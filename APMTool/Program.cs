@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Globalization;
 using OWLib;
@@ -26,86 +27,93 @@ namespace APMTool {
       Console.Out.WriteLine("APMTool v0.0.1");
 
       Console.Out.WriteLine("Opening APM structure {0}", name);
-      APM apm = new APM(root, name);
-      if(flag[0] == 'l') { // list
-        object search = null;
 
-        string arg = args[3];
+      LookupContentByKeyDelegate lookupContentByKey = (delegate(ulong key) {
+        return File.Open(string.Format("{0}/{1}/package_{2:X16}.index", root, name, key), FileMode.Open, FileAccess.Read);
+      });
 
-        bool packageKey = true;
-        if(arg[0] == 'p') {
-          search = ulong.Parse(arg.Substring(1), NumberStyles.HexNumber);
-        } else if(arg[0] == 'i') {
-          packageKey = false;
-          search = arg.Substring(1);
-        } else {
-          return;
-        }
+      using(Stream apmStream = File.Open(string.Format("{0}/{1}.apm", root, name), FileMode.Open, FileAccess.Read)) {
+        APM apm = new APM(apmStream, lookupContentByKey);
+        if(flag[0] == 'l') { // list
+          object search = null;
 
-        for(int i = 0; i < apm.Packages.Length; ++i) {
-          APMPackage package = apm.Packages[i];
-          if((packageKey && package.packageKey != (ulong)search) || (!packageKey && package.indexContentKey.ToHex() != (string)search)) {
-            continue;
-          }
-          PackageIndexRecord[] records = apm.Records[i];
-          Console.Out.WriteLine(string.Format("Dump for package {0:X16}", arg.Substring(1)));
-          for(int j = 0; j < records.Length; ++j) {
-            PackageIndexRecord record = records[j];
-            ulong type = APM.keyToTypeID(record.Key);
-            ulong index = APM.keyToIndexID(record.Key);
-            Console.Out.WriteLine(string.Format("\t{0:X16}.{1:X4} ({2} bytes)", index, type, record.Size));
-          }
-          break;
-        }
-      } else if(flag[0] == 'f') { // find
-        Console.Out.WriteLine("Finding...");
-        List<ulong> types = new List<ulong>();
-        List<ulong> ids = new List<ulong>();
-        for(int i = 3; i < args.Length; ++i) {
-          string arg = args[i];
-          if(arg[0] == 't') {
-            types.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
-          }
-          if(arg[0] == 'i') {
-            ids.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
-          }
-          if(arg[0] == 'T') {
-            types.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
-          }
-          if(arg[0] == 'I') {
-            ids.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
-          }
-        }
+          string arg = args[3];
 
-        bool matchAll = flag.Length > 1 && flag[1] == 'a';
-        for(int i = 0; i < apm.Packages.Length; ++i) {
-          APMPackage package = apm.Packages[i];
-          PackageIndexRecord[] records = apm.Records[i];
+          bool packageKey = true;
+          if(arg[0] == 'p') {
+            search = ulong.Parse(arg.Substring(1), NumberStyles.HexNumber);
+          } else if(arg[0] == 'i') {
+            packageKey = false;
+            search = arg.Substring(1);
+          } else {
+            return;
+          }
 
-          for(int j = 0; j < records.Length; ++j) {
-            PackageIndexRecord record = records[j];
-            ulong type = APM.keyToTypeID(record.Key);
-            ulong index = APM.keyToIndexID(record.Key);
-
-            bool check1 = true;
-            bool check2 = true;
-            if(types.Count > 0 && !types.Contains(type)) {
-              check1 = false;
+          for(int i = 0; i < apm.Packages.Length; ++i) {
+            APMPackage package = apm.Packages[i];
+            if((packageKey && package.packageKey != (ulong)search) || (!packageKey && package.indexContentKey.ToHex() != (string)search)) {
+              continue;
             }
-
-            if(ids.Count > 0 && !ids.Contains(index)) {
-              check2 = false;
+            PackageIndexRecord[] records = apm.Records[i];
+            Console.Out.WriteLine(string.Format("Dump for package {0:X16}", arg.Substring(1)));
+            for(int j = 0; j < records.Length; ++j) {
+              PackageIndexRecord record = records[j];
+              ulong type = APM.keyToTypeID(record.Key);
+              ulong index = APM.keyToIndexID(record.Key);
+              Console.Out.WriteLine(string.Format("\t{0:X16}.{1:X4} ({2} bytes)", index, type, record.Size));
             }
-
-            bool check = matchAll ? (check1 && check2) : (check1 || check2);
-            if(check) {
-              Console.Out.WriteLine(string.Format("Found {0:X16}.{1:X4} in package {2:X}", index, type, package.indexContentKey.ToHex()));
+            break;
+          }
+        } else if(flag[0] == 'f') { // find
+          Console.Out.WriteLine("Finding...");
+          List<ulong> types = new List<ulong>();
+          List<ulong> ids = new List<ulong>();
+          for(int i = 3; i < args.Length; ++i) {
+            string arg = args[i];
+            if(arg[0] == 't') {
+              types.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
+            }
+            if(arg[0] == 'i') {
+              ids.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
+            }
+            if(arg[0] == 'T') {
+              types.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
+            }
+            if(arg[0] == 'I') {
+              ids.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
             }
           }
-        }
-      } else if(flag[0] == 'c') { //compare
-        Console.Out.WriteLine("Coming soon");
-      } // end flag switch
+
+          bool matchAll = flag.Length > 1 && flag[1] == 'a';
+          for(int i = 0; i < apm.Packages.Length; ++i) {
+            APMPackage package = apm.Packages[i];
+            PackageIndexRecord[] records = apm.Records[i];
+
+            for(int j = 0; j < records.Length; ++j) {
+              PackageIndexRecord record = records[j];
+              ulong type = APM.keyToTypeID(record.Key);
+              ulong index = APM.keyToIndexID(record.Key);
+
+              bool check1 = true;
+              bool check2 = true;
+              if(types.Count > 0 && !types.Contains(type)) {
+                check1 = false;
+              }
+
+              if(ids.Count > 0 && !ids.Contains(index)) {
+                check2 = false;
+              }
+
+              bool check = matchAll ? (check1 && check2) : (check1 || check2);
+              if(check) {
+                Console.Out.WriteLine(string.Format("Found {0:X16}.{1:X4} in package {2:X}", index, type, package.indexContentKey.ToHex()));
+              }
+            }
+          }
+        } else if(flag[0] == 'c') { //compare
+          Console.Out.WriteLine("Coming soon");
+        } // end flag switch
+      }
     }
   }
 }

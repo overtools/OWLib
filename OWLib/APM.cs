@@ -31,8 +31,8 @@ namespace OWLib {
       return key & 0xFFFFFFFFFFFF;
     }
 
-    public APM(string root, string name) {
-      using(BinaryReader reader = new BinaryReader(File.Open(string.Format("{0}/{1}.apm", root, name), FileMode.Open, FileAccess.Read))) {
+    public APM(Stream apmStream, LookupContentByKeyDelegate lookupContentByKey) {
+      using(BinaryReader reader = new BinaryReader(apmStream)) {
         header = reader.Read<APMHeader>();
 
         entries = new APMEntry[header.entryCount];
@@ -48,8 +48,7 @@ namespace OWLib {
         for(int i = 0; i < header.packageCount; ++i) {
           packages[i] = reader.Read<APMPackage>();
 
-          string index_file = string.Format("{0}/{1}/package_{2:X16}.index", root, name, packages[i].packageKey);
-          using(Stream indexStream = File.Open(index_file, FileMode.Open, FileAccess.Read))
+          using(Stream indexStream = lookupContentByKey(packages[i].packageKey))
           using(BinaryReader indexReader = new BinaryReader(indexStream)) {
             indices[i] = indexReader.Read<PackageIndex>();
             indexStream.Position = indices[i].recordsOffset;
