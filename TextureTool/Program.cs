@@ -38,7 +38,7 @@ namespace TextureTool {
         using(BinaryReader dataReader = new BinaryReader(dataStream)) {
           RawTextureheader rawHeader = dataReader.Read<RawTextureheader>();
           uint size = rawHeader.imageSize / header.Format().ByteSize();
-          
+
           uint[] color1 = new uint[size];
           uint[] color2 = new uint[size];
           ushort[] color3 = new ushort[size];

@@ -57,7 +57,7 @@ namespace APMTool {
           }
           break;
         }
-      } else if(flag[0] == 'f') { // find 
+      } else if(flag[0] == 'f') { // find
         Console.Out.WriteLine("Finding...");
         List<ulong> types = new List<ulong>();
         List<ulong> ids = new List<ulong>();

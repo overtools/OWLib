@@ -1,9 +1,8 @@
-﻿using System.IO;
+using System.IO;
 using System.IO.Compression;
-using OWLib;
 
-namespace APMTool {
-  class APM {
+namespace OWLib {
+  public class APM {
     private APMHeader header;
     private APMPackage[] packages;
     private APMEntry[] entries;
