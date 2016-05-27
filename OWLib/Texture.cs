@@ -23,6 +23,8 @@ namespace OWLib {
     public uint[] Color5 => color5;
 
     public Texture(Stream headerStream, Stream dataStream) {
+      headerStream.Position = 0;
+      dataStream.Position = 0;
       using(BinaryReader headerReader = new BinaryReader(headerStream))
       using(BinaryReader dataReader = new BinaryReader(dataStream)) {
         header = headerReader.Read<TextureHeader>();
