@@ -43,7 +43,7 @@ namespace TextureTool {
           uint[] color2 = new uint[size];
           ushort[] color3 = new ushort[size];
           ushort[] color4 = new ushort[size];
-					uint[] color5 = new uint[size];
+          uint[] color5 = new uint[size];
 
           if(header.format > 72) {
             for(int j = 0; j < size; j++) {
