@@ -11,6 +11,7 @@ namespace OWLib {
     private ushort[] color3;
     private ushort[] color4;
     private uint[] color5;
+    private bool loaded = false;
 
     public TextureHeader Header => header;
     public RawTextureheader RawHeader => rawHeader;
@@ -21,10 +22,9 @@ namespace OWLib {
     public ushort[] Color3 => color3;
     public ushort[] Color4 => color4;
     public uint[] Color5 => color5;
+    public bool Loaded => loaded;
 
     public Texture(Stream headerStream, Stream dataStream) {
-      headerStream.Position = 0;
-      dataStream.Position = 0;
       using(BinaryReader headerReader = new BinaryReader(headerStream))
       using(BinaryReader dataReader = new BinaryReader(dataStream)) {
         header = headerReader.Read<TextureHeader>();
@@ -48,24 +48,25 @@ namespace OWLib {
         color5 = new uint[size];
 
         if(header.format > 72) {
-          for(int j = 0; j < size; j++) {
-            color3[j] = dataReader.ReadUInt16();
+          for(int i = 0; i < size; ++i) {
+            color3[i] = dataReader.ReadUInt16();
           }
-          for(int k = 0; k < size; k++) {
-            color4[k] = dataReader.ReadUInt16();
-            color5[k] = dataReader.ReadUInt32();
+          for(int i = 0; i < size; ++i) {
+            color4[i] = dataReader.ReadUInt16();
+            color5[i] = dataReader.ReadUInt32();
           }
         }
 
         if(header.format < 80) {
-          for(int l = 0; l < size; l++) {
-            color1[l] = dataReader.ReadUInt32();
+          for(int i = 0; i < size; ++i) {
+            color1[i] = dataReader.ReadUInt32();
           }
-          for(int m = 0; m < size; m++) {
-            color2[m] = dataReader.ReadUInt32();
+          for(int i = 0; i < size; ++i) {
+            color2[i] = dataReader.ReadUInt32();
           }
         }
       }
+      loaded = true;
     }
 
     public void ToDDS(Stream ddsStream) {
@@ -74,16 +75,16 @@ namespace OWLib {
         dds.linearSize = rawHeader.imageSize;
 
         ddsWriter.Write(dds);
-        for(int n = 0; n < size; n++) {
+        for(int i = 0; i < size; ++i) {
           if(header.format > 72) {
-            ddsWriter.Write(color3[n]);
-            ddsWriter.Write(color4[n]);
-            ddsWriter.Write(color5[n]);
+            ddsWriter.Write(color3[i]);
+            ddsWriter.Write(color4[i]);
+            ddsWriter.Write(color5[i]);
           }
 
           if(header.format < 80) {
-            ddsWriter.Write(color1[n]);
-            ddsWriter.Write(color2[n]);
+            ddsWriter.Write(color1[i]);
+            ddsWriter.Write(color2[i]);
           }
         }
       }

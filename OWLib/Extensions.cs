@@ -35,7 +35,7 @@ namespace OWLib {
     public static DDSPixelFormat ToPixelFormat(this TextureType T) {
       DDSPixelFormat ret = new DDSPixelFormat {
         size      = 32,
-        flags     = 0x4,
+        flags     = 4,
         fourCC    = (uint)T,
         bitCount  = 32,
         redMask   = 0x0000FF00,

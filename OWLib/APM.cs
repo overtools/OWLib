@@ -48,7 +48,7 @@ namespace OWLib {
         for(int i = 0; i < header.packageCount; ++i) {
           packages[i] = reader.Read<APMPackage>();
 
-          using(Stream indexStream = lookupContentByKey(packages[i].packageKey))
+          Stream indexStream = lookupContentByKey(packages[i].packageKey);
           using(BinaryReader indexReader = new BinaryReader(indexStream)) {
             indices[i] = indexReader.Read<PackageIndex>();
             indexStream.Position = indices[i].recordsOffset;
@@ -69,6 +69,8 @@ namespace OWLib {
             }
             dependencies[i] = deps;
           }
+          indexStream.Close();
+          indexStream.Dispose();
         }
       }
     }
