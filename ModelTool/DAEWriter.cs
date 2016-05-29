@@ -13,6 +13,7 @@ using System.Xml.Linq;
 namespace ModelTool {
   class DAEWriter {
     public static void Write(Model model, Stream stream, List<byte> LODs) {
+      Console.Out.WriteLine("WARNING: Bones are unsupported for now.");
 		  NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
       numberFormatInfo.NumberDecimalSeparator = ".";
       XmlWriterSettings settings = new XmlWriterSettings { Encoding = Encoding.UTF8, Indent = true, NewLineHandling = NewLineHandling.Entitize };
@@ -39,8 +40,10 @@ namespace ModelTool {
 
         XElement libGeometries = new XElement("library_geometries");
         XElement libScene = new XElement("library_visual_scenes");
+        XElement libController = new XElement("library_controllers");
         XElement scene = new XElement("scene");
         root.Add(libGeometries);
+        root.Add(libController);
         root.Add(libScene);
         root.Add(scene);
 
@@ -57,9 +60,13 @@ namespace ModelTool {
           string va = "";
           string ua = "";
           string ia = "";
-          string iv = "";
+          string wa = "";
+          string ba = "";
+          string bv = "";
 
           ulong off = 0;
+          ulong woff = 0;
+
           foreach(int i in kv.Value) {
             ModelSubmesh submesh = model.Submeshes[i];
             ModelVertex[] vertex = model.Vertices[i];
@@ -71,14 +78,27 @@ namespace ModelTool {
               va += string.Format("{0} {1} {2} ", vertex[j].x, vertex[j].y, vertex[j].z);
             }
             vertexSz += (ulong)vertex.Length;
+            if(false) { // model.BoneLookup.Length > 0
+              for(int j = 0; j < vertex.Length; ++j) {
+                unsafe
+                {
+                  fixed (ModelBoneData* p = &bones[j])
+                  {
+                    ba += string.Format("{0} {1} {2} {3} {4} {5} {6} {7} ", p->boneIndex[0], woff, p->boneIndex[1], woff + 1, p->boneIndex[2], woff + 2, p->boneIndex[3], woff + 3);
+                    wa += string.Format("{0} {1} {2} {3}", ((float)p->boneWeight[0] / 255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[1] / 255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[2] / 255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[3] / 255).ToString("0.######", numberFormatInfo));
+                  }
+                  bv += "4 ";
+                }
+                woff += 4;
+              }
+            }
 
             for(int j = 0; j < vertex.Length; ++j) {
               ua += string.Format("{0} {1} ", uv[j].u.ToString("0.######", numberFormatInfo), uv[j].v.ToString("0.######", numberFormatInfo));
             }
 
             for(int j = 0; j < index.Length; ++j) {
-              iv += "3 ";
-              ia += string.Format("{0} {1} {2} ", index[j].v1 + off, index[j].v2 + off, index[j].v3 + off);
+              ia += string.Format("{0} {0} {1} {1} {2} {2} ", index[j].v1 + off, index[j].v2 + off, index[j].v3 + off);
             }
             inSz += (ulong)index.Length;
             off += (ulong)vertex.Length;
@@ -113,28 +133,112 @@ namespace ModelTool {
           vertexEl.Add(new XElement("input", new XAttribute("semantic", "POSITION"), new XAttribute("source", "#" + geometryName + "-positions")));
           mesh.Add(vertexEl);
 
-          XElement triEl = new XElement("polylist", new XAttribute("count", inSz));
+          XElement triEl = new XElement("triangles", new XAttribute("count", inSz));
           triEl.Add(new XElement("input", new XAttribute("semantic", "VERTEX"), new XAttribute("offset", 0), new XAttribute("source", "#" + geometryName + "-vertices")));
-          //triEl.Add(new XElement("input", new XAttribute("semantic", "TEXCOORD"), new XAttribute("offset", 1), new XAttribute("set", 0), new XAttribute("source", "#" + geometryName + "-uv")));
+          triEl.Add(new XElement("input", new XAttribute("semantic", "TEXCOORD"), new XAttribute("offset", 1), new XAttribute("source", "#" + geometryName + "-uv")));
           
-          XElement triV = new XElement("vcount");
           XElement triP = new XElement("p");
-          triV.Value = iv;
           triP.Value = ia;
-          triEl.Add(triV);
           triEl.Add(triP);
           mesh.Add(triEl);
 
           geometry.Add(mesh);
           XElement rootNode = new XElement("visual_scene", new XAttribute("id", geometryName + "-scene"));
-          if(true) { // model.BoneHierarchy.Length != 0
+          if(true) { // model.BoneHierarchy.Length == 0
             XElement cNode = new XElement("node", new XAttribute("name", geometryName));
             XElement iNode = new XElement("node", new XAttribute("id", geometryName + "-inst"));
             iNode.Add(new XElement("instance_geometry", new XAttribute("url", "#" + geometryName)));
             cNode.Add(iNode);
             rootNode.Add(cNode);
           } else {
-            // TODO: bones
+            XElement controller = new XElement("controller", new XAttribute("id", geometryName + "-skin"));
+            XElement skin = new XElement("skin", new XAttribute("source", "#" + geometryName));
+
+            XElement jointsSource = new XElement("source", new XAttribute("id", geometryName + "-joints"));
+            XElement jointArray = new XElement("Name_array", new XAttribute("id", geometryName + "-joints-array"), new XAttribute("count", model.BoneLookup.Length));
+
+            for(int i = 0; i < model.BoneLookup.Length; ++i) {
+              jointArray.Value += string.Format("joint{0} ", model.BoneLookup[i]);
+            }
+            
+            jointsSource.Add(jointArray);
+
+            {
+              XElement technique = new XElement("technique_common");
+              XElement accessor = new XElement("accessor", new XAttribute("source", "#" + geometryName + "-joints-array"), new XAttribute("count", model.BoneLookup.Length), new XAttribute("stride", "1"));
+              accessor.Add(new XElement("param", new XAttribute("name", "JOINT"), new XAttribute("type", "Name")));
+              technique.Add(accessor);
+              jointsSource.Add(technique);
+            }
+
+            skin.Add(jointsSource);
+
+            XElement weightsSource = new XElement("source", new XAttribute("id", geometryName + "-weights"));
+            XElement weightsArray = new XElement("float_array", new XAttribute("id", geometryName + "-weights-array"), new XAttribute("count", vertexSz * 4));
+
+            weightsArray.Value = wa;
+
+            weightsSource.Add(weightsArray);
+
+            {
+              XElement technique = new XElement("technique_common");
+              XElement accessor = new XElement("accessor", new XAttribute("source", "#" + geometryName + "-weights-array"), new XAttribute("count", vertexSz * 4), new XAttribute("stride", "1"));
+              accessor.Add(new XElement("param", new XAttribute("name", "WEIGHT"), new XAttribute("type", "float")));
+              technique.Add(accessor);
+              weightsSource.Add(technique);
+            }
+
+            skin.Add(weightsSource);
+
+            XElement joints = new XElement("joints");
+            joints.Add(new XElement("input", new XAttribute("semantic", "JOINT"), new XAttribute("source", "#" + geometryName + "-joints")));
+            skin.Add(joints);
+
+            XElement vertexWeights = new XElement("vertex_weights", new XAttribute("count", vertexSz));
+            vertexWeights.Add(new XElement("input", new XAttribute("semantic", "JOINT"), new XAttribute("offset", 0), new XAttribute("source", "#" + geometryName + "-joints")));
+            vertexWeights.Add(new XElement("input", new XAttribute("semantic", "WEIGHT"), new XAttribute("offset", 1), new XAttribute("source", "#" + geometryName + "-weights")));
+          
+            XElement vertexV = new XElement("vcount");
+            XElement vertexP = new XElement("v");
+            vertexV.Value = bv;
+            vertexP.Value = ba;
+            vertexWeights.Add(vertexV);
+            vertexWeights.Add(vertexP);
+            skin.Add(vertexWeights);
+            controller.Add(skin);
+            libController.Add(controller);
+
+            XElement[] jointMap = new XElement[model.BoneData.Length];
+            for(int i = 0; i < model.BoneLookup.Length; ++i) {
+              XElement jointNode = new XElement("node", new XAttribute("sid", model.BoneLookup[i]), new XAttribute("type", "JOINT"));
+              XElement translate = new XElement("translate");
+              translate.Value = string.Format("{0} {1} {2}", model.BoneData[i][0].ToString("0.000000", numberFormatInfo), model.BoneData[i][1].ToString("0.000000", numberFormatInfo), model.BoneData[i][2].ToString("0.000000", numberFormatInfo));
+              jointNode.Add(translate);
+              jointMap[i] = jointNode;
+            }
+            XElement skeleton = new XElement("instance_contorller", new XAttribute("url", "#" + geometryName + "-skin"));
+            for(int i = 0; i < model.BoneLookup.Length; ++i) {
+              short parent = model.BoneHierarchy[i];
+              if(parent > -1) {
+                XElement p = jointMap[parent];
+                p.Add(jointMap[i]);
+                jointMap[parent + 1] = p;
+              }
+            }
+            
+            for(int i = 0; i < model.BoneLookup.Length; ++i) {
+              short parent = model.BoneHierarchy[i];
+              if(parent == -1) {
+                XElement t = jointMap[i];
+                t.SetAttributeValue("id", geometryName + "-skeleton-"+i);
+                rootNode.Add(t);
+                XElement skeletonUrl = new XElement("skeleton");
+                skeletonUrl.Value = geometryName + "-skeleton-" + i;
+                skeleton.Add(skeletonUrl);
+              }
+            }
+
+            rootNode.Add(skeleton);
           }
           libScene.Add(rootNode);
           libGeometries.Add(geometry);

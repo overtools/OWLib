@@ -57,11 +57,18 @@ namespace ModelTool {
               writer.WriteLine("0.0 0.0 0.0");
               writer.WriteLine("255 255 255");
               writer.WriteLine("{0} {1}", uv[j].u.ToString("0.######", numberFormatInfo), uv[j].v.ToString("0.######", numberFormatInfo));
-              unsafe {
-                fixed (ModelBoneData* p = &bones[j]) {
-                  writer.WriteLine("{0} {1} {2} {3}", model.BoneLookup[p->boneIndex[0]], model.BoneLookup[p->boneIndex[1]], model.BoneLookup[p->boneIndex[2]], model.BoneLookup[p->boneIndex[3]]);
-                  writer.WriteLine("{0} {1} {2} {3}", ((float)p->boneWeight[0]/255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[1]/255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[2]/255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[3]/255).ToString("0.######", numberFormatInfo));
+              if(model.BoneData.Length > 0) {
+                unsafe
+                {
+                  fixed (ModelBoneData* p = &bones[j])
+                  {
+                    writer.WriteLine("{0} {1} {2} {3}", model.BoneLookup[p->boneIndex[0]], model.BoneLookup[p->boneIndex[1]], model.BoneLookup[p->boneIndex[2]], model.BoneLookup[p->boneIndex[3]]);
+                    writer.WriteLine("{0} {1} {2} {3}", ((float)p->boneWeight[0] / 255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[1] / 255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[2] / 255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[3] / 255).ToString("0.######", numberFormatInfo));
+                  }
                 }
+              } else {
+                writer.WriteLine("0 0 0 0");
+                writer.WriteLine("0 0 0 0");
               }
             }
             writer.WriteLine(index.Length);
