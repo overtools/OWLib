@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using OWLib.Types;
 
 namespace OWLib {
   public static class Extensions {
@@ -47,7 +48,7 @@ namespace OWLib {
     }
 
     public static TextureType Format(this TextureHeader header) {
-      return TextureTypeFromHeaderByte(header.format);
+      return TextureTypeFromHeaderByte((byte)header.format);
     }
 
     public static T Read<T>(this BinaryReader reader) where T : struct {
@@ -101,6 +102,10 @@ namespace OWLib {
         *(MD5Hash*)ptr = hash;
       }
       return array.ToHex();
+    }
+
+    public static ModelUV ToModelUV(this ModelUVShort uv) {
+      return new ModelUV { u = Half.ToHalf(uv.u), v = Half.ToHalf(uv.v) };
     }
   }
 }

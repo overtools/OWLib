@@ -1,5 +1,6 @@
 using System.IO;
 using System.IO.Compression;
+using OWLib.Types;
 
 namespace OWLib {
   public class APM {

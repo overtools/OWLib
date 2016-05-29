@@ -1,137 +1,185 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace OWLib.Types {
+  // TODO FIX THIS
+
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
   public unsafe struct ModelHeader {
-    fixed float boundingBox[16];
-    uint blobPtr;
-    uint unkStruct1Ptr;
-    ulong eof;
-    ulong unkFFFFPtr;
-    fixed ulong boneMatrixPtr[4];
-    ulong unkBoneU16;
-    ulong boneIdPtr;
-    ulong boneBindataPtr;
-    ulong boneExPtr;
-    ulong boneHierarchyPtr;
-    uint magic;
-    ushort bone1Count;
-    ushort bone2Count;
-    ushort unk1;
-    ushort unk2;
-    ushort bone3Count;
-    ushort bone4Count;
-    ushort bone5Count;
-    ushort bone6Count;
-    ushort boneCount;
-    ushort padding1;
-    fixed byte unk3[16];
-    uint unk4;
-    uint inputElementCount;
-    uint unk5;
-    uint unk1p0;
-    fixed float unk6[4];
-    fixed float unk7[4];
-    fixed float unk8[4];
-    fixed uint unk9[4];
-    fixed float unkA[4];
-    fixed uint unkB[4];
-    uint unkC;
-    ushort materialACount;
-    ushort materialBCount;
-    uint unkD;
-    uint unkE;
-    byte vertexBufferCount;
-    byte indexBufferCount;
-    byte meshFlags;
-    byte submeshCount;
-    uint unkCount1;
-    ulong unkStruct2Ptr;
-    ulong materialBufferPtr;
-    ulong submeshBufferPtr;
-    ulong vertexBufferPtr;
-    ulong indiceBufferPtr;
-    ulong buffer4Ptr;
-    ulong buffer5Ptr;
-    ulong buffer6Ptr;
-    ulong unkStruct3Ptr;
-    ulong buffer8Ptr;
-    ulong buffer9Ptr;
-    ulong bufferAPtr;
-    ulong physicsBufferPtr;
-    ulong unkStruct1Ptr2;
-    ulong bufferDPtr;
-    ulong bufferEPtr;
-    ulong bufferFPtr;
+    public fixed float boundingBox[16];
+    public uint blobPtr;
+    public uint unkStruct1Ptr;
+    public ulong eof;
+    public ulong unkFFFFPtr;
+    public ulong boneMatrix1Ptr;
+    public ulong boneMatrix2Ptr;
+    public ulong boneMatrix3Ptr;
+    public ulong boneMatrix4Ptr;
+    public ulong unkBoneUshort;
+    public ulong boneIdPtr;
+    public ulong boneBindataPtr;
+    public ulong boneExPtr;
+    public ulong boneHierarchyPtr;
+    public uint magic;
+    public ushort bone1Count;
+    public ushort bone2Count;
+    public ushort unk1;
+    public ushort unk2;
+    public ushort bone3Count;
+    public ushort bone4Count;
+    public ushort bone5Count;
+    public ushort bone6Count;
+    public ushort boneCount;
+    public ushort padding1;
+    public fixed byte unk3[16];
+    public uint unk4;
+    public uint inputElementCount;
+    public uint unk5;
+    public uint unk1p0;
+    public fixed float unk6[4];
+    public fixed float unk7[4];
+    public fixed float unk8[4];
+    public fixed uint unk9[4];
+    public fixed float unkA[4];
+    public fixed uint unkB[4];
+    public uint unkC;
+    public ushort materialACount;
+    public ushort materialBCount;
+    public uint unkD;
+    public uint unkE;
+    public byte vertexBufferCount;
+    public byte indexBufferCount;
+    public byte meshFlags;
+    public byte submeshCount;
+    public uint unkCount1;
+    public ulong unkStruct2Ptr;
+    public ulong materialBufferPtr;
+    public ulong submeshBufferPtr;
+    public ulong vertexBufferPtr;
+    public ulong indiceBufferPtr;
+    public ulong buffer4Ptr;
+    public ulong buffer5Ptr;
+    public ulong buffer6Ptr;
+    public ulong unkStruct3Ptr;
+    public ulong buffer8Ptr;
+    public ulong buffer9Ptr;
+    public ulong bufferAPtr;
+    public ulong physicsBufferPtr;
+    public ulong unkStruct1Ptr2;
+    public ulong bufferDPtr;
+    public ulong bufferEPtr;
+    public ulong bufferFPtr;
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
   public unsafe struct ModelSubmesh {
-    ulong effed;
-    ulong unk1;
-    fixed float unk2[10];
-    uint vertexStart;
-    ushort indexStart;
-    ushort indexEnd;
-    ushort indiceCount;
-    uint vertexCount;
-    byte vertexBufferIndex;
-    byte indexBufferIndex;
-    byte unk3;
-    byte material;
-    byte lod;
-    byte unk4;
+    public ulong effed;            //
+    public uint unk1;              //
+    public fixed float unk2[10];   //
+    public uint vertexStart;       // vbOff
+    public ushort indexStart;      // i0
+    public ushort indexEnd;        // iN
+    public ushort indiceCount;     // 62
+    public ushort vertexCount;     // 66
+    public ushort unk3;            // 
+    public byte vertexBufferIndex; // vb
+    public byte indexBufferIndex;  // fb
+    public byte unk4;              // 
+    public byte material;          // mat
+    public byte lod;               // lod
+    public byte unk5;              //
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
   public unsafe struct ModelVertexBuffer {
-    uint inputElementCount;
-    uint unk1;
-    byte strideStream1;
-    byte strideStream2;
-    byte formatStream1;
-    byte formatStream2;
-    uint unk2;
-    fixed ulong effed[2];
-    ulong chainlinkPtr;
-    ulong stream1Ptr;
-    ulong stream2Ptr;
+    public uint inputElementCount;
+    public uint unk1;
+    public byte strideStream1;
+    public byte strideStream2;
+    public byte formatStream1;
+    public byte formatStream2;
+    public uint unk2;
+    public ulong effed1;
+    public ulong effed2;
+    public ulong chainlinkPtr;
+    public ulong stream1Ptr;
+    public ulong stream2Ptr;
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct ModelIndiceBuffer {
-    uint indiceCount;
-    uint format;
-    ulong effed;
-    ulong stream1Ptr;
+    public uint indiceCount;
+    public uint format;
+    public ulong effed;
+    public ulong stream1Ptr;
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public unsafe struct ModelUnkStruct1 {
-    fixed uint unk1[20];
+    public fixed uint unk1[20];
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public unsafe struct ModelUnkStruct2 {
-    fixed float matrix[16];
-    fixed float unk1[4];
-    ulong unkBindataPtr;
-    fixed uint padding[2];
+    public fixed float matrix[16];
+    public fixed float unk1[4];
+    public ulong unkBindataPtr;
+    public fixed uint padding[2];
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
   public unsafe struct ModelUnkStruct3 {
-    ulong vec3Ptr;
-    ulong vec4Ptr;
-    ulong unk1Ptr;
-    ulong unk2Ptr;
-    fixed float unk1[3];
-    uint vec3Size;
-    uint vec4Size;
-    fixed float unk2[2];
-    fixed uint effed1[2];
-    fixed float unk3[12];
-    ushort effed2;
-    fixed byte unk4[18];
+    public ulong vec3Ptr;
+    public ulong vec4Ptr;
+    public ulong unk1Ptr;
+    public ulong unk2Ptr;
+    public fixed float unk1[3];
+    public uint vec3Size;
+    public uint vec4Size;
+    public fixed float unk2[2];
+    public fixed uint effed1[2];
+    public fixed float unk3[12];
+    public ushort effed2;
+    public fixed byte unk4[18];
+  }
+
+  [StructLayout(LayoutKind.Sequential, Pack = 1)]
+  public struct ModelIndice {
+    public ushort v1;
+    public ushort v2;
+    public ushort v3;
+  }
+
+  [StructLayout(LayoutKind.Sequential, Pack = 1)]
+  public struct ModelUV {
+    public Half u;
+    public Half v;
+  }
+
+  [StructLayout(LayoutKind.Sequential, Pack = 1)]
+  public struct ModelUVShort {
+    public ushort u;
+    public ushort v;
+  }
+
+  [StructLayout(LayoutKind.Sequential, Pack = 1)]
+  public struct ModelChainlink {
+    public ushort type;
+    public ushort unk2;
+    public ushort unk3;
+    public ushort offset;
+  }
+
+  [StructLayout(LayoutKind.Sequential, Pack = 4)]
+  public unsafe struct ModelVertex {
+    public float x;
+    public float y;
+    public float z;
+  }
+  
+  [StructLayout(LayoutKind.Sequential, Pack = 1)]
+  public unsafe struct ModelBoneData {
+    public fixed byte boneIndex[4];
+    public fixed byte boneWeight[4];
   }
 }

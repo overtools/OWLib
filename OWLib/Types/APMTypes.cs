@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace OWLib {
+namespace OWLib.Types {
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct APMHeader {
     public ulong buildVersion;

@@ -1,4 +1,5 @@
 using System.IO;
+using OWLib.Types;
 
 namespace OWLib {
   public class Texture {
@@ -47,7 +48,7 @@ namespace OWLib {
         color4 = new ushort[size];
         color5 = new uint[size];
 
-        if(header.format > 72) {
+        if((byte)header.format > 72) {
           for(int i = 0; i < size; ++i) {
             color3[i] = dataReader.ReadUInt16();
           }
@@ -57,7 +58,7 @@ namespace OWLib {
           }
         }
 
-        if(header.format < 80) {
+        if((byte)header.format < 80) {
           for(int i = 0; i < size; ++i) {
             color1[i] = dataReader.ReadUInt32();
           }
@@ -76,13 +77,13 @@ namespace OWLib {
 
         ddsWriter.Write(dds);
         for(int i = 0; i < size; ++i) {
-          if(header.format > 72) {
+          if((byte)header.format > 72) {
             ddsWriter.Write(color3[i]);
             ddsWriter.Write(color4[i]);
             ddsWriter.Write(color5[i]);
           }
 
-          if(header.format < 80) {
+          if((byte)header.format < 80) {
             ddsWriter.Write(color1[i]);
             ddsWriter.Write(color2[i]);
           }
