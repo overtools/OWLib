@@ -112,9 +112,9 @@ namespace OWLib {
           ModelIndiceBuffer indiceBuffer = indiceBuffers[submesh.indexBufferIndex];
           ModelVertexBuffer vertexBuffer = vertexBuffers[submesh.vertexBufferIndex];
           uint sz = 0;
-          ModelIndice[] indices = new ModelIndice[submesh.indexEnd];
+          ModelIndice[] indices = new ModelIndice[submesh.indexEnd / 3];
           modelStream.Seek((long)indiceBuffer.stream1Ptr + submesh.indexStart * 2, SeekOrigin.Begin);
-          for(int j = 0; j < submesh.indexEnd; j += 3) {
+          for(int j = 0; j < indices.Length; ++j) {
             indices[j] = modelReader.Read<ModelIndice>();
             sz = Math.Max(sz, indices[j].v1);
             sz = Math.Max(sz, indices[j].v2);

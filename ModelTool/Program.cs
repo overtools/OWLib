@@ -12,6 +12,8 @@ namespace ModelTool {
         Console.Out.WriteLine("Usage: ModelTool.exe 00C_file type [-l n] output_file");
         Console.Out.WriteLine("type can be:");
         Console.Out.WriteLine("  o - OBJ");
+        Console.Out.WriteLine("  a - XNALara ASCII");
+        Console.Out.WriteLine("  b - XNALara BIN");
         Console.Out.WriteLine("args:");
         Console.Out.WriteLine("  -l n - only print LOD, where N is lod");
         return;
@@ -44,12 +46,10 @@ namespace ModelTool {
       ModelWriteDelegate writer = null;
       if(type == 'o') {
         writer = OBJWriter.Write;
-      } else if(type == 'x') {
-        writer = XWriter.Write;
-      } else if(type == 'd') {
-        writer = DAEWriter.Write;
       } else if(type == 'a') {
         writer = ASCIIWriter.Write;
+      } else if(type == 'b') {
+        writer = BINWriter.Write;
       } else {
         Console.Error.WriteLine("Unknown output format {0}", type);
       }

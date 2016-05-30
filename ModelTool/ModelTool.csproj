@@ -33,6 +33,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ModelTool.Program</StartupObject>
@@ -48,12 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BINWriter.cs" />
     <Compile Include="ASCIIWriter.cs" />
-    <Compile Include="DAEWriter.cs" />
     <Compile Include="OBJWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
