@@ -70,7 +70,7 @@ namespace ModelTool {
           Console.Out.WriteLine("Writing LOD {0}", kv.Key);
           foreach(int i in kv.Value) {
             ModelSubmesh submesh = model.Submeshes[i];
-            WriteString(writer, string.Format("LOD_{0}_{1}", kv.Key, submesh.material));
+            WriteString(writer, string.Format("Submesh_{0}.{1}.{2}", i, kv.Key, submesh.material));
             writer.Write((uint)1);
             writer.Write((uint)1);
             WriteString(writer, string.Format("Material_{0}",submesh.material));

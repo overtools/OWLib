@@ -26,10 +26,10 @@ namespace ModelTool {
         uint faceOffset = 1;
         foreach(KeyValuePair<byte, List<int>> kv in LODMap) {
           Console.Out.WriteLine("Writing LOD {0}", kv.Key);
-          writer.WriteLine("o LOD_{0:X}", kv.Key);
+          writer.WriteLine("o Submesh_{0}", kv.Key);
           foreach(int i in kv.Value) {
             ModelSubmesh submesh = model.Submeshes[i];
-            writer.WriteLine("g Material_{0:X}", submesh.material);
+            writer.WriteLine("g Material_{0}", submesh.material);
 
             ModelVertex[] vertex = model.Vertices[i];
             ModelUV[] uv = model.UVs[i];

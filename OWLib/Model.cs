@@ -28,6 +28,8 @@ namespace OWLib {
     public ushort[] BoneLookup => boneLookup;
     public float[][] BoneData => boneData;
     public ModelSubmesh[] Submeshes => submeshes;
+    public ModelVertexBuffer[] VertexBuffers => vertexBuffers;
+    public ModelIndiceBuffer[] IndiceBuffers => indiceBuffers;
     public ModelUV[][] UVs => uvs;
     public ModelIndice[][] Faces => faces;
     public ModelVertex[][] Vertices => vertices;
