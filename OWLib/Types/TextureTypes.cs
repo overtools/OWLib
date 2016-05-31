@@ -9,14 +9,13 @@ namespace OWLib.Types {
     public DXGI_PIXEL_FORMAT format;
     public byte surfaces;
     public byte unk3;
-    public byte secondary;
+    public byte unk4;
     public byte unk5;
-    public byte unk6;
     public ushort width;
     public ushort height;
     public ushort dataSize;
     public ulong referenceKey;
-    public ulong unk7;
+    public ulong unk6;
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]

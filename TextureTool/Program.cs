@@ -17,8 +17,10 @@ namespace TextureTool {
       using(Stream headerStream = File.Open(headerFile, FileMode.Open, FileAccess.Read))
       using(Stream dataStream = File.Open(dataFile, FileMode.Open, FileAccess.Read)) {
         Texture tex = new Texture(headerStream, dataStream);
+        Console.Out.WriteLine("Opened Texture. W: {0} H: {1}", tex.Header.width, tex.Header.height);
         using(Stream ddsStream = File.Open(destFile, FileMode.OpenOrCreate, FileAccess.Write)) {
           tex.ToDDS(ddsStream);
+          Console.Out.WriteLine("Saved DDS");
         }
       }
     }

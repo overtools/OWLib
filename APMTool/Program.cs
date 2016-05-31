@@ -35,6 +35,7 @@ namespace APMTool {
 
       using(Stream apmStream = File.Open(string.Format("{0}/{1}.apm", root, name), FileMode.Open, FileAccess.Read)) {
         APM apm = new APM(apmStream, lookupContentByKey);
+        Console.Out.WriteLine("Opened.");
         if(flag[0] == 'l') { // list
           object search = null;
 
@@ -73,15 +74,19 @@ namespace APMTool {
             string arg = args[i];
             if(arg[0] == 't') {
               types.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
+              Console.Out.WriteLine("Added Type {0}", types[types.Count - 1]);
             }
             if(arg[0] == 'i') {
               ids.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
+              Console.Out.WriteLine("Added ID {0}", ids[ids.Count - 1]);
             }
             if(arg[0] == 'T') {
               types.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
+              Console.Out.WriteLine("Added Type {0}", types[types.Count - 1]);
             }
             if(arg[0] == 'I') {
               ids.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
+              Console.Out.WriteLine("Added ID {0}", ids[ids.Count - 1]);
             }
           }
 
