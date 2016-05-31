@@ -1,0 +1,16 @@
+--- Logger.cs	2016-05-31 23:30:11.000000000 +0100
++++ Logger.cs	2016-05-31 23:34:50.000000000 +0100
+@@ -5,13 +5,8 @@
+ {
+     public class Logger
+     {
+-        static FileStream fs = new FileStream("debug.log", FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+-        static StreamWriter logger = new StreamWriter(fs) { AutoFlush = true };
+-
+         public static void WriteLine(string format, params object[] args)
+         {
+-            logger.Write("[{0}]: ", DateTime.Now);
+-            logger.WriteLine(format, args);
+         }
+     }
+ }
