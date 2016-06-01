@@ -98,13 +98,25 @@ namespace APMTool {
           PackageIndexRecord[] records = apm.Records[i];
 
           if(flag[0] == 'l') {
-            if(((List<ulong>)query[0]).Count > 0 && !((List<ulong>)query[0]).Contains(package.packageKey)) {
+            if(((List<ulong>)query[0]).Count + ((List<ulong>)query[1]).Count == 0) {
+              return;
+            }
+
+            bool ret = true;
+            if(((List<ulong>)query[0]).Count > 0 && ((List<ulong>)query[0]).Contains(package.packageKey)) {
+              ret = false;
+            }
+
+            if(ret && ((List<string>)query[1]).Count > 0 && ((List<string>)query[1]).Contains(package.indexContentKey.ToHexString().ToUpperInvariant())) {
+              ret = false;
+            }
+
+            if(ret) {
               continue;
             }
 
-            if(((List<string>)query[1]).Count > 0 && !((List<string>)query[1]).Contains(package.indexContentKey.ToHexString().ToUpperInvariant())) {
-              continue;
-            }
+            ((List<ulong>)query[0]).Remove(package.packageKey);
+            ((List<string>)query[1]).Remove(package.indexContentKey.ToHexString().ToUpperInvariant());
 
             Console.Out.WriteLine("Dump for package i{0} / p{1:X}", package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey);
           }

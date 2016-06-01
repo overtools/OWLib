@@ -64,12 +64,17 @@ namespace PackageTool {
           }
 
           APMPackage package = apm.Packages[i];
-          
-          if(packageKeys.Count > 0 && !packageKeys.Contains(package.packageKey)) {
-            continue;
+
+          bool ret = true;
+          if(packageKeys.Count > 0 && packageKeys.Contains(package.packageKey)) {
+            ret = false;
           }
 
-          if(contentKeys.Count > 0 && !contentKeys.Contains(package.indexContentKey.ToHexString().ToUpperInvariant())) {
+          if(ret && contentKeys.Count > 0 && contentKeys.Contains(package.indexContentKey.ToHexString().ToUpperInvariant())) {
+            ret = false;
+          }
+
+          if(ret) {
             continue;
           }
 
