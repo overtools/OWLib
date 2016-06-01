@@ -44,10 +44,13 @@
     <Compile Include="Half\Half.cs" />
     <Compile Include="Half\HalfHelper.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="STUD.cs" />
     <Compile Include="Texture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\APMTypes.cs" />
     <Compile Include="Types\ModelTypes.cs" />
+    <Compile Include="Types\STUDTypes.cs" />
+    <Compile Include="Types\STUD\STUD_A301496F.cs" />
     <Compile Include="Types\TextureTypes.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
