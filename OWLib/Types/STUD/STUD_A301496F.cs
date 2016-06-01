@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace OWLib.Types.STUD {
-  
+
   [StructLayout(LayoutKind.Sequential, Pack = 8)]
   public struct A301496F_Header {
     public ulong unk1;
@@ -70,7 +66,7 @@ namespace OWLib.Types.STUD {
       writer.WriteLine("{0} materials...", materialTable.Length);
       for(int i = 0; i < materialTable.Length; ++i) {
         DumpSTUDHeader(writer, materialTable[i].header);
-        writer.WriteLine("\tKey: {0:X}", materialTable[i].data.key);
+        writer.WriteLine("\tKey: {0}", materialTable[i].data.key);
         writer.WriteLine("");
       }
 
@@ -89,12 +85,12 @@ namespace OWLib.Types.STUD {
       writer.WriteLine("{0} params...", materialDataParam.Length);
       for(int i = 0; i < materialDataParam.Length; ++i) {
         DumpSTUDHeader(writer, materialDataParam[i].data.header);
-        writer.WriteLine("\tK: {0:X}", materialDataParam[i].data.data.key);
-        writer.WriteLine("\tV: {0:X}", materialDataParam[i].data.data.value);
+        writer.WriteLine("\tK: {0}", materialDataParam[i].data.data.key);
+        writer.WriteLine("\tV: {0}", materialDataParam[i].data.data.value);
         writer.WriteLine("\t{0} binds...", materialDataParam[i].binds.Length);
         for(int j = 0; j < materialDataParam[i].binds.Length; ++j) {
           DumpSTUDHeader(writer, materialDataParam[i].binds[j].header, "\t");
-          writer.WriteLine("\t\tKey: {0:X}", materialDataParam[i].binds[j].data.key);
+          writer.WriteLine("\t\tKey: {0}", materialDataParam[i].binds[j].data.key);
           writer.WriteLine("");
         }
         writer.WriteLine("");

@@ -48,8 +48,8 @@ namespace OWLib.Types {
     
 
     public void DumpSTUDHeader(TextWriter writer, STUDDataHeader header, string prefix = "") {
-      writer.WriteLine("{1}\tID: {0:X}", header.id, prefix);
-      writer.WriteLine("{1}\tType: {0:X}", header.type, prefix);
+      writer.WriteLine("{1}\tID: {0}", header.id, prefix);
+      writer.WriteLine("{1}\tType: {0}", header.type, prefix);
     }
 
     public void Dump(TextWriter writer) {
