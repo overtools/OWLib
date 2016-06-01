@@ -2,6 +2,7 @@
 using System;
 using OWLib;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace ModelTool {
   public class Program {
@@ -18,6 +19,8 @@ namespace ModelTool {
         Console.Out.WriteLine("  -l n - only print LOD, where N is lod");
         return;
       }
+
+      Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
       string modelFile = args[0];
       char type = args[1].ToLowerInvariant()[0];

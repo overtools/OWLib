@@ -1,15 +1,15 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Globalization;
 using CASCExplorer;
+using System.Reflection;
 
 namespace APMTool {
   class Program {
     static void Main(string[] args) {
       // APMTool.exe "root" file flag [query]
       if(args.Length < 2) {
-        Console.Out.WriteLine(string.Format("Usage: APMTool.exe \"root directory\" op args"));
+        Console.Out.WriteLine("Usage: APMTool.exe \"root directory\" op args");
         Console.Out.WriteLine("OP f: Find files in APM. subop: a (match all) args: query... query: i[INDEX HEX] t[TYPE HEX] I[INDEX] T[TYPE]");
         Console.Out.WriteLine("OP l: List files in package. args: query query: p[PACKAGE KEY HEX] i[CONTENT KEY HEX]");
         Console.Out.WriteLine("");
@@ -22,7 +22,7 @@ namespace APMTool {
       string root = args[0];
       string flag = args[1];
 
-      Console.Out.WriteLine("APMTool v0.1.0");
+      Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
       object[] query = null;
       bool glob = false;
@@ -66,6 +66,9 @@ namespace APMTool {
               case 'p':
                 pkg.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
                 break;
+              case 'P':
+                pkg.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
+                break;
               case 'i':
                 content.Add(arg.Substring(1).ToUpperInvariant());
                 break;
@@ -84,13 +87,27 @@ namespace APMTool {
       CASCConfig config = CASCConfig.LoadLocalStorageConfig(root);
       CASCHandler handler = CASCHandler.OpenStorage(config);
       OwRootHandler ow = handler.Root as OwRootHandler;
+      if(ow == null) {
+        Console.Error.WriteLine("Not a valid Overwatch installation");
+        return;
+      }
 
       foreach(APMFile apm in ow.APMFiles) {
         for(long i = 0; i < apm.Packages.LongLength; ++i) {
           APMPackage package = apm.Packages[i];
           PackageIndexRecord[] records = apm.Records[i];
 
-          object packageFlags = null;
+          if(flag[0] == 'l') {
+            if(((List<ulong>)query[0]).Count > 0 && !((List<ulong>)query[0]).Contains(package.packageKey)) {
+              continue;
+            }
+
+            if(((List<string>)query[1]).Count > 0 && !((List<string>)query[1]).Contains(package.indexContentKey.ToHexString().ToUpperInvariant())) {
+              continue;
+            }
+
+            Console.Out.WriteLine("Dump for package i{0} / p{1:X}", package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey);
+          }
 
           for(long j = 0; j < records.LongLength; ++j) {
             PackageIndexRecord record = records[j];
@@ -109,27 +126,9 @@ namespace APMTool {
               }
               bool check = glob ? (check1 && check2) : (check1 || check2);
               if(check) {
-                Console.Out.WriteLine("Found {0:X16}.{1:X4} in package {2} / {3:X}", rindex, rtype, package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey);
+                Console.Out.WriteLine("Found {0:X16}.{1:X4} in package i{2} / p{3:X}", rindex, rtype, package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey);
               }
             } else if (flag[0] == 'l') {
-              bool ret = true;
-              if(((List<ulong>)query[0]).Count > 0 && ((List<ulong>)query[0]).Contains(package.packageKey)) {
-                ret = false;
-              }
-              
-              if(ret && ((List<string>)query[1]).Count > 0 && ((List<string>)query[1]).Contains(package.indexContentKey.ToHexString().ToUpperInvariant())) {
-                ret = false;
-              }
-
-              if(ret) {
-                continue;
-              }
-
-              if(packageFlags == null) {
-                Console.Out.WriteLine("Dump for package {0} / {1:X}", package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey);
-                packageFlags = true;
-              }
-
               Console.Out.WriteLine("\t{0:X16}.{1:X4} ({2} bytes) - {3:X}", rindex, rtype, record.Size, record.Key);
             }
           }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using OWLib;
+using System.Reflection;
 
 namespace TextureTool {
   class Program {
@@ -9,6 +10,8 @@ namespace TextureTool {
         Console.Out.WriteLine("Usage: TextureTool.exe 004_file 04D_file output_file");
         return;
       }
+
+      Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
       string headerFile = args[0];
       string dataFile = args[1];
