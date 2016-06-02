@@ -10,7 +10,7 @@ namespace APMTool {
       // APMTool.exe "root" file flag [query]
       if(args.Length < 2) {
         Console.Out.WriteLine("Usage: APMTool.exe \"root directory\" op args");
-        Console.Out.WriteLine("OP f: Find files in APM. subop: a (match all) args: query... query: i[INDEX HEX] t[TYPE HEX] I[INDEX] T[TYPE]");
+        Console.Out.WriteLine("OP f: Find files in APM. subop: a (match all) args: query... query: i[INDEX HEX] t[TYPE HEX] I[INDEX] T[TYPE] s[SIZE LESS THAN] S[SIZE GREATER THAN]");
         Console.Out.WriteLine("OP l: List files in package. args: query query: p[PACKAGE KEY HEX] i[CONTENT KEY HEX]");
         Console.Out.WriteLine("");
         Console.Out.WriteLine("Examples:");
@@ -28,7 +28,7 @@ namespace APMTool {
       bool glob = false;
       if(flag[0] == 'f') {
         glob = flag.Length > 1 && flag[1] == 'a';
-        object[] t = new object[2] { null, null };
+        object[] t = new object[4] { null, null, null, null };
 
         List<ulong> id = new List<ulong>();
         List<ulong> type = new List<ulong>();
@@ -47,6 +47,24 @@ namespace APMTool {
                 break;
               case 'T':
                 type.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
+                break;
+              case 's': {
+                  int v = int.Parse(arg.Substring(1), NumberStyles.Number);
+                  if(t[2] == null) {
+                    t[2] = v;
+                  } else if(v > (int)t[2]) {
+                    t[2] = v;
+                  }
+                }
+                break;
+              case 'S': {
+                  int v = int.Parse(arg.Substring(1), NumberStyles.Number);
+                  if(t[3] == null) {
+                    t[3] = v;
+                  } else if(v > (int)t[3]) {
+                    t[3] = v;
+                  }
+                }
                 break;
             }
           } finally {
@@ -130,13 +148,21 @@ namespace APMTool {
             if(flag[0] == 'f') {
               bool check1 = true;
               bool check2 = true;
-              if(((List<ulong>)query[0]).Count > 0 && !((List<ulong>)query[0]).Contains(rindex)) {
+              bool check3 = true;
+              bool check4 = true;
+              if(((List<ulong>)query[0]).Count > 0 && !((List<ulong>)query[0]).Contains(rindex)) { // if index is not in i
                 check1 = false;
               }
-              if(((List<ulong>)query[1]).Count > 0 && !((List<ulong>)query[1]).Contains(rtype)) {
+              if(((List<ulong>)query[1]).Count > 0 && !((List<ulong>)query[1]).Contains(rtype)) { // if type is not in t
                 check2 = false;
               }
-              bool check = glob ? (check1 && check2) : (check1 || check2);
+              if(query[2] != null && (int)query[2] < record.Size) { // if size is greater than s[lt]
+                check2 = false;
+              }
+              if(query[3] != null && (int)query[3] > record.Size) { // if size is less than s[gt]
+                check3 = false;
+              }
+              bool check = glob ? (check1 && check2 && check3 && check4) : (check1 || check2 || check3 || check4);
               if(check) {
                 Console.Out.WriteLine("Found {0:X16}.{1:X4} in package i{2} / p{3:X}", rindex, rtype, package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey);
               }
