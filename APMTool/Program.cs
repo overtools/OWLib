@@ -12,6 +12,7 @@ namespace APMTool {
         Console.Out.WriteLine("Usage: APMTool.exe \"root directory\" op args");
         Console.Out.WriteLine("OP f: Find files in APM. subop: a (match all) args: query... query: i[INDEX HEX] t[TYPE HEX] I[INDEX] T[TYPE] s[SIZE LESS THAN] S[SIZE GREATER THAN]");
         Console.Out.WriteLine("OP l: List files in package. args: query query: p[PACKAGE KEY HEX] i[CONTENT KEY HEX]");
+        Console.Out.WriteLine("OP c: Convert number into index + type. args: hex");
         Console.Out.WriteLine("");
         Console.Out.WriteLine("Examples:");
         Console.Out.WriteLine("APMTool.exe overwatch l iDFEF49BEE7E66774E46DA9EEA750A552");
@@ -23,6 +24,14 @@ namespace APMTool {
       string flag = args[1];
 
       Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
+      
+      if(flag == "c") {
+        ulong value = ulong.Parse(args[2], NumberStyles.HexNumber);
+        Console.Out.WriteLine("Value: {0:X}", value);
+        Console.Out.WriteLine("Type: {0:X3}", OWLib.APM.keyToTypeID(value));
+        Console.Out.WriteLine("Index: {0:X16}", OWLib.APM.keyToIndexID(value));
+        return;
+      }
 
       object[] query = null;
       bool glob = false;
