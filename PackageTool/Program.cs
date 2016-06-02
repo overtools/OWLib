@@ -90,13 +90,19 @@ namespace PackageTool {
             Console.Error.WriteLine("Cannot open bundle");
             continue;
           }
-          Directory.CreateDirectory(o);
+          if(!Directory.Exists(o)) {
+            Directory.CreateDirectory(o);
+          }
 
           using(Stream bundleStream = handler.OpenFile(bundleEncoding.Key)) {
             foreach(PackageIndexRecord record in records) {
               ulong rtype = OWLib.APM.keyToTypeID(record.Key);
               ulong rindex = OWLib.APM.keyToIndexID(record.Key);
-              string ofn = string.Format("{0}{1:X16}.{2:X3}", o, rindex, rtype);
+              string ofn = string.Format("{0}{1:X3}{2}", o, rtype, Path.DirectorySeparatorChar);
+              if(!Directory.Exists(ofn)) {
+                Directory.CreateDirectory(ofn);
+              }
+              ofn = string.Format("{0}{1:X16}.{2:X3}", ofn, rindex, rtype);
 
               using(Stream outputStream = File.Open(ofn, FileMode.Create, FileAccess.Write)) {
                 if(((ContentFlags)record.Flags & ContentFlags.Bundle) == ContentFlags.Bundle) {
