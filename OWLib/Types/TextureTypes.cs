@@ -67,7 +67,24 @@ namespace OWLib.Types {
     DXT4    = 877942852,
     DXT5    = 894720068,
     RXGB    = 1111971922,
-    Unknown = 0xFFFFFFFF
+    Unknown = 808540228
+  }
+
+  public enum D3D10_RESOURCE_DIMENSION : uint {
+    UNKNOWN = 0,
+    BUFFER = 1,
+    TEXTURE1D = 2,
+    TEXTURE2D = 3,
+    TEXTURE3D = 4
+  }
+  
+  [StructLayout(LayoutKind.Sequential, Pack = 4)]
+  public struct DDS_HEADER_DXT10 {
+    public uint format;
+    public D3D10_RESOURCE_DIMENSION dimension;
+    public uint misc; // cubemap = 0x4
+    public uint size; // number of maps, 1
+    public uint misc2; // alpha mode, 0
   }
 
   public enum DXGI_PIXEL_FORMAT : byte { 

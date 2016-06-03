@@ -2,8 +2,6 @@
 using System.IO;
 using OWLib;
 using System.Reflection;
-using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace TextureTool {
   class Program {
@@ -33,20 +31,8 @@ namespace TextureTool {
             Console.Error.WriteLine("Error?! (Probably unsupported format)");
             return;
           }
-          using(Stream pngStream = File.Open(destFile, FileMode.OpenOrCreate, FileAccess.Write)) {
-            Bitmap bmp = new Bitmap(tex.Header.width, tex.Header.height, PixelFormat.Format64bppPArgb);
-            BitmapData bits = bmp.LockBits(new Rectangle(0, 0, tex.Header.width, tex.Header.height), ImageLockMode.ReadWrite, bmp.PixelFormat);
-            unsafe
-            {
-              for(int y = 0; y < tex.Header.height; ++y) {
-                ulong* row = (ulong*)((byte*)bits.Scan0 + (y * bits.Stride));
-                for(int x = 0; x < tex.Header.width; x++) {
-                  row[x] = tex.Color[x + (y * x)];
-                }
-              }
-            }
-            bmp.Save(pngStream, ImageFormat.Png);
-            Console.Out.WriteLine("Saved PNG");
+          using(Stream stream = File.Open(destFile, FileMode.OpenOrCreate, FileAccess.Write)) {
+            tex.Save(stream);
           }
           return;
         } else if(mode == '2') {

@@ -6,19 +6,23 @@ using OWLib.Types;
 namespace OWLib {
   public static class Extensions {
     public static TextureType TextureTypeFromHeaderByte(byte type) {
-      if(type == 71 || type == 72) {
+      if(type == 70 || type == 71 || type == 72) {
         return TextureType.DXT1;
       }
 
-      if(type == 78) {
+      if(type == 73 || type == 74 || type == 75) {
+        return TextureType.DXT3;
+      }
+
+      if(type == 76 || type == 77 || type == 78) {
         return TextureType.DXT5;
       }
 
-      if(type == 80) {
+      if(type == 79 || type == 80 || type == 81) {
         return TextureType.ATI1;
       }
 
-      if(type == 83) {
+      if(type == 82 || type == 83 || type == 84) {
         return TextureType.ATI2;
       }
 
@@ -82,7 +86,7 @@ namespace OWLib {
         flags       = 659463,
         height      = header.height,
         width       = header.width,
-        linearSize  = 0,
+        linearSize  = header.dataSize,
         depth       = 0,
         mipmapCount = 1,
         format      = header.Format().ToPixelFormat(),
