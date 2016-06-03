@@ -111,12 +111,16 @@ namespace OWLib.Types.STUD {
           };
         }
 
-        input.Seek((long)header.indicePtr, SeekOrigin.Begin);
-        ptr = reader.Read<STUDPointer>();
-        input.Seek((long)ptr.offset, SeekOrigin.Begin);
-        indiceData = new STUDDataHeader[ptr.count];
-        for(ulong i = 0; i < ptr.count; ++i) {
-          indiceData[i] = reader.Read<STUDDataHeader>();
+        if(header.indicePtr > 0) {
+          input.Seek((long)header.indicePtr, SeekOrigin.Begin);
+          ptr = reader.Read<STUDPointer>();
+          input.Seek((long)ptr.offset, SeekOrigin.Begin);
+          indiceData = new STUDDataHeader[ptr.count];
+          for(ulong i = 0; i < ptr.count; ++i) {
+            indiceData[i] = reader.Read<STUDDataHeader>();
+          }
+        } else {
+          indiceData = new STUDDataHeader[0];
         }
 
         input.Seek((long)header.unkDataPtr, SeekOrigin.Begin);

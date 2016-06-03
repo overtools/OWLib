@@ -10,9 +10,10 @@ namespace APMTool {
       // APMTool.exe "root" file flag [query]
       if(args.Length < 2) {
         Console.Out.WriteLine("Usage: APMTool.exe \"root directory\" op args");
-        Console.Out.WriteLine("OP f: Find files in APM. subop: a (match all) args: query... query: i[INDEX HEX] t[TYPE HEX] I[INDEX] T[TYPE] s[SIZE LESS THAN] S[SIZE GREATER THAN]");
+        Console.Out.WriteLine("OP f: Find files in APM. subop: a (match all) args: query... query: a[APM NAME] i[INDEX HEX] t[TYPE HEX] I[INDEX] T[TYPE] s[SIZE LESS THAN] S[SIZE GREATER THAN]");
         Console.Out.WriteLine("OP l: List files in package. args: query query: p[PACKAGE KEY HEX] i[CONTENT KEY HEX]");
         Console.Out.WriteLine("OP c: Convert number into index + type. args: hex");
+        Console.Out.WriteLine("OP a: Output all APM names");
         Console.Out.WriteLine("");
         Console.Out.WriteLine("Examples:");
         Console.Out.WriteLine("APMTool.exe overwatch l iDFEF49BEE7E66774E46DA9EEA750A552");
@@ -37,10 +38,11 @@ namespace APMTool {
       bool glob = false;
       if(flag[0] == 'f') {
         glob = flag.Length > 1 && flag[1] == 'a';
-        object[] t = new object[4] { null, null, null, null };
+        object[] t = new object[5] { null, null, null, null, null };
 
         List<ulong> id = new List<ulong>();
         List<ulong> type = new List<ulong>();
+        List<string> apms = new List<string>();
         for(int i = 2; i < args.Length; ++i) {
           string arg = args[i];
           try {
@@ -56,6 +58,9 @@ namespace APMTool {
                 break;
               case 'T':
                 type.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
+                break;
+              case 'a':
+                apms.Add(arg.Substring(1).ToLowerInvariant());
                 break;
               case 's': {
                   int v = int.Parse(arg.Substring(1), NumberStyles.Number);
@@ -79,6 +84,7 @@ namespace APMTool {
           } finally {
             t[0] = id;
             t[1] = type;
+            t[4] = apms;
             query = t;
           }
         }
@@ -106,6 +112,7 @@ namespace APMTool {
             query = t;
           }
         }
+      } else if(flag[0] == 'a') {
       } else {
         Console.Error.WriteLine("Unsupported operand {0}", flag[0]);
         return;
@@ -120,6 +127,13 @@ namespace APMTool {
       }
 
       foreach(APMFile apm in ow.APMFiles) {
+        if(flag[0] == 'f' && query[4] != null && ((List<string>)query[4]).Count > 0 && !((List<string>)query[4]).Contains(apm.Name.ToLowerInvariant())) {
+          continue;
+        } else if(flag[0] == 'a') {
+          Console.Out.WriteLine(apm.Name);
+          continue;
+        }
+
         for(long i = 0; i < apm.Packages.LongLength; ++i) {
           APMPackage package = apm.Packages[i];
           PackageIndexRecord[] records = apm.Records[i];
@@ -145,7 +159,7 @@ namespace APMTool {
             ((List<ulong>)query[0]).Remove(package.packageKey);
             ((List<string>)query[1]).Remove(package.indexContentKey.ToHexString().ToUpperInvariant());
 
-            Console.Out.WriteLine("Dump for package i{0} / p{1:X}", package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey);
+            Console.Out.WriteLine("Dump for package i{0} / p{1:X} in APM {2}", package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey, apm.Name);
           }
 
           for(long j = 0; j < records.LongLength; ++j) {
@@ -173,7 +187,7 @@ namespace APMTool {
               }
               bool check = glob ? (check1 && check2 && check3 && check4) : (check1 || check2 || check3 || check4);
               if(check) {
-                Console.Out.WriteLine("Found {0:X16}.{1:X4} in package i{2} / p{3:X}", rindex, rtype, package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey);
+                Console.Out.WriteLine("Found {0:X16}.{1:X4} in package i{2} / p{3:X} in APM {4}", rindex, rtype, package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey, apm.Name);
               }
             } else if (flag[0] == 'l') {
               Console.Out.WriteLine("\t{0:X16}.{1:X4} ({2} bytes) - {3:X}", rindex, rtype, record.Size, record.Key);
