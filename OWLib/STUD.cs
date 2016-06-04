@@ -21,10 +21,10 @@ namespace OWLib {
       using(BinaryReader reader = new BinaryReader(stream)) {
         header = reader.Read<STUDHeader>();
         blob = manager.NewInstance(header.type, stream);
-        ulong instanceTableSz = ((ulong)stream.Length - header.size - 32) / 16;
-        instanceTable = new STUDTableInstanceRecord[instanceTableSz];
-        stream.Seek(32 + header.size, SeekOrigin.Begin);
-        for(ulong i = 0; i < instanceTableSz; ++i) {
+        STUDPointer ptr = reader.Read<STUDPointer>();
+        stream.Seek((long)ptr.offset, SeekOrigin.Begin);
+        instanceTable = new STUDTableInstanceRecord[ptr.count];
+        for(ulong i = 0; i < ptr.count; ++i) {
           instanceTable[i] = reader.Read<STUDTableInstanceRecord>();
         }
       }
@@ -39,7 +39,6 @@ namespace OWLib {
     public void Dump(TextWriter writer) {
       writer.WriteLine("{0} instance records...", InstanceTable.Length);
       for(int i = 0; i < InstanceTable.Length; ++i) {
-        writer.WriteLine("Instance {0}", i);
         DumpInstance(writer, InstanceTable[i]);
         writer.WriteLine("");
       }
@@ -70,6 +69,11 @@ namespace OWLib {
     public static STUDManager Create() {
       STUDManager stud = new STUDManager();
       stud.AddHandler<A301496F>();
+      stud.AddHandler<x3ECCEB5D>();
+      stud.AddHandler<x15720E8A>();
+      stud.AddHandler<x0BCAF9C9>();
+      stud.AddHandler<x8CDAA871>();
+      stud.AddHandler<x8B9DEB02>();
       return stud;
     }
 
@@ -103,25 +107,7 @@ namespace OWLib {
       }
       return null;
     }
-
-    public void Dump(uint id, STUDBlob inst) {
-      for(int i = 0; i < handlerIds.Length; ++i) {
-        if(handlerIds[i] == id) {
-          handlers[i].GetMethod("Dump", new Type[] { }).Invoke(inst, new object[] { });
-          break;
-        }
-      }
-    }
-
-    public void Dump(uint id, STUDBlob inst, Stream stream) {
-      for(int i = 0; i < handlerIds.Length; ++i) {
-        if(handlerIds[i] == id) {
-          handlers[i].GetMethod("Dump", new Type[] { typeof(Stream) }).Invoke(inst, new object[] { stream });
-          break;
-        }
-      }
-    }
-
+    
     public void Dump(uint id, STUDBlob inst, TextWriter writer) {
       for(int i = 0; i < handlerIds.Length; ++i) {
         if(handlerIds[i] == id) {

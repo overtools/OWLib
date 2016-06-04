@@ -22,57 +22,54 @@ namespace OWLib.Types.STUD {
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct A301496FMaterialDefinition {
+    public STUDDataHeader header;
     public ulong key;
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct A301496FMaterialBind {
+    public STUDDataHeader header;
     public ulong key;
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct A301496FMaterialData {
+    public STUDDataHeader header;
     public ulong key;
     public ulong value;
   }
 
   public struct A301496FMaterialDataContainer {
-    public STUDDataPair<A301496FMaterialData> data;
-    public STUDDataPair<A301496FMaterialBind>[] binds;
+    public A301496FMaterialData data;
+    public A301496FMaterialBind[] binds;
   }
 
   public class A301496F : STUDBlob {
     public static new uint id = 0xA301496F;
 
     private A301496F_Header header;
-    private STUDDataPair<A301496FMaterialDefinition>[] materialTable;
-    private STUDDataHeader[] markerData;
+    private A301496FMaterialDefinition[] materialTable;
+    private STUDDataHeader[] modelData;
     private STUDDataHeader[] indiceData;
     private A301496FMaterialDataContainer[] materialDataParam;
-    private STUDTableInstanceRecord instance;
 
     public A301496F_Header Header => header;
-    public STUDDataPair<A301496FMaterialDefinition>[] MaterialTable => materialTable;
-    public STUDDataHeader[] MarkerData => markerData;
+    public A301496FMaterialDefinition[] MaterialTable => materialTable;
+    public STUDDataHeader[] MarkerData => modelData;
     public STUDDataHeader[] IndiceData => indiceData;
     public A301496FMaterialDataContainer[] MaterialDataParam => materialDataParam;
-    public STUDTableInstanceRecord Instance => instance;
 
     public new void Dump(TextWriter writer) {
-      writer.WriteLine("Root instance...");
-      OWLib.STUD.DumpInstance(writer, instance);
-      writer.WriteLine("");
-
       writer.WriteLine("{0} materials...", materialTable.Length);
       for(int i = 0; i < materialTable.Length; ++i) {
         DumpSTUDHeader(writer, materialTable[i].header);
-        writer.WriteLine("\tKey: {0}", materialTable[i].data.key);
+        writer.WriteLine("\tKey: {0}", materialTable[i].key);
         writer.WriteLine("");
       }
 
-      writer.WriteLine("{0} markers...", markerData.Length);
-      for(int i = 0; i < markerData.Length; ++i) {
-        DumpSTUDHeader(writer, markerData[i]);
+      writer.WriteLine("{0} model references...", modelData.Length);
+      for(int i = 0; i < modelData.Length; ++i) {
+        DumpSTUDHeader(writer, modelData[i]);
         writer.WriteLine("");
       }
 
@@ -85,12 +82,12 @@ namespace OWLib.Types.STUD {
       writer.WriteLine("{0} params...", materialDataParam.Length);
       for(int i = 0; i < materialDataParam.Length; ++i) {
         DumpSTUDHeader(writer, materialDataParam[i].data.header);
-        writer.WriteLine("\tK: {0}", materialDataParam[i].data.data.key);
-        writer.WriteLine("\tV: {0}", materialDataParam[i].data.data.value);
+        writer.WriteLine("\tK: {0}", materialDataParam[i].data.key);
+        writer.WriteLine("\tV: {0}", materialDataParam[i].data.value);
         writer.WriteLine("\t{0} binds...", materialDataParam[i].binds.Length);
         for(int j = 0; j < materialDataParam[i].binds.Length; ++j) {
           DumpSTUDHeader(writer, materialDataParam[i].binds[j].header, "\t");
-          writer.WriteLine("\t\tKey: {0}", materialDataParam[i].binds[j].data.key);
+          writer.WriteLine("\t\tKey: {0}", materialDataParam[i].binds[j].key);
           writer.WriteLine("");
         }
         writer.WriteLine("");
@@ -103,12 +100,9 @@ namespace OWLib.Types.STUD {
         STUDPointer ptr = reader.Read<STUDPointer>();
         input.Seek((long)ptr.offset, SeekOrigin.Begin);
 
-        materialTable = new STUDDataPair<A301496FMaterialDefinition>[ptr.count];
+        materialTable = new A301496FMaterialDefinition[ptr.count];
         for(ulong i = 0; i < ptr.count; ++i) {
-          materialTable[i] = new STUDDataPair<A301496FMaterialDefinition> {
-            header = reader.Read<STUDDataHeader>(),
-            data = reader.Read<A301496FMaterialDefinition>()
-          };
+          materialTable[i] = reader.Read<A301496FMaterialDefinition>();
         }
 
         if(header.indicePtr > 0) {
@@ -126,9 +120,9 @@ namespace OWLib.Types.STUD {
         input.Seek((long)header.unkDataPtr, SeekOrigin.Begin);
         ptr = reader.Read<STUDPointer>();
         input.Seek((long)ptr.offset, SeekOrigin.Begin);
-        markerData = new STUDDataHeader[ptr.count];
+        modelData = new STUDDataHeader[ptr.count];
         for(ulong i = 0; i < ptr.count; ++i) {
-          markerData[i] = reader.Read<STUDDataHeader>();
+          modelData[i] = reader.Read<STUDDataHeader>();
         }
 
         input.Seek((long)header.materialDataPtr, SeekOrigin.Begin);
@@ -138,10 +132,7 @@ namespace OWLib.Types.STUD {
         for(ulong i = 0; i < ptr.count; ++i) {
           reader.ReadUInt64(); // ?
           materialDataParam[i] = new A301496FMaterialDataContainer {
-            data = new STUDDataPair<A301496FMaterialData> {
-              header = reader.Read<STUDDataHeader>(),
-              data = reader.Read<A301496FMaterialData>()
-            },
+            data = reader.Read<A301496FMaterialData>(),
             binds = null
           };
         }
@@ -150,18 +141,11 @@ namespace OWLib.Types.STUD {
         for(ulong i = 0; i < ptr.count; ++i) {
           STUDPointer ptr2 = reader.Read<STUDPointer>();
           input.Seek((long)ptr2.offset, SeekOrigin.Begin);
-          materialDataParam[i].binds = new STUDDataPair<A301496FMaterialBind>[ptr2.count];
+          materialDataParam[i].binds = new A301496FMaterialBind[ptr2.count];
           for(ulong j = 0; j < ptr2.count; ++j) {
-            materialDataParam[i].binds[j] = new STUDDataPair<A301496FMaterialBind> {
-              header = reader.Read<STUDDataHeader>(),
-              data = reader.Read<A301496FMaterialBind>()
-            };
+            materialDataParam[i].binds[j] = reader.Read<A301496FMaterialBind>();
           }
         }
-
-        ptr = reader.Read<STUDPointer>();
-        input.Seek((long)ptr.offset, SeekOrigin.Begin);
-        instance = reader.Read<STUDTableInstanceRecord>();
       }
     }
   }

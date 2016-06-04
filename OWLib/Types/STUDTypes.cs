@@ -31,13 +31,7 @@ namespace OWLib.Types {
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct STUDDataHeader {
     public ulong padding;
-    public uint id;
-    public uint type;
-  }
-
-  public struct STUDDataPair<T> {
-    public STUDDataHeader header;
-    public T data;
+    public ulong key;
   }
 
   public partial class STUDBlob {
@@ -45,25 +39,18 @@ namespace OWLib.Types {
 
     public void Read(Stream stream) {
     }
-    
+
+    public void DumpKey(TextWriter writer, ulong key, string prefix = "") {
+      writer.WriteLine("{1}\tIndex: {0:X12}", APM.keyToIndexID(key), prefix);
+      writer.WriteLine("{1}\tType: {0:X3}", APM.keyToTypeID(key), prefix);
+    }
 
     public void DumpSTUDHeader(TextWriter writer, STUDDataHeader header, string prefix = "") {
-      writer.WriteLine("{1}\tID: {0}", header.id, prefix);
-      writer.WriteLine("{1}\tType: {0}", header.type, prefix);
+      DumpKey(writer, header.key, prefix);
     }
 
     public void Dump(TextWriter writer) {
       writer.Write("Whoops!");
-    }
-
-    public void Dump(Stream output) {
-      using(TextWriter writer = new StreamWriter(output)) {
-        Dump(writer);
-      }
-    }
-
-    public void Dump() {
-      Dump(Console.Out);
     }
   }
 }

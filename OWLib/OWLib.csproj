@@ -52,7 +52,13 @@
     <Compile Include="Types\APMTypes.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
+    <Compile Include="Types\STUD\STUD_8B9DEB02.cs" />
+    <Compile Include="Types\STUD\STUD_8CDAA871.cs" />
+    <Compile Include="Types\STUD\STUD_15720E8A.cs" />
+    <Compile Include="Types\STUD\STUD_0BCAF9C9.cs" />
+    <Compile Include="Types\STUD\STUD_3ECCEB5D.cs" />
     <Compile Include="Types\STUD\STUD_A301496F.cs" />
+    <Compile Include="Types\STUD\STUD_InventoryItemGeneric.cs" />
     <Compile Include="Types\TextureTypes.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
