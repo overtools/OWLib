@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace OWLib.Types.STUD {
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct x8B9DEB02Header {
+    public ulong padding;
     public ulong f0A6Key;
   }
 

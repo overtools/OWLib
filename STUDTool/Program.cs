@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using OWLib;
 
 namespace STUDTool {
@@ -9,8 +10,12 @@ namespace STUDTool {
         Console.Out.WriteLine("Usage: STUDTool.exe STUDFile");
         return;
       }
+      
+      Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
       string file = args[0];
+
+      Console.Out.WriteLine("Opening file {0}", file);
 
       STUDManager manager = STUDManager.Create();
       using(Stream stream = File.Open(file, FileMode.Open, FileAccess.Read)) {

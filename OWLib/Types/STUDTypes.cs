@@ -41,8 +41,8 @@ namespace OWLib.Types {
     }
 
     public void DumpKey(TextWriter writer, ulong key, string prefix = "") {
-      writer.WriteLine("{1}\tIndex: {0:X12}", APM.keyToIndexID(key), prefix);
-      writer.WriteLine("{1}\tType: {0:X3}", APM.keyToTypeID(key), prefix);
+      writer.WriteLine("{1}Index: {0:X12}", APM.keyToIndexID(key), prefix);
+      writer.WriteLine("{1}Type: {0:X3}", APM.keyToTypeID(key), prefix);
     }
 
     public void DumpSTUDHeader(TextWriter writer, STUDDataHeader header, string prefix = "") {

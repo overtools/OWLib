@@ -14,7 +14,6 @@ namespace OWLib.Types.STUD {
     public ulong unk1;
     public uint rarity;
     public uint amount;
-    public ulong padding3;
   }
 
   public class STUDInventoryItemGeneric : STUDBlob {

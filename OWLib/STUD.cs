@@ -21,6 +21,9 @@ namespace OWLib {
       using(BinaryReader reader = new BinaryReader(stream)) {
         header = reader.Read<STUDHeader>();
         blob = manager.NewInstance(header.type, stream);
+        if(blob == null) {
+          throw new Exception(string.Format("Unknown STUD type {0:X8}", header.type));
+        }
         STUDPointer ptr = reader.Read<STUDPointer>();
         stream.Seek((long)ptr.offset, SeekOrigin.Begin);
         instanceTable = new STUDTableInstanceRecord[ptr.count];
@@ -74,6 +77,7 @@ namespace OWLib {
       stud.AddHandler<x0BCAF9C9>();
       stud.AddHandler<x8CDAA871>();
       stud.AddHandler<x8B9DEB02>();
+      stud.AddHandler<x61632B43>();
       return stud;
     }
 

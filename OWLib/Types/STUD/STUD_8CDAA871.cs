@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 namespace OWLib.Types.STUD {
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct x8CDAA871Header {
-    public ulong f00DKey;
+    public ulong unk1;
     public ulong padding;
+    public ulong f00DKey;
+    public ulong padding2;
     public ulong f0A8Key;
-    public uint unk1;
+    public ulong unk2;
   }
 
   public class x8CDAA871 : STUDInventoryItemGeneric {
@@ -24,11 +26,12 @@ namespace OWLib.Types.STUD {
 
     public new void Dump(TextWriter writer) {
       base.Dump(writer);
+      writer.WriteLine("unk1: {0}", header.unk1);
       writer.WriteLine("00D:");
       DumpKey(writer, header.f00DKey, "\t");
       writer.WriteLine("0A8:");
       DumpKey(writer, header.f0A8Key, "\t");
-      writer.WriteLine("unk1: {0}", header.unk1);
+      writer.WriteLine("unk2: {0}", header.unk2);
     }
 
     public new void Read(Stream input) {

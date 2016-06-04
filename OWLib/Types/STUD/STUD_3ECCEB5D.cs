@@ -9,11 +9,13 @@ using System.Threading.Tasks;
 namespace OWLib.Types.STUD {
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct x3ECC0B5DHeader {
-    public ulong portraitKey;
     public ulong padding;
+    public ulong textureKey;
+    public ulong padding2;
+    public ulong textureKey2;
     public uint unk1;
     public uint indice;
-    public uint unk2;
+    public ulong unk2;
   }
 
   public class x3ECCEB5D : STUDInventoryItemGeneric {
@@ -25,8 +27,10 @@ namespace OWLib.Types.STUD {
 
     public new void Dump(TextWriter writer) {
       base.Dump(writer);
-      writer.WriteLine("portrait:");
-      DumpKey(writer, header.portraitKey, "\t");
+      writer.WriteLine("texture (1):");
+      DumpKey(writer, header.textureKey, "\t");
+      writer.WriteLine("texture (2):");
+      DumpKey(writer, header.textureKey, "\t");
       writer.WriteLine("unk1: {0}", header.unk1);
       writer.WriteLine("indice: {0}", header.indice);
       writer.WriteLine("unk2: {0}", header.unk2);
