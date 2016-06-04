@@ -19,7 +19,7 @@ namespace OWLib.Types.STUD {
     public new void Dump(TextWriter writer) {
       base.Dump(writer);
       writer.WriteLine("unk1", header.unk1);
-      writer.WriteLine("unk1", header.unk2);
+      writer.WriteLine("unk2", header.unk2);
     }
 
     public new void Read(Stream input) {

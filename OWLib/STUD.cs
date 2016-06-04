@@ -40,22 +40,13 @@ namespace OWLib {
     }
     
     public void Dump(TextWriter writer) {
+      writer.WriteLine("STUD Identifier: {0} / {0:X8}", header.type);
       writer.WriteLine("{0} instance records...", InstanceTable.Length);
       for(int i = 0; i < InstanceTable.Length; ++i) {
         DumpInstance(writer, InstanceTable[i]);
         writer.WriteLine("");
       }
       manager.Dump(header.type, blob, Console.Out);
-    }
-
-    public void Dump(Stream output) {
-      using(TextWriter writer = new StreamWriter(output)) {
-        Dump(writer);
-      }
-    }
-
-    public void Dump() {
-      Dump(Console.Out);
     }
   }
 
@@ -78,6 +69,11 @@ namespace OWLib {
       stud.AddHandler<x8CDAA871>();
       stud.AddHandler<x8B9DEB02>();
       stud.AddHandler<x61632B43>();
+      stud.AddHandler<x4EE84DC0>();
+      stud.AddHandler<x01609B4D>();
+      stud.AddHandler<E533D614>();
+      stud.AddHandler<x018667E2>();
+      stud.AddHandler<x090B30AB>();
       return stud;
     }
 

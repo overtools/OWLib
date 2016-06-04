@@ -52,6 +52,11 @@
     <Compile Include="Types\APMTypes.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
+    <Compile Include="Types\STUD\STUD_090B30AB.cs" />
+    <Compile Include="Types\STUD\STUD_018667E2.cs" />
+    <Compile Include="Types\STUD\STUD_E533D614.cs" />
+    <Compile Include="Types\STUD\STUD_01609B4D.cs" />
+    <Compile Include="Types\STUD\STUD_4EE84DC0.cs" />
     <Compile Include="Types\STUD\STUD_61632B43.cs" />
     <Compile Include="Types\STUD\STUD_8B9DEB02.cs" />
     <Compile Include="Types\STUD\STUD_8CDAA871.cs" />

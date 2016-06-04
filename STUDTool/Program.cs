@@ -15,12 +15,12 @@ namespace STUDTool {
 
       string file = args[0];
 
-      Console.Out.WriteLine("Opening file {0}", file);
+      Console.Out.WriteLine("Opening file {0}", Path.GetFileName(file));
 
       STUDManager manager = STUDManager.Create();
       using(Stream stream = File.Open(file, FileMode.Open, FileAccess.Read)) {
         STUD stud = new STUD(manager, stream);
-        stud.Dump();
+        stud.Dump(Console.Out);
       }
     }
   }
