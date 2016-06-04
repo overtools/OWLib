@@ -102,7 +102,7 @@ namespace PackageTool {
               if(!Directory.Exists(ofn)) {
                 Directory.CreateDirectory(ofn);
               }
-              ofn = string.Format("{0}{1:X16}.{2:X3}", ofn, rindex, rtype);
+              ofn = string.Format("{0}{1:X12}.{2:X3}", ofn, rindex, rtype);
 
               using(Stream outputStream = File.Open(ofn, FileMode.Create, FileAccess.Write)) {
                 if(((ContentFlags)record.Flags & ContentFlags.Bundle) == ContentFlags.Bundle) {
