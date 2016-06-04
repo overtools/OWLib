@@ -30,7 +30,7 @@ namespace APMTool {
         ulong value = ulong.Parse(args[2], NumberStyles.HexNumber);
         Console.Out.WriteLine("Value: {0:X}", value);
         Console.Out.WriteLine("Type: {0:X3}", OWLib.APM.keyToTypeID(value));
-        Console.Out.WriteLine("Index: {0:X16}", OWLib.APM.keyToIndexID(value));
+        Console.Out.WriteLine("Index: {0:X12}", OWLib.APM.keyToIndexID(value));
         return;
       }
 
@@ -187,10 +187,10 @@ namespace APMTool {
               }
               bool check = glob ? (check1 && check2 && check3 && check4) : (check1 || check2 || check3 || check4);
               if(check) {
-                Console.Out.WriteLine("Found {0:X16}.{1:X4} in package i{2} / p{3:X} in APM {4}", rindex, rtype, package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey, apm.Name);
+                Console.Out.WriteLine("Found {0:X12}.{1:X3} in package i{2} / p{3:X} in APM {4}", rindex, rtype, package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey, apm.Name);
               }
             } else if (flag[0] == 'l') {
-              Console.Out.WriteLine("\t{0:X16}.{1:X4} ({2} bytes) - {3:X}", rindex, rtype, record.Size, record.Key);
+              Console.Out.WriteLine("\t{0:X12}.{1:X3} ({2} bytes) - {3:X}", rindex, rtype, record.Size, record.Key);
             }
           }
         }
