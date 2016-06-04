@@ -32,7 +32,7 @@ namespace OWLib {
           };
           ddsWriter.Write(d10);
         }
-        ddsWriter.Write(data, 0, header.dataSize);
+        ddsWriter.Write(data, 0, (int)header.dataSize);
       }
     }
 
@@ -47,7 +47,7 @@ namespace OWLib {
         
         imageStream.Seek(128, SeekOrigin.Begin);
         data = new byte[header.dataSize];
-        imageStream.Read(data, 0, header.dataSize);
+        imageStream.Read(data, 0, (int)header.dataSize);
       }
       loaded = true;
     }

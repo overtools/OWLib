@@ -34,7 +34,6 @@ namespace TextureTool {
           using(Stream stream = File.Open(destFile, FileMode.OpenOrCreate, FileAccess.Write)) {
             tex.Save(stream);
           }
-          return;
         } else if(mode == '2') {
           using(Stream dataStream = File.Open(f04d, FileMode.Open, FileAccess.Read)) {
             Texture tex = new Texture(headerStream, dataStream);

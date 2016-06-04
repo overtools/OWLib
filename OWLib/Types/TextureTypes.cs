@@ -13,7 +13,7 @@ namespace OWLib.Types {
     public byte unk5;
     public ushort width;
     public ushort height;
-    public ushort dataSize;
+    public uint dataSize;
     public ulong referenceKey;
     public ulong unk6;
   }
