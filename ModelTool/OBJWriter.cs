@@ -30,8 +30,9 @@ namespace ModelTool {
           foreach(int i in kv.Value) {
             ModelSubmesh submesh = model.Submeshes[i];
             writer.WriteLine("g Material_{0}", submesh.material);
-
+            
             ModelVertex[] vertex = model.Vertices[i];
+            ModelVertex[] normal = model.Normals[i];
             ModelUV[] uv = model.UVs[i];
             ModelIndice[] index = model.Faces[i];
             for(int j = 0; j < vertex.Length; ++j) {
@@ -40,9 +41,12 @@ namespace ModelTool {
             for(int j = 0; j < vertex.Length; ++j) {
               writer.WriteLine("vt {0} {1}", uv[j].u.ToString("0.######", numberFormatInfo), uv[j].v.ToString("0.######", numberFormatInfo));
             }
+            for(int j = 0; j < vertex.Length; ++j) {
+              writer.WriteLine("vn {0} {1} {2}", normal[j].x, normal[j].y, normal[j].z);
+            }
             writer.WriteLine("");
             for(int j = 0; j < index.Length; ++j) {
-              writer.WriteLine("f {0}/{0} {1}/{1} {2}/{2}", index[j].v1 + faceOffset, index[j].v2 + faceOffset, index[j].v3 + faceOffset);
+              writer.WriteLine("f {0}/{0}/{0} {1}/{1}/{1} {2}/{2}/{2}", index[j].v1 + faceOffset, index[j].v2 + faceOffset, index[j].v3 + faceOffset);
             }
             faceOffset += (uint)vertex.Length;
             writer.WriteLine("");

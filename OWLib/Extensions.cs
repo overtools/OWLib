@@ -107,9 +107,5 @@ namespace OWLib {
       }
       return array.ToHex();
     }
-
-    public static ModelUV ToModelUV(this ModelUVShort uv) {
-      return new ModelUV { u = Half.ToHalf(uv.u), v = Half.ToHalf(uv.v) };
-    }
   }
 }

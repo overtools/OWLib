@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace OWLib.Types.STUD {
+  [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct STUDInventoryItemHeader {
     public ulong stringKey;
     public ulong padding1;

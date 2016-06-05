@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 namespace OWLib.Types.STUD {
-
   [StructLayout(LayoutKind.Sequential, Pack = 8)]
   public struct A301496F_Header {
     public ulong unk1;

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OWLib;
 using System.IO;
 using System.Globalization;
@@ -48,24 +45,19 @@ namespace ModelTool {
             writer.WriteLine("0");
 
             ModelVertex[] vertex = model.Vertices[i];
+            ModelVertex[] normal = model.Normals[i];
             ModelUV[] uv = model.UVs[i];
             ModelIndice[] index = model.Faces[i];
             ModelBoneData[] bones = model.Bones[i];
             writer.WriteLine(vertex.Length);
             for(int j = 0; j < vertex.Length; ++j) {
               writer.WriteLine("{0} {1} {2}", vertex[j].x, vertex[j].y, vertex[j].z);
-              writer.WriteLine("0.0 0.0 0.0");
+              writer.WriteLine("{0} {1} {2}", normal[j].x, normal[j].y, normal[j].z);
               writer.WriteLine("255 255 255 255");
               writer.WriteLine("{0} {1}", uv[j].u.ToString("0.######", numberFormatInfo), uv[j].v.ToString("0.######", numberFormatInfo));
               if(model.BoneData.Length > 0) {
-                unsafe
-                {
-                  fixed (ModelBoneData* p = &bones[j])
-                  {
-                    writer.WriteLine("{0} {1} {2} {3}", model.BoneLookup[p->boneIndex[0]], model.BoneLookup[p->boneIndex[1]], model.BoneLookup[p->boneIndex[2]], model.BoneLookup[p->boneIndex[3]]);
-                    writer.WriteLine("{0} {1} {2} {3}", ((float)p->boneWeight[0] / 255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[1] / 255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[2] / 255).ToString("0.######", numberFormatInfo), ((float)p->boneWeight[3] / 255).ToString("0.######", numberFormatInfo));
-                  }
-                }
+                writer.WriteLine("{0} {1} {2} {3}", model.BoneLookup[bones[j].boneIndex[0]], model.BoneLookup[bones[j].boneIndex[1]], model.BoneLookup[bones[j].boneIndex[2]], model.BoneLookup[bones[j].boneIndex[3]]);
+                writer.WriteLine("{0} {1} {2} {3}", bones[j].boneWeight[0].ToString("0.######", numberFormatInfo), bones[j].boneWeight[1].ToString("0.######", numberFormatInfo), bones[j].boneWeight[2].ToString("0.######", numberFormatInfo), bones[j].boneWeight[3].ToString("0.######", numberFormatInfo));
               }
             }
             writer.WriteLine(index.Length);

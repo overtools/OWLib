@@ -1,28 +1,26 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
-using System.Runtime.InteropServices;
 
-namespace System
-{
-    /// <summary>
-    /// Represents a half-precision floating point number. 
-    /// </summary>
-    /// <remarks>
-    /// Note:
-    ///     Half is not fast enought and precision is also very bad, 
-    ///     so is should not be used for matemathical computation (use Single instead).
-    ///     The main advantage of Half type is lower memory cost: two bytes per number. 
-    ///     Half is typically used in graphical applications.
-    ///     
-    /// Note: 
-    ///     All functions, where is used conversion half->float/float->half, 
-    ///     are approx. ten times slower than float->double/double->float, i.e. ~3ns on 2GHz CPU.
-    ///
-    /// References:
-    ///     - Fast Half Float Conversions, Jeroen van der Zijp, link: http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
-    ///     - IEEE 754 revision, link: http://grouper.ieee.org/groups/754/
-    /// </remarks>
-    [Serializable]
+namespace System {
+  /// <summary>
+  /// Represents a half-precision floating point number. 
+  /// </summary>
+  /// <remarks>
+  /// Note:
+  ///     Half is not fast enought and precision is also very bad, 
+  ///     so is should not be used for matemathical computation (use Single instead).
+  ///     The main advantage of Half type is lower memory cost: two bytes per number. 
+  ///     Half is typically used in graphical applications.
+  ///     
+  /// Note: 
+  ///     All functions, where is used conversion half->float/float->half, 
+  ///     are approx. ten times slower than float->double/double->float, i.e. ~3ns on 2GHz CPU.
+  ///
+  /// References:
+  ///     - Fast Half Float Conversions, Jeroen van der Zijp, link: http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
+  ///     - IEEE 754 revision, link: http://grouper.ieee.org/groups/754/
+  /// </remarks>
+  [Serializable]
     public struct Half : IComparable, IFormattable, IConvertible, IComparable<Half>, IEquatable<Half>
     {
         /// <summary>

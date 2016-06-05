@@ -96,12 +96,12 @@ namespace OWLib.Types {
     public uint unk1;
     public byte strideStream1;
     public byte strideStream2;
-    public byte formatStream1;
-    public byte formatStream2;
+    public byte vertexElements;
+    public byte unk0;
     public uint unk2;
     public ulong effed1;
     public ulong effed2;
-    public ulong chainlinkPtr;
+    public ulong vertexElementPtr;
     public ulong stream1Ptr;
     public ulong stream2Ptr;
   }
@@ -155,19 +155,36 @@ namespace OWLib.Types {
     public Half u;
     public Half v;
   }
-
+  
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
-  public struct ModelUVShort {
-    public ushort u;
-    public ushort v;
+  public struct ModelVertexElement {
+    public ModelVertexType type;
+    public byte index;
+    public ModelVertexFormat format;
+    public byte stream;
+    public ushort unk;
+    public ushort offset;
   }
 
-  [StructLayout(LayoutKind.Sequential, Pack = 1)]
-  public struct ModelChainlink {
-    public ushort type;
-    public ushort unk2;
-    public ushort unk3;
-    public ushort offset;
+  public enum ModelVertexType : byte {
+    POSITION    = 0x0,
+    NORMAL      = 0x1,
+    TANGENT     = 0x2,
+    BINORMAL    = 0X3,
+    BONE_INDEX  = 0x4,
+    BONE_WEIGHT = 0x5,
+    UV          = 0x9,
+    SEQUENCE    = 0x10
+  };
+
+  public enum ModelVertexFormat : byte {
+    NONE         = 0x0,
+    SINGLE_3     = 0x2,
+    HALF_2       = 0x4,
+    UINT8_4      = 0x6,
+    UINT8_UNORM4 = 0x8,
+    UINT8_SNORM4 = 0x9,
+    UINT32       = 0xC
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -179,7 +196,7 @@ namespace OWLib.Types {
   
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
   public unsafe struct ModelBoneData {
-    public fixed byte boneIndex[4];
-    public fixed byte boneWeight[4];
+    public byte[] boneIndex;
+    public float[] boneWeight;
   }
 }

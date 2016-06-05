@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OWLib;
 using System.IO;
-using System.Globalization;
 using OWLib.Types;
 
 namespace ModelTool {
@@ -75,8 +71,9 @@ namespace ModelTool {
             writer.Write((uint)1);
             WriteString(writer, string.Format("Material_{0}",submesh.material));
             writer.Write((uint)0);
-
+            
             ModelVertex[] vertex = model.Vertices[i];
+            ModelVertex[] normal = model.Normals[i];
             ModelUV[] uv = model.UVs[i];
             ModelIndice[] index = model.Faces[i];
             ModelBoneData[] bones = model.Bones[i];
@@ -85,9 +82,9 @@ namespace ModelTool {
               writer.Write(vertex[j].x);
               writer.Write(vertex[j].y);
               writer.Write(vertex[j].z);
-              writer.Write(0.0f);
-              writer.Write(0.0f);
-              writer.Write(0.0f);
+              writer.Write(normal[j].x);
+              writer.Write(normal[j].y);
+              writer.Write(normal[j].z);
               writer.Write((byte)255);
               writer.Write((byte)255);
               writer.Write((byte)255);
@@ -95,20 +92,14 @@ namespace ModelTool {
               writer.Write((float)uv[j].u);
               writer.Write((float)uv[j].v);
               if(model.BoneData.Length > 0) {
-                unsafe
-                {
-                  fixed (ModelBoneData* p = &bones[j])
-                  {
-                    writer.Write(model.BoneLookup[p->boneIndex[0]]);
-                    writer.Write(model.BoneLookup[p->boneIndex[1]]);
-                    writer.Write(model.BoneLookup[p->boneIndex[2]]);
-                    writer.Write(model.BoneLookup[p->boneIndex[3]]);
-                    writer.Write((float)p->boneWeight[0] / 255);
-                    writer.Write((float)p->boneWeight[1] / 255);
-                    writer.Write((float)p->boneWeight[2] / 255);
-                    writer.Write((float)p->boneWeight[3] / 255);
-                  }
-                }
+                writer.Write(model.BoneLookup[bones[j].boneIndex[0]]);
+                writer.Write(model.BoneLookup[bones[j].boneIndex[1]]);
+                writer.Write(model.BoneLookup[bones[j].boneIndex[2]]);
+                writer.Write(model.BoneLookup[bones[j].boneIndex[3]]);
+                writer.Write(bones[j].boneWeight[0]);
+                writer.Write(bones[j].boneWeight[1]);
+                writer.Write(bones[j].boneWeight[2]);
+                writer.Write(bones[j].boneWeight[3]);
               }
             }
             writer.Write((uint)index.Length);
