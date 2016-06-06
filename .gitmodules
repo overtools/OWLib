@@ -1,3 +1,6 @@
 [submodule "CASCExplorer"]
 	path = CASCExplorer
 	url = git@github.com:WoW-Tools/CASCExplorer.git
+[submodule "FbxWriter"]
+	path = FbxWriter
+	url = git@github.com:hamish-milne/FbxWriter.git
