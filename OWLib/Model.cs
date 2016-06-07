@@ -9,12 +9,16 @@ namespace OWLib {
     private byte indiceBufferCount;
     private byte submeshCount;
     private ushort boneCount;
-    
+
+    private ModelHeader header;
     private HashSet<ModelVertexType> unhandledVertexTypes;
     private HashSet<ModelVertexFormat> unhandledVertexFormats;
     private short[] boneHierarchy;
     private ushort[] boneLookup;
-    private float[][] boneData;
+    private OpenTK.Matrix4[] boneData;
+    private OpenTK.Matrix4[] boneData2;
+    private OpenTK.Matrix3x4[] poseData;
+    private OpenTK.Matrix3x4[] poseData2;
     private ModelSubmesh[] submeshes;
     private ModelVertexBuffer[] vertexBuffers;
     private ModelIndiceBuffer[] indiceBuffers;
@@ -26,9 +30,13 @@ namespace OWLib {
     private ModelVertexElement[][][] vertexElements;
     private object[][][][] vertexStrideStream;
 
+    public ModelHeader Header => header;
     public short[] BoneHierarchy => boneHierarchy;
     public ushort[] BoneLookup => boneLookup;
-    public float[][] BoneData => boneData;
+    public OpenTK.Matrix4[] BoneData => boneData;
+    public OpenTK.Matrix4[] BoneData2 => boneData2;
+    public OpenTK.Matrix3x4[] PoseData => poseData;
+    public OpenTK.Matrix3x4[] PoseData2 => poseData2;
     public ModelSubmesh[] Submeshes => submeshes;
     public ModelVertexBuffer[] VertexBuffers => vertexBuffers;
     public ModelIndiceBuffer[] IndiceBuffers => indiceBuffers;
@@ -68,43 +76,54 @@ namespace OWLib {
       unhandledVertexFormats = new HashSet<ModelVertexFormat>();
       unhandledVertexTypes = new HashSet<ModelVertexType>();
       using(BinaryReader modelReader = new BinaryReader(modelStream)) {
-        modelStream.Seek(336L, SeekOrigin.Begin);
-        vertexBufferCount = modelReader.ReadByte();
-        indiceBufferCount = modelReader.ReadByte();
-        modelStream.ReadByte();
-        submeshCount = modelReader.ReadByte();
-
-        modelStream.Seek(360L, SeekOrigin.Begin);
-        ulong submeshInfoPtr = modelReader.ReadUInt64();
-        ulong vertexInfoPtr = modelReader.ReadUInt64();
-        ulong indiceInfoPtr = modelReader.ReadUInt64();
-
-			  modelStream.Seek(172L, SeekOrigin.Begin);
-			  boneCount = modelReader.ReadUInt16();
-			  modelReader.ReadInt16();
-			  modelReader.ReadInt16();
-        uint boneIndices = modelReader.ReadUInt16();
-
-        modelStream.Seek(152L, SeekOrigin.Begin);
-        modelStream.Seek((long)modelReader.ReadUInt64(), SeekOrigin.Begin);
+        header = modelReader.Read<ModelHeader>();
+        
+        vertexBufferCount = header.vertexBufferCount;
+        indiceBufferCount = header.indiceBufferCount;
+        submeshCount = header.submeshCount;
+        
+        ulong submeshInfoPtr = header.submeshBufferPtr;
+        ulong vertexInfoPtr = header.vertexBufferPtr;
+        ulong indiceInfoPtr = header.indiceBufferPtr;
+        
+        boneCount = header.boneCount;
+        uint boneIndices = header.boneCount3;
+        
+        modelStream.Seek((long)header.boneEx2Ptr, SeekOrigin.Begin);
         boneLookup = new ushort[boneIndices];
         for(int i = 0; i < boneIndices; ++i) {
           boneLookup[i] = modelReader.ReadUInt16();
         }
-        modelStream.Seek(80L, SeekOrigin.Begin);
-        modelStream.Seek((long)modelReader.ReadUInt64(), SeekOrigin.Begin);
+
+        modelStream.Seek((long)header.boneHierarchy1Ptr, SeekOrigin.Begin);
         boneHierarchy = new short[boneCount];
         for(int i = 0; i < boneCount; ++i) { 
           modelStream.Seek(4L, SeekOrigin.Current);
           boneHierarchy[i] = modelReader.ReadInt16();
         }
 
-        boneData = new float[boneCount][];
-        modelStream.Seek(88L, SeekOrigin.Begin);
-        modelStream.Seek((long)modelReader.ReadUInt64(), SeekOrigin.Begin);
+        boneData = new OpenTK.Matrix4[boneCount];
+        modelStream.Seek((long)header.boneMatrix1Ptr, SeekOrigin.Begin);
         for(int i = 0; i < boneCount; ++i) {
-          modelStream.Seek(48L, SeekOrigin.Current);
-          boneData[i] = new float[4] { modelReader.ReadSingle(), modelReader.ReadSingle(), modelReader.ReadSingle(), modelReader.ReadSingle() };
+          boneData[i] = modelReader.Read<Matrix4B>().ToOpenTK();
+        }
+
+        boneData2 = new OpenTK.Matrix4[boneCount];
+        modelStream.Seek((long)header.boneMatrix2Ptr, SeekOrigin.Begin);
+        for(int i = 0; i < boneCount; ++i) {
+          boneData2[i] = modelReader.Read<Matrix4B>().ToOpenTK();
+        }
+
+        poseData = new OpenTK.Matrix3x4[boneCount];
+        modelStream.Seek((long)header.boneMatrix3Ptr, SeekOrigin.Begin);
+        for(int i = 0; i < boneCount; ++i) {
+          poseData[i] = modelReader.Read<Matrix3x4B>().ToOpenTK();
+        }
+
+        poseData2 = new OpenTK.Matrix3x4[boneCount];
+        modelStream.Seek((long)header.boneMatrix4Ptr, SeekOrigin.Begin);
+        for(int i = 0; i < boneCount; ++i) {
+          poseData2[i] = modelReader.Read<Matrix3x4B>().ToOpenTK();
         }
 
         submeshes = new ModelSubmesh[submeshCount];

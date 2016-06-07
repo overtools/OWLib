@@ -39,13 +39,13 @@ namespace OWLib {
 
     public static DDSPixelFormat ToPixelFormat(this TextureType T) {
       DDSPixelFormat ret = new DDSPixelFormat {
-        size      = 32,
-        flags     = 4,
-        fourCC    = (uint)T,
-        bitCount  = 32,
-        redMask   = 0x0000FF00,
+        size = 32,
+        flags = 4,
+        fourCC = (uint)T,
+        bitCount = 32,
+        redMask = 0x0000FF00,
         greenMask = 0x00FF0000,
-        blueMask  = 0xFF000000,
+        blueMask = 0xFF000000,
         alphaMask = 0x000000FF
       };
       return ret;
@@ -81,31 +81,54 @@ namespace OWLib {
 
     public static DDSHeader ToDDSHeader(this TextureHeader header) {
       DDSHeader ret = new DDSHeader {
-        magic       = 0x20534444,
-        size        = 124,
-        flags       = 659463,
-        height      = header.height,
-        width       = header.width,
-        linearSize  = header.dataSize,
-        depth       = 0,
+        magic = 0x20534444,
+        size = 124,
+        flags = 659463,
+        height = header.height,
+        width = header.width,
+        linearSize = header.dataSize,
+        depth = 0,
         mipmapCount = 1,
-        format      = header.Format().ToPixelFormat(),
-        caps1       = 0x1000,
-        caps2       = 0,
-        caps3       = 0,
-        caps4       = 0,
-        reserved2   = 0
+        format = header.Format().ToPixelFormat(),
+        caps1 = 0x1000,
+        caps2 = 0,
+        caps3 = 0,
+        caps4 = 0,
+        reserved2 = 0
       };
       return ret;
     }
 
     public unsafe static string ToHex(this MD5Hash hash) {
       byte[] array = new byte[16];
-      fixed(byte* ptr = array)
+      fixed (byte* ptr = array)
       {
         *(MD5Hash*)ptr = hash;
       }
       return array.ToHex();
+    }
+    
+    public unsafe static OpenTK.Matrix4 ToOpenTK(this Matrix4B matrix) {
+      unsafe
+      {
+        return new OpenTK.Matrix4(
+          matrix.Value[0], matrix.Value[1], matrix.Value[2], matrix.Value[3],
+          matrix.Value[4], matrix.Value[5], matrix.Value[6], matrix.Value[7],
+          matrix.Value[8], matrix.Value[9], matrix.Value[10], matrix.Value[11],
+          matrix.Value[12], matrix.Value[13], matrix.Value[14], matrix.Value[15]
+        );
+      }
+    }
+
+    public unsafe static OpenTK.Matrix3x4 ToOpenTK(this Matrix3x4B matrix) {
+      unsafe
+      {
+        return new OpenTK.Matrix3x4(
+          matrix.Value[0], matrix.Value[1], matrix.Value[2], matrix.Value[3],
+          matrix.Value[4], matrix.Value[5], matrix.Value[6], matrix.Value[7],
+          matrix.Value[8], matrix.Value[9], matrix.Value[10], matrix.Value[11]
+        );
+      }
     }
   }
 }

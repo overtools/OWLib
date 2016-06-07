@@ -16,7 +16,8 @@ namespace ModelTool {
         for(int i = 0; i < model.BoneData.Length; ++i) {
           writer.WriteLine("bone{0}", i);
           writer.WriteLine(model.BoneHierarchy[i]);
-          writer.WriteLine("{0} {1} {2}", model.BoneData[i][0].ToString("0.000000", numberFormatInfo), model.BoneData[i][1].ToString("0.000000", numberFormatInfo), model.BoneData[i][2].ToString("0.000000", numberFormatInfo));
+          OpenTK.Vector3 bonePos = model.BoneData[i].ExtractTranslation();
+          writer.WriteLine("{0} {1} {2}", bonePos.X.ToString("0.000000", numberFormatInfo), bonePos.Y.ToString("0.000000", numberFormatInfo), bonePos.Z.ToString("0.000000", numberFormatInfo));
         }
         
         Dictionary<byte, List<int>> LODMap = new Dictionary<byte, List<int>>();

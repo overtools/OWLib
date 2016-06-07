@@ -55,6 +55,7 @@ namespace ModelTool {
         writer = BINWriter.Write;
       } else {
         Console.Error.WriteLine("Unknown output format {0}", type);
+        return;
       }
 
       using(Stream modelStream = File.Open(modelFile, FileMode.Open, FileAccess.Read)) {
