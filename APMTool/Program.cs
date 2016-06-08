@@ -75,7 +75,7 @@ namespace APMTool {
                   int v = int.Parse(arg.Substring(1), NumberStyles.Number);
                   if(t[3] == null) {
                     t[3] = v;
-                  } else if(v > (int)t[3]) {
+                  } else if(v < (int)t[3]) {
                     t[3] = v;
                   }
                 }
@@ -127,10 +127,11 @@ namespace APMTool {
       }
 
       foreach(APMFile apm in ow.APMFiles) {
-        if(flag[0] == 'f' && query[4] != null && ((List<string>)query[4]).Count > 0 && !((List<string>)query[4]).Contains(apm.Name.ToLowerInvariant())) {
+        string apmName = System.IO.Path.GetFileName(apm.Name);
+        if(flag[0] == 'f' && query[4] != null && ((List<string>)query[4]).Count > 0 && !((List<string>)query[4]).Contains(apmName.ToLowerInvariant())) {
           continue;
         } else if(flag[0] == 'a') {
-          Console.Out.WriteLine(apm.Name);
+          Console.Out.WriteLine(apmName);
           continue;
         }
 
@@ -169,21 +170,21 @@ namespace APMTool {
             ulong rindex = OWLib.APM.keyToIndexID(record.Key);
 
             if(flag[0] == 'f') {
-              bool check1 = true;
-              bool check2 = true;
-              bool check3 = true;
-              bool check4 = true;
-              if(((List<ulong>)query[0]).Count > 0 && !((List<ulong>)query[0]).Contains(rindex)) { // if index is not in i
-                check1 = false;
+              bool check1 = ((List<ulong>)query[0]).Count == 0;
+              bool check2 = ((List<ulong>)query[1]).Count == 0;
+              bool check3 = query[2] == null;
+              bool check4 = query[3] == null;
+              if(((List<ulong>)query[0]).Count > 0 && ((List<ulong>)query[0]).Contains(rindex)) { // if index is not in i
+                check1 = true;
               }
-              if(((List<ulong>)query[1]).Count > 0 && !((List<ulong>)query[1]).Contains(rtype)) { // if type is not in t
-                check2 = false;
+              if(((List<ulong>)query[1]).Count > 0 && ((List<ulong>)query[1]).Contains(rtype)) { // if type is not in t
+                check2 = true;
               }
-              if(query[2] != null && (int)query[2] < record.Size) { // if size is greater than s[lt]
-                check2 = false;
+              if(query[2] != null && (int)query[2] > record.Size) { // if size is less than s[lt]
+                check2 = true;
               }
-              if(query[3] != null && (int)query[3] > record.Size) { // if size is less than s[gt]
-                check3 = false;
+              if(query[3] != null && (int)query[3] < record.Size) { // if size is greater than s[gt]
+                check3 = true;
               }
               bool check = glob ? (check1 && check2 && check3 && check4) : (check1 || check2 || check3 || check4);
               if(check) {
