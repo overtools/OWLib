@@ -18,6 +18,8 @@ namespace PackageTool {
       if(args.Length < 3) {
         Console.Out.WriteLine("Usage: PackageTool.exe \"overwatch_folder\" \"output_folder\" <keys...>");
         Console.Out.WriteLine("Keys must start with 'i' for content keys or 'p' for package keys");
+        Console.Out.WriteLine("If any key starts with Q it will dump all files.");
+        Console.Out.WriteLine("If any key starts with D it will only output filenames to console, but not write files");
         return;
       }
 
@@ -28,10 +30,19 @@ namespace PackageTool {
 
       List<ulong> packageKeys = new List<ulong>();
       List<string> contentKeys = new List<string>();
+      HashSet<ulong> dumped = new HashSet<ulong>();
+      bool dumpAll = false;
+      bool dry = false;
 
       for(int i = 2; i < args.Length; ++i) {
         string arg = args[i];
         switch(arg[0]) {
+          case 'Q':
+            dumpAll = true;
+            break;
+          case 'D':
+            dry = true;
+            break;
           case 'p':
             packageKeys.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
             break;
@@ -44,7 +55,7 @@ namespace PackageTool {
         }
       }
 
-      if(contentKeys.Count + packageKeys.Count == 0) {
+      if(contentKeys.Count + packageKeys.Count == 0 && !dumpAll) {
         Console.Error.WriteLine("Must have at least 1 query");
         return;
       }
@@ -57,25 +68,29 @@ namespace PackageTool {
         return;
       }
 
+      Console.Out.WriteLine("Extracting...");
+
       foreach(APMFile apm in ow.APMFiles) {
         for(long i = 0; i < apm.Packages.LongLength; ++i) {
-          if(packageKeys.Count + contentKeys.Count == 0) {
+          if(packageKeys.Count + contentKeys.Count == 0 && !dumpAll) {
             return;
           }
 
           APMPackage package = apm.Packages[i];
 
-          bool ret = true;
-          if(packageKeys.Count > 0 && packageKeys.Contains(package.packageKey)) {
-            ret = false;
-          }
+          if(!dumpAll) {
+            bool ret = true;
+            if(packageKeys.Count > 0 && packageKeys.Contains(package.packageKey)) {
+              ret = false;
+            }
 
-          if(ret && contentKeys.Count > 0 && contentKeys.Contains(package.indexContentKey.ToHexString().ToUpperInvariant())) {
-            ret = false;
-          }
+            if(ret && contentKeys.Count > 0 && contentKeys.Contains(package.indexContentKey.ToHexString().ToUpperInvariant())) {
+              ret = false;
+            }
 
-          if(ret) {
-            continue;
+            if(ret) {
+              continue;
+            }
           }
 
           packageKeys.Remove(package.packageKey);
@@ -84,30 +99,42 @@ namespace PackageTool {
           PackageIndex index = apm.Indexes[i];
           PackageIndexRecord[] records = apm.Records[i];
 
-          string o = string.Format("{0}{1}{2}", output, package.indexContentKey.ToHexString(), Path.DirectorySeparatorChar);
+          string o = null;
+          if(dumpAll) {
+            o = output;
+          } else {
+            o = string.Format("{0}{1}{2}", output, package.indexContentKey.ToHexString(), Path.DirectorySeparatorChar);
+          }
+
           EncodingEntry bundleEncoding;
-          if(!handler.Encoding.GetEntry(index.bundleContentKey, out bundleEncoding)) {
-            Console.Error.WriteLine("Cannot open bundle");
-            continue;
-          }
-          if(!Directory.Exists(o)) {
-            Directory.CreateDirectory(o);
-          }
+          bool allowBundle = handler.Encoding.GetEntry(index.bundleContentKey, out bundleEncoding);
 
-          using(Stream bundleStream = handler.OpenFile(bundleEncoding.Key)) {
-            foreach(PackageIndexRecord record in records) {
-              ulong rtype = OWLib.APM.keyToTypeID(record.Key);
-              ulong rindex = OWLib.APM.keyToIndexID(record.Key);
-              string ofn = string.Format("{0}{1:X3}{2}", o, rtype, Path.DirectorySeparatorChar);
-              if(!Directory.Exists(ofn)) {
-                Directory.CreateDirectory(ofn);
-              }
-              ofn = string.Format("{0}{1:X12}.{2:X3}", ofn, rindex, rtype);
-
+          Stream bundleStream = null;
+          if(allowBundle) {
+            bundleStream = handler.OpenFile(bundleEncoding.Key);
+          }
+          foreach(PackageIndexRecord record in records) {
+            if(dumpAll && !dumped.Add(record.Key)) {
+              continue;
+            }
+            ulong rtype = OWLib.APM.keyToTypeID(record.Key);
+            ulong rindex = OWLib.APM.keyToIndexID(record.Key);
+            string ofn = string.Format("{0}{1:X3}{2}", o, rtype, Path.DirectorySeparatorChar);
+            if(!dry && !Directory.Exists(ofn)) {
+              Console.Out.WriteLine("Created directory {0}", ofn);
+              Directory.CreateDirectory(ofn);
+            }
+            ofn = string.Format("{0}{1:X12}.{2:X3}", ofn, rindex, rtype);
+            if(!dry) {
               using(Stream outputStream = File.Open(ofn, FileMode.Create, FileAccess.Write)) {
                 if(((ContentFlags)record.Flags & ContentFlags.Bundle) == ContentFlags.Bundle) {
-                  bundleStream.Position = record.Offset;
-                  CopyBytes(bundleStream, outputStream, record.Size);
+                  if(allowBundle) {
+                    bundleStream.Position = record.Offset;
+                    CopyBytes(bundleStream, outputStream, record.Size);
+                  } else {
+                    Console.Error.WriteLine("Cannot open file {0} -- can't open bundle", ofn);
+                    continue;
+                  }
                 } else {
                   EncodingEntry recordEncoding;
                   if(!handler.Encoding.GetEntry(record.ContentKey, out recordEncoding)) {
@@ -120,9 +147,13 @@ namespace PackageTool {
                   }
                 }
               }
-
-              Console.Out.WriteLine("Saved file {0}", ofn);
             }
+
+            Console.Out.WriteLine("Saved file {0}", ofn);
+          }
+
+          if(allowBundle) {
+            bundleStream.Dispose();
           }
         }
       }
