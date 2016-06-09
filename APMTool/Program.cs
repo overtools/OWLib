@@ -14,6 +14,7 @@ namespace APMTool {
         Console.Out.WriteLine("OP l: List files in package. args: query query: p[PACKAGE KEY HEX] i[CONTENT KEY HEX]");
         Console.Out.WriteLine("OP c: Convert number into index + type. args: hex");
         Console.Out.WriteLine("OP a: Output all APM names");
+        Console.Out.WriteLine("OP t: Output all types");
         Console.Out.WriteLine("");
         Console.Out.WriteLine("Examples:");
         Console.Out.WriteLine("APMTool.exe overwatch l iDFEF49BEE7E66774E46DA9EEA750A552");
@@ -113,6 +114,8 @@ namespace APMTool {
           }
         }
       } else if(flag[0] == 'a') {
+      } else if(flag[1] == 't') {
+        query = new object[1] { new HashSet<ulong>() };
       } else {
         Console.Error.WriteLine("Unsupported operand {0}", flag[0]);
         return;
@@ -140,7 +143,7 @@ namespace APMTool {
           PackageIndexRecord[] records = apm.Records[i];
 
           if(flag[0] == 'l') {
-            if(((List<ulong>)query[0]).Count + ((List<ulong>)query[1]).Count == 0) {
+            if(((List<ulong>)query[0]).Count + ((List<string>)query[1]).Count == 0) {
               return;
             }
 
@@ -169,7 +172,9 @@ namespace APMTool {
             ulong rtype = OWLib.APM.keyToTypeID(record.Key);
             ulong rindex = OWLib.APM.keyToIndexID(record.Key);
 
-            if(flag[0] == 'f') {
+            if(flag[0] == 't') {
+              ((HashSet<ulong>)query[0]).Add(rindex >> 48);
+            } else if(flag[0] == 'f') {
               bool check1 = ((List<ulong>)query[0]).Count == 0;
               bool check2 = ((List<ulong>)query[1]).Count == 0;
               bool check3 = query[2] == null;
@@ -190,10 +195,16 @@ namespace APMTool {
               if(check) {
                 Console.Out.WriteLine("Found {0:X12}.{1:X3} in package i{2} / p{3:X} in APM {4}", rindex, rtype, package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey, apm.Name);
               }
-            } else if (flag[0] == 'l') {
+            } else if(flag[0] == 'l') {
               Console.Out.WriteLine("\t{0:X12}.{1:X3} ({2} bytes) - {3:X}", rindex, rtype, record.Size, record.Key);
             }
           }
+        }
+      }
+
+      if(flag[0] == 't') {
+        foreach(ulong type in (HashSet<ulong>)query[0]) {
+          Console.Out.WriteLine("{0:X4} : {1:X3}", type, OWLib.APM.keyToTypeID(type << 48));
         }
       }
     }
