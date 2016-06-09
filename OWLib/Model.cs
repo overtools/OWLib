@@ -125,7 +125,7 @@ namespace OWLib {
         for(int i = 0; i < boneCount; ++i) {
           poseData2[i] = modelReader.Read<Matrix3x4B>().ToOpenTK();
         }
-
+        
         submeshes = new ModelSubmesh[submeshCount];
         modelStream.Seek((long)submeshInfoPtr, SeekOrigin.Begin);
         for(int i = 0; i < submeshCount; ++i) {
@@ -193,7 +193,7 @@ namespace OWLib {
           ModelIndiceBuffer indiceBuffer = indiceBuffers[submesh.indexBufferIndex];
           ModelVertexBuffer vertexBuffer = vertexBuffers[submesh.vertexBufferIndex];
           uint sz = 0;
-          ModelIndice[] indices = new ModelIndice[submesh.indexEnd / 3];
+          ModelIndice[] indices = new ModelIndice[submesh.indiceCount / 3];
           modelStream.Seek((long)indiceBuffer.stream1Ptr + submesh.indexStart * 2, SeekOrigin.Begin);
           for(int j = 0; j < indices.Length; ++j) {
             indices[j] = modelReader.Read<ModelIndice>();
@@ -201,7 +201,7 @@ namespace OWLib {
             sz = Math.Max(sz, indices[j].v2);
             sz = Math.Max(sz, indices[j].v3);
           }
-          sz += 1;
+          sz += 1; 
           ModelUV[] uv = new ModelUV[sz];
           ModelVertex[] vertex = new ModelVertex[sz];
           ModelBoneData[] bone = new ModelBoneData[sz];
@@ -228,7 +228,11 @@ namespace OWLib {
                   vertex[j] = new ModelVertex { x = ((float[])value)[0], y = ((float[])value)[1], z = ((float[])value)[2] };
                   break;
                 case ModelVertexType.BONE_INDEX:
-                  bone[j].boneIndex = (byte[])value;
+                  byte[] tmp = (byte[])value;
+                  bone[j].boneIndex = new ushort[tmp.Length];
+                  for(int l = 0; l < tmp.Length; ++l) {
+                    bone[j].boneIndex[l] = (ushort)(tmp[l] + submesh.boneOffset); 
+                  }
                   break;
                 case ModelVertexType.BONE_WEIGHT:
                   bone[j].boneWeight = (float[])value;
@@ -260,7 +264,11 @@ namespace OWLib {
                   vertex[j] = new ModelVertex { x = ((float[])value)[0], y = ((float[])value)[1], z = ((float[])value)[2] };
                   break;
                 case ModelVertexType.BONE_INDEX:
-                  bone[j].boneIndex = (byte[])value;
+                  byte[] tmp = (byte[])value;
+                  bone[j].boneIndex = new ushort[tmp.Length];
+                  for(int l = 0; l < tmp.Length; ++l) {
+                    bone[j].boneIndex[l] = (ushort)(tmp[l] + submesh.boneOffset); 
+                  }
                   break;
                 case ModelVertexType.BONE_WEIGHT:
                   bone[j].boneWeight = (float[])value;

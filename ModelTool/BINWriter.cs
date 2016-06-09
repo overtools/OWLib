@@ -73,8 +73,7 @@ namespace ModelTool {
                 rot.X = pitch;
                 rot.Z = roll;
                 OpenTK.Vector3 scale = data.Row1.Xyz;
-                OpenTK.Vector3 pos = data.Row2.Xyz;
-                poseWriter.Write(string.Format("bone{0}:{1} {2} {3} {4} {5} {6} {7} {8} {9}\n", i, rot.X, rot.Y, rot.Z, pos.X, pos.Y, pos.Z, scale.X, scale.Y, scale.Z));
+                poseWriter.Write(string.Format("bone{0}:{1} {2} {3} {4} {5} {6} {7} {8} {9}\n", i, rot.X, rot.Y, rot.Z, 0, 0, 0, scale.X, scale.Y, scale.Z));
               }
             }
 

@@ -80,9 +80,9 @@ namespace OWLib.Types {
     public uint vertexStart;       // vbOff
     public ushort indexStart;      // i0
     public ushort indexEnd;        // iN
-    public ushort indiceCount;     // 62
-    public ushort vertexCount;     // 66
-    public ushort unk3;            // 
+    public ushort indiceCount;     //
+    public ushort vertexCount;     //
+    public ushort boneOffset;      // 
     public byte vertexBufferIndex; // vb
     public byte indexBufferIndex;  // fb
     public byte unk4;              // 
@@ -197,7 +197,7 @@ namespace OWLib.Types {
   
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
   public unsafe struct ModelBoneData {
-    public byte[] boneIndex;
+    public ushort[] boneIndex;
     public float[] boneWeight;
   }
 }
