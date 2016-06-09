@@ -53,7 +53,7 @@ namespace ModelTool {
             writer.WriteLine(vertex.Length);
             for(int j = 0; j < vertex.Length; ++j) {
               writer.WriteLine("{0} {1} {2}", vertex[j].x, vertex[j].y, vertex[j].z);
-              writer.WriteLine("{0} {1} {2}", normal[j].x, normal[j].y, normal[j].z);
+              writer.WriteLine("{0} {1} {2}", -normal[j].x, -normal[j].y, -normal[j].z);
               writer.WriteLine("255 255 255 255");
               writer.WriteLine("{0} {1}", uv[j].u.ToString("0.######", numberFormatInfo), uv[j].v.ToString("0.######", numberFormatInfo));
               if(model.BoneData.Length > 0) {

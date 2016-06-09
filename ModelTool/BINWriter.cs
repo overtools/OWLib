@@ -147,9 +147,9 @@ namespace ModelTool {
               writer.Write(vertex[j].x);
               writer.Write(vertex[j].y);
               writer.Write(vertex[j].z);
-              writer.Write(normal[j].x);
-              writer.Write(normal[j].y);
-              writer.Write(normal[j].z);
+              writer.Write(-normal[j].x);
+              writer.Write(-normal[j].y);
+              writer.Write(-normal[j].z);
               writer.Write((byte)255);
               writer.Write((byte)255);
               writer.Write((byte)255);
