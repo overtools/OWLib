@@ -53,7 +53,7 @@ namespace OWLib {
         case ModelVertexFormat.SINGLE_3:
           return new float[3] { modelReader.ReadSingle(), modelReader.ReadSingle(), modelReader.ReadSingle() };
         case ModelVertexFormat.HALF_2:
-          return new Half[2] { Half.ToHalf(modelReader.ReadUInt16()), Half.ToHalf(modelReader.ReadUInt16()) };
+          return new ushort[2] { modelReader.ReadUInt16(), modelReader.ReadUInt16() };
         case ModelVertexFormat.UINT8_4:
           return new byte[4] { modelReader.ReadByte(), modelReader.ReadByte(), modelReader.ReadByte(), modelReader.ReadByte() };
         case ModelVertexFormat.UINT8_UNORM4:
@@ -151,28 +151,21 @@ namespace OWLib {
             ind[tmp.stream] += 1;
           };
           
-          modelStream.Position = (long)vertexBuffers[i].stream1Ptr;
-          for(int j = 0; j < vertexBuffers[i].inputElementCount; ++j) {
-            long start = modelStream.Position;
-            vertexStrideStream[i][0][j] = new object[vertexElements[i][0].Length];
-            for(int o = 0; o < vertexElements[i][0].Length; ++o) {
-              ModelVertexElement elem = vertexElements[i][0][o];
-              modelStream.Position = start + elem.offset;
-              vertexStrideStream[i][0][j][o] = ReadStrideValue(elem.format, modelReader);
-            }
-            modelStream.Position = start + vertexBuffers[i].strideStream1;
-          }
+          long[] ptrs    = new long[2] { (long)vertexBuffers[i].stream1Ptr, (long)vertexBuffers[i].stream2Ptr };
+          byte[] stridel = new byte[2] { vertexBuffers[i].strideStream1, vertexBuffers[i].strideStream2 };
 
-          modelStream.Position = (long)vertexBuffers[i].stream2Ptr;
-          for(int j = 0; j < vertexBuffers[i].inputElementCount; ++j) {
-            long start = modelStream.Position;
-            vertexStrideStream[i][1][j] = new object[vertexElements[i][1].Length];
-            for(int o = 0; o < vertexElements[i][1].Length; ++o) {
-              ModelVertexElement elem = vertexElements[i][1][o];
-              modelStream.Position = start + elem.offset;
-              vertexStrideStream[i][1][j][o] = ReadStrideValue(elem.format, modelReader);
+          for(int w = 0; w < ptrs.Length; ++w) {
+            modelStream.Position = ptrs[w];
+            for(int j = 0; j < vertexBuffers[i].inputElementCount; ++j) {
+              long start = modelStream.Position;
+              vertexStrideStream[i][w][j] = new object[vertexElements[i][w].Length];
+              for(int o = 0; o < vertexElements[i][w].Length; ++o) {
+                ModelVertexElement elem = vertexElements[i][w][o];
+                modelStream.Position = start + elem.offset;
+                vertexStrideStream[i][w][j][o] = ReadStrideValue(elem.format, modelReader);
+              }
+              modelStream.Position = start + stridel[w];
             }
-            modelStream.Position = start + vertexBuffers[i].strideStream2;
           }
         }
 
@@ -192,96 +185,94 @@ namespace OWLib {
           ModelSubmesh submesh = submeshes[i];
           ModelIndiceBuffer indiceBuffer = indiceBuffers[submesh.indexBufferIndex];
           ModelVertexBuffer vertexBuffer = vertexBuffers[submesh.vertexBufferIndex];
-          uint sz = 0;
           ModelIndice[] indices = new ModelIndice[submesh.indiceCount / 3];
           modelStream.Seek((long)indiceBuffer.stream1Ptr + submesh.indexStart * 2, SeekOrigin.Begin);
+          List<ushort> indiceT = new List<ushort>(submesh.vertexCount);
           for(int j = 0; j < indices.Length; ++j) {
-            indices[j] = modelReader.Read<ModelIndice>();
-            sz = Math.Max(sz, indices[j].v1);
-            sz = Math.Max(sz, indices[j].v2);
-            sz = Math.Max(sz, indices[j].v3);
+            ModelIndice ind = modelReader.Read<ModelIndice>();
+            int v1 = indiceT.IndexOf(ind.v1);
+            if(v1 == -1) {
+              v1 = indiceT.Count;
+              indiceT.Add(ind.v1);
+            }
+            int v2 = indiceT.IndexOf(ind.v2);
+            if(v2 == -1) {
+              v2 = indiceT.Count;
+              indiceT.Add(ind.v2);
+            }
+            int v3 = indiceT.IndexOf(ind.v3);
+            if(v3 == -1) {
+              v3 = indiceT.Count;
+              indiceT.Add(ind.v3);
+            }
+            indices[j] = new ModelIndice { v1 = (ushort)v1, v2 = (ushort)v2, v3 = (ushort)v3 };
           }
-          sz += 1; 
-          ModelUV[] uv = new ModelUV[sz];
-          ModelVertex[] vertex = new ModelVertex[sz];
-          ModelBoneData[] bone = new ModelBoneData[sz];
-          ModelVertex[] normal = new ModelVertex[sz];
+          ModelUV[] uv = new ModelUV[submesh.vertexCount];
+          ModelVertex[] vertex = new ModelVertex[submesh.vertexCount];
+          ModelBoneData[] bone = new ModelBoneData[submesh.vertexCount];
+          ModelVertex[] normal = new ModelVertex[submesh.vertexCount];
 
           ModelVertexElement[][] elements = vertexElements[submesh.vertexBufferIndex];
-
-          for(int j = 0; j < sz; ++j) {
-            long offset = submesh.vertexStart + j;
-            for(int k = 0; k < elements[0].Length; ++k) {
-              ModelVertexElement element = elements[0][k];
-              if(element.format == ModelVertexFormat.NONE) {
-                continue;
-              }
-              object value = vertexStrideStream[submesh.vertexBufferIndex][0][offset][k];
-              switch(element.type) {
-                case ModelVertexType.UV:
-                  uv[j] = new ModelUV { u = ((Half[])value)[0], v = ((Half[])value)[0] };
-                  break;
-                case ModelVertexType.NORMAL:
-                  normal[j] = new ModelVertex { x = ((float[])value)[0], y = ((float[])value)[1], z = ((float[])value)[2] };
-                  break;
-                case ModelVertexType.POSITION:
-                  vertex[j] = new ModelVertex { x = ((float[])value)[0], y = ((float[])value)[1], z = ((float[])value)[2] };
-                  break;
-                case ModelVertexType.BONE_INDEX:
-                  byte[] tmp = (byte[])value;
-                  bone[j].boneIndex = new ushort[tmp.Length];
-                  for(int l = 0; l < tmp.Length; ++l) {
-                    bone[j].boneIndex[l] = (ushort)(tmp[l] + submesh.boneOffset); 
-                  }
-                  break;
-                case ModelVertexType.BONE_WEIGHT:
-                  bone[j].boneWeight = (float[])value;
-                  break;
-                default:
-                  if(unhandledVertexTypes.Add(element.type)) {
-                    Console.Out.WriteLine("Unhandled vertex type {0:X}!", element.type);
-                  }
-                  break;
+          HashSet<int> uvj = new HashSet<int>();
+          HashSet<int> noj = new HashSet<int>();
+          HashSet<int> vej = new HashSet<int>();
+          HashSet<int> bij = new HashSet<int>();
+          HashSet<int> bwj = new HashSet<int>();
+          for(int w = 0; w < vertexStrideStream[submesh.vertexBufferIndex].Length; ++w) {
+            for(int j = 0; j < submesh.vertexCount; ++j) {
+              long offset = submesh.vertexStart + indiceT[j];
+              for(int k = 0; k < elements[w].Length; ++k) {
+                ModelVertexElement element = elements[w][k];
+                if(element.format == ModelVertexFormat.NONE) {
+                  continue;
+                }
+                object value = vertexStrideStream[submesh.vertexBufferIndex][w][offset][k];
+                switch(element.type) {
+                  case ModelVertexType.UV:
+                    if(!uvj.Add(j)) {
+                      break;
+                    }
+                    ushort[] t = (ushort[])value;
+                    uv[j] = new ModelUV { u = Half.ToHalf(t[0]), v = Half.ToHalf(t[1]) };
+                    break;
+                  case ModelVertexType.NORMAL:
+                    if(!noj.Add(j)) {
+                      break;
+                    }
+                    normal[j] = new ModelVertex { x = ((float[])value)[0], y = ((float[])value)[1], z = ((float[])value)[2] };
+                    break;
+                  case ModelVertexType.POSITION:
+                    if(!vej.Add(j)) {
+                      break;
+                    }
+                    vertex[j] = new ModelVertex { x = ((float[])value)[0], y = ((float[])value)[1], z = ((float[])value)[2] };
+                    break;
+                  case ModelVertexType.BONE_INDEX:
+                    if(!bij.Add(j)) {
+                      break;
+                    }
+                    byte[] tmp = (byte[])value;
+                    bone[j].boneIndex = new ushort[tmp.Length];
+                    for(int l = 0; l < tmp.Length; ++l) {
+                      bone[j].boneIndex[l] = (ushort)(tmp[l] + submesh.boneOffset);
+                    }
+                    break;
+                  case ModelVertexType.BONE_WEIGHT:
+                    if(!bwj.Add(j)) {
+                      break;
+                    }
+                    bone[j].boneWeight = (float[])value;
+                    break;
+                  default:
+                    if(unhandledVertexTypes.Add(element.type)) {
+                      Console.Out.WriteLine("Unhandled vertex type {0:X}!", element.type);
+                    }
+                    break;
+                }
               }
             }
           }
-          for(int j = 0; j < sz; ++j) {
-            long offset = submesh.vertexStart + j;
-            for(int k = 0; k < vertexBuffer.strideStream2; ++k) {
-              ModelVertexElement element = vertexElements[submesh.vertexBufferIndex][1][k];
-              if(element.format == ModelVertexFormat.NONE) {
-                continue;
-              }
-              object value = vertexStrideStream[submesh.vertexBufferIndex][1][offset][k];
-              switch(element.type) {
-                case ModelVertexType.UV:
-                  uv[j] = new ModelUV { u = ((Half[])value)[0], v = ((Half[])value)[0] };
-                  break;
-                case ModelVertexType.NORMAL:
-                  normal[j] = new ModelVertex { x = ((float[])value)[0], y = ((float[])value)[1], z = ((float[])value)[2] };
-                  break;
-                case ModelVertexType.POSITION:
-                  vertex[j] = new ModelVertex { x = ((float[])value)[0], y = ((float[])value)[1], z = ((float[])value)[2] };
-                  break;
-                case ModelVertexType.BONE_INDEX:
-                  byte[] tmp = (byte[])value;
-                  bone[j].boneIndex = new ushort[tmp.Length];
-                  for(int l = 0; l < tmp.Length; ++l) {
-                    bone[j].boneIndex[l] = (ushort)(tmp[l] + submesh.boneOffset); 
-                  }
-                  break;
-                case ModelVertexType.BONE_WEIGHT:
-                  bone[j].boneWeight = (float[])value;
-                  break;
-                default:
-                  if(unhandledVertexTypes.Add(element.type)) {
-                    Console.Out.WriteLine("Unhandled vertex type {0:X}!", element.type);
-                  }
-                  break;
-              }
-            }
-            offset += vertexBuffer.strideStream2;
-          }
+          indiceT.Clear();
           uvs[i] = uv;
           vertices[i] = vertex;
           faces[i] = indices;
