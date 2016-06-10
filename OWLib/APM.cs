@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.IO.Compression;
 using OWLib.Types;
@@ -30,6 +31,14 @@ namespace OWLib {
 
     public static ulong keyToIndexID(ulong key) {
       return key & 0xFFFFFFFFFFFF;
+    }
+
+    public static ulong keyToIndexIDI(ulong key) {
+      return key & 0xFFFFFFFF;
+    }
+
+    public static ulong keyToIndent(ulong key) {
+      return (key >> 32) & 0xFFFF;
     }
 
     public APM(Stream apmStream, LookupContentByKeyDelegate lookupContentByKey) {

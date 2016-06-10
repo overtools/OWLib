@@ -10,7 +10,7 @@ namespace APMTool {
       // APMTool.exe "root" file flag [query]
       if(args.Length < 2) {
         Console.Out.WriteLine("Usage: APMTool.exe \"root directory\" op args");
-        Console.Out.WriteLine("OP f: Find files in APM. subop: a (match all) args: query... query: a[APM NAME] i[INDEX HEX] t[TYPE HEX] I[INDEX] T[TYPE] s[SIZE LESS THAN] S[SIZE GREATER THAN]");
+        Console.Out.WriteLine("OP f: Find files in APM. args: query... query: a[APM NAME] i[INDEX HEX] t[TYPE HEX] s[SIZE LESS THAN] S[SIZE GREATER THAN] N[INDEX WITHOUT IDENTIFIER]");
         Console.Out.WriteLine("OP l: List files in package. args: query query: p[PACKAGE KEY HEX] i[CONTENT KEY HEX]");
         Console.Out.WriteLine("OP c: Convert number into index + type. args: hex");
         Console.Out.WriteLine("OP a: Output all APM names");
@@ -36,29 +36,28 @@ namespace APMTool {
       }
 
       object[] query = null;
-      bool glob = false;
       if(flag[0] == 'f') {
-        glob = flag.Length > 1 && flag[1] == 'a';
-        object[] t = new object[5] { null, null, null, null, null };
+        object[] t = new object[6] { null, null, null, null, null, null };
 
         List<ulong> id = new List<ulong>();
         List<ulong> type = new List<ulong>();
         List<string> apms = new List<string>();
+        List<ulong> idi = new List<ulong>();
         for(int i = 2; i < args.Length; ++i) {
           string arg = args[i];
           try {
             switch(arg[0]) {
+              case 'I':
               case 'i':
                 id.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
                 break;
+              case 'T':
               case 't':
                 type.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
                 break;
-              case 'I':
-                id.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
-                break;
-              case 'T':
-                type.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
+              case 'n':
+              case 'N':
+                idi.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
                 break;
               case 'a':
                 apms.Add(arg.Substring(1).ToLowerInvariant());
@@ -86,6 +85,7 @@ namespace APMTool {
             t[0] = id;
             t[1] = type;
             t[4] = apms;
+            t[5] = idi;
             query = t;
           }
         }
@@ -171,6 +171,7 @@ namespace APMTool {
 
             ulong rtype = OWLib.APM.keyToTypeID(record.Key);
             ulong rindex = OWLib.APM.keyToIndexID(record.Key);
+            ulong rindex2 = OWLib.APM.keyToIndexIDI(record.Key);
 
             if(flag[0] == 't') {
               ((HashSet<ulong>)query[0]).Add(rindex >> 48);
@@ -179,6 +180,8 @@ namespace APMTool {
               bool check2 = ((List<ulong>)query[1]).Count == 0;
               bool check3 = query[2] == null;
               bool check4 = query[3] == null;
+              bool check5 = ((List<ulong>)query[5]).Count == 0;
+
               if(((List<ulong>)query[0]).Count > 0 && ((List<ulong>)query[0]).Contains(rindex)) { // if index is not in i
                 check1 = true;
               }
@@ -186,12 +189,15 @@ namespace APMTool {
                 check2 = true;
               }
               if(query[2] != null && (int)query[2] > record.Size) { // if size is less than s[lt]
-                check2 = true;
-              }
-              if(query[3] != null && (int)query[3] < record.Size) { // if size is greater than s[gt]
                 check3 = true;
               }
-              bool check = glob ? (check1 && check2 && check3 && check4) : (check1 || check2 || check3 || check4);
+              if(query[3] != null && (int)query[3] < record.Size) { // if size is greater than s[gt]
+                check4 = true;
+              }
+              if(((List<ulong>)query[5]).Count > 0 && ((List<ulong>)query[5]).Contains(rindex2)) { // if type is not in t
+                check5 = true;
+              }
+              bool check = check1 && check2 && check3 && check4 && check5;
               if(check) {
                 Console.Out.WriteLine("Found {0:X12}.{1:X3} in package i{2} / p{3:X} in APM {4}", rindex, rtype, package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey, apm.Name);
               }
