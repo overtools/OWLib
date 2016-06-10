@@ -13,6 +13,7 @@ namespace OWLib {
     private ModelHeader header;
     private HashSet<ModelVertexType> unhandledVertexTypes;
     private HashSet<ModelVertexFormat> unhandledVertexFormats;
+    private HashSet<long> unhandledVertexLayers;
     private short[] boneHierarchy;
     private ushort[] boneLookup;
     private OpenTK.Matrix4[] boneData;
@@ -22,12 +23,13 @@ namespace OWLib {
     private ModelSubmesh[] submeshes;
     private ModelVertexBuffer[] vertexBuffers;
     private ModelIndiceBuffer[] indiceBuffers;
-    private ModelUV[][] uvs;
+    private ModelUV[][][] uvs;
     private ModelIndice[][] faces;
     private ModelVertex[][] vertices;
     private ModelVertex[][] normals;
     private ModelBoneData[][] bones;
     private ModelVertexElement[][][] vertexElements;
+    private byte[] uvLayerCount;
     private object[][][][] vertexStrideStream;
 
     public ModelHeader Header => header;
@@ -40,7 +42,7 @@ namespace OWLib {
     public ModelSubmesh[] Submeshes => submeshes;
     public ModelVertexBuffer[] VertexBuffers => vertexBuffers;
     public ModelIndiceBuffer[] IndiceBuffers => indiceBuffers;
-    public ModelUV[][] UVs => uvs;
+    public ModelUV[][][] UVs => uvs;
     public ModelIndice[][] Faces => faces;
     public ModelVertex[][] Vertices => vertices;
     public ModelVertex[][] Normals => normals;
@@ -75,6 +77,7 @@ namespace OWLib {
     public Model(Stream modelStream) {
       unhandledVertexFormats = new HashSet<ModelVertexFormat>();
       unhandledVertexTypes = new HashSet<ModelVertexType>();
+      unhandledVertexLayers = new HashSet<long>();
       using(BinaryReader modelReader = new BinaryReader(modelStream)) {
         header = modelReader.Read<ModelHeader>();
         
@@ -140,14 +143,19 @@ namespace OWLib {
         }
         vertexElements = new ModelVertexElement[vertexBufferCount][][];
         vertexStrideStream = new object[vertexBufferCount][][][];
+        uvLayerCount = new byte[vertexBufferCount];
         for(int i = 0; i < vertexBufferCount; ++i) {
           vertexElements[i] = new ModelVertexElement[2][] { new ModelVertexElement[vertexBuffers[i].strideStream1], new ModelVertexElement[vertexBuffers[i].strideStream2] };
           modelStream.Seek((long)vertexBuffers[i].vertexElementPtr, SeekOrigin.Begin);
           vertexStrideStream[i] = new object[2][][] { new object[vertexBuffers[i].inputElementCount][], new object[vertexBuffers[i].inputElementCount][]};
+          uvLayerCount[i] = 1;
           int[] ind = new int[2] { 0, 0 };
           for(int j = 0; j < vertexBuffers[i].vertexElements; ++j) {
             ModelVertexElement tmp = modelReader.Read<ModelVertexElement>();
             vertexElements[i][tmp.stream][ind[tmp.stream]] = tmp;
+            if(tmp.type == ModelVertexType.UV) {
+              uvLayerCount[i] = (byte)Math.Max(uvLayerCount[i], tmp.index + 1);
+            }
             ind[tmp.stream] += 1;
           };
           
@@ -175,7 +183,7 @@ namespace OWLib {
           indiceBuffers[i] = modelReader.Read<ModelIndiceBuffer>();
         }
         
-        uvs = new ModelUV[submeshCount][];
+        uvs = new ModelUV[submeshCount][][];
         faces = new ModelIndice[submeshCount][];
         vertices = new ModelVertex[submeshCount][];
         normals = new ModelVertex[submeshCount][];
@@ -183,6 +191,7 @@ namespace OWLib {
 
         for(int i = 0; i < submeshCount; ++i) {
           ModelSubmesh submesh = submeshes[i];
+          ModelVertexElement[][] elements = vertexElements[submesh.vertexBufferIndex];
           ModelIndiceBuffer indiceBuffer = indiceBuffers[submesh.indexBufferIndex];
           ModelVertexBuffer vertexBuffer = vertexBuffers[submesh.vertexBufferIndex];
           ModelIndice[] indices = new ModelIndice[submesh.indiceCount / 3];
@@ -207,50 +216,41 @@ namespace OWLib {
             }
             indices[j] = new ModelIndice { v1 = (ushort)v1, v2 = (ushort)v2, v3 = (ushort)v3 };
           }
-          ModelUV[] uv = new ModelUV[submesh.vertexCount];
+          ModelUV[][] uv = new ModelUV[uvLayerCount[submesh.vertexBufferIndex]][];
+          for(int j = 0; j < uvLayerCount[submesh.vertexBufferIndex]; ++j) {
+            uv[j] = new ModelUV[submesh.vertexCount];
+          }
           ModelVertex[] vertex = new ModelVertex[submesh.vertexCount];
           ModelBoneData[] bone = new ModelBoneData[submesh.vertexCount];
           ModelVertex[] normal = new ModelVertex[submesh.vertexCount];
 
-          ModelVertexElement[][] elements = vertexElements[submesh.vertexBufferIndex];
-          HashSet<int> uvj = new HashSet<int>();
-          HashSet<int> noj = new HashSet<int>();
-          HashSet<int> vej = new HashSet<int>();
-          HashSet<int> bij = new HashSet<int>();
-          HashSet<int> bwj = new HashSet<int>();
           for(int w = 0; w < vertexStrideStream[submesh.vertexBufferIndex].Length; ++w) {
             for(int j = 0; j < submesh.vertexCount; ++j) {
               long offset = submesh.vertexStart + indiceT[j];
               for(int k = 0; k < elements[w].Length; ++k) {
                 ModelVertexElement element = elements[w][k];
                 if(element.format == ModelVertexFormat.NONE) {
-                  continue;
+                  break;
                 }
                 object value = vertexStrideStream[submesh.vertexBufferIndex][w][offset][k];
+                if(element.index > 0 && element.type != ModelVertexType.UV) {
+                  long idx = ((long)element.type << 1) + element.index;
+                  if(unhandledVertexLayers.Add(idx)) {
+                    Console.Out.WriteLine("Unhandled vertex layer {0:X} for type {1:X}!", element.index, element.type);
+                  }
+                }
                 switch(element.type) {
                   case ModelVertexType.UV:
-                    if(!uvj.Add(j)) {
-                      break;
-                    }
                     ushort[] t = (ushort[])value;
-                    uv[j] = new ModelUV { u = Half.ToHalf(t[0]), v = Half.ToHalf(t[1]) };
+                    uv[element.index][j] = new ModelUV { u = Half.ToHalf(t[0]), v = Half.ToHalf(t[1]) };
                     break;
                   case ModelVertexType.NORMAL:
-                    if(!noj.Add(j)) {
-                      break;
-                    }
                     normal[j] = new ModelVertex { x = ((float[])value)[0], y = ((float[])value)[1], z = ((float[])value)[2] };
                     break;
                   case ModelVertexType.POSITION:
-                    if(!vej.Add(j)) {
-                      break;
-                    }
                     vertex[j] = new ModelVertex { x = ((float[])value)[0], y = ((float[])value)[1], z = ((float[])value)[2] };
                     break;
                   case ModelVertexType.BONE_INDEX:
-                    if(!bij.Add(j)) {
-                      break;
-                    }
                     byte[] tmp = (byte[])value;
                     bone[j].boneIndex = new ushort[tmp.Length];
                     for(int l = 0; l < tmp.Length; ++l) {
@@ -258,9 +258,6 @@ namespace OWLib {
                     }
                     break;
                   case ModelVertexType.BONE_WEIGHT:
-                    if(!bwj.Add(j)) {
-                      break;
-                    }
                     bone[j].boneWeight = (float[])value;
                     break;
                   default:

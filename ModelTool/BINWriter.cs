@@ -131,17 +131,19 @@ namespace ModelTool {
           Console.Out.WriteLine("Writing LOD {0}", kv.Key);
           foreach(int i in kv.Value) {
             ModelSubmesh submesh = model.Submeshes[i];
-            WriteString(writer, string.Format("Submesh_{0}.{1}.{2}", i, kv.Key, submesh.material));
-            writer.Write((uint)1);
-            writer.Write((uint)1);
-            WriteString(writer, string.Format("Material_{0}",submesh.material));
-            writer.Write((uint)0);
-            
             ModelVertex[] vertex = model.Vertices[i];
             ModelVertex[] normal = model.Normals[i];
-            ModelUV[] uv = model.UVs[i];
+            ModelUV[][] uv = model.UVs[i];
             ModelIndice[] index = model.Faces[i];
             ModelBoneData[] bones = model.Bones[i];
+            WriteString(writer, string.Format("Submesh_{0}.{1}.{2}", i, kv.Key, submesh.material));
+            writer.Write((uint)uv.Length);
+            writer.Write((uint)uv.Length);
+            for(int j = 0; j < uv.Length; ++j) {
+              WriteString(writer, string.Format("Material_{0}_UV{1}", submesh.material, j));
+              writer.Write((uint)j);
+            }
+            
             writer.Write((uint)vertex.Length);
             for(int j = 0; j < vertex.Length; ++j) {
               writer.Write(vertex[j].x);
@@ -154,8 +156,10 @@ namespace ModelTool {
               writer.Write((byte)255);
               writer.Write((byte)255);
               writer.Write((byte)255);
-              writer.Write((float)uv[j].u);
-              writer.Write((float)uv[j].v);
+              for(int k = 0; k < uv.Length; ++k) {
+                writer.Write((float)uv[k][j].u);
+                writer.Write((float)uv[k][j].v);
+              }
               if(model.BoneData.Length > 0) {
                 writer.Write(model.BoneLookup[bones[j].boneIndex[0]]);
                 writer.Write(model.BoneLookup[bones[j].boneIndex[1]]);

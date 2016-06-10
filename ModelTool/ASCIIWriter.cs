@@ -39,23 +39,28 @@ namespace ModelTool {
           Console.Out.WriteLine("Writing LOD {0}", kv.Key);
           foreach(int i in kv.Value) {
             ModelSubmesh submesh = model.Submeshes[i];
-            writer.WriteLine("Submesh_{0}.{1}.{2}", i, kv.Key, submesh.material);
-            writer.WriteLine("1");
-            writer.WriteLine("1");
-            writer.WriteLine("Material_{0}", submesh.material);
-            writer.WriteLine("0");
-
             ModelVertex[] vertex = model.Vertices[i];
             ModelVertex[] normal = model.Normals[i];
-            ModelUV[] uv = model.UVs[i];
+            ModelUV[][] uv = model.UVs[i];
             ModelIndice[] index = model.Faces[i];
             ModelBoneData[] bones = model.Bones[i];
+
+            writer.WriteLine("Submesh_{0}.{1}.{2}", i, kv.Key, submesh.material);
+            writer.WriteLine(uv.Length);
+            writer.WriteLine(uv.Length);
+            for(int j = 0; j < uv.Length; ++j) {
+              writer.WriteLine("Material_{0}_UV{1}", submesh.material, j);
+              writer.WriteLine(j);
+            }
+
             writer.WriteLine(vertex.Length);
             for(int j = 0; j < vertex.Length; ++j) {
               writer.WriteLine("{0} {1} {2}", vertex[j].x, vertex[j].y, vertex[j].z);
               writer.WriteLine("{0} {1} {2}", -normal[j].x, -normal[j].y, -normal[j].z);
               writer.WriteLine("255 255 255 255");
-              writer.WriteLine("{0} {1}", uv[j].u.ToString("0.######", numberFormatInfo), uv[j].v.ToString("0.######", numberFormatInfo));
+              for(int k = 0; k < uv.Length; ++k) {
+                writer.WriteLine("{0} {1}", uv[k][j].u.ToString("0.######", numberFormatInfo), uv[k][j].v.ToString("0.######", numberFormatInfo));
+              }
               if(model.BoneData.Length > 0) {
                 writer.WriteLine("{0} {1} {2} {3}", model.BoneLookup[bones[j].boneIndex[0]], model.BoneLookup[bones[j].boneIndex[1]], model.BoneLookup[bones[j].boneIndex[2]], model.BoneLookup[bones[j].boneIndex[3]]);
                 writer.WriteLine("{0} {1} {2} {3}", bones[j].boneWeight[0].ToString("0.######", numberFormatInfo), bones[j].boneWeight[1].ToString("0.######", numberFormatInfo), bones[j].boneWeight[2].ToString("0.######", numberFormatInfo), bones[j].boneWeight[3].ToString("0.######", numberFormatInfo));
