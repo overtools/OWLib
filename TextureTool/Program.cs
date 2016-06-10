@@ -7,8 +7,10 @@ namespace TextureTool {
   class Program {
     static void Main(string[] args) {
       if(args.Length < 3) {
-        Console.Out.WriteLine("Usage: TextureTool.exe output_file 2 004_file 04D_file");
-        Console.Out.WriteLine("Usage: TextureTool.exe output_file 1 004_file");
+        Console.Out.WriteLine("Usage: TextureTool.exe mode 004 04D\n\nExamples:");
+        Console.Out.WriteLine("TextureTool.exe output_folder r 004_directory 04D_directory\n\t(04D_directory is optional)");
+        Console.Out.WriteLine("TextureTool.exe output_file 2 004_file 04D_file");
+        Console.Out.WriteLine("TextureTool.exe output_file 1 004_file");
         return;
       }
 
@@ -19,8 +21,13 @@ namespace TextureTool {
       char mode = args[1][0];
       string f004 = args[2];
       string f04d = null;
-      if(mode == '2') {
+      if(args.Length > 3) {
         f04d = args[3];
+      }
+
+      if(mode == 'r') {
+        new Recursive(destFile, f004, f04d);
+        return;
       }
 
       using(Stream headerStream = File.Open(f004, FileMode.Open, FileAccess.Read)) {
@@ -37,7 +44,7 @@ namespace TextureTool {
         } else if(mode == '2') {
           using(Stream dataStream = File.Open(f04d, FileMode.Open, FileAccess.Read)) {
             Texture tex = new Texture(headerStream, dataStream);
-            Console.Out.WriteLine("Opened Texture. W: {0} H: {1}", tex.Header.width, tex.Header.height);
+            Console.Out.WriteLine("Opened Texture. W: {0} H: {1} F: {2}", tex.Header.width, tex.Header.height, tex.Format.ToString());
             if(tex.Loaded == false) {
               Console.Error.WriteLine("Error?! (Probably unsupported format)");
               return;

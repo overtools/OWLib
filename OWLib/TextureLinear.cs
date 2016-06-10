@@ -36,8 +36,8 @@ namespace OWLib {
       }
     }
 
-    public TextureLinear(Stream imageStream) {
-      using(BinaryReader imageReader = new BinaryReader(imageStream)) {
+    public TextureLinear(Stream imageStream, bool keepOpen = false) {
+      using(BinaryReader imageReader = new BinaryReader(imageStream, System.Text.Encoding.Default, keepOpen)) {
         header = imageReader.Read<TextureHeader>();
         if(header.dataSize == 0) {
           return;

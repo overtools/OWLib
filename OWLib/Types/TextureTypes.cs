@@ -9,7 +9,7 @@ namespace OWLib.Types {
     public DXGI_PIXEL_FORMAT format;
     public byte surfaces;
     public byte unk3;
-    public byte unk4;
+    public byte indice;
     public byte unk5;
     public ushort width;
     public ushort height;
