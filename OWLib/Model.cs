@@ -16,10 +16,12 @@ namespace OWLib {
     private HashSet<long> unhandledVertexLayers;
     private short[] boneHierarchy;
     private ushort[] boneLookup;
+    private uint[] boneIDs;
     private OpenTK.Matrix4[] boneData;
     private OpenTK.Matrix4[] boneData2;
     private OpenTK.Matrix3x4[] poseData;
     private OpenTK.Matrix3x4[] poseData2;
+    private ulong[] materialKeys;
     private ModelSubmesh[] submeshes;
     private ModelVertexBuffer[] vertexBuffers;
     private ModelIndiceBuffer[] indiceBuffers;
@@ -35,10 +37,12 @@ namespace OWLib {
     public ModelHeader Header => header;
     public short[] BoneHierarchy => boneHierarchy;
     public ushort[] BoneLookup => boneLookup;
+    public uint[] BoneIDs => boneIDs;
     public OpenTK.Matrix4[] BoneData => boneData;
     public OpenTK.Matrix4[] BoneData2 => boneData2;
     public OpenTK.Matrix3x4[] PoseData => poseData;
     public OpenTK.Matrix3x4[] PoseData2 => poseData2;
+    public ulong[] MaterialKeys => materialKeys;
     public ModelSubmesh[] Submeshes => submeshes;
     public ModelVertexBuffer[] VertexBuffers => vertexBuffers;
     public ModelIndiceBuffer[] IndiceBuffers => indiceBuffers;
@@ -91,6 +95,18 @@ namespace OWLib {
         
         boneCount = header.boneCount;
         uint boneIndices = header.boneCount3;
+
+        modelStream.Seek((long)header.boneIdPtr, SeekOrigin.Begin);
+        boneIDs = new uint[boneCount];
+        for(int i = 0; i < boneCount; ++i) {
+          boneIDs[i] = modelReader.ReadUInt32();
+        }
+
+        modelStream.Seek((long)header.materialBufferPtr, SeekOrigin.Begin);
+        materialKeys = new ulong[Math.Max(header.materialACount, header.materialBCount)];
+        for(int i = 0; i < materialKeys.Length; ++i) {
+          materialKeys[i] = modelReader.ReadUInt64();
+        }
         
         modelStream.Seek((long)header.boneEx2Ptr, SeekOrigin.Begin);
         boneLookup = new ushort[boneIndices];

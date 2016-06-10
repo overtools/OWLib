@@ -14,7 +14,7 @@ namespace ModelTool {
       using(StreamWriter writer = new StreamWriter(stream)) {
         writer.WriteLine(model.BoneData.Length);
         for(int i = 0; i < model.BoneData.Length; ++i) {
-          writer.WriteLine("bone{0}", i);
+          writer.WriteLine("bone{0:X}", model.BoneIDs[i]);
           writer.WriteLine(model.BoneHierarchy[i]);
           OpenTK.Vector3 bonePos = model.BoneData[i].ExtractTranslation();
           writer.WriteLine("{0} {1} {2}", bonePos.X.ToString("0.000000", numberFormatInfo), bonePos.Y.ToString("0.000000", numberFormatInfo), bonePos.Z.ToString("0.000000", numberFormatInfo));
@@ -45,11 +45,11 @@ namespace ModelTool {
             ModelIndice[] index = model.Faces[i];
             ModelBoneData[] bones = model.Bones[i];
 
-            writer.WriteLine("Submesh_{0}.{1}.{2}", i, kv.Key, submesh.material);
+            writer.WriteLine("Submesh_{0}.{1}.{2:X16}", i, kv.Key, model.MaterialKeys[submesh.material]);
             writer.WriteLine(uv.Length);
             writer.WriteLine(uv.Length);
             for(int j = 0; j < uv.Length; ++j) {
-              writer.WriteLine("Material_{0}_UV{1}", submesh.material, j);
+              writer.WriteLine("Material_{0:X16}_UV{1}", model.MaterialKeys[submesh.material], j);
               writer.WriteLine(j);
             }
 

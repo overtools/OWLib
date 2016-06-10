@@ -29,7 +29,7 @@ namespace ModelTool {
           writer.WriteLine("o Submesh_{0}", kv.Key);
           foreach(int i in kv.Value) {
             ModelSubmesh submesh = model.Submeshes[i];
-            writer.WriteLine("g Material_{0}", submesh.material);
+            writer.WriteLine("g Material_{0:X16}", model.MaterialKeys[submesh.material]);
             
             ModelVertex[] vertex = model.Vertices[i];
             ModelVertex[] normal = model.Normals[i];

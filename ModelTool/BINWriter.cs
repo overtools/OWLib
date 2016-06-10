@@ -73,7 +73,7 @@ namespace ModelTool {
                 rot.X = pitch;
                 rot.Z = roll;
                 OpenTK.Vector3 scale = data.Row1.Xyz;
-                poseWriter.Write(string.Format("bone{0}:{1} {2} {3} {4} {5} {6} {7} {8} {9}\n", i, rot.X, rot.Y, rot.Z, 0, 0, 0, scale.X, scale.Y, scale.Z));
+                poseWriter.Write(string.Format("bone{0:X}:{1} {2} {3} {4} {5} {6} {7} {8} {9}\n", model.BoneIDs[i], rot.X, rot.Y, rot.Z, 0, 0, 0, scale.X, scale.Y, scale.Z));
               }
             }
 
@@ -101,7 +101,7 @@ namespace ModelTool {
         writer.Write((uint)model.BoneData.Length);
         
         for(int i = 0; i < model.BoneData.Length; ++i) {
-          WriteString(writer, "bone" + i);
+          WriteString(writer, string.Format("bone{0:X}", model.BoneIDs[i]));
           short parent = model.BoneHierarchy[i];
           if(parent == -1) {
             parent = (short)i;
@@ -136,11 +136,11 @@ namespace ModelTool {
             ModelUV[][] uv = model.UVs[i];
             ModelIndice[] index = model.Faces[i];
             ModelBoneData[] bones = model.Bones[i];
-            WriteString(writer, string.Format("Submesh_{0}.{1}.{2}", i, kv.Key, submesh.material));
+            WriteString(writer, string.Format("Submesh_{0}.{1}.{2:X16}", i, kv.Key, model.MaterialKeys[submesh.material]));
             writer.Write((uint)uv.Length);
             writer.Write((uint)uv.Length);
             for(int j = 0; j < uv.Length; ++j) {
-              WriteString(writer, string.Format("Material_{0}_UV{1}", submesh.material, j));
+              WriteString(writer, string.Format("Material_{0:X16}_UV{1}", model.MaterialKeys[submesh.material], j));
               writer.Write((uint)j);
             }
             
