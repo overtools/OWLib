@@ -114,7 +114,7 @@ namespace APMTool {
           }
         }
       } else if(flag[0] == 'a') {
-      } else if(flag[1] == 't') {
+      } else if(flag[0] == 't') {
         query = new object[1] { new HashSet<ulong>() };
       } else {
         Console.Error.WriteLine("Unsupported operand {0}", flag[0]);
@@ -174,7 +174,7 @@ namespace APMTool {
             ulong rindex2 = OWLib.APM.keyToIndexIDI(record.Key);
 
             if(flag[0] == 't') {
-              ((HashSet<ulong>)query[0]).Add(rindex >> 48);
+              ((HashSet<ulong>)query[0]).Add(record.Key >> 48);
             } else if(flag[0] == 'f') {
               bool check1 = ((List<ulong>)query[0]).Count == 0;
               bool check2 = ((List<ulong>)query[1]).Count == 0;
@@ -207,7 +207,6 @@ namespace APMTool {
           }
         }
       }
-
       if(flag[0] == 't') {
         foreach(ulong type in (HashSet<ulong>)query[0]) {
           Console.Out.WriteLine("{0:X4} : {1:X3}", type, OWLib.APM.keyToTypeID(type << 48));

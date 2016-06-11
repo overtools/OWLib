@@ -103,7 +103,7 @@ namespace PackageTool {
           if(dumpAll) {
             o = output;
           } else {
-            o = string.Format("{0}{1}{2}", output, package.indexContentKey.ToHexString(), Path.DirectorySeparatorChar);
+            o = string.Format("{0}{1:X12}{2}", output, OWLib.APM.keyToIndexID(package.packageKey), Path.DirectorySeparatorChar);
           }
 
           EncodingEntry bundleEncoding;
