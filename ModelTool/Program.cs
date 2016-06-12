@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace ModelTool {
   public class Program {
-    public delegate void ModelWriteDelegate(Model model, Stream stream, List<byte> lods);
+    public delegate void ModelWriteDelegate(Model model, Stream stream, List<byte> lods, bool[] opts);
 
     public static void Main(string[] args) {
       if(args.Length < 3) {
@@ -15,8 +15,11 @@ namespace ModelTool {
         Console.Out.WriteLine("  o - OBJ");
         Console.Out.WriteLine("  a - XNALara ASCII");
         Console.Out.WriteLine("  b - XNALara BIN");
+        Console.Out.WriteLine("  f - Autodesk FBX 2006 ASCII");
+        Console.Out.WriteLine("  F - Autodesk FBX 2006 Binary");
         Console.Out.WriteLine("args:");
-        Console.Out.WriteLine("  -l n - only print LOD, where N is lod");
+        Console.Out.WriteLine("  -l n - only save LOD, where N is lod");
+        Console.Out.WriteLine("  -t   - only save attachment points (only supported on OBJ)");
         return;
       }
 
@@ -24,8 +27,10 @@ namespace ModelTool {
 
       string modelFile = args[0];
       char type = args[1].ToLowerInvariant()[0];
+      char typen = args[1][0];
       string outputFile = args[args.Length - 1];
       List<byte> lods = null;
+      bool attachments = false;
       if(args.Length > 3) {
         int i = 2;
         while(i < args.Length - 2) {
@@ -39,6 +44,8 @@ namespace ModelTool {
               byte b = byte.Parse(args[i], System.Globalization.NumberStyles.Number);
               lods.Add(b);
               ++i;
+            } else if(arg[1] == 't') {
+              attachments = true;
             }
           } else {
             continue;
@@ -53,6 +60,10 @@ namespace ModelTool {
         writer = ASCIIWriter.Write;
       } else if(type == 'b') {
         writer = BINWriter.Write;
+      } else if(typen == 'f') {
+        writer = FBXWriter.WriteASCII;
+      } else if(typen == 'F') {
+        writer = FBXWriter.WriteBIN;
       } else {
         Console.Error.WriteLine("Unknown output format {0}", type);
         return;
@@ -61,7 +72,7 @@ namespace ModelTool {
       using(Stream modelStream = File.Open(modelFile, FileMode.Open, FileAccess.Read)) {
         Model model = new Model(modelStream);
         using(Stream outStream = File.Open(outputFile, FileMode.Create, FileAccess.Write)) {
-          writer(model, outStream, lods);
+          writer(model, outStream, lods, new bool[1] { attachments });
         }
       }
     }

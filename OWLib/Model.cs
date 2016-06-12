@@ -15,6 +15,7 @@ namespace OWLib {
     private HashSet<ModelVertexFormat> unhandledVertexFormats;
     private HashSet<long> unhandledVertexLayers;
     private short[] boneHierarchy;
+
     private ushort[] boneLookup;
     private uint[] boneIDs;
     private OpenTK.Matrix4[] boneData;
@@ -33,6 +34,7 @@ namespace OWLib {
     private ModelVertexElement[][][] vertexElements;
     private byte[] uvLayerCount;
     private object[][][][] vertexStrideStream;
+    private ModelAttachmentPoint[] attachmentPoints;
 
     public ModelHeader Header => header;
     public short[] BoneHierarchy => boneHierarchy;
@@ -53,6 +55,7 @@ namespace OWLib {
     public ModelBoneData[][] Bones => bones;
     public ModelVertexElement[][][] VertexElements => vertexElements;
     public object[][][] VertexStrideStream => vertexStrideStream;
+    public ModelAttachmentPoint[] AttachmentPoints => attachmentPoints;
 
     public object ReadStrideValue(ModelVertexFormat format, BinaryReader modelReader) {
       switch(format) {
@@ -63,9 +66,9 @@ namespace OWLib {
         case ModelVertexFormat.UINT8_4:
           return new byte[4] { modelReader.ReadByte(), modelReader.ReadByte(), modelReader.ReadByte(), modelReader.ReadByte() };
         case ModelVertexFormat.UINT8_UNORM4:
-          return new float[4] { (float)(modelReader.ReadByte()) / 255, (float)(modelReader.ReadByte())  / 255, (float)(modelReader.ReadByte())  / 255, (float)(modelReader.ReadByte())  / 255 };
+          return new float[4] { (float)(modelReader.ReadByte()) / 255f, (float)(modelReader.ReadByte())  / 255f, (float)(modelReader.ReadByte())  / 255f, (float)(modelReader.ReadByte())  / 255f };
         case ModelVertexFormat.UINT8_SNORM4:
-          return new float[4] { (float)(modelReader.ReadSByte()) / 255, (float)(modelReader.ReadSByte()) / 255, (float)(modelReader.ReadSByte()) / 255, (float)(modelReader.ReadSByte()) / 255 };
+          return new float[4] { (float)(modelReader.ReadSByte()) / 255f, (float)(modelReader.ReadSByte()) / 255f, (float)(modelReader.ReadSByte()) / 255f, (float)(modelReader.ReadSByte()) / 255f };
         case ModelVertexFormat.UINT32:
           return modelReader.ReadUInt32();
         case ModelVertexFormat.NONE:
@@ -76,6 +79,52 @@ namespace OWLib {
           }
           return null;
       }
+    }
+
+    public struct AttachmentPoint {
+      public OpenTK.Vector3[] points;
+      public int[] indices;
+    }
+
+    public AttachmentPoint[] CreateAttachmentPoints() {
+      AttachmentPoint[] ret = new AttachmentPoint[header.unkStruct2Count];
+      for(int i = 0; i < header.unkStruct2Count; ++i) {
+        int[] indices = new int[36] {
+          0, 1, 2, 2, 3, 0, // front
+          3, 2, 6, 6, 7, 3, // top
+          7, 6, 5, 5, 4, 7, // back
+          4, 0, 3, 3, 7, 4, // left
+          0, 1, 5, 5, 4, 0, // bottom
+          1, 5, 6, 6, 2, 1  // right
+        };
+
+        OpenTK.Vector3[] points = new OpenTK.Vector3[8] {
+          new OpenTK.Vector3(-1.0f, -1.0f,  1.0f), // 0
+          new OpenTK.Vector3( 1.0f, -1.0f,  1.0f), // 1
+          new OpenTK.Vector3( 1.0f,  1.0f,  1.0f), // 2
+          new OpenTK.Vector3(-1.0f,  1.0f,  1.0f), // 3
+          new OpenTK.Vector3(-1.0f, -1.0f, -1.0f), // 4
+          new OpenTK.Vector3( 1.0f, -1.0f, -1.0f), // 5
+          new OpenTK.Vector3( 1.0f,  1.0f, -1.0f), // 6
+          new OpenTK.Vector3(-1.0f,  1.0f, -1.0f)  // 7
+        };
+
+        OpenTK.Matrix4 matrix = attachmentPoints[i].matrix.ToOpenTK();
+        OpenTK.Vector3 translation = matrix.ExtractTranslation();
+        OpenTK.Quaternion rotation = matrix.ExtractRotation(false);
+        for(int j = 0; j < 8; ++j) {
+          points[j].X *= 0.1f;
+          points[j].Y *= 0.1f;
+          points[j].Z *= 0.1f;
+          OpenTK.Vector3.Transform(points[j], rotation);
+          points[j].X += translation.X;
+          points[j].Y += translation.Y;
+          points[j].Z += translation.Z;
+        }
+
+        ret[i] = new AttachmentPoint { points = points, indices = indices };
+      }
+      return ret;
     }
 
     public Model(Stream modelStream) {
@@ -291,6 +340,12 @@ namespace OWLib {
           faces[i] = indices;
           bones[i] = bone;
           normals[i] = normal;
+        }
+
+        modelStream.Seek((long)header.unkStruct2Ptr, SeekOrigin.Begin);
+        attachmentPoints = new ModelAttachmentPoint[header.unkStruct2Count];
+        for(int i = 0; i < header.unkStruct2Count; ++i) {
+          attachmentPoints[i] = modelReader.Read<ModelAttachmentPoint>();
         }
       }
     }

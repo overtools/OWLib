@@ -7,10 +7,28 @@ using System;
 
 namespace ModelTool {
   public class OBJWriter {
-    public static void Write(Model model, Stream stream, List<byte> LODs) {
+    public static void Write(Model model, Stream stream, List<byte> LODs, bool[] opts) {
 		  NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
       numberFormatInfo.NumberDecimalSeparator = ".";
       using(StreamWriter writer = new StreamWriter(stream)) {
+        uint faceOffset = 1;
+        if(opts[0]) {
+          Model.AttachmentPoint[] hbx = model.CreateAttachmentPoints();
+          for(int i = 0; i < hbx.Length; ++i) {
+            Console.Out.WriteLine("Writing Attachment Point {0}", model.AttachmentPoints[i].id);
+            writer.WriteLine("o Attachment_{0:X}", model.AttachmentPoints[i].id);
+            for(int j = 0; j < hbx[i].points.Length; ++j) {
+              OpenTK.Vector3 v = hbx[i].points[j];
+              writer.WriteLine("v {0} {1} {2}", v.X, v.Y, v.Z);
+            }
+            for(int j = 0; j < hbx[i].indices.Length; j += 3) {
+              writer.WriteLine("f {0} {1} {2}", faceOffset + hbx[i].indices[j], faceOffset + hbx[i].indices[j + 1], faceOffset + hbx[i].indices[j + 2]);
+            }
+            faceOffset += (uint)hbx[i].points.Length;
+            writer.WriteLine("");
+          }
+        }
+
         Dictionary<byte, List<int>> LODMap = new Dictionary<byte, List<int>>();
         for(int i = 0; i < model.Submeshes.Length; ++i) {
           ModelSubmesh submesh = model.Submeshes[i];
@@ -23,7 +41,6 @@ namespace ModelTool {
           LODMap[submesh.lod].Add(i);
         }
 
-        uint faceOffset = 1;
         foreach(KeyValuePair<byte, List<int>> kv in LODMap) {
           Console.Out.WriteLine("Writing LOD {0}", kv.Key);
           writer.WriteLine("o Submesh_{0}", kv.Key);

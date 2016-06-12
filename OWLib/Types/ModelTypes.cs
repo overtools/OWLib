@@ -32,7 +32,9 @@ namespace OWLib.Types {
     public ushort boneCount7;
     public ushort boneCountn1;
     public ushort padding1;
-    public fixed byte unk3[16];
+    public fixed byte unk3[11];
+    public byte unkStruct2Count;
+    public fixed byte unk3B[4];
     public uint unk4;
     public uint inputElementCount;
     public uint unk5;
@@ -121,9 +123,15 @@ namespace OWLib.Types {
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
-  public unsafe struct ModelUnkStruct2 {
-    public fixed float matrix[16];
-    public fixed float unk1[4];
+  public unsafe struct ModelAttachmentPoint {
+    public Matrix4B matrix;
+    public uint id;
+    public ushort unk1;
+    public byte unk2;
+    public byte binary_size;
+    public uint unk3;
+    public ushort unk5;
+    public ushort unk5b;
     public ulong unkBindataPtr;
     public fixed uint padding[2];
   }

@@ -5,12 +5,59 @@ using System.IO;
 using OWLib.Types;
 
 namespace ModelTool {
-  class BINWriter {
+  public class BINWriter {
     private static void WriteString(BinaryWriter stream, string str) {
       stream.Write(str);
     }
 
-    public static void Write(Model model, Stream stream, List<byte> LODs) {
+    public static readonly float Rad2Deg = 360.0f / (float)(Math.PI * 2f);
+
+    public static OpenTK.Vector3 NormalizeAngles(OpenTK.Vector3 angles) {
+      angles.X = NormalizeAngle(angles.X);
+      angles.Y = NormalizeAngle(angles.Y);
+      angles.Z = NormalizeAngle(angles.Z);
+      return angles;
+    }
+
+    public static float NormalizeAngle(float angle) {
+      while(angle > 360) {
+        angle -= 360;
+      }
+      while(angle < 0) {
+        angle += 360;
+      }
+      return angle;
+    }
+
+    public static OpenTK.Vector3 QuaternionToVector(OpenTK.Quaternion q1) {
+      float sqw = q1.W * q1.W;
+      float sqx = q1.X * q1.X;
+      float sqy = q1.Y * q1.Y;
+      float sqz = q1.Z * q1.Z;
+      float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+      float test = q1.X * q1.W - q1.Y * q1.Z;
+      OpenTK.Vector3 v = new OpenTK.Vector3();
+
+      if(test > 0.4995f * unit) { // singularity at north pole
+        v.Y = 2f * (float)Math.Atan2(q1.Y, q1.X);
+        v.X = (float)Math.PI / 2;
+        v.Z = 0;
+        return NormalizeAngles(v * Rad2Deg);
+      }
+      if(test < -0.4995f * unit) { // singularity at south pole
+        v.Y = -2f * (float)Math.Atan2(q1.Y, q1.X);
+        v.X = (float)Math.PI / 2;
+        v.Z = 0;
+        return NormalizeAngles(v * Rad2Deg);
+      }
+      OpenTK.Quaternion q = new OpenTK.Quaternion(q1.W, q1.Z, q1.X, q1.Y);
+      v.Y = (float)Math.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (q.Z * q.Z + q.W * q.W));       // Yaw
+      v.X = (float)Math.Asin(2f * (q.X * q.Z - q.W * q.Y));                                             // Pitch
+      v.Z = (float)Math.Atan2(2f * q.X * q.Y + 2f * q.Z * q.W, 1 - 2f * (q.Y * q.Y + q.Z * q.Z));       // Roll
+      return NormalizeAngles(v * Rad2Deg);
+    }
+
+    public static void Write(Model model, Stream stream, List<byte> LODs, bool[] opts) {
       Console.Out.WriteLine("Writing BIN");
       using(BinaryWriter writer = new BinaryWriter(stream)) {
         writer.Write((uint)323232);
@@ -43,37 +90,10 @@ namespace ModelTool {
                 */
                 OpenTK.Matrix3x4 data = model.PoseData[i];
                 OpenTK.Quaternion q = new OpenTK.Quaternion(data.Row0.Xyz, data.Row0.W);
-                OpenTK.Vector3 rot = new OpenTK.Vector3();
-
-                float sqw = q.W * q.W;
-                float sqx = q.X * q.X;
-                float sqy = q.Y * q.Y;
-                float sqz = q.Z * q.Z;
-                float unit = sqx + sqy + sqz + sqw;
-                float test = q.X * q.Y + q.Z * q.W;
-                float yaw = 0;
-                float pitch = 0;
-                float roll = 0;
-
-                if(test > 0.4999f * unit) {
-                  yaw   = 2f * (float)Math.Atan2(q.X, q.W);
-                  pitch = (float)Math.PI * 0.5f;
-                  roll  = 0;
-                } else if(test < -0.4999f * unit) {
-                  yaw   = -2f * (float)Math.Atan2(q.X, q.W);
-                  pitch = -(float)Math.PI * 0.5f;
-                  roll  = 0;
-                } else {
-                  yaw  = (float)Math.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (sqz  + sqw));
-                  pitch = (float)Math.Asin(2f * ( q.X * q.Z - q.W * q.Y ) );
-                  roll  = (float)Math.Atan2(2f * q.X * q.Y + 2f * q.Z * q.W, 1 - 2f * (sqy + sqz));
-                }
-
-                rot.Y = yaw;
-                rot.X = pitch;
-                rot.Z = roll;
+                OpenTK.Vector3 rot = QuaternionToVector(q);
                 OpenTK.Vector3 scale = data.Row1.Xyz;
-                poseWriter.Write(string.Format("bone{0:X}:{1} {2} {3} {4} {5} {6} {7} {8} {9}\n", model.BoneIDs[i], rot.X, rot.Y, rot.Z, 0, 0, 0, scale.X, scale.Y, scale.Z));
+                OpenTK.Vector3 pos = new OpenTK.Vector3(0, 0, 0); // data.Row2.Xyz
+                poseWriter.Write(string.Format("bone{0:X}:{1} {2} {3} {4} {5} {6} {7} {8} {9}\n", model.BoneIDs[i], rot.X, rot.Y, rot.Z, pos.X, pos.Y, pos.Z, scale.X, scale.Y, scale.Z));
               }
             }
 

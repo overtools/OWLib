@@ -6,8 +6,8 @@ using System.Globalization;
 using OWLib.Types;
 
 namespace ModelTool {
-  class ASCIIWriter {
-    public static void Write(Model model, Stream stream, List<byte> LODs) {
+  public class ASCIIWriter {
+    public static void Write(Model model, Stream stream, List<byte> LODs, bool[] opts) {
 			NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
 			numberFormatInfo.NumberDecimalSeparator = ".";
       Console.Out.WriteLine("Writing ASCII");

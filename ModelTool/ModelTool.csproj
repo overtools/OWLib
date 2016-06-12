@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="BINWriter.cs" />
     <Compile Include="ASCIIWriter.cs" />
+    <Compile Include="FBXWriter.cs" />
     <Compile Include="OBJWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,6 +65,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FbxWriter\Fbx\Fbx.csproj">
+      <Project>{07a221ac-5238-4c77-96de-e792c49d23e1}</Project>
+      <Name>Fbx</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OWLib\OWLib.csproj">
       <Project>{353c0d05-c505-4df4-909e-624fd94a7d3b}</Project>
       <Name>OWLib</Name>
