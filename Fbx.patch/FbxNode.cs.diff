@@ -1,0 +1,11 @@
+--- FbxNode.cs
++++ FbxNode.cs
+@@ -21,7 +21,7 @@ public class FbxNode : FbxNodeList
+ 		/// <remarks>
+ 		/// Supported types are primitives (apart from byte and char),arrays of primitives, and strings
+ 		/// </remarks>
+-		public List<object> Properties { get; } = new List<object>();
++		public List<object> Properties { get; set; } = new List<object>();
+
+ 		/// <summary>
+ 		/// The first property element
