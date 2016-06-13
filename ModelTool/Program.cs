@@ -12,14 +12,17 @@ namespace ModelTool {
       if(args.Length < 3) {
         Console.Out.WriteLine("Usage: ModelTool.exe 00C_file type [-l n] output_file");
         Console.Out.WriteLine("type can be:");
-        Console.Out.WriteLine("  o - OBJ");
-        Console.Out.WriteLine("  a - XNALara ASCII");
-        Console.Out.WriteLine("  b - XNALara BIN");
-        Console.Out.WriteLine("  f - Autodesk FBX 2006 ASCII");
-        Console.Out.WriteLine("  F - Autodesk FBX 2006 Binary");
+        Console.Out.WriteLine("  o - vua.. - Wavefront OBJ            - .obj");
+        Console.Out.WriteLine("  a - vu.b. - XNALara XPS ASCII        - .mesh.ascii");
+        Console.Out.WriteLine("  b - vu.bp - XNALara XPS Binary       - .mesh / .xps");
+        Console.Out.WriteLine("  f - vua.. - Autodesk FBX 2006 ASCII  - .fbx");
+        Console.Out.WriteLine("  F - vua.. - Autodesk FBX 2006 Binary - .fbx");
+        Console.Out.WriteLine("  d - ..... - Khronos COLLADA          - .dae");
+        Console.Out.WriteLine("  u - ..... - Unreal PSK               - .psk / .pskx");
+        Console.Out.WriteLine("vutbp = vertex / uv / attachment / bone / pose support");
         Console.Out.WriteLine("args:");
         Console.Out.WriteLine("  -l n - only save LOD, where N is lod");
-        Console.Out.WriteLine("  -t   - only save attachment points (only supported on OBJ)");
+        Console.Out.WriteLine("  -t   - only save attachment points");
         return;
       }
 
@@ -64,6 +67,10 @@ namespace ModelTool {
         writer = FBXWriter.WriteASCII;
       } else if(typen == 'F') {
         writer = FBXWriter.WriteBIN;
+      } else if(type == 'd') {
+        throw new NotImplementedException("Khronos COLLADA is not implemented");
+      } else if(type == 'u') {
+        throw new NotImplementedException("Unreal PSK is not implemented");
       } else {
         Console.Error.WriteLine("Unknown output format {0}", type);
         return;
