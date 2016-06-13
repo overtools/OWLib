@@ -91,27 +91,29 @@ namespace OWLib {
       return (dds.type & TEXTURE_FLAGS.WORLD) == TEXTURE_FLAGS.WORLD;
     }
 
-    public static void Modify(this DDSHeader dds, TextureHeader header, uint mips, uint surfaces) {
-      if(mips > 1) {
-        dds.mipmapCount = mips;
-        dds.caps1 = 0x1000 | 0x400000 | 0x8;
+    public static DDSHeader Modify(this DDSHeader d, TextureHeader header, uint mips, uint surfaces) {
+      DDSHeader dds = d;
+      if(surfaces > 1) {
+        dds.caps1 = 0x1000 | 0x8;
       }
       if(header.IsCubemap()) {
         dds.caps2 = 0x200;
       }
-      if(surfaces > 1 && mips < 2) {
-        dds.caps1 = 0x1000 | 0x8;
+      if(mips > 1) {
+        dds.mipmapCount = mips;
+        dds.caps1 = (0x8 | 0x1000 | 0x400000);
       }
+      return dds;
     }
 
     public static DDSHeader ToDDSHeader(this TextureHeader header, bool modify = true) {
       DDSHeader ret = new DDSHeader {
         magic = 0x20534444,
         size = 124,
-        flags = 659463,
+        flags = (0x1 | 0x2 | 0x4 | 0x1000 | 0x20000),
         height = header.height,
         width = header.width,
-        linearSize = header.dataSize,
+        linearSize = 0,
         depth = 0,
         mipmapCount = 1,
         format = header.Format().ToPixelFormat(),
@@ -122,14 +124,14 @@ namespace OWLib {
         reserved2 = 0
       };
       if(modify) {
-        ret.Modify(header, header.mips, header.surfaces);
+        ret = ret.Modify(header, header.mips, header.surfaces);
       }
       return ret;
     }
 
     public static DDSHeader ToDDSHeader(this RawTextureheader rawHeader, TextureHeader header) {
       DDSHeader ret = header.ToDDSHeader(false);
-      ret.Modify(header, rawHeader.mips, rawHeader.surfaces);
+      ret = ret.Modify(header, rawHeader.mips, rawHeader.surfaces);
       return ret;
     }
 
