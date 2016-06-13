@@ -2,8 +2,8 @@
 
 namespace OWLib.Types {
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
-  public struct TextureHeader { // 004 files
-    public byte unk1;
+  public struct TextureHeader {
+    public TEXTURE_FLAGS type;
     public byte unk2;
     public byte mips;
     public DXGI_PIXEL_FORMAT format;
@@ -36,7 +36,7 @@ namespace OWLib.Types {
     public uint linearSize;
     public uint depth;
     public uint mipmapCount;
-    public fixed uint reserved1[11]; // * 11
+    public fixed uint reserved1[11];
     public DDSPixelFormat format;
     public uint caps1;
     public uint caps2;
@@ -85,6 +85,17 @@ namespace OWLib.Types {
     public uint misc; // cubemap = 0x4
     public uint size; // number of maps, 1
     public uint misc2; // alpha mode, 0
+  }
+
+  public enum TEXTURE_FLAGS : byte {
+    UNKNOWN1 = 0x01,
+    DIFFUSE = 0x02,
+    UNKNOWN2 = 0x04,
+    CUBEMAP = 0x08,
+    UNKNOWN4 = 0x10,
+    WORLD = 0x20,
+    MULTISURFACE = 0x40,
+    UNKNOWN5 = 0x80
   }
 
   public enum DXGI_PIXEL_FORMAT : byte { 

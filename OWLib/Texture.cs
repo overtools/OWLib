@@ -79,7 +79,7 @@ namespace OWLib {
           DDS_HEADER_DXT10 d10 = new DDS_HEADER_DXT10 {
             format = (uint)header.format,
             dimension = D3D10_RESOURCE_DIMENSION.TEXTURE2D,
-            misc = (uint)(rawHeader.surfaces == 6 ? 0x4 : 0),
+            misc = (uint)(header.IsCubemap() ? 0x4 : 0),
             size = 1,
             misc2 = 0
           };

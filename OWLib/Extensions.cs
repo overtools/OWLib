@@ -78,13 +78,25 @@ namespace OWLib {
     public static string ToHex(this byte[] data) {
       return BitConverter.ToString(data).Replace("-", string.Empty);
     }
+    
+    public static bool IsCubemap(this TextureHeader dds) {
+      return (dds.type & TEXTURE_FLAGS.CUBEMAP) == TEXTURE_FLAGS.CUBEMAP;
+    }
 
-    public static void Modify(this DDSHeader dds, uint mips, uint surfaces) {
+    public static bool IsMultisurface(this TextureHeader dds) {
+      return (dds.type & TEXTURE_FLAGS.MULTISURFACE) == TEXTURE_FLAGS.MULTISURFACE;
+    }
+
+    public static bool IsWorld(this TextureHeader dds) {
+      return (dds.type & TEXTURE_FLAGS.WORLD) == TEXTURE_FLAGS.WORLD;
+    }
+
+    public static void Modify(this DDSHeader dds, TextureHeader header, uint mips, uint surfaces) {
       if(mips > 1) {
         dds.mipmapCount = mips;
         dds.caps1 = 0x1000 | 0x400000 | 0x8;
       }
-      if(surfaces == 6) {
+      if(header.IsCubemap()) {
         dds.caps2 = 0x200;
       }
       if(surfaces > 1 && mips < 2) {
@@ -110,14 +122,14 @@ namespace OWLib {
         reserved2 = 0
       };
       if(modify) {
-        ret.Modify(header.mips, header.surfaces);
+        ret.Modify(header, header.mips, header.surfaces);
       }
       return ret;
     }
 
     public static DDSHeader ToDDSHeader(this RawTextureheader rawHeader, TextureHeader header) {
       DDSHeader ret = header.ToDDSHeader(false);
-      ret.Modify(rawHeader.mips, header.surfaces);
+      ret.Modify(header, rawHeader.mips, rawHeader.surfaces);
       return ret;
     }
 

@@ -20,13 +20,13 @@ namespace TextureTool {
           using(Stream s004 = File.Open(f004i, FileMode.Open, FileAccess.Read)) {
             TextureLinear master = new TextureLinear(s004, true);
             string fn004 = Path.GetFileNameWithoutExtension(f004i);
-            Console.Out.WriteLine("Opened Texture {0}. W: {1} H: {2} F: {3} M: {4} S: {5}", fn004, master.Header.width, master.Header.height, master.Format.ToString(), master.Header.mips, master.Header.surfaces);
+            Console.Out.WriteLine("Opened Texture {0}. W: {1} H: {2} F: {3} M: {4} S: {5} T: {6}", fn004, master.Header.width, master.Header.height, master.Format.ToString(), master.Header.mips, master.Header.surfaces, master.Header.type);
             string ntype = "004";
             if(master.Loaded == false && d04D == null) {
-              Console.Out.WriteLine("Missing 04D texture");
+              Console.Error.WriteLine("Missing 04D texture");
               continue;
             }
-            if(master.Header.surfaces == 6) {
+            if(master.Header.IsCubemap()) {
               ntype = "cube";
             } else if(master.Header.surfaces > 1) {
               ntype = "multisurface";
@@ -44,6 +44,7 @@ namespace TextureTool {
                 string fn04D = (master.Header.indice - 1).ToString("X").PadLeft(fn004.Length - 8, '0') + fn004.Substring(fn004.Length - 8); // try to find the texture
                 string f04Di = string.Format("{0}{1}{2}.04D", d04D, Path.DirectorySeparatorChar, fn04D);
                 if(d04D == null || !File.Exists(f04Di)) {
+                  Console.Error.WriteLine("Corresponding 04D {1} file for 004 {0} does not exist", fn004, fn04D);
                   continue;
                 }
                 s004.Position = 0;
