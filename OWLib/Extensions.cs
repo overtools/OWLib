@@ -79,7 +79,20 @@ namespace OWLib {
       return BitConverter.ToString(data).Replace("-", string.Empty);
     }
 
-    public static DDSHeader ToDDSHeader(this TextureHeader header) {
+    public static void Modify(this DDSHeader dds, uint mips, uint surfaces) {
+      if(mips > 1) {
+        dds.mipmapCount = mips;
+        dds.caps1 = 0x1000 | 0x400000 | 0x8;
+      }
+      if(surfaces == 6) {
+        dds.caps2 = 0x200;
+      }
+      if(surfaces > 1 && mips < 2) {
+        dds.caps1 = 0x1000 | 0x8;
+      }
+    }
+
+    public static DDSHeader ToDDSHeader(this TextureHeader header, bool modify = true) {
       DDSHeader ret = new DDSHeader {
         magic = 0x20534444,
         size = 124,
@@ -96,6 +109,15 @@ namespace OWLib {
         caps4 = 0,
         reserved2 = 0
       };
+      if(modify) {
+        ret.Modify(header.mips, header.surfaces);
+      }
+      return ret;
+    }
+
+    public static DDSHeader ToDDSHeader(this RawTextureheader rawHeader, TextureHeader header) {
+      DDSHeader ret = header.ToDDSHeader(false);
+      ret.Modify(rawHeader.mips, header.surfaces);
       return ret;
     }
 

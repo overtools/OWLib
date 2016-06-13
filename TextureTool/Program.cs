@@ -33,7 +33,7 @@ namespace TextureTool {
       using(Stream headerStream = File.Open(f004, FileMode.Open, FileAccess.Read)) {
         if(mode == '1') {
           TextureLinear tex = new TextureLinear(headerStream);
-          Console.Out.WriteLine("Opened Texture. W: {0} H: {1} F: {2}", tex.Header.width, tex.Header.height, tex.Format.ToString());
+          Console.Out.WriteLine("Opened Texture. W: {0} H: {1} F: {2} M: {3} S: {4}", tex.Header.width, tex.Header.height, tex.Format.ToString(), tex.Header.mips, tex.Header.surfaces);
           if(tex.Loaded == false) {
             Console.Error.WriteLine("Error?! (Probably unsupported format)");
             return;
@@ -44,7 +44,7 @@ namespace TextureTool {
         } else if(mode == '2') {
           using(Stream dataStream = File.Open(f04d, FileMode.Open, FileAccess.Read)) {
             Texture tex = new Texture(headerStream, dataStream);
-            Console.Out.WriteLine("Opened Texture. W: {0} H: {1} F: {2}", tex.Header.width, tex.Header.height, tex.Format.ToString());
+            Console.Out.WriteLine("Opened Texture. W: {0} H: {1} F: {2} M: {3} S: {4}", tex.Header.width, tex.Header.height, tex.Format.ToString(), tex.RawHeader.mips, tex.RawHeader.surfaces);
             if(tex.Loaded == false) {
               Console.Error.WriteLine("Error?! (Probably unsupported format)");
               return;

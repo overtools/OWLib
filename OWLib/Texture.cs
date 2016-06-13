@@ -72,10 +72,19 @@ namespace OWLib {
 
     public void ToDDS(Stream ddsStream) {
       using(BinaryWriter ddsWriter = new BinaryWriter(ddsStream)) {
-        DDSHeader dds = header.ToDDSHeader();
+        DDSHeader dds = rawHeader.ToDDSHeader(header);
         dds.linearSize = rawHeader.imageSize;
-
         ddsWriter.Write(dds);
+        if(dds.format.fourCC == 808540228) {
+          DDS_HEADER_DXT10 d10 = new DDS_HEADER_DXT10 {
+            format = (uint)header.format,
+            dimension = D3D10_RESOURCE_DIMENSION.TEXTURE2D,
+            misc = (uint)(rawHeader.surfaces == 6 ? 0x4 : 0),
+            size = 1,
+            misc2 = 0
+          };
+          ddsWriter.Write(d10);
+        }
         for(int i = 0; i < size; ++i) {
           if((byte)header.format > 72) {
             ddsWriter.Write(color3[i]);

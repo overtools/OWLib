@@ -26,7 +26,7 @@ namespace OWLib {
           DDS_HEADER_DXT10 d10 = new DDS_HEADER_DXT10 {
             format = (uint)header.format,
             dimension = D3D10_RESOURCE_DIMENSION.TEXTURE2D,
-            misc = 0,
+            misc = (uint)(header.surfaces == 6 ? 0x4 : 0),
             size = 1,
             misc2 = 0
           };
@@ -39,11 +39,12 @@ namespace OWLib {
     public TextureLinear(Stream imageStream, bool keepOpen = false) {
       using(BinaryReader imageReader = new BinaryReader(imageStream, System.Text.Encoding.Default, keepOpen)) {
         header = imageReader.Read<TextureHeader>();
+        size = header.dataSize;
+        format = header.format;
+
         if(header.dataSize == 0) {
           return;
         }
-        size = header.dataSize;
-        format = header.format;
         
         imageStream.Seek(128, SeekOrigin.Begin);
         data = new byte[header.dataSize];
