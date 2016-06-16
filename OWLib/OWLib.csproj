@@ -49,6 +49,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Half\Half.cs" />
     <Compile Include="Half\HalfHelper.cs" />
+    <Compile Include="ImageDefinition.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="OWString.cs" />
     <Compile Include="STUD.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextureLinear.cs" />
     <Compile Include="Types\APMTypes.cs" />
+    <Compile Include="Types\CommonTypes.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
     <Compile Include="Types\STUD\STUD_090B30AB.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="Types\STUD\STUD_0BCAF9C9.cs" />
     <Compile Include="Types\STUD\STUD_3ECCEB5D.cs" />
     <Compile Include="Types\STUD\STUD_A301496F.cs" />
+    <Compile Include="Types\STUD\STUD_FF82DF73.cs" />
     <Compile Include="Types\STUD\STUD_InventoryItemGeneric.cs" />
     <Compile Include="Types\TextureTypes.cs" />
   </ItemGroup>

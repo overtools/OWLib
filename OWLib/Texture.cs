@@ -70,7 +70,7 @@ namespace OWLib {
       loaded = true;
     }
 
-    public void ToDDS(Stream ddsStream) {
+    public void Save(Stream ddsStream) {
       using(BinaryWriter ddsWriter = new BinaryWriter(ddsStream)) {
         DDSHeader dds = rawHeader.ToDDSHeader(header);
         dds.linearSize = rawHeader.imageSize;
@@ -100,9 +100,9 @@ namespace OWLib {
       }
     }
 
-    public Stream ToDDS() {
+    public Stream Save() {
       Stream ms = new MemoryStream();
-      ToDDS(ms);
+      Save(ms);
       return ms;
     }
   }

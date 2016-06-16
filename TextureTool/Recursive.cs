@@ -51,7 +51,7 @@ namespace TextureTool {
                 using(Stream s04D = File.Open(f04Di, FileMode.Open, FileAccess.Read)) {
                   Texture tex = new Texture(s004, s04D);
                   Console.Out.WriteLine("Opened Texture Data {0}. M: {1} S: {2}", fn004, tex.RawHeader.mips, tex.RawHeader.surfaces);
-                  tex.ToDDS(sDDS);
+                  tex.Save(sDDS);
                   Console.Out.WriteLine("Converted texture pair {0}.dds", fn004);
                 }
               } else {

@@ -85,6 +85,7 @@ namespace OWLib {
       stud.AddHandler<x018667E2>();
       stud.AddHandler<x090B30AB>();
       stud.AddHandler<x33F56AC1>();
+      stud.AddHandler<FF82DF73>();
       return stud;
     }
 

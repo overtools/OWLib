@@ -50,7 +50,7 @@ namespace TextureTool {
               return;
             }
             using(Stream ddsStream = File.Open(destFile, FileMode.OpenOrCreate, FileAccess.Write)) {
-              tex.ToDDS(ddsStream);
+              tex.Save(ddsStream);
               Console.Out.WriteLine("Saved DDS");
             }
           }
