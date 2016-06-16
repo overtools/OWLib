@@ -160,7 +160,7 @@ namespace ModelTool {
             writer.Write((uint)uv.Length);
             writer.Write((uint)uv.Length);
             for(int j = 0; j < uv.Length; ++j) {
-              WriteString(writer, string.Format("Material_{0:X16}_UV{1}", model.MaterialKeys[submesh.material], j));
+              WriteString(writer, string.Format("{0:X16}_UV{1}.dds", model.MaterialKeys[submesh.material], j));
               writer.Write((uint)j);
             }
             

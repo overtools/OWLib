@@ -4,22 +4,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OWLib.Types;
 
 namespace OWLib {
   public class OWString {
+    private OWStringHeader header;
+    public OWStringHeader Header => header;
     public string Value;
-    private ulong offset;
-    private uint size;
-    public uint References;
+    public uint References => header.references;
 
     public OWString(Stream input) {
       using(BinaryReader reader = new BinaryReader(input)) {
-        offset = reader.ReadUInt64();
-        size = reader.ReadUInt32();
-        References = reader.ReadUInt32();
-        input.Position = (long)offset;
-        if(size > 0) {
-          Value = Encoding.UTF8.GetString(reader.ReadBytes((int)size));
+        header = reader.Read<OWStringHeader>();
+        input.Position = (long)header.offset;
+        if(header.size > 0) {
+          Value = Encoding.UTF8.GetString(reader.ReadBytes((int)header.size));
         } else {
           Value = Encoding.UTF8.GetString(reader.ReadBytes((int)(input.Length - input.Position - 1)));
         }

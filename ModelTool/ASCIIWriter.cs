@@ -49,7 +49,7 @@ namespace ModelTool {
             writer.WriteLine(uv.Length);
             writer.WriteLine(uv.Length);
             for(int j = 0; j < uv.Length; ++j) {
-              writer.WriteLine("Material_{0:X16}_UV{1}", model.MaterialKeys[submesh.material], j);
+              writer.WriteLine("{0:X16}_UV{1}.dds", model.MaterialKeys[submesh.material], j);
               writer.WriteLine(j);
             }
 
