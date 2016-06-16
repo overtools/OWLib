@@ -17,7 +17,8 @@ namespace PackageTool {
     static void Main(string[] args) {
       if(args.Length < 3) {
         Console.Out.WriteLine("Usage: PackageTool.exe \"overwatch_folder\" \"output_folder\" <keys...>");
-        Console.Out.WriteLine("Keys must start with 'i' for content keys or 'p' for package keys");
+        Console.Out.WriteLine("Keys must start with 'i' for content keys, 'p' for package keys, 'n' for package indexes, 't' for package indexes + indices");
+        Console.Out.WriteLine("Keys must start with 'a' for specific APMs");
         Console.Out.WriteLine("If any key starts with Q it will dump all files.");
         Console.Out.WriteLine("If any key starts with D it will only output filenames to console, but not write files");
         return;
@@ -28,18 +29,23 @@ namespace PackageTool {
 
       Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
-      List<ulong> packageKeys = new List<ulong>();
-      List<string> contentKeys = new List<string>();
+      HashSet<ulong> packageKeys = new HashSet<ulong>();
+      HashSet<ulong> packageIndices = new HashSet<ulong>();
+      HashSet<ulong> packageIndent = new HashSet<ulong>();
+      HashSet<string> contentKeys = new HashSet<string>();
       HashSet<ulong> dumped = new HashSet<ulong>();
+      string apmName = null;
       bool dumpAll = false;
       bool dry = false;
 
       for(int i = 2; i < args.Length; ++i) {
         string arg = args[i];
         switch(arg[0]) {
+          case 'q':
           case 'Q':
             dumpAll = true;
             break;
+          case 'd':
           case 'D':
             dry = true;
             break;
@@ -49,13 +55,30 @@ namespace PackageTool {
           case 'P':
             packageKeys.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
             break;
+          case 'n':
+            packageIndices.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
+            break;
+          case 'N':
+            packageIndices.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
+            break;
+          case 't':
+            packageIndent.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
+            break;
+          case 'T':
+            packageIndent.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
+            break;
+          case 'a':
+          case 'A':
+            apmName = arg.Substring(1).ToLowerInvariant();
+            break;
           case 'i':
+          case 'I':
             contentKeys.Add(arg.Substring(1).ToUpperInvariant());
             break;
         }
       }
 
-      if(contentKeys.Count + packageKeys.Count == 0 && !dumpAll) {
+      if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count == 0 && !dumpAll) {
         Console.Error.WriteLine("Must have at least 1 query");
         return;
       }
@@ -70,9 +93,14 @@ namespace PackageTool {
 
       Console.Out.WriteLine("Extracting...");
 
+      HashSet<ulong> indicesExtracted = new HashSet<ulong>();
       foreach(APMFile apm in ow.APMFiles) {
+        if(apmName != null && !Path.GetFileName(apm.Name).ToLowerInvariant().Contains(apmName)) {
+          continue;
+        }
+        Console.Out.WriteLine("Iterating {0}", Path.GetFileName(apm.Name));
         for(long i = 0; i < apm.Packages.LongLength; ++i) {
-          if(packageKeys.Count + contentKeys.Count == 0 && !dumpAll) {
+          if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count == 0 && !dumpAll) {
             return;
           }
 
@@ -87,6 +115,14 @@ namespace PackageTool {
             if(ret && contentKeys.Count > 0 && contentKeys.Contains(package.indexContentKey.ToHexString().ToUpperInvariant())) {
               ret = false;
             }
+            
+            if(ret && packageIndices.Count > 0 && packageIndices.Contains(OWLib.APM.keyToIndex(package.packageKey)) && !indicesExtracted.Contains(package.packageKey)) {
+              ret = false;
+            }
+
+            if(ret && packageIndent.Count > 0 && packageIndent.Contains(OWLib.APM.keyToIndexID(package.packageKey))) {
+              ret = false;
+            }
 
             if(ret) {
               continue;
@@ -94,6 +130,8 @@ namespace PackageTool {
           }
 
           packageKeys.Remove(package.packageKey);
+          indicesExtracted.Add(package.packageKey);
+          packageIndent.Remove(OWLib.APM.keyToIndexID(package.packageKey));
           contentKeys.Remove(package.indexContentKey.ToHexString().ToUpperInvariant());
 
           PackageIndex index = apm.Indexes[i];
