@@ -13,6 +13,7 @@ namespace OWLib.Types.STUD {
 
   public class x4EE84DC0 : STUDInventoryItemGeneric {
     public static new uint id = 0x4EE84DC0;
+    public static new string name = "Heroic Intro";
 
     private x4EE84DC0Header header;
 

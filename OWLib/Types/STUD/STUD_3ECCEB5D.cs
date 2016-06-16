@@ -16,6 +16,7 @@ namespace OWLib.Types.STUD {
 
   public class x3ECCEB5D : STUDInventoryItemGeneric {
     public static new uint id = 0x3ECCEB5D;
+    public static new string name = "Portrait";
 
     private x3ECC0B5DHeader header;
 

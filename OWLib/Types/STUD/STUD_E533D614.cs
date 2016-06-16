@@ -16,6 +16,7 @@ namespace OWLib.Types.STUD {
 
   public class E533D614 : STUDInventoryItemGeneric {
     public static new uint id = 0xE533D614;
+    public static new string name = "Emote";
 
     private E533D614Header header;
 

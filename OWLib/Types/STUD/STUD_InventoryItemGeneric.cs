@@ -15,8 +15,10 @@ namespace OWLib.Types.STUD {
   }
 
   public class STUDInventoryItemGeneric : STUDBlob {
+    public static new string name = "Inventory STUD";
+
     private STUDInventoryItemHeader inventoryHeader;
-    public STUDInventoryItemHeader InventoryHeader => InventoryHeader;
+    public STUDInventoryItemHeader InventoryHeader => inventoryHeader;
 
     public void DumpInventoryItemHeader(TextWriter writer, STUDInventoryItemHeader header, string padding = "") {
       writer.WriteLine("{0}string:", padding);

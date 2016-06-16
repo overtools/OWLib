@@ -10,6 +10,7 @@ namespace OWLib.Types.STUD {
 
   public class x0BCAF9C9 : STUDInventoryItemGeneric {
     public static new uint id = 0x0BCAF9C9;
+    public static new string name = "Credits";
 
     private x0BCAF9C9Header header;
 

@@ -35,6 +35,7 @@ namespace OWLib.Types {
 
   public partial class STUDBlob {
     public static uint id = 0x00000000;
+    public static string name = "STUD";
 
     public void Read(Stream stream) {
     }

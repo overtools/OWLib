@@ -15,6 +15,7 @@ namespace OWLib.Types.STUD {
 
   public class x8CDAA871 : STUDInventoryItemGeneric {
     public static new uint id = 0x8CDAA871;
+    public static new string name = "Icon";
 
     private x8CDAA871Header header;
 

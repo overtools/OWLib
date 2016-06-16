@@ -17,6 +17,7 @@ namespace OWLib.Types.STUD {
 
   public class x090B30AB : STUDInventoryItemGeneric {
     public static new uint id = 0x090B30AB;
+    public static new string name = "Voice Line";
 
     private x090B30ABHeader header;
 

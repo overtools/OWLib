@@ -45,6 +45,7 @@ namespace OWLib.Types.STUD {
 
   public class A301496F : STUDBlob {
     public static new uint id = 0xA301496F;
+    public static new string name = "Material";
 
     private A301496F_Header header;
     private A301496FMaterialDefinition[] materialTable;

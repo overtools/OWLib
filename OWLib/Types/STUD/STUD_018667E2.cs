@@ -11,6 +11,7 @@ namespace OWLib.Types.STUD {
 
   public class x018667E2 : STUDInventoryItemGeneric {
     public static new uint id = 0x018667E2;
+    public static new string name = "Victory Pose";
 
     private x018667E2Header header;
 

@@ -23,6 +23,7 @@ namespace OWLib.Types.STUD {
 
   public class x15720E8A : STUDInventoryItemGeneric {
     public static new uint id = 0x15720E8A;
+    public static new string name = "Spray";
 
     private x15720E8AHeader header;
 

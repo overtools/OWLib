@@ -11,6 +11,7 @@ namespace OWLib.Types.STUD {
 
   public class x01609B4D : STUDInventoryItemGeneric {
     public static new uint id = 0x01609B4D;
+    public static new string name = "Unknown01609B4D";
 
     private x01609B4DHeader header;
 

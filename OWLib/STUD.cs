@@ -15,6 +15,14 @@ namespace OWLib {
     public STUDTableInstanceRecord[] InstanceTable => instanceTable;
     public STUDBlob Blob => blob;
 
+    public string Name
+    {
+      get
+      {
+        return manager.GetName(header.type);
+      }
+    }
+
     public STUD(STUDManager manager, Stream stream) {
       stream.Seek(0, SeekOrigin.Begin);
       this.manager = manager;
@@ -54,10 +62,12 @@ namespace OWLib {
 
     private Type[] handlers;
     private uint[] handlerIds;
+    private string[] handlerNames;
 
     public STUDManager() {
       handlers = new Type[0];
       handlerIds = new uint[0];
+      handlerNames = new string[0];
     }
 
     public static STUDManager Create() {
@@ -74,6 +84,7 @@ namespace OWLib {
       stud.AddHandler<E533D614>();
       stud.AddHandler<x018667E2>();
       stud.AddHandler<x090B30AB>();
+      stud.AddHandler<x33F56AC1>();
       return stud;
     }
 
@@ -87,10 +98,14 @@ namespace OWLib {
         uint[] tmpI = new uint[handlerIds.Length + 1];
         handlerIds.CopyTo(tmpI, 0);
         handlerIds = tmpI;
+        string[] tmpN = new string[handlerNames.Length + 1];
+        handlerNames.CopyTo(tmpN, 0);
+        handlerNames = tmpN;
       }
 
       handlers[i] = T;
       handlerIds[i] = (uint)handlers[i].GetField("id", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null);
+      handlerNames[i] = (string)handlers[i].GetField("name", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null);
     }
 
     public void AddHandler<T>() where T : STUDBlob {
@@ -107,7 +122,16 @@ namespace OWLib {
       }
       return null;
     }
-    
+
+    public string GetName(uint id) {
+      for(int i = 0; i < handlerIds.Length; ++i) {
+        if(handlerIds[i] == id) {
+          return handlerNames[i];
+        }
+      }
+      return STUDBlob.name;
+    }
+
     public void Dump(uint id, STUDBlob inst, TextWriter writer) {
       for(int i = 0; i < handlerIds.Length; ++i) {
         if(handlerIds[i] == id) {

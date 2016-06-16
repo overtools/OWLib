@@ -11,6 +11,7 @@ namespace OWLib.Types.STUD {
 
   public class x8B9DEB02 : STUDInventoryItemGeneric {
     public static new uint id = 0x8B9DEB02;
+    public static new string name = "Skin";
 
     private x8B9DEB02Header header;
 
