@@ -33,7 +33,7 @@ namespace OWLib {
       return key & 0xFFFFFFFFFFFF;
     }
 
-    public static ulong keyToIndexIDI(ulong key) {
+    public static ulong keyToIndex(ulong key) {
       return key & 0xFFFFFFFF;
     }
 

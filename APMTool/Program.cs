@@ -171,7 +171,7 @@ namespace APMTool {
 
             ulong rtype = OWLib.APM.keyToTypeID(record.Key);
             ulong rindex = OWLib.APM.keyToIndexID(record.Key);
-            ulong rindex2 = OWLib.APM.keyToIndexIDI(record.Key);
+            ulong rindex2 = OWLib.APM.keyToIndex(record.Key);
 
             if(flag[0] == 't') {
               ((HashSet<ulong>)query[0]).Add(record.Key >> 48);
