@@ -59,12 +59,12 @@ namespace InventoryTool {
         Console.Out.WriteLine("\"destination folder\" type \"list\"...");
         Console.Out.WriteLine("You can combine types with the + operator, valid types:");
         Console.Out.WriteLine("\"destination folder\" skin \"hero name:skin name\"...");
-        Console.Out.WriteLine("\"destination folder\" voice \"hero name\"...");
         Console.Out.WriteLine("\"destination folder\" spray \"hero name\"...");
+        Console.Out.WriteLine("\"destination folder\" icon \"hero name\"...");
         Console.Out.WriteLine("");
         Console.Out.WriteLine("Examples:");
         Console.Out.WriteLine("InventoryTool.exe overwatch");
-        Console.Out.WriteLine("InventoryTool.exe overwatch va voice hanzo");
+        Console.Out.WriteLine("InventoryTool.exe overwatch icons icon hanzo");
         Console.Out.WriteLine("InventoryTool.exe overwatch sprays spray tracer");
         Console.Out.WriteLine("InventoryTool.exe overwatch tracer skin+spray tracer tracer:classic");
         return;
@@ -72,7 +72,7 @@ namespace InventoryTool {
       string root = args[0];
       bool complex = args.Length > 3;
       if(complex) {
-        string[] types = { "skin", "voice", "spray" };
+        string[] types = { "skin", "icon", "spray" };
         string[] qtypes = args[2].ToLowerInvariant().Split('+');
         foreach(string qtype in qtypes) {
           if(!types.Contains(qtype)) {
@@ -259,7 +259,7 @@ namespace InventoryTool {
         if(heroes.Contains(sp.Key)) {
           Console.Out.WriteLine("Loading data for {0}...", sp.Value);
           Dictionary<string, List<KeyValuePair<string, STUDBlob>>> inventory = new Dictionary<string, List<KeyValuePair<string, STUDBlob>>>();
-          inventory.Add("Voice Line", new List<KeyValuePair<string, STUDBlob>>());
+          inventory.Add("Icon", new List<KeyValuePair<string, STUDBlob>>());
           inventory.Add("Skin", new List<KeyValuePair<string, STUDBlob>>());
           inventory.Add("Spray", new List<KeyValuePair<string, STUDBlob>>());
           x33F56AC1 im = inventoryMap[sp.Value];
@@ -350,8 +350,8 @@ namespace InventoryTool {
           string ntype = "";
           if(type == "spray") {
             ntype = "Spray";
-          } else if(type == "voice") {
-            ntype = "Voice Line";
+          } else if(type == "icon") {
+            ntype = "Icon";
           } else {
             continue;
           }
@@ -366,17 +366,14 @@ namespace InventoryTool {
           List<KeyValuePair<string, STUDBlob>> records = inventory[ntype];
           foreach(KeyValuePair<string, STUDBlob> recordkp in records) {
             string ext = "dds";
-            if(ntype == "Voice Line") {
-              ext = "wem";
-            }
             char[] invalids = Path.GetInvalidPathChars();
             char[] invalids2 = Path.GetInvalidFileNameChars();
             path = string.Join("_", path.Split(invalids, StringSplitOptions.RemoveEmptyEntries));
             string tmpPath = path + Path.DirectorySeparatorChar + string.Format("{0}.{1}", string.Join("_", recordkp.Key.Split(invalids2, StringSplitOptions.RemoveEmptyEntries)), ext);
             tmpPath = string.Join(Path.DirectorySeparatorChar.ToString(), tmpPath.Split(Path.DirectorySeparatorChar));
 
-            if(ntype == "Voice Line") {
-              Extract((x090B30AB)recordkp.Value, map, handler, tmpPath, manager);
+            if(ntype == "Icon") {
+              Extract((x8CDAA871)recordkp.Value, map, handler, tmpPath, manager);
             } else if(ntype == "Spray") {
               Extract((x15720E8A)recordkp.Value, map, handler, tmpPath, manager);
             } else {
@@ -442,8 +439,59 @@ namespace InventoryTool {
       }
     }
 
-    private static void Extract(x090B30AB inventoryVoice, Dictionary<ulong, InventoryToolDescriptor> map, CASCHandler handler, string path, STUDManager manager) {
-      throw new NotImplementedException();
+    private static void Extract(x8CDAA871 inventoryIcon, Dictionary<ulong, InventoryToolDescriptor> map, CASCHandler handler, string path, STUDManager manager) {
+      if(!map.ContainsKey(inventoryIcon.Header.f0A8Key)) {
+        return;
+      }
+
+      using(Stream studDecalStream = OpenFile(map[inventoryIcon.Header.f0A8Key], handler)) {
+        STUD studDecal = new STUD(manager, studDecalStream);
+        FF82DF73 decal = (FF82DF73)studDecal.Blob;
+        if(decal == null) {
+          return;
+        }
+
+        ulong key = decal.Mips[0].imageDefinition.key;
+        if(!map.ContainsKey(key)) {
+          return;
+        }
+        using(Stream imageDef = OpenFile(map[key], handler)) {
+          ImageDefinition id = new ImageDefinition(imageDef);
+          ulong imageKey = id.Layers[0].key;
+          if(!map.ContainsKey(imageKey)) {
+            return;
+          }
+          ulong imageDataKey = (imageKey & 0xFFFFFFFFUL) | (0x100000000UL) | (0x0320000000000000UL);
+          bool dbl = map.ContainsKey(imageDataKey);
+          if(!Directory.Exists(Path.GetDirectoryName(path))) {
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+          }
+          string a = imageKey.ToString("X");
+          string b = imageDataKey.ToString("X");
+          using(Stream f004Stream = OpenFile(map[imageKey], handler)) {
+            if(dbl) {
+              using(Stream f04DStream = OpenFile(map[imageDataKey], handler)) {
+                Texture texture = new Texture(f004Stream, f04DStream);
+                if(!texture.Loaded) {
+                  return;
+                }
+                using(Stream outputStream = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write)) {
+                  texture.Save(outputStream);
+                }
+              }
+            } else {
+              TextureLinear texture = new TextureLinear(f004Stream);
+              if(!texture.Loaded) {
+                return;
+              }
+              using(Stream outputStream = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write)) {
+                texture.Save(outputStream);
+              }
+            }
+            Console.Out.WriteLine("Saved file {0}", path);
+          }
+        }
+      }
     }
 
     private static void Extract(x8B9DEB02 inventorySkin, Dictionary<ulong, InventoryToolDescriptor> map, CASCHandler handler, string path, STUDManager manager) {

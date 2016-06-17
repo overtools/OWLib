@@ -63,6 +63,7 @@
     <Compile Include="Types\STUD\STUD_090B30AB.cs" />
     <Compile Include="Types\STUD\STUD_018667E2.cs" />
     <Compile Include="Types\STUD\STUD_33F56AC1.cs" />
+    <Compile Include="Types\STUD\STUD_4FB2CE32.cs" />
     <Compile Include="Types\STUD\STUD_E533D614.cs" />
     <Compile Include="Types\STUD\STUD_01609B4D.cs" />
     <Compile Include="Types\STUD\STUD_4EE84DC0.cs" />

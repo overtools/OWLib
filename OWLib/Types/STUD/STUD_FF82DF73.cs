@@ -10,7 +10,8 @@ namespace OWLib.Types.STUD {
     public ulong count;
     public ulong offset;
   }
-
+  
+  [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct FF82DF73Mip {
     public ulong zero1;
     public STUDDataHeader f008_A; 
@@ -31,7 +32,7 @@ namespace OWLib.Types.STUD {
 
     public new void Dump(TextWriter writer) {
       writer.WriteLine("unk1: {0}", header.unk1);
-      writer.WriteLine("unk2: {0}", header.unk1);
+      writer.WriteLine("unk2: {0}", header.unk2);
       writer.WriteLine("");
       writer.WriteLine("{0} definitions", header.count);
       for(ulong i = 0; i < header.count; ++i) {
