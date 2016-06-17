@@ -60,28 +60,25 @@
     <Compile Include="Types\CommonTypes.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
-    <Compile Include="Types\STUD\STUD_090B30AB.cs" />
-    <Compile Include="Types\STUD\STUD_018667E2.cs" />
-    <Compile Include="Types\STUD\STUD_33F56AC1.cs" />
-    <Compile Include="Types\STUD\STUD_4FB2CE32.cs" />
-    <Compile Include="Types\STUD\STUD_E533D614.cs" />
-    <Compile Include="Types\STUD\STUD_01609B4D.cs" />
-    <Compile Include="Types\STUD\STUD_4EE84DC0.cs" />
-    <Compile Include="Types\STUD\STUD_61632B43.cs" />
-    <Compile Include="Types\STUD\STUD_8B9DEB02.cs" />
-    <Compile Include="Types\STUD\STUD_8CDAA871.cs" />
-    <Compile Include="Types\STUD\STUD_15720E8A.cs" />
-    <Compile Include="Types\STUD\STUD_0BCAF9C9.cs" />
-    <Compile Include="Types\STUD\STUD_3ECCEB5D.cs" />
-    <Compile Include="Types\STUD\STUD_A301496F.cs" />
-    <Compile Include="Types\STUD\STUD_FF82DF73.cs" />
-    <Compile Include="Types\STUD\STUD_InventoryItemGeneric.cs" />
+    <Compile Include="Types\STUD\InventoryItem\VoiceLineItem.cs" />
+    <Compile Include="Types\STUD\InventoryItem\VictoryPoseItem.cs" />
+    <Compile Include="Types\STUD\InventoryItem\EmoteItem.cs" />
+    <Compile Include="Types\STUD\InventoryItem\HeroicIntroItem.cs" />
+    <Compile Include="Types\STUD\InventoryItem\IconItem.cs" />
+    <Compile Include="Types\STUD\InventoryItem\SkinItem.cs" />
+    <Compile Include="Types\STUD\InventoryItem\CreditItem.cs" />
+    <Compile Include="Types\STUD\InventoryItem\GenericInventoryTypes.cs" />
+    <Compile Include="Types\STUD\InventoryItem\SprayItem.cs" />
+    <Compile Include="Types\STUD\InventoryItem\PortraitItem.cs" />
+    <Compile Include="Types\STUD\InventoryItem\Unknown34C28F86080AAB76Item.cs" />
+    <Compile Include="Types\STUD\InventoryItem\Unknown5C4B5EF809855F8FItem.cs" />
     <Compile Include="Types\TextureTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

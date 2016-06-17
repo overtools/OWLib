@@ -1,145 +1,193 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.IO;
 using OWLib.Types;
-using OWLib.Types.STUD;
+using System.Reflection;
 
 namespace OWLib {
-  public class STUD {
-    private STUDManager manager;
-
+  public class STUD {    
     private STUDHeader header;
-    private STUDTableInstanceRecord[] instanceTable;
-    private STUDBlob blob;
+    private STUDInstanceRecord[] records;
+    private ISTUDInstance[] instances;
+    private STUDManager manager = STUDManager.Instance;
 
     public STUDHeader Header => header;
-    public STUDTableInstanceRecord[] InstanceTable => instanceTable;
-    public STUDBlob Blob => blob;
+    public STUDInstanceRecord[] Records => records;
+    public ISTUDInstance[] Instances => instances;
+    public STUDManager Manager => manager;
 
-    public string Name
-    {
-      get
-      {
-        return manager.GetName(header.type);
+    public STUD(Stream input, bool initalizeAll = true, STUDManager manager = null) {
+      if(manager == null) {
+        manager = this.manager;
       }
-    }
 
-    public STUD(STUDManager manager, Stream stream) {
-      stream.Seek(0, SeekOrigin.Begin);
-      this.manager = manager;
-      using(BinaryReader reader = new BinaryReader(stream)) {
+      using(BinaryReader reader = new BinaryReader(input, Encoding.Default, true)) {
         header = reader.Read<STUDHeader>();
-        blob = manager.NewInstance(header.type, stream);
-        if(blob == null) {
-          throw new Exception(string.Format("Unknown STUD type {0:X8}", header.type));
-        }
-        STUDPointer ptr = reader.Read<STUDPointer>();
-        stream.Seek((long)ptr.offset, SeekOrigin.Begin);
-        instanceTable = new STUDTableInstanceRecord[ptr.count];
+        input.Position = (long)header.instanceTableOffset;
+        STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
+
+        records = new STUDInstanceRecord[ptr.count];
+        instances = new ISTUDInstance[ptr.count];
+
         for(ulong i = 0; i < ptr.count; ++i) {
-          instanceTable[i] = reader.Read<STUDTableInstanceRecord>();
+          records[i] = reader.Read<STUDInstanceRecord>();
+        }
+
+        if(initalizeAll) {
+          InitializeAll(input);
         }
       }
     }
 
-    public static void DumpInstance(TextWriter writer, STUDTableInstanceRecord instance) {
-      writer.WriteLine("\tID: {0}", instance.id);
-      writer.WriteLine("\tFlags: {0}", instance.flags);
-      writer.WriteLine("\tKey: {0}", instance.key);
-    }
-    
-    public void Dump(TextWriter writer) {
-      writer.WriteLine("STUD Identifier: {0} / {0:X8}", header.type);
-      writer.WriteLine("{0} instance records...", InstanceTable.Length);
-      for(int i = 0; i < InstanceTable.Length; ++i) {
-        DumpInstance(writer, InstanceTable[i]);
-        writer.WriteLine("");
+    public void InitializeAll(Stream input) {
+      for(long i = 0; i < records.LongLength; ++i) {
+        instances[i] = Initialize(input, records[i]);
       }
-      manager.Dump(header.type, blob, Console.Out);
+    }
+
+    public void InitializeAll(Stream input, List<ulong> keys) {
+      for(long i = 0; i < records.LongLength; ++i) {
+        if(keys.Contains(records[i].key)) {
+          instances[i] = Initialize(input, records[i]);
+        }
+      }
+    }
+
+    public ISTUDInstance Initialize(Stream input, STUDInstanceRecord instance) {
+      input.Position = instance.offset;
+      ISTUDInstance ret = null;
+      STUD_MANAGER_ERROR err;
+      if((err = manager.InitializeInstance(instance.key, input, out ret)) != STUD_MANAGER_ERROR.E_SUCCESS) {
+        if(err != STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE) {
+          Console.Error.WriteLine("Error while instancing for STUD type {0:X16}", err);
+        }
+        return null;
+      }
+      return ret;
     }
   }
 
   public class STUDManager {
+    private List<Type> implementations;
+    private List<ulong> ids;
+    private List<string> names;
+    private HashSet<ulong> complained;
 
-    private Type[] handlers;
-    private uint[] handlerIds;
-    private string[] handlerNames;
+    public IReadOnlyList<Type> Implementations => implementations;
+    public IReadOnlyList<ulong> Ids => ids;
+    public IReadOnlyList<string> Names => names;
+
+    public static STUDManager Instance = NewInstance();
 
     public STUDManager() {
-      handlers = new Type[0];
-      handlerIds = new uint[0];
-      handlerNames = new string[0];
+      implementations = new List<Type>();
+      ids = new List<ulong>();
+      names = new List<string>();
+      complained = new HashSet<ulong>();
     }
 
-    public static STUDManager Create() {
-      STUDManager stud = new STUDManager();
-      stud.AddHandler<A301496F>();
-      stud.AddHandler<x3ECCEB5D>();
-      stud.AddHandler<x15720E8A>();
-      stud.AddHandler<x0BCAF9C9>();
-      stud.AddHandler<x8CDAA871>();
-      stud.AddHandler<x8B9DEB02>();
-      stud.AddHandler<x61632B43>();
-      stud.AddHandler<x4EE84DC0>();
-      stud.AddHandler<x01609B4D>();
-      stud.AddHandler<E533D614>();
-      stud.AddHandler<x018667E2>();
-      stud.AddHandler<x090B30AB>();
-      stud.AddHandler<x33F56AC1>();
-      stud.AddHandler<FF82DF73>();
-      return stud;
+    public Type GetInstance(ulong id) {
+      for(int i = 0; i < implementations.Count; ++i) {
+        if(ids[i] == id) {
+          return implementations[i];
+        }
+      }
+      if(complained.Add(id)) {
+        Console.Error.WriteLine("Warning! Unknown Instance ID {0:X16}", id);
+      }
+      return null;
     }
 
-    public void AddHandler(Type T) {
-      int i = handlers.Length;
+    public STUD_MANAGER_ERROR InitializeInstance(ulong id, Stream input, out ISTUDInstance instance) {
+      return InitializeInstance(GetInstance(id), input, out instance);
+    }
 
-      {
-        Type[] tmpT = new Type[handlers.Length + 1];
-        handlers.CopyTo(tmpT, 0);
-        handlers = tmpT;
-        uint[] tmpI = new uint[handlerIds.Length + 1];
-        handlerIds.CopyTo(tmpI, 0);
-        handlerIds = tmpI;
-        string[] tmpN = new string[handlerNames.Length + 1];
-        handlerNames.CopyTo(tmpN, 0);
-        handlerNames = tmpN;
+    public STUD_MANAGER_ERROR InitializeInstance(Type inst, Stream input, out ISTUDInstance instance) {
+      if(inst == null) {
+        instance = null;
+        return STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE;
       }
 
-      handlers[i] = T;
-      handlerIds[i] = (uint)handlers[i].GetField("id", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null);
-      handlerNames[i] = (string)handlers[i].GetField("name", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).GetValue(null);
+      try {
+        instance = (ISTUDInstance)Activator.CreateInstance(inst);
+        instance.Read(input);
+      } catch (Exception ex) {
+        Console.Error.WriteLine(ex.Message);
+        instance = null;
+        return STUD_MANAGER_ERROR.E_FAULT;
+      }
+
+      return STUD_MANAGER_ERROR.E_SUCCESS;
     }
 
-    public void AddHandler<T>() where T : STUDBlob {
-      AddHandler(typeof(T));
-    }
-
-    public STUDBlob NewInstance(uint id, Stream data) {
-      for(int i = 0; i < handlerIds.Length; ++i) {
-        if(handlerIds[i] == id) {
-          STUDBlob inst = (STUDBlob)(handlers[i].GetConstructor(new Type[] { }).Invoke(new object[] { }));
-          handlers[i].GetMethod("Read", new Type[] { typeof(Stream) }).Invoke(inst, new object[] { data });
-          return inst;
+    public string GetName(ulong id) {
+      for(int i = 0; i < implementations.Count; ++i) {
+        if(ids[i] == id) {
+          return names[i];
         }
       }
       return null;
     }
 
-    public string GetName(uint id) {
-      for(int i = 0; i < handlerIds.Length; ++i) {
-        if(handlerIds[i] == id) {
-          return handlerNames[i];
-        }
+    public string GetName(ISTUDInstance inst) {
+      if(inst == null) {
+        return null;
       }
-      return STUDBlob.name;
+      return inst.Name;
     }
 
-    public void Dump(uint id, STUDBlob inst, TextWriter writer) {
-      for(int i = 0; i < handlerIds.Length; ++i) {
-        if(handlerIds[i] == id) {
-          handlers[i].GetMethod("Dump", new Type[] { typeof(TextWriter) }).Invoke(inst, new object[] { writer });
-          break;
-        }
+    public string GetName(Type inst) {
+      if(inst == null) {
+        return null;
       }
+      ISTUDInstance instance = (ISTUDInstance)Activator.CreateInstance(inst);
+      return GetName(instance);
+    }
+
+    public ulong GetId(ISTUDInstance inst) {
+      if(inst == null) {
+        return 0;
+      }
+      return inst.Key;
+    }
+
+    public ulong GetId(Type inst) {
+      if(inst == null) {
+        return 0;
+      }
+      ISTUDInstance instance = (ISTUDInstance)Activator.CreateInstance(inst);
+      return GetId(instance);
+    }
+
+    public STUD_MANAGER_ERROR AddInstance(ISTUDInstance instance) {
+      if(instance == null) {
+        return STUD_MANAGER_ERROR.E_FAULT;
+      }
+      return AddInstance(instance.GetType());
+    }
+
+    public STUD_MANAGER_ERROR AddInstance(Type instance) {
+      if(instance == null) {
+        return STUD_MANAGER_ERROR.E_FAULT;
+      }
+      implementations.Add(instance);
+      ids.Add(GetId(instance));
+      names.Add(GetName(instance));
+      return STUD_MANAGER_ERROR.E_SUCCESS;
+    }
+
+    public static STUDManager NewInstance() {
+      STUDManager manager = new STUDManager();
+      Assembly asm = typeof(ISTUDInstance).Assembly;
+      Type t = typeof(ISTUDInstance);
+      List<Type> types = asm.GetTypes().Where(type => type != t && t.IsAssignableFrom(type)).ToList();
+      foreach(Type type in types) {
+        manager.AddInstance(type);
+      }
+      return manager;
     }
   }
 }

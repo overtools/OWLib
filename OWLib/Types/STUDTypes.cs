@@ -1,56 +1,54 @@
-﻿using System.Runtime.InteropServices;
-using System.IO;
+﻿using System.IO;
+using System.Runtime.InteropServices;
 
 namespace OWLib.Types {
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct STUDHeader {
     public uint magic;
     public uint version;
-    public uint size;
-    public uint unk1;
-    public uint type;
-    public uint instances;
-    public uint unk2;
-    public uint unk3;
+    public ulong instanceTableOffset;
   }
-  
+
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
-  public struct STUDTableInstanceRecord {
-    public uint id;
+  public struct STUDInstanceRecord {
+    public uint offset;
     public uint flags;
     public ulong key;
   }
 
-  [StructLayout(LayoutKind.Sequential, Pack = 8)]
-  public struct STUDPointer {
+  [StructLayout(LayoutKind.Sequential, Pack = 4)]
+  public struct STUDInstanceInfo {
+    public uint localId;
+    public uint nextInstance;
+  }
+
+  [StructLayout(LayoutKind.Sequential, Pack = 4)]
+  public struct STUDArrayInfo {
     public ulong count;
     public ulong offset;
   }
 
-  [StructLayout(LayoutKind.Sequential, Pack = 4)]
-  public struct STUDDataHeader {
-    public ulong padding;
-    public ulong key;
+  public interface ISTUDInstance {
+    string Name
+    {
+      get;
+    }
+
+    ulong Key
+    {
+      get;
+    }
+
+    void Read(Stream input);
   }
 
-  public partial class STUDBlob {
-    public static uint id = 0x00000000;
-    public static string name = "STUD";
-
-    public void Read(Stream stream) {
-    }
-
-    public void DumpKey(TextWriter writer, ulong key, string prefix = "") {
-      writer.WriteLine("{1}Index: {0:X12}", APM.keyToIndexID(key), prefix);
-      writer.WriteLine("{1}Type: {0:X3}", APM.keyToTypeID(key), prefix);
-    }
-
-    public void DumpSTUDHeader(TextWriter writer, STUDDataHeader header, string prefix = "") {
-      DumpKey(writer, header.key, prefix);
-    }
-
-    public void Dump(TextWriter writer) {
-      writer.Write("Whoops!");
-    }
+  public enum STUD_MANAGER_ERROR {
+    E_SUCCESS = 0x00,
+    E_ALREADY_ADDED = 0x01,
+    E_FAULT = 0x02,
+    E_FAULT_AT_ID = 0x03,
+    E_FAULT_AT_NAME = 0x04,
+    E_UNKNOWN_INSTANCE = 0x05,
+    E_GENERIC = 0x06
   }
 }
