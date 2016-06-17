@@ -60,6 +60,8 @@
     <Compile Include="Types\CommonTypes.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
+    <Compile Include="Types\STUD\Decal.cs" />
+    <Compile Include="Types\STUD\HeroMaster.cs" />
     <Compile Include="Types\STUD\InventoryItem\VoiceLineItem.cs" />
     <Compile Include="Types\STUD\InventoryItem\VictoryPoseItem.cs" />
     <Compile Include="Types\STUD\InventoryItem\EmoteItem.cs" />
@@ -72,6 +74,8 @@
     <Compile Include="Types\STUD\InventoryItem\PortraitItem.cs" />
     <Compile Include="Types\STUD\InventoryItem\Unknown34C28F86080AAB76Item.cs" />
     <Compile Include="Types\STUD\InventoryItem\Unknown5C4B5EF809855F8FItem.cs" />
+    <Compile Include="Types\STUD\InventoryMaster.cs" />
+    <Compile Include="Types\STUD\MaterialMaster.cs" />
     <Compile Include="Types\TextureTypes.cs" />
   </ItemGroup>
   <ItemGroup>

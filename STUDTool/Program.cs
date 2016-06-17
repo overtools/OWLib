@@ -19,11 +19,7 @@ namespace STUDTool {
       
       using(Stream stream = File.Open(file, FileMode.Open, FileAccess.Read)) {
         STUD stud = new STUD(stream);
-        try {
-          System.Diagnostics.Debugger.Break();
-        } catch {
-          Console.Error.WriteLine(file);
-        }
+        System.Diagnostics.Debugger.Break();
       }
     }
   }

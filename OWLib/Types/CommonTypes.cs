@@ -28,11 +28,18 @@ namespace OWLib.Types {
     public ushort unk4;
     public uint unk5;
   }
-  
+
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct ImageLayer {
     public ulong key;
     public uint unk;
     public uint layer;
+  }
+
+  public enum HeroType : uint {
+    OFFENSIVE = 1,
+    DEFENSIVE = 2,
+    TANK = 3,
+    SUPPORT = 4
   }
 }
