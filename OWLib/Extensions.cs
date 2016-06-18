@@ -91,7 +91,7 @@ namespace OWLib {
       return (dds.type & TEXTURE_FLAGS.WORLD) == TEXTURE_FLAGS.WORLD;
     }
 
-    public static DDSHeader ToDDSHeader(this TextureHeader header, bool modify = true) {
+    public static DDSHeader ToDDSHeader(this TextureHeader header) {
       DDSHeader ret = new DDSHeader {
         magic = 0x20534444,
         size = 124,
@@ -112,9 +112,9 @@ namespace OWLib {
         ret.caps1 = 0x1000 | 0x8;
       }
       if(header.IsCubemap()) {
-        ret.caps2 = 0x200;
+        ret.caps2 = 0xFE00;
       }
-      if(header.mips > 1 && header.indice == 1) {
+      if(header.mips > 1 && (header.indice == 1 || header.IsCubemap())) {
         ret.mipmapCount = header.mips;
         ret.caps1 = (0x8 | 0x1000 | 0x400000);
       }
@@ -123,6 +123,9 @@ namespace OWLib {
 
     public static DDSHeader ToDDSHeader(this RawTextureheader rawHeader, TextureHeader header) {
       DDSHeader ret = header.ToDDSHeader();
+      if(header.indice == 1 || header.IsCubemap()) {
+        ret.mipmapCount = rawHeader.mips;
+      }
       return ret;
     }
 
