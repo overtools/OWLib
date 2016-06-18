@@ -37,12 +37,12 @@ namespace OverTool {
 
     public static string SanitizePath(string name) {
       char[] invalids = Path.GetInvalidFileNameChars();
-      return string.Join("_", name.Split(invalids, StringSplitOptions.RemoveEmptyEntries));
+      return string.Join("_", name.Split(invalids));
     }
 
     public static string SanitizeDir(string name) {
       char[] invalids = Path.GetInvalidPathChars();
-      return string.Join("_", name.Split(invalids, StringSplitOptions.RemoveEmptyEntries));
+      return string.Join("_", name.Split(invalids));
     }
 
     public static string GetString(ulong key, Dictionary<ulong, Record> map, CASCHandler handler) {
