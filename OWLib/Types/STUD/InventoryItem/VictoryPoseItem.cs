@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.InventoryItem {
-  public class VictoryPoseItem : ISTUDInstance {
+  public class VictoryPoseItem : IInventorySTUDInstance {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct VictoryPoseData {
       public OWRecord f0BF;
@@ -31,7 +31,7 @@ namespace OWLib.Types.STUD.InventoryItem {
     public VictoryPoseData Data => data;
 
     public void Read(Stream input) {
-      using(BinaryReader reader = new BinaryReader(input)) {
+      using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<InventoryItemHeader>();
         data = reader.Read<VictoryPoseData>();
       }

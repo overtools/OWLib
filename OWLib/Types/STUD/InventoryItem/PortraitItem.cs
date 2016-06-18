@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.InventoryItem {
-  public class PortraitItem : ISTUDInstance {
+  public class PortraitItem : IInventorySTUDInstance {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct PortraitItemData {
       public OWRecord portrait;
@@ -35,7 +35,7 @@ namespace OWLib.Types.STUD.InventoryItem {
     public PortraitItemData Data => data;
 
     public void Read(Stream input) {
-      using(BinaryReader reader = new BinaryReader(input)) {
+      using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<InventoryItemHeader>();
         data = reader.Read<PortraitItemData>();
       }

@@ -43,7 +43,7 @@ namespace OWLib.Types.STUD {
     public DecalRecord[] Records => records;
 
     public void Read(Stream input) {
-      using(BinaryReader reader = new BinaryReader(input)) {
+      using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<DecalHeader>();
 
         input.Position = (long)header.offset;

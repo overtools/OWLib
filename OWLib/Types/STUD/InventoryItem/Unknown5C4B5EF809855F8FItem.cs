@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.InventoryItem {
-  public class Unknown5C4B5EF809855F8FItem : ISTUDInstance {
+  public class Unknown5C4B5EF809855F8FItem : IInventorySTUDInstance {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct UnknownItemData {
       public ulong unk1;
@@ -32,7 +32,7 @@ namespace OWLib.Types.STUD.InventoryItem {
     public UnknownItemData Data => data;
 
     public void Read(Stream input) {
-      using(BinaryReader reader = new BinaryReader(input)) {
+      using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<InventoryItemHeader>();
         data = reader.Read<UnknownItemData>();
       }

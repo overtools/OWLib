@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.InventoryItem {
-  public class EmoteItem : ISTUDInstance {
+  public class EmoteItem : IInventorySTUDInstance {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct EmoteData {
       public OWRecord f014;
@@ -29,7 +29,7 @@ namespace OWLib.Types.STUD.InventoryItem {
         return "Emote";
       }
     }
-    
+
     private InventoryItemHeader header;
     public InventoryItemHeader Header => header;
 
@@ -37,7 +37,7 @@ namespace OWLib.Types.STUD.InventoryItem {
     public EmoteData Data => data;
 
     public void Read(Stream input) {
-      using(BinaryReader reader = new BinaryReader(input)) {
+      using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<InventoryItemHeader>();
         data = reader.Read<EmoteData>();
       }

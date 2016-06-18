@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.InventoryItem {
-  public class SprayItem : ISTUDInstance {
+  public class SprayItem : IInventorySTUDInstance {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct SprayItemData {
       public ulong unk1;
@@ -34,7 +34,7 @@ namespace OWLib.Types.STUD.InventoryItem {
     public SprayItemData Data => data;
 
     public void Read(Stream input) {
-      using(BinaryReader reader = new BinaryReader(input)) {
+      using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<InventoryItemHeader>();
         data = reader.Read<SprayItemData>();
       }
@@ -69,7 +69,7 @@ namespace OWLib.Types.STUD.InventoryItem {
     public MipmapData Data => data;
 
     public void Read(Stream input) {
-      using(BinaryReader reader = new BinaryReader(input)) {
+      using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         data = reader.Read<MipmapData>();
       }
     }

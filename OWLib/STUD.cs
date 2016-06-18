@@ -12,6 +12,7 @@ namespace OWLib {
     private STUDHeader header;
     private STUDInstanceRecord[] records;
     private ISTUDInstance[] instances;
+
     private STUDManager manager = STUDManager.Instance;
 
     public STUDHeader Header => header;
@@ -22,6 +23,8 @@ namespace OWLib {
     public STUD(Stream input, bool initalizeAll = true, STUDManager manager = null) {
       if(manager == null) {
         manager = this.manager;
+      } else {
+        this.manager = manager;
       }
 
       using(BinaryReader reader = new BinaryReader(input, Encoding.Default, true)) {
@@ -76,11 +79,12 @@ namespace OWLib {
     private List<string> names;
     private HashSet<ulong> complained;
 
+    private static STUDManager _Instance = NewInstance();
+    public static STUDManager Instance => _Instance;
+
     public IReadOnlyList<Type> Implementations => implementations;
     public IReadOnlyList<ulong> Ids => ids;
     public IReadOnlyList<string> Names => names;
-
-    public static STUDManager Instance = NewInstance();
 
     public STUDManager() {
       implementations = new List<Type>();
@@ -185,6 +189,9 @@ namespace OWLib {
       Type t = typeof(ISTUDInstance);
       List<Type> types = asm.GetTypes().Where(type => type != t && t.IsAssignableFrom(type)).ToList();
       foreach(Type type in types) {
+        if(type.IsInterface) {
+          continue;
+        }
         manager.AddInstance(type);
       }
       return manager;

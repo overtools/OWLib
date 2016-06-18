@@ -101,7 +101,7 @@ namespace OWLib.Types.STUD {
     public HeroChild2[] Child3 => child3;
 
     public void Read(Stream input) {
-      using(BinaryReader reader = new BinaryReader(input)) {
+      using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<HeroMasterHeader>();
         
         input.Position = (long)header.recordsOffset;

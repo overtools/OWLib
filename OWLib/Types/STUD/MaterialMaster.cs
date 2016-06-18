@@ -67,7 +67,7 @@ namespace OWLib.Types.STUD {
     public MaterialMasterData[] Data => data;
 
     public void Read(Stream input) {
-      using(BinaryReader reader = new BinaryReader(input)) {
+      using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<MaterialMasterHeader>();
 
         input.Position = (long)header.materialOffset;
