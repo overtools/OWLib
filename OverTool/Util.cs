@@ -35,6 +35,16 @@ namespace OverTool {
       return ms;
     }
 
+    public static string SanitizePath(string name) {
+      char[] invalids = Path.GetInvalidFileNameChars();
+      return string.Join("_", name.Split(invalids, StringSplitOptions.RemoveEmptyEntries));
+    }
+
+    public static string SanitizeDir(string name) {
+      char[] invalids = Path.GetInvalidPathChars();
+      return string.Join("_", name.Split(invalids, StringSplitOptions.RemoveEmptyEntries));
+    }
+
     public static string GetString(ulong key, Dictionary<ulong, Record> map, CASCHandler handler) {
       if(!map.ContainsKey(key)) {
         return null;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CASCExplorer;
@@ -25,7 +26,7 @@ namespace OverTool {
 
       string root = args[0];
       char opt = args[1][0];
-      char[] validOpts = new char[] { 't' };
+      char[] validOpts = new char[] { 't', 'x' };
       if(!validOpts.Contains(opt)) {
         Console.Error.WriteLine("UNSUPPORTED OPT {0}", opt);
         return;
@@ -36,6 +37,8 @@ namespace OverTool {
 
       Dictionary<ulong, Record> map = new Dictionary<ulong, Record>();
 
+      Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
+      Console.Out.WriteLine("Loading files...");
       CASCConfig config = CASCConfig.LoadLocalStorageConfig(root);
       CASCHandler handler = CASCHandler.OpenStorage(config);
       OwRootHandler ow = handler.Root as OwRootHandler;
@@ -44,6 +47,7 @@ namespace OverTool {
         return;
       }
 
+      Console.Out.WriteLine("Mapping files...");
       foreach(APMFile apm in ow.APMFiles) {
         if(!apm.Name.ToLowerInvariant().Contains("rcn")) {
           continue; // skip
@@ -75,6 +79,8 @@ namespace OverTool {
 
       if(opt == 't') {
         ListInventory.Parse(track, map, handler, args.Skip(2).ToArray());
+      } else if(opt == 'x') {
+        Extract.Parse(track, map, handler, args.Skip(2).ToArray());
       }
     }
   }

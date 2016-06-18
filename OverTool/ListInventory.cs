@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CASCExplorer;
 using OWLib;
 using OWLib.Types;
@@ -30,7 +27,7 @@ namespace OverTool {
       Console.Out.WriteLine("\t{0} ({1} {2})", name, instance.Header.rarity, stud.Instances[0].Name);
     }
 
-    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] v) {
+    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       List<ulong> masters = track[0x75];
       foreach(ulong masterKey in masters) {
         if(!map.ContainsKey(masterKey)) {

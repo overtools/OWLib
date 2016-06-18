@@ -20,14 +20,14 @@ namespace OWLib {
     public ISTUDInstance[] Instances => instances;
     public STUDManager Manager => manager;
 
-    public STUD(Stream input, bool initalizeAll = true, STUDManager manager = null) {
+    public STUD(Stream input, bool initalizeAll = true, STUDManager manager = null, bool leaveOpen = false) {
       if(manager == null) {
         manager = this.manager;
       } else {
         this.manager = manager;
       }
 
-      using(BinaryReader reader = new BinaryReader(input, Encoding.Default, true)) {
+      using(BinaryReader reader = new BinaryReader(input, Encoding.Default, leaveOpen)) {
         header = reader.Read<STUDHeader>();
         input.Position = (long)header.instanceTableOffset;
         STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
