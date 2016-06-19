@@ -20,7 +20,7 @@ namespace OWLib {
     public ISTUDInstance[] Instances => instances;
     public STUDManager Manager => manager;
 
-    public STUD(Stream input, bool initalizeAll = true, STUDManager manager = null, bool leaveOpen = false) {
+    public STUD(Stream input, bool initalizeAll = true, STUDManager manager = null, bool leaveOpen = false, bool suppress = false) {
       if(manager == null) {
         manager = this.manager;
       } else {
@@ -40,32 +40,35 @@ namespace OWLib {
         }
 
         if(initalizeAll) {
-          InitializeAll(input);
+          InitializeAll(input, suppress);
         }
       }
     }
 
-    public void InitializeAll(Stream input) {
+    public void InitializeAll(Stream input, bool suppress) {
       for(long i = 0; i < records.LongLength; ++i) {
-        instances[i] = Initialize(input, records[i]);
+        instances[i] = Initialize(input, records[i], suppress);
       }
     }
 
-    public void InitializeAll(Stream input, List<ulong> keys) {
+    public void InitializeAll(Stream input, List<ulong> keys, bool suppress) {
       for(long i = 0; i < records.LongLength; ++i) {
         if(keys.Contains(records[i].key)) {
-          instances[i] = Initialize(input, records[i]);
+          instances[i] = Initialize(input, records[i], suppress);
         }
       }
     }
 
-    public ISTUDInstance Initialize(Stream input, STUDInstanceRecord instance) {
+    public ISTUDInstance Initialize(Stream input, STUDInstanceRecord instance, bool suppress) {
       input.Position = instance.offset;
       ISTUDInstance ret = null;
       STUD_MANAGER_ERROR err;
-      if((err = manager.InitializeInstance(instance.key, input, out ret)) != STUD_MANAGER_ERROR.E_SUCCESS) {
+      bool outputOffset = STUDManager.Complained.Contains(instance.key);
+      if((err = manager.InitializeInstance(instance.key, input, out ret, suppress)) != STUD_MANAGER_ERROR.E_SUCCESS) {
         if(err != STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE) {
           Console.Error.WriteLine("Error while instancing for STUD type {0:X16}", err);
+        } else if(!suppress && !outputOffset) {
+          Console.Error.WriteLine("Instance is at offset {0:X16}", instance.offset);
         }
         return null;
       }
@@ -77,7 +80,9 @@ namespace OWLib {
     private List<Type> implementations;
     private List<ulong> ids;
     private List<string> names;
-    private HashSet<ulong> complained;
+
+    private static HashSet<ulong> complained = new HashSet<ulong>();
+    public static HashSet<ulong> Complained => complained;
 
     private static STUDManager _Instance = NewInstance();
     public static STUDManager Instance => _Instance;
@@ -90,23 +95,22 @@ namespace OWLib {
       implementations = new List<Type>();
       ids = new List<ulong>();
       names = new List<string>();
-      complained = new HashSet<ulong>();
     }
 
-    public Type GetInstance(ulong id) {
+    public Type GetInstance(ulong id, bool suppress) {
       for(int i = 0; i < implementations.Count; ++i) {
         if(ids[i] == id) {
           return implementations[i];
         }
       }
-      if(complained.Add(id)) {
+      if(complained.Add(id) && !suppress) {
         Console.Error.WriteLine("Warning! Unknown Instance ID {0:X16}", id);
       }
       return null;
     }
 
-    public STUD_MANAGER_ERROR InitializeInstance(ulong id, Stream input, out ISTUDInstance instance) {
-      return InitializeInstance(GetInstance(id), input, out instance);
+    public STUD_MANAGER_ERROR InitializeInstance(ulong id, Stream input, out ISTUDInstance instance, bool suppress) {
+      return InitializeInstance(GetInstance(id, suppress), input, out instance);
     }
 
     public STUD_MANAGER_ERROR InitializeInstance(Type inst, Stream input, out ISTUDInstance instance) {

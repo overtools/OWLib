@@ -60,7 +60,12 @@
     <Compile Include="Types\CommonTypes.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
+    <Compile Include="Types\STUD\Binding\ComplexModelRecord.cs" />
+    <Compile Include="Types\STUD\Binding\ViewModelRecord.cs" />
+    <Compile Include="Types\STUD\Binding\ParameterRecord.cs" />
     <Compile Include="Types\STUD\Decal.cs" />
+    <Compile Include="Types\STUD\GameParam\DamageCharacteristicRecord.cs" />
+    <Compile Include="Types\STUD\GameParam\ModelParamRecord.cs" />
     <Compile Include="Types\STUD\HeroMaster.cs" />
     <Compile Include="Types\STUD\InventoryItem\VoiceLineItem.cs" />
     <Compile Include="Types\STUD\InventoryItem\VictoryPoseItem.cs" />
