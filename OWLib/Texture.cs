@@ -4,7 +4,7 @@ using OWLib.Types;
 namespace OWLib {
   public class Texture {
     private TextureHeader header;
-    private RawTextureheader rawHeader;
+    private RawTextureHeader rawHeader;
     private TextureType format;
     private uint size;
     private uint[] color1;
@@ -15,7 +15,7 @@ namespace OWLib {
     private bool loaded = false;
 
     public TextureHeader Header => header;
-    public RawTextureheader RawHeader => rawHeader;
+    public RawTextureHeader RawHeader => rawHeader;
     public TextureType Format => format;
     public uint Size => size;
     public uint[] Color1 => color1;
@@ -39,7 +39,7 @@ namespace OWLib {
           return;
         }
 
-        rawHeader = dataReader.Read<RawTextureheader>();
+        rawHeader = dataReader.Read<RawTextureHeader>();
 
         size   = rawHeader.imageSize / header.Format().ByteSize();
         color1 = new uint[size];
@@ -72,15 +72,14 @@ namespace OWLib {
 
     public void Save(Stream ddsStream) {
       using(BinaryWriter ddsWriter = new BinaryWriter(ddsStream)) {
-        DDSHeader dds = rawHeader.ToDDSHeader(header);
-        dds.linearSize = rawHeader.imageSize;
+        DDSHeader dds = header.ToDDSHeader();
         ddsWriter.Write(dds);
         if(dds.format.fourCC == 808540228) {
           DDS_HEADER_DXT10 d10 = new DDS_HEADER_DXT10 {
             format = (uint)header.format,
             dimension = D3D10_RESOURCE_DIMENSION.TEXTURE2D,
             misc = (uint)(header.IsCubemap() ? 0x4 : 0),
-            size = 1,
+            size = (uint)(header.IsCubemap() ? 1 : header.surfaces),
             misc2 = 0
           };
           ddsWriter.Write(d10);

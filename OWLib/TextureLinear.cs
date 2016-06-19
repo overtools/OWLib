@@ -27,7 +27,7 @@ namespace OWLib {
             format = (uint)header.format,
             dimension = D3D10_RESOURCE_DIMENSION.TEXTURE2D,
             misc = (uint)(header.IsCubemap() ? 0x4 : 0),
-            size = 1,
+            size = (uint)(header.IsCubemap() ? 1 : header.surfaces),
             misc2 = 0
           };
           ddsWriter.Write(d10);

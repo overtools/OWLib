@@ -109,7 +109,8 @@ namespace OWLib {
         reserved2 = 0
       };
       if(header.surfaces > 1) {
-        ret.caps1 = 0x1000 | 0x8;
+        ret.caps1 = (0x8 | 0x1000);
+        ret.format = TextureType.Unknown.ToPixelFormat();
       }
       if(header.IsCubemap()) {
         ret.caps2 = 0xFE00;
@@ -117,14 +118,6 @@ namespace OWLib {
       if(header.mips > 1 && (header.indice == 1 || header.IsCubemap())) {
         ret.mipmapCount = header.mips;
         ret.caps1 = (0x8 | 0x1000 | 0x400000);
-      }
-      return ret;
-    }
-
-    public static DDSHeader ToDDSHeader(this RawTextureheader rawHeader, TextureHeader header) {
-      DDSHeader ret = header.ToDDSHeader();
-      if(header.indice == 1 || header.IsCubemap()) {
-        ret.mipmapCount = rawHeader.mips;
       }
       return ret;
     }

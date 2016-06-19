@@ -19,7 +19,7 @@ namespace OWLib.Types {
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
-  public struct RawTextureheader {
+  public struct RawTextureHeader {
     public uint mips;
     public uint surfaces;
     public uint imageSize;
