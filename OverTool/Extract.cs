@@ -105,7 +105,7 @@ namespace OverTool {
           if(name == null) {
             continue;
           }
-          if(!heroWildcard[heroName.ToLowerInvariant()] && !heroTypes[heroName.ToLowerInvariant()].Contains(instance.Name.ToLowerInvariant())) {
+          if(!heroWildcard[heroName.ToLowerInvariant()] && !heroTypes[heroName.ToLowerInvariant()].Contains(name.ToLowerInvariant())) {
             continue;
           }
 
@@ -114,7 +114,7 @@ namespace OverTool {
               ExtractLogic.Spray.Extract(stud, output, heroName, name, track, map, handler);
               break;
             case "Skin":
-              //ExtractLogic.Skin.Extract(master, stud, output, heroName, name, track, map, handler);
+              ExtractLogic.Skin.Extract(master, stud, output, heroName, name, track, map, handler);
               break;
             case "Icon":
               ExtractLogic.Icon.Extract(stud, output, heroName, name, track, map, handler);

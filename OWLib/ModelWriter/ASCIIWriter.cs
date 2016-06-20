@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OWLib.Types;
 
 namespace OWLib.ModelWriter {
@@ -65,7 +62,7 @@ namespace OWLib.ModelWriter {
               List<ImageLayer> materialLayers = layers[materialKey];
               writer.WriteLine(materialLayers.Count);
               for(int j = 0; j < materialLayers.Count; ++j) {
-                writer.WriteLine("{0:X16}_{1:X16}.dds", materialKey, materialLayers[j].unk);
+                writer.WriteLine("{0:X16}_{1:X8}.dds", materialKey, materialLayers[j].unk);
                 uint layer = layers[materialKey][j].layer;
                 if(layer == 0) {
                   layer = 1;

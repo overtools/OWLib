@@ -49,6 +49,7 @@ namespace OWLib.Types {
     E_FAULT_AT_ID = 0x03,
     E_FAULT_AT_NAME = 0x04,
     E_UNKNOWN_INSTANCE = 0x05,
-    E_GENERIC = 0x06
+    E_GENERIC = 0x06,
+    E_DUPLICATE = 0x07
   }
 }

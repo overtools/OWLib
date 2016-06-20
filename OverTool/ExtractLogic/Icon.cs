@@ -39,12 +39,14 @@ namespace OverTool.ExtractLogic {
 
       ulong imageDataKey = (imageKey & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
 
-      if(map.ContainsKey(imageDataKey)) {
-        Texture tex = new Texture(Util.OpenFile(map[imageKey], handler), Util.OpenFile(map[imageDataKey], handler));
-        tex.Save(File.Open(path, FileMode.OpenOrCreate, FileAccess.Write));
-      } else {
-        TextureLinear tex = new TextureLinear(Util.OpenFile(map[imageKey], handler));
-        tex.Save(File.Open(path, FileMode.OpenOrCreate, FileAccess.Write));
+      using(Stream outp = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write)) {
+        if(map.ContainsKey(imageDataKey)) {
+          Texture tex = new Texture(Util.OpenFile(map[imageKey], handler), Util.OpenFile(map[imageDataKey], handler));
+          tex.Save(outp);
+        } else {
+          TextureLinear tex = new TextureLinear(Util.OpenFile(map[imageKey], handler));
+          tex.Save(outp);
+        }
       }
       Console.Out.WriteLine("Wrote spray {0}", path);
     }

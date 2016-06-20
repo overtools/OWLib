@@ -36,6 +36,14 @@ namespace OWLib.Types {
     public uint layer;
   }
 
+  [StructLayout(LayoutKind.Sequential, Pack = 4)]
+  public unsafe struct Vec4 {
+    public float x;
+    public float y;
+    public float z;
+    public float w;
+  }
+
   public enum HeroType : uint {
     OFFENSIVE = 1,
     DEFENSIVE = 2,

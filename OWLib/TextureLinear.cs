@@ -19,6 +19,9 @@ namespace OWLib {
     public bool Loaded => loaded;
 
     public void Save(Stream output) {
+      if(!loaded) {
+        return;
+      }
       using(BinaryWriter ddsWriter = new BinaryWriter(output)) {
         DDSHeader dds = header.ToDDSHeader();
         ddsWriter.Write(dds);

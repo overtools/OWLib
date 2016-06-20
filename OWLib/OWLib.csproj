@@ -50,6 +50,7 @@
     <Compile Include="Half\Half.cs" />
     <Compile Include="Half\HalfHelper.cs" />
     <Compile Include="ImageDefinition.cs" />
+    <Compile Include="Material.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="ModelWriter\OBJWriter.cs" />
     <Compile Include="ModelWriter\ASCIIWriter.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Types\STUD\Decal.cs" />
     <Compile Include="Types\STUD\GameParam\DamageCharacteristicRecord.cs" />
     <Compile Include="Types\STUD\GameParam\ModelParamRecord.cs" />
+    <Compile Include="Types\STUD\Generic.cs" />
     <Compile Include="Types\STUD\HeroMaster.cs" />
     <Compile Include="Types\STUD\InventoryItem\VoiceLineItem.cs" />
     <Compile Include="Types\STUD\InventoryItem\VictoryPoseItem.cs" />

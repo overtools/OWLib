@@ -71,7 +71,7 @@ namespace OWLib {
       bool outputOffset = STUDManager.Complained.Contains(instance.key);
       if((err = manager.InitializeInstance(instance.key, input, out ret, suppress)) != STUD_MANAGER_ERROR.E_SUCCESS) {
         if(err != STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE) {
-          Console.Error.WriteLine("Error while instancing for STUD type {0:X16}", err);
+          Console.Error.WriteLine("Error while instancing for STUD type {0:X16}", instance.key);
         } else if(!suppress && !outputOffset) {
           Console.Error.WriteLine("Instance is at offset {0:X16}", instance.offset);
         }
@@ -124,6 +124,12 @@ namespace OWLib {
         return STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE;
       }
 
+      if(System.Diagnostics.Debugger.IsAttached) {
+        instance = (ISTUDInstance)Activator.CreateInstance(inst);
+        instance.Read(input);
+        return STUD_MANAGER_ERROR.E_SUCCESS;
+      }
+
       try {
         instance = (ISTUDInstance)Activator.CreateInstance(inst);
         instance.Read(input);
@@ -156,6 +162,11 @@ namespace OWLib {
       if(inst == null) {
         return null;
       }
+      if(implementations.Contains(inst)) {
+        if(names.Count > implementations.IndexOf(inst)) {
+          return names[implementations.IndexOf(inst)];
+        }
+      }
       ISTUDInstance instance = (ISTUDInstance)Activator.CreateInstance(inst);
       return GetName(instance);
     }
@@ -185,6 +196,9 @@ namespace OWLib {
     public STUD_MANAGER_ERROR AddInstance(Type instance) {
       if(instance == null) {
         return STUD_MANAGER_ERROR.E_FAULT;
+      }
+      if(implementations.Contains(instance)) {
+        return STUD_MANAGER_ERROR.E_DUPLICATE;
       }
       implementations.Add(instance);
       ids.Add(GetId(instance));

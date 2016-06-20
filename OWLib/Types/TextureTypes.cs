@@ -1,6 +1,23 @@
 ﻿using System.Runtime.InteropServices;
 
 namespace OWLib.Types {
+  [StructLayout(LayoutKind.Sequential, Pack = 4)]
+  public struct MaterialHeader {
+    public ulong virtualKey;
+    public ulong f03AKey;
+    public ulong definitionKey;
+    public ulong offset1;
+    public ulong offset2;
+    public Vec4 rotation;
+    public uint unk1;
+    public uint unk2;
+    public ushort count2;
+    public ushort count1;
+    public ushort unk3;
+    public ushort unk4;
+    public ushort unk5;
+  }
+
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
   public struct TextureHeader {
     public TEXTURE_FLAGS type;

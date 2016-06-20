@@ -71,6 +71,9 @@ namespace OWLib {
     }
 
     public void Save(Stream ddsStream) {
+      if(!loaded) {
+        return;
+      }
       using(BinaryWriter ddsWriter = new BinaryWriter(ddsStream)) {
         DDSHeader dds = header.ToDDSHeader();
         ddsWriter.Write(dds);

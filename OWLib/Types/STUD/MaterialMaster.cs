@@ -98,21 +98,23 @@ namespace OWLib.Types.STUD {
           }
         }
 
-        input.Position = (long)header.dataOffset;
-        ptr = reader.Read<STUDArrayInfo>();
-        data = new MaterialMasterData[ptr.count];
-        dataBinds = new MaterialMasterMaterial[ptr.count][];
-        input.Position = (long)ptr.offset;
-        for(ulong i = 0; i < ptr.count; ++i) {
-          data[i] = reader.Read<MaterialMasterData>();
-        }
-        for(ulong i = 0; i < ptr.count; ++i) {
-          input.Position = (long)data[i].offset;
-          STUDArrayInfo ptr2 = reader.Read<STUDArrayInfo>();
-          dataBinds[i] = new MaterialMasterMaterial[ptr2.count];
-          input.Position = (long)ptr2.offset;
-          for(ulong j = 0; j < ptr2.count; ++j) {
-            dataBinds[i][j] = reader.Read<MaterialMasterMaterial>();
+        if(header.dataOffset > 0) {
+          input.Position = (long)header.dataOffset;
+          ptr = reader.Read<STUDArrayInfo>();
+          data = new MaterialMasterData[ptr.count];
+          dataBinds = new MaterialMasterMaterial[ptr.count][];
+          input.Position = (long)ptr.offset;
+          for(ulong i = 0; i < ptr.count; ++i) {
+            data[i] = reader.Read<MaterialMasterData>();
+          }
+          for(ulong i = 0; i < ptr.count; ++i) {
+            input.Position = (long)data[i].offset;
+            STUDArrayInfo ptr2 = reader.Read<STUDArrayInfo>();
+            dataBinds[i] = new MaterialMasterMaterial[ptr2.count];
+            input.Position = (long)ptr2.offset;
+            for(ulong j = 0; j < ptr2.count; ++j) {
+              dataBinds[i][j] = reader.Read<MaterialMasterMaterial>();
+            }
           }
         }
       }
