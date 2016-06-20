@@ -1,16 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using OWLib;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using OWLib.Types;
 
-namespace ModelTool {
-  public class BINWriter {
+namespace OWLib.ModelWriter {
+  public class BINWriter : IModelWriter {
     private static void WriteString(BinaryWriter stream, string str) {
       stream.Write(str);
     }
 
     public static readonly float Rad2Deg = 360.0f / (float)(Math.PI * 2f);
+    
+    public string Name => "XNALara XPS Binary";
+    public string Format => ".mesh.bin";
+    public char[] Identifier => new char[2] { 'L', 'b' };
+    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.POSE | ModelWriterSupport.MATERIAL);
 
     public static OpenTK.Vector3 NormalizeAngles(OpenTK.Vector3 angles) {
       angles.X = NormalizeAngle(angles.X);
@@ -56,8 +63,8 @@ namespace ModelTool {
       v.Z = (float)Math.Atan2(2f * q.X * q.Y + 2f * q.Z * q.W, 1 - 2f * (q.Y * q.Y + q.Z * q.Z));       // Roll
       return NormalizeAngles(v * Rad2Deg);
     }
-
-    public static void Write(Model model, Stream stream, List<byte> LODs, bool[] opts) {
+    
+    public void Write(Model model, Stream stream, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] opts) {
       Console.Out.WriteLine("Writing BIN");
       using(BinaryWriter writer = new BinaryWriter(stream)) {
         writer.Write((uint)323232);
@@ -79,15 +86,6 @@ namespace ModelTool {
           using(MemoryStream ms = new MemoryStream()) {
             using(StreamWriter poseWriter = new StreamWriter(ms, System.Text.Encoding.ASCII, 4096, true)) {
               for(int i = 0; i < model.BoneData.Length; ++i) {
-                /*
-                double sqw = q.W * q.W;
-                double sqx = q.X * q.X;
-                double sqy = q.Y * q.Y;
-                double sqz = q.Z * q.Z;
-                rot.Z = (float)Math.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (sqz  + sqw));     // Yaw 
-                rot.X = (float)Math.Asin(2f * ( q.X * q.Z - q.W * q.Y ) );                             // Pitch 
-                rot.Y = (float)Math.Atan2(2f * q.X * q.Y + 2f * q.Z * q.W, 1 - 2f * (sqy + sqz));      // Roll 
-                */
                 OpenTK.Matrix3x4 data = model.PoseData[i];
                 OpenTK.Quaternion q = new OpenTK.Quaternion(data.Row0.Xyz, data.Row0.W);
                 OpenTK.Vector3 rot = QuaternionToVector(q);
@@ -158,10 +156,26 @@ namespace ModelTool {
             ModelBoneData[] bones = model.Bones[i];
             WriteString(writer, string.Format("Submesh_{0}.{1}.{2:X16}", i, kv.Key, model.MaterialKeys[submesh.material]));
             writer.Write((uint)uv.Length);
-            writer.Write((uint)uv.Length);
-            for(int j = 0; j < uv.Length; ++j) {
-              WriteString(writer, string.Format("{0:X16}_UV{1}.dds", model.MaterialKeys[submesh.material], j));
-              writer.Write((uint)j);
+            ulong materialKey = model.MaterialKeys[submesh.material];
+            if(layers.ContainsKey(materialKey)) {
+              List<ImageLayer> materialLayers = layers[materialKey];
+              writer.Write((uint)materialLayers.Count);
+              for(int j = 0; j < materialLayers.Count; ++j) {
+                writer.Write(string.Format("{0:X16}_{1:X16}.dds", materialKey, materialLayers[j].unk));
+                uint layer = layers[materialKey][j].layer;
+                if(layer == 0) {
+                  layer = 1;
+                }
+                layer = (uint)uv.Length - layers[materialKey][j].layer;
+                layer = layer % (uint)uv.Length;
+                writer.Write(layer);
+              }
+            } else {
+              writer.Write((uint)uv.Length);
+              for(int j = 0; j < uv.Length; ++j) {
+                writer.Write(string.Format("{0:X16}_UV{1}.dds", materialKey, j));
+                writer.Write((uint)j);
+              }
             }
             
             writer.Write((uint)vertex.Length);
@@ -200,6 +214,12 @@ namespace ModelTool {
           }
         }
       }
+    }
+    
+    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] flags) {
+      MemoryStream stream = new MemoryStream();
+      Write(model, stream, LODs, layers, flags);
+      return stream;
     }
   }
 }

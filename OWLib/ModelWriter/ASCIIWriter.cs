@@ -1,17 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using OWLib;
-using System.IO;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using OWLib.Types;
 
-namespace ModelTool {
-  public class ASCIIWriter {
-    public static void Write(Model model, Stream stream, List<byte> LODs, bool[] opts) {
+namespace OWLib.ModelWriter {
+  public class ASCIIWriter : IModelWriter {
+    public string Name => "XNALara XPS ASCII";
+    public string Format => ".mesh.ascii";
+    public char[] Identifier => new char[2] { 'l', 'a' };
+    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.MATERIAL);
+
+    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] flags) {
+      MemoryStream stream = new MemoryStream();
+      Write(model, stream, LODs, layers, flags);
+      return stream;
+    }
+
+    public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] flags) {
 			NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
 			numberFormatInfo.NumberDecimalSeparator = ".";
       Console.Out.WriteLine("Writing ASCII");
-      using(StreamWriter writer = new StreamWriter(stream)) {
+      using(StreamWriter writer = new StreamWriter(output)) {
         writer.WriteLine(model.BoneData.Length);
         for(int i = 0; i < model.BoneData.Length; ++i) {
           writer.WriteLine("bone{0:X}", model.BoneIDs[i]);
@@ -47,10 +60,26 @@ namespace ModelTool {
 
             writer.WriteLine("Submesh_{0}.{1}.{2:X16}", i, kv.Key, model.MaterialKeys[submesh.material]);
             writer.WriteLine(uv.Length);
-            writer.WriteLine(uv.Length);
-            for(int j = 0; j < uv.Length; ++j) {
-              writer.WriteLine("{0:X16}_UV{1}.dds", model.MaterialKeys[submesh.material], j);
-              writer.WriteLine(j);
+            ulong materialKey = model.MaterialKeys[submesh.material];
+            if(layers.ContainsKey(materialKey)) {
+              List<ImageLayer> materialLayers = layers[materialKey];
+              writer.WriteLine(materialLayers.Count);
+              for(int j = 0; j < materialLayers.Count; ++j) {
+                writer.WriteLine("{0:X16}_{1:X16}.dds", materialKey, materialLayers[j].unk);
+                uint layer = layers[materialKey][j].layer;
+                if(layer == 0) {
+                  layer = 1;
+                }
+                layer = (uint)uv.Length - layers[materialKey][j].layer;
+                layer = layer % (uint)uv.Length;
+                writer.WriteLine(layer);
+              }
+            } else {
+              writer.WriteLine(uv.Length);
+              for(int j = 0; j < uv.Length; ++j) {
+                writer.WriteLine("{0:X16}_UV{1}.dds", materialKey, j);
+                writer.WriteLine(j);
+              }
             }
 
             writer.WriteLine(vertex.Length);

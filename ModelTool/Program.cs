@@ -3,34 +3,47 @@ using System;
 using OWLib;
 using System.Collections.Generic;
 using System.Reflection;
+using OWLib.ModelWriter;
+using System.Linq;
 
 namespace ModelTool {
   public class Program {
-    public delegate void ModelWriteDelegate(Model model, Stream stream, List<byte> lods, bool[] opts);
+    private static List<IModelWriter> writers;
 
     public static void Main(string[] args) {
+
+      writers = new List<IModelWriter>();
+
+      Assembly asm = typeof(IModelWriter).Assembly;
+      Type t = typeof(IModelWriter);
+      List<Type> types = asm.GetTypes().Where(tt => tt != t && t.IsAssignableFrom(tt)).ToList();
+      foreach(Type tt in types) {
+        if(tt.IsInterface) {
+          continue;
+        }
+
+        writers.Add((IModelWriter)Activator.CreateInstance(tt));
+      }
+
       if(args.Length < 3) {
         Console.Out.WriteLine("Usage: ModelTool.exe 00C_file type [-l n] output_file");
         Console.Out.WriteLine("type can be:");
-        Console.Out.WriteLine("  o - vua.. - Wavefront OBJ            - .obj");
-        Console.Out.WriteLine("  a - vu.b. - XNALara XPS ASCII        - .mesh.ascii");
-        Console.Out.WriteLine("  b - vu.bp - XNALara XPS Binary       - .mesh / .xps");
-        Console.Out.WriteLine("  f - vua.. - Autodesk FBX 2006 ASCII  - .fbx");
-        Console.Out.WriteLine("  F - vua.. - Autodesk FBX 2006 Binary - .fbx");
-        Console.Out.WriteLine("  d - ..... - Khronos COLLADA          - .dae");
-        Console.Out.WriteLine("  u - ..... - Unreal PSK               - .psk / .pskx");
-        Console.Out.WriteLine("vutbp = vertex / uv / attachment / bone / pose support");
+        Console.Out.WriteLine("  t - supprt - {0, -30} - normal extension", "name");
+        Console.Out.WriteLine("".PadLeft(60, '-'));
+        foreach(IModelWriter w in writers) {
+          Console.Out.WriteLine("  {0} - {1} - {2,-30} - {3}", w.Identifier[0], SupportLevel(w.SupportLevel), w.Name, w.Format);
+        }
+        Console.Out.WriteLine("vutbpm = vertex / uv / attachment / bone / pose / material support");
         Console.Out.WriteLine("args:");
         Console.Out.WriteLine("  -l n - only save LOD, where N is lod");
-        Console.Out.WriteLine("  -t   - only save attachment points");
+        Console.Out.WriteLine("  -t   - save attachment points (sockets)");
         return;
       }
 
       Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
       string modelFile = args[0];
-      char type = args[1].ToLowerInvariant()[0];
-      char typen = args[1][0];
+      char type = args[1][0];
       string outputFile = args[args.Length - 1];
       List<byte> lods = null;
       bool attachments = false;
@@ -56,32 +69,51 @@ namespace ModelTool {
         }
       }
 
-      ModelWriteDelegate writer = null;
-      if(type == 'o') {
-        writer = OBJWriter.Write;
-      } else if(type == 'a') {
-        writer = ASCIIWriter.Write;
-      } else if(type == 'b') {
-        writer = BINWriter.Write;
-      } else if(typen == 'f') {
-        writer = FBXWriter.WriteASCII;
-      } else if(typen == 'F') {
-        writer = FBXWriter.WriteBIN;
-      } else if(type == 'd') {
-        throw new NotImplementedException("Khronos COLLADA is not implemented");
-      } else if(type == 'u') {
-        throw new NotImplementedException("Unreal PSK is not implemented");
-      } else {
-        Console.Error.WriteLine("Unknown output format {0}", type);
+      IModelWriter writer = null;
+      foreach(IModelWriter w in writers) {
+        if(w.Identifier.Contains(type)) {
+          writer = w;
+          break;
+        }
+      }
+      if(writer == null) {
+        Console.Error.WriteLine("Unsupported format {0}", type);
         return;
       }
 
       using(Stream modelStream = File.Open(modelFile, FileMode.Open, FileAccess.Read)) {
         Model model = new Model(modelStream);
         using(Stream outStream = File.Open(outputFile, FileMode.Create, FileAccess.Write)) {
-          writer(model, outStream, lods, new bool[1] { attachments });
+          writer.Write(model, outStream, lods, new Dictionary<ulong, List<OWLib.Types.ImageLayer>>(), new bool[] { attachments });
         }
       }
+    }
+
+    private static string SupportLevel(ModelWriterSupport supportLevel) {
+      char[] r = new char[6] {
+        '.', '.', '.', '.', '.', '.'
+      };
+      
+      if((supportLevel & ModelWriterSupport.VERTEX) == ModelWriterSupport.VERTEX) {
+        r[0] = 'v';
+      }
+      if((supportLevel & ModelWriterSupport.UV) == ModelWriterSupport.UV) {
+        r[1] = 'u';
+      }
+      if((supportLevel & ModelWriterSupport.ATTACHMENT) == ModelWriterSupport.ATTACHMENT) {
+        r[2] = 't';
+      }
+      if((supportLevel & ModelWriterSupport.BONE) == ModelWriterSupport.BONE) {
+        r[3] = 'b';
+      }
+      if((supportLevel & ModelWriterSupport.POSE) == ModelWriterSupport.POSE) {
+        r[4] = 'p';
+      }
+      if((supportLevel & ModelWriterSupport.MATERIAL) == ModelWriterSupport.MATERIAL) {
+        r[5] = 'm';
+      }
+
+      return new string(r);
     }
   }
 }

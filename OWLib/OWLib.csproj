@@ -51,6 +51,14 @@
     <Compile Include="Half\HalfHelper.cs" />
     <Compile Include="ImageDefinition.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="ModelWriter\OBJWriter.cs" />
+    <Compile Include="ModelWriter\ASCIIWriter.cs" />
+    <Compile Include="ModelWriter\BINWriter.cs" />
+    <Compile Include="ModelWriter\FBXASCIIWriter.cs" />
+    <Compile Include="ModelWriter\FBXBINWriter.cs" />
+    <Compile Include="ModelWriter\FBXCommon.cs" />
+    <Compile Include="ModelWriter\FBXWriter.cs" />
+    <Compile Include="ModelWriter\IModelWriter.cs" />
     <Compile Include="OWString.cs" />
     <Compile Include="STUD.cs" />
     <Compile Include="Texture.cs" />
@@ -87,7 +95,12 @@
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\FbxWriter\Fbx\Fbx.csproj">
+      <Project>{07a221ac-5238-4c77-96de-e792c49d23e1}</Project>
+      <Name>Fbx</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

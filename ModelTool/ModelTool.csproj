@@ -42,33 +42,19 @@
     <StartupObject>ModelTool.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BINWriter.cs" />
-    <Compile Include="ASCIIWriter.cs" />
-    <Compile Include="FBXWriter.cs" />
-    <Compile Include="OBJWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="OpenTK.dll.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FbxWriter\Fbx\Fbx.csproj">
-      <Project>{07a221ac-5238-4c77-96de-e792c49d23e1}</Project>
-      <Name>Fbx</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OWLib\OWLib.csproj">
       <Project>{353c0d05-c505-4df4-909e-624fd94a7d3b}</Project>
       <Name>OWLib</Name>

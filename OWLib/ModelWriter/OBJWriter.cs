@@ -1,18 +1,31 @@
-﻿using System.IO;
-using OWLib;
-using OWLib.Types;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using OWLib.Types;
 
-namespace ModelTool {
-  public class OBJWriter {
-    public static void Write(Model model, Stream stream, List<byte> LODs, bool[] opts) {
+namespace OWLib.ModelWriter {
+  public class OBJWriter : IModelWriter {
+    public string Name => "Wavefront OBJ";
+    public string Format => ".obj";
+    public char[] Identifier => new char[1] { 'o' };
+    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.ATTACHMENT);
+
+    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] flags) {
+      MemoryStream stream = new MemoryStream();
+      Write(model, stream, LODs, layers, flags);
+      return stream;
+    }
+
+    public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] flags) {
 		  NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
       numberFormatInfo.NumberDecimalSeparator = ".";
-      using(StreamWriter writer = new StreamWriter(stream)) {
+      using(StreamWriter writer = new StreamWriter(output)) {
         uint faceOffset = 1;
-        if(opts[0]) {
+        if(flags[0]) {
           Model.AttachmentPoint[] hbx = model.CreateAttachmentPoints();
           for(int i = 0; i < hbx.Length; ++i) {
             Console.Out.WriteLine("Writing Attachment Point {0}", model.AttachmentPoints[i].id);

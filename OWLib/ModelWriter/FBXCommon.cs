@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using OWLib;
-using OWLib.Types;
 using Fbx;
+using System.Threading.Tasks;
 using System.IO;
+using OWLib.Types;
 
-namespace ModelTool {
+namespace OWLib.ModelWriter {
   public static class FBXExtensions {
     public static FbxNode GetNamedNode(this FbxNode parent, string name) {
       for(int i = 0; i < parent.Nodes.Count; ++i) {
@@ -33,7 +32,7 @@ namespace ModelTool {
     }
   }
 
-  public class FBXWriter {
+  public class FBXCommon {
     public static void Increment(FbxNode node, int index = 0, int index2 = 0) {
       node.Nodes[index].Properties[index2] = (int)node.Nodes[index].Properties[index2] + 1;
     }
@@ -157,7 +156,7 @@ namespace ModelTool {
       return cls + "::" + id;
     }
 
-    public static FbxDocument Write(Model model, Stream stream, List<byte> LODs, bool[] opts) {
+    public static FbxDocument Write(Model model, List<byte> LODs, bool[] opts) {
       FbxDocument document = new FbxDocument();
       DateTime now = DateTime.Now.ToUniversalTime();
       FbxNode header = CreateNode("FBXHeaderExtension");
@@ -510,18 +509,6 @@ namespace ModelTool {
       document.Nodes.Add(conections);
 
       return document;
-    }
-
-    public static void WriteASCII(Model model, Stream stream, List<byte> LODs, bool[] opts) {
-      FbxDocument document = Write(model, stream, LODs, opts);
-      FbxAsciiWriter writer = new FbxAsciiWriter(stream);
-      writer.Write(document);
-    }
-
-    public static void WriteBIN(Model model, Stream stream, List<byte> LODs, bool[] opts) {
-      FbxDocument document = Write(model, stream, LODs, opts);
-      FbxBinaryWriter writer = new FbxBinaryWriter(stream);
-      writer.Write(document);
     }
   }
 }
