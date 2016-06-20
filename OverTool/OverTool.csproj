@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Extract.cs" />
     <Compile Include="ExtractLogic\Icon.cs" />
+    <Compile Include="ExtractLogic\Skin.cs" />
     <Compile Include="ExtractLogic\Spray.cs" />
     <Compile Include="ListInventory.cs" />
     <Compile Include="Program.cs" />

@@ -89,6 +89,7 @@
     <Compile Include="Types\STUD\InventoryItem\Unknown5C4B5EF809855F8FItem.cs" />
     <Compile Include="Types\STUD\InventoryMaster.cs" />
     <Compile Include="Types\STUD\MaterialMaster.cs" />
+    <Compile Include="Types\STUD\TextureOverride.cs" />
     <Compile Include="Types\TextureTypes.cs" />
   </ItemGroup>
   <ItemGroup>

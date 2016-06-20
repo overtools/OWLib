@@ -29,6 +29,11 @@ namespace OWLib {
 
       using(BinaryReader reader = new BinaryReader(input, Encoding.Default, leaveOpen)) {
         header = reader.Read<STUDHeader>();
+        if(header.magic != 0x53545544) {
+          records = new STUDInstanceRecord[0];
+          instances = new ISTUDInstance[0];
+          return;
+        }
         input.Position = (long)header.instanceTableOffset;
         STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
 

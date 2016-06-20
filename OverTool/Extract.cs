@@ -113,6 +113,9 @@ namespace OverTool {
             case "Spray":
               ExtractLogic.Spray.Extract(stud, output, heroName, name, track, map, handler);
               break;
+            case "Skin":
+              //ExtractLogic.Skin.Extract(master, stud, output, heroName, name, track, map, handler);
+              break;
             case "Icon":
               ExtractLogic.Icon.Extract(stud, output, heroName, name, track, map, handler);
               break;
