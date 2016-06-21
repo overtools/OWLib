@@ -52,6 +52,7 @@
     <Compile Include="ImageDefinition.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="ModelWriter\MTLWriter.cs" />
     <Compile Include="ModelWriter\OBJWriter.cs" />
     <Compile Include="ModelWriter\ASCIIWriter.cs" />
     <Compile Include="ModelWriter\BINWriter.cs" />

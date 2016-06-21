@@ -14,18 +14,18 @@ namespace OWLib.ModelWriter {
     public char[] Identifier => new char[1] { 'o' };
     public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.ATTACHMENT);
 
-    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] flags) {
+    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] flags) {
       MemoryStream stream = new MemoryStream();
       Write(model, stream, LODs, layers, flags);
       return stream;
     }
 
-    public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] flags) {
+    public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] flags) {
 		  NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
       numberFormatInfo.NumberDecimalSeparator = ".";
       using(StreamWriter writer = new StreamWriter(output)) {
         uint faceOffset = 1;
-        if(flags[0]) {
+        if((bool)flags[0]) {
           Model.AttachmentPoint[] hbx = model.CreateAttachmentPoints();
           for(int i = 0; i < hbx.Length; ++i) {
             Console.Out.WriteLine("Writing Attachment Point {0}", model.AttachmentPoints[i].id);

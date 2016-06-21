@@ -156,7 +156,7 @@ namespace OWLib.ModelWriter {
       return cls + "::" + id;
     }
 
-    public static FbxDocument Write(Model model, List<byte> LODs, bool[] opts) {
+    public static FbxDocument Write(Model model, List<byte> LODs, object[] opts) {
       FbxDocument document = new FbxDocument();
       DateTime now = DateTime.Now.ToUniversalTime();
       FbxNode header = CreateNode("FBXHeaderExtension");
@@ -201,7 +201,7 @@ namespace OWLib.ModelWriter {
       FbxNode relations = CreateNode("Relations");
       FbxNode conections = CreateNode("Connections");
       FbxNode poseNode = null;
-      if(opts[0] == true) {
+      if((bool)opts[0] == true) {
         for(int i = 0; i < model.AttachmentPoints.Length; ++i) {
           ModelAttachmentPoint point = model.AttachmentPoints[i];
           FbxNode modelNode = CreateModel("Attachment" + point.id.ToString("X"));

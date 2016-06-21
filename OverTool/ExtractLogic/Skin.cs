@@ -231,7 +231,7 @@ namespace OverTool.ExtractLogic {
           Directory.CreateDirectory(Path.GetDirectoryName(output));
         }
         using(Stream outp = File.Open(outpath, FileMode.OpenOrCreate, FileAccess.Write)) {
-          writer.Write(mdl, outp, lods, layers, new bool[1] { false });
+          writer.Write(mdl, outp, lods, layers, new object[1] { false });
           Console.Out.WriteLine("Wrote model {0}", outpath);
         }
       }

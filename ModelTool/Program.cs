@@ -84,7 +84,7 @@ namespace ModelTool {
       using(Stream modelStream = File.Open(modelFile, FileMode.Open, FileAccess.Read)) {
         Model model = new Model(modelStream);
         using(Stream outStream = File.Open(outputFile, FileMode.Create, FileAccess.Write)) {
-          writer.Write(model, outStream, lods, new Dictionary<ulong, List<OWLib.Types.ImageLayer>>(), new bool[] { attachments });
+          writer.Write(model, outStream, lods, new Dictionary<ulong, List<OWLib.Types.ImageLayer>>(), new object[] { attachments });
         }
       }
     }

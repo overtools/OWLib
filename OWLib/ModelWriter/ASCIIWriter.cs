@@ -11,13 +11,13 @@ namespace OWLib.ModelWriter {
     public char[] Identifier => new char[2] { 'l', 'a' };
     public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.MATERIAL);
 
-    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] flags) {
+    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] flags) {
       MemoryStream stream = new MemoryStream();
       Write(model, stream, LODs, layers, flags);
       return stream;
     }
 
-    public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] flags) {
+    public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] flags) {
 			NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
 			numberFormatInfo.NumberDecimalSeparator = ".";
       Console.Out.WriteLine("Writing ASCII");

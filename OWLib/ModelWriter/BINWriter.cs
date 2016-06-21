@@ -61,7 +61,7 @@ namespace OWLib.ModelWriter {
       return NormalizeAngles(v * Rad2Deg);
     }
     
-    public void Write(Model model, Stream stream, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] opts) {
+    public void Write(Model model, Stream stream, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] opts) {
       Console.Out.WriteLine("Writing BIN");
       using(BinaryWriter writer = new BinaryWriter(stream)) {
         writer.Write((uint)323232);
@@ -213,7 +213,7 @@ namespace OWLib.ModelWriter {
       }
     }
     
-    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, bool[] flags) {
+    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] flags) {
       MemoryStream stream = new MemoryStream();
       Write(model, stream, LODs, layers, flags);
       return stream;
