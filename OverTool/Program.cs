@@ -49,7 +49,7 @@ namespace OverTool {
 
       Console.Out.WriteLine("Mapping...");
       foreach(APMFile apm in ow.APMFiles) {
-        if(!apm.Name.ToLowerInvariant().Contains("rcn")) {
+        if(!apm.Name.ToLowerInvariant().Contains("rdev")) {
           continue; // skip
         }
         for(int i = 0; i < apm.Packages.Length; ++i) {
