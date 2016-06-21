@@ -38,7 +38,7 @@ namespace OverTool {
       Dictionary<ulong, Record> map = new Dictionary<ulong, Record>();
 
       Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
-      Console.Out.WriteLine("Loading files...");
+      Console.Out.WriteLine("Initializing CASC...");
       CASCConfig config = CASCConfig.LoadLocalStorageConfig(root);
       CASCHandler handler = CASCHandler.OpenStorage(config);
       OwRootHandler ow = handler.Root as OwRootHandler;
@@ -47,7 +47,7 @@ namespace OverTool {
         return;
       }
 
-      Console.Out.WriteLine("Mapping files...");
+      Console.Out.WriteLine("Mapping...");
       foreach(APMFile apm in ow.APMFiles) {
         if(!apm.Name.ToLowerInvariant().Contains("rcn")) {
           continue; // skip

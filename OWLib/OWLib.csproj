@@ -70,6 +70,7 @@
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
     <Compile Include="Types\STUD\Binding\ComplexModelRecord.cs" />
+    <Compile Include="Types\STUD\TextureOverrideMaster.cs" />
     <Compile Include="Types\STUD\Binding\ViewModelRecord.cs" />
     <Compile Include="Types\STUD\Binding\ParameterRecord.cs" />
     <Compile Include="Types\STUD\Decal.cs" />

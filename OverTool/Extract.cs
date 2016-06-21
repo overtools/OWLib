@@ -24,20 +24,35 @@ namespace OverTool {
       }
       Dictionary<string, List<string>> heroTypes = new Dictionary<string, List<string>>();
       Dictionary<string, bool> heroWildcard = new Dictionary<string, bool>();
+      Dictionary<string, Dictionary<string, List<ulong>>> heroIgnore = new Dictionary<string, Dictionary<string, List<ulong>>>();
       bool heroAllWildcard = false;
       if(args.Length > 2) {
         foreach(string pair in args[2].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries)) {
-          List<string> data = new List<string>(pair.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries));
+          List<string> data = new List<string>(pair.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries));
           string name = data[0];
           data.RemoveAt(0);
 
           if(!heroTypes.ContainsKey(name)) {
             heroTypes[name] = new List<string>();
+            heroIgnore[name] = new Dictionary<string, List<ulong>>();
             heroWildcard[name] = false;
           }
 
           if(data.Count > 0) {
-            heroTypes[name].AddRange(data);
+            foreach(string d in data) {
+              List<string> subdata = new List<string>(d.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
+              string subn = subdata[0];
+              subdata.RemoveAt(0);
+              heroTypes[name].Add(subn);
+              heroIgnore[name][subn] = new List<ulong>();
+              if(subdata.Count > 0) {
+                foreach(string sd in subdata) {
+                  try {
+                    heroIgnore[name][subn].Add(ulong.Parse(sd, System.Globalization.NumberStyles.HexNumber));
+                  } catch { }
+                }
+              }
+            }
           }
 
           if(data.Count == 0 || data.Contains("*")) {
@@ -111,12 +126,19 @@ namespace OverTool {
 
           switch(instance.Name) {
             case "Spray":
+              Console.Out.WriteLine("Extracting spray {0} for {1}...", name, heroName);
               ExtractLogic.Spray.Extract(stud, output, heroName, name, track, map, handler);
               break;
             case "Skin":
-              ExtractLogic.Skin.Extract(master, stud, output, heroName, name, track, map, handler);
+              List<ulong> ignoreList = new List<ulong>();
+              try {
+                ignoreList = heroIgnore[heroName.ToLowerInvariant()][name.ToLowerInvariant()];
+              } catch { }
+              Console.Out.WriteLine("Extracting {0} models and textures for {1}", name, heroName);
+              ExtractLogic.Skin.Extract(master, stud, output, heroName, name, ignoreList, track, map, handler);
               break;
             case "Icon":
+              Console.Out.WriteLine("Extracting icon {0} for {1}...", name, heroName);
               ExtractLogic.Icon.Extract(stud, output, heroName, name, track, map, handler);
               break;
           }

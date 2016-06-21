@@ -200,6 +200,12 @@ namespace OWLib {
       if(implementations.Contains(instance)) {
         return STUD_MANAGER_ERROR.E_DUPLICATE;
       }
+      if(ids.Contains(GetId(instance))) {
+        return STUD_MANAGER_ERROR.E_DUPLICATE;
+      }
+      if(names.Contains(GetName(instance))) {
+        return STUD_MANAGER_ERROR.E_DUPLICATE;
+      }
       implementations.Add(instance);
       ids.Add(GetId(instance));
       names.Add(GetName(instance));

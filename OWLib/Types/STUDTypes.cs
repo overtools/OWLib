@@ -28,6 +28,13 @@ namespace OWLib.Types {
     public ulong offset;
   }
 
+  [StructLayout(LayoutKind.Sequential, Pack = 4)]
+  public struct STUDReferenceArrayInfo {
+    public ulong count;
+    public ulong indiceOffset;
+    public ulong referenceOffset;
+  }
+
   public interface ISTUDInstance {
     string Name
     {

@@ -13,25 +13,35 @@ using OWLib.ModelWriter;
 namespace OverTool.ExtractLogic {
   class Skin {
     private static void FindTextures(ulong key, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
-      if(!map.ContainsKey(key)) {
+      ulong tgt = key;
+      if(replace.ContainsKey(tgt)) {
+        tgt = replace[tgt];
+      }
+      if(!map.ContainsKey(tgt)) {
         return;
       }
-      if(!parsed.Add(key)) {
+      if(!parsed.Add(tgt)) {
         return;
       }
 
-      STUD record = new STUD(Util.OpenFile(map[key], handler));
+      STUD record = new STUD(Util.OpenFile(map[tgt], handler));
+      if(record.Instances[0] == null) {
+        return;
+      }
       MaterialMaster master = (MaterialMaster)record.Instances[0];
+      if(master == null) {
+        return;
+      }
       foreach(MaterialMaster.MaterialMasterMaterial material in master.Materials) {
         ulong materialId = material.id;
         ulong materialKey = material.record.key;
         if(replace.ContainsKey(materialKey)) {
           materialKey = replace[materialKey];
         }
-        if(!map.ContainsKey(material.record.key)) {
+        if(!map.ContainsKey(materialKey)) {
           continue;
         }
-        Material mat = new Material(Util.OpenFile(map[material.record.key], handler));
+        Material mat = new Material(Util.OpenFile(map[materialKey], handler));
         ulong definitionKey = mat.Header.definitionKey;
         if(replace.ContainsKey(definitionKey)) {
           definitionKey = replace[definitionKey];
@@ -45,25 +55,28 @@ namespace OverTool.ExtractLogic {
         }
         for(int i = 0; i < def.Layers.Length; ++i) {
           ImageLayer layer = def.Layers[i];
-          if(!replace.ContainsKey(layer.key)) {
-            continue;
+          if(replace.ContainsKey(layer.key)) {
+            layer.key = replace[layer.key];
           }
-          layer.key = replace[layer.key];
-          def.Layers[i] = layer;
+          layers[materialId].Add(layer);
         }
-        layers[materialId].AddRange(def.Layers);
       }
     }
 
-    private static void FindModels(ulong key, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
-      if(!map.ContainsKey(key)) {
+    private static void FindModels(ulong key, List<ulong> ignore, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
+      ulong tgt = key;
+      if(replace.ContainsKey(tgt)) {
+        tgt = replace[tgt];
+      }
+
+      if(!map.ContainsKey(tgt)) {
         return;
       }
-      if(!parsed.Add(key)) {
+      if(!parsed.Add(tgt)) {
         return;
       }
 
-      STUD record = new STUD(Util.OpenFile(map[key], handler), true, STUDManager.Instance, false, true);
+      STUD record = new STUD(Util.OpenFile(map[tgt], handler), true, STUDManager.Instance, false, true);
       foreach(ISTUDInstance inst in record.Instances) {
         if(inst == null) {
           continue;
@@ -74,13 +87,16 @@ namespace OverTool.ExtractLogic {
           if(replace.ContainsKey(bindingKey)) {
             bindingKey = replace[bindingKey];
           }
-          FindModels(bindingKey, models, layers, replace, parsed, map, handler);
+          FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
         }
         if(inst.Name == record.Manager.GetName(typeof(ComplexModelRecord))) {
           ComplexModelRecord r = (ComplexModelRecord)inst;
           ulong modelKey = r.Data.model.key;
           if(replace.ContainsKey(modelKey)) {
             modelKey = replace[modelKey];
+          }
+          if(ignore.Count > 0 && !ignore.Contains(APM.keyToIndexID(modelKey))) {
+            continue;
           }
           models.Add(modelKey);
           ulong target = r.Data.material.key;
@@ -96,7 +112,7 @@ namespace OverTool.ExtractLogic {
             if(replace.ContainsKey(bindingKey)) {
               bindingKey = replace[bindingKey];
             }
-            FindModels(bindingKey, models, layers, replace, parsed, map, handler);
+            FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
           }
         }
         if(inst.Name == record.Manager.GetName(typeof(ModelParamRecord))) {
@@ -105,7 +121,7 @@ namespace OverTool.ExtractLogic {
           if(replace.ContainsKey(bindingKey)) {
             bindingKey = replace[bindingKey];
           }
-          FindModels(bindingKey, models, layers, replace, parsed, map, handler);
+          FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
         }
       }
     }
@@ -119,16 +135,45 @@ namespace OverTool.ExtractLogic {
       }
 
       STUD record = new STUD(Util.OpenFile(map[key], handler));
+      if(record.Instances[0] == null) {
+        return;
+      }
       if(record.Instances[0].Name == record.Manager.GetName(typeof(TextureOverride))) {
+        Dictionary<ulong, ulong> tmp = new Dictionary<ulong, ulong>();
         TextureOverride over = (TextureOverride)record.Instances[0];
         for(int i = 0; i < over.Replace.Length; ++i) {
           if(!map.ContainsKey(over.Target[i])) {
             continue;
           }
-          replace[over.Replace[i]] = over.Target[i];
+          if(tmp.ContainsKey(over.Replace[i])) {
+            continue;
+          }
+          tmp[over.Replace[i]] = over.Target[i];
         }
+        STUD overstud = new STUD(Util.OpenFile(map[over.Header.master.key], handler));
+        TextureOverrideMaster overmaster = (TextureOverrideMaster)overstud.Instances[0];
         foreach(OWRecord rec in over.SubDefinitions) {
-          FindReplacements(rec.key, replace, parsed, map, handler);
+          FindReplacements(rec.key, tmp, parsed, map, handler);
+        }
+        if(overmaster.Header.offsetInfo > 0) {
+          for(int i = 0; i < overmaster.Replace.Length; ++i) {
+            if(!map.ContainsKey(overmaster.Target[i])) {
+              continue;
+            }
+            if(tmp.ContainsKey(overmaster.Replace[i])) {
+              continue;
+            }
+            tmp[over.Replace[i]] = overmaster.Target[i];
+          }
+        }
+        foreach(KeyValuePair<ulong, ulong> kv in tmp) {
+          if(overmaster.Header.modelOverride.key == 0) {
+            ushort idx = (ushort)APM.keyToTypeID(kv.Value);
+            if(idx != 0x0B3 && idx != 0x008 && idx != 0x004) {
+              continue;
+            }
+          }
+          replace[kv.Key] = kv.Value;
         }
       } else if(record.Instances[0].Name == record.Manager.GetName(typeof(TextureOverrideSecondary))) {
         TextureOverrideSecondary over = (TextureOverrideSecondary)record.Instances[0];
@@ -136,12 +181,15 @@ namespace OverTool.ExtractLogic {
           if(!map.ContainsKey(over.Target[i])) {
             continue;
           }
+          if(replace.ContainsKey(over.Replace[i])) {
+            continue;
+          }
           replace[over.Replace[i]] = over.Target[i];
         }
       }
     }
 
-    public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler) {
+    public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, List<ulong> ignore, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler) {
       string path = string.Format("{0}{1}{2}{1}{3}{1}{4}{1}", output, Path.DirectorySeparatorChar, Util.SanitizePath(heroName), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName));
 
       SkinItem skin = (SkinItem)itemStud.Instances[0];
@@ -150,13 +198,14 @@ namespace OverTool.ExtractLogic {
       HashSet<ulong> parsed = new HashSet<ulong>();
       Dictionary<ulong, List<ImageLayer>> layers = new Dictionary<ulong, List<ImageLayer>>();
       Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
-
-      FindReplacements(skin.Data.skin.key, replace, parsed, map, handler);
+      if(itemName.ToLowerInvariant() != "classic") {
+        FindReplacements(skin.Data.skin.key, replace, parsed, map, handler);
+      }
       ulong bindingKey = master.Header.binding.key;
       if(replace.ContainsKey(bindingKey)) {
         bindingKey = replace[bindingKey];
       }
-      FindModels(bindingKey, models, layers, replace, parsed, map, handler);
+      FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
       
       foreach(KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
         ulong materialId = kv.Key;
@@ -165,7 +214,7 @@ namespace OverTool.ExtractLogic {
           if(!parsed.Add(layer.key)) {
             continue;
           }
-          SaveTexture(layer.key, map, handler, string.Format("{0}{1:X16}_{2:X8}.dds", path, materialId, layer.unk));
+          SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", path, APM.keyToIndexID(layer.key)));
         }
       }
 

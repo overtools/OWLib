@@ -158,7 +158,7 @@ namespace OWLib.ModelWriter {
               List<ImageLayer> materialLayers = layers[materialKey];
               writer.Write((uint)materialLayers.Count);
               for(int j = 0; j < materialLayers.Count; ++j) {
-                writer.Write(string.Format("{0:X16}_{1:X8}.dds", materialKey, materialLayers[j].unk));
+                writer.Write(string.Format("{0:X12}.dds", APM.keyToIndexID(materialLayers[j].key)));
                 uint layer = layers[materialKey][j].layer;
                 if(layer == 0) {
                   layer = 1;

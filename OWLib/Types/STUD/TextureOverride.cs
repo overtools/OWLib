@@ -22,15 +22,8 @@ namespace OWLib.Types.STUD {
       public ulong unk6;
       public ulong unk7;
       public ulong unk8;
-      public OWRecord f058;
+      public OWRecord master;
       public Vec4 delta;
-    }
-    
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct TextureOverrideInfo {
-      public ulong count;
-      public ulong indiceOffset;
-      public ulong replaceOffset;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -40,7 +33,6 @@ namespace OWLib.Types.STUD {
     }
     
     private TextureOverrideHeader header;
-    private TextureOverrideInfo info;
     private TextureOverrideInlineReference[] references;
     private ulong[] replace;
     private ulong[] target;
@@ -48,7 +40,6 @@ namespace OWLib.Types.STUD {
     private OWRecord[] subs;
 
     public TextureOverrideHeader Header => header;
-    public TextureOverrideInfo Info => info;
     public TextureOverrideInlineReference[] References => references;
     public ulong[] Replace => replace;
     public ulong[] Target => target;
@@ -59,7 +50,7 @@ namespace OWLib.Types.STUD {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<TextureOverrideHeader>();
         input.Position = (long)header.offsetInfo;
-        info = reader.Read<TextureOverrideInfo>();
+        STUDReferenceArrayInfo info = reader.Read<STUDReferenceArrayInfo>();
 
         uint size = 0;
         sizes = new uint[info.count];
@@ -73,7 +64,7 @@ namespace OWLib.Types.STUD {
 
         replace = new ulong[size];
         references = new TextureOverrideInlineReference[size];
-        input.Position = (long)info.replaceOffset;
+        input.Position = (long)info.referenceOffset;
         for(uint i = 0; i < size; ++i) {
           references[i] = reader.Read<TextureOverrideInlineReference>();
           replace[i] = references[i].key;
@@ -115,14 +106,12 @@ namespace OWLib.Types.STUD {
     }
 
     private TextureOverrideSecondaryHeader header;
-    private TextureOverride.TextureOverrideInfo info;
     private TextureOverride.TextureOverrideInlineReference[] references;
     private ulong[] replace;
     private ulong[] target;
     private uint[] sizes;
 
     public TextureOverrideSecondaryHeader Header => header;
-    public TextureOverride.TextureOverrideInfo Info => info;
     public TextureOverride.TextureOverrideInlineReference[] References => references;
     public ulong[] Replace => replace;
     public ulong[] Target => target;
@@ -132,7 +121,7 @@ namespace OWLib.Types.STUD {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<TextureOverrideSecondaryHeader>();
         input.Position = (long)header.offsetInfo;
-        info = reader.Read<TextureOverride.TextureOverrideInfo>();
+        STUDReferenceArrayInfo info = reader.Read<STUDReferenceArrayInfo>();
 
         uint size = 0;
         sizes = new uint[info.count];
@@ -146,7 +135,7 @@ namespace OWLib.Types.STUD {
 
         replace = new ulong[size];
         references = new TextureOverride.TextureOverrideInlineReference[size];
-        input.Position = (long)info.replaceOffset;
+        input.Position = (long)info.referenceOffset;
         for(uint i = 0; i < size; ++i) {
           references[i] = reader.Read<TextureOverride.TextureOverrideInlineReference>();
           replace[i] = references[i].key;
