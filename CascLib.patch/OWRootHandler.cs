@@ -93,7 +93,7 @@ namespace CASCExplorer
 
                 string name = filedata[4];
 
-                if (Path.GetExtension(name) == ".apm" && name.Contains("LenUS") && name.Contains("RCN"))
+                if (Path.GetExtension(name) == ".apm" && name.Contains("LenUS") && name.Contains("RDEV"))
                 {
                     // add apm file for dev purposes
                     ulong apmNameHash = Hasher.ComputeHash(name);
