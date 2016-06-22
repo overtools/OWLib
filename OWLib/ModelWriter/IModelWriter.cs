@@ -32,8 +32,7 @@ namespace OWLib.ModelWriter {
     {
       get;
     }
-
-    Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data);
+    
     void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data);
   }
 }

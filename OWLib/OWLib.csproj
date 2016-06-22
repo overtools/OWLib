@@ -59,7 +59,6 @@
     <Compile Include="ModelWriter\FBXASCIIWriter.cs" />
     <Compile Include="ModelWriter\FBXBINWriter.cs" />
     <Compile Include="ModelWriter\FBXCommon.cs" />
-    <Compile Include="ModelWriter\FBXWriter.cs" />
     <Compile Include="ModelWriter\IModelWriter.cs" />
     <Compile Include="OWString.cs" />
     <Compile Include="STUD.cs" />
@@ -70,6 +69,8 @@
     <Compile Include="Types\CommonTypes.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
+    <Compile Include="Types\STUD\Binding\ProjectileModelRecord.cs" />
+    <Compile Include="Types\STUD\Binding\ChildParameterRecord.cs" />
     <Compile Include="Types\STUD\Binding\ComplexModelRecord.cs" />
     <Compile Include="Types\STUD\TextureOverrideMaster.cs" />
     <Compile Include="Types\STUD\Binding\ViewModelRecord.cs" />

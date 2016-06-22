@@ -12,7 +12,7 @@ namespace OWLib.ModelWriter {
     public static readonly float Rad2Deg = 360.0f / (float)(Math.PI * 2f);
     
     public string Name => "XNALara XPS Binary";
-    public string Format => ".mesh.bin";
+    public string Format => ".mesh";
     public char[] Identifier => new char[2] { 'L', 'b' };
     public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.POSE | ModelWriterSupport.MATERIAL);
 
@@ -156,16 +156,20 @@ namespace OWLib.ModelWriter {
             ulong materialKey = model.MaterialKeys[submesh.material];
             if(layers.ContainsKey(materialKey)) {
               List<ImageLayer> materialLayers = layers[materialKey];
-              writer.Write((uint)materialLayers.Count);
+              uint count = 0;
+              HashSet<ulong> done = new HashSet<ulong>();
               for(int j = 0; j < materialLayers.Count; ++j) {
-                writer.Write(string.Format("{0:X12}.dds", APM.keyToIndexID(materialLayers[j].key)));
-                uint layer = layers[materialKey][j].layer;
-                if(layer == 0) {
-                  layer = 1;
+                if(done.Add(materialLayers[j].key)) {
+                  count += 1;
                 }
-                layer = (uint)uv.Length - layers[materialKey][j].layer;
-                layer = layer % (uint)uv.Length;
-                writer.Write(layer);
+              }
+              writer.Write(count);
+              done.Clear();
+              for(int j = 0; j < materialLayers.Count; ++j) {
+                if(done.Add(materialLayers[j].key)) {
+                  writer.Write(string.Format("{0:X12}.dds", APM.keyToIndexID(materialLayers[j].key)));
+                  writer.Write((uint)0);
+                }
               }
             } else {
               writer.Write((uint)uv.Length);
@@ -211,12 +215,6 @@ namespace OWLib.ModelWriter {
           }
         }
       }
-    }
-    
-    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] flags) {
-      MemoryStream stream = new MemoryStream();
-      Write(model, stream, LODs, layers, flags);
-      return stream;
     }
   }
 }

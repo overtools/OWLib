@@ -10,14 +10,8 @@ namespace OWLib.ModelWriter {
     public string Format => ".mesh.ascii";
     public char[] Identifier => new char[2] { 'l', 'a' };
     public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.MATERIAL);
-
-    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] flags) {
-      MemoryStream stream = new MemoryStream();
-      Write(model, stream, LODs, layers, flags);
-      return stream;
-    }
-
-    public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] flags) {
+    
+    public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] opts) {
 			NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
 			numberFormatInfo.NumberDecimalSeparator = ".";
       Console.Out.WriteLine("Writing ASCII");
@@ -60,16 +54,20 @@ namespace OWLib.ModelWriter {
             ulong materialKey = model.MaterialKeys[submesh.material];
             if(layers.ContainsKey(materialKey)) {
               List<ImageLayer> materialLayers = layers[materialKey];
-              writer.WriteLine(materialLayers.Count);
+              uint count = 0;
+              HashSet<ulong> done = new HashSet<ulong>();
               for(int j = 0; j < materialLayers.Count; ++j) {
-                writer.WriteLine("{0:X12}.dds", APM.keyToIndexID(materialLayers[j].key));
-                uint layer = layers[materialKey][j].layer;
-                if(layer == 0) {
-                  layer = 1;
+                if(done.Add(materialLayers[j].key)) {
+                  count += 1;
                 }
-                layer = (uint)uv.Length - layers[materialKey][j].layer;
-                layer = layer % (uint)uv.Length;
-                writer.WriteLine(layer);
+              }
+              writer.WriteLine(count);
+              done.Clear();
+              for(int j = 0; j < materialLayers.Count; ++j) {
+                if(done.Add(materialLayers[j].key)) {
+                  writer.WriteLine(string.Format("{0:X12}.dds", APM.keyToIndexID(materialLayers[j].key)));
+                  writer.WriteLine(0);
+                }
               }
             } else {
               writer.WriteLine(uv.Length);

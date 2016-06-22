@@ -201,7 +201,7 @@ namespace OWLib.ModelWriter {
       FbxNode relations = CreateNode("Relations");
       FbxNode conections = CreateNode("Connections");
       FbxNode poseNode = null;
-      if((bool)opts[0] == true) {
+      if(opts.Length > 0 && opts[0] != null && opts[0].GetType() == typeof(bool) && (bool)opts[0] == true) {
         for(int i = 0; i < model.AttachmentPoints.Length; ++i) {
           ModelAttachmentPoint point = model.AttachmentPoints[i];
           FbxNode modelNode = CreateModel("Attachment" + point.id.ToString("X"));

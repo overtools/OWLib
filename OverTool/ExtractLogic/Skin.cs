@@ -9,6 +9,8 @@ using OWLib.Types.STUD.Binding;
 using OWLib.Types.STUD.GameParam;
 using OWLib.Types.STUD.InventoryItem;
 using OWLib.ModelWriter;
+using System.Reflection;
+using System.Linq;
 
 namespace OverTool.ExtractLogic {
   class Skin {
@@ -64,6 +66,9 @@ namespace OverTool.ExtractLogic {
     }
 
     private static void FindModels(ulong key, List<ulong> ignore, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
+      if(key == 0) {
+        return;
+      }
       ulong tgt = key;
       if(replace.ContainsKey(tgt)) {
         tgt = replace[tgt];
@@ -122,6 +127,26 @@ namespace OverTool.ExtractLogic {
             bindingKey = replace[bindingKey];
           }
           FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
+        }
+        if(inst.Name == record.Manager.GetName(typeof(ProjectileModelRecord))) {
+          ProjectileModelRecord r = (ProjectileModelRecord)inst;
+          foreach(ProjectileModelRecord.BindingRecord br in r.Children) {
+            ulong bindingKey = br.binding.key;
+            if(replace.ContainsKey(bindingKey)) {
+              bindingKey = replace[bindingKey];
+            }
+            FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
+          }
+        }
+        if(inst.Name == record.Manager.GetName(typeof(ChildParameterRecord))) {
+          ChildParameterRecord r = (ChildParameterRecord)inst;
+          foreach(ChildParameterRecord.Child br in r.Children) {
+            ulong bindingKey = br.parameter.key;
+            if(replace.ContainsKey(bindingKey)) {
+              bindingKey = replace[bindingKey];
+            }
+            FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
+          }
         }
       }
     }
@@ -189,7 +214,7 @@ namespace OverTool.ExtractLogic {
       }
     }
 
-    public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, List<ulong> ignore, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler) {
+    public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, List<ulong> ignore, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, List<char> furtherOpts) {
       string path = string.Format("{0}{1}{2}{1}{3}{1}{4}{1}", output, Path.DirectorySeparatorChar, Util.SanitizePath(heroName), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName));
 
       SkinItem skin = (SkinItem)itemStud.Instances[0];
@@ -206,6 +231,26 @@ namespace OverTool.ExtractLogic {
         bindingKey = replace[bindingKey];
       }
       FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
+      bindingKey = master.Header.child1.key;
+      if(replace.ContainsKey(bindingKey)) {
+        bindingKey = replace[bindingKey];
+      }
+      FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
+      bindingKey = master.Header.child2.key;
+      if(replace.ContainsKey(bindingKey)) {
+        bindingKey = replace[bindingKey];
+      }
+      FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
+      bindingKey = master.Header.child3.key;
+      if(replace.ContainsKey(bindingKey)) {
+        bindingKey = replace[bindingKey];
+      }
+      FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
+      bindingKey = master.Header.child4.key;
+      if(replace.ContainsKey(bindingKey)) {
+        bindingKey = replace[bindingKey];
+      }
+      FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
       
       foreach(KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
         ulong materialId = kv.Key;
@@ -218,7 +263,40 @@ namespace OverTool.ExtractLogic {
         }
       }
 
-      BINWriter writer = new BINWriter();
+      IModelWriter writer = null;
+      string mtlPath = null;
+      if(furtherOpts.Contains('O')) {
+        writer = new OBJWriter();
+        IModelWriter tmp = new MTLWriter();
+        mtlPath = string.Format("{0}material{1}", path, tmp.Format);
+        using(Stream outp = File.Open(mtlPath, FileMode.OpenOrCreate, FileAccess.Write)) {
+          tmp.Write(null, outp, null, layers, new object[2] { false, mtlPath });
+          Console.Out.WriteLine("Wrote materials {0}", mtlPath);
+        }
+      } else if(furtherOpts.Count > 0) {
+        Assembly asm = typeof(IModelWriter).Assembly;
+        Type t = typeof(IModelWriter);
+        List<Type> types = asm.GetTypes().Where(tt => tt != t && t.IsAssignableFrom(tt)).ToList();
+        foreach(Type tt in types) {
+          if(tt.IsInterface) {
+            continue;
+          }
+
+          IModelWriter tmp = (IModelWriter)Activator.CreateInstance(tt);
+          for(int i = 0; i < tmp.Identifier.Length; ++i) {
+            if(tmp.Identifier[i] == furtherOpts[i]) {
+              writer = tmp;
+              break;
+            }
+          }
+          if(writer == null) {
+            writer = new BINWriter();
+          }
+        }
+      } else {
+        writer = new BINWriter();
+      }
+
       List<byte> lods = new List<byte>(new byte[3] { 0, 1, 0xFF });
       foreach(ulong key in models) {
         if(!map.ContainsKey(key)) {
@@ -226,12 +304,12 @@ namespace OverTool.ExtractLogic {
         }
         Model mdl = new Model(Util.OpenFile(map[key], handler));
 
-        string outpath = string.Format("{0}{1:X12}.xps", path, APM.keyToIndexID(key));
+        string outpath = string.Format("{0}{1:X12}{2}", path, APM.keyToIndexID(key), writer.Format);
         if(!Directory.Exists(Path.GetDirectoryName(output))) {
           Directory.CreateDirectory(Path.GetDirectoryName(output));
         }
         using(Stream outp = File.Open(outpath, FileMode.OpenOrCreate, FileAccess.Write)) {
-          writer.Write(mdl, outp, lods, layers, new object[1] { false });
+          writer.Write(mdl, outp, lods, layers, new object[2] { false, mtlPath });
           Console.Out.WriteLine("Wrote model {0}", outpath);
         }
       }

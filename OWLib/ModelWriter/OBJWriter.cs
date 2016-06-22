@@ -12,20 +12,17 @@ namespace OWLib.ModelWriter {
     public string Name => "Wavefront OBJ";
     public string Format => ".obj";
     public char[] Identifier => new char[1] { 'o' };
-    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.ATTACHMENT);
-
-    public Stream Write(Model model, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] flags) {
-      MemoryStream stream = new MemoryStream();
-      Write(model, stream, LODs, layers, flags);
-      return stream;
-    }
-
-    public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] flags) {
+    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.ATTACHMENT | ModelWriterSupport.MATERIAL);
+    
+    public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] opts) {
 		  NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
       numberFormatInfo.NumberDecimalSeparator = ".";
       using(StreamWriter writer = new StreamWriter(output)) {
         uint faceOffset = 1;
-        if((bool)flags[0]) {
+        if(opts.Length > 1 && opts[1] != null && opts[1].GetType() == typeof(string)) {
+          writer.WriteLine("mtllib {0}", (string)opts[1]);
+        }
+        if(opts.Length > 0 && opts[0] != null && opts[0].GetType() == typeof(bool) && (bool)opts[0] == true) {
           Model.AttachmentPoint[] hbx = model.CreateAttachmentPoints();
           for(int i = 0; i < hbx.Length; ++i) {
             Console.Out.WriteLine("Writing Attachment Point {0}", model.AttachmentPoints[i].id);
@@ -60,7 +57,7 @@ namespace OWLib.ModelWriter {
           foreach(int i in kv.Value) {
             ModelSubmesh submesh = model.Submeshes[i];
             writer.WriteLine("g Material_{0:X16}", model.MaterialKeys[submesh.material]);
-            
+            writer.WriteLine("usemtl {0:X16}", model.MaterialKeys[submesh.material]);
             ModelVertex[] vertex = model.Vertices[i];
             ModelVertex[] normal = model.Normals[i];
             ModelUV[][] uvs = model.UVs[i];

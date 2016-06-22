@@ -10,7 +10,7 @@ namespace OverTool {
   class Extract {
     public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       if(args.Length < 1) {
-        Console.Out.WriteLine("Usage: OverTool.exe overwatch x output [types] [query]");
+        Console.Out.WriteLine("Usage: OverTool.exe overwatch x output [types [query [opts]]]");
         return;
       }
 
@@ -61,6 +61,11 @@ namespace OverTool {
         }
       } else {
         heroAllWildcard = true;
+      }
+
+      List<char> furtherOpts = new List<char>();
+      if(args.Length > 3) {
+        furtherOpts.AddRange(args[3].ToCharArray());
       }
 
       List<ulong> masters = track[0x75];
@@ -127,7 +132,7 @@ namespace OverTool {
           switch(instance.Name) {
             case "Spray":
               Console.Out.WriteLine("Extracting spray {0} for {1}...", name, heroName);
-              ExtractLogic.Spray.Extract(stud, output, heroName, name, track, map, handler);
+              ExtractLogic.Spray.Extract(stud, output, heroName, name, track, map, handler, furtherOpts);
               break;
             case "Skin":
               List<ulong> ignoreList = new List<ulong>();
@@ -135,11 +140,11 @@ namespace OverTool {
                 ignoreList = heroIgnore[heroName.ToLowerInvariant()][name.ToLowerInvariant()];
               } catch { }
               Console.Out.WriteLine("Extracting {0} models and textures for {1}", name, heroName);
-              ExtractLogic.Skin.Extract(master, stud, output, heroName, name, ignoreList, track, map, handler);
+              ExtractLogic.Skin.Extract(master, stud, output, heroName, name, ignoreList, track, map, handler, furtherOpts);
               break;
             case "Icon":
               Console.Out.WriteLine("Extracting icon {0} for {1}...", name, heroName);
-              ExtractLogic.Icon.Extract(stud, output, heroName, name, track, map, handler);
+              ExtractLogic.Icon.Extract(stud, output, heroName, name, track, map, handler, furtherOpts);
               break;
           }
         }
