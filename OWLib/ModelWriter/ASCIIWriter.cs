@@ -101,13 +101,11 @@ namespace OWLib.ModelWriter {
           for(uint i = 0; i < model.AttachmentPoints.Length; ++i) {
             ModelAttachmentPoint attachment = model.AttachmentPoints[i];
             writer.WriteLine("Attachment{0:X}", attachment.id);
-            unsafe
-            {
-              for(uint j = 0; j < 16; ++j) {
-                writer.Write("{0} ", attachment.matrix.Value[i].ToString("0.000000", numberFormatInfo));
-              }
-              writer.WriteLine("");
-            }
+            OpenTK.Matrix4 mat = attachment.matrix.ToOpenTK();
+            OpenTK.Vector3 pos = mat.ExtractTranslation();
+            OpenTK.Quaternion quat = mat.ExtractRotation();
+            writer.WriteLine("{0} {1} {2}", pos.X.ToString("0.######", numberFormatInfo), pos.Y.ToString("0.######", numberFormatInfo), pos.Z.ToString("0.######", numberFormatInfo));
+            writer.WriteLine("{0} {1} {2} {3}", quat.X.ToString("0.######", numberFormatInfo), quat.Y.ToString("0.######", numberFormatInfo), quat.Z.ToString("0.######", numberFormatInfo), quat.W.ToString("0.######", numberFormatInfo));
           }
         }
         writer.WriteLine("");

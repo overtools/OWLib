@@ -219,12 +219,16 @@ namespace OWLib.ModelWriter {
           for(uint i = 0; i < model.AttachmentPoints.Length; ++i) {
             ModelAttachmentPoint attachment = model.AttachmentPoints[i];
             WriteString(writer, string.Format("Attachment{0:X}", attachment.id));
-            unsafe
-            {
-              for(uint j = 0; j < 16; ++j) {
-                writer.Write(attachment.matrix.Value[i]);
-              }
-            }
+            OpenTK.Matrix4 mat = attachment.matrix.ToOpenTK();
+            OpenTK.Vector3 pos = mat.ExtractTranslation();
+            OpenTK.Quaternion quat = mat.ExtractRotation();
+            writer.Write(pos.X);
+            writer.Write(pos.Y);
+            writer.Write(pos.Z);
+            writer.Write(quat.X);
+            writer.Write(quat.Y);
+            writer.Write(quat.Z);
+            writer.Write(quat.W);
           }
         }
       }
