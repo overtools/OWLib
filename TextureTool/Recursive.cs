@@ -39,7 +39,7 @@ namespace TextureTool {
             if(!Directory.Exists(nDDSd)) {
               Directory.CreateDirectory(nDDSd);
             }
-            using(Stream sDDS = File.Open(nDDS, FileMode.OpenOrCreate, FileAccess.Write)) {
+            using(Stream sDDS = File.Open(nDDS, FileMode.Create, FileAccess.Write)) {
               if(master.Loaded == false) {
                 string fn04D = (master.Header.indice - 1).ToString("X").PadLeft(fn004.Length - 8, '0') + fn004.Substring(fn004.Length - 8); // try to find the texture
                 string f04Di = string.Format("{0}{1}{2}.04D", d04D, Path.DirectorySeparatorChar, fn04D);

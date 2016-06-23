@@ -38,7 +38,7 @@ namespace TextureTool {
             Console.Error.WriteLine("Error?! (Probably unsupported format)");
             return;
           }
-          using(Stream stream = File.Open(destFile, FileMode.OpenOrCreate, FileAccess.Write)) {
+          using(Stream stream = File.Open(destFile, FileMode.Create, FileAccess.Write)) {
             tex.Save(stream);
           }
         } else if(mode == '2') {
@@ -49,7 +49,7 @@ namespace TextureTool {
               Console.Error.WriteLine("Error?! (Probably unsupported format)");
               return;
             }
-            using(Stream ddsStream = File.Open(destFile, FileMode.OpenOrCreate, FileAccess.Write)) {
+            using(Stream ddsStream = File.Open(destFile, FileMode.Create, FileAccess.Write)) {
               tex.Save(ddsStream);
               Console.Out.WriteLine("Saved DDS");
             }

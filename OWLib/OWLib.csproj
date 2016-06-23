@@ -52,6 +52,7 @@
     <Compile Include="ImageDefinition.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="ModelWriter\DAEWriter.cs" />
     <Compile Include="ModelWriter\MTLWriter.cs" />
     <Compile Include="ModelWriter\OBJWriter.cs" />
     <Compile Include="ModelWriter\ASCIIWriter.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="ModelWriter\IModelWriter.cs" />
     <Compile Include="OWString.cs" />
     <Compile Include="STUD.cs" />
+    <Compile Include="Support\COLLADA.cs" />
     <Compile Include="Texture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextureLinear.cs" />

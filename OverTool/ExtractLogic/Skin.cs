@@ -269,7 +269,7 @@ namespace OverTool.ExtractLogic {
         writer = new OBJWriter();
         IModelWriter tmp = new MTLWriter();
         mtlPath = string.Format("{0}material{1}", path, tmp.Format);
-        using(Stream outp = File.Open(mtlPath, FileMode.OpenOrCreate, FileAccess.Write)) {
+        using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
           tmp.Write(null, outp, null, layers, new object[2] { false, mtlPath });
           Console.Out.WriteLine("Wrote materials {0}", mtlPath);
         }
@@ -278,13 +278,16 @@ namespace OverTool.ExtractLogic {
         Type t = typeof(IModelWriter);
         List<Type> types = asm.GetTypes().Where(tt => tt != t && t.IsAssignableFrom(tt)).ToList();
         foreach(Type tt in types) {
+          if(writer != null) {
+            break;
+          }
           if(tt.IsInterface) {
             continue;
           }
 
           IModelWriter tmp = (IModelWriter)Activator.CreateInstance(tt);
           for(int i = 0; i < tmp.Identifier.Length; ++i) {
-            if(tmp.Identifier[i] == furtherOpts[i]) {
+            if(tmp.Identifier[i] == furtherOpts[0]) {
               writer = tmp;
               break;
             }
@@ -308,8 +311,8 @@ namespace OverTool.ExtractLogic {
         if(!Directory.Exists(Path.GetDirectoryName(output))) {
           Directory.CreateDirectory(Path.GetDirectoryName(output));
         }
-        using(Stream outp = File.Open(outpath, FileMode.OpenOrCreate, FileAccess.Write)) {
-          writer.Write(mdl, outp, lods, layers, new object[2] { false, mtlPath });
+        using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+          writer.Write(mdl, outp, lods, layers, new object[2] { true, mtlPath });
           Console.Out.WriteLine("Wrote model {0}", outpath);
         }
       }
@@ -327,7 +330,7 @@ namespace OverTool.ExtractLogic {
       ulong imageDataKey = (key & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
       bool dbl = map.ContainsKey(imageDataKey);
 
-      using(Stream output = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write)) {
+      using(Stream output = File.Open(path, FileMode.Create, FileAccess.Write)) {
         if(map.ContainsKey(imageDataKey)) {
           Texture tex = new Texture(Util.OpenFile(map[key], handler), Util.OpenFile(map[imageDataKey], handler));
           tex.Save(output);

@@ -39,7 +39,7 @@ namespace OverTool.ExtractLogic {
 
       ulong imageDataKey = (imageKey & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
 
-      using(Stream outp = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write)) {
+      using(Stream outp = File.Open(path, FileMode.Create, FileAccess.Write)) {
         if(map.ContainsKey(imageDataKey)) {
           Texture tex = new Texture(Util.OpenFile(map[imageKey], handler), Util.OpenFile(map[imageDataKey], handler));
           tex.Save(outp);

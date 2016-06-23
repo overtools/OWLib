@@ -9,7 +9,7 @@ namespace OWLib.ModelWriter {
     public string Name => "XNALara XPS ASCII";
     public string Format => ".mesh.ascii";
     public char[] Identifier => new char[2] { 'l', 'a' };
-    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.MATERIAL);
+    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.MATERIAL | ModelWriter.ModelWriterSupport.ATTACHMENT);
     
     public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] opts) {
 			NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
@@ -93,6 +93,20 @@ namespace OWLib.ModelWriter {
             writer.WriteLine(index.Length);
             for(int j = 0; j < index.Length; ++j) {
               writer.WriteLine("{0} {1} {2}", index[j].v1, index[j].v2, index[j].v3);
+            }
+          }
+        }
+        if(opts.Length > 0 && opts[0] != null && opts[0].GetType() == typeof(bool) && (bool)opts[0] == true) {
+          writer.WriteLine(model.AttachmentPoints.Length); // extension, empty nodes.
+          for(uint i = 0; i < model.AttachmentPoints.Length; ++i) {
+            ModelAttachmentPoint attachment = model.AttachmentPoints[i];
+            writer.WriteLine("Attachment{0:X}", attachment.id);
+            unsafe
+            {
+              for(uint j = 0; j < 16; ++j) {
+                writer.Write("{0} ", attachment.matrix.Value[i].ToString("0.000000", numberFormatInfo));
+              }
+              writer.WriteLine("");
             }
           }
         }

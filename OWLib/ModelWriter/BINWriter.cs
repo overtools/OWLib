@@ -14,7 +14,7 @@ namespace OWLib.ModelWriter {
     public string Name => "XNALara XPS Binary";
     public string Format => ".mesh";
     public char[] Identifier => new char[2] { 'L', 'b' };
-    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.POSE | ModelWriterSupport.MATERIAL);
+    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.POSE | ModelWriterSupport.MATERIAL | ModelWriterSupport.ATTACHMENT);
 
     public static OpenTK.Vector3 NormalizeAngles(OpenTK.Vector3 angles) {
       angles.X = NormalizeAngle(angles.X);
@@ -66,7 +66,7 @@ namespace OWLib.ModelWriter {
       using(BinaryWriter writer = new BinaryWriter(stream)) {
         writer.Write((uint)323232);
         writer.Write((ushort)2);
-        writer.Write((ushort)15);
+        writer.Write((ushort)99);
         WriteString(writer, "XNAaraL");
         writer.Write((uint)5);
         WriteString(writer, "OVERWATCH");
@@ -211,6 +211,19 @@ namespace OWLib.ModelWriter {
               writer.Write((uint)index[j].v1);
               writer.Write((uint)index[j].v2);
               writer.Write((uint)index[j].v3);
+            }
+          }
+        }
+        if(opts.Length > 0 && opts[0] != null && opts[0].GetType() == typeof(bool) && (bool)opts[0] == true) {
+          writer.Write((uint)model.AttachmentPoints.Length); // extension, empty nodes.
+          for(uint i = 0; i < model.AttachmentPoints.Length; ++i) {
+            ModelAttachmentPoint attachment = model.AttachmentPoints[i];
+            WriteString(writer, string.Format("Attachment{0:X}", attachment.id));
+            unsafe
+            {
+              for(uint j = 0; j < 16; ++j) {
+                writer.Write(attachment.matrix.Value[i]);
+              }
             }
           }
         }
