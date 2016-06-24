@@ -33,6 +33,7 @@ namespace OWLib.ModelWriter {
       get;
     }
     
+    // data is object[] { bool exportAttachments, string materialReference, string modelName }
     void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data);
   }
 }

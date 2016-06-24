@@ -1,15 +1,16 @@
 import struct
 
 def readString(file):
-    lb1 = file.read(1)[0]
+    lb1 = struct.unpack('B', file.read(1))[0]
     lb2 = 0
 
     if lb1 > 128:
-        lb2 = file.read(1)[0]
+        lb2 = struct.unpack('B', file.read(1))[0]
 
     l = (lb1 % 128) + (lb2 * 128)
 
-    return struct.unpack('p' * l, file.read(l))[0]
+    s = file.read(l)
+    return s.decode('ascii')
 
 fmtSz = {
   'c': 1,
@@ -30,7 +31,32 @@ def read(file, fmt):
     for char in fmt:
         if char == '<': continue
         if char.lower() in fmtSz:
-            size += fmtSz[char]
+            size += fmtSz[char.lower()]
         else:
             print('unrecognized fmt char %s' % (char))
-    return struct.unpack(fmt, file.read(size))
+    if size == 0:
+        return []
+    return list(struct.unpack(fmt, file.read(size)))
+
+def readFmt(file, fmts):
+    a = []
+    for fmt in fmts:
+        if fmt == str:
+            a += [readString(file)]
+        else:
+            a += [read(file, fmt)]
+    if len(a) == 1:
+        return a[0]
+    return a
+
+
+def readFmtFlat(file, fmts):
+    a = []
+    for fmt in fmts:
+        if fmt == str:
+            a += [readString(file)]
+        else:
+            a += read(file, fmt)
+    if len(a) == 1:
+        return a[0]
+    return a

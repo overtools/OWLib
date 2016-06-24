@@ -8,11 +8,12 @@ namespace OWLib.ModelWriter {
   public class OWMAPWriter {
     public string Format => ".owmap";
 
-    public void Write(Stream output, Map map) {
+    public void Write(Stream output, Map map, string name = "") {
       using(BinaryWriter writer = new BinaryWriter(output)) {
         writer.Write((ushort)1); // version major
         writer.Write((ushort)0); // version minor
 
+        writer.Write(name);
         uint size = 0;
 
         for(int i = 0; i < map.Records.Length; ++i) {

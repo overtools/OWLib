@@ -23,6 +23,12 @@ namespace OWLib.ModelWriter {
           writer.Write("");
         }
 
+        if(data.Length > 2 && data[2] != null && data[2].GetType() == typeof(string)) {
+          writer.Write((string)data[2]);
+        } else {
+          writer.Write("");
+        }
+
         writer.Write((ushort)model.BoneData.Length); // nr bones
         
         Dictionary<byte, List<int>> LODMap = new Dictionary<byte, List<int>>();
@@ -107,6 +113,12 @@ namespace OWLib.ModelWriter {
               } else {
                 writer.Write((byte)0);
               }
+            }
+            for(int j = 0; j < index.Length; ++j) {
+              writer.Write((byte)3);
+              writer.Write((int)index[j].v1);
+              writer.Write((int)index[j].v2);
+              writer.Write((int)index[j].v3);
             }
           }
         }

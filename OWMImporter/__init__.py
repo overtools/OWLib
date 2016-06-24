@@ -1,4 +1,4 @@
-bl_info {
+bl_info = {
     "name": "OWM Import",
     "author": "dynaomi",
     "version": (1, 0, 0),

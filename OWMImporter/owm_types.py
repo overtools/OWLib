@@ -1,4 +1,4 @@
-class Settings:
+class OWSettings:
     def __init__(self, filename, uvDisplaceX, uvDisplaceY, autoIk, importNormals, importEmpties, importMaterial, importSkeleton):
         self.filename = filename
         self.uvDisplaceX = uvDisplaceX
@@ -27,11 +27,12 @@ class OWMAPFile:
         self.objects = objects
 
 class OWMDLHeader:
-    structFormat = ['<HH', str, '<HII']
-    def __init__(self, major, minor, material, boneCount, meshCount, emptyCount):
+    structFormat = ['<HH', str, str, '<HII']
+    def __init__(self, major, minor, material, name, boneCount, meshCount, emptyCount):
         self.major = major
         self.minor = minor
         self.material = material
+        self.name = name
         self.boneCount = boneCount
         self.meshCount = meshCount
         self.emptyCount = emptyCount
@@ -44,14 +45,15 @@ class OWMATHeader:
         self.materialCount = materialCount
 
 class OWMAPHeader:
-    structFormat = ['<HHI']
-    def __init__(self, major, minor, objectCount):
+    structFormat = ['<HH', str, '<I']
+    def __init__(self, major, minor, name, objectCount):
         self.major = major
         self.minor = minor
+        self.name = name
         self.objectCount = objectCount
 
 class OWMDLBone:
-    structFormat = [str, '<h']
+    structFormat = [str, '<h', '<fff', '<fff', '<ffff']
     def __init__(self, name, parent, pos, scale, rot):
         self.name = name
         self.parent = parent
@@ -71,7 +73,8 @@ class OWMDLMesh:
         self.indices = indices
 
 class OWMDLVertex:
-    structFormat = ['B']
+    structFormat = ['<fff', '<fff']
+    exFormat = ['<ff', 'B', '<H', '<f']
     def __init__(self, position, normal, uvs, boneCount, boneIndices, boneWeights):
         self.position = position
         self.normal = normal
@@ -81,20 +84,22 @@ class OWMDLVertex:
         self.boneWeights = boneWeights
 
 class OWMDLIndex:
-    structFormat = ['B', 'I']
+    structFormat = ['B']
+    exFormat = ['<I']
     def __init__(self, pointCount, points):
         self.pointCount = pointCount
         self.points = points
 
 class OWMDLEmpty:
-    structFormat = [str]
+    structFormat = [str, '<fff', '<ffff']
     def __init__(self, name, position, rotation):
         self.name = name
         self.position = position
         self.rotation = rotation
 
 class OWMATMaterial:
-    structFormat = ['<QI', str]
+    structFormat = ['<QI']
+    exFormat = [str]
     def __init__(self, key, textureCount, textures):
         self.key = key
         self.textureCount = textureCount
@@ -115,6 +120,7 @@ class OWMAPEntity:
         self.records = records
 
 class OWMAPRecord:
+    structFormat = ['<fff', '<fff', '<ffff']
     def __init__(self, position, scale, rotation):
         self.position = position
         self.scale = scale
