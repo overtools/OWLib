@@ -273,6 +273,14 @@ namespace OverTool.ExtractLogic {
           tmp.Write(null, outp, null, layers, new object[2] { false, mtlPath });
           Console.Out.WriteLine("Wrote materials {0}", mtlPath);
         }
+      } else if(furtherOpts.Contains('W')) {
+        writer = new OWMDLWriter();
+        IModelWriter tmp = new OWMATWriter();
+        mtlPath = string.Format("{0}material{1}", path, tmp.Format);
+        using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
+          tmp.Write(null, outp, null, layers, new object[0]);
+          Console.Out.WriteLine("Wrote materials {0}", mtlPath);
+        }
       } else if(furtherOpts.Count > 0) {
         Assembly asm = typeof(IModelWriter).Assembly;
         Type t = typeof(IModelWriter);

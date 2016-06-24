@@ -45,11 +45,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APM.cs" />
-    <Compile Include="Common.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Half\Half.cs" />
     <Compile Include="Half\HalfHelper.cs" />
     <Compile Include="ImageDefinition.cs" />
+    <Compile Include="Map.cs" />
+    <Compile Include="Types\Map\IMapFormat.cs" />
+    <Compile Include="Types\Map\Map01.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="ModelWriter\MTLWriter.cs" />
@@ -60,6 +62,9 @@
     <Compile Include="ModelWriter\FBXBINWriter.cs" />
     <Compile Include="ModelWriter\FBXCommon.cs" />
     <Compile Include="ModelWriter\IModelWriter.cs" />
+    <Compile Include="ModelWriter\OWMAPWriter.cs" />
+    <Compile Include="ModelWriter\OWMATWriter.cs" />
+    <Compile Include="ModelWriter\OWMDLWriter.cs" />
     <Compile Include="OWString.cs" />
     <Compile Include="STUD.cs" />
     <Compile Include="Texture.cs" />
@@ -67,6 +72,7 @@
     <Compile Include="TextureLinear.cs" />
     <Compile Include="Types\APMTypes.cs" />
     <Compile Include="Types\CommonTypes.cs" />
+    <Compile Include="Types\MapTypes.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
     <Compile Include="Types\STUD\Binding\ProjectileModelRecord.cs" />

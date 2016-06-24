@@ -2,8 +2,6 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types {
-  // TODO FIX THIS
-
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
   public unsafe struct ModelHeader {
     public fixed float boundingBox[16];
