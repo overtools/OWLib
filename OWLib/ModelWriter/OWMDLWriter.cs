@@ -20,13 +20,13 @@ namespace OWLib.ModelWriter {
         if(data.Length > 1 && data[1] != null && data[1].GetType() == typeof(string)) {
           writer.Write((string)data[1]);
         } else {
-          writer.Write("");
+          writer.Write((byte)0);
         }
 
         if(data.Length > 2 && data[2] != null && data[2].GetType() == typeof(string)) {
           writer.Write((string)data[2]);
         } else {
-          writer.Write("");
+          writer.Write((byte)0);
         }
 
         writer.Write((ushort)model.BoneData.Length); // nr bones
@@ -50,7 +50,7 @@ namespace OWLib.ModelWriter {
         if(data.Length > 0 && data[0] != null && data[0].GetType() == typeof(bool) && (bool)data[0] == true) {
           writer.Write(model.AttachmentPoints.Length); // nr empties
         } else {
-          writer.Write(0L);
+          writer.Write((int)0);
         }
         
         for(int i = 0; i < model.BoneData.Length; ++i) {

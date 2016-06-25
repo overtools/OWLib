@@ -23,7 +23,7 @@ namespace OWLib.Types {
   
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct MapCommonHeader {
-    public MD5Hash guid;
+    public GuidT guid;
     public ushort mask;
     public ushort type;
     public uint size;

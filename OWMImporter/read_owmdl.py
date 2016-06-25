@@ -17,10 +17,10 @@ def read(filename):
     header = owm_types.OWMDLHeader(major, minor, materialstr, namestr, boneCount, meshCount, emptyCount)
 
     bones = []
-    for i in range(boneCount):
-        name, parent, pos, scale, rot = bin_ops.readFmt(stream, owm_types.OWMDLBone.structFormat)
-        bones += [owm_types.OWMDLBone(name, parent[0], pos, scale, rot)]
-
+    if boneCount > 0:
+        for i in range(boneCount):
+            name, parent, pos, scale, rot = bin_ops.readFmt(stream, owm_types.OWMDLBone.structFormat)
+            bones += [owm_types.OWMDLBone(name, parent[0], pos, scale, rot)]
     meshes = []
     for i in range(meshCount):
         name, materialKey, uvCount, vertexCount, indexCount = bin_ops.readFmtFlat(stream, owm_types.OWMDLMesh.structFormat)
@@ -28,15 +28,17 @@ def read(filename):
         for j in range(vertexCount):
             position, normal = bin_ops.readFmt(stream, owm_types.OWMDLVertex.structFormat)
             uvs = []
-            for k in range(uvCount):
-                uvs += [bin_ops.read(stream, owm_types.OWMDLVertex.exFormat[0])]
+            if uvCount > 0:
+                for k in range(uvCount):
+                    uvs += [bin_ops.read(stream, owm_types.OWMDLVertex.exFormat[0])]
             boneDataCount = bin_ops.read(stream, owm_types.OWMDLVertex.exFormat[1])[0]
             boneIndices = []
-            for k in range(boneDataCount):
-                boneIndices += [bin_ops.readFmtFlat(stream, owm_types.OWMDLVertex.exFormat[2])]
             boneWeights = []
-            for k in range(boneDataCount):
-                boneWeights += [bin_ops.readFmtFlat(stream, owm_types.OWMDLVertex.exFormat[3])]
+            if boneDataCount > 0:
+                for k in range(boneDataCount):
+                    boneIndices += [bin_ops.readFmtFlat(stream, owm_types.OWMDLVertex.exFormat[2])]
+                for k in range(boneDataCount):
+                    boneWeights += [bin_ops.readFmtFlat(stream, owm_types.OWMDLVertex.exFormat[3])]
             verts += [owm_types.OWMDLVertex(position, normal, uvs, boneDataCount, boneIndices, boneWeights)]
         faces = []
         for j in range(indexCount):
@@ -48,8 +50,9 @@ def read(filename):
         meshes += [owm_types.OWMDLMesh(name, materialKey, uvCount, vertexCount, indexCount, verts, faces)]
 
     empties = []
-    for i in range(emptyCount):
-        name, position, rotation = bin_ops.readFmt(stream, owm_types.OWMDLEmpty.structFormat)
-        empties += [owm_types.OWMDLEmpty(name, position, rotation)]
+    if emptyCount > 0:
+        for i in range(emptyCount):
+            name, position, rotation = bin_ops.readFmt(stream, owm_types.OWMDLEmpty.structFormat)
+            empties += [owm_types.OWMDLEmpty(name, position, rotation)]
 
     return owm_types.OWMDLFile(header, bones, meshes, empties)

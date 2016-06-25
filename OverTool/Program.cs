@@ -18,15 +18,17 @@ namespace OverTool {
     static void Main(string[] args) {
       if(args.Length < 2) {
         Console.Out.WriteLine("Usage: OverTool.exe \"overwatch path\" mode [opts]");
-        Console.Out.WriteLine("THIS TOOL IS UNFINISHED.");
         Console.Out.WriteLine("Modes:");
         Console.Out.WriteLine("\tt - List Cosmetics");
+        Console.Out.WriteLine("\tx - Extract Cosmetics");
+        Console.Out.WriteLine("\tm - List Maps");
+        Console.Out.WriteLine("\tM - Extract Maps");
         return;
       }
 
       string root = args[0];
       char opt = args[1][0];
-      char[] validOpts = new char[] { 't', 'x' };
+      char[] validOpts = new char[] { 't', 'x', 'm', 'M' };
       if(!validOpts.Contains(opt)) {
         Console.Error.WriteLine("UNSUPPORTED OPT {0}", opt);
         return;
@@ -34,6 +36,7 @@ namespace OverTool {
 
       Dictionary<ushort, List<ulong>> track = new Dictionary<ushort, List<ulong>>();
       track.Add(0x75, new List<ulong>());
+      track.Add(0x9F, new List<ulong>());
 
       Dictionary<ulong, Record> map = new Dictionary<ulong, Record>();
 
@@ -76,12 +79,18 @@ namespace OverTool {
           }
         }
       }
-
+      Action<Dictionary<ushort, List<ulong>>, Dictionary<ulong, Record>, CASCHandler, string[]> optfn = null;
       if(opt == 't') {
-        ListInventory.Parse(track, map, handler, args.Skip(2).ToArray());
+        optfn = ListInventory.Parse;
       } else if(opt == 'x') {
-        Extract.Parse(track, map, handler, args.Skip(2).ToArray());
+        optfn = Extract.Parse;
+      } else if(opt == 'm') {
+        optfn = ListMap.Parse;
+      } else if(opt == 'M') {
+        optfn = ExtractMap.Parse;
       }
+
+      optfn(track, map, handler, args.Skip(2).ToArray());
     }
   }
 }

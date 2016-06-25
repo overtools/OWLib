@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace OverTool.ExtractLogic {
   class Skin {
-    private static void FindTextures(ulong key, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
+    public static void FindTextures(ulong key, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
       ulong tgt = key;
       if(replace.ContainsKey(tgt)) {
         tgt = replace[tgt];
@@ -327,7 +327,7 @@ namespace OverTool.ExtractLogic {
       }
     }
 
-    private static void SaveTexture(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, string path) {
+    public static void SaveTexture(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, string path) {
       if(!map.ContainsKey(key)) {
         return;
       }

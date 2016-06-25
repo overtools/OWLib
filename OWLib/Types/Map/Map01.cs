@@ -40,7 +40,7 @@ namespace OWLib.Types.Map {
       public int unkC;
     }
 
-    public ushort Identifier => 1;
+    public ushort Identifier => 256;
 
     public string Name => "Object Placement";
 

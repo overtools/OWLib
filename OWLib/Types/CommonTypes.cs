@@ -14,6 +14,14 @@ namespace OWLib.Types {
     public ulong padding;
     public ulong key;
   }
+
+  [StructLayout(LayoutKind.Sequential, Pack = 4)]
+  public struct GuidT {
+    public uint Data1;
+    public ushort Data2;
+    public ushort Data3;
+    public ulong Data4;
+  }
   
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct ImageDefinitionHeader {

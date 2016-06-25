@@ -48,7 +48,9 @@
     <Compile Include="ExtractLogic\Icon.cs" />
     <Compile Include="ExtractLogic\Skin.cs" />
     <Compile Include="ExtractLogic\Spray.cs" />
+    <Compile Include="ExtractMap.cs" />
     <Compile Include="ListInventory.cs" />
+    <Compile Include="ListMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />

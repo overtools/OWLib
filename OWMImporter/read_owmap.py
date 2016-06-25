@@ -22,7 +22,7 @@ def read(filename):
 
         entities = []
         for j in range(entityCount):
-            material, recordCount = bin_ops.readFmtFlat(stream. owm_types.OWMAPEntity.structFormat)
+            material, recordCount = bin_ops.readFmtFlat(stream, owm_types.OWMAPEntity.structFormat)
 
             records = []
             for k in range(recordCount):

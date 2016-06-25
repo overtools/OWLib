@@ -78,6 +78,7 @@
     <Compile Include="Types\STUD\Binding\ProjectileModelRecord.cs" />
     <Compile Include="Types\STUD\Binding\ChildParameterRecord.cs" />
     <Compile Include="Types\STUD\Binding\ComplexModelRecord.cs" />
+    <Compile Include="Types\STUD\MapMaster.cs" />
     <Compile Include="Types\STUD\TextureOverrideMaster.cs" />
     <Compile Include="Types\STUD\Binding\ViewModelRecord.cs" />
     <Compile Include="Types\STUD\Binding\ParameterRecord.cs" />

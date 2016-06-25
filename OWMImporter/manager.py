@@ -136,9 +136,9 @@ class import_map_op(bpy.types.Operator, ImportHelper):
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
 
-    filename_ext = ".owmdl"
+    filename_ext = ".owmap"
     filter_glob = bpy.props.StringProperty(
-        default="*.owmdl",
+        default="*.owmap",
         options={'HIDDEN'},
     )
 
@@ -178,7 +178,7 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         default=True,
     )
 
-    importMaterial = BoolProperty(
+    importSkeleton = BoolProperty(
         name="Import Skeleton",
         description="Import Bones",
         default=True,

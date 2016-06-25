@@ -113,6 +113,14 @@ def randomColor():
     randomB = random.random()
     return (randomR, randomG, randomB)
 
+def bindMaterials(meshes, data, materials):
+    for i, obj in enumerate(meshes):
+        mesh = obj.data
+        meshData = data.meshes[i]
+        if materials != None and meshData.materialKey in materials[1]:
+            mesh.materials.clear()
+            mesh.materials.append(materials[1][meshData.materialKey])
+
 def importMesh(armature, materials, meshData):
     global settings
     global rootObject
@@ -214,8 +222,8 @@ def importEmpties():
         bpy.context.scene.update()
         empty.parent = att
         empty.location = xzy(emp.position)
-        empty.rotation_mode = 'XYZ'
-        empty.rotation_quaternion = emp.rotation
+        empty.rotation_mode = 'QUATERNION'
+        empty.rotation_quaternion = (emp.rotation[3], emp.rotation[0], -emp.rotation[2], emp.rotation[1])
         empty.select = True
         bpy.context.scene.update()
         e += [empty]
@@ -264,13 +272,13 @@ def readmdl(materials = None):
     bpy.context.scene.update()
 
     armature = None
-    if settings.importSkeleton:
+    if settings.importSkeleton and data.header.boneCount > 0:
         armature = importArmature(settings.autoIk)
         armature.name = rootName + '_Skeleton'
         armature.parent = rootObject
 
     impMat = False
-    if materials == None and settings.importMaterial:
+    if materials == None and settings.importMaterial and len(data.header.material) > 0:
         impMat = True
         matpath = data.header.material
         if not os.path.isabs(matpath):
@@ -280,7 +288,7 @@ def readmdl(materials = None):
     meshes = importMeshes(armature, materials)
 
     empties = []
-    if settings.importEmpties:
+    if settings.importEmpties and data.header.emptyCount > 0:
         empties = importEmpties()
 
     if armature:
@@ -291,7 +299,7 @@ def readmdl(materials = None):
 
     bpy.context.scene.update()
 
-    return (rootObject, armature, meshes, empties)
+    return (rootObject, armature, meshes, empties, data)
 
 def read(aux, materials = None):
     global settings
@@ -313,7 +321,3 @@ def mode():
     currentMode = bpy.context.mode
     if bpy.context.scene.objects.active and currentMode != 'OBJECT':
         bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
-
-if __name__ == '__main__':
-    settings = owm_types.OWSettings('C:\\ow\\overtooltest\\D.Va\\Skin\\Classic\\000000001064.owmdl', 0, 0, True, True, True, True, True)
-    read(settings)
