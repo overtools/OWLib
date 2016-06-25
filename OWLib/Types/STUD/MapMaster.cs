@@ -42,6 +42,10 @@ namespace OWLib.Types.STUD {
     private MapMasterHeader header;
     public MapMasterHeader Header => header;
 
+    public ulong DataKey(ushort type) {
+      return (header.data.key & ~0xFFFF00000000ul) | (((ulong)type) << 32);
+    }
+
     public void Read(Stream input) {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<MapMasterHeader>();
