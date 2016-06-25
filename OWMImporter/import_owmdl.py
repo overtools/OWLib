@@ -4,14 +4,68 @@ from OWMImporter import read_owmdl
 from OWMImporter import import_owmat
 from OWMImporter import owm_types
 from mathutils import *
-import bpy, mathutils, bmesh
+import bpy, mathutils, bmesh, random
 
 root = ''
 settings = None
 data = None
 rootObject = None
+blenderBoneNames = []
 
-def importArmature(autoIk): pass # TODO: Generate Armature
+def newBoneName():
+    global blenderBoneNames
+    blenderBoneNames = []
+def addBoneName(newName):
+    global blenderBoneNames
+    blenderBoneNames += [newName]
+def getBoneName(originalIndex):
+    if originalIndex < len(blenderBoneNames):
+        return blenderBoneNames[originalIndex]
+    else:
+        return None
+
+def fixLength(bone):
+    default_length = 0.005
+    if bone.length == 0:
+        bone.tail = bone.head - Vector((0, .001, 0))
+    if bone.length < default_length:
+        bone.length = default_length
+
+def importArmature(autoIk):
+    bones = data.bones
+    armature = None
+    if len(bones) > 0:
+        armData = bpy.data.armatures.new("Armature")
+        armData.draw_type = 'STICK'
+        armature = bpy.data.objects.new("Armature", armData)
+        armature.show_x_ray = True
+
+        bpy.context.scene.objects.link(armature)
+
+        bpy.context.scene.objects.active = armature
+        bpy.ops.object.mode_set(mode='EDIT')
+
+        newBoneName()
+        for bone in bones:
+            bbone = armature.data.edit_bones.new(bone.name)
+            addBoneName(bbone.name)
+
+            mpos = Matrix.Translation(xzy(bone.pos))
+            mscl = Matrix.Scale(1, 4, xzy(bone.scale))
+            mrot = Matrix.Rotation(bone.rot[3], 4, bone.rot[0:3])
+            m = mpos * mrot * mscl
+
+            bbone.transform(m)
+            fixLength(bbone)
+
+        for i, bone in enumerate(bones):
+            if (bone.parent >= 0):
+                bbone = armData.edit_bones[i    ]
+                bbone.parent = armData.edit_bones[bone.parent]
+        armature.select = True
+        bpy.ops.object.mode_set(mode='OBJECT')
+        armature.data.use_auto_ik = autoIk
+    return armature
 
 def xzy(vec):
     return (vec[0], -vec[2], vec[1])
@@ -38,6 +92,27 @@ def detach(faces):
         f += [face.points]
     return f
 
+def makeVertexGroups(mesh, boneData):
+    for vidx in range(len(boneData)):
+        indices, weights = boneData[vidx]
+        for idx in range(len(indices)):
+            i = indices[idx]
+            w = weights[idx]
+
+            if w != 0:
+                name = getBoneName(i)
+                if name != None:
+                    vgrp = mesh.vertex_groups.get(name)
+                    if vgrp == None:
+                        vgrp = mesh.vertex_groups.new(name)
+                    vgrp.add([vidx], w, 'REPLACE')
+
+def randomColor():
+    randomR = random.random()
+    randomG = random.random()
+    randomB = random.random()
+    return (randomR, randomG, randomB)
+
 def importMesh(armature, materials, meshData):
     global settings
     global rootObject
@@ -54,6 +129,37 @@ def importMesh(armature, materials, meshData):
     for i in range(meshData.uvCount):
         mesh.uv_textures.new(name="UV" + str(i + 1))
 
+    if materials != None and meshData.materialKey in materials[1]:
+        mesh.materials.append(materials[1][meshData.materialKey])
+
+        if len(mesh.materials) > 0 and len(mesh.materials[0].texture_slots) > 0:
+            texture = mesh.materials[0].texture_slots[0].texture.image
+            if mesh.uv_textures.active:
+                for uvf in mesh.uv_textures.active.data:
+                    uvf.image = texture
+
+    if armature:
+        mod = obj.modifiers.new(type="ARMATURE", name="Armature")
+        mod.use_vertex_groups = True
+        mod.object = armature
+        obj.parent = armature
+
+        makeVertexGroups(obj, boneData)
+
+        current_theme = bpy.context.user_preferences.themes.items()[0][0]
+        theme = bpy.context.user_preferences.themes[current_theme]
+
+        bgrp = armature.pose.bone_groups.new(obj.name)
+        bgrp.color_set = 'CUSTOM'
+        bgrp.colors.normal = (randomColor())
+        bgrp.colors.select = theme.view_3d.bone_pose
+        bgrp.colors.active = theme.view_3d.bone_pose_active
+
+        vgrps = obj.vertex_groups.keys()
+        pbones = armature.pose.bones
+        for bname in vgrps:
+            pbones[bname].bone_group = bgrp
+
     bm = bmesh.new()
     bm.from_mesh(mesh)
     for fidx, face in enumerate(bm.faces):
@@ -64,23 +170,6 @@ def importMesh(armature, materials, meshData):
                 layer = bm.loops.layers.uv[idx]
                 vert[layer].uv = Vector([uvs[ridx][idx][0] + settings.uvDisplaceX, 1 + settings.uvDisplaceY - uvs[ridx][idx][1]])
     bm.to_mesh(mesh)
-
-    if materials != None and meshData.materialKey in materials:
-        obj.materials += materials[meshData.materialKey]
-
-        if len(obj.materials) > 0 and len(obj.materials[0].texture_slots) > 0:
-            texture = obj.materials[0].texture_slots[0].texture.image
-            if obj.uv_textures.active:
-                for uvf in obj.uv_textures.active.data:
-                    uvf.image = texture
-
-    if armature:
-        mod = obj.modifiers.new(type="ARMATURE", name="Armature")
-        mod.use_vertex_groups = True
-        mod.object = armature
-        obj.parent = armature
-        # TODO: makeVertexGroups
-        # TODO: makeBoneGroups
 
     mesh.update()
 
@@ -132,52 +221,84 @@ def importEmpties():
         e += [empty]
     return e
 
-def hideUnusedBones(armature): pass # TODO
+def boneTailMiddleObject(armature):
+    bpy.context.scene.objects.active = armature
+    bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+    eb = armature.data.edit_bones
+    boneTailMiddle(eb)
+    bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
 
-def boneTailMiddleObject(armature): pass # TODO
+def boneTailMiddle(eb):
+    for bone in eb:
+        if len(bone.children) > 0:
+            bone.tail = Vector(map(sum,zip(*(child.head.xyz for child in bone.children))))/len(bone.children)
+        else:
+            if bone.parent != None:
+                if bone.head.xyz != bone.parent.tail.xyz:
+                    delta = bone.head.xyz - bone.parent.tail.xyz
+                else:
+                    delta = bone.parent.tail.xyz - bone.parent.head.xyz
+                bone.tail = bone.head.xyz + delta
+    for bone in eb:
+        fixLength(bone)
+        if bone.parent:
+            if bone.head == bone.parent.tail:
+                bone.use_connect = True
 
-def readmdl(material_dat = None):
+def readmdl(materials = None):
     global root
     global data
     global rootObject
     root, file = os.path.split(settings.filename)
 
     data = read_owmdl.read(settings.filename)
-    if not data: return '{NONE}'
+    if not data: return None
 
+    rootName = os.path.splitext(file)[0]
     if len(data.header.name) > 0:
-        rootObject = bpy.data.objects.new(data.header.name, None)
-        rootObject.hide = rootObject.hide_render = True
-        bpy.context.scene.objects.link(rootObject)
-        bpy.context.scene.update()
+        rootName = data.header.name
+
+    rootObject = bpy.data.objects.new(rootName, None)
+    rootObject.hide = rootObject.hide_render = True
+    bpy.context.scene.objects.link(rootObject)
+    bpy.context.scene.update()
 
     armature = None
     if settings.importSkeleton:
         armature = importArmature(settings.autoIk)
+        armature.name = rootName + '_Skeleton'
+        armature.parent = rootObject
 
-    if material_dat == None and settings.importMaterial:
-        material_dat = import_owmat.read(data.header.material)
+    impMat = False
+    if materials == None and settings.importMaterial:
+        impMat = True
+        matpath = data.header.material
+        if not os.path.isabs(matpath):
+            matpath = os.path.normpath('%s/%s' % (root, matpath))
+        materials = import_owmat.read(matpath)
 
-    mesh_obs = importMeshes(armature, material_dat)
+    meshes = importMeshes(armature, materials)
 
-    empties_ob = []
+    empties = []
     if settings.importEmpties:
-        empties_ob = importEmpties()
+        empties = importEmpties()
 
     if armature:
-        hideUnusedBones(armature)
         boneTailMiddleObject(armature)
+
+    if impMat:
+        import_owmat.cleanUnusedMaterials(materials)
 
     bpy.context.scene.update()
 
-    return '{FINISHED}'
+    return (rootObject, armature, meshes, empties)
 
-def read(aux, material_dat = None):
+def read(aux, materials = None):
     global settings
     settings = aux
 
     setup()
-    status = readmdl(material_dat)
+    status = readmdl(materials)
     finalize()
     return status
 
@@ -194,5 +315,5 @@ def mode():
         bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
 
 if __name__ == '__main__':
-    settings = owm_types.OWSettings('C:\\ow\\overtooltest\\D.Va\\Skin\\Classic\\0000000011CE.owmdl', 0, 0, True, True, True, True, True)
+    settings = owm_types.OWSettings('C:\\ow\\overtooltest\\D.Va\\Skin\\Classic\\000000001064.owmdl', 0, 0, True, True, True, True, True)
     read(settings)

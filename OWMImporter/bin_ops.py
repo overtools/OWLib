@@ -8,7 +8,8 @@ def readString(file):
         lb2 = struct.unpack('B', file.read(1))[0]
 
     l = (lb1 % 128) + (lb2 * 128)
-
+    if l == 0:
+        return ''
     s = file.read(l)
     return s.decode('ascii')
 

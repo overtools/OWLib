@@ -1,3 +1,5 @@
+import mathutils
+
 class OWSettings:
     def __init__(self, filename, uvDisplaceX, uvDisplaceY, autoIk, importNormals, importEmpties, importMaterial, importSkeleton):
         self.filename = filename
@@ -8,6 +10,9 @@ class OWSettings:
         self.importEmpties = importEmpties
         self.importMaterial = importMaterial
         self.importSkeleton = importSkeleton
+
+    def mutate(self, filename):
+        return OWSettings(filename, self.uvDisplaceX, self.uvDisplaceY, self.autoIk, self.importNormals, self.importEmpties, self.importMaterial, self.importSkeleton)
 
 class OWMDLFile:
     def __init__(self, header, bones, meshes, empties):

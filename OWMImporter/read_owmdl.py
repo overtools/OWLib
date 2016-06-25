@@ -19,7 +19,7 @@ def read(filename):
     bones = []
     for i in range(boneCount):
         name, parent, pos, scale, rot = bin_ops.readFmt(stream, owm_types.OWMDLBone.structFormat)
-        bones += [owm_types.OWMDLBone(name, parent, pos, scale, rot)]
+        bones += [owm_types.OWMDLBone(name, parent[0], pos, scale, rot)]
 
     meshes = []
     for i in range(meshCount):
