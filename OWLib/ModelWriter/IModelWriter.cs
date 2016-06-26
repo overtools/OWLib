@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using OWLib.Types;
+using OWLib.Types.Map;
 
 namespace OWLib.ModelWriter {
   public enum ModelWriterSupport : ushort {
@@ -35,5 +36,6 @@ namespace OWLib.ModelWriter {
     
     // data is object[] { bool exportAttachments, string materialReference, string modelName }
     void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data);
+    void Write(Map10 physics, Stream output, object[] data);
   }
 }

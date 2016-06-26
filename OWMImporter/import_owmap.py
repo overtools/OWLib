@@ -85,9 +85,40 @@ def read(settings):
                 nobj.location = Vector(import_owmdl.xzy(rec.position))
                 nobj.scale = Vector(import_owmdl.xzy(rec.scale))
                 nobj.rotation_mode = 'QUATERNION'
-                nobj.rotation_quaternion = (rec.rotation[3], rec.rotation[0], -rec.rotation[2], rec.rotation[1])
+                nobj.rotation_quaternion = import_owmdl.wxzy(rec.rotation)
             bpy.ops.object.select_all(action = 'DESELECT')
-
         bpy.ops.object.select_all(action = 'DESELECT')
         remove(obj[0])
+    for ob in data.details:
+        obpath = ob.model
+        if not os.path.isabs(obpath):
+            obpath = os.path.normpath('%s/%s' % (root, obpath))
+
+        obn = os.path.splitext(os.path.basename(obpath))[0]
+        print(obn)
+        obnObj = bpy.data.objects.new(obn, None)
+        obnObj.parent = rootObj
+        obnObj.hide = True
+        bpy.context.scene.objects.link(obnObj)
+
+        mutated = settings.mutate(obpath)
+        mutated.importMaterial = False
+        bpy.ops.object.select_all(action = 'DESELECT')
+
+        if len(ob.material) == 0:
+            mutated.importNormals = False
+
+        obj = import_owmdl.read(mutated, None)
+
+        material = None
+        if settings.importMaterial:
+            material = import_owmat.read(matpath, '%s_%s' % (name, obn))
+            import_owmdl.bindMaterials(obj[2], obj[4], material)
+
+        obj[0].location = Vector(import_owmdl.xzy(ob.position))
+        obj[0].scale = Vector(import_owmdl.xzy(ob.scale))
+        obj[0].rotation_mode = 'QUATERNION'
+        obj[0].rotation_quaternion = import_owmdl.wxzy(ob.rotation)
+        obj[0].parent = obnObj
+
     bpy.context.scene.update()

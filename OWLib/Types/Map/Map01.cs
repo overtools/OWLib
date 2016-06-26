@@ -23,9 +23,9 @@ namespace OWLib.Types.Map {
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Map01GroupRecord {
-      public ModelVertex position;
-      public ModelVertex scale;
-      public Vec4 rotation;
+      public MapVec3 position;
+      public MapVec3 scale;
+      public MapQuat rotation;
       public uint unk1;
       public uint unk2;
       public uint unk3;
@@ -40,7 +40,7 @@ namespace OWLib.Types.Map {
       public int unkC;
     }
 
-    public ushort Identifier => 256;
+    public ushort Identifier => 1;
 
     public string Name => "Object Placement";
 

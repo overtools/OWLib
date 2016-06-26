@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using OWLib.Types;
+using OWLib.Types.Map;
 
 namespace OWLib.ModelWriter {
   public class OWMATWriter : IModelWriter {
@@ -12,7 +14,11 @@ namespace OWLib.ModelWriter {
 
     public ModelWriterSupport SupportLevel => ModelWriterSupport.MATERIAL;
 
+    public void Write(Map10 physics, Stream output, object[] data) {
+    }
+
     public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data) {
+      Console.Out.WriteLine("Writing OWMAT");
       using(BinaryWriter writer = new BinaryWriter(output)) {
         writer.Write((ushort)1); // version major
         writer.Write((ushort)0); // version minor

@@ -10,6 +10,7 @@ using OWLib.Types;
 using OWLib.Types.STUD;
 using OWLib.ModelWriter;
 using OverTool.ExtractLogic;
+using OWLib.Types.Map;
 
 namespace OverTool {
   class ExtractMap {
@@ -58,11 +59,23 @@ namespace OverTool {
           if(!Directory.Exists(outputPath)) {
             Directory.CreateDirectory(outputPath);
           }
-          using(Stream outputStream = File.Open(string.Format("{0}{1}{2}", outputPath, Util.SanitizePath(name), owmap.Format), FileMode.Create, FileAccess.Write)) {
-            used = owmap.Write(outputStream, mapData, name);
+          using(Stream map2Stream = Util.OpenFile(map[master.DataKey(2)], handler)) {
+            Map map2Data = new Map(map2Stream);
+            using(Stream map8Stream = Util.OpenFile(map[master.DataKey(8)], handler)) {
+              Map map8Data = new Map(map8Stream);
+              using(Stream outputStream = File.Open(string.Format("{0}{1}{2}", outputPath, Util.SanitizePath(name), owmap.Format), FileMode.Create, FileAccess.Write)) {
+                used = owmap.Write(outputStream, mapData, map2Data, map8Data, name);
+              }
+            }
           }
           IModelWriter owmdl = new OWMDLWriter();
           IModelWriter owmat = new OWMATWriter();
+          using(Stream map10Stream = Util.OpenFile(map[master.DataKey(0x10)], handler)) {
+            Map10 physics = new Map10(map10Stream);
+            using(Stream outputStream = File.Open(string.Format("{0}physics{1}", outputPath, owmdl.Format), FileMode.Create, FileAccess.Write)) {
+              owmdl.Write(physics, outputStream, new object[0]);
+            }
+          }
           if(used != null) {
             Dictionary<ulong, List<string>> models = used[0];
             Dictionary<ulong, List<string>> materials = used[1];
@@ -80,7 +93,7 @@ namespace OverTool {
                 foreach(string modelOutput in modelpair.Value) {
                   using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, modelOutput), FileMode.Create, FileAccess.Write)) {
                     owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[0]);
-                  Console.Out.WriteLine("Wrote model {0}", modelOutput);
+                    Console.Out.WriteLine("Wrote model {0}", modelOutput);
                   }
                 }
               }
@@ -93,7 +106,7 @@ namespace OverTool {
                 Skin.FindTextures(matpair.Key, tmp, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), map, handler);
                 cache.Add(matpair.Key, tmp);
               }
-              
+
               foreach(KeyValuePair<ulong, List<ImageLayer>> kv in tmp) {
                 ulong materialId = kv.Key;
                 List<ImageLayer> sublayers = kv.Value;
@@ -104,7 +117,7 @@ namespace OverTool {
                   Skin.SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", outputPath, APM.keyToIndexID(layer.key)));
                 }
               }
-              
+
               foreach(string matOutput in matpair.Value) {
                 using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, matOutput), FileMode.Create, FileAccess.Write)) {
                   owmat.Write(null, outputStream, null, tmp, new object[0]);

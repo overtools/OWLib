@@ -27,9 +27,10 @@ class OWMATFile:
         self.materials = materials
 
 class OWMAPFile:
-    def __init__(self, header, objects):
+    def __init__(self, header, objects, details):
         self.header = header
         self.objects = objects
+        self.details = details
 
 class OWMDLHeader:
     structFormat = ['<HH', str, str, '<HII']
@@ -50,12 +51,13 @@ class OWMATHeader:
         self.materialCount = materialCount
 
 class OWMAPHeader:
-    structFormat = ['<HH', str, '<I']
-    def __init__(self, major, minor, name, objectCount):
+    structFormat = ['<HH', str, '<II']
+    def __init__(self, major, minor, name, objectCount, detailCount):
         self.major = major
         self.minor = minor
         self.name = name
         self.objectCount = objectCount
+        self.detailCount = detailCount
 
 class OWMDLBone:
     structFormat = [str, '<h', '<fff', '<fff', '<ffff']
@@ -127,6 +129,16 @@ class OWMAPEntity:
 class OWMAPRecord:
     structFormat = ['<fff', '<fff', '<ffff']
     def __init__(self, position, scale, rotation):
+        self.position = position
+        self.scale = scale
+        self.rotation = rotation
+
+class OWMAPDetail:
+    structFormat = [str, str]
+    exFormat = ['<fff', '<fff', '<ffff']
+    def __init__(self, model, material, position, scale, rotation):
+        self.model = model
+        self.material = material
         self.position = position
         self.scale = scale
         self.rotation = rotation

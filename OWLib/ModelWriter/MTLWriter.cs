@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using OWLib.Types;
+using OWLib.Types.Map;
 
 namespace OWLib.ModelWriter {
   public class MTLWriter : IModelWriter {
@@ -22,6 +24,9 @@ namespace OWLib.ModelWriter {
           writer.WriteLine("");
         }
       }
+    }
+
+    public void Write(Map10 physics, Stream output, object[] data) {
     }
   }
 }

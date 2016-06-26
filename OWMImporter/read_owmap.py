@@ -13,8 +13,8 @@ def read(filename):
     if stream == None:
         return False
 
-    major, minor, name, objectCount = bin_ops.readFmtFlat(stream, owm_types.OWMAPHeader.structFormat)
-    header = owm_types.OWMAPHeader(major, minor, name, objectCount)
+    major, minor, name, objectCount, detailCount = bin_ops.readFmtFlat(stream, owm_types.OWMAPHeader.structFormat)
+    header = owm_types.OWMAPHeader(major, minor, name, objectCount, detailCount)
 
     objects = []
     for i in range(objectCount):
@@ -30,4 +30,9 @@ def read(filename):
                 records += [owm_types.OWMAPRecord(position, scale, rotation)]
             entities += [owm_types.OWMAPEntity(material, recordCount, records)]
         objects += [owm_types.OWMAPObject(model, entityCount, entities)]
-    return owm_types.OWMAPFile(header, objects)
+    details = []
+    for i in range(detailCount):
+        model, material = bin_ops.readFmtFlat(stream, owm_types.OWMAPDetail.structFormat)
+        position, scale, rotation = bin_ops.readFmt(stream, owm_types.OWMAPDetail.exFormat)
+        details += [owm_types.OWMAPDetail(model, material, position, scale, rotation)]
+    return owm_types.OWMAPFile(header, objects, details)

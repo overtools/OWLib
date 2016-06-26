@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using OWLib.Types;
+using OWLib.Types.Map;
 
 namespace OWLib.ModelWriter {
   public class OWMDLWriter : IModelWriter {
@@ -12,7 +13,44 @@ namespace OWLib.ModelWriter {
 
     public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.POSE | ModelWriterSupport.MATERIAL | ModelWriterSupport.ATTACHMENT);
 
+    public void Write(Map10 physics, Stream output, object[] data) {
+      Console.Out.WriteLine("Writing OWMDL");
+      using(BinaryWriter writer = new BinaryWriter(output)) {
+        writer.Write((ushort)1);
+        writer.Write((ushort)0);
+        writer.Write((byte)0);
+        writer.Write((byte)0);
+        writer.Write((ushort)0);
+        writer.Write(1);
+        writer.Write(0);
+
+        writer.Write("PhysicsModel");
+        writer.Write(0L);
+        writer.Write((byte)0);
+        writer.Write(physics.Vertices.Length);
+        writer.Write(physics.Indices.Length);
+        
+        for(int i = 0; i < physics.Vertices.Length; ++i) {
+          writer.Write(physics.Vertices[i].position.x);
+          writer.Write(physics.Vertices[i].position.y);
+          writer.Write(physics.Vertices[i].position.z);
+          writer.Write(0.0f);
+          writer.Write(0.0f);
+          writer.Write(0.0f);
+          writer.Write((byte)0);
+        }
+
+        for(int i = 0; i < physics.Indices.Length; ++i) {
+          writer.Write((byte)3);
+          writer.Write(physics.Indices[i].index.v1);
+          writer.Write(physics.Indices[i].index.v2);
+          writer.Write(physics.Indices[i].index.v3);
+        }
+      }
+    }
+
     public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data) {
+      Console.Out.WriteLine("Writing OWMDL");
       using(BinaryWriter writer = new BinaryWriter(output)) {
         writer.Write((ushort)1); // version major
         writer.Write((ushort)0); // version minor
@@ -100,7 +138,7 @@ namespace OWLib.ModelWriter {
                 writer.Write((float)uv[k][j].u);
                 writer.Write((float)uv[k][j].v);
               }
-              if(model.BoneData.Length > 0) {
+              if(model.BoneData.Length > 0 && bones != null) {
                 writer.Write((byte)4);
                 writer.Write(model.BoneLookup[bones[j].boneIndex[0]]);
                 writer.Write(model.BoneLookup[bones[j].boneIndex[1]]);

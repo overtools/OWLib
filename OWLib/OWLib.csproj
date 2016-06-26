@@ -58,9 +58,6 @@
     <Compile Include="ModelWriter\OBJWriter.cs" />
     <Compile Include="ModelWriter\ASCIIWriter.cs" />
     <Compile Include="ModelWriter\BINWriter.cs" />
-    <Compile Include="ModelWriter\FBXASCIIWriter.cs" />
-    <Compile Include="ModelWriter\FBXBINWriter.cs" />
-    <Compile Include="ModelWriter\FBXCommon.cs" />
     <Compile Include="ModelWriter\IModelWriter.cs" />
     <Compile Include="ModelWriter\OWMAPWriter.cs" />
     <Compile Include="ModelWriter\OWMATWriter.cs" />
@@ -73,6 +70,9 @@
     <Compile Include="Types\APMTypes.cs" />
     <Compile Include="Types\CommonTypes.cs" />
     <Compile Include="Types\MapTypes.cs" />
+    <Compile Include="Types\Map\Map02.cs" />
+    <Compile Include="Types\Map\Map08.cs" />
+    <Compile Include="Types\Map\Map10.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
     <Compile Include="Types\STUD\Binding\ProjectileModelRecord.cs" />
@@ -107,12 +107,6 @@
   <ItemGroup>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FbxWriter\Fbx\Fbx.csproj">
-      <Project>{07a221ac-5238-4c77-96de-e792c49d23e1}</Project>
-      <Name>Fbx</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

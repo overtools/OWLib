@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OWLib.Types;
+using OWLib.Types.Map;
 
 namespace OWLib.ModelWriter {
   public class OBJWriter : IModelWriter {
@@ -86,6 +84,21 @@ namespace OWLib.ModelWriter {
             faceOffset += (uint)vertex.Length;
             writer.WriteLine("");
           }
+        }
+      }
+    }
+
+    public void Write(Map10 physics, Stream output, object[] data) {
+      Console.Out.WriteLine("Writing OBJ");
+      using(StreamWriter writer = new StreamWriter(output)) {
+        writer.WriteLine("o Physics");
+        
+        for(int i = 0; i < physics.Vertices.Length; ++i) {
+          writer.WriteLine("v {0} {1} {2}", physics.Vertices[i].position.x, physics.Vertices[i].position.y, physics.Vertices[i].position.z);
+        }
+        
+        for(int i = 0; i < physics.Indices.Length; ++i) {
+          writer.WriteLine("f {0} {1} {2}", physics.Indices[i].index.v1, physics.Indices[i].index.v2, physics.Indices[i].index.v3);
         }
       }
     }

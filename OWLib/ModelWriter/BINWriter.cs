@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using OWLib.Types;
+using OWLib.Types.Map;
 
 namespace OWLib.ModelWriter {
   public class BINWriter : IModelWriter {
@@ -196,14 +197,25 @@ namespace OWLib.ModelWriter {
                 writer.Write((float)uv[k][j].v);
               }
               if(model.BoneData.Length > 0) {
-                writer.Write(model.BoneLookup[bones[j].boneIndex[0]]);
-                writer.Write(model.BoneLookup[bones[j].boneIndex[1]]);
-                writer.Write(model.BoneLookup[bones[j].boneIndex[2]]);
-                writer.Write(model.BoneLookup[bones[j].boneIndex[3]]);
-                writer.Write(bones[j].boneWeight[0]);
-                writer.Write(bones[j].boneWeight[1]);
-                writer.Write(bones[j].boneWeight[2]);
-                writer.Write(bones[j].boneWeight[3]);
+                if(bones != null) {
+                  writer.Write(model.BoneLookup[bones[j].boneIndex[0]]);
+                  writer.Write(model.BoneLookup[bones[j].boneIndex[1]]);
+                  writer.Write(model.BoneLookup[bones[j].boneIndex[2]]);
+                  writer.Write(model.BoneLookup[bones[j].boneIndex[3]]);
+                  writer.Write(bones[j].boneWeight[0]);
+                  writer.Write(bones[j].boneWeight[1]);
+                  writer.Write(bones[j].boneWeight[2]);
+                  writer.Write(bones[j].boneWeight[3]);
+                } else {
+                  writer.Write((ushort)0);
+                  writer.Write((ushort)0);
+                  writer.Write((ushort)0);
+                  writer.Write((ushort)0);
+                  writer.Write(0.0f);
+                  writer.Write(0.0f);
+                  writer.Write(0.0f);
+                  writer.Write(0.0f);
+                }
               }
             }
             writer.Write((uint)index.Length);
@@ -230,6 +242,51 @@ namespace OWLib.ModelWriter {
             writer.Write(quat.Z);
             writer.Write(quat.W);
           }
+        }
+      }
+    }
+    
+    public void Write(Map10 physics, Stream output, object[] data) {
+      Console.Out.WriteLine("Writing BIN");
+      using(BinaryWriter writer = new BinaryWriter(output)) {
+        writer.Write((uint)323232);
+        writer.Write((ushort)2);
+        writer.Write((ushort)99);
+        WriteString(writer, "XNAaraL");
+        writer.Write((uint)5);
+        WriteString(writer, "OVERWATCH");
+        WriteString(writer, "BLIZZARD");
+        WriteString(writer, "NULL");
+        writer.Write((uint)180);
+        writer.Write((uint)1);
+        writer.Write((uint)1);
+        writer.Write((uint)0);
+        writer.Write((uint)0);
+
+        writer.Write(0);
+        writer.Write(1);
+
+        WriteString(writer, "Physics");
+        writer.Write(0);
+        writer.Write(0);
+        writer.Write(physics.Vertices.Length);
+        for(int i = 0; i < physics.Vertices.Length; ++i) {
+          writer.Write(physics.Vertices[i].position.x);
+          writer.Write(physics.Vertices[i].position.y);
+          writer.Write(physics.Vertices[i].position.z);
+          writer.Write(0.0f);
+          writer.Write(0.0f);
+          writer.Write(0.0f);
+          writer.Write((byte)255);
+          writer.Write((byte)255);
+          writer.Write((byte)255);
+          writer.Write((byte)255);
+        }
+        writer.Write(physics.Indices.Length);
+        for(int i = 0; i < physics.Indices.Length; ++i) {
+          writer.Write(physics.Indices[i].index.v1);
+          writer.Write(physics.Indices[i].index.v2);
+          writer.Write(physics.Indices[i].index.v3);
         }
       }
     }

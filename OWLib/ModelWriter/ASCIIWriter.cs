@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using OWLib.Types;
+using OWLib.Types.Map;
 
 namespace OWLib.ModelWriter {
   public class ASCIIWriter : IModelWriter {
@@ -86,8 +87,13 @@ namespace OWLib.ModelWriter {
                 writer.WriteLine("{0} {1}", uv[k][j].u.ToString("0.######", numberFormatInfo), uv[k][j].v.ToString("0.######", numberFormatInfo));
               }
               if(model.BoneData.Length > 0) {
-                writer.WriteLine("{0} {1} {2} {3}", model.BoneLookup[bones[j].boneIndex[0]], model.BoneLookup[bones[j].boneIndex[1]], model.BoneLookup[bones[j].boneIndex[2]], model.BoneLookup[bones[j].boneIndex[3]]);
-                writer.WriteLine("{0} {1} {2} {3}", bones[j].boneWeight[0].ToString("0.######", numberFormatInfo), bones[j].boneWeight[1].ToString("0.######", numberFormatInfo), bones[j].boneWeight[2].ToString("0.######", numberFormatInfo), bones[j].boneWeight[3].ToString("0.######", numberFormatInfo));
+                if(bones != null) {
+                  writer.WriteLine("{0} {1} {2} {3}", model.BoneLookup[bones[j].boneIndex[0]], model.BoneLookup[bones[j].boneIndex[1]], model.BoneLookup[bones[j].boneIndex[2]], model.BoneLookup[bones[j].boneIndex[3]]);
+                  writer.WriteLine("{0} {1} {2} {3}", bones[j].boneWeight[0].ToString("0.######", numberFormatInfo), bones[j].boneWeight[1].ToString("0.######", numberFormatInfo), bones[j].boneWeight[2].ToString("0.######", numberFormatInfo), bones[j].boneWeight[3].ToString("0.######", numberFormatInfo));
+                } else {
+                  writer.WriteLine("0 0 0 0");
+                  writer.WriteLine("0 0 0 0");
+                }
               }
             }
             writer.WriteLine(index.Length);
@@ -109,6 +115,28 @@ namespace OWLib.ModelWriter {
           }
         }
         writer.WriteLine("");
+      }
+    }
+
+    public void Write(Map10 physics, Stream output, object[] data) {
+      Console.Out.WriteLine("Writing ASCII");
+      using(StreamWriter writer = new StreamWriter(output)) {
+        writer.WriteLine(0);
+        writer.WriteLine(1);
+
+        writer.WriteLine("Physics");
+        writer.WriteLine(0);
+        writer.WriteLine(0);
+        writer.WriteLine(physics.Vertices.Length);
+        for(int i = 0; i < physics.Vertices.Length; ++i) {
+          writer.WriteLine("{0} {1} {2}", physics.Vertices[i].position.x, physics.Vertices[i].position.y, physics.Vertices[i].position.z);
+          writer.WriteLine("0 0 0");
+          writer.WriteLine("255 255 255 255");
+        }
+        writer.WriteLine(physics.Indices.Length);
+        for(int i = 0; i < physics.Indices.Length; ++i) {
+          writer.WriteLine("{0} {1} {2}", physics.Indices[i].index.v1, physics.Indices[i].index.v2, physics.Indices[i].index.v3);
+        }
       }
     }
   }

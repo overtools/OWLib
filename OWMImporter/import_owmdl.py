@@ -70,6 +70,9 @@ def importArmature(autoIk):
 def xzy(vec):
     return (vec[0], -vec[2], vec[1])
 
+def wxzy(vec):
+    return (vec[3], vec[0], -vec[2], vec[1])
+
 def segregate(vertex):
     pos = []
     norms = []
@@ -223,7 +226,7 @@ def importEmpties():
         empty.parent = att
         empty.location = xzy(emp.position)
         empty.rotation_mode = 'QUATERNION'
-        empty.rotation_quaternion = (emp.rotation[3], emp.rotation[0], -emp.rotation[2], emp.rotation[1])
+        empty.rotation_quaternion = wxzy(emp.rotation)
         empty.select = True
         bpy.context.scene.update()
         e += [empty]
