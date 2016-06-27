@@ -184,6 +184,24 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         default=True,
     )
 
+    importObjects = BoolProperty(
+        name="Import Objects",
+        description="Import Map Objects",
+        default=False,
+    )
+
+    importDetails = BoolProperty(
+        name="Import Props",
+        description="Import Map Props",
+        default=True,
+    )
+
+    importPhysics = BoolProperty(
+        name="Import Collision Model",
+        description="Import Map Collision Model",
+        default=False,
+    )
+
     def menu_func(self, context):
         self.layout.operator_context = 'INVOKE_DEFAULT'
         self.layout.operator(
@@ -205,7 +223,7 @@ class import_map_op(bpy.types.Operator, ImportHelper):
             self.importMaterial,
             self.importSkeleton
         )
-        import_owmap.read(settings)
+        import_owmap.read(settings, self.importObjects, self.importDetails, self.importPhysics)
         return {'FINISHED'}
 
     def draw(self, context):
@@ -220,6 +238,15 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         col.prop(self, "importNormals")
         col.prop(self, "importEmpties")
         col.prop(self, "importMaterial")
+
+        col = layout.column(align=True)
+        col.label('Map')
+        col.prop(self, "importObjects")
+        col.prop(self, "importDetails")
+
+        sub = col.row()
+        sub.prop(self, "importPhysics")
+        sub.enabled = self.importDetails
 
         col = layout.column(align=True)
         col.label('Armature')

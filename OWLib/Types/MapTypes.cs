@@ -30,14 +30,14 @@ namespace OWLib.Types {
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
-  public struct MapVec3 {
+  public unsafe struct MapVec3 {
     public float x;
     public float y;
     public float z;
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
-  public struct MapQuat {
+  public unsafe struct MapQuat {
     public float x;
     public float y;
     public float z;

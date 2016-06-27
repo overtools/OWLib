@@ -8,18 +8,7 @@ from mathutils import *
 import bpy
 
 def copy(obj, parent):
-    cpy = None
-    if obj.type == 'MESH':
-        msh = bpy.data.meshes.new(obj.name)
-        cpy = bpy.data.objects.new(obj.name, msh)
-    elif obj.type == 'ARMATURE':
-        arm = bpy.data.armatures.new(obj.name)
-        cpy = bpy.data.objects.new(obj.name, arm)
-    else:
-        cpy = bpy.data.objects.new(obj.name, None)
-    try:
-        cpy.data = obj.data.copy()
-    except: pass
+    cpy = bpy.data.objects.new(obj.name, obj.data)
     bpy.context.scene.objects.link(cpy)
     cpy.parent = parent
     cpy.hide = obj.hide
@@ -30,10 +19,11 @@ def copy(obj, parent):
 def remove(obj):
     for child in obj.children:
         remove(child)
-    obj.select = True
-    bpy.ops.object.delete()
+    try:
+        bpy.context.scene.objects.unlink(obj)
+    except: pass
 
-def read(settings):
+def read(settings, importObjects = False, importDetails = True, importPhysics = False):
     root, file = os.path.split(settings.filename)
 
     data = read_owmap.read(settings.filename)
@@ -46,79 +36,79 @@ def read(settings):
     rootObj.hide = True
     bpy.context.scene.objects.link(rootObj)
 
-    prc = len(data.objects)
-    for ob in data.objects:
-        obpath = ob.model
-        if not os.path.isabs(obpath):
-            obpath = os.path.normpath('%s/%s' % (root, obpath))
+    if importObjects:
+        for ob in data.objects:
+            obpath = ob.model
+            if not os.path.isabs(obpath):
+                obpath = os.path.normpath('%s/%s' % (root, obpath))
 
-        obn = os.path.splitext(os.path.basename(obpath))[0]
-        print(obn)
-        obnObj = bpy.data.objects.new(obn, None)
-        obnObj.parent = rootObj
-        obnObj.hide = True
-        bpy.context.scene.objects.link(obnObj)
+            obn = os.path.splitext(os.path.basename(obpath))[0]
+            print(obn)
 
-        mutated = settings.mutate(obpath)
-        mutated.importMaterial = False
-        bpy.ops.object.select_all(action = 'DESELECT')
+            mutated = settings.mutate(obpath)
+            mutated.importMaterial = False
+            mutated.importSkeleton = False
 
-        obj = import_owmdl.read(mutated, None)
+            obj = import_owmdl.read(mutated, None)
 
-        for idx, ent in enumerate(ob.entities):
-            matpath = ent.material
-            if not os.path.isabs(matpath):
-                matpath = os.path.normpath('%s/%s' % (root, matpath))
+            for idx, ent in enumerate(ob.entities):
+                matpath = ent.material
+                if not os.path.isabs(matpath):
+                    matpath = os.path.normpath('%s/%s' % (root, matpath))
 
-            matObj = bpy.data.objects.new('%s_%X' % (obn, idx), None)
-            matObj.parent = obnObj
-            matObj.hide = True
-            bpy.context.scene.objects.link(matObj)
+                material = None
+                if settings.importMaterial:
+                    material = import_owmat.read(matpath, '%s_%s:%X_' % (name, obn, idx))
+                    import_owmdl.bindMaterials(obj[2], obj[4], material)
+
+                for idx2, rec in enumerate(ent.records):
+                    nobj = copy(obj[0], rootObj)
+                    nobj.location = import_owmdl.xzy(rec.position)
+                    nobj.scale = import_owmdl.xzy(rec.scale)
+                    nobj.rotation_mode = 'QUATERNION'
+                    nobj.rotation_quaternion = import_owmdl.wxzy(rec.rotation)
+                    nobj.rotation_mode = 'XYZ'
+            remove(obj[0])
+
+    if importDetails:
+        objCache = {}
+        for ob in data.details:
+            obpath = ob.model
+            if not os.path.isabs(obpath):
+                obpath = os.path.normpath('%s/%s' % (root, obpath))
+
+            obn = os.path.splitext(os.path.basename(obpath))[0]
+            if not importPhysics and obn == 'physics':
+                continue
+
+            mutated = settings.mutate(obpath)
+            mutated.importMaterial = False
+            mutated.importSkeleton = False
+
+            if len(ob.material) == 0:
+                mutated.importNormals = False
+
+            objnode = None
+            if obn not in objCache:
+                obj = import_owmdl.read(mutated, None)
+                objCache[obn] = obj
+                objnode = obj[0]
+                print(obn)
+            else:
+                objnode = copy(objCache[obn][0], rootObj)
 
             material = None
             if settings.importMaterial:
-                material = import_owmat.read(matpath, '%s_%s:%X_' % (name, obn, idx))
+                material = import_owmat.read(matpath, '%s_%s' % (name, obn))
                 import_owmdl.bindMaterials(obj[2], obj[4], material)
 
-            for idx2, rec in enumerate(ent.records):
-                nobj = copy(obj[0], matObj)
-                nobj.location = Vector(import_owmdl.xzy(rec.position))
-                nobj.scale = Vector(import_owmdl.xzy(rec.scale))
-                nobj.rotation_mode = 'QUATERNION'
-                nobj.rotation_quaternion = import_owmdl.wxzy(rec.rotation)
-            bpy.ops.object.select_all(action = 'DESELECT')
-        bpy.ops.object.select_all(action = 'DESELECT')
-        remove(obj[0])
-    for ob in data.details:
-        obpath = ob.model
-        if not os.path.isabs(obpath):
-            obpath = os.path.normpath('%s/%s' % (root, obpath))
-
-        obn = os.path.splitext(os.path.basename(obpath))[0]
-        print(obn)
-        obnObj = bpy.data.objects.new(obn, None)
-        obnObj.parent = rootObj
-        obnObj.hide = True
-        bpy.context.scene.objects.link(obnObj)
-
-        mutated = settings.mutate(obpath)
-        mutated.importMaterial = False
-        bpy.ops.object.select_all(action = 'DESELECT')
-
-        if len(ob.material) == 0:
-            mutated.importNormals = False
-
-        obj = import_owmdl.read(mutated, None)
-
-        material = None
-        if settings.importMaterial:
-            material = import_owmat.read(matpath, '%s_%s' % (name, obn))
-            import_owmdl.bindMaterials(obj[2], obj[4], material)
-
-        obj[0].location = Vector(import_owmdl.xzy(ob.position))
-        obj[0].scale = Vector(import_owmdl.xzy(ob.scale))
-        obj[0].rotation_mode = 'QUATERNION'
-        obj[0].rotation_quaternion = import_owmdl.wxzy(ob.rotation)
-        obj[0].parent = obnObj
-
+            objnode.location = import_owmdl.xzy(ob.position)
+            objnode.scale = import_owmdl.xzy(ob.scale)
+            objnode.rotation_mode = 'QUATERNION'
+            objnode.rotation_quaternion = import_owmdl.wxzy(ob.rotation)
+            objnode.rotation_mode = 'XYZ'
+            objnode.parent = rootObj
     bpy.context.scene.update()
+
+if __name__ == '__main__':
+    read(owm_types.OWSettings('C:\\ow\\overtooltest\\HANAMURA\\165\HANAMURA.owmap', 0, 0, True, True, True, False, True), True, True, True)

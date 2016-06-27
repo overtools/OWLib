@@ -130,31 +130,29 @@ namespace OverTool {
               }
             }
 
-            if(false) {
-              foreach(KeyValuePair<ulong, List<string>> matpair in materials) {
-                Dictionary<ulong, List<ImageLayer>> tmp = new Dictionary<ulong, List<ImageLayer>>();
-                if(cache.ContainsKey(matpair.Key)) {
-                  tmp = cache[matpair.Key];
-                } else {
-                  Skin.FindTextures(matpair.Key, tmp, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), map, handler);
-                  cache.Add(matpair.Key, tmp);
-                }
-                foreach(KeyValuePair<ulong, List<ImageLayer>> kv in tmp) {
-                  ulong materialId = kv.Key;
-                  List<ImageLayer> sublayers = kv.Value;
-                  foreach(ImageLayer layer in sublayers) {
-                    if(!parsed.Add(layer.key)) {
-                      continue;
-                    }
-                    Skin.SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", outputPath, APM.keyToIndexID(layer.key)));
+            foreach(KeyValuePair<ulong, List<string>> matpair in materials) {
+              Dictionary<ulong, List<ImageLayer>> tmp = new Dictionary<ulong, List<ImageLayer>>();
+              if(cache.ContainsKey(matpair.Key)) {
+                tmp = cache[matpair.Key];
+              } else {
+                Skin.FindTextures(matpair.Key, tmp, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), map, handler);
+                cache.Add(matpair.Key, tmp);
+              }
+              foreach(KeyValuePair<ulong, List<ImageLayer>> kv in tmp) {
+                ulong materialId = kv.Key;
+                List<ImageLayer> sublayers = kv.Value;
+                foreach(ImageLayer layer in sublayers) {
+                  if(!parsed.Add(layer.key)) {
+                    continue;
                   }
+                  Skin.SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", outputPath, APM.keyToIndexID(layer.key)));
                 }
+              }
 
-                foreach(string matOutput in matpair.Value) {
-                  using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, matOutput), FileMode.Create, FileAccess.Write)) {
-                    owmat.Write(null, outputStream, null, tmp, new object[0]);
-                    Console.Out.WriteLine("Wrote material {0}", matOutput);
-                  }
+              foreach(string matOutput in matpair.Value) {
+                using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, matOutput), FileMode.Create, FileAccess.Write)) {
+                  owmat.Write(null, outputStream, null, tmp, new object[0]);
+                  Console.Out.WriteLine("Wrote material {0}", matOutput);
                 }
               }
             }
