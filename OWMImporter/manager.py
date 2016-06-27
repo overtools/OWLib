@@ -82,6 +82,7 @@ class import_mdl_op(bpy.types.Operator, ImportHelper):
             self.importSkeleton
         )
         import_owmdl.read(settings)
+        print('DONE')
         return {'FINISHED'}
 
     def draw(self, context):
@@ -126,6 +127,7 @@ class import_mat_op(bpy.types.Operator, ImportHelper):
 
     def execute(self, context):
         import_owmat.read(self.filepath)
+        print('DONE')
         return {'FINISHED'}
 
     def draw(self, context): pass
@@ -154,12 +156,6 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         default=0,
     )
 
-    autoIk = BoolProperty(
-        name="AutoIK",
-        description="Set AutoIK",
-        default=True,
-    )
-
     importNormals = BoolProperty(
         name="Import Normals",
         description="Import Custom Normals",
@@ -175,12 +171,6 @@ class import_map_op(bpy.types.Operator, ImportHelper):
     importMaterial = BoolProperty(
         name="Import Material",
         description="Import Referenced OWMATs",
-        default=True,
-    )
-
-    importSkeleton = BoolProperty(
-        name="Import Skeleton",
-        description="Import Bones",
         default=True,
     )
 
@@ -217,13 +207,14 @@ class import_map_op(bpy.types.Operator, ImportHelper):
             self.filepath,
             self.uvDisplX,
             self.uvDisplY,
-            self.autoIk,
+            False,
             self.importNormals,
             self.importEmpties,
             self.importMaterial,
-            self.importSkeleton
+            False
         )
         import_owmap.read(settings, self.importObjects, self.importDetails, self.importPhysics)
+        print('DONE')
         return {'FINISHED'}
 
     def draw(self, context):
@@ -247,11 +238,6 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         sub = col.row()
         sub.prop(self, "importPhysics")
         sub.enabled = self.importDetails
-
-        col = layout.column(align=True)
-        col.label('Armature')
-        col.prop(self, "autoIk")
-        col.prop(self, "importSkeleton")
 
 def mdlimp(self, context):
     self.layout.operator(

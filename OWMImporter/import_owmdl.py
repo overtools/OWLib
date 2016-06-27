@@ -60,7 +60,7 @@ def importArmature(autoIk):
 
         for i, bone in enumerate(bones):
             if (bone.parent >= 0):
-                bbone = armData.edit_bones[i    ]
+                bbone = armData.edit_bones[i]
                 bbone.parent = armData.edit_bones[bone.parent]
         armature.select = True
         bpy.ops.object.mode_set(mode='OBJECT')

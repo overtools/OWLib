@@ -64,7 +64,7 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
 
             obj = import_owmdl.read(mutated, None)
 
-            obnObj = bpy.data.objects.new(obn + '_COLLECTION', None);
+            obnObj = bpy.data.objects.new(obn + '_COLLECTION', None)
             obnObj.hide = True
             obnObj.parent = globObj
             bpy.context.scene.objects.link(obnObj)
@@ -79,7 +79,7 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
                     material = import_owmat.read(matpath, '%s_%s:%X_' % (name, obn, idx))
                     import_owmdl.bindMaterials(obj[2], obj[4], material)
 
-                matObj = bpy.data.objects.new(obn + '_' + os.path.splitext(os.path.basename(matpath))[0], None);
+                matObj = bpy.data.objects.new(obn + '_' + os.path.splitext(os.path.basename(matpath))[0], None)
                 matObj.hide = True
                 matObj.parent = obnObj
                 bpy.context.scene.objects.link(matObj)
@@ -135,4 +135,4 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
     bpy.context.scene.update()
 
 if __name__ == '__main__':
-    read(owm_types.OWSettings('C:\\ow\\overtooltest\\HANAMURA\\664\\HANAMURA.owmap', 0, 0, True, True, True, False, True), True, True, False)
+    read(owm_types.OWSettings('C:\\ow\\overtooltest\\HANAMURA\\165\\HANAMURA.owmap', 0, 0, True, True, True, False, True), False, True, False)
