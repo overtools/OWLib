@@ -5,7 +5,15 @@ from OWMImporter import import_owmdl
 from OWMImporter import import_owmat
 from OWMImporter import owm_types
 from mathutils import *
-import bpy
+import bpy, bpy_extras, mathutils
+
+acm = bpy_extras.io_utils.axis_conversion(from_forward='-Z', from_up='Y').to_4x4()
+
+def posMatrix(pos):
+    global acm
+    posMtx = mathutils.Matrix.Translation(pos)
+    mtx = acm * posMtx
+    return mtx.to_translation()
 
 def copy(obj, parent):
     cpy = bpy.data.objects.new(obj.name, obj.data)
@@ -36,6 +44,11 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
     rootObj.hide = True
     bpy.context.scene.objects.link(rootObj)
 
+    globObj = bpy.data.objects.new(name + '_OBJECTS', None)
+    globObj.hide = True
+    globObj.parent = rootObj
+    bpy.context.scene.objects.link(globObj)
+
     if importObjects:
         for ob in data.objects:
             obpath = ob.model
@@ -51,6 +64,11 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
 
             obj = import_owmdl.read(mutated, None)
 
+            obnObj = bpy.data.objects.new(obn + '_COLLECTION', None);
+            obnObj.hide = True
+            obnObj.parent = globObj
+            bpy.context.scene.objects.link(obnObj)
+
             for idx, ent in enumerate(ob.entities):
                 matpath = ent.material
                 if not os.path.isabs(matpath):
@@ -61,14 +79,22 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
                     material = import_owmat.read(matpath, '%s_%s:%X_' % (name, obn, idx))
                     import_owmdl.bindMaterials(obj[2], obj[4], material)
 
+                matObj = bpy.data.objects.new(obn + '_' + os.path.splitext(os.path.basename(matpath))[0], None);
+                matObj.hide = True
+                matObj.parent = obnObj
+                bpy.context.scene.objects.link(matObj)
+
                 for idx2, rec in enumerate(ent.records):
-                    nobj = copy(obj[0], rootObj)
-                    nobj.location = import_owmdl.xzy(rec.position)
-                    nobj.scale = import_owmdl.xzy(rec.scale)
-                    nobj.rotation_mode = 'QUATERNION'
-                    nobj.rotation_quaternion = import_owmdl.wxzy(rec.rotation)
-                    nobj.rotation_mode = 'XYZ'
+                    nobj = copy(obj[0], matObj)
+                    nobj.location = posMatrix(rec.position)
+                    nobj.rotation_euler = Quaternion(import_owmdl.wxzy(rec.rotation)).to_euler('XYZ')
+                    nobj.scale = rec.scale
             remove(obj[0])
+
+    globDet = bpy.data.objects.new(name + '_DETAILS', None)
+    globDet.hide = True
+    globDet.parent = rootObj
+    bpy.context.scene.objects.link(globDet)
 
     if importDetails:
         objCache = {}
@@ -89,26 +115,24 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
                 mutated.importNormals = False
 
             objnode = None
+            print(obn)
             if obn not in objCache:
                 obj = import_owmdl.read(mutated, None)
                 objCache[obn] = obj
                 objnode = obj[0]
-                print(obn)
             else:
-                objnode = copy(objCache[obn][0], rootObj)
+                objnode = copy(objCache[obn][0], globDet)
 
             material = None
             if settings.importMaterial:
                 material = import_owmat.read(matpath, '%s_%s' % (name, obn))
                 import_owmdl.bindMaterials(obj[2], obj[4], material)
 
-            objnode.location = import_owmdl.xzy(ob.position)
+            objnode.location = posMatrix(ob.position)
+            objnode.rotation_euler = Quaternion(import_owmdl.wxzy(ob.rotation)).to_euler('XYZ')
             objnode.scale = import_owmdl.xzy(ob.scale)
-            objnode.rotation_mode = 'QUATERNION'
-            objnode.rotation_quaternion = import_owmdl.wxzy(ob.rotation)
-            objnode.rotation_mode = 'XYZ'
-            objnode.parent = rootObj
+            objnode.parent = globDet
     bpy.context.scene.update()
 
 if __name__ == '__main__':
-    read(owm_types.OWSettings('C:\\ow\\overtooltest\\HANAMURA\\165\HANAMURA.owmap', 0, 0, True, True, True, False, True), True, True, True)
+    read(owm_types.OWSettings('C:\\ow\\overtooltest\\HANAMURA\\664\\HANAMURA.owmap', 0, 0, True, True, True, False, True), True, True, False)
