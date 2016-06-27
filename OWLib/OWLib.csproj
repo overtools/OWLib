@@ -72,6 +72,7 @@
     <Compile Include="Types\MapTypes.cs" />
     <Compile Include="Types\Map\Map02.cs" />
     <Compile Include="Types\Map\Map08.cs" />
+    <Compile Include="Types\Map\Map0B.cs" />
     <Compile Include="Types\Map\Map10.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
@@ -107,6 +108,12 @@
   <ItemGroup>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CASCExplorer\CascLib\CascLib.csproj">
+      <Project>{E08E1E48-6585-4137-8405-661C62C10713}</Project>
+      <Name>CascLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

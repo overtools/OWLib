@@ -8,7 +8,7 @@ namespace OWLib.ModelWriter {
   public class OWMAPWriter {
     public string Format => ".owmap";
 
-    public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, string name = "") {
+    public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, string name = "") {
       Console.Out.WriteLine("Writing OWMAP");
       using(BinaryWriter writer = new BinaryWriter(output)) {
         writer.Write((ushort)1); // version major
@@ -38,6 +38,15 @@ namespace OWLib.ModelWriter {
         }
         for(int i = 0; i < detail2.Records.Length; ++i) {
           if(detail2.Records[i] != null && detail2.Records[i].GetType() != typeof(Map08)) {
+            continue;
+          }
+          size++;
+        }
+        for(int i = 0; i < props.Records.Length; ++i) {
+          if(props.Records[i] != null && props.Records[i].GetType() != typeof(Map0B)) {
+            continue;
+          }
+          if(((Map0B)props.Records[i]).ModelKey == 0) {
             continue;
           }
           size++;
@@ -129,6 +138,7 @@ namespace OWLib.ModelWriter {
           }
           ret[1][obj.Header.material].Add(matFn);
         }
+
         for(int i = 0; i < detail2.Records.Length; ++i) {
           if(detail2.Records[i] != null && detail2.Records[i].GetType() != typeof(Map08)) {
             continue;
@@ -159,6 +169,41 @@ namespace OWLib.ModelWriter {
             ret[1].Add(obj.Header.material, new List<string>());
           }
           ret[1][obj.Header.material].Add(matFn);
+        }
+
+        for(int i = 0; i < props.Records.Length; ++i) {
+          if(props.Records[i] != null && props.Records[i].GetType() != typeof(Map0B)) {
+            continue;
+          }
+          Map0B obj = (Map0B)props.Records[i];
+          if(obj.ModelKey == 0) {
+            continue;
+          }
+          string modelFn = string.Format("{0:X12}.owmdl", APM.keyToIndexID(obj.ModelKey));
+          string matFn = string.Format("{0:X12}.owmat", APM.keyToIndexID(obj.MaterialKey));
+          writer.Write(modelFn);
+          writer.Write(matFn);
+          writer.Write(obj.Header.position.x);
+          writer.Write(obj.Header.position.y);
+          writer.Write(obj.Header.position.z);
+          writer.Write(obj.Header.scale.x);
+          writer.Write(obj.Header.scale.y);
+          writer.Write(obj.Header.scale.z);
+          writer.Write(obj.Header.rotation.x);
+          writer.Write(obj.Header.rotation.y);
+          writer.Write(obj.Header.rotation.z);
+          writer.Write(obj.Header.rotation.w);
+          
+          if(!ret[0].ContainsKey(obj.ModelKey)) {
+            ret[0].Add(obj.ModelKey, new List<string>());
+          }
+          ret[0][obj.ModelKey].Add(modelFn);
+
+          
+          if(!ret[1].ContainsKey(obj.MaterialKey)) {
+            ret[1].Add(obj.MaterialKey, new List<string>());
+          }
+          ret[1][obj.MaterialKey].Add(matFn);
         }
         return ret;
       }

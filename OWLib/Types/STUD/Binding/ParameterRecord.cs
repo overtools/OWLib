@@ -48,7 +48,10 @@ namespace OWLib.Types.STUD.Binding {
     public void Read(Stream input) {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<ParameterHeader>();
-
+        if(header.arrayOffset == 0) {
+          parameters = new ParameterEntry[0];
+          return;
+        }
         input.Position = (long)header.arrayOffset;
         STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
         parameters = new ParameterEntry[ptr.count];

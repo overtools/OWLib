@@ -131,14 +131,23 @@ namespace OWLib.ModelWriter {
         
         Dictionary<byte, List<int>> LODMap = new Dictionary<byte, List<int>>();
         uint sz = 0;
+        uint lookForLod = 0;
+        bool lodOnly = false;
+        if(opts.Length > 2 && opts[3] != null && opts[3].GetType() == typeof(bool) && (bool)opts[3] == true) {
+          lodOnly = true;
+        }
         for(int i = 0; i < model.Submeshes.Length; ++i) {
           ModelSubmesh submesh = model.Submeshes[i];
           if(LODs != null && !LODs.Contains(submesh.lod)) {
             continue;
           }
+          if(lodOnly && lookForLod > 0 && submesh.lod != lookForLod) {
+            continue;
+          }
           if(!LODMap.ContainsKey(submesh.lod)) {
             LODMap.Add(submesh.lod, new List<int>());
           }
+          lookForLod = submesh.lod;
           sz++;
           LODMap[submesh.lod].Add(i);
         }
@@ -197,7 +206,7 @@ namespace OWLib.ModelWriter {
                 writer.Write((float)uv[k][j].v);
               }
               if(model.BoneData.Length > 0) {
-                if(bones != null) {
+                if(bones != null && bones[j].boneIndex != null && bones[j].boneWeight != null) {
                   writer.Write(model.BoneLookup[bones[j].boneIndex[0]]);
                   writer.Write(model.BoneLookup[bones[j].boneIndex[1]]);
                   writer.Write(model.BoneLookup[bones[j].boneIndex[2]]);

@@ -84,6 +84,9 @@ namespace OWLib.ModelWriter {
             faceOffset += (uint)vertex.Length;
             writer.WriteLine("");
           }
+          if(opts.Length > 2 && opts[3] != null && opts[3].GetType() == typeof(bool) && (bool)opts[3] == true) {
+            break;
+          }
         }
       }
     }

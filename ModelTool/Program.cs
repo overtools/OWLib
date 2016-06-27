@@ -31,12 +31,16 @@ namespace ModelTool {
         Console.Out.WriteLine("  t - supprt - {0, -30} - normal extension", "name");
         Console.Out.WriteLine("".PadLeft(60, '-'));
         foreach(IModelWriter w in writers) {
+          if(w.SupportLevel == ModelWriterSupport.MATERIAL) {
+            continue;
+          }
           Console.Out.WriteLine("  {0} - {1} - {2,-30} - {3}", w.Identifier[0], SupportLevel(w.SupportLevel), w.Name, w.Format);
         }
         Console.Out.WriteLine("vutbpm = vertex / uv / attachment / bone / pose / material support");
         Console.Out.WriteLine("args:");
         Console.Out.WriteLine("  -l n - only save LOD, where N is lod");
         Console.Out.WriteLine("  -t   - save attachment points (sockets)");
+        Console.Out.WriteLine("  -L   - only save first LOD found");
         return;
       }
 
@@ -47,6 +51,7 @@ namespace ModelTool {
       string outputFile = args[args.Length - 1];
       List<byte> lods = null;
       bool attachments = false;
+      bool firstLod = false;
       if(args.Length > 3) {
         int i = 2;
         while(i < args.Length - 2) {
@@ -60,6 +65,8 @@ namespace ModelTool {
               byte b = byte.Parse(args[i], System.Globalization.NumberStyles.Number);
               lods.Add(b);
               ++i;
+            } else if(arg[1] == 'L') {
+              firstLod = true;
             } else if(arg[1] == 't') {
               attachments = true;
             }
@@ -84,7 +91,7 @@ namespace ModelTool {
       using(Stream modelStream = File.Open(modelFile, FileMode.Open, FileAccess.Read)) {
         Model model = new Model(modelStream);
         using(Stream outStream = File.Open(outputFile, FileMode.Create, FileAccess.Write)) {
-          writer.Write(model, outStream, lods, new Dictionary<ulong, List<OWLib.Types.ImageLayer>>(), new object[] { attachments });
+          writer.Write(model, outStream, lods, new Dictionary<ulong, List<OWLib.Types.ImageLayer>>(), new object[] { attachments, null, null, firstLod });
         }
       }
     }
