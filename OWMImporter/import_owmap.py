@@ -7,6 +7,8 @@ from OWMImporter import owm_types
 from mathutils import *
 import bpy, bpy_extras, mathutils
 
+sameMeshData = False
+
 acm = bpy_extras.io_utils.axis_conversion(from_forward='-Z', from_up='Y').to_4x4()
 
 def posMatrix(pos):
@@ -16,7 +18,15 @@ def posMatrix(pos):
     return mtx.to_translation()
 
 def copy(obj, parent):
-    cpy = bpy.data.objects.new(obj.name, obj.data)
+    global sameMeshData
+    cpy = None
+    if sameMeshData:
+        cpy = bpy.data.objects.new(obj.name, obj.data)
+    else:
+        if obj.data != None:
+            cpy = bpy.data.objects.new(obj.name, obj.data.copy())
+        else:
+            cpy = bpy.data.objects.new(obj.name, None)
     bpy.context.scene.objects.link(cpy)
     cpy.parent = parent
     cpy.hide = obj.hide
@@ -31,7 +41,10 @@ def remove(obj):
         bpy.context.scene.objects.unlink(obj)
     except: pass
 
-def read(settings, importObjects = False, importDetails = True, importPhysics = False):
+def read(settings, importObjects = False, importDetails = True, importPhysics = False, sMD = True):
+    global sameMeshData
+    sameMeshData = sMD
+
     root, file = os.path.split(settings.filename)
 
     data = read_owmap.read(settings.filename)
@@ -48,6 +61,8 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
     globObj.hide = True
     globObj.parent = rootObj
     bpy.context.scene.objects.link(globObj)
+
+    materialsCache = []
 
     if importObjects:
         for ob in data.objects:
@@ -78,6 +93,7 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
                 if settings.importMaterial:
                     material = import_owmat.read(matpath, '%s_%s:%X_' % (name, obn, idx))
                     import_owmdl.bindMaterials(obj[2], obj[4], material)
+                    materialsCache += [material]
 
                 matObj = bpy.data.objects.new(obn + '_' + os.path.splitext(os.path.basename(matpath))[0], None)
                 matObj.hide = True
@@ -114,25 +130,31 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
             if len(ob.material) == 0:
                 mutated.importNormals = False
 
-            objnode = None
             print(obn)
+            obj = None
             if obn not in objCache:
-                obj = import_owmdl.read(mutated, None)
-                objCache[obn] = obj
-                objnode = obj[0]
-            else:
-                objnode = copy(objCache[obn][0], globDet)
+                objCache[obn] = import_owmdl.read(mutated, None)
+            obj = objCache[obn]
 
             material = None
             if settings.importMaterial:
+                matpath = ob.material
+                if not os.path.isabs(matpath):
+                    matpath = os.path.normpath('%s/%s' % (root, matpath))
                 material = import_owmat.read(matpath, '%s_%s' % (name, obn))
                 import_owmdl.bindMaterials(obj[2], obj[4], material)
+                materialsCache += [material]
+
+            objnode = copy(obj[0], globDet)
 
             objnode.location = posMatrix(ob.position)
             objnode.rotation_euler = Quaternion(import_owmdl.wxzy(ob.rotation)).to_euler('XYZ')
             objnode.scale = import_owmdl.xzy(ob.scale)
-            objnode.parent = globDet
+        for ob in objCache:
+            remove(objCache[ob][0])
+    if len(materialsCache) > 0:
+        for material in materialsCache:
+            try:
+                import_owmat.cleanUnusedMaterials(material)
+            except: pass
     bpy.context.scene.update()
-
-if __name__ == '__main__':
-    read(owm_types.OWSettings('C:\\ow\\overtooltest\\HANAMURA\\165\\HANAMURA.owmap', 0, 0, True, True, True, False, True), False, True, False)

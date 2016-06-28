@@ -55,13 +55,13 @@ namespace OWLib.ModelWriter {
         writer.Write((ushort)1); // version major
         writer.Write((ushort)0); // version minor
 
-        if(data.Length > 1 && data[1] != null && data[1].GetType() == typeof(string)) {
+        if(data.Length > 1 && data[1] != null && data[1].GetType() == typeof(string) && ((string)data[1]).Length > 0) {
           writer.Write((string)data[1]);
         } else {
           writer.Write((byte)0);
         }
 
-        if(data.Length > 2 && data[2] != null && data[2].GetType() == typeof(string)) {
+        if(data.Length > 2 && data[2] != null && data[2].GetType() == typeof(string) && ((string)data[2]).Length > 0) {
           writer.Write((string)data[2]);
         } else {
           writer.Write((byte)0);
@@ -73,7 +73,7 @@ namespace OWLib.ModelWriter {
         uint sz = 0;
         uint lookForLod = 0;
         bool lodOnly = false;
-        if(data.Length > 2 && data[3] != null && data[3].GetType() == typeof(bool) && (bool)data[3] == true) {
+        if(data.Length > 3 && data[3] != null && data[3].GetType() == typeof(bool) && (bool)data[3] == true) {
           lodOnly = true;
         }
         for(int i = 0; i < model.Submeshes.Length; ++i) {

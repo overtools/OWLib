@@ -87,16 +87,16 @@ class import_mdl_op(bpy.types.Operator, ImportHelper):
 
     def draw(self, context):
         layout = self.layout
-        col = layout.column(align=True)
-        col.label('UV Displace')
-        col.prop(self, "uvDisplX")
-        col.prop(self, "uvDisplY")
 
         col = layout.column(align=True)
         col.label('Mesh')
         col.prop(self, "importNormals")
         col.prop(self, "importEmpties")
         col.prop(self, "importMaterial")
+        sub = col.row()
+        sub.label('UV')
+        sub.prop(self, "uvDisplX")
+        sub.prop(self, "uvDisplY")
 
         col = layout.column(align=True)
         col.label('Armature')
@@ -177,7 +177,7 @@ class import_map_op(bpy.types.Operator, ImportHelper):
     importObjects = BoolProperty(
         name="Import Objects",
         description="Import Map Objects",
-        default=False,
+        default=True,
     )
 
     importDetails = BoolProperty(
@@ -189,6 +189,12 @@ class import_map_op(bpy.types.Operator, ImportHelper):
     importPhysics = BoolProperty(
         name="Import Collision Model",
         description="Import Map Collision Model",
+        default=False,
+    )
+
+    sameMeshData = BoolProperty(
+        name="Re-use Mesh Data",
+        description="Re-uses mesh data for identical objects, will create weird meshes and materials won't apply correctly but saves a lot of space and time",
         default=False,
     )
 
@@ -213,22 +219,23 @@ class import_map_op(bpy.types.Operator, ImportHelper):
             self.importMaterial,
             False
         )
-        import_owmap.read(settings, self.importObjects, self.importDetails, self.importPhysics)
+        import_owmap.read(settings, self.importObjects, self.importDetails, self.importPhysics, self.sameMeshData)
         print('DONE')
         return {'FINISHED'}
 
     def draw(self, context):
         layout = self.layout
-        col = layout.column(align=True)
-        col.label('UV Displace')
-        col.prop(self, "uvDisplX")
-        col.prop(self, "uvDisplY")
 
         col = layout.column(align=True)
         col.label('Mesh')
         col.prop(self, "importNormals")
         col.prop(self, "importEmpties")
         col.prop(self, "importMaterial")
+        col.prop(self, "sameMeshData")
+        sub = col.row()
+        sub.label('UV')
+        sub.prop(self, "uvDisplX")
+        sub.prop(self, "uvDisplY")
 
         col = layout.column(align=True)
         col.label('Map')

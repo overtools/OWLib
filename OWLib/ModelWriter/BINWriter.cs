@@ -15,7 +15,7 @@ namespace OWLib.ModelWriter {
     public string Name => "XNALara XPS Binary";
     public string Format => ".mesh";
     public char[] Identifier => new char[2] { 'L', 'b' };
-    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.POSE | ModelWriterSupport.MATERIAL | ModelWriterSupport.ATTACHMENT);
+    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.POSE | ModelWriterSupport.MATERIAL);
 
     public static OpenTK.Vector3 NormalizeAngles(OpenTK.Vector3 angles) {
       angles.X = NormalizeAngle(angles.X);
@@ -133,7 +133,7 @@ namespace OWLib.ModelWriter {
         uint sz = 0;
         uint lookForLod = 0;
         bool lodOnly = false;
-        if(opts.Length > 2 && opts[3] != null && opts[3].GetType() == typeof(bool) && (bool)opts[3] == true) {
+        if(opts.Length > 3 && opts[3] != null && opts[3].GetType() == typeof(bool) && (bool)opts[3] == true) {
           lodOnly = true;
         }
         for(int i = 0; i < model.Submeshes.Length; ++i) {
@@ -233,23 +233,6 @@ namespace OWLib.ModelWriter {
               writer.Write((uint)index[j].v2);
               writer.Write((uint)index[j].v3);
             }
-          }
-        }
-        if(opts.Length > 0 && opts[0] != null && opts[0].GetType() == typeof(bool) && (bool)opts[0] == true) {
-          writer.Write((uint)model.AttachmentPoints.Length); // extension, empty nodes.
-          for(uint i = 0; i < model.AttachmentPoints.Length; ++i) {
-            ModelAttachmentPoint attachment = model.AttachmentPoints[i];
-            WriteString(writer, string.Format("Attachment{0:X}", attachment.id));
-            OpenTK.Matrix4 mat = attachment.matrix.ToOpenTK();
-            OpenTK.Vector3 pos = mat.ExtractTranslation();
-            OpenTK.Quaternion quat = mat.ExtractRotation();
-            writer.Write(pos.X);
-            writer.Write(pos.Y);
-            writer.Write(pos.Z);
-            writer.Write(quat.X);
-            writer.Write(quat.Y);
-            writer.Write(quat.Z);
-            writer.Write(quat.W);
           }
         }
       }

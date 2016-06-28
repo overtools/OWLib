@@ -10,7 +10,7 @@ namespace OWLib.ModelWriter {
     public string Name => "XNALara XPS ASCII";
     public string Format => ".mesh.ascii";
     public char[] Identifier => new char[2] { 'l', 'a' };
-    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.MATERIAL | ModelWriter.ModelWriterSupport.ATTACHMENT);
+    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.MATERIAL);
     
     public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] opts) {
 			NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
@@ -29,7 +29,7 @@ namespace OWLib.ModelWriter {
         uint sz = 0;
         uint lookForLod = 0;
         bool lodOnly = false;
-        if(opts.Length > 2 && opts[3] != null && opts[3].GetType() == typeof(bool) && (bool)opts[3] == true) {
+        if(opts.Length > 3 && opts[3] != null && opts[3].GetType() == typeof(bool) && (bool)opts[3] == true) {
           lodOnly = true;
         }
         for(int i = 0; i < model.Submeshes.Length; ++i) {
@@ -109,18 +109,6 @@ namespace OWLib.ModelWriter {
             for(int j = 0; j < index.Length; ++j) {
               writer.WriteLine("{0} {1} {2}", index[j].v1, index[j].v2, index[j].v3);
             }
-          }
-        }
-        if(opts.Length > 0 && opts[0] != null && opts[0].GetType() == typeof(bool) && (bool)opts[0] == true) {
-          writer.WriteLine(model.AttachmentPoints.Length); // extension, empty nodes.
-          for(uint i = 0; i < model.AttachmentPoints.Length; ++i) {
-            ModelAttachmentPoint attachment = model.AttachmentPoints[i];
-            writer.WriteLine("Attachment{0:X}", attachment.id);
-            OpenTK.Matrix4 mat = attachment.matrix.ToOpenTK();
-            OpenTK.Vector3 pos = mat.ExtractTranslation();
-            OpenTK.Quaternion quat = mat.ExtractRotation();
-            writer.WriteLine("{0} {1} {2}", pos.X.ToString("0.######", numberFormatInfo), pos.Y.ToString("0.######", numberFormatInfo), pos.Z.ToString("0.######", numberFormatInfo));
-            writer.WriteLine("{0} {1} {2} {3}", quat.X.ToString("0.######", numberFormatInfo), quat.Y.ToString("0.######", numberFormatInfo), quat.Z.ToString("0.######", numberFormatInfo), quat.W.ToString("0.######", numberFormatInfo));
           }
         }
         writer.WriteLine("");

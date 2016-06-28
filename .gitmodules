@@ -7,6 +7,3 @@
 [submodule "DirectXTex"]
 	path = DirectXTex
 	url = git@github.com:Microsoft/DirectXTex.git
-[submodule "xps"]
-	path = xps
-	url = git@gitlab.com:naomichan/xps.git

@@ -5,6 +5,8 @@ from OWMImporter import owm_types
 import bpy
 
 def cleanUnusedMaterials(materials):
+    if materials == None:
+        return
     m = {}
     for name in materials[1]:
         mat = materials[1][name]

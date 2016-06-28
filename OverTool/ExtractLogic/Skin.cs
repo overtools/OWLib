@@ -265,23 +265,7 @@ namespace OverTool.ExtractLogic {
 
       IModelWriter writer = null;
       string mtlPath = null;
-      if(furtherOpts.Contains('O')) {
-        writer = new OBJWriter();
-        IModelWriter tmp = new MTLWriter();
-        mtlPath = string.Format("{0}material{1}", path, tmp.Format);
-        using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
-          tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) });
-          Console.Out.WriteLine("Wrote materials {0}", mtlPath);
-        }
-      } else if(furtherOpts.Contains('W')) {
-        writer = new OWMDLWriter();
-        IModelWriter tmp = new OWMATWriter();
-        mtlPath = string.Format("{0}material{1}", path, tmp.Format);
-        using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
-          tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) });
-          Console.Out.WriteLine("Wrote materials {0}", mtlPath);
-        }
-      } else if(furtherOpts.Count > 0) {
+      if(furtherOpts.Count > 0) {
         Assembly asm = typeof(IModelWriter).Assembly;
         Type t = typeof(IModelWriter);
         List<Type> types = asm.GetTypes().Where(tt => tt != t && t.IsAssignableFrom(tt)).ToList();
@@ -300,12 +284,28 @@ namespace OverTool.ExtractLogic {
               break;
             }
           }
-          if(writer == null) {
-            writer = new BINWriter();
-          }
         }
-      } else {
-        writer = new BINWriter();
+      }
+
+      if(writer == null) {
+        writer = new OWMDLWriter();
+      }
+
+      if(writer.GetType() == typeof(OWMDLWriter)) {
+        IModelWriter tmp = new OWMATWriter();
+        mtlPath = string.Format("{0}material{1}", path, tmp.Format);
+        using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
+          tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) });
+          Console.Out.WriteLine("Wrote materials {0}", mtlPath);
+        }
+      } else if(writer.GetType() == typeof(OBJWriter)) {
+        writer = new OBJWriter();
+        IModelWriter tmp = new MTLWriter();
+        mtlPath = string.Format("{0}material{1}", path, tmp.Format);
+        using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
+          tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) });
+          Console.Out.WriteLine("Wrote materials {0}", mtlPath);
+        }
       }
 
       List<byte> lods = new List<byte>(new byte[3] { 0, 1, 0xFF });

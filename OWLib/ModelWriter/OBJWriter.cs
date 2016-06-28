@@ -10,31 +10,15 @@ namespace OWLib.ModelWriter {
     public string Name => "Wavefront OBJ";
     public string Format => ".obj";
     public char[] Identifier => new char[1] { 'o' };
-    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.ATTACHMENT | ModelWriterSupport.MATERIAL);
+    public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.MATERIAL);
     
     public void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] opts) {
 		  NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
       numberFormatInfo.NumberDecimalSeparator = ".";
       using(StreamWriter writer = new StreamWriter(output)) {
         uint faceOffset = 1;
-        if(opts.Length > 1 && opts[1] != null && opts[1].GetType() == typeof(string)) {
+        if(opts.Length > 1 && opts[1] != null && opts[1].GetType() == typeof(string) && ((string)opts[1]).Length > 0) {
           writer.WriteLine("mtllib {0}", (string)opts[1]);
-        }
-        if(opts.Length > 0 && opts[0] != null && opts[0].GetType() == typeof(bool) && (bool)opts[0] == true) {
-          Model.AttachmentPoint[] hbx = model.CreateAttachmentPoints();
-          for(int i = 0; i < hbx.Length; ++i) {
-            Console.Out.WriteLine("Writing Attachment Point {0}", model.AttachmentPoints[i].id);
-            writer.WriteLine("o Attachment_{0:X}", model.AttachmentPoints[i].id);
-            for(int j = 0; j < hbx[i].points.Length; ++j) {
-              OpenTK.Vector3 v = hbx[i].points[j];
-              writer.WriteLine("v {0} {1} {2}", v.X, v.Y, v.Z);
-            }
-            for(int j = 0; j < hbx[i].indices.Length; j += 3) {
-              writer.WriteLine("f {0} {1} {2}", faceOffset + hbx[i].indices[j], faceOffset + hbx[i].indices[j + 1], faceOffset + hbx[i].indices[j + 2]);
-            }
-            faceOffset += (uint)hbx[i].points.Length;
-            writer.WriteLine("");
-          }
         }
 
         Dictionary<byte, List<int>> LODMap = new Dictionary<byte, List<int>>();
@@ -84,7 +68,7 @@ namespace OWLib.ModelWriter {
             faceOffset += (uint)vertex.Length;
             writer.WriteLine("");
           }
-          if(opts.Length > 2 && opts[3] != null && opts[3].GetType() == typeof(bool) && (bool)opts[3] == true) {
+          if(opts.Length > 3 && opts[3] != null && opts[3].GetType() == typeof(bool) && (bool)opts[3] == true) {
             break;
           }
         }

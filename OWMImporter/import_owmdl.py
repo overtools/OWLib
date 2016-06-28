@@ -124,7 +124,7 @@ def bindMaterials(meshes, data, materials):
             mesh.materials.clear()
             mesh.materials.append(materials[1][meshData.materialKey])
 
-def importMesh(armature, materials, meshData):
+def importMesh(armature, meshData):
     global settings
     global rootObject
     mesh = bpy.data.meshes.new(meshData.name)
@@ -139,15 +139,6 @@ def importMesh(armature, materials, meshData):
     mesh.polygons.foreach_set('use_smooth', [True] * len(mesh.polygons))
     for i in range(meshData.uvCount):
         mesh.uv_textures.new(name="UV" + str(i + 1))
-
-    if materials != None and meshData.materialKey in materials[1]:
-        mesh.materials.append(materials[1][meshData.materialKey])
-
-        if len(mesh.materials) > 0 and len(mesh.materials[0].texture_slots) > 0:
-            texture = mesh.materials[0].texture_slots[0].texture.image
-            if mesh.uv_textures.active:
-                for uvf in mesh.uv_textures.active.data:
-                    uvf.image = texture
 
     if armature:
         mod = obj.modifiers.new(type="ARMATURE", name="Armature")
@@ -199,9 +190,9 @@ def importMesh(armature, materials, meshData):
     return obj
 
 
-def importMeshes(armature, materials):
+def importMeshes(armature):
     global data
-    meshes = [importMesh(armature, materials, meshData) for meshData in data.meshes]
+    meshes = [importMesh(armature, meshData) for meshData in data.meshes]
     return meshes
 
 def importEmpties():
@@ -225,8 +216,7 @@ def importEmpties():
         bpy.context.scene.update()
         empty.parent = att
         empty.location = xzy(emp.position)
-        empty.rotation_mode = 'QUATERNION'
-        empty.rotation_quaternion = wxzy(emp.rotation)
+        empty.rotation_euler = Quaternion(wxzy(emp.rotation)).to_euler('XYZ')
         empty.select = True
         bpy.context.scene.update()
         e += [empty]
@@ -280,15 +270,17 @@ def readmdl(materials = None):
         armature.name = rootName + '_Skeleton'
         armature.parent = rootObject
 
+    meshes = importMeshes(armature)
+
     impMat = False
+    materials = None
     if materials == None and settings.importMaterial and len(data.header.material) > 0:
         impMat = True
         matpath = data.header.material
         if not os.path.isabs(matpath):
             matpath = os.path.normpath('%s/%s' % (root, matpath))
         materials = import_owmat.read(matpath)
-
-    meshes = importMeshes(armature, materials)
+        bindMaterials(meshes, data, materials)
 
     empties = []
     if settings.importEmpties and data.header.emptyCount > 0:
