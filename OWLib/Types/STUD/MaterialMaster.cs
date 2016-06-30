@@ -34,21 +34,9 @@ namespace OWLib.Types.STUD {
       public ulong unk2;
     }
 
-    public ulong Key
-    {
-      get
-      {
-        return 0xABB8E85C7F65CBF9;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Material Master";
-      }
-    }
+    public ulong Key => 0xABB8E85C7F65CBF9;
+    public uint Id => 0xA301496F;
+    public string Name => "Material Master";
 
     private MaterialMasterHeader header;
     public MaterialMasterHeader Header => header;

@@ -41,6 +41,11 @@ namespace OWLib.Types {
       get;
     }
 
+    uint Id
+    {
+      get;
+    }
+
     ulong Key
     {
       get;

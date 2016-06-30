@@ -98,7 +98,7 @@
     <Compile Include="Types\STUD\InventoryItem\GenericInventoryTypes.cs" />
     <Compile Include="Types\STUD\InventoryItem\SprayItem.cs" />
     <Compile Include="Types\STUD\InventoryItem\PortraitItem.cs" />
-    <Compile Include="Types\STUD\InventoryItem\Unknown34C28F86080AAB76Item.cs" />
+    <Compile Include="Types\STUD\InventoryItem\WeaponSkinItem.cs" />
     <Compile Include="Types\STUD\InventoryItem\Unknown5C4B5EF809855F8FItem.cs" />
     <Compile Include="Types\STUD\InventoryMaster.cs" />
     <Compile Include="Types\STUD\MaterialMaster.cs" />

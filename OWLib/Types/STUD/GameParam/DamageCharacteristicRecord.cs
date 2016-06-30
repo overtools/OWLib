@@ -7,21 +7,9 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.GameParam {
   public class DamageCharacteristicRecord : ISTUDInstance {
-    public ulong Key
-    {
-      get
-      {
-        return 0xF6ED9C3A376B9B60;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "GameParameter:DamageCharacteristic";
-      }
-    }
+    public ulong Key => 0xF6ED9C3A376B9B60;
+    public uint Id => 0x3AE7427E;
+    public string Name => "GameParameter:DamageCharacteristic";
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct DamageCharacteristic {

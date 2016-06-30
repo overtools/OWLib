@@ -23,21 +23,9 @@ namespace OWLib.Types.STUD {
       public ulong zero3;
     }
 
-    public ulong Key
-    {
-      get
-      {
-        return 0x86A4F1BD3291EAB8;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Inventory Master";
-      }
-    }
+    public ulong Key => 0x86A4F1BD3291EAB8;
+    public uint Id => 0x33F56AC1;
+    public string Name => "Inventory Master";
 
     private InventoryMasterHeader header;
     public InventoryMasterHeader Header => header;

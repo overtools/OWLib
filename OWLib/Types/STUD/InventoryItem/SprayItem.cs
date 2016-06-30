@@ -11,21 +11,9 @@ namespace OWLib.Types.STUD.InventoryItem {
       public ulong unk2;
     }
 
-    public ulong Key
-    {
-      get
-      {
-        return 0xF19B41835220C528;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Spray";
-      }
-    }
+    public ulong Key => 0xF19B41835220C528;
+    public uint Id => 0x15720E8A;
+    public string Name => "Spray";
 
     private InventoryItemHeader header;
     public InventoryItemHeader Header => header;
@@ -49,21 +37,9 @@ namespace OWLib.Types.STUD.InventoryItem {
       public OWRecord decal;
     }
 
-    public ulong Key
-    {
-      get
-      {
-        return 0x1EBE13D167E67948;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Spray:Mipmap";
-      }
-    }
+    public ulong Key => 0x1EBE13D167E67948;
+    public uint Id => 0x6DA011A1;
+    public string Name => "Spray:Mipmap";
     
     private MipmapData data;
     public MipmapData Data => data;

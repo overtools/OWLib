@@ -67,21 +67,9 @@ namespace OWLib.Types.STUD {
       public uint zero5;
     }
 
-    public ulong Key
-    {
-      get
-      {
-        return 0x0640DC92294CCF91;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Hero Master";
-      }
-    }
+    public ulong Key => 0x0640DC92294CCF91;
+    public uint Id => 0x91E7843A;
+    public string Name => "Hero Master";
 
     private HeroMasterHeader header;
     public HeroMasterHeader Header => header;

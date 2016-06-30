@@ -8,21 +8,9 @@ namespace OWLib.Types.STUD.InventoryItem {
       public OWRecord f0BF;
     }
 
-    public ulong Key
-    {
-      get
-      {
-        return 0x964150072700B0D0;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Victory Pose";
-      }
-    }
+    public ulong Key => 0x964150072700B0D0;
+    public uint Id => 0x018667E2;
+    public string Name => "Victory Pose";
     
     private InventoryItemHeader header;
     public InventoryItemHeader Header => header;

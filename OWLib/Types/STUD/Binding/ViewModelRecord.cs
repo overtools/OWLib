@@ -7,21 +7,9 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.Binding {
   public class ViewModelRecord : ISTUDInstance {
-    public ulong Key
-    {
-      get
-      {
-        return 0x503AD86BB9752B99;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Binding:ViewModel";
-      }
-    }
+    public ulong Key => 0x503AD86BB9752B99;
+    public uint Id => 0xDAF7A654;
+    public string Name => "Binding:ViewModel";
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct ViewModel {

@@ -7,21 +7,9 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.Binding {
   public class ProjectileModelRecord : ISTUDInstance {
-    public ulong Key
-    {
-      get
-      {
-        return 0x9284FC578E1984E3;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Binding:ProjectileModel";
-      }
-    }
+    public ulong Key => 0x9284FC578E1984E3;
+    public uint Id => 0xEC23FFFD;
+    public string Name => "Binding:ProjectileModel";
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct ProjectileModel {

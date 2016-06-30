@@ -7,21 +7,9 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.Binding {
   public class ChildParameterRecord : ISTUDInstance {
-    public ulong Key
-    {
-      get
-      {
-        return 0x8D08A5795843FDD2;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Binding:ChildParameter";
-      }
-    }
+    public ulong Key => 0x8D08A5795843FDD2;
+    public uint Id => 0x378F54CD;
+    public string Name => "Binding:ChildParameter";
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct ChildParameter {

@@ -12,21 +12,9 @@ namespace OWLib.Types.STUD.InventoryItem {
       public ulong unk2;
     }
 
-    public ulong Key
-    {
-      get
-      {
-        return 0x40BA18C08294158F;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Voice Line";
-      }
-    }
+    public ulong Key => 0x40BA18C08294158F;
+    public uint Id => 0x090B30AB;
+    public string Name => "Voice Line";
 
     private InventoryItemHeader header;
     public InventoryItemHeader Header => header;

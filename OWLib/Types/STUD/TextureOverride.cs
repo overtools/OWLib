@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 namespace OWLib.Types.STUD {
   public class TextureOverride : ISTUDInstance {
     public ulong Key => 0x053C4CCBC528B5B3;
+    public uint Id => 0x4FB2CE32;
     public string Name => "TextureOverride";
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -88,6 +89,7 @@ namespace OWLib.Types.STUD {
 
   public class TextureOverrideSecondary : ISTUDInstance {
     public ulong Key => 0x7B9E6EF05C0F92F8;
+    public uint Id => 0x3FCD3E39;
     public string Name => "TextureOverride:Secondary";
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

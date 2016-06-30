@@ -11,21 +11,9 @@ namespace OWLib.Types.STUD.InventoryItem {
       public ulong unk2;
     }
 
-    public ulong Key
-    {
-      get
-      {
-        return 0x70AC478844826266;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Icon";
-      }
-    }
+    public ulong Key => 0x70AC478844826266;
+    public uint Id => 0x8CDAA871;
+    public string Name => "Icon";
 
     private InventoryItemHeader header;
     public InventoryItemHeader Header => header;

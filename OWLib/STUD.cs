@@ -66,16 +66,25 @@ namespace OWLib {
 
     public ISTUDInstance Initialize(Stream input, STUDInstanceRecord instance, bool suppress) {
       input.Position = instance.offset;
+      uint id = 0;
+      using(BinaryReader reader = new BinaryReader(input, Encoding.Default, true)) {
+        id = reader.ReadUInt32();
+      }
+      input.Position -= 4;
       ISTUDInstance ret = null;
       STUD_MANAGER_ERROR err;
-      bool outputOffset = STUDManager.Complained.Contains(instance.key);
-      if((err = manager.InitializeInstance(instance.key, input, out ret, suppress)) != STUD_MANAGER_ERROR.E_SUCCESS) {
-        if(err != STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE) {
-          Console.Error.WriteLine("Error while instancing for STUD type {0:X16}", instance.key);
-        } else if(!suppress && !outputOffset) {
-          Console.Error.WriteLine("Instance is at offset {0:X16}", instance.offset);
+      bool outputOffset = STUDManager.Complained.Contains(id);
+      if((err = manager.InitializeInstance(id, input, out ret, suppress)) != STUD_MANAGER_ERROR.E_SUCCESS) {
+        if((err = manager.InitializeInstance(instance.key, input, out ret, suppress)) != STUD_MANAGER_ERROR.E_SUCCESS) {
+          if(err != STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE) {
+            Console.Error.WriteLine("Error while instancing for STUD type {0:X8}", id);
+          } else if(!suppress && !outputOffset) {
+            Console.Error.WriteLine("Instance is at offset {0:X16}", instance.offset);
+          }
+          return null;
+        } else {
+          Console.Error.WriteLine("{0:X16} = {1:X8} ({2})", instance.key, id, ret.Name);
         }
-        return null;
       }
       return ret;
     }
@@ -83,35 +92,51 @@ namespace OWLib {
 
   public class STUDManager {
     private List<Type> implementations;
-    private List<ulong> ids;
+    private List<uint> ids;
+    private List<ulong> instanceIds;
     private List<string> names;
 
-    private static HashSet<ulong> complained = new HashSet<ulong>();
-    public static HashSet<ulong> Complained => complained;
+    private static HashSet<uint> complained = new HashSet<uint>();
+    public static HashSet<uint> Complained => complained;
 
     private static STUDManager _Instance = NewInstance();
     public static STUDManager Instance => _Instance;
 
     public IReadOnlyList<Type> Implementations => implementations;
-    public IReadOnlyList<ulong> Ids => ids;
+    public IReadOnlyList<ulong> InstanceIds => instanceIds;
+    public IReadOnlyList<uint> Ids => ids;
     public IReadOnlyList<string> Names => names;
 
     public STUDManager() {
       implementations = new List<Type>();
-      ids = new List<ulong>();
+      ids = new List<uint>();
+      instanceIds = new List<ulong>();
       names = new List<string>();
     }
-
-    public Type GetInstance(ulong id, bool suppress) {
+    
+    public Type GetInstance(uint id, bool suppress) {
       for(int i = 0; i < implementations.Count; ++i) {
         if(ids[i] == id) {
           return implementations[i];
         }
       }
       if(complained.Add(id) && !suppress) {
-        Console.Error.WriteLine("Warning! Unknown Instance ID {0:X16}", id);
+        Console.Error.WriteLine("Warning! Unknown Instance ID {0:X8}", id);
       }
       return null;
+    }
+
+    public Type GetInstance(ulong id, bool suppress) {
+      for(int i = 0; i < implementations.Count; ++i) {
+        if(instanceIds[i] == id) {
+          return implementations[i];
+        }
+      }
+      return null;
+    }
+    
+    public STUD_MANAGER_ERROR InitializeInstance(uint id, Stream input, out ISTUDInstance instance, bool suppress) {
+      return InitializeInstance(GetInstance(id, suppress), input, out instance);
     }
 
     public STUD_MANAGER_ERROR InitializeInstance(ulong id, Stream input, out ISTUDInstance instance, bool suppress) {
@@ -142,7 +167,7 @@ namespace OWLib {
       return STUD_MANAGER_ERROR.E_SUCCESS;
     }
 
-    public string GetName(ulong id) {
+    public string GetName(uint id) {
       for(int i = 0; i < implementations.Count; ++i) {
         if(ids[i] == id) {
           return names[i];
@@ -171,19 +196,34 @@ namespace OWLib {
       return GetName(instance);
     }
 
-    public ulong GetId(ISTUDInstance inst) {
+    public uint GetId(ISTUDInstance inst) {
+      if(inst == null) {
+        return 0;
+      }
+      return inst.Id;
+    }
+
+    public ulong GetKey(ISTUDInstance inst) {
       if(inst == null) {
         return 0;
       }
       return inst.Key;
     }
 
-    public ulong GetId(Type inst) {
+    public uint GetId(Type inst) {
       if(inst == null) {
         return 0;
       }
       ISTUDInstance instance = (ISTUDInstance)Activator.CreateInstance(inst);
       return GetId(instance);
+    }
+
+    public ulong GetKey(Type inst) {
+      if(inst == null) {
+        return 0;
+      }
+      ISTUDInstance instance = (ISTUDInstance)Activator.CreateInstance(inst);
+      return GetKey(instance);
     }
 
     public STUD_MANAGER_ERROR AddInstance(ISTUDInstance instance) {
@@ -200,15 +240,22 @@ namespace OWLib {
       if(implementations.Contains(instance)) {
         return STUD_MANAGER_ERROR.E_DUPLICATE;
       }
-      if(ids.Contains(GetId(instance))) {
+      ulong key = GetKey(instance);
+      uint id = GetId(instance);
+      string name = GetName(instance);
+      if(instanceIds.Contains(key)) {
         return STUD_MANAGER_ERROR.E_DUPLICATE;
       }
-      if(names.Contains(GetName(instance))) {
+      if(names.Contains(name)) {
         return STUD_MANAGER_ERROR.E_DUPLICATE;
+      }
+      if(id == 0) {
+        Console.Error.WriteLine("Error! {0:X16} still has no ID!", key);
       }
       implementations.Add(instance);
-      ids.Add(GetId(instance));
-      names.Add(GetName(instance));
+      ids.Add(id);
+      instanceIds.Add(key);
+      names.Add(name);
       return STUD_MANAGER_ERROR.E_SUCCESS;
     }
 

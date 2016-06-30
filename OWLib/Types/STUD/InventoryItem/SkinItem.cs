@@ -8,21 +8,9 @@ namespace OWLib.Types.STUD.InventoryItem {
       public OWRecord skin;
     }
 
-    public ulong Key
-    {
-      get
-      {
-        return 0x6A79CBB4BC5CDACC;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Skin";
-      }
-    }
+    public ulong Key => 0x6A79CBB4BC5CDACC;
+    public uint Id => 0x8B9DEB02;
+    public string Name => "Skin";
     
     private InventoryItemHeader header;
     public InventoryItemHeader Header => header;

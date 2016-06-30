@@ -2,39 +2,27 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.InventoryItem {
-  public class Unknown34C28F86080AAB76Item : IInventorySTUDInstance {
+  public class WeaponSkinItem : IInventorySTUDInstance {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct UnknownItemData {
+    public struct WeaponSkinData {
       public ulong unk1;
       public ulong unk2;
     }
 
-    public ulong Key
-    {
-      get
-      {
-        return 0x34C28F86080AAB76;
-      }
-    }
-
-    public string Name
-    {
-      get
-      {
-        return "Unknown34C28F86080AAB76";
-      }
-    }
+    public ulong Key => 0x34C28F86080AAB76;
+    public uint Id => 0x01609B4D;
+    public string Name => "Weapon Skin";
 
     private InventoryItemHeader header;
     public InventoryItemHeader Header => header;
 
-    private UnknownItemData data;
-    public UnknownItemData Data => data;
+    private WeaponSkinData data;
+    public WeaponSkinData Data => data;
 
     public void Read(Stream input) {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<InventoryItemHeader>();
-        data = reader.Read<UnknownItemData>();
+        data = reader.Read<WeaponSkinData>();
       }
     }
   }
