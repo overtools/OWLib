@@ -62,7 +62,7 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
     globObj.parent = rootObj
     bpy.context.scene.objects.link(globObj)
 
-    materialsCache = []
+    matCache = {}
 
     if importObjects:
         for ob in data.objects:
@@ -90,10 +90,14 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
                     matpath = os.path.normpath('%s/%s' % (root, matpath))
 
                 material = None
-                if settings.importMaterial:
-                    material = import_owmat.read(matpath, '%s_%s:%X_' % (name, obn, idx))
-                    import_owmdl.bindMaterials(obj[2], obj[4], material)
-                    materialsCache += [material]
+                if settings.importMaterial and len(ent.material) > 0:
+                    if matpath not in matCache:
+                        material = import_owmat.read(matpath, '%s_%s:%X_' % (name, obn, idx))
+                        import_owmdl.bindMaterials(obj[2], obj[4], material)
+                        matCache[matpath] = material
+                    else:
+                        material = matCache[matpath]
+                        import_owmdl.bindMaterials(obj[2], obj[4], material)
 
                 matObj = bpy.data.objects.new(obn + '_' + os.path.splitext(os.path.basename(matpath))[0], None)
                 matObj.hide = True
@@ -137,13 +141,18 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
             obj = objCache[obn]
 
             material = None
-            if settings.importMaterial:
-                matpath = ob.material
-                if not os.path.isabs(matpath):
-                    matpath = os.path.normpath('%s/%s' % (root, matpath))
-                material = import_owmat.read(matpath, '%s_%s' % (name, obn))
-                import_owmdl.bindMaterials(obj[2], obj[4], material)
-                materialsCache += [material]
+            if settings.importMaterial and len(ob.material) > 0:
+                man = '%s_%s_' % (name, obn)
+                if man not in matCache:
+                    matpath = ob.material
+                    if not os.path.isabs(matpath):
+                        matpath = os.path.normpath('%s/%s' % (root, matpath))
+                    material = import_owmat.read(matpath, man)
+                    import_owmdl.bindMaterials(obj[2], obj[4], material)
+                    matCache[man] = material
+                else:
+                    material = matCache[man]
+                    import_owmdl.bindMaterials(obj[2], obj[4], material)
 
             objnode = copy(obj[0], globDet)
 
@@ -152,9 +161,8 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
             objnode.scale = import_owmdl.xzy(ob.scale)
         for ob in objCache:
             remove(objCache[ob][0])
-    if len(materialsCache) > 0:
-        for material in materialsCache:
-            try:
-                import_owmat.cleanUnusedMaterials(material)
-            except: pass
+    for man in matCache:
+        try:
+            import_owmat.cleanUnusedMaterials(matCache[man])
+        except: pass
     bpy.context.scene.update()

@@ -117,6 +117,8 @@ def randomColor():
     return (randomR, randomG, randomB)
 
 def bindMaterials(meshes, data, materials):
+    if materials == None:
+        return
     for i, obj in enumerate(meshes):
         mesh = obj.data
         meshData = data.meshes[i]

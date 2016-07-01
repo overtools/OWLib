@@ -82,8 +82,6 @@ namespace OWLib {
             Console.Error.WriteLine("Instance is at offset {0:X16}", instance.offset);
           }
           return null;
-        } else {
-          Console.Error.WriteLine("{0:X16} = {1:X8} ({2})", instance.key, id, ret.Name);
         }
       }
       return ret;
@@ -243,14 +241,14 @@ namespace OWLib {
       ulong key = GetKey(instance);
       uint id = GetId(instance);
       string name = GetName(instance);
-      if(instanceIds.Contains(key)) {
+      if(id == 0) {
+        Console.Error.WriteLine("Error! {0:X16} still has no ID!", key);
+      }
+      if(instanceIds.Contains(key) && ids.Contains(id)) {
         return STUD_MANAGER_ERROR.E_DUPLICATE;
       }
       if(names.Contains(name)) {
         return STUD_MANAGER_ERROR.E_DUPLICATE;
-      }
-      if(id == 0) {
-        Console.Error.WriteLine("Error! {0:X16} still has no ID!", key);
       }
       implementations.Add(instance);
       ids.Add(id);
