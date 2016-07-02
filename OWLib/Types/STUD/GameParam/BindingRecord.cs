@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.GameParam {
-  public class ModelParamRecord : ISTUDInstance {
+  public class BindingRecord : ISTUDInstance {
     public ulong Key => 0x0DECF2BA78E343C9;
     public uint Id => 0xE53C2921;
-    public string Name => "GameParameter:Model";
+    public string Name => "GameParameter:Binding";
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct ModelParam {

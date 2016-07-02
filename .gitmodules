@@ -7,3 +7,6 @@
 [submodule "DirectXTex"]
 	path = DirectXTex
 	url = git@github.com:Microsoft/DirectXTex.git
+[submodule "slimshader"]
+	path = slimshader
+	url = git@github.com:tgjones/slimshader.git

@@ -146,6 +146,10 @@ namespace OverTool {
               Console.Out.WriteLine("Extracting icon {0} for {1}...", name, heroName);
               ExtractLogic.Icon.Extract(stud, output, heroName, name, track, map, handler, furtherOpts);
               break;
+            case "Voice Line":
+              //Console.Out.WriteLine("Extracting voice line {0} for {1}...", name, heroName);
+              //ExtractLogic.VoiceLine.Extract(master, stud, output, heroName, name, track, map, handler);
+              break;
           }
         }
       }

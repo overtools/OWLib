@@ -120,8 +120,8 @@ namespace OverTool.ExtractLogic {
             FindModels(bindingKey, ignore, models, layers, replace, parsed, map, handler);
           }
         }
-        if(inst.Name == record.Manager.GetName(typeof(ModelParamRecord))) {
-          ModelParamRecord r = (ModelParamRecord)inst;
+        if(inst.Name == record.Manager.GetName(typeof(BindingRecord))) {
+          BindingRecord r = (BindingRecord)inst;
           ulong bindingKey = r.Param.binding.key;
           if(replace.ContainsKey(bindingKey)) {
             bindingKey = replace[bindingKey];

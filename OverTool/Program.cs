@@ -23,12 +23,13 @@ namespace OverTool {
         Console.Out.WriteLine("\tx - Extract Cosmetics");
         Console.Out.WriteLine("\tm - List Maps");
         Console.Out.WriteLine("\tM - Extract Maps");
+        Console.Out.WriteLine("\tv - Dump Hero Sounds");
         return;
       }
 
       string root = args[0];
       char opt = args[1][0];
-      char[] validOpts = new char[] { 't', 'x', 'm', 'M' };
+      char[] validOpts = new char[] { 't', 'x', 'm', 'M', 'v' };
       if(!validOpts.Contains(opt)) {
         Console.Error.WriteLine("UNSUPPORTED OPT {0}", opt);
         return;
@@ -88,6 +89,8 @@ namespace OverTool {
         optfn = ListMap.Parse;
       } else if(opt == 'M') {
         optfn = ExtractMap.Parse;
+      } else if(opt == 'v') {
+        optfn = DumpVoice.Parse;
       }
 
       optfn(track, map, handler, args.Skip(2).ToArray());
