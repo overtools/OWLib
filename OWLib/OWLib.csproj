@@ -45,11 +45,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APM.cs" />
+    <Compile Include="DXBC.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Half\Half.cs" />
     <Compile Include="Half\HalfHelper.cs" />
     <Compile Include="ImageDefinition.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="Types\DXBCTypes.cs" />
     <Compile Include="Types\Map\IMapFormat.cs" />
     <Compile Include="Types\Map\Map01.cs" />
     <Compile Include="Material.cs" />
@@ -80,12 +82,15 @@
     <Compile Include="Types\STUD\Binding\ChildParameterRecord.cs" />
     <Compile Include="Types\STUD\Binding\ComplexModelRecord.cs" />
     <Compile Include="Types\STUD\MapMaster.cs" />
+    <Compile Include="Types\STUD\SoundBinding.cs" />
+    <Compile Include="Types\STUD\SoundMaster.cs" />
+    <Compile Include="Types\STUD\SoundOwner.cs" />
     <Compile Include="Types\STUD\TextureOverrideMaster.cs" />
     <Compile Include="Types\STUD\Binding\ViewModelRecord.cs" />
     <Compile Include="Types\STUD\Binding\ParameterRecord.cs" />
     <Compile Include="Types\STUD\Decal.cs" />
     <Compile Include="Types\STUD\GameParam\DamageCharacteristicRecord.cs" />
-    <Compile Include="Types\STUD\GameParam\ModelParamRecord.cs" />
+    <Compile Include="Types\STUD\GameParam\BindingRecord.cs" />
     <Compile Include="Types\STUD\Generic.cs" />
     <Compile Include="Types\STUD\HeroMaster.cs" />
     <Compile Include="Types\STUD\InventoryItem\VoiceLineItem.cs" />
