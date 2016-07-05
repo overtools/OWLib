@@ -28,10 +28,15 @@ namespace OverTool {
         handler.Encoding.GetEntry(record.record.ContentKey, out enc);
       }
 
-      Stream fstream = handler.OpenFile(enc.Key);
-      fstream.Position = offset;
-      CopyBytes(fstream, ms, record.record.Size);
-      ms.Position = 0;
+      try {
+        Stream fstream = handler.OpenFile(enc.Key);
+        fstream.Position = offset;
+        CopyBytes(fstream, ms, record.record.Size);
+        ms.Position = 0;
+      } catch (Exception ex) {
+        Console.Out.WriteLine("Error {0}", ex.Message);
+        return null;
+      }
       return ms;
     }
 

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DumpString.cs" />
     <Compile Include="DumpVoice.cs" />
     <Compile Include="Extract.cs" />
     <Compile Include="ExtractLogic\Icon.cs" />
