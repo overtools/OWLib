@@ -34,6 +34,9 @@ namespace OverTool {
           continue;
         }
         STUD masterStud = new STUD(Util.OpenFile(map[masterKey], handler));
+        if(masterStud.Instances == null) {
+          continue;
+        }
         HeroMaster master = (HeroMaster)masterStud.Instances[0];
         if(master == null) {
           continue;

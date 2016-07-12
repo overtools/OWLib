@@ -18,12 +18,13 @@ namespace OWLib.Types.STUD {
       public ulong unk3;
       public ulong offsetInfo;
       public ulong unk5;
-      public OWRecord zero2;
-      public ulong offset0AD;
       public ulong unk6;
       public ulong unk7;
+      public OWRecord zero2;
+      public ulong offset0AD;
       public ulong unk8;
-      public OWRecord master;
+      public ulong unk9;
+      public ulong unkA;
       public Vec4 delta;
     }
 

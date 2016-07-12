@@ -58,12 +58,17 @@ namespace OWLib.Types.STUD {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<MaterialMasterHeader>();
 
-        input.Position = (long)header.materialOffset;
-        STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
-        materials = new MaterialMasterMaterial[ptr.count];
-        input.Position = (long)ptr.offset;
-        for(ulong i = 0; i < ptr.count; ++i) {
-          materials[i] = reader.Read<MaterialMasterMaterial>();
+        STUDArrayInfo ptr;
+        if(header.materialOffset > 0) {
+          input.Position = (long)header.materialOffset;
+          ptr = reader.Read<STUDArrayInfo>();
+          materials = new MaterialMasterMaterial[ptr.count];
+          input.Position = (long)ptr.offset;
+          for(ulong i = 0; i < ptr.count; ++i) {
+            materials[i] = reader.Read<MaterialMasterMaterial>();
+          }
+        } else {
+          materials = new MaterialMasterMaterial[0];
         }
 
         if(header.unk1Offset > 0) {
@@ -96,6 +101,9 @@ namespace OWLib.Types.STUD {
             data[i] = reader.Read<MaterialMasterData>();
           }
           for(ulong i = 0; i < ptr.count; ++i) {
+            if(data[i].offset == 0) {
+              continue;
+            }
             input.Position = (long)data[i].offset;
             STUDArrayInfo ptr2 = reader.Read<STUDArrayInfo>();
             dataBinds[i] = new MaterialMasterMaterial[ptr2.count];

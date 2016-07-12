@@ -13,11 +13,9 @@ namespace OWLib.Types.STUD {
       public OWRecord binding;
       public OWRecord name;
       public OWRecord zero2;
-      public ulong recordsOffset;
-      public ulong zero3;
-      public OWRecord virtualSpace;
+      public OWRecord virtualSpace1;
       public ulong virtualOffset;
-      public ulong zero4;
+      public ulong zero3;
       public OWRecord child1;
       public OWRecord child2;
       public OWRecord child3;
@@ -37,8 +35,16 @@ namespace OWLib.Types.STUD {
       public ulong zero9;
       public ulong zeroA;
       public OWRecord itemMaster;
-      public fixed ushort zeroB[35];
-      public fixed ushort unk1[9];
+      public fixed ushort zeroB[32];
+      public ulong directiveOffset;
+      public ulong zeroC;
+      public ushort zeroD;
+      public uint zeroF;
+      public float unkf1;
+      public ushort unk1;
+      public float unkf2;
+      public float unkf3;
+      public float unkf4;
       public uint index;
       public HeroType type;
       public uint unk2;
@@ -67,19 +73,32 @@ namespace OWLib.Types.STUD {
       public uint zero5;
     }
 
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct HeroDirective {
+      public ulong zero1;
+      public OWRecord textureReplacement;
+      public OWRecord master;
+      public ulong offsetSubs;
+      public ulong zero2;
+      public ulong zero3;
+    }
+
     public ulong Key => 0x0640DC92294CCF91;
     public uint Id => 0x91E7843A;
     public string Name => "Hero Master";
 
     private HeroMasterHeader header;
     public HeroMasterHeader Header => header;
-
-    private OWRecord[] r075Records;
+    
     private OWRecord[] virtualRecords;
     private OWRecord[] r09ERecords;
-    public OWRecord[] Record075 => r075Records;
     public OWRecord[] RecordVirtual => virtualRecords;
     public OWRecord[] Record09E => r09ERecords;
+
+    private HeroDirective[] directives;
+    private OWRecord[][] directiveChild;
+    public HeroDirective[] Directives => directives;
+    public OWRecord[][] DirectiveChild => directiveChild;
 
     private HeroChild1[] child1;
     private HeroChild2[] child2;
@@ -91,16 +110,6 @@ namespace OWLib.Types.STUD {
     public void Read(Stream input) {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<HeroMasterHeader>();
-
-        if((long)header.recordsOffset > 0) {
-          input.Position = (long)header.recordsOffset;
-          STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
-          r075Records = new OWRecord[ptr.count];
-          input.Position = (long)ptr.offset;
-          for(ulong i = 0; i < ptr.count; ++i) {
-            r075Records[i] = reader.Read<OWRecord>();
-          }
-        }
 
         if((long)header.virtualOffset > 0) {
           input.Position = (long)header.virtualOffset;
@@ -149,6 +158,27 @@ namespace OWLib.Types.STUD {
           input.Position = (long)ptr.offset;
           for(ulong i = 0; i < ptr.count; ++i) {
             child3[i] = reader.Read<HeroChild2>();
+          }
+        }
+
+        if((long)header.directiveOffset > 0) {
+          input.Position = (long)header.directiveOffset;
+          STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
+          directives = new HeroDirective[ptr.count];
+          directiveChild = new OWRecord[ptr.count][];
+          input.Position = (long)ptr.offset;
+          for(ulong i = 0; i < ptr.count; ++i) {
+            directives[i] = reader.Read<HeroDirective>();
+          }
+          for(ulong i = 0; i < ptr.count; ++i) {
+            if((long)directives[i].offsetSubs > 0) {
+              STUDArrayInfo ptr2 = reader.Read<STUDArrayInfo>();
+              directiveChild[i] = new OWRecord[ptr2.count];
+              input.Position = (long)ptr2.offset;
+              for(ulong j = 0; j < ptr2.count; ++j) {
+                directiveChild[i][j] = reader.Read<OWRecord>();
+              }
+            }
           }
         }
       }

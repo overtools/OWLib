@@ -151,7 +151,7 @@ namespace OverTool.ExtractLogic {
       }
     }
 
-    private static void FindReplacements(ulong key, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
+    private static void FindReplacements(ulong key, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HeroMaster master, SkinItem skin) {
       if(!map.ContainsKey(key)) {
         return;
       }
@@ -175,24 +175,24 @@ namespace OverTool.ExtractLogic {
           }
           tmp[over.Replace[i]] = over.Target[i];
         }
-        STUD overstud = new STUD(Util.OpenFile(map[over.Header.master.key], handler));
-        TextureOverrideMaster overmaster = (TextureOverrideMaster)overstud.Instances[0];
         foreach(OWRecord rec in over.SubDefinitions) {
-          FindReplacements(rec.key, tmp, parsed, map, handler);
+          FindReplacements(rec.key, tmp, parsed, map, handler, null, null);
         }
-        if(overmaster.Header.offsetInfo > 0) {
-          for(int i = 0; i < overmaster.Replace.Length; ++i) {
-            if(!map.ContainsKey(overmaster.Target[i])) {
-              continue;
+        if(master != null && master.Directives != null) {
+          for(int i = 0; i < master.Directives.Length; ++i) {
+            HeroMaster.HeroDirective directive = master.Directives[i];
+            OWRecord[] directiveChildren = master.DirectiveChild[i];
+
+            if(directive.textureReplacement.key == key) {
+              FindReplacements(directive.master.key, tmp, parsed, map, handler, null, null);
+              foreach(OWRecord rec in directiveChildren) {
+                FindReplacements(rec.key, tmp, parsed, map, handler, null, null);
+              }
             }
-            if(tmp.ContainsKey(overmaster.Replace[i])) {
-              continue;
-            }
-            tmp[over.Replace[i]] = overmaster.Target[i];
           }
         }
         foreach(KeyValuePair<ulong, ulong> kv in tmp) {
-          if(overmaster.Header.modelOverride.key == 0) {
+          if(skin != null && skin.Header.rarity != InventoryRarity.Legendary) {
             ushort idx = (ushort)APM.keyToTypeID(kv.Value);
             if(idx != 0x0B3 && idx != 0x008 && idx != 0x004) {
               continue;
@@ -224,7 +224,7 @@ namespace OverTool.ExtractLogic {
       Dictionary<ulong, List<ImageLayer>> layers = new Dictionary<ulong, List<ImageLayer>>();
       Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
       if(itemName.ToLowerInvariant() != "classic") {
-        FindReplacements(skin.Data.skin.key, replace, parsed, map, handler);
+        FindReplacements(skin.Data.skin.key, replace, parsed, map, handler, master, skin);
       }
       ulong bindingKey = master.Header.binding.key;
       if(replace.ContainsKey(bindingKey)) {
