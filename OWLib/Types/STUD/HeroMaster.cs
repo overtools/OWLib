@@ -91,53 +91,65 @@ namespace OWLib.Types.STUD {
     public void Read(Stream input) {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<HeroMasterHeader>();
-        
-        input.Position = (long)header.recordsOffset;
-        STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
-        r075Records = new OWRecord[ptr.count];
-        input.Position = (long)ptr.offset;
-        for(ulong i = 0; i < ptr.count; ++i) {
-          r075Records[i] = reader.Read<OWRecord>();
+
+        if((long)header.recordsOffset > 0) {
+          input.Position = (long)header.recordsOffset;
+          STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
+          r075Records = new OWRecord[ptr.count];
+          input.Position = (long)ptr.offset;
+          for(ulong i = 0; i < ptr.count; ++i) {
+            r075Records[i] = reader.Read<OWRecord>();
+          }
         }
 
-        input.Position = (long)header.virtualOffset;
-        ptr = reader.Read<STUDArrayInfo>();
-        virtualRecords = new OWRecord[ptr.count];
-        input.Position = (long)ptr.offset;
-        for(ulong i = 0; i < ptr.count; ++i) {
-          virtualRecords[i] = reader.Read<OWRecord>();
+        if((long)header.virtualOffset > 0) {
+          input.Position = (long)header.virtualOffset;
+          STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
+          virtualRecords = new OWRecord[ptr.count];
+          input.Position = (long)ptr.offset;
+          for(ulong i = 0; i < ptr.count; ++i) {
+            virtualRecords[i] = reader.Read<OWRecord>();
+          }
         }
 
-        input.Position = (long)header.bindsOffset;
-        ptr = reader.Read<STUDArrayInfo>();
-        r09ERecords = new OWRecord[ptr.count];
-        input.Position = (long)ptr.offset;
-        for(ulong i = 0; i < ptr.count; ++i) {
-          r09ERecords[i] = reader.Read<OWRecord>();
+        if((long)header.bindsOffset > 0) {
+          input.Position = (long)header.bindsOffset;
+          STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
+          r09ERecords = new OWRecord[ptr.count];
+          input.Position = (long)ptr.offset;
+          for(ulong i = 0; i < ptr.count; ++i) {
+            r09ERecords[i] = reader.Read<OWRecord>();
+          }
         }
 
-        input.Position = (long)header.child1Offset;
-        ptr = reader.Read<STUDArrayInfo>();
-        child1 = new HeroChild1[ptr.count];
-        input.Position = (long)ptr.offset;
-        for(ulong i = 0; i < ptr.count; ++i) {
-          child1[i] = reader.Read<HeroChild1>();
+        if((long)header.child1Offset > 0) {
+          input.Position = (long)header.child1Offset;
+          STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
+          child1 = new HeroChild1[ptr.count];
+          input.Position = (long)ptr.offset;
+          for(ulong i = 0; i < ptr.count; ++i) {
+            child1[i] = reader.Read<HeroChild1>();
+          }
         }
 
-        input.Position = (long)header.child2Offset;
-        ptr = reader.Read<STUDArrayInfo>();
-        child2 = new HeroChild2[ptr.count];
-        input.Position = (long)ptr.offset;
-        for(ulong i = 0; i < ptr.count; ++i) {
-          child2[i] = reader.Read<HeroChild2>();
+        if((long)header.child2Offset > 0) {
+          input.Position = (long)header.child2Offset;
+          STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
+          child2 = new HeroChild2[ptr.count];
+          input.Position = (long)ptr.offset;
+          for(ulong i = 0; i < ptr.count; ++i) {
+            child2[i] = reader.Read<HeroChild2>();
+          }
         }
 
-        input.Position = (long)header.child3Offset;
-        ptr = reader.Read<STUDArrayInfo>();
-        child3 = new HeroChild2[ptr.count];
-        input.Position = (long)ptr.offset;
-        for(ulong i = 0; i < ptr.count; ++i) {
-          child3[i] = reader.Read<HeroChild2>();
+        if((long)header.child3Offset > 0) {
+          input.Position = (long)header.child3Offset;
+          STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
+          child3 = new HeroChild2[ptr.count];
+          input.Position = (long)ptr.offset;
+          for(ulong i = 0; i < ptr.count; ++i) {
+            child3[i] = reader.Read<HeroChild2>();
+          }
         }
       }
     }

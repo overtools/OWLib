@@ -27,6 +27,10 @@ namespace OWLib {
         this.manager = manager;
       }
 
+      if(input == null) {
+        return;
+      }
+
       using(BinaryReader reader = new BinaryReader(input, Encoding.Default, leaveOpen)) {
         header = reader.Read<STUDHeader>();
         if(header.magic != 0x53545544) {

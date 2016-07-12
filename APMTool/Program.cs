@@ -199,7 +199,7 @@ namespace APMTool {
               }
               bool check = check1 && check2 && check3 && check4 && check5;
               if(check) {
-                Console.Out.WriteLine("Found {0:X12}.{1:X3} in package i{2} / p{3:X} in APM {4}", rindex, rtype, package.indexContentKey.ToHexString().ToUpperInvariant(), package.packageKey, apm.Name);
+                Console.Out.WriteLine("Found {0:X12}.{1:X3} in package p{2:X} in APM {3}", rindex, rtype, package.packageKey, apm.Name);
               }
             } else if(flag[0] == 'l') {
               Console.Out.WriteLine("\t{0:X12}.{1:X3} ({2} bytes) - {3:X}", rindex, rtype, record.Size, record.Key);
