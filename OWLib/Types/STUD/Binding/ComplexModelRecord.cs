@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.Binding {
@@ -14,7 +10,7 @@ namespace OWLib.Types.STUD.Binding {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct ComplexModel {
       public STUDInstanceInfo instance;
-      public OWRecord f021;
+      public OWRecord animationList;
       public OWRecord funk1;
       public OWRecord model;
       public OWRecord material;

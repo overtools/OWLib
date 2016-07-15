@@ -78,10 +78,14 @@
     <Compile Include="Types\Map\Map10.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
+    <Compile Include="Types\STUD\AnimationList.cs" />
+    <Compile Include="Types\STUD\Binding\PoseList.cs" />
+    <Compile Include="Types\STUD\Binding\AnimationCoreference.cs" />
     <Compile Include="Types\STUD\Binding\ProjectileModelRecord.cs" />
     <Compile Include="Types\STUD\Binding\ChildParameterRecord.cs" />
     <Compile Include="Types\STUD\Binding\ComplexModelRecord.cs" />
     <Compile Include="Types\STUD\EncryptionKey.cs" />
+    <Compile Include="Types\STUD\Pose.cs" />
     <Compile Include="Types\STUD\MapMaster.cs" />
     <Compile Include="Types\STUD\SoundBinding.cs" />
     <Compile Include="Types\STUD\SoundMaster.cs" />
