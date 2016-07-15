@@ -19,7 +19,7 @@ namespace OWLib.ModelWriter {
       using(StreamWriter writer = new StreamWriter(output)) {
         writer.WriteLine(model.BoneData.Length);
         for(int i = 0; i < model.BoneData.Length; ++i) {
-          writer.WriteLine("bone{0:X}", model.BoneIDs[i]);
+          writer.WriteLine("bone_{0:X4}", model.BoneIDs[i]);
           writer.WriteLine(model.BoneHierarchy[i]);
           OpenTK.Vector3 bonePos = model.BoneData[i].ExtractTranslation();
           writer.WriteLine("{0} {1} {2}", bonePos.X.ToString("0.000000", numberFormatInfo), bonePos.Y.ToString("0.000000", numberFormatInfo), bonePos.Z.ToString("0.000000", numberFormatInfo));

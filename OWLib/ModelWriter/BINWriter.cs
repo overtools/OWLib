@@ -117,7 +117,7 @@ namespace OWLib.ModelWriter {
         writer.Write((uint)model.BoneData.Length);
         
         for(int i = 0; i < model.BoneData.Length; ++i) {
-          WriteString(writer, string.Format("bone{0:X}", model.BoneIDs[i]));
+          WriteString(writer, string.Format("bone_{0:X4}", model.BoneIDs[i]));
           short parent = model.BoneHierarchy[i];
           if(parent == -1) {
             parent = (short)i;
