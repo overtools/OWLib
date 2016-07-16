@@ -65,6 +65,75 @@ namespace OverTool.ExtractLogic {
       }
     }
 
+    private static void FindAnimationsSoft(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, ulong parent = 0) {
+      if(!map.ContainsKey(key)) {
+        return;
+      }
+      if(APM.keyToTypeID(key) != 0x006) {
+        return;
+      }
+      if(!parsed.Add(key)) {
+        return;
+      }
+
+      using(Stream anim = Util.OpenFile(map[key], handler)) {
+        using(BinaryReader reader = new BinaryReader(anim)) {
+          anim.Position = 0x18L;
+          ulong infokey = reader.ReadUInt64();
+          if(infokey == 0) {
+            return;
+          }
+          if(replace.ContainsKey(infokey)) {
+            infokey = replace[infokey];
+          }
+          if(!map.ContainsKey(infokey)) {
+            return;
+          }
+          if(APM.keyToTypeID(infokey) != 0x08F) {
+            return;
+          }
+          if(!parsed.Add(infokey)) {
+            return;
+          }
+          using(Stream info = Util.OpenFile(map[infokey], handler)) {
+            using(BinaryReader inforeader = new BinaryReader(info)) {
+              info.Position = 0xB0;
+              ulong offset = inforeader.ReadUInt64();
+              info.Position = 0x15C;
+              ushort count = inforeader.ReadUInt16();
+              if(count == 0 || offset == 0) {
+                return;
+              }
+              info.Position = (long)offset;
+              for(int i = 0; i < count; ++i) {
+                long off = info.Position;
+                long nxt = info.Position + 0xD0L;
+                info.Position = off + 0xB0;
+                ulong animkey = inforeader.ReadUInt64();
+                if(animkey == 0) {
+                  continue;
+                }
+                if(replace.ContainsKey(animkey)) {
+                  animkey = replace[animkey];
+                }
+                if(!map.ContainsKey(animkey)) {
+                  continue;
+                }
+                if(APM.keyToTypeID(animkey) != 0x006) {
+                  continue;
+                }
+                if(animList.ContainsKey(animkey) && animList[animkey] > 0) {
+                  continue;
+                }
+                animList[animkey] = parent;
+                FindAnimationsSoft(animkey, animList, replace, parsed, map, handler, parent);
+              }
+            }
+          }
+        }
+      }
+    }
+
     private static void FindAnimations(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, ulong parent = 0) {
       if(key == 0) {
         return;
@@ -101,6 +170,7 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             animList[bindingKey] = parent;
+            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, parent);
           }
         }
         if(inst.Name == record.Manager.GetName(typeof(Pose))) {
@@ -117,6 +187,7 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             animList[bindingKey] = parent;
+            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, parent);
           }
         }
         if(inst.Name == record.Manager.GetName(typeof(AnimationListInfo))) {
@@ -141,6 +212,7 @@ namespace OverTool.ExtractLogic {
             ulong keyid = APM.keyToTypeID(bindingKey);
             if(keyid == 0x6) {
               animList[bindingKey] = parent;
+              FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, parent);
             } else if(keyid == 0x20 || keyid == 0x21) {
               FindAnimations(bindingKey, animList, replace, parsed, map, handler, parent);
             }
@@ -248,6 +320,7 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             animList[bindingKey] = 0;
+            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, 0);
           }
         }
         if(inst.Name == record.Manager.GetName(typeof(PoseList))) {
@@ -268,6 +341,7 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             animList[bindingKey] = 0;
+            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, 0);
           }
         }
       }
