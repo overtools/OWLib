@@ -97,7 +97,7 @@ namespace OverTool.ExtractLogic {
             if(!map.ContainsKey(bindingKey)) {
               continue;
             }
-            if(animList.ContainsKey(bindingKey)) {
+            if(animList.ContainsKey(bindingKey) && animList[bindingKey] > 0) {
               continue;
             }
             animList[bindingKey] = parent;
@@ -113,10 +113,37 @@ namespace OverTool.ExtractLogic {
             if(!map.ContainsKey(bindingKey)) {
               continue;
             }
-            if(animList.ContainsKey(bindingKey)) {
+            if(animList.ContainsKey(bindingKey) && animList[bindingKey] > 0) {
               continue;
             }
             animList[bindingKey] = parent;
+          }
+        }
+        if(inst.Name == record.Manager.GetName(typeof(AnimationListInfo))) {
+          AnimationListInfo r = (AnimationListInfo)inst;
+          foreach(AnimationListInfo.AnimationListEntry entry in r.Entries) {
+            FindAnimations(entry.secondary.key, animList, replace, parsed, map, handler, parent);
+          }
+        }
+        if(inst.Name == record.Manager.GetName(typeof(AnimationListReference))) {
+          AnimationListReference r = (AnimationListReference)inst;
+          foreach(OWRecord animation in new OWRecord[5] { r.Header.unkD, r.Header.animation, r.Header.unk12, r.Header.unk15, r.Header.unk18}) {
+            ulong bindingKey = animation.key;
+            if(replace.ContainsKey(bindingKey)) {
+              bindingKey = replace[bindingKey];
+            }
+            if(!map.ContainsKey(bindingKey)) {
+              continue;
+            }
+            if(animList.ContainsKey(bindingKey) && animList[bindingKey] > 0) {
+              continue;
+            }
+            ulong keyid = APM.keyToTypeID(bindingKey);
+            if(keyid == 0x6) {
+              animList[bindingKey] = parent;
+            } else if(keyid == 0x20 || keyid == 0x21) {
+              FindAnimations(bindingKey, animList, replace, parsed, map, handler, parent);
+            }
           }
         }
       }
@@ -217,7 +244,7 @@ namespace OverTool.ExtractLogic {
             if(!map.ContainsKey(bindingKey)) {
               continue;
             }
-            if(animList.ContainsKey(bindingKey)) {
+            if(animList.ContainsKey(bindingKey) && animList[bindingKey] > 0) {
               continue;
             }
             animList[bindingKey] = 0;
@@ -237,7 +264,7 @@ namespace OverTool.ExtractLogic {
             if(!map.ContainsKey(bindingKey)) {
               continue;
             }
-            if(animList.ContainsKey(bindingKey)) {
+            if(animList.ContainsKey(bindingKey) && animList[bindingKey] > 0) {
               continue;
             }
             animList[bindingKey] = 0;
