@@ -10,13 +10,17 @@ namespace OWLib.Types.STUD {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public unsafe struct PoseHeader {
       public STUDInstanceInfo instance;
+      public ulong zero;
       public OWRecord animation1;
       public fixed float unk1[18];
+      public ulong unk2;
       public OWRecord animation2;
-      public fixed float unk2[18];
-      public OWRecord animation3;
       public fixed float unk3[18];
-      public fixed float unk4[4];
+      public ulong unk4;
+      public OWRecord animation3;
+      public fixed float unk5[18];
+      public OWRecord unk6;
+      public fixed float unk7[2];
     }
 
     private PoseHeader header;

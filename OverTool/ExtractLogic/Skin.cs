@@ -103,10 +103,10 @@ namespace OverTool.ExtractLogic {
             animList[bindingKey] = parent;
           }
         }
-        if(inst.Name == record.Manager.GetName(typeof(AnimationList))) {
-          AnimationList r = (AnimationList)inst;
-          foreach(AnimationList.AnimationListEntry entry in r.Entries) {
-            ulong bindingKey = entry.animation.key;
+        if(inst.Name == record.Manager.GetName(typeof(Pose))) {
+          Pose r = (Pose)inst;
+          foreach(OWRecord animation in new OWRecord[3] { r.Header.animation1, r.Header.animation2, r.Header.animation3 }) {
+            ulong bindingKey = animation.key;
             if(replace.ContainsKey(bindingKey)) {
               bindingKey = replace[bindingKey];
             }
@@ -223,10 +223,14 @@ namespace OverTool.ExtractLogic {
             animList[bindingKey] = 0;
           }
         }
-        if(inst.Name == record.Manager.GetName(typeof(Pose))) {
-          Pose r = (Pose)inst;
-          foreach(OWRecord animation in new OWRecord[3] { r.Header.animation1, r.Header.animation2, r.Header.animation3 }) {
-            ulong bindingKey = animation.key;
+        if(inst.Name == record.Manager.GetName(typeof(PoseList))) {
+          PoseList r = (PoseList)inst;
+          foreach(PoseList.PoseListEntry entry in r.Entries) {
+            FindAnimations(entry.animation.key, animList, replace, parsed, map, handler, 0);
+          }
+
+          foreach(PoseList.PoseListAnimation entry in r.Animations) {
+            ulong bindingKey = entry.animation.key;
             if(replace.ContainsKey(bindingKey)) {
               bindingKey = replace[bindingKey];
             }
@@ -409,7 +413,7 @@ namespace OverTool.ExtractLogic {
         }
         string outpath;
         if(furtherOpts.Count > 0 && furtherOpts[0] == '+') { // raw
-          outpath = string.Format("{0}{1:X12}{2}", path, APM.keyToIndexID(key), ".00C");
+          outpath = string.Format("{0}{1:X12}.{2:X3}", path, APM.keyToIndexID(key), APM.keyToTypeID(key));
           using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
             Util.OpenFile(map[key], handler).CopyTo(outp);
             Console.Out.WriteLine("Wrote model {0}", outpath);
@@ -432,7 +436,7 @@ namespace OverTool.ExtractLogic {
       foreach(KeyValuePair<ulong, ulong> kv in animList) {
         ulong parent = kv.Value;
         ulong key = kv.Key;
-        string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}{4}", path, Path.DirectorySeparatorChar, APM.keyToIndex(parent), APM.keyToIndexID(key), ".006");
+        string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, APM.keyToIndex(parent), APM.keyToIndexID(key), APM.keyToTypeID(key));
         if(!Directory.Exists(Path.GetDirectoryName(outpath))) {
           Directory.CreateDirectory(Path.GetDirectoryName(outpath));
         }
