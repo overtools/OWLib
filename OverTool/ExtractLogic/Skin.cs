@@ -126,7 +126,7 @@ namespace OverTool.ExtractLogic {
                   continue;
                 }
                 animList[animkey] = parent;
-                FindAnimationsSoft(animkey, animList, replace, parsed, map, handler, parent);
+                FindAnimationsSoft(animkey, animList, replace, parsed, map, handler, animkey);
               }
             }
           }
@@ -170,7 +170,7 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             animList[bindingKey] = parent;
-            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, parent);
+            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, bindingKey);
           }
         }
         if(inst.Name == record.Manager.GetName(typeof(Pose))) {
@@ -187,7 +187,7 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             animList[bindingKey] = parent;
-            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, parent);
+            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, bindingKey);
           }
         }
         if(inst.Name == record.Manager.GetName(typeof(AnimationListInfo))) {
@@ -212,7 +212,7 @@ namespace OverTool.ExtractLogic {
             ulong keyid = APM.keyToTypeID(bindingKey);
             if(keyid == 0x6) {
               animList[bindingKey] = parent;
-              FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, parent);
+              FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, bindingKey);
             } else if(keyid == 0x20 || keyid == 0x21) {
               FindAnimations(bindingKey, animList, replace, parsed, map, handler, parent);
             }
@@ -320,7 +320,7 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             animList[bindingKey] = 0;
-            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, 0);
+            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, bindingKey);
           }
         }
         if(inst.Name == record.Manager.GetName(typeof(PoseList))) {
@@ -341,7 +341,7 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             animList[bindingKey] = 0;
-            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, 0);
+            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, bindingKey);
           }
         }
       }
