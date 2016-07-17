@@ -525,8 +525,8 @@ namespace OverTool.ExtractLogic {
         string mdlName = string.Format("{0} Skin {1}_{2:X}", heroName, itemName, APM.keyToIndex(key));
 
         outpath = string.Format("{0}{1:X12}{2}", path, APM.keyToIndexID(key), writer.Format);
-        if(!Directory.Exists(Path.GetDirectoryName(output))) {
-          Directory.CreateDirectory(Path.GetDirectoryName(output));
+        if(!Directory.Exists(Path.GetDirectoryName(outpath))) {
+          Directory.CreateDirectory(Path.GetDirectoryName(outpath));
         }
         using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
           writer.Write(mdl, outp, lods, layers, new object[3] { true, Path.GetFileName(mtlPath), mdlName });
