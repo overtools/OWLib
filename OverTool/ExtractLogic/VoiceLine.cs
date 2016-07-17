@@ -97,6 +97,9 @@ namespace OverTool.ExtractLogic {
           continue;
         }
         using(Stream studStream = Util.OpenFile(map[pair.sound], handler)) {
+          if(studStream == null) {
+            continue;
+          }
           STUD stud = new STUD(studStream, true, STUDManager.Instance, false, true);
           foreach(ISTUDInstance instance in stud.Instances) {
             if(instance == null) {
@@ -123,6 +126,9 @@ namespace OverTool.ExtractLogic {
       }
 
       using(Stream studStream = Util.OpenFile(map[key], handler)) {
+        if(studStream == null) {
+          return;
+        }
         STUD stud = new STUD(studStream, true, STUDManager.Instance, false, true);
         foreach(ISTUDInstance instance in stud.Instances) {
           if(instance == null) {
