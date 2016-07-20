@@ -149,7 +149,12 @@ namespace PackageTool {
 
           Stream bundleStream = null;
           if(allowBundle) {
-            bundleStream = handler.OpenFile(bundleEncoding.Key);
+            try {
+              bundleStream = handler.OpenFile(bundleEncoding.Key);
+            } catch {
+              Console.Error.WriteLine("Cannot open bundle {0:X16} -- encryption", index.bundleKey);
+              continue;
+            }
           }
           foreach(PackageIndexRecord record in records) {
             if(dumpAll && !dumped.Add(record.Key)) {
@@ -180,8 +185,12 @@ namespace PackageTool {
                     continue;
                   }
 
-                  using(Stream recordStream = handler.OpenFile(recordEncoding.Key)) {
-                    CopyBytes(recordStream, outputStream, record.Size);
+                  try {
+                    using(Stream recordStream = handler.OpenFile(recordEncoding.Key)) {
+                      CopyBytes(recordStream, outputStream, record.Size);
+                    }
+                  } catch {
+                    Console.Error.WriteLine("Cannot open file {0} -- encryption", ofn);
                   }
                 }
               }

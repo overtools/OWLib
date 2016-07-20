@@ -34,7 +34,7 @@ namespace OverTool {
         CopyBytes(fstream, ms, record.record.Size);
         ms.Position = 0;
       } catch (Exception ex) {
-        Console.Out.WriteLine("Error {0}", ex.Message);
+        Console.Out.WriteLine("Error {0} {1:X16}", ex.Message, record.package.packageKey);
         return null;
       }
       return ms;
