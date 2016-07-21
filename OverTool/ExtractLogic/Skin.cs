@@ -77,6 +77,9 @@ namespace OverTool.ExtractLogic {
       }
 
       using(Stream anim = Util.OpenFile(map[key], handler)) {
+        if(anim == null) {
+          return;
+        }
         using(BinaryReader reader = new BinaryReader(anim)) {
           anim.Position = 0x18L;
           ulong infokey = reader.ReadUInt64();
@@ -96,6 +99,9 @@ namespace OverTool.ExtractLogic {
             return;
           }
           using(Stream info = Util.OpenFile(map[infokey], handler)) {
+            if(info == null) {
+              return;
+            }
             using(BinaryReader inforeader = new BinaryReader(info)) {
               info.Position = 0xB0;
               ulong offset = inforeader.ReadUInt64();

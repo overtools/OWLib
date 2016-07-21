@@ -16,7 +16,7 @@ namespace OverTool {
       buffer = null;
     }
 
-    public static Stream OpenFile(Record record, CASCHandler handler) {
+    public static Stream OpenFile(Record record, CASCHandler handler, bool recur = true) {
       MemoryStream ms = new MemoryStream(record.record.Size);
 
       long offset = 0;
@@ -34,7 +34,35 @@ namespace OverTool {
         CopyBytes(fstream, ms, record.record.Size);
         ms.Position = 0;
       } catch (Exception ex) {
-        Console.Out.WriteLine("Error {0} {1:X16}", ex.Message, record.package.packageKey);
+        if(recur) {
+          OwRootHandler ow = (OwRootHandler)handler.Root;
+          foreach(APMFile apm in ow.APMFiles) {
+            if(!apm.Name.ToLowerInvariant().Contains("rdev")) {
+              continue; // skip
+            }
+            for(int i = 0; i < apm.Packages.Length; ++i) {
+              APMPackage package = apm.Packages[i];
+              PackageIndex index = apm.Indexes[i];
+              PackageIndexRecord[] records = apm.Records[i];
+              for(long j = 0; j < records.LongLength; ++j) {
+                PackageIndexRecord recordindex = records[j];
+                if(recordindex.Key != record.record.Key) {
+                  continue;
+                }
+
+                Stream strm = OpenFile(new Record {
+                  package = package,
+                  index = index,
+                  record = recordindex,
+                }, handler, false);
+                if(strm != null) {
+                  return strm;
+                }
+              }
+            }
+          }
+          Console.Out.WriteLine("Error {0} {1:X16}", ex.Message, record.package.packageKey);
+        }
         return null;
       }
       return ms;
