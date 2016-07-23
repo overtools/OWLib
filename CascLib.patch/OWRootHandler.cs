@@ -79,6 +79,9 @@ namespace CASCExplorer
         public override int Count => _rootData.Count;
         public IReadOnlyList<APMFile> APMFiles => apmFiles;
 
+        public string[] APMList;
+        public static string LanguageScan = "enUS";
+
         public OwRootHandler(BinaryReader stream, BackgroundWorkerEx worker, CASCHandler casc)
         {
             worker?.ReportProgress(0, "Loading \"root\"...");
@@ -87,14 +90,19 @@ namespace CASCExplorer
 
             string[] array = str.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
+            List<string> APMNames = new List<string>();
             for (int i = 1; i < array.Length; i++)
             {
                 string[] filedata = array[i].Split('|');
 
                 string name = filedata[4];
 
-                if (Path.GetExtension(name) == ".apm" && name.Contains("LenUS") && name.Contains("RDEV"))
+                if (Path.GetExtension(name) == ".apm" && name.Contains("RDEV"))
                 {
+                    APMNames.Add(Path.GetFileNameWithoutExtension(name));
+                    if(!name.Contains("L"+LanguageScan)) {
+                      continue;
+                    }
                     // add apm file for dev purposes
                     ulong apmNameHash = Hasher.ComputeHash(name);
                     MD5Hash apmMD5 = filedata[0].ToByteArray().ToMD5();
@@ -118,6 +126,8 @@ namespace CASCExplorer
 
                 worker?.ReportProgress((int)(i / (array.Length / 100f)));
             }
+            APMList = APMNames.ToArray();
+            APMNames.Clear();
         }
 
         static ulong keyToTypeID(ulong key)

@@ -26,7 +26,7 @@ namespace OverTool {
       Dictionary<string, bool> heroWildcard = new Dictionary<string, bool>();
       Dictionary<string, Dictionary<string, List<ulong>>> heroIgnore = new Dictionary<string, Dictionary<string, List<ulong>>>();
       bool heroAllWildcard = false;
-      if(args.Length > 2) {
+      if(args.Length > 2 && args[2] != "*") {
         foreach(string pair in args[2].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries)) {
           List<string> data = new List<string>(pair.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries));
           string name = data[0];

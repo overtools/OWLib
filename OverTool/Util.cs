@@ -78,6 +78,10 @@ namespace OverTool {
       return string.Join("_", name.Split(invalids));
     }
 
+    public static string Strip(string name) {
+      return name.TrimEnd(new char[2] { '_', ' ' });
+    }
+
     public static string GetString(ulong key, Dictionary<ulong, Record> map, CASCHandler handler) {
       if(!map.ContainsKey(key)) {
         return null;

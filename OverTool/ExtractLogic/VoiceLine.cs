@@ -28,7 +28,7 @@ namespace OverTool.ExtractLogic {
 
       VoiceLineItem item = (VoiceLineItem)itemStud.Instances[0];
 
-      string path = string.Format("{0}{1}{2}{1}{3}{1}{4}", output, Path.DirectorySeparatorChar, Util.SanitizePath(heroName), Util.SanitizePath(item.Name), Util.SanitizePath(itemName));
+      string path = string.Format("{0}{1}{2}{1}{3}{1}{4}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), Util.SanitizePath(item.Name), Util.SanitizePath(itemName));
 
       uint suffix = 0;
       HashSet<ulong> done = new HashSet<ulong>();

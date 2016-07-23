@@ -420,10 +420,10 @@ namespace OverTool.ExtractLogic {
     }
 
     public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, List<ulong> ignore, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, List<char> furtherOpts) {
-      string path = string.Format("{0}{1}{2}{1}{3}{1}{4}{1}", output, Path.DirectorySeparatorChar, Util.SanitizePath(heroName), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName));
+      string path = string.Format("{0}{1}{2}{1}{3}{1}{4}{1}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName));
 
       SkinItem skin = (SkinItem)itemStud.Instances[0];
-      
+
       HashSet<ulong> models = new HashSet<ulong>();
       Dictionary<ulong, ulong> animList = new Dictionary<ulong, ulong>();
       HashSet<ulong> parsed = new HashSet<ulong>();
@@ -457,15 +457,17 @@ namespace OverTool.ExtractLogic {
         bindingKey = replace[bindingKey];
       }
       FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
-      
-      foreach(KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
-        ulong materialId = kv.Key;
-        List<ImageLayer> sublayers = kv.Value;
-        foreach(ImageLayer layer in sublayers) {
-          if(!parsed.Add(layer.key)) {
-            continue;
+
+      if(furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
+        foreach(KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
+          ulong materialId = kv.Key;
+          List<ImageLayer> sublayers = kv.Value;
+          foreach(ImageLayer layer in sublayers) {
+            if(!parsed.Add(layer.key)) {
+              continue;
+            }
+            SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", path, APM.keyToIndexID(layer.key)));
           }
-          SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", path, APM.keyToIndexID(layer.key)));
         }
       }
 
@@ -495,64 +497,75 @@ namespace OverTool.ExtractLogic {
         }
       }
 
+
       if(writer == null) {
         writer = new OWMDLWriter();
       }
 
-      if(writer.GetType() == typeof(OWMDLWriter) || furtherOpts[0] == '+') {
-        IModelWriter tmp = new OWMATWriter();
-        mtlPath = string.Format("{0}material{1}", path, tmp.Format);
-        using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
-          tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) });
-          Console.Out.WriteLine("Wrote materials {0}", mtlPath);
-        }
-      } else if(writer.GetType() == typeof(OBJWriter)) {
-        writer = new OBJWriter();
-        IModelWriter tmp = new MTLWriter();
-        mtlPath = string.Format("{0}material{1}", path, tmp.Format);
-        using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
-          tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) });
-          Console.Out.WriteLine("Wrote materials {0}", mtlPath);
+      if(furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
+        if(writer.GetType() == typeof(OWMDLWriter) || furtherOpts[0] == '+') {
+          IModelWriter tmp = new OWMATWriter();
+          mtlPath = string.Format("{0}material{1}", path, tmp.Format);
+          using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
+            tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) });
+            Console.Out.WriteLine("Wrote materials {0}", mtlPath);
+          }
+        } else if(writer.GetType() == typeof(OBJWriter)) {
+          writer = new OBJWriter();
+          IModelWriter tmp = new MTLWriter();
+          mtlPath = string.Format("{0}material{1}", path, tmp.Format);
+          using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
+            tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) });
+            Console.Out.WriteLine("Wrote materials {0}", mtlPath);
+          }
         }
       }
 
-      List<byte> lods = new List<byte>(new byte[3] { 0, 1, 0xFF });
-      foreach(ulong key in models) {
-        if(!map.ContainsKey(key)) {
-          continue;
-        }
-        string outpath;
-        if(furtherOpts.Count > 0 && furtherOpts[0] == '+') { // raw
-          outpath = string.Format("{0}{1:X12}.{2:X3}", path, APM.keyToIndexID(key), APM.keyToTypeID(key));
+      if(furtherOpts.Count < 4 || furtherOpts[3] != 'M') {
+        List<byte> lods = new List<byte>(new byte[3] { 0, 1, 0xFF });
+        foreach(ulong key in models) {
+          if(!map.ContainsKey(key)) {
+            continue;
+          }
+          string outpath;
+          
+          if(!Directory.Exists(Path.GetDirectoryName(path))) {
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+          }
+          if(furtherOpts.Count > 0 && furtherOpts[0] == '+') { // raw
+            outpath = string.Format("{0}{1:X12}.{2:X3}", path, APM.keyToIndexID(key), APM.keyToTypeID(key));
+            using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+              Util.OpenFile(map[key], handler).CopyTo(outp);
+              Console.Out.WriteLine("Wrote model {0}", outpath);
+            }
+            continue;
+          }
+          Model mdl = new Model(Util.OpenFile(map[key], handler));
+          string mdlName = string.Format("{0} Skin {1}_{2:X}", heroName, itemName, APM.keyToIndex(key));
+
+          outpath = string.Format("{0}{1:X12}{2}", path, APM.keyToIndexID(key), writer.Format);
+          if(!Directory.Exists(Path.GetDirectoryName(outpath))) {
+            Directory.CreateDirectory(Path.GetDirectoryName(outpath));
+          }
           using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-            Util.OpenFile(map[key], handler).CopyTo(outp);
+            writer.Write(mdl, outp, lods, layers, new object[3] { true, Path.GetFileName(mtlPath), mdlName });
             Console.Out.WriteLine("Wrote model {0}", outpath);
           }
-          continue;
-        }
-        Model mdl = new Model(Util.OpenFile(map[key], handler));
-        string mdlName = string.Format("{0} Skin {1}_{2:X}", heroName, itemName, APM.keyToIndex(key));
-
-        outpath = string.Format("{0}{1:X12}{2}", path, APM.keyToIndexID(key), writer.Format);
-        if(!Directory.Exists(Path.GetDirectoryName(outpath))) {
-          Directory.CreateDirectory(Path.GetDirectoryName(outpath));
-        }
-        using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-          writer.Write(mdl, outp, lods, layers, new object[3] { true, Path.GetFileName(mtlPath), mdlName });
-          Console.Out.WriteLine("Wrote model {0}", outpath);
         }
       }
 
-      foreach(KeyValuePair<ulong, ulong> kv in animList) {
-        ulong parent = kv.Value;
-        ulong key = kv.Key;
-        string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, APM.keyToIndex(parent), APM.keyToIndexID(key), APM.keyToTypeID(key));
-        if(!Directory.Exists(Path.GetDirectoryName(outpath))) {
-          Directory.CreateDirectory(Path.GetDirectoryName(outpath));
-        }
-        using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-          Util.OpenFile(map[key], handler).CopyTo(outp);
-          Console.Out.WriteLine("Wrote animation {0}", outpath);
+      if(furtherOpts.Count < 3 || furtherOpts[2] != 'A') {
+        foreach(KeyValuePair<ulong, ulong> kv in animList) {
+          ulong parent = kv.Value;
+          ulong key = kv.Key;
+          string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, APM.keyToIndex(parent), APM.keyToIndexID(key), APM.keyToTypeID(key));
+          if(!Directory.Exists(Path.GetDirectoryName(outpath))) {
+            Directory.CreateDirectory(Path.GetDirectoryName(outpath));
+          }
+          using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+            Util.OpenFile(map[key], handler).CopyTo(outp);
+            Console.Out.WriteLine("Wrote animation {0}", outpath);
+          }
         }
       }
     }

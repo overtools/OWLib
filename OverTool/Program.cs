@@ -16,8 +16,9 @@ namespace OverTool {
 
   class Program {
     static void Main(string[] args) {
+      Console.OutputEncoding = Encoding.UTF8;
       if(args.Length < 2) {
-        Console.Out.WriteLine("Usage: OverTool.exe \"overwatch path\" mode [opts]");
+        Console.Out.WriteLine("Usage: OverTool.exe [-LLang] \"overwatch path\" mode [mode opts]");
         Console.Out.WriteLine("Modes:");
         Console.Out.WriteLine("\tt - List Cosmetics");
         Console.Out.WriteLine("\tx - Extract Cosmetics");
@@ -27,6 +28,12 @@ namespace OverTool {
         Console.Out.WriteLine("\ts - Dump Strings");
         Console.Out.WriteLine("\tZ - Dump Keys");
         return;
+      }
+
+      if(args[0][0] == '-' && args[0][1] == 'L') {
+        string lang = args[0].Substring(2);
+        OwRootHandler.LanguageScan = lang;
+        args = args.Skip(1).ToArray();
       }
 
       string root = args[0];

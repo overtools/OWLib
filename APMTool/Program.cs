@@ -114,6 +114,7 @@ namespace APMTool {
           }
         }
       } else if(flag[0] == 'a') {
+        OwRootHandler.LanguageScan = "NONE";
       } else if(flag[0] == 't') {
         query = new object[1] { new HashSet<ulong>() };
       } else {
@@ -129,12 +130,16 @@ namespace APMTool {
         return;
       }
 
+      if(flag[0] == 'a') {
+        foreach(string name in ow.APMList) {
+          Console.Out.WriteLine(name);
+        }
+        return;
+      }
+
       foreach(APMFile apm in ow.APMFiles) {
         string apmName = System.IO.Path.GetFileName(apm.Name);
         if(flag[0] == 'f' && query[4] != null && ((List<string>)query[4]).Count > 0 && !((List<string>)query[4]).Contains(apmName.ToLowerInvariant())) {
-          continue;
-        } else if(flag[0] == 'a') {
-          Console.Out.WriteLine(apmName);
           continue;
         }
 

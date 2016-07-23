@@ -16,12 +16,18 @@ namespace PackageTool {
 
     static void Main(string[] args) {
       if(args.Length < 3) {
-        Console.Out.WriteLine("Usage: PackageTool.exe \"overwatch_folder\" \"output_folder\" <keys...>");
+        Console.Out.WriteLine("Usage: PackageTool.exe [-LLang] \"overwatch_folder\" \"output_folder\" <keys...>");
         Console.Out.WriteLine("Keys must start with 'i' for content keys, 'p' for package keys, 'n' for package indexes, 't' for package indexes + indices");
         Console.Out.WriteLine("Keys must start with 'a' for specific APMs");
         Console.Out.WriteLine("If any key starts with Q it will dump all files.");
         Console.Out.WriteLine("If any key starts with D it will only output filenames to console, but not write files");
         return;
+      }
+      
+      if(args[0][0] == '-' && args[0][1] == 'L') {
+        string lang = args[0].Substring(2);
+        OwRootHandler.LanguageScan = lang;
+        args = args.Skip(1).ToArray();
       }
 
       string root = args[0];

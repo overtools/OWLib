@@ -9,7 +9,7 @@ using OWLib.Types.STUD.InventoryItem;
 namespace OverTool.ExtractLogic {
   class Icon {
     public static void Extract(STUD itemStud, string output, string heroName, string itemName, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, List<char> furtherOpts) {
-      string path = string.Format("{0}{1}{2}{1}{3}{1}{4}.dds", output, Path.DirectorySeparatorChar, Util.SanitizePath(heroName), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName));
+      string path = string.Format("{0}{1}{2}{1}{3}{1}{4}.dds", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName));
 
       IconItem item = (IconItem)itemStud.Instances[0];
       if(item == null) {
