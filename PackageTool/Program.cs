@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using CASCExplorer;
 using System.Reflection;
+using System.Linq;
 
 namespace PackageTool {
   class Program {
@@ -23,7 +24,7 @@ namespace PackageTool {
         Console.Out.WriteLine("If any key starts with D it will only output filenames to console, but not write files");
         return;
       }
-      
+
       if(args[0][0] == '-' && args[0][1] == 'L') {
         string lang = args[0].Substring(2);
         OwRootHandler.LanguageScan = lang;

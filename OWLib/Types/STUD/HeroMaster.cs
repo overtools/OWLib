@@ -30,10 +30,12 @@ namespace OWLib.Types.STUD {
       public OWRecord texture4;
       public ulong child3Offset;
       public ulong zero7;
-      public ulong bindsOffset;
       public ulong zero8;
       public ulong zero9;
+      public ulong bindsOffset;
       public ulong zeroA;
+      public ulong zeroA2;
+      public ulong zeroA3;
       public OWRecord itemMaster;
       public fixed ushort zeroB[32];
       public ulong directiveOffset;
