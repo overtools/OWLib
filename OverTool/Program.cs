@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CASCExplorer;
 using OWLib;
+using OWLib.Types.STUD;
 
 namespace OverTool {
   public struct Record {
@@ -92,6 +94,29 @@ namespace OverTool {
           }
         }
       }
+      
+      Console.Out.WriteLine("Adding Encryption Keys...");
+
+      foreach(ulong key in track[0x90]) {
+        if(!map.ContainsKey(key)) {
+          continue;
+        }
+        using(Stream stream = Util.OpenFile(map[key], handler)) {
+          if(stream == null) {
+            continue;
+          }
+          STUD stud = new STUD(stream);
+          if(stud.Instances[0].Name != stud.Manager.GetName(typeof(EncryptionKey))) {
+            continue;
+          }
+          EncryptionKey ek = (EncryptionKey)stud.Instances[0];
+          if(!KeyService.keys.ContainsKey(ek.KeyNameLong)) {
+            KeyService.keys.Add(ek.KeyNameLong, ek.KeyValueText.ToByteArray());
+            Console.Out.WriteLine("Added Encryption Key {0}", ek.KeyNameText);
+          }
+        }
+      }
+      Console.Out.WriteLine("Tooling...");
       Action<Dictionary<ushort, List<ulong>>, Dictionary<ulong, Record>, CASCHandler, string[]> optfn = null;
       if(opt == 't') {
         optfn = ListInventory.Parse;
@@ -110,6 +135,9 @@ namespace OverTool {
       }
 
       optfn(track, map, handler, args.Skip(2).ToArray());
+      if(System.Diagnostics.Debugger.IsAttached) {
+        System.Diagnostics.Debugger.Break();
+      }
     }
   }
 }

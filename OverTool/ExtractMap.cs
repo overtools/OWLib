@@ -35,6 +35,9 @@ namespace OverTool {
           continue;
         }
         STUD masterStud = new STUD(Util.OpenFile(map[masterKey], handler));
+        if(masterStud.Instances == null) {
+          continue;
+        }
         MapMaster master = (MapMaster)masterStud.Instances[0];
         if(master == null) {
           continue;

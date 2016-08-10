@@ -52,6 +52,11 @@ namespace OWLib.Types.STUD {
         return x.ToUpperInvariant();
       }
     }
+    public ulong KeyNameLong {
+      get {
+        return ulong.Parse(KeyNameText, System.Globalization.NumberStyles.HexNumber);
+      }
+    }
     public byte[] KeyValue => keyValue;
     public string KeyValueText {
       get {

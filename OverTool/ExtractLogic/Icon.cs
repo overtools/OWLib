@@ -11,6 +11,9 @@ namespace OverTool.ExtractLogic {
     public static void Extract(STUD itemStud, string output, string heroName, string itemName, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, List<char> furtherOpts) {
       string path = string.Format("{0}{1}{2}{1}{3}{1}{4}.dds", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName));
 
+      if(itemStud.Instances == null) {
+        return;
+      }
       IconItem item = (IconItem)itemStud.Instances[0];
       if(item == null) {
         return;
@@ -19,6 +22,9 @@ namespace OverTool.ExtractLogic {
         return;
       }
       STUD decalStud = new STUD(Util.OpenFile(map[item.Data.decal.key], handler));
+      if(decalStud.Instances == null) {
+        return;
+      }
       Decal decal = (Decal)decalStud.Instances[0];
       if(decal == null) {
         return;
