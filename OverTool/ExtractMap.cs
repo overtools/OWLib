@@ -126,7 +126,7 @@ namespace OverTool {
                 Model mdl = new Model(modelStream);
                 foreach(string modelOutput in modelpair.Value) {
                   using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, modelOutput), FileMode.Create, FileAccess.Write)) {
-                    owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[4] { null, null, null, true });
+                    owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[0] { });
                     Console.Out.WriteLine("Wrote model {0}", modelOutput);
                   }
                 }
