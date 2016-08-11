@@ -29,7 +29,7 @@ namespace OverTool {
       bool mapWildcard = maps.Count == 0;
 
       List<ulong> masters = track[0x9F];
-      List<byte> LODs = new List<byte>(new byte[2] { 1, 255 });
+      List<byte> LODs = new List<byte>(new byte[5] { 0, 1, 128, 254, 255 });
       foreach(ulong masterKey in masters) {
         if(!map.ContainsKey(masterKey)) {
           continue;

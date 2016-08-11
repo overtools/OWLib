@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using CASCExplorer;
 using OWLib;
 
@@ -14,6 +13,17 @@ namespace OverTool {
       i.Read(buffer, 0, sz);
       o.Write(buffer, 0, sz);
       buffer = null;
+    }
+
+    public static string DowncaseDiacritics(string txt) {
+      var norm = txt.Normalize(NormalizationForm.FormD);
+      StringBuilder sb = new StringBuilder(norm.Length);
+      foreach(char c in norm) {
+        if(CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark) {
+          sb.Append(c);
+        }
+      }
+      return sb.ToString().Normalize(NormalizationForm.FormC);
     }
 
     public static Stream OpenFile(Record record, CASCHandler handler, bool recur = true) {
