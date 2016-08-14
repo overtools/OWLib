@@ -140,7 +140,7 @@ namespace OverTool.ExtractLogic {
       }
     }
 
-    private static void FindAnimations(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, ulong parent = 0) {
+    public static void FindAnimations(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, ulong parent = 0) {
       if(key == 0) {
         return;
       }
@@ -289,6 +289,14 @@ namespace OverTool.ExtractLogic {
         }
         if(inst.Name == record.Manager.GetName(typeof(BindingRecord))) {
           BindingRecord r = (BindingRecord)inst;
+          ulong bindingKey = r.Param.binding.key;
+          if(replace.ContainsKey(bindingKey)) {
+            bindingKey = replace[bindingKey];
+          }
+          FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+        }
+        if(inst.Name == record.Manager.GetName(typeof(ChildGameParameterRecord))) {
+          ChildGameParameterRecord r = (ChildGameParameterRecord)inst;
           ulong bindingKey = r.Param.binding.key;
           if(replace.ContainsKey(bindingKey)) {
             bindingKey = replace[bindingKey];

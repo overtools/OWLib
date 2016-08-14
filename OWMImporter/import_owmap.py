@@ -8,7 +8,7 @@ from mathutils import *
 import bpy, bpy_extras, mathutils
 
 sameMeshData = False
-
+sets = None
 acm = bpy_extras.io_utils.axis_conversion(from_forward='-Z', from_up='Y').to_4x4()
 
 def posMatrix(pos):
@@ -17,22 +17,44 @@ def posMatrix(pos):
     mtx = acm * posMtx
     return mtx.to_translation()
 
-def copy(obj, parent):
-    global sameMeshData
-    cpy = None
-    if sameMeshData:
-        cpy = bpy.data.objects.new(obj.name, obj.data)
-    else:
-        if obj.data != None:
-            cpy = bpy.data.objects.new(obj.name, obj.data.copy())
-        else:
-            cpy = bpy.data.objects.new(obj.name, None)
-    bpy.context.scene.objects.link(cpy)
-    cpy.parent = parent
-    cpy.hide = obj.hide
+def select_all(obj):
+    obj.select = True
     for child in obj.children:
-        copy(child, cpy)
-    return cpy
+        select_all(child)
+
+def copy(obj, parent, deep = False):
+    global sameMeshData
+    if not deep:
+        cpy = None
+        if sameMeshData:
+            cpy = bpy.data.objects.new(obj.name, obj.data)
+        else:
+            if obj.data != None:
+                cpy = bpy.data.objects.new(obj.name, obj.data.copy())
+            else:
+                cpy = bpy.data.objects.new(obj.name, None)
+        bpy.context.scene.objects.link(cpy)
+        try:
+            cpy.parent = parent
+        except: pass
+        cpy.hide = obj.hide
+        for child in obj.children:
+            copy(child, cpy)
+        return cpy
+    else:
+        v = obj.hide
+        obj.hide = False
+        bpy.context.scene.objects.active = obj
+        bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+        bpy.ops.object.select_all(action='DESELECT')
+        select_all(obj)
+        bpy.ops.object.duplicate()
+        try:
+            bpy.context.active_object.parent = parent
+        except: pass
+        bpy.context.active_object.hide = v
+        obj.hide = v
+        return bpy.context.active_object
 
 def remove(obj):
     for child in obj.children:
@@ -41,8 +63,13 @@ def remove(obj):
         bpy.context.scene.objects.unlink(obj)
     except: pass
 
+def xpzy(vec):
+    return (vec[0], vec[2], vec[1])
+
 def read(settings, importObjects = False, importDetails = True, importPhysics = False, sMD = True):
+    global sets
     global sameMeshData
+    sets = settings
     sameMeshData = sMD
 
     root, file = os.path.split(settings.filename)
@@ -75,7 +102,6 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
 
             mutated = settings.mutate(obpath)
             mutated.importMaterial = False
-            mutated.importSkeleton = False
 
             obj = import_owmdl.read(mutated, None)
 
@@ -108,7 +134,7 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
                     nobj = copy(obj[0], matObj)
                     nobj.location = posMatrix(rec.position)
                     nobj.rotation_euler = Quaternion(import_owmdl.wxzy(rec.rotation)).to_euler('XYZ')
-                    nobj.scale = rec.scale
+                    nobj.scale = xpzy(rec.scale)
             remove(obj[0])
 
     globDet = bpy.data.objects.new(name + '_DETAILS', None)
@@ -129,7 +155,6 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
 
             mutated = settings.mutate(obpath)
             mutated.importMaterial = False
-            mutated.importSkeleton = False
 
             if len(ob.material) == 0:
                 mutated.importNormals = False
@@ -154,11 +179,10 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
                     material = matCache[man]
                     import_owmdl.bindMaterials(obj[2], obj[4], material)
 
-            objnode = copy(obj[0], globDet)
-
+            objnode = copy(obj[0], globDet, settings.importSkeleton)
             objnode.location = posMatrix(ob.position)
             objnode.rotation_euler = Quaternion(import_owmdl.wxzy(ob.rotation)).to_euler('XYZ')
-            objnode.scale = import_owmdl.xzy(ob.scale)
+            objnode.scale = xpzy(ob.scale)
         for ob in objCache:
             remove(objCache[ob][0])
     for man in matCache:

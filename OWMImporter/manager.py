@@ -8,7 +8,7 @@ from bpy_extras.io_utils import ImportHelper
 
 class import_mdl_op(bpy.types.Operator, ImportHelper):
     bl_idname = "owm_importer.import_model"
-    bl_label = "Import Overwatch-Toolchain OWMDL"
+    bl_label = "Import OWMDL"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
 
@@ -100,12 +100,14 @@ class import_mdl_op(bpy.types.Operator, ImportHelper):
 
         col = layout.column(align=True)
         col.label('Armature')
-        col.prop(self, "autoIk")
         col.prop(self, "importSkeleton")
+        sub = col.row()
+        sub.prop(self, "autoIk")
+        sub.enabled = self.importSkeleton
 
 class import_mat_op(bpy.types.Operator, ImportHelper):
     bl_idname = "owm_importer.import_material"
-    bl_label = "Import Overwatch-Toolchain OWMAT"
+    bl_label = "Import OWMAT"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
 
@@ -134,7 +136,7 @@ class import_mat_op(bpy.types.Operator, ImportHelper):
 
 class import_map_op(bpy.types.Operator, ImportHelper):
     bl_idname = "owm_importer.import_map"
-    bl_label = "Import Overwatch-Toolchain OWMAP"
+    bl_label = "Import OWMAP"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
 
@@ -198,6 +200,18 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         default=False,
     )
 
+    importSkeleton = BoolProperty(
+        name="Import Skeleton",
+        description="Import Bones",
+        default=True,
+    )
+
+    autoIk = BoolProperty(
+        name="AutoIK",
+        description="Set AutoIK",
+        default=True,
+    )
+
     def menu_func(self, context):
         self.layout.operator_context = 'INVOKE_DEFAULT'
         self.layout.operator(
@@ -213,11 +227,11 @@ class import_map_op(bpy.types.Operator, ImportHelper):
             self.filepath,
             self.uvDisplX,
             self.uvDisplY,
-            False,
+            self.autoIk,
             self.importNormals,
             self.importEmpties,
             self.importMaterial,
-            False
+            self.importSkeleton
         )
         import_owmap.read(settings, self.importObjects, self.importDetails, self.importPhysics, self.sameMeshData)
         print('DONE')
@@ -236,6 +250,12 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         sub.label('UV')
         sub.prop(self, "uvDisplX")
         sub.prop(self, "uvDisplY")
+        col = layout.column(align=True)
+        col.label('Armature')
+        col.prop(self, "importSkeleton")
+        sub = col.row()
+        sub.prop(self, "autoIk")
+        sub.enabled = self.importSkeleton
 
         col = layout.column(align=True)
         col.label('Map')
@@ -249,19 +269,19 @@ class import_map_op(bpy.types.Operator, ImportHelper):
 def mdlimp(self, context):
     self.layout.operator(
         import_mdl_op.bl_idname,
-        text="Overwatch-Toolchain OWMDL"
+        text="OWMDL"
     )
 
 def matimp(self, context):
     self.layout.operator(
         import_mat_op.bl_idname,
-        text="Overwatch-Toolchain OWMAT"
+        text="OWMAT"
     )
 
 def mapimp(self, context):
     self.layout.operator(
         import_map_op.bl_idname,
-        text="Overwatch-Toolchain OWMAP"
+        text="OWMAP"
     )
 
 def register():

@@ -30,6 +30,7 @@ namespace OverTool {
 
       List<ulong> masters = track[0x9F];
       List<byte> LODs = new List<byte>(new byte[5] { 0, 1, 128, 254, 255 });
+      Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
       foreach(ulong masterKey in masters) {
         if(!map.ContainsKey(masterKey)) {
           continue;
@@ -55,6 +56,7 @@ namespace OverTool {
         }
         
         HashSet<ulong> parsed = new HashSet<ulong>();
+        Dictionary<ulong, ulong> animList = new Dictionary<ulong, ulong>();
         using(Stream mapStream = Util.OpenFile(map[master.Header.data.key], handler)) {
           Console.Out.WriteLine("Extracting map {0} with ID {1:X8}", name, APM.keyToIndex(master.Header.data.key));
           Map mapData = new Map(mapStream);
@@ -90,6 +92,7 @@ namespace OverTool {
                       ComplexModelRecord cmr = (ComplexModelRecord)instance;
                       mapprop.MaterialKey = cmr.Data.material.key;
                       mapprop.ModelKey = cmr.Data.model.key;
+                      Skin.FindAnimations(cmr.Data.animationList.key, animList, replace, parsed, map, handler, mapprop.ModelKey);
                       break;
                     }
                   }
@@ -130,6 +133,18 @@ namespace OverTool {
                     Console.Out.WriteLine("Wrote model {0}", modelOutput);
                   }
                 }
+              }
+            }
+            foreach(KeyValuePair<ulong, ulong> kv in animList) {
+              ulong parent = kv.Value;
+              ulong key = kv.Key;
+              string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", outputPath, Path.DirectorySeparatorChar, APM.keyToIndex(parent), APM.keyToIndexID(key), APM.keyToTypeID(key));
+              if(!Directory.Exists(Path.GetDirectoryName(outpath))) {
+                Directory.CreateDirectory(Path.GetDirectoryName(outpath));
+              }
+              using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+                Util.OpenFile(map[key], handler).CopyTo(outp);
+                Console.Out.WriteLine("Wrote animation {0}", outpath);
               }
             }
 
