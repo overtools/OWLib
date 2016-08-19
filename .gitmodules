@@ -1,12 +1,6 @@
 [submodule "CASCExplorer"]
 	path = CASCExplorer
 	url = git@github.com:WoW-Tools/CASCExplorer.git
-[submodule "FbxWriter"]
-	path = FbxWriter
-	url = git@github.com:hamish-milne/FbxWriter.git
 [submodule "DirectXTex"]
 	path = DirectXTex
 	url = git@github.com:Microsoft/DirectXTex.git
-[submodule "slimshader"]
-	path = slimshader
-	url = git@github.com:tgjones/slimshader.git
