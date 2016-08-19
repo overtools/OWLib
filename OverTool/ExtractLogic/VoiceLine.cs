@@ -85,18 +85,25 @@ namespace OverTool.ExtractLogic {
       }
     }
 
-    public static List<ulong> FlattenSounds(List<SoundOwnerPair> pairs, Dictionary<ulong, Record> map, CASCHandler handler) {
+    public static List<ulong> FlattenSounds(List<SoundOwnerPair> pairs, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace = null) {
       List<ulong> ret = new List<ulong>();
+      if(replace == null) {
+        replace = new Dictionary<ulong, ulong>();
+      }
       HashSet<ulong> done = new HashSet<ulong>();
 
       foreach(SoundOwnerPair pair in pairs) {
-        if(!map.ContainsKey(pair.sound)) {
+        ulong skey = pair.sound;
+        if(replace.ContainsKey(skey)) {
+          skey = replace[skey];
+        }
+        if(!map.ContainsKey(skey)) {
           continue;
         }
-        if(!done.Add(pair.sound)) {
+        if(!done.Add(skey)) {
           continue;
         }
-        using(Stream studStream = Util.OpenFile(map[pair.sound], handler)) {
+        using(Stream studStream = Util.OpenFile(map[skey], handler)) {
           if(studStream == null) {
             continue;
           }
@@ -108,7 +115,11 @@ namespace OverTool.ExtractLogic {
 
             if(instance.Name == stud.Manager.GetName(typeof(SoundBindingReference))) {
               SoundBindingReference reference = (SoundBindingReference)instance;
-              ret.Add(reference.Reference.sound.key);
+              ulong tgt = reference.Reference.sound.key;
+              if(replace.ContainsKey(tgt)) {
+                tgt = replace[tgt];
+              }
+              ret.Add(tgt);
             }
           }
         }
@@ -117,7 +128,10 @@ namespace OverTool.ExtractLogic {
       return ret;
     }
 
-    public static void FindSoundsEx(ulong key, HashSet<ulong> done, Dictionary<ulong, List<SoundOwnerPair>> ret, Dictionary<ulong, Record> map, CASCHandler handler) {
+    public static void FindSoundsEx(ulong key, HashSet<ulong> done, Dictionary<ulong, List<SoundOwnerPair>> ret, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace) {
+      if(replace.ContainsKey(key)) {
+        key = replace[key];
+      }
       if(!map.ContainsKey(key)) {
         return;
       }
@@ -137,7 +151,7 @@ namespace OverTool.ExtractLogic {
 
           if(instance.Name == stud.Manager.GetName(typeof(GenericRecordReference))) {
             GenericRecordReference inst = (GenericRecordReference)instance;
-            FindSoundsEx(inst.Reference.key.key, done, ret, map, handler);
+            FindSoundsEx(inst.Reference.key.key, done, ret, map, handler, replace);
           } else if(instance.Name == stud.Manager.GetName(typeof(SoundMasterReference))) {
             SoundMasterReference smr = (SoundMasterReference)instance;
             SoundOwnerPair pair = new SoundOwnerPair { owner = smr.Data.owner.key, sound = smr.Data.sound.key };
@@ -148,26 +162,30 @@ namespace OverTool.ExtractLogic {
           } else if(instance.Name == stud.Manager.GetName(typeof(ParameterRecord))) {
             ParameterRecord parameter = (ParameterRecord)instance;
             foreach(ParameterRecord.ParameterEntry entry in parameter.Parameters) {
-              FindSoundsEx(entry.parameter.key, done, ret, map, handler);
+              FindSoundsEx(entry.parameter.key, done, ret, map, handler, replace);
             }
           } else if(instance.Name == stud.Manager.GetName(typeof(BindingRecord))) {
             BindingRecord record = (BindingRecord)instance;
-            FindSoundsEx(record.Param.binding.key, done, ret, map, handler);
+            FindSoundsEx(record.Param.binding.key, done, ret, map, handler, replace);
           }
         }
       }
     }
 
-    public static Dictionary<ulong, List<SoundOwnerPair>> FindSounds(HeroMaster master, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler) {
+    public static Dictionary<ulong, List<SoundOwnerPair>> FindSounds(HeroMaster master, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace = null) {
       Dictionary<ulong, List<SoundOwnerPair>> ret = new Dictionary<ulong, List<SoundOwnerPair>>();
 
       HashSet<ulong> done = new HashSet<ulong>();
 
-      FindSoundsEx(master.Header.binding.key, done, ret, map, handler);
-      FindSoundsEx(master.Header.child1.key, done, ret, map, handler);
-      FindSoundsEx(master.Header.child2.key, done, ret, map, handler);
-      FindSoundsEx(master.Header.child3.key, done, ret, map, handler);
-      FindSoundsEx(master.Header.child4.key, done, ret, map, handler);
+      if(replace == null) {
+        replace = new Dictionary<ulong, ulong>();
+      }
+
+      FindSoundsEx(master.Header.binding.key, done, ret, map, handler, replace);
+      FindSoundsEx(master.Header.child1.key, done, ret, map, handler, replace);
+      FindSoundsEx(master.Header.child2.key, done, ret, map, handler, replace);
+      FindSoundsEx(master.Header.child3.key, done, ret, map, handler, replace);
+      FindSoundsEx(master.Header.child4.key, done, ret, map, handler, replace);
 
       return ret;
     }

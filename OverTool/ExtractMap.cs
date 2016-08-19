@@ -45,6 +45,9 @@ namespace OverTool {
         }
         
         string name = Util.GetString(master.Header.name.key, map, handler);
+        if(name == null) {
+          continue;
+        }
         if(!mapWildcard && !maps.Contains(name.ToLowerInvariant())) {
           continue;
         }

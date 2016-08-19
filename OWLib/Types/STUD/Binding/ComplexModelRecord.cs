@@ -12,6 +12,7 @@ namespace OWLib.Types.STUD.Binding {
       public STUDInstanceInfo instance;
       public OWRecord animationList;
       public OWRecord funk1;
+      public OWRecord funk2;
       public OWRecord model;
       public OWRecord material;
       public ulong unk1;

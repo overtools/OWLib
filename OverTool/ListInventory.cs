@@ -14,6 +14,12 @@ namespace OverTool {
       }
 
       STUD stud = new STUD(Util.OpenFile(map[key], handler));
+      if(stud.Instances == null) {
+        return;
+      }
+      if(stud.Instances[0] == null) {
+        return;
+      }
       IInventorySTUDInstance instance = (IInventorySTUDInstance)stud.Instances[0];
       if(instance == null) {
         return;

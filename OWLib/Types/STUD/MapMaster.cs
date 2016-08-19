@@ -13,6 +13,11 @@ namespace OWLib.Types.STUD {
     public struct MapMasterHeader {
       public STUDInstanceInfo instance;
       public OWRecord f002;
+      public OWRecord funk_1300;
+      public ulong unk1300_0;
+      public ulong unk1300_1;
+      public ulong unk1300_2;
+      public ulong unk1300_3;
       public OWRecord data;
       public OWRecord background;
       public OWRecord flag;

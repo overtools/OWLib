@@ -36,14 +36,17 @@ namespace CASCExplorer
     {
         public long recordsOffset;                  // Offset to GZIP compressed records chunk, read (recordsSize + numRecords) bytes here
         public ulong unkOffset_0;
+		public ulong unk_1300_0;
         public long depsOffset;                     // Offset to dependencies chunk, read numDeps * uint here
         public ulong unkOffset_1;
         public uint unk_0;
         public uint numRecords;
+		public uint unk_1300_2;
         public int recordsSize;
         public uint unk_1;
         public uint numDeps;
         public uint totalSize;
+		public uint unk_1300_3;
         public ulong bundleKey;                     // Requires some sorcery, see Key
         public uint bundleSize;
         public ulong unk_2;

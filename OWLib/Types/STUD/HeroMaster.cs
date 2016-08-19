@@ -13,6 +13,7 @@ namespace OWLib.Types.STUD {
       public OWRecord binding;
       public OWRecord name;
       public OWRecord zero2;
+      public OWRecord zero_1300_1;
       public OWRecord virtualSpace1;
       public ulong virtualOffset;
       public ulong zero3;

@@ -11,7 +11,7 @@ def readString(file):
     if l == 0:
         return ''
     s = file.read(l)
-    return s.decode('ascii')
+    return s.decode('utf8')
 
 fmtSz = {
   'c': 1,
