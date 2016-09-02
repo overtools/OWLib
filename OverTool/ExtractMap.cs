@@ -17,12 +17,23 @@ namespace OverTool {
   class ExtractMap {
     public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       if(args.Length < 1) {
-        Console.Out.WriteLine("Usage: OverTool.exe overwatch M output [maps]");
+        Console.Out.WriteLine("Usage: OverTool.exe overwatch M output [maps] .[C]");
+        Console.Out.WriteLine("The last value is to export collision models. The last argument must be exactly \".C\" if you want to export collision models");
         return;
       }
 
       string output = args[0];
       List<string> maps = args.Skip(1).ToList();
+      
+      bool skipCmodel = true;
+      if(maps.Last()[0] == '.') {
+        string cmd = maps.Last();
+        maps.Remove(cmd);
+        if(cmd.Length > 1 && cmd[1] == 'C') {
+          skipCmodel = false;
+        }
+      }
+
       for(int i = 0; i < maps.Count; ++i) {
         maps[i] = maps[i].ToLowerInvariant();
       }
@@ -132,7 +143,7 @@ namespace OverTool {
                 Model mdl = new Model(modelStream);
                 foreach(string modelOutput in modelpair.Value) {
                   using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, modelOutput), FileMode.Create, FileAccess.Write)) {
-                    owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[0] { });
+                    owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel });
                     Console.Out.WriteLine("Wrote model {0}", modelOutput);
                   }
                 }

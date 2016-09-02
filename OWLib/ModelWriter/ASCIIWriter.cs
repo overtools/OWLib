@@ -34,6 +34,11 @@ namespace OWLib.ModelWriter {
         }
         for(int i = 0; i < model.Submeshes.Length; ++i) {
           ModelSubmesh submesh = model.Submeshes[i];
+          if(opts.Length > 4 && opts[4] != null && opts[4].GetType() == typeof(bool) && (bool)opts[4] == true) {
+            if((SubmeshFlags)submesh.flags == SubmeshFlags.COLLISION_MESH) {
+              continue;
+            }
+          }
           if(LODs != null && !LODs.Contains(submesh.lod)) {
             continue;
           }

@@ -532,6 +532,12 @@ namespace OverTool.ExtractLogic {
         }
       }
 
+      bool skipCmodel = true;
+
+      if(furtherOpts.Count > 5 || furtherOpts[5] == 'C') {
+        skipCmodel = false;
+      }
+
       if(furtherOpts.Count < 4 || furtherOpts[3] != 'M') {
         List<byte> lods = new List<byte>(new byte[3] { 0, 1, 0xFF });
         foreach(ulong key in models) {
@@ -559,7 +565,7 @@ namespace OverTool.ExtractLogic {
             Directory.CreateDirectory(Path.GetDirectoryName(outpath));
           }
           using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-            writer.Write(mdl, outp, lods, layers, new object[3] { true, Path.GetFileName(mtlPath), mdlName });
+            writer.Write(mdl, outp, lods, layers, new object[5] { true, Path.GetFileName(mtlPath), mdlName, null, skipCmodel });
             Console.Out.WriteLine("Wrote model {0}", outpath);
           }
         }

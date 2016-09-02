@@ -41,6 +41,7 @@ namespace ModelTool {
         Console.Out.WriteLine("  -l n - only save LOD, where N is lod");
         Console.Out.WriteLine("  -t   - save attachment points (sockets)");
         Console.Out.WriteLine("  -L   - only save first LOD found");
+        Console.Out.WriteLine("  -c   - save collision models");
         return;
       }
 
@@ -52,6 +53,7 @@ namespace ModelTool {
       List<byte> lods = null;
       bool attachments = false;
       bool firstLod = false;
+      bool skipCmodel = true;
       if(args.Length > 3) {
         int i = 2;
         while(i < args.Length - 2) {
@@ -69,6 +71,8 @@ namespace ModelTool {
               firstLod = true;
             } else if(arg[1] == 't') {
               attachments = true;
+            } else if(arg[1] == 'c') {
+              skipCmodel = false;
             }
           } else {
             continue;
@@ -91,7 +95,7 @@ namespace ModelTool {
       using(Stream modelStream = File.Open(modelFile, FileMode.Open, FileAccess.Read)) {
         Model model = new Model(modelStream);
         using(Stream outStream = File.Open(outputFile, FileMode.Create, FileAccess.Write)) {
-          writer.Write(model, outStream, lods, new Dictionary<ulong, List<OWLib.Types.ImageLayer>>(), new object[] { attachments, null, null, firstLod });
+          writer.Write(model, outStream, lods, new Dictionary<ulong, List<OWLib.Types.ImageLayer>>(), new object[] { attachments, null, null, firstLod, skipCmodel });
         }
       }
     }

@@ -53,7 +53,7 @@ namespace OWLib.ModelWriter {
       Console.Out.WriteLine("Writing OWMDL");
       using(BinaryWriter writer = new BinaryWriter(output)) {
         writer.Write((ushort)1); // version major
-        writer.Write((ushort)0); // version minor
+        writer.Write((ushort)1); // version minor
 
         if(data.Length > 1 && data[1] != null && data[1].GetType() == typeof(string) && ((string)data[1]).Length > 0) {
           writer.Write((string)data[1]);
@@ -78,6 +78,11 @@ namespace OWLib.ModelWriter {
         }
         for(int i = 0; i < model.Submeshes.Length; ++i) {
           ModelSubmesh submesh = model.Submeshes[i];
+          if(data.Length > 4 && data[4] != null && data[4].GetType() == typeof(bool) && (bool)data[4] == true) {
+            if((SubmeshFlags)submesh.flags == SubmeshFlags.COLLISION_MESH) {
+              continue;
+            }
+          }
           if(LODs != null && !LODs.Contains(submesh.lod)) {
             continue;
           }
@@ -169,7 +174,7 @@ namespace OWLib.ModelWriter {
             }
           }
         }
-
+        
         if(data.Length > 0 && data[0] != null && data[0].GetType() == typeof(bool) && (bool)data[0] == true) {
           for(uint i = 0; i < model.AttachmentPoints.Length; ++i) {
             ModelAttachmentPoint attachment = model.AttachmentPoints[i];
@@ -184,6 +189,12 @@ namespace OWLib.ModelWriter {
             writer.Write(quat.Y);
             writer.Write(quat.Z);
             writer.Write(quat.W);
+          }
+
+          // extension 1.1
+          for(uint i = 0; i < model.AttachmentPoints.Length; ++i) {
+            ModelAttachmentPoint attachment = model.AttachmentPoints[i];
+            writer.Write(string.Format("bone_{0:X4}", attachment.parent_bone_id));
           }
         }
       }

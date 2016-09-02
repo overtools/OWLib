@@ -85,10 +85,21 @@ namespace OWLib.Types {
     public ushort boneOffset;      // 
     public byte vertexBufferIndex; // vb
     public byte indexBufferIndex;  // fb
-    public byte unk4;              // 
+    public byte flags;     // flag
     public byte material;          // mat
     public byte lod;               // lod
     public byte unk5;              //
+  }
+
+  public enum SubmeshFlags : byte {
+    UNK1 = 1,
+    UNK2 = 2,
+    UNK3 = 4,
+    UNK4 = 8,
+    COLLISION_MESH = 16,
+    UNK6 = 32,
+    UNK7 = 64,
+    UNK8 = 128
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -127,7 +138,8 @@ namespace OWLib.Types {
     public ushort unk1;
     public byte unk2;
     public byte binary_size;
-    public uint unk3;
+    public short parent_bone_id;
+    public short unk4;
     public ushort unk5;
     public ushort unk5b;
     public ulong unkBindataPtr;
