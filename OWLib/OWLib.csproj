@@ -74,6 +74,7 @@
     <Compile Include="Types\MapTypes.cs" />
     <Compile Include="Types\Map\Map02.cs" />
     <Compile Include="Types\Map\Map08.cs" />
+    <Compile Include="Types\Map\Map09.cs" />
     <Compile Include="Types\Map\Map0B.cs" />
     <Compile Include="Types\Map\Map10.cs" />
     <Compile Include="Types\ModelTypes.cs" />
@@ -127,6 +128,9 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(ProjectDir)..\CascLib.patch\ow.keys $(OutDir)\ow.keys</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
