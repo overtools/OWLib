@@ -8,11 +8,11 @@ namespace OWLib.ModelWriter {
   public class OWMAPWriter {
     public string Format => ".owmap";
 
-    public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, string name = "") {
+    public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name = "") {
       Console.Out.WriteLine("Writing OWMAP");
       using(BinaryWriter writer = new BinaryWriter(output)) {
         writer.Write((ushort)1); // version major
-        writer.Write((ushort)0); // version minor
+        writer.Write((ushort)1); // version minor
 
         if(name.Length == 0) {
           writer.Write((byte)0);
@@ -52,6 +52,19 @@ namespace OWLib.ModelWriter {
           size++;
         }
         writer.Write(size); // nr details
+        
+        // Extension 1.1 - Lights
+        size = 0;
+        for (int i = 0; i < lights.Records.Length; ++i)
+        {
+            if (lights.Records[i] != null && lights.Records[i].GetType() != typeof(Map09))
+            {
+                continue;
+            }
+            size++;
+        }
+        writer.Write(size); // nr Lights
+
 
         Dictionary<ulong, List<string>>[] ret = new Dictionary<ulong, List<string>>[2];
         ret[0] = new Dictionary<ulong, List<string>>();
@@ -205,6 +218,67 @@ namespace OWLib.ModelWriter {
           }
           ret[1][obj.MaterialKey].Add(matFn);
         }
+
+        // Extension 1.1 - Lights
+        for (int i = 0; i < lights.Records.Length; ++i)
+        {
+            if (lights.Records[i] != null && lights.Records[i].GetType() != typeof(Map09))
+            {
+                continue;
+            }
+            Map09 obj = (Map09)lights.Records[i];
+            writer.Write(obj.Header.position.x);
+            writer.Write(obj.Header.position.y);
+            writer.Write(obj.Header.position.z);
+            writer.Write(obj.Header.rotation.x);
+            writer.Write(obj.Header.rotation.y);
+            writer.Write(obj.Header.rotation.z);
+            writer.Write(obj.Header.rotation.w);
+            writer.Write(obj.Header.LightType);
+            writer.Write(obj.Header.LightFOV);
+            writer.Write(obj.Header.Color.x);
+            writer.Write(obj.Header.Color.y);
+            writer.Write(obj.Header.Color.z);
+            writer.Write(obj.Header.unknown1A);
+            writer.Write(obj.Header.unknown1B);
+            writer.Write(obj.Header.unknown2A);
+            writer.Write(obj.Header.unknown2B);
+            writer.Write(obj.Header.unknown2C);
+            writer.Write(obj.Header.unknown2D);
+            writer.Write(obj.Header.unknown3A);
+            writer.Write(obj.Header.unknown3B);
+
+            writer.Write(obj.Header.unknownPos1.x);
+            writer.Write(obj.Header.unknownPos1.y);
+            writer.Write(obj.Header.unknownPos1.z);
+            writer.Write(obj.Header.unknownQuat1.x);
+            writer.Write(obj.Header.unknownQuat1.y);
+            writer.Write(obj.Header.unknownQuat1.z);
+            writer.Write(obj.Header.unknownQuat1.w);
+            writer.Write(obj.Header.unknownPos2.x);
+            writer.Write(obj.Header.unknownPos2.y);
+            writer.Write(obj.Header.unknownPos2.z);
+            writer.Write(obj.Header.unknownQuat2.x);
+            writer.Write(obj.Header.unknownQuat2.y);
+            writer.Write(obj.Header.unknownQuat2.z);
+            writer.Write(obj.Header.unknownQuat2.w);
+            writer.Write(obj.Header.unknownPos3.x);
+            writer.Write(obj.Header.unknownPos3.y);
+            writer.Write(obj.Header.unknownPos3.z);
+            writer.Write(obj.Header.unknownQuat3.x);
+            writer.Write(obj.Header.unknownQuat3.y);
+            writer.Write(obj.Header.unknownQuat3.z);
+            writer.Write(obj.Header.unknownQuat3.w);
+
+            writer.Write(obj.Header.unknown4A);
+            writer.Write(obj.Header.unknown4B);
+            writer.Write(obj.Header.unknown5);
+            writer.Write(obj.Header.unknown6A);
+            writer.Write(obj.Header.unknown6B);
+            writer.Write(obj.Header.unknown7A);
+            writer.Write(obj.Header.unknown7B);
+        }
+
         return ret;
       }
     }

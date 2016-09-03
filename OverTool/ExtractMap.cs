@@ -113,8 +113,11 @@ namespace OverTool {
                   mapBData.Records[i] = mapprop;
                 }
 
-                using(Stream outputStream = File.Open(string.Format("{0}{1}{2}", outputPath, Util.SanitizePath(name), owmap.Format), FileMode.Create, FileAccess.Write)) {
-                  used = owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, name);
+                using (Stream mapLStream = Util.OpenFile(map[master.DataKey(9)], handler)) {
+                    Map mapLData = new Map(mapLStream);
+                    using (Stream outputStream = File.Open(string.Format("{0}{1}{2}", outputPath, Util.SanitizePath(name), owmap.Format), FileMode.Create, FileAccess.Write)) {
+                        used = owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name);
+                    }
                 }
               }
             }
