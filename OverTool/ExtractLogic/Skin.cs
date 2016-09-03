@@ -534,7 +534,7 @@ namespace OverTool.ExtractLogic {
 
       bool skipCmodel = true;
 
-      if(furtherOpts.Count > 5 || furtherOpts[5] == 'C') {
+      if(furtherOpts.Count > 5 && furtherOpts[5] == 'C') {
         skipCmodel = false;
       }
 
