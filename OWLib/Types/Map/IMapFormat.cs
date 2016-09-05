@@ -1,17 +1,17 @@
 ﻿using System.IO;
 
 namespace OWLib.Types.Map {
-  public interface IMapFormat {
-    ushort Identifier
-    {
-      get;
-    }
+    public interface IMapFormat {
+        ushort Identifier
+        {
+            get;
+        }
     
-    string Name
-    {
-      get;
-    }
+        string Name
+        {
+            get;
+        }
     
-    void Read(Stream data);
-  }
+        void Read(Stream data);
+    }
 }
