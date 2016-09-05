@@ -391,10 +391,10 @@ namespace OverTool.ExtractLogic {
           }
           tmp[over.Replace[i]] = over.Target[i];
         }
-        foreach(OWRecord rec in over.SubDefinitions) {
+        foreach(OWRecord rec in over.SubDefinitions) { // TODO: there is overlap, see which one is necessary
           FindReplacements(rec.key, tmp, parsed, map, handler, null, null);
         }
-        if(master != null && master.Directives != null) {
+        if(master != null && master.Directives != null) { // TODO: see if this is necessary
           for(int i = 0; i < master.Directives.Length; ++i) {
             HeroMaster.HeroDirective directive = master.Directives[i];
             OWRecord[] directiveChildren = master.DirectiveChild[i];
@@ -408,11 +408,14 @@ namespace OverTool.ExtractLogic {
           }
         }
         foreach(KeyValuePair<ulong, ulong> kv in tmp) {
-          if(skin != null && skin.Header.rarity != InventoryRarity.Legendary) {
+          if(skin != null && skin.Header.rarity != InventoryRarity.Legendary) { // TODO: properly replace things, this doesn't work for legendary skins
             ushort idx = (ushort)APM.keyToTypeID(kv.Value);
             if(idx != 0x0B3 && idx != 0x008 && idx != 0x004) {
               continue;
             }
+          }
+          if(replace.ContainsKey(kv.Key)) {
+            continue;
           }
           replace[kv.Key] = kv.Value;
         }

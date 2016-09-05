@@ -1,6 +1,6 @@
 [submodule "CASCExplorer"]
 	path = CASCExplorer
-	url = git@github.com:WoW-Tools/CASCExplorer.git
+	url = https://github.com/WoW-Tools/CASCExplorer.git
 [submodule "DirectXTex"]
 	path = DirectXTex
-	url = git@github.com:Microsoft/DirectXTex.git
+	url = https://github.com/Microsoft/DirectXTex.git
