@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="DumpKey.cs" />
     <Compile Include="DumpString.cs" />
+    <Compile Include="DumpTex.cs" />
     <Compile Include="DumpVoice.cs" />
     <Compile Include="Extract.cs" />
     <Compile Include="ExtractLogic\Icon.cs" />

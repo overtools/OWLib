@@ -29,6 +29,7 @@ namespace OverTool {
                 Console.Out.WriteLine("\tv - Dump Hero Sounds");
                 Console.Out.WriteLine("\ts - Dump Strings");
                 Console.Out.WriteLine("\tZ - Dump Keys");
+                Console.Out.WriteLine("\tT - Dump Textures for Model");
                 return;
             }
 
@@ -42,7 +43,7 @@ namespace OverTool {
 
             string root = args[0];
             char opt = args[1][0];
-            char[] validOpts = new char[] { 't', 'x', 'm', 'M', 'v', 's', 'Z' };
+            char[] validOpts = new char[] { 't', 'x', 'm', 'M', 'v', 's', 'Z', 'T' };
             if(!validOpts.Contains(opt)) {
                 Console.Error.WriteLine("UNSUPPORTED OPT {0}", opt);
                 return;
@@ -54,6 +55,7 @@ namespace OverTool {
             track.Add(0x7C, new List<ulong>());
             track.Add(0xA9, new List<ulong>());
             track.Add(0x90, new List<ulong>());
+            track.Add(0x3, new List<ulong>());
 
             Dictionary<ulong, Record> map = new Dictionary<ulong, Record>();
 
@@ -140,6 +142,8 @@ namespace OverTool {
                 optfn = DumpString.Parse;
             } else if(opt == 'Z') {
                 optfn = DumpKey.Parse;
+            } else if(opt == 'T') {
+                optfn = DumpTex.Parse;
             }
 
             optfn(track, map, handler, args.Skip(2).ToArray());
