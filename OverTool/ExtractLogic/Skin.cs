@@ -16,7 +16,7 @@ namespace OverTool.ExtractLogic {
   class Skin {
     public static void FindTextures(ulong key, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
       ulong tgt = key;
-      while(replace.ContainsKey(tgt)) {
+      if(replace.ContainsKey(tgt)) {
         tgt = replace[tgt];
       }
       if(!map.ContainsKey(tgt)) {
@@ -40,7 +40,7 @@ namespace OverTool.ExtractLogic {
       foreach(MaterialMaster.MaterialMasterMaterial material in master.Materials) {
         ulong materialId = material.id;
         ulong materialKey = material.record.key;
-        while(replace.ContainsKey(materialKey)) {
+        if(replace.ContainsKey(materialKey)) {
           materialKey = replace[materialKey];
         }
         if(!map.ContainsKey(materialKey)) {
@@ -48,7 +48,7 @@ namespace OverTool.ExtractLogic {
         }
         Material mat = new Material(Util.OpenFile(map[materialKey], handler));
         ulong definitionKey = mat.Header.definitionKey;
-        while(replace.ContainsKey(definitionKey)) {
+        if(replace.ContainsKey(definitionKey)) {
           definitionKey = replace[definitionKey];
         }
         if(!map.ContainsKey(definitionKey)) {
@@ -60,7 +60,7 @@ namespace OverTool.ExtractLogic {
         }
         for(int i = 0; i < def.Layers.Length; ++i) {
           ImageLayer layer = def.Layers[i];
-          while(replace.ContainsKey(layer.key)) {
+          if(replace.ContainsKey(layer.key)) {
             layer.key = replace[layer.key];
           }
           layers[materialId].Add(layer);
@@ -89,7 +89,7 @@ namespace OverTool.ExtractLogic {
           if(infokey == 0) {
             return;
           }
-          while(replace.ContainsKey(infokey)) {
+          if(replace.ContainsKey(infokey)) {
             infokey = replace[infokey];
           }
           if(!map.ContainsKey(infokey)) {
@@ -122,7 +122,7 @@ namespace OverTool.ExtractLogic {
                 if(animkey == 0) {
                   continue;
                 }
-                while(replace.ContainsKey(animkey)) {
+                if(replace.ContainsKey(animkey)) {
                   animkey = replace[animkey];
                 }
                 if(!map.ContainsKey(animkey)) {
@@ -148,7 +148,7 @@ namespace OverTool.ExtractLogic {
         return;
       }
       ulong tgt = key;
-      while(replace.ContainsKey(tgt)) {
+      if(replace.ContainsKey(tgt)) {
         tgt = replace[tgt];
       }
 
@@ -172,7 +172,7 @@ namespace OverTool.ExtractLogic {
           AnimationList r = (AnimationList)inst;
           foreach(AnimationList.AnimationListEntry entry in r.Entries) {
             ulong bindingKey = entry.animation.key;
-            while(replace.ContainsKey(bindingKey)) {
+            if(replace.ContainsKey(bindingKey)) {
               bindingKey = replace[bindingKey];
             }
             if(!map.ContainsKey(bindingKey)) {
@@ -189,7 +189,7 @@ namespace OverTool.ExtractLogic {
           Pose r = (Pose)inst;
           foreach(OWRecord animation in new OWRecord[3] { r.Header.animation1, r.Header.animation2, r.Header.animation3 }) {
             ulong bindingKey = animation.key;
-            while(replace.ContainsKey(bindingKey)) {
+            if(replace.ContainsKey(bindingKey)) {
               bindingKey = replace[bindingKey];
             }
             if(!map.ContainsKey(bindingKey)) {
@@ -212,7 +212,7 @@ namespace OverTool.ExtractLogic {
           AnimationListReference r = (AnimationListReference)inst;
           foreach(OWRecord animation in new OWRecord[5] { r.Header.unkD, r.Header.animation, r.Header.unk12, r.Header.unk15, r.Header.unk18}) {
             ulong bindingKey = animation.key;
-            while(replace.ContainsKey(bindingKey)) {
+            if(replace.ContainsKey(bindingKey)) {
               bindingKey = replace[bindingKey];
             }
             if(!map.ContainsKey(bindingKey)) {
@@ -238,7 +238,7 @@ namespace OverTool.ExtractLogic {
         return;
       }
       ulong tgt = key;
-      while(replace.ContainsKey(tgt)) {
+      if(replace.ContainsKey(tgt)) {
         tgt = replace[tgt];
       }
 
@@ -257,7 +257,7 @@ namespace OverTool.ExtractLogic {
         if(inst.Name == record.Manager.GetName(typeof(ViewModelRecord))) {
           ViewModelRecord r = (ViewModelRecord)inst;
           ulong bindingKey = r.Data.binding.key;
-          while(replace.ContainsKey(bindingKey)) {
+          if(replace.ContainsKey(bindingKey)) {
             bindingKey = replace[bindingKey];
           }
           FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
@@ -265,7 +265,7 @@ namespace OverTool.ExtractLogic {
         if(inst.Name == record.Manager.GetName(typeof(ComplexModelRecord))) {
           ComplexModelRecord r = (ComplexModelRecord)inst;
           ulong modelKey = r.Data.model.key;
-          while(replace.ContainsKey(modelKey)) {
+          if(replace.ContainsKey(modelKey)) {
             modelKey = replace[modelKey];
           }
           if(ignore.Count > 0 && !ignore.Contains(APM.keyToIndexID(modelKey))) {
@@ -275,7 +275,7 @@ namespace OverTool.ExtractLogic {
           ulong animListKey = r.Data.animationList.key;
           FindAnimations(animListKey, animList, replace, parsed, map, handler, modelKey);
           ulong target = r.Data.material.key;
-          while(replace.ContainsKey(target)) {
+          if(replace.ContainsKey(target)) {
             target = replace[target];
           }
           FindTextures(target, layers, replace, parsed, map, handler);
@@ -284,7 +284,7 @@ namespace OverTool.ExtractLogic {
           ParameterRecord r = (ParameterRecord)inst;
           foreach(ParameterRecord.ParameterEntry entry in r.Parameters) {
             ulong bindingKey = entry.parameter.key;
-            while(replace.ContainsKey(bindingKey)) {
+            if(replace.ContainsKey(bindingKey)) {
               bindingKey = replace[bindingKey];
             }
             FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
@@ -293,7 +293,7 @@ namespace OverTool.ExtractLogic {
         if(inst.Name == record.Manager.GetName(typeof(BindingRecord))) {
           BindingRecord r = (BindingRecord)inst;
           ulong bindingKey = r.Param.binding.key;
-          while(replace.ContainsKey(bindingKey)) {
+          if(replace.ContainsKey(bindingKey)) {
             bindingKey = replace[bindingKey];
           }
           FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
@@ -301,7 +301,7 @@ namespace OverTool.ExtractLogic {
         if(inst.Name == record.Manager.GetName(typeof(ChildGameParameterRecord))) {
           ChildGameParameterRecord r = (ChildGameParameterRecord)inst;
           ulong bindingKey = r.Param.binding.key;
-          while(replace.ContainsKey(bindingKey)) {
+          if(replace.ContainsKey(bindingKey)) {
             bindingKey = replace[bindingKey];
           }
           FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
@@ -310,7 +310,7 @@ namespace OverTool.ExtractLogic {
           ProjectileModelRecord r = (ProjectileModelRecord)inst;
           foreach(ProjectileModelRecord.BindingRecord br in r.Children) {
             ulong bindingKey = br.binding.key;
-            while(replace.ContainsKey(bindingKey)) {
+            if(replace.ContainsKey(bindingKey)) {
               bindingKey = replace[bindingKey];
             }
             FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
@@ -320,7 +320,7 @@ namespace OverTool.ExtractLogic {
           ChildParameterRecord r = (ChildParameterRecord)inst;
           foreach(ChildParameterRecord.Child br in r.Children) {
             ulong bindingKey = br.parameter.key;
-            while(replace.ContainsKey(bindingKey)) {
+            if(replace.ContainsKey(bindingKey)) {
               bindingKey = replace[bindingKey];
             }
             FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
@@ -330,7 +330,7 @@ namespace OverTool.ExtractLogic {
           AnimationCoreference r = (AnimationCoreference)inst;
           foreach(AnimationCoreference.AnimationCoreferenceEntry entry in r.Entries) {
             ulong bindingKey = entry.animation.key;
-            while(replace.ContainsKey(bindingKey)) {
+            if(replace.ContainsKey(bindingKey)) {
               bindingKey = replace[bindingKey];
             }
             if(!map.ContainsKey(bindingKey)) {
@@ -351,7 +351,7 @@ namespace OverTool.ExtractLogic {
 
           foreach(PoseList.PoseListAnimation entry in r.Animations) {
             ulong bindingKey = entry.animation.key;
-            while(replace.ContainsKey(bindingKey)) {
+            if(replace.ContainsKey(bindingKey)) {
               bindingKey = replace[bindingKey];
             }
             if(!map.ContainsKey(bindingKey)) {
@@ -418,27 +418,27 @@ namespace OverTool.ExtractLogic {
         FindReplacements(skin.Data.skin.key, replace, parsed, map, handler, master, skin);
       }
       ulong bindingKey = master.Header.binding.key;
-      while(replace.ContainsKey(bindingKey)) {
+      if(replace.ContainsKey(bindingKey)) {
         bindingKey = replace[bindingKey];
       }
       FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
       bindingKey = master.Header.child1.key;
-      while(replace.ContainsKey(bindingKey)) {
+      if(replace.ContainsKey(bindingKey)) {
         bindingKey = replace[bindingKey];
       }
       FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
       bindingKey = master.Header.child2.key;
-      while(replace.ContainsKey(bindingKey)) {
+      if(replace.ContainsKey(bindingKey)) {
         bindingKey = replace[bindingKey];
       }
       FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
       bindingKey = master.Header.child3.key;
-      while(replace.ContainsKey(bindingKey)) {
+      if(replace.ContainsKey(bindingKey)) {
         bindingKey = replace[bindingKey];
       }
       FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
       bindingKey = master.Header.child4.key;
-      while(replace.ContainsKey(bindingKey)) {
+      if(replace.ContainsKey(bindingKey)) {
         bindingKey = replace[bindingKey];
       }
       FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
