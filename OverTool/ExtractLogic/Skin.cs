@@ -272,8 +272,8 @@ namespace OverTool.ExtractLogic {
             continue;
           }
           models.Add(modelKey);
-          ulong animListKey = r.Data.animationList.key;
-          FindAnimations(animListKey, animList, replace, parsed, map, handler, modelKey);
+          FindAnimations(r.Data.animationList.key, animList, replace, parsed, map, handler, modelKey);
+          FindAnimations(r.Data.secondaryAnimationList.key, animList, replace, parsed, map, handler, modelKey);
           ulong target = r.Data.material.key;
           if(replace.ContainsKey(target)) {
             target = replace[target];
