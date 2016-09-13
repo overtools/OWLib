@@ -52,12 +52,14 @@ class OWMATHeader:
 
 class OWMAPHeader:
     structFormat = ['<HH', str, '<II']
-    def __init__(self, major, minor, name, objectCount, detailCount):
+    structFormat11 = ['<I']
+    def __init__(self, major, minor, name, objectCount, detailCount, lightCount = 0):
         self.major = major
         self.minor = minor
         self.name = name
         self.objectCount = objectCount
         self.detailCount = detailCount
+        self.lightCount = lightCount
 
 class OWMDLBone:
     structFormat = [str, '<h', '<fff', '<fff', '<ffff']

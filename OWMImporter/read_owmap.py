@@ -14,7 +14,11 @@ def read(filename):
         return False
 
     major, minor, name, objectCount, detailCount = bin_ops.readFmtFlat(stream, owm_types.OWMAPHeader.structFormat)
-    header = owm_types.OWMAPHeader(major, minor, name, objectCount, detailCount)
+    lightCount = 0;
+    if major + 0xFFFF + minor >= 0x10001:
+        lightCount = bin_ops.readFmtFlat(stream, owm_types.OWMAPHeader.structFormat11)
+        
+    header = owm_types.OWMAPHeader(major, minor, name, objectCount, detailCount, lightCount)
 
     objects = []
     for i in range(objectCount):
