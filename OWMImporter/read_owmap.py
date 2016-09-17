@@ -17,7 +17,6 @@ def read(filename):
     lightCount = 0;
     if major + 0xFFFF + minor >= 0x10001:
         lightCount = bin_ops.readFmtFlat(stream, owm_types.OWMAPHeader.structFormat11)
-        
     header = owm_types.OWMAPHeader(major, minor, name, objectCount, detailCount, lightCount)
 
     objects = []
@@ -39,4 +38,10 @@ def read(filename):
         model, material = bin_ops.readFmtFlat(stream, owm_types.OWMAPDetail.structFormat)
         position, scale, rotation = bin_ops.readFmt(stream, owm_types.OWMAPDetail.exFormat)
         details += [owm_types.OWMAPDetail(model, material, position, scale, rotation)]
-    return owm_types.OWMAPFile(header, objects, details)
+    lights = []
+    if major + 0xFFFF + minor >= 0x10001:
+        for i in range(lightCount):
+            position, rotation, typ, fov, color  = bin_ops.readFmt(stream, owm_types.OWMAPLight.structFormat)
+            ex = bin_ops.readFmtFlat(stream, owm_types.OWMAPLight.exFormat)
+            lights += [owm_types.OWMAPLight(position, rotation, typ[0], fov[0], color)]
+    return owm_types.OWMAPFile(header, objects, details, lights)

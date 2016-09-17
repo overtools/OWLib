@@ -27,10 +27,11 @@ class OWMATFile:
         self.materials = materials
 
 class OWMAPFile:
-    def __init__(self, header, objects, details):
+    def __init__(self, header, objects, details, lights = []):
         self.header = header
         self.objects = objects
         self.details = details
+        self.lights = lights
 
 class OWMDLHeader:
     structFormat = ['<HH', str, str, '<HII']
@@ -144,3 +145,13 @@ class OWMAPDetail:
         self.position = position
         self.scale = scale
         self.rotation = rotation
+
+class OWMAPLight:
+    structFormat = ['<fff', '<ffff', '<I', '<f', '<fff']
+    exFormat = ['<IIBBBBII', '<fff', '<ffff', '<fff', '<ffff', '<fff', '<ffff', '<ffIHHII']
+    def __init__(self, position, rotation, typ, fov, color):
+        self.position = position
+        self.rotation = rotation
+        self.type = typ
+        self.fov = fov
+        self.color = color

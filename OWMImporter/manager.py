@@ -167,7 +167,7 @@ class import_map_op(bpy.types.Operator, ImportHelper):
     importEmpties = BoolProperty(
         name="Import Empties",
         description="Import Empty Objects",
-        default=True,
+        default=False,
     )
 
     importMaterial = BoolProperty(
@@ -188,6 +188,12 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         default=True,
     )
 
+    importLights = BoolProperty(
+        name="Import Lights",
+        description="Import Map Lights",
+        default=True,
+    )
+
     importPhysics = BoolProperty(
         name="Import Collision Model",
         description="Import Map Collision Model",
@@ -198,6 +204,13 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         name="Re-use Mesh Data",
         description="Re-uses mesh data for identical objects, will create weird meshes and materials won't apply correctly but saves a lot of space and time",
         default=False,
+    )
+
+
+    reimportProps = BoolProperty(
+        name="Re-import Prop Models",
+        description="Re-imports prop models rather than duplicate them",
+        default=True,
     )
 
     importSkeleton = BoolProperty(
@@ -233,7 +246,7 @@ class import_map_op(bpy.types.Operator, ImportHelper):
             self.importMaterial,
             self.importSkeleton
         )
-        import_owmap.read(settings, self.importObjects, self.importDetails, self.importPhysics, self.sameMeshData)
+        import_owmap.read(settings, self.importObjects, self.importDetails, self.importPhysics, self.sameMeshData, self.reimportProps, self.importLights)
         print('DONE')
         return {'FINISHED'}
 
@@ -246,6 +259,9 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         col.prop(self, "importEmpties")
         col.prop(self, "importMaterial")
         col.prop(self, "sameMeshData")
+        sub = col.row()
+        sub.prop(self, 'reimportProps')
+        sub.enabled = self.importDetails
         sub = col.row()
         sub.label('UV')
         sub.prop(self, "uvDisplX")
@@ -261,10 +277,10 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         col.label('Map')
         col.prop(self, "importObjects")
         col.prop(self, "importDetails")
-
         sub = col.row()
         sub.prop(self, "importPhysics")
         sub.enabled = self.importDetails
+        col.prop(self, "importLights")
 
 def mdlimp(self, context):
     self.layout.operator(
