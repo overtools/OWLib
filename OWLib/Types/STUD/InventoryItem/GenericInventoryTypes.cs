@@ -17,6 +17,7 @@ namespace OWLib.Types.STUD.InventoryItem {
     public OWRecord name;
     public OWRecord icon;
     public OWRecord unk1;
+    public OWRecord unk2;
     public InventoryRarity rarity;
     public uint amount;
   };

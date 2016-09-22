@@ -168,7 +168,10 @@ namespace OverTool.ExtractLogic {
         if(inst == null) {
           continue;
         }
-        if(inst.Name == record.Manager.GetName(typeof(AnimationList))) {
+        if(inst.Name == record.Manager.GetName(typeof(VictoryPoseItem))) {
+          VictoryPoseItem item = (VictoryPoseItem)inst;
+          FindAnimations(item.Data.f0BF.key, animList, replace, parsed, map, handler);
+        } else if(inst.Name == record.Manager.GetName(typeof(AnimationList))) {
           AnimationList r = (AnimationList)inst;
           foreach(AnimationList.AnimationListEntry entry in r.Entries) {
             ulong bindingKey = entry.animation.key;
@@ -345,23 +348,8 @@ namespace OverTool.ExtractLogic {
         }
         if(inst.Name == record.Manager.GetName(typeof(PoseList))) {
           PoseList r = (PoseList)inst;
-          foreach(PoseList.PoseListEntry entry in r.Entries) {
-            FindAnimations(entry.animation.key, animList, replace, parsed, map, handler, 0);
-          }
-
-          foreach(PoseList.PoseListAnimation entry in r.Animations) {
-            ulong bindingKey = entry.animation.key;
-            if(replace.ContainsKey(bindingKey)) {
-              bindingKey = replace[bindingKey];
-            }
-            if(!map.ContainsKey(bindingKey)) {
-              continue;
-            }
-            if(animList.ContainsKey(bindingKey) && animList[bindingKey] > 0) {
-              continue;
-            }
-            animList[bindingKey] = 0;
-            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, bindingKey);
+          if(r.Header.reference.key != 0) {
+            FindAnimations(r.Header.reference.key, animList, replace, parsed, map, handler, 0);
           }
         }
       }

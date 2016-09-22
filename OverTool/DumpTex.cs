@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using CASCExplorer;
 using OWLib;
 using OWLib.Types;
-using OWLib.Types.STUD;
 using OWLib.Types.STUD.Binding;
 
 namespace OverTool {
@@ -22,6 +20,9 @@ namespace OverTool {
       Console.Out.WriteLine("Scanning for textures...");
       foreach(ulong f003 in track[3]) {
         STUD record = new STUD(Util.OpenFile(map[f003], handler), true, STUDManager.Instance, false, true);
+        if(record.Instances == null) {
+          continue;
+        }
         foreach(ISTUDInstance instance in record.Instances) {
           if(instance == null) {
             continue;
