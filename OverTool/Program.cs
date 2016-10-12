@@ -148,7 +148,7 @@ namespace OverTool {
 
             optfn(track, map, handler, args.Skip(2).ToArray());
             if(System.Diagnostics.Debugger.IsAttached) {
-                System.Diagnostics.Debugger.Break();
+                  System.Diagnostics.Debugger.Break();
             }
         }
     }

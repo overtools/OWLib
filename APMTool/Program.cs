@@ -214,7 +214,9 @@ namespace APMTool {
       }
       if(flag[0] == 't') {
         foreach(ulong type in (HashSet<ulong>)query[0]) {
-          Console.Out.WriteLine("{0:X4} : {1:X3}", type, OWLib.APM.keyToTypeID(type << 48));
+          byte[] be = BitConverter.GetBytes((ushort)type);
+          Array.Reverse(be);
+          Console.Out.WriteLine("{2:X4} : {0:X4} : {1:X3}", (ushort)type, OWLib.APM.keyToTypeID(type << 48), BitConverter.ToUInt16(be, 0));
         }
       }
     }

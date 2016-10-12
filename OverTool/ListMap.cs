@@ -24,7 +24,7 @@ namespace OverTool {
         if(!map.ContainsKey(masterKey)) {
           continue;
         }
-        STUD masterStud = new STUD(Util.OpenFile(map[masterKey], handler));
+        STUD masterStud = new STUD(Util.OpenFile(map[masterKey], handler), true, STUDManager.Instance, false, true);
         if(masterStud.Instances == null) {
           continue;
         }
@@ -36,20 +36,33 @@ namespace OverTool {
         string name = Util.GetString(master.Header.name.key, map, handler);
         Console.Out.WriteLine(name);
         Console.Out.WriteLine("\tID: {0:X8}", APM.keyToIndex(masterKey));
-
-        Console.Out.WriteLine("\tSubline: {0}", Util.GetString(master.Header.subline.key, map, handler));
         
-        TryString("State A", Util.GetString(master.Header.stateA.key, map, handler));
-        TryString("State B", Util.GetString(master.Header.stateB.key, map, handler));
+        string subline = Util.GetString(master.Header.subline.key, map, handler);
+        if(subline == null) {
+          subline = "";
+        }
+        if(master.Header.subline.key != master.Header.subline2.key && master.Header.subline2.key != 0) {
+          subline += " " + Util.GetString(master.Header.subline2.key, map, handler);
+        }
+        subline = subline.Trim();
+        if(subline.Length > 0) {
+          Console.Out.WriteLine("\tSubline: {0}", subline);
+        }
+
+        TryString("State", Util.GetString(master.Header.stateA.key, map, handler));
+        TryString("State", Util.GetString(master.Header.stateB.key, map, handler));
 
         string description = Util.GetString(master.Header.description1.key, map, handler);
         if(description == null) {
           description = "";
         }
-        if(master.Header.description1.key != master.Header.description2.key) {
+        if(master.Header.description1.key != master.Header.description2.key && master.Header.description2.key != 0) {
           description += " " + Util.GetString(master.Header.description2.key, map, handler);
         }
-        Console.Out.WriteLine("\tDescription: {0}", description);
+        description = description.Trim();
+        if(description.Length > 0) {
+          Console.Out.WriteLine("\tDescription: {0}", description);
+        }
       }
     }
   }
