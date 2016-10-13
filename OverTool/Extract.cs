@@ -116,10 +116,10 @@ namespace OverTool {
           }
 
           STUD stud = new STUD(Util.OpenFile(map[record.key], handler));
-          IInventorySTUDInstance instance = (IInventorySTUDInstance)stud.Instances[0];
-          if(instance == null) {
+          if(stud.Instances == null) {
             continue;
           }
+          IInventorySTUDInstance instance = (IInventorySTUDInstance)stud.Instances[0];
           if(!typeWildcard && !types.Contains(instance.Name.ToLowerInvariant())) {
             continue;
           }

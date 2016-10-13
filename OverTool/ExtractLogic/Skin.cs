@@ -506,26 +506,29 @@ namespace OverTool.ExtractLogic {
           if(!map.ContainsKey(key)) {
             continue;
           }
+
           string outpath;
           
           if(!Directory.Exists(Path.GetDirectoryName(path))) {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
           }
+
+          outpath = string.Format("{0}{1:X12}.{2:X3}", path, APM.keyToIndexID(key), APM.keyToTypeID(key));
+
+          using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+            Util.OpenFile(map[key], handler).CopyTo(outp);
+            Console.Out.WriteLine("Wrote raw model {0}", outpath);
+          }
+
           if(furtherOpts.Count > 0 && furtherOpts[0] == '+') { // raw
-            outpath = string.Format("{0}{1:X12}.{2:X3}", path, APM.keyToIndexID(key), APM.keyToTypeID(key));
-            using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-              Util.OpenFile(map[key], handler).CopyTo(outp);
-              Console.Out.WriteLine("Wrote model {0}", outpath);
-            }
             continue;
           }
+
           Model mdl = new Model(Util.OpenFile(map[key], handler));
           string mdlName = string.Format("{0} Skin {1}_{2:X}", heroName, itemName, APM.keyToIndex(key));
 
           outpath = string.Format("{0}{1:X12}{2}", path, APM.keyToIndexID(key), writer.Format);
-          if(!Directory.Exists(Path.GetDirectoryName(outpath))) {
-            Directory.CreateDirectory(Path.GetDirectoryName(outpath));
-          }
+
           using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
             writer.Write(mdl, outp, lods, layers, new object[5] { true, Path.GetFileName(mtlPath), mdlName, null, skipCmodel });
             Console.Out.WriteLine("Wrote model {0}", outpath);
@@ -547,6 +550,7 @@ namespace OverTool.ExtractLogic {
           }
         }
       }
+
       if(furtherOpts.Count < 5 || furtherOpts[4] != 'S') {
         Console.Out.WriteLine("Dumping voice bites for hero {0} with skin {1}", heroName, itemName);
         Dictionary<ulong, List<VoiceLine.SoundOwnerPair>> soundData = VoiceLine.FindSounds(master, track, map, handler, replace);
