@@ -26,11 +26,13 @@ namespace OverTool {
       List<string> maps = args.Skip(1).ToList();
       
       bool skipCmodel = true;
-      if(maps.Last()[0] == '.') {
-        string cmd = maps.Last();
-        maps.Remove(cmd);
-        if(cmd.Length > 1 && cmd[1] == 'C') {
-          skipCmodel = false;
+      if(maps.Count > 0) {
+        if(maps.Last()[0] == '.') {
+          string cmd = maps.Last();
+          maps.Remove(cmd);
+          if(cmd.Length > 1 && cmd[1] == 'C') {
+            skipCmodel = false;
+          }
         }
       }
 
@@ -38,6 +40,9 @@ namespace OverTool {
         maps[i] = maps[i].ToLowerInvariant();
       }
       bool mapWildcard = maps.Count == 0;
+      if(maps.Count > 0 && maps.Contains("*")) {
+        mapWildcard = true;
+      }
 
       List<ulong> masters = track[0x9F];
       List<byte> LODs = new List<byte>(new byte[5] { 0, 1, 128, 254, 255 });
