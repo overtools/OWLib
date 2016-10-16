@@ -13,10 +13,6 @@ namespace OWLib.Types.STUD {
       public OWRecord owner;
       public OWRecord sound;
       public OWRecord definition;
-      public OWRecord unk1;
-      public OWRecord unk2;
-      public OWRecord unk3;
-      public OWRecord virtualRecord;
     }
 
     private SoundMasterReferenceData data;
