@@ -14,8 +14,8 @@ namespace OWLib.Types.Map {
             public MapVec3 position;
             public MapVec3 scale;
             public MapQuat rotation;
-            public uint extraCount;
-            public fixed uint unk[11];
+            public ulong extraCount;
+            public fixed uint unk[10];
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

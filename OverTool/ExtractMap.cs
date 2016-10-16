@@ -84,6 +84,9 @@ namespace OverTool {
           if(!Directory.Exists(outputPath)) {
             Directory.CreateDirectory(outputPath);
           }
+          Dictionary<ulong, List<VoiceLine.SoundOwnerPair>> soundData = new Dictionary<ulong, List<VoiceLine.SoundOwnerPair>>();
+          HashSet<ulong> soundDone = new HashSet<ulong>();
+          VoiceLine.FindSoundsEx(master.Header.audio.key, soundDone, soundData, map, handler, replace);
           using(Stream map2Stream = Util.OpenFile(map[master.DataKey(2)], handler)) {
             Map map2Data = new Map(map2Stream);
             using(Stream map8Stream = Util.OpenFile(map[master.DataKey(8)], handler)) {
@@ -99,6 +102,7 @@ namespace OverTool {
                   if(!map.ContainsKey(mapprop.Header.binding)) {
                     continue;
                   }
+                  VoiceLine.FindSoundsEx(mapprop.Header.binding, soundDone, soundData, map, handler, replace);
                   using(Stream bindingFile = Util.OpenFile(map[mapprop.Header.binding], handler)) {
                     STUD binding = new STUD(bindingFile, true, STUDManager.Instance, false, true);
                     foreach(ISTUDInstance instance in binding.Instances) {
@@ -172,9 +176,6 @@ namespace OverTool {
             }
             
             Console.Out.WriteLine("Dumping sounds...");
-            Dictionary<ulong, List<VoiceLine.SoundOwnerPair>> soundData = new Dictionary<ulong, List<VoiceLine.SoundOwnerPair>>();
-            HashSet<ulong> soundDone = new HashSet<ulong>();
-            VoiceLine.FindSoundsEx(master.Header.audio.key, soundDone, soundData, map, handler, replace);
             string soundPath = string.Format("{0}Sounds{1}", outputPath, Path.DirectorySeparatorChar);
             if(!Directory.Exists(soundPath)) {
               Directory.CreateDirectory(soundPath);
