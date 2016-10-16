@@ -18,14 +18,14 @@ namespace OWLib.Types.STUD {
       public ulong unk1300_1;
       public ulong unk1300_2;
       public ulong unk1300_3;
-      public ulong unk1401_0;
+      public ulong offset1;
       public ulong unk1401_1;
       public OWRecord data;
       public OWRecord background;
       public OWRecord flag;
       public OWRecord f00D1;
-      public OWRecord funk_1401_0;
-      public OWRecord funk_1401_1;
+      public OWRecord f00D2;
+      public OWRecord audio;
       public ulong unk1;
       public ulong unk2;
       public ulong unk3;
@@ -44,7 +44,7 @@ namespace OWLib.Types.STUD {
       public OWRecord texture1;
       public OWRecord unkRecord1;
       public OWRecord unkRecord2;
-      public ulong unk1401_5;
+      public ulong offset2;
       public ulong unk1401_6;
       public uint unk1401_7;
       public uint unk7;
@@ -52,6 +52,7 @@ namespace OWLib.Types.STUD {
       public uint unk9;
       public ulong unkA;
       public ulong unk1401_8;
+      public ulong unk1401_9;
     }
 
     private MapMasterHeader header;

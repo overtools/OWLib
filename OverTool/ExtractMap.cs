@@ -170,6 +170,17 @@ namespace OverTool {
                 Console.Out.WriteLine("Wrote animation {0}", outpath);
               }
             }
+            
+            Console.Out.WriteLine("Dumping sounds...");
+            Dictionary<ulong, List<VoiceLine.SoundOwnerPair>> soundData = new Dictionary<ulong, List<VoiceLine.SoundOwnerPair>>();
+            HashSet<ulong> soundDone = new HashSet<ulong>();
+            VoiceLine.FindSoundsEx(master.Header.audio.key, soundDone, soundData, map, handler, replace);
+            string soundPath = string.Format("{0}Sounds{1}", outputPath, Path.DirectorySeparatorChar);
+            if(!Directory.Exists(soundPath)) {
+              Directory.CreateDirectory(soundPath);
+            }
+
+            DumpVoice.Save(soundPath, soundData, map, handler);
 
             foreach(KeyValuePair<ulong, List<string>> matpair in materials) {
               Dictionary<ulong, List<ImageLayer>> tmp = new Dictionary<ulong, List<ImageLayer>>();
