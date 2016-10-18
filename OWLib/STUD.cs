@@ -20,6 +20,9 @@ namespace OWLib {
     public ISTUDInstance[] Instances => instances;
     public STUDManager Manager => manager;
 
+    public long end = -1;
+    public long start = -1;
+
     public STUD(Stream input, bool initalizeAll = true, STUDManager manager = null, bool leaveOpen = false, bool suppress = false) {
       if(manager == null) {
         manager = this.manager;
@@ -32,13 +35,14 @@ namespace OWLib {
       }
 
       using(BinaryReader reader = new BinaryReader(input, Encoding.Default, leaveOpen)) {
+        start = input.Position;
         header = reader.Read<STUDHeader>();
         if(header.magic != 0x53545544) {
           records = new STUDInstanceRecord[0];
           instances = new ISTUDInstance[0];
           return;
         }
-        input.Position = (long)header.instanceTableOffset;
+        input.Position = start + (long)header.instanceTableOffset;
         STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
 
         records = new STUDInstanceRecord[ptr.count];
@@ -47,6 +51,8 @@ namespace OWLib {
         for(ulong i = 0; i < ptr.count; ++i) {
           records[i] = reader.Read<STUDInstanceRecord>();
         }
+
+        end = input.Position;
 
         if(initalizeAll) {
           InitializeAll(input, suppress);
@@ -69,7 +75,7 @@ namespace OWLib {
     }
 
     public ISTUDInstance Initialize(Stream input, STUDInstanceRecord instance, bool suppress) {
-      input.Position = instance.offset;
+      input.Position = start + instance.offset;
       uint id = 0;
       using(BinaryReader reader = new BinaryReader(input, Encoding.Default, true)) {
         id = reader.ReadUInt32();
@@ -82,8 +88,16 @@ namespace OWLib {
         if((err = manager.InitializeInstance(instance.key, input, out ret, suppress)) != STUD_MANAGER_ERROR.E_SUCCESS) {
           if(err != STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE) {
             Console.Error.WriteLine("Error while instancing for STUD type {0:X8}", id);
-          } else if(!suppress && !outputOffset) {
-            Console.Error.WriteLine("Instance is at offset {0:X16}", instance.offset);
+            if(System.Diagnostics.Debugger.IsAttached) {
+              System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Error while instancing for STUD type {0:X8}\n", id));
+            }
+          } else if(!outputOffset) {
+            if(System.Diagnostics.Debugger.IsAttached) {
+              System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Instance is at offset {0:X16}\n", start + instance.offset));
+            }
+            if(!suppress) {
+              Console.Error.WriteLine("Instance is at offset {0:X16}", start + instance.offset);
+            }
           }
           return null;
         }
@@ -122,8 +136,13 @@ namespace OWLib {
           return implementations[i];
         }
       }
-      if(complained.Add(id) && !suppress) {
-        Console.Error.WriteLine("Warning! Unknown Instance ID {0:X8}", id);
+      if(complained.Add(id)) {
+        if(System.Diagnostics.Debugger.IsAttached) {
+          System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Warning! Unknown Instance ID {0:X8}\n", id));
+        }
+        if(!suppress) {
+          Console.Error.WriteLine("Warning! Unknown Instance ID {0:X8}", id);
+        }
       }
       return null;
     }

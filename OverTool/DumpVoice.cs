@@ -9,27 +9,25 @@ using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
   class DumpVoice {
-    public static void Save(string path, Dictionary<ulong, List<ExtractLogic.VoiceLine.SoundOwnerPair>> soundData, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace = null) {
+    public static void Save(string path, List<ulong> soundData, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace = null) {
       HashSet<ulong> done = new HashSet<ulong>();
-      foreach(List<ExtractLogic.VoiceLine.SoundOwnerPair> list in soundData.Values) {
-        List<ulong> sounds = ExtractLogic.VoiceLine.FlattenSounds(list, map, handler, replace);
-        foreach(ulong key in sounds) {
-          if(!done.Add(key)) {
-            continue;
-          }
-          string ooutputPath = string.Format("{0}{1:X12}", path, APM.keyToIndexID(key));
-          string outputPath = string.Format("{0}{1:X12}", path, APM.keyToIndexID(key));
-          int sigma = 0;
-          while(File.Exists(outputPath + ".wem")) {
-            sigma++;
-            outputPath = ooutputPath + string.Format("_{0:X}", sigma);
-          }
-          outputPath += ".wem";
-          using(Stream soundStream = Util.OpenFile(map[key], handler)) {
-            using(Stream outputStream = File.Open(outputPath, FileMode.Create)) {
-              ExtractLogic.VoiceLine.CopyBytes(soundStream, outputStream, (int)soundStream.Length);
-              Console.Out.WriteLine("Wrote file {0}", outputPath);
-            }
+      List<ulong> sounds = ExtractLogic.VoiceLine.FlattenSounds(soundData, map, handler, replace);
+      foreach(ulong key in sounds) {
+        if(!done.Add(key)) {
+          continue;
+        }
+        string ooutputPath = string.Format("{0}{1:X12}", path, APM.keyToIndexID(key));
+        string outputPath = string.Format("{0}{1:X12}", path, APM.keyToIndexID(key));
+        int sigma = 0;
+        while(File.Exists(outputPath + ".wem")) {
+          sigma++;
+          outputPath = ooutputPath + string.Format("_{0:X}", sigma);
+        }
+        outputPath += ".wem";
+        using(Stream soundStream = Util.OpenFile(map[key], handler)) {
+          using(Stream outputStream = File.Open(outputPath, FileMode.Create)) {
+            ExtractLogic.VoiceLine.CopyBytes(soundStream, outputStream, (int)soundStream.Length);
+            Console.Out.WriteLine("Wrote file {0}", outputPath);
           }
         }
       }
@@ -72,7 +70,7 @@ namespace OverTool {
           }
         }
         Console.Out.WriteLine("Dumping voice bites for hero {0}", heroName);
-        Dictionary<ulong, List<ExtractLogic.VoiceLine.SoundOwnerPair>> soundData = ExtractLogic.VoiceLine.FindSounds(master, track, map, handler);
+        List<ulong> soundData = ExtractLogic.VoiceLine.FindSounds(master, track, map, handler);
         string path = string.Format("{0}{1}{2}{1}{3}{1}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), "Sound Dump");
         if(!Directory.Exists(path)) {
           Directory.CreateDirectory(path);

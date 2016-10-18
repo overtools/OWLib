@@ -12,7 +12,7 @@ namespace OWLib.Types.STUD {
       public STUDInstanceInfo instance;
       public OWRecord owner;
       public OWRecord sound;
-      public OWRecord definition;
+      public OWRecord system;
     }
 
     private SoundMasterReferenceData data;

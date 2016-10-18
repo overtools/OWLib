@@ -84,7 +84,7 @@ namespace OverTool {
           if(!Directory.Exists(outputPath)) {
             Directory.CreateDirectory(outputPath);
           }
-          Dictionary<ulong, List<VoiceLine.SoundOwnerPair>> soundData = new Dictionary<ulong, List<VoiceLine.SoundOwnerPair>>();
+          List<ulong> soundData = new List<ulong>();
           HashSet<ulong> soundDone = new HashSet<ulong>();
           VoiceLine.FindSoundsEx(master.Header.audio.key, soundDone, soundData, map, handler, replace);
           using(Stream map2Stream = Util.OpenFile(map[master.DataKey(2)], handler)) {
@@ -92,7 +92,26 @@ namespace OverTool {
             using(Stream map8Stream = Util.OpenFile(map[master.DataKey(8)], handler)) {
               Map map8Data = new Map(map8Stream);
               using(Stream mapBStream = Util.OpenFile(map[master.DataKey(0xB)], handler)) {
-                Map mapBData = new Map(mapBStream);
+                Map mapBData = new Map(mapBStream, true);
+
+                mapBStream.Position = (long)(Math.Ceiling((float)mapBStream.Position / 16.0f) * 16); // Future proofing
+
+                List<STUD> inlineSTUDArray = new List<STUD>();
+                try {
+                  while(true) { // TODO: Move this to Map.cs
+                    if(inlineSTUDArray.Count > 0 && inlineSTUDArray.Last().end >= mapBStream.Length) {
+                      break;
+                    }
+                    STUD tmp = new STUD(mapBStream, true, STUDManager.Instance, true, false);
+                    mapBStream.Position = tmp.end;
+                    inlineSTUDArray.Add(tmp);
+                  }
+                } catch { break; }
+
+                for(int i = 0; i < inlineSTUDArray.Count; ++i) {
+                  STUD stud = inlineSTUDArray[i];
+                  VoiceLine.FindSoundsSTUD(stud, soundDone, soundData, map, handler, replace);
+                }
 
                 for(int i = 0; i < mapBData.Records.Length; ++i) {
                   if(mapBData.Records[i] != null && mapBData.Records[i].GetType() != typeof(Map0B)) {

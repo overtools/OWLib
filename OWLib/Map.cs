@@ -20,8 +20,8 @@ namespace OWLib {
     public IMapFormat[] Records => records;
     public MapManager Manager => manager;
 
-    public Map(Stream input) {
-      using(BinaryReader reader = new BinaryReader(input)) {
+    public Map(Stream input, bool open = false) {
+      using(BinaryReader reader = new BinaryReader(input, Encoding.Default, open)) {
         header = reader.Read<MapHeader>();
         input.Position = header.offset;
         records = new IMapFormat[header.recordCount];
@@ -31,7 +31,9 @@ namespace OWLib {
           long nps = input.Position + commonHeaders[i].size - 24;
           MAP_MANAGER_ERROR err;
           if((err = manager.InitializeInstance(commonHeaders[i].type, input, out records[i])) != MAP_MANAGER_ERROR.E_SUCCESS) {
-            //Console.Out.WriteLine("Error reading Map type {0:X}", commonHeaders[i]);
+            if(System.Diagnostics.Debugger.IsAttached) {
+              Console.Out.WriteLine("Error reading Map type {0:X}", commonHeaders[i]);
+            }
           }
           input.Position = nps;
         }
