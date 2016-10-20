@@ -33,10 +33,23 @@ namespace OverTool {
                 return;
             }
 
-            bool targetlang = false;
+            string[] validLangs = new string[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" };
             if(args[0][0] == '-' && args[0][1] == 'L') {
-                targetlang = true;
                 string lang = args[0].Substring(2);
+                if(!validLangs.Contains(lang)) {
+                    Console.Out.WriteLine("Language {0} is not supported!", lang);
+                    foreach(string validLang in validLangs) {
+                        if(validLang.ToLowerInvariant().Contains(lang.ToLowerInvariant())) {
+                            lang = validLang;
+                            Console.Out.WriteLine("Autocorrecting selected lanuage to {0}", lang);
+                            break;
+                        }
+                    }
+                }
+                if(!validLangs.Contains(lang)) {
+                  return;
+                }
+                Console.Out.WriteLine("Set language to {0}", lang);
                 OwRootHandler.LanguageScan = lang;
                 args = args.Skip(1).ToArray();
             }
@@ -70,9 +83,9 @@ namespace OverTool {
             }
 
             // Fail when trying to extract data from a specified language with 2 or less files found.
-            if ((ow.APMFiles.Count() <= 2) && (targetlang == true) && ((opt=='v')||(opt=='x')||(opt=='M'))) {
-               Console.Error.WriteLine("Could not find the files for language {0}. Please confirm that you have that language installed, and are using the names from the target language.", OwRootHandler.LanguageScan);
-               return;
+            if(ow.APMFiles.Count() == 0) {
+                Console.Error.WriteLine("Could not find the files for language {0}. Please confirm that you have that language installed, and are using the names from the target language.", OwRootHandler.LanguageScan);
+                return;
             }
 
             Console.Out.WriteLine("Mapping...");
