@@ -13,7 +13,6 @@ namespace OWLib.Types {
     public struct STUDInstanceRecord {
         public uint offset;
         public uint flags;
-        public ulong key;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

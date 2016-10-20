@@ -101,44 +101,7 @@ namespace OverTool.ExtractLogic {
           if(!parsed.Add(infokey)) {
             return;
           }
-          using(Stream info = Util.OpenFile(map[infokey], handler)) {
-            if(info == null) {
-              return;
-            }
-            using(BinaryReader inforeader = new BinaryReader(info)) {
-              info.Position = 0xB0;
-              ulong offset = inforeader.ReadUInt64();
-              info.Position = 0x15C;
-              ushort count = inforeader.ReadUInt16();
-              if(count == 0 || offset == 0) {
-                return;
-              }
-              info.Position = (long)offset;
-              for(int i = 0; i < count; ++i) {
-                long off = info.Position;
-                long nxt = info.Position + 0xD0L;
-                info.Position = off + 0xB0;
-                ulong animkey = inforeader.ReadUInt64();
-                if(animkey == 0) {
-                  continue;
-                }
-                if(replace.ContainsKey(animkey)) {
-                  animkey = replace[animkey];
-                }
-                if(!map.ContainsKey(animkey)) {
-                  continue;
-                }
-                if(APM.keyToTypeID(animkey) != 0x006) {
-                  continue;
-                }
-                if(animList.ContainsKey(animkey) && animList[animkey] > 0) {
-                  continue;
-                }
-                animList[animkey] = parent;
-                FindAnimationsSoft(animkey, animList, replace, parsed, map, handler, animkey);
-              }
-            }
-          }
+          // TODO: Dissect format 08F.
         }
       }
     }
