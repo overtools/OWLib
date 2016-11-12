@@ -42,7 +42,7 @@ namespace OWLib.Types.Chunk {
     public uint format;
     public long dataStreamPointer;
   }
-  
+
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public unsafe struct SubmeshDescriptor {
     fixed float unk1[10];
@@ -59,7 +59,7 @@ namespace OWLib.Types.Chunk {
     public byte indexBuffer;
     fixed byte pad3[7];
     public byte vertexBuffer;
-    public byte flags;
+    public SubmeshFlags flags;
     public byte material;
     public byte lod;
     public uint unk5;
@@ -76,26 +76,37 @@ namespace OWLib.Types.Chunk {
   }
 
   public enum SemanticType : byte {
-    POSITION    = 0x0,
-    NORMAL      = 0x1,
-    COLOR       = 0x2,
-    TANGENT     = 0x3,
-    BONE_INDEX  = 0x4,
+    POSITION = 0x0,
+    NORMAL = 0x1,
+    COLOR = 0x2,
+    TANGENT = 0x3,
+    BONE_INDEX = 0x4,
     BONE_WEIGHT = 0x5,
-    UNKNOWN_1   = 0x6,
-    UNKNOWN_2   = 0x7,
-    UNKNOWN_3   = 0x8,
-    UV          = 0x9,
-    ID          = 0x10
+    UNKNOWN_1 = 0x6,
+    UNKNOWN_2 = 0x7,
+    UNKNOWN_3 = 0x8,
+    UV = 0x9,
+    ID = 0x10
   }
 
   public enum SemanticFormat : byte {
-    NONE         = 0x0,
-    SINGLE_3     = 0x2,
-    HALF_2       = 0x4,
-    UINT8_4      = 0x6,
+    NONE = 0x0,
+    SINGLE_3 = 0x2,
+    HALF_2 = 0x4,
+    UINT8_4 = 0x6,
     UINT8_UNORM4 = 0x8,
     UINT8_SNORM4 = 0x9,
-    UINT32       = 0xC
+    UINT32 = 0xC
+  }
+
+  public enum SubmeshFlags : byte {
+    UNK1 = 1,
+    UNK2 = 2,
+    UNK3 = 4,
+    UNK4 = 8,
+    COLLISION_MESH = 16,
+    UNK6 = 32,
+    UNK7 = 64,
+    UNK8 = 128
   }
 }

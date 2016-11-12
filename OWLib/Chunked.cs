@@ -65,7 +65,7 @@ namespace OWLib.Types {
 
     public KeyValuePair<int, IChunk> FindNextChunk(Type type, int after = 0) {
       for(int i = after; i < chunks.Count; ++i) {
-        if(type.IsInstanceOfType(chunks[i])) {
+        if(chunks[i] != null && type.IsInstanceOfType(chunks[i])) {
           return new KeyValuePair<int, IChunk>(i, chunks[i]);
         }
       }
@@ -74,7 +74,7 @@ namespace OWLib.Types {
 
     public KeyValuePair<int, IChunk> FindNextChunk(string identifier, int after = 0) {
       for(int i = after; i < chunks.Count; ++i) {
-        if(chunks[i].Identifier == identifier) {
+        if(chunks[i] != null && chunks[i].Identifier == identifier) {
           return new KeyValuePair<int, IChunk>(i, chunks[i]);
         }
       }
