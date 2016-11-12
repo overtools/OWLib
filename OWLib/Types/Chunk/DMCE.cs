@@ -7,7 +7,15 @@ namespace OWLib.Types.Chunk {
     {
       get
       {
-        return "DMCE";
+        return "DMCE"; // ECMD - Entity Child Model Data?
+      }
+    }
+
+    public string RootIdentifier
+    {
+      get
+      {
+        return "TCFE"; // EFCT - Effect?
       }
     }
     

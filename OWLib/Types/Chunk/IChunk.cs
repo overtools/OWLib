@@ -7,6 +7,11 @@ namespace OWLib.Types.Chunk {
       get;
     }
 
+    string RootIdentifier
+    {
+      get;
+    }
+
     void Parse(Stream input);
   }
 }

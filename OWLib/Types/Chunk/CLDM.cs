@@ -7,7 +7,15 @@ namespace OWLib.Types.Chunk {
     {
       get
       {
-        return "CLDM";
+        return "CLDM"; // MDLC
+      }
+    }
+
+    public string RootIdentifier
+    {
+      get
+      {
+        return "LDOM"; // MODL
       }
     }
     

@@ -8,7 +8,15 @@ namespace OWLib.Types.Chunk {
     {
       get
       {
-        return "MNRM";
+        return "MNRM"; // MRNM
+      }
+    }
+
+    public string RootIdentifier
+    {
+      get
+      {
+        return "LDOM"; // MODL
       }
     }
 
@@ -55,7 +63,7 @@ namespace OWLib.Types.Chunk {
 
     public void ParseIBO(BinaryReader reader) {
       reader.BaseStream.Position = Mesh.indexBufferDescriptorPointer;
-      for(int i = 0; i < Mesh.vertexBufferDescriptorCount; ++i) {
+      for(int i = 0; i < Mesh.indexBufferDescriptorCount; ++i) {
         IndexBufferDescriptor descriptor = reader.Read<IndexBufferDescriptor>();
         IndexBuffers[i] = descriptor;
       }

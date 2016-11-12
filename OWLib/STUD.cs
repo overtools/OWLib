@@ -74,10 +74,10 @@ namespace OWLib {
       }
       input.Position -= 4;
       ISTUDInstance ret = null;
-      STUD_MANAGER_ERROR err;
+      MANAGER_ERROR err;
       bool outputOffset = STUDManager.Complained.Contains(id);
-      if((err = manager.InitializeInstance(id, input, out ret, suppress)) != STUD_MANAGER_ERROR.E_SUCCESS) {
-        if(err != STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE) {
+      if((err = manager.InitializeInstance(id, input, out ret, suppress)) != MANAGER_ERROR.E_SUCCESS) {
+        if(err != MANAGER_ERROR.E_UNKNOWN) {
           Console.Error.WriteLine("Error while instancing for STUD type {0:X8}", id);
           if(System.Diagnostics.Debugger.IsAttached) {
             System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Error while instancing for STUD type {0:X8}\n", id));
@@ -146,24 +146,24 @@ namespace OWLib {
       return null;
     }
     
-    public STUD_MANAGER_ERROR InitializeInstance(uint id, Stream input, out ISTUDInstance instance, bool suppress) {
+    public MANAGER_ERROR InitializeInstance(uint id, Stream input, out ISTUDInstance instance, bool suppress) {
       return InitializeInstance(GetInstance(id, suppress), input, out instance);
     }
 
-    public STUD_MANAGER_ERROR InitializeInstance(ulong id, Stream input, out ISTUDInstance instance, bool suppress) {
+    public MANAGER_ERROR InitializeInstance(ulong id, Stream input, out ISTUDInstance instance, bool suppress) {
       return InitializeInstance(GetInstance(id, suppress), input, out instance);
     }
 
-    public STUD_MANAGER_ERROR InitializeInstance(Type inst, Stream input, out ISTUDInstance instance) {
+    public MANAGER_ERROR InitializeInstance(Type inst, Stream input, out ISTUDInstance instance) {
       if(inst == null) {
         instance = null;
-        return STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE;
+        return MANAGER_ERROR.E_UNKNOWN;
       }
 
       if(System.Diagnostics.Debugger.IsAttached) {
         instance = (ISTUDInstance)Activator.CreateInstance(inst);
         instance.Read(input);
-        return STUD_MANAGER_ERROR.E_SUCCESS;
+        return MANAGER_ERROR.E_SUCCESS;
       }
 
       try {
@@ -172,10 +172,10 @@ namespace OWLib {
       } catch (Exception ex) {
         Console.Error.WriteLine(ex.Message);
         instance = null;
-        return STUD_MANAGER_ERROR.E_FAULT;
+        return MANAGER_ERROR.E_FAULT;
       }
 
-      return STUD_MANAGER_ERROR.E_SUCCESS;
+      return MANAGER_ERROR.E_SUCCESS;
     }
 
     public string GetName(uint id) {
@@ -237,19 +237,19 @@ namespace OWLib {
       return GetKey(instance);
     }
 
-    public STUD_MANAGER_ERROR AddInstance(ISTUDInstance instance) {
+    public MANAGER_ERROR AddInstance(ISTUDInstance instance) {
       if(instance == null) {
-        return STUD_MANAGER_ERROR.E_FAULT;
+        return MANAGER_ERROR.E_FAULT;
       }
       return AddInstance(instance.GetType());
     }
 
-    public STUD_MANAGER_ERROR AddInstance(Type instance) {
+    public MANAGER_ERROR AddInstance(Type instance) {
       if(instance == null) {
-        return STUD_MANAGER_ERROR.E_FAULT;
+        return MANAGER_ERROR.E_FAULT;
       }
       if(implementations.Contains(instance)) {
-        return STUD_MANAGER_ERROR.E_DUPLICATE;
+        return MANAGER_ERROR.E_DUPLICATE;
       }
       ulong key = GetKey(instance);
       uint id = GetId(instance);
@@ -258,16 +258,16 @@ namespace OWLib {
         Console.Error.WriteLine("Error! {0:X16} still has no ID!", key);
       }
       if(instanceIds.Contains(key) && ids.Contains(id)) {
-        return STUD_MANAGER_ERROR.E_DUPLICATE;
+        return MANAGER_ERROR.E_DUPLICATE;
       }
       if(names.Contains(name)) {
-        return STUD_MANAGER_ERROR.E_DUPLICATE;
+        return MANAGER_ERROR.E_DUPLICATE;
       }
       implementations.Add(instance);
       ids.Add(id);
       instanceIds.Add(key);
       names.Add(name);
-      return STUD_MANAGER_ERROR.E_SUCCESS;
+      return MANAGER_ERROR.E_SUCCESS;
     }
 
     public static STUDManager NewInstance() {
