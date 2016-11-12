@@ -7,7 +7,7 @@ namespace OWLib.Types.Chunk {
     {
       get
       {
-        return "DMCE"; // ECMD - Entity Child Model Data?
+        return "DMCE"; // ECMD - Effect Child Model Data
       }
     }
 
@@ -15,7 +15,7 @@ namespace OWLib.Types.Chunk {
     {
       get
       {
-        return "TCFE"; // EFCT - Effect?
+        return "TCFE"; // EFCT - Effect
       }
     }
     

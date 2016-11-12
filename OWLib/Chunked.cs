@@ -127,7 +127,9 @@ namespace OWLib.Types {
       Type t = typeof(IChunk);
       List<Type> types = asm.GetTypes().Where(type => type != t && t.IsAssignableFrom(type)).ToList();
       foreach(Type type in types) {
-        Console.Out.WriteLine(type.FullName);
+        if(type.IsInterface) {
+          continue;
+        }
         manager.AddChunk(type);
       }
       return manager;
