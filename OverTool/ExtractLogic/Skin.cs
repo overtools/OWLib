@@ -443,16 +443,22 @@ namespace OverTool.ExtractLogic {
           IModelWriter tmp = new OWMATWriter();
           mtlPath = string.Format("{0}material{1}", path, tmp.Format);
           using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
-            tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) });
-            Console.Out.WriteLine("Wrote materials {0}", mtlPath);
+            if(tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) })) {
+              Console.Out.WriteLine("Wrote materials {0}", mtlPath);
+            } else {
+              Console.Out.WriteLine("Failed to write material");
+            }
           }
         } else if(writer.GetType() == typeof(OBJWriter)) {
           writer = new OBJWriter();
           IModelWriter tmp = new MTLWriter();
           mtlPath = string.Format("{0}material{1}", path, tmp.Format);
           using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
-            tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) });
-            Console.Out.WriteLine("Wrote materials {0}", mtlPath);
+            if(tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) })) {
+              Console.Out.WriteLine("Wrote materials {0}", mtlPath);
+            } else {
+              Console.Out.WriteLine("Failed to write material");
+            }
           }
         }
       }
@@ -487,14 +493,17 @@ namespace OverTool.ExtractLogic {
             continue;
           }
 
-          Model mdl = new Model(Util.OpenFile(map[key], handler));
+          Chunked mdl = new Chunked(Util.OpenFile(map[key], handler));
           string mdlName = string.Format("{0} Skin {1}_{2:X}", heroName, itemName, APM.keyToIndex(key));
 
           outpath = string.Format("{0}{1:X12}{2}", path, APM.keyToIndexID(key), writer.Format);
 
           using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-            writer.Write(mdl, outp, lods, layers, new object[5] { true, Path.GetFileName(mtlPath), mdlName, null, skipCmodel });
-            Console.Out.WriteLine("Wrote model {0}", outpath);
+            if(writer.Write(mdl, outp, lods, layers, new object[5] { true, Path.GetFileName(mtlPath), mdlName, null, skipCmodel })) {
+              Console.Out.WriteLine("Wrote model {0}", outpath);
+            } else {
+              Console.Out.WriteLine("Failed to write model");
+            }
           }
         }
       }

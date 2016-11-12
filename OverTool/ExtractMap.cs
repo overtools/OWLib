@@ -172,11 +172,14 @@ namespace OverTool {
                 continue;
               }
               using(Stream modelStream = Util.OpenFile(map[modelpair.Key], handler)) {
-                Model mdl = new Model(modelStream);
+                Chunked mdl = new Chunked(modelStream);
                 foreach(string modelOutput in modelpair.Value) {
                   using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, modelOutput), FileMode.Create, FileAccess.Write)) {
-                    owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel });
-                    Console.Out.WriteLine("Wrote model {0}", modelOutput);
+                    if(owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel })) {
+                      Console.Out.WriteLine("Wrote model {0}", modelOutput);
+                    } else {
+                      Console.Out.WriteLine("Failed to write model");
+                    }
                   }
                 }
               }
@@ -223,8 +226,11 @@ namespace OverTool {
 
               foreach(string matOutput in matpair.Value) {
                 using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, matOutput), FileMode.Create, FileAccess.Write)) {
-                  owmat.Write(null, outputStream, null, tmp, new object[0]);
-                  Console.Out.WriteLine("Wrote material {0}", matOutput);
+                  if(owmat.Write(null, outputStream, null, tmp, new object[0])) {
+                    Console.Out.WriteLine("Wrote material {0}", matOutput);
+                  } else {
+                    Console.Out.WriteLine("Failed to write material");
+                  }
                 }
               }
             }
