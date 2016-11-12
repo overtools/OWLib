@@ -24,7 +24,7 @@ namespace OWLib.Types.Chunk {
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
   public struct VertexBufferDescriptor {
-    public uint inputElementCount;
+    public uint vertexCount;
     public uint unk1;
     public byte strideStream1;
     public byte strideStream2;
@@ -55,14 +55,14 @@ namespace OWLib.Types.Chunk {
     public ushort indexCount;
     public ushort indicesToDraw;
     public ushort verticesToDraw;
-    ushort pad2;
+    public ushort boneIdOffset;
     public byte indexBuffer;
     fixed byte pad3[7];
     public byte vertexBuffer;
     public byte flags;
     public byte material;
     public byte lod;
-    public ulong unk5;
+    public uint unk5;
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -86,7 +86,7 @@ namespace OWLib.Types.Chunk {
     UNKNOWN_2   = 0x7,
     UNKNOWN_3   = 0x8,
     UV          = 0x9,
-    ID          = 0xA
+    ID          = 0x10
   }
 
   public enum SemanticFormat : byte {

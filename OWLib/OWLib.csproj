@@ -119,6 +119,7 @@
     <Compile Include="Types\STUD\MaterialMaster.cs" />
     <Compile Include="Types\STUD\TextureOverride.cs" />
     <Compile Include="Types\TextureTypes.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config" />

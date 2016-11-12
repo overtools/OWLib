@@ -19,19 +19,22 @@ namespace OWLib.Types.Chunk {
         return "LDOM"; // MODL
       }
     }
-
+    
     private static HashSet<SemanticFormat> unhandledSemanticFormats = new HashSet<SemanticFormat>();
+    private static HashSet<SemanticType> unhandledSemanticTypes = new HashSet<SemanticType>();
 
     public MeshDescriptor Mesh;
     public VertexBufferDescriptor[] VertexBuffers;
     public IndexBufferDescriptor[] IndexBuffers;
     public VertexElementDescriptor[][] VertexElements;
     public SubmeshDescriptor[] Submeshes;
-
+    
     public ModelVertex[][] Vertices;
+    public ModelVertex[][] Normals;
     public ModelIndice[][] Indices;
     public ModelUV[][][] TextureCoordinates;
     public ModelBoneData[][] Bones;
+    public object[][][][] Stride; // buffer -> stream -> vertex -> element
 
     public void Parse(Stream input) {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
@@ -40,11 +43,19 @@ namespace OWLib.Types.Chunk {
         VertexBuffers = new VertexBufferDescriptor[Mesh.vertexBufferDescriptorCount];
         VertexElements = new VertexElementDescriptor[Mesh.vertexBufferDescriptorCount][];
         IndexBuffers = new IndexBufferDescriptor[Mesh.indexBufferDescriptorCount];
+        Stride = new object[Mesh.vertexBufferDescriptorCount][][][];
+
         Submeshes = new SubmeshDescriptor[Mesh.submeshDescriptorCount];
+        Vertices = new ModelVertex[Mesh.submeshDescriptorCount][];
+        Normals = new ModelVertex[Mesh.submeshDescriptorCount][];
+        Indices = new ModelIndice[Mesh.submeshDescriptorCount][];
+        TextureCoordinates = new ModelUV[Mesh.submeshDescriptorCount][][];
+        Bones = new ModelBoneData[Mesh.submeshDescriptorCount][];
 
         ParseVBO(reader);
         ParseIBO(reader);
         ParseSubmesh(reader);
+        ParseStride(reader);
         GenerateMeshes(reader);
       }
     }
@@ -107,6 +118,31 @@ namespace OWLib.Types.Chunk {
       }
       return elements;
     }
+
+    // buffer -> stream -> vertex -> element
+    public void ParseStride(BinaryReader reader) {
+      for(int i = 0; i < VertexBuffers.Length; ++i) {
+        VertexBufferDescriptor vbo = VertexBuffers[i];
+        Stride[i] = new object[2][][];
+        long[] offset = new long[2] { vbo.dataStream1Pointer, vbo.dataStream2Pointer };
+        byte[] sizes = new byte[2] { vbo.strideStream1, vbo.strideStream2 };
+        VertexElementDescriptor[][] elements = SplitVBE(VertexElements[i]);
+        for(int j = 0; j < offset.Length; ++j) {
+          Stride[i][j] = new object[vbo.vertexCount][];
+          reader.BaseStream.Position = offset[j];
+          for(int k = 0; k < vbo.vertexCount; ++k) {
+            Stride[i][j][k] = new object[elements[j].Length];
+            long next = reader.BaseStream.Position + sizes[j];
+            long current = reader.BaseStream.Position;
+            for(int l = 0; l < elements[j].Length; ++l) {
+              reader.BaseStream.Position = current + elements[j][l].offset;
+              Stride[i][j][k][l] = ReadElement(elements[j][l].format, reader);
+            }
+            reader.BaseStream.Position = next;
+          }
+        }
+      }
+    }
     #endregion
 
     public object ReadElement(SemanticFormat format, BinaryReader reader) {
@@ -133,8 +169,138 @@ namespace OWLib.Types.Chunk {
       }
     }
 
+    private byte GetMaxIndex(VertexElementDescriptor[] elements, SemanticType type) {
+      byte max = 0;
+      foreach(VertexElementDescriptor element in elements) {
+        if(element.type == type) {
+          max = Math.Max(max, element.index);
+        }
+      }
+      max += 1;
+      return max;
+    }
+
     public void GenerateMeshes(BinaryReader reader) {
       // TODO
+      for(int i = 0; i < Submeshes.Length; ++i) {
+        SubmeshDescriptor submesh = Submeshes[i];
+        VertexBufferDescriptor vbo = VertexBuffers[submesh.vertexBuffer];
+        IndexBufferDescriptor ibo = IndexBuffers[submesh.indexBuffer];
+        byte uvCount = GetMaxIndex(VertexElements[submesh.vertexBuffer], SemanticType.UV);
+
+        #region IBO
+        ModelIndice[] indices = new ModelIndice[submesh.indicesToDraw / 3];
+
+        reader.BaseStream.Position = ibo.dataStreamPointer + submesh.indexStart * 2;
+        List<ushort> indexTracker = new List<ushort>(submesh.verticesToDraw);
+        for(int j = 0; j < submesh.indicesToDraw / 3; ++j) {
+          ModelIndice index = reader.Read<ModelIndice>();
+          int v1 = indexTracker.IndexOf(index.v1);
+          if(v1 == -1) {
+            v1 = indexTracker.Count;
+            indexTracker.Add(index.v1);
+          }
+
+          int v2 = indexTracker.IndexOf(index.v2);
+          if(v2 == -1) {
+            v2 = indexTracker.Count;
+            indexTracker.Add(index.v2);
+          }
+
+          int v3 = indexTracker.IndexOf(index.v3);
+          if(v3 == -1) {
+            v3 = indexTracker.Count;
+            indexTracker.Add(index.v3);
+          }
+
+          indices[j] = new ModelIndice { v1 = (ushort)v1, v2 = (ushort)v2, v3 = (ushort)v3 }; 
+        }
+        Indices[i] = indices;
+        #endregion
+
+        #region UV Pre.
+        ModelUV[][] uv = new ModelUV[uvCount][];
+        for(int j = 0; j < uvCount; ++j) {
+          uv[j] = new ModelUV[submesh.verticesToDraw];
+        }
+        #endregion
+
+        #region VBO
+        ModelVertex[] vertex = new ModelVertex[submesh.verticesToDraw];
+        ModelBoneData[] bone = new ModelBoneData[submesh.verticesToDraw];
+        ModelVertex[] normal = new ModelVertex[submesh.verticesToDraw];
+
+        VertexElementDescriptor[][] elements = SplitVBE(VertexElements[submesh.vertexBuffer]);
+        for(int j = 0; j < Stride[submesh.vertexBuffer].Length; ++j) {
+          for(int k = 0; k < submesh.verticesToDraw; ++k) {
+            long offset = submesh.vertexStart + indexTracker[k];
+            for(int l = 0; l < elements[j].Length; ++l) {
+              VertexElementDescriptor element = elements[j][l];
+              if(element.format == SemanticFormat.NONE) {
+                break;
+              }
+              object[][][] v1 = Stride[submesh.vertexBuffer];
+              object[][] v2 = v1[j];
+              object[] v3 = v2[offset];
+              object value = v3[l]; // Stride[submesh.vertexBuffer][j][offset]
+              switch(element.type) {
+                case SemanticType.POSITION:
+                    if(element.index == 0) {
+                      float[] t = (float[])value;
+                      vertex[k] = new ModelVertex { x = t[0], y = t[1], z = t[2] };
+                    } else {
+                      Console.Error.WriteLine("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type));
+                    }
+                  break;
+                case SemanticType.NORMAL:
+                    if(element.index == 0) {
+                      float[] t = (float[])value;
+                      normal[k] = new ModelVertex { x = t[0], y = t[1], z = t[2] };
+                    } else {
+                      Console.Error.WriteLine("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type));
+                    }
+                  break;
+                case SemanticType.UV: {
+                    ushort[] t = (ushort[])value;
+                    uv[element.index][k] = new ModelUV { u = Half.ToHalf(t[0]), v = Half.ToHalf(t[1]) };
+                  }
+                  break;
+                case SemanticType.BONE_INDEX:
+                    if(element.index == 0) {
+                      byte[] t = (byte[])value;
+                      bone[k].boneIndex = new ushort[t.Length];
+                      for(int m = 0; m < t.Length; ++m) {
+                        bone[k].boneIndex[m] = (ushort)(t[l] + submesh.boneIdOffset);
+                      }
+                    } else {
+                      Console.Error.WriteLine("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type));
+                    }
+                  break;
+                case SemanticType.BONE_WEIGHT:
+                  if(element.index == 0) {
+                    bone[k].boneWeight = (float[])value;
+                  } else {
+                      Console.Error.WriteLine("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type));
+                  }
+                  break;
+                default:
+                  if(unhandledSemanticTypes.Add(element.type)) {
+                    Console.Out.WriteLine("Unhandled vertex type {0}!", Util.GetEnumName(typeof(SemanticType), element.type));
+                  }
+                  break;
+              }
+            }
+          }
+        }
+
+        indexTracker.Clear();
+        
+        TextureCoordinates[i] = uv;
+        Vertices[i] = vertex;
+        Bones[i] = bone;
+        Normals[i] = normal;
+        #endregion
+      }
     }
   }
 }
