@@ -239,10 +239,7 @@ namespace OWLib.Types.Chunk {
               if(element.format == SemanticFormat.NONE) {
                 break;
               }
-              object[][][] v1 = Stride[submesh.vertexBuffer];
-              object[][] v2 = v1[j];
-              object[] v3 = v2[offset];
-              object value = v3[l]; // Stride[submesh.vertexBuffer][j][offset]
+              object value = Stride[submesh.vertexBuffer][j][offset][l]; 
               switch(element.type) {
                 case SemanticType.POSITION:
                     if(element.index == 0) {
