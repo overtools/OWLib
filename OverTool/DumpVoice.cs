@@ -34,8 +34,6 @@ namespace OverTool {
     }
 
     public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
-      Console.Out.WriteLine("Voice extraction is temporary broken");
-      return; // TODO FIX
       if(args.Length < 1) {
         Console.Out.WriteLine("Usage: OverTool.exe overwatch v output [hero query]");
         return;

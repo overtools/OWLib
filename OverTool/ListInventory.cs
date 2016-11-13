@@ -30,7 +30,7 @@ namespace OverTool {
         return;
       }
 
-      Console.Out.WriteLine("\t{0} ({1} {2})", name, instance.Header.rarity, stud.Instances[0].Name);
+      Console.Out.WriteLine("\t{0} ({1} {2} p{3:X16})", name, instance.Header.rarity, stud.Instances[0].Name, map[key].package.packageKey, map[key].record.Key);
     }
 
     public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
@@ -51,7 +51,7 @@ namespace OverTool {
         if(heroName == null) {
           continue;
         }
-        Console.Out.WriteLine("Cosmetics for {0}...", heroName);
+        Console.Out.WriteLine("Cosmetics for {0}... (p{1:X16})", heroName, map[masterKey].package.packageKey, map[masterKey].record.Key);
         if(!map.ContainsKey(master.Header.itemMaster.key)) {
           Console.Out.WriteLine("Error loading inventory master file...");
           continue;
