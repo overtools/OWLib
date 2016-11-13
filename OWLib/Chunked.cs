@@ -34,6 +34,9 @@ namespace OWLib.Types {
       chunks = new List<IChunk>();
       entrees = new List<ChunkedEntry>();
       entryOffsets = new List<long>();
+      if(input == null) {
+        return;
+      }
 
       start = input.Position;
 
