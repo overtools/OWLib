@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
-  class DMCE : IChunk {
+  public class DMCE : IChunk {
     public string Identifier
     {
       get

@@ -11,6 +11,7 @@ using OWLib.Types.STUD.InventoryItem;
 using OWLib.ModelWriter;
 using System.Reflection;
 using System.Linq;
+using OWLib.Types.Chunk;
 
 namespace OverTool.ExtractLogic {
   class Skin {
@@ -68,7 +69,7 @@ namespace OverTool.ExtractLogic {
       }
     }
 
-    private static void FindAnimationsSoft(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, ulong parent = 0) {
+    private static void FindAnimationsSoft(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, ulong parent = 0) {
       if(!map.ContainsKey(key)) {
         return;
       }
@@ -101,12 +102,20 @@ namespace OverTool.ExtractLogic {
           if(!parsed.Add(infokey)) {
             return;
           }
-          // TODO: Dissect format 08F.
+          Chunked chunked = new Chunked(Util.OpenFile(map[key], handler));
+          DMCE[] chunks = chunked.GetAllOfTypeFlat<DMCE>();
+          foreach(DMCE dmce in chunks) {
+            models.Add(dmce.Data.modelKey);
+            FindTextures(dmce.Data.materialKey, layers, replace, parsed, map, handler);
+            if(!animList.ContainsKey(dmce.Data.animationKey)) {
+              animList[dmce.Data.animationKey] = parent;
+            }
+          }
         }
       }
     }
 
-    public static void FindAnimations(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, ulong parent = 0) {
+    public static void FindAnimations(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, ulong parent = 0) {
       if(key == 0) {
         return;
       }
@@ -133,7 +142,7 @@ namespace OverTool.ExtractLogic {
         }
         if(inst.Name == record.Manager.GetName(typeof(VictoryPoseItem))) {
           VictoryPoseItem item = (VictoryPoseItem)inst;
-          FindAnimations(item.Data.f0BF.key, animList, replace, parsed, map, handler);
+          FindAnimations(item.Data.f0BF.key, animList, replace, parsed, map, handler, models, layers);
         } else if(inst.Name == record.Manager.GetName(typeof(AnimationList))) {
           AnimationList r = (AnimationList)inst;
           foreach(AnimationList.AnimationListEntry entry in r.Entries) {
@@ -148,7 +157,7 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             animList[bindingKey] = parent;
-            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, bindingKey);
+            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
           }
         }
         if(inst.Name == record.Manager.GetName(typeof(Pose))) {
@@ -165,13 +174,13 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             animList[bindingKey] = parent;
-            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, bindingKey);
+            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
           }
         }
         if(inst.Name == record.Manager.GetName(typeof(AnimationListInfo))) {
           AnimationListInfo r = (AnimationListInfo)inst;
           foreach(AnimationListInfo.AnimationListEntry entry in r.Entries) {
-            FindAnimations(entry.secondary.key, animList, replace, parsed, map, handler, parent);
+            FindAnimations(entry.secondary.key, animList, replace, parsed, map, handler, models, layers, parent);
           }
         }
         if(inst.Name == record.Manager.GetName(typeof(AnimationListReference))) {
@@ -190,9 +199,9 @@ namespace OverTool.ExtractLogic {
             ulong keyid = APM.keyToTypeID(bindingKey);
             if(keyid == 0x6) {
               animList[bindingKey] = parent;
-              FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, bindingKey);
+              FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
             } else if(keyid == 0x20 || keyid == 0x21) {
-              FindAnimations(bindingKey, animList, replace, parsed, map, handler, parent);
+              FindAnimations(bindingKey, animList, replace, parsed, map, handler, models, layers, parent);
             }
           }
         }
@@ -238,8 +247,8 @@ namespace OverTool.ExtractLogic {
             continue;
           }
           models.Add(modelKey);
-          FindAnimations(r.Data.animationList.key, animList, replace, parsed, map, handler, modelKey);
-          FindAnimations(r.Data.secondaryAnimationList.key, animList, replace, parsed, map, handler, modelKey);
+          FindAnimations(r.Data.animationList.key, animList, replace, parsed, map, handler, models, layers, modelKey);
+          FindAnimations(r.Data.secondaryAnimationList.key, animList, replace, parsed, map, handler, models, layers, modelKey);
           ulong target = r.Data.material.key;
           if(replace.ContainsKey(target)) {
             target = replace[target];
@@ -306,13 +315,13 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             animList[bindingKey] = 0;
-            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, bindingKey);
+            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
           }
         }
         if(inst.Name == record.Manager.GetName(typeof(PoseList))) {
           PoseList r = (PoseList)inst;
           if(r.Header.reference.key != 0) {
-            FindAnimations(r.Header.reference.key, animList, replace, parsed, map, handler, 0);
+            FindAnimations(r.Header.reference.key, animList, replace, parsed, map, handler, models, layers, 0);
           }
         }
       }

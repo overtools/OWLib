@@ -80,6 +80,26 @@ namespace OWLib.Types {
       }
       return new KeyValuePair<int, IChunk>(-1, null);
     }
+
+    public KeyValuePair<int, T>[] GetAllOfType<T>(int after = 0) where T : IChunk {
+      List<KeyValuePair<int, T>> ret = new List<KeyValuePair<int, T>>();
+      Type type = typeof(T);
+      for(int i = after; i < chunks.Count; ++i) {
+        if(chunks[i] != null && type.IsInstanceOfType(chunks[i])) {
+          ret.Add(new KeyValuePair<int, T>(i, (T)chunks[i]));
+        }
+      }
+      return ret.ToArray<KeyValuePair<int, T>>();
+    }
+
+    public T[] GetAllOfTypeFlat<T>(int after = 0) where T : IChunk {
+      KeyValuePair<int, T>[] v = GetAllOfType<T>(after);
+      T[] ret = new T[v.Length];
+      for(int i = 0; i < v.Length; ++i) {
+        ret[i] = v[i].Value;
+      }
+      return ret;
+    }
   }
 
   public class ChunkManager {
