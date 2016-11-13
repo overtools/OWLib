@@ -32,7 +32,7 @@ namespace OWLib {
           MANAGER_ERROR err;
           if((err = manager.InitializeInstance(commonHeaders[i].type, input, out records[i])) != MANAGER_ERROR.E_SUCCESS) {
             if(System.Diagnostics.Debugger.IsAttached) {
-              Console.Out.WriteLine("Error reading Map type {0:X}", commonHeaders[i]);
+              System.Diagnostics.Debugger.Log(2, "MAP", string.Format("Error reading Map type {0:X}", commonHeaders[i]));
             }
           }
           input.Position = nps;

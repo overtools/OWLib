@@ -97,16 +97,17 @@ namespace OverTool {
                 mapBStream.Position = (long)(Math.Ceiling((float)mapBStream.Position / 16.0f) * 16); // Future proofing
 
                 List<STUD> inlineSTUDArray = new List<STUD>();
-                try {
-                  while(true) { // TODO: Move this to Map.cs
-                    if(inlineSTUDArray.Count > 0 && inlineSTUDArray.Last().end >= mapBStream.Length) {
-                      break;
-                    }
-                    STUD tmp = new STUD(mapBStream, true, STUDManager.Instance, true, false);
-                    mapBStream.Position = tmp.end;
-                    inlineSTUDArray.Add(tmp);
+                while(true) { // TODO: Move this to Map.cs
+                  if(mapBStream.Position >= mapBStream.Length) {
+                    break;
                   }
-                } catch { break; }
+                  STUD tmp = new STUD(mapBStream, true, STUDManager.Instance, true, false);
+                  if(tmp.end == -1) {
+                    break;
+                  }
+                  mapBStream.Position = (long)(Math.Ceiling((float)tmp.end / 16.0f) * 16); // Future proofing
+                  inlineSTUDArray.Add(tmp);
+                }
 
                 for(int i = 0; i < inlineSTUDArray.Count; ++i) {
                   STUD stud = inlineSTUDArray[i];

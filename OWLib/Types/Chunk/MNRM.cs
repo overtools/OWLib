@@ -19,7 +19,7 @@ namespace OWLib.Types.Chunk {
         return "LDOM"; // MODL
       }
     }
-    
+
     private static HashSet<SemanticFormat> unhandledSemanticFormats = new HashSet<SemanticFormat>();
     private static HashSet<SemanticType> unhandledSemanticTypes = new HashSet<SemanticType>();
 
@@ -28,7 +28,7 @@ namespace OWLib.Types.Chunk {
     public IndexBufferDescriptor[] IndexBuffers;
     public VertexElementDescriptor[][] VertexElements;
     public SubmeshDescriptor[] Submeshes;
-    
+
     public ModelVertex[][] Vertices;
     public ModelVertex[][] Normals;
     public ModelIndice[][] Indices;
@@ -163,7 +163,9 @@ namespace OWLib.Types.Chunk {
           return reader.ReadUInt32();
         default:
           if(unhandledSemanticFormats.Add(format)) {
-            Console.Out.WriteLine("Unhandled Semantic Format {0:X}!", format);
+            if(System.Diagnostics.Debugger.IsAttached) {
+              System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled Semantic Format {0:X}!", format));
+            }
           }
           return null;
       }
@@ -213,7 +215,7 @@ namespace OWLib.Types.Chunk {
             indexTracker.Add(index.v3);
           }
 
-          indices[j] = new ModelIndice { v1 = (ushort)v1, v2 = (ushort)v2, v3 = (ushort)v3 }; 
+          indices[j] = new ModelIndice { v1 = (ushort)v1, v2 = (ushort)v2, v3 = (ushort)v3 };
         }
         Indices[i] = indices;
         #endregion
@@ -239,23 +241,27 @@ namespace OWLib.Types.Chunk {
               if(element.format == SemanticFormat.NONE) {
                 break;
               }
-              object value = Stride[submesh.vertexBuffer][j][offset][l]; 
+              object value = Stride[submesh.vertexBuffer][j][offset][l];
               switch(element.type) {
                 case SemanticType.POSITION:
-                    if(element.index == 0) {
-                      float[] t = (float[])value;
-                      vertex[k] = new ModelVertex { x = t[0], y = t[1], z = t[2] };
-                    } else {
-                      Console.Error.WriteLine("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type));
+                  if(element.index == 0) {
+                    float[] t = (float[])value;
+                    vertex[k] = new ModelVertex { x = t[0], y = t[1], z = t[2] };
+                  } else {
+                    if(System.Diagnostics.Debugger.IsAttached) {
+                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
                     }
+                  }
                   break;
                 case SemanticType.NORMAL:
-                    if(element.index == 0) {
-                      float[] t = (float[])value;
-                      normal[k] = new ModelVertex { x = t[0], y = t[1], z = t[2] };
-                    } else {
-                      Console.Error.WriteLine("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type));
+                  if(element.index == 0) {
+                    float[] t = (float[])value;
+                    normal[k] = new ModelVertex { x = t[0], y = t[1], z = t[2] };
+                  } else {
+                    if(System.Diagnostics.Debugger.IsAttached) {
+                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
                     }
+                  }
                   break;
                 case SemanticType.UV: {
                     ushort[] t = (ushort[])value;
@@ -263,26 +269,30 @@ namespace OWLib.Types.Chunk {
                   }
                   break;
                 case SemanticType.BONE_INDEX:
-                    if(element.index == 0) {
-                      byte[] t = (byte[])value;
-                      bone[k].boneIndex = new ushort[t.Length];
-                      for(int m = 0; m < t.Length; ++m) {
-                        bone[k].boneIndex[m] = (ushort)(t[l] + submesh.boneIdOffset);
-                      }
-                    } else {
-                      Console.Error.WriteLine("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type));
+                  if(element.index == 0) {
+                    byte[] t = (byte[])value;
+                    bone[k].boneIndex = new ushort[t.Length];
+                    for(int m = 0; m < t.Length; ++m) {
+                      bone[k].boneIndex[m] = (ushort)(t[l] + submesh.boneIdOffset);
                     }
+                  } else {
+                    if(System.Diagnostics.Debugger.IsAttached) {
+                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
+                    }
+                  }
                   break;
                 case SemanticType.BONE_WEIGHT:
                   if(element.index == 0) {
                     bone[k].boneWeight = (float[])value;
                   } else {
-                      Console.Error.WriteLine("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type));
+                    if(System.Diagnostics.Debugger.IsAttached) {
+                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
+                    }
                   }
                   break;
                 default:
-                  if(unhandledSemanticTypes.Add(element.type)) {
-                    Console.Out.WriteLine("Unhandled vertex type {0}!", Util.GetEnumName(typeof(SemanticType), element.type));
+                  if(System.Diagnostics.Debugger.IsAttached) {
+                    System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex type {0}!", Util.GetEnumName(typeof(SemanticType), element.type)));
                   }
                   break;
               }
@@ -291,7 +301,7 @@ namespace OWLib.Types.Chunk {
         }
 
         indexTracker.Clear();
-        
+
         TextureCoordinates[i] = uv;
         Vertices[i] = vertex;
         Bones[i] = bone;

@@ -78,16 +78,12 @@ namespace OWLib {
       bool outputOffset = STUDManager.Complained.Contains(id);
       if((err = manager.InitializeInstance(id, input, out ret, suppress)) != MANAGER_ERROR.E_SUCCESS) {
         if(err != MANAGER_ERROR.E_UNKNOWN) {
-          Console.Error.WriteLine("Error while instancing for STUD type {0:X8}", id);
           if(System.Diagnostics.Debugger.IsAttached) {
             System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Error while instancing for STUD type {0:X8}\n", id));
           }
         } else if(!outputOffset) {
           if(System.Diagnostics.Debugger.IsAttached) {
             System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Instance is at offset {0:X16}\n", start + instance.offset));
-          }
-          if(!suppress) {
-            Console.Error.WriteLine("Instance is at offset {0:X16}", start + instance.offset);
           }
         }
         return null;
@@ -129,9 +125,6 @@ namespace OWLib {
       if(complained.Add(id)) {
         if(System.Diagnostics.Debugger.IsAttached) {
           System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Warning! Unknown Instance ID {0:X8}\n", id));
-        }
-        if(!suppress) {
-          Console.Error.WriteLine("Warning! Unknown Instance ID {0:X8}", id);
         }
       }
       return null;
@@ -255,7 +248,9 @@ namespace OWLib {
       uint id = GetId(instance);
       string name = GetName(instance);
       if(id == 0) {
-        Console.Error.WriteLine("Error! {0:X16} still has no ID!", key);
+        if(System.Diagnostics.Debugger.IsAttached) {
+          System.Diagnostics.Debugger.Log(2, "STUD", string.Format("Error! {0:X16} still has no ID!", key));
+        }
       }
       if(instanceIds.Contains(key) && ids.Contains(id)) {
         return MANAGER_ERROR.E_DUPLICATE;

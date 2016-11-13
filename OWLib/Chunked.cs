@@ -126,7 +126,9 @@ namespace OWLib.Types {
       IChunk instance = (IChunk)Activator.CreateInstance(chunk);
       string identifier = instance.RootIdentifier + instance.Identifier;
       if(identifier == null) {
-        Console.Error.WriteLine("Error! {0} has no identifier!", chunk.FullName);
+        if(System.Diagnostics.Debugger.IsAttached) {
+          System.Diagnostics.Debugger.Log(2, "CHUNK", string.Format("Error! {0} has no identifier!", chunk.FullName));
+        }
       }
       chunkMap.Add(identifier, chunk);
       return MANAGER_ERROR.E_SUCCESS;
@@ -138,7 +140,9 @@ namespace OWLib.Types {
         return (IChunk)Activator.CreateInstance(chunkMap[identifier]);
       } else {
         if(unhandledChunkIdentifiers.Add(identifier)) {
-          Console.Error.WriteLine("Error! No handler for chunk type {0}", identifier);
+          if(System.Diagnostics.Debugger.IsAttached) {
+            System.Diagnostics.Debugger.Log(2, "CHUNK", string.Format("Error! No handler for chunk type {0}", identifier));
+          }
         }
       }
       return null;
