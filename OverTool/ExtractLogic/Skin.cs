@@ -536,14 +536,16 @@ namespace OverTool.ExtractLogic {
         }
       }
 
-      if(furtherOpts.Count < 5 || furtherOpts[4] != 'S') {
-        Console.Out.WriteLine("Dumping voice bites for hero {0} with skin {1}", heroName, itemName);
-        List<ulong> soundData = VoiceLine.FindSounds(master, track, map, handler, replace);
-        string outpath = string.Format("{0}Sound{1}", path, Path.DirectorySeparatorChar);
-        if(!Directory.Exists(outpath)) {
-          Directory.CreateDirectory(outpath);
+      if(false) { // TODO FIX
+        if(furtherOpts.Count < 5 || furtherOpts[4] != 'S') {
+          Console.Out.WriteLine("Dumping voice bites for hero {0} with skin {1}", heroName, itemName);
+          List<ulong> soundData = VoiceLine.FindSounds(master, track, map, handler, replace);
+          string outpath = string.Format("{0}Sound{1}", path, Path.DirectorySeparatorChar);
+          if(!Directory.Exists(outpath)) {
+            Directory.CreateDirectory(outpath);
+          }
+          DumpVoice.Save(outpath, soundData, map, handler, replace);
         }
-        DumpVoice.Save(outpath, soundData, map, handler, replace);
       }
     }
 
