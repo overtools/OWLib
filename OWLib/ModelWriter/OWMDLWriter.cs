@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using OWLib.Types;
+using OWLib.Types.Chunk;
 using OWLib.Types.Map;
 
 namespace OWLib.ModelWriter {
@@ -50,8 +51,18 @@ namespace OWLib.ModelWriter {
       return true;
     }
 
-    public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data) {
-      return false;
+    public bool Write(Chunked chunked, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data) {
+      IChunk chunk = chunked.FindNextChunk("MNRM").Value;
+      if(chunk == null) {
+        return false;
+      }
+      MNRM model = (MNRM)chunk;
+      chunk = chunked.FindNextChunk("CLDM").Value;
+      CLDM materials = null;
+      if(chunk != null) {
+        materials = (CLDM)chunk;
+      }
+
       Console.Out.WriteLine("Writing OWMDL");
       using(BinaryWriter writer = new BinaryWriter(output)) {
         writer.Write((ushort)1); // version major
@@ -68,9 +79,81 @@ namespace OWLib.ModelWriter {
         } else {
           writer.Write((byte)0);
         }
+        
+        writer.Write((ushort)0); // number of bones
 
-        // TODO
+        Dictionary<byte, List<int>> LODMap = new Dictionary<byte, List<int>>();
+        uint sz = 0;
+        uint lookForLod = 0;
+        bool lodOnly = false;
+        if(data.Length > 3 && data[3] != null && data[3].GetType() == typeof(bool) && (bool)data[3] == true) {
+          lodOnly = true;
+        }
+        for(int i = 0; i < model.Submeshes.Length; ++i) {
+          SubmeshDescriptor submesh = model.Submeshes[i];
+          if(data.Length > 4 && data[4] != null && data[4].GetType() == typeof(bool) && (bool)data[4] == true) {
+            if((SubmeshFlags)submesh.flags == SubmeshFlags.COLLISION_MESH) {
+              continue;
+            }
+          }
+          if(LODs != null && !LODs.Contains(submesh.lod)) {
+            continue;
+          }
+          if(lodOnly && lookForLod > 0 && submesh.lod != lookForLod) {
+            continue;
+          }
+          if(!LODMap.ContainsKey(submesh.lod)) {
+            LODMap.Add(submesh.lod, new List<int>());
+          }
+          lookForLod = submesh.lod;
+          sz++;
+          LODMap[submesh.lod].Add(i);
+        }
+
+        writer.Write(sz);
+
+        writer.Write((int)0); // number of attachments
+
+        foreach(KeyValuePair<byte, List<int>> kv in LODMap) {
+          Console.Out.WriteLine("Writing LOD {0}", kv.Key);
+          foreach(int i in kv.Value) {
+            SubmeshDescriptor submesh = model.Submeshes[i];
+            ModelVertex[] vertex = model.Vertices[i];
+            ModelVertex[] normal = model.Normals[i];
+            ModelUV[][] uv = model.TextureCoordinates[i];
+            ModelIndice[] index = model.Indices[i];
+            ModelBoneData[] bones = model.Bones[i];
+            writer.Write(string.Format("Submesh_{0}.{1}.{2:X16}", i, kv.Key, materials.Materials[submesh.material]));
+            writer.Write(materials.Materials[submesh.material]);
+            writer.Write((byte)uv.Length);
+            writer.Write(vertex.Length);
+            writer.Write(index.Length);
+            for(int j = 0; j < vertex.Length; ++j) {
+              writer.Write(vertex[j].x);
+              writer.Write(vertex[j].y);
+              writer.Write(vertex[j].z);
+              writer.Write(-normal[j].x);
+              writer.Write(-normal[j].y);
+              writer.Write(-normal[j].z);
+              for(int k = 0; k < uv.Length; ++k) {
+                writer.Write((float)uv[k][j].u);
+                writer.Write((float)uv[k][j].v);
+              }
+              // bone -> size + index + weight
+              writer.Write((byte)0);
+            }
+            for(int j = 0; j < index.Length; ++j) {
+              writer.Write((byte)3);
+              writer.Write((int)index[j].v1);
+              writer.Write((int)index[j].v2);
+              writer.Write((int)index[j].v3);
+            }
+          }
+        }
+        // attachments
+        // extension 1.1
       }
+      return true;
     }
   }
 }
