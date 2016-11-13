@@ -134,8 +134,8 @@ namespace OverTool {
                       ComplexModelRecord cmr = (ComplexModelRecord)instance;
                       mapprop.MaterialKey = cmr.Data.material.key;
                       mapprop.ModelKey = cmr.Data.model.key;
-                      Skin.FindAnimations(cmr.Data.animationList.key, animList, replace, parsed, map, handler, mapprop.ModelKey);
-                      Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, animList, replace, parsed, map, handler, mapprop.ModelKey);
+                      Skin.FindAnimations(cmr.Data.animationList.key, animList, replace, parsed, map, handler, null, null, mapprop.ModelKey);
+                      Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, animList, replace, parsed, map, handler, null, null, mapprop.ModelKey);
                       break;
                     }
                   }

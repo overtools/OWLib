@@ -105,9 +105,13 @@ namespace OverTool.ExtractLogic {
           Chunked chunked = new Chunked(Util.OpenFile(map[key], handler));
           DMCE[] chunks = chunked.GetAllOfTypeFlat<DMCE>();
           foreach(DMCE dmce in chunks) {
-            models.Add(dmce.Data.modelKey);
-            FindTextures(dmce.Data.materialKey, layers, replace, parsed, map, handler);
-            if(!animList.ContainsKey(dmce.Data.animationKey)) {
+            if(models != null) {
+              models.Add(dmce.Data.modelKey);
+            }
+            if(layers != null) {
+              FindTextures(dmce.Data.materialKey, layers, replace, parsed, map, handler);
+            }
+            if(animList != null && !animList.ContainsKey(dmce.Data.animationKey)) {
               animList[dmce.Data.animationKey] = parent;
             }
           }
