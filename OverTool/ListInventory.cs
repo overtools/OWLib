@@ -30,7 +30,7 @@ namespace OverTool {
         return;
       }
 
-      Console.Out.WriteLine("\t{0} ({1} {2} p{3:X16})", name, instance.Header.rarity, stud.Instances[0].Name, map[key].package.packageKey, map[key].record.Key);
+      Console.Out.WriteLine("\t\t{0} ({1} {2})", name, instance.Header.rarity, stud.Instances[0].Name);
     }
 
     public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
@@ -51,7 +51,7 @@ namespace OverTool {
         if(heroName == null) {
           continue;
         }
-        Console.Out.WriteLine("Cosmetics for {0}... (p{1:X16})", heroName, map[masterKey].package.packageKey, map[masterKey].record.Key);
+        Console.Out.WriteLine("Cosmetics for {0}...", heroName);
         if(!map.ContainsKey(master.Header.itemMaster.key)) {
           Console.Out.WriteLine("Error loading inventory master file...");
           continue;
@@ -63,17 +63,28 @@ namespace OverTool {
           continue;
         }
 
+        Console.Out.WriteLine("\tACHIEVEMENT ({0} items)", inventory.Achievables.Length);
         foreach(OWRecord record in inventory.Achievables) {
           GetInventoryName(record.key, map, handler);
         }
 
-        foreach(OWRecord[] records in inventory.Defaults) {
+        for(int i = 0; i < inventory.DefaultGroups.Length; ++i) {
+          if(inventory.Defaults[i].Length == 0) {
+            continue;
+          }
+          OWRecord[] records = inventory.Defaults[i];
+          Console.Out.WriteLine("\tSTANDARD_{0} ({1} items)", OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.DefaultGroups[i].@event), records.Length);
           foreach(OWRecord record in records) {
             GetInventoryName(record.key, map, handler);
           }
         }
 
-        foreach(OWRecord[] records in inventory.Items) {
+        for(int i = 0; i < inventory.ItemGroups.Length; ++i) {
+          if(inventory.Items[i].Length == 0) {
+            continue;
+          }
+          OWRecord[] records = inventory.Items[i];
+          Console.Out.WriteLine("\t{0} ({1} items)", OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event), records.Length);
           foreach(OWRecord record in records) {
             GetInventoryName(record.key, map, handler);
           }

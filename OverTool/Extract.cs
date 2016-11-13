@@ -101,16 +101,28 @@ namespace OverTool {
           continue;
         }
 
-        List<OWRecord> items = new List<OWRecord>();
-        items.AddRange(inventory.Achievables);
-        foreach(OWRecord[] records in inventory.Defaults) {
-          items.AddRange(records);
-        }
-        foreach(OWRecord[] records in inventory.Items) {
-          items.AddRange(records);
+        Dictionary<OWRecord, string> items = new Dictionary<OWRecord, string>();
+        foreach(OWRecord record in inventory.Achievables) {
+          items[record] = "ACHIEVEMENT";
         }
 
-        foreach(OWRecord record in items) {
+        for(int i = 0; i < inventory.DefaultGroups.Length; ++i) {
+          string name = "STANDARD_"+OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.DefaultGroups[i].@event);
+          for(int j = 0; j < inventory.Defaults[i].Length; ++j) {
+            items[inventory.Defaults[i][j]] = name;
+          }
+        }
+
+        for(int i = 0; i < inventory.ItemGroups.Length; ++i) {
+          string name = OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event);
+          for(int j = 0; j < inventory.Items[i].Length; ++j) {
+            items[inventory.Items[i][j]] = name;
+          }
+        }
+
+        foreach(KeyValuePair<OWRecord, string> recordname in items) {
+          OWRecord record = recordname.Key;
+          string itemGroup = recordname.Value;
           if(!map.ContainsKey(record.key)) {
             continue;
           }
@@ -135,7 +147,7 @@ namespace OverTool {
           switch(instance.Name) {
             case "Spray":
               Console.Out.WriteLine("Extracting spray {0} for {1}...", name, heroName);
-              ExtractLogic.Spray.Extract(stud, output, heroName, name, track, map, handler, furtherOpts);
+              ExtractLogic.Spray.Extract(stud, output, heroName, name, itemGroup, track, map, handler, furtherOpts);
               break;
             case "Skin":
               List<ulong> ignoreList = new List<ulong>();
@@ -143,11 +155,11 @@ namespace OverTool {
                 ignoreList = heroIgnore[heroName.ToLowerInvariant()][name.ToLowerInvariant()];
               } catch { }
               Console.Out.WriteLine("Extracting {0} models and textures for {1}", name, heroName);
-              ExtractLogic.Skin.Extract(master, stud, output, heroName, name, ignoreList, track, map, handler, furtherOpts);
+              ExtractLogic.Skin.Extract(master, stud, output, heroName, name, itemGroup, ignoreList, track, map, handler, furtherOpts);
               break;
             case "Icon":
               Console.Out.WriteLine("Extracting icon {0} for {1}...", name, heroName);
-              ExtractLogic.Icon.Extract(stud, output, heroName, name, track, map, handler, furtherOpts);
+              ExtractLogic.Icon.Extract(stud, output, heroName, name, itemGroup, track, map, handler, furtherOpts);
               break;
             case "Voice Line":
               //Console.Out.WriteLine("Extracting voice line {0} for {1}...", name, heroName);
