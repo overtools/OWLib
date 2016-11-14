@@ -12,6 +12,7 @@ namespace OWLib.Types.STUD.GameParam {
       public STUDInstanceInfo instance;
       public ulong unk1;
       public OWRecord binding;
+      public OWRecord binding2;
     }
 
     private ModelParam param;

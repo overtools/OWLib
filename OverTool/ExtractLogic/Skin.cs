@@ -276,6 +276,11 @@ namespace OverTool.ExtractLogic {
             bindingKey = replace[bindingKey];
           }
           FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+          bindingKey = r.Param.binding2.key;
+          if(replace.ContainsKey(bindingKey)) {
+            bindingKey = replace[bindingKey];
+          }
+          FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
         }
         if(inst.Name == record.Manager.GetName(typeof(ChildGameParameterRecord))) {
           ChildGameParameterRecord r = (ChildGameParameterRecord)inst;
