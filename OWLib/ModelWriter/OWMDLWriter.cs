@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using OpenTK;
 using OWLib.Types;
 using OWLib.Types.Chunk;
 using OWLib.Types.Map;
@@ -62,6 +63,11 @@ namespace OWLib.ModelWriter {
       if(chunk != null) {
         materials = (CLDM)chunk;
       }
+      chunk = chunked.FindNextChunk("lksm").Value;
+      lksm skeleton = null;
+      if(chunk != null) {
+        skeleton = (lksm)chunk;
+      }
 
       Console.Out.WriteLine("Writing OWMDL");
       using(BinaryWriter writer = new BinaryWriter(output)) {
@@ -79,8 +85,12 @@ namespace OWLib.ModelWriter {
         } else {
           writer.Write((byte)0);
         }
-        
-        writer.Write((ushort)0); // number of bones
+
+        if(skeleton == null) {
+          writer.Write((ushort)0); // number of bones
+        } else {
+          writer.Write(skeleton.Data.bones);
+        }
 
         Dictionary<byte, List<int>> LODMap = new Dictionary<byte, List<int>>();
         uint sz = 0;
@@ -114,6 +124,30 @@ namespace OWLib.ModelWriter {
 
         writer.Write((int)0); // number of attachments
 
+        if(skeleton != null) {
+          for(int i = 0; i < skeleton.Data.bones; ++i) {
+            writer.Write(string.Format("bone_{0:X4}", skeleton.IDs[i]));
+            short parent = skeleton.Hierarchy[i];
+            if(parent == -1) {
+              parent = (short)i;
+            }
+            writer.Write(parent);
+            Vector3 pos = skeleton.Matrices[i].ExtractTranslation();
+            Quaternion rot = skeleton.Matrices[i].ExtractRotation();
+            Vector3 scl = skeleton.Matrices[i].ExtractScale();
+            writer.Write(pos.X);
+            writer.Write(pos.Y);
+            writer.Write(pos.Z);
+            writer.Write(scl.X);
+            writer.Write(scl.X);
+            writer.Write(scl.X);
+            writer.Write(rot.X);
+            writer.Write(rot.Y);
+            writer.Write(rot.Z);
+            writer.Write(rot.W);
+          }
+        }
+
         foreach(KeyValuePair<byte, List<int>> kv in LODMap) {
           Console.Out.WriteLine("Writing LOD {0}", kv.Key);
           foreach(int i in kv.Value) {
@@ -139,8 +173,20 @@ namespace OWLib.ModelWriter {
                 writer.Write((float)uv[k][j].u);
                 writer.Write((float)uv[k][j].v);
               }
-              // bone -> size + index + weight
-              writer.Write((byte)0);
+              if(skeleton != null && bones != null && bones[j].boneIndex != null && bones[j].boneWeight != null) {
+                writer.Write((byte)4);
+                writer.Write(skeleton.Lookup[bones[j].boneIndex[0]]);
+                writer.Write(skeleton.Lookup[bones[j].boneIndex[1]]);
+                writer.Write(skeleton.Lookup[bones[j].boneIndex[2]]);
+                writer.Write(skeleton.Lookup[bones[j].boneIndex[3]]);
+                writer.Write(bones[j].boneWeight[0]);
+                writer.Write(bones[j].boneWeight[1]);
+                writer.Write(bones[j].boneWeight[2]);
+                writer.Write(bones[j].boneWeight[3]);
+              } else {
+                // bone -> size + index + weight
+                writer.Write((byte)0);
+              }
             }
             for(int j = 0; j < index.Length; ++j) {
               writer.Write((byte)3);

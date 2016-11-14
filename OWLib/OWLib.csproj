@@ -55,6 +55,7 @@
     <Compile Include="Types\Chunk\CLDM.cs" />
     <Compile Include="Types\Chunk\DMCE.cs" />
     <Compile Include="Types\Chunk\IChunk.cs" />
+    <Compile Include="Types\Chunk\lksm.cs" />
     <Compile Include="Types\Chunk\MNRM.cs" />
     <Compile Include="Types\Chunk\MNRMTypes.cs" />
     <Compile Include="Types\DXBCTypes.cs" />

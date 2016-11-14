@@ -164,7 +164,7 @@ namespace OWLib.Types.Chunk {
         default:
           if(unhandledSemanticFormats.Add(format)) {
             if(System.Diagnostics.Debugger.IsAttached) {
-              System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled Semantic Format {0:X}!", format));
+              System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled Semantic Format {0:X}!\n", format));
             }
           }
           return null;
@@ -249,7 +249,7 @@ namespace OWLib.Types.Chunk {
                     vertex[k] = new ModelVertex { x = t[0], y = t[1], z = t[2] };
                   } else {
                     if(System.Diagnostics.Debugger.IsAttached) {
-                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
+                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!\n", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
                     }
                   }
                   break;
@@ -259,7 +259,7 @@ namespace OWLib.Types.Chunk {
                     normal[k] = new ModelVertex { x = t[0], y = t[1], z = t[2] };
                   } else {
                     if(System.Diagnostics.Debugger.IsAttached) {
-                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
+                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!\n", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
                     }
                   }
                   break;
@@ -277,7 +277,7 @@ namespace OWLib.Types.Chunk {
                     }
                   } else {
                     if(System.Diagnostics.Debugger.IsAttached) {
-                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
+                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!\n", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
                     }
                   }
                   break;
@@ -286,13 +286,13 @@ namespace OWLib.Types.Chunk {
                     bone[k].boneWeight = (float[])value;
                   } else {
                     if(System.Diagnostics.Debugger.IsAttached) {
-                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
+                      System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex layer {0:X} for type {1}!\n", element.index, Util.GetEnumName(typeof(SemanticType), element.type)));
                     }
                   }
                   break;
                 default:
                   if(System.Diagnostics.Debugger.IsAttached) {
-                    System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex type {0}!", Util.GetEnumName(typeof(SemanticType), element.type)));
+                    System.Diagnostics.Debugger.Log(2, "CHUNK_LDOMMNRM", string.Format("Unhandled vertex type {0}!\n", Util.GetEnumName(typeof(SemanticType), element.type)));
                   }
                   break;
               }

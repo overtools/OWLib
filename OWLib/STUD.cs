@@ -249,7 +249,7 @@ namespace OWLib {
       string name = GetName(instance);
       if(id == 0) {
         if(System.Diagnostics.Debugger.IsAttached) {
-          System.Diagnostics.Debugger.Log(2, "STUD", string.Format("Error! {0:X16} still has no ID!", key));
+          System.Diagnostics.Debugger.Log(2, "STUD", string.Format("Error! {0:X16} still has no ID!\n", key));
         }
       }
       if(instanceIds.Contains(key) && ids.Contains(id)) {
