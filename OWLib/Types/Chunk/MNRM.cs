@@ -273,7 +273,7 @@ namespace OWLib.Types.Chunk {
                     byte[] t = (byte[])value;
                     bone[k].boneIndex = new ushort[t.Length];
                     for(int m = 0; m < t.Length; ++m) {
-                      bone[k].boneIndex[m] = (ushort)(t[l] + submesh.boneIdOffset);
+                      bone[k].boneIndex[m] = (ushort)(t[m] + submesh.boneIdOffset);
                     }
                   } else {
                     if(System.Diagnostics.Debugger.IsAttached) {
