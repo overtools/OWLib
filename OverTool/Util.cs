@@ -71,13 +71,12 @@ namespace OverTool {
               }
             }
           }
-          Console.Out.WriteLine("Error {0} {1:X16}", ex.Message, record.package.packageKey);
+          Console.Out.WriteLine("Error {0} p 0x{1:X16} f 0x{2:X16}", ex.Message, record.package.packageKey, record.record.Key);
         }
         return null;
       }
       if(System.Diagnostics.Debugger.IsAttached) {
         System.Diagnostics.Debugger.Log(0, "CASC:IO", string.Format("[CASC:IO] Opened file {0:X12}.{1:X3}\n", APM.keyToIndexID(record.record.Key), APM.keyToTypeID(record.record.Key)));
-        Console.Error.WriteLine("Opened file {0:X12}.{1:X3}", APM.keyToIndexID(record.record.Key), APM.keyToTypeID(record.record.Key));
       }
       return ms;
     }

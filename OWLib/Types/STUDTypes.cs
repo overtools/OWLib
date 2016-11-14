@@ -13,7 +13,6 @@ namespace OWLib.Types {
     public struct STUDInstanceRecord {
         public uint offset;
         public uint flags;
-        public ulong key;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -52,16 +51,5 @@ namespace OWLib.Types {
         }
 
         void Read(Stream input);
-    }
-
-    public enum STUD_MANAGER_ERROR {
-        E_SUCCESS = 0x00,
-        E_ALREADY_ADDED = 0x01,
-        E_FAULT = 0x02,
-        E_FAULT_AT_ID = 0x03,
-        E_FAULT_AT_NAME = 0x04,
-        E_UNKNOWN_INSTANCE = 0x05,
-        E_GENERIC = 0x06,
-        E_DUPLICATE = 0x07
     }
 }

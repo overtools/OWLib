@@ -30,7 +30,7 @@ namespace OverTool {
         return;
       }
 
-      Console.Out.WriteLine("\t{0} ({1} {2})", name, instance.Header.rarity, stud.Instances[0].Name);
+      Console.Out.WriteLine("\t\t{0} ({1} {2})", name, instance.Header.rarity, stud.Instances[0].Name);
     }
 
     public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
@@ -63,17 +63,28 @@ namespace OverTool {
           continue;
         }
 
+        Console.Out.WriteLine("\tACHIEVEMENT ({0} items)", inventory.Achievables.Length);
         foreach(OWRecord record in inventory.Achievables) {
           GetInventoryName(record.key, map, handler);
         }
 
-        foreach(OWRecord[] records in inventory.Defaults) {
+        for(int i = 0; i < inventory.DefaultGroups.Length; ++i) {
+          if(inventory.Defaults[i].Length == 0) {
+            continue;
+          }
+          OWRecord[] records = inventory.Defaults[i];
+          Console.Out.WriteLine("\tSTANDARD_{0} ({1} items)", OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.DefaultGroups[i].@event), records.Length);
           foreach(OWRecord record in records) {
             GetInventoryName(record.key, map, handler);
           }
         }
 
-        foreach(OWRecord[] records in inventory.Items) {
+        for(int i = 0; i < inventory.ItemGroups.Length; ++i) {
+          if(inventory.Items[i].Length == 0) {
+            continue;
+          }
+          OWRecord[] records = inventory.Items[i];
+          Console.Out.WriteLine("\t{0} ({1} items)", OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event), records.Length);
           foreach(OWRecord record in records) {
             GetInventoryName(record.key, map, handler);
           }

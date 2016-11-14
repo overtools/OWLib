@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System;
-using OWLib;
 using System.Collections.Generic;
 using System.Reflection;
 using OWLib.ModelWriter;
 using System.Linq;
+using OWLib.Types;
 
 namespace ModelTool {
   public class Program {
@@ -93,9 +93,13 @@ namespace ModelTool {
       }
 
       using(Stream modelStream = File.Open(modelFile, FileMode.Open, FileAccess.Read)) {
-        Model model = new Model(modelStream);
+        Chunked model = new Chunked(modelStream);
         using(Stream outStream = File.Open(outputFile, FileMode.Create, FileAccess.Write)) {
-          writer.Write(model, outStream, lods, new Dictionary<ulong, List<OWLib.Types.ImageLayer>>(), new object[] { attachments, null, null, firstLod, skipCmodel });
+          if(writer.Write(model, outStream, lods, new Dictionary<ulong, List<ImageLayer>>(), new object[] { attachments, null, null, firstLod, skipCmodel })) {
+            Console.Out.WriteLine("Wrote model");
+          } else {
+            Console.Out.WriteLine("Failed to write model");
+          }
         }
       }
     }

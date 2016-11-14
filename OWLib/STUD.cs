@@ -66,14 +66,6 @@ namespace OWLib {
       }
     }
 
-    public void InitializeAll(Stream input, List<ulong> keys, bool suppress) {
-      for(long i = 0; i < records.LongLength; ++i) {
-        if(keys.Contains(records[i].key)) {
-          instances[i] = Initialize(input, records[i], suppress);
-        }
-      }
-    }
-
     public ISTUDInstance Initialize(Stream input, STUDInstanceRecord instance, bool suppress) {
       input.Position = start + instance.offset;
       uint id = 0;
@@ -82,25 +74,19 @@ namespace OWLib {
       }
       input.Position -= 4;
       ISTUDInstance ret = null;
-      STUD_MANAGER_ERROR err;
+      MANAGER_ERROR err;
       bool outputOffset = STUDManager.Complained.Contains(id);
-      if((err = manager.InitializeInstance(id, input, out ret, suppress)) != STUD_MANAGER_ERROR.E_SUCCESS) {
-        if((err = manager.InitializeInstance(instance.key, input, out ret, suppress)) != STUD_MANAGER_ERROR.E_SUCCESS) {
-          if(err != STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE) {
-            Console.Error.WriteLine("Error while instancing for STUD type {0:X8}", id);
-            if(System.Diagnostics.Debugger.IsAttached) {
-              System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Error while instancing for STUD type {0:X8}\n", id));
-            }
-          } else if(!outputOffset) {
-            if(System.Diagnostics.Debugger.IsAttached) {
-              System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Instance is at offset {0:X16}\n", start + instance.offset));
-            }
-            if(!suppress) {
-              Console.Error.WriteLine("Instance is at offset {0:X16}", start + instance.offset);
-            }
+      if((err = manager.InitializeInstance(id, input, out ret, suppress)) != MANAGER_ERROR.E_SUCCESS) {
+        if(err != MANAGER_ERROR.E_UNKNOWN) {
+          if(System.Diagnostics.Debugger.IsAttached) {
+            System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Error while instancing for STUD type {0:X8}\n", id));
           }
-          return null;
+        } else if(!outputOffset) {
+          if(System.Diagnostics.Debugger.IsAttached) {
+            System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Instance is at offset {0:X16}\n", start + instance.offset));
+          }
         }
+        return null;
       }
       return ret;
     }
@@ -140,9 +126,6 @@ namespace OWLib {
         if(System.Diagnostics.Debugger.IsAttached) {
           System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Warning! Unknown Instance ID {0:X8}\n", id));
         }
-        if(!suppress) {
-          Console.Error.WriteLine("Warning! Unknown Instance ID {0:X8}", id);
-        }
       }
       return null;
     }
@@ -156,24 +139,24 @@ namespace OWLib {
       return null;
     }
     
-    public STUD_MANAGER_ERROR InitializeInstance(uint id, Stream input, out ISTUDInstance instance, bool suppress) {
+    public MANAGER_ERROR InitializeInstance(uint id, Stream input, out ISTUDInstance instance, bool suppress) {
       return InitializeInstance(GetInstance(id, suppress), input, out instance);
     }
 
-    public STUD_MANAGER_ERROR InitializeInstance(ulong id, Stream input, out ISTUDInstance instance, bool suppress) {
+    public MANAGER_ERROR InitializeInstance(ulong id, Stream input, out ISTUDInstance instance, bool suppress) {
       return InitializeInstance(GetInstance(id, suppress), input, out instance);
     }
 
-    public STUD_MANAGER_ERROR InitializeInstance(Type inst, Stream input, out ISTUDInstance instance) {
+    public MANAGER_ERROR InitializeInstance(Type inst, Stream input, out ISTUDInstance instance) {
       if(inst == null) {
         instance = null;
-        return STUD_MANAGER_ERROR.E_UNKNOWN_INSTANCE;
+        return MANAGER_ERROR.E_UNKNOWN;
       }
 
       if(System.Diagnostics.Debugger.IsAttached) {
         instance = (ISTUDInstance)Activator.CreateInstance(inst);
         instance.Read(input);
-        return STUD_MANAGER_ERROR.E_SUCCESS;
+        return MANAGER_ERROR.E_SUCCESS;
       }
 
       try {
@@ -182,10 +165,10 @@ namespace OWLib {
       } catch (Exception ex) {
         Console.Error.WriteLine(ex.Message);
         instance = null;
-        return STUD_MANAGER_ERROR.E_FAULT;
+        return MANAGER_ERROR.E_FAULT;
       }
 
-      return STUD_MANAGER_ERROR.E_SUCCESS;
+      return MANAGER_ERROR.E_SUCCESS;
     }
 
     public string GetName(uint id) {
@@ -247,37 +230,39 @@ namespace OWLib {
       return GetKey(instance);
     }
 
-    public STUD_MANAGER_ERROR AddInstance(ISTUDInstance instance) {
+    public MANAGER_ERROR AddInstance(ISTUDInstance instance) {
       if(instance == null) {
-        return STUD_MANAGER_ERROR.E_FAULT;
+        return MANAGER_ERROR.E_FAULT;
       }
       return AddInstance(instance.GetType());
     }
 
-    public STUD_MANAGER_ERROR AddInstance(Type instance) {
+    public MANAGER_ERROR AddInstance(Type instance) {
       if(instance == null) {
-        return STUD_MANAGER_ERROR.E_FAULT;
+        return MANAGER_ERROR.E_FAULT;
       }
       if(implementations.Contains(instance)) {
-        return STUD_MANAGER_ERROR.E_DUPLICATE;
+        return MANAGER_ERROR.E_DUPLICATE;
       }
       ulong key = GetKey(instance);
       uint id = GetId(instance);
       string name = GetName(instance);
       if(id == 0) {
-        Console.Error.WriteLine("Error! {0:X16} still has no ID!", key);
+        if(System.Diagnostics.Debugger.IsAttached) {
+          System.Diagnostics.Debugger.Log(2, "STUD", string.Format("Error! {0:X16} still has no ID!\n", key));
+        }
       }
       if(instanceIds.Contains(key) && ids.Contains(id)) {
-        return STUD_MANAGER_ERROR.E_DUPLICATE;
+        return MANAGER_ERROR.E_DUPLICATE;
       }
       if(names.Contains(name)) {
-        return STUD_MANAGER_ERROR.E_DUPLICATE;
+        return MANAGER_ERROR.E_DUPLICATE;
       }
       implementations.Add(instance);
       ids.Add(id);
       instanceIds.Add(key);
       names.Add(name);
-      return STUD_MANAGER_ERROR.E_SUCCESS;
+      return MANAGER_ERROR.E_SUCCESS;
     }
 
     public static STUDManager NewInstance() {

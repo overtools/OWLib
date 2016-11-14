@@ -29,10 +29,10 @@ namespace OWLib {
         for(uint i = 0; i < header.recordCount; ++i) {
           commonHeaders[i] = reader.Read<MapCommonHeader>();
           long nps = input.Position + commonHeaders[i].size - 24;
-          MAP_MANAGER_ERROR err;
-          if((err = manager.InitializeInstance(commonHeaders[i].type, input, out records[i])) != MAP_MANAGER_ERROR.E_SUCCESS) {
+          MANAGER_ERROR err;
+          if((err = manager.InitializeInstance(commonHeaders[i].type, input, out records[i])) != MANAGER_ERROR.E_SUCCESS) {
             if(System.Diagnostics.Debugger.IsAttached) {
-              Console.Out.WriteLine("Error reading Map type {0:X}", commonHeaders[i]);
+              System.Diagnostics.Debugger.Log(2, "MAP", string.Format("Error reading Map type {0:X}\n", commonHeaders[i]));
             }
           }
           input.Position = nps;
@@ -68,20 +68,20 @@ namespace OWLib {
       return null;
     }
 
-    public MAP_MANAGER_ERROR InitializeInstance(ushort id, Stream input, out IMapFormat instance) {
+    public MANAGER_ERROR InitializeInstance(ushort id, Stream input, out IMapFormat instance) {
       return InitializeInstance(GetInstance(id), input, out instance);
     }
 
-    public MAP_MANAGER_ERROR InitializeInstance(Type inst, Stream input, out IMapFormat instance) {
+    public MANAGER_ERROR InitializeInstance(Type inst, Stream input, out IMapFormat instance) {
       if(inst == null) {
         instance = null;
-        return MAP_MANAGER_ERROR.E_UNKNOWN_TYPE;
+        return MANAGER_ERROR.E_UNKNOWN;
       }
 
       if(System.Diagnostics.Debugger.IsAttached) {
         instance = (IMapFormat)Activator.CreateInstance(inst);
         instance.Read(input);
-        return MAP_MANAGER_ERROR.E_SUCCESS;
+        return MANAGER_ERROR.E_SUCCESS;
       }
 
       try {
@@ -90,10 +90,10 @@ namespace OWLib {
       } catch (Exception ex) {
         Console.Error.WriteLine(ex.Message);
         instance = null;
-        return MAP_MANAGER_ERROR.E_FAULT;
+        return MANAGER_ERROR.E_FAULT;
       }
 
-      return MAP_MANAGER_ERROR.E_SUCCESS;
+      return MANAGER_ERROR.E_SUCCESS;
     }
 
     public string GetName(ushort id) {
@@ -140,30 +140,30 @@ namespace OWLib {
       return GetId(instance);
     }
 
-    public MAP_MANAGER_ERROR AddInstance(IMapFormat instance) {
+    public MANAGER_ERROR AddInstance(IMapFormat instance) {
       if(instance == null) {
-        return MAP_MANAGER_ERROR.E_FAULT;
+        return MANAGER_ERROR.E_FAULT;
       }
       return AddInstance(instance.GetType());
     }
 
-    public MAP_MANAGER_ERROR AddInstance(Type instance) {
+    public MANAGER_ERROR AddInstance(Type instance) {
       if(instance == null) {
-        return MAP_MANAGER_ERROR.E_FAULT;
+        return MANAGER_ERROR.E_FAULT;
       }
       if(implementations.Contains(instance)) {
-        return MAP_MANAGER_ERROR.E_DUPLICATE;
+        return MANAGER_ERROR.E_DUPLICATE;
       }
       if(ids.Contains(GetId(instance))) {
-        return MAP_MANAGER_ERROR.E_DUPLICATE;
+        return MANAGER_ERROR.E_DUPLICATE;
       }
       if(names.Contains(GetName(instance))) {
-        return MAP_MANAGER_ERROR.E_DUPLICATE;
+        return MANAGER_ERROR.E_DUPLICATE;
       }
       implementations.Add(instance);
       ids.Add(GetId(instance));
       names.Add(GetName(instance));
-      return MAP_MANAGER_ERROR.E_SUCCESS;
+      return MANAGER_ERROR.E_SUCCESS;
     }
 
     public static MapManager NewInstance() {

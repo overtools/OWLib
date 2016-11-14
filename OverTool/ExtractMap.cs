@@ -97,16 +97,17 @@ namespace OverTool {
                 mapBStream.Position = (long)(Math.Ceiling((float)mapBStream.Position / 16.0f) * 16); // Future proofing
 
                 List<STUD> inlineSTUDArray = new List<STUD>();
-                try {
-                  while(true) { // TODO: Move this to Map.cs
-                    if(inlineSTUDArray.Count > 0 && inlineSTUDArray.Last().end >= mapBStream.Length) {
-                      break;
-                    }
-                    STUD tmp = new STUD(mapBStream, true, STUDManager.Instance, true, false);
-                    mapBStream.Position = tmp.end;
-                    inlineSTUDArray.Add(tmp);
+                while(true) { // TODO: Move this to Map.cs
+                  if(mapBStream.Position >= mapBStream.Length) {
+                    break;
                   }
-                } catch { break; }
+                  STUD tmp = new STUD(mapBStream, true, STUDManager.Instance, true, false);
+                  if(tmp.end == -1) {
+                    break;
+                  }
+                  mapBStream.Position = (long)(Math.Ceiling((float)tmp.end / 16.0f) * 16); // Future proofing
+                  inlineSTUDArray.Add(tmp);
+                }
 
                 for(int i = 0; i < inlineSTUDArray.Count; ++i) {
                   STUD stud = inlineSTUDArray[i];
@@ -134,8 +135,8 @@ namespace OverTool {
                       ComplexModelRecord cmr = (ComplexModelRecord)instance;
                       mapprop.MaterialKey = cmr.Data.material.key;
                       mapprop.ModelKey = cmr.Data.model.key;
-                      Skin.FindAnimations(cmr.Data.animationList.key, animList, replace, parsed, map, handler, mapprop.ModelKey);
-                      Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, animList, replace, parsed, map, handler, mapprop.ModelKey);
+                      Skin.FindAnimations(cmr.Data.animationList.key, animList, replace, parsed, map, handler, null, null, mapprop.ModelKey);
+                      Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, animList, replace, parsed, map, handler, null, null, mapprop.ModelKey);
                       break;
                     }
                   }
@@ -172,11 +173,14 @@ namespace OverTool {
                 continue;
               }
               using(Stream modelStream = Util.OpenFile(map[modelpair.Key], handler)) {
-                Model mdl = new Model(modelStream);
+                Chunked mdl = new Chunked(modelStream);
                 foreach(string modelOutput in modelpair.Value) {
                   using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, modelOutput), FileMode.Create, FileAccess.Write)) {
-                    owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel });
-                    Console.Out.WriteLine("Wrote model {0}", modelOutput);
+                    if(owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel })) {
+                      Console.Out.WriteLine("Wrote model {0}", modelOutput);
+                    } else {
+                      Console.Out.WriteLine("Failed to write model");
+                    }
                   }
                 }
               }
@@ -223,8 +227,11 @@ namespace OverTool {
 
               foreach(string matOutput in matpair.Value) {
                 using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, matOutput), FileMode.Create, FileAccess.Write)) {
-                  owmat.Write(null, outputStream, null, tmp, new object[0]);
-                  Console.Out.WriteLine("Wrote material {0}", matOutput);
+                  if(owmat.Write(null, outputStream, null, tmp, new object[0])) {
+                    Console.Out.WriteLine("Wrote material {0}", matOutput);
+                  } else {
+                    Console.Out.WriteLine("Failed to write material");
+                  }
                 }
               }
             }

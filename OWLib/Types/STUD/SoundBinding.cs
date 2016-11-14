@@ -10,7 +10,6 @@ namespace OWLib.Types.STUD {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct ReferenceData {
       public STUDInstanceInfo instance;
-      public OWRecord unk1;
       public OWRecord sound;
       public uint unk2;
     }

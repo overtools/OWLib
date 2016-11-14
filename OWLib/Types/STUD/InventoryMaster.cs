@@ -20,7 +20,13 @@ namespace OWLib.Types.STUD {
       public ulong zero1;
       public ulong offset;
       public ulong zero2;
-      public ulong zero3;
+      public EVENT_ID @event;
+    }
+
+    public enum EVENT_ID : ulong {
+      COMMON = 0,
+      SUMMER_GAMES_2016 = 1,
+      HALLOWEEN_2016 = 2
     }
 
     public ulong Key => 0x86A4F1BD3291EAB8;
@@ -83,12 +89,16 @@ namespace OWLib.Types.STUD {
         }
 
         for(ulong i = 0; i < ptr.count; ++i) {
-          input.Position = (long)itemGroups[i].offset;
-          STUDArrayInfo ptr2 = reader.Read<STUDArrayInfo>();
-          itemGroupItems[i] = new OWRecord[ptr2.count];
-          input.Position = (long)ptr2.offset;
-          for(ulong j = 0; j < ptr2.count; ++j) {
-            itemGroupItems[i][j] = reader.Read<OWRecord>();
+          if(itemGroups[i].offset > 0) {
+            input.Position = (long)itemGroups[i].offset;
+            STUDArrayInfo ptr2 = reader.Read<STUDArrayInfo>();
+            itemGroupItems[i] = new OWRecord[ptr2.count];
+            input.Position = (long)ptr2.offset;
+            for(ulong j = 0; j < ptr2.count; ++j) {
+              itemGroupItems[i][j] = reader.Read<OWRecord>();
+            }
+          } else {
+            itemGroupItems[i] = new OWRecord[0];
           }
         }
       }

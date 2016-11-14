@@ -51,15 +51,19 @@
     <Compile Include="Half\HalfHelper.cs" />
     <Compile Include="ImageDefinition.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="Chunked.cs" />
+    <Compile Include="Types\Chunk\CLDM.cs" />
+    <Compile Include="Types\Chunk\DMCE.cs" />
+    <Compile Include="Types\Chunk\IChunk.cs" />
+    <Compile Include="Types\Chunk\lksm.cs" />
+    <Compile Include="Types\Chunk\MNRM.cs" />
+    <Compile Include="Types\Chunk\MNRMTypes.cs" />
     <Compile Include="Types\DXBCTypes.cs" />
     <Compile Include="Types\Map\IMapFormat.cs" />
     <Compile Include="Types\Map\Map01.cs" />
     <Compile Include="Material.cs" />
-    <Compile Include="Model.cs" />
     <Compile Include="ModelWriter\MTLWriter.cs" />
     <Compile Include="ModelWriter\OBJWriter.cs" />
-    <Compile Include="ModelWriter\ASCIIWriter.cs" />
-    <Compile Include="ModelWriter\BINWriter.cs" />
     <Compile Include="ModelWriter\IModelWriter.cs" />
     <Compile Include="ModelWriter\OWMAPWriter.cs" />
     <Compile Include="ModelWriter\OWMATWriter.cs" />
@@ -116,6 +120,7 @@
     <Compile Include="Types\STUD\MaterialMaster.cs" />
     <Compile Include="Types\STUD\TextureOverride.cs" />
     <Compile Include="Types\TextureTypes.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config" />

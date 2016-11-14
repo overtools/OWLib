@@ -35,7 +35,7 @@ namespace OWLib.ModelWriter {
         }
     
         // data is object[] { bool exportAttachments, string materialReference, string modelName, bool onlyOneLOD, bool skipCollision }
-        void Write(Model model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data);
-        void Write(Map10 physics, Stream output, object[] data);
+        bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data);
+        bool Write(Map10 physics, Stream output, object[] data);
     }
 }
