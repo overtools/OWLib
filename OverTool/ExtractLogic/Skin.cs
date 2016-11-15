@@ -481,6 +481,8 @@ namespace OverTool.ExtractLogic {
         }
       }
 
+      IModelWriter refpose = new RefPoseWriter();
+
       bool skipCmodel = true;
 
       if(furtherOpts.Count > 5 && furtherOpts[5] == 'C') {
@@ -510,8 +512,18 @@ namespace OverTool.ExtractLogic {
           if(furtherOpts.Count > 0 && furtherOpts[0] == '+') { // raw
             continue;
           }
-
+          
           Chunked mdl = new Chunked(Util.OpenFile(map[key], handler));
+
+          if(furtherOpts.Count <= 6 || furtherOpts[6] != 'R') {
+            outpath = string.Format("{0}{1:X12}_refpose{2}", path, APM.keyToIndexID(key), refpose.Format);
+            using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+              if(refpose.Write(mdl, outp, null, null, null)) {
+                Console.Out.WriteLine("Wrote reference pose {0}", outpath);
+              }
+            }
+          }
+
           string mdlName = string.Format("{0} Skin {1}_{2:X}", heroName, itemName, APM.keyToIndex(key));
 
           outpath = string.Format("{0}{1:X12}{2}", path, APM.keyToIndexID(key), writer.Format);

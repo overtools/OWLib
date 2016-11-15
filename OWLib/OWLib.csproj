@@ -52,6 +52,7 @@
     <Compile Include="ImageDefinition.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Chunked.cs" />
+    <Compile Include="ModelWriter\RefPoseWriter.cs" />
     <Compile Include="Types\Chunk\CLDM.cs" />
     <Compile Include="Types\Chunk\DMCE.cs" />
     <Compile Include="Types\Chunk\IChunk.cs" />
