@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenTK;
 using OWLib.Types;
 using OWLib.Types.Chunk;
@@ -23,6 +20,7 @@ namespace OWLib.ModelWriter {
       return false;
     }
 
+    // Note: id-daemon's code, from overwatch_skeleton.
     private Vector3 ToEulerAngles(float w, float x, float y, float z) {
       double[,] matrix = new double[4, 4];
       {
