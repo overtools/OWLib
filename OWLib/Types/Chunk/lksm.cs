@@ -66,9 +66,6 @@ namespace OWLib.Types.Chunk {
     public ushort[] Lookup => lookup;
     public uint[] IDs => ids;
 
-    private ushort boneLengthCached = 0;
-    public ushort BoneLengthCached => boneLengthCached;
-
     public void Parse(Stream input) {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         data = reader.Read<Structure>();
