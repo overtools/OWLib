@@ -33,8 +33,8 @@ namespace OWLib.ModelWriter {
       Console.Out.WriteLine("Writing ASCII");
       using(StreamWriter writer = new StreamWriter(output)) {
         if(skeleton != null) {
-          writer.WriteLine(skeleton.Data.bones);
-          for(int i = 0; i < skeleton.Data.bones; ++i) {
+          writer.WriteLine(skeleton.Data.bonesAbs);
+          for(int i = 0; i < skeleton.Data.bonesAbs; ++i) {
             writer.WriteLine("bone_{0:X4}", skeleton.IDs[i]);
             writer.WriteLine(skeleton.Hierarchy[i]);
             OpenTK.Vector3 bonePos = skeleton.Matrices[i].ExtractTranslation();
@@ -123,7 +123,7 @@ namespace OWLib.ModelWriter {
               for(int k = 0; k < uv.Length; ++k) {
                 writer.WriteLine("{0:0.######} {1:0.######}", uv[k][j].u, uv[k][j].v);
               }
-              if(skeleton != null && skeleton.Data.bones > 0) {
+              if(skeleton != null && skeleton.Data.bonesAbs > 0) {
                 if(bones != null && bones[j].boneIndex != null && bones[j].boneWeight != null) {
                   writer.WriteLine("{0} {1} {2} {3}", skeleton.Lookup[bones[j].boneIndex[0]], skeleton.Lookup[bones[j].boneIndex[1]], skeleton.Lookup[bones[j].boneIndex[2]], skeleton.Lookup[bones[j].boneIndex[3]]);
                   writer.WriteLine("{0:0.######} {1:0.######} {2:0.######} {3:0.######}", bones[j].boneWeight[0], bones[j].boneWeight[1], bones[j].boneWeight[2], bones[j].boneWeight[3]);

@@ -81,16 +81,16 @@ namespace OWLib.ModelWriter {
       }
       lksm skeleton = (lksm)chunk;
       using(StreamWriter writer = new StreamWriter(output)) {
-        writer.WriteLine("{0}", skeleton.Data.bones);
+        writer.WriteLine("{0}", skeleton.Data.bonesAbs);
         writer.WriteLine("version 1");
         writer.WriteLine("nodes");
-        for(int i = 0; i < skeleton.Data.bones; ++i) {
+        for(int i = 0; i < skeleton.Data.bonesAbs; ++i) {
           writer.WriteLine("{0} \"bone_{1:X4}\" {2}", i, skeleton.IDs[i], skeleton.Hierarchy[i]);
         }
         writer.WriteLine("end");
         writer.WriteLine("skeleton");
         writer.WriteLine("time 0");
-        for(int i = 0; i < skeleton.Data.bones; ++i) {
+        for(int i = 0; i < skeleton.Data.bonesAbs; ++i) {
           Matrix3x4 bone = skeleton.Matrices34Inverted[i];
           Vector3 rot = ToEulerAngles(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
           Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);

@@ -89,7 +89,7 @@ namespace OWLib.ModelWriter {
         if(skeleton == null) {
           writer.Write((ushort)0); // number of bones
         } else {
-          writer.Write(skeleton.Data.bones);
+          writer.Write(skeleton.Data.bonesAbs);
         }
 
         Dictionary<byte, List<int>> LODMap = new Dictionary<byte, List<int>>();
@@ -125,7 +125,7 @@ namespace OWLib.ModelWriter {
         writer.Write((int)0); // number of attachments
 
         if(skeleton != null) {
-          for(int i = 0; i < skeleton.Data.bones; ++i) {
+          for(int i = 0; i < skeleton.Data.bonesAbs; ++i) {
             writer.Write(string.Format("bone_{0:X4}", skeleton.IDs[i]));
             short parent = skeleton.Hierarchy[i];
             if(parent == -1) {

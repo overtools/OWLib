@@ -106,8 +106,8 @@ namespace OWLib.ModelWriter {
         */
 
         if(skeleton != null) {
-          writer.Write((uint)skeleton.Data.bones);
-          for(int i = 0; i < skeleton.Data.bones; ++i) {
+          writer.Write((uint)skeleton.Data.bonesAbs);
+          for(int i = 0; i < skeleton.Data.bonesAbs; ++i) {
             WriteString(writer, string.Format("bone_{0:X4}", skeleton.IDs[i]));
             short parent = skeleton.Hierarchy[i];
             if(parent == -1) {
@@ -207,7 +207,7 @@ namespace OWLib.ModelWriter {
                 writer.Write((float)uv[k][j].u);
                 writer.Write((float)uv[k][j].v);
               }
-              if(skeleton != null && skeleton.Data.bones > 0) {
+              if(skeleton != null && skeleton.Data.bonesAbs > 0) {
                 if(bones != null && bones[j].boneIndex != null && bones[j].boneWeight != null) {
                   writer.Write(skeleton.Lookup[bones[j].boneIndex[0]]);
                   writer.Write(skeleton.Lookup[bones[j].boneIndex[1]]);

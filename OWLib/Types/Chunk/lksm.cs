@@ -34,8 +34,8 @@ namespace OWLib.Types.Chunk {
       public long remap;
       public long hierarchy2;
       public int unk1;
-      public ushort hierarchyCount;
-      public ushort bones;
+      public ushort bonesAbs;
+      public ushort bonesSimple;
       public ushort unk2;
       public ushort remapCount;
       public ushort idCount;
@@ -66,48 +66,51 @@ namespace OWLib.Types.Chunk {
     public ushort[] Lookup => lookup;
     public uint[] IDs => ids;
 
+    private ushort boneLengthCached = 0;
+    public ushort BoneLengthCached => boneLengthCached;
+
     public void Parse(Stream input) {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         data = reader.Read<Structure>();
 
-        hierarchy = new short[data.hierarchyCount];
+        hierarchy = new short[data.bonesAbs];
         input.Position = data.hierarchy1;
         if(input.Position > 0) {
-          for(int i = 0; i < data.hierarchyCount; ++i) {
+          for(int i = 0; i < data.bonesAbs; ++i) {
             input.Position += 4L;
             hierarchy[i] = reader.ReadInt16();
           }
         }
 
-        matrices = new Matrix4[data.bones];
-        matricesInverted = new Matrix4[data.bones];
-        matrices34 = new Matrix3x4[data.bones];
-        matrices34Inverted = new Matrix3x4[data.bones];
+        matrices = new Matrix4[data.bonesAbs];
+        matricesInverted = new Matrix4[data.bonesAbs];
+        matrices34 = new Matrix3x4[data.bonesAbs];
+        matrices34Inverted = new Matrix3x4[data.bonesAbs];
 
         input.Position = data.matrix44;
         if(input.Position > 0) {
-          for(int i = 0; i < data.bones; ++i) {
+          for(int i = 0; i < data.bonesAbs; ++i) {
             matrices[i] = reader.Read<Matrix4B>().ToOpenTK();
           }
         }
 
         input.Position = data.matrix44i;
         if(input.Position > 0) {
-          for(int i = 0; i < data.bones; ++i) {
+          for(int i = 0; i < data.bonesAbs; ++i) {
             matricesInverted[i] = reader.Read<Matrix4B>().ToOpenTK();
           }
         }
 
         input.Position = data.matrix43;
         if(input.Position > 0) {
-          for(int i = 0; i < data.bones; ++i) {
+          for(int i = 0; i < data.bonesAbs; ++i) {
             matrices34[i] = reader.Read<Matrix3x4B>().ToOpenTK();
           }
         }
 
         input.Position = data.matrix43i;
         if(input.Position > 0) {
-          for(int i = 0; i < data.bones; ++i) {
+          for(int i = 0; i < data.bonesAbs; ++i) {
             matrices34Inverted[i] = reader.Read<Matrix3x4B>().ToOpenTK();
           }
         }
@@ -120,10 +123,10 @@ namespace OWLib.Types.Chunk {
           }
         }
 
-        ids = new uint[data.idCount];
+        ids = new uint[data.bonesAbs];
         input.Position = data.id;
         if(input.Position > 0) {
-          for(int i = 0; i < data.idCount; ++i) {
+          for(int i = 0; i < data.bonesAbs; ++i) {
             ids[i] = reader.ReadUInt32();
           }
         }
