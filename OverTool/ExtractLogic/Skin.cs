@@ -212,7 +212,7 @@ namespace OverTool.ExtractLogic {
       }
     }
 
-    private static void FindModels(ulong key, List<ulong> ignore, HashSet<ulong> models, Dictionary<ulong, ulong> animList, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
+    public static void FindModels(ulong key, List<ulong> ignore, HashSet<ulong> models, Dictionary<ulong, ulong> animList, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
       if(key == 0) {
         return;
       }
@@ -292,13 +292,6 @@ namespace OverTool.ExtractLogic {
         }
         if(inst.Name == record.Manager.GetName(typeof(ProjectileModelRecord))) {
           ProjectileModelRecord r = (ProjectileModelRecord)inst;
-          foreach(ProjectileModelRecord.BindingRecord br in r.Children) {
-            ulong bindingKey = br.binding.key;
-            if(replace.ContainsKey(bindingKey)) {
-              bindingKey = replace[bindingKey];
-            }
-            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
-          }
         }
         if(inst.Name == record.Manager.GetName(typeof(ChildParameterRecord))) {
           ChildParameterRecord r = (ChildParameterRecord)inst;
@@ -412,6 +405,10 @@ namespace OverTool.ExtractLogic {
       }
       FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
 
+      Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler);
+    }
+
+    public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler) {
       if(furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
         foreach(KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
           ulong materialId = kv.Key;
@@ -547,8 +544,12 @@ namespace OverTool.ExtractLogic {
             Directory.CreateDirectory(Path.GetDirectoryName(outpath));
           }
           using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-            Util.OpenFile(map[key], handler).CopyTo(outp);
-            Console.Out.WriteLine("Wrote animation {0}", outpath);
+            Stream output = Util.OpenFile(map[key], handler);
+            if(output != null) {
+              output.CopyTo(outp);
+              Console.Out.WriteLine("Wrote animation {0}", outpath);
+              output.Close();
+            }
           }
         }
       }

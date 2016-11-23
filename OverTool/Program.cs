@@ -26,6 +26,8 @@ namespace OverTool {
         Console.Out.WriteLine("\tx - Extract Cosmetics");
         Console.Out.WriteLine("\tm - List Maps");
         Console.Out.WriteLine("\tM - Extract Maps");
+        Console.Out.WriteLine("\tn - List NPCs");
+        Console.Out.WriteLine("\tN - Extract NPCs");
         Console.Out.WriteLine("\tv - Dump Hero Sounds");
         Console.Out.WriteLine("\ts - Dump Strings");
         Console.Out.WriteLine("\tZ - Dump Keys");
@@ -56,7 +58,7 @@ namespace OverTool {
 
       string root = args[0];
       char opt = args[1][0];
-      char[] validOpts = new char[] { 't', 'x', 'm', 'M', 'v', 's', 'Z', 'T' };
+      char[] validOpts = new char[] { 't', 'x', 'm', 'M', 'v', 's', 'Z', 'T', 'n', 'N' };
       if(!validOpts.Contains(opt)) {
         Console.Error.WriteLine("UNSUPPORTED OPT {0}", opt);
         return;
@@ -157,6 +159,10 @@ namespace OverTool {
         optfn = DumpKey.Parse;
       } else if(opt == 'T') {
         optfn = DumpTex.Parse;
+      } else if(opt == 'n') {
+        optfn = ListNPC.Parse;
+      } else if(opt == 'N') {
+        optfn = DumpNPC.Parse;
       }
 
       optfn(track, map, handler, args.Skip(2).ToArray());

@@ -14,6 +14,14 @@ namespace OWLib.Types {
   public struct OWRecord {
     public ulong padding;
     public ulong key;
+
+    public static implicit operator long(OWRecord i) {
+      return (long)i.key;
+    }
+
+    public static implicit operator ulong(OWRecord i) {
+      return i.key;
+    }
   }
 
   [StructLayout(LayoutKind.Sequential, Pack = 4)]

@@ -163,6 +163,7 @@ namespace OWLib {
         instance = (ISTUDInstance)Activator.CreateInstance(inst);
         instance.Read(input);
       } catch (Exception ex) {
+        Console.Error.WriteLine("Error with {0}", inst.FullName);
         Console.Error.WriteLine(ex.Message);
         instance = null;
         return MANAGER_ERROR.E_FAULT;
