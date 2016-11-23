@@ -114,7 +114,7 @@ namespace OverTool {
         }
 
         for(int i = 0; i < inventory.ItemGroups.Length; ++i) {
-          string name = OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event);
+          string name = OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event, "EVENT_{0}");
           for(int j = 0; j < inventory.Items[i].Length; ++j) {
             items[inventory.Items[i][j]] = name;
           }

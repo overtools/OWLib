@@ -51,7 +51,10 @@ namespace OverTool {
         if(heroName == null) {
           continue;
         }
-        Console.Out.WriteLine("Cosmetics for {0}...", heroName);
+        if(master.Header.itemMaster.key == 0) { // AI
+          continue;
+        }
+        Console.Out.WriteLine("Cosmetics for {0} in package {1:X16}", heroName, map[masterKey].package.packageKey);
         if(!map.ContainsKey(master.Header.itemMaster.key)) {
           Console.Out.WriteLine("Error loading inventory master file...");
           continue;
@@ -84,7 +87,7 @@ namespace OverTool {
             continue;
           }
           OWRecord[] records = inventory.Items[i];
-          Console.Out.WriteLine("\t{0} ({1} items)", OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event), records.Length);
+          Console.Out.WriteLine("\t{0} ({1} items)", OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event, "EVENT_{0}"), records.Length);
           foreach(OWRecord record in records) {
             GetInventoryName(record.key, map, handler);
           }

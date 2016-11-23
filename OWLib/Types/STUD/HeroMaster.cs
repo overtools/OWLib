@@ -13,7 +13,6 @@ namespace OWLib.Types.STUD {
       public OWRecord binding;
       public OWRecord name;
       public OWRecord zero2;
-      public OWRecord zero_1300_1;
       public OWRecord virtualSpace1;
       public ulong virtualOffset;
       public ulong zero3;
@@ -41,17 +40,15 @@ namespace OWLib.Types.STUD {
       public fixed ushort zeroB[32];
       public ulong directiveOffset;
       public ulong zeroC;
-      public ushort zeroD;
-      public uint zeroF;
-      public float unkf1;
-      public ushort unk1;
-      public float unkf2;
-      public float unkf3;
-      public float unkf4;
+      public OWRecord blank;
+      public float x;
+      public float y;
+      public float z;
+      public float w;
+      public uint id2;
       public uint index;
       public HeroType type;
-      public uint unk2;
-      public uint unk3;
+      public uint subtype;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
