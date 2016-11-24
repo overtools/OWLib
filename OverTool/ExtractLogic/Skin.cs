@@ -228,6 +228,21 @@ namespace OverTool.ExtractLogic {
         return;
       }
 
+      switch(APM.keyToTypeID(tgt)) {
+        case 0xC: // model
+          models.Add(tgt);
+          return;
+        case 0x1A: // texture
+          FindTextures(tgt, layers, replace, parsed, map, handler);
+          return;
+        case 0x20: // animation
+        case 0x21:
+          FindAnimations(tgt, animList, replace, parsed, map, handler, models, layers, 0);
+          return;
+        case 0x7C: // string
+          return;
+      }
+
       STUD record = new STUD(Util.OpenFile(map[tgt], handler), true, STUDManager.Instance, false, true);
       foreach(ISTUDInstance inst in record.Instances) {
         if(inst == null) {
