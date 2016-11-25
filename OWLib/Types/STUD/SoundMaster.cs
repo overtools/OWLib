@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
   public class SoundMasterReference : ISTUDInstance {
-    public ulong Key => 0x95B7E9BB9D96E8F2;
     public uint Id => 0x8884C15A;
     public string Name => "Sound Master:Reference";
 

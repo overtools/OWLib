@@ -6,7 +6,7 @@ using System.Reflection;
 using OWLib.Types.Chunk;
 
 namespace OWLib.Types {
-  public class Chunked {
+  public class Chunked : IDisposable {
     private List<IChunk> chunks;
     public IReadOnlyList<IChunk> Chunks => chunks;
 
@@ -102,6 +102,13 @@ namespace OWLib.Types {
         ret[i] = v[i].Value;
       }
       return ret;
+    }
+
+    public void Dispose() {
+      chunks.Clear();
+      entrees.Clear();
+      entryOffsets.Clear();
+      GC.SuppressFinalize(this);
     }
   }
 

@@ -5,9 +5,6 @@ using System.Runtime.InteropServices;
 namespace OWLib.Types.STUD {
   public class EncryptionKey : ISTUDInstance {
     public uint Id => 0x8F754DFF;
-
-    public ulong Key => 0xE68A7714016119F7;
-
     public string Name => "Encryption Key";
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

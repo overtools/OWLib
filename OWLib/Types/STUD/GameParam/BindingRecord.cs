@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.GameParam {
   public class BindingRecord : ISTUDInstance {
-    public ulong Key => 0x0DECF2BA78E343C9;
     public uint Id => 0xE53C2921;
     public string Name => "GameParameter:Binding";
 

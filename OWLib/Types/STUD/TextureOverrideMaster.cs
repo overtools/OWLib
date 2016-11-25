@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
     public class TextureOverrideMaster : ISTUDInstance {
-        public ulong Key => 0x14E40F29D7CDF08F;
         public uint Id => 0xC25082A2;
         public string Name => "TextureOverrideMaster";
 

@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.Binding {
   public class AnimationCoreference : ISTUDInstance {
-    public ulong Key => 0xADD66DCFB21894C4;
     public uint Id => 0xC811BADD;
     public string Name => "Binding:AnimationCoreference";
 

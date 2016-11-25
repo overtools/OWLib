@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.GameParam {
   public class ChildGameParameterRecord : ISTUDInstance {
-    public ulong Key => 0x6D3AAC865595D4FF;
     public uint Id => 0x04E83493;
     public string Name => "GameParameter:Child";
 

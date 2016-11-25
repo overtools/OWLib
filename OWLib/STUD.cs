@@ -8,7 +8,7 @@ using OWLib.Types;
 using System.Reflection;
 
 namespace OWLib {
-  public class STUD {    
+  public class STUD : IDisposable {    
     private STUDHeader header;
     private STUDInstanceRecord[] records;
     private ISTUDInstance[] instances;
@@ -90,12 +90,17 @@ namespace OWLib {
       }
       return ret;
     }
+
+    public void Dispose() {
+      records = null;
+      instances = null;
+      GC.SuppressFinalize(this);
+    }
   }
 
   public class STUDManager {
     private List<Type> implementations;
     private List<uint> ids;
-    private List<ulong> instanceIds;
     private List<string> names;
 
     private static HashSet<uint> complained = new HashSet<uint>();
@@ -105,14 +110,12 @@ namespace OWLib {
     public static STUDManager Instance => _Instance;
 
     public IReadOnlyList<Type> Implementations => implementations;
-    public IReadOnlyList<ulong> InstanceIds => instanceIds;
     public IReadOnlyList<uint> Ids => ids;
     public IReadOnlyList<string> Names => names;
 
     public STUDManager() {
       implementations = new List<Type>();
       ids = new List<uint>();
-      instanceIds = new List<ulong>();
       names = new List<string>();
     }
     
@@ -130,20 +133,7 @@ namespace OWLib {
       return null;
     }
 
-    public Type GetInstance(ulong id, bool suppress) {
-      for(int i = 0; i < implementations.Count; ++i) {
-        if(instanceIds[i] == id) {
-          return implementations[i];
-        }
-      }
-      return null;
-    }
-    
     public MANAGER_ERROR InitializeInstance(uint id, Stream input, out ISTUDInstance instance, bool suppress) {
-      return InitializeInstance(GetInstance(id, suppress), input, out instance);
-    }
-
-    public MANAGER_ERROR InitializeInstance(ulong id, Stream input, out ISTUDInstance instance, bool suppress) {
       return InitializeInstance(GetInstance(id, suppress), input, out instance);
     }
 
@@ -208,27 +198,12 @@ namespace OWLib {
       return inst.Id;
     }
 
-    public ulong GetKey(ISTUDInstance inst) {
-      if(inst == null) {
-        return 0;
-      }
-      return inst.Key;
-    }
-
     public uint GetId(Type inst) {
       if(inst == null) {
         return 0;
       }
       ISTUDInstance instance = (ISTUDInstance)Activator.CreateInstance(inst);
       return GetId(instance);
-    }
-
-    public ulong GetKey(Type inst) {
-      if(inst == null) {
-        return 0;
-      }
-      ISTUDInstance instance = (ISTUDInstance)Activator.CreateInstance(inst);
-      return GetKey(instance);
     }
 
     public MANAGER_ERROR AddInstance(ISTUDInstance instance) {
@@ -245,15 +220,9 @@ namespace OWLib {
       if(implementations.Contains(instance)) {
         return MANAGER_ERROR.E_DUPLICATE;
       }
-      ulong key = GetKey(instance);
       uint id = GetId(instance);
       string name = GetName(instance);
-      if(id == 0) {
-        if(System.Diagnostics.Debugger.IsAttached) {
-          System.Diagnostics.Debugger.Log(2, "STUD", string.Format("Error! {0:X16} still has no ID!\n", key));
-        }
-      }
-      if(instanceIds.Contains(key) && ids.Contains(id)) {
+      if(ids.Contains(id)) {
         return MANAGER_ERROR.E_DUPLICATE;
       }
       if(names.Contains(name)) {
@@ -261,7 +230,6 @@ namespace OWLib {
       }
       implementations.Add(instance);
       ids.Add(id);
-      instanceIds.Add(key);
       names.Add(name);
       return MANAGER_ERROR.E_SUCCESS;
     }

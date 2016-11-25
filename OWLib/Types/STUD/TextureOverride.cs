@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
   public class TextureOverride : ISTUDInstance {
-    public ulong Key => 0x053C4CCBC528B5B3;
     public uint Id => 0x4FB2CE32;
     public string Name => "TextureOverride";
 
@@ -16,6 +15,8 @@ namespace OWLib.Types.STUD {
       public ulong one;
       public ulong unk2;
       public ulong unk3;
+      public ulong unk1600_1;
+      public ulong unk1600_2;
       public ulong offsetInfo;
       public ulong unk5;
       public ulong unk6;
@@ -25,6 +26,7 @@ namespace OWLib.Types.STUD {
       public ulong unk8;
       public ulong unk9;
       public ulong unkA;
+      public OWRecord unk1600_3;
       public Vec4 delta;
     }
 
@@ -101,6 +103,8 @@ namespace OWLib.Types.STUD {
       public ulong one;
       public ulong unk2;
       public ulong unk3;
+      public ulong unk1600_1;
+      public ulong unk1600_2;
       public ulong offsetInfo;
       public ulong unk5;
       public ulong unk6;

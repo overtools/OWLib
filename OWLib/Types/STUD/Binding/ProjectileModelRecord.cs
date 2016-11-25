@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.Binding {
   public class ProjectileModelRecord : ISTUDInstance {
-    public ulong Key => 0x9284FC578E1984E3;
     public uint Id => 0xEC23FFFD;
     public string Name => "Binding:ProjectileModel";
 

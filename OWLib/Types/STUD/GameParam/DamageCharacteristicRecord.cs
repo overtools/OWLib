@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.GameParam {
   public class DamageCharacteristicRecord : ISTUDInstance {
-    public ulong Key => 0xF6ED9C3A376B9B60;
     public uint Id => 0x3AE7427E;
     public string Name => "GameParameter:DamageCharacteristic";
 

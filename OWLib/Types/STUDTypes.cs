@@ -45,11 +45,6 @@ namespace OWLib.Types {
             get;
         }
 
-        ulong Key
-        {
-            get;
-        }
-
         void Read(Stream input);
     }
 }

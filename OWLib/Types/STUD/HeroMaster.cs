@@ -82,8 +82,7 @@ namespace OWLib.Types.STUD {
       public ulong zero2;
       public ulong zero3;
     }
-
-    public ulong Key => 0x0640DC92294CCF91;
+    
     public uint Id => 0x91E7843A;
     public string Name => "Hero Master";
 

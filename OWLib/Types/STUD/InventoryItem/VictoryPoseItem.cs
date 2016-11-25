@@ -7,8 +7,7 @@ namespace OWLib.Types.STUD.InventoryItem {
     public struct VictoryPoseData {
       public OWRecord f0BF;
     }
-
-    public ulong Key => 0x964150072700B0D0;
+    
     public uint Id => 0x018667E2;
     public string Name => "Victory Pose";
     

@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
   public class MapMaster : ISTUDInstance {
-    public ulong Key => 0xC670329155D47265;
     public uint Id => 0xF42FE559;
     public string Name => "Map Master";
 

@@ -20,7 +20,6 @@ namespace OWLib.Types.STUD {
       public ulong unk2;
     }
 
-    public ulong Key => 0x5DBB227A48364073;
     public uint Id => 0xFF82DF73;
     public string Name => "Decal";
 

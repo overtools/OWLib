@@ -8,8 +8,7 @@ namespace OWLib.Types.STUD.InventoryItem {
       public ulong unk1;
       public ulong unk2;
     }
-
-    public ulong Key => 0x5C4B5EF809855F8F;
+    
     public uint Id => 0x61632B43;
     public string Name => "Unknown5C4B5EF809855F8F";
     

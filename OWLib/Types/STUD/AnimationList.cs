@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
   public class AnimationListInfo : ISTUDInstance {
-    public ulong Key => 0xAAF0D8040993D5DB;
     public uint Id => 0x73A19293;
     public string Name => "AnimationList:Info";
 

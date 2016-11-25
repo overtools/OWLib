@@ -4,12 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using OWLib.Types.Map;
 using OWLib.Types;
 
 namespace OWLib {
-  public class Map {
+  public class Map : IDisposable {
     private MapHeader header;
     private MapCommonHeader[] commonHeaders;
     private IMapFormat[] records;
@@ -38,6 +37,12 @@ namespace OWLib {
           input.Position = nps;
         }
       }
+    }
+
+    public void Dispose() {
+      commonHeaders = null;
+      records = null;
+      GC.SuppressFinalize(this);
     }
   }
 
