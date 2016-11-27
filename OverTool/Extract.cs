@@ -81,13 +81,20 @@ namespace OverTool {
         if(master == null) {
           continue;
         }
+        if(master.Header.itemMaster.key == 0) {
+          continue;
+        }
         string heroName = Util.GetString(master.Header.name.key, map, handler);
         if(heroName == null) {
           continue;
         }
         if(heroAllWildcard) {
-          heroTypes.Add(heroName.ToLowerInvariant(), new List<string>());
-          heroWildcard.Add(heroName.ToLowerInvariant(), true);
+          if(!heroTypes.ContainsKey(heroName.ToLowerInvariant())) {
+            heroTypes.Add(heroName.ToLowerInvariant(), new List<string>());
+          }
+          if(!heroWildcard.ContainsKey(heroName.ToLowerInvariant())) {
+            heroWildcard.Add(heroName.ToLowerInvariant(), true);
+          }
         }
         if(!heroTypes.ContainsKey(heroName.ToLowerInvariant())) {
           continue;
