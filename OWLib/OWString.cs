@@ -17,11 +17,14 @@ namespace OWLib {
       using(BinaryReader reader = new BinaryReader(input)) {
         header = reader.Read<OWStringHeader>();
         input.Position = (long)header.offset;
+        byte[] bytes;
         if(header.size > 0) {
-          Value = Encoding.UTF8.GetString(reader.ReadBytes((int)header.size));
+          bytes = reader.ReadBytes((int)header.size);
         } else {
-          Value = Encoding.UTF8.GetString(reader.ReadBytes((int)(input.Length - input.Position - 1)));
+          bytes = reader.ReadBytes((int)(input.Length - input.Position - 1));
         }
+
+        Value = Encoding.UTF8.GetString(bytes).Trim().Trim(new char[] { '\0' });
       }
     }
 

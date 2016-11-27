@@ -391,9 +391,9 @@ namespace OverTool.ExtractLogic {
       HashSet<ulong> parsed = new HashSet<ulong>();
       Dictionary<ulong, List<ImageLayer>> layers = new Dictionary<ulong, List<ImageLayer>>();
       Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
-      if(itemName.ToLowerInvariant() != "classic") {
-        FindReplacements(skin.Data.skin.key, replace, parsed, map, handler, master, skin);
-      }
+
+      FindReplacements(skin.Data.skin.key, replace, parsed, map, handler, master, skin);
+
       ulong bindingKey = master.Header.binding.key;
       if(replace.ContainsKey(bindingKey)) {
         bindingKey = replace[bindingKey];
