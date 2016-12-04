@@ -18,8 +18,11 @@ namespace OverTool {
   class Program {
     static void Main(string[] args) {
       Console.OutputEncoding = Encoding.UTF8;
-      if(args.Length < 2) {
+      string[] validLangs = new string[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" };
+      if (args.Length < 2) {
         Console.Out.WriteLine("Usage: OverTool.exe [-LLang] \"overwatch path\" mode [mode opts]");
+        Console.Out.WriteLine("Options:");
+        Console.Out.WriteLine("\tL - Specify a language to extract. Example: -L{0}", validLangs[0]);
         Console.Out.WriteLine("Modes:");
         Console.Out.WriteLine("\tt - List Cosmetics");
         Console.Out.WriteLine("\tx - Extract Cosmetics");
@@ -36,7 +39,6 @@ namespace OverTool {
         return;
       }
 
-      string[] validLangs = new string[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" };
       if(args[0][0] == '-' && args[0][1] == 'L') {
         string lang = args[0].Substring(2);
         if(!validLangs.Contains(lang)) {
