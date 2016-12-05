@@ -23,9 +23,9 @@ namespace OWLib.ModelWriter {
       ushort versionMajor = 1;
       ushort versionMinor = 0;
 
-      bool hasTypeData = false;
-      if(data != null && data.Length > 0 && data[0].GetType() == typeof(List<TextureType>)) {
-        hasTypeData = true;
+      Dictionary<string, TextureType> typeData = null;
+      if(data != null && data.Length > 0 && data[0].GetType() == typeof(Dictionary<string, TextureType>)) {
+        typeData = (Dictionary<string, TextureType>) data[0];
         versionMajor = 1;
         versionMinor = 1;
       }
@@ -44,10 +44,10 @@ namespace OWLib.ModelWriter {
           writer.Write(images.Count);
           foreach(string image in images) {
             writer.Write(image);
-          }
-          if(hasTypeData) {
-            foreach(TextureType @type in (List<TextureType>)data[0]) {
-              writer.Write((byte)DDSTypeDetect.Detect(@type));
+            if(typeData != null && typeData.ContainsKey(image)) {
+              writer.Write((byte)DDSTypeDetect.Detect(typeData[image]));
+            } else {
+              writer.Write((byte)0xFF);
             }
           }
         }

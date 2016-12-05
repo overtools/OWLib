@@ -214,7 +214,7 @@ namespace OverTool {
                 Skin.FindTextures(matpair.Key, tmp, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), map, handler);
                 cache.Add(matpair.Key, tmp);
               }
-              List<TextureType> types = new List<TextureType>();
+              Dictionary<string, TextureType> types = new Dictionary<string, TextureType>();
               foreach(KeyValuePair<ulong, List<ImageLayer>> kv in tmp) {
                 ulong materialId = kv.Key;
                 List<ImageLayer> sublayers = kv.Value;
@@ -222,7 +222,8 @@ namespace OverTool {
                   if(!parsed.Add(layer.key)) {
                     continue;
                   }
-                  types.Add(Skin.SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", outputPath, APM.keyToIndexID(layer.key))));
+                  KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", outputPath, APM.keyToIndexID(layer.key)));
+                  types.Add(pair.Key, pair.Value);
                 }
               }
 

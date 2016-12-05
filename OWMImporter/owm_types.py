@@ -30,10 +30,9 @@ class OWMDLFile:
         self.empties = empties
 
 class OWMATFile:
-    def __init__(self, header, materials, types = []):
+    def __init__(self, header, materials):
         self.header = header
         self.materials = materials
-        self.types = types
 
 class OWMAPFile:
     def __init__(self, header, objects, details, lights = []):

@@ -21,11 +21,11 @@ def read(filename):
         key, textureCount = bin_ops.readFmtFlat(stream, owm_types.OWMATMaterial.structFormat)
         textures = []
         for j in range(textureCount):
-            textures += [bin_ops.readFmtFlat(stream, [owm_types.OWMATMaterial.exFormat[0]])]
+            t = bin_ops.readFmtFlat(stream, [owm_types.OWMATMaterial.exFormat[0]])
+            y = 0
+            if major >= 1 and minor >= 1:
+                y = stream.read()
+            textures += [(t, y)]
         materials += [owm_types.OWMATMaterial(key, textureCount, textures)]
 
-    types = []
-    if major >= 1 && minor >= 1:
-        types = map(lambda it: ord(it), stream.read(materialCount))
-
-    return owm_types.OWMATFile(header, materials, types)
+    return owm_types.OWMATFile(header, materials)

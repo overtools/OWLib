@@ -34,13 +34,14 @@ def read(filename, prefix = '', importNormal, importEffect):
     m = {}
 
     for i in range(len(data.materials)):
-        if i < len(data.types):
-            if data.types[i] == owm_types.OWMATTypes['NORMAL'] and not importNormal: continue
-            if data.types[i] == owm_types.OWMATTypes['EFFECT'] and not importEffect: continue
         material = data.materials[i]
         mat = bpy.data.materials.new('%s%016X' % (prefix, material.key))
         mat.diffuse_intensity = 1.0
-        for texture in material.textures:
+        for texturetype in material.textures:
+            typ = texturetype[1]
+            texture = texturetype[0]
+            if importNormal == False and typ == owm_types.OWMATTypes['NORMAL']: continue
+            if importEffect == False and typ == owm_types.OWMATTypes['EFFECT']: continue
             realpath = texture
             if not os.path.isabs(realpath):
                 realpath = os.path.normpath('%s/%s' % (root, realpath))
@@ -67,14 +68,13 @@ def read(filename, prefix = '', importNormal, importEffect):
                 mattex = mat.texture_slots.add()
                 mattex.use_map_color_diffuse = True
                 mattex.diffuse_factor = 1
-                if i < len(data.types):
-                    if data.types[i] == owm_types.OWMATTypes['NORMAL']:
-                        tex.use_alpha = False
-                        tex.use_normal_map = True
-                        mattex.use_map_color_diffuse = False
-                        mattex.use_map_normal = True
-                        mattex.normal_factor = -1
-                        mattex.diffuse_factor = 0
+                if typ == owm_types.OWMATTypes['NORMAL']:
+                    tex.use_alpha = False
+                    tex.use_normal_map = True
+                    mattex.use_map_color_diffuse = False
+                    mattex.use_map_normal = True
+                    mattex.normal_factor = -1
+                    mattex.diffuse_factor = 0
                 mattex.texture = tex
                 mattex.texture_coords = 'UV'
                 t[fn] = tex

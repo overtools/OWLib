@@ -424,7 +424,7 @@ namespace OverTool.ExtractLogic {
     }
 
     public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler) {
-      List<TextureType> typeInfo = new List<TextureType>();
+      Dictionary<string, TextureType> typeInfo = new Dictionary<string, TextureType>();
       if(furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
         foreach(KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
           ulong materialId = kv.Key;
@@ -433,7 +433,8 @@ namespace OverTool.ExtractLogic {
             if(!parsed.Add(layer.key)) {
               continue;
             }
-            typeInfo.Add(SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", path, APM.keyToIndexID(layer.key))));
+            KeyValuePair<string, TextureType> stt = SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", path, APM.keyToIndexID(layer.key)));
+            typeInfo.Add(stt.Key, stt.Value);
           }
         }
       }
@@ -581,9 +582,12 @@ namespace OverTool.ExtractLogic {
       }
     }
 
-    public static TextureType SaveTexture(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, string path) {
+    public static KeyValuePair<string, TextureType> SaveTexture(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, string path) {
+      string name = string.Format("{0:X12}.dds", APM.keyToIndexID(key));
+      TextureType @type = TextureType.Unknown;
+
       if(!map.ContainsKey(key)) {
-        return TextureType.Unknown;
+        return new KeyValuePair<string, TextureType>(name, @type);
       }
       
       if(!Directory.Exists(Path.GetDirectoryName(path))) {
@@ -593,7 +597,6 @@ namespace OverTool.ExtractLogic {
       ulong imageDataKey = (key & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
       bool dbl = map.ContainsKey(imageDataKey);
 
-      TextureType @type = TextureType.Unknown;
       using(Stream output = File.Open(path, FileMode.Create, FileAccess.Write)) {
         if(map.ContainsKey(imageDataKey)) {
           Texture tex = new Texture(Util.OpenFile(map[key], handler), Util.OpenFile(map[imageDataKey], handler));
@@ -606,7 +609,7 @@ namespace OverTool.ExtractLogic {
         }
       }
       Console.Out.WriteLine("Wrote texture {0}", path);
-      return @type;
+      return new KeyValuePair<string, TextureType>(name, @type);
     }
   }
 }
