@@ -21,6 +21,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{97878F88
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third Party", "Third Party", "{3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OWMImporter", "OWMImporter", "{AA8F13E5-C6D3-4D16-93BF-73A445A2BB81}"
+	ProjectSection(SolutionItems) = preProject
+		OWMImporter\__init__.py = OWMImporter\__init__.py
+		OWMImporter\bin_ops.py = OWMImporter\bin_ops.py
+		OWMImporter\import_owmap.py = OWMImporter\import_owmap.py
+		OWMImporter\import_owmat.py = OWMImporter\import_owmat.py
+		OWMImporter\import_owmdl.py = OWMImporter\import_owmdl.py
+		OWMImporter\manager.py = OWMImporter\manager.py
+		OWMImporter\owm_types.py = OWMImporter\owm_types.py
+		OWMImporter\read_owmap.py = OWMImporter\read_owmap.py
+		OWMImporter\read_owmat.py = OWMImporter\read_owmat.py
+		OWMImporter\read_owmdl.py = OWMImporter\read_owmdl.py
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

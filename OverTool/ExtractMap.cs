@@ -214,6 +214,7 @@ namespace OverTool {
                 Skin.FindTextures(matpair.Key, tmp, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), map, handler);
                 cache.Add(matpair.Key, tmp);
               }
+              List<TextureType> types = new List<TextureType>();
               foreach(KeyValuePair<ulong, List<ImageLayer>> kv in tmp) {
                 ulong materialId = kv.Key;
                 List<ImageLayer> sublayers = kv.Value;
@@ -221,13 +222,13 @@ namespace OverTool {
                   if(!parsed.Add(layer.key)) {
                     continue;
                   }
-                  Skin.SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", outputPath, APM.keyToIndexID(layer.key)));
+                  types.Add(Skin.SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", outputPath, APM.keyToIndexID(layer.key))));
                 }
               }
 
               foreach(string matOutput in matpair.Value) {
                 using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, matOutput), FileMode.Create, FileAccess.Write)) {
-                  if(owmat.Write(null, outputStream, null, tmp, new object[0])) {
+                  if(owmat.Write(null, outputStream, null, tmp, new object[1] { types })) {
                     Console.Out.WriteLine("Wrote material {0}", matOutput);
                   } else {
                     Console.Out.WriteLine("Failed to write material");

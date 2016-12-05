@@ -33,7 +33,8 @@ def read(filename, prefix = ''):
     t = {}
     m = {}
 
-    for material in data.materials:
+    for i in range(len(data.materials)):
+        material = data.materials[i]
         mat = bpy.data.materials.new('%s%016X' % (prefix, material.key))
         mat.diffuse_intensity = 1.0
         for texture in material.textures:
@@ -60,11 +61,20 @@ def read(filename, prefix = ''):
                     if tex == None:
                         tex = bpy.data.textures.new(fn, type = 'IMAGE')
                         tex.image = img
-                t[fn] = tex
                 mattex = mat.texture_slots.add()
+                mattex.use_map_color_diffuse = True
+                mattex.diffuse_factor = 1
+                if i < len(data.types):
+                    if data.types[i] == owm_types.OWMATTypes['NORMAL']:
+                        tex.use_alpha = False
+                        tex.use_normal_map = True
+                        mattex.use_map_color_diffuse = False
+                        mattex.use_map_normal = True
+                        mattex.normal_factor = -1
+                        mattex.diffuse_factor = 0
                 mattex.texture = tex
                 mattex.texture_coords = 'UV'
-                mattex.use_map_color_diffuse = True
+                t[fn] = tex
             except: pass
         m[material.key] = mat
 

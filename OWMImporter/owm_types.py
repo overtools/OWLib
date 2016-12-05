@@ -1,5 +1,11 @@
 import mathutils
 
+OWMATTypes = {
+    "ALBEDO": 0x00,
+    "NORMAL": 0x01,
+    "SHADER": 0x02
+}
+
 class OWSettings:
     def __init__(self, filename, uvDisplaceX, uvDisplaceY, autoIk, importNormals, importEmpties, importMaterial, importSkeleton):
         self.filename = filename
@@ -22,9 +28,10 @@ class OWMDLFile:
         self.empties = empties
 
 class OWMATFile:
-    def __init__(self, header, materials):
+    def __init__(self, header, materials, types = []):
         self.header = header
         self.materials = materials
+        self.types = types
 
 class OWMAPFile:
     def __init__(self, header, objects, details, lights = []):

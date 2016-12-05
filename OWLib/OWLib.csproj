@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APM.cs" />
+    <Compile Include="DDSTypeDetect.cs" />
     <Compile Include="DXBC.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Half\Half.cs" />

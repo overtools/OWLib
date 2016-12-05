@@ -424,6 +424,7 @@ namespace OverTool.ExtractLogic {
     }
 
     public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler) {
+      List<TextureType> typeInfo = new List<TextureType>();
       if(furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
         foreach(KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
           ulong materialId = kv.Key;
@@ -432,7 +433,7 @@ namespace OverTool.ExtractLogic {
             if(!parsed.Add(layer.key)) {
               continue;
             }
-            SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", path, APM.keyToIndexID(layer.key)));
+            typeInfo.Add(SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", path, APM.keyToIndexID(layer.key))));
           }
         }
       }
@@ -473,7 +474,7 @@ namespace OverTool.ExtractLogic {
           IModelWriter tmp = new OWMATWriter();
           mtlPath = string.Format("{0}material{1}", path, tmp.Format);
           using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
-            if(tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) })) {
+            if(tmp.Write(null, outp, null, layers, new object[3] { typeInfo, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) })) {
               Console.Out.WriteLine("Wrote materials {0}", mtlPath);
             } else {
               Console.Out.WriteLine("Failed to write material");
@@ -580,9 +581,9 @@ namespace OverTool.ExtractLogic {
       }
     }
 
-    public static void SaveTexture(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, string path) {
+    public static TextureType SaveTexture(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, string path) {
       if(!map.ContainsKey(key)) {
-        return;
+        return TextureType.Unknown;
       }
       
       if(!Directory.Exists(Path.GetDirectoryName(path))) {
@@ -592,16 +593,20 @@ namespace OverTool.ExtractLogic {
       ulong imageDataKey = (key & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
       bool dbl = map.ContainsKey(imageDataKey);
 
+      TextureType @type = TextureType.Unknown;
       using(Stream output = File.Open(path, FileMode.Create, FileAccess.Write)) {
         if(map.ContainsKey(imageDataKey)) {
           Texture tex = new Texture(Util.OpenFile(map[key], handler), Util.OpenFile(map[imageDataKey], handler));
           tex.Save(output);
+          @type = tex.Format;
         } else {
           TextureLinear tex = new TextureLinear(Util.OpenFile(map[key], handler));
           tex.Save(output);
+          @type = tex.Header.Format();
         }
       }
       Console.Out.WriteLine("Wrote texture {0}", path);
+      return @type;
     }
   }
 }
