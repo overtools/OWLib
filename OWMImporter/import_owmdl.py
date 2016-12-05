@@ -281,7 +281,7 @@ def readmdl(materials = None):
         matpath = data.header.material
         if not os.path.isabs(matpath):
             matpath = os.path.normpath('%s/%s' % (root, matpath))
-        materials = import_owmat.read(matpath)
+        materials = import_owmat.read(matpath, '', settings.importTexNormal, settings.importTexEffect)
         bindMaterials(meshes, data, materials)
 
     empties = []

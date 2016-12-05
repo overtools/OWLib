@@ -25,7 +25,7 @@ def cleanUnusedMaterials(materials):
     bpy.context.scene.update()
     return (t, m)
 
-def read(filename, prefix = ''):
+def read(filename, prefix = '', importNormal, importEffect):
     root, file = os.path.split(filename)
     data = read_owmat.read(filename)
     if not data: return None
@@ -34,6 +34,9 @@ def read(filename, prefix = ''):
     m = {}
 
     for i in range(len(data.materials)):
+        if i < len(data.types):
+            if data.types[i] == owm_types.OWMATTypes['NORMAL'] and not importNormal: continue
+            if data.types[i] == owm_types.OWMATTypes['EFFECT'] and not importEffect: continue
         material = data.materials[i]
         mat = bpy.data.materials.new('%s%016X' % (prefix, material.key))
         mat.diffuse_intensity = 1.0

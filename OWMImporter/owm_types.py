@@ -7,7 +7,7 @@ OWMATTypes = {
 }
 
 class OWSettings:
-    def __init__(self, filename, uvDisplaceX, uvDisplaceY, autoIk, importNormals, importEmpties, importMaterial, importSkeleton):
+    def __init__(self, filename, uvDisplaceX, uvDisplaceY, autoIk, importNormals, importEmpties, importMaterial, importSkeleton, importTexNormal, importTexEffect):
         self.filename = filename
         self.uvDisplaceX = uvDisplaceX
         self.uvDisplaceY = uvDisplaceY
@@ -16,9 +16,11 @@ class OWSettings:
         self.importEmpties = importEmpties
         self.importMaterial = importMaterial
         self.importSkeleton = importSkeleton
+		self.importTexNormal = importTexNormal
+		self.importTexEffect = importTexEffect
 
     def mutate(self, filename):
-        return OWSettings(filename, self.uvDisplaceX, self.uvDisplaceY, self.autoIk, self.importNormals, self.importEmpties, self.importMaterial, self.importSkeleton)
+        return OWSettings(filename, self.uvDisplaceX, self.uvDisplaceY, self.autoIk, self.importNormals, self.importEmpties, self.importMaterial, self.importSkeleton, self.importTexNormal, self.importTexEffect)
 
 class OWMDLFile:
     def __init__(self, header, bones, meshes, empties):

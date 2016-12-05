@@ -60,6 +60,18 @@ class import_mdl_op(bpy.types.Operator, ImportHelper):
         default=True,
     )
 
+    importTexNormal = BoolProperty(
+        name="Import Normal Maps",
+        description="Import Normal Textures",
+        default=True,
+    )
+
+    importTexEffect = BoolProperty(
+        name="Import Misc Maps",
+        description="Import Misc Texutures (Effects, highlights)",
+        default=True,
+    )
+
     def menu_func(self, context):
         self.layout.operator_context = 'INVOKE_DEFAULT'
         self.layout.operator(
@@ -79,7 +91,9 @@ class import_mdl_op(bpy.types.Operator, ImportHelper):
             self.importNormals,
             self.importEmpties,
             self.importMaterial,
-            self.importSkeleton
+            self.importSkeleton,
+            self.importTexNormal,
+            self.importTexEffect
         )
         import_owmdl.read(settings)
         print('DONE')
@@ -104,6 +118,12 @@ class import_mdl_op(bpy.types.Operator, ImportHelper):
         sub = col.row()
         sub.prop(self, "autoIk")
         sub.enabled = self.importSkeleton
+        
+        col = layout.column(align=True)
+        col.enabled = self.importMaterial
+        col.label('Material')
+        col.prop(self, 'importTexNormal')
+        col.prop(self, 'importTexEffect')
 
 class import_mat_op(bpy.types.Operator, ImportHelper):
     bl_idname = "owm_importer.import_material"
@@ -117,6 +137,18 @@ class import_mat_op(bpy.types.Operator, ImportHelper):
         options={'HIDDEN'},
     )
 
+    importTexNormal = BoolProperty(
+        name="Import Normal Maps",
+        description="Import Normal Textures",
+        default=True,
+    )
+
+    importTexEffect = BoolProperty(
+        name="Import Misc Maps",
+        description="Import Misc Texutures (Effects, highlights)",
+        default=True,
+    )
+
     def menu_func(self, context):
         self.layout.operator_context = 'INVOKE_DEFAULT'
         self.layout.operator(
@@ -128,11 +160,16 @@ class import_mat_op(bpy.types.Operator, ImportHelper):
         return True
 
     def execute(self, context):
-        import_owmat.read(self.filepath)
+        import_owmat.read(self.filepath, '', self.importTexNormal, self.importTexNormal)
         print('DONE')
         return {'FINISHED'}
 
-    def draw(self, context): pass
+    def draw(self, context):
+        layout = self.layout
+        col = layout.column(align=True)
+        col.label('Material')
+        col.prop(self, 'importTexNormal')
+        col.prop(self, 'importTexEffect')
 
 class import_map_op(bpy.types.Operator, ImportHelper):
     bl_idname = "owm_importer.import_map"
@@ -224,6 +261,18 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         description="Set AutoIK",
         default=True,
     )
+    
+    importTexNormal = BoolProperty(
+        name="Import Normal Maps",
+        description="Import Normal Textures",
+        default=True,
+    )
+    
+    importTexEffect = BoolProperty(
+        name="Import Misc Maps",
+        description="Import Misc Texutures (Effects, highlights)",
+        default=True,
+    )
 
     def menu_func(self, context):
         self.layout.operator_context = 'INVOKE_DEFAULT'
@@ -244,7 +293,9 @@ class import_map_op(bpy.types.Operator, ImportHelper):
             self.importNormals,
             self.importEmpties,
             self.importMaterial,
-            self.importSkeleton
+            self.importSkeleton,
+            self.importTexNormal,
+            self.importTexEffect
         )
         import_owmap.read(settings, self.importObjects, self.importDetails, self.importPhysics, self.sameMeshData, self.reimportProps, self.importLights)
         print('DONE')
@@ -281,6 +332,12 @@ class import_map_op(bpy.types.Operator, ImportHelper):
         sub.prop(self, "importPhysics")
         sub.enabled = self.importDetails
         col.prop(self, "importLights")
+        
+        col = layout.column(align=True)
+        col.label('Material')
+        col.enabled = self.importMaterial
+        col.prop(self, 'importTexNormal')
+        col.prop(self, 'importTexEffect')
 
 def mdlimp(self, context):
     self.layout.operator(
