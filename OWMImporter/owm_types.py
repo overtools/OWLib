@@ -16,8 +16,8 @@ class OWSettings:
         self.importEmpties = importEmpties
         self.importMaterial = importMaterial
         self.importSkeleton = importSkeleton
-		self.importTexNormal = importTexNormal
-		self.importTexEffect = importTexEffect
+        self.importTexNormal = importTexNormal
+        self.importTexEffect = importTexEffect
 
     def mutate(self, filename):
         return OWSettings(filename, self.uvDisplaceX, self.uvDisplaceY, self.autoIk, self.importNormals, self.importEmpties, self.importMaterial, self.importSkeleton, self.importTexNormal, self.importTexEffect)

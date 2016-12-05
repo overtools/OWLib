@@ -25,7 +25,7 @@ def cleanUnusedMaterials(materials):
     bpy.context.scene.update()
     return (t, m)
 
-def read(filename, prefix = '', importNormal, importEffect):
+def read(filename, prefix = '', importNormal = True, importEffect = True):
     root, file = os.path.split(filename)
     data = read_owmat.read(filename)
     if not data: return None
@@ -41,7 +41,7 @@ def read(filename, prefix = '', importNormal, importEffect):
             typ = texturetype[1]
             texture = texturetype[0]
             if importNormal == False and typ == owm_types.OWMATTypes['NORMAL']: continue
-            if importEffect == False and typ == owm_types.OWMATTypes['EFFECT']: continue
+            if importEffect == False and typ == owm_types.OWMATTypes['SHADER']: continue
             realpath = texture
             if not os.path.isabs(realpath):
                 realpath = os.path.normpath('%s/%s' % (root, realpath))
@@ -75,6 +75,8 @@ def read(filename, prefix = '', importNormal, importEffect):
                     mattex.use_map_normal = True
                     mattex.normal_factor = -1
                     mattex.diffuse_factor = 0
+                elif typ == owm_types.OWMATTypes['SHADER']:
+                    mattex.use = False
                 mattex.texture = tex
                 mattex.texture_coords = 'UV'
                 t[fn] = tex
