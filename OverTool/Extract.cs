@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CASCExplorer;
 using OWLib;
 using OWLib.Types;
@@ -15,6 +16,22 @@ namespace OverTool {
       }
 
       string output = args[0];
+
+      string[] validCommands = new string[] { "skin", "spray", "icon" };
+      if (!validCommands.Contains(args[1])) {
+        string cmdlist = "";
+        for (int i=0; i < validCommands.Length; i++) {
+          if (i != 0) {
+            cmdlist += ", ";
+            if (i == validCommands.Length - 1) {
+              cmdlist += "or ";
+            }
+          }
+          cmdlist += validCommands[i].ToString().ToLower();
+        }
+        Console.Out.WriteLine("The output type was not a valid option. ({0})", cmdlist);
+        return;
+      }
 
       bool typeWildcard = true;
       List<string> types = new List<string>();
