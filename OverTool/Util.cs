@@ -95,14 +95,18 @@ namespace OverTool {
       return name.TrimEnd(new char[2] { '_', ' ' });
     }
 
-    public static string GetString(ulong key, Dictionary<ulong, Record> map, CASCHandler handler) {
+    public static string GetString(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, params object[] format) {
       if(!map.ContainsKey(key)) {
         return null;
       }
 
       Stream str = OpenFile(map[key], handler);
       OWString ows = new OWString(str);
-      return ows.Value;
+      try {
+        return ows.Format(format);
+      } catch {
+        return ows.Value;
+      }
     }
   }
 }

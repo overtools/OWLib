@@ -59,5 +59,20 @@ namespace OWLib {
     public override string ToString() {
       return Value;
     }
+
+    public string Format(params object[] format) {
+      if(header.references == 0) {
+        return Value;
+      }
+      object[] r = new object[header.references];
+      for(int i = 0; i < r.Length; ++i) {
+        if(i < format.Length) {
+          r[i] = format[i];
+        } else {
+          r[i] = 0;
+        }
+      }
+      return string.Format(Value, format);
+    }
   }
 }
