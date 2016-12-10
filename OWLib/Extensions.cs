@@ -155,7 +155,7 @@ namespace OWLib {
     }
 
     public static string ToStringA(this OWRecord i) {
-      return string.Format("{0:X12}.{1:X3}", APM.keyToIndexID(i.key), APM.keyToTypeID(i.key));
+      return $"{APM.keyToIndexID(i.key):X12}.{APM.keyToTypeID(i.key):X3}";
     }
   }
 }

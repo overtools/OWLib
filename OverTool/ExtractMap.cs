@@ -143,7 +143,7 @@ namespace OverTool {
 
                 using (Stream mapLStream = Util.OpenFile(map[master.DataKey(9)], handler)) {
                     Map mapLData = new Map(mapLStream);
-                    using (Stream outputStream = File.Open(string.Format("{0}{1}{2}", outputPath, Util.SanitizePath(name), owmap.Format), FileMode.Create, FileAccess.Write)) {
+                    using (Stream outputStream = File.Open($"{outputPath}{Util.SanitizePath(name)}{owmap.Format}", FileMode.Create, FileAccess.Write)) {
                         used = owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name);
                     }
                 }
@@ -154,7 +154,7 @@ namespace OverTool {
           IModelWriter owmat = new OWMATWriter();
           using(Stream map10Stream = Util.OpenFile(map[master.DataKey(0x10)], handler)) {
             Map10 physics = new Map10(map10Stream);
-            using(Stream outputStream = File.Open(string.Format("{0}physics{1}", outputPath, owmdl.Format), FileMode.Create, FileAccess.Write)) {
+            using(Stream outputStream = File.Open($"{outputPath}physics{owmdl.Format}", FileMode.Create, FileAccess.Write)) {
               owmdl.Write(physics, outputStream, new object[0]);
             }
           }
@@ -173,7 +173,7 @@ namespace OverTool {
               using(Stream modelStream = Util.OpenFile(map[modelpair.Key], handler)) {
                 Chunked mdl = new Chunked(modelStream);
                 foreach(string modelOutput in modelpair.Value) {
-                  using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, modelOutput), FileMode.Create, FileAccess.Write)) {
+                  using(Stream outputStream = File.Open($"{outputPath}{modelOutput}", FileMode.Create, FileAccess.Write)) {
                     if(owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel })) {
                       Console.Out.WriteLine("Wrote model {0}", modelOutput);
                     } else {
@@ -197,7 +197,7 @@ namespace OverTool {
             }
             
             Console.Out.WriteLine("Dumping sounds...");
-            string soundPath = string.Format("{0}Sounds{1}", outputPath, Path.DirectorySeparatorChar);
+            string soundPath = $"{outputPath}Sounds{Path.DirectorySeparatorChar}";
             if(!Directory.Exists(soundPath)) {
               Directory.CreateDirectory(soundPath);
             }
@@ -220,13 +220,14 @@ namespace OverTool {
                   if(!parsed.Add(layer.key)) {
                     continue;
                   }
-                  KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", outputPath, APM.keyToIndexID(layer.key)));
+                  KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, map, handler,
+                      $"{outputPath}{APM.keyToIndexID(layer.key):X12}.dds");
                   types.Add(pair.Key, pair.Value);
                 }
               }
 
               foreach(string matOutput in matpair.Value) {
-                using(Stream outputStream = File.Open(string.Format("{0}{1}", outputPath, matOutput), FileMode.Create, FileAccess.Write)) {
+                using(Stream outputStream = File.Open($"{outputPath}{matOutput}", FileMode.Create, FileAccess.Write)) {
                   if(owmat.Write(null, outputStream, null, tmp, new object[1] { types })) {
                     Console.Out.WriteLine("Wrote material {0}", matOutput);
                   } else {

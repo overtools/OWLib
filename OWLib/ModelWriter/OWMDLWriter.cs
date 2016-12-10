@@ -126,7 +126,7 @@ namespace OWLib.ModelWriter {
 
         if(skeleton != null) {
           for(int i = 0; i < skeleton.Data.bonesAbs; ++i) {
-            writer.Write(string.Format("bone_{0:X4}", skeleton.IDs[i]));
+            writer.Write($"bone_{skeleton.IDs[i]:X4}");
             short parent = skeleton.Hierarchy[i];
             if(parent == -1) {
               parent = (short)i;
@@ -157,7 +157,7 @@ namespace OWLib.ModelWriter {
             ModelUV[][] uv = model.TextureCoordinates[i];
             ModelIndice[] index = model.Indices[i];
             ModelBoneData[] bones = model.Bones[i];
-            writer.Write(string.Format("Submesh_{0}.{1}.{2:X16}", i, kv.Key, materials.Materials[submesh.material]));
+            writer.Write($"Submesh_{i}.{kv.Key}.{materials.Materials[submesh.material]:X16}");
             writer.Write(materials.Materials[submesh.material]);
             writer.Write((byte)uv.Length);
             writer.Write(vertex.Length);

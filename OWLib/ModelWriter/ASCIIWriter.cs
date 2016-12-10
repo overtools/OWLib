@@ -102,7 +102,7 @@ namespace OWLib.ModelWriter {
               done.Clear();
               for(int j = 0; j < materialLayers.Count; ++j) {
                 if(done.Add(materialLayers[j].key)) {
-                  writer.WriteLine(string.Format("{0:X12}.dds", APM.keyToIndexID(materialLayers[j].key)));
+                  writer.WriteLine($"{APM.keyToIndexID(materialLayers[j].key):X12}.dds");
                   writer.WriteLine(0);
                 }
               }

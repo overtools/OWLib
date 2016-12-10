@@ -14,12 +14,12 @@ namespace OverTool {
         if(!done.Add(key)) {
           continue;
         }
-        string ooutputPath = string.Format("{0}{1:X12}", path, APM.keyToIndexID(key));
-        string outputPath = string.Format("{0}{1:X12}", path, APM.keyToIndexID(key));
+        string ooutputPath = $"{path}{APM.keyToIndexID(key):X12}";
+        string outputPath = $"{path}{APM.keyToIndexID(key):X12}";
         int sigma = 0;
         while(File.Exists(outputPath + ".wem")) {
           sigma++;
-          outputPath = ooutputPath + string.Format("_{0:X}", sigma);
+          outputPath = ooutputPath + $"_{sigma:X}";
         }
         outputPath += ".wem";
         using(Stream soundStream = Util.OpenFile(map[key], handler)) {

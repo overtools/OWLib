@@ -148,7 +148,7 @@ namespace PackageTool {
           if(dumpAll) {
             o = output;
           } else {
-            o = string.Format("{0}{1:X12}{2}", output, OWLib.APM.keyToIndexID(package.packageKey), Path.DirectorySeparatorChar);
+            o = $"{output}{OWLib.APM.keyToIndexID(package.packageKey):X12}{Path.DirectorySeparatorChar}";
           }
 
           EncodingEntry bundleEncoding;
@@ -169,12 +169,12 @@ namespace PackageTool {
             }
             ulong rtype = OWLib.APM.keyToTypeID(record.Key);
             ulong rindex = OWLib.APM.keyToIndexID(record.Key);
-            string ofn = string.Format("{0}{1:X3}{2}", o, rtype, Path.DirectorySeparatorChar);
+            string ofn = $"{o}{rtype:X3}{Path.DirectorySeparatorChar}";
             if(!dry && !Directory.Exists(ofn)) {
               Console.Out.WriteLine("Created directory {0}", ofn);
               Directory.CreateDirectory(ofn);
             }
-            ofn = string.Format("{0}{1:X12}.{2:X3}", ofn, rindex, rtype);
+            ofn = $"{ofn}{rindex:X12}.{rtype:X3}";
             if(!dry) {
               using(Stream outputStream = File.Open(ofn, FileMode.Create, FileAccess.Write)) {
                 if(((ContentFlags)record.Flags & ContentFlags.Bundle) == ContentFlags.Bundle) {

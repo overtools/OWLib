@@ -108,7 +108,7 @@ namespace OWLib.ModelWriter {
         if(skeleton != null) {
           writer.Write((uint)skeleton.Data.bonesAbs);
           for(int i = 0; i < skeleton.Data.bonesAbs; ++i) {
-            WriteString(writer, string.Format("bone_{0:X4}", skeleton.IDs[i]));
+            WriteString(writer, $"bone_{skeleton.IDs[i]:X4}");
             short parent = skeleton.Hierarchy[i];
             if(parent == -1) {
               parent = (short)i;
@@ -164,7 +164,7 @@ namespace OWLib.ModelWriter {
             if(materials != null) {
               materialKey = materials.Materials[submesh.material];
             }
-            WriteString(writer, string.Format("Submesh_{0}.{1}.{2:X16}", i, kv.Key, materialKey));
+            WriteString(writer, $"Submesh_{i}.{kv.Key}.{materialKey:X16}");
             writer.Write((uint)uv.Length);
             if(layers.ContainsKey(materialKey)) {
               List<ImageLayer> materialLayers = layers[materialKey];
@@ -179,14 +179,14 @@ namespace OWLib.ModelWriter {
               done.Clear();
               for(int j = 0; j < materialLayers.Count; ++j) {
                 if(done.Add(materialLayers[j].key)) {
-                  writer.Write(string.Format("{0:X12}.dds", APM.keyToIndexID(materialLayers[j].key)));
+                  writer.Write($"{APM.keyToIndexID(materialLayers[j].key):X12}.dds");
                   writer.Write((uint)0);
                 }
               }
             } else {
               writer.Write((uint)uv.Length);
               for(int j = 0; j < uv.Length; ++j) {
-                writer.Write(string.Format("{0:X16}_UV{1}.dds", materialKey, j));
+                writer.Write($"{materialKey:X16}_UV{j}.dds");
                 writer.Write((uint)j);
               }
             }

@@ -41,7 +41,7 @@ namespace TextureTool {
             using(Stream sDDS = File.Open(nDDS, FileMode.Create, FileAccess.Write)) {
               if(master.Loaded == false) {
                 string fn04D = (master.Header.indice - 1).ToString("X").PadLeft(fn004.Length - 8, '0') + fn004.Substring(fn004.Length - 8); // try to find the texture
-                string f04Di = string.Format("{0}{1}{2}.04D", d04D, Path.DirectorySeparatorChar, fn04D);
+                string f04Di = $"{d04D}{Path.DirectorySeparatorChar}{fn04D}.04D";
                 if(d04D == null || !File.Exists(f04Di)) {
                   Console.Error.WriteLine("Corresponding 04D {1} file for 004 {0} does not exist", fn004, fn04D);
                   continue;

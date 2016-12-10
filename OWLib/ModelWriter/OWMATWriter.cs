@@ -39,7 +39,7 @@ namespace OWLib.ModelWriter {
           writer.Write(layer.Key);
           HashSet<string> images = new HashSet<string>();
           foreach(ImageLayer image in layer.Value) {
-            images.Add(string.Format("{0:X12}.dds", APM.keyToIndexID(image.key)));
+            images.Add($"{APM.keyToIndexID(image.key):X12}.dds");
           }
           writer.Write(images.Count);
           foreach(string image in images) {

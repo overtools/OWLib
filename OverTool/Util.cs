@@ -76,7 +76,8 @@ namespace OverTool {
         return null;
       }
       if(System.Diagnostics.Debugger.IsAttached) {
-        System.Diagnostics.Debugger.Log(0, "CASC:IO", string.Format("[CASC:IO] Opened file {0:X12}.{1:X3}\n", APM.keyToIndexID(record.record.Key), APM.keyToTypeID(record.record.Key)));
+        System.Diagnostics.Debugger.Log(0, "CASC:IO",
+            $"[CASC:IO] Opened file {APM.keyToIndexID(record.record.Key):X12}.{APM.keyToTypeID(record.record.Key):X3}\n");
       }
       return ms;
     }
