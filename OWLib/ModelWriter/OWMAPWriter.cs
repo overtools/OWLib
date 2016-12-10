@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using OWLib.Types.Map;
-using OWLib.Types;
 
 namespace OWLib.ModelWriter {
     public class OWMAPWriter {

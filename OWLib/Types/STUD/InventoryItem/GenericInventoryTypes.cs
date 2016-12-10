@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.IO;
-using System.Reflection;
+﻿using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.InventoryItem {
   public enum InventoryRarity : uint {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using CASCExplorer;
 using OWLib;
@@ -7,7 +6,6 @@ using OWLib.Types;
 using OWLib.Types.STUD;
 using OWLib.Types.STUD.Binding;
 using OWLib.Types.STUD.GameParam;
-using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool.ExtractLogic {
   class VoiceLine {

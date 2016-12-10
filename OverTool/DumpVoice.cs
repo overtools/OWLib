@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using CASCExplorer;
 using OWLib;
-using OWLib.Types;
 using OWLib.Types.STUD;
-using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
   class DumpVoice {

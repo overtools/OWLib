@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using OWLib.Types;
 using System.Reflection;
 
 namespace OWLib {
-  public class STUD : IDisposable {    
+  public class STUD : IDisposable {
     private STUDHeader header;
     private STUDInstanceRecord[] records;
     private ISTUDInstance[] instances;
