@@ -26,7 +26,8 @@ namespace OWLib.Types.STUD {
     public enum EVENT_ID : ulong {
       COMMON = 0,
       SUMMER_GAMES_2016 = 1,
-      HALLOWEEN_2016 = 2
+      HALLOWEEN_2016 = 2,
+      WINTER_WONDERLAND_2016 = 3
     }
     
     public uint Id => 0x33F56AC1;
