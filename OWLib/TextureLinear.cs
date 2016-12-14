@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using OWLib.Types;
-using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace OWLib {
   public class TextureLinear {

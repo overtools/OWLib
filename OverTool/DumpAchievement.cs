@@ -11,9 +11,9 @@ namespace OverTool {
     private static void ExtractImage(ulong imageKey, string dpath, Dictionary<ulong, Record> map, CASCHandler handler, string name = null) {
       ulong imageDataKey = (imageKey & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
       if(string.IsNullOrWhiteSpace(name)) {
-        name = string.Format("{0:X12}", APM.keyToIndexID(imageKey));
+        name = $"{APM.keyToIndexID(imageKey):X12}";
       }
-      string path = string.Format("{0}{1}.dds", dpath, name);
+      string path = $"{dpath}{name}.dds";
       if(!Directory.Exists(Path.GetDirectoryName(path))) {
         Directory.CreateDirectory(Path.GetDirectoryName(path));
       }
@@ -57,10 +57,10 @@ namespace OverTool {
 
           string path = string.Format("{0}{1}Reward{1}Image{1}ACHIEVEMENT{1}", output, Path.DirectorySeparatorChar);
           if(achievement.Data.image != 0) {
-            ExtractImage(achievement.Data.image, path, map, handler, string.Format("{0:X8}", APM.keyToIndex(key)) + "_img");
+            ExtractImage(achievement.Data.image, path, map, handler, $"{APM.keyToIndex(key):X8}" + "_img");
           }
           if(achievement.Data.icon != 0) {
-            ExtractImage(achievement.Data.icon, path, map, handler, string.Format("{0:X8}", APM.keyToIndex(key)) + "_icon");
+            ExtractImage(achievement.Data.icon, path, map, handler, $"{APM.keyToIndex(key):X8}" + "_icon");
           }
           if(achievement.Data.reward == 0) {
             continue;
@@ -82,10 +82,10 @@ namespace OverTool {
 
             switch(reward.Instances[0].Name) {
               case "Icon":
-                ExtractLogic.Icon.Extract(reward, output, "Reward", string.Format("{0:X8}", APM.keyToIndex(key)), "ACHIEVEMENT", track, map, handler, blank);
+                ExtractLogic.Icon.Extract(reward, output, "Reward", $"{APM.keyToIndex(key):X8}", "ACHIEVEMENT", track, map, handler, blank);
                 break;
               case "Spray":
-                ExtractLogic.Spray.Extract(reward, output, "Reward", string.Format("{0:X8}", APM.keyToIndex(key)), "ACHIEVEMENT", track, map, handler, blank);
+                ExtractLogic.Spray.Extract(reward, output, "Reward", $"{APM.keyToIndex(key):X8}", "ACHIEVEMENT", track, map, handler, blank);
                 break;
               default:
                 Console.Out.WriteLine("No way to extract {0}!", reward.Instances[0].Name);

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.IO;
-using System.Reflection;
+﻿using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.InventoryItem {
   public enum InventoryRarity : uint {
@@ -19,10 +16,10 @@ namespace OWLib.Types.STUD.InventoryItem {
     public OWRecord unk1;
     public OWRecord unk2;
     public OWRecord unk3;
-    public InventoryRarity rarity;
-    public uint amount;
     public ulong unk0;
     public ulong unk01;
+    public InventoryRarity rarity;
+    public uint amount;
   };
 
   public interface IInventorySTUDInstance : ISTUDInstance {

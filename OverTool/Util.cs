@@ -76,7 +76,8 @@ namespace OverTool {
         return null;
       }
       if(System.Diagnostics.Debugger.IsAttached) {
-        System.Diagnostics.Debugger.Log(0, "CASC:IO", string.Format("[CASC:IO] Opened file {0:X12}.{1:X3}\n", APM.keyToIndexID(record.record.Key), APM.keyToTypeID(record.record.Key)));
+        System.Diagnostics.Debugger.Log(0, "CASC:IO",
+            $"[CASC:IO] Opened file {APM.keyToIndexID(record.record.Key):X12}.{APM.keyToTypeID(record.record.Key):X3}\n");
       }
       return ms;
     }
@@ -95,14 +96,18 @@ namespace OverTool {
       return name.TrimEnd(new char[2] { '_', ' ' });
     }
 
-    public static string GetString(ulong key, Dictionary<ulong, Record> map, CASCHandler handler) {
+    public static string GetString(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, params object[] format) {
       if(!map.ContainsKey(key)) {
         return null;
       }
 
       Stream str = OpenFile(map[key], handler);
       OWString ows = new OWString(str);
-      return ows.Value;
+      try {
+        return ows.Format(format);
+      } catch {
+        return ows.Value;
+      }
     }
   }
 }
