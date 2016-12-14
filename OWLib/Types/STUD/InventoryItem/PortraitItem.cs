@@ -11,8 +11,7 @@ namespace OWLib.Types.STUD.InventoryItem {
       public uint index;
       public uint unk2;
     }
-
-    public ulong Key => 0x7931552C0E26DA69;
+    
     public uint Id => 0x3ECCEB5D;
     public string Name => "Portrait";
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APMTool", "APMTool\APMTool.csproj", "{7A975804-D7B8-4233-9B63-F2FA8E06796F}"
 EndProject
@@ -15,13 +15,25 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageTool", "PackageTool\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CascLib", "CASCExplorer\CascLib\CascLib.csproj", "{E08E1E48-6585-4137-8405-661C62C10713}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STUDTool", "STUDTool\STUDTool.csproj", "{917AF8D5-5886-44DD-87CA-939CBC5119F8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OverTool", "OverTool\OverTool.csproj", "{55122BF8-CC39-4936-B8F1-CF8E87195971}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{97878F88-59A9-47BD-BAA4-7B4DEAC97826}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third Party", "Third Party", "{3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OWMImporter", "OWMImporter", "{AA8F13E5-C6D3-4D16-93BF-73A445A2BB81}"
+	ProjectSection(SolutionItems) = preProject
+		OWMImporter\__init__.py = OWMImporter\__init__.py
+		OWMImporter\bin_ops.py = OWMImporter\bin_ops.py
+		OWMImporter\import_owmap.py = OWMImporter\import_owmap.py
+		OWMImporter\import_owmat.py = OWMImporter\import_owmat.py
+		OWMImporter\import_owmdl.py = OWMImporter\import_owmdl.py
+		OWMImporter\manager.py = OWMImporter\manager.py
+		OWMImporter\owm_types.py = OWMImporter\owm_types.py
+		OWMImporter\read_owmap.py = OWMImporter\read_owmap.py
+		OWMImporter\read_owmat.py = OWMImporter\read_owmat.py
+		OWMImporter\read_owmdl.py = OWMImporter\read_owmdl.py
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +65,6 @@ Global
 		{E08E1E48-6585-4137-8405-661C62C10713}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E08E1E48-6585-4137-8405-661C62C10713}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E08E1E48-6585-4137-8405-661C62C10713}.Release|Any CPU.Build.0 = Release|Any CPU
-		{917AF8D5-5886-44DD-87CA-939CBC5119F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{917AF8D5-5886-44DD-87CA-939CBC5119F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{917AF8D5-5886-44DD-87CA-939CBC5119F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{917AF8D5-5886-44DD-87CA-939CBC5119F8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{55122BF8-CC39-4936-B8F1-CF8E87195971}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{55122BF8-CC39-4936-B8F1-CF8E87195971}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55122BF8-CC39-4936-B8F1-CF8E87195971}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,7 +79,6 @@ Global
 		{9432CA06-25EA-44DB-9FA1-0583FF096B5D} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{71291DB4-629C-4D3D-B0D1-14FC9F9FC543} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{E08E1E48-6585-4137-8405-661C62C10713} = {3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}
-		{917AF8D5-5886-44DD-87CA-939CBC5119F8} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{55122BF8-CC39-4936-B8F1-CF8E87195971} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution

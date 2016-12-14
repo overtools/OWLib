@@ -6,7 +6,7 @@ using System.Reflection;
 using OWLib.Types.Chunk;
 
 namespace OWLib.Types {
-  public class Chunked {
+  public class Chunked : IDisposable {
     private List<IChunk> chunks;
     public IReadOnlyList<IChunk> Chunks => chunks;
 
@@ -103,6 +103,13 @@ namespace OWLib.Types {
       }
       return ret;
     }
+
+    public void Dispose() {
+      chunks.Clear();
+      entrees.Clear();
+      entryOffsets.Clear();
+      GC.SuppressFinalize(this);
+    }
   }
 
   public class ChunkManager {
@@ -127,7 +134,7 @@ namespace OWLib.Types {
       string identifier = instance.RootIdentifier + instance.Identifier;
       if(identifier == null) {
         if(System.Diagnostics.Debugger.IsAttached) {
-          System.Diagnostics.Debugger.Log(2, "CHUNK", string.Format("Error! {0} has no identifier!\n", chunk.FullName));
+          System.Diagnostics.Debugger.Log(2, "CHUNK", $"Error! {chunk.FullName} has no identifier!\n");
         }
       }
       chunkMap.Add(identifier, chunk);
@@ -141,7 +148,7 @@ namespace OWLib.Types {
       } else {
         if(unhandledChunkIdentifiers.Add(identifier)) {
           if(System.Diagnostics.Debugger.IsAttached) {
-            System.Diagnostics.Debugger.Log(2, "CHUNK", string.Format("Error! No handler for chunk type {0}\n", identifier));
+            System.Diagnostics.Debugger.Log(2, "CHUNK", $"Error! No handler for chunk type {identifier}\n");
           }
         }
       }

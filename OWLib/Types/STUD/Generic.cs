@@ -2,8 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
-  public class GenericReference : ISTUDInstance { // these are typically referenced directly from one of the other records.
-    public ulong Key => 0xB87BF59ADE760C26;
+  public class GenericReference : ISTUDInstance {
     public uint Id => 0x8305C688;
     public string Name => "GenericReference";
 

@@ -153,5 +153,9 @@ namespace OWLib {
         );
       }
     }
+
+    public static string ToStringA(this OWRecord i) {
+      return $"{APM.keyToIndexID(i.key):X12}.{APM.keyToTypeID(i.key):X3}";
+    }
   }
 }

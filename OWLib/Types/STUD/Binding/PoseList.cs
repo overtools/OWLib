@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.Binding {
   public class PoseList : ISTUDInstance {
-    public ulong Key => 0x6377FB6907E088FA;
     public uint Id => 0xDD3FC67D;
     public string Name => "Binding:PoseList";
 

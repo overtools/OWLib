@@ -13,8 +13,7 @@ namespace OWLib.Types.STUD.InventoryItem {
       public float unk5;
       public ulong unk6;
     }
-
-    public ulong Key => 0xF71CD4D63A3838E4;
+    
     public uint Id => 0xE533D614;
     public string Name => "Emote";
 

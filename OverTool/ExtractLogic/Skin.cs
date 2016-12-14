@@ -212,7 +212,7 @@ namespace OverTool.ExtractLogic {
       }
     }
 
-    private static void FindModels(ulong key, List<ulong> ignore, HashSet<ulong> models, Dictionary<ulong, ulong> animList, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
+    public static void FindModels(ulong key, List<ulong> ignore, HashSet<ulong> models, Dictionary<ulong, ulong> animList, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
       if(key == 0) {
         return;
       }
@@ -226,6 +226,21 @@ namespace OverTool.ExtractLogic {
       }
       if(!parsed.Add(tgt)) {
         return;
+      }
+
+      switch(APM.keyToTypeID(tgt)) {
+        case 0xC: // model
+          models.Add(tgt);
+          return;
+        case 0x1A: // texture
+          FindTextures(tgt, layers, replace, parsed, map, handler);
+          return;
+        case 0x20: // animation
+        case 0x21:
+          FindAnimations(tgt, animList, replace, parsed, map, handler, models, layers, 0);
+          return;
+        case 0x7C: // string
+          return;
       }
 
       STUD record = new STUD(Util.OpenFile(map[tgt], handler), true, STUDManager.Instance, false, true);
@@ -292,13 +307,6 @@ namespace OverTool.ExtractLogic {
         }
         if(inst.Name == record.Manager.GetName(typeof(ProjectileModelRecord))) {
           ProjectileModelRecord r = (ProjectileModelRecord)inst;
-          foreach(ProjectileModelRecord.BindingRecord br in r.Children) {
-            ulong bindingKey = br.binding.key;
-            if(replace.ContainsKey(bindingKey)) {
-              bindingKey = replace[bindingKey];
-            }
-            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
-          }
         }
         if(inst.Name == record.Manager.GetName(typeof(ChildParameterRecord))) {
           ChildParameterRecord r = (ChildParameterRecord)inst;
@@ -383,9 +391,9 @@ namespace OverTool.ExtractLogic {
       HashSet<ulong> parsed = new HashSet<ulong>();
       Dictionary<ulong, List<ImageLayer>> layers = new Dictionary<ulong, List<ImageLayer>>();
       Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
-      if(itemName.ToLowerInvariant() != "classic") {
-        FindReplacements(skin.Data.skin.key, replace, parsed, map, handler, master, skin);
-      }
+
+      FindReplacements(skin.Data.skin.key, replace, parsed, map, handler, master, skin);
+
       ulong bindingKey = master.Header.binding.key;
       if(replace.ContainsKey(bindingKey)) {
         bindingKey = replace[bindingKey];
@@ -412,6 +420,11 @@ namespace OverTool.ExtractLogic {
       }
       FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
 
+      Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler);
+    }
+
+    public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler) {
+      Dictionary<string, TextureType> typeInfo = new Dictionary<string, TextureType>();
       if(furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
         foreach(KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
           ulong materialId = kv.Key;
@@ -420,7 +433,9 @@ namespace OverTool.ExtractLogic {
             if(!parsed.Add(layer.key)) {
               continue;
             }
-            SaveTexture(layer.key, map, handler, string.Format("{0}{1:X12}.dds", path, APM.keyToIndexID(layer.key)));
+            KeyValuePair<string, TextureType> stt = SaveTexture(layer.key, map, handler,
+                $"{path}{APM.keyToIndexID(layer.key):X12}.dds");
+            typeInfo.Add(stt.Key, stt.Value);
           }
         }
       }
@@ -459,9 +474,11 @@ namespace OverTool.ExtractLogic {
       if(furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
         if(writer.GetType() == typeof(OWMDLWriter) || furtherOpts[0] == '+') {
           IModelWriter tmp = new OWMATWriter();
-          mtlPath = string.Format("{0}material{1}", path, tmp.Format);
+          mtlPath = $"{path}material{tmp.Format}";
           using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
-            if(tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) })) {
+            if(tmp.Write(null, outp, null, layers, new object[3] { typeInfo, Path.GetFileName(mtlPath),
+                $"{heroName} Skin {itemName}"
+            })) {
               Console.Out.WriteLine("Wrote materials {0}", mtlPath);
             } else {
               Console.Out.WriteLine("Failed to write material");
@@ -470,9 +487,11 @@ namespace OverTool.ExtractLogic {
         } else if(writer.GetType() == typeof(OBJWriter)) {
           writer = new OBJWriter();
           IModelWriter tmp = new MTLWriter();
-          mtlPath = string.Format("{0}material{1}", path, tmp.Format);
+          mtlPath = $"{path}material{tmp.Format}";
           using(Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
-            if(tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), string.Format("{0} Skin {1}", heroName, itemName) })) {
+            if(tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath),
+                $"{heroName} Skin {itemName}"
+            })) {
               Console.Out.WriteLine("Wrote materials {0}", mtlPath);
             } else {
               Console.Out.WriteLine("Failed to write material");
@@ -502,7 +521,7 @@ namespace OverTool.ExtractLogic {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
           }
 
-          outpath = string.Format("{0}{1:X12}.{2:X3}", path, APM.keyToIndexID(key), APM.keyToTypeID(key));
+          outpath = $"{path}{APM.keyToIndexID(key):X12}.{APM.keyToTypeID(key):X3}";
 
           using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
             Util.OpenFile(map[key], handler).CopyTo(outp);
@@ -516,7 +535,7 @@ namespace OverTool.ExtractLogic {
           Chunked mdl = new Chunked(Util.OpenFile(map[key], handler));
 
           if(furtherOpts.Count <= 6 || furtherOpts[6] != 'R') {
-            outpath = string.Format("{0}{1:X12}_refpose{2}", path, APM.keyToIndexID(key), refpose.Format);
+            outpath = $"{path}{APM.keyToIndexID(key):X12}_refpose{refpose.Format}";
             using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
               if(refpose.Write(mdl, outp, null, null, null)) {
                 Console.Out.WriteLine("Wrote reference pose {0}", outpath);
@@ -524,9 +543,9 @@ namespace OverTool.ExtractLogic {
             }
           }
 
-          string mdlName = string.Format("{0} Skin {1}_{2:X}", heroName, itemName, APM.keyToIndex(key));
+          string mdlName = $"{heroName} Skin {itemName}_{APM.keyToIndex(key):X}";
 
-          outpath = string.Format("{0}{1:X12}{2}", path, APM.keyToIndexID(key), writer.Format);
+          outpath = $"{path}{APM.keyToIndexID(key):X12}{writer.Format}";
 
           using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
             if(writer.Write(mdl, outp, lods, layers, new object[5] { true, Path.GetFileName(mtlPath), mdlName, null, skipCmodel })) {
@@ -547,8 +566,12 @@ namespace OverTool.ExtractLogic {
             Directory.CreateDirectory(Path.GetDirectoryName(outpath));
           }
           using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-            Util.OpenFile(map[key], handler).CopyTo(outp);
-            Console.Out.WriteLine("Wrote animation {0}", outpath);
+            Stream output = Util.OpenFile(map[key], handler);
+            if(output != null) {
+              output.CopyTo(outp);
+              Console.Out.WriteLine("Wrote animation {0}", outpath);
+              output.Close();
+            }
           }
         }
       }
@@ -556,7 +579,7 @@ namespace OverTool.ExtractLogic {
       if(furtherOpts.Count < 5 || furtherOpts[4] != 'S') {
         Console.Out.WriteLine("Dumping voice bites for hero {0} with skin {1}", heroName, itemName);
         List<ulong> soundData = VoiceLine.FindSounds(master, track, map, handler, replace);
-        string outpath = string.Format("{0}Sound{1}", path, Path.DirectorySeparatorChar);
+        string outpath = $"{path}Sound{Path.DirectorySeparatorChar}";
         if(!Directory.Exists(outpath)) {
           Directory.CreateDirectory(outpath);
         }
@@ -564,9 +587,12 @@ namespace OverTool.ExtractLogic {
       }
     }
 
-    public static void SaveTexture(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, string path) {
+    public static KeyValuePair<string, TextureType> SaveTexture(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, string path) {
+      string name = $"{APM.keyToIndexID(key):X12}.dds";
+      TextureType @type = TextureType.Unknown;
+
       if(!map.ContainsKey(key)) {
-        return;
+        return new KeyValuePair<string, TextureType>(name, @type);
       }
       
       if(!Directory.Exists(Path.GetDirectoryName(path))) {
@@ -580,12 +606,15 @@ namespace OverTool.ExtractLogic {
         if(map.ContainsKey(imageDataKey)) {
           Texture tex = new Texture(Util.OpenFile(map[key], handler), Util.OpenFile(map[imageDataKey], handler));
           tex.Save(output);
+          @type = tex.Format;
         } else {
           TextureLinear tex = new TextureLinear(Util.OpenFile(map[key], handler));
           tex.Save(output);
+          @type = tex.Header.Format();
         }
       }
       Console.Out.WriteLine("Wrote texture {0}", path);
+      return new KeyValuePair<string, TextureType>(name, @type);
     }
   }
 }

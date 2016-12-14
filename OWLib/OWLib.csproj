@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APM.cs" />
+    <Compile Include="DDSTypeDetect.cs" />
     <Compile Include="DXBC.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Half\Half.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="ModelWriter\ASCIIWriter.cs" />
     <Compile Include="ModelWriter\BINWriter.cs" />
     <Compile Include="ModelWriter\RefPoseWriter.cs" />
+    <Compile Include="Types\STUD\Achievement.cs" />
     <Compile Include="Types\Chunk\CLDM.cs" />
     <Compile Include="Types\Chunk\DMCE.cs" />
     <Compile Include="Types\Chunk\IChunk.cs" />

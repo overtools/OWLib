@@ -7,8 +7,7 @@ namespace OWLib.Types.STUD.InventoryItem {
     public struct SkinData {
       public OWRecord skin;
     }
-
-    public ulong Key => 0x6A79CBB4BC5CDACC;
+    
     public uint Id => 0x8B9DEB02;
     public string Name => "Skin";
     

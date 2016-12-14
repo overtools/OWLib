@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CASCExplorer;
 using OWLib;
 using OWLib.Types;
@@ -15,6 +16,22 @@ namespace OverTool {
       }
 
       string output = args[0];
+
+      string[] validCommands = new string[] { "skin", "spray", "icon" };
+      if (!validCommands.Contains(args[1])) {
+        string cmdlist = "";
+        for (int i=0; i < validCommands.Length; i++) {
+          if (i != 0) {
+            cmdlist += ", ";
+            if (i == validCommands.Length - 1) {
+              cmdlist += "or ";
+            }
+          }
+          cmdlist += validCommands[i].ToString().ToLower();
+        }
+        Console.Out.WriteLine("The output type was not a valid option. ({0})", cmdlist);
+        return;
+      }
 
       bool typeWildcard = true;
       List<string> types = new List<string>();
@@ -81,13 +98,20 @@ namespace OverTool {
         if(master == null) {
           continue;
         }
+        if(master.Header.itemMaster.key == 0) {
+          continue;
+        }
         string heroName = Util.GetString(master.Header.name.key, map, handler);
         if(heroName == null) {
           continue;
         }
         if(heroAllWildcard) {
-          heroTypes.Add(heroName.ToLowerInvariant(), new List<string>());
-          heroWildcard.Add(heroName.ToLowerInvariant(), true);
+          if(!heroTypes.ContainsKey(heroName.ToLowerInvariant())) {
+            heroTypes.Add(heroName.ToLowerInvariant(), new List<string>());
+          }
+          if(!heroWildcard.ContainsKey(heroName.ToLowerInvariant())) {
+            heroWildcard.Add(heroName.ToLowerInvariant(), true);
+          }
         }
         if(!heroTypes.ContainsKey(heroName.ToLowerInvariant())) {
           continue;
@@ -114,7 +138,7 @@ namespace OverTool {
         }
 
         for(int i = 0; i < inventory.ItemGroups.Length; ++i) {
-          string name = OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event);
+          string name = OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event, "EVENT_{0}");
           for(int j = 0; j < inventory.Items[i].Length; ++j) {
             items[inventory.Items[i][j]] = name;
           }

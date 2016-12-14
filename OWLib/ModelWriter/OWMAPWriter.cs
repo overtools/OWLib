@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using OWLib.Types.Map;
-using OWLib.Types;
 
 namespace OWLib.ModelWriter {
     public class OWMAPWriter {
@@ -75,7 +74,7 @@ namespace OWLib.ModelWriter {
                         continue;
                     }
                     Map01 obj = (Map01)map.Records[i];
-                    string modelFn = string.Format("{0:X12}.owmdl", APM.keyToIndexID(obj.Header.model));
+                    string modelFn = $"{APM.keyToIndexID(obj.Header.model):X12}.owmdl";
                     writer.Write(modelFn);
                     if(!ret[0].ContainsKey(obj.Header.model)) {
                         ret[0].Add(obj.Header.model, new List<string>());
@@ -84,7 +83,8 @@ namespace OWLib.ModelWriter {
                     writer.Write(obj.Header.groupCount);
                     for(int j = 0; j < obj.Header.groupCount; ++j) {
                         Map01.Map01Group group = obj.Groups[j];
-                        string materialFn = string.Format("{0:X12}_{1:X12}.owmat", APM.keyToIndexID(obj.Header.model), APM.keyToIndexID(group.material));
+                        string materialFn =
+                            $"{APM.keyToIndexID(obj.Header.model):X12}_{APM.keyToIndexID(@group.material):X12}.owmat";
                         writer.Write(materialFn);
                         if(!ret[1].ContainsKey(group.material)) {
                             ret[1].Add(group.material, new List<string>());
@@ -125,8 +125,8 @@ namespace OWLib.ModelWriter {
                         continue;
                     }
                     Map02 obj = (Map02)detail1.Records[i];
-                    string modelFn = string.Format("{0:X12}.owmdl", APM.keyToIndexID(obj.Header.model));
-                    string matFn = string.Format("{0:X12}.owmat", APM.keyToIndexID(obj.Header.model));
+                    string modelFn = $"{APM.keyToIndexID(obj.Header.model):X12}.owmdl";
+                    string matFn = $"{APM.keyToIndexID(obj.Header.model):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);
@@ -157,8 +157,8 @@ namespace OWLib.ModelWriter {
                         continue;
                     }
                     Map08 obj = (Map08)detail2.Records[i];
-                    string modelFn = string.Format("{0:X12}.owmdl", APM.keyToIndexID(obj.Header.model));
-                    string matFn = string.Format("{0:X12}.owmat", APM.keyToIndexID(obj.Header.model));
+                    string modelFn = $"{APM.keyToIndexID(obj.Header.model):X12}.owmdl";
+                    string matFn = $"{APM.keyToIndexID(obj.Header.model):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);
@@ -192,8 +192,8 @@ namespace OWLib.ModelWriter {
                     if(obj.ModelKey == 0) {
                         continue;
                     }
-                    string modelFn = string.Format("{0:X12}.owmdl", APM.keyToIndexID(obj.ModelKey));
-                    string matFn = string.Format("{0:X12}.owmat", APM.keyToIndexID(obj.MaterialKey));
+                    string modelFn = $"{APM.keyToIndexID(obj.ModelKey):X12}.owmdl";
+                    string matFn = $"{APM.keyToIndexID(obj.MaterialKey):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);

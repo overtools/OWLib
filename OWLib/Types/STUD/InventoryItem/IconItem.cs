@@ -10,8 +10,7 @@ namespace OWLib.Types.STUD.InventoryItem {
       public OWRecord decal;
       public ulong unk2;
     }
-
-    public ulong Key => 0x70AC478844826266;
+    
     public uint Id => 0x8CDAA871;
     public string Name => "Icon";
 

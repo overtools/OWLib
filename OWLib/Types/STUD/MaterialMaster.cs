@@ -34,7 +34,6 @@ namespace OWLib.Types.STUD {
       public ulong unk2;
     }
 
-    public ulong Key => 0xABB8E85C7F65CBF9;
     public uint Id => 0xA301496F;
     public string Name => "Material Master";
 

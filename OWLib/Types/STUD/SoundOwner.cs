@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
   public class SoundOwner : ISTUDInstance {
-    public ulong Key => 0x9EB0A61CE3F03AEA;
     public uint Id => 0xCD24159B;
     public string Name => "Sound Owner";
 

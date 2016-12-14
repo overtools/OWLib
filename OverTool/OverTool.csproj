@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DumpKey.cs" />
+    <Compile Include="DumpNPC.cs" />
     <Compile Include="DumpString.cs" />
     <Compile Include="DumpTex.cs" />
     <Compile Include="DumpVoice.cs" />
@@ -54,6 +55,9 @@
     <Compile Include="ExtractLogic\VoiceLine.cs" />
     <Compile Include="ExtractLogic\Spray.cs" />
     <Compile Include="ExtractMap.cs" />
+    <Compile Include="DumpAchievement.cs" />
+    <Compile Include="ListAchievement.cs" />
+    <Compile Include="ListNPC.cs" />
     <Compile Include="ListInventory.cs" />
     <Compile Include="ListMap.cs" />
     <Compile Include="Program.cs" />

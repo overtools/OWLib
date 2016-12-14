@@ -11,8 +11,7 @@ namespace OWLib.Types.STUD.InventoryItem {
       public OWRecord f00D_2;
       public ulong unk2;
     }
-
-    public ulong Key => 0x40BA18C08294158F;
+    
     public uint Id => 0x090B30AB;
     public string Name => "Voice Line";
 

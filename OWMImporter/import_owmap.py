@@ -121,7 +121,7 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
                 material = None
                 if settings.importMaterial and len(ent.material) > 0:
                     if matpath not in matCache:
-                        material = import_owmat.read(matpath, '%s:%X_' % (name, idx))
+                        material = import_owmat.read(matpath, '%s:%X_' % (name, idx), settings.importTexNormal, settings.importTexEffect)
                         import_owmdl.bindMaterials(obj[2], obj[4], material)
                         matCache[matpath] = material
                     else:
@@ -181,7 +181,7 @@ def read(settings, importObjects = False, importDetails = True, importPhysics = 
                     matpath = ob.material
                     if not os.path.isabs(matpath):
                         matpath = os.path.normpath('%s/%s' % (root, matpath))
-                    material = import_owmat.read(matpath, man)
+                    material = import_owmat.read(matpath, man, settings.importTexNormal, settings.importTexEffect)
                     import_owmdl.bindMaterials(obj[2], obj[4], material)
                     matCache[man] = material
                 else:

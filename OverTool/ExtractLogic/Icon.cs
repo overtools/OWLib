@@ -54,7 +54,7 @@ namespace OverTool.ExtractLogic {
           tex.Save(outp);
         }
       }
-      Console.Out.WriteLine("Wrote spray {0}", path);
+      Console.Out.WriteLine("Wrote icon {0}", path);
     }
   }
 }

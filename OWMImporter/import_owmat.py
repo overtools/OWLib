@@ -25,7 +25,7 @@ def cleanUnusedMaterials(materials):
     bpy.context.scene.update()
     return (t, m)
 
-def read(filename, prefix = ''):
+def read(filename, prefix = '', importNormal = True, importEffect = True):
     root, file = os.path.split(filename)
     data = read_owmat.read(filename)
     if not data: return None
@@ -33,10 +33,15 @@ def read(filename, prefix = ''):
     t = {}
     m = {}
 
-    for material in data.materials:
+    for i in range(len(data.materials)):
+        material = data.materials[i]
         mat = bpy.data.materials.new('%s%016X' % (prefix, material.key))
         mat.diffuse_intensity = 1.0
-        for texture in material.textures:
+        for texturetype in material.textures:
+            typ = texturetype[1]
+            texture = texturetype[0]
+            if importNormal == False and typ == owm_types.OWMATTypes['NORMAL']: continue
+            if importEffect == False and typ == owm_types.OWMATTypes['SHADER']: continue
             realpath = texture
             if not os.path.isabs(realpath):
                 realpath = os.path.normpath('%s/%s' % (root, realpath))
@@ -60,11 +65,21 @@ def read(filename, prefix = ''):
                     if tex == None:
                         tex = bpy.data.textures.new(fn, type = 'IMAGE')
                         tex.image = img
-                t[fn] = tex
                 mattex = mat.texture_slots.add()
+                mattex.use_map_color_diffuse = True
+                mattex.diffuse_factor = 1
+                if typ == owm_types.OWMATTypes['NORMAL']:
+                    tex.use_alpha = False
+                    tex.use_normal_map = True
+                    mattex.use_map_color_diffuse = False
+                    mattex.use_map_normal = True
+                    mattex.normal_factor = -1
+                    mattex.diffuse_factor = 0
+                elif typ == owm_types.OWMATTypes['SHADER']:
+                    mattex.use = False
                 mattex.texture = tex
                 mattex.texture_coords = 'UV'
-                mattex.use_map_color_diffuse = True
+                t[fn] = tex
             except: pass
         m[material.key] = mat
 

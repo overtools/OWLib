@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using CASCExplorer;
 using OWLib;
 using OWLib.Types.STUD;
@@ -19,21 +18,27 @@ namespace OverTool {
   class Program {
     static void Main(string[] args) {
       Console.OutputEncoding = Encoding.UTF8;
-      if(args.Length < 2) {
+      string[] validLangs = new string[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" };
+      if (args.Length < 2) {
         Console.Out.WriteLine("Usage: OverTool.exe [-LLang] \"overwatch path\" mode [mode opts]");
+        Console.Out.WriteLine("Options:");
+        Console.Out.WriteLine("\tL - Specify a language to extract. Example: -L{0}", validLangs[0]);
         Console.Out.WriteLine("Modes:");
         Console.Out.WriteLine("\tt - List Cosmetics");
         Console.Out.WriteLine("\tx - Extract Cosmetics");
         Console.Out.WriteLine("\tm - List Maps");
         Console.Out.WriteLine("\tM - Extract Maps");
-        Console.Out.WriteLine("\tv - Dump Hero Sounds");
-        Console.Out.WriteLine("\ts - Dump Strings");
-        Console.Out.WriteLine("\tZ - Dump Keys");
-        Console.Out.WriteLine("\tT - Dump Textures for Model");
+        Console.Out.WriteLine("\tn - List NPCs");
+        Console.Out.WriteLine("\tN - Extract NPCs");
+        Console.Out.WriteLine("\ta - List Achievements");
+        Console.Out.WriteLine("\tA - Extract Achievement Rewards and Icons");
+        Console.Out.WriteLine("\tv - Extract Hero Sounds");
+        Console.Out.WriteLine("\ts - Extract Strings");
+        Console.Out.WriteLine("\tZ - List Keys");
+        Console.Out.WriteLine("\tT - List Textures for Model");
         return;
       }
 
-      string[] validLangs = new string[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" };
       if(args[0][0] == '-' && args[0][1] == 'L') {
         string lang = args[0].Substring(2);
         if(!validLangs.Contains(lang)) {
@@ -54,10 +59,41 @@ namespace OverTool {
         args = args.Skip(1).ToArray();
       }
 
+      bool enableKeyDetection = true;
+      if(args[0][0] == '-' && args[0][1] == 'n') {
+        enableKeyDetection = false;
+        Console.Out.WriteLine("Disabling Key auto-detection...");
+        args = args.Skip(1).ToArray();
+      }
+
       string root = args[0];
       char opt = args[1][0];
-      char[] validOpts = new char[] { 't', 'x', 'm', 'M', 'v', 's', 'Z', 'T' };
-      if(!validOpts.Contains(opt)) {
+      Action<Dictionary<ushort, List<ulong>>, Dictionary<ulong, Record>, CASCHandler, string[]> optfn = null;
+      if(opt == 't') {
+        optfn = ListInventory.Parse;
+      } else if(opt == 'x') {
+        optfn = Extract.Parse;
+      } else if(opt == 'm') {
+        optfn = ListMap.Parse;
+      } else if(opt == 'M') {
+        optfn = ExtractMap.Parse;
+      } else if(opt == 'v') {
+        optfn = DumpVoice.Parse;
+      } else if(opt == 's') {
+        optfn = DumpString.Parse;
+      } else if(opt == 'Z') {
+        optfn = DumpKey.Parse;
+      } else if(opt == 'T') {
+        optfn = DumpTex.Parse;
+      } else if(opt == 'n') {
+        optfn = ListNPC.Parse;
+      } else if(opt == 'N') {
+        optfn = DumpNPC.Parse;
+      } else if(opt == 'a') {
+        optfn = ListAchievement.Parse;
+      } else if(opt == 'A') {
+        optfn = DumpAchievement.Parse;
+      } else {
         Console.Error.WriteLine("UNSUPPORTED OPT {0}", opt);
         return;
       }
@@ -69,6 +105,7 @@ namespace OverTool {
       track.Add(0xA9, new List<ulong>());
       track.Add(0x90, new List<ulong>());
       track.Add(0x3, new List<ulong>());
+      track.Add(0x68, new List<ulong>());
 
       Dictionary<ulong, Record> map = new Dictionary<ulong, Record>();
 
@@ -118,46 +155,31 @@ namespace OverTool {
         }
       }
 
-      Console.Out.WriteLine("Adding Encryption Keys...");
+      if(enableKeyDetection) {
+        Console.Out.WriteLine("Adding Encryption Keys...");
 
-      foreach(ulong key in track[0x90]) {
-        if(!map.ContainsKey(key)) {
-          continue;
-        }
-        using(Stream stream = Util.OpenFile(map[key], handler)) {
-          if(stream == null) {
+        foreach(ulong key in track[0x90]) {
+          if(!map.ContainsKey(key)) {
             continue;
           }
-          STUD stud = new STUD(stream);
-          if(stud.Instances[0].Name != stud.Manager.GetName(typeof(EncryptionKey))) {
-            continue;
-          }
-          EncryptionKey ek = (EncryptionKey)stud.Instances[0];
-          if(!KeyService.keys.ContainsKey(ek.KeyNameLong)) {
-            KeyService.keys.Add(ek.KeyNameLong, ek.KeyValueText.ToByteArray());
-            Console.Out.WriteLine("Added Encryption Key {0}", ek.KeyNameText);
+          using(Stream stream = Util.OpenFile(map[key], handler)) {
+            if(stream == null) {
+              continue;
+            }
+            STUD stud = new STUD(stream);
+            if(stud.Instances[0].Name != stud.Manager.GetName(typeof(EncryptionKey))) {
+              continue;
+            }
+            EncryptionKey ek = (EncryptionKey)stud.Instances[0];
+            if(!KeyService.keys.ContainsKey(ek.KeyNameLong)) {
+              KeyService.keys.Add(ek.KeyNameLong, ek.KeyValueText.ToByteArray());
+              Console.Out.WriteLine("Added Encryption Key {0}", ek.KeyNameText);
+            }
           }
         }
       }
+
       Console.Out.WriteLine("Tooling...");
-      Action<Dictionary<ushort, List<ulong>>, Dictionary<ulong, Record>, CASCHandler, string[]> optfn = null;
-      if(opt == 't') {
-        optfn = ListInventory.Parse;
-      } else if(opt == 'x') {
-        optfn = Extract.Parse;
-      } else if(opt == 'm') {
-        optfn = ListMap.Parse;
-      } else if(opt == 'M') {
-        optfn = ExtractMap.Parse;
-      } else if(opt == 'v') {
-        optfn = DumpVoice.Parse;
-      } else if(opt == 's') {
-        optfn = DumpString.Parse;
-      } else if(opt == 'Z') {
-        optfn = DumpKey.Parse;
-      } else if(opt == 'T') {
-        optfn = DumpTex.Parse;
-      }
 
       optfn(track, map, handler, args.Skip(2).ToArray());
       if(System.Diagnostics.Debugger.IsAttached) {

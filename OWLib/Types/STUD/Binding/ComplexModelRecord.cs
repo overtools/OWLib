@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD.Binding {
   public class ComplexModelRecord : ISTUDInstance {
-    public ulong Key => 0xF65022A8B1E146D9;
     public uint Id => 0xBC1233E0;
     public string Name => "Binding:ComplexModel";
 

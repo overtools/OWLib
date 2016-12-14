@@ -8,7 +8,7 @@ using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
   class ListInventory {
-    public static void GetInventoryName(ulong key, Dictionary<ulong, Record> map, CASCHandler handler) {
+    public static void GetInventoryName(ulong key, bool ex, Dictionary<ulong, Record> map, CASCHandler handler) {
       if(!map.ContainsKey(key)) {
         return;
       }
@@ -30,7 +30,11 @@ namespace OverTool {
         return;
       }
 
-      Console.Out.WriteLine("\t\t{0} ({1} {2})", name, instance.Header.rarity, stud.Instances[0].Name);
+      if(ex) {
+        Console.Out.WriteLine("\t\t{0} ({1} {2} in package {3:X16})", name, instance.Header.rarity, stud.Instances[0].Name, map[key].package.packageKey);
+      } else {
+        Console.Out.WriteLine("\t\t{0} ({1} {2})", name, instance.Header.rarity, stud.Instances[0].Name);
+      }
     }
 
     public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
@@ -51,7 +55,19 @@ namespace OverTool {
         if(heroName == null) {
           continue;
         }
-        Console.Out.WriteLine("Cosmetics for {0}...", heroName);
+        if(master.Header.itemMaster.key == 0) { // AI
+          continue;
+        }
+        bool ex = System.Diagnostics.Debugger.IsAttached;
+        List<string> largs = new List<string>(args);
+        if(largs.Count > 0 && largs.Contains("ex")) {
+          ex = true;
+        }
+        if(ex) {
+          Console.Out.WriteLine("Cosmetics for {0} in package {1:X16}", heroName, map[masterKey].package.packageKey);
+        } else {
+          Console.Out.WriteLine("Cosmetics for {0}", heroName);
+        }
         if(!map.ContainsKey(master.Header.itemMaster.key)) {
           Console.Out.WriteLine("Error loading inventory master file...");
           continue;
@@ -65,7 +81,7 @@ namespace OverTool {
 
         Console.Out.WriteLine("\tACHIEVEMENT ({0} items)", inventory.Achievables.Length);
         foreach(OWRecord record in inventory.Achievables) {
-          GetInventoryName(record.key, map, handler);
+          GetInventoryName(record.key, ex, map, handler);
         }
 
         for(int i = 0; i < inventory.DefaultGroups.Length; ++i) {
@@ -75,7 +91,7 @@ namespace OverTool {
           OWRecord[] records = inventory.Defaults[i];
           Console.Out.WriteLine("\tSTANDARD_{0} ({1} items)", OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.DefaultGroups[i].@event), records.Length);
           foreach(OWRecord record in records) {
-            GetInventoryName(record.key, map, handler);
+            GetInventoryName(record.key, ex, map, handler);
           }
         }
 
@@ -84,9 +100,9 @@ namespace OverTool {
             continue;
           }
           OWRecord[] records = inventory.Items[i];
-          Console.Out.WriteLine("\t{0} ({1} items)", OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event), records.Length);
+          Console.Out.WriteLine("\t{0} ({1} items)", OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event, "EVENT_{0}"), records.Length);
           foreach(OWRecord record in records) {
-            GetInventoryName(record.key, map, handler);
+            GetInventoryName(record.key, ex, map, handler);
           }
         }
         Console.Out.WriteLine("");

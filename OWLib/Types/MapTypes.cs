@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace OWLib.Types {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

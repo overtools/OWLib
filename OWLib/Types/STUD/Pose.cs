@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
   public class Pose : ISTUDInstance {
-    public ulong Key => 0x99A19357DAF2CF8C;
     public uint Id => 0x34C4FFE6;
     public string Name => "Pose";
 
