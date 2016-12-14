@@ -20,14 +20,7 @@ namespace OWLib.Types.STUD {
       public ulong zero1;
       public ulong offset;
       public ulong zero2;
-      public EVENT_ID @event;
-    }
-
-    public enum EVENT_ID : ulong {
-      COMMON = 0,
-      SUMMER_GAMES_2016 = 1,
-      HALLOWEEN_2016 = 2,
-      WINTER_WONDERLAND_2016 = 3
+      public ulong @event;
     }
     
     public uint Id => 0x33F56AC1;

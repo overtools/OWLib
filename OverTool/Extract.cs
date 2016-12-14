@@ -131,14 +131,14 @@ namespace OverTool {
         }
 
         for(int i = 0; i < inventory.DefaultGroups.Length; ++i) {
-          string name = "STANDARD_"+OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.DefaultGroups[i].@event);
+          string name = $"STANDARD_{ItemEvents.GetInstance().GetEvent(inventory.DefaultGroups[i].@event)}";
           for(int j = 0; j < inventory.Defaults[i].Length; ++j) {
             items[inventory.Defaults[i][j]] = name;
           }
         }
 
         for(int i = 0; i < inventory.ItemGroups.Length; ++i) {
-          string name = OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event, "EVENT_{0}");
+          string name = ItemEvents.GetInstance().GetEvent(inventory.ItemGroups[i].@event);
           for(int j = 0; j < inventory.Items[i].Length; ++j) {
             items[inventory.Items[i][j]] = name;
           }

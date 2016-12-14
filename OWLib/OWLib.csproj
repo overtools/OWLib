@@ -51,6 +51,7 @@
     <Compile Include="Half\Half.cs" />
     <Compile Include="Half\HalfHelper.cs" />
     <Compile Include="ImageDefinition.cs" />
+    <Compile Include="ItemEvents.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Chunked.cs" />
     <Compile Include="ModelWriter\ASCIIWriter.cs" />
@@ -129,6 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config" />
+    <Content Include="ow.events">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
