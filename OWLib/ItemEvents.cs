@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace OWLib {
   public class ItemEvents {
-    public Dictionary<ulong, string> events;
-    public IReadOnlyDictionary<ulong, string> Events;
+    private Dictionary<ulong, string> events;
+    public IReadOnlyDictionary<ulong, string> Events => events;
 
     private static ItemEvents Instance;
 
