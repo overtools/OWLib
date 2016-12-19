@@ -57,6 +57,9 @@ namespace OWLib.Types {
             CopyBytes(input, dataStream, entry.size);
             dataStream.Position = 0;
             chunk.Parse(dataStream);
+            try {
+              dataStream.Dispose();
+            } catch { }
           }
           chunks.Add(chunk);
           entrees.Add(entry);

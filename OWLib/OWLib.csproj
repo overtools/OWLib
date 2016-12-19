@@ -57,6 +57,7 @@
     <Compile Include="ModelWriter\ASCIIWriter.cs" />
     <Compile Include="ModelWriter\BINWriter.cs" />
     <Compile Include="ModelWriter\RefPoseWriter.cs" />
+    <Compile Include="Types\Chunk\PRHM.cs" />
     <Compile Include="Types\STUD\Achievement.cs" />
     <Compile Include="Types\Chunk\CLDM.cs" />
     <Compile Include="Types\Chunk\DMCE.cs" />

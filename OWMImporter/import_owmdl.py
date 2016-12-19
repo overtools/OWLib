@@ -36,7 +36,7 @@ def importArmature(autoIk):
     armature = None
     if len(bones) > 0:
         armData = bpy.data.armatures.new("Armature")
-        armData.draw_type = 'STICK'
+        armData.draw_type = 'BBONE'
         armature = bpy.data.objects.new("Armature", armData)
         armature.show_x_ray = True
 
@@ -46,6 +46,7 @@ def importArmature(autoIk):
         bpy.ops.object.mode_set(mode='EDIT')
 
         newBoneName()
+
         for bone in bones:
             bbone = armature.data.edit_bones.new(bone.name)
             addBoneName(bbone.name)
@@ -56,12 +57,12 @@ def importArmature(autoIk):
             m = mpos * mrot * mscl
 
             bbone.transform(m)
-            fixLength(bbone)
 
         for i, bone in enumerate(bones):
             if (bone.parent >= 0):
                 bbone = armData.edit_bones[i]
                 bbone.parent = armData.edit_bones[bone.parent]
+		
         armature.select = True
         bpy.ops.object.mode_set(mode='OBJECT')
         armature.data.use_auto_ik = autoIk

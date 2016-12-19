@@ -3,21 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
   public class DMCE : IChunk {
-    public string Identifier
-    {
-      get
-      {
-        return "DMCE"; // ECMD - Effect Child Model Data
-      }
-    }
-
-    public string RootIdentifier
-    {
-      get
-      {
-        return "TCFE"; // EFCT - Effect
-      }
-    }
+    public string Identifier => "DMCE"; // ECMD - Effect Child Model Data
+    public string RootIdentifier => "TCFE"; // EFCT - Effect
     
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Structure {
