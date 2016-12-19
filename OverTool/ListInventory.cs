@@ -89,7 +89,7 @@ namespace OverTool {
             continue;
           }
           OWRecord[] records = inventory.Defaults[i];
-          Console.Out.WriteLine("\tSTANDARD_{0} ({1} items)", OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.DefaultGroups[i].@event), records.Length);
+          Console.Out.WriteLine("\tSTANDARD_{0} ({1} items)", ItemEvents.GetInstance().GetEvent(inventory.DefaultGroups[i].@event), records.Length);
           foreach(OWRecord record in records) {
             GetInventoryName(record.key, ex, map, handler);
           }
@@ -100,7 +100,7 @@ namespace OverTool {
             continue;
           }
           OWRecord[] records = inventory.Items[i];
-          Console.Out.WriteLine("\t{0} ({1} items)", OWLib.Util.GetEnumName(typeof(InventoryMaster.EVENT_ID), inventory.ItemGroups[i].@event, "EVENT_{0}"), records.Length);
+          Console.Out.WriteLine("\t{0} ({1} items)", ItemEvents.GetInstance().GetEvent(inventory.ItemGroups[i].@event), records.Length);
           foreach(OWRecord record in records) {
             GetInventoryName(record.key, ex, map, handler);
           }
