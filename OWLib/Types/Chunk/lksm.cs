@@ -4,21 +4,8 @@ using OpenTK;
 
 namespace OWLib.Types.Chunk {
   public class lksm : IChunk {
-    public string Identifier
-    {
-      get
-      {
-        return "lksm"; // mskl
-      }
-    }
-
-    public string RootIdentifier
-    {
-      get
-      {
-        return "LDOM"; // MODL
-      }
-    }
+    public string Identifier => "lksm"; // mskl - Model Skeleton
+    public string RootIdentifier => "LDOM"; //  MODL - Model
     
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public unsafe struct Structure {

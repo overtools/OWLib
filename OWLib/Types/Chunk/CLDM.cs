@@ -3,21 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
   public class CLDM : IChunk {
-    public string Identifier
-    {
-      get
-      {
-        return "CLDM"; // MDLC
-      }
-    }
-
-    public string RootIdentifier
-    {
-      get
-      {
-        return "LDOM"; // MODL
-      }
-    }
+    public string Identifier => "CLDM"; // MDLC - Model Collision? Color?
+    public string RootIdentifier => "LDOM"; // MODL - Model
     
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public unsafe struct Structure {

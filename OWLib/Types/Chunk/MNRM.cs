@@ -4,21 +4,8 @@ using System.IO;
 
 namespace OWLib.Types.Chunk {
   public class MNRM : IChunk {
-    public string Identifier
-    {
-      get
-      {
-        return "MNRM"; // MRNM
-      }
-    }
-
-    public string RootIdentifier
-    {
-      get
-      {
-        return "LDOM"; // MODL
-      }
-    }
+    public string Identifier => "MNRM"; // MRNM - Model ? ? ?
+    public string RootIdentifier => "LDOM"; // MODL - Model
 
     private static HashSet<SemanticFormat> unhandledSemanticFormats = new HashSet<SemanticFormat>();
     private static HashSet<SemanticType> unhandledSemanticTypes = new HashSet<SemanticType>();

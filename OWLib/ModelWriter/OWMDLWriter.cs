@@ -68,6 +68,11 @@ namespace OWLib.ModelWriter {
       if(chunk != null) {
         skeleton = (lksm)chunk;
       }
+      chunk = chunked.FindNextChunk("PRHM").Value;
+      PRHM hardpoints = null;
+      if(chunk != null) {
+        hardpoints = (PRHM)chunk;
+      }
 
       Console.Out.WriteLine("Writing OWMDL");
       using(BinaryWriter writer = new BinaryWriter(output)) {
@@ -122,7 +127,11 @@ namespace OWLib.ModelWriter {
 
         writer.Write(sz);
 
-        writer.Write((int)0); // number of attachments
+        if(hardpoints != null) {
+          writer.Write(hardpoints.HardPoints.Length);
+        } else {
+          writer.Write((int)0); // number of attachments
+        }
 
         if(skeleton != null) {
           for(int i = 0; i < skeleton.Data.bonesAbs; ++i) {
@@ -196,8 +205,28 @@ namespace OWLib.ModelWriter {
             }
           }
         }
-        // attachments
-        // extension 1.1
+        if(hardpoints != null) {
+          // attachments
+          for(int i = 0; i < hardpoints.HardPoints.Length; ++i) {
+            PRHM.HardPoint hp = hardpoints.HardPoints[i];
+            writer.Write($"attachment_{hp.name:X}");
+            Matrix4 mat = hp.matrix.ToOpenTK();
+            Vector3 pos = mat.ExtractTranslation();
+            Quaternion rot = mat.ExtractRotation();
+            writer.Write(pos.X);
+            writer.Write(pos.Y);
+            writer.Write(pos.Z);
+            writer.Write(rot.X);
+            writer.Write(rot.Y);
+            writer.Write(rot.Z);
+            writer.Write(rot.W);
+          }
+          // extension 1.1
+          for(int i = 0; i < hardpoints.HardPoints.Length; ++i) {
+            PRHM.HardPoint hp = hardpoints.HardPoints[i];
+            writer.Write($"bone_{hp.id:X}");
+          }
+        }
       }
       return true;
     }
