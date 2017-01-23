@@ -16,8 +16,14 @@ namespace CASCExplorer
         public uint hashB;
     }
 
+    public struct CMFEntry {
+        public uint Index;
+        public uint hashA;
+        public uint hashB;
+    }
+
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct APMPackage
+    public struct APMPackageItem
     {
         public ulong localKey;
         public ulong primaryKey;
@@ -27,8 +33,42 @@ namespace CASCExplorer
         public uint unk_0;
         public uint unk_1; // size?
         public uint unk_2;
-        public uint unk_3;
-        public MD5Hash indexContentKey;    // Content key of the Package Index
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public class APMPackage {
+        public ulong localKey;
+        public ulong primaryKey;
+        public ulong externalKey;
+        public ulong encryptionKeyHash;
+        public ulong packageKey;
+        public uint unk_0;
+        public uint unk_1; // size?
+        public uint unk_2;
+        public MD5Hash indexContentKey;
+
+        public APMPackage(APMPackageItem package) {
+            localKey = package.localKey;
+            primaryKey = package.primaryKey;
+            externalKey = package.externalKey;
+            encryptionKeyHash = package.encryptionKeyHash;
+            packageKey = package.packageKey;
+            unk_0 = package.unk_0;
+            unk_1 = package.unk_1;
+            unk_2 = package.unk_2;
+        }
+        public static explicit operator APMPackage(APMPackageItem package) {
+            APMPackage a = new APMPackage(package);
+            return a;
+        }
+    }
+    
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct CMFHashData
+    {
+        public ulong id;
+        public uint flags;
+        public MD5Hash HashKey;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -93,37 +133,82 @@ namespace CASCExplorer
 
             string[] array = str.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
+            Dictionary<string, MD5Hash> CMFHashes = new Dictionary<string, MD5Hash>();
             List<string> APMNames = new List<string>();
+            for (int i = 1; i < array.Length; i++) {
+                string[] filedata = array[i].Split('|');
+                string name = filedata[4];
+
+                if (Path.GetExtension(name) == ".cmf" && name.Contains("RDEV")) {
+                    MD5Hash cmfMD5 = filedata[0].ToByteArray().ToMD5();
+                    EncodingEntry apmEnc;
+                    if (!name.Contains("L" + LanguageScan)) {
+                        continue;
+                    }
+
+                    if (!casc.Encoding.GetEntry(cmfMD5, out apmEnc)) {
+                        Console.Out.WriteLine("Failed to GetEntry: {0}", cmfMD5.ToHexString());
+                        continue;
+                    }
+					// Export CMF files for hex viewing
+					/*
+                    using (Stream apmStream = casc.OpenFile(apmEnc.Key)) {
+                        long start = apmStream.Position;
+                        string Filename = string.Format("./APMFiles/{0}", name);
+                        string Pathname = Filename.Substring(0, Filename.LastIndexOf('/'));
+                        Directory.CreateDirectory(Pathname);
+                        Stream APMWriter = File.Create(Filename);
+                        apmStream.CopyTo(APMWriter);
+                        APMWriter.Close();
+                    }
+					*/
+                    CMFHashes.Add(name, cmfMD5);
+                    // Console.Out.WriteLine("Adding {0} | {1:X} to CMFHashes", name, cmfMD5.ToHexString());
+                }
+            }
+            
             for (int i = 1; i < array.Length; i++)
             {
                 string[] filedata = array[i].Split('|');
-
+                Console.Out.WriteLine("Array[{0}]: {1}", i, array[i]);
                 string name = filedata[4];
 
-                if (Path.GetExtension(name) == ".apm" && name.Contains("RDEV"))
-                {
+                if (Path.GetExtension(name) == ".apm" && name.Contains("RDEV")) {
                     APMNames.Add(Path.GetFileNameWithoutExtension(name));
-                    if(!name.Contains("L"+LanguageScan)) {
-                      continue;
+                    if (!name.Contains("L" + LanguageScan)) {
+                        continue;
                     }
                     // add apm file for dev purposes
                     ulong apmNameHash = Hasher.ComputeHash(name);
                     MD5Hash apmMD5 = filedata[0].ToByteArray().ToMD5();
-                    _rootData[apmNameHash] = new OWRootEntry()
-                    {
+                    // Console.Out.WriteLine("apmNameHash: {0}, apmMD5: {1}", apmNameHash, apmMD5.ToHexString());
+                    _rootData[apmNameHash] = new OWRootEntry() {
                         baseEntry = new RootEntry() { MD5 = apmMD5, LocaleFlags = LocaleFlags.All, ContentFlags = ContentFlags.None }
                     };
 
                     CASCFile.FileNames[apmNameHash] = name;
+                    // Console.Out.WriteLine("name: {0}", name);
 
                     EncodingEntry apmEnc;
 
-                    if (!casc.Encoding.GetEntry(apmMD5, out apmEnc))
+                    if (!casc.Encoding.GetEntry(apmMD5, out apmEnc)) {
+                        Console.Out.WriteLine("Failed to GetEntry: {0}", apmMD5.ToHexString());
                         continue;
+                    }
 
+                    MD5Hash cmf;
+                    string cmfname = string.Format("{0}/{1}.cmf", Path.GetDirectoryName(name), Path.GetFileNameWithoutExtension(name));
+                    // Console.Out.WriteLine("CMF File Name: {0}", cmfname);
+                    if (CMFHashes.ContainsKey(cmfname)==true)
+                    {
+                        CMFHashes.TryGetValue(cmfname, out cmf);
+                        // Console.Out.WriteLine("CMF Hash Value: {0:X}", cmf.ToHexString());
+                    }
+
+                   //  Console.Out.WriteLine("Sucessfully Got Entry.\napmEnc.key: {0}", apmEnc.Key.ToHexString());
                     using (Stream apmStream = casc.OpenFile(apmEnc.Key))
                     {
-                        apmFiles.Add(new APMFile(name, apmStream, casc));
+                        apmFiles.Add(new APMFile(name, cmf, apmStream, casc));
                     }
                 }
 
@@ -312,44 +397,113 @@ namespace CASCExplorer
         public PackageIndexRecord[][] Records => records;
 
         public string Name { get; }
+        public string cmfHash { get; }
 
-        public APMFile(string name, Stream stream, CASCHandler casc)
+        public APMFile(string name, MD5Hash cmfhash, Stream stream, CASCHandler casc)
         {
             Name = name;
 
             using (BinaryReader reader = new BinaryReader(stream))
             {
+                // Save out APM files for hex viewing
+                /*
+                string Filename = string.Format("./APMFiles/{0}", name);
+                string Pathname = Filename.Substring(0,Filename.LastIndexOf('/'));
+                Directory.CreateDirectory(Pathname);
+                Stream APMWriter = File.Create(Filename);
+                stream.CopyTo(APMWriter);
+                APMWriter.Close();
+                stream.Seek(0, SeekOrigin.Begin);
+                */
                 ulong buildVersion = reader.ReadUInt64();
                 uint buildNumber = reader.ReadUInt32();
-                uint packageCount = reader.ReadUInt32();
+                uint packageCount = reader.ReadUInt32();   // always 0 as of 1.7.0.0
                 uint entryCount = reader.ReadUInt32();
                 uint unk = reader.ReadUInt32();
 
+                /*
+                Console.Out.WriteLine("\nAPM Name: {0}", name);
+                Console.Out.WriteLine("APM buildVersion: {0}", buildVersion);
+                Console.Out.WriteLine("APM buildNumber: {0}", buildNumber);
+                Console.Out.WriteLine("APM PackageCount: {0}", packageCount);
+                Console.Out.WriteLine("APM EntryCount: {0}", entryCount);
+                Console.Out.WriteLine("APM unk: {0:X}", unk);
+                */
                 entries = new APMEntry[entryCount];
-
                 for (int j = 0; j < entryCount; j++)
                 {
                     entries[j] = reader.Read<APMEntry>();
+                    //Console.Out.WriteLine("Entry[{0}]: Index: {1}, hashA: {2}, hashB: {3}", j, entries[j].Index, entries[j].hashA, entries[j].hashB);
+                }
+                packageCount = (uint)((stream.Length - stream.Position) / Marshal.SizeOf(typeof(APMPackage)));
+                //Console.Out.WriteLine("Math PackageCount: {0}", packageCount);
+
+                EncodingEntry cmfEnc;
+                List<CMFHashData> cmfHashList = new List<CMFHashData>();
+
+                if (!casc.Encoding.GetEntry(cmfhash, out cmfEnc)) {
+                    // Console.Out.WriteLine("Failed to GetEntry for CMF: {0}", cmfhash.ToHexString());
+                    return;
+                }
+                using (Stream cmfStream = casc.OpenFile(cmfEnc.Key)) {
+                    using (BinaryReader cmfreader = new BinaryReader(cmfStream)) {
+                        cmfStream.Seek(0, SeekOrigin.Begin);
+
+                        ulong cmfbuildVersion = cmfreader.ReadUInt64();
+                        ulong cmfbuildNumber = cmfreader.ReadUInt64();
+                        uint cmfentryCount = cmfreader.ReadUInt32();
+                        uint cmfunk_0 = cmfreader.ReadUInt32();
+
+                        //Console.Out.WriteLine("CMF EntryCount: {0}", cmfentryCount);
+                        for (uint i = 0; i < cmfentryCount; i++) {
+                            CMFEntry a = cmfreader.Read<CMFEntry>();
+                        }
+
+                        uint HashCount = (uint)((cmfStream.Length - cmfStream.Position) / Marshal.SizeOf(typeof(CMFHashData)));
+                        //Console.Out.WriteLine("CMF HashCount: {0}", HashCount);
+                        for (uint i = 0; i < HashCount; i++) {
+                            CMFHashData a = cmfreader.Read<CMFHashData>();
+                            // Console.Out.WriteLine("Hash #{0}:\n\tID: {1:X},\n\tFlags: {2:X},\n\tKey: {3:X}", i, a.id, a.flags, a.HashKey.ToHexString());
+                            cmfHashList.Add(a);
+                        }
+                    }
                 }
 
                 packages = new APMPackage[packageCount];
                 indexes = new PackageIndex[packageCount];
                 records = new PackageIndexRecord[packageCount][];
                 dependencies = new uint[packageCount][];
-
-                for (int j = 0; j < packages.Length; j++)
-                {
-                    packages[j] = reader.Read<APMPackage>();
+                //Console.Out.WriteLine("Package Length: {0}", packages.Length);
+                for (int j = 0; j < packages.Length; j++) {
+                    packages[j] = new APMPackage(reader.Read<APMPackageItem>());
+                    packages[j].indexContentKey = cmfHashList[j].HashKey;
+                    //Console.Out.WriteLine("package[{0}]:\n\tlocalKey: {1:X}, \n\tprimaryKey: {2:X}, \n\texternalKey: {3:X}, \n\tencryptionKeyHash: {4:X}, \n\tpackageKey: {5:X}, \n\tunk_0: {6:X}, \n\tunk_1: {7:X}, \n\tunk_2: {8:X}", j, packages[j].localKey, packages[j].primaryKey, packages[j].externalKey, packages[j].encryptionKeyHash, packages[j].packageKey, packages[j].unk_0, packages[j].unk_1, packages[j].unk_2);
 
                     EncodingEntry pkgIndexEnc;
 
-                    if (!casc.Encoding.GetEntry(packages[j].indexContentKey, out pkgIndexEnc))
+                    //Console.Out.WriteLine("indexContentKey: {0}", packages[j].indexContentKey.ToHexString());
+                    if (!casc.Encoding.GetEntry(packages[j].indexContentKey, out pkgIndexEnc)) {
+                        //Console.Out.WriteLine("Couldn't find indexContentKey: {0}", packages[j].indexContentKey.ToHexString());
+                        //continue;
                         throw new Exception("pkgIndexEnc missing");
+                    }
 
                     using (Stream pkgIndexStream = casc.OpenFile(pkgIndexEnc.Key))
                     using (BinaryReader pkgIndexReader = new BinaryReader(pkgIndexStream))
                     {
+                        // Write out Package Index files
+                        /*
+                        string pkgfilename = string.Format("./Packages/{0}/{1:X}.pkgindx", name, packages[j].packageKey);
+                        string pkgPathname = pkgfilename.Substring(0, pkgfilename.LastIndexOf('/'));
+                        Directory.CreateDirectory(pkgPathname);
+                        Stream pkgWriter = File.Create(pkgfilename);
+                        pkgIndexStream.CopyTo(pkgWriter);
+                        pkgWriter.Close();
+                        pkgIndexStream.Seek(0, SeekOrigin.Begin);
+                        */
+
                         indexes[j] = pkgIndexReader.Read<PackageIndex>();
+                        // Console.Out.WriteLine("index[{0}]:\n\trecordsOffset: {1}|{1:X}\n\tunkOffset_0: {2}|{2:X}\n\tunk_1300_0: {3}|{3:X}\n\tdepsOffset: {4}|{4:X}\n\tunkOffset_1: {5}|{5:X}\n\tunk_0: {6}|{6:X}", j, indexes[j].recordsOffset, indexes[j].unkOffset_0, indexes[j].unk_1300_0, indexes[j].depsOffset, indexes[j].unkOffset_1, indexes[j].unk_0);
 
                         pkgIndexStream.Position = indexes[j].recordsOffset;
 
