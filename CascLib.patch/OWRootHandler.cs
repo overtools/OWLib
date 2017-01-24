@@ -89,7 +89,7 @@ namespace CASCExplorer
         public uint recordsSize;
         public uint unk_1;
         public uint numDeps;
-        public uint unk_2;
+        public ulong unk_2;
         public ulong bundleKey;
         public ulong unk_3;
         //PackageIndexRecord[numRecords] records;   // See recordsOffset and PackageIndexRecord
@@ -110,7 +110,7 @@ namespace CASCExplorer
         public uint recordsSize;
         public uint unk_1;
         public uint numDeps;
-        public uint unk_2;
+        public ulong unk_2;
         public ulong bundleKey;                     // Requires some sorcery, see Key
         public ulong unk_3;
         public MD5Hash bundleContentKey;
@@ -147,6 +147,7 @@ namespace CASCExplorer
         public ulong Key;               // Requires some sorcery, see Key
         public uint Flags;              // Flags. Has 0x40000000 when in bundle, otherwise in encoding
         public uint Offset;             // Offset into bundle
+        public uint Size;
         public MD5Hash ContentKey;      // If it doesn't have the above flag (0x40000000) look it up in encoding
 
         public PackageIndexRecord(PackageIndexRecordItem record)
@@ -154,6 +155,7 @@ namespace CASCExplorer
             Key = record.Key;
             Flags = record.Flags;
             Offset = record.Offset;
+            Size = 0;
         }
 
         public static explicit operator PackageIndexRecord(PackageIndexRecordItem record)
@@ -594,7 +596,7 @@ namespace CASCExplorer
                         try
                         {
                           indexes[j].bundleContentKey = cmfMap[indexes[j].bundleKey];
-                        } catch { }
+                        } catch {}
                         // Console.Out.WriteLine("index[{0}]:\n\trecordsOffset: {1}|{1:X}\n\tunkOffset_0: {2}|{2:X}\n\tunk_1300_0: {3}|{3:X}\n\tdepsOffset: {4}|{4:X}\n\tunkOffset_1: {5}|{5:X}\n\tunk_0: {6}|{6:X}", j, indexes[j].recordsOffset, indexes[j].unkOffset_0, indexes[j].unk_1300_0, indexes[j].depsOffset, indexes[j].unkOffset_1, indexes[j].unk_0);
                         // Logger.WriteLine("index[{0}]: {1} {2}", j, indexes[j].numRecords, indexes[j].numUnk_0);
                         pkgIndexStream.Position = indexes[j].recordsOffset;
@@ -605,8 +607,48 @@ namespace CASCExplorer
                             {
                                 PackageIndexRecord[] recs = new PackageIndexRecord[indexes[j].numRecords];
 
-                                for(int k = 0; k < recs.Length; k++) recs[k] = new PackageIndexRecord(recordsReader.Read<PackageIndexRecordItem>());
+                                for(int k = 0; k < recs.Length; k++)
+                                {
+                                    recs[k] = new PackageIndexRecord(recordsReader.Read<PackageIndexRecordItem>());
+                                    recs[k].ContentKey = cmfMap[recs[k].Key];
+                                }
+                                List<uint> bundleOffsets = new List<uint>(recs.Length);
+                                for(int k = 0; k < recs.Length; k++)
+                                {
+                                    if(((ContentFlags)recs[k].Flags & ContentFlags.Bundle) != ContentFlags.None)
+                                    {
+                                        bundleOffsets.Add(recs[k].Offset);
+                                    }
+                                }
+                                bundleOffsets.Sort();
+                                for(int k = 0; k < recs.Length; k++)
+                                {
+                                    if(((ContentFlags)recs[k].Flags & ContentFlags.Bundle) != ContentFlags.None)
+                                    {
+                                        int offsetIndex = bundleOffsets.IndexOf(recs[k].Offset);
+                                        if(offsetIndex + 1 >= bundleOffsets.Count)
+                                        {
+                                            EncodingEntry encInfo;
+                                            if(casc.Encoding.GetEntry(recs[k].ContentKey, out encInfo))
+                                            {
+                                                recs[k].Size = (uint)encInfo.Size - bundleOffsets[offsetIndex];
+                                            }
+                                        }
+                                        else
+                                        {
+                                            recs[k].Size = bundleOffsets[offsetIndex + 1] - bundleOffsets[offsetIndex];
+                                        }
+                                    }
+                                    else
+                                    {
+                                         EncodingEntry encInfo;
+                                        if(casc.Encoding.GetEntry(recs[k].ContentKey, out encInfo))
+                                        {
+                                            recs[k].Size = (uint)encInfo.Size;
+                                        }
+                                    }
 
+                                }
                                 records[j] = recs;
                             }
                         }
