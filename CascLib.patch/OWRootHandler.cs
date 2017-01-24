@@ -215,7 +215,7 @@ namespace CASCExplorer
                     }
 
                     if (!casc.Encoding.GetEntry(cmfMD5, out apmEnc)) {
-                        Console.Out.WriteLine("Failed to GetEntry: {0}", cmfMD5.ToHexString());
+                        //Console.Out.WriteLine("Failed to GetEntry: {0}", cmfMD5.ToHexString());
                         continue;
                     }
 					          // Export CMF files for hex viewing
@@ -238,7 +238,7 @@ namespace CASCExplorer
             for (int i = 1; i < array.Length; i++)
             {
                 string[] filedata = array[i].Split('|');
-                Console.Out.WriteLine("Array[{0}]: {1}", i, array[i]);
+                //Console.Out.WriteLine("Array[{0}]: {1}", i, array[i]);
                 string name = filedata[4];
 
                 if (Path.GetExtension(name) == ".apm" && name.Contains("RDEV")) {
@@ -260,7 +260,7 @@ namespace CASCExplorer
                     EncodingEntry apmEnc;
 
                     if (!casc.Encoding.GetEntry(apmMD5, out apmEnc)) {
-                        Console.Out.WriteLine("Failed to GetEntry: {0}", apmMD5.ToHexString());
+                        //Console.Out.WriteLine("Failed to GetEntry: {0}", apmMD5.ToHexString());
                         continue;
                     }
 
