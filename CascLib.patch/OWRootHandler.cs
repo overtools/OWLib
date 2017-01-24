@@ -15,8 +15,10 @@ namespace CASCExplorer
         public uint hashA;
         public uint hashB;
     }
-
-    public struct CMFEntry {
+  
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct CMFEntry
+    {
         public uint Index;
         public uint hashA;
         public uint hashB;
@@ -47,7 +49,8 @@ namespace CASCExplorer
         public uint unk_2;
         public MD5Hash indexContentKey;
 
-        public APMPackage(APMPackageItem package) {
+        public APMPackage(APMPackageItem package)
+        {
             localKey = package.localKey;
             primaryKey = package.primaryKey;
             externalKey = package.externalKey;
@@ -57,7 +60,8 @@ namespace CASCExplorer
             unk_1 = package.unk_1;
             unk_2 = package.unk_2;
         }
-        public static explicit operator APMPackage(APMPackageItem package) {
+        public static explicit operator APMPackage(APMPackageItem package)
+        {
             APMPackage a = new APMPackage(package);
             return a;
         }
@@ -72,37 +76,99 @@ namespace CASCExplorer
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct PackageIndex
+    public struct PackageIndexItem
     {
-        public long recordsOffset;                  // Offset to GZIP compressed records chunk, read (recordsSize + numRecords) bytes here
-        public ulong unkOffset_0;
-		public ulong unk_1300_0;
-        public long depsOffset;                     // Offset to dependencies chunk, read numDeps * uint here
-        public ulong unkOffset_1;
-        public uint unk_0;
+        public long recordsOffset;
+        public long unkOffset_0;
+        public long unkOffset_1;
+        public long depsOffset;
+        public ulong unk_0;
+        public uint numUnk_0;
         public uint numRecords;
-		public uint unk_1300_2;
-        public int recordsSize;
+        public uint numUnk_1;
+        public uint recordsSize;
         public uint unk_1;
         public uint numDeps;
-        public uint totalSize;
-		public uint unk_1300_3;
-        public ulong bundleKey;                     // Requires some sorcery, see Key
-        public uint bundleSize;
-        public ulong unk_2;
-        public MD5Hash bundleContentKey;            // Look this up in encoding
+        public uint unk_2;
+        public ulong bundleKey;
+        public ulong unk_3;
         //PackageIndexRecord[numRecords] records;   // See recordsOffset and PackageIndexRecord
         //u32[numDeps] dependencies;                // See depsOffset
+    }
+  
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct PackageIndex
+    {                   
+        public long recordsOffset;                  // Offset to GZIP compressed records chunk, read (recordsSize + numRecords) bytes here
+        public long unkOffset_0;
+        public long unkOffset_1;
+        public long depsOffset;                    // Offset to dependencies chunk, read numDeps * uint here
+        public ulong unk_0;
+        public uint numUnk_0;
+        public uint numRecords;
+        public uint numUnk_1;
+        public uint recordsSize;
+        public uint unk_1;
+        public uint numDeps;
+        public uint unk_2;
+        public ulong bundleKey;                     // Requires some sorcery, see Key
+        public ulong unk_3;
+        public MD5Hash bundleContentKey;
+        //PackageIndexRecord[numRecords] records;   // See recordsOffset and PackageIndexRecord
+        //u32[numDeps] dependencies;                // See depsOffset
+
+        public PackageIndex(PackageIndexItem package)
+        {
+            recordsOffset = package.recordsOffset;
+            unkOffset_0 = package.unkOffset_0;
+            unkOffset_1 = package.unkOffset_1;
+            depsOffset = package.depsOffset;
+            unk_0 = package.unk_0;
+            numRecords = package.numRecords;
+            numUnk_0 = package.numUnk_0;
+            numUnk_1 = package.numUnk_1;
+            recordsSize = package.recordsSize;
+            unk_1 = package.unk_1;
+            numDeps = package.numDeps;
+            unk_2 = package.unk_2;
+            bundleKey = package.bundleKey;
+            unk_3 = package.unk_3;
+        }
+
+        public static explicit operator PackageIndex(PackageIndexItem package) {
+            PackageIndex a = new PackageIndex(package);
+            return a;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct PackageIndexRecord
     {
         public ulong Key;               // Requires some sorcery, see Key
-        public int Size;                // Size of asset
         public uint Flags;              // Flags. Has 0x40000000 when in bundle, otherwise in encoding
         public uint Offset;             // Offset into bundle
         public MD5Hash ContentKey;      // If it doesn't have the above flag (0x40000000) look it up in encoding
+
+        public PackageIndexRecord(PackageIndexRecordItem record)
+        {
+            Key = record.Key;
+            Flags = record.Flags;
+            Offset = record.Offset;
+        }
+
+        public static explicit operator PackageIndexRecord(PackageIndexRecordItem record)
+        {
+            PackageIndexRecord a = new PackageIndexRecord(record);
+            return a;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct PackageIndexRecordItem
+    {
+        public ulong Key;               // Requires some sorcery, see Key
+        public uint Flags;              // Flags. Has 0x40000000 when in bundle, otherwise in encoding
+        public uint Offset;             // Offset into bundle
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -150,8 +216,8 @@ namespace CASCExplorer
                         Console.Out.WriteLine("Failed to GetEntry: {0}", cmfMD5.ToHexString());
                         continue;
                     }
-					// Export CMF files for hex viewing
-					/*
+					          // Export CMF files for hex viewing
+					          /*
                     using (Stream apmStream = casc.OpenFile(apmEnc.Key)) {
                         long start = apmStream.Position;
                         string Filename = string.Format("./APMFiles/{0}", name);
@@ -161,7 +227,7 @@ namespace CASCExplorer
                         apmStream.CopyTo(APMWriter);
                         APMWriter.Close();
                     }
-					*/
+					          */
                     CMFHashes.Add(name, cmfMD5);
                     // Console.Out.WriteLine("Adding {0} | {1:X} to CMFHashes", name, cmfMD5.ToHexString());
                 }
@@ -205,7 +271,7 @@ namespace CASCExplorer
                         // Console.Out.WriteLine("CMF Hash Value: {0:X}", cmf.ToHexString());
                     }
 
-                   //  Console.Out.WriteLine("Sucessfully Got Entry.\napmEnc.key: {0}", apmEnc.Key.ToHexString());
+                    //  Console.Out.WriteLine("Sucessfully Got Entry.\napmEnc.key: {0}", apmEnc.Key.ToHexString());
                     using (Stream apmStream = casc.OpenFile(apmEnc.Key))
                     {
                         apmFiles.Add(new APMFile(name, cmf, apmStream, casc));
@@ -295,26 +361,28 @@ namespace CASCExplorer
                     CASCFile.FileNames[fileHash] = fakeName;
 
                     PackageIndex pkgIndex = apm.Indexes[i];
-
-                    fakeName = string.Format("{0}_bundle_{1:X16}", pkgName, pkgIndex.bundleKey);
-
-                    fileHash = Hasher.ComputeHash(fakeName);
-                    Logger.WriteLine("Adding bundle: {0:X16} {1}", fileHash, pkgIndex.bundleContentKey.ToHexString());
-                    if (_rootData.ContainsKey(fileHash))
+                    if(pkgIndex.bundleKey != 0)
                     {
-                        if (!_rootData[fileHash].baseEntry.MD5.EqualsTo(pkgIndex.bundleContentKey))
-                            Logger.WriteLine("Weird duplicate bundle: {0:X16} {1}", fileHash, pkgIndex.bundleContentKey.ToHexString());
-                        else
-                            Logger.WriteLine("Duplicate bundle: {0:X16} {1}", fileHash, pkgIndex.bundleContentKey.ToHexString());
-                        continue;
-                    }
-                    _rootData[fileHash] = new OWRootEntry()
-                    {
-                        baseEntry = new RootEntry() { MD5 = pkgIndex.bundleContentKey, LocaleFlags = LocaleFlags.All, ContentFlags = ContentFlags.None },
-                        pkgIndex = pkgIndex
-                    };
+                        fakeName = string.Format("{0}_bundle_{1:X16}", pkgName, pkgIndex.bundleKey);
 
-                    CASCFile.FileNames[fileHash] = fakeName;
+                        fileHash = Hasher.ComputeHash(fakeName);
+                        Logger.WriteLine("Adding bundle: {0:X16} {1}", fileHash, pkgIndex.bundleContentKey.ToHexString());
+                        if(_rootData.ContainsKey(fileHash))
+                        {
+                            if(!_rootData[fileHash].baseEntry.MD5.EqualsTo(pkgIndex.bundleContentKey))
+                              Logger.WriteLine("Weird duplicate bundle: {0:X16} {1}", fileHash, pkgIndex.bundleContentKey.ToHexString());
+                            else
+                              Logger.WriteLine("Duplicate bundle: {0:X16} {1}", fileHash, pkgIndex.bundleContentKey.ToHexString());
+                            continue;
+                        }
+                        _rootData[fileHash] = new OWRootEntry()
+                        {
+                            baseEntry = new RootEntry() { MD5 = pkgIndex.bundleContentKey, LocaleFlags = LocaleFlags.All, ContentFlags = ContentFlags.None },
+                            pkgIndex = pkgIndex
+                        };
+
+                        CASCFile.FileNames[fileHash] = fakeName;
+                      }
 
                     PackageIndexRecord[] records = apm.Records[i];
 
@@ -390,11 +458,17 @@ namespace CASCExplorer
         private PackageIndex[] indexes;
         private PackageIndexRecord[][] records;
         private uint[][] dependencies;
+        private List<CMFHashData> cmfHashList;
+        private List<CMFEntry> cmfEntries;
+        private Dictionary<ulong, MD5Hash> cmfMap;
 
         public APMPackage[] Packages => packages;
         public APMEntry[] Entries => entries;
         public PackageIndex[] Indexes => indexes;
         public PackageIndexRecord[][] Records => records;
+        public List<CMFHashData> CMFHashList => cmfHashList;
+        public List<CMFEntry> CMFEntries => cmfEntries;
+        public Dictionary<ulong, MD5Hash> CMFMap => CMFMap;
 
         public string Name { get; }
         public string cmfHash { get; }
@@ -406,15 +480,15 @@ namespace CASCExplorer
             using (BinaryReader reader = new BinaryReader(stream))
             {
                 // Save out APM files for hex viewing
-                /*
-                string Filename = string.Format("./APMFiles/{0}", name);
-                string Pathname = Filename.Substring(0,Filename.LastIndexOf('/'));
-                Directory.CreateDirectory(Pathname);
-                Stream APMWriter = File.Create(Filename);
-                stream.CopyTo(APMWriter);
-                APMWriter.Close();
-                stream.Seek(0, SeekOrigin.Begin);
-                */
+                #if OUTPUT_APM
+                    string Filename = string.Format("./APMFiles/{0}", name);
+                    string Pathname = Filename.Substring(0,Filename.LastIndexOf('/'));
+                    Directory.CreateDirectory(Pathname);
+                    Stream APMWriter = File.Create(Filename);
+                    stream.CopyTo(APMWriter);
+                    APMWriter.Close();
+                    stream.Seek(0, SeekOrigin.Begin);
+                #endif
                 ulong buildVersion = reader.ReadUInt64();
                 uint buildNumber = reader.ReadUInt32();
                 uint packageCount = reader.ReadUInt32();   // always 0 as of 1.7.0.0
@@ -439,13 +513,21 @@ namespace CASCExplorer
                 //Console.Out.WriteLine("Math PackageCount: {0}", packageCount);
 
                 EncodingEntry cmfEnc;
-                List<CMFHashData> cmfHashList = new List<CMFHashData>();
 
                 if (!casc.Encoding.GetEntry(cmfhash, out cmfEnc)) {
                     // Console.Out.WriteLine("Failed to GetEntry for CMF: {0}", cmfhash.ToHexString());
                     return;
                 }
                 using (Stream cmfStream = casc.OpenFile(cmfEnc.Key)) {
+                    #if OUTPUT_CMF
+                        string cmfFilename = string.Format("./CMF/{0}.cmf", Path.GetFileNameWithoutExtension(name));
+                        string cmfPathname = cmfFilename.Substring(0,cmfFilename.LastIndexOf('/'));
+                        Directory.CreateDirectory(cmfPathname);
+                        Stream CMFWriter = File.Create(cmfFilename);
+                        cmfStream.CopyTo(CMFWriter);
+                        CMFWriter.Close();
+                        cmfStream.Seek(0, SeekOrigin.Begin);
+                    #endif
                     using (BinaryReader cmfreader = new BinaryReader(cmfStream)) {
                         cmfStream.Seek(0, SeekOrigin.Begin);
 
@@ -455,16 +537,21 @@ namespace CASCExplorer
                         uint cmfunk_0 = cmfreader.ReadUInt32();
 
                         //Console.Out.WriteLine("CMF EntryCount: {0}", cmfentryCount);
+                        cmfEntries = new List<CMFEntry>((int)cmfentryCount);
                         for (uint i = 0; i < cmfentryCount; i++) {
                             CMFEntry a = cmfreader.Read<CMFEntry>();
+                            cmfEntries.Add(a);
                         }
 
                         uint HashCount = (uint)((cmfStream.Length - cmfStream.Position) / Marshal.SizeOf(typeof(CMFHashData)));
+                        cmfHashList = new List<CMFHashData>((int)HashCount);
+                        cmfMap = new Dictionary<ulong, MD5Hash>((int)HashCount);
                         //Console.Out.WriteLine("CMF HashCount: {0}", HashCount);
                         for (uint i = 0; i < HashCount; i++) {
                             CMFHashData a = cmfreader.Read<CMFHashData>();
                             // Console.Out.WriteLine("Hash #{0}:\n\tID: {1:X},\n\tFlags: {2:X},\n\tKey: {3:X}", i, a.id, a.flags, a.HashKey.ToHexString());
                             cmfHashList.Add(a);
+                            cmfMap[a.id] = a.HashKey;
                         }
                     }
                 }
@@ -474,9 +561,10 @@ namespace CASCExplorer
                 records = new PackageIndexRecord[packageCount][];
                 dependencies = new uint[packageCount][];
                 //Console.Out.WriteLine("Package Length: {0}", packages.Length);
+                //Logger.WriteLine("Package Length: {0}", packageCount);
                 for (int j = 0; j < packages.Length; j++) {
                     packages[j] = new APMPackage(reader.Read<APMPackageItem>());
-                    packages[j].indexContentKey = cmfHashList[j].HashKey;
+                    packages[j].indexContentKey = cmfMap[packages[j].packageKey];
                     //Console.Out.WriteLine("package[{0}]:\n\tlocalKey: {1:X}, \n\tprimaryKey: {2:X}, \n\texternalKey: {3:X}, \n\tencryptionKeyHash: {4:X}, \n\tpackageKey: {5:X}, \n\tunk_0: {6:X}, \n\tunk_1: {7:X}, \n\tunk_2: {8:X}", j, packages[j].localKey, packages[j].primaryKey, packages[j].externalKey, packages[j].encryptionKeyHash, packages[j].packageKey, packages[j].unk_0, packages[j].unk_1, packages[j].unk_2);
 
                     EncodingEntry pkgIndexEnc;
@@ -492,30 +580,35 @@ namespace CASCExplorer
                     using (BinaryReader pkgIndexReader = new BinaryReader(pkgIndexStream))
                     {
                         // Write out Package Index files
-                        /*
-                        string pkgfilename = string.Format("./Packages/{0}/{1:X}.pkgindx", name, packages[j].packageKey);
-                        string pkgPathname = pkgfilename.Substring(0, pkgfilename.LastIndexOf('/'));
-                        Directory.CreateDirectory(pkgPathname);
-                        Stream pkgWriter = File.Create(pkgfilename);
-                        pkgIndexStream.CopyTo(pkgWriter);
-                        pkgWriter.Close();
-                        pkgIndexStream.Seek(0, SeekOrigin.Begin);
-                        */
+                        #if OUTPUT_PKG
+                            string pkgfilename = string.Format("./Packages/{0}/{1:X}.pkgindx", name, packages[j].packageKey);
+                            string pkgPathname = pkgfilename.Substring(0, pkgfilename.LastIndexOf('/'));
+                            Directory.CreateDirectory(pkgPathname);
+                            Stream pkgWriter = File.Create(pkgfilename);
+                            pkgIndexStream.CopyTo(pkgWriter);
+                            pkgWriter.Close();
+                            pkgIndexStream.Seek(0, SeekOrigin.Begin);
+                        #endif
 
-                        indexes[j] = pkgIndexReader.Read<PackageIndex>();
+                        indexes[j] = new PackageIndex(pkgIndexReader.Read<PackageIndexItem>());
+                        try
+                        {
+                          indexes[j].bundleContentKey = cmfMap[indexes[j].bundleKey];
+                        } catch { }
                         // Console.Out.WriteLine("index[{0}]:\n\trecordsOffset: {1}|{1:X}\n\tunkOffset_0: {2}|{2:X}\n\tunk_1300_0: {3}|{3:X}\n\tdepsOffset: {4}|{4:X}\n\tunkOffset_1: {5}|{5:X}\n\tunk_0: {6}|{6:X}", j, indexes[j].recordsOffset, indexes[j].unkOffset_0, indexes[j].unk_1300_0, indexes[j].depsOffset, indexes[j].unkOffset_1, indexes[j].unk_0);
-
+                        // Logger.WriteLine("index[{0}]: {1} {2}", j, indexes[j].numRecords, indexes[j].numUnk_0);
                         pkgIndexStream.Position = indexes[j].recordsOffset;
 
-                        using (GZipStream recordsStream = new GZipStream(pkgIndexStream, CompressionMode.Decompress, true))
-                        using (BinaryReader recordsReader = new BinaryReader(recordsStream))
+                        using(GZipStream recordsStream = new GZipStream(pkgIndexStream, CompressionMode.Decompress, true))
                         {
-                            PackageIndexRecord[] recs = new PackageIndexRecord[indexes[j].numRecords];
+                            using(BinaryReader recordsReader = new BinaryReader(recordsStream))
+                            {
+                                PackageIndexRecord[] recs = new PackageIndexRecord[indexes[j].numRecords];
 
-                            for (int k = 0; k < recs.Length; k++)
-                                recs[k] = recordsReader.Read<PackageIndexRecord>();
+                                for(int k = 0; k < recs.Length; k++) recs[k] = new PackageIndexRecord(recordsReader.Read<PackageIndexRecordItem>());
 
-                            records[j] = recs;
+                                records[j] = recs;
+                            }
                         }
 
                         pkgIndexStream.Position = indexes[j].depsOffset;
