@@ -178,7 +178,7 @@ namespace CASCExplorer {
     public static string LanguageScan = "enUS";
 
     public OwRootHandler(BinaryReader stream, BackgroundWorkerEx worker, CASCHandler casc) {
-      worker?.ReportProgress(0, "Loading \"root\"...");
+      worker?.ReportProgress(0, "Loading APM data...");
 
       string str = Encoding.ASCII.GetString(stream.ReadBytes((int)stream.BaseStream.Length));
 
@@ -248,11 +248,16 @@ namespace CASCExplorer {
 
           MD5Hash cmf;
           string cmfname = string.Format("{0}/{1}.cmf", Path.GetDirectoryName(name), Path.GetFileNameWithoutExtension(name));
+          ulong cmfNameHash = Hasher.ComputeHash(cmfname);
           // Console.Out.WriteLine("CMF File Name: {0}", cmfname);
           if(CMFHashes.ContainsKey(cmfname) == true) {
             CMFHashes.TryGetValue(cmfname, out cmf);
             // Console.Out.WriteLine("CMF Hash Value: {0:X}", cmf.ToHexString());
           }
+          _rootData[cmfNameHash] = new OWRootEntry() {
+            baseEntry = new RootEntry() {  MD5 = cmf, LocaleFlags = LocaleFlags.All, ContentFlags = ContentFlags.None }
+          };
+          CASCFile.FileNames[cmfNameHash] = cmfname;
 
           //  Console.Out.WriteLine("Sucessfully Got Entry.\napmEnc.key: {0}", apmEnc.Key.ToHexString());
           using(Stream apmStream = casc.OpenFile(apmEnc.Key)) {
@@ -299,84 +304,59 @@ namespace CASCExplorer {
     }
 
     public override void LoadListFile(string path, BackgroundWorkerEx worker = null) {
-      worker?.ReportProgress(0, "Loading \"listfile\"...");
-
       Logger.WriteLine("OWRootHandler: loading file names...");
+      foreach(APMFile apm in apmFiles) {
+        Logger.WriteLine($"OWRootHandler: processing {apm.Name}...");
+        worker?.ReportProgress(0, $"Loading APM {apm.Name}...");
 
-      float pkgOnePct = apmFiles.Sum(a => a.Packages.Length) / 100f;
-
-      int pkgCount = 0;
-
-      foreach(var apm in apmFiles) {
+        float one = apm.Packages.Length / 100f;
+        int count = 0;
         for(int i = 0; i < apm.Packages.Length; i++) {
           APMPackage package = apm.Packages[i];
-
-          MD5Hash pkgIndexMD5 = package.indexContentKey;
-
-          string apmName = Path.GetFileNameWithoutExtension(apm.Name);
-          string pkgName = string.Format("{0}/package_{1:X4}_{2:X16}", apmName, i, package.packageKey);
-          string fakeName = string.Format("{0}_index", pkgName);
-
-          ulong fileHash = Hasher.ComputeHash(fakeName);
-          Logger.WriteLine("Adding package: {0:X16} {1}", fileHash, package.indexContentKey.ToHexString());
-          if(_rootData.ContainsKey(fileHash)) {
-            if(!_rootData[fileHash].baseEntry.MD5.EqualsTo(package.indexContentKey))
-              Logger.WriteLine("Weird duplicate package: {0:X16} {1}", fileHash, package.indexContentKey.ToHexString());
-            else
-              Logger.WriteLine("Duplicate package: {0:X16} {1}", fileHash, package.indexContentKey.ToHexString());
-            continue;
-          }
-          _rootData[fileHash] = new OWRootEntry() {
-            baseEntry = new RootEntry() { MD5 = pkgIndexMD5, LocaleFlags = LocaleFlags.All, ContentFlags = ContentFlags.None }
-          };
-
-          CASCFile.FileNames[fileHash] = fakeName;
-
-          PackageIndex pkgIndex = apm.Indexes[i];
-          if(pkgIndex.bundleKey != 0) {
-            fakeName = string.Format("{0}_bundle_{1:X16}", pkgName, pkgIndex.bundleKey);
-
-            fileHash = Hasher.ComputeHash(fakeName);
-            Logger.WriteLine("Adding bundle: {0:X16} {1}", fileHash, pkgIndex.bundleContentKey.ToHexString());
-            if(_rootData.ContainsKey(fileHash)) {
-              if(!_rootData[fileHash].baseEntry.MD5.EqualsTo(pkgIndex.bundleContentKey))
-                Logger.WriteLine("Weird duplicate bundle: {0:X16} {1}", fileHash, pkgIndex.bundleContentKey.ToHexString());
-              else
-                Logger.WriteLine("Duplicate bundle: {0:X16} {1}", fileHash, pkgIndex.bundleContentKey.ToHexString());
-              continue;
-            }
-            _rootData[fileHash] = new OWRootEntry() {
-              baseEntry = new RootEntry() { MD5 = pkgIndex.bundleContentKey, LocaleFlags = LocaleFlags.All, ContentFlags = ContentFlags.None },
-              pkgIndex = pkgIndex
-            };
-
-            CASCFile.FileNames[fileHash] = fakeName;
-          }
-
+          PackageIndex index = apm.Indexes[i];
+          MD5Hash packageHash = apm.CMFMap[package.packageKey].HashKey;
           PackageIndexRecord[] records = apm.Records[i];
 
-          for(int k = 0; k < records.Length; k++) {
-            fakeName = string.Format("files/{0:X3}/{1:X12}.{0:X3}", keyToTypeID(records[k].Key), records[k].Key & 0xFFFFFFFFFFFF);
+          for(int j = 0; j < records.Length; j++) {
+            string recordName = string.Format("files/{0:X3}/{1:X12}.{0:X3}", keyToTypeID(records[j].Key), records[j].Key & 0xFFFFFFFFFFFF);
 
-            fileHash = Hasher.ComputeHash(fakeName);
-            //Logger.WriteLine("Adding package record: key {0:X16} hash {1} flags {2:X8}", fileHash, records[k].contentKey.ToHexString(), records[k].flags);
-            if(_rootData.ContainsKey(fileHash)) {
-              if(!_rootData[fileHash].baseEntry.MD5.EqualsTo(records[k].ContentKey))
-                Logger.WriteLine("Weird duplicate package record: {0:X16} {1}", fileHash, records[k].ContentKey.ToHexString());
-              //else
-              //    Logger.WriteLine("Duplicate package record: {0:X16} {1}", fileHash, records[k].contentKey.ToHexString());
+            ulong recordHash = Hasher.ComputeHash(recordName);
+            if(_rootData.ContainsKey(recordHash)) {
               continue;
             }
-            _rootData[fileHash] = new OWRootEntry() {
-              baseEntry = new RootEntry() { MD5 = records[k].ContentKey, LocaleFlags = LocaleFlags.All, ContentFlags = (ContentFlags)records[k].Flags },
-              pkgIndex = pkgIndex,
-              pkgIndexRec = records[k]
+            _rootData[recordHash] = new OWRootEntry() {
+              baseEntry = new RootEntry() { MD5 = records[j].ContentKey, LocaleFlags = LocaleFlags.All, ContentFlags = (ContentFlags)records[j].Flags },
+              pkgIndex = index,
+              pkgIndexRec = records[j]
             };
 
-            CASCFile.FileNames[fileHash] = fakeName;
+            CASCFile.FileNames[recordHash] = recordName;
           }
 
-          worker?.ReportProgress((int)(++pkgCount / pkgOnePct));
+          worker?.ReportProgress((int)(++count / one / 2));
+        }
+
+        count = 0;
+        one = apm.CMFMap.Count / 100f;
+
+        worker?.ReportProgress(50, $"Loading CMF...");
+        foreach(KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {
+          string recordName = string.Format("files/{0:X3}/{1:X12}.{0:X3}", keyToTypeID(pair.Key), pair.Key & 0xFFFFFFFFFFFF);
+
+          ulong recordHash = Hasher.ComputeHash(recordName);
+          if(_rootData.ContainsKey(recordHash)) {
+            continue;
+          }
+
+          _rootData[recordHash] = new OWRootEntry() {
+            baseEntry = new RootEntry() { MD5 = pair.Value.HashKey, LocaleFlags = LocaleFlags.All, ContentFlags = ContentFlags.None },
+            pkgIndex = new PackageIndex(new PackageIndexItem()),
+            pkgIndexRec = new PackageIndexRecord(new PackageIndexRecordItem())
+          };
+
+          CASCFile.FileNames[recordHash] = recordName;
+
+          worker?.ReportProgress(50 + (int)(++count / one / 2));
         }
       }
 
