@@ -147,7 +147,7 @@ namespace CASCExplorer
         public ulong Key;               // Requires some sorcery, see Key
         public uint Flags;              // Flags. Has 0x40000000 when in bundle, otherwise in encoding
         public uint Offset;             // Offset into bundle
-        public uint Size;
+        public int Size;
         public MD5Hash ContentKey;      // If it doesn't have the above flag (0x40000000) look it up in encoding
 
         public PackageIndexRecord(PackageIndexRecordItem record)
@@ -612,12 +612,12 @@ namespace CASCExplorer
                                     recs[k] = new PackageIndexRecord(recordsReader.Read<PackageIndexRecordItem>());
                                     recs[k].ContentKey = cmfMap[recs[k].Key];
                                 }
-                                List<uint> bundleOffsets = new List<uint>(recs.Length);
+                                List<int> bundleOffsets = new List<int>(recs.Length);
                                 for(int k = 0; k < recs.Length; k++)
                                 {
                                     if(((ContentFlags)recs[k].Flags & ContentFlags.Bundle) != ContentFlags.None)
                                     {
-                                        bundleOffsets.Add(recs[k].Offset);
+                                        bundleOffsets.Add((int)recs[k].Offset);
                                     }
                                 }
                                 bundleOffsets.Sort();
@@ -625,13 +625,13 @@ namespace CASCExplorer
                                 {
                                     if(((ContentFlags)recs[k].Flags & ContentFlags.Bundle) != ContentFlags.None)
                                     {
-                                        int offsetIndex = bundleOffsets.IndexOf(recs[k].Offset);
+                                        int offsetIndex = bundleOffsets.IndexOf((int)recs[k].Offset);
                                         if(offsetIndex + 1 >= bundleOffsets.Count)
                                         {
                                             EncodingEntry encInfo;
                                             if(casc.Encoding.GetEntry(recs[k].ContentKey, out encInfo))
                                             {
-                                                recs[k].Size = (uint)encInfo.Size - bundleOffsets[offsetIndex];
+                                                recs[k].Size = encInfo.Size - bundleOffsets[offsetIndex];
                                             }
                                         }
                                         else
@@ -644,7 +644,7 @@ namespace CASCExplorer
                                          EncodingEntry encInfo;
                                         if(casc.Encoding.GetEntry(recs[k].ContentKey, out encInfo))
                                         {
-                                            recs[k].Size = (uint)encInfo.Size;
+                                            recs[k].Size = encInfo.Size;
                                         }
                                     }
 
