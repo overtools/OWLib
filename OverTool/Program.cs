@@ -131,7 +131,7 @@ namespace OverTool {
           continue; // skip
         }
         //Console.Out.WriteLine("Package Length: {0}", apm.Packages.Length);
-        for (int i = 0; i < apm.Packages.Length; ++i) {
+        for(int i = 0; i < apm.Packages.Length; ++i) {
           //Console.Out.WriteLine("i: {0}",i);
           APMPackage package = apm.Packages[i];
           //Console.Out.WriteLine("Package: {0}", package);
@@ -157,6 +157,33 @@ namespace OverTool {
             }
           }
         }
+      }
+      int origLength = map.Count;
+      foreach(APMFile apm in ow.APMFiles) {
+        if(!apm.Name.ToLowerInvariant().Contains("rdev")) {
+          continue;
+        }
+        foreach(KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {
+          if(map.ContainsKey(pair.Key)) {
+            continue;
+          }
+          Record rec = new Record {
+            record = new PackageIndexRecord()
+          };
+          rec.record.Flags = 0;
+          rec.record.Key = pair.Value.id;
+          rec.record.ContentKey = pair.Value.HashKey;
+          rec.package = new APMPackage(new APMPackageItem());
+          rec.index = new PackageIndex(new PackageIndexItem());
+          EncodingEntry enc;
+          if(handler.Encoding.GetEntry(pair.Value.HashKey, out enc)) {
+            rec.record.Size = enc.Size;
+            map.Add(pair.Key, rec);
+          }
+        }
+      }
+      if(origLength != map.Count) {
+        Console.Out.WriteLine("Warning: {0} packageless files", map.Count - origLength);
       }
 
       if(enableKeyDetection) {

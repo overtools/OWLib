@@ -16,9 +16,18 @@ namespace OverTool {
       }
 
       string output = args[0];
-
+      
       string[] validCommands = new string[] { "skin", "spray", "icon" };
-      if (!validCommands.Contains(args[1])) {
+
+      bool typeWildcard = true;
+      List<string> types = new List<string>();
+      if(args.Length > 1) {
+        types.AddRange(args[1].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries));
+        typeWildcard = types.Contains("*");
+        types = types.FindAll((string it) => validCommands.Contains(it)).ToList();
+      }
+      
+      if (!typeWildcard && types.Count == 0) {
         string cmdlist = "";
         for (int i=0; i < validCommands.Length; i++) {
           if (i != 0) {
@@ -33,12 +42,6 @@ namespace OverTool {
         return;
       }
 
-      bool typeWildcard = true;
-      List<string> types = new List<string>();
-      if(args.Length > 1) {
-        types.AddRange(args[1].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries));
-        typeWildcard = types.Contains("*");
-      }
       Dictionary<string, List<string>> heroTypes = new Dictionary<string, List<string>>();
       Dictionary<string, bool> heroWildcard = new Dictionary<string, bool>();
       Dictionary<string, Dictionary<string, List<ulong>>> heroIgnore = new Dictionary<string, Dictionary<string, List<ulong>>>();

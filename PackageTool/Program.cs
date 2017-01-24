@@ -41,6 +41,7 @@ namespace PackageTool {
       HashSet<ulong> packageIndent = new HashSet<ulong>();
       HashSet<string> contentKeys = new HashSet<string>();
       HashSet<ulong> dumped = new HashSet<ulong>();
+      HashSet<ulong> fileKeys = new HashSet<ulong>();
       string apmName = null;
       bool dumpAll = false;
       bool dry = false;
@@ -82,10 +83,13 @@ namespace PackageTool {
           case 'I':
             contentKeys.Add(arg.Substring(1).ToUpperInvariant());
             break;
+          case 'f':
+             fileKeys.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
+             break;
         }
       }
 
-      if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count == 0 && !dumpAll) {
+      if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count + fileKeys.Count == 0 && !dumpAll) {
         Console.Error.WriteLine("Must have at least 1 query");
         return;
       }
@@ -101,11 +105,45 @@ namespace PackageTool {
       Console.Out.WriteLine("Extracting...");
 
       HashSet<ulong> indicesExtracted = new HashSet<ulong>();
+      HashSet<ulong> CMFExtracted = new HashSet<ulong>();
       foreach(APMFile apm in ow.APMFiles) {
         if(apmName != null && !Path.GetFileName(apm.Name).ToLowerInvariant().Contains(apmName)) {
           continue;
         }
         Console.Out.WriteLine("Iterating {0}", Path.GetFileName(apm.Name));
+        foreach(ulong key in fileKeys) {
+          if(apm.CMFMap.ContainsKey(key) || dumpAll) {
+            ulong rtype = OWLib.APM.keyToTypeID(key);
+            ulong rindex = OWLib.APM.keyToIndexID(key);
+            string ofn = $"{output}{Path.DirectorySeparatorChar}cmf{Path.DirectorySeparatorChar}{rtype:X3}{Path.DirectorySeparatorChar}";
+            if(!dry && !Directory.Exists(ofn)) {
+              Console.Out.WriteLine("Created directory {0}", ofn);
+              Directory.CreateDirectory(ofn);
+            }
+            ofn = $"{ofn}{rindex:X12}.{rtype:X3}";
+            if(!dry) {
+              using(Stream outputStream = File.Open(ofn, FileMode.Create, FileAccess.Write)) {
+                EncodingEntry recordEncoding;
+                if(!handler.Encoding.GetEntry(apm.CMFMap[key].HashKey, out recordEncoding)) {
+                  Console.Error.WriteLine("Cannot open file {0} -- malformed CMF?", ofn);
+                  continue;
+                }
+
+                try {
+                  using(Stream recordStream = handler.OpenFile(recordEncoding.Key)) {
+                    CopyBytes(recordStream, outputStream, recordEncoding.Size);
+                  }
+                  Console.Out.WriteLine("Saved file {0}", ofn);
+                } catch {
+                  Console.Error.WriteLine("Cannot open file {0} -- encryption", ofn);
+                }
+              }
+            }
+          }
+        }
+        if(dumpAll) {
+          continue;
+        }
         for(long i = 0; i < apm.Packages.LongLength; ++i) {
           if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count == 0 && !dumpAll) {
             return;

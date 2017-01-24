@@ -421,7 +421,7 @@ namespace CASCExplorer {
     private uint[][] dependencies;
     private List<CMFHashData> cmfHashList;
     private List<CMFEntry> cmfEntries;
-    private Dictionary<ulong, MD5Hash> cmfMap;
+    private Dictionary<ulong, CMFHashData> cmfMap;
 
     public APMPackage[] Packages => packages;
     public APMEntry[] Entries => entries;
@@ -429,7 +429,7 @@ namespace CASCExplorer {
     public PackageIndexRecord[][] Records => records;
     public List<CMFHashData> CMFHashList => cmfHashList;
     public List<CMFEntry> CMFEntries => cmfEntries;
-    public Dictionary<ulong, MD5Hash> CMFMap => CMFMap;
+    public Dictionary<ulong, CMFHashData> CMFMap => cmfMap;
 
     public string Name
     {
@@ -509,13 +509,13 @@ namespace CASCExplorer {
 
             uint HashCount = (uint)((cmfStream.Length - cmfStream.Position) / Marshal.SizeOf(typeof(CMFHashData)));
             cmfHashList = new List<CMFHashData>((int)HashCount);
-            cmfMap = new Dictionary<ulong, MD5Hash>((int)HashCount);
+            cmfMap = new Dictionary<ulong, CMFHashData>((int)HashCount);
             //Console.Out.WriteLine("CMF HashCount: {0}", HashCount);
             for(uint i = 0; i < HashCount; i++) {
               CMFHashData a = cmfreader.Read<CMFHashData>();
               // Console.Out.WriteLine("Hash #{0}:\n\tID: {1:X},\n\tFlags: {2:X},\n\tKey: {3:X}", i, a.id, a.flags, a.HashKey.ToHexString());
               cmfHashList.Add(a);
-              cmfMap[a.id] = a.HashKey;
+              cmfMap[a.id] = a;
             }
           }
         }
@@ -529,7 +529,7 @@ namespace CASCExplorer {
 
         for(int j = 0; j < packages.Length; j++) {
           packages[j] = new APMPackage(reader.Read<APMPackageItem>());
-          packages[j].indexContentKey = cmfMap[packages[j].packageKey];
+          packages[j].indexContentKey = cmfMap[packages[j].packageKey].HashKey;
           //Console.Out.WriteLine("package[{0}]:\n\tlocalKey: {1:X}, \n\tprimaryKey: {2:X}, \n\texternalKey: {3:X}, \n\tencryptionKeyHash: {4:X}, \n\tpackageKey: {5:X}, \n\tunk_0: {6:X}, \n\tunk_1: {7:X}, \n\tunk_2: {8:X}", j, packages[j].localKey, packages[j].primaryKey, packages[j].externalKey, packages[j].encryptionKeyHash, packages[j].packageKey, packages[j].unk_0, packages[j].unk_1, packages[j].unk_2);
 
           EncodingEntry pkgIndexEnc;
@@ -556,7 +556,7 @@ namespace CASCExplorer {
 
             indexes[j] = new PackageIndex(pkgIndexReader.Read<PackageIndexItem>());
             try {
-              indexes[j].bundleContentKey = cmfMap[indexes[j].bundleKey];
+              indexes[j].bundleContentKey = cmfMap[indexes[j].bundleKey].HashKey;
             } catch { }
             // Console.Out.WriteLine("index[{0}]:\n\trecordsOffset: {1}|{1:X}\n\tunkOffset_0: {2}|{2:X}\n\tunk_1300_0: {3}|{3:X}\n\tdepsOffset: {4}|{4:X}\n\tunkOffset_1: {5}|{5:X}\n\tunk_0: {6}|{6:X}", j, indexes[j].recordsOffset, indexes[j].unkOffset_0, indexes[j].unk_1300_0, indexes[j].depsOffset, indexes[j].unkOffset_1, indexes[j].unk_0);
             // Logger.WriteLine("index[{0}]: {1} {2}", j, indexes[j].numRecords, indexes[j].numUnk_0);
@@ -568,7 +568,7 @@ namespace CASCExplorer {
 
                 for(int k = 0; k < recs.Length; k++) {
                   recs[k] = new PackageIndexRecord(recordsReader.Read<PackageIndexRecordItem>());
-                  recs[k].ContentKey = cmfMap[recs[k].Key];
+                  recs[k].ContentKey = cmfMap[recs[k].Key].HashKey;
                   EncodingEntry encInfo;
                   if(casc.Encoding.GetEntry(recs[k].ContentKey, out encInfo)) {
                     recs[k].Size = encInfo.Size; // WHY DOES THIS WORK? ARE BUNDLED FILES NOT ACTUALLY IN A BUNDLE ANYMORE?
