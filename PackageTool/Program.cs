@@ -86,6 +86,9 @@ namespace PackageTool {
           case 'f':
              fileKeys.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
              break;
+          case 'F':
+             fileKeys.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
+             break;
         }
       }
 
@@ -111,6 +114,7 @@ namespace PackageTool {
           continue;
         }
         Console.Out.WriteLine("Iterating {0}", Path.GetFileName(apm.Name));
+        HashSet<ulong> removed = new HashSet<ulong>();
         foreach(ulong key in fileKeys) {
           if(apm.CMFMap.ContainsKey(key) || dumpAll) {
             ulong rtype = OWLib.APM.keyToTypeID(key);
@@ -134,6 +138,7 @@ namespace PackageTool {
                     CopyBytes(recordStream, outputStream, recordEncoding.Size);
                   }
                   Console.Out.WriteLine("Saved file {0}", ofn);
+                  removed.Add(key);
                 } catch {
                   Console.Error.WriteLine("Cannot open file {0} -- encryption", ofn);
                 }
@@ -141,11 +146,14 @@ namespace PackageTool {
             }
           }
         }
+        foreach(ulong key in removed) {
+          fileKeys.Remove(key);
+        }
         if(dumpAll) {
           continue;
         }
         for(long i = 0; i < apm.Packages.LongLength; ++i) {
-          if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count == 0 && !dumpAll) {
+          if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count + fileKeys.Count == 0 && !dumpAll) {
             return;
           }
 

@@ -101,7 +101,8 @@
     <Compile Include="Types\STUD\Pose.cs" />
     <Compile Include="Types\STUD\MapMaster.cs" />
     <Compile Include="Types\STUD\SoundBinding.cs" />
-    <Compile Include="Types\STUD\SoundMaster.cs" />
+    <Compile Include="Types\STUD\SoundBank.cs" />
+    <Compile Include="Types\STUD\SoundMasterList.cs" />
     <Compile Include="Types\STUD\SoundOwner.cs" />
     <Compile Include="Types\STUD\TextureOverrideMaster.cs" />
     <Compile Include="Types\STUD\Binding\ViewModelRecord.cs" />

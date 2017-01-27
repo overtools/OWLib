@@ -193,7 +193,7 @@ namespace CASCExplorer {
         if(Path.GetExtension(name) == ".cmf" && name.Contains("RDEV")) {
           MD5Hash cmfMD5 = filedata[0].ToByteArray().ToMD5();
           EncodingEntry apmEnc;
-          if(!name.Contains("L" + LanguageScan)) {
+          if(LanguageScan != null && !name.Contains("L" + LanguageScan)) {
             continue;
           }
 
@@ -223,9 +223,12 @@ namespace CASCExplorer {
         //Console.Out.WriteLine("Array[{0}]: {1}", i, array[i]);
         string name = filedata[4];
 
-        if(Path.GetExtension(name) == ".apm" && name.Contains("RDEV")) {
+        if(Path.GetExtension(name) == ".apm") {
           APMNames.Add(Path.GetFileNameWithoutExtension(name));
-          if(!name.Contains("L" + LanguageScan)) {
+          if(!name.Contains("RDEV")) {
+            continue;
+          }
+          if(LanguageScan != null && !name.Contains("L" + LanguageScan)) {
             continue;
           }
           // add apm file for dev purposes

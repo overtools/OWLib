@@ -52,7 +52,7 @@
     <Compile Include="Extract.cs" />
     <Compile Include="ExtractLogic\Icon.cs" />
     <Compile Include="ExtractLogic\Skin.cs" />
-    <Compile Include="ExtractLogic\VoiceLine.cs" />
+    <Compile Include="ExtractLogic\Sound.cs" />
     <Compile Include="ExtractLogic\Spray.cs" />
     <Compile Include="ExtractMap.cs" />
     <Compile Include="DumpAchievement.cs" />
