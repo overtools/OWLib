@@ -24,14 +24,13 @@ namespace OverTool {
         Console.Out.WriteLine("Options:");
         Console.Out.WriteLine("\tL - Specify a language to extract. Example: -L{0}", validLangs[0]);
         Console.Out.WriteLine("Modes:");
-        Console.Out.WriteLine("\tt - List Cosmetics");
-        Console.Out.WriteLine("\tx - Extract Cosmetics");
+        Console.Out.WriteLine("\tt - List Items");
         Console.Out.WriteLine("\tm - List Maps");
-        Console.Out.WriteLine("\tM - Extract Maps");
         Console.Out.WriteLine("\tn - List NPCs");
+        Console.Out.WriteLine("\tx - Extract Items");
+        Console.Out.WriteLine("\tM - Extract Maps");
         Console.Out.WriteLine("\tN - Extract NPCs");
-        Console.Out.WriteLine("\ta - List Achievements");
-        Console.Out.WriteLine("\tA - Extract Achievement Rewards and Icons");
+        Console.Out.WriteLine("\tG - Extract General Items");
         Console.Out.WriteLine("\tv - Extract Hero Sounds");
         Console.Out.WriteLine("\ts - Extract Strings");
         Console.Out.WriteLine("\tZ - List Keys");
@@ -89,10 +88,8 @@ namespace OverTool {
         optfn = ListNPC.Parse;
       } else if(opt == 'N') {
         optfn = DumpNPC.Parse;
-      } else if(opt == 'a') {
-        optfn = ListAchievement.Parse;
-      } else if(opt == 'A') {
-        optfn = DumpAchievement.Parse;
+      } else if(opt == 'G') {
+        optfn = DumpGeneral.Parse;
       } else {
         Console.Error.WriteLine("UNSUPPORTED OPT {0}", opt);
         return;
@@ -106,6 +103,7 @@ namespace OverTool {
       track.Add(0x90, new List<ulong>());
       track.Add(0x3, new List<ulong>());
       track.Add(0x68, new List<ulong>());
+      track.Add(0xA5, new List<ulong>());
 
       Dictionary<ulong, Record> map = new Dictionary<ulong, Record>();
 
