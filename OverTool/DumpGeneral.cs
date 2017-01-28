@@ -33,7 +33,7 @@ namespace OverTool {
 
     public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       if(args.Length < 1) {
-        Console.Out.WriteLine("Usage: OverTool.exe overwatch A output");
+        Console.Out.WriteLine("Usage: OverTool.exe overwatch G output");
       }
       string output = args[0];
       List<char> blank = new List<char>();

@@ -90,6 +90,8 @@ namespace OverTool {
         optfn = DumpNPC.Parse;
       } else if(opt == 'G') {
         optfn = DumpGeneral.Parse;
+      } else if(opt == '~') {
+        optfn = DebugTrackInfo;
       } else {
         Console.Error.WriteLine("UNSUPPORTED OPT {0}", opt);
         return;
@@ -148,11 +150,6 @@ namespace OverTool {
               record = record,
             };
             map.Add(record.Key, rec);
-
-            ushort id = (ushort)APM.keyToTypeID(record.Key);
-            if(track.ContainsKey(id)) {
-              track[id].Add(record.Key);
-            }
           }
         }
       }
@@ -162,6 +159,11 @@ namespace OverTool {
           continue;
         }
         foreach(KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {
+          ushort id = (ushort)APM.keyToTypeID(pair.Value.id);
+          if(track.ContainsKey(id)) {
+            track[id].Add(pair.Value.id);
+          }
+
           if(map.ContainsKey(pair.Key)) {
             continue;
           }
@@ -173,6 +175,7 @@ namespace OverTool {
           rec.record.ContentKey = pair.Value.HashKey;
           rec.package = new APMPackage(new APMPackageItem());
           rec.index = new PackageIndex(new PackageIndexItem());
+
           EncodingEntry enc;
           if(handler.Encoding.GetEntry(pair.Value.HashKey, out enc)) {
             rec.record.Size = enc.Size;
@@ -213,6 +216,12 @@ namespace OverTool {
       optfn(track, map, handler, args.Skip(2).ToArray());
       if(System.Diagnostics.Debugger.IsAttached) {
         System.Diagnostics.Debugger.Break();
+      }
+    }
+
+    private static void DebugTrackInfo(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+      foreach(KeyValuePair<ushort, List<ulong>> pair in track) {
+        Console.Out.WriteLine($"{pair.Key:X3} {pair.Value.Count} entries");
       }
     }
   }
