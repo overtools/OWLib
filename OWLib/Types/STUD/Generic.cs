@@ -23,7 +23,6 @@ namespace OWLib.Types.STUD {
   }
 
   public class GenericRecordReference : ISTUDInstance {
-    public ulong Key => 0x9284FC578E1984E3;
     public uint Id => 0x528F2F94;
     public string Name => "GenericRecordReference";
 

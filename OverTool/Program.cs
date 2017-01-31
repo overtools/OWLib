@@ -24,14 +24,13 @@ namespace OverTool {
         Console.Out.WriteLine("Options:");
         Console.Out.WriteLine("\tL - Specify a language to extract. Example: -L{0}", validLangs[0]);
         Console.Out.WriteLine("Modes:");
-        Console.Out.WriteLine("\tt - List Cosmetics");
-        Console.Out.WriteLine("\tx - Extract Cosmetics");
+        Console.Out.WriteLine("\tt - List Items");
         Console.Out.WriteLine("\tm - List Maps");
-        Console.Out.WriteLine("\tM - Extract Maps");
         Console.Out.WriteLine("\tn - List NPCs");
+        Console.Out.WriteLine("\tx - Extract Items");
+        Console.Out.WriteLine("\tM - Extract Maps");
         Console.Out.WriteLine("\tN - Extract NPCs");
-        Console.Out.WriteLine("\ta - List Achievements");
-        Console.Out.WriteLine("\tA - Extract Achievement Rewards and Icons");
+        Console.Out.WriteLine("\tG - Extract General Items");
         Console.Out.WriteLine("\tv - Extract Hero Sounds");
         Console.Out.WriteLine("\ts - Extract Strings");
         Console.Out.WriteLine("\tZ - List Keys");
@@ -89,10 +88,10 @@ namespace OverTool {
         optfn = ListNPC.Parse;
       } else if(opt == 'N') {
         optfn = DumpNPC.Parse;
-      } else if(opt == 'a') {
-        optfn = ListAchievement.Parse;
-      } else if(opt == 'A') {
-        optfn = DumpAchievement.Parse;
+      } else if(opt == 'G') {
+        optfn = DumpGeneral.Parse;
+      } else if(opt == '~') {
+        optfn = DebugTrackInfo;
       } else {
         Console.Error.WriteLine("UNSUPPORTED OPT {0}", opt);
         return;
@@ -106,6 +105,7 @@ namespace OverTool {
       track.Add(0x90, new List<ulong>());
       track.Add(0x3, new List<ulong>());
       track.Add(0x68, new List<ulong>());
+      track.Add(0xA5, new List<ulong>());
 
       Dictionary<ulong, Record> map = new Dictionary<ulong, Record>();
 
@@ -130,9 +130,13 @@ namespace OverTool {
         if(!apm.Name.ToLowerInvariant().Contains("rdev")) {
           continue; // skip
         }
+        //Console.Out.WriteLine("Package Length: {0}", apm.Packages.Length);
         for(int i = 0; i < apm.Packages.Length; ++i) {
+          //Console.Out.WriteLine("i: {0}",i);
           APMPackage package = apm.Packages[i];
+          //Console.Out.WriteLine("Package: {0}", package);
           PackageIndex index = apm.Indexes[i];
+          //Console.Out.WriteLine("Package Index: {0}", index);
           PackageIndexRecord[] records = apm.Records[i];
           for(long j = 0; j < records.LongLength; ++j) {
             PackageIndexRecord record = records[j];
@@ -146,13 +150,41 @@ namespace OverTool {
               record = record,
             };
             map.Add(record.Key, rec);
-
-            ushort id = (ushort)APM.keyToTypeID(record.Key);
-            if(track.ContainsKey(id)) {
-              track[id].Add(record.Key);
-            }
           }
         }
+      }
+      int origLength = map.Count;
+      foreach(APMFile apm in ow.APMFiles) {
+        if(!apm.Name.ToLowerInvariant().Contains("rdev")) {
+          continue;
+        }
+        foreach(KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {
+          ushort id = (ushort)APM.keyToTypeID(pair.Value.id);
+          if(track.ContainsKey(id)) {
+            track[id].Add(pair.Value.id);
+          }
+
+          if(map.ContainsKey(pair.Key)) {
+            continue;
+          }
+          Record rec = new Record {
+            record = new PackageIndexRecord()
+          };
+          rec.record.Flags = 0;
+          rec.record.Key = pair.Value.id;
+          rec.record.ContentKey = pair.Value.HashKey;
+          rec.package = new APMPackage(new APMPackageItem());
+          rec.index = new PackageIndex(new PackageIndexItem());
+
+          EncodingEntry enc;
+          if(handler.Encoding.GetEntry(pair.Value.HashKey, out enc)) {
+            rec.record.Size = enc.Size;
+            map.Add(pair.Key, rec);
+          }
+        }
+      }
+      if(origLength != map.Count) {
+        Console.Out.WriteLine("Warning: {0} packageless files", map.Count - origLength);
       }
 
       if(enableKeyDetection) {
@@ -184,6 +216,12 @@ namespace OverTool {
       optfn(track, map, handler, args.Skip(2).ToArray());
       if(System.Diagnostics.Debugger.IsAttached) {
         System.Diagnostics.Debugger.Break();
+      }
+    }
+
+    private static void DebugTrackInfo(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+      foreach(KeyValuePair<ushort, List<ulong>> pair in track) {
+        Console.Out.WriteLine($"{pair.Key:X3} {pair.Value.Count} entries");
       }
     }
   }

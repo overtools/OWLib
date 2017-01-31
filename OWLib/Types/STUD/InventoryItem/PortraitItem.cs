@@ -7,9 +7,9 @@ namespace OWLib.Types.STUD.InventoryItem {
     public struct PortraitItemData {
       public OWRecord portrait;
       public OWRecord portrait2;
-      public uint unk1;
-      public uint index;
-      public uint unk2;
+      public uint tier;
+      public ushort bracket;
+      public ushort star;
     }
     
     public uint Id => 0x3ECCEB5D;

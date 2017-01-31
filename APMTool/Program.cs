@@ -36,7 +36,7 @@ namespace APMTool {
       }
 
       object[] query = null;
-      if(flag[0] == 'f') {
+      if(flag[0] == 'f' || flag[0] == 'C') {
         object[] t = new object[6] { null, null, null, null, null, null };
 
         List<ulong> id = new List<ulong>();
@@ -143,6 +143,41 @@ namespace APMTool {
           continue;
         }
 
+        if(flag[0] == 'C') {
+          foreach(ulong key in apm.CMFMap.Keys) {
+            ulong rtype = OWLib.APM.keyToTypeID(key);
+            ulong rindex = OWLib.APM.keyToIndexID(key);
+            ulong rindex2 = OWLib.APM.keyToIndex(key);
+
+            bool check1 = ((List<ulong>)query[0]).Count == 0;
+            bool check2 = ((List<ulong>)query[1]).Count == 0;
+            bool check5 = ((List<ulong>)query[5]).Count == 0;
+
+            if(((List<ulong>)query[0]).Count > 0 && ((List<ulong>)query[0]).Contains(rindex)) { // if index is not in i
+              check1 = true;
+            }
+            if(((List<ulong>)query[1]).Count > 0 && ((List<ulong>)query[1]).Contains(rtype)) { // if type is not in t
+              check2 = true;
+            }
+            if(((List<ulong>)query[5]).Count > 0 && ((List<ulong>)query[5]).Contains(rindex2)) { // if type is not in t
+              check5 = true;
+            }
+
+            bool check = check1 && check2 && check5;
+            if(check) {
+              Console.Out.WriteLine("Found {0:X12}.{1:X3} in APM {2}", rindex, rtype, apm.Name);
+            }
+          }
+        } else if(flag[0] == 't') {
+          foreach(ulong key in apm.CMFMap.Keys) {
+            ((HashSet<ulong>)query[0]).Add(key >> 48);
+          }
+        }
+
+        if(flag[0] == 'C' || flag[0] == 't') {
+          continue;
+        }
+
         for(long i = 0; i < apm.Packages.LongLength; ++i) {
           APMPackage package = apm.Packages[i];
           PackageIndexRecord[] records = apm.Records[i];
@@ -178,9 +213,7 @@ namespace APMTool {
             ulong rindex = OWLib.APM.keyToIndexID(record.Key);
             ulong rindex2 = OWLib.APM.keyToIndex(record.Key);
 
-            if(flag[0] == 't') {
-              ((HashSet<ulong>)query[0]).Add(record.Key >> 48);
-            } else if(flag[0] == 'f') {
+            if(flag[0] == 'f') {
               bool check1 = ((List<ulong>)query[0]).Count == 0;
               bool check2 = ((List<ulong>)query[1]).Count == 0;
               bool check3 = query[2] == null;

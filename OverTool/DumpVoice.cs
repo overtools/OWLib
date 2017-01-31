@@ -9,22 +9,33 @@ namespace OverTool {
   class DumpVoice {
     public static void Save(string path, List<ulong> soundData, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace = null) {
       HashSet<ulong> done = new HashSet<ulong>();
-      List<ulong> sounds = ExtractLogic.VoiceLine.FlattenSounds(soundData, map, handler, replace);
+      List<ulong> sounds = ExtractLogic.Sound.FlattenSounds(soundData, map, handler, replace);
       foreach(ulong key in sounds) {
         if(!done.Add(key)) {
           continue;
         }
+        ulong typ = APM.keyToTypeID(key);
+        string ext = "wem";
+        if(typ == 0x043) {
+          ext = "bnk";
+        }
+        if(typ == 0x0BB) {
+          ext = "vid.wem";
+        }
+        if(typ == 0x03F) {
+          ext = "sfx.wem";
+        }
         string ooutputPath = $"{path}{APM.keyToIndexID(key):X12}";
         string outputPath = $"{path}{APM.keyToIndexID(key):X12}";
         int sigma = 0;
-        while(File.Exists(outputPath + ".wem")) {
+        while(File.Exists(outputPath + "." + ext)) {
           sigma++;
           outputPath = ooutputPath + $"_{sigma:X}";
         }
-        outputPath += ".wem";
+        outputPath += "." + ext;
         using(Stream soundStream = Util.OpenFile(map[key], handler)) {
           using(Stream outputStream = File.Open(outputPath, FileMode.Create)) {
-            ExtractLogic.VoiceLine.CopyBytes(soundStream, outputStream, (int)soundStream.Length);
+            ExtractLogic.Sound.CopyBytes(soundStream, outputStream, (int)soundStream.Length);
             Console.Out.WriteLine("Wrote file {0}", outputPath);
           }
         }
@@ -68,7 +79,7 @@ namespace OverTool {
           }
         }
         Console.Out.WriteLine("Dumping voice bites for hero {0}", heroName);
-        List<ulong> soundData = ExtractLogic.VoiceLine.FindSounds(master, track, map, handler);
+        List<ulong> soundData = ExtractLogic.Sound.FindSounds(master, track, map, handler);
         string path = string.Format("{0}{1}{2}{1}{3}{1}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), "Sound Dump");
         if(!Directory.Exists(path)) {
           Directory.CreateDirectory(path);

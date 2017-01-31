@@ -8,7 +8,7 @@ using OWLib.Types.STUD.Binding;
 using OWLib.Types.STUD.GameParam;
 
 namespace OverTool.ExtractLogic {
-  class VoiceLine {
+  class Sound {
     public static void CopyBytes(Stream i, Stream o, int sz) {
       byte[] buffer = new byte[sz];
       i.Read(buffer, 0, sz);
@@ -34,6 +34,10 @@ namespace OverTool.ExtractLogic {
           continue;
         }
         if(!done.Add(skey)) {
+          continue;
+        }
+        if(typ == 0x03F || typ == 0x043 || typ == 0x0B2 || typ == 0x0BB) {
+          ret.Add(skey);
           continue;
         }
         using(Stream studStream = Util.OpenFile(map[skey], handler)) {
@@ -90,12 +94,38 @@ namespace OverTool.ExtractLogic {
         if(instance.Name == stud.Manager.GetName(typeof(GenericRecordReference))) {
           GenericRecordReference inst = (GenericRecordReference)instance;
           FindSoundsEx(inst.Reference.key.key, done, ret, map, handler, replace);
-        } else if(instance.Name == stud.Manager.GetName(typeof(SoundMasterReference))) {
-          SoundMasterReference smr = (SoundMasterReference)instance;
-          if(!ret.Contains(smr.Data.sound.key)) {
-            ret.Add(smr.Data.sound.key);
+        } else if(instance.Name == stud.Manager.GetName(typeof(SoundMasterList))) {
+          SoundMasterList smr = (SoundMasterList)instance;
+          foreach(ulong key in smr.Sound) {
+            if(!ret.Contains(key)) {
+              ret.Add(key);
+            }
           }
-          FindSoundsEx(smr.Data.owner.key, done, ret, map, handler, replace);
+          if(smr.Owner != null) {
+            foreach(ulong key in smr.Owner) {
+              FindSoundsEx(key, done, ret, map, handler, replace);
+            }
+          }
+        } else if(instance.Name == stud.Manager.GetName(typeof(SoundBindingReference))) {
+          SoundBindingReference smr = (SoundBindingReference)instance;
+          if(!ret.Contains(smr.Reference.sound.key)) {
+            ret.Add(smr.Reference.sound.key);
+          }
+        } else if(instance.Name == stud.Manager.GetName(typeof(SoundOwner))) {
+          SoundOwner owner = (SoundOwner)instance;
+          FindSoundsEx(owner.Data.soundbank.key, done, ret, map, handler, replace);
+        } else if(instance.Name == stud.Manager.GetName(typeof(SoundBank))) {
+          SoundBank sb = (SoundBank)instance;
+          if(!ret.Contains(sb.Data.soundbank.key)) {
+            ret.Add(sb.Data.soundbank.key);
+          }
+          if(sb.SFX != null) {
+            foreach(OWRecord record in sb.SFX) {
+              if(!ret.Contains(record.key)) {
+                ret.Add(record.key);
+              }
+            }
+          }
         } else if(instance.Name == stud.Manager.GetName(typeof(ParameterRecord))) {
           ParameterRecord parameter = (ParameterRecord)instance;
           foreach(ParameterRecord.ParameterEntry entry in parameter.Parameters) {

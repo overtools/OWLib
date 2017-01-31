@@ -27,8 +27,6 @@ namespace OverTool {
     }
 
     public static Stream OpenFile(Record record, CASCHandler handler, bool recur = true) {
-      MemoryStream ms = new MemoryStream(record.record.Size);
-
       long offset = 0;
       EncodingEntry enc;
       if(((ContentFlags)record.record.Flags & ContentFlags.Bundle) == ContentFlags.Bundle) {
@@ -37,6 +35,7 @@ namespace OverTool {
       } else {
         handler.Encoding.GetEntry(record.record.ContentKey, out enc);
       }
+      MemoryStream ms = new MemoryStream(record.record.Size);
 
       try {
         Stream fstream = handler.OpenFile(enc.Key);

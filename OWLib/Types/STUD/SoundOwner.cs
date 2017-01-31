@@ -9,14 +9,10 @@ namespace OWLib.Types.STUD {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct SoundOwnerData {
       public STUDInstanceInfo instance;
-      public OWRecord sound;
-      public OWRecord unk1;
+      public OWRecord unk0;
       public OWRecord soundbank;
       public OWRecord unk2;
       public OWRecord unk3;
-      public ulong unk4;
-      public ulong unk5;
-      public float volume;
     }
 
     private SoundOwnerData data;

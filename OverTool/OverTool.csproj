@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\dist\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -50,13 +50,13 @@
     <Compile Include="DumpTex.cs" />
     <Compile Include="DumpVoice.cs" />
     <Compile Include="Extract.cs" />
+    <Compile Include="ExtractLogic\Portrait.cs" />
     <Compile Include="ExtractLogic\Icon.cs" />
     <Compile Include="ExtractLogic\Skin.cs" />
-    <Compile Include="ExtractLogic\VoiceLine.cs" />
+    <Compile Include="ExtractLogic\Sound.cs" />
     <Compile Include="ExtractLogic\Spray.cs" />
     <Compile Include="ExtractMap.cs" />
-    <Compile Include="DumpAchievement.cs" />
-    <Compile Include="ListAchievement.cs" />
+    <Compile Include="DumpGeneral.cs" />
     <Compile Include="ListNPC.cs" />
     <Compile Include="ListInventory.cs" />
     <Compile Include="ListMap.cs" />

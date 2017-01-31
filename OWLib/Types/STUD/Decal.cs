@@ -6,18 +6,14 @@ namespace OWLib.Types.STUD {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct DecalHeader {
       public STUDInstanceInfo instance;
-      public ulong offset;
+      public ulong unk0;
       public ulong unk1;
-      public ulong unk2;
+      public ulong textures;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct DecalRecord {
-      public ulong unk1;
-      public OWRecord f008A;
-      public OWRecord f008B;
       public OWRecord definiton;
-      public ulong unk2;
     }
 
     public uint Id => 0xFF82DF73;
@@ -33,7 +29,7 @@ namespace OWLib.Types.STUD {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
         header = reader.Read<DecalHeader>();
 
-        input.Position = (long)header.offset;
+        input.Position = (long)header.textures;
         STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
         records = new DecalRecord[ptr.count];
         input.Position = (long)ptr.offset;
