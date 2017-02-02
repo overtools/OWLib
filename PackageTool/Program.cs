@@ -42,6 +42,7 @@ namespace PackageTool {
       HashSet<string> contentKeys = new HashSet<string>();
       HashSet<ulong> dumped = new HashSet<ulong>();
       HashSet<ulong> fileKeys = new HashSet<ulong>();
+      HashSet<ulong> types = new HashSet<ulong>();
       string apmName = null;
       bool dumpAll = false;
       bool dry = false;
@@ -84,19 +85,22 @@ namespace PackageTool {
             contentKeys.Add(arg.Substring(1).ToUpperInvariant());
             break;
           case 'f':
-             fileKeys.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
-             break;
+            fileKeys.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
+            break;
           case 'F':
-             fileKeys.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
-             break;
+            fileKeys.Add(ulong.Parse(arg.Substring(1), NumberStyles.Number));
+            break;
+          case 'M':
+            types.Add(ulong.Parse(arg.Substring(1), NumberStyles.HexNumber));
+            break;
         }
       }
 
-      if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count + fileKeys.Count == 0 && !dumpAll) {
+      if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count + fileKeys.Count + types.Count == 0 && !dumpAll) {
         Console.Error.WriteLine("Must have at least 1 query");
         return;
       }
-      
+
       CASCConfig config = CASCConfig.LoadLocalStorageConfig(root);
       CASCHandler handler = CASCHandler.OpenStorage(config);
       OwRootHandler ow = handler.Root as OwRootHandler;
@@ -116,7 +120,7 @@ namespace PackageTool {
         Console.Out.WriteLine("Iterating {0}", Path.GetFileName(apm.Name));
         HashSet<ulong> removed = new HashSet<ulong>();
         foreach(ulong key in fileKeys) {
-          if(apm.CMFMap.ContainsKey(key) || dumpAll) {
+          if(apm.CMFMap.ContainsKey(key)) {
             ulong rtype = OWLib.APM.keyToTypeID(key);
             ulong rindex = OWLib.APM.keyToIndexID(key);
             string ofn = $"{output}{Path.DirectorySeparatorChar}cmf{Path.DirectorySeparatorChar}{rtype:X3}{Path.DirectorySeparatorChar}";
@@ -149,111 +153,146 @@ namespace PackageTool {
         foreach(ulong key in removed) {
           fileKeys.Remove(key);
         }
-        if(dumpAll) {
-          continue;
-        }
-        for(long i = 0; i < apm.Packages.LongLength; ++i) {
-          if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count + fileKeys.Count == 0 && !dumpAll) {
-            return;
-          }
-
-          APMPackage package = apm.Packages[i];
-
-          if(!dumpAll) {
-            bool ret = true;
-            if(packageKeys.Count > 0 && packageKeys.Contains(package.packageKey)) {
-              ret = false;
-            }
-
-            if(ret && contentKeys.Count > 0 && contentKeys.Contains(package.indexContentKey.ToHexString().ToUpperInvariant())) {
-              ret = false;
-            }
-            
-            if(ret && packageIndices.Count > 0 && packageIndices.Contains(OWLib.APM.keyToIndex(package.packageKey)) && !indicesExtracted.Contains(package.packageKey)) {
-              ret = false;
-            }
-
-            if(ret && packageIndent.Count > 0 && packageIndent.Contains(OWLib.APM.keyToIndexID(package.packageKey))) {
-              ret = false;
-            }
-
-            if(ret) {
-              continue;
-            }
-          }
-
-          packageKeys.Remove(package.packageKey);
-          indicesExtracted.Add(package.packageKey);
-          packageIndent.Remove(OWLib.APM.keyToIndexID(package.packageKey));
-          contentKeys.Remove(package.indexContentKey.ToHexString().ToUpperInvariant());
-
-          PackageIndex index = apm.Indexes[i];
-          PackageIndexRecord[] records = apm.Records[i];
-
-          string o = null;
-          if(dumpAll) {
-            o = output;
-          } else {
-            o = $"{output}{OWLib.APM.keyToIndexID(package.packageKey):X12}{Path.DirectorySeparatorChar}";
-          }
-
-          EncodingEntry bundleEncoding;
-          bool allowBundle = handler.Encoding.GetEntry(index.bundleContentKey, out bundleEncoding);
-
-          Stream bundleStream = null;
-          if(allowBundle) {
-            try {
-              bundleStream = handler.OpenFile(bundleEncoding.Key);
-            } catch {
-              Console.Error.WriteLine("Cannot open bundle {0:X16} -- encryption", index.bundleKey);
-              continue;
-            }
-          }
-          foreach(PackageIndexRecord record in records) {
-            if(dumpAll && !dumped.Add(record.Key)) {
-              continue;
-            }
-            ulong rtype = OWLib.APM.keyToTypeID(record.Key);
-            ulong rindex = OWLib.APM.keyToIndexID(record.Key);
-            string ofn = $"{o}{rtype:X3}{Path.DirectorySeparatorChar}";
-            if(!dry && !Directory.Exists(ofn)) {
-              Console.Out.WriteLine("Created directory {0}", ofn);
-              Directory.CreateDirectory(ofn);
-            }
-            ofn = $"{ofn}{rindex:X12}.{rtype:X3}";
-            if(!dry) {
-              using(Stream outputStream = File.Open(ofn, FileMode.Create, FileAccess.Write)) {
-                if(((ContentFlags)record.Flags & ContentFlags.Bundle) == ContentFlags.Bundle) {
-                  if(allowBundle) {
-                    bundleStream.Position = record.Offset;
-                    CopyBytes(bundleStream, outputStream, record.Size);
-                  } else {
-                    Console.Error.WriteLine("Cannot open file {0} -- can't open bundle", ofn);
-                    continue;
-                  }
-                } else {
+        Console.WriteLine(types.Count);
+        if(types.Count > 0 || dumpAll) {
+          foreach(ulong key in apm.CMFMap.Keys) {
+            if(types.Contains(OWLib.APM.keyToTypeID(key)) || dumpAll) {
+              ulong rtype = OWLib.APM.keyToTypeID(key);
+              ulong rindex = OWLib.APM.keyToIndexID(key);
+              string ofn = $"{output}{Path.DirectorySeparatorChar}cmf{Path.DirectorySeparatorChar}{rtype:X3}{Path.DirectorySeparatorChar}";
+              if(!dry && !Directory.Exists(ofn)) {
+                Console.Out.WriteLine("Created directory {0}", ofn);
+                Directory.CreateDirectory(ofn);
+              }
+              ofn = $"{ofn}{rindex:X12}.{rtype:X3}";
+              if(!dry) {
+                using(Stream outputStream = File.Open(ofn, FileMode.Create, FileAccess.Write)) {
                   EncodingEntry recordEncoding;
-                  if(!handler.Encoding.GetEntry(record.ContentKey, out recordEncoding)) {
-                    Console.Error.WriteLine("Cannot open file {0} -- doesn't have bundle flags", ofn);
+                  if(!handler.Encoding.GetEntry(apm.CMFMap[key].HashKey, out recordEncoding)) {
+                    Console.Error.WriteLine("Cannot open file {0} -- malformed CMF?", ofn);
                     continue;
                   }
 
                   try {
                     using(Stream recordStream = handler.OpenFile(recordEncoding.Key)) {
-                      CopyBytes(recordStream, outputStream, record.Size);
+                      CopyBytes(recordStream, outputStream, recordEncoding.Size);
                     }
+                    Console.Out.WriteLine("Saved file {0}", ofn);
                   } catch {
                     Console.Error.WriteLine("Cannot open file {0} -- encryption", ofn);
                   }
                 }
               }
             }
-
-            Console.Out.WriteLine("Saved file {0}", ofn);
           }
+        }
+        if(dumpAll) {
+          continue;
+        }
+        if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count + fileKeys.Count > 0) {
+          for(long i = 0; i < apm.Packages.LongLength; ++i) {
+            if(contentKeys.Count + packageKeys.Count + packageIndices.Count + packageIndent.Count + fileKeys.Count == 0) {
+              break;
+            }
 
-          if(allowBundle) {
-            bundleStream.Dispose();
+            APMPackage package = apm.Packages[i];
+
+            if(!dumpAll) {
+              bool ret = true;
+              if(packageKeys.Count > 0 && packageKeys.Contains(package.packageKey)) {
+                ret = false;
+              }
+
+              if(ret && contentKeys.Count > 0 && contentKeys.Contains(package.indexContentKey.ToHexString().ToUpperInvariant())) {
+                ret = false;
+              }
+
+              if(ret && packageIndices.Count > 0 && packageIndices.Contains(OWLib.APM.keyToIndex(package.packageKey)) && !indicesExtracted.Contains(package.packageKey)) {
+                ret = false;
+              }
+
+              if(ret && packageIndent.Count > 0 && packageIndent.Contains(OWLib.APM.keyToIndexID(package.packageKey))) {
+                ret = false;
+              }
+
+              if(ret) {
+                continue;
+              }
+            }
+
+            packageKeys.Remove(package.packageKey);
+            indicesExtracted.Add(package.packageKey);
+            packageIndent.Remove(OWLib.APM.keyToIndexID(package.packageKey));
+            contentKeys.Remove(package.indexContentKey.ToHexString().ToUpperInvariant());
+
+            PackageIndex index = apm.Indexes[i];
+            PackageIndexRecord[] records = apm.Records[i];
+
+            string o = null;
+            if(dumpAll) {
+              o = output;
+            } else {
+              o = $"{output}{OWLib.APM.keyToIndexID(package.packageKey):X12}{Path.DirectorySeparatorChar}";
+            }
+
+            EncodingEntry bundleEncoding;
+            bool allowBundle = handler.Encoding.GetEntry(index.bundleContentKey, out bundleEncoding);
+
+            Stream bundleStream = null;
+            if(allowBundle) {
+              try {
+                bundleStream = handler.OpenFile(bundleEncoding.Key);
+              } catch {
+                Console.Error.WriteLine("Cannot open bundle {0:X16} -- encryption", index.bundleKey);
+                continue;
+              }
+            }
+            foreach(PackageIndexRecord record in records) {
+              if(dumpAll && !dumped.Add(record.Key)) {
+                continue;
+              }
+              ulong rtype = OWLib.APM.keyToTypeID(record.Key);
+              ulong rindex = OWLib.APM.keyToIndexID(record.Key);
+              string ofn = $"{o}{rtype:X3}{Path.DirectorySeparatorChar}";
+              if(!dry && !Directory.Exists(ofn)) {
+                Console.Out.WriteLine("Created directory {0}", ofn);
+                Directory.CreateDirectory(ofn);
+              }
+              ofn = $"{ofn}{rindex:X12}.{rtype:X3}";
+              if(!dry) {
+                using(Stream outputStream = File.Open(ofn, FileMode.Create, FileAccess.Write)) {
+                  if(((ContentFlags)record.Flags & ContentFlags.Bundle) == ContentFlags.Bundle) {
+                    if(allowBundle) {
+                      bundleStream.Position = record.Offset;
+                      CopyBytes(bundleStream, outputStream, record.Size);
+                    } else {
+                      Console.Error.WriteLine("Cannot open file {0} -- can't open bundle", ofn);
+                      continue;
+                    }
+                  } else {
+                    EncodingEntry recordEncoding;
+                    if(!handler.Encoding.GetEntry(record.ContentKey, out recordEncoding)) {
+                      Console.Error.WriteLine("Cannot open file {0} -- doesn't have bundle flags", ofn);
+                      continue;
+                    }
+
+                    try {
+                      using(Stream recordStream = handler.OpenFile(recordEncoding.Key)) {
+                        CopyBytes(recordStream, outputStream, record.Size);
+                      }
+                    } catch {
+                      Console.Error.WriteLine("Cannot open file {0} -- encryption", ofn);
+                    }
+                  }
+                }
+              }
+
+              Console.Out.WriteLine("Saved file {0}", ofn);
+            }
+
+            if(allowBundle) {
+              bundleStream.Dispose();
+            }
           }
         }
       }
