@@ -50,6 +50,7 @@
     <Compile Include="Dump\DumpString.cs" />
     <Compile Include="Dump\DumpTex.cs" />
     <Compile Include="Dump\DumpVoice.cs" />
+    <Compile Include="Extract\ExtractLootbox.cs" />
     <Compile Include="Extract\Extract.cs" />
     <Compile Include="ExtractLogic\Portrait.cs" />
     <Compile Include="ExtractLogic\Icon.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Extract\ExtractMap.cs" />
     <Compile Include="Dump\DumpGeneral.cs" />
     <Compile Include="IOvertool.cs" />
+    <Compile Include="List\ListLootbox.cs" />
     <Compile Include="List\ListNPC.cs" />
     <Compile Include="List\ListInventory.cs" />
     <Compile Include="List\ListMap.cs" />

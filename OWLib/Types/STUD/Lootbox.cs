@@ -8,6 +8,7 @@ namespace OWLib.Types.STUD {
     
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct MasterRecord {
+      public STUDInstanceInfo instance;
       public OWRecord model;
       public OWRecord alternate;
       public OWRecord norm;
@@ -33,7 +34,8 @@ namespace OWLib.Types.STUD {
     private Bundle[] bundles;
 
     public MasterRecord Master => master;
-    private Bundle[] Bundles => bundles;
+    public Bundle[] Bundles => bundles;
+    public string EventNameNormal => ItemEvents.GetInstance().GetEventNormal(master.eventID);
     public string EventName => ItemEvents.GetInstance().GetEvent(master.eventID);
 
     public void Read(Stream input) {

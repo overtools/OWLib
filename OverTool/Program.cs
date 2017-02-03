@@ -76,6 +76,7 @@ namespace OverTool {
       
       IOvertool tool = null;
       Dictionary<ushort, List<ulong>> track = new Dictionary<ushort, List<ulong>>();
+      track[0x90] = new List<ulong>(); // internal requirements
       foreach(IOvertool t in tools) {
         if(t.Opt == opt) {
           tool = t;

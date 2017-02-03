@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 namespace OWLib {
   public class ItemEvents {
     private Dictionary<ulong, string> events;
+    private Dictionary<ulong, string> eventsNormal;
     public IReadOnlyDictionary<ulong, string> Events => events;
+    public IReadOnlyDictionary<ulong, string> EventsNormal => eventsNormal;
 
     private static ItemEvents Instance;
 
@@ -26,6 +28,7 @@ namespace OWLib {
 
     public ItemEvents() {
       events = new Dictionary<ulong, string>();
+      eventsNormal = new Dictionary<ulong, string>();
       if(File.Exists(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\ow.events")) {
         using(Stream f = File.OpenRead(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\ow.events")) {
           using(TextReader r = new StreamReader(f)) {
@@ -34,6 +37,7 @@ namespace OWLib {
             while((line = r.ReadLine()) != null) {
               line = line.Split('#')[0].Trim();
               if(line.Length > 0) {
+                eventsNormal[idx] = line;
                 string @event = REPLACE.Replace(line.Replace(' ', '_').ToUpper(), "");
                 if(@event.Length > 0) {
                   events[idx++] = @event;
@@ -42,6 +46,14 @@ namespace OWLib {
             }
           }
         }
+      }
+    }
+
+    public string GetEventNormal(ulong id) {
+      if(events.ContainsKey(id)) {
+        return eventsNormal[id];
+      } else {
+        return $"Event {id}";
       }
     }
 
