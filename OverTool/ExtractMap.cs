@@ -35,7 +35,7 @@ namespace OverTool {
       }
 
       for(int i = 0; i < maps.Count; ++i) {
-        maps[i] = maps[i].ToLowerInvariant();
+        maps[i] = maps[i].ToUpperInvariant().TrimStart('0');
       }
       bool mapWildcard = maps.Count == 0;
       if(maps.Count > 0 && maps.Contains("*")) {
@@ -62,10 +62,12 @@ namespace OverTool {
         if(name == null) {
           continue;
         }
-        if(!mapWildcard && !maps.Contains(name.ToLowerInvariant())) {
+        if(!mapWildcard && !(maps.Contains(name.ToUpperInvariant()) || maps.Contains($"{APM.keyToIndex(masterKey):X}"))) {
           continue;
         }
-
+        if(string.IsNullOrWhiteSpace(name)) {
+          name = $"Unknown{APM.keyToIndent(master.Header.data.key):X}";
+        }
         string outputPath = string.Format("{0}{1}{2}{1}{3:X}{1}", output, Path.DirectorySeparatorChar, Util.SanitizePath(name), APM.keyToIndex(master.Header.data.key));
 
         if(!map.ContainsKey(master.Header.data.key)) {

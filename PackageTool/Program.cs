@@ -153,7 +153,6 @@ namespace PackageTool {
         foreach(ulong key in removed) {
           fileKeys.Remove(key);
         }
-        Console.WriteLine(types.Count);
         if(types.Count > 0 || dumpAll) {
           foreach(ulong key in apm.CMFMap.Keys) {
             if(types.Contains(OWLib.APM.keyToTypeID(key)) || dumpAll) {
