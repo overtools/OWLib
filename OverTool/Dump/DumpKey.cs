@@ -11,7 +11,7 @@ namespace OverTool {
     public char Opt => 'Z';
     public string Help => "No additional arguments";
     public uint MinimumArgs => 0;
-    public ushort[] Track => new ushort[0x90];
+    public ushort[] Track => new ushort[1] { 0x90 };
 
     public static void Iterate(List<ulong> files, Dictionary<ulong, Record> map, CASCHandler handler) {
       foreach(ulong key in files) {
