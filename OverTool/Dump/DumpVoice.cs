@@ -6,7 +6,13 @@ using OWLib;
 using OWLib.Types.STUD;
 
 namespace OverTool {
-  class DumpVoice {
+  class DumpVoice : IOvertool {
+    public string Help => "output [hero query]";
+    public uint MinimumArgs => 1;
+    public char Opt => 'v';
+    public string Title => "Extract Voice";
+    public ushort[] Track => new ushort[1] { 0x75 };
+
     public static void Save(string path, List<ulong> soundData, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace = null) {
       HashSet<ulong> done = new HashSet<ulong>();
       List<ulong> sounds = ExtractLogic.Sound.FlattenSounds(soundData, map, handler, replace);
@@ -42,12 +48,7 @@ namespace OverTool {
       }
     }
 
-    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
-      if(args.Length < 1) {
-        Console.Out.WriteLine("Usage: OverTool.exe overwatch v output [hero query]");
-        return;
-      }
-
+    public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       string output = args[0];
 
       List<string> heroes = new List<string>();

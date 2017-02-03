@@ -7,12 +7,14 @@ using OWLib.Types.STUD;
 using System.IO;
 
 namespace OverTool {
-  class DumpNPC {
-    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
-      if(args.Length < 1) {
-        Console.Out.WriteLine("Usage: OverTool.exe overwatch N output [names]");
-        return;
-      }
+  class DumpNPC : IOvertool {
+    public string Help => "output [names]";
+    public uint MinimumArgs => 1;
+    public char Opt => 'N';
+    public string Title => "Extract NPC";
+    public ushort[] Track => new ushort[1] { 0x75 };
+
+    public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       List<ulong> masters = track[0x75];
       List<ulong> blank = new List<ulong>();
       Dictionary<ulong, ulong> blankdict = new Dictionary<ulong, ulong>();

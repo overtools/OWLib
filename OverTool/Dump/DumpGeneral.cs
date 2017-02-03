@@ -8,7 +8,14 @@ using OWLib.Types.STUD;
 using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
-  public class DumpGeneral {
+  public class DumpGeneral : IOvertool {
+    public string Title => "Extract General Cosmetics";
+    public char Opt => 'G';
+    public string Help => "output";
+    public uint MinimumArgs => 1;
+
+    public ushort[] Track => new ushort[2] { 0xA5, 0x75 };
+
     private static void ExtractImage(ulong imageKey, string dpath, Dictionary<ulong, Record> map, CASCHandler handler, string name = null) {
       ulong imageDataKey = (imageKey & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
       if(string.IsNullOrWhiteSpace(name)) {
@@ -31,10 +38,7 @@ namespace OverTool {
       Console.Out.WriteLine("Wrote image {0}", path);
     }
 
-    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
-      if(args.Length < 1) {
-        Console.Out.WriteLine("Usage: OverTool.exe overwatch G output");
-      }
+    public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       string output = args[0];
       List<char> blank = new List<char>();
       HashSet<ulong> skip = new HashSet<ulong>();

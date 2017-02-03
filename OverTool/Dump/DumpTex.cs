@@ -6,19 +6,20 @@ using OWLib.Types;
 using OWLib.Types.STUD.Binding;
 
 namespace OverTool {
-  class DumpTex {
-    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
-      if(args.Length < 1) {
-        Console.Out.WriteLine("Usage: OverTool.exe overwatch T <model IDs...>");
-        return;
-      }
-      
+  class DumpTex : IOvertool {
+    public string Help => "<model ids...>";
+    public uint MinimumArgs => 1;
+    public char Opt => 'T';
+    public string Title => "List Textures";
+    public ushort[] Track => new ushort[1] { 0x3 };
+
+    public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       List<ulong> ids = new List<ulong>();
       foreach(string arg in args) {
         ids.Add(ulong.Parse(arg.Split('.')[0], System.Globalization.NumberStyles.HexNumber));
       }
       Console.Out.WriteLine("Scanning for textures...");
-      foreach(ulong f003 in track[3]) {
+      foreach(ulong f003 in track[0x3]) {
         STUD record = new STUD(Util.OpenFile(map[f003], handler), true, STUDManager.Instance, false, true);
         if(record.Instances == null) {
           continue;

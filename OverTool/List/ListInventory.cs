@@ -7,7 +7,13 @@ using OWLib.Types.STUD;
 using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
-  class ListInventory {
+  class ListInventory : IOvertool {
+    public string Help => "No additional arguments";
+    public uint MinimumArgs => 0;
+    public char Opt => 't';
+    public string Title => "List Hero Cosmetics";
+    public ushort[] Track => new ushort[1] { 0x75 };
+
     public static void GetInventoryName(ulong key, bool ex, Dictionary<ulong, Record> map, CASCHandler handler) {
       if(!map.ContainsKey(key)) {
         return;
@@ -37,7 +43,7 @@ namespace OverTool {
       }
     }
 
-    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+    public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       List<ulong> masters = track[0x75];
       foreach(ulong masterKey in masters) {
         if(!map.ContainsKey(masterKey)) {

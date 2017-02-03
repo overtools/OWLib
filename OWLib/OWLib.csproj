@@ -98,6 +98,7 @@
     <Compile Include="Types\STUD\Binding\ComplexModelRecord.cs" />
     <Compile Include="Types\STUD\EncryptionKey.cs" />
     <Compile Include="Types\STUD\GameParam\ChildGameParameterRecord.cs" />
+    <Compile Include="Types\STUD\Lootbox.cs" />
     <Compile Include="Types\STUD\Pose.cs" />
     <Compile Include="Types\STUD\MapMaster.cs" />
     <Compile Include="Types\STUD\SoundBinding.cs" />

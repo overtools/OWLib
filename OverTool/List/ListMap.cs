@@ -5,7 +5,13 @@ using OWLib;
 using OWLib.Types.STUD;
 
 namespace OverTool {
-  class ListMap {
+  class ListMap : IOvertool {
+    public string Help => "No additional arguments";
+    public uint MinimumArgs => 0;
+    public char Opt => 'm';
+    public string Title => "List Maps";
+    public ushort[] Track => new ushort[1] { 0x9F };
+
     public static void TryString(string n, string str) {
       if(str == null) {
         return;
@@ -14,7 +20,7 @@ namespace OverTool {
       }
     }
 
-    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+    public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       List<ulong> masters = track[0x9F];
       foreach(ulong masterKey in masters) {
         Console.Out.WriteLine("");

@@ -12,14 +12,14 @@ using OWLib.Types.Map;
 using OWLib.Types.STUD.Binding;
 
 namespace OverTool {
-  class ExtractMap {
-    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
-      if(args.Length < 1) {
-        Console.Out.WriteLine("Usage: OverTool.exe overwatch M output [maps] .[C]");
-        Console.Out.WriteLine("The last value is to export collision models. The last argument must be exactly \".C\" if you want to export collision models");
-        return;
-      }
+  class ExtractMap : IOvertool {
+    public string Help => "output [maps] .[C]";
+    public uint MinimumArgs => 1;
+    public char Opt => 'M';
+    public string Title => "Extract Maps";
+    public ushort[] Track => new ushort[1] { 0x9F };
 
+    public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       string output = args[0];
       List<string> maps = args.Skip(1).ToList();
       

@@ -44,22 +44,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DumpKey.cs" />
-    <Compile Include="DumpNPC.cs" />
-    <Compile Include="DumpString.cs" />
-    <Compile Include="DumpTex.cs" />
-    <Compile Include="DumpVoice.cs" />
-    <Compile Include="Extract.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="Dump\DumpKey.cs" />
+    <Compile Include="Dump\DumpNPC.cs" />
+    <Compile Include="Dump\DumpString.cs" />
+    <Compile Include="Dump\DumpTex.cs" />
+    <Compile Include="Dump\DumpVoice.cs" />
+    <Compile Include="Extract\Extract.cs" />
     <Compile Include="ExtractLogic\Portrait.cs" />
     <Compile Include="ExtractLogic\Icon.cs" />
     <Compile Include="ExtractLogic\Skin.cs" />
     <Compile Include="ExtractLogic\Sound.cs" />
     <Compile Include="ExtractLogic\Spray.cs" />
-    <Compile Include="ExtractMap.cs" />
-    <Compile Include="DumpGeneral.cs" />
-    <Compile Include="ListNPC.cs" />
-    <Compile Include="ListInventory.cs" />
-    <Compile Include="ListMap.cs" />
+    <Compile Include="Extract\ExtractMap.cs" />
+    <Compile Include="Dump\DumpGeneral.cs" />
+    <Compile Include="IOvertool.cs" />
+    <Compile Include="List\ListNPC.cs" />
+    <Compile Include="List\ListInventory.cs" />
+    <Compile Include="List\ListMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />

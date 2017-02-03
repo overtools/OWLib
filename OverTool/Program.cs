@@ -16,33 +16,34 @@ namespace OverTool {
   }
 
   class Program {
+    static string[] ValidLangs = new string[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" };
+
     static void Main(string[] args) {
       Console.OutputEncoding = Encoding.UTF8;
-      string[] validLangs = new string[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" };
-      if (args.Length < 2) {
-        Console.Out.WriteLine("Usage: OverTool.exe [-LLang] \"overwatch path\" mode [mode opts]");
-        Console.Out.WriteLine("Options:");
-        Console.Out.WriteLine("\tL - Specify a language to extract. Example: -L{0}", validLangs[0]);
-        Console.Out.WriteLine("Modes:");
-        Console.Out.WriteLine("\tt - List Items");
-        Console.Out.WriteLine("\tm - List Maps");
-        Console.Out.WriteLine("\tn - List NPCs");
-        Console.Out.WriteLine("\tx - Extract Items");
-        Console.Out.WriteLine("\tM - Extract Maps");
-        Console.Out.WriteLine("\tN - Extract NPCs");
-        Console.Out.WriteLine("\tG - Extract General Items");
-        Console.Out.WriteLine("\tv - Extract Hero Sounds");
-        Console.Out.WriteLine("\ts - Extract Strings");
-        Console.Out.WriteLine("\tZ - List Keys");
-        Console.Out.WriteLine("\tT - List Textures for Model");
+      List<IOvertool> tools = new List<IOvertool>();
+
+      {
+        Assembly asm = typeof(IOvertool).Assembly;
+        Type t = typeof(IOvertool);
+        List<Type> types = asm.GetTypes().Where(tt => tt != t && t.IsAssignableFrom(tt)).ToList();
+        foreach(Type tt in types) {
+          if(tt.IsInterface) {
+            continue;
+          }
+          tools.Add((IOvertool)Activator.CreateInstance(tt));
+        }
+      }
+
+      if(args.Length < 2) {
+        PrintHelp(tools);
         return;
       }
 
       if(args[0][0] == '-' && args[0][1] == 'L') {
         string lang = args[0].Substring(2);
-        if(!validLangs.Contains(lang)) {
+        if(!ValidLangs.Contains(lang)) {
           Console.Out.WriteLine("Language {0} is not supported!", lang);
-          foreach(string validLang in validLangs) {
+          foreach(string validLang in ValidLangs) {
             if(validLang.ToLowerInvariant().Contains(lang.ToLowerInvariant())) {
               lang = validLang;
               Console.Out.WriteLine("Autocorrecting selected lanuage to {0}", lang);
@@ -50,7 +51,7 @@ namespace OverTool {
             }
           }
         }
-        if(!validLangs.Contains(lang)) {
+        if(!ValidLangs.Contains(lang)) {
           return;
         }
         Console.Out.WriteLine("Set language to {0}", lang);
@@ -67,45 +68,30 @@ namespace OverTool {
 
       string root = args[0];
       char opt = args[1][0];
-      Action<Dictionary<ushort, List<ulong>>, Dictionary<ulong, Record>, CASCHandler, string[]> optfn = null;
-      if(opt == 't') {
-        optfn = ListInventory.Parse;
-      } else if(opt == 'x') {
-        optfn = Extract.Parse;
-      } else if(opt == 'm') {
-        optfn = ListMap.Parse;
-      } else if(opt == 'M') {
-        optfn = ExtractMap.Parse;
-      } else if(opt == 'v') {
-        optfn = DumpVoice.Parse;
-      } else if(opt == 's') {
-        optfn = DumpString.Parse;
-      } else if(opt == 'Z') {
-        optfn = DumpKey.Parse;
-      } else if(opt == 'T') {
-        optfn = DumpTex.Parse;
-      } else if(opt == 'n') {
-        optfn = ListNPC.Parse;
-      } else if(opt == 'N') {
-        optfn = DumpNPC.Parse;
-      } else if(opt == 'G') {
-        optfn = DumpGeneral.Parse;
-      } else if(opt == '~') {
-        optfn = DebugTrackInfo;
-      } else {
-        Console.Error.WriteLine("UNSUPPORTED OPT {0}", opt);
+      
+      if(args.Length < 2) {
+        PrintHelp(tools);
         return;
       }
-
+      
+      IOvertool tool = null;
       Dictionary<ushort, List<ulong>> track = new Dictionary<ushort, List<ulong>>();
-      track.Add(0x75, new List<ulong>());
-      track.Add(0x9F, new List<ulong>());
-      track.Add(0x7C, new List<ulong>());
-      track.Add(0xA9, new List<ulong>());
-      track.Add(0x90, new List<ulong>());
-      track.Add(0x3, new List<ulong>());
-      track.Add(0x68, new List<ulong>());
-      track.Add(0xA5, new List<ulong>());
+
+      foreach(IOvertool t in tools) {
+        if(t.Opt == opt) {
+          tool = t;
+        }
+
+        foreach(ushort tr in t.Track) {
+          if(!track.ContainsKey(tr)) {
+            track[tr] = new List<ulong>();
+          }
+        }
+      }
+      if(tool == null || args.Length - 2 < tool.MinimumArgs) {
+        PrintHelp(tools);
+        return;
+      }
 
       Dictionary<ulong, Record> map = new Dictionary<ulong, Record>();
 
@@ -213,16 +199,31 @@ namespace OverTool {
 
       Console.Out.WriteLine("Tooling...");
 
-      optfn(track, map, handler, args.Skip(2).ToArray());
+      tool.Parse(track, map, handler, args.Skip(2).ToArray());
       if(System.Diagnostics.Debugger.IsAttached) {
         System.Diagnostics.Debugger.Break();
       }
     }
 
-    private static void DebugTrackInfo(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
-      foreach(KeyValuePair<ushort, List<ulong>> pair in track) {
-        Console.Out.WriteLine($"{pair.Key:X3} {pair.Value.Count} entries");
+    internal class OvertoolComparer : IComparer<IOvertool> {
+      public int Compare(IOvertool x, IOvertool y) {
+        return string.Compare(x.Title, y.Title);
       }
+    }
+
+    private static void PrintHelp(List<IOvertool> tools) {
+      Console.Out.WriteLine("Usage: OverTool.exe [-LLang] \"overwatch path\" mode [mode opts]");
+      Console.Out.WriteLine("Options:");
+      Console.Out.WriteLine("\tL - Specify a language to extract. Example: -LdeDE");
+      Console.Out.WriteLine("\t\tValid Languages: {0}", string.Join(", ", ValidLangs));
+      Console.Out.WriteLine("mode can be:");
+      Console.Out.WriteLine("  m - {0, -30} - {1, -30}", "name", "arguments");
+      Console.Out.WriteLine("".PadLeft(64, '-'));
+      tools.Sort(new OvertoolComparer());
+      foreach(IOvertool t in tools) {
+        Console.Out.WriteLine("  {0} - {1,-30} - {2}", t.Opt, t.Title, t.Help);
+      }
+      return;
     }
   }
 }

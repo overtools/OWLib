@@ -5,7 +5,13 @@ using CASCExplorer;
 using OWLib;
 
 namespace OverTool {
-  public class DumpString {
+  public class DumpString : IOvertool {
+    public string Help => "No additional arguments";
+    public uint MinimumArgs => 0;
+    public char Opt => 's';
+    public string Title => "List Strings";
+    public ushort[] Track => new ushort[2] { 0x7C, 0xA9 };
+
     public static void Iterate(List<ulong> files, Dictionary<ulong, Record> map, CASCHandler handler) {
       foreach(ulong key in files) {
         if(!map.ContainsKey(key)) {
@@ -28,7 +34,7 @@ namespace OverTool {
       }
     }
 
-    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] opts) {
+    public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] opts) {
       Iterate(track[0x7C], map, handler);
       Iterate(track[0xA9], map, handler);
     }

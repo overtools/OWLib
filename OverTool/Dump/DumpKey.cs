@@ -6,7 +6,13 @@ using OWLib;
 using OWLib.Types.STUD;
 
 namespace OverTool {
-  public class DumpKey {
+  public class DumpKey : IOvertool {
+    public string Title => "List Keys";
+    public char Opt => 'Z';
+    public string Help => "No additional arguments";
+    public uint MinimumArgs => 0;
+    public ushort[] Track => new ushort[0x90];
+
     public static void Iterate(List<ulong> files, Dictionary<ulong, Record> map, CASCHandler handler) {
       foreach(ulong key in files) {
         if(!map.ContainsKey(key)) {
@@ -29,7 +35,7 @@ namespace OverTool {
       }
     }
 
-    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] opts) {
+    public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] opts) {
       Console.Out.WriteLine("key_name          key");
       foreach(ulong key in track[0x90]) {
         if(!map.ContainsKey(key)) {

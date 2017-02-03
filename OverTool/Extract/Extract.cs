@@ -8,13 +8,14 @@ using OWLib.Types.STUD;
 using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
-  class Extract {
-    public static void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
-      if(args.Length < 1) {
-        Console.Out.WriteLine("Usage: OverTool.exe overwatch x output [types [query [opts]]]");
-        return;
-      }
+  class Extract : IOvertool {
+    public string Help => "output [types [query [opts]]]";
+    public uint MinimumArgs => 1;
+    public char Opt => 'x';
+    public string Title => "Extract Hero Cosmetics";
+    public ushort[] Track => new ushort[1] { 0x75 };
 
+    public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
       string output = args[0];
       
       string[] validCommands = new string[] { "skin", "spray", "icon" };
