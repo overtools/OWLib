@@ -31,6 +31,9 @@ namespace OverTool {
         }
         
         string name = Util.GetString(master.Header.name.key, map, handler);
+        if(string.IsNullOrWhiteSpace(name)) {
+          name = $"Unknown{APM.keyToIndex(masterKey):X}";
+        }
         Console.Out.WriteLine(name);
         Console.Out.WriteLine("\tID: {0:X8}", APM.keyToIndex(masterKey));
         

@@ -59,14 +59,11 @@ namespace OverTool {
         }
         
         string name = Util.GetString(master.Header.name.key, map, handler);
-        if(name == null) {
-          continue;
+        if(string.IsNullOrWhiteSpace(name)) {
+          name = $"Unknown{APM.keyToIndex(master.Header.data.key):X}";
         }
         if(!mapWildcard && !(maps.Contains(name.ToUpperInvariant()) || maps.Contains($"{APM.keyToIndex(masterKey):X}"))) {
           continue;
-        }
-        if(string.IsNullOrWhiteSpace(name)) {
-          name = $"Unknown{APM.keyToIndent(master.Header.data.key):X}";
         }
         string outputPath = string.Format("{0}{1}{2}{1}{3:X}{1}", output, Path.DirectorySeparatorChar, Util.SanitizePath(name), APM.keyToIndex(master.Header.data.key));
 
