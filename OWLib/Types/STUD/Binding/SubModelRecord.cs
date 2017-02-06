@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace OWLib.Types.STUD.Binding {
   public class SubModelRecord : ISTUDInstance {
     public uint Id => 0xEC23FFFD;
-    public string Name => "Binding:ProjectileModel";
+    public string Name => "Binding:SubModel";
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct SubModel {
