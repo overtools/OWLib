@@ -305,8 +305,15 @@ namespace OverTool.ExtractLogic {
           }
           FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
         }
-        if(inst.Name == record.Manager.GetName(typeof(ProjectileModelRecord))) {
-          ProjectileModelRecord r = (ProjectileModelRecord)inst;
+        if(inst.Name == record.Manager.GetName(typeof(SubModelRecord))) {
+          SubModelRecord r = (SubModelRecord)inst;
+          foreach(SubModelRecord.SubModelEntry entry in r.Entries) {
+            ulong bindingKey = entry.binding;
+            if(replace.ContainsKey(bindingKey)) {
+              bindingKey = replace[bindingKey];
+            }
+            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+          }
         }
         if(inst.Name == record.Manager.GetName(typeof(ChildParameterRecord))) {
           ChildParameterRecord r = (ChildParameterRecord)inst;

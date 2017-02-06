@@ -93,7 +93,7 @@
     <Compile Include="Types\STUD\AnimationList.cs" />
     <Compile Include="Types\STUD\Binding\PoseList.cs" />
     <Compile Include="Types\STUD\Binding\AnimationCoreference.cs" />
-    <Compile Include="Types\STUD\Binding\ProjectileModelRecord.cs" />
+    <Compile Include="Types\STUD\Binding\SubModelRecord.cs" />
     <Compile Include="Types\STUD\Binding\ChildParameterRecord.cs" />
     <Compile Include="Types\STUD\Binding\ComplexModelRecord.cs" />
     <Compile Include="Types\STUD\EncryptionKey.cs" />
