@@ -5,6 +5,7 @@ using OpenTK;
 using OWLib.Types;
 using OWLib.Types.Chunk;
 using OWLib.Types.Map;
+using System.Globalization;
 
 namespace OWLib.ModelWriter {
   public class RefPoseWriter : IModelWriter {
@@ -94,7 +95,7 @@ namespace OWLib.ModelWriter {
           Matrix3x4 bone = skeleton.Matrices34Inverted[i];
           Vector3 rot = ToEulerAngles(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
           Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
-          writer.WriteLine("{0}  {1:0.000000} {2:0.000000} {3:0.000000}  {4:0.000000} {5:0.000000} {6:0.000000}", i, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z);
+          writer.WriteLine(String.Format(CultureInfo.InvariantCulture, "{0}  {1:0.000000} {2:0.000000} {3:0.000000}  {4:0.000000} {5:0.000000} {6:0.000000}", i, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z));
         }
       }
       return true;
