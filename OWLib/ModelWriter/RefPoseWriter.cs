@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using OpenTK;
 using OWLib.Types;
 using OWLib.Types.Chunk;
