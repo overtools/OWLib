@@ -80,6 +80,7 @@ namespace OWLib.ModelWriter {
         return false;
       }
       lksm skeleton = (lksm)chunk;
+      Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
       using(StreamWriter writer = new StreamWriter(output)) {
         writer.WriteLine("{0}", skeleton.Data.bonesAbs);
         writer.WriteLine("version 1");
