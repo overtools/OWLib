@@ -188,10 +188,10 @@ namespace CASCExplorer {
       List<string> APMNames = new List<string>();
       for(int i = 1; i < array.Length; i++) {
         string[] filedata = array[i].Split('|');
-        string name = filedata[4];
+        string name = filedata[0];
 
         if(Path.GetExtension(name) == ".cmf" && name.Contains("RDEV")) {
-          MD5Hash cmfMD5 = filedata[0].ToByteArray().ToMD5();
+          MD5Hash cmfMD5 = filedata[1].ToByteArray().ToMD5();
           EncodingEntry apmEnc;
           if(LanguageScan != null && !name.Contains("L" + LanguageScan)) {
             continue;
@@ -221,7 +221,7 @@ namespace CASCExplorer {
       for(int i = 1; i < array.Length; i++) {
         string[] filedata = array[i].Split('|');
         //Console.Out.WriteLine("Array[{0}]: {1}", i, array[i]);
-        string name = filedata[4];
+        string name = filedata[0];
 
         if(Path.GetExtension(name) == ".apm") {
           APMNames.Add(Path.GetFileNameWithoutExtension(name));
@@ -233,7 +233,7 @@ namespace CASCExplorer {
           }
           // add apm file for dev purposes
           ulong apmNameHash = Hasher.ComputeHash(name);
-          MD5Hash apmMD5 = filedata[0].ToByteArray().ToMD5();
+          MD5Hash apmMD5 = filedata[1].ToByteArray().ToMD5();
           // Console.Out.WriteLine("apmNameHash: {0}, apmMD5: {1}", apmNameHash, apmMD5.ToHexString());
           _rootData[apmNameHash] = new OWRootEntry() {
             baseEntry = new RootEntry() { MD5 = apmMD5, LocaleFlags = LocaleFlags.All, ContentFlags = ContentFlags.None }
