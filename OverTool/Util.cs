@@ -102,11 +102,12 @@ namespace OverTool {
 
       Stream str = OpenFile(map[key], handler);
       OWString ows = new OWString(str);
-      try {
-        return ows.Format(format);
-      } catch {
-        return ows.Value;
+      if(format.Length > 0) {
+        try {
+          return ows.Format(format);
+        } catch { }
       }
+      return ows.Value;
     }
   }
 }

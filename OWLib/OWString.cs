@@ -10,17 +10,17 @@ namespace OWLib {
     public uint References => header.references;
 
     public OWString(Stream input) {
-      using(BinaryReader reader = new BinaryReader(input)) {
+      using(BinaryReader reader = new BinaryReader(input, Encoding.UTF8)) {
         header = reader.Read<OWStringHeader>();
         input.Position = (long)header.offset;
-        byte[] bytes;
+        char[] bytes;
         if(header.size > 0) {
-          bytes = reader.ReadBytes((int)header.size);
+          bytes = reader.ReadChars((int)header.size);
         } else {
-          bytes = reader.ReadBytes((int)(input.Length - input.Position - 1));
+          bytes = reader.ReadChars((int)(input.Length - input.Position));
         }
 
-        Value = Encoding.UTF8.GetString(bytes).Trim().Trim(new char[] { '\0' });
+        Value = new string(bytes).TrimEnd('\0');
       }
     }
 
