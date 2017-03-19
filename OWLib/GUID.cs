@@ -1,4 +1,7 @@
-﻿namespace OWLib {
+﻿using System;
+using System.IO;
+
+namespace OWLib {
   public static class GUID {
     public enum AttributeEnum : ulong {
       Index    = 0x00000000FFFFFFFF,
@@ -9,7 +12,7 @@
       Engine   = 0xF000000000000000
     };
 
-
+    #region Helpers
     public static ulong Attribute(ulong key, AttributeEnum flags) {
       return key & (ulong)flags;
     }
@@ -32,18 +35,30 @@
     
     public static ushort Type(ulong key) {
       ulong num = Attribute(key, AttributeEnum.Type) >> 48;
-      
+
       num = (((num >> 1 ) & 0x55555555) | ((num & 0x55555555) << 1 ));
       num = (((num >> 2 ) & 0x33333333) | ((num & 0x33333333) << 2 ));
       num = (((num >> 4 ) & 0x0F0F0F0F) | ((num & 0x0F0F0F0F) << 4 ));
       num = (((num >> 8 ) & 0x00FF00FF) | ((num & 0x00FF00FF) << 8 ));
       num = ( (num >> 16)               | ( num               << 16));
+      num >>= 20;
 
-      return (ushort)num;
+      return (ushort)(num + 1);
     }
 
     public static byte Engine(ulong key) {
       return (byte)(Attribute(key, AttributeEnum.Engine) >> 60);
+    }
+    #endregion
+
+    public static void DumpAttributes(TextWriter @out, ulong key) {
+      @out.WriteLine($"Index:    {Index(key):X4}");
+      @out.WriteLine($"Locale:   {Locale(key):X1}");
+      @out.WriteLine($"Region:   {Region(key):X1}");
+      @out.WriteLine($"Platform: {Platform(key):X1}");
+      @out.WriteLine($"Type:     {Type(key):X3}");
+      @out.WriteLine($"Engine:   {Engine(key):X1}");
+      @out.WriteLine();
     }
   }
 }

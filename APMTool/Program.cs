@@ -13,7 +13,6 @@ namespace APMTool {
         Console.Out.WriteLine("Usage: APMTool.exe \"root directory\" op args");
         Console.Out.WriteLine("OP f: Find files in APM. args: query... query: a[APM NAME] i[INDEX HEX] t[TYPE HEX] s[SIZE LESS THAN] S[SIZE GREATER THAN] N[INDEX WITHOUT IDENTIFIER]");
         Console.Out.WriteLine("OP l: List files in package. args: query query: p[PACKAGE KEY HEX] i[CONTENT KEY HEX]");
-        Console.Out.WriteLine("OP c: Convert number into index + type. args: hex");
         Console.Out.WriteLine("OP a: Output all APM names");
         Console.Out.WriteLine("OP t: Output all types");
         Console.Out.WriteLine("");
@@ -28,14 +27,6 @@ namespace APMTool {
 
       Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
       
-      if(flag == "c") {
-        ulong value = ulong.Parse(args[2], NumberStyles.HexNumber);
-        Console.Out.WriteLine("Value: {0:X}", value);
-        Console.Out.WriteLine("Type: {0:X3}", GUID.Type(value));
-        Console.Out.WriteLine("Index: {0:X12}", GUID.Attribute(value, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform));
-        return;
-      }
-
       object[] query = null;
       if(flag[0] == 'f' || flag[0] == 'C') {
         object[] t = new object[6] { null, null, null, null, null, null };
