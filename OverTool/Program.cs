@@ -145,7 +145,7 @@ namespace OverTool {
           continue;
         }
         foreach(KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {
-          ushort id = (ushort)APM.keyToTypeID(pair.Value.id);
+          ushort id = GUID.Type(pair.Key);
           if(track.ContainsKey(id)) {
             track[id].Add(pair.Value.id);
           }

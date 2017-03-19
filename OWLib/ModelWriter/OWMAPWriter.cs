@@ -74,7 +74,7 @@ namespace OWLib.ModelWriter {
                         continue;
                     }
                     Map01 obj = (Map01)map.Records[i];
-                    string modelFn = $"{APM.keyToIndexID(obj.Header.model):X12}.owmdl";
+                    string modelFn = $"{GUID.Index(obj.Header.model):X12}.owmdl";
                     writer.Write(modelFn);
                     if(!ret[0].ContainsKey(obj.Header.model)) {
                         ret[0].Add(obj.Header.model, new List<string>());
@@ -84,7 +84,7 @@ namespace OWLib.ModelWriter {
                     for(int j = 0; j < obj.Header.groupCount; ++j) {
                         Map01.Map01Group group = obj.Groups[j];
                         string materialFn =
-                            $"{APM.keyToIndexID(obj.Header.model):X12}_{APM.keyToIndexID(@group.material):X12}.owmat";
+                            $"{GUID.Index(obj.Header.model):X12}_{GUID.Index(@group.material):X12}.owmat";
                         writer.Write(materialFn);
                         if(!ret[1].ContainsKey(group.material)) {
                             ret[1].Add(group.material, new List<string>());
@@ -125,8 +125,8 @@ namespace OWLib.ModelWriter {
                         continue;
                     }
                     Map02 obj = (Map02)detail1.Records[i];
-                    string modelFn = $"{APM.keyToIndexID(obj.Header.model):X12}.owmdl";
-                    string matFn = $"{APM.keyToIndexID(obj.Header.model):X12}.owmat";
+                    string modelFn = $"{GUID.Attribute(obj.Header.model, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmdl";
+                    string matFn = $"{GUID.Attribute(obj.Header.model, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);
@@ -157,8 +157,8 @@ namespace OWLib.ModelWriter {
                         continue;
                     }
                     Map08 obj = (Map08)detail2.Records[i];
-                    string modelFn = $"{APM.keyToIndexID(obj.Header.model):X12}.owmdl";
-                    string matFn = $"{APM.keyToIndexID(obj.Header.model):X12}.owmat";
+                    string modelFn = $"{GUID.Attribute(obj.Header.model, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmdl";
+                    string matFn = $"{GUID.Attribute(obj.Header.model, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);
@@ -192,8 +192,8 @@ namespace OWLib.ModelWriter {
                     if(obj.ModelKey == 0) {
                         continue;
                     }
-                    string modelFn = $"{APM.keyToIndexID(obj.ModelKey):X12}.owmdl";
-                    string matFn = $"{APM.keyToIndexID(obj.MaterialKey):X12}.owmat";
+                    string modelFn = $"{GUID.Attribute(obj.ModelKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmdl";
+                    string matFn = $"{GUID.Attribute(obj.MaterialKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);

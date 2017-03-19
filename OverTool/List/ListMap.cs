@@ -38,10 +38,10 @@ namespace OverTool {
         
         string name = Util.GetString(master.Header.name.key, map, handler);
         if(string.IsNullOrWhiteSpace(name)) {
-          name = $"Unknown{APM.keyToIndex(masterKey):X}";
+          name = $"Unknown{GUID.Index(masterKey):X}";
         }
         Console.Out.WriteLine(name);
-        Console.Out.WriteLine("\tID: {0:X8}", APM.keyToIndex(masterKey));
+        Console.Out.WriteLine("\tID: {0:X8}", GUID.Index(masterKey));
         
         string subline = Util.GetString(master.Header.subline.key, map, handler);
         if(subline == null) {

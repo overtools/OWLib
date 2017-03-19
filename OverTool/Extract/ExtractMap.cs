@@ -60,12 +60,12 @@ namespace OverTool {
         
         string name = Util.GetString(master.Header.name.key, map, handler);
         if(string.IsNullOrWhiteSpace(name)) {
-          name = $"Unknown{APM.keyToIndex(master.Header.data.key):X}";
+          name = $"Unknown{GUID.Index(master.Header.data.key):X}";
         }
-        if(!mapWildcard && !(maps.Contains(name.ToUpperInvariant()) || maps.Contains($"{APM.keyToIndex(masterKey):X}"))) {
+        if(!mapWildcard && !(maps.Contains(name.ToUpperInvariant()) || maps.Contains($"{GUID.Index(masterKey):X}"))) {
           continue;
         }
-        string outputPath = string.Format("{0}{1}{2}{1}{3:X}{1}", output, Path.DirectorySeparatorChar, Util.SanitizePath(name), APM.keyToIndex(master.Header.data.key));
+        string outputPath = string.Format("{0}{1}{2}{1}{3:X}{1}", output, Path.DirectorySeparatorChar, Util.SanitizePath(name), GUID.Index(master.Header.data.key));
 
         if(!map.ContainsKey(master.Header.data.key)) {
           continue;
@@ -74,7 +74,7 @@ namespace OverTool {
         HashSet<ulong> parsed = new HashSet<ulong>();
         Dictionary<ulong, ulong> animList = new Dictionary<ulong, ulong>();
         using(Stream mapStream = Util.OpenFile(map[master.Header.data.key], handler)) {
-          Console.Out.WriteLine("Extracting map {0} with ID {1:X8}", name, APM.keyToIndex(master.Header.data.key));
+          Console.Out.WriteLine("Extracting map {0} with ID {1:X8}", name, GUID.Index(master.Header.data.key));
           Map mapData = new Map(mapStream);
           OWMAPWriter owmap = new OWMAPWriter();
           Dictionary<ulong, List<string>>[] used = null;
@@ -185,7 +185,7 @@ namespace OverTool {
             foreach(KeyValuePair<ulong, ulong> kv in animList) {
               ulong parent = kv.Value;
               ulong key = kv.Key;
-              string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", outputPath, Path.DirectorySeparatorChar, APM.keyToIndex(parent), APM.keyToIndexID(key), APM.keyToTypeID(key));
+              string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", outputPath, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform), GUID.Type(key));
               if(!Directory.Exists(Path.GetDirectoryName(outpath))) {
                 Directory.CreateDirectory(Path.GetDirectoryName(outpath));
               }
@@ -220,7 +220,7 @@ namespace OverTool {
                     continue;
                   }
                   KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, map, handler,
-                      $"{outputPath}{APM.keyToIndexID(layer.key):X12}.dds");
+                      $"{outputPath}{GUID.Attribute(layer.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.dds");
                   types.Add(pair.Key, pair.Value);
                 }
               }

@@ -77,12 +77,12 @@ namespace OverTool.List {
           if(!parsed.Add(layer.key)) {
             continue;
           }
-          KeyValuePair<string, TextureType> stt = Skin.SaveTexture(layer.key, map, handler, $"{output}{APM.keyToIndexID(layer.key):X12}.dds");
+          KeyValuePair<string, TextureType> stt = Skin.SaveTexture(layer.key, map, handler, $"{output}{GUID.Attribute(layer.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.dds");
           typeInfo.Add(stt.Key, stt.Value);
         }
       }
       using(Stream outp = File.Open(matPath, FileMode.Create, FileAccess.Write)) {
-        if(mat.Write(null, outp, null, layers, new object[3] { typeInfo, Path.GetFileName(matPath), $"{lootbox.EventNameNormal} {APM.keyToIndex(model):X}" })) {
+        if(mat.Write(null, outp, null, layers, new object[3] { typeInfo, Path.GetFileName(matPath), $"{lootbox.EventNameNormal} {GUID.Index(model):X}" })) {
           Console.Out.WriteLine("Wrote materials {0}", matPath);
         } else {
           Console.Out.WriteLine("Failed to write material");
@@ -91,7 +91,7 @@ namespace OverTool.List {
       foreach(KeyValuePair<ulong, ulong> kv in animList) {
         ulong parent = kv.Value;
         ulong key = kv.Key;
-        string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", output, Path.DirectorySeparatorChar, APM.keyToIndex(parent), APM.keyToIndexID(key), APM.keyToTypeID(key));
+        string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", output, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform), GUID.Type(key));
         if(!Directory.Exists(Path.GetDirectoryName(outpath))) {
           Directory.CreateDirectory(Path.GetDirectoryName(outpath));
         }
@@ -116,7 +116,7 @@ namespace OverTool.List {
           Directory.CreateDirectory(Path.GetDirectoryName(output));
         }
 
-        outpath = $"{output}{APM.keyToIndexID(key):X12}.{APM.keyToTypeID(key):X3}";
+        outpath = $"{output}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.{GUID.Type(key):X3}";
 
         using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
           Util.OpenFile(map[key], handler).CopyTo(outp);
@@ -125,16 +125,16 @@ namespace OverTool.List {
 
         Chunked mdl = new Chunked(Util.OpenFile(map[key], handler));
         
-        outpath = $"{output}{APM.keyToIndexID(key):X12}_refpose{refpose.Format}";
+        outpath = $"{output}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}_refpose{refpose.Format}";
         using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
           if(refpose.Write(mdl, outp, null, null, null)) {
             Console.Out.WriteLine("Wrote reference pose {0}", outpath);
           }
         }
 
-        string mdlName = $"{lootbox.EventNameNormal} {APM.keyToIndex(key):X}";
+        string mdlName = $"{lootbox.EventNameNormal} {GUID.Index(key):X}";
 
-        outpath = $"{output}{APM.keyToIndexID(key):X12}{mod.Format}";
+        outpath = $"{output}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}{mod.Format}";
 
         using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
           if(mod.Write(mdl, outp, lods, layers, new object[5] { true, Path.GetFileName(matPath), mdlName, null, true })) {

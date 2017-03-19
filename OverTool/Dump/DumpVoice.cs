@@ -20,7 +20,7 @@ namespace OverTool {
         if(!done.Add(key)) {
           continue;
         }
-        ulong typ = APM.keyToTypeID(key);
+        ulong typ = GUID.Type(key);
         string ext = "wem";
         if(typ == 0x043) {
           ext = "bnk";
@@ -31,8 +31,8 @@ namespace OverTool {
         if(typ == 0x03F) {
           ext = "sfx.wem";
         }
-        string ooutputPath = $"{path}{APM.keyToIndexID(key):X12}";
-        string outputPath = $"{path}{APM.keyToIndexID(key):X12}";
+        string ooutputPath = $"{path}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}";
+        string outputPath = $"{path}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}";
         int sigma = 0;
         while(File.Exists(outputPath + "." + ext)) {
           sigma++;

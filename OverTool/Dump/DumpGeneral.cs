@@ -19,7 +19,7 @@ namespace OverTool {
     private static void ExtractImage(ulong imageKey, string dpath, Dictionary<ulong, Record> map, CASCHandler handler, string name = null) {
       ulong imageDataKey = (imageKey & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
       if(string.IsNullOrWhiteSpace(name)) {
-        name = $"{APM.keyToIndexID(imageKey):X12}";
+        name = $"{GUID.Attribute(imageKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}";
       }
       string path = $"{dpath}{name}.dds";
       if(!Directory.Exists(Path.GetDirectoryName(path))) {
@@ -113,7 +113,7 @@ namespace OverTool {
           }
           string name = Util.GetString(instance.Header.name.key, map, handler);
           if(name == null) {
-            name = $"{APM.keyToIndex(key):X8}";
+            name = $"{GUID.Index(key):X8}";
           }
 
           string path = string.Format("{0}{1}General{1}{2}{1}", output, Path.DirectorySeparatorChar, stud.Instances[0].Name);

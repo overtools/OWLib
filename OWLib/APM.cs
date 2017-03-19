@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.IO.Compression;
 using OWLib.Types;
@@ -17,6 +18,7 @@ namespace OWLib {
     public PackageIndex[] Indices => indices;
     public PackageIndexRecord[][] Records => records;
 
+    [Obsolete("Use GUID.TypeMask(key)")]
     public static ulong keyToTypeID(ulong key) {
       var num = (key >> 48);
       num = (((num >> 1) & 0x55555555) | ((num & 0x55555555) << 1));
@@ -27,17 +29,20 @@ namespace OWLib {
       num >>= 20;
       return num + 1;
     }
-
+    
+    [Obsolete("Use GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform)")]
     public static ulong keyToIndexID(ulong key) {
-      return key & 0xFFFFFFFFFFFF;
+      return GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
     }
-
+    
+    [Obsolete("Use GUID.Index(key)")]
     public static ulong keyToIndex(ulong key) {
-      return key & 0xFFFFFFFF;
+      return GUID.Index(key);
     }
-
+    
+    [Obsolete("Use GUID.Attribute(key, GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform) >> 32")]
     public static ulong keyToIndent(ulong key) {
-      return (key >> 32) & 0xFFFF;
+      return GUID.Attribute(key, GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform) >> 32;
     }
 
     public APM(Stream apmStream, LookupContentByKeyDelegate lookupContentByKey) {

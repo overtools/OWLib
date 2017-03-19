@@ -45,8 +45,8 @@ namespace OverTool {
         if(master.Header.itemMaster.key != 0) { // AI
           continue;
         }
-        Console.Out.WriteLine("{0} {1:X}", heroName, APM.keyToIndexID(masterKey));
-        string path = string.Format("{0}{1}{2}{1}{3:X}{1}", args[0], Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), APM.keyToIndexID(masterKey));
+        Console.Out.WriteLine("{0} {1:X}", heroName, GUID.Index(masterKey));
+        string path = string.Format("{0}{1}{2}{1}{3:X}{1}", args[0], Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), GUID.Attribute(masterKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform));
 
         HashSet<ulong> models = new HashSet<ulong>();
         Dictionary<ulong, ulong> animList = new Dictionary<ulong, ulong>();
@@ -55,7 +55,7 @@ namespace OverTool {
 
         ExtractLogic.Skin.FindModels(master.Header.binding, blank, models, animList, layers, blankdict, parsed, map, handler);
 
-        ExtractLogic.Skin.Save(master, path, heroName, $"{APM.keyToIndexID(masterKey):X}", blankdict, parsed, models, layers, animList, blankchar, track, map, handler);
+        ExtractLogic.Skin.Save(master, path, heroName, $"{GUID.Attribute(masterKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X}", blankdict, parsed, models, layers, animList, blankchar, track, map, handler);
       }
     }
   }

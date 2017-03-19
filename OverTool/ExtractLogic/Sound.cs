@@ -28,8 +28,8 @@ namespace OverTool.ExtractLogic {
         if(replace.ContainsKey(skey)) {
           skey = replace[skey];
         }
-        ulong id = APM.keyToIndexID(skey);
-        ulong typ = APM.keyToTypeID(skey);
+        ulong id = GUID.Attribute(skey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
+        ulong typ = GUID.Type(skey);
         if(!map.ContainsKey(skey)) {
           continue;
         }

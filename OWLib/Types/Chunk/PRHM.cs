@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
-using OpenTK;
 
 namespace OWLib.Types.Chunk {
   class PRHM : IChunk {

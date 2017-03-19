@@ -33,7 +33,7 @@ namespace OverTool {
         if(master.Header.itemMaster.key != 0) { // AI
           continue;
         }
-        Console.Out.WriteLine("{0} {1:X}", heroName, APM.keyToIndexID(masterKey));
+        Console.Out.WriteLine("{0} {1:X}", heroName, GUID.Attribute(masterKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform));
       }
     }
   }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using CASCExplorer;
 using System.Reflection;
+using OWLib;
 
 namespace APMTool {
   class Program {
@@ -30,8 +31,8 @@ namespace APMTool {
       if(flag == "c") {
         ulong value = ulong.Parse(args[2], NumberStyles.HexNumber);
         Console.Out.WriteLine("Value: {0:X}", value);
-        Console.Out.WriteLine("Type: {0:X3}", OWLib.APM.keyToTypeID(value));
-        Console.Out.WriteLine("Index: {0:X12}", OWLib.APM.keyToIndexID(value));
+        Console.Out.WriteLine("Type: {0:X3}", GUID.Type(value));
+        Console.Out.WriteLine("Index: {0:X12}", GUID.Attribute(value, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform));
         return;
       }
 
@@ -145,9 +146,9 @@ namespace APMTool {
 
         if(flag[0] == 'C') {
           foreach(ulong key in apm.CMFMap.Keys) {
-            ulong rtype = OWLib.APM.keyToTypeID(key);
-            ulong rindex = OWLib.APM.keyToIndexID(key);
-            ulong rindex2 = OWLib.APM.keyToIndex(key);
+            ulong rtype = GUID.Type(key);
+            ulong rindex = GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
+            ulong rindex2 = GUID.Index(key);
 
             bool check1 = ((List<ulong>)query[0]).Count == 0;
             bool check2 = ((List<ulong>)query[1]).Count == 0;
@@ -209,9 +210,9 @@ namespace APMTool {
           for(long j = 0; j < records.LongLength; ++j) {
             PackageIndexRecord record = records[j];
 
-            ulong rtype = OWLib.APM.keyToTypeID(record.Key);
-            ulong rindex = OWLib.APM.keyToIndexID(record.Key);
-            ulong rindex2 = OWLib.APM.keyToIndex(record.Key);
+            ulong rtype = GUID.Type(record.Key);
+            ulong rindex = GUID.Attribute(record.Key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
+            ulong rindex2 = GUID.Index(record.Key);
 
             if(flag[0] == 'f') {
               bool check1 = ((List<ulong>)query[0]).Count == 0;
@@ -249,7 +250,7 @@ namespace APMTool {
         foreach(ulong type in (HashSet<ulong>)query[0]) {
           byte[] be = BitConverter.GetBytes((ushort)type);
           Array.Reverse(be);
-          Console.Out.WriteLine("{2:X4} : {0:X4} : {1:X3}", (ushort)type, OWLib.APM.keyToTypeID(type << 48), BitConverter.ToUInt16(be, 0));
+          Console.Out.WriteLine("{2:X4} : {0:X4} : {1:X3}", (ushort)type, GUID.Type(type << 48), BitConverter.ToUInt16(be, 0));
         }
       }
     }

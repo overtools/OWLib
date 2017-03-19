@@ -73,7 +73,7 @@ namespace OverTool.ExtractLogic {
       if(!map.ContainsKey(key)) {
         return;
       }
-      if(APM.keyToTypeID(key) != 0x006) {
+      if(GUID.Type(key) != 0x006) {
         return;
       }
       if(!parsed.Add(key)) {
@@ -96,7 +96,7 @@ namespace OverTool.ExtractLogic {
           if(!map.ContainsKey(infokey)) {
             return;
           }
-          if(APM.keyToTypeID(infokey) != 0x08F) {
+          if(GUID.Type(infokey) != 0x08F) {
             return;
           }
           if(!parsed.Add(infokey)) {
@@ -200,7 +200,7 @@ namespace OverTool.ExtractLogic {
             if(animList.ContainsKey(bindingKey) && animList[bindingKey] > 0) {
               continue;
             }
-            ulong keyid = APM.keyToTypeID(bindingKey);
+            ulong keyid = GUID.Type(bindingKey);
             if(keyid == 0x6) {
               animList[bindingKey] = parent;
               FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
@@ -228,7 +228,7 @@ namespace OverTool.ExtractLogic {
         return;
       }
 
-      switch(APM.keyToTypeID(tgt)) {
+      switch(GUID.Type(tgt)) {
         case 0xC: // model
           models.Add(tgt);
           return;
@@ -262,7 +262,7 @@ namespace OverTool.ExtractLogic {
           if(replace.ContainsKey(modelKey)) {
             modelKey = replace[modelKey];
           }
-          if(ignore.Count > 0 && !ignore.Contains(APM.keyToIndexID(modelKey))) {
+          if(ignore.Count > 0 && !ignore.Contains(GUID.Attribute(modelKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform))) {
             continue;
           }
           models.Add(modelKey);
@@ -441,7 +441,7 @@ namespace OverTool.ExtractLogic {
               continue;
             }
             KeyValuePair<string, TextureType> stt = SaveTexture(layer.key, map, handler,
-                $"{path}{APM.keyToIndexID(layer.key):X12}.dds");
+                $"{path}{GUID.Attribute(layer.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.dds");
             typeInfo.Add(stt.Key, stt.Value);
           }
         }
@@ -528,7 +528,7 @@ namespace OverTool.ExtractLogic {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
           }
 
-          outpath = $"{path}{APM.keyToIndexID(key):X12}.{APM.keyToTypeID(key):X3}";
+          outpath = $"{path}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.{GUID.Type(key):X3}";
 
           using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
             Util.OpenFile(map[key], handler).CopyTo(outp);
@@ -542,7 +542,7 @@ namespace OverTool.ExtractLogic {
           Chunked mdl = new Chunked(Util.OpenFile(map[key], handler));
 
           if(furtherOpts.Count <= 6 || furtherOpts[6] != 'R') {
-            outpath = $"{path}{APM.keyToIndexID(key):X12}_refpose{refpose.Format}";
+            outpath = $"{path}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}_refpose{refpose.Format}";
             using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
               if(refpose.Write(mdl, outp, null, null, null)) {
                 Console.Out.WriteLine("Wrote reference pose {0}", outpath);
@@ -550,9 +550,9 @@ namespace OverTool.ExtractLogic {
             }
           }
 
-          string mdlName = $"{heroName} Skin {itemName}_{APM.keyToIndex(key):X}";
+          string mdlName = $"{heroName} Skin {itemName}_{GUID.Index(key):X}";
 
-          outpath = $"{path}{APM.keyToIndexID(key):X12}{writer.Format}";
+          outpath = $"{path}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}{writer.Format}";
 
           using(Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
             if(writer.Write(mdl, outp, lods, layers, new object[5] { true, Path.GetFileName(mtlPath), mdlName, null, skipCmodel })) {
@@ -568,7 +568,7 @@ namespace OverTool.ExtractLogic {
         foreach(KeyValuePair<ulong, ulong> kv in animList) {
           ulong parent = kv.Value;
           ulong key = kv.Key;
-          string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, APM.keyToIndex(parent), APM.keyToIndexID(key), APM.keyToTypeID(key));
+          string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform), GUID.Type(key));
           if(!Directory.Exists(Path.GetDirectoryName(outpath))) {
             Directory.CreateDirectory(Path.GetDirectoryName(outpath));
           }
@@ -595,7 +595,7 @@ namespace OverTool.ExtractLogic {
     }
 
     public static KeyValuePair<string, TextureType> SaveTexture(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, string path) {
-      string name = $"{APM.keyToIndexID(key):X12}.dds";
+      string name = $"{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform)}:X12.dds";
       TextureType @type = TextureType.Unknown;
 
       if(!map.ContainsKey(key)) {

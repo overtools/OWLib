@@ -5,6 +5,7 @@ using System.IO;
 using CASCExplorer;
 using System.Reflection;
 using System.Linq;
+using OWLib;
 
 namespace PackageTool {
   class Program {
@@ -121,8 +122,8 @@ namespace PackageTool {
         HashSet<ulong> removed = new HashSet<ulong>();
         foreach(ulong key in fileKeys) {
           if(apm.CMFMap.ContainsKey(key)) {
-            ulong rtype = OWLib.APM.keyToTypeID(key);
-            ulong rindex = OWLib.APM.keyToIndexID(key);
+            ulong rtype = GUID.Type(key);
+            ulong rindex = GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
             string ofn = $"{output}{Path.DirectorySeparatorChar}cmf{Path.DirectorySeparatorChar}{rtype:X3}{Path.DirectorySeparatorChar}";
             if(!dry && !Directory.Exists(ofn)) {
               Console.Out.WriteLine("Created directory {0}", ofn);
@@ -155,9 +156,9 @@ namespace PackageTool {
         }
         if(types.Count > 0 || dumpAll) {
           foreach(ulong key in apm.CMFMap.Keys) {
-            if(types.Contains(OWLib.APM.keyToTypeID(key)) || dumpAll) {
-              ulong rtype = OWLib.APM.keyToTypeID(key);
-              ulong rindex = OWLib.APM.keyToIndexID(key);
+            if(types.Contains(GUID.Type(key)) || dumpAll) {
+              ulong rtype = GUID.Type(key);
+              ulong rindex = GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
               string ofn = $"{output}{Path.DirectorySeparatorChar}cmf{Path.DirectorySeparatorChar}{rtype:X3}{Path.DirectorySeparatorChar}";
               if(!dry && !Directory.Exists(ofn)) {
                 Console.Out.WriteLine("Created directory {0}", ofn);
@@ -206,11 +207,11 @@ namespace PackageTool {
                 ret = false;
               }
 
-              if(ret && packageIndices.Count > 0 && packageIndices.Contains(OWLib.APM.keyToIndex(package.packageKey)) && !indicesExtracted.Contains(package.packageKey)) {
+              if(ret && packageIndices.Count > 0 && packageIndices.Contains(GUID.Index(package.packageKey)) && !indicesExtracted.Contains(package.packageKey)) {
                 ret = false;
               }
 
-              if(ret && packageIndent.Count > 0 && packageIndent.Contains(OWLib.APM.keyToIndexID(package.packageKey))) {
+              if(ret && packageIndent.Count > 0 && packageIndent.Contains(GUID.Attribute(package.packageKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform))) {
                 ret = false;
               }
 
@@ -221,7 +222,7 @@ namespace PackageTool {
 
             packageKeys.Remove(package.packageKey);
             indicesExtracted.Add(package.packageKey);
-            packageIndent.Remove(OWLib.APM.keyToIndexID(package.packageKey));
+            packageIndent.Remove(GUID.Attribute(package.packageKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform));
             contentKeys.Remove(package.indexContentKey.ToHexString().ToUpperInvariant());
 
             PackageIndex index = apm.Indexes[i];
@@ -231,7 +232,7 @@ namespace PackageTool {
             if(dumpAll) {
               o = output;
             } else {
-              o = $"{output}{OWLib.APM.keyToIndexID(package.packageKey):X12}{Path.DirectorySeparatorChar}";
+              o = $"{output}{GUID.Attribute(package.packageKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}{Path.DirectorySeparatorChar}";
             }
 
             EncodingEntry bundleEncoding;
@@ -250,8 +251,8 @@ namespace PackageTool {
               if(dumpAll && !dumped.Add(record.Key)) {
                 continue;
               }
-              ulong rtype = OWLib.APM.keyToTypeID(record.Key);
-              ulong rindex = OWLib.APM.keyToIndexID(record.Key);
+              ulong rtype = GUID.Type(record.Key);
+              ulong rindex = GUID.Attribute(record.Key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
               string ofn = $"{o}{rtype:X3}{Path.DirectorySeparatorChar}";
               if(!dry && !Directory.Exists(ofn)) {
                 Console.Out.WriteLine("Created directory {0}", ofn);

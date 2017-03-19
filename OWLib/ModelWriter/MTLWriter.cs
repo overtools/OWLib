@@ -18,7 +18,7 @@ namespace OWLib.ModelWriter {
           writer.WriteLine("Kd 1 1 1");
 
           foreach(ImageLayer layer in pair.Value) {
-            writer.WriteLine("map_Kd \"{0:X12}.dds\"", APM.keyToIndexID(layer.key));
+            writer.WriteLine("map_Kd \"{0:X12}.dds\"", GUID.Attribute(layer.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform));
           }
           writer.WriteLine("");
         }

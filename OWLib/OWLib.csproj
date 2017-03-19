@@ -48,6 +48,7 @@
     <Compile Include="DDSTypeDetect.cs" />
     <Compile Include="DXBC.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="GUID.cs" />
     <Compile Include="Half\Half.cs" />
     <Compile Include="Half\HalfHelper.cs" />
     <Compile Include="ImageDefinition.cs" />

@@ -155,7 +155,7 @@ namespace OWLib {
     }
 
     public static string ToStringA(this OWRecord i) {
-      return $"{APM.keyToIndexID(i.key):X12}.{APM.keyToTypeID(i.key):X3}";
+      return $"{GUID.Attribute(i.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.{GUID.Type(i.key):X3}";
     }
   }
 }
