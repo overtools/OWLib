@@ -2,32 +2,27 @@
 using CASCExplorer;
 
 namespace OverTool {
-  public interface IOvertool {
-    string Title
-    {
-      get;
-    }
+    public interface IOvertool {
+        string Title {
+            get;
+        }
 
-    char Opt
-    {
-      get;
-    }
+        char Opt {
+            get;
+        }
 
-    string Help
-    {
-      get;
-    }
+        string Help {
+            get;
+        }
 
-    uint MinimumArgs
-    {
-      get;
-    }
+        uint MinimumArgs {
+            get;
+        }
 
-    ushort[] Track
-    {
-      get;
-    }
+        ushort[] Track {
+            get;
+        }
 
-    void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args);
-  }
+        void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args);
+    }
 }

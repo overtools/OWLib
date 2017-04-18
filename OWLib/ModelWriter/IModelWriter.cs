@@ -14,26 +14,22 @@ namespace OWLib.ModelWriter {
     };
 
     public interface IModelWriter {
-        ModelWriterSupport SupportLevel
-        {
+        ModelWriterSupport SupportLevel {
             get;
         }
 
-        char[] Identifier
-        {
+        char[] Identifier {
             get;
         }
 
-        string Format
-        {
+        string Format {
             get;
         }
 
-        string Name
-        {
+        string Name {
             get;
         }
-    
+
         // data is object[] { bool exportAttachments, string materialReference, string modelName, bool onlyOneLOD, bool skipCollision }
         bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data);
         bool Write(Map10 physics, Stream output, object[] data);

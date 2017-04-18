@@ -9,55 +9,53 @@ namespace OWLib.ModelWriter {
 
         public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name = "") {
             Console.Out.WriteLine("Writing OWMAP");
-            using(BinaryWriter writer = new BinaryWriter(output)) {
+            using (BinaryWriter writer = new BinaryWriter(output)) {
                 writer.Write((ushort)1); // version major
                 writer.Write((ushort)1); // version minor
 
-                if(name.Length == 0) {
+                if (name.Length == 0) {
                     writer.Write((byte)0);
                 } else {
                     writer.Write(name);
                 }
 
                 uint size = 0;
-                for(int i = 0; i < map.Records.Length; ++i) {
-                    if(map.Records[i] != null && map.Records[i].GetType() != typeof(Map01)) {
+                for (int i = 0; i < map.Records.Length; ++i) {
+                    if (map.Records[i] != null && map.Records[i].GetType() != typeof(Map01)) {
                         continue;
                     }
                     size++;
                 }
                 writer.Write(size); // nr objects
-        
+
                 size = 1;
-                for(int i = 0; i < detail1.Records.Length; ++i) {
-                    if(detail1.Records[i] != null && detail1.Records[i].GetType() != typeof(Map02)) {
+                for (int i = 0; i < detail1.Records.Length; ++i) {
+                    if (detail1.Records[i] != null && detail1.Records[i].GetType() != typeof(Map02)) {
                         continue;
                     }
                     size++;
                 }
-                for(int i = 0; i < detail2.Records.Length; ++i) {
-                    if(detail2.Records[i] != null && detail2.Records[i].GetType() != typeof(Map08)) {
+                for (int i = 0; i < detail2.Records.Length; ++i) {
+                    if (detail2.Records[i] != null && detail2.Records[i].GetType() != typeof(Map08)) {
                         continue;
                     }
                     size++;
                 }
-                for(int i = 0; i < props.Records.Length; ++i) {
-                    if(props.Records[i] != null && props.Records[i].GetType() != typeof(Map0B)) {
+                for (int i = 0; i < props.Records.Length; ++i) {
+                    if (props.Records[i] != null && props.Records[i].GetType() != typeof(Map0B)) {
                         continue;
                     }
-                    if(((Map0B)props.Records[i]).ModelKey == 0) {
+                    if (((Map0B)props.Records[i]).ModelKey == 0) {
                         continue;
                     }
                     size++;
                 }
                 writer.Write(size); // nr details
-        
+
                 // Extension 1.1 - Lights
                 size = 0;
-                for (int i = 0; i < lights.Records.Length; ++i)
-                {
-                    if (lights.Records[i] != null && lights.Records[i].GetType() != typeof(Map09))
-                    {
+                for (int i = 0; i < lights.Records.Length; ++i) {
+                    if (lights.Records[i] != null && lights.Records[i].GetType() != typeof(Map09)) {
                         continue;
                     }
                     size++;
@@ -69,29 +67,29 @@ namespace OWLib.ModelWriter {
                 ret[0] = new Dictionary<ulong, List<string>>();
                 ret[1] = new Dictionary<ulong, List<string>>();
 
-                for(int i = 0; i < map.Records.Length; ++i) {
-                    if(map.Records[i] != null && map.Records[i].GetType() != typeof(Map01)) {
+                for (int i = 0; i < map.Records.Length; ++i) {
+                    if (map.Records[i] != null && map.Records[i].GetType() != typeof(Map01)) {
                         continue;
                     }
                     Map01 obj = (Map01)map.Records[i];
                     string modelFn = $"{GUID.Index(obj.Header.model):X12}.owmdl";
                     writer.Write(modelFn);
-                    if(!ret[0].ContainsKey(obj.Header.model)) {
+                    if (!ret[0].ContainsKey(obj.Header.model)) {
                         ret[0].Add(obj.Header.model, new List<string>());
                     }
                     ret[0][obj.Header.model].Add(modelFn);
                     writer.Write(obj.Header.groupCount);
-                    for(int j = 0; j < obj.Header.groupCount; ++j) {
+                    for (int j = 0; j < obj.Header.groupCount; ++j) {
                         Map01.Map01Group group = obj.Groups[j];
                         string materialFn =
                             $"{GUID.Index(obj.Header.model):X12}_{GUID.Index(@group.material):X12}.owmat";
                         writer.Write(materialFn);
-                        if(!ret[1].ContainsKey(group.material)) {
+                        if (!ret[1].ContainsKey(group.material)) {
                             ret[1].Add(group.material, new List<string>());
                         }
                         ret[1][group.material].Add(materialFn);
                         writer.Write(group.recordCount);
-                        for(int k = 0; k < group.recordCount; ++k) {
+                        for (int k = 0; k < group.recordCount; ++k) {
                             Map01.Map01GroupRecord record = obj.Records[j][k];
                             writer.Write(record.position.x);
                             writer.Write(record.position.y);
@@ -120,8 +118,8 @@ namespace OWLib.ModelWriter {
                 writer.Write(0.0f);
                 writer.Write(1.0f);
 
-                for(int i = 0; i < detail1.Records.Length; ++i) {
-                    if(detail1.Records[i] != null && detail1.Records[i].GetType() != typeof(Map02)) {
+                for (int i = 0; i < detail1.Records.Length; ++i) {
+                    if (detail1.Records[i] != null && detail1.Records[i].GetType() != typeof(Map02)) {
                         continue;
                     }
                     Map02 obj = (Map02)detail1.Records[i];
@@ -139,21 +137,21 @@ namespace OWLib.ModelWriter {
                     writer.Write(obj.Header.rotation.y);
                     writer.Write(obj.Header.rotation.z);
                     writer.Write(obj.Header.rotation.w);
-          
-                    if(!ret[0].ContainsKey(obj.Header.model)) {
+
+                    if (!ret[0].ContainsKey(obj.Header.model)) {
                         ret[0].Add(obj.Header.model, new List<string>());
                     }
                     ret[0][obj.Header.model].Add(modelFn);
 
-          
-                    if(!ret[1].ContainsKey(obj.Header.material)) {
+
+                    if (!ret[1].ContainsKey(obj.Header.material)) {
                         ret[1].Add(obj.Header.material, new List<string>());
                     }
                     ret[1][obj.Header.material].Add(matFn);
                 }
 
-                for(int i = 0; i < detail2.Records.Length; ++i) {
-                    if(detail2.Records[i] != null && detail2.Records[i].GetType() != typeof(Map08)) {
+                for (int i = 0; i < detail2.Records.Length; ++i) {
+                    if (detail2.Records[i] != null && detail2.Records[i].GetType() != typeof(Map08)) {
                         continue;
                     }
                     Map08 obj = (Map08)detail2.Records[i];
@@ -171,25 +169,25 @@ namespace OWLib.ModelWriter {
                     writer.Write(obj.Header.rotation.y);
                     writer.Write(obj.Header.rotation.z);
                     writer.Write(obj.Header.rotation.w);
-          
-                    if(!ret[0].ContainsKey(obj.Header.model)) {
+
+                    if (!ret[0].ContainsKey(obj.Header.model)) {
                         ret[0].Add(obj.Header.model, new List<string>());
                     }
                     ret[0][obj.Header.model].Add(modelFn);
 
-          
-                    if(!ret[1].ContainsKey(obj.Header.material)) {
+
+                    if (!ret[1].ContainsKey(obj.Header.material)) {
                         ret[1].Add(obj.Header.material, new List<string>());
                     }
                     ret[1][obj.Header.material].Add(matFn);
                 }
 
-                for(int i = 0; i < props.Records.Length; ++i) {
-                    if(props.Records[i] != null && props.Records[i].GetType() != typeof(Map0B)) {
+                for (int i = 0; i < props.Records.Length; ++i) {
+                    if (props.Records[i] != null && props.Records[i].GetType() != typeof(Map0B)) {
                         continue;
                     }
                     Map0B obj = (Map0B)props.Records[i];
-                    if(obj.ModelKey == 0) {
+                    if (obj.ModelKey == 0) {
                         continue;
                     }
                     string modelFn = $"{GUID.Attribute(obj.ModelKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmdl";
@@ -206,24 +204,22 @@ namespace OWLib.ModelWriter {
                     writer.Write(obj.Header.rotation.y);
                     writer.Write(obj.Header.rotation.z);
                     writer.Write(obj.Header.rotation.w);
-          
-                    if(!ret[0].ContainsKey(obj.ModelKey)) {
+
+                    if (!ret[0].ContainsKey(obj.ModelKey)) {
                         ret[0].Add(obj.ModelKey, new List<string>());
                     }
                     ret[0][obj.ModelKey].Add(modelFn);
 
-          
-                    if(!ret[1].ContainsKey(obj.MaterialKey)) {
+
+                    if (!ret[1].ContainsKey(obj.MaterialKey)) {
                         ret[1].Add(obj.MaterialKey, new List<string>());
                     }
                     ret[1][obj.MaterialKey].Add(matFn);
                 }
 
                 // Extension 1.1 - Lights
-                for (int i = 0; i < lights.Records.Length; ++i)
-                {
-                    if (lights.Records[i] != null && lights.Records[i].GetType() != typeof(Map09))
-                    {
+                for (int i = 0; i < lights.Records.Length; ++i) {
+                    if (lights.Records[i] != null && lights.Records[i].GetType() != typeof(Map09)) {
                         continue;
                     }
                     Map09 obj = (Map09)lights.Records[i];
