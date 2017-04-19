@@ -3,6 +3,7 @@ using System.IO;
 using CASCExplorer;
 using OWLib;
 using OWLib.Types;
+using OWLib.Types.Chunk;
 using OWLib.Types.STUD;
 using OWLib.Types.STUD.Binding;
 using OWLib.Types.STUD.GameParam;
@@ -85,6 +86,39 @@ namespace OverTool.ExtractLogic {
             }
         }
 
+
+        public static void FindSoundsExD(ulong key, HashSet<ulong> done, List<ulong> ret, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace) {
+            if (replace.ContainsKey(key)) {
+                key = replace[key];
+            }
+            if (!map.ContainsKey(key)) {
+                return;
+            }
+            if (!done.Add(key)) {
+                return;
+            }
+
+            using (Stream effectStream = Util.OpenFile(map[key], handler)) {
+                if (effectStream == null) {
+                    return;
+                }
+                Chunked chunked = new Chunked(effectStream, true, ChunkManager.Instance);
+                FindSoundsChunked(chunked, done, ret, map, handler, replace);
+            }
+        }
+
+        public static void FindSoundsChunked(Chunked chunked, HashSet<ulong> done, List<ulong> ret, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace) {
+            OSCE[] osces = chunked.GetAllOfTypeFlat<OSCE>();
+            foreach (OSCE osce in osces) {
+                FindSoundsEx(osce.Data.effect, done, ret, map, handler, replace);
+            }
+
+            FECE[] feces = chunked.GetAllOfTypeFlat<FECE>();
+            foreach (FECE fece in feces) {
+                FindSoundsExD(fece.Data.effect, done, ret, map, handler, replace);
+            }
+        }
+
         public static void FindSoundsSTUD(STUD stud, HashSet<ulong> done, List<ulong> ret, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace) {
             foreach (ISTUDInstance instance in stud.Instances) {
                 if (instance == null) {
@@ -134,6 +168,16 @@ namespace OverTool.ExtractLogic {
                 } else if (instance.Name == stud.Manager.GetName(typeof(BindingRecord))) {
                     BindingRecord record = (BindingRecord)instance;
                     FindSoundsEx(record.Param.binding.key, done, ret, map, handler, replace);
+                    FindSoundsEx(record.Param.binding2.key, done, ret, map, handler, replace);
+                } else if (instance.Name == stud.Manager.GetName(typeof(ChildParameterRecord))) {
+                    ChildParameterRecord record = (ChildParameterRecord)instance;
+                    FindSoundsEx(record.Header.binding.key, done, ret, map, handler, replace);
+                    foreach (ChildParameterRecord.Child child in record.Children) {
+                        FindSoundsEx(child.parameter.key, done, ret, map, handler, replace);
+                    }
+                } else if (instance.Name == stud.Manager.GetName(typeof(EffectReference))) {
+                    EffectReference reference = (EffectReference)instance;
+                    FindSoundsExD(reference.Reference.key.key, done, ret, map, handler, replace);
                 }
             }
         }

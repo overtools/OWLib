@@ -25,12 +25,6 @@ namespace OverTool {
                 if (typ == 0x043) {
                     ext = "bnk";
                 }
-                if (typ == 0x0BB) {
-                    ext = "vid.wem";
-                }
-                if (typ == 0x03F) {
-                    ext = "sfx.wem";
-                }
                 string ooutputPath = $"{path}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}";
                 string outputPath = $"{path}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}";
                 int sigma = 0;

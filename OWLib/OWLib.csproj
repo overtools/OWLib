@@ -61,6 +61,8 @@
     <Compile Include="ModelWriter\ASCIIWriter.cs" />
     <Compile Include="ModelWriter\BINWriter.cs" />
     <Compile Include="ModelWriter\RefPoseWriter.cs" />
+    <Compile Include="Types\Chunk\OSCE.cs" />
+    <Compile Include="Types\Chunk\FECE.cs" />
     <Compile Include="Types\Chunk\PRHM.cs" />
     <Compile Include="Types\STUD\Achievement.cs" />
     <Compile Include="Types\Chunk\CLDM.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
     <Compile Include="Types\STUD\AnimationList.cs" />
+    <Compile Include="Types\STUD\Binding\EffectReference.cs" />
     <Compile Include="Types\STUD\Binding\PoseList.cs" />
     <Compile Include="Types\STUD\Binding\AnimationCoreference.cs" />
     <Compile Include="Types\STUD\Binding\SubModelRecord.cs" />
