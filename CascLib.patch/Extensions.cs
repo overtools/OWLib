@@ -148,18 +148,18 @@ namespace CASCExplorer
             return true;
         }
 
-        private static unsafe bool EqualsTo9(this MD5Hash key, MD5Hash array)
+        private static unsafe bool EqualsTo9(this MD5Hash key, MD5Hash other)
         {
-            for (int i = 0; i < 16; ++i)
-            {
-                if (i > 8) {
-                    if (array.Value[i] != 0)
-                        return false;
-                } else {
-                    if (key.Value[i] != array.Value[i])
-                        return false;
-                }
-            }
+            ulong keyPart = *(ulong*)(key.Value);
+            ulong otherPart = *(ulong*)(other.Value);
+
+            if (keyPart != otherPart)
+                return false;
+
+            keyPart = (byte) *(ulong*)(key.Value + 8);
+            otherPart = *(ulong*)(other.Value + 8);
+            if (keyPart != otherPart)
+                return false;
             return true;
         }
 

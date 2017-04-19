@@ -39,6 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CascLib.patch", "CascLib.pa
 	ProjectSection(SolutionItems) = preProject
 		assemble.bat = assemble.bat
 		CascLib.patch\CASCConfig.cs = CascLib.patch\CASCConfig.cs
+		CascLib.patch\Extensions.cs = CascLib.patch\Extensions.cs
 		CascLib.patch\KeyService.cs = CascLib.patch\KeyService.cs
 		CascLib.patch\Logger.cs = CascLib.patch\Logger.cs
 		CascLib.patch\ow.keys = CascLib.patch\ow.keys
