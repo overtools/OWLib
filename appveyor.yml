@@ -1,0 +1,37 @@
+version: 1.10.0.{build}
+configuration: Release
+platform: Any CPU
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+before_build:
+- cmd: >-
+    git submodule update --init
+
+    assemble
+
+    nuget restore OverwatchToolchain.sln
+build:
+  project: OverwatchToolchain.sln
+  verbosity: minimal
+before_package:
+- cmd: >-
+    mkdir OWMImporter\OWMImporter
+
+    move /Y OWMImporter\*.py OWMImporter\OWMImporter
+
+    del /F /Q dist\Release\*.pdb
+
+    del /F /Q dist\Release\*.xml
+
+    del /F /Q dist\Release\*.exe.config
+artifacts:
+- path: dist/Release
+  name: toolchain-release
+- path: OWMImporter
+  name: OWMImporter
+- path: dist/Release/CascLib.dll
+  name: CascLib
