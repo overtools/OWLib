@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types {
@@ -31,11 +32,11 @@ namespace OWLib.Types {
         public int RotationDataOffset;
     }
 
-    // Our structures
-    public enum AnimChannelID {
-        POSITION,
-        SCALE,
-        ROTATION
+    [Flags]
+    public enum AnimChannelID : byte {
+        POSITION = 1,
+        SCALE = 2,
+        ROTATION = 4
     }
 
     public struct FrameValue {
@@ -55,6 +56,7 @@ namespace OWLib.Types {
 
     public struct Keyframe {
         public float FramePosition;
+        public int FramePositionI;
         public List<BoneAnimation> BoneFrames;
     }
 }

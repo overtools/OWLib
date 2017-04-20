@@ -135,7 +135,7 @@ namespace OWLib.Writer {
 
                 if (skeleton != null) {
                     for (int i = 0; i < skeleton.Data.bonesAbs; ++i) {
-                        writer.Write($"bone_{skeleton.IDs[i]:X4}");
+                        writer.Write(IdToString("bone", skeleton.IDs[i]));
                         short parent = skeleton.Hierarchy[i];
                         if (parent == -1) {
                             parent = (short)i;
@@ -209,7 +209,7 @@ namespace OWLib.Writer {
                     // attachments
                     for (int i = 0; i < hardpoints.HardPoints.Length; ++i) {
                         PRHM.HardPoint hp = hardpoints.HardPoints[i];
-                        writer.Write($"attachment_{hp.name:X}");
+                        writer.Write(IdToString("attachment_", hp.id));
                         Matrix4 mat = hp.matrix.ToOpenTK();
                         Vector3 pos = mat.ExtractTranslation();
                         Quaternion rot = mat.ExtractRotation();
@@ -224,11 +224,15 @@ namespace OWLib.Writer {
                     // extension 1.1
                     for (int i = 0; i < hardpoints.HardPoints.Length; ++i) {
                         PRHM.HardPoint hp = hardpoints.HardPoints[i];
-                        writer.Write($"bone_{hp.id:X}");
+                        writer.Write(IdToString("bone", hp.id));
                     }
                 }
             }
             return true;
+        }
+
+        public static string IdToString(string prefix, uint id) {
+            return $"{prefix}_{id:X4}";
         }
 
         public bool Write(Animation anim, Stream output, object[] data) {

@@ -102,7 +102,7 @@ namespace ConvertTool {
             
             using (Stream modelStream = File.Open(modelFile, FileMode.Open, FileAccess.Read)) {
                 if (!writer.SupportLevel.HasFlag(WriterSupport.MODEL) && writer.SupportLevel.HasFlag(WriterSupport.ANIM)) {
-                    Animation anim = new Animation(modelStream, "", false);
+                    Animation anim = new Animation(modelStream, false);
                     using (Stream outStream = File.Open(outputFile, FileMode.Create, FileAccess.Write)) {
                         if (writer.Write(anim, outStream, new object[] { })) {
                             Console.Out.WriteLine("Wrote animation");

@@ -7,7 +7,6 @@ using OWLib.Types;
 namespace OWLib {
   public class Animation {
     // Public items, for writing
-    public string Name;                 // The name of the animation. If no name can be provided, use the filename.
     public float Duration;              // How long the animtion is, in seconds.
     public float FramesPerSecond;       // The Number of frames per second. Duration * FPS = Total number of frames.
     public List<Keyframe> Animations;
@@ -34,7 +33,7 @@ namespace OWLib {
       z = 1.41421 * (c - 0x8000) / 0x10000;
       w = Math.Pow(1.0 - x * x - y * y - z * z, 0.5);
 
-      Console.Out.WriteLine("Unpack Values: X: {0}, Y: {1}, Z: {2}, W: {3}, Axis: {4}", x, y, z, w, axis);
+      // Console.Out.WriteLine("Unpack Values: X: {0}, Y: {1}, Z: {2}, W: {3}, Axis: {4}", x, y, z, w, axis);
 
       if (axis == 0) {
         q = new Vec4d(w, x, y, z);
@@ -59,11 +58,7 @@ namespace OWLib {
       return value;
     }
 
-    public Animation(Stream animStream, string userName = "", bool leaveOpen = true) {
-      Name = animStream.ToString();
-      if (userName != "") {
-        Name = userName;
-      }
+    public Animation(Stream animStream, bool leaveOpen = true) {
       Animations = new List<Keyframe>();
       // Convert OW Animation to our Animation Type
       using (BinaryReader animReader = new BinaryReader(animStream, Encoding.Default, leaveOpen)) {
@@ -168,6 +163,7 @@ namespace OWLib {
         for (int frame = 0; frame < InfoTableSize; frame++) {
           Keyframe kf = new Keyframe();
           kf.FramePosition = ((float)frame / FramesPerSecond);
+          kf.FramePositionI = frame;
           kf.BoneFrames = new List<BoneAnimation>();
           for (int bone = 0; bone < header.bonecount; bone++) {
             // Build Value Data
