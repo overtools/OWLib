@@ -18,7 +18,7 @@ namespace OWLib.Writer {
         REFPOSE = 0x0100,
         MAP = 0x0200,
         MATERIAL_DEF = 0x0400
-  };
+    };
 
     public interface IDataWriter {
         WriterSupport SupportLevel {
