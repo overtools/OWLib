@@ -55,11 +55,42 @@ namespace OWLib.Types {
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public unsafe struct Vec4 {
+    public struct Vec4 {
         public float x;
         public float y;
         public float z;
         public float w;
+    }
+
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct Vec4d {
+        public double x;
+        public double y;
+        public double z;
+        public double w;
+
+        public Vec4d(double x, double y, double z, double w = 1.0) {
+            this.x = x; this.y = y; this.z = z; this.w = w;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct Vec3 {
+        public float x;
+        public float y;
+        public float z;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct Vec3d {
+        public double x;
+        public double y;
+        public double z;
+
+        public Vec3d(double x, double y, double z) {
+            this.x = x; this.y = y; this.z = z;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

@@ -7,7 +7,7 @@ using OWLib.Types.STUD;
 using OWLib.Types;
 using OWLib.Types.STUD.Binding;
 using OverTool.ExtractLogic;
-using OWLib.ModelWriter;
+using OWLib.Writer;
 
 namespace OverTool.List {
     class ExtractLootbox : IOvertool {
@@ -64,9 +64,9 @@ namespace OverTool.List {
             }
 
             // TODO: genericify
-            IModelWriter mod = new OWMDLWriter();
-            IModelWriter mat = new OWMATWriter();
-            IModelWriter refpose = new RefPoseWriter();
+            IDataWriter mod = new OWMDLWriter();
+            IDataWriter mat = new OWMATWriter();
+            IDataWriter refpose = new RefPoseWriter();
             string matPath = $"{output}material{mat.Format}";
 
             Dictionary<string, TextureType> typeInfo = new Dictionary<string, TextureType>();

@@ -1,11 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using OWLib.Types;
 using OWLib.Types.Map;
 
-namespace OWLib.ModelWriter {
-    public class OWMAPWriter {
+namespace OWLib.Writer {
+    public class OWMAPWriter : IDataWriter {
         public string Format => ".owmap";
+
+        public WriterSupport SupportLevel => WriterSupport.VERTEX | WriterSupport.MAP;
+
+        public char[] Identifier => new char[1] { 'O' };
+
+        public string Name => "OWM Map Format";
+
+        public bool Write(Animation anim, Stream output, object[] data) {
+            return false;
+        }
+
+        public bool Write(Map10 physics, Stream output, object[] data) {
+            return false;
+        }
+
+        public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data) {
+            return false;
+        }
 
         public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name = "") {
             Console.Out.WriteLine("Writing OWMAP");

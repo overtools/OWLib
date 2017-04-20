@@ -3,13 +3,13 @@ using System.IO;
 using OWLib.Types;
 using OWLib.Types.Map;
 
-namespace OWLib.ModelWriter {
-    public class MTLWriter : IModelWriter {
+namespace OWLib.Writer {
+    public class MTLWriter : IDataWriter {
         public string Name => "Wavefront MTL";
         public string Format => ".mtl";
         public char[] Identifier => new char[1] { 'O' };
 
-        public ModelWriterSupport SupportLevel => ModelWriterSupport.MATERIAL;
+        public WriterSupport SupportLevel => WriterSupport.MATERIAL | WriterSupport.MATERIAL_DEF;
 
         public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] opts) {
             using (StreamWriter writer = new StreamWriter(output)) {
@@ -28,6 +28,14 @@ namespace OWLib.ModelWriter {
 
         public bool Write(Map10 physics, Stream output, object[] data) {
             return false;
+        }
+
+        public bool Write(Animation anim, Stream output, object[] data) {
+            return false;
+        }
+
+        public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name = "") {
+            return null;
         }
     }
 }

@@ -8,7 +8,7 @@ using OWLib.Types.STUD;
 using OWLib.Types.STUD.Binding;
 using OWLib.Types.STUD.GameParam;
 using OWLib.Types.STUD.InventoryItem;
-using OWLib.ModelWriter;
+using OWLib.Writer;
 using System.Reflection;
 using System.Linq;
 using OWLib.Types.Chunk;
@@ -458,12 +458,12 @@ namespace OverTool.ExtractLogic {
                 }
             }
 
-            IModelWriter writer = null;
+            IDataWriter writer = null;
             string mtlPath = null;
             if (furtherOpts.Count > 0) {
                 if (furtherOpts[0] != '+') {
-                    Assembly asm = typeof(IModelWriter).Assembly;
-                    Type t = typeof(IModelWriter);
+                    Assembly asm = typeof(IDataWriter).Assembly;
+                    Type t = typeof(IDataWriter);
                     List<Type> types = asm.GetTypes().Where(tt => tt != t && t.IsAssignableFrom(tt)).ToList();
                     foreach (Type tt in types) {
                         if (writer != null) {
@@ -473,7 +473,7 @@ namespace OverTool.ExtractLogic {
                             continue;
                         }
 
-                        IModelWriter tmp = (IModelWriter)Activator.CreateInstance(tt);
+                        IDataWriter tmp = (IDataWriter)Activator.CreateInstance(tt);
                         for (int i = 0; i < tmp.Identifier.Length; ++i) {
                             if (tmp.Identifier[i] == furtherOpts[0]) {
                                 writer = tmp;
@@ -491,7 +491,7 @@ namespace OverTool.ExtractLogic {
 
             if (furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
                 if (writer.GetType() == typeof(OWMDLWriter) || furtherOpts[0] == '+') {
-                    IModelWriter tmp = new OWMATWriter();
+                    IDataWriter tmp = new OWMATWriter();
                     mtlPath = $"{path}material{tmp.Format}";
                     using (Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
                         if (tmp.Write(null, outp, null, layers, new object[3] { typeInfo, Path.GetFileName(mtlPath),
@@ -504,7 +504,7 @@ namespace OverTool.ExtractLogic {
                     }
                 } else if (writer.GetType() == typeof(OBJWriter)) {
                     writer = new OBJWriter();
-                    IModelWriter tmp = new MTLWriter();
+                    IDataWriter tmp = new MTLWriter();
                     mtlPath = $"{path}material{tmp.Format}";
                     using (Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
                         if (tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath),
@@ -518,7 +518,7 @@ namespace OverTool.ExtractLogic {
                 }
             }
 
-            IModelWriter refpose = new RefPoseWriter();
+            IDataWriter refpose = new RefPoseWriter();
 
             bool skipCmodel = true;
 

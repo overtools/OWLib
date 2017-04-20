@@ -7,8 +7,8 @@
     <ProjectGuid>{9432CA06-25EA-44DB-9FA1-0583FF096B5D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ModelTool</RootNamespace>
-    <AssemblyName>ModelTool</AssemblyName>
+    <RootNamespace>ConvertTool</RootNamespace>
+    <AssemblyName>ConvertTool</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -39,7 +39,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>ModelTool.Program</StartupObject>
+    <StartupObject>ConvertTool.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

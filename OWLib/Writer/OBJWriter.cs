@@ -6,12 +6,12 @@ using OWLib.Types;
 using OWLib.Types.Chunk;
 using OWLib.Types.Map;
 
-namespace OWLib.ModelWriter {
-    public class OBJWriter : IModelWriter {
+namespace OWLib.Writer {
+    public class OBJWriter : IDataWriter {
         public string Name => "Wavefront OBJ";
         public string Format => ".obj";
         public char[] Identifier => new char[1] { 'o' };
-        public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.MATERIAL);
+        public WriterSupport SupportLevel => (WriterSupport.VERTEX | WriterSupport.UV | WriterSupport.MATERIAL | WriterSupport.MODEL);
 
         public bool Write(Chunked chunked, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] opts) {
             IChunk chunk = chunked.FindNextChunk("MNRM").Value;
@@ -111,6 +111,14 @@ namespace OWLib.ModelWriter {
                 }
             }
             return false;
+        }
+
+        public bool Write(Animation anim, Stream output, object[] data) {
+            return false;
+        }
+
+        public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name = "") {
+            return null;
         }
     }
 }

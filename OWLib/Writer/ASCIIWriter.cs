@@ -5,12 +5,12 @@ using OWLib.Types;
 using OWLib.Types.Chunk;
 using OWLib.Types.Map;
 
-namespace OWLib.ModelWriter {
-    public class ASCIIWriter : IModelWriter {
+namespace OWLib.Writer {
+    public class ASCIIWriter : IDataWriter {
         public string Name => "XNALara XPS ASCII";
         public string Format => ".mesh.ascii";
         public char[] Identifier => new char[2] { 'l', 'a' };
-        public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.MATERIAL);
+        public WriterSupport SupportLevel => (WriterSupport.VERTEX | WriterSupport.UV | WriterSupport.BONE | WriterSupport.MATERIAL | WriterSupport.MODEL);
 
         public bool Write(Chunked chunked, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] opts) {
             IChunk chunk = chunked.FindNextChunk("MNRM").Value;
@@ -165,5 +165,13 @@ namespace OWLib.ModelWriter {
                 return true;
             }
         }
-    }
+
+        public bool Write(Animation anim, Stream output, object[] data) {
+            return false;
+        }
+
+        public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name = "") {
+            return null;
+        }
+  }
 }

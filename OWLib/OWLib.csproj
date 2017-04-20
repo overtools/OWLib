@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs" />
     <Compile Include="APM.cs" />
     <Compile Include="DDSTypeDetect.cs" />
     <Compile Include="DXBC.cs" />
@@ -58,9 +59,11 @@
     <Compile Include="ItemEvents.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Chunked.cs" />
-    <Compile Include="ModelWriter\ASCIIWriter.cs" />
-    <Compile Include="ModelWriter\BINWriter.cs" />
-    <Compile Include="ModelWriter\RefPoseWriter.cs" />
+    <Compile Include="Writer\ASCIIWriter.cs" />
+    <Compile Include="Writer\BINWriter.cs" />
+    <Compile Include="Writer\RefPoseWriter.cs" />
+    <Compile Include="Writer\SEAnimWriter.cs" />
+    <Compile Include="Types\AnimationTypes.cs" />
     <Compile Include="Types\Chunk\OSCE.cs" />
     <Compile Include="Types\Chunk\FECE.cs" />
     <Compile Include="Types\Chunk\PRHM.cs" />
@@ -75,12 +78,12 @@
     <Compile Include="Types\Map\IMapFormat.cs" />
     <Compile Include="Types\Map\Map01.cs" />
     <Compile Include="Material.cs" />
-    <Compile Include="ModelWriter\MTLWriter.cs" />
-    <Compile Include="ModelWriter\OBJWriter.cs" />
-    <Compile Include="ModelWriter\IModelWriter.cs" />
-    <Compile Include="ModelWriter\OWMAPWriter.cs" />
-    <Compile Include="ModelWriter\OWMATWriter.cs" />
-    <Compile Include="ModelWriter\OWMDLWriter.cs" />
+    <Compile Include="Writer\MTLWriter.cs" />
+    <Compile Include="Writer\OBJWriter.cs" />
+    <Compile Include="Writer\IDataWriter.cs" />
+    <Compile Include="Writer\OWMAPWriter.cs" />
+    <Compile Include="Writer\OWMATWriter.cs" />
+    <Compile Include="Writer\OWMDLWriter.cs" />
     <Compile Include="OWString.cs" />
     <Compile Include="STUD.cs" />
     <Compile Include="Texture.cs" />

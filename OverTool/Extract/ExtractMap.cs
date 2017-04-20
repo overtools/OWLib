@@ -6,7 +6,7 @@ using CASCExplorer;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.STUD;
-using OWLib.ModelWriter;
+using OWLib.Writer;
 using OverTool.ExtractLogic;
 using OWLib.Types.Map;
 using OWLib.Types.STUD.Binding;
@@ -76,7 +76,7 @@ namespace OverTool {
                 using (Stream mapStream = Util.OpenFile(map[master.Header.data.key], handler)) {
                     Console.Out.WriteLine("Extracting map {0} with ID {1:X8}", name, GUID.Index(master.Header.data.key));
                     Map mapData = new Map(mapStream);
-                    OWMAPWriter owmap = new OWMAPWriter();
+                    IDataWriter owmap = new OWMAPWriter();
                     Dictionary<ulong, List<string>>[] used = null;
                     if (!Directory.Exists(outputPath)) {
                         Directory.CreateDirectory(outputPath);
@@ -149,8 +149,8 @@ namespace OverTool {
                             }
                         }
                     }
-                    IModelWriter owmdl = new OWMDLWriter();
-                    IModelWriter owmat = new OWMATWriter();
+                    IDataWriter owmdl = new OWMDLWriter();
+                    IDataWriter owmat = new OWMATWriter();
                     using (Stream map10Stream = Util.OpenFile(map[master.DataKey(0x10)], handler)) {
                         Map10 physics = new Map10(map10Stream);
                         using (Stream outputStream = File.Open($"{outputPath}physics{owmdl.Format}", FileMode.Create, FileAccess.Write)) {

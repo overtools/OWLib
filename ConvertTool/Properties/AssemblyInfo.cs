@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ModelTool")]
-[assembly: AssemblyDescription("Converts Overwatch Models to various formats")]
+[assembly: AssemblyTitle("ConvertTool")]
+[assembly: AssemblyDescription("Converts Overwatch geometric data to various formats")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ModelTool")]
+[assembly: AssemblyProduct("ConvertTool")]
 [assembly: AssemblyCopyright("Copyright © 2016-2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

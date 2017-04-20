@@ -5,8 +5,8 @@ using OWLib.Types;
 using OWLib.Types.Chunk;
 using OWLib.Types.Map;
 
-namespace OWLib.ModelWriter {
-    public class BINWriter : IModelWriter {
+namespace OWLib.Writer {
+    public class BINWriter : IDataWriter {
         private static void WriteString(BinaryWriter stream, string str) {
             stream.Write(str);
         }
@@ -16,7 +16,7 @@ namespace OWLib.ModelWriter {
         public string Name => "XNALara XPS Binary";
         public string Format => ".mesh";
         public char[] Identifier => new char[2] { 'L', 'b' };
-        public ModelWriterSupport SupportLevel => (ModelWriterSupport.VERTEX | ModelWriterSupport.UV | ModelWriterSupport.BONE | ModelWriterSupport.POSE | ModelWriterSupport.MATERIAL);
+        public WriterSupport SupportLevel => (WriterSupport.VERTEX | WriterSupport.UV | WriterSupport.BONE | WriterSupport.POSE | WriterSupport.MATERIAL | WriterSupport.MODEL);
 
         public static OpenTK.Vector3 NormalizeAngles(OpenTK.Vector3 angles) {
             angles.X = NormalizeAngle(angles.X);
@@ -285,6 +285,14 @@ namespace OWLib.ModelWriter {
                 }
             }
             return true;
+        }
+
+        public bool Write(Animation anim, Stream output, object[] data) {
+            return false;
+        }
+
+        public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name = "") {
+            return null;
         }
     }
 }
