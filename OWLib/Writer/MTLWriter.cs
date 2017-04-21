@@ -8,7 +8,6 @@ namespace OWLib.Writer {
         public string Name => "Wavefront MTL";
         public string Format => ".mtl";
         public char[] Identifier => new char[1] { 'O' };
-
         public WriterSupport SupportLevel => WriterSupport.MATERIAL | WriterSupport.MATERIAL_DEF;
 
         public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] opts) {

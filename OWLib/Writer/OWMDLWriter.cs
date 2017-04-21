@@ -9,10 +9,8 @@ using OWLib.Types.Map;
 namespace OWLib.Writer {
     public class OWMDLWriter : IDataWriter {
         public string Format => ".owmdl";
-
         public char[] Identifier => new char[1] { 'w' };
         public string Name => "OWM Model Format";
-
         public WriterSupport SupportLevel => (WriterSupport.VERTEX | WriterSupport.UV | WriterSupport.BONE | WriterSupport.POSE | WriterSupport.MATERIAL | WriterSupport.ATTACHMENT | WriterSupport.MODEL);
 
         public bool Write(Map10 physics, Stream output, object[] data) {

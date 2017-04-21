@@ -8,10 +8,8 @@ using OWLib.Types.Map;
 namespace OWLib.Writer {
     public class OWMATWriter : IDataWriter {
         public string Format => ".owmat";
-
         public char[] Identifier => new char[1] { 'W' };
         public string Name => "OWM Material Format";
-
         public WriterSupport SupportLevel => WriterSupport.MATERIAL | WriterSupport.MATERIAL_DEF;
 
         public bool Write(Map10 physics, Stream output, object[] data) {

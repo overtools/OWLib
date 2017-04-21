@@ -10,11 +10,9 @@ using System.Globalization;
 namespace OWLib.Writer {
     public class RefPoseWriter : IDataWriter {
         public string Format => ".smd";
-
         public char[] Identifier => new char[1] { 'R' };
-
         public string Name => "Reference Pose";
-
+        private CultureInfo culture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
         public WriterSupport SupportLevel => WriterSupport.BONE | WriterSupport.POSE | WriterSupport.MODEL | WriterSupport.REFPOSE;
 
         public bool Write(Map10 physics, Stream output, object[] data) {
@@ -76,6 +74,8 @@ namespace OWLib.Writer {
         }
 
         public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data) {
+            culture.NumberFormat.NumberDecimalSeparator = ".";
+            System.Threading.Thread.CurrentThread.CurrentCulture = culture;
             IChunk chunk = model.FindNextChunk("lksm").Value;
             if (chunk == null) {
                 return false;

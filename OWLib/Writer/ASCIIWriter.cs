@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using OWLib.Types;
 using OWLib.Types.Chunk;
@@ -10,9 +11,13 @@ namespace OWLib.Writer {
         public string Name => "XNALara XPS ASCII";
         public string Format => ".mesh.ascii";
         public char[] Identifier => new char[2] { 'l', 'a' };
+        private CultureInfo culture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
         public WriterSupport SupportLevel => (WriterSupport.VERTEX | WriterSupport.UV | WriterSupport.BONE | WriterSupport.MATERIAL | WriterSupport.MODEL);
 
         public bool Write(Chunked chunked, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] opts) {
+            culture.NumberFormat.NumberDecimalSeparator = ".";
+            System.Threading.Thread.CurrentThread.CurrentCulture = culture;
+
             IChunk chunk = chunked.FindNextChunk("MNRM").Value;
             if (chunk == null) {
                 return false;
