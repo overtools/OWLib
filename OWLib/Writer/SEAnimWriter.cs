@@ -103,9 +103,13 @@ namespace OWLib.Writer {
       SortedSet<int> boneIds = new SortedSet<int>();
 
       SEAnimPresence everHas = 0;
+      int frameCount = 0;
 
       foreach(Keyframe keyframe in anim.Animations) {
         int pos = keyframe.FramePositionI;
+        if(pos > frameCount) {
+            frameCount = pos;
+        }
 
         foreach(BoneAnimation bone in keyframe.BoneFrames) {
           foreach(FrameValue value in bone.Values) {
@@ -130,9 +134,9 @@ namespace OWLib.Writer {
       }
 
       byte frameWidth;
-      if(anim.Animations.Count - 1 <= 0xFF) {
+      if(frameCount <= 0xFF) {
         frameWidth = 1;
-      } else if(anim.Animations.Count - 1 <= 0xFFFF) {
+      } else if(frameCount <= 0xFFFF) {
         frameWidth = 2;
       } else {
         frameWidth = 4;
@@ -159,7 +163,7 @@ namespace OWLib.Writer {
         writer.Write((byte)0);
         writer.Write(new byte[2] { 0, 0 });
         writer.Write(anim.FramesPerSecond);
-        writer.Write(anim.Animations.Count);
+        writer.Write(frameCount + 1);
         writer.Write(boneIds.Count);
         writer.Write((byte)0);
         writer.Write(new byte[3] { 0, 0, 0 });
