@@ -10,7 +10,7 @@ namespace OWLib.Types.STUD {
     public struct ReferenceData {
       public STUDInstanceInfo instance;
       public OWRecord sound;
-      public uint unk2;
+      public uint Typus;
     }
 
     private ReferenceData reference;

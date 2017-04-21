@@ -17,6 +17,10 @@ namespace OWLib {
             return key & (ulong)flags;
         }
 
+        public static ulong LongKey(ulong key) {
+            return Attribute(key, AttributeEnum.Index | AttributeEnum.Locale | AttributeEnum.Region | AttributeEnum.Platform);
+        }
+
         public static uint Index(ulong key) {
             return (uint)(Attribute(key, AttributeEnum.Index));
         }

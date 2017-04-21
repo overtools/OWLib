@@ -399,7 +399,7 @@ namespace OverTool.ExtractLogic {
             }
         }
 
-        public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, string itemGroup, List<ulong> ignore, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, List<char> furtherOpts) {
+        public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, string itemGroup, List<ulong> ignore, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, List<char> furtherOpts, ulong masterKey) {
             string path = string.Format("{0}{1}{2}{1}{3}{1}{5}{1}{4}{1}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName), Util.SanitizePath(itemGroup));
 
             SkinItem skin = (SkinItem)itemStud.Instances[0];
@@ -438,10 +438,10 @@ namespace OverTool.ExtractLogic {
             }
             FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
 
-            Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler);
+            Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler, masterKey);
         }
 
-        public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler) {
+        public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, ulong heroKey) {
             Dictionary<string, TextureType> typeInfo = new Dictionary<string, TextureType>();
             if (furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
                 foreach (KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
@@ -611,7 +611,7 @@ namespace OverTool.ExtractLogic {
 
             if (furtherOpts.Count < 5 || furtherOpts[4] != 'S') {
                 Console.Out.WriteLine("Dumping voice bites for hero {0} with skin {1}", heroName, itemName);
-                List<ulong> soundData = Sound.FindSounds(master, track, map, handler, replace);
+                Dictionary<ulong, List<ulong>> soundData = Sound.FindSounds(master, track, map, handler, replace, heroKey);
                 string outpath = $"{path}Sound{Path.DirectorySeparatorChar}";
                 if (!Directory.Exists(outpath)) {
                     Directory.CreateDirectory(outpath);

@@ -81,9 +81,9 @@ namespace OverTool {
                     if (!Directory.Exists(outputPath)) {
                         Directory.CreateDirectory(outputPath);
                     }
-                    List<ulong> soundData = new List<ulong>();
+                    Dictionary<ulong, List<ulong>> soundData = new Dictionary<ulong, List<ulong>>();
                     HashSet<ulong> soundDone = new HashSet<ulong>();
-                    Sound.FindSoundsEx(master.Header.audio.key, soundDone, soundData, map, handler, replace);
+                    Sound.FindSoundsEx(master.Header.audio.key, soundDone, soundData, map, handler, replace, master.Header.data.key);
                     using (Stream map2Stream = Util.OpenFile(map[master.DataKey(2)], handler)) {
                         Map map2Data = new Map(map2Stream);
                         using (Stream map8Stream = Util.OpenFile(map[master.DataKey(8)], handler)) {
@@ -108,7 +108,7 @@ namespace OverTool {
 
                                 for (int i = 0; i < inlineSTUDArray.Count; ++i) {
                                     STUD stud = inlineSTUDArray[i];
-                                    Sound.FindSoundsSTUD(stud, soundDone, soundData, map, handler, replace);
+                                    Sound.FindSoundsSTUD(stud, soundDone, soundData, map, handler, replace, master.DataKey(0xB), master.DataKey(0xB));
                                 }
 
                                 for (int i = 0; i < mapBData.Records.Length; ++i) {
@@ -119,7 +119,7 @@ namespace OverTool {
                                     if (!map.ContainsKey(mapprop.Header.binding)) {
                                         continue;
                                     }
-                                    Sound.FindSoundsEx(mapprop.Header.binding, soundDone, soundData, map, handler, replace);
+                                    Sound.FindSoundsEx(mapprop.Header.binding, soundDone, soundData, map, handler, replace, master.DataKey(0xB));
                                     using (Stream bindingFile = Util.OpenFile(map[mapprop.Header.binding], handler)) {
                                         STUD binding = new STUD(bindingFile, true, STUDManager.Instance, false, true);
                                         foreach (ISTUDInstance instance in binding.Instances) {

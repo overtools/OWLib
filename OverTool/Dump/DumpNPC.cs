@@ -55,7 +55,7 @@ namespace OverTool {
 
                 ExtractLogic.Skin.FindModels(master.Header.binding, blank, models, animList, layers, blankdict, parsed, map, handler);
 
-                ExtractLogic.Skin.Save(master, path, heroName, $"{GUID.Attribute(masterKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X}", blankdict, parsed, models, layers, animList, blankchar, track, map, handler);
+                ExtractLogic.Skin.Save(master, path, heroName, $"{GUID.Attribute(masterKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X}", blankdict, parsed, models, layers, animList, blankchar, track, map, handler, masterKey);
             }
         }
     }

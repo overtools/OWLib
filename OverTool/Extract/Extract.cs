@@ -183,7 +183,7 @@ namespace OverTool {
                                 ignoreList = heroIgnore[heroName.ToLowerInvariant()][name.ToLowerInvariant()];
                             } catch { }
                             Console.Out.WriteLine("Extracting {0} models and textures for {1}", name, heroName);
-                            ExtractLogic.Skin.Extract(master, stud, output, heroName, name, itemGroup, ignoreList, track, map, handler, furtherOpts);
+                            ExtractLogic.Skin.Extract(master, stud, output, heroName, name, itemGroup, ignoreList, track, map, handler, furtherOpts, masterKey);
                             break;
                         case "Icon":
                             Console.Out.WriteLine("Extracting icon {0} for {1}...", name, heroName);
