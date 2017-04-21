@@ -79,9 +79,9 @@ namespace OWLib.Writer {
       foreach(KeyValuePair<int, object> pair in frames) {
         Vec3d value = (Vec3d)pair.Value;
         WriteFrameT(writer, frame_t, pair.Key);
-        writer.Write(value.x);
-        writer.Write(value.y);
-        writer.Write(value.z);
+        writer.Write((float)value.x);
+        writer.Write((float)value.y);
+        writer.Write((float)value.z);
       }
     }
     
@@ -91,10 +91,10 @@ namespace OWLib.Writer {
       foreach(KeyValuePair<int, object> pair in frames) {
         Vec4d value = (Vec4d)pair.Value;
         WriteFrameT(writer, frame_t, pair.Key);
-        writer.Write(value.x);
-        writer.Write(value.y);
-        writer.Write(value.z);
-        writer.Write(value.w);
+        writer.Write((float)value.x);
+        writer.Write((float)value.y);
+        writer.Write((float)value.z);
+        writer.Write((float)value.w);
       }
     }
 
@@ -102,14 +102,14 @@ namespace OWLib.Writer {
       Dictionary<int, Dictionary<AnimChannelID, SortedList<int, object>>> framesByBone = new Dictionary<int, Dictionary<AnimChannelID, SortedList<int, object>>>();
       SortedSet<int> boneIds = new SortedSet<int>();
 
-      AnimChannelID everHas = 0;
+      SEAnimPresence everHas = 0;
 
       foreach(Keyframe keyframe in anim.Animations) {
         int pos = keyframe.FramePositionI;
 
         foreach(BoneAnimation bone in keyframe.BoneFrames) {
           foreach(FrameValue value in bone.Values) {
-            everHas |= value.Channel;
+            everHas |= (SEAnimPresence)value.Channel;
 
             if(!framesByBone.ContainsKey(bone.BoneID)) {
               boneIds.Add(bone.BoneID);
@@ -155,8 +155,8 @@ namespace OWLib.Writer {
         writer.Write(HEADER_SZ);
         writer.Write((byte)SEAnimType.ABSOLUTE);
         writer.Write((byte)0);
-        writer.Write((byte)((SEAnimPresence)everHas));
-        writer.Write((byte)SEAnimProperty.HighPrecision);
+        writer.Write((byte)everHas);
+        writer.Write((byte)0);
         writer.Write(new byte[2] { 0, 0 });
         writer.Write(anim.FramesPerSecond);
         writer.Write(anim.Animations.Count);
@@ -171,6 +171,7 @@ namespace OWLib.Writer {
 
         foreach(int boneId in boneIds) {
           Dictionary<AnimChannelID, SortedList<int, object>> dict = framesByBone[boneId];
+          writer.Write((byte)0);
           if(everHas.HasFlag(AnimChannelID.POSITION)) {
             WriteFrames3d(writer, frameWidth, dict[AnimChannelID.POSITION]);
           }
