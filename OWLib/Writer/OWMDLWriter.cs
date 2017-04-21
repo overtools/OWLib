@@ -19,7 +19,7 @@ namespace OWLib.Writer {
             Console.Out.WriteLine("Writing OWMDL");
             using (BinaryWriter writer = new BinaryWriter(output)) {
                 writer.Write((ushort)1);
-                writer.Write((ushort)0);
+                writer.Write((ushort)1);
                 writer.Write((byte)0);
                 writer.Write((byte)0);
                 writer.Write((ushort)0);

@@ -54,5 +54,7 @@ def read(filename):
         for i in range(emptyCount):
             name, position, rotation = bin_ops.readFmt(stream, owm_types.OWMDLEmpty.structFormat)
             empties += [owm_types.OWMDLEmpty(name, position, rotation)]
+        if major >= 1 and minor >= 1:
+            for i in range(emptyCount): empties[i].hardpoint = bin_ops.readFmt(stream, owm_types.OWMDLEmpty.exFormat)
 
     return owm_types.OWMDLFile(header, bones, meshes, empties)

@@ -197,7 +197,7 @@ def importMeshes(armature):
     meshes = [importMesh(armature, meshData) for meshData in data.meshes]
     return meshes
 
-def importEmpties():
+def importEmpties(armature = None):
     global data
     global settings
     global rootObject
@@ -213,13 +213,26 @@ def importEmpties():
 
     e = []
     for emp in data.empties:
-        empty = bpy.data.objects.new(emp.name, None)
-        bpy.context.scene.objects.link(empty)
-        bpy.context.scene.update()
+        bpy.ops.object.empty_add(type='CIRCLE', radius=0.05 )
+        empty = bpy.context.active_object
         empty.parent = att
+        empty.name = emp.name
+        empty.show_x_ray = True
         empty.location = xzy(emp.position)
         empty.rotation_euler = Quaternion(wxzy(emp.rotation)).to_euler('XYZ')
         empty.select = True
+        bpy.context.scene.update()
+        if len(emp.hardpoint) > 0 and armature is not None:
+            childOf = empty.constraints.new("CHILD_OF")
+            childOf.name = "ChildOfHardpoint%s" % (empty.name)
+            childOf.target = armature
+            childOf.subtarget = emp.hardpoint
+            bpy.context.scene.update()
+            context_cpy = bpy.context.copy()
+            context_cpy["constraint"] = childOf
+            empty.update_tag({"DATA"})
+            bpy.ops.constraint.childof_set_inverse(context_cpy, constraint=childOf.name, owner="OBJECT")
+            empty.update_tag({"DATA"})
         bpy.context.scene.update()
         e += [empty]
     return e
@@ -247,6 +260,10 @@ def boneTailMiddle(eb):
         if bone.parent:
             if bone.head == bone.parent.tail:
                 bone.use_connect = True
+
+def select_all(ob):
+    ob.select = True
+    for obj in ob.children: select_all(obj)
 
 def readmdl(materials = None):
     global root
@@ -286,13 +303,16 @@ def readmdl(materials = None):
 
     empties = []
     if settings.importEmpties and data.header.emptyCount > 0:
-        empties = importEmpties()
+        empties = importEmpties(armature)
 
     if armature:
         boneTailMiddleObject(armature)
 
     if impMat:
         import_owmat.cleanUnusedMaterials(materials)
+    
+    bpy.ops.object.select_all(action='DESELECT')
+    select_all(rootObject)
 
     bpy.context.scene.update()
 

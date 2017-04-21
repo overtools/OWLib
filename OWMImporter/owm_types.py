@@ -110,10 +110,12 @@ class OWMDLIndex:
 
 class OWMDLEmpty:
     structFormat = [str, '<fff', '<ffff']
-    def __init__(self, name, position, rotation):
+    exFormat = [str]
+    def __init__(self, name, position, rotation, hardpoint = ""):
         self.name = name
         self.position = position
         self.rotation = rotation
+        self.hardpoint = hardpoint
 
 class OWMATMaterial:
     structFormat = ['<QI']
