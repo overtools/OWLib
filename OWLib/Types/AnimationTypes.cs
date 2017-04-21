@@ -35,8 +35,8 @@ namespace OWLib.Types {
     [Flags]
     public enum AnimChannelID : byte {
         POSITION = 1,
-        SCALE = 2,
-        ROTATION = 4
+        ROTATION = 2,
+        SCALE = 4
     }
 
     public struct FrameValue {

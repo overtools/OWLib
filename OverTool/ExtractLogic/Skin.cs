@@ -576,6 +576,7 @@ namespace OverTool.ExtractLogic {
             }
 
             if (furtherOpts.Count < 3 || furtherOpts[2] != 'A') {
+                SEAnimWriter animWriter = new SEAnimWriter();
                 foreach (KeyValuePair<ulong, ulong> kv in animList) {
                     ulong parent = kv.Value;
                     ulong key = kv.Key;
@@ -587,8 +588,22 @@ namespace OverTool.ExtractLogic {
                         Stream output = Util.OpenFile(map[key], handler);
                         if (output != null) {
                             output.CopyTo(outp);
-                            Console.Out.WriteLine("Wrote animation {0}", outpath);
+                            Console.Out.WriteLine("Wrote raw animation {0}", outpath);
                             output.Close();
+                        }
+                    }
+                    outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform), animWriter.Format);
+
+                    using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+                        Stream output = Util.OpenFile(map[key], handler);
+                        if (output != null) {
+                            try {
+                                Animation anim = new Animation(output, false);
+                                animWriter.Write(anim, outp, new object[] { });
+                                Console.Out.WriteLine("Wrote animation {0}", outpath);
+                            } catch {
+                                Console.Error.WriteLine("Error with animation {0:X12}.{1:X3}", GUID.Index(key), GUID.Type(key));
+                            }
                         }
                     }
                 }
