@@ -29,14 +29,7 @@ namespace OverTool {
                     if (typ == 0x043) {
                         ext = "bnk";
                     }
-                    string ooutputPath = $"{rootOutput}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}";
-                    string outputPath = (string) ooutputPath.Clone();
-                    int sigma = 0;
-                    while (File.Exists(outputPath + "." + ext)) {
-                        sigma++;
-                        outputPath = ooutputPath + $"_{sigma:X}";
-                    }
-                    outputPath += "." + ext;
+                    string outputPath = $"{rootOutput}{GUID.LongKey(key):X12}.{ext}";
                     using (Stream soundStream = Util.OpenFile(map[key], handler)) {
                         if (soundStream == null) {
                             //Console.Out.WriteLine("Failed to dump {0}, probably missing key", ooutputPath);

@@ -179,7 +179,7 @@ namespace OWLib.Writer {
                             done.Clear();
                             for (int j = 0; j < materialLayers.Count; ++j) {
                                 if (done.Add(materialLayers[j].key)) {
-                                    writer.Write($"{GUID.Attribute(materialLayers[j].key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.dds");
+                                    writer.Write($"{GUID.LongKey(materialLayers[j].key):X12}.dds");
                                     writer.Write((uint)0);
                                 }
                             }

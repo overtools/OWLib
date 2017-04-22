@@ -27,7 +27,8 @@ namespace ConvertTool {
             }
 
             if (args.Length < 3) {
-                Console.Out.WriteLine("Usage: ConvertTool.exe file type [-l n] output_file");
+                Console.Out.WriteLine("Usage (model): ConvertTool.exe file type [model args] output_file");
+                Console.Out.WriteLine("Usage (animation): ConvertTool.exe file type output_file");
                 Console.Out.WriteLine("type can be:");
                 Console.Out.WriteLine("  t - supprt - type  - {0, -30} - normal extension", "name");
                 Console.Out.WriteLine("".PadLeft(60, '-'));
@@ -45,7 +46,7 @@ namespace ConvertTool {
                 }
                 Console.Out.WriteLine("vutbpm = vertex / uv / attachment / bone / pose / material support");
                 Console.Out.WriteLine("ampre = anim / model / map / refpose / material definition");
-                Console.Out.WriteLine("args:");
+                Console.Out.WriteLine("model args:");
                 Console.Out.WriteLine("  -l n - only save LOD, where N is lod");
                 Console.Out.WriteLine("  -t   - save attachment points (sockets)");
                 Console.Out.WriteLine("  -L   - only save first LOD found");
@@ -55,38 +56,9 @@ namespace ConvertTool {
 
             Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
-            string modelFile = args[0];
+            string dataFile = args[0];
             char type = args[1][0];
             string outputFile = args[args.Length - 1];
-            List<byte> lods = null;
-            bool attachments = false;
-            bool firstLod = false;
-            bool skipCmodel = true;
-            if (args.Length > 3) {
-                int i = 2;
-                while (i < args.Length - 2) {
-                    string arg = args[i];
-                    ++i;
-                    if (arg[0] == '-') {
-                        if (arg[1] == 'l') {
-                            if (lods == null) {
-                                lods = new List<byte>();
-                            }
-                            byte b = byte.Parse(args[i], System.Globalization.NumberStyles.Number);
-                            lods.Add(b);
-                            ++i;
-                        } else if (arg[1] == 'L') {
-                            firstLod = true;
-                        } else if (arg[1] == 't') {
-                            attachments = true;
-                        } else if (arg[1] == 'c') {
-                            skipCmodel = false;
-                        }
-                    } else {
-                        continue;
-                    }
-                }
-            }
 
             IDataWriter writer = null;
             foreach (IDataWriter w in writers) {
@@ -99,26 +71,60 @@ namespace ConvertTool {
                 Console.Error.WriteLine("Unsupported format {0}", type);
                 return;
             }
-            
-            using (Stream modelStream = File.Open(modelFile, FileMode.Open, FileAccess.Read)) {
-                if (!writer.SupportLevel.HasFlag(WriterSupport.MODEL) && writer.SupportLevel.HasFlag(WriterSupport.ANIM)) {
-                    Animation anim = new Animation(modelStream, false);
-                    using (Stream outStream = File.Open(outputFile, FileMode.Create, FileAccess.Write)) {
-                        if (writer.Write(anim, outStream, new object[] { })) {
+
+            Console.Out.WriteLine("Opening {0}", dataFile);
+            using (Stream dataStream = File.Open(dataFile, FileMode.Open, FileAccess.Read)) {
+                if (writer.SupportLevel.HasFlag(WriterSupport.ANIM)) {
+                    Console.Out.WriteLine("Converting animation...");
+                    Animation anim = new Animation(dataStream, false);
+                    using (Stream output = File.Open(outputFile, FileMode.Create, FileAccess.Write)) {
+                        if (writer.Write(anim, output, new object[] { })) {
                             Console.Out.WriteLine("Wrote animation");
                         } else {
                             Console.Out.WriteLine("Failed to write animation");
                         }
                     }
-                } else {
-                    Chunked model = new Chunked(modelStream);
-                    using (Stream outStream = File.Open(outputFile, FileMode.Create, FileAccess.Write)) {
-                        if (writer.Write(model, outStream, lods, new Dictionary<ulong, List<ImageLayer>>(), new object[] { attachments, null, null, firstLod, skipCmodel })) {
+                } else if (writer.SupportLevel.HasFlag(WriterSupport.MODEL)) {
+                    List<byte> lods = null;
+                    bool attachments = false;
+                    bool firstLod = false;
+                    bool skipCmodel = true;
+                    if (args.Length > 3) {
+                        int i = 2;
+                        while (i < args.Length - 2) {
+                            string arg = args[i];
+                            ++i;
+                            if (arg[0] == '-') {
+                                if (arg[1] == 'l') {
+                                    if (lods == null) {
+                                        lods = new List<byte>();
+                                    }
+                                    byte b = byte.Parse(args[i], System.Globalization.NumberStyles.Number);
+                                    lods.Add(b);
+                                    ++i;
+                                } else if (arg[1] == 'L') {
+                                    firstLod = true;
+                                } else if (arg[1] == 't') {
+                                    attachments = true;
+                                } else if (arg[1] == 'c') {
+                                    skipCmodel = false;
+                                }
+                            } else {
+                                continue;
+                            }
+                        }
+                    }
+                    Chunked model = new Chunked(dataStream);
+                    using (Stream output = File.Open(outputFile, FileMode.Create, FileAccess.Write)) {
+                        Console.Out.WriteLine("Converting model...");
+                        if (writer.Write(model, output, lods, new Dictionary<ulong, List<ImageLayer>>(), new object[] { attachments, null, null, firstLod, skipCmodel })) {
                             Console.Out.WriteLine("Wrote model");
                         } else {
                             Console.Out.WriteLine("Failed to write model");
                         }
                     }
+                } else {
+                    Console.Out.WriteLine("Cant export.");
                 }
             }
         }

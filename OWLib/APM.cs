@@ -30,9 +30,9 @@ namespace OWLib {
             return num + 1;
         }
 
-        [Obsolete("Use GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform)")]
+        [Obsolete("Use GUID.LongKey(key)")]
         public static ulong keyToIndexID(ulong key) {
-            return GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
+            return GUID.LongKey(key);
         }
 
         [Obsolete("Use GUID.Index(key)")]
@@ -40,7 +40,7 @@ namespace OWLib {
             return GUID.Index(key);
         }
 
-        [Obsolete("Use GUID.Attribute(key, GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform) >> 32")]
+        [Obsolete("Use GUID.LongKey(key, GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform) >> 32")]
         public static ulong keyToIndent(ulong key) {
             return GUID.Attribute(key, GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform) >> 32;
         }

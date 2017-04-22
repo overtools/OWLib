@@ -163,7 +163,28 @@ namespace OverTool.ExtractLogic {
             FindSoundsEx(master.Header.child2.key, done, ret, map, handler, replace, parent);
             FindSoundsEx(master.Header.child3.key, done, ret, map, handler, replace, parent);
             FindSoundsEx(master.Header.child4.key, done, ret, map, handler, replace, parent);
-
+            ulong bindingKey = 0;
+            foreach (HeroMaster.HeroChild1 child in master.Child1) {
+                bindingKey = child.record.key;
+                if (replace.ContainsKey(bindingKey)) {
+                    bindingKey = replace[bindingKey];
+                }
+                FindSoundsEx(bindingKey, done, ret, map, handler, replace, parent);
+            }
+            foreach (HeroMaster.HeroChild2 child in master.Child3) {
+                bindingKey = child.record.key;
+                if (replace.ContainsKey(bindingKey)) {
+                    bindingKey = replace[bindingKey];
+                }
+                FindSoundsEx(bindingKey, done, ret, map, handler, replace, parent);
+            }
+            foreach (HeroMaster.HeroChild2 child in master.Child3) {
+                bindingKey = child.record.key;
+                if (replace.ContainsKey(bindingKey)) {
+                    bindingKey = replace[bindingKey];
+                }
+                FindSoundsEx(bindingKey, done, ret, map, handler, replace, parent);
+            }
             return ret;
         }
     }

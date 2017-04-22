@@ -273,7 +273,7 @@ namespace OverTool.ExtractLogic {
                     if (replace.ContainsKey(modelKey)) {
                         modelKey = replace[modelKey];
                     }
-                    if (ignore.Count > 0 && !ignore.Contains(GUID.Attribute(modelKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform))) {
+                    if (ignore.Count > 0 && !ignore.Contains(GUID.LongKey(modelKey))) {
                         continue;
                     }
                     models.Add(modelKey);
@@ -437,6 +437,27 @@ namespace OverTool.ExtractLogic {
                 bindingKey = replace[bindingKey];
             }
             FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+            foreach (HeroMaster.HeroChild1 child in master.Child1) {
+                bindingKey = child.record.key;
+                if (replace.ContainsKey(bindingKey)) {
+                    bindingKey = replace[bindingKey];
+                }
+                FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+            }
+            foreach (HeroMaster.HeroChild2 child in master.Child3) {
+                bindingKey = child.record.key;
+                if (replace.ContainsKey(bindingKey)) {
+                    bindingKey = replace[bindingKey];
+                }
+                FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+            }
+            foreach (HeroMaster.HeroChild2 child in master.Child3) {
+                bindingKey = child.record.key;
+                if (replace.ContainsKey(bindingKey)) {
+                    bindingKey = replace[bindingKey];
+                }
+                FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+            }
 
             Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler, masterKey);
         }
@@ -452,7 +473,7 @@ namespace OverTool.ExtractLogic {
                             continue;
                         }
                         KeyValuePair<string, TextureType> stt = SaveTexture(layer.key, map, handler,
-                            $"{path}{GUID.Attribute(layer.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.dds");
+                            $"{path}{GUID.LongKey(layer.key):X12}.dds");
                         typeInfo.Add(stt.Key, stt.Value);
                     }
                 }
@@ -539,7 +560,7 @@ namespace OverTool.ExtractLogic {
                         Directory.CreateDirectory(Path.GetDirectoryName(path));
                     }
 
-                    outpath = $"{path}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.{GUID.Type(key):X3}";
+                    outpath = $"{path}{GUID.LongKey(key):X12}.{GUID.Type(key):X3}";
 
                     using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
                         Util.OpenFile(map[key], handler).CopyTo(outp);
@@ -553,7 +574,7 @@ namespace OverTool.ExtractLogic {
                     Chunked mdl = new Chunked(Util.OpenFile(map[key], handler));
 
                     if (furtherOpts.Count <= 6 || furtherOpts[6] != 'R') {
-                        outpath = $"{path}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}_refpose{refpose.Format}";
+                        outpath = $"{path}{GUID.LongKey(key):X12}_refpose{refpose.Format}";
                         using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
                             if (refpose.Write(mdl, outp, null, null, null)) {
                                 Console.Out.WriteLine("Wrote reference pose {0}", outpath);
@@ -563,7 +584,7 @@ namespace OverTool.ExtractLogic {
 
                     string mdlName = $"{heroName} Skin {itemName}_{GUID.Index(key):X}";
 
-                    outpath = $"{path}{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}{writer.Format}";
+                    outpath = $"{path}{GUID.LongKey(key):X12}{writer.Format}";
 
                     using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
                         if (writer.Write(mdl, outp, lods, layers, new object[5] { true, Path.GetFileName(mtlPath), mdlName, null, skipCmodel })) {
@@ -580,7 +601,7 @@ namespace OverTool.ExtractLogic {
                 foreach (KeyValuePair<ulong, ulong> kv in animList) {
                     ulong parent = kv.Value;
                     ulong key = kv.Key;
-                    string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform), GUID.Type(key));
+                    string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), GUID.Type(key));
                     if (!Directory.Exists(Path.GetDirectoryName(outpath))) {
                         Directory.CreateDirectory(Path.GetDirectoryName(outpath));
                     }
@@ -592,7 +613,7 @@ namespace OverTool.ExtractLogic {
                             output.Close();
                         }
                     }
-                    outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform), animWriter.Format);
+                    outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), animWriter.Format);
 
                     using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
                         Stream output = Util.OpenFile(map[key], handler);
@@ -618,10 +639,41 @@ namespace OverTool.ExtractLogic {
                 }
                 DumpVoice.Save(outpath, soundData, map, handler, replace);
             }
+
+            if (furtherOpts.Count <= 7 || furtherOpts[7] != 'I') {
+                string output = string.Format("{0}GUI{1}", path, Path.DirectorySeparatorChar);
+
+                if (Directory.Exists(output)) {
+                    Directory.CreateDirectory(output);
+                }
+
+                HashSet<ulong> done = new HashSet<ulong>();
+                if (done.Add(master.Header.texture1.key)) {
+                    SaveIcon(output, master.Header.texture1.key, replace, map, handler);
+                }
+                if (done.Add(master.Header.texture2.key)) {
+                    SaveIcon(output, master.Header.texture2.key, replace, map, handler);
+                }
+                if (done.Add(master.Header.texture3.key)) {
+                    SaveIcon(output, master.Header.texture3.key, replace, map, handler);
+                }
+                if (done.Add(master.Header.texture4.key)) {
+                    SaveIcon(output, master.Header.texture4.key, replace, map, handler);
+                }
+            }
+        }
+
+        public static void SaveIcon(string output, ulong key, Dictionary<ulong, ulong> replace, Dictionary<ulong, Record> map, CASCHandler handler) {
+            if (replace.ContainsKey(key)) {
+                key = replace[key];
+            }
+            if (key != 0) {
+                SaveTexture(key, map, handler, $"{output}{GUID.LongKey(key):X12}.dds");
+            }
         }
 
         public static KeyValuePair<string, TextureType> SaveTexture(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, string path) {
-            string name = $"{GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform)}:X12.dds";
+            string name = $"{GUID.LongKey(key)}:X12.dds";
             TextureType @type = TextureType.Unknown;
 
             if (!map.ContainsKey(key)) {

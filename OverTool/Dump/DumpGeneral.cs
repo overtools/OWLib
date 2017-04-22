@@ -19,7 +19,7 @@ namespace OverTool {
         private static void ExtractImage(ulong imageKey, string dpath, Dictionary<ulong, Record> map, CASCHandler handler, string name = null) {
             ulong imageDataKey = (imageKey & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
             if (string.IsNullOrWhiteSpace(name)) {
-                name = $"{GUID.Attribute(imageKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}";
+                name = $"{GUID.LongKey(imageKey):X12}";
             }
             string path = $"{dpath}{name}.dds";
             if (!Directory.Exists(Path.GetDirectoryName(path))) {

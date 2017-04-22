@@ -27,9 +27,9 @@ namespace OverTool {
                         if (str.Value == null || str.Value.Length == 0) {
                             continue;
                         }
-                        Console.Out.WriteLine("{0:X12}.{1:X3}: {2}", GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform), GUID.Type(key), str.Value);
+                        Console.Out.WriteLine("{0:X12}.{1:X3}: {2}", GUID.LongKey(key), GUID.Type(key), str.Value);
                     } catch {
-                        Console.Out.WriteLine("Error with file {0:X12}.{1:X3}", GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform), GUID.Type(key));
+                        Console.Out.WriteLine("Error with file {0:X12}.{1:X3}", GUID.LongKey(key), GUID.Type(key));
                     }
                 }
             }

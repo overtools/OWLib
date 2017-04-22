@@ -37,7 +37,7 @@ namespace OWLib.Writer {
                     writer.Write(layer.Key);
                     HashSet<string> images = new HashSet<string>();
                     foreach (ImageLayer image in layer.Value) {
-                        images.Add($"{GUID.Attribute(image.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.dds");
+                        images.Add($"{GUID.LongKey(image.key):X12}.dds");
                     }
                     writer.Write(images.Count);
                     foreach (string image in images) {

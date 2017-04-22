@@ -123,7 +123,7 @@ namespace PackageTool {
                 foreach (ulong key in fileKeys) {
                     if (apm.CMFMap.ContainsKey(key)) {
                         ulong rtype = GUID.Type(key);
-                        ulong rindex = GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
+                        ulong rindex = GUID.LongKey(key);
                         string ofn = $"{output}{Path.DirectorySeparatorChar}cmf{Path.DirectorySeparatorChar}{rtype:X3}{Path.DirectorySeparatorChar}";
                         if (!dry && !Directory.Exists(ofn)) {
                             Console.Out.WriteLine("Created directory {0}", ofn);
@@ -158,7 +158,7 @@ namespace PackageTool {
                     foreach (ulong key in apm.CMFMap.Keys) {
                         if (types.Contains(GUID.Type(key)) || dumpAll) {
                             ulong rtype = GUID.Type(key);
-                            ulong rindex = GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
+                            ulong rindex = GUID.LongKey(key);
                             string ofn = $"{output}{Path.DirectorySeparatorChar}cmf{Path.DirectorySeparatorChar}{rtype:X3}{Path.DirectorySeparatorChar}";
                             if (!dry && !Directory.Exists(ofn)) {
                                 Console.Out.WriteLine("Created directory {0}", ofn);
@@ -211,7 +211,7 @@ namespace PackageTool {
                                 ret = false;
                             }
 
-                            if (ret && packageIndent.Count > 0 && packageIndent.Contains(GUID.Attribute(package.packageKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform))) {
+                            if (ret && packageIndent.Count > 0 && packageIndent.Contains(GUID.LongKey(package.packageKey))) {
                                 ret = false;
                             }
 
@@ -222,7 +222,7 @@ namespace PackageTool {
 
                         packageKeys.Remove(package.packageKey);
                         indicesExtracted.Add(package.packageKey);
-                        packageIndent.Remove(GUID.Attribute(package.packageKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform));
+                        packageIndent.Remove(GUID.LongKey(package.packageKey));
                         contentKeys.Remove(package.indexContentKey.ToHexString().ToUpperInvariant());
 
                         PackageIndex index = apm.Indexes[i];
@@ -232,7 +232,7 @@ namespace PackageTool {
                         if (dumpAll) {
                             o = output;
                         } else {
-                            o = $"{output}{GUID.Attribute(package.packageKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}{Path.DirectorySeparatorChar}";
+                            o = $"{output}{GUID.LongKey(package.packageKey):X12}{Path.DirectorySeparatorChar}";
                         }
 
                         EncodingEntry bundleEncoding;
@@ -252,7 +252,7 @@ namespace PackageTool {
                                 continue;
                             }
                             ulong rtype = GUID.Type(record.Key);
-                            ulong rindex = GUID.Attribute(record.Key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
+                            ulong rindex = GUID.LongKey(record.Key);
                             string ofn = $"{o}{rtype:X3}{Path.DirectorySeparatorChar}";
                             if (!dry && !Directory.Exists(ofn)) {
                                 Console.Out.WriteLine("Created directory {0}", ofn);

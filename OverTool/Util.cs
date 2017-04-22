@@ -76,7 +76,7 @@ namespace OverTool {
             }
             if (System.Diagnostics.Debugger.IsAttached) {
                 System.Diagnostics.Debugger.Log(0, "CASC:IO",
-                    $"[CASC:IO] Opened file {GUID.Attribute(record.record.Key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.{GUID.Type(record.record.Key):X3}\n");
+                    $"[CASC:IO] Opened file {GUID.LongKey(record.record.Key):X12}.{GUID.Type(record.record.Key):X3}\n");
             }
             return ms;
         }

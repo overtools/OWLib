@@ -185,7 +185,7 @@ namespace OverTool {
                         foreach (KeyValuePair<ulong, ulong> kv in animList) {
                             ulong parent = kv.Value;
                             ulong key = kv.Key;
-                            string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", outputPath, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform), GUID.Type(key));
+                            string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", outputPath, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), GUID.Type(key));
                             if (!Directory.Exists(Path.GetDirectoryName(outpath))) {
                                 Directory.CreateDirectory(Path.GetDirectoryName(outpath));
                             }
@@ -220,7 +220,7 @@ namespace OverTool {
                                         continue;
                                     }
                                     KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, map, handler,
-                                        $"{outputPath}{GUID.Attribute(layer.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.dds");
+                                        $"{outputPath}{GUID.LongKey(layer.key):X12}.dds");
                                     types.Add(pair.Key, pair.Value);
                                 }
                             }

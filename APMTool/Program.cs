@@ -140,7 +140,7 @@ namespace APMTool {
                 if (flag[0] == 'C') {
                     foreach (ulong key in apm.CMFMap.Keys) {
                         ulong rtype = GUID.Type(key);
-                        ulong rindex = GUID.Attribute(key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
+                        ulong rindex = GUID.LongKey(key);
                         ulong rindex2 = GUID.Index(key);
 
                         bool check1 = ((List<ulong>)query[0]).Count == 0;
@@ -204,7 +204,7 @@ namespace APMTool {
                         PackageIndexRecord record = records[j];
 
                         ulong rtype = GUID.Type(record.Key);
-                        ulong rindex = GUID.Attribute(record.Key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform);
+                        ulong rindex = GUID.LongKey(record.Key);
                         ulong rindex2 = GUID.Index(record.Key);
 
                         if (flag[0] == 'f') {

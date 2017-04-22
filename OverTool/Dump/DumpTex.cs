@@ -30,20 +30,20 @@ namespace OverTool {
                     }
                     if (instance.Name == record.Manager.GetName(typeof(ComplexModelRecord))) {
                         ComplexModelRecord r = (ComplexModelRecord)instance;
-                        if (ids.Contains(GUID.Attribute(r.Data.model.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform))) {
+                        if (ids.Contains(GUID.LongKey(r.Data.model.key))) {
                             Dictionary<ulong, List<ImageLayer>> layers = new Dictionary<ulong, List<ImageLayer>>();
                             ExtractLogic.Skin.FindTextures(r.Data.material.key, layers, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), map, handler);
-                            Console.Out.WriteLine("Model ID {0:X12}", GUID.Attribute(r.Data.model.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform));
+                            Console.Out.WriteLine("Model ID {0:X12}", GUID.LongKey(r.Data.model.key));
                             foreach (KeyValuePair<ulong, List<ImageLayer>> pair in layers) {
                                 Console.Out.WriteLine("Material ID {0:X16}", pair.Key);
                                 HashSet<ulong> dedup = new HashSet<ulong>();
                                 foreach (ImageLayer layer in pair.Value) {
                                     if (dedup.Add(layer.key)) {
-                                        Console.Out.WriteLine("Texture ID {0:X12}", GUID.Attribute(layer.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform));
+                                        Console.Out.WriteLine("Texture ID {0:X12}", GUID.LongKey(layer.key));
                                     }
                                 }
                             }
-                            ids.Remove(GUID.Attribute(r.Data.model.key, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform));
+                            ids.Remove(GUID.LongKey(r.Data.model.key));
                         }
                     }
                 }

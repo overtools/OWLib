@@ -23,7 +23,7 @@ namespace OWLib.Types.Chunk {
       public int unk1;
       public ushort bonesAbs;
       public ushort bonesSimple;
-      public ushort unk2;
+      public ushort bonesCloth;
       public ushort remapCount;
       public ushort idCount;
       public ushort unkStruct6Count;

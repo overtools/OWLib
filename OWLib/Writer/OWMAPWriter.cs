@@ -139,8 +139,8 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map02 obj = (Map02)detail1.Records[i];
-                    string modelFn = $"{GUID.Attribute(obj.Header.model, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmdl";
-                    string matFn = $"{GUID.Attribute(obj.Header.model, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmat";
+                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}.owmdl";
+                    string matFn = $"{GUID.LongKey(obj.Header.model):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);
@@ -171,8 +171,8 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map08 obj = (Map08)detail2.Records[i];
-                    string modelFn = $"{GUID.Attribute(obj.Header.model, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmdl";
-                    string matFn = $"{GUID.Attribute(obj.Header.model, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmat";
+                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}.owmdl";
+                    string matFn = $"{GUID.LongKey(obj.Header.model):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);
@@ -206,8 +206,8 @@ namespace OWLib.Writer {
                     if (obj.ModelKey == 0) {
                         continue;
                     }
-                    string modelFn = $"{GUID.Attribute(obj.ModelKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmdl";
-                    string matFn = $"{GUID.Attribute(obj.MaterialKey, GUID.AttributeEnum.Index | GUID.AttributeEnum.Locale | GUID.AttributeEnum.Region | GUID.AttributeEnum.Platform):X12}.owmat";
+                    string modelFn = $"{GUID.LongKey(obj.ModelKey):X12}.owmdl";
+                    string matFn = $"{GUID.LongKey(obj.MaterialKey):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);
