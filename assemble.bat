@@ -4,4 +4,4 @@ copy /Y /V CascLib.patch\OWRootHandler.cs CASCExplorer\CascLib\OWRootHandler.cs
 copy /Y /V CascLib.patch\KeyService.cs CASCExplorer\CascLib\KeyService.cs
 copy /Y /V CascLib.patch\CASCConfig.cs CASCExplorer\CascLib\CASCConfig.cs
 copy /Y /V CascLib.patch\Extensions.cs CASCExplorer\CascLib\Extensions.cs
-
+copy /Y /V CascLib.patch\BLTEStream.cs CASCExplorer\CascLib\BLTEStream.cs
