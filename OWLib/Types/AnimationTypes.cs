@@ -5,17 +5,18 @@ using System.Runtime.InteropServices;
 namespace OWLib.Types {
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct AnimHeader {
-        private uint counter1;
+        private uint version;
         public float duration;
         public float fps;
-        public uint bonecount;
+        public ushort bonecount;
+        public ushort flags;
         private ulong unk2;
         public ulong F08Key;
         private ulong padding;
         public ulong boneListOffset;
         public ulong infoTableOffset;
-        private ulong end1;
-        private ulong end2;
+        private ulong size;
+        private ulong eof;
         private ulong zero;
     }
 

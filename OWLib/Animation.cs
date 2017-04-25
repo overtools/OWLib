@@ -68,7 +68,7 @@ namespace OWLib {
                 Duration = header.duration;
                 FramesPerSecond = header.fps;
                 InfoTableSize = (int)(header.fps * header.duration) + 1;
-                uint bonecount = header.bonecount;
+                ushort bonecount = header.bonecount;
 
                 animStream.Seek((long)header.boneListOffset, SeekOrigin.Begin);
                 for (uint i = 0; i < header.bonecount; i++) {
