@@ -75,6 +75,7 @@
     <Compile Include="Extract\ExtractMap.cs" />
     <Compile Include="Dump\DumpGeneral.cs" />
     <Compile Include="IOvertool.cs" />
+    <Compile Include="List\ListGeneral.cs" />
     <Compile Include="List\ListLootbox.cs" />
     <Compile Include="List\ListNPC.cs" />
     <Compile Include="List\ListInventory.cs" />

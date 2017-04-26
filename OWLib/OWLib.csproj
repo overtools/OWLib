@@ -60,6 +60,7 @@
     <Compile Include="Map.cs" />
     <Compile Include="Chunked.cs" />
     <Compile Include="Types\Chunk\HTLC.cs" />
+    <Compile Include="Types\STUD\GlobalInventoryMaster.cs" />
     <Compile Include="Writer\ASCIIWriter.cs" />
     <Compile Include="Writer\BINWriter.cs" />
     <Compile Include="Writer\RefPoseWriter.cs" />

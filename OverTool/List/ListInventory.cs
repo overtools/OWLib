@@ -33,7 +33,7 @@ namespace OverTool {
             }
 
             string name = Util.GetString(instance.Header.name.key, map, handler);
-            if (name == null) {
+            if (name == null && instance.Name != stud.Manager.GetName(typeof(CreditItem))) {
                 return;
             }
 #if OUTPUT_STUDINVENTORY
@@ -50,6 +50,11 @@ namespace OverTool {
             OutWriter.Close();
             studStream.Close();
 #endif
+
+            if (instance.Name == stud.Manager.GetName(typeof(CreditItem))) {
+                CreditItem credits = (CreditItem)instance;
+                name = $"{credits.Data.value} Credits";
+            }
 
             if (ex) {
                 Console.Out.WriteLine("\t\t{0} ({1} {2} in package {3:X16})", name, instance.Header.rarity, stud.Instances[0].Name, map[key].package.packageKey);
