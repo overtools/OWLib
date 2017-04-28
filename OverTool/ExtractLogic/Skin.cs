@@ -80,7 +80,7 @@ namespace OverTool.ExtractLogic {
             }
         }
 
-        private static void FindAnimationsSoft(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, ulong parent = 0) {
+        public static void FindAnimationsSoft(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, ulong parent = 0) {
             if (!map.ContainsKey(key)) {
                 return;
             }
@@ -157,7 +157,7 @@ namespace OverTool.ExtractLogic {
                 }
                 if (inst.Name == record.Manager.GetName(typeof(VictoryPoseItem))) {
                     VictoryPoseItem item = (VictoryPoseItem)inst;
-                    FindAnimations(item.Data.f0BF.key, animList, replace, parsed, map, handler, models, layers);
+                    FindAnimations(item.Data.f0BF.key, animList, replace, parsed, map, handler, models, layers, tgt);
                 } else if (inst.Name == record.Manager.GetName(typeof(AnimationList))) {
                     AnimationList r = (AnimationList)inst;
                     foreach (AnimationList.AnimationListEntry entry in r.Entries) {
@@ -174,8 +174,7 @@ namespace OverTool.ExtractLogic {
                         animList[bindingKey] = parent;
                         FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
                     }
-                }
-                if (inst.Name == record.Manager.GetName(typeof(Pose))) {
+                } else if (inst.Name == record.Manager.GetName(typeof(Pose))) {
                     Pose r = (Pose)inst;
                     foreach (OWRecord animation in new OWRecord[3] { r.Header.animation1, r.Header.animation2, r.Header.animation3 }) {
                         ulong bindingKey = animation.key;
@@ -191,14 +190,12 @@ namespace OverTool.ExtractLogic {
                         animList[bindingKey] = parent;
                         FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
                     }
-                }
-                if (inst.Name == record.Manager.GetName(typeof(AnimationListInfo))) {
+                } else if (inst.Name == record.Manager.GetName(typeof(AnimationListInfo))) {
                     AnimationListInfo r = (AnimationListInfo)inst;
                     foreach (AnimationListInfo.AnimationListEntry entry in r.Entries) {
-                        FindAnimations(entry.secondary.key, animList, replace, parsed, map, handler, models, layers, parent);
+                        FindAnimations(entry.secondary.key, animList, replace, parsed, map, handler, models, layers, tgt);
                     }
-                }
-                if (inst.Name == record.Manager.GetName(typeof(AnimationListReference))) {
+                } else if (inst.Name == record.Manager.GetName(typeof(AnimationListReference))) {
                     AnimationListReference r = (AnimationListReference)inst;
                     foreach (OWRecord animation in new OWRecord[5] { r.Header.unkD, r.Header.animation, r.Header.unk12, r.Header.unk15, r.Header.unk18 }) {
                         ulong bindingKey = animation.key;
@@ -216,7 +213,7 @@ namespace OverTool.ExtractLogic {
                             animList[bindingKey] = parent;
                             FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
                         } else if (keyid == 0x20 || keyid == 0x21) {
-                            FindAnimations(bindingKey, animList, replace, parsed, map, handler, models, layers, parent);
+                            FindAnimations(bindingKey, animList, replace, parsed, map, handler, models, layers, tgt);
                         }
                     }
                 }
@@ -311,6 +308,11 @@ namespace OverTool.ExtractLogic {
                 if (inst.Name == record.Manager.GetName(typeof(ChildGameParameterRecord))) {
                     ChildGameParameterRecord r = (ChildGameParameterRecord)inst;
                     ulong bindingKey = r.Param.binding.key;
+                    if (replace.ContainsKey(bindingKey)) {
+                        bindingKey = replace[bindingKey];
+                    }
+                    FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                    bindingKey = r.Param.binding2.key;
                     if (replace.ContainsKey(bindingKey)) {
                         bindingKey = replace[bindingKey];
                     }
@@ -613,7 +615,7 @@ namespace OverTool.ExtractLogic {
                             output.Close();
                         }
                     }
-                    outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), animWriter.Format);
+                    outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}{4}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), animWriter.Format);
 
                     using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
                         Stream output = Util.OpenFile(map[key], handler);
@@ -661,6 +663,29 @@ namespace OverTool.ExtractLogic {
                     SaveIcon(output, master.Header.texture4.key, replace, map, handler);
                 }
             }
+
+#if OUTPUT_ANIMSTUD
+            foreach (ulong key in animList.Values) {
+                if (key == 0) {
+                    continue;
+                }
+                string outFilename = $"{path}STUD{Path.DirectorySeparatorChar}Animation{Path.DirectorySeparatorChar}{key:X16}.stud";
+                if (File.Exists(outFilename)) {
+                    continue;
+                }
+                Stream stud = Util.OpenFile(map[key], handler);
+                if (stud == null) {
+                    continue;
+                }
+                if (!Directory.Exists(Path.GetDirectoryName(outFilename))) {
+                    Directory.CreateDirectory(Path.GetDirectoryName(outFilename));
+                }
+                using (Stream OutWriter = File.Create(outFilename)) {
+                    stud.CopyTo(OutWriter);
+                }
+                stud.Close();
+            }
+#endif
         }
 
         public static void SaveIcon(string output, ulong key, Dictionary<ulong, ulong> replace, Dictionary<ulong, Record> map, CASCHandler handler) {

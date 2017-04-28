@@ -65,6 +65,7 @@
     <Compile Include="Dump\DumpString.cs" />
     <Compile Include="Dump\DumpTex.cs" />
     <Compile Include="Dump\DumpVoice.cs" />
+    <Compile Include="ExtractLogic\VictoryPose.cs" />
     <Compile Include="Extract\ExtractLootbox.cs" />
     <Compile Include="Extract\Extract.cs" />
     <Compile Include="ExtractLogic\Portrait.cs" />

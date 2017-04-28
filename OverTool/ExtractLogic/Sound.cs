@@ -103,6 +103,10 @@ namespace OverTool.ExtractLogic {
                 if (instance.Name == stud.Manager.GetName(typeof(GenericRecordReference))) {
                     GenericRecordReference inst = (GenericRecordReference)instance;
                     FindSoundsEx(inst.Reference.key.key, done, ret, map, handler, replace, mykey);
+                } else if (instance.Name == stud.Manager.GetName(typeof(ChildGameParameterRecord))) {
+                    ChildGameParameterRecord inst = (ChildGameParameterRecord)instance;
+                    FindSoundsEx(inst.Param.binding.key, done, ret, map, handler, replace, mykey);
+                    FindSoundsEx(inst.Param.binding2.key, done, ret, map, handler, replace, mykey);
                 } else if (instance.Name == stud.Manager.GetName(typeof(SoundMasterList))) {
                     SoundMasterList smr = (SoundMasterList)instance;
                     foreach (ulong key in smr.Sound) {
@@ -145,6 +149,13 @@ namespace OverTool.ExtractLogic {
                 } else if (instance.Name == stud.Manager.GetName(typeof(EffectReference))) {
                     EffectReference reference = (EffectReference)instance;
                     FindSoundsExD(reference.Reference.key.key, done, ret, map, handler, replace, mykey);
+                } else if (instance.Name == stud.Manager.GetName(typeof(BindingEffectReference))) {
+                    BindingEffectReference reference = (BindingEffectReference)instance;
+                    // Exports a LOT of system sound effects unrelated to the origin.
+                    // FindSoundsExD(reference.Reference.effect.key, done, ret, map, handler, replace, mykey);
+                } else if (instance.Name == stud.Manager.GetName(typeof(GenericKeyReference))) {
+                    GenericKeyReference reference = (GenericKeyReference)instance;
+                    FindSoundsEx(reference.Reference.key.key, done, ret, map, handler, replace, mykey);
                 }
             }
         }

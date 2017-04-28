@@ -18,7 +18,7 @@ namespace OverTool {
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
             string output = args[0];
 
-            string[] validCommands = new string[] { "skin", "spray", "icon" };
+            string[] validCommands = new string[] { "skin", "spray", "icon", "victory pose" };
 
             bool typeWildcard = true;
             List<string> types = new List<string>();
@@ -188,6 +188,10 @@ namespace OverTool {
                         case "Icon":
                             Console.Out.WriteLine("Extracting icon {0} for {1}...", name, heroName);
                             ExtractLogic.Icon.Extract(stud, output, heroName, name, itemGroup, track, map, handler, furtherOpts);
+                            break;
+                        case "Victory Pose":
+                            Console.Out.WriteLine("Extracting victory pose {0} for {1}...", name, heroName);
+                            ExtractLogic.VictoryPose.Extract(record.key, stud, output, heroName, name, itemGroup, track, map, handler, furtherOpts);
                             break;
                         case "Voice Line":
                             //Console.Out.WriteLine("Extracting voice line {0} for {1}...", name, heroName);
