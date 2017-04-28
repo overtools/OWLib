@@ -11,8 +11,6 @@ before_build:
 - cmd: >-
     git submodule update --init
 
-    assemble
-
     nuget restore OverwatchToolchain.sln
 build:
   project: OverwatchToolchain.sln
