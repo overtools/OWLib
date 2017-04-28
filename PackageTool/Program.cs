@@ -34,8 +34,8 @@ namespace PackageTool {
 
             string root = args[0];
             string output = args[1] + Path.DirectorySeparatorChar;
-
-            Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            
+            Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
 
             HashSet<ulong> packageKeys = new HashSet<ulong>();
             HashSet<ulong> packageIndices = new HashSet<ulong>();

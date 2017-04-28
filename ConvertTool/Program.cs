@@ -53,8 +53,8 @@ namespace ConvertTool {
                 Console.Out.WriteLine("  -c   - save collision models");
                 return;
             }
-
-            Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            
+            Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
 
             string dataFile = args[0];
             char type = args[1][0];

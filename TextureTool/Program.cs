@@ -13,8 +13,8 @@ namespace TextureTool {
                 Console.Out.WriteLine("TextureTool.exe output_file 1 004_file");
                 return;
             }
-
-            Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            
+            Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
 
             string destFile = args[0];
 

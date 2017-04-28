@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using OWLib;
@@ -13,6 +14,8 @@ namespace GUIDDebug {
                 Console.Out.WriteLine("Usage: GUIDDebug keys...");
                 return;
             }
+            
+            Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
 
             HashSet<ulong> keys = new HashSet<ulong>();
             for (long i = 0; i < args.LongLength; ++i) {

@@ -150,6 +150,10 @@ namespace OverTool.ExtractLogic {
         }
 
         public static Dictionary<ulong, List<ulong>> FindSounds(HeroMaster master, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace = null, ulong parent = 0) {
+            if (master == null) {
+                return null;
+            }
+
             Dictionary<ulong, List<ulong>> ret = new Dictionary<ulong, List<ulong>>();
 
             HashSet<ulong> done = new HashSet<ulong>();

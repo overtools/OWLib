@@ -131,6 +131,8 @@ namespace OWLib.Types.STUD {
                     for (ulong i = 0; i < ptr.count; ++i) {
                         virtualRecords[i] = reader.Read<OWRecord>();
                     }
+                } else {
+                    virtualRecords = new OWRecord[0] { };
                 }
 
                 if ((long)header.bindsOffset > 0) {
@@ -141,6 +143,8 @@ namespace OWLib.Types.STUD {
                     for (ulong i = 0; i < ptr.count; ++i) {
                         r09ERecords[i] = reader.Read<OWRecord>();
                     }
+                } else {
+                    r09ERecords = new OWRecord[0] { };
                 }
 
                 if ((long)header.child1Offset > 0) {
@@ -151,6 +155,8 @@ namespace OWLib.Types.STUD {
                     for (ulong i = 0; i < ptr.count; ++i) {
                         child1[i] = reader.Read<HeroChild1>();
                     }
+                } else {
+                    child1 = new HeroChild1[0] { };
                 }
 
                 if ((long)header.child2Offset > 0) {
@@ -161,6 +167,8 @@ namespace OWLib.Types.STUD {
                     for (ulong i = 0; i < ptr.count; ++i) {
                         child2[i] = reader.Read<HeroChild2>();
                     }
+                } else {
+                    child2 = new HeroChild2[0] { };
                 }
 
                 if ((long)header.child3Offset > 0) {
@@ -171,6 +179,8 @@ namespace OWLib.Types.STUD {
                     for (ulong i = 0; i < ptr.count; ++i) {
                         child3[i] = reader.Read<HeroChild2>();
                     }
+                } else {
+                    child3 = new HeroChild2[0] { };
                 }
 
                 if ((long)header.directiveOffset > 0) {
@@ -190,8 +200,13 @@ namespace OWLib.Types.STUD {
                             for (ulong j = 0; j < ptr2.count; ++j) {
                                 directiveChild[i][j] = reader.Read<OWRecord>();
                             }
+                        } else {
+                            directiveChild[i] = new OWRecord[0] { };
                         }
                     }
+                } else {
+                    directives = new HeroDirective[0] { };
+                    directiveChild = new OWRecord[0][] { };
                 }
             }
         }

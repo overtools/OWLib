@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace BNKTool {
@@ -16,6 +17,7 @@ namespace BNKTool {
                 Console.Out.WriteLine("Usage: BNKTool file.bnk");
                 return;
             }
+
             string BNKFile = args[0];
             using (Stream input = File.Open(BNKFile, FileMode.Open, FileAccess.Read)) {
                 using (BinaryReader reader = new BinaryReader(input)) {

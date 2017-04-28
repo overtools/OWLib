@@ -95,7 +95,7 @@ namespace OverTool {
 
             Dictionary<ulong, Record> map = new Dictionary<ulong, Record>();
 
-            Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
             Console.Out.WriteLine("Initializing CASC...");
             CASCConfig config = CASCConfig.LoadLocalStorageConfig(root);
             CASCHandler handler = CASCHandler.OpenStorage(config);

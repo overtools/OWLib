@@ -24,8 +24,8 @@ namespace APMTool {
             }
             string root = args[0];
             string flag = args[1];
-
-            Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            
+            Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
 
             object[] query = null;
             if (flag[0] == 'f' || flag[0] == 'C') {

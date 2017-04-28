@@ -6,7 +6,7 @@ assembly_info:
   file: '**\AssemblyInfo.*'
   assembly_version: '{version}'
   assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
+  assembly_informational_version: $(appveyor_repo_commit)
 before_build:
 - cmd: >-
     git submodule update --init
