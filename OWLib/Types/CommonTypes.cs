@@ -281,8 +281,10 @@ namespace OWLib.Types {
         public int size;
         public int unk;
 
-        internal string GetIdentifier() {
-            return System.Text.Encoding.ASCII.GetString(BitConverter.GetBytes(identifier));
+        public string StringIdentifier => System.Text.Encoding.ASCII.GetString(BitConverter.GetBytes(identifier));
+
+        public new string ToString() {
+            return base.ToString() + $" ({StringIdentifier})";
         }
     }
 
@@ -293,8 +295,10 @@ namespace OWLib.Types {
         public int size;
         public uint checksum;
 
-        internal string GetIdentifier() {
-            return System.Text.Encoding.ASCII.GetString(BitConverter.GetBytes(identifier));
+        public string StringIdentifier => System.Text.Encoding.ASCII.GetString(BitConverter.GetBytes(identifier));
+
+        public new string ToString() {
+            return base.ToString() + $" ({StringIdentifier})";
         }
     }
 }

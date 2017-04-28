@@ -6,7 +6,36 @@ using System.Reflection;
 using OWLib.Types.Chunk;
 
 namespace OWLib.Types {
+    public class MemoryChunk : IChunk {
+        private string identifier = null;
+        public string Identifier {
+            get {
+                return identifier;
+            } set {
+                identifier = value;
+            }
+        }
+
+        private string rootIdentifier = null;
+        public string RootIdentifier {
+            get {
+                return rootIdentifier;
+            } set {
+                rootIdentifier = value;
+            }
+        }
+
+        public MemoryStream stream;
+
+        public void Parse(Stream input) {
+            stream = new MemoryStream();
+            input.CopyTo(stream);
+            stream.Position = 0;
+        }
+    }
+
     public class Chunked : IDisposable {
+
         private List<IChunk> chunks;
         public IReadOnlyList<IChunk> Chunks => chunks;
 
@@ -51,7 +80,7 @@ namespace OWLib.Types {
                     ChunkedEntry entry = reader.Read<ChunkedEntry>();
                     long offset = input.Position;
                     next = offset + entry.size;
-                    IChunk chunk = manager.NewChunk(entry.GetIdentifier(), header.GetIdentifier());
+                    IChunk chunk = manager.NewChunk(entry.StringIdentifier, header.StringIdentifier);
                     if (chunk != null) {
                         MemoryStream dataStream = new MemoryStream(entry.size);
                         CopyBytes(input, dataStream, entry.size);
@@ -122,6 +151,8 @@ namespace OWLib.Types {
         private static HashSet<string> unhandledChunkIdentifiers = new HashSet<string>();
         public Dictionary<string, Type> chunkMap;
 
+        private Type MEMORY_TYPE = typeof(MemoryChunk);
+
         public ChunkManager() {
             chunkMap = new Dictionary<string, Type>();
         }
@@ -134,6 +165,9 @@ namespace OWLib.Types {
                 return MANAGER_ERROR.E_DUPLICATE;
             }
             IChunk instance = (IChunk)Activator.CreateInstance(chunk);
+            if (instance.RootIdentifier == null || instance.Identifier == null) {
+                return MANAGER_ERROR.E_SUCCESS;
+            }
             string identifier = instance.RootIdentifier + instance.Identifier;
             if (identifier == null) {
                 if (System.Diagnostics.Debugger.IsAttached) {
@@ -153,6 +187,12 @@ namespace OWLib.Types {
                     if (System.Diagnostics.Debugger.IsAttached) {
                         System.Diagnostics.Debugger.Log(2, "CHUNK", $"Error! No handler for chunk type {identifier}\n");
                     }
+                }
+                if (System.Diagnostics.Debugger.IsAttached) {
+                    MemoryChunk memory = (MemoryChunk)Activator.CreateInstance(MEMORY_TYPE);
+                    memory.Identifier = id;
+                    memory.RootIdentifier = root;
+                    return memory;
                 }
             }
             return null;

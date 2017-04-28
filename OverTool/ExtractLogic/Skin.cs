@@ -113,17 +113,20 @@ namespace OverTool.ExtractLogic {
                     if (!parsed.Add(infokey)) {
                         return;
                     }
-                    Chunked chunked = new Chunked(Util.OpenFile(map[key], handler));
-                    DMCE[] chunks = chunked.GetAllOfTypeFlat<DMCE>();
-                    foreach (DMCE dmce in chunks) {
-                        if (models != null) {
-                            models.Add(dmce.Data.modelKey);
-                        }
-                        if (layers != null) {
-                            FindTextures(dmce.Data.materialKey, layers, replace, parsed, map, handler);
-                        }
-                        if (animList != null && !animList.ContainsKey(dmce.Data.animationKey)) {
-                            animList[dmce.Data.animationKey] = parent;
+                    using (Stream file = Util.OpenFile(map[infokey], handler)) {
+                        file.Position = 0;
+                        Chunked chunked = new Chunked(file);
+                        DMCE[] chunks = chunked.GetAllOfTypeFlat<DMCE>();
+                        foreach (DMCE dmce in chunks) {
+                            if (models != null && dmce.Data.modelKey != 0) {
+                                models.Add(dmce.Data.modelKey);
+                            }
+                            if (layers != null && dmce.Data.materialKey != 0) {
+                                FindTextures(dmce.Data.materialKey, layers, replace, parsed, map, handler);
+                            }
+                            if (animList != null && !animList.ContainsKey(dmce.Data.animationKey) && dmce.Data.animationKey != 0) {
+                                animList[dmce.Data.animationKey] = parent;
+                            }
                         }
                     }
                 }
@@ -464,7 +467,7 @@ namespace OverTool.ExtractLogic {
             Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler, masterKey);
         }
 
-        public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, ulong heroKey) {
+        public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, ulong heroKey, bool external = false) {
             Dictionary<string, TextureType> typeInfo = new Dictionary<string, TextureType>();
             if (furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
                 foreach (KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
@@ -603,7 +606,7 @@ namespace OverTool.ExtractLogic {
                 foreach (KeyValuePair<ulong, ulong> kv in animList) {
                     ulong parent = kv.Value;
                     ulong key = kv.Key;
-                    string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), GUID.Type(key));
+                    string outpath = string.Format("{0}{5}{1}{2:X12}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), GUID.Type(key), external ? "" : "Animations");
                     if (!Directory.Exists(Path.GetDirectoryName(outpath))) {
                         Directory.CreateDirectory(Path.GetDirectoryName(outpath));
                     }
@@ -615,7 +618,7 @@ namespace OverTool.ExtractLogic {
                             output.Close();
                         }
                     }
-                    outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}{4}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), animWriter.Format);
+                    outpath = string.Format("{0}{5}{1}{2:X12}{1}{3:X12}{4}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), animWriter.Format, external ? "" : "Animations");
 
                     using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
                         Stream output = Util.OpenFile(map[key], handler);
@@ -632,7 +635,7 @@ namespace OverTool.ExtractLogic {
                 }
             }
 
-            if (furtherOpts.Count < 5 || furtherOpts[4] != 'S') {
+            if ((furtherOpts.Count < 5 || furtherOpts[4] != 'S') && master != null) {
                 Console.Out.WriteLine("Dumping voice bites for hero {0} with skin {1}", heroName, itemName);
                 Dictionary<ulong, List<ulong>> soundData = Sound.FindSounds(master, track, map, handler, replace, heroKey);
                 string outpath = $"{path}Sound{Path.DirectorySeparatorChar}";
@@ -642,7 +645,7 @@ namespace OverTool.ExtractLogic {
                 DumpVoice.Save(outpath, soundData, map, handler, replace);
             }
 
-            if (furtherOpts.Count <= 7 || furtherOpts[7] != 'I') {
+            if ((furtherOpts.Count <= 7 || furtherOpts[7] != 'I') && master != null) {
                 string output = string.Format("{0}GUI{1}", path, Path.DirectorySeparatorChar);
 
                 if (Directory.Exists(output)) {
