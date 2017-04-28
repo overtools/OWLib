@@ -60,6 +60,7 @@
     <Compile Include="Map.cs" />
     <Compile Include="Chunked.cs" />
     <Compile Include="Types\Chunk\LDOM\HTLC.cs" />
+    <Compile Include="Types\Chunk\TCFE\NECE.cs" />
     <Compile Include="Types\STUD\GameParam\BindingEffectReference.cs" />
     <Compile Include="Types\STUD\GlobalInventoryMaster.cs" />
     <Compile Include="Writer\ASCIIWriter.cs" />

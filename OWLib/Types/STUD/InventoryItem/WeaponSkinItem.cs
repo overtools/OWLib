@@ -5,7 +5,7 @@ namespace OWLib.Types.STUD.InventoryItem {
   public class WeaponSkinItem : IInventorySTUDInstance {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct WeaponSkinData {
-      public ulong unk1;
+      public ulong index;
       public ulong unk2;
     }
     

@@ -116,8 +116,8 @@ namespace OverTool.ExtractLogic {
                     using (Stream file = Util.OpenFile(map[infokey], handler)) {
                         file.Position = 0;
                         Chunked chunked = new Chunked(file);
-                        DMCE[] chunks = chunked.GetAllOfTypeFlat<DMCE>();
-                        foreach (DMCE dmce in chunks) {
+                        DMCE[] dmces = chunked.GetAllOfTypeFlat<DMCE>();
+                        foreach (DMCE dmce in dmces) {
                             if (models != null && dmce.Data.modelKey != 0) {
                                 models.Add(dmce.Data.modelKey);
                             }
@@ -126,6 +126,12 @@ namespace OverTool.ExtractLogic {
                             }
                             if (animList != null && !animList.ContainsKey(dmce.Data.animationKey) && dmce.Data.animationKey != 0) {
                                 animList[dmce.Data.animationKey] = parent;
+                            }
+                        }
+                        NECE[] neces = chunked.GetAllOfTypeFlat<NECE>();
+                        foreach (NECE nece in neces) {
+                            if (nece.Data.key > 0) {
+                                FindModels(nece.Data.key, new List<ulong>(), models, animList, layers, replace, parsed, map, handler);
                             }
                         }
                     }
@@ -161,6 +167,15 @@ namespace OverTool.ExtractLogic {
                 if (inst.Name == record.Manager.GetName(typeof(VictoryPoseItem))) {
                     VictoryPoseItem item = (VictoryPoseItem)inst;
                     FindAnimations(item.Data.f0BF.key, animList, replace, parsed, map, handler, models, layers, tgt);
+                } else if (inst.Name == record.Manager.GetName(typeof(EmoteItem))) {
+                    EmoteItem item = (EmoteItem)inst;
+                    FindAnimations(item.Data.animation.key, animList, replace, parsed, map, handler, models, layers, tgt);
+                } else if (inst.Name == record.Manager.GetName(typeof(HeroicIntroItem))) {
+                    HeroicIntroItem item = (HeroicIntroItem)inst;
+                    if (item.Data.f006.key > 0) {
+                        animList[item.Data.f006.key] = parent;
+                        FindAnimationsSoft(item.Data.f006.key, animList, replace, parsed, map, handler, models, layers, tgt);
+                    }
                 } else if (inst.Name == record.Manager.GetName(typeof(AnimationList))) {
                     AnimationList r = (AnimationList)inst;
                     foreach (AnimationList.AnimationListEntry entry in r.Entries) {
@@ -515,14 +530,12 @@ namespace OverTool.ExtractLogic {
                 writer = new OWMDLWriter();
             }
 
-            if (furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
+            if ((furtherOpts.Count < 2 || furtherOpts[1] != 'T') && typeInfo.Count > 0) {
                 if (writer.GetType() == typeof(OWMDLWriter) || furtherOpts[0] == '+') {
                     IDataWriter tmp = new OWMATWriter();
                     mtlPath = $"{path}material{tmp.Format}";
                     using (Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
-                        if (tmp.Write(null, outp, null, layers, new object[3] { typeInfo, Path.GetFileName(mtlPath),
-                $"{heroName} Skin {itemName}"
-            })) {
+                        if (tmp.Write(null, outp, null, layers, new object[3] { typeInfo, Path.GetFileName(mtlPath), $"{heroName} Skin {itemName}" })) {
                             Console.Out.WriteLine("Wrote materials {0}", mtlPath);
                         } else {
                             Console.Out.WriteLine("Failed to write material");
@@ -533,9 +546,7 @@ namespace OverTool.ExtractLogic {
                     IDataWriter tmp = new MTLWriter();
                     mtlPath = $"{path}material{tmp.Format}";
                     using (Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
-                        if (tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath),
-                $"{heroName} Skin {itemName}"
-            })) {
+                        if (tmp.Write(null, outp, null, layers, new object[3] { false, Path.GetFileName(mtlPath), $"{heroName} Skin {itemName}" })) {
                             Console.Out.WriteLine("Wrote materials {0}", mtlPath);
                         } else {
                             Console.Out.WriteLine("Failed to write material");
