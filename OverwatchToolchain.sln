@@ -33,19 +33,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OWMImporter", "OWMImporter"
 		OWMImporter\read_owmdl.py = OWMImporter\read_owmdl.py
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CascLib.patch", "CascLib.patch", "{4AE91B29-21F6-4263-AD06-AE01AE2EF5BD}"
-	ProjectSection(SolutionItems) = preProject
-		assemble.bat = assemble.bat
-		CascLib.patch\BLTEStream.cs = CascLib.patch\BLTEStream.cs
-		CascLib.patch\CASCConfig.cs = CascLib.patch\CASCConfig.cs
-		CascLib.patch\Extensions.cs = CascLib.patch\Extensions.cs
-		CascLib.patch\KeyService.cs = CascLib.patch\KeyService.cs
-		CascLib.patch\Logger.cs = CascLib.patch\Logger.cs
-		CascLib.patch\ow.keys = CascLib.patch\ow.keys
-		CascLib.patch\OWRootHandler.cs = CascLib.patch\OWRootHandler.cs
-		CascLib.patch\PerfCounter.cs = CascLib.patch\PerfCounter.cs
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BNKTool", "BNKTool\BNKTool.csproj", "{EFDA1674-FF63-4411-BA19-229AC67075DB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUIDDebug", "GUIDDebug\GUIDDebug.csproj", "{8E93A08E-1156-45BB-973D-B087B88742C4}"
@@ -104,7 +91,6 @@ Global
 		{71291DB4-629C-4D3D-B0D1-14FC9F9FC543} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{E08E1E48-6585-4137-8405-661C62C10713} = {3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}
 		{55122BF8-CC39-4936-B8F1-CF8E87195971} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
-		{4AE91B29-21F6-4263-AD06-AE01AE2EF5BD} = {3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}
 		{EFDA1674-FF63-4411-BA19-229AC67075DB} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{8E93A08E-1156-45BB-973D-B087B88742C4} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{9432CA06-25EA-44DB-9FA1-0583FF096B5D} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
