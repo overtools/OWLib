@@ -8,7 +8,7 @@ namespace OWLib {
         public MaterialHeader Header => header;
 
         public Material(Stream input, ulong streamid) {
-            if (input.Length <= 0) { return; }
+            if (input == null || input.Length <= 0) { return; }
 #if OUTPUT_MATERIAL
             long spos = input.Position;
             string outFilename = string.Format("./Materials/{0:X16}.mat", streamid);
