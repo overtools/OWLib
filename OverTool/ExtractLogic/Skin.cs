@@ -119,13 +119,23 @@ namespace OverTool.ExtractLogic {
                         DMCE[] dmces = chunked.GetAllOfTypeFlat<DMCE>();
                         foreach (DMCE dmce in dmces) {
                             if (models != null && dmce.Data.modelKey != 0) {
-                                models.Add(dmce.Data.modelKey);
+                                if (replace.ContainsKey(dmce.Data.modelKey)) {
+                                    models.Add(replace[dmce.Data.modelKey]);
+                                } else {
+                                    models.Add(dmce.Data.modelKey);
+                                }
                             }
                             if (layers != null && dmce.Data.materialKey != 0) {
                                 FindTextures(dmce.Data.materialKey, layers, replace, parsed, map, handler);
                             }
                             if (animList != null && !animList.ContainsKey(dmce.Data.animationKey) && dmce.Data.animationKey != 0) {
-                                animList[dmce.Data.animationKey] = parent;
+                                if (replace.ContainsKey(dmce.Data.animationKey)) {
+                                    animList[replace[dmce.Data.animationKey]] = parent;
+                                    FindAnimationsSoft(replace[dmce.Data.animationKey], animList, replace, parsed, map, handler, models, layers, replace[dmce.Data.animationKey]);
+                                } else {
+                                    animList[dmce.Data.animationKey] = parent;
+                                    FindAnimationsSoft(dmce.Data.animationKey, animList, replace, parsed, map, handler, models, layers, dmce.Data.animationKey);
+                                }
                             }
                         }
                         NECE[] neces = chunked.GetAllOfTypeFlat<NECE>();
