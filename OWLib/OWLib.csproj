@@ -146,6 +146,9 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Third Party\OPENTK_LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="OpenTK.dll.config" />
     <Content Include="ow.events">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
