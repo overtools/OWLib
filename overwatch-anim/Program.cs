@@ -64,9 +64,12 @@ namespace Overwatch_anim {
             streamReader.ReadLine();
             streamReader.ReadLine();
             for (int index = 0; index < int32; ++index) {
-                string[] strArray = streamReader.ReadLine().Split(' ');
-                numArray1[index] = Convert.ToInt32(strArray[1].Substring(6, 4), 16);
+                string[] strArray = streamReader.ReadLine().Replace("\"", string.Empty).Split(' ');
+                numArray1[index] = Convert.ToInt32(strArray[1].Split('_').Last(), 16);
                 numArray2[index] = Convert.ToInt32(strArray[2]);
+            }
+
+            for (int index = 0; index < int32; ++index) {
                 if (numArray2[index] != -1)
                     dictionary1.Add(numArray1[index], numArray1[numArray2[index]]);
                 else
@@ -81,7 +84,7 @@ namespace Overwatch_anim {
             for (int index = 0; index < int32; ++index) {
                 vector3DArray1[index] = new Vector3D();
                 vector3DArray2[index] = new Vector3D();
-                string[] strArray = streamReader.ReadLine().Split(' ');
+                string[] strArray = streamReader.ReadLine().Replace("\"", string.Empty).Split(' ');
                 vector3DArray1[index].X = Convert.ToSingle(strArray[2], (IFormatProvider)numberFormatInfo);
                 vector3DArray1[index].Y = Convert.ToSingle(strArray[3], (IFormatProvider)numberFormatInfo);
                 vector3DArray1[index].Z = Convert.ToSingle(strArray[4], (IFormatProvider)numberFormatInfo);
