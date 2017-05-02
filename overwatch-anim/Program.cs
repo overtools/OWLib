@@ -7,6 +7,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using OWLib.Types;
+using OWLib;
 
 namespace Overwatch_anim {
     public class Overwatch_anim {
@@ -111,12 +113,14 @@ namespace Overwatch_anim {
                 key1 = binaryReader.ReadInt32();
                 numArray3[index] = key1;
                 dictionary3.Add(key1, index);
-                int num3;
+            }
+            for (int index = 0; index < length1; ++index) {
+                key1 = numArray3[index];
+                int num3 = -1;
                 if (dictionary1.ContainsKey(key1)) {
                     int key2 = dictionary1[key1];
                     num3 = !dictionary3.ContainsKey(key2) ? -1 : dictionary3[key2];
-                } else
-                    num3 = -1;
+                }
                 streamWriter.WriteLine(index.ToString() + " \"bone_" + key1.ToString("X4") + "\" " + (object)num3);
             }
             int length3 = length1;
@@ -124,6 +128,11 @@ namespace Overwatch_anim {
             for (int index = 0; index < int32; ++index) {
                 if (!dictionary3.ContainsKey(numArray1[index])) {
                     dictionary4.Add(numArray1[index], length3);
+                }
+            }
+
+            for (int index = 0; index < int32; ++index) {
+                if (!dictionary3.ContainsKey(numArray1[index])) {
                     int key2 = dictionary1[numArray1[index]];
                     int num3 = !dictionary3.ContainsKey(key2) ? (!dictionary4.ContainsKey(key2) ? -1 : dictionary4[key2]) : dictionary3[key2];
                     streamWriter.WriteLine(length3.ToString() + " \"bone_" + numArray1[index].ToString("X4") + "\" " + (object)num3);
@@ -169,10 +178,6 @@ namespace Overwatch_anim {
                     streamWriter.WriteLine();
                 }
             }
-            float num5 = 0.0f;
-            float num6 = 0.0f;
-            float num7 = 0.0f;
-            float num8 = 0.0f;
             Quaternion3D q = new Quaternion3D();
             Vector3D vector3D = new Vector3D();
             fileStream.Seek(offset2, SeekOrigin.Begin);
@@ -209,45 +214,16 @@ namespace Overwatch_anim {
                     numArray12[index2] = length2 >= (int)byte.MaxValue ? (int)binaryReader.ReadInt16() : (int)binaryReader.ReadByte();
                 fileStream.Seek(offset6, SeekOrigin.Begin);
                 for (int index2 = 0; index2 < length5; ++index2) {
-                    int num10 = (int)binaryReader.ReadUInt16();
-                    int num11 = num10 >> 15;
-                    float num12 = (float)((double)((num10 & (int)short.MaxValue) - 16384) * 1.41421 / 32768.0);
-                    int num13 = (int)binaryReader.ReadUInt16();
-                    int num14 = num13 >> 15;
-                    float num15 = (float)((double)((num13 & (int)short.MaxValue) - 16384) * 1.41421 / 32768.0);
-                    float num16 = (float)((double)((int)binaryReader.ReadUInt16() - 32768) * 1.41421 / 65536.0);
-                    float num17 = (float)Math.Pow(1.0 - (double)num12 * (double)num12 - (double)num15 * (double)num15 - (double)num16 * (double)num16, 0.5);
-                    int num18 = num14 * 2 + num11;
-                    if (num18 == 0) {
-                        num5 = num17;
-                        num6 = num12;
-                        num7 = num15;
-                        num8 = num16;
-                    }
-                    if (num18 == 1) {
-                        num5 = num12;
-                        num6 = num17;
-                        num7 = num15;
-                        num8 = num16;
-                    }
-                    if (num18 == 2) {
-                        num5 = num12;
-                        num6 = num15;
-                        num7 = num17;
-                        num8 = num16;
-                    }
-                    if (num18 == 3) {
-                        num5 = num12;
-                        num6 = num15;
-                        num7 = num16;
-                        num8 = num17;
-                    }
+                    ushort rot_a = binaryReader.ReadUInt16();
+                    ushort rot_b = binaryReader.ReadUInt16();
+                    ushort rot_c = binaryReader.ReadUInt16();
+                    Vec4d rot = Animation.UnpackRotation(rot_a, rot_b, rot_c);
                     int index3 = numArray12[index2];
                     flagArray1[index1, index3] = true;
-                    numArray7[index1, index3] = num5;
-                    numArray8[index1, index3] = num6;
-                    numArray9[index1, index3] = num7;
-                    numArray10[index1, index3] = num8;
+                    numArray7[index1, index3] = (float) rot.x;
+                    numArray8[index1, index3] = (float) rot.y;
+                    numArray9[index1, index3] = (float) rot.z;
+                    numArray10[index1, index3] = (float) rot.w;
                 }
                 fileStream.Seek(position + 32L, SeekOrigin.Begin);
             }

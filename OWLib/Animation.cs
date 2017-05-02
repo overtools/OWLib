@@ -18,7 +18,7 @@ namespace OWLib {
         private List<AnimInfoTable> InfoTables = new List<AnimInfoTable>();
         private int InfoTableSize = 0;
 
-        private Vec4d UnpackRotation(ushort a, ushort b, ushort c) {
+        public static Vec4d UnpackRotation(ushort a, ushort b, ushort c) {
             Vec4d q = new Vec4d();
             int axis1 = a >> 15;
             int axis2 = b >> 15;
@@ -50,7 +50,8 @@ namespace OWLib {
 
             return q;
         }
-        private Vec3d UnpackScale(ushort x, ushort y, ushort z) {
+
+        public static Vec3d UnpackScale(ushort x, ushort y, ushort z) {
             double xd = (double)x / 1024f;
             double yd = (double)y / 1024f;
             double zd = (double)z / 1024f;
