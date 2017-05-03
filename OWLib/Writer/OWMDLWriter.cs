@@ -139,9 +139,11 @@ namespace OWLib.Writer {
                             parent = (short)i;
                         }
                         writer.Write(parent);
-                        Vector3 pos = skeleton.Matrices[i].ExtractTranslation();
-                        Quaternion rot = skeleton.Matrices[i].ExtractRotation();
-                        Vector3 scl = skeleton.Matrices[i].ExtractScale();
+                        
+                        Matrix3x4 bone = skeleton.Matrices34[i];
+                        Quaternion rot = new Quaternion(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
+                        Vector3 scl = new Vector3(bone[1, 0], bone[1, 1], bone[1, 2]);
+                        Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
                         writer.Write(pos.X);
                         writer.Write(pos.Y);
                         writer.Write(pos.Z);

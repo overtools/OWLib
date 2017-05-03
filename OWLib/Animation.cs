@@ -54,9 +54,9 @@ namespace OWLib {
         }
 
         public static Vec3d UnpackScale(ushort x, ushort y, ushort z) {
-            double xd = (double)x / 1024f;
-            double yd = (double)y / 1024f;
-            double zd = (double)z / 1024f;
+            double xd = (double)x / 1024d;
+            double yd = (double)y / 1024d;
+            double zd = (double)z / 1024d;
 
             Vec3d value = new Vec3d(xd, yd, zd);
             return value;

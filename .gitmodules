@@ -1,4 +1,7 @@
 [submodule "CASCExplorer"]
 	path = CASCExplorer
 	url = https://github.com/overtools/CASCExplorer.git
+[submodule "io_scene_owm"]
+	path = OWMImporter
+	url = https://github.com/overtools/io_scene_owm.git
 
