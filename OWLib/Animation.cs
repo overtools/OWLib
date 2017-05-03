@@ -31,9 +31,9 @@ namespace OWLib {
             b = (ushort)(b & 0x7FFF);
 
             double x, y, z, w;
-            x = 1.41421 * (a - 0x4000) / 0x8000;
-            y = 1.41421 * (b - 0x4000) / 0x8000;
-            z = 1.41421 * (c - 0x8000) / 0x10000;
+            x = 1.41421 * (a - 0x4000) / 0x8000f;
+            y = 1.41421 * (b - 0x4000) / 0x8000f;
+            z = 1.41421 * c / 0x10000f;
             w = Math.Pow(1.0 - x * x - y * y - z * z, 0.5);
 
             // Console.Out.WriteLine("Unpack Values: X: {0}, Y: {1}, Z: {2}, W: {3}, Axis: {4}", x, y, z, w, axis);
@@ -156,7 +156,7 @@ namespace OWLib {
                         ushort x = animReader.ReadUInt16();
                         ushort y = animReader.ReadUInt16();
                         ushort z = animReader.ReadUInt16();
-
+                        
                         Vec4d values = UnpackRotation(x, y, z);
                         RotationValues[boneid, Index] = values;
                     }
