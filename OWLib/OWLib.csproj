@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Animation.cs" />
     <Compile Include="APM.cs" />
+    <Compile Include="Third Party\APPLIB\C3D.cs" />
     <Compile Include="DDSTypeDetect.cs" />
     <Compile Include="DXBC.cs" />
     <Compile Include="Extensions.cs" />
@@ -59,6 +60,8 @@
     <Compile Include="ItemEvents.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Chunked.cs" />
+    <Compile Include="Third Party\APPLIB\Quaternion3D.cs" />
+    <Compile Include="Third Party\APPLIB\Vector3D.cs" />
     <Compile Include="Types\Chunk\LDOM\HTLC.cs" />
     <Compile Include="Types\Chunk\TCFE\NECE.cs" />
     <Compile Include="Types\STUD\GameParam\BindingEffectReference.cs" />

@@ -48,9 +48,6 @@
     <Compile Include="Third Party\Glob.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Third Party\C3D.cs" />
-    <Compile Include="Third Party\Quaternion3D.cs" />
-    <Compile Include="Third Party\Vector3D.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -53,251 +53,304 @@ namespace Overwatch_anim {
         }
 
         public static void ConvertAnimation(string refpose, string input, string output) {
-            NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
-            numberFormatInfo.NumberDecimalSeparator = ".";
-            StreamReader streamReader = new StreamReader(refpose);
-            int int32 = Convert.ToInt32(streamReader.ReadLine());
-            Dictionary<int, int> dictionary1 = new Dictionary<int, int>();
-            Dictionary<int, int> dictionary2 = new Dictionary<int, int>();
-            int[] numArray1 = new int[int32];
-            int[] numArray2 = new int[int32];
-            streamReader.ReadLine();
-            streamReader.ReadLine();
-            for (int index = 0; index < int32; ++index) {
-                string[] strArray = streamReader.ReadLine().Replace("\"", string.Empty).Split(' ');
-                numArray1[index] = Convert.ToInt32(strArray[1].Split('_').Last(), 16);
-                numArray2[index] = Convert.ToInt32(strArray[2]);
+            NumberFormatInfo format = new NumberFormatInfo();
+            format.NumberDecimalSeparator = ".";
+            StreamReader refpose_reader = new StreamReader(refpose);
+            int refpose_bonecount = Convert.ToInt32(refpose_reader.ReadLine());
+            Dictionary<int, int> refpose_parentmap = new Dictionary<int, int>();
+            Dictionary<int, int> refpose_indexmap = new Dictionary<int, int>();
+            int[] refpose_bonearray = new int[refpose_bonecount];
+            int[] refpose_hierarchy = new int[refpose_bonecount];
+            refpose_reader.ReadLine();
+            refpose_reader.ReadLine();
+            for (int index = 0; index < refpose_bonecount; ++index) {
+                string[] array = refpose_reader.ReadLine().Replace("\"", string.Empty).Split(' ');
+                refpose_bonearray[index] = Convert.ToInt32(array[1].Split('_').Last(), 16);
+                refpose_hierarchy[index] = Convert.ToInt32(array[2]);
             }
 
-            for (int index = 0; index < int32; ++index) {
-                if (numArray2[index] != -1)
-                    dictionary1.Add(numArray1[index], numArray1[numArray2[index]]);
+            for (int index = 0; index < refpose_bonecount; ++index) {
+                if (refpose_hierarchy[index] != -1)
+                    refpose_parentmap.Add(refpose_bonearray[index], refpose_bonearray[refpose_hierarchy[index]]);
                 else
-                    dictionary1.Add(numArray1[index], -1);
-                dictionary2.Add(numArray1[index], index);
+                    refpose_parentmap.Add(refpose_bonearray[index], -1);
+                refpose_indexmap.Add(refpose_bonearray[index], index);
             }
-            streamReader.ReadLine();
-            streamReader.ReadLine();
-            streamReader.ReadLine();
-            Vector3D[] vector3DArray1 = new Vector3D[int32];
-            Vector3D[] vector3DArray2 = new Vector3D[int32];
-            for (int index = 0; index < int32; ++index) {
-                vector3DArray1[index] = new Vector3D();
-                vector3DArray2[index] = new Vector3D();
-                string[] strArray = streamReader.ReadLine().Replace("\"", string.Empty).Split(' ');
-                vector3DArray1[index].X = Convert.ToSingle(strArray[2], (IFormatProvider)numberFormatInfo);
-                vector3DArray1[index].Y = Convert.ToSingle(strArray[3], (IFormatProvider)numberFormatInfo);
-                vector3DArray1[index].Z = Convert.ToSingle(strArray[4], (IFormatProvider)numberFormatInfo);
-                vector3DArray2[index].X = Convert.ToSingle(strArray[6], (IFormatProvider)numberFormatInfo);
-                vector3DArray2[index].Y = Convert.ToSingle(strArray[7], (IFormatProvider)numberFormatInfo);
-                vector3DArray2[index].Z = Convert.ToSingle(strArray[8], (IFormatProvider)numberFormatInfo);
-            }
-            streamReader.Close();
-            FileStream fileStream = new FileStream(input, FileMode.Open);
-            BinaryReader binaryReader = new BinaryReader((Stream)fileStream);
-            binaryReader.ReadInt32();
-            float num1 = binaryReader.ReadSingle();
-            float num2 = binaryReader.ReadSingle();
-            ushort length1 = binaryReader.ReadUInt16();
-            binaryReader.ReadUInt16();
-            int length2 = (int)((double)num2 * (double)num1) + 1;
-            fileStream.Seek(24L, SeekOrigin.Current);
-            long offset1 = binaryReader.ReadInt64();
-            long offset2 = binaryReader.ReadInt64();
-            fileStream.Seek(24L, SeekOrigin.Current);
-            StreamWriter streamWriter = new StreamWriter(output);
-            streamWriter.WriteLine("version 1");
-            streamWriter.WriteLine("nodes");
-            int[] numArray3 = new int[length1];
-            fileStream.Seek(offset1, SeekOrigin.Begin);
-            Dictionary<int, int> dictionary3 = new Dictionary<int, int>();
-            int key1;
-            for (int index = 0; index < length1; ++index) {
-                key1 = binaryReader.ReadInt32();
-                numArray3[index] = key1;
-                dictionary3.Add(key1, index);
-            }
-            for (int index = 0; index < length1; ++index) {
-                key1 = numArray3[index];
-                int num3 = -1;
-                if (dictionary1.ContainsKey(key1)) {
-                    int key2 = dictionary1[key1];
-                    num3 = !dictionary3.ContainsKey(key2) ? -1 : dictionary3[key2];
+            refpose_reader.ReadLine();
+            refpose_reader.ReadLine();
+            refpose_reader.ReadLine();
+            Vector3D[] refpose_position = new Vector3D[refpose_bonecount];
+            Vector3D[] refpose_rotation = new Vector3D[refpose_bonecount];
+            Vector3D[] refpose_scale = new Vector3D[refpose_bonecount];
+            for (int index = 0; index < refpose_bonecount; ++index) {
+                refpose_position[index] = new Vector3D();
+                refpose_rotation[index] = new Vector3D();
+                refpose_scale[index] = new Vector3D(1, 1, 1);
+                string[] array = refpose_reader.ReadLine().Replace("\"", string.Empty).Split(' ');
+                refpose_position[index].X = Convert.ToSingle(array[2], format);
+                refpose_position[index].Y = Convert.ToSingle(array[3], format);
+                refpose_position[index].Z = Convert.ToSingle(array[4], format);
+                refpose_rotation[index].X = Convert.ToSingle(array[6], format);
+                refpose_rotation[index].Y = Convert.ToSingle(array[7], format);
+                refpose_rotation[index].Z = Convert.ToSingle(array[8], format);
+                if (array.Length > 9) {
+                    refpose_scale[index].X = Convert.ToSingle(array[9], format);
+                    refpose_scale[index].Y = Convert.ToSingle(array[10], format);
+                    refpose_scale[index].Z = Convert.ToSingle(array[11], format);
                 }
-                streamWriter.WriteLine(index.ToString() + " \"bone_" + key1.ToString("X4") + "\" " + (object)num3);
             }
-            int length3 = length1;
-            Dictionary<int, int> dictionary4 = new Dictionary<int, int>();
-            for (int index = 0; index < int32; ++index) {
-                if (!dictionary3.ContainsKey(numArray1[index])) {
-                    dictionary4.Add(numArray1[index], length3);
+            refpose_reader.Close();
+            FileStream inputStream = new FileStream(input, FileMode.Open);
+            BinaryReader input_reader = new BinaryReader(inputStream);
+            input_reader.ReadInt32();
+            float duration = input_reader.ReadSingle();
+            float fps = input_reader.ReadSingle();
+            ushort bone_count = input_reader.ReadUInt16();
+            input_reader.ReadUInt16();
+            int frame_count = (int)(fps * (double)duration) + 1;
+            inputStream.Seek(24L, SeekOrigin.Current);
+            long offset_bone_list = input_reader.ReadInt64();
+            long offset_info_table = input_reader.ReadInt64();
+            inputStream.Seek(24L, SeekOrigin.Current);
+            StreamWriter output_writer = new StreamWriter(output);
+            output_writer.WriteLine("version 1");
+            output_writer.WriteLine("nodes");
+            int[] bone_list = new int[bone_count];
+            inputStream.Seek(offset_bone_list, SeekOrigin.Begin);
+            Dictionary<int, int> bone_translation_map = new Dictionary<int, int>();
+            int bone_id;
+            for (int index = 0; index < bone_count; ++index) {
+                bone_id = input_reader.ReadInt32();
+                bone_list[index] = bone_id;
+                bone_translation_map.Add(bone_id, index);
+            }
+            for (int index = 0; index < bone_count; ++index) {
+                bone_id = bone_list[index];
+                int num3 = -1;
+                if (refpose_parentmap.ContainsKey(bone_id)) {
+                    int key2 = refpose_parentmap[bone_id];
+                    num3 = !bone_translation_map.ContainsKey(key2) ? -1 : bone_translation_map[key2];
+                }
+                output_writer.WriteLine(index.ToString() + " \"bone_" + bone_id.ToString("X4") + "\" " + num3);
+            }
+            int last_bone_index = bone_count;
+            Dictionary<int, int> secondary_bone_translation_map = new Dictionary<int, int>();
+            for (int index = 0; index < refpose_bonecount; ++index) {
+                if (!bone_translation_map.ContainsKey(refpose_bonearray[index])) {
+                    secondary_bone_translation_map.Add(refpose_bonearray[index], last_bone_index);
                 }
             }
 
-            for (int index = 0; index < int32; ++index) {
-                if (!dictionary3.ContainsKey(numArray1[index])) {
-                    int key2 = dictionary1[numArray1[index]];
-                    int num3 = !dictionary3.ContainsKey(key2) ? (!dictionary4.ContainsKey(key2) ? -1 : dictionary4[key2]) : dictionary3[key2];
-                    streamWriter.WriteLine(length3.ToString() + " \"bone_" + numArray1[index].ToString("X4") + "\" " + (object)num3);
-                    ++length3;
+            for (int index = 0; index < refpose_bonecount; ++index) {
+                if (!bone_translation_map.ContainsKey(refpose_bonearray[index])) {
+                    int key2 = refpose_parentmap[refpose_bonearray[index]];
+                    int num3 = !bone_translation_map.ContainsKey(key2) ? (!secondary_bone_translation_map.ContainsKey(key2) ? -1 : secondary_bone_translation_map[key2]) : bone_translation_map[key2];
+                    output_writer.WriteLine(last_bone_index.ToString() + " \"bone_" + refpose_bonearray[index].ToString("X4") + "\" " + num3);
+                    ++last_bone_index;
                 }
             }
-            streamWriter.WriteLine("end");
-            float[,] numArray4 = new float[length3, length2];
-            float[,] numArray5 = new float[length3, length2];
-            float[,] numArray6 = new float[length3, length2];
-            float[,] numArray7 = new float[length3, length2];
-            float[,] numArray8 = new float[length3, length2];
-            float[,] numArray9 = new float[length3, length2];
-            float[,] numArray10 = new float[length3, length2];
-            bool[,] flagArray1 = new bool[length3, length2];
-            bool[,] flagArray2 = new bool[length3, length2];
-            streamWriter.WriteLine("skeleton");
-            streamWriter.WriteLine("time 0");
-            for (int index = 0; index < length1; ++index) {
-                if (dictionary2.ContainsKey(numArray3[index])) {
-                    key1 = dictionary2[numArray3[index]];
-                    streamWriter.Write(index);
-                    streamWriter.Write(" " + vector3DArray1[key1].X.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.Write(" " + vector3DArray1[key1].Y.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.Write(" " + vector3DArray1[key1].Z.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.Write(" " + vector3DArray2[key1].X.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.Write(" " + vector3DArray2[key1].Y.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.Write(" " + vector3DArray2[key1].Z.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.WriteLine();
+            output_writer.WriteLine("end");
+            float[,] x_array = new float[last_bone_index, frame_count];
+            float[,] y_array = new float[last_bone_index, frame_count];
+            float[,] z_array = new float[last_bone_index, frame_count];
+            float[,] sx_array = new float[last_bone_index, frame_count];
+            float[,] sy_array = new float[last_bone_index, frame_count];
+            float[,] sz_array = new float[last_bone_index, frame_count];
+            float[,] rx_array = new float[last_bone_index, frame_count];
+            float[,] ry_array = new float[last_bone_index, frame_count];
+            float[,] rz_array = new float[last_bone_index, frame_count];
+            float[,] rw_array = new float[last_bone_index, frame_count];
+            bool[,] has_rotation_frame = new bool[last_bone_index, frame_count];
+            bool[,] has_position_frame = new bool[last_bone_index, frame_count];
+            bool[,] has_scale_frame = new bool[last_bone_index, frame_count];
+            output_writer.WriteLine("skeleton");
+            output_writer.WriteLine("time 0");
+            for (int index = 0; index < bone_count; ++index) {
+                if (refpose_indexmap.ContainsKey(bone_list[index])) {
+                    bone_id = refpose_indexmap[bone_list[index]];
+                    output_writer.Write(index);
+                    output_writer.Write(" " + refpose_position[bone_id].X.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_position[bone_id].Y.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_position[bone_id].Z.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_rotation[bone_id].X.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_rotation[bone_id].Y.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_rotation[bone_id].Z.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_scale[bone_id].X.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_scale[bone_id].Y.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_scale[bone_id].Z.ToString("0.000000", format));
+                    output_writer.WriteLine();
                 } else
-                    streamWriter.WriteLine(index.ToString() + " 0 0 0 0 0 0");
+                    output_writer.WriteLine(index.ToString() + " 0 0 0 0 0 0 0 0 0");
             }
-            int num4 = length1;
-            for (int index = 0; index < int32; ++index) {
-                if (!dictionary3.ContainsKey(numArray1[index])) {
-                    streamWriter.Write(num4++);
-                    streamWriter.Write(" " + vector3DArray1[index].X.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.Write(" " + vector3DArray1[index].Y.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.Write(" " + vector3DArray1[index].Z.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.Write(" " + vector3DArray2[index].X.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.Write(" " + vector3DArray2[index].Y.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.Write(" " + vector3DArray2[index].Z.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                    streamWriter.WriteLine();
+            int num4 = bone_count;
+            for (int index = 0; index < refpose_bonecount; ++index) {
+                if (!bone_translation_map.ContainsKey(refpose_bonearray[index])) {
+                    output_writer.Write(num4++);
+                    output_writer.Write(" " + refpose_position[index].X.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_position[index].Y.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_position[index].Z.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_rotation[index].X.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_rotation[index].Y.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_rotation[index].Z.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_scale[index].X.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_scale[index].Y.ToString("0.000000", format));
+                    output_writer.Write(" " + refpose_scale[index].Z.ToString("0.000000", format));
+                    output_writer.WriteLine();
                 }
             }
             Quaternion3D q = new Quaternion3D();
             Vector3D vector3D = new Vector3D();
-            fileStream.Seek(offset2, SeekOrigin.Begin);
-            for (int index1 = 0; index1 < length1; ++index1) {
-                long position = fileStream.Position;
-                int num3 = (int)binaryReader.ReadInt16();
-                int length4 = (int)binaryReader.ReadInt16();
-                int length5 = (int)binaryReader.ReadInt16();
-                int num9 = (int)binaryReader.ReadInt16();
-                binaryReader.ReadInt32();
-                long offset3 = (long)(binaryReader.ReadInt32() * 4) + position;
-                long offset4 = (long)(binaryReader.ReadInt32() * 4) + position;
-                binaryReader.ReadInt32();
-                long offset5 = (long)(binaryReader.ReadInt32() * 4) + position;
-                long offset6 = (long)(binaryReader.ReadInt32() * 4) + position;
-                int[] numArray11 = new int[length4];
-                fileStream.Seek(offset3, SeekOrigin.Begin);
-                for (int index2 = 0; index2 < length4; ++index2)
-                    numArray11[index2] = length2 >= (int)byte.MaxValue ? (int)binaryReader.ReadInt16() : (int)binaryReader.ReadByte();
-                fileStream.Seek(offset5, SeekOrigin.Begin);
-                for (int index2 = 0; index2 < length4; ++index2) {
-                    int index3 = numArray11[index2];
-                    flagArray2[index1, index3] = true;
-                    float num10 = binaryReader.ReadSingle();
-                    numArray4[index1, index3] = num10;
-                    float num11 = binaryReader.ReadSingle();
-                    numArray5[index1, index3] = num11;
-                    float num12 = binaryReader.ReadSingle();
-                    numArray6[index1, index3] = num12;
+            inputStream.Seek(offset_info_table, SeekOrigin.Begin);
+            for (int index1 = 0; index1 < bone_count; ++index1) {
+                long position = inputStream.Position;
+                int scale_count = input_reader.ReadInt16();
+                int position_count = input_reader.ReadInt16();
+                int rotation_count = input_reader.ReadInt16();
+                int flags = input_reader.ReadInt16();
+                long scale_indices_offset = input_reader.ReadInt32() * 4 + position;
+                long position_indices_offset = input_reader.ReadInt32() * 4 + position;
+                long rotation_indices_offset = input_reader.ReadInt32() * 4 + position;
+                long scale_data_offset = input_reader.ReadInt32() * 4 + position;
+                long position_data_offset = input_reader.ReadInt32() * 4 + position;
+                long rotation_data_offset = input_reader.ReadInt32() * 4 + position;
+                int[] scale_indices = new int[scale_count];
+                inputStream.Seek(scale_indices_offset, SeekOrigin.Begin);
+                for (int index2 = 0; index2 < scale_count; ++index2)
+                    scale_indices[index2] = frame_count >= byte.MaxValue ? input_reader.ReadInt16() : input_reader.ReadByte();
+                inputStream.Seek(scale_data_offset, SeekOrigin.Begin);
+                for (int index2 = 0; index2 < scale_count; ++index2) {
+                    int index3 = scale_indices[index2];
+                    has_scale_frame[index1, index3] = true;
+                    float x = input_reader.ReadUInt16() / 1024.0f;
+                    sx_array[index1, index3] = x;
+                    float y = input_reader.ReadUInt16() / 1024.0f;
+                    sy_array[index1, index3] = y;
+                    float z = input_reader.ReadUInt16() / 1024.0f;
+                    sz_array[index1, index3] = z;
                 }
-                int[] numArray12 = new int[length5];
-                fileStream.Seek(offset4, SeekOrigin.Begin);
-                for (int index2 = 0; index2 < length5; ++index2)
-                    numArray12[index2] = length2 >= (int)byte.MaxValue ? (int)binaryReader.ReadInt16() : (int)binaryReader.ReadByte();
-                fileStream.Seek(offset6, SeekOrigin.Begin);
-                for (int index2 = 0; index2 < length5; ++index2) {
-                    ushort rot_a = binaryReader.ReadUInt16();
-                    ushort rot_b = binaryReader.ReadUInt16();
-                    ushort rot_c = binaryReader.ReadUInt16();
+                int[] position_indices = new int[position_count];
+                inputStream.Seek(position_indices_offset, SeekOrigin.Begin);
+                for (int index2 = 0; index2 < position_count; ++index2)
+                    position_indices[index2] = frame_count >= byte.MaxValue ? input_reader.ReadInt16() : input_reader.ReadByte();
+                inputStream.Seek(position_data_offset, SeekOrigin.Begin);
+                for (int index2 = 0; index2 < position_count; ++index2) {
+                    int index3 = position_indices[index2];
+                    has_position_frame[index1, index3] = true;
+                    float x = input_reader.ReadSingle();
+                    x_array[index1, index3] = x;
+                    float y = input_reader.ReadSingle();
+                    y_array[index1, index3] = y;
+                    float z = input_reader.ReadSingle();
+                    z_array[index1, index3] = z;
+                }
+                int[] rotation_indices = new int[rotation_count];
+                inputStream.Seek(rotation_indices_offset, SeekOrigin.Begin);
+                for (int index2 = 0; index2 < rotation_count; ++index2)
+                    rotation_indices[index2] = frame_count >= byte.MaxValue ? input_reader.ReadInt16() : input_reader.ReadByte();
+                inputStream.Seek(rotation_data_offset, SeekOrigin.Begin);
+                for (int index2 = 0; index2 < rotation_count; ++index2) {
+                    ushort rot_a = input_reader.ReadUInt16();
+                    ushort rot_b = input_reader.ReadUInt16();
+                    ushort rot_c = input_reader.ReadUInt16();
                     Vec4d rot = Animation.UnpackRotation(rot_a, rot_b, rot_c);
-                    int index3 = numArray12[index2];
-                    flagArray1[index1, index3] = true;
-                    numArray7[index1, index3] = (float) rot.x;
-                    numArray8[index1, index3] = (float) rot.y;
-                    numArray9[index1, index3] = (float) rot.z;
-                    numArray10[index1, index3] = (float) rot.w;
+                    int index3 = rotation_indices[index2];
+                    has_rotation_frame[index1, index3] = true;
+                    rx_array[index1, index3] = (float) rot.x;
+                    ry_array[index1, index3] = (float) rot.y;
+                    rz_array[index1, index3] = (float) rot.z;
+                    rw_array[index1, index3] = (float) rot.w;
                 }
-                fileStream.Seek(position + 32L, SeekOrigin.Begin);
+                inputStream.Seek(position + 32L, SeekOrigin.Begin);
             }
-            for (int index1 = 0; index1 < length2; ++index1) {
-                streamWriter.WriteLine("time " + (object)(index1 + 1));
-                for (int index2 = 0; index2 < length3; ++index2) {
-                    if (flagArray2[index2, index1] || flagArray1[index2, index1]) {
-                        if (!flagArray2[index2, index1]) {
+            for (int index1 = 0; index1 < frame_count; ++index1) {
+                output_writer.WriteLine($"time {index1 + 1}");
+                for (int index2 = 0; index2 < last_bone_index; ++index2) {
+                    if (has_position_frame[index2, index1] || has_rotation_frame[index2, index1] || has_scale_frame[index2, index1]) {
+                        if (!has_position_frame[index2, index1]) {
                             int index3 = index1;
                             int index4 = index1;
-                            while (!flagArray2[index2, index3])
+                            while (!has_position_frame[index2, index3])
                                 --index3;
-                            while (index4 < length2 && !flagArray2[index2, index4])
+                            while (index4 < frame_count && !has_position_frame[index2, index4])
                                 ++index4;
-                            if (index4 == length2) {
-                                numArray4[index2, index1] = numArray4[index2, index3];
-                                numArray5[index2, index1] = numArray5[index2, index3];
-                                numArray6[index2, index1] = numArray6[index2, index3];
+                            if (index4 == frame_count) {
+                                x_array[index2, index1] = x_array[index2, index3];
+                                y_array[index2, index1] = y_array[index2, index3];
+                                z_array[index2, index1] = z_array[index2, index3];
                             } else {
-                                float num3 = (float)(index1 - index3) / (float)(index4 - index3);
-                                numArray4[index2, index1] = (numArray4[index2, index4] - numArray4[index2, index3]) * num3 + numArray4[index2, index3];
-                                numArray5[index2, index1] = (numArray5[index2, index4] - numArray5[index2, index3]) * num3 + numArray5[index2, index3];
-                                numArray6[index2, index1] = (numArray6[index2, index4] - numArray6[index2, index3]) * num3 + numArray6[index2, index3];
+                                float num3 = (index1 - index3) / (float)(index4 - index3);
+                                x_array[index2, index1] = (x_array[index2, index4] - x_array[index2, index3]) * num3 + x_array[index2, index3];
+                                y_array[index2, index1] = (y_array[index2, index4] - y_array[index2, index3]) * num3 + y_array[index2, index3];
+                                z_array[index2, index1] = (z_array[index2, index4] - z_array[index2, index3]) * num3 + z_array[index2, index3];
                             }
                         }
-                        if (!flagArray1[index2, index1]) {
+                        if (!has_scale_frame[index2, index1]) {
                             int index3 = index1;
                             int index4 = index1;
-                            while (!flagArray1[index2, index3])
+                            while (!has_scale_frame[index2, index3])
                                 --index3;
-                            while (index4 < length2 && !flagArray1[index2, index4])
+                            while (index4 < frame_count && !has_scale_frame[index2, index4])
                                 ++index4;
-                            if (index4 == length2) {
-                                numArray7[index2, index1] = numArray7[index2, index3];
-                                numArray8[index2, index1] = numArray8[index2, index3];
-                                numArray9[index2, index1] = numArray9[index2, index3];
-                                numArray10[index2, index1] = numArray10[index2, index3];
+                            if (index4 == frame_count) {
+                                sx_array[index2, index1] = sx_array[index2, index3];
+                                sy_array[index2, index1] = sy_array[index2, index3];
+                                sz_array[index2, index1] = sz_array[index2, index3];
                             } else {
-                                double num3 = (double)numArray7[index2, index4] * (double)numArray7[index2, index3] + (double)numArray8[index2, index4] * (double)numArray8[index2, index3] + (double)numArray9[index2, index4] * (double)numArray9[index2, index3] + (double)numArray10[index2, index4] * (double)numArray10[index2, index3];
-                                float num9 = (float)(index1 - index3) / (float)(index4 - index3);
+                                float num3 = (index1 - index3) / (float)(index4 - index3);
+                                sx_array[index2, index1] = (sx_array[index2, index4] - sx_array[index2, index3]) * num3 + sx_array[index2, index3];
+                                sy_array[index2, index1] = (sy_array[index2, index4] - sy_array[index2, index3]) * num3 + sy_array[index2, index3];
+                                sz_array[index2, index1] = (sz_array[index2, index4] - sz_array[index2, index3]) * num3 + sz_array[index2, index3];
+                            }
+                        }
+                        if (!has_rotation_frame[index2, index1]) {
+                            int index3 = index1;
+                            int index4 = index1;
+                            while (!has_rotation_frame[index2, index3])
+                                --index3;
+                            while (index4 < frame_count && !has_rotation_frame[index2, index4])
+                                ++index4;
+                            if (index4 == frame_count) {
+                                rx_array[index2, index1] = rx_array[index2, index3];
+                                ry_array[index2, index1] = ry_array[index2, index3];
+                                rz_array[index2, index1] = rz_array[index2, index3];
+                                rw_array[index2, index1] = rw_array[index2, index3];
+                            } else {
+                                double num3 = rx_array[index2, index4] * (double)rx_array[index2, index3] + ry_array[index2, index4] * (double)ry_array[index2, index3] + rz_array[index2, index4] * (double)rz_array[index2, index3] + rw_array[index2, index4] * (double)rw_array[index2, index3];
+                                float num9 = (index1 - index3) / (float)(index4 - index3);
                                 if (num3 < 0.0) {
-                                    numArray7[index2, index1] = (-numArray7[index2, index4] - numArray7[index2, index3]) * num9 + numArray7[index2, index3];
-                                    numArray8[index2, index1] = (-numArray8[index2, index4] - numArray8[index2, index3]) * num9 + numArray8[index2, index3];
-                                    numArray9[index2, index1] = (-numArray9[index2, index4] - numArray9[index2, index3]) * num9 + numArray9[index2, index3];
-                                    numArray10[index2, index1] = (-numArray10[index2, index4] - numArray10[index2, index3]) * num9 + numArray10[index2, index3];
+                                    rx_array[index2, index1] = (-rx_array[index2, index4] - rx_array[index2, index3]) * num9 + rx_array[index2, index3];
+                                    ry_array[index2, index1] = (-ry_array[index2, index4] - ry_array[index2, index3]) * num9 + ry_array[index2, index3];
+                                    rz_array[index2, index1] = (-rz_array[index2, index4] - rz_array[index2, index3]) * num9 + rz_array[index2, index3];
+                                    rw_array[index2, index1] = (-rw_array[index2, index4] - rw_array[index2, index3]) * num9 + rw_array[index2, index3];
                                 } else {
-                                    numArray7[index2, index1] = (numArray7[index2, index4] - numArray7[index2, index3]) * num9 + numArray7[index2, index3];
-                                    numArray8[index2, index1] = (numArray8[index2, index4] - numArray8[index2, index3]) * num9 + numArray8[index2, index3];
-                                    numArray9[index2, index1] = (numArray9[index2, index4] - numArray9[index2, index3]) * num9 + numArray9[index2, index3];
-                                    numArray10[index2, index1] = (numArray10[index2, index4] - numArray10[index2, index3]) * num9 + numArray10[index2, index3];
+                                    rx_array[index2, index1] = (rx_array[index2, index4] - rx_array[index2, index3]) * num9 + rx_array[index2, index3];
+                                    ry_array[index2, index1] = (ry_array[index2, index4] - ry_array[index2, index3]) * num9 + ry_array[index2, index3];
+                                    rz_array[index2, index1] = (rz_array[index2, index4] - rz_array[index2, index3]) * num9 + rz_array[index2, index3];
+                                    rw_array[index2, index1] = (rw_array[index2, index4] - rw_array[index2, index3]) * num9 + rw_array[index2, index3];
                                 }
                             }
                         }
-                        streamWriter.Write(index2);
-                        streamWriter.Write(" " + numArray4[index2, index1].ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                        streamWriter.Write(" " + numArray5[index2, index1].ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                        streamWriter.Write(" " + numArray6[index2, index1].ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                        q.i = numArray7[index2, index1];
-                        q.j = numArray8[index2, index1];
-                        q.k = numArray9[index2, index1];
-                        q.real = numArray10[index2, index1];
+                        output_writer.Write(index2);
+                        output_writer.Write(" " + x_array[index2, index1].ToString("0.000000", format));
+                        output_writer.Write(" " + y_array[index2, index1].ToString("0.000000", format));
+                        output_writer.Write(" " + z_array[index2, index1].ToString("0.000000", format));
+                        q.i = rx_array[index2, index1];
+                        q.j = ry_array[index2, index1];
+                        q.k = rz_array[index2, index1];
+                        q.real = rw_array[index2, index1];
                         Vector3D eulerAngles = C3D.ToEulerAngles(q);
-                        streamWriter.Write(" " + eulerAngles.X.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                        streamWriter.Write(" " + eulerAngles.Y.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                        streamWriter.Write(" " + eulerAngles.Z.ToString("0.000000", (IFormatProvider)numberFormatInfo));
-                        streamWriter.WriteLine();
+                        output_writer.Write(" " + eulerAngles.X.ToString("0.000000", format));
+                        output_writer.Write(" " + eulerAngles.Y.ToString("0.000000", format));
+                        output_writer.Write(" " + eulerAngles.Z.ToString("0.000000", format));
+                        output_writer.Write(" " + sx_array[index2, index1].ToString("0.000000", format));
+                        output_writer.Write(" " + sy_array[index2, index1].ToString("0.000000", format));
+                        output_writer.Write(" " + sz_array[index2, index1].ToString("0.000000", format));
+                        output_writer.WriteLine();
                     }
                 }
             }
-            streamWriter.WriteLine("end");
-            streamWriter.Close();
+            output_writer.WriteLine("end");
+            output_writer.Close();
         }
     }
 }

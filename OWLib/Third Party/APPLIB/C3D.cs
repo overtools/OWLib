@@ -3,7 +3,7 @@
 using System;
 
 namespace APPLIB {
-    class C3D {
+    public class C3D {
         private enum EulerParity {
             Even,
             Odd,
