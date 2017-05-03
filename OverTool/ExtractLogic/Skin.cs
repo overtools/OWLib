@@ -627,30 +627,33 @@ namespace OverTool.ExtractLogic {
                 foreach (KeyValuePair<ulong, ulong> kv in animList) {
                     ulong parent = kv.Value;
                     ulong key = kv.Key;
-                    string outpath = string.Format("{0}{5}{1}{2:X12}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), GUID.Type(key), external ? "" : "Animations");
+
+                    Stream animation = Util.OpenFile(map[key], handler);
+                    if (animation == null) {
+                        continue;
+                    }
+
+                    Animation anim = new Animation(animation, true);
+                    animation.Position = 0;
+
+                    string outpath = string.Format("{0}{5}{1}{2:X12}{1}{6}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), GUID.Type(key), external ? "" : "Animations", anim.Header.priority);
                     if (!Directory.Exists(Path.GetDirectoryName(outpath))) {
                         Directory.CreateDirectory(Path.GetDirectoryName(outpath));
                     }
-                    using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-                        Stream output = Util.OpenFile(map[key], handler);
-                        if (output != null) {
-                            output.CopyTo(outp);
-                            Console.Out.WriteLine("Wrote raw animation {0}", outpath);
-                            output.Close();
-                        }
-                    }
-                    outpath = string.Format("{0}{5}{1}{2:X12}{1}{3:X12}{4}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), animWriter.Format, external ? "" : "Animations");
 
                     using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-                        Stream output = Util.OpenFile(map[key], handler);
-                        if (output != null) {
-                            try {
-                                Animation anim = new Animation(output, false);
-                                animWriter.Write(anim, outp, new object[] { });
-                                Console.Out.WriteLine("Wrote animation {0}", outpath);
-                            } catch {
-                                Console.Error.WriteLine("Error with animation {0:X12}.{1:X3}", GUID.Index(key), GUID.Type(key));
-                            }
+                        animation.CopyTo(outp);
+                        animation.Close();
+                        Console.Out.WriteLine("Wrote raw animation {0}", outpath);
+                    }
+
+                    outpath = string.Format("{0}{5}{1}{2:X12}{1}{6}{1}{3:X12}{4}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), animWriter.Format, external ? "" : "Animations", anim.Header.priority);
+                    using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+                        try {
+                            animWriter.Write(anim, outp, new object[] { });
+                            Console.Out.WriteLine("Wrote animation {0}", outpath);
+                        } catch {
+                            Console.Error.WriteLine("Error with animation {0:X12}.{1:X3}", GUID.Index(key), GUID.Type(key));
                         }
                     }
                 }

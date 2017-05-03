@@ -18,6 +18,8 @@ namespace OWLib {
         private List<AnimInfoTable> InfoTables = new List<AnimInfoTable>();
         private int InfoTableSize = 0;
 
+        public AnimHeader Header => header;
+
         public static Vec4d UnpackRotation(ushort a, ushort b, ushort c) {
             Vec4d q = new Vec4d();
             int axis1 = a >> 15;

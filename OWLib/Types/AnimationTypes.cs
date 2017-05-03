@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace OWLib.Types {
   [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct AnimHeader {
-        private uint version;
+        public uint priority;
         public float duration;
         public float fps;
         public ushort bonecount;
