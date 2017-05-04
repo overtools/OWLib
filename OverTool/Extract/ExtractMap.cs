@@ -19,7 +19,7 @@ namespace OverTool {
         public string Title => "Extract Maps";
         public ushort[] Track => new ushort[1] { 0x9F };
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             string output = args[0];
             List<string> maps = args.Skip(1).ToList();
 
@@ -174,9 +174,13 @@ namespace OverTool {
                                 foreach (string modelOutput in modelpair.Value) {
                                     using (Stream outputStream = File.Open($"{outputPath}{modelOutput}", FileMode.Create, FileAccess.Write)) {
                                         if (owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel })) {
-                                            Console.Out.WriteLine("Wrote model {0}", modelOutput);
+                                            if (!quiet) {
+                                                Console.Out.WriteLine("Wrote model {0}", modelOutput);
+                                            }
                                         } else {
-                                            Console.Out.WriteLine("Failed to write model");
+                                            if (!quiet) {
+                                                Console.Out.WriteLine("Failed to write model");
+                                            }
                                         }
                                     }
                                 }
@@ -191,7 +195,9 @@ namespace OverTool {
                             }
                             using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
                                 Util.OpenFile(map[key], handler).CopyTo(outp);
-                                Console.Out.WriteLine("Wrote animation {0}", outpath);
+                                if (!quiet) {
+                                    Console.Out.WriteLine("Wrote animation {0}", outpath);
+                                }
                             }
                         }
 
@@ -201,7 +207,7 @@ namespace OverTool {
                             Directory.CreateDirectory(soundPath);
                         }
 
-                        DumpVoice.Save(soundPath, soundData, map, handler);
+                        DumpVoice.Save(soundPath, soundData, map, handler, quiet);
 
                         foreach (KeyValuePair<ulong, List<string>> matpair in materials) {
                             Dictionary<ulong, List<ImageLayer>> tmp = new Dictionary<ulong, List<ImageLayer>>();
@@ -219,8 +225,7 @@ namespace OverTool {
                                     if (!parsed.Add(layer.key)) {
                                         continue;
                                     }
-                                    KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, map, handler,
-                                        $"{outputPath}{GUID.LongKey(layer.key):X12}.dds");
+                                    KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, map, handler, $"{outputPath}{GUID.LongKey(layer.key):X12}.dds", quiet);
                                     types.Add(pair.Key, pair.Value);
                                 }
                             }
@@ -228,9 +233,13 @@ namespace OverTool {
                             foreach (string matOutput in matpair.Value) {
                                 using (Stream outputStream = File.Open($"{outputPath}{matOutput}", FileMode.Create, FileAccess.Write)) {
                                     if (owmat.Write(null, outputStream, null, tmp, new object[1] { types })) {
-                                        Console.Out.WriteLine("Wrote material {0}", matOutput);
+                                        if (!quiet) {
+                                            Console.Out.WriteLine("Wrote material {0}", matOutput);
+                                        }
                                     } else {
-                                        Console.Out.WriteLine("Failed to write material");
+                                        if (!quiet) {
+                                            Console.Out.WriteLine("Failed to write material");
+                                        }
                                     }
                                 }
                             }

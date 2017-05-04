@@ -27,7 +27,7 @@ namespace OverTool {
             return inventory;
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             string output = args[0];
 
             string[] validCommands = new string[] { "skin", "spray", "icon", "victory pose", "emote", "heroic intro" };
@@ -184,7 +184,7 @@ namespace OverTool {
                     switch (instance.Name) {
                         case "Spray":
                             Console.Out.WriteLine("Extracting spray {0} for {1}...", name, heroName);
-                            ExtractLogic.Spray.Extract(stud, output, heroName, name, itemGroup, track, map, handler, furtherOpts);
+                            ExtractLogic.Spray.Extract(stud, output, heroName, name, itemGroup, track, map, handler, quiet, furtherOpts);
                             break;
                         case "Skin":
                             List<ulong> ignoreList = new List<ulong>();
@@ -192,17 +192,17 @@ namespace OverTool {
                                 ignoreList = heroIgnore[heroName.ToLowerInvariant()][name.ToLowerInvariant()];
                             } catch { }
                             Console.Out.WriteLine("Extracting {0} models and textures for {1}", name, heroName);
-                            ExtractLogic.Skin.Extract(master, stud, output, heroName, name, itemGroup, ignoreList, track, map, handler, furtherOpts, masterKey);
+                            ExtractLogic.Skin.Extract(master, stud, output, heroName, name, itemGroup, ignoreList, track, map, handler, quiet, furtherOpts, masterKey);
                             break;
                         case "Icon":
                             Console.Out.WriteLine("Extracting icon {0} for {1}...", name, heroName);
-                            ExtractLogic.Icon.Extract(stud, output, heroName, name, itemGroup, track, map, handler, furtherOpts);
+                            ExtractLogic.Icon.Extract(stud, output, heroName, name, itemGroup, track, map, handler, quiet, furtherOpts);
                             break;
                         case "Emote":
                         case "Victory Pose":
                         case "Heroic Intro":
                             Console.Out.WriteLine("Extracting {2} {0} for {1}...", name, heroName, instance.Name);
-                            ExtractLogic.ItemAnimation.Extract(record.key, stud, output, heroName, name, itemGroup, track, map, handler, furtherOpts);
+                            ExtractLogic.ItemAnimation.Extract(record.key, stud, output, heroName, name, itemGroup, track, map, handler, quiet, furtherOpts);
                             break;
                         case "Voice Line":
                             //Console.Out.WriteLine("Extracting voice line {0} for {1}...", name, heroName);

@@ -13,7 +13,7 @@ namespace OverTool {
         public string Title => "Extract Voice";
         public ushort[] Track => new ushort[1] { 0x75 };
 
-        public static void Save(string path, Dictionary<ulong, List<ulong>> sounds, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace = null) {
+        public static void Save(string path, Dictionary<ulong, List<ulong>> sounds, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, Dictionary<ulong, ulong> replace = null) {
             HashSet<ulong> done = new HashSet<ulong>();
             foreach (KeyValuePair<ulong, List<ulong>> pair in sounds) {
                 string rootOutput = $"{path}{GUID.LongKey(pair.Key):X12}{Path.DirectorySeparatorChar}";
@@ -37,14 +37,16 @@ namespace OverTool {
                         }
                         using (Stream outputStream = File.Open(outputPath, FileMode.Create)) {
                             ExtractLogic.Sound.CopyBytes(soundStream, outputStream, (int)soundStream.Length);
-                            Console.Out.WriteLine("Wrote file {0}", outputPath);
+                            if (!quiet) {
+                                Console.Out.WriteLine("Wrote file {0}", outputPath);
+                            }
                         }
                     }
                 }
             }
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             string output = args[0];
 
             List<string> heroes = new List<string>();
@@ -82,7 +84,7 @@ namespace OverTool {
                     Directory.CreateDirectory(path);
                 }
 
-                Save(path, soundData, map, handler);
+                Save(path, soundData, map, handler, quiet);
             }
         }
     }

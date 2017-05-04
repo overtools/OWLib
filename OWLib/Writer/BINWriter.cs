@@ -80,7 +80,7 @@ namespace OWLib.Writer {
                 skeleton = (lksm)chunk;
             }
 
-            Console.Out.WriteLine("Writing BIN");
+            //Console.Out.WriteLine("Writing BIN");
             using (BinaryWriter writer = new BinaryWriter(stream)) {
                 writer.Write((uint)323232);
                 writer.Write((ushort)2);
@@ -152,7 +152,7 @@ namespace OWLib.Writer {
                 }
                 writer.Write(sz);
                 foreach (KeyValuePair<byte, List<int>> kv in LODMap) {
-                    Console.Out.WriteLine("Writing LOD {0}", kv.Key);
+                    //Console.Out.WriteLine("Writing LOD {0}", kv.Key);
                     foreach (int i in kv.Value) {
                         SubmeshDescriptor submesh = model.Submeshes[i];
                         ModelVertex[] vertex = model.Vertices[i];
@@ -242,7 +242,7 @@ namespace OWLib.Writer {
         }
 
         public bool Write(Map10 physics, Stream output, object[] data) {
-            Console.Out.WriteLine("Writing BIN");
+            //Console.Out.WriteLine("Writing BIN");
             using (BinaryWriter writer = new BinaryWriter(output)) {
                 writer.Write((uint)323232);
                 writer.Write((ushort)2);

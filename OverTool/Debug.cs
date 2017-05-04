@@ -10,7 +10,7 @@ namespace OverTool {
         public string Title => "Debug";
         public ushort[] Track => new ushort[0];
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             foreach (KeyValuePair<ushort, List<ulong>> pair in track) {
                 Console.Out.WriteLine($"{pair.Key:X3} {pair.Value.Count} entries");
             }

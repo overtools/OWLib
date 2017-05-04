@@ -7,7 +7,7 @@ using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool.ExtractLogic {
     class Portrait {
-        public static void Save(ulong key, string path, Dictionary<ulong, Record> map, CASCHandler handler) {
+        public static void Save(ulong key, string path, Dictionary<ulong, Record> map, bool quiet, CASCHandler handler) {
             if (!map.ContainsKey(key)) {
                 return;
             }
@@ -26,10 +26,13 @@ namespace OverTool.ExtractLogic {
                     tex.Save(outp);
                 }
             }
-            Console.Out.WriteLine("Wrote portrait {0}", path);
+
+            if (!quiet) {
+                Console.Out.WriteLine("Wrote portrait {0}", path);
+            }
         }
 
-        public static void Extract(STUD itemStud, string output, string heroName, string itemName, string itemGroup, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, List<char> furtherOpts) {
+        public static void Extract(STUD itemStud, string output, string heroName, string itemName, string itemGroup, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, List<char> furtherOpts) {
             string path = string.Format("{0}{1}{2}{1}{3}{1}{5}{1}{4}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName), Util.SanitizePath(itemGroup));
 
             if (itemStud.Instances == null) {
@@ -43,10 +46,10 @@ namespace OverTool.ExtractLogic {
                 return;
             }
             if (!File.Exists($"{path} ({item.Data.bracket}).dds")) {
-                Save(item.Data.portrait.key, $"{path} ({item.Data.bracket}).dds", map, handler);
+                Save(item.Data.portrait.key, $"{path} ({item.Data.bracket}).dds", map, quiet, handler);
             }
             if (!File.Exists($"{path} Star {item.Data.star}.dds")) {
-                Save(item.Data.portrait2.key, $"{path} Star {item.Data.star}.dds", map, handler);
+                Save(item.Data.portrait2.key, $"{path} Star {item.Data.star}.dds", map, quiet, handler);
             }
         }
     }

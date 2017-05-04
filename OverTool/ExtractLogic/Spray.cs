@@ -8,7 +8,7 @@ using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool.ExtractLogic {
     class Spray {
-        public static void Extract(STUD itemStud, string output, string heroName, string itemName, string itemGroup, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, List<char> furtherOpts) {
+        public static void Extract(STUD itemStud, string output, string heroName, string itemName, string itemGroup, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, List<char> furtherOpts) {
             string path = string.Format("{0}{1}{2}{1}{3}{1}{5}{1}{4}.dds", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName), Util.SanitizePath(itemGroup));
 
             if (itemStud.Instances == null) {
@@ -54,7 +54,10 @@ namespace OverTool.ExtractLogic {
                     tex.Save(outp);
                 }
             }
-            Console.Out.WriteLine("Wrote spray {0}", path);
+
+            if (!quiet) {
+                Console.Out.WriteLine("Wrote spray {0}", path);
+            }
         }
     }
 }

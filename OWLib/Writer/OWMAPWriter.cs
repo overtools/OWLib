@@ -24,7 +24,7 @@ namespace OWLib.Writer {
         }
 
         public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name = "") {
-            Console.Out.WriteLine("Writing OWMAP");
+            //Console.Out.WriteLine("Writing OWMAP");
             using (BinaryWriter writer = new BinaryWriter(output)) {
                 writer.Write((ushort)1); // version major
                 writer.Write((ushort)1); // version minor

@@ -13,7 +13,7 @@ namespace OverTool.List {
         public string Title => "List Lootbox";
         public ushort[] Track => new ushort[1] { 0xCF };
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             Console.Out.WriteLine();
             foreach (ulong master in track[0xCF]) {
                 if (!map.ContainsKey(master)) {

@@ -14,7 +14,7 @@ namespace OWLib.Writer {
         public WriterSupport SupportLevel => (WriterSupport.VERTEX | WriterSupport.UV | WriterSupport.BONE | WriterSupport.POSE | WriterSupport.MATERIAL | WriterSupport.ATTACHMENT | WriterSupport.MODEL);
 
         public bool Write(Map10 physics, Stream output, object[] data) {
-            Console.Out.WriteLine("Writing OWMDL");
+            // Console.Out.WriteLine("Writing OWMDL");
             using (BinaryWriter writer = new BinaryWriter(output)) {
                 writer.Write((ushort)1);
                 writer.Write((ushort)1);
@@ -72,7 +72,7 @@ namespace OWLib.Writer {
                 hardpoints = (PRHM)chunk;
             }
 
-            Console.Out.WriteLine("Writing OWMDL");
+            //Console.Out.WriteLine("Writing OWMDL");
             using (BinaryWriter writer = new BinaryWriter(output)) {
                 writer.Write((ushort)1); // version major
                 writer.Write((ushort)1); // version minor
@@ -158,7 +158,7 @@ namespace OWLib.Writer {
                 }
 
                 foreach (KeyValuePair<byte, List<int>> kv in LODMap) {
-                    Console.Out.WriteLine("Writing LOD {0}", kv.Key);
+                    //Console.Out.WriteLine("Writing LOD {0}", kv.Key);
                     foreach (int i in kv.Value) {
                         SubmeshDescriptor submesh = model.Submeshes[i];
                         ModelVertex[] vertex = model.Vertices[i];

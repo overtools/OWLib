@@ -17,7 +17,7 @@ namespace OWLib.Writer {
         }
 
         public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data) {
-            Console.Out.WriteLine("Writing OWMAT");
+            //Console.Out.WriteLine("Writing OWMAT");
             ushort versionMajor = 1;
             ushort versionMinor = 0;
 

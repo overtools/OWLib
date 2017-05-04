@@ -66,6 +66,13 @@ namespace OverTool {
                 args = args.Skip(1).ToArray();
             }
 
+            bool quiet = false;
+            if (args[0][0] == '-' && args[0][1] == 'q') {
+                quiet = true;
+                Console.Out.WriteLine("Quiet mode");
+                args = args.Skip(1).ToArray();
+            }
+
             string root = args[0];
             char opt = args[1][0];
 
@@ -200,7 +207,7 @@ namespace OverTool {
 
             Console.Out.WriteLine("Tooling...");
 
-            tool.Parse(track, map, handler, args.Skip(2).ToArray());
+            tool.Parse(track, map, handler, quiet, args.Skip(2).ToArray());
             if (System.Diagnostics.Debugger.IsAttached) {
                 System.Diagnostics.Debugger.Break();
             }
@@ -213,7 +220,7 @@ namespace OverTool {
         }
 
         private static void PrintHelp(List<IOvertool> tools) {
-            Console.Out.WriteLine("Usage: OverTool.exe [-LLang] \"overwatch path\" mode [mode opts]");
+            Console.Out.WriteLine("Usage: OverTool.exe [-LLang] [-q] \"overwatch path\" mode [mode opts]");
             Console.Out.WriteLine("Options:");
             Console.Out.WriteLine("\tL - Specify a language to extract. Example: -LdeDE");
             Console.Out.WriteLine("\t\tValid Languages: {0}", string.Join(", ", ValidLangs));

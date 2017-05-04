@@ -51,7 +51,7 @@ namespace OWLib.Writer {
                 }
 
                 foreach (KeyValuePair<byte, List<int>> kv in LODMap) {
-                    Console.Out.WriteLine("Writing LOD {0}", kv.Key);
+                    //Console.Out.WriteLine("Writing LOD {0}", kv.Key);
                     writer.WriteLine("o Submesh_{0}", kv.Key);
                     foreach (int i in kv.Value) {
                         SubmeshDescriptor submesh = model.Submeshes[i];
@@ -98,7 +98,7 @@ namespace OWLib.Writer {
         }
 
         public bool Write(Map10 physics, Stream output, object[] data) {
-            Console.Out.WriteLine("Writing OBJ");
+            //Console.Out.WriteLine("Writing OBJ");
             using (StreamWriter writer = new StreamWriter(output)) {
                 writer.WriteLine("o Physics");
 

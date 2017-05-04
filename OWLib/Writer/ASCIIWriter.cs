@@ -34,7 +34,7 @@ namespace OWLib.Writer {
                 skeleton = (lksm)chunk;
             }
 
-            Console.Out.WriteLine("Writing ASCII");
+            //Console.Out.WriteLine("Writing ASCII");
             using (StreamWriter writer = new StreamWriter(output)) {
                 if (skeleton != null) {
                     writer.WriteLine(skeleton.Data.bonesAbs);
@@ -78,7 +78,7 @@ namespace OWLib.Writer {
 
                 writer.WriteLine(sz);
                 foreach (KeyValuePair<byte, List<int>> kv in LODMap) {
-                    Console.Out.WriteLine("Writing LOD {0}", kv.Key);
+                    //Console.Out.WriteLine("Writing LOD {0}", kv.Key);
                     foreach (int i in kv.Value) {
                         SubmeshDescriptor submesh = model.Submeshes[i];
                         ModelVertex[] vertex = model.Vertices[i];
@@ -149,7 +149,7 @@ namespace OWLib.Writer {
         }
 
         public bool Write(Map10 physics, Stream output, object[] data) {
-            Console.Out.WriteLine("Writing ASCII");
+            //Console.Out.WriteLine("Writing ASCII");
             using (StreamWriter writer = new StreamWriter(output)) {
                 writer.WriteLine(0);
                 writer.WriteLine(1);

@@ -14,7 +14,7 @@ namespace OverTool {
         public string Title => "Extract NPC";
         public ushort[] Track => new ushort[1] { 0x75 };
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             List<ulong> masters = track[0x75];
             List<ulong> blank = new List<ulong>();
             Dictionary<ulong, ulong> blankdict = new Dictionary<ulong, ulong>();
@@ -58,7 +58,7 @@ namespace OverTool {
 
                 ExtractLogic.Skin.FindModels(master.Header.binding, blank, models, animList, layers, blankdict, parsed, map, handler);
 
-                ExtractLogic.Skin.Save(master, path, heroName, $"{GUID.LongKey(masterKey):X}", blankdict, parsed, models, layers, animList, blankchar, track, map, handler, masterKey);
+                ExtractLogic.Skin.Save(master, path, heroName, $"{GUID.LongKey(masterKey):X}", blankdict, parsed, models, layers, animList, blankchar, track, map, handler, masterKey, false, quiet);
             }
         }
     }

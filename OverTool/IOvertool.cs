@@ -23,6 +23,6 @@ namespace OverTool {
             get;
         }
 
-        void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args);
+        void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args);
     }
 }

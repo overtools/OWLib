@@ -17,7 +17,7 @@ namespace OverTool.List {
         public string Title => "Extract Lootboxes";
         public ushort[] Track => new ushort[1] { 0xCF };
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             Console.Out.WriteLine();
             foreach (ulong master in track[0xCF]) {
                 if (!map.ContainsKey(master)) {
@@ -29,12 +29,12 @@ namespace OverTool.List {
                     continue;
                 }
 
-                Extract(box.Master.model, box, track, map, handler, args);
-                Extract(box.Master.alternate, box, track, map, handler, args);
+                Extract(box.Master.model, box, track, map, handler, quiet, args);
+                Extract(box.Master.alternate, box, track, map, handler, quiet, args);
             }
         }
 
-        private void Extract(ulong model, Lootbox lootbox, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+        private void Extract(ulong model, Lootbox lootbox, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             if (model == 0 || !map.ContainsKey(model)) {
                 return;
             }
@@ -63,87 +63,7 @@ namespace OverTool.List {
                 }
             }
 
-            // TODO: genericify
-            IDataWriter mod = new OWMDLWriter();
-            IDataWriter mat = new OWMATWriter();
-            IDataWriter refpose = new RefPoseWriter();
-            string matPath = $"{output}material{mat.Format}";
-
-            Dictionary<string, TextureType> typeInfo = new Dictionary<string, TextureType>();
-            foreach (KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
-                ulong materialId = kv.Key;
-                List<ImageLayer> sublayers = kv.Value;
-                foreach (ImageLayer layer in sublayers) {
-                    if (!parsed.Add(layer.key)) {
-                        continue;
-                    }
-                    KeyValuePair<string, TextureType> stt = Skin.SaveTexture(layer.key, map, handler, $"{output}{GUID.LongKey(layer.key):X12}.dds");
-                    typeInfo.Add(stt.Key, stt.Value);
-                }
-            }
-            using (Stream outp = File.Open(matPath, FileMode.Create, FileAccess.Write)) {
-                if (mat.Write(null, outp, null, layers, new object[3] { typeInfo, Path.GetFileName(matPath), $"{lootbox.EventNameNormal} {GUID.Index(model):X}" })) {
-                    Console.Out.WriteLine("Wrote materials {0}", matPath);
-                } else {
-                    Console.Out.WriteLine("Failed to write material");
-                }
-            }
-            foreach (KeyValuePair<ulong, ulong> kv in animList) {
-                ulong parent = kv.Value;
-                ulong key = kv.Key;
-                string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", output, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), GUID.Type(key));
-                if (!Directory.Exists(Path.GetDirectoryName(outpath))) {
-                    Directory.CreateDirectory(Path.GetDirectoryName(outpath));
-                }
-                using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-                    Stream anim = Util.OpenFile(map[key], handler);
-                    if (output != null) {
-                        anim.CopyTo(outp);
-                        Console.Out.WriteLine("Wrote animation {0}", outpath);
-                        anim.Close();
-                    }
-                }
-            }
-            List<byte> lods = new List<byte>(new byte[3] { 0, 1, 0xFF });
-            foreach (ulong key in models) {
-                if (!map.ContainsKey(key)) {
-                    continue;
-                }
-
-                string outpath;
-
-                if (!Directory.Exists(Path.GetDirectoryName(output))) {
-                    Directory.CreateDirectory(Path.GetDirectoryName(output));
-                }
-
-                outpath = $"{output}{GUID.LongKey(key):X12}.{GUID.Type(key):X3}";
-
-                using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-                    Util.OpenFile(map[key], handler).CopyTo(outp);
-                    Console.Out.WriteLine("Wrote raw model {0}", outpath);
-                }
-
-                Chunked mdl = new Chunked(Util.OpenFile(map[key], handler));
-
-                outpath = $"{output}{GUID.LongKey(key):X12}_refpose{refpose.Format}";
-                using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-                    if (refpose.Write(mdl, outp, null, null, null)) {
-                        Console.Out.WriteLine("Wrote reference pose {0}", outpath);
-                    }
-                }
-
-                string mdlName = $"{lootbox.EventNameNormal} {GUID.Index(key):X}";
-
-                outpath = $"{output}{GUID.LongKey(key):X12}{mod.Format}";
-
-                using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-                    if (mod.Write(mdl, outp, lods, layers, new object[5] { true, Path.GetFileName(matPath), mdlName, null, true })) {
-                        Console.Out.WriteLine("Wrote model {0}", outpath);
-                    } else {
-                        Console.Out.WriteLine("Failed to write model");
-                    }
-                }
-            }
+            Skin.Save(null, output, "", "", replace, parsed, models, layers, animList, new List<char>() { }, track, map, handler, model, false, quiet);
         }
     }
 }

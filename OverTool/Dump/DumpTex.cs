@@ -13,7 +13,7 @@ namespace OverTool {
         public string Title => "List Textures";
         public ushort[] Track => new ushort[1] { 0x3 };
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             List<ulong> ids = new List<ulong>();
             foreach (string arg in args) {
                 ids.Add(ulong.Parse(arg.Split('.')[0], System.Globalization.NumberStyles.HexNumber));

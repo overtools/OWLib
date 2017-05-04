@@ -16,7 +16,7 @@ namespace OverTool {
 
         public ushort[] Track => new ushort[1] { 0x54 };
 
-        private static void ExtractImage(ulong imageKey, string dpath, Dictionary<ulong, Record> map, CASCHandler handler, string name = null) {
+        private static void ExtractImage(ulong imageKey, string dpath, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string name = null) {
             ulong imageDataKey = (imageKey & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
             if (string.IsNullOrWhiteSpace(name)) {
                 name = $"{GUID.LongKey(imageKey):X12}";
@@ -35,10 +35,12 @@ namespace OverTool {
                 }
             }
 
-            Console.Out.WriteLine("Wrote image {0}", path);
+            if (!quiet) {
+                Console.Out.WriteLine("Wrote image {0}", path);
+            }
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             string output = args[0];
             List<char> blank = new List<char>();
 
@@ -107,15 +109,15 @@ namespace OverTool {
                     switch (instance.Name) {
                         case "Spray":
                             Console.Out.WriteLine("Extracting spray {0}...", name);
-                            ExtractLogic.Spray.Extract(stud, output, "Generic", name, itemGroup, track, map, handler, blank);
+                            ExtractLogic.Spray.Extract(stud, output, "Generic", name, itemGroup, track, map, handler, quiet, blank);
                             break;
                         case "Icon":
                             Console.Out.WriteLine("Extracting icon {0}...", name);
-                            ExtractLogic.Icon.Extract(stud, output, "Generic", name, itemGroup, track, map, handler, blank);
+                            ExtractLogic.Icon.Extract(stud, output, "Generic", name, itemGroup, track, map, handler, quiet, blank);
                             break;
                         case "Portrait":
                             PortraitItem portrait = instance as PortraitItem;
-                            ExtractLogic.Portrait.Extract(stud, output, "Generic", $"Tier {portrait.Data.tier}", itemGroup, track, map, handler, blank);
+                            ExtractLogic.Portrait.Extract(stud, output, "Generic", $"Tier {portrait.Data.tier}", itemGroup, track, map, handler, quiet, blank);
                             break;
                         default:
                             continue;
