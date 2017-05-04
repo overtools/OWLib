@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
@@ -44,37 +47,50 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs" />
     <Compile Include="APM.cs" />
+    <Compile Include="Third Party\APPLIB\C3D.cs" />
     <Compile Include="DDSTypeDetect.cs" />
     <Compile Include="DXBC.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="GUID.cs" />
     <Compile Include="Half\Half.cs" />
     <Compile Include="Half\HalfHelper.cs" />
     <Compile Include="ImageDefinition.cs" />
     <Compile Include="ItemEvents.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Chunked.cs" />
-    <Compile Include="ModelWriter\ASCIIWriter.cs" />
-    <Compile Include="ModelWriter\BINWriter.cs" />
-    <Compile Include="ModelWriter\RefPoseWriter.cs" />
-    <Compile Include="Types\Chunk\PRHM.cs" />
+    <Compile Include="Third Party\APPLIB\Quaternion3D.cs" />
+    <Compile Include="Third Party\APPLIB\Vector3D.cs" />
+    <Compile Include="Types\Chunk\LDOM\HTLC.cs" />
+    <Compile Include="Types\Chunk\TCFE\NECE.cs" />
+    <Compile Include="Types\STUD\GameParam\BindingEffectReference.cs" />
+    <Compile Include="Types\STUD\GlobalInventoryMaster.cs" />
+    <Compile Include="Writer\ASCIIWriter.cs" />
+    <Compile Include="Writer\BINWriter.cs" />
+    <Compile Include="Writer\RefPoseWriter.cs" />
+    <Compile Include="Writer\SEAnimWriter.cs" />
+    <Compile Include="Types\AnimationTypes.cs" />
+    <Compile Include="Types\Chunk\TCFE\OSCE.cs" />
+    <Compile Include="Types\Chunk\TCFE\FECE.cs" />
+    <Compile Include="Types\Chunk\LDOM\PRHM.cs" />
     <Compile Include="Types\STUD\Achievement.cs" />
-    <Compile Include="Types\Chunk\CLDM.cs" />
-    <Compile Include="Types\Chunk\DMCE.cs" />
+    <Compile Include="Types\Chunk\LDOM\CLDM.cs" />
+    <Compile Include="Types\Chunk\TCFE\DMCE.cs" />
     <Compile Include="Types\Chunk\IChunk.cs" />
-    <Compile Include="Types\Chunk\lksm.cs" />
-    <Compile Include="Types\Chunk\MNRM.cs" />
-    <Compile Include="Types\Chunk\MNRMTypes.cs" />
+    <Compile Include="Types\Chunk\LDOM\lksm.cs" />
+    <Compile Include="Types\Chunk\LDOM\MNRM.cs" />
+    <Compile Include="Types\Chunk\LDOM\MNRMTypes.cs" />
     <Compile Include="Types\DXBCTypes.cs" />
     <Compile Include="Types\Map\IMapFormat.cs" />
     <Compile Include="Types\Map\Map01.cs" />
     <Compile Include="Material.cs" />
-    <Compile Include="ModelWriter\MTLWriter.cs" />
-    <Compile Include="ModelWriter\OBJWriter.cs" />
-    <Compile Include="ModelWriter\IModelWriter.cs" />
-    <Compile Include="ModelWriter\OWMAPWriter.cs" />
-    <Compile Include="ModelWriter\OWMATWriter.cs" />
-    <Compile Include="ModelWriter\OWMDLWriter.cs" />
+    <Compile Include="Writer\MTLWriter.cs" />
+    <Compile Include="Writer\OBJWriter.cs" />
+    <Compile Include="Writer\IDataWriter.cs" />
+    <Compile Include="Writer\OWMAPWriter.cs" />
+    <Compile Include="Writer\OWMATWriter.cs" />
+    <Compile Include="Writer\OWMDLWriter.cs" />
     <Compile Include="OWString.cs" />
     <Compile Include="STUD.cs" />
     <Compile Include="Texture.cs" />
@@ -91,6 +107,7 @@
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
     <Compile Include="Types\STUD\AnimationList.cs" />
+    <Compile Include="Types\STUD\Binding\EffectReference.cs" />
     <Compile Include="Types\STUD\Binding\PoseList.cs" />
     <Compile Include="Types\STUD\Binding\AnimationCoreference.cs" />
     <Compile Include="Types\STUD\Binding\SubModelRecord.cs" />
@@ -132,9 +149,15 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Third Party\OPENTK_LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="OpenTK.dll.config" />
     <Content Include="ow.events">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ow.keys">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
   </ItemGroup>
@@ -146,7 +169,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(ProjectDir)..\CascLib.patch\ow.keys $(OutDir)\ow.keys</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

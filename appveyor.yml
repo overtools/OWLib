@@ -1,0 +1,29 @@
+version: 1.10.1.{build}
+configuration: Release
+platform: Any CPU
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: $(appveyor_repo_commit)
+before_build:
+- cmd: >-
+    git submodule update --init
+
+    nuget restore OverwatchToolchain.sln
+build:
+  project: OverwatchToolchain.sln
+  verbosity: minimal
+before_package:
+- cmd: >-
+    del /F /Q dist\Release\*.pdb
+
+    del /F /Q dist\Release\*.xml
+
+    del /F /Q dist\Release\*.exe.config
+artifacts:
+- path: dist/Release
+  name: toolchain-release
+- path: dist/Release/CascLib.dll
+  name: CascLib

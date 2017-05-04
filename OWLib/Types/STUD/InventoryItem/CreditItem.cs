@@ -5,7 +5,7 @@ namespace OWLib.Types.STUD.InventoryItem {
   public class CreditItem : IInventorySTUDInstance {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct CreditData {
-      public ulong unk1;
+      public ulong value;
     }
     
     public uint Id => 0x0BCAF9C9;
