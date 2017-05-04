@@ -2,14 +2,14 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
-    public class NECE : IChunk {
-        public string Identifier => "NECE"; // ECEN - Effect Child ???? ????
+    public class CECE : IChunk {
+        public string Identifier => "CECE"; // ECEC - ????
         public string RootIdentifier => "TCFE"; // EFCT - Effect
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public ulong key;
-            public ulong unknown;
+            public ulong animation;
+            public ulong unknown_key;
         }
 
         private Structure data;

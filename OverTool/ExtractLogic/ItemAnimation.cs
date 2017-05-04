@@ -12,13 +12,13 @@ namespace OverTool.ExtractLogic {
             Dictionary<ulong, ulong> animList = new Dictionary<ulong, ulong>();
             HashSet<ulong> models = new HashSet<ulong>();
             Dictionary<ulong, List<ImageLayer>> layers = new Dictionary<ulong, List<ImageLayer>>();
-
-            Skin.FindAnimations(key, animList, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), map, handler, models, layers, key);
+            Dictionary<ulong, List<ulong>> sound = new Dictionary<ulong, List<ulong>>();
+            Skin.FindAnimations(key, sound, animList, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), map, handler, models, layers, key);
             if (animList.Count > 0) {
                 if (!Directory.Exists(dest)) {
                     Directory.CreateDirectory(dest);
                 }
-                Skin.Save(null, dest, heroName, name, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), models, layers, animList, new List<char> { }, track, map, handler, 0, true, quiet);
+                Skin.Save(null, dest, heroName, name, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), models, layers, animList, new List<char> { }, track, map, handler, 0, true, quiet, sound);
             }
         }
     }

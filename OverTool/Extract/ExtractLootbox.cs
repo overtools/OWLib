@@ -48,6 +48,7 @@ namespace OverTool.List {
             HashSet<ulong> parsed = new HashSet<ulong>();
             Dictionary<ulong, List<ImageLayer>> layers = new Dictionary<ulong, List<ImageLayer>>();
             Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
+            Dictionary<ulong, List<ulong>> sound = new Dictionary<ulong, List<ulong>>();
 
             foreach (ISTUDInstance inst in stud.Instances) {
                 if (inst == null) {
@@ -57,13 +58,13 @@ namespace OverTool.List {
                     ComplexModelRecord r = (ComplexModelRecord)inst;
                     ulong modelKey = r.Data.model.key;
                     models.Add(modelKey);
-                    Skin.FindAnimations(r.Data.animationList.key, animList, replace, parsed, map, handler, models, layers, modelKey);
-                    Skin.FindAnimations(r.Data.secondaryAnimationList.key, animList, replace, parsed, map, handler, models, layers, modelKey);
+                    Skin.FindAnimations(r.Data.animationList.key, sound, animList, replace, parsed, map, handler, models, layers, modelKey);
+                    Skin.FindAnimations(r.Data.secondaryAnimationList.key, sound, animList, replace, parsed, map, handler, models, layers, modelKey);
                     Skin.FindTextures(r.Data.material.key, layers, replace, parsed, map, handler);
                 }
             }
 
-            Skin.Save(null, output, "", "", replace, parsed, models, layers, animList, new List<char>() { }, track, map, handler, model, false, quiet);
+            Skin.Save(null, output, "", "", replace, parsed, models, layers, animList, new List<char>() { }, track, map, handler, model, false, quiet, sound);
         }
     }
 }

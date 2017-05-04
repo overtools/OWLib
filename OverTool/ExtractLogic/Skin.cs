@@ -80,7 +80,7 @@ namespace OverTool.ExtractLogic {
             }
         }
 
-        public static void FindAnimationsSoft(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, ulong parent = 0) {
+        public static void FindAnimationsSoft(ulong key, Dictionary<ulong, List<ulong>> sound, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, ulong parent = 0) {
             if (!map.ContainsKey(key)) {
                 return;
             }
@@ -131,25 +131,33 @@ namespace OverTool.ExtractLogic {
                             if (animList != null && !animList.ContainsKey(dmce.Data.animationKey) && dmce.Data.animationKey != 0) {
                                 if (replace.ContainsKey(dmce.Data.animationKey)) {
                                     animList[replace[dmce.Data.animationKey]] = parent;
-                                    FindAnimationsSoft(replace[dmce.Data.animationKey], animList, replace, parsed, map, handler, models, layers, replace[dmce.Data.animationKey]);
+                                    FindAnimationsSoft(replace[dmce.Data.animationKey], sound, animList, replace, parsed, map, handler, models, layers, replace[dmce.Data.animationKey]);
                                 } else {
                                     animList[dmce.Data.animationKey] = parent;
-                                    FindAnimationsSoft(dmce.Data.animationKey, animList, replace, parsed, map, handler, models, layers, dmce.Data.animationKey);
+                                    FindAnimationsSoft(dmce.Data.animationKey, sound, animList, replace, parsed, map, handler, models, layers, dmce.Data.animationKey);
                                 }
                             }
                         }
                         NECE[] neces = chunked.GetAllOfTypeFlat<NECE>();
                         foreach (NECE nece in neces) {
                             if (nece.Data.key > 0) {
-                                FindModels(nece.Data.key, new List<ulong>(), models, animList, layers, replace, parsed, map, handler);
+                                FindModels(nece.Data.key, new List<ulong>(), models, animList, layers, replace, parsed, map, handler, sound);
                             }
                         }
+                        CECE[] ceces = chunked.GetAllOfTypeFlat<CECE>();
+                        foreach (CECE cece in ceces) {
+                            if (animList != null && !animList.ContainsKey(cece.Data.animation) && cece.Data.animation != 0) {
+                                animList[cece.Data.animation] = parent;
+                                FindAnimationsSoft(cece.Data.animation, sound, animList, replace, parsed, map, handler, models, layers, cece.Data.animation);
+                            }
+                        }
+                        Sound.FindSoundsChunked(chunked, new HashSet<ulong>(), sound, map, handler, replace, parent, parent);
                     }
                 }
             }
         }
 
-        public static void FindAnimations(ulong key, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, ulong parent = 0) {
+        public static void FindAnimations(ulong key, Dictionary<ulong, List<ulong>> sound, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, ulong parent = 0) {
             if (key == 0) {
                 return;
             }
@@ -176,15 +184,15 @@ namespace OverTool.ExtractLogic {
                 }
                 if (inst.Name == record.Manager.GetName(typeof(VictoryPoseItem))) {
                     VictoryPoseItem item = (VictoryPoseItem)inst;
-                    FindAnimations(item.Data.f0BF.key, animList, replace, parsed, map, handler, models, layers, tgt);
+                    FindAnimations(item.Data.f0BF.key, sound, animList, replace, parsed, map, handler, models, layers, tgt);
                 } else if (inst.Name == record.Manager.GetName(typeof(EmoteItem))) {
                     EmoteItem item = (EmoteItem)inst;
-                    FindAnimations(item.Data.animation.key, animList, replace, parsed, map, handler, models, layers, tgt);
+                    FindAnimations(item.Data.animation.key, sound, animList, replace, parsed, map, handler, models, layers, tgt);
                 } else if (inst.Name == record.Manager.GetName(typeof(HeroicIntroItem))) {
                     HeroicIntroItem item = (HeroicIntroItem)inst;
                     if (item.Data.f006.key > 0) {
                         animList[item.Data.f006.key] = parent;
-                        FindAnimationsSoft(item.Data.f006.key, animList, replace, parsed, map, handler, models, layers, tgt);
+                        FindAnimationsSoft(item.Data.f006.key, sound, animList, replace, parsed, map, handler, models, layers, tgt);
                     }
                 } else if (inst.Name == record.Manager.GetName(typeof(AnimationList))) {
                     AnimationList r = (AnimationList)inst;
@@ -200,7 +208,7 @@ namespace OverTool.ExtractLogic {
                             continue;
                         }
                         animList[bindingKey] = parent;
-                        FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
+                        FindAnimationsSoft(bindingKey, sound, animList, replace, parsed, map, handler, models, layers, bindingKey);
                     }
                 } else if (inst.Name == record.Manager.GetName(typeof(Pose))) {
                     Pose r = (Pose)inst;
@@ -216,12 +224,12 @@ namespace OverTool.ExtractLogic {
                             continue;
                         }
                         animList[bindingKey] = parent;
-                        FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
+                        FindAnimationsSoft(bindingKey, sound, animList, replace, parsed, map, handler, models, layers, bindingKey);
                     }
                 } else if (inst.Name == record.Manager.GetName(typeof(AnimationListInfo))) {
                     AnimationListInfo r = (AnimationListInfo)inst;
                     foreach (AnimationListInfo.AnimationListEntry entry in r.Entries) {
-                        FindAnimations(entry.secondary.key, animList, replace, parsed, map, handler, models, layers, tgt);
+                        FindAnimations(entry.secondary.key, sound, animList, replace, parsed, map, handler, models, layers, tgt);
                     }
                 } else if (inst.Name == record.Manager.GetName(typeof(AnimationListReference))) {
                     AnimationListReference r = (AnimationListReference)inst;
@@ -239,16 +247,16 @@ namespace OverTool.ExtractLogic {
                         ulong keyid = GUID.Type(bindingKey);
                         if (keyid == 0x6) {
                             animList[bindingKey] = parent;
-                            FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
+                            FindAnimationsSoft(bindingKey, sound, animList, replace, parsed, map, handler, models, layers, bindingKey);
                         } else if (keyid == 0x20 || keyid == 0x21) {
-                            FindAnimations(bindingKey, animList, replace, parsed, map, handler, models, layers, tgt);
+                            FindAnimations(bindingKey, sound, animList, replace, parsed, map, handler, models, layers, tgt);
                         }
                     }
                 }
             }
         }
 
-        public static void FindModels(ulong key, List<ulong> ignore, HashSet<ulong> models, Dictionary<ulong, ulong> animList, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
+        public static void FindModels(ulong key, List<ulong> ignore, HashSet<ulong> models, Dictionary<ulong, ulong> animList, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, List<ulong>> sound) {
             if (key == 0) {
                 return;
             }
@@ -273,7 +281,7 @@ namespace OverTool.ExtractLogic {
                     return;
                 case 0x20: // animation
                 case 0x21:
-                    FindAnimations(tgt, animList, replace, parsed, map, handler, models, layers, 0);
+                    FindAnimations(tgt, sound, animList, replace, parsed, map, handler, models, layers, 0);
                     return;
                 case 0x7C: // string
                     return;
@@ -290,7 +298,7 @@ namespace OverTool.ExtractLogic {
                     if (replace.ContainsKey(bindingKey)) {
                         bindingKey = replace[bindingKey];
                     }
-                    FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                    FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
                 }
                 if (inst.Name == record.Manager.GetName(typeof(ComplexModelRecord))) {
                     ComplexModelRecord r = (ComplexModelRecord)inst;
@@ -302,8 +310,8 @@ namespace OverTool.ExtractLogic {
                         continue;
                     }
                     models.Add(modelKey);
-                    FindAnimations(r.Data.animationList.key, animList, replace, parsed, map, handler, models, layers, modelKey);
-                    FindAnimations(r.Data.secondaryAnimationList.key, animList, replace, parsed, map, handler, models, layers, modelKey);
+                    FindAnimations(r.Data.animationList.key, sound, animList, replace, parsed, map, handler, models, layers, modelKey);
+                    FindAnimations(r.Data.secondaryAnimationList.key, sound, animList, replace, parsed, map, handler, models, layers, modelKey);
                     ulong target = r.Data.material.key;
                     if (replace.ContainsKey(target)) {
                         target = replace[target];
@@ -317,7 +325,7 @@ namespace OverTool.ExtractLogic {
                         if (replace.ContainsKey(bindingKey)) {
                             bindingKey = replace[bindingKey];
                         }
-                        FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                        FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
                     }
                 }
                 if (inst.Name == record.Manager.GetName(typeof(BindingRecord))) {
@@ -326,12 +334,12 @@ namespace OverTool.ExtractLogic {
                     if (replace.ContainsKey(bindingKey)) {
                         bindingKey = replace[bindingKey];
                     }
-                    FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                    FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
                     bindingKey = r.Param.binding2.key;
                     if (replace.ContainsKey(bindingKey)) {
                         bindingKey = replace[bindingKey];
                     }
-                    FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                    FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
                 }
                 if (inst.Name == record.Manager.GetName(typeof(ChildGameParameterRecord))) {
                     ChildGameParameterRecord r = (ChildGameParameterRecord)inst;
@@ -339,12 +347,12 @@ namespace OverTool.ExtractLogic {
                     if (replace.ContainsKey(bindingKey)) {
                         bindingKey = replace[bindingKey];
                     }
-                    FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                    FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
                     bindingKey = r.Param.binding2.key;
                     if (replace.ContainsKey(bindingKey)) {
                         bindingKey = replace[bindingKey];
                     }
-                    FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                    FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
                 }
                 if (inst.Name == record.Manager.GetName(typeof(SubModelRecord))) {
                     SubModelRecord r = (SubModelRecord)inst;
@@ -353,7 +361,7 @@ namespace OverTool.ExtractLogic {
                         if (replace.ContainsKey(bindingKey)) {
                             bindingKey = replace[bindingKey];
                         }
-                        FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                        FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
                     }
                 }
                 if (inst.Name == record.Manager.GetName(typeof(ChildParameterRecord))) {
@@ -363,7 +371,7 @@ namespace OverTool.ExtractLogic {
                         if (replace.ContainsKey(bindingKey)) {
                             bindingKey = replace[bindingKey];
                         }
-                        FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                        FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
                     }
                 }
                 if (inst.Name == record.Manager.GetName(typeof(AnimationCoreference))) {
@@ -380,13 +388,13 @@ namespace OverTool.ExtractLogic {
                             continue;
                         }
                         animList[bindingKey] = 0;
-                        FindAnimationsSoft(bindingKey, animList, replace, parsed, map, handler, models, layers, bindingKey);
+                        FindAnimationsSoft(bindingKey, sound, animList, replace, parsed, map, handler, models, layers, bindingKey);
                     }
                 }
                 if (inst.Name == record.Manager.GetName(typeof(PoseList))) {
                     PoseList r = (PoseList)inst;
                     if (r.Header.reference.key != 0) {
-                        FindAnimations(r.Header.reference.key, animList, replace, parsed, map, handler, models, layers, 0);
+                        FindAnimations(r.Header.reference.key, sound, animList, replace, parsed, map, handler, models, layers, 0);
                     }
                 }
             }
@@ -439,6 +447,7 @@ namespace OverTool.ExtractLogic {
             HashSet<ulong> parsed = new HashSet<ulong>();
             Dictionary<ulong, List<ImageLayer>> layers = new Dictionary<ulong, List<ImageLayer>>();
             Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
+            Dictionary<ulong, List<ulong>> sound = new Dictionary<ulong, List<ulong>>();
 
             FindReplacements(skin.Data.skin.key, replace, parsed, map, handler, master, skin);
 
@@ -446,53 +455,53 @@ namespace OverTool.ExtractLogic {
             if (replace.ContainsKey(bindingKey)) {
                 bindingKey = replace[bindingKey];
             }
-            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
             bindingKey = master.Header.child1.key;
             if (replace.ContainsKey(bindingKey)) {
                 bindingKey = replace[bindingKey];
             }
-            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
             bindingKey = master.Header.child2.key;
             if (replace.ContainsKey(bindingKey)) {
                 bindingKey = replace[bindingKey];
             }
-            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
             bindingKey = master.Header.child3.key;
             if (replace.ContainsKey(bindingKey)) {
                 bindingKey = replace[bindingKey];
             }
-            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
             bindingKey = master.Header.child4.key;
             if (replace.ContainsKey(bindingKey)) {
                 bindingKey = replace[bindingKey];
             }
-            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+            FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
             foreach (HeroMaster.HeroChild1 child in master.Child1) {
                 bindingKey = child.record.key;
                 if (replace.ContainsKey(bindingKey)) {
                     bindingKey = replace[bindingKey];
                 }
-                FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
             }
             foreach (HeroMaster.HeroChild2 child in master.Child3) {
                 bindingKey = child.record.key;
                 if (replace.ContainsKey(bindingKey)) {
                     bindingKey = replace[bindingKey];
                 }
-                FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
             }
             foreach (HeroMaster.HeroChild2 child in master.Child3) {
                 bindingKey = child.record.key;
                 if (replace.ContainsKey(bindingKey)) {
                     bindingKey = replace[bindingKey];
                 }
-                FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler);
+                FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
             }
 
-            Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler, masterKey, false, quiet);
+            Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler, masterKey, false, quiet, sound);
         }
 
-        public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, ulong heroKey, bool external, bool quiet) {
+        public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, ulong heroKey, bool external, bool quiet, Dictionary<ulong, List<ulong>> sound) {
             Dictionary<string, TextureType> typeInfo = new Dictionary<string, TextureType>();
             if (furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
                 foreach (KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
@@ -682,7 +691,7 @@ namespace OverTool.ExtractLogic {
 
             if ((furtherOpts.Count < 5 || furtherOpts[4] != 'S') && master != null) {
                 Console.Out.WriteLine("Dumping voice bites for hero {0} with skin {1}", heroName, itemName);
-                Dictionary<ulong, List<ulong>> soundData = Sound.FindSounds(master, track, map, handler, replace, heroKey);
+                Dictionary<ulong, List<ulong>> soundData = Sound.FindSounds(master, track, map, handler, replace, heroKey, sound);
                 string outpath = $"{path}Sound{Path.DirectorySeparatorChar}";
                 if (!Directory.Exists(outpath)) {
                     Directory.CreateDirectory(outpath);

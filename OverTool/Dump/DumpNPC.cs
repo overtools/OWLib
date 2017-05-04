@@ -55,10 +55,11 @@ namespace OverTool {
                 Dictionary<ulong, ulong> animList = new Dictionary<ulong, ulong>();
                 HashSet<ulong> parsed = new HashSet<ulong>();
                 Dictionary<ulong, List<ImageLayer>> layers = new Dictionary<ulong, List<ImageLayer>>();
+                Dictionary<ulong, List<ulong>> sound = new Dictionary<ulong, List<ulong>>();
 
-                ExtractLogic.Skin.FindModels(master.Header.binding, blank, models, animList, layers, blankdict, parsed, map, handler);
+                ExtractLogic.Skin.FindModels(master.Header.binding, blank, models, animList, layers, blankdict, parsed, map, handler, sound);
 
-                ExtractLogic.Skin.Save(master, path, heroName, $"{GUID.LongKey(masterKey):X}", blankdict, parsed, models, layers, animList, blankchar, track, map, handler, masterKey, false, quiet);
+                ExtractLogic.Skin.Save(master, path, heroName, $"{GUID.LongKey(masterKey):X}", blankdict, parsed, models, layers, animList, blankchar, track, map, handler, masterKey, false, quiet, sound);
             }
         }
     }

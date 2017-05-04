@@ -73,6 +73,7 @@ namespace OverTool {
 
                 HashSet<ulong> parsed = new HashSet<ulong>();
                 Dictionary<ulong, ulong> animList = new Dictionary<ulong, ulong>();
+                Dictionary<ulong, List<ulong>> soundData = new Dictionary<ulong, List<ulong>>();
                 using (Stream mapStream = Util.OpenFile(map[master.Header.data.key], handler)) {
                     Console.Out.WriteLine("Extracting map {0} with ID {1:X8}", name, GUID.Index(master.Header.data.key));
                     Map mapData = new Map(mapStream);
@@ -81,7 +82,6 @@ namespace OverTool {
                     if (!Directory.Exists(outputPath)) {
                         Directory.CreateDirectory(outputPath);
                     }
-                    Dictionary<ulong, List<ulong>> soundData = new Dictionary<ulong, List<ulong>>();
                     HashSet<ulong> soundDone = new HashSet<ulong>();
                     Sound.FindSoundsEx(master.Header.audio.key, soundDone, soundData, map, handler, replace, master.Header.data.key);
                     using (Stream map2Stream = Util.OpenFile(map[master.DataKey(2)], handler)) {
@@ -132,8 +132,8 @@ namespace OverTool {
                                             ComplexModelRecord cmr = (ComplexModelRecord)instance;
                                             mapprop.MaterialKey = cmr.Data.material.key;
                                             mapprop.ModelKey = cmr.Data.model.key;
-                                            Skin.FindAnimations(cmr.Data.animationList.key, animList, replace, parsed, map, handler, null, null, mapprop.ModelKey);
-                                            Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, animList, replace, parsed, map, handler, null, null, mapprop.ModelKey);
+                                            Skin.FindAnimations(cmr.Data.animationList.key, soundData, animList, replace, parsed, map, handler, null, null, mapprop.ModelKey);
+                                            Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, soundData, animList, replace, parsed, map, handler, null, null, mapprop.ModelKey);
                                             break;
                                         }
                                     }
