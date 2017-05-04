@@ -689,14 +689,22 @@ namespace OverTool.ExtractLogic {
                 }
             }
 
-            if ((furtherOpts.Count < 5 || furtherOpts[4] != 'S') && master != null) {
-                Console.Out.WriteLine("Dumping voice bites for hero {0} with skin {1}", heroName, itemName);
-                Dictionary<ulong, List<ulong>> soundData = Sound.FindSounds(master, track, map, handler, replace, heroKey, sound);
-                string outpath = $"{path}Sound{Path.DirectorySeparatorChar}";
-                if (!Directory.Exists(outpath)) {
-                    Directory.CreateDirectory(outpath);
+            if ((furtherOpts.Count < 5 || furtherOpts[4] != 'S')) {
+                Dictionary<ulong, List<ulong>> soundData = null;
+                if (master != null) {
+                    Console.Out.WriteLine("Dumping voice bites for hero {0} with skin {1}", heroName, itemName);
+                    soundData = Sound.FindSounds(master, track, map, handler, replace, heroKey, sound);
+                } else {
+                    soundData = sound;
                 }
-                DumpVoice.Save(outpath, soundData, map, handler, quiet, replace);
+
+                if (soundData != null && soundData.Count > 0) {
+                    string outpath = $"{path}Sound{Path.DirectorySeparatorChar}";
+                    if (!Directory.Exists(outpath)) {
+                        Directory.CreateDirectory(outpath);
+                    }
+                    DumpVoice.Save(outpath, soundData, map, handler, quiet, replace);
+                }
             }
 
             if ((furtherOpts.Count <= 7 || furtherOpts[7] != 'I') && master != null) {
