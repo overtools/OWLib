@@ -15,6 +15,18 @@ namespace OverTool {
         public string Title => "Extract Hero Cosmetics";
         public ushort[] Track => new ushort[1] { 0x75 };
 
+        public static InventoryMaster OpenInventoryMaster(HeroMaster master, Dictionary<ulong, Record> map, CASCHandler handler) {
+            if (!map.ContainsKey(master.Header.itemMaster.key)) {
+                return null;
+            }
+            STUD inventoryStud = new STUD(Util.OpenFile(map[master.Header.itemMaster.key], handler));
+            InventoryMaster inventory = (InventoryMaster)inventoryStud.Instances[0];
+            if (inventory == null) {
+                return null;
+            }
+            return inventory;
+        }
+
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] args) {
             string output = args[0];
 
@@ -120,11 +132,7 @@ namespace OverTool {
                 if (!heroTypes.ContainsKey(heroName.ToLowerInvariant())) {
                     continue;
                 }
-                if (!map.ContainsKey(master.Header.itemMaster.key)) {
-                    continue;
-                }
-                STUD inventoryStud = new STUD(Util.OpenFile(map[master.Header.itemMaster.key], handler));
-                InventoryMaster inventory = (InventoryMaster)inventoryStud.Instances[0];
+                InventoryMaster inventory = OpenInventoryMaster(master, map, handler);
                 if (inventory == null) {
                     continue;
                 }

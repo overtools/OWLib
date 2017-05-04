@@ -97,13 +97,6 @@ namespace Overwatch_anim {
                 refpose_rotation[index].X = Convert.ToSingle(array[6], format);
                 refpose_rotation[index].Y = Convert.ToSingle(array[7], format);
                 refpose_rotation[index].Z = Convert.ToSingle(array[8], format);
-                if (false) {
-                    if (array.Length > 9) {
-                        refpose_scale[index].X = Convert.ToSingle(array[10], format);
-                        refpose_scale[index].Y = Convert.ToSingle(array[11], format);
-                        refpose_scale[index].Z = Convert.ToSingle(array[12], format);
-                    }
-                }
             }
             refpose_reader.Close();
             FileStream inputStream = new FileStream(input, FileMode.Open);
@@ -181,18 +174,9 @@ namespace Overwatch_anim {
                     output_writer.Write(" " + refpose_rotation[bone_id].X.ToString("0.000000", format));
                     output_writer.Write(" " + refpose_rotation[bone_id].Y.ToString("0.000000", format));
                     output_writer.Write(" " + refpose_rotation[bone_id].Z.ToString("0.000000", format));
-                    if (false) {
-                        output_writer.Write(" " + refpose_scale[bone_id].X.ToString("0.000000", format));
-                        output_writer.Write(" " + refpose_scale[bone_id].Y.ToString("0.000000", format));
-                        output_writer.Write(" " + refpose_scale[bone_id].Z.ToString("0.000000", format));
-                    }
                     output_writer.WriteLine();
                 } else {
-                    if (false) {
-                        output_writer.WriteLine(index.ToString() + " 0 0 0 0 0 0 0 0 0");
-                    } else {
-                        output_writer.WriteLine(index.ToString() + " 0 0 0 0 0 0");
-                    }
+                    output_writer.WriteLine(index.ToString() + " 0 0 0 0 0 0");
                 }
             }
             int num4 = bone_count;
@@ -205,11 +189,6 @@ namespace Overwatch_anim {
                     output_writer.Write(" " + refpose_rotation[index].X.ToString("0.000000", format));
                     output_writer.Write(" " + refpose_rotation[index].Y.ToString("0.000000", format));
                     output_writer.Write(" " + refpose_rotation[index].Z.ToString("0.000000", format));
-                    if (false) {
-                        output_writer.Write(" " + refpose_scale[index].X.ToString("0.000000", format));
-                        output_writer.Write(" " + refpose_scale[index].Y.ToString("0.000000", format));
-                        output_writer.Write(" " + refpose_scale[index].Z.ToString("0.000000", format));
-                    }
                     output_writer.WriteLine();
                 }
             }
@@ -357,11 +336,6 @@ namespace Overwatch_anim {
                         output_writer.Write(" " + eulerAngles.X.ToString("0.000000", format));
                         output_writer.Write(" " + eulerAngles.Y.ToString("0.000000", format));
                         output_writer.Write(" " + eulerAngles.Z.ToString("0.000000", format));
-                        if (false) {
-                            output_writer.Write(" " + sx_array[index2, index1].ToString("0.000000", format));
-                            output_writer.Write(" " + sy_array[index2, index1].ToString("0.000000", format));
-                            output_writer.Write(" " + sz_array[index2, index1].ToString("0.000000", format));
-                        }
                         output_writer.WriteLine();
                     }
                 }

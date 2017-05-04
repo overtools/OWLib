@@ -31,7 +31,10 @@ namespace OverTool {
                     continue;
                 }
                 if (master.Header.itemMaster.key != 0) { // AI
-                    continue;
+                    InventoryMaster inventory = Extract.OpenInventoryMaster(master, map, handler);
+                    if (inventory.ItemGroups.Length > 0 || inventory.DefaultGroups.Length > 0) {
+                        continue;
+                    }
                 }
                 Console.Out.WriteLine("{0} {1:X}", heroName, GUID.LongKey(masterKey));
             }

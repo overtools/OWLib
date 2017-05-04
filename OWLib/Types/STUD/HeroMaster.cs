@@ -49,7 +49,7 @@ namespace OWLib.Types.STUD {
             public float w;
             public uint id2;
             public uint index;
-            public HeroType type;
+            public uint type;
             public uint subtype;
         }
 

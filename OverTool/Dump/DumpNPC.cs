@@ -43,7 +43,10 @@ namespace OverTool {
                     continue;
                 }
                 if (master.Header.itemMaster.key != 0) { // AI
-                    continue;
+                    InventoryMaster inventory = Extract.OpenInventoryMaster(master, map, handler);
+                    if (inventory.ItemGroups.Length > 0 || inventory.DefaultGroups.Length > 0) {
+                        continue;
+                    }
                 }
                 Console.Out.WriteLine("{0} {1:X}", heroName, GUID.Index(masterKey));
                 string path = string.Format("{0}{1}{2}{1}{3:X}{1}", args[0], Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), GUID.LongKey(masterKey));
