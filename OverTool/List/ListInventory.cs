@@ -34,6 +34,7 @@ namespace OverTool {
 
             string name = Util.GetString(instance.Header.name.key, map, handler);
             if (name == null && instance.Name != stud.Manager.GetName(typeof(CreditItem))) {
+                Console.Out.WriteLine("\t\t(Untitled-{0:X12}) ({1} {2})", GUID.LongKey(key), instance.Header.rarity, stud.Instances[0].Name);
                 return;
             }
 #if OUTPUT_STUDINVENTORY

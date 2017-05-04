@@ -174,6 +174,7 @@ namespace OverTool {
 
                     string name = Util.GetString(instance.Header.name.key, map, handler);
                     if (name == null) {
+                        name = $"Untitled-{GUID.LongKey(instance.Header.name.key):X12}";
                         continue;
                     }
                     if (!heroWildcard[heroName.ToLowerInvariant()] && !heroTypes[heroName.ToLowerInvariant()].Contains(name.ToLowerInvariant())) {
