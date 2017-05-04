@@ -98,6 +98,7 @@ namespace OverTool {
             Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
             Console.Out.WriteLine("Initializing CASC...");
             CASCConfig config = CASCConfig.LoadLocalStorageConfig(root);
+            Console.Out.WriteLine("Using Overwatch Version {0}", config.BuildName);
             CASCHandler handler = CASCHandler.OpenStorage(config);
             OwRootHandler ow = handler.Root as OwRootHandler;
             if (ow == null) {

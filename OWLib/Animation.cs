@@ -25,7 +25,7 @@ namespace OWLib {
             int axis1 = a >> 15;
             int axis2 = b >> 15;
             int axis = axis1 << 1 | axis2;
-            axis = axis2 * 2 + axis1;
+            // axis = axis2 * 2 + axis1;
 
             a = (ushort)(a & 0x7FFF);
             b = (ushort)(b & 0x7FFF);
@@ -37,15 +37,15 @@ namespace OWLib {
             w = Math.Pow(1.0 - x * x - y * y - z * z, 0.5);
 
             // Console.Out.WriteLine("Unpack Values: X: {0}, Y: {1}, Z: {2}, W: {3}, Axis: {4}", x, y, z, w, axis);
-
+            
             if (axis == 0) {
-                q = new Vec4d(w, x, y, z);
+                q = new Vec4d(-w, y, -x, z);
             } else if (axis == 1) {
-                q = new Vec4d(x, w, y, z);
+                q = new Vec4d(-x, w, -y, z);
             } else if (axis == 2) {
-                q = new Vec4d(x, y, w, z);
+                q = new Vec4d(-x, y, -w, z);
             } else if (axis == 3) {
-                q = new Vec4d(x, y, z, w);
+                q = new Vec4d(-x, z, -y, w);
             } else {
                 Console.Out.WriteLine("Unknown Axis detected! Axis: %s", axis);
             }

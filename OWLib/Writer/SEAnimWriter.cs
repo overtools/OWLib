@@ -116,13 +116,6 @@ namespace OWLib.Writer {
 
                 foreach (BoneAnimation bone in keyframe.BoneFrames) {
                     foreach (FrameValue value in bone.Values) {
-                        if (value.Channel == AnimChannelID.ROTATION) {
-                            Vec4d values = (Vec4d)value.Value;
-                            if (values.x == 0 && values.y == 0 && values.z == 0 && values.w == 1) {
-                                continue; // skip zero rotation?
-                            }
-                        }
-
                         everHas |= (SEAnimPresence)value.Channel;
 
                         if (!framesByBone.ContainsKey(bone.BoneID)) {
@@ -188,21 +181,24 @@ namespace OWLib.Writer {
                     writer.Write((byte)0);
                     if (everHas.HasFlag(SEAnimPresence.BoneLocation)) {
                         if (!dict.ContainsKey(AnimChannelID.POSITION)) {
-                            dict[AnimChannelID.POSITION] = new SortedList<int, object>();
+                            WriteFrameT(writer, frameWidth, 0);
+                        } else {
+                            WriteFrames3d(writer, frameWidth, dict[AnimChannelID.POSITION]);
                         }
-                        WriteFrames3d(writer, frameWidth, dict[AnimChannelID.POSITION]);
                     }
                     if (everHas.HasFlag(SEAnimPresence.BoneRotation)) {
                         if (!dict.ContainsKey(AnimChannelID.ROTATION)) {
-                            dict[AnimChannelID.ROTATION] = new SortedList<int, object>();
+                            WriteFrameT(writer, frameWidth, 0);
+                        } else {
+                            WriteFrames4d(writer, frameWidth, dict[AnimChannelID.ROTATION]);
                         }
-                        WriteFrames4d(writer, frameWidth, dict[AnimChannelID.ROTATION]);
                     }
                     if (everHas.HasFlag(SEAnimPresence.BoneScale)) {
                         if (!dict.ContainsKey(AnimChannelID.SCALE)) {
-                            dict[AnimChannelID.SCALE] = new SortedList<int, object>();
+                            WriteFrameT(writer, frameWidth, 0);
+                        } else {
+                            WriteFrames3d(writer, frameWidth, dict[AnimChannelID.SCALE]);
                         }
-                        WriteFrames3d(writer, frameWidth, dict[AnimChannelID.SCALE]);
                     }
                 }
             }
