@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using CASCExplorer;
 using OWLib;
 using OWLib.Types.STUD;
@@ -35,6 +36,14 @@ namespace OverTool {
             }
         }
 
+        private string ByteArrayToString(byte[] array) {
+            string str = "";
+            foreach (byte b in array) {
+                str += $"{b:X2}";
+            }
+            return str;
+        }
+
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, string[] opts) {
             Console.Out.WriteLine("key_name          key");
             foreach (ulong key in track[0x90]) {
@@ -51,6 +60,16 @@ namespace OverTool {
                     }
                     EncryptionKey ek = (EncryptionKey)stud.Instances[0];
                     Console.Out.WriteLine("{0}  {1}", ek.KeyNameText, ek.KeyValueText);
+                }
+            }
+
+            if (System.Diagnostics.Debugger.IsAttached) {
+                using (Stream output = File.Open("ow_dump.keys", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
+                    using (TextWriter writer = new StreamWriter(output)) {
+                        foreach (KeyValuePair<ulong, byte[]> key in KeyService.keys) {
+                            writer.WriteLine("{0:X16} {1}", key.Key, ByteArrayToString(key.Value));
+                        }
+                    }
                 }
             }
         }
