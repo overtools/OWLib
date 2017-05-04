@@ -76,15 +76,15 @@ namespace OWLib.Writer {
             }
         }
 
-        public void WriteFrames3d(BinaryWriter writer, byte frame_t, SortedList<int, object> frames) {
+        public void WriteFrames3d(BinaryWriter writer, byte frame_t, SortedList<int, object> frames, float fac = 1.0f) {
             WriteFrameT(writer, frame_t, frames.Count);
 
             foreach (KeyValuePair<int, object> pair in frames) {
                 Vec3d value = (Vec3d)pair.Value;
                 WriteFrameT(writer, frame_t, pair.Key);
-                writer.Write(value.x);
-                writer.Write(value.y);
-                writer.Write(value.z);
+                writer.Write(value.x * fac);
+                writer.Write(value.y * fac);
+                writer.Write(value.z * fac);
             }
         }
 
@@ -183,7 +183,7 @@ namespace OWLib.Writer {
                         if (!dict.ContainsKey(AnimChannelID.POSITION)) {
                             WriteFrameT(writer, frameWidth, 0);
                         } else {
-                            WriteFrames3d(writer, frameWidth, dict[AnimChannelID.POSITION]);
+                            WriteFrames3d(writer, frameWidth, dict[AnimChannelID.POSITION], 2.54f);
                         }
                     }
                     if (everHas.HasFlag(SEAnimPresence.BoneRotation)) {
