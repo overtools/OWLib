@@ -97,7 +97,7 @@ namespace OverTool {
                     ex = true;
                 }
                 if (ex) {
-                    Console.Out.WriteLine("Cosmetics for {0} in package {1:X16}", heroName, map[masterKey].package.packageKey);
+                    Console.Out.WriteLine("Cosmetics for {0} ({2:X16}) in package {1:X16}", heroName, map[masterKey].package.packageKey, masterKey);
                 } else {
                     Console.Out.WriteLine("Cosmetics for {0}", heroName);
                 }
