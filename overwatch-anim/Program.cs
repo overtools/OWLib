@@ -210,7 +210,7 @@ namespace Overwatch_anim {
                 int[] scale_indices = new int[scale_count];
                 inputStream.Seek(scale_indices_offset, SeekOrigin.Begin);
                 for (int index2 = 0; index2 < scale_count; ++index2)
-                    scale_indices[index2] = frame_count >= byte.MaxValue ? input_reader.ReadInt16() : input_reader.ReadByte();
+                    scale_indices[index2] = frame_count > byte.MaxValue ? input_reader.ReadInt16() : input_reader.ReadByte();
                 inputStream.Seek(scale_data_offset, SeekOrigin.Begin);
                 for (int index2 = 0; index2 < scale_count; ++index2) {
                     int index3 = scale_indices[index2];
@@ -225,7 +225,7 @@ namespace Overwatch_anim {
                 int[] position_indices = new int[position_count];
                 inputStream.Seek(position_indices_offset, SeekOrigin.Begin);
                 for (int index2 = 0; index2 < position_count; ++index2)
-                    position_indices[index2] = frame_count >= byte.MaxValue ? input_reader.ReadInt16() : input_reader.ReadByte();
+                    position_indices[index2] = frame_count > byte.MaxValue ? input_reader.ReadInt16() : input_reader.ReadByte();
                 inputStream.Seek(position_data_offset, SeekOrigin.Begin);
                 for (int index2 = 0; index2 < position_count; ++index2) {
                     int index3 = position_indices[index2];
@@ -240,7 +240,7 @@ namespace Overwatch_anim {
                 int[] rotation_indices = new int[rotation_count];
                 inputStream.Seek(rotation_indices_offset, SeekOrigin.Begin);
                 for (int index2 = 0; index2 < rotation_count; ++index2)
-                    rotation_indices[index2] = frame_count >= byte.MaxValue ? input_reader.ReadInt16() : input_reader.ReadByte();
+                    rotation_indices[index2] = frame_count > byte.MaxValue ? input_reader.ReadInt16() : input_reader.ReadByte();
                 inputStream.Seek(rotation_data_offset, SeekOrigin.Begin);
                 for (int index2 = 0; index2 < rotation_count; ++index2) {
                     ushort rot_a = input_reader.ReadUInt16();

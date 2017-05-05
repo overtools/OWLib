@@ -104,7 +104,7 @@ namespace OWLib {
                     List<int> ScaleIndexList = new List<int>();
                     animStream.Seek(SIO, SeekOrigin.Begin);
                     for (int j = 0; j < it.ScaleCount; j++) {
-                        if (InfoTableSize < 255) {
+                        if (InfoTableSize <= 255) {
                             ScaleIndexList.Add((int)animReader.ReadByte());
                         } else {
                             ScaleIndexList.Add((int)animReader.ReadInt16());
@@ -113,7 +113,7 @@ namespace OWLib {
                     List<int> PositonIndexList = new List<int>();
                     animStream.Seek(PIO, SeekOrigin.Begin);
                     for (int j = 0; j < it.PositionCount; j++) {
-                        if (InfoTableSize < 255) {
+                        if (InfoTableSize <= 255) {
                             PositonIndexList.Add((int)animReader.ReadByte());
                         } else {
                             PositonIndexList.Add((int)animReader.ReadInt16());
@@ -122,7 +122,7 @@ namespace OWLib {
                     List<int> RotationIndexList = new List<int>();
                     animStream.Seek(RIO, SeekOrigin.Begin);
                     for (int j = 0; j < it.RotationCount; j++) {
-                        if (InfoTableSize < 255) {
+                        if (InfoTableSize <= 255) {
                             RotationIndexList.Add((int)animReader.ReadByte());
                         } else {
                             RotationIndexList.Add((int)animReader.ReadInt16());
