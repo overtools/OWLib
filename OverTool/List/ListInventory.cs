@@ -14,6 +14,7 @@ namespace OverTool {
         public char Opt => 't';
         public string Title => "List Hero Cosmetics";
         public ushort[] Track => new ushort[1] { 0x75 };
+        public bool Display => true;
 
         public static void GetInventoryName(ulong key, bool ex, Dictionary<ulong, Record> map, CASCHandler handler, string heroName) {
             if (!map.ContainsKey(key)) {
@@ -61,6 +62,23 @@ namespace OverTool {
                 Console.Out.WriteLine("\t\t{0} ({1} {2} in package {3:X16})", name, instance.Header.rarity, stud.Instances[0].Name, map[key].package.packageKey);
             } else {
                 Console.Out.WriteLine("\t\t{0} ({1} {2})", name, instance.Header.rarity, stud.Instances[0].Name);
+            }
+
+            if (instance.Header.description != 0) {
+                using (Stream descStream = Util.OpenFile(map[instance.Header.description], handler)) {
+                    STUD description = new STUD(descStream);
+                    if (description.Instances == null) {
+                        return;
+                    }
+                    InventoryDescription desc = description.Instances[0] as InventoryDescription;
+                    if (desc == null) {
+                        return;
+                    }
+                    string descriptionStr = Util.GetString(desc.Header.str, map, handler);
+                    if (!string.IsNullOrEmpty(descriptionStr)) {
+                        Console.Out.WriteLine("\t\t\t{0}", descriptionStr);
+                    }
+                }
             }
         }
 

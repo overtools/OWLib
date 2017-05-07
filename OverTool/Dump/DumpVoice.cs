@@ -12,6 +12,7 @@ namespace OverTool {
         public char Opt => 'v';
         public string Title => "Extract Voice";
         public ushort[] Track => new ushort[1] { 0x75 };
+        public bool Display => true;
 
         public static void Save(string path, Dictionary<ulong, List<ulong>> sounds, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, Dictionary<ulong, ulong> replace = null) {
             HashSet<ulong> done = new HashSet<ulong>();

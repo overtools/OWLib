@@ -14,11 +14,7 @@ namespace OWLib {
                 header = reader.Read<OWStringHeader>();
                 input.Position = (long)header.offset;
                 char[] bytes;
-                if (header.size > 0) {
-                    bytes = reader.ReadChars((int)header.size);
-                } else {
-                    bytes = reader.ReadChars((int)(input.Length - input.Position));
-                }
+                bytes = reader.ReadChars((int)(input.Length - input.Position));
 
                 Value = new string(bytes).TrimEnd('\0');
             }
@@ -44,8 +40,12 @@ namespace OWLib {
             return a.Value != b.Value;
         }
 
+        public static implicit operator string(OWString a) {
+            return a.Value;
+        }
+
         public override int GetHashCode() {
-            return base.GetHashCode();
+            return base.GetHashCode() ^ Value.GetHashCode();
         }
 
         public override bool Equals(object obj) {
@@ -54,21 +54,6 @@ namespace OWLib {
 
         public override string ToString() {
             return Value;
-        }
-
-        public string Format(params object[] format) {
-            if (header.references == 0) {
-                return Value;
-            }
-            object[] r = new object[header.references];
-            for (int i = 0; i < r.Length; ++i) {
-                if (i < format.Length) {
-                    r[i] = format[i];
-                } else {
-                    r[i] = 0;
-                }
-            }
-            return string.Format(Value, format);
         }
     }
 }

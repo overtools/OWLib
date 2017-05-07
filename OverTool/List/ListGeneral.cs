@@ -13,8 +13,8 @@ namespace OverTool {
         public char Opt => 'g';
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
-
         public ushort[] Track => new ushort[1] { 0x54 };
+        public bool Display => true;
         
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             foreach (ulong key in track[0x54]) {

@@ -13,8 +13,8 @@ namespace OverTool {
         public char Opt => 'G';
         public string Help => "output";
         public uint MinimumArgs => 1;
-
         public ushort[] Track => new ushort[1] { 0x54 };
+        public bool Display => true;
 
         private static void ExtractImage(ulong imageKey, string dpath, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string name = null) {
             ulong imageDataKey = (imageKey & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;

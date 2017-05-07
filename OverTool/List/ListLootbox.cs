@@ -12,6 +12,7 @@ namespace OverTool.List {
         public char Opt => 'l';
         public string Title => "List Lootbox";
         public ushort[] Track => new ushort[1] { 0xCF };
+        public bool Display => true;
 
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             Console.Out.WriteLine();

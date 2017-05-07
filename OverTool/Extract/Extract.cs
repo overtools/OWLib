@@ -14,6 +14,7 @@ namespace OverTool {
         public char Opt => 'x';
         public string Title => "Extract Hero Cosmetics";
         public ushort[] Track => new ushort[1] { 0x75 };
+        public bool Display => true;
 
         public static InventoryMaster OpenInventoryMaster(HeroMaster master, Dictionary<ulong, Record> map, CASCHandler handler) {
             if (!map.ContainsKey(master.Header.itemMaster.key)) {

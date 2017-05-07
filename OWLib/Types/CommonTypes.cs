@@ -6,7 +6,7 @@ namespace OWLib.Types {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct OWStringHeader {
         public ulong offset;
-        public uint size;
+        public uint unk1;
         public uint references;
     }
 
@@ -21,6 +21,10 @@ namespace OWLib.Types {
 
         public static implicit operator ulong (OWRecord i) {
             return i.key;
+        }
+
+        public new string ToString() {
+            return $"{GUID.LongKey(key):X12}.{GUID.Type(key):X3}";
         }
     }
 

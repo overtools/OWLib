@@ -13,6 +13,7 @@ namespace OverTool {
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public ushort[] Track => new ushort[1] { 0x90 };
+        public bool Display => true;
 
         public static void Iterate(List<ulong> files, Dictionary<ulong, Record> map, CASCHandler handler) {
             foreach (ulong key in files) {
@@ -68,6 +69,23 @@ namespace OverTool {
                     using (TextWriter writer = new StreamWriter(output)) {
                         foreach (KeyValuePair<ulong, byte[]> key in KeyService.keys) {
                             writer.WriteLine("{0:X16} {1}", key.Key, ByteArrayToString(key.Value));
+                        }
+                    }
+                }
+                if (handler.Config.KeyRing != null) {
+                    using (Stream output = File.Open("ow_keyring.keys", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
+                        using (TextWriter writer = new StreamWriter(output)) {
+                            foreach (KeyValuePair<string, List<string>> pair in handler.Config.KeyRing.KeyValue) {
+                                if (pair.Key.StartsWith("key-")) {
+                                    string reverseKey = pair.Key.Substring(pair.Key.Length - 16);
+                                    string key = "";
+                                    for (int i = 0; i < 8; ++i) {
+                                        key = reverseKey.Substring(i * 2, 2) + key;
+                                    }
+                                    ulong keyL = ulong.Parse(key, System.Globalization.NumberStyles.HexNumber);
+                                    writer.WriteLine("{0:X16} {1}", keyL, pair.Value[0].ToByteArray());
+                                }
+                            }
                         }
                     }
                 }

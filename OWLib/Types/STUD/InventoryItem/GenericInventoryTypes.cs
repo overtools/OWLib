@@ -14,11 +14,11 @@ namespace OWLib.Types.STUD.InventoryItem {
         public OWRecord name;
         public OWRecord icon;
         public OWRecord unk1;
-        public OWRecord unk2;
-        public OWRecord unk3;
+        public OWRecord background_mask;
+        public OWRecord availble_in;
         public ulong unk4;
         public ulong unk5;
-        public OWRecord unk6;
+        public OWRecord description;
         public InventoryRarity rarity;
         public uint amount;
     };
