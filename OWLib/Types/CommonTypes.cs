@@ -6,7 +6,7 @@ namespace OWLib.Types {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct OWStringHeader {
         public ulong offset;
-        public uint size;
+        public uint unk1;
         public uint references;
     }
 
