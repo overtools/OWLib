@@ -72,6 +72,23 @@ namespace OverTool {
                         }
                     }
                 }
+                if (handler.Config.KeyRing != null) {
+                    using (Stream output = File.Open("ow_keyring.keys", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)) {
+                        using (TextWriter writer = new StreamWriter(output)) {
+                            foreach (KeyValuePair<string, List<string>> pair in handler.Config.KeyRing.KeyValue) {
+                                if (pair.Key.StartsWith("key-")) {
+                                    string reverseKey = pair.Key.Substring(pair.Key.Length - 16);
+                                    string key = "";
+                                    for (int i = 0; i < 8; ++i) {
+                                        key = reverseKey.Substring(i * 2, 2) + key;
+                                    }
+                                    ulong keyL = ulong.Parse(key, System.Globalization.NumberStyles.HexNumber);
+                                    writer.WriteLine("{0:X16} {1}", keyL, pair.Value[0].ToByteArray());
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
