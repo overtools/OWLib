@@ -9,6 +9,11 @@ namespace OWLib.Types.STUD {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public unsafe struct AnimationListHeader {
       public STUDInstanceInfo instance;
+      public ulong unk1_111;
+      public ulong unk2_111;
+      public ulong unk3_111;
+      public ulong unk4_111;
+      public ulong unk5_111;
       public OWRecord f015_1;
       public OWRecord f015_2;
       public OWRecord f015_3;
