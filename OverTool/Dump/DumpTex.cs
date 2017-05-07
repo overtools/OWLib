@@ -12,6 +12,7 @@ namespace OverTool {
         public char Opt => 'T';
         public string Title => "List Textures";
         public ushort[] Track => new ushort[1] { 0x3 };
+        public bool Display => true;
 
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             List<ulong> ids = new List<ulong>();

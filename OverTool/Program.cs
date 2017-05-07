@@ -30,7 +30,10 @@ namespace OverTool {
                     if (tt.IsInterface) {
                         continue;
                     }
-                    tools.Add((IOvertool)Activator.CreateInstance(tt));
+                    IOvertool toolinst = (IOvertool)Activator.CreateInstance(tt);
+                    if (toolinst.Display) {
+                        tools.Add(toolinst);
+                    }
                 }
             }
 

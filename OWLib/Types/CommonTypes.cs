@@ -22,6 +22,10 @@ namespace OWLib.Types {
         public static implicit operator ulong (OWRecord i) {
             return i.key;
         }
+
+        public new string ToString() {
+            return $"{GUID.LongKey(key):X12}.{GUID.Type(key):X3}";
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

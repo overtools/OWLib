@@ -13,6 +13,7 @@ namespace OverTool {
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public ushort[] Track => new ushort[1] { 0x90 };
+        public bool Display => true;
 
         public static void Iterate(List<ulong> files, Dictionary<ulong, Record> map, CASCHandler handler) {
             foreach (ulong key in files) {

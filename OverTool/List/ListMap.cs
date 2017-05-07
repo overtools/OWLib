@@ -11,6 +11,7 @@ namespace OverTool {
         public char Opt => 'm';
         public string Title => "List Maps";
         public ushort[] Track => new ushort[1] { 0x9F };
+        public bool Display => true;
 
         public static void TryString(string n, string str) {
             if (str == null) {

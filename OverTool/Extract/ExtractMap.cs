@@ -18,6 +18,7 @@ namespace OverTool {
         public char Opt => 'M';
         public string Title => "Extract Maps";
         public ushort[] Track => new ushort[1] { 0x9F };
+        public bool Display => true;
 
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
             string output = args[0];
