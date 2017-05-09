@@ -449,7 +449,16 @@ namespace OverTool.ExtractLogic {
             Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
             Dictionary<ulong, List<ulong>> sound = new Dictionary<ulong, List<ulong>>();
 
-            FindReplacements(skin.Data.skin.key, replace, parsed, map, handler, master, skin);
+            ExtractData(skin, master, true, models, animList, parsed, layers, replace, sound, ignore, map, handler);
+            
+            Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler, masterKey, false, quiet, sound);
+        }
+
+        public static void ExtractData(SkinItem skin, HeroMaster master, bool findReplacements, HashSet<ulong> models, Dictionary<ulong, ulong> animList, HashSet<ulong> parsed, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, Dictionary<ulong, List<ulong>> sound, List<ulong> ignore, Dictionary<ulong, Record> map, CASCHandler handler) {
+
+            if (findReplacements) {
+                FindReplacements(skin.Data.skin.key, replace, parsed, map, handler, master, skin);
+            }
 
             ulong bindingKey = master.Header.binding.key;
             if (replace.ContainsKey(bindingKey)) {
@@ -497,8 +506,6 @@ namespace OverTool.ExtractLogic {
                 }
                 FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
             }
-
-            Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler, masterKey, false, quiet, sound);
         }
 
         public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, ulong heroKey, bool external, bool quiet, Dictionary<ulong, List<ulong>> sound) {

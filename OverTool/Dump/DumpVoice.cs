@@ -14,13 +14,12 @@ namespace OverTool {
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;
 
-        public static void Save(string path, Dictionary<ulong, List<ulong>> sounds, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, Dictionary<ulong, ulong> replace = null) {
-            HashSet<ulong> done = new HashSet<ulong>();
+        public static void Save(string path, Dictionary<ulong, List<ulong>> sounds, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, Dictionary<ulong, ulong> replace = null, HashSet<ulong> done = null) {
+            if (done == null) {
+                done = new HashSet<ulong>();
+            }
             foreach (KeyValuePair<ulong, List<ulong>> pair in sounds) {
                 string rootOutput = $"{path}{GUID.LongKey(pair.Key):X12}{Path.DirectorySeparatorChar}";
-                if (pair.Value.Count > 0 && !Directory.Exists(rootOutput)) {
-                    Directory.CreateDirectory(rootOutput);
-                }
                 foreach (ulong key in pair.Value) {
                     if (!done.Add(key)) {
                         continue;
@@ -29,6 +28,9 @@ namespace OverTool {
                     string ext = "wem";
                     if (typ == 0x043) {
                         ext = "bnk";
+                    }
+                    if (!Directory.Exists(rootOutput)) {
+                        Directory.CreateDirectory(rootOutput);
                     }
                     string outputPath = $"{rootOutput}{GUID.LongKey(key):X12}.{ext}";
                     using (Stream soundStream = Util.OpenFile(map[key], handler)) {

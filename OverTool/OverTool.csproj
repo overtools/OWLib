@@ -64,6 +64,7 @@
     <Compile Include="Dump\DumpNPC.cs" />
     <Compile Include="Dump\DumpString.cs" />
     <Compile Include="Dump\DumpTex.cs" />
+    <Compile Include="Dump\DumpVoiceFull.cs" />
     <Compile Include="Dump\DumpVoice.cs" />
     <Compile Include="ExtractLogic\ItemAnimation.cs" />
     <Compile Include="Extract\ExtractLootbox.cs" />
