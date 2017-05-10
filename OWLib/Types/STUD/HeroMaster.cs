@@ -13,7 +13,8 @@ namespace OWLib.Types.STUD {
             public ulong version;
             public OWRecord binding;
             public OWRecord name;
-            public OWRecord zero2;
+            public ulong offset__;
+            public ulong unknwn;
             public OWRecord unk1;
             public ulong virtualOffset;
             public ulong zero3;
@@ -39,10 +40,9 @@ namespace OWLib.Types.STUD {
             public ulong zero10;
             public ulong zero11;
             public OWRecord itemMaster;
-            public fixed ushort zero12[33];
+            public fixed ushort zero12[40];
             public ulong directiveOffset;
-            public short zero13;
-            public OWRecord blank;
+            public ulong unkn;
             public float x;
             public float y;
             public float z;

@@ -80,6 +80,66 @@ namespace OverTool.ExtractLogic {
             }
         }
 
+        public static void FindTexturesAnonymous8(ulong key, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
+            ulong tgt = key;
+            if (replace.ContainsKey(tgt)) {
+                tgt = replace[tgt];
+            }
+            if (!map.ContainsKey(tgt)) {
+                return;
+            }
+            if (!parsed.Add(tgt)) {
+                return;
+            }
+
+            ulong materialId = ulong.MaxValue;
+            Material mat = new Material(Util.OpenFile(map[tgt], handler), materialId);
+            ulong definitionKey = mat.Header.definitionKey;
+            if (replace.ContainsKey(definitionKey)) {
+                definitionKey = replace[definitionKey];
+            }
+            if (!map.ContainsKey(definitionKey)) {
+                return;
+            }
+            ImageDefinition def = new ImageDefinition(Util.OpenFile(map[definitionKey], handler));
+            if (!layers.ContainsKey(materialId)) {
+                layers.Add(materialId, new List<ImageLayer>());
+            }
+            for (int i = 0; i < def.Layers.Length; ++i) {
+                ImageLayer layer = def.Layers[i];
+                if (replace.ContainsKey(layer.key)) {
+                    layer.key = replace[layer.key];
+                }
+                layers[materialId].Add(layer);
+            }
+        }
+
+        public static void FindTexturesAnonymousB3(ulong key, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler) {
+            ulong tgt = key;
+            if (replace.ContainsKey(tgt)) {
+                tgt = replace[tgt];
+            }
+            if (!map.ContainsKey(tgt)) {
+                return;
+            }
+            if (!parsed.Add(tgt)) {
+                return;
+            }
+
+            ulong materialId = ulong.MaxValue;
+            ImageDefinition def = new ImageDefinition(Util.OpenFile(map[tgt], handler));
+            if (!layers.ContainsKey(materialId)) {
+                layers.Add(materialId, new List<ImageLayer>());
+            }
+            for (int i = 0; i < def.Layers.Length; ++i) {
+                ImageLayer layer = def.Layers[i];
+                if (replace.ContainsKey(layer.key)) {
+                    layer.key = replace[layer.key];
+                }
+                layers[materialId].Add(layer);
+            }
+        }
+
         public static void FindAnimationsSoft(ulong key, Dictionary<ulong, List<ulong>> sound, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, ulong parent = 0) {
             if (!map.ContainsKey(key)) {
                 return;
@@ -98,62 +158,79 @@ namespace OverTool.ExtractLogic {
                 using (BinaryReader reader = new BinaryReader(anim)) {
                     anim.Position = 0x18L;
                     ulong infokey = reader.ReadUInt64();
-                    if (infokey == 0) {
-                        return;
-                    }
-                    if (replace.ContainsKey(infokey)) {
-                        infokey = replace[infokey];
-                    }
-                    if (!map.ContainsKey(infokey)) {
-                        return;
-                    }
-                    if (GUID.Type(infokey) != 0x08F) {
-                        return;
-                    }
-                    if (!parsed.Add(infokey)) {
-                        return;
-                    }
-                    using (Stream file = Util.OpenFile(map[infokey], handler)) {
-                        file.Position = 0;
-                        Chunked chunked = new Chunked(file);
-                        DMCE[] dmces = chunked.GetAllOfTypeFlat<DMCE>();
-                        foreach (DMCE dmce in dmces) {
-                            if (models != null && dmce.Data.modelKey != 0) {
-                                if (replace.ContainsKey(dmce.Data.modelKey)) {
-                                    models.Add(replace[dmce.Data.modelKey]);
-                                } else {
-                                    models.Add(dmce.Data.modelKey);
-                                }
-                            }
-                            if (layers != null && dmce.Data.materialKey != 0) {
-                                FindTextures(dmce.Data.materialKey, layers, replace, parsed, map, handler);
-                            }
-                            if (animList != null && !animList.ContainsKey(dmce.Data.animationKey) && dmce.Data.animationKey != 0) {
-                                if (replace.ContainsKey(dmce.Data.animationKey)) {
-                                    animList[replace[dmce.Data.animationKey]] = parent;
-                                    FindAnimationsSoft(replace[dmce.Data.animationKey], sound, animList, replace, parsed, map, handler, models, layers, replace[dmce.Data.animationKey]);
-                                } else {
-                                    animList[dmce.Data.animationKey] = parent;
-                                    FindAnimationsSoft(dmce.Data.animationKey, sound, animList, replace, parsed, map, handler, models, layers, dmce.Data.animationKey);
-                                }
-                            }
+                    FindDataChunked(infokey, sound, animList, replace, parsed, map, handler, models, layers, key);
+                }
+            }
+        }
+        
+
+        public static void FindDataChunked(ulong key, Dictionary<ulong, List<ulong>> sound, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, ulong parent = 0) {
+            if (replace.ContainsKey(key)) {
+                key = replace[key];
+            }
+            if (!map.ContainsKey(key)) {
+                return;
+            }
+            if (!parsed.Add(key)) {
+                return;
+            }
+
+            using (Stream file = Util.OpenFile(map[key], handler)) {
+                file.Position = 0;
+                Chunked chunked = new Chunked(file);
+                DMCE[] dmces = chunked.GetAllOfTypeFlat<DMCE>();
+                foreach (DMCE dmce in dmces) {
+                    if (models != null && dmce.Data.modelKey != 0) {
+                        if (replace.ContainsKey(dmce.Data.modelKey)) {
+                            models.Add(replace[dmce.Data.modelKey]);
+                        } else {
+                            models.Add(dmce.Data.modelKey);
                         }
-                        NECE[] neces = chunked.GetAllOfTypeFlat<NECE>();
-                        foreach (NECE nece in neces) {
-                            if (nece.Data.key > 0) {
-                                FindModels(nece.Data.key, new List<ulong>(), models, animList, layers, replace, parsed, map, handler, sound);
-                            }
+                    }
+                    if (layers != null && dmce.Data.materialKey != 0) {
+                        FindTextures(dmce.Data.materialKey, layers, replace, parsed, map, handler);
+                    }
+                    if (animList != null && !animList.ContainsKey(dmce.Data.animationKey) && dmce.Data.animationKey != 0) {
+                        if (replace.ContainsKey(dmce.Data.animationKey)) {
+                            animList[replace[dmce.Data.animationKey]] = parent;
+                            FindAnimationsSoft(replace[dmce.Data.animationKey], sound, animList, replace, parsed, map, handler, models, layers, replace[dmce.Data.animationKey]);
+                        } else {
+                            animList[dmce.Data.animationKey] = parent;
+                            FindAnimationsSoft(dmce.Data.animationKey, sound, animList, replace, parsed, map, handler, models, layers, dmce.Data.animationKey);
                         }
-                        CECE[] ceces = chunked.GetAllOfTypeFlat<CECE>();
-                        foreach (CECE cece in ceces) {
-                            if (animList != null && !animList.ContainsKey(cece.Data.animation) && cece.Data.animation != 0) {
-                                animList[cece.Data.animation] = parent;
-                                FindAnimationsSoft(cece.Data.animation, sound, animList, replace, parsed, map, handler, models, layers, cece.Data.animation);
-                            }
-                        }
-                        Sound.FindSoundsChunked(chunked, new HashSet<ulong>(), sound, map, handler, replace, parent, parent);
                     }
                 }
+                NECE[] neces = chunked.GetAllOfTypeFlat<NECE>();
+                foreach (NECE nece in neces) {
+                    if (nece.Data.key > 0) {
+                        FindModels(nece.Data.key, new List<ulong>(), models, animList, layers, replace, parsed, map, handler, sound);
+                    }
+                }
+                CECE[] ceces = chunked.GetAllOfTypeFlat<CECE>();
+                foreach (CECE cece in ceces) {
+                    if (animList != null && !animList.ContainsKey(cece.Data.animation) && cece.Data.animation != 0) {
+                        animList[cece.Data.animation] = parent;
+                        FindAnimationsSoft(cece.Data.animation, sound, animList, replace, parsed, map, handler, models, layers, cece.Data.animation);
+                    }
+                }
+                SSCE[] ssces = chunked.GetAllOfTypeFlat<SSCE>();
+                foreach (SSCE ssce in ssces) {
+                    if (layers != null) {
+                        FindTexturesAnonymous8(ssce.Data.material_key, layers, replace, parsed, map, handler);
+                        FindTexturesAnonymousB3(ssce.Data.definition_key, layers, replace, parsed, map, handler);
+                    }
+                }
+                RPCE[] prces = chunked.GetAllOfTypeFlat<RPCE>();
+                foreach (RPCE prce in prces) {
+                    if (models != null) {
+                        if (replace.ContainsKey(prce.Data.model_key)) {
+                            models.Add(replace[prce.Data.model_key]);
+                        } else {
+                            models.Add(prce.Data.model_key);
+                        }
+                    }
+                }
+                Sound.FindSoundsChunked(chunked, new HashSet<ulong>(), sound, map, handler, replace, parent, parent);
             }
         }
 
@@ -252,6 +329,9 @@ namespace OverTool.ExtractLogic {
                             FindAnimations(bindingKey, sound, animList, replace, parsed, map, handler, models, layers, tgt);
                         }
                     }
+                } if (inst.Name == record.Manager.GetName(typeof(EffectReference))) {
+                    EffectReference reference = (EffectReference)inst;
+                    FindDataChunked(reference.Reference.key.key, sound, animList, replace, parsed, map, handler, models, layers, tgt);
                 }
             }
         }
@@ -396,6 +476,10 @@ namespace OverTool.ExtractLogic {
                     if (r.Header.reference.key != 0) {
                         FindAnimations(r.Header.reference.key, sound, animList, replace, parsed, map, handler, models, layers, 0);
                     }
+                }
+                if (inst.Name == record.Manager.GetName(typeof(EffectReference))) {
+                    EffectReference reference = (EffectReference)inst;
+                    FindDataChunked(reference.Reference.key.key, sound, animList, replace, parsed, map, handler, models, layers, tgt);
                 }
             }
         }
