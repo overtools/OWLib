@@ -709,7 +709,7 @@ namespace OverTool.ExtractLogic {
 
                     Chunked mdl = new Chunked(Util.OpenFile(map[key], handler));
 
-                    if (furtherOpts.Count <= 6 || furtherOpts[6] != 'R') {
+                    if ((furtherOpts.Count <= 6 || furtherOpts[6] != 'R') && mdl.HasChunk<lksm>()) {
                         outpath = $"{path}{GUID.LongKey(key):X12}_refpose{refpose.Format}";
                         using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
                             if (refpose.Write(mdl, outp, null, null, null)) {
