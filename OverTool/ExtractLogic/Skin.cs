@@ -514,11 +514,12 @@ namespace OverTool.ExtractLogic {
                 foreach (KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
                     ulong materialId = kv.Key;
                     List<ImageLayer> sublayers = kv.Value;
+                    HashSet<ulong> materialParsed = new HashSet<ulong>();
                     foreach (ImageLayer layer in sublayers) {
-                        if (!parsed.Add(layer.key)) {
+                        if (!materialParsed.Add(layer.key)) {
                             continue;
                         }
-                        KeyValuePair<string, TextureType> stt = SaveTexture(layer.key, map, handler, $"{path}{GUID.LongKey(layer.key):X12}.dds", quiet);
+                        KeyValuePair<string, TextureType> stt = SaveTexture(layer.key, materialId, map, handler, path, quiet);
                         typeInfo.Add(stt.Key, stt.Value);
                     }
                 }
@@ -765,17 +766,22 @@ namespace OverTool.ExtractLogic {
                 key = replace[key];
             }
             if (key != 0) {
-                SaveTexture(key, map, handler, $"{output}{GUID.LongKey(key):X12}.dds", quiet);
+                SaveTexture(key, 0, map, handler, output, quiet);
             }
         }
 
-        public static KeyValuePair<string, TextureType> SaveTexture(ulong key, Dictionary<ulong, Record> map, CASCHandler handler, string path, bool quiet) {
-            string name = $"{GUID.LongKey(key)}:X12.dds";
+        public static KeyValuePair<string, TextureType> SaveTexture(ulong key, ulong material, Dictionary<ulong, Record> map, CASCHandler handler, string outp, bool quiet) {
+            string name = $"{GUID.LongKey(key):X12}.dds";
+            if (material > 0) {
+                name = $"Textures{Path.DirectorySeparatorChar}{material:X16}{Path.DirectorySeparatorChar}{name}";
+            }
             TextureType @type = TextureType.Unknown;
 
             if (!map.ContainsKey(key)) {
                 return new KeyValuePair<string, TextureType>(name, @type);
             }
+
+            string path = $"{outp}{Path.DirectorySeparatorChar}{name}";
 
             if (!Directory.Exists(Path.GetDirectoryName(path))) {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
