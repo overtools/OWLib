@@ -142,6 +142,16 @@ namespace OWLib.Types {
             entryOffsets.Clear();
             GC.SuppressFinalize(this);
         }
+
+        public bool HasChunk<T>() {
+            Type type = typeof(T);
+            for (int i = 0; i < chunks.Count; ++i) {
+                if (chunks[i] != null && type.IsInstanceOfType(chunks[i])) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     public class ChunkManager {

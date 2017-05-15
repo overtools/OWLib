@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
+    [System.Diagnostics.DebuggerDisplay(OWLib.STUD.STUD_DEBUG_STR)]
     public class HeroMaster : ISTUDInstance {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public unsafe struct HeroMasterHeader {
@@ -13,7 +14,8 @@ namespace OWLib.Types.STUD {
             public ulong version;
             public OWRecord binding;
             public OWRecord name;
-            public OWRecord zero2;
+            public ulong offset__;
+            public ulong unknwn;
             public OWRecord unk1;
             public ulong virtualOffset;
             public ulong zero3;
@@ -39,10 +41,9 @@ namespace OWLib.Types.STUD {
             public ulong zero10;
             public ulong zero11;
             public OWRecord itemMaster;
-            public fixed ushort zero12[33];
+            public fixed ushort zero12[40];
             public ulong directiveOffset;
-            public short zero13;
-            public OWRecord blank;
+            public ulong unkn;
             public float x;
             public float y;
             public float z;
@@ -108,7 +109,7 @@ namespace OWLib.Types.STUD {
         public HeroChild2[] Child2 => child2;
         public HeroChild2[] Child3 => child3;
 
-        public void Read(Stream input) {
+        public void Read(Stream input, OWLib.STUD stud) {
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
                 header = reader.Read<HeroMasterHeader>();
                 long seekpos = input.Position;

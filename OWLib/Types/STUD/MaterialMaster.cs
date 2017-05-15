@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
+    [System.Diagnostics.DebuggerDisplay(OWLib.STUD.STUD_DEBUG_STR)]
     public class MaterialMaster : ISTUDInstance {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct MaterialMasterHeader {
@@ -53,7 +54,7 @@ namespace OWLib.Types.STUD {
         private MaterialMasterData[] data;
         public MaterialMasterData[] Data => data;
 
-        public void Read(Stream input) {
+        public void Read(Stream input, OWLib.STUD stud) {
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
                 header = reader.Read<MaterialMasterHeader>();
 

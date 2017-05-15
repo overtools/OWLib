@@ -35,16 +35,14 @@ namespace OWLib.Types {
     }
 
     public interface ISTUDInstance {
-        string Name
-        {
+        string Name {
             get;
         }
 
-        uint Id
-        {
+        uint Id {
             get;
         }
 
-        void Read(Stream input);
+        void Read(Stream input, OWLib.STUD stud);
     }
 }

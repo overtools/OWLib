@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
+    [System.Diagnostics.DebuggerDisplay(OWLib.STUD.STUD_DEBUG_STR)]
     public class GlobalInventoryMaster : ISTUDInstance {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct InventoryMetadata {
@@ -65,7 +66,7 @@ namespace OWLib.Types.STUD {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Reward {
             public OWRecord item;
-            public long unknown;
+            public long index;
         }
 
         public uint Id => 0x33597A76;
@@ -96,7 +97,7 @@ namespace OWLib.Types.STUD {
         public long[] ExclusiveOffsets => exclusiveOffsets;
         public Reward[][] LootboxExclusive => lootboxExclusive;
 
-        public void Read(Stream input) {
+        public void Read(Stream input, OWLib.STUD stud) {
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
                 header = reader.Read<InventoryMetadata>();
                 

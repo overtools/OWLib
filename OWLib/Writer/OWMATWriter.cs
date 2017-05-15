@@ -37,7 +37,18 @@ namespace OWLib.Writer {
                     writer.Write(layer.Key);
                     HashSet<string> images = new HashSet<string>();
                     foreach (ImageLayer image in layer.Value) {
-                        images.Add($"{GUID.LongKey(image.key):X12}.dds");
+                        string old = $"{GUID.LongKey(image.key):X12}.dds";
+                        if (typeData != null) {
+                            try {
+                                images.Add(typeData.First(new Func<KeyValuePair<string, TextureType>, bool>(delegate (KeyValuePair<string, TextureType> input) {
+                                    return Path.GetFileName(input.Key).ToUpperInvariant() == old.ToUpperInvariant();
+                                })).Key);
+                            } catch {
+                                images.Add(old);
+                            }
+                        } else {
+                            images.Add(old);
+                        }
                     }
                     writer.Write(images.Count);
                     foreach (string image in images) {

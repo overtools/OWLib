@@ -1,24 +1,26 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
 
-namespace OWLib.Types.STUD {
+namespace OWLib.Types.STUD.GameParam {
     [System.Diagnostics.DebuggerDisplay(OWLib.STUD.STUD_DEBUG_STR)]
-    public class InventoryDescription : ISTUDInstance {
-        public uint Id => 0x96ABC153;
-        public string Name => "InventoryDescription";
+    public class SoundFX : ISTUDInstance {
+        public uint Id => 0xF36D34BB;
+        public string Name => "GameParameter:SoundFX";
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public unsafe struct Structure {
+        public struct Header {
             public STUDInstanceInfo instance;
-            public OWRecord str;
+            public ulong unk1;
+            public OWRecord binding;
+            public OWRecord binding2;
         }
 
-        private Structure header;
-        public Structure Header => header;
+        private Header param;
+        public Header Param => param;
 
         public void Read(Stream input, OWLib.STUD stud) {
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
-                header = reader.Read<Structure>();
+                param = reader.Read<Header>();
             }
         }
     }

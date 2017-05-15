@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
+    [System.Diagnostics.DebuggerDisplay(OWLib.STUD.STUD_DEBUG_STR)]
     public class SoundMasterList : ISTUDInstance {
         public uint Id => 0xBAD42A8D;
         public string Name => "Sound Master:List";
@@ -30,7 +31,7 @@ namespace OWLib.Types.STUD {
         public ulong[] Owner => owners;
         public ulong[] Sound => sounds;
 
-        public void Read(Stream input) {
+        public void Read(Stream input, OWLib.STUD stud) {
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
                 data = reader.Read<SoundMasterListData>();
 

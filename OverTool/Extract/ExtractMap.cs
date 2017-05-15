@@ -222,11 +222,12 @@ namespace OverTool {
                             foreach (KeyValuePair<ulong, List<ImageLayer>> kv in tmp) {
                                 ulong materialId = kv.Key;
                                 List<ImageLayer> sublayers = kv.Value;
+                                HashSet<ulong> materialParsed = new HashSet<ulong>();
                                 foreach (ImageLayer layer in sublayers) {
-                                    if (!parsed.Add(layer.key)) {
+                                    if (!materialParsed.Add(layer.key)) {
                                         continue;
                                     }
-                                    KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, map, handler, $"{outputPath}{GUID.LongKey(layer.key):X12}.dds", quiet);
+                                    KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, materialId, map, handler, outputPath, quiet);
                                     types.Add(pair.Key, pair.Value);
                                 }
                             }
