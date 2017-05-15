@@ -66,7 +66,7 @@ namespace OWLib.Types.STUD {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Reward {
             public OWRecord item;
-            public long unknown;
+            public long index;
         }
 
         public uint Id => 0x33597A76;

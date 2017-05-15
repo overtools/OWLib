@@ -102,9 +102,10 @@ namespace OWLib {
                 id = reader.ReadUInt32();
             }
             input.Position -= 4;
+            ISTUDInstance ret;
             MANAGER_ERROR err;
             bool outputOffset = STUDManager.Complained.Contains(id);
-            if ((err = manager.InitializeInstance(id, input, out ISTUDInstance ret, suppress, this)) != MANAGER_ERROR.E_SUCCESS) {
+            if ((err = manager.InitializeInstance(id, input, out ret, suppress, this)) != MANAGER_ERROR.E_SUCCESS) {
                 if (err != MANAGER_ERROR.E_UNKNOWN) {
                     if (System.Diagnostics.Debugger.IsAttached) {
                         System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Error while instancing for STUD type {0:X8}\n", id));
@@ -114,7 +115,15 @@ namespace OWLib {
                         System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Instance is at offset {0:X16}\n", start + instance.offset));
                     }
                 }
-                return new STUDummy(id, instance.offset);
+#if STUD_DEBUG
+                if (System.Diagnostics.Debugger.IsAttached) {
+                    return new STUDummy(id, instance.offset);
+                } else {
+                    return null;
+                }
+#else
+                return null;
+#endif
             }
             return ret;
         }

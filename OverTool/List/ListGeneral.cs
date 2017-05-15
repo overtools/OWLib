@@ -78,7 +78,7 @@ namespace OverTool {
                         if (master.LootboxExclusive[i].Length == 0) {
                             continue;
                         }
-                        Console.Out.WriteLine($"\tLOOTBOX_EXCLUSIVE_{i:X}");
+                        Console.Out.WriteLine($"\tLOOTBOX_EXCLUSIVE_{ItemEvents.GetInstance().GetEvent((ulong)i)}");
                         for (int j = 0; j < master.LootboxExclusive[i].Length; ++j) {
                             ListInventory.GetInventoryName(master.LootboxExclusive[i][j].item, false, map, handler, "General");
                         }
