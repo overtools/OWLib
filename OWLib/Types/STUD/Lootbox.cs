@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
+    [System.Diagnostics.DebuggerDisplay(OWLib.STUD.STUD_DEBUG_STR)]
     public class Lootbox : ISTUDInstance {
         public uint Id => 0x0A6886A1;
         public string Name => "Lootbox";
@@ -39,7 +40,7 @@ namespace OWLib.Types.STUD {
         public string EventNameNormal => ItemEvents.GetInstance().GetEventNormal(master.eventID);
         public string EventName => ItemEvents.GetInstance().GetEvent(master.eventID);
 
-        public void Read(Stream input) {
+        public void Read(Stream input, OWLib.STUD stud) {
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
                 master = reader.Read<MasterRecord>();
 

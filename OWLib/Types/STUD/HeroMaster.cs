@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
+    [System.Diagnostics.DebuggerDisplay(OWLib.STUD.STUD_DEBUG_STR)]
     public class HeroMaster : ISTUDInstance {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public unsafe struct HeroMasterHeader {
@@ -108,7 +109,7 @@ namespace OWLib.Types.STUD {
         public HeroChild2[] Child2 => child2;
         public HeroChild2[] Child3 => child3;
 
-        public void Read(Stream input) {
+        public void Read(Stream input, OWLib.STUD stud) {
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
                 header = reader.Read<HeroMasterHeader>();
                 long seekpos = input.Position;

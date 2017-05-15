@@ -8,11 +8,13 @@ using System.Reflection;
 
 namespace OWLib {
     public class STUD : IDisposable {
+        public const string STUD_DEBUG_STR = "{Name, nq} - {Id}";
+
         private STUDHeader header;
         private STUDInstanceRecord[] records;
         private ISTUDInstance[] instances;
 
-        private STUDManager manager = STUDManager.Instance;
+        private STUDManager manager;
 
         public STUDHeader Header => header;
         public STUDInstanceRecord[] Records => records;
@@ -22,8 +24,17 @@ namespace OWLib {
         public long end = -1;
         public long start = -1;
 
+        private bool complete = false;
+        public bool Complete => complete;
+        private bool suppress = false;
+        public bool Suppress => suppress;
+
+        private Stream studstream = null;
+        public Stream STUDStream => studstream;
+
         public STUD(Stream input, bool initalizeAll = true, STUDManager manager = null, bool leaveOpen = false, bool suppress = false) {
             if (manager == null) {
+                this.manager = STUDManager.Instance;
                 manager = this.manager;
             } else {
                 this.manager = manager;
@@ -32,6 +43,9 @@ namespace OWLib {
             if (input == null) {
                 return;
             }
+
+            this.suppress = suppress;
+            studstream = input;
 
             using (BinaryReader reader = new BinaryReader(input, Encoding.Default, leaveOpen)) {
                 start = input.Position;
@@ -61,8 +75,24 @@ namespace OWLib {
 
         public void InitializeAll(Stream input, bool suppress) {
             for (long i = 0; i < records.LongLength; ++i) {
-                instances[i] = Initialize(input, records[i], suppress);
+                if (instances[i] == null) {
+                    instances[i] = Initialize(input, records[i], suppress);
+                }
             }
+            complete = true;
+        }
+
+        public void SetInstance(long index, ISTUDInstance instance) {
+            instances[index] = instance;
+        }
+
+        public STUDReference GetInstanceAtOffset(ulong offset) {
+            for (long i = 0; i < records.LongLength; ++i) {
+                if (records[i].offset == offset) {
+                    return new STUDReference(this, i);
+                }
+            }
+            return null;
         }
 
         public ISTUDInstance Initialize(Stream input, STUDInstanceRecord instance, bool suppress) {
@@ -72,10 +102,9 @@ namespace OWLib {
                 id = reader.ReadUInt32();
             }
             input.Position -= 4;
-            ISTUDInstance ret = null;
             MANAGER_ERROR err;
             bool outputOffset = STUDManager.Complained.Contains(id);
-            if ((err = manager.InitializeInstance(id, input, out ret, suppress)) != MANAGER_ERROR.E_SUCCESS) {
+            if ((err = manager.InitializeInstance(id, input, out ISTUDInstance ret, suppress, this)) != MANAGER_ERROR.E_SUCCESS) {
                 if (err != MANAGER_ERROR.E_UNKNOWN) {
                     if (System.Diagnostics.Debugger.IsAttached) {
                         System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Error while instancing for STUD type {0:X8}\n", id));
@@ -85,7 +114,7 @@ namespace OWLib {
                         System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Instance is at offset {0:X16}\n", start + instance.offset));
                     }
                 }
-                return null;
+                return new STUDummy(id, instance.offset);
             }
             return ret;
         }
@@ -97,6 +126,50 @@ namespace OWLib {
         }
     }
 
+    [System.Diagnostics.DebuggerDisplay(STUD.STUD_DEBUG_STR)]
+    public class STUDummy : ISTUDInstance {
+        private string name = "Dummy";
+        public string Name => name;
+
+        private uint id = 0;
+        public uint Id => id;
+
+        public void Read(Stream input, STUD stud) {
+            return;
+        }
+
+        public STUDummy(uint id, uint offset) {
+            this.id = id;
+            name = $"Dummy({offset})";
+        }
+    }
+
+    public class STUDReference {
+        private long index;
+        private STUD stud;
+
+        public ISTUDInstance Value {
+            get {
+                if (stud.Instances == null) {
+                    return null;
+                }
+                if (stud.Instances.LongLength >= index) {
+                    return null;
+                }
+                if (stud.STUDStream != null && stud.STUDStream.CanRead && stud.Complete == false && stud.Instances[index] == null) {
+                    STUDInstanceRecord record = stud.Records[index];
+                    stud.SetInstance(index, stud.Initialize(stud.STUDStream, record, stud.Suppress));
+                }
+                return stud.Instances[index];
+            }
+        }
+
+        public STUDReference(STUD stud, long index) {
+            this.index = index;
+            this.stud = stud;
+        }
+    }
+
     public class STUDManager {
         private List<Type> implementations;
         private List<uint> ids;
@@ -105,8 +178,15 @@ namespace OWLib {
         private static HashSet<uint> complained = new HashSet<uint>();
         public static HashSet<uint> Complained => complained;
 
-        private static STUDManager _Instance = NewInstance();
-        public static STUDManager Instance => _Instance;
+        private static STUDManager _Instance = null;
+        public static STUDManager Instance {
+            get {
+                if (_Instance == null) {
+                    _Instance = NewInstance();
+                }
+                return _Instance;
+            }
+        }
 
         public IReadOnlyList<Type> Implementations => implementations;
         public IReadOnlyList<uint> Ids => ids;
@@ -132,11 +212,11 @@ namespace OWLib {
             return null;
         }
 
-        public MANAGER_ERROR InitializeInstance(uint id, Stream input, out ISTUDInstance instance, bool suppress) {
-            return InitializeInstance(GetInstance(id, suppress), input, out instance);
+        public MANAGER_ERROR InitializeInstance(uint id, Stream input, out ISTUDInstance instance, bool suppress, STUD stud) {
+            return InitializeInstance(GetInstance(id, suppress), input, out instance, stud);
         }
 
-        public MANAGER_ERROR InitializeInstance(Type inst, Stream input, out ISTUDInstance instance) {
+        public MANAGER_ERROR InitializeInstance(Type inst, Stream input, out ISTUDInstance instance, STUD stud) {
             if (inst == null) {
                 instance = null;
                 return MANAGER_ERROR.E_UNKNOWN;
@@ -144,13 +224,13 @@ namespace OWLib {
 
             if (System.Diagnostics.Debugger.IsAttached) {
                 instance = (ISTUDInstance)Activator.CreateInstance(inst);
-                instance.Read(input);
+                instance.Read(input, stud);
                 return MANAGER_ERROR.E_SUCCESS;
             }
 
             try {
                 instance = (ISTUDInstance)Activator.CreateInstance(inst);
-                instance.Read(input);
+                instance.Read(input, stud);
             } catch (Exception ex) {
                 Console.Error.WriteLine("Error with {0}", inst.FullName);
                 Console.Error.WriteLine(ex.Message);
@@ -240,6 +320,9 @@ namespace OWLib {
             List<Type> types = asm.GetTypes().Where(type => type != t && t.IsAssignableFrom(type)).ToList();
             foreach (Type type in types) {
                 if (type.IsInterface) {
+                    continue;
+                }
+                if (type.IsEquivalentTo(typeof(STUDummy))) {
                     continue;
                 }
                 manager.AddInstance(type);

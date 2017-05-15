@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.STUD {
+    [System.Diagnostics.DebuggerDisplay(OWLib.STUD.STUD_DEBUG_STR)]
     public class TextureOverrideMaster : ISTUDInstance {
         public uint Id => 0xC25082A2;
         public string Name => "TextureOverrideMaster";
@@ -46,20 +47,20 @@ namespace OWLib.Types.STUD {
         public ulong[] Target => target;
         public uint[] Sizes => sizes;
 
-        public void Read(Stream input) {
-            using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
+        public void Read(Stream input, OWLib.STUD stud) {
+            using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
                 header = reader.Read<TextureOverrideMasterHeader>();
-                if(header.offsetRecords > 0) {
+                if (header.offsetRecords > 0) {
                     input.Position = (long)header.offsetRecords;
                     STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
                     records = new OWRecord[ptr.count];
                     input.Position = (long)ptr.offset;
-                    for(ulong i = 0; i < ptr.count; ++i) {
+                    for (ulong i = 0; i < ptr.count; ++i) {
                         records[i] = reader.Read<OWRecord>();
                     }
                 }
 
-                if(header.offsetInfo == 0) {
+                if (header.offsetInfo == 0) {
                     return;
                 }
 
@@ -69,9 +70,9 @@ namespace OWLib.Types.STUD {
                 uint size = 0;
                 sizes = new uint[info.count];
                 input.Position = (long)info.indiceOffset;
-                for(ulong i = 0; i < info.count; ++i) {
+                for (ulong i = 0; i < info.count; ++i) {
                     sizes[i] = reader.ReadUInt32();
-                    if(sizes[i] > size) {
+                    if (sizes[i] > size) {
                         size = sizes[i];
                     }
                 }
@@ -79,12 +80,12 @@ namespace OWLib.Types.STUD {
                 replace = new ulong[size];
                 references = new TextureOverride.TextureOverrideInlineReference[size];
                 input.Position = (long)info.referenceOffset;
-                for(uint i = 0; i < size; ++i) {
+                for (uint i = 0; i < size; ++i) {
                     references[i] = reader.Read<TextureOverride.TextureOverrideInlineReference>();
                     replace[i] = references[i].key;
                 }
                 target = new ulong[size];
-                for(uint i = 0; i < size; ++i) {
+                for (uint i = 0; i < size; ++i) {
                     input.Position = (long)(references[i].offset + 8UL);
                     target[i] = reader.ReadUInt64();
                 }
