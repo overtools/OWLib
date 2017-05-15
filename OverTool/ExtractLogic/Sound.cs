@@ -140,6 +140,10 @@ namespace OverTool.ExtractLogic {
                     BindingRecord record = (BindingRecord)instance;
                     FindSoundsEx(record.Param.binding.key, done, ret, map, handler, replace, mykey);
                     FindSoundsEx(record.Param.binding2.key, done, ret, map, handler, replace, mykey);
+                } else if (instance.Name == stud.Manager.GetName(typeof(SoundFX))) {
+                    SoundFX record = (SoundFX)instance;
+                    FindSoundsEx(record.Param.binding.key, done, ret, map, handler, replace, mykey);
+                    FindSoundsEx(record.Param.binding2.key, done, ret, map, handler, replace, mykey);
                 } else if (instance.Name == stud.Manager.GetName(typeof(ChildParameterRecord))) {
                     ChildParameterRecord record = (ChildParameterRecord)instance;
                     FindSoundsEx(record.Header.binding.key, done, ret, map, handler, replace, mykey);

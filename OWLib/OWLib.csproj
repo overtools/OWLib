@@ -68,6 +68,7 @@
     <Compile Include="Types\Chunk\TCFE\CECE.cs" />
     <Compile Include="Types\Chunk\TCFE\NECE.cs" />
     <Compile Include="Types\STUD\GameParam\BindingEffectReference.cs" />
+    <Compile Include="Types\STUD\GameParam\SoundFX.cs" />
     <Compile Include="Types\STUD\GlobalInventoryMaster.cs" />
     <Compile Include="Types\STUD\InventoryDescription.cs" />
     <Compile Include="Writer\ASCIIWriter.cs" />

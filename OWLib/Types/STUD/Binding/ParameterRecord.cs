@@ -12,7 +12,7 @@ namespace OWLib.Types.STUD.Binding {
             public STUDInstanceInfo instance;
             public ulong arrayOffset;
             public ulong unk1;
-            public uint unk2;
+            public int unk2;
             public uint unk3;
         }
 
