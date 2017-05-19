@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using OWLib.Types;
 using OWLib.Types.Chunk;
 
-namespace OWLib.Types {
+namespace OWLib {
     public class MemoryChunk : IChunk {
         private string identifier = null;
         public string Identifier {
@@ -24,17 +25,21 @@ namespace OWLib.Types {
                 rootIdentifier = value;
             }
         }
-
-        public MemoryStream stream;
+        
+        private MemoryStream data;
+        public MemoryStream Data => data;
 
         public void Parse(Stream input) {
-            stream = new MemoryStream();
-            input.CopyTo(stream);
-            stream.Position = 0;
+            if (Util.DEBUG) {
+                data = new MemoryStream();
+                input.CopyTo(data);
+                data.Position = 0;
+            }
         }
     }
 
     public class Chunked : IDisposable {
+        public const uint CHUNK_MAGIC = 0xF123456F;
 
         private List<IChunk> chunks;
         public IReadOnlyList<IChunk> Chunks => chunks;
@@ -71,7 +76,7 @@ namespace OWLib.Types {
 
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, keepOpen)) {
                 header = reader.Read<ChunkedHeader>();
-                if (header.magic != 0xF123456F) {
+                if (header.magic != CHUNK_MAGIC) {
                     return;
                 }
 
@@ -198,7 +203,7 @@ namespace OWLib.Types {
                         System.Diagnostics.Debugger.Log(2, "CHUNK", $"Error! No handler for chunk type {identifier}\n");
                     }
                 }
-                if (System.Diagnostics.Debugger.IsAttached) {
+                if (System.Diagnostics.Debugger.IsAttached || Util.DEBUG) {
                     MemoryChunk memory = (MemoryChunk)Activator.CreateInstance(MEMORY_TYPE);
                     memory.Identifier = id;
                     memory.RootIdentifier = root;

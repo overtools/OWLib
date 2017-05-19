@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertTool", "ConvertTool\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "overwatch-anim", "overwatch-anim\overwatch-anim.csproj", "{F31B8ADD-B400-4A21-9D15-85840B4C38C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STUDebug", "STUDebug\STUDebug.csproj", "{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{F31B8ADD-B400-4A21-9D15-85840B4C38C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F31B8ADD-B400-4A21-9D15-85840B4C38C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F31B8ADD-B400-4A21-9D15-85840B4C38C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +107,7 @@ Global
 		{8E93A08E-1156-45BB-973D-B087B88742C4} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{9432CA06-25EA-44DB-9FA1-0583FF096B5D} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{F31B8ADD-B400-4A21-9D15-85840B4C38C6} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
+		{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

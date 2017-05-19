@@ -9,6 +9,7 @@ using System.Reflection;
 namespace OWLib {
     public class STUD : IDisposable {
         public const string STUD_DEBUG_STR = "{Name, nq} - {Id}";
+        public const uint STUD_MAGIC = 0x53545544;
 
         private STUDHeader header;
         private STUDInstanceRecord[] records;
@@ -50,7 +51,7 @@ namespace OWLib {
             using (BinaryReader reader = new BinaryReader(input, Encoding.Default, leaveOpen)) {
                 start = input.Position;
                 header = reader.Read<STUDHeader>();
-                if (header.magic != 0x53545544) {
+                if (header.magic != STUD_MAGIC) {
                     records = new STUDInstanceRecord[0];
                     instances = new ISTUDInstance[0];
                     return;
@@ -98,10 +99,15 @@ namespace OWLib {
         public ISTUDInstance Initialize(Stream input, STUDInstanceRecord instance, bool suppress) {
             input.Position = start + instance.offset;
             uint id = 0;
+            uint next = 0;
             using (BinaryReader reader = new BinaryReader(input, Encoding.Default, true)) {
                 id = reader.ReadUInt32();
+                next = reader.ReadUInt32();
+                if (next == 0xFFFFFFFF) {
+                    next = (uint)header.instanceTableOffset;
+                }
             }
-            input.Position -= 4;
+            input.Position -= 8;
             ISTUDInstance ret;
             MANAGER_ERROR err;
             bool outputOffset = STUDManager.Complained.Contains(id);
@@ -115,15 +121,12 @@ namespace OWLib {
                         System.Diagnostics.Debugger.Log(2, "STUD", string.Format("[STUD] Instance is at offset {0:X16}\n", start + instance.offset));
                     }
                 }
-#if STUD_DEBUG
-                if (System.Diagnostics.Debugger.IsAttached) {
-                    return new STUDummy(id, instance.offset);
-                } else {
-                    return null;
+                if (System.Diagnostics.Debugger.IsAttached || Util.DEBUG) {
+                    STUDummy dummy = new STUDummy(id, instance.offset, next - instance.offset);
+                    dummy.Read(input, this);
+                    return dummy;
                 }
-#else
                 return null;
-#endif
             }
             return ret;
         }
@@ -143,12 +146,25 @@ namespace OWLib {
         private uint id = 0;
         public uint Id => id;
 
+        private uint offset = 0;
+        public uint Offset => offset;
+
+        private uint size = 0;
+        public uint Size => size;
+
+        private MemoryStream data;
+        public MemoryStream Data => data;
+
         public void Read(Stream input, STUD stud) {
-            return;
+            if (Util.DEBUG) {
+                data = Util.CopyStream(input, (int)size);
+            }
         }
 
-        public STUDummy(uint id, uint offset) {
+        public STUDummy(uint id, uint offset, uint size) {
             this.id = id;
+            this.offset = offset;
+            this.size = size;
             name = $"Dummy({offset})";
         }
     }
