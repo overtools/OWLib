@@ -53,15 +53,21 @@ namespace OverTool {
             studStream.Close();
 #endif
 
+            string addt = string.Empty;
+
             if (instance.Name == stud.Manager.GetName(typeof(CreditItem))) {
                 CreditItem credits = (CreditItem)instance;
                 name = $"{credits.Data.value} Credits";
             }
+            if (instance.Name == stud.Manager.GetName(typeof(WeaponSkinItem))) {
+                WeaponSkinItem weapon = (WeaponSkinItem)instance;
+                addt = $" Index {weapon.Data.index}";
+            }
 
             if (ex) {
-                Console.Out.WriteLine("\t\t{0} ({1} {2} in package {3:X16})", name, instance.Header.rarity, stud.Instances[0].Name, map[key].package.packageKey);
+                Console.Out.WriteLine("\t\t{0} ({1} {2} in package {3:X16}){4}", name, instance.Header.rarity, stud.Instances[0].Name, map[key].package.packageKey, addt);
             } else {
-                Console.Out.WriteLine("\t\t{0} ({1} {2})", name, instance.Header.rarity, stud.Instances[0].Name);
+                Console.Out.WriteLine("\t\t{0} ({1} {2}){4}", name, instance.Header.rarity, stud.Instances[0].Name, addt);
             }
 
             if (instance.Header.description != 0) {

@@ -9,7 +9,7 @@ using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
     class Extract : IOvertool {
-        public string Help => "output [types [query [opts]]]";
+        public string Help => "output [types [query [opts [weaponskin_index]]]]";
         public uint MinimumArgs => 1;
         public char Opt => 'x';
         public string Title => "Extract Hero Cosmetics";
@@ -100,6 +100,12 @@ namespace OverTool {
             List<char> furtherOpts = new List<char>();
             if (args.Length > 3) {
                 furtherOpts.AddRange(args[3].ToCharArray());
+            }
+            int replacementIndex = -1;
+            if (args.Length > 4) {
+                if (!int.TryParse(args[4], out replacementIndex)) {
+                    replacementIndex = -1;
+                }
             }
 
             List<ulong> masters = track[0x75];
@@ -193,7 +199,7 @@ namespace OverTool {
                                 ignoreList = heroIgnore[heroName.ToLowerInvariant()][name.ToLowerInvariant()];
                             } catch { }
                             Console.Out.WriteLine("Extracting {0} models and textures for {1}", name, heroName);
-                            ExtractLogic.Skin.Extract(master, stud, output, heroName, name, itemGroup, ignoreList, track, map, handler, quiet, furtherOpts, masterKey);
+                            ExtractLogic.Skin.Extract(master, stud, output, heroName, name, itemGroup, ignoreList, track, map, handler, quiet, furtherOpts, masterKey, replacementIndex);
                             break;
                         case "Icon":
                             Console.Out.WriteLine("Extracting icon {0} for {1}...", name, heroName);

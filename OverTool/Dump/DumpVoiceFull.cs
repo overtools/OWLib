@@ -94,7 +94,7 @@ namespace OverTool {
                         if (!haveBase) {
                             sound.Clear();
                             Console.Out.WriteLine("Processing base sounds for hero {0}", heroName);
-                            Skin.ExtractData(item, master, false, new HashSet<ulong>(), new Dictionary<ulong, ulong>(), new HashSet<ulong>(), new Dictionary<ulong, List<ImageLayer>>(), new Dictionary<ulong, ulong>(), sound, new List<ulong>(), map, handler);
+                            Skin.ExtractData(item, master, false, new HashSet<ulong>(), new Dictionary<ulong, ulong>(), new HashSet<ulong>(), new Dictionary<ulong, List<ImageLayer>>(), new Dictionary<ulong, ulong>(), sound, new List<ulong>(), -1, map, handler);
                             Sound.FindSounds(master, track, map, handler, null, masterKey, sound);
                             DumpVoice.Save($"{path}_Base{Path.DirectorySeparatorChar}", sound, map, handler, quiet, null, done);
                             haveBase = true;
@@ -106,7 +106,7 @@ namespace OverTool {
                         }
                         Console.Out.WriteLine("Processing new sounds for skin {0}", itemName);
                         Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
-                        Skin.ExtractData(item, master, true, new HashSet<ulong>(), new Dictionary<ulong, ulong>(), new HashSet<ulong>(), new Dictionary<ulong, List<ImageLayer>>(), replace, sound, new List<ulong>(), map, handler);
+                        Skin.ExtractData(item, master, true, new HashSet<ulong>(), new Dictionary<ulong, ulong>(), new HashSet<ulong>(), new Dictionary<ulong, List<ImageLayer>>(), replace, sound, new List<ulong>(), -1, map, handler);
                         Sound.FindSounds(master, track, map, handler, replace, masterKey, sound);
                         DumpVoice.Save($"{path}{Util.Strip(Util.SanitizePath(itemName))}{Path.DirectorySeparatorChar}", sound, map, handler, quiet, replace, done);
                     }
