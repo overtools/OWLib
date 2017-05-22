@@ -483,7 +483,7 @@ namespace OverTool.ExtractLogic {
             }
         }
 
-        private static void FindReplacements(ulong key, int index, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HeroMaster master, SkinItem skin) {
+        public static void FindReplacements(ulong key, int index, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HeroMaster master, SkinItem skin, bool skipFirst = false) {
             if (!map.ContainsKey(key)) {
                 return;
             }
@@ -499,6 +499,9 @@ namespace OverTool.ExtractLogic {
                 TextureOverride over = (TextureOverride)record.Instances[0];
                 if (index > -1 && over.SubDefinitions.Length > index) {
                     FindReplacements(over.SubDefinitions[index].key, -1, replace, parsed, map, handler, master, skin);
+                }
+                if (skipFirst) {
+                    return;
                 }
                 for (int i = 0; i < over.Replace.Length; ++i) {
                     if (!map.ContainsKey(over.Target[i])) {
@@ -873,10 +876,10 @@ namespace OverTool.ExtractLogic {
             }
         }
 
-        public static KeyValuePair<string, TextureType> SaveTexture(ulong key, ulong material, Dictionary<ulong, Record> map, CASCHandler handler, string outp, bool quiet) {
+        public static KeyValuePair<string, TextureType> SaveTexture(ulong key, ulong material, Dictionary<ulong, Record> map, CASCHandler handler, string outp, bool quiet, string prefix = "Textures") {
             string name = $"{GUID.LongKey(key):X12}.dds";
             if (material > 0) {
-                name = $"Textures{Path.DirectorySeparatorChar}{material:X16}{Path.DirectorySeparatorChar}{name}";
+                name = $"{prefix}{Path.DirectorySeparatorChar}{material:X16}{Path.DirectorySeparatorChar}{name}";
             }
             TextureType @type = TextureType.Unknown;
 
