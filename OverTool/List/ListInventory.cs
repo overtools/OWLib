@@ -67,7 +67,7 @@ namespace OverTool {
             if (ex) {
                 Console.Out.WriteLine("\t\t{0} ({1} {2} in package {3:X16}){4}", name, instance.Header.rarity, stud.Instances[0].Name, map[key].package.packageKey, addt);
             } else {
-                Console.Out.WriteLine("\t\t{0} ({1} {2}){4}", name, instance.Header.rarity, stud.Instances[0].Name, addt);
+                Console.Out.WriteLine("\t\t{0} ({1} {2}){3}", name, instance.Header.rarity, stud.Instances[0].Name, addt);
             }
 
             if (instance.Header.description != 0) {
