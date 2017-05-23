@@ -161,8 +161,7 @@ namespace OverTool.ExtractLogic {
                     FindDataChunked(infokey, sound, animList, replace, parsed, map, handler, models, layers, key);
                 }
             }
-        }
-        
+        }      
 
         public static void FindDataChunked(ulong key, Dictionary<ulong, List<ulong>> sound, Dictionary<ulong, ulong> animList, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, ulong parent = 0) {
             if (replace.ContainsKey(key)) {
@@ -484,7 +483,7 @@ namespace OverTool.ExtractLogic {
             }
         }
 
-        private static void FindReplacements(ulong key, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HeroMaster master, SkinItem skin) {
+        public static void FindReplacements(ulong key, int index, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HeroMaster master, SkinItem skin, bool skipFirst = false) {
             if (!map.ContainsKey(key)) {
                 return;
             }
@@ -498,6 +497,12 @@ namespace OverTool.ExtractLogic {
             }
             if (record.Instances[0].Name == record.Manager.GetName(typeof(TextureOverride))) {
                 TextureOverride over = (TextureOverride)record.Instances[0];
+                if (index > -1 && over.SubDefinitions.Length > index) {
+                    FindReplacements(over.SubDefinitions[index].key, -1, replace, parsed, map, handler, master, skin);
+                }
+                if (skipFirst) {
+                    return;
+                }
                 for (int i = 0; i < over.Replace.Length; ++i) {
                     if (!map.ContainsKey(over.Target[i])) {
                         continue;
@@ -521,7 +526,7 @@ namespace OverTool.ExtractLogic {
             }
         }
 
-        public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, string itemGroup, List<ulong> ignore, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, List<char> furtherOpts, ulong masterKey) {
+        public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, string itemGroup, List<ulong> ignore, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, List<char> furtherOpts, ulong masterKey, int replacementIndex) {
             string path = string.Format("{0}{1}{2}{1}{3}{1}{5}{1}{4}{1}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName), Util.SanitizePath(itemGroup));
 
             SkinItem skin = (SkinItem)itemStud.Instances[0];
@@ -533,15 +538,15 @@ namespace OverTool.ExtractLogic {
             Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
             Dictionary<ulong, List<ulong>> sound = new Dictionary<ulong, List<ulong>>();
 
-            ExtractData(skin, master, true, models, animList, parsed, layers, replace, sound, ignore, map, handler);
+            ExtractData(skin, master, true, models, animList, parsed, layers, replace, sound, ignore, replacementIndex, map, handler);
             
             Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler, masterKey, false, quiet, sound);
         }
 
-        public static void ExtractData(SkinItem skin, HeroMaster master, bool findReplacements, HashSet<ulong> models, Dictionary<ulong, ulong> animList, HashSet<ulong> parsed, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, Dictionary<ulong, List<ulong>> sound, List<ulong> ignore, Dictionary<ulong, Record> map, CASCHandler handler) {
+        public static void ExtractData(SkinItem skin, HeroMaster master, bool findReplacements, HashSet<ulong> models, Dictionary<ulong, ulong> animList, HashSet<ulong> parsed, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, Dictionary<ulong, List<ulong>> sound, List<ulong> ignore, int replacementIndex, Dictionary<ulong, Record> map, CASCHandler handler) {
 
             if (findReplacements) {
-                FindReplacements(skin.Data.skin.key, replace, parsed, map, handler, master, skin);
+                FindReplacements(skin.Data.skin.key, replacementIndex, replace, parsed, map, handler, master, skin);
             }
 
             ulong bindingKey = master.Header.binding.key;
@@ -592,9 +597,32 @@ namespace OverTool.ExtractLogic {
             }
         }
 
+        private static bool tryOpt(List<char> opts, int index, char target, bool @default = false) {
+            if (opts.Count > index && opts[index] == target) {
+                return !@default;
+            }
+            return @default;
+        }
+
+        private static char tryOptChar(List<char> opts, int index, char @default) {
+            if (opts.Count > index) {
+                return opts[index];
+            }
+            return @default;
+        }
+
         public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, ulong heroKey, bool external, bool quiet, Dictionary<ulong, List<ulong>> sound) {
+            char modelEncoding = tryOptChar(furtherOpts, 0, (char)0);
+            bool suppressTextures = tryOpt(furtherOpts, 1, 'T');
+            bool suppressAnimations = tryOpt(furtherOpts, 2, 'A');
+            bool suppressModels = tryOpt(furtherOpts, 3, 'M');
+            bool suppressSounds = tryOpt(furtherOpts, 4, 'S');
+            bool exportCollision = tryOpt(furtherOpts, 5, 'C', true);
+            bool suppressRefpose = tryOpt(furtherOpts, 6, 'R');
+            bool suppressGUI = tryOpt(furtherOpts, 7, 'I');
+
             Dictionary<string, TextureType> typeInfo = new Dictionary<string, TextureType>();
-            if (furtherOpts.Count < 2 || furtherOpts[1] != 'T') {
+            if (!suppressTextures) {
                 foreach (KeyValuePair<ulong, List<ImageLayer>> kv in layers) {
                     ulong materialId = kv.Key;
                     List<ImageLayer> sublayers = kv.Value;
@@ -611,25 +639,23 @@ namespace OverTool.ExtractLogic {
 
             IDataWriter writer = null;
             string mtlPath = null;
-            if (furtherOpts.Count > 0) {
-                if (furtherOpts[0] != '+') {
-                    Assembly asm = typeof(IDataWriter).Assembly;
-                    Type t = typeof(IDataWriter);
-                    List<Type> types = asm.GetTypes().Where(tt => tt != t && t.IsAssignableFrom(tt)).ToList();
-                    foreach (Type tt in types) {
-                        if (writer != null) {
-                            break;
-                        }
-                        if (tt.IsInterface) {
-                            continue;
-                        }
+            if (modelEncoding != 0 && modelEncoding != '+') {
+                Assembly asm = typeof(IDataWriter).Assembly;
+                Type t = typeof(IDataWriter);
+                List<Type> types = asm.GetTypes().Where(tt => tt != t && t.IsAssignableFrom(tt)).ToList();
+                foreach (Type tt in types) {
+                    if (writer != null) {
+                        break;
+                    }
+                    if (tt.IsInterface) {
+                        continue;
+                    }
 
-                        IDataWriter tmp = (IDataWriter)Activator.CreateInstance(tt);
-                        for (int i = 0; i < tmp.Identifier.Length; ++i) {
-                            if (tmp.Identifier[i] == furtherOpts[0]) {
-                                writer = tmp;
-                                break;
-                            }
+                    IDataWriter tmp = (IDataWriter)Activator.CreateInstance(tt);
+                    for (int i = 0; i < tmp.Identifier.Length; ++i) {
+                        if (tmp.Identifier[i] == modelEncoding) {
+                            writer = tmp;
+                            break;
                         }
                     }
                 }
@@ -640,8 +666,8 @@ namespace OverTool.ExtractLogic {
                 writer = new OWMDLWriter();
             }
 
-            if ((furtherOpts.Count < 2 || furtherOpts[1] != 'T') && typeInfo.Count > 0) {
-                if (writer.GetType() == typeof(OWMDLWriter) || furtherOpts[0] == '+') {
+            if (!suppressTextures && typeInfo.Count > 0) {
+                if (writer.GetType() == typeof(OWMDLWriter) || modelEncoding == '+') {
                     IDataWriter tmp = new OWMATWriter();
                     mtlPath = $"{path}material{tmp.Format}";
                     using (Stream outp = File.Open(mtlPath, FileMode.Create, FileAccess.Write)) {
@@ -675,13 +701,9 @@ namespace OverTool.ExtractLogic {
 
             IDataWriter refpose = new RefPoseWriter();
 
-            bool skipCmodel = true;
+            bool skipCmodel = !exportCollision;
 
-            if (furtherOpts.Count > 5 && furtherOpts[5] == 'C') {
-                skipCmodel = false;
-            }
-
-            if (furtherOpts.Count < 4 || furtherOpts[3] != 'M') {
+            if (!suppressModels) {
                 List<byte> lods = new List<byte>(new byte[3] { 0, 1, 0xFF });
                 foreach (ulong key in models) {
                     if (!map.ContainsKey(key)) {
@@ -703,13 +725,13 @@ namespace OverTool.ExtractLogic {
                         }
                     }
 
-                    if (furtherOpts.Count > 0 && furtherOpts[0] == '+') { // raw
+                    if (modelEncoding == '+') { // raw
                         continue;
                     }
 
                     Chunked mdl = new Chunked(Util.OpenFile(map[key], handler));
 
-                    if ((furtherOpts.Count <= 6 || furtherOpts[6] != 'R') && mdl.HasChunk<lksm>()) {
+                    if (!suppressRefpose && mdl.HasChunk<lksm>()) {
                         outpath = $"{path}{GUID.LongKey(key):X12}_refpose{refpose.Format}";
                         using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
                             if (refpose.Write(mdl, outp, null, null, null)) {
@@ -738,7 +760,7 @@ namespace OverTool.ExtractLogic {
                 }
             }
 
-            if (furtherOpts.Count < 3 || furtherOpts[2] != 'A') {
+            if (!suppressAnimations) {
                 SEAnimWriter animWriter = new SEAnimWriter();
                 foreach (KeyValuePair<ulong, ulong> kv in animList) {
                     ulong parent = kv.Value;
@@ -781,7 +803,7 @@ namespace OverTool.ExtractLogic {
                 }
             }
 
-            if ((furtherOpts.Count < 5 || furtherOpts[4] != 'S')) {
+            if (!suppressSounds) {
                 Dictionary<ulong, List<ulong>> soundData = null;
                 if (master != null) {
                     Console.Out.WriteLine("Dumping voice bites for hero {0} with skin {1}", heroName, itemName);
@@ -799,7 +821,7 @@ namespace OverTool.ExtractLogic {
                 }
             }
 
-            if ((furtherOpts.Count <= 7 || furtherOpts[7] != 'I') && master != null) {
+            if (!suppressGUI && master != null) {
                 string output = string.Format("{0}GUI{1}", path, Path.DirectorySeparatorChar);
 
                 if (Directory.Exists(output)) {
@@ -854,10 +876,10 @@ namespace OverTool.ExtractLogic {
             }
         }
 
-        public static KeyValuePair<string, TextureType> SaveTexture(ulong key, ulong material, Dictionary<ulong, Record> map, CASCHandler handler, string outp, bool quiet) {
+        public static KeyValuePair<string, TextureType> SaveTexture(ulong key, ulong material, Dictionary<ulong, Record> map, CASCHandler handler, string outp, bool quiet, string prefix = "Textures") {
             string name = $"{GUID.LongKey(key):X12}.dds";
             if (material > 0) {
-                name = $"Textures{Path.DirectorySeparatorChar}{material:X16}{Path.DirectorySeparatorChar}{name}";
+                name = $"{prefix}{Path.DirectorySeparatorChar}{material:X16}{Path.DirectorySeparatorChar}{name}";
             }
             TextureType @type = TextureType.Unknown;
 
