@@ -25,6 +25,9 @@ namespace OverTool.List {
                     continue;
                 }
                 STUD lootbox = new STUD(Util.OpenFile(map[master], handler));
+                if (lootbox.Instances == null) {
+                    continue;
+                }
                 Lootbox box = lootbox.Instances[0] as Lootbox;
                 if (box == null) {
                     continue;
