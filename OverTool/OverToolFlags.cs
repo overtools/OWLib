@@ -57,7 +57,7 @@ namespace OverTool {
         [Alias(Alias = "S")]
         public bool SkipSound;
 
-        [CLIFlag(Default = true, Flag = "collision", Help = "Export collision models", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
+        [CLIFlag(Default = false, Flag = "collision", Help = "Export collision models", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
         [Alias(Alias = "C")]
         public bool ExportCollision;
 
