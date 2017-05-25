@@ -41,6 +41,14 @@ namespace OverTool {
         [Alias(Alias = "r")]
         public bool Raw;
 
+        //[CLIFlag(Default = true, Flag = "raw-model", Help = "Extract raw model with converted model", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
+        //[Alias(Alias = "rw")]
+        //public bool RawModel;
+
+        //[CLIFlag(Default = true, Flag = "raw-animation", Help = "Extract raw animation with converted animation", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
+        //[Alias(Alias = "ra")]
+        //public bool RawAnimation;
+
         [CLIFlag(Default = false, Flag = "no-texture", Help = "Skip texture extraction", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
         [Alias(Alias = "T")]
         public bool SkipTextures;
@@ -49,7 +57,7 @@ namespace OverTool {
         [Alias(Alias = "A")]
         public bool SkipAnimations;
 
-        [CLIFlag(Default = false, Flag = "no-model", Help = "Skip texture extraction", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
+        [CLIFlag(Default = false, Flag = "no-model", Help = "Skip model extraction", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
         [Alias(Alias = "M")]
         public bool SkipModels;
 
