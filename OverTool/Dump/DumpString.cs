@@ -35,7 +35,7 @@ namespace OverTool {
             }
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] opts) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             Iterate(track[0x7C], map, handler);
             Iterate(track[0xA9], map, handler);
         }

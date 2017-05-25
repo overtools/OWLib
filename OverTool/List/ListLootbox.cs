@@ -14,7 +14,7 @@ namespace OverTool.List {
         public ushort[] Track => new ushort[1] { 0xCF };
         public bool Display => true;
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             Console.Out.WriteLine();
             foreach (ulong master in track[0xCF]) {
                 if (!map.ContainsKey(master)) {

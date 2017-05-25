@@ -17,7 +17,7 @@ namespace OverTool {
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             List<ulong> masters = track[0x75];
             foreach (ulong masterKey in masters) {
                 if (!map.ContainsKey(masterKey)) {
@@ -44,11 +44,8 @@ namespace OverTool {
                 if (master.Header.itemMaster.key == 0) { // AI
                     continue;
                 }
-                bool ex = System.Diagnostics.Debugger.IsAttached;
-                List<string> largs = new List<string>(args);
-                if (largs.Count > 0 && largs.Contains("ex")) {
-                    ex = true;
-                }
+                bool ex = System.Diagnostics.Debugger.IsAttached || flags.Expert;
+
                 bool hasName = false;
                 if (!map.ContainsKey(master.Header.itemMaster.key)) {
                     Console.Out.WriteLine("Error loading inventory master file...");

@@ -77,6 +77,10 @@
     <Compile Include="ExtractLogic\Spray.cs" />
     <Compile Include="Extract\ExtractMap.cs" />
     <Compile Include="Dump\DumpGeneral.cs" />
+    <Compile Include="Flags\AliasAttribute.cs" />
+    <Compile Include="Flags\CLIFlagAttribute.cs" />
+    <Compile Include="Flags\FlagParser.cs" />
+    <Compile Include="Flags\ICLIFlags.cs" />
     <Compile Include="IOvertool.cs" />
     <Compile Include="List\ListGeneral.cs" />
     <Compile Include="List\ListWeapon.cs" />
@@ -84,6 +88,7 @@
     <Compile Include="List\ListNPC.cs" />
     <Compile Include="List\ListInventory.cs" />
     <Compile Include="List\ListMap.cs" />
+    <Compile Include="OverToolFlags.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />

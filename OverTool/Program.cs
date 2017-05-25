@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CASCExplorer;
+using OverTool.Flags;
 using OWLib;
 using OWLib.Types.STUD;
 
@@ -37,53 +38,16 @@ namespace OverTool {
                 }
             }
 
-            if (args.Length < 2) {
-                PrintHelp(tools);
+            OverToolFlags flags = FlagParser.Parse<OverToolFlags>(() => PrintHelp(tools));
+            if (flags == null) {
                 return;
             }
 
-            if (args[0][0] == '-' && args[0][1] == 'L') {
-                string lang = args[0].Substring(2);
-                if (!ValidLangs.Contains(lang)) {
-                    Console.Out.WriteLine("Language {0} is not supported!", lang);
-                    foreach (string validLang in ValidLangs) {
-                        if (validLang.ToLowerInvariant().Contains(lang.ToLowerInvariant())) {
-                            lang = validLang;
-                            Console.Out.WriteLine("Autocorrecting selected lanuage to {0}", lang);
-                            break;
-                        }
-                    }
-                }
-                if (!ValidLangs.Contains(lang)) {
-                    return;
-                }
-                Console.Out.WriteLine("Set language to {0}", lang);
-                OwRootHandler.LanguageScan = lang;
-                args = args.Skip(1).ToArray();
-            }
+            bool quiet = flags.Quiet;
 
-            bool enableKeyDetection = true;
-            if (args[0][0] == '-' && args[0][1] == 'n') {
-                enableKeyDetection = false;
-                Console.Out.WriteLine("Disabling Key auto-detection...");
-                args = args.Skip(1).ToArray();
-            }
-
-            bool quiet = false;
-            if (args[0][0] == '-' && args[0][1] == 'q') {
-                quiet = true;
-                Console.Out.WriteLine("Quiet mode");
-                args = args.Skip(1).ToArray();
-            }
-
-            string root = args[0];
-            char opt = args[1][0];
-
-            if (args.Length < 2) {
-                PrintHelp(tools);
-                return;
-            }
-
+            string root = flags.OverwatchDirectory;
+            char opt = flags.Mode[0];
+            
             IOvertool tool = null;
             Dictionary<ushort, List<ulong>> track = new Dictionary<ushort, List<ulong>>();
             track[0x90] = new List<ulong>(); // internal requirements
@@ -98,7 +62,7 @@ namespace OverTool {
                     }
                 }
             }
-            if (tool == null || args.Length - 2 < tool.MinimumArgs) {
+            if (tool == null || flags.Positionals.Length - 2 < tool.MinimumArgs) {
                 PrintHelp(tools);
                 return;
             }
@@ -107,7 +71,13 @@ namespace OverTool {
 
             Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
             Console.Out.WriteLine("Initializing CASC...");
-            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root, enableKeyDetection);
+            Console.Out.WriteLine("Set language to {0}", flags.Language);
+            OwRootHandler.LanguageScan = flags.Language;
+
+            if (flags.SkipKeys) {
+                Console.Out.WriteLine("Disabling Key auto-detection...");
+            }
+            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root, !flags.SkipKeys);
             Console.Out.WriteLine("Using Overwatch Version {0}", config.BuildName);
             CASCHandler handler = CASCHandler.OpenStorage(config);
             OwRootHandler ow = handler.Root as OwRootHandler;
@@ -184,7 +154,7 @@ namespace OverTool {
                 Console.Out.WriteLine("Warning: {0} packageless files", map.Count - origLength);
             }
 
-            if (enableKeyDetection) {
+            if (!flags.SkipKeys) {
                 Console.Out.WriteLine("Adding Encryption Keys...");
 
                 foreach (ulong key in track[0x90]) {
@@ -210,7 +180,7 @@ namespace OverTool {
 
             Console.Out.WriteLine("Tooling...");
 
-            tool.Parse(track, map, handler, quiet, args.Skip(2).ToArray());
+            tool.Parse(track, map, handler, quiet, flags);
             if (System.Diagnostics.Debugger.IsAttached) {
                 System.Diagnostics.Debugger.Break();
             }
@@ -223,16 +193,13 @@ namespace OverTool {
         }
 
         private static void PrintHelp(List<IOvertool> tools) {
-            Console.Out.WriteLine("Usage: OverTool.exe [-LLang] [-q] \"overwatch path\" mode [mode opts]");
-            Console.Out.WriteLine("Options:");
-            Console.Out.WriteLine("\tL - Specify a language to extract. Example: -LdeDE");
-            Console.Out.WriteLine("\t\tValid Languages: {0}", string.Join(", ", ValidLangs));
-            Console.Out.WriteLine("mode can be:");
-            Console.Out.WriteLine("  m - {0, -30} - {1, -30}", "name", "arguments");
+            Console.Out.WriteLine();
+            Console.Out.WriteLine("Modes:");
+            Console.Out.WriteLine("  m | {0, -30} | {1, -30}", "name", "arguments");
             Console.Out.WriteLine("".PadLeft(64, '-'));
             tools.Sort(new OvertoolComparer());
             foreach (IOvertool t in tools) {
-                Console.Out.WriteLine("  {0} - {1,-30} - {2}", t.Opt, t.Title, t.Help);
+                Console.Out.WriteLine("  {0} | {1,-30} | {2}", t.Opt, t.Title, t.Help);
             }
             return;
         }

@@ -40,9 +40,8 @@ namespace OverTool {
             }
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
-            string output = args[0];
-            List<char> blank = new List<char>();
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
+            string output = flags.Positionals[2];
 
             foreach (ulong key in track[0x54]) {
                 if (!map.ContainsKey(key)) {
@@ -109,15 +108,15 @@ namespace OverTool {
                     switch (instance.Name) {
                         case "Spray":
                             Console.Out.WriteLine("Extracting spray {0}...", name);
-                            ExtractLogic.Spray.Extract(stud, output, "Generic", name, itemGroup, track, map, handler, quiet, blank);
+                            ExtractLogic.Spray.Extract(stud, output, "Generic", name, itemGroup, track, map, handler, quiet, flags);
                             break;
                         case "Icon":
                             Console.Out.WriteLine("Extracting icon {0}...", name);
-                            ExtractLogic.Icon.Extract(stud, output, "Generic", name, itemGroup, track, map, handler, quiet, blank);
+                            ExtractLogic.Icon.Extract(stud, output, "Generic", name, itemGroup, track, map, handler, quiet, flags);
                             break;
                         case "Portrait":
                             PortraitItem portrait = instance as PortraitItem;
-                            ExtractLogic.Portrait.Extract(stud, output, "Generic", $"Tier {portrait.Data.tier}", itemGroup, track, map, handler, quiet, blank);
+                            ExtractLogic.Portrait.Extract(stud, output, "Generic", $"Tier {portrait.Data.tier}", itemGroup, track, map, handler, quiet, flags);
                             break;
                         default:
                             continue;

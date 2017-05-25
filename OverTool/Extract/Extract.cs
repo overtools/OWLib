@@ -9,7 +9,7 @@ using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
     class Extract : IOvertool {
-        public string Help => "output [types [query [opts [weaponskin_index]]]]";
+        public string Help => "output [types [query]]]";
         public uint MinimumArgs => 1;
         public char Opt => 'x';
         public string Title => "Extract Hero Cosmetics";
@@ -28,15 +28,15 @@ namespace OverTool {
             return inventory;
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
-            string output = args[0];
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
+            string output = flags.Positionals[2];
 
             string[] validCommands = new string[] { "skin", "spray", "icon", "victory pose", "emote", "heroic intro" };
 
             bool typeWildcard = true;
             List<string> types = new List<string>();
-            if (args.Length > 1) {
-                types.AddRange(args[1].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries));
+            if (flags.Positionals.Length > 3) {
+                types.AddRange(flags.Positionals[3].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries));
                 typeWildcard = types.Contains("*");
                 types = types.FindAll((string it) => validCommands.Contains(it)).ToList();
             }
@@ -60,8 +60,8 @@ namespace OverTool {
             Dictionary<string, bool> heroWildcard = new Dictionary<string, bool>();
             Dictionary<string, Dictionary<string, List<ulong>>> heroIgnore = new Dictionary<string, Dictionary<string, List<ulong>>>();
             bool heroAllWildcard = false;
-            if (args.Length > 2 && args[2] != "*") {
-                foreach (string pair in args[2].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries)) {
+            if (flags.Positionals.Length > 4 && flags.Positionals[4] != "*") {
+                foreach (string pair in flags.Positionals[4].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries)) {
                     List<string> data = new List<string>(pair.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries));
                     string name = data[0];
                     data.RemoveAt(0);
@@ -97,16 +97,7 @@ namespace OverTool {
                 heroAllWildcard = true;
             }
 
-            List<char> furtherOpts = new List<char>();
-            if (args.Length > 3) {
-                furtherOpts.AddRange(args[3].ToCharArray());
-            }
-            int replacementIndex = -1;
-            if (args.Length > 4) {
-                if (!int.TryParse(args[4], out replacementIndex)) {
-                    replacementIndex = -1;
-                }
-            }
+            int replacementIndex = flags.WeaponSkinIndex;
 
             List<ulong> masters = track[0x75];
             foreach (ulong masterKey in masters) {
@@ -191,7 +182,7 @@ namespace OverTool {
                     switch (instance.Name) {
                         case "Spray":
                             Console.Out.WriteLine("Extracting spray {0} for {1}...", name, heroName);
-                            ExtractLogic.Spray.Extract(stud, output, heroName, name, itemGroup, track, map, handler, quiet, furtherOpts);
+                            ExtractLogic.Spray.Extract(stud, output, heroName, name, itemGroup, track, map, handler, quiet, flags);
                             break;
                         case "Skin":
                             List<ulong> ignoreList = new List<ulong>();
@@ -199,17 +190,17 @@ namespace OverTool {
                                 ignoreList = heroIgnore[heroName.ToLowerInvariant()][name.ToLowerInvariant()];
                             } catch { }
                             Console.Out.WriteLine("Extracting {0} models and textures for {1}", name, heroName);
-                            ExtractLogic.Skin.Extract(master, stud, output, heroName, name, itemGroup, ignoreList, track, map, handler, quiet, furtherOpts, masterKey, replacementIndex);
+                            ExtractLogic.Skin.Extract(master, stud, output, heroName, name, itemGroup, ignoreList, track, map, handler, quiet, flags, masterKey, replacementIndex);
                             break;
                         case "Icon":
                             Console.Out.WriteLine("Extracting icon {0} for {1}...", name, heroName);
-                            ExtractLogic.Icon.Extract(stud, output, heroName, name, itemGroup, track, map, handler, quiet, furtherOpts);
+                            ExtractLogic.Icon.Extract(stud, output, heroName, name, itemGroup, track, map, handler, quiet, flags);
                             break;
                         case "Emote":
                         case "Victory Pose":
                         case "Heroic Intro":
                             Console.Out.WriteLine("Extracting {2} {0} for {1}...", name, heroName, instance.Name);
-                            ExtractLogic.ItemAnimation.Extract(record.key, stud, output, heroName, name, itemGroup, track, map, handler, quiet, furtherOpts);
+                            ExtractLogic.ItemAnimation.Extract(record.key, stud, output, heroName, name, itemGroup, track, map, handler, quiet, flags);
                             break;
                         case "Voice Line":
                             //Console.Out.WriteLine("Extracting voice line {0} for {1}...", name, heroName);

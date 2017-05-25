@@ -18,7 +18,7 @@ namespace OverTool.List {
         public ushort[] Track => new ushort[1] { 0xCF };
         public bool Display => true;
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             Console.Out.WriteLine();
             foreach (ulong master in track[0xCF]) {
                 if (!map.ContainsKey(master)) {
@@ -33,17 +33,17 @@ namespace OverTool.List {
                     continue;
                 }
 
-                Extract(box.Master.model, box, track, map, handler, quiet, args);
-                Extract(box.Master.alternate, box, track, map, handler, quiet, args);
+                Extract(box.Master.model, box, track, map, handler, quiet, flags);
+                Extract(box.Master.alternate, box, track, map, handler, quiet, flags);
             }
         }
 
-        private void Extract(ulong model, Lootbox lootbox, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
+        private void Extract(ulong model, Lootbox lootbox, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             if (model == 0 || !map.ContainsKey(model)) {
                 return;
             }
 
-            string output = $"{args[0]}{Path.DirectorySeparatorChar}{Util.SanitizePath(lootbox.EventName)}{Path.DirectorySeparatorChar}";
+            string output = $"{flags.Positionals[2]}{Path.DirectorySeparatorChar}{Util.SanitizePath(lootbox.EventName)}{Path.DirectorySeparatorChar}";
 
             STUD stud = new STUD(Util.OpenFile(map[model], handler));
 
@@ -68,7 +68,7 @@ namespace OverTool.List {
                 }
             }
 
-            Skin.Save(null, output, "", "", replace, parsed, models, layers, animList, new List<char>() { }, track, map, handler, model, false, quiet, sound);
+            Skin.Save(null, output, "", "", replace, parsed, models, layers, animList, flags, track, map, handler, model, false, quiet, sound);
         }
     }
 }

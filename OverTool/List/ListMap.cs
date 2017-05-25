@@ -21,7 +21,7 @@ namespace OverTool {
             }
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             List<ulong> masters = track[0x9F];
             foreach (ulong masterKey in masters) {
                 Console.Out.WriteLine("");

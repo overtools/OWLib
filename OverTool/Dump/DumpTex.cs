@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using CASCExplorer;
 using OWLib;
@@ -7,16 +8,16 @@ using OWLib.Types.STUD.Binding;
 
 namespace OverTool {
     class DumpTex : IOvertool {
-        public string Help => "<model ids...>";
+        public string Help => "model ids...";
         public uint MinimumArgs => 1;
         public char Opt => 'T';
         public string Title => "List Textures";
         public ushort[] Track => new ushort[1] { 0x3 };
         public bool Display => true;
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             List<ulong> ids = new List<ulong>();
-            foreach (string arg in args) {
+            foreach (string arg in flags.Positionals.Skip(2)) {
                 ids.Add(ulong.Parse(arg.Split('.')[0], System.Globalization.NumberStyles.HexNumber));
             }
             Console.Out.WriteLine("Scanning for textures...");

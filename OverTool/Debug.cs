@@ -14,7 +14,7 @@ namespace OverTool {
         public ushort[] Track => new ushort[0];
         public bool Display => System.Diagnostics.Debugger.IsAttached;
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             foreach (KeyValuePair<ushort, List<ulong>> pair in track) {
                 Console.Out.WriteLine($"{pair.Key:X3} {pair.Value.Count} entries");
             }

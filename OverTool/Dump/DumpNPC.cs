@@ -15,14 +15,13 @@ namespace OverTool {
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             List<ulong> masters = track[0x75];
             List<ulong> blank = new List<ulong>();
             Dictionary<ulong, ulong> blankdict = new Dictionary<ulong, ulong>();
-            List<char> blankchar = new List<char>();
             List<string> extract = new List<string>();
-            for (int i = 1; i < args.Length; ++i) {
-                extract.Add(args[i].ToLowerInvariant());
+            for (int i = 3; i < flags.Positionals.Length; ++i) {
+                extract.Add(flags.Positionals[i].ToLowerInvariant());
             }
             foreach (ulong masterKey in masters) {
                 if (!map.ContainsKey(masterKey)) {
@@ -50,7 +49,7 @@ namespace OverTool {
                     }
                 }
                 Console.Out.WriteLine("{0} {1:X}", heroName, GUID.Index(masterKey));
-                string path = string.Format("{0}{1}{2}{1}{3:X}{1}", args[0], Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), GUID.LongKey(masterKey));
+                string path = string.Format("{0}{1}{2}{1}{3:X}{1}", flags.Positionals[2], Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), GUID.LongKey(masterKey));
 
                 HashSet<ulong> models = new HashSet<ulong>();
                 Dictionary<ulong, ulong> animList = new Dictionary<ulong, ulong>();
@@ -60,7 +59,7 @@ namespace OverTool {
 
                 ExtractLogic.Skin.FindModels(master.Header.binding, blank, models, animList, layers, blankdict, parsed, map, handler, sound);
 
-                ExtractLogic.Skin.Save(master, path, heroName, $"{GUID.LongKey(masterKey):X}", blankdict, parsed, models, layers, animList, blankchar, track, map, handler, masterKey, false, quiet, sound);
+                ExtractLogic.Skin.Save(master, path, heroName, $"{GUID.LongKey(masterKey):X}", blankdict, parsed, models, layers, animList, flags, track, map, handler, masterKey, false, quiet, sound);
             }
         }
     }

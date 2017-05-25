@@ -88,7 +88,7 @@ namespace OverTool {
             }
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             List<ulong> masters = track[0x75];
             foreach (ulong masterKey in masters) {
                 if (!map.ContainsKey(masterKey)) {
@@ -115,11 +115,7 @@ namespace OverTool {
                 if (master.Header.itemMaster.key == 0) { // AI
                     continue;
                 }
-                bool ex = System.Diagnostics.Debugger.IsAttached;
-                List<string> largs = new List<string>(args);
-                if (largs.Count > 0 && largs.Contains("ex")) {
-                    ex = true;
-                }
+                bool ex = System.Diagnostics.Debugger.IsAttached || flags.Expert;
                 if (ex) {
                     Console.Out.WriteLine("Cosmetics for {0} ({2:X16}) in package {1:X16}", heroName, map[masterKey].package.packageKey, masterKey);
                 } else {

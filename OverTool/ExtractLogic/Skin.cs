@@ -526,7 +526,7 @@ namespace OverTool.ExtractLogic {
             }
         }
 
-        public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, string itemGroup, List<ulong> ignore, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, List<char> furtherOpts, ulong masterKey, int replacementIndex) {
+        public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, string itemGroup, List<ulong> ignore, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags, ulong masterKey, int replacementIndex) {
             string path = string.Format("{0}{1}{2}{1}{3}{1}{5}{1}{4}{1}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName), Util.SanitizePath(itemGroup));
 
             SkinItem skin = (SkinItem)itemStud.Instances[0];
@@ -540,7 +540,7 @@ namespace OverTool.ExtractLogic {
 
             ExtractData(skin, master, true, models, animList, parsed, layers, replace, sound, ignore, replacementIndex, map, handler);
             
-            Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, furtherOpts, track, map, handler, masterKey, false, quiet, sound);
+            Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, flags, track, map, handler, masterKey, false, quiet, sound);
         }
 
         public static void ExtractData(SkinItem skin, HeroMaster master, bool findReplacements, HashSet<ulong> models, Dictionary<ulong, ulong> animList, HashSet<ulong> parsed, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, Dictionary<ulong, List<ulong>> sound, List<ulong> ignore, int replacementIndex, Dictionary<ulong, Record> map, CASCHandler handler) {
@@ -611,15 +611,23 @@ namespace OverTool.ExtractLogic {
             return @default;
         }
 
-        public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, List<char> furtherOpts, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, ulong heroKey, bool external, bool quiet, Dictionary<ulong, List<ulong>> sound) {
-            char modelEncoding = tryOptChar(furtherOpts, 0, (char)0);
-            bool suppressTextures = tryOpt(furtherOpts, 1, 'T');
-            bool suppressAnimations = tryOpt(furtherOpts, 2, 'A');
-            bool suppressModels = tryOpt(furtherOpts, 3, 'M');
-            bool suppressSounds = tryOpt(furtherOpts, 4, 'S');
-            bool exportCollision = tryOpt(furtherOpts, 5, 'C', true);
-            bool suppressRefpose = tryOpt(furtherOpts, 6, 'R');
-            bool suppressGUI = tryOpt(furtherOpts, 7, 'I');
+        public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, OverToolFlags flags, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, ulong heroKey, bool external, bool quiet, Dictionary<ulong, List<ulong>> sound) {
+            char modelEncoding = flags.ModelFormat;
+            if (flags.Raw) {
+                modelEncoding = '+';
+            }
+            char animEncoding = flags.AnimFormat;
+            if (flags.Raw) {
+                animEncoding = '+';
+            }
+            bool suppressTextures = flags.SkipTextures;
+            bool suppressAnimations = flags.SkipAnimations;
+            bool suppressModels = flags.SkipModels;
+            bool suppressSounds = flags.SkipSound;
+            bool exportCollision = flags.ExportCollision;
+            bool suppressRefpose = flags.SkipRefpose;
+            bool suppressGUI = flags.SkipGUI;
+            bool raw = flags.Raw;
 
             Dictionary<string, TextureType> typeInfo = new Dictionary<string, TextureType>();
             if (!suppressTextures) {
@@ -655,6 +663,29 @@ namespace OverTool.ExtractLogic {
                     for (int i = 0; i < tmp.Identifier.Length; ++i) {
                         if (tmp.Identifier[i] == modelEncoding) {
                             writer = tmp;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            IDataWriter animWriter = null;
+            if (animEncoding != 0 && animEncoding != '+') {
+                Assembly asm = typeof(IDataWriter).Assembly;
+                Type t = typeof(IDataWriter);
+                List<Type> types = asm.GetTypes().Where(tt => tt != t && t.IsAssignableFrom(tt)).ToList();
+                foreach (Type tt in types) {
+                    if (animWriter != null) {
+                        break;
+                    }
+                    if (tt.IsInterface) {
+                        continue;
+                    }
+
+                    IDataWriter tmp = (IDataWriter)Activator.CreateInstance(tt);
+                    for (int i = 0; i < tmp.Identifier.Length; ++i) {
+                        if (tmp.Identifier[i] == animEncoding) {
+                            animWriter = tmp;
                             break;
                         }
                     }
@@ -761,7 +792,6 @@ namespace OverTool.ExtractLogic {
             }
 
             if (!suppressAnimations) {
-                SEAnimWriter animWriter = new SEAnimWriter();
                 foreach (KeyValuePair<ulong, ulong> kv in animList) {
                     ulong parent = kv.Value;
                     ulong key = kv.Key;
@@ -786,17 +816,18 @@ namespace OverTool.ExtractLogic {
                             Console.Out.WriteLine("Wrote raw animation {0}", outpath);
                         }
                     }
-
-                    outpath = string.Format("{0}{5}{1}{2:X12}{1}{6}{1}{3:X12}{4}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), animWriter.Format, external ? "" : "Animations", anim.Header.priority);
-                    using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-                        try {
-                            animWriter.Write(anim, outp, new object[] { });
-                            if (!quiet) {
-                                Console.Out.WriteLine("Wrote animation {0}", outpath);
-                            }
-                        } catch {
-                            if (!quiet) {
-                                Console.Error.WriteLine("Error with animation {0:X12}.{1:X3}", GUID.Index(key), GUID.Type(key));
+                    if (animWriter != null && animEncoding != '+') {
+                        outpath = string.Format("{0}{5}{1}{2:X12}{1}{6}{1}{3:X12}{4}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), animWriter.Format, external ? "" : "Animations", anim.Header.priority);
+                        using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+                            try {
+                                animWriter.Write(anim, outp, new object[] { });
+                                if (!quiet) {
+                                    Console.Out.WriteLine("Wrote animation {0}", outpath);
+                                }
+                            } catch {
+                                if (!quiet) {
+                                    Console.Error.WriteLine("Error with animation {0:X12}.{1:X3}", GUID.Index(key), GUID.Type(key));
+                                }
                             }
                         }
                     }

@@ -45,7 +45,7 @@ namespace OverTool {
             return str;
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] opts) {
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             Console.Out.WriteLine("key_name          key");
             foreach (ulong key in track[0x90]) {
                 if (!map.ContainsKey(key)) {

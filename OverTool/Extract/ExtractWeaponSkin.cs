@@ -28,15 +28,15 @@ namespace OverTool {
             return inventory;
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
-            string output = args[0];
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
+            string output = flags.Positionals[2];
 
             HashSet<string> heroes = new HashSet<string>();
             HashSet<string> heroBlank = new HashSet<string>();
             Dictionary<string, HashSet<string>> heroSkin = new Dictionary<string, HashSet<string>>();
             bool heroAllWildcard = false;
-            if (args.Length > 1 && args[1] != "*") {
-                foreach (string name in args[1].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries)) {
+            if (flags.Positionals.Length > 3 && flags.Positionals[1] != "*") {
+                foreach (string name in flags.Positionals[3].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries)) {
                     string[] data = name.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                     string realname = data[0];
                     heroes.Add(realname);

@@ -49,12 +49,12 @@ namespace OverTool {
             }
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
-            string output = args[0];
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
+            string output = flags.Positionals[2];
 
             List<string> heroes = new List<string>();
-            if (args.Length > 1) {
-                heroes.AddRange(args[1].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries));
+            if (flags.Positionals.Length > 3) {
+                heroes.AddRange(flags.Positionals[3].ToLowerInvariant().Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries));
             }
             bool heroAllWildcard = heroes.Count == 0 || heroes.Contains("*");
 

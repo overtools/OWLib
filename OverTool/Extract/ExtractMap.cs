@@ -13,27 +13,18 @@ using OWLib.Types.STUD.Binding;
 
 namespace OverTool {
     class ExtractMap : IOvertool {
-        public string Help => "output [maps] .[C]";
+        public string Help => "output [maps]";
         public uint MinimumArgs => 1;
         public char Opt => 'M';
         public string Title => "Extract Maps";
         public ushort[] Track => new ushort[1] { 0x9F };
         public bool Display => true;
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, string[] args) {
-            string output = args[0];
-            List<string> maps = args.Skip(1).ToList();
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
+            string output = flags.Positionals[2];
+            List<string> maps = flags.Positionals.Skip(3).ToList();
 
-            bool skipCmodel = true;
-            if (maps.Count > 0) {
-                if (maps.Last()[0] == '.') {
-                    string cmd = maps.Last();
-                    maps.Remove(cmd);
-                    if (cmd.Length > 1 && cmd[1] == 'C') {
-                        skipCmodel = false;
-                    }
-                }
-            }
+            bool skipCmodel = !flags.ExportCollision;
 
             for (int i = 0; i < maps.Count; ++i) {
                 maps[i] = maps[i].ToUpperInvariant().TrimStart('0');
