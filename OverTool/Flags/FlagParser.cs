@@ -180,6 +180,7 @@ namespace OverTool.Flags {
             HashSet<string> presence = new HashSet<string>();
             List<string> positionals = new List<string>();
             Dictionary<string, string> values = new Dictionary<string, string>();
+
             foreach (string arg in args) {
                 if (arg[0] == '-') {
                     if (arg[1] == '-') {

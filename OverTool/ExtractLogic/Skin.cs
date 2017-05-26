@@ -622,7 +622,13 @@ namespace OverTool.ExtractLogic {
             }
             bool suppressTextures = flags.SkipTextures;
             bool suppressAnimations = flags.SkipAnimations;
+            if (animEncoding == '+' && !flags.RawAnimation) {
+                suppressAnimations = true;
+            }
             bool suppressModels = flags.SkipModels;
+            if (modelEncoding == '+' && !flags.RawModel) {
+                suppressModels = true;
+            }
             bool suppressSounds = flags.SkipSound;
             bool exportCollision = flags.ExportCollision;
             bool suppressRefpose = flags.SkipRefpose;
@@ -748,11 +754,12 @@ namespace OverTool.ExtractLogic {
                     }
 
                     outpath = $"{path}{GUID.LongKey(key):X12}.{GUID.Type(key):X3}";
-
-                    using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-                        Util.OpenFile(map[key], handler).CopyTo(outp);
-                        if (!quiet) {
-                            Console.Out.WriteLine("Wrote raw model {0}", outpath);
+                    if (flags.RawModel) {
+                        using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+                            Util.OpenFile(map[key], handler).CopyTo(outp);
+                            if (!quiet) {
+                                Console.Out.WriteLine("Wrote raw model {0}", outpath);
+                            }
                         }
                     }
 
@@ -801,19 +808,21 @@ namespace OverTool.ExtractLogic {
                         continue;
                     }
 
+
+
                     Animation anim = new Animation(animation, true);
                     animation.Position = 0;
-
                     string outpath = string.Format("{0}{5}{1}{2:X12}{1}{6}{1}{3:X12}.{4:X3}", path, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), GUID.Type(key), external ? "" : "Animations", anim.Header.priority);
                     if (!Directory.Exists(Path.GetDirectoryName(outpath))) {
                         Directory.CreateDirectory(Path.GetDirectoryName(outpath));
                     }
-
-                    using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-                        animation.CopyTo(outp);
-                        animation.Close();
-                        if (!quiet) {
-                            Console.Out.WriteLine("Wrote raw animation {0}", outpath);
+                    if (flags.RawAnimation) {
+                        using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+                            animation.CopyTo(outp);
+                            animation.Close();
+                            if (!quiet) {
+                                Console.Out.WriteLine("Wrote raw animation {0}", outpath);
+                            }
                         }
                     }
                     if (animWriter != null && animEncoding != '+') {
