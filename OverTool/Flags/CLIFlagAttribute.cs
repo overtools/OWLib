@@ -18,6 +18,10 @@ namespace OverTool.Flags {
             }
             return false;
         }
+
+        public static object CLIFlagBooleanInv(string @in) {
+            return !(bool)CLIFlagBoolean(@in);
+        }
         
         public static object CLIFlagInt(string @in) {
             return int.Parse(@in);

@@ -41,11 +41,11 @@ namespace OverTool {
         [Alias(Alias = "r")]
         public bool Raw;
 
-        [CLIFlag(Default = true, Flag = "raw-model", Help = "Extract raw model with converted model", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
+        [CLIFlag(Default = true, Flag = "raw-model", Help = "Extract raw model with converted model", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBooleanInv" })]
         [Alias(Alias = "rw")]
         public bool RawModel;
 
-        [CLIFlag(Default = true, Flag = "raw-animation", Help = "Extract raw animation with converted animation", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
+        [CLIFlag(Default = true, Flag = "raw-animation", Help = "Extract raw animation with converted animation", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBooleanInv" })]
         [Alias(Alias = "ra")]
         public bool RawAnimation;
 
