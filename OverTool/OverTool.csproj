@@ -88,6 +88,7 @@
     <Compile Include="List\ListNPC.cs" />
     <Compile Include="List\ListInventory.cs" />
     <Compile Include="List\ListMap.cs" />
+    <Compile Include="Multi.cs" />
     <Compile Include="OverToolFlags.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

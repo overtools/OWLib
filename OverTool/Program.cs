@@ -17,7 +17,7 @@ namespace OverTool {
     }
 
     class Program {
-        static string[] ValidLangs = new string[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" };
+        public static Dictionary<char, IOvertool> toolsMap;
 
         static void Main(string[] args) {
             Console.OutputEncoding = Encoding.UTF8;
@@ -51,6 +51,7 @@ namespace OverTool {
             IOvertool tool = null;
             Dictionary<ushort, List<ulong>> track = new Dictionary<ushort, List<ulong>>();
             track[0x90] = new List<ulong>(); // internal requirements
+            toolsMap = new Dictionary<char, IOvertool>();
             foreach (IOvertool t in tools) {
                 if (t.Opt == opt) {
                     tool = t;
@@ -61,6 +62,7 @@ namespace OverTool {
                         track[tr] = new List<ulong>();
                     }
                 }
+                toolsMap[t.Opt] = t;
             }
             if (tool == null || flags.Positionals.Length - 2 < tool.MinimumArgs) {
                 PrintHelp(tools);

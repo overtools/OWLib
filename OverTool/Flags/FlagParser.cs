@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace OverTool.Flags {
     public class FlagParser {
         public static T Parse<T>() where T : ICLIFlags {
-            return Parse<T>(null);
+            return Parse<T>(null, Environment.GetCommandLineArgs().Skip(1).ToArray());
         }
 
         public static void Help<T>(bool simple) where T : ICLIFlags {
@@ -163,8 +163,10 @@ namespace OverTool.Flags {
         }
 
         public static T Parse<T>(Action extraHelp) where T : ICLIFlags {
-            string[] args = Environment.GetCommandLineArgs().Skip(1).ToArray();
+            return Parse<T>(extraHelp, Environment.GetCommandLineArgs().Skip(1).ToArray());
+        }
 
+        public static T Parse<T>(Action extraHelp, string[] args) where T : ICLIFlags {
             if (args.Length == 0) {
                 FullHelp<T>(extraHelp);
                 return null;
@@ -252,7 +254,7 @@ namespace OverTool.Flags {
                 if (value != null) {
                     if (flagattr.Valid != null) {
                         if (!flagattr.Valid.Contains(value.ToString())) {
-                            Console.Error.WriteLine($"Value {value.ToString()} is invalid for flag {flagattr.Flag}");
+                            Console.Error.WriteLine($"Value {value.ToString()} is invalid for flag {flagattr.Flag}, valid values are {string.Join(", ", flagattr.Valid)}");
                             FullHelp<T>(extraHelp);
                             return null;
                         }

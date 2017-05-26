@@ -51,18 +51,24 @@ namespace OverTool {
 
         [CLIFlag(Default = false, Flag = "no-texture", Help = "Skip texture extraction", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
         [Alias(Alias = "T")]
+        [Alias(Alias = "skip-texture")]
+        [Alias(Alias = "skip-tex")]
         public bool SkipTextures;
 
         [CLIFlag(Default = false, Flag = "no-animation", Help = "Skip animation extraction", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
         [Alias(Alias = "A")]
+        [Alias(Alias = "skip-animation")]
+        [Alias(Alias = "skip-anim")]
         public bool SkipAnimations;
 
         [CLIFlag(Default = false, Flag = "no-model", Help = "Skip model extraction", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
         [Alias(Alias = "M")]
+        [Alias(Alias = "skip-model")]
         public bool SkipModels;
 
         [CLIFlag(Default = false, Flag = "no-sound", Help = "Skip sound extraction", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
         [Alias(Alias = "S")]
+        [Alias(Alias = "skip-sound")]
         public bool SkipSound;
 
         [CLIFlag(Default = false, Flag = "collision", Help = "Export collision models", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
@@ -71,10 +77,12 @@ namespace OverTool {
 
         [CLIFlag(Default = false, Flag = "no-ref", Help = "Skip refpose extraction", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
         [Alias(Alias = "R")]
+        [Alias(Alias = "skip-ref")]
         public bool SkipRefpose;
 
         [CLIFlag(Default = false, Flag = "no-gui", Help = "Skip GUI icon extraction", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
         [Alias(Alias = "I")]
+        [Alias(Alias = "skip-gui")]
         public bool SkipGUI;
 
         [CLIFlag(Default = -1, Flag = "weaponskin", Help = "Weaponskin to use", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagInt" })]
