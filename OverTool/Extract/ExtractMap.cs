@@ -10,6 +10,7 @@ using OWLib.Writer;
 using OverTool.ExtractLogic;
 using OWLib.Types.Map;
 using OWLib.Types.STUD.Binding;
+using System.Reflection;
 
 namespace OverTool {
     class ExtractMap : IOvertool {
@@ -32,6 +33,70 @@ namespace OverTool {
             bool mapWildcard = maps.Count == 0;
             if (maps.Count > 0 && maps.Contains("*")) {
                 mapWildcard = true;
+            }
+
+            char animEncoding = flags.AnimFormat;
+            if (flags.Raw) {
+                animEncoding = '+';
+            }
+            bool suppressAnimations = flags.SkipAnimations;
+            if (animEncoding == '+' && !flags.RawAnimation) {
+                suppressAnimations = true;
+            }
+
+            char modelEncoding = flags.ModelFormat;
+            if (flags.Raw) {
+                modelEncoding = '+';
+            }
+            bool suppressModels = flags.SkipModels;
+            if (modelEncoding == '+' && !flags.RawModel) {
+                suppressModels = true;
+            }
+
+            IDataWriter animWriter = null;
+            if (animEncoding != 0 && animEncoding != '+') {
+                Assembly asm = typeof(IDataWriter).Assembly;
+                Type t = typeof(IDataWriter);
+                List<Type> types = asm.GetTypes().Where(tt => tt != t && t.IsAssignableFrom(tt)).ToList();
+                foreach (Type tt in types) {
+                    if (animWriter != null) {
+                        break;
+                    }
+                    if (tt.IsInterface) {
+                        continue;
+                    }
+
+                    IDataWriter tmp = (IDataWriter)Activator.CreateInstance(tt);
+                    for (int i = 0; i < tmp.Identifier.Length; ++i) {
+                        if (tmp.Identifier[i] == animEncoding) {
+                            animWriter = tmp;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            IDataWriter modelWriter = null;
+            if (modelEncoding != 0 && modelEncoding != '+') {
+                Assembly asm = typeof(IDataWriter).Assembly;
+                Type t = typeof(IDataWriter);
+                List<Type> types = asm.GetTypes().Where(tt => tt != t && t.IsAssignableFrom(tt)).ToList();
+                foreach (Type tt in types) {
+                    if (modelWriter != null) {
+                        break;
+                    }
+                    if (tt.IsInterface) {
+                        continue;
+                    }
+
+                    IDataWriter tmp = (IDataWriter)Activator.CreateInstance(tt);
+                    for (int i = 0; i < tmp.Identifier.Length; ++i) {
+                        if (tmp.Identifier[i] == modelEncoding) {
+                            modelWriter = tmp;
+                            break;
+                        }
+                    }
+                }
             }
 
             List<ulong> masters = track[0x9F];
@@ -135,18 +200,17 @@ namespace OverTool {
                                 using (Stream mapLStream = Util.OpenFile(map[master.DataKey(9)], handler)) {
                                     Map mapLData = new Map(mapLStream);
                                     using (Stream outputStream = File.Open($"{outputPath}{Util.SanitizePath(name)}{owmap.Format}", FileMode.Create, FileAccess.Write)) {
-                                        used = owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name);
+                                        used = owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name, modelWriter);
                                     }
                                 }
                             }
                         }
                     }
-                    IDataWriter owmdl = new OWMDLWriter();
                     IDataWriter owmat = new OWMATWriter();
                     using (Stream map10Stream = Util.OpenFile(map[master.DataKey(0x10)], handler)) {
                         Map10 physics = new Map10(map10Stream);
-                        using (Stream outputStream = File.Open($"{outputPath}physics{owmdl.Format}", FileMode.Create, FileAccess.Write)) {
-                            owmdl.Write(physics, outputStream, new object[0]);
+                        using (Stream outputStream = File.Open($"{outputPath}physics{modelWriter.Format}", FileMode.Create, FileAccess.Write)) {
+                            modelWriter.Write(physics, outputStream, new object[0]);
                         }
                     }
                     if (used != null) {
@@ -154,84 +218,127 @@ namespace OverTool {
                         Dictionary<ulong, List<string>> materials = used[1];
                         Dictionary<ulong, Dictionary<ulong, List<ImageLayer>>> cache = new Dictionary<ulong, Dictionary<ulong, List<ImageLayer>>>();
 
-                        foreach (KeyValuePair<ulong, List<string>> modelpair in models) {
-                            if (!map.ContainsKey(modelpair.Key)) {
-                                continue;
+                        if (!suppressModels) {
+                            foreach (KeyValuePair<ulong, List<string>> modelpair in models) {
+                                if (!map.ContainsKey(modelpair.Key)) {
+                                    continue;
+                                }
+                                if (!parsed.Add(modelpair.Key)) {
+                                    continue;
+                                }
+                                using (Stream modelStream = Util.OpenFile(map[modelpair.Key], handler)) {
+                                    Chunked mdl = new Chunked(modelStream, true);
+                                    modelStream.Position = 0;
+                                    if (modelEncoding != '+' && modelWriter != null) {
+                                        foreach (string modelOutput in modelpair.Value) {
+                                            using (Stream outputStream = File.Open($"{outputPath}{modelOutput}", FileMode.Create, FileAccess.Write)) {
+                                                if (modelWriter.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel })) {
+                                                    if (!quiet) {
+                                                        Console.Out.WriteLine("Wrote model {0}", modelOutput);
+                                                    }
+                                                } else {
+                                                    if (!quiet) {
+                                                        Console.Out.WriteLine("Failed to write model");
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (flags.RawModel) {
+                                        using (Stream outputStream = File.Open($"{outputPath}{GUID.LongKey(modelpair.Key)}.{GUID.Type(modelpair.Key)}", FileMode.Create, FileAccess.Write)) {
+                                            if (modelWriter.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel })) {
+                                                if (!quiet) {
+                                                    Console.Out.WriteLine("Wrote raw model {0}.{1}", GUID.LongKey(modelpair.Key), GUID.Type(modelpair.Key));
+                                                }
+                                            } else {
+                                                if (!quiet) {
+                                                    Console.Out.WriteLine("Failed to write model");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            if (!parsed.Add(modelpair.Key)) {
-                                continue;
+                        }
+                        if (!suppressAnimations) {
+                            foreach (KeyValuePair<ulong, ulong> kv in animList) {
+                                ulong parent = kv.Value;
+                                ulong key = kv.Key;
+                                Stream animStream = Util.OpenFile(map[key], handler);
+                                if (animStream == null) {
+                                    continue;
+                                }
+
+                                Animation anim = new Animation(animStream);
+                                animStream.Position = 0;
+
+                                string outpath = string.Format("{0}Animations{1}{2:X12}{1}{5}{1}{3:X12}.{4:X3}", outputPath, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), GUID.Type(key), anim.Header.priority);
+                                if (!Directory.Exists(Path.GetDirectoryName(outpath))) {
+                                    Directory.CreateDirectory(Path.GetDirectoryName(outpath));
+                                }
+                                if (flags.RawAnimation) {
+                                    using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+                                        animStream.CopyTo(outp);
+                                        if (!quiet) {
+                                            Console.Out.WriteLine("Wrote raw animation {0}", outpath);
+                                        }
+                                    }
+                                }
+                                if (animEncoding != '+' && animWriter != null) {
+                                    outpath = string.Format("{0}Animations{1}{2:X12}{1}{5}{1}{3:X12}.{4}", outputPath, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), animWriter.Format, anim.Header.priority);
+                                    using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
+                                        animWriter.Write(anim, outp);
+                                        if (!quiet) {
+                                            Console.Out.WriteLine("Wrote animation {0}", outpath);
+                                        }
+                                    }
+                                }
                             }
-                            using (Stream modelStream = Util.OpenFile(map[modelpair.Key], handler)) {
-                                Chunked mdl = new Chunked(modelStream);
-                                foreach (string modelOutput in modelpair.Value) {
-                                    using (Stream outputStream = File.Open($"{outputPath}{modelOutput}", FileMode.Create, FileAccess.Write)) {
-                                        if (owmdl.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel })) {
+                        }
+
+                        if (!flags.SkipSound) {
+                            Console.Out.WriteLine("Dumping sounds...");
+                            string soundPath = $"{outputPath}Sounds{Path.DirectorySeparatorChar}";
+                            if (!Directory.Exists(soundPath)) {
+                                Directory.CreateDirectory(soundPath);
+                            }
+
+                            DumpVoice.Save(soundPath, soundData, map, handler, quiet);
+                        }
+
+                        if (!flags.SkipTextures) {
+                            foreach (KeyValuePair<ulong, List<string>> matpair in materials) {
+                                Dictionary<ulong, List<ImageLayer>> tmp = new Dictionary<ulong, List<ImageLayer>>();
+                                if (cache.ContainsKey(matpair.Key)) {
+                                    tmp = cache[matpair.Key];
+                                } else {
+                                    Skin.FindTextures(matpair.Key, tmp, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), map, handler);
+                                    cache.Add(matpair.Key, tmp);
+                                }
+                                Dictionary<string, TextureType> types = new Dictionary<string, TextureType>();
+                                foreach (KeyValuePair<ulong, List<ImageLayer>> kv in tmp) {
+                                    ulong materialId = kv.Key;
+                                    List<ImageLayer> sublayers = kv.Value;
+                                    HashSet<ulong> materialParsed = new HashSet<ulong>();
+                                    foreach (ImageLayer layer in sublayers) {
+                                        if (!materialParsed.Add(layer.key)) {
+                                            continue;
+                                        }
+                                        KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, materialId, map, handler, outputPath, quiet);
+                                        types.Add(pair.Key, pair.Value);
+                                    }
+                                }
+
+                                foreach (string matOutput in matpair.Value) {
+                                    using (Stream outputStream = File.Open($"{outputPath}{matOutput}", FileMode.Create, FileAccess.Write)) {
+                                        if (owmat.Write(null, outputStream, null, tmp, new object[1] { types })) {
                                             if (!quiet) {
-                                                Console.Out.WriteLine("Wrote model {0}", modelOutput);
+                                                Console.Out.WriteLine("Wrote material {0}", matOutput);
                                             }
                                         } else {
                                             if (!quiet) {
-                                                Console.Out.WriteLine("Failed to write model");
+                                                Console.Out.WriteLine("Failed to write material");
                                             }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        foreach (KeyValuePair<ulong, ulong> kv in animList) {
-                            ulong parent = kv.Value;
-                            ulong key = kv.Key;
-                            string outpath = string.Format("{0}Animations{1}{2:X12}{1}{3:X12}.{4:X3}", outputPath, Path.DirectorySeparatorChar, GUID.Index(parent), GUID.LongKey(key), GUID.Type(key));
-                            if (!Directory.Exists(Path.GetDirectoryName(outpath))) {
-                                Directory.CreateDirectory(Path.GetDirectoryName(outpath));
-                            }
-                            using (Stream outp = File.Open(outpath, FileMode.Create, FileAccess.Write)) {
-                                Util.OpenFile(map[key], handler).CopyTo(outp);
-                                if (!quiet) {
-                                    Console.Out.WriteLine("Wrote animation {0}", outpath);
-                                }
-                            }
-                        }
-
-                        Console.Out.WriteLine("Dumping sounds...");
-                        string soundPath = $"{outputPath}Sounds{Path.DirectorySeparatorChar}";
-                        if (!Directory.Exists(soundPath)) {
-                            Directory.CreateDirectory(soundPath);
-                        }
-
-                        DumpVoice.Save(soundPath, soundData, map, handler, quiet);
-
-                        foreach (KeyValuePair<ulong, List<string>> matpair in materials) {
-                            Dictionary<ulong, List<ImageLayer>> tmp = new Dictionary<ulong, List<ImageLayer>>();
-                            if (cache.ContainsKey(matpair.Key)) {
-                                tmp = cache[matpair.Key];
-                            } else {
-                                Skin.FindTextures(matpair.Key, tmp, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), map, handler);
-                                cache.Add(matpair.Key, tmp);
-                            }
-                            Dictionary<string, TextureType> types = new Dictionary<string, TextureType>();
-                            foreach (KeyValuePair<ulong, List<ImageLayer>> kv in tmp) {
-                                ulong materialId = kv.Key;
-                                List<ImageLayer> sublayers = kv.Value;
-                                HashSet<ulong> materialParsed = new HashSet<ulong>();
-                                foreach (ImageLayer layer in sublayers) {
-                                    if (!materialParsed.Add(layer.key)) {
-                                        continue;
-                                    }
-                                    KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, materialId, map, handler, outputPath, quiet);
-                                    types.Add(pair.Key, pair.Value);
-                                }
-                            }
-
-                            foreach (string matOutput in matpair.Value) {
-                                using (Stream outputStream = File.Open($"{outputPath}{matOutput}", FileMode.Create, FileAccess.Write)) {
-                                    if (owmat.Write(null, outputStream, null, tmp, new object[1] { types })) {
-                                        if (!quiet) {
-                                            Console.Out.WriteLine("Wrote material {0}", matOutput);
-                                        }
-                                    } else {
-                                        if (!quiet) {
-                                            Console.Out.WriteLine("Failed to write material");
                                         }
                                     }
                                 }

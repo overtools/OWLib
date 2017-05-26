@@ -23,7 +23,10 @@ namespace OWLib.Writer {
             return false;
         }
 
-        public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name = "") {
+        public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name, IDataWriter modelFormat) {
+            if (modelFormat == null) {
+                modelFormat = new OWMDLWriter();
+            }
             //Console.Out.WriteLine("Writing OWMAP");
             using (BinaryWriter writer = new BinaryWriter(output)) {
                 writer.Write((ushort)1); // version major
@@ -88,7 +91,7 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map01 obj = (Map01)map.Records[i];
-                    string modelFn = $"{GUID.Index(obj.Header.model):X12}.owmdl";
+                    string modelFn = $"{GUID.Index(obj.Header.model):X12}.{modelFormat.Format}";
                     writer.Write(modelFn);
                     if (!ret[0].ContainsKey(obj.Header.model)) {
                         ret[0].Add(obj.Header.model, new List<string>());
@@ -121,7 +124,7 @@ namespace OWLib.Writer {
                     }
                 }
 
-                writer.Write("physics.owmdl");
+                writer.Write($"physics.{modelFormat.Format}");
                 writer.Write((byte)0);
                 writer.Write(0.0f);
                 writer.Write(0.0f);
@@ -139,7 +142,7 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map02 obj = (Map02)detail1.Records[i];
-                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}.owmdl";
+                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}.{modelFormat.Format}";
                     string matFn = $"{GUID.LongKey(obj.Header.model):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
@@ -171,7 +174,7 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map08 obj = (Map08)detail2.Records[i];
-                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}.owmdl";
+                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}.{modelFormat.Format}";
                     string matFn = $"{GUID.LongKey(obj.Header.model):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
@@ -206,7 +209,7 @@ namespace OWLib.Writer {
                     if (obj.ModelKey == 0) {
                         continue;
                     }
-                    string modelFn = $"{GUID.LongKey(obj.ModelKey):X12}.owmdl";
+                    string modelFn = $"{GUID.LongKey(obj.ModelKey):X12}.{modelFormat.Format}";
                     string matFn = $"{GUID.LongKey(obj.MaterialKey):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);

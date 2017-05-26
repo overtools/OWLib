@@ -41,6 +41,6 @@ namespace OWLib.Writer {
         bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, params object[] data);
         bool Write(Map10 physics, Stream output, params object[] data);
         bool Write(Animation anim, Stream output, params object[] data);
-        Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name = "");
+        Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name, IDataWriter modelFormat);
     }
 }
