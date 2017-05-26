@@ -131,7 +131,7 @@ namespace OWLib {
                     // Read Data
                     animStream.Seek(SDO, SeekOrigin.Begin);
                     for (int j = 0; j < it.ScaleCount; j++) {
-                        int Index = ScaleIndexList[j];
+                        int Index = Math.Abs(ScaleIndexList[j]) % InfoTableSize;
                         hasScale[boneid, Index] = true;
                         ushort x = animReader.ReadUInt16();
                         ushort y = animReader.ReadUInt16();
@@ -142,7 +142,7 @@ namespace OWLib {
                     }
                     animStream.Seek(PDO, SeekOrigin.Begin);
                     for (int j = 0; j < it.PositionCount; j++) {
-                        int Index = PositonIndexList[j];
+                        int Index = Math.Abs(PositonIndexList[j]) % InfoTableSize;
                         hasPosition[boneid, Index] = true;
                         float x = animReader.ReadSingle();
                         float y = animReader.ReadSingle();
@@ -153,7 +153,7 @@ namespace OWLib {
                     }
                     animStream.Seek(RDO, SeekOrigin.Begin);
                     for (int j = 0; j < it.RotationCount; j++) {
-                        int Index = RotationIndexList[j];
+                        int Index = Math.Abs(RotationIndexList[j]) % InfoTableSize;
                         ushort x = animReader.ReadUInt16();
                         ushort y = animReader.ReadUInt16();
                         ushort z = animReader.ReadUInt16();
