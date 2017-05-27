@@ -39,7 +39,7 @@ namespace OverTool {
                             continue;
                         }
                         using (Stream outputStream = File.Open(outputPath, FileMode.Create)) {
-                            ExtractLogic.Sound.CopyBytes(soundStream, outputStream, (int)soundStream.Length);
+                            Util.CopyBytes(soundStream, outputStream, (int)soundStream.Length);
                             if (!quiet) {
                                 Console.Out.WriteLine("Wrote file {0}", outputPath);
                             }

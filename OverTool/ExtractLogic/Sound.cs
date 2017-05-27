@@ -10,13 +10,6 @@ using OWLib.Types.STUD.GameParam;
 
 namespace OverTool.ExtractLogic {
     class Sound {
-        public static void CopyBytes(Stream i, Stream o, int sz) {
-            byte[] buffer = new byte[sz];
-            i.Read(buffer, 0, sz);
-            o.Write(buffer, 0, sz);
-            buffer = null;
-        }
-
         private static bool CheckAddEntry(Dictionary<ulong, List<ulong>> ret, ulong parent, ulong key) {
             ushort type = GUID.Type(key);
             if (type == 0x03F || type == 0x043 || type == 0x0B2 || type == 0x0BB) {

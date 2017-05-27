@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debug.cs" />
+    <Compile Include="Delta.cs" />
     <Compile Include="Dump\DumpKey.cs" />
     <Compile Include="Dump\DumpNPC.cs" />
     <Compile Include="Dump\DumpString.cs" />
