@@ -76,6 +76,7 @@ namespace OverTool {
                 }
                 if (heroAllWildcard) {
                     heroes.Add(heroName.ToLowerInvariant());
+                    heroBlank.Add(heroName.ToLowerInvariant());
                 }
                 if (!heroes.Contains(heroName.ToLowerInvariant())) {
                     continue;
@@ -158,7 +159,7 @@ namespace OverTool {
                     if (heroBlank.Contains(heroName.ToLowerInvariant()) || heroSkin[heroName.ToLowerInvariant()].Contains(name.ToLowerInvariant())) {
                         Console.Out.WriteLine("Saving textures for skin {0}", name);
                         foreach (KeyValuePair<string, WeaponSkinItem> pair in weaponskins) {
-                            string output_real = string.Format("{0}{1}{4}{1}Weapon Skin{1}{2}{1}{3}{1}", output, System.IO.Path.DirectorySeparatorChar, pair.Key, name, heroName);
+                            string output_real = string.Format("{0}{1}{4}{1}Weapon Skin{1}{2}{1}{3}{1}", output, System.IO.Path.DirectorySeparatorChar, pair.Key, name, Util.SanitizePath(heroName));
                             Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
                             ExtractLogic.Skin.FindReplacements(skin.Data.skin.key, (int)pair.Value.Data.index, replace, new HashSet<ulong>(), map, handler, master, skin, true);
                             Dictionary<ulong, ulong> replace_blank = new Dictionary<ulong, ulong>();
