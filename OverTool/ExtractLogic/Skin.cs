@@ -646,6 +646,9 @@ namespace OverTool.ExtractLogic {
                             continue;
                         }
                         KeyValuePair<string, TextureType> stt = SaveTexture(layer.key, materialId, map, handler, path, quiet);
+                        if (stt.Key == null) {
+                            continue;
+                        }
                         typeInfo.Add(stt.Key, stt.Value);
                     }
                 }
@@ -935,16 +938,26 @@ namespace OverTool.ExtractLogic {
 
             ulong imageDataKey = (key & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
             bool dbl = map.ContainsKey(imageDataKey);
-
-            using (Stream output = File.Open(path, FileMode.Create, FileAccess.Write)) {
-                if (map.ContainsKey(imageDataKey)) {
-                    Texture tex = new Texture(Util.OpenFile(map[key], handler), Util.OpenFile(map[imageDataKey], handler));
-                    tex.Save(output);
-                    @type = tex.Format;
-                } else {
-                    TextureLinear tex = new TextureLinear(Util.OpenFile(map[key], handler));
-                    tex.Save(output);
-                    @type = tex.Header.Format();
+            using (Stream mainFile = Util.OpenFile(map[key], handler)) {
+                if (mainFile == null || mainFile.Length == 0) {
+                    return new KeyValuePair<string, TextureType>(null, 0);
+                }
+                using (MemoryStream output = new MemoryStream()) {
+                    if (map.ContainsKey(imageDataKey)) {
+                        Texture tex = new Texture(mainFile, Util.OpenFile(map[imageDataKey], handler));
+                        tex.Save(output, true);
+                        @type = tex.Format;
+                    } else {
+                        TextureLinear tex = new TextureLinear(mainFile);
+                        tex.Save(output, true);
+                        @type = tex.Header.Format();
+                    }
+                    if (output.Length > 0) {
+                        output.Position = 0;
+                        using (Stream file = File.Open(path, FileMode.Create, FileAccess.Write)) {
+                            output.CopyTo(file);
+                        }
+                    }
                 }
             }
             if (!quiet) {

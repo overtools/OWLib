@@ -207,7 +207,7 @@ namespace OverTool {
                                     if (origTextures.ContainsKey(materialId) && origTextures[materialId].Contains(layer.key)) {
                                         continue;
                                     }
-                                    KeyValuePair<string, TextureType> stt = ExtractLogic.Skin.SaveTexture(layer.key, materialId, map, handler, output_real, quiet, "");
+                                    ExtractLogic.Skin.SaveTexture(layer.key, materialId, map, handler, output_real, quiet, "");
                                 }
                             }
                         }

@@ -15,11 +15,11 @@ namespace OWLib {
         public byte[] Data => data;
         public bool Loaded => loaded;
 
-        public void Save(Stream output) {
+        public void Save(Stream output, bool keepOpen = false) {
             if (!loaded) {
                 return;
             }
-            using (BinaryWriter ddsWriter = new BinaryWriter(output)) {
+            using (BinaryWriter ddsWriter = new BinaryWriter(output, System.Text.Encoding.Default, keepOpen)) {
                 DDSHeader dds = header.ToDDSHeader();
                 ddsWriter.Write(dds);
                 if (dds.format.fourCC == 808540228) {

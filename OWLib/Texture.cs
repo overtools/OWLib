@@ -70,11 +70,11 @@ namespace OWLib {
             loaded = true;
         }
 
-        public void Save(Stream ddsStream) {
+        public void Save(Stream ddsStream, bool keepOpen = false) {
             if (!loaded) {
                 return;
             }
-            using (BinaryWriter ddsWriter = new BinaryWriter(ddsStream)) {
+            using (BinaryWriter ddsWriter = new BinaryWriter(ddsStream, System.Text.Encoding.Default, keepOpen)) {
                 DDSHeader dds = header.ToDDSHeader();
                 ddsWriter.Write(dds);
                 if (dds.format.fourCC == 808540228) {
