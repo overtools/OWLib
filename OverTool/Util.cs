@@ -15,6 +15,32 @@ namespace OverTool {
             buffer = null;
         }
 
+        private static string TypeAlias(ushort type) {
+            switch (type) {
+                case 0x3: return "Game Logic";
+                case 0x4: return "Texture";
+                case 0x6: return "Animation";
+                case 0x8: return "Material";
+                case 0xC: return "Model";
+                case 0xD: return "Effect";
+                case 0x1A: return "Material Metadata";
+                case 0x1B: return "Game Parameter";
+                case 0x20:
+                case 0x21: return "Animation Metadata";
+                case 0x3F:
+                case 0x43:
+                case 0xB2:
+                case 0xBB: return "Audio";
+                case 0xBC: return "Map Chunk";
+                case 0xA5: return "Cosmetic";
+                case 0xA6:
+                case 0xAD: return "Texture Override";
+                case 0x75: return "Hero Metadata";
+                case 0x9F: return "Map Metadata";
+                default: return "Unknown";
+            }
+        }
+
         public static string DowncaseDiacritics(string txt) {
             var norm = txt.Normalize(NormalizationForm.FormD);
             StringBuilder sb = new StringBuilder(norm.Length);
@@ -70,7 +96,7 @@ namespace OverTool {
                             }
                         }
                     }
-                    Console.Out.WriteLine("Error {0} p 0x{1:X16} f 0x{2:X16}", ex.Message, record.package.packageKey, record.record.Key);
+                    Console.Out.WriteLine("Error {0} with file {2:X12}.{3:X3} ({1})", ex.Message, TypeAlias(GUID.Type(record.record.Key)), GUID.LongKey(record.record.Key), GUID.Type(record.record.Key));
                 }
                 return null;
             }

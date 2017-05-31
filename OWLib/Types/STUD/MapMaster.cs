@@ -11,12 +11,10 @@ namespace OWLib.Types.STUD {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct MapMasterHeader {
             public STUDInstanceInfo instance;
-            public OWRecord f002;
-            public OWRecord funk_1300;
+            public OWRecord mapData;
+            public OWRecord zeroFile;
             public ulong unk1300_0;
             public ulong unk1300_1;
-            public ulong unk1300_2;
-            public ulong unk1300_3;
             public ulong offset1;
             public ulong unk1401_1;
             public OWRecord data;
