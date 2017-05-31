@@ -48,6 +48,9 @@ namespace OWLib {
                 blueMask = 0xFF000000,
                 alphaMask = 0x000000FF
             };
+            if (T == TextureType.ATI2) {
+                ret.flags |= 0x80000000;
+            }
             return ret;
         }
 
