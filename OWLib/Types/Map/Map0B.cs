@@ -11,12 +11,12 @@ namespace OWLib.Types.Map {
         public unsafe struct Map0BHeader {
             public ulong binding;
             public ulong unk0;
+            public ulong unk1;
             public MapVec3 position;
             public MapVec3 scale;
             public MapQuat rotation;
-            public ushort extraCount;
-            public ushort unk1;
-            public fixed uint unk2[11];
+            public uint extraCount;
+            public fixed uint unk2[15];
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

@@ -226,11 +226,15 @@ namespace OverTool {
                                 if (!parsed.Add(modelpair.Key)) {
                                     continue;
                                 }
+                                HashSet<string> extracted = new HashSet<string>();
                                 using (Stream modelStream = Util.OpenFile(map[modelpair.Key], handler)) {
                                     Chunked mdl = new Chunked(modelStream, true);
                                     modelStream.Position = 0;
                                     if (modelEncoding != '+' && modelWriter != null) {
                                         foreach (string modelOutput in modelpair.Value) {
+                                            if (!extracted.Add(modelOutput)) {
+                                                continue;
+                                            }
                                             using (Stream outputStream = File.Open($"{outputPath}{modelOutput}", FileMode.Create, FileAccess.Write)) {
                                                 if (modelWriter.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel })) {
                                                     if (!quiet) {
@@ -245,10 +249,10 @@ namespace OverTool {
                                         }
                                     }
                                     if (flags.RawModel) {
-                                        using (Stream outputStream = File.Open($"{outputPath}{GUID.LongKey(modelpair.Key)}.{GUID.Type(modelpair.Key)}", FileMode.Create, FileAccess.Write)) {
+                                        using (Stream outputStream = File.Open($"{outputPath}{GUID.LongKey(modelpair.Key):X12}.{GUID.Type(modelpair.Key):X3}", FileMode.Create, FileAccess.Write)) {
                                             if (modelWriter.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel })) {
                                                 if (!quiet) {
-                                                    Console.Out.WriteLine("Wrote raw model {0}.{1}", GUID.LongKey(modelpair.Key), GUID.Type(modelpair.Key));
+                                                    Console.Out.WriteLine("Wrote raw model {0:X12}.{1:X3}", GUID.LongKey(modelpair.Key), GUID.Type(modelpair.Key));
                                                 }
                                             } else {
                                                 if (!quiet) {
