@@ -91,7 +91,7 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map01 obj = (Map01)map.Records[i];
-                    string modelFn = $"{GUID.Index(obj.Header.model):X12}.{modelFormat.Format}";
+                    string modelFn = $"{GUID.Index(obj.Header.model):X12}{modelFormat.Format}";
                     writer.Write(modelFn);
                     if (!ret[0].ContainsKey(obj.Header.model)) {
                         ret[0].Add(obj.Header.model, new List<string>());
@@ -142,7 +142,7 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map02 obj = (Map02)detail1.Records[i];
-                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}.{modelFormat.Format}";
+                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}{modelFormat.Format}";
                     string matFn = $"{GUID.LongKey(obj.Header.model):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
@@ -174,7 +174,7 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map08 obj = (Map08)detail2.Records[i];
-                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}.{modelFormat.Format}";
+                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}{modelFormat.Format}";
                     string matFn = $"{GUID.LongKey(obj.Header.model):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
@@ -209,7 +209,7 @@ namespace OWLib.Writer {
                     if (obj.ModelKey == 0) {
                         continue;
                     }
-                    string modelFn = $"{GUID.LongKey(obj.ModelKey):X12}.{modelFormat.Format}";
+                    string modelFn = $"{GUID.LongKey(obj.ModelKey):X12}{modelFormat.Format}";
                     string matFn = $"{GUID.LongKey(obj.MaterialKey):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
