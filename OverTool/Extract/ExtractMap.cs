@@ -177,6 +177,9 @@ namespace OverTool {
                                         continue;
                                     }
                                     Sound.FindSoundsEx(mapprop.Header.binding, soundDone, soundData, map, handler, replace, master.DataKey(0xB));
+                                    HashSet<ulong> bindingModels = new HashSet<ulong>();
+                                    Dictionary<ulong, List<ImageLayer>> bindingTextures = new Dictionary<ulong, List<ImageLayer>>(); 
+
                                     using (Stream bindingFile = Util.OpenFile(map[mapprop.Header.binding], handler)) {
                                         STUD binding = new STUD(bindingFile, true, STUDManager.Instance, false, true);
                                         foreach (ISTUDInstance instance in binding.Instances) {
@@ -189,8 +192,8 @@ namespace OverTool {
                                             ComplexModelRecord cmr = (ComplexModelRecord)instance;
                                             mapprop.MaterialKey = cmr.Data.material.key;
                                             mapprop.ModelKey = cmr.Data.model.key;
-                                            Skin.FindAnimations(cmr.Data.animationList.key, soundData, animList, replace, parsed, map, handler, null, null, mapprop.ModelKey);
-                                            Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, soundData, animList, replace, parsed, map, handler, null, null, mapprop.ModelKey);
+                                            Skin.FindAnimations(cmr.Data.animationList.key, soundData, animList, replace, parsed, map, handler, bindingModels, bindingTextures, mapprop.ModelKey);
+                                            Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, soundData, animList, replace, parsed, map, handler, bindingModels, bindingTextures, mapprop.ModelKey);
                                             break;
                                         }
                                     }
