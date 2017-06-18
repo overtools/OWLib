@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using CASCExplorer;
 using OWLib;
-using OWLib.Types.STUD.InventoryItem;
+using OWLib.Types.STUD;
 
 namespace OverTool {
     public class Debug : IOvertool {
@@ -11,32 +11,28 @@ namespace OverTool {
         public uint MinimumArgs => 0;
         public char Opt => '~';
         public string Title => "Debug";
-        public ushort[] Track => new ushort[0];
+        public ushort[] Track => new ushort[1] { 0xA6 };
         public bool Display => System.Diagnostics.Debugger.IsAttached;
 
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             foreach (KeyValuePair<ushort, List<ulong>> pair in track) {
                 Console.Out.WriteLine($"{pair.Key:X3} {pair.Value.Count} entries");
             }
-            /*
             // Code for rapidly finding what zero values are.
-            foreach (ulong key in track[0xA5]) {
+            foreach (ulong key in track[0xA6]) {
                 using (Stream stream = Util.OpenFile(map[key], handler)) {
                     STUD stud = new STUD(stream);
                     if (stud.Instances == null) {
                         continue;
                     }
 
-                    IInventorySTUDInstance instance = stud.Instances[0] as IInventorySTUDInstance;
-                    if (instance == null) {
-                        continue;
-                    }
-                    if (instance.Header.unk1.key != 0) {
-                        System.Diagnostics.Debugger.Break();
+                    if (stud.Instances[0] is TextureOverride @override) {
+                        if (@override.Header.unknown2 > 0 || @override.Header.unknown4 > 0 || @override.Header.unknown7 > 0 || @override.Header.unknown12.key > 0 || @override.Header.unknown13 > 0) {
+                            System.Diagnostics.Debugger.Break();
+                        }
                     }
                 }
             }
-            */
         }
     }
 }

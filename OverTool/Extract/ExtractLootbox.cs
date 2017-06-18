@@ -68,7 +68,7 @@ namespace OverTool.List {
                 }
             }
 
-            Skin.Save(null, output, "", "", replace, parsed, models, layers, animList, flags, track, map, handler, model, false, quiet, sound);
+            Skin.Save(null, output, "", "", replace, parsed, models, layers, animList, flags, track, map, handler, model, false, quiet, sound, 0);
         }
     }
 }

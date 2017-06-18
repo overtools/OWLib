@@ -18,7 +18,7 @@ namespace OverTool.ExtractLogic {
                 if (!Directory.Exists(dest)) {
                     Directory.CreateDirectory(dest);
                 }
-                Skin.Save(null, dest, heroName, name, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), models, layers, animList, flags, track, map, handler, 0, true, quiet, sound);
+                Skin.Save(null, dest, heroName, name, new Dictionary<ulong, ulong>(), new HashSet<ulong>(), models, layers, animList, flags, track, map, handler, 0, true, quiet, sound, 0);
             }
         }
     }

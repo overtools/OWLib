@@ -10,24 +10,26 @@ namespace OWLib.Types.STUD {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct TextureOverrideHeader {
             public STUDInstanceInfo instance;
-            public OWRecord zero1;
-            public uint rarity;
-            public uint unk1;
-            public ulong one;
-            public ulong unk2;
-            public ulong unk3;
-            public ulong unk1600_1;
-            public ulong unk1600_2;
+            public OWRecord encryptionKey;
+            public ulong rarity;
+            public ulong unknown1;
+            public ulong unknown2;
+            public ulong unknown3;
+            public ulong unknown4;
+            public ulong unknown5;
             public ulong offsetInfo;
-            public ulong unk5;
-            public ulong unk6;
-            public ulong unk7;
-            public OWRecord zero2;
+            public ulong unknown6;
+            public ulong unknown7;
+            public ulong unknown8;
+            public OWRecord icon;
             public ulong offset0AD;
-            public ulong unk8;
-            public ulong unk9;
-            public ulong unkA;
-            public OWRecord unk1600_3;
+            public ulong unknown9;
+            public ulong offsetNew;
+            public ulong unknown11;
+            public OWRecord unknown12;
+            public ulong unknown13;
+            public ulong unknown14;
+            public OWRecord unknown15;
             public Vec4 delta;
         }
 
@@ -43,6 +45,7 @@ namespace OWLib.Types.STUD {
         private ulong[] target;
         private uint[] sizes;
         private OWRecord[] subs;
+        private OWRecord[] newFiles;
 
         public TextureOverrideHeader Header => header;
         public TextureOverrideInlineReference[] References => references;
@@ -50,6 +53,7 @@ namespace OWLib.Types.STUD {
         public ulong[] Target => target;
         public uint[] Sizes => sizes;
         public OWRecord[] SubDefinitions => subs;
+        public OWRecord[] NewFiles => newFiles;
 
         public void Read(Stream input, OWLib.STUD stud) {
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
@@ -96,6 +100,18 @@ namespace OWLib.Types.STUD {
                     }
                 } else {
                     subs = new OWRecord[0];
+                }
+
+                if (header.offsetNew > 0) {
+                    input.Position = (long)header.offsetNew;
+                    STUDArrayInfo ptr = reader.Read<STUDArrayInfo>();
+                    newFiles = new OWRecord[ptr.count];
+                    input.Position = (long)ptr.offset;
+                    for (ulong i = 0; i < ptr.count; ++i) {
+                        newFiles[i] = reader.Read<OWRecord>();
+                    }
+                } else {
+                    newFiles = new OWRecord[0];
                 }
             }
         }
