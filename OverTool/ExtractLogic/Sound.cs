@@ -149,7 +149,7 @@ namespace OverTool.ExtractLogic {
                 } else if (instance.Name == stud.Manager.GetName(typeof(BindingEffectReference))) {
                     BindingEffectReference reference = (BindingEffectReference)instance;
                     // Exports a LOT of system sound effects unrelated to the origin.
-                    // FindSoundsExD(reference.Reference.effect.key, done, ret, map, handler, replace, mykey);
+                    FindSoundsExD(reference.Reference.effect.key, done, ret, map, handler, replace, mykey);
                 } else if (instance.Name == stud.Manager.GetName(typeof(GenericKeyReference))) {
                     GenericKeyReference reference = (GenericKeyReference)instance;
                     FindSoundsEx(reference.Reference.key.key, done, ret, map, handler, replace, mykey);

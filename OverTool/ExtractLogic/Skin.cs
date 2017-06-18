@@ -158,6 +158,7 @@ namespace OverTool.ExtractLogic {
                 using (BinaryReader reader = new BinaryReader(anim)) {
                     anim.Position = 0x18L;
                     ulong infokey = reader.ReadUInt64();
+                    Sound.FindSoundsExD(infokey, new HashSet<ulong>(), sound, map, handler, replace, key);
                     FindDataChunked(infokey, sound, animList, replace, parsed, map, handler, models, layers, key);
                 }
             }
