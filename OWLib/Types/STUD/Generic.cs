@@ -45,6 +45,27 @@ namespace OWLib.Types.STUD {
     }
     
     [System.Diagnostics.DebuggerDisplay(OWLib.STUD.STUD_DEBUG_STR)]
+    public class GenericSoundReference : ISTUDInstance {
+        public uint Id => 0x17C5E999;
+        public string Name => "GenericSoundReference";
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct ReferenceHeader {
+            public STUDInstanceInfo instance;
+            public OWRecord key;
+        }
+
+        private ReferenceHeader reference;
+        public ReferenceHeader Reference => reference;
+
+        public void Read(Stream input, OWLib.STUD stud) {
+            using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
+                reference = reader.Read<ReferenceHeader>();
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerDisplay(OWLib.STUD.STUD_DEBUG_STR)]
     public class GenericKeyReference : ISTUDInstance {
         public uint Id => 0xAD81A809;
         public string Name => "GenericKeyReference";

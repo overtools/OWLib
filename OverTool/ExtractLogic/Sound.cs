@@ -96,6 +96,16 @@ namespace OverTool.ExtractLogic {
                 if (instance.Name == stud.Manager.GetName(typeof(GenericRecordReference))) {
                     GenericRecordReference inst = (GenericRecordReference)instance;
                     FindSoundsEx(inst.Reference.key.key, done, ret, map, handler, replace, mykey);
+                } else if (instance.Name == stud.Manager.GetName(typeof(UISoundList))) {
+                    UISoundList inst = (UISoundList)instance;
+                    foreach (UISoundList.SoundListEntry[] list in inst.Entries) {
+                        foreach (UISoundList.SoundListEntry entry in list) {
+                            FindSoundsExD(entry.sound, done, ret, map, handler, replace, mykey);
+                        }
+                    }
+                } else if (instance.Name == stud.Manager.GetName(typeof(GenericSoundReference))) {
+                    GenericSoundReference inst = (GenericSoundReference)instance;
+                    FindSoundsEx(inst.Reference.key.key, done, ret, map, handler, replace, mykey);
                 } else if (instance.Name == stud.Manager.GetName(typeof(ChildGameParameterRecord))) {
                     ChildGameParameterRecord inst = (ChildGameParameterRecord)instance;
                     FindSoundsEx(inst.Param.binding.key, done, ret, map, handler, replace, mykey);
