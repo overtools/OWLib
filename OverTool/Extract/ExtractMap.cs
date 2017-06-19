@@ -142,60 +142,68 @@ namespace OverTool {
                     HashSet<ulong> soundDone = new HashSet<ulong>();
                     Sound.FindSoundsEx(master.Header.audio.key, soundDone, soundData, map, handler, replace, master.Header.data.key);
                     using (Stream map2Stream = Util.OpenFile(map[master.DataKey(2)], handler)) {
-                        Map map2Data = new Map(map2Stream);
-                        using (Stream map8Stream = Util.OpenFile(map[master.DataKey(8)], handler)) {
-                            Map map8Data = new Map(map8Stream);
-                            using (Stream mapBStream = Util.OpenFile(map[master.DataKey(0xB)], handler)) {
-                                Map mapBData = new Map(mapBStream, true);
-
-                                mapBStream.Position = (long)(Math.Ceiling((float)mapBStream.Position / 16.0f) * 16); // Future proofing
-
-                                for (int i = 0; i < mapBData.STUDs.Count; ++i) {
-                                    STUD stud = mapBData.STUDs[i];
-                                    Sound.FindSoundsSTUD(stud, soundDone, soundData, map, handler, replace, master.DataKey(0xB), master.DataKey(0xB));
-                                }
-
-                                for (int i = 0; i < mapBData.Records.Length; ++i) {
-                                    if (mapBData.Records[i] != null && mapBData.Records[i].GetType() != typeof(Map0B)) {
-                                        continue;
-                                    }
-                                    Map0B mapprop = (Map0B)mapBData.Records[i];
-                                    if (!map.ContainsKey(mapprop.Header.binding)) {
-                                        continue;
-                                    }
-                                    using (Stream map11Stream = Util.OpenFile(map[master.DataKey(0x11)], handler)) {
-                                        Map11 map11 = new Map11(map11Stream);
-                                        Sound.FindSoundsSTUD(map11.main, soundDone, soundData, map, handler, replace, masterKey, master.DataKey(0x11));
-                                        Sound.FindSoundsSTUD(map11.secondary, soundDone, soundData, map, handler, replace, masterKey, master.DataKey(0x11));
-                                    }
-                                    Sound.FindSoundsEx(mapprop.Header.binding, soundDone, soundData, map, handler, replace, master.DataKey(0xB));
-                                    HashSet<ulong> bindingModels = new HashSet<ulong>();
-                                    Dictionary<ulong, List<ImageLayer>> bindingTextures = new Dictionary<ulong, List<ImageLayer>>(); 
-
-                                    using (Stream bindingFile = Util.OpenFile(map[mapprop.Header.binding], handler)) {
-                                        STUD binding = new STUD(bindingFile, true, STUDManager.Instance, false, true);
-                                        foreach (ISTUDInstance instance in binding.Instances) {
-                                            if (instance == null) {
-                                                continue;
+                        if (map2Stream != null) {
+                            Map map2Data = new Map(map2Stream);
+                            using (Stream map8Stream = Util.OpenFile(map[master.DataKey(8)], handler)) {
+                                if (map8Stream != null) {
+                                    Map map8Data = new Map(map8Stream);
+                                    using (Stream mapBStream = Util.OpenFile(map[master.DataKey(0xB)], handler)) {
+                                        if (mapBStream != null) {
+                                            Map mapBData = new Map(mapBStream, true);
+                                            using (Stream map11Stream = Util.OpenFile(map[master.DataKey(0x11)], handler)) {
+                                                if (map11Stream != null) {
+                                                    Map11 map11 = new Map11(map11Stream);
+                                                    Sound.FindSoundsSTUD(map11.main, soundDone, soundData, map, handler, replace, masterKey, master.DataKey(0x11));
+                                                    Sound.FindSoundsSTUD(map11.secondary, soundDone, soundData, map, handler, replace, masterKey, master.DataKey(0x11));
+                                                }
                                             }
-                                            if (instance.Name != binding.Manager.GetName(typeof(ComplexModelRecord))) {
-                                                continue;
+
+                                            mapBStream.Position = (long)(Math.Ceiling((float)mapBStream.Position / 16.0f) * 16); // Future proofing
+
+                                            for (int i = 0; i < mapBData.STUDs.Count; ++i) {
+                                                STUD stud = mapBData.STUDs[i];
+                                                Sound.FindSoundsSTUD(stud, soundDone, soundData, map, handler, replace, master.DataKey(0xB), master.DataKey(0xB));
                                             }
-                                            ComplexModelRecord cmr = (ComplexModelRecord)instance;
-                                            mapprop.MaterialKey = cmr.Data.material.key;
-                                            mapprop.ModelKey = cmr.Data.model.key;
-                                            Skin.FindAnimations(cmr.Data.animationList.key, soundData, animList, replace, parsed, map, handler, bindingModels, bindingTextures, mapprop.ModelKey);
-                                            Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, soundData, animList, replace, parsed, map, handler, bindingModels, bindingTextures, mapprop.ModelKey);
-                                            break;
+
+                                            for (int i = 0; i < mapBData.Records.Length; ++i) {
+                                                if (mapBData.Records[i] != null && mapBData.Records[i].GetType() != typeof(Map0B)) {
+                                                    continue;
+                                                }
+                                                Map0B mapprop = (Map0B)mapBData.Records[i];
+                                                if (!map.ContainsKey(mapprop.Header.binding)) {
+                                                    continue;
+                                                }
+                                                Sound.FindSoundsEx(mapprop.Header.binding, soundDone, soundData, map, handler, replace, master.DataKey(0xB));
+                                                HashSet<ulong> bindingModels = new HashSet<ulong>();
+                                                Dictionary<ulong, List<ImageLayer>> bindingTextures = new Dictionary<ulong, List<ImageLayer>>();
+
+                                                using (Stream bindingFile = Util.OpenFile(map[mapprop.Header.binding], handler)) {
+                                                    STUD binding = new STUD(bindingFile, true, STUDManager.Instance, false, true);
+                                                    foreach (ISTUDInstance instance in binding.Instances) {
+                                                        if (instance == null) {
+                                                            continue;
+                                                        }
+                                                        if (instance.Name != binding.Manager.GetName(typeof(ComplexModelRecord))) {
+                                                            continue;
+                                                        }
+                                                        ComplexModelRecord cmr = (ComplexModelRecord)instance;
+                                                        mapprop.MaterialKey = cmr.Data.material.key;
+                                                        mapprop.ModelKey = cmr.Data.model.key;
+                                                        Skin.FindAnimations(cmr.Data.animationList.key, soundData, animList, replace, parsed, map, handler, bindingModels, bindingTextures, mapprop.ModelKey);
+                                                        Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, soundData, animList, replace, parsed, map, handler, bindingModels, bindingTextures, mapprop.ModelKey);
+                                                        break;
+                                                    }
+                                                }
+                                                mapBData.Records[i] = mapprop;
+                                            }
+
+                                            using (Stream mapLStream = Util.OpenFile(map[master.DataKey(9)], handler)) {
+                                                Map mapLData = new Map(mapLStream);
+                                                using (Stream outputStream = File.Open($"{outputPath}{Util.SanitizePath(name)}{owmap.Format}", FileMode.Create, FileAccess.Write)) {
+                                                    used = owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name, modelWriter);
+                                                }
+                                            }
                                         }
-                                    }
-                                    mapBData.Records[i] = mapprop;
-                                }
-
-                                using (Stream mapLStream = Util.OpenFile(map[master.DataKey(9)], handler)) {
-                                    Map mapLData = new Map(mapLStream);
-                                    using (Stream outputStream = File.Open($"{outputPath}{Util.SanitizePath(name)}{owmap.Format}", FileMode.Create, FileAccess.Write)) {
-                                        used = owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name, modelWriter);
                                     }
                                 }
                             }
