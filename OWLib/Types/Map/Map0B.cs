@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Map {
     public class Map0B : IMapFormat {
+        public bool HasSTUD => true;
+
         public ushort Identifier => 0xB;
 
         public string Name => "Prop Models";

@@ -62,6 +62,9 @@ namespace OverTool {
                         track[tr] = new List<ulong>();
                     }
                 }
+                if (toolsMap.ContainsKey(t.Opt)) {
+                    Console.Out.WriteLine("Duplicate opt! {0} conflicts with {1}", t.Title, toolsMap[t.Opt].Title);
+                }
                 toolsMap[t.Opt] = t;
             }
             if (tool == null || flags.Positionals.Length - 2 < tool.MinimumArgs) {

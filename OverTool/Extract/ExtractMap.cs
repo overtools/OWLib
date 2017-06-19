@@ -150,21 +150,8 @@ namespace OverTool {
 
                                 mapBStream.Position = (long)(Math.Ceiling((float)mapBStream.Position / 16.0f) * 16); // Future proofing
 
-                                List<STUD> inlineSTUDArray = new List<STUD>();
-                                while (true) { // TODO: Move this to Map.cs
-                                    if (mapBStream.Position >= mapBStream.Length) {
-                                        break;
-                                    }
-                                    STUD tmp = new STUD(mapBStream, true, STUDManager.Instance, true, false);
-                                    if (tmp.end == -1) {
-                                        break;
-                                    }
-                                    mapBStream.Position = (long)(Math.Ceiling((float)tmp.end / 16.0f) * 16); // Future proofing
-                                    inlineSTUDArray.Add(tmp);
-                                }
-
-                                for (int i = 0; i < inlineSTUDArray.Count; ++i) {
-                                    STUD stud = inlineSTUDArray[i];
+                                for (int i = 0; i < mapBData.STUDs.Count; ++i) {
+                                    STUD stud = mapBData.STUDs[i];
                                     Sound.FindSoundsSTUD(stud, soundDone, soundData, map, handler, replace, master.DataKey(0xB), master.DataKey(0xB));
                                 }
 
@@ -175,6 +162,11 @@ namespace OverTool {
                                     Map0B mapprop = (Map0B)mapBData.Records[i];
                                     if (!map.ContainsKey(mapprop.Header.binding)) {
                                         continue;
+                                    }
+                                    using (Stream map11Stream = Util.OpenFile(map[master.DataKey(0x11)], handler)) {
+                                        Map11 map11 = new Map11(map11Stream);
+                                        Sound.FindSoundsSTUD(map11.main, soundDone, soundData, map, handler, replace, masterKey, master.DataKey(0x11));
+                                        Sound.FindSoundsSTUD(map11.secondary, soundDone, soundData, map, handler, replace, masterKey, master.DataKey(0x11));
                                     }
                                     Sound.FindSoundsEx(mapprop.Header.binding, soundDone, soundData, map, handler, replace, master.DataKey(0xB));
                                     HashSet<ulong> bindingModels = new HashSet<ulong>();

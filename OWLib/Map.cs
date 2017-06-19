@@ -13,11 +13,17 @@ namespace OWLib {
         private MapCommonHeader[] commonHeaders;
         private IMapFormat[] records;
         private MapManager manager = MapManager.Instance;
+        private List<STUD> studs = new List<STUD>();
 
         public MapHeader Header => header;
-        private MapCommonHeader[] CommonHeaders => commonHeaders;
+        public MapCommonHeader[] CommonHeaders => commonHeaders;
         public IMapFormat[] Records => records;
         public MapManager Manager => manager;
+        public IReadOnlyList<STUD> STUDs => studs;
+
+        private void AlignPosition(Stream input, long end) {
+            input.Position = (long)(Math.Ceiling((float)end / 16.0f) * 16);
+        }
 
         public Map(Stream input, bool open = false) {
             using (BinaryReader reader = new BinaryReader(input, Encoding.Default, open)) {
@@ -35,6 +41,21 @@ namespace OWLib {
                         }
                     }
                     input.Position = nps;
+                }
+
+                if (records[0].HasSTUD) {
+                    AlignPosition(input, input.Position);
+                    while (true) {
+                        if (input.Position >= input.Length) {
+                            break;
+                        }
+                        STUD tmp = new STUD(input, true, STUDManager.Instance, true, false);
+                        if (tmp.end == -1) {
+                            break;
+                        }
+                        AlignPosition(input, tmp.end);
+                        studs.Add(tmp);
+                    }
                 }
             }
         }

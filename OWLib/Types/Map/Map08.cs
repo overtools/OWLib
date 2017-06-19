@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Map {
     public class Map08 : IMapFormat {
+        public bool HasSTUD => false;
+
         public ushort Identifier => 8;
 
         public string Name => "Detail Models";

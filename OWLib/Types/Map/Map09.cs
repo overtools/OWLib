@@ -2,14 +2,15 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Map {
-  public class Map09 : IMapFormat {
-    public ushort Identifier => 9;
+    public class Map09 : IMapFormat {
+        public bool HasSTUD => false;
+
+        public ushort Identifier => 9;
 
         public string Name => "Lights";
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct Map09Header
-        {
+        public struct Map09Header {
             public MapQuat rotation;
             public MapVec3 position;
             public uint unknown1A;
@@ -42,10 +43,8 @@ namespace OWLib.Types.Map {
         private Map09Header header;
         public Map09Header Header => header;
 
-        public void Read(Stream data)
-        {
-            using (BinaryReader reader = new BinaryReader(data, System.Text.Encoding.Default, true))
-            {
+        public void Read(Stream data) {
+            using (BinaryReader reader = new BinaryReader(data, System.Text.Encoding.Default, true)) {
                 header = reader.Read<Map09Header>();
             }
         }

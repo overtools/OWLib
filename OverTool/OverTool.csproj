@@ -66,6 +66,7 @@
     <Compile Include="Dump\DumpString.cs" />
     <Compile Include="Dump\DumpTex.cs" />
     <Compile Include="Dump\DumpAudio.cs" />
+    <Compile Include="Dump\DumpMapAudio.cs" />
     <Compile Include="Dump\DumpVoiceFull.cs" />
     <Compile Include="Dump\DumpVoice.cs" />
     <Compile Include="ExtractLogic\ItemAnimation.cs" />
