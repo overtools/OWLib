@@ -59,7 +59,7 @@ namespace OverTool {
 
                 ExtractLogic.Skin.FindModels(master.Header.binding, blank, models, animList, layers, blankdict, parsed, map, handler, sound);
 
-                ExtractLogic.Skin.Save(master, path, heroName, $"{GUID.LongKey(masterKey):X}", blankdict, parsed, models, layers, animList, flags, track, map, handler, masterKey, false, quiet, sound);
+                ExtractLogic.Skin.Save(master, path, heroName, $"{GUID.LongKey(masterKey):X}", blankdict, parsed, models, layers, animList, flags, track, map, handler, masterKey, false, quiet, sound, 0);
             }
         }
     }

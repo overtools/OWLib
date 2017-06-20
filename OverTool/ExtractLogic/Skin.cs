@@ -158,6 +158,7 @@ namespace OverTool.ExtractLogic {
                 using (BinaryReader reader = new BinaryReader(anim)) {
                     anim.Position = 0x18L;
                     ulong infokey = reader.ReadUInt64();
+                    Sound.FindSoundsExD(infokey, new HashSet<ulong>(), sound, map, handler, replace, key);
                     FindDataChunked(infokey, sound, animList, replace, parsed, map, handler, models, layers, key);
                 }
             }
@@ -483,17 +484,17 @@ namespace OverTool.ExtractLogic {
             }
         }
 
-        public static void FindReplacements(ulong key, int index, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HeroMaster master, SkinItem skin, bool skipFirst = false) {
+        public static ulong FindReplacements(ulong key, int index, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, Dictionary<ulong, Record> map, CASCHandler handler, HeroMaster master, SkinItem skin, bool skipFirst = false) {
             if (!map.ContainsKey(key)) {
-                return;
+                return 0;
             }
             if (!parsed.Add(key)) {
-                return;
+                return 0;
             }
 
             STUD record = new STUD(Util.OpenFile(map[key], handler));
             if (record.Instances[0] == null) {
-                return;
+                return 0;
             }
             if (record.Instances[0].Name == record.Manager.GetName(typeof(TextureOverride))) {
                 TextureOverride over = (TextureOverride)record.Instances[0];
@@ -501,7 +502,7 @@ namespace OverTool.ExtractLogic {
                     FindReplacements(over.SubDefinitions[index].key, -1, replace, parsed, map, handler, master, skin);
                 }
                 if (skipFirst) {
-                    return;
+                    return over.Header.icon.key;
                 }
                 for (int i = 0; i < over.Replace.Length; ++i) {
                     if (!map.ContainsKey(over.Target[i])) {
@@ -512,6 +513,7 @@ namespace OverTool.ExtractLogic {
                     }
                     replace[over.Replace[i]] = over.Target[i];
                 }
+                return over.Header.icon.key;
             } else if (record.Instances[0].Name == record.Manager.GetName(typeof(TextureOverrideSecondary))) {
                 TextureOverrideSecondary over = (TextureOverrideSecondary)record.Instances[0];
                 for (int i = 0; i < over.Replace.Length; ++i) {
@@ -524,6 +526,7 @@ namespace OverTool.ExtractLogic {
                     replace[over.Replace[i]] = over.Target[i];
                 }
             }
+            return 0;
         }
 
         public static void Extract(HeroMaster master, STUD itemStud, string output, string heroName, string itemName, string itemGroup, List<ulong> ignore, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags, ulong masterKey, int replacementIndex) {
@@ -538,15 +541,15 @@ namespace OverTool.ExtractLogic {
             Dictionary<ulong, ulong> replace = new Dictionary<ulong, ulong>();
             Dictionary<ulong, List<ulong>> sound = new Dictionary<ulong, List<ulong>>();
 
-            ExtractData(skin, master, true, models, animList, parsed, layers, replace, sound, ignore, replacementIndex, map, handler);
+            ulong guiIcon = ExtractData(skin, master, true, models, animList, parsed, layers, replace, sound, ignore, replacementIndex, map, handler);
             
-            Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, flags, track, map, handler, masterKey, false, quiet, sound);
+            Save(master, path, heroName, itemName, replace, parsed, models, layers, animList, flags, track, map, handler, masterKey, false, quiet, sound, guiIcon);
         }
 
-        public static void ExtractData(SkinItem skin, HeroMaster master, bool findReplacements, HashSet<ulong> models, Dictionary<ulong, ulong> animList, HashSet<ulong> parsed, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, Dictionary<ulong, List<ulong>> sound, List<ulong> ignore, int replacementIndex, Dictionary<ulong, Record> map, CASCHandler handler) {
-
+        public static ulong ExtractData(SkinItem skin, HeroMaster master, bool findReplacements, HashSet<ulong> models, Dictionary<ulong, ulong> animList, HashSet<ulong> parsed, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> replace, Dictionary<ulong, List<ulong>> sound, List<ulong> ignore, int replacementIndex, Dictionary<ulong, Record> map, CASCHandler handler) {
+            ulong guiIcon = 0;
             if (findReplacements) {
-                FindReplacements(skin.Data.skin.key, replacementIndex, replace, parsed, map, handler, master, skin);
+                guiIcon = FindReplacements(skin.Data.skin.key, replacementIndex, replace, parsed, map, handler, master, skin);
             }
 
             ulong bindingKey = master.Header.binding.key;
@@ -595,6 +598,8 @@ namespace OverTool.ExtractLogic {
                 }
                 FindModels(bindingKey, ignore, models, animList, layers, replace, parsed, map, handler, sound);
             }
+
+            return guiIcon;
         }
 
         private static bool tryOpt(List<char> opts, int index, char target, bool @default = false) {
@@ -611,7 +616,7 @@ namespace OverTool.ExtractLogic {
             return @default;
         }
 
-        public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, OverToolFlags flags, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, ulong heroKey, bool external, bool quiet, Dictionary<ulong, List<ulong>> sound) {
+        public static void Save(HeroMaster master, string path, string heroName, string itemName, Dictionary<ulong, ulong> replace, HashSet<ulong> parsed, HashSet<ulong> models, Dictionary<ulong, List<ImageLayer>> layers, Dictionary<ulong, ulong> animList, OverToolFlags flags, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, ulong heroKey, bool external, bool quiet, Dictionary<ulong, List<ulong>> sound, ulong guiIcon) {
             char modelEncoding = flags.ModelFormat;
             if (flags.Raw) {
                 modelEncoding = '+';
@@ -883,6 +888,10 @@ namespace OverTool.ExtractLogic {
                 }
                 if (done.Add(master.Header.texture4.key)) {
                     SaveIcon(output, master.Header.texture4.key, replace, map, handler, quiet);
+                }
+
+                if (guiIcon > 0 && done.Add(guiIcon)) {
+                    SaveIcon(output, guiIcon, replace, map, handler, quiet);
                 }
             }
 

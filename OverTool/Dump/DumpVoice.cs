@@ -7,10 +7,10 @@ using OWLib.Types.STUD;
 
 namespace OverTool {
     class DumpVoice : IOvertool {
-        public string Help => "output [hero query]";
+        public string Help => "output [query]";
         public uint MinimumArgs => 1;
         public char Opt => 'v';
-        public string Title => "Extract Voice";
+        public string Title => "Extract NPC Voice";
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;
 
@@ -80,7 +80,13 @@ namespace OverTool {
                         continue;
                     }
                 }
-                Console.Out.WriteLine("Dumping voice bites for hero {0}", heroName);
+                if (master.Header.itemMaster.key != 0) { // AI
+                    InventoryMaster inventory = Extract.OpenInventoryMaster(master, map, handler);
+                    if (inventory.ItemGroups.Length > 0 || inventory.DefaultGroups.Length > 0) {
+                        continue;
+                    }
+                }
+                Console.Out.WriteLine("Dumping voice bites for NPC {0}", heroName);
                 Dictionary<ulong, List<ulong>> soundData = ExtractLogic.Sound.FindSounds(master, track, map, handler, null, masterKey);
                 string path = string.Format("{0}{1}{2}{1}{3}{1}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), "Sound Dump");
                 if (!Directory.Exists(path)) {

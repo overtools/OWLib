@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Map {
     public class Map01 : IMapFormat {
+        public bool HasSTUD => false;
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Map01Header {
             public ulong model;

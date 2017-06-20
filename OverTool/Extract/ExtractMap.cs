@@ -131,7 +131,25 @@ namespace OverTool {
                 HashSet<ulong> parsed = new HashSet<ulong>();
                 Dictionary<ulong, ulong> animList = new Dictionary<ulong, ulong>();
                 Dictionary<ulong, List<ulong>> soundData = new Dictionary<ulong, List<ulong>>();
-                using (Stream mapStream = Util.OpenFile(map[master.Header.data.key], handler)) {
+                if (!map.ContainsKey(master.DataKey(1))) {
+                    continue;
+                }
+                if (!map.ContainsKey(master.DataKey(2))) {
+                    continue;
+                }
+                if (!map.ContainsKey(master.DataKey(8))) {
+                    continue;
+                }
+                if (!map.ContainsKey(master.DataKey(0xB))) {
+                    continue;
+                }
+                if (!map.ContainsKey(master.DataKey(0x11))) {
+                    continue;
+                }
+                if (!map.ContainsKey(master.DataKey(0x10))) {
+                    continue;
+                }
+                using (Stream mapStream = Util.OpenFile(map[master.DataKey(1)], handler)) {
                     Console.Out.WriteLine("Extracting map {0} with ID {1:X8}", name, GUID.Index(master.Header.data.key));
                     Map mapData = new Map(mapStream);
                     IDataWriter owmap = new OWMAPWriter();
@@ -142,68 +160,68 @@ namespace OverTool {
                     HashSet<ulong> soundDone = new HashSet<ulong>();
                     Sound.FindSoundsEx(master.Header.audio.key, soundDone, soundData, map, handler, replace, master.Header.data.key);
                     using (Stream map2Stream = Util.OpenFile(map[master.DataKey(2)], handler)) {
-                        Map map2Data = new Map(map2Stream);
-                        using (Stream map8Stream = Util.OpenFile(map[master.DataKey(8)], handler)) {
-                            Map map8Data = new Map(map8Stream);
-                            using (Stream mapBStream = Util.OpenFile(map[master.DataKey(0xB)], handler)) {
-                                Map mapBData = new Map(mapBStream, true);
-
-                                mapBStream.Position = (long)(Math.Ceiling((float)mapBStream.Position / 16.0f) * 16); // Future proofing
-
-                                List<STUD> inlineSTUDArray = new List<STUD>();
-                                while (true) { // TODO: Move this to Map.cs
-                                    if (mapBStream.Position >= mapBStream.Length) {
-                                        break;
-                                    }
-                                    STUD tmp = new STUD(mapBStream, true, STUDManager.Instance, true, false);
-                                    if (tmp.end == -1) {
-                                        break;
-                                    }
-                                    mapBStream.Position = (long)(Math.Ceiling((float)tmp.end / 16.0f) * 16); // Future proofing
-                                    inlineSTUDArray.Add(tmp);
-                                }
-
-                                for (int i = 0; i < inlineSTUDArray.Count; ++i) {
-                                    STUD stud = inlineSTUDArray[i];
-                                    Sound.FindSoundsSTUD(stud, soundDone, soundData, map, handler, replace, master.DataKey(0xB), master.DataKey(0xB));
-                                }
-
-                                for (int i = 0; i < mapBData.Records.Length; ++i) {
-                                    if (mapBData.Records[i] != null && mapBData.Records[i].GetType() != typeof(Map0B)) {
-                                        continue;
-                                    }
-                                    Map0B mapprop = (Map0B)mapBData.Records[i];
-                                    if (!map.ContainsKey(mapprop.Header.binding)) {
-                                        continue;
-                                    }
-                                    Sound.FindSoundsEx(mapprop.Header.binding, soundDone, soundData, map, handler, replace, master.DataKey(0xB));
-                                    HashSet<ulong> bindingModels = new HashSet<ulong>();
-                                    Dictionary<ulong, List<ImageLayer>> bindingTextures = new Dictionary<ulong, List<ImageLayer>>(); 
-
-                                    using (Stream bindingFile = Util.OpenFile(map[mapprop.Header.binding], handler)) {
-                                        STUD binding = new STUD(bindingFile, true, STUDManager.Instance, false, true);
-                                        foreach (ISTUDInstance instance in binding.Instances) {
-                                            if (instance == null) {
-                                                continue;
+                        if (map2Stream != null) {
+                            Map map2Data = new Map(map2Stream);
+                            using (Stream map8Stream = Util.OpenFile(map[master.DataKey(8)], handler)) {
+                                if (map8Stream != null) {
+                                    Map map8Data = new Map(map8Stream);
+                                    using (Stream mapBStream = Util.OpenFile(map[master.DataKey(0xB)], handler)) {
+                                        if (mapBStream != null) {
+                                            Map mapBData = new Map(mapBStream, true);
+                                            using (Stream map11Stream = Util.OpenFile(map[master.DataKey(0x11)], handler)) {
+                                                if (map11Stream != null) {
+                                                    Map11 map11 = new Map11(map11Stream);
+                                                    Sound.FindSoundsSTUD(map11.main, soundDone, soundData, map, handler, replace, masterKey, master.DataKey(0x11));
+                                                    Sound.FindSoundsSTUD(map11.secondary, soundDone, soundData, map, handler, replace, masterKey, master.DataKey(0x11));
+                                                }
                                             }
-                                            if (instance.Name != binding.Manager.GetName(typeof(ComplexModelRecord))) {
-                                                continue;
+
+                                            mapBStream.Position = (long)(Math.Ceiling((float)mapBStream.Position / 16.0f) * 16); // Future proofing
+
+                                            for (int i = 0; i < mapBData.STUDs.Count; ++i) {
+                                                STUD stud = mapBData.STUDs[i];
+                                                Sound.FindSoundsSTUD(stud, soundDone, soundData, map, handler, replace, master.DataKey(0xB), master.DataKey(0xB));
                                             }
-                                            ComplexModelRecord cmr = (ComplexModelRecord)instance;
-                                            mapprop.MaterialKey = cmr.Data.material.key;
-                                            mapprop.ModelKey = cmr.Data.model.key;
-                                            Skin.FindAnimations(cmr.Data.animationList.key, soundData, animList, replace, parsed, map, handler, bindingModels, bindingTextures, mapprop.ModelKey);
-                                            Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, soundData, animList, replace, parsed, map, handler, bindingModels, bindingTextures, mapprop.ModelKey);
-                                            break;
+
+                                            for (int i = 0; i < mapBData.Records.Length; ++i) {
+                                                if (mapBData.Records[i] != null && mapBData.Records[i].GetType() != typeof(Map0B)) {
+                                                    continue;
+                                                }
+                                                Map0B mapprop = (Map0B)mapBData.Records[i];
+                                                if (!map.ContainsKey(mapprop.Header.binding)) {
+                                                    continue;
+                                                }
+                                                Sound.FindSoundsEx(mapprop.Header.binding, soundDone, soundData, map, handler, replace, master.DataKey(0xB));
+                                                HashSet<ulong> bindingModels = new HashSet<ulong>();
+                                                Dictionary<ulong, List<ImageLayer>> bindingTextures = new Dictionary<ulong, List<ImageLayer>>();
+
+                                                using (Stream bindingFile = Util.OpenFile(map[mapprop.Header.binding], handler)) {
+                                                    STUD binding = new STUD(bindingFile, true, STUDManager.Instance, false, true);
+                                                    foreach (ISTUDInstance instance in binding.Instances) {
+                                                        if (instance == null) {
+                                                            continue;
+                                                        }
+                                                        if (instance.Name != binding.Manager.GetName(typeof(ComplexModelRecord))) {
+                                                            continue;
+                                                        }
+                                                        ComplexModelRecord cmr = (ComplexModelRecord)instance;
+                                                        mapprop.MaterialKey = cmr.Data.material.key;
+                                                        mapprop.ModelKey = cmr.Data.model.key;
+                                                        Skin.FindAnimations(cmr.Data.animationList.key, soundData, animList, replace, parsed, map, handler, bindingModels, bindingTextures, mapprop.ModelKey);
+                                                        Skin.FindAnimations(cmr.Data.secondaryAnimationList.key, soundData, animList, replace, parsed, map, handler, bindingModels, bindingTextures, mapprop.ModelKey);
+                                                        break;
+                                                    }
+                                                }
+                                                mapBData.Records[i] = mapprop;
+                                            }
+
+                                            using (Stream mapLStream = Util.OpenFile(map[master.DataKey(9)], handler)) {
+                                                Map mapLData = new Map(mapLStream);
+                                                using (Stream outputStream = File.Open($"{outputPath}{Util.SanitizePath(name)}{owmap.Format}", FileMode.Create, FileAccess.Write)) {
+                                                    used = owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name, modelWriter);
+                                                }
+                                            }
                                         }
-                                    }
-                                    mapBData.Records[i] = mapprop;
-                                }
-
-                                using (Stream mapLStream = Util.OpenFile(map[master.DataKey(9)], handler)) {
-                                    Map mapLData = new Map(mapLStream);
-                                    using (Stream outputStream = File.Open($"{outputPath}{Util.SanitizePath(name)}{owmap.Format}", FileMode.Create, FileAccess.Write)) {
-                                        used = owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name, modelWriter);
                                     }
                                 }
                             }
@@ -229,11 +247,15 @@ namespace OverTool {
                                 if (!parsed.Add(modelpair.Key)) {
                                     continue;
                                 }
+                                HashSet<string> extracted = new HashSet<string>();
                                 using (Stream modelStream = Util.OpenFile(map[modelpair.Key], handler)) {
                                     Chunked mdl = new Chunked(modelStream, true);
                                     modelStream.Position = 0;
                                     if (modelEncoding != '+' && modelWriter != null) {
                                         foreach (string modelOutput in modelpair.Value) {
+                                            if (!extracted.Add(modelOutput)) {
+                                                continue;
+                                            }
                                             using (Stream outputStream = File.Open($"{outputPath}{modelOutput}", FileMode.Create, FileAccess.Write)) {
                                                 if (modelWriter.Write(mdl, outputStream, LODs, new Dictionary<ulong, List<ImageLayer>>(), new object[5] { null, null, null, null, skipCmodel })) {
                                                     if (!quiet) {

@@ -2,16 +2,18 @@
 
 namespace OWLib.Types.Map {
     public interface IMapFormat {
-        ushort Identifier
-        {
+        ushort Identifier {
             get;
         }
-    
-        string Name
-        {
+
+        string Name {
             get;
         }
-    
+
+        bool HasSTUD {
+            get;
+        }
+
         void Read(Stream data);
     }
 }

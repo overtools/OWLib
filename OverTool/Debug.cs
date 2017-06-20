@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using CASCExplorer;
 using OWLib;
-using OWLib.Types.STUD.InventoryItem;
+using OWLib.Types.STUD;
 
 namespace OverTool {
     public class Debug : IOvertool {
@@ -18,25 +18,6 @@ namespace OverTool {
             foreach (KeyValuePair<ushort, List<ulong>> pair in track) {
                 Console.Out.WriteLine($"{pair.Key:X3} {pair.Value.Count} entries");
             }
-            /*
-            // Code for rapidly finding what zero values are.
-            foreach (ulong key in track[0xA5]) {
-                using (Stream stream = Util.OpenFile(map[key], handler)) {
-                    STUD stud = new STUD(stream);
-                    if (stud.Instances == null) {
-                        continue;
-                    }
-
-                    IInventorySTUDInstance instance = stud.Instances[0] as IInventorySTUDInstance;
-                    if (instance == null) {
-                        continue;
-                    }
-                    if (instance.Header.unk1.key != 0) {
-                        System.Diagnostics.Debugger.Break();
-                    }
-                }
-            }
-            */
         }
     }
 }
