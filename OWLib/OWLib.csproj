@@ -72,6 +72,7 @@
     <Compile Include="Types\STUD\GameParam\SoundFX.cs" />
     <Compile Include="Types\STUD\GlobalInventoryMaster.cs" />
     <Compile Include="Types\STUD\InventoryDescription.cs" />
+    <Compile Include="Types\STUD\AnnouncerVoiceList.cs" />
     <Compile Include="Types\STUD\UISoundList.cs" />
     <Compile Include="Writer\ASCIIWriter.cs" />
     <Compile Include="Writer\BINWriter.cs" />
