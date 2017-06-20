@@ -131,7 +131,25 @@ namespace OverTool {
                 HashSet<ulong> parsed = new HashSet<ulong>();
                 Dictionary<ulong, ulong> animList = new Dictionary<ulong, ulong>();
                 Dictionary<ulong, List<ulong>> soundData = new Dictionary<ulong, List<ulong>>();
-                using (Stream mapStream = Util.OpenFile(map[master.Header.data.key], handler)) {
+                if (!map.ContainsKey(master.DataKey(1))) {
+                    continue;
+                }
+                if (!map.ContainsKey(master.DataKey(2))) {
+                    continue;
+                }
+                if (!map.ContainsKey(master.DataKey(8))) {
+                    continue;
+                }
+                if (!map.ContainsKey(master.DataKey(0xB))) {
+                    continue;
+                }
+                if (!map.ContainsKey(master.DataKey(0x11))) {
+                    continue;
+                }
+                if (!map.ContainsKey(master.DataKey(0x10))) {
+                    continue;
+                }
+                using (Stream mapStream = Util.OpenFile(map[master.DataKey(1)], handler)) {
                     Console.Out.WriteLine("Extracting map {0} with ID {1:X8}", name, GUID.Index(master.Header.data.key));
                     Map mapData = new Map(mapStream);
                     IDataWriter owmap = new OWMAPWriter();

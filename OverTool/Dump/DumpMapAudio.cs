@@ -47,6 +47,12 @@ namespace OverTool {
                 if (!maps.Contains(name.ToLowerInvariant()) && !wildcard) {
                     continue;
                 }
+                if (!map.ContainsKey(master.DataKey(0xB))) {
+                    continue;
+                }
+                if (!map.ContainsKey(master.DataKey(0x11))) {
+                    continue;
+                }
                 Console.Out.WriteLine("Dumping audio for map {0}", name);
                 Dictionary<ulong, List<ulong>> soundData = new Dictionary<ulong, List<ulong>>();
                 string path = string.Format("{0}{1}{2}{1}{3}{1}{4}{1}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(name)), "Audio", GUID.Index(master.Header.data.key));
