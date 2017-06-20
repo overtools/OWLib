@@ -131,6 +131,11 @@ namespace OverTool.ExtractLogic {
                             FindSoundsEx(record.key, done, ret, map, handler, replace, mykey);
                         }
                     }
+                    if (sb.Music != null) {
+                        foreach (OWRecord record in sb.Music) {
+                            FindSoundsEx(record.key, done, ret, map, handler, replace, mykey);
+                        }
+                    }
                 } else if (instance.Name == stud.Manager.GetName(typeof(ParameterRecord))) {
                     ParameterRecord parameter = (ParameterRecord)instance;
                     foreach (ParameterRecord.ParameterEntry entry in parameter.Parameters) {
