@@ -20,7 +20,8 @@ namespace OWLib.Types.STUD.InventoryItem {
         public ulong unk5;
         public OWRecord description;
         public InventoryRarity rarity;
-        public uint amount;
+        public uint flags;
+        public ulong unknown;
     };
 
     public interface IInventorySTUDInstance : ISTUDInstance {
