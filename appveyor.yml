@@ -9,7 +9,7 @@ assembly_info:
   assembly_informational_version: $(appveyor_repo_commit)
 before_build:
 - cmd: >-
-    git submodule update --init
+    git submodule update --init --recursive
 
     nuget restore OverwatchToolchain.sln
 build:
@@ -22,8 +22,16 @@ before_package:
     del /F /Q dist\Release\*.xml
 
     del /F /Q dist\Release\*.exe.config
+
+    del /F /Q CASCExplorer\CASCExplorer\bin\Release\*.pdb
+
+    del /F /Q CASCExplorer\CASCExplorer\bin\Release\*.xml
+
+    del /F /Q CASCExplorer\CASCExplorer\bin\Release\*.exe.config
 artifacts:
 - path: dist/Release
   name: toolchain-release
 - path: dist/Release/CascLib.dll
   name: CascLib
+- path: CASCExplorer/CASCExplorer/bin/Release
+  name: CASCExplorer
