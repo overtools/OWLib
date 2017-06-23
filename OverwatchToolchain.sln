@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APMTool", "APMTool\APMTool.csproj", "{7A975804-D7B8-4233-9B63-F2FA8E06796F}"
 EndProject
@@ -42,6 +42,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "overwatch-anim", "overwatch-anim\overwatch-anim.csproj", "{F31B8ADD-B400-4A21-9D15-85840B4C38C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STUDebug", "STUDebug\STUDebug.csproj", "{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CASCExplorer", "CASCExplorer\CASCExplorer\CASCExplorer.csproj", "{CB208F91-B1E8-4319-B4C0-2F4E15A4BFBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +95,10 @@ Global
 		{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB208F91-B1E8-4319-B4C0-2F4E15A4BFBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB208F91-B1E8-4319-B4C0-2F4E15A4BFBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB208F91-B1E8-4319-B4C0-2F4E15A4BFBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB208F91-B1E8-4319-B4C0-2F4E15A4BFBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +114,7 @@ Global
 		{9432CA06-25EA-44DB-9FA1-0583FF096B5D} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{F31B8ADD-B400-4A21-9D15-85840B4C38C6} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
+		{CB208F91-B1E8-4319-B4C0-2F4E15A4BFBC} = {3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
