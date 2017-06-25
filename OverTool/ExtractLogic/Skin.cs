@@ -368,6 +368,9 @@ namespace OverTool.ExtractLogic {
             }
 
             STUD record = new STUD(Util.OpenFile(map[tgt], handler), true, STUDManager.Instance, false, true);
+            if (record.Instances == null) {
+                return;
+            }
             foreach (ISTUDInstance inst in record.Instances) {
                 if (inst == null) {
                     continue;
