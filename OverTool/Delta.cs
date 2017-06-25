@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CASCExplorer;
 using OWLib;
 
@@ -77,13 +78,13 @@ namespace OverTool {
 
         public void Save(string path, Record record, CASCHandler handler, string mode, bool quiet) {
             string output = Path.Combine(path, mode, $"{GUID.Type(record.record.Key):X3}", $"{GUID.LongKey(record.record.Key):X12}.{GUID.Type(record.record.Key):X3}");
-            if (!Directory.Exists(Path.GetDirectoryName(output))) {
-                Directory.CreateDirectory(Path.GetDirectoryName(output));
-            }
 
             using (Stream acp = Util.OpenFile(record, handler)) {
                 if (acp == null) {
                     return;
+                }
+                if (!Directory.Exists(Path.GetDirectoryName(output))) {
+                    Directory.CreateDirectory(Path.GetDirectoryName(output));
                 }
                 using (Stream file = File.Open(output, FileMode.Create)) {
                     Util.CopyBytes(acp, file, (int)acp.Length);
@@ -162,10 +163,17 @@ namespace OverTool {
                     }
                 case "dump": {
                         DeltaFile old = new DeltaFile(flags.Positionals[4]);
+                        List<ushort> types = new List<ushort>();
+                        if (flags.Positionals.Length > 5) {
+                            types.AddRange(flags.Positionals.Skip(5).Select((it) => ushort.Parse(it, System.Globalization.NumberStyles.HexNumber)));
+                        }
                         if (string.IsNullOrEmpty(old.Name) || old.Files.Count == 0) {
                             Console.Error.WriteLine("Invalid old file");
                         } else {
                             foreach (KeyValuePair<ulong, Record> pair in map) {
+                                if (types.Count > 0 && !types.Contains(GUID.Type(pair.Key))) {
+                                    continue;
+                                }
                                 if (old.Files.ContainsKey(pair.Key)) {
                                     if (old.Files[pair.Key] == pair.Value.record.Size) {
                                         continue;
@@ -181,6 +189,10 @@ namespace OverTool {
                     }
                 default: {
                         Console.Out.WriteLine("Valid modes: list, create, delta, dump");
+                        Console.Out.WriteLine("create [destination owdelta]");
+                        Console.Out.WriteLine("list [old owdelta] [new owdelta]");
+                        Console.Out.WriteLine("delta [old owdelta]");
+                        Console.Out.WriteLine("dump [detination] [old owdelta] [types]");
                         break;
                     }
             }
