@@ -26,13 +26,16 @@ namespace PackageTool {
                 return;
             }
 
+            string root = args[0];
+            
+            OwRootHandler.LOAD_PACKAGES = true;
+            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root, true, false);
             if (args[0][0] == '-' && args[0][1] == 'L') {
                 string lang = args[0].Substring(2);
-                OwRootHandler.LanguageScan = lang;
+                config.Languages = new HashSet<string>(new string[1] { lang });
                 args = args.Skip(1).ToArray();
             }
 
-            string root = args[0];
             string output = args[1] + Path.DirectorySeparatorChar;
             
             Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
@@ -102,7 +105,6 @@ namespace PackageTool {
                 return;
             }
 
-            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root);
             CASCHandler handler = CASCHandler.OpenStorage(config);
             OwRootHandler ow = handler.Root as OwRootHandler;
             if (ow == null) {

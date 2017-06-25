@@ -52,7 +52,7 @@ namespace OverTool {
             return sb.ToString().Normalize(NormalizationForm.FormC);
         }
 
-        public static Stream OpenFile(Record record, CASCHandler handler, bool recur = true) {
+        public static Stream OpenFile(Record record, CASCHandler handler) {
             long offset = 0;
             EncodingEntry enc;
             if (((ContentFlags)record.record.Flags & ContentFlags.Bundle) == ContentFlags.Bundle) {
@@ -69,35 +69,7 @@ namespace OverTool {
                 CopyBytes(fstream, ms, record.record.Size);
                 ms.Position = 0;
             } catch (Exception ex) {
-                if (recur) {
-                    OwRootHandler ow = (OwRootHandler)handler.Root;
-                    foreach (APMFile apm in ow.APMFiles) {
-                        if (!apm.Name.ToLowerInvariant().Contains("rdev")) {
-                            continue; // skip
-                        }
-                        for (int i = 0; i < apm.Packages.Length; ++i) {
-                            APMPackage package = apm.Packages[i];
-                            PackageIndex index = apm.Indexes[i];
-                            PackageIndexRecord[] records = apm.Records[i];
-                            for (long j = 0; j < records.LongLength; ++j) {
-                                PackageIndexRecord recordindex = records[j];
-                                if (recordindex.Key != record.record.Key) {
-                                    continue;
-                                }
-
-                                Stream strm = OpenFile(new Record {
-                                    package = package,
-                                    index = index,
-                                    record = recordindex,
-                                }, handler, false);
-                                if (strm != null) {
-                                    return strm;
-                                }
-                            }
-                        }
-                    }
-                    Console.Out.WriteLine("Error {0} with file {2:X12}.{3:X3} ({1})", ex.Message, TypeAlias(GUID.Type(record.record.Key)), GUID.LongKey(record.record.Key), GUID.Type(record.record.Key));
-                }
+                Console.Out.WriteLine("Error {0} with file {2:X12}.{3:X3} ({1})", ex.Message, TypeAlias(GUID.Type(record.record.Key)), GUID.LongKey(record.record.Key), GUID.Type(record.record.Key));
                 return null;
             }
             if (System.Diagnostics.Debugger.IsAttached) {

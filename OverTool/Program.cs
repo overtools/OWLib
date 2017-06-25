@@ -47,7 +47,7 @@ namespace OverTool {
 
             string root = flags.OverwatchDirectory;
             char opt = flags.Mode[0];
-            
+
             IOvertool tool = null;
             Dictionary<ushort, List<ulong>> track = new Dictionary<ushort, List<ulong>>();
             track[0x90] = new List<ulong>(); // internal requirements
@@ -77,12 +77,12 @@ namespace OverTool {
             Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
             Console.Out.WriteLine("Initializing CASC...");
             Console.Out.WriteLine("Set language to {0}", flags.Language);
-            OwRootHandler.LanguageScan = flags.Language;
+            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root, !flags.SkipKeys, false);
+            config.Languages = new HashSet<string>(new string[1] { flags.Language });
 
             if (flags.SkipKeys) {
                 Console.Out.WriteLine("Disabling Key auto-detection...");
             }
-            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root, !flags.SkipKeys);
             Console.Out.WriteLine("Using Overwatch Version {0}", config.BuildName);
             CASCHandler handler = CASCHandler.OpenStorage(config);
             OwRootHandler ow = handler.Root as OwRootHandler;
@@ -93,41 +93,13 @@ namespace OverTool {
 
             // Fail when trying to extract data from a specified language with 2 or less files found.
             if (ow.APMFiles.Count() == 0) {
-                Console.Error.WriteLine("Could not find the files for language {0}. Please confirm that you have that language installed, and are using the names from the target language.", OwRootHandler.LanguageScan);
+                Console.Error.WriteLine("Could not find the files for language {0}. Please confirm that you have that language installed, and are using the names from the target language.", flags.Language);
                 return;
             }
 
             Console.Out.WriteLine("Mapping...");
             foreach (APMFile apm in ow.APMFiles) {
-                if (!apm.Name.ToLowerInvariant().Contains("rdev")) {
-                    continue; // skip
-                }
-                //Console.Out.WriteLine("Package Length: {0}", apm.Packages.Length);
-                for (int i = 0; i < apm.Packages.Length; ++i) {
-                    //Console.Out.WriteLine("i: {0}",i);
-                    APMPackage package = apm.Packages[i];
-                    //Console.Out.WriteLine("Package: {0}", package);
-                    PackageIndex index = apm.Indexes[i];
-                    //Console.Out.WriteLine("Package Index: {0}", index);
-                    PackageIndexRecord[] records = apm.Records[i];
-                    for (long j = 0; j < records.LongLength; ++j) {
-                        PackageIndexRecord record = records[j];
-                        if (map.ContainsKey(record.Key)) {
-                            continue;
-                        }
-
-                        Record rec = new Record {
-                            package = package,
-                            index = index,
-                            record = record,
-                        };
-                        map.Add(record.Key, rec);
-                    }
-                }
-            }
-            int origLength = map.Count;
-            foreach (APMFile apm in ow.APMFiles) {
-                if (!apm.Name.ToLowerInvariant().Contains("rdev")) {
+                if (!apm.Name.ToLowerInvariant().Contains("rdev") && !apm.Name.ToLowerInvariant().Contains("l"+flags.Language)) {
                     continue;
                 }
                 foreach (KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {
@@ -154,9 +126,6 @@ namespace OverTool {
                         map.Add(pair.Key, rec);
                     }
                 }
-            }
-            if (origLength != map.Count) {
-                Console.Out.WriteLine("Warning: {0} packageless files", map.Count - origLength);
             }
 
             if (!flags.SkipKeys) {
