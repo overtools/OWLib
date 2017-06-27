@@ -43,7 +43,7 @@ namespace OWLib {
                     input.Position = nps;
                 }
 
-                if (records[0].HasSTUD) {
+                if (records.Length > 0 && records[0] != null && records[0].HasSTUD) {
                     AlignPosition(input, input.Position);
                     while (true) {
                         if (input.Position >= input.Length) {

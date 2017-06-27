@@ -358,6 +358,9 @@ namespace OverTool {
                                 }
 
                                 foreach (string matOutput in matpair.Value) {
+                                    if (File.Exists($"{outputPath}{matOutput}")) {
+                                        continue;
+                                    }
                                     using (Stream outputStream = File.Open($"{outputPath}{matOutput}", FileMode.Create, FileAccess.Write)) {
                                         if (owmat.Write(null, outputStream, null, tmp, new object[1] { types })) {
                                             if (!quiet) {

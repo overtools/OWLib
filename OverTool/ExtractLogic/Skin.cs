@@ -954,6 +954,7 @@ namespace OverTool.ExtractLogic {
                 if (mainFile == null || mainFile.Length == 0) {
                     return new KeyValuePair<string, TextureType>(null, 0);
                 }
+
                 using (MemoryStream output = new MemoryStream()) {
                     if (map.ContainsKey(imageDataKey)) {
                         Texture tex = new Texture(mainFile, Util.OpenFile(map[imageDataKey], handler));
@@ -963,6 +964,9 @@ namespace OverTool.ExtractLogic {
                         TextureLinear tex = new TextureLinear(mainFile);
                         tex.Save(output, true);
                         @type = tex.Header.Format();
+                    }
+                    if (File.Exists(path)) {
+                        return new KeyValuePair<string, TextureType>(name, @type);
                     }
                     if (output.Length > 0) {
                         output.Position = 0;
