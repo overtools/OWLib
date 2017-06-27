@@ -52,7 +52,7 @@ namespace PackageTool {
                     }
                 }
             } else {
-                config = CASCConfig.LoadLocalStorageConfig(root, true, false);
+                config = CASCConfig.LoadLocalStorageConfig(root, true, true);
             }
             if (args[0][0] == '-' && args[0][1] == 'L') {
                 string lang = args[0].Substring(2);

@@ -51,7 +51,7 @@ namespace APMTool {
                     }
                 }
             } else {
-                config = CASCConfig.LoadLocalStorageConfig(root, true, false);
+                config = CASCConfig.LoadLocalStorageConfig(root, true, true);
             }
             object[] query = null;
             if (flag[0] == 'f' || flag[0] == 'C') {
