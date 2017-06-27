@@ -21,13 +21,9 @@ before_package:
 
     del /F /Q dist\Release\*.xml
 
-    del /F /Q dist\Release\*.exe.config
-
     del /F /Q CASCExplorer\CASCExplorer\bin\Release\*.pdb
 
     del /F /Q CASCExplorer\CASCExplorer\bin\Release\*.xml
-
-    del /F /Q CASCExplorer\CASCExplorer\bin\Release\*.exe.config
 artifacts:
 - path: dist/Release
   name: toolchain-release
