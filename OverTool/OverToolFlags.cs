@@ -14,6 +14,15 @@ namespace OverTool {
         [Alias(Alias = "L")]
         [Alias(Alias = "lang")]
         public string Language;
+
+        [CLIFlag(Default = true, Flag = "cache", Help = "Cache Index files from CDN", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBooleanInv" })]
+        public bool UseCache;
+
+        [CLIFlag(Default = true, Flag = "cache-data", Help = "Cache Data files from CDN", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBooleanInv" })]
+        public bool CacheData;
+
+        [CLIFlag(Default = false, Flag = "validate-cache", Help = "Validate files from CDN", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
+        public bool ValidateCache;
         
         [CLIFlag(Default = false, Flag = "quiet", Help = "Suppress majority of output messages", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
         [Alias(Alias = "q")]

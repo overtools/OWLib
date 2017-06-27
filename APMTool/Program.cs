@@ -4,6 +4,7 @@ using System.Globalization;
 using CASCExplorer;
 using System.Reflection;
 using OWLib;
+using System.Linq;
 
 namespace APMTool {
     class Program {
@@ -27,7 +28,31 @@ namespace APMTool {
             
             Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
             OwRootHandler.LOAD_PACKAGES = true;
-            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root, true, false);
+            CASCConfig config = null;
+            // ngdp:us:pro
+            // http:us:pro:us.patch.battle.net:1119
+            if (root.ToLowerInvariant().Substring(0, 5) == "ngdp:") {
+                string cdn = root.Substring(5, 4);
+                string[] parts = root.Substring(5).Split(':');
+                string region = "us";
+                string product = "pro"; 
+                if (parts.Length > 1) {
+                    region = parts[1];
+                }
+                if (parts.Length > 2) {
+                    product = parts[2];
+                }
+                if (cdn == "bnet") {
+                    config = CASCConfig.LoadOnlineStorageConfig(product, region);
+                } else {
+                    if (cdn == "http") {
+                        string host = string.Join(":", parts.Skip(3));
+                        config = CASCConfig.LoadOnlineStorageConfig(host, product, region, true, true);
+                    }
+                }
+            } else {
+                config = CASCConfig.LoadLocalStorageConfig(root, true, false);
+            }
             object[] query = null;
             if (flag[0] == 'f' || flag[0] == 'C') {
                 object[] t = new object[6] { null, null, null, null, null, null };

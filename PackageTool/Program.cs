@@ -29,7 +29,31 @@ namespace PackageTool {
             string root = args[0];
             
             OwRootHandler.LOAD_PACKAGES = true;
-            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root, true, false);
+            CASCConfig config = null;
+            // ngdp:us:pro
+            // http:us:pro:us.patch.battle.net:1119
+            if (root.ToLowerInvariant().Substring(0, 5) == "ngdp:") {
+                string cdn = root.Substring(5, 4);
+                string[] parts = root.Substring(5).Split(':');
+                string region = "us";
+                string product = "pro"; 
+                if (parts.Length > 1) {
+                    region = parts[1];
+                }
+                if (parts.Length > 2) {
+                    product = parts[2];
+                }
+                if (cdn == "bnet") {
+                    config = CASCConfig.LoadOnlineStorageConfig(product, region);
+                } else {
+                    if (cdn == "http") {
+                        string host = string.Join(":", parts.Skip(3));
+                        config = CASCConfig.LoadOnlineStorageConfig(host, product, region, true, true);
+                    }
+                }
+            } else {
+                config = CASCConfig.LoadLocalStorageConfig(root, true, false);
+            }
             if (args[0][0] == '-' && args[0][1] == 'L') {
                 string lang = args[0].Substring(2);
                 config.Languages = new HashSet<string>(new string[1] { lang });
