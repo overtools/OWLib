@@ -47,7 +47,7 @@ namespace OverTool {
 
             string root = flags.OverwatchDirectory;
             char opt = flags.Mode[0];
-            
+
             IOvertool tool = null;
             Dictionary<ushort, List<ulong>> track = new Dictionary<ushort, List<ulong>>();
             track[0x90] = new List<ulong>(); // internal requirements
@@ -77,12 +77,12 @@ namespace OverTool {
             Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
             Console.Out.WriteLine("Initializing CASC...");
             Console.Out.WriteLine("Set language to {0}", flags.Language);
-            OwRootHandler.LanguageScan = flags.Language;
 
             if (flags.SkipKeys) {
                 Console.Out.WriteLine("Disabling Key auto-detection...");
             }
-            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root, !flags.SkipKeys);
+            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root, !flags.SkipKeys, false);
+            config.Languages = new HashSet<string>(new string[1] { flags.Language });
             Console.Out.WriteLine("Using Overwatch Version {0}", config.BuildName);
             CASCHandler handler = CASCHandler.OpenStorage(config);
             OwRootHandler ow = handler.Root as OwRootHandler;
@@ -93,7 +93,7 @@ namespace OverTool {
 
             // Fail when trying to extract data from a specified language with 2 or less files found.
             if (ow.APMFiles.Count() == 0) {
-                Console.Error.WriteLine("Could not find the files for language {0}. Please confirm that you have that language installed, and are using the names from the target language.", OwRootHandler.LanguageScan);
+                Console.Error.WriteLine("Could not find the files for language {0}. Please confirm that you have that language installed, and are using the names from the target language.", flags.Language);
                 return;
             }
 

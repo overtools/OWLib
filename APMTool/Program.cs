@@ -26,7 +26,7 @@ namespace APMTool {
             string flag = args[1];
             
             Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
-
+            bool all_langs = false;
             object[] query = null;
             if (flag[0] == 'f' || flag[0] == 'C') {
                 object[] t = new object[6] { null, null, null, null, null, null };
@@ -108,7 +108,7 @@ namespace APMTool {
                     }
                 }
             } else if (flag[0] == 'a') {
-                OwRootHandler.LanguageScan = "NONE";
+                all_langs = true;
             } else if (flag[0] == 't') {
                 query = new object[1] { new HashSet<ulong>() };
             } else {
@@ -116,7 +116,7 @@ namespace APMTool {
                 return;
             }
 
-            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root);
+            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root, true, !all_langs);
             CASCHandler handler = CASCHandler.OpenStorage(config);
             OwRootHandler ow = handler.Root as OwRootHandler;
             if (ow == null) {

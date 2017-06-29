@@ -26,9 +26,9 @@ namespace PackageTool {
                 return;
             }
 
+            string lang = null;
             if (args[0][0] == '-' && args[0][1] == 'L') {
-                string lang = args[0].Substring(2);
-                OwRootHandler.LanguageScan = lang;
+                lang = args[0].Substring(2);
                 args = args.Skip(1).ToArray();
             }
 
@@ -102,7 +102,10 @@ namespace PackageTool {
                 return;
             }
 
-            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root);
+            CASCConfig config = CASCConfig.LoadLocalStorageConfig(root, true, true);
+            if (lang != null) {
+                config.Languages = new HashSet<string>(new string[] { lang });
+            }
             CASCHandler handler = CASCHandler.OpenStorage(config);
             OwRootHandler ow = handler.Root as OwRootHandler;
             if (ow == null) {
