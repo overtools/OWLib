@@ -25,7 +25,7 @@ namespace PackageTool {
                 Console.Out.WriteLine("If any key starts with D it will only output filenames to console, but not write files");
                 return;
             }
-
+            
             string root = args[0];
             
             OwRootHandler.LOAD_PACKAGES = true;

@@ -110,6 +110,7 @@ namespace OverTool {
             if (flags.SkipKeys) {
                 Console.Out.WriteLine("Disabling Key auto-detection...");
             }
+
             Console.Out.WriteLine("Using Overwatch Version {0}", config.BuildName);
             CASCHandler handler = CASCHandler.OpenStorage(config);
             OwRootHandler ow = handler.Root as OwRootHandler;

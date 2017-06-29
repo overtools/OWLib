@@ -27,6 +27,7 @@ namespace APMTool {
             string flag = args[1];
             
             Console.Out.WriteLine("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, OWLib.Util.GetVersion());
+
             OwRootHandler.LOAD_PACKAGES = true;
             CASCConfig config = null;
             // ngdp:us:pro
@@ -53,6 +54,7 @@ namespace APMTool {
             } else {
                 config = CASCConfig.LoadLocalStorageConfig(root, true, true);
             }
+
             object[] query = null;
             if (flag[0] == 'f' || flag[0] == 'C') {
                 object[] t = new object[6] { null, null, null, null, null, null };
