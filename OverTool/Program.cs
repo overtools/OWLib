@@ -100,34 +100,6 @@ namespace OverTool {
             Console.Out.WriteLine("Mapping...");
             foreach (APMFile apm in ow.APMFiles) {
                 if (!apm.Name.ToLowerInvariant().Contains("rdev")) {
-                    continue; // skip
-                }
-                //Console.Out.WriteLine("Package Length: {0}", apm.Packages.Length);
-                for (int i = 0; i < apm.Packages.Length; ++i) {
-                    //Console.Out.WriteLine("i: {0}",i);
-                    APMPackage package = apm.Packages[i];
-                    //Console.Out.WriteLine("Package: {0}", package);
-                    PackageIndex index = apm.Indexes[i];
-                    //Console.Out.WriteLine("Package Index: {0}", index);
-                    PackageIndexRecord[] records = apm.Records[i];
-                    for (long j = 0; j < records.LongLength; ++j) {
-                        PackageIndexRecord record = records[j];
-                        if (map.ContainsKey(record.Key)) {
-                            continue;
-                        }
-
-                        Record rec = new Record {
-                            package = package,
-                            index = index,
-                            record = record,
-                        };
-                        map.Add(record.Key, rec);
-                    }
-                }
-            }
-            int origLength = map.Count;
-            foreach (APMFile apm in ow.APMFiles) {
-                if (!apm.Name.ToLowerInvariant().Contains("rdev")) {
                     continue;
                 }
                 foreach (KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {
@@ -154,9 +126,6 @@ namespace OverTool {
                         map.Add(pair.Key, rec);
                     }
                 }
-            }
-            if (origLength != map.Count) {
-                Console.Out.WriteLine("Warning: {0} packageless files", map.Count - origLength);
             }
 
             if (!flags.SkipKeys) {
