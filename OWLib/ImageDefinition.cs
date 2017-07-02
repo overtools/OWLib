@@ -10,6 +10,10 @@ namespace OWLib {
         public ImageLayer[] Layers => layers;
 
         public ImageDefinition(Stream input) {
+            if (input == null) {
+                layers = new ImageLayer[0];
+                return;
+            }
             using (BinaryReader reader = new BinaryReader(input)) {
                 header = reader.Read<ImageDefinitionHeader>();
                 layers = new ImageLayer[header.textureCount];

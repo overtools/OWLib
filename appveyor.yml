@@ -25,6 +25,10 @@ before_package:
     del /F /Q CASCExplorer\CASCExplorer\bin\Release\*.pdb
 
     del /F /Q CASCExplorer\CASCExplorer\bin\Release\*.xml
+
+    del /F /Q CASCExplorer\CASCConsole\bin\Release\*.pdb
+
+    del /F /Q CASCExplorer\CASCConsole\bin\Release\*.xml
 artifacts:
 - path: dist/Release
   name: toolchain-release
@@ -32,3 +36,5 @@ artifacts:
   name: CascLib
 - path: CASCExplorer/CASCExplorer/bin/Release
   name: CASCExplorer
+- path: CASCExplorer/CASCConsole/bin/Release
+  name: CASCConsole

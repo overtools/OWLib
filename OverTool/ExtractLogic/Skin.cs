@@ -128,6 +128,9 @@ namespace OverTool.ExtractLogic {
 
             ulong materialId = ulong.MaxValue;
             ImageDefinition def = new ImageDefinition(Util.OpenFile(map[tgt], handler));
+            if (def.Layers.Count() == 0) {
+                return;
+            }
             if (!layers.ContainsKey(materialId)) {
                 layers.Add(materialId, new List<ImageLayer>());
             }
