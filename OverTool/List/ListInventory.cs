@@ -65,7 +65,7 @@ namespace OverTool {
             }
 
             if (ex) {
-                Console.Out.WriteLine("\t\t{0} ({1} {2} in package {3:X16}){4}", name, instance.Header.rarity, stud.Instances[0].Name, map[key].package.packageKey, addt);
+                Console.Out.WriteLine("\t\t{0} ({1} {2} in file {3:X16}){4}", name, instance.Header.rarity, stud.Instances[0].Name, GUID.LongKey(key), addt);
             } else {
                 Console.Out.WriteLine("\t\t{0} ({1} {2}){3}", name, instance.Header.rarity, stud.Instances[0].Name, addt);
             }
@@ -117,7 +117,7 @@ namespace OverTool {
                 }
                 bool ex = System.Diagnostics.Debugger.IsAttached || flags.Expert;
                 if (ex) {
-                    Console.Out.WriteLine("Cosmetics for {0} ({2:X16}) in package {1:X16}", heroName, map[masterKey].package.packageKey, masterKey);
+                    Console.Out.WriteLine("Cosmetics for {0} ({1:X16})", heroName, GUID.LongKey(masterKey));
                 } else {
                     Console.Out.WriteLine("Cosmetics for {0}", heroName);
                 }
