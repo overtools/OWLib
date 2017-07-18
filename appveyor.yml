@@ -38,3 +38,5 @@ artifacts:
   name: CASCExplorer
 - path: CASCExplorer/CASCConsole/bin/Release
   name: CASCConsole
+cache:
+  - packages -> OWLib\packages.config 
