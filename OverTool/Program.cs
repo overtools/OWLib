@@ -99,7 +99,7 @@ namespace OverTool {
                 } else {
                     if (cdn == "http") {
                         string host = string.Join(":", parts.Skip(3));
-                        config = CASCConfig.LoadOnlineStorageConfig(host, product, region, true, true);
+                        config = CASCConfig.LoadOnlineStorageConfig(host, product, region, true, true, true);
                     }
                 }
             } else {

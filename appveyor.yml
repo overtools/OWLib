@@ -9,6 +9,7 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: $(appveyor_repo_commit)
 before_build:
+- ps: '[System.IO.File]::AppendAllText("C:\Windows\System32\drivers\etc\hosts", "`n93.184.221.200  api.nuget.org")'
 - cmd: >-
     git submodule update --init --recursive
 
@@ -38,3 +39,5 @@ artifacts:
   name: CASCExplorer
 - path: CASCExplorer/CASCConsole/bin/Release
   name: CASCConsole
+cache:
+  - packages -> OWLib\packages.config 
