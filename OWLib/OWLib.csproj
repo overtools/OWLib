@@ -44,6 +44,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +69,7 @@
     <Compile Include="Types\Chunk\TCFE\CECE.cs" />
     <Compile Include="Types\Chunk\TCFE\NECE.cs" />
     <Compile Include="Types\Map\Map11.cs" />
+    <Compile Include="Types\Marshal.cs" />
     <Compile Include="Types\STUD\GameParam\BindingEffectReference.cs" />
     <Compile Include="Types\STUD\GameParam\SoundFX.cs" />
     <Compile Include="Types\STUD\GlobalInventoryMaster.cs" />

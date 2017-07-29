@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types {
@@ -8,6 +9,43 @@ namespace OWLib.Types {
         public ulong offset;
         public uint unk1;
         public uint references;
+    }
+
+    // Overwatch somewhy uses 128-bit integers for offsets.
+    // I really should've done this when I started.
+    [StructLayout(LayoutKind.Sequential, Pack = 16)]
+    public struct ulonglong {
+        public ulong Upper;
+        public ulong Lower;
+
+        public static implicit operator ulong(ulonglong i) {
+            return i.Upper;
+        }
+
+        public static implicit operator long(ulonglong i) {
+            return (long)i.Upper;
+        }
+
+        public BigInteger ToBigInt() {
+            BigInteger bi = new BigInteger(Lower);
+            return (bi << 64) + Upper;
+        }
+
+        public new string ToString() {
+            return ToBigInt().ToString();
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct UUID {
+        public uint A;
+        public ushort B;
+        public ushort C;
+        public ulong D;
+
+        public new string ToString() {
+            return $"{A:X8}-{B:X4}-{C:X4}-{D:X16}";
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

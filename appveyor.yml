@@ -35,6 +35,10 @@ artifacts:
   name: toolchain-release
 - path: dist/Release/CascLib.dll
   name: CascLib
+- path: dist/Release/OWLib.dll
+  name: OWLib
+- path: dist/Release/OWReplayLib.dll
+  name: OWReplayLib
 - path: CASCExplorer/CASCExplorer/bin/Release
   name: CASCExplorer
 - path: CASCExplorer/CASCConsole/bin/Release
