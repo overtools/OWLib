@@ -3,20 +3,66 @@ using System.Collections.Generic;
 using System.IO;
 using CASCExplorer;
 using OWLib;
+using OWLib.Types;
 using OWLib.Types.STUD;
 
 namespace OverTool.List {
     public class ListGameMode : IOvertool {
         public string Title => "List Game Modes";
-        public char Opt => 'E';
+        public char Opt => 'e';
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
-        public ushort[] Track => new ushort[1] { 0xC0 };
+        public ushort[] Track => new ushort[1] { 0xC7 };
         public bool Display => true;
 
+        private string GetGameType(ulong key, Dictionary<ulong, Record> map, CASCHandler handler) {
+            if (!map.ContainsKey(key)) {
+                return null;
+            }
+
+            using (Stream input = Util.OpenFile(map[key], handler)) {
+                if (input == null) {
+                    return null;
+                }
+                STUD stud = new STUD(input);
+                if (stud.Instances == null || stud.Instances[0] == null) {
+                    return null;
+                }
+
+                GameType gm = stud.Instances[0] as GameType;
+                if (gm == null) {
+                    return null;
+                }
+
+                return Util.GetString(gm.Header.name, map, handler);
+            }
+        }
+
+        private string GetGameParam(ulong key, Dictionary<ulong, Record> map, CASCHandler handler) {
+            if (!map.ContainsKey(key)) {
+                return null;
+            }
+
+            using (Stream input = Util.OpenFile(map[key], handler)) {
+                if (input == null) {
+                    return null;
+                }
+                STUD stud = new STUD(input);
+                if (stud.Instances == null || stud.Instances[0] == null) {
+                    return null;
+                }
+
+                GameTypeParam gm = stud.Instances[0] as GameTypeParam;
+                if (gm == null) {
+                    return null;
+                }
+
+                return Util.GetString(gm.Header.name, map, handler);
+            }
+        }
+
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
-            Dictionary<uint, Dictionary<uint, string>> data = new Dictionary<uint, Dictionary<uint, string>>();
-            foreach (ulong key in track[0xC0]) {
+            foreach (ulong key in track[0xC7]) {
                 if (!map.ContainsKey(key)) {
                     continue;
                 }
@@ -36,18 +82,30 @@ namespace OverTool.List {
 
                     string name = Util.GetString(gm.Header.name, map, handler);
                     if (name != null) {
-                        uint ruleset = GUID.Index(gm.Header.ruleset);
-                        if (!data.ContainsKey(ruleset)) {
-                            data[ruleset] = new Dictionary<uint, string>();
+                        string desc = Util.GetString(gm.Header.description, map, handler);
+                        Console.Out.WriteLine(name);
+                        if (desc != null) {
+                            Console.Out.WriteLine("\t{0}", desc);
                         }
-                        data[ruleset].Add(GUID.Index(key), name);
+                        foreach (OWRecord @string in gm.Strings) {
+                            string str = Util.GetString(@string, map, handler);
+                            if (str != null) {
+                                Console.Out.WriteLine("\t{0}", str);
+                            }
+                        }
+                        foreach (OWRecord gp in gm.Params) {
+                            string str = GetGameParam(gp, map, handler);
+                            if (str != null) {
+                                Console.Out.WriteLine("\t{0}", str);
+                            }
+                        }
+                        foreach (OWRecord gt in gm.Types) {
+                            string str = GetGameType(gt, map, handler);
+                            if (str != null) {
+                                Console.Out.WriteLine("\t{0}", str);
+                            }
+                        }
                     }
-                }
-            }
-            foreach (KeyValuePair<uint, Dictionary<uint, string>> pairs in data) {
-                Console.Out.WriteLine("{0:X8}:", pairs.Key);
-                foreach (KeyValuePair<uint, string> kv in pairs.Value) {
-                    Console.Out.WriteLine("\t{0} ({1:X8})", kv.Value, kv.Key);
                 }
             }
         }

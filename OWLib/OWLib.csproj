@@ -71,6 +71,8 @@
     <Compile Include="Types\Map\Map11.cs" />
     <Compile Include="Types\Marshal.cs" />
     <Compile Include="Types\STUD\GameMode.cs" />
+    <Compile Include="Types\STUD\GameTypeParam.cs" />
+    <Compile Include="Types\STUD\GameType.cs" />
     <Compile Include="Types\STUD\GameParam\BindingEffectReference.cs" />
     <Compile Include="Types\STUD\GameParam\SoundFX.cs" />
     <Compile Include="Types\STUD\GlobalInventoryMaster.cs" />
