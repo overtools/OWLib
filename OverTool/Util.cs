@@ -24,7 +24,7 @@ namespace OverTool {
                 if (!apm.Name.ToLowerInvariant().Contains("rdev")) {
                     continue;
                 }
-                if(flags != null && !apm.Name.ToLowerInvariant().Contains("l" + flags.Language)) {
+                if(flags != null && !apm.Name.ToLowerInvariant().Contains("l" + flags.Language.ToLowerInvariant())) {
                     continue;
                 }
                 foreach (KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {

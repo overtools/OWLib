@@ -86,6 +86,7 @@
     <Compile Include="Flags\FlagParser.cs" />
     <Compile Include="Flags\ICLIFlags.cs" />
     <Compile Include="IOvertool.cs" />
+    <Compile Include="List\ListGameMode.cs" />
     <Compile Include="List\ListGeneral.cs" />
     <Compile Include="List\ListWeapon.cs" />
     <Compile Include="List\ListLootbox.cs" />
