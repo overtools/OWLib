@@ -30,6 +30,9 @@ namespace OWReplayLib {
 
             using (BinaryReader reader = new BinaryReader(stream)) {
                 header = reader.Read<ReplayHeader>();
+                if (header.Magic != MAGIC_CONSTANT) {
+                    throw new InvalidDataException("Data stream is not a replay!");
+                }
                 using (Decompressor decompressor = new Decompressor()) {
                     byte[] temp = reader.ReadBytes((int)(stream.Length - stream.Position));
                     byte[] dec = decompressor.Unwrap(temp);

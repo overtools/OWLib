@@ -29,6 +29,9 @@ namespace OWReplayLib {
 
             using (BinaryReader reader = new BinaryReader(stream)) {
                 header = reader.Read<HighlightHeader>();
+                if (header.Magic != MAGIC_CONSTANT) {
+                    throw new InvalidDataException("Data stream is not a highlight!");
+                }
                 MemoryStream replayData = new MemoryStream(header.ReplayLength);
                 stream.CopyBytes(replayData, header.ReplayLength);
                 embeddedReplay = new Replay(replayData, handler, records);
