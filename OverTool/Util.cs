@@ -75,6 +75,7 @@ namespace OverTool {
                 case 0xA6:
                 case 0xAD: return "Texture Override";
                 case 0x75: return "Hero Metadata";
+                case 0x90: return "Encryption Key";
                 case 0x9F: return "Map Metadata";
                 default: return "Unknown";
             }

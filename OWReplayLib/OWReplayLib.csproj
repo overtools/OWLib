@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Highlight.cs" />
+    <Compile Include="NameResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Replay.cs" />
     <Compile Include="ReplayFrame.cs" />

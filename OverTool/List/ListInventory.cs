@@ -8,7 +8,7 @@ using OWLib.Types.STUD;
 using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
-    class ListInventory : IOvertool {
+    public class ListInventory : IOvertool {
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public char Opt => 't';
@@ -16,24 +16,35 @@ namespace OverTool {
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;
 
-        public static void GetInventoryName(ulong key, bool ex, Dictionary<ulong, Record> map, CASCHandler handler, string heroName) {
+        public static Tuple<string, STUD, IInventorySTUDInstance> GetInventoryName(ulong key, Dictionary<ulong, Record> map, CASCHandler handler) {
             if (!map.ContainsKey(key)) {
-                return;
+                return null;
             }
 
             STUD stud = new STUD(Util.OpenFile(map[key], handler));
             if (stud.Instances == null) {
-                return;
+                return null;
             }
             if (stud.Instances[0] == null) {
-                return;
+                return null;
             }
-            IInventorySTUDInstance instance = (IInventorySTUDInstance)stud.Instances[0];
+            IInventorySTUDInstance instance = stud.Instances[0] as IInventorySTUDInstance;
             if (instance == null) {
-                return;
+                return null;
             }
 
-            string name = Util.GetString(instance.Header.name.key, map, handler);
+            return new Tuple<string, STUD, IInventorySTUDInstance>(Util.GetString(instance.Header.name.key, map, handler), stud, instance);
+        }
+
+        public static void GetInventoryName(ulong key, bool ex, Dictionary<ulong, Record> map, CASCHandler handler, string heroName) {
+            Tuple<string, STUD, IInventorySTUDInstance> data = GetInventoryName(key, map, handler);
+            if (data == null) {
+                return;
+            }
+            string name = data.Item1;
+            STUD stud = data.Item2;
+            IInventorySTUDInstance instance = data.Item3;
+
             if (name == null && instance.Name != stud.Manager.GetName(typeof(CreditItem))) {
                 Console.Out.WriteLine("\t\t(Untitled-{0:X12}) ({1} {2})", GUID.LongKey(key), instance.Header.rarity, stud.Instances[0].Name);
                 return;
