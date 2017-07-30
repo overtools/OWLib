@@ -31,12 +31,12 @@ namespace OWReplayLib.Types {
             public HighlightFlags Flags;
             public ulong MapDataKey;
             public ulong C5Key;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshalerI<HighlightInfo>))]
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<HighlightInfo, int>))]
             public HighlightInfo[] Info;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshalerI<HeroInfo>))]
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<HeroInfo, int>))]
             public HeroInfo[] HeroInfo;
             public ulong Unknown4;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshalerB<HighlightFilter>))]
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<HighlightFilter, int>))]
             public HighlightFilter[] Filters;
             public int ReplayLength;
         }

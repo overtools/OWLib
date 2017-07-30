@@ -15,6 +15,45 @@ namespace OverTool {
             buffer = null;
         }
 
+        public static void MapCMF(OwRootHandler ow, CASCHandler handler, Dictionary<ulong, Record> map, Dictionary<ushort, List<ulong>> track, OverToolFlags flags) {
+            if (ow == null || handler == null) {
+                return;
+            }
+
+            foreach (APMFile apm in ow.APMFiles) {
+                if (!apm.Name.ToLowerInvariant().Contains("rdev")) {
+                    continue;
+                }
+                if(flags != null && !apm.Name.ToLowerInvariant().Contains("l" + flags.Language)) {
+                    continue;
+                }
+                foreach (KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {
+                    ushort id = GUID.Type(pair.Key);
+                    if (track != null && track.ContainsKey(id)) {
+                        track[id].Add(pair.Value.id);
+                    }
+
+                    if (map.ContainsKey(pair.Key)) {
+                        continue;
+                    }
+                    Record rec = new Record {
+                        record = new PackageIndexRecord()
+                    };
+                    rec.record.Flags = 0;
+                    rec.record.Key = pair.Value.id;
+                    rec.record.ContentKey = pair.Value.HashKey;
+                    rec.package = new APMPackage(new APMPackageItem());
+                    rec.index = new PackageIndex(new PackageIndexItem());
+
+                    EncodingEntry enc;
+                    if (handler.Encoding.GetEntry(pair.Value.HashKey, out enc)) {
+                        rec.record.Size = enc.Size;
+                        map.Add(pair.Key, rec);
+                    }
+                }
+            }
+        }
+
         private static string TypeAlias(ushort type) {
             switch (type) {
                 case 0x3: return "Game Logic";

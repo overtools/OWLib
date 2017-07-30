@@ -10,11 +10,11 @@ namespace OWReplayLib.Types {
             public uint SkinId;
             public uint WSkinId;
             public uint HighlightId;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshalerI<uint>))]
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<uint, int>))]
             public uint[] SprayIds;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshalerI<uint>))]
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<uint, int>))]
             public uint[] VoiceLineIds;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshalerI<uint>))]
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<uint, int>))]
             public uint[] EmoteIds;
             public ulong HeroMasterKey;
         }

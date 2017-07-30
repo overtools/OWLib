@@ -38,7 +38,7 @@ namespace OWReplayLib.Types {
             public ulong Duration;
             public ulong Start;
             public ulong End;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshalerI<HeroInfo>))]
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<HeroInfo, int>))]
             public HeroInfo[] HeroInfo;
         }
     }

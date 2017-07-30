@@ -44,4 +44,4 @@ artifacts:
 - path: CASCExplorer/CASCConsole/bin/Release
   name: CASCConsole
 cache:
-  - packages -> OWLib\packages.config 
+  - packages -> **\packages.config 

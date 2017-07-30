@@ -126,35 +126,7 @@ namespace OverTool {
             }
 
             Console.Out.WriteLine("Mapping...");
-            foreach (APMFile apm in ow.APMFiles) {
-                if (!apm.Name.ToLowerInvariant().Contains("rdev") && !apm.Name.ToLowerInvariant().Contains("l"+flags.Language)) {
-                    continue;
-                }
-                foreach (KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {
-                    ushort id = GUID.Type(pair.Key);
-                    if (track.ContainsKey(id)) {
-                        track[id].Add(pair.Value.id);
-                    }
-
-                    if (map.ContainsKey(pair.Key)) {
-                        continue;
-                    }
-                    Record rec = new Record {
-                        record = new PackageIndexRecord()
-                    };
-                    rec.record.Flags = 0;
-                    rec.record.Key = pair.Value.id;
-                    rec.record.ContentKey = pair.Value.HashKey;
-                    rec.package = new APMPackage(new APMPackageItem());
-                    rec.index = new PackageIndex(new PackageIndexItem());
-
-                    EncodingEntry enc;
-                    if (handler.Encoding.GetEntry(pair.Value.HashKey, out enc)) {
-                        rec.record.Size = enc.Size;
-                        map.Add(pair.Key, rec);
-                    }
-                }
-            }
+            Util.MapCMF(ow, handler, map, track, flags);
 
             if (!flags.SkipKeys) {
                 Console.Out.WriteLine("Adding Encryption Keys...");
