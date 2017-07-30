@@ -15,6 +15,7 @@ namespace OverTool.List {
         public bool Display => true;
 
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
+            Dictionary<uint, Dictionary<uint, string>> data = new Dictionary<uint, Dictionary<uint, string>>();
             foreach (ulong key in track[0xC0]) {
                 if (!map.ContainsKey(key)) {
                     continue;
@@ -35,8 +36,18 @@ namespace OverTool.List {
 
                     string name = Util.GetString(gm.Header.name, map, handler);
                     if (name != null) {
-                        Console.Out.WriteLine("{0:X8}: {1}", GUID.Index(gm.Header.ruleset), name);
+                        uint ruleset = GUID.Index(gm.Header.ruleset);
+                        if (!data.ContainsKey(ruleset)) {
+                            data[ruleset] = new Dictionary<uint, string>();
+                        }
+                        data[ruleset].Add(GUID.Index(key), name);
                     }
+                }
+            }
+            foreach (KeyValuePair<uint, Dictionary<uint, string>> pairs in data) {
+                Console.Out.WriteLine("{0:X8}:", pairs.Key);
+                foreach (KeyValuePair<uint, string> kv in pairs.Value) {
+                    Console.Out.WriteLine("\t{0} ({1:X8})", kv.Value, kv.Key);
                 }
             }
         }
