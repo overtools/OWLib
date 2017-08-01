@@ -83,14 +83,16 @@ namespace OverTool.List {
                     string name = Util.GetString(gm.Header.name, map, handler);
                     if (name != null) {
                         string desc = Util.GetString(gm.Header.description, map, handler);
-                        if (map.ContainsKey(gm.Header.difficultyName.key)) {
-                            Console.WriteLine($"{name} (difficulty: {Util.GetString(gm.Header.difficultyName, map, handler)})");
-                        } else {
-                            Console.Out.WriteLine(name);
+                        string difficultyName = Util.GetString(gm.Header.difficultyName, map, handler);
+                        string difficultyDescription = Util.GetString(gm.Header.difficultyDescription, map, handler);
+                        Console.Out.WriteLine(name);
+
+                        if (difficultyName != null) {
+                            Console.Out.WriteLine("\t{0}", difficultyName);
                         }
 
-                        if (map.ContainsKey(gm.Header.difficultyDescription.key)) {
-                            Console.Out.WriteLine($"\tdifficultyDescription: {Util.GetString(gm.Header.difficultyDescription, map, handler)}");
+                        if (difficultyDescription != null) {
+                            Console.Out.WriteLine("\t{0}", difficultyDescription);
                         }
 
                         if (desc != null) {
