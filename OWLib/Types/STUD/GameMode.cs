@@ -25,12 +25,12 @@ namespace OWLib.Types.STUD {
             public Vec4 unknown_B;
             public ulong unknown_C;
             public OWRecord name;
-            public OWRecord unknown;
+            public OWRecord difficultyName;
             public OWRecord description;
-            public OWRecord unknown2;
+            public OWRecord difficultyDescription;
             public ulonglong strings;
             public OWRecord icon;
-            public OWRecord unknown3;
+            public OWRecord difficultyImage;
             public ulonglong @params;
             public OWRecord unknown4;
             public OWRecord unknown5;
@@ -40,7 +40,7 @@ namespace OWLib.Types.STUD {
             public OWRecord unknown9; // ruleset most likely.
             public ulonglong types;
             public ulonglong unknownA;
-            public OWRecord unknownB;
+            public OWRecord statistic;
         }
 
         private GameModeHeader header;
