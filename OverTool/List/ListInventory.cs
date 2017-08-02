@@ -12,6 +12,7 @@ namespace OverTool {
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public char Opt => 't';
+        public string FullOpt => "list";
         public string Title => "List Hero Cosmetics";
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;

@@ -71,6 +71,7 @@ namespace OverTool {
     public class Delta : IOvertool {
         public string Title => "Delta";
         public char Opt => 'z';
+        public string FullOpt => "delta";
         public string Help => "command file...";
         public uint MinimumArgs => 2;
         public ushort[] Track => new ushort[0];

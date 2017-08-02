@@ -12,6 +12,7 @@ namespace OverTool {
         public string Help => "output [query]";
         public uint MinimumArgs => 1;
         public char Opt => 'w';
+        public string FullOpt => "weaponskin";
         public string Title => "Extract Hero Weapon Skins";
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;

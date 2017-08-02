@@ -10,6 +10,7 @@ namespace OverTool {
     public class DumpKey : IOvertool {
         public string Title => "List Keys";
         public char Opt => 'Z';
+        public string FullOpt => "keys";
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public ushort[] Track => new ushort[1] { 0x90 };

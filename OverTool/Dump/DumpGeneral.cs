@@ -11,6 +11,7 @@ namespace OverTool {
     public class DumpGeneral : IOvertool {
         public string Title => "Extract General Cosmetics";
         public char Opt => 'G';
+        public string FullOpt => "general";
         public string Help => "output";
         public uint MinimumArgs => 1;
         public ushort[] Track => new ushort[1] { 0x54 };

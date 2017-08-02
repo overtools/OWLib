@@ -10,6 +10,7 @@ namespace OverTool.List {
     public class ListGameMode : IOvertool {
         public string Title => "List Game Modes";
         public char Opt => 'e';
+        public string FullOpt => "list-gamemode";
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public ushort[] Track => new ushort[1] { 0xC7 };

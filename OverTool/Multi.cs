@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using CASCExplorer;
 using OverTool.Flags;
 
@@ -11,6 +9,7 @@ namespace OverTool {
     public class Multi : IOvertool {
         public string Title => "Multimode";
         public char Opt => '_';
+        public string FullOpt => "multi";
         public string Help => "mode[mode args]";
         public uint MinimumArgs => 1;
         public ushort[] Track => new ushort[0];
@@ -43,9 +42,10 @@ namespace OverTool {
             List<string> args = new List<string>();
             string[] origFlags = baseArgs.Where(x => x[0] == '-').ToArray();
             args.Add(flags.Positionals[0]);
-            Dictionary<char, string> tracking = new Dictionary<char, string>();
-
-            tracking['_'] = string.Empty;
+            Dictionary<string, string> tracking = new Dictionary<string, string>();
+            
+            tracking[Opt.ToString()] = string.Empty;
+            tracking[FullOpt] = string.Empty;
 
             foreach (string modeargument in flags.Positionals.Skip(2)) {
                 string modearg = modeargument;
@@ -55,23 +55,23 @@ namespace OverTool {
                     subargs = modearg.Substring(modearg.IndexOf('[') + 1);
                     modearg = modearg.Substring(0, modearg.IndexOf('['));
                 }
-                char[] modes = modearg.ToCharArray();
+                string[] modes = modearg.Split('+');
 
-                foreach (char mode in modes) {
+                foreach (string mode in modes) {
                     tracking[mode] = subargs;
                 }
             }
 
-            foreach (KeyValuePair<char, string> modes in tracking) {
-                char mode = modes.Key;
-                if (mode == '_') {
+            foreach (KeyValuePair<string, string> modes in tracking) {
+                string mode = modes.Key;
+                if ((mode.Length == 1 && mode[0] == Opt) || mode == FullOpt) {
                     continue;
                 }
                 if (!Program.toolsMap.ContainsKey(mode)) {
                     continue;
                 }
                 string subargs = modes.Value;
-                string global = tracking['_'];
+                string global = tracking[Opt.ToString()] + " " + tracking[FullOpt];
                 List<string> tmp = new List<string>();
                 tmp.Add(baseArgs[0]);
                 tmp.Add(mode.ToString());

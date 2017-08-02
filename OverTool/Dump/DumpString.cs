@@ -9,6 +9,7 @@ namespace OverTool {
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public char Opt => 's';
+        public string FullOpt => "strings";
         public string Title => "List Strings";
         public ushort[] Track => new ushort[2] { 0x7C, 0xA9 };
         public bool Display => true;

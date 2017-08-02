@@ -11,6 +11,7 @@ namespace OverTool {
         public string Help => "model ids...";
         public uint MinimumArgs => 1;
         public char Opt => 'T';
+        public string FullOpt => "find";
         public string Title => "List Textures";
         public ushort[] Track => new ushort[1] { 0x3 };
         public bool Display => true;

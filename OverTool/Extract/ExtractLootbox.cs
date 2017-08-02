@@ -14,6 +14,7 @@ namespace OverTool.List {
         public string Help => "output";
         public uint MinimumArgs => 0;
         public char Opt => 'L';
+        public string FullOpt => "lootbox";
         public string Title => "Extract Lootboxes";
         public ushort[] Track => new ushort[1] { 0xCF };
         public bool Display => true;

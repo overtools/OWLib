@@ -7,6 +7,7 @@ namespace OverTool {
         public string Help => "output";
         public uint MinimumArgs => 1;
         public char Opt => 'A';
+        public string FullOpt => "audio";
         public string Title => "Extract Audio referenced by 01B files";
         public ushort[] Track => new ushort[1] { 0x1B };
         public bool Display => true;

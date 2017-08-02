@@ -9,6 +9,7 @@ namespace OverTool.List {
     public class ListGameType : IOvertool {
         public string Title => "List Game Types";
         public char Opt => 'E';
+        public string FullOpt => "list-gametype";
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public ushort[] Track => new ushort[1] { 0xC0 };

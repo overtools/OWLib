@@ -9,6 +9,7 @@ namespace OverTool {
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public char Opt => 'm';
+        public string FullOpt => "list-map";
         public string Title => "List Maps";
         public ushort[] Track => new ushort[1] { 0x9F };
         public bool Display => true;

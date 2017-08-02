@@ -13,6 +13,7 @@ namespace OverTool {
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public char Opt => 'W';
+        public string FullOpt => "list-weaponskin";
         public string Title => "List Weapon Override Index";
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;

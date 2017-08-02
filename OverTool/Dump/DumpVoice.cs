@@ -10,6 +10,7 @@ namespace OverTool {
         public string Help => "output [query]";
         public uint MinimumArgs => 1;
         public char Opt => 'v';
+        public string FullOpt => "npc-voice";
         public string Title => "Extract NPC Voice";
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;

@@ -13,6 +13,7 @@ namespace OverTool {
         public string Help => "output [query]";
         public uint MinimumArgs => 1;
         public char Opt => 'a';
+        public string FullOpt => "map-audio";
         public string Title => "Extract Map Audio";
         public ushort[] Track => new ushort[1] { 0x9F };
         public bool Display => true;

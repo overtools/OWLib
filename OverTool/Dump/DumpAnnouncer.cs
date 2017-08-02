@@ -12,6 +12,7 @@ namespace OverTool {
         public string Help => "output";
         public uint MinimumArgs => 1;
         public char Opt => 'c';
+        public string FullOpt => "announcer";
         public string Title => "Extract Announcer Sounds";
         public ushort[] Track => new ushort[1] { 0x9D };
         public bool Display => true;

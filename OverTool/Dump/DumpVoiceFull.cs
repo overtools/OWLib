@@ -13,6 +13,7 @@ namespace OverTool {
         public string Help => "output [hero query]";
         public uint MinimumArgs => 1;
         public char Opt => 'V';
+        public string FullOpt => "voice";
         public string Title => "Extract sounds from all skins";
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;

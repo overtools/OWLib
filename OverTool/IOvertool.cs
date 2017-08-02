@@ -11,6 +11,10 @@ namespace OverTool {
             get;
         }
 
+        string FullOpt {
+            get;
+        }
+
         string Help {
             get;
         }

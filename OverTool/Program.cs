@@ -17,7 +17,7 @@ namespace OverTool {
     }
 
     class Program {
-        public static Dictionary<char, IOvertool> toolsMap;
+        public static Dictionary<string, IOvertool> toolsMap;
 
         static void Main(string[] args) {
             Console.OutputEncoding = Encoding.UTF8;
@@ -46,14 +46,14 @@ namespace OverTool {
             bool quiet = flags.Quiet;
 
             string root = flags.OverwatchDirectory;
-            char opt = flags.Mode[0];
+            string opt = flags.Mode;
 
             IOvertool tool = null;
             Dictionary<ushort, List<ulong>> track = new Dictionary<ushort, List<ulong>>();
             track[0x90] = new List<ulong>(); // internal requirements
-            toolsMap = new Dictionary<char, IOvertool>();
+            toolsMap = new Dictionary<string, IOvertool>();
             foreach (IOvertool t in tools) {
-                if (t.Opt == opt) {
+                if (t.FullOpt == opt || (opt.Length == 1 && t.Opt == opt[0])) {
                     tool = t;
                 }
 
@@ -62,10 +62,13 @@ namespace OverTool {
                         track[tr] = new List<ulong>();
                     }
                 }
-                if (toolsMap.ContainsKey(t.Opt)) {
-                    Console.Out.WriteLine("Duplicate opt! {0} conflicts with {1}", t.Title, toolsMap[t.Opt].Title);
+                if (toolsMap.ContainsKey(t.FullOpt)) {
+                    Console.Out.WriteLine("Duplicate opt! {0} conflicts with {1}", t.Title, toolsMap[t.FullOpt].Title);
                 }
-                toolsMap[t.Opt] = t;
+                if (t.FullOpt.Length == 1) {
+                    Console.Out.WriteLine("FullOpt should not be length 1 for {0}", t.Title);
+                }
+                toolsMap[t.FullOpt] = t;
             }
             if (tool == null || flags.Positionals.Length - 2 < tool.MinimumArgs) {
                 PrintHelp(tools);
@@ -169,11 +172,11 @@ namespace OverTool {
         private static void PrintHelp(List<IOvertool> tools) {
             Console.Out.WriteLine();
             Console.Out.WriteLine("Modes:");
-            Console.Out.WriteLine("  m | {0, -30} | {1, -30}", "name", "arguments");
-            Console.Out.WriteLine("".PadLeft(64, '-'));
+            Console.Out.WriteLine("  {0, -20} | {1, -40} | {2, -30}", "mode", "name", "arguments");
+            Console.Out.WriteLine("".PadLeft(94, '-'));
             tools.Sort(new OvertoolComparer());
             foreach (IOvertool t in tools) {
-                Console.Out.WriteLine("  {0} | {1,-30} | {2}", t.Opt, t.Title, t.Help);
+                Console.Out.WriteLine("  {0, -20} | {1,-40} | {2}", t.FullOpt, t.Title, t.Help);
             }
             return;
         }

@@ -10,6 +10,7 @@ namespace OverTool {
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public char Opt => '~';
+        public string FullOpt => "debug";
         public string Title => "Debug";
         public ushort[] Track => new ushort[0];
         public bool Display => System.Diagnostics.Debugger.IsAttached;

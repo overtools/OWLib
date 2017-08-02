@@ -11,6 +11,7 @@ namespace OverTool {
         public string Help => "output [names]";
         public uint MinimumArgs => 1;
         public char Opt => 'N';
+        public string FullOpt => "npc";
         public string Title => "Extract NPC";
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;

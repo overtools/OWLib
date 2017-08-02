@@ -6,7 +6,7 @@ namespace OWLib.Types.STUD {
     [System.Diagnostics.DebuggerDisplay(OWLib.STUD.STUD_DEBUG_STR)]
     public class GameType : ISTUDInstance {
         public uint Id => 0x9A8B17B5;
-        public string Name => "GameMode";
+        public string Name => "GameType";
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct GameTypeHeader {

@@ -9,6 +9,7 @@ namespace OverTool {
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public char Opt => 'n';
+        public string FullOpt => "list-npc";
         public string Title => "List NPCs";
         public ushort[] Track => new ushort[1] { 0x75 };
         public bool Display => true;

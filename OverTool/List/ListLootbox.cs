@@ -10,6 +10,7 @@ namespace OverTool.List {
         public string Help => "No additional arguments";
         public uint MinimumArgs => 0;
         public char Opt => 'l';
+        public string FullOpt => "list-lootbox";
         public string Title => "List Lootbox";
         public ushort[] Track => new ushort[1] { 0xCF };
         public bool Display => true;
