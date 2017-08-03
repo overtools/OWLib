@@ -2,20 +2,30 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using CASCExplorer;
-using OWLib;
 
 namespace OverTool {
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct DeltaRecord {
+        public int Size;
+        public MD5Hash Hash;
+    }
+
     public class DeltaFile : IDisposable {
         private Stream baseFile;
 
-        private Dictionary<ulong, int> files = new Dictionary<ulong, int>();
+        private int VERSION = 1;
+        public int Version => VERSION;
+
+        private Dictionary<ulong, DeltaRecord> files = new Dictionary<ulong, DeltaRecord>();
         private string name = string.Empty;
 
-        public Dictionary<ulong, int> Files => files;
+        public Dictionary<ulong, DeltaRecord> Files => files;
         public string Name => name;
 
         private const uint DELTAHEADER_V1 = 0x444C5441;
+        private const uint DELTAHEADER_V2 = 0x444C5442;
 
         public DeltaFile(string path) {
             if (!Directory.Exists(Path.GetDirectoryName(path))) {
@@ -33,28 +43,52 @@ namespace OverTool {
         public void Parse() {
             using (BinaryReader reader = new BinaryReader(baseFile, System.Text.Encoding.ASCII, true)) {
                 uint magic = reader.ReadUInt32();
-                if (magic != DELTAHEADER_V1) {
-                    return;
-                }
-                name = reader.ReadString();
-                int count = reader.ReadInt32();
-                for (int i = 0; i < count; ++i) {
-                    ulong key = reader.ReadUInt64();
-                    int size = reader.ReadInt32();
-                    files[key] = size;
+                if (magic == DELTAHEADER_V1) {
+                    ParseV1(reader);
+                } else if (magic == DELTAHEADER_V2) {
+                    ParseV2(reader);
                 }
             }
         }
 
+        private void ParseV1(BinaryReader reader) {
+            VERSION = 1;
+            name = reader.ReadString();
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; ++i) {
+                ulong key = reader.ReadUInt64();
+                files[key] = new DeltaRecord { Size = reader.ReadInt32() };
+            }
+        }
+
+        private void ParseV2(BinaryReader reader) {
+            VERSION = 2;
+            name = reader.ReadString();
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; ++i) {
+                ulong key = reader.ReadUInt64();
+                files[key] = reader.Read<DeltaRecord>();
+            }
+        }
+
+
         public void Save() {
             using (BinaryWriter writer = new BinaryWriter(baseFile, System.Text.Encoding.ASCII, true)) {
                 baseFile.Position = 0;
-                writer.Write(DELTAHEADER_V1);
+                writer.Write(DELTAHEADER_V2);
                 writer.Write(name);
                 writer.Write(files.Count);
-                foreach(KeyValuePair<ulong, int> pair in files) {
+                foreach (KeyValuePair<ulong, DeltaRecord> pair in files) {
                     writer.Write(pair.Key);
-                    writer.Write(pair.Value);
+                    writer.Write(pair.Value.Size);
+                    unsafe
+                    {
+                        DeltaRecord record = pair.Value;
+                        byte* offset = record.Hash.Value;
+                        writer.Write(*(ulong*)offset);
+                        offset += 8;
+                        writer.Write(*(ulong*)offset);
+                    }
                 }
                 writer.Flush();
             }
@@ -78,7 +112,7 @@ namespace OverTool {
         public bool Display => true;
 
         public void Save(string path, Record record, CASCHandler handler, string mode, bool quiet) {
-            string output = Path.Combine(path, mode, $"{GUID.Type(record.record.Key):X3}", $"{GUID.LongKey(record.record.Key):X12}.{GUID.Type(record.record.Key):X3}");
+            string output = Path.Combine(path, mode, $"{OWLib.GUID.Type(record.record.Key):X3}", $"{OWLib.GUID.LongKey(record.record.Key):X12}.{OWLib.GUID.Type(record.record.Key):X3}");
 
             using (Stream acp = Util.OpenFile(record, handler)) {
                 if (acp == null) {
@@ -107,19 +141,21 @@ namespace OverTool {
                             Console.Error.WriteLine("Invalid new file");
                         } else {
                             Console.Out.WriteLine("Comparing {0} with {1}", old.Name, @new.Name);
-                            foreach (KeyValuePair<ulong, int> pair in @new.Files) {
+                            foreach (KeyValuePair<ulong, DeltaRecord> pair in @new.Files) {
                                 if (old.Files.ContainsKey(pair.Key)) {
-                                    if (old.Files[pair.Key] == pair.Value) {
-                                        continue;
+                                    if (old.Files[pair.Key].Size == pair.Value.Size) {
+                                        if (old.Version != 2 || @new.Version != 2 || old.Files[pair.Key].Hash.EqualsTo(pair.Value.Hash)) {
+                                            continue;
+                                        }
                                     }
-                                    Console.Out.WriteLine("{0:X12}.{1:X3} changed ({2} bytes)", GUID.LongKey(pair.Key), GUID.Type(pair.Key), old.Files[pair.Key] - pair.Value);
+                                    Console.Out.WriteLine("{0:X12}.{1:X3} changed ({2} delta bytes)", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key), old.Files[pair.Key].Size - pair.Value.Size);
                                 } else {
-                                    Console.Out.WriteLine("{0:X12}.{1:X3} added ({2} bytes)", GUID.LongKey(pair.Key), GUID.Type(pair.Key), pair.Value);
+                                    Console.Out.WriteLine("{0:X12}.{1:X3} added ({2} bytes)", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key), pair.Value.Size);
                                 }
                             }
-                            foreach (KeyValuePair<ulong, int> pair in old.Files) {
+                            foreach (KeyValuePair<ulong, DeltaRecord> pair in old.Files) {
                                 if (!@new.Files.ContainsKey(pair.Key)) {
-                                    Console.Out.WriteLine("{0:X12}.{1:X3} removed", GUID.LongKey(pair.Key), GUID.Type(pair.Key));
+                                    Console.Out.WriteLine("{0:X12}.{1:X3} removed", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key));
                                 }
                             }
                         }
@@ -132,20 +168,24 @@ namespace OverTool {
                         if (string.IsNullOrEmpty(old.Name) || old.Files.Count == 0) {
                             Console.Error.WriteLine("Invalid old file");
                         } else {
-                            Console.Out.WriteLine("Comparing {0} with current ({1})", old.Name, handler.Config.BuildName    );
+                            Console.Out.WriteLine("Comparing {0} with current ({1})", old.Name, handler.Config.BuildName);
                             foreach (KeyValuePair<ulong, Record> pair in map) {
-                                if (old.Files.ContainsKey(pair.Key)) {
-                                    if (old.Files[pair.Key] == pair.Value.record.Size) {
-                                        continue;
+                                if (handler.Encoding.GetEntry(pair.Value.record.ContentKey, out EncodingEntry enc)) {
+                                    if (old.Files.ContainsKey(pair.Key)) {
+                                        if (old.Files[pair.Key].Size == pair.Value.record.Size) {
+                                            if (old.Version != 2 || old.Files[pair.Key].Hash.EqualsTo(enc.Key)) {
+                                                continue;
+                                            }
+                                        }
+                                        Console.Out.WriteLine("{0:X12}.{1:X3} changed ({2} delta bytes)", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key), old.Files[pair.Key].Size - pair.Value.record.Size);
+                                    } else {
+                                        Console.Out.WriteLine("{0:X12}.{1:X3} added ({2} bytes)", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key), pair.Value.record.Size);
                                     }
-                                    Console.Out.WriteLine("{0:X12}.{1:X3} changed ({2} bytes)", GUID.LongKey(pair.Key), GUID.Type(pair.Key), old.Files[pair.Key] - pair.Value.record.Size);
-                                } else {
-                                    Console.Out.WriteLine("{0:X12}.{1:X3} added ({2} bytes)", GUID.LongKey(pair.Key), GUID.Type(pair.Key), pair.Value.record.Size);
                                 }
                             }
-                            foreach (KeyValuePair<ulong, int> pair in old.Files) {
+                            foreach (KeyValuePair<ulong, DeltaRecord> pair in old.Files) {
                                 if (!map.ContainsKey(pair.Key)) {
-                                    Console.Out.WriteLine("{0:X12}.{1:X3} removed", GUID.LongKey(pair.Key), GUID.Type(pair.Key));
+                                    Console.Out.WriteLine("{0:X12}.{1:X3} removed", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key));
                                 }
                             }
                         }
@@ -156,7 +196,9 @@ namespace OverTool {
                         DeltaFile delta = new DeltaFile(flags.Positionals[3]);
                         delta.SetName(handler.Config.BuildName);
                         foreach (KeyValuePair<ulong, Record> pair in map) {
-                            delta.Files[pair.Key] = pair.Value.record.Size;
+                            if (handler.Encoding.GetEntry(pair.Value.record.ContentKey, out EncodingEntry enc)) {
+                                delta.Files[pair.Key] = new DeltaRecord { Size = pair.Value.record.Size, Hash = enc.Key };
+                            }
                         }
                         delta.Save();
                         delta.Dispose();
@@ -172,16 +214,20 @@ namespace OverTool {
                             Console.Error.WriteLine("Invalid old file");
                         } else {
                             foreach (KeyValuePair<ulong, Record> pair in map) {
-                                if (types.Count > 0 && !types.Contains(GUID.Type(pair.Key))) {
+                                if (types.Count > 0 && !types.Contains(OWLib.GUID.Type(pair.Key))) {
                                     continue;
                                 }
-                                if (old.Files.ContainsKey(pair.Key)) {
-                                    if (old.Files[pair.Key] == pair.Value.record.Size) {
-                                        continue;
+                                if (handler.Encoding.GetEntry(pair.Value.record.ContentKey, out EncodingEntry enc)) {
+                                    if (old.Files.ContainsKey(pair.Key)) {
+                                        if (old.Files[pair.Key].Size == pair.Value.record.Size) {
+                                            if (old.Version != 2 || old.Files[pair.Key].Hash.EqualsTo(enc.Key)) {
+                                                continue;
+                                            }
+                                        }
+                                        Save(flags.Positionals[3], pair.Value, handler, "changed", quiet);
+                                    } else {
+                                        Save(flags.Positionals[3], pair.Value, handler, "new", quiet);
                                     }
-                                    Save(flags.Positionals[3], pair.Value, handler, "changed", quiet);
-                                } else {
-                                    Save(flags.Positionals[3], pair.Value, handler, "new", quiet);
                                 }
                             }
                         }

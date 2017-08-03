@@ -10,7 +10,7 @@ namespace OverTool {
         public string Title => "Multimode";
         public char Opt => '_';
         public string FullOpt => "multi";
-        public string Help => "mode[mode args]";
+        public string Help => "mode+mode[mode args]";
         public uint MinimumArgs => 1;
         public ushort[] Track => new ushort[0];
         public bool Display => true;
