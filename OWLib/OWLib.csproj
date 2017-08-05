@@ -70,6 +70,7 @@
     <Compile Include="Types\Chunk\TCFE\NECE.cs" />
     <Compile Include="Types\Map\Map11.cs" />
     <Compile Include="Types\Marshal.cs" />
+    <Compile Include="Types\STUD\BrawlName.cs" />
     <Compile Include="Types\STUD\GameMode.cs" />
     <Compile Include="Types\STUD\GameTypeParam.cs" />
     <Compile Include="Types\STUD\GameType.cs" />
