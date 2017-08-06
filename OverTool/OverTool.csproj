@@ -51,6 +51,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -88,6 +91,9 @@
     <Compile Include="Flags\FlagParser.cs" />
     <Compile Include="Flags\ICLIFlags.cs" />
     <Compile Include="IOvertool.cs" />
+    <Compile Include="JSON\JSONPortrait.cs" />
+    <Compile Include="JSON\JSONGeneral.cs" />
+    <Compile Include="JSON\JSONInventory.cs" />
     <Compile Include="List\ListBrawlName.cs" />
     <Compile Include="List\ListGameMode.cs" />
     <Compile Include="List\ListGameType.cs" />
@@ -106,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CASCExplorer\CascLib\CascLib.csproj">

@@ -7,7 +7,7 @@ using OWLib.Types.STUD;
 
 namespace OverTool.List {
     class ListLootbox : IOvertool {
-        public string Help => "No additional arguments";
+        public string Help => null;
         public uint MinimumArgs => 0;
         public char Opt => 'l';
         public string FullOpt => "list-lootbox";

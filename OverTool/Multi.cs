@@ -12,7 +12,7 @@ namespace OverTool {
         public string FullOpt => "multi";
         public string Help => "mode+mode[mode args]";
         public uint MinimumArgs => 1;
-        public ushort[] Track => new ushort[0];
+        public ushort[] Track => null;
         public bool Display => true;
 
         [DllImport("shell32.dll", SetLastError = true)]

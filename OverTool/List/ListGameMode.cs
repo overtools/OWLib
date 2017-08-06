@@ -11,7 +11,7 @@ namespace OverTool.List {
         public string Title => "List Game Modes";
         public char Opt => 'e';
         public string FullOpt => "list-gamemode";
-        public string Help => "No additional arguments";
+        public string Help => null;
         public uint MinimumArgs => 0;
         public ushort[] Track => new ushort[1] { 0xC7 };
         public bool Display => true;

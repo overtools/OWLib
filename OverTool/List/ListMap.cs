@@ -6,7 +6,7 @@ using OWLib.Types.STUD;
 
 namespace OverTool {
     class ListMap : IOvertool {
-        public string Help => "No additional arguments";
+        public string Help => null;
         public uint MinimumArgs => 0;
         public char Opt => 'm';
         public string FullOpt => "list-map";

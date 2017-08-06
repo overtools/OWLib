@@ -33,7 +33,7 @@ namespace OverTool.ExtractLogic {
         }
 
         public static void Extract(STUD itemStud, string output, string heroName, string itemName, string itemGroup, Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
-            string path = string.Format("{0}{1}{2}{1}{3}{1}{5}{1}{4}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName), Util.SanitizePath(itemGroup));
+            string path = string.Format("{0}{1}{2}{1}{3}{1}{5}{1}{4}{1}", output, Path.DirectorySeparatorChar, Util.Strip(Util.SanitizePath(heroName)), Util.SanitizePath(itemStud.Instances[0].Name), Util.SanitizePath(itemName), Util.SanitizePath(itemGroup));
 
             if (itemStud.Instances == null) {
                 return;
@@ -45,11 +45,16 @@ namespace OverTool.ExtractLogic {
             if (!map.ContainsKey(item.Data.portrait.key)) {
                 return;
             }
-            if (!File.Exists($"{path} ({item.Data.bracket}).dds")) {
-                Save(item.Data.portrait.key, $"{path} ({item.Data.bracket}).dds", map, quiet, handler);
+            string level = $"Level {(item.Data.bracket - 11) * 10 + 1}";
+            if (!File.Exists($"{path}{level}.dds")) {
+                Save(item.Data.portrait.key,  $"{path}{level}.dds", map, quiet, handler);
             }
-            if (!File.Exists($"{path} Star {item.Data.star}.dds")) {
-                Save(item.Data.portrait2.key, $"{path} Star {item.Data.star}.dds", map, quiet, handler);
+            string s = "s";
+            if (item.Data.star == 1) {
+                s = "";
+            }
+            if (!File.Exists($"{path} {item.Data.star} Star{s}.dds")) {
+                Save(item.Data.portrait2.key, $"{path} {item.Data.star} Star{s}.dds", map, quiet, handler);
             }
         }
     }
