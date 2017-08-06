@@ -49,7 +49,7 @@ namespace OverTool.JSON {
             JSONPkg pkg = new JSONPkg { };
             pkg.Name = Util.GetString(instance.Header.name, map, handler);
             pkg.Description = ListInventory.GetDescription(instance, map, handler);
-            pkg.Subline = Util.GetString(instance.Header.availble_in, map, handler);
+            pkg.Subline = Util.GetString(instance.Header.available_in, map, handler);
             pkg.Key = key;
             pkg.Rarity = instance.Header.rarity.ToString();
 
