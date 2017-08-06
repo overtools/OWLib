@@ -67,17 +67,18 @@ namespace OverTool.List
                         continue;
                     }
 
-                    string name = Util.GetString(achieve.Header.name, map, handler);
-                    string description = Util.GetString(achieve.Header.description1, map, handler);
+                    string achievementName = Util.GetString(achieve.Header.name, map, handler);
+                    string achievementDescription = Util.GetString(achieve.Header.description1, map, handler);
+                    // string description2 = Util.GetString(achieve.Header.description2, map, handler); // Fancy popup description, only used for level 25 comp enabled achievement
 
                     Tuple<string, STUD, IInventorySTUDInstance> reward = GetRewardItem(achieve.Header.reward, map, handler);
                     string rewardName = reward.Item1;
                     STUD rewardStud = reward.Item2;
                     IInventorySTUDInstance rewardInstance = reward.Item3;
 
-                    Console.Out.WriteLine(name);
+                    Console.Out.WriteLine(achievementName);
                     Console.Out.WriteLine("\t{0} ({1} {2})", rewardName, rewardInstance.Header.rarity, rewardStud.Instances[0].Name);
-                    Console.Out.WriteLine("\t{0}", description);
+                    Console.Out.WriteLine("\t{0}", achievementDescription);
                 }
             }
         }
