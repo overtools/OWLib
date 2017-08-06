@@ -12,14 +12,14 @@ namespace OverTool.List
     public class ListAchievement : IOvertool
     {
         public string Title => "List Achievements";
-        public char Opt => ' ';
+        public char Opt => '\0';
         public string FullOpt => "list-achievement";
-        public string Help => "No additional arguments";
+        public string Help => null;
         public uint MinimumArgs => 0;
         public ushort[] Track => new ushort[1] { 0x68 };
         public bool Display => true;
 
-        public static Tuple<string, STUD, IInventorySTUDInstance> getReward(ulong key, Dictionary<ulong, Record> map, CASCHandler handler) {
+        public static Tuple<string, STUD, IInventorySTUDInstance> GetRewardItem(ulong key, Dictionary<ulong, Record> map, CASCHandler handler) {
             if (!map.ContainsKey(key)) {
                 return null;
             }
@@ -70,7 +70,7 @@ namespace OverTool.List
                     string name = Util.GetString(achieve.Header.name, map, handler);
                     string description = Util.GetString(achieve.Header.description1, map, handler);
 
-                    Tuple<string, STUD, IInventorySTUDInstance> reward = getReward(achieve.Header.reward, map, handler);
+                    Tuple<string, STUD, IInventorySTUDInstance> reward = GetRewardItem(achieve.Header.reward, map, handler);
                     string rewardName = reward.Item1;
                     STUD rewardStud = reward.Item2;
                     IInventorySTUDInstance rewardInstance = reward.Item3;
