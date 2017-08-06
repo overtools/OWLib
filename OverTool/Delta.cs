@@ -108,7 +108,7 @@ namespace OverTool {
         public string FullOpt => "delta";
         public string Help => "command file...";
         public uint MinimumArgs => 2;
-        public ushort[] Track => new ushort[0];
+        public ushort[] Track => null;
         public bool Display => true;
 
         public void Save(string path, Record record, CASCHandler handler, string mode, bool quiet) {

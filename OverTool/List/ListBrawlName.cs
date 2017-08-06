@@ -9,9 +9,9 @@ using OWLib.Types.STUD;
 namespace OverTool.List {
     public class ListBrawlName : IOvertool {
         public string Title => "List Brawl Names";
-        public char Opt => ' ';
+        public char Opt => '\0';
         public string FullOpt => "list-brawlname";
-        public string Help => "No additional arguments";
+        public string Help => null;
         public uint MinimumArgs => 0;
         public ushort[] Track => new ushort[1] { 0xD9 };
         public bool Display => true;

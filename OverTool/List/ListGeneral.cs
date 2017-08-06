@@ -5,14 +5,13 @@ using CASCExplorer;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.STUD;
-using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
     public class ListGeneral : IOvertool {
         public string Title => "List General Cosmetics";
         public char Opt => 'g';
         public string FullOpt => "list-general";
-        public string Help => "No additional arguments";
+        public string Help => null;
         public uint MinimumArgs => 0;
         public ushort[] Track => new ushort[1] { 0x54 };
         public bool Display => true;

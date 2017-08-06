@@ -6,7 +6,7 @@ using OWLib;
 
 namespace OverTool {
     public class DumpString : IOvertool {
-        public string Help => "No additional arguments";
+        public string Help => null;
         public uint MinimumArgs => 0;
         public char Opt => 's';
         public string FullOpt => "strings";

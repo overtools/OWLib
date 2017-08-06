@@ -6,7 +6,7 @@ using OWLib.Types.STUD;
 
 namespace OverTool {
     class ListNPC : IOvertool {
-        public string Help => "No additional arguments";
+        public string Help => null;
         public uint MinimumArgs => 0;
         public char Opt => 'n';
         public string FullOpt => "list-npc";

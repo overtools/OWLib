@@ -9,7 +9,7 @@ using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
     public class ListInventory : IOvertool {
-        public string Help => "No additional arguments";
+        public string Help => null;
         public uint MinimumArgs => 0;
         public char Opt => 't';
         public string FullOpt => "list";
@@ -35,6 +35,23 @@ namespace OverTool {
             }
 
             return new Tuple<string, STUD, IInventorySTUDInstance>(Util.GetString(instance.Header.name.key, map, handler), stud, instance);
+        }
+
+        public static string GetDescription(IInventorySTUDInstance instance, Dictionary<ulong, Record> map, CASCHandler handler) {
+            if (instance.Header.description != 0) {
+                using (Stream descStream = Util.OpenFile(map[instance.Header.description], handler)) {
+                    STUD description = new STUD(descStream);
+                    if (description.Instances == null) {
+                        return null;
+                    }
+                    InventoryDescription desc = description.Instances[0] as InventoryDescription;
+                    if (desc == null) {
+                        return null;
+                    }
+                    return Util.GetString(desc.Header.str, map, handler);
+                }
+            }
+            return null;
         }
 
         public static void GetInventoryName(ulong key, bool ex, Dictionary<ulong, Record> map, CASCHandler handler, string heroName) {
@@ -82,21 +99,9 @@ namespace OverTool {
                 Console.Out.WriteLine("\t\t{0} ({1} {2}){3}", name, instance.Header.rarity, stud.Instances[0].Name, addt);
             }
 
-            if (instance.Header.description != 0) {
-                using (Stream descStream = Util.OpenFile(map[instance.Header.description], handler)) {
-                    STUD description = new STUD(descStream);
-                    if (description.Instances == null) {
-                        return;
-                    }
-                    InventoryDescription desc = description.Instances[0] as InventoryDescription;
-                    if (desc == null) {
-                        return;
-                    }
-                    string descriptionStr = Util.GetString(desc.Header.str, map, handler);
-                    if (!string.IsNullOrEmpty(descriptionStr)) {
-                        Console.Out.WriteLine("\t\t\t{0}", descriptionStr);
-                    }
-                }
+            string descriptionStr = GetDescription(instance, map, handler);
+            if (!string.IsNullOrEmpty(descriptionStr)) {
+                Console.Out.WriteLine("\t\t\t{0}", descriptionStr);
             }
         }
 
