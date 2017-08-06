@@ -14,11 +14,10 @@ namespace STULib.Types {
             public uint Offset;
             public uint Flags;
         }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct STUInstance {
-            public uint Checksum;
-            public uint NextOffset;
+        
+        public class STUInstance {
+            public uint InstanceChecksum;
+            public uint NextInstanceOffset;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
