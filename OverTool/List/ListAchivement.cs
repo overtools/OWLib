@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using CASCExplorer;
 using OWLib;
-using OWLib.Types;
 using OWLib.Types.STUD;
 using OWLib.Types.STUD.InventoryItem;
 
@@ -25,10 +24,8 @@ namespace OverTool.List
             }
 
             STUD stud = new STUD(Util.OpenFile(map[key], handler));
-            if (stud.Instances == null) {
-                return null;
-            }
-            if (stud.Instances[0] == null) {
+            if (stud.Instances == null || stud.Instances[0] == null)
+            {
                 return null;
             }
             IInventorySTUDInstance instance = stud.Instances[0] as IInventorySTUDInstance;
