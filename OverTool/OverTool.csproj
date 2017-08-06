@@ -92,6 +92,7 @@
     <Compile Include="List\ListGameMode.cs" />
     <Compile Include="List\ListGameType.cs" />
     <Compile Include="List\ListGeneral.cs" />
+    <Compile Include="List\ListAchivement.cs" />
     <Compile Include="List\ListWeapon.cs" />
     <Compile Include="List\ListLootbox.cs" />
     <Compile Include="List\ListNPC.cs" />

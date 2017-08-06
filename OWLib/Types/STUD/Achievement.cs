@@ -18,12 +18,12 @@ namespace OWLib.Types.STUD {
       public OWRecord icon;
     }
 
-    private AchievementData data;
-    public AchievementData Data => data;
+    private AchievementData header;
+    public AchievementData Header => header;
 
     public void Read(Stream input, OWLib.STUD stud) {
       using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
-        data = reader.Read<AchievementData>();
+        header = reader.Read<AchievementData>();
       }
     }
   }
