@@ -7,18 +7,18 @@ using OWLib.Types;
 using OWLib.Types.STUD;
 
 namespace OverTool.List {
-    public class ListBrawlName : IOvertool {
-        public string Title => "List Brawl Names";
+    public class ListHighlightType : IOvertool {
+        public string Title => "List Highlight Types";
         public char Opt => '\0';
-        public string FullOpt => "list-brawlname";
+        public string FullOpt => "list-highlighttype";
         public string Help => null;
         public uint MinimumArgs => 0;
-        public ushort[] Track => new ushort[1] { 0xD9 };
+        public ushort[] Track => new ushort[1] { 0xC2 };
         public bool Display => true;
 
 
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
-            foreach (ulong key in track[0xD9]) {
+            foreach (ulong key in track[0xC2]) {
                 if (!map.ContainsKey(key)) {
                     continue;
                 }
@@ -31,12 +31,12 @@ namespace OverTool.List {
                         continue;
                     }
 
-                    BrawlName bn = stud.Instances[0] as BrawlName;
-                    if (bn == null) {
+                    HighlightType ht = stud.Instances[0] as HighlightType;
+                    if (ht == null) {
                         continue;
                     }
 
-                    Console.Out.WriteLine($"{key}: {Util.GetString(bn.Data.name, map, handler)}");
+                    Console.Out.WriteLine($"{key}: {Util.GetString(ht.Data.name, map, handler)}");
                 }
             }
         }

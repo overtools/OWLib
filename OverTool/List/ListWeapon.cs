@@ -10,7 +10,7 @@ using OWLib.Types.STUD.InventoryItem;
 
 namespace OverTool {
     class ListWeapon : IOvertool {
-        public string Help => "No additional arguments";
+        public string Help => null;
         public uint MinimumArgs => 0;
         public char Opt => 'W';
         public string FullOpt => "list-weaponskin";

@@ -53,15 +53,18 @@ namespace OverTool {
             track[0x90] = new List<ulong>(); // internal requirements
             toolsMap = new Dictionary<string, IOvertool>();
             foreach (IOvertool t in tools) {
-                if (t.FullOpt == opt || (opt.Length == 1 && t.Opt == opt[0])) {
+                if (t.FullOpt == opt || (opt.Length == 1 && t.Opt != (char) 0 && t.Opt == opt[0])) {
                     tool = t;
                 }
 
-                foreach (ushort tr in t.Track) {
-                    if (!track.ContainsKey(tr)) {
-                        track[tr] = new List<ulong>();
+                if (t.Track != null) {
+                    foreach (ushort tr in t.Track) {
+                        if (!track.ContainsKey(tr)) {
+                            track[tr] = new List<ulong>();
+                        }
                     }
                 }
+
                 if (toolsMap.ContainsKey(t.FullOpt)) {
                     Console.Out.WriteLine("Duplicate opt! {0} conflicts with {1}", t.Title, toolsMap[t.FullOpt].Title);
                 }
@@ -176,7 +179,11 @@ namespace OverTool {
             Console.Out.WriteLine("".PadLeft(94, '-'));
             tools.Sort(new OvertoolComparer());
             foreach (IOvertool t in tools) {
-                Console.Out.WriteLine("  {0, -20} | {1,-40} | {2}", t.FullOpt, t.Title, t.Help);
+                string help = t.Help;
+                if (help == null) {
+                    help = "No additional arguments";
+                }
+                Console.Out.WriteLine("  {0, -20} | {1,-40} | {2}", t.FullOpt, t.Title, help);
             }
             return;
         }
