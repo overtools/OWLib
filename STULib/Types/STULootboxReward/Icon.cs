@@ -1,7 +1,6 @@
 ﻿using OWLib.Types;
 
 namespace STULib.Types.STULootboxReward {
-    [System.Diagnostics.DebuggerDisplay(STU.DEBUG_STR)]
     [STU(Checksum = 0x8CDAA871)]
     public class Icon : Cosmetic {
         public ulong Unknown1;

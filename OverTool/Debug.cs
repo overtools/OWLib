@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using CASCExplorer;
-using OWLib;
-using OWLib.Types.STUD;
+using STULib;
 
 namespace OverTool {
     public class Debug : IOvertool {
@@ -16,9 +14,8 @@ namespace OverTool {
         public bool Display => System.Diagnostics.Debugger.IsAttached;
 
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
-            foreach (KeyValuePair<ushort, List<ulong>> pair in track) {
-                Console.Out.WriteLine($"{pair.Key:X3} {pair.Value.Count} entries");
-            }
+            STU stu = new STU(Util.OpenFile(map[0x0250000000000D5D], handler));
+            System.Diagnostics.Debugger.Break();
         }
     }
 }

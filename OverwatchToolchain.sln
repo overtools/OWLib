@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CASCConsole", "CASCExplorer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OWReplayLib", "OWReplayLib\OWReplayLib.csproj", "{D3747A31-85D2-424F-9865-A83245FDB762}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STULib", "STULib\STULib.csproj", "{996012B0-3693-4642-AC44-5AA8865EE44A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{D3747A31-85D2-424F-9865-A83245FDB762}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3747A31-85D2-424F-9865-A83245FDB762}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3747A31-85D2-424F-9865-A83245FDB762}.Release|Any CPU.Build.0 = Release|Any CPU
+		{996012B0-3693-4642-AC44-5AA8865EE44A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{996012B0-3693-4642-AC44-5AA8865EE44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{996012B0-3693-4642-AC44-5AA8865EE44A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{996012B0-3693-4642-AC44-5AA8865EE44A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,11 +2,11 @@
 
 namespace STULib.Types {
     public static class Generic {
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct STUHeader {
+        public class STUHeader {
+            [STUElement(Verify = STU.MAGIC)]
             public uint Magic;
             public uint Version;
-            public ulong InstanceTableOffset;
+            public STUInstanceRecord[] InstanceTable;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -18,6 +18,10 @@ namespace STULib.Types {
         public class STUInstance {
             public uint InstanceChecksum;
             public uint NextInstanceOffset;
+
+            public override string ToString() {
+                return STU.GetName(GetType());
+            }
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -31,11 +35,6 @@ namespace STULib.Types {
             public long EntryCount;
             public long SizeOffset;
             public long DataOffset;
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct STUReference {
-            public long Offset;
         }
     }
 }

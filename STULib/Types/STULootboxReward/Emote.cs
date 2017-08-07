@@ -1,7 +1,6 @@
 ﻿using OWLib.Types;
 
 namespace STULib.Types.STULootboxReward {
-    [System.Diagnostics.DebuggerDisplay(STU.DEBUG_STR)]
     [STU(Checksum = 0xE533D614)]
     public class Emote : Cosmetic {
         public OWRecord UnknownRecord014;
