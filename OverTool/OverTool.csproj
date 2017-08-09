@@ -94,6 +94,7 @@
     <Compile Include="JSON\JSONPortrait.cs" />
     <Compile Include="JSON\JSONGeneral.cs" />
     <Compile Include="JSON\JSONInventory.cs" />
+    <Compile Include="List\ListUnknownE76D9EC1.cs" />
     <Compile Include="List\ListBrawlName.cs" />
     <Compile Include="List\ListGameMode.cs" />
     <Compile Include="List\ListGameType.cs" />
