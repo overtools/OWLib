@@ -16,7 +16,6 @@ namespace OWLib.Types.STUD {
             public ulong unk1;  // 0
             public ulong unk2;  // 0
             public ulong count;  // 7
-            public ulong arrayDataOffset;  // 64
         }
 
         private UnknownE76D9EC1Data data;
