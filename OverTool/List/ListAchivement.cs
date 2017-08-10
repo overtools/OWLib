@@ -38,6 +38,8 @@ namespace OverTool.List
 
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags)
         {
+            bool ex = System.Diagnostics.Debugger.IsAttached || flags.Expert;
+
             Console.Out.WriteLine("Listing Achievements");
             foreach (ulong key in track[0x68])
             {
@@ -72,10 +74,22 @@ namespace OverTool.List
                     string rewardName = reward.Item1;
                     STUD rewardStud = reward.Item2;
                     IInventorySTUDInstance rewardInstance = reward.Item3;
+                    
+                    if (ex) {
+                        Console.Out.WriteLine("{0} ({1:X16})", achievementName, GUID.LongKey(key));
+                    } else {
+                        Console.Out.WriteLine(achievementName);
+                    }
 
-                    Console.Out.WriteLine(achievementName);
-                    Console.Out.WriteLine("\t{0} ({1} {2})", rewardName, rewardInstance.Header.rarity, rewardStud.Instances[0].Name);
-                    Console.Out.WriteLine("\t{0}", achievementDescription);
+                    if (rewardName != null) {
+                        Console.Out.WriteLine("\tReward: {0} ({1} {2})", rewardName, rewardInstance.Header.rarity, rewardStud.Instances[0].Name);
+                    }
+
+                    if (achievementDescription != null) {
+                        Console.Out.WriteLine("\tDescription: {0}", achievementDescription);
+                    }
+
+                    
                 }
             }
         }
