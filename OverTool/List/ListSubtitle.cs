@@ -35,8 +35,7 @@ namespace OverTool.List {
                         continue;
                     }
 
-                    Console.Out.WriteLine($"{key}");
-                    Console.Out.WriteLine($"\t{st.String}\n");
+                    Console.Out.WriteLine($"{key}: {st.String}");
                 }
             }
         }
