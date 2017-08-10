@@ -43,6 +43,8 @@ namespace OverTool {
                 return;
             }
 
+            Logger.EXIT = !flags.GracefulExit;
+
             bool quiet = flags.Quiet;
 
             string root = flags.OverwatchDirectory;
@@ -128,7 +130,9 @@ namespace OverTool {
             // Fail when trying to extract data from a specified language with 2 or less files found.
             if (ow.APMFiles.Count() == 0) {
                 Console.Error.WriteLine("Could not find the files for language {0}. Please confirm that you have that language installed, and are using the names from the target language.", flags.Language);
-                return;
+                if (!flags.GracefulExit) {
+                    return;
+                }
             }
 
             Console.Out.WriteLine("Mapping...");

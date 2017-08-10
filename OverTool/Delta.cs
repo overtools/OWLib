@@ -45,7 +45,8 @@ namespace OverTool {
                 uint magic = reader.ReadUInt32();
                 if (magic == DELTAHEADER_V1) {
                     ParseV1(reader);
-                } else if (magic == DELTAHEADER_V2) {
+                }
+                else if (magic == DELTAHEADER_V2) {
                     ParseV2(reader);
                 }
             }
@@ -57,7 +58,7 @@ namespace OverTool {
             int count = reader.ReadInt32();
             for (int i = 0; i < count; ++i) {
                 ulong key = reader.ReadUInt64();
-                files[key] = new DeltaRecord { Size = reader.ReadInt32() };
+                files[key] = new DeltaRecord {Size = reader.ReadInt32()};
             }
         }
 
@@ -81,13 +82,12 @@ namespace OverTool {
                 foreach (KeyValuePair<ulong, DeltaRecord> pair in files) {
                     writer.Write(pair.Key);
                     writer.Write(pair.Value.Size);
-                    unsafe
-                    {
+                    unsafe {
                         DeltaRecord record = pair.Value;
                         byte* offset = record.Hash.Value;
-                        writer.Write(*(ulong*)offset);
+                        writer.Write(*(ulong*) offset);
                         offset += 8;
-                        writer.Write(*(ulong*)offset);
+                        writer.Write(*(ulong*) offset);
                     }
                 }
                 writer.Flush();
@@ -112,7 +112,8 @@ namespace OverTool {
         public bool Display => true;
 
         public void Save(string path, Record record, CASCHandler handler, string mode, bool quiet) {
-            string output = Path.Combine(path, mode, $"{OWLib.GUID.Type(record.record.Key):X3}", $"{OWLib.GUID.LongKey(record.record.Key):X12}.{OWLib.GUID.Type(record.record.Key):X3}");
+            string output = Path.Combine(path, mode, $"{OWLib.GUID.Type(record.record.Key):X3}",
+                $"{OWLib.GUID.LongKey(record.record.Key):X12}.{OWLib.GUID.Type(record.record.Key):X3}");
 
             using (Stream acp = Util.OpenFile(record, handler)) {
                 if (acp == null) {
@@ -122,7 +123,7 @@ namespace OverTool {
                     Directory.CreateDirectory(Path.GetDirectoryName(output));
                 }
                 using (Stream file = File.Open(output, FileMode.Create)) {
-                    Util.CopyBytes(acp, file, (int)acp.Length);
+                    Util.CopyBytes(acp, file, (int) acp.Length);
                     if (!quiet) {
                         Console.Out.WriteLine("Wrote file {0}", output);
                     }
@@ -130,118 +131,197 @@ namespace OverTool {
             }
         }
 
-        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
+        public void Save(string path, MD5Hash hash, ulong key, CASCHandler handler, bool quiet) {
+            string output = Path.Combine(path, $"{OWLib.GUID.Type(key):X3}",
+                $"{OWLib.GUID.LongKey(key):X12}.{OWLib.GUID.Type(key):X3}");
+
+            using (Stream acp = Util.OpenFile(hash, handler)) {
+                if (acp == null) {
+                    return;
+                }
+                if (!Directory.Exists(Path.GetDirectoryName(output))) {
+                    Directory.CreateDirectory(Path.GetDirectoryName(output));
+                }
+                using (Stream file = File.Open(output, FileMode.Create)) {
+                    Util.CopyBytes(acp, file, (int) acp.Length);
+                    if (!quiet) {
+                        Console.Out.WriteLine("Wrote file {0}", output);
+                    }
+                }
+            }
+        }
+
+        public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler,
+            bool quiet, OverToolFlags flags) {
             switch (flags.Positionals[2].ToLowerInvariant()) {
                 case "list": {
-                        DeltaFile old = new DeltaFile(flags.Positionals[3]);
-                        DeltaFile @new = new DeltaFile(flags.Positionals[4]);
-                        if (string.IsNullOrEmpty(old.Name) || old.Files.Count == 0) {
-                            Console.Error.WriteLine("Invalid old file");
-                        } else if (string.IsNullOrEmpty(@new.Name) || @new.Files.Count == 0) {
-                            Console.Error.WriteLine("Invalid new file");
-                        } else {
-                            Console.Out.WriteLine("Comparing {0} with {1}", old.Name, @new.Name);
-                            foreach (KeyValuePair<ulong, DeltaRecord> pair in @new.Files) {
+                    DeltaFile old = new DeltaFile(flags.Positionals[3]);
+                    DeltaFile @new = new DeltaFile(flags.Positionals[4]);
+                    if (string.IsNullOrEmpty(old.Name) || old.Files.Count == 0) {
+                        Console.Error.WriteLine("Invalid old file");
+                    }
+                    else if (string.IsNullOrEmpty(@new.Name) || @new.Files.Count == 0) {
+                        Console.Error.WriteLine("Invalid new file");
+                    }
+                    else {
+                        Console.Out.WriteLine("Comparing {0} with {1}", old.Name, @new.Name);
+                        foreach (KeyValuePair<ulong, DeltaRecord> pair in @new.Files) {
+                            if (old.Files.ContainsKey(pair.Key)) {
+                                if (old.Files[pair.Key].Size == pair.Value.Size) {
+                                    if (old.Version != 2 || @new.Version != 2 ||
+                                        old.Files[pair.Key].Hash.EqualsTo(pair.Value.Hash)) {
+                                        continue;
+                                    }
+                                }
+                                Console.Out.WriteLine("{0:X12}.{1:X3} changed ({2} delta bytes)",
+                                    OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key),
+                                    old.Files[pair.Key].Size - pair.Value.Size);
+                            }
+                            else {
+                                Console.Out.WriteLine("{0:X12}.{1:X3} added ({2} bytes)", OWLib.GUID.LongKey(pair.Key),
+                                    OWLib.GUID.Type(pair.Key), pair.Value.Size);
+                            }
+                        }
+                        foreach (KeyValuePair<ulong, DeltaRecord> pair in old.Files) {
+                            if (!@new.Files.ContainsKey(pair.Key)) {
+                                Console.Out.WriteLine("{0:X12}.{1:X3} removed", OWLib.GUID.LongKey(pair.Key),
+                                    OWLib.GUID.Type(pair.Key));
+                            }
+                        }
+                    }
+                    old.Dispose();
+                    @new.Dispose();
+                    break;
+                }
+                case "delta": {
+                    DeltaFile old = new DeltaFile(flags.Positionals[3]);
+                    if (string.IsNullOrEmpty(old.Name) || old.Files.Count == 0) {
+                        Console.Error.WriteLine("Invalid old file");
+                    }
+                    else {
+                        Console.Out.WriteLine("Comparing {0} with current ({1})", old.Name, handler.Config.BuildName);
+                        foreach (KeyValuePair<ulong, Record> pair in map) {
+                            if (handler.Encoding.GetEntry(pair.Value.record.ContentKey, out EncodingEntry enc)) {
                                 if (old.Files.ContainsKey(pair.Key)) {
-                                    if (old.Files[pair.Key].Size == pair.Value.Size) {
-                                        if (old.Version != 2 || @new.Version != 2 || old.Files[pair.Key].Hash.EqualsTo(pair.Value.Hash)) {
+                                    if (old.Files[pair.Key].Size == pair.Value.record.Size) {
+                                        if (old.Version != 2 || old.Files[pair.Key].Hash.EqualsTo(enc.Key)) {
                                             continue;
                                         }
                                     }
-                                    Console.Out.WriteLine("{0:X12}.{1:X3} changed ({2} delta bytes)", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key), old.Files[pair.Key].Size - pair.Value.Size);
-                                } else {
-                                    Console.Out.WriteLine("{0:X12}.{1:X3} added ({2} bytes)", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key), pair.Value.Size);
+                                    Console.Out.WriteLine("{0:X12}.{1:X3} changed ({2} delta bytes)",
+                                        OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key),
+                                        old.Files[pair.Key].Size - pair.Value.record.Size);
                                 }
-                            }
-                            foreach (KeyValuePair<ulong, DeltaRecord> pair in old.Files) {
-                                if (!@new.Files.ContainsKey(pair.Key)) {
-                                    Console.Out.WriteLine("{0:X12}.{1:X3} removed", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key));
-                                }
-                            }
-                        }
-                        old.Dispose();
-                        @new.Dispose();
-                        break;
-                    }
-                case "delta": {
-                        DeltaFile old = new DeltaFile(flags.Positionals[3]);
-                        if (string.IsNullOrEmpty(old.Name) || old.Files.Count == 0) {
-                            Console.Error.WriteLine("Invalid old file");
-                        } else {
-                            Console.Out.WriteLine("Comparing {0} with current ({1})", old.Name, handler.Config.BuildName);
-                            foreach (KeyValuePair<ulong, Record> pair in map) {
-                                if (handler.Encoding.GetEntry(pair.Value.record.ContentKey, out EncodingEntry enc)) {
-                                    if (old.Files.ContainsKey(pair.Key)) {
-                                        if (old.Files[pair.Key].Size == pair.Value.record.Size) {
-                                            if (old.Version != 2 || old.Files[pair.Key].Hash.EqualsTo(enc.Key)) {
-                                                continue;
-                                            }
-                                        }
-                                        Console.Out.WriteLine("{0:X12}.{1:X3} changed ({2} delta bytes)", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key), old.Files[pair.Key].Size - pair.Value.record.Size);
-                                    } else {
-                                        Console.Out.WriteLine("{0:X12}.{1:X3} added ({2} bytes)", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key), pair.Value.record.Size);
-                                    }
-                                }
-                            }
-                            foreach (KeyValuePair<ulong, DeltaRecord> pair in old.Files) {
-                                if (!map.ContainsKey(pair.Key)) {
-                                    Console.Out.WriteLine("{0:X12}.{1:X3} removed", OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key));
+                                else {
+                                    Console.Out.WriteLine("{0:X12}.{1:X3} added ({2} bytes)",
+                                        OWLib.GUID.LongKey(pair.Key), OWLib.GUID.Type(pair.Key),
+                                        pair.Value.record.Size);
                                 }
                             }
                         }
-                        old.Dispose();
-                        break;
+                        foreach (KeyValuePair<ulong, DeltaRecord> pair in old.Files) {
+                            if (!map.ContainsKey(pair.Key)) {
+                                Console.Out.WriteLine("{0:X12}.{1:X3} removed", OWLib.GUID.LongKey(pair.Key),
+                                    OWLib.GUID.Type(pair.Key));
+                            }
+                        }
                     }
+                    old.Dispose();
+                    break;
+                }
                 case "create": {
-                        DeltaFile delta = new DeltaFile(flags.Positionals[3]);
-                        delta.SetName(handler.Config.BuildName);
-                        foreach (KeyValuePair<ulong, Record> pair in map) {
-                            if (handler.Encoding.GetEntry(pair.Value.record.ContentKey, out EncodingEntry enc)) {
-                                delta.Files[pair.Key] = new DeltaRecord { Size = pair.Value.record.Size, Hash = enc.Key };
-                            }
+                    DeltaFile delta = new DeltaFile(flags.Positionals[3]);
+                    delta.SetName(handler.Config.BuildName);
+                    foreach (KeyValuePair<ulong, Record> pair in map) {
+                        if (handler.Encoding.GetEntry(pair.Value.record.ContentKey, out EncodingEntry enc)) {
+                            delta.Files[pair.Key] = new DeltaRecord {Size = pair.Value.record.Size, Hash = enc.Key};
                         }
-                        delta.Save();
-                        delta.Dispose();
-                        break;
                     }
+                    delta.Save();
+                    delta.Dispose();
+                    break;
+                }
+                case "create_flat": {
+                    DeltaFile delta = new DeltaFile(flags.Positionals[3]);
+                    delta.SetName(handler.Config.BuildName);
+                    foreach (KeyValuePair<ulong, Record> pair in map) {
+                        delta.Files[pair.Key] = new DeltaRecord {Size = pair.Value.record.Size, Hash = pair.Value.record.ContentKey};
+                    }
+                    delta.Save();
+                    delta.Dispose();
+                    break;
+                }
                 case "dump": {
-                        DeltaFile old = new DeltaFile(flags.Positionals[4]);
-                        List<ushort> types = new List<ushort>();
-                        if (flags.Positionals.Length > 5) {
-                            types.AddRange(flags.Positionals.Skip(5).Select((it) => ushort.Parse(it, System.Globalization.NumberStyles.HexNumber)));
-                        }
-                        if (string.IsNullOrEmpty(old.Name) || old.Files.Count == 0) {
-                            Console.Error.WriteLine("Invalid old file");
-                        } else {
-                            foreach (KeyValuePair<ulong, Record> pair in map) {
-                                if (types.Count > 0 && !types.Contains(OWLib.GUID.Type(pair.Key))) {
-                                    continue;
-                                }
-                                if (handler.Encoding.GetEntry(pair.Value.record.ContentKey, out EncodingEntry enc)) {
-                                    if (old.Files.ContainsKey(pair.Key)) {
-                                        if (old.Files[pair.Key].Size == pair.Value.record.Size) {
-                                            if (old.Version != 2 || old.Files[pair.Key].Hash.EqualsTo(enc.Key)) {
-                                                continue;
-                                            }
+                    DeltaFile old = new DeltaFile(flags.Positionals[4]);
+                    List<ushort> types = new List<ushort>();
+                    if (flags.Positionals.Length > 5) {
+                        types.AddRange(flags.Positionals.Skip(5)
+                            .Select((it) => ushort.Parse(it, System.Globalization.NumberStyles.HexNumber)));
+                    }
+                    if (string.IsNullOrEmpty(old.Name) || old.Files.Count == 0) {
+                        Console.Error.WriteLine("Invalid old file");
+                    }
+                    else {
+                        foreach (KeyValuePair<ulong, Record> pair in map) {
+                            if (types.Count > 0 && !types.Contains(OWLib.GUID.Type(pair.Key))) {
+                                continue;
+                            }
+                            if (handler.Encoding.GetEntry(pair.Value.record.ContentKey, out EncodingEntry enc)) {
+                                if (old.Files.ContainsKey(pair.Key)) {
+                                    if (old.Files[pair.Key].Size == pair.Value.record.Size) {
+                                        if (old.Version != 2 || old.Files[pair.Key].Hash.EqualsTo(enc.Key)) {
+                                            continue;
                                         }
-                                        Save(flags.Positionals[3], pair.Value, handler, "changed", quiet);
-                                    } else {
-                                        Save(flags.Positionals[3], pair.Value, handler, "new", quiet);
                                     }
+                                    Save(flags.Positionals[3], pair.Value, handler, "changed", quiet);
+                                }
+                                else {
+                                    Save(flags.Positionals[3], pair.Value, handler, "new", quiet);
                                 }
                             }
                         }
-                        old.Dispose();
-                        break;
                     }
+                    old.Dispose();
+                    break;
+                }
+                case "extract": {
+                    DeltaFile old = new DeltaFile(flags.Positionals[4]);
+                    List<ushort> types = new List<ushort>();
+                    List<ushort> ignoreTypes = new List<ushort>();
+                    if (flags.Positionals.Length > 5) {
+                        types.AddRange(flags.Positionals.Skip(5)
+                            .Where((it) => !it.StartsWith("!")).Select((it) => ushort.Parse(it, System.Globalization.NumberStyles.HexNumber)));
+                        ignoreTypes.AddRange(flags.Positionals.Skip(5)
+                            .Where((it) => it.StartsWith("!")).Select((it) => ushort.Parse(it.Substring(1), System.Globalization.NumberStyles.HexNumber)));
+                    }
+                    if (string.IsNullOrEmpty(old.Name) || old.Files.Count == 0) {
+                        Console.Error.WriteLine("Invalid old file");
+                    }
+                    else {
+                        foreach (KeyValuePair<ulong, DeltaRecord> pair in old.Files) {
+                            if (types.Count > 0 && !types.Contains(OWLib.GUID.Type(pair.Key))) {
+                                continue;
+                            }
+                            if (ignoreTypes.Count > 0 && ignoreTypes.Contains(OWLib.GUID.Type(pair.Key))) {
+                                continue;
+                            }
+                            if (handler.Encoding.GetEntry(pair.Value.Hash, out EncodingEntry enc)) {
+                                Save(flags.Positionals[3], enc.Key, pair.Key, handler, quiet);
+                            }
+                        }
+                    }
+                    old.Dispose();
+                    break;
+                }
                 default: {
-                        Console.Out.WriteLine("Valid modes: list, create, delta, dump");
-                        Console.Out.WriteLine("create [destination owdelta]");
-                        Console.Out.WriteLine("list [old owdelta] [new owdelta]");
-                        Console.Out.WriteLine("delta [old owdelta]");
-                        Console.Out.WriteLine("dump [detination] [old owdelta] [types]");
-                        break;
-                    }
+                    Console.Out.WriteLine("Valid modes: list, create, delta, dump, extract");
+                    Console.Out.WriteLine("create [destination owdelta]");
+                    Console.Out.WriteLine("list [old owdelta] [new owdelta]");
+                    Console.Out.WriteLine("delta [old owdelta]");
+                    Console.Out.WriteLine("extract [detination] [owdelta] [types]");
+                    Console.Out.WriteLine("dump [detination] [old owdelta] [types]");
+                    break;
+                }
             }
         }
     }

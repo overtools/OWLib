@@ -49,7 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
-    <Compile Include="APM.cs" />
     <Compile Include="Third Party\APPLIB\C3D.cs" />
     <Compile Include="DDSTypeDetect.cs" />
     <Compile Include="DXBC.cs" />
@@ -70,7 +69,6 @@
     <Compile Include="Types\Chunk\TCFE\NECE.cs" />
     <Compile Include="Types\Map\Map11.cs" />
     <Compile Include="Types\Marshal.cs" />
-    <Compile Include="Types\STUD\Subtitle.cs" />
     <Compile Include="Types\STUD\BrawlName.cs" />
     <Compile Include="Types\STUD\GameMode.cs" />
     <Compile Include="Types\STUD\GameTypeParam.cs" />
@@ -81,6 +79,7 @@
     <Compile Include="Types\STUD\HighlightType.cs" />
     <Compile Include="Types\STUD\InventoryDescription.cs" />
     <Compile Include="Types\STUD\AnnouncerVoiceList.cs" />
+    <Compile Include="Types\STUD\Subtitle.cs" />
     <Compile Include="Types\STUD\UISoundList.cs" />
     <Compile Include="Writer\ASCIIWriter.cs" />
     <Compile Include="Writer\BINWriter.cs" />

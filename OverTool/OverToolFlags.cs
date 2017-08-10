@@ -15,6 +15,9 @@ namespace OverTool {
         [Alias(Alias = "lang")]
         public string Language;
 
+        [CLIFlag(Default = false, Flag = "graceful-exit", Help = "When eabled don't crash on invalid CMF Encryption", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBoolean" })]
+        public bool GracefulExit;
+
         [CLIFlag(Default = true, Flag = "cache", Help = "Cache Index files from CDN", Parser = new string[] { "OverTool.Flags.CLIFlagAttribute", "CLIFlagBooleanInv" })]
         public bool UseCache;
 

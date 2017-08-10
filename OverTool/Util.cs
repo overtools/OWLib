@@ -119,6 +119,16 @@ namespace OverTool {
             return ms;
         }
 
+        public static Stream OpenFile(MD5Hash hash, CASCHandler handler) {
+            try {
+                Stream fstream = handler.OpenFile(hash);
+                return fstream;
+            } catch (Exception ex) {
+                Console.Out.WriteLine("Error {0}", ex.Message);
+                return null;
+            }
+        }
+
         public static string SanitizePath(string name) {
             char[] invalids = Path.GetInvalidFileNameChars();
             return string.Join("_", name.Split(invalids));
