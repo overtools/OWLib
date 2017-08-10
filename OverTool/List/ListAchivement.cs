@@ -87,9 +87,7 @@ namespace OverTool.List
 
                     if (achievementDescription != null) {
                         Console.Out.WriteLine("\tDescription: {0}", achievementDescription);
-                    }
-
-                    
+                    }                  
                 }
             }
         }
