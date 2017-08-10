@@ -13,15 +13,12 @@ namespace OWLib.Types.STUD {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct SubtitleData {
             public STUDInstanceInfo instance;
-            public uint unk1;  // 96
+            public uint arrayInfoOffset;  // 96
             public uint unk2;  // 0
             public uint unk3;  // 0
             public uint unk4;  // 0
             public uint unk5;  // 0
             public uint unk6;  // 0
-            public uint count;
-            public uint unk7;
-            public uint offset;
         }
 
         private SubtitleData data;
@@ -34,15 +31,19 @@ namespace OWLib.Types.STUD {
             using (BinaryReader reader = new BinaryReader(input, Encoding.UTF8, true)) {
                 data = reader.Read<SubtitleData>();
 
-                char[] chars = new char[data.count];
+                input.Position = data.arrayInfoOffset;
+                // seems to use nonstandard array, defined by two uints, with one uint inbetween
+                uint count = reader.Read<uint>();
+                reader.Read<uint>();  // unk7, seems to be apart of the array definiton
+                uint offset = reader.Read<uint>();
 
-                if (data.count > 0) {
-                    // seems to use nonstandard array, defined by two uints, with one uint inbetween
-                    // see length, unk7, offset
-                    input.Position = data.offset;
-                    chars = reader.ReadChars((int)data.count);
+                if (count > 0) {
+                    input.Position = offset;
+                    str = new string(reader.ReadChars((int)count));
+                } else {
+                    str = "";
                 }
-                str = new string(chars);
+                
             }
         }
     }
