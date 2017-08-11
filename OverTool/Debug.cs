@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using CASCExplorer;
-using OWLib;
-using OWLib.Types.STUD;
+using STULib;
 
 namespace OverTool {
     public class Debug : IOvertool {

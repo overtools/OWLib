@@ -126,6 +126,10 @@
       <Project>{353c0d05-c505-4df4-909e-624fd94a7d3b}</Project>
       <Name>OWLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\STULib\STULib.csproj">
+      <Project>{996012b0-3693-4642-ac44-5aa8865ee44a}</Project>
+      <Name>STULib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">
