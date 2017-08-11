@@ -13,7 +13,7 @@ namespace OverTool {
         public string FullOpt => "debug";
         public string Title => "Debug";
         public ushort[] Track => null;
-        public bool Display => System.Diagnostics.Debugger.IsAttached;
+        public bool Display => true;
 
         public void Parse(Dictionary<ushort, List<ulong>> track, Dictionary<ulong, Record> map, CASCHandler handler, bool quiet, OverToolFlags flags) {
             foreach (KeyValuePair<ushort, List<ulong>> pair in track) {
