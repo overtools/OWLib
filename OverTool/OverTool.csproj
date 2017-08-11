@@ -86,6 +86,7 @@
     <Compile Include="ExtractLogic\Spray.cs" />
     <Compile Include="Extract\ExtractMap.cs" />
     <Compile Include="Dump\DumpGeneral.cs" />
+    <Compile Include="FileTypes.cs" />
     <Compile Include="Flags\AliasAttribute.cs" />
     <Compile Include="Flags\CLIFlagAttribute.cs" />
     <Compile Include="Flags\FlagParser.cs" />
