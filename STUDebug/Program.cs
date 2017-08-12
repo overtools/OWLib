@@ -3,6 +3,7 @@ using System.IO;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.Chunk;
+using static STULib.Types.Generic.Version2;
 
 namespace STUDebug {
     public class Program {
@@ -73,14 +74,43 @@ namespace STUDebug {
             Console.Out.WriteLine("Dumped {0} chunks", i);
         }
 
+        public static void ListSTU(Stream file) {
+            using (BinaryReader reader = new BinaryReader(file)) {
+                STUHeader header = reader.Read<STUHeader>();
+
+                Util.DumpStruct(header, "");
+                Console.Out.WriteLine("{0} instances", header.InstanceCount);
+                file.Position = header.InstanceListOffset;
+                for (uint i = 0; i < header.InstanceCount; ++i) {
+                    STUInstanceRecord record = reader.Read<STUInstanceRecord>();
+                    Console.Out.WriteLine("\t{0:X8} - {1:X8} - {2} - {3} bytes ({4} real bytes)", record.InstanceChecksum, record.UnknownChecksum, record.Index, record.Size, record.Size - 4);
+                }
+                Console.Out.WriteLine("{0} variable lists", header.InstanceVariableListCount);
+                file.Position = header.InstanceVariableListOffset;
+                for (uint i = 0; i < header.InstanceVariableListCount; ++i) {
+                    STUInstanceVariableListInfo info = reader.Read<STUInstanceVariableListInfo>();
+                    Console.Out.WriteLine("\t{0} variables", info.Count);
+                    long tmp = file.Position;
+                    file.Position = info.Offset;
+                    long totalSize = 0;
+                    for (uint j = 0; j < info.Count; ++j) {
+                        STUInstanceVariableListEntry entry = reader.Read<STUInstanceVariableListEntry>();
+                        Console.Out.WriteLine("\t\t{0:X8} - {1} bytes", entry.Checksum, entry.Size);
+                        totalSize += entry.Size;
+                    }
+                    Console.Out.WriteLine("\t\tTotal: {0} bytes", totalSize);
+                    file.Position = tmp;
+                }
+            }
+        }
+
         public static void Main(string[] args) {
-            if (args.Length < 2) {
-                Console.Out.WriteLine("Usage: STUDebug file output_dir");
+            if (args.Length < 1) {
+                Console.Out.WriteLine("Usage: STUDebug file [output_dir]");
                 return;
             }
 
             string file = args[0];
-            string @out = args[1];
 
             Util.DEBUG = true;
 
@@ -92,13 +122,26 @@ namespace STUDebug {
             using (Stream fileStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 using (BinaryReader magicReader = new BinaryReader(fileStream, System.Text.Encoding.Default, true)) {
                     uint magic = magicReader.ReadUInt32();
+                    fileStream.Position = 0;
 
                     if (magic == STUD.STUD_MAGIC) {
+                        if (args.Length < 2) {
+                            Console.Out.WriteLine("Usage: STUDebug file [output_dir]");
+                            return;
+                        }
+
                         Console.Out.WriteLine("STU File Detected");
-                        DumpSTU(fileStream, @out);
+                        DumpSTU(fileStream, args[1]);
                     } else if (magic == Chunked.CHUNK_MAGIC) {
+                        if (args.Length < 2) {
+                            Console.Out.WriteLine("Usage: STUDebug file [output_dir]");
+                            return;
+                        }
+
                         Console.Out.WriteLine("Chunk File Detected");
-                        DumpChunks(fileStream, @out);
+                        DumpChunks(fileStream, args[1]);
+                    } else {
+                        ListSTU(fileStream);
                     }
                 }
             }

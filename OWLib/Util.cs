@@ -6,6 +6,13 @@ namespace OWLib {
     public static class Util {
         public static bool DEBUG = false;
 
+        public static void DumpStruct<T>(T instance, string padding) {
+            Type t = typeof(T);
+            foreach (FieldInfo info in t.GetFields()) {
+                Console.Out.WriteLine("{0}{1}: {2:X8}", padding, info.Name, info.GetValue(instance));
+            }
+        }
+
         public static string GetEnumName(Type t, object value, string fallback = "{0}") {
             string v = Enum.GetName(t, value);
             if (v == null) {
