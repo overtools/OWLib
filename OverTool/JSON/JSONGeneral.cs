@@ -101,14 +101,37 @@ namespace OverTool.JSON {
                     if (!dict.ContainsKey("LOOTBOX_EXCLUSIVE")) {
                         dict["LOOTBOX_EXCLUSIVE"] = new Dictionary<string, Dictionary<string, List<JSONPkg>>>();
                     }
-                    
+
+                    for (int i = 0; i < master.StandardItems.Length; ++i)
+                    {
+                        JSONPkg pkg = GenerateJSONPkg(master.StandardItems[i].key, map, handler);
+                        if (pkg.Name == null)
+                        {
+                            continue;
+                        }
+                        string s = "COMMON";
+                        pkg.EventId = 0;
+                        pkg.Event = s;
+
+                        if (!dict["ACHIEVEMENT"].ContainsKey(s))
+                        {
+                            dict["ACHIEVEMENT"][s] = new Dictionary<string, List<JSONPkg>>();
+                        }
+
+                        if (!dict["ACHIEVEMENT"][s].ContainsKey(pkg.Type))
+                        {
+                            dict["ACHIEVEMENT"][s][pkg.Type] = new List<JSONPkg>();
+                        }
+                        dict["ACHIEVEMENT"][s][pkg.Type].Add(pkg);
+                    }
+
                     for (int i = 0; i < master.Generic.Length; ++i) {
                         if (master.GenericItems[i].Length == 0) {
                             continue;
                         }
-                        string s = ItemEvents.GetInstance().GetEvent(master.Generic[i].@event);
-                        if (!dict["ACHIEVEMENT"].ContainsKey(s)) {
-                            dict["ACHIEVEMENT"][s] = new Dictionary<string, List<JSONPkg>>();
+                        string s = "STANDARD";
+                        if (!dict["AVAILABLE"].ContainsKey(s)) {
+                            dict["AVAILABLE"][s] = new Dictionary<string, List<JSONPkg>>();
                         }
 
                         for (int j = 0; j < master.GenericItems[i].Length; ++j) {
@@ -119,10 +142,10 @@ namespace OverTool.JSON {
                             pkg.EventId = master.Generic[i].@event;
                             pkg.Event = s;
 
-                            if (!dict["ACHIEVEMENT"][s].ContainsKey(pkg.Type)) {
-                                dict["ACHIEVEMENT"][s][pkg.Type] = new List<JSONPkg>();
+                            if (!dict["AVAILABLE"][s].ContainsKey(pkg.Type)) {
+                                dict["AVAILABLE"][s][pkg.Type] = new List<JSONPkg>();
                             }
-                            dict["ACHIEVEMENT"][s][pkg.Type].Add(pkg);
+                            dict["AVAILABLE"][s][pkg.Type].Add(pkg);
                         }
                     }
                     
