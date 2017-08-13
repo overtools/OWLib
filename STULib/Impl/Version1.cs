@@ -1,55 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.HashFunction.CRCStandards;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using OWLib;
-using static STULib.Types.Generic;
+using static STULib.Types.Generic.Common;
+using static STULib.Types.Generic.Version1;
 
-namespace STULib {
-    public class STU {
+namespace STULib.Impl {
+    public class Version1 : ISTU {
         public const uint MAGIC = 0x53545544;
-
-        private static Dictionary<uint, Type> instanceTypes;
-        private static Dictionary<Type, string> instanceNames;
-
-        private static void LoadInstanceTypes() {
-            instanceTypes = new Dictionary<uint, Type>();
-            instanceNames = new Dictionary<Type, string>();
-            
-            Assembly asm = typeof(STUInstance).Assembly;
-            Type t = typeof(STUInstance);
-            List<Type> types = asm.GetTypes().Where(type => type != t && t.IsAssignableFrom(type)).ToList();
-            foreach (Type type in types) {
-                STUAttribute attrib = type.GetCustomAttribute<STUAttribute>();
-                if (attrib == null) {
-                    continue;
-                }
-                if (attrib.Name == null) {
-                    attrib.Name = type.Name;
-                }
-                if (!attrib.Name.StartsWith("STU") && type.Namespace != null) {
-                    attrib.Name = type.Namespace.Split('.').Last() + attrib.Name;
-                }
-                if (attrib.Checksum == 0) {
-                    attrib.Checksum =
-                        BitConverter.ToUInt32(new CRC32().ComputeHash(Encoding.ASCII.GetBytes(attrib.Name)), 0);
-                }
-                instanceNames[type] = attrib.Name;
-                instanceTypes[attrib.Checksum] = type;
-            }
-        }
 
         private Stream stream;
         private STUHeader data;
         private Dictionary<long, STUInstance> instances;
 
-        public IEnumerator<STUInstance> Instances => instances.Values.GetEnumerator();
+        public override IEnumerator<STUInstance> Instances => instances.Values.GetEnumerator();
+        public override uint Version => 1;
 
-        public STU(Stream stuStream) {
+        internal static bool IsValidVersion(BinaryReader reader) {
+            return reader.ReadUInt32() == MAGIC;
+        }
+
+        public Version1(Stream stuStream) {
             stream = stuStream;
             instances = new Dictionary<long, STUInstance>();
             ReadInstanceData(stuStream.Position);
@@ -208,17 +182,6 @@ namespace STULib {
             reader.BaseStream.Position = position;
 
             return instances[offset];
-        }
-
-        public static string GetName<T>() {
-            return GetName(typeof(T));
-        }
-
-        public static string GetName(Type t) {
-            if (instanceNames.ContainsKey(t)) {
-                return instanceNames[t];
-            }
-            return null;
         }
     }
 }

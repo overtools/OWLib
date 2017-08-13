@@ -1,5 +1,5 @@
 ﻿using OWLib.Types;
-using static STULib.Types.Generic;
+using static STULib.Types.Generic.Common;
 using static STULib.Types.STULootboxReward.Common;
 
 namespace STULib.Types.STULootboxReward {
