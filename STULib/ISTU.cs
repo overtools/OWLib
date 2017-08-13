@@ -33,7 +33,7 @@ namespace STULib {
                 }
                 if (attrib.Checksum == 0) {
                     attrib.Checksum =
-                        BitConverter.ToUInt32(new CRC32().ComputeHash(Encoding.ASCII.GetBytes(attrib.Name)), 0);
+                        BitConverter.ToUInt32(new CRC32().ComputeHash(Encoding.ASCII.GetBytes(attrib.Name.ToLowerInvariant())), 0);
                 }
                 instanceNames[type] = attrib.Name;
                 instanceTypes[attrib.Checksum] = type;
