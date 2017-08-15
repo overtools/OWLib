@@ -11,5 +11,10 @@ namespace STULib {
         public STUAttribute(uint Checksum) {
             this.Checksum = Checksum;
         }
+
+        public STUAttribute(uint Checksum, string Name) {
+            this.Checksum = Checksum;
+            this.Name = Name;
+        }
     }
 }

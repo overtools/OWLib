@@ -41,12 +41,12 @@ namespace STULib.Types.Generic {
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        [STUOverride(0xDEADBEEF, 8)]
+        [STUOverride(0xDEADBEEF, 8)] // DUMMY
         public struct STUGUID {
             [STUField(STUVersionOnly = new uint[] {1})]
             private ulong Padding;
 
-            [STUField(0xDEADBEEF)]
+            [STUField(0xDEADBEEF)] // DUMMY
             private ulong Key;
 
             public static implicit operator long(STUGUID i) {

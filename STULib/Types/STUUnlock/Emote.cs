@@ -2,7 +2,7 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
-    [STU(0xE533D614)]
+    [STU(0xE533D614, "STUUnlock_Emote")]
     public class Emote : Cosmetic {
         public STUGUID UnknownRecord014;
         public STUGUID AnimationResource;
