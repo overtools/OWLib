@@ -11,11 +11,15 @@ namespace STULib.Types {
         public NestedGUID DefaultGroup;
 
         [STUField(0x719E981B)] // m_unlocks
-        public NestedGUID Unlocks;
+        public UnlockCategory Unlocks;
 
         public class NestedGUID {
             [STUField(0x719E981B, Padding = 8)] // m_unlocks
             public STUGUID[] Unlocks;
+        }
+
+        public class UnlockCategory {
+            public uint Unknown;
         }
     }
 }
