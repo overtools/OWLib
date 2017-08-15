@@ -3,10 +3,12 @@ using System.IO;
 
 namespace OWLib {
     public static class GUID {
+        [Flags]
         public enum AttributeEnum : ulong {
             Index = 0x00000000FFFFFFFF,
-            Locale = 0x0000001F00000000,
-            Region = 0x00000F8000000000,
+            Locale   = 0x0000001F00000000,
+            Reserved = 0x0000006000000000,
+            Region   = 0x00000F8000000000,
             Platform = 0x0000F00000000000,
             Type = 0x0FFF000000000000,
             Engine = 0xF000000000000000
@@ -27,6 +29,10 @@ namespace OWLib {
 
         public static byte Locale(ulong key) {
             return (byte)(Attribute(key, AttributeEnum.Locale) >> 32);
+        }
+
+        public static byte Reserved(ulong key) {
+            return (byte)(Attribute(key, AttributeEnum.Reserved) >> 37);
         }
 
         public static byte Region(ulong key) {
@@ -55,10 +61,16 @@ namespace OWLib {
         }
         #endregion
 
+        // TODO: Figure out the real detection code.
+        public static bool IsMangled(ulong key) {
+            return Reserved(key) > 0 || Engine(key) > 0;
+        }
+
         public static void DumpAttributes(TextWriter @out, ulong key) {
             @out.WriteLine($"Index:    {Index(key):X4}");
             @out.WriteLine($"Locale:   {Locale(key):X1}");
             @out.WriteLine($"Region:   {Region(key):X1}");
+            @out.WriteLine($"Reserved: {Reserved(key):X1}");
             @out.WriteLine($"Platform: {Platform(key):X1}");
             @out.WriteLine($"Type:     {Type(key):X3}");
             @out.WriteLine($"Engine:   {Engine(key):X1}");
