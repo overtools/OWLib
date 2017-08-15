@@ -130,7 +130,11 @@ namespace STULib.Impl {
             FieldInfo[] fields = GetFields(type);
             foreach (FieldInfo field in fields) {
                 STUFieldAttribute element = field.GetCustomAttribute<STUFieldAttribute>();
-                if (element?.STUVersionOnly > 0 && element.STUVersionOnly != Version) {
+                bool skip = false;
+                if (element?.STUVersionOnly != null) {
+                    skip = element.STUVersionOnly.All(version => version != Version);
+                }
+                if (skip) {
                     continue;
                 }
                 if (!CheckCompatVersion(field)) {
