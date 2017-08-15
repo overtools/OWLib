@@ -16,12 +16,12 @@ namespace STULib.Impl {
         private STUHeader data;
         private Dictionary<long, STUInstance> instances;
         private uint buildVersion;
-
-        public override IEnumerator<STUInstance> Instances => instances.Values.GetEnumerator();
+        
+        public override IEnumerable<STUInstance> Instances => instances.Select((pair => pair.Value));
         public override uint Version => 1;
 
         public override void Dispose() {
-            stream.Dispose();
+            stream?.Dispose();
         }
 
         internal static bool IsValidVersion(BinaryReader reader) {
@@ -137,7 +137,7 @@ namespace STULib.Impl {
                 if (skip) {
                     continue;
                 }
-                if (!CheckCompatVersion(field)) {
+                if (!CheckCompatVersion(field, buildVersion)) {
                     continue;
                 }
                 if (field.FieldType.IsArray) {
@@ -173,13 +173,6 @@ namespace STULib.Impl {
             }
 
             return instance;
-        }
-
-        private bool CheckCompatVersion(FieldInfo field) {
-            IEnumerable<BuildVersionRangeAttribute> buildVersionRanges = field.GetCustomAttributes<BuildVersionRangeAttribute>();
-            IEnumerable<BuildVersionRangeAttribute> buildVersionRangeAttributes = buildVersionRanges as BuildVersionRangeAttribute[] ?? buildVersionRanges.ToArray();
-
-            return !buildVersionRangeAttributes.Any() || buildVersionRangeAttributes.Any(buildVersionRange => buildVersion >= buildVersionRange?.Min && buildVersion <= buildVersionRange.Max);
         }
 
         private void ReadInstanceData(long offset) {

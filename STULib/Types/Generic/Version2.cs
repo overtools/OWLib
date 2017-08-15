@@ -34,5 +34,11 @@ namespace STULib.Types.Generic {
             public uint FieldChecksum;
             public uint FieldSize;
         }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct STUNestedInfo {
+            public uint Offset;
+            public int FieldListIndex;
+        }
     }
 }

@@ -13,6 +13,13 @@ namespace STULib {
         internal static Dictionary<uint, Type> instanceTypes;
         internal static Dictionary<Type, string> instanceNames;
 
+        internal static bool CheckCompatVersion(FieldInfo field, uint buildVersion) {
+            IEnumerable<BuildVersionRangeAttribute> buildVersionRanges = field.GetCustomAttributes<BuildVersionRangeAttribute>();
+            IEnumerable<BuildVersionRangeAttribute> buildVersionRangeAttributes = buildVersionRanges as BuildVersionRangeAttribute[] ?? buildVersionRanges.ToArray();
+
+            return !buildVersionRangeAttributes.Any() || buildVersionRangeAttributes.Any(buildVersionRange => buildVersion >= buildVersionRange?.Min && buildVersion <= buildVersionRange.Max);
+        }
+
         internal static void LoadInstanceTypes() {
             instanceTypes = new Dictionary<uint, Type>();
             instanceNames = new Dictionary<Type, string>();
@@ -38,7 +45,7 @@ namespace STULib {
                         foreach (string part in parts) {
                             attrib.Name = part + "_" + attrib.Name;
                             if (attrib.Name.StartsWith("STU")) {
-                                continue;
+                                break;
                             }
                         }
                     }
@@ -53,7 +60,7 @@ namespace STULib {
             }
         }
 
-        public abstract IEnumerator<STUInstance> Instances { get; }
+        public abstract IEnumerable<STUInstance> Instances { get; }
         public abstract uint Version { get; }
 
         public static string GetName<T>() {

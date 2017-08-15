@@ -4,6 +4,7 @@ using OWLib;
 using OWLib.Types;
 using OWLib.Types.Chunk;
 using static STULib.Types.Generic.Version2;
+using STULib;
 
 namespace STUDebug {
     public class Program {
@@ -123,6 +124,12 @@ namespace STUDebug {
                     }
                     Console.Out.WriteLine("\t\tTotal: {0} bytes", totalSize);
                     file.Position = tmp;
+                }
+
+                if (System.Diagnostics.Debugger.IsAttached) {
+                    file.Position = 0;
+                    ISTU stu = ISTU.NewInstance(file, uint.MaxValue);
+                    System.Diagnostics.Debugger.Break();
                 }
             }
         }
