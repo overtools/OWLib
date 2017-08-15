@@ -5,7 +5,7 @@ using static STULib.Types.STUUnlock.Common;
 
 namespace STULib.Types.STUUnlock {
     public class Cosmetic : STUInstance {
-        public OWRecord CosmeticName;
+        [STUField(0xC08C4427)] public OWRecord CosmeticName;
         public OWRecord CosmeticIconResource;
         public OWRecord CosmeticUnknownRecord;
         public OWRecord CosmeticBackgroundResource;
@@ -16,13 +16,7 @@ namespace STULib.Types.STUUnlock {
         public Rarity CosmeticRarity;
         public uint CosmeticFlags;
 
-        [BuildVersionRange(38125)]
-        // 1.12 release
-        [BuildVersionRange(38024, 38044)]
-        // 1.12 release
-        [BuildVersionRange(37755, 37793)]
-        // 1.12 release
-        [BuildVersionRange(37646, 37703)]
-        public ulong CosmeticUnknown3;
+        [BuildVersionRange(38125)] [BuildVersionRange(38024, 38044)] [BuildVersionRange(37755, 37793)]
+        [BuildVersionRange(37646, 37703)] public ulong CosmeticUnknown3;
     }
 }

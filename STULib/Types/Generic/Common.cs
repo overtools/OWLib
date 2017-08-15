@@ -4,14 +4,12 @@ namespace STULib.Types.Generic {
     public static class Common {
         public class STUInstance {
             // Version 1.0 prefix
-            [STUElement(STUVersionOnly = 1)]
-            public uint InstanceChecksum;
-            [STUElement(STUVersionOnly = 1)]
-            public uint NextInstanceOffset;
+            [STUField(STUVersionOnly = new uint[] {1})] public uint InstanceChecksum;
+
+            [STUField(STUVersionOnly = new uint[] {1})] public uint NextInstanceOffset;
 
             // Version 2.0 prefix
-            [STUElement(STUVersionOnly = 2)]
-            public uint FieldListIndex;
+            [STUField(STUVersionOnly = new uint[] {2})] public uint FieldListIndex;
 
             public override string ToString() {
                 return ISTU.GetName(GetType());

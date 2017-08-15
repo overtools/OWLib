@@ -2,23 +2,22 @@
 
 namespace STULib {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public class STUElementAttribute : Attribute {
+    public class STUFieldAttribute : Attribute {
         public bool ReferenceArray = false;
         public bool ReferenceValue = false;
         public object Verify = null;
 
         public uint Checksum = 0;
-        public string[] DependsOn = { };
 
-        public uint STUVersionOnly = 0;
+        public uint[] STUVersionOnly = null;
 
-        public STUElementAttribute() {}
+        public STUFieldAttribute() {}
 
-        public STUElementAttribute(uint Checksum) {
+        public STUFieldAttribute(uint Checksum) {
             this.Checksum = Checksum;
         }
 
-        public STUElementAttribute(uint Checksum, params string[] DependsOn) {
+        public STUFieldAttribute(uint Checksum, params string[] DependsOn) {
             this.Checksum = Checksum;
             this.DependsOn = DependsOn;
         }

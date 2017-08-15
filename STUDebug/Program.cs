@@ -21,25 +21,26 @@ namespace STUDebug {
             }
 
             uint i = 0;
-            foreach (ISTUDInstance instance in stud.Instances) {
-                STUDummy dummy = instance as STUDummy;
-                if (dummy == null) {
-                    if (System.Diagnostics.Debugger.IsAttached) {
-                        System.Diagnostics.Debugger.Break();
+            if (stud.Instances != null)
+                foreach (ISTUDInstance instance in stud.Instances) {
+                    STUDummy dummy = instance as STUDummy;
+                    if (dummy == null) {
+                        if (System.Diagnostics.Debugger.IsAttached) {
+                            System.Diagnostics.Debugger.Break();
+                        }
                     }
-                } else {
-                    string traditional_name = manager.GetName(dummy.Id);
-                    if (traditional_name == null) {
-                        traditional_name = $"{dummy.Id:X8}";
+                    else {
+                        string traditional_name = manager.GetName(dummy.Id) ?? $"{dummy.Id:X8}";
+                        string filename =
+                            $"{i:X8}_{dummy.Offset:X8}_{OverTool.Util.SanitizePath(traditional_name)}.stu";
+                        using (Stream outputStream = File.Open(Path.Combine(@out, filename), FileMode.Create,
+                            FileAccess.Write, FileShare.Read)) {
+                            dummy.Data.Position = 0;
+                            dummy.Data.CopyTo(outputStream);
+                        }
                     }
-                    string filename = $"{i:X8}_{dummy.Offset:X8}_{OverTool.Util.SanitizePath(traditional_name)}.stu";
-                    using (Stream outputStream = File.Open(Path.Combine(@out, filename), FileMode.Create, FileAccess.Write, FileShare.Read)) {
-                        dummy.Data.Position = 0;
-                        dummy.Data.CopyTo(outputStream);
-                    }
+                    ++i;
                 }
-                ++i;
-            }
             Console.Out.WriteLine("Dumped {0} STU instances", i);
         }
 
@@ -56,21 +57,24 @@ namespace STUDebug {
             }
 
             uint i = 0;
-            foreach (IChunk instance in chunked.Chunks) {
-                MemoryChunk dummy = instance as MemoryChunk;
-                if (dummy == null) {
-                    if (System.Diagnostics.Debugger.IsAttached) {
-                        System.Diagnostics.Debugger.Break();
+            if (chunked.Chunks != null)
+                foreach (IChunk instance in chunked.Chunks) {
+                    MemoryChunk dummy = instance as MemoryChunk;
+                    if (dummy == null) {
+                        if (System.Diagnostics.Debugger.IsAttached) {
+                            System.Diagnostics.Debugger.Break();
+                        }
                     }
-                } else {
-                    string filename = $"{i:X8}_{dummy.RootIdentifier}_{dummy.Identifier}.chunk";
-                    using (Stream outputStream = File.Open(Path.Combine(@out, filename), FileMode.Create, FileAccess.Write, FileShare.Read)) {
-                        dummy.Data.Position = 0;
-                        dummy.Data.CopyTo(outputStream);
+                    else {
+                        string filename = $"{i:X8}_{dummy.RootIdentifier}_{dummy.Identifier}.chunk";
+                        using (Stream outputStream = File.Open(Path.Combine(@out, filename), FileMode.Create,
+                            FileAccess.Write, FileShare.Read)) {
+                            dummy.Data.Position = 0;
+                            dummy.Data.CopyTo(outputStream);
+                        }
                     }
+                    i++;
                 }
-                i++;
-            }
             Console.Out.WriteLine("Dumped {0} chunks", i);
         }
 
@@ -84,7 +88,15 @@ namespace STUDebug {
                 long totalSize = 0;
                 for (uint i = 0; i < header.InstanceCount; ++i) {
                     STUInstanceRecord record = reader.Read<STUInstanceRecord>();
-                    Console.Out.WriteLine("\t{0:X8} - {1:X8} - {2} - {3} bytes", record.InstanceChecksum, record.AssignFieldChecksum, record.AssignInstanceIndex, record.InstanceSize);
+                    Console.Out.WriteLine("\t{0:X8} - {1:X8} - {2} - {3} bytes", record.InstanceChecksum, record.AssignFieldChecksum, record.AssignInstanceIndex, record.InstanceSize - 4);
+                    long position = file.Position;
+                    file.Position = header.Offset + totalSize;
+                    int listIndex = reader.ReadInt32();
+                    if (listIndex > -1 && (uint)listIndex >= header.InstanceFieldListCount) {
+                        throw new Exception();
+                    }
+                    Console.Out.WriteLine("\t\tfield list index {0:X}", listIndex);
+                    file.Position = position;
                     totalSize += record.InstanceSize;
                 }
                 Console.Out.WriteLine("Total: {0} bytes", totalSize);

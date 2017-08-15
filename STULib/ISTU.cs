@@ -21,28 +21,35 @@ namespace STULib {
             Type t = typeof(STUInstance);
             List<Type> types = asm.GetTypes().Where(type => type != t && t.IsAssignableFrom(type)).ToList();
             foreach (Type type in types) {
-                STUAttribute attrib = type.GetCustomAttribute<STUAttribute>();
-                if (attrib == null) {
+                IEnumerable<STUAttribute> stuAttributes = type.GetCustomAttributes<STUAttribute>();
+                IEnumerable<STUAttribute> attributes = stuAttributes as STUAttribute[] ?? stuAttributes.ToArray();
+                if (!attributes.Any()) {
                     continue;
                 }
-                if (attrib.Name == null) {
-                    attrib.Name = type.Name;
-                }
-                if (!attrib.Name.StartsWith("STU") && type.Namespace != null) {
-                    IEnumerable<string> parts = type.Namespace.Split('.').Reverse();
-                    foreach (string part in parts) {
-                        attrib.Name = part + "_" + attrib.Name;
-                        if (attrib.Name.StartsWith("STU")) {
-                            continue;
+                foreach (STUAttribute attrib in attributes) {
+                    if (attrib == null) {
+                        continue;
+                    }
+                    if (attrib.Name == null) {
+                        attrib.Name = type.Name;
+                    }
+                    if (!attrib.Name.StartsWith("STU") && type.Namespace != null) {
+                        IEnumerable<string> parts = type.Namespace.Split('.').Reverse();
+                        foreach (string part in parts) {
+                            attrib.Name = part + "_" + attrib.Name;
+                            if (attrib.Name.StartsWith("STU")) {
+                                continue;
+                            }
                         }
                     }
+                    if (attrib.Checksum == 0) {
+                        attrib.Checksum =
+                            BitConverter.ToUInt32(
+                                new CRC32().ComputeHash(Encoding.ASCII.GetBytes(attrib.Name.ToLowerInvariant())), 0);
+                    }
+                    instanceNames[type] = attrib.Name;
+                    instanceTypes[attrib.Checksum] = type;
                 }
-                if (attrib.Checksum == 0) {
-                    attrib.Checksum =
-                        BitConverter.ToUInt32(new CRC32().ComputeHash(Encoding.ASCII.GetBytes(attrib.Name.ToLowerInvariant())), 0);
-                }
-                instanceNames[type] = attrib.Name;
-                instanceTypes[attrib.Checksum] = type;
             }
         }
 

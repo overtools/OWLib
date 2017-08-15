@@ -35,7 +35,7 @@ namespace STULib.Impl {
             ReadInstanceData(stuStream.Position);
         }
 
-        private object GetValueArray(Type type, BinaryReader reader, STUElementAttribute element) {
+        private object GetValueArray(Type type, BinaryReader reader, STUFieldAttribute element) {
             long offset = 0;
             int size = 0;
 
@@ -61,7 +61,7 @@ namespace STULib.Impl {
             return array;
         }
 
-        private object GetValue(Type type, BinaryReader reader, STUElementAttribute element) {
+        private object GetValue(Type type, BinaryReader reader, STUFieldAttribute element) {
             if (type.IsArray) {
                 long offset = reader.ReadInt64();
                 if (offset == 0) {
@@ -129,7 +129,7 @@ namespace STULib.Impl {
         private object InitializeObject(object instance, Type type, BinaryReader reader) {
             FieldInfo[] fields = GetFields(type);
             foreach (FieldInfo field in fields) {
-                STUElementAttribute element = field.GetCustomAttribute<STUElementAttribute>();
+                STUFieldAttribute element = field.GetCustomAttribute<STUFieldAttribute>();
                 if (element?.STUVersionOnly > 0 && element.STUVersionOnly != Version) {
                     continue;
                 }
