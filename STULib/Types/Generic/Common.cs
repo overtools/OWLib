@@ -36,7 +36,7 @@ namespace STULib.Types.Generic {
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         [STUOverride(0xDEADBEEF, 8)] // DUMMY
-        public struct STUGUID {
+        public class STUGUID {
             [STUField(STUVersionOnly = new uint[] { 1 })]
             private ulong Padding;
 
