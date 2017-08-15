@@ -16,10 +16,5 @@ namespace STULib {
         public STUFieldAttribute(uint Checksum) {
             this.Checksum = Checksum;
         }
-
-        public STUFieldAttribute(uint Checksum, params string[] DependsOn) {
-            this.Checksum = Checksum;
-            this.DependsOn = DependsOn;
-        }
     }
 }
