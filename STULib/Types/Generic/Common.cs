@@ -21,12 +21,6 @@ namespace STULib.Types.Generic {
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct STUArray {
-            public long EntryCount;
-            public long Offset;
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct STUReferenceArray {
             public long EntryCount;
             public long SizeOffset;
@@ -43,7 +37,7 @@ namespace STULib.Types.Generic {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         [STUOverride(0xDEADBEEF, 8)] // DUMMY
         public struct STUGUID {
-            [STUField(STUVersionOnly = new uint[] {1})]
+            [STUField(STUVersionOnly = new uint[] { 1 })]
             private ulong Padding;
 
             [STUField(0xDEADBEEF)] // DUMMY

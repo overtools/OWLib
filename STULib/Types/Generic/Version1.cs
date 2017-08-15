@@ -13,5 +13,11 @@ namespace STULib.Types.Generic {
             public uint Offset;
             public uint Flags;
         }
+        
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct STUArray {
+            public long EntryCount;
+            public long Offset;
+        }
     }
 }

@@ -26,10 +26,11 @@ namespace STULib.Impl {
 
         private uint buildVersion;
 
+        private BinaryReader metadataReader;
 
         public override void Dispose() {
             stream?.Dispose();
-            metadata?.Dispose();
+            metadataReader?.Dispose();
         }
 
         internal static bool IsValidVersion(BinaryReader reader) {
@@ -43,10 +44,65 @@ namespace STULib.Impl {
             ReadInstanceData(stuStream.Position);
         }
 
+        private object GetValueArray(Type type, STUFieldAttribute element, uint count) {
+            Array array = Array.CreateInstance(type, count);
+            for (uint i = 0; i < count; ++i) {
+                array.SetValue(GetValueArrayInner(type, element), i);
+            }
+            return array;
+        }
+
+        private object GetValueArrayInner(Type type, STUFieldAttribute element) {
+            BinaryReader reader = metadataReader;
+            switch (type.Name) {
+                case "String": {
+                    long offset = reader.ReadInt64();
+                    long position = reader.BaseStream.Position;
+                    reader.BaseStream.Position = offset;
+                    STUString stringData = reader.Read<STUString>();
+                    if (stringData.Size == 0) {
+                        return string.Empty;
+                    }
+                    reader.BaseStream.Position = stringData.Offset;
+                    string @string = new string(reader.ReadChars((int) stringData.Size));
+                    reader.BaseStream.Position = position;
+                    return @string;
+                }
+                case "Single":
+                    return reader.ReadSingle();
+                case "Boolean":
+                    return reader.ReadByte() != 0;
+                case "Int16":
+                    return reader.ReadInt16();
+                case "UInt16":
+                    return reader.ReadUInt16();
+                case "Int32":
+                    return reader.ReadInt32();
+                case "UInt32":
+                    return reader.ReadUInt32();
+                case "Int64":
+                    return reader.ReadInt64();
+                case "UInt64":
+                    return reader.ReadUInt64();
+                case "Byte":
+                    return reader.ReadByte();
+                case "SByte":
+                    return reader.ReadSByte();
+                default:
+                    if (type.IsEnum) {
+                        return GetValueArrayInner(type.GetEnumUnderlyingType(), element);
+                    }
+                    if (type.IsClass || type.IsValueType) {
+                        return InitializeObject(Activator.CreateInstance(type), type, reader);
+                    }
+                    return null;
+            }
+        }
+
         // ReSharper disable once UnusedParameter.Local
         private object GetValue(Type type, BinaryReader reader, STUFieldAttribute element) {
             if (type.IsArray) {
-                throw new NotImplementedException();
+                return InitializeObjectArray(type.GetElementType(), reader, element);
             }
             switch (type.Name) {
                 case "String": {
@@ -97,7 +153,7 @@ namespace STULib.Impl {
         }
 
         private STUInstanceField[] CreateInstanceFields(Type instanceType) {
-            return instanceType.GetCustomAttributes<STUOverride>().Select(@override => new STUInstanceField() {FieldChecksum = @override.Checksum, FieldSize = @override.Size}).ToArray();
+            return instanceType.GetCustomAttributes<STUOverride>().Select(@override => new STUInstanceField {FieldChecksum = @override.Checksum, FieldSize = @override.Size}).ToArray();
         }
 
         private void SetField(object instance, uint checksum, object value) {
@@ -120,7 +176,56 @@ namespace STULib.Impl {
             return instanceType.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
                 .Where(fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0);
         }
-        
+
+        private object InitializeObjectArray(Type type, BinaryReader reader, STUFieldAttribute element) {
+            int offset = reader.ReadInt32();
+            metadata.Position = offset;
+            STUArray arrayInfo = metadataReader.Read<STUArray>();
+            metadata.Position = arrayInfo.Offset;
+            return GetValueArray(type, element, arrayInfo.Count);
+        }
+
+        private object InitializeObject(object instance, Type type, BinaryReader reader) {
+            FieldInfo[] fields = GetFields(type);
+            foreach (FieldInfo field in fields) {
+                STUFieldAttribute element = field.GetCustomAttribute<STUFieldAttribute>();
+                bool skip = false;
+                if (element?.STUVersionOnly != null) {
+                    skip = element.STUVersionOnly.All(version => version != Version);
+                }
+                if (skip) {
+                    continue;
+                }
+                if (!CheckCompatVersion(field, buildVersion)) {
+                    continue;
+                }
+                if (field.FieldType.IsArray) {
+                    field.SetValue(instance, InitializeObjectArray(field.FieldType, reader, element));
+                } else {
+                    long position = -1;
+                    if (element?.ReferenceValue == true) {
+                        long offset = reader.ReadInt64();
+                        if (offset == 0) {
+                            continue;
+                        }
+                        position = reader.BaseStream.Position;
+                        reader.BaseStream.Position = offset;
+                    }
+                    field.SetValue(instance, GetValue(field.FieldType, reader, element));
+                    if (position > -1) {
+                        reader.BaseStream.Position = position;
+                    }
+                }
+                if (element?.Verify != null) {
+                    if (!field.GetValue(instance).Equals(element.Verify)) {
+                        throw new Exception("Verification failed");
+                    }
+                }
+            }
+
+            return instance;
+        }
+
         private object InitializeObject(object instance, Type type, STUInstanceField[] writtenFields, BinaryReader reader) {
             Dictionary<uint, FieldInfo> fieldMap = CreateFieldMap(GetValidFields(type));
 
@@ -144,18 +249,23 @@ namespace STULib.Impl {
                 if (!CheckCompatVersion(field, buildVersion)) {
                     continue;
                 }
-                if (writtenField.FieldSize == 0) {
-                    if (type.IsClass || type.IsValueType) {
-                        STUNestedInfo nested = reader.Read<STUNestedInfo>();
-                        object nestedInstance = Activator.CreateInstance(field.FieldType);
-                        reader.BaseStream.Position = nested.Offset;
-                        field.SetValue(instance, InitializeObject(nestedInstance, field.FieldType, instanceFields[nested.FieldListIndex], reader));
-                        continue;
-                    }
-                }
                 if (field.FieldType.IsArray) {
-                    throw new NotImplementedException();
+                    field.SetValue(instance, InitializeObjectArray(field.FieldType.GetElementType(), reader, element));
                 } else {
+                    if (element != null) {
+                        reader.BaseStream.Position += element.Padding;
+                    }
+
+                    if (writtenField.FieldSize == 0) {
+                        if (type.IsClass || type.IsValueType) {
+                            STUNestedInfo nested = reader.Read<STUNestedInfo>();
+                            object nestedInstance = Activator.CreateInstance(field.FieldType);
+                            reader.BaseStream.Position = nested.Offset;
+                            field.SetValue(instance, InitializeObject(nestedInstance, field.FieldType, instanceFields[nested.FieldListIndex], reader));
+                            continue;
+                        }
+                    }
+
                     long position = -1;
                     if (element?.ReferenceValue == true) {
                         long offset = reader.ReadInt64();
@@ -255,6 +365,7 @@ namespace STULib.Impl {
             metadata = new MemoryStream((int)header.MetadataSize);
             metadata.Write(reader.ReadBytes((int)header.MetadataSize), 0, (int)header.MetadataSize);
             metadata.Position = 0;
+            metadataReader = new BinaryReader(metadata, Encoding.UTF8, false);
 
             return true;
         }

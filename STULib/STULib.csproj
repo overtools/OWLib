@@ -61,6 +61,7 @@
     <Compile Include="Types\Generic\Common.cs" />
     <Compile Include="Types\Generic\Version2.cs" />
     <Compile Include="Types\Generic\Version1.cs" />
+    <Compile Include="Types\STUCatalog.cs" />
     <Compile Include="Types\STUUnlock\Common.cs" />
     <Compile Include="Types\STUUnlock\Cosmetic.cs" />
     <Compile Include="Types\STUUnlock\Currency.cs" />

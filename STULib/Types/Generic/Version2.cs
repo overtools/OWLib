@@ -40,5 +40,14 @@ namespace STULib.Types.Generic {
             public uint Offset;
             public int FieldListIndex;
         }
+
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct STUArray {
+            public uint Count;
+            public uint InstanceIndex;
+            public uint Offset;
+            public uint Unknown;
+        }
     }
 }

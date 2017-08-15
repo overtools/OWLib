@@ -19,6 +19,15 @@ namespace STULib {
 
             return !buildVersionRangeAttributes.Any() || buildVersionRangeAttributes.Any(buildVersionRange => buildVersion >= buildVersionRange?.Min && buildVersion <= buildVersionRange.Max);
         }
+        
+
+        internal static FieldInfo[] GetFields(Type type) {
+            FieldInfo[] parent = new FieldInfo[0];
+            if (type.BaseType != null && type.BaseType.Namespace != null && !type.BaseType.Namespace.StartsWith("System.")) {
+                parent = GetFields(type.BaseType);
+            }
+            return parent.Concat(type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)).ToArray();
+        }
 
         internal static void LoadInstanceTypes() {
             instanceTypes = new Dictionary<uint, Type>();

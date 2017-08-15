@@ -118,14 +118,6 @@ namespace STULib.Impl {
             }
         }
 
-        private FieldInfo[] GetFields(Type type) {
-            FieldInfo[] parent = new FieldInfo[0];
-            if (type.BaseType != null) {
-                parent = GetFields(type.BaseType);
-            }
-            return parent.Concat(type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)).ToArray();
-        }
-
         private object InitializeObject(object instance, Type type, BinaryReader reader) {
             FieldInfo[] fields = GetFields(type);
             foreach (FieldInfo field in fields) {
