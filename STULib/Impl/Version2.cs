@@ -8,11 +8,15 @@ namespace STULib.Impl {
         public override IEnumerator<STUInstance> Instances => null;
         public override uint Version => 2;
 
+        public override void Dispose() {
+            return;
+        }
+
         internal static bool IsValidVersion(BinaryReader reader) {
             return reader.BaseStream.Length >= 36;
         }
 
-        public Version2(Stream stream) {
+        public Version2(Stream stream, uint owVersion) {
 
         }
     }

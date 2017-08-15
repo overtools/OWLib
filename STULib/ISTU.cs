@@ -9,7 +9,7 @@ using STULib.Impl;
 using static STULib.Types.Generic.Common;
 
 namespace STULib {
-    public abstract class ISTU {
+    public abstract class ISTU : IDisposable {
         internal static Dictionary<uint, Type> instanceTypes;
         internal static Dictionary<Type, string> instanceNames;
 
@@ -29,7 +29,13 @@ namespace STULib {
                     attrib.Name = type.Name;
                 }
                 if (!attrib.Name.StartsWith("STU") && type.Namespace != null) {
-                    attrib.Name = type.Namespace.Split('.').Last() + attrib.Name;
+                    IEnumerable<string> parts = type.Namespace.Split('.').Reverse();
+                    foreach (string part in parts) {
+                        attrib.Name = part + "_" + attrib.Name;
+                        if (attrib.Name.StartsWith("STU")) {
+                            continue;
+                        }
+                    }
                 }
                 if (attrib.Checksum == 0) {
                     attrib.Checksum =
@@ -54,19 +60,21 @@ namespace STULib {
             return null;
         }
 
-        public static ISTU NewInstance(Stream stream) {
+        public static ISTU NewInstance(Stream stream, uint owVersion) {
             long pos = stream.Position;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, true)) {
                 if (Version1.IsValidVersion(reader)) {
                     stream.Position = pos;
-                    return new Version1(stream);
+                    return new Version1(stream, owVersion);
                 }
                 if (Version2.IsValidVersion(reader)) {
                     stream.Position = pos;
-                    return new Version2(stream);
+                    return new Version2(stream, owVersion);
                 }
                 throw new InvalidDataException("Data stream is not a STU file");
             }
         }
+
+        public abstract void Dispose();
     }
 }

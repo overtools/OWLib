@@ -1,6 +1,6 @@
 ﻿using OWLib.Types;
 
-namespace STULib.Types.STULootboxReward {
+namespace STULib.Types.STUUnlock {
     [STU(0x090B30AB)]
     public class VoiceLine : Cosmetic {
         public ulong Unknown1;

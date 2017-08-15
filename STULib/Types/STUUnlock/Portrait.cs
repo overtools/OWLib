@@ -1,6 +1,6 @@
 ﻿using OWLib.Types;
 
-namespace STULib.Types.STULootboxReward {
+namespace STULib.Types.STUUnlock {
     [STU(0x3ECCEB5D)]
     public class Portrait : Cosmetic {
         public OWRecord PortraitResource;

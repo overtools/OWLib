@@ -1,4 +1,4 @@
-﻿namespace STULib.Types.STULootboxReward {
+﻿namespace STULib.Types.STUUnlock {
     public static class Common {
         public enum Rarity : uint {
             Common = 0,

@@ -10,6 +10,8 @@ namespace STULib {
         public uint Checksum = 0;
         public string[] DependsOn = { };
 
+        public uint STUVersionOnly = 0;
+
         public STUElementAttribute() {}
 
         public STUElementAttribute(uint Checksum) {

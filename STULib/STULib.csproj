@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuildVersionRangeAttribute.cs" />
     <Compile Include="Impl\Version2.cs" />
     <Compile Include="ISTU.cs" />
     <Compile Include="Impl\Version1.cs" />
@@ -59,19 +60,19 @@
     <Compile Include="Types\Generic\Common.cs" />
     <Compile Include="Types\Generic\Version2.cs" />
     <Compile Include="Types\Generic\Version1.cs" />
-    <Compile Include="Types\STULootboxReward\Common.cs" />
-    <Compile Include="Types\STULootboxReward\Cosmetic.cs" />
-    <Compile Include="Types\STULootboxReward\Credit.cs" />
-    <Compile Include="Types\STULootboxReward\Emote.cs" />
-    <Compile Include="Types\STULootboxReward\HeroicIntro.cs" />
-    <Compile Include="Types\STULootboxReward\Icon.cs" />
-    <Compile Include="Types\STULootboxReward\Portrait.cs" />
-    <Compile Include="Types\STULootboxReward\Skin.cs" />
-    <Compile Include="Types\STULootboxReward\Spray.cs" />
-    <Compile Include="Types\STULootboxReward\Unknown_61632B43.cs" />
-    <Compile Include="Types\STULootboxReward\VictoryPose.cs" />
-    <Compile Include="Types\STULootboxReward\VoiceLine.cs" />
-    <Compile Include="Types\STULootboxReward\WeaponSkin.cs" />
+    <Compile Include="Types\STUUnlock\Common.cs" />
+    <Compile Include="Types\STUUnlock\Cosmetic.cs" />
+    <Compile Include="Types\STUUnlock\Currency.cs" />
+    <Compile Include="Types\STUUnlock\Emote.cs" />
+    <Compile Include="Types\STUUnlock\HeroicIntro.cs" />
+    <Compile Include="Types\STUUnlock\Icon.cs" />
+    <Compile Include="Types\STUUnlock\Portrait.cs" />
+    <Compile Include="Types\STUUnlock\Skin.cs" />
+    <Compile Include="Types\STUUnlock\Spray.cs" />
+    <Compile Include="Types\STUUnlock\Unknown_61632B43.cs" />
+    <Compile Include="Types\STUUnlock\Pose.cs" />
+    <Compile Include="Types\STUUnlock\VoiceLine.cs" />
+    <Compile Include="Types\STUUnlock\Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OWLib\OWLib.csproj">

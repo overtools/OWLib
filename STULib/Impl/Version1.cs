@@ -15,16 +15,22 @@ namespace STULib.Impl {
         private Stream stream;
         private STUHeader data;
         private Dictionary<long, STUInstance> instances;
+        private uint buildVersion;
 
         public override IEnumerator<STUInstance> Instances => instances.Values.GetEnumerator();
         public override uint Version => 1;
+
+        public override void Dispose() {
+            stream.Dispose();
+        }
 
         internal static bool IsValidVersion(BinaryReader reader) {
             return reader.ReadUInt32() == MAGIC;
         }
 
-        public Version1(Stream stuStream) {
+        public Version1(Stream stuStream, uint owVersion) {
             stream = stuStream;
+            buildVersion = owVersion;
             instances = new Dictionary<long, STUInstance>();
             ReadInstanceData(stuStream.Position);
         }
@@ -58,6 +64,9 @@ namespace STULib.Impl {
         private object GetValue(Type type, BinaryReader reader, STUElementAttribute element) {
             if (type.IsArray) {
                 long offset = reader.ReadInt64();
+                if (offset == 0) {
+                    return Array.CreateInstance(type.GetElementType(), 0);
+                }
                 long position = reader.BaseStream.Position;
                 reader.BaseStream.Position = offset;
                 object value = GetValueArray(type.GetElementType(), reader, element);
@@ -65,6 +74,19 @@ namespace STULib.Impl {
                 return value;
             }
             switch (type.Name) {
+                case "String": {
+                    long offset = reader.ReadInt64();
+                    long position = reader.BaseStream.Position;
+                    reader.BaseStream.Position = offset;
+                    STUString stringData = reader.Read<STUString>();
+                    if (stringData.Size == 0) {
+                        return string.Empty;
+                    }
+                    reader.BaseStream.Position = stringData.Offset;
+                    string @string = new string(reader.ReadChars((int) stringData.Size));
+                    reader.BaseStream.Position = position;
+                    return @string;
+                }
                 case "Single":
                     return reader.ReadSingle();
                 case "Boolean":
@@ -108,6 +130,12 @@ namespace STULib.Impl {
             FieldInfo[] fields = GetFields(type);
             foreach (FieldInfo field in fields) {
                 STUElementAttribute element = field.GetCustomAttribute<STUElementAttribute>();
+                if (element?.STUVersionOnly > 0 && element.STUVersionOnly != Version) {
+                    continue;
+                }
+                if (!CheckCompatVersion(field)) {
+                    continue;
+                }
                 if (field.FieldType.IsArray) {
                     long offset = reader.ReadInt64();
                     if (offset == 0) {
@@ -143,9 +171,16 @@ namespace STULib.Impl {
             return instance;
         }
 
+        private bool CheckCompatVersion(FieldInfo field) {
+            IEnumerable<BuildVersionRangeAttribute> buildVersionRanges = field.GetCustomAttributes<BuildVersionRangeAttribute>();
+            IEnumerable<BuildVersionRangeAttribute> buildVersionRangeAttributes = buildVersionRanges as BuildVersionRangeAttribute[] ?? buildVersionRanges.ToArray();
+
+            return !buildVersionRangeAttributes.Any() || buildVersionRangeAttributes.Any(buildVersionRange => buildVersion >= buildVersionRange?.Min && buildVersion <= buildVersionRange.Max);
+        }
+
         private void ReadInstanceData(long offset) {
             stream.Position = offset;
-            using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, false)) {
+            using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
                 if (instanceTypes == null) {
                     LoadInstanceTypes();
                 }

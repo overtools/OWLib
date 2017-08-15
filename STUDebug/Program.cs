@@ -81,22 +81,33 @@ namespace STUDebug {
                 Util.DumpStruct(header, "");
                 Console.Out.WriteLine("{0} instances", header.InstanceCount);
                 file.Position = header.InstanceListOffset;
+                long totalSize = 0;
                 for (uint i = 0; i < header.InstanceCount; ++i) {
                     STUInstanceRecord record = reader.Read<STUInstanceRecord>();
-                    Console.Out.WriteLine("\t{0:X8} - {1:X8} - {2} - {3} bytes ({4} real bytes)", record.InstanceChecksum, record.UnknownChecksum, record.Index, record.Size, record.Size - 4);
+                    Console.Out.WriteLine("\t{0:X8} - {1:X8} - {2} - {3} bytes", record.InstanceChecksum, record.AssignFieldChecksum, record.AssignInstanceIndex, record.InstanceSize);
+                    totalSize += record.InstanceSize;
                 }
-                Console.Out.WriteLine("{0} variable lists", header.InstanceVariableListCount);
-                file.Position = header.InstanceVariableListOffset;
-                for (uint i = 0; i < header.InstanceVariableListCount; ++i) {
-                    STUInstanceVariableListInfo info = reader.Read<STUInstanceVariableListInfo>();
-                    Console.Out.WriteLine("\t{0} variables", info.Count);
+                Console.Out.WriteLine("Total: {0} bytes", totalSize);
+                if (header.EntryInstanceCount > 0) {
+                    Console.Out.WriteLine("{0} reference entries", header.EntryInstanceCount);
+                    file.Position = header.EntryInstanceListOffset;
+                    for (int i = (int) header.EntryInstanceCount; i > 0; --i) {
+                        STUInstanceField entry = reader.Read<STUInstanceField>();
+                        Console.Out.WriteLine("\t\t{0:X8} - {1}", entry.FieldChecksum, entry.FieldSize);
+                    }
+                }
+                Console.Out.WriteLine("{0} variable lists", header.InstanceFieldListCount);
+                file.Position = header.InstanceFieldListOffset;
+                for (uint i = 0; i < header.InstanceFieldListCount; ++i) {
+                    STUInstanceFieldList info = reader.Read<STUInstanceFieldList>();
+                    Console.Out.WriteLine("\t{0} variables", info.FieldCount);
                     long tmp = file.Position;
-                    file.Position = info.Offset;
-                    long totalSize = 0;
-                    for (uint j = 0; j < info.Count; ++j) {
-                        STUInstanceVariableListEntry entry = reader.Read<STUInstanceVariableListEntry>();
-                        Console.Out.WriteLine("\t\t{0:X8} - {1} bytes", entry.Checksum, entry.Size);
-                        totalSize += entry.Size;
+                    file.Position = info.ListOffset;
+                    totalSize = 0;
+                    for (uint j = 0; j < info.FieldCount; ++j) {
+                        STUInstanceField entry = reader.Read<STUInstanceField>();
+                        Console.Out.WriteLine("\t\t{0:X8} - {1} bytes", entry.FieldChecksum, entry.FieldSize);
+                        totalSize += entry.FieldSize;
                     }
                     Console.Out.WriteLine("\t\tTotal: {0} bytes", totalSize);
                     file.Position = tmp;

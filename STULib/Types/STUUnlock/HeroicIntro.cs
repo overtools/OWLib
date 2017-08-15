@@ -1,6 +1,6 @@
 ﻿using OWLib.Types;
 
-namespace STULib.Types.STULootboxReward {
+namespace STULib.Types.STUUnlock {
     [STU(0x4EE84DC0)]
     public class HeroicIntro : Cosmetic {
         public OWRecord AnimationResource;

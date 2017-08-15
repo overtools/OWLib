@@ -1,6 +1,6 @@
 ﻿using OWLib.Types;
 
-namespace STULib.Types.STULootboxReward {
+namespace STULib.Types.STUUnlock {
     [STU(0xE533D614)]
     public class Emote : Cosmetic {
         public OWRecord UnknownRecord014;

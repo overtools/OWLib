@@ -1,7 +1,7 @@
 ﻿using OWLib.Types;
 using static STULib.Types.Generic.Common;
 
-namespace STULib.Types.STULootboxReward {
+namespace STULib.Types.STUUnlock {
     [STU(0x15720E8A)]
     public class Spray : Cosmetic {
         public ulong Unknown1;
