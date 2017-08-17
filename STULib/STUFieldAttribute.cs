@@ -6,7 +6,9 @@ namespace STULib {
         public bool ReferenceArray = false;
         public bool ReferenceValue = false;
         public object Verify = null;
-        public long Padding = 0; 
+        public long Padding = 0;
+
+        public object Default = null;
 
         public uint Checksum = 0;
 

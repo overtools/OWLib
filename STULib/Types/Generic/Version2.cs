@@ -37,10 +37,9 @@ namespace STULib.Types.Generic {
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct STUNestedInfo {
-            public uint Offset;
+            public uint Size;
             public int FieldListIndex;
         }
-
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct STUArray {
