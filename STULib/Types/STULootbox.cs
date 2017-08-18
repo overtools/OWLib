@@ -14,7 +14,7 @@ namespace STULib.Types {
         public STUGUID Material;
 
         [STUField(0x90A4CE09)]
-        public STUGUID StateScriptComponent;
+        public STUGUID UnknownStateScriptComponent;
 
         [STUField(0xC08C4427)]
         public STUGUID Name;
