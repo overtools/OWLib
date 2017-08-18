@@ -68,6 +68,7 @@
     <Compile Include="Types\STUHighlightType.cs" />
     <Compile Include="Types\STULootbox.cs" />
     <Compile Include="Types\STUBrawlName.cs" />
+    <Compile Include="Types\STUEncryptionKey.cs" />
     <Compile Include="Types\STUSubtitle.cs" />
     <Compile Include="Types\STUCatalog.cs" />
     <Compile Include="Types\STUHeroUnlocks.cs" />
