@@ -377,7 +377,8 @@ namespace STULib.Impl {
 
         }
 
-        private ulong DemangleGUID(ulong guid, uint checksum) {
+        private ulong DemangleGUID(ulong guid, uint c32) {
+            ulong checksum = (ulong)c32;
             ulong c64field = checksum | (checksum << 32);
             ulong g = guid ^ headerCrc ^ c64field;
             byte[] buf = BitConverter.GetBytes(g);
@@ -390,7 +391,7 @@ namespace STULib.Impl {
                 buf[4],
                 buf[2],
                 buf[7]
-            }, 0);
+            }, 0) ^ ulong.MaxValue;
         }
 
 
