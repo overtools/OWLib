@@ -12,6 +12,7 @@ namespace STULib {
 
         public uint Checksum = 0;
 
+        public uint[] IgnoreVersion = null;
         public uint[] STUVersionOnly = null;
 
         public STUFieldAttribute() {}

@@ -27,7 +27,7 @@ namespace STULib.Types {
             [STUField(STUVersionOnly = new uint[] {1})]
             private long padding0;
 
-            [STUField(0x719E981B, Padding = 8)]
+            [STUField(0x719E981B)]
             public UnlockInfo Data;
 
             [STUField(0x581570BA)]
@@ -39,7 +39,7 @@ namespace STULib.Types {
 
 
         public class UnlockInfo {
-            [STUField(0x719E981B, Padding = 8)]
+            [STUField(0x719E981B)]
             public STUGUID[] Unlocks;
         }
     }

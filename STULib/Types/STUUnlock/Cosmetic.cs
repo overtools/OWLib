@@ -6,9 +6,12 @@ namespace STULib.Types.STUUnlock {
         [STUField(0xC08C4427)] // m_name
         public STUGUID CosmeticName;
 
+        //[STUField(0)] // ?
         public STUGUID CosmeticIconResource;
         public STUGUID CosmeticUnknownRecord;
+        [STUField(0xCC8FD7CE)] // ?
         public STUGUID CosmeticBackgroundResource;
+        [STUField(0x912C9001)] // ?
         public STUGUID CosmeticAvailableIn;
         public ulong CosmeticUnknown1;
         public ulong CosmeticUnknown2;
