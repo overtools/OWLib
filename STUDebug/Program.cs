@@ -29,8 +29,7 @@ namespace STUDebug {
                         if (System.Diagnostics.Debugger.IsAttached) {
                             System.Diagnostics.Debugger.Break();
                         }
-                    }
-                    else {
+                    } else {
                         string traditional_name = manager.GetName(dummy.Id) ?? $"{dummy.Id:X8}";
                         string filename =
                             $"{i:X8}_{dummy.Offset:X8}_{OverTool.Util.SanitizePath(traditional_name)}.stu";
@@ -49,7 +48,7 @@ namespace STUDebug {
             if (!Directory.Exists(@out)) {
                 Directory.CreateDirectory(@out);
             }
-            
+
             file.Position = 0;
 
             Chunked chunked = new Chunked(file, false, new ChunkManager());
@@ -65,8 +64,7 @@ namespace STUDebug {
                         if (System.Diagnostics.Debugger.IsAttached) {
                             System.Diagnostics.Debugger.Break();
                         }
-                    }
-                    else {
+                    } else {
                         string filename = $"{i:X8}_{dummy.RootIdentifier}_{dummy.Identifier}.chunk";
                         using (Stream outputStream = File.Open(Path.Combine(@out, filename), FileMode.Create,
                             FileAccess.Write, FileShare.Read)) {
@@ -104,7 +102,7 @@ namespace STUDebug {
                 if (header.EntryInstanceCount > 0) {
                     Console.Out.WriteLine("{0} reference entries", header.EntryInstanceCount);
                     file.Position = header.EntryInstanceListOffset;
-                    for (int i = (int) header.EntryInstanceCount; i > 0; --i) {
+                    for (int i = (int)header.EntryInstanceCount; i > 0; --i) {
                         STUInstanceField entry = reader.Read<STUInstanceField>();
                         Console.Out.WriteLine("\t\t{0:X8} - {1}", entry.FieldChecksum, entry.FieldSize);
                     }
@@ -140,41 +138,45 @@ namespace STUDebug {
                 return;
             }
 
-            string file = args[0];
+            string argFile = args[0];
 
             Util.DEBUG = true;
 
-            if (!File.Exists(file)) {
-                Console.Out.WriteLine("File {0} does not exist!", file);
-                return;
-            }
+            var dirPart = Path.GetDirectoryName(argFile);
+            if (dirPart.Length == 0)
+                dirPart = ".";
+            var filePart = Path.GetFileName(argFile);
 
-            using (Stream fileStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                using (BinaryReader magicReader = new BinaryReader(fileStream, System.Text.Encoding.Default, true)) {
-                    uint magic = magicReader.ReadUInt32();
-                    fileStream.Position = 0;
+            foreach (string file in Directory.GetFiles(dirPart, filePart)) {
+                Console.Out.WriteLine(file);
+                using (Stream fileStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                    using (BinaryReader magicReader = new BinaryReader(fileStream, System.Text.Encoding.Default, true)) {
+                        uint magic = magicReader.ReadUInt32();
+                        fileStream.Position = 0;
 
-                    if (magic == STUD.STUD_MAGIC) {
-                        if (args.Length < 2) {
-                            Console.Out.WriteLine("Usage: STUDebug file [output_dir]");
-                            return;
+                        if (magic == STUD.STUD_MAGIC) {
+                            if (args.Length < 2) {
+                                Console.Out.WriteLine("Usage: STUDebug file [output_dir]");
+                                return;
+                            }
+
+                            Console.Out.WriteLine("STU File Detected");
+                            DumpSTU(fileStream, args[1]);
+                        } else if (magic == Chunked.CHUNK_MAGIC) {
+                            if (args.Length < 2) {
+                                Console.Out.WriteLine("Usage: STUDebug file [output_dir]");
+                                return;
+                            }
+
+                            Console.Out.WriteLine("Chunk File Detected");
+                            DumpChunks(fileStream, args[1]);
+                        } else {
+                            ListSTU(fileStream);
                         }
-
-                        Console.Out.WriteLine("STU File Detected");
-                        DumpSTU(fileStream, args[1]);
-                    } else if (magic == Chunked.CHUNK_MAGIC) {
-                        if (args.Length < 2) {
-                            Console.Out.WriteLine("Usage: STUDebug file [output_dir]");
-                            return;
-                        }
-
-                        Console.Out.WriteLine("Chunk File Detected");
-                        DumpChunks(fileStream, args[1]);
-                    } else {
-                        ListSTU(fileStream);
                     }
                 }
             }
         }
     }
 }
+

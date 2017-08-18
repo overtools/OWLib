@@ -91,6 +91,8 @@ namespace STULib.Impl {
                     return reader.ReadByte();
                 case "SByte":
                     return reader.ReadSByte();
+                case "Char":
+                    return reader.ReadChar();
                 default:
                     if (type.IsEnum) {
                         return GetValueArrayInner(type.GetEnumUnderlyingType(), element);
@@ -141,6 +143,8 @@ namespace STULib.Impl {
                     return reader.ReadByte();
                 case "SByte":
                     return reader.ReadSByte();
+                case "Char":
+                    return reader.ReadChar();
                 default:
                     if (type.IsEnum) {
                         return GetValue(type.GetEnumUnderlyingType(), reader, element, nestedOffset);
