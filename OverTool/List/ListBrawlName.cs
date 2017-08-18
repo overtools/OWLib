@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using CASCExplorer;
-using OWLib;
-using OWLib.Types;
-using OWLib.Types.STUD;
+using STULib;
+using STULib.Types;
+using System.Linq;
 
 namespace OverTool.List {
     public class ListBrawlName : IOvertool {
@@ -26,17 +26,18 @@ namespace OverTool.List {
                     if (input == null) {
                         continue;
                     }
-                    STUD stud = new STUD(input);
-                    if (stud.Instances == null || stud.Instances[0] == null) {
+                    ISTU stu = ISTU.NewInstance(input, uint.MaxValue);
+                    if (stu.Instances == null) {
                         continue;
                     }
+                    STUBrawlName bn = stu.Instances.First() as STUBrawlName;
 
-                    BrawlName bn = stud.Instances[0] as BrawlName;
+                    // BrawlName bn = stud.Instances[0] as BrawlName;
                     if (bn == null) {
                         continue;
                     }
 
-                    Console.Out.WriteLine($"{key}: {Util.GetString(bn.Data.name, map, handler)}");
+                    Console.Out.WriteLine($"{key}: {Util.GetString(bn.Name, map, handler)}");
                 }
             }
         }
