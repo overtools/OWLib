@@ -64,6 +64,7 @@
     <Compile Include="Types\Generic\Version2.cs" />
     <Compile Include="Types\Generic\Version1.cs" />
     <Compile Include="Types\STUAchievement.cs" />
+    <Compile Include="Types\STULootbox.cs" />
     <Compile Include="Types\STUBrawlName.cs" />
     <Compile Include="Types\STUSubtitle.cs" />
     <Compile Include="Types\STUCatalog.cs" />
