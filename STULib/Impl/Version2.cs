@@ -58,10 +58,8 @@ namespace STULib.Impl {
                 if (instanceArrayRef?.Length > info.InstanceIndex) {
                     parent = instanceArrayRef[info.InstanceIndex].Checksum;
                 } 
-
-                object instance = GetValueArrayInner(type, element, parent);
-                DemangleInstance(instance, writtenField.FieldChecksum);
-                array.SetValue(instance, i);
+                
+                array.SetValue(GetValueArrayInner(type, element, parent, writtenField.FieldChecksum), i);
             }
             return array;
         }
@@ -84,7 +82,7 @@ namespace STULib.Impl {
             }
         }
 
-        private object GetValueArrayInner(Type type, STUFieldAttribute element, uint parent) {
+        private object GetValueArrayInner(Type type, STUFieldAttribute element, uint parent, uint checksum) {
             BinaryReader reader = metadataReader;
             switch (type.Name) {
                 case "String": {
@@ -125,10 +123,10 @@ namespace STULib.Impl {
                     return null;
                 default:
                     if (type.IsEnum) {
-                        return GetValueArrayInner(type.GetEnumUnderlyingType(), element, parent);
+                        return GetValueArrayInner(type.GetEnumUnderlyingType(), element, parent, checksum);
                     }
                     if (type.IsClass || type.IsValueType) {
-                        return InitializeObject(Activator.CreateInstance(type), type, parent, reader);
+                        return InitializeObject(Activator.CreateInstance(type), type, parent, checksum, reader);
                     }
                     return null;
             }
@@ -181,7 +179,7 @@ namespace STULib.Impl {
                         return GetValue(field, type.GetEnumUnderlyingType(), reader, element);
                     }
                     if (type.IsClass) {
-                        return InitializeObject(Activator.CreateInstance(type), type, field.FieldChecksum, reader);
+                        return InitializeObject(Activator.CreateInstance(type), type, field.FieldChecksum, field.FieldChecksum, reader);
                     }
                     if (type.IsValueType) {
                         return InitializeObject(Activator.CreateInstance(type), type, CreateInstanceFields(type),
@@ -240,7 +238,7 @@ namespace STULib.Impl {
             return GetValueArray(type, element, arrayInfo, field);
         }
 
-        private object InitializeObject(object instance, Type type, uint reference, BinaryReader reader) {
+        private object InitializeObject(object instance, Type type, uint reference, uint checksum, BinaryReader reader) {
             FieldInfo[] fields = GetFields(type);
             foreach (FieldInfo field in fields) {
                 STUFieldAttribute element = field.GetCustomAttribute<STUFieldAttribute>();
@@ -281,7 +279,7 @@ namespace STULib.Impl {
                     }
                 }
             }
-            DemangleInstance(instance, reference);
+            DemangleInstance(instance, checksum);
 
             return instance;
         }
