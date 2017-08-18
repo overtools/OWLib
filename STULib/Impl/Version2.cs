@@ -17,10 +17,13 @@ namespace STULib.Impl {
         private Stream stream;
         private MemoryStream metadata;
 
+        private ulong headerCrc = 0;
+
         private Dictionary<long, STUInstance> instances;
 
         private STUHeader header;
         private STUInstanceRecord[] instanceInfo;
+        private STUInstanceArrayRef[] instanceArrayRef;
         private STUInstanceFieldList[] instanceFieldLists;
         private STUInstanceField[][] instanceFields;
 
@@ -44,18 +47,42 @@ namespace STULib.Impl {
             ReadInstanceData(stuStream.Position);
         }
 
-        private object GetValueArray(Type type, STUFieldAttribute element, uint count) {
-            Array array = Array.CreateInstance(type, count);
-            for (uint i = 0; i < count; ++i) {
+        private object GetValueArray(Type type, STUFieldAttribute element, STUArray info, STUInstanceField writtenField) {
+            Array array = Array.CreateInstance(type, info.Count);
+            for (uint i = 0; i < info.Count; ++i) {
                 if (element != null) {
                     metadata.Position += element.Padding;
                 }
-                array.SetValue(GetValueArrayInner(type, element), i);
+
+                uint parent = 0;
+                if (instanceArrayRef?.Length > info.InstanceIndex) {
+                    parent = instanceArrayRef[info.InstanceIndex].Checksum;
+                } 
+                
+                array.SetValue(GetValueArrayInner(type, element, parent, writtenField.FieldChecksum), i);
             }
             return array;
         }
 
-        private object GetValueArrayInner(Type type, STUFieldAttribute element) {
+        private void DemangleInstance(object instance, uint checksum) {
+            if (IsFieldMangled(checksum)) {
+                IDemangleable demangleable = instance as IDemangleable;
+                if (demangleable != null) {
+                    ulong[] GUIDs = demangleable.GetGUIDs();
+                    ulong[] XORs = demangleable.GetGUIDXORs();
+                    if (GUIDs?.Length > 0) {
+                        for (long j = 0; j < GUIDs.LongLength; ++j) {
+                            if(GUID.IsMangled(GUIDs[j])) {
+                                GUIDs[j] = DemangleGUID(GUIDs[j], checksum) ^ XORs[j];
+                            }
+                        }
+                    }
+                    demangleable.SetGUIDs(GUIDs);
+                }
+            }
+        }
+
+        private object GetValueArrayInner(Type type, STUFieldAttribute element, uint parent, uint checksum) {
             BinaryReader reader = metadataReader;
             switch (type.Name) {
                 case "String": {
@@ -91,23 +118,26 @@ namespace STULib.Impl {
                     return reader.ReadByte();
                 case "SByte":
                     return reader.ReadSByte();
+                case "Object":
+                    reader.BaseStream.Position += 4;
+                    return null;
                 case "Char":
                     return reader.ReadChar();
                 default:
                     if (type.IsEnum) {
-                        return GetValueArrayInner(type.GetEnumUnderlyingType(), element);
+                        return GetValueArrayInner(type.GetEnumUnderlyingType(), element, parent, checksum);
                     }
                     if (type.IsClass || type.IsValueType) {
-                        return InitializeObject(Activator.CreateInstance(type), type, reader);
+                        return InitializeObject(Activator.CreateInstance(type), type, parent, checksum, reader);
                     }
                     return null;
             }
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private object GetValue(Type type, BinaryReader reader, STUFieldAttribute element, int nestedOffset) {
+        private object GetValue(STUInstanceField field, Type type, BinaryReader reader, STUFieldAttribute element) {
             if (type.IsArray) {
-                return InitializeObjectArray(type.GetElementType(), reader, element);
+                return InitializeObjectArray(field, type.GetElementType(), reader, element);
             }
             switch (type.Name) {
                 case "String": {
@@ -143,18 +173,21 @@ namespace STULib.Impl {
                     return reader.ReadByte();
                 case "SByte":
                     return reader.ReadSByte();
+                case "Object":
+                    reader.BaseStream.Position += 4;
+                    return null;
                 case "Char":
                     return reader.ReadChar();
                 default:
                     if (type.IsEnum) {
-                        return GetValue(type.GetEnumUnderlyingType(), reader, element, nestedOffset);
+                        return GetValue(field, type.GetEnumUnderlyingType(), reader, element);
                     }
                     if (type.IsClass) {
-                        throw new Exception();
+                        return InitializeObject(Activator.CreateInstance(type), type, field.FieldChecksum, field.FieldChecksum, reader);
                     }
                     if (type.IsValueType) {
                         return InitializeObject(Activator.CreateInstance(type), type, CreateInstanceFields(type),
-                            reader, nestedOffset);
+                            reader);
                     }
                     return null;
             }
@@ -190,21 +223,35 @@ namespace STULib.Impl {
                 .Where(fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0);
         }
 
-        private object InitializeObjectArray(Type type, BinaryReader reader, STUFieldAttribute element) {
+        private object InitializeObjectArray(STUInstanceField field, Type type, BinaryReader reader, STUFieldAttribute element) {
+            if (field.FieldSize == 0 && field.FieldChecksum != 0) {
+                STUNestedInfo nestedInfo = reader.Read<STUNestedInfo>();
+                Array array = Array.CreateInstance(type, (uint)nestedInfo.FieldListIndex);
+                for (uint i = 0; i < (uint)nestedInfo.FieldListIndex; ++i) {
+                    stream.Position += element.Padding;
+                    uint fieldIndex = reader.ReadUInt32();
+                    object instance = Activator.CreateInstance(type);
+                    array.SetValue(InitializeObject(instance, type, instanceFields[fieldIndex], reader), i);
+                }
+                return array;
+            }
             int offset = reader.ReadInt32();
             metadata.Position = offset;
             STUArray arrayInfo = metadataReader.Read<STUArray>();
             metadata.Position = arrayInfo.Offset;
-            return GetValueArray(type, element, arrayInfo.Count);
+            return GetValueArray(type, element, arrayInfo, field);
         }
 
-        private object InitializeObject(object instance, Type type, BinaryReader reader) {
+        private object InitializeObject(object instance, Type type, uint reference, uint checksum, BinaryReader reader) {
             FieldInfo[] fields = GetFields(type);
             foreach (FieldInfo field in fields) {
                 STUFieldAttribute element = field.GetCustomAttribute<STUFieldAttribute>();
                 bool skip = false;
                 if (element?.STUVersionOnly != null) {
-                    skip = element.STUVersionOnly.All(version => version != Version);
+                    skip = !element.STUVersionOnly.Any(version => version == Version);
+                }
+                if (element?.IgnoreVersion != null && skip) {
+                    skip = !element.IgnoreVersion.Any(stufield => stufield == reference);
                 }
                 if (skip) {
                     continue;
@@ -213,7 +260,7 @@ namespace STULib.Impl {
                     continue;
                 }
                 if (field.FieldType.IsArray) {
-                    field.SetValue(instance, InitializeObjectArray(field.FieldType, reader, element));
+                    field.SetValue(instance, InitializeObjectArray(new STUInstanceField { FieldChecksum = 0, FieldSize = 4 }, field.FieldType, reader, element));
                 }
                 else {
                     long position = -1;
@@ -225,7 +272,7 @@ namespace STULib.Impl {
                         position = reader.BaseStream.Position;
                         reader.BaseStream.Position = offset;
                     }
-                    field.SetValue(instance, GetValue(field.FieldType, reader, element, 0));
+                    field.SetValue(instance, GetValue(new STUInstanceField { FieldChecksum = 0, FieldSize = 4 }, field.FieldType, reader, element));
                     if (position > -1) {
                         reader.BaseStream.Position = position;
                     }
@@ -236,32 +283,33 @@ namespace STULib.Impl {
                     }
                 }
             }
+            DemangleInstance(instance, checksum);
 
             return instance;
         }
 
         private object InitializeObject(object instance, Type type, STUInstanceField[] writtenFields,
-            BinaryReader reader, int nestedOffset) {
+            BinaryReader reader) {
             Dictionary<uint, FieldInfo> fieldMap = CreateFieldMap(GetValidFields(type));
 
             foreach (STUInstanceField writtenField in writtenFields) {
                 if (!fieldMap.ContainsKey(writtenField.FieldChecksum)) {
                     if (writtenField.FieldSize == 0) {
-                        STUNestedInfo nested = reader.Read<STUNestedInfo>();
-                        int newNestedOffset = (int) reader.BaseStream.Position;
-                        reader.BaseStream.Position = nestedOffset + nested.Offset;
-                        InitializeObject(new STUInstance(), typeof(STUInstance), instanceFields[nested.FieldListIndex],
-                            reader, newNestedOffset);
-                        nestedOffset = (int) reader.BaseStream.Position;
+                        uint size = reader.ReadUInt32();
+                        reader.BaseStream.Position += size;
+                        continue;
                     }
                     reader.BaseStream.Position += writtenField.FieldSize;
                     continue;
                 }
                 FieldInfo field = fieldMap[writtenField.FieldChecksum];
-                STUFieldAttribute element = field.GetCustomAttribute<STUFieldAttribute>();
+                STUFieldAttribute element = field.GetCustomAttribute<STUFieldAttribute>() ?? new STUFieldAttribute();
                 bool skip = false;
                 if (element?.STUVersionOnly != null) {
                     skip = element.STUVersionOnly.All(version => version != Version);
+                }
+                if (element?.IgnoreVersion != null && skip) {
+                    skip = !element.IgnoreVersion.Any(stufield => stufield == writtenField.FieldChecksum);
                 }
                 if (skip) {
                     continue;
@@ -270,26 +318,21 @@ namespace STULib.Impl {
                     continue;
                 }
                 if (field.FieldType.IsArray) {
-                    field.SetValue(instance, InitializeObjectArray(field.FieldType.GetElementType(), reader, element));
+                    field.SetValue(instance, InitializeObjectArray(writtenField, field.FieldType.GetElementType(), reader, element));
                 }
                 else {
-                    if (element != null) {
-                        reader.BaseStream.Position += element.Padding;
-                    }
-
                     if (writtenField.FieldSize == 0) {
                         if (type.IsClass || type.IsValueType) {
                             STUNestedInfo nested = reader.Read<STUNestedInfo>();
-                            int newNestedOffset = (int) reader.BaseStream.Position;
                             object nestedInstance = Activator.CreateInstance(field.FieldType);
-                            reader.BaseStream.Position = nestedOffset + nested.Offset;
                             field.SetValue(instance,
                                 InitializeObject(nestedInstance, field.FieldType, instanceFields[nested.FieldListIndex],
-                                    reader, newNestedOffset));
-                            nestedOffset = (int) reader.BaseStream.Position;
+                                    reader));
                             continue;
                         }
                     }
+
+                    reader.BaseStream.Position += element.Padding;
 
                     long position = -1;
                     if (element?.ReferenceValue == true) {
@@ -300,7 +343,7 @@ namespace STULib.Impl {
                         position = reader.BaseStream.Position;
                         reader.BaseStream.Position = offset;
                     }
-                    field.SetValue(instance, GetValue(field.FieldType, reader, element, nestedOffset));
+                    field.SetValue(instance, GetValue(writtenField, field.FieldType, reader, element));
                     if (position > -1) {
                         reader.BaseStream.Position = position;
                     }
@@ -310,6 +353,8 @@ namespace STULib.Impl {
                         throw new Exception("Verification failed");
                     }
                 }
+
+                DemangleInstance(instance, writtenField.FieldChecksum);
             }
 
             return instance;
@@ -322,12 +367,52 @@ namespace STULib.Impl {
             sandbox.Position = 0;
             using (BinaryReader sandboxedReader = new BinaryReader(sandbox, Encoding.UTF8, false)) {
                 object instance = Activator.CreateInstance(instanceType);
-                return InitializeObject(instance, instanceType, writtenFields, sandboxedReader, 0) as STUInstance;
+                return InitializeObject(instance, instanceType, writtenFields, sandboxedReader) as STUInstance;
             }
+        }
+
+        private bool IsFieldMangled(uint field) {
+            // TODO
+            return true;
+        }
+
+        private static bool ValidCRC = false;
+
+        private void GetHeaderCRC() {
+            if (!ValidCRC) {
+                ValidCRC = CRC64.Hash(0, Encoding.ASCII.GetBytes("123456789")) == 0xe9c6d914c4b8d9ca;
+                if (!ValidCRC) {
+                    throw new Exception("CRC64 is invalid!");
+                }
+            }
+            byte[] buffer = new byte[36];
+            stream.Read(buffer, 0, 36);
+            headerCrc = CRC64.Hash(0, buffer);
+        }
+
+        private byte[] SwapBytes(byte[] buf, int a, int b) {
+            byte a_b = buf[a];
+            buf[a] = buf[b];
+            buf[b] = a_b;
+            return buf;
+        }
+
+        private ulong DemangleGUID(ulong guid, uint c32field) {
+            ulong checksum = c32field;
+            ulong c64field = checksum | (checksum << 32);
+            ulong g = guid ^ headerCrc ^ c64field;
+            byte[] buf = BitConverter.GetBytes(g);
+            buf = SwapBytes(buf, 0, 3);
+            buf = SwapBytes(buf, 7, 1);
+            buf = SwapBytes(buf, 2, 6);
+            buf = SwapBytes(buf, 4, 5);
+            return BitConverter.ToUInt64(buf, 0); // ^ ulong.MaxValue;
         }
 
         // ReSharper disable once PossibleNullReferenceException
         private void ReadInstanceData(long offset) {
+            stream.Position = offset;
+            GetHeaderCRC();
             stream.Position = offset;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
                 if (instanceTypes == null) {
@@ -376,6 +461,19 @@ namespace STULib.Impl {
                 instanceInfo[i] = reader.Read<STUInstanceRecord>();
             }
 
+            instanceArrayRef = new STUInstanceArrayRef[header.EntryInstanceCount];
+            stream.Position = header.EntryInstanceListOffset;
+            for (uint i = 0; i < instanceArrayRef.Length; ++i) {
+                instanceArrayRef[i] = reader.Read<STUInstanceArrayRef>();
+            }
+
+            instanceFieldLists = new STUInstanceFieldList[header.InstanceFieldListCount];
+            stream.Position = header.InstanceFieldListOffset;
+            for (uint i = 0; i < instanceFieldLists.Length; ++i) {
+                instanceFieldLists[i] = reader.Read<STUInstanceFieldList>();
+            }
+
+            
             instanceFieldLists = new STUInstanceFieldList[header.InstanceFieldListCount];
             stream.Position = header.InstanceFieldListOffset;
             for (uint i = 0; i < instanceFieldLists.Length; ++i) {

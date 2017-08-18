@@ -70,7 +70,7 @@ namespace STULib.Impl {
                 long position = reader.BaseStream.Position;
                 reader.BaseStream.Position = offset;
                 object value = GetValueArray(type.GetElementType(), reader, element);
-                reader.BaseStream.Position = position;
+                reader.BaseStream.Position = position + 8;
                 return value;
             }
             switch (type.Name) {
@@ -143,7 +143,7 @@ namespace STULib.Impl {
                     long position = reader.BaseStream.Position;
                     reader.BaseStream.Position = offset;
                     field.SetValue(instance, GetValueArray(field.FieldType.GetElementType(), reader, element));
-                    reader.BaseStream.Position = position;
+                    reader.BaseStream.Position = position + 8;
                 } else {
                     long position = -1;
                     if (element?.ReferenceValue == true) {

@@ -30,6 +30,12 @@ namespace STULib.Types.Generic {
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct STUInstanceArrayRef {
+            public uint Checksum;
+            public uint Size;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct STUInstanceField {
             public uint FieldChecksum;
             public uint FieldSize;
@@ -37,10 +43,9 @@ namespace STULib.Types.Generic {
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct STUNestedInfo {
-            public uint Offset;
+            public uint Size;
             public int FieldListIndex;
         }
-
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct STUArray {
