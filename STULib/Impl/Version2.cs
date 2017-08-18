@@ -17,6 +17,8 @@ namespace STULib.Impl {
         private Stream stream;
         private MemoryStream metadata;
 
+        private ulong headerCrc = 0;
+
         private Dictionary<long, STUInstance> instances;
 
         private STUHeader header;
@@ -44,13 +46,29 @@ namespace STULib.Impl {
             ReadInstanceData(stuStream.Position);
         }
 
-        private object GetValueArray(Type type, STUFieldAttribute element, uint count) {
+        private object GetValueArray(Type type, STUFieldAttribute element, uint count, STUInstanceField writtenField) {
             Array array = Array.CreateInstance(type, count);
             for (uint i = 0; i < count; ++i) {
                 if (element != null) {
                     metadata.Position += element.Padding;
                 }
-                array.SetValue(GetValueArrayInner(type, element), i);
+
+                object instance = GetValueArrayInner(type, element);
+                if (IsFieldMangled(writtenField.FieldChecksum)) {
+                    IDemangleable demangleable = instance as IDemangleable;
+                    if (demangleable != null) {
+                        ulong[] GUIDs = demangleable.GetGUIDs();
+                        if (GUIDs?.Length > 0) {
+                            for (long j = 0; j < GUIDs.LongLength; ++j) {
+                                if(GUID.IsMangled(GUIDs[j])) {
+                                    GUIDs[j] = DemangleGUID(GUIDs[j], writtenField.FieldChecksum);
+                                }
+                            }
+                        }
+                        demangleable.SetGUIDs(GUIDs);
+                    }
+                }
+                array.SetValue(instance, i);
             }
             return array;
         }
@@ -202,7 +220,7 @@ namespace STULib.Impl {
             metadata.Position = offset;
             STUArray arrayInfo = metadataReader.Read<STUArray>();
             metadata.Position = arrayInfo.Offset;
-            return GetValueArray(type, element, arrayInfo.Count);
+            return GetValueArray(type, element, arrayInfo.Count, field);
         }
 
         private object InitializeObject(object instance, Type type, BinaryReader reader) {
@@ -309,6 +327,21 @@ namespace STULib.Impl {
                         throw new Exception("Verification failed");
                     }
                 }
+
+                if (IsFieldMangled(writtenField.FieldChecksum)) {
+                    IDemangleable demangleable = instance as IDemangleable;
+                    if (demangleable != null) {
+                        ulong[] GUIDs = demangleable.GetGUIDs();
+                        if (GUIDs?.Length > 0) {
+                            for (long i = 0; i < GUIDs.LongLength; ++i) {
+                                if(GUID.IsMangled(GUIDs[i])) {
+                                    GUIDs[i] = DemangleGUID(GUIDs[i], writtenField.FieldChecksum);
+                                }
+                            }
+                        }
+                        demangleable.SetGUIDs(GUIDs);
+                    }
+                }
             }
 
             return instance;
@@ -325,8 +358,46 @@ namespace STULib.Impl {
             }
         }
 
+        private bool IsFieldMangled(uint field) {
+            return true;
+        }
+
+        private static bool ValidCRC = false;
+
+        private void GetHeaderCRC() {
+            if (!ValidCRC) {
+                ValidCRC = CRC64.Hash(0, Encoding.ASCII.GetBytes("123456789")) == 0xe9c6d914c4b8d9ca;
+                if (!ValidCRC) {
+                    throw new Exception("CRC64 is invalid!");
+                }
+            }
+            byte[] buffer = new byte[36];
+            stream.Read(buffer, 0, 36);
+            headerCrc = CRC64.Hash(0, buffer);
+
+        }
+
+        private ulong DemangleGUID(ulong guid, uint checksum) {
+            ulong c64field = checksum | (checksum << 32);
+            ulong g = guid ^ headerCrc ^ c64field;
+            byte[] buf = BitConverter.GetBytes(g);
+            return BitConverter.ToUInt64(new[] {
+                buf[3],
+                buf[7],
+                buf[6],
+                buf[0],
+                buf[5],
+                buf[4],
+                buf[2],
+                buf[7]
+            }, 0);
+        }
+
+
         // ReSharper disable once PossibleNullReferenceException
         private void ReadInstanceData(long offset) {
+            stream.Position = offset;
+            GetHeaderCRC();
             stream.Position = offset;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
                 if (instanceTypes == null) {

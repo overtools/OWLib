@@ -36,7 +36,7 @@ namespace STULib.Types.Generic {
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         [STUOverride(0xDEADBEEF, 8)] // DUMMY
-        public class STUGUID {
+        public class STUGUID : IDemangleable {
             [STUField(STUVersionOnly = new uint[] { 1 })]
             private ulong Padding;
 
@@ -53,6 +53,18 @@ namespace STULib.Types.Generic {
 
             public new string ToString() {
                 return $"{GUID.LongKey(Key):X12}.{GUID.Type(Key):X3}" + (GUID.IsMangled(Key) ? " (Mangled)" : "");
+            }
+
+            public ulong[] GetGUIDs() {
+                return new[] {
+                    Key 
+                };
+            }
+
+            public void SetGUIDs(ulong[] GUIDs) {
+                if (GUIDs?.Length > 0) {
+                    Key = GUIDs[0];
+                }
             }
         }
     }
