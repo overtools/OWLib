@@ -15,7 +15,7 @@ namespace OWLib.Types.STUD.InventoryItem {
         public OWRecord icon;
         public OWRecord unk1;
         public OWRecord background_mask;
-        public OWRecord availble_in;
+        public OWRecord available_in;
         public ulong unk4;
         public ulong unk5;
         public OWRecord description;

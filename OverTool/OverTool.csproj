@@ -94,10 +94,12 @@
     <Compile Include="JSON\JSONPortrait.cs" />
     <Compile Include="JSON\JSONGeneral.cs" />
     <Compile Include="JSON\JSONInventory.cs" />
+    <Compile Include="List\ListSubtitle.cs" />
     <Compile Include="List\ListBrawlName.cs" />
     <Compile Include="List\ListGameMode.cs" />
     <Compile Include="List\ListGameType.cs" />
     <Compile Include="List\ListGeneral.cs" />
+    <Compile Include="List\ListAchivement.cs" />
     <Compile Include="List\ListHighlightType.cs" />
     <Compile Include="List\ListWeapon.cs" />
     <Compile Include="List\ListLootbox.cs" />
