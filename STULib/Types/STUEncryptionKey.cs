@@ -2,14 +2,13 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0x8F754DFF)]
+    [STU(0x1DA7C021)]
     public class STUEncryptionKey : STUInstance {
-        [STUField(0x413F29AE)]
-        public byte[] KeyValue;
-
-        [STUField(0xCD0F2F64)]
+        [STUField(0x1A71903A)]
         public byte[] KeyName;
 
+        [STUField(0x2F709539)]
+        public byte[] KeyValue;
 
         public string KeyNameText {
             get {

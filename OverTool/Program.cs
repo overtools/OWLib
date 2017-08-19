@@ -8,6 +8,8 @@ using CASCExplorer;
 using OverTool.Flags;
 using OWLib;
 using OWLib.Types.STUD;
+using STULib;
+using STULib.Types;
 
 namespace OverTool {
     public struct Record {
@@ -149,11 +151,11 @@ namespace OverTool {
                         if (stream == null) {
                             continue;
                         }
-                        STUD stud = new STUD(stream);
-                        if (stud.Instances[0].Name != stud.Manager.GetName(typeof(EncryptionKey))) {
+                        ISTU stu = ISTU.NewInstance(stream, UInt32.Parse(config.BuildName.Split('.').Last()));
+                        if (!(stu.Instances.First() is STUEncryptionKey)) {
                             continue;
                         }
-                        EncryptionKey ek = (EncryptionKey)stud.Instances[0];
+                        STUEncryptionKey ek = stu.Instances.First() as STUEncryptionKey;
                         if (!KeyService.keys.ContainsKey(ek.KeyNameLong)) {
                             KeyService.keys.Add(ek.KeyNameLong, ek.KeyValueText.ToByteArray());
                             Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}", ek.KeyNameText, ek.KeyValueText);

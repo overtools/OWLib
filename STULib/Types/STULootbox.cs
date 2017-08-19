@@ -2,7 +2,7 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0x0A6886A1, "STULootbox")]
+    [STU(0x56B6D12E, "STULootbox")]
     public class STULootbox : STUInstance {
         [STUField(0x537B9B9E)]
         public STUGUID Effect;

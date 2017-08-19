@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using STULib.Impl;
 using static STULib.Types.Generic.Common;
+using System.Diagnostics;
 
 namespace STULib {
     public abstract class ISTU : IDisposable {
@@ -19,7 +20,7 @@ namespace STULib {
 
             return !buildVersionRangeAttributes.Any() || buildVersionRangeAttributes.Any(buildVersionRange => buildVersion >= buildVersionRange?.Min && buildVersion <= buildVersionRange.Max);
         }
-        
+
 
         internal static FieldInfo[] GetFields(Type type) {
             FieldInfo[] parent = new FieldInfo[0];
@@ -32,7 +33,7 @@ namespace STULib {
         internal static void LoadInstanceTypes() {
             instanceTypes = new Dictionary<uint, Type>();
             instanceNames = new Dictionary<Type, string>();
-            
+
             Assembly asm = typeof(STUInstance).Assembly;
             Type t = typeof(STUInstance);
             List<Type> types = asm.GetTypes().Where(type => type != t && t.IsAssignableFrom(type)).ToList();
@@ -46,7 +47,13 @@ namespace STULib {
                     if (attrib == null) {
                         continue;
                     }
-                    if (attrib.Name == null) {
+                    if (attrib.Name != null) {
+                        uint crcCheck = BitConverter.ToUInt32(
+                                new CRC32().ComputeHash(Encoding.ASCII.GetBytes(attrib.Name.ToLowerInvariant())), 0);
+                        if (attrib.Checksum != crcCheck) {
+                            Debugger.Log(0, "STU", $"[STU] Invalid name for {attrib.Name}, checksum mismatch ({attrib.Checksum}, {crcCheck})\n");
+                        }
+                    } else {
                         attrib.Name = type.Name;
                     }
                     if (!attrib.Name.StartsWith("STU") && type.Namespace != null) {
