@@ -7,10 +7,10 @@ using OWLib;
 using OWLib.Types.STUD;
 
 namespace OverTool {
-    public class DumpKey : IOvertool {
+    public class ListKey : IOvertool {
         public string Title => "List Keys";
         public char Opt => 'Z';
-        public string FullOpt => "keys";
+        public string FullOpt => "list-keys";
         public string Help => null;
         public uint MinimumArgs => 0;
         public ushort[] Track => new ushort[1] { 0x90 };

@@ -121,6 +121,8 @@ namespace STULib.Impl {
                 case "Object":
                     reader.BaseStream.Position += 4;
                     return null;
+                case "Char":
+                    return reader.ReadChar();
                 default:
                     if (type.IsEnum) {
                         return GetValueArrayInner(type.GetEnumUnderlyingType(), element, parent, checksum);
@@ -174,6 +176,8 @@ namespace STULib.Impl {
                 case "Object":
                     reader.BaseStream.Position += 4;
                     return null;
+                case "Char":
+                    return reader.ReadChar();
                 default:
                     if (type.IsEnum) {
                         return GetValue(field, type.GetEnumUnderlyingType(), reader, element);
