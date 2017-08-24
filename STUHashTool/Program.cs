@@ -9,7 +9,7 @@ using System.Linq;
 namespace STUHashTool {
     public class InstanceTally {
         public uint count;
-        public Dictionary<uint, uint> fieldOccurances;
+        public Dictionary<uint, uint> fieldOccurrences;
         public Dictionary<uint, List<CompareResult>> resultDict;
         public Dictionary<uint, List<FieldResult>> fieldDict;
 
@@ -62,16 +62,16 @@ namespace STUHashTool {
         }
 
         static void Main(string[] args) {
-            // usage:
-            // single file: file {before file path} {after file path}
-            // iter files in dir: dir {before file directory} {after file directory}
+            // Usage:
+            // Single file: "file {before file} {after file}"
+            // Iter files in a single directory: "dir {before files directory} {after files directory}"
 
             // todo: cleanup
 
             if (args.Length < 3) {
-                Console.Out.WriteLine("usage:");
-                Console.Out.WriteLine("single file: file {before file path} {after file path}");
-                Console.Out.WriteLine("iter files in dir: dir {before file directory} {after file directory}");
+                Console.Out.WriteLine("Usage:");
+                Console.Out.WriteLine("Single file: \"file {before file} {after file}\"");
+                Console.Out.WriteLine("Iter files in a single directory: \"dir {before files directory} {after files directory}\"");
                 return;
             }
             List<string> files1 = new List<string>();
@@ -174,10 +174,10 @@ namespace STUHashTool {
                 if (!instanceChangeTally.ContainsKey(result.beforeInstanceHash)) {
                     instanceChangeTally[result.beforeInstanceHash] = new InstanceTally { count = 1, resultDict = new Dictionary<uint, List<CompareResult>>(), fieldDict = new Dictionary<uint, List<FieldResult>>() };
                     instanceChangeTally[result.beforeInstanceHash].resultDict[result.afterInstanceHash] = new List<CompareResult> { result };
-                    instanceChangeTally[result.beforeInstanceHash].fieldOccurances = new Dictionary<uint, uint>();
+                    instanceChangeTally[result.beforeInstanceHash].fieldOccurrences = new Dictionary<uint, uint>();
                     foreach (FieldCompareResult d in result.fields) {
                         if (instanceChangeTally[result.beforeInstanceHash].fieldDict.ContainsKey(d.beforeFieldHash)) {
-                            instanceChangeTally[result.beforeInstanceHash].fieldOccurances[d.beforeFieldHash]++;
+                            instanceChangeTally[result.beforeInstanceHash].fieldOccurrences[d.beforeFieldHash]++;
                             FieldResult f = instanceChangeTally[result.beforeInstanceHash].getField(d.beforeFieldHash, d.afterFieldHash);
                             if (f != null) {
                                 f.count++;
@@ -188,7 +188,7 @@ namespace STUHashTool {
                         } else {
                             instanceChangeTally[result.beforeInstanceHash].fieldDict[d.beforeFieldHash] = new List<FieldResult>();
                             instanceChangeTally[result.beforeInstanceHash].fieldDict[d.beforeFieldHash].Add(new FieldResult { beforeFieldHash = d.beforeFieldHash, afterFieldHash = d.afterFieldHash, count = 1 });
-                            instanceChangeTally[result.beforeInstanceHash].fieldOccurances[d.beforeFieldHash] = 1;
+                            instanceChangeTally[result.beforeInstanceHash].fieldOccurrences[d.beforeFieldHash] = 1;
                         }
                     }
                 } else {
@@ -200,7 +200,7 @@ namespace STUHashTool {
 
                     foreach (FieldCompareResult d in result.fields) {
                         if (instanceChangeTally[result.beforeInstanceHash].fieldDict.ContainsKey(d.beforeFieldHash)) {
-                            instanceChangeTally[result.beforeInstanceHash].fieldOccurances[d.beforeFieldHash]++;
+                            instanceChangeTally[result.beforeInstanceHash].fieldOccurrences[d.beforeFieldHash]++;
                             FieldResult f = instanceChangeTally[result.beforeInstanceHash].getField(d.beforeFieldHash, d.afterFieldHash);
                             if (f != null) {
                                 f.count++;
@@ -211,7 +211,7 @@ namespace STUHashTool {
                         } else {
                             instanceChangeTally[result.beforeInstanceHash].fieldDict[d.beforeFieldHash] = new List<FieldResult>();
                             instanceChangeTally[result.beforeInstanceHash].fieldDict[d.beforeFieldHash].Add(new FieldResult { beforeFieldHash = d.beforeFieldHash, afterFieldHash = d.afterFieldHash, count = 1 });
-                            instanceChangeTally[result.beforeInstanceHash].fieldOccurances[d.beforeFieldHash] = 1;
+                            instanceChangeTally[result.beforeInstanceHash].fieldOccurrences[d.beforeFieldHash] = 1;
                         }
                     }
                 }
@@ -222,7 +222,7 @@ namespace STUHashTool {
                     Console.Out.WriteLine($"{it.Key:X} => {id.Key:X} ({instanceProbablility}% probability)");
                     foreach (KeyValuePair<uint, List<FieldResult>> field in it.Value.fieldDict) {
                         foreach (FieldResult fieldResult in field.Value) {
-                            Console.Out.WriteLine($"\t{fieldResult.beforeFieldHash:X} => {fieldResult.afterFieldHash:X} ({(double)fieldResult.count / it.Value.fieldOccurances[fieldResult.beforeFieldHash] * 100:0.0#}% probability)");
+                            Console.Out.WriteLine($"\t{fieldResult.beforeFieldHash:X} => {fieldResult.afterFieldHash:X} ({(double)fieldResult.count / it.Value.fieldOccurrences[fieldResult.beforeFieldHash] * 100:0.0#}% probability)");
                         }
                     }
                 }
