@@ -53,6 +53,7 @@
     <Compile Include="BuildVersionRangeAttribute.cs" />
     <Compile Include="CRC64.cs" />
     <Compile Include="IDemangleable.cs" />
+    <Compile Include="Impl\Version2HashComparer.cs" />
     <Compile Include="Impl\Version2.cs" />
     <Compile Include="ISTU.cs" />
     <Compile Include="Impl\Version1.cs" />

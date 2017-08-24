@@ -11,8 +11,8 @@ using System.Diagnostics;
 
 namespace STULib {
     public abstract class ISTU : IDisposable {
-        internal static Dictionary<uint, Type> instanceTypes;
-        internal static Dictionary<Type, string> instanceNames;
+        protected internal static Dictionary<uint, Type> instanceTypes;
+        protected internal static Dictionary<Type, string> instanceNames;
 
         internal static bool CheckCompatVersion(FieldInfo field, uint buildVersion) {
             IEnumerable<BuildVersionRangeAttribute> buildVersionRanges = field.GetCustomAttributes<BuildVersionRangeAttribute>();
@@ -30,7 +30,7 @@ namespace STULib {
             return parent.Concat(type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)).ToArray();
         }
 
-        internal static void LoadInstanceTypes() {
+        protected internal static void LoadInstanceTypes() {
             instanceTypes = new Dictionary<uint, Type>();
             instanceNames = new Dictionary<Type, string>();
 
@@ -90,9 +90,12 @@ namespace STULib {
             return null;
         }
 
-        public static ISTU NewInstance(Stream stream, uint owVersion) {
+        public static ISTU NewInstance(Stream stream, uint owVersion, Type type = null) {
             long pos = stream.Position;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, true)) {
+                if (type != null) {
+                    return (ISTU)Activator.CreateInstance(type, stream, owVersion);
+                }
                 if (Version1.IsValidVersion(reader)) {
                     stream.Position = pos;
                     return new Version1(stream, owVersion);

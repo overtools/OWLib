@@ -7,6 +7,7 @@ using System.Text;
 using OWLib;
 using static STULib.Types.Generic.Common;
 using static STULib.Types.Generic.Version2;
+using System.Diagnostics;
 
 // ReSharper disable MemberCanBeMadeStatic.Local
 namespace STULib.Impl {
@@ -14,18 +15,18 @@ namespace STULib.Impl {
         public override IEnumerable<STUInstance> Instances => instances.Select((pair => pair.Value));
         public override uint Version => 2;
 
-        private Stream stream;
+        protected Stream stream;
         private MemoryStream metadata;
 
         private ulong headerCrc = 0;
 
         private Dictionary<long, STUInstance> instances;
 
-        private STUHeader header;
-        private STUInstanceRecord[] instanceInfo;
+        protected STUHeader header;
+        protected STUInstanceRecord[] instanceInfo;
         private STUInstanceArrayRef[] instanceArrayRef;
         private STUInstanceFieldList[] instanceFieldLists;
-        private STUInstanceField[][] instanceFields;
+        protected STUInstanceField[][] instanceFields;
 
         private uint buildVersion;
 
@@ -64,7 +65,7 @@ namespace STULib.Impl {
             return array;
         }
 
-        private void DemangleInstance(object instance, uint checksum) {
+        protected void DemangleInstance(object instance, uint checksum) {
             if (IsFieldMangled(checksum)) {
                 IDemangleable demangleable = instance as IDemangleable;
                 if (demangleable != null) {
@@ -213,11 +214,11 @@ namespace STULib.Impl {
             }
         }
 
-        private static Dictionary<uint, FieldInfo> CreateFieldMap(IEnumerable<FieldInfo> info) {
+        protected static Dictionary<uint, FieldInfo> CreateFieldMap(IEnumerable<FieldInfo> info) {
             return info.ToDictionary(fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>().Checksum);
         }
 
-        private static IEnumerable<FieldInfo> GetValidFields(Type instanceType) {
+        protected static IEnumerable<FieldInfo> GetValidFields(Type instanceType) {
             return instanceType.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance |
                                           BindingFlags.FlattenHierarchy)
                 .Where(fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0);
@@ -288,7 +289,7 @@ namespace STULib.Impl {
             return instance;
         }
 
-        private object InitializeObject(object instance, Type type, STUInstanceField[] writtenFields,
+        protected virtual object InitializeObject(object instance, Type type, STUInstanceField[] writtenFields,
             BinaryReader reader) {
             Dictionary<uint, FieldInfo> fieldMap = CreateFieldMap(GetValidFields(type));
 
@@ -360,7 +361,7 @@ namespace STULib.Impl {
             return instance;
         }
 
-        private STUInstance ReadInstance(Type instanceType, STUInstanceField[] writtenFields, BinaryReader reader,
+        protected virtual STUInstance ReadInstance(Type instanceType, STUInstanceField[] writtenFields, BinaryReader reader,
             int size) {
             MemoryStream sandbox = new MemoryStream(size);
             sandbox.Write(reader.ReadBytes(size), 0, size);
@@ -378,7 +379,7 @@ namespace STULib.Impl {
 
         private static bool ValidCRC = false;
 
-        private void GetHeaderCRC() {
+        protected void GetHeaderCRC() {
             if (!ValidCRC) {
                 ValidCRC = CRC64.Hash(0, Encoding.ASCII.GetBytes("123456789")) == 0xe9c6d914c4b8d9ca;
                 if (!ValidCRC) {
@@ -410,7 +411,7 @@ namespace STULib.Impl {
         }
 
         // ReSharper disable once PossibleNullReferenceException
-        private void ReadInstanceData(long offset) {
+        protected virtual void ReadInstanceData(long offset) {
             stream.Position = offset;
             GetHeaderCRC();
             stream.Position = offset;
@@ -449,7 +450,7 @@ namespace STULib.Impl {
             }
         }
 
-        private bool ReadHeaderData(BinaryReader reader) {
+        protected bool ReadHeaderData(BinaryReader reader) {
             header = reader.Read<STUHeader>();
             if (header.InstanceCount == 0 || header.InstanceListOffset == 0) {
                 return false;
