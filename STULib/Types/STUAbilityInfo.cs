@@ -6,8 +6,8 @@ namespace STULib.Types {
         NORMAL = 1,
         PASSIVE = 2,
         ULTIMATE = 3
-
     }
+
     [STU(0x07A0E32F)]
     public class STUAbilityInfo : STUInstance {
         [STUField(0x2C54AEAF)]

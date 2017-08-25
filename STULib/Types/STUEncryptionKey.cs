@@ -16,21 +16,14 @@ namespace STULib.Types {
                 for (int i = KeyName.Length - 1; i > 0; i -= 2) {
                     char h = (char)KeyName[i];
                     char l = (char)KeyName[i - 1];
-                    x += l.ToString() + h.ToString();
+                    x += l + h;
                 }
                 return x.ToUpperInvariant();
             }
         }
 
-        public string KeyValueText {
-            get {
-                return BitConverter.ToString(KeyValue).Replace("-", string.Empty);
-            }
-        }
-        public ulong KeyNameLong {
-            get {
-                return ulong.Parse(KeyNameText, System.Globalization.NumberStyles.HexNumber);
-            }
-        }
+        public string KeyValueText => BitConverter.ToString(KeyValue).Replace("-", string.Empty);
+
+        public ulong KeyNameLong => ulong.Parse(KeyNameText, System.Globalization.NumberStyles.HexNumber);
     }
 }

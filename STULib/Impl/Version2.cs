@@ -8,6 +8,7 @@ using OWLib;
 using static STULib.Types.Generic.Common;
 using static STULib.Types.Generic.Version2;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 // ReSharper disable MemberCanBeMadeStatic.Local
 namespace STULib.Impl {
@@ -82,7 +83,8 @@ namespace STULib.Impl {
                 }
             }
         }
-
+        
+        // ReSharper disable once UnusedParameter.Local
         private object GetValueArrayInner(Type type, STUFieldAttribute element, uint parent, uint checksum) {
             BinaryReader reader = metadataReader;
             switch (type.Name) {
@@ -101,6 +103,10 @@ namespace STULib.Impl {
                 }
                 case "Single":
                     return reader.ReadSingle();
+                case "Double":
+                    return reader.ReadDouble();
+                case "Decimal":
+                    return reader.ReadDecimal();
                 case "Boolean":
                     return reader.ReadByte() != 0;
                 case "Int16":
@@ -135,6 +141,30 @@ namespace STULib.Impl {
             }
         }
 
+        private object GetPrimitiveVarValue(BinaryReader reader, STUInstanceField field, Type target) {
+            object value = 0;
+            uint size = field.FieldSize > 0 ? field.FieldSize : (uint)Marshal.SizeOf(target);
+            switch (size) {
+                case 16:
+                    value = reader.ReadDecimal();
+                    break;
+                case 8:
+                    value = reader.ReadUInt64();
+                    break;
+                case 4:
+                    value = reader.ReadUInt32();
+                    break;
+                case 2:
+                    value = reader.ReadUInt16();
+                    break;
+                case 1:
+                    value = reader.ReadByte();
+                    break;
+                default: throw new InvalidDataException();
+            }
+            return Convert.ChangeType(value, target);
+        }
+
         // ReSharper disable once UnusedParameter.Local
         private object GetValue(STUInstanceField field, Type type, BinaryReader reader, STUFieldAttribute element) {
             if (type.IsArray) {
@@ -155,30 +185,23 @@ namespace STULib.Impl {
                     return @string;
                 }
                 case "Single":
-                    return reader.ReadSingle();
-                case "Boolean":
-                    return reader.ReadByte() != 0;
+                case "Double":
+                case "Decimal":
                 case "Int16":
-                    return reader.ReadInt16();
                 case "UInt16":
-                    return reader.ReadUInt16();
                 case "Int32":
-                    return reader.ReadInt32();
                 case "UInt32":
-                    return reader.ReadUInt32();
                 case "Int64":
-                    return reader.ReadInt64();
                 case "UInt64":
-                    return reader.ReadUInt64();
-                case "Byte":
-                    return reader.ReadByte();
                 case "SByte":
-                    return reader.ReadSByte();
+                case "Byte":
+                case "Char":
+                    return GetPrimitiveVarValue(reader, field, type);
+                case "Boolean":
+                    return (byte)GetPrimitiveVarValue(reader, field, typeof(byte)) != 0;
                 case "Object":
                     reader.BaseStream.Position += 4;
                     return null;
-                case "Char":
-                    return reader.ReadChar();
                 default:
                     if (type.IsEnum) {
                         return GetValue(field, type.GetEnumUnderlyingType(), reader, element);

@@ -22,7 +22,7 @@ namespace STULib.Types {
         // long example 0000000000157.068
 
         [STUField(0x2C54AEAF)]
-        public uint Unknown1;
+        public ulong Unknown1;
 
         [STUField(0xCA7E6EDC)]
         public STUGUID UnkStringA;
