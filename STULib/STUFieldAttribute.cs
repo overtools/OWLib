@@ -10,6 +10,7 @@ namespace STULib {
         public bool ReferenceValue = false;
         public object Verify = null;
         public long Padding = 0;
+        public int Size = -1;
 
         public object Default = null;
 

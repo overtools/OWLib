@@ -162,7 +162,7 @@ namespace STULib.Impl {
                     break;
                 default: throw new InvalidDataException();
             }
-            return Convert.ChangeType(value, target);
+            return Convert.ChangeType(value, target);  // if you get an OverflowException, you need to use a bigger type
         }
 
         // ReSharper disable once UnusedParameter.Local
@@ -299,7 +299,7 @@ namespace STULib.Impl {
                         position = reader.BaseStream.Position;
                         reader.BaseStream.Position = offset;
                     }
-                    field.SetValue(instance, GetValue(new STUInstanceField { FieldChecksum = 0, FieldSize = 4 }, field.FieldType, reader, element));
+                    field.SetValue(instance, GetValue(new STUInstanceField { FieldChecksum = 0, FieldSize = element.Size == -1 ? 4 : (uint)element.Size}, field.FieldType, reader, element));
                     if (position > -1) {
                         reader.BaseStream.Position = position;
                     }

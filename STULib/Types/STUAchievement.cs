@@ -58,10 +58,6 @@ namespace STULib.Types {
         public STUGUID Image2;
 
         [STUField(0x290B2ADF)]
-        public uint Unknown6;
-
-
-
-
+        public ulong Unknown6;
     }
 }

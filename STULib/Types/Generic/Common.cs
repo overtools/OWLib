@@ -40,7 +40,7 @@ namespace STULib.Types.Generic {
             [STUField(STUVersionOnly = new uint[] {1}, IgnoreVersion = new[] {0xc41B27A5})]
             private ulong Padding = ulong.MaxValue;
 
-            [STUField(0xDEADBEEF)] // DUMMY
+            [STUField(0xDEADBEEF, Size = 8)] // DUMMY
             private ulong Key;
 
             public static implicit operator long(STUGUID i) {
