@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OWLib", "OWLib\OWLib.csproj", "{353C0D05-C505-4DF4-909E-624FD94A7D3B}"
 EndProject
@@ -46,6 +46,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OWReplayLib", "OWReplayLib\OWReplayLib.csproj", "{D3747A31-85D2-424F-9865-A83245FDB762}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STULib", "STULib\STULib.csproj", "{996012B0-3693-4642-AC44-5AA8865EE44A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STUHashTool", "STUHashTool\STUHashTool.csproj", "{FB874758-AB99-4526-A035-8E6DA1252822}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,10 @@ Global
 		{996012B0-3693-4642-AC44-5AA8865EE44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{996012B0-3693-4642-AC44-5AA8865EE44A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{996012B0-3693-4642-AC44-5AA8865EE44A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB874758-AB99-4526-A035-8E6DA1252822}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB874758-AB99-4526-A035-8E6DA1252822}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB874758-AB99-4526-A035-8E6DA1252822}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB874758-AB99-4526-A035-8E6DA1252822}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +126,7 @@ Global
 		{32750FDA-CFE6-4296-BE7A-27E94FB4EEFA} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{CB208F91-B1E8-4319-B4C0-2F4E15A4BFBC} = {3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}
 		{85502A7B-1B1B-4A02-B37F-11600B6194FD} = {3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}
+		{FB874758-AB99-4526-A035-8E6DA1252822} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
