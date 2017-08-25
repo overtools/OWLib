@@ -1,7 +1,7 @@
 ﻿using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0x7CE5C1B2, "STUAchievement")]
+    [STU(0x0CC07049, "STUAchievement")]
     public class STUAchievement : STUInstance {
         //0916AFB9 - 4 bytes
         //0E27C815 - 8 bytes
@@ -21,38 +21,44 @@ namespace STULib.Types {
         // int example: 000000000002.068
         // long example 0000000000157.068
 
-        [STUField(0x0916AFB9)]
+        [STUField(0x2C54AEAF)]
         public uint Unknown1;
 
-        [STUField(0x0E27C815)]
+        [STUField(0xCA7E6EDC)]
         public STUGUID UnkStringA;
 
-        [STUField(0x2077E211)]
+        [STUField(0xF5087894)]
         public STUGUID Reward;
 
-        [STUField(0x26A7BB03)]
+        [STUField(0x4E291DCC)]
         public uint Unknown2;
 
-        [STUField(0x4C73ADB5)]
+        [STUField(0x5351832E)]
         public uint ID;
 
-        [STUField(0x5180E750)]
+        [STUField(0x628D48CC)]
         public uint Unknown3;
 
-        [STUField(0x5BB9A817)]
+        [STUField(0x59D52DA5)]
         public uint Unknown4;
 
-        [STUField(0x7E7CB22B)]
+        [STUField(0x07DD813E)]
         public uint XPReward;
 
-        [STUField(0xB9452DF9)]
+        [STUField(0x4FF98D41)]
         public uint Unknown5;
 
-        [STUField(0xC08C4427)]
+        [STUField(0xB48F1D22)]
         public STUGUID UnkStringB;
 
-        [STUField(0xFB3B13FA)]
+        [STUField(0x544A6A4F)]
         public STUGUID Image;
+
+        [STUField(0x245A3F6D)]
+        public STUGUID Image2;
+
+        [STUField(0x290B2ADF)]
+        public uint Unknown6;
 
 
 

@@ -21,14 +21,20 @@ namespace STULib {
 
         public STUFieldAttribute() {}
 
+        public STUFieldAttribute(string Name) {
+            Checksum = BitConverter.ToUInt32(new CRC32().ComputeHash(Encoding.ASCII.GetBytes(Name.ToLowerInvariant())), 0);
+            this.Name = Name;
+        }
+
         public STUFieldAttribute(uint Checksum, string Name=null) {
             this.Checksum = Checksum;
+            this.Name = Name;
             if (Name != null) {
                 uint crcCheck = BitConverter.ToUInt32(
                                 new CRC32().ComputeHash(Encoding.ASCII.GetBytes(Name.ToLowerInvariant())), 0);
                 if (Checksum != crcCheck) {
-                    Debugger.Log(0, "STU", $"[STU] Invalid name for field {Name}, checksum mismatch ({Checksum}, {crcCheck})\n");
-
+                    // Debugger.Log(0, "STU", $"[STU] Invalid name for field {Name}, checksum mismatch ({Checksum}, {crcCheck})\n");
+                    // No longer the CRC32 of the name :(
                 }
             }
         }

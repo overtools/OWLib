@@ -1,9 +1,9 @@
 ﻿using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0x190D4773)]
+    [STU(0xA94C5E3B)]
     public class STUSubtitle : STUInstance {
-        [STUField(0xA5249DE6)]  // crc32b = m_text
+        [STUField(0xF1CB3BA0, "m_text")]
         public char[] Chars; 
 
         public string String { get => new string(Chars);}

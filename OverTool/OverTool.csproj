@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Debug.cs" />
     <Compile Include="Delta.cs" />
+    <Compile Include="List\ListAbilityInfo.cs" />
     <Compile Include="List\ListKey.cs" />
     <Compile Include="Dump\DumpNPC.cs" />
     <Compile Include="Dump\DumpString.cs" />

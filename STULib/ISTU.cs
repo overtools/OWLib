@@ -51,7 +51,8 @@ namespace STULib {
                         uint crcCheck = BitConverter.ToUInt32(
                                 new CRC32().ComputeHash(Encoding.ASCII.GetBytes(attrib.Name.ToLowerInvariant())), 0);
                         if (attrib.Checksum != crcCheck) {
-                            Debugger.Log(0, "STU", $"[STU] Invalid name for {attrib.Name}, checksum mismatch ({attrib.Checksum}, {crcCheck})\n");
+                            // Debugger.Log(0, "STU", $"[STU] Invalid name for {attrib.Name}, checksum mismatch ({attrib.Checksum}, {crcCheck})\n");
+                            // No longer a CRC32 of the name
                         }
                     } else {
                         attrib.Name = type.Name;

@@ -7,6 +7,7 @@ using System.Text;
 using OWLib;
 using static STULib.Types.Generic.Common;
 using static STULib.Types.Generic.Version2;
+using System.Diagnostics;
 
 // ReSharper disable MemberCanBeMadeStatic.Local
 namespace STULib.Impl {
@@ -294,6 +295,7 @@ namespace STULib.Impl {
 
             foreach (STUInstanceField writtenField in writtenFields) {
                 if (!fieldMap.ContainsKey(writtenField.FieldChecksum)) {
+                    Debugger.Log(0, "STU", $"[STU:{type}]: Unknown field {writtenField.FieldChecksum:X} ({writtenField.FieldSize} bytes)\n");
                     if (writtenField.FieldSize == 0) {
                         uint size = reader.ReadUInt32();
                         reader.BaseStream.Position += size;
