@@ -222,7 +222,7 @@ namespace STUHashTool {
                     Console.Out.WriteLine($"{it.Key:X8} => {id.Key:X8} ({instanceProbablility}% probability)");
                     foreach (KeyValuePair<uint, List<FieldResult>> field in it.Value.fieldDict) {
                         foreach (FieldResult fieldResult in field.Value) {
-                            Console.Out.WriteLine($"\t{fieldResult.beforeFieldHash:X8} => {fieldResult.afterFieldHash:X:X8} ({(double)fieldResult.count / it.Value.fieldOccurrences[fieldResult.beforeFieldHash] * 100:0.0#}% probability)");
+                            Console.Out.WriteLine($"\t{fieldResult.beforeFieldHash:X8} => {fieldResult.afterFieldHash:X8} ({(double)fieldResult.count / it.Value.fieldOccurrences[fieldResult.beforeFieldHash] * 100:0.0#}% probability)");
                         }
                     }
                 }
