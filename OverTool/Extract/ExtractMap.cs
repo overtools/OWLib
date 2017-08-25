@@ -350,7 +350,7 @@ namespace OverTool {
                                         if (!materialParsed.Add(layer.key)) {
                                             continue;
                                         }
-                                        KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, materialId, map, handler, outputPath, quiet);
+                                        KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, materialId, map, handler, outputPath, quiet, $"Textures/{GUID.Index(matpair.Key):X8}");
                                         if (pair.Key == null) {
                                             continue;
                                         }
