@@ -218,11 +218,12 @@ namespace STUHashTool {
             }
             foreach (KeyValuePair<uint, InstanceTally> it in instanceChangeTally) {
                 foreach (KeyValuePair<uint, List<CompareResult>> id in it.Value.resultDict) {
-                    double instanceProbablility = id.Value.Count / it.Value.count * 100;
-                    Console.Out.WriteLine($"{it.Key:X8} => {id.Key:X8} ({instanceProbablility}% probability)");
+                    double instanceProbablility = (double)id.Value.Count / it.Value.count * 100;
+                    Console.Out.WriteLine($"{it.Key:X8} => {id.Key:X8} ({instanceProbablility:0.0#}% probability)");
                     foreach (KeyValuePair<uint, List<FieldResult>> field in it.Value.fieldDict) {
                         foreach (FieldResult fieldResult in field.Value) {
-                            Console.Out.WriteLine($"\t{fieldResult.beforeFieldHash:X8} => {fieldResult.afterFieldHash:X8} ({(double)fieldResult.count / it.Value.fieldOccurrences[fieldResult.beforeFieldHash] * 100:0.0#}% probability)");
+                            double fieldProbability = (double)fieldResult.count / it.Value.fieldOccurrences[fieldResult.beforeFieldHash] * 100;
+                            Console.Out.WriteLine($"\t{fieldResult.beforeFieldHash:X8} => {fieldResult.afterFieldHash:X8} ({fieldProbability:0.0#}% probability)");
                         }
                     }
                 }
