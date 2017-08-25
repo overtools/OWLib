@@ -203,6 +203,9 @@ namespace STULib.Impl {
                     reader.BaseStream.Position += 4;
                     return null;
                 default:
+                    if (typeof(STUInstance).IsAssignableFrom(type)) {
+                        return null; // Set later by the second pass. Usually this is uint, indicating which STU instance entry to load inorder to get the instance. However this is only useful when you're streaming specific STUs.
+                    }
                     if (type.IsEnum) {
                         return GetValue(field, type.GetEnumUnderlyingType(), reader, element);
                     }
