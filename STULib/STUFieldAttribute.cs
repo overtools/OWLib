@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.HashFunction.CRCStandards;
-using System.Diagnostics;
 using System.Text;
 
 namespace STULib {
@@ -10,7 +9,7 @@ namespace STULib {
         public bool ReferenceValue = false;
         public object Verify = null;
         public long Padding = 0;
-        public int Size = -1;
+        public int DummySize = -1;  // used to set the size if the field doesn't actually exist.
 
         public object Default = null;
 

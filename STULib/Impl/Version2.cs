@@ -299,7 +299,7 @@ namespace STULib.Impl {
                         position = reader.BaseStream.Position;
                         reader.BaseStream.Position = offset;
                     }
-                    field.SetValue(instance, GetValue(new STUInstanceField { FieldChecksum = 0, FieldSize = element.Size == -1 ? 4 : (uint)element.Size}, field.FieldType, reader, element));
+                    field.SetValue(instance, GetValue(new STUInstanceField { FieldChecksum = 0, FieldSize = element.DummySize == -1 ? 4 : (uint)element.DummySize}, field.FieldType, reader, element));
                     if (position > -1) {
                         reader.BaseStream.Position = position;
                     }

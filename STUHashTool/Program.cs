@@ -116,29 +116,25 @@ namespace STUHashTool {
                             foreach (STULib.Impl.Version2HashComparer.InstanceData instance2 in file2STU2.instanceDiffData) {
                                 // Console.Out.WriteLine($"Trying {instance1.hash:X}:{instance2.hash:X}");
                                 if (instance1.fields.Length != instance2.fields.Length) {
-                                    // Console.Out.WriteLine($"{instance1.hash:X} != {instance2.hash:X}, different field count");
+                                    Debugger.Log(0, "STUHashTool", $"[STUHashTool] {file}: {instance1.hash:X8} != {instance2.hash:X8}, different field count\n");
                                     continue;
                                 }
 
                                 if (instance1.size != instance2.size) {
-                                    // Console.Out.WriteLine($"{instance1.hash:X} != {instance2.hash:X}, different size");
+                                    Debugger.Log(0, "STUHashTool", $"[STUHashTool] {file}: {instance1.hash:X8} != {instance2.hash:X8}, different size\n");
                                     continue;
                                 }
 
-                                if (file1STU2.instanceDiffData.Length != file2STU2.instanceDiffData.Length) {
-                                    // Console.Out.WriteLine($"{instance1.hash:X} != {instance2.hash:X}, can't verify due to different instance count");
-                                    continue;
-                                }
-
-                                if (instance1.fields.Length != instance2.fields.Length) {
-                                    // Console.Out.WriteLine($"{instance1.hash:X} != {instance2.hash:X}, different field count");
-                                    continue;
-                                }
+                                //if (file1STU2.instanceDiffData.Length != file2STU2.instanceDiffData.Length) {
+                                //    Debugger.Log(0, "STUHashTool", $"[STUHashTool] {file}: {instance1.hash:X} != {instance2.hash:X}, different instance count\n");
+                                //    Console.Out.WriteLine($"{instance1.hash:X} != {instance2.hash:X}, can't verify due to different instance count");
+                                //    continue;
+                                //}
 
                                 if (file1STU2.instanceDiffData.Length == 1 || file2STU2.instanceDiffData.Length == 1) {
-                                    // Console.Out.WriteLine($"{instance1.hash:X} is probably {instance2.hash:X}, only one instance");
+                                    Debugger.Log(0, "STUHashTool", $"[STUHashTool] {file}: {instance1.hash:X8} might be {instance2.hash:X8}, only one instance\n");
                                 } else {
-                                    // Console.Out.WriteLine($"{instance1.hash:X} might be {instance2.hash:X}");
+                                    Debugger.Log(0, "STUHashTool", $"[STUHashTool] {file}: {instance1.hash:X8} might be {instance2.hash:X8}\n");
                                 }
 
                                 results.Add(new CompareResult { beforeInstanceHash = instance1.hash, afterInstanceHash = instance2.hash, fields = new List<FieldCompareResult>() });
@@ -146,18 +142,17 @@ namespace STUHashTool {
                                 foreach (FieldData field1 in instance1.fields) {
                                     foreach (FieldData field2 in instance2.fields) {
                                         if (field1.size != field2.size) {
-                                            // Console.Out.WriteLine($"\t{field1.hash:X} != {field2.hash:X}, difference field size");
                                             continue;
                                         }
 
                                         if (ArraysEqual(field1.sha1, field2.sha1)) {
-                                            // Console.Out.WriteLine($"\t{field1.hash:X} might be {field2.hash:X}, same sha1");
+                                            Debugger.Log(0, "STUHashTool", $"[STUHashTool] {file}: {instance1.hash:X8}:{field1.hash:X8} == {instance2.hash:X8}:{field2.hash:X8}, same SHA1\n");
                                             results.Last().fields.Add(new FieldCompareResult { beforeFieldHash = field1.hash, afterFieldHash = field2.hash });
                                         }
 
                                         if (field1.demangle_sha1 != null || field2.demangle_sha1 != null) {
                                             if (ArraysEqual(field1.demangle_sha1, field2.demangle_sha1)) {
-                                                // Console.Out.WriteLine($"\t{field1.hash:X} might be {field2.hash:X}, same demangle sha1");
+                                                Debugger.Log(0, "STUHashTool", $"[STUHashTool] {file}: {instance1.hash:X8}:{field1.hash:X8} == {instance2.hash:X8}:{field2.hash:X8}, same demangled SHA1\n");
                                                 results.Last().fields.Add(new FieldCompareResult { beforeFieldHash = field1.hash, afterFieldHash = field2.hash });
                                             }
                                         }
