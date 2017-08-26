@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace STUHashTool {
     public class InstanceTally {
@@ -38,12 +39,31 @@ namespace STUHashTool {
     public class FieldCompareResult {
         public uint beforeFieldHash;
         public uint afterFieldHash;
-
     }
-    class Program {
-        private static ISTU file1STU;
-        private static ISTU file2STU;
 
+    public class STUInstanceInfo {
+        public List<STUFieldInfo> fields;
+        public uint size;
+        public uint hash;
+        public uint occurrences;
+
+        public STUFieldInfo GetField(uint hash) {
+            foreach (STUFieldInfo f in fields) {
+                if (f.hash == hash) {
+                    return f;
+                }
+            }
+            return null;
+        }
+    }
+
+    public class STUFieldInfo {
+        public uint hash;
+        public uint size;
+        public uint occurrences;
+    }
+
+    class Program {
         static bool ArraysEqual<T>(T[] a1, T[] a2) {
             if (ReferenceEquals(a1, a2))
                 return true;
@@ -61,24 +81,42 @@ namespace STUHashTool {
             return true;
         }
 
+        static void PrintHelp() {
+            Console.Out.WriteLine("Usage:");
+            Console.Out.WriteLine("Single file: \"file {before file} {after file}\"");
+            Console.Out.WriteLine("Iter files in a single directory: \"dir {before files directory} {after files directory}\"");
+            Console.Out.WriteLine("List instances in a directory of files: \"list {files directory}\"");
+            Console.Out.WriteLine("Auto generate instance class: \"class {files directory} {instance, \"*\" for all}\"");
+        }
+
         static void Main(string[] args) {
             // Usage:
             // Single file: "file {before file} {after file}"
             // Iter files in a single directory: "dir {before files directory} {after files directory}"
+            // List instances in a directory of files: "list {files directory}"
+            // Auto generate instance class: "class {files directory} {instance, "*" for all}"
 
             // todo: cleanup
 
-            if (args.Length < 3) {
-                Console.Out.WriteLine("Usage:");
-                Console.Out.WriteLine("Single file: \"file {before file} {after file}\"");
-                Console.Out.WriteLine("Iter files in a single directory: \"dir {before files directory} {after files directory}\"");
+            if (args.Length > 1) {
+                if (args[0] == "list" && args.Length < 2) {
+                    PrintHelp();
+                    return;
+                } else if (args[0] != "list" && args.Length < 3) {
+                    PrintHelp();
+                    return;
+                }
+            } else {
+                PrintHelp();
                 return;
             }
+
             List<string> files1 = new List<string>();
             List<string> files2 = new List<string>();
+            string mode = args[0];
             string directory1 = "";
             string directory2 = "";
-            string mode = args[0];
+            string classInstance = "";
             if (mode == "file") {
                 directory1 = Path.GetDirectoryName(args[1]);
                 directory2 = Path.GetDirectoryName(args[2]);
@@ -93,6 +131,26 @@ namespace STUHashTool {
                 foreach (string f in Directory.GetFiles(args[2], "*", SearchOption.TopDirectoryOnly)) {
                     files2.Add(Path.GetFileName(f));
                 }
+            } else if (mode == "class") {
+                directory1 = args[1];
+                directory2 = args[1];
+                classInstance = args[2];
+                foreach (string f in Directory.GetFiles(args[1], "*", SearchOption.TopDirectoryOnly)) {
+                    files1.Add(Path.GetFileName(f));
+                }
+                foreach (string f in Directory.GetFiles(args[1], "*", SearchOption.TopDirectoryOnly)) {
+                    files2.Add(Path.GetFileName(f));
+                }
+
+            } else if (mode == "list") {
+                directory1 = args[1];
+                directory2 = args[1];
+                foreach (string f in Directory.GetFiles(args[1], "*", SearchOption.TopDirectoryOnly)) {
+                    files1.Add(Path.GetFileName(f));
+                }
+                foreach (string f in Directory.GetFiles(args[1], "*", SearchOption.TopDirectoryOnly)) {
+                    files2.Add(Path.GetFileName(f));
+                }
             } else if (mode == "dir-rec") {
                 // todo: recurse over every type
                 throw new NotImplementedException();
@@ -100,19 +158,36 @@ namespace STUHashTool {
 
             List<string> both = files2.Intersect(files1).ToList();
             List<CompareResult> results = new List<CompareResult>();
+            Dictionary<uint, STUInstanceInfo> instances = new Dictionary<uint, STUInstanceInfo>();
 
             foreach (string file in both) {
                 string file1 = Path.Combine(directory1, file);
                 string file2 = Path.Combine(directory2, file);
                 using (Stream file1Stream = File.Open(file1, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (Stream file2Stream = File.Open(file2, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                        file1STU = ISTU.NewInstance(file1Stream, uint.MaxValue, typeof(Version2Comparer));
+                        ISTU file1STU = ISTU.NewInstance(file1Stream, uint.MaxValue, typeof(Version2Comparer));
                         Version2Comparer file1STU2 = (Version2Comparer)file1STU;
 
-                        file2STU = ISTU.NewInstance(file2Stream, uint.MaxValue, typeof(Version2Comparer));
+                        ISTU file2STU = ISTU.NewInstance(file2Stream, uint.MaxValue, typeof(Version2Comparer));
                         Version2Comparer file2STU2 = (Version2Comparer)file2STU;
 
                         foreach (STULib.Impl.Version2HashComparer.InstanceData instance1 in file1STU2.instanceDiffData) {
+                            if (!instances.ContainsKey(instance1.hash)) {
+                                instances[instance1.hash] = new STUInstanceInfo { size = instance1.size, hash = instance1.hash, occurrences = 1, fields = new List<STUFieldInfo>() };
+                                foreach (FieldData f in instance1.fields) {
+                                    instances[instance1.hash].fields.Add(new STUFieldInfo { size = f.size, hash = f.hash, occurrences = 1 });
+                                }
+                            } else {
+                                instances[instance1.hash].occurrences++;
+                                foreach (FieldData f in instance1.fields) {
+                                    STUFieldInfo stuF = instances[instance1.hash].GetField(f.hash);
+                                    if (stuF != null) {
+                                        stuF.occurrences++;
+                                    } else {
+                                        instances[instance1.hash].fields.Add(new STUFieldInfo { size = f.size, hash = f.hash, occurrences = 1 });
+                                    }
+                                }
+                            }
                             foreach (STULib.Impl.Version2HashComparer.InstanceData instance2 in file2STU2.instanceDiffData) {
                                 // Console.Out.WriteLine($"Trying {instance1.hash:X}:{instance2.hash:X}");
                                 if (instance1.fields.Length != instance2.fields.Length) {
@@ -211,14 +286,101 @@ namespace STUHashTool {
                     }
                 }
             }
-            foreach (KeyValuePair<uint, InstanceTally> it in instanceChangeTally) {
-                foreach (KeyValuePair<uint, List<CompareResult>> id in it.Value.resultDict) {
-                    double instanceProbablility = (double)id.Value.Count / it.Value.count * 100;
-                    Console.Out.WriteLine($"{it.Key:X8} => {id.Key:X8} ({instanceProbablility:0.0#}% probability)");
-                    foreach (KeyValuePair<uint, List<FieldResult>> field in it.Value.fieldDict) {
-                        foreach (FieldResult fieldResult in field.Value) {
-                            double fieldProbability = (double)fieldResult.count / it.Value.fieldOccurrences[fieldResult.beforeFieldHash] * 100;
-                            Console.Out.WriteLine($"\t{fieldResult.beforeFieldHash:X8} => {fieldResult.afterFieldHash:X8} ({fieldProbability:0.0#}% probability)");
+
+            if (mode == "list") {
+                uint instanceCounter = 0;
+                foreach (KeyValuePair<uint, STUInstanceInfo> instance in instances) {
+                    Console.Out.WriteLine($"{instance.Key:X8}: (in {instance.Value.occurrences}/{both.Count} files)");
+                    foreach (STUFieldInfo field in instance.Value.fields) {
+                        Console.Out.WriteLine($"\t{field.hash:X8}: {field.size} bytes (in {field.occurrences}/{instance.Value.occurrences} instances)");
+                    }
+                    instanceCounter++;
+                    if (instanceCounter != instances.Count) {
+                        Console.Out.WriteLine();
+                    }
+                }
+            } else if (mode == "class") {
+                StringBuilder sb = new StringBuilder();
+                Console.Out.WriteLine($"// File auto generated by STUHashTool");
+                sb.AppendLine("using static STULib.Types.Generic.Common;");
+                sb.AppendLine();
+                sb.AppendLine("namespace STULib.Types {");
+
+                string[] todoInstances;
+                if (classInstance == "*") {
+                    uint wildcardCount = 0;
+                    todoInstances = new string[instances.Count];
+                    foreach (KeyValuePair<uint, STUInstanceInfo> instance in instances) {
+                        todoInstances[wildcardCount] = Convert.ToString(instance.Value.hash, 16);
+                        wildcardCount++;
+                    }
+                } else {
+                    todoInstances = classInstance.Split(':');
+                }
+                
+
+                foreach (string todo in todoInstances) {
+                    uint todoInstance = Convert.ToUInt32(todo, 16);
+                    uint unknownCounter = 1;
+                    uint fieldCounter = 0;
+
+                    sb.AppendLine($"    [STU(0x{todoInstance:X8})]");
+                    sb.AppendLine($"    public class STU_{todoInstance:X8} : STUInstance {{");
+
+                    if (instances.ContainsKey(todoInstance)) {
+                        foreach (STUFieldInfo f in instances[todoInstance].fields) {
+                            if (f.size > 0) {
+                                sb.AppendLine($"        [STUField(0x{f.hash:X8})]");
+                                switch (f.size) {
+                                    //case 16:
+                                    //    sb.AppendLine($"        public decimal Unknown{unknownCounter};");
+                                    //    break;
+                                    case 8:
+                                        sb.AppendLine($"        public STUGUID Unknown{unknownCounter};  // todo: check if ulong");  // we assume GUID, might be ulong, no way to tell AFAIK
+                                        break;
+                                    case 4:
+                                        sb.AppendLine($"        public uint Unknown{unknownCounter};");
+                                        break;
+                                    case 2:
+                                        sb.AppendLine($"        public ushort Unknown{unknownCounter};");
+                                        break;
+                                    case 1:
+                                        sb.AppendLine($"        public byte Unknown{unknownCounter};");
+                                        break;
+                                    default:
+                                        Console.Out.WriteLine($"// Unhandled size of {f.hash:X8}, {f.size} bytes");
+                                        sb.AppendLine($"        public byte Unknown{unknownCounter};  // todo: proper type");
+                                        break;
+                                }
+                                unknownCounter++;
+                            } else {
+                                sb.AppendLine($"        //[STUField(0x{f.hash:X8})] // 0 bytes");
+                            }
+                            fieldCounter++;
+                            if (fieldCounter != instances[todoInstance].fields.Count) {
+                                sb.AppendLine();
+                            }
+                        }
+                        sb.AppendLine("    }");
+                    } else {
+                        Debugger.Log(0, "STUHashTool", $"[STUHashTool:class] Couldn't find instance {todo:X8}");
+                    }
+
+                    
+                }
+                sb.Append("}");
+
+                Console.Out.WriteLine(sb.ToString());
+            } else {
+                foreach (KeyValuePair<uint, InstanceTally> it in instanceChangeTally) {
+                    foreach (KeyValuePair<uint, List<CompareResult>> id in it.Value.resultDict) {
+                        double instanceProbablility = (double)id.Value.Count / it.Value.count * 100;
+                        Console.Out.WriteLine($"{it.Key:X8} => {id.Key:X8} ({instanceProbablility:0.0#}% probability)");
+                        foreach (KeyValuePair<uint, List<FieldResult>> field in it.Value.fieldDict) {
+                            foreach (FieldResult fieldResult in field.Value) {
+                                double fieldProbability = (double)fieldResult.count / it.Value.fieldOccurrences[fieldResult.beforeFieldHash] * 100;
+                                Console.Out.WriteLine($"\t{fieldResult.beforeFieldHash:X8} => {fieldResult.afterFieldHash:X8} ({fieldProbability:0.0#}% probability)");
+                            }
                         }
                     }
                 }
