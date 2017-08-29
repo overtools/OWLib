@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using CASCExplorer;
-using OWLib;
-using OWLib.Types.STUD;
-using OWLib.Types.STUD.InventoryItem;
 using STULib;
 using System.Linq;
 using STULib.Types;
@@ -34,18 +31,18 @@ namespace OverTool.List {
                         continue;
                     }
 
-                    STUAbilityInfo achieve = stu.Instances.First() as STUAbilityInfo;
-                    if (achieve == null) {
+                    STUAbilityInfo ability = stu.Instances.First() as STUAbilityInfo;
+                    if (ability == null) {
                         continue;
                     }
 
-                    Console.Out.WriteLine(Util.GetString(achieve.Name, map, handler));
-                    if (achieve.AbilityType == AbilityType.WEAPON) {
-                        Console.Out.WriteLine($"\t{achieve.AbilityType}: {achieve.WeaponIndex}");
+                    Console.Out.WriteLine(Util.GetString(ability.Name, map, handler));
+                    if (ability.AbilityType == AbilityType.WEAPON) {
+                        Console.Out.WriteLine($"\t{ability.AbilityType}: {ability.WeaponIndex}");
                     } else {
-                        Console.Out.WriteLine($"\t{achieve.AbilityType}");
+                        Console.Out.WriteLine($"\t{ability.AbilityType}");
                     }
-                    Console.Out.WriteLine($"\t{Util.GetString(achieve.Description, map, handler)}");
+                    Console.Out.WriteLine($"\t{Util.GetString(ability.Description, map, handler)}");
 
                     // Console.Out.WriteLine($"{Util.GetString(achieve.Name, map, handler)}, {achieve.AbilityType}, {achieve.WeaponIndex}, {achieve.Unknown3}");
                 }

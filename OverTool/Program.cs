@@ -53,8 +53,9 @@ namespace OverTool {
             string opt = flags.Mode;
 
             IOvertool tool = null;
-            Dictionary<ushort, List<ulong>> track = new Dictionary<ushort, List<ulong>>();
-            track[0x90] = new List<ulong>(); // internal requirements
+            Dictionary<ushort, List<ulong>> track = new Dictionary<ushort, List<ulong>> {
+                [0x90] = new List<ulong>() // internal requirements
+            };
             toolsMap = new Dictionary<string, IOvertool>();
             foreach (IOvertool t in tools) {
                 if (t.FullOpt == opt || (opt.Length == 1 && t.Opt != (char) 0 && t.Opt == opt[0])) {

@@ -42,6 +42,7 @@
     <Reference Include="System.Data.HashFunction.Interfaces, Version=1.0.0.2, Culture=neutral, PublicKeyToken=80c9288e394c1322, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.HashFunction.Interfaces.1.0.0.2\lib\net45\System.Data.HashFunction.Interfaces.dll</HintPath>
     </Reference>
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -67,6 +68,7 @@
     <Compile Include="Types\STUAbilityInfo.cs" />
     <Compile Include="Types\STUAchievement.cs" />
     <Compile Include="Types\STUAnnouncerVoiceList.cs" />
+    <Compile Include="Types\STUHero.cs" />
     <Compile Include="Types\STUHighlightType.cs" />
     <Compile Include="Types\STULootbox.cs" />
     <Compile Include="Types\STUBrawlName.cs" />

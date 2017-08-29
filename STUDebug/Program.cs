@@ -104,7 +104,7 @@ namespace STUDebug {
                     file.Position = header.EntryInstanceListOffset;
                     for (int i = (int)header.EntryInstanceCount; i > 0; --i) {
                         STUInstanceField entry = reader.Read<STUInstanceField>();
-                        Console.Out.WriteLine("\t\t{0:X8} - {1}", entry.FieldChecksum, entry.FieldSize);
+                        Console.Out.WriteLine("\t\t{0:X8} - {1} bytes", entry.FieldChecksum, entry.FieldSize);
                     }
                 }
                 Console.Out.WriteLine("{0} variable lists", header.InstanceFieldListCount);

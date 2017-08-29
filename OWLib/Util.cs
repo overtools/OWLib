@@ -13,6 +13,31 @@ namespace OWLib {
             }
         }
 
+        internal static object GetInstanceField(Type type, object instance, string fieldName) {
+            BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
+                | BindingFlags.Static;
+            FieldInfo field = type.GetField(fieldName, bindFlags);
+            return field.GetValue(instance);
+        }
+
+        public static void DumpSTUFields<T>(T instance, string padding="\t") {  // eww?
+            Type t = typeof(T);
+            foreach (FieldInfo info in t.GetFields()) {
+                object got = info.GetValue(instance);
+                if (got == null) {
+                    Console.Out.WriteLine("{0}{1}: {2:X8}", padding, info.Name, info.GetValue(instance));
+                } else {
+                    if (got.GetType().Name == "STUGUID" && got.GetType().Namespace == "STULib.Types.Generic") {
+                        ulong key = (ulong)GetInstanceField(got.GetType(), got, "Key");
+                        Console.Out.WriteLine($"{padding}{info.Name}: {GUID.LongKey(key):X12}.{GUID.Type(key):X3}" + (GUID.IsMangled(key) ? " (Mangled)" : ""));
+                    } else {
+                        Console.Out.WriteLine("{0}{1}: {2:X8}", padding, info.Name, info.GetValue(instance).ToString());
+                    }
+
+                }
+            }
+        }
+
         public static string GetEnumName(Type t, object value, string fallback = "{0}") {
             string v = Enum.GetName(t, value);
             if (v == null) {

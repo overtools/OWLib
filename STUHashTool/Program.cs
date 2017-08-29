@@ -14,7 +14,7 @@ namespace STUHashTool {
         public Dictionary<uint, List<CompareResult>> resultDict;
         public Dictionary<uint, List<FieldResult>> fieldDict;
 
-        public FieldResult getField(uint before, uint after) {
+        public FieldResult GetField(uint before, uint after) {
             foreach (FieldResult f in fieldDict[before]) {
                 if (f.afterFieldHash == after) {
                     return f;
@@ -61,7 +61,41 @@ namespace STUHashTool {
         public uint hash;
         public uint size;
         public uint occurrences;
+        public bool possible_array;
+        public uint possible_array_item_size;
+        public bool is_nested_standard;
+        public bool is_nested_array;
+        public int nested_array_occurrences;
+        public int nested_standard_occurrences;
+        public int possible_array_occurrences;
+        public int standard_occurrences;
+        public List<STUFieldInfo> nested_fields;
+
+        public bool ContainsNestedField(uint nestedField) {
+            if (!is_nested_standard && !is_nested_array) {
+                return false;
+            }
+            foreach (STUFieldInfo f in nested_fields) {
+                if (f.hash == nestedField) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public STUFieldInfo GetNestedField(uint nestedField) {
+            if (!is_nested_standard && !is_nested_array) {
+                return null;
+            }
+            foreach (STUFieldInfo f in nested_fields) {
+                if (f.hash == nestedField) {
+                    return f;
+                }
+            }
+            return null;
+        }
     }
+
 
     class Program {
         static bool ArraysEqual<T>(T[] a1, T[] a2) {
@@ -137,8 +171,6 @@ namespace STUHashTool {
                 classInstance = args[2];
                 foreach (string f in Directory.GetFiles(args[1], "*", SearchOption.TopDirectoryOnly)) {
                     files1.Add(Path.GetFileName(f));
-                }
-                foreach (string f in Directory.GetFiles(args[1], "*", SearchOption.TopDirectoryOnly)) {
                     files2.Add(Path.GetFileName(f));
                 }
 
@@ -147,8 +179,6 @@ namespace STUHashTool {
                 directory2 = args[1];
                 foreach (string f in Directory.GetFiles(args[1], "*", SearchOption.TopDirectoryOnly)) {
                     files1.Add(Path.GetFileName(f));
-                }
-                foreach (string f in Directory.GetFiles(args[1], "*", SearchOption.TopDirectoryOnly)) {
                     files2.Add(Path.GetFileName(f));
                 }
             } else if (mode == "dir-rec") {
@@ -175,7 +205,7 @@ namespace STUHashTool {
                             if (!instances.ContainsKey(instance1.hash)) {
                                 instances[instance1.hash] = new STUInstanceInfo { size = instance1.size, hash = instance1.hash, occurrences = 1, fields = new List<STUFieldInfo>() };
                                 foreach (FieldData f in instance1.fields) {
-                                    instances[instance1.hash].fields.Add(new STUFieldInfo { size = f.size, hash = f.hash, occurrences = 1 });
+                                    instances[instance1.hash].fields.Add(ConvertField(f));
                                 }
                             } else {
                                 instances[instance1.hash].occurrences++;
@@ -183,8 +213,9 @@ namespace STUHashTool {
                                     STUFieldInfo stuF = instances[instance1.hash].GetField(f.hash);
                                     if (stuF != null) {
                                         stuF.occurrences++;
+                                        IncrementNestedCount(stuF, f);
                                     } else {
-                                        instances[instance1.hash].fields.Add(new STUFieldInfo { size = f.size, hash = f.hash, occurrences = 1 });
+                                        instances[instance1.hash].fields.Add(ConvertField(f));
                                     }
                                 }
                             }
@@ -248,7 +279,7 @@ namespace STUHashTool {
                     foreach (FieldCompareResult d in result.fields) {
                         if (instanceChangeTally[result.beforeInstanceHash].fieldDict.ContainsKey(d.beforeFieldHash)) {
                             instanceChangeTally[result.beforeInstanceHash].fieldOccurrences[d.beforeFieldHash]++;
-                            FieldResult f = instanceChangeTally[result.beforeInstanceHash].getField(d.beforeFieldHash, d.afterFieldHash);
+                            FieldResult f = instanceChangeTally[result.beforeInstanceHash].GetField(d.beforeFieldHash, d.afterFieldHash);
                             if (f != null) {
                                 f.count++;
                             } else {
@@ -256,8 +287,9 @@ namespace STUHashTool {
                             }
 
                         } else {
-                            instanceChangeTally[result.beforeInstanceHash].fieldDict[d.beforeFieldHash] = new List<FieldResult>();
-                            instanceChangeTally[result.beforeInstanceHash].fieldDict[d.beforeFieldHash].Add(new FieldResult { beforeFieldHash = d.beforeFieldHash, afterFieldHash = d.afterFieldHash, count = 1 });
+                            instanceChangeTally[result.beforeInstanceHash].fieldDict[d.beforeFieldHash] = new List<FieldResult> {
+                                new FieldResult { beforeFieldHash = d.beforeFieldHash, afterFieldHash = d.afterFieldHash, count = 1 }
+                            };
                             instanceChangeTally[result.beforeInstanceHash].fieldOccurrences[d.beforeFieldHash] = 1;
                         }
                     }
@@ -271,7 +303,7 @@ namespace STUHashTool {
                     foreach (FieldCompareResult d in result.fields) {
                         if (instanceChangeTally[result.beforeInstanceHash].fieldDict.ContainsKey(d.beforeFieldHash)) {
                             instanceChangeTally[result.beforeInstanceHash].fieldOccurrences[d.beforeFieldHash]++;
-                            FieldResult f = instanceChangeTally[result.beforeInstanceHash].getField(d.beforeFieldHash, d.afterFieldHash);
+                            FieldResult f = instanceChangeTally[result.beforeInstanceHash].GetField(d.beforeFieldHash, d.afterFieldHash);
                             if (f != null) {
                                 f.count++;
                             } else {
@@ -279,8 +311,9 @@ namespace STUHashTool {
                             }
 
                         } else {
-                            instanceChangeTally[result.beforeInstanceHash].fieldDict[d.beforeFieldHash] = new List<FieldResult>();
-                            instanceChangeTally[result.beforeInstanceHash].fieldDict[d.beforeFieldHash].Add(new FieldResult { beforeFieldHash = d.beforeFieldHash, afterFieldHash = d.afterFieldHash, count = 1 });
+                            instanceChangeTally[result.beforeInstanceHash].fieldDict[d.beforeFieldHash] = new List<FieldResult> {
+                                new FieldResult { beforeFieldHash = d.beforeFieldHash, afterFieldHash = d.afterFieldHash, count = 1 }
+                            };
                             instanceChangeTally[result.beforeInstanceHash].fieldOccurrences[d.beforeFieldHash] = 1;
                         }
                     }
@@ -300,12 +333,6 @@ namespace STUHashTool {
                     }
                 }
             } else if (mode == "class") {
-                StringBuilder sb = new StringBuilder();
-                Console.Out.WriteLine($"// File auto generated by STUHashTool");
-                sb.AppendLine("using static STULib.Types.Generic.Common;");
-                sb.AppendLine();
-                sb.AppendLine("namespace STULib.Types {");
-
                 string[] todoInstances;
                 if (classInstance == "*") {
                     uint wildcardCount = 0;
@@ -317,57 +344,21 @@ namespace STUHashTool {
                 } else {
                     todoInstances = classInstance.Split(':');
                 }
-                
+
+                StringBuilder sb = new StringBuilder();
+                Console.Out.WriteLine($"// File auto generated by STUHashTool");
+                sb.AppendLine("using static STULib.Types.Generic.Common;");
+                sb.AppendLine("using System.Numerics;");
+                sb.AppendLine();
+                sb.AppendLine("namespace STULib.Types {");
 
                 foreach (string todo in todoInstances) {
                     uint todoInstance = Convert.ToUInt32(todo, 16);
-                    uint unknownCounter = 1;
-                    uint fieldCounter = 0;
 
                     sb.AppendLine($"    [STU(0x{todoInstance:X8})]");
-                    sb.AppendLine($"    public class STU_{todoInstance:X8} : STUInstance {{");
-
-                    if (instances.ContainsKey(todoInstance)) {
-                        foreach (STUFieldInfo f in instances[todoInstance].fields) {
-                            if (f.size > 0) {
-                                sb.AppendLine($"        [STUField(0x{f.hash:X8})]");
-                                switch (f.size) {
-                                    //case 16:
-                                    //    sb.AppendLine($"        public decimal Unknown{unknownCounter};");
-                                    //    break;
-                                    case 8:
-                                        sb.AppendLine($"        public STUGUID Unknown{unknownCounter};  // todo: check if ulong");  // we assume GUID, might be ulong, no way to tell AFAIK
-                                        break;
-                                    case 4:
-                                        sb.AppendLine($"        public uint Unknown{unknownCounter};");
-                                        break;
-                                    case 2:
-                                        sb.AppendLine($"        public ushort Unknown{unknownCounter};");
-                                        break;
-                                    case 1:
-                                        sb.AppendLine($"        public byte Unknown{unknownCounter};");
-                                        break;
-                                    default:
-                                        Console.Out.WriteLine($"// Unhandled size of {f.hash:X8}, {f.size} bytes");
-                                        sb.AppendLine($"        public byte Unknown{unknownCounter};  // todo: proper type");
-                                        break;
-                                }
-                                unknownCounter++;
-                            } else {
-                                sb.AppendLine($"        //[STUField(0x{f.hash:X8})] // 0 bytes");
-                            }
-                            fieldCounter++;
-                            if (fieldCounter != instances[todoInstance].fields.Count) {
-                                sb.AppendLine();
-                            }
-                        }
-                        sb.AppendLine("    }");
-                    } else {
-                        Debugger.Log(0, "STUHashTool", $"[STUHashTool:class] Couldn't find instance {todo:X8}");
-                    }
-
-                    
+                    sb.Append(CreateInstanceClass($"{todoInstance:X8}", instances[todoInstance].fields.ToArray(), true));
                 }
+
                 sb.Append("}");
 
                 Console.Out.WriteLine(sb.ToString());
@@ -386,6 +377,174 @@ namespace STUHashTool {
                 }
             }
             Debugger.Break();
+        }
+
+        public static string GetSizeType(uint size, bool isArray, out string commentString) {
+            commentString = "";
+            switch (size) {
+                //case 16:
+                //    return "Quaternion";
+                //case 12:
+                //    return "Vector3";
+                case 8:
+                    if (isArray) {
+                        commentString = "  //todo: check if long";
+                        return "STUGUID";
+                    } else {
+                        commentString = "  //todo: check if STUGUID";
+                        return "ulong";
+                    }
+                case 4:
+                    return "uint";
+                case 2:
+                    return "ushort";
+                case 1:
+                    commentString = "  //todo: check if char";
+                    return "byte";
+            }
+            return null;
+        }
+
+        public static string CreateInstanceClass(string instanceName, STUFieldInfo[] fields, bool inherit = false, uint indentLevel = 1) {
+            StringBuilder sb = new StringBuilder();
+            StringBuilder classSb = new StringBuilder();  // things to be written later
+            string indentString = String.Concat(Enumerable.Repeat("    ", (int)indentLevel));
+            string fieldIndentString = String.Concat(Enumerable.Repeat("    ", (int)indentLevel + 1));
+            uint fieldCounter = 1;
+            if (inherit) {
+                sb.AppendLine($"{indentString}public class STU_{instanceName} : STUInstance {{");
+            } else {
+                sb.AppendLine($"{indentString}public class STU_{instanceName} {{");
+            }
+
+            foreach (STUFieldInfo field in fields) {
+                string typeString;
+                string typeComment;
+                string fieldType = "unknown";
+
+
+                if (field.nested_array_occurrences == field.occurrences) {
+                    fieldType = "nest_a";
+                } else if (field.nested_standard_occurrences == field.occurrences) {
+                    fieldType = "nest_s";
+                } else if (field.possible_array_occurrences == field.occurrences) {  // must pass every time, I think this is a pretty safe assumption
+                    fieldType = "array";
+                } else {
+                    fieldType = "normal";
+                }
+
+                // Console.Out.WriteLine($"{field.hash:X8}: {fieldType}");
+                switch (fieldType) {
+                    case "unknown":
+                        return "";
+                    case "nest_s":
+                        classSb.AppendLine();
+                        classSb.AppendLine(CreateInstanceClass(instanceName + $"_{field.hash:X8}", field.nested_fields.ToArray(), false, indentLevel + 1));
+                        sb.AppendLine($"{fieldIndentString}[STUField(0x{field.hash:X8})]");
+                        sb.AppendLine($"{fieldIndentString}public STU_{instanceName}_{field.hash:X8} Unknown{fieldCounter};  // todo: check nested");
+                        break;
+                    case "nest_a":
+                        classSb.AppendLine();
+                        classSb.AppendLine(CreateInstanceClass(instanceName + $"_{field.hash:X8}", field.nested_fields.ToArray(), false, indentLevel + 1));
+                        sb.AppendLine($"{fieldIndentString}[STUField(0x{field.hash:X8})]");
+                        sb.AppendLine($"{fieldIndentString}public STU_{instanceName}_{field.hash:X8}[] Unknown{fieldCounter};  // todo: check nested array");
+                        break;
+                    case "array":
+                        typeString = GetSizeType(field.possible_array_item_size, true, out typeComment);
+                        if (typeString != null) {
+                            sb.AppendLine($"{fieldIndentString}[STUField(0x{field.hash:X8})]");
+                            sb.AppendLine($"{fieldIndentString}public {typeString}[] Unknown{fieldCounter};{typeComment}");
+                        } else {
+                            sb.AppendLine($"{fieldIndentString}//[STUField(0x{field.hash:X8})]  // unhandled field size: {field.size}");
+                        }
+                        break;
+                    case "normal":
+                        typeString = GetSizeType(field.size, false, out typeComment);
+                        if (typeString != null) {
+                            sb.AppendLine($"{fieldIndentString}[STUField(0x{field.hash:X8})]");
+                            sb.AppendLine($"{fieldIndentString}public {typeString} Unknown{fieldCounter};{typeComment}");
+                        } else {
+                            sb.AppendLine($"{fieldIndentString}//[STUField(0x{field.hash:X8})]  // unhandled field size: {field.size}");
+                        }
+                        break;
+                }
+
+                if (fieldCounter != fields.Length) {
+                    sb.AppendLine();
+                }
+                fieldCounter++;
+            }
+
+            sb.Append(classSb.ToString());
+
+            if (inherit) {
+                sb.AppendLine($"{indentString}}}");
+            } else {
+                sb.Append($"{indentString}}}");
+            }
+
+            return sb.ToString();
+        }
+
+        public static void IncrementNestedCount(STUFieldInfo f, FieldData f2) {
+            bool incr = false;
+            if (f2.is_nested_array) {
+                f.nested_array_occurrences++;
+                incr = true;
+            }
+            if (f2.is_nested_standard) {
+                f.nested_standard_occurrences++;
+                incr = true;
+            }
+            if (f2.possible_array) {
+                f.possible_array_occurrences++;
+                incr = true;
+            }
+
+            if (!incr) {
+                f.standard_occurrences++;
+            }
+            if ((f.is_nested_array && f2.IsNested) || (f.is_nested_standard && f2.IsNested)) {
+                foreach (FieldData nest_f in f2.nested_fields) {
+                    if (f.ContainsNestedField(nest_f.hash)) {
+                        STUFieldInfo got_f = f.GetNestedField(nest_f.hash);
+                        got_f.occurrences++;
+                        IncrementNestedCount(got_f, nest_f);
+                    } else {
+                        f.nested_fields.Add(ConvertField(nest_f));
+                    }
+                }
+            }
+        }
+
+        public static STUFieldInfo ConvertField(FieldData f) {
+            return new STUFieldInfo {
+                size = f.size,
+                hash = f.hash,
+                occurrences = 1,
+                possible_array = f.possible_array,
+                possible_array_item_size = f.possible_array_item_size,
+                is_nested_array = f.is_nested_array,
+                is_nested_standard = f.is_nested_standard,
+                nested_fields = ConvertFields(f.nested_fields)?.ToList(),
+                possible_array_occurrences = f.possible_array ? 1 : 0,
+                nested_array_occurrences = f.is_nested_array ? 1 : 0,
+                nested_standard_occurrences = f.is_nested_standard ? 1 : 0,
+                standard_occurrences = (f.possible_array || f.is_nested_array || f.is_nested_standard) ? 0 : 1
+            };
+        }
+
+        public static STUFieldInfo[] ConvertFields(FieldData[] fields) {
+            if (fields == null) {
+                return null;
+            }
+            STUFieldInfo[] output = new STUFieldInfo[fields.Length];
+            uint i = 0;
+            foreach (FieldData f in fields) {
+                output[i] = ConvertField(f);
+                i++;
+            }
+            return output;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace STULib.Impl {
         public override uint Version => 2;
 
         protected Stream stream;
-        private MemoryStream metadata;
+        protected MemoryStream metadata;
 
         private ulong headerCrc = 0;
 
@@ -25,13 +25,13 @@ namespace STULib.Impl {
 
         protected STUHeader header;
         protected STUInstanceRecord[] instanceInfo;
-        private STUInstanceArrayRef[] instanceArrayRef;
-        private STUInstanceFieldList[] instanceFieldLists;
+        protected STUInstanceArrayRef[] instanceArrayRef;
+        protected STUInstanceFieldList[] instanceFieldLists;
         protected STUInstanceField[][] instanceFields;
 
         private uint buildVersion;
 
-        private BinaryReader metadataReader;
+        protected BinaryReader metadataReader;
 
         public override void Dispose() {
             stream?.Dispose();
@@ -68,13 +68,12 @@ namespace STULib.Impl {
 
         protected void DemangleInstance(object instance, uint checksum) {
             if (IsFieldMangled(checksum)) {
-                IDemangleable demangleable = instance as IDemangleable;
-                if (demangleable != null) {
+                if (instance is IDemangleable demangleable) {
                     ulong[] GUIDs = demangleable.GetGUIDs();
                     ulong[] XORs = demangleable.GetGUIDXORs();
                     if (GUIDs?.Length > 0) {
                         for (long j = 0; j < GUIDs.LongLength; ++j) {
-                            if(GUID.IsMangled(GUIDs[j])) {
+                            if (GUID.IsMangled(GUIDs[j])) {
                                 GUIDs[j] = DemangleGUID(GUIDs[j], checksum) ^ XORs[j];
                             }
                         }
@@ -321,7 +320,7 @@ namespace STULib.Impl {
 
             foreach (STUInstanceField writtenField in writtenFields) {
                 if (!fieldMap.ContainsKey(writtenField.FieldChecksum)) {
-                    Debugger.Log(0, "STU", $"[STU:{type}]: Unknown field {writtenField.FieldChecksum:X} ({writtenField.FieldSize} bytes)\n");
+                    Debugger.Log(0, "STU", $"[STU:{type}]: Unknown field {writtenField.FieldChecksum:X8} ({writtenField.FieldSize} bytes)\n");
                     if (writtenField.FieldSize == 0) {
                         uint size = reader.ReadUInt32();
                         reader.BaseStream.Position += size;

@@ -16,7 +16,7 @@ namespace STULib.Types {
                 for (int i = KeyName.Length - 1; i > 0; i -= 2) {
                     char h = (char)KeyName[i];
                     char l = (char)KeyName[i - 1];
-                    x += l + h;
+                    x += l.ToString() + h.ToString();
                 }
                 return x.ToUpperInvariant();
             }

@@ -40,6 +40,5 @@ namespace STULib.Types {
 
         [STUField(0xB1124918)]
         public uint Unknown4;
-
     }
 }
