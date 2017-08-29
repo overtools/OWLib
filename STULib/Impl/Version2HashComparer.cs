@@ -212,7 +212,8 @@ namespace STULib.Impl.Version2HashComparer {
                         parentSize = instanceArrayRef[array.InstanceIndex].Size;
                     }
 
-                    arrayItemSize = GetArrayItemSize(array, element, metadataReader);
+                    // arrayItemSize = GetArrayItemSize(array, element, metadataReader);
+                    arrayItemSize = 1; // no way to actually tell :(
                     if (arrayItemSize > 0 && array.Count < 9999 && array.Count > 0) {
                         possibleArray = true;
                         possibleArrayItemSize = arrayItemSize;

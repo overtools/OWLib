@@ -7,13 +7,14 @@ namespace STULib.Types {
         [STUField(0x0EDCE350)]
         public STUGUID Name;
 
-        // [STUField(0x26D71549)]
+        [STUField(0x26D71549)]
+        public STUGUID StatescriptHeroComponent1;
 
         [STUField(0x2C54AEAF)]
         public STUGUID VirtualReference1;
 
         [STUField(0x322C521A)]
-        public STUGUID StatescriptHeroComponent1;
+        public STUGUID StatescriptHeroComponent2;
 
         [STUField(0x3446F580)]
         public STUGUID Description;
@@ -40,19 +41,19 @@ namespace STULib.Types {
         public uint Unknown12;
 
         [STUField(0x8125713E)]
-        public STUGUID StatescriptHeroComponent2;
+        public STUGUID StatescriptHeroComponent3;
 
         [STUField(0x84625AA3)]
         public WeaponSkin[] WeaponSkins;
 
         [STUField(0x950BBA06)]
-        public STUGUID StatescriptHeroComponent3;
+        public STUGUID StatescriptHeroComponent4;
 
         [STUField(0xA341183E)]
         public UnknownNested1[] Unknown16;
 
         [STUField(0xAC91BECC)]
-        public STUGUID StatescriptHeroComponent4;
+        public STUGUID StatescriptHeroComponent5;
 
         [STUField(0xB7A1D145)]
         public uint HeroId;
@@ -72,7 +73,8 @@ namespace STULib.Types {
         [STUField(0xE04197AF)]
         public STUPaddedGUID[] GUIDx0C6_Reference;
 
-        // [STUField(0xE25DDDA1)] // unhandled field size: 16
+        [STUField(0xE25DDDA1)]
+        public STUVec4 UnknownVec4;
 
         [STUField(0xEA6FF023)]
         public STUGUID ImageResource4;
@@ -123,20 +125,24 @@ namespace STULib.Types {
             public StatisticGroup[] Statistics;  // todo: check nested array
 
             [STUField(0xEB4F2408)]
-            public ulong Unknown2;  //todo: check if STUGUID
+            public STUGUID GUIDx0C5_Reference;  //todo: check if STUGUID
         }
 
         public class Statescript {
-            //[STUField(0x0827AB28)]  // unhandled field size: 12
+            [STUField(0x0827AB28)]
+            public STUVec3 UnknownVec3_a;
 
-            //[STUField(0x18789D20)]  // unhandled field size: 12
+            [STUField(0x18789D20)]
+            public STUVec3 UnknownVec3_b;
 
             [STUField(0x38F997AB)]
             public STUGUID Component;
 
-            //[STUField(0xAF9D3A0C)]  // unhandled field size: 16
+            [STUField(0xAF9D3A0C)]
+            public STUVec4 UnknownVec4;
 
-            //[STUField(0xFF72C038)]  // unhandled field size: 12
+            [STUField(0xFF72C038)]
+            public STUVec3 UnknownVec3_c;
         }
 
         public class StatisticGroup {
@@ -163,7 +169,7 @@ namespace STULib.Types {
             public uint Unknown1;
 
             [STUField(0x96D9482C)]
-            public STUPaddedGUID[] Unknown2; // todo: verify
+            public STUPaddedGUID[] StateScriptCompontents;
         }
     }
 }
