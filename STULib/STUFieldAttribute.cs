@@ -18,7 +18,7 @@ namespace STULib {
 
         public uint[] IgnoreVersion = null;
         public uint[] STUVersionOnly = null;
-
+        
         public STUFieldAttribute() {}
 
         public STUFieldAttribute(string Name) {
