@@ -504,14 +504,18 @@ namespace STUHashTool {
             if (!incr) {
                 f.standard_occurrences++;
             }
-            if ((f.is_nested_array && f2.IsNested) || (f.is_nested_standard && f2.IsNested)) {
+            if (f2.nested_fields != null) {
                 foreach (FieldData nest_f in f2.nested_fields) {
                     if (f.ContainsNestedField(nest_f.hash)) {
                         STUFieldInfo got_f = f.GetNestedField(nest_f.hash);
                         got_f.occurrences++;
                         IncrementNestedCount(got_f, nest_f);
                     } else {
-                        f.nested_fields.Add(ConvertField(nest_f));
+                        if (f.nested_fields == null) {
+                            f.nested_fields = ConvertFields(f2.nested_fields)?.ToList();
+                        } else {
+                            f.nested_fields.Add(ConvertField(nest_f));
+                        }
                     }
                 }
             }
