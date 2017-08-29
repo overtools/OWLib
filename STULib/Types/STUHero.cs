@@ -132,7 +132,7 @@ namespace STULib.Types {
             //[STUField(0x18789D20)]  // unhandled field size: 12
 
             [STUField(0x38F997AB)]
-            public STUGUID Unknown3;  //todo: check if STUGUID
+            public STUGUID Component;
 
             //[STUField(0xAF9D3A0C)]  // unhandled field size: 16
 
