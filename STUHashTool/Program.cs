@@ -224,12 +224,14 @@ namespace STUHashTool {
             foreach (string file in both) {
                 string file1 = Path.Combine(directory1, file);
                 string file2 = Path.Combine(directory2, file);
-                Console.Out.WriteLine(file1);
+                if (mode != "class") {
+                    Console.Out.WriteLine(file1);
+                }
                 using (Stream file1Stream = File.Open(file1, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (Stream file2Stream = File.Open(file2, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                         ISTU file1STU = ISTU.NewInstance(file1Stream, uint.MaxValue, typeof(Version2Comparer));
                         Version2Comparer file1STU2 = (Version2Comparer) file1STU;
-                        
+
                         Version2Comparer file2STU2;
                         if (mode == "class") {
                             file2STU2 = file1STU2;
@@ -528,7 +530,6 @@ namespace STUHashTool {
                         return "";
                     case "nest_s":
                         nestName = NestedDone(field.nested_fields.ToArray(), doneNests);
-                        Console.Out.WriteLine($"done: {nestName}");
                         if (nestName == null) {
                             nestName = $"{instanceName}_UnknownNested{nestedCounter}";
                             doneNests[nestName] = field.nested_fields.ToArray();
@@ -537,11 +538,10 @@ namespace STUHashTool {
                             nestedCounter++;
                         }
                         sb.AppendLine($"{fieldIndentString}[STUField(0x{field.hash:X8})]");
-                        sb.AppendLine($"{fieldIndentString}public {nestName} Unknown{fieldCounter};  // todo: check nested");
+                        sb.AppendLine($"{fieldIndentString}public STU_{nestName} Unknown{fieldCounter};  // todo: check nested");
                         break;
                     case "nest_a":
                         nestName = NestedDone(field.nested_fields.ToArray(), doneNests);
-                        Console.Out.WriteLine($"done: {nestName}");
                         if (nestName == null) {
                             nestName = $"{instanceName}_UnknownNested{nestedCounter}";
                             doneNests[nestName] = field.nested_fields.ToArray();
@@ -550,7 +550,7 @@ namespace STUHashTool {
                             nestedCounter++;
                         }
                         sb.AppendLine($"{fieldIndentString}[STUField(0x{field.hash:X8})]");
-                        sb.AppendLine($"{fieldIndentString}public {nestName}[] Unknown{fieldCounter};  // todo: check nested array");
+                        sb.AppendLine($"{fieldIndentString}public STU_{nestName}[] Unknown{fieldCounter};  // todo: check nested array");
                         break;
                     case "array":
                         typeString = GetSizeType(field.possible_array_item_size, true, out typeComment);
