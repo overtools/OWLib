@@ -236,8 +236,6 @@ namespace STUHashTool {
                         } else {
                             ISTU file2STU = ISTU.NewInstance(file2Stream, uint.MaxValue, typeof(Version2Comparer));
                             file2STU2 = (Version2Comparer) file2STU;
-                        } catch {
-                            continue;
                         }
 
                         foreach (STULib.Impl.Version2HashComparer.InstanceData instance1 in file1STU2.instanceDiffData) {
