@@ -422,11 +422,11 @@ namespace STUHashTool {
                 string typeComment;
                 string fieldType = "unknown";
 
-                if (field.nested_array_occurrences == field.occurrences) {
+                if (field.nested_array_occurrences == field.occurrences) {  // must pass every time, I think this is a pretty safe assumption
                     fieldType = "nest_a";
                 } else if (field.nested_standard_occurrences == field.occurrences) {
                     fieldType = "nest_s";
-                } else if (field.possible_array_occurrences == field.occurrences) {  // must pass every time, I think this is a pretty safe assumption
+                } else if (field.possible_array_occurrences == field.occurrences && field.size == 4) {  // should always be 4 for arrays (?)
                     fieldType = "array";
                 } else {
                     fieldType = "normal";
@@ -454,7 +454,7 @@ namespace STUHashTool {
                             sb.AppendLine($"{fieldIndentString}[STUField(0x{field.hash:X8})]");
                             sb.AppendLine($"{fieldIndentString}public {typeString}[] Unknown{fieldCounter};{typeComment}");
                         } else {
-                            sb.AppendLine($"{fieldIndentString}//[STUField(0x{field.hash:X8})]  // unhandled field size: {field.size}");
+                            sb.AppendLine($"{fieldIndentString}//[STUField(0x{field.hash:X8})]  // unhandled array item size: {field.possible_array_item_size}");
                         }
                         break;
                     case "normal":
@@ -497,6 +497,9 @@ namespace STUHashTool {
             }
             if (f2.possible_array) {
                 f.possible_array_occurrences++;
+                if (f2.possible_array_item_size < f.possible_array_item_size) {
+                    f.possible_array_item_size = f2.possible_array_item_size;
+                }
                 incr = true;
             }
 

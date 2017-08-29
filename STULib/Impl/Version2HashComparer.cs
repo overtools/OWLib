@@ -166,19 +166,16 @@ namespace STULib.Impl.Version2HashComparer {
 
         private int GetArrayItemSize(STUArray array, STUFieldAttribute element, BinaryReader reader) {  // nasty
             // unfortunately there is no other way to do this
-            int output = -1;
             // todo: currently only standard sizes, more in future?
 
-            // todo: reading 12 and 16 is too much strain on the system.
+            if (TryReadArrayItems(array, element, 8, reader)) { return 16; }
+            if (TryReadArrayItems(array, element, 8, reader)) { return 12; }
+            if (TryReadArrayItems(array, element, 8, reader)) { return 8; }
+            if (TryReadArrayItems(array, element, 4, reader)) { return 4; }
+            if (TryReadArrayItems(array, element, 2, reader)) { return 2; }
+            if (TryReadArrayItems(array, element, 1, reader)) { return 1; }
 
-            if (TryReadArrayItems(array, element, 8, reader)) { output = 16; }
-            if (TryReadArrayItems(array, element, 8, reader)) { output = 12; }
-            if (TryReadArrayItems(array, element, 8, reader)) { output = 8; }
-            if (TryReadArrayItems(array, element, 4, reader)) { output = 4; }
-            if (TryReadArrayItems(array, element, 2, reader)) { output = 2; }
-            if (TryReadArrayItems(array, element, 1, reader)) { output = 1; }
-
-            return output;
+            return 0;
         }
 
         protected override object InitializeObject(object instance, Type type, STUInstanceField[] writtenFields, BinaryReader reader) {
