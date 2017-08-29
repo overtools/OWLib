@@ -127,6 +127,10 @@ namespace STULib.Impl.Version2HashComparer {
 
                         int fieldListIndex = reader.ReadInt32();
 
+                        if (instanceFields.Length <= fieldListIndex || fieldListIndex < 0) {
+                            continue;
+                        }
+
 
                         FieldData[] fields = FakeReadInstance(typeof(FakeInstanceType), instanceFields[fieldListIndex], reader,
                             (int)instanceInfo[i].InstanceSize - 4);
