@@ -421,19 +421,18 @@ namespace STUHashTool {
 
         public static string GetSizeType(uint size, bool isArray, out string commentString) {
             commentString = "";
+            if (isArray) {
+                commentString = "  // todo: proper array type";
+                return "object";
+            }
             switch (size) {
-                //case 16:
-                //    return "Quaternion";
-                //case 12:
-                //    return "Vector3";
+                case 16:
+                    return "STUVec4";
+                case 12:
+                    return "STUVec3";
                 case 8:
-                    if (isArray) {
-                        commentString = "  //todo: check if long";
-                        return "STUGUID";
-                    } else {
-                        commentString = "  //todo: check if STUGUID";
-                        return "ulong";
-                    }
+                    commentString = "  //todo: check if STUGUID";
+                    return "ulong";
                 case 4:
                     return "uint";
                 case 2:
@@ -490,12 +489,12 @@ namespace STUHashTool {
                         break;
                     case "array":
                         typeString = GetSizeType(field.possible_array_item_size, true, out typeComment);
-                        if (typeString != null) {
-                            sb.AppendLine($"{fieldIndentString}[STUField(0x{field.hash:X8})]");
-                            sb.AppendLine($"{fieldIndentString}public {typeString}[] Unknown{fieldCounter};{typeComment}");
-                        } else {
-                            sb.AppendLine($"{fieldIndentString}//[STUField(0x{field.hash:X8})]  // unhandled array item size: {field.possible_array_item_size}");
-                        }
+                        // if (typeString != null) {
+                        sb.AppendLine($"{fieldIndentString}[STUField(0x{field.hash:X8})]");
+                        sb.AppendLine($"{fieldIndentString}public {typeString}[] Unknown{fieldCounter};{typeComment}");
+                        //} else {
+                        //    sb.AppendLine($"{fieldIndentString}//[STUField(0x{field.hash:X8})]  // unhandled array item size: {field.possible_array_item_size}");
+                        //}
                         break;
                     case "normal":
                         typeString = GetSizeType(field.size, false, out typeComment);
