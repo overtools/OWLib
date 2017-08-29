@@ -29,7 +29,7 @@ namespace OWLib {
                 } else {
                     if (got.GetType().Name == "STUGUID" && got.GetType().Namespace == "STULib.Types.Generic") {
                         ulong key = (ulong)GetInstanceField(got.GetType(), got, "Key");
-                        Console.Out.WriteLine($"{padding}{info.Name}: {GUID.LongKey(key):X12}.{GUID.Type(key):X3}" + (GUID.IsMangled(key) ? " (Mangled)" : ""));
+                        Console.Out.WriteLine($"{padding}{info.Name}: {GUID.LongKey(key):X12}.{GUID.Type(key):X3}");
                     } else {
                         Console.Out.WriteLine("{0}{1}: {2:X8}", padding, info.Name, info.GetValue(instance).ToString());
                     }

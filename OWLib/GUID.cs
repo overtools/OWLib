@@ -61,11 +61,6 @@ namespace OWLib {
         }
         #endregion
 
-        // TODO: Figure out the real detection code.
-        public static bool IsMangled(ulong key) {
-            return Reserved(key) > 0 || Engine(key) > 0;
-        }
-
         public static void DumpAttributes(TextWriter @out, ulong key) {
             @out.WriteLine($"Index:    {Index(key):X4}");
             @out.WriteLine($"Locale:   {Locale(key):X1}");

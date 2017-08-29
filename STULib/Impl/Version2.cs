@@ -73,9 +73,7 @@ namespace STULib.Impl {
                     ulong[] XORs = demangleable.GetGUIDXORs();
                     if (GUIDs?.Length > 0) {
                         for (long j = 0; j < GUIDs.LongLength; ++j) {
-                            if (GUID.IsMangled(GUIDs[j])) {
-                                GUIDs[j] = DemangleGUID(GUIDs[j], checksum) ^ XORs[j];
-                            }
+                            GUIDs[j] = DemangleGUID(GUIDs[j], checksum) ^ XORs[j];
                         }
                     }
                     demangleable.SetGUIDs(GUIDs);

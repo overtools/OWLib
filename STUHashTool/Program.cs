@@ -200,7 +200,7 @@ namespace STUHashTool {
             foreach (string file in both) {
                 string file1 = Path.Combine(directory1, file);
                 string file2 = Path.Combine(directory2, file);
-                //Console.Out.WriteLine(file1);
+                if(Debugger.IsAttached) Console.Out.WriteLine(file1);
                 using (Stream file1Stream = File.Open(file1, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (Stream file2Stream = File.Open(file2, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                         Version2Comparer file1STU2;
