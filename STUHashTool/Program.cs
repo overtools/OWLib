@@ -203,21 +203,15 @@ namespace STUHashTool {
                 if(Debugger.IsAttached) Console.Out.WriteLine(file1);
                 using (Stream file1Stream = File.Open(file1, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (Stream file2Stream = File.Open(file2, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                        Version2Comparer file1STU2;
+                        ISTU file1STU = ISTU.NewInstance(file1Stream, uint.MaxValue, typeof(Version2Comparer));
+                        Version2Comparer file1STU2 = (Version2Comparer) file1STU;
+                        
                         Version2Comparer file2STU2;
-                        try {
-                            ISTU file1STU = ISTU.NewInstance(file1Stream, uint.MaxValue, typeof(Version2Comparer));
-                            file1STU2 = (Version2Comparer) file1STU;
-
-                            if (mode == "class") {
-                                file2STU2 = file1STU2;
-                            } else {
-                                ISTU file2STU = ISTU.NewInstance(file2Stream, uint.MaxValue, typeof(Version2Comparer));
-                                file2STU2 = (Version2Comparer) file2STU;
-                            }
-                        }
-                        catch {
-                            continue;
+                        if (mode == "class") {
+                            file2STU2 = file1STU2;
+                        } else {
+                            ISTU file2STU = ISTU.NewInstance(file2Stream, uint.MaxValue, typeof(Version2Comparer));
+                            file2STU2 = (Version2Comparer) file2STU;
                         }
 
                         foreach (STULib.Impl.Version2HashComparer.InstanceData instance1 in file1STU2.instanceDiffData) {
@@ -392,7 +386,7 @@ namespace STUHashTool {
                     sb.Append("}");
 
                     if (outputFolder.Length > 0) {
-                        using (Stream stream = File.OpenWrite($"{outputFolder}{Path.DirectorySeparatorChar}STU_{todoInstance:X8}_{i:X8}.cs")) {
+                        using (Stream stream = File.OpenWrite($"{outputFolder}{Path.DirectorySeparatorChar}STU_{todoInstance:X8}.cs")) {
                             using (TextWriter writer = new StreamWriter(stream)) {
                                 writer.WriteLine(sb);
                             }
