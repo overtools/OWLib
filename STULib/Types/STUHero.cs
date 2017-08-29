@@ -120,21 +120,10 @@ namespace STULib.Types {
 
         public class UnknownNested1 {
             [STUField(0x118D9D9F)]
-            public UnknownNested1_1[] Unknown1;  // todo: check nested array
+            public StatisticGroup[] Statistics;  // todo: check nested array
 
             [STUField(0xEB4F2408)]
             public ulong Unknown2;  //todo: check if STUGUID
-
-            public class UnknownNested1_1 {
-                [STUField(0x07EC21F2)]
-                public ulong Unknown1;  //todo: check if STUGUID
-
-                [STUField(0xB5B91051)]
-                public ulong Unknown2;  //todo: check if STUGUID
-
-                [STUField(0xBC4326FF)]
-                public ulong Unknown3;  //todo: check if STUGUID
-            }
         }
 
         public class Statescript {
@@ -178,3 +167,4 @@ namespace STULib.Types {
         }
     }
 }
+    
