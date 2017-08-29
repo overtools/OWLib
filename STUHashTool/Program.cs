@@ -422,7 +422,6 @@ namespace STUHashTool {
                 string typeComment;
                 string fieldType = "unknown";
 
-
                 if (field.nested_array_occurrences == field.occurrences) {
                     fieldType = "nest_a";
                 } else if (field.nested_standard_occurrences == field.occurrences) {

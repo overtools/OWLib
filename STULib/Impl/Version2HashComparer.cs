@@ -24,8 +24,6 @@ namespace STULib.Impl.Version2HashComparer {
         public FieldData[] nested_fields;
         public bool possible_array;
         public uint possible_array_item_size;
-
-        public bool IsNested => is_nested_array && is_nested_standard;
     }
     //public class FieldClassData {
     //    public uint hash;
@@ -223,14 +221,13 @@ namespace STULib.Impl.Version2HashComparer {
                         possibleArrayItemSize = arrayItemSize;
                     }
                 } catch (Exception) {
-                    // Console.Out.WriteLine($"{writtenField.FieldChecksum:X8}: standard array fail: {e.GetType()}");
+                    //Console.Out.WriteLine($"{writtenField.FieldChecksum:X8}: standard array fail: {e}");
                 }
                 reader.BaseStream.Position = beforeArrayPos;
 
                 if (writtenField.FieldSize == 0) {
 
                     // todo: nested sha1, every item in array?
-
 
                     long nestStartPos = reader.BaseStream.Position;
                     STUNestedInfo nested = reader.Read<STUNestedInfo>();
@@ -250,23 +247,27 @@ namespace STULib.Impl.Version2HashComparer {
                         //foreach (KeyValuePair<uint, FieldData> n_f in nestedFieldCache) {
                         //    // Console.Out.WriteLine($"{writtenField.FieldChecksum:X8}: found nest standard: {n_f.Value.hash:X8} ({n_f.Value.size} bytes)");
                         //}
-                        isNestedStandard = true;
-                        nestedFields = nestedFieldCache.Values.ToArray();
-                        afterNestedPosition = reader.BaseStream.Position;
+                        if (reader.BaseStream.Position == nestStartPos + nested.Size + 4) {
+                            isNestedStandard = true;
+                            nestedFields = nestedFieldCache.Values.ToArray();
+                            //afterNestedPosition = reader.BaseStream.Position;
+                            afterNestedPosition = nestStartPos + nested.Size + 4;
+                        }
                     } catch (Exception) {
-                        // Console.Out.WriteLine($"Fail standard nest: {e.GetType()}");
+                        //Console.Out.WriteLine($"Fail standard nest: {e}");
                     }
 
                     reader.BaseStream.Position = nestBeforeReadPos;
 
                     try {
                         Dictionary<uint, FieldData> nestedFieldCache = new Dictionary<uint, FieldData>();
-                        for (uint nest_i = 0; nest_i < (uint)nested.FieldListIndex; ++nest_i) {
+                        for (uint nest_i = 0; nest_i < nested.FieldListIndex; ++nest_i) {
                             stream.Position += element.Padding;
                             uint fieldIndex = reader.ReadUInt32();
-                            if (fieldIndex < 0) {
-                                throw new FieldAccessException("invalid instance index");
-                            }
+                            //Console.Out.WriteLine($"{writtenField.FieldChecksum:X8}: {nest_i}/{nested.FieldListIndex}: {fieldIndex}/{instanceFields.Length}");
+                            //if (fieldIndex < 0) {
+                            //    throw new FieldAccessException("invalid instance index");
+                            //}
                             foreach (FieldData n_f in InitializeObject(instance, type, instanceFields[fieldIndex], reader) as FieldData[]) {
                                 if (!nestedFieldCache.ContainsKey(n_f.hash)) {
                                     nestedFieldCache[n_f.hash] = n_f;
@@ -280,11 +281,14 @@ namespace STULib.Impl.Version2HashComparer {
                         //foreach (KeyValuePair<uint, FieldData> n_f in nestedFieldCache) {
                         //    // Console.Out.WriteLine($"{writtenField.FieldChecksum:X8}: found nest array: {n_f.Value.hash:X8} ({n_f.Value.size} bytes)");
                         //}
-                        nestedFields = nestedFieldCache.Values.ToArray();
-                        isNestedArray = true;
-                        afterNestedPosition = reader.BaseStream.Position;
-                    } catch (Exception e) {
-                        // Console.Out.WriteLine($"Fail nest array: {writtenField.FieldChecksum:X8}: {e}");
+                        if (reader.BaseStream.Position == nestStartPos + nested.Size + 4) {
+                            nestedFields = nestedFieldCache.Values.ToArray();
+                            isNestedArray = true;
+                            afterNestedPosition = nestStartPos + nested.Size + 4;
+                            //afterNestedPosition = reader.BaseStream.Position;
+                        }
+                    } catch (Exception) {
+                        //Console.Out.WriteLine($"Fail nest array: {writtenField.FieldChecksum:X8}: {e}");
                     }
 
                     reader.BaseStream.Position = nestStartPos;
@@ -309,7 +313,7 @@ namespace STULib.Impl.Version2HashComparer {
                     if (writtenField.FieldSize == 8) {  // this might be a GUID, can't be sure
                         FakeGUID f = new FakeGUID { Key = reader.ReadUInt64() };
                         DemangleInstance(f, writtenField.FieldChecksum);
-                        demangleSha1 = sha1.ComputeHash(new byte[1] { (byte)f.Key });
+                        demangleSha1 = sha1.ComputeHash(BitConverter.GetBytes(f.Key));  // is this bad?
 
                         reader.BaseStream.Position = startPosition;
                     }
@@ -333,10 +337,8 @@ namespace STULib.Impl.Version2HashComparer {
                     reader.BaseStream.Position = position;
                 }
                 // }
-                if (isNestedArray || isNestedStandard) {
-                    if (reader.BaseStream.Length >= afterNestedPosition) {
-                        reader.BaseStream.Position = afterNestedPosition;
-                    }
+                if (afterNestedPosition != -1) {
+                    reader.BaseStream.Position = afterNestedPosition;
                 }
                 i++;
             }
