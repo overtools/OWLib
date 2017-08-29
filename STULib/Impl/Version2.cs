@@ -73,9 +73,7 @@ namespace STULib.Impl {
                     ulong[] XORs = demangleable.GetGUIDXORs();
                     if (GUIDs?.Length > 0) {
                         for (long j = 0; j < GUIDs.LongLength; ++j) {
-                            if (GUID.IsMangled(GUIDs[j])) {
-                                GUIDs[j] = DemangleGUID(GUIDs[j], checksum) ^ XORs[j];
-                            }
+                            GUIDs[j] = DemangleGUID(GUIDs[j], checksum) ^ XORs[j];
                         }
                     }
                     demangleable.SetGUIDs(GUIDs);
@@ -102,10 +100,6 @@ namespace STULib.Impl {
                 }
                 case "Single":
                     return reader.ReadSingle();
-                case "Double":
-                    return reader.ReadDouble();
-                case "Decimal":
-                    return reader.ReadDecimal();
                 case "Boolean":
                     return reader.ReadByte() != 0;
                 case "Int16":
@@ -184,8 +178,7 @@ namespace STULib.Impl {
                     return @string;
                 }
                 case "Single":
-                case "Double":
-                case "Decimal":
+                    return reader.ReadSingle();
                 case "Int16":
                 case "UInt16":
                 case "Int32":

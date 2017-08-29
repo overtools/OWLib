@@ -224,14 +224,16 @@ namespace STUHashTool {
             foreach (string file in both) {
                 string file1 = Path.Combine(directory1, file);
                 string file2 = Path.Combine(directory2, file);
+                Console.Out.WriteLine(file1);
                 using (Stream file1Stream = File.Open(file1, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (Stream file2Stream = File.Open(file2, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                        Version2Comparer file1STU2;
+                        ISTU file1STU = ISTU.NewInstance(file1Stream, uint.MaxValue, typeof(Version2Comparer));
+                        Version2Comparer file1STU2 = (Version2Comparer) file1STU;
+                        
                         Version2Comparer file2STU2;
-                        try {
-                            ISTU file1STU = ISTU.NewInstance(file1Stream, uint.MaxValue, typeof(Version2Comparer));
-                            file1STU2 = (Version2Comparer) file1STU;
-
+                        if (mode == "class") {
+                            file2STU2 = file1STU2;
+                        } else {
                             ISTU file2STU = ISTU.NewInstance(file2Stream, uint.MaxValue, typeof(Version2Comparer));
                             file2STU2 = (Version2Comparer) file2STU;
                         } catch {
@@ -258,6 +260,9 @@ namespace STUHashTool {
                                         instances[instance1.hash].fields.Add(ConvertField(f));
                                     }
                                 }
+                            }
+                            if (mode == "class") {
+                                continue;
                             }
                             foreach (STULib.Impl.Version2HashComparer.InstanceData instance2 in file2STU2.instanceDiffData) {
                                 if (instance1 == null || instance2 == null) {
@@ -406,7 +411,7 @@ namespace STUHashTool {
                     sb.Append("}");
 
                     if (outputFolder.Length > 0) {
-                        using (Stream stream = File.OpenWrite($"{outputFolder}{Path.DirectorySeparatorChar}STU_{todoInstance:X8}_{i:X8}.cs")) {
+                        using (Stream stream = File.OpenWrite($"{outputFolder}{Path.DirectorySeparatorChar}STU_{todoInstance:X8}.cs")) {
                             using (TextWriter writer = new StreamWriter(stream)) {
                                 writer.WriteLine(sb);
                             }
@@ -430,7 +435,9 @@ namespace STUHashTool {
                     }
                 }
             }
-            Debugger.Break();
+            if (Debugger.IsAttached) {
+                Debugger.Break();
+            }
         }
 
         public static string GetSizeType(uint size, bool isArray, out string commentString) {

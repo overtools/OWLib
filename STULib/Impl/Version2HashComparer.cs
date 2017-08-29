@@ -56,7 +56,7 @@ namespace STULib.Impl.Version2HashComparer {
         }
 
         public new string ToString() {
-            return $"{GUID.LongKey(Key):X12}.{GUID.Type(Key):X3}" + (GUID.IsMangled(Key) ? " (Mangled)" : "");
+            return $"{GUID.LongKey(Key):X12}.{GUID.Type(Key):X3}";
         }
 
         public ulong[] GetGUIDs() {
