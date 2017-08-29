@@ -100,10 +100,6 @@ namespace STULib.Impl {
                 }
                 case "Single":
                     return reader.ReadSingle();
-                case "Double":
-                    return reader.ReadDouble();
-                case "Decimal":
-                    return reader.ReadDecimal();
                 case "Boolean":
                     return reader.ReadByte() != 0;
                 case "Int16":
@@ -182,8 +178,7 @@ namespace STULib.Impl {
                     return @string;
                 }
                 case "Single":
-                case "Double":
-                case "Decimal":
+                    return reader.ReadSingle();
                 case "Int16":
                 case "UInt16":
                 case "Int32":
