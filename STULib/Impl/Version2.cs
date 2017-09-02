@@ -67,37 +67,30 @@ namespace STULib.Impl {
         }
 
         protected void DemangleInstance(object instance, uint checksum) {
-            if (IsFieldMangled(checksum)) {
-                if (instance is IDemangleable demangleable) {
-                    ulong[] GUIDs = demangleable.GetGUIDs();
-                    ulong[] XORs = demangleable.GetGUIDXORs();
-                    if (GUIDs?.Length > 0) {
-                        for (long j = 0; j < GUIDs.LongLength; ++j) {
-                            GUIDs[j] = DemangleGUID(GUIDs[j], checksum) ^ XORs[j];
-                        }
+            if (instance is IDemangleable demangleable) {
+                ulong[] GUIDs = demangleable.GetGUIDs();
+                ulong[] XORs = demangleable.GetGUIDXORs();
+                if (GUIDs?.Length > 0) {
+                    for (long j = 0; j < GUIDs.LongLength; ++j) {
+                        GUIDs[j] = DemangleGUID(GUIDs[j], checksum) ^ XORs[j];
                     }
-                    demangleable.SetGUIDs(GUIDs);
                 }
+                demangleable.SetGUIDs(GUIDs);
             }
+        }
+
+        private string ReadMetadataString() {
+            STUString data = metadataReader.Read<STUString>();
+            metadata.Position = data.Offset;
+            return new string(metadataReader.ReadChars((int) data.Size));
         }
         
         // ReSharper disable once UnusedParameter.Local
         private object GetValueArrayInner(Type type, STUFieldAttribute element, uint parent, uint checksum) {
             BinaryReader reader = metadataReader;
             switch (type.Name) {
-                case "String": {
-                    long offset = reader.ReadInt64();
-                    long position = reader.BaseStream.Position;
-                    reader.BaseStream.Position = offset;
-                    STUString stringData = reader.Read<STUString>();
-                    if (stringData.Size == 0) {
-                        return string.Empty;
-                    }
-                    reader.BaseStream.Position = stringData.Offset;
-                    string @string = new string(reader.ReadChars((int) stringData.Size));
-                    reader.BaseStream.Position = position;
-                    return @string;
-                }
+                case "String":
+                    return ReadMetadataString();
                 case "Single":
                     return reader.ReadSingle();
                 case "Boolean":
@@ -165,17 +158,8 @@ namespace STULib.Impl {
             }
             switch (type.Name) {
                 case "String": {
-                    long offset = reader.ReadInt64();
-                    long position = reader.BaseStream.Position;
-                    reader.BaseStream.Position = offset;
-                    STUString stringData = reader.Read<STUString>();
-                    if (stringData.Size == 0) {
-                        return string.Empty;
-                    }
-                    reader.BaseStream.Position = stringData.Offset;
-                    string @string = new string(reader.ReadChars((int) stringData.Size));
-                    reader.BaseStream.Position = position;
-                    return @string;
+                    metadata.Position = reader.ReadUInt32();
+                    return ReadMetadataString();
                 }
                 case "Single":
                     return reader.ReadSingle();
@@ -389,11 +373,6 @@ namespace STULib.Impl {
                 object instance = Activator.CreateInstance(instanceType);
                 return InitializeObject(instance, instanceType, writtenFields, sandboxedReader) as STUInstance;
             }
-        }
-
-        private bool IsFieldMangled(uint field) {
-            // TODO
-            return true;
         }
 
         private static bool ValidCRC = false;

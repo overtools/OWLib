@@ -43,6 +43,17 @@ namespace STULib.Types.Generic {
             [STUField(0x2, DummySize = 8)] // DUMMY
             private ulong Key;
 
+            public STUGUID() {
+            }
+
+            public STUGUID(ulong key) {
+                Key = key;
+            }
+
+            public static implicit operator STUPaddedGUID(STUGUID i) {
+                return new STUPaddedGUID(i.GetGUIDs()[0]);
+            }
+
             public static implicit operator long(STUGUID i) {
                 return (long) i.Key;
             }
@@ -92,6 +103,18 @@ namespace STULib.Types.Generic {
 
             [STUField(0x2, DummySize = 8)] // DUMMY
             private ulong Key;
+
+            public STUPaddedGUID() {
+            }
+
+            public STUPaddedGUID(ulong key) {
+                Key = key;
+            }
+
+            public static implicit operator STUGUID(STUPaddedGUID i) {
+                return new STUGUID(i.GetGUIDs()[0]);
+            }
+
 
             public static implicit operator long(STUPaddedGUID i) {
                 return (long) i.Key;
