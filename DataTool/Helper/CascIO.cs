@@ -34,7 +34,7 @@ namespace DataTool.Helper {
         
         public static Stream OpenFile(ulong guid) {
             try {
-                return CASC.OpenFile(Files[guid]);
+                return OpenFile(Files[guid]);
             }
             catch {
                 return null;
@@ -43,7 +43,7 @@ namespace DataTool.Helper {
 
         public static string GetString(ulong guid) {
             try {
-                using (Stream stream = CASC.OpenFile(Files[guid])) {
+                using (Stream stream = OpenFile(Files[guid])) {
                     return stream == null ? null : new OWString(stream);
                 }
             }

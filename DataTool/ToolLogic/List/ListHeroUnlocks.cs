@@ -41,7 +41,8 @@ namespace DataTool.ToolLogic.List {
         public void Parse(ICLIFlags toolFlags) {
             Dictionary<string, Dictionary<string, HashSet<Info>>> unlocks = GatherUnlocks();
             foreach (KeyValuePair<string, Dictionary<string, HashSet<Info>>> heroPair in unlocks) {
-                if (heroPair.Value?.Count == 0 || heroPair.Value.Any(it => it.Value?.Any(itt => itt?.Name != null) == false) == false) {
+                if (heroPair.Value?.Count == 0 || 
+                    heroPair.Value.Any(it => it.Value?.Any(itt => itt?.Name != null) == false)) {
                     continue;
                 }
 
@@ -110,31 +111,38 @@ namespace DataTool.ToolLogic.List {
                     return @return;
                 }
 
-                @return["Default"] = GatherUnlocks(unlocks.SystemUnlocks?.Unlocks?.Cast<ulong>());
+                @return["Default"] = GatherUnlocks(unlocks.SystemUnlocks?.Unlocks?.Select(it => (ulong)it));
 
-                foreach (STUHeroUnlocks.UnlockInfo defaultUnlocks in unlocks.Unlocks) {
-                    if (defaultUnlocks?.Unlocks == null) {
-                        continue;
-                    }
-                    if (!@return.ContainsKey("Standard")) {
-                        @return["Standard"] = new HashSet<Info>();
-                    }
+                if (unlocks.Unlocks != null) {
+                    foreach (STUHeroUnlocks.UnlockInfo defaultUnlocks in unlocks.Unlocks) {
+                        if (defaultUnlocks?.Unlocks == null) {
+                            continue;
+                        }
+                        if (!@return.ContainsKey("Standard")) {
+                            @return["Standard"] = new HashSet<Info>();
+                        }
 
-                    foreach (Info info in GatherUnlocks(defaultUnlocks.Unlocks.Cast<ulong>())) {
-                        @return["Standard"].Add(info);
+                        foreach (Info info in GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it))) {
+                            @return["Standard"].Add(info);
+                        }
                     }
                 }
 
-                foreach (STUHeroUnlocks.EventUnlockInfo eventUnlocks in unlocks.LootboxUnlocks) {
-                    if (eventUnlocks?.Data?.Unlocks == null) {
-                        continue;
-                    }
-                    if (!@return.ContainsKey("Standard")) {
-                        @return[$"Event/{ItemEvents.GetInstance().EventsNormal[eventUnlocks.EventID]}"] = new HashSet<Info>();
-                    }
+                if (unlocks.LootboxUnlocks != null) {
+                    foreach (STUHeroUnlocks.EventUnlockInfo eventUnlocks in unlocks.LootboxUnlocks) {
+                        if (eventUnlocks?.Data?.Unlocks == null) {
+                            continue;
+                        }
 
-                    foreach (Info info in GatherUnlocks(eventUnlocks.Data.Unlocks.Cast<ulong>())) {
-                        @return[$"Event/{ItemEvents.GetInstance().EventsNormal[eventUnlocks.EventID]}"].Add(info);
+                        string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[eventUnlocks.EventID]}";
+
+                        if (!@return.ContainsKey(eventKey)) {
+                            @return[eventKey] = new HashSet<Info>();
+                        }
+
+                        foreach (Info info in GatherUnlocks(eventUnlocks.Data.Unlocks.Select(it => (ulong) it))) {
+                            @return[eventKey].Add(info);
+                        }
                     }
                 }
             }

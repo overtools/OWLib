@@ -11,6 +11,6 @@ namespace STULib.Types.STUUnlock {
         public uint EventID;
 
         [STUField(0xD8A49A4D)]
-        public uint Unknown5;
+        public uint Unknown;
     }
 }

@@ -84,7 +84,7 @@
     <Compile Include="Types\STUUnlock\Emote.cs" />
     <Compile Include="Types\STUUnlock\CompetitiveCurrencyReward.cs" />
     <Compile Include="Types\STUUnlock\PlayerIcon.cs" />
-    <Compile Include="Types\STUUnlock\STU_5C713BD4.cs" />
+    <Compile Include="Types\STUDecal.cs" />
     <Compile Include="Types\STUUnlock\Currency.cs" />
     <Compile Include="Types\STUUnlock\Portrait.cs" />
     <Compile Include="Types\STUUnlock\Spray.cs" />

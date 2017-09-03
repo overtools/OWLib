@@ -51,11 +51,11 @@ namespace STULib.Types.Generic {
             }
 
             public static implicit operator long(STUGUID i) {
-                return (long) i.Key;
+                return (long)(ulong)i;
             }
 
             public static implicit operator ulong(STUGUID i) {
-                return i.Key;
+                return i?.Key ?? 0;
             }
 
             public new string ToString() {
