@@ -130,7 +130,7 @@ namespace STUHashTool {
                         if (output == null) {
                             Console.Out.WriteLine($"{nameString}");
                         }
-                        Console.Out.WriteLine($"{nameString}\r\n{GetIndentString(indentLevel+1)}{output}");
+                        Console.Out.WriteLine($"{nameString}\r\n{output}");
                     } else if (field.FieldType.IsClass) {
                         //Console.Out.WriteLine($"{indentString}{fieldValue.GetType()}:");
                         Console.Out.WriteLine($"{nameString}");
@@ -157,7 +157,7 @@ namespace STUHashTool {
             foreach (STUInstance instance in stu.Instances) {
                 if (instance == null) continue;
                 string instanceChecksum = Convert.ToString(instance.GetType().GetCustomAttribute<STUAttribute>().Checksum, 16);
-                if (instanceWildcard != null && !string.Equals(instanceChecksum, instanceWildcard, 
+                if (instanceWildcard != null && !string.Equals(instanceChecksum, instanceWildcard.TrimStart('0'), 
                         StringComparison.InvariantCultureIgnoreCase)) {
                     continue;
                 }

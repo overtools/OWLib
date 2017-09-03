@@ -152,7 +152,7 @@ namespace STUHashTool {
             string outputFolder = "";
             string cascDir = "";
             string testFileType = "";
-            string testinstanceWildcard = "";
+            string testinstanceWildcard = null;
             switch (mode) {
                 default:
                     PrintHelp();
@@ -199,7 +199,9 @@ namespace STUHashTool {
                     directory2 = null;
                     cascDir = args[1];
                     testFileType = args[2];
-                    testinstanceWildcard = args[3];
+                    if (args.Length >= 4) {
+                        testinstanceWildcard = args[3];
+                    }
                     break;
                 case "gendata":
                     //directory1 = null;
