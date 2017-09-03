@@ -21,9 +21,9 @@ namespace STULib.Types.STUUnlock {
         public byte CosmeticUnknownByte;
         
         [STUField(0xAA8E1BB0)]
-        public STUGUID[] CosmeticUnknownArray;
+        public STUGUID[] CosmeticUnknownArray;  // virtual
         
         [STUField(0x1B25AB90)]
-        public STU_5C713BD4 CosmeticUnknownNested;  // virtual
+        public STU_5C713BD4 CosmeticUnknownNested;
     }
 }

@@ -6,6 +6,6 @@ namespace STULib.Types.STUUnlock {
     // ReSharper disable once InconsistentNaming
     public class Skin : Cosmetic {
         [STUField(0x4C167404)]
-        public STUGUID OverrideResource;
+        public STUGUID SkinResource;
     }
 }
