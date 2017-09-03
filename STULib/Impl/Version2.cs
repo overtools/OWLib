@@ -204,17 +204,17 @@ namespace STULib.Impl {
                 }).ToArray();
         }
 
-//        private void SetField(object instance, uint checksum, object value) {  // wat is this
-//            if (instance == null) {
-//                return;
-//            }
-//
-//            Dictionary<uint, FieldInfo> fieldMap = CreateFieldMap(GetValidFields(instance.GetType()));
-//
-//            if (fieldMap.ContainsKey(checksum)) {
-//                fieldMap[checksum].SetValue(instance, value);
-//            }
-//        }
+        private void SetField(object instance, uint checksum, object value) {
+            if (instance == null) {
+                return;
+            }
+
+            Dictionary<uint, FieldInfo> fieldMap = CreateFieldMap(GetValidFields(instance.GetType()));
+
+            if (fieldMap.ContainsKey(checksum)) {
+                fieldMap[checksum].SetValue(instance, value);
+            }
+        }
 
         protected static Dictionary<uint, FieldInfo> CreateFieldMap(IEnumerable<FieldInfo> info) {
             return info.ToDictionary(fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>().Checksum);
@@ -443,15 +443,15 @@ namespace STULib.Impl {
                                 instanceFields[fieldListIndex], reader, (int) instanceInfo[i].InstanceSize - 4);
                         }
                     }
-
-                    // Disabled for now(?), doesn't work properly, and doesn't seem to do anything anyway
-//                    for (int i = 0; i < instanceInfo.Length; ++i) {
-//                        if (instanceInfo[i].AssignInstanceIndex > -1 &&
-//                            instanceInfo[i].AssignInstanceIndex < instances.Count) {
-//                            SetField(instances[instanceInfo[i].AssignInstanceIndex],
-//                                instanceInfo[i].AssignFieldChecksum, instances[i]);
-//                        }
-//                    }
+                    
+                    for (int i = 0; i < instanceInfo.Length; ++i) {
+                        if (instances[i] != null && 
+                            instanceInfo[i].AssignInstanceIndex > -1 &&
+                            instanceInfo[i].AssignInstanceIndex < instances.Count) {
+                            SetField(instances[instanceInfo[i].AssignInstanceIndex],
+                                instanceInfo[i].AssignFieldChecksum, instances[i]);
+                        }
+                    }
                 }
             }
         }

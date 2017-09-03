@@ -25,7 +25,7 @@ namespace DataTool.Helper {
 
         public static Stream OpenFile(MD5Hash hash) {
             try {
-                return CASC.OpenFile(hash);
+                return CASC.Encoding.GetEntry(hash, out EncodingEntry enc) ? CASC.OpenFile(enc.Key) : null;
             }
             catch {
                 return null;
