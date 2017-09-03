@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Windows.Forms;
 using CASCExplorer;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -26,16 +25,8 @@ namespace DataTool {
         public static uint BuildVersion = 0;
 
         public static bool ValidKey(ulong key) => Files.ContainsKey(key);
-
+        
         private static void Main() {
-            try {
-                object unused = Console.WindowHeight;
-            } catch {
-                // GUI
-                MessageBox.Show("GUI is not implemented", "Soon", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             Console.OutputEncoding = Encoding.UTF8;
 
             Files = new Dictionary<ulong, MD5Hash>();

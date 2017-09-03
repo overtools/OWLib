@@ -32,7 +32,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -49,6 +53,7 @@
     <Compile Include="Flag\FlagParser.cs" />
     <Compile Include="Flag\ICLIFlags.cs" />
     <Compile Include="Helper\CascIO.cs" />
+    <Compile Include="Helper\LinqExtensions.cs" />
     <Compile Include="Helper\Logger.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="ITool.cs" />

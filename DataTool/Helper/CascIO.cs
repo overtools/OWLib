@@ -31,6 +31,26 @@ namespace DataTool.Helper {
                 return null;
             }
         }
+        
+        public static Stream OpenFile(ulong guid) {
+            try {
+                return CASC.OpenFile(Files[guid]);
+            }
+            catch {
+                return null;
+            }
+        }
+
+        public static string GetString(ulong guid) {
+            try {
+                using (Stream stream = CASC.OpenFile(Files[guid])) {
+                    return stream == null ? null : new OWString(stream);
+                }
+            }
+            catch {
+                return null;
+            }
+        }
 
         public static void MapCMF() {
             if (Root == null || CASC == null) {
