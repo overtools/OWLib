@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -53,6 +54,10 @@
     <ProjectReference Include="..\CASCExplorer\CascLib\CascLib.csproj">
       <Project>{e08e1e48-6585-4137-8405-661c62c10713}</Project>
       <Name>CascLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OverTool\OverTool.csproj">
+      <Project>{55122bf8-cc39-4936-b8f1-cf8e87195971}</Project>
+      <Name>OverTool</Name>
     </ProjectReference>
     <ProjectReference Include="..\OWLib\OWLib.csproj">
       <Project>{353c0d05-c505-4df4-909e-624fd94a7d3b}</Project>

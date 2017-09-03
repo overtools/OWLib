@@ -6,6 +6,6 @@ namespace STULib.Types {
         [STUField(0xF1CB3BA0, "m_text")]
         public char[] Chars; 
 
-        public string String { get => new string(Chars);}
+        public string String => new string(Chars);
     }
 }

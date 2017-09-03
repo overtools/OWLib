@@ -10,6 +10,8 @@ namespace STULib {
         public object Verify = null;
         public long Padding = 0;
         public int DummySize = -1;  // used to set the size if the field doesn't actually exist.
+        public bool OnlyBuffer = false;
+        public bool FakeBuffer = false;  // fake being in an array buffer
 
         public object Default = null;
 

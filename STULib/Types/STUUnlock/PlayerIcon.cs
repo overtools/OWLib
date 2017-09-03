@@ -2,10 +2,10 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
-    [STU(0xC6A72877, "STUUnlock_Pose")]
+    [STU(0x54BC2188)]
     // ReSharper disable once InconsistentNaming
-    public class Pose : Cosmetic {
-        [STUField(0x2E5FBA99)]
-        public STUGUID PoseResource;
+    public class PlayerIcon : Cosmetic {
+        [STUField(0xDAD2E3A2)]
+        public STUGUID ImageResource;
     }
 }

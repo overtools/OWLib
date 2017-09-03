@@ -54,8 +54,8 @@
     <Compile Include="BuildVersionRangeAttribute.cs" />
     <Compile Include="CRC64.cs" />
     <Compile Include="IDemangleable.cs" />
-    <Compile Include="Impl\Version2HashComparer.cs" />
     <Compile Include="Impl\Version2.cs" />
+    <Compile Include="Impl\Version2HashComparer\Version2HashComparer.cs" />
     <Compile Include="ISTU.cs" />
     <Compile Include="Impl\Version1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +68,7 @@
     <Compile Include="Types\STUAbilityInfo.cs" />
     <Compile Include="Types\STUAchievement.cs" />
     <Compile Include="Types\STUAnnouncerVoiceList.cs" />
+    <Compile Include="Types\STUDescription.cs" />
     <Compile Include="Types\STUHero.cs" />
     <Compile Include="Types\STUHighlightType.cs" />
     <Compile Include="Types\STULootbox.cs" />
@@ -80,17 +81,19 @@
     <Compile Include="Types\STUHeroUnlocks.cs" />
     <Compile Include="Types\STUUnlock\Common.cs" />
     <Compile Include="Types\STUUnlock\Cosmetic.cs" />
-    <Compile Include="Types\STUUnlock\Currency.cs" />
     <Compile Include="Types\STUUnlock\Emote.cs" />
-    <Compile Include="Types\STUUnlock\HeroicIntro.cs" />
-    <Compile Include="Types\STUUnlock\Icon.cs" />
+    <Compile Include="Types\STUUnlock\CompetitiveCurrencyReward.cs" />
+    <Compile Include="Types\STUUnlock\PlayerIcon.cs" />
+    <Compile Include="Types\STUUnlock\STU_5C713BD4.cs" />
+    <Compile Include="Types\STUUnlock\Currency.cs" />
     <Compile Include="Types\STUUnlock\Portrait.cs" />
-    <Compile Include="Types\STUUnlock\Skin.cs" />
     <Compile Include="Types\STUUnlock\Spray.cs" />
-    <Compile Include="Types\STUUnlock\Unknown_61632B43.cs" />
-    <Compile Include="Types\STUUnlock\Pose.cs" />
     <Compile Include="Types\STUUnlock\VoiceLine.cs" />
+    <Compile Include="Types\STUUnlock\HeroicIntro.cs" />
     <Compile Include="Types\STUUnlock\Weapon.cs" />
+    <Compile Include="Types\STUUnlock\STU_C294A43B.cs" />
+    <Compile Include="Types\STUUnlock\Pose.cs" />
+    <Compile Include="Types\STUUnlock\Skin.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OWLib\OWLib.csproj">

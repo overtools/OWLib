@@ -37,29 +37,29 @@ namespace OverTool {
                 if (map == null) {
                     continue;
                 }
-                Console.Out.WriteLine($"{key}");
-
-                if (mapSTU.StringDescriptionA != null) { 
-                    Console.Out.WriteLine($"\tStringDescriptionA: {Util.GetString(mapSTU.StringDescriptionA, map, handler)}");
-                }
-                if (mapSTU.StringStateA != null) {
-                    Console.Out.WriteLine($"\tStringStateA: {Util.GetString(mapSTU.StringStateA, map, handler)}");
-                }
-                if (mapSTU.StringName != null) {
-                    Console.Out.WriteLine($"\tStringName: {Util.GetString(mapSTU.StringName, map, handler)}");
-                }
-                if (mapSTU.StringStateB != null) {
-                    Console.Out.WriteLine($"StringStateB: {Util.GetString(mapSTU.StringStateB, map, handler)}");
-                }
-                if (mapSTU.StringDescriptionB != null) {
-                    Console.Out.WriteLine($"\tStringDescriptionB: {Util.GetString(mapSTU.StringDescriptionB, map, handler)}");
-                }
-                if (mapSTU.StringSubline != null) {
-                    Console.Out.WriteLine($"\tStringSubline: {Util.GetString(mapSTU.StringSubline, map, handler)}");
-                }
-                if (mapSTU.StringNameB != null) {
-                    Console.Out.WriteLine($"\tStringNameB: {Util.GetString(mapSTU.StringNameB, map, handler)}");
-                }
+//                Console.Out.WriteLine($"{key}");
+//
+//                if (mapSTU.StringDescriptionA != null) { 
+//                    Console.Out.WriteLine($"\tStringDescriptionA: {Util.GetString(mapSTU.StringDescriptionA, map, handler)}");
+//                }
+//                if (mapSTU.StringStateA != null) {
+//                    Console.Out.WriteLine($"\tStringStateA: {Util.GetString(mapSTU.StringStateA, map, handler)}");
+//                }
+//                if (mapSTU.StringName != null) {
+//                    Console.Out.WriteLine($"\tStringName: {Util.GetString(mapSTU.StringName, map, handler)}");
+//                }
+//                if (mapSTU.StringStateB != null) {
+//                    Console.Out.WriteLine($"StringStateB: {Util.GetString(mapSTU.StringStateB, map, handler)}");
+//                }
+//                if (mapSTU.StringDescriptionB != null) {
+//                    Console.Out.WriteLine($"\tStringDescriptionB: {Util.GetString(mapSTU.StringDescriptionB, map, handler)}");
+//                }
+//                if (mapSTU.StringSubline != null) {
+//                    Console.Out.WriteLine($"\tStringSubline: {Util.GetString(mapSTU.StringSubline, map, handler)}");
+//                }
+//                if (mapSTU.StringNameB != null) {
+//                    Console.Out.WriteLine($"\tStringNameB: {Util.GetString(mapSTU.StringNameB, map, handler)}");
+//                }
 
                 //string name = Util.GetString(map.Header.name.key, map, handler);
                 //if (string.IsNullOrWhiteSpace(name)) {

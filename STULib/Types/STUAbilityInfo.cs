@@ -32,13 +32,13 @@ namespace STULib.Types {
         public uint WeaponIndex;  // 0 = 0th weapon (sometimes the first weapon is 1, sometimes 0) 1 = first weapon, 2 = second weapon...
         // Doomfist's weapon is 0, every other is 1
 
-        [STUField(0x7E3ED979)]
-        public uint Unknown3;  // always 0?
-
         [STUField(0x9290B942)]
         public STUGUID Unknown096_2;
 
+        [STUField(0x7E3ED979)]
+        public STUGUID[] GUIDx06C_Reference;
+
         [STUField(0xB1124918)]
-        public uint Unknown4;
+        public STUGUID[] GUIDx096_Reference;
     }
 }

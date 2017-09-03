@@ -15,7 +15,8 @@ namespace OverTool {
             buffer = null;
         }
 
-        public static void MapCMF(OwRootHandler ow, CASCHandler handler, Dictionary<ulong, Record> map, Dictionary<ushort, List<ulong>> track, OverToolFlags flags) {
+        public static void MapCMF(OwRootHandler ow, CASCHandler handler, Dictionary<ulong, Record> map, 
+            Dictionary<ushort, List<ulong>> track, string language) {
             if (ow == null || handler == null) {
                 return;
             }
@@ -24,7 +25,7 @@ namespace OverTool {
                 if (!apm.Name.ToLowerInvariant().Contains("rdev")) {
                     continue;
                 }
-                if(flags != null && !apm.Name.ToLowerInvariant().Contains("l" + flags.Language.ToLowerInvariant())) {
+                if(language != null && !apm.Name.ToLowerInvariant().Contains("l" + language.ToLowerInvariant())) {
                     continue;
                 }
                 foreach (KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {

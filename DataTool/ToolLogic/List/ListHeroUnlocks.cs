@@ -130,11 +130,11 @@ namespace DataTool.ToolLogic.List {
                         continue;
                     }
                     if (!@return.ContainsKey("Standard")) {
-                        @return[$"Event/{ItemEvents.GetInstance().EventsNormal[eventUnlocks.Event]}"] = new HashSet<Info>();
+                        @return[$"Event/{ItemEvents.GetInstance().EventsNormal[eventUnlocks.EventID]}"] = new HashSet<Info>();
                     }
 
                     foreach (Info info in GatherUnlocks(eventUnlocks.Data.Unlocks.Cast<ulong>())) {
-                        @return[$"Event/{ItemEvents.GetInstance().EventsNormal[eventUnlocks.Event]}"].Add(info);
+                        @return[$"Event/{ItemEvents.GetInstance().EventsNormal[eventUnlocks.EventID]}"].Add(info);
                     }
                 }
             }
@@ -170,7 +170,7 @@ namespace DataTool.ToolLogic.List {
                 string name = GetString(unlock.CosmeticName);
 
                 if (unlock is Currency) {
-                    name = $"{(unlock as Currency).Value} Credits";
+                    name = $"{(unlock as Currency).Amount} Credits";
                 } else if (unlock is Portrait) {
                     Portrait portrait = unlock as Portrait;
                     name = $"{portrait.Tier} tier - {portrait.Bracket} - {portrait.Star} star";

@@ -2,10 +2,13 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
-    [STU(0x8A9D1F89)]
+    [STU(0x5C713BD4)]
     // ReSharper disable once InconsistentNaming
-    public class VoiceLine : Cosmetic {
-        [STUField(0xF57B051E)]
+    public class STU_5C713BD4 : STUInstance {
+        [STUField(0x2B522C5B)]
+        public STUGUID DecalResource;
+
+        [STUField(0x58D56DD4)]
         public STUGUID EffectResource;
     }
 }

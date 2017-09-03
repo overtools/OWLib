@@ -37,7 +37,7 @@ namespace STULib.Types.Generic {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         [STUOverride(0xDEADBEEF, 8)] // DUMMY
         public class STUGUID : IDemangleable {
-            [STUField(0x1, DummySize = 8, STUVersionOnly = new uint[] { 1 })] // DUMMY
+            [STUField(0x1, DummySize = 8, OnlyBuffer = true)] // DUMMY
             private ulong Padding = ulong.MaxValue;
 
             [STUField(0x2, DummySize = 8)] // DUMMY
@@ -48,10 +48,6 @@ namespace STULib.Types.Generic {
 
             public STUGUID(ulong key) {
                 Key = key;
-            }
-
-            public static implicit operator STUPaddedGUID(STUGUID i) {
-                return new STUPaddedGUID(i.GetGUIDs()[0]);
             }
 
             public static implicit operator long(STUGUID i) {
@@ -78,6 +74,7 @@ namespace STULib.Types.Generic {
                 };
             }
 
+            // ReSharper disable once InconsistentNaming
             public void SetGUIDs(ulong[] GUIDs) {
                 if (GUIDs?.Length > 0) {
                     Key = GUIDs[0];
@@ -87,64 +84,12 @@ namespace STULib.Types.Generic {
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         [STUOverride(0xDEADBEEF, 8)] // DUMMY
+        // ReSharper disable once InconsistentNaming
         public class ulonglong {
             [STUField(0x1, DummySize = 8)] // DUMMY
             public ulong A;
             [STUField(0x2, DummySize = 8)] // DUMMY
             public ulong B;
-        }
-
-
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        [STUOverride(0xDEADBEEF, 8)] // DUMMY
-        public class STUPaddedGUID : IDemangleable {
-            [STUField(0x1, DummySize = 8)] // DUMMY
-            private ulong Padding;
-
-            [STUField(0x2, DummySize = 8)] // DUMMY
-            private ulong Key;
-
-            public STUPaddedGUID() {
-            }
-
-            public STUPaddedGUID(ulong key) {
-                Key = key;
-            }
-
-            public static implicit operator STUGUID(STUPaddedGUID i) {
-                return new STUGUID(i.GetGUIDs()[0]);
-            }
-
-
-            public static implicit operator long(STUPaddedGUID i) {
-                return (long) i.Key;
-            }
-
-            public static implicit operator ulong(STUPaddedGUID i) {
-                return i.Key;
-            }
-
-            public new string ToString() {
-                return $"{GUID.LongKey(Key):X12}.{GUID.Type(Key):X3}";
-            }
-
-            public ulong[] GetGUIDs() {
-                return new[] {
-                    Key
-                };
-            }
-
-            public ulong[] GetGUIDXORs() {
-                return new[] {
-                    Padding
-                };
-            }
-
-            public void SetGUIDs(ulong[] GUIDs) {
-                if (GUIDs?.Length > 0) {
-                    Key = GUIDs[0];
-                }
-            }
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

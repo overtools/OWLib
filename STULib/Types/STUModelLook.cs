@@ -8,13 +8,13 @@ namespace STULib.Types {
         public MaterialReferenceWrapper[] Wrappers;
 
         [STUField(0x33DA887B)]
-        public STUPaddedGUID[] VirtualReferences;
+        public STUGUID[] VirtualReferences;
 
         [STUField(0xBAFDAFBA)]
         public Material[] Materials;
 
         [STUField(0xC03306D7)]
-        public STUPaddedGUID[] ModelReferences;
+        public STUGUID[] ModelReferences;
 
         public class MaterialReferenceWrapper {
             [STUField(0x0BCD10D6)]

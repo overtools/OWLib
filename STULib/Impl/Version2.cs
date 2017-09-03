@@ -121,7 +121,7 @@ namespace STULib.Impl {
                         return GetValueArrayInner(type.GetEnumUnderlyingType(), element, parent, checksum);
                     }
                     if (type.IsClass || type.IsValueType) {
-                        return InitializeObject(Activator.CreateInstance(type), type, parent, checksum, reader);
+                        return InitializeObject(Activator.CreateInstance(type), type, parent, checksum, reader, true);
                     }
                     return null;
             }
@@ -186,7 +186,7 @@ namespace STULib.Impl {
                         return GetValue(field, type.GetEnumUnderlyingType(), reader, element);
                     }
                     if (type.IsClass) {
-                        return InitializeObject(Activator.CreateInstance(type), type, field.FieldChecksum, field.FieldChecksum, reader);
+                        return InitializeObject(Activator.CreateInstance(type), type, field.FieldChecksum, field.FieldChecksum, reader, element.FakeBuffer);
                     }
                     if (type.IsValueType) {
                         return InitializeObject(Activator.CreateInstance(type), type, CreateInstanceFields(type),
@@ -204,17 +204,17 @@ namespace STULib.Impl {
                 }).ToArray();
         }
 
-        private void SetField(object instance, uint checksum, object value) {
-            if (instance == null) {
-                return;
-            }
-
-            Dictionary<uint, FieldInfo> fieldMap = CreateFieldMap(GetValidFields(instance.GetType()));
-
-            if (fieldMap.ContainsKey(checksum)) {
-                fieldMap[checksum].SetValue(instance, value);
-            }
-        }
+//        private void SetField(object instance, uint checksum, object value) {  // wat is this
+//            if (instance == null) {
+//                return;
+//            }
+//
+//            Dictionary<uint, FieldInfo> fieldMap = CreateFieldMap(GetValidFields(instance.GetType()));
+//
+//            if (fieldMap.ContainsKey(checksum)) {
+//                fieldMap[checksum].SetValue(instance, value);
+//            }
+//        }
 
         protected static Dictionary<uint, FieldInfo> CreateFieldMap(IEnumerable<FieldInfo> info) {
             return info.ToDictionary(fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>().Checksum);
@@ -245,7 +245,7 @@ namespace STULib.Impl {
             return GetValueArray(type, element, arrayInfo, field);
         }
 
-        private object InitializeObject(object instance, Type type, uint reference, uint checksum, BinaryReader reader) {
+        private object InitializeObject(object instance, Type type, uint reference, uint checksum, BinaryReader reader, bool isArrayBuffer) {
             FieldInfo[] fields = GetFields(type);
             foreach (FieldInfo field in fields) {
                 STUFieldAttribute element = field.GetCustomAttribute<STUFieldAttribute>();
@@ -261,6 +261,9 @@ namespace STULib.Impl {
                 }
                 if (!CheckCompatVersion(field, buildVersion)) {
                     continue;
+                } 
+                if (element?.OnlyBuffer == true && !isArrayBuffer) {
+                    continue;
                 }
                 if (field.FieldType.IsArray) {
                     field.SetValue(instance, InitializeObjectArray(new STUInstanceField { FieldChecksum = 0, FieldSize = 4 }, field.FieldType, reader, element));
@@ -275,7 +278,11 @@ namespace STULib.Impl {
                         position = reader.BaseStream.Position;
                         reader.BaseStream.Position = offset;
                     }
-                    field.SetValue(instance, GetValue(new STUInstanceField { FieldChecksum = 0, FieldSize = element.DummySize == -1 ? 4 : (uint)element.DummySize}, field.FieldType, reader, element));
+                    field.SetValue(instance, GetValue(new STUInstanceField {
+                            FieldChecksum = 0,
+                            FieldSize = element == null || element.DummySize == -1 ? 4 : (uint) element.DummySize
+                        },
+                        field.FieldType, reader, element));
                     if (position > -1) {
                         reader.BaseStream.Position = position;
                     }
@@ -437,13 +444,14 @@ namespace STULib.Impl {
                         }
                     }
 
-                    for (int i = 0; i < instanceInfo.Length; ++i) {
-                        if (instanceInfo[i].AssignInstanceIndex > -1 &&
-                            instanceInfo[i].AssignInstanceIndex < instances.Count) {
-                            SetField(instances[instanceInfo[i].AssignInstanceIndex],
-                                instanceInfo[i].AssignFieldChecksum, instances[i]);
-                        }
-                    }
+                    // Disabled for now(?), doesn't work properly, and doesn't seem to do anything anyway
+//                    for (int i = 0; i < instanceInfo.Length; ++i) {
+//                        if (instanceInfo[i].AssignInstanceIndex > -1 &&
+//                            instanceInfo[i].AssignInstanceIndex < instances.Count) {
+//                            SetField(instances[instanceInfo[i].AssignInstanceIndex],
+//                                instanceInfo[i].AssignFieldChecksum, instances[i]);
+//                        }
+//                    }
                 }
             }
         }

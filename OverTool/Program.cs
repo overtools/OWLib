@@ -6,8 +6,6 @@ using System.Reflection;
 using System.Text;
 using CASCExplorer;
 using OverTool.Flags;
-using OWLib;
-using OWLib.Types.STUD;
 using STULib;
 using STULib.Types;
 
@@ -139,7 +137,7 @@ namespace OverTool {
             }
 
             Console.Out.WriteLine("Mapping...");
-            Util.MapCMF(ow, handler, map, track, flags);
+            Util.MapCMF(ow, handler, map, track, flags.Language);
 
             if (!flags.SkipKeys) {
                 Console.Out.WriteLine("Adding Encryption Keys...");
@@ -159,7 +157,7 @@ namespace OverTool {
                         STUEncryptionKey ek = stu.Instances.First() as STUEncryptionKey;
                         if (ek != null && !KeyService.keys.ContainsKey(ek.LongKey)) {
                             KeyService.keys.Add(ek.LongKey, ek.KeyValue);
-                            Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}", ek.LongKey, ek.Key);
+                            Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}", ek.KeyName, ek.Key);
                         }
                     }
                 }

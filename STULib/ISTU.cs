@@ -91,6 +91,9 @@ namespace STULib {
         }
 
         public static ISTU NewInstance(Stream stream, uint owVersion, Type type = null) {
+            if (stream == null) {
+                return null;
+            }
             long pos = stream.Position;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, true)) {
                 if (type != null) {
