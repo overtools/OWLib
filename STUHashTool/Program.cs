@@ -570,7 +570,8 @@ namespace STUHashTool {
             List<string> newTodoInstances = todoInstances.ToList();
             foreach (STUFieldInfo field in fields) {
                 if (field.IsChained) {
-                    if (!newTodoInstances.Contains(field.ChainedInstance.Hash.ToString("X"))) {
+                    if (!newTodoInstances.Contains(field.ChainedInstance.Hash.ToString("X")) && 
+                        !ISTU.InstanceTypes.ContainsKey(field.ChainedInstance.Hash)) {
                         newTodoInstances.Add(field.ChainedInstance.Hash.ToString("X"));
                     }
                 }
@@ -578,7 +579,8 @@ namespace STUHashTool {
                 foreach (KeyValuePair<uint, STUInstanceInfo> toplevelInstance in toplevelInstances) {
                     if (!ComprareFields(toplevelInstance.Value.Fields.ToArray(), field.NestedFields.ToArray()))
                         continue;
-                    if (!newTodoInstances.Contains(toplevelInstance.Key.ToString("X"))) {
+                    if (!newTodoInstances.Contains(toplevelInstance.Key.ToString("X")) &&
+                        !ISTU.InstanceTypes.ContainsKey(toplevelInstance.Key)) {
                         newTodoInstances.Add(toplevelInstance.Key.ToString("X"));
                     }
                 }
@@ -666,7 +668,6 @@ namespace STUHashTool {
             foreach (STUFieldInfo field in fields) {
                 string typeString;
                 string typeComment;
-                string nestName;
                 string fieldType;
                 bool skipNested = false;
 
@@ -688,41 +689,39 @@ namespace STUHashTool {
                     default:
                         continue;
                     case "chain":
-                        sb.AppendLine($"{fieldIndentString}[STUField(0x{field.Hash:X8})]");
-                        sb.AppendLine($"{fieldIndentString}public STU_{field.ChainedInstance.Hash:X8} Unknown{fieldCounter};  // todo: check chained");
+                        if (ISTU.InstanceTypes.ContainsKey(field.ChainedInstance.Hash)) {
+                            Type existingType = ISTU.InstanceTypes[field.ChainedInstance.Hash];
+                            sb.AppendLine($"{fieldIndentString}[STUField(0x{field.Hash:X8})]");
+                            sb.AppendLine(
+                                $"{fieldIndentString}public {existingType.FullName} Unknown{fieldCounter};  // todo: check chained");
+                        } else {
+                            sb.AppendLine($"{fieldIndentString}[STUField(0x{field.Hash:X8})]");
+                            sb.AppendLine(
+                                $"{fieldIndentString}public STU_{field.ChainedInstance.Hash:X8} Unknown{fieldCounter};  // todo: check chained");
+                        }
                         break;
                     case "nest_s":
-                        foreach (KeyValuePair<uint, STUInstanceInfo> topLevelInstance in topLevelInstances) {
-                            if (!ComprareFields(topLevelInstance.Value.Fields.ToArray(), field.NestedFields.ToArray()))
-                                continue;
-                            sb.AppendLine($"{fieldIndentString}[STUField(0x{field.Hash:X8})]");
-                            sb.AppendLine($"{fieldIndentString}public STU_{topLevelInstance.Key:X8} Unknown{fieldCounter};  // todo: check nested");
-                            skipNested = true;
-                        }
-                        if (skipNested) break;
-                        nestName = NestedDone(field.NestedFields.ToArray(), doneNests);
-                        if (nestName == null) {
-                            nestName = $"{instanceName}_UnknownNested{nestedCounter}";
-                            doneNests[nestName] = field.NestedFields.ToArray();
-                            classSb.AppendLine();
-                            classSb.AppendLine(CreateInstanceClass(nestName, field.NestedFields.ToArray(), 
-                                topLevelInstances, false, indentLevel + 1));
-                            nestedCounter++;
-                        }
-                        sb.AppendLine($"{fieldIndentString}[STUField(0x{field.Hash:X8})]");
-                        sb.AppendLine(
-                            $"{fieldIndentString}public STU_{nestName} Unknown{fieldCounter};  // todo: check nested");
-                        break;
                     case "nest_a":
+                        bool isArray = fieldType == "nest_a";
+                        string arrayString = isArray ? "[]" : "";
+                        string arrayString2 = isArray ? " array" : "";
                         foreach (KeyValuePair<uint, STUInstanceInfo> topLevelInstance in topLevelInstances) {
                             if (!ComprareFields(topLevelInstance.Value.Fields.ToArray(), field.NestedFields.ToArray()))
                                 continue;
-                            sb.AppendLine($"{fieldIndentString}[STUField(0x{field.Hash:X8})]");
-                            sb.AppendLine($"{fieldIndentString}public STU_{topLevelInstance.Key:X8}[] Unknown{fieldCounter};  // todo: check nested");
+                            if (ISTU.InstanceTypes.ContainsKey(topLevelInstance.Value.Hash)) {
+                                Type existingType = ISTU.InstanceTypes[topLevelInstance.Value.Hash];
+                                sb.AppendLine($"{fieldIndentString}[STUField(0x{field.Hash:X8})]");
+                                sb.AppendLine(
+                                    $"{fieldIndentString}public {existingType.FullName}{arrayString} Unknown{fieldCounter};  // todo: check nested{arrayString2}");
+                            } else {
+                                sb.AppendLine($"{fieldIndentString}[STUField(0x{field.Hash:X8})]");
+                                sb.AppendLine(
+                                    $"{fieldIndentString}public STU_{topLevelInstance.Key:X8}{arrayString} Unknown{fieldCounter};  // todo: check nested{arrayString2}");
+                            }
                             skipNested = true;
                         }
                         if (skipNested) break;
-                        nestName = NestedDone(field.NestedFields.ToArray(), doneNests);
+                        string nestName = NestedDone(field.NestedFields.ToArray(), doneNests);
                         if (nestName == null) {
                             nestName = $"{instanceName}_UnknownNested{nestedCounter}";
                             doneNests[nestName] = field.NestedFields.ToArray();
@@ -733,8 +732,7 @@ namespace STUHashTool {
                         }
                         sb.AppendLine($"{fieldIndentString}[STUField(0x{field.Hash:X8})]");
                         sb.AppendLine(
-                            $"{fieldIndentString}public STU_{nestName}[] Unknown{fieldCounter};  // todo: check " +
-                            "nested array");
+                            $"{fieldIndentString}public STU_{nestName}{arrayString} Unknown{fieldCounter};  // todo: check nested{arrayString2}");
                         break;
                     case "array":
                         typeString = GetSizeType(field.PossibleArrayItemSize, true, out typeComment);

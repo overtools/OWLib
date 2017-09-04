@@ -13,6 +13,8 @@ namespace STULib {
         protected internal static Dictionary<uint, Type> instanceTypes;
         protected internal static Dictionary<Type, string> instanceNames;
 
+        public static Dictionary<uint, Type> InstanceTypes => instanceTypes;
+
         internal static bool CheckCompatVersion(FieldInfo field, uint buildVersion) {
             IEnumerable<BuildVersionRangeAttribute> buildVersionRanges = field.GetCustomAttributes<BuildVersionRangeAttribute>();
             IEnumerable<BuildVersionRangeAttribute> buildVersionRangeAttributes = buildVersionRanges as BuildVersionRangeAttribute[] ?? buildVersionRanges.ToArray();

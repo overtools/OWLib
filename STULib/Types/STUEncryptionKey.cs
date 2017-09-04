@@ -18,19 +18,8 @@ namespace STULib.Types {
         
         public ulong LongKey => ulong.Parse(KeyName, System.Globalization.NumberStyles.HexNumber);
         public ulong LongRevKey => BitConverter.ToUInt64(BitConverter.GetBytes(LongKey).Reverse().ToArray(), 0);
-        
-        public string KeyNameProper {
-            get {
-                string x = "";
-                byte[] key = Encoding.UTF8.GetBytes(KeyName);
-                for (int i = key.Length - 1; i > 0; i -= 2) {
-                    char h = (char)key[i];
-                    char l = (char)key[i - 1];
-                    x += l + h.ToString();
-                }
-                return x.ToUpperInvariant();
-            }
-        }
+
+        public string KeyNameProper => LongRevKey.ToString("X16");
 
         [STUField(0x7EEFB57A)]
         public uint Unknown3;
