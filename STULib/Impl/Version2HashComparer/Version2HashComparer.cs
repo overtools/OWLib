@@ -150,7 +150,10 @@ namespace STULib.Impl.Version2HashComparer {
                     if (instanceInfo[i].AssignInstanceIndex <= -1 ||
                         instanceInfo[i].AssignInstanceIndex >= fakeInstances.Length) continue;
                     int parentIndex = instanceInfo[i].AssignInstanceIndex;
-                    if (InstanceDiffData[parentIndex] == null) continue;
+                    if (InstanceDiffData[parentIndex] == null) {
+                        // Console.Out.WriteLine("Instance does not exist FeelsBadMan");
+                        continue;
+                    }
                     InstanceDiffData[parentIndex].ChainedInstances[chainCounter[parentIndex]] =
                         new ChainedInstanceData {
                             InstanceChecksum = fakeInstances[i],

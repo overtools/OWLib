@@ -333,7 +333,7 @@ namespace STULib.Impl {
                 }
                 else {
                     if (writtenField.FieldSize == 0) {
-                        if (type.IsClass || type.IsValueType) {
+                        if (field.FieldType.IsClass || field.FieldType.IsValueType) {
                             STUNestedInfo nested = reader.Read<STUNestedInfo>();
                             object nestedInstance = Activator.CreateInstance(field.FieldType);
                             field.SetValue(instance,
@@ -342,7 +342,7 @@ namespace STULib.Impl {
                             continue;
                         }
                     }
-                    if (writtenField.FieldSize == 4 && type.IsClass && !IsSimple(field.FieldType)) {
+                    if (writtenField.FieldSize == 4 && field.FieldType.IsClass && !IsSimple(field.FieldType)) {
                         // this is chained, don't initialise the class
                         reader.BaseStream.Position += writtenField.FieldSize;
                         continue;

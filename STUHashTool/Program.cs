@@ -568,6 +568,7 @@ namespace STUHashTool {
                         !ISTU.InstanceTypes.ContainsKey(field.ChainedInstance.Checksum)) {
                         newTodoInstances.Add(field.ChainedInstance.Checksum.ToString("X"));
                     }
+                    newTodoInstances = FindNestedTodo(toplevelInstances, field.ChainedInstance.Fields, newTodoInstances.ToArray());
                 }
                 if (!field.IsNestedArray && !field.IsNestedStandard) continue;
                 foreach (KeyValuePair<uint, STUInstanceInfo> toplevelInstance in toplevelInstances) {
@@ -683,7 +684,10 @@ namespace STUHashTool {
                     default:
                         continue;
                     case "chain":
-                        if (ISTU.InstanceTypes.ContainsKey(field.ChainedInstance.Checksum)) {
+                        if (!topLevelInstances.ContainsKey(field.ChainedInstance.Checksum)) {
+                            sb.AppendLine($"{fieldIndentString}[STUField(0x{field.Checksum:X8})]");
+                            sb.AppendLine($"{fieldIndentString}//public STU_{field.ChainedInstance.Checksum:X8} Unknown{fieldCounter};  // chained was not found");
+                        } else if (ISTU.InstanceTypes.ContainsKey(field.ChainedInstance.Checksum)) {
                             Type existingType = ISTU.InstanceTypes[field.ChainedInstance.Checksum];
                             sb.AppendLine($"{fieldIndentString}[STUField(0x{field.Checksum:X8})]");
                             sb.AppendLine(
