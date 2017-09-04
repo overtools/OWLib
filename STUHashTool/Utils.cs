@@ -61,10 +61,8 @@ namespace STUHashTool {
                     case 0x90:
                         instances = GetInstances(guid, handler, map);
                         if (instances[0] == null) return null;
-                        // STUEncryptionKey encryptionKey = instances[0] as STUEncryptionKey;
-                        return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|EncryptionKey: BROKEN";
-                        // return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|EncryptionKey: {encryptionKey?.KeyNameText} : {encryptionKey?.KeyValueText}";
-                        // todo: wait for fix
+                        STUEncryptionKey encryptionKey = instances[0] as STUEncryptionKey;
+                        return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|EncryptionKey: {encryptionKey?.KeyNameProper} : {encryptionKey?.Key}";
                     case 0xD5:
                         instances = GetInstances(guid, handler, map);
                         if (instances[0] == null) return null;

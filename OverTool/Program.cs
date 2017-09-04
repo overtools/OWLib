@@ -157,7 +157,7 @@ namespace OverTool {
                         STUEncryptionKey ek = stu.Instances.First() as STUEncryptionKey;
                         if (ek != null && !KeyService.keys.ContainsKey(ek.LongRevKey)) {
                             KeyService.keys.Add(ek.LongRevKey, ek.KeyValue);
-                            Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}", ek.KeyName, ek.Key);
+                            Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}", ek.KeyNameProper, ek.Key);
                         }
                     }
                 }

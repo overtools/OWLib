@@ -168,7 +168,7 @@ namespace DataTool {
                         STUEncryptionKey ek = stu.Instances.OfType<STUEncryptionKey>().First();
                         if (ek != null && !KeyService.keys.ContainsKey(ek.LongRevKey)) {
                             KeyService.keys.Add(ek.LongRevKey, ek.KeyValue);
-                            Log("Added Encryption Key {0}, Value: {1}", ek.LongRevKey, ek.Key);
+                            Log("Added Encryption Key {0}, Value: {1}", ek.KeyNameProper, ek.Key);
                         }
                     }
                 }
