@@ -2,6 +2,7 @@ using CASCLib;
 using OWLib;
 using STULib.Impl;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -74,6 +75,10 @@ namespace STUHashTool {
                 return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3} BLTEDecoderException";
             }
         }
+        
+        internal static bool IsSimple(Type type) {
+            return type.IsPrimitive || type == typeof(string) || type == typeof(object);
+        }
 
         internal static void DumpSTUInner(object instance, FieldInfo[] fields, CASCHandler handler,
             Dictionary<ulong, Record> map, uint indentLevel) {
@@ -93,26 +98,36 @@ namespace STUHashTool {
                     continue;
                 }
                 if (field.FieldType.IsArray) {
+                    uint index = 0;
+                    if (field.FieldType.GetElementType() == typeof(char)) {
+                        Console.Out.WriteLine($"{nameString} \"{new string((char[])fieldValue)}\"");
+                        continue;
+                    }
                     Console.Out.WriteLine($"{nameString}");
                     if (field.FieldType == typeof(STUGUID[])) {
                         foreach (STUGUID val in (STUGUID[]) fieldValue)
                             Console.Out.WriteLine($"{GetGUIDProcessed(val, handler, map, indentLevel + 1)}");
-                    } else if (field.FieldType.IsClass) {
-                        uint index = 0;
-                        foreach (object val in (object[]) fieldValue) {
-                            if (val == null) {
-                                Console.Out.WriteLine($"{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]: null");
-                                continue;
-                            }
+                        continue;
+                    }
+                    
+                    IEnumerable enumerable = fieldValue as IEnumerable;
+                    if (enumerable == null) continue;
+                    foreach (object val in enumerable) {
+                        if (val == null) {
+                            Console.Out.WriteLine(
+                                $"{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]: null");
+                            continue;
+                        }
+                        if (field.FieldType.IsClass && !IsSimple(field.FieldType.GetElementType())) {
                             Console.Out.WriteLine($"{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]:");
                             DumpSTUInner(val, GetFields(val.GetType()).OrderBy(x => x.Name).Where(
                                     fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0)
                                 .ToArray(), handler, map, indentLevel + 2);
-                            index++;
+                        } else {
+                            Console.Out.WriteLine(
+                                $"{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]: {val}");
                         }
-                    } else {
-                        foreach (object val in (object[]) fieldValue)
-                            Console.Out.WriteLine($"{GetIndentString(indentLevel + 1)}{val}");
+                        index++;
                     }
                 } else {
                     if (field.FieldType == typeof(STUGUID)) {
@@ -151,8 +166,7 @@ namespace STUHashTool {
                 Console.Out.WriteLine($"Found instance: {instance.GetType()}");
                 DumpSTUInner(instance, GetFields(instance.GetType()).OrderBy(x => x.Name).Where(
                         fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),
-                    handler,
-                    map, 1);
+                    handler, map, 1);
                 if (Debugger.IsAttached) {
                     Debugger.Break();
                 }
