@@ -7,6 +7,9 @@ namespace STULib.Types.STUUnlock {
         [STUField(0xABFBD552)]
         public STUDecal Decal;
 
+        [STUField(0x8EEF1251)]
+        public uint Unknown;
+
         [STUField(0xDAD2E3A2)]
         public STUGUID TextureResource;
     }

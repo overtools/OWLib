@@ -14,6 +14,10 @@ namespace STULib {
         protected internal static Dictionary<Type, string> instanceNames;
 
         public static Dictionary<uint, Type> InstanceTypes => instanceTypes;
+        
+        public static bool IsSimple(Type type) {
+            return type.IsPrimitive || type == typeof(string) || type == typeof(object);
+        }
 
         internal static bool CheckCompatVersion(FieldInfo field, uint buildVersion) {
             IEnumerable<BuildVersionRangeAttribute> buildVersionRanges = field.GetCustomAttributes<BuildVersionRangeAttribute>();

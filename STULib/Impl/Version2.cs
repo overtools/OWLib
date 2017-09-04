@@ -342,6 +342,11 @@ namespace STULib.Impl {
                             continue;
                         }
                     }
+                    if (writtenField.FieldSize == 4 && type.IsClass && !IsSimple(field.FieldType)) {
+                        // this is chained, don't initialise the class
+                        reader.BaseStream.Position += writtenField.FieldSize;
+                        continue;
+                    }
 
                     reader.BaseStream.Position += element.Padding;
 

@@ -8,9 +8,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using OverTool;
 using STULib;
 using STULib.Types;
+using STULib.Types.STUUnlock;
 using static STULib.Types.Generic.Common;
 using Util = OverTool.Util;
 
@@ -41,49 +43,92 @@ namespace STUHashTool {
             return stu.Instances.ToArray();
         }
 
+        internal static string GetTypeName(STUGUID guid) {
+            Dictionary<ushort, string> types = new Dictionary<ushort, string> {
+                [0x90] = "EncryptionKey",
+                [0x7C] = "String", [0xA9] = "String",
+                [0x9E] = "Ability",
+                [0xD5] = "Description",
+                [0x58] = "HeroUnlocks",
+                [0xA5] = "Unlock"
+            };
+            return types.ContainsKey(GUID.Type(guid)) ? types[GUID.Type(guid)] : null;
+        }
+
+        internal static string ProcessGUIDInternal(STUGUID guid, CASCHandler handler, Dictionary<ulong, Record> map, 
+            uint indentLevel, bool useName=true) {
+            string nameString = useName ? $"{GetTypeName(guid)}: " : "";
+            string nameStringBase = useName ? $"{GetTypeName(guid)}" : "";
+            // string indentString = GetIndentString(indentLevel);
+            try {
+                if (!map.ContainsKey(guid))
+                    return "virtual";
+                STUInstance[] instances;
+                switch (GUID.Type(guid)) {
+                    default:
+                        return "unknown type";
+                    case 0x7C:
+                    case 0xA9:
+                        return $"{nameString}\"{GetOWString(guid, handler, map)}\"";
+                    case 0x9E:
+                        instances = GetInstances(guid, handler, map);
+                        if (instances[0] == null) return null;
+                        STUAbilityInfo ability = instances[0] as STUAbilityInfo;
+                        return $"{nameString}\"{GetOWString(ability?.Name, handler, map)}\" : {ability?.AbilityType}";
+                    case 0x90:
+                        instances = GetInstances(guid, handler, map);
+                        if (instances[0] == null) return null;
+                        STUEncryptionKey encryptionKey = instances[0] as STUEncryptionKey;
+                        return $"{nameString}{encryptionKey?.KeyNameProper} : {encryptionKey?.Key}";
+                    case 0xD5:
+                        instances = GetInstances(guid, handler, map);
+                        if (instances[0] == null) return null;
+                        STUDescription description = instances[0] as STUDescription;
+                        return $"{nameString}\"{GetOWString(description?.String, handler, map)}\"";
+                    case 0x58:
+                        instances = GetInstances(guid, handler, map);
+                        STUHeroUnlocks unlocks = instances.OfType<STUHeroUnlocks>().First();
+                        if (unlocks == null) return null;
+                        // Console.Out.WriteLine($"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|{nameString}");
+                        return $"{nameString}\r\n{DumpSTUInner(unlocks, GetFields(unlocks.GetType()).OrderBy(x => x.Name).Where(fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(), handler, map, indentLevel+1)}";
+                    case 0xA5:
+                        instances = GetInstances(guid, handler, map);
+                        Cosmetic unlock = instances.OfType<Cosmetic>().First();
+                        if (unlock == null) return null;
+                        if (unlock is Currency) {
+                            return $"{nameStringBase}:Credits: {(unlock as Currency).Amount} Credits";
+                        } else {
+                            return $"{nameStringBase}:{unlock.GetType().Name}: {ProcessGUIDInternal(unlock.CosmeticName, handler, map, indentLevel, false)}";
+                        }
+                }
+            }
+            catch (Exception) {
+                return "BLTEDecoderException";
+            }
+        }
+
         public static string GetGUIDProcessed(STUGUID guid, CASCHandler handler, Dictionary<ulong, Record> map,
             uint indentLevel) {
             string indentString = GetIndentString(indentLevel);
             try {
                 if (!map.ContainsKey(guid))
                     return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3} virtual";
-                STUInstance[] instances;
-                switch (GUID.Type(guid)) {
-                    default:
-                        return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3} unknown type";
-                    case 0x7C:
-                    case 0xA9:
-                        return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|String: \"{GetOWString(guid, handler, map)}\"";
-                    case 0x9E:
-                        instances = GetInstances(guid, handler, map);
-                        if (instances[0] == null) return null;
-                        STUAbilityInfo ability = instances[0] as STUAbilityInfo;
-                        return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|Ability: \"{GetOWString(ability?.Name, handler, map)}\" : {ability?.AbilityType}";
-                    case 0x90:
-                        instances = GetInstances(guid, handler, map);
-                        if (instances[0] == null) return null;
-                        STUEncryptionKey encryptionKey = instances[0] as STUEncryptionKey;
-                        return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|EncryptionKey: {encryptionKey?.KeyNameProper} : {encryptionKey?.Key}";
-                    case 0xD5:
-                        instances = GetInstances(guid, handler, map);
-                        if (instances[0] == null) return null;
-                        STUDescription description = instances[0] as STUDescription;
-                        return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|Description: \"{GetOWString(description?.String, handler, map)}\"";
-                }
+                return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|{ProcessGUIDInternal(guid, handler, map, indentLevel)}";
             }
             catch (Exception) {
                 return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3} BLTEDecoderException";
             }
         }
-        
-        internal static bool IsSimple(Type type) {
-            return type.IsPrimitive || type == typeof(string) || type == typeof(object);
-        }
 
-        internal static void DumpSTUInner(object instance, FieldInfo[] fields, CASCHandler handler,
+        internal static string DumpSTUInner(object instance, FieldInfo[] fields, CASCHandler handler,
             Dictionary<ulong, Record> map, uint indentLevel) {
+            StringBuilder sb = new StringBuilder();
             string indentString = GetIndentString(indentLevel);
+            uint fieldIndex = 0;
+            string nl = "";
             foreach (FieldInfo field in fields) {
+                if (fieldIndex == 0) nl = "";
+                if (fieldIndex > 0) nl = Environment.NewLine;
                 STUFieldAttribute element = field.GetCustomAttribute<STUFieldAttribute>();
                 if (element == null) continue;
                 object fieldValue = field.GetValue(instance);
@@ -94,54 +139,55 @@ namespace STUHashTool {
 
                 string nameString = $"{indentString}{nameStringBase}:";
                 if (fieldValue == null) {
-                    Console.Out.WriteLine($"{nameString} null");
+                    sb.Append($"{nl}{nameString} null");
+                    fieldIndex++;
                     continue;
                 }
                 if (field.FieldType.IsArray) {
                     uint index = 0;
                     if (field.FieldType.GetElementType() == typeof(char)) {
-                        Console.Out.WriteLine($"{nameString} \"{new string((char[])fieldValue)}\"");
+                        sb.Append($"{nl}{nameString} \"{new string((char[])fieldValue)}\"");
+                        fieldIndex++;
                         continue;
                     }
-                    Console.Out.WriteLine($"{nameString}");
+                    sb.Append($"{nl}{nameString}");
                     if (field.FieldType == typeof(STUGUID[])) {
                         foreach (STUGUID val in (STUGUID[]) fieldValue)
-                            Console.Out.WriteLine($"{GetGUIDProcessed(val, handler, map, indentLevel + 1)}");
+                            sb.Append($"\r\n{GetGUIDProcessed(val, handler, map, indentLevel + 1)}");
+                        fieldIndex++;
                         continue;
                     }
                     
                     IEnumerable enumerable = fieldValue as IEnumerable;
-                    if (enumerable == null) continue;
+                    if (enumerable == null) {fieldIndex++; continue;}
                     foreach (object val in enumerable) {
                         if (val == null) {
-                            Console.Out.WriteLine(
-                                $"{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]: null");
+                            sb.Append($"\r\n{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]: null");
                             continue;
                         }
-                        if (field.FieldType.IsClass && !IsSimple(field.FieldType.GetElementType())) {
-                            Console.Out.WriteLine($"{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]:");
-                            DumpSTUInner(val, GetFields(val.GetType()).OrderBy(x => x.Name).Where(
+                        if (field.FieldType.IsClass && !ISTU.IsSimple(field.FieldType.GetElementType())) {
+                            sb.AppendLine($"\r\n{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]:");
+                            sb.Append(DumpSTUInner(val, GetFields(val.GetType()).OrderBy(x => x.Name).Where(
                                     fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0)
-                                .ToArray(), handler, map, indentLevel + 2);
+                                .ToArray(), handler, map, indentLevel + 2));
                         } else {
-                            Console.Out.WriteLine(
-                                $"{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]: {val}");
+                            sb.Append($"\r\n{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]: {val}");
                         }
                         index++;
                     }
                 } else {
                     if (field.FieldType == typeof(STUGUID)) {
                         string output = GetGUIDProcessed((STUGUID) fieldValue, handler, map, indentLevel + 1);
-                        if (output == null) Console.Out.WriteLine($"{nameString}");
-                        Console.Out.WriteLine($"{nameString}\r\n{output}");
+                        // if (output == null) sb.AppendLine($"{nameString}");
+                        sb.Append($"{nl}{nameString}\r\n{output}");
                     } else if (field.FieldType.IsClass) {
                         //Console.Out.WriteLine($"{indentString}{fieldValue.GetType()}:");
-                        Console.Out.WriteLine($"{nameString}");
-                        DumpSTUInner(fieldValue, GetFields(fieldValue.GetType()).OrderBy(x => x.Name).Where(
+                        sb.AppendLine($"{nl}{nameString}");
+                        sb.Append(DumpSTUInner(fieldValue, GetFields(fieldValue.GetType()).OrderBy(x => x.Name).Where(
                                 fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),
-                            handler, map, indentLevel + 1);
+                            handler, map, indentLevel + 1));
                     } else {
-                        Console.Out.WriteLine($"{nameString} {fieldValue}");
+                        sb.Append($"{nl}{nameString} {fieldValue}");
                     }
                 }
                 //if (field.Name == "UnknownNested") {
@@ -149,7 +195,9 @@ namespace STUHashTool {
                 //        Debugger.Break();
                 //    }
                 //}
+                fieldIndex++;
             }
+            return sb.ToString();
         }
 
         public static void DumpSTUFull(Version2 stu, CASCHandler handler, Dictionary<ulong, Record> map,
@@ -164,9 +212,9 @@ namespace STUHashTool {
                 if (instanceWildcard != null && !string.Equals(instanceChecksum, instanceWildcard.TrimStart('0'),
                         StringComparison.InvariantCultureIgnoreCase)) continue;
                 Console.Out.WriteLine($"Found instance: {instance.GetType()}");
-                DumpSTUInner(instance, GetFields(instance.GetType()).OrderBy(x => x.Name).Where(
+                Console.Out.WriteLine(DumpSTUInner(instance, GetFields(instance.GetType()).OrderBy(x => x.Name).Where(
                         fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),
-                    handler, map, 1);
+                    handler, map, 1));
                 if (Debugger.IsAttached) {
                     Debugger.Break();
                 }

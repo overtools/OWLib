@@ -118,6 +118,8 @@ namespace STUHashTool {
             Console.Out.WriteLine("List instances in a directory of files: \"list {files directory}\"");
             Console.Out.WriteLine(
                 "Auto generate instance class: \"class {files directory} {instance, \"*\" for all}\"");
+            Console.Out.WriteLine(
+                "Test classes: \"test {CASC dir} {file type} {instance, \"*\" for all}\"");
         }
 
         private static void Main(string[] args) {
@@ -135,7 +137,8 @@ namespace STUHashTool {
                     PrintHelp();
                     return;
                 }
-                if (args[0] != "list" && args.Length < 3) {
+                if (args[0] == "class" && args.Length == 2) {} 
+                else if (args[0] != "list" && args.Length < 3) {
                     PrintHelp();
                     return;
                 }
@@ -175,7 +178,7 @@ namespace STUHashTool {
                 case "class":
                     directory1 = args[1];
                     directory2 = args[1];
-                    classInstance = args[2];
+                    classInstance = args.Length > 2 ? args[2] : "*";
                     if (args.Length > 3) {
                         outputFolder = args[3];
                         if (!Directory.Exists(outputFolder)) {
