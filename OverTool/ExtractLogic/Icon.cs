@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using CASCExplorer;
+using CASCLib;
 using OWLib;
 using OWLib.Types.STUD;
 using OWLib.Types.STUD.InventoryItem;

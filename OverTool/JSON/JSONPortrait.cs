@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CASCExplorer;
+using CASCLib;
 using Newtonsoft.Json;
 using OWLib;
 using OWLib.Types.STUD.InventoryItem;

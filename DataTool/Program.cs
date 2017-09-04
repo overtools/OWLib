@@ -5,14 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using CASCExplorer;
+using CASCLib;
 using DataTool.Flag;
 using DataTool.Helper;
 using OWLib;
 using STULib;
 using STULib.Types;
 using static DataTool.Helper.Logger;
-using Logger = CASCExplorer.Logger;
+using Logger = CASCLib.Logger;
 
 namespace DataTool {
     public class Program {

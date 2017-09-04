@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CASCExplorer;
+using CASCLib;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.STUD;

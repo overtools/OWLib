@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using CASCExplorer;
+using CASCLib;
 
 namespace OverTool {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

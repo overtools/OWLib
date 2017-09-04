@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using CASCExplorer;
+using CASCLib;
 using OverTool;
 using static OWReplayLib.Types.Replay;
 using ZstdNet;

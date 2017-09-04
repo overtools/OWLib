@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using CASCExplorer;
+using CASCLib;
 using OWLib;
 using OWLib.Types.STUD;
 
