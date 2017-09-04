@@ -12,6 +12,7 @@ namespace STULib.Impl.Version2HashComparer {
         public FieldData[] Fields;
         public uint Hash;
         public uint Size;
+        public ChainedInstanceData[] ChainedInstances;
     }
 
     public class FieldData {
@@ -24,6 +25,12 @@ namespace STULib.Impl.Version2HashComparer {
         public FieldData[] NestedFields;
         public bool PossibleArray;
         public uint PossibleArrayItemSize;
+    }
+
+    public class ChainedInstanceData {
+        public uint ParentField;
+        public uint InstanceChecksum;
+        public FieldData[] Fields;
     }
 
     public class FakeNestedInstance { }
@@ -104,6 +111,9 @@ namespace STULib.Impl.Version2HashComparer {
 
                 long stuOffset = header.Offset;
                 InstanceDiffData = new InstanceData[instanceInfo.Length];
+                uint[] fakeInstances = new uint[instanceInfo.Length];
+                uint[] chainedCount = new uint[fakeInstances.Length];
+                uint[] chainCounter = new uint[fakeInstances.Length];
                 for (int i = 0; i < instanceInfo.Length; ++i) {
                     stream.Position = stuOffset;
                     stuOffset += instanceInfo[i].InstanceSize;
@@ -114,11 +124,36 @@ namespace STULib.Impl.Version2HashComparer {
                         continue;
                     }
 
-
+                    fakeInstances[i] = instanceInfo[i].InstanceChecksum;
+                    chainedCount[i] = 0;
+                    chainCounter[i] = 0;
                     FieldData[] fields = FakeReadInstance(typeof(FakeInstanceType), instanceFields[fieldListIndex], reader,
                         (int)instanceInfo[i].InstanceSize - 4);
                     InstanceDiffData[i] = new InstanceData { Size = instanceInfo[i].InstanceSize, 
                         Hash = instanceInfo[i].InstanceChecksum, Fields = fields };
+                }
+                
+                for (int ci = 0; ci < fakeInstances.Length; ++ci) {
+                    if (instanceInfo[ci].AssignInstanceIndex > -1 &&
+                        instanceInfo[ci].AssignInstanceIndex < fakeInstances.Length) {
+                        chainedCount[instanceInfo[ci].AssignInstanceIndex]++;
+                    }
+                }
+                
+                for (int i = 0; i < fakeInstances.Length; ++i) {
+                    InstanceDiffData[i].ChainedInstances = new ChainedInstanceData[chainedCount[i]];
+                    if (instanceInfo[i].AssignInstanceIndex <= -1 ||
+                        instanceInfo[i].AssignInstanceIndex >= fakeInstances.Length) continue;
+                    int parentIndex = instanceInfo[i].AssignInstanceIndex;
+                    InstanceDiffData[instanceInfo[i].AssignInstanceIndex].ChainedInstances[chainCounter[parentIndex]] =
+                        new ChainedInstanceData {
+                            InstanceChecksum = fakeInstances[i],
+                            ParentField = instanceInfo[i].AssignFieldChecksum,
+                            Fields = InstanceDiffData[i].Fields
+                        };
+                    chainCounter[parentIndex]++;
+                    // Console.Out.WriteLine($"Found chained? {fakeInstances[instanceInfo[i].AssignInstanceIndex]:X8}:{instanceInfo[i].AssignFieldChecksum:X8} -- {InstanceDiffData[i]} of type {fakeInstances[i]:X8}");
+                    //SetField(instances[instanceInfo[i].AssignInstanceIndex], instanceInfo[i].AssignFieldChecksum, instances[i]);
                 }
             }
         }

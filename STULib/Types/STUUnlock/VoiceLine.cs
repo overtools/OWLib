@@ -3,7 +3,6 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
     [STU(0x8A9D1F89)]
-    // ReSharper disable once InconsistentNaming
     public class VoiceLine : Cosmetic {
         [STUField(0xF57B051E)]
         public STUGUID EffectResource;

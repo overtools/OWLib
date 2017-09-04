@@ -3,7 +3,6 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
     [STU(0x8E77E8A1)]
-    // ReSharper disable once InconsistentNaming
     public class HeroicIntro : Cosmetic {
         [STUField(0x3F5B86A4)]
         public STUGUID AnimationResource;
@@ -12,6 +11,6 @@ namespace STULib.Types.STUUnlock {
         public uint Unknown4;
 
         [STUField(0xDAD2E3A2)]
-        public STUGUID Unknown10;  //todo: check if STUGUID
+        public STUGUID Unknown10;
     }
 }

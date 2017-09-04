@@ -3,7 +3,6 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
     [STU(0xC23F89EB, "STUUnlock_Weapon")]
-    // ReSharper disable once InconsistentNaming
     public class Weapon : Cosmetic {
         [STUField(0xCDEF1203)]
         public uint Index;

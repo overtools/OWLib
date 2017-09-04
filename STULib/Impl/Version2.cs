@@ -21,7 +21,7 @@ namespace STULib.Impl {
 
         private ulong headerCrc = 0;
 
-        private Dictionary<long, STUInstance> instances;
+        protected Dictionary<long, STUInstance> instances;
 
         protected STUHeader header;
         protected STUInstanceRecord[] instanceInfo;

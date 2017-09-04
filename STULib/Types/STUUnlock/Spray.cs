@@ -3,7 +3,6 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
     [STU(0x84515D93)]
-    // ReSharper disable once InconsistentNaming
     public class Spray : Cosmetic {
         [STUField(0xABFBD552)]
         public STUDecal Decal;

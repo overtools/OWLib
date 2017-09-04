@@ -3,7 +3,6 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
     [STU(0xC6A72877, "STUUnlock_Pose")]
-    // ReSharper disable once InconsistentNaming
     public class Pose : Cosmetic {
         [STUField(0x2E5FBA99)]
         public STUGUID PoseResource;

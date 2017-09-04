@@ -3,7 +3,6 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
     [STU(0x6FE91269)]
-    // ReSharper disable once InconsistentNaming
     public class Portrait : Cosmetic {
         [STUField(0x2C01908B)]
         public ushort Bracket;

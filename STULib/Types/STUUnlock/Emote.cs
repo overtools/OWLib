@@ -3,7 +3,6 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
     [STU(0x0B517D2E, "STUUnlock_Emote")]
-    // ReSharper disable once InconsistentNaming
     public class Emote : Cosmetic {
         [STUField(0x28814AE5)]
         public STUVec3 Unknown1;
