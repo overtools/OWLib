@@ -47,6 +47,11 @@ namespace STUHashTool {
         public STUFieldInfo GetField(uint hash) {
             return Fields.FirstOrDefault(f => f.Checksum == hash);
         }
+
+        public STUInstanceInfo Copy() {
+            List<STUFieldInfo> newFields = Fields.Select(field => field.Copy()).ToList();
+            return new STUInstanceInfo { Fields = newFields, Checksum = Checksum, Occurrences = 1};
+        }
     }
 
     public class STUFieldInfo {
@@ -65,6 +70,26 @@ namespace STUHashTool {
         public List<STUFieldInfo> NestedFields;
         public bool IsChained;
         public STUInstanceInfo ChainedInstance;
+
+        public STUFieldInfo Copy() {
+            return new STUFieldInfo {
+                Checksum = Checksum,
+                Size = Size,
+                Occurrences = 1,
+                PossibleArray = PossibleArray,
+                PossibleArrayItemSize = PossibleArrayItemSize,
+                IsNestedStandard = IsNestedStandard,
+                IsNestedArray = IsNestedArray,
+                NestedFields = NestedFields?.Select(field => field.Copy()).ToList(),
+                IsChained = IsChained,
+                ChainedInstance = ChainedInstance?.Copy(),
+                
+                PossibleArrayOccurrences = PossibleArray ? 1 : 0,
+                NestedArrayOccurrences = IsNestedArray ? 1 : 0,
+                NestedStandardOccurrences = IsNestedStandard ? 1 : 0,
+                StandardOccurrences = PossibleArray || IsNestedArray || IsNestedStandard ? 0 : 1
+            };
+        }
         
         public bool ContainsNestedField(uint nestedField) {
             if (!IsNestedStandard && !IsNestedArray) return false;
@@ -268,18 +293,18 @@ namespace STUHashTool {
                                             Occurrences = 1
                                         };
                                         if (!instances.ContainsKey(chained.InstanceChecksum)) {
-                                            instances[chained.InstanceChecksum] = parentField.ChainedInstance;
+                                            instances[chained.InstanceChecksum] = parentField.ChainedInstance.Copy();
                                         } else {
                                             instances[chained.InstanceChecksum].Occurrences++;
 
                                             STUFieldInfo instanceParentField = instances[chained.InstanceChecksum]
                                                 .GetField(parentField.Checksum);
                                             if (instanceParentField == null) {
-                                                instances[chained.InstanceChecksum].Fields.Add(parentField);
+                                                instances[chained.InstanceChecksum].Fields.Add(parentField.Copy());
                                                 continue;
                                             }
                                             if (instanceParentField.ChainedInstance == null) {
-                                                instanceParentField.ChainedInstance = parentField.ChainedInstance;
+                                                instanceParentField.ChainedInstance = parentField.ChainedInstance.Copy();
                                                 continue;
                                             }
 
@@ -327,18 +352,17 @@ namespace STUHashTool {
                                             }
                                         }
                                         if (!instances.ContainsKey(chained.InstanceChecksum)) {
-                                            instances[chained.InstanceChecksum] = parentField.ChainedInstance;
+                                            instances[chained.InstanceChecksum] = parentField.ChainedInstance.Copy();
                                         } else {
                                             instances[chained.InstanceChecksum].Occurrences++;
-
                                             STUFieldInfo instanceParentField = instances[chained.InstanceChecksum]
                                                 .GetField(parentField.Checksum);
                                             if (instanceParentField == null) {
-                                                instances[chained.InstanceChecksum].Fields.Add(parentField);
+                                                instances[chained.InstanceChecksum].Fields.Add(parentField.Copy());
                                                 continue;
                                             }
                                             if (instanceParentField.ChainedInstance == null) {
-                                                instanceParentField.ChainedInstance = parentField.ChainedInstance;
+                                                instanceParentField.ChainedInstance = parentField.ChainedInstance.Copy();
                                                 continue;
                                             }
 
