@@ -6,8 +6,8 @@ namespace DataTool {
         public string Keyword;
         public string Description = null;
         public ushort[] TrackTypes = null;
-        public bool HasCustomFlags = false;
         public bool IsSensitive = false;
+        public Type CustomFlags = null;
 
         public ToolAttribute(string Keyword) {
             this.Keyword = Keyword;

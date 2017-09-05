@@ -3,29 +3,35 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.Flag;
+using DataTool.JSON;
+using Newtonsoft.Json;
 using OWLib;
 using STULib;
 using STULib.Types;
 using STULib.Types.STUUnlock;
-using static DataTool.Helper.CascIO;
+using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-unlocks", Description = "List hero unlocks", TrackTypes = new ushort[] { 0x75 })]
+    [Tool("list-unlocks", Description = "List hero unlocks", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ListFlags))]
     public class ListHeroUnlocks : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
         }
 
+        [JsonObject(MemberSerialization.OptOut)]
         public class Info {
             public string Name;
             public string Rarity;
             public string Type;
+            [JsonIgnore]
             public string Description;
+            [JsonIgnore]
             public Cosmetic Unlock;
+            [JsonConverter(typeof(GUIDConverter))]
             public ulong GUID;
 
             public Info(string Name, string Rarity, string Type, string Description, Cosmetic Unlock, ulong GUID) {
@@ -36,10 +42,35 @@ namespace DataTool.ToolLogic.List {
                 this.Unlock = Unlock;
                 this.GUID = GUID;
             }
-        };
+        }
+
+        internal void ParseJSON(Dictionary<string, Dictionary<string, HashSet<Info>>> unlocks, ListFlags toolFlags) {
+            string json = JsonConvert.SerializeObject(unlocks, Formatting.Indented);
+            if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
+                Log("Writing to {0}", toolFlags.Output);
+
+                CreateDirectoryFromFile(toolFlags.Output);
+
+                using (Stream file = File.OpenWrite(toolFlags.Output)) {
+                    using (TextWriter writer = new StreamWriter(file)) {
+                        writer.WriteLine(json);
+                    }
+                }
+            } else {
+                Console.Error.WriteLine(json);
+            }
+        }
 
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<string, Dictionary<string, HashSet<Info>>> unlocks = GatherUnlocks();
+            Dictionary<string, Dictionary<string, HashSet<Info>>> unlocks = GatherUnlocks(false);
+
+            if (toolFlags is ListFlags flags) {
+                if (flags.JSON) {
+                    ParseJSON(unlocks, flags);
+                    return;
+                }
+            }
+
             foreach (KeyValuePair<string, Dictionary<string, HashSet<Info>>> heroPair in unlocks) {
                 if (heroPair.Value?.Count == 0 || 
                     heroPair.Value.Any(it => it.Value?.Any(itt => itt?.Name != null) == false)) {
@@ -70,7 +101,7 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public Dictionary<string, Dictionary<string, HashSet<Info>>> GatherUnlocks() {
+        public Dictionary<string, Dictionary<string, HashSet<Info>>> GatherUnlocks(bool onlyAI) {
             Dictionary<string, Dictionary<string, HashSet<Info>>> @return = new Dictionary<string, Dictionary<string, HashSet<Info>>>();
             foreach (ulong key in TrackedFiles[0x75]) {
                 using (Stream stream = OpenFile(key)) {
@@ -90,25 +121,36 @@ namespace DataTool.ToolLogic.List {
                         continue;
                     }
 
-                    @return[name] = GatherUnlocks(hero.LootboxUnlocks);
+                    Dictionary<string, HashSet<Info>> unlocks = GatherUnlocks(hero.LootboxUnlocks, false);
+                    if (unlocks == null) {
+                        continue;
+                    }
+
+                    @return[name] = unlocks;
                 }
             }
             return @return;
         }
 
-        public Dictionary<string, HashSet<Info>> GatherUnlocks(ulong GUID) {
+        public Dictionary<string, HashSet<Info>> GatherUnlocks(ulong GUID, bool onlyAI) {
             Dictionary<string, HashSet<Info>> @return = new Dictionary<string, HashSet<Info>>();
 
             using (Stream stream = OpenFile(GUID)) {
                 if (stream == null) {
-                    return @return;
+                    return null;
                 }
 
                 ISTU stu = ISTU.NewInstance(stream, BuildVersion);
 
                 STUHeroUnlocks unlocks = stu.Instances.OfType<STUHeroUnlocks>().First();
                 if (unlocks == null) {
-                    return @return;
+                    return null;
+                }
+
+                if (onlyAI && unlocks.Unlocks != null) {
+                    return null;
+                } if (!onlyAI && unlocks.Unlocks == null) {
+                    return null;
                 }
 
                 @return["Default"] = GatherUnlocks(unlocks.SystemUnlocks?.Unlocks?.Select(it => (ulong)it));
@@ -184,7 +226,10 @@ namespace DataTool.ToolLogic.List {
                     name = $"{portrait.Tier} tier - {portrait.Bracket} - {portrait.Star} star";
                 }
 
-                return name == null ? null : new Info(name, unlock.CosmeticRarity.ToString(), unlock.GetType().Name, GetString(unlock.CosmeticDescription), unlock, GUID);
+                if (name == null) {
+                    name = $"{OWLib.GUID.LongKey(GUID):X12}";
+                }
+                return new Info(name, unlock.CosmeticRarity.ToString(), unlock.GetType().Name, GetString(unlock.CosmeticDescription), unlock, GUID);
             }
         }
     }

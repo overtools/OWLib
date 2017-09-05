@@ -5,7 +5,7 @@ using OWLib;
 using static DataTool.Program;
 
 namespace DataTool.Helper {
-    public static class CascIO {
+    public static class IO {
         private static Dictionary<ulong, string> GUIDTable = new Dictionary<ulong, string>();
 
         public static void WriteFile(Stream stream, ulong guid, string path) {
@@ -38,6 +38,16 @@ namespace DataTool.Helper {
             }
             catch {
                 return null;
+            }
+        }
+
+        public static void CreateDirectoryFromFile(string path) {
+            string dir = Path.GetDirectoryName(path);
+            if (string.IsNullOrWhiteSpace(dir)) {
+                return;
+            }
+            if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(dir);
             }
         }
 

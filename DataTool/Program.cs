@@ -74,13 +74,13 @@ namespace DataTool {
                 if (string.Equals(attrib.Keyword, Flags.Mode, StringComparison.InvariantCultureIgnoreCase)) {
                     TargetTool = Activator.CreateInstance(type) as ITool;
 
-                    if (attrib.HasCustomFlags) {
-                        Type flags = type.Assembly.GetType(type.FullName + ".Flags");
-                        if (flags == null || !typeof(ICLIFlags).IsAssignableFrom(flags)) {
-                            continue;
+                    if (attrib.CustomFlags != null) {
+                        Type flags = attrib.CustomFlags;
+                        if (typeof(ICLIFlags).IsAssignableFrom(flags)) {
+                            TargetToolFlags = typeof(FlagParser).GetMethod("Parse", new Type[] { }).MakeGenericMethod(flags).Invoke(null, null) as ICLIFlags;
                         }
-                        TargetToolFlags = typeof(FlagParser).GetMethod("Parse").MakeGenericMethod(flags).Invoke(null, null) as ICLIFlags;
                     }
+                    break;
                 }
             }
 
@@ -149,7 +149,7 @@ namespace DataTool {
 
             Log("Mapping...");
             TrackedFiles[0x90] = new HashSet<ulong>();
-            CascIO.MapCMF();
+            IO.MapCMF();
 
             #region Key Detection
             if (!Flags.SkipKeys) {
@@ -159,7 +159,7 @@ namespace DataTool {
                     if (!ValidKey(key)) {
                         continue;
                     }
-                    using (Stream stream = CascIO.OpenFile(Files[key])) {
+                    using (Stream stream = IO.OpenFile(Files[key])) {
                         if (stream == null) {
                             continue;
                         }
@@ -211,9 +211,9 @@ namespace DataTool {
             
             foreach (Type t in tools) {
                 ToolAttribute attrib = t.GetCustomAttribute<ToolAttribute>();
-                if (attrib.HasCustomFlags) {
-                    Type flags = t.Assembly.GetType(t.FullName + "+Flags");
-                    if (flags == null || !typeof(ICLIFlags).IsAssignableFrom(flags)) {
+                if (attrib.CustomFlags != null) {
+                    Type flags = attrib.CustomFlags;
+                    if(typeof(ICLIFlags).IsAssignableFrom(flags)) {
                         continue;
                     }
                     Log();
