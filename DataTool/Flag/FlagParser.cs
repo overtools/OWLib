@@ -140,28 +140,32 @@ namespace DataTool.Flag {
                 Help<T>(true);
             }
             Console.Out.WriteLine();
-            if (!skipOpener) {
-                Console.Out.WriteLine("Flags:");
-            }
-            Console.Out.WriteLine($"  {{0, -{maxflags}}} | {{1, -{maxstrs}}} | {{2}}", "flags", "help", "default");
-            Console.Out.WriteLine("".PadLeft(maxflags + maxstrs + 20, '-'));
-            for (int i = 0; i < helpstrs.Count; ++i) {
-                string helpflag = helpflags[i];
-                string helpstr = helpstrs[i];
-                string helpdefault = helpdefaults[i];
-                Console.Out.WriteLine($"  {{0, -{maxflags}}} | {{1, -{maxstrs}}} | {{2}}", helpflag, helpstr, helpdefault);
+            if (helpstrs.Count > 0) {
+                if (!skipOpener) {
+                    Console.Out.WriteLine("Flags:");
+                }
+                Console.Out.WriteLine($"  {{0, -{maxflags}}} | {{1, -{maxstrs}}} | {{2}}", "flag", "help", "default");
+                Console.Out.WriteLine("".PadLeft(maxflags + maxstrs + 20, '-'));
+                for (int i = 0; i < helpstrs.Count; ++i) {
+                    string helpflag = helpflags[i];
+                    string helpstr = helpstrs[i];
+                    string helpdefault = helpdefaults[i];
+                    Console.Out.WriteLine($"  {{0, -{maxflags}}} | {{1, -{maxstrs}}} | {{2}}", helpflag, helpstr, helpdefault);
+                }
             }
             int maxindex = Math.Max("index".Length, ((int)Math.Floor(positionals.Count / 10d)) + 1);
-            if (!skipOpener) {
+            if (positionals.Count > 0) {
                 Console.Out.WriteLine();
-                Console.Out.WriteLine("Positionals:");
-            }
-            Console.Out.WriteLine($"  {{0, -{maxindex}}} | {{1, -{maxpositionals}}} | {{2}}", "index", "positional", "help");
-            Console.Out.WriteLine("".PadLeft(maxindex + maxpositionals + 30, '-'));
-            foreach (KeyValuePair<int, string> pair in positionals) {
-                string positional = pair.Value;
-                string positionalstr = positionalsstr[pair.Key];
-                Console.Out.WriteLine($"  {{0, -{maxindex}}} | {{1, -{maxpositionals}}} | {{2}}", pair.Key, positional, positionalstr);
+                if (!skipOpener) {
+                    Console.Out.WriteLine("Positionals:");
+                }
+                Console.Out.WriteLine($"  {{0, -{maxindex}}} | {{1, -{maxpositionals}}} | {{2}}", "index", "positional", "help");
+                Console.Out.WriteLine("".PadLeft(maxindex + maxpositionals + 30, '-'));
+                foreach (KeyValuePair<int, string> pair in positionals) {
+                    string positional = pair.Value;
+                    string positionalstr = positionalsstr[pair.Key];
+                    Console.Out.WriteLine($"  {{0, -{maxindex}}} | {{1, -{maxpositionals}}} | {{2}}", pair.Key, positional, positionalstr);
+                }
             }
             extraHelp?.Invoke();
         }

@@ -37,6 +37,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -50,17 +53,20 @@
   <ItemGroup>
     <Compile Include="Flag\AliasAttribute.cs" />
     <Compile Include="Flag\CLIFlagAttribute.cs" />
+    <Compile Include="Flag\Converter.cs" />
     <Compile Include="Flag\FlagParser.cs" />
     <Compile Include="Flag\ICLIFlags.cs" />
-    <Compile Include="Helper\CascIO.cs" />
+    <Compile Include="Helper\IO.cs" />
     <Compile Include="Helper\LinqExtensions.cs" />
     <Compile Include="Helper\Logger.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="ITool.cs" />
+    <Compile Include="JSON\GUIDConverter.cs" />
     <Compile Include="ToolFlags.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolAttribute.cs" />
+    <Compile Include="ToolLogic\List\ListFlags.cs" />
     <Compile Include="ToolLogic\List\ListHeroUnlocks.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +74,7 @@
     <AdditionalFiles Include="Helper\GUIDNames.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AdditionalFiles>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CASCExplorer\CascLib\CascLib.csproj">
