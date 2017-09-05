@@ -77,6 +77,10 @@ namespace STULib.Impl.Version2HashComparer {
     public class Version2Comparer : Version2 {
         public InstanceData[] InstanceDiffData;
 
+        public bool IsInData(uint hash, FieldData[] fields) {
+            return InstanceDiffData.Any(data => data?.Hash == hash && data.Fields == fields);
+        }
+
         public Version2Comparer(Stream stuStream, uint owVersion) : base(stuStream, owVersion) {
         }
 

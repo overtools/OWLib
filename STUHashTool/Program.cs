@@ -69,7 +69,8 @@ namespace STUHashTool {
         public int StandardOccurrences;
         public List<STUFieldInfo> NestedFields;
         public bool IsChained;
-        public STUInstanceInfo ChainedInstance;
+        public STUInstanceInfo ChainedInstance;  
+        // note: you should use the chained fields that are defied in the global instance object, not the fields here
 
         public STUFieldInfo Copy() {
             return new STUFieldInfo {
@@ -277,11 +278,8 @@ namespace STUHashTool {
                                 instances[instance1.Hash] = new STUInstanceInfo {
                                     Checksum = instance1.Hash,
                                     Occurrences = 1,
-                                    Fields = new List<STUFieldInfo>()
+                                    Fields = ConvertFields(instance1.Fields).ToList()
                                 };
-                                foreach (FieldData f in instance1.Fields) {
-                                    instances[instance1.Hash].Fields.Add(ConvertField(f));
-                                }
                                 if (instance1.ChainedInstances.Length >= 1) {
                                     foreach (ChainedInstanceData chained in instance1.ChainedInstances) {
                                         STUFieldInfo parentField =
@@ -294,8 +292,13 @@ namespace STUHashTool {
                                         };
                                         if (!instances.ContainsKey(chained.InstanceChecksum)) {
                                             instances[chained.InstanceChecksum] = parentField.ChainedInstance.Copy();
+                                            if (file1STU2.IsInData(chained.InstanceChecksum, chained.Fields)) {
+                                                instances[chained.InstanceChecksum].Occurrences = 0;
+                                            }
                                         } else {
-                                            instances[chained.InstanceChecksum].Occurrences++;
+                                            if (!file1STU2.IsInData(chained.InstanceChecksum, chained.Fields)) {
+                                                instances[chained.InstanceChecksum].Occurrences++;
+                                            }
 
                                             STUFieldInfo instanceParentField = instances[chained.InstanceChecksum]
                                                 .GetField(parentField.Checksum);
@@ -309,11 +312,14 @@ namespace STUHashTool {
                                             }
 
                                             foreach (FieldData chainedField in chained.Fields) {
-                                                STUFieldInfo gotChainedF = instances[chained.InstanceChecksum].GetField(parentField.Checksum).ChainedInstance.GetField(chainedField.Hash);
+                                                STUFieldInfo gotChainedF = instances[chained.InstanceChecksum]
+                                                    .GetField(parentField.Checksum).ChainedInstance
+                                                    .GetField(chainedField.Hash);
                                                 if (gotChainedF != null) {
                                                     IncrementNestedCount(gotChainedF, chainedField);
                                                 } else {
-                                                    instances[chained.InstanceChecksum].GetField(parentField.Checksum).ChainedInstance.Fields.Add(ConvertField(chainedField));
+                                                    instances[chained.InstanceChecksum].GetField(parentField.Checksum)
+                                                        .ChainedInstance.Fields.Add(ConvertField(chainedField));
                                                 }
                                             }
                                         }
@@ -353,8 +359,13 @@ namespace STUHashTool {
                                         }
                                         if (!instances.ContainsKey(chained.InstanceChecksum)) {
                                             instances[chained.InstanceChecksum] = parentField.ChainedInstance.Copy();
+                                            if (file1STU2.IsInData(chained.InstanceChecksum, chained.Fields)) {
+                                                instances[chained.InstanceChecksum].Occurrences = 0;
+                                            }
                                         } else {
-                                            instances[chained.InstanceChecksum].Occurrences++;
+                                            if (!file1STU2.IsInData(chained.InstanceChecksum, chained.Fields)) {
+                                                instances[chained.InstanceChecksum].Occurrences++;
+                                            }
                                             STUFieldInfo instanceParentField = instances[chained.InstanceChecksum]
                                                 .GetField(parentField.Checksum);
                                             if (instanceParentField == null) {
@@ -649,7 +660,7 @@ namespace STUHashTool {
                         return newTodoInstances;
                     }
                     
-                    newTodoInstances = FindNestedTodo(toplevelInstances, field.ChainedInstance.Fields, newTodoInstances.ToArray(), field.ChainedInstance.Checksum);
+                    newTodoInstances = FindNestedTodo(toplevelInstances, toplevelInstances[field.ChainedInstance.Checksum].Fields, newTodoInstances.ToArray(), field.ChainedInstance.Checksum);
                 }
                 if (!field.IsNestedArray && !field.IsNestedStandard) continue;
                 foreach (KeyValuePair<uint, STUInstanceInfo> toplevelInstance in toplevelInstances) {
