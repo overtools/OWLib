@@ -29,6 +29,8 @@ namespace STULib.Impl {
         protected STUInstanceFieldList[] instanceFieldLists;
         protected STUInstanceField[][] instanceFields;
 
+        protected Dictionary<Array, int[]> EmbedArrayRequests;
+
         private uint buildVersion;
 
         protected BinaryReader metadataReader;
@@ -59,9 +61,9 @@ namespace STULib.Impl {
                 uint parent = 0;
                 if (instanceArrayRef?.Length > info.InstanceIndex) {
                     parent = instanceArrayRef[info.InstanceIndex].Checksum;
-                } 
-                
-                array.SetValue(GetValueArrayInner(type, element, parent, writtenField.FieldChecksum), i);
+                }
+                object test = GetValueArrayInner(type, element, parent, writtenField.FieldChecksum);
+                array.SetValue(test, i);
             }
             return array;
         }
@@ -118,7 +120,7 @@ namespace STULib.Impl {
                     return reader.ReadChar();
                 default:
                     if (type.IsEnum) {
-                        return GetValueArrayInner(type.GetEnumUnderlyingType(), element, parent, checksum);
+                        return Enum.ToObject(type, GetValueArrayInner(type.GetEnumUnderlyingType(), element, parent, checksum));
                     }
                     if (type.IsClass || type.IsValueType) {
                         return InitializeObject(Activator.CreateInstance(type), type, parent, checksum, reader, true);
@@ -129,26 +131,45 @@ namespace STULib.Impl {
 
         private object GetPrimitiveVarValue(BinaryReader reader, STUInstanceField field, Type target) {
             object value = 0;
-            uint size = field.FieldSize > 0 ? field.FieldSize : (uint)Marshal.SizeOf(target);
-            switch (size) {
-                case 16:
-                    value = reader.ReadDecimal();
-                    break;
-                case 8:
-                    value = reader.ReadUInt64();
-                    break;
-                case 4:
-                    value = reader.ReadUInt32();
-                    break;
-                case 2:
-                    value = reader.ReadUInt16();
-                    break;
-                case 1:
-                    value = reader.ReadByte();
-                    break;
-                default: throw new InvalidDataException();
+            bool signed = Convert.ToBoolean(target.GetField("MinValue").GetValue(null));
+            uint size = field.FieldSize > 0 ? field.FieldSize : (uint) Marshal.SizeOf(target);
+            if (size == 16) value = reader.ReadDecimal();
+            if (!signed) {
+                switch (size) {
+                    case 16: break;
+                    case 8:
+                        value = reader.ReadUInt64();
+                        break;
+                    case 4:
+                        value = reader.ReadUInt32();
+                        break;
+                    case 2:
+                        value = reader.ReadUInt16();
+                        break;
+                    case 1:
+                        value = reader.ReadByte();
+                        break;
+                    default: throw new InvalidDataException();
+                }
+            } else {
+                switch (size) {
+                    case 16: break;
+                    case 8:
+                        value = reader.ReadInt64();
+                        break;
+                    case 4:
+                        value = reader.ReadInt32();
+                        break;
+                    case 2:
+                        value = reader.ReadInt16();
+                        break;
+                    case 1:
+                        value = reader.ReadSByte();
+                        break;
+                    default: throw new InvalidDataException();
+                }
             }
-            return Convert.ChangeType(value, target);  // if you get an OverflowException, you need to use a bigger type
+            return Convert.ChangeType(value, target); // if you get an OverflowException, you need to use a bigger type
         }
 
         // ReSharper disable once UnusedParameter.Local
@@ -228,14 +249,40 @@ namespace STULib.Impl {
 
         private object InitializeObjectArray(STUInstanceField field, Type type, BinaryReader reader, STUFieldAttribute element) {
             if (field.FieldSize == 0 && field.FieldChecksum != 0) {
-                STUNestedInfo nestedInfo = reader.Read<STUNestedInfo>();
-                Array array = Array.CreateInstance(type, (uint)nestedInfo.FieldListIndex);
-                for (uint i = 0; i < (uint)nestedInfo.FieldListIndex; ++i) {
+                STUInlineArrayInfo inlineInfo = reader.Read<STUInlineArrayInfo>();
+                if (inlineInfo.Size > 600000) return null; // i feel that it's unlikley that there will be an inline with this count, exceptions if this isn't checked.
+                Array array = Array.CreateInstance(type, (uint)inlineInfo.Count);
+                // if (inlineInfo.FieldListIndex == 0) return array;
+                for (uint i = 0; i < (uint)inlineInfo.Count; ++i) {
                     stream.Position += element.Padding;
                     uint fieldIndex = reader.ReadUInt32();
                     object instance = Activator.CreateInstance(type);
+                    if (fieldIndex >= instanceFieldLists.Length) continue;
                     array.SetValue(InitializeObject(instance, type, instanceFields[fieldIndex], reader), i);
                 }
+                return array;
+            } if (typeof(STUInstance).IsAssignableFrom(type)) {
+                STUArray arrayDef = new STUArray();
+                int embedArrayOffset = reader.ReadInt32();
+                metadata.Position = embedArrayOffset;
+                int embedCount = metadataReader.ReadInt32();
+                if (embedCount == 0) {
+                    return null;
+                }
+                arrayDef.Count = (uint)embedCount;
+                arrayDef.Unknown = metadataReader.ReadUInt32();
+                metadata.Position = metadataReader.ReadInt64();
+                
+                Array array = Array.CreateInstance(type, arrayDef.Count);
+                
+                List<int> request = new List<int>();
+                for (int i = 0; i < arrayDef.Count; i++) {
+                    int value = metadataReader.ReadInt32();
+                    metadataReader.ReadInt32(); // Padding for in-place deserialization
+                    if (value == -1) return null;
+                    request.Add(value);
+                }
+                EmbedArrayRequests[array] = request.ToArray();
                 return array;
             }
             int offset = reader.ReadInt32();
@@ -334,16 +381,19 @@ namespace STULib.Impl {
                 else {
                     if (writtenField.FieldSize == 0) {
                         if (field.FieldType.IsClass || field.FieldType.IsValueType) {
-                            STUNestedInfo nested = reader.Read<STUNestedInfo>();
-                            object nestedInstance = Activator.CreateInstance(field.FieldType);
+                            STUInlineInfo inline = reader.Read<STUInlineInfo>();
+                            object inlineInstance = Activator.CreateInstance(field.FieldType);
+                            if (inline.FieldListIndex < 0 || inline.FieldListIndex >= instanceFields.Length) {
+                                continue;
+                            }
                             field.SetValue(instance,
-                                InitializeObject(nestedInstance, field.FieldType, instanceFields[nested.FieldListIndex],
+                                InitializeObject(inlineInstance, field.FieldType, instanceFields[inline.FieldListIndex],
                                     reader));
                             continue;
                         }
                     }
                     if (writtenField.FieldSize == 4 && field.FieldType.IsClass && !IsSimple(field.FieldType)) {
-                        // this is chained, don't initialise the class
+                        // this is embedded, don't initialise the class
                         reader.BaseStream.Position += writtenField.FieldSize;
                         continue;
                     }
@@ -422,6 +472,7 @@ namespace STULib.Impl {
 
         // ReSharper disable once PossibleNullReferenceException
         protected virtual void ReadInstanceData(long offset) {
+            EmbedArrayRequests = new Dictionary<Array, int[]>();
             stream.Position = offset;
             GetHeaderCRC();
             stream.Position = offset;
@@ -444,6 +495,11 @@ namespace STULib.Impl {
 
                         if (instanceTypes.ContainsKey(instanceInfo[i].InstanceChecksum)) {
                             int fieldListIndex = reader.ReadInt32();
+                            if (instanceFields.Length <= fieldListIndex || fieldListIndex < 0) {
+                                Debugger.Log(0, "STU", $"[Version2:{instanceInfo[i].InstanceChecksum:X}]: Instance field list was not valid ({fieldListIndex})\n");
+                                // todo: why does this happen? Does it just mean that the instance doesn't exist?
+                                continue;
+                            }
                             instances[i] = ReadInstance(instanceTypes[instanceInfo[i].InstanceChecksum],
                                 instanceFields[fieldListIndex], reader, (int) instanceInfo[i].InstanceSize - 4);
                         }
@@ -455,6 +511,18 @@ namespace STULib.Impl {
                             instanceInfo[i].AssignInstanceIndex < instances.Count) {
                             SetField(instances[instanceInfo[i].AssignInstanceIndex],
                                 instanceInfo[i].AssignFieldChecksum, instances[i]);
+                            instances[instanceInfo[i].AssignInstanceIndex].Usage = InstanceUsage.Embed;
+                        }
+                    }
+                    foreach (KeyValuePair<Array,int[]> request in EmbedArrayRequests) {
+                        int arrayIndex = 0;
+                        foreach (int i in request.Value) {
+                            if (i < instances.Count) {
+                                request.Key.SetValue(instances[i], arrayIndex);
+                                if (instances[i] == null) continue;
+                                instances[i].Usage = InstanceUsage.EmbedArray;
+                            }
+                            arrayIndex++;
                         }
                     }
                 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Data.HashFunction.CRCStandards;
+using System.Diagnostics;
 using System.Text;
 
 namespace STULib {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
     public class STUFieldAttribute : Attribute {
         public bool ReferenceArray = false;
         public bool ReferenceValue = false;
@@ -40,5 +42,7 @@ namespace STULib {
                 }
             }
         }
+
+        internal string DebuggerDisplay => $"{Checksum:X}{(Name != null ? $"/{Name}" : "")}{(DummySize != -1 ? $" DUMMY (DSize: {DummySize})" : "")}";
     }
 }

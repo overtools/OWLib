@@ -50,7 +50,8 @@ namespace STUHashTool {
                 [0x9E] = "Ability",
                 [0xD5] = "Description",
                 [0x58] = "HeroUnlocks",
-                [0xA5] = "Unlock"
+                [0xA5] = "Unlock",
+                [0x75] = "Hero"
             };
             return types.ContainsKey(GUID.Type(guid)) ? types[GUID.Type(guid)] : null;
         }
@@ -98,8 +99,12 @@ namespace STUHashTool {
                         if (unlock is Currency) {
                             return $"{nameStringBase}:Credits: {(unlock as Currency).Amount} Credits";
                         } else {
-                            return $"{nameStringBase}:{unlock.GetType().Name}: {ProcessGUIDInternal(unlock.CosmeticName, handler, map, indentLevel, false)}";
+                            return $"{nameStringBase}:{unlock.GetType().Name}: {GetOWString(unlock.CosmeticName, handler, map)}";
                         }
+                    case 0x75:
+                        instances = GetInstances(guid, handler, map);
+                        STUHero hero = instances.OfType<STUHero>().First();
+                        return $"{nameString}{GetOWString(hero?.Name, handler, map)}";
                 }
             }
             catch (Exception) {
@@ -205,12 +210,9 @@ namespace STUHashTool {
             // tries to properly dump an STU to the console
             // uses handler to load GUIDs, and process the types
 
-            foreach (STUInstance instance in stu.Instances) {
-                if (instance == null) continue;
-                string instanceChecksum =
-                    Convert.ToString(instance.GetType().GetCustomAttribute<STUAttribute>().Checksum, 16);
-                if (instanceWildcard != null && !string.Equals(instanceChecksum, instanceWildcard.TrimStart('0'),
-                        StringComparison.InvariantCultureIgnoreCase)) continue;
+            foreach (STUInstance instance in stu.Instances.Where(x => x?.Usage == InstanceUsage.Root)) {
+                string[] instanceChecksums = instance.GetType().GetCustomAttributes<STUAttribute>().Select(x => Convert.ToString(x.Checksum, 16)).ToArray();
+                if (instanceWildcard != null && !instanceChecksums.Any(x => string.Equals(x, instanceWildcard.TrimStart('0'),  StringComparison.InvariantCultureIgnoreCase))) continue;
                 Console.Out.WriteLine($"Found instance: {instance.GetType()}");
                 Console.Out.WriteLine(DumpSTUInner(instance, GetFields(instance.GetType()).OrderBy(x => x.Name).Where(
                         fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),

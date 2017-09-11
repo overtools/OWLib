@@ -25,20 +25,23 @@ namespace STULib.Types {
         public uint Unknown3;
 
         [STUField(0xC872F4B1)]
-        public Unknown Unknown4;
+        public STU_0CABB5CE Unknown4;
 
         [STUField(0xDA765F6C)]
         public uint Unknown5;
 
-        public class Unknown {
+        public class STU_0CABB5CE {
             [STUField(0x643BEFB1)]
-            public uint Unknown1;
+            public int Unknown1;
 
             [STUField(0x44ABE251)]
-            public uint Unknown2;
+            public int Unknown2;
 
             [STUField(0x2CA853F9)]
-            public uint Unknown3;
+            public int Unknown3;
+            
+            [STUField(0x27ADAA07)]
+            public int Unknown4;
         }
     }
 }

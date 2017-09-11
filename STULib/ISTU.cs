@@ -11,9 +11,11 @@ using static STULib.Types.Generic.Common;
 namespace STULib {
     public abstract class ISTU : IDisposable {
         protected internal static Dictionary<uint, Type> instanceTypes;
+        protected internal static Dictionary<uint, Type> enumTypes;
         protected internal static Dictionary<Type, string> instanceNames;
 
         public static Dictionary<uint, Type> InstanceTypes => instanceTypes;
+        public static Dictionary<uint, Type> EnumTypes => enumTypes;
         
         public static bool IsSimple(Type type) {
             return type.IsPrimitive || type == typeof(string) || type == typeof(object);
@@ -80,6 +82,18 @@ namespace STULib {
                     instanceTypes[attrib.Checksum] = type;
                 }
             }
+            Type t2 = typeof(Enum);
+            List<Type> types2 = asm.GetTypes().Where(type => type != t2 && t2.IsAssignableFrom(type)).ToList();
+            enumTypes = new Dictionary<uint, Type>();
+            foreach (Type type in types2) {
+                STUEnumAttribute attribute = type.GetCustomAttribute<STUEnumAttribute>();
+                if (attribute == null) continue;
+                if (attribute.Checksum == 0) continue;
+                if (enumTypes.ContainsKey(attribute.Checksum)) {
+                    throw new Exception($"Collision of STUEnum checksums ({attribute.Checksum:X})");
+                }
+                enumTypes[attribute.Checksum] = type;
+            }
         }
 
         public abstract IEnumerable<STUInstance> Instances { get; }
@@ -104,6 +118,7 @@ namespace STULib {
             using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, true)) {
                 if (type != null) {
                     return (ISTU)Activator.CreateInstance(type, stream, owVersion);
+                    // return new Version2Comparer(stream, owVersion);  // for debug
                 }
                 if (Version1.IsValidVersion(reader)) {
                     stream.Position = pos;

@@ -6,7 +6,7 @@ namespace STULib.Types.STUUnlock {
         public STUGUID CosmeticName;
         
         [STUField(0xBB99FCD3, "m_rarity")]
-        public Common.Rarity CosmeticRarity;
+        public Enums.STUEnumRarity CosmeticRarity;
         
         [STUField(0x53145FAF)]
         public STUGUID CosmeticAvailableIn;
