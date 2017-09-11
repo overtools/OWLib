@@ -62,8 +62,7 @@ namespace STULib.Impl {
                 if (instanceArrayRef?.Length > info.InstanceIndex) {
                     parent = instanceArrayRef[info.InstanceIndex].Checksum;
                 }
-                object test = GetValueArrayInner(type, element, parent, writtenField.FieldChecksum);
-                array.SetValue(test, i);
+                array.SetValue(GetValueArrayInner(type, element, parent, writtenField.FieldChecksum), i);
             }
             return array;
         }
