@@ -19,7 +19,7 @@ namespace STULib.Types {
         [STUField(0x322C521A)]
         public STUGUID StatescriptHeroComponent2;
 
-        [STUField(0x3446F580)]
+        [STUField(0x3446F580, "m_description")]
         public STUGUID Description;
 
         [STUField(0x38BFB46C)]
@@ -59,7 +59,7 @@ namespace STULib.Types {
         public STUGUID StatescriptHeroComponent5;
 
         [STUField(0xB7A1D145)]
-        public uint UnknownID;  // weird, sometimes works as hero type, but not always
+        public int UnknownID;  // weird, sometimes works as hero type, but not always
 
         [STUField(0xC2FE396F)]
         public Statescript[] StatescriptComponents1;

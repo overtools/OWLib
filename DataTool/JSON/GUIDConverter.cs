@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Newtonsoft.Json;
 using OWLib;
 using static STULib.Types.Generic.Common;
@@ -30,6 +31,34 @@ namespace DataTool.JSON {
 
         public override bool CanConvert(Type objectType) {
             return typeof(STUGUID).IsAssignableFrom(objectType) || typeof(ulong).IsAssignableFrom(objectType);
+        }
+    }
+    
+    public class GUIDArrayConverter : GUIDConverter {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {          
+            ulong[] keys;
+            STUGUID[] guid = value as STUGUID[];
+            if (guid != null) {
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                keys = guid.Cast<ulong>().ToArray();
+            } else {
+                keys = (ulong[])value;
+            }
+
+            writer.WriteStartArray();
+            foreach (ulong key in keys) {
+                writer.WriteStartObject();
+                writer.WritePropertyName("Key");
+                writer.WriteValue($"{key:X16}");
+                writer.WritePropertyName("String");
+                writer.WriteValue($"{GUID.LongKey(key):X12}.{GUID.Type(key):X3}");
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
+        }
+
+        public override bool CanConvert(Type objectType) {
+            return typeof(STUGUID[]).IsAssignableFrom(objectType) || typeof(ulong).IsAssignableFrom(objectType);
         }
     }
 }

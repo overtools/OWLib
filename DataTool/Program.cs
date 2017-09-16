@@ -22,7 +22,7 @@ namespace DataTool {
         public static CASCConfig Config;
         public static OwRootHandler Root;
         public static ToolFlags Flags;
-        public static uint BuildVersion = 0;
+        public static uint BuildVersion;
 
         public static bool ValidKey(ulong key) => Files.ContainsKey(key);
         
@@ -45,12 +45,11 @@ namespace DataTool {
                     }
                     tools.Add(tt);
 
-                    if (attrib.TrackTypes != null) {
-                        foreach (ushort type in attrib.TrackTypes) {
-                            if (!TrackedFiles.ContainsKey(type)) {
-                                TrackedFiles[type] = new HashSet<ulong>();
-                            } 
-                        }
+                    if (attrib.TrackTypes == null) continue;
+                    foreach (ushort type in attrib.TrackTypes) {
+                        if (!TrackedFiles.ContainsKey(type)) {
+                            TrackedFiles[type] = new HashSet<ulong>();
+                        } 
                     }
                 }
             }
@@ -63,32 +62,35 @@ namespace DataTool {
 
             Logger.EXIT = !Flags.GracefulExit;
 
-            ITool TargetTool = null;
-            ICLIFlags TargetToolFlags = null;
+            ITool targetTool = null;
+            ICLIFlags targetToolFlags = null;
 
             #region Tool Activation
 
             foreach (Type type in tools) {
                 ToolAttribute attrib = type.GetCustomAttribute<ToolAttribute>();
 
-                if (string.Equals(attrib.Keyword, Flags.Mode, StringComparison.InvariantCultureIgnoreCase)) {
-                    TargetTool = Activator.CreateInstance(type) as ITool;
+                if (!string.Equals(attrib.Keyword, Flags.Mode, StringComparison.InvariantCultureIgnoreCase)) continue;
+                targetTool = Activator.CreateInstance(type) as ITool;
 
-                    if (attrib.CustomFlags != null) {
-                        Type flags = attrib.CustomFlags;
-                        if (typeof(ICLIFlags).IsAssignableFrom(flags)) {
-                            TargetToolFlags = typeof(FlagParser).GetMethod("Parse", new Type[] { }).MakeGenericMethod(flags).Invoke(null, null) as ICLIFlags;
-                        }
+                if (attrib.CustomFlags != null) {
+                    Type flags = attrib.CustomFlags;
+                    if (typeof(ICLIFlags).IsAssignableFrom(flags)) {
+                        targetToolFlags = typeof(FlagParser).GetMethod("Parse", new Type[] { }).MakeGenericMethod(flags).Invoke(null, null) as ICLIFlags;
                     }
-                    break;
                 }
+                break;
             }
 
             #endregion
 
-            if (TargetTool == null) {
+            if (targetTool == null) {
                 FlagParser.Help<ToolFlags>(false);
                 PrintHelp(tools);
+                if (Debugger.IsAttached) {
+                    Debugger.Break();
+                }
+                return;
             }
 
             #region Initialize CASC
@@ -176,7 +178,7 @@ namespace DataTool {
             #endregion
 
             Log("Tooling...");
-            TargetTool?.Parse(TargetToolFlags);
+            targetTool.Parse(targetToolFlags);
             if (Debugger.IsAttached) {
                 Debugger.Break();
             }
@@ -190,12 +192,12 @@ namespace DataTool {
             }
         }
 
-        private static void PrintHelp(IEnumerable<Type> tools_) {
+        private static void PrintHelp(IEnumerable<Type> eTools) {
             Log();
             Log("Modes:");
             Log("  {0, -20} | {1, -40}", "mode", "description");
             Log("".PadLeft(94, '-'));
-            List<Type> tools = new List<Type>(tools_);
+            List<Type> tools = new List<Type>(eTools);
             tools.Sort(new ToolComparer());
             foreach (Type t in tools) {
                 ToolAttribute attrib = t.GetCustomAttribute<ToolAttribute>();
@@ -211,15 +213,14 @@ namespace DataTool {
             
             foreach (Type t in tools) {
                 ToolAttribute attrib = t.GetCustomAttribute<ToolAttribute>();
-                if (attrib.CustomFlags != null) {
-                    Type flags = attrib.CustomFlags;
-                    if(typeof(ICLIFlags).IsAssignableFrom(flags)) {
-                        continue;
-                    }
-                    Log();
-                    Log("Flags for {0}", attrib.Keyword);
-                    typeof(FlagParser).GetMethod("FullHelp").MakeGenericMethod(flags).Invoke(null, new object[] { null, true });
+                if (attrib.CustomFlags == null) continue;
+                Type flags = attrib.CustomFlags;
+                if(typeof(ICLIFlags).IsAssignableFrom(flags)) {
+                    continue;
                 }
+                Log();
+                Log("Flags for {0}", attrib.Keyword);
+                typeof(FlagParser).GetMethod("FullHelp").MakeGenericMethod(flags).Invoke(null, new object[] { null, true });
             }
         }
     }

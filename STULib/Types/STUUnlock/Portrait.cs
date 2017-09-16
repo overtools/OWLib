@@ -4,20 +4,20 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types.STUUnlock {
     [STU(0x6FE91269)]
     public class Portrait : Cosmetic {
-        [STUField(0x2C01908B)]
-        public ushort Bracket;
+        [STUField(0x2C01908B, "m_level")]
+        public ushort Level;
 
-        [STUField(0x8F736177)]
-        public uint Tier;
+        [STUField(0x8F736177, "m_rank")]
+        public Enums.STUEnumPortraitTier Tier;
 
         [STUField(0x949D9C2A)]
-        public STUGUID ImageResource;
+        public STUGUID BorderImage;
 
-        [STUField(0x78A2AC5C)]
+        [STUField(0x78A2AC5C, "m_stars")]
         public ushort Star;
 
         [STUField(0xA4A66AB6)]
-        public STUGUID ImageResource2;
+        public STUGUID StarImage;
         
         // todo: ImageResource => BorderResource, PortraitResource
     }

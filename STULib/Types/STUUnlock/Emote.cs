@@ -18,6 +18,6 @@ namespace STULib.Types.STUUnlock {
         public STUGUID GUIDx014;
 
         [STUField(0x7E3ED979)]
-        public object[] Unknown8;  // todo: proper array type
+        public STUGUID[] UnknownGUIDArray;
     }
 }

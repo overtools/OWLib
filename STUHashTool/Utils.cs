@@ -1,6 +1,3 @@
-using CASCLib;
-using OWLib;
-using STULib.Impl;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using CASCLib;
 using OverTool;
+using OWLib;
 using STULib;
+using STULib.Impl;
 using STULib.Types;
 using STULib.Types.STUUnlock;
 using static STULib.Types.Generic.Common;
@@ -185,7 +185,7 @@ namespace STUHashTool {
                         string output = GetGUIDProcessed((STUGUID) fieldValue, handler, map, indentLevel + 1);
                         // if (output == null) sb.AppendLine($"{nameString}");
                         sb.Append($"{nl}{nameString}\r\n{output}");
-                    } else if (field.FieldType.IsClass) {
+                    } else if (field.FieldType.IsClass && field.FieldType != typeof(string)) {
                         //Console.Out.WriteLine($"{indentString}{fieldValue.GetType()}:");
                         sb.AppendLine($"{nl}{nameString}");
                         sb.Append(DumpSTUInner(fieldValue, GetFields(fieldValue.GetType()).OrderBy(x => x.Name).Where(
@@ -195,7 +195,7 @@ namespace STUHashTool {
                         sb.Append($"{nl}{nameString} {fieldValue}");
                     }
                 }
-                //if (field.Name == "UnknownNested") {
+                //if (field.Name == "UnknownArray") {
                 //    if (Debugger.IsAttached) {
                 //        Debugger.Break();
                 //    }
@@ -210,10 +210,15 @@ namespace STUHashTool {
             // tries to properly dump an STU to the console
             // uses handler to load GUIDs, and process the types
 
+            if (stu == null) return;
+
             foreach (STUInstance instance in stu.Instances.Where(x => x?.Usage == InstanceUsage.Root)) {
                 string[] instanceChecksums = instance.GetType().GetCustomAttributes<STUAttribute>().Select(x => Convert.ToString(x.Checksum, 16)).ToArray();
                 if (instanceWildcard != null && !instanceChecksums.Any(x => string.Equals(x, instanceWildcard.TrimStart('0'),  StringComparison.InvariantCultureIgnoreCase))) continue;
                 Console.Out.WriteLine($"Found instance: {instance.GetType()}");
+                // STU_7A68A730 test = instance as STU_7A68A730;
+                // if (test == null) continue;
+                // if (test.m_1485B834 == null) continue;
                 Console.Out.WriteLine(DumpSTUInner(instance, GetFields(instance.GetType()).OrderBy(x => x.Name).Where(
                         fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),
                     handler, map, 1));

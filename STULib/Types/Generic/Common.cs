@@ -1,6 +1,9 @@
-﻿using System.Drawing;
+﻿using System.Data.HashFunction.CRCStandards;
+using System.Drawing;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using OWLib;
 
 namespace STULib.Types.Generic {
@@ -8,7 +11,9 @@ namespace STULib.Types.Generic {
         public enum InstanceUsage : uint {
             Root = 0,
             Embed = 1,
-            EmbedArray = 2
+            EmbedArray = 2,
+            Inline = 3,
+            InlineArray = 4
         }
         
         public class STUInstance {
@@ -193,6 +198,26 @@ namespace STULib.Types.Generic {
                     (int) (obj.G * 255f),
                     (int) (obj.B * 255f)
                 );
+            }
+        }
+        
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [STUOverride(0xDEADBEEF, 16)] // DUMMY
+        public class STUQuaternion {
+            [STUField(0x1, DummySize = 4)]
+            public float X;
+            
+            [STUField(0x2, DummySize = 4)]
+            public float Y;
+            
+            [STUField(0x3, DummySize = 4)]
+            public float Z;
+            
+            [STUField(0x4, DummySize = 4)]
+            public float W;
+            
+            public static implicit operator Quaternion(STUQuaternion obj) {
+                return new Quaternion(obj.X, obj.Y, obj.Z, obj.W);
             }
         }
     }

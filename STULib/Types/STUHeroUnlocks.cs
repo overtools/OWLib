@@ -15,8 +15,9 @@ namespace STULib.Types {
 
         [STUField(0x9135A4B2)]
         public UnlockInfo UnknownUnlocks; 
-
-        public class EventUnlockInfo {
+    
+        [STU(0xF818D652)]
+        public class EventUnlockInfo : STUInstance {
             [STUField(0xDB803F2F)]
             public UnlockInfo Data;
 
@@ -24,7 +25,8 @@ namespace STULib.Types {
             public uint EventID;
         }
 
-        public class UnlockInfo {
+        [STU(0x5ABF8769)]
+        public class UnlockInfo : STUInstance {
             [STUField(0xDB803F2F)]
             public STUGUID[] Unlocks;
         }

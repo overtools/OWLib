@@ -1,5 +1,4 @@
-﻿using STULib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -9,6 +8,7 @@ using System.Text;
 using CASCLib;
 using Newtonsoft.Json.Linq;
 using OverTool;
+using STULib;
 using STULib.Impl;
 using STULib.Impl.Version2HashComparer;
 using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
@@ -143,6 +143,7 @@ namespace STUHashTool {
         public static Dictionary<uint, STUInstanceInfo> Instances = new Dictionary<uint, STUInstanceInfo>();
         public static Dictionary<uint, InstanceData> RealInstances = new Dictionary<uint, InstanceData>();
         public static Dictionary<uint, STUInstanceJSON> InstanceJSON = new Dictionary<uint, STUInstanceJSON>();
+        public static Dictionary<uint, STUInstanceJSON> OldInstanceJSON = new Dictionary<uint, STUInstanceJSON>();
 
         public static Dictionary<uint, string> EnumNames = new Dictionary<uint, string>();
         public static Dictionary<uint, string> FieldNames = new Dictionary<uint, string>();
@@ -196,6 +197,34 @@ namespace STUHashTool {
                 "Auto generate instance class: \"class {files directory} {instance, \"*\" for all}\"");
             Console.Out.WriteLine(
                 "Test classes: \"test {CASC dir} {file type} {instance, \"*\" for all}\"");
+        }
+
+        public static Dictionary<uint, STUInstanceJSON> LoadInstanceJson(string filename) {
+            Dictionary<uint, STUInstanceJSON> output = new Dictionary<uint, STUInstanceJSON>();
+            JObject stuTypesJson = JObject.Parse(File.ReadAllText(filename));
+            foreach (KeyValuePair<string,JToken> pair in stuTypesJson) {
+                uint checksum = uint.Parse(pair.Key.Split('_')[1], NumberStyles.HexNumber);
+                output[checksum] = new STUInstanceJSON {
+                    Fields = null,
+                    Hash = checksum,
+                    Parent = (string)pair.Value["parent"],
+                    Name = pair.Key
+                };
+                if (pair.Value["fields"] == null) continue;
+                output[checksum].Fields = new STUInstanceJSON.STUFieldJSON[pair.Value["fields"].Count()];
+                uint fieldCounter = 0;
+                foreach (JToken field in pair.Value["fields"]) {
+                    output[checksum].Fields[fieldCounter] = new STUInstanceJSON.STUFieldJSON {
+                        Hash = uint.Parse((string)field["name"], NumberStyles.HexNumber),
+                        Name = (string)field["name"],
+                        SerializationType = (int)field["serializationType"],
+                        Size = field.Value<int>("size"),
+                        Type = field.Value<string>("type")
+                    };
+                    fieldCounter++;
+                }       
+            }
+            return output;
         }
 
         private static void Main(string[] args) {
@@ -267,30 +296,7 @@ namespace STUHashTool {
                         files2.Add(Path.GetFileName(f));
                     }
                     if (!File.Exists("RegisteredSTUTypes.json")) break;
-                    JObject stuTypesJson = JObject.Parse(File.ReadAllText("RegisteredSTUTypes.json"));
-                    foreach (KeyValuePair<string,JToken> pair in stuTypesJson) {
-                        uint checksum = uint.Parse(pair.Key.Split('_')[1], NumberStyles.HexNumber);
-                        InstanceJSON[checksum] = new STUInstanceJSON {
-                            Fields = null,
-                            Hash = checksum,
-                            Parent = (string)pair.Value["parent"],
-                            Name = pair.Key
-                        };
-                        if (pair.Value["fields"] == null) continue;
-                        InstanceJSON[checksum].Fields = new STUInstanceJSON.STUFieldJSON[pair.Value["fields"].Count()];
-                        uint fieldCounter = 0;
-                        foreach (JToken field in pair.Value["fields"]) {
-                            InstanceJSON[checksum].Fields[fieldCounter] = new STUInstanceJSON.STUFieldJSON {
-                                Hash = uint.Parse((string)field["name"], NumberStyles.HexNumber),
-                                Name = (string)field["name"],
-                                SerializationType = (int)field["serializationType"],
-                                Size = field.Value<int>("size"),
-                                Type = field.Value<string>("type")
-                            };
-                            fieldCounter++;
-                        }
-                        
-                    }
+                    InstanceJSON = LoadInstanceJson("RegisteredSTUTypes.json");
                     Version2Comparer.InstanceJSON = InstanceJSON;
                     LoadHashCSV("KnownFields.csv", out FieldNames);
                     LoadHashCSV("KnownEnums.csv", out EnumNames);
@@ -321,11 +327,20 @@ namespace STUHashTool {
                         files2.Add(Path.GetFileName(f));
                     }
                     break;
-                case "gendata":
-                    //directory1 = null;
-                    //directory2 = null;
-                    throw new NotImplementedException();
-                    //break;
+                case "newhashes-test":
+                    directory1 = null;
+                    directory2 = null;
+
+                    string oldHashes = args[1];
+                    string oldTypesCSV = args[2];
+                    string oldFieldsCSV = args[3];
+                    
+                    InstanceJSON = LoadInstanceJson("RegisteredSTUTypes.json");
+                    OldInstanceJSON = LoadInstanceJson(oldHashes);
+                    
+                    LoadHashCSV(oldTypesCSV, out InstanceNames);
+                    LoadHashCSV(oldFieldsCSV, out FieldNames);
+                    break;
                 case "dir-rec":
                     // todo: recurse over every type
                     throw new NotImplementedException();
@@ -613,7 +628,54 @@ namespace STUHashTool {
                             testinstanceWildcard == "*" ? null: testinstanceWildcard);
                     }
                 }
-            } else if (mode != "compare-debug"){
+            } else if (mode == "newhashes-test") {
+                // testing thing, trying to guess fields and whatever
+                Dictionary<KeyValuePair<uint, uint>, uint> fieldOccurrences = new Dictionary<KeyValuePair<uint, uint>, uint>();
+                foreach (KeyValuePair<uint,STUInstanceJSON> oldInstance in OldInstanceJSON) {
+                    foreach (KeyValuePair<uint,STUInstanceJSON> newInstance in InstanceJSON) {
+                        if (oldInstance.Value.Fields.Length != newInstance.Value.Fields.Length) continue;
+                        if (oldInstance.Value.Parent != null && oldInstance.Value.Parent == null) continue;
+                        if (oldInstance.Value.Parent == null && oldInstance.Value.Parent != null) continue;
+                        // if (!InstanceNames.ContainsKey(oldInstance.Value.Hash)) continue;
+                        uint goodFields = 0;
+                        foreach (STUInstanceJSON.STUFieldJSON oldField in oldInstance.Value.Fields) {
+                            foreach (STUInstanceJSON.STUFieldJSON newField in newInstance.Value.Fields) {
+                                if (oldField.SerializationType != newField.SerializationType) continue;
+                                switch (oldField.SerializationType) {
+                                    case 0:
+                                    case 1:
+                                    case 10:
+                                    case 11:
+                                        if (oldField.Type != newField.Type) continue;
+                                        break;
+                                    case 8:
+                                    case 9:
+                                        if (oldField.Size != newField.Size) continue;
+                                        break;
+                                }
+                                if (FieldNames.ContainsKey(oldField.Hash)) {
+                                    if (!fieldOccurrences.ContainsKey(
+                                        new KeyValuePair<uint, uint>(oldField.Hash, newField.Hash))) {
+                                        fieldOccurrences[new KeyValuePair<uint, uint>(oldField.Hash, newField.Hash)] =
+                                            1;
+                                    }
+                                    fieldOccurrences[new KeyValuePair<uint, uint>(oldField.Hash, newField.Hash)]++;
+                                    //Console.Out.WriteLine($"Possible field: {oldField.Hash:X} {newField.Hash:X}: {FieldNames[oldField.Hash]}");
+                                }
+                                goodFields++;
+                            }
+                        }
+                        if (goodFields != oldInstance.Value.Fields.Length) continue;
+                        
+                        //Console.Out.WriteLine($"Possible: {oldInstance.Value.Hash:X} {newInstance.Value.Hash:X}: {InstanceNames[oldInstance.Value.Hash]}");
+                    }
+                }
+                IOrderedEnumerable<KeyValuePair<KeyValuePair<uint, uint>, uint>> sortedDict = from entry in fieldOccurrences orderby entry.Value descending select entry;
+                foreach (KeyValuePair<KeyValuePair<uint, uint>, uint> fieldChange in sortedDict) {
+                    if (fieldChange.Value < 10) continue;
+                    Console.Out.WriteLine($"{fieldChange.Key.Key:X}:{fieldChange.Key.Value:X}:{FieldNames[fieldChange.Key.Key]} Count: {fieldChange.Value}");
+                }
+            } else if (mode != "compare-debug") {
                 foreach (KeyValuePair<uint, InstanceTally> it in instanceChangeTally) {
                     foreach (KeyValuePair<uint, List<CompareResult>> id in it.Value.ResultDict) {
                         double instanceProbablility = (double) id.Value.Count / it.Value.Count * 100;
@@ -725,6 +787,8 @@ namespace STUHashTool {
                     return "STUColorRGB";
                 case "teColorRGBA":
                     return "STUColorRGBA";
+                case "teQuat":
+                    return "STUQuaternion";
                 case "ARRAY FILE REFERENCE":
                 case "File Reference":
                     return "STUGUID";

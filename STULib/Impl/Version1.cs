@@ -172,7 +172,7 @@ namespace STULib.Impl {
         private void ReadInstanceData(long offset) {
             stream.Position = offset;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
-                if (instanceTypes == null) {
+                if (_InstanceTypes == null) {
                     LoadInstanceTypes();
                 }
                 STUHeader instance = new STUHeader();
@@ -199,8 +199,8 @@ namespace STULib.Impl {
             uint Id = reader.ReadUInt32();
             reader.BaseStream.Position = offset;
 
-            if (instanceTypes.ContainsKey(Id)) {
-                Type type = instanceTypes[Id];
+            if (_InstanceTypes.ContainsKey(Id)) {
+                Type type = _InstanceTypes[Id];
                 object instance = Activator.CreateInstance(type);
                 instances[offset] = InitializeObject(instance, type, reader) as STUInstance;
             }

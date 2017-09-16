@@ -1,22 +1,15 @@
 ﻿using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    public enum AbilityType : uint {
-        WEAPON = 0,
-        NORMAL = 1,
-        PASSIVE = 2,
-        ULTIMATE = 3
-    }
-
     [STU(0x07A0E32F)]
     public class STUAbilityInfo : STUInstance {
         [STUField(0x2C54AEAF)]
-        public AbilityType AbilityType;
+        public Enums.STUEnumAbilityType AbilityType;
 
         [STUField(0x3CD6DC1E)]
         public STUGUID Image;
 
-        [STUField(0xB48F1D22)]
+        [STUField(0xB48F1D22, "m_name")]
         public STUGUID Name;
 
         [STUField(0xC8D38D7B)]

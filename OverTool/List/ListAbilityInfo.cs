@@ -37,7 +37,7 @@ namespace OverTool.List {
                     }
 
                     Console.Out.WriteLine(Util.GetString(ability.Name, map, handler));
-                    if (ability.AbilityType == AbilityType.WEAPON) {
+                    if (ability.AbilityType == STULib.Types.Enums.STUEnumAbilityType.Weapon) {
                         Console.Out.WriteLine($"\t{ability.AbilityType}: {ability.WeaponIndex}");
                     } else {
                         Console.Out.WriteLine($"\t{ability.AbilityType}");

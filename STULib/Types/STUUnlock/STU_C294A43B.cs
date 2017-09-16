@@ -5,9 +5,6 @@ namespace STULib.Types.STUUnlock {
     [STU(0xC294A43B)]
     // ReSharper disable once InconsistentNaming
     public class STU_C294A43B : Cosmetic {  // some lootbox thing
-        [STUField(0xDAD2E3A2)]
-        public STUGUID ImageResource;
-
         [STUField(0x7AB4E3F8)]
         public uint EventID;
 

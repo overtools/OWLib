@@ -9,8 +9,5 @@ namespace STULib.Types.STUUnlock {
 
         [STUField(0x0619C597)]
         public uint Unknown4;
-
-        [STUField(0xDAD2E3A2)]
-        public STUGUID Unknown10;
     }
 }

@@ -6,5 +6,8 @@ namespace STULib.Types.STUUnlock {
     public class VoiceLine : Cosmetic {
         [STUField(0xF57B051E)]
         public STUGUID EffectResource;
+        
+        [STUField(0x1B25AB90)]
+        public STUDecal CosmeticUnknownDecal;
     }
 }

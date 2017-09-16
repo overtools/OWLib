@@ -48,7 +48,7 @@ namespace STULib.Types {
         [STUField(0x4FF98D41)]
         public uint Unknown5;
 
-        [STUField(0xB48F1D22)]
+        [STUField(0xB48F1D22, "m_name")]
         public STUGUID UnkStringB;
 
         [STUField(0x544A6A4F)]

@@ -8,7 +8,7 @@ namespace STULib.Types {
         public STUGUID DescriptionA;
 
         [STUField(0x44D13CC2)]
-        public uint Unknown2;
+        public int Unknown2;
 
         [STUField(0x4E87690F)]
         public STUGUID MapDataResource1;
@@ -59,7 +59,7 @@ namespace STULib.Types {
         public STUMapUnknownNested1[] UnknownNested;
 
         [STUField(0x1DD3A0CD)]
-        public uint Unknown19;
+        public uint Unknown19; // 0 = assault/escort/hybrid, 1 = other, 2 = event
 
         [STUField(0x1C706502)]
         public STUGUID NameB;
@@ -68,14 +68,24 @@ namespace STULib.Types {
         public STUGUID SoundMasterResource;
 
         [STUField(0x762B6796)]
-        public ulong[] UnknownArray;
+        public STU_7D6D8405[] UnknownArray;
 
-        public class STUMapUnknownNested1 {
+        [STU(0xAC40722C)]
+        public class STUMapUnknownNested1 : STUInstance {
             [STUField(0x4E87690F)]
             public STUGUID Unknown1;
 
             [STUField(0xED999C8B)]
             public STUGUID Unknown2;
+        }
+
+        [STU(0x7D6D8405)]
+        public class STU_7D6D8405 : STUInstance {
+            [STUField(0xC0A83121)]
+            public STUGUID ComponentResource;
+            
+            [STUField(0x7DD89F4F)]
+            public STUGUID OverrideResource;
         }
     }
 }

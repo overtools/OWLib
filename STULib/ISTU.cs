@@ -9,13 +9,14 @@ using STULib.Impl;
 using static STULib.Types.Generic.Common;
 
 namespace STULib {
+    // ReSharper disable once InconsistentNaming
     public abstract class ISTU : IDisposable {
-        protected internal static Dictionary<uint, Type> instanceTypes;
-        protected internal static Dictionary<uint, Type> enumTypes;
-        protected internal static Dictionary<Type, string> instanceNames;
+        protected internal static Dictionary<uint, Type> _InstanceTypes;
+        protected internal static Dictionary<uint, Type> _EnumTypes;
+        protected internal static Dictionary<Type, string> _InstanceNames;
 
-        public static Dictionary<uint, Type> InstanceTypes => instanceTypes;
-        public static Dictionary<uint, Type> EnumTypes => enumTypes;
+        public static Dictionary<uint, Type> InstanceTypes => _InstanceTypes;
+        public static Dictionary<uint, Type> EnumTypes => _EnumTypes;
         
         public static bool IsSimple(Type type) {
             return type.IsPrimitive || type == typeof(string) || type == typeof(object);
@@ -38,8 +39,8 @@ namespace STULib {
         }
 
         protected internal static void LoadInstanceTypes() {
-            instanceTypes = new Dictionary<uint, Type>();
-            instanceNames = new Dictionary<Type, string>();
+            _InstanceTypes = new Dictionary<uint, Type>();
+            _InstanceNames = new Dictionary<Type, string>();
 
             Assembly asm = typeof(STUInstance).Assembly;
             Type t = typeof(STUInstance);
@@ -78,21 +79,21 @@ namespace STULib {
                             BitConverter.ToUInt32(
                                 new CRC32().ComputeHash(Encoding.ASCII.GetBytes(attrib.Name.ToLowerInvariant())), 0);
                     }
-                    instanceNames[type] = attrib.Name;
-                    instanceTypes[attrib.Checksum] = type;
+                    _InstanceNames[type] = attrib.Name;
+                    _InstanceTypes[attrib.Checksum] = type;
                 }
             }
             Type t2 = typeof(Enum);
             List<Type> types2 = asm.GetTypes().Where(type => type != t2 && t2.IsAssignableFrom(type)).ToList();
-            enumTypes = new Dictionary<uint, Type>();
+            _EnumTypes = new Dictionary<uint, Type>();
             foreach (Type type in types2) {
                 STUEnumAttribute attribute = type.GetCustomAttribute<STUEnumAttribute>();
                 if (attribute == null) continue;
                 if (attribute.Checksum == 0) continue;
-                if (enumTypes.ContainsKey(attribute.Checksum)) {
+                if (_EnumTypes.ContainsKey(attribute.Checksum)) {
                     throw new Exception($"Collision of STUEnum checksums ({attribute.Checksum:X})");
                 }
-                enumTypes[attribute.Checksum] = type;
+                _EnumTypes[attribute.Checksum] = type;
             }
         }
 
@@ -104,8 +105,8 @@ namespace STULib {
         }
 
         public static string GetName(Type t) {
-            if (instanceNames != null && instanceNames.ContainsKey(t)) {
-                return instanceNames[t];
+            if (_InstanceNames != null && _InstanceNames.ContainsKey(t)) {
+                return _InstanceNames[t];
             }
             return null;
         }

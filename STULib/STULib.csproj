@@ -64,6 +64,9 @@
     <Compile Include="STUEnumAttribute.cs" />
     <Compile Include="STUOverride.cs" />
     <Compile Include="STUFieldAttribute.cs" />
+    <Compile Include="Types\Enums\STUEnumAbilityType.cs" />
+    <Compile Include="Types\Enums\STUEnumPortraitTier.cs" />
+    <Compile Include="Types\STUSubtitleContainer.cs" />
     <Compile Include="Types\Enums\STUEnumRarity.cs" />
     <Compile Include="Types\Generic\Common.cs" />
     <Compile Include="Types\Generic\Version2.cs" />

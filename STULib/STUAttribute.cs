@@ -1,20 +1,20 @@
 ﻿using System;
 
 namespace STULib {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class STUAttribute : Attribute {
-        public uint Checksum = 0; // if 0: take CRC of name
-        public string Name = null; // if null: take struct name
+        public uint Checksum; // if 0: take CRC of name
+        public string Name ; // if null: take struct name
 
         public STUAttribute() { }
 
-        public STUAttribute(uint Checksum) {
-            this.Checksum = Checksum;
+        public STUAttribute(uint checksum) {
+            Checksum = checksum;
         }
 
-        public STUAttribute(uint Checksum, string Name) {
-            this.Checksum = Checksum;
-            this.Name = Name;
+        public STUAttribute(uint checksum, string name) {
+            Checksum = checksum;
+            Name = name;
         }
     }
 }

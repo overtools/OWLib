@@ -235,7 +235,7 @@ namespace STULib.Impl.Version2HashComparer {
         }
 
         protected override void ReadInstanceData(long offset) {
-            if (instanceTypes == null) {
+            if (_InstanceTypes == null) {
                 LoadInstanceTypes();
             }
             stream.Position = offset;

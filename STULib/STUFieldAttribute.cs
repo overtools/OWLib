@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text;
 
 namespace STULib {
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Field)]
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
     public class STUFieldAttribute : Attribute {
         public bool ReferenceArray = false;
@@ -14,32 +14,33 @@ namespace STULib {
         public int DummySize = -1;  // used to set the size if the field doesn't actually exist.
         public bool OnlyBuffer = false;
         public bool FakeBuffer = false;  // fake being in an array buffer
+        public bool ForceNotBuffer = false;  // fake being out of an array buffer
+        public bool Demangle = true;  // this field should be demangled
 
         public object Default = null;
 
-        public uint Checksum = 0;
-        public string Name = null;
+        public uint Checksum;
+        public string Name;
 
         public uint[] IgnoreVersion = null;
         public uint[] STUVersionOnly = null;
         
         public STUFieldAttribute() {}
 
-        public STUFieldAttribute(string Name) {
-            Checksum = BitConverter.ToUInt32(new CRC32().ComputeHash(Encoding.ASCII.GetBytes(Name.ToLowerInvariant())), 0);
-            this.Name = Name;
+        public STUFieldAttribute(string name) {
+            Checksum = BitConverter.ToUInt32(new CRC32().ComputeHash(Encoding.ASCII.GetBytes(name.ToLowerInvariant())), 0);
+            Name = name;
         }
 
-        public STUFieldAttribute(uint Checksum, string Name=null) {
-            this.Checksum = Checksum;
-            this.Name = Name;
-            if (Name != null) {
-                uint crcCheck = BitConverter.ToUInt32(
-                                new CRC32().ComputeHash(Encoding.ASCII.GetBytes(Name.ToLowerInvariant())), 0);
-                if (Checksum != crcCheck) {
-                    // Debugger.Log(0, "STU", $"[STU] Invalid name for field {Name}, checksum mismatch ({Checksum}, {crcCheck})\n");
-                    // No longer the CRC32 of the name :(
-                }
+        public STUFieldAttribute(uint checksum, string name=null) {
+            Checksum = checksum;
+            Name = name;
+            if (name == null) return;
+            uint crcCheck = BitConverter.ToUInt32(
+                new CRC32().ComputeHash(Encoding.ASCII.GetBytes(name.ToLowerInvariant())), 0);
+            if (checksum != crcCheck) {
+                // Debugger.Log(0, "STU", $"[STU] Invalid name for field {Name}, checksum mismatch ({Checksum}, {crcCheck})\n");
+                // No longer the CRC32 of the name :(
             }
         }
 

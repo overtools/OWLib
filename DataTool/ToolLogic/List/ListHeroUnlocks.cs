@@ -223,7 +223,7 @@ namespace DataTool.ToolLogic.List {
                     name = $"{(unlock as Currency).Amount} Credits";
                 } else if (unlock is Portrait) {
                     Portrait portrait = unlock as Portrait;
-                    name = $"{portrait.Tier} tier - {portrait.Bracket} - {portrait.Star} star";
+                    name = $"{portrait.Tier} - {portrait.Level} - {portrait.Star} star";
                 }
 
                 if (name == null) {

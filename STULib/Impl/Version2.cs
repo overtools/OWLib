@@ -122,7 +122,7 @@ namespace STULib.Impl {
                         return Enum.ToObject(type, GetValueArrayInner(type.GetEnumUnderlyingType(), element, parent, checksum));
                     }
                     if (type.IsClass || type.IsValueType) {
-                        return InitializeObject(Activator.CreateInstance(type), type, parent, checksum, reader, true);
+                        return InitializeObject(Activator.CreateInstance(type), type, parent, checksum, reader, !element.ForceNotBuffer, element.Demangle);
                     }
                     return null;
             }
@@ -206,7 +206,7 @@ namespace STULib.Impl {
                         return GetValue(field, type.GetEnumUnderlyingType(), reader, element);
                     }
                     if (type.IsClass) {
-                        return InitializeObject(Activator.CreateInstance(type), type, field.FieldChecksum, field.FieldChecksum, reader, element.FakeBuffer);
+                        return InitializeObject(Activator.CreateInstance(type), type, field.FieldChecksum, field.FieldChecksum, reader, element.FakeBuffer, element.Demangle);
                     }
                     if (type.IsValueType) {
                         return InitializeObject(Activator.CreateInstance(type), type, CreateInstanceFields(type),
@@ -258,6 +258,10 @@ namespace STULib.Impl {
                     object instance = Activator.CreateInstance(type);
                     if (fieldIndex >= instanceFieldLists.Length) continue;
                     array.SetValue(InitializeObject(instance, type, instanceFields[fieldIndex], reader), i);
+                    STUInstance fieldInstance = array.GetValue(i) as STUInstance;
+                    if (fieldInstance != null) {
+                        fieldInstance.Usage = InstanceUsage.InlineArray;
+                    }
                 }
                 return array;
             } if (typeof(STUInstance).IsAssignableFrom(type)) {
@@ -291,7 +295,7 @@ namespace STULib.Impl {
             return GetValueArray(type, element, arrayInfo, field);
         }
 
-        private object InitializeObject(object instance, Type type, uint reference, uint checksum, BinaryReader reader, bool isArrayBuffer) {
+        private object InitializeObject(object instance, Type type, uint reference, uint checksum, BinaryReader reader, bool isArrayBuffer, bool demangle) {
             FieldInfo[] fields = GetFields(type);
             foreach (FieldInfo field in fields) {
                 STUFieldAttribute element = field.GetCustomAttribute<STUFieldAttribute>();
@@ -339,7 +343,9 @@ namespace STULib.Impl {
                     }
                 }
             }
-            DemangleInstance(instance, checksum);
+            if (demangle) {
+                DemangleInstance(instance, checksum);
+            }
 
             return instance;
         }
@@ -388,6 +394,10 @@ namespace STULib.Impl {
                             field.SetValue(instance,
                                 InitializeObject(inlineInstance, field.FieldType, instanceFields[inline.FieldListIndex],
                                     reader));
+                            STUInstance fieldInstance = field.GetValue(instance) as STUInstance;
+                            if (fieldInstance != null) {
+                                fieldInstance.Usage = InstanceUsage.Inline;
+                            }
                             continue;
                         }
                     }
@@ -419,7 +429,9 @@ namespace STULib.Impl {
                     }
                 }
 
-                DemangleInstance(instance, writtenField.FieldChecksum);
+                if (element.Demangle) {
+                    DemangleInstance(instance, writtenField.FieldChecksum);
+                }
             }
 
             return instance;
@@ -476,12 +488,12 @@ namespace STULib.Impl {
             GetHeaderCRC();
             stream.Position = offset;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
-                if (instanceTypes == null) {
+                if (_InstanceTypes == null) {
                     LoadInstanceTypes();
                 }
 
                 if (ReadHeaderData(reader)) {
-                    if (instanceTypes == null) {
+                    if (_InstanceTypes == null) {
                         LoadInstanceTypes();
                     }
 
@@ -492,25 +504,31 @@ namespace STULib.Impl {
 
                         instances[i] = null;
 
-                        if (instanceTypes.ContainsKey(instanceInfo[i].InstanceChecksum)) {
+                        if (_InstanceTypes.ContainsKey(instanceInfo[i].InstanceChecksum)) {
                             int fieldListIndex = reader.ReadInt32();
                             if (instanceFields.Length <= fieldListIndex || fieldListIndex < 0) {
-                                Debugger.Log(0, "STU", $"[Version2:{instanceInfo[i].InstanceChecksum:X}]: Instance field list was not valid ({fieldListIndex})\n");
+                                Debugger.Log(0, "STU",
+                                    $"[Version2:{instanceInfo[i].InstanceChecksum:X}]: Instance field list was not valid ({fieldListIndex})\n");
                                 // todo: why does this happen? Does it just mean that the instance doesn't exist?
                                 continue;
                             }
-                            instances[i] = ReadInstance(instanceTypes[instanceInfo[i].InstanceChecksum],
+                            instances[i] = ReadInstance(_InstanceTypes[instanceInfo[i].InstanceChecksum],
                                 instanceFields[fieldListIndex], reader, (int) instanceInfo[i].InstanceSize - 4);
+                        } else {
+                            Debugger.Log(0, "STU",
+                                $"[Version2]: Unhandled instance type: {instanceInfo[i].InstanceChecksum:X}\n");
                         }
                     }
-                    
+
                     for (int i = 0; i < instanceInfo.Length; ++i) {
-                        if (instances[i] != null && 
+                        if (instances[i] != null &&
                             instanceInfo[i].AssignInstanceIndex > -1 &&
                             instanceInfo[i].AssignInstanceIndex < instances.Count) {
                             SetField(instances[instanceInfo[i].AssignInstanceIndex],
                                 instanceInfo[i].AssignFieldChecksum, instances[i]);
-                            instances[instanceInfo[i].AssignInstanceIndex].Usage = InstanceUsage.Embed;
+                            if (instances[i] != null) {
+                                instances[i].Usage = InstanceUsage.Embed;
+                            }
                         }
                     }
                     foreach (KeyValuePair<Array,int[]> request in EmbedArrayRequests) {

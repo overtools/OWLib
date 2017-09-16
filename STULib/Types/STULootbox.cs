@@ -16,7 +16,7 @@ namespace STULib.Types {
         [STUField(0xCBE2DADD)]
         public STUGUID UnknownStateScriptComponent;
 
-        [STUField(0xB48F1D22)]
+        [STUField(0xB48F1D22, "m_name")]
         public STUGUID Name;
 
         [STUField(0xD75586C0)]

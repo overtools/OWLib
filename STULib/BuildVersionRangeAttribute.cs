@@ -1,21 +1,21 @@
 ﻿using System;
 
 namespace STULib {
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
     public class BuildVersionRangeAttribute : Attribute {
-        public uint Min = 0;
+        public uint Min;
         public uint Max = uint.MaxValue;
 
-        public BuildVersionRangeAttribute() : base() {
+        public BuildVersionRangeAttribute() {
         }
 
-        public BuildVersionRangeAttribute(uint Min) : base() {
-            this.Min = Min;
+        public BuildVersionRangeAttribute(uint min) {
+            Min = min;
         }
 
-        public BuildVersionRangeAttribute(uint Min, uint Max) : base() {
-            this.Min = Min;
-            this.Max = Max;
+        public BuildVersionRangeAttribute(uint min, uint max) {
+            Min = min;
+            Max = max;
         }
     }
 }

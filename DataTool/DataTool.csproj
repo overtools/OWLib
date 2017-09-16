@@ -60,6 +60,7 @@
     <Compile Include="Helper\LinqExtensions.cs" />
     <Compile Include="Helper\Logger.cs" />
     <Compile Include="Helper\StringHelper.cs" />
+    <Compile Include="Helper\STUHelper.cs" />
     <Compile Include="ITool.cs" />
     <Compile Include="JSON\GUIDConverter.cs" />
     <Compile Include="ToolFlags.cs" />
@@ -67,7 +68,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolAttribute.cs" />
     <Compile Include="ToolLogic\List\ListFlags.cs" />
+    <Compile Include="ToolLogic\List\ListHeroes.cs" />
     <Compile Include="ToolLogic\List\ListHeroUnlocks.cs" />
+    <Compile Include="ToolLogic\List\ListMaps.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,6 +1,7 @@
 ﻿using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
+    [STU(0x6760479E, "STUUnlock")]
     public class Cosmetic: STUInstance {
         [STUField(0xB48F1D22, "m_name")]
         public STUGUID CosmeticName;
@@ -22,8 +23,16 @@ namespace STULib.Types.STUUnlock {
         
         [STUField(0xAA8E1BB0)]
         public STUGUID[] CosmeticUnknownArray;  // virtual
+
+        [STUField(0x8EEF1251)]
+        public int Unknown;
         
-        [STUField(0x1B25AB90)]
-        public STUDecal CosmeticUnknownNested;
+        [STUField(0xDAD2E3A2)]
+        public STUGUID TextureResource;
+
+        [STUField(0xBDB2D444)]
+        public STUGUID UnknownGUID;
+        
+        
     }
 }
