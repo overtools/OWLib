@@ -5,9 +5,10 @@ using STULib;
 using STULib.Types;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
+using static STULib.Types.Generic.Common;
 
 namespace DataTool.Helper {
-    public class STUHelper {
+    public static class STUHelper {
         public static string GetDescriptionString(ulong key) {
             STUDescription description = GetInstance<STUDescription>(key);
             return GetString(description?.String);
@@ -22,7 +23,7 @@ namespace DataTool.Helper {
             }
         }
 
-        public static T[] GetInstances<T>(ulong key) {
+        public static T[] GetInstances<T>(ulong key) where T : STUInstance  {
             ISTU stu = OpenSTUSafe(key);
             if(stu == null) {
                 return new T[0];
@@ -30,10 +31,10 @@ namespace DataTool.Helper {
             return stu.Instances.OfType<T>().ToArray();
         }
 
-        public static T GetInstance<T>(ulong key) {
+        public static T GetInstance<T>(ulong key) where T : STUInstance  {
             ISTU stu = OpenSTUSafe(key);
             if(stu == null) {
-                return null;
+                return default(T);
             }
             return stu.Instances.OfType<T>().FirstOrDefault();
         }
