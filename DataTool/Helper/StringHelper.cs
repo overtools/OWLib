@@ -28,7 +28,7 @@ namespace DataTool.Helper {
         }
 
         public IndentHelper(string existingValue) {  // create from existing string
-            string find = GetIndentString(1);  // 1 indent
+            string find = GetIndentString(IndentStringPerLevel);  // 1 indent
             string s2 = existingValue.Replace(find, "");  // how many times is 1 indent string in existing string
             _indentLevel = ((uint)existingValue.Length - (uint)s2.Length) / (uint)find.Length;
             
@@ -38,12 +38,11 @@ namespace DataTool.Helper {
             // Debug.Assert(new IndentHelper(4).GetLevel() == new IndentHelper("                ").GetLevel());
         }
 
-        protected string GetIndentString(int count) {
-            return string.Concat(Enumerable.Repeat(IndentString, count));
-        }
+        protected string GetIndentString(int count) => string.Concat(Enumerable.Repeat(IndentString, count));
+        protected string GetIndentString(uint count) => GetIndentString((int) count);
         
         public override string ToString() {
-            return GetIndentString((int) _indentLevel * (int) IndentStringPerLevel);
+            return GetIndentString(_indentLevel * IndentStringPerLevel);
         }
         
         public static IndentHelper operator +(IndentHelper c1, uint c2) => new IndentHelper(c1._indentLevel + c2);

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using STULib;
 using STULib.Types;
@@ -16,27 +15,18 @@ namespace DataTool.Helper {
         
         public static ISTU OpenSTUSafe(ulong key) {
             using (Stream stream = OpenFile(key)) {
-                if (stream == null) {
-                    return null;
-                }
-                return ISTU.NewInstance(stream, BuildVersion);
+                return stream == null ? null : ISTU.NewInstance(stream, BuildVersion);
             }
         }
 
         public static T[] GetInstances<T>(ulong key) where T : STUInstance  {
             ISTU stu = OpenSTUSafe(key);
-            if(stu == null) {
-                return new T[0];
-            }
-            return stu.Instances.OfType<T>().ToArray();
+            return stu?.Instances.OfType<T>().ToArray() ?? new T[0];
         }
 
         public static T GetInstance<T>(ulong key) where T : STUInstance  {
             ISTU stu = OpenSTUSafe(key);
-            if(stu == null) {
-                return default(T);
-            }
-            return stu.Instances.OfType<T>().FirstOrDefault();
+            return stu?.Instances.OfType<T>().FirstOrDefault();
         }
     }
 }
