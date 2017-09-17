@@ -14,7 +14,7 @@ using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-maps", Description = "List maps", TrackTypes = new ushort[] {0x9F}, CustomFlags = typeof(ListFlags))]
-    public class ListMaps : ITool {
+    public class ListMaps : JSONTool, ITool  {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
         }
@@ -48,23 +48,6 @@ namespace DataTool.ToolLogic.List {
                 StateB = stateB;
                 DataGUID1 = mapData1;
                 DataGUID2 = mapData2;
-            }
-        }
-
-        internal void ParseJSON(Dictionary<string, MapInfo> maps, ListFlags toolFlags) {
-            string json = JsonConvert.SerializeObject(maps, Formatting.Indented);
-            if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
-                Log("Writing to {0}", toolFlags.Output);
-
-                CreateDirectoryFromFile(toolFlags.Output);
-
-                using (Stream file = File.OpenWrite(toolFlags.Output)) {
-                    using (TextWriter writer = new StreamWriter(file)) {
-                        writer.WriteLine(json);
-                    }
-                }
-            } else {
-                Console.Error.WriteLine(json);
             }
         }
 

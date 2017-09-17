@@ -3,7 +3,7 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0x7A68A730)]
-    public class STU_7A68A730 : STUInstance {
+    public class STUSubtitleContainer : STUInstance {
         [STUField(0x798027DE)]
         public STUSubtitle Subtitle1;
 

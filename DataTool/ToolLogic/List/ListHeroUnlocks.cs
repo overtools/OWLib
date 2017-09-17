@@ -17,7 +17,7 @@ using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-unlocks", Description = "List hero unlocks", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ListFlags))]
-    public class ListHeroUnlocks : ITool {
+    public class ListHeroUnlocks : JSONTool, ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
         }
@@ -41,23 +41,6 @@ namespace DataTool.ToolLogic.List {
                 this.Description = Description;
                 this.Unlock = Unlock;
                 this.GUID = GUID;
-            }
-        }
-
-        internal void ParseJSON(Dictionary<string, Dictionary<string, HashSet<Info>>> unlocks, ListFlags toolFlags) {
-            string json = JsonConvert.SerializeObject(unlocks, Formatting.Indented);
-            if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
-                Log("Writing to {0}", toolFlags.Output);
-
-                CreateDirectoryFromFile(toolFlags.Output);
-
-                using (Stream file = File.OpenWrite(toolFlags.Output)) {
-                    using (TextWriter writer = new StreamWriter(file)) {
-                        writer.WriteLine(json);
-                    }
-                }
-            } else {
-                Console.Error.WriteLine(json);
             }
         }
 
