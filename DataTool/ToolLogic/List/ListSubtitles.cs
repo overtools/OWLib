@@ -4,11 +4,11 @@ using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
 using Newtonsoft.Json;
-using OWLib;
 using STULib.Types;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
+using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-subtitles", Description = "List subtitles", TrackTypes = new ushort[] {0x71}, CustomFlags = typeof(ListFlags))]
@@ -71,7 +71,7 @@ namespace DataTool.ToolLogic.List {
                 STUSubtitleContainer subtitleContainer = GetInstance<STUSubtitleContainer>(key);
                 if (subtitleContainer == null) continue;
 
-                @return[$"{GUID.Index(key):X12}.{GUID.Type(key):X3}"] = new SubtitleInfo(key, GetSubtitlesInternal(subtitleContainer));
+                @return[GetFileName(key)] = new SubtitleInfo(key, GetSubtitlesInternal(subtitleContainer));
             }
 
             return @return;

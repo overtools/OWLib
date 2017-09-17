@@ -195,11 +195,12 @@ namespace STUHashTool {
                         sb.Append($"{nl}{nameString} {fieldValue}");
                     }
                 }
-                //if (field.Name == "UnknownArray") {
-                //    if (Debugger.IsAttached) {
-                //        Debugger.Break();
-                //    }
-                //}
+                // if (field.Name == "Unknown4") {
+                //     if (Debugger.IsAttached) {
+                //         Debugger.Log(0, "STUHashTool", $"\r\n{sb}\r\n");
+                //         Debugger.Break();
+                //     }
+                // }
                 fieldIndex++;
             }
             return sb.ToString();

@@ -1,9 +1,6 @@
-﻿using System.Data.HashFunction.CRCStandards;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Security.Policy;
 using OWLib;
 
 namespace STULib.Types.Generic {

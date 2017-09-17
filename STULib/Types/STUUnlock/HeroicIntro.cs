@@ -8,6 +8,6 @@ namespace STULib.Types.STUUnlock {
         public STUGUID AnimationResource;
 
         [STUField(0x0619C597)]
-        public uint Unknown4;
+        public uint Unknown4;  // STUEnum_E5327514
     }
 }

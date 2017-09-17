@@ -4,6 +4,7 @@ namespace STULib.Types.Enums {
         Common = 0,
         Rare = 1,
         Epic = 2,
-        Legendary = 3
+        Legendary = 3,
+        Unobtainable = 4294967295
     }
 }

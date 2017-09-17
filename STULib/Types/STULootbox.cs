@@ -1,4 +1,5 @@
 ﻿using OWLib;
+using STULib.Types.Enums;
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
@@ -23,19 +24,19 @@ namespace STULib.Types {
         public LootboxBundle[] Bundles;
 
         [STUField(0xE02BEE24)]
-        public STUGUID Effect3;
+        public STUGUID Unknown0C3;
 
         [STUField(0x3DFAC8CA)]
         public uint Unknown1;  // 0
 
         [STUField(0x7AB4E3F8)]
-        public uint EventID;
+        public Enums.STUEnumEventID Event;
 
         [STUField(0xFFE7768F)]
-        public STUGUID Effect4;
+        public STUGUID Effect3;
 
         [STUField(0xB2F9D222)]
-        public STUGUID Effect5;
+        public STUGUID Effect4;
 
         [STUField(0x9B180535)]
         public STUGUID Material2;
@@ -46,14 +47,16 @@ namespace STULib.Types {
         [STUField(0x45C33D76)]
         public byte Unknown3;
 
-        public class LootboxBundle {
+        [STU(0xD75586C0)]
+        public class LootboxBundle : STUInstance {
             [STUField(0x90EB924A)]
             public STUGUID String;
+            
             [STUField(0x87EACF5F)]
             public STUGUID UnknownImage;
         }
 
-        public string EventNameNormal => ItemEvents.GetInstance().GetEventNormal(EventID);
-        public string EventName => ItemEvents.GetInstance().GetEvent(EventID);
+        public string EventNameNormal => ItemEvents.GetInstance().GetEventNormal((ulong)Event);
+        public string EventName => ItemEvents.GetInstance().GetEvent((ulong)Event);
     }
 }

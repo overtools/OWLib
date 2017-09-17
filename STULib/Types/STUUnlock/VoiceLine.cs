@@ -2,7 +2,7 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
-    [STU(0x8A9D1F89)]
+    [STU(0x8A9D1F89, "STUUnlock_VoiceLine")]  // old hash: 090B30AB
     public class VoiceLine : Cosmetic {
         [STUField(0xF57B051E)]
         public STUGUID EffectResource;

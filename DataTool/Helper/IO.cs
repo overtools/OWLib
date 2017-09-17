@@ -8,12 +8,16 @@ namespace DataTool.Helper {
     public static class IO {
         private static Dictionary<ulong, string> GUIDTable = new Dictionary<ulong, string>();
 
+        public static string GetFileName(ulong guid) {
+            return $"{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}";
+        }
+
         public static void WriteFile(Stream stream, ulong guid, string path) {
             if (stream == null || guid == 0) {
                 return;
             }
 
-            string filename = GUIDTable.ContainsKey(guid) ? GUIDTable[guid] : $"{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}";
+            string filename = GUIDTable.ContainsKey(guid) ? GUIDTable[guid] : GetFileName(guid);
             if (!Directory.Exists(path)) {
                 Directory.CreateDirectory(path);
             }

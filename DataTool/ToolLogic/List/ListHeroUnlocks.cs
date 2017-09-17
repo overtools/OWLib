@@ -159,7 +159,7 @@ namespace DataTool.ToolLogic.List {
                             continue;
                         }
 
-                        string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[eventUnlocks.EventID]}";
+                        string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";
 
                         if (!@return.ContainsKey(eventKey)) {
                             @return[eventKey] = new HashSet<Info>();

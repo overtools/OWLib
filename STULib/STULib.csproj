@@ -65,6 +65,7 @@
     <Compile Include="STUOverride.cs" />
     <Compile Include="STUFieldAttribute.cs" />
     <Compile Include="Types\Enums\STUEnumAbilityType.cs" />
+    <Compile Include="Types\Enums\STUEnumEventID.cs" />
     <Compile Include="Types\Enums\STUEnumPortraitTier.cs" />
     <Compile Include="Types\STUSubtitleContainer.cs" />
     <Compile Include="Types\Enums\STUEnumRarity.cs" />

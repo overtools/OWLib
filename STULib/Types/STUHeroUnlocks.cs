@@ -22,7 +22,7 @@ namespace STULib.Types {
             public UnlockInfo Data;
 
             [STUField(0x7AB4E3F8)]
-            public uint EventID;
+            public Enums.STUEnumEventID Event;
         }
 
         [STU(0x5ABF8769)]

@@ -16,7 +16,7 @@ namespace STULib.Types.STUUnlock {
         public STUGUID CosmeticDescription;
         
         [STUField(0x84F3DCC0)]
-        public STUGUID CosmeticImage;  // todo: is this the event image?
+        public STUGUID CosmeticEventImage;
         
         [STUField(0x1A546C64)]
         public byte CosmeticUnknownByte;
@@ -25,13 +25,13 @@ namespace STULib.Types.STUUnlock {
         public STUGUID[] CosmeticUnknownArray;  // virtual
 
         [STUField(0x8EEF1251)]
-        public int Unknown;
+        public int CosmeticUnknown;
         
         [STUField(0xDAD2E3A2)]
-        public STUGUID TextureResource;
+        public STUGUID CosmeticTextureResource;
 
         [STUField(0xBDB2D444)]
-        public STUGUID UnknownGUID;
+        public STUGUID CosmeticUnknownGUID;
         
         
     }

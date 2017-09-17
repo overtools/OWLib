@@ -46,20 +46,7 @@ namespace OWLib {
             }
         }
 
-        public string GetEventNormal(ulong id) {
-            if (events.ContainsKey(id)) {
-                return eventsNormal[id];
-            } else {
-                return $"Event {id}";
-            }
-        }
-
-        public string GetEvent(ulong id) {
-            if (events.ContainsKey(id)) {
-                return events[id];
-            } else {
-                return $"EVENT_{id}";
-            }
-        }
+        public string GetEventNormal(ulong id) => events.ContainsKey(id) ? eventsNormal[id] : $"Event {id}";
+        public string GetEvent(ulong id) => events.ContainsKey(id) ? events[id] : $"EVENT_{id}";
     }
 }

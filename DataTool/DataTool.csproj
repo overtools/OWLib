@@ -70,6 +70,7 @@
     <Compile Include="ToolLogic\List\ListFlags.cs" />
     <Compile Include="ToolLogic\List\ListHeroes.cs" />
     <Compile Include="ToolLogic\List\ListHeroUnlocks.cs" />
+    <Compile Include="ToolLogic\List\ListKeys.cs" />
     <Compile Include="ToolLogic\List\ListMaps.cs" />
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
   </ItemGroup>
