@@ -12,20 +12,30 @@ namespace DataTool.Helper {
             STUDescription description = GetInstance<STUDescription>(key);
             return GetString(description?.String);
         }
-
-        public static T[] GetInstances<T>(ulong key) {
+        
+        public static ISTU OpenSTUSafe(ulong key) {
             using (Stream stream = OpenFile(key)) {
-                if (stream == null) return default(T[]);
-                ISTU stu = ISTU.NewInstance(stream, BuildVersion);
-                IEnumerable<T> insts = stu.Instances.OfType<T>();
-                IEnumerable<T> enumerable = insts as T[] ?? insts.ToArray();
-                return !enumerable.Any() ? default(T[]) : enumerable.ToArray();
+                if (stream == null) {
+                    return null;
+                }
+                return ISTU.NewInstance(stream, BuildVersion);
             }
         }
 
+        public static T[] GetInstances<T>(ulong key) {
+            ISTU stu = OpenSTUSafe(key);
+            if(stu == null) {
+                return new T[0];
+            }
+            return stu.Instances.OfType<T>().ToArray();
+        }
+
         public static T GetInstance<T>(ulong key) {
-            T[] insts = GetInstances<T>(key);
-            return !insts.Any() ? default(T) : insts.First();
+            ISTU stu = OpenSTUSafe(key);
+            if(stu == null) {
+                return null;
+            }
+            return stu.Instances.OfType<T>().FirstOrDefault();
         }
     }
 }
