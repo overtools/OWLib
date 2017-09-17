@@ -1,7 +1,7 @@
 ﻿using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0x0CC07049)]
+    [STU(0x0CC07049, "STUAchievement")]
     public class STUAchievement : STUInstance {
         [STUField(0xB48F1D22, "m_name")]
         public STUGUID Name;
