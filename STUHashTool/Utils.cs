@@ -195,7 +195,7 @@ namespace STUHashTool {
                         sb.Append($"{nl}{nameString} {fieldValue}");
                     }
                 }
-                // if (field.Name == "Unknown4") {
+                // if (field.Name == "m_07DD813E") {
                 //     if (Debugger.IsAttached) {
                 //         Debugger.Log(0, "STUHashTool", $"\r\n{sb}\r\n");
                 //         Debugger.Break();
@@ -217,9 +217,9 @@ namespace STUHashTool {
                 string[] instanceChecksums = instance.GetType().GetCustomAttributes<STUAttribute>().Select(x => Convert.ToString(x.Checksum, 16)).ToArray();
                 if (instanceWildcard != null && !instanceChecksums.Any(x => string.Equals(x, instanceWildcard.TrimStart('0'),  StringComparison.InvariantCultureIgnoreCase))) continue;
                 Console.Out.WriteLine($"Found instance: {instance.GetType()}");
-                // STU_7A68A730 test = instance as STU_7A68A730;
+                // STUAchievement test = instance as STUAchievement;
                 // if (test == null) continue;
-                // if (test.m_1485B834 == null) continue;
+                // Debug.Assert(test.PCRewardPoints == test.XboxGamerscore);
                 Console.Out.WriteLine(DumpSTUInner(instance, GetFields(instance.GetType()).OrderBy(x => x.Name).Where(
                         fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),
                     handler, map, 1));
