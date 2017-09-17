@@ -14,7 +14,7 @@ using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-maps", Description = "List maps", TrackTypes = new ushort[] {0x9F}, CustomFlags = typeof(ListFlags))]
-    public class ListMaps : JSONTool, ITool  {
+    public class ListMaps : JSONTool, ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
         }
