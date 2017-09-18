@@ -19,19 +19,19 @@ namespace STULib.Types {
         public STUGUID Description;
 
         [STUField(0xFC33191B)]
-        public STUGUID Unknown096_1;
+        public STUGUID Unknown096A;
 
         [STUField(0x0E679979)]
         public uint WeaponIndex;  // 0 = 0th weapon (sometimes the first weapon is 1, sometimes 0) 1 = first weapon, 2 = second weapon...
         // Doomfist's weapon is 0, every other is 1
 
         [STUField(0x9290B942)]
-        public STUGUID Unknown096_2;
+        public STUGUID Unknown096B;
 
         [STUField(0x7E3ED979)]
-        public STUGUID[] GUIDx06C_Reference;
+        public STUGUID[] UnknownGUIDx06C;
 
         [STUField(0xB1124918)]
-        public STUGUID[] GUIDx096_Reference;
+        public STUGUID[] UnknownGUIDx096;
     }
 }

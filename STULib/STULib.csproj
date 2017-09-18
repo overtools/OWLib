@@ -76,7 +76,6 @@
     <Compile Include="Types\Generic\Version1.cs" />
     <Compile Include="Types\STUAbilityInfo.cs" />
     <Compile Include="Types\STUAchievement.cs" />
-    <Compile Include="Types\STUAnnouncerVoiceList.cs" />
     <Compile Include="Types\STUDescription.cs" />
     <Compile Include="Types\STUHero.cs" />
     <Compile Include="Types\STUHighlightType.cs" />
@@ -102,6 +101,8 @@
     <Compile Include="Types\STUUnlock\STU_C294A43B.cs" />
     <Compile Include="Types\STUUnlock\Pose.cs" />
     <Compile Include="Types\STUUnlock\Skin.cs" />
+    <Compile Include="Types\STU_19DE8C96.cs" />
+    <Compile Include="Types\STU_9FF759FD.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OWLib\OWLib.csproj">

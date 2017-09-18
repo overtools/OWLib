@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
@@ -42,13 +40,30 @@ namespace DataTool.ToolLogic.List {
         public class AbilityInfo {
             public string Name;
             public string Type;
-            public string[] Descriptions;
+            public string Description;
             
-            [JsonConverter(typeof(GUIDArrayConverter))]
-            public ulong[] GUIDs;
+            [JsonConverter(typeof(GUIDConverter))]
+            public ulong GUID;
+
+            public AbilityInfo() {}
+
+            public AbilityInfoInner ToInner() {
+                return new AbilityInfoInner(GUID, Name, new List<string> {Description}, Type);
+            }
             
-            public AbilityInfo(ulong[] guid, string name, string[] descriptions, string type) {
-                GUIDs = guid;
+            public AbilityInfo(ulong guid, string name, string description, string type) {
+                GUID = guid;
+                Name = name;
+                Type = type;
+                Description = description;
+            }
+        }
+
+        public class AbilityInfoInner : AbilityInfo {
+            public List<string> Descriptions;
+            
+            public AbilityInfoInner(ulong guid, string name, List<string> descriptions, string type) {
+                GUID = guid;
                 Name = name;
                 Type = type;
                 Descriptions = descriptions;
@@ -73,8 +88,18 @@ namespace DataTool.ToolLogic.List {
                 }
 
                 if (hero.Value.Abilities != null) {
+                    Dictionary<string, AbilityInfoInner> abilities = new Dictionary<string, AbilityInfoInner>();
+
+                    foreach (KeyValuePair<string, AbilityInfo> ability in hero.Value.Abilities) {
+                        if (!abilities.ContainsKey(ability.Value.Name)) {
+                            abilities[ability.Value.Name] = ability.Value.ToInner();
+                        } else {
+                            abilities[ability.Value.Name].Descriptions.Add(ability.Value.Description);
+                        }
+                    }
+
                     Log($"{indentLevel + 1}Abilities:");
-                    foreach (KeyValuePair<string,AbilityInfo> ability in hero.Value.Abilities) {
+                    foreach (KeyValuePair<string, AbilityInfoInner> ability in abilities) {
                         Log($"{indentLevel + 2}{ability.Value.Name}: {ability.Value.Type}");
                         foreach (string description in ability.Value.Descriptions) {
                             if (description == null) continue;
@@ -91,8 +116,7 @@ namespace DataTool.ToolLogic.List {
             STUAbilityInfo ability = GetInstance<STUAbilityInfo>(key);
             if (ability == null) return null;
 
-            return new AbilityInfo(new[] {(ulong) key}, GetString(ability.Name), new[] {GetString(ability.Description)},
-                ability.AbilityType.ToString());
+            return new AbilityInfo(key, GetString(ability.Name), GetString(ability.Description), ability.AbilityType.ToString());
         }
 
         public Dictionary<string, AbilityInfo> GetAbilities(STUHero hero) {
@@ -105,20 +129,8 @@ namespace DataTool.ToolLogic.List {
             foreach (Common.STUGUID ability in hero.Abilities) {
                 AbilityInfo abi = GetAbility(ability);
 
-                string name = abi.Name ?? $"Unknown{GUID.Index(ability):X}";
-                
-                if (@return.ContainsKey(name)) {
-                    List<string> descrList = @return[name].Descriptions.ToList();
-                    descrList.AddRange(abi.Descriptions);
-                    @return[name].Descriptions = descrList.ToArray();
-                    
-                    List<ulong> guidList = @return[name].GUIDs.ToList();
-                    guidList.AddRange(abi.GUIDs);
-                    @return[name].GUIDs = guidList.ToArray();
-                } else {
-                    @return[name] = abi;
-                }
-                
+                string name = abi.Name == null ? $"Unknown{GUID.Index(ability):X}" : $"{abi.Name}:{GUID.Index(ability):X}";               
+                @return[name] = abi;
             }
             
             return @return;

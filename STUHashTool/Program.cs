@@ -579,9 +579,9 @@ namespace STUHashTool {
                     sb.AppendLine();
                     sb.AppendLine("namespace STULib.Types {");
 
-                    string stuAttribute = $"[STU(0x{todoInstance:X8})";
+                    string stuAttribute = $"[STU(0x{todoInstance:X8})]";
                     if (InstanceNames.ContainsKey(todoInstance)) {
-                        stuAttribute = $"[STU(0x{todoInstance:X8}, \"{InstanceNames[todoInstance]}\")";
+                        stuAttribute = $"[STU(0x{todoInstance:X8}, \"{InstanceNames[todoInstance]}\")]";
                     }
 
                     sb.AppendLine($"    {stuAttribute}");
