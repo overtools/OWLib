@@ -69,6 +69,10 @@
     <Compile Include="Types\Enums\STUEnumEventID.cs" />
     <Compile Include="Types\Enums\STUEnumPortraitTier.cs" />
     <Compile Include="Types\Enums\STUEnumPS4Trophy.cs" />
+    <Compile Include="Types\Enums\STUEnum_1AA009C2.cs" />
+    <Compile Include="Types\Enums\STUEnum_0C014B4A.cs" />
+    <Compile Include="Types\Enums\STUEnum_C4294B0E.cs" />
+    <Compile Include="Types\STUSoundbank.cs" />
     <Compile Include="Types\STUSubtitleContainer.cs" />
     <Compile Include="Types\Enums\STUEnumRarity.cs" />
     <Compile Include="Types\Generic\Common.cs" />
@@ -101,6 +105,15 @@
     <Compile Include="Types\STUUnlock\STU_C294A43B.cs" />
     <Compile Include="Types\STUUnlock\Pose.cs" />
     <Compile Include="Types\STUUnlock\Skin.cs" />
+    <Compile Include="Types\STUHeroVoiceEntry.cs" />
+    <Compile Include="Types\STUHeroVoice.cs" />
+    <Compile Include="Types\STUSoundHolder.cs" />
+    <Compile Include="Types\STUSoundDataContainer.cs" />
+    <Compile Include="Types\STUSoundMaster.cs" />
+    <Compile Include="Types\STUSoundWrapper.cs" />
+    <Compile Include="Types\STUSoundConainer.cs" />
+    <Compile Include="Types\STUSoundHeroInfo.cs" />
+    <Compile Include="Types\STUSoundInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OWLib\OWLib.csproj">

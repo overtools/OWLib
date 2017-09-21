@@ -22,7 +22,7 @@ namespace OWLib {
         public IReadOnlyList<STUD> STUDs => studs;
 
         private void AlignPosition(Stream input, long end) {
-            input.Position = (long)(Math.Ceiling((float)end / 16.0f) * 16);
+            input.Position = (long)(Math.Ceiling(end / 16.0f) * 16);
         }
 
         public Map(Stream input, bool open = false) {
@@ -34,8 +34,7 @@ namespace OWLib {
                 for (uint i = 0; i < header.recordCount; ++i) {
                     commonHeaders[i] = reader.Read<MapCommonHeader>();
                     long nps = input.Position + commonHeaders[i].size - 24;
-                    MANAGER_ERROR err;
-                    if ((err = manager.InitializeInstance(commonHeaders[i].type, input, out records[i])) != MANAGER_ERROR.E_SUCCESS) {
+                    if (manager.InitializeInstance(commonHeaders[i].type, input, out records[i]) != MANAGER_ERROR.E_SUCCESS) {
                         if (System.Diagnostics.Debugger.IsAttached) {
                             System.Diagnostics.Debugger.Log(2, "MAP", $"Error reading Map type {commonHeaders[i]:X}\n");
                         }
@@ -167,10 +166,7 @@ namespace OWLib {
         }
 
         public MANAGER_ERROR AddInstance(IMapFormat instance) {
-            if (instance == null) {
-                return MANAGER_ERROR.E_FAULT;
-            }
-            return AddInstance(instance.GetType());
+            return instance == null ? MANAGER_ERROR.E_FAULT : AddInstance(instance.GetType());
         }
 
         public MANAGER_ERROR AddInstance(Type instance) {
