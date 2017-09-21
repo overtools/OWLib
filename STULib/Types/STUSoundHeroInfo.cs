@@ -3,7 +3,7 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0xD815520F)]
-    public class STUSoundHeroInfo : STUSoundInfo {
+    public class STUSoundHeroInfo : STUSoundInfo {  // indirect, parent is referenced
         [STUField(0x8C8C5285)]
         public STUGUID Hero;
 

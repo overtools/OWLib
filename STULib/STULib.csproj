@@ -114,6 +114,7 @@
     <Compile Include="Types\STUSoundConainer.cs" />
     <Compile Include="Types\STUSoundHeroInfo.cs" />
     <Compile Include="Types\STUSoundInfo.cs" />
+    <Compile Include="Types\STU_32A19631.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OWLib\OWLib.csproj">
