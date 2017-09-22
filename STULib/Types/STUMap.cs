@@ -87,5 +87,11 @@ namespace STULib.Types {
             [STUField(0x7DD89F4F)]
             public STUGUID OverrideResource;
         }
+
+        public ulong DataKey => (MapDataResource1 & ~0xFFFFFFFF00000000ul) | 0x0DD0000100000000ul;
+        
+        public ulong GetDataKey(ushort type) {
+            return (DataKey & ~0xFFFF00000000ul) | ((ulong) type << 32);
+        }
     }
 }

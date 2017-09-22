@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using OWLib;
@@ -48,7 +49,7 @@ namespace STULib.Types.Generic {
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         [STUOverride(0xDEADBEEF, 8)] // DUMMY
-        public class STUGUID : IDemangleable {
+        public class STUGUID : IDemangleable, IEquatable<STUGUID> {
             [STUField(0x1, DummySize = 8, OnlyBuffer = true)] // DUMMY
             private ulong Padding = ulong.MaxValue;
 
@@ -95,6 +96,25 @@ namespace STULib.Types.Generic {
             public void SetGUIDs(ulong[] GUIDs) {
                 if (GUIDs?.Length > 0) {
                     Key = GUIDs[0];
+                }
+            }
+
+            public bool Equals(STUGUID other) {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return Padding == other.Padding && Key == other.Key;
+            }
+
+            public override bool Equals(object obj) {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((STUGUID) obj);
+            }
+
+            public override int GetHashCode() {
+                unchecked {
+                    return (Padding.GetHashCode() * 397) ^ Key.GetHashCode();
                 }
             }
         }

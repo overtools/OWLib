@@ -1,11 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using CASCLib;
 using OWLib;
 using static DataTool.Program;
 
 namespace DataTool.Helper {
     public static class IO {
+        public static string GetValidFilename(string filename) {
+            if (filename == null) return null;
+            string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
+            string invalidReStr = $@"[{invalidChars}]+";
+
+            string[] reservedWords = {
+                "CON", "PRN", "AUX", "CLOCK$", "NUL", "COM0", "COM1", "COM2", "COM3", "COM4",
+                "COM5", "COM6", "COM7", "COM8", "COM9", "LPT0", "LPT1", "LPT2", "LPT3", "LPT4",
+                "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
+            };
+
+            string sanitisedNamePart = Regex.Replace(filename, invalidReStr, "_");
+
+            return reservedWords.Select(reservedWord => $"^{reservedWord}\\.").Aggregate(sanitisedNamePart,
+                (current, reservedWordPattern) => Regex.Replace(current, reservedWordPattern, "_reservedWord_.",
+                    RegexOptions.IgnoreCase));
+        }
+        
         private static Dictionary<ulong, string> GUIDTable = new Dictionary<ulong, string>();
 
         public static string GetFileName(ulong guid) {

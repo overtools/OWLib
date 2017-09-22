@@ -51,7 +51,8 @@ namespace STUHashTool {
                 [0xD5] = "Description",
                 [0x58] = "HeroUnlocks",
                 [0xA5] = "Unlock",
-                [0x75] = "Hero"
+                [0x75] = "Hero",
+                [0x71] = "Subtitle"
             };
             return types.ContainsKey(GUID.Type(guid)) ? types[GUID.Type(guid)] : null;
         }
@@ -105,6 +106,10 @@ namespace STUHashTool {
                         instances = GetInstances(guid, handler, map);
                         STUHero hero = instances.OfType<STUHero>().First();
                         return $"{nameString}{GetOWString(hero?.Name, handler, map)}";
+                    case 0x71:
+                        instances = GetInstances(guid, handler, map);
+                        STUSubtitle subtitle = instances.OfType<STUSubtitle>().First();
+                        return $"{nameString}{subtitle.Text}";
                 }
             }
             catch (Exception) {
