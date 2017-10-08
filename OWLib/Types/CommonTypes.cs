@@ -94,6 +94,8 @@ namespace OWLib.Types {
         public ulong key;
         public uint unk;
         public uint layer;
+        
+        public ulong DataKey => (key & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

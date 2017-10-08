@@ -5,6 +5,6 @@ namespace STULib.Types.STUUnlock {
     public class PlayerIcon : Cosmetic {
         // importantthing is TextureResource
         [STUField(0x1B25AB90)]
-        public STUDecal CosmeticUnknownDecal;
+        public STUDecalReference CosmeticUnknownDecal;
     }
 }

@@ -1,26 +1,31 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using OWLib.Types;
-using static OWReplayLib.Types.Common;
+using OWReplayLib.Serializer;
 
 namespace OWReplayLib.Types {
-    // https://github.com/willkirkby/overwatch-highlights/blob/master/OverwatchHighlights/Highlight.cs
     public static class Highlight {
-        public const uint MAGIC_CONSTANT = 0x036C6870; // phl3, Player HighLight v3?
-
+        public class FillerStruct : ReadableData {
+            public uint Unknown62;
+            public uint Unknown63;
+            public uint Unknown64;
+            public byte Unknown65;
+        }
+        
         [Flags]
         public enum HighlightFlags {
-            Recent = 0x01,
-            Manual = 0x02,
-            Old = 0x04,
-            Exported = 0x08
+            Top5Highlight   = 0x1, // Displayed in the "Top 5" section
+            ManualHighlight = 0x2, // Displayed in the "36 manual highlights" section
+            IsNotNew        = 0x4, // if false, game will display "New" label
+            HasBeenExported = 0x8 // if true, game will display "Recorded" label
         }
 
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct HighlightHeader {
+        public class HighlightHeaderNew : ReadableData {
+            [Serializer.Types.Magic24(0x6C6870)] // { 'p', 'h', 'l' }
             public uint Magic;
-            [MarshalAs(UnmanagedType.LPArray, SizeConst = 0x20)]
-            public byte[] Checksum;
+            public byte FormatVersion;
+            //[Serializer.Types.FixedSizeArray(typeof(byte), 32)]
+            //public byte[] Checksum;
+            public Checksum Checksum;
             public uint DataLength;
             public ulonglong Unknown1;
             public ulonglong Unknown2;
@@ -29,44 +34,75 @@ namespace OWReplayLib.Types {
             public uint PlayerId;
             public uint Unknown3;
             public HighlightFlags Flags;
-            public ulong MapDataKey;
-            public ulong C5Key;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<HighlightInfo, int>))]
-            public HighlightInfo[] Info;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<HeroInfo, int>))]
-            public HeroInfo[] HeroInfo;
-            public ulong Unknown4;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<HighlightFilter, int>))]
-            public HighlightFilter[] Filters;
+            public Common.FileReference MapDataKey;
+            public Common.FileReference Gamemode;
+            [Serializer.Types.DynamicSizeArray(typeof(int), typeof(HighlightInfoNew))]
+            public HighlightInfoNew[] Info;
+            [Serializer.Types.DynamicSizeArray(typeof(int), typeof(Common.HeroInfo))]
+            public Common.HeroInfo[] HeroInfo;
+            public uint Unknown4;
+            public uint Unknown5;
+            [Serializer.Types.DynamicSizeArray(typeof(byte), typeof(FillerStruct))]
+            public FillerStruct[] FillerStructs;
             public int ReplayLength;
+            public Replay Replay;
         }
 
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct HighlightInfo {
-            [MarshalAs(UnmanagedType.LPStr)]
+        public class Replay : ReadableData {
+            [Serializer.Types.Magic24(0x707270)] // { 'p', 'r', 'p' }
+            public uint Magic;
+            public byte FormatVersion;
+            public uint BuildNumber;
+            public Common.FileReference Map;
+            public Common.FileReference Gamemode;
+            public byte Unknown1;
+            public uint Unknown2;
+            public uint Unknown3;
+            // [Serializer.Types.FixedSizeArray(typeof(byte), 32)]
+            // public byte[] MapChecksum;
+            public Checksum MapChecksum;
+            public int ParamsBlockLength;
+            public ReplayParams Params;
+            [Serializer.Types.Conditional("(helper.BitwiseAnd(Unknown1, 4)) != 0", new [] {"Unknown1"})]
+            public int HighlightInfoLength;
+            [Serializer.Types.Conditional("(helper.BitwiseAnd(Unknown1, 4)) != 0", new [] {"Unknown1"})]
+            public HighlightInfoNew HighlightInfo;
+            [Serializer.Types.ZstdBuffer(Serializer.Types.ZstdBufferSize.StreamEnd)]
+            public byte[] DecompressedBuffer;           
+        }
+
+        public class ReplayParams : ReadableData {
+            public uint StartFrame;
+            public uint EndFrame;
+            public ulong ExpectedDurationMS;
+            public ulong StartMS;
+            public ulong EndMS;
+            [Serializer.Types.DynamicSizeArray(typeof(int), typeof(Common.HeroInfo))]
+            public Common.HeroInfo[] HeroInfo;
+        }
+        
+        public class HighlightInfoNew : ReadableData {
+            [Serializer.Types.NullPaddedString]
             public string PlayerName;
+            
+            // public byte UnknownByte;
+            
             public byte Type;
             public uint Unknown1;
             public uint Unknown2;
-            public Vec3 Unknown3;
-            public Vec3 Unknown4;
-            public Vec3 Unknown5;
+            public float Unknown3;
+            public float Unknown4;
+            public uint Unknown5;
+            public Vec3 Position;
+            public Vec3 Direction;
             public Vec3 Up;
-            public ulong HeroMasterKey;
-            public ulong ItemSkinKey;
-            public ulong ItemWSkinKey;
-            public ulong ItemHighlightKey;
-            public ulong C2Key;
+            public Common.FileReference HeroMasterKey;
+            public Common.FileReference ItemSkinKey;
+            public Common.FileReference ItemWSkinKey;
+            public Common.FileReference HighlightIntro;
+            public Common.FileReference HighlightType;
             public ulong Timestamp;
             public UUID UUID;
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct HighlightFilter {
-            public uint Unknown1;
-            public uint Unknown2;
-            public uint Unknown3;
-            public byte Unknown4;
         }
     }
 }

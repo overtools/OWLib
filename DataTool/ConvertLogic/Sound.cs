@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using static OWLib.Extensions;
 // using OggVorbisEncoder;
 
 namespace DataTool.ConvertLogic {
@@ -227,7 +230,7 @@ namespace DataTool.ConvertLogic {
             public WwiseRIFFVorbis(Stream stream, string codebooksFile) {
                 _codebooksFile = codebooksFile;
                 _stream = stream;
-                using (BinaryReader reader = new BinaryReader(stream, System.Text.Encoding.Default, true)) {
+                using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, true)) {
                     _fileSize = reader.BaseStream.Length;
 
                     reader.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -624,6 +627,85 @@ namespace DataTool.ConvertLogic {
                 }
                 return outputStream;*/
             }
-        }   
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct WwiseBankHeader {
+            public uint MagicNumber;
+            public uint HeaderLength;
+            public uint Version;
+            public uint ID;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct WwiseBankChunkHeader {
+            public uint MagicNumber;
+            public uint ChunkLength;
+
+            public string Name => Encoding.UTF8.GetString(BitConverter.GetBytes(MagicNumber));
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct WwiseBankWemDef {
+            public uint FileID;
+            public uint DataOffset;
+            public int FileLength;
+        }
+
+        public class WwiseBank {
+            // public WwiseBankHeader Header;
+            public WwiseBankWemDef[] WemDefs;
+            public byte[][] WemData;
+
+            public List<WwiseBankChunkHeader> Chunks;
+            public Dictionary<WwiseBankChunkHeader, long> ChunkPositions;
+            
+            public WwiseBank(Stream stream) {
+                using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, true)) {
+                    ChunkPositions = new Dictionary<WwiseBankChunkHeader, long>();
+                    Chunks = new List<WwiseBankChunkHeader>();
+
+                    while (reader.BaseStream.Position < reader.BaseStream.Length) {
+                        WwiseBankChunkHeader chunk = reader.Read<WwiseBankChunkHeader>();
+                        Chunks.Add(chunk);
+                        ChunkPositions[chunk] = reader.BaseStream.Position;
+                        reader.BaseStream.Position += chunk.ChunkLength;
+                    }
+
+                    WwiseBankChunkHeader dataHeader = Chunks.FirstOrDefault(x => x.Name == "DATA");
+                    WwiseBankChunkHeader didxHeader = Chunks.FirstOrDefault(x => x.Name == "DIDX");
+                    
+                    if (dataHeader.MagicNumber == 0 || dataHeader.MagicNumber == 0) return;
+
+                    reader.BaseStream.Position = ChunkPositions[didxHeader];
+                    if (didxHeader.ChunkLength <= 0) return;
+                    
+                    WemDefs = new WwiseBankWemDef[didxHeader.ChunkLength / 12];
+                    WemData = new byte[didxHeader.ChunkLength / 12][];
+                    for (int i = 0; i < didxHeader.ChunkLength / 12; i++) {
+                        WemDefs[i] = reader.Read<WwiseBankWemDef>();
+                        long temp = reader.BaseStream.Position;
+
+                        reader.BaseStream.Position = ChunkPositions[dataHeader];
+                        WemData[i] = reader.ReadBytes(WemDefs[i].FileLength);
+
+                        reader.BaseStream.Position = temp;
+                    }
+                }
+            }
+
+            public void WriteWems(string output) {
+                if (WemDefs == null) return;
+                for (int i = 0; i < WemDefs.Length; i++) {
+                    WwiseBankWemDef wemDef = WemDefs[i];
+                    byte[] data = WemData[i];
+                    
+                    using (Stream outputs = File.Open($"{output}{Path.DirectorySeparatorChar}{wemDef.FileID:X8}.wem", FileMode.OpenOrCreate, FileAccess.Write)) {
+                        outputs.SetLength(0);
+                        outputs.Write(data, 0, data.Length);
+                    }
+                }
+            }
+        }
     }
 }

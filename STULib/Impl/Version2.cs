@@ -30,6 +30,8 @@ namespace STULib.Impl {
         protected STUInstanceField[][] instanceFields;
 
         protected Dictionary<Array, int[]> EmbedArrayRequests;
+        protected Dictionary<KeyValuePair<object, FieldInfo>, int> EmbedRequests;
+        internal List<KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, uint>>> HashmapRequests;  // keyval = instanceIndex: mapIndex
 
         private uint buildVersion;
 
@@ -51,7 +53,7 @@ namespace STULib.Impl {
             ReadInstanceData(stuStream.Position);
         }
 
-        private object GetValueArray(Type type, STUFieldAttribute element, STUArray info, STUInstanceField writtenField) {
+        private object GetValueArray(Type type, STUFieldAttribute element, STUArrayInfo info, STUInstanceField writtenField) {
             Array array = Array.CreateInstance(type, info.Count);
             for (uint i = 0; i < info.Count; ++i) {
                 if (element != null) {
@@ -178,7 +180,9 @@ namespace STULib.Impl {
             }
             switch (type.Name) {
                 case "String": {
-                    metadata.Position = reader.ReadUInt32();
+                    int stringPos = reader.ReadInt32();
+                    if (stringPos == -1) return null;
+                    metadata.Position = stringPos;
                     return ReadMetadataString();
                 }
                 case "Single":
@@ -199,6 +203,10 @@ namespace STULib.Impl {
                     reader.BaseStream.Position += 4;
                     return null;
                 default:
+                    if (type.GetInterfaces().Contains(typeof(ISTUCustomSerializable))) {
+                        return ((ISTUCustomSerializable) Activator.CreateInstance(type)).Deserialize(this, field,
+                            reader, metadataReader);
+                    }
                     if (typeof(STUInstance).IsAssignableFrom(type)) {
                         return null; // Set later by the second pass. Usually this is uint, indicating which STU instance entry to load inorder to get the instance. However this is only useful when you're streaming specific STUs.
                     }
@@ -265,32 +273,30 @@ namespace STULib.Impl {
                 }
                 return array;
             } if (typeof(STUInstance).IsAssignableFrom(type)) {
-                STUArray arrayDef = new STUArray();
                 int embedArrayOffset = reader.ReadInt32();
                 metadata.Position = embedArrayOffset;
-                int embedCount = metadataReader.ReadInt32();
-                if (embedCount == 0) {
+                STUEmbedArrayInfo embedArrayInfo = metadataReader.Read<STUEmbedArrayInfo>();
+                
+                if (embedArrayInfo.Count == 0) {
                     return null;
                 }
-                arrayDef.Count = (uint)embedCount;
-                arrayDef.Unknown = metadataReader.ReadUInt32();
-                metadata.Position = metadataReader.ReadInt64();
+                metadata.Position = embedArrayInfo.Offset;
                 
-                Array array = Array.CreateInstance(type, arrayDef.Count);
+                Array array = Array.CreateInstance(type, embedArrayInfo.Count);
                 
                 List<int> request = new List<int>();
-                for (int i = 0; i < arrayDef.Count; i++) {
-                    int value = metadataReader.ReadInt32();
-                    metadataReader.ReadInt32(); // Padding for in-place deserialization
-                    if (value == -1) return null;
-                    request.Add(value);
+                for (int i = 0; i < embedArrayInfo.Count; i++) {
+                    int instanceIndex = metadataReader.ReadInt32();
+                    metadataReader.ReadInt32(); // Padding
+                    if (instanceIndex == -1) return null;
+                    request.Add(instanceIndex);
                 }
                 EmbedArrayRequests[array] = request.ToArray();
                 return array;
             }
             int offset = reader.ReadInt32();
             metadata.Position = offset;
-            STUArray arrayInfo = metadataReader.Read<STUArray>();
+            STUArrayInfo arrayInfo = metadataReader.Read<STUArrayInfo>();
             metadata.Position = arrayInfo.Offset;
             return GetValueArray(type, element, arrayInfo, field);
         }
@@ -354,9 +360,24 @@ namespace STULib.Impl {
             BinaryReader reader) {
             Dictionary<uint, FieldInfo> fieldMap = CreateFieldMap(GetValidFields(type));
 
+            uint? instanceChecksum = instance.GetType().GetCustomAttributes<STUAttribute>().FirstOrDefault()?.Checksum;
+
             foreach (STUInstanceField writtenField in writtenFields) {
                 if (!fieldMap.ContainsKey(writtenField.FieldChecksum)) {
-                    Debugger.Log(0, "STU", $"[STU:{type}]: Unknown field {writtenField.FieldChecksum:X8} ({writtenField.FieldSize} bytes)\n");
+                    bool noFieldWarn = false;
+                    if (instanceChecksum != null) {
+                        if (SuppressedWarnings.ContainsKey((uint) instanceChecksum)) {
+                            if (SuppressedWarnings[(uint) instanceChecksum].Any(warn =>
+                                warn.Type == STUWarningType.MissingField &&
+                                warn.FieldChecksum == writtenField.FieldChecksum)) {
+                                noFieldWarn = true;
+                            }
+                        }
+                    }
+                    if (!noFieldWarn) {
+                        Debugger.Log(0, "STU",
+                            $"[STU:{type}]: Unknown field {writtenField.FieldChecksum:X8} ({writtenField.FieldSize} bytes)\n");
+                    }
                     if (writtenField.FieldSize == 0) {
                         uint size = reader.ReadUInt32();
                         reader.BaseStream.Position += size;
@@ -401,9 +422,10 @@ namespace STULib.Impl {
                             continue;
                         }
                     }
-                    if (writtenField.FieldSize == 4 && field.FieldType.IsClass && !IsSimple(field.FieldType)) {
+                    if (writtenField.FieldSize == 4 && field.FieldType.IsClass && !IsSimple(field.FieldType) && typeof(STUInstance).IsAssignableFrom(type)) {
+                        int instanceIndex = reader.ReadInt32();  // sometimes the inline isn't defined in the instance
+                        EmbedRequests.Add(new KeyValuePair<object, FieldInfo>(instance, field), instanceIndex);
                         // this is embedded, don't initialise the class
-                        reader.BaseStream.Position += writtenField.FieldSize;
                         continue;
                     }
 
@@ -484,9 +506,12 @@ namespace STULib.Impl {
         // ReSharper disable once PossibleNullReferenceException
         protected virtual void ReadInstanceData(long offset) {
             EmbedArrayRequests = new Dictionary<Array, int[]>();
+            HashmapRequests = new List<KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, uint>>>();
+            EmbedRequests = new Dictionary<KeyValuePair<object, FieldInfo>, int>();
             stream.Position = offset;
             GetHeaderCRC();
             stream.Position = offset;
+            HashSet<uint> missingInstances = new HashSet<uint>();
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
                 if (_InstanceTypes == null) {
                     LoadInstanceTypes();
@@ -515,8 +540,7 @@ namespace STULib.Impl {
                             instances[i] = ReadInstance(_InstanceTypes[instanceInfo[i].InstanceChecksum],
                                 instanceFields[fieldListIndex], reader, (int) instanceInfo[i].InstanceSize - 4);
                         } else {
-                            Debugger.Log(0, "STU",
-                                $"[Version2]: Unhandled instance type: {instanceInfo[i].InstanceChecksum:X}\n");
+                            missingInstances.Add(instanceInfo[i].InstanceChecksum);
                         }
                     }
 
@@ -531,6 +555,12 @@ namespace STULib.Impl {
                             }
                         }
                     }
+                    foreach (KeyValuePair<KeyValuePair<object, FieldInfo>, int> request in EmbedRequests) {
+                        if (request.Value >= instances.Count) continue;
+                        if (instances[request.Value] == null) continue;
+                        instances[request.Value].Usage = InstanceUsage.Embed;
+                        request.Key.Value.SetValue(request.Key.Key, instances[request.Value]);
+                    }
                     foreach (KeyValuePair<Array,int[]> request in EmbedArrayRequests) {
                         int arrayIndex = 0;
                         foreach (int i in request.Value) {
@@ -542,7 +572,30 @@ namespace STULib.Impl {
                             arrayIndex++;
                         }
                     }
+                    foreach (KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, uint>> hashmapRequest in HashmapRequests) {
+                        // keyval = instanceIndex: mapIndex
+                        hashmapRequest.Key.Value.GetType().GetMethod("Set").Invoke(hashmapRequest.Key.Value, new object[] {hashmapRequest.Value.Value, instances[hashmapRequest.Value.Key]});
+                        instances[hashmapRequest.Value.Key].Usage = InstanceUsage.HashmapElement;
+                    }
                 }
+            }
+            foreach (STUInstance instance in Instances) {
+                uint? instanceChecksum =
+                    instance?.GetType().GetCustomAttributes<STUAttribute>().FirstOrDefault()?.Checksum;
+                if (instanceChecksum == null) continue;
+                if (!SuppressedWarnings.ContainsKey((uint) instanceChecksum)) continue;
+                if (SuppressedWarnings[(uint) instanceChecksum]
+                    .All(warn => warn.Type != STUWarningType.MissingInstance)) continue;
+
+                foreach (STUSuppressWarningAttribute warningAttribute in SuppressedWarnings[(uint) instanceChecksum]
+                    .Where(warn => warn.Type == STUWarningType.MissingInstance)) {
+                    if (missingInstances.Contains(warningAttribute.InstanceChecksum)) {
+                        missingInstances.Remove(warningAttribute.InstanceChecksum);
+                    }
+                }
+            }
+            foreach (uint missingInstance in missingInstances) {
+                Debugger.Log(0, "STU", $"[Version2]: Unhandled instance type: {missingInstance:X}\n");
             }
         }
 

@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CASCLib;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
 using Newtonsoft.Json;
-using STULib.Types;
 using STULib.Types.Generic;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
-using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-subtitles-real", Description = "List subtitles (from audio data)", TrackTypes = new ushort[] {0x5F}, CustomFlags = typeof(ListFlags))]
@@ -56,7 +52,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public List<SoundInfo> GetSubtitles() {
-            Dictionary<ulong, List<SoundInfo>> sounds = new MultiDictionary<ulong, SoundInfo>();
+            Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
             List<SoundInfo> subtitleSounds = new List<SoundInfo>();
 
             foreach (ulong key in TrackedFiles[0x5F]) {

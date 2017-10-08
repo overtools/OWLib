@@ -14,7 +14,8 @@ namespace DataTool.SaveLogic {
             bool convertBnk = false;
             if (flags is ExtractFlags extractFlags) {
                 convertWem = extractFlags.ConvertWem;
-                convertBnk = extractFlags.ConvertBnk;
+                // convertBnk = extractFlags.ConvertBnk;
+                convertBnk = false;
             }
 
             foreach (KeyValuePair<ulong,List<SoundInfo>> pair in sounds) {
@@ -62,10 +63,8 @@ namespace DataTool.SaveLogic {
                                 soundStream.CopyTo(outputStream);
                             }
                         }
-                        if (convertBnk) {
-                            // todo: soon
-                            // I'm not including it now because the binary I was planning on using has no license attached and I want to be sure
-                        }
+                        // todo: I'm not going to add conversion here because no OW bnks have wems (yet)
+                        // if (convertBnk) { }
                     }
 
 

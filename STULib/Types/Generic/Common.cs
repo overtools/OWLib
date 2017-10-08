@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using OWLib;
@@ -7,11 +11,13 @@ using OWLib;
 namespace STULib.Types.Generic {
     public static class Common {
         public enum InstanceUsage : uint {
-            Root = 0,
-            Embed = 1,
-            EmbedArray = 2,
-            Inline = 3,
-            InlineArray = 4
+            None = 0,
+            Root = 1,
+            Embed = 2,
+            EmbedArray = 3,
+            Inline = 4,
+            InlineArray = 5,
+            HashmapElement = 6
         }
         
         public class STUInstance {
@@ -31,6 +37,10 @@ namespace STULib.Types.Generic {
             public override string ToString() {
                 return ISTU.GetName(GetType());
             }
+        }
+
+        public interface ISTUHashToolPrintExtender {  // this needs to be worked into more things
+            string Print(out Color? color);
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -183,7 +193,7 @@ namespace STULib.Types.Generic {
     
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         [STUOverride(0xDEADBEEF, 12)] // DUMMY
-        public class STUColorRGB {
+        public class STUColorRGB : ISTUHashToolPrintExtender {
             [STUField(0x1, DummySize = 4)]
             public float R;
 
@@ -199,6 +209,16 @@ namespace STULib.Types.Generic {
                     (int) (obj.G * 255f),
                     (int) (obj.B * 255f)
                 );
+            }
+            
+            public string Hex() {
+                Color c = this;
+                return $"#{c.Name}";
+            }
+
+            public string Print(out Color? color) {
+                color = this;
+                return Hex();
             }
         }
 
@@ -235,6 +255,81 @@ namespace STULib.Types.Generic {
             
             public static implicit operator Quaternion(STUQuaternion obj) {
                 return new Quaternion(obj.X, obj.Y, obj.Z, obj.W);
+            }
+        }
+
+        public interface ISTUCustomSerializable {
+            object Deserialize(Impl.Version2 stu, Version2.STUInstanceField field, BinaryReader reader, BinaryReader metadataReader);
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct STUHashMapData {
+            public int Unknown2Size;
+            public uint Unknown1;
+            public long Unknown2Offset;
+            public long DataOffset;
+        }
+
+        public class STUHashMap<T> : Dictionary<ulong, T>, ISTUCustomSerializable  where T : STUInstance {
+            public object Deserialize(Impl.Version2 stu, Version2.STUInstanceField field, BinaryReader reader, BinaryReader metadataReader) {
+                int offset = reader.ReadInt32();
+                if (offset == -1) return null;
+                metadataReader.BaseStream.Position = offset;
+
+                STUHashMapData data = metadataReader.Read<STUHashMapData>();
+                if (data.Unknown2Size == 0) return null;
+
+                metadataReader.BaseStream.Position = data.Unknown2Offset;
+                List<uint> unknown2 = new List<uint>(data.Unknown2Size);
+                for (int i = 0; i != data.Unknown2Size; ++i){
+                    unknown2.Add(metadataReader.ReadUInt32());
+                }
+                
+                metadataReader.BaseStream.Position = data.DataOffset;
+                uint mapSize = unknown2.Last();
+                for (int i = 0; i != mapSize; ++i) {
+                    ulong key = metadataReader.ReadUInt64();
+                    // Last 4 bytes are padding for in-place deserialization.
+                    int value = (int) metadataReader.ReadUInt64();
+                    if (value == -1) {
+                        Add(key, null);
+                    } else {
+                        // get instance later
+                        stu.HashmapRequests.Add(new KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, uint>>(new KeyValuePair<Type, object>(typeof(T), this), new KeyValuePair<uint, uint>((uint)value, (uint)i)));
+                    }
+                }
+                return this;
+            }
+
+            public void Set(uint index, T instance) {
+                this[index] = instance;
+            }
+        }
+
+        // [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        // [STUOverride(0xDEADBEEF, 8)]
+        public class STUDateAndTime : ISTUHashToolPrintExtender {
+            [STUField(0x1, DummySize = 8)]
+            public ulong Timestamp;
+            
+            // todo: the timestamp doesn't work as seconds or milliseconds
+
+            public DateTime ToDateTime() {
+                return ToDateTimeUTC().ToLocalTime();
+            }
+
+            public DateTime ToDateTimeUTC() {
+                DateTime time = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                return time.AddSeconds(Timestamp);
+            }
+
+            public override string ToString() {
+                return ToDateTime().ToString(CultureInfo.InvariantCulture);
+            }
+
+            public string Print(out Color? color) {
+                color = Color.Yellow;
+                return "(STUDateAndTime doesn't work properly yet)";
             }
         }
     }

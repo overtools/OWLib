@@ -64,14 +64,21 @@
     <Compile Include="STUEnumAttribute.cs" />
     <Compile Include="STUOverride.cs" />
     <Compile Include="STUFieldAttribute.cs" />
+    <Compile Include="STUWarning.cs" />
     <Compile Include="Types\Enums\STUEnumAbilityType.cs" />
     <Compile Include="Types\Enums\STUEnumAchievementGroup.cs" />
     <Compile Include="Types\Enums\STUEnumEventID.cs" />
     <Compile Include="Types\Enums\STUEnumPortraitTier.cs" />
     <Compile Include="Types\Enums\STUEnumPS4Trophy.cs" />
+    <Compile Include="Types\Enums\STUEnumTeamType.cs" />
     <Compile Include="Types\Enums\STUEnum_1AA009C2.cs" />
     <Compile Include="Types\Enums\STUEnum_0C014B4A.cs" />
     <Compile Include="Types\Enums\STUEnum_C4294B0E.cs" />
+    <Compile Include="Types\STUGamemode.cs" />
+    <Compile Include="Types\STUGamemodeCosmeticCollection.cs" />
+    <Compile Include="Types\STUGamemodeHeroCollection.cs" />
+    <Compile Include="Types\STUGamemodeHeroOverride.cs" />
+    <Compile Include="Types\STUGamemodeTeam.cs" />
     <Compile Include="Types\STUSoundbank.cs" />
     <Compile Include="Types\STUSubtitleContainer.cs" />
     <Compile Include="Types\Enums\STUEnumRarity.cs" />
@@ -112,9 +119,16 @@
     <Compile Include="Types\STUSoundMaster.cs" />
     <Compile Include="Types\STUSoundWrapper.cs" />
     <Compile Include="Types\STUSoundConainer.cs" />
-    <Compile Include="Types\STUSoundHeroInfo.cs" />
     <Compile Include="Types\STUSoundInfo.cs" />
-    <Compile Include="Types\STU_32A19631.cs" />
+    <Compile Include="Types\STUSoundInfoContainer.cs" />
+    <Compile Include="Types\GamemodeUnknown\Enums\STUEnum_1964FED7.cs" />
+    <Compile Include="Types\GamemodeUnknown\STU_02E4C615.cs" />
+    <Compile Include="Types\GamemodeUnknown\STU_21CE58F6.cs" />
+    <Compile Include="Types\GamemodeUnknown\STU_22BF1D21.cs" />
+    <Compile Include="Types\GamemodeUnknown\STU_3ED2A372.cs" />
+    <Compile Include="Types\GamemodeUnknown\STU_43CA1D94.cs" />
+    <Compile Include="Types\GamemodeUnknown\STU_57AEDFA2.cs" />
+    <Compile Include="Types\GamemodeUnknown\STU_9783E116.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OWLib\OWLib.csproj">

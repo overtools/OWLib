@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
@@ -62,6 +61,8 @@ namespace DataTool.ToolLogic.List {
 
             IndentHelper indentLevel = new IndentHelper();
             foreach (KeyValuePair<string, MapInfo> map in maps) {
+                string name = map.Value.NameB ?? map.Value.Name;
+                if (name == null) continue;
                 Log(map.Value.NameB ?? map.Value.Name);
 
                 if (map.Value.Description != null) Log($"{indentLevel + 1}Description: {map.Value.Description}");

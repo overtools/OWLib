@@ -1,22 +1,46 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using OWLib.Types;
+﻿using System.Runtime.InteropServices;
+using OWLib;
+using OWReplayLib.Serializer;
 
 namespace OWReplayLib.Types {
     public static class Common {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        // https://github.com/willkirkby/overwatch-highlights/blob/master/OverwatchHighlights/HeroWithUnlockables.cs
-        public struct HeroInfo {
-            public uint SkinId;
-            public uint WSkinId;
-            public uint HighlightId;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<uint, int>))]
-            public uint[] SprayIds;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<uint, int>))]
-            public uint[] VoiceLineIds;
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ArrayMarshaler<uint, int>))]
-            public uint[] EmoteIds;
-            public ulong HeroMasterKey;
+        public struct FileReference {
+            public ulong Key;
+
+            public override string ToString() {
+                return $"{GUID.LongKey(Key):X12}.{GUID.Type(Key):X3}";
+            }
+
+            public static implicit operator ulong(FileReference obj) {
+                return obj.Key;
+            }
+        }
+        
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct IntFileReference {
+            public uint Key;
+
+            public override string ToString() {
+                return $"{GUID.LongKey(Key):X8}";
+            }
+
+            public static implicit operator uint(IntFileReference obj) {
+                return obj.Key;
+            }
+        }
+
+        public class HeroInfo : ReadableData {
+            public IntFileReference SkinId;
+            public IntFileReference WeaponSkinId;
+            public IntFileReference HighlightIntro;
+            [Serializer.Types.DynamicSizeArray(typeof(int), typeof(IntFileReference))]
+            public IntFileReference[] SprayIds;
+            [Serializer.Types.DynamicSizeArray(typeof(int), typeof(IntFileReference))]
+            public IntFileReference[] VoiceLineIds;
+            [Serializer.Types.DynamicSizeArray(typeof(int), typeof(IntFileReference))]
+            public IntFileReference[] EmoteIds;
+            public FileReference HeroMasterKey;
         }
     }
 }

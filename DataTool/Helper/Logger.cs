@@ -35,6 +35,10 @@ namespace DataTool.Helper {
         public static void Log() {
             Console.Out.WriteLine();
         }
+        
+        public static void Log(string syntax) {
+            Console.Out.WriteLine(syntax);
+        }
 
         public static void Log(string syntax, params object[] payload) {
             Console.Out.WriteLine(syntax, payload);

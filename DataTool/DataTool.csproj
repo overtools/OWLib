@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="ConvertLogic\Sound.cs" />
     <Compile Include="FindLogic\Sound.cs" />
+    <Compile Include="FindLogic\Texture.cs" />
     <Compile Include="Flag\AliasAttribute.cs" />
     <Compile Include="Flag\CLIFlagAttribute.cs" />
     <Compile Include="Flag\Converter.cs" />
@@ -72,9 +73,12 @@
     <Compile Include="ToolAttribute.cs" />
     <Compile Include="ToolLogic\Extract\ExtractMaps.cs" />
     <Compile Include="ToolLogic\Extract\ExtractFlags.cs" />
+    <Compile Include="ToolLogic\List\Debug\ListDebugSoundbanks.cs" />
+    <Compile Include="ToolLogic\List\Debug\ListDebugDecal.cs" />
     <Compile Include="ToolLogic\List\ListFlags.cs" />
     <Compile Include="ToolLogic\List\ListHeroes.cs" />
     <Compile Include="ToolLogic\List\ListHeroUnlocks.cs" />
+    <Compile Include="ToolLogic\List\ListHighlights.cs" />
     <Compile Include="ToolLogic\List\ListKeys.cs" />
     <Compile Include="ToolLogic\List\ListMaps.cs" />
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
@@ -97,7 +101,7 @@
       <Name>OWLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\OWReplayLib\OWReplayLib.csproj">
-      <Project>{d3747a31-85d2-424f-9865-a83245fdb762}</Project>
+      <Project>{FCF6F515-0870-4CB4-8A55-1363D20B01A0}</Project>
       <Name>OWReplayLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\STULib\STULib.csproj">

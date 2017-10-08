@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using OWLib;
@@ -39,7 +40,7 @@ namespace STULib.Impl.Version2HashComparer {
                 Debugger.Log(0, "STULib",
                     $"[Version2HashComparer]: Instance {Hash:X} parent {ParentChecksum:X} does not exist in the dataset\n");
             } else {
-                fields.AddRange(Version2Comparer.InstanceJSON[ParentChecksum].GetFields());
+                fields.AddRange(Version2Comparer.InstanceJSON[ParentChecksum].GetFields(true));
             }
             return fields.ToArray();
         }
@@ -91,7 +92,7 @@ namespace STULib.Impl.Version2HashComparer {
         public FieldSHA1 SHA1;
         public FieldSHA1 DemangleSHA1;
 
-        public STUArray ArrayInfo;
+        public STUArrayInfo ArrayInfo;
         public Dictionary<uint, ArrayFieldDataHash[]> ArraySHA1;
 
         public uint ChainedInstanceChecksum;
@@ -176,6 +177,7 @@ namespace STULib.Impl.Version2HashComparer {
         public uint EmbedInstanceChecksum =>
             IsEmbed || IsEmbedArray ? TypeInstanceChecksum : 0;
         public uint EnumChecksum => IsEnum || IsEnumArray ? uint.Parse(Type, NumberStyles.HexNumber) : 0;
+        public uint HashMapChecksum => IsHashMap ? TypeInstanceChecksum : 0;
         
         public FieldData() { }
 
@@ -194,7 +196,7 @@ namespace STULib.Impl.Version2HashComparer {
         public FieldSHA1 SHA1;
         public FieldSHA1 SHA1Demangle;
         
-        public Dictionary<uint, ArrayFieldDataHash[]> ArraySHA1;
+        public FieldSHA1[] ArraySHA1;
 
         public WrittenFieldData(STUInstanceJSON.STUFieldJSON jsonField) : base(jsonField) { }
     }
@@ -215,6 +217,12 @@ namespace STULib.Impl.Version2HashComparer {
         public uint OwnerChecksum;
         public uint OwnerField;
         internal string DebuggerDisplay => $"{Checksum:X} (Chained to {OwnerChecksum:X}:{OwnerField:X})";
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct FakeArrayGUID {
+        public ulong Padding;
+        public ulong Key;
     }
 
     public class Version2Comparer : Version2 {
@@ -346,7 +354,7 @@ namespace STULib.Impl.Version2HashComparer {
             try {
                 int offset = reader.ReadInt32();
                 metadata.Position = offset;
-                STUArray array = metadataReader.Read<STUArray>();
+                STUArrayInfo array = metadataReader.Read<STUArrayInfo>();
 
                 if (array.Count < 99999 && array.Count > 0) {
                     output.IsArray = true;
@@ -496,8 +504,9 @@ namespace STULib.Impl.Version2HashComparer {
             uint fieldIndex = 0;
             foreach (STUInstanceJSON.STUFieldJSON field in InstanceJSON[instanceChecksum].GetFields()) {
                 output[fieldIndex] = new FieldData(field);
-                if (output[fieldIndex].SerializationType >= 2 && output[fieldIndex].SerializationType <= 5) {
+                if (output[fieldIndex].InlineInstanceChecksum != 0 || output[fieldIndex].EmbedInstanceChecksum != 0 || output[fieldIndex].HashMapChecksum != 0) {
                     if (!InternalInstances.ContainsKey(output[fieldIndex].TypeInstanceChecksum)) {
+                        InternalInstances[output[fieldIndex].TypeInstanceChecksum] = null; // prevent stackoverflow
                         InternalInstances[output[fieldIndex].TypeInstanceChecksum] =
                             GetInstanceData(output[fieldIndex].TypeInstanceChecksum, null);
                     }
@@ -527,43 +536,75 @@ namespace STULib.Impl.Version2HashComparer {
                 }
 
                 WrittenFieldData outputField = new WrittenFieldData(jsonField);
+                using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider()) {
+                    /*switch (jsonField.SerializationType) {
+                        case 2:
+                        case 3:
+                            reader.BaseStream.Position += field.FieldSize;
+                            break;
+                        case 4:
+                        case 5:
+                            reader.BaseStream.Position += reader.ReadUInt32();
+                            // outputField.SHA1 = sha1.ComputeHash(BitConverter.GetBytes(jsonField.Size));
+                            break;
+                        case 8:
+                        case 0:
+                            outputField.SHA1 = sha1.ComputeHash(reader.ReadBytes((int) field.FieldSize));
+                            break;
+                        case 9:
+                        case 1:
+                            int offset = reader.ReadInt32();
+                            metadata.Position = offset;
+                            STUArrayInfo array = metadataReader.Read<STUArrayInfo>();
+                            outputField.ArraySHA1 = new FieldSHA1[array.Count];
+                            int arrayItemSize = 0; // todo
+                            if (arrayItemSize == 0) {
+                                break;
+                            }
+                            for (int j = 0; j < array.Count; j++) {
+                                outputField.ArraySHA1[i] = sha1.ComputeHash(metadataReader.ReadBytes(arrayItemSize));
+                            }
+                            break;
+                        case 7: // todo hashmap
+                            Debugger.Break();
+                            break;
+                        case 10:
+                        case 12:
+                            Common.STUGUID f = new Common.STUGUID(reader.ReadUInt64());
+                            DemangleInstance(f, field.FieldChecksum);
+                            outputField.SHA1Demangle = sha1.ComputeHash(BitConverter.GetBytes(f));
+                            break;
+                        case 11:
+                        case 13:
+                            int offset2 = reader.ReadInt32();
+                            metadata.Position = offset2;
+                            STUArrayInfo array2 = metadataReader.Read<STUArrayInfo>();
+                            outputField.ArraySHA1 = new FieldSHA1[array2.Count];
+                            for (int j = 0; j < array2.Count; j++) {
+                                FakeArrayGUID fakeArrayGUID = metadataReader.Read<FakeArrayGUID>();
+                                Common.STUGUID f2 = new Common.STUGUID(fakeArrayGUID.Key, fakeArrayGUID.Padding);
+                                DemangleInstance(f2, field.FieldChecksum);
+                                outputField.ArraySHA1[j] = sha1.ComputeHash(BitConverter.GetBytes(f2));
+                            }
+                            break;
+                        // case 10: // todo guid
+                        // case 11: // todo guid array
+                        //     break;
 
-                switch (jsonField.SerializationType) {
-                    // todo: move over all old sha1 logic
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                        //Console.Out.WriteLine($"{jsonField.SerializationType}: {field.FieldSize} bytes");
-                        break;
-                    case 0:
-                        reader.BaseStream.Position += field.FieldSize;
-                        break;
-                    case 1: // todo arrray
-                        reader.BaseStream.Position += field.FieldSize;
-                        break;
-                    case 7: // todo hashmap
-                        Debugger.Break();
-                        break;
-                    // case 8: // todo enum
-                    // case 9: // todo enum array
-                    // case 10: // todo guid
-                    // case 11: // todo guid array
-                    //     break;
-                    
-                    // case 0: Primitive
-		            // case 1: STUArray<STU{stuField.Type}Primitive>
-		            // case 2: STUEmbed<{stuField.Type}>    // ex chained
-		            // case 3: STUArray<STUEmbed<{stuField.Type}>>
-		            // case 4: STUInline<{stuField.Type}>  // ex nested
-		            // case 5: STUArray<STUInline<{stuField.Type}>>
-		            // case 7: STUHashMap<{stuField.Type}>
-		            // case 8: Enums.{stuField.Type}?
-		            // case 9: STUArray<Enums.{stuField.Type}?>
-		            // case 10: STUAssetRef<ulong>
-		            // case 11: STUArray<STUAssetRef<ulong>>
-		            // case 12: STUAssetRef<{stuField.Type}>
-		            // case 13: STUArray<STUAssetRef<{stuField.Type}>>
+                        // case 0: Primitive
+                        // case 1: STUArray<STU{stuField.Type}Primitive>
+                        // case 2: STUEmbed<{stuField.Type}>    // ex chained
+                        // case 3: STUArray<STUEmbed<{stuField.Type}>>
+                        // case 4: STUInline<{stuField.Type}>  // ex nested
+                        // case 5: STUArray<STUInline<{stuField.Type}>>
+                        // case 7: STUHashMap<{stuField.Type}>
+                        // case 8: Enums.{stuField.Type}?
+                        // case 9: STUArray<Enums.{stuField.Type}?>
+                        // case 10: STUAssetRef<ulong>
+                        // case 11: STUArray<STUAssetRef<ulong>>
+                        // case 12: STUAssetRef<{stuField.Type}>
+                        // case 13: STUArray<STUAssetRef<{stuField.Type}>>
+                    }*/
                 }
                 output[i] = outputField;
             }

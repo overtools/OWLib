@@ -23,6 +23,7 @@ namespace DataTool {
         public static OwRootHandler Root;
         public static ToolFlags Flags;
         public static uint BuildVersion;
+        public static bool IsPTR;
 
         public static bool ValidKey(ulong key) => Files.ContainsKey(key);
         
@@ -127,6 +128,13 @@ namespace DataTool {
             Config.Languages = new HashSet<string>(new[] { Flags.Language });
             #endregion
 
+            foreach (Dictionary<string, string> build in Config.BuildInfo) {
+                if (!build.ContainsKey("Tags")) continue;
+                if (build["Tags"].Contains("XX?")) IsPTR = true;
+                // us ptr region is known as XX, so just look for it in the tags.
+                // this should work... untested for Asia
+            }
+            
             BuildVersion = uint.Parse(Config.BuildName.Split('.').Last());
 
             if (Flags.SkipKeys) {

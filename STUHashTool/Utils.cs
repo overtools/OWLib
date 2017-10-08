@@ -15,6 +15,10 @@ using STULib.Types;
 using STULib.Types.STUUnlock;
 using static STULib.Types.Generic.Common;
 using Util = OverTool.Util;
+using Console = Colorful.Console;
+using System.Drawing;
+using System.Text.RegularExpressions;
+using Colorful;
 
 namespace STUHashTool {
     public class Utils {
@@ -52,7 +56,9 @@ namespace STUHashTool {
                 [0x58] = "HeroUnlocks",
                 [0xA5] = "Unlock",
                 [0x75] = "Hero",
-                [0x71] = "Subtitle"
+                [0x71] = "Subtitle",
+                [0x68] = "Achievement",
+                [0xD9] = "BrawlName"
             };
             return types.ContainsKey(GUID.Type(guid)) ? types[GUID.Type(guid)] : null;
         }
@@ -92,7 +98,7 @@ namespace STUHashTool {
                         STUHeroUnlocks unlocks = instances.OfType<STUHeroUnlocks>().First();
                         if (unlocks == null) return null;
                         // Console.Out.WriteLine($"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|{nameString}");
-                        return $"{nameString}\r\n{DumpSTUInner(unlocks, GetFields(unlocks.GetType()).OrderBy(x => x.Name).Where(fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(), handler, map, indentLevel+1)}";
+                        return $"{nameString}\r\n{DumpSTUInner(unlocks, GetFields(unlocks.GetType()).OrderBy(x => x.Name).Where(fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(), handler, map, indentLevel+1, null)}";
                     case 0xA5:
                         instances = GetInstances(guid, handler, map);
                         Cosmetic unlock = instances.OfType<Cosmetic>().First();
@@ -110,6 +116,14 @@ namespace STUHashTool {
                         instances = GetInstances(guid, handler, map);
                         STUSubtitle subtitle = instances.OfType<STUSubtitle>().First();
                         return $"{nameString}{subtitle.Text}";
+                    case 0x68:
+                        instances = GetInstances(guid, handler, map);
+                        STUAchievement achievement = instances.OfType<STUAchievement>().First();
+                        return $"{nameString}{GetOWString(achievement?.Name, handler, map)}";
+                    case 0xD9:
+                        instances = GetInstances(guid, handler, map);
+                        STUBrawlName brawlName = instances.OfType<STUBrawlName>().First();
+                        return $"{nameString}{GetOWString(brawlName?.Name, handler, map)}";
                 }
             }
             catch (Exception) {
@@ -131,7 +145,7 @@ namespace STUHashTool {
         }
 
         internal static string DumpSTUInner(object instance, FieldInfo[] fields, CASCHandler handler,
-            Dictionary<ulong, Record> map, uint indentLevel) {
+            Dictionary<ulong, Record> map, uint indentLevel, StyleSheet sheet) {
             StringBuilder sb = new StringBuilder();
             string indentString = GetIndentString(indentLevel);
             uint fieldIndex = 0;
@@ -151,6 +165,20 @@ namespace STUHashTool {
                 if (fieldValue == null) {
                     sb.Append($"{nl}{nameString} null");
                     fieldIndex++;
+                    continue;
+                }
+                if (typeof(IDictionary).IsAssignableFrom(field.FieldType)) {
+                    sb.Append($"{nl}{nameString}");
+                    IDictionary test = (IDictionary) fieldValue;
+                    List<string> dictOut = (from object key in test.Keys select $"{key} :").ToList();
+                    int valueIndex = 0;
+                    foreach (object value in test.Values) {
+                        dictOut[valueIndex] += $" {value}";
+                        valueIndex++;
+                    }
+                    foreach (string s in dictOut) {
+                        sb.Append($"\r\n{GetIndentString(indentLevel + 1)}{s}");
+                    }
                     continue;
                 }
                 if (field.FieldType.IsArray) {
@@ -175,11 +203,11 @@ namespace STUHashTool {
                             sb.Append($"\r\n{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]: null");
                             continue;
                         }
-                        if (field.FieldType.IsClass && !ISTU.IsSimple(field.FieldType.GetElementType())) {
+                        if (field.FieldType.IsClass && !ISTU.IsSimple(field.FieldType.GetElementType()) && !field.FieldType.GetElementType().IsEnum) {
                             sb.AppendLine($"\r\n{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]:");
                             sb.Append(DumpSTUInner(val, GetFields(val.GetType()).OrderBy(x => x.Name).Where(
                                     fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0)
-                                .ToArray(), handler, map, indentLevel + 2));
+                                .ToArray(), handler, map, indentLevel + 2, sheet));
                         } else {
                             sb.Append($"\r\n{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]: {val}");
                         }
@@ -195,12 +223,26 @@ namespace STUHashTool {
                         sb.AppendLine($"{nl}{nameString}");
                         sb.Append(DumpSTUInner(fieldValue, GetFields(fieldValue.GetType()).OrderBy(x => x.Name).Where(
                                 fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),
-                            handler, map, indentLevel + 1));
+                            handler, map, indentLevel + 1, sheet));
                     } else {
                         sb.Append($"{nl}{nameString} {fieldValue}");
                     }
+                    if (field.FieldType.GetInterfaces().Contains(typeof(ISTUHashToolPrintExtender))) {
+                        Color? color;
+                        string output = ((ISTUHashToolPrintExtender) fieldValue).Print(out color);
+                        string outputFormatted = $"\r\n{GetIndentString(indentLevel + 1)}{output}";
+                        string outputEscaped = Regex.Escape(outputFormatted);
+                        sb.Append(outputFormatted);
+                        if (color != null) {
+                            if (sheet.Styles.All(x => x.Target.Value != outputEscaped)) {
+                                sheet.AddStyle(outputEscaped, (Color) color);
+                            }
+                        }
+                        
+                    }
+
                 }
-                // if (field.Name == "m_07DD813E") {
+                // if (field.Name == "m_961B4853") {
                 //     if (Debugger.IsAttached) {
                 //         Debugger.Log(0, "STUHashTool", $"\r\n{sb}\r\n");
                 //         Debugger.Break();
@@ -215,22 +257,40 @@ namespace STUHashTool {
             string instanceWildcard = null) {
             // tries to properly dump an STU to the console
             // uses handler to load GUIDs, and process the types
+            
+            // colour support doesn't work as well as I had hoped, because Windows is bad.
+            // after setitting the colour 16 times it breaks, so I have to reset the colours every time
+            // this means that any past-written colours will change.
 
             if (stu == null) return;
 
-            foreach (STUInstance instance in stu.Instances.Where(x => x?.Usage == InstanceUsage.Root)) {
+            uint index = 0;
+            foreach (STUInstance instance in stu.Instances) {
+                // ifs are seperate for modularity, comment and uncomment for testing
+                if (instance == null) {
+                    index++;
+                    continue;
+                }
+                if (instance.Usage != InstanceUsage.Root) {
+                    index++;
+                    continue;
+                }
                 string[] instanceChecksums = instance.GetType().GetCustomAttributes<STUAttribute>().Select(x => Convert.ToString(x.Checksum, 16)).ToArray();
                 if (instanceWildcard != null && !instanceChecksums.Any(x => string.Equals(x, instanceWildcard.TrimStart('0'),  StringComparison.InvariantCultureIgnoreCase))) continue;
-                Console.Out.WriteLine($"Found instance: {instance.GetType()}");
+                Console.ReplaceAllColorsWithDefaults();
+                Console.WriteLine($"Found instance: {instance.GetType()} ({index})", Color.LightGray);
                 // STUAchievement test = instance as STUAchievement;
                 // if (test == null) continue;
                 // Debug.Assert(test.PCRewardPoints == test.XboxGamerscore);
-                Console.Out.WriteLine(DumpSTUInner(instance, GetFields(instance.GetType()).OrderBy(x => x.Name).Where(
+                StyleSheet styleSheet = new StyleSheet(Color.LightGray);
+                Console.WriteLineStyled(DumpSTUInner(instance, GetFields(instance.GetType()).OrderBy(x => x.Name).Where(
                         fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),
-                    handler, map, 1));
+                    handler, map, 1, styleSheet), styleSheet);
+                
                 if (Debugger.IsAttached) {
                     Debugger.Break();
                 }
+                index++;
             }
         }
     }

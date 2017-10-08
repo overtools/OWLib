@@ -121,6 +121,9 @@ namespace DataTool.FindLogic {
                         AddGUID(existingSounds, sound, soundGUID, null);
                     }
                     break;
+                case 0x043:
+                    AddGUID(existingSounds, soundGUID, soundGUID, null);
+                    break;
             }
 
             return existingSounds;

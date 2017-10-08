@@ -72,7 +72,7 @@ namespace STULib.Types.Generic {
 
         [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct STUArray {
+        public struct STUArrayInfo {
             public uint Count;
             public uint InstanceIndex;
             public uint Offset;
@@ -80,6 +80,17 @@ namespace STULib.Types.Generic {
 
             internal string DebuggerDisplay =>
                 $"Count: {Count}, Offset: {Offset}, InstanceIndex:{InstanceIndex}, Unknown:{Unknown}";
+        }
+        
+        [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct STUEmbedArrayInfo {
+            public int Count;
+            public uint Unknown;
+            public long Offset;
+
+            internal string DebuggerDisplay =>
+                $"Count: {Count}, Offset: {Offset}, Unknown:{Unknown}";
         }
     }
 }

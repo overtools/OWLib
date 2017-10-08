@@ -9,7 +9,7 @@ namespace STUHashTool {
             EnumData = enumData;
         }
 
-        public string Build(Dictionary<uint, string> enumNames) {
+        public string Build(Dictionary<uint, string> enumNames, string enumNamespace="STULib.Types.Enums") {
             StringBuilder sb = new StringBuilder();
 
             string name = $"STUEnum_{EnumData.Checksum:X8}";
@@ -19,7 +19,7 @@ namespace STUHashTool {
                 attrDef = $"[STUEnum(0x{EnumData.Checksum:X8}, \"{name}\")]";
             }
 
-            sb.AppendLine("namespace STULib.Types.Enums {");
+            sb.AppendLine($"namespace {enumNamespace} {{");
             sb.AppendLine($"    {attrDef}");
             sb.AppendLine($"    public enum {name} : {EnumData.Type} {{");
             sb.AppendLine("    }");

@@ -17,6 +17,8 @@ namespace STULib {
 
         public static Dictionary<uint, Type> InstanceTypes => _InstanceTypes;
         public static Dictionary<uint, Type> EnumTypes => _EnumTypes;
+
+        public static Dictionary<uint, List<STUSuppressWarningAttribute>> SuppressedWarnings;
         
         public static bool IsSimple(Type type) {
             return type.IsPrimitive || type == typeof(string) || type == typeof(object);
@@ -41,13 +43,18 @@ namespace STULib {
         protected internal static void LoadInstanceTypes() {
             _InstanceTypes = new Dictionary<uint, Type>();
             _InstanceNames = new Dictionary<Type, string>();
+            SuppressedWarnings = new Dictionary<uint, List<STUSuppressWarningAttribute>>();
 
             Assembly asm = typeof(STUInstance).Assembly;
             Type t = typeof(STUInstance);
             List<Type> types = asm.GetTypes().Where(type => type != t && t.IsAssignableFrom(type)).ToList();
+            
             foreach (Type type in types) {
                 IEnumerable<STUAttribute> stuAttributes = type.GetCustomAttributes<STUAttribute>();
                 IEnumerable<STUAttribute> attributes = stuAttributes as STUAttribute[] ?? stuAttributes.ToArray();
+                
+                IEnumerable<STUSuppressWarningAttribute> stuWarningAttributes = type.GetCustomAttributes<STUSuppressWarningAttribute>();
+                IEnumerable<STUSuppressWarningAttribute> warningAttributes = stuWarningAttributes as STUSuppressWarningAttribute[] ?? stuWarningAttributes.ToArray();
                 if (!attributes.Any()) {
                     continue;
                 }
@@ -81,6 +88,13 @@ namespace STULib {
                     }
                     _InstanceNames[type] = attrib.Name;
                     _InstanceTypes[attrib.Checksum] = type;
+                    break;  // todo: MAJOR: fixes inherited types overriding parent checksums
+                }
+                foreach (STUSuppressWarningAttribute warn in warningAttributes) {
+                    if (!SuppressedWarnings.ContainsKey(warn.ThisInstance)) {
+                        SuppressedWarnings[warn.ThisInstance] = new List<STUSuppressWarningAttribute>();
+                    }
+                    SuppressedWarnings[warn.ThisInstance].Add(warn);
                 }
             }
             Type t2 = typeof(Enum);

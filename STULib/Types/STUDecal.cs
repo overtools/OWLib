@@ -3,12 +3,20 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0x5C713BD4)]
-    // ReSharper disable once InconsistentNaming
-    public class STUDecal : STUInstance {
+    public class STUDecalReference : STUInstance {
         [STUField(0x2B522C5B)]
         public STUGUID DecalResource;
 
         [STUField(0x58D56DD4)]
         public STUGUID EffectResource;
+    }
+    
+    [STU(0x251E73C7)]
+    public class STUDecal : STUInstance {
+        [STUField(0x2E93585A, ForceNotBuffer = true, Demangle = false)]
+        public STUGUID[] Virtual041;
+
+        [STUField(0x939ABB2C)]
+        public STUGUID[] Materials;
     }
 }
