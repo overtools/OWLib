@@ -76,6 +76,10 @@ namespace DataTool.ToolLogic.List {
                             }
 
                             Log("\t\t{0} ({1} {2})", unlock.Name, unlock.Rarity, unlock.Type);
+                            if (unlock.Description != null)
+                            {
+                                Log("\t\t\t{0}", unlock.Description);
+                            }
                         }
                     }
                 }
@@ -187,6 +191,22 @@ namespace DataTool.ToolLogic.List {
             return @return;
         }
 
+        public string GetDescription(ulong GUID) {
+            try {
+                using (Stream stream = OpenFile(GUID)) {
+                    if (stream == null) {
+                        return null;
+                    }
+
+                    ISTU stu = ISTU.NewInstance(stream, BuildVersion);
+                    STUDescription desc = stu.Instances.OfType<STUDescription>().First();
+                    return GetString(desc.String);
+                }
+            } catch {
+                return null;
+            }
+        }
+
         public Info GatherUnlock(ulong GUID) {
             using (Stream stream = OpenFile(GUID)) {
                 if (stream == null) {
@@ -201,6 +221,7 @@ namespace DataTool.ToolLogic.List {
                 }
 
                 string name = GetString(unlock.CosmeticName);
+                string description = GetDescription(unlock.CosmeticDescription);
 
                 if (unlock is Currency) {
                     name = $"{(unlock as Currency).Amount} Credits";
@@ -212,7 +233,7 @@ namespace DataTool.ToolLogic.List {
                 if (name == null) {
                     name = $"{OWLib.GUID.LongKey(GUID):X12}";
                 }
-                return new Info(name, unlock.CosmeticRarity.ToString(), unlock.GetType().Name, GetString(unlock.CosmeticDescription), unlock, GUID);
+                return new Info(name, unlock.CosmeticRarity.ToString(), unlock.GetType().Name, description, unlock, GUID);
             }
         }
     }
