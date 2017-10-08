@@ -12,6 +12,7 @@ using STULib.Types.STUUnlock;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
+using static DataTool.Helper.STUHelper;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
@@ -191,22 +192,6 @@ namespace DataTool.ToolLogic.List {
             return @return;
         }
 
-        public string GetDescription(ulong GUID) {
-            try {
-                using (Stream stream = OpenFile(GUID)) {
-                    if (stream == null) {
-                        return null;
-                    }
-
-                    ISTU stu = ISTU.NewInstance(stream, BuildVersion);
-                    STUDescription desc = stu.Instances.OfType<STUDescription>().First();
-                    return GetString(desc.String);
-                }
-            } catch {
-                return null;
-            }
-        }
-
         public Info GatherUnlock(ulong GUID) {
             using (Stream stream = OpenFile(GUID)) {
                 if (stream == null) {
@@ -221,7 +206,7 @@ namespace DataTool.ToolLogic.List {
                 }
 
                 string name = GetString(unlock.CosmeticName);
-                string description = GetDescription(unlock.CosmeticDescription);
+                string description = GetDescriptionString(unlock.CosmeticDescription);
 
                 if (unlock is Currency) {
                     name = $"{(unlock as Currency).Amount} Credits";
