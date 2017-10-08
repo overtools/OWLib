@@ -12,6 +12,7 @@ using STULib.Types.STUUnlock;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
+using static DataTool.Helper.STUHelper;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
@@ -76,6 +77,10 @@ namespace DataTool.ToolLogic.List {
                             }
 
                             Log("\t\t{0} ({1} {2})", unlock.Name, unlock.Rarity, unlock.Type);
+                            if (unlock.Description != null)
+                            {
+                                Log("\t\t\t{0}", unlock.Description);
+                            }
                         }
                     }
                 }
@@ -201,6 +206,7 @@ namespace DataTool.ToolLogic.List {
                 }
 
                 string name = GetString(unlock.CosmeticName);
+                string description = GetDescriptionString(unlock.CosmeticDescription);
 
                 if (unlock is Currency) {
                     name = $"{(unlock as Currency).Amount} Credits";
@@ -212,7 +218,7 @@ namespace DataTool.ToolLogic.List {
                 if (name == null) {
                     name = $"{OWLib.GUID.LongKey(GUID):X12}";
                 }
-                return new Info(name, unlock.CosmeticRarity.ToString(), unlock.GetType().Name, GetString(unlock.CosmeticDescription), unlock, GUID);
+                return new Info(name, unlock.CosmeticRarity.ToString(), unlock.GetType().Name, description, unlock, GUID);
             }
         }
     }
