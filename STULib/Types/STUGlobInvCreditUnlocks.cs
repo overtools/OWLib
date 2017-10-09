@@ -5,9 +5,9 @@ namespace STULib.Types {
     [STU(0x9FFCF237)]
     public class STUGlobInvCreditUnlocks : Common.STUInstance {
         [STUField(0xF5087894)]
-        public Common.STUGUID m_F5087894;  // STULib.Types.STUUnlock.Cosmetic
+        public Common.STUGUID CreditUnlock;  // STULib.Types.STUUnlock.Cosmetic
 
         [STUField(0xBB99FCD3, "m_rarity")]
-        public STULib.Types.Enums.STUEnumRarity m_rarity;
+        public Enums.STUEnumRarity Rarity;
     }
 }

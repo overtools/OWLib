@@ -578,7 +578,7 @@ namespace STUHashTool {
 
                 todoInstances = GetClassTodos(todoInstances);
                 
-                const string stuNamespace = "STULib.Types.GlobInvMaster";
+                const string stuNamespace = "STULib.Types.test";
                 const string enumNamespace = stuNamespace+".Enums";
                 
                 foreach (string t in todoInstances) {
