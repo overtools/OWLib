@@ -23,8 +23,6 @@ namespace OWReplayLib.Types {
             [Serializer.Types.Magic24(0x6C6870)] // { 'p', 'h', 'l' }
             public uint Magic;
             public byte FormatVersion;
-            //[Serializer.Types.FixedSizeArray(typeof(byte), 32)]
-            //public byte[] Checksum;
             public Checksum Checksum;
             public uint DataLength;
             public ulonglong Unknown1;
@@ -58,8 +56,6 @@ namespace OWReplayLib.Types {
             public byte Unknown1;
             public uint Unknown2;
             public uint Unknown3;
-            // [Serializer.Types.FixedSizeArray(typeof(byte), 32)]
-            // public byte[] MapChecksum;
             public Checksum MapChecksum;
             public int ParamsBlockLength;
             public ReplayParams Params;
@@ -85,7 +81,7 @@ namespace OWReplayLib.Types {
             [Serializer.Types.NullPaddedString]
             public string PlayerName;
             
-            // public byte UnknownByte;
+            // public byte UnknownByte; // todo: 1.16
             
             public byte Type;
             public uint Unknown1;

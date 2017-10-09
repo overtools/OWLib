@@ -79,6 +79,12 @@
     <Compile Include="Types\STUGamemodeHeroCollection.cs" />
     <Compile Include="Types\STUGamemodeHeroOverride.cs" />
     <Compile Include="Types\STUGamemodeTeam.cs" />
+    <Compile Include="Types\STUGlobalInventoryMaster.cs" />
+    <Compile Include="Types\STUGlobInvCreditUnlocks.cs" />
+    <Compile Include="Types\STUGlobInvEventCreditUnlocks.cs" />
+    <Compile Include="Types\STUGlobInvLevelUnlocks.cs" />
+    <Compile Include="Types\STUGlobInvLootbox.cs" />
+    <Compile Include="Types\STUGlobInvUnknownLootbox.cs" />
     <Compile Include="Types\STUSoundbank.cs" />
     <Compile Include="Types\STUSubtitleContainer.cs" />
     <Compile Include="Types\Enums\STUEnumRarity.cs" />

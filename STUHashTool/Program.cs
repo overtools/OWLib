@@ -141,8 +141,13 @@ namespace STUHashTool {
         }
     }
 
+    public static class Extensions {
+        public static string ProperName(this Type t) => t.FullName.Replace("+", ".");
+    }
+
     internal class Program {
         // ReSharper disable once SuggestBaseTypeForParameter
+        
         
         public static Dictionary<uint, STUInstanceInfo> Instances = new Dictionary<uint, STUInstanceInfo>();
         public static Dictionary<uint, InstanceData> RealInstances = new Dictionary<uint, InstanceData>();
@@ -573,7 +578,7 @@ namespace STUHashTool {
 
                 todoInstances = GetClassTodos(todoInstances);
                 
-                const string stuNamespace = "STULib.Types.test0C0";
+                const string stuNamespace = "STULib.Types.GlobInvMaster";
                 const string enumNamespace = stuNamespace+".Enums";
                 
                 foreach (string t in todoInstances) {
@@ -600,6 +605,7 @@ namespace STUHashTool {
                     if (outputFolder.Length > 0 && !ISTU.InstanceTypes.ContainsKey(RealInstances[todoInstance].Checksum)) {
                         using (Stream stream =
                             File.OpenWrite($"{outputFolder}{Path.DirectorySeparatorChar}STU_{todoInstance:X8}.cs")) {
+                            stream.SetLength(0);
                             using (TextWriter writer = new StreamWriter(stream)) {
                                 writer.WriteLine(sb);
                             }
@@ -609,15 +615,16 @@ namespace STUHashTool {
                 }
 
                 foreach (uint todoEnum in TodoEnums) {
-                    if (!Directory.Exists($"{outputFolder}{Path.DirectorySeparatorChar}Enums{Path.DirectorySeparatorChar}")) {
-                        Directory.CreateDirectory($"{outputFolder}{Path.DirectorySeparatorChar}Enums{Path.DirectorySeparatorChar}");
-                    }
                     if (ISTU.EnumTypes.ContainsKey(todoEnum)) continue;
                     string @enum = new EnumBuilder(Enums[todoEnum]).Build(EnumNames, enumNamespace);
                     Console.Out.WriteLine(@enum);
                     if (outputFolder.Length <= 0 || ISTU.EnumTypes.ContainsKey(todoEnum)) continue;
+                    if (!Directory.Exists($"{outputFolder}{Path.DirectorySeparatorChar}Enums{Path.DirectorySeparatorChar}")) {
+                        Directory.CreateDirectory($"{outputFolder}{Path.DirectorySeparatorChar}Enums{Path.DirectorySeparatorChar}");
+                    }
                     using (Stream stream =
                         File.OpenWrite($"{outputFolder}{Path.DirectorySeparatorChar}Enums{Path.DirectorySeparatorChar}STUEnum_{todoEnum:X8}.cs")) {
+                        stream.SetLength(0);
                         using (TextWriter writer = new StreamWriter(stream)) {
                             writer.WriteLine(@enum);
                         }
@@ -736,14 +743,14 @@ namespace STUHashTool {
                 if (field.IsInline || field.IsInlineArray) {
                     if (!newTodoInstances.Contains(Hex(field.InlineInstanceChecksum)) && !ISTU.InstanceTypes.ContainsKey(field.InlineInstanceChecksum)) {
                         newTodoInstances.Add(Hex(field.InlineInstanceChecksum));
-                        FindNestedTodo(RealInstances[field.InlineInstanceChecksum],
+                        newTodoInstances = FindNestedTodo(RealInstances[field.InlineInstanceChecksum],
                             newTodoInstances.ToArray());
                     }
                 }
                 if (field.IsEmbed || field.IsEmbed) {
                     if (!newTodoInstances.Contains(Hex(field.EmbedInstanceChecksum)) && !ISTU.InstanceTypes.ContainsKey(field.InlineInstanceChecksum)) {
                         newTodoInstances.Add(Hex(field.EmbedInstanceChecksum));
-                        FindNestedTodo(RealInstances[field.EmbedInstanceChecksum],
+                        newTodoInstances = FindNestedTodo(RealInstances[field.EmbedInstanceChecksum],
                             newTodoInstances.ToArray());
                     }
                 }
@@ -751,7 +758,7 @@ namespace STUHashTool {
                 if (field.IsHashMap) {
                     if (!newTodoInstances.Contains(Hex(field.HashMapChecksum)) && !ISTU.InstanceTypes.ContainsKey(field.HashMapChecksum)) {
                         newTodoInstances.Add(Hex(field.HashMapChecksum));
-                        FindNestedTodo(RealInstances[field.HashMapChecksum],
+                        newTodoInstances = FindNestedTodo(RealInstances[field.HashMapChecksum],
                             newTodoInstances.ToArray());
                     }
                 }
@@ -879,7 +886,7 @@ namespace STUHashTool {
                 parentName = InstanceNames[instance.ParentChecksum];
             }
             if (instance.ParentChecksum != 0 && ISTU.InstanceTypes.ContainsKey(instance.ParentChecksum)) {
-                parentName = ISTU.InstanceTypes[instance.ParentChecksum].FullName;
+                parentName = ISTU.InstanceTypes[instance.ParentChecksum].ProperName();
             }
             uint fieldCounter = 1;
 
@@ -903,12 +910,12 @@ namespace STUHashTool {
                     guidComment = field.Type;
                     if (InstanceNames.ContainsKey(field.TypeInstanceChecksum)) guidComment = InstanceNames[field.TypeInstanceChecksum];
                     if (ISTU.InstanceTypes.ContainsKey(field.TypeInstanceChecksum))
-                        guidComment = ISTU.InstanceTypes[field.TypeInstanceChecksum].FullName;
+                        guidComment = ISTU.InstanceTypes[field.TypeInstanceChecksum].ProperName();
                     guidComment = $"  // {guidComment}";
                 }
                 if (field.IsInline || field.IsEmbed || field.IsEmbedArray || field.IsInlineArray) {  //  
                     string instanceType = ISTU.InstanceTypes.ContainsKey(field.TypeInstanceChecksum) ? 
-                        ISTU.InstanceTypes[field.TypeInstanceChecksum].FullName : $"STU_{field.TypeInstanceChecksum:X8}";
+                        ISTU.InstanceTypes[field.TypeInstanceChecksum].ProperName() : $"STU_{field.TypeInstanceChecksum:X8}";
                     if (InstanceNames.ContainsKey(field.TypeInstanceChecksum)) {
                         instanceType = InstanceNames[field.TypeInstanceChecksum];
                     }
@@ -930,7 +937,7 @@ namespace STUHashTool {
                         hmInstanceName = $"Enums.{InstanceNames[field.HashMapChecksum]}";
                     }
                     if (ISTU.InstanceTypes.ContainsKey(field.HashMapChecksum)) {
-                        hmInstanceName = ISTU.InstanceTypes[field.HashMapChecksum].FullName;
+                        hmInstanceName = ISTU.InstanceTypes[field.HashMapChecksum].ProperName();
                     }
                     sb.AppendLine($"{fieldIndentString}{fieldDefinition}");
                     sb.AppendLine($"{fieldIndentString}public STUHashMap<{hmInstanceName}> {fieldName};");
@@ -940,7 +947,7 @@ namespace STUHashTool {
                         enumName = $"Enums.{EnumNames[field.EnumChecksum]}";
                     }
                     if (ISTU.EnumTypes.ContainsKey(field.EnumChecksum)) {
-                        enumName = ISTU.EnumTypes[field.EnumChecksum].FullName;
+                        enumName = ISTU.EnumTypes[field.EnumChecksum].ProperName();
                     }
                     sb.AppendLine($"{fieldIndentString}{fieldDefinition}");
                     sb.AppendLine($"{fieldIndentString}public {enumName}{(field.IsEnumArray ? "[]" : "")} {fieldName};");
