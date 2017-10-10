@@ -107,7 +107,7 @@ namespace STUHashTool {
                             return $"{nameStringBase}:Credits: {(unlock as Currency).Amount} Credits";
                         } else if (unlock is Portrait) {
                             Portrait portrait = unlock as Portrait;
-                            return $"{nameStringBase}:Unlock: {portrait.Tier} Star:{portrait.Star} Level:{portrait.Level}";
+                            return $"{nameStringBase}:Portrait: {portrait.Tier} Star:{portrait.Star} Level:{portrait.Level}";
                         } else {
                             return $"{nameStringBase}:{unlock.GetType().Name}: {GetOWString(unlock.CosmeticName, handler, map)}";
                         }

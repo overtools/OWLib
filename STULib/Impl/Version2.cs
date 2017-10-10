@@ -93,7 +93,15 @@ namespace STULib.Impl {
             BinaryReader reader = metadataReader;
             switch (type.Name) {
                 case "String":
-                    return ReadMetadataString();
+                    long offset = metadataReader.ReadInt64();
+                    long unk = metadataReader.ReadInt64();
+
+                    long beforePos = metadataReader.BaseStream.Position;
+                    
+                    metadataReader.BaseStream.Position = offset;
+                    string outString = ReadMetadataString();
+                    metadataReader.BaseStream.Position = beforePos;  // idk if this is important
+                    return outString;
                 case "Single":
                     return reader.ReadSingle();
                 case "Boolean":
@@ -322,7 +330,7 @@ namespace STULib.Impl {
                     continue;
                 }
                 if (field.FieldType.IsArray) {
-                    field.SetValue(instance, InitializeObjectArray(new STUInstanceField { FieldChecksum = 0, FieldSize = 4 }, field.FieldType, reader, element));
+                    field.SetValue(instance, InitializeObjectArray(new STUInstanceField { FieldChecksum = 0, FieldSize = 4 }, field.FieldType.GetElementType(), reader, element));
                 }
                 else {
                     long position = -1;
@@ -422,7 +430,7 @@ namespace STULib.Impl {
                             continue;
                         }
                     }
-                    if (writtenField.FieldSize == 4 && field.FieldType.IsClass && !IsSimple(field.FieldType) && typeof(STUInstance).IsAssignableFrom(type)) {
+                    if (writtenField.FieldSize == 4 && field.FieldType.IsClass && !IsSimple(field.FieldType) && typeof(STUInstance).IsAssignableFrom(field.FieldType)) {
                         int instanceIndex = reader.ReadInt32();  // sometimes the inline isn't defined in the instance
                         EmbedRequests.Add(new KeyValuePair<object, FieldInfo>(instance, field), instanceIndex);
                         // this is embedded, don't initialise the class

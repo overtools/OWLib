@@ -74,6 +74,7 @@
     <Compile Include="Types\Enums\STUEnum_1AA009C2.cs" />
     <Compile Include="Types\Enums\STUEnum_0C014B4A.cs" />
     <Compile Include="Types\Enums\STUEnum_C4294B0E.cs" />
+    <Compile Include="Types\STUChatReplacementStrings.cs" />
     <Compile Include="Types\STUCompetitiveSeason.cs" />
     <Compile Include="Types\STUCompetitiveSeasonBase.cs" />
     <Compile Include="Types\STUCompetitiveSeasonRewards.cs" />
