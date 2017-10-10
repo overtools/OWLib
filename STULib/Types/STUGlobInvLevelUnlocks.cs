@@ -3,11 +3,11 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0x5C499B8E)]
-    public class STUGlobInvLevelUnlocks : STUInstance {
+    public class STUGlobInvStandardUnlocks : STUInstance {
         [STUField(0xDB803F2F)]
         public STUGUID[] Unlocks;  // STULib.Types.STUUnlock.Cosmetic
 
         [STUField(0x2C01908B, "m_level")]
-        public uint Level;
+        public uint Level; // Only used for portraits?
     }
 }

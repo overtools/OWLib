@@ -66,6 +66,7 @@
     <Compile Include="Helper\STUHelper.cs" />
     <Compile Include="ITool.cs" />
     <Compile Include="JSON\GUIDConverter.cs" />
+    <Compile Include="Models\ItemInfo.cs" />
     <Compile Include="SaveLogic\Sound.cs" />
     <Compile Include="ToolFlags.cs" />
     <Compile Include="Program.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="ToolLogic\List\Debug\ListDebugDecal.cs" />
     <Compile Include="ToolLogic\List\ListFlags.cs" />
     <Compile Include="ToolLogic\List\ListHeroes.cs" />
+    <Compile Include="ToolLogic\List\ListGeneralUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListHeroUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListHighlights.cs" />
     <Compile Include="ToolLogic\List\ListKeys.cs" />

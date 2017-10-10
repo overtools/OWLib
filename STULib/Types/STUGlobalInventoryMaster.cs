@@ -22,7 +22,7 @@ namespace STULib.Types {
         public STUGlobInvUnknownLootbox[] UnknownLootboxUnlocksB;
 
         [STUField(0x9A4245F2)]
-        public STUGlobInvLevelUnlocks[] LevelUnlocks;
+        public STUGlobInvStandardUnlocks[] StandardUnlocks; // Includes default sprays/icons and every level portrait
 
         [STUField(0x473494FF)]
         public STUHeroUnlocks.EventUnlockInfo[] EventGeneralUnlocks;
