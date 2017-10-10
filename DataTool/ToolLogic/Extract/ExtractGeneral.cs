@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DataTool.Flag;
-using DataTool.Models;
 using STULib.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;

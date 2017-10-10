@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using static DataTool.Helper.IO;
-using DataTool.FindLogic;
 using DataTool.Flag;
-using DataTool.Models;
+using DataTool.DataModels;
 using DataTool.ToolLogic.Extract;
 using static DataTool.Helper.STUHelper;
-using OWLib;
 using STULib.Types;
 
 namespace DataTool.SaveLogic {
