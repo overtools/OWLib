@@ -54,8 +54,8 @@ namespace DataTool.ToolLogic.List {
 
                 @return["Standard/Common"] = new HashSet<ItemInfo>();
 
-                if (invMaster.StandardUnlocks != null) {
-                    foreach (STUGlobInvStandardUnlocks levelUnlocks in invMaster.StandardUnlocks) {
+                if (invMaster.LevelUnlocks != null) {
+                    foreach (STUGlobInvLevelUnlocks levelUnlocks in invMaster.LevelUnlocks) {
                         if (levelUnlocks?.Unlocks == null) continue;
 
                         foreach (ItemInfo info in GatherUnlocks(levelUnlocks.Unlocks.Select(it => (ulong)it))) {
