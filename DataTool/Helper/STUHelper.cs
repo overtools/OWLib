@@ -32,33 +32,25 @@ namespace DataTool.Helper {
             return stu?.Instances.OfType<T>().FirstOrDefault();
         }
 
-        public static ItemInfo GatherUnlock(ulong GUID) {
-            using (Stream stream = OpenFile(GUID)) {
-                if (stream == null)
-                    return null;
+        public static ItemInfo GatherUnlock(ulong key) {
+            Cosmetic unlock = GetInstance<Cosmetic>(key);
+            if (unlock == null) return null;
 
-                ISTU stu = ISTU.NewInstance(stream, BuildVersion);
+            string name = GetString(unlock.CosmeticName);
+            string description = GetDescriptionString(unlock.CosmeticDescription);
+            string availableIn = GetString(unlock.CosmeticAvailableIn);
 
-                Cosmetic unlock = stu.Instances.OfType<Cosmetic>().First();
-                if (unlock == null)
-                    return null;
-
-                string name = GetString(unlock.CosmeticName);
-                string description = GetDescriptionString(unlock.CosmeticDescription);
-                string availableIn = GetString(unlock.CosmeticAvailableIn);
-
-                if (unlock is Currency) {
-                    name = $"{(unlock as Currency).Amount} Credits";
-                } else if (unlock is Portrait) {
-                    Portrait portrait = unlock as Portrait;
-                    name = $"{portrait.Tier} - {portrait.Level} - {portrait.Star} star";
-                }
-
-                if (name == null)
-                    name = $"{OWLib.GUID.LongKey(GUID):X12}";
-
-                return new ItemInfo(name, unlock.CosmeticRarity.ToString(), unlock.GetType().Name, description, availableIn, unlock, GUID);
+            if (unlock is Currency) {
+                name = $"{(unlock as Currency).Amount} Credits";
+            } else if (unlock is Portrait) {
+                Portrait portrait = unlock as Portrait;
+                name = $"{portrait.Tier} - {portrait.Level} - {portrait.Star} star";
             }
+
+            if (name == null)
+                name = $"{OWLib.GUID.LongKey(key):X12}";
+
+            return new ItemInfo(name, unlock.CosmeticRarity.ToString(), unlock.GetType().Name, description, availableIn, unlock, key);
         }
     }
 }
