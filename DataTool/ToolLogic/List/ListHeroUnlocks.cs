@@ -10,7 +10,7 @@ using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
-using DataTool.Models;
+using DataTool.DataModels;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
