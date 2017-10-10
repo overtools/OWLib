@@ -7,7 +7,7 @@ using STULib.Types.STUUnlock;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static STULib.Types.Generic.Common;
-using DataTool.Models;
+using DataTool.DataModels;
 
 namespace DataTool.Helper {
     public static class STUHelper {
@@ -44,7 +44,7 @@ namespace DataTool.Helper {
                 name = $"{(unlock as Currency).Amount} Credits";
             } else if (unlock is Portrait) {
                 Portrait portrait = unlock as Portrait;
-                name = $"{portrait.Tier} - {portrait.Level} - {portrait.Star} star";
+                name = $"{portrait.Tier} Star: {portrait.Star} Level: {portrait.Level}";
             }
 
             if (name == null)

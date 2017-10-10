@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using STULib.Types.STUUnlock;
 
-namespace DataTool.Models
+namespace DataTool.DataModels
 {
     [JsonObject(MemberSerialization.OptOut)]
     public class ItemInfo

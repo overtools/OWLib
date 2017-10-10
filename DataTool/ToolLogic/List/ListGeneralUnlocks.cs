@@ -8,9 +8,8 @@ using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
-using DataTool.Models;
+using DataTool.DataModels;
 using OWLib;
-using STULib.Types.Generic;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
@@ -52,14 +51,14 @@ namespace DataTool.ToolLogic.List {
 
                 @return["Achievement"] = GatherUnlocks(invMaster.AchievementUnlocks?.Unlocks?.Select(it => (ulong)it));
 
-                @return["Standard/Common"] = new HashSet<ItemInfo>();
+                @return["Standard"] = new HashSet<ItemInfo>();
 
                 if (invMaster.LevelUnlocks != null) {
                     foreach (STUGlobInvLevelUnlocks levelUnlocks in invMaster.LevelUnlocks) {
                         if (levelUnlocks?.Unlocks == null) continue;
 
                         foreach (ItemInfo info in GatherUnlocks(levelUnlocks.Unlocks.Select(it => (ulong)it))) {
-                            @return["Standard/Common"].Add(info);
+                            @return["Standard"].Add(info);
                         }
                     }
                 }
