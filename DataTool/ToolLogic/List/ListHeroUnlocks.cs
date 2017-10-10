@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.Flag;
-using DataTool.JSON;
-using Newtonsoft.Json;
 using OWLib;
 using STULib;
 using STULib.Types;
-using STULib.Types.STUUnlock;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
+using DataTool.DataModels;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 
@@ -23,30 +21,8 @@ namespace DataTool.ToolLogic.List {
             throw new NotImplementedException();
         }
 
-        [JsonObject(MemberSerialization.OptOut)]
-        public class Info {
-            public string Name;
-            public string Rarity;
-            public string Type;
-            [JsonIgnore]
-            public string Description;
-            [JsonIgnore]
-            public Cosmetic Unlock;
-            [JsonConverter(typeof(GUIDConverter))]
-            public ulong GUID;
-
-            public Info(string Name, string Rarity, string Type, string Description, Cosmetic Unlock, ulong GUID) {
-                this.Name = Name;
-                this.Rarity = Rarity;
-                this.Type = Type;
-                this.Description = Description;
-                this.Unlock = Unlock;
-                this.GUID = GUID;
-            }
-        }
-
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<string, Dictionary<string, HashSet<Info>>> unlocks = GatherUnlocks(false);
+            Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> unlocks = GatherUnlocks(false);
 
             if (toolFlags is ListFlags flags) {
                 if (flags.JSON) {
@@ -55,7 +31,7 @@ namespace DataTool.ToolLogic.List {
                 }
             }
 
-            foreach (KeyValuePair<string, Dictionary<string, HashSet<Info>>> heroPair in unlocks) {
+            foreach (KeyValuePair<string, Dictionary<string, HashSet<ItemInfo>>> heroPair in unlocks) {
                 if (heroPair.Value?.Count == 0 || 
                     heroPair.Value.Any(it => it.Value?.Any(itt => itt?.Name != null) == false)) {
                     continue;
@@ -63,7 +39,7 @@ namespace DataTool.ToolLogic.List {
 
                 Log("Unlocks for {0}", heroPair.Key);
 
-                foreach (KeyValuePair<string, HashSet<Info>> unlockPair in heroPair.Value) {
+                foreach (KeyValuePair<string, HashSet<ItemInfo>> unlockPair in heroPair.Value) {
                     if (unlockPair.Value?.Count == 0) {
                         continue;
                     }
@@ -71,14 +47,13 @@ namespace DataTool.ToolLogic.List {
                     Log("\t{0} Unlocks", unlockPair.Key);
 
                     if (unlockPair.Value != null) {
-                        foreach (Info unlock in unlockPair.Value) {
+                        foreach (ItemInfo unlock in unlockPair.Value) {
                             if (unlock?.Name == null) {
                                 continue;
                             }
 
                             Log("\t\t{0} ({1} {2})", unlock.Name, unlock.Rarity, unlock.Type);
-                            if (unlock.Description != null)
-                            {
+                            if (unlock.Description != null) {
                                 Log("\t\t\t{0}", unlock.Description);
                             }
                         }
@@ -89,8 +64,8 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public Dictionary<string, Dictionary<string, HashSet<Info>>> GatherUnlocks(bool onlyAI) {
-            Dictionary<string, Dictionary<string, HashSet<Info>>> @return = new Dictionary<string, Dictionary<string, HashSet<Info>>>();
+        public Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> GatherUnlocks(bool onlyAI) {
+            Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> @return = new Dictionary<string, Dictionary<string, HashSet<ItemInfo>>>();
             foreach (ulong key in TrackedFiles[0x75]) {
                 using (Stream stream = OpenFile(key)) {
                     if (stream == null) {
@@ -109,7 +84,7 @@ namespace DataTool.ToolLogic.List {
                         continue;
                     }
 
-                    Dictionary<string, HashSet<Info>> unlocks = GatherUnlocks(hero.LootboxUnlocks, false);
+                    Dictionary<string, HashSet<ItemInfo>> unlocks = GatherUnlocks(hero.LootboxUnlocks, false);
                     if (unlocks == null) {
                         continue;
                     }
@@ -120,8 +95,8 @@ namespace DataTool.ToolLogic.List {
             return @return;
         }
 
-        public Dictionary<string, HashSet<Info>> GatherUnlocks(ulong GUID, bool onlyAI) {
-            Dictionary<string, HashSet<Info>> @return = new Dictionary<string, HashSet<Info>>();
+        public Dictionary<string, HashSet<ItemInfo>> GatherUnlocks(ulong GUID, bool onlyAI) {
+            Dictionary<string, HashSet<ItemInfo>> @return = new Dictionary<string, HashSet<ItemInfo>>();
 
             using (Stream stream = OpenFile(GUID)) {
                 if (stream == null) {
@@ -149,10 +124,10 @@ namespace DataTool.ToolLogic.List {
                             continue;
                         }
                         if (!@return.ContainsKey("Standard")) {
-                            @return["Standard"] = new HashSet<Info>();
+                            @return["Standard"] = new HashSet<ItemInfo>();
                         }
 
-                        foreach (Info info in GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it))) {
+                        foreach (ItemInfo info in GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it))) {
                             @return["Standard"].Add(info);
                         }
                     }
@@ -167,10 +142,10 @@ namespace DataTool.ToolLogic.List {
                         string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";
 
                         if (!@return.ContainsKey(eventKey)) {
-                            @return[eventKey] = new HashSet<Info>();
+                            @return[eventKey] = new HashSet<ItemInfo>();
                         }
 
-                        foreach (Info info in GatherUnlocks(eventUnlocks.Data.Unlocks.Select(it => (ulong) it))) {
+                        foreach (ItemInfo info in GatherUnlocks(eventUnlocks.Data.Unlocks.Select(it => (ulong) it))) {
                             @return[eventKey].Add(info);
                         }
                     }
@@ -180,46 +155,16 @@ namespace DataTool.ToolLogic.List {
             return @return;
         }
 
-        public HashSet<Info> GatherUnlocks(IEnumerable<ulong> GUIDs) {
-            HashSet<Info> @return = new HashSet<Info>();
+        public HashSet<ItemInfo> GatherUnlocks(IEnumerable<ulong> GUIDs) {
+            HashSet<ItemInfo> @return = new HashSet<ItemInfo>();
             foreach (ulong GUID in GUIDs) {
-                Info unlock = GatherUnlock(GUID);
+                ItemInfo unlock = GatherUnlock(GUID);
                 if (unlock == null) {
                     continue;
                 }
                 @return.Add(unlock);
             }
             return @return;
-        }
-
-        public Info GatherUnlock(ulong GUID) {
-            using (Stream stream = OpenFile(GUID)) {
-                if (stream == null) {
-                    return null;
-                }
-
-                ISTU stu = ISTU.NewInstance(stream, BuildVersion);
-
-                Cosmetic unlock = stu.Instances.OfType<Cosmetic>().First();
-                if (unlock == null) {
-                    return null;
-                }
-
-                string name = GetString(unlock.CosmeticName);
-                string description = GetDescriptionString(unlock.CosmeticDescription);
-
-                if (unlock is Currency) {
-                    name = $"{(unlock as Currency).Amount} Credits";
-                } else if (unlock is Portrait) {
-                    Portrait portrait = unlock as Portrait;
-                    name = $"{portrait.Tier} - {portrait.Level} - {portrait.Star} star";
-                }
-
-                if (name == null) {
-                    name = $"{OWLib.GUID.LongKey(GUID):X12}";
-                }
-                return new Info(name, unlock.CosmeticRarity.ToString(), unlock.GetType().Name, description, unlock, GUID);
-            }
         }
     }
 }

@@ -8,6 +8,6 @@ namespace STULib.Types {
         public STUGUID[] Unlocks;  // STULib.Types.STUUnlock.Cosmetic
 
         [STUField(0x2C01908B, "m_level")]
-        public uint Level;
+        public uint Level; // Level the item is available in? Base items have level 0
     }
 }
