@@ -23,7 +23,7 @@ namespace DataTool.Models
 	        Type = type;
 	        Description = description;
 	        AvailableIn = availableIn;
-            Unlock = unlock;
+	        Unlock = unlock;
 	        GUID = guid;
 	    }
     }
