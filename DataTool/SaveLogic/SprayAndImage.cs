@@ -8,6 +8,7 @@ using DataTool.ToolLogic.Extract;
 using static DataTool.Helper.STUHelper;
 using STULib.Types;
 using STULib.Types.Generic;
+using STULib.Types.STUUnlock;
 
 namespace DataTool.SaveLogic {
     public class SprayAndImage {
@@ -21,11 +22,19 @@ namespace DataTool.SaveLogic {
             foreach (var key in items) {
                 ItemInfo item = GatherUnlock(key);
 
-                if (item.Unlock.CosmeticTextureResource == null) continue;
-
                 var name = GetValidFilename(item.Name);
-                
-                textures = FindLogic.Texture.FindTextures(textures, item.Unlock.CosmeticTextureResource, name, false);
+                var type = GetValidFilename(item.Type);
+
+                STUDecalReference decal = null;
+                if (item.Unlock is Spray)
+                    decal = ((Spray) item.Unlock).Decal;
+
+                if (item.Unlock is PlayerIcon)
+                    decal = ((PlayerIcon) item.Unlock).CosmeticUnknownDecal;
+
+                if (decal == null) continue;
+
+                textures = FindLogic.Texture.FindTextures(textures,  decal.DecalResource, name, type, true);
             }
 
             var output = Path.Combine(basePath, containerName, folderName);

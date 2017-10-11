@@ -26,9 +26,12 @@ namespace DataTool.SaveLogic {
                 }
  
                 foreach (TextureInfo textureInfo in pair.Value) {
-                    string outputPath = $"{rootOutput}{GUID.LongKey(textureInfo.GUID):X12}";
+                    string outputPath = zeroOnly ? rootOutput : $"{rootOutput}{GUID.LongKey(textureInfo.GUID):X12}";
                     string outputPathSecondary = $"{rootOutput}{GUID.LongKey(textureInfo.DataGUID):X12}";
-                    if (textureInfo.Name != null) outputPath = $"{rootOutput}{textureInfo.Name}";
+
+                    if (textureInfo.Type != null) outputPath = Path.Combine(outputPath, textureInfo.Type);
+                    if (textureInfo.Name != null) outputPath = Path.Combine(outputPath, textureInfo.Name);
+
                     if (!convertTextures) {
                         using (Stream soundStream = OpenFile(textureInfo.GUID)) {
                             WriteFile(soundStream, $"{outputPath}.004");
