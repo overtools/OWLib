@@ -86,9 +86,5 @@ namespace DataTool.FindLogic {
 
             return existingTextures;
         }
-
-        internal static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> textures, ulong key, string name, bool v) {
-            throw new NotImplementedException();
-        }
     }
 }
