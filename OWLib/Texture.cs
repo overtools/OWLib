@@ -104,7 +104,7 @@ namespace OWLib {
 
         public Stream Save() {
             Stream ms = new MemoryStream();
-            Save(ms);
+            Save(ms, true);
             return ms;
         }
     }

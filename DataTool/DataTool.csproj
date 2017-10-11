@@ -69,6 +69,7 @@
     <Compile Include="JSON\GUIDConverter.cs" />
     <Compile Include="SaveLogic\SprayAndImage.cs" />
     <Compile Include="SaveLogic\Sound.cs" />
+    <Compile Include="SaveLogic\Texture.cs" />
     <Compile Include="ToolFlags.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
