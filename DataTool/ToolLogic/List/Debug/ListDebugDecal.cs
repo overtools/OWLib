@@ -20,8 +20,9 @@ namespace DataTool.ToolLogic.List.Debug {
             Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
 
             foreach (ulong key in TrackedFiles[0xA8]) {
-                textures = Texture.FindTextures(textures, new Common.STUGUID(key));
+                textures = Texture.FindTextures(textures, new Common.STUGUID(key), null, true);
             }
+            // SaveLogic.Texture.Save(null, "D:\\dds", textures);
         }
     }
 }

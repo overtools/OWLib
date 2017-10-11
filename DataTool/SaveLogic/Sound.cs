@@ -4,7 +4,6 @@ using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.ToolLogic.Extract;
 using OWLib;
-using Common = STULib.Types.Generic.Common;
 using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic {

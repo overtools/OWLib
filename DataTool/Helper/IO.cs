@@ -32,12 +32,28 @@ namespace DataTool.Helper {
             return $"{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}";
         }
 
+        public static void WriteFile(Stream stream, string filename) {
+            if (stream == null) return;
+            string path = Path.GetDirectoryName(filename);
+            if (!Directory.Exists(path) && path != null) {
+                Directory.CreateDirectory(path);
+            }
+
+            using (Stream file = File.OpenWrite(filename)) {
+                file.SetLength(0); // ensure no leftover data
+                stream.CopyTo(file);
+            }
+        }
+
         public static void WriteFile(Stream stream, ulong guid, string path) {
             if (stream == null || guid == 0) {
                 return;
             }
 
             string filename = GUIDTable.ContainsKey(guid) ? GUIDTable[guid] : GetFileName(guid);
+            
+            WriteFile(stream, Path.Combine(path, filename));
+            
             if (!Directory.Exists(path)) {
                 Directory.CreateDirectory(path);
             }

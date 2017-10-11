@@ -15,6 +15,12 @@ namespace OWLib {
         public byte[] Data => data;
         public bool Loaded => loaded;
 
+        public Stream Save() {
+            Stream output = new MemoryStream();
+            Save(output, true);
+            return output;
+        }
+
         public void Save(Stream output, bool keepOpen = false) {
             if (!loaded) {
                 return;

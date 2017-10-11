@@ -66,8 +66,9 @@
     <Compile Include="Helper\STUHelper.cs" />
     <Compile Include="ITool.cs" />
     <Compile Include="JSON\GUIDConverter.cs" />
-    <Compile Include="Models\ItemInfo.cs" />
+    <Compile Include="DataModels\ItemInfo.cs" />
     <Compile Include="SaveLogic\Sound.cs" />
+    <Compile Include="SaveLogic\Texture.cs" />
     <Compile Include="ToolFlags.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
