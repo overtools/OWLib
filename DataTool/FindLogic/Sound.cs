@@ -99,15 +99,15 @@ namespace DataTool.FindLogic {
                             AddGUID(existingSounds, th2.Sound2?.SoundResource, soundGUID, subtitle2);
                             AddGUID(existingSounds, th2.Sound3?.SoundResource, soundGUID, subtitle3);
                             AddGUID(existingSounds, th2.Sound4?.SoundResource, soundGUID, subtitle4);
-                            if (th2.Sound2 != null) {
-                                Debugger.Break();
-                            }
-                            if (th2.Sound3 != null) {
-                                Debugger.Break();
-                            }
-                            if (th2.Sound4 != null) {
-                                Debugger.Break();
-                            }
+                            // if (th2.Sound2 != null) {
+                            //     Debugger.Break();
+                            // }
+                            // if (th2.Sound3 != null) {
+                            //     Debugger.Break();
+                            // }
+                            // if (th2.Sound4 != null) {
+                            //     Debugger.Break();
+                            // }
                         }
                         if (soundThingy.SoundDataContainer?.SoundbankMasterResource == null) continue;
                         FindSounds(existingSounds, soundThingy.SoundDataContainer.SoundbankMasterResource);
