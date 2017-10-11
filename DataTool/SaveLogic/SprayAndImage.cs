@@ -3,9 +3,11 @@ using System.IO;
 using static DataTool.Helper.IO;
 using DataTool.Flag;
 using DataTool.DataModels;
+using DataTool.FindLogic;
 using DataTool.ToolLogic.Extract;
 using static DataTool.Helper.STUHelper;
 using STULib.Types;
+using STULib.Types.Generic;
 
 namespace DataTool.SaveLogic {
     public class SprayAndImage {
@@ -15,27 +17,19 @@ namespace DataTool.SaveLogic {
 
             }
 
+            Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
             foreach (var key in items) {
                 ItemInfo item = GatherUnlock(key);
 
                 if (item.Unlock.CosmeticTextureResource == null) continue;
 
                 var name = GetValidFilename(item.Name);
-                var texturePath = item.Unlock.CosmeticTextureResource;
-                var filePath = Path.Combine(basePath, containerName, folderName, $"{name}.{ext}");
-
-                STUDecal decal = GetInstance<STUDecal>(texturePath);
-
-                CreateDirectoryFromFile(filePath);
-
-                using (Stream fileStream = OpenFile(texturePath)) {
-                    if (fileStream == null) continue;
-                    using (Stream outputStream = File.OpenWrite(filePath)) {
-                        fileStream.CopyTo(outputStream);
-                    }
-                }
-
+                
+                textures = FindLogic.Texture.FindTextures(textures, item.Unlock.CosmeticTextureResource, name, false);
             }
+
+            var output = Path.Combine(basePath, containerName, folderName);
+            SaveLogic.Texture.Save(null, output, textures);
         }
     }
 }

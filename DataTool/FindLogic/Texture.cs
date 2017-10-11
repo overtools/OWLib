@@ -45,14 +45,18 @@ namespace DataTool.FindLogic {
                 textures[parentKey] = new List<TextureInfo>();
             }
 
-            TextureInfo newTexture = new TextureInfo {GUID = mainKey, DataGUID = dataKey};
+            TextureInfo newTexture = new TextureInfo {
+                GUID = mainKey,
+                DataGUID = dataKey,
+                Name = name
+            };
 
             if (!textures[parentKey].Contains(newTexture)) {
                 textures[parentKey].Add(newTexture);
             }
         }
         
-        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, Common.STUGUID textureGUID, string name=null, bool forceZero=false) {
+        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, Common.STUGUID textureGUID, string name, bool forceZero) {
             if (existingTextures == null) {
                 existingTextures = new Dictionary<ulong, List<TextureInfo>>();
             }
@@ -81,6 +85,10 @@ namespace DataTool.FindLogic {
             }
 
             return existingTextures;
+        }
+
+        internal static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> textures, ulong key, string name, bool v) {
+            throw new NotImplementedException();
         }
     }
 }

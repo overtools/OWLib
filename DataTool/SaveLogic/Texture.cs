@@ -24,6 +24,7 @@ namespace DataTool.SaveLogic {
                 if (zeroOnly) {
                     rootOutput = path + Path.DirectorySeparatorChar;
                 }
+ 
                 foreach (TextureInfo textureInfo in pair.Value) {
                     string outputPath = $"{rootOutput}{GUID.LongKey(textureInfo.GUID):X12}";
                     string outputPathSecondary = $"{rootOutput}{GUID.LongKey(textureInfo.DataGUID):X12}";
