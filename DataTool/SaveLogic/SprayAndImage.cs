@@ -14,8 +14,8 @@ namespace DataTool.SaveLogic {
             foreach (var key in items) {
                 var item = GatherUnlock(key);
                 var name = GetValidFilename(item.Name);
-                string type = null;
-                STUDecalReference decal = null;
+                string type;
+                STUDecalReference decal;
 
                 switch (item.Unlock) {
                     case PlayerIcon icon:
@@ -39,7 +39,7 @@ namespace DataTool.SaveLogic {
 
             foreach (KeyValuePair<string, Dictionary<ulong, List<TextureInfo>>> groupPair in textures) {
                 if (groupPair.Value?.Count == 0) continue;
-                var output = Path.Combine(basePath, containerName, folderName, groupPair.Key);
+                var output = Path.Combine(basePath, containerName, groupPair.Key, folderName);
                 Texture.Save(null, output, groupPair.Value);
             }
         }

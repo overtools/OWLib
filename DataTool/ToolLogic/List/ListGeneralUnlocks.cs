@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DataTool.Flag;
-using STULib;
 using STULib.Types;
-using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;

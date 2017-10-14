@@ -67,6 +67,7 @@
     <Compile Include="Helper\STUHelper.cs" />
     <Compile Include="ITool.cs" />
     <Compile Include="JSON\GUIDConverter.cs" />
+    <Compile Include="SaveLogic\Portrait.cs" />
     <Compile Include="SaveLogic\SprayAndImage.cs" />
     <Compile Include="SaveLogic\Sound.cs" />
     <Compile Include="SaveLogic\Texture.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DataTool.Flag;
+using OWLib;
 using STULib.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
@@ -29,6 +30,27 @@ namespace DataTool.ToolLogic.Extract {
                 if (invMaster == null) continue;
 
                 SaveLogic.SprayAndImage.SaveItems(basePath, null, "General", "Achievements", flags, invMaster.AchievementUnlocks?.Unlocks?.Select(it => (ulong)it));
+
+                if (invMaster.EventGeneralUnlocks != null) {
+                    foreach (var eventUnlocks in invMaster.EventGeneralUnlocks) {
+                        if (eventUnlocks?.Data?.Unlocks == null) continue;
+
+                        var eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event];
+                        var unlocks = eventUnlocks.Data.Unlocks.Select(it => (ulong) it);
+                        SaveLogic.SprayAndImage.SaveItems(basePath, null, "General", eventKey, flags, unlocks);
+                    }
+                }
+
+                /* Requires a bit more work
+                if (invMaster.LevelUnlocks != null) {
+                    foreach (var levelUnlocks in invMaster.LevelUnlocks) {
+                        if (levelUnlocks?.Unlocks == null) continue;
+
+                        var unlocks = levelUnlocks.Unlocks.Select(it => (ulong)it);
+                        SaveLogic.Portrait.SaveItems(basePath, null, "General", "Standard", flags, unlocks);
+                    }
+                }
+                */
             }
         }
     }
