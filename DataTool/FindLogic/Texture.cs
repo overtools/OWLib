@@ -39,7 +39,7 @@ namespace DataTool.FindLogic {
     }
     
     public static class Texture {
-        public static void AddGUID(Dictionary<ulong, List<TextureInfo>> textures, Common.STUGUID mainKey, Common.STUGUID dataKey, ulong parentKey, string name, string type, bool forceZero) {
+        public static void AddGUID(Dictionary<ulong, List<TextureInfo>> textures, Common.STUGUID mainKey, Common.STUGUID dataKey, ulong parentKey, string name, bool forceZero) {
             if (mainKey == null) return;
             if (forceZero) parentKey = 0;
             if (!textures.ContainsKey(parentKey)) {
@@ -50,7 +50,6 @@ namespace DataTool.FindLogic {
                 GUID = mainKey,
                 DataGUID = dataKey,
                 Name = name,
-                Type = type
             };
 
             if (!textures[parentKey].Contains(newTexture)) {
@@ -58,7 +57,7 @@ namespace DataTool.FindLogic {
             }
         }
         
-        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, Common.STUGUID textureGUID, string name, string type, bool forceZero) {
+        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, Common.STUGUID textureGUID, string name, bool forceZero) {
             if (existingTextures == null) {
                 existingTextures = new Dictionary<ulong, List<TextureInfo>>();
             }
@@ -75,14 +74,14 @@ namespace DataTool.FindLogic {
                        foreach (ImageLayer layer in def.Layers) {
                            AddGUID(existingTextures, new Common.STUGUID(layer.key),
                                Files.ContainsKey(layer.DataKey) ? new Common.STUGUID(layer.DataKey) : null,
-                               textureGUID, name, type, forceZero);
+                               textureGUID, name, forceZero);
                        }
                    }
                    break;
                case 0x04:
                    ulong dataKey = (textureGUID & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
                    AddGUID(existingTextures, textureGUID,
-                       Files.ContainsKey(dataKey) ? new Common.STUGUID(dataKey) : null, 0, name, type, forceZero);
+                       Files.ContainsKey(dataKey) ? new Common.STUGUID(dataKey) : null, 0, name, forceZero);
                    break;
             }
 
