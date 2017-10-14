@@ -56,6 +56,10 @@ namespace DataTool.FindLogic {
                 textures[parentKey].Add(newTexture);
             }
         }
+
+        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, STUDecalReference decal, string name = null, bool forceZero = false) {
+            return FindTextures(existingTextures, decal.DecalResource, name, forceZero);
+        }
         
         public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, Common.STUGUID textureGUID, string name, bool forceZero) {
             if (existingTextures == null) {
