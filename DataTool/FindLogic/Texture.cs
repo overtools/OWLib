@@ -38,7 +38,7 @@ namespace DataTool.FindLogic {
     }
     
     public static class Texture {
-        public static void AddGUID(Dictionary<ulong, List<TextureInfo>> textures, Common.STUGUID mainKey, Common.STUGUID dataKey, ulong parentKey, string name, bool forceZero) {
+        public static void AddGUID(Dictionary<ulong, List<TextureInfo>> textures, Common.STUGUID mainKey, Common.STUGUID dataKey, ulong parentKey, string name=null, bool forceZero=false) {
             if (mainKey == null) return;
             if (forceZero) parentKey = 0;
             if (!textures.ContainsKey(parentKey)) {
