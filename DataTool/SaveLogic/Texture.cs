@@ -29,7 +29,6 @@ namespace DataTool.SaveLogic {
                     string outputPath = zeroOnly ? rootOutput : $"{rootOutput}{GUID.LongKey(textureInfo.GUID):X12}";
                     string outputPathSecondary = $"{rootOutput}{GUID.LongKey(textureInfo.DataGUID):X12}";
 
-                    if (textureInfo.Type != null) outputPath = Path.Combine(outputPath, textureInfo.Type);
                     if (textureInfo.Name != null) outputPath = Path.Combine(outputPath, textureInfo.Name);
 
                     if (!convertTextures) {
