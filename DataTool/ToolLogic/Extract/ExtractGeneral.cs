@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DataTool.DataModels;
 using DataTool.Flag;
 using OWLib;
 using STULib.Types;
@@ -29,28 +31,30 @@ namespace DataTool.ToolLogic.Extract {
                 STUGlobalInventoryMaster invMaster = GetInstance<STUGlobalInventoryMaster>(key);
                 if (invMaster == null) continue;
 
-                SaveLogic.SprayAndImage.SaveItems(basePath, null, "General", "Achievements", flags, invMaster.AchievementUnlocks?.Unlocks?.Select(it => (ulong)it));
+                var achivementUnlocks = invMaster.AchievementUnlocks?.Unlocks?.Select(it => GatherUnlock((ulong) it)).ToList();
+                SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, null, "General", "Achievements", flags, achivementUnlocks);
 
                 if (invMaster.EventGeneralUnlocks != null) {
                     foreach (var eventUnlocks in invMaster.EventGeneralUnlocks) {
                         if (eventUnlocks?.Data?.Unlocks == null) continue;
 
                         var eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event];
-                        var unlocks = eventUnlocks.Data.Unlocks.Select(it => (ulong) it);
-                        SaveLogic.SprayAndImage.SaveItems(basePath, null, "General", eventKey, flags, unlocks);
+                        var unlocks = eventUnlocks.Data.Unlocks.Select(it => GatherUnlock((ulong) it)).ToList();
+                        SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, null, "General", eventKey, flags, unlocks);
                     }
                 }
 
-                /* Requires a bit more work
                 if (invMaster.LevelUnlocks != null) {
+                    var unlocks = new HashSet<ItemInfo>();
                     foreach (var levelUnlocks in invMaster.LevelUnlocks) {
                         if (levelUnlocks?.Unlocks == null) continue;
-
-                        var unlocks = levelUnlocks.Unlocks.Select(it => (ulong)it);
-                        SaveLogic.Portrait.SaveItems(basePath, null, "General", "Standard", flags, unlocks);
+                        foreach (var unlock in levelUnlocks.Unlocks)
+                            unlocks.Add(GatherUnlock(unlock));
                     }
+
+                    SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, null, "General", "Standard", flags, unlocks.ToList());
+                    SaveLogic.Unlock.Portrait.SaveItems(basePath, null, "General", "Standard", flags, unlocks.ToList());
                 }
-                */
             }
         }
     }
