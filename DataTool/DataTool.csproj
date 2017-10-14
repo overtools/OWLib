@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConvertLogic\Sound.cs" />
+    <Compile Include="DataModels\ItemInfo.cs" />
     <Compile Include="FindLogic\Sound.cs" />
     <Compile Include="FindLogic\Texture.cs" />
     <Compile Include="Flag\AliasAttribute.cs" />
@@ -66,13 +67,15 @@
     <Compile Include="Helper\STUHelper.cs" />
     <Compile Include="ITool.cs" />
     <Compile Include="JSON\GUIDConverter.cs" />
-    <Compile Include="DataModels\ItemInfo.cs" />
+    <Compile Include="SaveLogic\Unlock\Portrait.cs" />
+    <Compile Include="SaveLogic\Unlock\SprayAndImage.cs" />
     <Compile Include="SaveLogic\Sound.cs" />
     <Compile Include="SaveLogic\Texture.cs" />
     <Compile Include="ToolFlags.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolAttribute.cs" />
+    <Compile Include="ToolLogic\Extract\ExtractGeneral.cs" />
     <Compile Include="ToolLogic\Extract\ExtractMaps.cs" />
     <Compile Include="ToolLogic\Extract\ExtractFlags.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugSoundbanks.cs" />

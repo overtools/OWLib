@@ -38,14 +38,18 @@ namespace DataTool.FindLogic {
     }
     
     public static class Texture {
-        public static void AddGUID(Dictionary<ulong, List<TextureInfo>> textures, Common.STUGUID mainKey, Common.STUGUID dataKey, ulong parentKey, string name, bool forceZero) {
+        public static void AddGUID(Dictionary<ulong, List<TextureInfo>> textures, Common.STUGUID mainKey, Common.STUGUID dataKey, ulong parentKey, string name=null, bool forceZero=false) {
             if (mainKey == null) return;
             if (forceZero) parentKey = 0;
             if (!textures.ContainsKey(parentKey)) {
                 textures[parentKey] = new List<TextureInfo>();
             }
 
-            TextureInfo newTexture = new TextureInfo {GUID = mainKey, DataGUID = dataKey};
+            TextureInfo newTexture = new TextureInfo {
+                GUID = mainKey,
+                DataGUID = dataKey,
+                Name = name,
+            };
 
             if (!textures[parentKey].Contains(newTexture)) {
                 textures[parentKey].Add(newTexture);
@@ -56,7 +60,7 @@ namespace DataTool.FindLogic {
             return FindTextures(existingTextures, decal.DecalResource, name, forceZero);
         }
         
-        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, Common.STUGUID textureGUID, string name=null, bool forceZero=false) {
+        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, Common.STUGUID textureGUID, string name, bool forceZero) {
             if (existingTextures == null) {
                 existingTextures = new Dictionary<ulong, List<TextureInfo>>();
             }
