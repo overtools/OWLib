@@ -15,7 +15,6 @@ namespace DataTool.FindLogic {
         public Common.STUGUID GUID;
         public Common.STUGUID DataGUID;
         public string Name;
-        public string Type;
         internal string DebuggerDisplay => $"{GUID.ToString()}{(DataGUID != null ? $" - {DataGUID.ToString()}" : "")}";
 
         public bool Equals(TextureInfo other) {
