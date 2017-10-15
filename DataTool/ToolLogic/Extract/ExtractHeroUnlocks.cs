@@ -81,7 +81,7 @@ namespace DataTool.ToolLogic.Extract {
                 var heroTextures = new Dictionary<ulong, List<TextureInfo>>();
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource1, "Icon", true);
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource2, "Portrait", true);
-                heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource3, "unknown", true); // Doesn't work??
+                heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource3, "unknown", true); // Same as Icon for now
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource4, "Avatar", true);
                 Texture.Save(null, Path.Combine(basePath, "Heroes", heroName), heroTextures);
             }
