@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using STULib;
@@ -30,6 +31,16 @@ namespace DataTool.Helper {
         public static T GetInstance<T>(ulong key) where T : STUInstance  {
             ISTU stu = OpenSTUSafe(key);
             return stu?.Instances.OfType<T>().FirstOrDefault();
+        }
+
+        public static HashSet<ItemInfo> GatherUnlocks(IEnumerable<ulong> GUIDs) {
+            var @return = new HashSet<ItemInfo>();
+            foreach (var GUID in GUIDs) {
+                var unlock = GatherUnlock(GUID);
+                if (unlock == null) continue;
+                @return.Add(unlock);
+            }
+            return @return;
         }
 
         public static ItemInfo GatherUnlock(ulong key) {
