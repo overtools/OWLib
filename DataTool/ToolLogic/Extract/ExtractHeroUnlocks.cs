@@ -13,17 +13,13 @@ using static DataTool.Helper.STUHelper;
 using Texture = DataTool.SaveLogic.Texture;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-unlocks", Description = "Extract all heroes sprays and icons", TrackTypes = new ushort[] {0x54},
-        CustomFlags = typeof(ExtractFlags))]
-    public class ExtractHeroUnlocks : ITool
-    {
-        public void IntegrateView(object sender)
-        {
+    [Tool("extract-unlocks", Description = "Extract all heroes sprays and icons", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ExtractFlags))]
+    public class ExtractHeroUnlocks : ITool {
+        public void IntegrateView(object sender) {
             throw new NotImplementedException();
         }
 
-        public void Parse(ICLIFlags toolFlags)
-        {
+        public void Parse(ICLIFlags toolFlags) {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
@@ -33,7 +29,6 @@ namespace DataTool.ToolLogic.Extract {
 
             var heroes = GetHeroes();
             SaveUnlocksForHeroes(heroes, basePath);
-            Debugger.Break();
         }
 
         public List<STUHero> GetHeroes() {
