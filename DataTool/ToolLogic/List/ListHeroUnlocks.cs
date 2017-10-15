@@ -22,7 +22,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> unlocks = GatherUnlocks(false);
+            Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> unlocks = GetUnlocks(false);
 
             if (toolFlags is ListFlags flags) {
                 if (flags.JSON) {
@@ -64,106 +64,64 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> GatherUnlocks(bool onlyAI) {
+        public Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> GetUnlocks(bool onlyAI) {
             Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> @return = new Dictionary<string, Dictionary<string, HashSet<ItemInfo>>>();
             foreach (ulong key in TrackedFiles[0x75]) {
-                using (Stream stream = OpenFile(key)) {
-                    if (stream == null) {
-                        continue;
-                    }
+                STUHero hero = GetInstance<STUHero>(key);
+                if (hero == null) continue;
 
-                    ISTU stu = ISTU.NewInstance(stream, BuildVersion);
-                    STUHero hero = stu.Instances.OfType<STUHero>().First();
-                    if (hero == null) {
-                        continue;
-                    }
+                string name = GetString(hero.Name);
+                if (name == null) continue;
 
-                    string name = GetString(hero.Name);
+                Dictionary<string, HashSet<ItemInfo>> unlocks = GetUnlocksForHero(hero.LootboxUnlocks, false);
+                if (unlocks == null) continue;
 
-                    if (name == null) {
-                        continue;
-                    }
-
-                    Dictionary<string, HashSet<ItemInfo>> unlocks = GatherUnlocks(hero.LootboxUnlocks, false);
-                    if (unlocks == null) {
-                        continue;
-                    }
-
-                    @return[name] = unlocks;
-                }
+                @return[name] = unlocks;
             }
+
             return @return;
         }
 
-        public Dictionary<string, HashSet<ItemInfo>> GatherUnlocks(ulong GUID, bool onlyAI) {
+        public Dictionary<string, HashSet<ItemInfo>> GetUnlocksForHero(ulong GUID, bool onlyAI) {
             Dictionary<string, HashSet<ItemInfo>> @return = new Dictionary<string, HashSet<ItemInfo>>();
 
-            using (Stream stream = OpenFile(GUID)) {
-                if (stream == null) {
-                    return null;
-                }
+            STUHeroUnlocks unlocks = GetInstance<STUHeroUnlocks>(GUID);
+            if (unlocks == null) return null;
 
-                ISTU stu = ISTU.NewInstance(stream, BuildVersion);
+            if (onlyAI && unlocks.Unlocks != null) return null;
+            if (!onlyAI && unlocks.Unlocks == null) return null;
 
-                STUHeroUnlocks unlocks = stu.Instances.OfType<STUHeroUnlocks>().First();
-                if (unlocks == null) {
-                    return null;
-                }
+            @return["Default"] = GatherUnlocks(unlocks.SystemUnlocks?.Unlocks?.Select(it => (ulong)it));
 
-                if (onlyAI && unlocks.Unlocks != null) {
-                    return null;
-                } if (!onlyAI && unlocks.Unlocks == null) {
-                    return null;
-                }
+            if (unlocks.Unlocks != null) {
+                foreach (STUHeroUnlocks.UnlockInfo defaultUnlocks in unlocks.Unlocks) {
+                    if (defaultUnlocks?.Unlocks == null) continue;
 
-                @return["Default"] = GatherUnlocks(unlocks.SystemUnlocks?.Unlocks?.Select(it => (ulong)it));
+                    if (!@return.ContainsKey("Standard"))
+                        @return["Standard"] = new HashSet<ItemInfo>();
 
-                if (unlocks.Unlocks != null) {
-                    foreach (STUHeroUnlocks.UnlockInfo defaultUnlocks in unlocks.Unlocks) {
-                        if (defaultUnlocks?.Unlocks == null) {
-                            continue;
-                        }
-                        if (!@return.ContainsKey("Standard")) {
-                            @return["Standard"] = new HashSet<ItemInfo>();
-                        }
-
-                        foreach (ItemInfo info in GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it))) {
-                            @return["Standard"].Add(info);
-                        }
-                    }
-                }
-
-                if (unlocks.LootboxUnlocks != null) {
-                    foreach (STUHeroUnlocks.EventUnlockInfo eventUnlocks in unlocks.LootboxUnlocks) {
-                        if (eventUnlocks?.Data?.Unlocks == null) {
-                            continue;
-                        }
-
-                        string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";
-
-                        if (!@return.ContainsKey(eventKey)) {
-                            @return[eventKey] = new HashSet<ItemInfo>();
-                        }
-
-                        foreach (ItemInfo info in GatherUnlocks(eventUnlocks.Data.Unlocks.Select(it => (ulong) it))) {
-                            @return[eventKey].Add(info);
-                        }
+                    foreach (ItemInfo info in GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it))) {
+                        @return["Standard"].Add(info);
                     }
                 }
             }
 
-            return @return;
-        }
+            if (unlocks.LootboxUnlocks != null) {
+                foreach (STUHeroUnlocks.EventUnlockInfo eventUnlocks in unlocks.LootboxUnlocks) {
+                    if (eventUnlocks?.Data?.Unlocks == null) continue;
 
-        public HashSet<ItemInfo> GatherUnlocks(IEnumerable<ulong> GUIDs) {
-            HashSet<ItemInfo> @return = new HashSet<ItemInfo>();
-            foreach (ulong GUID in GUIDs) {
-                ItemInfo unlock = GatherUnlock(GUID);
-                if (unlock == null) {
-                    continue;
+                    string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";
+
+                    if (!@return.ContainsKey(eventKey)) {
+                        @return[eventKey] = new HashSet<ItemInfo>();
+                    }
+
+                    foreach (ItemInfo info in GatherUnlocks(eventUnlocks.Data.Unlocks.Select(it => (ulong) it))) {
+                        @return[eventKey].Add(info);
+                    }
                 }
-                @return.Add(unlock);
             }
+
             return @return;
         }
     }

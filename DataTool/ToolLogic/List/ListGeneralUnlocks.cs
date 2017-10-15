@@ -19,7 +19,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public void Parse(ICLIFlags toolFlags) {
-            var unlocks = GatherUnlocks();
+            var unlocks = GetUnlocks();
 
             if (toolFlags is ListFlags flags) {
                 if (flags.JSON) {
@@ -41,7 +41,7 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public Dictionary<string, HashSet<ItemInfo>> GatherUnlocks() {
+        public Dictionary<string, HashSet<ItemInfo>> GetUnlocks() {
             Dictionary<string, HashSet<ItemInfo>> @return = new Dictionary<string, HashSet<ItemInfo>>();
             foreach (ulong key in TrackedFiles[0x54]) {
                 STUGlobalInventoryMaster invMaster = GetInstance<STUGlobalInventoryMaster>(key);
@@ -67,9 +67,8 @@ namespace DataTool.ToolLogic.List {
 
                         string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";
 
-                        if (!@return.ContainsKey(eventKey)) {
+                        if (!@return.ContainsKey(eventKey))
                             @return[eventKey] = new HashSet<ItemInfo>();
-                        }
 
                         foreach (ItemInfo info in GatherUnlocks(eventUnlocks.Data.Unlocks.Select(it => (ulong)it))) {
                             @return[eventKey].Add(info);
@@ -78,17 +77,6 @@ namespace DataTool.ToolLogic.List {
                 }
             }
 
-            return @return;
-        }
-
-        public HashSet<ItemInfo> GatherUnlocks(IEnumerable<ulong> GUIDs) {
-            HashSet<ItemInfo> @return = new HashSet<ItemInfo>();
-            foreach (ulong GUID in GUIDs) {
-                ItemInfo unlock = GatherUnlock(GUID);
-                if (unlock == null) continue;
-
-                @return.Add(unlock);
-            }
             return @return;
         }
     }
