@@ -2,15 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DataTool.DataModels;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using OWLib;
-using STULib;
 using STULib.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
