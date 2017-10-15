@@ -19,6 +19,8 @@ namespace DataTool.ToolLogic.Extract {
             throw new NotImplementedException();
         }
 
+        string rootDir = "Heroes";
+
         public void Parse(ICLIFlags toolFlags) {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
@@ -52,11 +54,11 @@ namespace DataTool.ToolLogic.Extract {
                     continue;
 
                 var achievementUnlocks = GatherUnlocks(unlocks.SystemUnlocks?.Unlocks?.Select(it => (ulong)it)).ToList();
-                SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, heroName, "Heroes", "Achievements", null, achievementUnlocks);
+                SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, heroName, rootDir, "Achievements", null, achievementUnlocks);
 
                 foreach (var defaultUnlocks in unlocks.Unlocks)  {
                     var dUnlocks = GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it)).ToList();
-                    SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, heroName, "Heroes", "Standard", null, dUnlocks);
+                    SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, heroName, rootDir, "Standard", null, dUnlocks);
                 }
 
                 foreach (var eventUnlocks in unlocks.LootboxUnlocks) {
@@ -64,7 +66,7 @@ namespace DataTool.ToolLogic.Extract {
 
                     var eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event];
                     var eUnlocks = eventUnlocks.Data.Unlocks.Select(it => GatherUnlock((ulong)it)).ToList();
-                    SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, heroName, "Heroes", eventKey, null, eUnlocks);
+                    SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, heroName, rootDir, eventKey, null, eUnlocks);
                 }
 
                 var heroTextures = new Dictionary<ulong, List<TextureInfo>>();
@@ -72,7 +74,7 @@ namespace DataTool.ToolLogic.Extract {
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource2, "Portrait", true);
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource3, "unknown", true); // Same as Icon for now
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource4, "Avatar", true);
-                Texture.Save(null, Path.Combine(basePath, "Heroes", heroName), heroTextures);
+                Texture.Save(null, Path.Combine(basePath, rootDir, heroName, "GUI"), heroTextures);
             }
         }
     }
