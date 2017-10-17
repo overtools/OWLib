@@ -28,8 +28,8 @@ namespace DataTool.SaveLogic {
         }
         
         public bool Write(Stream output, ModelInfo model, Dictionary<TextureInfo, TextureType> typeData) {
-            const ushort versionMajor = 2;
-            const ushort versionMinor = 0;
+            const ushort versionMajor = 1;
+            const ushort versionMinor = 1;
 
             using (BinaryWriter writer = new BinaryWriter(output)) {
                 writer.Write(versionMajor);
