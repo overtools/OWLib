@@ -62,7 +62,7 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> GetUnlocks(bool onlyAI) {
+        public static Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> GetUnlocks(bool onlyAI) {
             Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> @return = new Dictionary<string, Dictionary<string, HashSet<ItemInfo>>>();
             foreach (ulong key in TrackedFiles[0x75]) {
                 STUHero hero = GetInstance<STUHero>(key);
@@ -80,7 +80,7 @@ namespace DataTool.ToolLogic.List {
             return @return;
         }
 
-        public Dictionary<string, HashSet<ItemInfo>> GetUnlocksForHero(ulong GUID, bool onlyAI) {
+        public static Dictionary<string, HashSet<ItemInfo>> GetUnlocksForHero(ulong GUID, bool onlyAI) {
             Dictionary<string, HashSet<ItemInfo>> @return = new Dictionary<string, HashSet<ItemInfo>>();
 
             STUHeroUnlocks unlocks = GetInstance<STUHeroUnlocks>(GUID);

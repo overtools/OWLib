@@ -9,6 +9,7 @@ using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static STULib.Types.Generic.Common;
 using DataTool.DataModels;
+using STULib.Impl;
 
 namespace DataTool.Helper {
     public static class STUHelper {
@@ -21,6 +22,13 @@ namespace DataTool.Helper {
             using (Stream stream = OpenFile(key)) {
                 return stream == null ? null : ISTU.NewInstance(stream, BuildVersion);
             }
+        }
+        
+        public static T[] GetAllInstances<T>(ulong key) where T : STUInstance  {
+            ISTU stu = OpenSTUSafe(key);
+            Version2 ver2 = stu as Version2;
+            if (ver2 == null) return null;
+            return (stu?.Instances.Concat(ver2.HiddenInstances).OfType<T>().ToArray() ?? new T[0]);
         }
 
         public static T[] GetInstances<T>(ulong key) where T : STUInstance  {

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Diagnostics;
+using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using OWLib;
 using STULib.Types;
+using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
@@ -30,7 +31,7 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             var heroes = GetHeroes();
-            SaveUnlocksForHeroes(heroes, basePath);
+            SaveUnlocksForHeroes(flags, heroes, basePath);
         }
 
         public List<STUHero> GetHeroes() {
@@ -45,7 +46,7 @@ namespace DataTool.ToolLogic.Extract {
             return @return;
         }
 
-        public void SaveUnlocksForHeroes(List<STUHero> heroes, string basePath) {
+        public void SaveUnlocksForHeroes(ICLIFlags flags, List<STUHero> heroes, string basePath) {
             foreach (var hero in heroes)
             {
                 var heroName = GetValidFilename(GetString(hero.Name));
@@ -53,12 +54,31 @@ namespace DataTool.ToolLogic.Extract {
                 if (unlocks?.Unlocks == null || heroName == null)
                     continue;
 
+                List<STUAbilityInfo> abilities = new List<STUAbilityInfo>();
+                foreach (Common.STUGUID ability in hero.Abilities) {
+                    STUAbilityInfo abilityInfo = GetInstance<STUAbilityInfo>(ability);
+                    if (abilityInfo != null) abilities.Add(abilityInfo);
+                }
+                
+                List<ItemInfo> weaponSkins = List.ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks, false).SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList(); // eww?
+
                 var achievementUnlocks = GatherUnlocks(unlocks.SystemUnlocks?.Unlocks?.Select(it => (ulong)it)).ToList();
                 SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, heroName, rootDir, "Achievements", null, achievementUnlocks);
+                foreach (ItemInfo achievementUnlock in achievementUnlocks) {  // todo @zb: make a convenience fucntion
+                    if (achievementUnlock.Type != "Skin") continue;
+                    SaveLogic.Unlock.Skin.Save(flags, basePath, hero, $"Achievement\\{achievementUnlock.Rarity}", achievementUnlock.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
+                }
+                
 
                 foreach (var defaultUnlocks in unlocks.Unlocks)  {
                     var dUnlocks = GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it)).ToList();
                     SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, heroName, rootDir, "Standard", null, dUnlocks);
+
+                    foreach (ItemInfo itemInfo in dUnlocks) {
+                        if (itemInfo.Type == "Skin") {
+                            SaveLogic.Unlock.Skin.Save(flags, basePath, hero, itemInfo.Rarity, itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
+                        }
+                    }
                 }
 
                 foreach (var eventUnlocks in unlocks.LootboxUnlocks) {
@@ -67,6 +87,12 @@ namespace DataTool.ToolLogic.Extract {
                     var eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event];
                     var eUnlocks = eventUnlocks.Data.Unlocks.Select(it => GatherUnlock((ulong)it)).ToList();
                     SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, heroName, rootDir, eventKey, null, eUnlocks);
+
+                    foreach (ItemInfo itemInfo in eUnlocks) {
+                        if (itemInfo.Type == "Skin") {
+                            SaveLogic.Unlock.Skin.Save(flags, basePath, hero, itemInfo.Rarity, itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
+                        }
+                    }
                 }
 
                 var heroTextures = new Dictionary<ulong, List<TextureInfo>>();

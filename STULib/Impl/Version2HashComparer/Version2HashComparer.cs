@@ -252,6 +252,10 @@ namespace STULib.Impl.Version2HashComparer {
 
             ChainedInstances = new Dictionary<uint, List<ChainedInstanceInfo>>();
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
+                if (Version1.IsValidVersion(reader)) {
+                    throw new InvalidDataException("Version2HashComparer does not support version 1 STUs");
+                }
+                stream.Position = offset;
                 if (!ReadHeaderData(reader)) return;
                 long stuOffset = header.Offset;
 
@@ -275,7 +279,11 @@ namespace STULib.Impl.Version2HashComparer {
 
                     int fieldListIndex = reader.ReadInt32();
 
-                    if (fieldListIndex < 0) continue;
+                    if (fieldListIndex < 0) {
+                        Debugger.Log(0, "STU",
+                            $"[Version2HashComparer:{instanceInfo[i].InstanceChecksum:X}]: Instance field list was not valid ({fieldListIndex})\n");
+                        continue;
+                    }
 
                     if (InstanceJSON == null) {
                         FieldGuessData[] fields = GuessInstance(instanceFields[fieldListIndex], reader,
@@ -310,6 +318,14 @@ namespace STULib.Impl.Version2HashComparer {
             if (json.Parent != null && !InternalInstances.ContainsKey(json.ParentChecksum)) {
                 InternalInstances[json.ParentChecksum] = GetInstanceData(json.ParentChecksum, reader);
             }
+            
+            // get all children
+            // foreach (KeyValuePair<uint,STUInstanceJSON> instanceJSON in InstanceJSON) {
+            //     if (instanceJSON.Value.ParentChecksum == json.Hash && !InternalInstances.ContainsKey(instanceJSON.Value.Hash)) {
+            //         InternalInstances[instanceJSON.Value.Hash] = null;
+            //         InternalInstances[instanceJSON.Value.Hash] = GetInstanceData(instanceJSON.Value.Hash, reader);
+            //     }
+            // }
             
             if (instanceSize != null && fieldListIndex != null && reader != null) {
                 fields = FakeReadInstance(instanceFields[(int)fieldListIndex], reader,

@@ -58,7 +58,8 @@ namespace STUHashTool {
                 [0x75] = "Hero",
                 [0x71] = "Subtitle",
                 [0x68] = "Achievement",
-                [0xD9] = "BrawlName"
+                [0xD9] = "BrawlName",
+                [0x9F] = "Map"
             };
             return types.ContainsKey(GUID.Type(guid)) ? types[GUID.Type(guid)] : null;
         }
@@ -127,6 +128,10 @@ namespace STUHashTool {
                         instances = GetInstances(guid, handler, map);
                         STUBrawlName brawlName = instances.OfType<STUBrawlName>().First();
                         return $"{nameString}{GetOWString(brawlName?.Name, handler, map)}";
+                    case 0x9F:
+                        instances = GetInstances(guid, handler, map);
+                        STUMap stuMap = instances.OfType<STUMap>().First();
+                        return $"{nameString}{GetOWString(stuMap?.Name, handler, map)}";
                 }
             }
             catch (Exception) {
@@ -136,6 +141,8 @@ namespace STUHashTool {
 
         public static string GetGUIDProcessed(STUGUID guid, CASCHandler handler, Dictionary<ulong, Record> map,
             uint indentLevel) {
+            // Debugger.Break();
+            // if (GUID.Type(guid).ToString("X3") == "003") Debugger.Break();
             string indentString = GetIndentString(indentLevel);
             try {
                 if (!map.ContainsKey(guid))
@@ -173,15 +180,27 @@ namespace STUHashTool {
                 if (typeof(IDictionary).IsAssignableFrom(field.FieldType)) {
                     sb.Append($"{nl}{nameString}");
                     IDictionary test = (IDictionary) fieldValue;
-                    List<string> dictOut = (from object key in test.Keys select $"{key} :").ToList();
                     int valueIndex = 0;
+                    
+                    List<object> keys = new List<object>();
+                    foreach (object key in test.Keys) {
+                        keys.Add(key);
+                    }
+                    
                     foreach (object value in test.Values) {
-                        dictOut[valueIndex] += $" {value}";
+                        sb.AppendLine($"\r\n{GetIndentString(indentLevel + 1)}{nameStringBase}[{keys[valueIndex]}]:{(value != null ? $" ({value.GetType()})" : "")}");
+                        if (value == null) {
+                            sb.Append($"{GetIndentString(indentLevel + 2)}null");
+                        } else if (value.GetType().IsClass && !ISTU.IsSimple(value.GetType()) && !value.GetType().IsEnum) {
+                            sb.Append(DumpSTUInner(value, GetFields(value.GetType()).OrderBy(x => x.Name).Where(
+                                    fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0)
+                                .ToArray(), handler, map, indentLevel + 2, sheet));
+                        } else {
+                            sb.Append($"{GetIndentString(indentLevel + 2)}{value}");
+                        }
                         valueIndex++;
                     }
-                    foreach (string s in dictOut) {
-                        sb.Append($"\r\n{GetIndentString(indentLevel + 1)}{s}");
-                    }
+                    fieldIndex++;
                     continue;
                 }
                 if (field.FieldType.IsArray) {
@@ -204,6 +223,7 @@ namespace STUHashTool {
                     foreach (object val in enumerable) {
                         if (val == null) {
                             sb.Append($"\r\n{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]: null");
+                            index++;
                             continue;
                         }
                         if (field.FieldType.IsClass && !ISTU.IsSimple(field.FieldType.GetElementType()) && !field.FieldType.GetElementType().IsEnum) {
@@ -227,6 +247,7 @@ namespace STUHashTool {
                         sb.Append(DumpSTUInner(fieldValue, GetFields(fieldValue.GetType()).OrderBy(x => x.Name).Where(
                                 fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),
                             handler, map, indentLevel + 1, sheet));
+                        
                     } else {
                         sb.Append($"{nl}{nameString} {fieldValue}");
                     }

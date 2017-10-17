@@ -295,13 +295,13 @@ namespace STULib.Types.Generic {
                         Add(key, null);
                     } else {
                         // get instance later
-                        stu.HashmapRequests.Add(new KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, uint>>(new KeyValuePair<Type, object>(typeof(T), this), new KeyValuePair<uint, uint>((uint)value, (uint)i)));
+                        stu.HashmapRequests.Add(new KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, ulong>>(new KeyValuePair<Type, object>(typeof(T), this), new KeyValuePair<uint, ulong>((uint)value, key)));
                     }
                 }
                 return this;
             }
 
-            public void Set(uint index, T instance) {
+            public void Set(ulong index, T instance) {
                 this[index] = instance;
             }
         }

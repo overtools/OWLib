@@ -251,3 +251,4 @@ paket-files/
 .idea/
 *.sln.iml
 !/DataTool/ToolLogic/List/Debug/
+!/DataTool/ToolLogic/Extract/Debug/

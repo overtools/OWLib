@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using OWLib;
+using OWLib.Types.Chunk;
 using STULib.Types;
 using STULib.Types.Generic;
+using STULib.Types.StatesciptComponents;
 using static DataTool.Helper.STUHelper;
+using static DataTool.Helper.IO;
 
 namespace DataTool.FindLogic {
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
     public class SoundInfo : IEquatable<SoundInfo> {
         public Common.STUGUID GUID;
         public string Subtitle;
+        public string Name;
         internal string DebuggerDisplay => $"{GUID.ToString()}{(Subtitle != null ? $" - {Subtitle}" : "")}";
 
         public bool Equals(SoundInfo other) {
@@ -33,13 +38,14 @@ namespace DataTool.FindLogic {
     }
     
     public static class Sound {
-        public static void AddGUID(Dictionary<ulong, List<SoundInfo>> sounds, Common.STUGUID newElement, ulong parentKey, string subtitle) {
+        public static void AddGUID(Dictionary<ulong, List<SoundInfo>> sounds, Common.STUGUID newElement, ulong parentKey, string subtitle, string name, bool forceZero) {
             if (newElement == null) return;
+            if (forceZero) parentKey = 0;
             if (!sounds.ContainsKey(parentKey)) {
                 sounds[parentKey] = new List<SoundInfo>();
             }
 
-            SoundInfo newSound = new SoundInfo {GUID = newElement, Subtitle = subtitle};
+            SoundInfo newSound = new SoundInfo {GUID = newElement, Subtitle = subtitle, Name = name};
 
             if (!sounds[parentKey].Contains(newSound)) {
                 sounds[parentKey].Add(newSound);
@@ -51,13 +57,56 @@ namespace DataTool.FindLogic {
                 }
             }
         }
-        
-        public static Dictionary<ulong, List<SoundInfo>> FindSounds(Dictionary<ulong, List<SoundInfo>> existingSounds, Common.STUGUID soundGUID) {
+
+        public static Dictionary<ulong, List<SoundInfo>> FindSounds(Dictionary<ulong, List<SoundInfo>> existingSounds,
+            STUSound07ASub sub07A, string name=null, bool forceZero=false, ulong toplevelKey=0, Dictionary<ulong, ulong> replacements=null) {
+            existingSounds = FindSounds(existingSounds, sub07A?.Sound3, name, forceZero, toplevelKey, replacements);
+            existingSounds = FindSounds(existingSounds, sub07A?.Sound1, name, forceZero, toplevelKey, replacements);
+            existingSounds = FindSounds(existingSounds, sub07A?.Sound2, name, forceZero, toplevelKey, replacements);
+            return existingSounds;
+        }
+
+        public static Dictionary<ulong, List<SoundInfo>> FindSoundsChunked(Dictionary<ulong, List<SoundInfo>> existingSounds, Common.STUGUID soundGUID, string name=null, bool forceZero=false, ulong toplevelKey=0, Dictionary<ulong, ulong> replacements=null) {
+            if (existingSounds == null) {
+                existingSounds = new Dictionary<ulong, List<SoundInfo>>();
+            }
+            if (soundGUID == null) return existingSounds;
+            if (replacements == null) replacements = new Dictionary<ulong, ulong>();
+            if (replacements.ContainsKey(soundGUID)) soundGUID = new Common.STUGUID(replacements[soundGUID]);
+
+            using (Stream chunkStream = OpenFile(soundGUID)) {
+                if (chunkStream == null) {
+                    return existingSounds;
+                }
+                Chunked chunked = new Chunked(chunkStream, true, ChunkManager.Instance);
+                
+                OSCE[] osces = chunked.GetAllOfTypeFlat<OSCE>();
+                foreach (OSCE osce in osces) {
+                    existingSounds = FindSounds(existingSounds, osce.Data.effect, name, forceZero, toplevelKey, replacements);
+                }
+
+                FECE[] feces = chunked.GetAllOfTypeFlat<FECE>();
+                foreach (FECE fece in feces) {   // good variable name
+                    existingSounds = FindSounds(existingSounds, fece.Data.effect, name, forceZero, toplevelKey, replacements);
+                }
+            }
+
+            return existingSounds;
+        }
+
+        private static Dictionary<ulong, List<SoundInfo>> FindSounds(Dictionary<ulong, List<SoundInfo>> existingSounds, ulong soundGuid, string name=null, bool forceZero=false, ulong toplevelKey=0, Dictionary<ulong, ulong> replacements=null) {
+            return FindSounds(existingSounds, new Common.STUGUID(soundGuid), name, forceZero, toplevelKey, replacements);
+        }
+
+        public static Dictionary<ulong, List<SoundInfo>> FindSounds(Dictionary<ulong, List<SoundInfo>> existingSounds, Common.STUGUID soundGUID, string name=null, bool forceZero=false, ulong toplevelKey=0, Dictionary<ulong, ulong> replacements=null) {
             if (existingSounds == null) {
                 existingSounds = new Dictionary<ulong, List<SoundInfo>>();
             }
 
             if (soundGUID == null) return existingSounds;
+            if (replacements == null) replacements = new Dictionary<ulong, ulong>();
+            if (replacements.ContainsKey(soundGUID)) soundGUID = new Common.STUGUID(replacements[soundGUID]);
+            if (toplevelKey == 0) toplevelKey = soundGUID;
             
             // 05F todos:
             
@@ -95,34 +144,79 @@ namespace DataTool.FindLogic {
                         }
                         STUSoundConainer th2 = soundThingy.SoundContainer;
                         if (th2 != null) {
-                            AddGUID(existingSounds, th2.Sound1?.SoundResource, soundGUID, subtitle1);
-                            AddGUID(existingSounds, th2.Sound2?.SoundResource, soundGUID, subtitle2);
-                            AddGUID(existingSounds, th2.Sound3?.SoundResource, soundGUID, subtitle3);
-                            AddGUID(existingSounds, th2.Sound4?.SoundResource, soundGUID, subtitle4);
-                            // if (th2.Sound2 != null) {
-                            //     Debugger.Break();
-                            // }
-                            // if (th2.Sound3 != null) {
-                            //     Debugger.Break();
-                            // }
-                            // if (th2.Sound4 != null) {
-                            //     Debugger.Break();
-                            // }
+                            AddGUID(existingSounds, th2.Sound1?.SoundResource, toplevelKey, subtitle1, name, forceZero);
+                            AddGUID(existingSounds, th2.Sound2?.SoundResource, toplevelKey, subtitle2, name, forceZero);
+                            AddGUID(existingSounds, th2.Sound3?.SoundResource, toplevelKey, subtitle3, name, forceZero);
+                            AddGUID(existingSounds, th2.Sound4?.SoundResource, toplevelKey, subtitle4, name, forceZero);
                         }
                         if (soundThingy.SoundDataContainer?.SoundbankMasterResource == null) continue;
-                        FindSounds(existingSounds, soundThingy.SoundDataContainer.SoundbankMasterResource);
+                        existingSounds = FindSounds(existingSounds, soundThingy.SoundDataContainer.SoundbankMasterResource, null, forceZero, toplevelKey, replacements);
                     }
                     break;
                 case 0x02C:
                     STUSound sbM = GetInstance<STUSound>(soundGUID);
-                    AddGUID(existingSounds, sbM?.Inner?.Soundbank, soundGUID, null);
+                    AddGUID(existingSounds, sbM?.Inner?.Soundbank, toplevelKey, null, name, forceZero);
                     if (sbM?.Inner?.Sounds == null) break;
                     foreach (Common.STUGUID sound in sbM.Inner.Sounds) {
-                        AddGUID(existingSounds, sound, soundGUID, null);
+                        AddGUID(existingSounds, sound, toplevelKey, null, name, forceZero);
                     }
                     break;
                 case 0x043:
-                    AddGUID(existingSounds, soundGUID, soundGUID, null);
+                    AddGUID(existingSounds, soundGUID, toplevelKey, null, name, forceZero);
+                    break;
+                case 0x0D:
+                    existingSounds = FindSoundsChunked(existingSounds, soundGUID, null, forceZero, toplevelKey, replacements);
+                    break;
+                case 0x07A:
+                    STUSound07A x07A = GetInstance<STUSound07A>(soundGUID);
+                    if (x07A == null) break;
+                    // eww
+                    existingSounds = FindSounds(existingSounds, x07A.Sub1, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, x07A.Sub2, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, x07A.Sub3, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, x07A.Sub4, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, x07A.Sub5, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, x07A.Sub6, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, x07A.Sub7, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, x07A.Sub8, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, x07A.Sub9, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, x07A.Sub10, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, x07A.Sub11, name, forceZero, toplevelKey, replacements);
+                    break;
+                case 0x04A:
+                    FindSoundsChunked(existingSounds, soundGUID, null, forceZero, toplevelKey);
+                    break;
+                case 0x049:
+                    STUUISoundList uiSoundList = GetInstance<STUUISoundList>(soundGUID);
+                    foreach (STUUISoundListEffectContainer effectContainer in uiSoundList.EffectContainer) {
+                        foreach (STUUISoundListEffect effect in effectContainer.Effects) {
+                            FindSounds(existingSounds, effect.Effect, null, forceZero, toplevelKey, replacements);
+                        }
+                    }
+                    break;
+                case 0x03:
+                    STUStatescriptComponentMaster container = GetInstance<STUStatescriptComponentMaster>(soundGUID);
+                    foreach (KeyValuePair<ulong,STUStatescriptComponent> statescriptComponent in container.Components) {
+                        STUStatescriptComponent component = statescriptComponent.Value;
+                        if (component == null) continue;
+                        if (component.GetType() == typeof(STUStatescriptSoundMaster)) {
+                            STUStatescriptSoundMaster ssSoundMaster = component as STUStatescriptSoundMaster;
+                            existingSounds = FindSounds(existingSounds, ssSoundMaster?.SoundMaster, null, forceZero, toplevelKey, replacements);
+                        } else if (component.GetType() == typeof(STUStatescript07A)) {
+                            STUStatescript07A ss07A = component as STUStatescript07A;
+                            existingSounds = FindSounds(existingSounds, ss07A?.GUIDx07A, null, forceZero, toplevelKey, replacements);
+                        } else if (component.GetType() == typeof(STUStatescriptSubreferenceComponent)) {
+                            // hmm, references another 003
+                            // STU_9D28963F ss9D28963F = component as STU_9D28963F;
+                            // existingSounds = FindSounds(existingSounds, ss9D28963F?.m_A83C2C26, replacements);
+                        } else if (component.GetType() == typeof(STUStatescript049)) {
+                            STUStatescript049 ss049 = component as STUStatescript049;
+                            existingSounds = FindSounds(existingSounds, ss049?.GUIDx049, null, forceZero, toplevelKey, replacements);
+                        }
+                    }
+                    break;
+                default:
+                    Debugger.Log(0, "DataTool.FindLogic.Sound", $"[DataTool.FindLogic.Sound] Unhandled type: {GUID.Type(soundGUID):X3}\n");
                     break;
             }
 

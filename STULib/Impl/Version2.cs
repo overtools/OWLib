@@ -31,9 +31,10 @@ namespace STULib.Impl {
 
         protected Dictionary<Array, int[]> EmbedArrayRequests;
         protected Dictionary<KeyValuePair<object, FieldInfo>, int> EmbedRequests;
-        internal List<KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, uint>>> HashmapRequests;  // keyval = instanceIndex: mapIndex
+        internal List<KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, ulong>>> HashmapRequests;  // keyval = instanceIndex: mapIndex
+        public List<STUInstance> HiddenInstances;
 
-        private uint buildVersion;
+        protected uint buildVersion;
 
         protected BinaryReader metadataReader;
 
@@ -85,7 +86,8 @@ namespace STULib.Impl {
         private string ReadMetadataString() {
             STUString data = metadataReader.Read<STUString>();
             metadata.Position = data.Offset;
-            return new string(metadataReader.ReadChars((int) data.Size));
+            byte[] chars = metadataReader.ReadBytes((int) data.Size);
+            return Encoding.UTF8.GetString(chars);
         }
         
         // ReSharper disable once UnusedParameter.Local
@@ -278,6 +280,7 @@ namespace STULib.Impl {
                     if (fieldInstance != null) {
                         fieldInstance.Usage = InstanceUsage.InlineArray;
                     }
+                    HiddenInstances.Add(fieldInstance);
                 }
                 return array;
             } if (typeof(STUInstance).IsAssignableFrom(type)) {
@@ -427,6 +430,7 @@ namespace STULib.Impl {
                             if (fieldInstance != null) {
                                 fieldInstance.Usage = InstanceUsage.Inline;
                             }
+                            HiddenInstances.Add(fieldInstance);
                             continue;
                         }
                     }
@@ -514,8 +518,9 @@ namespace STULib.Impl {
         // ReSharper disable once PossibleNullReferenceException
         protected virtual void ReadInstanceData(long offset) {
             EmbedArrayRequests = new Dictionary<Array, int[]>();
-            HashmapRequests = new List<KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, uint>>>();
+            HashmapRequests = new List<KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, ulong>>>();
             EmbedRequests = new Dictionary<KeyValuePair<object, FieldInfo>, int>();
+            HiddenInstances = new List<STUInstance>();
             stream.Position = offset;
             GetHeaderCRC();
             stream.Position = offset;
@@ -580,10 +585,12 @@ namespace STULib.Impl {
                             arrayIndex++;
                         }
                     }
-                    foreach (KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, uint>> hashmapRequest in HashmapRequests) {
+                    foreach (KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, ulong>> hashmapRequest in HashmapRequests) {
                         // keyval = instanceIndex: mapIndex
                         hashmapRequest.Key.Value.GetType().GetMethod("Set").Invoke(hashmapRequest.Key.Value, new object[] {hashmapRequest.Value.Value, instances[hashmapRequest.Value.Key]});
-                        instances[hashmapRequest.Value.Key].Usage = InstanceUsage.HashmapElement;
+                        if (instances[hashmapRequest.Value.Key] != null) {
+                            instances[hashmapRequest.Value.Key].Usage = InstanceUsage.HashmapElement;
+                        }
                     }
                 }
             }

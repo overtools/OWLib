@@ -62,7 +62,7 @@ namespace STULib.Types {
         public int UnknownID;  // weird, sometimes works as hero type, but not always
 
         [STUField(0xC2FE396F)]
-        public Statescript[] StatescriptComponents1;
+        public Statescript[] WeaponComponents1;
 
         [STUField(0xD696F2F6)]
         public STUGUID ImageResource1;
@@ -89,10 +89,10 @@ namespace STULib.Types {
         public StatisticGroup[] Statistics;
 
         [STUField(0xFCD2B649)]
-        public Statescript[] StatescriptComponents2;
+        public Statescript[] WeaponComponents2;
 
         [STUField(0xFF3C2071)]
-        public STUGUID[] Unknown29;
+        public STUGUID[] Achievements;  // not all of them...
 
         [STUField(0x418F797D)]
         public UnknownNested2[] Unknown30;

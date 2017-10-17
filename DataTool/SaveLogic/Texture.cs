@@ -5,15 +5,21 @@ using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.ToolLogic.Extract;
 using OWLib;
+using OWLib.Types;
 using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic {
     public class Texture {
-        public static void Save(ICLIFlags flags, string path, Dictionary<ulong, List<TextureInfo>> textures) {
+
+        public static Dictionary<TextureInfo, TextureType> MergeTypes(Dictionary<TextureInfo, TextureType> first, Dictionary<TextureInfo, TextureType> second) {
+            return first.Concat(second).GroupBy(d => d.Key).ToDictionary (d => d.Key, d => d.First().Value);
+        }
+        public static Dictionary<TextureInfo, TextureType> Save(ICLIFlags flags, string path, Dictionary<ulong, List<TextureInfo>> textures) {
+            Dictionary<TextureInfo, TextureType> output = new Dictionary<TextureInfo, TextureType>();
             bool convertTextures = true;
             if (flags is ExtractFlags extractFlags) {
                 convertTextures = extractFlags.ConvertWem;
-                if (extractFlags.SkipTextures) return;
+                if (extractFlags.SkipTextures) return output;
             }
 
             bool zeroOnly = textures.ContainsKey(0) && textures.All(x => x.Key == 0);
@@ -25,11 +31,19 @@ namespace DataTool.SaveLogic {
                     rootOutput = path + Path.DirectorySeparatorChar;
 
                 foreach (TextureInfo textureInfo in pair.Value) {
-                    var outputPath = zeroOnly ? rootOutput : $"{rootOutput}{GUID.LongKey(textureInfo.GUID):X12}";
-                    var outputPathSecondary = zeroOnly ? rootOutput : $"{rootOutput}{GUID.LongKey(textureInfo.DataGUID):X12}";
+                    string outputPath = zeroOnly ? rootOutput : $"{rootOutput}{GUID.LongKey(textureInfo.GUID):X12}";
+                    string outputPathSecondary = zeroOnly ? rootOutput : $"{rootOutput}{GUID.LongKey(textureInfo.DataGUID):X12}";
 
-                    if (textureInfo.Name != null)
+                    if (textureInfo.Name != null) {
                         outputPath = Path.Combine(outputPath, textureInfo.Name);
+                        outputPathSecondary = Path.Combine(outputPathSecondary, textureInfo.Name);
+                    }
+                    if (textureInfo.Name == null) {
+                        outputPath = Path.Combine(outputPath, $"{GUID.LongKey(textureInfo.GUID):X12}");
+                        outputPathSecondary = Path.Combine(outputPathSecondary, $"{GUID.LongKey(textureInfo.GUID):X12}");
+                    }
+                    
+                    TextureType type = TextureType.Unknown;
 
                     if (!convertTextures) {
                         using (Stream soundStream = OpenFile(textureInfo.GUID)) {
@@ -45,17 +59,22 @@ namespace DataTool.SaveLogic {
                             OWLib.Texture textObj = new OWLib.Texture(OpenFile(textureInfo.GUID),
                                 OpenFile(textureInfo.DataGUID));
                             convertedStream = textObj.Save();
+                            type = textObj.Format;
                         } else {
                             TextureLinear textObj = new TextureLinear(OpenFile(textureInfo.GUID));
                             convertedStream = textObj.Save();
+                            type = textObj.Header.Format();
                         }
                         if (convertedStream == null) continue;
                         convertedStream.Position = 0;
                         WriteFile(convertedStream, $"{outputPath}.dds");
                         convertedStream.Close();
+
                     }
+                    output[textureInfo] = type;
                 }
             }
+            return output;
         }
     }
 }

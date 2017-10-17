@@ -358,6 +358,8 @@ namespace STUHashTool {
 
             List<string> both = files2.Intersect(files1).ToList();
             List<CompareResult> results = new List<CompareResult>();
+            
+            uint classCount = 0;
 
             foreach (string file in both) {
                 if (directory1 == null || directory2 == null) {
@@ -366,9 +368,12 @@ namespace STUHashTool {
                 string file1 = Path.Combine(directory1, file);
                 string file2 = Path.Combine(directory2, file);
                 Debugger.Log(0, "STUHashTool", $"[STUHashTool]: Loading file: {file1}\n");
+
                 
                 using (Stream file1Stream = File.Open(file1, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (Stream file2Stream = File.Open(file2, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                        // if (classCount >= 10) continue;
+                        
                         ISTU file1STU = ISTU.NewInstance(file1Stream, uint.MaxValue, typeof(Version2Comparer));
                         Version2Comparer file1STU2 = (Version2Comparer) file1STU;
 
@@ -382,6 +387,8 @@ namespace STUHashTool {
                             //     continue;
                             // }
                         }
+                        classCount++;
+                        
 
                         foreach (InstanceData instanceData in file1STU2.InstanceData) {
                             if (instanceData == null) continue;
@@ -648,7 +655,10 @@ namespace STUHashTool {
                         Debugger.Log(0, "STUHashTool:test", $"Unable to open file: {file:X} ({GUID.LongKey(file):X12}.{GUID.Type(file):X3})\n");
                         continue;
                     }
-                    // if (file != 743093938516138274) continue;
+                    //if (file != 288230376151714901 && file != 288230376151712128) continue;
+                    // if (file != 0x400000000000C55) continue;
+                    // if (file != 166633186212711045) continue;  // season 1
+                    // if (file != 396316767208603669) continue; // sound 01B
                     using (Stream fileStream = Util.OpenFile(records[file], handler)) {
                         ISTU fileSTU = ISTU.NewInstance(fileStream, uint.MaxValue);
                         Console.WriteLine($"Loaded: {file:X12} {GUID.LongKey(file):X12}.{GUID.Type(file):X3}", Color.LightGray);
@@ -814,7 +824,7 @@ namespace STUHashTool {
                     return "STUVec2";
                 case "teVec3":
                     return "STUVec3";
-                case "teVec3a":
+                case "teVec3A":
                     return "STUVec3A";
                 case "teVec4":
                     return "STUVec4";
@@ -980,7 +990,7 @@ namespace STUHashTool {
             if (instance.ParentType != null && !alreadyDone.Contains(instance.ParentChecksum)) {
                 RealInstances[instance.ParentChecksum] = internalInstances[instance.ParentChecksum];
                 alreadyDone.Add(instance.ParentChecksum);
-                FindInternalInstances(internalInstances[instance.ParentChecksum], internalInstances);
+                FindInternalInstances(internalInstances[instance.ParentChecksum], internalInstances, alreadyDone);
             }
             foreach (FieldData field in instance.Fields) {
                 if ((field.IsEmbed || field.IsEmbedArray) && !alreadyDone.Contains(field.EmbedInstanceChecksum)) {

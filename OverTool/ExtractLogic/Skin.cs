@@ -242,6 +242,7 @@ namespace OverTool.ExtractLogic {
                 return;
             }
             ulong tgt = key;
+            string tgtName = $"{GUID.LongKey(tgt):X12}.{GUID.Type(tgt):X3}";
             if (replace.ContainsKey(tgt)) {
                 tgt = replace[tgt];
             }
@@ -344,6 +345,7 @@ namespace OverTool.ExtractLogic {
                 return;
             }
             ulong tgt = key;
+            string tgtName = $"{GUID.LongKey(tgt):X12}.{GUID.Type(tgt):X3}";
             if (replace.ContainsKey(tgt)) {
                 tgt = replace[tgt];
             }
