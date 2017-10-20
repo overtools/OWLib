@@ -99,7 +99,7 @@ namespace STUHashTool {
                         STUHeroUnlocks unlocks = instances.OfType<STUHeroUnlocks>().First();
                         if (unlocks == null) return null;
                         // Console.Out.WriteLine($"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|{nameString}");
-                        return $"{nameString}\r\n{DumpSTUInner(unlocks, GetFields(unlocks.GetType()).OrderBy(x => x.Name).Where(fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(), handler, map, indentLevel+1, null)}";
+                        return $"{nameString}\r\n{DumpSTUInner(unlocks, GetFields(unlocks.GetType()).OrderBy(x => x.Name).Where(fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(), handler, map, indentLevel+1, null, new List<object>())}";
                     case 0xA5:
                         instances = GetInstances(guid, handler, map);
                         Cosmetic unlock = instances.OfType<Cosmetic>().First();
@@ -147,6 +147,9 @@ namespace STUHashTool {
             try {
                 if (!map.ContainsKey(guid))
                     return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3} virtual";
+                if (GUID.Type(guid).ToString("X3") != "025" && GUID.Type(guid).ToString("X3") != "0AF" && GUID.Type(guid).ToString("X3") != "024" && GUID.Type(guid).ToString("X3") != "015" && GUID.Type(guid).ToString("X3") != "0B0" && GUID.Type(guid).ToString("X3") != "014" && GUID.Type(guid).ToString("X3") != "05A" 
+                    && GUID.Type(guid).ToString("X3") != "013" && GUID.Type(guid).ToString("X3") != "003" && GUID.Type(guid).ToString("X3") != "062" && GUID.Type(guid).ToString("X3") != "00D" && GUID.Type(guid).ToString("X3") != "09E" && GUID.Type(guid).ToString("X3") != "0AC"
+                    && GUID.Type(guid).ToString("X3") != "01B" && GUID.Type(guid).ToString("X3") != "021" && GUID.Type(guid).ToString("X3") != "036") Debugger.Break();
                 return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|{ProcessGUIDInternal(guid, handler, map, indentLevel)}";
             }
             catch (Exception) {
@@ -155,7 +158,7 @@ namespace STUHashTool {
         }
 
         internal static string DumpSTUInner(object instance, FieldInfo[] fields, CASCHandler handler,
-            Dictionary<ulong, Record> map, uint indentLevel, StyleSheet sheet) {
+            Dictionary<ulong, Record> map, uint indentLevel, StyleSheet sheet, List<object> doneObjects) {
             StringBuilder sb = new StringBuilder();
             string indentString = GetIndentString(indentLevel);
             uint fieldIndex = 0;
@@ -192,9 +195,14 @@ namespace STUHashTool {
                         if (value == null) {
                             sb.Append($"{GetIndentString(indentLevel + 2)}null");
                         } else if (value.GetType().IsClass && !ISTU.IsSimple(value.GetType()) && !value.GetType().IsEnum) {
-                            sb.Append(DumpSTUInner(value, GetFields(value.GetType()).OrderBy(x => x.Name).Where(
-                                    fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0)
-                                .ToArray(), handler, map, indentLevel + 2, sheet));
+                            if (!doneObjects.Contains(value)) {
+                                doneObjects.Add(value);
+                                sb.Append(DumpSTUInner(value, GetFields(value.GetType()).OrderBy(x => x.Name).Where(
+                                        fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0)
+                                    .ToArray(), handler, map, indentLevel + 2, sheet, new List<object>(doneObjects)));
+                            } else {
+                                sb.Append($"{GetIndentString(indentLevel + 2)}RECURSION ERROR");
+                            }
                         } else {
                             sb.Append($"{GetIndentString(indentLevel + 2)}{value}");
                         }
@@ -228,9 +236,15 @@ namespace STUHashTool {
                         }
                         if (field.FieldType.IsClass && !ISTU.IsSimple(field.FieldType.GetElementType()) && !field.FieldType.GetElementType().IsEnum) {
                             sb.AppendLine($"\r\n{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]:");
-                            sb.Append(DumpSTUInner(val, GetFields(val.GetType()).OrderBy(x => x.Name).Where(
-                                    fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0)
-                                .ToArray(), handler, map, indentLevel + 2, sheet));
+                            if (!doneObjects.Contains(val)) {
+                                doneObjects.Add(val);
+                                sb.Append(DumpSTUInner(val, GetFields(val.GetType()).OrderBy(x => x.Name).Where(
+                                        fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0)
+                                    .ToArray(), handler, map, indentLevel + 2, sheet, new List<object>(doneObjects)));
+                            } else {
+                                sb.Append($"\r\n{GetIndentString(indentLevel + 2)}RECURSION ERROR");
+                            }
+                            
                         } else {
                             sb.Append($"\r\n{GetIndentString(indentLevel + 1)}{nameStringBase}[{index}]: {val}");
                         }
@@ -244,9 +258,16 @@ namespace STUHashTool {
                     } else if (field.FieldType.IsClass && field.FieldType != typeof(string)) {
                         //Console.Out.WriteLine($"{indentString}{fieldValue.GetType()}:");
                         sb.AppendLine($"{nl}{nameString}");
-                        sb.Append(DumpSTUInner(fieldValue, GetFields(fieldValue.GetType()).OrderBy(x => x.Name).Where(
-                                fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),
-                            handler, map, indentLevel + 1, sheet));
+                        if (!doneObjects.Contains(fieldValue)) {                            
+                            doneObjects.Add(fieldValue);
+                            sb.Append(DumpSTUInner(fieldValue, GetFields(fieldValue.GetType()).OrderBy(x => x.Name)
+                                    .Where(
+                                        fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0)
+                                    .ToArray(),
+                                handler, map, indentLevel + 1, sheet, new List<object>(doneObjects)));
+                        } else {
+                            sb.Append($"{GetIndentString(indentLevel + 1)}RECURSION ERROR");
+                        }
                         
                     } else {
                         sb.Append($"{nl}{nameString} {fieldValue}");
@@ -309,11 +330,11 @@ namespace STUHashTool {
                 StyleSheet styleSheet = new StyleSheet(Color.LightGray);
                 Console.WriteLineStyled(DumpSTUInner(instance, GetFields(instance.GetType()).OrderBy(x => x.Name).Where(
                         fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),
-                    handler, map, 1, styleSheet), styleSheet);
+                    handler, map, 1, styleSheet, new List<object>()), styleSheet);
                 
-                if (Debugger.IsAttached) {
-                    Debugger.Break();
-                }
+                // if (Debugger.IsAttached) {
+                //     Debugger.Break();
+                // }
                 index++;
             }
         }

@@ -6,6 +6,7 @@ using OWLib.Types;
 using OWLib.Types.Chunk;
 using OWLib.Types.Map;
 using System.Globalization;
+using System.Linq;
 
 namespace OWLib.Writer {
     public class RefPoseWriter : IDataWriter {
@@ -103,6 +104,73 @@ namespace OWLib.Writer {
                     writer.WriteLine(String.Format(CultureInfo.InvariantCulture, "{0}  {1:0.000000} {2:0.000000} {3:0.000000}  {4:0.000000} {5:0.000000} {6:0.000000}  {7:0.000000} {8:0.000000} {9:0.000000}", i, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z));
                 }
             }
+            return true;
+        }
+
+        public bool TestWriteCloth(Chunked model, Stream output, HTLC cloth) {  // todo:
+            culture.NumberFormat.NumberDecimalSeparator = ".";
+            System.Threading.Thread.CurrentThread.CurrentCulture = culture;
+            IChunk chunk = model.FindNextChunk("lksm").Value;
+            if (chunk == null) {
+                return false;
+            }
+            lksm skeleton = (lksm)chunk;
+            
+            Dictionary<short, short> hierarchy = new Dictionary<short, short>();
+            foreach (HTLC.ClothNode[] nodes in cloth.Nodes) {
+                foreach (HTLC.ClothNode node in nodes) {
+                    short parent = node.DiagonalParent;
+                    if (node.Bone1 != 0) {
+                        if (!hierarchy.ContainsKey(node.Bone1) || hierarchy[node.Bone1] == -1) {
+                            hierarchy[node.Bone1] = parent;
+                        }
+                    }
+                    if (node.Bone2 != 0) {
+                        if (!hierarchy.ContainsKey(node.Bone2) || hierarchy[node.Bone2] == -1) {
+                            hierarchy[node.Bone2] = parent;
+                        }
+                    }
+                    if (node.Bone3 != 0) {
+                        if (!hierarchy.ContainsKey(node.Bone3) || hierarchy[node.Bone3] == -1) {
+                            hierarchy[node.Bone3] = parent;
+                        }
+                    }
+                    if (node.Bone4 != 0) {
+                        if (!hierarchy.ContainsKey(node.Bone4) || hierarchy[node.Bone4] == -1) {
+                            hierarchy[node.Bone4] = parent;
+                        }
+                    }
+                    
+                    if (!hierarchy.ContainsKey(parent) && parent != -1) {
+                        hierarchy[parent] = -1; // assume parent's parent is -1 until told otherwise
+                    }
+                }
+            }
+            IEnumerable<short> query = hierarchy.Keys.OrderBy(pet => pet);
+            HashSet<short> bones = new HashSet<short>(query);
+            using (StreamWriter writer = new StreamWriter(output)) {
+                writer.WriteLine("{0}", bones.Count);
+                writer.WriteLine("version 1");
+                writer.WriteLine("nodes");
+                foreach (short bone in bones) {  
+                    writer.WriteLine("{0} \"bone_{1:X4}\" {2}", bone, skeleton.IDs[bone], hierarchy[bone]);
+                }
+                writer.WriteLine("end");
+                writer.WriteLine("skeleton");
+                writer.WriteLine("time 0");
+                foreach (short i in bones) {
+                    Matrix3x4 bone = skeleton.Matrices34Inverted[i];
+                    APPLIB.Quaternion3D quat = new APPLIB.Quaternion3D(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
+                    APPLIB.Vector3D rot = APPLIB.C3D.ToEulerAngles(quat);
+                    Vector3 scale = new Vector3(bone[1, 0], bone[1, 1], bone[1, 2]);
+                    Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
+                    if (rot.X == -3.14159274f && rot.Y == 0 && rot.Z == 0) {
+                        rot = new APPLIB.Vector3D(0, 3.14159274f, 3.14159274f); // effectively the same but you know, eulers.
+                    }
+                    writer.WriteLine(String.Format(CultureInfo.InvariantCulture, "{0}  {1:0.000000} {2:0.000000} {3:0.000000}  {4:0.000000} {5:0.000000} {6:0.000000}  {7:0.000000} {8:0.000000} {9:0.000000}", i, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z));
+                }
+            }
+            
             return true;
         }
 

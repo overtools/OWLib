@@ -1,9 +1,0 @@
-﻿using STULib.Types.Generic;
-
-namespace STULib.Types.StatesciptComponents {
-    [STU(0x5DE82F2)]
-    public class STUUnlockComponent : STUStatescriptComponent {
-        [STUField(0x4A83FA61)]
-        public Common.STUGUID Unlock;
-    }
-}

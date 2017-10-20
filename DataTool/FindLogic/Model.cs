@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using OWLib;
 using OWLib.Types.Chunk;
+using STULib;
 using STULib.Types;
 using STULib.Types.Generic;
-using STULib.Types.StatesciptComponents;
+using STULib.Types.Statescript.Components;
+using STULib.Types.Statescript.DataStores;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
@@ -236,8 +238,8 @@ namespace DataTool.FindLogic {
                             }
                         }
                     }
-                    if (container.SubModels != null) {
-                        foreach (STUSubModelReferenceComponent subModelReference in container.SubModels) {
+                    if (container.SubComponents != null) {
+                        foreach (STUSubComponentReferenceComponent subModelReference in container.SubComponents) {
                             existingModels = FindModels(existingModels, subModelReference?.GUIDx003, replacements);
                         }
                     }
@@ -256,6 +258,25 @@ namespace DataTool.FindLogic {
                     break;
                 case 0x0C:
                     AddGUID(existingModels, modelGUID, new Dictionary<ulong, List<TextureInfo>>(), null, replacements);
+                    break;
+                case 0x1B:
+                    ISTU stuTemp = OpenSTUSafe(modelGUID);
+                    // STUStatescriptDataStoreBase[] dataStores = GetAllInstances<STUStatescriptDataStoreBase>(modelGUID);
+                    foreach (STUStatescriptDataStore01B statescriptDataStore01B in stuTemp.Instances.OfType<STUStatescriptDataStore01B>()) {
+                        existingModels = FindModels(existingModels, statescriptDataStore01B.GUIDx01B, replacements);
+                    }
+                    foreach (STUStatescriptDataStoreComponent statescriptDataStoreComponent in stuTemp.Instances.OfType<STUStatescriptDataStoreComponent>()) {
+                        existingModels = FindModels(existingModels, statescriptDataStoreComponent.Component, replacements);
+                    }
+                    foreach (STUStatescriptDataStoreComponent2 statescriptDataStoreComponent in stuTemp.Instances.OfType<STUStatescriptDataStoreComponent2>()) {
+                        existingModels = FindModels(existingModels, statescriptDataStoreComponent.Component, replacements);
+                    }
+                    foreach (STUStatescriptDataStoreMaterial statescriptDataStoreMaterial in stuTemp.Instances.OfType<STUStatescriptDataStoreMaterial>()) {
+                        existingModels = FindModels(existingModels, statescriptDataStoreMaterial.Material, replacements);
+                    }
+                    foreach (STUStatescriptDataStoreEffect statescriptDataStoreEffect in stuTemp.Instances.OfType<STUStatescriptDataStoreEffect>()) {
+                        existingModels = FindModels(existingModels, statescriptDataStoreEffect.Effect, replacements);
+                    }
                     break;
                 default:
                     Debugger.Log(0, "DataTool.FindLogic.Model", $"[DataTool.FindLogic.Model] Unhandled type: {GUID.Type(modelGUID):X3}\n");
