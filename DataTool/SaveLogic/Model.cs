@@ -99,24 +99,24 @@ namespace DataTool.SaveLogic {
             }
             List<byte> lods = new List<byte>(new byte[3] {0, 1, 0xFF});
             Chunked mdl = new Chunked(OpenFile(model.GUID));
-            // if (model.GUID.ToString() == "0000000006E9.00C" || model.GUID.ToString() == "00000000093F.00C") {
-            //     // using (Stream fileStream =
-            //     //     new FileStream(
-            //     //         Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}.00C"),
-            //     //         FileMode.Create)) {
-            //     //     using (Stream cascSteam = OpenFile(model.GUID)) {
-            //     //         cascSteam.CopyTo(fileStream);
-            //     //     }
-            //     // }
-            //     using (Stream fileStream =
-            //         new FileStream(
-            //             Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}_clth{refposeWriter.Format}"), FileMode.Create)) {
-            //         fileStream.SetLength(0);
-            //         HTLC cloth = mdl.FindNextChunk("HTLC").Value as HTLC;
-            //         refposeWriter.TestWriteCloth(mdl, fileStream, cloth);
-            //     }
-            //     Debugger.Break();
-            // }
+            if (model.GUID.ToString() == "0000000006E9.00C" || model.GUID.ToString() == "00000000093F.00C") {
+                // using (Stream fileStream =
+                //     new FileStream(
+                //         Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}.00C"),
+                //         FileMode.Create)) {
+                //     using (Stream cascSteam = OpenFile(model.GUID)) {
+                //         cascSteam.CopyTo(fileStream);
+                //     }
+                // }
+                using (Stream fileStream =
+                    new FileStream(
+                        Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}_clth{refposeWriter.Format}"), FileMode.Create)) {
+                    fileStream.SetLength(0);
+                    HTLC cloth = mdl.FindNextChunk("HTLC").Value as HTLC;
+                    refposeWriter.TestWriteCloth(mdl, fileStream, cloth);
+                }
+                Debugger.Break();
+            }
             using (Stream fileStream =
                 new FileStream(
                     Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{mdlWriter.Format}"),

@@ -51,7 +51,7 @@ namespace DataTool.ToolLogic.Extract {
             {
                 var heroName = GetValidFilename(GetString(hero.Name));
                 // if (heroName != "Mercy") continue;
-                // if (heroName != "McCree") continue;
+                if (heroName != "McCree") continue;
                 var unlocks = GetInstance<STUHeroUnlocks>(hero.LootboxUnlocks);
                 if (unlocks?.Unlocks == null || heroName == null)
                     continue;
@@ -68,7 +68,7 @@ namespace DataTool.ToolLogic.Extract {
                 SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, heroName, rootDir, "Achievements", null, achievementUnlocks);
                 foreach (ItemInfo achievementUnlock in achievementUnlocks) {  // todo @zb: make a convenience fucntion
                     if (achievementUnlock.Type != "Skin") continue;
-                    // if (achievementUnlock.Name != "Classic") continue;
+                    if (achievementUnlock.Name != "Classic") continue;
                     SaveLogic.Unlock.Skin.Save(flags, basePath, hero, $"Achievement\\{achievementUnlock.Rarity}", achievementUnlock.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
                 }
                 
@@ -79,7 +79,7 @@ namespace DataTool.ToolLogic.Extract {
 
                     foreach (ItemInfo itemInfo in dUnlocks) {
                         if (itemInfo.Type == "Skin") {
-                            // if (itemInfo.Name != "Classic") continue;
+                            if (itemInfo.Name != "Classic") continue;
                             SaveLogic.Unlock.Skin.Save(flags, basePath, hero, itemInfo.Rarity, itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
                         }
                     }
@@ -94,7 +94,7 @@ namespace DataTool.ToolLogic.Extract {
 
                     foreach (ItemInfo itemInfo in eUnlocks) {
                         if (itemInfo.Type == "Skin") {
-                            // if (itemInfo.Name != "Classic") continue;
+                            if (itemInfo.Name != "Classic") continue;
                             SaveLogic.Unlock.Skin.Save(flags, basePath, hero, itemInfo.Rarity, itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
                         }
                     }
