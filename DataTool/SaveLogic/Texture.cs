@@ -18,7 +18,7 @@ namespace DataTool.SaveLogic {
             Dictionary<TextureInfo, TextureType> output = new Dictionary<TextureInfo, TextureType>();
             bool convertTextures = true;
             if (flags is ExtractFlags extractFlags) {
-                convertTextures = extractFlags.ConvertWem;
+                convertTextures = extractFlags.ConvertTextures;
                 if (extractFlags.SkipTextures) return output;
             }
 
