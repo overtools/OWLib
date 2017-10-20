@@ -117,35 +117,6 @@ namespace OWLib.Writer {
             lksm skeleton = (lksm)chunk;
             
             Dictionary<short, short> hierarchy = new Dictionary<short, short>();
-            foreach (HTLC.ClothNode[] nodes in cloth.Nodes) {
-                foreach (HTLC.ClothNode node in nodes) {
-                    short parent = node.DiagonalParent;
-                    if (node.Bone1 != 0) {
-                        if (!hierarchy.ContainsKey(node.Bone1) || hierarchy[node.Bone1] == -1) {
-                            hierarchy[node.Bone1] = parent;
-                        }
-                    }
-                    if (node.Bone2 != 0) {
-                        if (!hierarchy.ContainsKey(node.Bone2) || hierarchy[node.Bone2] == -1) {
-                            hierarchy[node.Bone2] = parent;
-                        }
-                    }
-                    if (node.Bone3 != 0) {
-                        if (!hierarchy.ContainsKey(node.Bone3) || hierarchy[node.Bone3] == -1) {
-                            hierarchy[node.Bone3] = parent;
-                        }
-                    }
-                    if (node.Bone4 != 0) {
-                        if (!hierarchy.ContainsKey(node.Bone4) || hierarchy[node.Bone4] == -1) {
-                            hierarchy[node.Bone4] = parent;
-                        }
-                    }
-                    
-                    if (!hierarchy.ContainsKey(parent) && parent != -1) {
-                        hierarchy[parent] = -1; // assume parent's parent is -1 until told otherwise
-                    }
-                }
-            }
             IEnumerable<short> query = hierarchy.Keys.OrderBy(pet => pet);
             HashSet<short> bones = new HashSet<short>(query);
             using (StreamWriter writer = new StreamWriter(output)) {
