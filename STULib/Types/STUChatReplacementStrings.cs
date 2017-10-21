@@ -14,15 +14,7 @@ namespace STULib.Types {
         public string[] Strings;
         
         public static string FixBlizzString(string blizzString) {
-            return TrimEnd(TrimStart(blizzString, "\\b"), "\\b");    
-        }
-        
-        public static string TrimStart(string target, string trimChars) {
-            return target.TrimStart(trimChars.ToCharArray());
-        }
-        
-        public static string TrimEnd(string target, string trimChars) {
-            return target.TrimEnd(trimChars.ToCharArray());
+            return blizzString.Replace("\\b", "");
         }
 
         public string[] GetStrings() {
