@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using DataTool.Flag;
 using DataTool.Helper;
-using OWReplayLib.Types;
 using STULib.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
