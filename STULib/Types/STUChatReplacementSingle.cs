@@ -5,7 +5,7 @@ namespace STULib.Types {
     [STU(0x34F6B4CF)]
     public class STUChatReplacementSingle : STUInstance {
         [STUField(0x123179A6)]
-        public STUGUID Sub;
+        public STUGUID Triggers;
 
         [STUField(0xC6A72790)]
         public STUChatReplacementGroup[] Groups;
