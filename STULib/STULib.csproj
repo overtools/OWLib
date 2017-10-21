@@ -264,6 +264,7 @@
     <Compile Include="Types\Enums\STUEnumTeamType.cs" />
     <Compile Include="Types\Enums\STUEnum_1AA009C2.cs" />
     <Compile Include="Types\Enums\STUEnum_0C014B4A.cs" />
+    <Compile Include="Types\Enums\STUEnum_1C8CB734.cs" />
     <Compile Include="Types\Enums\STUEnum_C4294B0E.cs" />
     <Compile Include="Types\Enums\STUEnum_D407CA8B.cs" />
     <Compile Include="Types\Statescript\Components\Enums\STUEnum_790E517D.cs" />
@@ -348,7 +349,11 @@
     <Compile Include="Types\STUAnimationListSecondaryContainer.cs" />
     <Compile Include="Types\STUAnimationListSubAnimationContainer.cs" />
     <Compile Include="Types\STUAnimationListWrapperBase.cs" />
+    <Compile Include="Types\STUChatReplacementContainer.cs" />
+    <Compile Include="Types\STUChatReplacementGroup.cs" />
+    <Compile Include="Types\STUChatReplacementSingle.cs" />
     <Compile Include="Types\STUChatReplacementStrings.cs" />
+    <Compile Include="Types\STUChatReplacementUnknown.cs" />
     <Compile Include="Types\STUCompetitiveSeason.cs" />
     <Compile Include="Types\STUCompetitiveSeasonBase.cs" />
     <Compile Include="Types\STUCompetitiveSeasonRewards.cs" />

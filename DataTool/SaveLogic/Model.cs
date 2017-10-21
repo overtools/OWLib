@@ -101,6 +101,15 @@ namespace DataTool.SaveLogic {
             Chunked mdl = new Chunked(OpenFile(model.GUID));
             using (Stream fileStream =
                 new FileStream(
+                    Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}.{GUID.Type(model.GUID):X3}"),
+                    FileMode.Create)) {
+                fileStream.SetLength(0);
+                using (Stream cascStream = OpenFile(model.GUID)) {
+                    cascStream.CopyTo(fileStream);
+                }
+            }
+            using (Stream fileStream =
+                new FileStream(
                     Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{mdlWriter.Format}"),
                     FileMode.Create)) {
                 fileStream.SetLength(0);
