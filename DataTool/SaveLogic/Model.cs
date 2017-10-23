@@ -99,6 +99,15 @@ namespace DataTool.SaveLogic {
             }
             List<byte> lods = new List<byte>(new byte[3] {0, 1, 0xFF});
             Chunked mdl = new Chunked(OpenFile(model.GUID));
+            using (Stream fileStream =
+                new FileStream(
+                    Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}.{GUID.Type(model.GUID):X3}"),
+                    FileMode.Create)) {
+                fileStream.SetLength(0);
+                using (Stream cascStream = OpenFile(model.GUID)) {
+                    cascStream.CopyTo(fileStream);
+                }
+            }
             if (model.GUID.ToString() == "0000000006E9.00C" || model.GUID.ToString() == "00000000093F.00C") {
                 // using (Stream fileStream =
                 //     new FileStream(

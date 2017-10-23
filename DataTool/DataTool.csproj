@@ -79,6 +79,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolAttribute.cs" />
+    <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
+    <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
     <Compile Include="ToolLogic\Extract\ExtractHeroUnlocks.cs" />
     <Compile Include="ToolLogic\Extract\ExtractGeneral.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="ToolLogic\List\ListKeys.cs" />
     <Compile Include="ToolLogic\List\ListMaps.cs" />
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
+    <Compile Include="ToolLogic\List\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
   </ItemGroup>
   <ItemGroup>

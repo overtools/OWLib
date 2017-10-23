@@ -757,7 +757,7 @@ namespace STUHashTool {
                             newTodoInstances.ToArray());
                     }
                 }
-                if (field.IsEmbed || field.IsEmbed) {
+                if (field.IsEmbed || field.IsEmbedArray) {
                     if (!newTodoInstances.Contains(Hex(field.EmbedInstanceChecksum)) && !ISTU.InstanceTypes.ContainsKey(field.InlineInstanceChecksum)) {
                         newTodoInstances.Add(Hex(field.EmbedInstanceChecksum));
                         newTodoInstances = FindNestedTodo(RealInstances[field.EmbedInstanceChecksum],

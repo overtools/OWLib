@@ -147,9 +147,10 @@ namespace STUHashTool {
             try {
                 if (!map.ContainsKey(guid))
                     return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3} virtual";
-                if (GUID.Type(guid).ToString("X3") != "025" && GUID.Type(guid).ToString("X3") != "0AF" && GUID.Type(guid).ToString("X3") != "024" && GUID.Type(guid).ToString("X3") != "015" && GUID.Type(guid).ToString("X3") != "0B0" && GUID.Type(guid).ToString("X3") != "014" && GUID.Type(guid).ToString("X3") != "05A" 
-                    && GUID.Type(guid).ToString("X3") != "013" && GUID.Type(guid).ToString("X3") != "003" && GUID.Type(guid).ToString("X3") != "062" && GUID.Type(guid).ToString("X3") != "00D" && GUID.Type(guid).ToString("X3") != "09E" && GUID.Type(guid).ToString("X3") != "0AC"
-                    && GUID.Type(guid).ToString("X3") != "01B" && GUID.Type(guid).ToString("X3") != "021" && GUID.Type(guid).ToString("X3") != "036") Debugger.Break();
+                // 01B stuff
+                // if (GUID.Type(guid).ToString("X3") != "025" && GUID.Type(guid).ToString("X3") != "0AF" && GUID.Type(guid).ToString("X3") != "024" && GUID.Type(guid).ToString("X3") != "015" && GUID.Type(guid).ToString("X3") != "0B0" && GUID.Type(guid).ToString("X3") != "014" && GUID.Type(guid).ToString("X3") != "05A" 
+                //     && GUID.Type(guid).ToString("X3") != "013" && GUID.Type(guid).ToString("X3") != "003" && GUID.Type(guid).ToString("X3") != "062" && GUID.Type(guid).ToString("X3") != "00D" && GUID.Type(guid).ToString("X3") != "09E" && GUID.Type(guid).ToString("X3") != "0AC"
+                //     && GUID.Type(guid).ToString("X3") != "01B" && GUID.Type(guid).ToString("X3") != "021" && GUID.Type(guid).ToString("X3") != "036") Debugger.Break();
                 return $"{indentString}{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}|{ProcessGUIDInternal(guid, handler, map, indentLevel)}";
             }
             catch (Exception) {
@@ -332,9 +333,9 @@ namespace STUHashTool {
                         fieldInfo => fieldInfo.GetCustomAttribute<STUFieldAttribute>()?.Checksum > 0).ToArray(),
                     handler, map, 1, styleSheet, new List<object>()), styleSheet);
                 
-                // if (Debugger.IsAttached) {
-                //     Debugger.Break();
-                // }
+                if (Debugger.IsAttached) {
+                    Debugger.Break();
+                }
                 index++;
             }
         }

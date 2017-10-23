@@ -39,7 +39,7 @@ namespace DataTool.SaveLogic.Unlock {
 
             foreach (var groupPair in textures) {
                 if (groupPair.Value?.Count == 0) continue;
-                var output = Path.Combine(basePath, containerName, heroName, groupPair.Key, folderName);
+                var output = Path.Combine(basePath, containerName, heroName ?? "", groupPair.Key, folderName);
                 Texture.Save(null, output, groupPair.Value);
             }
         }
