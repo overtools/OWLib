@@ -8,7 +8,7 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = true, Flag = "convert-textures", Help = "Convert .004 files to .dds", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertTextures;
         
-        [CLIFlag(Default = false, Flag = "convert-wem", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = true, Flag = "convert-wem", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertWem;
         
         // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]

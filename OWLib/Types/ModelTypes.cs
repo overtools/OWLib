@@ -9,6 +9,12 @@ namespace OWLib.Types {
         public ushort v3;
     }
 
+    public class ModelIndiceModifiable {
+        public int v1;
+        public int v2;
+        public int v3;
+    }
+
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct ModelUV {
         public Half u;

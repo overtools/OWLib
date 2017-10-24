@@ -81,7 +81,7 @@ namespace OWReplayLib.Types {
             [Serializer.Types.NullPaddedString]
             public string PlayerName;
             
-            // public byte UnknownByte; // todo: 1.16
+            public byte UnknownByte;
             
             public byte Type;
             public uint Unknown1;

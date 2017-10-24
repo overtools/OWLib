@@ -7,6 +7,7 @@ using DataTool.Flag;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.Chunk;
+using OWLib.Types.Chunk.LDOM;
 using OWLib.Types.Map;
 using OWLib.Writer;
 using static DataTool.Helper.IO;
@@ -108,24 +109,8 @@ namespace DataTool.SaveLogic {
                     cascStream.CopyTo(fileStream);
                 }
             }
-            if (model.GUID.ToString() == "0000000006E9.00C" || model.GUID.ToString() == "00000000093F.00C") {
-                // using (Stream fileStream =
-                //     new FileStream(
-                //         Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}.00C"),
-                //         FileMode.Create)) {
-                //     using (Stream cascSteam = OpenFile(model.GUID)) {
-                //         cascSteam.CopyTo(fileStream);
-                //     }
-                // }
-                using (Stream fileStream =
-                    new FileStream(
-                        Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}_clth{refposeWriter.Format}"), FileMode.Create)) {
-                    fileStream.SetLength(0);
-                    HTLC cloth = mdl.FindNextChunk("HTLC").Value as HTLC;
-                    refposeWriter.TestWriteCloth(mdl, fileStream, cloth);
-                }
-                Debugger.Break();
-            }
+            HTLC cloth = mdl.FindNextChunk("HTLC").Value as HTLC;
+           
             using (Stream fileStream =
                 new FileStream(
                     Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{mdlWriter.Format}"),
@@ -134,7 +119,6 @@ namespace DataTool.SaveLogic {
                 mdlWriter.Write(mdl, fileStream, lods, null,
                     new object[5] {true, $"{GUID.LongKey(model.GUID):X12}{writer14.Format}", name, null, true});
             }
-
             if (mdl.HasChunk<lksm>()) {
                 using (Stream fileStream =
                     new FileStream(
@@ -142,6 +126,18 @@ namespace DataTool.SaveLogic {
                         FileMode.Create)) {
                     fileStream.SetLength(0);
                     refposeWriter.Write(mdl, fileStream, null, null, null);
+                }
+                if (cloth != null) {
+                    for (uint i = 0; i < cloth.Descriptors.Length; i++) {
+                        HTLC.ClothDesc desc = cloth.Descriptors[i];
+                        CreateDirectoryFromFile(Path.Combine(basePath, "Cloth\\jeff"));
+                        using (Stream fileStream =
+                            new FileStream(
+                                Path.Combine(basePath, $"Cloth\\{desc.Name}{refposeWriter.Format}"), FileMode.Create)) {
+                            fileStream.SetLength(0);
+                            refposeWriter.WriteCloth(mdl, fileStream, cloth, i);
+                        }
+                    }
                 }
             } else {
                 if (model.Skeleton != null) Debugger.Log(0, "DataTool.SaveLogic.Model", "[DataTool.SaveLogic.Model]: lksm chunk doesn't exist but skeleton does");

@@ -14,6 +14,21 @@ using static DataTool.Helper.STUHelper;
 using Texture = DataTool.SaveLogic.Texture;
 
 namespace DataTool.ToolLogic.Extract {
+
+    public class ExtractHeroUnlocksFlags : ExtractFlags {
+        // naughty? I don't override anything here because I can just steal positionals
+    }
+    // syntax:
+    // *|skin=Classic
+    // *|skin=Classic
+    // *|skin=*,!Classic
+    // *
+    // "Soldier: 76|skin=Classic,Daredevil: 76|emote=Pushups|victory pose=*"
+    // "Soldier: 76|skin=Classic,Daredevil: 76|emote=Pushups|victory pose=*" Roadhog
+    // "Soldier: 76|skin=Classic,Daredevil: 76|emote=Pushups|victory pose=*" Roadhog|emote=Dance  // assume nothing else for roadhog, be specific
+    // "Soldier: 76|skin=!Classic"  // invalid
+    // "Soldier: 76|skin=!Classic,*"  // valid
+    // Roadhog
     [Tool("extract-unlocks", Description = "Extract all heroes sprays and icons", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroUnlocks : ITool {
         public void IntegrateView(object sender) {
@@ -47,11 +62,9 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public void SaveUnlocksForHeroes(ICLIFlags flags, List<STUHero> heroes, string basePath) {
-            foreach (var hero in heroes)
-            {
+            List<string> extractTypes = new List<string> {"skin", "spray", "icon"};  // todo
+            foreach (var hero in heroes) {
                 var heroName = GetValidFilename(GetString(hero.Name));
-                // if (heroName != "Mercy") continue;
-                if (heroName != "McCree") continue;
                 var unlocks = GetInstance<STUHeroUnlocks>(hero.LootboxUnlocks);
                 if (unlocks?.Unlocks == null || heroName == null)
                     continue;
@@ -68,7 +81,6 @@ namespace DataTool.ToolLogic.Extract {
                 SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, heroName, rootDir, "Achievements", null, achievementUnlocks);
                 foreach (ItemInfo achievementUnlock in achievementUnlocks) {  // todo @zb: make a convenience fucntion
                     if (achievementUnlock.Type != "Skin") continue;
-                    if (achievementUnlock.Name != "Classic") continue;
                     SaveLogic.Unlock.Skin.Save(flags, basePath, hero, $"Achievement\\{achievementUnlock.Rarity}", achievementUnlock.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
                 }
                 
@@ -79,7 +91,6 @@ namespace DataTool.ToolLogic.Extract {
 
                     foreach (ItemInfo itemInfo in dUnlocks) {
                         if (itemInfo.Type == "Skin") {
-                            if (itemInfo.Name != "Classic") continue;
                             SaveLogic.Unlock.Skin.Save(flags, basePath, hero, itemInfo.Rarity, itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
                         }
                     }
@@ -94,7 +105,6 @@ namespace DataTool.ToolLogic.Extract {
 
                     foreach (ItemInfo itemInfo in eUnlocks) {
                         if (itemInfo.Type == "Skin") {
-                            if (itemInfo.Name != "Classic") continue;
                             SaveLogic.Unlock.Skin.Save(flags, basePath, hero, itemInfo.Rarity, itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
                         }
                     }
