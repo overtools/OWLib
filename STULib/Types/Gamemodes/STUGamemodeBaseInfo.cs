@@ -3,7 +3,7 @@ using STULib.Types.Generic;
 
 namespace STULib.Types.Gamemodes {
     [STU(0x56830926)]
-    public class STUGamemodeInfoItem : Common.STUInstance {
+    public class STUGamemodeBaseInfo : Common.STUInstance {
         [STUField(0xFCAC9546)]
         public Common.STUGUID m_FCAC9546;
 

@@ -269,7 +269,7 @@
     <Compile Include="Types\Enums\STUEnum_D407CA8B.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeBase.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeCompetitiveSeason.cs" />
-    <Compile Include="Types\Gamemodes\STUGamemodeInfoItem.cs" />
+    <Compile Include="Types\Gamemodes\STUGamemodeBaseInfo.cs" />
     <Compile Include="Types\Gamemodes\Unknown\Enums\STUEnum_E7FEC166.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_2B17E5B4.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_2BA92134.cs" />

@@ -100,7 +100,7 @@ namespace DataTool.ToolLogic.List {
                 if (thing.GameModeInfo != null) {
                     Log($"{iD+2}Game Info:");
                     foreach (var guid in thing.GameModeInfo) {
-                        var something = GetInstance<STUGamemodeInfoItem>(guid);
+                        var something = GetInstance<STUGamemodeBaseInfo>(guid);
                         if (something != null)
                             Log($"{iD+3}{GetString(something.Name)}");
                     }

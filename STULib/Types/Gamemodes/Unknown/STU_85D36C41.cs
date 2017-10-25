@@ -2,6 +2,6 @@
 
 namespace STULib.Types.Gamemodes.Unknown {
     [STU(0x85D36C41)]
-    public class STU_85D36C41 : STUGamemodeInfoItem {
+    public class STU_85D36C41 : STUGamemodeBaseInfo {
     }
 }
