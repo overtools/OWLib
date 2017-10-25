@@ -267,6 +267,15 @@
     <Compile Include="Types\Enums\STUEnum_1C8CB734.cs" />
     <Compile Include="Types\Enums\STUEnum_C4294B0E.cs" />
     <Compile Include="Types\Enums\STUEnum_D407CA8B.cs" />
+    <Compile Include="Types\Gamemodes\STUGamemodeBase.cs" />
+    <Compile Include="Types\Gamemodes\STUGamemodeCompetitiveSeason.cs" />
+    <Compile Include="Types\Gamemodes\STUGamemodeInfoItem.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\Enums\STUEnum_E7FEC166.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_2B17E5B4.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_2BA92134.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_58E4EC09.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_85D36C41.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_F31D4F9C.cs" />
     <Compile Include="Types\Statescript\Components\Enums\STUEnum_790E517D.cs" />
     <Compile Include="Types\Statescript\Components\Enums\STUEnum_8A184A5C.cs" />
     <Compile Include="Types\Statescript\Components\STUAnimationCoreferenceComponent.cs" />
@@ -357,11 +366,11 @@
     <Compile Include="Types\STUCompetitiveSeason.cs" />
     <Compile Include="Types\STUCompetitiveSeasonBase.cs" />
     <Compile Include="Types\STUCompetitiveSeasonRewards.cs" />
-    <Compile Include="Types\STUGamemode.cs" />
-    <Compile Include="Types\STUGamemodeCosmeticCollection.cs" />
-    <Compile Include="Types\STUGamemodeHeroCollection.cs" />
-    <Compile Include="Types\STUGamemodeHeroOverride.cs" />
-    <Compile Include="Types\STUGamemodeTeam.cs" />
+    <Compile Include="Types\Gamemodes\STUGamemode.cs" />
+    <Compile Include="Types\Gamemodes\STUGamemodeCosmeticCollection.cs" />
+    <Compile Include="Types\Gamemodes\STUGamemodeHeroCollection.cs" />
+    <Compile Include="Types\Gamemodes\STUGamemodeHeroOverride.cs" />
+    <Compile Include="Types\Gamemodes\STUGamemodeTeam.cs" />
     <Compile Include="Types\STUGlobalInventoryMaster.cs" />
     <Compile Include="Types\STUGlobInvCreditUnlocks.cs" />
     <Compile Include="Types\STUGlobInvEventCreditUnlocks.cs" />
@@ -426,14 +435,14 @@
     <Compile Include="Types\STUSoundConainer.cs" />
     <Compile Include="Types\STUSoundInfo.cs" />
     <Compile Include="Types\STUSoundInfoContainer.cs" />
-    <Compile Include="Types\GamemodeUnknown\Enums\STUEnum_1964FED7.cs" />
-    <Compile Include="Types\GamemodeUnknown\STU_02E4C615.cs" />
-    <Compile Include="Types\GamemodeUnknown\STU_21CE58F6.cs" />
-    <Compile Include="Types\GamemodeUnknown\STU_22BF1D21.cs" />
-    <Compile Include="Types\GamemodeUnknown\STU_3ED2A372.cs" />
-    <Compile Include="Types\GamemodeUnknown\STU_43CA1D94.cs" />
-    <Compile Include="Types\GamemodeUnknown\STU_57AEDFA2.cs" />
-    <Compile Include="Types\GamemodeUnknown\STU_9783E116.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\Enums\STUEnum_1964FED7.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_02E4C615.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_21CE58F6.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_22BF1D21.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_3ED2A372.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_43CA1D94.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_57AEDFA2.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_9783E116.cs" />
     <Compile Include="Types\STUWeaponOverride.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -95,6 +95,7 @@
     <Compile Include="ToolLogic\List\ListHighlights.cs" />
     <Compile Include="ToolLogic\List\ListKeys.cs" />
     <Compile Include="ToolLogic\List\ListMaps.cs" />
+    <Compile Include="ToolLogic\List\ListSomething.cs" />
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
     <Compile Include="ToolLogic\List\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
