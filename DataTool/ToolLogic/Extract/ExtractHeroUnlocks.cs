@@ -202,7 +202,7 @@ namespace DataTool.ToolLogic.Extract {
                         
                         string type = afterSplit[0].ToLowerInvariant();
                         ArgType typeObj = types.FirstOrDefault(x => x.Name == type);
-                        if (typeObj == null) throw new Exception();
+                        if (typeObj == null) {Log($"\r\nUnknown type: {type}\r\n"); Help(types); return;}
                         
                         parsedTypes[hero][typeObj.Name] = new ParsedArg {Type = typeObj.Name, Allowed = new List<string>(), Disallowed = new List<string>(), Tags = new Dictionary<string, string>()};
                         
@@ -236,7 +236,7 @@ namespace DataTool.ToolLogic.Extract {
                                 string tagName = kv[0].ToLowerInvariant();
                                 string tagValue = kv[1].ToLowerInvariant();
                                 ArgTag tagObj = typeObj.Tags.FirstOrDefault(x => x.Name == tagName);
-                                if (tagObj == null) throw new Exception();
+                                if (tagObj == null) {Log($"\r\nUnknown tag: {tagName}\r\n"); Help(types); return;}
                                 
                                 parsedTypes[hero][typeObj.Name].Tags[tagName] = tagValue;
                             }
