@@ -133,7 +133,7 @@ namespace STULib {
             using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, true)) {
                 if (type != null) {
                     return (ISTU)Activator.CreateInstance(type, stream, owVersion);
-                    // return new Version2Comparer(stream, owVersion);  // for debug
+                    // return new Impl.Version2HashComparer.Version2Comparer(stream, owVersion);  // for debug
                 }
                 if (Version1.IsValidVersion(reader)) {
                     stream.Position = pos;
@@ -145,6 +145,13 @@ namespace STULib {
                 }
                 throw new InvalidDataException("Data stream is not a STU file");
             }
+        }
+
+        public static void Clear() {
+            _InstanceTypes = new Dictionary<uint, Type>();
+            _EnumTypes = new Dictionary<uint, Type>();
+            _InstanceNames = new Dictionary<Type, string>();
+            SuppressedWarnings = new Dictionary<uint, List<STUSuppressWarningAttribute>>();
         }
 
         public abstract void Dispose();

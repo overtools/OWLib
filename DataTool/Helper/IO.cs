@@ -102,7 +102,7 @@ namespace DataTool.Helper {
             }
         }
 
-        public static void MapCMF() {
+        public static void MapCMF(bool mapAll=false) {
             if (Root == null || CASC == null) {
                 return;
             }
@@ -112,12 +112,13 @@ namespace DataTool.Helper {
                 if (!apm.Name.ToLowerInvariant().Contains(searchString)) {
                     continue;
                 }
-                if (Flags != null && !apm.Name.ToLowerInvariant().Contains("l" + Flags.Language.ToLowerInvariant())) {
+                if (!apm.Name.ToLowerInvariant().Contains("l" + Flags.Language.ToLowerInvariant())) {
                     continue;
                 }
                 foreach (KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {
                     ushort id = GUID.Type(pair.Key);
-                    if (TrackedFiles != null && TrackedFiles.ContainsKey(id)) {
+                    if (TrackedFiles != null && (TrackedFiles.ContainsKey(id) || mapAll)) {
+                        if (!TrackedFiles.ContainsKey(id)) TrackedFiles[id] = new HashSet<ulong>();
                         TrackedFiles[id].Add(pair.Value.id);
                     }
 

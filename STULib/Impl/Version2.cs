@@ -43,7 +43,7 @@ namespace STULib.Impl {
             metadataReader?.Dispose();
         }
 
-        internal static bool IsValidVersion(BinaryReader reader) {
+        public static bool IsValidVersion(BinaryReader reader) {
             return reader.BaseStream.Length >= 36;
         }
 

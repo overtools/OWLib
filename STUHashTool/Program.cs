@@ -145,7 +145,7 @@ namespace STUHashTool {
         public static string ProperName(this Type t) => t.FullName.Replace("+", ".");
     }
 
-    internal class Program {
+    public class Program {
         // ReSharper disable once SuggestBaseTypeForParameter
         
         
@@ -794,7 +794,56 @@ namespace STUHashTool {
             return newTodoInstances.ToArray();
         }
 
-        public static string GetType(FieldData field) {
+        public static string GetType(FieldData field, bool properTypePaths=false) {
+            if (properTypePaths) {  // todo: @zb: please do this better
+                switch (field.Type) {
+                    default:
+                        return null;
+                    case "u8":
+                        return "byte";
+                    case "u16":
+                        return "ushort";
+                    case "u32":
+                        return "uint";
+                    case "u64":
+                        return "ulong";
+                    case "s8":
+                        return "sbyte";
+                    case "s16":
+                        return "short";
+                    case "s32":
+                        return "int";
+                    case "s64":
+                        return "long";
+                    case "f32":
+                        return "float";
+                    case "f64":
+                        return "double";
+                    case "teString":
+                        return "string";
+                    case "teVec2":
+                        return "STULib.Types.Generic.Common.STUVec2";
+                    case "teVec3":
+                        return "STULib.Types.Generic.Common.STUVec3";
+                    case "teVec3A":
+                        return "STULib.Types.Generic.Common.STUVec3A";
+                    case "teVec4":
+                        return "STULib.Types.Generic.Common.STUVec4";
+                    case "teEntityID":
+                        return "STULib.Types.Generic.Common.STUEntityID";
+                    case "teColorRGB":
+                        return "STULib.Types.Generic.Common.STUColorRGB";
+                    case "teColorRGBA":
+                        return "STULib.Types.Generic.Common.STUColorRGBA";
+                    case "teQuat":
+                        return "STULib.Types.Generic.Common.STUQuaternion";
+                    case "ARRAY FILE REFERENCE":
+                    case "File Reference":
+                        return "STULib.Types.Generic.Common.STUGUID";
+                    case "teStructuredDataDateAndTime":
+                        return "STULib.Types.Generic.Common.STUDateAndTime";
+                }
+            }
             switch (field.Type) {
                 default:
                     return null;
