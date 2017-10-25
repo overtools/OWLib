@@ -54,7 +54,7 @@ namespace STULib.Types.Gamemodes {
         public STUGUID MapBinding;  // STULib.Types.STUMapDataBinding
 
         [STUField(0x4EEA6AF4)]
-        public STUGUID[] m_4EEA6AF4;  // STU_43F40C0F
+        public STUGUID[] Brawls;  // STUBrawlContainer
 
         [STUField(0x70045C77)]
         public STU_58E4EC09[] m_70045C77;

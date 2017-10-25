@@ -1,9 +1,11 @@
 ﻿using System;
+using System.CodeDom;
 using System.Diagnostics;
 using DataTool.Flag;
 using DataTool.Helper;
 using STULib.Types;
 using STULib.Types.Gamemodes;
+using STULib.Types.Gamemodes.Unknown;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
@@ -106,8 +108,42 @@ namespace DataTool.ToolLogic.List {
                     }
                 }
 
+                if (thing.Brawls != null) {
+                    Log($"{iD+2}Brawls:");
+                    var ii = 0;
+                    foreach (var guid in thing.Brawls) {
+                        var BrawlContainer = GetInstance<STUBrawlContainer>(guid);
+                        if (BrawlContainer == null) continue;
 
-                Debugger.Break();
+                        var bName = GetString(BrawlContainer.Brawl.Name);
+                        Log($"{iD+3}[{ii}] {bName}:");
+                        ii++;
+
+                        Debugger.Break();
+
+                        if (BrawlContainer.Brawl.TeamConfig != null) {
+                            var iii = 0;
+                            Log($"{iD+4}Team Config?:");
+                            foreach (var something in BrawlContainer.Brawl.TeamConfig) {
+                                Log($"{iD+5}[{iii}]:");
+                                Log($"{iD+6}Max Players: {something.MaxPlayers}");
+
+                                iii++;
+
+                                if (something.HeroOverrides != null) {
+                                    Log($"{iD+6}Hero Overrides?:");
+                                    foreach (var somethingElse in something.HeroOverrides) {
+                                        var dsfds = somethingElse.STUBrawlHeroContainer as STUBrawlHero;
+                                        var hero = GetInstance<STUHero>(dsfds.Hero);
+                                        Log($"{iD + 7}Hero: {GetString(hero.Name)}");
+                                        //Debugger.Break();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 Log("\n");
             }
         }

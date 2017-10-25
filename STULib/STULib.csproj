@@ -270,11 +270,19 @@
     <Compile Include="Types\Gamemodes\STUGamemodeBase.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeCompetitiveSeason.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeBaseInfo.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\Enums\STUEnum_56DF3C94.cs" />
     <Compile Include="Types\Gamemodes\Unknown\Enums\STUEnum_E7FEC166.cs" />
+    <Compile Include="Types\Gamemodes\STUBrawlTeamType.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_2B17E5B4.cs" />
-    <Compile Include="Types\Gamemodes\Unknown\STU_2BA92134.cs" />
+    <Compile Include="Types\Gamemodes\STUBrawlTeamTypeContainer.cs" />
+    <Compile Include="Types\Gamemodes\STUBrawl.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_3C14F504.cs" />
+    <Compile Include="Types\Gamemodes\STUBrawlContainer.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_58E4EC09.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STU_73715F2E.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_85D36C41.cs" />
+    <Compile Include="Types\Gamemodes\STUBrawlTeam.cs" />
+    <Compile Include="Types\Gamemodes\STUBrawlHero.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_F31D4F9C.cs" />
     <Compile Include="Types\Statescript\Components\Enums\STUEnum_790E517D.cs" />
     <Compile Include="Types\Statescript\Components\Enums\STUEnum_8A184A5C.cs" />
@@ -437,11 +445,11 @@
     <Compile Include="Types\STUSoundInfoContainer.cs" />
     <Compile Include="Types\Gamemodes\Unknown\Enums\STUEnum_1964FED7.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_02E4C615.cs" />
-    <Compile Include="Types\Gamemodes\Unknown\STU_21CE58F6.cs" />
+    <Compile Include="Types\Gamemodes\STUBrawlHeroContainer.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_22BF1D21.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_3ED2A372.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_43CA1D94.cs" />
-    <Compile Include="Types\Gamemodes\Unknown\STU_57AEDFA2.cs" />
+    <Compile Include="Types\Gamemodes\STUBrawlHeroOverride.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_9783E116.cs" />
     <Compile Include="Types\STUWeaponOverride.cs" />
   </ItemGroup>
