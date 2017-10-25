@@ -190,6 +190,13 @@ namespace STUExcavator {
                         
                         if (version2Comparer == null) throw new InvalidDataException();
 
+                        if (version2Comparer.InstanceData == null) {
+                            summary.SerializationType = SerializationType.Unknown; // abort
+                            summary.Incomplete = true;
+                            return summary;
+                        }
+                            
+
                         foreach (InstanceData instanceData in version2Comparer.InternalInstances.Values.Concat(
                             version2Comparer.InstanceData)) {
                             if (instanceData == null) continue;
