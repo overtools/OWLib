@@ -200,7 +200,7 @@ namespace OWLib {
             } else {
                 if (unhandledChunkIdentifiers.Add(identifier)) {
                     if (System.Diagnostics.Debugger.IsAttached) {
-                        System.Diagnostics.Debugger.Log(2, "CHUNK", $"Error! No handler for chunk type {identifier}\n");
+                        System.Diagnostics.Debugger.Log(2, "CHUNK", $"Error! No handler for chunk type {identifier} ({root}:{id})\n");
                     }
                 }
                 if (System.Diagnostics.Debugger.IsAttached || Util.DEBUG) {

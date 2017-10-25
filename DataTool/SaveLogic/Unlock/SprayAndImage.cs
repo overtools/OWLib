@@ -43,5 +43,34 @@ namespace DataTool.SaveLogic.Unlock {
                 Texture.Save(null, output, groupPair.Value);
             }
         }
+
+
+        public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, ItemInfo item) {
+            string name = GetValidFilename(item.Name);
+            string type;
+            Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
+            STUDecalReference decal;
+
+            switch (item.Unlock) {
+                case PlayerIcon icon:
+                    decal = icon.Decal;
+                    type = "Icons";
+                    break;
+                case Spray spray:
+                    decal = spray.Decal;
+                    type = "Sprays";
+                    break;
+                default:
+                    return;
+            }
+
+            if (decal == null) return;
+
+            textures = FindLogic.Texture.FindTextures(textures, decal.DecalResource, name, true);
+            
+            string output = Path.Combine(basePath, containerName, heroName ?? "", type, folderName);
+            Texture.Save(null, output, textures);
+        }
+        
     }
 }
