@@ -3,7 +3,7 @@ using STULib.Types.Gamemodes.Unknown;
 using STULib.Types.Gamemodes.Unknown.Enums;
 using static STULib.Types.Generic.Common;
 
-namespace STULib.Types {
+namespace STULib.Types.Gamemodes {
     [STU(0x494C33C4)]
     public class STUGamemode : STUInstance {
         [STUField(0xA43573F4)]

@@ -133,11 +133,11 @@ namespace DataTool.ToolLogic.List {
 
                                 if (teamConfig.AllowedHeroes != null) {
                                     Log($"{iD+6}Allowed Heroes:");
-                                    STUGamemodeHeroCollection allowedHeroes;
-                                    if (teamConfig.AllowedHeroes is STUGamemodeHeroCollection)
-                                        allowedHeroes = teamConfig.AllowedHeroes as STUGamemodeHeroCollection;
+                                    STUHeroCollection allowedHeroes;
+                                    if (teamConfig.AllowedHeroes is STUHeroCollection)
+                                        allowedHeroes = teamConfig.AllowedHeroes as STUHeroCollection;
                                     if (teamConfig.AllowedHeroes is STUBrawlHeroCollection)
-                                        allowedHeroes = (STUGamemodeHeroCollection) teamConfig.AllowedHeroes;
+                                        allowedHeroes = (STUHeroCollection) teamConfig.AllowedHeroes;
 
                                     foreach (var heroguid in allowedHeroes.Heroes) {
                                         var hero = GetInstance<STUHero>(heroguid);

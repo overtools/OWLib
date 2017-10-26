@@ -3,7 +3,7 @@ using STULib.Types.Generic;
 
 namespace STULib.Types.Gamemodes {
     [STU(0x3C14F504)]
-    public class STUBrawlHeroCollection : STUGamemodeCosmeticCollection {
+    public class STUBrawlHeroCollection : STUCosmeticCollection {
         [STUField(0x056D3E39)]
         public Common.STUGUID[] Heroes;  // STULib.Types.STUHero
     }

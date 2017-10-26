@@ -19,7 +19,7 @@ namespace STULib.Types.Gamemodes {
         public STUBrawlTeamTypeContainer BrawlTeamTypeContainer;
 
         [STUField(0x59C86C8D)]
-        public STUGamemodeCosmeticCollection AllowedHeroes;
+        public STUCosmeticCollection AllowedHeroes;
 
         [STUField(0x341EF5FA)]
         public int MaxPlayers;
