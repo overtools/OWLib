@@ -2,7 +2,7 @@
 
 namespace STULib.Types.Gamemodes {
     [STU(0x91B28B0A)]
-    public class STU_91B28B0A : STUCompetitiveSeasonBase {
+    public class STUBrawlCompetitiveSeasonBase : STUCompetitiveSeasonBase {
         [STUField(0x6E616C15)]
         public int m_6E616C15;
 

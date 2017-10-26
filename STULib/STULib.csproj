@@ -375,7 +375,7 @@
     <Compile Include="Types\STUCompetitiveSeasonBase.cs" />
     <Compile Include="Types\STUCompetitiveSeasonRewards.cs" />
     <Compile Include="Types\Gamemodes\STUGamemode.cs" />
-    <Compile Include="Types\Gamemodes\STUGamemodeCosmeticCollection.cs" />
+    <Compile Include="Types\Gamemodes\STUCosmeticCollection.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeHeroCollection.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeHeroOverride.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeTeam.cs" />

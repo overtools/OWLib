@@ -6,7 +6,7 @@ namespace STULib.Types.Gamemodes {
     [STU(0x2B8093CD)]
     public class STUGamemodeBase : STUInstance {
         [STUField(0x2226CBD8)]
-        public STU_91B28B0A CompetitiveInfo;
+        public STUBrawlCompetitiveSeasonBase CompetitiveInfo;
 
         [STUField(0xB48F1D22)]
         public STUGUID Name;
