@@ -7,6 +7,8 @@ using OWLib.Types.Chunk;
 using OWLib.Types.Map;
 using System.Globalization;
 using System.Linq;
+using APPLIB;
+using OWLib.Types.Chunk.LDOM;
 
 namespace OWLib.Writer {
     public class RefPoseWriter : IDataWriter {
@@ -19,61 +21,7 @@ namespace OWLib.Writer {
         public bool Write(Map10 physics, Stream output, object[] data) {
             return false;
         }
-
-        // Note: id-daemon's code, from overwatch_skeleton.
-        private Vector3 ToEulerAngles(float w, float x, float y, float z) {
-            double[,] matrix = new double[4, 4];
-            {
-                double num = x * x + y * y + z * z + w * w;
-                double num2;
-                if (num > 0.0) {
-                    num2 = 2.0 / num;
-                } else {
-                    num2 = 0.0;
-                }
-                double num3 = x * num2;
-                double num4 = y * num2;
-                double num5 = z * num2;
-                double num6 = w * num3;
-                double num7 = w * num4;
-                double num8 = w * num5;
-                double num9 = x * num3;
-                double num10 = x * num4;
-                double num11 = x * num5;
-                double num12 = y * num4;
-                double num13 = y * num5;
-                double num14 = z * num5;
-                matrix[0, 0] = 1.0 - (num12 + num14);
-                matrix[0, 1] = num10 - num8;
-                matrix[0, 2] = num11 + num7;
-                matrix[1, 0] = num10 + num8;
-                matrix[1, 1] = 1.0 - (num9 + num14);
-                matrix[1, 2] = num13 - num6;
-                matrix[2, 0] = num11 - num7;
-                matrix[2, 1] = num13 + num6;
-                matrix[2, 2] = 1.0 - (num9 + num12);
-                matrix[3, 3] = 1.0;
-            }
-            {
-                int i = 0;
-                int j = 1;
-                int k = 2;
-                double[,] M = matrix;
-                Vector3 vec = new Vector3();
-                double num2 = Math.Sqrt(M[i, i] * M[i, i] + M[j, i] * M[j, i]);
-                if (num2 > 0.00016) {
-                    vec.X = (float)Math.Atan2(M[k, j], M[k, k]);
-                    vec.Y = (float)Math.Atan2(-M[k, i], num2);
-                    vec.Z = (float)Math.Atan2(M[j, i], M[i, i]);
-                } else {
-                    vec.X = (float)Math.Atan2(-M[j, k], M[j, j]);
-                    vec.Y = (float)Math.Atan2(-M[k, i], num2);
-                    vec.Z = 0f;
-                }
-                return vec;
-            }
-        }
-
+        
         public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data) {
             culture.NumberFormat.NumberDecimalSeparator = ".";
             System.Threading.Thread.CurrentThread.CurrentCulture = culture;
@@ -82,22 +30,88 @@ namespace OWLib.Writer {
                 return false;
             }
             lksm skeleton = (lksm)chunk;
+            short[] hierarchy = (short[])skeleton.Hierarchy.Clone();
+            HashSet<short> weightedParNodes = new HashSet<short>();
+            Dictionary<int, HTLC.ClothNode> nodeMap = new Dictionary<int, HTLC.ClothNode>();
+            HTLC cloth = model.FindNextChunk("HTLC").Value as HTLC;
+            if (cloth != null) {
+                uint clothIndex = 0;
+                foreach (HTLC.ClothNode[] nodeCollection in cloth.Nodes) {
+                    if (nodeCollection == null) continue;
+                    int nodeIndex = 0;
+                    foreach (HTLC.ClothNode node in nodeCollection) {
+                        int parentRaw = node.VerticalParent;
+                        if (cloth.NodeBones[clothIndex].ContainsKey(nodeIndex) &&
+                            cloth.NodeBones[clothIndex].ContainsKey(parentRaw)) {
+                            // good code:
+                            if (cloth.NodeBones[clothIndex][nodeIndex] != -1) {
+                                hierarchy[cloth.NodeBones[clothIndex][nodeIndex]] = cloth.NodeBones[clothIndex][parentRaw];
+                                if (cloth.NodeBones[clothIndex][parentRaw] == -1) {
+                                    HTLC.ClothNodeWeight weightedBone = node.Bones.Aggregate((i1, i2) => i1.Weight > i2.Weight ? i1 : i2);
+                                    hierarchy[cloth.NodeBones[clothIndex][nodeIndex]] = weightedBone.Bone;
+                                    weightedParNodes.Add(cloth.NodeBones[clothIndex][nodeIndex]);
+                                }
+                            }
+                            // else: on subskele
+                            // todo: add subskelebones?
+
+                        } else {
+                            if (cloth.NodeBones[clothIndex].ContainsKey(nodeIndex)) {  // if on main skele
+                                // good code:
+                                if (cloth.NodeBones[clothIndex][nodeIndex] != -1) {
+                                    hierarchy[cloth.NodeBones[clothIndex][nodeIndex]] = -1;
+                                    HTLC.ClothNodeWeight weightedBone = node.Bones.Aggregate((i1, i2) => i1.Weight > i2.Weight ? i1 : i2);
+                                    hierarchy[cloth.NodeBones[clothIndex][nodeIndex]] = weightedBone.Bone;
+                                    weightedParNodes.Add(cloth.NodeBones[clothIndex][nodeIndex]);
+                                }
+                                // else: on subskele
+                                // todo: add subskelebones?
+                            }
+                        }
+                        if (cloth.NodeBones[clothIndex].ContainsKey(nodeIndex)) {
+                            // good code:
+                            nodeMap[cloth.NodeBones[clothIndex][nodeIndex]] = node;
+                        }
+                        nodeIndex++;
+                    }
+                    clothIndex++;
+                }
+            }
             using (StreamWriter writer = new StreamWriter(output)) {
                 writer.WriteLine("{0}", skeleton.Data.bonesAbs);
                 writer.WriteLine("version 1");
                 writer.WriteLine("nodes");
                 for (int i = 0; i < skeleton.Data.bonesAbs; ++i) {
-                    writer.WriteLine("{0} \"bone_{1:X4}\" {2}", i, skeleton.IDs[i], skeleton.Hierarchy[i]);
+                    writer.WriteLine("{0} \"bone_{1:X4}\" {2}", i, skeleton.IDs[i], hierarchy[i]);
                 }
                 writer.WriteLine("end");
                 writer.WriteLine("skeleton");
                 writer.WriteLine("time 0");
                 for (int i = 0; i < skeleton.Data.bonesAbs; ++i) {
                     Matrix3x4 bone = skeleton.Matrices34Inverted[i];
-                    APPLIB.Quaternion3D quat = new APPLIB.Quaternion3D(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
-                    APPLIB.Vector3D rot = APPLIB.C3D.ToEulerAngles(quat);
+                    Quaternion3D quat = new Quaternion3D(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
+                    Vector3D rot = C3D.ToEulerAngles(quat);
                     Vector3 scale = new Vector3(bone[1, 0], bone[1, 1], bone[1, 2]);
                     Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
+                    if (nodeMap.ContainsKey(i)) {
+                        HTLC.ClothNode thisNode = nodeMap[i];
+                        if (weightedParNodes.Contains((short)i)) {
+                            Vector3 pos2 = GetGlobalPos(skeleton.Matrices34Inverted, hierarchy[i], hierarchy);
+                            pos.X = thisNode.X - pos2.X;
+                            pos.Y = thisNode.Y - pos2.Y;
+                            pos.Z = thisNode.Z - pos2.Z;
+                        } else if (nodeMap.ContainsKey(hierarchy[i])) {
+                            HTLC.ClothNode parentNode = nodeMap[hierarchy[i]];
+                            pos.X = thisNode.X - parentNode.X;
+                            pos.Y = thisNode.Y - parentNode.Y;
+                            pos.Z = thisNode.Z - parentNode.Z;
+                        } else {
+                            pos.X = thisNode.X;
+                            pos.Y = thisNode.Y;
+                            pos.Z = thisNode.Z;
+                            
+                        }
+                    }
                     if (rot.X == -3.14159274f && rot.Y == 0 && rot.Z == 0) {
                         rot = new APPLIB.Vector3D(0, 3.14159274f, 3.14159274f); // effectively the same but you know, eulers.
                     }
@@ -107,7 +121,16 @@ namespace OWLib.Writer {
             return true;
         }
 
-        public bool TestWriteCloth(Chunked model, Stream output, HTLC cloth) {  // todo:
+        private static Vector3 GetGlobalPos(IReadOnlyList<Matrix3x4> skeletonMatrices34Inverted, short s, IReadOnlyList<short> hierarchy) {
+            if (skeletonMatrices34Inverted.Count <= s || s == -1) return new Vector3();
+            Matrix3x4 bone = skeletonMatrices34Inverted[s];
+            Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
+            Vector3 parent = new Vector3();
+            if (hierarchy.Count > s) parent = GetGlobalPos(skeletonMatrices34Inverted, hierarchy[s], hierarchy);
+            return pos + parent;
+        }
+
+        public bool WriteCloth(Chunked model, Stream output, HTLC cloth, uint index) {  // todo:
             culture.NumberFormat.NumberDecimalSeparator = ".";
             System.Threading.Thread.CurrentThread.CurrentCulture = culture;
             IChunk chunk = model.FindNextChunk("lksm").Value;
@@ -115,31 +138,41 @@ namespace OWLib.Writer {
                 return false;
             }
             lksm skeleton = (lksm)chunk;
-            
-            Dictionary<short, short> hierarchy = new Dictionary<short, short>();
-            IEnumerable<short> query = hierarchy.Keys.OrderBy(pet => pet);
-            HashSet<short> bones = new HashSet<short>(query);
+
+            if (cloth.Nodes[index] == null) return false;
+            List<HTLC.ClothNode> nodes = cloth.Nodes[index].ToList();
             using (StreamWriter writer = new StreamWriter(output)) {
-                writer.WriteLine("{0}", bones.Count);
+                writer.WriteLine("{0}", nodes.Count);
                 writer.WriteLine("version 1");
                 writer.WriteLine("nodes");
-                foreach (short bone in bones) {  
-                    writer.WriteLine("{0} \"bone_{1:X4}\" {2}", bone, skeleton.IDs[bone], hierarchy[bone]);
+                Dictionary<HTLC.ClothNode, uint> boneMap = new Dictionary<HTLC.ClothNode, uint>();
+                uint nodeIndex = 0;
+                foreach (HTLC.ClothNode clothNode in nodes) {
+                    uint bone = nodeIndex;
+                    bool isNonskele = false;
+                    if (cloth.NodeBones[index].ContainsKey((short)bone) && cloth.NodeBones[index][(int) bone] != -1) {
+                        bone = skeleton.IDs[cloth.NodeBones[index][(int) bone]];
+                        isNonskele = true;
+                    }
+                    boneMap[clothNode] = nodeIndex;
+                    writer.WriteLine($"{nodeIndex} \"bone_{(isNonskele ? "" : "noskele_")}{bone:X}\" {clothNode.VerticalParent}");
+                    nodeIndex++;
                 }
                 writer.WriteLine("end");
                 writer.WriteLine("skeleton");
                 writer.WriteLine("time 0");
-                foreach (short i in bones) {
-                    Matrix3x4 bone = skeleton.Matrices34Inverted[i];
-                    APPLIB.Quaternion3D quat = new APPLIB.Quaternion3D(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
-                    APPLIB.Vector3D rot = APPLIB.C3D.ToEulerAngles(quat);
-                    Vector3 scale = new Vector3(bone[1, 0], bone[1, 1], bone[1, 2]);
-                    Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
-                    if (rot.X == -3.14159274f && rot.Y == 0 && rot.Z == 0) {
-                        rot = new APPLIB.Vector3D(0, 3.14159274f, 3.14159274f); // effectively the same but you know, eulers.
+                foreach (HTLC.ClothNode node in nodes) {
+                    if (!boneMap.ContainsKey(node)) continue;
+                    short parent = node.VerticalParent;
+                    float parentX = parent != -1 ? nodes[parent].X : 0f;
+                    float parentY = parent != -1 ? nodes[parent].Y : 0f;
+                    float parentZ = parent != -1 ? nodes[parent].Z : 0f;
+                    writer.Write($"{boneMap[node]}");
+                    writer.Write($" {node.X-parentX:0.000000}");
+                    writer.Write($" {node.Y-parentY:0.000000}");
+                    writer.Write($" {node.Z-parentZ:0.000000}");
+                    writer.WriteLine(" 0 0 0");
                     }
-                    writer.WriteLine(String.Format(CultureInfo.InvariantCulture, "{0}  {1:0.000000} {2:0.000000} {3:0.000000}  {4:0.000000} {5:0.000000} {6:0.000000}  {7:0.000000} {8:0.000000} {9:0.000000}", i, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z));
-                }
             }
             
             return true;

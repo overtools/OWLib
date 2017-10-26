@@ -90,10 +90,21 @@ namespace DataTool.SaveLogic.Unlock {
                         weaponComponent = hero.WeaponComponents2[i].Component;
                     if (hero.WeaponComponents1 != null && hero.WeaponComponents1.Length > i)
                         weaponComponent = hero.WeaponComponents1[i].Component;
-                    if (weaponNamesRaw.ContainsKey(i)) {
-                        weaponNames[i] = weaponNamesRaw[i];
-                    }
+                    // disabled for now:
+                    // if (weaponNamesRaw.ContainsKey(i)) {
+                    //     weaponNames[i] = weaponNamesRaw[i];
+                    // }
                     weaponModels[overrideWeapon] = FindLogic.Model.FindModels(weaponModels[overrideWeapon], weaponComponent, subRealReplacements);
+                    foreach (ModelInfo modelInfo in weaponModels[overrideWeapon]) {  // this feels dirty
+                        // sometimes animations seem to be defined in the context of another model
+                        ModelInfo main = models.FirstOrDefault(x => Equals(x.GUID, modelInfo.GUID));
+                        if (main == null) continue;
+                        foreach (AnimationInfo mainAnimation in main.Animations) {
+                            if (!modelInfo.Animations.Contains(mainAnimation)) {
+                                modelInfo.Animations.Add(mainAnimation);
+                            }
+                        }
+                    }
                 }
             }
             

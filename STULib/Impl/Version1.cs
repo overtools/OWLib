@@ -24,7 +24,7 @@ namespace STULib.Impl {
             stream?.Dispose();
         }
 
-        internal static bool IsValidVersion(BinaryReader reader) {
+        public static bool IsValidVersion(BinaryReader reader) {
             return reader.ReadUInt32() == MAGIC;
         }
 

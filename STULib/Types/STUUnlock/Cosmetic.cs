@@ -32,7 +32,5 @@ namespace STULib.Types.STUUnlock {
 
         [STUField(0xBDB2D444)]
         public STUGUID CosmeticUnknownGUID;
-        
-        
     }
 }

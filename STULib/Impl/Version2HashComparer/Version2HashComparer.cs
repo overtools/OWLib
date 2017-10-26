@@ -231,6 +231,7 @@ namespace STULib.Impl.Version2HashComparer {
         public Dictionary<uint, List<ChainedInstanceInfo>> ChainedInstances;
         public Dictionary<uint, InstanceData> InternalInstances = new Dictionary<uint, InstanceData>();
         public static Dictionary<uint, STUInstanceJSON> InstanceJSON;
+        public static bool GetAllChildren = false;
 
         public bool IsInData(uint hash, FieldGuessData[] fields) {
             return InstanceGuessData.Any(data => data?.Checksum == hash && data.Fields == fields);
@@ -320,12 +321,16 @@ namespace STULib.Impl.Version2HashComparer {
             }
             
             // get all children
-            // foreach (KeyValuePair<uint,STUInstanceJSON> instanceJSON in InstanceJSON) {
-            //     if (instanceJSON.Value.ParentChecksum == json.Hash && !InternalInstances.ContainsKey(instanceJSON.Value.Hash)) {
-            //         InternalInstances[instanceJSON.Value.Hash] = null;
-            //         InternalInstances[instanceJSON.Value.Hash] = GetInstanceData(instanceJSON.Value.Hash, reader);
-            //     }
-            // }
+            // WARNING: NOT THREAD SAFE
+            if (GetAllChildren) {
+                foreach (KeyValuePair<uint,STUInstanceJSON> instanceJSON in InstanceJSON) {
+                    if (instanceJSON.Value.ParentChecksum != json.Hash ||
+                        InternalInstances.ContainsKey(instanceJSON.Value.Hash)) continue;
+                    InternalInstances[instanceJSON.Value.Hash] = null;
+                    InternalInstances[instanceJSON.Value.Hash] = GetInstanceData(instanceJSON.Value.Hash, reader);
+                }
+            }
+            
             
             if (instanceSize != null && fieldListIndex != null && reader != null) {
                 fields = FakeReadInstance(instanceFields[(int)fieldListIndex], reader,
@@ -520,7 +525,7 @@ namespace STULib.Impl.Version2HashComparer {
             uint fieldIndex = 0;
             foreach (STUInstanceJSON.STUFieldJSON field in InstanceJSON[instanceChecksum].GetFields()) {
                 output[fieldIndex] = new FieldData(field);
-                if (output[fieldIndex].InlineInstanceChecksum != 0 || output[fieldIndex].EmbedInstanceChecksum != 0 || output[fieldIndex].HashMapChecksum != 0) {
+                if (output[fieldIndex].TypeInstanceChecksum != 0) {
                     if (!InternalInstances.ContainsKey(output[fieldIndex].TypeInstanceChecksum)) {
                         InternalInstances[output[fieldIndex].TypeInstanceChecksum] = null; // prevent stackoverflow
                         InternalInstances[output[fieldIndex].TypeInstanceChecksum] =
