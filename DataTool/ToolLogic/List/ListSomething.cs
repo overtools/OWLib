@@ -10,7 +10,9 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static STULib.Types.Generic.Common;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using STULib.Types.Gamemodes.Unknown.Enums;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-stuff", Description = "List subtitles", TrackTypes = new ushort[] {0xC7}, CustomFlags = typeof(ListFlags))]
@@ -65,11 +67,11 @@ namespace DataTool.ToolLogic.List {
 
         private static void ParseGamemodeInfo(IndentHelper iD, STUGUID[] gamemodeInfo) {
             if (gamemodeInfo == null) return;
-            Log($"{iD + 2}Game Info:");
+            Log($"{iD}Game Info:");
             foreach (var guid in gamemodeInfo) {
                 var something = GetInstance<STUGamemodeBaseInfo>(guid);
                 if (something != null)
-                    Log($"{iD + 3}{GetString(something.Name)}");
+                    Log($"{iD+1}{GetString(something.Name)}");
             }
         }
 
@@ -149,19 +151,28 @@ namespace DataTool.ToolLogic.List {
             Log($"{iD}Brawls:");
             var ii = 0;
             foreach (var guid in brawls) {
-                var BrawlContainer = GetInstance<STUBrawlContainer>(guid);
-                if (BrawlContainer == null) continue;
+                var brawlContainer = GetInstance<STUBrawlContainer>(guid);
+                if (brawlContainer == null) continue;
 
-                var bName = GetString(BrawlContainer.Brawl.Name);
+                var bName = GetString(brawlContainer.Brawl.Name);
                 Log($"{iD+1}[{ii}] {bName}:");
                 ii++;
+                
+                if (brawlContainer.Brawl.GamemodeData != null) {
+                    var gamemodeData = GetInstance<STUGamemode>(brawlContainer.Brawl.GamemodeData);
+                    Log($"{iD+2}Gamemode Data:");
 
-                if (BrawlContainer.Brawl.TeamConfig != null) {
+                    var gamemodeType = GetString(gamemodeData.Name);
+                    Log($"{iD+3}Type: {gamemodeType}");
+                    
+                    if (gamemodeData.UnknownEnum == (STUEnum_1964FED7) 1) Debugger.Break();
+                }
+
+                if (brawlContainer.Brawl.TeamConfig != null) {
                     var iii = 0;
-                    Log($"{iD+2}Team Config?:");
-                    foreach (var teamConfig in BrawlContainer.Brawl.TeamConfig) {
+                    Log($"{iD+2}Team Config:");
+                    foreach (var teamConfig in brawlContainer.Brawl.TeamConfig) {
                         Log($"{iD+3}[{iii}]:");
-                        Log($"{iD+4}Max Players: {teamConfig.MaxPlayers}");
 
                         iii++;
 
@@ -171,8 +182,6 @@ namespace DataTool.ToolLogic.List {
                         }
 
                         if (teamConfig.AllowedHeroes != null) {
-                            Log($"{iD+4}Allowed Heroes:");
-
                             Common.STUGUID[] heroes = null;
                             if (teamConfig.AllowedHeroes is STUGamemodeHeroCollection)
                                 heroes = (teamConfig.AllowedHeroes as STUGamemodeHeroCollection).Heroes;
@@ -180,11 +189,14 @@ namespace DataTool.ToolLogic.List {
                             if (teamConfig.AllowedHeroes is STUBrawlHeroCollection)
                                 heroes = (teamConfig.AllowedHeroes as STUBrawlHeroCollection).Heroes;
 
+                            var allowedHeroes = new List<string>();
                             foreach (var heroguid in heroes) {
                                 var hero = GetInstance<STUHero>(heroguid);
                                 if (hero == null) continue;
-                                Log($"{iD+5}{GetString(hero.Name)}");
+                                allowedHeroes.Add(GetString(hero.Name));
                             }
+
+                            Log($"{iD+4}Allowed Heroes: {String.Join(", ", allowedHeroes)}");
                         }
 
                         if (teamConfig.HeroOverrides != null) {

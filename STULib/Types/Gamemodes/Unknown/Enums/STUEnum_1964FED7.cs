@@ -3,5 +3,9 @@
 namespace STULib.Types.Gamemodes.Unknown.Enums {
     [STUEnum(0x1964FED7)]
     public enum STUEnum_1964FED7 : uint {
+        //EverythingElse = 0,
+        //ControlEliminationSnowballCtfTeamdeathmatchLucioball = 1
+        //Deathmatch = 2
+        //UprisingJunkenstein = 3
     }
 }

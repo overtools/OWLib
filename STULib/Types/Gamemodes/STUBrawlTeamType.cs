@@ -4,6 +4,6 @@ namespace STULib.Types.Gamemodes {
     [STU(0x00C5C6F0)]
     public class STUBrawlTeamType : STUBrawlTeamTypeContainer {
         [STUField(0x33B0B2B6)]
-        public Types.Enums.STUEnumTeamType TeamType;
+        public Enums.STUEnumTeamType TeamType;
     }
 }
