@@ -276,7 +276,7 @@
     <Compile Include="Types\Gamemodes\Unknown\STU_2B17E5B4.cs" />
     <Compile Include="Types\Gamemodes\STUBrawlTeamTypeContainer.cs" />
     <Compile Include="Types\Gamemodes\STUBrawl.cs" />
-    <Compile Include="Types\Gamemodes\Unknown\STU_3C14F504.cs" />
+    <Compile Include="Types\Gamemodes\STUBrawlHeroCollection.cs" />
     <Compile Include="Types\Gamemodes\STUBrawlContainer.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_58E4EC09.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_73715F2E.cs" />

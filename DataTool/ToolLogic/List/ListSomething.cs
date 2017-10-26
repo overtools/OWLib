@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using DataTool.Flag;
 using DataTool.Helper;
 using STULib.Types;
@@ -124,15 +125,30 @@ namespace DataTool.ToolLogic.List {
                         if (BrawlContainer.Brawl.TeamConfig != null) {
                             var iii = 0;
                             Log($"{iD+4}Team Config?:");
-                            foreach (var something in BrawlContainer.Brawl.TeamConfig) {
+                            foreach (var teamConfig in BrawlContainer.Brawl.TeamConfig) {
                                 Log($"{iD+5}[{iii}]:");
-                                Log($"{iD+6}Max Players: {something.MaxPlayers}");
+                                Log($"{iD+6}Max Players: {teamConfig.MaxPlayers}");
 
                                 iii++;
 
-                                if (something.HeroOverrides != null) {
+                                if (teamConfig.AllowedHeroes != null) {
+                                    Log($"{iD+6}Allowed Heroes:");
+                                    STUGamemodeHeroCollection allowedHeroes;
+                                    if (teamConfig.AllowedHeroes is STUGamemodeHeroCollection)
+                                        allowedHeroes = teamConfig.AllowedHeroes as STUGamemodeHeroCollection;
+                                    if (teamConfig.AllowedHeroes is STUBrawlHeroCollection)
+                                        allowedHeroes = (STUGamemodeHeroCollection) teamConfig.AllowedHeroes;
+
+                                    foreach (var heroguid in allowedHeroes.Heroes) {
+                                        var hero = GetInstance<STUHero>(heroguid);
+                                        if (hero == null) continue;
+                                        Log($"{iD+7}{GetString(hero.Name)}");
+                                    }
+                                }
+
+                                if (teamConfig.HeroOverrides != null) {
                                     Log($"{iD+6}Hero Overrides?:");
-                                    foreach (var somethingElse in something.HeroOverrides) {
+                                    foreach (var somethingElse in teamConfig.HeroOverrides) {
                                         var dsfds = somethingElse.STUBrawlHeroContainer as STUBrawlHero;
                                         var hero = GetInstance<STUHero>(dsfds.Hero);
                                         Log($"{iD + 7}Hero: {GetString(hero.Name)}");
