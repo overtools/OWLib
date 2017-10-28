@@ -3,14 +3,12 @@ using DataTool.Flag;
 using DataTool.Helper;
 using STULib.Types;
 using STULib.Types.Gamemodes;
-using STULib.Types.Generic;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static STULib.Types.Generic.Common;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-gamemodes", Description = "List game modes", IsSensitive = true, TrackTypes = new ushort[] {0xC7}, CustomFlags = typeof(ListFlags))]
@@ -170,8 +168,6 @@ namespace DataTool.ToolLogic.List {
                     }
                 }
             }
-
-            //Debugger.Break();
         }
 
         private static void ParseBrawls(IndentHelper iD, STUGUID[] brawls) {
@@ -202,7 +198,7 @@ namespace DataTool.ToolLogic.List {
                         }
 
                         if (teamConfig.AllowedHeroes != null) {
-                            Common.STUGUID[] heroes = null;
+                            STUGUID[] heroes = null;
                             if (teamConfig.AllowedHeroes is STUGamemodeHeroCollection)
                                 heroes = (teamConfig.AllowedHeroes as STUGamemodeHeroCollection).Heroes;
 

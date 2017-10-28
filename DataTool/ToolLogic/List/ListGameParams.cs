@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using DataTool.Flag;
 using DataTool.Helper;
-using STULib.Types;
 using STULib.Types.GameParams;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -73,13 +70,8 @@ namespace DataTool.ToolLogic.List {
                                 Log($"{jD}    Max: {p3.Max}");
                                 Log($"{jD}Default: {p3.Default}");
                                 break;
-                           default:
-                               Debugger.Break();
-                                break;
                         }
                     }
-
-                    //Debugger.Break();
                 }
             }
         }
