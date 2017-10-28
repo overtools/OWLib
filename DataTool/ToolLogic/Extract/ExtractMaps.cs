@@ -28,7 +28,6 @@ namespace DataTool.ToolLogic.Extract {
                 throw new Exception("no output path");
             }
             
-            
             foreach (ulong key in TrackedFiles[0x9F]) {
                 STUMap map = GetInstance<STUMap>(key);
                 if (map == null) continue;
@@ -36,12 +35,21 @@ namespace DataTool.ToolLogic.Extract {
                 string name = GetValidFilename(GetString(map.Name)) ?? $"Unknown{GUID.Index(key):X}";
                 Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
 
+                // if (map.Gamemodes != null) {
+                //     foreach (Common.STUGUID gamemodeGUID in map.Gamemodes) {
+                //         STUGamemode gamemode = GetInstance<STUGamemode>(gamemodeGUID);
+                //     }
+                // }
+
                 // string test1 = GetFileName(map.GetDataKey(1));
                 // string test2 = GetFileName(map.GetDataKey(2));
                 // string test3 = GetFileName(map.GetDataKey(8));
                 // string test4 = GetFileName(map.GetDataKey(0xB));
                 // string test5 = GetFileName(map.GetDataKey(0x11));
                 // string test6 = GetFileName(map.GetDataKey(0x10));
+                // using (Stream oneStream = OpenFile(map.GetDataKey(0xB))) {
+                //     Map mapOne = new Map(oneStream);
+                // }
 
                 string mapPath = Path.Combine(basePath, name, GUID.Index(key).ToString("X")) + Path.DirectorySeparatorChar;
                 CreateDirectoryFromFile(mapPath);
