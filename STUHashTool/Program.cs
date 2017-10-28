@@ -659,6 +659,7 @@ namespace STUHashTool {
                     // if (file != 0x400000000000C55) continue;
                     // if (file != 166633186212711045) continue;  // season 1
                     // if (file != 396316767208603669) continue; // sound 01B
+                    // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000199.068") continue;
                     using (Stream fileStream = Util.OpenFile(records[file], handler)) {
                         ISTU fileSTU = ISTU.NewInstance(fileStream, uint.MaxValue);
                         Console.WriteLine($"Loaded: {file:X12} {GUID.LongKey(file):X12}.{GUID.Type(file):X3}", Color.LightGray);

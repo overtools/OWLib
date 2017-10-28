@@ -50,7 +50,7 @@ namespace STULib.Types {
         public STUGUID ImageResource3;
 
         [STUField(0xD608E9F3)]
-        public STUGUID[] Unknown15;
+        public STUGUID[] Gamemodes;
 
         [STUField(0xDDC37F3D)]
         public STUGUID MapDataResource2;
@@ -72,6 +72,9 @@ namespace STULib.Types {
 
         [STUField(0x762B6796)]
         public STU_7D6D8405[] UnknownArray;
+
+        [STUField(0x38F33424)]
+        public STUGUID MapDataResource3;
 
         [STU(0xAC40722C)]
         public class STUMapUnknownNested1 : STUInstance {

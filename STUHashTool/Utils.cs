@@ -288,7 +288,7 @@ namespace STUHashTool {
                     }
 
                 }
-                // if (field.Name == "m_961B4853") {
+                // if (field.Name == "UnknownGUID") {
                 //     if (Debugger.IsAttached) {
                 //         Debugger.Log(0, "STUHashTool", $"\r\n{sb}\r\n");
                 //         Debugger.Break();

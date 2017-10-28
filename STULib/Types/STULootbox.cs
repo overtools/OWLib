@@ -6,7 +6,7 @@ namespace STULib.Types {
     [STU(0x56B6D12E, "STULootbox")]
     public class STULootbox : STUInstance {
         [STUField(0xFEC3ED62)]
-        public STUGUID Effect;
+        public STUGUID Effect1;
 
         [STUField(0x3970E137)]
         public STUGUID Effect2;
@@ -15,7 +15,7 @@ namespace STULib.Types {
         public STUGUID Material;
 
         [STUField(0xCBE2DADD)]
-        public STUGUID UnknownStateScriptComponent;
+        public STUGUID StateScriptComponent;
 
         [STUField(0xB48F1D22, "m_name")]
         public STUGUID Name;
@@ -24,13 +24,13 @@ namespace STULib.Types {
         public LootboxBundle[] Bundles;
 
         [STUField(0xE02BEE24)]
-        public STUGUID Unknown0C3;
+        public STUGUID Virtual0C3;
 
         [STUField(0x3DFAC8CA)]
         public uint Unknown1;  // 0
 
         [STUField(0x7AB4E3F8)]
-        public Enums.STUEnumEventID Event;
+        public STUEnumEventID Event;
 
         [STUField(0xFFE7768F)]
         public STUGUID Effect3;
@@ -53,7 +53,7 @@ namespace STULib.Types {
             public STUGUID String;
             
             [STUField(0x87EACF5F)]
-            public STUGUID UnknownImage;
+            public STUGUID Image;
         }
 
         public string EventNameNormal => ItemEvents.GetInstance().GetEventNormal((ulong)Event);

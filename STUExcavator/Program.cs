@@ -10,6 +10,7 @@ using DataTool;
 using DataTool.Helper;
 using Microsoft.CSharp;
 using Newtonsoft.Json;
+using OWLib;
 using STUHashTool;
 using STULib;
 using STULib.Impl.Version2HashComparer;
@@ -149,7 +150,32 @@ namespace STUExcavator {
                                 }
                             }
                         }
-                    } 
+                    }
+                    // well, this is dumb, raw guids don't have padding.
+                    //if (asset.SerializationType == SerializationType.Unknown) {  // ok so this is probably a raw file
+                    //    asset.SerializationType = SerializationType.Raw;
+                    //    asset.GUIDs = new HashSet<string>();
+                    //    reader.BaseStream.Position = 0;
+                    //    
+                    //    // try and auto detect padding that is before a guid
+                    //    // this is innacurate for types like 004
+                    //    int maxCount = 0;
+                    //    for (int i = 0; i < reader.BaseStream.Length; i++) {
+                    //        byte b = reader.ReadByte();
+                    //        if (b == 255) maxCount++;
+                    //        if (maxCount >= 8 && b != 255) {
+                    //            if (reader.BaseStream.Length - reader.BaseStream.Position > 8) {
+                    //                reader.BaseStream.Position -= 1; // before b
+                    //                Common.STUGUID rawGUID = new Common.STUGUID(reader.ReadUInt64());
+                    //                reader.BaseStream.Position -= 7; // back to after b
+                    //                if (GUID.Type(rawGUID) > 1) {
+                    //                    asset.GUIDs.Add(rawGUID.ToString());
+                    //                }
+                    //            }
+                    //        } 
+                    //        if (b != 255 && maxCount > 0) maxCount = 0;
+                    //    }
+                    //}
                 }
             }
             return asset;
@@ -171,6 +197,9 @@ namespace STUExcavator {
             summary.SerializationType = firstAsset.SerializationType;
 
             switch (summary.SerializationType) {
+                case SerializationType.Raw:
+                    summary.GUIDTypes = new HashSet<string>();
+                    break;
                 case SerializationType.STUv2:
                     // compile the classes
                     summary.GUIDTypes = new HashSet<string>();
@@ -287,6 +316,16 @@ namespace STUExcavator {
                     }
                     if (field.FieldType == typeof(Common.STUGUID)) {
                         guids.Add(IO.GetFileName(fieldValue as Common.STUGUID));
+                    }
+                    
+                    // tbh I haven't seen any ulong that isn't a guid yet
+                    if (field.FieldType == typeof(ulong)) {
+                        if (GUID.Type((ulong) fieldValue) > 1) guids.Add(IO.GetFileName(new Common.STUGUID((ulong)fieldValue)));
+                    }
+                    if (field.FieldType == typeof(ulong[])) {
+                        foreach (ulong guid in (ulong[]) fieldValue) {
+                            if (GUID.Type(guid) > 1) guids.Add(IO.GetFileName(new Common.STUGUID(guid)));
+                        }
                     }
                 }
             }
