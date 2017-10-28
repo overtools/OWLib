@@ -145,16 +145,22 @@ namespace DataTool.SaveLogic {
 
             // todo: SaveLogic.Animation
             foreach (AnimationInfo modelAnimation in model.Animations) {
-                Stream animStream = OpenFile(modelAnimation.GUID);
-                if (animStream == null) {
-                    continue;
-                }
+                using (Stream animStream = OpenFile(modelAnimation.GUID)) {
+                    if (animStream == null) {
+                        continue;
+                    }
                 
-                OWLib.Animation animation = new OWLib.Animation(animStream);
-                string animOutput = Path.Combine(basePath, $"Animations\\{animation.Header.priority}\\{GUID.LongKey(modelAnimation.GUID):X12}{animWriter.Format}");
-                CreateDirectoryFromFile(animOutput);
-                using (Stream fileStream = new FileStream(animOutput, FileMode.Create)) {
-                    animWriter.Write(animation, fileStream, new object[] { });
+                    OWLib.Animation animation = new OWLib.Animation(animStream);
+                    string animOutput = Path.Combine(basePath, $"Animations\\{animation.Header.priority}\\{GUID.LongKey(modelAnimation.GUID):X12}{animWriter.Format}");
+                    CreateDirectoryFromFile(animOutput);
+                    using (Stream fileStream = new FileStream(animOutput, FileMode.Create)) {
+                        animWriter.Write(animation, fileStream, new object[] { });
+                    }
+                    string animOutput2 = Path.Combine(basePath, $"Animations\\{animation.Header.priority}\\{GUID.LongKey(modelAnimation.GUID):X12}.{GUID.Type(modelAnimation.GUID):X3}");
+                    CreateDirectoryFromFile(animOutput);
+                    using (Stream fileStream = new FileStream(animOutput2, FileMode.Create)) {
+                        animStream.CopyTo(fileStream);
+                    }
                 }
             }
         }
