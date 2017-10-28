@@ -182,7 +182,7 @@ namespace DataTool.ToolLogic.List {
                 Log($"{iD+1}[{ii}] {bName}:");
                 ii++;
                 
-                ParseGamemodeData(iD+2, brawlContainer.BrawlInfo.GamemodeData);
+                ParseGamemodeData(iD+2, brawlContainer.BrawlInfo.Gamemode);
 
                 if (brawlContainer.BrawlInfo.TeamConfig != null) {
                     var iii = 0;
