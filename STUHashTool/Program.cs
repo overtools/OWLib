@@ -610,8 +610,12 @@ namespace STUHashTool {
                     sb.Append("}");
 
                     if (outputFolder.Length > 0 && !ISTU.InstanceTypes.ContainsKey(RealInstances[todoInstance].Checksum)) {
+                        string name = $"STU_{todoInstance:X8}";
+                        if (InstanceNames.ContainsKey(RealInstances[todoInstance].Checksum)) {
+                            name = InstanceNames[RealInstances[todoInstance].Checksum];
+                        }
                         using (Stream stream =
-                            File.OpenWrite($"{outputFolder}{Path.DirectorySeparatorChar}STU_{todoInstance:X8}.cs")) {
+                            File.OpenWrite($"{outputFolder}{Path.DirectorySeparatorChar}{name}.cs")) {
                             stream.SetLength(0);
                             using (TextWriter writer = new StreamWriter(stream)) {
                                 writer.WriteLine(sb);
