@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using OWReplayLib;
 using OWReplayLib.Types;
 using STULib.Types;
+using STULib.Types.Gamemodes;
 using STULib.Types.STUUnlock;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;

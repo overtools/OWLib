@@ -6,6 +6,6 @@ namespace STULib.Types.Statescript.DataStores {
     [STU(0x1C934279)]
     public class STU_1C934279 : STUStatescriptDataStoreBase {
         [STUField(0xEDDF9466)]
-        public Common.STUGUID m_EDDF9466;  // STU_43F40C0F
+        public Common.STUGUID m_EDDF9466;  // STUBrawlContainer
     }
 }

@@ -89,6 +89,7 @@
     <Compile Include="ToolLogic\Extract\ExtractFlags.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugSoundbanks.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugDecal.cs" />
+    <Compile Include="ToolLogic\List\ListGameParams.cs" />
     <Compile Include="ToolLogic\List\ListFlags.cs" />
     <Compile Include="ToolLogic\List\ListHeroes.cs" />
     <Compile Include="ToolLogic\List\ListGeneralUnlocks.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="ToolLogic\List\ListLoobox.cs" />
     <Compile Include="ToolLogic\List\ListKeys.cs" />
     <Compile Include="ToolLogic\List\ListMaps.cs" />
+    <Compile Include="ToolLogic\List\ListGamemodes.cs" />
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
     <Compile Include="ToolLogic\List\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
