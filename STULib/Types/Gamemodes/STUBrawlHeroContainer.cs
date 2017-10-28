@@ -3,6 +3,6 @@ using STULib.Types.Generic;
 
 namespace STULib.Types.Gamemodes {
     [STU(0x21CE58F6)]
-    public class STUBrawlHeroContainer : Common.STUInstance {
+    public class STUBrawlHeroContainer : Common.STUInstance {  // wat
     }
 }

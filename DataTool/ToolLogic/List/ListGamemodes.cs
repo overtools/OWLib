@@ -21,7 +21,7 @@ namespace DataTool.ToolLogic.List {
             Log("Gamemodes:");
             var i = 0;
             foreach (var key in TrackedFiles[0xC7]) {
-                var thing = GetInstance<STUGamemodeBase>(key);
+                var thing = GetInstance<STUBrawl>(key);
 
                 if (thing == null) continue;
 
@@ -55,7 +55,7 @@ namespace DataTool.ToolLogic.List {
                 ParseInfo(subIndent, thing.Info);
                 ParseGamemodeInfo(subIndent, thing.GameModeInfo);
                 ParseMaps(subIndent, thing.MapBinding);
-                ParseBrawls(subIndent, thing.Brawls);
+                ParseBrawls(subIndent, thing.BrawlInfo);
 
                 Log("\n");
             }
@@ -175,19 +175,19 @@ namespace DataTool.ToolLogic.List {
             Log($"{iD}Brawls:");
             var ii = 0;
             foreach (var guid in brawls) {
-                var brawlContainer = GetInstance<STUBrawlContainer>(guid);
+                var brawlContainer = GetInstance<STUBrawlInfoContainer>(guid);
                 if (brawlContainer == null) continue;
 
-                var bName = GetString(brawlContainer.Brawl.Name);
+                var bName = GetString(brawlContainer.BrawlInfo.Name);
                 Log($"{iD+1}[{ii}] {bName}:");
                 ii++;
                 
-                ParseGamemodeData(iD+2, brawlContainer.Brawl.GamemodeData);
+                ParseGamemodeData(iD+2, brawlContainer.BrawlInfo.GamemodeData);
 
-                if (brawlContainer.Brawl.TeamConfig != null) {
+                if (brawlContainer.BrawlInfo.TeamConfig != null) {
                     var iii = 0;
                     Log($"{iD+2}Team Config:");
-                    foreach (var teamConfig in brawlContainer.Brawl.TeamConfig) {
+                    foreach (var teamConfig in brawlContainer.BrawlInfo.TeamConfig) {
                         Log($"{iD+3}[{iii}]:");
 
                         iii++;
