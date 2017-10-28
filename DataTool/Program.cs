@@ -188,7 +188,7 @@ namespace DataTool {
             Log("Tooling...");
             targetTool.Parse(targetToolFlags);
             if (Debugger.IsAttached) {
-                Debugger.Break();
+               Debugger.Break();
             }
         }
         

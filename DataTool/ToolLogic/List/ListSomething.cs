@@ -52,14 +52,14 @@ namespace DataTool.ToolLogic.List {
                         Log($"{iD + 2}Brawl: {GetString(brawl.Name)}");
                 }
 
-                
-                ParseAchievements(iD+2, thing.Achievements);
-                ParseCompetitiveInfo(iD+2, thing.CompetitiveInfo);
-                ParseUnlocks(iD+2, thing.Achievements);
-                ParseInfo(iD+2, thing.Info);
-                ParseGamemodeInfo(iD+2, thing.GameModeInfo);
-                ParseMaps(iD+2, thing.MapBinding);
-                ParseBrawls(iD+2, thing.Brawls);
+                var subIndent = iD + 2;
+                ParseAchievements(subIndent, thing.Achievements);
+                ParseCompetitiveInfo(subIndent, thing.CompetitiveInfo);
+                ParseUnlocks(subIndent, thing.Achievements);
+                ParseInfo(subIndent, thing.Info);
+                ParseGamemodeInfo(subIndent, thing.GameModeInfo);
+                ParseMaps(subIndent, thing.MapBinding);
+                ParseBrawls(subIndent, thing.Brawls);
 
                 Log("\n");
             }
@@ -146,6 +146,19 @@ namespace DataTool.ToolLogic.List {
             } catch { }
         }
 
+        private static void ParseGamemodeData(IndentHelper iD, STUGUID guid) {
+            if (guid == null) return;
+
+            var gamemodeData = GetInstance<STUGamemode>(guid);
+            Log($"{iD}Gamemode Data:");
+
+            var gamemodeType = GetString(gamemodeData.Name);
+            if (gamemodeType != null)
+                Log($"{iD+1}Type: {gamemodeType}");
+
+
+        }
+
         private static void ParseBrawls(IndentHelper iD, STUGUID[] brawls) {
             if (brawls == null) return;
             Log($"{iD}Brawls:");
@@ -158,15 +171,7 @@ namespace DataTool.ToolLogic.List {
                 Log($"{iD+1}[{ii}] {bName}:");
                 ii++;
                 
-                if (brawlContainer.Brawl.GamemodeData != null) {
-                    var gamemodeData = GetInstance<STUGamemode>(brawlContainer.Brawl.GamemodeData);
-                    Log($"{iD+2}Gamemode Data:");
-
-                    var gamemodeType = GetString(gamemodeData.Name);
-                    Log($"{iD+3}Type: {gamemodeType}");
-                    
-                    if (gamemodeData.UnknownEnum == (STUEnum_1964FED7) 1) Debugger.Break();
-                }
+                ParseGamemodeData(iD+2, brawlContainer.Brawl.GamemodeData);
 
                 if (brawlContainer.Brawl.TeamConfig != null) {
                     var iii = 0;

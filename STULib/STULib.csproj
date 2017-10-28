@@ -267,6 +267,7 @@
     <Compile Include="Types\Enums\STUEnum_1C8CB734.cs" />
     <Compile Include="Types\Enums\STUEnum_C4294B0E.cs" />
     <Compile Include="Types\Enums\STUEnum_D407CA8B.cs" />
+    <Compile Include="Types\Enums\STUEnum_F2F62E3D.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeBase.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeCompetitiveSeason.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeBaseInfo.cs" />
@@ -284,6 +285,17 @@
     <Compile Include="Types\Gamemodes\STUBrawlTeam.cs" />
     <Compile Include="Types\Gamemodes\STUBrawlHero.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_F31D4F9C.cs" />
+    <Compile Include="Types\GameParams\STUGameParam.cs" />
+    <Compile Include="Types\GameParams\STUGameParamBase.cs" />
+    <Compile Include="Types\GameParams\STUGameParamBaseOptions.cs" />
+    <Compile Include="Types\GameParams\STUGameParamDropdown.cs" />
+    <Compile Include="Types\GameParams\STUGameParamDropdownOptions.cs" />
+    <Compile Include="Types\GameParams\STUGameParamSlider.cs" />
+    <Compile Include="Types\GameParams\STUGameParamStepSlider.cs" />
+    <Compile Include="Types\GameParams\STUGameParamSwitch.cs" />
+    <Compile Include="Types\GameParams\STU_96788737.cs" />
+    <Compile Include="Types\GameParams\STU_A289530F.cs" />
+    <Compile Include="Types\GameParams\STU_B2795D4D.cs" />
     <Compile Include="Types\Statescript\Components\Enums\STUEnum_790E517D.cs" />
     <Compile Include="Types\Statescript\Components\Enums\STUEnum_8A184A5C.cs" />
     <Compile Include="Types\Statescript\Components\STUAnimationCoreferenceComponent.cs" />
