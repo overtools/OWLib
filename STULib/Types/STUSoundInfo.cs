@@ -64,9 +64,72 @@ namespace STULib.Types {
         [STUField(0xE02BEE24)]
         public STUGUID Unknown0C3;
     }
+
+    // Found in 068
+    [STU(0xC9AAE3AE)]
+    public class STU_C9AAE3AE : STUSoundInfo {
+        [STUField(0xBC4326FF )]
+        public STUGUID m_BC4326FF;  // STU_C7BAA017
+
+        [STUField(0xAF872E86)]
+        public double m_AF872E86;
+
+        [STUField(0x411ABFEA)]
+        public ulong m_411ABFEA;
+
+        [STUField(0x4889445F)]
+        public uint m_4889445F;
+
+        [STUField(0x5D32D524)]
+        public STUEnum_2D0A59BA m_5D32D524;
+
+        [STUField(0x5ED79353)]
+        public STUEnum_10064D07 m_5ED79353;
+
+        [STUField(0xAB103723)]
+        public byte m_AB103723;
+    }
+
+    // Found in 068
+    [STU(0x857C15FC)]
+    public class STU_857C15FC : STUSoundInfo {
+        [STUField(0xBC4326FF)]
+        public STUGUID m_BC4326FF;  // STU_C7BAA017
+
+        [STUField(0xAF872E86)]
+        public double m_AF872E86;
+
+        [STUField(0x7FE9F87A)]
+        public ulong m_7FE9F87A;
+
+        [STUField(0xEA58FA50)]
+        public ulong m_EA58FA50;
+
+        [STUField(0x411ABFEA)]
+        public ulong m_411ABFEA;
+
+        [STUField(0x5D32D524)]
+        public STUEnum_2D0A59BA m_5D32D524;
+
+        [STUField(0x5ED79353)]
+        public STUEnum_10064D07 m_5ED79353;
+
+        [STUField(0xAB103723)]
+        public byte m_AB103723;
+    }
+
+    // Found in 068
+    [STUEnum(0x2D0A59BA)]
+    public enum STUEnum_2D0A59BA : uint {
+    }
+
+    // Found in 068
+    [STUEnum(0x10064D07)]
+    public enum STUEnum_10064D07 : uint {
+    }
+}
     
     // todo: A95E4B99
     // todo: BDD783B9
     // todo: D931E2CF
     // todo: C9F4617F
-}

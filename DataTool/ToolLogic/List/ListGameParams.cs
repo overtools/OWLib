@@ -37,7 +37,7 @@ namespace DataTool.ToolLogic.List {
                 var j = 0;
                 foreach (var param in parameter.GameParams) {
                     Log($"{iD+3}[{j}]");
-                    Log($"{iD+4}   Name:  {GetString(param.Name) ?? "N/A"}");
+                    Log($"{iD+4}   Name: {GetString(param.Name) ?? "N/A"}");
                     Log($"{iD+4}  Name2: {GetString(param.Name2) ?? "N/A"}");
                     Log($"{iD+4}Unknown: {param.UnknownInt}");
                     Log($"{iD+4}Options:");
@@ -47,13 +47,13 @@ namespace DataTool.ToolLogic.List {
                         var jD = iD + 5;
                         switch (param.Options) {
                             case STUGameParamSwitch p:
-                                Log($"{jD}Type:{p.GetType().FullName}");
+                                Log($"{jD}Type: {p.GetType().FullName}");
                                 Log($"{jD}Val1: {GetString(p.Value1)}");
                                 Log($"{jD}Val2: {GetString(p.Value2)}");
                                 Log($"{jD}Unkn: {p.Unknown}");
                                 break;
                             case STUGameParamSlider p1:
-                                Log($"{jD}   Type:{p1.GetType().FullName}");
+                                Log($"{jD}   Type: {p1.GetType().FullName}");
                                 Log($"{jD} String: {GetString(p1.String)}");
                                 Log($"{jD}    Min: {p1.Min}");
                                 Log($"{jD}    Max: {p1.Max}");
@@ -64,7 +64,7 @@ namespace DataTool.ToolLogic.List {
                                 Log($"{jD}    Type: {p2.GetType().FullName}");
                                 Log($"{jD}Dropdown:");
                                 foreach (var droption in p2.DropdownOptions)
-                                    Log($"{jD+1}{GetString(droption.Name)}");
+                                    Log($"{jD+1}- {GetString(droption.Name)}");
                                 break;
                             case STUGameParamStepSlider p3:
                                 Log($"{jD}   Type: {p3.GetType().FullName}");

@@ -11,12 +11,10 @@ using static DataTool.Helper.IO;
 using static STULib.Types.Generic.Common;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using STULib.Types.Gamemodes.Unknown.Enums;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-stuff", Description = "List subtitles", TrackTypes = new ushort[] {0xC7}, CustomFlags = typeof(ListFlags))]
-    public class ListSomething : JSONTool, ITool {
+    [Tool("list-gamemodes", Description = "List game modes", IsSensitive = true, TrackTypes = new ushort[] {0xC7}, CustomFlags = typeof(ListFlags))]
+    public class ListGamemodes : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
         }
@@ -151,12 +149,29 @@ namespace DataTool.ToolLogic.List {
 
             var gamemodeData = GetInstance<STUGamemode>(guid);
             Log($"{iD}Gamemode Data:");
+            Log($"{iD+1}Type: {GetString(gamemodeData.Name) ?? "N/A"}");
 
-            var gamemodeType = GetString(gamemodeData.Name);
-            if (gamemodeType != null)
-                Log($"{iD+1}Type: {gamemodeType}");
+            if (gamemodeData.Teams != null) {
+                Log($"{iD+1}Teams:");
+                foreach (var team in gamemodeData.Teams) {
+                    Log($"{iD+2}{team.TeamType}:");
+                    Log($"{iD+3}Max: {team.MaxPlayers}");
+                    Log($"{iD+3}Min: {team.MaxPlayers}");
 
+                    if (team.AllowedHeroes != null) {
+                        var allowedHeroes = new List<string>();
+                        foreach (var heroguid in ((STUGamemodeHeroCollection) team.AllowedHeroes).Heroes) {
+                            var hero = GetInstance<STUHero>(heroguid);
+                            if (hero == null) continue;
+                            allowedHeroes.Add(GetString(hero.Name));
+                        }
 
+                        Log($"{iD + 3}Allowed Heroes: {String.Join(", ", allowedHeroes)}");
+                    }
+                }
+            }
+
+            //Debugger.Break();
         }
 
         private static void ParseBrawls(IndentHelper iD, STUGUID[] brawls) {
