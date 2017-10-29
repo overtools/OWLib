@@ -1,33 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CRCReverse {
     public class Crc32 {
         public readonly uint[] Table;
 
-        public uint ComputeChecksum(IEnumerable<byte> bytes) {
-            uint crc = 0xffffffff;
+        public uint ComputeChecksum(IEnumerable<byte> bytes, uint xorStart = 0xffffffff, uint xorEnd = 0xffffffff) {
+            uint crc = xorStart;
             foreach (byte t in bytes) {
                 byte index = (byte)((crc & 0xff) ^ t);
                 crc = (crc >> 8) ^ Table[index];
             }
-            return ~crc;
+            return crc ^ xorEnd;
         }
-
-        public byte[] ComputeChecksumBytes(IEnumerable<byte> bytes) {
-            return BitConverter.GetBytes(ComputeChecksum(bytes));
-        }
-
-        public Crc32(uint poly=0xedb88320) {
+        
+        public Crc32(uint poly = 0xedb88320) {
             Table = new uint[256];
-            for(uint i = 0; i < Table.Length; ++i) {
+            for (uint i = 0; i < Table.Length; ++i) {
                 uint temp = i;
-                for(int j = 8; j > 0; --j) {
-                    if((temp & 1) == 1) {
+                for (int j = 8; j > 0; --j) {
+                    if ((temp & 1) == 1) {
                         temp = (temp >> 1) ^ poly;
-                    }else {
+                    } else {
                         temp >>= 1;
                     }
                 }
@@ -55,32 +52,43 @@ namespace CRCReverse {
                 {0x8F736177, "m_rank"},
                 {0x7236F6E3, "STUStatescriptGraph".ToLowerInvariant()}
             };
-            
+            knownValues = new Dictionary<uint, string> {  // old vals
+                {0x0a6886a1, "STULootbox".ToLowerInvariant()},
+                {0x7ce5c1b2, "stuachievement"}
+            };
+
             Dictionary<string, byte[]> bytes = new Dictionary<string, byte[]>();  // precalc for lil bit of speed
-            foreach (KeyValuePair<uint,string> keyValuePair in knownValues) {
+            foreach (KeyValuePair<uint, string> keyValuePair in knownValues) {
                 bytes[keyValuePair.Value] = Encoding.ASCII.GetBytes(keyValuePair.Value);
             }
 
-            const string outputFile = "crc.txt";
-            const uint start = 0; // after running for so long, stop, and set this value to where you ended
-            Dictionary<uint, int> results = new Dictionary<uint, int>();
+            int goodCount = knownValues.Count/2;
             
-            for (uint i = start; i < uint.MaxValue; i++) {  // not a joke, lets go
-                int goodnessScale = 0;
-                foreach (KeyValuePair<uint,string> knownValue in knownValues) {
-                    uint trialHash = new Crc32(i).ComputeChecksum(bytes[knownValue.Value]);
-                    if (trialHash == knownValue.Key) goodnessScale++;
-                }
-                if (goodnessScale > 0) results[i] = goodnessScale;
-            }
+            long startXor = -1;
+            long endXor = -1;
 
-            using (Stream stream = File.OpenWrite(outputFile)) {
-                using (StreamWriter writer = new StreamWriter(stream)) {
-                    foreach (KeyValuePair<uint,int> keyValuePair in results) {
-                        writer.WriteLine($"{keyValuePair.Key:X}: {keyValuePair.Value}");
-                    }
+            // long counter = 0;  // debug
+
+            Parallel.For(0, (long)uint.MaxValue+1, i => {
+                // i is start xor
+                // if (i != 0xffffffff) return;
+                // counter++;  // debug
+                
+                Dictionary<uint, int> goodness = new Dictionary<uint, int>();
+                
+                foreach (KeyValuePair<uint, string> knownValue in knownValues) {
+                    uint trialHash = new Crc32().ComputeChecksum(bytes[knownValue.Value], (uint)i, 0);  // don't xor at the end, and i is start
+                    uint testEndXor = trialHash | knownValue.Key; 
+                    if (!goodness.ContainsKey(testEndXor)) goodness[testEndXor] = 0;
+                    goodness[testEndXor]++;
                 }
-            }
+                if (!goodness.Any(x => x.Value >= goodCount)) return;
+                uint xorEnd = goodness.OrderByDescending(x => x.Value).FirstOrDefault(x => x.Value >= goodCount).Key;  // highest goodness over threshold
+                startXor = i;
+                endXor = xorEnd;
+            });
+            
+            Console.Out.WriteLine($"Results: start_xor={startXor:X}, end_xor={endXor:X}");
         }
     }
 }
