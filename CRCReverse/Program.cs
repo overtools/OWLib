@@ -50,10 +50,10 @@ namespace CRCReverse {
                 {0x2C01908B, "m_level"},
                 {0x78A2AC5C, "m_stars"},
                 {0x8F736177, "m_rank"},
-                {0x7236F6E3, "STUStatescriptGraph".ToLowerInvariant()}
+                // {0x7236F6E3, "STUStatescriptGraph".ToLowerInvariant()}  // idk about this one so I'll disable it for speed
             };
             // knownValues = new Dictionary<uint, string> {  // old vals
-            //     {0x0a6886a1, "STULootbox".ToLowerInvariant()},
+            //     {0xa6886a1, "STULootbox".ToLowerInvariant()},
             //     {0x7ce5c1b2, "stuachievement"}
             // };
 
@@ -78,9 +78,14 @@ namespace CRCReverse {
                     if (!goodness.ContainsKey(testEndXor)) goodness[testEndXor] = 0;
                     goodness[testEndXor]++;
                 }
-                if (!goodness.Any(x => x.Value >= goodCount)) return;  // i'm not 100% all of the hashes are correct, don't take any risks
-                uint xorEnd = goodness.OrderByDescending(x => x.Value).FirstOrDefault(x => x.Value >= goodCount).Key;  // highest goodness over threshold
-                Console.Out.WriteLine($"Results: start_xor={i:X}, end_xor={xorEnd:X}");
+                foreach (KeyValuePair<uint,int> goodPair in goodness.OrderByDescending(x => x.Value).Where(x => x.Value >= goodCount)) {
+                    Console.Out.WriteLine($"Result: start_xor={i:X}, end_xor={goodPair.Key:X} (count: {goodPair.Value})");
+                    Console.Out.WriteLine("Trials:");
+                    foreach (KeyValuePair<uint, string> knownValue in knownValues) {
+                        uint trialHash = new Crc32().ComputeChecksum(bytes[knownValue.Value], (uint)i, goodPair.Key);
+                        Console.Out.WriteLine($"\t{knownValue.Value}: {trialHash:X}");
+                    }
+                }
             });
         }
     }
