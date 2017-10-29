@@ -63,13 +63,18 @@ namespace CRCReverse {
             }
 
             int goodCount = knownValues.Count/2;
-            // long counter = 0;  // debug
+            long counter = 0;
             Crc32 crc32 = new Crc32(); // for this we only need to make the table once
 
-            Parallel.For(0, (long)uint.MaxValue+1, i => {
+            const long start = 0;
+            const long end = (long) uint.MaxValue + 1;
+
+            Parallel.For(start, end, i => {
                 // i is start xor
                 // if (i != 0xffffffff) return;  // old hashes test
-                // counter++;  // debug
+                counter++;
+                
+                if (counter % 100000000 == 0) Console.Out.WriteLine($"(I'm at {counter}/{end})");
                 
                 Dictionary<uint, int> goodness = new Dictionary<uint, int>();  // end_xor: count
                 
