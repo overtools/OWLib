@@ -52,10 +52,10 @@ namespace CRCReverse {
                 {0x8F736177, "m_rank"},
                 {0x7236F6E3, "STUStatescriptGraph".ToLowerInvariant()}
             };
-            knownValues = new Dictionary<uint, string> {  // old vals
-                {0x0a6886a1, "STULootbox".ToLowerInvariant()},
-                {0x7ce5c1b2, "stuachievement"}
-            };
+            // knownValues = new Dictionary<uint, string> {  // old vals
+            //     {0x0a6886a1, "STULootbox".ToLowerInvariant()},
+            //     {0x7ce5c1b2, "stuachievement"}
+            // };
 
             Dictionary<string, byte[]> bytes = new Dictionary<string, byte[]>();  // precalc for lil bit of speed
             foreach (KeyValuePair<uint, string> keyValuePair in knownValues) {
@@ -63,15 +63,13 @@ namespace CRCReverse {
             }
 
             int goodCount = knownValues.Count/2;
-            
             long startXor = -1;
             long endXor = -1;
-
             // long counter = 0;  // debug
 
             Parallel.For(0, (long)uint.MaxValue+1, i => {
                 // i is start xor
-                // if (i != 0xffffffff) return;
+                // if (i != 0xffffffff) return;  // old hashes test
                 // counter++;  // debug
                 
                 Dictionary<uint, int> goodness = new Dictionary<uint, int>();
