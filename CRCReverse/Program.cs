@@ -63,8 +63,6 @@ namespace CRCReverse {
             }
 
             int goodCount = knownValues.Count/2;
-            long startXor = -1;
-            long endXor = -1;
             // long counter = 0;  // debug
 
             Parallel.For(0, (long)uint.MaxValue+1, i => {
@@ -72,21 +70,18 @@ namespace CRCReverse {
                 // if (i != 0xffffffff) return;  // old hashes test
                 // counter++;  // debug
                 
-                Dictionary<uint, int> goodness = new Dictionary<uint, int>();
+                Dictionary<uint, int> goodness = new Dictionary<uint, int>();  // end_xor: count
                 
                 foreach (KeyValuePair<uint, string> knownValue in knownValues) {
                     uint trialHash = new Crc32().ComputeChecksum(bytes[knownValue.Value], (uint)i, 0);  // don't xor at the end, and i is start
-                    uint testEndXor = trialHash | knownValue.Key; 
+                    uint testEndXor = trialHash | knownValue.Key;  // get end xor
                     if (!goodness.ContainsKey(testEndXor)) goodness[testEndXor] = 0;
                     goodness[testEndXor]++;
                 }
-                if (!goodness.Any(x => x.Value >= goodCount)) return;
+                if (!goodness.Any(x => x.Value >= goodCount)) return;  // i'm not 100% all of the hashes are correct, don't take any risks
                 uint xorEnd = goodness.OrderByDescending(x => x.Value).FirstOrDefault(x => x.Value >= goodCount).Key;  // highest goodness over threshold
-                startXor = i;
-                endXor = xorEnd;
+                Console.Out.WriteLine($"Results: start_xor={i:X}, end_xor={xorEnd:X}");
             });
-            
-            Console.Out.WriteLine($"Results: start_xor={startXor:X}, end_xor={endXor:X}");
         }
     }
 }
