@@ -64,6 +64,7 @@ namespace CRCReverse {
 
             int goodCount = knownValues.Count/2;
             // long counter = 0;  // debug
+            Crc32 crc32 = new Crc32(); // for this we only need to make the table once
 
             Parallel.For(0, (long)uint.MaxValue+1, i => {
                 // i is start xor
@@ -73,7 +74,7 @@ namespace CRCReverse {
                 Dictionary<uint, int> goodness = new Dictionary<uint, int>();  // end_xor: count
                 
                 foreach (KeyValuePair<uint, string> knownValue in knownValues) {
-                    uint trialHash = new Crc32().ComputeChecksum(bytes[knownValue.Value], (uint)i, 0);  // don't xor at the end, and i is start
+                    uint trialHash = crc32.ComputeChecksum(bytes[knownValue.Value], (uint)i, 0);  // don't xor at the end, and i is start
                     uint testEndXor = trialHash | knownValue.Key;  // get end xor
                     if (!goodness.ContainsKey(testEndXor)) goodness[testEndXor] = 0;
                     goodness[testEndXor]++;
@@ -82,7 +83,7 @@ namespace CRCReverse {
                     Console.Out.WriteLine($"Result: start_xor={i:X}, end_xor={goodPair.Key:X} (count: {goodPair.Value})");
                     Console.Out.WriteLine("Trials:");
                     foreach (KeyValuePair<uint, string> knownValue in knownValues) {
-                        uint trialHash = new Crc32().ComputeChecksum(bytes[knownValue.Value], (uint)i, goodPair.Key);
+                        uint trialHash = crc32.ComputeChecksum(bytes[knownValue.Value], (uint)i, goodPair.Key);
                         Console.Out.WriteLine($"\t{knownValue.Value}: {trialHash:X}");
                     }
                 }
