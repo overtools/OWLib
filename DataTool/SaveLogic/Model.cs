@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DataTool.FindLogic;
 using DataTool.Flag;
+using DataTool.ToolLogic.Extract;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.Chunk;
@@ -77,6 +78,15 @@ namespace DataTool.SaveLogic {
         }
         
         public static void Save(ICLIFlags flags, string path, ModelInfo model, string name, string fileNameOverride=null) {
+            bool convertAnims = true;
+            bool skipAnims = false;
+            bool convertModels = true;
+            if (flags is ExtractFlags extractFlags) {
+                convertModels = extractFlags.ConvertModels && !extractFlags.Raw;
+                convertAnims = extractFlags.ConvertAnimations && !extractFlags.Raw;
+                skipAnims = extractFlags.SkipAnimations;
+                if (extractFlags.SkipModels) return;
+            }
             string basePath = Path.Combine(path, $"{model.GUID.ToString()}");
             if (fileNameOverride != null) basePath = Path.Combine(path, fileNameOverride);
             Dictionary<ulong, List<TextureInfo>> textures =
@@ -91,75 +101,85 @@ namespace DataTool.SaveLogic {
             
             CreateDirectoryFromFile($"{basePath}\\billy"); // lies
 
-            using (Stream fileStream =
-                new FileStream(
-                    Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{writer14.Format}"),
-                    FileMode.Create)) {
-                fileStream.SetLength(0);
-                writer14.Write(fileStream, model, textureTypes);
-            }
-            List<byte> lods = new List<byte>(new byte[] {0, 1, 0xFF});
-            Chunked mdl = new Chunked(OpenFile(model.GUID));
-            using (Stream fileStream =
-                new FileStream(
-                    Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}.{GUID.Type(model.GUID):X3}"),
-                    FileMode.Create)) {
-                fileStream.SetLength(0);
-                using (Stream cascStream = OpenFile(model.GUID)) {
-                    cascStream.CopyTo(fileStream);
-                }
-            }
-            HTLC cloth = mdl.FindNextChunk("HTLC").Value as HTLC;
-           
-            using (Stream fileStream =
-                new FileStream(
-                    Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{mdlWriter.Format}"),
-                    FileMode.Create)) {
-                fileStream.SetLength(0);
-                mdlWriter.Write(mdl, fileStream, lods, null,
-                    new object[] {true, $"{GUID.LongKey(model.GUID):X12}{writer14.Format}", name, null, true});
-            }
-            if (mdl.HasChunk<lksm>()) {
+            if (convertModels) {
                 using (Stream fileStream =
                     new FileStream(
-                        Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{refposeWriter.Format}"),
+                        Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{writer14.Format}"),
                         FileMode.Create)) {
                     fileStream.SetLength(0);
-                    refposeWriter.Write(mdl, fileStream, null, null, null);
+                    writer14.Write(fileStream, model, textureTypes);
                 }
-                if (cloth != null) {
-                    for (uint i = 0; i < cloth.Descriptors.Length; i++) {
-                        HTLC.ClothDesc desc = cloth.Descriptors[i];
-                        CreateDirectoryFromFile(Path.Combine(basePath, "Cloth\\jeff"));
-                        using (Stream fileStream =
-                            new FileStream(
-                                Path.Combine(basePath, $"Cloth\\{desc.Name}{refposeWriter.Format}"), FileMode.Create)) {
-                            fileStream.SetLength(0);
-                            refposeWriter.WriteCloth(mdl, fileStream, cloth, i);
+                List<byte> lods = new List<byte>(new byte[] {0, 1, 0xFF});
+                Chunked mdl = new Chunked(OpenFile(model.GUID));
+            
+                HTLC cloth = mdl.FindNextChunk("HTLC").Value as HTLC;
+           
+                using (Stream fileStream =
+                    new FileStream(
+                        Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{mdlWriter.Format}"),
+                        FileMode.Create)) {
+                    fileStream.SetLength(0);
+                    mdlWriter.Write(mdl, fileStream, lods, null,
+                        new object[] {true, $"{GUID.LongKey(model.GUID):X12}{writer14.Format}", name, null, true});
+                }
+                if (mdl.HasChunk<lksm>()) {
+                    using (Stream fileStream =
+                        new FileStream(
+                            Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{refposeWriter.Format}"),
+                            FileMode.Create)) {
+                        fileStream.SetLength(0);
+                        refposeWriter.Write(mdl, fileStream, null, null, null);
+                    }
+                    if (cloth != null) {
+                        for (uint i = 0; i < cloth.Descriptors.Length; i++) {
+                            HTLC.ClothDesc desc = cloth.Descriptors[i];
+                            CreateDirectoryFromFile(Path.Combine(basePath, "Cloth\\jeff"));
+                            using (Stream fileStream =
+                                new FileStream(
+                                    Path.Combine(basePath, $"Cloth\\{desc.Name}{refposeWriter.Format}"), FileMode.Create)) {
+                                fileStream.SetLength(0);
+                                refposeWriter.WriteCloth(mdl, fileStream, cloth, i);
+                            }
                         }
                     }
+                } else {
+                    if (model.Skeleton != null) Debugger.Log(0, "DataTool.SaveLogic.Model", "[DataTool.SaveLogic.Model]: lksm chunk doesn't exist but skeleton does");
                 }
             } else {
-                if (model.Skeleton != null) Debugger.Log(0, "DataTool.SaveLogic.Model", "[DataTool.SaveLogic.Model]: lksm chunk doesn't exist but skeleton does");
+                using (Stream fileStream =
+                    new FileStream(
+                        Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}.{GUID.Type(model.GUID):X3}"),
+                        FileMode.Create)) {
+                    fileStream.SetLength(0);
+                    using (Stream cascStream = OpenFile(model.GUID)) {
+                        cascStream.CopyTo(fileStream);
+                    }
+                }
             }
-
             // todo: SaveLogic.Animation
+
+            if (skipAnims) return;
             foreach (AnimationInfo modelAnimation in model.Animations) {
                 using (Stream animStream = OpenFile(modelAnimation.GUID)) {
                     if (animStream == null) {
                         continue;
                     }
-                
+                    
                     OWLib.Animation animation = new OWLib.Animation(animStream);
-                    string animOutput = Path.Combine(basePath, $"Animations\\{animation.Header.priority}\\{GUID.LongKey(modelAnimation.GUID):X12}{animWriter.Format}");
-                    CreateDirectoryFromFile(animOutput);
-                    using (Stream fileStream = new FileStream(animOutput, FileMode.Create)) {
-                        animWriter.Write(animation, fileStream, new object[] { });
-                    }
-                    string animOutput2 = Path.Combine(basePath, $"Animations\\{animation.Header.priority}\\{GUID.LongKey(modelAnimation.GUID):X12}.{GUID.Type(modelAnimation.GUID):X3}");
-                    CreateDirectoryFromFile(animOutput);
-                    using (Stream fileStream = new FileStream(animOutput2, FileMode.Create)) {
-                        animStream.CopyTo(fileStream);
+
+                    if (convertAnims) {
+                        string animOutput = Path.Combine(basePath,
+                            $"Animations\\{animation.Header.priority}\\{GUID.LongKey(modelAnimation.GUID):X12}{animWriter.Format}");
+                        CreateDirectoryFromFile(animOutput);
+                        using (Stream fileStream = new FileStream(animOutput, FileMode.Create)) {
+                            animWriter.Write(animation, fileStream, new object[] { });
+                        }
+                    } else {
+                        string animOutput2 = Path.Combine(basePath, $"Animations\\{animation.Header.priority}\\{GUID.LongKey(modelAnimation.GUID):X12}.{GUID.Type(modelAnimation.GUID):X3}");
+                        CreateDirectoryFromFile(animOutput2);
+                        using (Stream fileStream = new FileStream(animOutput2, FileMode.Create)) {
+                            animStream.CopyTo(fileStream);
+                        }
                     }
                 }
             }

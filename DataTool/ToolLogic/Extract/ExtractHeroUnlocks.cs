@@ -182,6 +182,7 @@ namespace DataTool.ToolLogic.Extract {
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = new Dictionary<string, Dictionary<string, ParsedArg>>();
             
             foreach (string opt in result) {
+                if (opt.StartsWith("--")) continue;  // ok so this is a flag
                 string[] split = opt.Split('|');
 
                 string hero = split[0].ToLowerInvariant();
@@ -336,7 +337,7 @@ namespace DataTool.ToolLogic.Extract {
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource2, "Portrait", true);
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource3, "unknown", true); // Same as Icon for now
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource4, "Avatar", true);
-                Texture.Save(null, Path.Combine(basePath, rootDir, heroName, "GUI"), heroTextures);
+                Texture.Save(flags, Path.Combine(basePath, rootDir, heroName, "GUI"), heroTextures);
             }
         }
     }

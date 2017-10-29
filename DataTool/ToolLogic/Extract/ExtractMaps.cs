@@ -59,9 +59,7 @@ namespace DataTool.ToolLogic.Extract {
                 if (map.SoundMasterResource != null) {
                     sounds = Sound.FindSounds(sounds, map.SoundMasterResource);
                 }
-                if (!flags.SkipAudio) {
-                    SaveLogic.Sound.Save(toolFlags, Path.Combine(mapPath, "Sounds"), sounds);
-                }
+                SaveLogic.Sound.Save(toolFlags, Path.Combine(mapPath, "Sounds"), sounds);
             }
         }
     }

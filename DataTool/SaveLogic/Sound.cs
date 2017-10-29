@@ -10,11 +10,11 @@ namespace DataTool.SaveLogic {
     public class Sound {
         public static void Save(ICLIFlags flags, string path, Dictionary<ulong, List<SoundInfo>> sounds) {
             bool convertWem = false;
-            bool convertBnk = false;
+            // bool convertBnk = false;
             if (flags is ExtractFlags extractFlags) {
-                convertWem = extractFlags.ConvertWem;
+                convertWem = extractFlags.ConvertSound && !extractFlags.Raw;
+                if (extractFlags.SkipSound) return;
                 // convertBnk = extractFlags.ConvertBnk;
-                convertBnk = false;
             }
 
             foreach (KeyValuePair<ulong,List<SoundInfo>> pair in sounds) {

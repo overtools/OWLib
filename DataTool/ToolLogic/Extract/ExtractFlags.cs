@@ -8,21 +8,33 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = true, Flag = "convert-textures", Help = "Convert .004 files to .dds", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertTextures;
         
-        [CLIFlag(Default = true, Flag = "convert-wem", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
-        public bool ConvertWem;
+        [CLIFlag(Default = true, Flag = "convert-sound", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool ConvertSound;
         
-        // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
-        // public bool ConvertBnk;
+        [CLIFlag(Default = true, Flag = "convert-models", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool ConvertModels;
         
-        [CLIFlag(Default = false, Flag = "skip-audio", Help = "Skip audio extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
-        public bool SkipAudio;
+        [CLIFlag(Default = true, Flag = "convert-animations", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool ConvertAnimations;
+        
         
         [CLIFlag(Default = false, Flag = "skip-textures", Help = "Skip texture extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SkipTextures;
         
-        // [CLIFlag(Flag = "out", Help = "Output JSON file")]
-        // [Alias(Alias = "o")]
-        // public string Output;
+        [CLIFlag(Default = false, Flag = "skip-sound", Help = "Skip audio extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool SkipSound;
+        
+        [CLIFlag(Default = false, Flag = "skip-models", Help = "Skip model extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool SkipModels;
+        
+        [CLIFlag(Default = false, Flag = "skip-animations", Help = "Skip animation extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool SkipAnimations;
+        
+        [CLIFlag(Default = false, Flag = "raw", Help = "Skip all conversion", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool Raw;
+        
+        // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        // public bool ConvertBnk;
 
         public override bool Validate() => true;
     }
