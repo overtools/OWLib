@@ -9,6 +9,7 @@ using STULib.Types;
 using STULib.Types.AnimationList.x020;
 using STULib.Types.AnimationList.x021;
 using STULib.Types.Generic;
+using STULib.Types.STUUnlock;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
@@ -212,6 +213,26 @@ namespace DataTool.FindLogic {
                     // if (listWeird != null) {
                     //     existingAnimations = FindAnimations(existingAnimations, listWeird.AnimationWrapper?.Animation, replacements);
                     // }
+                    break;
+                case 0xA5:
+                    Cosmetic cosmetic = GetInstance<Cosmetic>(animationGUID);
+                    if (cosmetic is Emote) {
+                        Emote cosmeticEmote = cosmetic as Emote;
+                        existingAnimations = FindAnimations(existingAnimations, models, cosmeticEmote.AnimationList, replacements);
+                    } else if (cosmetic is Pose) {
+                        Pose cosmeticPose = cosmetic as Pose;
+                        existingAnimations = FindAnimations(existingAnimations, models, cosmeticPose.PoseResource, replacements);
+                    } else if (cosmetic is HighlightIntro) {
+                        HighlightIntro cosmeticHighlightIntro = cosmetic as HighlightIntro;
+                        existingAnimations = FindAnimations(existingAnimations, models, cosmeticHighlightIntro.AnimationResource, replacements);
+                    }
+                    break;
+                case 0xBF:
+                    STUPose pose = GetInstance<STUPose>(animationGUID);
+                    existingAnimations = FindAnimations(existingAnimations, models, pose.Animation, replacements);
+                    foreach (STUPoseSub poseSub in new [] {pose.Sub1, pose.Sub2, pose.Sub3}) {
+                        existingAnimations = FindAnimations(existingAnimations, models, poseSub.Animation, replacements);
+                    }
                     break;
                 default:
                     Debugger.Log(0, "DataTool.FindLogic.Animation", $"[DataTool.FindLogic.Animation] Unhandled type: {GUID.Type(animationGUID):X3}\n");

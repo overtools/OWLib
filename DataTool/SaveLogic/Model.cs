@@ -14,8 +14,8 @@ using OWLib.Writer;
 using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic {
-        public class Model {
-            public class OWMatWriter14 : IDataWriter {
+    public class Model {
+        public class OWMatWriter14 : IDataWriter {
             public string Format => ".owmat";
             public char[] Identifier => new[] { 'W' };
             public string Name => "OWM Material Format (1.14+)";
@@ -62,8 +62,6 @@ namespace DataTool.SaveLogic {
                             }
                         }
                     }
-    
-                    
                 }
                 return true;
             }
@@ -156,33 +154,8 @@ namespace DataTool.SaveLogic {
                     }
                 }
             }
-            // todo: SaveLogic.Animation
-
-            if (skipAnims) return;
-            foreach (AnimationInfo modelAnimation in model.Animations) {
-                using (Stream animStream = OpenFile(modelAnimation.GUID)) {
-                    if (animStream == null) {
-                        continue;
-                    }
-                    
-                    OWLib.Animation animation = new OWLib.Animation(animStream);
-
-                    if (convertAnims) {
-                        string animOutput = Path.Combine(basePath,
-                            $"Animations\\{animation.Header.priority}\\{GUID.LongKey(modelAnimation.GUID):X12}{animWriter.Format}");
-                        CreateDirectoryFromFile(animOutput);
-                        using (Stream fileStream = new FileStream(animOutput, FileMode.Create)) {
-                            animWriter.Write(animation, fileStream, new object[] { });
-                        }
-                    } else {
-                        string animOutput2 = Path.Combine(basePath, $"Animations\\{animation.Header.priority}\\{GUID.LongKey(modelAnimation.GUID):X12}.{GUID.Type(modelAnimation.GUID):X3}");
-                        CreateDirectoryFromFile(animOutput2);
-                        using (Stream fileStream = new FileStream(animOutput2, FileMode.Create)) {
-                            animStream.CopyTo(fileStream);
-                        }
-                    }
-                }
-            }
+            
+            Animation.Save(flags, Path.Combine(basePath, "Animations"), model.Animations);
         }
     }
 }

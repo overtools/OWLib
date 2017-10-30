@@ -3,7 +3,7 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.STUUnlock {
     [STU(0x8E77E8A1)]
-    public class HeroicIntro : Cosmetic {
+    public class HighlightIntro : Cosmetic {
         [STUField(0x3F5B86A4)]
         public STUGUID AnimationResource;
 

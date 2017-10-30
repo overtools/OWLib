@@ -69,7 +69,9 @@
     <Compile Include="Helper\STUHelper.cs" />
     <Compile Include="ITool.cs" />
     <Compile Include="JSON\GUIDConverter.cs" />
+    <Compile Include="SaveLogic\Animation.cs" />
     <Compile Include="SaveLogic\Model.cs" />
+    <Compile Include="SaveLogic\Unlock\AnimationItem.cs" />
     <Compile Include="SaveLogic\Unlock\Portrait.cs" />
     <Compile Include="SaveLogic\Unlock\Skin.cs" />
     <Compile Include="SaveLogic\Unlock\SprayAndImage.cs" />

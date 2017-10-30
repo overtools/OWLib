@@ -406,6 +406,8 @@
     <Compile Include="Types\STUDataOverride.cs" />
     <Compile Include="Types\STUOverrideBase.cs" />
     <Compile Include="Types\STUOverrideFileChange.cs" />
+    <Compile Include="Types\STUPose.cs" />
+    <Compile Include="Types\STUPoseSub.cs" />
     <Compile Include="Types\STUSkinOverride.cs" />
     <Compile Include="Types\STUSound07A.cs" />
     <Compile Include="Types\STUSound07ASub.cs" />
@@ -441,7 +443,7 @@
     <Compile Include="Types\STUUnlock\Portrait.cs" />
     <Compile Include="Types\STUUnlock\Spray.cs" />
     <Compile Include="Types\STUUnlock\VoiceLine.cs" />
-    <Compile Include="Types\STUUnlock\HeroicIntro.cs" />
+    <Compile Include="Types\STUUnlock\HighlightIntro.cs" />
     <Compile Include="Types\STUUnlock\Weapon.cs" />
     <Compile Include="Types\STUUnlock\STU_C294A43B.cs" />
     <Compile Include="Types\STUUnlock\Pose.cs" />

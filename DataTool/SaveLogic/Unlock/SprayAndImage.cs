@@ -40,7 +40,7 @@ namespace DataTool.SaveLogic.Unlock {
             foreach (var groupPair in textures) {
                 if (groupPair.Value?.Count == 0) continue;
                 var output = Path.Combine(basePath, containerName, heroName ?? "", groupPair.Key, folderName);
-                Texture.Save(null, output, groupPair.Value);
+                Texture.Save(flags, output, groupPair.Value);
             }
         }
 
@@ -69,7 +69,7 @@ namespace DataTool.SaveLogic.Unlock {
             textures = FindLogic.Texture.FindTextures(textures, decal.DecalResource, name, true);
             
             string output = Path.Combine(basePath, containerName, heroName ?? "", type, folderName);
-            Texture.Save(null, output, textures);
+            Texture.Save(flags, output, textures);
         }
         
     }

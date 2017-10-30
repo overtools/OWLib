@@ -171,7 +171,9 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public void SaveUnlocksForHeroes(ICLIFlags flags, List<STUHero> heroes, string basePath) {
-            List<ArgType> types = new List<ArgType> {new CosmeticType("skin"), new CosmeticType("icon"), new CosmeticType("spray")};
+            List<ArgType> types = new List<ArgType> {new CosmeticType("skin"), new CosmeticType("icon"), 
+                new CosmeticType("spray"), new CosmeticType("victorypose"), new CosmeticType("highlightintro"), 
+                new CosmeticType("emote")};
             if (flags.Positionals.Length < 4) {
                 Help(types);
                 return;
@@ -285,14 +287,15 @@ namespace DataTool.ToolLogic.Extract {
                 foreach (ItemInfo itemInfo in achievementUnlocks) {
                     Dictionary<string, string> tags = new Dictionary<string, string> {{"event", "base"}, {"rarity", itemInfo.Rarity}};
                     if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
-                        SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, "Achievements", null, itemInfo);
+                        SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, "Achievements", flags, itemInfo);
                     }
                     if (itemInfo.Type == "PlayerIcon" && config.ContainsKey("icon") && config["icon"].ShouldDo(itemInfo.Name, tags)) {
-                        SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, "Achievements", null, itemInfo);
+                        SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, "Achievements", flags, itemInfo);
                     }
                     if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
                         SaveLogic.Unlock.Skin.Save(flags, basePath, hero, $"Achievement\\{itemInfo.Rarity}", itemInfo.Unlock as Skin, weaponSkins, abilities, false);
                     }
+                    // todo: add emote,highlightintro,victorypose whenever used
                 }
 
                 foreach (var defaultUnlocks in unlocks.Unlocks)  {
@@ -301,14 +304,24 @@ namespace DataTool.ToolLogic.Extract {
                     foreach (ItemInfo itemInfo in dUnlocks) {
                         Dictionary<string, string> tags = new Dictionary<string, string> {{"event", "base"}, {"rarity", itemInfo.Rarity}};
                         if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, "Standard", null, itemInfo);
+                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, "Standard", flags, itemInfo);
                         }
                         if (itemInfo.Type == "PlayerIcon" && config.ContainsKey("icon") && config["icon"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, "Standard", null, itemInfo);
+                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, "Standard", flags, itemInfo);
                         }
                         if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
                             SaveLogic.Unlock.Skin.Save(flags, basePath, hero, itemInfo.Rarity, itemInfo.Unlock as Skin, weaponSkins, abilities, false);
                         }
+                        if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
+                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroName, rootDir, "Standard", flags, itemInfo);
+                        }
+                        if (itemInfo.Type == "HighlightIntro" && config.ContainsKey("highlightintro") && config["highlightintro"].ShouldDo(itemInfo.Name, tags)) {
+                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroName, rootDir, "Standard", flags, itemInfo);
+                        }
+                        if (itemInfo.Type == "Emote" && config.ContainsKey("emote") && config["emote"].ShouldDo(itemInfo.Name, tags)) {
+                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroName, rootDir, "Standard", flags, itemInfo);
+                        }
+                        
                     }
                 }
 
@@ -321,13 +334,22 @@ namespace DataTool.ToolLogic.Extract {
                     foreach (ItemInfo itemInfo in eUnlocks) {
                         Dictionary<string, string> tags = new Dictionary<string, string> {{"event", eventUnlocks.Event.ToString().ToLowerInvariant()}, {"rarity", itemInfo.Rarity.ToLowerInvariant()}};
                         if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, eventKey, null, itemInfo);
+                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, eventKey, flags, itemInfo);
                         }
                         if (itemInfo.Type == "PlayerIcon" && config.ContainsKey("icon") && config["icon"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, eventKey, null, itemInfo);
+                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroName, rootDir, eventKey, flags, itemInfo);
                         }
                         if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
                             SaveLogic.Unlock.Skin.Save(flags, basePath, hero, itemInfo.Rarity, itemInfo.Unlock as Skin, weaponSkins, abilities, false);
+                        }
+                        if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
+                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroName, rootDir, "Standard", flags, itemInfo);
+                        }
+                        if (itemInfo.Type == "HighlightIntro" && config.ContainsKey("highlightintro") && config["highlightintro"].ShouldDo(itemInfo.Name, tags)) {
+                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroName, rootDir, eventKey, flags, itemInfo);
+                        }
+                        if (itemInfo.Type == "Emote" && config.ContainsKey("emote") && config["emote"].ShouldDo(itemInfo.Name, tags)) {
+                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroName, rootDir, eventKey, flags, itemInfo);
                         }
                     }
                 }

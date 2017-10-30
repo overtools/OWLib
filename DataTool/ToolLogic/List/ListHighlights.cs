@@ -147,7 +147,7 @@ namespace DataTool.ToolLogic.List {
             outputJson.Hero = GetString(hero?.Name);
             outputJson.Player = infoNew.PlayerName;
                 
-            HeroicIntro intro = GetInstance<HeroicIntro>(infoNew.HighlightIntro);
+            HighlightIntro intro = GetInstance<HighlightIntro>(infoNew.HighlightIntro);
             outputJson.HighlightIntro = GetString(intro.CosmeticName);
             
             // todo: outputJson.WeaponSkin
@@ -185,7 +185,7 @@ namespace DataTool.ToolLogic.List {
                 VoiceLine voiceLine = GetInstance<VoiceLine>(GetCosmeticKey(voiceLineId));
                 outputHero.VoiceLines.Add(GetString(voiceLine.CosmeticName));
             }
-            HeroicIntro intro = GetInstance<HeroicIntro>(GetCosmeticKey(heroInfo.HighlightIntro));
+            HighlightIntro intro = GetInstance<HighlightIntro>(GetCosmeticKey(heroInfo.HighlightIntro));
             outputHero.HighlightIntro = GetString(intro.CosmeticName);
                 
             // Skin skin = GetInstance<Skin>(GetSkinKey(heroInfo.SkinId));  // todo: this is by skin override

@@ -74,7 +74,7 @@ namespace CRCReverse {
                 // if (i != 0xffffffff) return;  // old hashes test
                 counter++;
                 
-                if (counter % 100000000 == 0) Console.Out.WriteLine($"(I'm at {counter}/{end})");
+                if (counter % 100000000 == 0) Console.Error.WriteLine($"(I'm at {counter}/{end})");
                 
                 Dictionary<uint, int> goodness = new Dictionary<uint, int>();  // end_xor: count
                 
