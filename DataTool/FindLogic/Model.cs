@@ -9,7 +9,7 @@ using STULib;
 using STULib.Types;
 using STULib.Types.Generic;
 using STULib.Types.Statescript.Components;
-using STULib.Types.Statescript.DataStores;
+using STULib.Types.Statescript.ConfigVar;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
@@ -274,7 +274,7 @@ namespace DataTool.FindLogic {
                     foreach (STUStatescriptDataStoreMaterial statescriptDataStoreMaterial in stuTemp.Instances.OfType<STUStatescriptDataStoreMaterial>()) {
                         existingModels = FindModels(existingModels, statescriptDataStoreMaterial.Material, replacements);
                     }
-                    foreach (STUStatescriptDataStoreEffect statescriptDataStoreEffect in stuTemp.Instances.OfType<STUStatescriptDataStoreEffect>()) {
+                    foreach (STUConfigVarEffect statescriptDataStoreEffect in stuTemp.Instances.OfType<STUConfigVarEffect>()) {
                         existingModels = FindModels(existingModels, statescriptDataStoreEffect.Effect, replacements);
                     }
                     break;

@@ -332,5 +332,14 @@ namespace STULib.Types.Generic {
                 return "(STUDateAndTime doesn't work properly yet)";
             }
         }
+
+        public class STUUUID : ISTUCustomSerializable {
+            public Guid Value;
+            
+            public object Deserialize(Impl.Version2 stu, Version2.STUInstanceField field, BinaryReader reader, BinaryReader metadataReader) {
+                Value = new Guid(reader.ReadBytes(16));
+                return this;
+            }
+        }
     }
 }

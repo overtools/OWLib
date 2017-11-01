@@ -6,9 +6,9 @@ namespace STULib.Types.AnimationList.x020 {
     [STU(0xCEAA4897)]
     public class STU_CEAA4897 : Common.STUInstance {
         [STUField(0x979E8BDE)]
-        public STU_6E63F8E1[] m_979E8BDE;
+        public STUGraphLink[] m_979E8BDE;
 
-        [STUField(0x3868F518)]
-        public STU_25C4F930 m_3868F518;
+        [STUField(0x3868F518, "m_parentNode")]
+        public STU_25C4F930 ParentNode;
     }
 }

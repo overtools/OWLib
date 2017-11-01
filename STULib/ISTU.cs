@@ -104,9 +104,9 @@ namespace STULib {
                 STUEnumAttribute attribute = type.GetCustomAttribute<STUEnumAttribute>();
                 if (attribute == null) continue;
                 if (attribute.Checksum == 0) continue;
-                if (_EnumTypes.ContainsKey(attribute.Checksum)) {
-                    throw new Exception($"Collision of STUEnum checksums ({attribute.Checksum:X})");
-                }
+                // if (_EnumTypes.ContainsKey(attribute.Checksum)) {
+                //     throw new Exception($"Collision of STUEnum checksums ({attribute.Checksum:X})");
+                // }
                 _EnumTypes[attribute.Checksum] = type;
             }
         }

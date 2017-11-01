@@ -585,7 +585,7 @@ namespace STUHashTool {
 
                 todoInstances = GetClassTodos(todoInstances);
                 
-                const string stuNamespace = "STULib.Types.temp";
+                const string stuNamespace = "STULib.Types.posthash";
                 const string enumNamespace = stuNamespace+".Enums";
                 
                 foreach (string t in todoInstances) {
@@ -664,6 +664,8 @@ namespace STUHashTool {
                     // if (file != 166633186212711045) continue;  // season 1
                     // if (file != 396316767208603669) continue; // sound 01B
                     // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000199.068") continue;
+                    // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000BF7.01B") continue;
+                    if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "0000000001CA.01B") continue;
                     using (Stream fileStream = Util.OpenFile(records[file], handler)) {
                         ISTU fileSTU = ISTU.NewInstance(fileStream, uint.MaxValue);
                         Console.WriteLine($"Loaded: {file:X12} {GUID.LongKey(file):X12}.{GUID.Type(file):X3}", Color.LightGray);
@@ -847,6 +849,8 @@ namespace STUHashTool {
                         return "STULib.Types.Generic.Common.STUGUID";
                     case "teStructuredDataDateAndTime":
                         return "STULib.Types.Generic.Common.STUDateAndTime";
+                    case "teUUID":
+                        return "STULib.Types.Generic.Common.STUUUID";
                 }
             }
             switch (field.Type) {
@@ -895,6 +899,8 @@ namespace STUHashTool {
                     return "STUGUID";
                 case "teStructuredDataDateAndTime":
                     return "STUDateAndTime";
+                case "teUUID":
+                    return "STUUUID";
             }
         }
 
@@ -977,10 +983,10 @@ namespace STUHashTool {
                         guidComment = ISTU.InstanceTypes[field.TypeInstanceChecksum].ProperName();
                     guidComment = $"  // {guidComment}";
                 }
-                if (field.IsInline || field.IsEmbed || field.IsEmbedArray || field.IsInlineArray) {  //  
+                if (field.IsInline || field.IsEmbed || field.IsEmbedArray || field.IsInlineArray) {
                     string instanceType = ISTU.InstanceTypes.ContainsKey(field.TypeInstanceChecksum) ? 
                         ISTU.InstanceTypes[field.TypeInstanceChecksum].ProperName() : $"STU_{field.TypeInstanceChecksum:X8}";
-                    if (InstanceNames.ContainsKey(field.TypeInstanceChecksum)) {
+                    if (InstanceNames.ContainsKey(field.TypeInstanceChecksum) && !ISTU.InstanceTypes.ContainsKey(field.TypeInstanceChecksum)) {
                         instanceType = InstanceNames[field.TypeInstanceChecksum];
                     }
                     sb.AppendLine($"{fieldIndentString}{fieldDefinition}");

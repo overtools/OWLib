@@ -112,8 +112,8 @@ namespace DataTool.FindLogic {
                     if (listBB7Asub?.m_AF632ACD != null) {
                         existingAnimations = FindAnimations(existingAnimations, models, listBB7Asub.m_AF632ACD, replacements);
                     }
-                    if (listBB7Asub?.m_3868F518 != null) {
-                        if (listBB7Asub?.m_3868F518.GetType() == typeof(STU_BB7A7240)) {
+                    if (listBB7Asub?.ParentNode != null) {
+                        if (listBB7Asub?.ParentNode.GetType() == typeof(STU_BB7A7240)) {
                             
                         }
                     }
