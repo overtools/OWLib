@@ -31,6 +31,7 @@ namespace DataTool.SaveLogic {
                             animWriter.Write(animation, fileStream, new object[] { });
                         }
                     } else {
+                        animStream.Position = 0;
                         string animOutput2 = Path.Combine(path, $"{animation.Header.priority}\\{GUID.LongKey(modelAnimation.GUID):X12}.{GUID.Type(modelAnimation.GUID):X3}");
                         CreateDirectoryFromFile(animOutput2);
                         using (Stream fileStream = new FileStream(animOutput2, FileMode.Create)) {
