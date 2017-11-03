@@ -6,6 +6,7 @@ using DataTool.JSON;
 using Newtonsoft.Json;
 using OWLib;
 using STULib.Types;
+using STULib.Types.Gamemodes;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
@@ -18,14 +19,24 @@ namespace DataTool.ToolLogic.List {
             throw new NotImplementedException();
         }
 
+        public class GamemodeInfo {
+            public string Name;
+
+            [JsonConverter(typeof(GUIDConverter))]
+            public ulong GUID;
+        }
+
         [JsonObject(MemberSerialization.OptOut)]
         public class MapInfo {
             public string Name;
             public string NameB;
             public string Description;
             public string DescriptionB;
+            public string Subline;
             public string StateA;
             public string StateB;
+
+            public List<GamemodeInfo> Gamemodes;
 
             [JsonConverter(typeof(GUIDConverter))]
             public ulong MetadataGUID;
@@ -37,16 +48,18 @@ namespace DataTool.ToolLogic.List {
             public ulong DataGUID2;
 
             public MapInfo(ulong dataGUID, string name, string nameB, string description, string descriptionB,
-                string stateA, string stateB, ulong mapData1, ulong mapData2) {
+                string subline, string stateA, string stateB, ulong mapData1, ulong mapData2, List<GamemodeInfo> gamemodes) {
                 MetadataGUID = dataGUID;
                 Name = name;
                 NameB = nameB;
                 Description = description;
                 DescriptionB = descriptionB;
+                Subline = subline;
                 StateA = stateA;
                 StateB = stateB;
                 DataGUID1 = mapData1;
                 DataGUID2 = mapData2;
+                Gamemodes = gamemodes;
             }
         }
 
@@ -59,20 +72,32 @@ namespace DataTool.ToolLogic.List {
                     return;
                 }
 
-            IndentHelper indentLevel = new IndentHelper();
+            var iD = new IndentHelper();
+            var i = 0;
             foreach (KeyValuePair<string, MapInfo> map in maps) {
-                string name = map.Value.NameB ?? map.Value.Name;
-                if (name == null) continue;
-                Log(map.Value.NameB ?? map.Value.Name);
 
-                if (map.Value.Description != null) Log($"{indentLevel + 1}Description: {map.Value.Description}");
-                if (map.Value.DescriptionB != null && map.Value.DescriptionB != map.Value.Description)
-                    Log($"{indentLevel + 1}DescriptionB: {map.Value.DescriptionB}");
+                Log($"[{i}]");
+                i++;
 
-                if (map.Value.StateA != null || map.Value.StateB != null) {
-                    Log($"{indentLevel + 1}States:");
-                    Log($"{indentLevel + 2}{map.Value.StateA}");
-                    Log($"{indentLevel + 2}{map.Value.StateB}");
+                var data = map.Value;
+
+                Log($"{iD+1}Name: {data.Name ?? map.Key}");
+
+                if (!string.IsNullOrEmpty(data.NameB)) Log($"{iD+1}NameB: {data.NameB}");
+
+                if (!string.IsNullOrEmpty(data.Description)) Log($"{iD+1}Desc: {data.Description}");
+                if (!string.IsNullOrEmpty(data.DescriptionB)) Log($"{iD+1}DescB: {data.DescriptionB}");
+                if (!string.IsNullOrEmpty(data.Subline)) Log($"{iD+1}Subline: {data.Subline}");
+
+                if (data.StateA != null || data.StateB != null) {
+                    Log($"{iD+1}States:");
+                    Log($"{iD+2}{data.StateA}");
+                    Log($"{iD+2}{data.StateB}");
+                }
+
+                if (data.Gamemodes != null) {
+                    Log($"{iD+1}Gamemodes:");
+                    data.Gamemodes.ForEach(m => Log($"{iD+2}{m.Name}"));
                 }
 
                 Log();
@@ -83,31 +108,55 @@ namespace DataTool.ToolLogic.List {
             Dictionary<string, MapInfo> @return = new Dictionary<string, MapInfo>();
 
             foreach (ulong key in TrackedFiles[0x9F]) {
-                STUMap map = GetInstance<STUMap>(key);
+                var map = GetInstance<STUMap>(key);
                 if (map == null) continue;
 
-                string name = GetString(map.Name);
-                string nameB = GetString(map.NameB);
+                var nameA = GetString(map.Name);
+                var nameB = GetString(map.NameB);
+
+                var descA = GetString(map.DescriptionA);
+                var descB = GetString(map.DescriptionB);
+                var subline = GetString(map.SublineString);
+
+                var stateA = GetString(map.StateStringA);
+                var stateB = GetString(map.StateStringB);
+
+                List<GamemodeInfo> gamemodes = null;
+                if (map.Gamemodes != null) {
+                    gamemodes = new List<GamemodeInfo>();
+                    foreach (var guid in map.Gamemodes) {
+                        var gamemode = GetInstance<STUGamemode>(guid);
+                        if (gamemode == null) {
+                            continue;
+                        }
+                        
+                        gamemodes.Add(new GamemodeInfo {
+                            Name = GetString(gamemode.Name),
+                            GUID = guid
+                        });
+                    }
+
+                }
+
+                if (!string.IsNullOrEmpty(nameA) && !string.IsNullOrEmpty(nameB) && nameB.Equals(nameA)) {
+                    nameB = null;
+                }
+
+                if (!string.IsNullOrEmpty(descA) && !string.IsNullOrEmpty(descB) && descB.Equals(descA)) {
+                    descB = null;
+                }
 
                 string uniqueName;
-                if (name == null) {
+                if (nameA == null) {
                     if (ignoreUnknown) continue;
                     uniqueName = $"Unknown{GUID.Index(key):X}";
                 } else {
-                    uniqueName = name + $":{GUID.Index(key):X}";
+                    uniqueName = nameA + $":{GUID.Index(key):X}";
                 }
 
-                string description = GetString(map.DescriptionA);
-                string description2 = GetString(map.DescriptionB);
-
-                string stateA = GetString(map.StateStringA);
-                string stateB = GetString(map.StateStringB);
-                // string subline = GetString(map.SublineString);
-
-                @return[uniqueName] = new MapInfo(key, name, nameB, description, description2, stateA, stateB,
-                    map.MapDataResource1, map.MapDataResource2);
+                @return[uniqueName] = new MapInfo(key, nameA, nameB, descA, descB, subline, stateA, stateB,
+                    map.MapDataResource1, map.MapDataResource2, gamemodes);
             }
-
 
             return @return;
         }
