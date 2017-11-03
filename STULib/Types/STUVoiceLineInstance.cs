@@ -2,8 +2,8 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0x00C21225)]
-    public class STUSoundHolder : STUInstance {  // todo: these names are so bad
+    [STU(0x00C21225, "STUVoiceLineInstance")]
+    public class STUVoiceLineInstance : STUInstance {  // todo: these names are so bad
         [STUField(0xD0C28030)]
         public STUGUID m_D0C28030;
 

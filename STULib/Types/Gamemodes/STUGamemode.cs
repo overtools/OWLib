@@ -13,15 +13,15 @@ namespace STULib.Types.Gamemodes {
         public STUGUID StateScriptA;  // STU_6BE90C5C
 
         [STUField(0x3CE93B76)]
-        public STU_9783E116[] m_3CE93B76;
+        public STUGamemodeVarValuePair[] m_3CE93B76;
 
         [STUField(0xF88BA3B9)]
         public STUGUID StateScriptB;  // STU_6BE90C5C
 
         [STUField(0xAD4BF17F)]
-        public STU_9783E116[] m_AD4BF17F;
+        public STUGamemodeVarValuePair[] m_AD4BF17F;
 
-        [STUField(0x5DB91CE2)]
+        [STUField(0x5DB91CE2, "m_displayName")]
         public STUGUID Name;
 
         [STUField(0x6EB38130)]
@@ -34,7 +34,7 @@ namespace STULib.Types.Gamemodes {
         public STUGamemodeTeam[] Teams;
 
         [STUField(0xDA642982)]
-        public STUGamemodeHeroOverride[] HeroOverrides;
+        public STUGamemodeLoadoutOverride[] HeroOverrides;
 
         [STUField(0xA8957901)]
         public STUGUID Virtual01C;  // STU_ACCDE63F

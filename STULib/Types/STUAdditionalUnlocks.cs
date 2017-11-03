@@ -2,9 +2,9 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0x5C499B8E)]
-    public class STUGlobInvLevelUnlocks : STUInstance {
-        [STUField(0xDB803F2F)]
+    [STU(0x5C499B8E, "STUAdditionalUnlocks")]
+    public class STUAdditionalUnlocks : STUInstance {
+        [STUField(0xDB803F2F, "m_unlocks")]
         public STUGUID[] Unlocks;  // STULib.Types.STUUnlock.Cosmetic
 
         [STUField(0x2C01908B, "m_level")]

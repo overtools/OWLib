@@ -633,8 +633,12 @@ namespace STUHashTool {
                     if (!Directory.Exists($"{outputFolder}{Path.DirectorySeparatorChar}Enums{Path.DirectorySeparatorChar}")) {
                         Directory.CreateDirectory($"{outputFolder}{Path.DirectorySeparatorChar}Enums{Path.DirectorySeparatorChar}");
                     }
+                    string name = $"STUEnum_{todoEnum:X8}";
+                    if (EnumNames.ContainsKey(todoEnum)) {
+                        name = EnumNames[todoEnum];
+                    }
                     using (Stream stream =
-                        File.OpenWrite($"{outputFolder}{Path.DirectorySeparatorChar}Enums{Path.DirectorySeparatorChar}STUEnum_{todoEnum:X8}.cs")) {
+                        File.OpenWrite($"{outputFolder}{Path.DirectorySeparatorChar}Enums{Path.DirectorySeparatorChar}{name}.cs")) {
                         stream.SetLength(0);
                         using (TextWriter writer = new StreamWriter(stream)) {
                             writer.WriteLine(@enum);
@@ -665,7 +669,7 @@ namespace STUHashTool {
                     // if (file != 396316767208603669) continue; // sound 01B
                     // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000199.068") continue;
                     // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000BF7.01B") continue;
-                    if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "0000000001CA.01B") continue;
+                    // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "00000000012E.01B") continue;
                     using (Stream fileStream = Util.OpenFile(records[file], handler)) {
                         ISTU fileSTU = ISTU.NewInstance(fileStream, uint.MaxValue);
                         Console.WriteLine($"Loaded: {file:X12} {GUID.LongKey(file):X12}.{GUID.Type(file):X3}", Color.LightGray);

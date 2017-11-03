@@ -275,9 +275,9 @@ namespace DataTool.ToolLogic.Extract {
                 if (unlocks?.Unlocks == null)
                     continue;
 
-                List<STUAbilityInfo> abilities = new List<STUAbilityInfo>();
+                List<STULoadout> abilities = new List<STULoadout>();
                 foreach (Common.STUGUID ability in hero.Abilities) {
-                    STUAbilityInfo abilityInfo = GetInstance<STUAbilityInfo>(ability);
+                    STULoadout abilityInfo = GetInstance<STULoadout>(ability);
                     if (abilityInfo != null) abilities.Add(abilityInfo);
                 }
                 
@@ -326,10 +326,10 @@ namespace DataTool.ToolLogic.Extract {
                 }
 
                 foreach (var eventUnlocks in unlocks.LootboxUnlocks) {
-                    if (eventUnlocks?.Data?.Unlocks == null) continue;
+                    if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
 
                     var eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event];
-                    var eUnlocks = eventUnlocks.Data.Unlocks.Select(it => GatherUnlock(it)).ToList();
+                    var eUnlocks = eventUnlocks.Unlocks.Unlocks.Select(it => GatherUnlock(it)).ToList();
 
                     foreach (ItemInfo itemInfo in eUnlocks) {
                         Dictionary<string, string> tags = new Dictionary<string, string> {{"event", eventUnlocks.Event.ToString().ToLowerInvariant()}, {"rarity", itemInfo.Rarity.ToLowerInvariant()}};

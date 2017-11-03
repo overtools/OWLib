@@ -256,7 +256,7 @@
     <Compile Include="Types\AnimationList\x021\STU_F3942997.cs" />
     <Compile Include="Types\AnimationList\x021\STU_F6279B0F.cs" />
     <Compile Include="Types\AnimationList\x021\STU_F7E4CDAC.cs" />
-    <Compile Include="Types\Enums\STUEnumAbilityType.cs" />
+    <Compile Include="Types\Enums\LoadoutCategory.cs" />
     <Compile Include="Types\Enums\STUEnumAchievementGroup.cs" />
     <Compile Include="Types\Enums\STUEnumEventID.cs" />
     <Compile Include="Types\Enums\STUEnumPortraitTier.cs" />
@@ -389,14 +389,15 @@
     <Compile Include="Types\Gamemodes\STUGamemode.cs" />
     <Compile Include="Types\Gamemodes\STUCosmeticCollection.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeHeroCollection.cs" />
-    <Compile Include="Types\Gamemodes\STUGamemodeHeroOverride.cs" />
+    <Compile Include="Types\Gamemodes\STUGamemodeLoadoutOverride.cs" />
     <Compile Include="Types\Gamemodes\STUGamemodeTeam.cs" />
     <Compile Include="Types\STUGlobalInventoryMaster.cs" />
-    <Compile Include="Types\STUGlobInvCreditUnlocks.cs" />
-    <Compile Include="Types\STUGlobInvEventCreditUnlocks.cs" />
-    <Compile Include="Types\STUGlobInvLevelUnlocks.cs" />
-    <Compile Include="Types\STUGlobInvLootbox.cs" />
-    <Compile Include="Types\STUGlobInvUnknownLootbox.cs" />
+    <Compile Include="Types\STULoadout.cs" />
+    <Compile Include="Types\STULootBoxCurrencyRarityUnlock.cs" />
+    <Compile Include="Types\STULootBoxCurrencyUnlocks.cs" />
+    <Compile Include="Types\STUAdditionalUnlocks.cs" />
+    <Compile Include="Types\STULootBoxCelebrationOverride.cs" />
+    <Compile Include="Types\STURulesetWinReward.cs" />
     <Compile Include="Types\STULanguageData.cs" />
     <Compile Include="Types\STULanguageInfo.cs" />
     <Compile Include="Types\STULanguageMonths.cs" />
@@ -418,7 +419,6 @@
     <Compile Include="Types\Generic\Common.cs" />
     <Compile Include="Types\Generic\Version2.cs" />
     <Compile Include="Types\Generic\Version1.cs" />
-    <Compile Include="Types\STUAbilityInfo.cs" />
     <Compile Include="Types\STUAchievement.cs" />
     <Compile Include="Types\STUDescription.cs" />
     <Compile Include="Types\STUHero.cs" />
@@ -450,7 +450,7 @@
     <Compile Include="Types\STUUnlock\Skin.cs" />
     <Compile Include="Types\STUHeroVoiceEntry.cs" />
     <Compile Include="Types\STUHeroVoice.cs" />
-    <Compile Include="Types\STUSoundHolder.cs" />
+    <Compile Include="Types\STUVoiceLineInstance.cs" />
     <Compile Include="Types\STUSoundDataContainer.cs" />
     <Compile Include="Types\STUSoundMaster.cs" />
     <Compile Include="Types\STUSoundWrapper.cs" />
@@ -463,8 +463,8 @@
     <Compile Include="Types\Gamemodes\Unknown\STU_22BF1D21.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_3ED2A372.cs" />
     <Compile Include="Types\Gamemodes\Unknown\STU_43CA1D94.cs" />
-    <Compile Include="Types\Gamemodes\STUBrawlHeroOverride.cs" />
-    <Compile Include="Types\Gamemodes\Unknown\STU_9783E116.cs" />
+    <Compile Include="Types\Gamemodes\STUGamemodeBodyVars.cs" />
+    <Compile Include="Types\Gamemodes\Unknown\STUGameModeVarValuePair.cs" />
     <Compile Include="Types\STUWeaponOverride.cs" />
   </ItemGroup>
   <ItemGroup>

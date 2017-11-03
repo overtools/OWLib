@@ -570,6 +570,7 @@ namespace STULib.Impl {
                     }
                     foreach (KeyValuePair<KeyValuePair<object, FieldInfo>, int> request in EmbedRequests) {
                         if (request.Value >= instances.Count) continue;
+                        if (!instances.ContainsKey(request.Value)) continue;
                         if (instances[request.Value] == null) continue;
                         instances[request.Value].Usage = InstanceUsage.Embed;
                         request.Key.Value.SetValue(request.Key.Key, instances[request.Value]);

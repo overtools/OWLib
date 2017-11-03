@@ -3,19 +3,19 @@ using STULib.Types.Gamemodes.Unknown;
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.Gamemodes {
-    [STU(0xD797394C)]
+    [STU(0xD797394C, "STUGamemodeTeam")]
     public class STUGamemodeTeam : STUInstance {
         [STUField(0xA2781AA4)]
         public STUGUID StateScriptA;  // STU_6BE90C5C
 
         [STUField(0x6F71E9AA)]
-        public STU_9783E116[] m_6F71E9AA;
+        public STUGamemodeVarValuePair[] m_6F71E9AA;
 
         [STUField(0x76E8C82A)]
         public STUGUID StateScriptB;  // STU_6BE90C5C
 
         [STUField(0xEA2B516F)]
-        public STUBrawlHeroOverride[] m_EA2B516F;
+        public STUGamemodeBodyVars[] m_EA2B516F;
 
         [STUField(0x59C86C8D)]
         public STUCosmeticCollection AllowedHeroes;

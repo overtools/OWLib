@@ -2,12 +2,12 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.Gamemodes {
-    [STU(0x456C3C15)]
-    public class STUGamemodeHeroOverride : STUInstance {
-        [STUField(0x37AB13D3)]
+    [STU(0x456C3C15, "STUGameModeLoadoutOverride")]
+    public class STUGamemodeLoadoutOverride : STUInstance {
+        [STUField(0x37AB13D3, "m_hero")]
         public STUGUID Hero;  // STULib.Types.STUHero
 
-        [STUField(0x7B95AB93)]
+        [STUField(0x7B95AB93, "m_loadouts")]
         public STUGUID[] Abilities;  // STULib.Types.STUAbilityInfo
     }
 }

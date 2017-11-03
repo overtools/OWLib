@@ -52,7 +52,7 @@ namespace DataTool.ToolLogic.List {
                 @return["Standard"] = new HashSet<ItemInfo>();
 
                 if (invMaster.LevelUnlocks != null) {
-                    foreach (STUGlobInvLevelUnlocks levelUnlocks in invMaster.LevelUnlocks) {
+                    foreach (STUAdditionalUnlocks levelUnlocks in invMaster.LevelUnlocks) {
                         if (levelUnlocks?.Unlocks == null) continue;
 
                         foreach (ItemInfo info in GatherUnlocks(levelUnlocks.Unlocks.Select(it => (ulong)it))) {
@@ -62,15 +62,15 @@ namespace DataTool.ToolLogic.List {
                 }
 
                 if (invMaster.EventGeneralUnlocks != null) {
-                    foreach (STUHeroUnlocks.EventUnlockInfo eventUnlocks in invMaster.EventGeneralUnlocks) {
-                        if (eventUnlocks?.Data?.Unlocks == null) continue;
+                    foreach (STUHeroUnlocks.STULootBoxUnlocks eventUnlocks in invMaster.EventGeneralUnlocks) {
+                        if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
 
                         string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";
 
                         if (!@return.ContainsKey(eventKey))
                             @return[eventKey] = new HashSet<ItemInfo>();
 
-                        foreach (ItemInfo info in GatherUnlocks(eventUnlocks.Data.Unlocks.Select(it => (ulong)it))) {
+                        foreach (ItemInfo info in GatherUnlocks(eventUnlocks.Unlocks.Unlocks.Select(it => (ulong)it))) {
                             @return[eventKey].Add(info);
                         }
                     }

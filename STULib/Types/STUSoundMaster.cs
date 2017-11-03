@@ -5,7 +5,7 @@ namespace STULib.Types {
     [STU(0xB466CBBD)]
     public class STUSoundMaster : STUInstance {  // todo: these names are so bad
         [STUField(0xF51B70C4)]
-        public STUSoundHolder[] SoundHolders;
+        public STUVoiceLineInstance[] VoiceLineInstances;
 
         [STUField(0x269FC4E9)]
         public STUGUID m_269FC4E9;

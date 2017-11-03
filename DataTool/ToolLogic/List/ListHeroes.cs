@@ -113,10 +113,10 @@ namespace DataTool.ToolLogic.List {
         }
 
         public AbilityInfo GetAbility(Common.STUGUID key) {
-            STUAbilityInfo ability = GetInstance<STUAbilityInfo>(key);
+            STULoadout ability = GetInstance<STULoadout>(key);
             if (ability == null) return null;
 
-            return new AbilityInfo(key, GetString(ability.Name), GetString(ability.Description), ability.AbilityType.ToString());
+            return new AbilityInfo(key, GetString(ability.Name), GetString(ability.Description), ability.Category.ToString());
         }
 
         public Dictionary<string, AbilityInfo> GetAbilities(STUHero hero) {

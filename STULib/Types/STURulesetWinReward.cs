@@ -2,8 +2,8 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0x899CC976)]
-    public class STUGlobInvUnknownLootbox : STUInstance {
+    [STU(0x899CC976, "STURulesetWinReward")]
+    public class STURulesetWinReward : STUInstance {
         [STUField(0xF5087894)]
         public STUGUID LootboxUnlock;  // STULib.Types.STUUnlock.Cosmetic
 

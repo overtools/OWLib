@@ -2,12 +2,12 @@
 using STULib.Types.Generic;
 
 namespace STULib.Types.Gamemodes.Unknown {
-    [STU(0x9783E116)]
-    public class STU_9783E116 : Common.STUInstance {
+    [STU(0x9783E116, "STUGameModeVarValuePair")]
+    public class STUGamemodeVarValuePair : Common.STUInstance {
         [STUField(0x3E783677)]
         public Common.STUGUID Virtual01C;  // STU_9CADF2EC
 
-        [STUField(0x07DD813E)]
-        public STU_02E4C615 m_07DD813E;
+        [STUField(0x07DD813E, "m_value")]
+        public STU_02E4C615 Value;
     }
 }

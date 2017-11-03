@@ -82,8 +82,8 @@ namespace STUHashTool {
                     case 0x9E:
                         instances = GetInstances(guid, handler, map);
                         if (instances[0] == null) return null;
-                        STUAbilityInfo ability = instances[0] as STUAbilityInfo;
-                        return $"{nameString}\"{GetOWString(ability?.Name, handler, map)}\" : {ability?.AbilityType}";
+                        STULoadout ability = instances[0] as STULoadout;
+                        return $"{nameString}\"{GetOWString(ability?.Name, handler, map)}\" : {ability?.Category}";
                     case 0x90:
                         instances = GetInstances(guid, handler, map);
                         if (instances[0] == null) return null;
@@ -316,10 +316,10 @@ namespace STUHashTool {
                     index++;
                     continue;
                 }
-                if (instance.Usage != InstanceUsage.Root) {
-                    index++;
-                    continue;
-                }
+                // if (instance.Usage != InstanceUsage.Root) {
+                //     index++;
+                //     continue;
+                // }
                 string[] instanceChecksums = instance.GetType().GetCustomAttributes<STUAttribute>().Select(x => Convert.ToString(x.Checksum, 16)).ToArray();
                 if (instanceWildcard != null && !instanceChecksums.Any(x => string.Equals(x, instanceWildcard.TrimStart('0'),  StringComparison.InvariantCultureIgnoreCase))) continue;
                 Console.ReplaceAllColorsWithDefaults();

@@ -2,8 +2,8 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0x6CBC2E3F)]
-    public class STUGlobInvLootbox : STUInstance {
+    [STU(0x6CBC2E3F, "STULootBoxCelebrationOverride")]
+    public class STULootBoxCelebrationOverride : STUInstance {
         [STUField(0xED999C8B)]
         public STUGUID Virtual01C;  // STU_9CADF2EC
 

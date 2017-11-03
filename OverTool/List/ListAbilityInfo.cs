@@ -31,16 +31,16 @@ namespace OverTool.List {
                         continue;
                     }
 
-                    STUAbilityInfo ability = stu.Instances.First() as STUAbilityInfo;
+                    STULoadout ability = stu.Instances.First() as STULoadout;
                     if (ability == null) {
                         continue;
                     }
 
                     Console.Out.WriteLine(Util.GetString(ability.Name, map, handler));
-                    if (ability.AbilityType == STULib.Types.Enums.STUEnumAbilityType.Weapon) {
-                        Console.Out.WriteLine($"\t{ability.AbilityType}: {ability.WeaponIndex}");
+                    if (ability.Category == STULib.Types.Enums.LoadoutCategory.Weapon) {
+                        Console.Out.WriteLine($"\t{ability.Category}: {ability.WeaponIndex}");
                     } else {
-                        Console.Out.WriteLine($"\t{ability.AbilityType}");
+                        Console.Out.WriteLine($"\t{ability.Category}");
                     }
                     Console.Out.WriteLine($"\t{Util.GetString(ability.Description, map, handler)}");
 

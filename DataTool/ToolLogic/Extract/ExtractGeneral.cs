@@ -36,10 +36,10 @@ namespace DataTool.ToolLogic.Extract {
 
                 if (invMaster.EventGeneralUnlocks != null) {
                     foreach (var eventUnlocks in invMaster.EventGeneralUnlocks) {
-                        if (eventUnlocks?.Data?.Unlocks == null) continue;
+                        if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
 
                         var eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event];
-                        var unlocks = eventUnlocks.Data.Unlocks.Select(it => GatherUnlock((ulong) it)).ToList();
+                        var unlocks = eventUnlocks.Unlocks.Unlocks.Select(it => GatherUnlock((ulong) it)).ToList();
                         SaveLogic.Unlock.SprayAndImage.SaveItems(basePath, null, "General", eventKey, flags, unlocks);
                     }
                 }

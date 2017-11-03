@@ -7,13 +7,13 @@ namespace STULib.Types.Gamemodes {
     [STU(0x87C00EC0)]
     public class STUBrawlTeam : STUInstance {
         [STUField(0x6F71E9AA)]
-        public STU_9783E116[] m_6F71E9AA;
+        public STUGamemodeVarValuePair[] m_6F71E9AA;
 
         [STUField(0xEA2B516F)]
-        public STUBrawlHeroOverride[] HeroOverrides;
+        public STUGamemodeBodyVars[] HeroOverrides;
 
         [STUField(0xCF58324E)]
-        public STU_9783E116[] m_CF58324E;
+        public STUGamemodeVarValuePair[] m_CF58324E;
 
         [STUField(0x33B0B2B6)]
         public STUBrawlTeamTypeContainer BrawlTeamTypeContainer;
