@@ -65,7 +65,7 @@ namespace STULib.Types {
         public uint Unknown19; // 0 = assault/escort/hybrid, 1 = other, 2 = event
 
         [STUField(0x1C706502)]
-        public STUGUID NameB;
+        public STUGUID VariantName;
 
         [STUField(0x7F5B54B2)]
         public STUGUID SoundMasterResource;
@@ -88,10 +88,10 @@ namespace STULib.Types {
         [STU(0x7D6D8405)]
         public class STU_7D6D8405 : STUInstance {
             [STUField(0xC0A83121)]
-            public STUGUID ComponentResource;
+            public STUGUID Override;
             
             [STUField(0x7DD89F4F)]
-            public STUGUID OverrideResource;
+            public STUGUID Component;
         }
 
         public ulong DataKey => (MapDataResource1 & ~0xFFFFFFFF00000000ul) | 0x0DD0000100000000ul;

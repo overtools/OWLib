@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using OWLib.Types;
 using OWLib.Types.Map;
@@ -101,7 +100,7 @@ namespace OWLib.Writer {
                     for (int j = 0; j < obj.Header.groupCount; ++j) {
                         Map01.Map01Group group = obj.Groups[j];
                         string materialFn =
-                            $"{GUID.Index(obj.Header.model):X12}_{GUID.Index(@group.material):X12}.owmat";
+                            $"{GUID.Index(obj.Header.model):X12}_{GUID.Index(group.material):X12}.owmat";
                         writer.Write(materialFn);
                         if (!ret[1].ContainsKey(group.material)) {
                             ret[1].Add(group.material, new List<string>());

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using OWLib;
 
@@ -28,6 +29,7 @@ namespace STULib.Types.Generic {
             [STUField(STUVersionOnly = new uint[] { 1 })]
             public uint NextInstanceOffset;
 
+            [STUField(STUVersionOnly = new uint[] { 4 })]  // dont
             public InstanceUsage Usage = InstanceUsage.Root;
 
             // Version 2.0 prefix
@@ -259,7 +261,8 @@ namespace STULib.Types.Generic {
         }
 
         public interface ISTUCustomSerializable {
-            object Deserialize(Impl.Version2 stu, Version2.STUInstanceField field, BinaryReader reader, BinaryReader metadataReader);
+            object Deserialize(object instance, ISTU stu, FieldInfo field, BinaryReader reader, BinaryReader metadataReader);
+            object DeserializeArray(object instance, ISTU stu, FieldInfo field, BinaryReader reader, BinaryReader metadataReader);
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -271,7 +274,11 @@ namespace STULib.Types.Generic {
         }
 
         public class STUHashMap<T> : Dictionary<ulong, T>, ISTUCustomSerializable  where T : STUInstance {
-            public object Deserialize(Impl.Version2 stu, Version2.STUInstanceField field, BinaryReader reader, BinaryReader metadataReader) {
+            public void Set(ulong index, T instance) {
+                this[index] = instance;
+            }
+
+            public object Deserialize(object instace, ISTU stu, FieldInfo field, BinaryReader reader, BinaryReader metadataReader) {
                 int offset = reader.ReadInt32();
                 if (offset == -1) return null;
                 metadataReader.BaseStream.Position = offset;
@@ -301,13 +308,11 @@ namespace STULib.Types.Generic {
                 return this;
             }
 
-            public void Set(ulong index, T instance) {
-                this[index] = instance;
+            public object DeserializeArray(object instace, ISTU stu, FieldInfo field, BinaryReader reader, BinaryReader metadataReader) {
+                throw new NotImplementedException();
             }
         }
 
-        // [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        // [STUOverride(0xDEADBEEF, 8)]
         public class STUDateAndTime : ISTUHashToolPrintExtender {
             [STUField(0x1, DummySize = 8)]
             public ulong Timestamp;
@@ -330,6 +335,19 @@ namespace STULib.Types.Generic {
             public string Print(out Color? color) {
                 color = Color.Yellow;
                 return "(STUDateAndTime doesn't work properly yet)";
+            }
+        }
+
+        public class STUUUID : ISTUCustomSerializable {
+            public Guid Value;
+
+            public object Deserialize(object instance, ISTU stu, FieldInfo field, BinaryReader reader, BinaryReader metadataReader) {
+                Value = new Guid(reader.ReadBytes(16));
+                return this;
+            }
+
+            public object DeserializeArray(object instance, ISTU stu, FieldInfo field, BinaryReader reader, BinaryReader metadataReader) {
+                throw new NotImplementedException();
             }
         }
     }

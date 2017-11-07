@@ -105,6 +105,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0x1A:
                     STUModelLook modelLook = GetInstance<STUModelLook>(textureGUID);
+                    if (modelLook.Materials == null) break;
                     foreach (STUModelLook.Material modelLookMaterial in modelLook.Materials) {
                         existingTextures = FindTextures(existingTextures, modelLookMaterial.MaterialReference, null,
                             forceZero, replacements, modelLookMaterial.Id);

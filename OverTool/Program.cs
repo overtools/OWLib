@@ -164,10 +164,10 @@ namespace OverTool {
                             continue;
                         }
                         ISTU stu = ISTU.NewInstance(stream, UInt32.Parse(config.BuildName.Split('.').Last()));
-                        if (!(stu.Instances.First() is STUEncryptionKey)) {
+                        if (!(stu.Instances.FirstOrDefault() is STUEncryptionKey)) {
                             continue;
                         }
-                        STUEncryptionKey ek = stu.Instances.First() as STUEncryptionKey;
+                        STUEncryptionKey ek = stu.Instances.FirstOrDefault() as STUEncryptionKey;
                         if (ek != null && !KeyService.keys.ContainsKey(ek.LongRevKey)) {
                             KeyService.keys.Add(ek.LongRevKey, ek.KeyValue);
                             Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}", ek.KeyNameProper, ek.Key);

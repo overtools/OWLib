@@ -260,7 +260,7 @@ namespace OWLib.Writer {
                         writer.Write(materials.Materials[submesh.material]);
                         writer.Write((byte)uv.Length);
                         
-                        List<int> removedVerts = new List<int>();
+                        // List<int> removedVerts = new List<int>();
                         Dictionary<int, int> newVertIDs = new Dictionary<int, int>();  // todo: remove
                         
                         writer.Write(vertex.Length);
@@ -279,42 +279,41 @@ namespace OWLib.Writer {
                                 writer.Write(t[j].v);
                             }
                             if (skeleton != null && bones != null && bones[j].boneIndex != null && bones[j].boneWeight != null) {
-                                if (clothBones.Contains((short) skeleton.Lookup[bones[j].boneIndex[0]]) ||
-                                    clothBones.Contains((short) skeleton.Lookup[bones[j].boneIndex[1]]) ||
-                                    clothBones.Contains((short) skeleton.Lookup[bones[j].boneIndex[2]]) ||
-                                    clothBones.Contains((short) skeleton.Lookup[bones[j].boneIndex[3]])) {
-                                    removedVerts.Add(j);
-
-                                    int parentCloth = -1;
-                                    foreach (ushort boneIdx in bones[j].boneIndex) {
-                                        if (clothBones.Contains((short) skeleton.Lookup[boneIdx])) {
-                                            parentCloth = clothBoneMap[(short) skeleton.Lookup[boneIdx]];
-                                        }
-                                    }
-                                    if (parentCloth == -1) {
-                                        Debugger.Break();
-                                        continue;
-                                    }
-                                    
-                                    if (!clothMeshes.ContainsKey(parentCloth)) {
-                                        clothMeshes[parentCloth] = new Dictionary<int, ClothMesh>();
-                                    }
-                                    if (!clothMeshes[parentCloth].ContainsKey(i)) {
-                                        clothMeshes[parentCloth][i] = new ClothMesh {
-                                            Indices = new List<ModelIndiceModifiable>(),
-                                            Material = materials.Materials[submesh.material],
-                                            Vertcies = new List<ClothVertContainer>(),
-                                            Coth = parentCloth,
-                                            VertIDs = new List<int>(), 
-                                            UV = model.TextureCoordinates[i],
-                                            Submesh = i
-                                        };
-                                    }
-                                    
-                                    clothMeshes[parentCloth][i].Vertcies.Add(new ClothVertContainer {Vertex = vertex[j],
-                                        Normal = normal[j], Bones = bones[j], J = j});
-                                    clothMeshes[parentCloth][i].VertIDs.Add(j);
-                                }
+                                // if (clothBones.Contains((short) skeleton.Lookup[bones[j].boneIndex[0]]) ||
+                                //     clothBones.Contains((short) skeleton.Lookup[bones[j].boneIndex[1]]) ||
+                                //     clothBones.Contains((short) skeleton.Lookup[bones[j].boneIndex[2]]) ||
+                                //     clothBones.Contains((short) skeleton.Lookup[bones[j].boneIndex[3]])) {
+                                //     removedVerts.Add(j);
+                                //     int parentCloth = -1;
+                                //     foreach (ushort boneIdx in bones[j].boneIndex) {
+                                //         if (clothBones.Contains((short) skeleton.Lookup[boneIdx])) {
+                                //             parentCloth = clothBoneMap[(short) skeleton.Lookup[boneIdx]];
+                                //         }
+                                //     }
+                                //     if (parentCloth == -1) {
+                                //         Debugger.Break();
+                                //         continue;
+                                //     }
+                                //     
+                                //     if (!clothMeshes.ContainsKey(parentCloth)) {
+                                //         clothMeshes[parentCloth] = new Dictionary<int, ClothMesh>();
+                                //     }
+                                //     if (!clothMeshes[parentCloth].ContainsKey(i)) {
+                                //         clothMeshes[parentCloth][i] = new ClothMesh {
+                                //             Indices = new List<ModelIndiceModifiable>(),
+                                //             Material = materials.Materials[submesh.material],
+                                //             Vertcies = new List<ClothVertContainer>(),
+                                //             Coth = parentCloth,
+                                //             VertIDs = new List<int>(), 
+                                //             UV = model.TextureCoordinates[i],
+                                //             Submesh = i
+                                //         };
+                                //     }
+                                //     
+                                //     clothMeshes[parentCloth][i].Vertcies.Add(new ClothVertContainer {Vertex = vertex[j],
+                                //         Normal = normal[j], Bones = bones[j], J = j});
+                                //     clothMeshes[parentCloth][i].VertIDs.Add(j);
+                                // }
                                 writer.Write((byte)4);
                                 writer.Write(skeleton.Lookup[bones[j].boneIndex[0]]);
                                 writer.Write(skeleton.Lookup[bones[j].boneIndex[1]]);
@@ -333,22 +332,22 @@ namespace OWLib.Writer {
                         }
                         List<ModelIndiceModifiable> indexNew = new List<ModelIndiceModifiable>();
                         foreach (ModelIndice indice in index) {
-                            if (removedVerts.Contains(indice.v1) && removedVerts.Contains(indice.v2) && removedVerts.Contains(indice.v3)) {
-                                
-                                foreach (KeyValuePair<int, Dictionary<int, ClothMesh>> clothMesh in clothMeshes) {
-                                    foreach (KeyValuePair<int, ClothMesh> clothSubmesh in clothMesh.Value) {
-                                        foreach (ushort indiceVert in new [] {indice.v1, indice.v2, indice.v3}) {
-                                            if (!clothSubmesh.Value.VertIDs.Contains(indiceVert)) continue;
-                                            int parentCloth = clothMesh.Key;
-                                            int parentMesh = clothSubmesh.Value.Submesh;
-                                            clothMeshes[parentCloth][parentMesh].Indices.Add(new ModelIndiceModifiable {v1 = indice.v1, 
-                                                v2 = indice.v2, v3 = indice.v3
-                                            });
-                                        }
-                                    }
-                                }
-                                continue;
-                            }
+                            // if (removedVerts.Contains(indice.v1) && removedVerts.Contains(indice.v2) && removedVerts.Contains(indice.v3)) {
+                            //     
+                            //     foreach (KeyValuePair<int, Dictionary<int, ClothMesh>> clothMesh in clothMeshes) {
+                            //         foreach (KeyValuePair<int, ClothMesh> clothSubmesh in clothMesh.Value) {
+                            //             foreach (ushort indiceVert in new [] {indice.v1, indice.v2, indice.v3}) {
+                            //                 if (!clothSubmesh.Value.VertIDs.Contains(indiceVert)) continue;
+                            //                 int parentCloth = clothMesh.Key;
+                            //                 int parentMesh = clothSubmesh.Value.Submesh;
+                            //                 clothMeshes[parentCloth][parentMesh].Indices.Add(new ModelIndiceModifiable {v1 = indice.v1, 
+                            //                     v2 = indice.v2, v3 = indice.v3
+                            //                 });
+                            //             }
+                            //         }
+                            //     }
+                            //     continue;
+                            // }
 
                             if (newVertIDs.Count == 0 && fakeVertCount == 0) {
                                 indexNew.Add(new ModelIndiceModifiable {v1 = indice.v1, v2 = indice.v2, v3 = indice.v3});
@@ -481,31 +480,32 @@ namespace OWLib.Writer {
                 }
                 
                 // ext 1.3: cloth
-                writer.Write(clothes.Count); // count
-                int clothIndex = 0;
-                foreach (ClothInfo clothInfo in clothes) {
-                    HTLC.ClothDesc desc = clothInfo.Cloth.Descriptors[clothInfo.ID];
-                    writer.Write(desc.Name);
-                    if (!clothMeshes.ContainsKey(clothIndex)) {
-                        Debugger.Log(0, "OWMDLWriter", $"[OWMDLWriter]: Cloth does not exist {clothIndex}");
-                        writer.Write(0);
-                        clothIndex++;
-                        continue;
-                    }
-                    Dictionary<int, ClothMesh> meshes = clothMeshes[clothIndex];
-                    writer.Write(meshes.Count);
-                    int meshIndex = 0;
-                    foreach (KeyValuePair<int,ClothMesh> clothMesh in meshes) {
-                        writer.Write(clothMesh.Value.FileIndex);
-                        writer.Write(clothInfo.ConnectionVerts[meshIndex].Count);
-                        writer.Write($"Submesh_Cloth.{desc.Name}.{clothMesh.Value.Submesh}"); 
-                        foreach (ClothVertContainer vertContainer in clothInfo.ConnectionVerts[meshIndex]) {
-                            writer.Write(vertContainer.J);
-                        }
-                        meshIndex++;
-                    }
-                    clothIndex++;
-                }
+                writer.Write(0);
+                // writer.Write(clothes.Count); // count
+                // int clothIndex = 0;
+                // foreach (ClothInfo clothInfo in clothes) {
+                //     HTLC.ClothDesc desc = clothInfo.Cloth.Descriptors[clothInfo.ID];
+                //     writer.Write(desc.Name);
+                //     if (!clothMeshes.ContainsKey(clothIndex)) {
+                //         Debugger.Log(0, "OWMDLWriter", $"[OWMDLWriter]: Cloth does not exist {clothIndex}");
+                //         writer.Write(0);
+                //         clothIndex++;
+                //         continue;
+                //     }
+                //     Dictionary<int, ClothMesh> meshes = clothMeshes[clothIndex];
+                //     writer.Write(meshes.Count);
+                //     int meshIndex = 0;
+                //     foreach (KeyValuePair<int,ClothMesh> clothMesh in meshes) {
+                //         writer.Write(clothMesh.Value.FileIndex);
+                //         writer.Write(clothInfo.ConnectionVerts[meshIndex].Count);
+                //         writer.Write($"Submesh_Cloth.{desc.Name}.{clothMesh.Value.Submesh}"); 
+                //         foreach (ClothVertContainer vertContainer in clothInfo.ConnectionVerts[meshIndex]) {
+                //             writer.Write(vertContainer.J);
+                //         }
+                //         meshIndex++;
+                //     }
+                //     clothIndex++;
+                // }
             }
             
             

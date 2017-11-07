@@ -5,10 +5,10 @@ namespace STULib.Types {
     [STU(0x8159A26D)]
     public class STUCompetitiveSeasonBase : STUInstance { // why base ?
         [STUField(0x58066D8F)]
-        public STUHeroUnlocks.UnlockInfo CompetitorRewards;
+        public STUHeroUnlocks.STUUnlocks CompetitorRewards;
 
         [STUField(0x3C1894B2)]
-        public STUHeroUnlocks.UnlockInfo TopRewards;
+        public STUHeroUnlocks.STUUnlocks TopRewards;
 
         [STUField(0x5BB8DFF3)]
         public STUCompetitiveSeasonRewards[] Rewards;

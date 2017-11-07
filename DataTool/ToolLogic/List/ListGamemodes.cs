@@ -218,7 +218,7 @@ namespace DataTool.ToolLogic.List {
                         if (teamConfig.HeroOverrides != null) {
                             Log($"{iD+4}Hero Overrides?:");
                             foreach (var somethingElse in teamConfig.HeroOverrides) {
-                                var dsfds = somethingElse.STUBrawlHeroContainer as STUBrawlHero;
+                                var dsfds = somethingElse.Hero as STUBrawlHero;
                                 var hero = GetInstance<STUHero>(dsfds.Hero);
                                 Log($"{iD+5}Hero: {GetString(hero.Name)}");
                             }

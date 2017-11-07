@@ -9,7 +9,7 @@ using STULib;
 using STULib.Types;
 using STULib.Types.Generic;
 using STULib.Types.Statescript.Components;
-using STULib.Types.Statescript.DataStores;
+using STULib.Types.Statescript.ConfigVar;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
@@ -62,7 +62,9 @@ namespace DataTool.FindLogic {
 
             if (animations == null) animations = new HashSet<AnimationInfo>();
             if (textures == null) textures = new HashSet<TextureInfo>();
-            if (replacements.ContainsKey(newElement)) newElement = new Common.STUGUID(replacements[newElement]);
+            if (replacements != null) {
+                if (replacements.ContainsKey(newElement)) newElement = new Common.STUGUID(replacements[newElement]);
+            }
             ModelInfo newModel = new ModelInfo {GUID = newElement, Animations = animations, Textures = textures, Skeleton = skeleton};
 
             if (models.All(x => !Equals(x.GUID, newModel.GUID))) {
@@ -202,8 +204,6 @@ namespace DataTool.FindLogic {
                             AddGUID(existingModels, modelComponent?.Model, new HashSet<TextureInfo>(textureList), animations, replacements, modelComponent.Skeleton);
                             // AddGUID(models, newElement, new HashSet<TextureInfo>(textureList), animations, replacements, skeleton);
                             
-                            // AddGUID(existingModels, modelComponent?.Model, textures, animations, replacements, modelComponent.Skeleton);
-                            // AddGUID(existingModels, modelComponent?.Model, textures, animations, replacements, modelComponent.Skeleton);
                             existingModels = FindModels(existingModels, modelComponent?.Material, replacements);  // get all referenced models
                         }
                         animationBank?.Clear(); // todo: yes?
@@ -231,10 +231,8 @@ namespace DataTool.FindLogic {
                             STUAnimationCoreferenceComponent ssAnims = component as STUAnimationCoreferenceComponent;
                             // todo: assumed: next component is model
                             if (ssAnims?.Animations == null) continue;
-                            // HashSet<AnimationInfo> animations = new HashSet<AnimationInfo>();
-                            foreach (STUAnimationCoreferenceComponentAnimation ssAnimsFB16 in ssAnims.Animations) {
-                                // animations = Animation.FindAnimations(animations, ssAnimsFB16.Animation, replacements);
-                                animationBank = Animation.FindAnimations(animationBank, existingModels, ssAnimsFB16.Animation, replacements);
+                            foreach (STUAnimationCoreferenceComponentAnimation ssAnim in ssAnims.Animations) {
+                                animationBank = Animation.FindAnimations(animationBank, existingModels, ssAnim.Animation, replacements);
                             }
                         }
                     }
@@ -274,7 +272,7 @@ namespace DataTool.FindLogic {
                     foreach (STUStatescriptDataStoreMaterial statescriptDataStoreMaterial in stuTemp.Instances.OfType<STUStatescriptDataStoreMaterial>()) {
                         existingModels = FindModels(existingModels, statescriptDataStoreMaterial.Material, replacements);
                     }
-                    foreach (STUStatescriptDataStoreEffect statescriptDataStoreEffect in stuTemp.Instances.OfType<STUStatescriptDataStoreEffect>()) {
+                    foreach (STUConfigVarEffect statescriptDataStoreEffect in stuTemp.Instances.OfType<STUConfigVarEffect>()) {
                         existingModels = FindModels(existingModels, statescriptDataStoreEffect.Effect, replacements);
                     }
                     break;

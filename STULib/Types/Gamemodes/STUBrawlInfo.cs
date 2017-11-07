@@ -10,10 +10,10 @@ namespace STULib.Types.Gamemodes {
         public STUGUID Gamemode;  // STULib.Types.STUGamemode
 
         [STUField(0x3CE93B76)]
-        public STU_9783E116[] Virtual1;
+        public STUGamemodeVarValuePair[] Virtual1;
 
         [STUField(0xAD4BF17F)]
-        public STU_9783E116[] Virtual2;
+        public STUGamemodeVarValuePair[] Virtual2;
 
         [STUField(0xD440A0F7)]
         public STUBrawlTeam[] TeamConfig;

@@ -5,7 +5,7 @@ namespace STULib.Types {
     [STU(0xA92F620A)]
     public class STUCompetitiveSeasonRewards : STUInstance {
         [STUField(0xDB803F2F)]
-        public STUHeroUnlocks.UnlockInfo Unlocks;
+        public STUHeroUnlocks.STUUnlocks Unlocks;
 
         [STUField(0x4BF7CD58)]
         public uint RankLowerBound;

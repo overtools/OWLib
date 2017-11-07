@@ -15,7 +15,7 @@ using static DataTool.Helper.Logger;
 
 namespace DataTool.SaveLogic.Unlock {
     public class Skin {
-        public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STULib.Types.STUUnlock.Skin skin, List<ItemInfo> weaponSkins, List<STUAbilityInfo> abilities, bool quiet=true) {
+        public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STULib.Types.STUUnlock.Skin skin, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet=true) {
             string basePath = Path.Combine(path,
                 $"Heroes\\{GetValidFilename(GetString(hero.Name))}\\Skins\\{rarity}\\{GetValidFilename(GetString(skin.CosmeticName))}");
             if (!quiet) Log($"Extracting skin {GetString(hero.Name)} {GetString(skin.CosmeticName)}");
@@ -64,10 +64,10 @@ namespace DataTool.SaveLogic.Unlock {
             Dictionary<int, string> weaponNamesRaw = new Dictionary<int, string>();
             Dictionary<int, string> weaponNames = new Dictionary<int, string>();
 
-            foreach (STUAbilityInfo ability in abilities) {
-                if (ability.AbilityType != STUEnumAbilityType.Weapon) continue;
-                if (!weaponNamesRaw.ContainsKey((int)ability.WeaponIndex-1))
-                    weaponNamesRaw[(int)ability.WeaponIndex-1] = GetString(ability.Name);
+            foreach (STULoadout ability in abilities) {
+                if (ability.Category != LoadoutCategory.Weapon) continue;
+                if (!weaponNamesRaw.ContainsKey(ability.WeaponIndex-1))
+                    weaponNamesRaw[ability.WeaponIndex-1] = GetString(ability.Name);
             }
             
             int weaponCount = 0;

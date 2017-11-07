@@ -112,7 +112,7 @@ namespace DataTool.ToolLogic.List {
                 if (map == null) continue;
 
                 var nameA = GetString(map.Name);
-                var nameB = GetString(map.NameB);
+                var nameB = GetString(map.VariantName);
 
                 var descA = GetString(map.DescriptionA);
                 var descB = GetString(map.DescriptionB);

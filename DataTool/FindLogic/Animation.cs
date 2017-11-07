@@ -85,9 +85,13 @@ namespace DataTool.FindLogic {
                     HashSet<AnimationInfo> newAnims = new HashSet<AnimationInfo>();
                     Model.FindModels(models, new Common.STUGUID(dmce.Data.modelKey), replacements);
                     Model.FindModels(models, new Common.STUGUID(dmce.Data.materialKey), replacements);
+                    
+                    Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
+                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.materialKey), null, true, replacements);
+                    
                     newAnims = FindAnimations(newAnims, models, new Common.STUGUID(dmce.Data.animationKey), replacements);
                     
-                    Model.AddGUID(models, new Common.STUGUID(dmce.Data.modelKey), new Dictionary<ulong, List<TextureInfo>>(), newAnims, replacements);
+                    Model.AddGUID(models, new Common.STUGUID(dmce.Data.modelKey), textures, newAnims, replacements);
                 }
             }
             return existingAnimations;
@@ -112,8 +116,8 @@ namespace DataTool.FindLogic {
                     if (listBB7Asub?.m_AF632ACD != null) {
                         existingAnimations = FindAnimations(existingAnimations, models, listBB7Asub.m_AF632ACD, replacements);
                     }
-                    if (listBB7Asub?.m_3868F518 != null) {
-                        if (listBB7Asub?.m_3868F518.GetType() == typeof(STU_BB7A7240)) {
+                    if (listBB7Asub?.ParentNode != null) {
+                        if (listBB7Asub?.ParentNode.GetType() == typeof(STU_BB7A7240)) {
                             
                         }
                     }

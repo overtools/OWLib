@@ -129,7 +129,7 @@ namespace DataTool.FindLogic {
                 case 0x05F:
                     STUSoundMaster th = GetInstance<STUSoundMaster>(soundGUID);
                     if (th == null) break;
-                    foreach (STUSoundHolder soundThingy in th.SoundHolders) {
+                    foreach (STUVoiceLineInstance soundThingy in th.VoiceLineInstances) {
                         string subtitle1 = null;
                         string subtitle2 = null;
                         string subtitle3 = null;

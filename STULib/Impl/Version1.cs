@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,11 +13,13 @@ namespace STULib.Impl {
     public class Version1 : ISTU {
         public const uint MAGIC = 0x53545544;
 
-        private Stream stream;
+        protected Stream stream;
         private STUHeader data;
         private Dictionary<long, STUInstance> instances;
         private uint buildVersion;
-        
+        public List<STUInstanceRecord> Records { get; private set; }
+        protected long Start;
+
         public override IEnumerable<STUInstance> Instances => instances.Select((pair => pair.Value));
         public override uint Version => 1;
 
@@ -35,7 +38,7 @@ namespace STULib.Impl {
             ReadInstanceData(stuStream.Position);
         }
 
-        private object GetValueArray(Type type, BinaryReader reader, STUFieldAttribute element) {
+        internal object GetValueArray(Type type, BinaryReader reader, STUFieldAttribute element, FieldInfo fieldInfo) {
             long offset = 0;
             int size = 0;
 
@@ -51,38 +54,43 @@ namespace STULib.Impl {
                 offset = arrayInfo.Offset;
                 size = (int)arrayInfo.EntryCount;
             }
+            if (size == -1) return null;
 
             Array array = Array.CreateInstance(type, size);
-            reader.BaseStream.Position = offset;
+            reader.BaseStream.Position = offset+Start;
             for (int i = 0; i < size; ++i) {
-                array.SetValue(GetValue(type, reader, element), i);
+                array.SetValue(GetValue(null, type, reader, element, fieldInfo, true), i);
             }
 
             return array;
         }
 
-        private object GetValue(Type type, BinaryReader reader, STUFieldAttribute element) {
+        internal object GetValue(object fieldOwner, Type type, BinaryReader reader, STUFieldAttribute element, FieldInfo fieldInfo, bool isArray=false) {
             if (type.IsArray) {
                 long offset = reader.ReadInt64();
                 if (offset == 0) {
                     return Array.CreateInstance(type.GetElementType(), 0);
                 }
                 long position = reader.BaseStream.Position;
-                reader.BaseStream.Position = offset;
-                object value = GetValueArray(type.GetElementType(), reader, element);
+                reader.BaseStream.Position = offset+Start;
+                if (element.EmbeddedInstance) {
+                    throw new NotImplementedException();
+                }
+                object value = GetValueArray(type.GetElementType(), reader, element, fieldInfo);
                 reader.BaseStream.Position = position + 8;
                 return value;
             }
             switch (type.Name) {
                 case "String": {
                     long offset = reader.ReadInt64();
+                    if (offset == 0) return string.Empty;
                     long position = reader.BaseStream.Position;
-                    reader.BaseStream.Position = offset;
+                    reader.BaseStream.Position = offset+Start;
                     STUString stringData = reader.Read<STUString>();
                     if (stringData.Size == 0) {
                         return string.Empty;
                     }
-                    reader.BaseStream.Position = stringData.Offset;
+                    reader.BaseStream.Position = stringData.Offset+Start;
                     string @string = new string(reader.ReadChars((int) stringData.Size));
                     reader.BaseStream.Position = position;
                     return @string;
@@ -110,23 +118,40 @@ namespace STULib.Impl {
                 case "Char":
                     return reader.ReadChar();
                 default:
+                    if (type.GetInterfaces().Contains(typeof(ISTUCustomSerializable))) {
+                        if (fieldInfo.FieldType.IsArray) {
+                            return ((ISTUCustomSerializable) Activator.CreateInstance(type)).DeserializeArray(fieldOwner, this, fieldInfo,
+                                reader, null);
+                        }
+                        return ((ISTUCustomSerializable) Activator.CreateInstance(type)).Deserialize(fieldOwner, this, fieldInfo,
+                            reader, null);
+                    }
                     if (type.IsEnum) {
-                        return GetValue(type.GetEnumUnderlyingType(), reader, element);
+                        return Enum.ToObject(type, GetValue(fieldOwner, type.GetEnumUnderlyingType(), reader, element, fieldInfo, isArray));
                     }
                     if (type.IsClass || type.IsValueType) {
-                        return InitializeObject(Activator.CreateInstance(type), type, reader);
+                        if (!element.EmbeddedInstance)
+                            return InitializeObject(Activator.CreateInstance(type), type, reader, isArray);
+                        int index = reader.ReadInt32();
+                        EmbedRequests.Add(new KeyValuePair<object, FieldInfo>(fieldOwner, fieldInfo), index);
+                        return null;
                     }
                     return null;
             }
         }
 
-        private object InitializeObject(object instance, Type type, BinaryReader reader) {
+        private object InitializeObject(object instance, Type type, BinaryReader reader, bool isArray) {
             FieldInfo[] fields = GetFields(type);
             foreach (FieldInfo field in fields) {
                 STUFieldAttribute element = field.GetCustomAttribute<STUFieldAttribute>();
                 bool skip = false;
                 if (element?.STUVersionOnly != null) {
                     skip = element.STUVersionOnly.All(version => version != Version);
+                }
+                if (element != null) {
+                    if (isArray && element.OnlyBuffer) {
+                        skip = true;
+                    }
                 }
                 if (skip) {
                     continue;
@@ -136,13 +161,20 @@ namespace STULib.Impl {
                 }
                 if (field.FieldType.IsArray) {
                     long offset = reader.ReadInt64();
-                    if (offset == 0) {
+                    if (offset == 0 || offset == -1) {
                         field.SetValue(instance, Array.CreateInstance(field.FieldType.GetElementType(), 0));
                         continue;
                     }
                     long position = reader.BaseStream.Position;
-                    reader.BaseStream.Position = offset;
-                    field.SetValue(instance, GetValueArray(field.FieldType.GetElementType(), reader, element));
+                    reader.BaseStream.Position = offset+Start;
+                    if (element?.EmbeddedInstance == true) {
+                        int[] offsets = (int[])GetValueArray(typeof(int), reader, element, field);
+                        Array array = Array.CreateInstance(field.FieldType.GetElementType(), offsets.Length);
+                        EmbedArrayRequests.Add(array, offsets);
+                        field.SetValue(instance, array);
+                    } else {
+                        field.SetValue(instance, GetValueArray(field.FieldType.GetElementType(), reader, element, field));
+                    }
                     reader.BaseStream.Position = position + 8;
                 } else {
                     long position = -1;
@@ -152,9 +184,9 @@ namespace STULib.Impl {
                             continue;
                         }
                         position = reader.BaseStream.Position;
-                        reader.BaseStream.Position = offset;
+                        reader.BaseStream.Position = offset+Start;
                     }
-                    field.SetValue(instance, GetValue(field.FieldType, reader, element));
+                    field.SetValue(instance, GetValue(instance, field.FieldType, reader, element, field));
                     if (position > -1) {
                         reader.BaseStream.Position = position;
                     }
@@ -170,17 +202,43 @@ namespace STULib.Impl {
         }
 
         private void ReadInstanceData(long offset) {
+            Records = new List<STUInstanceRecord>();
             stream.Position = offset;
+            TypeHashes = new HashSet<uint>();
+            EmbedRequests = new Dictionary<KeyValuePair<object, FieldInfo>, int>();
+            EmbedArrayRequests = new Dictionary<Array, int[]>();
+            Start = offset;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
                 if (_InstanceTypes == null) {
                     LoadInstanceTypes();
                 }
                 STUHeader instance = new STUHeader();
-                data = InitializeObject(instance, typeof(STUHeader), reader) as STUHeader;
+                data = (STUHeader)InitializeObject(instance, typeof(STUHeader), reader, false);
+                
+                STUInstanceRecord[] instanceTable = new STUInstanceRecord[data.InstanceCount];
+                for (int i = 0; i < data.InstanceCount; i++) {
+                    instanceTable[i] = reader.Read<STUInstanceRecord>();
+                    Records.Add(instanceTable[i]);
+                }
+                
+                foreach (STUInstanceRecord record in instanceTable) {
+                    ReadInstance(record.Offset, reader);
+                }
 
-                if (data?.InstanceTable != null) {
-                    foreach (STUInstanceRecord record in data?.InstanceTable) {
-                        ReadInstance(record.Offset, reader);
+                foreach (KeyValuePair<KeyValuePair<object,FieldInfo>,int> embedRequest in EmbedRequests) {
+                    if (!instances.ContainsKey(embedRequest.Value)) continue;
+                    embedRequest.Key.Value.SetValue(embedRequest.Key.Key, instances[embedRequest.Value]);
+                    instances[embedRequest.Value].Usage = InstanceUsage.Embed;
+                }
+                foreach (KeyValuePair<Array,int[]> request in EmbedArrayRequests) {
+                    int arrayIndex = 0;
+                    foreach (int i in request.Value) {
+                        if (instances.ContainsKey(i)) {
+                            request.Key.SetValue(instances[i], arrayIndex);
+                            if (instances[i] == null) continue;
+                            instances[i].Usage = InstanceUsage.EmbedArray;
+                        }
+                        arrayIndex++;
                     }
                 }
             }
@@ -195,15 +253,20 @@ namespace STULib.Impl {
             instances[offset] = null;
 
             long position = reader.BaseStream.Position;
-            reader.BaseStream.Position = offset;
-            uint Id = reader.ReadUInt32();
-            reader.BaseStream.Position = offset;
+            reader.BaseStream.Position = offset + Start;
+            uint checksum = reader.ReadUInt32();
+            reader.BaseStream.Position = offset + Start;
 
-            if (_InstanceTypes.ContainsKey(Id)) {
-                Type type = _InstanceTypes[Id];
+            if (_InstanceTypes.ContainsKey(checksum)) {
+                Type type = _InstanceTypes[checksum];
                 object instance = Activator.CreateInstance(type);
-                instances[offset] = InitializeObject(instance, type, reader) as STUInstance;
+                instances[offset] = InitializeObject(instance, type, reader, false) as STUInstance;
+            } else {
+                // STUInstance instance = new STUInstance();
+                // instances[offset] = InitializeObject(instance, typeof(STUInstance), reader) as STUInstance;
+                Debugger.Log(0, "STU", $"[Version1]: Unhandled instance type: {checksum:X} (offset={offset})\n");
             }
+            TypeHashes.Add(checksum);
 
             reader.BaseStream.Position = position;
 

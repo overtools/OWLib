@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -69,20 +70,17 @@ namespace DataTool.SaveLogic {
             public bool Write(OWLib.Animation anim, Stream output, object[] data) {
                 return false;
             }
-    
-            public Dictionary<ulong, List<string>>[] Write(Stream output, Map map, Map detail1, Map detail2, Map props, Map lights, string name, IDataWriter modelFormat) {
-                return null;
+
+            public Dictionary<ulong, List<string>>[] Write(Stream output, OWLib.Map map, OWLib.Map detail1, OWLib.Map detail2, OWLib.Map props, OWLib.Map lights, string name,
+                IDataWriter modelFormat) {
+                throw new NotImplementedException();
             }
         }
         
         public static void Save(ICLIFlags flags, string path, ModelInfo model, string name, string fileNameOverride=null) {
-            bool convertAnims = true;
-            bool skipAnims = false;
             bool convertModels = true;
             if (flags is ExtractFlags extractFlags) {
                 convertModels = extractFlags.ConvertModels && !extractFlags.Raw;
-                convertAnims = extractFlags.ConvertAnimations && !extractFlags.Raw;
-                skipAnims = extractFlags.SkipAnimations;
                 if (extractFlags.SkipModels) return;
             }
             string basePath = Path.Combine(path, $"{model.GUID.ToString()}");
@@ -95,15 +93,12 @@ namespace DataTool.SaveLogic {
             OWMatWriter14 writer14 = new OWMatWriter14();
             OWMDLWriter mdlWriter = new OWMDLWriter();
             RefPoseWriter refposeWriter = new RefPoseWriter();
-            SEAnimWriter animWriter = new SEAnimWriter();
             
             CreateDirectoryFromFile($"{basePath}\\billy"); // lies
 
             if (convertModels) {
                 using (Stream fileStream =
-                    new FileStream(
-                        Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{writer14.Format}"),
-                        FileMode.Create)) {
+                    new FileStream(Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{writer14.Format}"), FileMode.Create)) {
                     fileStream.SetLength(0);
                     writer14.Write(fileStream, model, textureTypes);
                 }

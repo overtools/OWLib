@@ -18,8 +18,14 @@ namespace STULib {
         public static Dictionary<uint, Type> InstanceTypes => _InstanceTypes;
         public static Dictionary<uint, Type> EnumTypes => _EnumTypes;
 
-        public static Dictionary<uint, List<STUSuppressWarningAttribute>> SuppressedWarnings;
+        protected static Dictionary<uint, List<STUSuppressWarningAttribute>> SuppressedWarnings;
+
+        public HashSet<uint> TypeHashes { get; protected set; } = new HashSet<uint>();
         
+        internal Dictionary<KeyValuePair<object, FieldInfo>, int> EmbedRequests;
+        internal Dictionary<Array, int[]> EmbedArrayRequests;
+        internal List<KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, ulong>>> HashmapRequests; 
+
         public static bool IsSimple(Type type) {
             return type.IsPrimitive || type == typeof(string) || type == typeof(object);
         }
@@ -104,9 +110,9 @@ namespace STULib {
                 STUEnumAttribute attribute = type.GetCustomAttribute<STUEnumAttribute>();
                 if (attribute == null) continue;
                 if (attribute.Checksum == 0) continue;
-                if (_EnumTypes.ContainsKey(attribute.Checksum)) {
-                    throw new Exception($"Collision of STUEnum checksums ({attribute.Checksum:X})");
-                }
+                // if (_EnumTypes.ContainsKey(attribute.Checksum)) {
+                //     throw new Exception($"Collision of STUEnum checksums ({attribute.Checksum:X})");
+                // }
                 _EnumTypes[attribute.Checksum] = type;
             }
         }
@@ -134,6 +140,7 @@ namespace STULib {
                 if (type != null) {
                     return (ISTU)Activator.CreateInstance(type, stream, owVersion);
                     // return new Impl.Version2HashComparer.Version2Comparer(stream, owVersion);  // for debug
+                    // return new Impl.Version2HashComparer.MapComparer(stream, owVersion);  // for debug
                 }
                 if (Version1.IsValidVersion(reader)) {
                     stream.Position = pos;

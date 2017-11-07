@@ -5,28 +5,28 @@ namespace STULib.Types {
     [STU(0x8CE1D110)]
     public class STUHeroUnlocks : STUInstance {
         [STUField(0x473494FF)]
-        public EventUnlockInfo[] LootboxUnlocks;
+        public STULootBoxUnlocks[] LootboxUnlocks;
 
         [STUField(0xBF482AA3)]
-        public UnlockInfo SystemUnlocks;
+        public STUUnlocks SystemUnlocks;
 
         [STUField(0xDB803F2F)]
-        public UnlockInfo[] Unlocks; 
+        public STUUnlocks[] Unlocks; 
 
         [STUField(0x9135A4B2)]
-        public UnlockInfo UnknownUnlocks; 
+        public STUUnlocks UnknownUnlocks; 
     
-        [STU(0xF818D652)]
-        public class EventUnlockInfo : STUInstance {
-            [STUField(0xDB803F2F)]
-            public UnlockInfo Data;
+        [STU(0xF818D652, "STULootBoxUnlocks")]
+        public class STULootBoxUnlocks : STUInstance {
+            [STUField(0xDB803F2F, "m_unlocks")]
+            public STUUnlocks Unlocks;
 
             [STUField(0x7AB4E3F8)]
             public Enums.STUEnumEventID Event;
         }
 
-        [STU(0x5ABF8769)]
-        public class UnlockInfo : STUInstance {
+        [STU(0x5ABF8769, "STUUnlocks")]
+        public class STUUnlocks : STUInstance {
             [STUField(0xDB803F2F)]
             public STUGUID[] Unlocks;
         }
