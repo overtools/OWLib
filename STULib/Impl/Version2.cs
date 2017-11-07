@@ -27,11 +27,8 @@ namespace STULib.Impl {
         protected STUInstanceRecord[] instanceInfo;
         protected STUInstanceArrayRef[] instanceArrayRef;
         protected STUInstanceFieldList[] instanceFieldLists;
-        protected STUInstanceField[][] instanceFields;
-
-        protected Dictionary<Array, int[]> EmbedArrayRequests;
-        protected Dictionary<KeyValuePair<object, FieldInfo>, int> EmbedRequests;
-        internal List<KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, ulong>>> HashmapRequests;  // keyval = instanceIndex: mapIndex
+        internal STUInstanceField[][] instanceFields;
+        
         public List<STUInstance> HiddenInstances;
 
         protected uint buildVersion;
@@ -184,7 +181,7 @@ namespace STULib.Impl {
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private object GetValue(STUInstanceField field, Type type, BinaryReader reader, STUFieldAttribute element) {
+        private object GetValue(object fieldOwner, STUInstanceField field, Type type, BinaryReader reader, STUFieldAttribute element, FieldInfo fieldInfo) {
             if (type.IsArray) {
                 return InitializeObjectArray(field, type.GetElementType(), reader, element);
             }
@@ -214,14 +211,14 @@ namespace STULib.Impl {
                     return null;
                 default:
                     if (type.GetInterfaces().Contains(typeof(ISTUCustomSerializable))) {
-                        return ((ISTUCustomSerializable) Activator.CreateInstance(type)).Deserialize(this, field,
+                        return ((ISTUCustomSerializable) Activator.CreateInstance(type)).Deserialize(fieldOwner, this, fieldInfo,
                             reader, metadataReader);
                     }
                     if (typeof(STUInstance).IsAssignableFrom(type)) {
                         return null; // Set later by the second pass. Usually this is uint, indicating which STU instance entry to load inorder to get the instance. However this is only useful when you're streaming specific STUs.
                     }
                     if (type.IsEnum) {
-                        return GetValue(field, type.GetEnumUnderlyingType(), reader, element);
+                        return GetValue(fieldOwner, field, type.GetEnumUnderlyingType(), reader, element, null);
                     }
                     if (type.IsClass) {
                         return InitializeObject(Activator.CreateInstance(type), type, field.FieldChecksum, field.FieldChecksum, reader, element.FakeBuffer, element.Demangle);
@@ -345,11 +342,11 @@ namespace STULib.Impl {
                         position = reader.BaseStream.Position;
                         reader.BaseStream.Position = offset;
                     }
-                    field.SetValue(instance, GetValue(new STUInstanceField {
+                    field.SetValue(instance, GetValue(instance, new STUInstanceField {
                             FieldChecksum = 0,
                             FieldSize = element == null || element.DummySize == -1 ? 4 : (uint) element.DummySize
                         },
-                        field.FieldType, reader, element));
+                        field.FieldType, reader, element, field));
                     if (position > -1) {
                         reader.BaseStream.Position = position;
                     }
@@ -367,7 +364,7 @@ namespace STULib.Impl {
             return instance;
         }
 
-        protected virtual object InitializeObject(object instance, Type type, STUInstanceField[] writtenFields,
+        internal object InitializeObject(object instance, Type type, STUInstanceField[] writtenFields,
             BinaryReader reader) {
             Dictionary<uint, FieldInfo> fieldMap = CreateFieldMap(GetValidFields(type));
 
@@ -452,7 +449,7 @@ namespace STULib.Impl {
                         position = reader.BaseStream.Position;
                         reader.BaseStream.Position = offset;
                     }
-                    field.SetValue(instance, GetValue(writtenField, field.FieldType, reader, element));
+                    field.SetValue(instance, GetValue(instance, writtenField, field.FieldType, reader, element, field));
                     if (position > -1) {
                         reader.BaseStream.Position = position;
                     }
@@ -521,6 +518,7 @@ namespace STULib.Impl {
             HashmapRequests = new List<KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, ulong>>>();
             EmbedRequests = new Dictionary<KeyValuePair<object, FieldInfo>, int>();
             HiddenInstances = new List<STUInstance>();
+            TypeHashes = new HashSet<uint>();
             stream.Position = offset;
             GetHeaderCRC();
             stream.Position = offset;
@@ -541,6 +539,8 @@ namespace STULib.Impl {
                         stuOffset += instanceInfo[i].InstanceSize;
 
                         instances[i] = null;
+
+                        TypeHashes.Add(instanceInfo[i].InstanceChecksum);
 
                         if (_InstanceTypes.ContainsKey(instanceInfo[i].InstanceChecksum)) {
                             int fieldListIndex = reader.ReadInt32();

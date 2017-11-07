@@ -5,8 +5,8 @@ using STULib.Types.Generic;
 namespace STULib.Types.AnimationList.x020 {
     [STU(0xCEAA4897)]
     public class STU_CEAA4897 : Common.STUInstance {
-        [STUField(0x979E8BDE)]
-        public STUGraphLink[] m_979E8BDE;
+        [STUField(0x979E8BDE, "m_links")]
+        public STUGraphLink[] Links;
 
         [STUField(0x3868F518, "m_parentNode")]
         public STU_25C4F930 ParentNode;

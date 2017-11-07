@@ -16,6 +16,7 @@ namespace STULib {
         public bool FakeBuffer = false;  // fake being in an array buffer
         public bool ForceNotBuffer = false;  // fake being out of an array buffer
         public bool Demangle = true;  // this field should be demangled
+        public bool EmbeddedInstance = false;  // embedded stu, this is bad code
 
         public object Default = null;
 

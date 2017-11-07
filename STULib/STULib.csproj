@@ -56,6 +56,8 @@
     <Compile Include="CRC64.cs" />
     <Compile Include="IDemangleable.cs" />
     <Compile Include="Impl\Version2.cs" />
+    <Compile Include="Impl\Version2HashComparer\MapHashComparer.cs" />
+    <Compile Include="Impl\Version2HashComparer\Version1HashComparer.cs" />
     <Compile Include="Impl\Version2HashComparer\Version2HashComparer.cs" />
     <Compile Include="ISTU.cs" />
     <Compile Include="Impl\Version1.cs" />
@@ -296,6 +298,7 @@
     <Compile Include="Types\GameParams\STU_96788737.cs" />
     <Compile Include="Types\GameParams\STU_A289530F.cs" />
     <Compile Include="Types\GameParams\STU_B2795D4D.cs" />
+    <Compile Include="Types\Map\Map.cs" />
     <Compile Include="Types\Statescript\Components\Enums\STUEnum_790E517D.cs" />
     <Compile Include="Types\Statescript\Components\Enums\STUEnum_8A184A5C.cs" />
     <Compile Include="Types\Statescript\Components\STUAnimationCoreferenceComponent.cs" />

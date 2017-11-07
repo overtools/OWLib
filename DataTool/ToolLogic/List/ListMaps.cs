@@ -87,7 +87,7 @@ namespace DataTool.ToolLogic.List {
                 if (map == null) continue;
 
                 string name = GetString(map.Name);
-                string nameB = GetString(map.NameB);
+                string nameB = GetString(map.VariantName);
 
                 string uniqueName;
                 if (name == null) {

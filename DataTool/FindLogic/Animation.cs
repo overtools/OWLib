@@ -85,9 +85,13 @@ namespace DataTool.FindLogic {
                     HashSet<AnimationInfo> newAnims = new HashSet<AnimationInfo>();
                     Model.FindModels(models, new Common.STUGUID(dmce.Data.modelKey), replacements);
                     Model.FindModels(models, new Common.STUGUID(dmce.Data.materialKey), replacements);
+                    
+                    Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
+                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.materialKey), null, true, replacements);
+                    
                     newAnims = FindAnimations(newAnims, models, new Common.STUGUID(dmce.Data.animationKey), replacements);
                     
-                    Model.AddGUID(models, new Common.STUGUID(dmce.Data.modelKey), new Dictionary<ulong, List<TextureInfo>>(), newAnims, replacements);
+                    Model.AddGUID(models, new Common.STUGUID(dmce.Data.modelKey), textures, newAnims, replacements);
                 }
             }
             return existingAnimations;

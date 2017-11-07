@@ -254,7 +254,10 @@ namespace STULib.Impl.Version2HashComparer {
             ChainedInstances = new Dictionary<uint, List<ChainedInstanceInfo>>();
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
                 if (Version1.IsValidVersion(reader)) {
-                    throw new InvalidDataException("Version2HashComparer does not support version 1 STUs");
+                    Version1Comparer ver1 = new Version1Comparer(stream, buildVersion);
+                    InstanceData = ver1.InstanceData;
+                    InternalInstances = ver1.InternalInstances;
+                    return;
                 }
                 stream.Position = offset;
                 if (!ReadHeaderData(reader)) return;
@@ -324,8 +327,7 @@ namespace STULib.Impl.Version2HashComparer {
             // WARNING: NOT THREAD SAFE
             if (GetAllChildren) {
                 foreach (KeyValuePair<uint,STUInstanceJSON> instanceJSON in InstanceJSON) {
-                    if (instanceJSON.Value.ParentChecksum != json.Hash ||
-                        InternalInstances.ContainsKey(instanceJSON.Value.Hash)) continue;
+                    if (instanceJSON.Value.ParentChecksum != json.Hash || InternalInstances.ContainsKey(instanceJSON.Value.Hash)) continue;
                     InternalInstances[instanceJSON.Value.Hash] = null;
                     InternalInstances[instanceJSON.Value.Hash] = GetInstanceData(instanceJSON.Value.Hash, reader);
                 }

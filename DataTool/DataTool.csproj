@@ -70,6 +70,7 @@
     <Compile Include="ITool.cs" />
     <Compile Include="JSON\GUIDConverter.cs" />
     <Compile Include="SaveLogic\Animation.cs" />
+    <Compile Include="SaveLogic\Map.cs" />
     <Compile Include="SaveLogic\Model.cs" />
     <Compile Include="SaveLogic\Unlock\AnimationItem.cs" />
     <Compile Include="SaveLogic\Unlock\Portrait.cs" />

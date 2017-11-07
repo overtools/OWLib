@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using OWLib.Types.STUD.Binding;
 using STULib;
 using STULib.Impl.Version2HashComparer;
 using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
@@ -38,6 +39,12 @@ namespace STUHashTool {
                 parentName = ISTU.InstanceTypes[InstanceData.ParentChecksum].ProperName();
             }
             uint fieldCounter = 1;
+            
+            string stuAttribute = $"[STU(0x{InstanceData.Checksum:X8})]";
+            if (instanceNames.ContainsKey(InstanceData.Checksum)) {
+                stuAttribute = $"[STU(0x{InstanceData.Checksum:X8}, \"{instanceNames[InstanceData.Checksum]}\")]";
+            }
+            sb.AppendLine($"{indentString}{stuAttribute}");
 
             string instanceBaseClass = properTypePaths ? "STULib.Types.Generic.Common.STUInstance" : "STUInstance";
 
@@ -49,11 +56,15 @@ namespace STUHashTool {
                 string type = Program.GetType(field, properTypePaths);
                 string fieldName = $"m_{field.Checksum:X8}";
                 string fieldTypeDef = properTypePaths ? "STULib.STUField": "STUField";
-                string fieldDefinition = $"[{fieldTypeDef}(0x{field.Checksum:X8})]";
+                string fieldDefinition = $"[{fieldTypeDef}(0x{field.Checksum:X8}";
                 if (fieldNames.ContainsKey(field.Checksum)) {
                     fieldName = fieldNames[field.Checksum];
-                    fieldDefinition = $"[{fieldTypeDef}(0x{field.Checksum:X8}, \"{fieldName}\")]";
+                    fieldDefinition = fieldDefinition + $", \"{fieldName}\"";
                 }
+                if (field.IsEmbed || field.IsEmbedArray) {
+                    fieldDefinition = fieldDefinition + ", EmbeddedInstance = true";
+                }
+                fieldDefinition = fieldDefinition + ")]";
                 if (field.SerializationType == 12 || field.SerializationType == 13) {
                     type = properTypePaths ? "STULib.Types.Generic.Common.STUGUID": "STUGUID";
                 }
@@ -66,11 +77,12 @@ namespace STUHashTool {
                     guidComment = $"  // {guidComment}";
                 }
                 if (field.IsInline || field.IsEmbed || field.IsEmbedArray || field.IsInlineArray) {  //  
-                    string instanceType = ISTU.InstanceTypes.ContainsKey(field.TypeInstanceChecksum) ? 
-                        ISTU.InstanceTypes[field.TypeInstanceChecksum].ProperName() : $"STU_{field.TypeInstanceChecksum:X8}";
+                    string instanceType = $"STU_{field.TypeInstanceChecksum:X8}";
                     if (instanceNames.ContainsKey(field.TypeInstanceChecksum)) {
                         instanceType = instanceNames[field.TypeInstanceChecksum];
                     }
+                    if (ISTU.InstanceTypes.ContainsKey(field.TypeInstanceChecksum))
+                        instanceType = ISTU.InstanceTypes[field.TypeInstanceChecksum].ProperName();
                     sb.AppendLine($"{fieldIndentString}{fieldDefinition}");
                     sb.AppendLine($"{fieldIndentString}public {instanceType}{(field.IsEmbedArray||field.IsInlineArray ? "[]" : "")} {fieldName};");
                 } else if (type == null && !field.IsEnum && !field.IsEnumArray && !field.IsHashMap) {
