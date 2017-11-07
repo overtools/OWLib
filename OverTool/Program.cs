@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using CASCLib;
 using OverTool.Flags;
 using STULib;
@@ -118,6 +119,18 @@ namespace OverTool {
 
             if (flags.SkipKeys) {
                 Console.Out.WriteLine("Disabling Key auto-detection...");
+            }
+
+            Regex versionRegex = new Regex(@"\d+\.\d+");
+            Match versionMatch = versionRegex.Match(config.BuildName);
+
+            if (versionMatch.Success) {
+                float version = float.Parse(versionMatch.Value);
+
+                if (version > 1.13) {
+                    Console.Out.WriteLine("Overtool only works with Overwatch version 1.13 and below! You are using {0}", config.BuildName);
+                    Console.Out.WriteLine("Exiting...");
+                }
             }
 
             Console.Out.WriteLine("Using Overwatch Version {0}", config.BuildName);
