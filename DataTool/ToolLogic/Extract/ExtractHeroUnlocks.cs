@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
@@ -33,7 +34,7 @@ namespace DataTool.ToolLogic.Extract {
     // Roadhog
     
     // bases
-    
+
     [DebuggerDisplay("ArgType: {" + nameof(Name) + "}")]
     public class ArgType {
         public string Name;
@@ -105,6 +106,14 @@ namespace DataTool.ToolLogic.Extract {
 
         string rootDir = "Heroes";
 
+        private readonly Dictionary<string, string> _HeroMapping = new Dictionary<string, string> {
+            ["soldier76"] = "Soldier: 76",
+            ["soldier 76"] = "Soldier: 76",
+            ["soldier"] = "Soldier: 76",
+            ["lucio"] = "Lúcio",
+            ["torbjorn"] = "Torbjörn"
+        };
+
         public void Parse(ICLIFlags toolFlags) {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
@@ -171,13 +180,20 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public void SaveUnlocksForHeroes(ICLIFlags flags, List<STUHero> heroes, string basePath) {
-            List<ArgType> types = new List<ArgType> {new CosmeticType("skin"), new CosmeticType("icon"), 
-                new CosmeticType("spray"), new CosmeticType("victorypose"), new CosmeticType("highlightintro"), 
-                new CosmeticType("emote")};
+            List<ArgType> types = new List<ArgType> {
+                new CosmeticType("skin"),
+                new CosmeticType("icon"),
+                new CosmeticType("spray"),
+                new CosmeticType("victorypose"),
+                new CosmeticType("highlightintro"), 
+                new CosmeticType("emote")
+            };
+
             if (flags.Positionals.Length < 4) {
                 Help(types);
                 return;
             }
+
             string[] result = new string[flags.Positionals.Length-3];
             Array.Copy(flags.Positionals, 3, result, 0, flags.Positionals.Length-3);
             
@@ -188,6 +204,9 @@ namespace DataTool.ToolLogic.Extract {
                 string[] split = opt.Split('|');
 
                 string hero = split[0].ToLowerInvariant();
+                if (_HeroMapping.ContainsKey(hero)) {
+                    hero = _HeroMapping[hero];
+                }
                 
                 string[] afterOpts = new string[split.Length-1];
                 Array.Copy(split, 1, afterOpts, 0, split.Length-1);
@@ -216,6 +235,7 @@ namespace DataTool.ToolLogic.Extract {
                         foreach (string item in items) {
                             string realItem = item.ToLowerInvariant();
                             bool nextNotBracket = false;
+
                             if (item.StartsWith("(") && item.EndsWith(")")) {
                                 realItem = item.Remove(0, 1);
                                 realItem = realItem.Remove(realItem.Length-1);
@@ -228,6 +248,7 @@ namespace DataTool.ToolLogic.Extract {
                                 nextNotBracket = true;
                                 realItem = item.Remove(item.Length-1);
                             }
+
                             if (!isBracket) {
                                 if (!realItem.StartsWith("!")) {
                                     parsedTypes[hero][typeObj.Name].Allowed.Add(realItem);
@@ -245,6 +266,7 @@ namespace DataTool.ToolLogic.Extract {
                             }
                             if (nextNotBracket) isBracket = false;
                         }
+
                         if (parsedTypes[hero][typeObj.Name].Allowed.Count == 0 &&
                             parsedTypes[hero][typeObj.Name].Tags.Count > 0) {
                             parsedTypes[hero][typeObj.Name].Allowed = new List<string> {"*"};
@@ -252,6 +274,7 @@ namespace DataTool.ToolLogic.Extract {
                     }
                 }
             }
+
             foreach (var hero in heroes) {
                 var heroName = GetValidFilename(GetString(hero.Name));
                 
@@ -357,7 +380,7 @@ namespace DataTool.ToolLogic.Extract {
                 var heroTextures = new Dictionary<ulong, List<TextureInfo>>();
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource1, "Icon", true);
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource2, "Portrait", true);
-                heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource3, "unknown", true); // Same as Icon for now
+                heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource3, "unknown", true); // Same as Icon for now, doesn't get saved as its a dupe
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource4, "Avatar", true);
                 Texture.Save(flags, Path.Combine(basePath, rootDir, heroName, "GUI"), heroTextures);
             }
