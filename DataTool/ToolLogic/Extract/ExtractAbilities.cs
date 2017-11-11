@@ -41,7 +41,7 @@ namespace DataTool.ToolLogic.Extract {
                 using (Stream videoStream = OpenFile(loadout.InfoMovie)) {
                     if (videoStream != null) {
                         videoStream.Position = 128;  // wrapped in "MOVI" for some reason
-                        WriteFile(videoStream, Path.Combine(basePath, name, "video.bk2"));
+                        WriteFile(videoStream, Path.Combine(basePath, name, "InfoMovie.bk2"));
                     }
                 }
 
