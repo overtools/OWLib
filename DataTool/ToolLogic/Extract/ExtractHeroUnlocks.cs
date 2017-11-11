@@ -107,11 +107,11 @@ namespace DataTool.ToolLogic.Extract {
         string rootDir = "Heroes";
 
         private readonly Dictionary<string, string> _HeroMapping = new Dictionary<string, string> {
-            ["soldier76"] = "Soldier: 76",
-            ["soldier 76"] = "Soldier: 76",
-            ["soldier"] = "Soldier: 76",
-            ["lucio"] = "Lúcio",
-            ["torbjorn"] = "Torbjörn"
+            ["soldier76"] = "soldier: 76",
+            ["soldier 76"] = "soldier: 76",
+            ["soldier"] = "soldier: 76",
+            ["lucio"] = "lúcio",
+            ["torbjorn"] = "torbjörn"
         };
 
         public void Parse(ICLIFlags toolFlags) {
