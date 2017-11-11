@@ -90,6 +90,7 @@
     <Compile Include="ToolLogic\Extract\ExtractLootbox.cs" />
     <Compile Include="ToolLogic\Extract\ExtractMaps.cs" />
     <Compile Include="ToolLogic\Extract\ExtractFlags.cs" />
+    <Compile Include="ToolLogic\Extract\ExtractNPCs.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugSoundbanks.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugDecal.cs" />
     <Compile Include="ToolLogic\List\ListGameParams.cs" />

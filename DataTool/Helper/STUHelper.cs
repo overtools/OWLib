@@ -43,6 +43,7 @@ namespace DataTool.Helper {
 
         public static HashSet<ItemInfo> GatherUnlocks(IEnumerable<ulong> GUIDs) {
             var @return = new HashSet<ItemInfo>();
+            if (GUIDs == null) return @return;
             foreach (var GUID in GUIDs) {
                 var unlock = GatherUnlock(GUID);
                 if (unlock == null) continue;

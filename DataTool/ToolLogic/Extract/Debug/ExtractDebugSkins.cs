@@ -36,7 +36,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 List<ItemInfo> weaponSkins = unlocks.SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList();
 
                 foreach (ItemInfo skin in skins) {
-                    SaveLogic.Unlock.Skin.Save(flags, basePath, hero, skin.Rarity, skin.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, null, false);
+                    SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\HeroSkinDebug", hero, skin.Rarity, skin.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, null, false);
                 }
             }
         }

@@ -192,6 +192,13 @@ namespace OWLib {
             chunkMap.Add(identifier, chunk);
             return MANAGER_ERROR.E_SUCCESS;
         }
+        
+        public string ReverseString(string text){
+            if (text == null) return null;
+            char[] array = text.ToCharArray();
+            Array.Reverse(array);
+            return new string(array);
+        }
 
         public IChunk NewChunk(string id, string root) {
             string identifier = root + id;
@@ -200,7 +207,7 @@ namespace OWLib {
             } else {
                 if (unhandledChunkIdentifiers.Add(identifier)) {
                     if (System.Diagnostics.Debugger.IsAttached) {
-                        System.Diagnostics.Debugger.Log(2, "CHUNK", $"Error! No handler for chunk type {identifier} ({root}:{id})\n");
+                        System.Diagnostics.Debugger.Log(2, "CHUNK", $"Error! No handler for chunk type {identifier} ({ReverseString(root)}:{ReverseString(id)})\n");
                     }
                 }
                 if (System.Diagnostics.Debugger.IsAttached || Util.DEBUG) {

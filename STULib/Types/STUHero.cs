@@ -47,7 +47,7 @@ namespace STULib.Types {
         public STUGUID StatescriptHeroComponent3;
 
         [STUField(0x84625AA3)]
-        public WeaponSkin[] WeaponSkins;
+        public Skin[] Skins;
 
         [STUField(0x950BBA06)]
         public STUGUID StatescriptHeroComponent4;
@@ -109,7 +109,7 @@ namespace STULib.Types {
         [STUField(0xE1258EC1)]
         public UnknownNested3[] Unknown34;
 
-        public class WeaponSkin {
+        public class Skin {
             [STUField(0x0029461B)]
             public STUGUID Metadata;
 
@@ -117,7 +117,7 @@ namespace STULib.Types {
             public STUGUID SkinOverride;
 
             [STUField(0x7B95C2A2)]
-            public byte WeaponIndex;
+            public byte Index;
 
             [STUField(0x88F5CF3E)]
             public STUGUID[] WeaponOverrides;

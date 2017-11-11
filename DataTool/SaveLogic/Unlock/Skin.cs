@@ -15,17 +15,25 @@ using static DataTool.Helper.Logger;
 
 namespace DataTool.SaveLogic.Unlock {
     public class Skin {
-        public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STULib.Types.STUUnlock.Skin skin, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet=true) {
-            string basePath = Path.Combine(path,
-                $"Heroes\\{GetValidFilename(GetString(hero.Name))}\\Skins\\{rarity}\\{GetValidFilename(GetString(skin.CosmeticName))}");
-            if (!quiet) Log($"Extracting skin {GetString(hero.Name)} {GetString(skin.CosmeticName)}");
+        public static void Save(ICLIFlags flags, string path, STUHero hero, STUHero.Skin skin, bool quiet = true) {
+            STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinOverride);
+            if (!quiet) Log($"Extracting skin {GetString(hero.Name)} {GetFileName(skin.SkinOverride)}");
             if (!quiet) Log("\tFinding models");
-            if (weaponSkins == null) weaponSkins = new List<ItemInfo>();
+            Save(flags, GetFileName(skin.SkinOverride), path, hero, "", skinOverride, null, null, quiet);
+        }
+
+        public static void Save(ICLIFlags flags, string skinName, string path, STUHero hero, string rarity, STUSkinOverride skinOverride, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet = true) {
+            string heroPath = GetValidFilename(GetString(hero.Name));
+            if (heroPath == null) heroPath = "Unknown";
+            string basePath = Path.Combine(path,
+                $"{heroPath}\\Skins\\{rarity}\\{GetValidFilename(skinName)}");
             Dictionary<uint, ItemInfo> realWeaponSkins = new Dictionary<uint, ItemInfo>();
-            foreach (ItemInfo weaponSkin in weaponSkins) {
-                realWeaponSkins[((Weapon) weaponSkin.Unlock).Index] = weaponSkin;
+            if (weaponSkins != null) {
+                foreach (ItemInfo weaponSkin in weaponSkins) {
+                    realWeaponSkins[((Weapon) weaponSkin.Unlock).Index] = weaponSkin;
+                }
             }
-            STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinResource);
+            
             Dictionary<Common.STUGUID, Common.STUGUID> replacements = skinOverride.ProperReplacements ?? new Dictionary<Common.STUGUID, Common.STUGUID>();
             Dictionary<ulong, ulong> realReplacements = replacements.ToDictionary(x => (ulong)x.Key, y => (ulong)y.Value);
             HashSet<ModelInfo> models = new HashSet<ModelInfo>();
@@ -64,10 +72,12 @@ namespace DataTool.SaveLogic.Unlock {
             Dictionary<int, string> weaponNamesRaw = new Dictionary<int, string>();
             Dictionary<int, string> weaponNames = new Dictionary<int, string>();
 
-            foreach (STULoadout ability in abilities) {
-                if (ability.Category != LoadoutCategory.Weapon) continue;
-                if (!weaponNamesRaw.ContainsKey(ability.WeaponIndex-1))
-                    weaponNamesRaw[ability.WeaponIndex-1] = GetString(ability.Name);
+            if (abilities != null) {
+                foreach (STULoadout ability in abilities) {
+                    if (ability.Category != LoadoutCategory.Weapon) continue;
+                    if (!weaponNamesRaw.ContainsKey(ability.WeaponIndex-1))
+                        weaponNamesRaw[ability.WeaponIndex-1] = GetString(ability.Name);
+                }
             }
             
             int weaponCount = 0;
@@ -111,6 +121,7 @@ namespace DataTool.SaveLogic.Unlock {
             if (!quiet) Log("\tFinding GUI");
             Dictionary<ulong, List<TextureInfo>> guiTextures = new Dictionary<ulong, List<TextureInfo>>();
             foreach (Common.STUGUID existingGui in new [] {hero.ImageResource1, hero.ImageResource2, hero.ImageResource3, hero.ImageResource3, hero.ImageResource4}) {
+                if (existingGui == null) continue;
                 if (replacements.ContainsKey(existingGui)) {
                     guiTextures = FindLogic.Texture.FindTextures(guiTextures, replacements[existingGui], null, true,
                         realReplacements);
@@ -144,7 +155,7 @@ namespace DataTool.SaveLogic.Unlock {
 
             if (!quiet && models.Count > 0) Log("\tSaving models");
             foreach (ModelInfo model in models) {
-                Model.Save(flags, Path.Combine(basePath, "Models"), model, $"{GetString(hero.Name)} Skin {GetString(skin.CosmeticName)}_{GUID.Index(model.GUID):X}");
+                Model.Save(flags, Path.Combine(basePath, "Models"), model, $"{GetString(hero.Name)} Skin {skinName}_{GUID.Index(model.GUID):X}");
             }
             
             if (!quiet && weaponModels.Count > 0) Log("\tSaving weapons");
@@ -156,7 +167,7 @@ namespace DataTool.SaveLogic.Unlock {
                     string modelName = null;
                     if (weaponNames.ContainsKey(weaponModelIndex)) modelName = GetValidFilename(weaponNames[weaponModelIndex].TrimEnd());
                     if (realWeaponSkins.ContainsKey(weaponIndex)) weaponName = GetValidFilename(GetString(realWeaponSkins[weaponIndex].Unlock.CosmeticName));
-                    Model.Save(flags, Path.Combine(basePath, $"Weapons\\{weaponName}\\"), model, $"{GetString(hero.Name)} Skin {GetString(skin.CosmeticName)} Weapon {GUID.Index(weapon.Key)}_{GUID.Index(model.GUID):X}", modelName);
+                    Model.Save(flags, Path.Combine(basePath, $"Weapons\\{weaponName}\\"), model, $"{GetString(hero.Name)} Skin {skinName} Weapon {GUID.Index(weapon.Key)}_{GUID.Index(model.GUID):X}", modelName);
                     weaponModelIndex++;
                 }
                 weaponIndex++;
@@ -169,6 +180,15 @@ namespace DataTool.SaveLogic.Unlock {
             }
             if (!quiet) Log("\tComplete");
             
+        }
+
+        public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STULib.Types.STUUnlock.Skin skin, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet=true) {
+            if (!quiet) Log($"Extracting skin {GetString(hero.Name)} {GetString(skin.CosmeticName)}");
+            if (!quiet) Log("\tFinding models");
+            if (weaponSkins == null) weaponSkins = new List<ItemInfo>();
+            
+            STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinResource);
+            Save(flags, GetString(skin.CosmeticName), path, hero, rarity, skinOverride, weaponSkins, abilities, quiet);
         }
     }
 }

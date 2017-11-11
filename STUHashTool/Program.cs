@@ -401,6 +401,14 @@ namespace STUHashTool {
                             }
                             FindInternalInstances(instanceData, file1STU2.InternalInstances);
                         }
+
+                        foreach (KeyValuePair<uint,InstanceData> instanceData in file1STU2.InternalInstances) {
+                            if (instanceData.Value == null) continue;
+                            if (!RealInstances.ContainsKey(instanceData.Value.Checksum)) {
+                                RealInstances[instanceData.Value.Checksum] = instanceData.Value;
+                            }
+                            FindInternalInstances(instanceData.Value, file1STU2.InternalInstances);
+                        }
                         
                         if (file1STU2.InstanceGuessData == null) continue;
 
@@ -951,6 +959,10 @@ namespace STUHashTool {
         public static void FindInternalInstances(InstanceData instance, Dictionary<uint, InstanceData> internalInstances, List<uint> alreadyDone=null) {
             if (alreadyDone == null) {
                 alreadyDone = new List<uint>();
+            }
+            if (!alreadyDone.Contains(instance.Checksum)) {
+                RealInstances[instance.Checksum] = instance;
+                alreadyDone.Add(instance.Checksum);
             }
             if (instance.ParentType != null && !alreadyDone.Contains(instance.ParentChecksum)) {
                 RealInstances[instance.ParentChecksum] = internalInstances[instance.ParentChecksum];
