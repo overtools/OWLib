@@ -13,7 +13,7 @@ namespace DataTool {
         [Alias(Alias = "lang")]
         public string Language;
 
-        [CLIFlag(Default = false, Flag = "graceful-exit", Help = "When eabled don't crash on invalid CMF Encryption", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = false, Flag = "graceful-exit", Help = "When enabled don't crash on invalid CMF Encryption", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool GracefulExit;
 
         [CLIFlag(Default = true, Flag = "cache", Help = "Cache Index files from CDN", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]

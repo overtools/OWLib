@@ -203,7 +203,7 @@ namespace DataTool {
         private static void PrintHelp(IEnumerable<Type> eTools) {
             Log();
             Log("Modes:");
-            Log("  {0, -20} | {1, -40}", "mode", "description");
+            Log("  {0, -23} | {1, -40}", "mode", "description");
             Log("".PadLeft(94, '-'));
             List<Type> tools = new List<Type>(eTools);
             tools.Sort(new ToolComparer());
@@ -216,7 +216,7 @@ namespace DataTool {
                 if (attrib.Description == null) {
                     desc = "";
                 }
-                Log("  {0, -20} | {1}", attrib.Keyword, desc);
+                Log("  {0, -23} | {1}", attrib.Keyword, desc);
             }
             
             foreach (Type t in tools) {
