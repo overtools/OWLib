@@ -30,6 +30,7 @@ namespace STULib.Types {
         [STUField(0xDA765F6C)]
         public uint Unknown5;
 
+        [STU(0x0CABB5CE)]
         public class STU_0CABB5CE {
             [STUField(0x643BEFB1)]
             public int Unknown1;

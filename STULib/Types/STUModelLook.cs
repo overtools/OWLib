@@ -4,18 +4,19 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types {
     [STU(0x5207484B)]
     public class STUModelLook : STUInstance {
+        [STUField(0xBAFDAFBA)]
+        public Material[] Materials;
+        
+        [STUField(0x33DA887B)]
+        public STUGUID[] VirtualReferences;
+        
+        [STUField(0xC03306D7)]
+        public STUGUID[] ModelReferences;
+        
         [STUField(0x312C5F1A)]
         public MaterialReferenceWrapper[] Wrappers;
 
-        [STUField(0x33DA887B)]
-        public STUGUID[] VirtualReferences;
-
-        [STUField(0xBAFDAFBA)]
-        public Material[] Materials;
-
-        [STUField(0xC03306D7)]
-        public STUGUID[] ModelReferences;
-
+        [STU(0x4D03ED2B)]
         public class MaterialReferenceWrapper {
             [STUField(0x0BCD10D6)]
             public STUGUID GUIDx065_Reference;
@@ -24,6 +25,7 @@ namespace STULib.Types {
             public Material[] Materials;
         }
 
+        [STU(0x494B66C1)]
         public class Material {
             [STUField(0x33E51FDC)]
             public STUGUID MaterialReference;

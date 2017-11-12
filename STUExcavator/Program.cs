@@ -214,30 +214,30 @@ namespace STUExcavator {
                         }
                     }
                     // well, this is dumb, raw guids don't have padding.
-                    //if (asset.SerializationType == SerializationType.Unknown) {  // ok so this is probably a raw file
-                    //    asset.SerializationType = SerializationType.Raw;
-                    //    asset.GUIDs = new HashSet<string>();
-                    //    reader.BaseStream.Position = 0;
-                    //    
-                    //    // try and auto detect padding that is before a guid
-                    //    // this is innacurate for types like 004
-                    //    int maxCount = 0;
-                    //    for (int i = 0; i < reader.BaseStream.Length; i++) {
-                    //        byte b = reader.ReadByte();
-                    //        if (b == 255) maxCount++;
-                    //        if (maxCount >= 8 && b != 255) {
-                    //            if (reader.BaseStream.Length - reader.BaseStream.Position > 8) {
-                    //                reader.BaseStream.Position -= 1; // before b
-                    //                Common.STUGUID rawGUID = new Common.STUGUID(reader.ReadUInt64());
-                    //                reader.BaseStream.Position -= 7; // back to after b
-                    //                if (GUID.Type(rawGUID) > 1) {
-                    //                    asset.GUIDs.Add(rawGUID.ToString());
-                    //                }
-                    //            }
-                    //        } 
-                    //        if (b != 255 && maxCount > 0) maxCount = 0;
-                    //    }
-                    //}
+                    if (asset.SerializationType == SerializationType.STUv1) {  // ok so this is probably a raw file
+                        // asset.SerializationType = SerializationType.Raw;
+                        asset.GUIDs = new HashSet<string>();
+                        reader.BaseStream.Position = 0;
+                        
+                        // try and auto detect padding that is before a guid
+                        // this is innacurate for types like 004
+                        int maxCount = 0;
+                        for (int i = 0; i < reader.BaseStream.Length; i++) {
+                            byte b = reader.ReadByte();
+                            if (b == 255) maxCount++;
+                            if (maxCount >= 8 && b != 255) {
+                                if (reader.BaseStream.Length - reader.BaseStream.Position > 8) {
+                                    reader.BaseStream.Position -= 1; // before b
+                                    Common.STUGUID rawGUID = new Common.STUGUID(reader.ReadUInt64());
+                                    reader.BaseStream.Position -= 7; // back to after b
+                                    if (GUID.Type(rawGUID) > 1) {
+                                        asset.GUIDs.Add(rawGUID.ToString());
+                                    }
+                                }
+                            } 
+                            if (b != 255 && maxCount > 0) maxCount = 0;
+                        }
+                    }
                 }
             }
             return asset;
@@ -262,25 +262,10 @@ namespace STUExcavator {
                 case SerializationType.Raw:
                     summary.GUIDTypes = new HashSet<string>();
                     break;
+                case SerializationType.STUv1:
                 case SerializationType.STUv2:
-                    // compile the classes
                     summary.GUIDTypes = new HashSet<string>();
                     summary.STUInstanceTypes = new HashSet<string>();
-                    using (Stream firstStream = IO.OpenFile(files.First())) {
-                        bool beforeChildren = Version2Comparer.GetAllChildren;
-                        Version2Comparer.GetAllChildren = true;
-                        Version2Comparer version2Comparer =
-                            ISTU.NewInstance(firstStream, uint.MaxValue, typeof(Version2Comparer)) as Version2Comparer;
-                        Version2Comparer.GetAllChildren = beforeChildren;
-                        
-                        if (version2Comparer == null) throw new InvalidDataException();
-
-                        if (version2Comparer.InstanceData == null) {
-                            summary.SerializationType = SerializationType.Unknown; // abort
-                            summary.Incomplete = true;
-                            return summary;
-                        }
-                    }
                     break;
             }
             List<Asset> assets = new List<Asset>();

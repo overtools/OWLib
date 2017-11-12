@@ -6,7 +6,7 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types {
     [STU(0x7C3457DC)]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public class STUHero : STUInstance {
+    public class STUHero : STUInstance {  // this has a base class
         [STUField(0x0EDCE350)]
         public STUGUID Name;
 
@@ -109,6 +109,7 @@ namespace STULib.Types {
         [STUField(0xE1258EC1)]
         public UnknownNested3[] Unknown34;
 
+        [STU(0x63172E83)]
         public class Skin {
             [STUField(0x0029461B)]
             public STUGUID Metadata;
@@ -123,6 +124,7 @@ namespace STULib.Types {
             public STUGUID[] WeaponOverrides;
         }
 
+        [STU(0x8A1F18F9)]
         public class UnknownNested1 {
             [STUField(0x118D9D9F)]
             public StatisticGroup[] Statistics;  // todo: check nested array
@@ -131,6 +133,7 @@ namespace STULib.Types {
             public STUGUID GUIDx0C5_Reference;  //todo: check if STUGUID
         }
 
+        [STU(0xA0872511)]
         public class Statescript {
             [STUField(0x0827AB28)]
             public STUVec3 UnknownVec3_a;
@@ -148,6 +151,7 @@ namespace STULib.Types {
             public STUVec3 UnknownVec3_c;
         }
 
+        [STU(0xC0D5117B)]
         public class StatisticGroup {
             [STUField(0x07EC21F2)]
             public STUGUID Statistic1;
@@ -159,6 +163,7 @@ namespace STULib.Types {
             public STUGUID Statistic3;
         }
 
+        [STU(0x33752503)]
         public class UnknownNested2 {
             [STUField(0x9A97C666)]
             public uint Unknown1;
@@ -167,6 +172,7 @@ namespace STULib.Types {
             public float Unknown2;
         }
 
+        [STU(0x5E493D8B)]
         public class UnknownNested3 {
             [STUField(0x925E7392)]
             public uint Unknown1;

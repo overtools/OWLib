@@ -286,6 +286,10 @@ namespace DataTool.SaveLogic {
             string name = GetValidFilename(GetString(map.Name)) ?? $"Unknown{GUID.Index(key):X}";
             
             if (GetString(map.VariantName) != null) name = GetValidFilename(GetString(map.VariantName));
+
+            // if (name != "EICHENWALDE (HALLOWEEN)") return;
+            // music testing:
+            //     loadmusic = 00000008565B.03F
             
             if (!Flags.Quiet) Console.Out.WriteLine($"Saving map: {name} ({GUID.Index(key):X})");
             Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
@@ -300,6 +304,7 @@ namespace DataTool.SaveLogic {
             // TODO: MAP10 TOO?
             
             string mapPath = Path.Combine(basePath, "Maps", name, GUID.Index(key).ToString("X")) + Path.DirectorySeparatorChar;
+            
             CreateDirectoryFromFile(mapPath);
             
             // if (map.UnknownArray != null) {
