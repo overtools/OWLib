@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -69,20 +69,19 @@ namespace STULib.Types.Map {
                         return;
                     }
                 }
-
-                // todo: fix all of the existing classes
-                // if (Records.Length > 0 && Records[0] != null && Records[0].HasSTUD) {
-                //     AlignPosition(input, input.Position);
-                //     while (true) {
-                //         if (input.Position >= input.Length) {
-                //             break;
-                //         }
-                //         ISTU tmp = ISTU.NewInstance(input, owVersion);
-                //         AlignPositionNew(reader, tmp as Version1);
-                //         STUInstances = new HashSet<uint>(STUInstances.Concat(tmp.TypeHashes).ToList());
-                //         STUs.Add(tmp);
-                //     }
-                // }
+                
+                if (Records.Length > 0 && Records[0] != null && Records[0].HasSTUD) {
+                    AlignPosition(input, input.Position);
+                    while (true) {
+                        if (input.Position >= input.Length) {
+                            break;
+                        }
+                        ISTU tmp = ISTU.NewInstance(input, owVersion);
+                        AlignPositionNew(reader, tmp as Version1);
+                        STUInstances = new HashSet<uint>(STUInstances.Concat(tmp.TypeHashes).ToList());
+                        STUs.Add(tmp);
+                    }
+                }
             }
         }
 

@@ -7,6 +7,7 @@ using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
+using STULib;
 using STULib.Types;
 using STULib.Types.Generic;
 using STULib.Types.Statescript.Components;
@@ -287,7 +288,7 @@ namespace DataTool.SaveLogic {
             
             if (GetString(map.VariantName) != null) name = GetValidFilename(GetString(map.VariantName));
 
-            // if (name != "EICHENWALDE (HALLOWEEN)") return;
+            if (name != "EICHENWALDE (HALLOWEEN)") return;
             // music testing:
             //     loadmusic = 00000008565B.03F
             
@@ -335,7 +336,11 @@ namespace DataTool.SaveLogic {
 
                             mapBStream.Position =
                                 (long) (Math.Ceiling(mapBStream.Position / 16.0f) * 16); // Future proofing (?)
-                            // foreach (ISTU stu in mapBData.STUs) { }
+                            
+                            // type 0x75526BC2 kills the parser
+                            // foreach (ISTU stu in mapBData.STUs) {
+                            //     
+                            // }
 
                             for (int i = 0; i < mapBData.Records.Length; ++i) {
                                 if (mapBData.Records[i] != null && mapBData.Records[i].GetType() != typeof(Map0B)) {

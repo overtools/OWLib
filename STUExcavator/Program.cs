@@ -27,7 +27,8 @@ namespace STUExcavator {
         // ReSharper disable once InconsistentNaming
         STUv1 = 2,
         // ReSharper disable once InconsistentNaming
-        STUv2 = 3
+        STUv2 = 3,
+        MapData = 4
     }
     [JsonObject(MemberSerialization.OptOut)]
     public class AssetTypeSummary {
@@ -185,11 +186,33 @@ namespace STUExcavator {
                 SerializationType = SerializationType.Unknown
             };
 
+            if (type != 0xBC) return asset;
+
             using (Stream file = IO.OpenFile(guid)) {
                 using (BinaryReader reader = new BinaryReader(file)) {
                     if (Version1.IsValidVersion(reader)) {
                         reader.BaseStream.Position = 0;
                         asset.SerializationType = SerializationType.STUv1;  // todo:
+                    } else if (type == 0xBC) {
+                        asset.SerializationType = SerializationType.MapData;
+                        asset.GUIDs = new HashSet<string>();
+                        asset.STUInstances = new HashSet<string>();
+                        STULib.Types.Map.Map map;
+                        reader.BaseStream.Position = 0;
+                        try {
+                            map = new STULib.Types.Map.Map(file, uint.MaxValue);
+                        }
+                        catch (ArgumentOutOfRangeException) {
+                            return asset;
+                        }
+                        foreach (ISTU stu in map.STUs) {
+                            asset.GUIDs = GetGUIDs(stu);
+                            foreach (Common.STUInstance stuInstance in stu.Instances) {
+                                STUAttribute attr = stuInstance?.GetType().GetCustomAttributes<STUAttribute>().FirstOrDefault();
+                                if (attr == null) continue;
+                                asset.STUInstances.Add(attr.Checksum.ToString("X8"));
+                            }
+                        }
                     } else {
                         if (Version2.IsValidVersion(reader)) {   // why is there no magic, blizz pls
                             reader.BaseStream.Position = 0;
@@ -262,6 +285,7 @@ namespace STUExcavator {
                 case SerializationType.Raw:
                     summary.GUIDTypes = new HashSet<string>();
                     break;
+                case SerializationType.MapData:
                 case SerializationType.STUv1:
                 case SerializationType.STUv2:
                     summary.GUIDTypes = new HashSet<string>();
@@ -291,10 +315,15 @@ namespace STUExcavator {
             return summary;
         }
 
-        public static HashSet<string> GetGUIDs(Version2 stu) {
+        public static HashSet<string> GetGUIDs(ISTU stu) {
             HashSet<string> guids = new HashSet<string>();
 
-            foreach (Common.STUInstance instance in stu.Instances.Concat(stu.HiddenInstances)) {
+            IEnumerable<Common.STUInstance> instances = stu.Instances;
+            if (stu.GetType() == typeof(Version2)) {
+                instances = instances.Concat(((Version2) stu).HiddenInstances);
+            }
+
+            foreach (Common.STUInstance instance in instances) {
                 // this means all instances, we don't need to recurse
                 if (instance == null) continue;
                 FieldInfo[] fields = GetFields(instance.GetType(), true);

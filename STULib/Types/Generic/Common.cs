@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -62,10 +63,14 @@ namespace STULib.Types.Generic {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         [STUOverride(0xDEADBEEF, 8)] // DUMMY
         public class STUGUID : IDemangleable, IEquatable<STUGUID> {
-            [STUField(0x1, DummySize = 8, OnlyBuffer = true)] // DUMMY
+            [STUField(0x1, DummySize = 8, OnlyBuffer = true, STUVersionOnly = new uint[] { 2 })] // DUMMY
             private ulong Padding = ulong.MaxValue;
+            
+            [STUField(0x2, DummySize = 8, STUVersionOnly = new uint[] { 1 })] // DUMMY
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]  // we need to read padding no matter what for v1
+            private ulong V1Padding = ulong.MaxValue;
 
-            [STUField(0x2, DummySize = 8)] // DUMMY
+            [STUField(0x3, DummySize = 8)] // DUMMY
             private ulong Key;
 
             public STUGUID() {

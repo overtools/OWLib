@@ -343,7 +343,10 @@ namespace STULib.Impl.Version2HashComparer {
             WrittenFieldData[] fields = null;
 
             if (json.Parent != null && !InternalInstances.ContainsKey(json.ParentChecksum)) {
+                bool beforeGetAll = GetAllChildren;
+                GetAllChildren = false;  // we do not need parent's children
                 InternalInstances[json.ParentChecksum] = GetInstanceData(json.ParentChecksum, reader);
+                GetAllChildren = beforeGetAll;
             }
             
             // get all children
