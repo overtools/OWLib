@@ -288,7 +288,7 @@ namespace DataTool.SaveLogic {
             
             if (GetString(map.VariantName) != null) name = GetValidFilename(GetString(map.VariantName));
 
-            if (name != "EICHENWALDE (HALLOWEEN)") return;
+            // if (name != "EICHENWALDE (HALLOWEEN)") return;
             // music testing:
             //     loadmusic = 00000008565B.03F
             
