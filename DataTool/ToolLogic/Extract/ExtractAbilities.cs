@@ -27,7 +27,8 @@ namespace DataTool.ToolLogic.Extract {
             } else {
                 throw new Exception("no output path");
             }
-            
+
+            const string folderName = "Abilities";
             
             foreach (ulong key in TrackedFiles[0x9E]) {
                 STULoadout loadout = GetInstance<STULoadout>(key);
@@ -41,11 +42,10 @@ namespace DataTool.ToolLogic.Extract {
                 using (Stream videoStream = OpenFile(loadout.InfoMovie)) {
                     if (videoStream != null) {
                         videoStream.Position = 128;  // wrapped in "MOVI" for some reason
-                        WriteFile(videoStream, Path.Combine(basePath, name, "InfoMovie.bk2"));
+                        WriteFile(videoStream, Path.Combine(basePath, folderName, name, $"{GUID.LongKey(loadout.InfoMovie):X12}.bk2"));
                     }
                 }
-
-                SaveLogic.Texture.Save(flags, Path.Combine(basePath, name), textures);
+                SaveLogic.Texture.Save(flags, Path.Combine(basePath, folderName, name), textures);
             }
         }
     }

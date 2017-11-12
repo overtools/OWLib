@@ -45,7 +45,7 @@ namespace DataTool.ToolLogic.Extract {
                 models = Model.FindModels(models, lootbox.Material2);
 
                 foreach (ModelInfo model in models) {
-                    SaveLogic.Model.Save(flags, Path.Combine(basePath, name), model, $"Lootbox {lootbox.Event}_{GUID.Index(model.GUID):X}");
+                    SaveLogic.Model.Save(flags, Path.Combine(basePath, "Lootboxes", name), model, $"Lootbox {lootbox.Event}_{GUID.Index(model.GUID):X}");
                 }
             }
         }

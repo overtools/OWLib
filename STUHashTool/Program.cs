@@ -11,11 +11,11 @@ using Newtonsoft.Json.Linq;
 using OverTool;
 using OWLib;
 using STULib;
-using STULib.Impl;
 using STULib.Impl.Version2HashComparer;
 using Console = System.Console;
 using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
 using Util = OverTool.Util;
+using Version2 = STULib.Impl.Version2;
 
 namespace STUHashTool {
     public class InstanceTally {
