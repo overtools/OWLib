@@ -97,7 +97,7 @@ namespace DataTool.Flag {
                 List<string> aliases = new List<string>();
 
                 string prefix = "--";
-                if (flagattr.Flag.Length == 1) {
+                if (flagattr.Flag?.Length == 1) {
                     prefix = "-";
                 }
                 if (flagattr.Positional > -1) {

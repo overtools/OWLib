@@ -223,9 +223,7 @@ namespace DataTool {
                 ToolAttribute attrib = t.GetCustomAttribute<ToolAttribute>();
                 if (attrib.CustomFlags == null) continue;
                 Type flags = attrib.CustomFlags;
-                if(typeof(ICLIFlags).IsAssignableFrom(flags)) {
-                    continue;
-                }
+                if (!typeof(ICLIFlags).IsAssignableFrom(attrib.CustomFlags)) continue;
                 Log();
                 Log("Flags for {0}", attrib.Keyword);
                 typeof(FlagParser).GetMethod("FullHelp").MakeGenericMethod(flags).Invoke(null, new object[] { null, true });

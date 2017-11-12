@@ -18,6 +18,7 @@ using STULib.Types.Generic;
 using Version1 = STULib.Impl.Version1;
 using Version2 = STULib.Impl.Version2;
 using static DataTool.Helper.Logger;
+using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
 
 namespace STUExcavator {
     public enum SerializationType {
@@ -49,6 +50,7 @@ namespace STUExcavator {
     public class Program {
         public static Dictionary<ulong, MD5Hash> Files;
         public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
+        public static List<string> InvalidTypes;
         public static CASCConfig Config;
         public static CASCHandler CASC;
         // dawn of a new project
@@ -79,6 +81,7 @@ namespace STUExcavator {
             
             // prepare Version2Comparer
             Version2Comparer.InstanceJSON = STUHashTool.Program.LoadInstanceJson("RegisteredSTUTypes.json");
+            InvalidTypes = STUHashTool.Program.LoadInvalidTypes("IgnoredBrokenSTUs.txt");
             
             // wipe ISTU
             ISTU.Clear();
@@ -86,9 +89,12 @@ namespace STUExcavator {
             // actual tool
             Dictionary<string, AssetTypeSummary> types = new Dictionary<string, AssetTypeSummary>();
             
+            ISTU.Clear();
+            CompileSTUs();
+            
             foreach (KeyValuePair<ushort,HashSet<ulong>> keyValuePair in TrackedFiles.OrderBy(x => x.Key)) {
                 // wipe ISTU
-                ISTU.Clear();
+                
                 
                 string type = keyValuePair.Key.ToString("X3");
                 Log($"Processing type: {type}");
@@ -97,6 +103,7 @@ namespace STUExcavator {
                 IO.CreateDirectoryFromFile(Path.Combine(outputDir, type, "master.json"));
                 using (Stream masterFile =
                     File.OpenWrite(Path.Combine(outputDir, type, "master.json"))) {
+                    masterFile.SetLength(0);
                     string masterJson = JsonConvert.SerializeObject(types[type], Formatting.Indented);
                     using (TextWriter writer = new StreamWriter(masterFile)) {
                         writer.WriteLine(masterJson);
@@ -108,12 +115,67 @@ namespace STUExcavator {
                     string assetFile = Path.Combine(outputDir, type, "assets", $"{asset.GUID}.json");
                     IO.CreateDirectoryFromFile(assetFile);
                     using (Stream assetStream = File.OpenWrite(assetFile)) {
+                        assetStream.SetLength(0);
                         string assetJson = JsonConvert.SerializeObject(asset, Formatting.Indented);
                         using (TextWriter writer = new StreamWriter(assetStream)) {
                             writer.WriteLine(assetJson);
                         }
                     }
                 }
+            }
+        }
+
+        public static void CompileSTUs() {
+            StringBuilder sb = new StringBuilder();
+            // sb.AppendLine("using static STULib.Types.Generic.Common;");  // compiler no likey
+            // sb.AppendLine();
+            HashSet<uint> doneEnums = new HashSet<uint>();
+            HashSet<uint> doneInstances = new HashSet<uint>();
+            foreach (KeyValuePair<uint, STUInstanceJSON> json in Version2Comparer.InstanceJSON) {
+                if (InvalidTypes.Contains(json.Value.Name)) continue;
+                InstanceData instanceData = Version2Comparer.GetData(json.Key);
+                if (instanceData == null) continue;
+                if (doneInstances.Contains(instanceData.Checksum)) continue;
+                doneInstances.Add(instanceData.Checksum);
+                ClassBuilder builder = new ClassBuilder(instanceData);
+                string @class = builder.Build(new Dictionary<uint, string>(),
+                    new Dictionary<uint, string>(), new Dictionary<uint, string>(), "STUExcavator.Types", false, true);
+                sb.AppendLine(@class);
+
+                foreach (FieldData field in instanceData.Fields) {
+                    if (!field.IsEnum && !field.IsEnumArray) continue;
+                    if (doneEnums.Contains(field.EnumChecksum)) continue;
+                    doneEnums.Add(field.EnumChecksum);
+                    EnumBuilder enumBuilder = new EnumBuilder(new STUEnumData {
+                        Type = STUHashTool.Program.GetSizeType(field.Size),
+                        Checksum = field.EnumChecksum
+                    });
+                    sb.AppendLine(enumBuilder.Build(new Dictionary<uint, string>(), "STUExcavator.Types.Enums", true));
+                }
+            }
+
+            CSharpCodeProvider provider = new CSharpCodeProvider();
+            CompilerParameters parameters = new CompilerParameters();
+            parameters.ReferencedAssemblies.Add("STULib.dll");
+            parameters.ReferencedAssemblies.Add("OWLib.dll");
+            parameters.GenerateInMemory = true;
+            CompilerResults results = provider.CompileAssemblyFromSource(parameters, sb.ToString());
+
+            if (results.Errors.HasErrors) {
+                StringBuilder sb2 = new StringBuilder();
+
+                foreach (CompilerError error in results.Errors) {
+                    sb2.AppendLine($"Error ({error.ErrorNumber}): {error.ErrorText}");
+                }
+
+                throw new InvalidOperationException(sb2.ToString());
+            }
+            
+            Assembly assembly = results.CompiledAssembly;
+            foreach (KeyValuePair<uint, STUInstanceJSON> json in Version2Comparer.InstanceJSON) {
+                if (InvalidTypes.Contains(json.Value.Name)) continue;
+                Type compiledInst = assembly.GetType($"STUExcavator.Types.{json.Value.Name}");
+                ISTU.InstanceTypes[json.Value.Hash] = compiledInst;
             }
         }
 
@@ -144,7 +206,7 @@ namespace STUExcavator {
                                 asset.GUIDs = GetGUIDs(stuVersion2);
                                 // broken: todo
                                 foreach (Common.STUInstance stuInstance in stuVersion2.Instances.Concat(stuVersion2.HiddenInstances)) {
-                                    STUAttribute attr = stuInstance?.GetType().GetCustomAttribute<STUAttribute>();
+                                    STUAttribute attr = stuInstance?.GetType().GetCustomAttributes<STUAttribute>().FirstOrDefault();
                                     if (attr == null) continue;
                                     asset.STUInstances.Add(attr.Checksum.ToString("X8"));
                                 }
@@ -210,12 +272,6 @@ namespace STUExcavator {
                         Version2Comparer version2Comparer =
                             ISTU.NewInstance(firstStream, uint.MaxValue, typeof(Version2Comparer)) as Version2Comparer;
                         Version2Comparer.GetAllChildren = beforeChildren;
-
-                        StringBuilder sb = new StringBuilder();
-                        // sb.AppendLine("using static STULib.Types.Generic.Common;");  // compiler no likey
-                        // sb.AppendLine();
-                        HashSet<uint> doneEnums = new HashSet<uint>();
-                        HashSet<uint> doneInstances = new HashSet<uint>();
                         
                         if (version2Comparer == null) throw new InvalidDataException();
 
@@ -223,57 +279,6 @@ namespace STUExcavator {
                             summary.SerializationType = SerializationType.Unknown; // abort
                             summary.Incomplete = true;
                             return summary;
-                        }
-                            
-
-                        foreach (InstanceData instanceData in version2Comparer.InternalInstances.Values.Concat(
-                            version2Comparer.InstanceData)) {
-                            if (instanceData == null) continue;
-                            if (doneInstances.Contains(instanceData.Checksum)) continue;
-                            doneInstances.Add(instanceData.Checksum);
-                            ClassBuilder builder = new ClassBuilder(instanceData);
-                            string @class = builder.Build(new Dictionary<uint, string>(),
-                                new Dictionary<uint, string>(), new Dictionary<uint, string>(),
-                                $"STUExcavator.Types.x{type:X3}", false, true);
-                            sb.AppendLine(@class);
-
-                            foreach (FieldData field in instanceData.Fields) {
-                                if (!field.IsEnum && !field.IsEnumArray) continue;
-                                if (doneEnums.Contains(field.EnumChecksum)) continue;
-                                doneEnums.Add(field.EnumChecksum);
-                                EnumBuilder enumBuilder = new EnumBuilder(new STUEnumData {
-                                    Type = STUHashTool.Program.GetSizeType(field.Size),
-                                    Checksum = field.EnumChecksum
-                                });
-                                sb.AppendLine(enumBuilder.Build(new Dictionary<uint, string>(),
-                                    $"STUExcavator.Types.x{type:X3}.Enums", true));
-                            }
-                        }
-
-                        CSharpCodeProvider provider = new CSharpCodeProvider();
-                        CompilerParameters parameters = new CompilerParameters();
-                        parameters.ReferencedAssemblies.Add("STULib.dll");
-                        parameters.ReferencedAssemblies.Add("OWLib.dll");
-                        parameters.GenerateInMemory = true;
-                        CompilerResults results = provider.CompileAssemblyFromSource(parameters, sb.ToString());
-
-                        if (results.Errors.HasErrors) {
-                            StringBuilder sb2 = new StringBuilder();
-
-                            foreach (CompilerError error in results.Errors) {
-                                sb2.AppendLine($"Error ({error.ErrorNumber}): {error.ErrorText}");
-                            }
-
-                            throw new InvalidOperationException(sb2.ToString());
-                        }
-
-                        firstStream.Position = 0;
-                        Assembly assembly = results.CompiledAssembly;
-                        foreach (KeyValuePair<uint, InstanceData> inst in version2Comparer.InternalInstances) {
-                            summary.STUInstanceTypes.Add(inst.Value.Checksum.ToString("X8")); // todo: bad?
-                            Type compiledInst =
-                                assembly.GetType($"STUExcavator.Types.x{type:X3}.STU_{inst.Value.Checksum:X8}");
-                            ISTU.InstanceTypes[inst.Value.Checksum] = compiledInst;
                         }
                     }
                     break;

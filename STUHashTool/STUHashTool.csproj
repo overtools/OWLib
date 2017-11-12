@@ -79,6 +79,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="IgnoredBrokenSTUs.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="KnownEnums.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

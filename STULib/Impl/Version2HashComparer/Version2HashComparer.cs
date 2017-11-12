@@ -310,6 +310,29 @@ namespace STULib.Impl.Version2HashComparer {
             }
         }
 
+        public static InstanceData GetData(uint checksum) {
+            if (!InstanceJSON.ContainsKey(checksum)) {
+                Debugger.Log(0, "STULib",
+                    $"[Version2HashComparer]: Instance {checksum:X} does not exist in the dataset\n");
+                return null;
+            }
+            STUInstanceJSON json = InstanceJSON[checksum];
+            
+            FieldData[] fields = new FieldData[InstanceJSON[checksum].GetFields().Length];
+            uint fieldIndex = 0;
+            foreach (STUInstanceJSON.STUFieldJSON field in InstanceJSON[checksum].GetFields()) {
+                fields[fieldIndex] = new FieldData(field);
+                fieldIndex++;
+            }
+            return new InstanceData {
+                WrittenFields = null,
+                Fields = fields,
+                Checksum = checksum,
+                ParentType = json.Parent,
+                ParentChecksum = json.ParentChecksum
+            };
+        }
+
         public InstanceData GetInstanceData(uint instanceChecksum, BinaryReader reader, uint? instanceSize=null, int? fieldListIndex=null) {
             if (!InstanceJSON.ContainsKey(instanceChecksum)) {
                 Debugger.Log(0, "STULib",

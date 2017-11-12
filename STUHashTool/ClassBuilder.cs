@@ -40,10 +40,12 @@ namespace STUHashTool {
             }
             uint fieldCounter = 1;
             
-            string stuAttribute = $"[STU(0x{InstanceData.Checksum:X8})]";
+            string stuAttribute = $"STU(0x{InstanceData.Checksum:X8})]";
             if (instanceNames.ContainsKey(InstanceData.Checksum)) {
-                stuAttribute = $"[STU(0x{InstanceData.Checksum:X8}, \"{instanceNames[InstanceData.Checksum]}\")]";
+                stuAttribute = $"STU(0x{InstanceData.Checksum:X8}, \"{instanceNames[InstanceData.Checksum]}\")]";
             }
+            if (properTypePaths) stuAttribute = "STULib." + stuAttribute;
+            stuAttribute = "[" + stuAttribute;
             sb.AppendLine($"{indentString}{stuAttribute}");
 
             string instanceBaseClass = properTypePaths ? "STULib.Types.Generic.Common.STUInstance" : "STUInstance";

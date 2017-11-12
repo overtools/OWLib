@@ -208,6 +208,13 @@ namespace STUHashTool {
                 "Test classes: \"test {CASC dir} {file type} {instance, \"*\" for all}\"");
         }
 
+        public static List<string> LoadInvalidTypes(string filename) {
+            return File.Exists(filename)
+                ? File.ReadAllLines(filename).Where(x => !string.IsNullOrEmpty(x)).Select(x => x.Split(' ')[0]).ToList()
+                : null;
+        }
+        
+
         public static Dictionary<uint, STUInstanceJSON> LoadInstanceJson(string filename) {
             Dictionary<uint, STUInstanceJSON> output = new Dictionary<uint, STUInstanceJSON>();
             JObject stuTypesJson = JObject.Parse(File.ReadAllText(filename));

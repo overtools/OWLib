@@ -11,17 +11,17 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = true, Flag = "convert-sound", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertSound;
         
-        [CLIFlag(Default = true, Flag = "convert-models", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = true, Flag = "convert-models", Help = "Convert .00C files to .owmdl", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertModels;
         
-        [CLIFlag(Default = true, Flag = "convert-animations", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = true, Flag = "convert-animations", Help = "Convert .006 files to .seanim", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertAnimations;
         
         
         [CLIFlag(Default = false, Flag = "skip-textures", Help = "Skip texture extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SkipTextures;
         
-        [CLIFlag(Default = false, Flag = "skip-sound", Help = "Skip audio extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = false, Flag = "skip-sound", Help = "Skip sound extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SkipSound;
         
         [CLIFlag(Default = false, Flag = "skip-models", Help = "Skip model extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
