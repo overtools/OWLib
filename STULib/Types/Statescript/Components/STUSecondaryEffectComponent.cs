@@ -5,7 +5,7 @@ using STULib.Types.Generic;
 namespace STULib.Types.Statescript.Components {
     [STU(0xA658CA1C)]
     public class STUSecondaryEffectComponent : STUStatescriptComponent2 {
-        [STUField(0x73AEA60D)]
+        [STUField(0x73AEA60D, EmbeddedInstance = true)]
         public STU_9EA55F3D[] m_73AEA60D;
 
         [STUField(0x28994152)]

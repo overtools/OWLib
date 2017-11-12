@@ -52,10 +52,10 @@ namespace STULib.Types {
         [STUField(0xC14EEC71)]
         public STU_32443B67[] m_C14EEC71;
 
-        [STUField(0x881F239A)]
+        [STUField(0x881F239A, EmbeddedInstance = true)]
         public STU_B9FE55F9 m_881F239A;
 
-        [STUField(0x29AFF063)]
+        [STUField(0x29AFF063, EmbeddedInstance = true)]
         public STU_5861C542 m_29AFF063;
 
         [STUField(0xB774CFA6)]

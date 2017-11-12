@@ -51,10 +51,10 @@ namespace STULib.Types {
         [STUField(0xE1FA44F9, ForceNotBuffer = true, Demangle = false)]
         public STUGUID[] References;
 
-        [STUField(0x2B2C5C7F)]
+        [STUField(0x2B2C5C7F, EmbeddedInstance = true)]
         public STU_72C48DD7 m_2B2C5C7F;
 
-        [STUField(0x144318D5)]
+        [STUField(0x144318D5, EmbeddedInstance = true)]
         public STU_2BA91EC5 m_144318D5;
 
         [STUField(0xBA53D5ED, Demangle = false)]

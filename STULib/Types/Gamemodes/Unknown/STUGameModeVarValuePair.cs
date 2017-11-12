@@ -7,7 +7,7 @@ namespace STULib.Types.Gamemodes.Unknown {
         [STUField(0x3E783677)]
         public Common.STUGUID Virtual01C;  // STU_9CADF2EC
 
-        [STUField(0x07DD813E, "m_value")]
+        [STUField(0x07DD813E, "m_value", EmbeddedInstance = true)]
         public STU_02E4C615 Value;
     }
 }

@@ -39,19 +39,19 @@ namespace STULib.Types.AnimationList.x020 {
         [STUField(0xAB34269B)]
         public STU_EC56111A[] m_AB34269B;
 
-        [STUField(0x09FE31A5)]
+        [STUField(0x09FE31A5, EmbeddedInstance = true)]
         public STU_2F6BD485 m_09FE31A5;
 
-        [STUField(0x7A2F0A64)]
+        [STUField(0x7A2F0A64, EmbeddedInstance = true)]
         public STU_2F6BD485 m_7A2F0A64;
 
-        [STUField(0xCDA1FD6A)]
+        [STUField(0xCDA1FD6A, EmbeddedInstance = true)]
         public STU_2F6BD485 m_CDA1FD6A;
 
-        [STUField(0xE15BD392)]
+        [STUField(0xE15BD392, EmbeddedInstance = true)]
         public STU_2F6BD485 m_E15BD392;
 
-        [STUField(0x29BA51E7)]
+        [STUField(0x29BA51E7, EmbeddedInstance = true)]
         public STU_DB72CA9C m_29BA51E7;
     }
 }

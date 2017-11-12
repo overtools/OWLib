@@ -10,10 +10,10 @@ namespace STULib.Types {
         [STUField(0x43C90056)]
         public STUGUID Subtitle;
 
-        [STUField(0xAF226247)]
+        [STUField(0xAF226247, EmbeddedInstance = true)]
         public STUSoundConainer SoundContainer;
 
-        [STUField(0xBC474019)]
+        [STUField(0xBC474019, EmbeddedInstance = true)]
         public STUSoundDataContainer SoundDataContainer;  // todo: these names are so bad
 
         [STUField(0x38BFB46C)]

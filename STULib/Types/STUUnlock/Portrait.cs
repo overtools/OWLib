@@ -18,7 +18,7 @@ namespace STULib.Types.STUUnlock {
 
         [STUField(0xA4A66AB6)]
         public STUGUID StarImage;
-        
+
         // todo: ImageResource => BorderResource, PortraitResource
     }
 }

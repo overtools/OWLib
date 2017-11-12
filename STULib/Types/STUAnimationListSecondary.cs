@@ -10,16 +10,16 @@ namespace STULib.Types {
         [STUField(0x85CC326B)]
         public STU_DF9B7DE2 m_85CC326B;
 
-        [STUField(0x0B15B894)]
+        [STUField(0x0B15B894, EmbeddedInstance = true)]
         public STUAnimationListSecondaryContainer[] Containers;
 
         [STUField(0xF9CA7995)]
         public uint[] m_F9CA7995;
 
-        [STUField(0xBF7A74B0)]
+        [STUField(0xBF7A74B0, EmbeddedInstance = true)]
         public STU_8C127DE2[] m_BF7A74B0;
 
-        [STUField(0xD6497916)]
+        [STUField(0xD6497916, EmbeddedInstance = true)]
         public STU_CB30C7C3 m_D6497916;
 
         [STUField(0xA4712A0A)]

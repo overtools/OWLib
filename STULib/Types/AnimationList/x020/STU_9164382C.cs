@@ -6,7 +6,7 @@ using STULib.Types.AnimationList.x021.Enums;
 namespace STULib.Types.AnimationList.x020 {
     [STU(0x9164382C)]
     public class STU_9164382C : STU_8C127DE2 {
-        [STUField(0x265FA759)]
+        [STUField(0x265FA759, EmbeddedInstance = true)]
         public STU_8C127DE2[] m_265FA759;
 
         [STUField(0x19A51EF4)]

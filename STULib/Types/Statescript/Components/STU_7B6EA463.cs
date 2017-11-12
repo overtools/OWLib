@@ -8,7 +8,7 @@ namespace STULib.Types.Statescript.Components {
         [STUField(0xC71EA6BC)]
         public Common.STUGUID m_C71EA6BC;
 
-        [STUField(0x1EB5A024)]
+        [STUField(0x1EB5A024, EmbeddedInstance = true)]
         public STU_5866C45E[] m_1EB5A024;
 
         [STUField(0x75408640)]

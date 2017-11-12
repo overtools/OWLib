@@ -8,7 +8,7 @@ namespace STULib.Types.AnimationList.x021 {
         [STUField(0xF9C9453C, Demangle = false)]
         public Common.STUGUID GUIDx014;
 
-        [STUField(0xEB45D767)]
+        [STUField(0xEB45D767, EmbeddedInstance = true)]
         public STU_391AC5F1 m_EB45D767;
 
         [STUField(0x53A1B672)]

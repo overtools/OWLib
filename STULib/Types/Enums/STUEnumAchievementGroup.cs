@@ -1,4 +1,4 @@
-﻿namespace STULib.Types.Enums {
+namespace STULib.Types.Enums {
     [STUEnum(0x116F9601)]
     public enum STUEnumAchievementGroup : uint {
         General = 0,

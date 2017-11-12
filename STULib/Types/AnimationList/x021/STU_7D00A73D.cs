@@ -11,7 +11,7 @@ namespace STULib.Types.AnimationList.x021 {
         [STUField(0x61EE7BBB)]
         public short[] m_61EE7BBB;
 
-        [STUField(0x9B2111C5)]
+        [STUField(0x9B2111C5, EmbeddedInstance = true)]
         public STU_9881546F[] m_9B2111C5;
 
         [STUField(0x083DC038)]

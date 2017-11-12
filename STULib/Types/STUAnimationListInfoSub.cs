@@ -15,16 +15,16 @@ namespace STULib.Types {
         [STUField(0x95877FC5)]
         public STUGUID Skeleton;
 
-        [STUField(0xF6E6D4B1)]
+        [STUField(0xF6E6D4B1, EmbeddedInstance = true)]
         public STUAnimationListSubAnimationContainer AnimationContainer;
 
-        [STUField(0x9AD6CC25)]
+        [STUField(0x9AD6CC25, EmbeddedInstance = true)]
         public STU_391AC5F1 m_9AD6CC25;
 
         [STUField(0xCCB4CD4A, Demangle = false)]
         public STUGUID m_CCB4CD4A;
 
-        [STUField(0x274F833F)]
+        [STUField(0x274F833F, EmbeddedInstance = true)]
         public STU_89F8DBB3 m_274F833F;
 
         [STUField(0x384DE14F)]

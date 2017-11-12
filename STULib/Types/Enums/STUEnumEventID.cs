@@ -1,4 +1,4 @@
-﻿namespace STULib.Types.Enums {
+namespace STULib.Types.Enums {
     [STUEnum(0xBABC4175)]
     public enum STUEnumEventID : uint {
         Base = 0,

@@ -8,7 +8,7 @@ namespace STULib.Types.AnimationList.x020 {
         [STUField(0x3A5231AD)]
         public STU_E7BEFDCE m_3A5231AD;
 
-        [STUField(0x134EE5BB)]
+        [STUField(0x134EE5BB, EmbeddedInstance = true)]
         public STU_067EF854[] m_134EE5BB;
 
         [STUField(0xA81B57ED)]

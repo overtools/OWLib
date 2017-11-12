@@ -23,28 +23,28 @@ namespace STULib.Types.AnimationList.x020 {
         [STUField(0x69F54CEF)]
         public STU_15EF3A7E m_69F54CEF;
 
-        [STUField(0xFAE5598F)]
+        [STUField(0xFAE5598F, EmbeddedInstance = true)]
         public STU_2F6BD485 m_FAE5598F;
 
-        [STUField(0x1D00626C)]
+        [STUField(0x1D00626C, EmbeddedInstance = true)]
         public STU_2F6BD485 m_1D00626C;
 
-        [STUField(0x4E5FE824)]
+        [STUField(0x4E5FE824, EmbeddedInstance = true)]
         public STU_2F6BD485 m_4E5FE824;
 
-        [STUField(0x2140364D)]
+        [STUField(0x2140364D, EmbeddedInstance = true)]
         public STU_2F6BD485 m_2140364D;
 
-        [STUField(0x3387490B)]
+        [STUField(0x3387490B, EmbeddedInstance = true)]
         public STU_2F6BD485 m_3387490B;
 
-        [STUField(0x1A1666A5)]
+        [STUField(0x1A1666A5, EmbeddedInstance = true)]
         public STU_2F6BD485 m_1A1666A5;
 
-        [STUField(0xB2704A67)]
+        [STUField(0xB2704A67, EmbeddedInstance = true)]
         public STU_2F6BD485 m_B2704A67;
 
-        [STUField(0xB6B5D7AB)]
+        [STUField(0xB6B5D7AB, EmbeddedInstance = true)]
         public STU_2F6BD485 m_B6B5D7AB;
     }
 }

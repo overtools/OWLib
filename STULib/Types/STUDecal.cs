@@ -10,7 +10,7 @@ namespace STULib.Types {
         [STUField(0x58D56DD4)]
         public STUGUID EffectResource;
     }
-    
+
     [STU(0x251E73C7)]
     public class STUDecal : STUInstance {
         [STUField(0x2E93585A, ForceNotBuffer = true, Demangle = false)]

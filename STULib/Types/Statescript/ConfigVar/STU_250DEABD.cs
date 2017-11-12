@@ -5,10 +5,10 @@ using STULib.Types.Statescript.Components;
 namespace STULib.Types.Statescript.ConfigVar {
     [STU(0x250DEABD)]
     public class STU_250DEABD : STUStatescriptDataStoreBase4 {
-        [STUField(0x8A12D912)]
+        [STUField(0x8A12D912, EmbeddedInstance = true)]
         public STUConfigVar m_8A12D912;
 
-        [STUField(0xF24E4110)]
+        [STUField(0xF24E4110, EmbeddedInstance = true)]
         public STUConfigVar m_F24E4110;
     }
 }

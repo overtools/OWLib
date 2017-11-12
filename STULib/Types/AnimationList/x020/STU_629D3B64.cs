@@ -14,13 +14,13 @@ namespace STULib.Types.AnimationList.x020 {
         [STUField(0xC5B948D5)]
         public STU_ABD8FE73 m_C5B948D5;
 
-        [STUField(0xA5443C92)]
+        [STUField(0xA5443C92, EmbeddedInstance = true)]
         public STU_5BF8DA7A m_A5443C92;
 
-        [STUField(0x3E5D1B1D)]
+        [STUField(0x3E5D1B1D, EmbeddedInstance = true)]
         public STU_8C127DE2 m_3E5D1B1D;
 
-        [STUField(0xE42547F3)]
+        [STUField(0xE42547F3, EmbeddedInstance = true)]
         public STU_8C127DE2 m_E42547F3;
     }
 }

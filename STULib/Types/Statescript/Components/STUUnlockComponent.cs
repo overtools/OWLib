@@ -1,4 +1,4 @@
-﻿using STULib.Types.Generic;
+using STULib.Types.Generic;
 
 namespace STULib.Types.Statescript.Components {
     [STU(0x5DE82F2)]

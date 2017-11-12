@@ -29,13 +29,13 @@ namespace STULib.Types.AnimationList.x020 {
         [STUField(0xBBFC29D4)]
         public short[] m_BBFC29D4;
 
-        [STUField(0xAF75E2B7)]
+        [STUField(0xAF75E2B7, EmbeddedInstance = true)]
         public STU_8C127DE2 m_AF75E2B7;
 
-        [STUField(0xA5443C92)]
+        [STUField(0xA5443C92, EmbeddedInstance = true)]
         public STU_5BF8DA7A m_A5443C92;
 
-        [STUField(0xE3E77BFC)]
+        [STUField(0xE3E77BFC, EmbeddedInstance = true)]
         public STU_8C127DE2 m_E3E77BFC;
     }
 }

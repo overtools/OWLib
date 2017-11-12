@@ -1,4 +1,4 @@
-﻿using OWLib;
+using OWLib;
 using STULib.Types.Enums;
 using static STULib.Types.Generic.Common;
 
@@ -47,11 +47,11 @@ namespace STULib.Types {
         [STUField(0x45C33D76)]
         public byte Unknown3;
 
-        [STU(0xD75586C0)]
+        [STU(0x819B4F6D)]
         public class LootboxBundle : STUInstance {
             [STUField(0x90EB924A)]
             public STUGUID String;
-            
+
             [STUField(0x87EACF5F)]
             public STUGUID Image;
         }

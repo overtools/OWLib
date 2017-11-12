@@ -1,4 +1,4 @@
-﻿using static STULib.Types.Generic.Common;
+using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0x0CC07049, "STUAchievement")]
@@ -24,7 +24,7 @@ namespace STULib.Types {
         [STUField(0x4E291DCC)]
         public string InternalName;
 
-        [STUField(0x4FF98D41)]
+        [STUField(0x4FF98D41, EmbeddedInstance = true)]
         public STU_C1A2DB26 m_4FF98D41;  // todo: where used
 
         [STUField(0x2C54AEAF)]
@@ -59,7 +59,7 @@ namespace STULib.Types.Enums {  // these will get their own home when I find a f
     [STUEnum(0x9EAD8C06)]
     public enum STUEnum_9EAD8C06 : uint {
     }
-    
+
     [STUEnum(0xAB6CE3D1)]
     public enum STUEnum_AB6CE3D1 : uint {
     }

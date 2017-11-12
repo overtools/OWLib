@@ -1,4 +1,4 @@
-﻿using static STULib.Types.Generic.Common;
+using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0x314BB6F9, "STUCatalog")]  // todo: this is using old hashes, idk which file this is from.

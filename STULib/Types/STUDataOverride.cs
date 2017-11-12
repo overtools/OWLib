@@ -13,7 +13,7 @@ namespace STULib.Types {
         [STUField(0x2F08CD5E)]
         public STU_D9E3E761[] m_2F08CD5E;
     }
-    
+
     [STU(0xD9E3E761)]
     public class STU_D9E3E761 : STUInstance {
         [STUField(0x0CC61A13)]
@@ -22,7 +22,7 @@ namespace STULib.Types {
         [STUField(0xE101F943)]
         public byte m_E101F943;
     }
-    
+
     [STU(0xB7EEA3BE)]
     public class STUDataOverride : STUOverrideBase {
         [STUField(0xAA8E1BB0)]

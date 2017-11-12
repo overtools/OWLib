@@ -6,7 +6,7 @@ namespace STULib.Types {
     public class STU_866672AD : Common.STUInstance {  // needs own home
     }
 
-    
+
     [STU(0xC881FD3B)]
     public class STUGlobalInventoryMaster : STU_866672AD {
         [STUField(0xBF482AA3)]

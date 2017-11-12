@@ -1,4 +1,4 @@
-﻿namespace STULib.Types.Enums {
+namespace STULib.Types.Enums {
     [STUEnum(0x161443EA)]
     public enum STUEnumPortraitTier : uint {
         Bronze = 1,

@@ -45,21 +45,22 @@ namespace STUClassFixer {
                                 }
                             }
                         } else if (line.Contains("[STUField(0x")) {
-                            if (classEnds.Count == 0) continue; // a field from non-stu
-                            int biggestLevel = classEnds.Max(x => x.Value);
-                            uint instanceChecksum = classEnds.FirstOrDefault(x => x.Value == biggestLevel).Key;
-                            Match fieldMatch = hashRegex.Match(line);
-                            uint fieldChecksum = uint.Parse(fieldMatch.Groups[1].Value, NumberStyles.HexNumber);
-                            if (!instanceJson.ContainsKey(instanceChecksum)) {
-                                Console.Out.WriteLine($"Instance {instanceChecksum} does not exist");
-                                continue;
-                            }
-                            STUInstanceJSON instance = instanceJson[instanceChecksum];
-                            STUInstanceJSON.STUFieldJSON field = instance.GetField(fieldChecksum);
-                            if (field.SerializationType == 2 || field.SerializationType == 3) {
-                                newLine = newLine.Substring(0, newLine.LastIndexOf(")]", StringComparison.InvariantCulture));
-                                newLine = newLine + ", EmbeddedInstance = true)]";
-                                Console.Out.WriteLine($"[STUField(0x{fieldChecksum}), EmbeddedInstance = true)]");
+                            if (classEnds.Count != 0) { // non-stu fields exist
+                                int biggestLevel = classEnds.Max(x => x.Value);
+                                uint instanceChecksum = classEnds.FirstOrDefault(x => x.Value == biggestLevel).Key;
+                                Match fieldMatch = hashRegex.Match(line);
+                                uint fieldChecksum = uint.Parse(fieldMatch.Groups[1].Value, NumberStyles.HexNumber);
+                                if (!instanceJson.ContainsKey(instanceChecksum)) {
+                                    Console.Out.WriteLine($"Instance {instanceChecksum} does not exist");
+                                } else {
+                                    STUInstanceJSON instance = instanceJson[instanceChecksum];
+                                    STUInstanceJSON.STUFieldJSON field = instance.GetField(fieldChecksum);
+                                    if (field.SerializationType == 2 || field.SerializationType == 3) {
+                                        newLine = newLine.Substring(0, newLine.LastIndexOf(")]", StringComparison.InvariantCulture));
+                                        newLine = newLine + ", EmbeddedInstance = true)]";
+                                        Console.Out.WriteLine($"[STUField(0x{fieldChecksum}), EmbeddedInstance = true)]");
+                                    }
+                                }
                             }
                         }
                         newFileStream.WriteLine(newLine.TrimEnd(' '));

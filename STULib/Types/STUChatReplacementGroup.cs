@@ -7,7 +7,7 @@ namespace STULib.Types {
         [STUField(0x7EE81235)]
         public string Name;
 
-        [STUField(0x5967BF73)]
+        [STUField(0x5967BF73, EmbeddedInstance = true)]
         public STUChatReplacementUnknown[] Unknown;
     }
 }

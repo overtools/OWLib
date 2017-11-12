@@ -10,7 +10,7 @@ namespace STULib.Types {
         [STUField(0xC16A0BCD)]
         public STUGUID m_C16A0BCD;  // STU_42270D59
     }
-    
+
     [STU(0x42270D59)]
     public class STUSkinOverride : STUDataOverride {
         [STUField(0xA5C9CA02)]

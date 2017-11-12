@@ -17,12 +17,12 @@ namespace STULib.Types.Gamemodes {
         [STUField(0xEA2B516F)]
         public STUGamemodeBodyVars[] m_EA2B516F;
 
-        [STUField(0x59C86C8D)]
+        [STUField(0x59C86C8D, EmbeddedInstance = true)]
         public STUCosmeticCollection AllowedHeroes;
 
         [STUField(0x33B0B2B6)]
         public Enums.STUEnumTeamType TeamType;  // ffa team = 4, normal = 1/2
-        
+
         [STUField(0x7FA93ED4)]
         public int m_7FA93ED4;
 

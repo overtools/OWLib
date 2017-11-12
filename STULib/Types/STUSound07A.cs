@@ -4,37 +4,37 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types {
     [STU(0x569C801E)]
     public class STUSound07A : STUInstance {
-        [STUField(0x9556D6E4)]
+        [STUField(0x9556D6E4, EmbeddedInstance = true)]
         public STUSound07ASub Sub1;
 
-        [STUField(0x3661B9E8)]
+        [STUField(0x3661B9E8, EmbeddedInstance = true)]
         public STUSound07ASub Sub2;
 
-        [STUField(0x5F150DBC)]
+        [STUField(0x5F150DBC, EmbeddedInstance = true)]
         public STUSound07ASub Sub3;
 
-        [STUField(0x1E890BF5)]
+        [STUField(0x1E890BF5, EmbeddedInstance = true)]
         public STUSound07ASub Sub4;
 
-        [STUField(0x0DFBF3DA)]
+        [STUField(0x0DFBF3DA, EmbeddedInstance = true)]
         public STUSound07ASub Sub5;
 
-        [STUField(0x915B1F4B)]
+        [STUField(0x915B1F4B, EmbeddedInstance = true)]
         public STUSound07ASub Sub6;
 
-        [STUField(0x836924DF)]
+        [STUField(0x836924DF, EmbeddedInstance = true)]
         public STUSound07ASub Sub7;
 
-        [STUField(0xACA0C8B2)]
+        [STUField(0xACA0C8B2, EmbeddedInstance = true)]
         public STUSound07ASub Sub8;
 
-        [STUField(0xC652451B)]
+        [STUField(0xC652451B, EmbeddedInstance = true)]
         public STUSound07ASub Sub9;
 
-        [STUField(0xDD37B450)]
+        [STUField(0xDD37B450, EmbeddedInstance = true)]
         public STUSound07ASub Sub10;
 
-        [STUField(0x399EAEC6)]
+        [STUField(0x399EAEC6, EmbeddedInstance = true)]
         public STUSound07ASub Sub11;
     }
 }

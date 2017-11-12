@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace STULib.Types.Generic {
@@ -15,7 +15,7 @@ namespace STULib.Types.Generic {
             public uint MetadataOffset;
             public uint Offset;
         }
-        
+
         [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct STUInstanceRecord {
@@ -23,7 +23,7 @@ namespace STULib.Types.Generic {
             public uint AssignFieldChecksum;
             public int AssignInstanceIndex;
             public uint InstanceSize;
-            
+
             internal string DebuggerDisplay => $"{InstanceChecksum:X} ({InstanceSize} bytes){(AssignInstanceIndex != -1 ? $" (Embedded in instance {AssignInstanceIndex}:{AssignFieldChecksum:X})" : "")}";
         }
 
@@ -60,7 +60,7 @@ namespace STULib.Types.Generic {
 
             internal string DebuggerDisplay => $"Size: {Size}, FieldListIndex: {FieldListIndex}";
         }
-        
+
         [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
         [StructLayout(LayoutKind.Sequential, Pack = 4)]  // different struct for better naming
         public struct STUInlineArrayInfo {
@@ -81,7 +81,7 @@ namespace STULib.Types.Generic {
             internal string DebuggerDisplay =>
                 $"Count: {Count}, Offset: {Offset}, InstanceIndex:{InstanceIndex}, Unknown:{Unknown}";
         }
-        
+
         [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct STUEmbedArrayInfo {

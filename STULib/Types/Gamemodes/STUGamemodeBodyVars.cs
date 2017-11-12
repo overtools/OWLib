@@ -9,7 +9,7 @@ namespace STULib.Types.Gamemodes {
         [STUField(0x5C307091)]
         public STUGamemodeVarValuePair[] m_5C307091;
 
-        [STUField(0x37AB13D3, "m_hero")]
+        [STUField(0x37AB13D3, "m_hero", EmbeddedInstance = true)]
         public STUBrawlHeroContainer Hero;
     }
 }

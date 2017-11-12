@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace STULib.Types.Map {
         private void AlignPosition(Stream input, long end) {
             input.Position = (long)(Math.Ceiling(end / 16.0f) * 16);
         }
-        
+
         private void AlignPositionNew(BinaryReader reader, Version1 stu) {
             int maxOffset = stu.Records.Max(x => x.Offset);
             Generic.Version1.STUInstanceRecord record = stu.Records.FirstOrDefault(x => x.Offset == maxOffset);
@@ -69,7 +69,7 @@ namespace STULib.Types.Map {
                         return;
                     }
                 }
-                
+
                 // todo: fix all of the existing classes
                 // if (Records.Length > 0 && Records[0] != null && Records[0].HasSTUD) {
                 //     AlignPosition(input, input.Position);

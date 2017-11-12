@@ -16,49 +16,49 @@ namespace STULib.Types {
         [STUField(0x07D0F7AA)]
         public int m_07D0F7AA;
     }
-    
+
     [STU(0xD815520F)]
     public class STUSoundHeroInfo : STUSoundInfo {
         [STUField(0x8C8C5285)]
         public STUGUID Hero;
-    
+
         [STUField(0x57D96E27)]
         public byte Unknown;
     }
-    
+
     [STU(0xC37857A5)]
     public class STUSoundInfoUnknown1 : STUSoundInfo {
         [STUField(0xED999C8B)]
         public STUGUID Virtual01C;
     }
-    
+
     [STU(0xD0364821)]
     public class STUSoundInfoUnknown2 : STUSoundInfo {
         [STUField(0x4D2DB658)]
         public STUGUID Virtual01C;
-        
+
         [STUField(0x57D96E27)]
         public byte UnknownByte;
     }
-    
+
     [STU(0x7C69EA0F)]
     public class STUSoundInfoUnknown3 : STUSoundInfo {
-        [STUField(0x4FF98D41)]
+        [STUField(0x4FF98D41, EmbeddedInstance = true)]
         public STU_C1A2DB26[] UnknownEmbedArray;
-        
+
         [STUField(0xAF872E86)]
         public uint Unknown;
     }
-    
+
     [STU(0xE9DB72FF)]
     public class STUSoundInfoUnknown4 : STUSoundInfo {
         [STUField(0x4E87690F)]
         public STUGUID UnknownMapData;  // why is map data here?
-        
+
         [STUField(0xA2C1FA17)]
         public byte Unknown;
     }
-    
+
     [STU(0xC7CA73B1)]
     public class STUSoundInfoUnknown5 : STUSoundInfo {
         [STUField(0xE02BEE24)]
@@ -128,7 +128,7 @@ namespace STULib.Types {
     public enum STUEnum_10064D07 : uint {
     }
 }
-    
+
     // todo: A95E4B99
     // todo: BDD783B9
     // todo: D931E2CF

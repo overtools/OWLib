@@ -11,10 +11,10 @@ namespace STULib.Types.AnimationList.x020 {
         [STUField(0x994A38FF)]
         public STU_25B808BD m_994A38FF;
 
-        [STUField(0xA5ECF4EC)]
+        [STUField(0xA5ECF4EC, EmbeddedInstance = true)]
         public STU_BDB86C7B m_A5ECF4EC;
 
-        [STUField(0x436BEFE6)]
+        [STUField(0x436BEFE6, EmbeddedInstance = true)]
         public STU_2F6BD485 m_436BEFE6;
     }
 }

@@ -6,7 +6,7 @@ namespace STULib.Types.AnimationList.x021 {
         [STUField(0x540E2FC8)]
         public byte[] m_540E2FC8;
 
-        [STUField(0xCC732E55)]
+        [STUField(0xCC732E55, EmbeddedInstance = true)]
         public STU_CF110906[] m_CC732E55;
     }
 }

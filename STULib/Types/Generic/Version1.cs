@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
 namespace STULib.Types.Generic {
     public static class Version1 {
@@ -13,7 +13,7 @@ namespace STULib.Types.Generic {
             public int Offset;
             public uint Flags;
         }
-        
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct STUArray {
             public long EntryCount;

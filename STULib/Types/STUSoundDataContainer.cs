@@ -19,7 +19,7 @@ namespace STULib.Types {
         [STUField(0x38F3ED5E)]
         public string m_38F3ED5E;
 
-        [STUField(0x4FF98D41)]
+        [STUField(0x4FF98D41, EmbeddedInstance = true)]
         public STU_C1A2DB26 m_4FF98D41;
 
         [STUField(0x9CDDC24D)]

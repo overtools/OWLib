@@ -3,7 +3,7 @@
 namespace STULib.Types.AnimationList.x020 {
     [STU(0x08C0F545)]
     public class STU_08C0F545 : STU_CB30C7C3 {
-        [STUField(0x436BEFE6)]
+        [STUField(0x436BEFE6, EmbeddedInstance = true)]
         public STU_2F6BD485 m_436BEFE6;
     }
 }

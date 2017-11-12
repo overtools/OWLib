@@ -8,10 +8,10 @@ namespace STULib.Types.AnimationList.x020 {
         [STUField(0xE3B4FA5C)]
         public Common.STUUUID m_E3B4FA5C;
 
-        [STUField(0x498B0009)]
+        [STUField(0x498B0009, EmbeddedInstance = true)]
         public STU_CEAA4897 m_498B0009;
 
-        [STUField(0xEA1269DF)]
+        [STUField(0xEA1269DF, EmbeddedInstance = true)]
         public STU_CEAA4897 m_EA1269DF;
     }
 }

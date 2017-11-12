@@ -1,4 +1,4 @@
-﻿using static STULib.Types.Generic.Common;
+using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0xA94C5E3B)]

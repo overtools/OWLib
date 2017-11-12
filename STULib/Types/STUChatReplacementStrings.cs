@@ -12,7 +12,7 @@ namespace STULib.Types {
         [STUField(0x1)]
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         public string[] Strings;
-        
+
         public static string FixBlizzString(string blizzString) {
             return blizzString.Replace("\\b", "");
         }
@@ -23,7 +23,7 @@ namespace STULib.Types {
 
         public string Print(out Color? color) {
             color = Color.Aquamarine;
-            
+
             StringBuilder sb = new StringBuilder();
             foreach (string s in Strings) {
                 sb.AppendLine(FixBlizzString(s));
@@ -32,7 +32,7 @@ namespace STULib.Types {
             return sb.ToString();
         }
     }
-    
+
     [STU(0xE55DA1F4)]
     public class STUChatReplacementStrings : STUInstance {
         [STUField(0xF627FDCA)]
