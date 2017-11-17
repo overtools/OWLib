@@ -161,13 +161,13 @@ namespace DataTool.FindLogic {
                     foreach (STUAnimationListInfoSub listInfoSubInfo in listInfo.SubInfos) {
                         existingAnimations = FindAnimations(existingAnimations, models, listInfoSubInfo?.SecondaryList,
                             replacements);
-                        if (listInfoSubInfo?.AnimationContainer != null && listInfoSubInfo.AnimationContainer.Animations != null) {
+                        if (listInfoSubInfo?.AnimationContainer?.Animations != null) {
                             foreach (STUAnimationListAnimationWrapper listAnimationWrapper in listInfoSubInfo.AnimationContainer.Animations) {
                                 existingAnimations = FindAnimations(existingAnimations, models, listAnimationWrapper?.Animation,
                                     replacements, listInfoSubInfo.Skeleton);  // todo: is main skeleton?
                             }
                         }
-                        if (listInfoSubInfo.m_9AD6CC25 != null) {
+                        if (listInfoSubInfo?.m_9AD6CC25 != null) {
                             if (listInfoSubInfo.m_9AD6CC25.GetType() == typeof(STU_7D00A73D)) {
                                 STU_7D00A73D infosub7D00Converted = listInfoSubInfo.m_9AD6CC25 as STU_7D00A73D;
                                 if (infosub7D00Converted?.m_083DC038 != null) {
@@ -179,12 +179,10 @@ namespace DataTool.FindLogic {
                                 
                             }
                         }
-                        if (listInfoSubInfo.m_560940DC != null) {
-                            if (listInfoSubInfo.m_560940DC.m_6CB79D25 != null) {
-                                foreach (STU_BE20B7F5 subBE20 in listInfoSubInfo.m_560940DC.m_6CB79D25) {
-                                    existingAnimations = FindAnimations(existingAnimations, models, subBE20?.Animation,
-                                        replacements, listInfoSubInfo.Skeleton);  // todo: is main skeleton?
-                                }
+                        if (listInfoSubInfo?.m_560940DC?.m_6CB79D25 != null) {
+                            foreach (STU_BE20B7F5 subBE20 in listInfoSubInfo.m_560940DC.m_6CB79D25) {
+                                existingAnimations = FindAnimations(existingAnimations, models, subBE20?.Animation,
+                                    replacements, listInfoSubInfo.Skeleton);  // todo: is main skeleton?
                             }
                         }
                     }

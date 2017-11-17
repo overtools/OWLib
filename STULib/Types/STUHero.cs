@@ -109,6 +109,9 @@ namespace STULib.Types {
         [STUField(0xE1258EC1)]
         public UnknownNested3[] Unknown34;
 
+        [STUField(0xD3A31F29)]
+        public STUGUID SpectatorIcon;
+
         [STU(0x63172E83)]
         public class Skin {
             [STUField(0x0029461B)]

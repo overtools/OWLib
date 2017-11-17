@@ -113,7 +113,7 @@ namespace OWLib.Writer {
                         }
                     }
                     if (rot.X == -3.14159274f && rot.Y == 0 && rot.Z == 0) {
-                        rot = new APPLIB.Vector3D(0, 3.14159274f, 3.14159274f); // effectively the same but you know, eulers.
+                        rot = new Vector3D(0, 3.14159274f, 3.14159274f); // effectively the same but you know, eulers.
                     }
                     writer.WriteLine(String.Format(CultureInfo.InvariantCulture, "{0}  {1:0.000000} {2:0.000000} {3:0.000000}  {4:0.000000} {5:0.000000} {6:0.000000}  {7:0.000000} {8:0.000000} {9:0.000000}", i, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z));
                 }

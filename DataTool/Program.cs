@@ -218,14 +218,28 @@ namespace DataTool {
                 }
                 Log("  {0, -23} | {1}", attrib.Keyword, desc);
             }
+
+            Dictionary<string, List<Type>> sortedTools = new Dictionary<string, List<Type>>();
             
             foreach (Type t in tools) {
                 ToolAttribute attrib = t.GetCustomAttribute<ToolAttribute>();
-                if (attrib.CustomFlags == null) continue;
+                if (attrib.Keyword == null) continue;
+                if (!attrib.Keyword.Contains("-")) continue;
+                
+                string result = attrib.Keyword.Split('-').First();
+                
+                if (!sortedTools.ContainsKey(result)) sortedTools[result] = new List<Type>();
+                sortedTools[result].Add(t);
+            }
+
+            foreach (KeyValuePair<string,List<Type>> toolType in sortedTools) {
+                Type firstTool = toolType.Value.FirstOrDefault();
+                ToolAttribute attrib = firstTool?.GetCustomAttribute<ToolAttribute>();
+                if (attrib?.CustomFlags == null) continue;
                 Type flags = attrib.CustomFlags;
                 if (!typeof(ICLIFlags).IsAssignableFrom(attrib.CustomFlags)) continue;
                 Log();
-                Log("Flags for {0}", attrib.Keyword);
+                Log("Flags for {0}-*", toolType.Key);
                 typeof(FlagParser).GetMethod("FullHelp").MakeGenericMethod(flags).Invoke(null, new object[] { null, true });
             }
         }
