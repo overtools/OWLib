@@ -8,6 +8,7 @@ using STULib.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
+using Common = STULib.Types.Generic.Common;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-lootbox", Description = "Extract lootbox models", TrackTypes = new ushort[] {0xCF}, CustomFlags = typeof(ExtractFlags))]
@@ -43,6 +44,14 @@ namespace DataTool.ToolLogic.Extract {
                 models = Model.FindModels(models, lootbox.Effect4);
                 models = Model.FindModels(models, lootbox.Material);
                 models = Model.FindModels(models, lootbox.Material2);
+                
+                Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
+
+                foreach (Common.STUGUID stuguid in new [] {lootbox.Effect1, lootbox.Effect2, lootbox.Effect3, lootbox.Effect4, lootbox.StateScriptComponent}) {
+                    music = Sound.FindSounds(music, stuguid, null, true);
+                }
+            
+                SaveLogic.Sound.Save(toolFlags, Path.Combine(basePath, "Lootboxes", name, "Music"), music);
 
                 foreach (ModelInfo model in models) {
                     SaveLogic.Model.Save(flags, Path.Combine(basePath, "Lootboxes", name), model, $"Lootbox {lootbox.Event}_{GUID.Index(model.GUID):X}");

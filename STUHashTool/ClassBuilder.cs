@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using OWLib.Types.STUD.Binding;
 using STULib;
 using STULib.Impl.Version2HashComparer;
 using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
@@ -14,6 +14,20 @@ namespace STUHashTool {
         public ClassBuilder(InstanceData instanceData) {
             InstanceData = instanceData;
         }
+        
+        public static string FirstCharToUpper(string input) {
+            switch (input)
+            {
+                case null: throw new ArgumentNullException(nameof(input));
+                case "": throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
+                default: return input.First().ToString().ToUpper() + input.Substring(1);
+            }
+        }
+
+        public static string FixFieldName(string name) {
+            return FirstCharToUpper(name.Substring(2)).Replace("_", "");
+        }
+
 
         public string Build(Dictionary<uint, string> instanceNames, Dictionary<uint, string> enumNames, Dictionary<uint, string> fieldNames, string @namespace="STULib.Types", bool addUsings=false, bool properTypePaths=false) {
             StringBuilder sb = new StringBuilder();
@@ -60,7 +74,7 @@ namespace STUHashTool {
                 string fieldTypeDef = properTypePaths ? "STULib.STUField": "STUField";
                 string fieldDefinition = $"[{fieldTypeDef}(0x{field.Checksum:X8}";
                 if (fieldNames.ContainsKey(field.Checksum)) {
-                    fieldName = fieldNames[field.Checksum];
+                    fieldName = FixFieldName(fieldNames[field.Checksum]);
                     fieldDefinition = fieldDefinition + $", \"{fieldName}\"";
                 }
                 if (field.IsEmbed || field.IsEmbedArray) {

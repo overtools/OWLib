@@ -46,7 +46,7 @@ namespace STULib.Types {
         public STUGUID[] Sounds;
 
         [STUField(0x316EBD9D)]
-        public STUGUID[] m_316EBD9D;
+        public STUGUID[] SoundOther;
 
         [STUField(0x72F2A9FA)]
         public uint[] m_72F2A9FA;

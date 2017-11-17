@@ -103,7 +103,7 @@ namespace STULib.Types {
         [STUField(0xAF4EC410)]
         public uint Unknown32;
 
-        [STUField(0xBB16810A)]
+        [STUField(0xBB16810A, "m_priority")]
         public uint Unknown33;
 
         [STUField(0xE1258EC1)]
@@ -129,8 +129,8 @@ namespace STULib.Types {
             [STUField(0x118D9D9F)]
             public StatisticGroup[] Statistics;  // todo: check nested array
 
-            [STUField(0xEB4F2408)]
-            public STUGUID GUIDx0C5_Reference;  //todo: check if STUGUID
+            [STUField(0xEB4F2408, "m_gamemode")]
+            public STUGUID Gamemode;
         }
 
         [STU(0xA0872511)]

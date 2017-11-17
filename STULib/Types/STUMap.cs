@@ -17,7 +17,7 @@ namespace STULib.Types {
         [STUField(0x5AFE2F61)]
         public STUGUID StateStringA;
 
-        [STUField(0x5DB91CE2)]
+        [STUField(0x5DB91CE2, "m_displayName")]
         public STUGUID Name;
 
         [STUField(0x86C1CFAB)]
@@ -30,10 +30,10 @@ namespace STULib.Types {
         public STUGUID ImageResource2;
 
         [STUField(0x956158FF)]
-        public STUGUID EffectReference1;
+        public STUGUID EffectAnnouncer;  // these should be right
 
         [STUField(0xA0AE2E3E)]
-        public STUGUID EffectReference2;
+        public STUGUID EffectMusic;
 
         [STUField(0xA125818B)]
         public uint Unknown11;

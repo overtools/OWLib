@@ -7,7 +7,7 @@ namespace STULib.Types {
         [STUField(0x2B522C5B)]
         public STUGUID DecalResource;
 
-        [STUField(0x58D56DD4)]
+        [STUField(0x58D56DD4, "m_effect")]
         public STUGUID EffectResource;
     }
 

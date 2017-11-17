@@ -5,7 +5,7 @@ using STULib.Types.Generic;
 namespace STULib.Types.Statescript.ConfigVar {
     [STU(0xAFFC8378, "STUConfigVarEffect")]
     public class STUConfigVarEffect : STUStatescriptDataStoreBase {
-        [STUField(0x58D56DD4)]
+        [STUField(0x58D56DD4, "m_effect")]
         public Common.STUGUID Effect;
     }
 }

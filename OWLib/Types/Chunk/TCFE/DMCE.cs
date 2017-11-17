@@ -11,15 +11,14 @@ namespace OWLib.Types.Chunk {
             public ulong modelKey;
             public ulong materialKey;
             public ulong animationKey;
-            public ulong frame;
+            public ulong parentBone;  // todo: unsure, but 100% not frame
         }
 
-        private Structure data;
-        public Structure Data => data;
+        public Structure Data { get; private set; }
 
         public void Parse(Stream input) {
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
-                data = reader.Read<Structure>();
+                Data = reader.Read<Structure>();
             }
         }
     }

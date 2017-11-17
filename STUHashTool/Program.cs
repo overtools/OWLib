@@ -175,7 +175,7 @@ namespace STUHashTool {
             return !a1.Where((t, i) => !comparer.Equals(t, a2[i])).Any();
         }
 
-        private static void LoadHashCSV(string filepath, out Dictionary<uint, string> dict) {
+        public static void LoadHashCSV(string filepath, out Dictionary<uint, string> dict) {
             if (string.IsNullOrEmpty(filepath)) {
                 dict = new Dictionary<uint, string>(0);
                 return;
@@ -242,7 +242,8 @@ namespace STUHashTool {
             }
             return output;
         }
-
+        
+        
         private static void Main(string[] args) {
             // Usage:
             // Single file: "file {before file} {after file}"
@@ -383,7 +384,7 @@ namespace STUHashTool {
 
                 using (Stream file1Stream = File.Open(file1, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (Stream file2Stream = File.Open(file2, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                        // if (classCount >= 5) continue;
+                        if (classCount >= 3) continue;
                         
                         ISTU file1STU = ISTU.NewInstance(file1Stream, uint.MaxValue, type);
                         Version2Comparer file1STU2 = (Version2Comparer) file1STU;

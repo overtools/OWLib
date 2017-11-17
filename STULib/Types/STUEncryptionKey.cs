@@ -2,16 +2,15 @@
 
 using System;
 using System.Linq;
-using System.Text;
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0x1DA7C021)]
-    public class STUEncryptionKey : STUInstance {
+    public class STUEncryptionKey : STUInstance { // 8F754DFF
         [STUField(0x1A71903A)]
         public string KeyName;
 
-        [STUField(0x2F709539)]
+        [STUField(0x2F709539, "m_key")]
         public byte[] KeyValue;
 
         public string Key => BitConverter.ToString(KeyValue).Replace("-", string.Empty);

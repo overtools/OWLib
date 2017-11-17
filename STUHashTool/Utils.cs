@@ -336,8 +336,6 @@ namespace STUHashTool {
                     Debugger.Break();
                 }
                 index++;
-                
-                // m_states[0]={STU_6540C278}
             }
         }
     }

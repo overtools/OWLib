@@ -247,64 +247,64 @@ namespace STULib.Impl.Version2HashComparer {
             if (_InstanceTypes == null) {
                 LoadInstanceTypes();
             }
-            stream.Position = offset;
+            Stream.Position = offset;
             GetHeaderCRC();
-            stream.Position = offset;
+            Stream.Position = offset;
 
             ChainedInstances = new Dictionary<uint, List<ChainedInstanceInfo>>();
-            using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
+            using (BinaryReader reader = new BinaryReader(Stream, Encoding.UTF8, true)) {
                 if (Version1.IsValidVersion(reader)) {
-                    Version1Comparer ver1 = new Version1Comparer(stream, buildVersion);
+                    Version1Comparer ver1 = new Version1Comparer(Stream, BuildVersion);
                     InstanceData = ver1.InstanceData;
                     InternalInstances = ver1.InternalInstances;
                     return;
                 }
-                stream.Position = offset;
+                Stream.Position = offset;
                 if (!ReadHeaderData(reader)) return;
-                long stuOffset = header.Offset;
+                long stuOffset = Header.Offset;
 
-                for (int chainedI = 0; chainedI < instanceInfo.Length; ++chainedI) {
-                    if (instanceInfo[chainedI].AssignInstanceIndex <= -1 ||
-                        instanceInfo[chainedI].AssignInstanceIndex >= instanceInfo.Length) continue;
-                    if (!ChainedInstances.ContainsKey(instanceInfo[chainedI].InstanceChecksum))
-                        ChainedInstances[instanceInfo[chainedI].InstanceChecksum] = new List<ChainedInstanceInfo>();
-                    ChainedInstances[instanceInfo[chainedI].InstanceChecksum].Add(new ChainedInstanceInfo {
-                        Checksum = instanceInfo[chainedI].InstanceChecksum,
-                        OwnerChecksum = instanceInfo[instanceInfo[chainedI].AssignInstanceIndex].InstanceChecksum,
-                        OwnerField = instanceInfo[chainedI].AssignFieldChecksum
+                for (int chainedI = 0; chainedI < InstanceInfo.Length; ++chainedI) {
+                    if (InstanceInfo[chainedI].AssignInstanceIndex <= -1 ||
+                        InstanceInfo[chainedI].AssignInstanceIndex >= InstanceInfo.Length) continue;
+                    if (!ChainedInstances.ContainsKey(InstanceInfo[chainedI].InstanceChecksum))
+                        ChainedInstances[InstanceInfo[chainedI].InstanceChecksum] = new List<ChainedInstanceInfo>();
+                    ChainedInstances[InstanceInfo[chainedI].InstanceChecksum].Add(new ChainedInstanceInfo {
+                        Checksum = InstanceInfo[chainedI].InstanceChecksum,
+                        OwnerChecksum = InstanceInfo[InstanceInfo[chainedI].AssignInstanceIndex].InstanceChecksum,
+                        OwnerField = InstanceInfo[chainedI].AssignFieldChecksum
                     });
                 }
 
-                InstanceGuessData = new InstanceGuessData[instanceInfo.Length];
-                InstanceData = new InstanceData[instanceInfo.Length];
-                for (int i = 0; i < instanceInfo.Length; ++i) {
-                    stream.Position = stuOffset;
-                    stuOffset += instanceInfo[i].InstanceSize;
+                InstanceGuessData = new InstanceGuessData[InstanceInfo.Length];
+                InstanceData = new InstanceData[InstanceInfo.Length];
+                for (int i = 0; i < InstanceInfo.Length; ++i) {
+                    Stream.Position = stuOffset;
+                    stuOffset += InstanceInfo[i].InstanceSize;
 
                     int fieldListIndex = reader.ReadInt32();
 
                     if (fieldListIndex < 0) {
                         Debugger.Log(0, "STU",
-                            $"[Version2HashComparer:{instanceInfo[i].InstanceChecksum:X}]: Instance field list was not valid ({fieldListIndex})\n");
+                            $"[Version2HashComparer:{InstanceInfo[i].InstanceChecksum:X}]: Instance field list was not valid ({fieldListIndex})\n");
                         continue;
                     }
 
                     if (InstanceJSON == null) {
-                        FieldGuessData[] fields = GuessInstance(instanceFields[fieldListIndex], reader,
-                            (int) instanceInfo[i].InstanceSize - 4, instanceInfo[i].InstanceChecksum);
+                        FieldGuessData[] fields = GuessInstance(InstanceFields[fieldListIndex], reader,
+                            (int) InstanceInfo[i].InstanceSize - 4, InstanceInfo[i].InstanceChecksum);
 
                         InstanceGuessData[i] = new InstanceGuessData {
                             Fields = fields,
-                            IsChained = ChainedInstances.ContainsKey(instanceInfo[i].InstanceChecksum),
-                            Checksum = instanceInfo[i].InstanceChecksum,
-                            Size = instanceInfo[i].InstanceSize,
-                            ChainInfo = ChainedInstances.ContainsKey(instanceInfo[i].InstanceChecksum)
-                                ? ChainedInstances[instanceInfo[i].InstanceChecksum].ToArray()
+                            IsChained = ChainedInstances.ContainsKey(InstanceInfo[i].InstanceChecksum),
+                            Checksum = InstanceInfo[i].InstanceChecksum,
+                            Size = InstanceInfo[i].InstanceSize,
+                            ChainInfo = ChainedInstances.ContainsKey(InstanceInfo[i].InstanceChecksum)
+                                ? ChainedInstances[InstanceInfo[i].InstanceChecksum].ToArray()
                                 : null
                         };
                     } else {
-                        InstanceData[i] = GetInstanceData(instanceInfo[i].InstanceChecksum, reader,
-                            instanceInfo[i].InstanceSize, fieldListIndex);        
+                        InstanceData[i] = GetInstanceData(InstanceInfo[i].InstanceChecksum, reader,
+                            InstanceInfo[i].InstanceSize, fieldListIndex);        
                     }
                 }
             }
@@ -361,7 +361,7 @@ namespace STULib.Impl.Version2HashComparer {
             
             
             if (instanceSize != null && fieldListIndex != null && reader != null) {
-                fields = FakeReadInstance(instanceFields[(int)fieldListIndex], reader,
+                fields = FakeReadInstance(InstanceFields[(int)fieldListIndex], reader,
                     (int) instanceSize - 4, instanceChecksum);
             }
             
@@ -402,8 +402,8 @@ namespace STULib.Impl.Version2HashComparer {
             long beforePos = reader.BaseStream.Position;
             try {
                 int offset = reader.ReadInt32();
-                metadata.Position = offset;
-                STUArrayInfo array = metadataReader.Read<STUArrayInfo>();
+                Metadata.Position = offset;
+                STUArrayInfo array = MetadataReader.Read<STUArrayInfo>();
 
                 if (array.Count < 99999 && array.Count > 0) {
                     output.IsArray = true;
@@ -425,7 +425,7 @@ namespace STULib.Impl.Version2HashComparer {
             long beforePos = reader.BaseStream.Position;
             STUInlineInfo inline = reader.Read<STUInlineInfo>();
             try {
-                FieldGuessData[] inlineFields = GuessFields(instanceFields[inline.FieldListIndex], reader);
+                FieldGuessData[] inlineFields = GuessFields(InstanceFields[inline.FieldListIndex], reader);
 
                 output.IsInlineStandard = true;
                 output.InlineFields = inlineFields;
@@ -449,7 +449,7 @@ namespace STULib.Impl.Version2HashComparer {
                 Dictionary<uint, FieldGuessData> inlineFields = new Dictionary<uint, FieldGuessData>();
                 for (uint i = 0; i < inline.Count; ++i) {
                     uint fieldIndex = reader.ReadUInt32();
-                    foreach (FieldGuessData inlineField in GuessFields(instanceFields[fieldIndex], reader))
+                    foreach (FieldGuessData inlineField in GuessFields(InstanceFields[fieldIndex], reader))
                         if (!inlineFields.ContainsKey(inlineField.Checksum)) {
                             inlineFields[inlineField.Checksum] = inlineField;
                         } else {
@@ -469,7 +469,7 @@ namespace STULib.Impl.Version2HashComparer {
         protected byte[] _ReadArrayItem(FieldGuessData output, uint itemSize) {
             try {
                 using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider()) {
-                    return sha1.ComputeHash(metadataReader.ReadBytes((int) itemSize));
+                    return sha1.ComputeHash(MetadataReader.ReadBytes((int) itemSize));
                     }
                 }
             catch (EndOfStreamException) {
@@ -480,7 +480,7 @@ namespace STULib.Impl.Version2HashComparer {
         protected void TryReadArrayItems(FieldGuessData output) {
             const uint max = 32;
 
-            metadata.Position = output.ArrayInfo.Offset;
+            Metadata.Position = output.ArrayInfo.Offset;
             
             output.ArraySHA1 = new Dictionary<uint, ArrayFieldDataHash[]>();
 
@@ -488,7 +488,7 @@ namespace STULib.Impl.Version2HashComparer {
                 // bool badSize = false;
                 output.ArraySHA1[i] = new ArrayFieldDataHash[output.ArrayInfo.Count];
                 
-                long itemBeforePos = metadata.Position;
+                long itemBeforePos = Metadata.Position;
                 
                 for (uint ai = 0; ai < output.ArrayInfo.Count; ++ai) {
                     // long thisItemBeforePos = metadata.Position;
@@ -513,7 +513,7 @@ namespace STULib.Impl.Version2HashComparer {
                     //    output.ArraySHA1[i][ai].DemangleSHA1 = sha1.ComputeHash(BitConverter.GetBytes(guid));
                     //}
                 }
-                metadata.Position = itemBeforePos;
+                Metadata.Position = itemBeforePos;
             }
         }
 

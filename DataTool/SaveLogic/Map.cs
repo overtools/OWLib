@@ -7,7 +7,6 @@ using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
-using STULib;
 using STULib.Types;
 using STULib.Types.Generic;
 using STULib.Types.Statescript.Components;
@@ -293,7 +292,6 @@ namespace DataTool.SaveLogic {
             //     loadmusic = 00000008565B.03F
             
             if (!Flags.Quiet) Console.Out.WriteLine($"Saving map: {name} ({GUID.Index(key):X})");
-            Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
 
             // if (map.Gamemodes != null) {
             //     foreach (Common.STUGUID gamemodeGUID in map.Gamemodes) {
@@ -372,7 +370,19 @@ namespace DataTool.SaveLogic {
                     }
                 }
             }
+            
+            Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
+            music = FindLogic.Sound.FindSounds(music, map.EffectMusic, null, true);
+            Sound.Save(toolFlags, Path.Combine(mapPath, "Sound", "Music"), music);
 
+            // if (map.EffectAnnouncer != null) {
+            //     using (Stream announcerStream = OpenFile(map.EffectAnnouncer)) {
+            //         using (Chunked announcerChunk = new Chunked(announcerStream)) {
+            //             
+            //         }
+            //     }
+            // }
+            
             // if (extractFlags.ConvertModels) {
             //     string physicsFile = Path.Combine(mapPath, "Models", "physics", "physics.owmdl");
             //     // CreateDirectoryFromFile(physicsFile);
@@ -389,9 +399,10 @@ namespace DataTool.SaveLogic {
             }
 
             if (map.SoundMasterResource != null) {
+                Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
                 sounds = FindLogic.Sound.FindSounds(sounds, map.SoundMasterResource);
+                Sound.Save(toolFlags, Path.Combine(mapPath, "Sound", "SoundMaster"), sounds);
             }
-            Sound.Save(toolFlags, Path.Combine(mapPath, "Sounds"), sounds);
         }
     }
 }

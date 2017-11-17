@@ -5,7 +5,7 @@ namespace STULib.Types {
     [STU(0x40DA6CDF)]
     public class STUSoundDataContainer : STUInstance {
         [STUField(0x401F5484)]
-        public STUGUID m_401F5484;
+        public STUGUID Group;
 
         [STUField(0x386B8E9C)]
         public STUGUID SoundbankMasterResource;

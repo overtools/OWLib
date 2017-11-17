@@ -2,24 +2,19 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
-    public class FECE : IChunk {
-        public string Identifier => "FECE"; // ECEF - Effect Child Effect (?)
+    public class THSE : IChunk {
+        public string Identifier => "THSE"; // ECHT - Effect ?????
         public string RootIdentifier => "TCFE"; // EFCT - Effect
-    
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public ulong effect;
-            public byte unk1;
-            public byte unk2;
-            public byte unk3;
-            public byte unk4;
-            public uint unk5;
+            public ulong GUIDx03C;
         }
 
         public Structure Data { get; private set; }
 
         public void Parse(Stream input) {
-            using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
+            using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
                 Data = reader.Read<Structure>();
             }
         }

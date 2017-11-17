@@ -32,87 +32,44 @@ namespace DataTool.ToolLogic.Extract {
     // "{hero name}|{type}=({tag name}={tag}),{item name}"
     // Roadhog
     
-    // bases
-
     [DebuggerDisplay("ArgType: {" + nameof(Name) + "}")]
-    public class ArgType {
-        public string Name;
-        public List<ArgTag> Tags;
-    }
-
-    [DebuggerDisplay("ArgTag: {" + nameof(Name) + "}")]
-    public class ArgTag {
-        public string Name;
-        public List<string> Options;
-
-        public ArgTag(string name, List<string> options) {
-            Name = name;
-            Options = options;
-        }
-    }
-
-    // subs
-    [DebuggerDisplay("ArgType: {" + nameof(Name) + "}")]
-    public class CosmeticType : ArgType {
+    public class CosmeticType : QueryType {
         public CosmeticType(string name) {
             Name = name;
-            Tags = new List<ArgTag> {
-                new ArgTag("rarity", new List<string>{"common", "rare", "legendary"}),
-                new ArgTag("event", new List<string>{"base", "summergames", "halloween", "winter", "lunarnewyear", "uprising", "anniversary"})
+            Tags = new List<QueryTag> {
+                new QueryTag("rarity", new List<string>{"common", "rare", "legendary"}),
+                new QueryTag("event", new List<string>{"base", "summergames", "halloween", "winter", "lunarnewyear", "uprising", "anniversary"})
             };
-        }
-    }
-
-    public class ParsedArg {
-        public string Type;
-        public List<string> Allowed;
-        public List<string> Disallowed;
-        public Dictionary<string, string> Tags;
-
-
-        public ParsedArg Combine(ParsedArg second) {
-            if (second == null) return new ParsedArg { Type = Type, Allowed = Allowed, Disallowed = Disallowed, Tags = Tags};
-            Dictionary<string, string> tagsNew = Tags;
-            foreach (KeyValuePair<string,string> tag in second.Tags) {
-                tagsNew[tag.Key] = tag.Value;
-            }
-            return new ParsedArg {Type = Type, Allowed = Allowed.Concat(second.Allowed).ToList(), 
-                Disallowed = Disallowed.Concat(second.Disallowed).ToList(), Tags = tagsNew};
-        }
-
-        public bool ShouldDo(string name, Dictionary<string, string> tagVals=null) {
-            if (tagVals != null) {
-                foreach (KeyValuePair<string, string> tagVal in tagVals) {
-                    if (!Tags.ContainsKey(tagVal.Key.ToLowerInvariant())) continue;
-                    string tag = Tags[tagVal.Key.ToLowerInvariant()];
-                    if (tag.StartsWith("!")) {
-                        if (string.Equals(tag.Remove(0, 1), tagVal.Value, StringComparison.InvariantCultureIgnoreCase)) return false;
-                    } else {
-                        if (!string.Equals(tag, tagVal.Value, StringComparison.InvariantCultureIgnoreCase)) return false;
-                    }
-                }
-            }
-            string nameReal = name.ToLowerInvariant();
-            return (Allowed.Contains(nameReal) || Allowed.Contains("*")) && (!Disallowed.Contains(nameReal) || !Disallowed.Contains("*"));
         }
     }
     
     [Tool("extract-unlocks", Description = "Extract all heroes sprays and icons", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ExtractFlags))]
-    public class ExtractHeroUnlocks : ITool {
+    public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
         }
 
         protected virtual string RootDir => "Heroes";
         protected virtual bool NPCs => false;
-
-        protected readonly Dictionary<string, string> HeroMapping = new Dictionary<string, string> {
+        public List<QueryType> QueryTypes => new List<QueryType> {
+            new CosmeticType("skin"),
+            new CosmeticType("icon"),
+            new CosmeticType("spray"),
+            new CosmeticType("victorypose"),
+            new CosmeticType("highlightintro"), 
+            new CosmeticType("emote"),
+            new CosmeticType("voiceline")
+        };
+        
+        public static Dictionary<string, string> HeroMapping = new Dictionary<string, string> {
             ["soldier76"] = "soldier: 76",
             ["soldier 76"] = "soldier: 76",
             ["soldier"] = "soldier: 76",
             ["lucio"] = "lúcio",
             ["torbjorn"] = "torbjörn"
         };
+
+        public Dictionary<string, string> QueryNameOverrides => HeroMapping;
 
         public void Parse(ICLIFlags toolFlags) {
             string basePath;
@@ -137,12 +94,8 @@ namespace DataTool.ToolLogic.Extract {
 
             return @return;
         }
-
-        public class SubIndentHelper : IndentHelper {
-            protected new static uint IndentStringPerLevel = 2;
-        }
         
-        public static void Help(List<ArgType> types) {
+        protected override void QueryHelp(List<QueryType> types) {
             IndentHelper indent = new IndentHelper();
             
             Log("Please specify what you want to extract:");
@@ -150,14 +103,14 @@ namespace DataTool.ToolLogic.Extract {
             Log($"{indent+1}Each query should be surrounded by \", and individual queries should be seperated by spaces");
                         
             Log("\r\nTypes:");
-            foreach (ArgType argType in types) {
+            foreach (QueryType argType in types) {
                 Log($"{indent+1}{argType.Name}");
             }
             
             Log("\r\nTags:");
 
-            foreach (ArgType argType in types) {
-                foreach (ArgTag argTypeTag in argType.Tags) {
+            foreach (QueryType argType in types) {
+                foreach (QueryTag argTypeTag in argType.Tags) {
                     Log($"{indent+1}{argTypeTag.Name}:");
                     foreach (string option in argTypeTag.Options) {
                         Log($"{indent+2}{option}");
@@ -179,104 +132,17 @@ namespace DataTool.ToolLogic.Extract {
             // Log("https://www.youtube.com/watch?v=9Deg7VrpHbM");
         }
 
-        public void SaveUnlocksForHeroes(ICLIFlags flags, List<STUHero> heroes, string basePath, bool npc=false) {
-            List<ArgType> types = new List<ArgType> {
-                new CosmeticType("skin"),
-                new CosmeticType("icon"),
-                new CosmeticType("spray"),
-                new CosmeticType("victorypose"),
-                new CosmeticType("highlightintro"), 
-                new CosmeticType("emote")
-            };
-
+        public void SaveUnlocksForHeroes(ICLIFlags flags, IEnumerable<STUHero> heroes, string basePath, bool npc=false) {
             if (flags.Positionals.Length < 4) {
-                Help(types);
+                QueryHelp(QueryTypes);
                 return;
             }
 
-            string[] result = new string[flags.Positionals.Length-3];
-            Array.Copy(flags.Positionals, 3, result, 0, flags.Positionals.Length-3);
-            
-            Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = new Dictionary<string, Dictionary<string, ParsedArg>>();
-            
-            foreach (string opt in result) {
-                if (opt.StartsWith("--")) continue;  // ok so this is a flag
-                string[] split = opt.Split('|');
+            Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+            if (parsedTypes == null) return;
 
-                string hero = split[0].ToLowerInvariant();
-                if (HeroMapping.ContainsKey(hero)) {
-                    hero = HeroMapping[hero];
-                }
-                
-                string[] afterOpts = new string[split.Length-1];
-                Array.Copy(split, 1, afterOpts, 0, split.Length-1);
-                
-                parsedTypes[hero] = new Dictionary<string, ParsedArg>();
-
-                if (afterOpts.Length == 0) {
-                    foreach (ArgType type in types) {
-                        parsedTypes[hero][type.Name] = new ParsedArg {Type = type.Name, Allowed = new List<string> {"*"}, Disallowed = new List<string>(), Tags = new Dictionary<string, string>()};
-                    }
-                    // everything for this hero
-                } else {
-                    foreach (string afterHeroOpt in afterOpts) {
-                        string[] afterSplit = afterHeroOpt.Split('=');
-                        
-                        string type = afterSplit[0].ToLowerInvariant();
-                        ArgType typeObj = types.FirstOrDefault(x => x.Name == type);
-                        if (typeObj == null) {Log($"\r\nUnknown type: {type}\r\n"); Help(types); return;}
-                        
-                        parsedTypes[hero][typeObj.Name] = new ParsedArg {Type = typeObj.Name, Allowed = new List<string>(), Disallowed = new List<string>(), Tags = new Dictionary<string, string>()};
-                        
-                        string[] items = new string[afterSplit.Length - 1];
-                        Array.Copy(afterSplit, 1, items, 0, afterSplit.Length - 1);
-                        items = string.Join("=", items).Split(',');
-                        bool isBracket = false;
-                        foreach (string item in items) {
-                            string realItem = item.ToLowerInvariant();
-                            bool nextNotBracket = false;
-
-                            if (item.StartsWith("(") && item.EndsWith(")")) {
-                                realItem = item.Remove(0, 1);
-                                realItem = realItem.Remove(realItem.Length-1);
-                                isBracket = true;
-                                nextNotBracket = true;
-                            } else if (item.StartsWith("(")) {
-                                isBracket = true;
-                                realItem = item.Remove(0, 1);
-                            } else if (item.EndsWith(")")) {
-                                nextNotBracket = true;
-                                realItem = item.Remove(item.Length-1);
-                            }
-
-                            if (!isBracket) {
-                                if (!realItem.StartsWith("!")) {
-                                    parsedTypes[hero][typeObj.Name].Allowed.Add(realItem);
-                                } else {
-                                    parsedTypes[hero][typeObj.Name].Disallowed.Add(realItem.Remove(0, 1));
-                                }
-                            } else {
-                                string[] kv = realItem.Split('=');
-                                string tagName = kv[0].ToLowerInvariant();
-                                string tagValue = kv[1].ToLowerInvariant();
-                                ArgTag tagObj = typeObj.Tags.FirstOrDefault(x => x.Name == tagName);
-                                if (tagObj == null) {Log($"\r\nUnknown tag: {tagName}\r\n"); Help(types); return;}
-                                
-                                parsedTypes[hero][typeObj.Name].Tags[tagName] = tagValue;
-                            }
-                            if (nextNotBracket) isBracket = false;
-                        }
-
-                        if (parsedTypes[hero][typeObj.Name].Allowed.Count == 0 &&
-                            parsedTypes[hero][typeObj.Name].Tags.Count > 0) {
-                            parsedTypes[hero][typeObj.Name].Allowed = new List<string> {"*"};
-                        }
-                    }
-                }
-            }
-
-            foreach (var hero in heroes) {
-                var heroFileName = GetValidFilename(GetString(hero.Name));
+            foreach (STUHero hero in heroes) {
+                string heroFileName = GetValidFilename(GetString(hero.Name));
                 string heroNameActual = GetString(hero.Name);
 
                 if (heroFileName == null) {
@@ -328,18 +194,13 @@ namespace DataTool.ToolLogic.Extract {
                         SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\{RootDir}", hero, $"Achievement\\{itemInfo.Rarity}", itemInfo.Unlock as Skin, weaponSkins, abilities, false);
                     } else if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
                         SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
-                    } else {
-                        if (Debugger.IsAttached) Debugger.Break();
-                    }
+                    } 
+                    //else {
+                    //    if (Debugger.IsAttached) Debugger.Break();
+                    //}
                     // todo: add emote,highlightintro,victorypose whenever used
                 }
                 if (npc) {
-                    // HashSet<ModelInfo> modelTest = new HashSet<ModelInfo>();
-                    // foreach (STUHero.UnknownNested3 unknownNested3 in hero.Unknown34) {
-                    //     foreach (Common.STUGUID stateScriptCompontent in unknownNested3.StateScriptCompontents) {
-                    //         modelTest = Model.FindModels(modelTest, stateScriptCompontent);
-                    //     }
-                    // }
                     foreach (STUHero.Skin skin in hero.Skins) {
                         SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\{RootDir}", hero, skin, false);
                     }
@@ -369,7 +230,9 @@ namespace DataTool.ToolLogic.Extract {
                         if (itemInfo.Type == "Emote" && config.ContainsKey("emote") && config["emote"].ShouldDo(itemInfo.Name, tags)) {
                             SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
                         }
-                        
+                        if (itemInfo.Type == "VoiceLine" && config.ContainsKey("voiceline") && config["voiceline"].ShouldDo(itemInfo.Name, tags)) {
+                            SaveLogic.Unlock.VoiceLine.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo, hero);
+                        }
                     }
                 }
 
@@ -398,6 +261,9 @@ namespace DataTool.ToolLogic.Extract {
                         }
                         if (itemInfo.Type == "Emote" && config.ContainsKey("emote") && config["emote"].ShouldDo(itemInfo.Name, tags)) {
                             SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
+                        }
+                        if (itemInfo.Type == "VoiceLine" && config.ContainsKey("voiceline") && config["voiceline"].ShouldDo(itemInfo.Name, tags)) {
+                            SaveLogic.Unlock.VoiceLine.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo, hero);
                         }
                     }
                 }

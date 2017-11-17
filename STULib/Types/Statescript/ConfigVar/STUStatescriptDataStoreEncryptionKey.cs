@@ -5,7 +5,7 @@ using STULib.Types.Generic;
 namespace STULib.Types.Statescript.ConfigVar {
     [STU(0xC3EE0CD6)]
     public class STUStatescriptDataStoreEncryptionKey : STUStatescriptDataStoreBase {
-        [STUField(0x2F709539)]
+        [STUField(0x2F709539, "m_key")]
         public Common.STUGUID EncryptionKey;  // STULib.Types.STUEncryptionKey
     }
 }

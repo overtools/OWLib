@@ -468,7 +468,7 @@
     <Compile Include="Types\STUUnlock\VoiceLine.cs" />
     <Compile Include="Types\STUUnlock\Weapon.cs" />
     <Compile Include="Types\STUVoiceLineInstance.cs" />
-    <Compile Include="Types\STUWeaponOverride.cs" />
+    <Compile Include="Types\STUHeroWeapon.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OWLib\OWLib.csproj">

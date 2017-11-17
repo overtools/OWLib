@@ -8,49 +8,29 @@ using OWLib.Types.Chunk;
 
 namespace OWLib {
     public class MemoryChunk : IChunk {
-        private string identifier = null;
-        public string Identifier {
-            get {
-                return identifier;
-            } set {
-                identifier = value;
-            }
-        }
+        public string Identifier { get; set; }
+        public string RootIdentifier { get; set; }
 
-        private string rootIdentifier = null;
-        public string RootIdentifier {
-            get {
-                return rootIdentifier;
-            } set {
-                rootIdentifier = value;
-            }
-        }
-        
-        private MemoryStream data;
-        public MemoryStream Data => data;
+        public MemoryStream Data { get; private set; }
 
         public void Parse(Stream input) {
-            if (Util.DEBUG) {
-                data = new MemoryStream();
-                input.CopyTo(data);
-                data.Position = 0;
-            }
+            if (!Util.DEBUG) return;
+            Data = new MemoryStream();
+            input.CopyTo(Data);
+            Data.Position = 0;
         }
     }
 
     public class Chunked : IDisposable {
-        public const uint CHUNK_MAGIC = 0xF123456F;
+        public const uint ChunkMagic = 0xF123456F;
 
-        private List<IChunk> chunks;
-        public IReadOnlyList<IChunk> Chunks => chunks;
-
-        private ChunkedHeader header;
-        public ChunkedHeader Header => header;
+        public List<IChunk> Chunks { get; }
+        public ChunkedHeader Header { get; }
 
         private long start;
         private List<ChunkedEntry> entrees;
         private List<long> entryOffsets;
-        private ChunkManager manager = ChunkManager.Instance;
+        public readonly ChunkManager Manager = ChunkManager.Instance;
 
         private static void CopyBytes(Stream i, Stream o, int sz) {
             byte[] buffer = new byte[sz];
@@ -61,11 +41,11 @@ namespace OWLib {
 
         public Chunked(Stream input, bool keepOpen = false, ChunkManager manager = null) {
             if (manager == null) {
-                manager = this.manager;
+                manager = Manager;
             } else {
-                this.manager = manager;
+                Manager = manager;
             }
-            chunks = new List<IChunk>();
+            Chunks = new List<IChunk>();
             entrees = new List<ChunkedEntry>();
             entryOffsets = new List<long>();
             if (input == null) {
@@ -75,17 +55,17 @@ namespace OWLib {
             start = input.Position;
 
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, keepOpen)) {
-                header = reader.Read<ChunkedHeader>();
-                if (header.magic != CHUNK_MAGIC) {
+                Header = reader.Read<ChunkedHeader>();
+                if (Header.magic != ChunkMagic) {
                     return;
                 }
 
                 long next = input.Position;
-                while (next < header.size) {
+                while (next < Header.size) {
                     ChunkedEntry entry = reader.Read<ChunkedEntry>();
                     long offset = input.Position;
                     next = offset + entry.size;
-                    IChunk chunk = manager.NewChunk(entry.StringIdentifier, header.StringIdentifier);
+                    IChunk chunk = manager.NewChunk(entry.StringIdentifier, Header.StringIdentifier);
                     if (chunk != null) {
                         MemoryStream dataStream = new MemoryStream(entry.size);
                         CopyBytes(input, dataStream, entry.size);
@@ -95,7 +75,7 @@ namespace OWLib {
                             dataStream.Dispose();
                         } catch { }
                     }
-                    chunks.Add(chunk);
+                    Chunks.Add(chunk);
                     entrees.Add(entry);
                     entryOffsets.Add(offset);
                     input.Position = next;
@@ -104,18 +84,18 @@ namespace OWLib {
         }
 
         public KeyValuePair<int, IChunk> FindNextChunk(Type type, int after = 0) {
-            for (int i = after; i < chunks.Count; ++i) {
-                if (chunks[i] != null && type.IsInstanceOfType(chunks[i])) {
-                    return new KeyValuePair<int, IChunk>(i, chunks[i]);
+            for (int i = after; i < Chunks.Count; ++i) {
+                if (Chunks[i] != null && type.IsInstanceOfType(Chunks[i])) {
+                    return new KeyValuePair<int, IChunk>(i, Chunks[i]);
                 }
             }
             return new KeyValuePair<int, IChunk>(-1, null);
         }
 
         public KeyValuePair<int, IChunk> FindNextChunk(string identifier, int after = 0) {
-            for (int i = after; i < chunks.Count; ++i) {
-                if (chunks[i] != null && chunks[i].Identifier == identifier) {
-                    return new KeyValuePair<int, IChunk>(i, chunks[i]);
+            for (int i = after; i < Chunks.Count; ++i) {
+                if (Chunks[i] != null && Chunks[i].Identifier == identifier) {
+                    return new KeyValuePair<int, IChunk>(i, Chunks[i]);
                 }
             }
             return new KeyValuePair<int, IChunk>(-1, null);
@@ -124,9 +104,9 @@ namespace OWLib {
         public KeyValuePair<int, T>[] GetAllOfType<T>(int after = 0) where T : IChunk {
             List<KeyValuePair<int, T>> ret = new List<KeyValuePair<int, T>>();
             Type type = typeof(T);
-            for (int i = after; i < chunks.Count; ++i) {
-                if (chunks[i] != null && type.IsInstanceOfType(chunks[i])) {
-                    ret.Add(new KeyValuePair<int, T>(i, (T)chunks[i]));
+            for (int i = after; i < Chunks.Count; ++i) {
+                if (Chunks[i] != null && type.IsInstanceOfType(Chunks[i])) {
+                    ret.Add(new KeyValuePair<int, T>(i, (T)Chunks[i]));
                 }
             }
             return ret.ToArray<KeyValuePair<int, T>>();
@@ -142,7 +122,7 @@ namespace OWLib {
         }
 
         public void Dispose() {
-            chunks.Clear();
+            Chunks.Clear();
             entrees.Clear();
             entryOffsets.Clear();
             GC.SuppressFinalize(this);
@@ -150,33 +130,27 @@ namespace OWLib {
 
         public bool HasChunk<T>() {
             Type type = typeof(T);
-            for (int i = 0; i < chunks.Count; ++i) {
-                if (chunks[i] != null && type.IsInstanceOfType(chunks[i])) {
-                    return true;
-                }
-            }
-            return false;
+            return Chunks.Any(chunk => chunk != null && type.IsInstanceOfType(chunk));
         }
     }
 
     public class ChunkManager {
-        private static ChunkManager _Instance = NewInstance();
-        public static ChunkManager Instance => _Instance;
+        public static ChunkManager Instance { get; } = NewInstance();
 
-        private static HashSet<string> unhandledChunkIdentifiers = new HashSet<string>();
-        public Dictionary<string, Type> chunkMap;
+        public HashSet<string> UnhandledChunkIdentifiers = new HashSet<string>();
+        public Dictionary<string, Type> ChunkMap;
 
-        private Type MEMORY_TYPE = typeof(MemoryChunk);
+        private readonly Type _memoryType = typeof(MemoryChunk);
 
         public ChunkManager() {
-            chunkMap = new Dictionary<string, Type>();
+            ChunkMap = new Dictionary<string, Type>();
         }
 
         public MANAGER_ERROR AddChunk(Type chunk) {
             if (chunk == null) {
                 return MANAGER_ERROR.E_FAULT;
             }
-            if (chunkMap.ContainsValue(chunk)) {
+            if (ChunkMap.ContainsValue(chunk)) {
                 return MANAGER_ERROR.E_DUPLICATE;
             }
             IChunk instance = (IChunk)Activator.CreateInstance(chunk);
@@ -189,11 +163,11 @@ namespace OWLib {
                     System.Diagnostics.Debugger.Log(2, "CHUNK", $"Error! {chunk.FullName} has no identifier!\n");
                 }
             }
-            chunkMap.Add(identifier, chunk);
+            ChunkMap.Add(identifier, chunk);
             return MANAGER_ERROR.E_SUCCESS;
         }
         
-        public string ReverseString(string text){
+        public static string ReverseString(string text){
             if (text == null) return null;
             char[] array = text.ToCharArray();
             Array.Reverse(array);
@@ -202,22 +176,19 @@ namespace OWLib {
 
         public IChunk NewChunk(string id, string root) {
             string identifier = root + id;
-            if (chunkMap.ContainsKey(identifier)) {
-                return (IChunk)Activator.CreateInstance(chunkMap[identifier]);
-            } else {
-                if (unhandledChunkIdentifiers.Add(identifier)) {
-                    if (System.Diagnostics.Debugger.IsAttached) {
-                        System.Diagnostics.Debugger.Log(2, "CHUNK", $"Error! No handler for chunk type {identifier} ({ReverseString(root)}:{ReverseString(id)})\n");
-                    }
-                }
-                if (System.Diagnostics.Debugger.IsAttached || Util.DEBUG) {
-                    MemoryChunk memory = (MemoryChunk)Activator.CreateInstance(MEMORY_TYPE);
-                    memory.Identifier = id;
-                    memory.RootIdentifier = root;
-                    return memory;
+            if (ChunkMap.ContainsKey(identifier)) {
+                return (IChunk)Activator.CreateInstance(ChunkMap[identifier]);
+            }
+            if (UnhandledChunkIdentifiers.Add(identifier)) {
+                if (System.Diagnostics.Debugger.IsAttached) {
+                    System.Diagnostics.Debugger.Log(2, "CHUNK", $"Error! No handler for chunk type {identifier} ({ReverseString(root)}:{ReverseString(id)})\n");
                 }
             }
-            return null;
+            if (!System.Diagnostics.Debugger.IsAttached && !Util.DEBUG) return null;
+            MemoryChunk memory = (MemoryChunk)Activator.CreateInstance(_memoryType);
+            memory.Identifier = id;
+            memory.RootIdentifier = root;
+            return memory;
         }
 
         public static ChunkManager NewInstance() {

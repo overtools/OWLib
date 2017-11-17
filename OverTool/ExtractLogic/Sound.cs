@@ -74,7 +74,7 @@ namespace OverTool.ExtractLogic {
         public static void FindSoundsChunked(Chunked chunked, HashSet<ulong> done, Dictionary<ulong, List<ulong>> ret, Dictionary<ulong, Record> map, CASCHandler handler, Dictionary<ulong, ulong> replace, ulong parent, ulong mykey) {
             OSCE[] osces = chunked.GetAllOfTypeFlat<OSCE>();
             foreach (OSCE osce in osces) {
-                FindSoundsEx(osce.Data.effect, done, ret, map, handler, replace, mykey);
+                FindSoundsEx(osce.Data.soundDataKey, done, ret, map, handler, replace, mykey);
             }
 
             FECE[] feces = chunked.GetAllOfTypeFlat<FECE>();

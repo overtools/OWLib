@@ -9,15 +9,14 @@ namespace OWLib.Types.Chunk {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
             public ulong animation;
-            public ulong unknown_key;
+            public ulong GUIDx01C;
         }
 
-        private Structure data;
-        public Structure Data => data;
+        public Structure Data { get; private set; }
 
         public void Parse(Stream input) {
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
-                data = reader.Read<Structure>();
+                Data = reader.Read<Structure>();
             }
         }
     }

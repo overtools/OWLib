@@ -11,8 +11,8 @@ namespace STULib.Types.AnimationList.x021 {
         [STUField(0x3F5B86A4)]
         public Common.STUGUID Animation;
 
-        [STUField(0xBAA74493, EmbeddedInstance = true)]
-        public STU_8C127DE2 m_BAA74493;
+        [STUField(0xBAA74493, "m_condition", EmbeddedInstance = true)]
+        public STU_8C127DE2 Condition;
 
         [STUField(0x5BA0B476)]
         public int m_5BA0B476;

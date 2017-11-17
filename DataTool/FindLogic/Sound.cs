@@ -82,7 +82,7 @@ namespace DataTool.FindLogic {
                 
                 OSCE[] osces = chunked.GetAllOfTypeFlat<OSCE>();
                 foreach (OSCE osce in osces) {
-                    existingSounds = FindSounds(existingSounds, osce.Data.effect, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, osce.Data.soundDataKey, name, forceZero, toplevelKey, replacements);
                 }
 
                 FECE[] feces = chunked.GetAllOfTypeFlat<FECE>();
@@ -156,9 +156,15 @@ namespace DataTool.FindLogic {
                 case 0x02C:
                     STUSound sbM = GetInstance<STUSound>(soundGUID);
                     AddGUID(existingSounds, sbM?.Inner?.Soundbank, toplevelKey, null, name, forceZero);
-                    if (sbM?.Inner?.Sounds == null) break;
-                    foreach (Common.STUGUID sound in sbM.Inner.Sounds) {
-                        AddGUID(existingSounds, sound, toplevelKey, null, name, forceZero);
+                    if (sbM?.Inner?.Sounds != null) {
+                        foreach (Common.STUGUID sound in sbM.Inner.Sounds) {
+                            AddGUID(existingSounds, sound, toplevelKey, null, name, forceZero);
+                        }
+                    }
+                    if (sbM?.Inner?.SoundOther != null) {
+                        foreach (Common.STUGUID music in sbM.Inner.SoundOther) {
+                            AddGUID(existingSounds, music, toplevelKey, null, name, forceZero);
+                        }
                     }
                     break;
                 case 0x043:
@@ -212,7 +218,15 @@ namespace DataTool.FindLogic {
                         } else if (component.GetType() == typeof(STUStatescript049)) {
                             STUStatescript049 ss049 = component as STUStatescript049;
                             existingSounds = FindSounds(existingSounds, ss049?.GUIDx049, null, forceZero, toplevelKey, replacements);
-                        }
+                        } 
+                        // else if (component.GetType() == typeof(STU_FD024F42)) {
+                        //     STU_FD024F42 ssFD = component as STU_FD024F42;
+                        //     if (ssFD?.m_B634821A != null) {
+                        //         foreach (STU_7B6EA463 ss7B in ssFD.m_B634821A) {
+                        //             existingSounds = FindSounds(existingSounds, ss7B.m_C71EA6BC, null, forceZero, toplevelKey, replacements);
+                        //         }
+                        //     }
+                        // }
                     }
                     break;
                 default:

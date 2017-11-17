@@ -14,7 +14,14 @@ namespace STUClassFixer {
             string outputDir = args[1];
 
             Dictionary<uint, STUInstanceJSON> instanceJson = STUHashTool.Program.LoadInstanceJson("RegisteredSTUTypes.json");
+            STUHashTool.Program.LoadHashCSV("KnownFields.csv", out Dictionary<uint, string> fieldNames);
             Version2Comparer.InstanceJSON = instanceJson;
+
+            // foreach (KeyValuePair<uint,string> fieldName in fieldNames) {
+            //     Console.Out.WriteLine($"{fieldName.Value} => {STUHashTool.ClassBuilder.FixFieldName(fieldName.Value)}");
+            // }
+            
+            // todo: fix field names too
 
             Regex hashRegex = new Regex(@"0x(\w+)");
             
@@ -55,10 +62,15 @@ namespace STUClassFixer {
                                 } else {
                                     STUInstanceJSON instance = instanceJson[instanceChecksum];
                                     STUInstanceJSON.STUFieldJSON field = instance.GetField(fieldChecksum);
-                                    if (field.SerializationType == 2 || field.SerializationType == 3) {
+                                    if (fieldNames.ContainsKey(fieldChecksum)) {
+                                        if (!line.Contains(fieldNames[fieldChecksum])) {
+                                            newLine = newLine.Substring(0, newLine.LastIndexOf(")]", StringComparison.InvariantCulture));
+                                            newLine = newLine + $", \"{fieldNames[fieldChecksum]}\")]";
+                                        }
+                                    }
+                                    if ((field.SerializationType == 2 || field.SerializationType == 3) && !line.Contains("EmbeddedInstance")) {
                                         newLine = newLine.Substring(0, newLine.LastIndexOf(")]", StringComparison.InvariantCulture));
                                         newLine = newLine + ", EmbeddedInstance = true)]";
-                                        Console.Out.WriteLine($"[STUField(0x{fieldChecksum}), EmbeddedInstance = true)]");
                                     }
                                 }
                             }

@@ -7,10 +7,10 @@ namespace STULib.Impl.Version2HashComparer {
         public MapComparer(Stream stuStream, uint owVersion) : base(stuStream, owVersion) { }
 
         protected override void ReadInstanceData(long offset) {
-            stream.Position = offset;
+            Stream.Position = offset;
             InternalInstances = new Dictionary<uint, InstanceData>();
             
-            Map map = new Map(stream, buildVersion);
+            Map map = new Map(Stream, BuildVersion);
             int index = 0;
             InstanceData = new InstanceData[map.STUInstances.Count];
             foreach (uint instance in map.STUInstances) {

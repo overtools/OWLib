@@ -8,8 +8,8 @@ namespace STULib.Types {
     [STUSuppressWarning(0xF746901F, STUWarningType.MissingInstance, InstanceUsage.Embed, 0x5683B253, 0x4493ED2C)]
     // suppress the missing instance 4493ED2C embedded in F746901F:5683B253
     public class STUSoundConainer : STUInstance {  // todo: these names are so bad
-        //[STUField(0x5683B253, EmbeddedInstance = true)]
-        //public STU_4493ED2C[] m_5683B253;  // 0 to 12 // todo: I don't care about this instance right now
+        // [STUField(0x5683B253, EmbeddedInstance = true)]
+        // public STU_4493ED2C[] m_5683B253;  // 0 to 12 // todo: I don't care about this instance right now
 
         [STUField(0x798027DE, EmbeddedInstance = true)]
         public STUSoundWrapper Sound1;

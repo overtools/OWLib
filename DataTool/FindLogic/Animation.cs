@@ -116,11 +116,12 @@ namespace DataTool.FindLogic {
                     if (listBB7Asub?.m_AF632ACD != null) {
                         existingAnimations = FindAnimations(existingAnimations, models, listBB7Asub.m_AF632ACD, replacements);
                     }
-                    if (listBB7Asub?.ParentNode != null) {
-                        if (listBB7Asub?.ParentNode.GetType() == typeof(STU_BB7A7240)) {
-                            
-                        }
-                    }
+                    // now that I know what this field is called, the recursion issues make sense
+                    // if (listBB7Asub?.ParentNode != null) {
+                    //     if (listBB7Asub?.ParentNode.GetType() == typeof(STU_BB7A7240)) {
+                    //         
+                    //     }
+                    // }
                     if (listBB7A.m_0DE1BA16 != null) {
                         foreach (STU_40274C18 listBB7A_4027 in listBB7A.m_0DE1BA16) {
                             existingAnimations = FindAnimations(existingAnimations, models, listBB7A_4027.m_AF632ACD);

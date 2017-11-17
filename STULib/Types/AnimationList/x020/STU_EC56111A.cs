@@ -9,7 +9,7 @@ namespace STULib.Types.AnimationList.x020 {
         [STUField(0x8314F828, EmbeddedInstance = true)]
         public STU_DB72CA9C m_8314F828;
 
-        [STUField(0xBAA74493, EmbeddedInstance = true)]
-        public STU_8C127DE2 m_BAA74493;
+        [STUField(0xBAA74493, "m_condition", EmbeddedInstance = true)]
+        public STU_8C127DE2 Condition;
     }
 }

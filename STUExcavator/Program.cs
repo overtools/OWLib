@@ -89,14 +89,9 @@ namespace STUExcavator {
             
             // actual tool
             Dictionary<string, AssetTypeSummary> types = new Dictionary<string, AssetTypeSummary>();
-            
-            ISTU.Clear();
             CompileSTUs();
             
             foreach (KeyValuePair<ushort,HashSet<ulong>> keyValuePair in TrackedFiles.OrderBy(x => x.Key)) {
-                // wipe ISTU
-                
-                
                 string type = keyValuePair.Key.ToString("X3");
                 Log($"Processing type: {type}");
                 types[type] = Excavate(keyValuePair.Key, keyValuePair.Value);
@@ -128,8 +123,6 @@ namespace STUExcavator {
 
         public static void CompileSTUs() {
             StringBuilder sb = new StringBuilder();
-            // sb.AppendLine("using static STULib.Types.Generic.Common;");  // compiler no likey
-            // sb.AppendLine();
             HashSet<uint> doneEnums = new HashSet<uint>();
             HashSet<uint> doneInstances = new HashSet<uint>();
             foreach (KeyValuePair<uint, STUInstanceJSON> json in Version2Comparer.InstanceJSON) {
@@ -192,7 +185,28 @@ namespace STUExcavator {
                 using (BinaryReader reader = new BinaryReader(file)) {
                     if (Version1.IsValidVersion(reader)) {
                         reader.BaseStream.Position = 0;
-                        asset.SerializationType = SerializationType.STUv1;  // todo:
+                        asset.SerializationType = SerializationType.STUv1;
+                        
+                        asset.GUIDs = new HashSet<string>();
+                        reader.BaseStream.Position = 0;
+                        
+                        // try and auto detect padding that is before a guid
+                        int maxCount = 0;
+                        for (int i = 0; i < reader.BaseStream.Length; i++) {
+                            byte b = reader.ReadByte();
+                            if (b == 255) maxCount++;
+                            if (maxCount >= 8 && b != 255) {
+                                if (reader.BaseStream.Length - reader.BaseStream.Position > 8) {
+                                    reader.BaseStream.Position -= 1; // before b
+                                    Common.STUGUID rawGUID = new Common.STUGUID(reader.ReadUInt64());
+                                    reader.BaseStream.Position -= 7; // back to after b
+                                    if (GUID.Type(rawGUID) > 1) {
+                                        asset.GUIDs.Add(rawGUID.ToString());
+                                    }
+                                }
+                            } 
+                            if (b != 255 && maxCount > 0) maxCount = 0;
+                        }
                     } else if (type == 0xBC) {
                         asset.SerializationType = SerializationType.MapData;
                         asset.GUIDs = new HashSet<string>();
@@ -206,7 +220,7 @@ namespace STUExcavator {
                             return asset;
                         }
                         foreach (ISTU stu in map.STUs) {
-                            asset.GUIDs = GetGUIDs(stu);
+                            asset.GUIDs = new HashSet<string>(asset.GUIDs.Concat(GetGUIDs(stu)).ToList());
                             foreach (Common.STUInstance stuInstance in stu.Instances) {
                                 STUAttribute attr = stuInstance?.GetType().GetCustomAttributes<STUAttribute>().FirstOrDefault();
                                 if (attr == null) continue;
@@ -234,31 +248,6 @@ namespace STUExcavator {
                                     asset.STUInstances.Add(attr.Checksum.ToString("X8"));
                                 }
                             }
-                        }
-                    }
-                    // well, this is dumb, raw guids don't have padding.
-                    if (asset.SerializationType == SerializationType.STUv1) {  // ok so this is probably a raw file
-                        // asset.SerializationType = SerializationType.Raw;
-                        asset.GUIDs = new HashSet<string>();
-                        reader.BaseStream.Position = 0;
-                        
-                        // try and auto detect padding that is before a guid
-                        // this is innacurate for types like 004
-                        int maxCount = 0;
-                        for (int i = 0; i < reader.BaseStream.Length; i++) {
-                            byte b = reader.ReadByte();
-                            if (b == 255) maxCount++;
-                            if (maxCount >= 8 && b != 255) {
-                                if (reader.BaseStream.Length - reader.BaseStream.Position > 8) {
-                                    reader.BaseStream.Position -= 1; // before b
-                                    Common.STUGUID rawGUID = new Common.STUGUID(reader.ReadUInt64());
-                                    reader.BaseStream.Position -= 7; // back to after b
-                                    if (GUID.Type(rawGUID) > 1) {
-                                        asset.GUIDs.Add(rawGUID.ToString());
-                                    }
-                                }
-                            } 
-                            if (b != 255 && maxCount > 0) maxCount = 0;
                         }
                     }
                 }
@@ -297,10 +286,9 @@ namespace STUExcavator {
             foreach (ulong guid in files) {
                 Asset asset = Excavate(type, guid);
                 assets.Add(asset);
-                if (asset.GUIDs != null) {
-                    foreach (string assetGUID in asset.GUIDs) {
-                        summary.GUIDTypes.Add(assetGUID.Split('.')[1]);
-                    }
+                if (asset.GUIDs == null) continue;
+                foreach (string assetGUID in asset.GUIDs) {
+                    summary.GUIDTypes.Add(assetGUID.Split('.')[1]);
                 }
                 // broken: todo
                 // if (asset.STUInstances != null) {

@@ -67,6 +67,7 @@
     <Compile Include="Helper\Logger.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\STUHelper.cs" />
+    <Compile Include="IQueryParser.cs" />
     <Compile Include="ITool.cs" />
     <Compile Include="JSON\GUIDConverter.cs" />
     <Compile Include="SaveLogic\Animation.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="SaveLogic\Unlock\SprayAndImage.cs" />
     <Compile Include="SaveLogic\Sound.cs" />
     <Compile Include="SaveLogic\Texture.cs" />
+    <Compile Include="SaveLogic\Unlock\VoiceLine.cs" />
     <Compile Include="ToolFlags.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,9 +87,11 @@
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSound.cs" />
     <Compile Include="ToolLogic\Extract\ExtractAbilities.cs" />
     <Compile Include="ToolLogic\Extract\ExtractHeroUnlocks.cs" />
     <Compile Include="ToolLogic\Extract\ExtractGeneral.cs" />
+    <Compile Include="ToolLogic\Extract\ExtractHeroVoice.cs" />
     <Compile Include="ToolLogic\Extract\ExtractLootbox.cs" />
     <Compile Include="ToolLogic\Extract\ExtractMaps.cs" />
     <Compile Include="ToolLogic\Extract\ExtractFlags.cs" />

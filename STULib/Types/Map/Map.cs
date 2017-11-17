@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,23 @@ namespace STULib.Types.Map {
                     break;
                 }
                 uint magic = reader.ReadUInt32();
-                if (magic == Version1.MAGIC) {
+                if (magic == Version1.Magic) {
+                    reader.BaseStream.Position -= 4;
+                    break;
+                }
+                reader.BaseStream.Position -= 3;
+            }
+        }
+        
+        private void AlignPositionNew(BinaryReader reader) {
+            int maxOffset = (int)reader.BaseStream.Position + 4;  // after the last magic
+            for (int i = maxOffset; i < reader.BaseStream.Length; i++) {
+                if (reader.BaseStream.Position + 4 > reader.BaseStream.Length) {
+                    reader.BaseStream.Position = reader.BaseStream.Length;
+                    break;
+                }
+                uint magic = reader.ReadUInt32();
+                if (magic == Version1.Magic) {
                     reader.BaseStream.Position -= 4;
                     break;
                 }
@@ -48,12 +65,12 @@ namespace STULib.Types.Map {
                 for (uint i = 0; i < Header.recordCount; ++i) {
                     try {
                         CommonHeaders[i] = reader.Read<MapCommonHeader>();
+                        long before = reader.BaseStream.Position;
                         long nps = input.Position + CommonHeaders[i].size - 24;
                         if (Manager.InitializeInstance(CommonHeaders[i].type, input, out Records[i]) !=
                             MANAGER_ERROR.E_SUCCESS) {
-                            if (System.Diagnostics.Debugger.IsAttached) {
-                                System.Diagnostics.Debugger.Log(2, "MAP",
-                                    $"Error reading Map type {CommonHeaders[i].type:X}\n");
+                            if (Debugger.IsAttached) {
+                                Debugger.Log(0, "STULib.Types.Map", $"[STULib.Types.Map.Map]: Error reading Map type {CommonHeaders[i].type:X} (offset: {before})\n");
                             }
                         }
                         input.Position = nps;
@@ -76,7 +93,16 @@ namespace STULib.Types.Map {
                         if (input.Position >= input.Length) {
                             break;
                         }
-                        ISTU tmp = ISTU.NewInstance(input, owVersion);
+                        ISTU tmp;
+                        try {
+                            tmp = ISTU.NewInstance(input, owVersion);
+                        }
+                        catch (ArgumentOutOfRangeException) {
+                            Debugger.Log(0, "STULib.Types.Map", "[STULib.Types.Map.Map]: Error while reading STU (fix the damn parser)\r\n");
+                            AlignPositionNew(reader);
+                            continue;
+                        }
+                        
                         AlignPositionNew(reader, tmp as Version1);
                         STUInstances = new HashSet<uint>(STUInstances.Concat(tmp.TypeHashes).ToList());
                         STUs.Add(tmp);

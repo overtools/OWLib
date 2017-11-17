@@ -24,7 +24,7 @@ namespace STULib.Types {
     }
 
     [STU(0xB7EEA3BE)]
-    public class STUDataOverride : STUOverrideBase {
+    public class STUDataOverride : STUOverrideBase {  // 0AB61EC9
         [STUField(0xAA8E1BB0)]
         public STUGUID[] m_AA8E1BB0;  // STU_0A29DB0D
 

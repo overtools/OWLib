@@ -162,7 +162,7 @@ namespace STUDebug {
 
                             Console.Out.WriteLine("STU File Detected");
                             DumpSTU(fileStream, args[1]);
-                        } else if (magic == Chunked.CHUNK_MAGIC) {
+                        } else if (magic == Chunked.ChunkMagic) {
                             if (args.Length < 2) {
                                 Console.Out.WriteLine("Usage: STUDebug file [output_dir]");
                                 return;

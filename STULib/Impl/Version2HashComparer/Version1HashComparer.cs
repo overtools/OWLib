@@ -10,10 +10,10 @@ namespace STULib.Impl.Version2HashComparer {
         public Version1Comparer(Stream stuStream, uint owVersion) : base(stuStream, owVersion) { }
 
         protected override void ReadInstanceData(long offset) {
-            stream.Position = offset;
+            Stream.Position = offset;
             InternalInstances = new Dictionary<uint, InstanceData>();
             
-            using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
+            using (BinaryReader reader = new BinaryReader(Stream, Encoding.UTF8, true)) {
                 Types.Generic.Version1.STUHeader data = reader.Read<Types.Generic.Version1.STUHeader>();
                 
                 Types.Generic.Version1.STUInstanceRecord[] records = new Types.Generic.Version1.STUInstanceRecord[data.InstanceCount];

@@ -106,14 +106,13 @@ namespace OWLib.Writer {
             Dictionary<int, HTLC.ClothNode> nodeMap = new Dictionary<int, HTLC.ClothNode>();
             
             List<ClothInfo> clothes = new List<ClothInfo>();  // hmm, engligh is weird?
-            HTLC cloth = chunked.FindNextChunk("HTLC").Value as HTLC;
-            if (cloth != null) {
+            if (chunked.FindNextChunk("HTLC").Value is HTLC cloth) {
                 uint clothIndex = 0;
                 foreach (HTLC.ClothNode[] nodeCollection in cloth.Nodes) {
                     if (nodeCollection == null) continue;
                     int nodeIndex = 0;
-                    ClothInfo newCloth = new ClothInfo {Cloth = cloth, ConnectionVerts = new List<List<ClothVertContainer>>(), ConnectionBones = new List<int>(), ID=(int)clothIndex};
-                    clothes.Add(newCloth);
+                    // ClothInfo newCloth = new ClothInfo {Cloth = cloth, ConnectionVerts = new List<List<ClothVertContainer>>(), ConnectionBones = new List<int>(), ID=(int)clothIndex};
+                    // clothes.Add(newCloth);
                     foreach (HTLC.ClothNode node in nodeCollection) {
                         int parentRaw = node.VerticalParent;
                         if (cloth.NodeBones[clothIndex].ContainsKey(nodeIndex) &&
@@ -124,12 +123,11 @@ namespace OWLib.Writer {
                                 if (cloth.NodeBones[clothIndex][parentRaw] == -1) {
                                     HTLC.ClothNodeWeight weightedBone = node.Bones.Aggregate((i1, i2) => i1.Weight > i2.Weight ? i1 : i2);
                                     hierarchy[cloth.NodeBones[clothIndex][nodeIndex]] = weightedBone.Bone;
-                                    newCloth.ConnectionBones.Add(cloth.NodeBones[clothIndex][nodeIndex]);
+                                    // newCloth.ConnectionBones.Add(cloth.NodeBones[clothIndex][nodeIndex]);
                                 }
                             }
                             // else: on subskele
                             // todo: add subskelebones
-
                         } else {
                             if (cloth.NodeBones[clothIndex].ContainsKey(nodeIndex)) {  // if on main skele
                                 // good code:
@@ -137,7 +135,7 @@ namespace OWLib.Writer {
                                     hierarchy[cloth.NodeBones[clothIndex][nodeIndex]] = -1;
                                     HTLC.ClothNodeWeight weightedBone = node.Bones.Aggregate((i1, i2) => i1.Weight > i2.Weight ? i1 : i2);
                                     hierarchy[cloth.NodeBones[clothIndex][nodeIndex]] = weightedBone.Bone;
-                                    newCloth.ConnectionBones.Add(cloth.NodeBones[clothIndex][nodeIndex]);
+                                    // newCloth.ConnectionBones.Add(cloth.NodeBones[clothIndex][nodeIndex]);
                                 }
                                 // else: on subskele
                                 // todo: add subskelebones
@@ -206,7 +204,7 @@ namespace OWLib.Writer {
                     LODMap[submesh.lod].Add(i);
                 }
 
-                long meshCountPos = writer.BaseStream.Position;
+                //long meshCountPos = writer.BaseStream.Position;
                 writer.Write(sz);
 
                 writer.Write(hardpoints?.HardPoints.Length ?? 0);
@@ -261,12 +259,12 @@ namespace OWLib.Writer {
                         writer.Write((byte)uv.Length);
                         
                         // List<int> removedVerts = new List<int>();
-                        Dictionary<int, int> newVertIDs = new Dictionary<int, int>();  // todo: remove
+                        //Dictionary<int, int> newVertIDs = new Dictionary<int, int>();  // todo: remove
                         
                         writer.Write(vertex.Length);
-                        long indexPos = writer.BaseStream.Position;
+                        //long indexPos = writer.BaseStream.Position;
                         writer.Write(index.Length);
-                        int fakeVertCount = 0;
+                        // int fakeVertCount = 0;
                         for (int j = 0; j < vertex.Length; ++j) {
                             writer.Write(vertex[j].x);
                             writer.Write(vertex[j].y);
@@ -327,8 +325,8 @@ namespace OWLib.Writer {
                                 // bone -> size + index + weight
                                 writer.Write((byte)0);
                             }
-                            newVertIDs[j] = fakeVertCount;
-                            fakeVertCount++;
+                            // newVertIDs[j] = fakeVertCount;
+                            // fakeVertCount++;
                         }
                         List<ModelIndiceModifiable> indexNew = new List<ModelIndiceModifiable>();
                         foreach (ModelIndice indice in index) {
@@ -349,14 +347,15 @@ namespace OWLib.Writer {
                             //     continue;
                             // }
 
-                            if (newVertIDs.Count == 0 && fakeVertCount == 0) {
-                                indexNew.Add(new ModelIndiceModifiable {v1 = indice.v1, v2 = indice.v2, v3 = indice.v3});
-                                continue;
-                            }
+                            // if (newVertIDs.Count == 0 && fakeVertCount == 0) {
+                            //     indexNew.Add(new ModelIndiceModifiable {v1 = indice.v1, v2 = indice.v2, v3 = indice.v3});
+                            //     continue;
+                            // }
 
-                            indexNew.Add(new ModelIndiceModifiable {v1 = newVertIDs[indice.v1], 
-                                v2 = newVertIDs[indice.v2], v3 = newVertIDs[indice.v3]
-                            });
+                            // indexNew.Add(new ModelIndiceModifiable {v1 = newVertIDs[indice.v1], 
+                            //     v2 = newVertIDs[indice.v2], v3 = newVertIDs[indice.v3]
+                            // });
+                            indexNew.Add(new ModelIndiceModifiable {v1 = indice.v1, v2 = indice.v2, v3 = indice.v3});
                         }
                         foreach (ModelIndiceModifiable indice in indexNew) {
                             writer.Write((byte)3);
@@ -364,99 +363,97 @@ namespace OWLib.Writer {
                             writer.Write(indice.v2);
                             writer.Write(indice.v3);
                         }
-                        long tempPos = writer.BaseStream.Position;
-                        
-                        writer.BaseStream.Position = indexPos;
-                        writer.Write(indexNew.Count);
-                        
-                        writer.BaseStream.Position = tempPos;
+                        // long tempPos = writer.BaseStream.Position;
+                        // writer.BaseStream.Position = indexPos;
+                        // writer.Write(indexNew.Count);
+                        // writer.BaseStream.Position = tempPos;
                     }
                 }
-                foreach (KeyValuePair<int, Dictionary<int, ClothMesh>> clothMesh in clothMeshes) {
-                    HTLC.ClothDesc desc = cloth.Descriptors[clothMesh.Key];
-                    int submeshIndex = 0;
-                    foreach (KeyValuePair<int, ClothMesh> clothSubmesh in clothMesh.Value) {
-                        writer.Write($"Submesh_Cloth.{desc.Name}.{clothSubmesh.Value.Submesh}");
-                        clothSubmesh.Value.FileIndex = sz;
-                    
-                        List<ModelIndiceModifiable> indices = new List<ModelIndiceModifiable>();
-                        Dictionary<int, int> vertRemap = new Dictionary<int, int>();
-    
-                        int vertIndex = 0;
-                        foreach (ClothVertContainer vertContainer in clothSubmesh.Value.Vertcies) {
-                            vertRemap[vertContainer.J] = vertIndex;
-                            vertIndex++;
-                        }
-    
-                        foreach (ModelIndiceModifiable index in clothSubmesh.Value.Indices) {
-                            if (clothSubmesh.Value.VertIDs.Contains(index.v1) && clothSubmesh.Value.VertIDs.Contains(index.v2) &&
-                                clothSubmesh.Value.VertIDs.Contains(index.v3)) {
-                                indices.Add(new ModelIndiceModifiable {v1 = vertRemap[index.v1], v2 = vertRemap[index.v2], v3 = vertRemap[index.v3]});
-                            }
-                        }
-                        
-                        writer.Write(clothSubmesh.Value.Material);
-                        writer.Write((byte)clothSubmesh.Value.UV.Length);
-                        writer.Write(clothSubmesh.Value.Vertcies.Count);
-                        writer.Write(indices.Count);
-                        
-                        clothes[clothMesh.Key].ConnectionVerts.Add(new List<ClothVertContainer>());
-    
-                        vertIndex = 0;
-                        foreach (ClothVertContainer vertContainer in clothSubmesh.Value.Vertcies) {
-                            writer.Write(vertContainer.Vertex.x);
-                            writer.Write(vertContainer.Vertex.y);
-                            writer.Write(vertContainer.Vertex.z);
-                            writer.Write(-vertContainer.Normal.x);
-                            writer.Write(-vertContainer.Normal.y);
-                            writer.Write(-vertContainer.Normal.z);
-                            foreach (ModelUV[] t in clothSubmesh.Value.UV) {
-                                writer.Write(t[vertContainer.J].u);
-                                writer.Write(t[vertContainer.J].v);
-                            }
-                            if (skeleton != null && vertContainer.Bones.boneIndex != null && vertContainer.Bones.boneWeight != null) {
-                                writer.Write((byte)4);
-                                writer.Write(skeleton.Lookup[vertContainer.Bones.boneIndex[0]]);
-                                writer.Write(skeleton.Lookup[vertContainer.Bones.boneIndex[1]]);
-                                writer.Write(skeleton.Lookup[vertContainer.Bones.boneIndex[2]]);
-                                writer.Write(skeleton.Lookup[vertContainer.Bones.boneIndex[3]]);
-                                writer.Write(vertContainer.Bones.boneWeight[0]);
-                                writer.Write(vertContainer.Bones.boneWeight[1]);
-                                writer.Write(vertContainer.Bones.boneWeight[2]);
-                                writer.Write(vertContainer.Bones.boneWeight[3]);
-
-                                if (clothes[clothMesh.Key].ConnectionBones
-                                        .Contains(skeleton.Lookup[vertContainer.Bones.boneIndex[0]]) ||
-                                    clothes[clothMesh.Key].ConnectionBones
-                                        .Contains(skeleton.Lookup[vertContainer.Bones.boneIndex[1]]) ||
-                                    clothes[clothMesh.Key].ConnectionBones
-                                        .Contains(skeleton.Lookup[vertContainer.Bones.boneIndex[2]]) ||
-                                    clothes[clothMesh.Key].ConnectionBones
-                                        .Contains(skeleton.Lookup[vertContainer.Bones.boneIndex[3]])) {
-                                    vertContainer.J = vertRemap[vertContainer.J]; // warning: invalid after this point
-                                    clothes[clothMesh.Key].ConnectionVerts[submeshIndex].Add(vertContainer);
-                                }
-                            } else {
-                                // bone -> size + index + weight
-                                writer.Write((byte)0);
-                            }
-                            vertIndex++;
-                        }
-                        foreach (ModelIndiceModifiable indice in indices) {
-                            writer.Write((byte)3);
-                            writer.Write(indice.v1);
-                            writer.Write(indice.v2);
-                            writer.Write(indice.v3);
-                        }
-                        sz++;
-                        submeshIndex++;
-                    }
-                    
-                }
-                long tempPos2 = writer.BaseStream.Position;
-                writer.BaseStream.Position = meshCountPos;
-                writer.Write(sz);
-                writer.BaseStream.Position = tempPos2;
+                //foreach (KeyValuePair<int, Dictionary<int, ClothMesh>> clothMesh in clothMeshes) {
+                //    HTLC.ClothDesc desc = cloth.Descriptors[clothMesh.Key];
+                //    int submeshIndex = 0;
+                //    foreach (KeyValuePair<int, ClothMesh> clothSubmesh in clothMesh.Value) {
+                //        writer.Write($"Submesh_Cloth.{desc.Name}.{clothSubmesh.Value.Submesh}");
+                //        clothSubmesh.Value.FileIndex = sz;
+                //    
+                //        List<ModelIndiceModifiable> indices = new List<ModelIndiceModifiable>();
+                //        Dictionary<int, int> vertRemap = new Dictionary<int, int>();
+                
+                //        int vertIndex = 0;
+                //        foreach (ClothVertContainer vertContainer in clothSubmesh.Value.Vertcies) {
+                //            vertRemap[vertContainer.J] = vertIndex;
+                //            vertIndex++;
+                //        }
+                
+                //        foreach (ModelIndiceModifiable index in clothSubmesh.Value.Indices) {
+                //            if (clothSubmesh.Value.VertIDs.Contains(index.v1) && clothSubmesh.Value.VertIDs.Contains(index.v2) &&
+                //                clothSubmesh.Value.VertIDs.Contains(index.v3)) {
+                //                indices.Add(new ModelIndiceModifiable {v1 = vertRemap[index.v1], v2 = vertRemap[index.v2], v3 = vertRemap[index.v3]});
+                //            }
+                //        }
+                //        
+                //        writer.Write(clothSubmesh.Value.Material);
+                //        writer.Write((byte)clothSubmesh.Value.UV.Length);
+                //        writer.Write(clothSubmesh.Value.Vertcies.Count);
+                //        writer.Write(indices.Count);
+                //        
+                //        clothes[clothMesh.Key].ConnectionVerts.Add(new List<ClothVertContainer>());
+                
+                //        vertIndex = 0;
+                //        foreach (ClothVertContainer vertContainer in clothSubmesh.Value.Vertcies) {
+                //            writer.Write(vertContainer.Vertex.x);
+                //            writer.Write(vertContainer.Vertex.y);
+                //            writer.Write(vertContainer.Vertex.z);
+                //            writer.Write(-vertContainer.Normal.x);
+                //            writer.Write(-vertContainer.Normal.y);
+                //            writer.Write(-vertContainer.Normal.z);
+                //            foreach (ModelUV[] t in clothSubmesh.Value.UV) {
+                //                writer.Write(t[vertContainer.J].u);
+                //                writer.Write(t[vertContainer.J].v);
+                //            }
+                //            if (skeleton != null && vertContainer.Bones.boneIndex != null && vertContainer.Bones.boneWeight != null) {
+                //                writer.Write((byte)4);
+                //                writer.Write(skeleton.Lookup[vertContainer.Bones.boneIndex[0]]);
+                //                writer.Write(skeleton.Lookup[vertContainer.Bones.boneIndex[1]]);
+                //                writer.Write(skeleton.Lookup[vertContainer.Bones.boneIndex[2]]);
+                //                writer.Write(skeleton.Lookup[vertContainer.Bones.boneIndex[3]]);
+                //                writer.Write(vertContainer.Bones.boneWeight[0]);
+                //                writer.Write(vertContainer.Bones.boneWeight[1]);
+                //                writer.Write(vertContainer.Bones.boneWeight[2]);
+                //                writer.Write(vertContainer.Bones.boneWeight[3]);
+                
+                //                if (clothes[clothMesh.Key].ConnectionBones
+                //                        .Contains(skeleton.Lookup[vertContainer.Bones.boneIndex[0]]) ||
+                //                    clothes[clothMesh.Key].ConnectionBones
+                //                        .Contains(skeleton.Lookup[vertContainer.Bones.boneIndex[1]]) ||
+                //                    clothes[clothMesh.Key].ConnectionBones
+                //                        .Contains(skeleton.Lookup[vertContainer.Bones.boneIndex[2]]) ||
+                //                    clothes[clothMesh.Key].ConnectionBones
+                //                        .Contains(skeleton.Lookup[vertContainer.Bones.boneIndex[3]])) {
+                //                    vertContainer.J = vertRemap[vertContainer.J]; // warning: invalid after this point
+                //                    clothes[clothMesh.Key].ConnectionVerts[submeshIndex].Add(vertContainer);
+                //                }
+                //            } else {
+                //                // bone -> size + index + weight
+                //                writer.Write((byte)0);
+                //            }
+                //            vertIndex++;
+                //        }
+                //        foreach (ModelIndiceModifiable indice in indices) {
+                //            writer.Write((byte)3);
+                //            writer.Write(indice.v1);
+                //            writer.Write(indice.v2);
+                //            writer.Write(indice.v3);
+                //        }
+                //        sz++;
+                //        submeshIndex++;
+                //    }
+                //    
+                //}
+                // long tempPos2 = writer.BaseStream.Position;
+                // writer.BaseStream.Position = meshCountPos;
+                // writer.Write(sz);
+                // writer.BaseStream.Position = tempPos2;
                 
                 if (hardpoints != null) {
                     // attachments

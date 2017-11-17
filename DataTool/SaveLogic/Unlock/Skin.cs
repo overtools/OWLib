@@ -87,7 +87,7 @@ namespace DataTool.SaveLogic.Unlock {
                 // WeaponComponents1 and WeaponComponents2 are weapon components, matching up with Weapon.Inex
                 // doomfist doesn't have WeaponComponents1, also his weapon ids are messed up (linked?)
                 
-                STUWeaponOverride weaponOverride = GetInstance<STUWeaponOverride>(overrideWeapon);
+                STUHeroWeapon weaponOverride = GetInstance<STUHeroWeapon>(overrideWeapon);
                 
                 if (weaponOverride == null) continue;
                 

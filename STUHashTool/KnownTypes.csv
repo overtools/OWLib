@@ -31,3 +31,13 @@ BD6F5F83, STUStatescriptActionSendGameMessage
 B567AADA, STUConfigVarBool
 AFFC8378, STUConfigVarEffect
 07A0E32F, STULoadout
+F2646A89, STUHeroWeapon
+5C499B8E, STUAdditionalUnlocks
+F818D652, STULootBoxUnlocks
+5ABF8769, STUUnlocks
+F2646A89, STUHeroWeapon
+6CBC2E3F, STULootBoxCelebrationOverride
+9FFCF237, STULootBoxCurrencyRarityUnlock
+16F7C0EA, STULootBoxCurrencyUnlocks
+899CC976, STURulesetWinReward
+00C21225, STUVoiceLineInstance

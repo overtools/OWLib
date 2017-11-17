@@ -11,35 +11,35 @@ using static STULib.Types.Generic.Version1;
 
 namespace STULib.Impl {
     public class Version1 : ISTU {
-        public const uint MAGIC = 0x53545544;
+        public const uint Magic = 0x53545544;
 
-        protected Stream stream;
-        private STUHeader data;
-        private Dictionary<long, STUInstance> instances;
-        private uint buildVersion;
+        protected Stream Stream;
+        private STUHeader _data;
+        private readonly Dictionary<long, STUInstance> _instances;
+        private readonly uint _buildVersion;
         public List<STUInstanceRecord> Records { get; private set; }
         protected long Start;
 
-        public override IEnumerable<STUInstance> Instances => instances.Select((pair => pair.Value));
+        public override IEnumerable<STUInstance> Instances => _instances.Select(pair => pair.Value);
         public override uint Version => 1;
 
         public override void Dispose() {
-            stream?.Dispose();
+            Stream?.Dispose();
         }
 
         public static bool IsValidVersion(BinaryReader reader) {
-            return reader.ReadUInt32() == MAGIC;
+            return reader.ReadUInt32() == Magic;
         }
 
         public Version1(Stream stuStream, uint owVersion) {
-            stream = stuStream;
-            buildVersion = owVersion;
-            instances = new Dictionary<long, STUInstance>();
+            Stream = stuStream;
+            _buildVersion = owVersion;
+            _instances = new Dictionary<long, STUInstance>();
             ReadInstanceData(stuStream.Position);
         }
 
         internal object GetValueArray(Type type, BinaryReader reader, STUFieldAttribute element, FieldInfo fieldInfo) {
-            long offset = 0;
+            long offset;
             int size = 0;
 
             if (element?.ReferenceArray == true) {
@@ -60,6 +60,7 @@ namespace STULib.Impl {
             reader.BaseStream.Position = offset+Start;
             for (int i = 0; i < size; ++i) {
                 array.SetValue(GetValue(null, type, reader, element, fieldInfo, true, typeof(STUInstance).IsAssignableFrom(type)), i);
+                if (typeof(STUInstance).IsAssignableFrom(type)) reader.ReadUInt32();
                 // array.SetValue(GetValue(null, type, reader, element, fieldInfo, true), i);
             }
 
@@ -159,7 +160,7 @@ namespace STULib.Impl {
                 if (skip) {
                     continue;
                 }
-                if (!CheckCompatVersion(field, buildVersion)) {
+                if (!CheckCompatVersion(field, _buildVersion)) {
                     continue;
                 }
                 if (field.FieldType.IsArray) {
@@ -171,9 +172,9 @@ namespace STULib.Impl {
                     long position = reader.BaseStream.Position;
                     reader.BaseStream.Position = offset+Start;
                     if (element?.EmbeddedInstance == true) {
-                        int[] offsets = (int[])GetValueArray(typeof(int), reader, element, field);
+                        long[] offsets = (long[])GetValueArray(typeof(long), reader, element, field);
                         Array array = Array.CreateInstance(field.FieldType.GetElementType(), offsets.Length);
-                        EmbedArrayRequests.Add(array, offsets);
+                        EmbedArrayRequests.Add(array, offsets.Select(x => (int) x).ToArray());
                         field.SetValue(instance, array);
                     } else {
                         field.SetValue(instance, GetValueArray(field.FieldType.GetElementType(), reader, element, field));
@@ -206,20 +207,20 @@ namespace STULib.Impl {
 
         private void ReadInstanceData(long offset) {
             Records = new List<STUInstanceRecord>();
-            stream.Position = offset;
+            Stream.Position = offset;
             TypeHashes = new HashSet<uint>();
             EmbedRequests = new Dictionary<KeyValuePair<object, FieldInfo>, int>();
             EmbedArrayRequests = new Dictionary<Array, int[]>();
             Start = offset;
-            using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
+            using (BinaryReader reader = new BinaryReader(Stream, Encoding.UTF8, true)) {
                 if (_InstanceTypes == null) {
                     LoadInstanceTypes();
                 }
                 STUHeader instance = new STUHeader();
-                data = (STUHeader)InitializeObject(instance, typeof(STUHeader), reader, false, false);
+                _data = (STUHeader)InitializeObject(instance, typeof(STUHeader), reader, false, false);
                 
-                STUInstanceRecord[] instanceTable = new STUInstanceRecord[data.InstanceCount];
-                for (int i = 0; i < data.InstanceCount; i++) {
+                STUInstanceRecord[] instanceTable = new STUInstanceRecord[_data.InstanceCount];
+                for (int i = 0; i < _data.InstanceCount; i++) {
                     instanceTable[i] = reader.Read<STUInstanceRecord>();
                     Records.Add(instanceTable[i]);
                 }
@@ -229,18 +230,18 @@ namespace STULib.Impl {
                 }
 
                 foreach (KeyValuePair<KeyValuePair<object,FieldInfo>,int> embedRequest in EmbedRequests) {
-                    if (!instances.ContainsKey(embedRequest.Value)) continue;
-                    embedRequest.Key.Value.SetValue(embedRequest.Key.Key, instances[embedRequest.Value]);
-                    if (instances[embedRequest.Value] == null) continue;
-                    instances[embedRequest.Value].Usage = InstanceUsage.Embed;
+                    if (!_instances.ContainsKey(embedRequest.Value)) continue;
+                    embedRequest.Key.Value.SetValue(embedRequest.Key.Key, _instances[embedRequest.Value]);
+                    if (_instances[embedRequest.Value] == null) continue;
+                    _instances[embedRequest.Value].Usage = InstanceUsage.Embed;
                 }
                 foreach (KeyValuePair<Array,int[]> request in EmbedArrayRequests) {
                     int arrayIndex = 0;
                     foreach (int i in request.Value) {
-                        if (instances.ContainsKey(i)) {
-                            request.Key.SetValue(instances[i], arrayIndex);
-                            if (instances[i] == null) continue;
-                            instances[i].Usage = InstanceUsage.EmbedArray;
+                        if (_instances.ContainsKey(i)) {
+                            request.Key.SetValue(_instances[i], arrayIndex);
+                            if (_instances[i] == null) continue;
+                            _instances[i].Usage = InstanceUsage.EmbedArray;
                         }
                         arrayIndex++;
                     }
@@ -250,11 +251,11 @@ namespace STULib.Impl {
 
         // ReSharper disable once UnusedMethodReturnValue.Local
         private STUInstance ReadInstance(long offset, BinaryReader reader) {
-            if (instances.ContainsKey(offset)) {
-                return instances[offset];
+            if (_instances.ContainsKey(offset)) {
+                return _instances[offset];
             }
 
-            instances[offset] = null;
+            _instances[offset] = null;
 
             long position = reader.BaseStream.Position;
             reader.BaseStream.Position = offset + Start;
@@ -264,7 +265,7 @@ namespace STULib.Impl {
             if (_InstanceTypes.ContainsKey(checksum)) {
                 Type type = _InstanceTypes[checksum];
                 object instance = Activator.CreateInstance(type);
-                instances[offset] = InitializeObject(instance, type, reader, false, false) as STUInstance;
+                _instances[offset] = InitializeObject(instance, type, reader, false, false) as STUInstance;
             } else {
                 // STUInstance instance = new STUInstance();
                 // instances[offset] = InitializeObject(instance, typeof(STUInstance), reader) as STUInstance;
@@ -274,7 +275,7 @@ namespace STULib.Impl {
 
             reader.BaseStream.Position = position;
 
-            return instances[offset];
+            return _instances[offset];
         }
     }
 }

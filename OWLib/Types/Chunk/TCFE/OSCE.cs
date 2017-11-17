@@ -8,19 +8,18 @@ namespace OWLib.Types.Chunk {
     
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public ulong effect;
+            public ulong soundDataKey;  // so this isn't an effect(?)
             public ulong unk1;
             public ulong unk2;
             public ulong unk3;
         }
 
-        private Structure data;
-        public Structure Data => data;
+        public Structure Data { get; private set; }
 
         public void Parse(Stream input) {
             using(BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
-                data = reader.Read<Structure>();
+                Data = reader.Read<Structure>();
             }
         }
     }
-}
+}   
