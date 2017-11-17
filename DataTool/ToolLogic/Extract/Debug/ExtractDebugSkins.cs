@@ -30,7 +30,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 STUHero hero = GetInstance<STUHero>(key);
                 if (hero == null) continue;
                 
-                Dictionary<string, HashSet<ItemInfo>> unlocks = List.ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks, false);
+                Dictionary<string, HashSet<ItemInfo>> unlocks = List.ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks);
                 if (unlocks == null) continue;
                 List<ItemInfo> skins = unlocks.SelectMany(x => x.Value.Where(y => y.Type == "Skin")).ToList();
                 List<ItemInfo> weaponSkins = unlocks.SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList();

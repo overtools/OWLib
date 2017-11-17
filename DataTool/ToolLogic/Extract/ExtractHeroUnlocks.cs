@@ -66,7 +66,8 @@ namespace DataTool.ToolLogic.Extract {
             ["soldier 76"] = "soldier: 76",
             ["soldier"] = "soldier: 76",
             ["lucio"] = "lúcio",
-            ["torbjorn"] = "torbjörn"
+            ["torbjorn"] = "torbjörn",
+            ["dva"] = "d.va"
         };
 
         public Dictionary<string, string> QueryNameOverrides => HeroMapping;
@@ -101,6 +102,8 @@ namespace DataTool.ToolLogic.Extract {
             Log("Please specify what you want to extract:");
             Log($"{indent+1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
             Log($"{indent+1}Each query should be surrounded by \", and individual queries should be seperated by spaces");
+            
+            Log($"{indent+1}All hero and item names are in your selected locale");
                         
             Log("\r\nTypes:");
             foreach (QueryType argType in types) {
@@ -180,8 +183,7 @@ namespace DataTool.ToolLogic.Extract {
                     }
                 }
                 
-                // List<ItemInfo> weaponSkins = List.ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks, false).SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList(); // eww?
-                List<ItemInfo> weaponSkins = new List<ItemInfo>(); // currently broken in SaveLogic.Unlocks.Skin
+                List<ItemInfo> weaponSkins = List.ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks)?.SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList(); // eww?
 
                 var achievementUnlocks = GatherUnlocks(unlocks?.SystemUnlocks?.Unlocks?.Select(it => (ulong)it)).ToList();
                 foreach (ItemInfo itemInfo in achievementUnlocks) {
@@ -204,7 +206,6 @@ namespace DataTool.ToolLogic.Extract {
                     foreach (STUHero.Skin skin in hero.Skins) {
                         SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\{RootDir}", hero, skin, false);
                     }
-                    if (hero.Skins.Length == 0) Debugger.Break();
                     continue;
                 }
                 foreach (var defaultUnlocks in unlocks.Unlocks)  {

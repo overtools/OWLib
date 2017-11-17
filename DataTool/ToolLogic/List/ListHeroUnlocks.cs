@@ -20,7 +20,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> unlocks = GetUnlocks(false);
+            Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> unlocks = GetUnlocks();
 
             if (toolFlags is ListFlags flags) {
                 if (flags.JSON) {
@@ -62,7 +62,7 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public static Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> GetUnlocks(bool onlyAI) {
+        public static Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> GetUnlocks() {
             Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> @return = new Dictionary<string, Dictionary<string, HashSet<ItemInfo>>>();
             foreach (ulong key in TrackedFiles[0x75]) {
                 STUHero hero = GetInstance<STUHero>(key);
@@ -71,7 +71,7 @@ namespace DataTool.ToolLogic.List {
                 string name = GetString(hero.Name);
                 if (name == null) continue;
 
-                Dictionary<string, HashSet<ItemInfo>> unlocks = GetUnlocksForHero(hero.LootboxUnlocks, false);
+                Dictionary<string, HashSet<ItemInfo>> unlocks = GetUnlocksForHero(hero.LootboxUnlocks);
                 if (unlocks == null) continue;
 
                 @return[name] = unlocks;
@@ -80,15 +80,11 @@ namespace DataTool.ToolLogic.List {
             return @return;
         }
 
-        public static Dictionary<string, HashSet<ItemInfo>> GetUnlocksForHero(ulong GUID, bool onlyAI) {
+        public static Dictionary<string, HashSet<ItemInfo>> GetUnlocksForHero(ulong guid) {
             Dictionary<string, HashSet<ItemInfo>> @return = new Dictionary<string, HashSet<ItemInfo>>();
 
-            STUHeroUnlocks unlocks = GetInstance<STUHeroUnlocks>(GUID);
+            STUHeroUnlocks unlocks = GetInstance<STUHeroUnlocks>(guid);
             if (unlocks == null) return null;
-
-            if (onlyAI && unlocks.Unlocks != null) return null;
-            if (!onlyAI && unlocks.Unlocks == null) return null;
-
             @return["Default"] = GatherUnlocks(unlocks.SystemUnlocks?.Unlocks?.Select(it => (ulong)it));
 
             if (unlocks.Unlocks != null) {
