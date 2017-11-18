@@ -98,6 +98,7 @@
     <Compile Include="ToolLogic\Extract\ExtractNPCs.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugSoundbanks.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugDecal.cs" />
+    <Compile Include="ToolLogic\List\ListAchievements.cs" />
     <Compile Include="ToolLogic\List\ListGameParams.cs" />
     <Compile Include="ToolLogic\List\ListFlags.cs" />
     <Compile Include="ToolLogic\List\ListHeroes.cs" />
