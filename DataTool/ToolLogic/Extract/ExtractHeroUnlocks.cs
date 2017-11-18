@@ -140,9 +140,14 @@ namespace DataTool.ToolLogic.Extract {
                 QueryHelp(QueryTypes);
                 return;
             }
+            
+            Log("Initializing...");
 
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
-            if (parsedTypes == null) return;
+            if (parsedTypes == null) {
+                Log("Found nufin of use while parsing query :/");
+                return;
+            };
 
             foreach (STUHero hero in heroes) {
                 string heroFileName = GetValidFilename(GetString(hero.Name));
@@ -174,6 +179,8 @@ namespace DataTool.ToolLogic.Extract {
                 if (unlocks?.LootboxUnlocks != null && npc) {
                     continue;
                 }
+                
+                Log($"Processing data for {heroNameActual}...");
 
                 List<STULoadout> abilities = new List<STULoadout>();
                 if (hero.Abilities != null) {
@@ -202,12 +209,14 @@ namespace DataTool.ToolLogic.Extract {
                     //}
                     // todo: add emote,highlightintro,victorypose whenever used
                 }
+
                 if (npc) {
                     foreach (STUHero.Skin skin in hero.Skins) {
                         SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\{RootDir}", hero, skin, false);
                     }
                     continue;
                 }
+
                 foreach (var defaultUnlocks in unlocks.Unlocks)  {
                     var dUnlocks = GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it)).ToList();
                     
@@ -272,10 +281,13 @@ namespace DataTool.ToolLogic.Extract {
                 var heroTextures = new Dictionary<ulong, List<TextureInfo>>();
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource1, "Icon", true);
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource2, "Portrait", true);
-                heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource3, "unknown", true); // Same as Icon for now, doesn't get saved as its a dupe
+                heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource3, "unknown", true); // Same as Icon for now, doesn't get saved as its a dupe of icon
+                // heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.SpectatorIcon, "Spectator Icon", true); // Also same as icon except has some transparency
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource4, "Avatar", true);
                 Texture.Save(flags, Path.Combine(basePath, RootDir, heroFileName, "GUI"), heroTextures);
             }
+            
+            Log("DONE");
         }
     }
 }

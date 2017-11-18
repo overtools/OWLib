@@ -7,6 +7,7 @@ using DataTool.ToolLogic.Extract;
 using OWLib;
 using OWLib.Types;
 using static DataTool.Helper.IO;
+using static DataTool.Helper.Logger;
 
 namespace DataTool.SaveLogic {
     public class Texture {
@@ -49,10 +50,15 @@ namespace DataTool.SaveLogic {
                         using (Stream soundStream = OpenFile(textureInfo.GUID)) {
                             WriteFile(soundStream, $"{outputPath}.004");
                         }
-                        if (textureInfo.DataGUID == null) continue;
-                        using (Stream soundStream = OpenFile(textureInfo.DataGUID)) {
-                            WriteFile(soundStream, $"{outputPathSecondary}.04D");
+
+                        if (textureInfo.DataGUID != null) {
+                            using (Stream soundStream = OpenFile(textureInfo.DataGUID)) {
+                                WriteFile(soundStream, $"{outputPathSecondary}.04D");
+                            }
                         }
+
+                        LoudLog($"Wrote 004{(textureInfo.DataGUID != null ? " and 04D" : "")} file to {outputPath}");
+                        
                     } else {
                         Stream convertedStream;
                         if (textureInfo.DataGUID != null) {
@@ -69,6 +75,7 @@ namespace DataTool.SaveLogic {
                         convertedStream.Position = 0;
                         WriteFile(convertedStream, $"{outputPath}.dds");
                         convertedStream.Close();
+                        LoudLog($"Wrote file {outputPath}.dds");
 
                     }
                     output[textureInfo] = type;

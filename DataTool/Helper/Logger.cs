@@ -39,6 +39,11 @@ namespace DataTool.Helper {
         public static void Log(string syntax) {
             Console.Out.WriteLine(syntax);
         }
+        
+        public static void LoudLog(string syntax) {
+            if (!Flags.Quiet)
+                Console.Out.WriteLine(syntax);
+        }
 
         public static void Log(string syntax, params object[] payload) {
             Console.Out.WriteLine(syntax, payload);
