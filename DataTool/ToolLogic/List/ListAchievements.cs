@@ -27,7 +27,6 @@ namespace DataTool.ToolLogic.List {
             public Reward Reward;
 
             [JsonConverter(typeof(GUIDConverter))]
-            [JsonIgnore]
             public ulong GUID;
             
             public AchievementInfo(ulong guid, string name, string group, string description, string hero, Reward reward) {
@@ -47,7 +46,6 @@ namespace DataTool.ToolLogic.List {
             public string Rarity;
 
             [JsonConverter(typeof(GUIDConverter))]
-            [JsonIgnore]
             public ulong GUID;
 
             public Reward(ulong guid, string name, string type, string rarity) {
