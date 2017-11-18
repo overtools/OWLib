@@ -18,6 +18,7 @@ namespace DataTool.SaveLogic {
         public static Dictionary<TextureInfo, TextureType> Save(ICLIFlags flags, string path, Dictionary<ulong, List<TextureInfo>> textures) {
             Dictionary<TextureInfo, TextureType> output = new Dictionary<TextureInfo, TextureType>();
             bool convertTextures = true;
+
             if (flags is ExtractFlags extractFlags) {
                 convertTextures = extractFlags.ConvertTextures  && !extractFlags.Raw;
                 if (extractFlags.SkipTextures) return output;
@@ -47,23 +48,19 @@ namespace DataTool.SaveLogic {
                     TextureType type = TextureType.Unknown;
 
                     if (!convertTextures) {
-                        using (Stream soundStream = OpenFile(textureInfo.GUID)) {
+                        using (Stream soundStream = OpenFile(textureInfo.GUID))
                             WriteFile(soundStream, $"{outputPath}.004");
-                        }
 
                         if (textureInfo.DataGUID != null) {
-                            using (Stream soundStream = OpenFile(textureInfo.DataGUID)) {
+                            using (Stream soundStream = OpenFile(textureInfo.DataGUID))
                                 WriteFile(soundStream, $"{outputPathSecondary}.04D");
-                            }
                         }
 
                         LoudLog($"Wrote 004{(textureInfo.DataGUID != null ? " and 04D" : "")} file to {outputPath}");
-                        
                     } else {
                         Stream convertedStream;
                         if (textureInfo.DataGUID != null) {
-                            OWLib.Texture textObj = new OWLib.Texture(OpenFile(textureInfo.GUID),
-                                OpenFile(textureInfo.DataGUID));
+                            OWLib.Texture textObj = new OWLib.Texture(OpenFile(textureInfo.GUID), OpenFile(textureInfo.DataGUID));
                             convertedStream = textObj.Save();
                             type = textObj.Format;
                         } else {
@@ -71,16 +68,17 @@ namespace DataTool.SaveLogic {
                             convertedStream = textObj.Save();
                             type = textObj.Header.Format();
                         }
+
                         if (convertedStream == null) continue;
                         convertedStream.Position = 0;
                         WriteFile(convertedStream, $"{outputPath}.dds");
                         convertedStream.Close();
                         LoudLog($"Wrote file {outputPath}.dds");
-
                     }
                     output[textureInfo] = type;
                 }
             }
+
             return output;
         }
     }
