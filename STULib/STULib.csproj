@@ -67,6 +67,21 @@
     <Compile Include="STUOverride.cs" />
     <Compile Include="STUFieldAttribute.cs" />
     <Compile Include="STUWarning.cs" />
+    <Compile Include="Types\ZeroFiveFour\Enums\STUEnumChatCommands.cs" />
+    <Compile Include="Types\ZeroFiveFour\Enums\STUEnumChatGroups.cs" />
+    <Compile Include="Types\ZeroFiveFour\Enums\STUEnum_827B79B0.cs" />
+    <Compile Include="Types\ZeroFiveFour\Enums\STUEnum_988457C2.cs" />
+    <Compile Include="Types\ZeroFiveFour\Enums\STUEnum_C074B9DE.cs" />
+    <Compile Include="Types\ZeroFiveFour\STUChatContainer.cs" />
+    <Compile Include="Types\ZeroFiveFour\STU_4BD859E5.cs" />
+    <Compile Include="Types\ZeroFiveFour\STUChatCommand.cs" />
+    <Compile Include="Types\ZeroFiveFour\STUChatMessageGroup.cs" />
+    <Compile Include="Types\ZeroFiveFour\STU_6B892D91.cs" />
+    <Compile Include="Types\ZeroFiveFour\STU_6C2411B9.cs" />
+    <Compile Include="Types\ZeroFiveFour\STU_7725B6D6.cs" />
+    <Compile Include="Types\ZeroFiveFour\STU_AA9D0E8A.cs" />
+    <Compile Include="Types\ZeroFiveFour\STU_B7148D95.cs" />
+    <Compile Include="Types\ZeroFiveFour\STU_FA600F04.cs" />
     <Compile Include="Types\AnimationList\x020\Enums\STUEnum_258358CE.cs" />
     <Compile Include="Types\AnimationList\x020\Enums\STUEnum_825C1F1A.cs" />
     <Compile Include="Types\AnimationList\x020\Enums\STUEnum_AD2CA2C1.cs" />
@@ -469,6 +484,7 @@
     <Compile Include="Types\STUUnlock\Weapon.cs" />
     <Compile Include="Types\STUVoiceLineInstance.cs" />
     <Compile Include="Types\STUHeroWeapon.cs" />
+    <Compile Include="Types\ZeroFiveFour\STU_FAA3F9A2.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OWLib\OWLib.csproj">
