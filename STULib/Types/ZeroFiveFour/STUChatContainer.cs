@@ -5,7 +5,7 @@ namespace STULib.Types.ZeroFiveFour {
     [STU(0x30E8CEFC)]
     public class STUChatContainer : STU_866672AD {
         [STUField(0xB54004FA)]
-        public STUChatMessageGroup[] MessageGroupings;
+        public STUChatChannelDefinition[] ChannelDefinitions;
 
         [STUField(0x75D955D6)]
         public STUChatCommand[] ChatCommands;

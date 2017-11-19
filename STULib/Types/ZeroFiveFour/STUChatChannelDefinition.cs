@@ -3,7 +3,7 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.ZeroFiveFour {
     [STU(0x62D3E890)]
-    public class STUChatMessageGroup : STUInstance {
+    public class STUChatChannelDefinition : STUInstance {
         [STUField(0x52A8EBBB)]
         public STUGUID Name;
 

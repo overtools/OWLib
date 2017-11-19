@@ -75,7 +75,7 @@
     <Compile Include="Types\ZeroFiveFour\STUChatContainer.cs" />
     <Compile Include="Types\ZeroFiveFour\STU_4BD859E5.cs" />
     <Compile Include="Types\ZeroFiveFour\STUChatCommand.cs" />
-    <Compile Include="Types\ZeroFiveFour\STUChatMessageGroup.cs" />
+    <Compile Include="Types\ZeroFiveFour\STUChatChannelDefinition.cs" />
     <Compile Include="Types\ZeroFiveFour\STU_6B892D91.cs" />
     <Compile Include="Types\ZeroFiveFour\STU_6C2411B9.cs" />
     <Compile Include="Types\ZeroFiveFour\STU_7725B6D6.cs" />
