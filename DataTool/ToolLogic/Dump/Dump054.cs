@@ -25,21 +25,21 @@ namespace DataTool.ToolLogic.Dump {
 
                 switch (thing) {
                     case STU_4BD859E5 c:
-                        Debugger.Break();
+                        //Debugger.Break();
                         break;
                     case STU_6C2411B9 c:
-                        Debugger.Break();
+                        //Debugger.Break();
                         break;
                     case STU_B7148D95 c:
-                        Debugger.Break();
+                        //Debugger.Break();
                         break;
                     case STU_7725B6D6 c:
-                        Debugger.Break();
+                        //Debugger.Break();
                         break;
                     case STUChatContainer c:
                         Log($"STUChatContainer");
                         Log($"{indent+1}Message Groups");
-                        foreach (var messageGroup in c.MessageGroupings) {
+                        foreach (var messageGroup in c.ChannelDefinitions) {
                             string name = GetString(messageGroup.Name);
                             Log($"{indent+2}{name} ({messageGroup.Type}) - {messageGroup.Color.Hex()}");
                         }
@@ -56,8 +56,16 @@ namespace DataTool.ToolLogic.Dump {
                         }
                         Log();
                         break;
+                    case STU_5CE04BB1 c:
+                        //Debugger.Break();
+                        break;
+                    case STULootboxDefinitionContainer c:
+                        foreach (var lootboxEvent in c.Events) {
+                            Debugger.Break();
+                        }
+                        break;
                     default:
-                        Debugger.Break();
+                        //Debugger.Break();
                         break;
                 }
 
