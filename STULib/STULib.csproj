@@ -67,6 +67,14 @@
     <Compile Include="STUOverride.cs" />
     <Compile Include="STUFieldAttribute.cs" />
     <Compile Include="STUWarning.cs" />
+    <Compile Include="Types\Chat\STUChatChannelDefinition.cs" />
+    <Compile Include="Types\Chat\STUChatCommand.cs" />
+    <Compile Include="Types\Chat\STUChatContainer.cs" />
+    <Compile Include="Types\Chat\STUChatReplacementContainer.cs" />
+    <Compile Include="Types\Chat\STUChatReplacementGroup.cs" />
+    <Compile Include="Types\Chat\STUChatReplacementSingle.cs" />
+    <Compile Include="Types\Chat\STUChatReplacementStrings.cs" />
+    <Compile Include="Types\Chat\STUChatReplacementUnknown.cs" />
     <Compile Include="Types\Enums\STUEnumChatCommands.cs" />
     <Compile Include="Types\Enums\STUEnumChatGroups.cs" />
     <Compile Include="Types\Lootboxes\STULootbox.cs" />
@@ -76,9 +84,6 @@
     <Compile Include="Types\Lootboxes\STULootboxDefinition.cs" />
     <Compile Include="Types\Lootboxes\STULootboxDefinitionContainer.cs" />
     <Compile Include="Types\Lootboxes\STULootBoxRarityCosts.cs" />
-    <Compile Include="Types\STUChatChannelDefinition.cs" />
-    <Compile Include="Types\STUChatCommand.cs" />
-    <Compile Include="Types\STUChatContainer.cs" />
     <Compile Include="Types\ZeroFiveFour\Enums\STUEnum_827B79B0.cs" />
     <Compile Include="Types\ZeroFiveFour\Enums\STUEnum_988457C2.cs" />
     <Compile Include="Types\ZeroFiveFour\Enums\STUEnum_C074B9DE.cs" />
@@ -428,11 +433,6 @@
     <Compile Include="Types\STUAnimationListWrapperBase.cs" />
     <Compile Include="Types\STUBrawlName.cs" />
     <Compile Include="Types\STUCatalog.cs" />
-    <Compile Include="Types\STUChatReplacementContainer.cs" />
-    <Compile Include="Types\STUChatReplacementGroup.cs" />
-    <Compile Include="Types\STUChatReplacementSingle.cs" />
-    <Compile Include="Types\STUChatReplacementStrings.cs" />
-    <Compile Include="Types\STUChatReplacementUnknown.cs" />
     <Compile Include="Types\STUCompetitiveSeason.cs" />
     <Compile Include="Types\STUCompetitiveSeasonBase.cs" />
     <Compile Include="Types\STUCompetitiveSeasonRewards.cs" />

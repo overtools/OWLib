@@ -6,6 +6,7 @@ using STULib.Types.ZeroFiveFour;
 using STULib.Types;
 using System.Collections.Generic;
 using System.Linq;
+using STULib.Types.Chat;
 using STULib.Types.Lootboxes;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
