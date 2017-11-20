@@ -1,4 +1,4 @@
-﻿namespace STULib.Types.ZeroFiveFour.Enums {
+﻿namespace STULib.Types.Enums {
     [STUEnum(0x5D8C1DCC)]
     public enum STUEnumChatGroups : uint {
         Error = 1,

@@ -1,4 +1,4 @@
-﻿namespace STULib.Types.ZeroFiveFour.Enums {
+﻿namespace STULib.Types.Enums {
     [STUEnum(0x3D26984C)]
     public enum STUEnumChatCommands : uint {
         Invite = 0,
