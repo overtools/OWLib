@@ -12,7 +12,7 @@ using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Dump {
-    [Tool("dump-054", Description = "Dumps all the strings", TrackTypes = new ushort[] { 0x54 }, CustomFlags = typeof(DumpFlags))]
+    [Tool("dump-054", Description = "Dumps all the strings", IsSensitive = true, TrackTypes = new ushort[] { 0x54 }, CustomFlags = typeof(DumpFlags))]
     public class Dump054 : JSONTool, ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
@@ -38,12 +38,12 @@ namespace DataTool.ToolLogic.Dump {
                         break;
                     case STUChatContainer c:
                         Log($"STUChatContainer");
-                        Log($"{indent+1}Message Groups");
+                        Log($"{indent+1}Message Groups:");
                         foreach (var messageGroup in c.ChannelDefinitions) {
                             string name = GetString(messageGroup.Name);
                             Log($"{indent+2}{name} ({messageGroup.Type}) - {messageGroup.Color.Hex()}");
                         }
-                        Log($"\n {indent+1}Chat Commands");
+                        Log($"\n {indent+1}Chat Commands:");
                         foreach (var chatCommand in c.ChatCommands) {
                             string name = GetString(chatCommand.Name);
                             string desc = GetString(chatCommand.Subline);
@@ -60,8 +60,12 @@ namespace DataTool.ToolLogic.Dump {
                         //Debugger.Break();
                         break;
                     case STULootboxDefinitionContainer c:
-                        foreach (var lootboxEvent in c.Events) {
-                            Debugger.Break();
+                        Log("STULootboxDefinitionContainer");
+                        foreach (var lootbox in c.Events) {
+                            Log($"{indent+1}{lootbox.Event} Lootboxes:");
+                            foreach (var rarity in lootbox.RarityCosts) {
+                                Log($"{indent+2}{rarity.Rarity} - {rarity.ItemCost} | {rarity.DupeValue}");
+                            }
                         }
                         break;
                     default:
