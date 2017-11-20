@@ -7,6 +7,7 @@ using STULib.Types;
 using System.Collections.Generic;
 using System.Linq;
 using STULib.Types.Chat;
+using STULib.Types.Gamemodes;
 using STULib.Types.Lootboxes;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -26,16 +27,16 @@ namespace DataTool.ToolLogic.Dump {
                 var thing = GetInstance<STU_866672AD>(key);
 
                 switch (thing) {
-                    case STU_4BD859E5 c:
+                    case STU_4BD859E5 c: // Unknown
                         //Debugger.Break();
                         break;
-                    case STU_6C2411B9 c:
+                    case STU_6C2411B9 c: // Unknown
                         //Debugger.Break();
                         break;
-                    case STU_B7148D95 c:
+                    case STU_B7148D95 c: // STUGenericSettings_Reticle ??
                         //Debugger.Break();
                         break;
-                    case STU_7725B6D6 c:
+                    case STU_7725B6D6 c: // STUGenericSettings_Nameplates ??
                         //Debugger.Break();
                         break;
                     case STUChatContainer c:
@@ -58,7 +59,7 @@ namespace DataTool.ToolLogic.Dump {
                         }
                         Log();
                         break;
-                    case STU_5CE04BB1 c:
+                    case STU_5CE04BB1 c: // Unknown
                         //Debugger.Break();
                         break;
                     case STULootboxDefinitionContainer c:
@@ -69,6 +70,28 @@ namespace DataTool.ToolLogic.Dump {
                                 Log($"{indent+2}{rarity.Rarity} - {rarity.ItemCost} | {rarity.DupeValue}");
                             }
                         }
+                        Log();
+                        break;
+                    case STU_836EE22E c: // STUCustomGameBrowserMapCatalogInfo ??
+                        //Debugger.Break();
+                        break;
+                    case STU_98F34AAA c:
+                        Log("STU_98F34AAA");
+                        Log($"{indent+1}Presets:");
+                        foreach (var presetGroup in c.PresetGroups) {
+                            Log($"{indent+2}{GetString(presetGroup.Name)}");
+                            foreach (var preset in presetGroup.Presets) {
+                                Log($"{indent+3}{GetString(preset.Name)}");
+                                if (preset.Brawls != null) {
+                                    foreach (var guid in preset.Brawls) {
+                                        var brawlInfo = GetInstance<STUBrawlInfoContainer>(guid);
+                                        Log($"{indent + 4}{GetString(brawlInfo.BrawlInfo.Name)}");
+                                        Debugger.Break();
+                                    }
+                                }
+                            }
+                        }
+                        Debugger.Break();
                         break;
                     default:
                         //Debugger.Break();
