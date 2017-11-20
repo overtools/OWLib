@@ -5,6 +5,7 @@ using DataTool.FindLogic;
 using DataTool.Flag;
 using OWLib;
 using STULib.Types;
+using STULib.Types.Lootboxes;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
