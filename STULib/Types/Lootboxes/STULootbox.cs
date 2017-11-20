@@ -1,30 +1,30 @@
 using OWLib;
 using STULib.Types.Enums;
-using STULib.Types.Generic;
+using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.Lootboxes {
     [STU(0x56B6D12E, "STULootbox")]
-    public class STULootbox : Common.STUInstance {
+    public class STULootbox : STUInstance {
         [STUField(0xFEC3ED62)]
-        public Common.STUGUID Effect1;
+        public STUGUID Effect1;
 
         [STUField(0x3970E137)]
-        public Common.STUGUID Effect2;
+        public STUGUID Effect2;
 
         [STUField(0x041CE51F)]
-        public Common.STUGUID Material;
+        public STUGUID Material;
 
         [STUField(0xCBE2DADD)]
-        public Common.STUGUID StateScriptComponent;
+        public STUGUID StateScriptComponent;
 
         [STUField(0xB48F1D22, "m_name")]
-        public Common.STUGUID Name;
+        public STUGUID Name;
 
         [STUField(0xD75586C0)]
         public LootboxBundle[] Bundles;
 
         [STUField(0xE02BEE24)]
-        public Common.STUGUID Virtual0C3;
+        public STUGUID Virtual0C3;
 
         [STUField(0x3DFAC8CA)]
         public uint Unknown1;  // 0
@@ -33,13 +33,13 @@ namespace STULib.Types.Lootboxes {
         public STUEnumEventID Event;
 
         [STUField(0xFFE7768F)]
-        public Common.STUGUID Effect3;
+        public STUGUID Effect3;
 
         [STUField(0xB2F9D222)]
-        public Common.STUGUID Effect4;
+        public STUGUID Effect4;
 
         [STUField(0x9B180535)]
-        public Common.STUGUID Material2;
+        public STUGUID Material2;
 
         [STUField(0xFA2D81E7)]
         public byte Unknown2;
@@ -48,12 +48,12 @@ namespace STULib.Types.Lootboxes {
         public byte Unknown3;
 
         [STU(0x819B4F6D)]
-        public class LootboxBundle : Common.STUInstance {
+        public class LootboxBundle : STUInstance {
             [STUField(0x90EB924A)]
-            public Common.STUGUID String;
+            public STUGUID String;
 
             [STUField(0x87EACF5F)]
-            public Common.STUGUID Image;
+            public STUGUID Image;
         }
 
         public string EventNameNormal => ItemEvents.GetInstance().GetEventNormal((ulong)Event);
