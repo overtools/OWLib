@@ -220,7 +220,7 @@ namespace STULib.Types.Generic {
 
             public string Hex() {
                 Color c = this;
-                return $"#{c.Name}";
+                return $"#{c.Name.Remove(0, 2)}";
             }
 
             public string Print(out Color? color) {

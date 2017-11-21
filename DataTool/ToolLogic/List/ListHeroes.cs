@@ -23,15 +23,17 @@ namespace DataTool.ToolLogic.List {
         public class HeroInfo {
             public string Name;
             public string Description;
+            public string Color;
             public Dictionary<string, AbilityInfo> Abilities;
 
             [JsonConverter(typeof(GUIDConverter))]
             public ulong GUID;
             
-            public HeroInfo(ulong guid, string name, string description, Dictionary<string, AbilityInfo> abilities) {
+            public HeroInfo(ulong guid, string name, string description, string color, Dictionary<string, AbilityInfo> abilities) {
                 GUID = guid;
                 Name = name;
                 Description = description;
+                Color = color;
                 Abilities = abilities;
             }
         }
@@ -83,9 +85,11 @@ namespace DataTool.ToolLogic.List {
             
             foreach (KeyValuePair<string, HeroInfo> hero in heroes) {
                 Log($"{hero.Value.Name}");
-                if (hero.Value.Description != null) {
+                if (hero.Value.Description != null)
                     Log($"{indentLevel + 1}Description: {hero.Value.Description}");
-                }
+                
+                if (hero.Value.Color != null)
+                    Log($"{indentLevel + 1}Color: {hero.Value.Color}");
 
                 if (hero.Value.Abilities != null) {
                     Dictionary<string, AbilityInfoInner> abilities = new Dictionary<string, AbilityInfoInner>();
@@ -144,10 +148,13 @@ namespace DataTool.ToolLogic.List {
                 if (hero == null) continue;
 
                 string name = GetString(hero.Name) ?? $"Unknown{GUID.Index(key):X}";
-
                 string description = GetDescriptionString(hero.Description);
+                string color = null;
 
-                @return[name] = new HeroInfo(key, name, description, GetAbilities(hero));
+                if (hero.GalleryColor != null)
+                    color = hero.GalleryColor.Hex();
+
+                @return[name] = new HeroInfo(key, name, description, color, GetAbilities(hero));
             }
 
             return @return;

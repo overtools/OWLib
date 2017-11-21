@@ -77,7 +77,7 @@ namespace STULib.Types {
         public STUGUID[] GUIDx0C6_Reference;
 
         [STUField(0xE25DDDA1)]
-        public STUVec4 UnknownVec4;
+        public STUColorRGBA GalleryColor;
 
         [STUField(0xEA6FF023)]
         public STUGUID ImageResource4;
