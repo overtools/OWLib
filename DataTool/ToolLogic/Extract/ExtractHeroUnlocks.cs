@@ -147,14 +147,15 @@ namespace DataTool.ToolLogic.Extract {
             if (parsedTypes == null) return;
 
             foreach (STUHero hero in heroes) {
-                string heroNameActual = GetString(hero.Name).TrimEnd(' ');
+                string heroNameActual = GetString(hero.Name);
                 string heroFileName = GetValidFilename(heroNameActual);
 
                 if (heroFileName == null) {
                     continue;
                     // heroFileName = "Unknown";
                     // heroNameActual = "Unknown";
-                } 
+                }
+                heroNameActual = heroNameActual.TrimEnd(' ');
 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
                 foreach (string key in new [] {heroNameActual.ToLowerInvariant(), "*"}) {
