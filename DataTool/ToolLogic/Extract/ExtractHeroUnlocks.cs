@@ -144,14 +144,11 @@ namespace DataTool.ToolLogic.Extract {
             Log("Initializing...");
 
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
-            if (parsedTypes == null) {
-                Log("Found nufin of use while parsing query :/");
-                return;
-            };
+            if (parsedTypes == null) return;
 
             foreach (STUHero hero in heroes) {
-                string heroFileName = GetValidFilename(GetString(hero.Name));
-                string heroNameActual = GetString(hero.Name);
+                string heroNameActual = GetString(hero.Name).TrimEnd(' ');
+                string heroFileName = GetValidFilename(heroNameActual);
 
                 if (heroFileName == null) {
                     continue;
@@ -286,8 +283,6 @@ namespace DataTool.ToolLogic.Extract {
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource4, "Avatar", true);
                 Texture.Save(flags, Path.Combine(basePath, RootDir, heroFileName, "GUI"), heroTextures);
             }
-            
-            Log("DONE");
         }
     }
 }

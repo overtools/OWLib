@@ -56,7 +56,7 @@ namespace DataTool.SaveLogic {
                                 WriteFile(soundStream, $"{outputPathSecondary}.04D");
                         }
 
-                        LoudLog($"Wrote 004{(textureInfo.DataGUID != null ? " and 04D" : "")} file to {outputPath}");
+                        // LoudLog($"Wrote 004{(textureInfo.DataGUID != null ? " and 04D" : "")} file to {outputPath}");
                     } else {
                         Stream convertedStream;
                         if (textureInfo.DataGUID != null) {
@@ -73,7 +73,7 @@ namespace DataTool.SaveLogic {
                         convertedStream.Position = 0;
                         WriteFile(convertedStream, $"{outputPath}.dds");
                         convertedStream.Close();
-                        LoudLog($"Wrote file {outputPath}.dds");
+                        // LoudLog($"Wrote file {outputPath}.dds");
                     }
                     output[textureInfo] = type;
                 }

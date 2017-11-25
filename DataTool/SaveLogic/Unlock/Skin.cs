@@ -25,6 +25,7 @@ namespace DataTool.SaveLogic.Unlock {
         public static void Save(ICLIFlags flags, string skinName, string path, STUHero hero, string rarity, STUSkinOverride skinOverride, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet = true) {
             string heroPath = GetValidFilename(GetString(hero.Name));
             if (heroPath == null) heroPath = "Unknown";
+            heroPath = heroPath.TrimEnd(' ');
             string basePath = Path.Combine(path,
                 $"{heroPath}\\Skins\\{rarity}\\{GetValidFilename(skinName)}");
             Dictionary<uint, ItemInfo> realWeaponSkins = new Dictionary<uint, ItemInfo>();
