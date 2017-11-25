@@ -7,7 +7,6 @@ using DataTool.ToolLogic.Extract;
 using OWLib;
 using OWLib.Types;
 using static DataTool.Helper.IO;
-using static DataTool.Helper.Logger;
 
 namespace DataTool.SaveLogic {
     public class Texture {
