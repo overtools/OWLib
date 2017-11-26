@@ -120,14 +120,24 @@ namespace OWLib.Writer {
             }
             return true;
         }
-
-        private static Vector3 GetGlobalPos(IReadOnlyList<Matrix3x4> skeletonMatrices34Inverted, short s, IReadOnlyList<short> hierarchy) {
-            if (skeletonMatrices34Inverted.Count <= s || s == -1) return new Vector3();
+        
+        public static Vector3D GetGlobalRot(IReadOnlyList<Matrix3x4> skeletonMatrices34Inverted, short s, IReadOnlyList<short> hierarchy) {
+            if (skeletonMatrices34Inverted.Count <= s || s == -1) return new Vector3D();
             Matrix3x4 bone = skeletonMatrices34Inverted[s];
-            Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
-            Vector3 parent = new Vector3();
-            if (hierarchy.Count > s) parent = GetGlobalPos(skeletonMatrices34Inverted, hierarchy[s], hierarchy);
-            return pos + parent;
+            Quaternion3D quat = new Quaternion3D(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
+            Vector3D rot = C3D.ToEulerAngles(quat);
+            Vector3D parent = new Vector3D();
+            if (hierarchy.Count > s) parent = GetGlobalRot(skeletonMatrices34Inverted, hierarchy[s], hierarchy);
+            return rot + parent;
+        }
+
+        public static Vector3 GetGlobalPos(IReadOnlyList<Matrix3x4> skeletonMatrices34Inverted, short s, IReadOnlyList<short> hierarchy) {
+             if (skeletonMatrices34Inverted.Count <= s || s == -1) return new Vector3();
+             Matrix3x4 bone = skeletonMatrices34Inverted[s];
+             Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
+             Vector3 parent = new Vector3();
+             if (hierarchy.Count > s) parent = GetGlobalPos(skeletonMatrices34Inverted, hierarchy[s], hierarchy);
+             return pos + parent;
         }
 
         public bool WriteCloth(Chunked model, Stream output, HTLC cloth, uint index) {  // todo:

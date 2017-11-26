@@ -86,7 +86,7 @@ namespace DataTool.ToolLogic.Extract {
                 
                 if (config.Count == 0) continue;
                 
-                STUStatescriptSoundMaster soundMasterContainer = GetInstance<STUStatescriptSoundMaster>(hero.StatescriptHeroComponent1);
+                STUEntitySoundMaster soundMasterContainer = GetInstance<STUEntitySoundMaster>(hero.EntityMain);
 
                 if (soundMasterContainer == null) {
                     Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: soundMaster not found");

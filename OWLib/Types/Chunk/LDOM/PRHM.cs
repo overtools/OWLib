@@ -15,12 +15,13 @@ namespace OWLib.Types.Chunk {
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public unsafe struct HardPoint {
+    public struct HardPoint {
       public Matrix4B matrix;
-      public uint name;
-      public int unk;
-      public uint id;
-      public fixed int unk2[5];
+      public ulong HardPointGUID;
+      public ulong GUIDx012;
+
+      public ulong unk;
+      public ulong unk2;
     }
 
     private Structure data;

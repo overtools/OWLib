@@ -4,21 +4,21 @@ using STULib.Types.Generic;
 
 namespace STULib.Types.Statescript.Components {
     [STU(0x191835F9, "STUModelComponent")]
-    public class STUModelComponent : STUStatescriptComponent {
-        [STUField(0x523339C1)]
-        public Common.STUGUID AnimationList;  // STU_FC47A2ED
+    public class STUModelComponent : STUEntityComponent {
+        [STUField(0x523339C1, "m_animBlendTreeSet")]
+        public Common.STUGUID AnimBlentTreeSet;  // STUAnimBlendTreeSet
 
         [STUField(0x36F54327)]
-        public Common.STUGUID m_36F54327;  // STU_67866D38
+        public Common.STUGUID m_36F54327;  // STUAnimBlendTree
 
         [STUField(0x9C3F817E)]
-        public Common.STUGUID Skeleton;  // STU_5E569E7A
+        public Common.STUGUID Skeleton;  // STUSkeleton
 
-        [STUField(0x2D124BE2)]
-        public Common.STUGUID Model;  // STU_871BD3D0
+        [STUField(0x2D124BE2, "m_model")]
+        public Common.STUGUID Model;  // STUModel
 
-        [STUField(0x9297ADB4)]
-        public Common.STUGUID Material;  // STULib.Types.STUModelLook
+        [STUField(0x9297ADB4, "m_look")]
+        public Common.STUGUID Look;  // STULib.Types.STUModelLook
 
         // [STUField(0xA6041C8B)]
         // public STU_CAAB2581 m_A6041C8B;
@@ -26,20 +26,20 @@ namespace STULib.Types.Statescript.Components {
         [STUField(0x33DA887B)]
         public Common.STUGUID[] m_33DA887B;  // STU_CBD8CDF3
 
-        [STUField(0x14256239)]
-        public STU_D788E54C m_14256239;
+        [STUField(0x14256239, "m_ragdollConfig")]
+        public STURagdollConfig RagdollConfig;
 
-        [STUField(0xA7A9DA23)]
-        public STU_A6F1FE9E m_A7A9DA23;
+        [STUField(0xA7A9DA23, "m_clothConfig")]
+        public STUClothConfig ClothConfig;
 
         [STUField(0x94546E3D)]
         public float m_94546E3D;
 
-        [STUField(0x93178192)]
-        public STU_3E03052C m_93178192;
+        [STUField(0x93178192, "m_rigidBodyConfig")]
+        public STURigidBodyConfig RigidBodyConfig;
 
-        [STUField(0xDEB1159A)]
-        public STU_44897C73 m_DEB1159A;
+        [STUField(0xDEB1159A, "m_breakableConfig")]
+        public STUBreakableConfig BreakableConfig;
 
         [STUField(0x65777ADA)]
         public byte m_65777ADA;
