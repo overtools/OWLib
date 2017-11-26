@@ -6,7 +6,7 @@ namespace STULib.Types.Statescript.Components {
     [STU(0x191835F9, "STUModelComponent")]
     public class STUModelComponent : STUEntityComponent {
         [STUField(0x523339C1, "m_animBlendTreeSet")]
-        public Common.STUGUID AnimBlentTreeSet;  // STUAnimBlendTreeSet
+        public Common.STUGUID AnimBlendTreeSet;  // STUAnimBlendTreeSet
 
         [STUField(0x36F54327)]
         public Common.STUGUID m_36F54327;  // STUAnimBlendTree

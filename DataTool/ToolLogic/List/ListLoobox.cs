@@ -41,7 +41,7 @@ namespace DataTool.ToolLogic.List {
 
                 if (lootbox == null) continue;
 
-                @return[lootbox.EventNameNormal] = lootbox.Bundles.Select(l => GetString(l.String) ?? "Unknown").ToList();
+                @return[lootbox.EventNameNormal] = lootbox.ShopCards.Select(l => GetString(l.Text) ?? "Unknown").ToList();
             }
 
             return @return;

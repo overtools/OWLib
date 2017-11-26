@@ -256,7 +256,7 @@ namespace DataTool.FindLogic {
                             textures = Texture.FindTextures(textures, modelComponent?.Look, null, true, replacements);
                             
                             HashSet<AnimationInfo> animations = new HashSet<AnimationInfo>();
-                            animations = Animation.FindAnimations(animations, existingModels, modelComponent?.AnimBlentTreeSet, replacements);
+                            animations = Animation.FindAnimations(animations, existingModels, modelComponent?.AnimBlendTreeSet, replacements);
                             animations = new HashSet<AnimationInfo>(animations.Concat(animationBank));
                             
                             List<TextureInfo> textureList = new List<TextureInfo>();

@@ -121,7 +121,7 @@ namespace DataTool.FindLogic {
                 }
                 Chunked chunked = new Chunked(chunkStream, true, ChunkManager.Instance);
                 
-                if (GetFileName(parentAnim) == "00000000265C.006") Debugger.Break();
+                if (GetFileName(parentAnim) == "000000004239.006") Debugger.Break();
                 
                 CECE[] ceces = chunked.GetAllOfTypeFlat<CECE>();
                 foreach (CECE cece in ceces) {
