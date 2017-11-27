@@ -183,23 +183,23 @@ namespace OverTool.ExtractLogic {
                 Chunked chunked = new Chunked(file);
                 DMCE[] dmces = chunked.GetAllOfTypeFlat<DMCE>();
                 foreach (DMCE dmce in dmces) {
-                    if (models != null && dmce.Data.modelKey != 0) {
-                        if (replace.ContainsKey(dmce.Data.modelKey)) {
-                            models.Add(replace[dmce.Data.modelKey]);
+                    if (models != null && dmce.Data.Model != 0) {
+                        if (replace.ContainsKey(dmce.Data.Model)) {
+                            models.Add(replace[dmce.Data.Model]);
                         } else {
-                            models.Add(dmce.Data.modelKey);
+                            models.Add(dmce.Data.Model);
                         }
                     }
-                    if (layers != null && dmce.Data.materialKey != 0) {
-                        FindTextures(dmce.Data.materialKey, layers, replace, parsed, map, handler);
+                    if (layers != null && dmce.Data.Look != 0) {
+                        FindTextures(dmce.Data.Look, layers, replace, parsed, map, handler);
                     }
-                    if (animList != null && !animList.ContainsKey(dmce.Data.animationKey) && dmce.Data.animationKey != 0) {
-                        if (replace.ContainsKey(dmce.Data.animationKey)) {
-                            animList[replace[dmce.Data.animationKey]] = parent;
-                            FindAnimationsSoft(replace[dmce.Data.animationKey], sound, animList, replace, parsed, map, handler, models, layers, replace[dmce.Data.animationKey]);
+                    if (animList != null && !animList.ContainsKey(dmce.Data.Animation) && dmce.Data.Animation != 0) {
+                        if (replace.ContainsKey(dmce.Data.Animation)) {
+                            animList[replace[dmce.Data.Animation]] = parent;
+                            FindAnimationsSoft(replace[dmce.Data.Animation], sound, animList, replace, parsed, map, handler, models, layers, replace[dmce.Data.Animation]);
                         } else {
-                            animList[dmce.Data.animationKey] = parent;
-                            FindAnimationsSoft(dmce.Data.animationKey, sound, animList, replace, parsed, map, handler, models, layers, dmce.Data.animationKey);
+                            animList[dmce.Data.Animation] = parent;
+                            FindAnimationsSoft(dmce.Data.Animation, sound, animList, replace, parsed, map, handler, models, layers, dmce.Data.Animation);
                         }
                     }
                 }
@@ -211,9 +211,9 @@ namespace OverTool.ExtractLogic {
                 }
                 CECE[] ceces = chunked.GetAllOfTypeFlat<CECE>();
                 foreach (CECE cece in ceces) {
-                    if (animList != null && !animList.ContainsKey(cece.Data.animation) && cece.Data.animation != 0) {
-                        animList[cece.Data.animation] = parent;
-                        FindAnimationsSoft(cece.Data.animation, sound, animList, replace, parsed, map, handler, models, layers, cece.Data.animation);
+                    if (animList != null && !animList.ContainsKey(cece.Data.Animation) && cece.Data.Animation != 0) {
+                        animList[cece.Data.Animation] = parent;
+                        FindAnimationsSoft(cece.Data.Animation, sound, animList, replace, parsed, map, handler, models, layers, cece.Data.Animation);
                     }
                 }
                 SSCE[] ssces = chunked.GetAllOfTypeFlat<SSCE>();
@@ -226,10 +226,10 @@ namespace OverTool.ExtractLogic {
                 RPCE[] prces = chunked.GetAllOfTypeFlat<RPCE>();
                 foreach (RPCE prce in prces) {
                     if (models != null) {
-                        if (replace.ContainsKey(prce.Data.model_key)) {
-                            models.Add(replace[prce.Data.model_key]);
+                        if (replace.ContainsKey(prce.Data.Model)) {
+                            models.Add(replace[prce.Data.Model]);
                         } else {
-                            models.Add(prce.Data.model_key);
+                            models.Add(prce.Data.Model);
                         }
                     }
                 }

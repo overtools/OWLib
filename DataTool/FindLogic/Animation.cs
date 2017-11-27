@@ -78,8 +78,8 @@ namespace DataTool.FindLogic {
             AnimationInfo animInfo = animations.FirstOrDefault(x => x.GUID == animationKey);
             if (animInfo == null) return;
             
-            DMCEInfo newInfo = new DMCEInfo {Model = dmce.Data.modelKey, ParentBone = dmce.Data.parentBone, 
-                Material = dmce.Data.materialKey, Animation = dmce.Data.animationKey, StartFrame = 0};
+            DMCEInfo newInfo = new DMCEInfo {Model = dmce.Data.Model, ParentBone = dmce.Data.Unknown, 
+                Material = dmce.Data.Look, Animation = dmce.Data.Animation, StartFrame = 0};
             if (!animInfo.DMCEs.Contains(newInfo)) {
                 animInfo.DMCEs.Add(newInfo);
             }
@@ -125,7 +125,7 @@ namespace DataTool.FindLogic {
                 
                 CECE[] ceces = chunked.GetAllOfTypeFlat<CECE>();
                 foreach (CECE cece in ceces) {
-                    existingAnimations = FindAnimations(existingAnimations, models, new Common.STUGUID(cece.Data.animation), replacements);
+                    existingAnimations = FindAnimations(existingAnimations, models, new Common.STUGUID(cece.Data.Animation), replacements);
                     // cece.Data.animation] = parent;
                     // FindAnimationsSoft(cece.Data.animation, sound, animList, replace, parsed, map, handler, models, layers, cece.Data.animation);
                 }
@@ -133,21 +133,26 @@ namespace DataTool.FindLogic {
                 DMCE[] dmces = chunked.GetAllOfTypeFlat<DMCE>();
                 foreach (DMCE dmce in dmces) {
                     HashSet<AnimationInfo> newAnims = new HashSet<AnimationInfo>();
-                    Model.FindModels(models, new Common.STUGUID(dmce.Data.modelKey), replacements);
-                    Model.FindModels(models, new Common.STUGUID(dmce.Data.materialKey), replacements);
+                    Model.FindModels(models, new Common.STUGUID(dmce.Data.Model), replacements);
+                    Model.FindModels(models, new Common.STUGUID(dmce.Data.Look), replacements);
                     
                     // if (GetFileName(dmce.Data.modelKey) == "000000003AB1.00C") Debugger.Break();
                     
                     Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.materialKey), null, true, replacements);
+                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.Look), null, true, replacements);
                     
-                    newAnims = FindAnimations(newAnims, models, new Common.STUGUID(dmce.Data.animationKey), replacements);
+                    newAnims = FindAnimations(newAnims, models, new Common.STUGUID(dmce.Data.Animation), replacements);
                     
-                    Model.AddGUID(models, new Common.STUGUID(dmce.Data.modelKey), textures, newAnims, replacements);
+                    Model.AddGUID(models, new Common.STUGUID(dmce.Data.Model), textures, newAnims, replacements);
 
                     if (parentAnim != 0) {
                         AddDMCE(existingAnimations, parentAnim, replacements, dmce);
                     }
+                }
+                
+                RPCE[] rpces = chunked.GetAllOfTypeFlat<RPCE>();
+                foreach (RPCE rpce in rpces) {
+                    Model.FindModels(models, new Common.STUGUID(rpce.Data.Model), replacements);
                 }
             }
             return existingAnimations;

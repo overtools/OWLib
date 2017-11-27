@@ -169,15 +169,15 @@ namespace DataTool.FindLogic {
                 
                 DMCE[] dmces = chunked.GetAllOfTypeFlat<DMCE>();
                 foreach (DMCE dmce in dmces) {
-                    if (dmce.Data.modelKey == 0) continue;
+                    if (dmce.Data.Model == 0) continue;
                                         
                     Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.materialKey), null, true, replacements);
+                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.Look), null, true, replacements);
                     
                     HashSet<AnimationInfo> animations = new HashSet<AnimationInfo>();
-                    animations = Animation.FindAnimations(animations, existingModels, new Common.STUGUID(dmce.Data.animationKey), replacements);
+                    animations = Animation.FindAnimations(animations, existingModels, new Common.STUGUID(dmce.Data.Animation), replacements);
                     
-                    AddGUID(existingModels, new Common.STUGUID(dmce.Data.modelKey), textures, animations, replacements);
+                    AddGUID(existingModels, new Common.STUGUID(dmce.Data.Model), textures, animations, replacements);
                     
                     // if (animList != null && !animList.ContainsKey(dmce.Data.animationKey) && dmce.Data.animationKey != 0) {
                     //     if (replace.ContainsKey(dmce.Data.animationKey)) {
