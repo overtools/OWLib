@@ -48,3 +48,14 @@ FC33191B,m_logicalButton
 3CD6DC1E,m_texture
 2C54AEAF,m_category
 C8D38D7B,m_infoMovie
+2D124BE2, m_model
+523339C1, m_animBlendTreeSet
+9297ADB4, m_look
+14256239, m_ragdollConfig
+A7A9DA23, m_clothConfig
+93178192, m_rigidBodyConfig
+DEB1159A, m_breakableConfig
+A83C2C26, m_entity
+041CE51F, m_modelLook
+E02BEE24, m_celebration
+D75586C0, m_shopCards

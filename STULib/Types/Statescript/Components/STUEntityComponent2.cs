@@ -2,6 +2,6 @@
 
 namespace STULib.Types.Statescript.Components {
     [STU(0x773DC32C)]
-    public class STUStatescriptComponent2 : STUStatescriptComponent {
+    public class STUEntityComponent2 : STUEntityComponent {
     }
 }

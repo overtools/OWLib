@@ -3,8 +3,8 @@
 using STULib.Types.Generic;
 
 namespace STULib.Types.Statescript.Components {
-    [STU(0x44897C73)]
-    public class STU_44897C73 : Common.STUInstance {
+    [STU(0x44897C73, "STUBreakableConfig")]
+    public class STUBreakableConfig : Common.STUInstance {
         [STUField(0xE1B0C07F)]
         public byte m_E1B0C07F;
 

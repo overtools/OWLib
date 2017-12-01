@@ -347,10 +347,10 @@ namespace OverTool {
                                     List<ImageLayer> sublayers = kv.Value;
                                     HashSet<ulong> materialParsed = new HashSet<ulong>();
                                     foreach (ImageLayer layer in sublayers) {
-                                        if (!materialParsed.Add(layer.key)) {
+                                        if (!materialParsed.Add(layer.Key)) {
                                             continue;
                                         }
-                                        KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.key, materialId, map, handler, outputPath, quiet, $"Textures/{GUID.Index(matpair.Key):X8}");
+                                        KeyValuePair<string, TextureType> pair = Skin.SaveTexture(layer.Key, materialId, map, handler, outputPath, quiet, $"Textures/{GUID.Index(matpair.Key):X8}");
                                         if (pair.Key == null) {
                                             continue;
                                         }

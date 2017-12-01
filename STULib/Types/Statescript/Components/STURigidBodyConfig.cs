@@ -3,8 +3,8 @@
 using STULib.Types.Generic;
 
 namespace STULib.Types.Statescript.Components {
-    [STU(0x3E03052C)]
-    public class STU_3E03052C : Common.STUInstance {
+    [STU(0x3E03052C, "STURigidBodyConfig")]
+    public class STURigidBodyConfig : Common.STUInstance {
         [STUField(0xEDA30E4A)]
         public byte m_EDA30E4A;
 

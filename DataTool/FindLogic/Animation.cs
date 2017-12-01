@@ -14,9 +14,43 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.FindLogic {
+    public class DMCEInfo : IEquatable<DMCEInfo> {
+        public ulong Model;
+        public ulong Material;
+        public ulong Animation;
+        public ulong StartFrame;
+        public ulong ParentBone;
+
+        public bool Equals(DMCEInfo other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Model == other.Model && Material == other.Material && Animation == other.Animation && StartFrame == other.StartFrame && ParentBone == other.ParentBone;
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((DMCEInfo) obj);
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                int hashCode = Model.GetHashCode();
+                hashCode = (hashCode * 397) ^ Material.GetHashCode();
+                hashCode = (hashCode * 397) ^ Animation.GetHashCode();
+                hashCode = (hashCode * 397) ^ StartFrame.GetHashCode();
+                hashCode = (hashCode * 397) ^ ParentBone.GetHashCode();
+                return hashCode;
+            }
+        }
+    }
+    
     public class AnimationInfo : IEquatable<AnimationInfo> {
         public Common.STUGUID GUID;
         public Common.STUGUID Skeleton;
+
+        public List<DMCEInfo> DMCEs;
 
         public override int GetHashCode() {
             return (GUID != null ? GUID.GetHashCode() : 0);
@@ -37,11 +71,25 @@ namespace DataTool.FindLogic {
     }
     
     public class Animation {
+        public static void AddDMCE(HashSet<AnimationInfo> animations, ulong animationKey, Dictionary<ulong, ulong> replacements, DMCE dmce) {
+            if (animationKey == 0) return;
+            if (replacements.ContainsKey(animationKey)) animationKey = replacements[animationKey];
+            
+            AnimationInfo animInfo = animations.FirstOrDefault(x => x.GUID == animationKey);
+            if (animInfo == null) return;
+            
+            DMCEInfo newInfo = new DMCEInfo {Model = dmce.Data.Model, ParentBone = dmce.Data.Unknown, 
+                Material = dmce.Data.Look, Animation = dmce.Data.Animation, StartFrame = 0};
+            if (!animInfo.DMCEs.Contains(newInfo)) {
+                animInfo.DMCEs.Add(newInfo);
+            }
+        }
+        
         public static void AddGUID(HashSet<AnimationInfo> animations, Common.STUGUID newElement, Common.STUGUID skeleton, Dictionary<ulong, ulong> replacements) {
             if (newElement == null) return;
             
             if (replacements.ContainsKey(newElement)) newElement = new Common.STUGUID(replacements[newElement]);
-            AnimationInfo newAnim = new AnimationInfo {GUID = newElement, Skeleton = skeleton};
+            AnimationInfo newAnim = new AnimationInfo {GUID = newElement, Skeleton = skeleton, DMCEs = new List<DMCEInfo>()};
 
             if (animations.All(x => !Equals(x.GUID, newAnim.GUID))) {
                 animations.Add(newAnim);
@@ -58,7 +106,7 @@ namespace DataTool.FindLogic {
         // }
 
         public static HashSet<AnimationInfo> FindChunked(HashSet<AnimationInfo> existingAnimations, HashSet<ModelInfo> models, Common.STUGUID animationGUID,
-            Dictionary<ulong, ulong> replacements = null) {
+            Dictionary<ulong, ulong> replacements, ulong parentAnim) {
             if (existingAnimations == null) {
                 existingAnimations = new HashSet<AnimationInfo>();
             }
@@ -73,9 +121,12 @@ namespace DataTool.FindLogic {
                 }
                 Chunked chunked = new Chunked(chunkStream, true, ChunkManager.Instance);
                 
+                // if (GetFileName(parentAnim) == "000000004239.006") Debugger.Break(); // orisa supercharger main
+                // if (GetFileName(parentAnim) == "0000000045D6.006") Debugger.Break(); // doomfist one punch - 000000002206.08F
+                
                 CECE[] ceces = chunked.GetAllOfTypeFlat<CECE>();
                 foreach (CECE cece in ceces) {
-                    existingAnimations = FindAnimations(existingAnimations, models, new Common.STUGUID(cece.Data.animation), replacements);
+                    existingAnimations = FindAnimations(existingAnimations, models, new Common.STUGUID(cece.Data.Animation), replacements);
                     // cece.Data.animation] = parent;
                     // FindAnimationsSoft(cece.Data.animation, sound, animList, replace, parsed, map, handler, models, layers, cece.Data.animation);
                 }
@@ -83,15 +134,26 @@ namespace DataTool.FindLogic {
                 DMCE[] dmces = chunked.GetAllOfTypeFlat<DMCE>();
                 foreach (DMCE dmce in dmces) {
                     HashSet<AnimationInfo> newAnims = new HashSet<AnimationInfo>();
-                    Model.FindModels(models, new Common.STUGUID(dmce.Data.modelKey), replacements);
-                    Model.FindModels(models, new Common.STUGUID(dmce.Data.materialKey), replacements);
+                    Model.FindModels(models, new Common.STUGUID(dmce.Data.Model), replacements);
+                    Model.FindModels(models, new Common.STUGUID(dmce.Data.Look), replacements);
+                    
+                    // if (GetFileName(dmce.Data.modelKey) == "000000003AB1.00C") Debugger.Break();
                     
                     Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.materialKey), null, true, replacements);
+                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.Look), null, true, replacements);
                     
-                    newAnims = FindAnimations(newAnims, models, new Common.STUGUID(dmce.Data.animationKey), replacements);
+                    newAnims = FindAnimations(newAnims, models, new Common.STUGUID(dmce.Data.Animation), replacements);
                     
-                    Model.AddGUID(models, new Common.STUGUID(dmce.Data.modelKey), textures, newAnims, replacements);
+                    Model.AddGUID(models, new Common.STUGUID(dmce.Data.Model), textures, newAnims, replacements);
+
+                    if (parentAnim != 0) {
+                        AddDMCE(existingAnimations, parentAnim, replacements, dmce);
+                    }
+                }
+                
+                RPCE[] rpces = chunked.GetAllOfTypeFlat<RPCE>();
+                foreach (RPCE rpce in rpces) {
+                    Model.FindModels(models, new Common.STUGUID(rpce.Data.Model), replacements);
                 }
             }
             return existingAnimations;
@@ -144,6 +206,8 @@ namespace DataTool.FindLogic {
 
             switch (GUID.Type(animationGUID)) {
                 case 0x06:
+                    AddGUID(existingAnimations, animationGUID, skeleton, replacements);
+                    if (animationGUID.ToString() == "00000000265C.006") Debugger.Break();
                     using (Stream anim = OpenFile(animationGUID)) {
                         if (anim == null) {
                             break;
@@ -151,10 +215,9 @@ namespace DataTool.FindLogic {
                         using (BinaryReader reader = new BinaryReader(anim)) {
                             anim.Position = 0x18L;
                             ulong infokey = reader.ReadUInt64();
-                            existingAnimations = FindChunked(existingAnimations, models, new Common.STUGUID(infokey), replacements);
+                            existingAnimations = FindChunked(existingAnimations, models, new Common.STUGUID(infokey), replacements, animationGUID);
                         }
                     }
-                    AddGUID(existingAnimations, animationGUID, skeleton, replacements);
                     break;
                 case 0x21:
                     STUAnimationListInfo listInfo = GetInstance<STUAnimationListInfo>(animationGUID);

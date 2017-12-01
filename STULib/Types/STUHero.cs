@@ -11,13 +11,13 @@ namespace STULib.Types {
         public STUGUID Name;
 
         [STUField(0x26D71549)]
-        public STUGUID StatescriptHeroComponent1;
+        public STUGUID EntityMain;  // basic entity with a reference to a basic pose
 
         [STUField(0x2C54AEAF)]
         public STUGUID VirtualReference1;
 
         [STUField(0x322C521A)]
-        public STUGUID StatescriptHeroComponent2;
+        public STUGUID EntityHeroSelect;  // EntityMain + hero select anims
 
         [STUField(0x3446F580, "m_description")]
         public STUGUID Description;
@@ -44,22 +44,22 @@ namespace STULib.Types {
         public uint Unknown12;
 
         [STUField(0x8125713E)]
-        public STUGUID StatescriptHeroComponent3;
+        public STUGUID EntityHighlightIntro;
 
         [STUField(0x84625AA3)]
         public Skin[] Skins;
 
         [STUField(0x950BBA06)]
-        public STUGUID StatescriptHeroComponent4;
+        public STUGUID EntityPlayable;  // third person entity with a reference to 1st person
 
         [STUField(0xA341183E)]
         public UnknownNested1[] Unknown16;
 
         [STUField(0xAC91BECC)]
-        public STUGUID StatescriptHeroComponent5;
+        public STUGUID EntityThirdPerson;
 
         [STUField(0xB7A1D145)]
-        public int UnknownID;  // weird, sometimes works as hero type, but not always
+        public int UnknownID;
 
         [STUField(0xC2FE396F)]
         public Statescript[] WeaponComponents1;
@@ -130,8 +130,8 @@ namespace STULib.Types {
         [STU(0x8A1F18F9)]
         public class UnknownNested1 {
             [STUField(0x118D9D9F)]
-            public StatisticGroup[] Statistics;  // todo: check nested array
-
+            public StatisticGroup[] Statistics;
+            
             [STUField(0xEB4F2408, "m_gamemode")]
             public STUGUID Gamemode;
         }

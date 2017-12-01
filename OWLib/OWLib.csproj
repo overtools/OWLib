@@ -69,7 +69,9 @@
     <Compile Include="Types\Chunk\TCFE\NECE.cs" />
     <Compile Include="Types\Chunk\TCFE\SVCE.cs" />
     <Compile Include="Types\Chunk\TCFE\TACE.cs" />
+    <Compile Include="Types\Chunk\TCFE\TCFE.cs" />
     <Compile Include="Types\Chunk\TCFE\THSE.cs" />
+    <Compile Include="Types\Chunk\TCFE\VCCE.cs" />
     <Compile Include="Types\Map\Map11.cs" />
     <Compile Include="Types\Marshal.cs" />
     <Compile Include="Types\STUD\BrawlName.cs" />

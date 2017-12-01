@@ -37,17 +37,17 @@ namespace DataTool.ToolLogic.Extract {
                 string name = GetValidFilename(lootbox.Event.ToString()) ?? $"Unknown{GUID.Index(key):X}";
                 
                 HashSet<ModelInfo> models = new HashSet<ModelInfo>();
-                models = Model.FindModels(models, lootbox.StateScriptComponent);
+                models = Model.FindModels(models, lootbox.Entity);
+                models = Model.FindModels(models, lootbox.Entity2);
                 models = Model.FindModels(models, lootbox.Effect1);
                 models = Model.FindModels(models, lootbox.Effect2);
                 models = Model.FindModels(models, lootbox.Effect3);
-                models = Model.FindModels(models, lootbox.Effect4);
-                models = Model.FindModels(models, lootbox.Material);
-                models = Model.FindModels(models, lootbox.Material2);
+                models = Model.FindModels(models, lootbox.Look1);
+                models = Model.FindModels(models, lootbox.Look2);
                 
                 Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
 
-                foreach (Common.STUGUID stuguid in new [] {lootbox.Effect1, lootbox.Effect2, lootbox.Effect3, lootbox.Effect4, lootbox.StateScriptComponent}) {
+                foreach (Common.STUGUID stuguid in new [] {lootbox.Effect1, lootbox.Effect2, lootbox.Effect3, lootbox.Entity2, lootbox.Entity}) {
                     music = Sound.FindSounds(music, stuguid, null, true);
                 }
             

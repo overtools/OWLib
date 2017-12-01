@@ -353,7 +353,7 @@ namespace DataTool.SaveLogic {
 
                                 if (component == null) continue;
 
-                                mapprop.MaterialKey = component.Material;
+                                mapprop.MaterialKey = component.Look;
                                 mapprop.ModelKey = component.Model;
                                 mapBData.Records[i] = mapprop;
                             }

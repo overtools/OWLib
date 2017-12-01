@@ -43,7 +43,7 @@ namespace DataTool.ToolLogic.Extract {
         }
     }
     
-    [Tool("extract-unlocks", Description = "Extract all heroes sprays and icons", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-unlocks", Description = "Extract hero cosmetics", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
@@ -262,7 +262,7 @@ namespace DataTool.ToolLogic.Extract {
                             SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\{RootDir}", hero, itemInfo.Rarity, itemInfo.Unlock as Skin, weaponSkins, abilities, false);
                         }
                         if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
+                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
                         }
                         if (itemInfo.Type == "HighlightIntro" && config.ContainsKey("highlightintro") && config["highlightintro"].ShouldDo(itemInfo.Name, tags)) {
                             SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
