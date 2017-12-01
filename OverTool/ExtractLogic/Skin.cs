@@ -72,8 +72,8 @@ namespace OverTool.ExtractLogic {
                 }
                 for (int i = 0; i < def.Layers.Length; ++i) {
                     ImageLayer layer = def.Layers[i];
-                    if (replace.ContainsKey(layer.key)) {
-                        layer.key = replace[layer.key];
+                    if (replace.ContainsKey(layer.Key)) {
+                        layer.Key = replace[layer.Key];
                     }
                     layers[materialId].Add(layer);
                 }
@@ -107,8 +107,8 @@ namespace OverTool.ExtractLogic {
             }
             for (int i = 0; i < def.Layers.Length; ++i) {
                 ImageLayer layer = def.Layers[i];
-                if (replace.ContainsKey(layer.key)) {
-                    layer.key = replace[layer.key];
+                if (replace.ContainsKey(layer.Key)) {
+                    layer.Key = replace[layer.Key];
                 }
                 layers[materialId].Add(layer);
             }
@@ -136,8 +136,8 @@ namespace OverTool.ExtractLogic {
             }
             for (int i = 0; i < def.Layers.Length; ++i) {
                 ImageLayer layer = def.Layers[i];
-                if (replace.ContainsKey(layer.key)) {
-                    layer.key = replace[layer.key];
+                if (replace.ContainsKey(layer.Key)) {
+                    layer.Key = replace[layer.Key];
                 }
                 layers[materialId].Add(layer);
             }
@@ -655,10 +655,10 @@ namespace OverTool.ExtractLogic {
                     List<ImageLayer> sublayers = kv.Value;
                     HashSet<ulong> materialParsed = new HashSet<ulong>();
                     foreach (ImageLayer layer in sublayers) {
-                        if (!materialParsed.Add(layer.key)) {
+                        if (!materialParsed.Add(layer.Key)) {
                             continue;
                         }
-                        KeyValuePair<string, TextureType> stt = SaveTexture(layer.key, materialId, map, handler, path, quiet);
+                        KeyValuePair<string, TextureType> stt = SaveTexture(layer.Key, materialId, map, handler, path, quiet);
                         if (stt.Key == null) {
                             continue;
                         }

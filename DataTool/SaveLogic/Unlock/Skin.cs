@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
@@ -168,7 +169,7 @@ namespace DataTool.SaveLogic.Unlock {
             if (fpC?.Entity != null) entityNames[fpC.Entity] = $"{heroName}-Playable-FirstPerson";
             foreach (ModelInfo model in models) {
                 Model.Save(flags, Path.Combine(basePath, "Models"), model, $"{GetString(hero.Name)} Skin {skinName}_{GUID.Index(model.GUID):X}");
-                Entity.Save(flags, Path.Combine(basePath, "Entities"), model.Entities.Values, entityNames);
+                // Entity.Save(flags, Path.Combine(basePath, "Entities"), model.Entities.Values, entityNames);
             }
             
             if (!quiet && weaponModels.Count > 0) Log("\tSaving weapons");

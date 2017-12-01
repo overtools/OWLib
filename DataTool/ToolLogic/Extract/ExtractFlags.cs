@@ -5,7 +5,10 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Help = "Output path", Positional = 2, Required = true)]
         public string OutputPath;
         
-        [CLIFlag(Default = true, Flag = "convert-textures", Help = "Convert .004 files to .dds", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = "tif", Flag = "convert-textures-type", Help = "Texture ouput type", Valid = new[] { "dds", "tif", "tga"})]
+        public string ConvertTexturesType;
+        
+        [CLIFlag(Default = true, Flag = "convert-textures", Help = "Convert .004 files to {convert-textures-type}", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertTextures;
         
         [CLIFlag(Default = true, Flag = "convert-sound", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]

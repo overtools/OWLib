@@ -351,13 +351,14 @@ namespace STULib.Impl.Version2HashComparer {
             
             // get all children
             // WARNING: NOT THREAD SAFE
-            if (GetAllChildren) {
-                foreach (KeyValuePair<uint,STUInstanceJSON> instanceJSON in InstanceJSON.Where(x => x.Value.ParentChecksum == json.Hash)) {
-                    if (InternalInstances.ContainsKey(instanceJSON.Value.Hash)) continue;
-                    InternalInstances[instanceJSON.Value.Hash] = null;
-                    InternalInstances[instanceJSON.Value.Hash] = GetInstanceData(instanceJSON.Value.Hash, reader);
-                }
-            }
+            // if (GetAllChildren) {
+            //     foreach (KeyValuePair<uint,STUInstanceJSON> instanceJSON in InstanceJSON.Where(x => x.Value.ParentChecksum != 0 && x.Value.ParentChecksum == instanceChecksum)) {
+            //         if (instanceJSON.Value.ParentChecksum != instanceChecksum) continue; // wat
+            //         if (InternalInstances.ContainsKey(instanceJSON.Value.Hash)) continue;
+            //         InternalInstances[instanceJSON.Value.Hash] = null;
+            //         InternalInstances[instanceJSON.Value.Hash] = GetInstanceData(instanceJSON.Value.Hash, reader);
+            //     }
+            // }
             
             
             if (instanceSize != null && fieldListIndex != null && reader != null) {

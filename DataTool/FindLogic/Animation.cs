@@ -121,7 +121,8 @@ namespace DataTool.FindLogic {
                 }
                 Chunked chunked = new Chunked(chunkStream, true, ChunkManager.Instance);
                 
-                if (GetFileName(parentAnim) == "000000004239.006") Debugger.Break();
+                // if (GetFileName(parentAnim) == "000000004239.006") Debugger.Break(); // orisa supercharger main
+                // if (GetFileName(parentAnim) == "0000000045D6.006") Debugger.Break(); // doomfist one punch - 000000002206.08F
                 
                 CECE[] ceces = chunked.GetAllOfTypeFlat<CECE>();
                 foreach (CECE cece in ceces) {
