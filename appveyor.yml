@@ -1,4 +1,4 @@
-version: 1.17.1.{build}-pre
+version: 1.17.1.{build}
 image: Visual Studio 2017
 configuration: Release
 platform: Any CPU
