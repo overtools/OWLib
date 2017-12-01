@@ -504,7 +504,7 @@ namespace OWLib.Writer {
                 //     clothIndex++;
                 // }
                 
-                // ext 1.14: embedded refpose
+                // ext 1.4: embedded refpose
                 if (skeleton != null) {
                     for (int i = 0; i < skeleton.Data.bonesAbs; ++i) {
                         writer.Write(IdToString("bone", skeleton.IDs[i]));

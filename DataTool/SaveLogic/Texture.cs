@@ -95,9 +95,11 @@ namespace DataTool.SaveLogic {
                             
                             pProcess.Start();
                             pProcess.WaitForExit();
-                            //string line = pProcess.StandardOutput.ReadToEnd();
-                            //Console.Out.WriteLine(line);
-                            File.Delete($"{filePath}.dds");
+                            string line = pProcess.StandardOutput.ReadLine();
+                            if (line?.Contains($"{filePath}.dds FAILED") == false) {  // fallback if convert fails
+                                File.Delete($"{filePath}.dds");
+
+                            }
                         }
                     }
                     output[textureInfo] = type;
