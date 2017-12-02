@@ -384,7 +384,7 @@ namespace STUHashTool {
 
                 using (Stream file1Stream = File.Open(file1, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (Stream file2Stream = File.Open(file2, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                        if (classCount >= 3) continue;
+                        if (classCount >= 3) break;
                         
                         ISTU file1STU = ISTU.NewInstance(file1Stream, uint.MaxValue, type);
                         Version2Comparer file1STU2 = (Version2Comparer) file1STU;
@@ -607,7 +607,7 @@ namespace STUHashTool {
 
                 todoInstances = GetClassTodos(todoInstances);
                 
-                const string stuNamespace = "STULib.Types.posthash";
+                const string stuNamespace = "STULib.Types.prehash";
                 const string enumNamespace = stuNamespace+".Enums";
                 
                 foreach (string t in todoInstances) {

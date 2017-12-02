@@ -1,7 +1,6 @@
 Hash, Name
 56B6D12E, STULootbox
 0CC07049, STUAchievement
-314BB6F9, STUCatalog
 C6A72877, STUUnlock_Pose
 C23F89EB, STUUnlock_Weapon
 614BC677, STUUnlock_Currency
@@ -58,3 +57,8 @@ F9134815, STUHardPoint
 ACCDE63F, STUCelebration
 CE1A4D26, STUEffect
 0B792564, STUTexture
+5207484B, STUModelLook
+494B66C1, STUModelMaterial
+A6DD7672, STUAnimationPermutation
+92389E46, STUAnimation
+4D03ED2B, STUMaterialEffect

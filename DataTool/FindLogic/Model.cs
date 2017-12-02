@@ -307,7 +307,7 @@ namespace DataTool.FindLogic {
                     if (container.Children != null) {
                         foreach (STUChildEntityDefinition entityChild in container.Children) {
                             existingModels = FindModels(existingModels, entityChild?.Entity, replacements);
-                            if (entityModel != null) {
+                            if (entityModel != null && entityChild != null) {
                                 AddEntityChild(existingModels, modelGUID, entityModel, entityChild, replacements);
                             }
                         }

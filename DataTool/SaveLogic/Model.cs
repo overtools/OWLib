@@ -61,7 +61,7 @@ namespace DataTool.SaveLogic {
                             } else {
                                 writer.Write((byte)0xFF);
                             }
-                            writer.Write((int)texture.Type);
+                            writer.Write((uint)texture.Type);
                         }
                     }
                 }

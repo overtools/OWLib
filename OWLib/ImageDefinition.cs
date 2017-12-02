@@ -23,9 +23,9 @@ namespace OWLib {
             SubsurfaceScattering = 3004687613,
             Emission = 3166598269,
             Emission2 = 1523270506,
-            HairAnisotropy = 2337956496,
-            Specular = 1117188170, // maybe hairspec
-            AO = 3761386704,  // maybe hairao
+            HairTangent = 2337956496,
+            HairSpecular = 1117188170,
+            HairAO = 3761386704,
             SomeKindOfGradient = 1140682086
         }
 

@@ -109,17 +109,25 @@ namespace DataTool.FindLogic {
                 case 0x1A:
                     STUModelLook modelLook = GetInstance<STUModelLook>(textureGUID);
                     if (modelLook.Materials == null) break;
-                    foreach (STUModelLook.Material modelLookMaterial in modelLook.Materials) {
-                        existingTextures = FindTextures(existingTextures, modelLookMaterial.MaterialReference, null,
-                            forceZero, replacements, modelLookMaterial.Id);
+                    foreach (STUModelMaterial modelLookMaterial in modelLook.Materials) {
+                        existingTextures = FindTextures(existingTextures, modelLookMaterial.Material, null,
+                            forceZero, replacements, modelLookMaterial.ID);
                     }
-                    // foreach (STUModelLook.MaterialReferenceWrapper modelLookWrapper in modelLook.Wrappers) {
-                    //     foreach (STUModelLook.Material refMaterial in modelLookWrapper.Materials) {
-                    //         existingTextures = FindTextures(existingTextures, refMaterial.MaterialReference, null,
-                    //             forceZero, replacements);
-                    //     }
+                    if (modelLook.MaterialEffects != null) {
+                        foreach (STUMaterialEffect modelLookWrapper in modelLook.MaterialEffects) {
+                            foreach (STUModelMaterial refMaterial in modelLookWrapper.Materials) {
+                                existingTextures = FindTextures(existingTextures, refMaterial.Material, null,
+                                    forceZero, replacements);
+                            }
+                        
+                        }
+                    }
+                    // if (modelLook.AnimationPermutations != null) {
+                    //     foreach (STUAnimationPermutation animationPermutation in modelLook.AnimationPermutations) {
                     //     
+                    //     }
                     // }
+                    
                     break;
                 case 0x03:
                     // STUStatescriptComponentMaster container = GetInstance<STUStatescriptComponentMaster>(textureGUID);
