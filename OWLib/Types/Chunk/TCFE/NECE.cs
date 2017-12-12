@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
     public class NECE : IChunk {
-        public string Identifier => "NECE"; // ECEN - Effect Child ???? ????
+        public string Identifier => "NECE"; // ECEN - Effect Chunk Entity
         public string RootIdentifier => "TCFE"; // EFCT - Effect
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

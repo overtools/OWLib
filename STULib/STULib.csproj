@@ -411,7 +411,7 @@
     <Compile Include="Types\STUCompetitiveSeasonBase.cs" />
     <Compile Include="Types\STUCompetitiveSeasonRewards.cs" />
     <Compile Include="Types\STUDataOverride.cs" />
-    <Compile Include="Types\STUDecal.cs" />
+    <Compile Include="Types\STUEffectLook.cs" />
     <Compile Include="Types\STUDescription.cs" />
     <Compile Include="Types\STUEncryptionKey.cs" />
     <Compile Include="Types\STUGlobalInventoryMaster.cs" />

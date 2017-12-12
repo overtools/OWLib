@@ -168,8 +168,8 @@ namespace DataTool.SaveLogic.Unlock {
             STUFirstPersonComponent fpC = GetInstance<STUFirstPersonComponent>(hero.EntityPlayable);
             if (fpC?.Entity != null) entityNames[fpC.Entity] = $"{heroName}-Playable-FirstPerson";
             foreach (ModelInfo model in models) {
-                Model.Save(flags, Path.Combine(basePath, "Models"), model, $"{GetString(hero.Name)} Skin {skinName}_{GUID.Index(model.GUID):X}");
-                // Entity.Save(flags, Path.Combine(basePath, "Entities"), model.Entities.Values, entityNames);
+                Model.Save(flags, Path.Combine(basePath, "Models"), model, $"{GetString(hero.Name)} Skin {skinName}_{GUID.Index(model.GUID):X}", null, entityNames);
+                Entity.Save(flags, Path.Combine(basePath, "Entities"), model.Entities.Values, entityNames);
             }
             
             if (!quiet && weaponModels.Count > 0) Log("\tSaving weapons");

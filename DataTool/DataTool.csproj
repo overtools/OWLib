@@ -40,6 +40,9 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
+      <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -63,6 +66,7 @@
     <Compile Include="Flag\Converter.cs" />
     <Compile Include="Flag\FlagParser.cs" />
     <Compile Include="Flag\ICLIFlags.cs" />
+    <Compile Include="Helper\EffectParser.cs" />
     <Compile Include="Helper\IO.cs" />
     <Compile Include="Helper\LinqExtensions.cs" />
     <Compile Include="Helper\Logger.cs" />
@@ -72,6 +76,7 @@
     <Compile Include="ITool.cs" />
     <Compile Include="JSON\GUIDConverter.cs" />
     <Compile Include="SaveLogic\Animation.cs" />
+    <Compile Include="SaveLogic\Effect.cs" />
     <Compile Include="SaveLogic\Entity.cs" />
     <Compile Include="SaveLogic\Map.cs" />
     <Compile Include="SaveLogic\Model.cs" />
@@ -88,6 +93,8 @@
     <Compile Include="ToolAttribute.cs" />
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimatedSpray.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugEffectLook.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugEntities.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSound.cs" />

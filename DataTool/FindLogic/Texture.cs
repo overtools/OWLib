@@ -69,8 +69,8 @@ namespace DataTool.FindLogic {
             }
         }
 
-        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, STUDecalReference decal, string name = null, bool forceZero = false) {
-            return FindTextures(existingTextures, decal.DecalResource, name, forceZero);
+        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, STUEffectReference effect, string name = null, bool forceZero = false) {
+            return FindTextures(existingTextures, effect.EffectLook, name, forceZero);
         }
         
         public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, Common.STUGUID textureGUID, string name=null, bool forceZero=false, Dictionary<ulong, ulong> replacements = null, ulong materialId = 0, ImageDefinition.ImageType textureType = ImageDefinition.ImageType.Unknown) {
@@ -90,9 +90,9 @@ namespace DataTool.FindLogic {
                     }
                     break;
                 case 0xA8:
-                    STUDecal decal = GetInstance<STUDecal>(textureGUID);
-                    if (decal == null) break;
-                    foreach (Common.STUGUID decalMaterial in decal.Materials) {
+                    STUEffectLook effectLook = GetInstance<STUEffectLook>(textureGUID);
+                    if (effectLook == null) break;
+                    foreach (Common.STUGUID decalMaterial in effectLook.Materials) {
                         if (!Files.ContainsKey(decalMaterial)) continue;
                         existingTextures = FindTextures(existingTextures, decalMaterial, name, forceZero, replacements);
                     }

@@ -121,14 +121,25 @@ namespace OWLib.Writer {
             return true;
         }
         
-        public static Vector3D GetGlobalRot(IReadOnlyList<Matrix3x4> skeletonMatrices34Inverted, short s, IReadOnlyList<short> hierarchy) {
-            if (skeletonMatrices34Inverted.Count <= s || s == -1) return new Vector3D();
-            Matrix3x4 bone = skeletonMatrices34Inverted[s];
-            Quaternion3D quat = new Quaternion3D(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
-            Vector3D rot = C3D.ToEulerAngles(quat);
-            Vector3D parent = new Vector3D();
-            if (hierarchy.Count > s) parent = GetGlobalRot(skeletonMatrices34Inverted, hierarchy[s], hierarchy);
-            return rot + parent;
+        public static Quaternion GetGlobalRot(lksm skeleton, short s, IReadOnlyList<short> hierarchy) {
+            if (skeleton.Matrices34Inverted.Length <= s || s == -1) return new Quaternion();
+            Matrix3x4 bone = skeleton.Matrices34Inverted[s];
+            Quaternion quat = new Quaternion(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
+            Quaternion parent = new Quaternion();
+            if (hierarchy.Count > s) parent = GetGlobalRot(skeleton, hierarchy[s], hierarchy);
+            return quat + parent;
+        }
+
+        public static Vector3 GetPos(lksm skeleton, int index) {
+            Matrix3x4 bone = skeleton.Matrices34[index];
+            Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
+            return pos;
+        }
+        
+        public static Quaternion GetRotTest(lksm skeleton, int index) {
+            Matrix3x4 bone = skeleton.Matrices34[index];
+            Quaternion quat = new Quaternion(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
+            return quat;
         }
 
         public static Vector3 GetGlobalPos(IReadOnlyList<Matrix3x4> skeletonMatrices34Inverted, short s, IReadOnlyList<short> hierarchy) {

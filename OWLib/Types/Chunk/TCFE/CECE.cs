@@ -3,11 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
     public class CECE : IChunk {
-        public string Identifier => "CECE"; // ECEC - Effect Child(?) Entity Control
+        public string Identifier => "CECE"; // ECEC - Effect Chunk Entity Control
         public string RootIdentifier => "TCFE"; // EFCT - Effect
 
         public enum CECEAction : byte {  // todo: maybe u16/i16
-            Hide = 1,  // Animation is 0
+            Show = 1,  // Animation is 0
             PlayAnim = 4
         }
 

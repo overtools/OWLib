@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
-  class PRHM : IChunk {
+  public class PRHM : IChunk {
     public string Identifier => "PRHM"; // MHRP - Model Hard Points
     public string RootIdentifier => "LDOM"; // MODL - Model
 

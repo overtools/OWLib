@@ -79,7 +79,7 @@ namespace OverTool.ExtractLogic {
 
             FECE[] feces = chunked.GetAllOfTypeFlat<FECE>();
             foreach (FECE fece in feces) {
-                FindSoundsExD(fece.Data.effect, done, ret, map, handler, replace, mykey);
+                FindSoundsExD(fece.Data.Effect, done, ret, map, handler, replace, mykey);
             }
         }
 

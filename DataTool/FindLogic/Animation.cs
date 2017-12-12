@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using DataTool.Helper;
 using OWLib;
 using OWLib.Types.Chunk;
 using STULib.Types;
@@ -14,44 +15,15 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.FindLogic {
-    public class DMCEInfo : IEquatable<DMCEInfo> {
-        public ulong Model;
-        public ulong Material;
-        public ulong Animation;
-        public ulong StartFrame;
-        public ulong ParentBone;
-
-        public bool Equals(DMCEInfo other) {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Model == other.Model && Material == other.Material && Animation == other.Animation && StartFrame == other.StartFrame && ParentBone == other.ParentBone;
-        }
-
-        public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((DMCEInfo) obj);
-        }
-
-        public override int GetHashCode() {
-            unchecked {
-                int hashCode = Model.GetHashCode();
-                hashCode = (hashCode * 397) ^ Material.GetHashCode();
-                hashCode = (hashCode * 397) ^ Animation.GetHashCode();
-                hashCode = (hashCode * 397) ^ StartFrame.GetHashCode();
-                hashCode = (hashCode * 397) ^ ParentBone.GetHashCode();
-                return hashCode;
-            }
-        }
-    }
     
-    public class AnimationInfo : IEquatable<AnimationInfo> {
-        public Common.STUGUID GUID;
+    
+    public class AnimationInfo : EffectParser.EffectInfo, IEquatable<AnimationInfo> {
         public Common.STUGUID Skeleton;
+        public string Name;
 
-        public List<DMCEInfo> DMCEs;
-
+        public float FPS = -1;
+        public uint Priority = 0;
+        
         public override int GetHashCode() {
             return (GUID != null ? GUID.GetHashCode() : 0);
         }
@@ -71,39 +43,47 @@ namespace DataTool.FindLogic {
     }
     
     public class Animation {
-        public static void AddDMCE(HashSet<AnimationInfo> animations, ulong animationKey, Dictionary<ulong, ulong> replacements, DMCE dmce) {
-            if (animationKey == 0) return;
-            if (replacements.ContainsKey(animationKey)) animationKey = replacements[animationKey];
-            
-            AnimationInfo animInfo = animations.FirstOrDefault(x => x.GUID == animationKey);
-            if (animInfo == null) return;
-            
-            DMCEInfo newInfo = new DMCEInfo {Model = dmce.Data.Model, ParentBone = dmce.Data.Unknown, 
-                Material = dmce.Data.Look, Animation = dmce.Data.Animation, StartFrame = 0};
-            if (!animInfo.DMCEs.Contains(newInfo)) {
-                animInfo.DMCEs.Add(newInfo);
-            }
+        public static AnimationInfo GetAnimationInfo(HashSet<AnimationInfo> animations, ulong animation, Dictionary<ulong, ulong> replacements) {
+            if (replacements.ContainsKey(animation)) animation = replacements[animation];
+            AnimationInfo animInfo = animations.FirstOrDefault(x => x.GUID == animation);
+            return animInfo;
+        }
+
+        public static void SetName(HashSet<AnimationInfo> animations, ulong anim, string name,
+            Dictionary<ulong, ulong> reaplacements) {
+            if (reaplacements.ContainsKey(anim)) anim = reaplacements[anim];
+
+            AnimationInfo info = animations.FirstOrDefault(x => x.GUID == anim);
+            if (info == null) return;
+
+            info.Name = name;
         }
         
         public static void AddGUID(HashSet<AnimationInfo> animations, Common.STUGUID newElement, Common.STUGUID skeleton, Dictionary<ulong, ulong> replacements) {
             if (newElement == null) return;
             
             if (replacements.ContainsKey(newElement)) newElement = new Common.STUGUID(replacements[newElement]);
-            AnimationInfo newAnim = new AnimationInfo {GUID = newElement, Skeleton = skeleton, DMCEs = new List<DMCEInfo>()};
+            AnimationInfo newAnim = new AnimationInfo {GUID = newElement, Skeleton = skeleton};
+            newAnim.SetupEffect();
 
             if (animations.All(x => !Equals(x.GUID, newAnim.GUID))) {
                 animations.Add(newAnim);
             } else {
                 AnimationInfo existing = animations.FirstOrDefault(x => Equals(x, newAnim));
                 if (existing == null) return;
-                if (existing.GUID == null) existing.GUID = newAnim.GUID;
-                if (existing.GUID == null) existing.Skeleton = newAnim.Skeleton;
+                if (existing.Skeleton == 0) existing.Skeleton = newAnim.Skeleton;
             }
         }
-        
-        // public static HashSet<ModelInfo> Find(HashSet<ModelInfo> existingModels, Common.STUInstance instance) {
-        //     return null;
-        // }
+
+        private static void SetAnimFramerate(HashSet<AnimationInfo> existingAnimations, Common.STUGUID animationGUID, Dictionary<ulong, ulong> replacements, float framerate, uint priority) {
+            if (replacements.ContainsKey(animationGUID)) animationGUID = new Common.STUGUID(replacements[animationGUID]);
+            
+            AnimationInfo animInfo = existingAnimations.FirstOrDefault(x => x.GUID == animationGUID);
+            if (animInfo == null) return;
+
+            animInfo.FPS = framerate;
+            animInfo.Priority = priority;
+        }
 
         public static HashSet<AnimationInfo> FindChunked(HashSet<AnimationInfo> existingAnimations, HashSet<ModelInfo> models, Common.STUGUID animationGUID,
             Dictionary<ulong, ulong> replacements, ulong parentAnim) {
@@ -124,36 +104,84 @@ namespace DataTool.FindLogic {
                 // if (GetFileName(parentAnim) == "000000004239.006") Debugger.Break(); // orisa supercharger main
                 // if (GetFileName(parentAnim) == "0000000045D6.006") Debugger.Break(); // doomfist one punch - 000000002206.08F
                 
-                CECE[] ceces = chunked.GetAllOfTypeFlat<CECE>();
-                foreach (CECE cece in ceces) {
-                    existingAnimations = FindAnimations(existingAnimations, models, new Common.STUGUID(cece.Data.Animation), replacements);
-                    // cece.Data.animation] = parent;
-                    // FindAnimationsSoft(cece.Data.animation, sound, animList, replace, parsed, map, handler, models, layers, cece.Data.animation);
-                }
-                
-                DMCE[] dmces = chunked.GetAllOfTypeFlat<DMCE>();
-                foreach (DMCE dmce in dmces) {
-                    HashSet<AnimationInfo> newAnims = new HashSet<AnimationInfo>();
-                    Model.FindModels(models, new Common.STUGUID(dmce.Data.Model), replacements);
-                    Model.FindModels(models, new Common.STUGUID(dmce.Data.Look), replacements);
-                    
-                    // if (GetFileName(dmce.Data.modelKey) == "000000003AB1.00C") Debugger.Break();
-                    
-                    Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.Look), null, true, replacements);
-                    
-                    newAnims = FindAnimations(newAnims, models, new Common.STUGUID(dmce.Data.Animation), replacements);
-                    
-                    Model.AddGUID(models, new Common.STUGUID(dmce.Data.Model), textures, newAnims, replacements);
+                EffectParser parser = new EffectParser(chunked, animationGUID);
 
-                    if (parentAnim != 0) {
-                        AddDMCE(existingAnimations, parentAnim, replacements, dmce);
+                AnimationInfo info = GetAnimationInfo(existingAnimations, parentAnim, replacements);
+
+                ulong lastModel = 0;
+
+                foreach (KeyValuePair<EffectParser.ChunkPlaybackInfo,IChunk> chunk in parser.GetChunks()) {
+                    if (chunk.Value == null || chunk.Value.GetType() == typeof(MemoryChunk)) continue;
+
+                    parser.Process(info, chunk);
+
+                    if (chunk.Value.GetType() == typeof(DMCE)) {
+                        DMCE dmce = chunk.Value as DMCE;
+                        if (dmce == null) continue;
+                        HashSet<AnimationInfo> newAnims = new HashSet<AnimationInfo>();
+                        Model.FindModels(models, new Common.STUGUID(dmce.Data.Model), replacements);
+                        Model.FindModels(models, new Common.STUGUID(dmce.Data.Look), replacements);
+                    
+                        Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
+                        textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.Look), null, true, replacements);
+                    
+                        newAnims = FindAnimations(newAnims, models, new Common.STUGUID(dmce.Data.Animation), replacements);
+                    
+                        Model.AddGUID(models, new Common.STUGUID(dmce.Data.Model), textures, newAnims, replacements);
                     }
-                }
-                
-                RPCE[] rpces = chunked.GetAllOfTypeFlat<RPCE>();
-                foreach (RPCE rpce in rpces) {
-                    Model.FindModels(models, new Common.STUGUID(rpce.Data.Model), replacements);
+
+                    if (chunk.Value.GetType() == typeof(FECE)) {
+                        FECE fece = chunk.Value as FECE;
+                        if (fece == null) continue;
+                        HashSet<AnimationInfo> fakeAnims = new HashSet<AnimationInfo>();
+                        FindChunked(fakeAnims, models, new Common.STUGUID(fece.Data.Effect), replacements, 0);
+                    }
+
+                    if (chunk.Value.GetType() == typeof(NECE)) {
+                        NECE nece = chunk.Value as NECE;
+                        if (nece == null) continue;
+                        models = Model.FindModels(models, new Common.STUGUID(nece.Data.key), replacements);
+                    }
+                    
+                    if (chunk.Value.GetType() == typeof(SSCE)) {
+                        SSCE ssce = chunk.Value as SSCE;
+                        if (ssce == null) continue;
+                        Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
+                        textures = Texture.FindTextures(textures, new Common.STUGUID(ssce.Data.material_key), null, true, replacements, GUID.Index(ssce.Data.material_key));
+                        if (lastModel != 0) {
+                            Model.AddGUID(models, new Common.STUGUID(lastModel), textures, null, replacements);
+                        }
+                    }
+
+                    if (chunk.Value.GetType() == typeof(RPCE)) {
+                        RPCE rpce = chunk.Value as RPCE;
+                        if (rpce == null) continue;
+                        models = Model.FindModels(models, new Common.STUGUID(rpce.Data.Model), replacements);
+                        lastModel = rpce.Data.Model;
+                    } else {
+                        lastModel = 0;
+                    }
+
+                    if (chunk.Value.GetType() == typeof(CECE)) {
+                        CECE cece = chunk.Value as CECE;
+                        if (cece == null) continue;
+                        if (cece.Data.Animation == 0 || cece.Data.EntityVariable == 0) continue;
+                        HashSet<AnimationInfo> newAnims = new HashSet<AnimationInfo>();
+                        newAnims = FindAnimations(newAnims, models, new Common.STUGUID(cece.Data.Animation), replacements);
+                        
+                        // if (GUID.Index(cece.Data.Animation) == 0x371B) Debugger.Break();
+                        
+                        // nooooooooooooooo
+                        foreach (ModelInfo model in models) {
+                            foreach (KeyValuePair<Common.STUGUID,EntityInfo> entity in model.Entities) {
+                                foreach (ChildEntityReference entityReference in entity.Value.Children) {
+                                    if (entityReference.Variable == cece.Data.EntityVariable) {
+                                        Model.AddGUID(models, new Common.STUGUID(entityReference.Model), new Dictionary<ulong, List<TextureInfo>>(), newAnims, replacements);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             return existingAnimations;
@@ -207,12 +235,18 @@ namespace DataTool.FindLogic {
             switch (GUID.Type(animationGUID)) {
                 case 0x06:
                     AddGUID(existingAnimations, animationGUID, skeleton, replacements);
-                    if (animationGUID.ToString() == "00000000265C.006") Debugger.Break();
+                    // if (animationGUID.ToString() == "00000000265C.006") Debugger.Break();
                     using (Stream anim = OpenFile(animationGUID)) {
                         if (anim == null) {
                             break;
                         }
                         using (BinaryReader reader = new BinaryReader(anim)) {
+
+                            anim.Position = 0;
+                            uint priority = reader.ReadUInt32();
+                            anim.Position = 8;
+                            float fps = reader.ReadSingle();
+                            SetAnimFramerate(existingAnimations, animationGUID, replacements, fps, priority);
                             anim.Position = 0x18L;
                             ulong infokey = reader.ReadUInt64();
                             existingAnimations = FindChunked(existingAnimations, models, new Common.STUGUID(infokey), replacements, animationGUID);
@@ -291,6 +325,7 @@ namespace DataTool.FindLogic {
                     } else if (cosmetic is HighlightIntro) {
                         HighlightIntro cosmeticHighlightIntro = cosmetic as HighlightIntro;
                         existingAnimations = FindAnimations(existingAnimations, models, cosmeticHighlightIntro.AnimationResource, replacements);
+                        SetName(existingAnimations, cosmeticHighlightIntro.AnimationResource, $"HighlightIntro\\{GetString(cosmeticHighlightIntro.CosmeticName)}", replacements);
                     }
                     break;
                 case 0xBF:

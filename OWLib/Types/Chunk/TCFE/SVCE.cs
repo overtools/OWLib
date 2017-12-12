@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
     public class SVCE : IChunk {
-        public string Identifier => "SVCE"; // ECVS - Effect Child Voice Stimulus
+        public string Identifier => "SVCE"; // ECVS - Effect Chunk Voice Stimulus
         public string RootIdentifier => "TCFE"; // EFCT - Effect
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

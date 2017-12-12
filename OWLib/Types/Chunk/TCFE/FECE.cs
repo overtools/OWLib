@@ -3,12 +3,12 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
     public class FECE : IChunk {
-        public string Identifier => "FECE"; // ECEF - Effect Child Effect (?)
+        public string Identifier => "FECE"; // ECEF - Effect Chunk Effect
         public string RootIdentifier => "TCFE"; // EFCT - Effect
     
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public ulong effect;
+            public ulong Effect;
             public byte unk1;
             public byte unk2;
             public byte unk3;

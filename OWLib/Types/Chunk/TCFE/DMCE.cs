@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
     public class DMCE : IChunk {
-        public string Identifier => "DMCE"; // ECMD - Effect Child Model Data
+        public string Identifier => "DMCE"; // ECMD - Effect Chunk Model Data
         public string RootIdentifier => "TCFE"; // EFCT - Effect
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

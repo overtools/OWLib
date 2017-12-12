@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
     public class OSCE : IChunk {
-        public string Identifier => "OSCE"; // ESCO - ?
+        public string Identifier => "OSCE"; // ECSO - Effect Chunk ??????
         public string RootIdentifier => "TCFE"; // EFCT - Effect
     
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

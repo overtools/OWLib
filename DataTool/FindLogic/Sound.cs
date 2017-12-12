@@ -87,7 +87,7 @@ namespace DataTool.FindLogic {
 
                 FECE[] feces = chunked.GetAllOfTypeFlat<FECE>();
                 foreach (FECE fece in feces) {   // good variable name
-                    existingSounds = FindSounds(existingSounds, fece.Data.effect, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, fece.Data.Effect, name, forceZero, toplevelKey, replacements);
                 }
             }
 

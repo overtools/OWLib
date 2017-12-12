@@ -3,16 +3,16 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0x5C713BD4)]
-    public class STUDecalReference : STUInstance {
+    public class STUEffectReference : STUInstance {
         [STUField(0x2B522C5B)]
-        public STUGUID DecalResource;
+        public STUGUID EffectLook;
 
         [STUField(0x58D56DD4, "m_effect")]
-        public STUGUID EffectResource;
+        public STUGUID Effect;
     }
 
     [STU(0x251E73C7)]
-    public class STUDecal : STUInstance {
+    public class STUEffectLook : STUInstance {
         [STUField(0x2E93585A, ForceNotBuffer = true, Demangle = false)]
         public STUGUID[] Virtual041;
 

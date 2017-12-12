@@ -4,9 +4,9 @@ namespace STULib.Types.STUUnlock {
     [STU(0x84515D93)]
     public class Spray : Cosmetic {
         [STUField(0xABFBD552, EmbeddedInstance = true)]
-        public STUDecalReference Decal;
+        public STUEffectReference Effect;
 
         [STUField(0x1B25AB90)]
-        public STUDecalReference CosmeticUnknownDecal;
+        public STUEffectReference CosmeticUnknownEffect;
     }
 }
