@@ -144,8 +144,9 @@ namespace DataTool.Helper {
         }
         
         public static void AddNECE(EffectInfo effect, NECE nece, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
-            NECEInfo newInfo = new NECEInfo {PlaybackInfo = playbackInfo, GUID = nece.Data.key};
+            NECEInfo newInfo = new NECEInfo {PlaybackInfo = playbackInfo, GUID = nece.Data.Entity, Variable = nece.Data.EntityVariable};
             if (replacements.ContainsKey(newInfo.GUID)) newInfo.GUID = replacements[newInfo.GUID];
+            if (replacements.ContainsKey(newInfo.Variable)) newInfo.Variable = replacements[newInfo.Variable];
             effect.NECEs.Add(newInfo);
         }
         
@@ -252,6 +253,7 @@ namespace DataTool.Helper {
         
         public class NECEInfo : EffectChunkInfo {
             public ulong GUID;
+            public ulong Variable;
         }
 
         public class RPCEInfo : EffectChunkInfo {

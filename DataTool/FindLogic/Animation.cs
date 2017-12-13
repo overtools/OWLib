@@ -10,6 +10,7 @@ using STULib.Types;
 using STULib.Types.AnimationList.x020;
 using STULib.Types.AnimationList.x021;
 using STULib.Types.Generic;
+using STULib.Types.Statescript.Components;
 using STULib.Types.STUUnlock;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
@@ -109,6 +110,8 @@ namespace DataTool.FindLogic {
                 AnimationInfo info = GetAnimationInfo(existingAnimations, parentAnim, replacements);
 
                 ulong lastModel = 0;
+                
+                Dictionary<ulong, List<ulong>> entityAnimationBacklog = new Dictionary<ulong, List<ulong>>();
 
                 foreach (KeyValuePair<EffectParser.ChunkPlaybackInfo,IChunk> chunk in parser.GetChunks()) {
                     if (chunk.Value == null || chunk.Value.GetType() == typeof(MemoryChunk)) continue;
@@ -140,7 +143,25 @@ namespace DataTool.FindLogic {
                     if (chunk.Value.GetType() == typeof(NECE)) {
                         NECE nece = chunk.Value as NECE;
                         if (nece == null) continue;
-                        models = Model.FindModels(models, new Common.STUGUID(nece.Data.key), replacements);
+                        models = Model.FindModels(models, new Common.STUGUID(nece.Data.Entity), replacements);
+
+                        if (entityAnimationBacklog.ContainsKey(nece.Data.EntityVariable)) {
+                            HashSet<AnimationInfo> newAnims = new HashSet<AnimationInfo>();
+                            foreach (ulong anim in entityAnimationBacklog[nece.Data.EntityVariable]) {
+                                newAnims = FindAnimations(newAnims, models, new Common.STUGUID(anim), replacements);
+                            }
+                            // this is disgusting
+                            ulong entityGUID = nece.Data.Entity;
+                            if (replacements.ContainsKey(entityGUID)) entityGUID = replacements[entityGUID];
+                            STUModelComponent model = GetInstance<STUModelComponent>(entityGUID);
+                            if (model == null) continue;
+                            ModelInfo entityModel = models.FirstOrDefault(x => (ulong)x.GUID == model.Model);
+                            if (entityModel == null) continue;
+                            entityModel.Animations = new HashSet<AnimationInfo>(entityModel.Animations.Concat(newAnims));
+                            Common.STUGUID entitySTUGUID = new Common.STUGUID(entityGUID);
+                            if (!entityModel.Entities.ContainsKey(entitySTUGUID)) continue;
+                            entityModel.Entities[entitySTUGUID].Animations = new HashSet<AnimationInfo>(entityModel.Entities[entitySTUGUID].Animations.Concat(newAnims));
+                        }
                     }
                     
                     if (chunk.Value.GetType() == typeof(SSCE)) {
@@ -168,6 +189,11 @@ namespace DataTool.FindLogic {
                         if (cece.Data.Animation == 0 || cece.Data.EntityVariable == 0) continue;
                         HashSet<AnimationInfo> newAnims = new HashSet<AnimationInfo>();
                         newAnims = FindAnimations(newAnims, models, new Common.STUGUID(cece.Data.Animation), replacements);
+
+                        ulong anim = cece.Data.Animation;
+                        if (replacements.ContainsKey(anim)) anim = replacements[anim];
+                        if (!entityAnimationBacklog.ContainsKey(cece.Data.EntityVariable)) entityAnimationBacklog[cece.Data.EntityVariable] = new List<ulong>();
+                        entityAnimationBacklog[cece.Data.EntityVariable].Add(anim);
                         
                         // if (GUID.Index(cece.Data.Animation) == 0x371B) Debugger.Break();
                         

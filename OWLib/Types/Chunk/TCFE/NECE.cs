@@ -8,8 +8,8 @@ namespace OWLib.Types.Chunk {
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public ulong key;
-            public ulong unknown;
+            public ulong Entity;
+            public ulong EntityVariable;
         }
 
         public Structure Data { get; private set; }

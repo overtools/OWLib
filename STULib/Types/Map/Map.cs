@@ -23,9 +23,9 @@ namespace STULib.Types.Map {
         }
 
         private void AlignPositionNew(BinaryReader reader, Version1 stu) {
-            int maxOffset = stu.Records.Max(x => x.Offset);
-            Generic.Version1.STUInstanceRecord record = stu.Records.FirstOrDefault(x => x.Offset == maxOffset);
-            for (int i = record.Offset; i < reader.BaseStream.Length; i++) {
+            long maxOffset = stu.Records.Max(x => x.Offset)+stu.Start;
+            for (long i = maxOffset+4; i < reader.BaseStream.Length; i++) {
+                reader.BaseStream.Position = i;
                 if (reader.BaseStream.Position + 4 > reader.BaseStream.Length) {
                     reader.BaseStream.Position = reader.BaseStream.Length;
                     break;
@@ -35,7 +35,6 @@ namespace STULib.Types.Map {
                     reader.BaseStream.Position -= 4;
                     break;
                 }
-                reader.BaseStream.Position -= 3;
             }
         }
         

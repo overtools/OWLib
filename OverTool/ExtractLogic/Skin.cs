@@ -205,8 +205,8 @@ namespace OverTool.ExtractLogic {
                 }
                 NECE[] neces = chunked.GetAllOfTypeFlat<NECE>();
                 foreach (NECE nece in neces) {
-                    if (nece.Data.key > 0) {
-                        FindModels(nece.Data.key, new List<ulong>(), models, animList, layers, replace, parsed, map, handler, sound);
+                    if (nece.Data.Entity > 0) {
+                        FindModels(nece.Data.Entity, new List<ulong>(), models, animList, layers, replace, parsed, map, handler, sound);
                     }
                 }
                 CECE[] ceces = chunked.GetAllOfTypeFlat<CECE>();

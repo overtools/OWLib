@@ -201,8 +201,8 @@ namespace DataTool.FindLogic {
                 
                 NECE[] neces = chunked.GetAllOfTypeFlat<NECE>();
                 foreach (NECE nece in neces) {
-                    if (nece.Data.key > 0) {
-                        existingModels = FindModels(existingModels, new Common.STUGUID(nece.Data.key), replacements);
+                    if (nece.Data.Entity > 0) {
+                        existingModels = FindModels(existingModels, new Common.STUGUID(nece.Data.Entity), replacements);
                         // FindModels(nece.Data.key, new List<ulong>(), models, animList, layers, replace, parsed, map, handler, sound);
                     }
                 }
