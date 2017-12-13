@@ -113,7 +113,7 @@ namespace DataTool.FindLogic {
                 foreach (KeyValuePair<EffectParser.ChunkPlaybackInfo,IChunk> chunk in parser.GetChunks()) {
                     if (chunk.Value == null || chunk.Value.GetType() == typeof(MemoryChunk)) continue;
 
-                    parser.Process(info, chunk);
+                    parser.Process(info, chunk, replacements);
 
                     if (chunk.Value.GetType() == typeof(DMCE)) {
                         DMCE dmce = chunk.Value as DMCE;
