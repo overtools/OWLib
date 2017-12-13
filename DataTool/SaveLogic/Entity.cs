@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
+using System.Linq;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using OWLib;
@@ -39,11 +39,10 @@ namespace DataTool.SaveLogic {
                     writer.Write(GUID.Index(entity.GUID));
                     writer.Write(GUID.Index(entity.Model));
                     
-                    writer.Write(entity.Children.Count);
+                    writer.Write(entity.Children.Count(x => x.GUID != null && x.GUID != 0));
                     foreach (ChildEntityReference childEntityReference in entity.Children) {
                         string childFile = GetFileName(childEntityReference.GUID);
                         if (childEntityReference.GUID == null || childEntityReference.GUID == 0) {
-                            writer.Write(0ul);
                             continue;
                         }
                         if (nameOverrides.ContainsKey(childEntityReference.GUID)) {
