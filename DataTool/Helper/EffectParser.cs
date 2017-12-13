@@ -92,7 +92,7 @@ namespace DataTool.Helper {
             EffectChunkComponent lastComponent = null;
             IChunk lastChunk = null;
             for (int i = 0; i < Chunk.Chunks.Count; i++) {
-                if (Chunk.Chunks[i].GetType() == typeof(EffectChunkComponent)) {
+                if (Chunk?.Chunks[i]?.GetType() == typeof(EffectChunkComponent)) {
                     lastComponent = Chunk.Chunks[i] as EffectChunkComponent;
                     continue;
                 }
@@ -169,6 +169,7 @@ namespace DataTool.Helper {
 
         public void Process(EffectInfo effectInfo, KeyValuePair<ChunkPlaybackInfo, IChunk> chunk, Dictionary<ulong, ulong> replacements) {
             if (effectInfo == null) return;
+            if (chunk.Value == null) return;
             if (chunk.Value.GetType() == typeof(TCFE)) {
                 TCFE tcfe = chunk.Value as TCFE;
                 if (tcfe == null) return; 
@@ -220,7 +221,7 @@ namespace DataTool.Helper {
                 SSCE ssce = chunk.Value as SSCE;
                 if (ssce == null) return;
 
-                AddSSCE(effectInfo, ssce, chunk.Key.PreviousChunk.GetType(), replacements);
+                AddSSCE(effectInfo, ssce, chunk.Key.PreviousChunk?.GetType(), replacements);
             }
         }
 
