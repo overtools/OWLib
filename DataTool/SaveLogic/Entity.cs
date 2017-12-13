@@ -42,8 +42,12 @@ namespace DataTool.SaveLogic {
                     writer.Write(entity.Children.Count);
                     foreach (ChildEntityReference childEntityReference in entity.Children) {
                         string childFile = GetFileName(childEntityReference.GUID);
+                        if (childEntityReference.GUID == null || childEntityReference.GUID == 0) {
+                            writer.Write(0ul);
+                            continue;
+                        }
                         if (nameOverrides.ContainsKey(childEntityReference.GUID)) {
-                            childFile = nameOverrides[childEntityReference.GUID];
+                            childFile = GetValidFilename(nameOverrides[childEntityReference.GUID]);
                         }
                         writer.Write(childFile);
                         writer.Write((ulong)childEntityReference.Hardpoint);
@@ -85,7 +89,7 @@ namespace DataTool.SaveLogic {
                         continue;
                     }           
                     string entityName = entity.GUID.ToString();
-                    if (entityNames.ContainsKey(entity.GUID)) entityName = entityNames[entity.GUID];
+                    if (entityNames.ContainsKey(entity.GUID)) entityName = GetValidFilename(entityNames[entity.GUID]);
                     string basePath = Path.Combine(path, entityName);
                     CreateDirectoryFromFile($"{basePath}\\GabeN");
                     using (Stream fileStream =
@@ -105,7 +109,7 @@ namespace DataTool.SaveLogic {
             Effect.OWAnimWriter owAnimWriter = new Effect.OWAnimWriter();
             if (entityNames == null && isReference) throw new Exception("Entity names were not given to SaveLogic.Entity.SaveAnimations(isReference=false)");
             foreach (AnimationInfo animation in animations) {
-                string name = animation.Name;
+                string name = GetValidFilename(animation.Name);
                 if (name == null) name = GUID.LongKey(animation.GUID).ToString("X12");
                 CreateDirectoryFromFile($"{path}\\{dirname}\\{name}\\drfdfd");
                 using (Stream fileStream =

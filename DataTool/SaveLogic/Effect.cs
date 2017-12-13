@@ -91,7 +91,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(neceInfo.GUID);
                     string entityName = $"{GetFileName(neceInfo.GUID)}";
                     if (entityNames.ContainsKey(new Common.STUGUID(neceInfo.GUID))) {
-                        entityName = entityNames[new Common.STUGUID(neceInfo.GUID)];
+                        entityName = GetValidFilename(entityNames[new Common.STUGUID(neceInfo.GUID)]);
                     }
                     
                     writer.Write($"Entities\\{entityName}\\{entityName}.owentity");
