@@ -508,7 +508,7 @@ namespace DataTool.SaveLogic {
                             Quaternion rot = mat.ExtractRotation();
 
 
-                            if (skeleton != null) {
+                            /*if (skeleton != null) {
                                 int index = skeleton.IDs.TakeWhile(id => id != GUID.Index(hp.GUIDx012)).Count();
 
                                 if (index != skeleton.IDs.Length) {
@@ -519,7 +519,7 @@ namespace DataTool.SaveLogic {
                                     // Quaternion parRot = RefPoseWriter.GetRotTest(skeleton, (short)index, hierarchy);
                                     rot -= parRot;
                                 }
-                            }
+                            }*/
                             
                             // rot.W -= parRot.W;
                             // rot.X -= parRot.W;

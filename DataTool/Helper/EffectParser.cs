@@ -167,6 +167,12 @@ namespace DataTool.Helper {
                 rpceInfo.Material = mat;
             }
         }
+        
+        public static void AddSVCE(EffectInfo effect, SVCE svce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
+            SVCEInfo newInfo = new SVCEInfo {PlaybackInfo = playbackInfo, VoiceStimulus = svce.Data.VoiceStimulus};
+            if (replacements.ContainsKey(newInfo.VoiceStimulus)) newInfo.VoiceStimulus = replacements[newInfo.VoiceStimulus];
+            effect.SVCEs.Add(newInfo);
+        }
 
         public void Process(EffectInfo effectInfo, KeyValuePair<ChunkPlaybackInfo, IChunk> chunk, Dictionary<ulong, ulong> replacements) {
             if (effectInfo == null) return;
@@ -224,6 +230,12 @@ namespace DataTool.Helper {
 
                 AddSSCE(effectInfo, ssce, chunk.Key.PreviousChunk?.GetType(), replacements);
             }
+            if (chunk.Value.GetType() == typeof(SVCE)) {
+                SVCE svce = chunk.Value as SVCE;
+                if (svce == null) return;
+
+                AddSVCE(effectInfo, svce, chunk.Key, replacements);
+            }
         }
 
         public class EffectChunkInfo {
@@ -262,6 +274,10 @@ namespace DataTool.Helper {
             public ulong Material;
             public ulong TextureDefiniton;
         }
+        
+        public class SVCEInfo : EffectChunkInfo {
+            public ulong VoiceStimulus;
+        }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public class EffectInfo {
@@ -271,6 +287,7 @@ namespace DataTool.Helper {
             public List<FECEInfo> FECEs;
             public List<NECEInfo> NECEs;
             public List<RPCEInfo> RPCEs;
+            public List<SVCEInfo> SVCEs;
             public ulong GUID;
 
             public float EffectLength; // seconds
@@ -286,6 +303,7 @@ namespace DataTool.Helper {
                 NECEs = new List<NECEInfo>();
                 FECEs = new List<FECEInfo>();
                 RPCEs = new List<RPCEInfo>();
+                SVCEs = new List<SVCEInfo>();
             }
         }
     }

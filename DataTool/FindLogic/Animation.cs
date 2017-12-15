@@ -17,7 +17,7 @@ using static DataTool.Helper.IO;
 
 namespace DataTool.FindLogic {
     
-    
+    [DebuggerDisplay("AnimationInfo: {" + nameof(DebuggerDisplay) + "}")]
     public class AnimationInfo : EffectParser.EffectInfo, IEquatable<AnimationInfo> {
         public Common.STUGUID Skeleton;
         public string Name;
@@ -41,6 +41,8 @@ namespace DataTool.FindLogic {
             if (obj.GetType() != this.GetType()) return false;
             return Equals((AnimationInfo) obj);
         }
+
+        internal string DebuggerDisplay => GetFileName(GUID);
     }
     
     public class Animation {
@@ -203,6 +205,12 @@ namespace DataTool.FindLogic {
                                 foreach (ChildEntityReference entityReference in entity.Value.Children) {
                                     if (entityReference.Variable == cece.Data.EntityVariable) {
                                         Model.AddGUID(models, new Common.STUGUID(entityReference.Model), new Dictionary<ulong, List<TextureInfo>>(), newAnims, replacements);
+                                        if (entityReference.GUID == null) continue;
+                                        ModelInfo entityModel = models.FirstOrDefault(x => (ulong)x.GUID == entityReference.Model);
+                                        if (entityModel == null) continue;
+                                        Common.STUGUID entitySTUGUID = new Common.STUGUID(entityReference.GUID);
+                                        if (!entityModel.Entities.ContainsKey(entitySTUGUID)) continue;
+                                        entityModel.Entities[entitySTUGUID].Animations = new HashSet<AnimationInfo>(entityModel.Entities[entitySTUGUID].Animations.Concat(newAnims));
                                     }
                                 }
                             }

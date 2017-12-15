@@ -89,6 +89,7 @@ namespace DataTool.SaveLogic {
                 foreach (EffectParser.NECEInfo neceInfo in effect.NECEs) {
                     WriteTime(writer, neceInfo.PlaybackInfo);
                     writer.Write(neceInfo.GUID);
+                    writer.Write(GUID.Index(neceInfo.Variable));
                     string entityName = $"{GetFileName(neceInfo.GUID)}";
                     if (entityNames.ContainsKey(new Common.STUGUID(neceInfo.GUID))) {
                         entityName = GetValidFilename(entityNames[new Common.STUGUID(neceInfo.GUID)]);
