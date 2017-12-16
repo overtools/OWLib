@@ -14,15 +14,58 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.FindLogic {
-    public class FoundModelInfo {
-        public HashSet<ModelInfo> Models;
-        public Dictionary<Common.STUGUID, HashSet<AnimationInfo>> LooseAnimations;
+    public class ChildEntityReference : IEquatable<ChildEntityReference> {
+        public Common.STUGUID GUID;
+        public Common.STUGUID Hardpoint;
+        public Common.STUGUID Variable;  // the entity referenced by this
+        public Common.STUGUID Model;
+
+        public ChildEntityReference(STUChildEntityDefinition def, Common.STUGUID model) {
+            GUID = def.Entity;
+            Hardpoint = def.HardPoint;
+            Variable = def.GUIDx01C;
+            Model = model;
+        }
+
+        public bool Equals(ChildEntityReference other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(GUID, other.GUID) && Equals(Hardpoint, other.Hardpoint) && Equals(Variable, other.Variable);
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ChildEntityReference) obj);
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                int hashCode = (GUID != null ? GUID.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Hardpoint != null ? Hardpoint.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Variable != null ? Variable.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
+
+    public class EntityInfo {
+        public Common.STUGUID GUID;
+        public HashSet<ChildEntityReference> Children;
+        public HashSet<AnimationInfo> Animations;
+
+        public Common.STUGUID Model;
+    }
+    
     public class ModelInfo : IEquatable<ModelInfo> {
         public Common.STUGUID GUID;
         public Common.STUGUID Skeleton;
         public HashSet<AnimationInfo> Animations;
         public HashSet<TextureInfo> Textures;
+
+        public Dictionary<Common.STUGUID, EntityInfo> Entities;  // eww, please. Future: somewhere nice for this
+        // todo: is everything an entity? even random map props?
 
         public bool Equals(ModelInfo other) {
             if (ReferenceEquals(null, other)) return false;
@@ -65,7 +108,8 @@ namespace DataTool.FindLogic {
             if (replacements != null) {
                 if (replacements.ContainsKey(newElement)) newElement = new Common.STUGUID(replacements[newElement]);
             }
-            ModelInfo newModel = new ModelInfo {GUID = newElement, Animations = animations, Textures = textures, Skeleton = skeleton};
+            ModelInfo newModel = new ModelInfo {GUID = newElement, Animations = animations, Textures = textures, 
+                Skeleton = skeleton, Entities = new Dictionary<Common.STUGUID, EntityInfo>()};
 
             if (models.All(x => !Equals(x.GUID, newModel.GUID))) {
                 models.Add(newModel);
@@ -85,10 +129,36 @@ namespace DataTool.FindLogic {
                 }
             }
         }
+
+        public static void AddEntity(HashSet<ModelInfo> models, Common.STUGUID entityGUID, Common.STUGUID modelGUID, Dictionary<ulong, ulong> replacements, HashSet<AnimationInfo> animations) {
+            if (replacements.ContainsKey(entityGUID)) entityGUID = new Common.STUGUID(replacements[entityGUID]);
+            if (replacements.ContainsKey(modelGUID)) modelGUID = new Common.STUGUID(replacements[modelGUID]);
+            ModelInfo model = models.FirstOrDefault(x => x.GUID.Equals(modelGUID));
+            if (model == null) return;
+
+            if (!model.Entities.ContainsKey(entityGUID)) {
+                model.Entities[entityGUID] = new EntityInfo {
+                    Children = new HashSet<ChildEntityReference>(),
+                    GUID = entityGUID,
+                    Model = modelGUID,
+                    Animations = animations
+                };
+            } else {
+                model.Entities[entityGUID].Animations = animations;
+            }
+        }
         
-        // public static HashSet<ModelInfo> Find(HashSet<ModelInfo> existingModels, Common.STUInstance instance) {
-        //     return null;
-        // }
+        public static void AddEntityChild(HashSet<ModelInfo> models, Common.STUGUID entityGUID, Common.STUGUID modelGUID, 
+            STUChildEntityDefinition definition, Dictionary<ulong, ulong> replacements, Common.STUGUID childModel) {
+            if (replacements.ContainsKey(entityGUID)) entityGUID = new Common.STUGUID(replacements[entityGUID]);
+            if (replacements.ContainsKey(modelGUID)) modelGUID = new Common.STUGUID(replacements[modelGUID]);
+            ModelInfo model = models.FirstOrDefault(x => x.GUID.Equals(modelGUID));
+            if (model == null) return;
+
+            if (model.Entities.ContainsKey(entityGUID)) {
+                model.Entities[entityGUID].Children.Add(new ChildEntityReference(definition, childModel));
+            }
+        }
 
         public static HashSet<ModelInfo> FindChunked(HashSet<ModelInfo> existingModels, Common.STUGUID modelGUID,
             Dictionary<ulong, ulong> replacements = null) {
@@ -108,15 +178,15 @@ namespace DataTool.FindLogic {
                 
                 DMCE[] dmces = chunked.GetAllOfTypeFlat<DMCE>();
                 foreach (DMCE dmce in dmces) {
-                    if (dmce.Data.modelKey == 0) continue;
-                    
+                    if (dmce.Data.Model == 0) continue;
+                                        
                     Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.materialKey), null, true, replacements);
+                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.Look), null, true, replacements);
                     
                     HashSet<AnimationInfo> animations = new HashSet<AnimationInfo>();
-                    animations = Animation.FindAnimations(animations, existingModels, new Common.STUGUID(dmce.Data.animationKey), replacements);
+                    animations = Animation.FindAnimations(animations, existingModels, new Common.STUGUID(dmce.Data.Animation), replacements);
                     
-                    AddGUID(existingModels, new Common.STUGUID(dmce.Data.modelKey), textures, animations, replacements);
+                    AddGUID(existingModels, new Common.STUGUID(dmce.Data.Model), textures, animations, replacements);
                     
                     // if (animList != null && !animList.ContainsKey(dmce.Data.animationKey) && dmce.Data.animationKey != 0) {
                     //     if (replace.ContainsKey(dmce.Data.animationKey)) {
@@ -131,8 +201,8 @@ namespace DataTool.FindLogic {
                 
                 NECE[] neces = chunked.GetAllOfTypeFlat<NECE>();
                 foreach (NECE nece in neces) {
-                    if (nece.Data.key > 0) {
-                        existingModels = FindModels(existingModels, new Common.STUGUID(nece.Data.key), replacements);
+                    if (nece.Data.Entity > 0) {
+                        existingModels = FindModels(existingModels, new Common.STUGUID(nece.Data.Entity), replacements);
                         // FindModels(nece.Data.key, new List<ulong>(), models, animList, layers, replace, parsed, map, handler, sound);
                     }
                 }
@@ -182,34 +252,49 @@ namespace DataTool.FindLogic {
 
             switch (GUID.Type(modelGUID)) {
                 case 0x03:
-                    STUStatescriptComponentMaster container = GetInstance<STUStatescriptComponentMaster>(modelGUID);
-                    HashSet<AnimationInfo> animationBank = new HashSet<AnimationInfo>();
+                    STUEntityDefinition container = GetInstance<STUEntityDefinition>(modelGUID);
                     if (container == null) break;
-                    foreach (KeyValuePair<ulong, STUStatescriptComponent> statescriptComponent in container.Components) {
-                        STUStatescriptComponent component = statescriptComponent.Value;
+                    Common.STUGUID entityModel = null;
+                    HashSet<AnimationInfo> animations = new HashSet<AnimationInfo>();
+                    foreach (KeyValuePair<ulong, STUEntityComponent> statescriptComponent in container.Components.OrderBy(x => x.Value?.GetType() != typeof(STUModelComponent))) {
+                        STUEntityComponent component = statescriptComponent.Value;
                         if (component == null) continue;
                         if (component.GetType() == typeof(STUModelComponent)) {
                             STUModelComponent modelComponent = component as STUModelComponent;
                             Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                            textures = Texture.FindTextures(textures, modelComponent?.Material, null, true, replacements);
+                            textures = Texture.FindTextures(textures, modelComponent?.Look, null, true, replacements);
                             
-                            HashSet<AnimationInfo> animations = new HashSet<AnimationInfo>();
-                            animations = Animation.FindAnimations(animations, existingModels, modelComponent?.AnimationList, replacements);
-                            animations = new HashSet<AnimationInfo>(animations.Concat(animationBank));
+                            entityModel = modelComponent?.Model;
+                            
+                            AddEntity(existingModels, modelGUID, entityModel, replacements, new HashSet<AnimationInfo>());
+                            
+                            if (container.Children != null) {
+                                foreach (STUChildEntityDefinition entityChild in container.Children) {
+                                    existingModels = FindModels(existingModels, entityChild?.Entity, replacements);
+                                    if (entityModel != null && entityChild != null) {
+                                        STUModelComponent childModelComponent = GetInstance<STUModelComponent>(entityChild.Entity);
+                                        AddEntityChild(existingModels, modelGUID, entityModel, entityChild, replacements, childModelComponent?.Model);
+                                    }
+                                }
+                            }
+                            
+                            animations = Animation.FindAnimations(animations, existingModels, modelComponent?.AnimBlendTreeSet, replacements);
                             
                             List<TextureInfo> textureList = new List<TextureInfo>();
                             foreach (KeyValuePair<ulong,List<TextureInfo>> pair in textures) {
                                 textureList.AddRange(pair.Value);
                             }
                             AddGUID(existingModels, modelComponent?.Model, new HashSet<TextureInfo>(textureList), animations, replacements, modelComponent.Skeleton);
+                            
+                            AddEntity(existingModels, modelGUID, entityModel, replacements, animations);
+                            
                             // AddGUID(models, newElement, new HashSet<TextureInfo>(textureList), animations, replacements, skeleton);
                             
-                            existingModels = FindModels(existingModels, modelComponent?.Material, replacements);  // get all referenced models
+                            existingModels = FindModels(existingModels, modelComponent?.Look, replacements);  // get all referenced models
                         }
-                        animationBank?.Clear(); // todo: yes?
-                        if (component.GetType() == typeof(STUStatescriptSubreferenceComponent)) {  // 003 sub-reference
-                            STUStatescriptSubreferenceComponent sub003 = component as STUStatescriptSubreferenceComponent;
-                            existingModels = FindModels(existingModels, sub003?.GUIDx003, replacements);
+                        if (component.GetType() == typeof(STUFirstPersonComponent)) {  // 003 sub-reference
+                            STUFirstPersonComponent sub003 = component as STUFirstPersonComponent;
+                            existingModels = FindModels(existingModels, sub003?.Entity, replacements);
                         }
                         if (component.GetType() == typeof(STUSecondaryEffectComponent)) {
                             STUSecondaryEffectComponent secondaryEffectComponent = component as STUSecondaryEffectComponent;
@@ -229,17 +314,20 @@ namespace DataTool.FindLogic {
                         }
                         if (component.GetType() == typeof(STUAnimationCoreferenceComponent)) {
                             STUAnimationCoreferenceComponent ssAnims = component as STUAnimationCoreferenceComponent;
-                            // todo: assumed: next component is model
                             if (ssAnims?.Animations == null) continue;
                             foreach (STUAnimationCoreferenceComponentAnimation ssAnim in ssAnims.Animations) {
-                                animationBank = Animation.FindAnimations(animationBank, existingModels, ssAnim.Animation, replacements);
+                                animations = Animation.FindAnimations(animations, existingModels, ssAnim.Animation, replacements);
                             }
                         }
-                    }
-                    if (container.SubComponents != null) {
-                        foreach (STUSubComponentReferenceComponent subModelReference in container.SubComponents) {
-                            existingModels = FindModels(existingModels, subModelReference?.GUIDx003, replacements);
+                        if (component.GetType() == typeof(STUUnlockComponent)) {
+                            STUUnlockComponent ssUnlock = component as STUUnlockComponent;
+                            animations = Animation.FindAnimations(animations, existingModels, ssUnlock.Unlock, replacements);
                         }
+                    }
+                    
+                    if (entityModel != null) {  // we want all anims
+                        AddGUID(existingModels, entityModel, new Dictionary<ulong, List<TextureInfo>>(), animations, replacements);
+                        AddEntity(existingModels, modelGUID, entityModel, replacements, animations);
                     }
                     break;
                 case 0x0D:
@@ -256,6 +344,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0x0C:
                     AddGUID(existingModels, modelGUID, new Dictionary<ulong, List<TextureInfo>>(), null, replacements);
+                    // existingModels = FindChunked(existingModels, modelGUID, replacements);
                     break;
                 case 0x1B:
                     ISTU stuTemp = OpenSTUSafe(modelGUID);

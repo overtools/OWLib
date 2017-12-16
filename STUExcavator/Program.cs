@@ -179,15 +179,15 @@ namespace STUExcavator {
                 SerializationType = SerializationType.Unknown
             };
 
-            if (type != 0xBC) return asset;
-
             using (Stream file = IO.OpenFile(guid)) {
+                if (file == null) return asset;
                 using (BinaryReader reader = new BinaryReader(file)) {
                     if (Version1.IsValidVersion(reader)) {
                         reader.BaseStream.Position = 0;
                         asset.SerializationType = SerializationType.STUv1;
-                        
+                        asset.STUInstances = new HashSet<string>();
                         asset.GUIDs = new HashSet<string>();
+                        
                         reader.BaseStream.Position = 0;
                         
                         // try and auto detect padding that is before a guid
@@ -242,6 +242,9 @@ namespace STUExcavator {
                             if (stuVersion2 != null) {
                                 asset.GUIDs = GetGUIDs(stuVersion2);
                                 // broken: todo
+                                // foreach (uint typeHash in stuVersion2.TypeHashes) {
+                                //     asset.STUInstances.Add(typeHash.ToString("X8"));
+                                // }
                                 foreach (Common.STUInstance stuInstance in stuVersion2.Instances.Concat(stuVersion2.HiddenInstances)) {
                                     STUAttribute attr = stuInstance?.GetType().GetCustomAttributes<STUAttribute>().FirstOrDefault();
                                     if (attr == null) continue;
@@ -289,6 +292,11 @@ namespace STUExcavator {
                 if (asset.GUIDs == null) continue;
                 foreach (string assetGUID in asset.GUIDs) {
                     summary.GUIDTypes.Add(assetGUID.Split('.')[1]);
+                }
+                if (asset.STUInstances != null) {
+                    foreach (string instance in asset.STUInstances) {
+                        summary.STUInstanceTypes.Add(instance);
+                    }
                 }
                 // broken: todo
                 // if (asset.STUInstances != null) {

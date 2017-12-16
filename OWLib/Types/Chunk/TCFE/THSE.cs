@@ -8,7 +8,7 @@ namespace OWLib.Types.Chunk {
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public ulong GUIDx03C;
+            public ulong Hardpoint;
         }
 
         public Structure Data { get; private set; }

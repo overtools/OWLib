@@ -23,17 +23,17 @@ namespace OWLib.Writer {
             foreach (KeyValuePair<ulong, List<ImageLayer>> layer in layers) {
                 nameMap[layer.Key] = new Dictionary<ulong, string>();
                 foreach (ImageLayer image in layer.Value) {
-                    string old = $"{GUID.LongKey(image.key):X12}.dds";
+                    string old = $"{GUID.LongKey(image.Key):X12}.dds";
                     if (typeData != null) {
                         try {
-                            nameMap[layer.Key].Add(image.key, typeData.First(new Func<KeyValuePair<string, TextureType>, bool>(delegate (KeyValuePair<string, TextureType> input) {
+                            nameMap[layer.Key].Add(image.Key, typeData.First(new Func<KeyValuePair<string, TextureType>, bool>(delegate (KeyValuePair<string, TextureType> input) {
                                 return Path.GetFileName(input.Key).ToUpperInvariant() == old.ToUpperInvariant();
                             })).Key);
                         } catch {
-                            nameMap[layer.Key].Add(image.key, old);
+                            nameMap[layer.Key].Add(image.Key, old);
                         }
                     } else {
-                        nameMap[layer.Key].Add(image.key, old);
+                        nameMap[layer.Key].Add(image.Key, old);
                     }
                 }
             }
@@ -44,7 +44,7 @@ namespace OWLib.Writer {
                     writer.WriteLine("Kd 1 1 1");
 
                     foreach (ImageLayer layer in pair.Value) {
-                        writer.WriteLine("map_Kd \"{0}\"", nameMap[pair.Key][layer.key]);
+                        writer.WriteLine("map_Kd \"{0}\"", nameMap[pair.Key][layer.Key]);
                     }
                     writer.WriteLine("");
                 }

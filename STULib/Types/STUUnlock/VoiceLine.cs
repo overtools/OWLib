@@ -8,6 +8,6 @@ namespace STULib.Types.STUUnlock {
         public STUGUID EffectResource;
 
         [STUField(0x1B25AB90)]
-        public STUDecalReference CosmeticUnknownDecal;
+        public STUEffectReference CosmeticUnknownEffect;
     }
 }

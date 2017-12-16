@@ -193,7 +193,7 @@ namespace OverTool {
                                     origTextures[materialId] = new HashSet<ulong>();
                                 }
                                 foreach (ImageLayer layer in sublayers) {
-                                    origTextures[materialId].Add(layer.key);
+                                    origTextures[materialId].Add(layer.Key);
                                 }
                             }
 
@@ -202,13 +202,13 @@ namespace OverTool {
                                 List<ImageLayer> sublayers = kv.Value;
                                 HashSet<ulong> materialParsed = new HashSet<ulong>();
                                 foreach (ImageLayer layer in sublayers) {
-                                    if (!materialParsed.Add(layer.key)) {
+                                    if (!materialParsed.Add(layer.Key)) {
                                         continue;
                                     }
-                                    if (origTextures.ContainsKey(materialId) && origTextures[materialId].Contains(layer.key)) {
+                                    if (origTextures.ContainsKey(materialId) && origTextures[materialId].Contains(layer.Key)) {
                                         continue;
                                     }
-                                    ExtractLogic.Skin.SaveTexture(layer.key, materialId, map, handler, output_real, quiet, "");
+                                    ExtractLogic.Skin.SaveTexture(layer.Key, materialId, map, handler, output_real, quiet, "");
                                 }
                             }
                         }

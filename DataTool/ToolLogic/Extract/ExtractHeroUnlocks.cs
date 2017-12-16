@@ -43,7 +43,7 @@ namespace DataTool.ToolLogic.Extract {
         }
     }
     
-    [Tool("extract-unlocks", Description = "Extract all heroes sprays and icons", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-unlocks", Description = "Extract hero cosmetics", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
@@ -144,20 +144,18 @@ namespace DataTool.ToolLogic.Extract {
             Log("Initializing...");
 
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
-            if (parsedTypes == null) {
-                Log("Found nufin of use while parsing query :/");
-                return;
-            };
+            if (parsedTypes == null) return;
 
             foreach (STUHero hero in heroes) {
-                string heroFileName = GetValidFilename(GetString(hero.Name));
                 string heroNameActual = GetString(hero.Name);
+                string heroFileName = GetValidFilename(heroNameActual);
 
                 if (heroFileName == null) {
                     continue;
                     // heroFileName = "Unknown";
                     // heroNameActual = "Unknown";
-                } 
+                }
+                heroNameActual = heroNameActual.TrimEnd(' ');
 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
                 foreach (string key in new [] {heroNameActual.ToLowerInvariant(), "*"}) {
@@ -264,7 +262,7 @@ namespace DataTool.ToolLogic.Extract {
                             SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\{RootDir}", hero, itemInfo.Rarity, itemInfo.Unlock as Skin, weaponSkins, abilities, false);
                         }
                         if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
+                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
                         }
                         if (itemInfo.Type == "HighlightIntro" && config.ContainsKey("highlightintro") && config["highlightintro"].ShouldDo(itemInfo.Name, tags)) {
                             SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
@@ -286,8 +284,6 @@ namespace DataTool.ToolLogic.Extract {
                 heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource4, "Avatar", true);
                 Texture.Save(flags, Path.Combine(basePath, RootDir, heroFileName, "GUI"), heroTextures);
             }
-            
-            Log("DONE");
         }
     }
 }

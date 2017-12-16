@@ -39,6 +39,69 @@
       }
     ]
   },
+  "STU_C66347E5": {
+    "parent": "STU_A3C7077A",
+    "fields": [
+      {
+        "name": "CDBFC5EC",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "7E1EF4A3",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "2997BBEC",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "6EE70996",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "09E32A58",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "F0A9405A",
+        "type": "STU_8880FCB0",
+        "serializationType": 12
+      },
+      {
+        "name": "B999DDE2",
+        "type": "STU_58B3D0D0",
+        "serializationType": 12
+      },
+      {
+        "name": "02C2A46E",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "6C7256B5",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "8C565BF8",
+        "type": "u32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "18E97C4F",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      }
+    ]
+  },
   "STU_1150B023": {
     "parent": "STU_79862BCB",
     "fields": [
@@ -72,6 +135,16 @@
   "STU_8AEB560C": {
     "parent": "STU_E526E527",
     "fields": []
+  },
+  "STU_A3B38D9A": {
+    "parent": "STU_05BDD390",
+    "fields": [
+      {
+        "name": "F0A9405A",
+        "type": "STU_8880FCB0",
+        "serializationType": 12
+      }
+    ]
   },
   "STU_AC3BAAC0": {
     "parent": null,
@@ -575,7 +648,7 @@
     "parent": "STU_C87931B7",
     "fields": [
       {
-        "name": "C2C6DE6C",
+        "name": "E5AB8EC2",
         "type": "STU_584171B6",
         "serializationType": 5
       },
@@ -602,6 +675,22 @@
         "name": "A473820A",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_7E679B3A": {
+    "parent": "STU_A3C7077A",
+    "fields": [
+      {
+        "name": "B999DDE2",
+        "type": "STU_58B3D0D0",
+        "serializationType": 12
+      },
+      {
+        "name": "B14EAA65",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
       }
     ]
   },
@@ -734,6 +823,41 @@
         "serializationType": 4
       },
       {
+        "name": "EB462D7C",
+        "type": "STU_B613AECA",
+        "serializationType": 4
+      },
+      {
+        "name": "D9D02CA5",
+        "type": "STU_B613AECA",
+        "serializationType": 4
+      },
+      {
+        "name": "9B7C785F",
+        "type": "STU_B613AECA",
+        "serializationType": 4
+      },
+      {
+        "name": "56245E69",
+        "type": "STU_B613AECA",
+        "serializationType": 4
+      },
+      {
+        "name": "75C0E47F",
+        "type": "STU_B613AECA",
+        "serializationType": 4
+      },
+      {
+        "name": "48D33BE0",
+        "type": "STU_B613AECA",
+        "serializationType": 4
+      },
+      {
+        "name": "421D1156",
+        "type": "STU_B613AECA",
+        "serializationType": 4
+      },
+      {
         "name": "91B7E896",
         "type": "u32",
         "serializationType": 0,
@@ -831,6 +955,24 @@
       },
       {
         "name": "87A14B59",
+        "type": "u32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "7A281A63",
+        "type": "u32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "2C90A151",
+        "type": "u32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "5DD209BE",
         "type": "u32",
         "serializationType": 0,
         "size": 4
@@ -1624,6 +1766,11 @@
         "name": "B64D5A14",
         "type": "STU_871BD3D0",
         "serializationType": 12
+      },
+      {
+        "name": "F2C4BBBC",
+        "type": "STU_866672AD",
+        "serializationType": 12
       }
     ]
   },
@@ -2325,6 +2472,11 @@
         "serializationType": 12
       },
       {
+        "name": "2EE47073",
+        "type": "STU_6BA402D7",
+        "serializationType": 13
+      },
+      {
         "name": "6F28B37B",
         "type": "f32",
         "serializationType": 0,
@@ -2377,6 +2529,11 @@
       {
         "name": "172CAE5E",
         "type": "STU_92389E46",
+        "serializationType": 12
+      },
+      {
+        "name": "95BD9624",
+        "type": "STU_D2929F20",
         "serializationType": 12
       },
       {
@@ -2712,6 +2869,11 @@
         "serializationType": 2
       },
       {
+        "name": "734C4A34",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
         "name": "6A79BD98",
         "type": "STU_D05AEF31",
         "serializationType": 2
@@ -2775,6 +2937,21 @@
         "name": "5180E750",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_686D7705": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "4D6047C9",
+        "type": "teString",
+        "serializationType": 0
+      },
+      {
+        "name": "13AEA600",
+        "type": "STU_20AD1072",
+        "serializationType": 12
       }
     ]
   },
@@ -2906,6 +3083,16 @@
       }
     ]
   },
+  "STU_6B27224F": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "BD725DD2",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_DEA278FD": {
     "parent": "STU_1482DDBB",
     "fields": []
@@ -2955,6 +3142,11 @@
       },
       {
         "name": "ACEBA02F",
+        "type": "s32",
+        "serializationType": 1
+      },
+      {
+        "name": "7DB92D38",
         "type": "s32",
         "serializationType": 1
       },
@@ -3445,143 +3637,9 @@
     "parent": "STU_25C4F930",
     "fields": []
   },
-  "STU_596CBC50": {
-    "parent": "STU_2549D83D",
-    "fields": [
-      {
-        "name": "E1C63905",
-        "type": "teString",
-        "serializationType": 0
-      },
-      {
-        "name": "5F18C11B",
-        "type": "teString",
-        "serializationType": 0
-      },
-      {
-        "name": "A0A73A8E",
-        "type": "File Reference",
-        "serializationType": 10
-      },
-      {
-        "name": "0C7C2A2C",
-        "type": "teString",
-        "serializationType": 0
-      },
-      {
-        "name": "2EDDE612",
-        "type": "u64",
-        "serializationType": 0,
-        "size": 8
-      },
-      {
-        "name": "2A5470AF",
-        "type": "u64",
-        "serializationType": 0,
-        "size": 8
-      },
-      {
-        "name": "675DADFD",
-        "type": "STU_A0BDC3D3",
-        "serializationType": 2
-      },
-      {
-        "name": "2FC8D391",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "16F17EC3",
-        "type": "s32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "C1CB4927",
-        "type": "s32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "C0742B1E",
-        "type": "s32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "F786B277",
-        "type": "s32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "B7CF77F0",
-        "type": "s32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "A78EA96A",
-        "type": "s32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "5A896DCB",
-        "type": "s32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "2BE29900",
-        "type": "u8",
-        "serializationType": 0,
-        "size": 1
-      },
-      {
-        "name": "14A2AA48",
-        "type": "u8",
-        "serializationType": 0,
-        "size": 1
-      },
-      {
-        "name": "C071D1B3",
-        "type": "u8",
-        "serializationType": 0,
-        "size": 1
-      },
-      {
-        "name": "AF14BA44",
-        "type": "u8",
-        "serializationType": 0,
-        "size": 1
-      },
-      {
-        "name": "BE13929A",
-        "type": "u8",
-        "serializationType": 0,
-        "size": 1
-      },
-      {
-        "name": "67239DA3",
-        "type": "u8",
-        "serializationType": 0,
-        "size": 1
-      },
-      {
-        "name": "1F241458",
-        "type": "u8",
-        "serializationType": 0,
-        "size": 1
-      },
-      {
-        "name": "568DEF96",
-        "type": "u8",
-        "serializationType": 0,
-        "size": 1
-      }
-    ]
+  "STU_18D3FC1E": {
+    "parent": "STU_7639CFC1",
+    "fields": []
   },
   "STU_0539C988": {
     "parent": null,
@@ -3687,6 +3745,21 @@
         "type": "u8",
         "serializationType": 0,
         "size": 1
+      }
+    ]
+  },
+  "STU_2AB3F306": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "E62F36ED",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "0468C6D4",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
       }
     ]
   },
@@ -3963,6 +4036,11 @@
         "serializationType": 2
       },
       {
+        "name": "B8DC6D46",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
         "name": "3E3E203A",
         "type": "STU_D05AEF31",
         "serializationType": 2
@@ -4048,6 +4126,12 @@
         "type": "F510AF64",
         "serializationType": 8,
         "size": 4
+      },
+      {
+        "name": "6A3C1510",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -4139,6 +4223,16 @@
         "name": "45A7A69C",
         "type": "STU_A8EFC6F0",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_4A7A3740": {
+    "parent": "STU_2F33B1B7",
+    "fields": [
+      {
+        "name": "EB4F2408",
+        "type": "STU_494C33C4",
+        "serializationType": 12
       }
     ]
   },
@@ -4695,6 +4789,16 @@
       }
     ]
   },
+  "STU_54C9354E": {
+    "parent": "STU_7C27312D",
+    "fields": [
+      {
+        "name": "BA10B1B7",
+        "type": "teString",
+        "serializationType": 0
+      }
+    ]
+  },
   "STU_D98AE419": {
     "parent": null,
     "fields": [
@@ -4875,10 +4979,66 @@
         "size": 1
       },
       {
+        "name": "11012D0E",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
         "name": "5E009A60",
         "type": "u8",
         "serializationType": 0,
         "size": 1
+      }
+    ]
+  },
+  "STU_5BB2E270": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "B8DC6D46",
+        "type": "STU_8880FCB0",
+        "serializationType": 12
+      },
+      {
+        "name": "5DB91CE2",
+        "type": "File Reference",
+        "serializationType": 10
+      },
+      {
+        "name": "91346D6A",
+        "type": "STU_9CADF2EC",
+        "serializationType": 12
+      },
+      {
+        "name": "11C761F7",
+        "type": "u64",
+        "serializationType": 0,
+        "size": 8
+      },
+      {
+        "name": "8BEA8931",
+        "type": "teColorRGB",
+        "serializationType": 0,
+        "size": 12
+      },
+      {
+        "name": "14AFB2CB",
+        "type": "teColorRGB",
+        "serializationType": 0,
+        "size": 12
+      },
+      {
+        "name": "7E541DD0",
+        "type": "s32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "FEF3D903",
+        "type": "7E56FB0C",
+        "serializationType": 8,
+        "size": 4
       }
     ]
   },
@@ -5523,6 +5683,12 @@
         "size": 1
       },
       {
+        "name": "46544BA5",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
         "name": "881FEF39",
         "type": "u8",
         "serializationType": 0,
@@ -5864,6 +6030,11 @@
       },
       {
         "name": "725BDE79",
+        "type": "STU_BEE7F20E",
+        "serializationType": 4
+      },
+      {
+        "name": "628453C7",
         "type": "STU_BEE7F20E",
         "serializationType": 4
       },
@@ -6684,6 +6855,10 @@
     "parent": null,
     "fields": []
   },
+  "STU_41043472": {
+    "parent": "STU_7639CFC1",
+    "fields": []
+  },
   "STU_544E0DF6": {
     "parent": "STU_81C5DE19",
     "fields": [
@@ -7112,6 +7287,18 @@
       },
       {
         "name": "F6F2DEAD",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "77376E3F",
+        "type": "32092706",
+        "serializationType": 8,
+        "size": 4
+      },
+      {
+        "name": "81E9F6B4",
         "type": "f32",
         "serializationType": 0,
         "size": 4
@@ -7669,6 +7856,12 @@
         "type": "u8",
         "serializationType": 0,
         "size": 1
+      },
+      {
+        "name": "6A3C1510",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -7704,6 +7897,17 @@
         "name": "3CE40E49",
         "type": "6015ADE0",
         "serializationType": 8,
+        "size": 4
+      }
+    ]
+  },
+  "STU_D4A018B8": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "19B2212F",
+        "type": "f32",
+        "serializationType": 0,
         "size": 4
       }
     ]
@@ -7830,6 +8034,23 @@
   "STU_EAB333BD": {
     "parent": null,
     "fields": []
+  },
+  "STU_8C9D16A7": {
+    "parent": "STU_54D6A5F9",
+    "fields": [
+      {
+        "name": "1BC86576",
+        "type": "teUUID",
+        "serializationType": 0,
+        "size": 16
+      },
+      {
+        "name": "1031108F",
+        "type": "u64",
+        "serializationType": 0,
+        "size": 8
+      }
+    ]
   },
   "STU_9D7BF987": {
     "parent": "STU_7C37840C",
@@ -8803,6 +9024,12 @@
         "type": "u8",
         "serializationType": 0,
         "size": 1
+      },
+      {
+        "name": "0582B0E4",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -9008,6 +9235,12 @@
         "type": "u8",
         "serializationType": 0,
         "size": 1
+      },
+      {
+        "name": "32BA39E1",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -9187,8 +9420,8 @@
     "parent": null,
     "fields": [
       {
-        "name": "C2C6DE6C",
-        "type": "STU_2B8093CD",
+        "name": "382CEEC3",
+        "type": "STU_986157CD",
         "serializationType": 13
       },
       {
@@ -9550,6 +9783,10 @@
       }
     ]
   },
+  "STU_194690C0": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_3CC8C779": {
     "parent": "STU_81C5DE19",
     "fields": [
@@ -9577,6 +9814,21 @@
         "name": "90119470",
         "type": "STU_53908303",
         "serializationType": 12
+      }
+    ]
+  },
+  "STU_8EC26F6B": {
+    "parent": "STU_4B6F9A4C",
+    "fields": [
+      {
+        "name": "22CD8803",
+        "type": "STU_C66347E5",
+        "serializationType": 4
+      },
+      {
+        "name": "D697B92C",
+        "type": "STU_D11C922F",
+        "serializationType": 4
       }
     ]
   },
@@ -9857,6 +10109,26 @@
       }
     ]
   },
+  "STU_59F0F9EE": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "028C7C53",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "3890919E",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "79761FAE",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_5DCFD203": {
     "parent": "STU_5861C542",
     "fields": [
@@ -9881,6 +10153,75 @@
         "type": "8F2CDF51",
         "serializationType": 8,
         "size": 4
+      },
+      {
+        "name": "EB5492C4",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      }
+    ]
+  },
+  "STU_C3132DC7": {
+    "parent": "STU_A3C7077A",
+    "fields": [
+      {
+        "name": "F0A9405A",
+        "type": "STU_8880FCB0",
+        "serializationType": 12
+      },
+      {
+        "name": "B999DDE2",
+        "type": "STU_58B3D0D0",
+        "serializationType": 12
+      },
+      {
+        "name": "7943D34C",
+        "type": "teColorRGB",
+        "serializationType": 0,
+        "size": 12
+      },
+      {
+        "name": "76A0AE13",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "D551B44D",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "AA110E15",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "A47A57FE",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "4AB9A663",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "0B5FF93C",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "89D79F26",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -10320,6 +10661,10 @@
       }
     ]
   },
+  "STU_D6BB748C": {
+    "parent": "STU_7A7F2732",
+    "fields": []
+  },
   "STU_5C503B46": {
     "parent": "STU_311AE098",
     "fields": [
@@ -10624,6 +10969,11 @@
         "serializationType": 2
       },
       {
+        "name": "4086A628",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
         "name": "9524A8D6",
         "type": "STU_D05AEF31",
         "serializationType": 2
@@ -10802,6 +11152,10 @@
       }
     ]
   },
+  "STU_DEA5217E": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_0CFBAF2D": {
     "parent": "STU_1482DDBB",
     "fields": []
@@ -10963,6 +11317,16 @@
   "STU_A3B1D672": {
     "parent": "STU_53970C1C",
     "fields": []
+  },
+  "STU_3CE2BF32": {
+    "parent": "STU_7C27312D",
+    "fields": [
+      {
+        "name": "BA10B1B7",
+        "type": "STU_5DDB411A",
+        "serializationType": 2
+      }
+    ]
   },
   "STU_ABB6C23E": {
     "parent": "STU_252FDE3A",
@@ -11885,6 +12249,12 @@
       },
       {
         "name": "51ED2012",
+        "type": "s32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "BD40D10D",
         "type": "s32",
         "serializationType": 0,
         "size": 4
@@ -13355,6 +13725,54 @@
         "type": "f32",
         "serializationType": 0,
         "size": 4
+      },
+      {
+        "name": "BDFB182C",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "34BE7582",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "9CECEFA5",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "692CD028",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "D191D237",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "3AEF40B6",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "569B5D4E",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "34B5D2A5",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -14779,6 +15197,12 @@
         "size": 1
       },
       {
+        "name": "ADC54E57",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
         "name": "4A82B056",
         "type": "u8",
         "serializationType": 0,
@@ -15239,6 +15663,27 @@
       }
     ]
   },
+  "STU_024ED1FF": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "5591AF3A",
+        "type": "teString",
+        "serializationType": 0
+      },
+      {
+        "name": "374D122D",
+        "type": "STU_35AA91CE",
+        "serializationType": 12
+      },
+      {
+        "name": "366DF624",
+        "type": "u32",
+        "serializationType": 0,
+        "size": 4
+      }
+    ]
+  },
   "STU_769D90C4": {
     "parent": null,
     "fields": []
@@ -15415,6 +15860,28 @@
   "STU_2EBD79E5": {
     "parent": "STU_54D6A5F9",
     "fields": []
+  },
+  "STU_C7EA5467": {
+    "parent": "STU_7C27312D",
+    "fields": [
+      {
+        "name": "BA10B1B7",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      }
+    ]
+  },
+  "STU_AB132518": {
+    "parent": "STU_7C27312D",
+    "fields": [
+      {
+        "name": "BA10B1B7",
+        "type": "teColorRGBA",
+        "serializationType": 0,
+        "size": 16
+      }
+    ]
   },
   "STU_B29CCB6D": {
     "parent": "STU_81C5DE19",
@@ -15675,6 +16142,10 @@
   },
   "STU_DD1EC812": {
     "parent": "STU_74217D0B",
+    "fields": []
+  },
+  "STU_38E8D5F2": {
+    "parent": "STU_1482DDBB",
     "fields": []
   },
   "STU_C7CA6ECD": {
@@ -15939,6 +16410,10 @@
       }
     ]
   },
+  "STU_856F363B": {
+    "parent": "STU_E896B267",
+    "fields": []
+  },
   "STU_6CF9E181": {
     "parent": "STU_1482DDBB",
     "fields": [
@@ -16056,6 +16531,20 @@
         "size": 4
       }
     ]
+  },
+  "STU_195217A6": {
+    "parent": "STU_E4324757",
+    "fields": [
+      {
+        "name": "B8DC6D46",
+        "type": "STU_8880FCB0",
+        "serializationType": 12
+      }
+    ]
+  },
+  "STU_B36E804B": {
+    "parent": "STU_1482DDBB",
+    "fields": []
   },
   "STU_494B66C1": {
     "parent": null,
@@ -16919,6 +17408,17 @@
       }
     ]
   },
+  "STU_04E03364": {
+    "parent": "STU_7C27312D",
+    "fields": [
+      {
+        "name": "BA10B1B7",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      }
+    ]
+  },
   "STU_DA39F6FE": {
     "parent": null,
     "fields": [
@@ -17269,6 +17769,26 @@
       }
     ]
   },
+  "STU_35AA91CE": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "4227DBDA",
+        "type": "STU_7C27312D",
+        "serializationType": 3
+      },
+      {
+        "name": "D7A96218",
+        "type": "u32",
+        "serializationType": 1
+      },
+      {
+        "name": "5E1BC440",
+        "type": "STU_024ED1FF",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_295D117D": {
     "parent": "STU_1482DDBB",
     "fields": [
@@ -17487,6 +18007,12 @@
         "size": 4
       },
       {
+        "name": "39943678",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
         "name": "EDA30E4A",
         "type": "u8",
         "serializationType": 0,
@@ -17500,6 +18026,12 @@
       },
       {
         "name": "794ACECD",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "388DFDA7",
         "type": "u8",
         "serializationType": 0,
         "size": 1
@@ -17886,6 +18418,12 @@
         "size": 1
       },
       {
+        "name": "11012D0E",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
         "name": "5E009A60",
         "type": "u8",
         "serializationType": 0,
@@ -18031,6 +18569,10 @@
       }
     ]
   },
+  "STU_58DC96D7": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_F6B15AFB": {
     "parent": "STU_64C11507",
     "fields": [
@@ -18088,6 +18630,21 @@
       }
     ]
   },
+  "STU_9D8E0252": {
+    "parent": "STU_1413B6A1",
+    "fields": [
+      {
+        "name": "F291BE20",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "A1656586",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_16F7C0EA": {
     "parent": null,
     "fields": [
@@ -18100,6 +18657,22 @@
         "name": "7AB4E3F8",
         "type": "BABC4175",
         "serializationType": 8,
+        "size": 4
+      }
+    ]
+  },
+  "STU_F8D59CD0": {
+    "parent": "STU_DB63E5F8",
+    "fields": [
+      {
+        "name": "E1E200DD",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "01C08BCF",
+        "type": "f32",
+        "serializationType": 0,
         "size": 4
       }
     ]
@@ -18686,7 +19259,14 @@
   },
   "STU_32208212": {
     "parent": "STU_3006682C",
-    "fields": []
+    "fields": [
+      {
+        "name": "C3E03C7F",
+        "type": "DBF3C1B6",
+        "serializationType": 8,
+        "size": 4
+      }
+    ]
   },
   "STU_8FA61636": {
     "parent": "STU_1482DDBB",
@@ -18736,6 +19316,21 @@
   "STU_1DD78CB3": {
     "parent": "STU_B79960CE",
     "fields": []
+  },
+  "STU_1E41B675": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "00E7BB91",
+        "type": "teString",
+        "serializationType": 0
+      },
+      {
+        "name": "03376566",
+        "type": "STU_05BDD390",
+        "serializationType": 2
+      }
+    ]
   },
   "STU_01689D20": {
     "parent": "STU_9DF5D8CC",
@@ -19140,6 +19735,10 @@
       }
     ]
   },
+  "STU_29DED34F": {
+    "parent": "STU_DD856C32",
+    "fields": []
+  },
   "STU_EE25ADA5": {
     "parent": "STU_7C37840C",
     "fields": [
@@ -19396,6 +19995,12 @@
         "size": 4
       },
       {
+        "name": "E005252F",
+        "type": "FB7F61B4",
+        "serializationType": 9,
+        "size": 4
+      },
+      {
         "name": "44CE67EA",
         "type": "s32",
         "serializationType": 0,
@@ -19598,6 +20203,11 @@
         "name": "F51B70C4",
         "type": "STU_00C21225",
         "serializationType": 3
+      },
+      {
+        "name": "386B8E9C",
+        "type": "STU_04118DBD",
+        "serializationType": 12
       },
       {
         "name": "269FC4E9",
@@ -20180,6 +20790,10 @@
   },
   "STU_E68C1DAD": {
     "parent": "STU_216FE961",
+    "fields": []
+  },
+  "STU_F493471A": {
+    "parent": "STU_1482DDBB",
     "fields": []
   },
   "STU_E18C7DE7": {
@@ -21057,8 +21671,8 @@
         "serializationType": 13
       },
       {
-        "name": "DF16DB7F",
-        "type": "STU_3A9B5E90",
+        "name": "29075121",
+        "type": "STU_494C33C4",
         "serializationType": 13
       },
       {
@@ -22399,6 +23013,21 @@
       }
     ]
   },
+  "STU_9F9C100B": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "E086BB06",
+        "type": "STU_9CADF2EC",
+        "serializationType": 12
+      },
+      {
+        "name": "17C34C1B",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_6E24EE68": {
     "parent": "STU_C7C085F6",
     "fields": [
@@ -22549,6 +23178,22 @@
         "name": "C0EDD7EC",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_B5621AA7": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "5DC61E59",
+        "type": "STU_2B8093CD",
+        "serializationType": 12
+      },
+      {
+        "name": "9CDDC24D",
+        "type": "s32",
+        "serializationType": 0,
+        "size": 4
       }
     ]
   },
@@ -22812,6 +23457,17 @@
         "name": "AF2B1493",
         "type": "STU_3FBEDE0E",
         "serializationType": 5
+      }
+    ]
+  },
+  "STU_107C7E33": {
+    "parent": "STU_6D3ED020",
+    "fields": [
+      {
+        "name": "7567E07D",
+        "type": "940F45F4",
+        "serializationType": 8,
+        "size": 4
       }
     ]
   },
@@ -23358,6 +24014,11 @@
         "name": "9B309B8D",
         "type": "File Reference",
         "serializationType": 10
+      },
+      {
+        "name": "AD5A8AD7",
+        "type": "File Reference",
+        "serializationType": 10
       }
     ]
   },
@@ -23525,7 +24186,13 @@
   },
   "STU_C3AC054C": {
     "parent": "STU_6F37773E",
-    "fields": []
+    "fields": [
+      {
+        "name": "374D122D",
+        "type": "STU_35AA91CE",
+        "serializationType": 12
+      }
+    ]
   },
   "STU_C5D842D8": {
     "parent": "STU_7C37840C",
@@ -23547,6 +24214,11 @@
       },
       {
         "name": "B3FF693E",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "38E5A46A",
         "type": "STU_D05AEF31",
         "serializationType": 2
       }
@@ -23669,6 +24341,10 @@
         "serializationType": 2
       }
     ]
+  },
+  "STU_59364DB1": {
+    "parent": "STU_DD856C32",
+    "fields": []
   },
   "STU_F264A657": {
     "parent": "STU_E4324757",
@@ -24236,6 +24912,21 @@
         "name": "16B120CA",
         "type": "STU_F75654CF",
         "serializationType": 5
+      }
+    ]
+  },
+  "STU_F75FEEF0": {
+    "parent": "STU_4B6F9A4C",
+    "fields": [
+      {
+        "name": "22CD8803",
+        "type": "STU_6CA49D72",
+        "serializationType": 4
+      },
+      {
+        "name": "D697B92C",
+        "type": "STU_D11C922F",
+        "serializationType": 4
       }
     ]
   },
@@ -25783,6 +26474,21 @@
         "name": "7D8362C9",
         "type": "STU_4B093107",
         "serializationType": 2
+      },
+      {
+        "name": "C9B354ED",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "CC379567",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "05143217",
+        "type": "STU_4B093107",
+        "serializationType": 2
       }
     ]
   },
@@ -25800,11 +26506,41 @@
     "parent": "STU_C18DC9CD",
     "fields": []
   },
+  "STU_D6EB7F8D": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "B14A97B7",
+        "type": "STU_6D3ED020",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_354B9F6B": {
     "parent": "STU_67E0B08F",
     "fields": [
       {
         "name": "7E2A700B",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
+  "STU_CB6C0ED7": {
+    "parent": "STU_7A7F2732",
+    "fields": [
+      {
+        "name": "A83C2C26",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "83DD0ED5",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "4777D5EE",
         "type": "STU_D05AEF31",
         "serializationType": 2
       }
@@ -25864,32 +26600,9 @@
         "size": 16
       },
       {
-        "name": "D440A0F7",
-        "type": "STU_DE489008",
+        "name": "48FAFE22",
+        "type": "STU_DB19267C",
         "serializationType": 5
-      },
-      {
-        "name": "D4878E1C",
-        "type": "STU_FBD6EBA9",
-        "serializationType": 5
-      },
-      {
-        "name": "B34967D0",
-        "type": "u64",
-        "serializationType": 0,
-        "size": 8
-      },
-      {
-        "name": "B770BA30",
-        "type": "u64",
-        "serializationType": 0,
-        "size": 8
-      },
-      {
-        "name": "F97A13C6",
-        "type": "s32",
-        "serializationType": 0,
-        "size": 4
       }
     ]
   },
@@ -26193,6 +26906,21 @@
       }
     ]
   },
+  "STU_CF6A8191": {
+    "parent": "STU_7C37840C",
+    "fields": [
+      {
+        "name": "A83C2C26",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "B8DC6D46",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_0051316E": {
     "parent": null,
     "fields": [
@@ -26286,7 +27014,14 @@
   },
   "STU_15971773": {
     "parent": "STU_773DC32C",
-    "fields": []
+    "fields": [
+      {
+        "name": "59A530A3",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      }
+    ]
   },
   "STU_6B77CF61": {
     "parent": "STU_6F37773E",
@@ -26529,9 +27264,9 @@
         "serializationType": 12
       },
       {
-        "name": "1F6715D9",
-        "type": "STU_3A9B5E90",
-        "serializationType": 12
+        "name": "BC9DC9A3",
+        "type": "STU_494C33C4",
+        "serializationType": 13
       },
       {
         "name": "2CA766BD",
@@ -26864,6 +27599,14 @@
     "parent": "STU_64C11507",
     "fields": []
   },
+  "STU_D88581CA": {
+    "parent": "STU_252FDE3A",
+    "fields": []
+  },
+  "STU_68CDEB9C": {
+    "parent": "STU_252FDE3A",
+    "fields": []
+  },
   "STU_52E468C4": {
     "parent": "STU_48A39D9B",
     "fields": [
@@ -27164,6 +27907,118 @@
       }
     ]
   },
+  "STU_B252507B": {
+    "parent": "STU_D05AEF31",
+    "fields": [
+      {
+        "name": "A83C2C26",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "E37C05FB",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "AEE4E389",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "7567E07D",
+        "type": "42D371BD",
+        "serializationType": 8,
+        "size": 4
+      }
+    ]
+  },
+  "STU_20F25AC6": {
+    "parent": "STU_A3C7077A",
+    "fields": [
+      {
+        "name": "FDA311DA",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "E1E200DD",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "2370E609",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "09E32A58",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "F129CF0B",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "C9AC8391",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "DB643E43",
+        "type": "STU_D2929F20",
+        "serializationType": 12
+      },
+      {
+        "name": "F0A9405A",
+        "type": "STU_8880FCB0",
+        "serializationType": 12
+      },
+      {
+        "name": "B999DDE2",
+        "type": "STU_58B3D0D0",
+        "serializationType": 12
+      },
+      {
+        "name": "FF36FFDD",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "CC99D954",
+        "type": "77EE81B2",
+        "serializationType": 8,
+        "size": 4
+      },
+      {
+        "name": "49F392BD",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "D4C904FE",
+        "type": "u32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "0A1A2080",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "9710D80F",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      }
+    ]
+  },
   "STU_6E5C05CE": {
     "parent": "STU_11E07FD7",
     "fields": [
@@ -27409,6 +28264,11 @@
         "name": "A83C2C26",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      },
+      {
+        "name": "D9B661DA",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
       }
     ]
   },
@@ -27427,6 +28287,10 @@
         "size": 4
       }
     ]
+  },
+  "STU_6B5A8853": {
+    "parent": "STU_7639CFC1",
+    "fields": []
   },
   "STU_B5E209D6": {
     "parent": "STU_820A411A",
@@ -27840,6 +28704,10 @@
       }
     ]
   },
+  "STU_D2E565A0": {
+    "parent": "STU_F473415B",
+    "fields": []
+  },
   "STU_5F259EB7": {
     "parent": "STU_54D6A5F9",
     "fields": [
@@ -28183,6 +29051,63 @@
   "STU_CB3B66C7": {
     "parent": "STU_CCDF50E7",
     "fields": []
+  },
+  "STU_6E800F7C": {
+    "parent": "STU_4AA38EA8",
+    "fields": [
+      {
+        "name": "5E813688",
+        "type": "STU_A90901B3",
+        "serializationType": 4
+      },
+      {
+        "name": "7BE15319",
+        "type": "STU_A90901B3",
+        "serializationType": 4
+      },
+      {
+        "name": "99039FC8",
+        "type": "STU_A90901B3",
+        "serializationType": 4
+      },
+      {
+        "name": "4DA3254A",
+        "type": "STU_A90901B3",
+        "serializationType": 4
+      },
+      {
+        "name": "A665A5E4",
+        "type": "STU_A90901B3",
+        "serializationType": 4
+      },
+      {
+        "name": "369489D8",
+        "type": "STU_A90901B3",
+        "serializationType": 4
+      },
+      {
+        "name": "F0A9405A",
+        "type": "STU_8880FCB0",
+        "serializationType": 12
+      },
+      {
+        "name": "C276CF5C",
+        "type": "STU_C6A37088",
+        "serializationType": 12
+      },
+      {
+        "name": "C0DD643E",
+        "type": "u32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "A6CD82B5",
+        "type": "u32",
+        "serializationType": 0,
+        "size": 4
+      }
+    ]
   },
   "STU_528BD450": {
     "parent": "STU_DD856C32",
@@ -28556,6 +29481,10 @@
     "parent": "STU_122CD607",
     "fields": []
   },
+  "STU_26C14BDD": {
+    "parent": "STU_DD856C32",
+    "fields": []
+  },
   "STU_5010ABF4": {
     "parent": "STU_C55609C4",
     "fields": [
@@ -28645,6 +29574,10 @@
         "size": 1
       }
     ]
+  },
+  "STU_29E64289": {
+    "parent": "STU_DD856C32",
+    "fields": []
   },
   "STU_3D376BBA": {
     "parent": "STU_81C5DE19",
@@ -28820,6 +29753,17 @@
         "type": "u8",
         "serializationType": 0,
         "size": 1
+      }
+    ]
+  },
+  "STU_ADBDB47D": {
+    "parent": "STU_7C27312D",
+    "fields": [
+      {
+        "name": "BA10B1B7",
+        "type": "s32",
+        "serializationType": 0,
+        "size": 4
       }
     ]
   },
@@ -29816,6 +30760,10 @@
     "parent": "STU_C3AC054C",
     "fields": []
   },
+  "STU_41E91E02": {
+    "parent": "STU_E896B267",
+    "fields": []
+  },
   "STU_0CF6650E": {
     "parent": null,
     "fields": []
@@ -30399,6 +31347,11 @@
         "serializationType": 13
       },
       {
+        "name": "50FDDF83",
+        "type": "STU_8880FCB0",
+        "serializationType": 12
+      },
+      {
         "name": "B8DC6D46",
         "type": "STU_8880FCB0",
         "serializationType": 12
@@ -30650,6 +31603,12 @@
         "size": 4
       },
       {
+        "name": "6CC45E85",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
         "name": "CC99A0E8",
         "type": "f32",
         "serializationType": 0,
@@ -30680,6 +31639,24 @@
         "size": 4
       },
       {
+        "name": "90BC9161",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "1F8D5CAF",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "9F2D1AC3",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
         "name": "1B125EFF",
         "type": "f32",
         "serializationType": 0,
@@ -30704,9 +31681,27 @@
         "size": 1
       },
       {
+        "name": "B8126548",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "0AB1D1CD",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
         "name": "CBCB2AB9",
         "type": "STU_933AD0A9",
         "serializationType": 4
+      },
+      {
+        "name": "2A4B47DF",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       },
       {
         "name": "B4D8D9BB",
@@ -31774,12 +32769,6 @@
         "serializationType": 2
       },
       {
-        "name": "021CA9E8",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
         "name": "66D29548",
         "type": "s16",
         "serializationType": 0,
@@ -31917,6 +32906,16 @@
       }
     ]
   },
+  "STU_7C27312D": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "C08C4427",
+        "type": "teString",
+        "serializationType": 0
+      }
+    ]
+  },
   "STU_E9177706": {
     "parent": "STU_754341EB",
     "fields": []
@@ -31928,6 +32927,26 @@
         "name": "C17E7CA2",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_71C0D73D": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "BEBA3AEF",
+        "type": "File Reference",
+        "serializationType": 10
+      },
+      {
+        "name": "C65AA24E",
+        "type": "File Reference",
+        "serializationType": 10
+      },
+      {
+        "name": "C21DB248",
+        "type": "STU_B77FCA72",
+        "serializationType": 12
       }
     ]
   },
@@ -32105,6 +33124,16 @@
         "type": "s16",
         "serializationType": 0,
         "size": 2
+      }
+    ]
+  },
+  "STU_377B7AAB": {
+    "parent": "STU_E4324757",
+    "fields": [
+      {
+        "name": "67465E75",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
       }
     ]
   },
@@ -32360,6 +33389,10 @@
       }
     ]
   },
+  "STU_6545AB15": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_1482DDBB": {
     "parent": "STU_D05AEF31",
     "fields": []
@@ -32561,46 +33594,6 @@
   "STU_00033784": {
     "parent": "STU_7A7F2732",
     "fields": []
-  },
-  "STU_7F49CC0E": {
-    "parent": "STU_7C37840C",
-    "fields": [
-      {
-        "name": "D48A98B1",
-        "type": "STU_D05AEF31",
-        "serializationType": 2
-      },
-      {
-        "name": "2A2974A9",
-        "type": "STU_D05AEF31",
-        "serializationType": 2
-      },
-      {
-        "name": "3120AB4E",
-        "type": "STU_D05AEF31",
-        "serializationType": 2
-      },
-      {
-        "name": "84EFCB69",
-        "type": "STU_D05AEF31",
-        "serializationType": 2
-      },
-      {
-        "name": "0DED1AFC",
-        "type": "STU_D05AEF31",
-        "serializationType": 2
-      },
-      {
-        "name": "0E982590",
-        "type": "STU_4B093107",
-        "serializationType": 2
-      },
-      {
-        "name": "F56F4985",
-        "type": "STU_4B093107",
-        "serializationType": 2
-      }
-    ]
   },
   "STU_0B5C5FB3": {
     "parent": "STU_890B32A0",
@@ -32866,6 +33859,16 @@
       }
     ]
   },
+  "STU_47278665": {
+    "parent": "STU_7395D144",
+    "fields": [
+      {
+        "name": "8A557E94",
+        "type": "STU_04118DBD",
+        "serializationType": 12
+      }
+    ]
+  },
   "STU_8ED74BC8": {
     "parent": "STU_81C5DE19",
     "fields": [
@@ -32977,6 +33980,21 @@
         "type": "f32",
         "serializationType": 0,
         "size": 4
+      }
+    ]
+  },
+  "STU_BD47F80F": {
+    "parent": "STU_866672AD",
+    "fields": [
+      {
+        "name": "37AB13D3",
+        "type": "STU_7C3457DC",
+        "serializationType": 12
+      },
+      {
+        "name": "CB6873D7",
+        "type": "STU_73BB2F3A",
+        "serializationType": 13
       }
     ]
   },
@@ -33311,6 +34329,16 @@
         "name": "C68C8155",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_30C89937": {
+    "parent": "STU_6D3ED020",
+    "fields": [
+      {
+        "name": "07DD813E",
+        "type": "teString",
+        "serializationType": 0
       }
     ]
   },
@@ -33690,6 +34718,11 @@
         "serializationType": 4
       },
       {
+        "name": "59DD3C33",
+        "type": "STU_5FF2A50C",
+        "serializationType": 4
+      },
+      {
         "name": "AE003B9F",
         "type": "STU_5FF2A50C",
         "serializationType": 4
@@ -33916,8 +34949,23 @@
         "name": "5CC37CC0",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      },
+      {
+        "name": "3E5F6C6E",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "8C4D9D21",
+        "type": "76137072",
+        "serializationType": 8,
+        "size": 4
       }
     ]
+  },
+  "STU_8C4ECC54": {
+    "parent": "STU_7A7F2732",
+    "fields": []
   },
   "STU_7E3B5755": {
     "parent": "STU_72C48DD7",
@@ -34040,6 +35088,71 @@
         "type": "s32",
         "serializationType": 0,
         "size": 4
+      }
+    ]
+  },
+  "STU_B888FE1D": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "37AB13D3",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "F5087894",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "5443A3FA",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "52901F5C",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "D115A49D",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "B337A52B",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "E59E8B10",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "80939361",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "88225CDF",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "9B6EE8FC",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "E217A77C",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "85B247CB",
+        "type": "STU_4B093107",
+        "serializationType": 2
       }
     ]
   },
@@ -34912,6 +36025,10 @@
     "parent": "STU_8AA50FF2",
     "fields": []
   },
+  "STU_498067F9": {
+    "parent": "STU_7A7F2732",
+    "fields": []
+  },
   "STU_E1111C8D": {
     "parent": null,
     "fields": [
@@ -35551,68 +36668,6 @@
       }
     ]
   },
-  "STU_DC4945EC": {
-    "parent": "STU_2549D83D",
-    "fields": [
-      {
-        "name": "7D8BD6BB",
-        "type": "File Reference",
-        "serializationType": 10
-      },
-      {
-        "name": "92175C11",
-        "type": "teString",
-        "serializationType": 0
-      },
-      {
-        "name": "E75BEDA5",
-        "type": "u64",
-        "serializationType": 0,
-        "size": 8
-      },
-      {
-        "name": "FE5A914F",
-        "type": "STU_A0BDC3D3",
-        "serializationType": 2
-      },
-      {
-        "name": "E549F90C",
-        "type": "teColorRGBA",
-        "serializationType": 0,
-        "size": 16
-      },
-      {
-        "name": "1A652E3D",
-        "type": "s32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "C287CC79",
-        "type": "s32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "8BE9EBFE",
-        "type": "u8",
-        "serializationType": 0,
-        "size": 1
-      },
-      {
-        "name": "3F39322E",
-        "type": "u8",
-        "serializationType": 0,
-        "size": 1
-      },
-      {
-        "name": "BCE02839",
-        "type": "u8",
-        "serializationType": 0,
-        "size": 1
-      }
-    ]
-  },
   "STU_54274640": {
     "parent": "STU_B0C1EEEA",
     "fields": [
@@ -35635,6 +36690,17 @@
         "name": "C42F83F7",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_62DA2C0B": {
+    "parent": "STU_7C27312D",
+    "fields": [
+      {
+        "name": "F762B8B3",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -35963,6 +37029,10 @@
       }
     ]
   },
+  "STU_67AFF7D7": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_7D59202C": {
     "parent": "STU_C76EE5C0",
     "fields": [
@@ -35979,6 +37049,16 @@
       {
         "name": "F43898CB",
         "type": "STU_B280E352",
+        "serializationType": 2
+      }
+    ]
+  },
+  "STU_26A26AC3": {
+    "parent": "STU_1482DDBB",
+    "fields": [
+      {
+        "name": "B8DC6D46",
+        "type": "STU_D05AEF31",
         "serializationType": 2
       }
     ]
@@ -36394,6 +37474,11 @@
         "serializationType": 12
       },
       {
+        "name": "4559D62F",
+        "type": "STU_D2929F20",
+        "serializationType": 12
+      },
+      {
         "name": "5620DA50",
         "type": "STU_B0D9AEDF",
         "serializationType": 4
@@ -36458,6 +37543,12 @@
       },
       {
         "name": "37EE887D",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "11012D0E",
         "type": "u8",
         "serializationType": 0,
         "size": 1
@@ -36583,6 +37674,66 @@
         "type": "f32",
         "serializationType": 0,
         "size": 4
+      }
+    ]
+  },
+  "STU_8947CCAD": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "BDB80BE6",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "CEE160A8",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "69C93A4C",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "4A7C2A47",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "5A0ACD5C",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "8FB185B1",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "57A2289E",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "AB64153C",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "9D2967E1",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "3BF54E56",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "2A18E093",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
       }
     ]
   },
@@ -36744,6 +37895,28 @@
   "STU_7FA9F8F9": {
     "parent": "STU_94637DCA",
     "fields": []
+  },
+  "STU_D449F70B": {
+    "parent": "STU_A323F0F5",
+    "fields": [
+      {
+        "name": "8A12D912",
+        "type": "STU_F9E17188",
+        "serializationType": 2
+      },
+      {
+        "name": "11467156",
+        "type": "teVec2",
+        "serializationType": 0,
+        "size": 8
+      },
+      {
+        "name": "8E6AB252",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      }
+    ]
   },
   "STU_9881546F": {
     "parent": null,
@@ -37037,6 +38210,10 @@
     "parent": "STU_E896B267",
     "fields": []
   },
+  "STU_7031DA1B": {
+    "parent": "STU_F9C57875",
+    "fields": []
+  },
   "STU_6E33838C": {
     "parent": null,
     "fields": []
@@ -37077,6 +38254,21 @@
       },
       {
         "name": "C46FB879",
+        "type": "teString",
+        "serializationType": 0
+      },
+      {
+        "name": "01B7A48F",
+        "type": "STU_66F94CA8",
+        "serializationType": 12
+      },
+      {
+        "name": "0E431CCD",
+        "type": "teString",
+        "serializationType": 0
+      },
+      {
+        "name": "33090D11",
         "type": "teString",
         "serializationType": 0
       },
@@ -37314,6 +38506,23 @@
       }
     ]
   },
+  "STU_EFEAE0CF": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "81125A2C",
+        "type": "u64",
+        "serializationType": 0,
+        "size": 8
+      },
+      {
+        "name": "F3959583",
+        "type": "44BD8771",
+        "serializationType": 8,
+        "size": 4
+      }
+    ]
+  },
   "STU_75D1C308": {
     "parent": "STU_7C37840C",
     "fields": [
@@ -37333,6 +38542,43 @@
         "type": "32497A1C",
         "serializationType": 8,
         "size": 4
+      }
+    ]
+  },
+  "STU_2CDE4F8A": {
+    "parent": "STU_A323F0F5",
+    "fields": [
+      {
+        "name": "6AC1A818",
+        "type": "STU_F9E17188",
+        "serializationType": 2
+      },
+      {
+        "name": "CCE60A5A",
+        "type": "STU_F9E17188",
+        "serializationType": 2
+      },
+      {
+        "name": "563AFFD2",
+        "type": "STU_F9E17188",
+        "serializationType": 2
+      },
+      {
+        "name": "6798DA34",
+        "type": "STU_F9E17188",
+        "serializationType": 2
+      },
+      {
+        "name": "D9214822",
+        "type": "teVec3",
+        "serializationType": 0,
+        "size": 12
+      },
+      {
+        "name": "11467156",
+        "type": "teVec2",
+        "serializationType": 0,
+        "size": 8
       }
     ]
   },
@@ -37724,6 +38970,16 @@
         "type": "teColorRGBA",
         "serializationType": 0,
         "size": 16
+      }
+    ]
+  },
+  "STU_B9021111": {
+    "parent": "STU_F9E17188",
+    "fields": [
+      {
+        "name": "4A67B083",
+        "type": "STU_F9134815",
+        "serializationType": 12
       }
     ]
   },
@@ -38147,6 +39403,159 @@
   "STU_B4F19440": {
     "parent": "STU_1482DDBB",
     "fields": []
+  },
+  "STU_E095AE40": {
+    "parent": "STU_A3C7077A",
+    "fields": [
+      {
+        "name": "FDA311DA",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "43FC4DFF",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "225E5F28",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "60C7A1E1",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "3C0F8ED6",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "3A205C9C",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "F0A9405A",
+        "type": "STU_8880FCB0",
+        "serializationType": 12
+      },
+      {
+        "name": "B999DDE2",
+        "type": "STU_58B3D0D0",
+        "serializationType": 12
+      },
+      {
+        "name": "36517B3B",
+        "type": "teVec2",
+        "serializationType": 0,
+        "size": 8
+      },
+      {
+        "name": "47EBC7BE",
+        "type": "teVec2",
+        "serializationType": 0,
+        "size": 8
+      },
+      {
+        "name": "430B667D",
+        "type": "teVec2",
+        "serializationType": 0,
+        "size": 8
+      },
+      {
+        "name": "6EE9705A",
+        "type": "teVec2",
+        "serializationType": 0,
+        "size": 8
+      },
+      {
+        "name": "B7BDA632",
+        "type": "B87B0A59",
+        "serializationType": 8,
+        "size": 4
+      },
+      {
+        "name": "9884BDEE",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "880D5671",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "4C78CEF1",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "57C6507A",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "C19F1F99",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "BF4D1A8F",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "0893E7AC",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "57687459",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "FFC64463",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "6D35ED57",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "AB3B1189",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "2CDD7665",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "8313C80F",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      }
+    ]
   },
   "STU_3B6999CE": {
     "parent": "STU_CF110906",
@@ -39171,6 +40580,11 @@
         "serializationType": 2
       },
       {
+        "name": "66D29548",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
         "name": "3E7A533D",
         "type": "u8",
         "serializationType": 0,
@@ -39892,6 +41306,12 @@
         "size": 1
       },
       {
+        "name": "439EAAA8",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
         "name": "EED826CD",
         "type": "u8",
         "serializationType": 0,
@@ -40191,6 +41611,30 @@
         "serializationType": 2
       }
     ]
+  },
+  "STU_4326B1D9": {
+    "parent": "STU_7C37840C",
+    "fields": [
+      {
+        "name": "37AB13D3",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "F5087894",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "4C167404",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
+  "STU_1EC9E138": {
+    "parent": "STU_1482DDBB",
+    "fields": []
   },
   "STU_8B34CB23": {
     "parent": "STU_7DFC365B",
@@ -40668,6 +42112,11 @@
         "name": "7031B953",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      },
+      {
+        "name": "5BB38E35",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
       }
     ]
   },
@@ -40823,6 +42272,89 @@
         "type": "u32",
         "serializationType": 0,
         "size": 4
+      }
+    ]
+  },
+  "STU_5769E0DE": {
+    "parent": "STU_A2B9762B",
+    "fields": [
+      {
+        "name": "D1D68906",
+        "type": "teUUID",
+        "serializationType": 0,
+        "size": 16
+      },
+      {
+        "name": "BD631144",
+        "type": "teVec3",
+        "serializationType": 0,
+        "size": 12
+      },
+      {
+        "name": "3C0F8ED6",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      }
+    ]
+  },
+  "STU_2B7ACCC9": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "37AB13D3",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "F5087894",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "52901F5C",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "D115A49D",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "B337A52B",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "3A938263",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "B49B152F",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "C0082C5F",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "261CB7E4",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "85B247CB",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "DED09004",
+        "type": "STU_4B093107",
+        "serializationType": 2
       }
     ]
   },
@@ -41151,6 +42683,17 @@
       }
     ]
   },
+  "STU_5DDB411A": {
+    "parent": "STU_D4A018B8",
+    "fields": [
+      {
+        "name": "2AA1F78D",
+        "type": "teColorRGBA",
+        "serializationType": 0,
+        "size": 16
+      }
+    ]
+  },
   "STU_2C948C3D": {
     "parent": "STU_3660CDED",
     "fields": [
@@ -41272,6 +42815,12 @@
         "size": 4
       },
       {
+        "name": "6CC45E85",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
         "name": "CC99A0E8",
         "type": "f32",
         "serializationType": 0,
@@ -41350,9 +42899,27 @@
         "size": 1
       },
       {
+        "name": "B8126548",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "0AB1D1CD",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
         "name": "CBCB2AB9",
         "type": "STU_933AD0A9",
         "serializationType": 4
+      },
+      {
+        "name": "2A4B47DF",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       },
       {
         "name": "B4D8D9BB",
@@ -41386,6 +42953,28 @@
         "name": "C61288D7",
         "type": "STU_CEAA4897",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_BE772C9F": {
+    "parent": "STU_1482DDBB",
+    "fields": [
+      {
+        "name": "EC043EA6",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "567AEF59",
+        "type": "u64",
+        "serializationType": 0,
+        "size": 8
+      },
+      {
+        "name": "B8603844",
+        "type": "B89BB376",
+        "serializationType": 8,
+        "size": 4
       }
     ]
   },
@@ -41484,6 +43073,49 @@
         "size": 1
       }
     ]
+  },
+  "STU_DB19267C": {
+    "parent": "STU_54D6A5F9",
+    "fields": [
+      {
+        "name": "11B47C68",
+        "type": "teUUID",
+        "serializationType": 0,
+        "size": 16
+      },
+      {
+        "name": "D440A0F7",
+        "type": "STU_DE489008",
+        "serializationType": 5
+      },
+      {
+        "name": "D4878E1C",
+        "type": "STU_FBD6EBA9",
+        "serializationType": 5
+      },
+      {
+        "name": "B34967D0",
+        "type": "u64",
+        "serializationType": 0,
+        "size": 8
+      },
+      {
+        "name": "B770BA30",
+        "type": "u64",
+        "serializationType": 0,
+        "size": 8
+      },
+      {
+        "name": "F97A13C6",
+        "type": "s32",
+        "serializationType": 0,
+        "size": 4
+      }
+    ]
+  },
+  "STU_6643BD32": {
+    "parent": "STU_DD856C32",
+    "fields": []
   },
   "STU_F76727B5": {
     "parent": "STU_16EF9936",
@@ -42312,6 +43944,16 @@
       }
     ]
   },
+  "STU_EACF8DFB": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "D7DDEEAD",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_E45DEC4A": {
     "parent": "STU_1A4F2ADE",
     "fields": []
@@ -42821,6 +44463,16 @@
         "type": "37B74CB6",
         "serializationType": 8,
         "size": 4
+      }
+    ]
+  },
+  "STU_8A45DF9B": {
+    "parent": "STU_866672AD",
+    "fields": [
+      {
+        "name": "7FA31812",
+        "type": "STU_BD47F80F",
+        "serializationType": 5
       }
     ]
   },
@@ -43390,6 +45042,10 @@
       }
     ]
   },
+  "STU_AE87A346": {
+    "parent": "STU_E896B267",
+    "fields": []
+  },
   "STU_194D744E": {
     "parent": "STU_B28C2E5E",
     "fields": [
@@ -43497,6 +45153,10 @@
         "serializationType": 2
       }
     ]
+  },
+  "STU_A7864F38": {
+    "parent": "STU_1482DDBB",
+    "fields": []
   },
   "STU_837D6183": {
     "parent": "STU_E4324757",
@@ -43992,6 +45652,16 @@
   "STU_BA45D342": {
     "parent": "STU_B8A901AC",
     "fields": []
+  },
+  "STU_200B2282": {
+    "parent": "STU_7639CFC1",
+    "fields": [
+      {
+        "name": "37AB13D3",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
   },
   "STU_2B388E5C": {
     "parent": null,
@@ -44756,6 +46426,12 @@
         "size": 4
       },
       {
+        "name": "4FF6B862",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
         "name": "E8502460",
         "type": "f32",
         "serializationType": 0,
@@ -44810,6 +46486,21 @@
         "name": "8AA6504F",
         "type": "teString",
         "serializationType": 0
+      }
+    ]
+  },
+  "STU_98DD1872": {
+    "parent": "STU_D05AEF31",
+    "fields": [
+      {
+        "name": "2F709539",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "07DD813E",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
       }
     ]
   },
@@ -44925,6 +46616,12 @@
       },
       {
         "name": "635AC1DE",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "BAD85273",
         "type": "u8",
         "serializationType": 0,
         "size": 1
@@ -45542,6 +47239,10 @@
       }
     ]
   },
+  "STU_F9E17188": {
+    "parent": null,
+    "fields": []
+  },
   "STU_02F7FEA4": {
     "parent": "STU_7A7F2732",
     "fields": [
@@ -45785,6 +47486,26 @@
       }
     ]
   },
+  "STU_E91FC25A": {
+    "parent": "STU_4B6F9A4C",
+    "fields": [
+      {
+        "name": "887B7916",
+        "type": "STU_E095AE40",
+        "serializationType": 4
+      },
+      {
+        "name": "D697B92C",
+        "type": "STU_D11C922F",
+        "serializationType": 4
+      },
+      {
+        "name": "89F953D0",
+        "type": "STU_0B5C5FB3",
+        "serializationType": 4
+      }
+    ]
+  },
   "STU_3CFA8C4A": {
     "parent": "STU_7395D144",
     "fields": [
@@ -46012,6 +47733,11 @@
       },
       {
         "name": "015FF666",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "66D29548",
         "type": "STU_D05AEF31",
         "serializationType": 2
       },
@@ -46299,6 +48025,12 @@
         "name": "D918FB85",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      },
+      {
+        "name": "447324B5",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -46797,6 +48529,12 @@
       },
       {
         "name": "5A60C16E",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "C813DA9D",
         "type": "u8",
         "serializationType": 0,
         "size": 1
@@ -47568,6 +49306,12 @@
         "size": 1
       },
       {
+        "name": "DC30A92A",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
         "name": "AB866031",
         "type": "u8",
         "serializationType": 0,
@@ -48013,6 +49757,10 @@
       }
     ]
   },
+  "STU_2774528F": {
+    "parent": "STU_7639CFC1",
+    "fields": []
+  },
   "STU_910CD45C": {
     "parent": "STU_E0523F49",
     "fields": []
@@ -48274,31 +50022,7 @@
         "size": 4
       },
       {
-        "name": "24FB7EC9",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "C3E08E00",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
         "name": "4932DA20",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "E9173617",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "5CAF96B3",
         "type": "f32",
         "serializationType": 0,
         "size": 4
@@ -48310,31 +50034,7 @@
         "size": 4
       },
       {
-        "name": "9202F98A",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "93B2C40A",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
         "name": "BC9C756C",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "87235D99",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "543BC5FE",
         "type": "f32",
         "serializationType": 0,
         "size": 4
@@ -48346,31 +50046,7 @@
         "size": 4
       },
       {
-        "name": "11681CB2",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "28FFE28C",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
         "name": "2BE91CC6",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "A0C4BC4D",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "A6583676",
         "type": "f32",
         "serializationType": 0,
         "size": 4
@@ -48382,31 +50058,7 @@
         "size": 4
       },
       {
-        "name": "FE768B4F",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "A9BD22B1",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
         "name": "C0212FB8",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "C64458B8",
-        "type": "f32",
-        "serializationType": 0,
-        "size": 4
-      },
-      {
-        "name": "725E6746",
         "type": "f32",
         "serializationType": 0,
         "size": 4
@@ -48958,6 +50610,12 @@
         "size": 4
       },
       {
+        "name": "6CC45E85",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
         "name": "CC99A0E8",
         "type": "f32",
         "serializationType": 0,
@@ -49015,6 +50673,12 @@
         "name": "CBCB2AB9",
         "type": "STU_933AD0A9",
         "serializationType": 4
+      },
+      {
+        "name": "2A4B47DF",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       },
       {
         "name": "B4D8D9BB",
@@ -49209,6 +50873,12 @@
         "size": 4
       },
       {
+        "name": "70064613",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
         "name": "F3E24B6F",
         "type": "u8",
         "serializationType": 0,
@@ -49228,6 +50898,18 @@
       },
       {
         "name": "372E20EB",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "F40CE5D4",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "96C5A6F6",
         "type": "u8",
         "serializationType": 0,
         "size": 1
@@ -49857,12 +51539,20 @@
       }
     ]
   },
+  "STU_39798686": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_143DAF0C": {
     "parent": "STU_CEAA4897",
     "fields": []
   },
   "STU_8C11046B": {
     "parent": "STU_7639CFC1",
+    "fields": []
+  },
+  "STU_170887D1": {
+    "parent": "STU_F9C57875",
     "fields": []
   },
   "STU_7459F2CE": {
@@ -49882,6 +51572,12 @@
         "name": "4EEA6AF4",
         "type": "STU_43F40C0F",
         "serializationType": 13
+      },
+      {
+        "name": "5202A5B4",
+        "type": "u64",
+        "serializationType": 0,
+        "size": 8
       }
     ]
   },
@@ -50229,6 +51925,10 @@
     "parent": "STU_E896B267",
     "fields": []
   },
+  "STU_E088225F": {
+    "parent": "STU_7639CFC1",
+    "fields": []
+  },
   "STU_21106037": {
     "parent": "STU_820A411A",
     "fields": [
@@ -50421,6 +52121,10 @@
   },
   "STU_C4ECCE9F": {
     "parent": "STU_52DAC894",
+    "fields": []
+  },
+  "STU_003B9AE4": {
+    "parent": "STU_252FDE3A",
     "fields": []
   },
   "STU_EE825B6F": {
@@ -50951,6 +52655,10 @@
     "parent": "STU_BB1C8761",
     "fields": []
   },
+  "STU_AD1188A8": {
+    "parent": "STU_7639CFC1",
+    "fields": []
+  },
   "STU_2A0307D2": {
     "parent": "STU_78D39627",
     "fields": [
@@ -51303,6 +53011,27 @@
         "name": "33E51FDC",
         "type": "File Reference",
         "serializationType": 10
+      }
+    ]
+  },
+  "STU_DB63E5F8": {
+    "parent": "STU_A3C7077A",
+    "fields": [
+      {
+        "name": "B999DDE2",
+        "type": "STU_58B3D0D0",
+        "serializationType": 12
+      },
+      {
+        "name": "F0A9405A",
+        "type": "STU_8880FCB0",
+        "serializationType": 12
+      },
+      {
+        "name": "B14EAA65",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
       }
     ]
   },
@@ -51933,9 +53662,15 @@
       }
     ]
   },
-  "STU_8E153FB9": {
-    "parent": "STU_116D2B98",
-    "fields": []
+  "STU_69EFECCC": {
+    "parent": "STU_F9E17188",
+    "fields": [
+      {
+        "name": "F97609C8",
+        "type": "STU_7A0B33DA",
+        "serializationType": 12
+      }
+    ]
   },
   "STU_84B16D73": {
     "parent": "STU_866672AD",
@@ -51953,6 +53688,16 @@
       {
         "name": "92FF811B",
         "type": "STU_95FA12D3",
+        "serializationType": 4
+      },
+      {
+        "name": "46F6B79F",
+        "type": "STU_D5E7FD6F",
+        "serializationType": 4
+      },
+      {
+        "name": "ABFC7A19",
+        "type": "STU_D5E7FD6F",
         "serializationType": 4
       }
     ]
@@ -52055,6 +53800,16 @@
         "name": "3E8CDE6B",
         "type": "STU_3CC8FAC9",
         "serializationType": 12
+      }
+    ]
+  },
+  "STU_944A28CB": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "F1CB3BA0",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
       }
     ]
   },
@@ -52269,12 +54024,6 @@
         "type": "3165B681",
         "serializationType": 8,
         "size": 4
-      },
-      {
-        "name": "66D29548",
-        "type": "s16",
-        "serializationType": 0,
-        "size": 2
       }
     ]
   },
@@ -52460,20 +54209,9 @@
       }
     ]
   },
-  "STU_6ECE2C8E": {
-    "parent": null,
-    "fields": [
-      {
-        "name": "4AD6D126",
-        "type": "u64",
-        "serializationType": 1
-      },
-      {
-        "name": "EDC09DEB",
-        "type": "u32",
-        "serializationType": 1
-      }
-    ]
+  "STU_319757ED": {
+    "parent": "STU_7639CFC1",
+    "fields": []
   },
   "STU_EFB07818": {
     "parent": "STU_81C5DE19",
@@ -53309,6 +55047,11 @@
         "serializationType": 2
       },
       {
+        "name": "EB9D57C8",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
         "name": "0A5ED456",
         "type": "STU_D05AEF31",
         "serializationType": 2
@@ -53325,6 +55068,11 @@
       },
       {
         "name": "97149C3A",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "66D29548",
         "type": "STU_D05AEF31",
         "serializationType": 2
       },
@@ -53405,7 +55153,64 @@
         "size": 1
       },
       {
+        "name": "E6315025",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
         "name": "C0423010",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      }
+    ]
+  },
+  "STU_BA4C2296": {
+    "parent": "STU_7C37840C",
+    "fields": [
+      {
+        "name": "0A84537A",
+        "type": "STU_1B872806",
+        "serializationType": 12
+      },
+      {
+        "name": "DC71317C",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "04B2C103",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "4A5CA514",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "6EFD110C",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "D80AEDB1",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "3E3DFE0F",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "66D29548",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "86CE02DE",
         "type": "u8",
         "serializationType": 0,
         "size": 1
@@ -53530,6 +55335,12 @@
       },
       {
         "name": "B62657B8",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "166243EC",
         "type": "u8",
         "serializationType": 0,
         "size": 1
@@ -53792,19 +55603,8 @@
     ]
   },
   "STU_49D35243": {
-    "parent": "STU_116D2B98",
-    "fields": [
-      {
-        "name": "FA1A80DE",
-        "type": "STU_4B093107",
-        "serializationType": 2
-      },
-      {
-        "name": "72A822B2",
-        "type": "STU_4B093107",
-        "serializationType": 2
-      }
-    ]
+    "parent": "STU_7A7F2732",
+    "fields": []
   },
   "STU_27833576": {
     "parent": "STU_9526CBD2",
@@ -54109,6 +55909,10 @@
       }
     ]
   },
+  "STU_DF3AD54E": {
+    "parent": "STU_ED693AD7",
+    "fields": []
+  },
   "STU_355A262F": {
     "parent": "STU_866672AD",
     "fields": [
@@ -54176,6 +55980,12 @@
         "name": "AC2333F7",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      },
+      {
+        "name": "7A46FA0F",
+        "type": "148B377B",
+        "serializationType": 8,
+        "size": 4
       }
     ]
   },
@@ -54622,6 +56432,34 @@
     "parent": "STU_4BA3D4E6",
     "fields": []
   },
+  "STU_986157CD": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "C2C6DE6C",
+        "type": "STU_B5621AA7",
+        "serializationType": 5
+      },
+      {
+        "name": "0619C597",
+        "type": "668716F0",
+        "serializationType": 8,
+        "size": 4
+      },
+      {
+        "name": "75ADB11E",
+        "type": "u32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "3D5E4727",
+        "type": "u32",
+        "serializationType": 0,
+        "size": 4
+      }
+    ]
+  },
   "STU_134F0EA3": {
     "parent": "STU_1482DDBB",
     "fields": []
@@ -54674,6 +56512,11 @@
     "fields": [
       {
         "name": "3E3E203A",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "9193F8E8",
         "type": "STU_D05AEF31",
         "serializationType": 2
       },
@@ -55142,6 +56985,12 @@
         "type": "u8",
         "serializationType": 0,
         "size": 1
+      },
+      {
+        "name": "0582B0E4",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -55410,6 +57259,12 @@
         "size": 1
       },
       {
+        "name": "11012D0E",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
         "name": "5E009A60",
         "type": "u8",
         "serializationType": 0,
@@ -55523,6 +57378,12 @@
         "name": "4D1F0A0E",
         "type": "STU_FBBB375C",
         "serializationType": 4
+      },
+      {
+        "name": "D002ABE8",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -56420,11 +58281,6 @@
     "parent": null,
     "fields": [
       {
-        "name": "F948E1A8",
-        "type": "STU_3163D47F",
-        "serializationType": 4
-      },
-      {
         "name": "AB9BF1E8",
         "type": "teMtx43A",
         "serializationType": 0,
@@ -56447,11 +58303,6 @@
         "type": "teUUID",
         "serializationType": 0,
         "size": 16
-      },
-      {
-        "name": "8933069B",
-        "type": "teString",
-        "serializationType": 0
       },
       {
         "name": "EA8E6A19",
@@ -56573,11 +58424,6 @@
         "type": "0EF092C3",
         "serializationType": 9,
         "size": 4
-      },
-      {
-        "name": "2A68C4F3",
-        "type": "STU_3163D47F",
-        "serializationType": 5
       },
       {
         "name": "D522C4BA",
@@ -57379,6 +59225,11 @@
         "serializationType": 13
       },
       {
+        "name": "37ED05D0",
+        "type": "STU_871BD3D0",
+        "serializationType": 12
+      },
+      {
         "name": "7E48C526",
         "type": "STU_22BD6AAD",
         "serializationType": 2
@@ -57603,6 +59454,12 @@
         "name": "25D54A00",
         "type": "STU_E93236BC",
         "serializationType": 2
+      },
+      {
+        "name": "422B4A8E",
+        "type": "s32",
+        "serializationType": 0,
+        "size": 4
       },
       {
         "name": "EDF6D105",
@@ -58123,6 +59980,10 @@
       }
     ]
   },
+  "STU_C6FBA7F2": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_CB916742": {
     "parent": "STU_1482DDBB",
     "fields": []
@@ -58140,6 +60001,10 @@
         "serializationType": 2
       }
     ]
+  },
+  "STU_11044D24": {
+    "parent": "STU_92CA44CC",
+    "fields": []
   },
   "STU_9848D414": {
     "parent": "STU_C7C085F6",
@@ -59300,6 +61165,12 @@
         "serializationType": 12
       },
       {
+        "name": "7943D34C",
+        "type": "teColorRGB",
+        "serializationType": 0,
+        "size": 12
+      },
+      {
         "name": "76A0AE13",
         "type": "f32",
         "serializationType": 0,
@@ -59325,6 +61196,18 @@
       },
       {
         "name": "4AB9A663",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "0B5FF93C",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "89D79F26",
         "type": "u8",
         "serializationType": 0,
         "size": 1
@@ -59459,6 +61342,16 @@
         "name": "B350E4FD",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_785EDAA5": {
+    "parent": "STU_866672AD",
+    "fields": [
+      {
+        "name": "3E30AFD4",
+        "type": "STU_686D7705",
+        "serializationType": 5
       }
     ]
   },
@@ -60120,6 +62013,16 @@
       }
     ]
   },
+  "STU_5BBD2A64": {
+    "parent": "STU_866672AD",
+    "fields": [
+      {
+        "name": "F2C4BBBC",
+        "type": "STU_8880FCB0",
+        "serializationType": 13
+      }
+    ]
+  },
   "STU_82FC18D3": {
     "parent": "STU_7C37840C",
     "fields": [
@@ -60413,6 +62316,16 @@
         "type": "7F30B20D",
         "serializationType": 8,
         "size": 4
+      }
+    ]
+  },
+  "STU_66F94CA8": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "C0CC557A",
+        "type": "STU_102C607C",
+        "serializationType": 5
       }
     ]
   },
@@ -60844,6 +62757,10 @@
         "serializationType": 2
       }
     ]
+  },
+  "STU_F473415B": {
+    "parent": "STU_6F37773E",
+    "fields": []
   },
   "STU_A5CAE566": {
     "parent": "STU_DD856C32",
@@ -61473,6 +63390,10 @@
       }
     ]
   },
+  "STU_858A6EEC": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_8196246A": {
     "parent": "STU_1482DDBB",
     "fields": []
@@ -61758,6 +63679,51 @@
   "STU_C407C4BA": {
     "parent": "STU_1482DDBB",
     "fields": []
+  },
+  "STU_1E0773EB": {
+    "parent": "STU_7A7F2732",
+    "fields": [
+      {
+        "name": "58492C31",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "BD631144",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "2A2974A9",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "3120AB4E",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "84EFCB69",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "0DED1AFC",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "0E982590",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      },
+      {
+        "name": "F56F4985",
+        "type": "STU_4B093107",
+        "serializationType": 2
+      }
+    ]
   },
   "STU_A8EFC6F0": {
     "parent": "STU_CEAA4897",
@@ -63466,39 +65432,19 @@
       }
     ]
   },
+  "STU_5CDC5CC0": {
+    "parent": "STU_4B6F9A4C",
+    "fields": [
+      {
+        "name": "AB878DD1",
+        "type": "STU_DB63E5F8",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_9F1D18DD": {
     "parent": null,
     "fields": [
-      {
-        "name": "9E3EDA37",
-        "type": "STU_6ECE2C8E",
-        "serializationType": 4
-      },
-      {
-        "name": "636C27E1",
-        "type": "STU_6ECE2C8E",
-        "serializationType": 4
-      },
-      {
-        "name": "2B0A0FC0",
-        "type": "STU_6ECE2C8E",
-        "serializationType": 4
-      },
-      {
-        "name": "EC4C6F38",
-        "type": "STU_6ECE2C8E",
-        "serializationType": 4
-      },
-      {
-        "name": "2BC2D205",
-        "type": "STU_6ECE2C8E",
-        "serializationType": 4
-      },
-      {
-        "name": "9B298B8C",
-        "type": "STU_6ECE2C8E",
-        "serializationType": 4
-      },
       {
         "name": "B62FC651",
         "type": "u64",
@@ -63530,6 +65476,12 @@
         "name": "3C099E86",
         "type": "STU_06095C06",
         "serializationType": 12
+      },
+      {
+        "name": "5E15FBE2",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
       },
       {
         "name": "45123429",
@@ -64338,6 +66290,31 @@
       }
     ]
   },
+  "STU_7F06FF16": {
+    "parent": "STU_7C37840C",
+    "fields": [
+      {
+        "name": "4E87690F",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "C57FBE6F",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "24A44C4A",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "F93E4686",
+        "type": "STU_4421B506",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_ECC16B71": {
     "parent": null,
     "fields": []
@@ -64899,6 +66876,16 @@
       }
     ]
   },
+  "STU_D7C0CE6D": {
+    "parent": "STU_7639CFC1",
+    "fields": [
+      {
+        "name": "37AB13D3",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_8DCBAEC7": {
     "parent": "STU_D1A190D9",
     "fields": []
@@ -65020,6 +67007,10 @@
     "parent": "STU_6EBE37E7",
     "fields": []
   },
+  "STU_C2EE5DED": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_9F08AA06": {
     "parent": "STU_CCAD18DB",
     "fields": [
@@ -65093,6 +67084,10 @@
         "size": 8
       }
     ]
+  },
+  "STU_CEFF290A": {
+    "parent": "STU_1482DDBB",
+    "fields": []
   },
   "STU_5BE03DB4": {
     "parent": "STU_15043B61",
@@ -65270,6 +67265,37 @@
         "type": "teColorRGB",
         "serializationType": 0,
         "size": 12
+      },
+      {
+        "name": "08D07397",
+        "type": "teColorRGB",
+        "serializationType": 0,
+        "size": 12
+      }
+    ]
+  },
+  "STU_6AAB212B": {
+    "parent": "STU_7C37840C",
+    "fields": [
+      {
+        "name": "481B15D1",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "5B2774AF",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "0A02AA9A",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "56821B7B",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
       }
     ]
   },
@@ -65343,6 +67369,22 @@
         "name": "07DD813E",
         "type": "teString",
         "serializationType": 0
+      }
+    ]
+  },
+  "STU_9815AF23": {
+    "parent": "STU_C7C085F6",
+    "fields": [
+      {
+        "name": "0F88291F",
+        "type": "STU_D2929F20",
+        "serializationType": 12
+      },
+      {
+        "name": "85FAE8CB",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
       }
     ]
   },
@@ -65707,6 +67749,16 @@
   "STU_4E0A9A32": {
     "parent": "STU_6B892D91",
     "fields": []
+  },
+  "STU_20AD1072": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "F75F1026",
+        "type": "STU_1E41B675",
+        "serializationType": 5
+      }
+    ]
   },
   "STU_0349B182": {
     "parent": "STU_2549D83D",
@@ -66391,11 +68443,25 @@
       }
     ]
   },
+  "STU_CD14BCC8": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_151DA492": {
     "parent": "STU_24E99C78",
     "fields": [
       {
         "name": "ADE95629",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
+  "STU_C5B280AA": {
+    "parent": "STU_E896B267",
+    "fields": [
+      {
+        "name": "A83C2C26",
         "type": "STU_D05AEF31",
         "serializationType": 2
       }
@@ -66467,6 +68533,10 @@
         "size": 4
       }
     ]
+  },
+  "STU_EAEDADFC": {
+    "parent": "STU_1482DDBB",
+    "fields": []
   },
   "STU_59D20D3E": {
     "parent": "STU_04D80A41",
@@ -66672,6 +68742,22 @@
         "name": "8A12D912",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_53122493": {
+    "parent": "STU_7E679B3A",
+    "fields": [
+      {
+        "name": "E1E200DD",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "01C08BCF",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
       }
     ]
   },
@@ -66901,6 +68987,11 @@
         "serializationType": 2
       },
       {
+        "name": "5BB38E35",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
         "name": "A24CF176",
         "type": "STU_4B093107",
         "serializationType": 2
@@ -66985,6 +69076,26 @@
         "name": "9DB57C22",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_8CABE642": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "F948E1A8",
+        "type": "STU_3163D47F",
+        "serializationType": 4
+      },
+      {
+        "name": "8933069B",
+        "type": "teString",
+        "serializationType": 0
+      },
+      {
+        "name": "2A68C4F3",
+        "type": "STU_3163D47F",
+        "serializationType": 5
       }
     ]
   },
@@ -67294,6 +69405,12 @@
       },
       {
         "name": "1A546C64",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
+        "name": "40926C4A",
         "type": "u8",
         "serializationType": 0,
         "size": 1
@@ -67690,6 +69807,16 @@
     "parent": null,
     "fields": []
   },
+  "STU_D3BF7C39": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "5B9017ED",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_F4BBA185": {
     "parent": "STU_32977B87",
     "fields": [
@@ -67755,16 +69882,6 @@
         "name": "F627FDCA",
         "type": "teString",
         "serializationType": 1
-      }
-    ]
-  },
-  "STU_0C9B2D25": {
-    "parent": "STU_2549D83D",
-    "fields": [
-      {
-        "name": "1D1FDD39",
-        "type": "STU_DC4945EC",
-        "serializationType": 3
       }
     ]
   },
@@ -68159,6 +70276,16 @@
       }
     ]
   },
+  "STU_D3F71FCF": {
+    "parent": "STU_7C37840C",
+    "fields": [
+      {
+        "name": "67E8FF48",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
   "STU_20E18047": {
     "parent": "STU_B024BE51",
     "fields": [
@@ -68330,7 +70457,7 @@
     "fields": []
   },
   "STU_33A7CE78": {
-    "parent": "STU_6F37773E",
+    "parent": "STU_F473415B",
     "fields": []
   },
   "STU_40E05F6B": {
@@ -68358,6 +70485,11 @@
       },
       {
         "name": "A732F9A2",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "B0263D2D",
         "type": "STU_D05AEF31",
         "serializationType": 2
       },
@@ -69664,6 +71796,10 @@
       }
     ]
   },
+  "STU_81DC72A4": {
+    "parent": "STU_7A7F2732",
+    "fields": []
+  },
   "STU_1E7F5459": {
     "parent": "STU_773DC32C",
     "fields": []
@@ -69680,6 +71816,10 @@
   },
   "STU_7FC33EF6": {
     "parent": "STU_1482DDBB",
+    "fields": []
+  },
+  "STU_911B8FCF": {
+    "parent": "STU_DD856C32",
     "fields": []
   },
   "STU_1308AA6A": {
@@ -70052,6 +72192,11 @@
         "serializationType": 5
       },
       {
+        "name": "226CC159",
+        "type": "STU_A323F0F5",
+        "serializationType": 3
+      },
+      {
         "name": "85CC326B",
         "type": "STU_DF9B7DE2",
         "serializationType": 4
@@ -70339,6 +72484,17 @@
   "STU_3F2E4019": {
     "parent": "STU_E526E527",
     "fields": []
+  },
+  "STU_DD3E7EC5": {
+    "parent": "STU_54D6A5F9",
+    "fields": [
+      {
+        "name": "616085C3",
+        "type": "u64",
+        "serializationType": 0,
+        "size": 8
+      }
+    ]
   },
   "STU_8A491388": {
     "parent": "STU_E4324757",
@@ -71625,6 +73781,11 @@
         "serializationType": 5
       },
       {
+        "name": "D3A31F29",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
         "name": "DAD2E3A2",
         "type": "STU_0B792564",
         "serializationType": 12
@@ -71926,6 +74087,64 @@
         "name": "5AE5A935",
         "type": "STU_D05AEF31",
         "serializationType": 2
+      }
+    ]
+  },
+  "STU_6CA49D72": {
+    "parent": "STU_A3C7077A",
+    "fields": [
+      {
+        "name": "CDBFC5EC",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "7E1EF4A3",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "2997BBEC",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "6EE70996",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "09E32A58",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "B999DDE2",
+        "type": "STU_58B3D0D0",
+        "serializationType": 12
+      },
+      {
+        "name": "02C2A46E",
+        "type": "STU_0B792564",
+        "serializationType": 12
+      },
+      {
+        "name": "6C7256B5",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "8C565BF8",
+        "type": "u32",
+        "serializationType": 0,
+        "size": 4
+      },
+      {
+        "name": "18E97C4F",
+        "type": "f32",
+        "serializationType": 0,
+        "size": 4
       }
     ]
   },
@@ -72295,17 +74514,6 @@
         "name": "67465E75",
         "type": "STU_D05AEF31",
         "serializationType": 2
-      },
-      {
-        "name": "BACB9FF9",
-        "type": "STU_D05AEF31",
-        "serializationType": 2
-      },
-      {
-        "name": "C3E03C7F",
-        "type": "DBF3C1B6",
-        "serializationType": 8,
-        "size": 4
       }
     ]
   },
@@ -73144,6 +75352,16 @@
       }
     ]
   },
+  "STU_E07A76EE": {
+    "parent": "STU_22DB169C",
+    "fields": [
+      {
+        "name": "B5C0F593",
+        "type": "STU_9CADF2EC",
+        "serializationType": 12
+      }
+    ]
+  },
   "STU_DC11F441": {
     "parent": "STU_92C535C6",
     "fields": []
@@ -73383,6 +75601,10 @@
         "size": 4
       }
     ]
+  },
+  "STU_07B98AB7": {
+    "parent": "STU_DD856C32",
+    "fields": []
   },
   "STU_1C2FB897": {
     "parent": "STU_7C37840C",
@@ -74167,6 +76389,10 @@
       }
     ]
   },
+  "STU_A323F0F5": {
+    "parent": null,
+    "fields": []
+  },
   "STU_6A902A73": {
     "parent": "STU_96BC43C2",
     "fields": []
@@ -74219,6 +76445,17 @@
   "STU_338F2341": {
     "parent": "STU_D05AEF31",
     "fields": []
+  },
+  "STU_AE03805C": {
+    "parent": "STU_7FA0F929",
+    "fields": [
+      {
+        "name": "07DD813E",
+        "type": "s32",
+        "serializationType": 0,
+        "size": 4
+      }
+    ]
   },
   "STU_F7277418": {
     "parent": "STU_54D6A5F9",
@@ -74277,6 +76514,21 @@
       {
         "name": "A83C2C26",
         "type": "STU_D05AEF31",
+        "serializationType": 2
+      }
+    ]
+  },
+  "STU_86473349": {
+    "parent": "STU_81C5DE19",
+    "fields": [
+      {
+        "name": "F891229F",
+        "type": "STU_9815AF23",
+        "serializationType": 4
+      },
+      {
+        "name": "F17E3C5C",
+        "type": "STU_A8EFC6F0",
         "serializationType": 2
       }
     ]
@@ -75258,6 +77510,16 @@
       }
     ]
   },
+  "STU_7757D403": {
+    "parent": "STU_1361E674",
+    "fields": [
+      {
+        "name": "57CBDD1E",
+        "type": "STU_98DD1872",
+        "serializationType": 3
+      }
+    ]
+  },
   "STU_03461D6C": {
     "parent": "STU_866672AD",
     "fields": [
@@ -75878,6 +78140,26 @@
       }
     ]
   },
+  "STU_8F45430C": {
+    "parent": "STU_4B6F9A4C",
+    "fields": [
+      {
+        "name": "4F022A11",
+        "type": "STU_C3132DC7",
+        "serializationType": 4
+      },
+      {
+        "name": "D697B92C",
+        "type": "STU_D11C922F",
+        "serializationType": 4
+      },
+      {
+        "name": "89F953D0",
+        "type": "STU_0B5C5FB3",
+        "serializationType": 4
+      }
+    ]
+  },
   "STU_98631753": {
     "parent": "STU_5D663F1C",
     "fields": [
@@ -75910,6 +78192,10 @@
         "size": 4
       }
     ]
+  },
+  "STU_D3DD98CA": {
+    "parent": "STU_7A7F2732",
+    "fields": []
   },
   "STU_2BD49D74": {
     "parent": "STU_773DC32C",
@@ -75950,6 +78236,22 @@
   "STU_DB08D4C1": {
     "parent": "STU_773DC32C",
     "fields": []
+  },
+  "STU_8A0AC28F": {
+    "parent": "STU_54D6A5F9",
+    "fields": [
+      {
+        "name": "4A672FC3",
+        "type": "DBID",
+        "serializationType": 0,
+        "size": 16
+      },
+      {
+        "name": "FCA17809",
+        "type": "STU_8C9D16A7",
+        "serializationType": 5
+      }
+    ]
   },
   "STU_8E69CC3A": {
     "parent": "STU_A46203AB",
@@ -76197,6 +78499,12 @@
         "type": "u8",
         "serializationType": 0,
         "size": 1
+      },
+      {
+        "name": "11012D0E",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -76435,6 +78743,31 @@
         "type": "F87DF949",
         "serializationType": 8,
         "size": 4
+      }
+    ]
+  },
+  "STU_7C543D41": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "3D83C363",
+        "type": "STU_5BB2E270",
+        "serializationType": 5
+      }
+    ]
+  },
+  "STU_102C607C": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "268C564E",
+        "type": "teString",
+        "serializationType": 0
+      },
+      {
+        "name": "F22064A1",
+        "type": "STU_20AD1072",
+        "serializationType": 12
       }
     ]
   },
@@ -79581,6 +81914,12 @@
         "type": "u8",
         "serializationType": 0,
         "size": 1
+      },
+      {
+        "name": "FD92C072",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -79665,6 +82004,16 @@
         "type": "f32",
         "serializationType": 0,
         "size": 4
+      }
+    ]
+  },
+  "STU_23643C74": {
+    "parent": "STU_4B6F9A4C",
+    "fields": [
+      {
+        "name": "AB878DD1",
+        "type": "STU_7E679B3A",
+        "serializationType": 2
       }
     ]
   },
@@ -80197,6 +82546,12 @@
         "size": 1
       },
       {
+        "name": "11012D0E",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
+      },
+      {
         "name": "5E009A60",
         "type": "u8",
         "serializationType": 0,
@@ -80471,6 +82826,11 @@
         "serializationType": 2
       },
       {
+        "name": "B8DC6D46",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
         "name": "3E3E203A",
         "type": "STU_D05AEF31",
         "serializationType": 2
@@ -80570,6 +82930,12 @@
         "type": "F510AF64",
         "serializationType": 8,
         "size": 4
+      },
+      {
+        "name": "6A3C1510",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -82104,6 +84470,12 @@
         "type": "u8",
         "serializationType": 0,
         "size": 1
+      },
+      {
+        "name": "11012D0E",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -82523,6 +84895,10 @@
     "parent": "STU_8B68F073",
     "fields": []
   },
+  "STU_26EA0D74": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_43CFA23F": {
     "parent": "STU_6D3ED020",
     "fields": [
@@ -82856,6 +85232,16 @@
         "size": 2
       },
       {
+        "name": "CBCB2AB9",
+        "type": "STU_933AD0A9",
+        "serializationType": 4
+      },
+      {
+        "name": "2C54AEAF",
+        "type": "STU_933AD0A9",
+        "serializationType": 4
+      },
+      {
         "name": "0220680A",
         "type": "u8",
         "serializationType": 0,
@@ -82952,6 +85338,11 @@
         "serializationType": 13
       },
       {
+        "name": "6F71E9AA",
+        "type": "STU_9783E116",
+        "serializationType": 5
+      },
+      {
         "name": "70045C77",
         "type": "STU_58E4EC09",
         "serializationType": 5
@@ -82995,6 +85386,11 @@
         "name": "D7E28280",
         "type": "File Reference",
         "serializationType": 10
+      },
+      {
+        "name": "679737B3",
+        "type": "STU_2B8093CD",
+        "serializationType": 12
       },
       {
         "name": "AB6047ED",
@@ -83091,6 +85487,12 @@
         "type": "u8",
         "serializationType": 0,
         "size": 1
+      },
+      {
+        "name": "8F862EC7",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1
       }
     ]
   },
@@ -83109,6 +85511,21 @@
     "parent": "STU_A23BFD3B",
     "fields": []
   },
+  "STU_48F4173B": {
+    "parent": "STU_4B6F9A4C",
+    "fields": [
+      {
+        "name": "A7AC6320",
+        "type": "STU_20F25AC6",
+        "serializationType": 4
+      },
+      {
+        "name": "D697B92C",
+        "type": "STU_D11C922F",
+        "serializationType": 4
+      }
+    ]
+  },
   "STU_E7EA5F5B": {
     "parent": "STU_A2B9762B",
     "fields": [
@@ -83122,6 +85539,11 @@
   "STU_86A2C83C": {
     "parent": "STU_DD856C32",
     "fields": [
+      {
+        "name": "71CB8790",
+        "type": "STU_9F9C100B",
+        "serializationType": 3
+      },
       {
         "name": "1AF7DD3E",
         "type": "STU_D05AEF31",
@@ -83199,6 +85621,11 @@
       },
       {
         "name": "F8DE5BCD",
+        "type": "STU_D05AEF31",
+        "serializationType": 2
+      },
+      {
+        "name": "5254FA5A",
         "type": "STU_D05AEF31",
         "serializationType": 2
       }

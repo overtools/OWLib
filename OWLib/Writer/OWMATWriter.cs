@@ -37,7 +37,7 @@ namespace OWLib.Writer {
                     writer.Write(layer.Key);
                     HashSet<string> images = new HashSet<string>();
                     foreach (ImageLayer image in layer.Value) {
-                        string old = $"{GUID.LongKey(image.key):X12}.dds";
+                        string old = $"{GUID.LongKey(image.Key):X12}.dds";
                         if (typeData != null) {
                             try {
                                 images.Add(typeData.First(new Func<KeyValuePair<string, TextureType>, bool>(delegate (KeyValuePair<string, TextureType> input) {

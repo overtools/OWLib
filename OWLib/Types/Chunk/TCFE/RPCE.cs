@@ -12,7 +12,7 @@ namespace OWLib.Types.Chunk {
             public ulong unknown2;
             public ulong unknown3;
             public ulong unknown4;
-            public ulong model_key;
+            public ulong Model;
         }
 
         public Structure Data { get; private set; }

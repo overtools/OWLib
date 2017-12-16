@@ -14,27 +14,27 @@ namespace DataTool.SaveLogic.Unlock {
             foreach (var item in items) {
                 var name = GetValidFilename(item.Name);
                 string type;
-                STUDecalReference decal;
+                STUEffectReference effect;
 
                 switch (item.Unlock) {
                     case PlayerIcon icon:
-                        decal = icon.Decal;
+                        effect = icon.Effect;
                         type = "Icons";
                         break;
                     case Spray spray:
-                        decal = spray.Decal;
+                        effect = spray.Effect;
                         type = "Sprays";
                         break;
                     default:
                         continue;
                 }
 
-                if (decal == null) continue;
+                if (effect == null) continue;
 
                 if (!textures.ContainsKey(type))
                     textures[type] = new Dictionary<ulong, List<TextureInfo>>();
 
-                textures[type] = FindLogic.Texture.FindTextures(textures[type], decal.DecalResource, name, true);
+                textures[type] = FindLogic.Texture.FindTextures(textures[type], effect.EffectLook, name, true);
             }
 
             foreach (var groupPair in textures) {
@@ -49,24 +49,24 @@ namespace DataTool.SaveLogic.Unlock {
             string name = GetValidFilename(item.Name);
             string type;
             Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-            STUDecalReference decal;
+            STUEffectReference effect;
 
             switch (item.Unlock) {
                 case PlayerIcon icon:
-                    decal = icon.Decal;
+                    effect = icon.Effect;
                     type = "Icons";
                     break;
                 case Spray spray:
-                    decal = spray.Decal;
+                    effect = spray.Effect;
                     type = "Sprays";
                     break;
                 default:
                     return;
             }
 
-            if (decal == null) return;
+            if (effect == null) return;
 
-            textures = FindLogic.Texture.FindTextures(textures, decal.DecalResource, name, true);
+            textures = FindLogic.Texture.FindTextures(textures, effect.EffectLook, name, true);
             
             string output = Path.Combine(basePath, containerName, heroName ?? "", type, folderName);
             Texture.Save(flags, output, textures);

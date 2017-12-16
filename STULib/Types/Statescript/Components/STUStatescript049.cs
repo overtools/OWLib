@@ -4,7 +4,7 @@ using STULib.Types.Generic;
 
 namespace STULib.Types.Statescript.Components {
     [STU(0x5054972D)]
-    public class STUStatescript049 : STUStatescriptComponent {
+    public class STUStatescript049 : STUEntityComponent {
         [STUField(0x0A84537A)]
         public Common.STUGUID GUIDx049;  // STU_1B872806
     }

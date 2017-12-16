@@ -18,7 +18,7 @@ namespace STULib.Impl {
         private readonly Dictionary<long, STUInstance> _instances;
         private readonly uint _buildVersion;
         public List<STUInstanceRecord> Records { get; private set; }
-        protected long Start;
+        public long Start;
 
         public override IEnumerable<STUInstance> Instances => _instances.Select(pair => pair.Value);
         public override uint Version => 1;

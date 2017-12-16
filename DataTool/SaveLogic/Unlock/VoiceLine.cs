@@ -18,7 +18,7 @@ namespace DataTool.SaveLogic.Unlock {
             const string type = "VoiceLines";
             string name = GetValidFilename(item.Name);
 
-            STUStatescriptSoundMaster soundMasterContainer = GetInstance<STUStatescriptSoundMaster>(hero.StatescriptHeroComponent1);
+            STUEntitySoundMaster soundMasterContainer = GetInstance<STUEntitySoundMaster>(hero.EntityMain);
 
             if (soundMasterContainer == null) {
                 Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: soundMaster not found");
@@ -36,7 +36,7 @@ namespace DataTool.SaveLogic.Unlock {
                     SVCE svce = vlChunk.GetAllOfTypeFlat<SVCE>().FirstOrDefault();
                     if (svce == null) return;
 
-                    lines = master.VoiceLineInstances.Where(x => x.SoundDataContainer.Group == svce.Data.GUIDx078).ToList();
+                    lines = master.VoiceLineInstances.Where(x => x.SoundDataContainer.Group == svce.Data.VoiceStimulus).ToList();
                 }
             }
             

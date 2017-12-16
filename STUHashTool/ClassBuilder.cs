@@ -74,8 +74,8 @@ namespace STUHashTool {
                 string fieldTypeDef = properTypePaths ? "STULib.STUField": "STUField";
                 string fieldDefinition = $"[{fieldTypeDef}(0x{field.Checksum:X8}";
                 if (fieldNames.ContainsKey(field.Checksum)) {
+                    fieldDefinition = fieldDefinition + $", \"{fieldNames[field.Checksum]}\"";
                     fieldName = FixFieldName(fieldNames[field.Checksum]);
-                    fieldDefinition = fieldDefinition + $", \"{fieldName}\"";
                 }
                 if (field.IsEmbed || field.IsEmbedArray) {
                     fieldDefinition = fieldDefinition + ", EmbeddedInstance = true";
@@ -114,7 +114,7 @@ namespace STUHashTool {
                 } else if (field.IsHashMap) {
                     string hmInstanceName = $"STU_{field.HashMapChecksum:X8}";
                     if (instanceNames.ContainsKey(field.HashMapChecksum)) {
-                        hmInstanceName = $"{@namespace}.Enums.{instanceNames[field.HashMapChecksum]}";
+                        hmInstanceName = $"{@namespace}.{instanceNames[field.HashMapChecksum]}";
                     }
                     if (ISTU.InstanceTypes.ContainsKey(field.HashMapChecksum)) {
                         hmInstanceName = ISTU.InstanceTypes[field.HashMapChecksum].ProperName();

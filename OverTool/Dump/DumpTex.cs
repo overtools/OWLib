@@ -41,8 +41,8 @@ namespace OverTool {
                                 Console.Out.WriteLine("Material ID {0:X16}", pair.Key);
                                 HashSet<ulong> dedup = new HashSet<ulong>();
                                 foreach (ImageLayer layer in pair.Value) {
-                                    if (dedup.Add(layer.key)) {
-                                        Console.Out.WriteLine("Texture ID {0:X12}", GUID.LongKey(layer.key));
+                                    if (dedup.Add(layer.Key)) {
+                                        Console.Out.WriteLine("Texture ID {0:X12}", GUID.LongKey(layer.Key));
                                     }
                                 }
                             }

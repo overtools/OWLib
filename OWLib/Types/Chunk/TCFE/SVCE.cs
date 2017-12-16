@@ -3,12 +3,12 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
     public class SVCE : IChunk {
-        public string Identifier => "SVCE"; // ECVS - Effect Child Voice Sound
+        public string Identifier => "SVCE"; // ECVS - Effect Chunk Voice Stimulus
         public string RootIdentifier => "TCFE"; // EFCT - Effect
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public ulong GUIDx078;
+            public ulong VoiceStimulus;
         }
 
         public Structure Data { get; private set; }

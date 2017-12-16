@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using OWLib;
 using STULib.Types;
 using STULib.Types.Gamemodes;
+using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
@@ -28,6 +29,7 @@ namespace DataTool.ToolLogic.List {
 
         [JsonObject(MemberSerialization.OptOut)]
         public class MapInfo {
+            public string UniqueName;
             public string Name;
             public string NameB;
             public string Description;
@@ -47,8 +49,9 @@ namespace DataTool.ToolLogic.List {
             [JsonConverter(typeof(GUIDConverter))]
             public ulong DataGUID2;
 
-            public MapInfo(ulong dataGUID, string name, string nameB, string description, string descriptionB,
+            public MapInfo(string uniqueName, ulong dataGUID, string name, string nameB, string description, string descriptionB,
                 string subline, string stateA, string stateB, ulong mapData1, ulong mapData2, List<GamemodeInfo> gamemodes) {
+                UniqueName = uniqueName;
                 MetadataGUID = dataGUID;
                 Name = name;
                 NameB = nameB;
@@ -64,7 +67,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<string, MapInfo> maps = GetMaps(false);
+            Dictionary<string, MapInfo> maps = GetMaps();
 
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
@@ -104,58 +107,62 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public Dictionary<string, MapInfo> GetMaps(bool ignoreUnknown) {
+        public static MapInfo GetMap(ulong key) {
+            STUMap map = GetInstance<STUMap>(key);
+            if (map == null) return null;
+
+            string nameA = GetString(map.Name);
+            string nameB = GetString(map.VariantName);
+
+            string descA = GetString(map.DescriptionA);
+            string descB = GetString(map.DescriptionB);
+            string subline = GetString(map.SublineString);
+
+            string stateA = GetString(map.StateStringA);
+            string stateB = GetString(map.StateStringB);
+
+            List<GamemodeInfo> gamemodes = null;
+            if (map.Gamemodes != null) {
+                gamemodes = new List<GamemodeInfo>();
+                foreach (Common.STUGUID guid in map.Gamemodes) {
+                    STUGamemode gamemode = GetInstance<STUGamemode>(guid);
+                    if (gamemode == null) {
+                        continue;
+                    }
+                        
+                    gamemodes.Add(new GamemodeInfo {
+                        Name = GetString(gamemode.Name),
+                        GUID = guid
+                    });
+                }
+
+            }
+
+            if (!string.IsNullOrEmpty(nameA) && !string.IsNullOrEmpty(nameB) && nameB.Equals(nameA)) {
+                nameB = null;
+            }
+
+            if (!string.IsNullOrEmpty(descA) && !string.IsNullOrEmpty(descB) && descB.Equals(descA)) {
+                descB = null;
+            }
+
+            string uniqueName;
+            if (nameA == null) {
+                uniqueName = $"Unknown{GUID.Index(key):X}";
+            } else {
+                uniqueName = nameA + $":{GUID.Index(key):X}";
+            }
+            return new MapInfo(uniqueName, key, nameA, nameB, descA, descB, subline, stateA, stateB,
+                map.MapDataResource1, map.MapDataResource2, gamemodes);
+        }
+
+        public Dictionary<string, MapInfo> GetMaps() {
             Dictionary<string, MapInfo> @return = new Dictionary<string, MapInfo>();
 
             foreach (ulong key in TrackedFiles[0x9F]) {
-                var map = GetInstance<STUMap>(key);
+                MapInfo map = GetMap(key);
                 if (map == null) continue;
-
-                var nameA = GetString(map.Name);
-                var nameB = GetString(map.VariantName);
-
-                var descA = GetString(map.DescriptionA);
-                var descB = GetString(map.DescriptionB);
-                var subline = GetString(map.SublineString);
-
-                var stateA = GetString(map.StateStringA);
-                var stateB = GetString(map.StateStringB);
-
-                List<GamemodeInfo> gamemodes = null;
-                if (map.Gamemodes != null) {
-                    gamemodes = new List<GamemodeInfo>();
-                    foreach (var guid in map.Gamemodes) {
-                        var gamemode = GetInstance<STUGamemode>(guid);
-                        if (gamemode == null) {
-                            continue;
-                        }
-                        
-                        gamemodes.Add(new GamemodeInfo {
-                            Name = GetString(gamemode.Name),
-                            GUID = guid
-                        });
-                    }
-
-                }
-
-                if (!string.IsNullOrEmpty(nameA) && !string.IsNullOrEmpty(nameB) && nameB.Equals(nameA)) {
-                    nameB = null;
-                }
-
-                if (!string.IsNullOrEmpty(descA) && !string.IsNullOrEmpty(descB) && descB.Equals(descA)) {
-                    descB = null;
-                }
-
-                string uniqueName;
-                if (nameA == null) {
-                    if (ignoreUnknown) continue;
-                    uniqueName = $"Unknown{GUID.Index(key):X}";
-                } else {
-                    uniqueName = nameA + $":{GUID.Index(key):X}";
-                }
-
-                @return[uniqueName] = new MapInfo(key, nameA, nameB, descA, descB, subline, stateA, stateB,
-                    map.MapDataResource1, map.MapDataResource2, gamemodes);
+                @return[map.UniqueName] = map;
             }
 
             return @return;

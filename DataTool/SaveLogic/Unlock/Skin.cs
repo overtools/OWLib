@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
@@ -8,6 +9,7 @@ using OWLib;
 using STULib.Types;
 using STULib.Types.Enums;
 using STULib.Types.Generic;
+using STULib.Types.Statescript.Components;
 using STULib.Types.STUUnlock;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
@@ -23,8 +25,10 @@ namespace DataTool.SaveLogic.Unlock {
         }
 
         public static void Save(ICLIFlags flags, string skinName, string path, STUHero hero, string rarity, STUSkinOverride skinOverride, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet = true) {
-            string heroPath = GetValidFilename(GetString(hero.Name));
+            string heroName = GetString(hero.Name);
+            string heroPath = GetValidFilename(heroName);
             if (heroPath == null) heroPath = "Unknown";
+            heroPath = heroPath.TrimEnd(' ');
             string basePath = Path.Combine(path,
                 $"{heroPath}\\Skins\\{rarity}\\{GetValidFilename(skinName)}");
             Dictionary<uint, ItemInfo> realWeaponSkins = new Dictionary<uint, ItemInfo>();
@@ -37,11 +41,11 @@ namespace DataTool.SaveLogic.Unlock {
             Dictionary<Common.STUGUID, Common.STUGUID> replacements = skinOverride.ProperReplacements ?? new Dictionary<Common.STUGUID, Common.STUGUID>();
             Dictionary<ulong, ulong> realReplacements = replacements.ToDictionary(x => (ulong)x.Key, y => (ulong)y.Value);
             HashSet<ModelInfo> models = new HashSet<ModelInfo>();
-            models = FindLogic.Model.FindModels(models, hero.StatescriptHeroComponent1, realReplacements);
-            models = FindLogic.Model.FindModels(models, hero.StatescriptHeroComponent2, realReplacements);
-            models = FindLogic.Model.FindModels(models, hero.StatescriptHeroComponent3, realReplacements);
-            models = FindLogic.Model.FindModels(models, hero.StatescriptHeroComponent4, realReplacements);
-            models = FindLogic.Model.FindModels(models, hero.StatescriptHeroComponent5, realReplacements);
+            models = FindLogic.Model.FindModels(models, hero.EntityMain, realReplacements);
+            models = FindLogic.Model.FindModels(models, hero.EntityHeroSelect, realReplacements);
+            models = FindLogic.Model.FindModels(models, hero.EntityHighlightIntro, realReplacements);
+            models = FindLogic.Model.FindModels(models, hero.EntityPlayable, realReplacements);
+            models = FindLogic.Model.FindModels(models, hero.EntityThirdPerson, realReplacements);
 
             if (hero.WeaponComponents1 != null) {
                 foreach (STUHero.Statescript statescript in hero.WeaponComponents1) {
@@ -154,8 +158,18 @@ namespace DataTool.SaveLogic.Unlock {
             }
 
             if (!quiet && models.Count > 0) Log("\tSaving models");
+            Dictionary<Common.STUGUID, string> entityNames =
+                new Dictionary<Common.STUGUID, string> {[hero.EntityHighlightIntro] = $"{heroName}-HighlightIntro", 
+                    [hero.EntityHeroSelect] = $"{heroName}-HeroSelect", 
+                    [hero.EntityPlayable] = $"{heroName}-Playable-ThirdPerson",
+                    [hero.EntityThirdPerson] = $"{heroName}-ThirdPerson",
+                    [hero.EntityMain] = $"{heroName}-Base"
+                };
+            STUFirstPersonComponent fpC = GetInstance<STUFirstPersonComponent>(hero.EntityPlayable);
+            if (fpC?.Entity != null) entityNames[fpC.Entity] = $"{heroName}-Playable-FirstPerson";
             foreach (ModelInfo model in models) {
-                Model.Save(flags, Path.Combine(basePath, "Models"), model, $"{GetString(hero.Name)} Skin {skinName}_{GUID.Index(model.GUID):X}");
+                Model.Save(flags, Path.Combine(basePath, "Models"), model, $"{GetString(hero.Name)} Skin {skinName}_{GUID.Index(model.GUID):X}", null, entityNames);
+                Entity.Save(flags, Path.Combine(basePath, "Entities"), model.Entities.Values, entityNames);
             }
             
             if (!quiet && weaponModels.Count > 0) Log("\tSaving weapons");

@@ -3,8 +3,8 @@
 using STULib.Types.Generic;
 
 namespace STULib.Types.Statescript.Components {
-    [STU(0xD788E54C)]
-    public class STU_D788E54C : Common.STUInstance {
+    [STU(0xD788E54C, "STURagdollConfig")]
+    public class STURagdollConfig : Common.STUInstance {
         [STUField(0xFE263D30)]
         public Enums.STUEnum_8A184A5C m_FE263D30;
 

@@ -171,15 +171,15 @@ namespace OWLib.Writer {
                             uint count = 0;
                             HashSet<ulong> done = new HashSet<ulong>();
                             for (int j = 0; j < materialLayers.Count; ++j) {
-                                if (done.Add(materialLayers[j].key)) {
+                                if (done.Add(materialLayers[j].Key)) {
                                     count += 1;
                                 }
                             }
                             writer.Write(count);
                             done.Clear();
                             for (int j = 0; j < materialLayers.Count; ++j) {
-                                if (done.Add(materialLayers[j].key)) {
-                                    writer.Write($"{GUID.LongKey(materialLayers[j].key):X12}.dds");
+                                if (done.Add(materialLayers[j].Key)) {
+                                    writer.Write($"{GUID.LongKey(materialLayers[j].Key):X12}.dds");
                                     writer.Write((uint)0);
                                 }
                             }

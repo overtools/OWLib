@@ -16,6 +16,7 @@ namespace DataTool.FindLogic {
         public Common.STUGUID DataGUID;
         public string Name;
         public ulong MaterialID;
+        public ImageDefinition.ImageType Type;
         internal string DebuggerDisplay => $"{GUID.ToString()}{(DataGUID != null ? $" - {DataGUID.ToString()}" : "")}";
 
         public bool Equals(TextureInfo other) {
@@ -47,7 +48,8 @@ namespace DataTool.FindLogic {
     }
     
     public static class Texture {
-        public static void AddGUID(Dictionary<ulong, List<TextureInfo>> textures, Common.STUGUID mainKey, Common.STUGUID dataKey, ulong parentKey, string name=null, bool forceZero=false, ulong materialId = 0) {
+        public static void AddGUID(Dictionary<ulong, List<TextureInfo>> textures, Common.STUGUID mainKey, Common.STUGUID dataKey, ulong parentKey, string name=null, bool forceZero=false, 
+            ulong materialId = 0, ImageDefinition.ImageType textureType=ImageDefinition.ImageType.Unknown) {
             if (mainKey == null) return;
             if (forceZero) parentKey = 0;
             if (!textures.ContainsKey(parentKey)) {
@@ -58,7 +60,8 @@ namespace DataTool.FindLogic {
                 GUID = mainKey,
                 DataGUID = dataKey,
                 Name = name,
-                MaterialID = materialId
+                MaterialID = materialId,
+                Type = textureType
             };
 
             if (!textures[parentKey].Contains(newTexture)) {
@@ -66,11 +69,11 @@ namespace DataTool.FindLogic {
             }
         }
 
-        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, STUDecalReference decal, string name = null, bool forceZero = false) {
-            return FindTextures(existingTextures, decal.DecalResource, name, forceZero);
+        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, STUEffectReference effect, string name = null, bool forceZero = false) {
+            return FindTextures(existingTextures, effect.EffectLook, name, forceZero);
         }
         
-        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, Common.STUGUID textureGUID, string name=null, bool forceZero=false, Dictionary<ulong, ulong> replacements = null, ulong materialId = 0) {
+        public static Dictionary<ulong, List<TextureInfo>> FindTextures(Dictionary<ulong, List<TextureInfo>> existingTextures, Common.STUGUID textureGUID, string name=null, bool forceZero=false, Dictionary<ulong, ulong> replacements = null, ulong materialId = 0, ImageDefinition.ImageType textureType = ImageDefinition.ImageType.Unknown) {
             if (existingTextures == null) {
                 existingTextures = new Dictionary<ulong, List<TextureInfo>>();
             }
@@ -83,13 +86,13 @@ namespace DataTool.FindLogic {
                 case 0xB3:
                     ImageDefinition def = new ImageDefinition(OpenFile(textureGUID));
                     foreach (ImageLayer layer in def.Layers) {
-                        FindTextures(existingTextures, new Common.STUGUID(layer.key), name, forceZero, replacements, materialId);
+                        FindTextures(existingTextures, new Common.STUGUID(layer.Key), name, forceZero, replacements, materialId, layer.Type);
                     }
                     break;
                 case 0xA8:
-                    STUDecal decal = GetInstance<STUDecal>(textureGUID);
-                    if (decal == null) break;
-                    foreach (Common.STUGUID decalMaterial in decal.Materials) {
+                    STUEffectLook effectLook = GetInstance<STUEffectLook>(textureGUID);
+                    if (effectLook == null) break;
+                    foreach (Common.STUGUID decalMaterial in effectLook.Materials) {
                         if (!Files.ContainsKey(decalMaterial)) continue;
                         existingTextures = FindTextures(existingTextures, decalMaterial, name, forceZero, replacements);
                     }
@@ -97,7 +100,7 @@ namespace DataTool.FindLogic {
                 case 0x04:
                     ulong dataKey = (textureGUID & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
                     AddGUID(existingTextures, textureGUID,
-                        Files.ContainsKey(dataKey) ? new Common.STUGUID(dataKey) : null, 0, name, forceZero, materialId);
+                        Files.ContainsKey(dataKey) ? new Common.STUGUID(dataKey) : null, 0, name, forceZero, materialId, textureType);
                     break;
                 case 0x08:
                     Material material = new Material(OpenFile(textureGUID), 0);
@@ -106,17 +109,25 @@ namespace DataTool.FindLogic {
                 case 0x1A:
                     STUModelLook modelLook = GetInstance<STUModelLook>(textureGUID);
                     if (modelLook.Materials == null) break;
-                    foreach (STUModelLook.Material modelLookMaterial in modelLook.Materials) {
-                        existingTextures = FindTextures(existingTextures, modelLookMaterial.MaterialReference, null,
-                            forceZero, replacements, modelLookMaterial.Id);
+                    foreach (STUModelMaterial modelLookMaterial in modelLook.Materials) {
+                        existingTextures = FindTextures(existingTextures, modelLookMaterial.Material, null,
+                            forceZero, replacements, modelLookMaterial.ID);
                     }
-                    // foreach (STUModelLook.MaterialReferenceWrapper modelLookWrapper in modelLook.Wrappers) {
-                    //     foreach (STUModelLook.Material refMaterial in modelLookWrapper.Materials) {
-                    //         existingTextures = FindTextures(existingTextures, refMaterial.MaterialReference, null,
-                    //             forceZero, replacements);
-                    //     }
+                    if (modelLook.MaterialEffects != null) {
+                        foreach (STUMaterialEffect modelLookWrapper in modelLook.MaterialEffects) {
+                            foreach (STUModelMaterial refMaterial in modelLookWrapper.Materials) {
+                                existingTextures = FindTextures(existingTextures, refMaterial.Material, null,
+                                    forceZero, replacements);
+                            }
+                        
+                        }
+                    }
+                    // if (modelLook.AnimationPermutations != null) {
+                    //     foreach (STUAnimationPermutation animationPermutation in modelLook.AnimationPermutations) {
                     //     
+                    //     }
                     // }
+                    
                     break;
                 case 0x03:
                     // STUStatescriptComponentMaster container = GetInstance<STUStatescriptComponentMaster>(textureGUID);

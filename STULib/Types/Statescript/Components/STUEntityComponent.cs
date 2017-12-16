@@ -3,7 +3,7 @@
 using STULib.Types.Generic;
 
 namespace STULib.Types.Statescript.Components {
-    [STU(0x7395D144)]
-    public class STUStatescriptComponent : Common.STUInstance {
+    [STU(0x7395D144, "STUEntityComponent")]
+    public class STUEntityComponent : Common.STUInstance {
     }
 }

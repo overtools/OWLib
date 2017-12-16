@@ -316,10 +316,10 @@ namespace STUHashTool {
                     index++;
                     continue;
                 }
-                // if (instance.Usage != InstanceUsage.Root) {
-                //     index++;
-                //     continue;
-                // }
+                if (instance.Usage != InstanceUsage.Root) {
+                    index++;
+                    continue;
+                }
                 string[] instanceChecksums = instance.GetType().GetCustomAttributes<STUAttribute>().Select(x => Convert.ToString(x.Checksum, 16)).ToArray();
                 if (instanceWildcard != null && !instanceChecksums.Any(x => string.Equals(x, instanceWildcard.TrimStart('0'),  StringComparison.InvariantCultureIgnoreCase))) continue;
                 Console.ReplaceAllColorsWithDefaults();

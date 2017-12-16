@@ -120,14 +120,35 @@ namespace OWLib.Writer {
             }
             return true;
         }
+        
+        public static Quaternion GetGlobalRot(lksm skeleton, short s, IReadOnlyList<short> hierarchy) {
+            if (skeleton.Matrices34Inverted.Length <= s || s == -1) return new Quaternion();
+            Matrix3x4 bone = skeleton.Matrices34Inverted[s];
+            Quaternion quat = new Quaternion(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
+            Quaternion parent = new Quaternion();
+            if (hierarchy.Count > s) parent = GetGlobalRot(skeleton, hierarchy[s], hierarchy);
+            return quat + parent;
+        }
 
-        private static Vector3 GetGlobalPos(IReadOnlyList<Matrix3x4> skeletonMatrices34Inverted, short s, IReadOnlyList<short> hierarchy) {
-            if (skeletonMatrices34Inverted.Count <= s || s == -1) return new Vector3();
-            Matrix3x4 bone = skeletonMatrices34Inverted[s];
+        public static Vector3 GetPos(lksm skeleton, int index) {
+            Matrix3x4 bone = skeleton.Matrices34[index];
             Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
-            Vector3 parent = new Vector3();
-            if (hierarchy.Count > s) parent = GetGlobalPos(skeletonMatrices34Inverted, hierarchy[s], hierarchy);
-            return pos + parent;
+            return pos;
+        }
+        
+        public static Quaternion GetRotTest(lksm skeleton, int index) {
+            Matrix3x4 bone = skeleton.Matrices34[index];
+            Quaternion quat = new Quaternion(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
+            return quat;
+        }
+
+        public static Vector3 GetGlobalPos(IReadOnlyList<Matrix3x4> skeletonMatrices34Inverted, short s, IReadOnlyList<short> hierarchy) {
+             if (skeletonMatrices34Inverted.Count <= s || s == -1) return new Vector3();
+             Matrix3x4 bone = skeletonMatrices34Inverted[s];
+             Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
+             Vector3 parent = new Vector3();
+             if (hierarchy.Count > s) parent = GetGlobalPos(skeletonMatrices34Inverted, hierarchy[s], hierarchy);
+             return pos + parent;
         }
 
         public bool WriteCloth(Chunked model, Stream output, HTLC cloth, uint index) {  // todo:

@@ -91,11 +91,11 @@ namespace OWLib.Types {
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct ImageLayer {
-        public ulong key;
-        public uint unk;
-        public uint layer;
+        public ulong Key;
+        public ImageDefinition.ImageType Type;
+        public uint Flags;
         
-        public ulong DataKey => (key & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
+        public ulong DataKey => (Key & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

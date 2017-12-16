@@ -4,6 +4,6 @@ namespace STULib.Types.STUUnlock {
     [STU(0x54BC2188)]
     public class PlayerIcon : Cosmetic {
         [STUField(0x1B25AB90)]
-        public STUDecalReference Decal;
+        public STUEffectReference Effect;
     }
 }

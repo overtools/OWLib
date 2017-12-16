@@ -70,7 +70,7 @@ namespace DataTool.ToolLogic.Extract {
                 STUHero hero = GetInstance<STUHero>(heroFile);
                 if (hero == null) continue;
 
-                string heroNameActual = GetString(hero.Name) ?? $"Unknown{GUID.Index(heroFile)}";
+                string heroNameActual = (GetString(hero.Name) ?? $"Unknown{GUID.Index(heroFile)}").TrimEnd(' ');
 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
                 foreach (string key in new [] {heroNameActual.ToLowerInvariant(), "*"}) {
@@ -86,7 +86,7 @@ namespace DataTool.ToolLogic.Extract {
                 
                 if (config.Count == 0) continue;
                 
-                STUStatescriptSoundMaster soundMasterContainer = GetInstance<STUStatescriptSoundMaster>(hero.StatescriptHeroComponent1);
+                STUEntitySoundMaster soundMasterContainer = GetInstance<STUEntitySoundMaster>(hero.EntityMain);
 
                 if (soundMasterContainer == null) {
                     Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: soundMaster not found");

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using APPLIB;
 using OpenTK;
 using OWLib.Types;
 using OWLib.Types.Chunk;
@@ -158,7 +158,7 @@ namespace OWLib.Writer {
 
             using (BinaryWriter writer = new BinaryWriter(output)) {
                 writer.Write((ushort)1); // version major
-                writer.Write((ushort)3); // version minor
+                writer.Write((ushort)4); // version minor
 
                 if (data.Length > 1 && data[1] is string && ((string)data[1]).Length > 0) {
                     writer.Write((string)data[1]);
@@ -232,8 +232,8 @@ namespace OWLib.Writer {
                         writer.Write(pos.Y);
                         writer.Write(pos.Z);
                         writer.Write(scl.X);
-                        writer.Write(scl.X);
-                        writer.Write(scl.X);
+                        writer.Write(scl.Y);
+                        writer.Write(scl.Z);
                         writer.Write(rot.X);
                         writer.Write(rot.Y);
                         writer.Write(rot.Z);
@@ -458,7 +458,7 @@ namespace OWLib.Writer {
                 if (hardpoints != null) {
                     // attachments
                     foreach (PRHM.HardPoint hp in hardpoints.HardPoints) {
-                        writer.Write(IdToString("attachment_", hp.id));
+                        writer.Write(IdToString("attachment_", GUID.Index(hp.HardPointGUID)));
                         Matrix4 mat = hp.matrix.ToOpenTK();
                         Vector3 pos = mat.ExtractTranslation();
                         Quaternion rot = mat.ExtractRotation();
@@ -472,7 +472,7 @@ namespace OWLib.Writer {
                     }
                     // extension 1.1
                     foreach (PRHM.HardPoint hp in hardpoints.HardPoints) {
-                        writer.Write(IdToString("bone", hp.id));
+                        writer.Write(IdToString("bone", GUID.Index(hp.GUIDx012)));
                     }
                 }
                 
@@ -503,8 +503,51 @@ namespace OWLib.Writer {
                 //     }
                 //     clothIndex++;
                 // }
+                
+                // ext 1.4: embedded refpose
+                if (skeleton != null) {
+                    for (int i = 0; i < skeleton.Data.bonesAbs; ++i) {
+                        writer.Write(IdToString("bone", skeleton.IDs[i]));
+                        short parent = hierarchy[i];
+                        // if (parent == -1) {
+                        //     parent = (short)i;
+                        // }
+                        writer.Write(parent);
+                        
+                        Matrix3x4 bone = skeleton.Matrices34Inverted[i];
+                        
+                        // Quaternion3D quat = new Quaternion3D(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
+                        // why are they different
+                        Quaternion3D quat = new Quaternion3D(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
+                        
+                        Vector3D rot = C3D.ToEulerAngles(quat);
+                        if (rot.X == -3.14159274f && rot.Y == 0 && rot.Z == 0) {
+                            rot = new Vector3D(0, 3.14159274f, 3.14159274f); // effectively the same but you know, eulers.
+                        }
+                        Vector3 scl = new Vector3(bone[1, 0], bone[1, 1], bone[1, 2]);
+                        Vector3 pos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
+                        // Vector3 pos2 = new Vector3();
+                        // if (parent != i) {
+                        //     pos2 = RefPoseWriter.GetGlobalPos(skeleton.)
+                        // }
+                        // if (nodeMap.ContainsKey(i)) {
+                        //     HTLC.ClothNode thisNode = nodeMap[i];
+                        //     pos.X = thisNode.X;
+                        //     pos.Y = thisNode.Y;
+                        //     pos.Z = thisNode.Z;
+                        // }
+                        writer.Write(pos.X);
+                        writer.Write(pos.Y);
+                        writer.Write(pos.Z);
+                        writer.Write(scl.X);
+                        writer.Write(scl.Y);
+                        writer.Write(scl.Z);
+                        writer.Write(rot.X);
+                        writer.Write(rot.Y);
+                        writer.Write(rot.Z);
+                    }
+                }
             }
-            
             
             return true;
         }

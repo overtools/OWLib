@@ -35,7 +35,7 @@ namespace OverTool.ExtractLogic {
 
             ImageDefinition definition = new ImageDefinition(Util.OpenFile(map[decal.Records[0].definiton.key], handler));
 
-            ulong imageKey = definition.Layers[0].key;
+            ulong imageKey = definition.Layers[0].Key;
             if (!map.ContainsKey(imageKey)) {
                 return;
             }

@@ -87,7 +87,7 @@ namespace DataTool.FindLogic {
 
                 FECE[] feces = chunked.GetAllOfTypeFlat<FECE>();
                 foreach (FECE fece in feces) {   // good variable name
-                    existingSounds = FindSounds(existingSounds, fece.Data.effect, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, fece.Data.Effect, name, forceZero, toplevelKey, replacements);
                 }
             }
 
@@ -201,17 +201,17 @@ namespace DataTool.FindLogic {
                     }
                     break;
                 case 0x03:
-                    STUStatescriptComponentMaster container = GetInstance<STUStatescriptComponentMaster>(soundGUID);
-                    foreach (KeyValuePair<ulong,STUStatescriptComponent> statescriptComponent in container.Components) {
-                        STUStatescriptComponent component = statescriptComponent.Value;
+                    STUEntityDefinition container = GetInstance<STUEntityDefinition>(soundGUID);
+                    foreach (KeyValuePair<ulong,STUEntityComponent> statescriptComponent in container.Components) {
+                        STUEntityComponent component = statescriptComponent.Value;
                         if (component == null) continue;
-                        if (component.GetType() == typeof(STUStatescriptSoundMaster)) {
-                            STUStatescriptSoundMaster ssSoundMaster = component as STUStatescriptSoundMaster;
+                        if (component.GetType() == typeof(STUEntitySoundMaster)) {
+                            STUEntitySoundMaster ssSoundMaster = component as STUEntitySoundMaster;
                             existingSounds = FindSounds(existingSounds, ssSoundMaster?.SoundMaster, null, forceZero, toplevelKey, replacements);
                         } else if (component.GetType() == typeof(STUStatescript07A)) {
                             STUStatescript07A ss07A = component as STUStatescript07A;
                             existingSounds = FindSounds(existingSounds, ss07A?.GUIDx07A, null, forceZero, toplevelKey, replacements);
-                        } else if (component.GetType() == typeof(STUStatescriptSubreferenceComponent)) {
+                        } else if (component.GetType() == typeof(STUFirstPersonComponent)) {
                             // hmm, references another 003
                             // STU_9D28963F ss9D28963F = component as STU_9D28963F;
                             // existingSounds = FindSounds(existingSounds, ss9D28963F?.m_A83C2C26, replacements);
