@@ -4,7 +4,7 @@ using STULib.Types.Generic;
 namespace STULib.Types.Gamemodes {
     [STU(0x892418B9)]
     public class STUBrawlHero : STUBrawlHeroContainer {
-        [STUField(0x37AB13D3)]
+        [STUField(0x37AB13D3, "m_hero")]
         public Common.STUGUID Hero;  // STULib.Types.STUHero
     }
 }

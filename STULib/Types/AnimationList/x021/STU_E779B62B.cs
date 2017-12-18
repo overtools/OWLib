@@ -15,7 +15,7 @@ namespace STULib.Types.AnimationList.x021 {
         public Common.STUGUID GUIDx012_C;  // STU_7A0B33DA
 
         [STUField(0xF5E10B3A)]
-        public Common.STUGUID GUIDx03C;  // STU_F9134815
+        public Common.STUGUID GUIDx03C;  // STUHardpoint
 
         [STUField(0x2BC9F69B)]
         public Common.STUGUID m_2BC9F69B;  // STU_D2929F20

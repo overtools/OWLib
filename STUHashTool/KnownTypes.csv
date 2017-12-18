@@ -62,3 +62,8 @@ CE1A4D26, STUEffect
 A6DD7672, STUAnimationPermutation
 92389E46, STUAnimation
 4D03ED2B, STUMaterialEffect
+E7BEFDCE, STUAnimBlendDriverParam
+32443B67, STUAnimNode_AnimationTrackOverride
+CB6035BA, STUAnimNode_Animation
+15B4F157, STUAnimNode_Base
+C43ABAA7, STUAnimCurveCompiled

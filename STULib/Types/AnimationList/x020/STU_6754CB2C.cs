@@ -21,8 +21,8 @@ namespace STULib.Types.AnimationList.x020 {
         [STUField(0x87B8E1D6)]
         public STU_ABD8FE73 m_87B8E1D6;
 
-        [STUField(0x14F95E1B)]
-        public STU_ABD8FE73 m_14F95E1B;
+        [STUField(0x14F95E1B, "m_dampingFactor")]
+        public STU_ABD8FE73 DampingFactor;
 
         [STUField(0x694608DC)]
         public STU_15EF3A7E m_694608DC;

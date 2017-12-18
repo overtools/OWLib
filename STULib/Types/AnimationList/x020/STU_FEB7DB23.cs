@@ -10,7 +10,7 @@ namespace STULib.Types.AnimationList.x020 {
         public STUAnimationListAnimationWrapper AnimationWrapper;
 
         [STUField(0x07DD813E)]
-        public Common.STUGUID m_07DD813E;  // STU_92389E46
+        public Common.STUGUID m_07DD813E;  // STUAnimation
 
         [STUField(0x7C9BE696)]
         public byte m_7C9BE696;

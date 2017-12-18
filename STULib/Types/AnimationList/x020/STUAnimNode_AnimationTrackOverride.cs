@@ -4,15 +4,15 @@ using STULib.Types.AnimationList.x021;
 using STULib.Types.Generic;
 
 namespace STULib.Types.AnimationList.x020 {
-    [STU(0x32443B67)]
-    public class STU_32443B67 : Common.STUInstance {
+    [STU(0x32443B67, "STUAnimNode_AnimationTrackOverride")]
+    public class STUAnimNode_AnimationTrackOverride : Common.STUInstance {
         [STUField(0xF46C7A7F)]
         public STU_3426C7F2 m_F46C7A7F;
 
         [STUField(0x07DD813E)]
         public STU_ABD8FE73 m_07DD813E;
 
-        [STUField(0xBA891264)]
-        public Common.STUGUID GUIDx013;  // STU_D2929F20
+        [STUField(0xBA891264, "m_dataFlow")]
+        public Common.STUGUID DataFlow;  // STU_D2929F20
     }
 }

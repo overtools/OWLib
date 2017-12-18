@@ -8,6 +8,7 @@ using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
+using STULib.Types;
 using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 
@@ -83,22 +84,22 @@ namespace DataTool.SaveLogic {
             OWEntityWriter owEntityWriter = new OWEntityWriter();
             if (entityNames == null) entityNames = new Dictionary<Common.STUGUID, string>();
             foreach (EntityInfo entity in entities) {
-                using (Stream entityStream = OpenFile(entity.GUID)) {
-                    if (entityStream == null) {
-                        continue;
-                    }           
-                    string entityName = entity.GUID.ToString();
-                    if (entityNames.ContainsKey(entity.GUID)) entityName = GetValidFilename(entityNames[entity.GUID]);
-                    string basePath = Path.Combine(path, entityName);
-                    CreateDirectoryFromFile($"{basePath}\\GabeN");
-                    using (Stream fileStream =
-                        new FileStream($"{basePath}\\{entityName}{owEntityWriter.Format}", FileMode.Create)) {
-                        fileStream.SetLength(0);
-                        owEntityWriter.Write(fileStream, entity, entityNames);
-                    }
-                    
-                    SaveAnimations(flags, basePath, entity.Animations, entity.Model, "Animations", true, entityNames);
+                //using (Stream entityStream = OpenFile(entity.GUID)) {
+                //    if (entityStream == null) {
+                //        continue;
+                //    }           
+                string entityName = entity.GUID.ToString();
+                if (entityNames.ContainsKey(entity.GUID)) entityName = GetValidFilename(entityNames[entity.GUID]);
+                string basePath = Path.Combine(path, entityName);
+                CreateDirectoryFromFile($"{basePath}\\GabeN");
+                using (Stream fileStream =
+                    new FileStream($"{basePath}\\{entityName}{owEntityWriter.Format}", FileMode.Create)) {
+                    fileStream.SetLength(0);
+                    owEntityWriter.Write(fileStream, entity, entityNames);
                 }
+                
+                SaveAnimations(flags, basePath, entity.Animations, entity.Model, "Animations", true, entityNames);
+                //}
             }
         }
 
@@ -111,17 +112,19 @@ namespace DataTool.SaveLogic {
                 string name = GetValidFilename(animation.Name);
                 if (name == null) name = GUID.LongKey(animation.GUID).ToString("X12");
                 CreateDirectoryFromFile($"{path}\\{dirname}\\{name}\\drfdfd");
+                Dictionary<ulong, List<STUVoiceLineInstance>> svceLines = null;
                 using (Stream fileStream =
                     new FileStream($"{path}\\{dirname}\\{name}\\{name}.owanim", FileMode.Create)) {
                     fileStream.SetLength(0);
                     if (isReference) {
                         owAnimWriter.WriteReference(fileStream, animation, model);
                     } else {
-                        owAnimWriter.Write(fileStream, animation, model, entityNames);
+                        svceLines = Effect.GetSVCELines(animation);
+                        owAnimWriter.Write(fileStream, animation, model, entityNames, svceLines);
                     }
                 }
                 if (!isReference) {
-                    Effect.Save(flags, $"{path}\\{dirname}\\{name}", animation, true, entityNames);
+                    Effect.Save(flags, $"{path}\\{dirname}\\{name}", animation, true, entityNames, svceLines);
                 }
             }
         }

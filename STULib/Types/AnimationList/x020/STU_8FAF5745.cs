@@ -5,16 +5,16 @@ using STULib.Types.Generic;
 namespace STULib.Types.AnimationList.x020 {
     [STU(0x8FAF5745)]
     public class STU_8FAF5745 : Common.STUInstance {
-        [STUField(0x5DB91CE2)]
-        public string m_5DB91CE2;
+        [STUField(0x5DB91CE2, "m_displayName")]
+        public string DisplayName;
 
-        [STUField(0x6EAB6810)]
-        public string m_6EAB6810;
+        [STUField(0x6EAB6810, "m_comment")]
+        public string Comment;
 
-        [STUField(0xA10A5EAF)]
-        public Common.STUVec2 m_A10A5EAF;
+        [STUField(0xA10A5EAF, "m_pos")]
+        public Common.STUVec2 Pos;
 
-        [STUField(0xE3B4FA5C)]
-        public uint m_E3B4FA5C;
+        [STUField(0xE3B4FA5C, "m_uniqueID")]
+        public uint UniqueID;
     }
 }

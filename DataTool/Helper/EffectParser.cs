@@ -45,10 +45,10 @@ namespace DataTool.Helper {
             public ulong Hardpoint;
             public IChunk PreviousChunk;
 
-            public ChunkPlaybackInfo(EffectChunkComponent component, IChunk previousChunk) {
+            public ChunkPlaybackInfo(PMCEInfo component, IChunk previousChunk) {
                 if (component != null) {
                     TimeInfo = new ChunkPlaybackTimeInfo {StartTime = component.StartTime, EndTime = component.EndTime};
-                    Hardpoint = component.Data.Hardpoint;
+                    Hardpoint = component.Hardpoint;
                 } else {
                     Hardpoint = 0;
                 }
@@ -89,11 +89,16 @@ namespace DataTool.Helper {
         }
 
         public IEnumerable<KeyValuePair<ChunkPlaybackInfo, IChunk>> GetChunks() {
-            EffectChunkComponent lastComponent = null;
+            PMCEInfo lastComponent = null;
             IChunk lastChunk = null;
+            // TCFE effect = Chunk.GetAllOfType<TCFE>().First().Value;
             for (int i = 0; i < Chunk.Chunks.Count; i++) {
                 if (Chunk?.Chunks[i]?.GetType() == typeof(EffectChunkComponent)) {
-                    lastComponent = Chunk.Chunks[i] as EffectChunkComponent;
+                    EffectChunkComponent pmce = Chunk.Chunks[i] as EffectChunkComponent;
+                    if (pmce == null) continue;
+                    lastComponent = new PMCEInfo {Hardpoint = pmce.Data.Hardpoint, StartTime = pmce.StartTime, EndTime = pmce.EndTime};
+                    // if (effect.Hardpoints == null) continue;
+                    // if (effect.Hardpoints.Length <= pmce.Data.Index) continue;
                     continue;
                 }
 
@@ -157,8 +162,8 @@ namespace DataTool.Helper {
         }
 
         public static void AddSSCE(EffectInfo effectInfo, SSCE ssce, Type lastType, Dictionary<ulong, ulong> replacements) {
-            ulong def = ssce.Data.definition_key;
-            ulong mat = ssce.Data.material_key;
+            ulong def = ssce.Data.TextureDefinition;
+            ulong mat = ssce.Data.Material;
             if (replacements.ContainsKey(def)) def = replacements[def];
             if (replacements.ContainsKey(mat)) mat = replacements[mat];
             if (lastType == typeof(RPCE)) {
@@ -278,6 +283,12 @@ namespace DataTool.Helper {
         public class SVCEInfo : EffectChunkInfo {
             public ulong VoiceStimulus;
         }
+        
+        public class PMCEInfo : EffectChunkInfo {
+            public float StartTime;
+            public float EndTime;
+            public ulong Hardpoint;
+        }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public class EffectInfo {
@@ -290,10 +301,11 @@ namespace DataTool.Helper {
             public List<SVCEInfo> SVCEs;
             public ulong GUID;
 
+            public ulong SoundMaster; // 05F for VoiceStimuli
+
             public float EffectLength; // seconds
             
             // todo: many more chunks
-            // todo: svce: (only if used in an anim somewhere)
             // todo: OSCE / 02C is controlled by the bnk?
 
             public void SetupEffect() {

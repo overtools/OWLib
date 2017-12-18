@@ -3,9 +3,9 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0x41999460)]
-    public class STUUISoundListEffect : STUInstance {
-        [STUField(0x33E51FDC)]
-        public STUGUID GUIDx03A;  // STU_4D28219D
+    public class STUUISoundListEffect : STUInstance {  // todo: maybe not
+        [STUField(0x33E51FDC, "m_material")]
+        public STUGUID Material;  // STU_4D28219D
 
         [STUField(0x1AC55F2D)]
         public STUGUID Effect;

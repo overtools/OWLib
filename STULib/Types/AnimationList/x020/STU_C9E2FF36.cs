@@ -8,8 +8,8 @@ namespace STULib.Types.AnimationList.x020 {
         [STUField(0xC41767A5)]
         public STU_F731C873 m_C41767A5;
 
-        [STUField(0x2C54AEAF)]
-        public STU_4831B16F m_2C54AEAF;
+        [STUField(0x2C54AEAF, "m_category")]
+        public STU_4831B16F Category;
 
         [STUField(0x425DCDA1)]
         public STU_15EF3A7E m_425DCDA1;

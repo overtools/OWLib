@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -8,8 +9,10 @@ using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
+using STULib.Types;
 using Common = STULib.Types.Generic.Common;
 using static DataTool.Helper.IO;
+using static DataTool.Helper.STUHelper;
 
 namespace DataTool.SaveLogic {
     public class Effect {
@@ -20,11 +23,11 @@ namespace DataTool.SaveLogic {
             public string Name => "OWM Effect Format";
             
             public const ushort VersionMajor = 1;
-            public const ushort VersionMinor = 0;
+            public const ushort VersionMinor = 1;
 
-            public void Write(Stream output, EffectParser.EffectInfo effect, Dictionary<Common.STUGUID, string> entityNames) {
+            public void Write(Stream output, EffectParser.EffectInfo effect, Dictionary<Common.STUGUID, string> entityNames, Dictionary<ulong, List<STUVoiceLineInstance>> svceLines) {
                 using (BinaryWriter writer = new BinaryWriter(output)) {
-                    Write(writer, effect, entityNames);
+                    Write(writer, effect, entityNames, svceLines);
                 }
             }
 
@@ -42,10 +45,9 @@ namespace DataTool.SaveLogic {
                 } else {
                     writer.Write("null");
                 }
-                
             }
 
-            public void Write(BinaryWriter writer, EffectParser.EffectInfo effect, Dictionary<Common.STUGUID, string> entityNames) {
+            public void Write(BinaryWriter writer, EffectParser.EffectInfo effect, Dictionary<Common.STUGUID, string> entityNames, Dictionary<ulong, List<STUVoiceLineInstance>> svceLines) {
                 writer.Write(new string(Identifier));
                 writer.Write(VersionMajor);
                 writer.Write(VersionMinor);
@@ -59,6 +61,7 @@ namespace DataTool.SaveLogic {
                 writer.Write(effect.RPCEs.Count);
                 writer.Write(effect.FECEs.Count);
                 writer.Write(effect.OSCEs.Count);
+                writer.Write(effect.SVCEs.Count);
 
                 foreach (EffectParser.DMCEInfo dmceInfo in effect.DMCEs) {
                     WriteTime(writer, dmceInfo.PlaybackInfo);
@@ -101,23 +104,45 @@ namespace DataTool.SaveLogic {
                 foreach (EffectParser.RPCEInfo rpceInfo in effect.RPCEs) {
                     WriteTime(writer, rpceInfo.PlaybackInfo);
                     writer.Write(rpceInfo.Model);
-                    // // todo: make the materials work
+                    // todo: make the materials work
                     writer.Write(rpceInfo.Material);
                     //writer.Write(rpceInfo.TextureDefiniton);
                     
                     writer.Write($"Models\\{GetFileName(rpceInfo.Model)}\\{GUID.LongKey(rpceInfo.Model):X12}.owmdl");
                 }
 
-                foreach (EffectParser.FECEInfo feceInfo in effect.FECEs) {
-                    WriteTime(writer, feceInfo.PlaybackInfo);
-                    writer.Write(feceInfo.GUID);
+                foreach (EffectParser.SVCEInfo svceInfo in effect.SVCEs) {
+                    writer.Write(GUID.Index(svceInfo.VoiceStimulus));
+                    if (svceLines.ContainsKey(svceInfo.VoiceStimulus)) {
+                        List<STUVoiceLineInstance> lines = svceLines[svceInfo.VoiceStimulus];
+                        writer.Write(lines.Count);
+                        
+                        foreach (STUVoiceLineInstance voiceLineInstance in lines) {
+                            STUSoundWrapper[] sounds = {
+                                voiceLineInstance.SoundContainer.Sound1,
+                                voiceLineInstance.SoundContainer.Sound2, 
+                                voiceLineInstance.SoundContainer.Sound3,
+                                voiceLineInstance.SoundContainer.Sound4
+                            };
+                            sounds = sounds.Where(x => x != null).ToArray();
+                            writer.Write(sounds.Length);
+                            foreach (STUSoundWrapper wrapper in sounds) {
+                                writer.Write($"Sounds\\{GetFileName(wrapper.SoundResource)}");
+                            }
+                        }
+                    }
                 }
-                
-                foreach (EffectParser.OSCEInfo osceInfo in effect.OSCEs) {
-                    // this needs preprocessing, get the sounds
-                    WriteTime(writer, osceInfo.PlaybackInfo);
-                    writer.Write(osceInfo.Sound);
-                }
+
+                // foreach (EffectParser.FECEInfo feceInfo in effect.FECEs) {
+                //     WriteTime(writer, feceInfo.PlaybackInfo);
+                //     writer.Write(feceInfo.GUID);
+                // }
+                // 
+                // foreach (EffectParser.OSCEInfo osceInfo in effect.OSCEs) {
+                //     // this needs preprocessing, get the sounds
+                //     WriteTime(writer, osceInfo.PlaybackInfo);
+                //     writer.Write(osceInfo.Sound);
+                // }
             }
 
             public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, params object[] data) {
@@ -161,7 +186,7 @@ namespace DataTool.SaveLogic {
             //     how are weapons attached? TICK
             //     stretch goal:
             //         how do camera
-            public void Write(Stream output, AnimationInfo animation, Common.STUGUID model, Dictionary<Common.STUGUID, string> entityNames) {
+            public void Write(Stream output, AnimationInfo animation, Common.STUGUID model, Dictionary<Common.STUGUID, string> entityNames, Dictionary<ulong, List<STUVoiceLineInstance>> svceLines) {
                 using (BinaryWriter writer = new BinaryWriter(output)) {
                     writer.Write(new string(Identifier));
                     writer.Write(VersionMajor);
@@ -174,7 +199,7 @@ namespace DataTool.SaveLogic {
                     writer.Write($"Models\\{model.ToString()}\\{GUID.LongKey(model):X12}.owmdl");
                     // wrap oweffect
                     OWEffectWriter effectWriter = new OWEffectWriter();
-                    effectWriter.Write(writer, animation, entityNames);
+                    effectWriter.Write(writer, animation, entityNames, svceLines);
                 }
             }
 
@@ -207,8 +232,19 @@ namespace DataTool.SaveLogic {
                 throw new NotImplementedException();
             }
         }
+
+        public static Dictionary<ulong, List<STUVoiceLineInstance>> GetSVCELines(EffectParser.EffectInfo effect) {
+            Dictionary<ulong, List<STUVoiceLineInstance>> svceLines = new Dictionary<ulong, List<STUVoiceLineInstance>>();
+            if (effect.SoundMaster != 0 && effect.SVCEs.Count != 0) {
+                STUSoundMaster soundMaster = GetInstance<STUSoundMaster>(effect.SoundMaster);
+                foreach (EffectParser.SVCEInfo svceInfo in effect.SVCEs) {
+                    svceLines[svceInfo.VoiceStimulus] = soundMaster.VoiceLineInstances.Where(x => x.SoundDataContainer.Group == svceInfo.VoiceStimulus).ToList();
+                }
+            }
+            return svceLines;
+        }
         
-        public static void Save(ICLIFlags flags, string path, EffectParser.EffectInfo effect, bool isAnim = false, Dictionary<Common.STUGUID, string> entityNames=null) {
+        public static void Save(ICLIFlags flags, string path, EffectParser.EffectInfo effect, bool isAnim = false, Dictionary<Common.STUGUID, string> entityNames=null, Dictionary<ulong, List<STUVoiceLineInstance>> svceLines=null) {
             string thisPath = isAnim ? path : Path.Combine(path, GetFileName(effect.GUID));
             OWEffectWriter writer = new OWEffectWriter();
             
@@ -216,6 +252,23 @@ namespace DataTool.SaveLogic {
             foreach (EffectParser.OSCEInfo osceInfo in effect.OSCEs) {
                 sounds = FindLogic.Sound.FindSounds(sounds, new Common.STUGUID(osceInfo.Sound));
             }
+
+            if (svceLines == null) {
+                svceLines = GetSVCELines(effect);
+            }
+
+            foreach (KeyValuePair<ulong,List<STUVoiceLineInstance>> valuePair in svceLines) {
+                foreach (STUVoiceLineInstance voiceLineInstance in valuePair.Value) {
+                    foreach (STUSoundWrapper wrapper in new [] {voiceLineInstance.SoundContainer.Sound1, 
+                        voiceLineInstance.SoundContainer.Sound2, voiceLineInstance.SoundContainer.Sound3, 
+                        voiceLineInstance.SoundContainer.Sound4}) {
+                        if (wrapper != null) {
+                            Sound.Save(flags, $"{thisPath}\\Sounds", new Dictionary<ulong, List<SoundInfo>> {{0, new List<SoundInfo> {new SoundInfo {GUID = wrapper.SoundResource}}}}, false);
+                        }
+                    }
+                }
+            }
+            
             Sound.Save(flags, $"{thisPath}\\Sounds", sounds);
 
             if (!isAnim) {
@@ -223,7 +276,7 @@ namespace DataTool.SaveLogic {
                 using (Stream fileStream =
                     new FileStream($"{thisPath}\\{GetFileName(effect.GUID)}.oweffect", FileMode.Create)) {
                     fileStream.SetLength(0);
-                    writer.Write(fileStream, effect, entityNames);
+                    writer.Write(fileStream, effect, entityNames, svceLines);
                 }
             }
 

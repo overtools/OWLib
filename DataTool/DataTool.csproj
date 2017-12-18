@@ -94,8 +94,10 @@
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimatedSpray.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimNodes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugEffectLook.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugEntities.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugNewEntities.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSound.cs" />
     <Compile Include="ToolLogic\Extract\ExtractAbilities.cs" />

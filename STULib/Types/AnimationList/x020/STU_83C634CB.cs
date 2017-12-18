@@ -52,7 +52,7 @@ namespace STULib.Types.AnimationList.x020 {
         public Common.STUGUID m_50524C35;  // STU_7A0B33DA
 
         [STUField(0x01986408)]
-        public Common.STUGUID m_01986408;  // STU_F9134815
+        public Common.STUGUID m_01986408;  // STUHardPoint
 
         [STUField(0xB68CCF54)]
         public Common.STUGUID m_B68CCF54;  // STU_7A0B33DA

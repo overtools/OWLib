@@ -4,7 +4,7 @@ using STULib.Types.AnimationList.x021;
 
 namespace STULib.Types.AnimationList.x020 {
     [STU(0xDE44D504)]
-    public class STU_DE44D504 : STUAnimationListSecondaryContainer {
+    public class STU_DE44D504 : STUAnimNode_Base {
         [STUField(0x868A1EC8)]
         public STU_51A9D9C7 m_868A1EC8;
 

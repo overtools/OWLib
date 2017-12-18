@@ -9,8 +9,8 @@ namespace OWLib.Types.Chunk {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
             public ulong unknown1;
-            public ulong material_key;
-            public ulong definition_key;
+            public ulong Material;
+            public ulong TextureDefinition;
         }
 
         public Structure Data { get; private set; }

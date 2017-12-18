@@ -2,7 +2,7 @@
 
 namespace STULib.Types.AnimationList.x020 {
     [STU(0xD3FE890D)]
-    public class STU_D3FE890D : STUAnimationListSecondaryContainer {
+    public class STU_D3FE890D : STUAnimNode_Base {
         [STUField(0x541B8505)]
         public STU_6754CB2C m_541B8505;
 

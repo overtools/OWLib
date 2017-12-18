@@ -7,8 +7,8 @@ namespace STULib.Types {
         [STUField(0xA20DCD80)]
         public ulong m_A20DCD80;
 
-        [STUField(0x0619C597)]
-        public Enums.STUEnum_1AA009C2 m_0619C597;
+        [STUField(0x0619C597, "m_type")]
+        public Enums.STUEnum_1AA009C2 Type;
 
         [STUField(0x967A138B)]
         public Enums.STUEnum_AB6CE3D1 m_967A138B;
@@ -61,8 +61,8 @@ namespace STULib.Types {
 
     [STU(0xC7CA73B1)]
     public class STUSoundInfoUnknown5 : STUSoundInfo {
-        [STUField(0xE02BEE24)]
-        public STUGUID Unknown0C3;
+        [STUField(0xE02BEE24, "m_celebration")]
+        public STUGUID Celebration;
     }
 
     // Found in 068

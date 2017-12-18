@@ -13,13 +13,13 @@ namespace OWLib.Types.Chunk {
             public ulong Hardpoint;
             public float FloatOneA;
             public float FloatOneB;
-            
-            // public long Unk;  // unsure
-            
+            public long Unk;
+            public short Index;
+
             // public short ShortFlag;
             // public short MinusOneShort;
 
-            // public float StartTime;
+            // public float StartTime; // no
 
             // public long Pad1;
             // public long Pad2;
@@ -43,7 +43,7 @@ namespace OWLib.Types.Chunk {
                 // research notes:
                 // 000000002206.08F:
                 //     end = frame 150 = 5 seconds = 1.0
-                //     'GunFlash' = ECFE, start time stored on A
+                //     'GunFlash' = ECEF, start time stored on A
                 //     'GunFlash' on frame 14:
                 //         14/30 = 0.4666666666666
                 //     'GunFlash' on frame 25:

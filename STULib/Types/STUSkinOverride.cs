@@ -23,7 +23,7 @@ namespace STULib.Types {
         public STUGUID[] Weapons;  // STU_F2646A89
 
         [STUField(0x71818BC5)]
-        public STUGUID[] m_71818BC5;  // STU_CE1A4D26
+        public STUGUID[] m_71818BC5;  // STUEffect
 
         [STUField(0xB8DC6D46)]
         public STUGUID m_B8DC6D46;  // STU_8880FCB0
@@ -32,7 +32,7 @@ namespace STULib.Types {
         public STU_882807BA[] m_70D5F086;
 
         [STUField(0x02F889AE)]
-        public STUGUID m_02F889AE;  // STU_42270D59
+        public STUGUID TeamColor;  // STU_42270D59/STUTeamColor. is this used?
 
         [STUField(0xC3E03C7F)]
         public STUColorRGBA UnknownColor;

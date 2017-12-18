@@ -36,7 +36,14 @@ namespace DataTool.SaveLogic {
                             using (Stream outputStream = File.OpenWrite(outputPath)) {
                                 soundStream.CopyTo(outputStream);
                             }
+                            // ConvertLogic.Sound.WwiseRIFFVorbis vorbis =
+                            //     new ConvertLogic.Sound.WwiseRIFFVorbis(soundStream,
+                            //         "Third Party\\packed_codebooks_aoTuV_603.bin");
+                            // using (Stream outputStream = File.OpenWrite(outputPathOgg+"2")) {
+                            //     vorbis.ConvertToOgg(outputStream);
+                            // }
                         }
+                        
                         if (convertWem) {
                             System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
                             pProcess.StartInfo.FileName = "Third Party\\ww2ogg.exe";

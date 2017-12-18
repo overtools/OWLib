@@ -6,7 +6,7 @@ namespace STULib.Types.AnimationList.x020 {
     [STU(0x17845EB6)]
     public class STU_17845EB6 : STU_BDB86C7B {
         [STUField(0x2B8A05A7)]
-        public STU_E7BEFDCE m_2B8A05A7;
+        public STUAnimBlendDriverParam m_2B8A05A7;
 
         [STUField(0x7D47BD64)]
         public STU_ABD8FE73 m_7D47BD64;

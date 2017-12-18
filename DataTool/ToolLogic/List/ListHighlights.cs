@@ -160,7 +160,7 @@ namespace DataTool.ToolLogic.List {
 
         protected string GetMapName(ulong key) {
             STUMap map = GetInstance<STUMap>(key);
-            return GetString(map.Name);
+            return GetString(map.DisplayName);
         }
 
         protected HeroInfoJSON GetHeroInfo(Common.HeroInfo heroInfo) {
@@ -199,7 +199,7 @@ namespace DataTool.ToolLogic.List {
 
         protected string GetGamemode(ulong guid) {
             STUGamemode gamemode = GetInstance<STUGamemode>(guid);
-            return GetString(gamemode?.Name);
+            return GetString(gamemode?.DisplayName);
         }
 
         protected ReplayJSON GetReplay(Highlight.Replay replay) {

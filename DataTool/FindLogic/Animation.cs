@@ -104,15 +104,16 @@ namespace DataTool.FindLogic {
                 }
                 Chunked chunked = new Chunked(chunkStream, true, ChunkManager.Instance);
                 
-                // if (GetFileName(parentAnim) == "000000004239.006") Debugger.Break(); // orisa supercharger main
                 // if (GetFileName(parentAnim) == "0000000045D6.006") Debugger.Break(); // doomfist one punch - 000000002206.08F
+                // if (GetFileName(parentAnim) == "000000004239.006") Debugger.Break(); // ANCR_totemslam_POTG - 000000001FCD.08F
+                // if (GetFileName(parentAnim) == "0000000042AD.006") Debugger.Break(); // ANCR_totemslam_totemprop_POTG - 0000000020C2.08F
+                // if (GetFileName(parentAnim) == "00000000226F.006") Debugger.Break(); // pharah: barrage highlight intro - 000000000BBA.08F
+                // if (GetFileName(parentAnim) == "00000000372B.006") Debugger.Break(); // hanzo: my aim is true - 0000000019E1.08F
+                // if (GetFileName(parentAnim) == "00000000372D.006") Debugger.Break(); // hanzo: my aim is true: arrow - 0000000019E5.08F
                 
                 EffectParser parser = new EffectParser(chunked, animationGUID);
-
                 AnimationInfo info = GetAnimationInfo(existingAnimations, parentAnim, replacements);
-
                 ulong lastModel = 0;
-                
                 Dictionary<ulong, List<ulong>> entityAnimationBacklog = new Dictionary<ulong, List<ulong>>();
 
                 foreach (KeyValuePair<EffectParser.ChunkPlaybackInfo,IChunk> chunk in parser.GetChunks()) {
@@ -170,7 +171,7 @@ namespace DataTool.FindLogic {
                         SSCE ssce = chunk.Value as SSCE;
                         if (ssce == null) continue;
                         Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                        textures = Texture.FindTextures(textures, new Common.STUGUID(ssce.Data.material_key), null, true, replacements, GUID.Index(ssce.Data.material_key));
+                        textures = Texture.FindTextures(textures, new Common.STUGUID(ssce.Data.Material), null, true, replacements, GUID.Index(ssce.Data.Material));
                         if (lastModel != 0) {
                             Model.AddGUID(models, new Common.STUGUID(lastModel), textures, null, replacements);
                         }
@@ -218,21 +219,22 @@ namespace DataTool.FindLogic {
                     }
                 }
             }
+
             return existingAnimations;
         }
 
         public static HashSet<AnimationInfo> FindAnimations(HashSet<AnimationInfo> existingAnimations, HashSet<ModelInfo> models,
-            STUAnimationListSecondaryContainer container, Dictionary<ulong, ulong> replacements = null) {
+            STUAnimNode_Base container, Dictionary<ulong, ulong> replacements = null) {
             
             if (container.GetType() == typeof(STUAnimationListSecondardAnimationContainerA)) {
                 STUAnimationListSecondardAnimationContainerA animationContainerA =
                     container as STUAnimationListSecondardAnimationContainerA;
-                existingAnimations = FindAnimations(existingAnimations, models, animationContainerA?.AnimationWrapper?.Animation, replacements);
+                existingAnimations = FindAnimations(existingAnimations, models, animationContainerA?.Animation?.Value, replacements);
             }
-            if (container.GetType() == typeof(STUAnimationListSecondardAnimationContainerB)) {
-                STUAnimationListSecondardAnimationContainerB animationContainerB =
-                    container as STUAnimationListSecondardAnimationContainerB;
-                existingAnimations = FindAnimations(existingAnimations, models, animationContainerB?.AnimationWrapper?.Animation, replacements);
+            if (container.GetType() == typeof(STUAnimNode_Animation)) {
+                STUAnimNode_Animation animationContainerB =
+                    container as STUAnimNode_Animation;
+                existingAnimations = FindAnimations(existingAnimations, models, animationContainerB?.Animation?.Value, replacements);
             }
             if (container.GetType() == typeof(STU_BB7A7240)) {
                 STU_BB7A7240 listBB7A = container as STU_BB7A7240;
@@ -294,7 +296,7 @@ namespace DataTool.FindLogic {
                             replacements);
                         if (listInfoSubInfo?.AnimationContainer?.Animations != null) {
                             foreach (STUAnimationListAnimationWrapper listAnimationWrapper in listInfoSubInfo.AnimationContainer.Animations) {
-                                existingAnimations = FindAnimations(existingAnimations, models, listAnimationWrapper?.Animation,
+                                existingAnimations = FindAnimations(existingAnimations, models, listAnimationWrapper?.Value,
                                     replacements, listInfoSubInfo.Skeleton);  // todo: is main skeleton?
                             }
                         }
@@ -328,7 +330,7 @@ namespace DataTool.FindLogic {
                         GetAllInstances<STUAnimationListAnimationWrapper>(animationGUID);
                     foreach (STUAnimationListAnimationWrapper animationWrapper in wrappers) {
                         existingAnimations =
-                            FindAnimations(existingAnimations, models, animationWrapper?.Animation, replacements);
+                            FindAnimations(existingAnimations, models, animationWrapper?.Value, replacements);
                     }
                     break;
                 case 0x20:
@@ -336,7 +338,7 @@ namespace DataTool.FindLogic {
                         GetAllInstances<STUAnimationListAnimationWrapper>(animationGUID);
                     foreach (STUAnimationListAnimationWrapper animationWrapper in wrappers2) {
                         existingAnimations =
-                            FindAnimations(existingAnimations, models, animationWrapper?.Animation, replacements);
+                            FindAnimations(existingAnimations, models, animationWrapper?.Value, replacements);
                     }
                     // STUAnimationListSecondary listSecondary = GetInstance<STUAnimationListSecondary>(animationGUID);
                     // if (listSecondary == null) break;
@@ -358,8 +360,8 @@ namespace DataTool.FindLogic {
                         existingAnimations = FindAnimations(existingAnimations, models, cosmeticPose.PoseResource, replacements);
                     } else if (cosmetic is HighlightIntro) {
                         HighlightIntro cosmeticHighlightIntro = cosmetic as HighlightIntro;
-                        existingAnimations = FindAnimations(existingAnimations, models, cosmeticHighlightIntro.AnimationResource, replacements);
-                        SetName(existingAnimations, cosmeticHighlightIntro.AnimationResource, $"HighlightIntro\\{GetString(cosmeticHighlightIntro.CosmeticName)}", replacements);
+                        existingAnimations = FindAnimations(existingAnimations, models, cosmeticHighlightIntro.Animation, replacements);
+                        SetName(existingAnimations, cosmeticHighlightIntro.Animation, $"HighlightIntro\\{GetString(cosmeticHighlightIntro.CosmeticName)}", replacements);
                     }
                     break;
                 case 0xBF:

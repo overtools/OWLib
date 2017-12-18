@@ -9,13 +9,13 @@ namespace STULib.Types.AnimationList.x021 {
         public Common.STUGUID m_D482D723;  // STU_7A0B33DA
 
         [STUField(0xEFF840E4)]
-        public Common.STUGUID m_EFF840E4;  // STU_F9134815
+        public Common.STUGUID m_EFF840E4;  // STUHardPoint
 
         [STUField(0x50524C35)]
         public Common.STUGUID m_50524C35;  // STU_7A0B33DA
 
         [STUField(0x1C801B34)]
-        public Common.STUGUID m_1C801B34;  // STU_F9134815
+        public Common.STUGUID m_1C801B34;  // STUHardpoint
 
         [STUField(0x7620379A)]
         public Common.STUGUID m_7620379A;  // STU_D2929F20

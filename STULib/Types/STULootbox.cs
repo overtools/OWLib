@@ -21,8 +21,8 @@ namespace STULib.Types {
         [STUField(0xFEC3ED62)]
         public STUGUID Effect3;  // STUEffect
 
-        [STUField(0x041CE51F)]
-        public STUGUID Look1;  // STULib.Types.STUModelLook
+        [STUField(0x041CE51F, "m_modelLook")]
+        public STUGUID ModelLook;  // STULib.Types.STUModelLook
 
         [STUField(0x9B180535)]
         public STUGUID Look2;  // STULib.Types.STUModelLook

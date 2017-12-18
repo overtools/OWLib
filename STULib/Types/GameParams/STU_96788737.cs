@@ -4,8 +4,8 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types.GameParams {
     [STU(0x96788737)]
     public class STU_96788737 : STUInstance {
-        [STUField(0xFC33191B)]
-        public STUGUID System096;  // STU_C5243F93
+        [STUField(0xFC33191B, "m_logicalButton")]
+        public STUGUID LogicalButton;  // STU_C5243F93
 
         [STUField(0xD61F784B)]
         public STUGUID Virtual01C;  // STU_9CADF2EC

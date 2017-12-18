@@ -22,7 +22,7 @@ namespace STULib.Types.Gamemodes {
         public STUGamemodeVarValuePair[] m_AD4BF17F;
 
         [STUField(0x5DB91CE2, "m_displayName")]
-        public STUGUID Name;
+        public STUGUID DisplayName;
 
         [STUField(0x6EB38130)]
         public STUGUID Image;
@@ -37,7 +37,7 @@ namespace STULib.Types.Gamemodes {
         public STUGamemodeLoadoutOverride[] HeroOverrides;
 
         [STUField(0xA8957901)]
-        public STUGUID Virtual01C;  // STU_ACCDE63F
+        public STUGUID Virtual0C3;  // STUCelebration
 
         [STUField(0xCBAE46D4)]
         public float m_CBAE46D4; // 3 for Snowball, 0 everything else

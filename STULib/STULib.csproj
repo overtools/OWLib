@@ -92,7 +92,7 @@
     <Compile Include="Types\AnimationList\x020\STU_2F6BD485.cs" />
     <Compile Include="Types\AnimationList\x020\STU_2F920E29.cs" />
     <Compile Include="Types\AnimationList\x020\STU_32101B7B.cs" />
-    <Compile Include="Types\AnimationList\x020\STU_32443B67.cs" />
+    <Compile Include="Types\AnimationList\x020\STUAnimNode_AnimationTrackOverride.cs" />
     <Compile Include="Types\AnimationList\x020\STU_37D4419F.cs" />
     <Compile Include="Types\AnimationList\x020\STU_3810A07E.cs" />
     <Compile Include="Types\AnimationList\x020\STU_3C6A88BF.cs" />
@@ -166,7 +166,7 @@
     <Compile Include="Types\AnimationList\x020\STU_D8E10207.cs" />
     <Compile Include="Types\AnimationList\x020\STU_DB72CA9C.cs" />
     <Compile Include="Types\AnimationList\x020\STU_DE44D504.cs" />
-    <Compile Include="Types\AnimationList\x020\STU_E7BEFDCE.cs" />
+    <Compile Include="Types\AnimationList\x020\STUAnimBlendDriverParam.cs" />
     <Compile Include="Types\AnimationList\x020\STU_EAF06763.cs" />
     <Compile Include="Types\AnimationList\x020\STU_EC56111A.cs" />
     <Compile Include="Types\AnimationList\x020\STU_EEC7A51C.cs" />
@@ -241,7 +241,7 @@
     <Compile Include="Types\AnimationList\x021\STU_BE20B7F5.cs" />
     <Compile Include="Types\AnimationList\x021\STU_BEA2287D.cs" />
     <Compile Include="Types\AnimationList\x021\STU_C1C7CF4E.cs" />
-    <Compile Include="Types\AnimationList\x021\STU_C43ABAA7.cs" />
+    <Compile Include="Types\AnimationList\x021\STUAnimCurveCompiled.cs" />
     <Compile Include="Types\AnimationList\x021\STU_C6AA0CA6.cs" />
     <Compile Include="Types\AnimationList\x021\STU_C8704AD4.cs" />
     <Compile Include="Types\AnimationList\x021\STU_CCC326B7.cs" />
@@ -394,9 +394,9 @@
     <Compile Include="Types\STUAnimationListInfo.cs" />
     <Compile Include="Types\STUAnimationListInfoSub.cs" />
     <Compile Include="Types\STUAnimationListSecondardAnimationContainerA.cs" />
-    <Compile Include="Types\STUAnimationListSecondardAnimationContainerB.cs" />
-    <Compile Include="Types\STUAnimationListSecondary.cs" />
-    <Compile Include="Types\STUAnimationListSecondaryContainer.cs" />
+    <Compile Include="Types\STUAnimNode_Animation.cs" />
+    <Compile Include="Types\STUAnimBlendTree.cs" />
+    <Compile Include="Types\STUAnimNode_Base.cs" />
     <Compile Include="Types\STUAnimationListSubAnimationContainer.cs" />
     <Compile Include="Types\STUAnimationListWrapperBase.cs" />
     <Compile Include="Types\STUBrawlName.cs" />

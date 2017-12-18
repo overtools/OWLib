@@ -13,8 +13,8 @@ namespace STULib.Types {
         [STUField(0x26D71549)]
         public STUGUID EntityMain;  // basic entity with a reference to a basic pose
 
-        [STUField(0x2C54AEAF)]
-        public STUGUID VirtualReference1;
+        [STUField(0x2C54AEAF, "m_category")]
+        public STUGUID Category;
 
         [STUField(0x322C521A)]
         public STUGUID EntityHeroSelect;  // EntityMain + hero select anims

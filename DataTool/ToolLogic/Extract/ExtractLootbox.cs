@@ -47,7 +47,7 @@ namespace DataTool.ToolLogic.Extract {
                 models = Model.FindModels(models, lootbox.Effect1);
                 models = Model.FindModels(models, lootbox.Effect2);
                 models = Model.FindModels(models, lootbox.Effect3);
-                models = Model.FindModels(models, lootbox.Look1);
+                models = Model.FindModels(models, lootbox.ModelLook);
                 models = Model.FindModels(models, lootbox.Look2);
                 
                 Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();

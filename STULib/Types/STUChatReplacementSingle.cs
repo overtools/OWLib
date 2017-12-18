@@ -14,7 +14,7 @@ namespace STULib.Types {
         public STUGUID[] GlobalReplacementStrings;
 
         [STUField(0x115DDDBF)]
-        public STUGUID m_115DDDBF;  // STU_ACCDE63F
+        public STUGUID m_115DDDBF;  // STUCelebration
 
         [STUField(0xE9443298)]
         public STUGUID[] Heroes;  // STULib.Types.STUHero

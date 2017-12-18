@@ -111,7 +111,7 @@ namespace DataTool.ToolLogic.List {
             STUMap map = GetInstance<STUMap>(key);
             if (map == null) return null;
 
-            string nameA = GetString(map.Name);
+            string nameA = GetString(map.DisplayName);
             string nameB = GetString(map.VariantName);
 
             string descA = GetString(map.DescriptionA);
@@ -131,7 +131,7 @@ namespace DataTool.ToolLogic.List {
                     }
                         
                     gamemodes.Add(new GamemodeInfo {
-                        Name = GetString(gamemode.Name),
+                        Name = GetString(gamemode.DisplayName),
                         GUID = guid
                     });
                 }

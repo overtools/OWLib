@@ -5,7 +5,7 @@ using STULib.Types.Generic;
 namespace STULib.Types.Statescript.ConfigVar {
     [STU(0xE39B4C43)]
     public class STUStatescriptDataStore03C : STUStatescriptDataStoreBase {
-        [STUField(0x2D3CDFA9)]
-        public Common.STUGUID GUIDx03C;  // STU_F9134815
+        [STUField(0x2D3CDFA9, "m_hardpoint")]
+        public Common.STUGUID Hardpoint;  // STUHardpoint
     }
 }

@@ -4,12 +4,12 @@ using STULib.Types.AnimationList.x021;
 
 namespace STULib.Types.AnimationList.x020 {
     [STU(0xB89B3EF9)]
-    public class STU_B89B3EF9 : STUAnimationListSecondaryContainer {
+    public class STU_B89B3EF9 : STUAnimNode_Base {
         [STUField(0x8096CD9B)]
-        public STU_E7BEFDCE m_8096CD9B;
+        public STUAnimBlendDriverParam m_8096CD9B;
 
         [STUField(0x4ABE6B19)]
-        public STU_E7BEFDCE m_4ABE6B19;
+        public STUAnimBlendDriverParam m_4ABE6B19;
 
         [STUField(0x0F88291F)]
         public STU_25B808BD m_0F88291F;

@@ -5,7 +5,7 @@ using STULib.Types.Generic;
 
 namespace STULib.Types.AnimationList.x020 {
     [STU(0xA311F881)]
-    public class STU_A311F881 : STUAnimationListSecondaryContainer {
+    public class STU_A311F881 : STUAnimNode_Base {
         [STUField(0x6E576DA0)]
         public STU_25B808BD m_6E576DA0;
 

@@ -28,8 +28,6 @@ namespace OWLib.Types.Chunk {
         public Structure Data { get; private set; }
         public ulong[] Hardpoints;
 
-        public const int FPS = 30;
-
         public void Parse(Stream input) {
             using (BinaryReader reader = new BinaryReader(input, System.Text.Encoding.Default, true)) {
                 Data = reader.Read<Structure>();

@@ -46,8 +46,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
                                 if (chunk.GetType() != typeof(SSCE)) continue;
                                 SSCE ssce = chunk as SSCE;
                                 if (ssce == null) continue;
-                                FindLogic.Texture.FindTextures(textures, new Common.STUGUID(ssce.Data.definition_key), null, true);
-                                FindLogic.Texture.FindTextures(textures, new Common.STUGUID(ssce.Data.material_key), null, true);
+                                FindLogic.Texture.FindTextures(textures, new Common.STUGUID(ssce.Data.TextureDefinition), null, true);
+                                FindLogic.Texture.FindTextures(textures, new Common.STUGUID(ssce.Data.Material), null, true);
                             }
                         }
                     }
