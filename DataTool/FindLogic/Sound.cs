@@ -82,7 +82,7 @@ namespace DataTool.FindLogic {
                 
                 OSCE[] osces = chunked.GetAllOfTypeFlat<OSCE>();
                 foreach (OSCE osce in osces) {
-                    existingSounds = FindSounds(existingSounds, osce.Data.soundDataKey, name, forceZero, toplevelKey, replacements);
+                    existingSounds = FindSounds(existingSounds, osce.Data.Sound, name, forceZero, toplevelKey, replacements);
                 }
 
                 FECE[] feces = chunked.GetAllOfTypeFlat<FECE>();

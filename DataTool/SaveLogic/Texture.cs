@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -83,7 +82,7 @@ namespace DataTool.SaveLogic {
                         convertedStream.Close();
 
                         if (convertType == "tif" || convertType == "tga") { 
-                            System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+                            Process pProcess = new Process();
                             pProcess.StartInfo.FileName = "Third Party\\texconv.exe";
                             pProcess.StartInfo.UseShellExecute = false;
                             pProcess.StartInfo.RedirectStandardOutput = true;

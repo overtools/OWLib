@@ -14,8 +14,8 @@ using OWLib.Types.Chunk;
 using OWLib.Types.Chunk.LDOM;
 using OWLib.Types.Map;
 using OWLib.Writer;
+using STULib.Types.Generic;
 using static DataTool.Helper.IO;
-using Common = STULib.Types.Generic.Common;
 
 namespace DataTool.SaveLogic {
     public class Model {

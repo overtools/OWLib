@@ -6,10 +6,10 @@ using DataTool.Flag;
 using DataTool.SaveLogic;
 using OWLib;
 using STULib.Types;
+using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
-using Common = STULib.Types.Generic.Common;
 using Model = DataTool.FindLogic.Model;
 using Sound = DataTool.FindLogic.Sound;
 

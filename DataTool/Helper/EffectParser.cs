@@ -137,7 +137,7 @@ namespace DataTool.Helper {
         }
 
         public static void AddOSCE(EffectInfo effect, OSCE osce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
-            OSCEInfo newInfo = new OSCEInfo {PlaybackInfo = playbackInfo, Sound = osce.Data.soundDataKey};
+            OSCEInfo newInfo = new OSCEInfo {PlaybackInfo = playbackInfo, Sound = osce.Data.Sound};
             if (replacements.ContainsKey(newInfo.Sound)) newInfo.Sound = replacements[newInfo.Sound];
             effect.OSCEs.Add(newInfo);
         }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
+using DataTool.SaveLogic.Unlock;
+using DataTool.ToolLogic.List;
 using STULib.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
@@ -30,13 +32,13 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 STUHero hero = GetInstance<STUHero>(key);
                 if (hero == null) continue;
                 
-                Dictionary<string, HashSet<ItemInfo>> unlocks = List.ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks);
+                Dictionary<string, HashSet<ItemInfo>> unlocks = ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks);
                 if (unlocks == null) continue;
                 List<ItemInfo> skins = unlocks.SelectMany(x => x.Value.Where(y => y.Type == "Skin")).ToList();
                 List<ItemInfo> weaponSkins = unlocks.SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList();
 
                 foreach (ItemInfo skin in skins) {
-                    SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\HeroSkinDebug", hero, skin.Rarity, skin.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, null, false);
+                    Skin.Save(flags, $"{basePath}\\HeroSkinDebug", hero, skin.Rarity, skin.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, null, false);
                 }
             }
         }

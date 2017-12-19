@@ -10,7 +10,7 @@ using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
 using STULib.Types;
-using Common = STULib.Types.Generic.Common;
+using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 

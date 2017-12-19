@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DataTool.DataModels;
-using static DataTool.Helper.IO;
-using DataTool.Flag;
 using DataTool.FindLogic;
+using DataTool.Flag;
+using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic.Unlock {
     public class Portrait {

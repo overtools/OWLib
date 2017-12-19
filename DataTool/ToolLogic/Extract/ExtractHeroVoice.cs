@@ -12,6 +12,7 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
+using Sound = DataTool.SaveLogic.Sound;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-voice", Description = "Extract hero voice sounds", TrackTypes = new ushort[] {0x75}, CustomFlags = typeof(ExtractFlags))]
@@ -105,7 +106,7 @@ namespace DataTool.ToolLogic.Extract {
                         if (soundWrapper == null) continue;
                         if (config.ContainsKey("soundRestriction") && !config["soundRestriction"].ShouldDo(GetFileName(soundWrapper.SoundResource))) continue;
                         SoundInfo sound = new SoundInfo {GUID = soundWrapper.SoundResource};
-                        SaveLogic.Sound.Save(flags, outputDirectory, sound);
+                        Sound.Save(flags, outputDirectory, sound);
                     }
                 }
             }

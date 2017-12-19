@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
+using DataTool.ConvertLogic;
 using DataTool.Flag;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
-using Sound = DataTool.ConvertLogic.Sound;
 
 namespace DataTool.ToolLogic.List.Debug {
     [Tool("list-debug-soundbank", Description = "List soundbanks (debug)", TrackTypes = new ushort[] {0x43}, CustomFlags = typeof(ListFlags), IsSensitive = true)]

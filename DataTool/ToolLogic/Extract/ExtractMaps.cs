@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.SaveLogic;
 using DataTool.ToolLogic.List;
 using STULib.Types;
 using static DataTool.Program;
@@ -63,7 +64,7 @@ namespace DataTool.ToolLogic.Extract {
                 
                 if (config.Count == 0) continue;
                 
-                SaveLogic.Map.Save(flags, map, key, basePath);
+                Map.Save(flags, map, key, basePath);
             }
         }
 

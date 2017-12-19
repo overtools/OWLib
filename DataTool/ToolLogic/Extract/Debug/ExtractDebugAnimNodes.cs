@@ -1,12 +1,12 @@
 ﻿using System;
-using DataTool.Flag;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using DataTool.Flag;
 using DataTool.ToolLogic.List;
-using static DataTool.Program;
-using static DataTool.Helper.STUHelper;
 using Newtonsoft.Json;
 using STULib.Types;
+using static DataTool.Program;
+using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-anim-nodes", Description = "Extract anim nodes (debug)", TrackTypes = new ushort[] {0x20}, CustomFlags = typeof(ListFlags), IsSensitive = true)]
