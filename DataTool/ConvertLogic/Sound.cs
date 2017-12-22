@@ -530,16 +530,102 @@ namespace DataTool.ConvertLogic {
             public int FileLength;
         }
 
+        public interface IBankObject {
+            void Read(BinaryReader reader);
+        }
+
+        public class BankObjectEventAction : IBankObject {
+            public enum EventActionScope : byte {
+                GameObjectSwitchOrTrigger = 1, // Switch or Trigger
+                Global = 2,
+                GameObjectReference = 3, // see referenced object id
+                GameObjectState = 4,
+                All = 5,
+                AllExceptReference = 5,  // see referenced object id
+            }
+
+            public enum EventActionType : byte {
+                Stop = 0x1,
+                Pause = 0x2,
+                Resume = 0x3,
+                Play = 0x4,
+                Trigger = 0x5,
+                Mute = 0x6,
+                UnMute = 0x7,
+                SetVoicePitch = 0x8,
+                ResetVoicePitch = 0x9,
+                SetVoiceVolume = 0xA,
+                ResetVoiceVolume = 0xB,
+                SetBusVolume = 0xC,
+                ResetBusVolume = 0xD,
+                SetVoiceLowpassFilter = 0xE,
+                ResetVoiceLowpassFilter = 0xF,
+                EnableState = 0x10,
+                DisableState = 0x11,
+                SetState = 0x12,
+                SetGameParameter = 0x13,
+                ResetGameParameter = 0x14,
+                SetSwitch = 0x19,
+                EnableBypassOrDisableBypass = 0x1A,
+                ResetBypassEffect = 0x1B,
+                Break = 0x1C,
+                Seek = 0x1E
+            }
+
+            public enum EventActionParameterType : byte {
+                Delay = 0xE, // Delay, given as uint32 in milliseconds
+                Play = 0xF,  // Play: Fade in time, given as uint32 in milliseconds
+                Probability = 0x10  // Probability, given as float
+            }
+
+            public EventActionScope Scope;
+            public EventActionType Type;
+            public uint ObjectID;
+            
+            public void Read(BinaryReader reader) {
+                Scope = (EventActionScope) reader.ReadByte();
+                Type = (EventActionType) reader.ReadByte();
+                ObjectID = reader.ReadUInt32();
+                byte zero = reader.ReadByte();
+                byte parameterCount = reader.ReadByte();
+                for (int i = parameterCount - 1; i >= 0; i--) {
+                    EventActionParameterType parameterType = (EventActionParameterType)reader.ReadByte();
+                }
+            }
+        }
+
+        public class BankObjectSoundSFX : IBankObject {
+            public enum SoundLocation : byte {
+                Embedded = 0,
+                Streamed = 1,
+                StreamedZeroLatency = 2
+            }
+
+            public uint SoundID;
+            
+            public void Read(BinaryReader reader) {
+                // using a different structure to the wiki :thinking:
+                SoundLocation location = (SoundLocation)reader.ReadUInt32();
+                byte unk = reader.ReadByte();
+
+                SoundID = reader.ReadUInt32();
+            }
+        }
+
         public class WwiseBank {
             // public WwiseBankHeader Header;
             public WwiseBankWemDef[] WemDefs;
             public byte[][] WemData;
+
+            public List<IBankObject> Objects;
 
             public List<WwiseBankChunkHeader> Chunks;
             public Dictionary<WwiseBankChunkHeader, long> ChunkPositions;
             
             public WwiseBank(Stream stream) {
                 using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, true)) {
+                    // reference: http://wiki.xentax.com/index.php/Wwise_SoundBank_(*.bnk)
+                    
                     ChunkPositions = new Dictionary<WwiseBankChunkHeader, long>();
                     Chunks = new List<WwiseBankChunkHeader>();
 
@@ -553,7 +639,7 @@ namespace DataTool.ConvertLogic {
                     WwiseBankChunkHeader dataHeader = Chunks.FirstOrDefault(x => x.Name == "DATA");
                     WwiseBankChunkHeader didxHeader = Chunks.FirstOrDefault(x => x.Name == "DIDX");
 
-                    if (dataHeader.MagicNumber == 0 || dataHeader.MagicNumber == 0) {
+                    if (dataHeader.MagicNumber != 0 && dataHeader.MagicNumber != 0) {
                         reader.BaseStream.Position = ChunkPositions[didxHeader];
                         if (didxHeader.ChunkLength <= 0) return;
                     
@@ -567,6 +653,36 @@ namespace DataTool.ConvertLogic {
                             WemData[i] = reader.ReadBytes(WemDefs[i].FileLength);
 
                             reader.BaseStream.Position = temp;
+                        }
+                    }
+
+                    WwiseBankChunkHeader hircHeader = Chunks.FirstOrDefault(x => x.Name == "HIRC");
+
+                    if (hircHeader.MagicNumber != 0) {
+                        reader.BaseStream.Position = ChunkPositions[hircHeader];
+                        uint objectCount = reader.ReadUInt32();
+                        Objects = new List<IBankObject>((int)objectCount);
+                        for (int o = 0; o < objectCount; o++) {
+                            byte objectType = reader.ReadByte();
+                            uint objectLength = reader.ReadUInt32();
+
+                            long beforeObject = reader.BaseStream.Position;
+
+                            uint objectID = reader.ReadUInt32();
+
+                            if (objectType == 3) {
+                                BankObjectEventAction objectEventAction = new BankObjectEventAction();
+                                objectEventAction.Read(reader);
+                                Objects.Add(objectEventAction);
+                            } else if (objectType == 2) {
+                                BankObjectSoundSFX objectSoundSfx = new BankObjectSoundSFX();
+                                objectSoundSfx.Read(reader);
+                                Objects.Add(objectSoundSfx);
+                            } else {
+                                Objects.Add(null);
+                            }
+                            
+                            reader.BaseStream.Position = beforeObject + objectLength;
                         }
                     }
                 }
