@@ -459,7 +459,7 @@ namespace OWLib.Writer {
                     // attachments
                     foreach (PRHM.HardPoint hp in hardpoints.HardPoints) {
                         writer.Write(IdToString("attachment_", GUID.Index(hp.HardPointGUID)));
-                        Matrix4 mat = hp.matrix.ToOpenTK();
+                        Matrix4 mat = hp.Matrix.ToOpenTK();
                         Vector3 pos = mat.ExtractTranslation();
                         Quaternion rot = mat.ExtractRotation();
                         writer.Write(pos.X);

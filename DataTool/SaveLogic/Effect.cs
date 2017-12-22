@@ -41,7 +41,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(0f);
                 }
                 if (playbackInfo.Hardpoint != 0) {
-                    writer.Write(Model.OWModelWriter14.IdToString("attachment_", GUID.Index(playbackInfo.Hardpoint)));
+                    writer.Write(Model.OWModelWriter14.IdToString("hardpoint", GUID.Index(playbackInfo.Hardpoint)));
                 } else {
                     writer.Write("null");
                 }

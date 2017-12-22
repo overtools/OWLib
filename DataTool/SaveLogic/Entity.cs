@@ -55,7 +55,7 @@ namespace DataTool.SaveLogic {
                         writer.Write(GUID.Index(childEntityReference.Hardpoint));
                         writer.Write(GUID.Index(childEntityReference.Variable));
                         if (childEntityReference.Hardpoint != null) {
-                            writer.Write(Model.OWModelWriter14.IdToString("attachment_", GUID.Index(childEntityReference.Hardpoint)));
+                            writer.Write(Model.OWModelWriter14.IdToString("hardpoint", GUID.Index(childEntityReference.Hardpoint)));
                         } else {
                             writer.Write("null"); // erm, k
                         }

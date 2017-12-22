@@ -134,27 +134,30 @@ namespace OWLib {
             return array.ToHex();
         }
 
-        public unsafe static OpenTK.Matrix4 ToOpenTK(this Matrix4B matrix) {
-            unsafe
-            {
-                return new OpenTK.Matrix4(
-                  matrix.Value[0], matrix.Value[1], matrix.Value[2], matrix.Value[3],
-                  matrix.Value[4], matrix.Value[5], matrix.Value[6], matrix.Value[7],
-                  matrix.Value[8], matrix.Value[9], matrix.Value[10], matrix.Value[11],
-                  matrix.Value[12], matrix.Value[13], matrix.Value[14], matrix.Value[15]
-                );
-            }
+        public static unsafe OpenTK.Matrix4 ToOpenTK(this Matrix4B matrix) {
+            return new OpenTK.Matrix4(
+                matrix.Value[0], matrix.Value[1], matrix.Value[2], matrix.Value[3],
+                matrix.Value[4], matrix.Value[5], matrix.Value[6], matrix.Value[7],
+                matrix.Value[8], matrix.Value[9], matrix.Value[10], matrix.Value[11],
+                matrix.Value[12], matrix.Value[13], matrix.Value[14], matrix.Value[15]
+            );
+        }
+        
+        public static unsafe OpenTK.Matrix4 ToOpenTKColMajor(this Matrix4B matrix) {
+            return new OpenTK.Matrix4(
+                matrix.Value[0], matrix.Value[4], matrix.Value[8], matrix.Value[12],
+                matrix.Value[1], matrix.Value[5], matrix.Value[9], matrix.Value[13],
+                matrix.Value[2], matrix.Value[6], matrix.Value[10], matrix.Value[14],
+                matrix.Value[3], matrix.Value[7], matrix.Value[11], matrix.Value[15]
+            );
         }
 
-        public unsafe static OpenTK.Matrix3x4 ToOpenTK(this Matrix3x4B matrix) {
-            unsafe
-            {
-                return new OpenTK.Matrix3x4(
-                  matrix.Value[0], matrix.Value[1], matrix.Value[2], matrix.Value[3],
-                  matrix.Value[4], matrix.Value[5], matrix.Value[6], matrix.Value[7],
-                  matrix.Value[8], matrix.Value[9], matrix.Value[10], matrix.Value[11]
-                );
-            }
+        public static unsafe OpenTK.Matrix3x4 ToOpenTK(this Matrix3x4B matrix) {
+            return new OpenTK.Matrix3x4(
+                matrix.Value[0], matrix.Value[1], matrix.Value[2], matrix.Value[3],
+                matrix.Value[4], matrix.Value[5], matrix.Value[6], matrix.Value[7],
+                matrix.Value[8], matrix.Value[9], matrix.Value[10], matrix.Value[11]
+            );
         }
 
         public static string ToStringA(this OWRecord i) {

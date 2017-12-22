@@ -502,28 +502,21 @@ namespace DataTool.SaveLogic {
                     if (hardpoints != null) {
                         // attachments
                         foreach (PRHM.HardPoint hp in hardpoints.HardPoints) {
-                            writer.Write(IdToString("attachment_", GUID.Index(hp.HardPointGUID)));
-                            Matrix4 mat = hp.matrix.ToOpenTK();
-                            Vector3 pos = mat.ExtractTranslation();
-                            Quaternion rot = mat.ExtractRotation();
+                            writer.Write(IdToString("hardpoint", GUID.Index(hp.HardPointGUID)));
+                            Matrix4 mat = hp.Matrix.ToOpenTKColMajor();
+                            
+                            Vector3 pos = new Vector3(mat[0, 3], mat[1, 3], mat[2, 3]);
+                            Quaternion rot = GetHardpointQuaternion(mat);
 
-
+                            // for parent bone relative stuff
                             /*if (skeleton != null) {
                                 int index = skeleton.IDs.TakeWhile(id => id != GUID.Index(hp.GUIDx012)).Count();
 
                                 if (index != skeleton.IDs.Length) {
                                     Vector3 parPos = RefPoseWriter.GetPos(skeleton, index);
                                     pos -= parPos;
-                            
-                                    Quaternion parRot = RefPoseWriter.GetRotTest(skeleton, index);
-                                    // Quaternion parRot = RefPoseWriter.GetRotTest(skeleton, (short)index, hierarchy);
-                                    rot -= parRot;
                                 }
                             }*/
-                            
-                            // rot.W -= parRot.W;
-                            // rot.X -= parRot.W;
-                            
                             
                             writer.Write(pos.X);
                             writer.Write(pos.Y);
@@ -605,6 +598,51 @@ namespace DataTool.SaveLogic {
             public static string IdToString(string prefix, uint id) {
                 return $"{prefix}_{id:X4}";
             }
+        }
+
+        public static Quaternion GetHardpointQuaternion(Matrix4 matrix) {
+            Quaternion q = new Quaternion();
+
+            double tr = matrix[0, 0] + matrix[1, 1] + matrix[2, 2];
+
+            if (tr > 0) {
+                double s = Math.Sqrt(tr + 1) * 2;
+                q.W = (float) (0.25 * s);
+                q.X = (float) ((matrix[2, 1] - matrix[1, 2]) / s);
+
+                q.Y = (float) ((matrix[0, 2] - matrix[2, 0]) / s);
+                q.Z = (float) ((matrix[1, 0] - matrix[0, 1]) / s);
+            } else {
+                if(matrix[0,0] > matrix[1,1] && matrix[0,0] > matrix[2,2])
+                {
+                    double s = Math.Sqrt(1 + matrix[0,0] - matrix[1,1] - matrix[2,2]) * 2;
+                    q.W = (float)((matrix[2,1] - matrix[1,2]) /s);
+                    q.X = (float)(0.25 * s);
+                    q.Y = (float)((matrix[0,1] + matrix[1,0])/s);
+                    q.Z = (float)((matrix[0,2] + matrix[2,0])/s);
+                }
+                else
+                {
+                    if(matrix[1,1] > matrix[2,2])
+                    {
+                        double s = Math.Sqrt(1 + matrix[1,1] - matrix[0,0] - matrix[2,2]) * 2;
+                        q.W = (float)((matrix[0,2] - matrix[2,0])/s);
+                        q.X = (float)((matrix[0,1] + matrix[1,0])/s);
+                        q.Y = (float)(0.25 * s);
+                        q.Z = (float)((matrix[1,2] + matrix[2,1])/s);
+                    }
+                    else
+                    {
+                        double s = Math.Sqrt(1 + matrix[2,2] - matrix[0,0] - matrix[1,1]) * 2;
+                        q.W = (float)((matrix[1,0] - matrix[0,1])/s);
+                        q.X = (float)((matrix[0,2] + matrix[2,0])/s);
+                        q.Y = (float)((matrix[1,2] + matrix[2,1])/s);
+                        q.Z = (float)(0.25 * s);
+                    }
+                }
+            }
+            
+            return q;
         }
 
         public static void Save(ICLIFlags flags, string path, ModelInfo model, string name, string fileNameOverride=null, Dictionary<Common.STUGUID, string> entityNames=null) {
