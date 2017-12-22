@@ -552,22 +552,22 @@ namespace DataTool.ConvertLogic {
 
                     WwiseBankChunkHeader dataHeader = Chunks.FirstOrDefault(x => x.Name == "DATA");
                     WwiseBankChunkHeader didxHeader = Chunks.FirstOrDefault(x => x.Name == "DIDX");
+
+                    if (dataHeader.MagicNumber == 0 || dataHeader.MagicNumber == 0) {
+                        reader.BaseStream.Position = ChunkPositions[didxHeader];
+                        if (didxHeader.ChunkLength <= 0) return;
                     
-                    if (dataHeader.MagicNumber == 0 || dataHeader.MagicNumber == 0) return;
+                        WemDefs = new WwiseBankWemDef[didxHeader.ChunkLength / 12];
+                        WemData = new byte[didxHeader.ChunkLength / 12][];
+                        for (int i = 0; i < didxHeader.ChunkLength / 12; i++) {
+                            WemDefs[i] = reader.Read<WwiseBankWemDef>();
+                            long temp = reader.BaseStream.Position;
 
-                    reader.BaseStream.Position = ChunkPositions[didxHeader];
-                    if (didxHeader.ChunkLength <= 0) return;
-                    
-                    WemDefs = new WwiseBankWemDef[didxHeader.ChunkLength / 12];
-                    WemData = new byte[didxHeader.ChunkLength / 12][];
-                    for (int i = 0; i < didxHeader.ChunkLength / 12; i++) {
-                        WemDefs[i] = reader.Read<WwiseBankWemDef>();
-                        long temp = reader.BaseStream.Position;
+                            reader.BaseStream.Position = ChunkPositions[dataHeader];
+                            WemData[i] = reader.ReadBytes(WemDefs[i].FileLength);
 
-                        reader.BaseStream.Position = ChunkPositions[dataHeader];
-                        WemData[i] = reader.ReadBytes(WemDefs[i].FileLength);
-
-                        reader.BaseStream.Position = temp;
+                            reader.BaseStream.Position = temp;
+                        }
                     }
                 }
             }
