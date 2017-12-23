@@ -30,11 +30,11 @@ namespace STULib.Types {
         [STUField(0x2C54AEAF, "m_category")]
         public Enums.STUEnumAchievementGroup Category;
 
-        [STUField(0x07DD813E)]
-        public int PCRewardPoints;  // todo: this is currently interchangeable with XboxGamerscore
+        [STUField(0x07DD813E, "m_value")]
+        public int Value;  // todo: this is currently interchangeable with XboxGamerscore
 
         [STUField(0x628D48CC)]
-        public int XboxGamerscore;  // todo: this is currently interchangeable with PCRewardPoints
+        public int XboxGamerscore;  // todo: this is currently interchangeable with Value
 
         [STUField(0x59D52DA5)]
         public Enums.STUEnumPS4Trophy PS4Trophy;

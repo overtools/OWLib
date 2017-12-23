@@ -9,8 +9,8 @@ namespace STULib.Types.AnimationList.x020 {
         [STUField(0xBA891264, "m_dataFlow")]
         public STU_25B808BD DataFlow;
 
-        [STUField(0x07DD813E)]
-        public STU_ABD8FE73 m_07DD813E;
+        [STUField(0x07DD813E, "m_value")]
+        public STU_ABD8FE73 Value;
 
         [STUField(0xD98CB73A)]
         public STUEnum_499AD032 m_D98CB73A;

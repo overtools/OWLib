@@ -272,6 +272,7 @@ namespace DataTool.FindLogic {
                 case 0x06:
                     AddGUID(existingAnimations, animationGUID, skeleton, replacements);
                     // if (animationGUID.ToString() == "00000000265C.006") Debugger.Break();
+                    // if (animationGUID.ToString() == "000000004363.006") Debugger.Break();  // orisa - thirdperson - hello
                     using (Stream anim = OpenFile(animationGUID)) {
                         if (anim == null) {
                             break;
@@ -290,8 +291,8 @@ namespace DataTool.FindLogic {
                     }
                     break;
                 case 0x21:
-                    STUAnimationListInfo listInfo = GetInstance<STUAnimationListInfo>(animationGUID);
-                    foreach (STUAnimationListInfoSub listInfoSubInfo in listInfo.SubInfos) {
+                    STUAnimBlendTreeSet listInfo = GetInstance<STUAnimBlendTreeSet>(animationGUID);
+                    foreach (STUAnimBlendTreeSet_BlendTreeItem listInfoSubInfo in listInfo.BlendTreeItems) {
                         existingAnimations = FindAnimations(existingAnimations, models, listInfoSubInfo?.SecondaryList,
                             replacements);
                         if (listInfoSubInfo?.AnimationContainer?.Animations != null) {
@@ -312,8 +313,8 @@ namespace DataTool.FindLogic {
                                 
                             }
                         }
-                        if (listInfoSubInfo?.m_560940DC?.m_6CB79D25 != null) {
-                            foreach (STU_BE20B7F5 subBE20 in listInfoSubInfo.m_560940DC.m_6CB79D25) {
+                        if (listInfoSubInfo?.OnFinished?.m_6CB79D25 != null) {
+                            foreach (STU_BE20B7F5 subBE20 in listInfoSubInfo.OnFinished.m_6CB79D25) {
                                 existingAnimations = FindAnimations(existingAnimations, models, subBE20?.Animation,
                                     replacements, listInfoSubInfo.Skeleton);  // todo: is main skeleton?
                             }
@@ -361,7 +362,7 @@ namespace DataTool.FindLogic {
                     } else if (cosmetic is HighlightIntro) {
                         HighlightIntro cosmeticHighlightIntro = cosmetic as HighlightIntro;
                         existingAnimations = FindAnimations(existingAnimations, models, cosmeticHighlightIntro.Animation, replacements);
-                        SetName(existingAnimations, cosmeticHighlightIntro.Animation, $"HighlightIntro\\{GetString(cosmeticHighlightIntro.CosmeticName)}", replacements);
+                        SetName(existingAnimations, cosmeticHighlightIntro.Animation, $"HighlightIntro-{GetString(cosmeticHighlightIntro.CosmeticName)}", replacements);
                     }
                     break;
                 case 0xBF:

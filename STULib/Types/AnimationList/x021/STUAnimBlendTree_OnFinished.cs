@@ -3,8 +3,8 @@
 using STULib.Types.Generic;
 
 namespace STULib.Types.AnimationList.x021 {
-    [STU(0x7DDC51BC)]
-    public class STU_7DDC51BC : Common.STUInstance {
+    [STU(0x7DDC51BC, "STUAnimBlendTree_OnFinished")]
+    public class STUAnimBlendTree_OnFinished : Common.STUInstance {
         [STUField(0x0F88291F)]
         public STU_2BB5472B m_0F88291F;
 

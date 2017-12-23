@@ -3,7 +3,7 @@
 namespace STULib.Types.AnimationList.x021 {
     [STU(0x15EF3A7E)]
     public class STU_15EF3A7E : STUAnimationListWrapperBase {
-        [STUField(0x07DD813E)]
-        public byte m_07DD813E;
+        [STUField(0x07DD813E, "m_value")]
+        public byte Value;
     }
 }

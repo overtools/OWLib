@@ -149,7 +149,7 @@ namespace DataTool.ToolLogic.Extract {
 
             foreach (STUHero hero in heroes) {
                 string heroNameActual = GetString(hero.Name);
-                string heroFileName = GetValidFilename(heroNameActual);
+                string heroFileName = GetValidFilename(heroNameActual).TrimEnd(' ');
 
                 if (heroFileName == null) {
                     continue;

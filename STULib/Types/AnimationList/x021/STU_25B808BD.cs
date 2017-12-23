@@ -5,7 +5,7 @@ using STULib.Types.Generic;
 namespace STULib.Types.AnimationList.x021 {
     [STU(0x25B808BD)]
     public class STU_25B808BD : STUAnimationListWrapperBase {
-        [STUField(0x07DD813E)]
-        public Common.STUGUID GUIDx013;  // STU_D2929F20
+        [STUField(0x07DD813E, "m_value")]
+        public Common.STUGUID Value;  // STU_D2929F20
     }
 }

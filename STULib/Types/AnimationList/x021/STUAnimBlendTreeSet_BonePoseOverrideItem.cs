@@ -3,8 +3,8 @@
 using STULib.Types.Generic;
 
 namespace STULib.Types.AnimationList.x021 {
-    [STU(0xF3942997)]
-    public class STU_F3942997 : Common.STUInstance {
+    [STU(0xF3942997, "STUAnimBlendTreeSet_BonePoseOverrideItem")]
+    public class STUAnimBlendTreeSet_BonePoseOverrideItem : Common.STUInstance {
         [STUField(0xD482D723)]
         public Common.STUGUID m_D482D723;  // STU_7A0B33DA
 

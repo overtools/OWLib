@@ -74,3 +74,8 @@ BA891264, m_dataFlow
 C14EEC71, m_animTrackOverrides
 0619C597, m_type
 2D3CDFA9, m_hardPoint
+93DA6E7C, m_hardcodedAnimCategoryRefs
+6DDF40DD, m_bonePoseOverrideItems
+6AFCD1A5, m_blendTreeItems
+384DE14F, m_retargetParams
+560940DC, m_onFinished
