@@ -111,6 +111,8 @@ namespace DataTool.FindLogic {
                 // if (GetFileName(parentAnim) == "00000000372B.006") Debugger.Break(); // hanzo: my aim is true - 0000000019E1.08F
                 // if (GetFileName(parentAnim) == "00000000372D.006") Debugger.Break(); // hanzo: my aim is true: arrow - 0000000019E5.08F
                 
+                // if (GUID.Index(parentAnim) == 0x45DB) Debugger.Break(); // doomfist - hero select
+                
                 EffectParser parser = new EffectParser(chunked, animationGUID);
                 AnimationInfo info = GetAnimationInfo(existingAnimations, parentAnim, replacements);
                 ulong lastModel = 0;
@@ -218,6 +220,7 @@ namespace DataTool.FindLogic {
                         }
                     }
                 }
+                // if (GUID.Index(parentAnim) == 0x45DB) Debugger.Break(); // doomfist - hero select
             }
 
             return existingAnimations;

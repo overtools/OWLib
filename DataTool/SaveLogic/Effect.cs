@@ -112,24 +112,27 @@ namespace DataTool.SaveLogic {
                 }
 
                 foreach (EffectParser.SVCEInfo svceInfo in effect.SVCEs) {
+                    WriteTime(writer, svceInfo.PlaybackInfo);
                     writer.Write(GUID.Index(svceInfo.VoiceStimulus));
                     if (svceLines.ContainsKey(svceInfo.VoiceStimulus)) {
                         List<STUVoiceLineInstance> lines = svceLines[svceInfo.VoiceStimulus];
                         writer.Write(lines.Count);
-                        
+
                         foreach (STUVoiceLineInstance voiceLineInstance in lines) {
                             STUSoundWrapper[] sounds = {
                                 voiceLineInstance.SoundContainer.Sound1,
-                                voiceLineInstance.SoundContainer.Sound2, 
+                                voiceLineInstance.SoundContainer.Sound2,
                                 voiceLineInstance.SoundContainer.Sound3,
                                 voiceLineInstance.SoundContainer.Sound4
                             };
                             sounds = sounds.Where(x => x != null).ToArray();
                             writer.Write(sounds.Length);
                             foreach (STUSoundWrapper wrapper in sounds) {
-                                writer.Write($"Sounds\\{GetFileName(wrapper.SoundResource)}");
+                                writer.Write($"Sounds\\{GUID.LongKey(wrapper.SoundResource):X12}.ogg");
                             }
                         }
+                    } else {
+                        writer.Write(0);
                     }
                 }
 
