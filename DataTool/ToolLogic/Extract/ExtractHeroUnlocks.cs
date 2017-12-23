@@ -149,7 +149,7 @@ namespace DataTool.ToolLogic.Extract {
 
             foreach (STUHero hero in heroes) {
                 string heroNameActual = GetString(hero.Name);
-                string heroFileName = GetValidFilename(heroNameActual).TrimEnd(' ');
+                string heroFileName = GetValidFilename(heroNameActual);
 
                 if (heroFileName == null) {
                     continue;
@@ -157,6 +157,7 @@ namespace DataTool.ToolLogic.Extract {
                     // heroNameActual = "Unknown";
                 }
                 heroNameActual = heroNameActual.TrimEnd(' ');
+                heroFileName = heroFileName.TrimEnd(' ');
 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
                 foreach (string key in new [] {heroNameActual.ToLowerInvariant(), "*"}) {
