@@ -607,7 +607,7 @@ namespace STUHashTool {
 
                 todoInstances = GetClassTodos(todoInstances);
                 
-                const string stuNamespace = "STULib.Types.prehash";
+                const string stuNamespace = "STULib.Types.posthash";
                 const string enumNamespace = stuNamespace+".Enums";
                 
                 foreach (string t in todoInstances) {

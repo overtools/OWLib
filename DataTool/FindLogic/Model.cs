@@ -259,12 +259,12 @@ namespace DataTool.FindLogic {
 
             switch (GUID.Type(modelGUID)) {
                 case 0x03:
-                    STUEntityDefinition container = GetInstance<STUEntityDefinition>(modelGUID);
-                    if (container == null) break;
+                    STUEntityDefinition entityDefinition = GetInstance<STUEntityDefinition>(modelGUID);
+                    if (entityDefinition == null) break;
                     Common.STUGUID entityModel = null;
                     Common.STUGUID entitySound = null;
                     HashSet<AnimationInfo> animations = new HashSet<AnimationInfo>();
-                    foreach (KeyValuePair<ulong, STUEntityComponent> statescriptComponent in container.Components.OrderBy(x => x.Value?.GetType() != typeof(STUModelComponent))) {
+                    foreach (KeyValuePair<ulong, STUEntityComponent> statescriptComponent in entityDefinition.Components.OrderBy(x => x.Value?.GetType() != typeof(STUModelComponent))) {
                         STUEntityComponent component = statescriptComponent.Value;
                         if (component == null) continue;
                         if (component.GetType() == typeof(STUModelComponent)) {
@@ -276,8 +276,8 @@ namespace DataTool.FindLogic {
                             
                             AddEntity(existingModels, modelGUID, entityModel, replacements, new HashSet<AnimationInfo>());
                             
-                            if (container.Children != null) {
-                                foreach (STUChildEntityDefinition entityChild in container.Children) {
+                            if (entityDefinition.Children != null) {
+                                foreach (STUChildEntityDefinition entityChild in entityDefinition.Children) {
                                     existingModels = FindModels(existingModels, entityChild?.Entity, replacements);
                                     if (entityModel != null && entityChild != null) {
                                         STUModelComponent childModelComponent = GetInstance<STUModelComponent>(entityChild.Entity);

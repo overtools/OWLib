@@ -68,6 +68,7 @@ namespace DataTool.ToolLogic.Extract {
             ["soldier"] = "soldier: 76",
             ["lucio"] = "lúcio",
             ["torbjorn"] = "torbjörn",
+            ["torb"] = "torbjörn",
             ["dva"] = "d.va"
         };
 
