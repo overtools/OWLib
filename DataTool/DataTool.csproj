@@ -101,6 +101,7 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSound.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSoundBank.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVCCE.cs" />
     <Compile Include="ToolLogic\Extract\ExtractAbilities.cs" />
     <Compile Include="ToolLogic\Extract\ExtractHeroUnlocks.cs" />
     <Compile Include="ToolLogic\Extract\ExtractGeneral.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="ToolLogic\Extract\ExtractFlags.cs" />
     <Compile Include="ToolLogic\Extract\ExtractNPCs.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugAnimBlendTrees.cs" />
+    <Compile Include="ToolLogic\List\Debug\ListDebugFewParticles.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugSoundbanks.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugDecal.cs" />
     <Compile Include="ToolLogic\List\ListAchievements.cs" />

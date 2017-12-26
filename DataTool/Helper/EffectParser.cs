@@ -180,6 +180,23 @@ namespace DataTool.Helper {
         }
 
         public void Process(EffectInfo effectInfo, KeyValuePair<ChunkPlaybackInfo, IChunk> chunk, Dictionary<ulong, ulong> replacements) {
+            // todo: STUVoiceStimulus has f3099f20/m_volume
+            // probably more stuff too
+            
+            
+            // hey have some notes about particles:
+            // 000000003CEC.006 - 000000001D3D.08F = ana - guardian:
+            //     one RPCE, 61 chunks
+            //     seems to be at correct position with rpce at rot: x=90
+            
+            // 000000003796.006 - 000000001A31.08F = genji - warrior's salute:
+            //     one RPCE, 64 chunks.
+            
+            // VCCE might be a texture/material transform
+            // A B C D = R G B A
+            // see 'extract-debug-vcce'
+            
+            
             if (effectInfo == null) return;
             if (chunk.Value == null) return;
             if (chunk.Value.GetType() == typeof(TCFE)) {

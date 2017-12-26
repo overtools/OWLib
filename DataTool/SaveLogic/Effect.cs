@@ -23,7 +23,7 @@ namespace DataTool.SaveLogic {
             public string Name => "OWM Effect Format";
             
             public const ushort VersionMajor = 1;
-            public const ushort VersionMinor = 1;
+            public const ushort VersionMinor = 2;
 
             public void Write(Stream output, EffectParser.EffectInfo effect, Dictionary<Common.STUGUID, string> entityNames, Dictionary<ulong, List<STUVoiceLineInstance>> svceLines) {
                 using (BinaryWriter writer = new BinaryWriter(output)) {
