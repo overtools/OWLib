@@ -45,7 +45,8 @@ namespace DataTool.FindLogic {
                 AnimationEffects = new Dictionary<ulong, EffectInfoCombo>();
             }
 
-            public void SetEntityName(ulong entity, string name) {
+            public void SetEntityName(ulong entity, string name, Dictionary<ulong, ulong> replacements=null) {
+                if (replacements != null) entity = GetReplacement(entity, replacements);
                 if (Entities.ContainsKey(entity)) {
                     Entities[entity].Name = name;
                 }
@@ -131,7 +132,6 @@ namespace DataTool.FindLogic {
             // shader info;
             // main shader = 44, used to be A5
             // golden = 50
-            
             
             // ReSharper disable once InconsistentNaming
             public HashSet<ulong> IDs;  

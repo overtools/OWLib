@@ -188,6 +188,13 @@ namespace DataTool.SaveLogic {
             }
         }
 
+        public static void SaveLooseTextures(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
+            foreach (FindLogic.Combo.TextureInfoNew textureInfo in info.Textures.Values) {
+                if (!textureInfo.Loose) continue;
+                SaveTexture(flags, path, info, textureInfo.GUID);
+            }
+        }
+
         public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong texture) {
             bool convertTextures = true;
             string convertType = "dds";

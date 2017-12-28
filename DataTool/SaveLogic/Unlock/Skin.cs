@@ -76,7 +76,13 @@ namespace DataTool.SaveLogic.Unlock {
                 weaponIndex++;
             }
             info.Config.DoExistingEntities = false;
-            
+
+            foreach (Common.STUGUID guiImage in new[] {hero.ImageResource1, hero.ImageResource2, hero.ImageResource3, 
+                hero.ImageResource3, hero.ImageResource4, skinOverride.SkinImage}) {
+                FindLogic.Combo.Find(info, guiImage, realReplacements);
+            }
+            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, "GUI"), info);
+
             info.SetEntityName(hero.EntityHeroSelect, $"{heroName}-HeroSelect");
             info.SetEntityName(hero.EntityPlayable, $"{heroName}-Playable-ThirdPerson");
             info.SetEntityName(hero.EntityThirdPerson, $"{heroName}-ThirdPerson");

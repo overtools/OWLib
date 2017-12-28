@@ -49,14 +49,10 @@ namespace DataTool.ToolLogic.Extract {
                 Combo.Find(info, lootbox.Look2);
                 SaveLogic.Combo.Save(flags, Path.Combine(basePath, Container, name), info);
 
-                Combo.ComboInfo shopCardInfo = new Combo.ComboInfo();
                 foreach (STULootBoxShopCard lootboxShopCard in lootbox.ShopCards) {
-                    Combo.Find(shopCardInfo, lootboxShopCard.Texture);
+                    Combo.Find(info, lootboxShopCard.Texture);
                 }
-                foreach (Combo.TextureInfoNew textureInfo in shopCardInfo.Textures.Values) {
-                    SaveLogic.Combo.SaveTexture(flags, Path.Combine(basePath, Container, name, "ShopCards"), shopCardInfo, textureInfo.GUID);
-                }
-                
+                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, name, "ShopCards"), info);
                 
                 Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
                 foreach (Common.STUGUID guid in new [] {lootbox.Effect1, lootbox.Effect2, lootbox.Effect3, lootbox.Entity2, lootbox.Entity}) {
