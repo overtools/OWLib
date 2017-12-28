@@ -199,6 +199,7 @@ namespace DataTool.Helper {
             
             if (effectInfo == null) return;
             if (chunk.Value == null) return;
+            if (replacements == null) replacements = new Dictionary<ulong, ulong>();
             if (chunk.Value.GetType() == typeof(TCFE)) {
                 TCFE tcfe = chunk.Value as TCFE;
                 if (tcfe == null) return; 

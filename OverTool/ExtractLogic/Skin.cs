@@ -59,7 +59,7 @@ namespace OverTool.ExtractLogic {
                     continue;
                 }
                 Material mat = new Material(Util.OpenFile(map[materialKey], handler), materialId);
-                ulong definitionKey = mat.Header.definitionKey;
+                ulong definitionKey = mat.Header.ImageDefinition;
                 if (replace.ContainsKey(definitionKey)) {
                     definitionKey = replace[definitionKey];
                 }
@@ -94,7 +94,7 @@ namespace OverTool.ExtractLogic {
 
             ulong materialId = ulong.MaxValue;
             Material mat = new Material(Util.OpenFile(map[tgt], handler), materialId);
-            ulong definitionKey = mat.Header.definitionKey;
+            ulong definitionKey = mat.Header.ImageDefinition;
             if (replace.ContainsKey(definitionKey)) {
                 definitionKey = replace[definitionKey];
             }

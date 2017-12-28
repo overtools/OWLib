@@ -688,6 +688,7 @@ namespace STUHashTool {
                     // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000BF7.01B") continue;
                     // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "00000000012E.01B") continue;
                     // if (file != 1116892707587883018) continue;  // 020
+                    // if (file != 1116892707587883363) continue; // 020 reaper hero select
                     using (Stream fileStream = Util.OpenFile(records[file], handler)) {
                         // STULib.Types.Map.Map map = new STULib.Types.Map.Map(fileStream, uint.MaxValue);
                         ISTU fileSTU = ISTU.NewInstance(fileStream, uint.MaxValue);

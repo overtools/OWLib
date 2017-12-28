@@ -3,10 +3,10 @@
 namespace OWLib.Types {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct MaterialHeader {
-        public ulong submatkey; // Just a guess
-        public ulong virtualKey;
-        public ulong f03AKey;
-        public ulong definitionKey;
+        public ulong GUIDx085;
+        public ulong GUIDx088;
+        public ulong GUIDx03A;
+        public ulong ImageDefinition;
         public ulong offset1;   // no longer an offset
         public ulong offset2;   // no longer an offset
         public uint unk1;

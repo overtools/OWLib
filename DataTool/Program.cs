@@ -160,6 +160,7 @@ namespace DataTool {
             Log("Mapping...");
             TrackedFiles[0x90] = new HashSet<ulong>();
             IO.MapCMF();
+            IO.LoadGUIDTable();
 
             #region Key Detection
             if (!Flags.SkipKeys) {

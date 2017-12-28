@@ -9,7 +9,6 @@ using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
 using STULib.Types;
-using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic {
@@ -24,7 +23,7 @@ namespace DataTool.SaveLogic {
             
             public string Name => "OWM Entity Format";
             
-            public void Write(Stream output, EntityInfo entity, Dictionary<Common.STUGUID, string> nameOverrides) {
+            public void Write(Stream output, EntityInfo entity, Dictionary<ulong, string> nameOverrides) {
                 using (BinaryWriter writer = new BinaryWriter(output)) {
                     writer.Write(new string(Identifier));
                     writer.Write(VersionMajor);
@@ -62,6 +61,47 @@ namespace DataTool.SaveLogic {
                     }
                 }
             }
+            
+            public void Write(Stream output, FindLogic.Combo.EntityInfoNew entity, FindLogic.Combo.ComboInfo info) {
+                using (BinaryWriter writer = new BinaryWriter(output)) {
+                    writer.Write(new string(Identifier));
+                    writer.Write(VersionMajor);
+                    writer.Write((ushort)1);  // todo
+                    
+                    writer.Write(entity.GetNameIndex());
+                    if (entity.Model != 0) {
+                        FindLogic.Combo.ModelInfoNew modelInfo = info.Models[entity.Model];
+                        writer.Write(modelInfo.GetName());
+                    } else {writer.Write("null");}
+                    if (entity.Effect != 0) {
+                        FindLogic.Combo.EffectInfoCombo effectInfo = info.Effects[entity.Effect];
+                        writer.Write(effectInfo.GetName());
+                    } else {writer.Write("null");}
+                    writer.Write(GUID.Index(entity.GUID));
+                    writer.Write(GUID.Index(entity.Model));
+                    writer.Write(GUID.Index(entity.Effect));
+
+                    if (entity.Children == null) {
+                        writer.Write(0);
+                        return;
+                    }
+                    writer.Write(entity.Children.Count(x => x.GUID != 0));
+                    foreach (FindLogic.Combo.ChildEntityReferenceNew childEntityReference in entity.Children.Where(x => x.GUID != 0)) {
+                        FindLogic.Combo.EntityInfoNew childEntityInfo = info.Entities[childEntityReference.GUID];
+                        
+                        writer.Write(childEntityInfo.GetName());
+                        writer.Write(childEntityReference.Hardpoint);
+                        writer.Write(childEntityReference.Variable);
+                        writer.Write(GUID.Index(childEntityReference.Hardpoint));
+                        writer.Write(GUID.Index(childEntityReference.Variable));
+                        if (childEntityReference.Hardpoint != 0) {
+                            writer.Write(Model.OWModelWriter14.IdToString("hardpoint", GUID.Index(childEntityReference.Hardpoint)));
+                        } else {
+                            writer.Write("null"); // erm, k
+                        }
+                    }
+                }
+            }
 
             public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, params object[] data) {
                 throw new NotImplementedException();
@@ -80,9 +120,9 @@ namespace DataTool.SaveLogic {
             }
         }
         
-        public static void Save(ICLIFlags flags, string path, IEnumerable<EntityInfo> entities, Dictionary<Common.STUGUID, string> entityNames=null) {
+        public static void Save(ICLIFlags flags, string path, IEnumerable<EntityInfo> entities, Dictionary<ulong, string> entityNames=null) {
             OWEntityWriter owEntityWriter = new OWEntityWriter();
-            if (entityNames == null) entityNames = new Dictionary<Common.STUGUID, string>();
+            if (entityNames == null) entityNames = new Dictionary<ulong, string>();
             foreach (EntityInfo entity in entities) {
                 //using (Stream entityStream = OpenFile(entity.GUID)) {
                 //    if (entityStream == null) {
@@ -104,8 +144,8 @@ namespace DataTool.SaveLogic {
         }
 
         public static void SaveAnimations(ICLIFlags flags, string path, HashSet<AnimationInfo> animations, 
-            Common.STUGUID model, string dirname="Animations", bool isReference=false, 
-            Dictionary<Common.STUGUID, string> entityNames=null) {
+            ulong model, string dirname="Animations", bool isReference=false, 
+            Dictionary<ulong, string> entityNames=null) {
             Effect.OWAnimWriter owAnimWriter = new Effect.OWAnimWriter();
             if (entityNames == null && isReference) throw new Exception("Entity names were not given to SaveLogic.Entity.SaveAnimations(isReference=false)");
             foreach (AnimationInfo animation in animations) {

@@ -233,7 +233,7 @@ namespace STUHashTool {
                 if (value.GetType().IsClass) {
                     if (recursionGuard.Contains(value)) return $"[{GetType(fieldInfo, value.GetType())}] (Recursion Error)";
                     List<object> newRecursionGuard = new List<object>(recursionGuard) {value};
-                    return $"[{GetType(fieldInfo,value.GetType())}] \r\n{DumpInstance(value, helper+1, newRecursionGuard)}";
+                    return $"[{GetType(fieldInfo, value.GetType())}] \r\n{DumpInstance(value, helper+1, newRecursionGuard)}";
                 }
                 return "";
             }

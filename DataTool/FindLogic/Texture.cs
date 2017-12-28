@@ -104,7 +104,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0x08:
                     Material material = new Material(OpenFile(textureGUID), 0);
-                    existingTextures = FindTextures(existingTextures, new Common.STUGUID(material.Header.definitionKey), null, forceZero, replacements, materialId);
+                    existingTextures = FindTextures(existingTextures, new Common.STUGUID(material.Header.ImageDefinition), null, forceZero, replacements, materialId);
                     break;
                 case 0x1A:
                     STUModelLook modelLook = GetInstance<STUModelLook>(textureGUID);

@@ -12,7 +12,7 @@ namespace STULib.Types {
         public Common.STUGUID HardPoint;  // STUHardpoint
 
         [STUField(0x49F782CE)]
-        public Common.STUGUID GUIDx01C;  // STU_9CADF2EC
+        public Common.STUGUID Variable;  // STU_9CADF2EC
 
         [STUField(0x2263EA37)]
         public byte m_2263EA37;

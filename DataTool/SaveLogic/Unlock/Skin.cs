@@ -157,8 +157,8 @@ namespace DataTool.SaveLogic.Unlock {
             }
 
             if (!quiet && models.Count > 0) Log("\tSaving models");
-            Dictionary<Common.STUGUID, string> entityNames =
-                new Dictionary<Common.STUGUID, string> {[hero.EntityHighlightIntro] = $"{heroName}-HighlightIntro", 
+            Dictionary<ulong, string> entityNames =
+                new Dictionary<ulong, string> {[hero.EntityHighlightIntro] = $"{heroName}-HighlightIntro", 
                     [hero.EntityHeroSelect] = $"{heroName}-HeroSelect", 
                     [hero.EntityPlayable] = $"{heroName}-Playable-ThirdPerson",
                     [hero.EntityThirdPerson] = $"{heroName}-ThirdPerson",

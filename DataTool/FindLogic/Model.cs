@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using DataTool.Helper;
 using OWLib;
-using OWLib.Types.Chunk;
 using STULib;
 using STULib.Types;
 using STULib.Types.Generic;
@@ -23,7 +23,7 @@ namespace DataTool.FindLogic {
         public ChildEntityReference(STUChildEntityDefinition def, Common.STUGUID model) {
             GUID = def.Entity;
             Hardpoint = def.HardPoint;
-            Variable = def.GUIDx01C;
+            Variable = def.Variable;
             Model = model;
         }
 
@@ -51,18 +51,30 @@ namespace DataTool.FindLogic {
     }
 
     public class EntityInfo {
-        public Common.STUGUID GUID;
+        public ulong GUID;
         public HashSet<ChildEntityReference> Children;
         public HashSet<AnimationInfo> Animations;
 
-        public Common.STUGUID Model;
+        public ulong Model;
+
+        public EntityInfo() {}
+
+        public EntityInfo(ulong guid) {
+            GUID = guid;
+        }
     }
     
     public class ModelInfo : IEquatable<ModelInfo> {
-        public Common.STUGUID GUID;
+        public ulong GUID;
         public Common.STUGUID Skeleton;
         public HashSet<AnimationInfo> Animations;
         public HashSet<TextureInfo> Textures;
+
+        public ModelInfo(ulong guid) {
+            GUID = guid;
+            Animations = new HashSet<AnimationInfo>();
+            Textures = new HashSet<TextureInfo>();
+        }
 
         public Dictionary<Common.STUGUID, EntityInfo> Entities;  // eww, please. Future: somewhere nice for this
         // todo: is everything an entity? even random map props?
@@ -115,7 +127,7 @@ namespace DataTool.FindLogic {
             if (replacements != null) {
                 if (replacements.ContainsKey(newElement)) newElement = new Common.STUGUID(replacements[newElement]);
             }
-            ModelInfo newModel = new ModelInfo {GUID = newElement, Animations = animations, Textures = textures, 
+            ModelInfo newModel = new ModelInfo(newElement) {Animations = animations, Textures = textures, 
                 Skeleton = skeleton, Entities = new Dictionary<Common.STUGUID, EntityInfo>()};
 
             if (models.All(x => !Equals(x.GUID, newModel.GUID))) {
@@ -183,67 +195,11 @@ namespace DataTool.FindLogic {
                 }
                 Chunked chunked = new Chunked(chunkStream, true, ChunkManager.Instance);
                 
-                DMCE[] dmces = chunked.GetAllOfTypeFlat<DMCE>();
-                foreach (DMCE dmce in dmces) {
-                    if (dmce.Data.Model == 0) continue;
-                                        
-                    Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                    textures = Texture.FindTextures(textures, new Common.STUGUID(dmce.Data.Look), null, true, replacements);
-                    
-                    HashSet<AnimationInfo> animations = new HashSet<AnimationInfo>();
-                    animations = Animation.FindAnimations(animations, existingModels, new Common.STUGUID(dmce.Data.Animation), replacements);
-                    
-                    AddGUID(existingModels, new Common.STUGUID(dmce.Data.Model), textures, animations, replacements);
-                    
-                    // if (animList != null && !animList.ContainsKey(dmce.Data.animationKey) && dmce.Data.animationKey != 0) {
-                    //     if (replace.ContainsKey(dmce.Data.animationKey)) {
-                    //         animList[replace[dmce.Data.animationKey]] = parent;
-                    //         FindAnimationsSoft(replace[dmce.Data.animationKey], sound, animList, replace, parsed, map, handler, models, layers, replace[dmce.Data.animationKey]);
-                    //     } else {
-                    //         animList[dmce.Data.animationKey] = parent;
-                    //         FindAnimationsSoft(dmce.Data.animationKey, sound, animList, replace, parsed, map, handler, models, layers, dmce.Data.animationKey);
-                    //     }
-                    // }
-                }
+                EffectParser parser = new EffectParser(chunked, modelGUID);
+                parser.ProcessAll(replacements);
+                Animation.FindChunked(null, existingModels, modelGUID, replacements, 0);
                 
-                NECE[] neces = chunked.GetAllOfTypeFlat<NECE>();
-                foreach (NECE nece in neces) {
-                    if (nece.Data.Entity > 0) {
-                        existingModels = FindModels(existingModels, new Common.STUGUID(nece.Data.Entity), replacements);
-                        // FindModels(nece.Data.key, new List<ulong>(), models, animList, layers, replace, parsed, map, handler, sound);
-                    }
-                }
-                
-                // NECE[] neces = chunked.GetAllOfTypeFlat<NECE>();
-                // foreach (NECE nece in neces) {
-                //     if (nece.Data.key > 0) {
-                //         FindModels(nece.Data.key, new List<ulong>(), models, animList, layers, replace, parsed, map, handler, sound);
-                //     }
-                // }
-                // CECE[] ceces = chunked.GetAllOfTypeFlat<CECE>();
-                // foreach (CECE cece in ceces) {
-                //     if (animList != null && !animList.ContainsKey(cece.Data.animation) && cece.Data.animation != 0) {
-                //         animList[cece.Data.animation] = parent;
-                //         FindAnimationsSoft(cece.Data.animation, sound, animList, replace, parsed, map, handler, models, layers, cece.Data.animation);
-                //     }
-                // }
-                // SSCE[] ssces = chunked.GetAllOfTypeFlat<SSCE>();
-                // foreach (SSCE ssce in ssces) {
-                //     if (layers != null) {
-                //         FindTexturesAnonymous8(ssce.Data.material_key, layers, replace, parsed, map, handler);
-                //         FindTexturesAnonymousB3(ssce.Data.definition_key, layers, replace, parsed, map, handler);
-                //     }
-                // }
-                // RPCE[] prces = chunked.GetAllOfTypeFlat<RPCE>();
-                // foreach (RPCE prce in prces) {
-                //     if (models != null) {
-                //         if (replace.ContainsKey(prce.Data.model_key)) {
-                //             models.Add(replace[prce.Data.model_key]);
-                //         } else {
-                //             models.Add(prce.Data.model_key);
-                //         }
-                //     }
-                // }
+                // all of the effect stuff is handled by FindLogic.Animation.FindChunked
             }
             return existingModels;
         }
@@ -264,6 +220,7 @@ namespace DataTool.FindLogic {
                     Common.STUGUID entityModel = null;
                     Common.STUGUID entitySound = null;
                     HashSet<AnimationInfo> animations = new HashSet<AnimationInfo>();
+                    
                     foreach (KeyValuePair<ulong, STUEntityComponent> statescriptComponent in entityDefinition.Components.OrderBy(x => x.Value?.GetType() != typeof(STUModelComponent))) {
                         STUEntityComponent component = statescriptComponent.Value;
                         if (component == null) continue;

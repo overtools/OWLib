@@ -5,6 +5,7 @@ using DataTool.Flag;
 using DataTool.ToolLogic.List;
 using Newtonsoft.Json;
 using STULib.Types;
+using STULib.Types.AnimationList.x020;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
@@ -54,6 +55,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             // I didn't want to write code for a viewer so use: https://github.com/cb109/qtnodes
             
             foreach (ulong key in TrackedFiles[0x20]) {
+                if (key != 1116892707587883363) continue; // 020 reaper hero select
                 STUAnimBlendTree tree = GetInstance<STUAnimBlendTree>(key);
                 GraphRoot root = new GraphRoot {nodes = new List<GraphNode>(), edges = new List<GraphEdge>()};
                 if (tree?.AnimNodes == null) continue;
@@ -66,14 +68,13 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     root.nodes.Add(new GraphNode {x = node.Pos.X, y = node.Pos.Y, uuid = uuid, @class = "MaxObject", name = node.GetType().Name});
                     
                     
-                    // todo: convert to new hashes here
-                    // if (node.m_AC1BBFAE == null) continue;
-                    // foreach (STU_6C0BBD69 stu_6C0Bbd69 in node.m_AC1BBFAE) {
-                    //     if (stu_6C0Bbd69.m_C2E03957 != null) {
-                    //         uint parId = stu_6C0Bbd69.m_C2E03957.UniqueID;
-                    //         root.edges.Add(new GraphEdge {source_nodeId = node.UniqueID.ToString(), target_name = "parent", source_name = "children", target_nodeId = parId.ToString()});
-                    //     }
-                    // }
+                    if (node.m_0DE1BA16 == null) continue;
+                    foreach (STU_40274C18 stu_6C0Bbd69 in node.m_0DE1BA16) {
+                        if (stu_6C0Bbd69.m_AF632ACD != null) {
+                            uint parId = stu_6C0Bbd69.m_AF632ACD.UniqueID;
+                            root.edges.Add(new GraphEdge {source_nodeId = node.UniqueID.ToString(), target_name = "parent", source_name = "children", target_nodeId = parId.ToString()});
+                        }
+                    }
                 }
                 ParseJSON(root, flags);
                 

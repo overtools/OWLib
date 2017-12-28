@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -26,7 +27,32 @@ namespace DataTool.Helper {
                     RegexOptions.IgnoreCase));
         }
         
-        private static Dictionary<ulong, string> GUIDTable = new Dictionary<ulong, string>();
+        public static Dictionary<uint, Dictionary<uint, string>> GUIDTable = new Dictionary<uint, Dictionary<uint, string>>();
+
+        public static void LoadGUIDTable() {
+            if (!File.Exists("GUIDNames.csv")) return;
+            int i = 0;
+            foreach (string line in File.ReadAllLines("GUIDNames.csv")) {
+                if (i == 0) {
+                    i++;
+                    continue;
+                }
+                string[] parts = line.Split(',');
+                string indexString = parts[0];
+                string typeString = parts[1];
+                string name = parts[2];
+
+                uint index = uint.Parse(indexString, NumberStyles.HexNumber);
+                uint type = uint.Parse(typeString, NumberStyles.HexNumber);
+
+                if (!GUIDTable.ContainsKey(type)) {
+                    GUIDTable[type] = new Dictionary<uint, string>();
+                }
+                GUIDTable[type][index] = name;
+                
+                i++;
+            }
+        }
 
         public static string GetFileName(ulong guid) {
             return $"{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}";
@@ -50,7 +76,8 @@ namespace DataTool.Helper {
                 return;
             }
 
-            string filename = GUIDTable.ContainsKey(guid) ? GUIDTable[guid] : GetFileName(guid);
+            // string filename = GUIDTable.ContainsKey(guid) ? GUIDTable[guid] : GetFileName(guid);
+            string filename = GetFileName(guid);
             
             WriteFile(stream, Path.Combine(path, filename));
             

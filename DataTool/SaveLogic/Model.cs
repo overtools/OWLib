@@ -14,7 +14,6 @@ using OWLib.Types.Chunk;
 using OWLib.Types.Chunk.LDOM;
 using OWLib.Types.Map;
 using OWLib.Writer;
-using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic {
@@ -36,7 +35,53 @@ namespace DataTool.SaveLogic {
                 object[] data) {
                 return false;
             }
+
+            public enum OWMatType : uint {
+                Material = 0,
+                ModelLook = 1
+            }
+
+            public const ushort VersionMajor = 2;
+            public const ushort VersionMinor = 0;
+            // ver 2.0+ writes materials seperately from ModelLooks
+
+            public void Write(Stream output, FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelLookInfo modelLookInfo) {
+                using (BinaryWriter writer = new BinaryWriter(output)) {
+                    writer.Write(VersionMajor);
+                    writer.Write(VersionMinor);
+                    writer.Write(modelLookInfo.Materials.LongCount());
+                    writer.Write((uint)OWMatType.ModelLook);
+                    
+                    foreach (ulong modelLookMaterial in modelLookInfo.Materials) {
+                        FindLogic.Combo.MaterialInfo materialInfo = info.Materials[modelLookMaterial];
+                        writer.Write($"..\\..\\Materials\\{materialInfo.GetNameIndex()}{Format}");
+                        writer.Write(materialInfo.IDs.Count);
+                        foreach (ulong id in materialInfo.IDs) {
+                            writer.Write(id);
+                        }
+                    }
+                }
+            }
             
+            public void Write(Stream output, FindLogic.Combo.ComboInfo info, FindLogic.Combo.MaterialInfo materialInfo) {
+                using (BinaryWriter writer = new BinaryWriter(output)) {
+                    FindLogic.Combo.MaterialDataInfo materialDataInfo = info.MaterialDatas[materialInfo.MaterialData];
+                    writer.Write(VersionMajor);
+                    writer.Write(VersionMinor);
+                    writer.Write(materialDataInfo.Textures.LongCount());
+                    writer.Write((uint)OWMatType.Material);
+                    writer.Write(materialInfo.IDs.Count);
+                    foreach (ulong id in materialInfo.IDs) {
+                        writer.Write(id);
+                    }
+                    
+                    foreach (KeyValuePair<ulong,ImageDefinition.ImageType> texture in materialDataInfo.Textures) {
+                        writer.Write($"..\\Textures\\{GUID.LongKey(texture.Key):X12}.dds");
+                        writer.Write((uint)texture.Value);
+                    }
+                }
+            }
+
             public bool Write(Stream output, ModelInfo model, Dictionary<TextureInfo, TextureType> typeData) {
                 const ushort versionMajor = 1;
                 const ushort versionMinor = 2;
@@ -109,6 +154,26 @@ namespace DataTool.SaveLogic {
             public Dictionary<ulong, List<string>>[] Write(Stream output, OWLib.Map map, OWLib.Map detail1, OWLib.Map detail2, OWLib.Map props, OWLib.Map lights, string name,
                 IDataWriter modelFormat) {
                 throw new NotImplementedException();
+            }
+
+
+            public void Write(Stream output, FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelInfoNew modelInfo) {
+                // erm, we need to wrap for now
+                using (Stream modelStream = OpenFile(modelInfo.GUID)) {
+                    using (Chunked modelChunked = new Chunked(modelStream)) {
+                        string materialPath = "";
+                        OWMatWriter14 materialWriter = new OWMatWriter14();
+                        if (modelInfo.ModelLooks.Count > 0) {
+                            FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelInfo.ModelLooks.First()];
+                            materialPath = Path.Combine("ModelLooks",
+                                modelLookInfo.GetNameIndex() + materialWriter.Format);
+                        }
+                        // data is object[] { bool exportAttachments, string materialReference, string modelName, bool onlyOneLOD, bool skipCollision }
+                        Write(modelChunked, output, new List<byte>(new byte[] {0, 1, 0xFF}), 
+                            new object[] {true, materialPath, $"Model {GetFileName(modelInfo.GUID)}", null, true},
+                            new ModelInfo(modelInfo.GUID));
+                    }
+                }
             }
 
             // ReSharper disable once InconsistentNaming
@@ -600,13 +665,13 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void Save(ICLIFlags flags, string path, ModelInfo model, string name, string fileNameOverride=null, Dictionary<Common.STUGUID, string> entityNames=null) {
+        public static void Save(ICLIFlags flags, string path, ModelInfo model, string name, string fileNameOverride=null, Dictionary<ulong, string> entityNames=null) {
             bool convertModels = true;
             if (flags is ExtractFlags extractFlags) {
                 convertModels = extractFlags.ConvertModels && !extractFlags.Raw;
                 if (extractFlags.SkipModels) return;
             }
-            string basePath = Path.Combine(path, $"{model.GUID.ToString()}");
+            string basePath = Path.Combine(path, $"{GetFileName(model.GUID)}");
             if (fileNameOverride != null) basePath = Path.Combine(path, fileNameOverride);
             Dictionary<ulong, List<TextureInfo>> textures =
                 new Dictionary<ulong, List<TextureInfo>> {[0] = model.Textures.ToList()};
@@ -636,7 +701,7 @@ namespace DataTool.SaveLogic {
                         FileMode.Create)) {
                     fileStream.SetLength(0);
                     mdlWriter.Write(mdl, fileStream, lods, new object[] {true, $"{GUID.LongKey(model.GUID):X12}{writer14.Format}", name, null, true}, model);
-                }
+                                 }
                 if (mdl.HasChunk<lksm>()) {
                     using (Stream fileStream =
                         new FileStream(
@@ -660,7 +725,7 @@ namespace DataTool.SaveLogic {
                 } else {
                     if (model.Skeleton != null) Debugger.Log(0, "DataTool.SaveLogic.Model", "[DataTool.SaveLogic.Model]: lksm chunk doesn't exist but skeleton does");
                 }
-                if (entityNames == null) entityNames = new Dictionary<Common.STUGUID, string>();
+                if (entityNames == null) entityNames = new Dictionary<ulong, string>();
                 Entity.SaveAnimations(flags, basePath, model.Animations, model.GUID, AnimationEffectDir, false, entityNames);
             } else {
                 using (Stream fileStream =
