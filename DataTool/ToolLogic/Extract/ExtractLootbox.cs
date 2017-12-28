@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
-using DataTool.SaveLogic;
 using OWLib;
 using STULib.Types;
 using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
-using Model = DataTool.FindLogic.Model;
+using Combo = DataTool.FindLogic.Combo;
 using Sound = DataTool.FindLogic.Sound;
 
 namespace DataTool.ToolLogic.Extract {
@@ -40,28 +39,31 @@ namespace DataTool.ToolLogic.Extract {
                 if (lootbox == null) continue;
                 
                 string name = GetValidFilename(lootbox.Event.ToString()) ?? $"Unknown{GUID.Index(key):X}";
+
+                Combo.ComboInfo info = Combo.Find(null, lootbox.Entity);
+                Combo.Find(info, lootbox.Entity2);
+                Combo.Find(info, lootbox.Effect1);
+                Combo.Find(info, lootbox.Effect2);
+                Combo.Find(info, lootbox.Effect3);
+                Combo.Find(info, lootbox.ModelLook);
+                Combo.Find(info, lootbox.Look2);
+                SaveLogic.Combo.Save(flags, Path.Combine(basePath, Container, name), info);
+
+                Combo.ComboInfo shopCardInfo = new Combo.ComboInfo();
+                foreach (STULootBoxShopCard lootboxShopCard in lootbox.ShopCards) {
+                    Combo.Find(shopCardInfo, lootboxShopCard.Texture);
+                }
+                foreach (Combo.TextureInfoNew textureInfo in shopCardInfo.Textures.Values) {
+                    SaveLogic.Combo.SaveTexture(flags, Path.Combine(basePath, Container, name, "ShopCards"), shopCardInfo, textureInfo.GUID);
+                }
                 
-                HashSet<ModelInfo> models = new HashSet<ModelInfo>();
-                models = Model.FindModels(models, lootbox.Entity);
-                models = Model.FindModels(models, lootbox.Entity2);
-                models = Model.FindModels(models, lootbox.Effect1);
-                models = Model.FindModels(models, lootbox.Effect2);
-                models = Model.FindModels(models, lootbox.Effect3);
-                models = Model.FindModels(models, lootbox.ModelLook);
-                models = Model.FindModels(models, lootbox.Look2);
                 
                 Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
-
-                foreach (Common.STUGUID stuguid in new [] {lootbox.Effect1, lootbox.Effect2, lootbox.Effect3, lootbox.Entity2, lootbox.Entity}) {
-                    music = Sound.FindSounds(music, stuguid, null, true);
+                foreach (Common.STUGUID guid in new [] {lootbox.Effect1, lootbox.Effect2, lootbox.Effect3, lootbox.Entity2, lootbox.Entity}) {
+                    music = Sound.FindSounds(music, guid, null, true);
                 }
             
                 SaveLogic.Sound.Save(toolFlags, Path.Combine(basePath, $"{Container}", name, "Music"), music);
-
-                foreach (ModelInfo model in models) {
-                    SaveLogic.Model.Save(flags, Path.Combine(basePath, $"{Container}\\{name}\\Models"), model, $"Lootbox {lootbox.Event}_{GUID.Index(model.GUID):X}");
-                    Entity.Save(flags, Path.Combine(basePath, $"{Container}\\{name}\\Entities"), model.Entities.Values);
-                }
             }
         }
     }

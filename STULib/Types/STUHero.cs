@@ -62,7 +62,7 @@ namespace STULib.Types {
         public int UnknownID;
 
         [STUField(0xC2FE396F)]
-        public Statescript[] WeaponComponents1;
+        public WeaponEntity[] WeaponComponents1;
 
         [STUField(0xD696F2F6)]
         public STUGUID ImageResource1;
@@ -89,7 +89,7 @@ namespace STULib.Types {
         public StatisticGroup[] Statistics;
 
         [STUField(0xFCD2B649)]
-        public Statescript[] WeaponComponents2;
+        public WeaponEntity[] WeaponComponents2;
 
         [STUField(0xFF3C2071)]
         public STUGUID[] Achievements;  // not all of them...
@@ -137,7 +137,7 @@ namespace STULib.Types {
         }
 
         [STU(0xA0872511)]
-        public class Statescript {
+        public class WeaponEntity {
             [STUField(0x0827AB28)]
             public STUVec3 UnknownVec3_a;
 
@@ -145,7 +145,7 @@ namespace STULib.Types {
             public STUVec3 UnknownVec3_b;
 
             [STUField(0x38F997AB)]
-            public STUGUID Component;
+            public STUGUID Entity;
 
             [STUField(0xAF9D3A0C)]
             public STUVec4 UnknownVec4;

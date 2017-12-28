@@ -4,7 +4,7 @@ namespace OWLib.Types {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct MaterialHeader {
         public ulong GUIDx085;
-        public ulong GUIDx088;
+        public ulong Shader;
         public ulong GUIDx03A;
         public ulong ImageDefinition;
         public ulong offset1;   // no longer an offset

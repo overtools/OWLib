@@ -7,10 +7,10 @@ namespace STULib.Types {
     [STU(0x56B6D12E, "STULootbox")]
     public class STULootbox : STUInstance {
         [STUField(0xCBE2DADD)]
-        public STUGUID Entity;  // STULib.Types.STUEntityDefinition
+        public STUGUID Entity;  // STUEntityDefinition
 
         [STUField(0xB2F9D222)]
-        public STUGUID Entity2;  // STULib.Types.STUEntityDefinition
+        public STUGUID Entity2;  // STUEntityDefinition
 
         [STUField(0x3970E137)]
         public STUGUID Effect1;  // STUEffect
@@ -22,10 +22,10 @@ namespace STULib.Types {
         public STUGUID Effect3;  // STUEffect
 
         [STUField(0x041CE51F, "m_modelLook")]
-        public STUGUID ModelLook;  // STULib.Types.STUModelLook
+        public STUGUID ModelLook;  // STUModelLook
 
         [STUField(0x9B180535)]
-        public STUGUID Look2;  // STULib.Types.STUModelLook
+        public STUGUID Look2;  // STUModelLook
 
         [STUField(0xB48F1D22, "m_name")]
         public STUGUID Name;  // STULib.Types.posthash.STU_B456B24F

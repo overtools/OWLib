@@ -282,7 +282,7 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void Save(ICLIFlags toolFlags, STUMap map, ulong key, string basePath) {
+        public static void Save(ICLIFlags flags, STUMap map, ulong key, string basePath) {
             string name = GetValidFilename(GetString(map.DisplayName)) ?? $"Unknown{GUID.Index(key):X}";
             
             if (GetString(map.VariantName) != null) name = GetValidFilename(GetString(map.VariantName));
@@ -320,6 +320,8 @@ namespace DataTool.SaveLogic {
             
             OWMDLWriter modelWriter = new OWMDLWriter();
             OWMap14Writer owmap = new OWMap14Writer();
+            
+            // FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
 
             using (Stream mapStream = OpenFile(map.GetDataKey(1))) {
                 STULib.Types.Map.Map mapData = new STULib.Types.Map.Map(mapStream, BuildVersion);
@@ -347,12 +349,12 @@ namespace DataTool.SaveLogic {
                                 Map0B mapprop = (Map0B) mapBData.Records[i];
 
                                 if (mapprop == null) continue;
+                                // FindLogic.Combo.Find(comboInfo, mapprop.Header.binding);
                                 models = FindLogic.Model.FindModels(models, new Common.STUGUID(mapprop.Header.binding));
                                 STUModelComponent component =
                                     GetInstance<STUModelComponent>(mapprop.Header.binding);
 
                                 if (component == null) continue;
-
                                 mapprop.MaterialKey = component.Look;
                                 mapprop.ModelKey = component.Model;
                                 mapBData.Records[i] = mapprop;
@@ -373,7 +375,9 @@ namespace DataTool.SaveLogic {
             
             Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
             music = FindLogic.Sound.FindSounds(music, map.EffectMusic, null, true);
-            Sound.Save(toolFlags, Path.Combine(mapPath, "Sound", "Music"), music);
+            Sound.Save(flags, Path.Combine(mapPath, "Sound", "Music"), music);
+            
+            // SaveLogic.Combo.Save(flags, mapPath, comboInfo);
 
             // if (map.EffectAnnouncer != null) {
             //     using (Stream announcerStream = OpenFile(map.EffectAnnouncer)) {
@@ -395,13 +399,13 @@ namespace DataTool.SaveLogic {
             // }
 
             foreach (ModelInfo model in models) {
-                Model.Save(toolFlags, Path.Combine(mapPath, "Models"), model, $"Map:{GUID.Index(key):X} Model:{GUID.Index(model.GUID):X}");
+                Model.Save(flags, Path.Combine(mapPath, "Models"), model, $"Map:{GUID.Index(key):X} Model:{GUID.Index(model.GUID):X}");
             }
 
             if (map.SoundMasterResource != null) {
                 Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
                 sounds = FindLogic.Sound.FindSounds(sounds, map.SoundMasterResource);
-                Sound.Save(toolFlags, Path.Combine(mapPath, "Sound", "SoundMaster"), sounds);
+                Sound.Save(flags, Path.Combine(mapPath, "Sound", "SoundMaster"), sounds);
             }
         }
     }

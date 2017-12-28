@@ -39,7 +39,53 @@ namespace DataTool.SaveLogic.Unlock {
             
             Dictionary<Common.STUGUID, Common.STUGUID> replacements = skinOverride.ProperReplacements ?? new Dictionary<Common.STUGUID, Common.STUGUID>();
             Dictionary<ulong, ulong> realReplacements = replacements.ToDictionary(x => (ulong)x.Key, y => (ulong)y.Value);
-            HashSet<ModelInfo> models = new HashSet<ModelInfo>();
+            
+            FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
+            FindLogic.Combo.Find(info, hero.EntityMain, realReplacements);
+            FindLogic.Combo.Find(info, hero.EntityHeroSelect, realReplacements);
+            FindLogic.Combo.Find(info, hero.EntityHighlightIntro, realReplacements);
+            FindLogic.Combo.Find(info, hero.EntityPlayable, realReplacements);
+            FindLogic.Combo.Find(info, hero.EntityThirdPerson, realReplacements);
+
+            info.Config.DoExistingEntities = true;
+            
+            uint weaponIndex = 0;
+            foreach (Common.STUGUID overrideWeapon in skinOverride.Weapons) {
+                STUHeroWeapon weaponOverride = GetInstance<STUHeroWeapon>(overrideWeapon);
+                if (weaponOverride == null) continue;
+
+                string weaponName = null;
+                if (realWeaponSkins.ContainsKey(weaponIndex)) {
+                    weaponName = GetValidFilename(GetString(realWeaponSkins[weaponIndex].Unlock.CosmeticName));
+                }
+
+                Dictionary<ulong, ulong> weaponReplacements =
+                    weaponOverride.ProperReplacements?.ToDictionary(x => (ulong) x.Key, y => (ulong) y.Value) ??
+                    new Dictionary<ulong, ulong>();
+                foreach (STUHero.WeaponEntity statescript in hero.WeaponComponents1.Concat(hero.WeaponComponents2)) {
+                    FindLogic.Combo.Find(info, statescript.Entity, weaponReplacements);
+                    STUModelComponent modelComponent = GetInstance<STUModelComponent>(statescript.Entity);
+                    if (modelComponent?.Look == null || weaponName == null) continue;
+                    ulong modelLook = FindLogic.Combo.GetReplacement(modelComponent.Look, weaponReplacements);
+                    if (!info.ModelLooks.ContainsKey(modelLook)) continue;
+                    FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelLook];
+                    modelLookInfo.Name = weaponName;
+                }
+                
+                
+                weaponIndex++;
+            }
+            info.Config.DoExistingEntities = false;
+            
+            info.SetEntityName(hero.EntityHeroSelect, $"{heroName}-HeroSelect");
+            info.SetEntityName(hero.EntityPlayable, $"{heroName}-Playable-ThirdPerson");
+            info.SetEntityName(hero.EntityThirdPerson, $"{heroName}-ThirdPerson");
+            info.SetEntityName(hero.EntityMain, $"{heroName}-Base");
+            info.SetEntityName(hero.EntityHighlightIntro, $"{heroName}-HighlightIntro");
+            
+            SaveLogic.Combo.Save(flags, basePath, info);
+            
+            /*HashSet<ModelInfo> models = new HashSet<ModelInfo>();
             models = FindLogic.Model.FindModels(models, hero.EntityMain, realReplacements);
             models = FindLogic.Model.FindModels(models, hero.EntityHeroSelect, realReplacements);
             models = FindLogic.Model.FindModels(models, hero.EntityHighlightIntro, realReplacements);
@@ -191,8 +237,8 @@ namespace DataTool.SaveLogic.Unlock {
                 if (!quiet) Log("\tSaving GUI");
                 Texture.Save(flags, Path.Combine(basePath, "GUI"), guiTextures);
             }
-            if (!quiet) Log("\tComplete");
-            
+            if (!quiet) Log("\tComplete");*/
+
         }
 
         public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STULib.Types.STUUnlock.Skin skin, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet=true) {

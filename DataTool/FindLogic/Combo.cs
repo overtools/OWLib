@@ -30,6 +30,8 @@ namespace DataTool.FindLogic {
             public Dictionary<ulong, EffectInfoCombo> Effects;
             public Dictionary<ulong, EffectInfoCombo> AnimationEffects;
 
+            public ComboConfig Config = new ComboConfig();
+
             public ComboInfo() {
                 Entities = new Dictionary<ulong, EntityInfoNew>();
                 EntitiesByVar = new Dictionary<ulong, HashSet<ulong>>();
@@ -117,16 +119,20 @@ namespace DataTool.FindLogic {
             }
         }
 
-        public class ModelLookInfo : ComboType {
+        public class ModelLookInfo : ComboNameable {
             public HashSet<ulong> Materials;  // id, guid
-
-            public ModelLookInfo(ulong guid) {
-                GUID = guid;
-            }
+            public ModelLookInfo(ulong guid) : base(guid) { }
         }
 
         public class MaterialInfo : ComboType {
             public ulong MaterialData;
+            public ulong Shader;
+            
+            // shader info;
+            // main shader = 44, used to be A5
+            // golden = 50
+            
+            
             // ReSharper disable once InconsistentNaming
             public HashSet<ulong> IDs;  
             // dear blizz
@@ -146,6 +152,7 @@ namespace DataTool.FindLogic {
         public class TextureInfoNew : ComboType {
             public bool UseData;
             public ulong DataGUID => (GUID & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
+            public bool Loose;
         }
 
         public class ModelInfoNew : ComboType {
@@ -203,6 +210,10 @@ namespace DataTool.FindLogic {
             if (replacements.ContainsKey(guid)) return replacements[guid];
             return guid;
         }
+
+        public class ComboConfig {
+            public bool DoExistingEntities = false;
+        }
         
         public static ComboInfo Find(ComboInfo info, ulong guid, Dictionary<ulong, ulong> replacements=null , ComboContext context=null) {
             if (info == null) info = new ComboInfo();
@@ -226,7 +237,9 @@ namespace DataTool.FindLogic {
             if (guidType == 0 || guidType == 1) return info;
             switch (guidType) {
                 case 0x3:
-                    if (info.Entities.ContainsKey(guid)) break;
+                    if (info.Config == null || info.Config.DoExistingEntities == false) {
+                        if (info.Entities.ContainsKey(guid)) break;
+                    }
                     STUEntityDefinition entityDefinition = GetInstance<STUEntityDefinition>(guid);
                     if (entityDefinition == null) break;
                     
@@ -251,7 +264,7 @@ namespace DataTool.FindLogic {
                                 EntityVariable = childEntityDefinition.Variable
                             };
                             Find(info, childEntityDefinition.Entity, replacements, childContext);
-                            if (info.Entities.ContainsKey(childEntityDefinition.Entity)) {  // sometimes the entity can't be loaded
+                            if (info.Entities.ContainsKey(GetReplacement(childEntityDefinition.Entity, replacements))) {  // sometimes the entity can't be loaded
                                 entityInfo.Children.Add(new ChildEntityReferenceNew(childEntityDefinition, replacements));
                             }
                         }
@@ -317,6 +330,10 @@ namespace DataTool.FindLogic {
                     bool useData = Files.ContainsKey(dataKey);
                     textureInfo.UseData = useData;
                     info.Textures[guid] = textureInfo;
+
+                    if (context.Material == 0) {
+                        textureInfo.Loose = true;
+                    }
                     
                     break;
                 case 0x6:
@@ -337,7 +354,7 @@ namespace DataTool.FindLogic {
                             ulong effectKey = animationReader.ReadUInt64();
                             animationInfo.FPS = fps;
                             animationInfo.Priority = priority;
-                            animationInfo.Effect = effectKey;
+                            animationInfo.Effect = GetReplacement(effectKey, replacements);
                             Find(info, effectKey, replacements, animationContext);
                         }
                     }
@@ -355,12 +372,19 @@ namespace DataTool.FindLogic {
                     if (info.Materials.ContainsKey(guid) && (info.Materials[guid].IDs.Contains(context.MaterialID) || context.MaterialID == 0)) break;
                     // ^ break if material exists and has id, or id is 0
                     Material material = new Material(OpenFile(guid), 0);
+                    MaterialInfo materialInfo;
                     if (!info.Materials.ContainsKey(guid)) {
-                        info.Materials[guid] = new MaterialInfo {GUID = guid, 
-                            MaterialData = GetReplacement(material.Header.ImageDefinition, replacements), 
-                            IDs = new HashSet<ulong>()};
+                        materialInfo = new MaterialInfo {
+                            GUID = guid,
+                            MaterialData = GetReplacement(material.Header.ImageDefinition, replacements),
+                            IDs = new HashSet<ulong>()
+                        };
+                        info.Materials[guid] = materialInfo;
+                    } else {
+                        materialInfo = info.Materials[guid];
                     }
-                    info.Materials[guid].IDs.Add(context.MaterialID);
+                    materialInfo.IDs.Add(context.MaterialID);
+                    materialInfo.Shader = material.Header.Shader;
 
                     if (context.ModelLook == 0 && context.Model != 0) {
                         info.Models[context.Model].LooseMaterials.Add(guid);
@@ -398,7 +422,7 @@ namespace DataTool.FindLogic {
                                 if (chunk.Value.GetType() == typeof(DMCE)) {
                                     DMCE dmce = chunk.Value as DMCE;
                                     if (dmce == null) continue;
-                                    ComboContext dmceContext = new ComboContext {Model = dmce.Data.Model};
+                                    ComboContext dmceContext = new ComboContext {Model = GetReplacement(dmce.Data.Model, replacements)};
                                     Find(info, dmce.Data.Model, replacements, dmceContext);
                                     Find(info, dmce.Data.Look, replacements, dmceContext);
                                     Find(info, dmce.Data.Animation, replacements, dmceContext);
@@ -438,7 +462,7 @@ namespace DataTool.FindLogic {
                                     RPCE rpce = chunk.Value as RPCE;
                                     if (rpce == null) continue;
                                     Find(info, rpce.Data.Model, replacements);
-                                    lastModel = rpce.Data.Model;
+                                    lastModel = GetReplacement(rpce.Data.Model, replacements);
                                 } else {
                                     lastModel = 0;
                                 }
@@ -474,7 +498,7 @@ namespace DataTool.FindLogic {
                     if (modelLook.Materials != null) {
                         modelLookInfo.Materials = new HashSet<ulong>();
                         foreach (STUModelMaterial modelLookMaterial in modelLook.Materials) {
-                            if (modelLookMaterial == null) continue;
+                            if (modelLookMaterial == null || modelLookMaterial.Material == 0) continue;
                             modelLookInfo.Materials.Add(GetReplacement(modelLookMaterial.Material, replacements));
                             ComboContext modelLookMaterialContext = modelLookContext.Clone();
                             modelLookMaterialContext.MaterialID = modelLookMaterial.ID;
