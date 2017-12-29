@@ -11,7 +11,6 @@ using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic {
     public class Texture {
-
         public static Dictionary<TextureInfo, TextureType> MergeTypes(Dictionary<TextureInfo, TextureType> first, Dictionary<TextureInfo, TextureType> second) {
             return first.Concat(second).GroupBy(d => d.Key).ToDictionary (d => d.Key, d => d.First().Value);
         }

@@ -192,7 +192,7 @@ namespace OWLib.Types.Chunk {
                     ushort v2;
                     ushort v3;
                     if (indexTracker.ContainsKey(index.v1)) {
-                        v1 = indexTracker[index.v1];
+                        v1 = indexTracker[index.v1];  // "index of", value = fake index
                     } else {
                         v1 = (ushort) indexTracker.Count;
                         indexTracker[index.v1] = v1;
@@ -203,7 +203,7 @@ namespace OWLib.Types.Chunk {
                     } else {
                         v2 = (ushort) indexTracker.Count;
                         indexTracker[index.v2] = v2;
-                        indexTrackerInvert[v2] = index.v3;
+                        indexTrackerInvert[v2] = index.v2;
                     }
                     if (indexTracker.ContainsKey(index.v3)) {
                         v3 = indexTracker[index.v3];
@@ -297,6 +297,7 @@ namespace OWLib.Types.Chunk {
                 }
 
                 indexTracker.Clear();
+                indexTrackerInvert.Clear();
 
                 TextureCoordinates[i] = uv;
                 Vertices[i] = vertex;

@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
+using BCFF;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.Extract;
 using OWLib;
+using OWLib.Types;
 using OWLib.Writer;
 using STULib.Types;
 using static DataTool.Helper.IO;
@@ -195,6 +199,14 @@ namespace DataTool.SaveLogic {
             }
         }
 
+        public static class TextureConfig {
+            internal const int FOURCC_DX10 = 808540228;
+            internal const int FOURCC_ATI1 = 826889281;
+            internal const int FOURCC_ATI2 = 843666497;
+            internal static readonly int[] DXGI_BC4 = { 79, 80, 91 };
+            internal static readonly int[] DXGI_BC5 = { 82, 83, 84 };
+        }
+
         public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong texture) {
             bool convertTextures = true;
             string convertType = "dds";
@@ -219,12 +231,34 @@ namespace DataTool.SaveLogic {
                     WriteFile(textureStream, $"{filePath}.04D");
             } else {
                 Stream convertedStream;
+                TextureHeader header;
                 if (textureInfo.UseData) {
                     OWLib.Texture textObj = new OWLib.Texture(OpenFile(textureInfo.GUID), OpenFile(textureInfo.DataGUID));
                     convertedStream = textObj.Save();
+                    header = textObj.Header;
                 } else {
                     TextureLinear textObj = new TextureLinear(OpenFile(textureInfo.GUID));
                     convertedStream = textObj.Save();
+                    header = textObj.Header;
+                }
+                
+                // conversion utils
+                uint fourCC = header.Format().ToPixelFormat().fourCC;
+                bool isBC5 = TextureConfig.DXGI_BC5.Contains((int) header.format);
+                bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int) header.format) || isBC5 ||
+                                   fourCC == TextureConfig.FOURCC_ATI1 || fourCC == TextureConfig.FOURCC_ATI2;
+
+                if (isBcffValid) {
+                    convertedStream.Position = 0;
+                    BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
+                    if (isBC5) {  // overwatch normal maps (/tangent maps?) seem to always be BC5 and not BC4
+                        decompressor.CreateImage(BlockDecompressor.NormalMapPass);
+                    } else {
+                        decompressor.CreateImage();
+                    }
+                    decompressor.Image.Save($"{filePath}.tif", ImageFormat.Tiff);
+
+                    return;
                 }
 
                 if (convertedStream == null) return;

@@ -137,6 +137,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\bcffnet\BCFF\BCFF.csproj">
+      <Project>{9793cb2e-094a-41c9-81bc-27e60620538d}</Project>
+      <Name>BCFF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CASCExplorer\CascLib\CascLib.csproj">
       <Project>{e08e1e48-6585-4137-8405-661c62c10713}</Project>
       <Name>CascLib</Name>
