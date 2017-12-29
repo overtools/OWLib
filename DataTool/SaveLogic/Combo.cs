@@ -248,7 +248,15 @@ namespace DataTool.SaveLogic {
                 bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int) header.format) || isBC5 ||
                                    fourCC == TextureConfig.FOURCC_ATI1 || fourCC == TextureConfig.FOURCC_ATI2;
 
-                if (isBcffValid) {
+                ImageFormat imageFormat = null;
+                
+                if (convertType == "tif") imageFormat = ImageFormat.Tiff;
+                
+                // if (convertType == "tga") imageFormat = Im.... oh
+                // so there is no TGA image format.
+                // guess the TGA users are stuck with the DirectXTex stuff for now.
+
+                if (isBcffValid && imageFormat != null) {
                     convertedStream.Position = 0;
                     BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
                     if (isBC5) {  // overwatch normal maps (/tangent maps?) seem to always be BC5 and not BC4
@@ -256,7 +264,7 @@ namespace DataTool.SaveLogic {
                     } else {
                         decompressor.CreateImage();
                     }
-                    decompressor.Image.Save($"{filePath}.tif", ImageFormat.Tiff);
+                    decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
 
                     return;
                 }
