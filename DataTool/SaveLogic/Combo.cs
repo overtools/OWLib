@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -199,12 +200,17 @@ namespace DataTool.SaveLogic {
             }
         }
 
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public static class TextureConfig {
             internal const int FOURCC_DX10 = 808540228;
             internal const int FOURCC_ATI1 = 826889281;
             internal const int FOURCC_ATI2 = 843666497;
             internal static readonly int[] DXGI_BC4 = { 79, 80, 91 };
             internal static readonly int[] DXGI_BC5 = { 82, 83, 84 };
+        }
+        
+        public static float[] TriplePass(float x, float y) {
+            return new[] { x, x, x };
         }
 
         public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong texture) {
@@ -241,6 +247,7 @@ namespace DataTool.SaveLogic {
                     convertedStream = textObj.Save();
                     header = textObj.Header;
                 }
+                if (convertedStream == null) return;
                 
                 // conversion utils
                 uint fourCC = header.Format().ToPixelFormat().fourCC;
@@ -259,17 +266,17 @@ namespace DataTool.SaveLogic {
                 if (isBcffValid && imageFormat != null) {
                     convertedStream.Position = 0;
                     BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
-                    if (isBC5) {  // overwatch normal maps (/tangent maps?) seem to always be BC5 and not BC4
+                    if (isBC5) {
+                        // overwatch normal maps (/tangent maps?) seem to always be BC5 and not BC4
                         decompressor.CreateImage(BlockDecompressor.NormalMapPass);
                     } else {
-                        decompressor.CreateImage();
+                        decompressor.CreateImage(TriplePass);
                     }
                     decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
 
                     return;
                 }
 
-                if (convertedStream == null) return;
                 convertedStream.Position = 0;
                 if (convertType == "tga" || convertType == "tif" || convertType == "dds") {  // we need the dds for tif conversion
                     WriteFile(convertedStream, $"{filePath}.dds");
