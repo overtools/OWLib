@@ -35,7 +35,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 STUSound sound = GetInstance<STUSound>(key);
                 Dictionary<uint, Common.STUGUID> soundIDs = new Dictionary<uint, Common.STUGUID>();
                 if (sound.Inner == null) continue;
-                STUSoundInner inner = sound.Inner;
+                STUSoundbankDataVersion inner = sound.Inner;
                 for (int i = 0; i < inner.IDs.Length; i++) {
                     soundIDs[inner.IDs[i]] = inner.Sounds[i];
                 }

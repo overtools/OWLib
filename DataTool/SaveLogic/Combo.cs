@@ -93,19 +93,34 @@ namespace DataTool.SaveLogic {
             
             // just create a fake effect if it doesn't exist
             if (animationInfo.Effect == 0) {
-                animationEffect = new FindLogic.Combo.EffectInfoCombo {Effect = new EffectParser.EffectInfo()};
+                animationEffect = new FindLogic.Combo.EffectInfoCombo(0) {Effect = new EffectParser.EffectInfo()};
                 animationEffect.Effect.SetupEffect();
             } else {
                 animationEffect = info.AnimationEffects[animationInfo.Effect];
             }
             Effect.OWAnimWriter owAnimWriter = new Effect.OWAnimWriter();
-            string animationEffectPath = Path.Combine(path, Model.AnimationEffectDir, animationInfo.GetNameIndex(), 
-                $"{animationInfo.GetNameIndex()}{owAnimWriter.Format}");
-            CreateDirectoryFromFile(animationEffectPath);
-            using (Stream fileStream = new FileStream(animationEffectPath, FileMode.Create)) {
+            string animationEffectDir = Path.Combine(path, Model.AnimationEffectDir, animationInfo.GetNameIndex());
+            string animationEffectFile = Path.Combine(animationEffectDir, $"{animationInfo.GetNameIndex()}{owAnimWriter.Format}");
+            CreateDirectoryFromFile(animationEffectFile);
+            using (Stream fileStream = new FileStream(animationEffectFile, FileMode.Create)) {
                 fileStream.SetLength(0);
                 Dictionary<ulong, List<STUVoiceLineInstance>> svceLines = Effect.GetSVCELines(animationEffect.Effect);
                 owAnimWriter.Write(fileStream, info, animationInfo, animationEffect, model, svceLines);
+            }
+            SaveEffectExtras(flags, animationEffectDir, info, animationEffect.Effect);
+        }
+
+        public static void SaveEffectExtras(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            EffectParser.EffectInfo effectInfo) {
+            string soundDirectory = Path.Combine(path, "Sounds");
+            foreach (EffectParser.OSCEInfo osceInfo in effectInfo.OSCEs) {
+                if (osceInfo.Sound == 0) continue;
+                FindLogic.Combo.SoundInfoNew soundInfo = info.Sounds[osceInfo.Sound];
+                string osceDir = Path.Combine(soundDirectory, soundInfo.GetName());
+                CreateDirectoryFromFile(osceDir + "\\harrypotter.png");
+                foreach (KeyValuePair<uint,ulong> soundPair in soundInfo.Sounds) {
+                    SaveSoundFile(flags, osceDir, info, soundPair.Value, false);
+                }
             }
         }
 
@@ -129,6 +144,7 @@ namespace DataTool.SaveLogic {
             //         }
             //     }
             // }
+            SaveEffectExtras(flags, effectDirectory, info, effectInfo.Effect);
             
             using (Stream effectOutputStream = File.OpenWrite(effectFile)) {
                 effectOutputStream.SetLength(0);
@@ -259,8 +275,8 @@ namespace DataTool.SaveLogic {
                 // so there is no TGA image format.
                 // guess the TGA users are stuck with the DirectXTex stuff for now.
 
+                convertedStream.Position = 0;
                 if (isBcffValid && imageFormat != null) {
-                    convertedStream.Position = 0;
                     BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
                     decompressor.CreateImage();
                     decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
@@ -289,13 +305,61 @@ namespace DataTool.SaveLogic {
                     // but start one on it's own is fine (we need something for "Winged Victory")
                     
                     pProcess.Start();
-                    pProcess.WaitForExit();
+                    // pProcess.WaitForExit(); // not using this is kinda dangerous but I don't care
+                    // when texconv writes with to the console -nologo is has done/failed conversion
                     string line = pProcess.StandardOutput.ReadLine();
                     if (line?.Contains($"{filePath}.dds FAILED") == false) {  // fallback if convert fails
                         File.Delete($"{filePath}.dds");
                     }
                 }
             }
+        }
+
+        public static void SaveSoundFile(ICLIFlags flags, string directory, FindLogic.Combo.ComboInfo info, ulong soundFile,
+            bool voice) {
+            bool convertWem = false;
+            if (flags is ExtractFlags extractFlags) {
+                convertWem = extractFlags.ConvertSound && !extractFlags.Raw;
+                if (extractFlags.SkipSound) return;
+            }
+            
+            FindLogic.Combo.SoundFileInfo soundFileInfo = voice ? info.VoiceSoundFiles[soundFile] : info.SoundFiles[soundFile];
+            
+            string outputFile = Path.Combine(directory, $"{soundFileInfo.GetName()}.wem");
+            string outputFileOgg = Path.ChangeExtension(outputFile, "ogg");
+            CreateDirectoryFromFile(outputFile);
+
+            using (Stream soundStream = OpenFile(soundFile)) {
+                if (soundStream == null) return;
+                using (Stream outputStream = File.OpenWrite(outputFile)) {
+                    soundStream.CopyTo(outputStream);
+                }
+            }
+
+            if (!convertWem) return;
+            Process pProcess = new Process {
+                StartInfo = {
+                    FileName = "Third Party\\ww2ogg.exe",
+                    Arguments =
+                        $"\"{outputFile}\" --pcb \"Third Party\\packed_codebooks_aoTuV_603.bin\" -o \"{outputFileOgg}\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                }
+            };
+            Process pProcess2 = new Process {
+                StartInfo = {
+                    FileName = "Third Party\\revorb.exe",
+                    Arguments = $"\"{outputFileOgg}\"",
+                    UseShellExecute = false
+                }
+            };
+            
+            
+            // TODO: MAJOR, THIS IS WAAAAAAAAAAAAAAAAY TOO SLOW.
+            pProcess.Start();
+            pProcess.WaitForExit();
+            pProcess2.Start();
+            File.Delete(outputFile);
         }
     }
 }

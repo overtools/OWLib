@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using static OWLib.Extensions;
@@ -530,10 +532,20 @@ namespace DataTool.ConvertLogic {
             public int FileLength;
         }
 
+        [AttributeUsage(AttributeTargets.Class)]
+        public class BankObjectAttribute : Attribute {
+            public byte Type;
+            
+            public BankObjectAttribute(byte type) {
+                Type = type;
+            }
+        }
+
         public interface IBankObject {
             void Read(BinaryReader reader);
         }
 
+        [BankObject(3)]
         public class BankObjectEventAction : IBankObject {
             public enum EventActionScope : byte {
                 GameObjectSwitchOrTrigger = 1, // Switch or Trigger
@@ -575,25 +587,43 @@ namespace DataTool.ConvertLogic {
             public enum EventActionParameterType : byte {
                 Delay = 0xE, // Delay, given as uint32 in milliseconds
                 Play = 0xF,  // Play: Fade in time, given as uint32 in milliseconds
+                // may not be fade in time, but start time. (wouldn't that be a delay though?)
                 Probability = 0x10  // Probability, given as float
             }
 
             public EventActionScope Scope;
             public EventActionType Type;
-            public uint ObjectID;
+            public uint ReferenceObjectID;
+
+            public List<KeyValuePair<EventActionParameterType, object>> Parameters;
             
             public void Read(BinaryReader reader) {
                 Scope = (EventActionScope) reader.ReadByte();
                 Type = (EventActionType) reader.ReadByte();
-                ObjectID = reader.ReadUInt32();
+                ReferenceObjectID = reader.ReadUInt32();
                 byte zero = reader.ReadByte();
                 byte parameterCount = reader.ReadByte();
+                Parameters = new List<KeyValuePair<EventActionParameterType, object>>(parameterCount);
+                EventActionParameterType[] tempTypes = new EventActionParameterType[parameterCount];
                 for (int i = parameterCount - 1; i >= 0; i--) {
                     EventActionParameterType parameterType = (EventActionParameterType)reader.ReadByte();
+                    tempTypes[i] = parameterType;
+                }
+
+                foreach (EventActionParameterType parameterType in tempTypes) {
+                    object val = null;
+                    if (parameterType == EventActionParameterType.Probability) {
+                        val = reader.ReadSingle();
+                    } else if (parameterType == EventActionParameterType.Delay ||
+                               parameterType == EventActionParameterType.Play) {
+                        val = reader.ReadUInt32();
+                    }
+                    Parameters.Add(new KeyValuePair<EventActionParameterType, object>(parameterType, val));
                 }
             }
         }
 
+        [BankObject(2)]
         public class BankObjectSoundSFX : IBankObject {
             public enum SoundLocation : byte {
                 Embedded = 0,
@@ -602,27 +632,147 @@ namespace DataTool.ConvertLogic {
             }
 
             public uint SoundID;
+            public SoundLocation Location;
             
             public void Read(BinaryReader reader) {
                 // using a different structure to the wiki :thinking:
-                SoundLocation location = (SoundLocation)reader.ReadUInt32();
-                byte unk = reader.ReadByte();
+                Location = (SoundLocation)reader.ReadUInt32();
+                
+                byte unknown = reader.ReadByte();
 
                 SoundID = reader.ReadUInt32();
             }
         }
 
+        [BankObject(1)]
+        public class BankObjectSettings : IBankObject {
+            public enum SettingType : byte {
+                VoiceVolume = 1,
+                VoiceLowPassFilter = 3
+            }
+
+            public List<KeyValuePair<SettingType, float>> Settings;
+            
+            public void Read(BinaryReader reader) {
+                byte numSettings = reader.ReadByte();
+                
+                SettingType[] types = new SettingType[numSettings];
+                for (int i = 0; i < numSettings; i++) {
+                    SettingType type = (SettingType)reader.ReadByte();
+                    types[i] = type;
+                }
+                
+                Settings = new List<KeyValuePair<SettingType, float>>();
+
+                foreach (SettingType settingType in types) {
+                    float value = reader.ReadSingle();
+                    Settings.Add(new KeyValuePair<SettingType, float>(settingType, value));
+                }
+            }
+        }
+
+        [BankObject(4)]
+        public class BankObjectEvent : IBankObject {
+            public uint[] Actions;
+            
+            public void Read(BinaryReader reader) {
+                uint numActions = reader.ReadUInt32();
+
+                Actions = new uint[numActions];
+                for (int i = 0; i < numActions; i++) {
+                    Actions[i] = reader.ReadUInt32();
+                }
+            }
+        }
+
+        public class BankSoundStructure : IBankObject {  // might as well use interface
+            public enum AdditionalParameterType : byte {
+                VoiceVolume = 0x0,  // General Settings: Voice: Volume, float
+                VoicePitch = 0x2,  // General Settings: Voice: Pitch, float
+                VoiceLowPassFilter = 0x3,  // General Settings: Voice: Low-pass filter, float
+                PlaybackPriority = 0x5,  // Advanced Settings: Playback Priority: Priority, float
+                PlaybackPriortyOffset = 0x6,  // Advanced Settings: Playback Priority: Offset priority by ... at max distance, float
+                Loop = 0x7,  // whether to Loop, given as uint32 = number of loops, or infinite if the value is 0
+                MotionVolumeOffset = 0x8,  // Motion: Audio to Motion Settings: Motion Volume Offset, float
+                PositioningPannerX = 0xB,  // Positioning: 2D: Panner X-coordinate, float
+                PositioningPannerX2 = 0xC,  // todo: erm, wiki?
+                PositioningCenter = 0xD,  // Positioning: Center %, float
+                Bus0Volume = 0x12,  // General Settings: User-Defined Auxiliary Sends: Bus #0 Volume, float
+                Bus1Volume = 0x13,  // General Settings: User-Defined Auxiliary Sends: Bus #1 Volume, float
+                Bus2Volume = 0x14,  // General Settings: User-Defined Auxiliary Sends: Bus #2 Volume, float
+                Bus3Volume = 0x15,  // General Settings: User-Defined Auxiliary Sends: Bus #3 Volume, float
+                AuxiliarySendsVolume = 0x16,  // General Settings: Game-Defined Auxiliary Sends: Volume, float
+                OutputBusVolume = 0x17,  // General Settings: Output Bus: Volume, float
+                OutputBusLowPassFilter = 0x18  // General Settings: Output Bus: Low-pass filter, float
+            }
+            
+            public void Read(BinaryReader reader) {
+                throw new NotImplementedException(); // untested but you can try if you are brave
+                bool overrideParentSettingsEffect = reader.ReadBoolean();  // whether to override parent settings for Effects section
+                byte numEffects = reader.ReadByte();
+
+                if (numEffects > 0) {
+                    byte mask = reader.ReadByte(); // bit mask specifying which effects should be bypassed (see wiki)
+
+                    for (int i = 0; i < numEffects; i++) {
+                        byte effectIndex = reader.ReadByte();  // effect index (00 to 03)
+                        uint effectID = reader.ReadUInt32();  // id of Effect object
+                        short zero = reader.ReadInt16();  // two zero bytes
+                        Debug.Assert(zero == 0);
+                    }
+                }
+                
+                uint outputBus = reader.ReadUInt32();
+                uint parentObject = reader.ReadUInt32();
+                bool overrideParentSettingsPlaybackPriority = reader.ReadBoolean();  // whether to override parent settings for Playback Priority section
+                bool offsetPriorityBy = reader.ReadBoolean();  // whether the "Offset priority by ... at max distance" setting is activated
+                
+                byte numAdditionalParameters = reader.ReadByte();
+                AdditionalParameterType[] parameterTypes = new AdditionalParameterType[numAdditionalParameters];
+                for (int i = 0; i < numAdditionalParameters; i++) {
+                    AdditionalParameterType type = (AdditionalParameterType)reader.ReadByte();
+                    parameterTypes[i] = type;
+                }
+                
+                // byte zero2 = reader.ReadByte();
+                // Debug.Assert(zero2 == 0);
+            }
+        }
+        
+        public class BankNotReadyException : Exception {}
+
+        public class BankObjectTooMuchReadException : Exception {
+            public BankObjectTooMuchReadException(string message) : base(message) {}
+        }
+
         public class WwiseBank {
-            // public WwiseBankHeader Header;
-            public WwiseBankWemDef[] WemDefs;
-            public byte[][] WemData;
+            public WwiseBankWemDef[] WemDefs { get; }
+            public byte[][] WemData { get; }
 
-            public List<IBankObject> Objects;
+            public Dictionary<uint, IBankObject> Objects { get; }
+            public List<WwiseBankChunkHeader> Chunks { get; }
+            public Dictionary<WwiseBankChunkHeader, long> ChunkPositions { get; }
 
-            public List<WwiseBankChunkHeader> Chunks;
-            public Dictionary<WwiseBankChunkHeader, long> ChunkPositions;
+            public static bool Ready { get; private set; }
+            public static Dictionary<byte, Type> Types { get; private set; }
+            
+            public static void GetReady() {
+                Types = new Dictionary<byte, Type>();
+                
+                Assembly assembly = typeof(WwiseBank).Assembly;
+                Type baseType = typeof(IBankObject);
+                List<Type> types = assembly.GetTypes().Where(type => type != baseType && baseType.IsAssignableFrom(type)).ToList();
+
+                foreach (Type type in types) {
+                    BankObjectAttribute bankObjectAttribute = type.GetCustomAttribute<BankObjectAttribute>();
+                    if (bankObjectAttribute == null) continue;
+                    Types[bankObjectAttribute.Type] = type;
+                }
+                Ready = true;
+            }
             
             public WwiseBank(Stream stream) {
+                if (!Ready) throw new BankNotReadyException();
                 using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, true)) {
                     // reference: http://wiki.xentax.com/index.php/Wwise_SoundBank_(*.bnk)
                     
@@ -661,7 +811,7 @@ namespace DataTool.ConvertLogic {
                     if (hircHeader.MagicNumber != 0) {
                         reader.BaseStream.Position = ChunkPositions[hircHeader];
                         uint objectCount = reader.ReadUInt32();
-                        Objects = new List<IBankObject>((int)objectCount);
+                        Objects = new Dictionary<uint, IBankObject>((int)objectCount);
                         for (int o = 0; o < objectCount; o++) {
                             byte objectType = reader.ReadByte();
                             uint objectLength = reader.ReadUInt32();
@@ -670,19 +820,19 @@ namespace DataTool.ConvertLogic {
 
                             uint objectID = reader.ReadUInt32();
 
-                            if (objectType == 3) {
-                                BankObjectEventAction objectEventAction = new BankObjectEventAction();
-                                objectEventAction.Read(reader);
-                                Objects.Add(objectEventAction);
-                            } else if (objectType == 2) {
-                                BankObjectSoundSFX objectSoundSfx = new BankObjectSoundSFX();
-                                objectSoundSfx.Read(reader);
-                                Objects.Add(objectSoundSfx);
+                            if (Types.ContainsKey(objectType)) {
+                                IBankObject bankObject = Activator.CreateInstance(Types[objectType]) as IBankObject;
+                                if (bankObject == null) continue;
+                                bankObject.Read(reader);
+                                Objects[objectID] = bankObject;
                             } else {
-                                Objects.Add(null);
+                                Debugger.Log(0, "[DataTool.Convertlogic.Sound]", $"Unhandled Bank object type: {objectType}\r\n");
+                                Objects[objectID] = null;
                             }
-                            
-                            reader.BaseStream.Position = beforeObject + objectLength;
+
+                            long newPos = beforeObject + objectLength;
+                            if (newPos < reader.BaseStream.Position) throw new BankObjectTooMuchReadException($"Bank object of type {objectType} read too much data");
+                            reader.BaseStream.Position = newPos;
                         }
                     }
                 }
@@ -697,6 +847,14 @@ namespace DataTool.ConvertLogic {
                     using (Stream outputs = File.Open($"{output}{Path.DirectorySeparatorChar}{wemDef.FileID:X8}.wem", FileMode.OpenOrCreate, FileAccess.Write)) {
                         outputs.SetLength(0);
                         outputs.Write(data, 0, data.Length);
+                    }
+                }
+            }
+
+            public IEnumerable<T> ObjectsOfType<T>() {
+                foreach (KeyValuePair<uint,IBankObject> bankObject in Objects) {
+                    if (bankObject.Value != null && bankObject.Value.GetType() == typeof(T)) {
+                        yield return (T)bankObject.Value;
                     }
                 }
             }

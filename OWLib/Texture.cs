@@ -3,100 +3,90 @@ using OWLib.Types;
 
 namespace OWLib {
     public class Texture {
-        private TextureHeader header;
-        private RawTextureHeader rawHeader;
-        private TextureType format;
-        private uint size;
-        private uint[] color1;
-        private uint[] color2;
-        private ushort[] color3;
-        private ushort[] color4;
-        private uint[] color5;
-        private bool loaded = false;
+        public TextureHeader Header { get; }
+        public RawTextureHeader RawHeader { get; }
+        public TextureType Format { get; }
+        public uint Size { get; }
+        public uint[] Color1 { get; }
+        public uint[] Color2 { get; }
+        public ushort[] Color3 { get; }
+        public ushort[] Color4 { get; }
+        public uint[] Color5 { get; }
+        public bool Loaded { get; } = false;
 
-        public TextureHeader Header => header;
-        public RawTextureHeader RawHeader => rawHeader;
-        public TextureType Format => format;
-        public uint Size => size;
-        public uint[] Color1 => color1;
-        public uint[] Color2 => color2;
-        public ushort[] Color3 => color3;
-        public ushort[] Color4 => color4;
-        public uint[] Color5 => color5;
-        public bool Loaded => loaded;
-
-        public Texture(Stream headerStream, Stream dataStream) {
-            using (BinaryReader headerReader = new BinaryReader(headerStream))
-            using (BinaryReader dataReader = new BinaryReader(dataStream)) {
-                header = headerReader.Read<TextureHeader>();
-                if (header.dataSize != 0) {
+        public Texture(Stream headerStream, Stream dataStream) {           
+            using (BinaryReader headerReader = new BinaryReader(headerStream)) {
+                Header = headerReader.Read<TextureHeader>();
+                if (Header.dataSize != 0) {
                     return;
                 }
 
-                format = header.Format();
+                Format = Header.Format();
 
-                if (format == TextureType.Unknown) {
+                if (Format == TextureType.Unknown) {
                     return;
                 }
 
-                rawHeader = dataReader.Read<RawTextureHeader>();
+                using (BinaryReader dataReader = new BinaryReader(dataStream)) {
+                    RawHeader = dataReader.Read<RawTextureHeader>();
 
-                size = rawHeader.imageSize / header.Format().ByteSize();
-                color1 = new uint[size];
-                color2 = new uint[size];
-                color3 = new ushort[size];
-                color4 = new ushort[size];
-                color5 = new uint[size];
+                    Size = RawHeader.imageSize / Header.Format().ByteSize();
+                    Color1 = new uint[Size];
+                    Color2 = new uint[Size];
+                    Color3 = new ushort[Size];
+                    Color4 = new ushort[Size];
+                    Color5 = new uint[Size];
 
-                if ((byte)header.format > 72) {
-                    for (int i = 0; i < size; ++i) {
-                        color3[i] = dataReader.ReadUInt16();
+                    if ((byte) Header.format > 72) {
+                        for (int i = 0; i < Size; ++i) {
+                            Color3[i] = dataReader.ReadUInt16();
+                        }
+                        for (int i = 0; i < Size; ++i) {
+                            Color4[i] = dataReader.ReadUInt16();
+                            Color5[i] = dataReader.ReadUInt32();
+                        }
                     }
-                    for (int i = 0; i < size; ++i) {
-                        color4[i] = dataReader.ReadUInt16();
-                        color5[i] = dataReader.ReadUInt32();
+
+                    if ((byte) Header.format < 80) {
+                        for (int i = 0; i < Size; ++i) {
+                            Color1[i] = dataReader.ReadUInt32();
+                        }
+                        for (int i = 0; i < Size; ++i) {
+                            Color2[i] = dataReader.ReadUInt32();
+                        }
                     }
                 }
-
-                if ((byte)header.format < 80) {
-                    for (int i = 0; i < size; ++i) {
-                        color1[i] = dataReader.ReadUInt32();
-                    }
-                    for (int i = 0; i < size; ++i) {
-                        color2[i] = dataReader.ReadUInt32();
-                    }
-                }
+                Loaded = true;
             }
-            loaded = true;
         }
 
         public void Save(Stream ddsStream, bool keepOpen = false) {
-            if (!loaded) {
+            if (!Loaded) {
                 return;
             }
             using (BinaryWriter ddsWriter = new BinaryWriter(ddsStream, System.Text.Encoding.Default, keepOpen)) {
-                DDSHeader dds = header.ToDDSHeader();
+                DDSHeader dds = Header.ToDDSHeader();
                 ddsWriter.Write(dds);
                 if (dds.format.fourCC == 808540228) {
                     DDS_HEADER_DXT10 d10 = new DDS_HEADER_DXT10 {
-                        format = (uint)header.format,
+                        format = (uint)Header.format,
                         dimension = D3D10_RESOURCE_DIMENSION.TEXTURE2D,
-                        misc = (uint)(header.IsCubemap() ? 0x4 : 0),
-                        size = (uint)(header.IsCubemap() ? 1 : header.surfaces),
+                        misc = (uint)(Header.IsCubemap() ? 0x4 : 0),
+                        size = (uint)(Header.IsCubemap() ? 1 : Header.surfaces),
                         misc2 = 0
                     };
                     ddsWriter.Write(d10);
                 }
-                for (int i = 0; i < size; ++i) {
-                    if ((byte)header.format > 72) {
-                        ddsWriter.Write(color3[i]);
-                        ddsWriter.Write(color4[i]);
-                        ddsWriter.Write(color5[i]);
+                for (int i = 0; i < Size; ++i) {
+                    if ((byte)Header.format > 72) {
+                        ddsWriter.Write(Color3[i]);
+                        ddsWriter.Write(Color4[i]);
+                        ddsWriter.Write(Color5[i]);
                     }
 
-                    if ((byte)header.format < 80) {
-                        ddsWriter.Write(color1[i]);
-                        ddsWriter.Write(color2[i]);
+                    if ((byte)Header.format < 80) {
+                        ddsWriter.Write(Color1[i]);
+                        ddsWriter.Write(Color2[i]);
                     }
                 }
             }

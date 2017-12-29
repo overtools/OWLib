@@ -10,7 +10,7 @@ namespace STULib.Types {
         public STUGUID[] GUIDx04F;
 
         [STUField(0x57351687, EmbeddedInstance = true)]
-        public STUSoundInner Inner;
+        public STUSoundbankDataVersion Inner;
 
         [STUField(0x13523278)]
         public float m_13523278;
@@ -35,7 +35,7 @@ namespace STULib.Types {
     }
 
     [STU(0x0EBAF735)]
-    public class STUSoundInner : STUInstance {
+    public class STUSoundbankDataVersion : STUInstance {
         [STUField(0xFA1FDF0D)]
         public string m_FA1FDF0D;
 

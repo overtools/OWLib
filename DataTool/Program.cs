@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CASCLib;
+using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using OWLib;
@@ -161,6 +162,7 @@ namespace DataTool {
             TrackedFiles[0x90] = new HashSet<ulong>();
             IO.MapCMF();
             IO.LoadGUIDTable();
+            Sound.WwiseBank.GetReady();
 
             #region Key Detection
             if (!Flags.SkipKeys) {

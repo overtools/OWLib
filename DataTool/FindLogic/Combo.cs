@@ -29,6 +29,10 @@ namespace DataTool.FindLogic {
             public Dictionary<ulong, TextureInfoNew> Textures;
             public Dictionary<ulong, EffectInfoCombo> Effects;
             public Dictionary<ulong, EffectInfoCombo> AnimationEffects;
+            public Dictionary<ulong, SoundInfoNew> Sounds;
+            public Dictionary<ulong, WWiseBankInfo> SoundBanks;
+            public Dictionary<ulong, SoundFileInfo> VoiceSoundFiles;
+            public Dictionary<ulong, SoundFileInfo> SoundFiles;
 
             public ComboConfig Config = new ComboConfig();
 
@@ -43,18 +47,26 @@ namespace DataTool.FindLogic {
                 Textures = new Dictionary<ulong, TextureInfoNew>();
                 Effects = new Dictionary<ulong, EffectInfoCombo>();
                 AnimationEffects = new Dictionary<ulong, EffectInfoCombo>();
+                Sounds = new Dictionary<ulong, SoundInfoNew>();
+                SoundBanks = new Dictionary<ulong, WWiseBankInfo>();
+                VoiceSoundFiles = new Dictionary<ulong, SoundFileInfo>();
+                SoundFiles = new Dictionary<ulong, SoundFileInfo>();
             }
 
             public void SetEntityName(ulong entity, string name, Dictionary<ulong, ulong> replacements=null) {
                 if (replacements != null) entity = GetReplacement(entity, replacements);
                 if (Entities.ContainsKey(entity)) {
-                    Entities[entity].Name = name;
+                    Entities[entity].Name = name.TrimEnd(' ');
                 }
             }
         }
         
         public class ComboType {
             public ulong GUID;
+
+            public ComboType(ulong guid) {
+                GUID = guid;
+            }
             
             public virtual string GetName() {
                 return GetFileName(GUID);
@@ -62,15 +74,13 @@ namespace DataTool.FindLogic {
         
             public virtual string GetNameIndex() {
                 return OWLib.GUID.Index(GUID).ToString("X12");
-                
             }
         }
         
         public class ComboNameable : ComboType {
             public string Name;
 
-            public ComboNameable(ulong guid) {
-                GUID = guid;
+            public ComboNameable(ulong guid) : base(guid) {
                 if (GUID == 0) return;
                 uint type = OWLib.GUID.Type(GUID);
                 uint index = OWLib.GUID.Index(GUID);
@@ -87,15 +97,35 @@ namespace DataTool.FindLogic {
             public override string GetNameIndex() {
                 return GetValidFilename(Name) ?? OWLib.GUID.Index(GUID).ToString("X12");
             }
+        }
+        
+        public class SoundFileInfo : ComboType {
+            public SoundFileInfo(ulong guid) : base(guid) { }
+        }
 
+        public class SoundInfoNew : ComboType {
+            public Dictionary<uint, ulong> Sounds;
+            public ulong Bank;
+            public SoundInfoNew(ulong guid) : base(guid) { }
+        }
+
+        public class WWiseBankEvent {
+            public ConvertLogic.Sound.BankObjectEventAction.EventActionType Type;
+            public uint StartDelay;  // milliseconds
+            public uint SoundID;
+        }
+
+        public class WWiseBankInfo : ComboType {
+            public List<WWiseBankEvent> Events;
+            public WWiseBankInfo(ulong guid) : base(guid) { }
         }
         
         public class EffectInfoCombo : ComboType {
             // wrap
             public EffectParser.EffectInfo Effect;
-        }
 
-       
+            public EffectInfoCombo(ulong guid) : base(guid) { }
+        }
 
         public class EntityInfoNew : ComboNameable {
             public ulong Model;
@@ -109,9 +139,10 @@ namespace DataTool.FindLogic {
             }
         }
 
-        public class ChildEntityReferenceNew : ComboType {
+        public class ChildEntityReferenceNew {
             public ulong Hardpoint;
             public ulong Variable;
+            public ulong GUID;
 
             public ChildEntityReferenceNew(STUChildEntityDefinition childEntityDefinition, Dictionary<ulong, ulong> replacements) {
                 GUID = GetReplacement(childEntityDefinition.Entity, replacements);
@@ -139,20 +170,21 @@ namespace DataTool.FindLogic {
             // ...
             // WHY DO YOU HAVE THE SAME MATERIAL MULTIPLE TIMES WITH DIFFERENT IDS. ONE OF THEM ISN'T EVEN USED
             // AHHHHHHHHHHHHHHHHHHH
+            
+            public MaterialInfo(ulong guid) : base(guid) { }
         }
 
         public class MaterialDataInfo : ComboType {
             public Dictionary<ulong, ImageDefinition.ImageType> Textures;
 
-            public MaterialDataInfo(ulong guid) {
-                GUID = guid;
-            }
+            public MaterialDataInfo(ulong guid) : base(guid) { }
         }
 
         public class TextureInfoNew : ComboType {
             public bool UseData;
             public ulong DataGUID => (GUID & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
             public bool Loose;
+            public TextureInfoNew(ulong guid) : base(guid) { }
         }
 
         public class ModelInfoNew : ComboType {
@@ -161,8 +193,7 @@ namespace DataTool.FindLogic {
             public HashSet<ulong> ModelLooks;
             public HashSet<ulong> LooseMaterials;
 
-            public ModelInfoNew(ulong model) {
-                GUID = model;
+            public ModelInfoNew(ulong guid) : base(guid) {
                 Animations = new HashSet<ulong>();
                 ModelLooks = new HashSet<ulong>();
                 LooseMaterials = new HashSet<ulong>();
@@ -174,9 +205,7 @@ namespace DataTool.FindLogic {
             public uint Priority;
             public ulong Effect;
 
-            public AnimationInfoNew(ulong guid) : base(guid) {
-                GUID = guid;
-            }
+            public AnimationInfoNew(ulong guid) : base(guid) { }
         }
 
         public class ComboContext {
@@ -324,8 +353,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0x4:
                     if (info.Textures.ContainsKey(guid)) break;
-                    TextureInfoNew textureInfo = new TextureInfoNew();
-                    textureInfo.GUID = guid;
+                    TextureInfoNew textureInfo = new TextureInfoNew(guid);
                     ulong dataKey = (guid & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
                     bool useData = Files.ContainsKey(dataKey);
                     textureInfo.UseData = useData;
@@ -374,8 +402,7 @@ namespace DataTool.FindLogic {
                     Material material = new Material(OpenFile(guid), 0);
                     MaterialInfo materialInfo;
                     if (!info.Materials.ContainsKey(guid)) {
-                        materialInfo = new MaterialInfo {
-                            GUID = guid,
+                        materialInfo = new MaterialInfo(guid) {
                             MaterialData = GetReplacement(material.Header.ImageDefinition, replacements),
                             IDs = new HashSet<ulong>()
                         };
@@ -457,6 +484,12 @@ namespace DataTool.FindLogic {
                                         }
                                     }
                                 }
+                                
+                                if (chunk.Value.GetType() == typeof(OSCE)) {
+                                    OSCE osce = chunk.Value as OSCE;
+                                    if (osce == null) continue;
+                                    Find(info, osce.Data.Sound, replacements);
+                                }
 
                                 if (chunk.Value.GetType() == typeof(RPCE)) {
                                     RPCE rpce = chunk.Value as RPCE;
@@ -472,9 +505,9 @@ namespace DataTool.FindLogic {
 
 
                     if (guidType == 0xD) {
-                        info.Effects[guid] = new EffectInfoCombo {Effect = effectInfo, GUID = guid};
+                        info.Effects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
                     } else if (guidType == 0x8F) {
-                        info.AnimationEffects[guid] = new EffectInfoCombo {Effect = effectInfo, GUID = guid};
+                        info.AnimationEffects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
                     }
                     
                     break;
@@ -558,6 +591,62 @@ namespace DataTool.FindLogic {
                     // foreach (STUAnimationListAnimationWrapper animationWrapper in wrappers) {
                     //     Find(info, animationWrapper?.Value, replacements, context);
                     // }
+                    break;
+                case 0x2C:
+                    if (info.Sounds.ContainsKey(guid)) break;
+                    STUSound sound = GetInstance<STUSound>(guid);
+                    SoundInfoNew soundInfo = new SoundInfoNew(guid);
+                    info.Sounds[guid] = soundInfo;
+
+                    if (sound?.Inner?.Soundbank != null) {
+                        Find(info, sound.Inner.Soundbank, replacements, context);
+                        soundInfo.Bank = GetReplacement(sound.Inner.Soundbank, replacements);
+
+                        soundInfo.Sounds = new Dictionary<uint, ulong>();
+                        for (int i = 0; i < sound.Inner.IDs.Length; i++) {
+                            ulong soundFileRef = sound.Inner.Sounds[i];
+                            soundInfo.Sounds[sound.Inner.IDs[i]] = GetReplacement(soundFileRef, replacements);
+                            Find(info, soundFileRef, replacements, context);
+                        }
+                    }
+                    break;
+                case 0x3F:
+                    if (info.SoundFiles.ContainsKey(guid)) break;
+                    SoundFileInfo soundFileInfo = new SoundFileInfo(guid);
+                    info.SoundFiles[guid] = soundFileInfo;
+                    break;
+                case 0x43:
+                    if (info.SoundBanks.ContainsKey(guid)) break;
+                    
+                    WWiseBankInfo bankInfo = new WWiseBankInfo(guid);
+                    info.SoundBanks[guid] = bankInfo;
+                    
+                    bankInfo.Events = new List<WWiseBankEvent>();
+                    using (Stream bankStream = OpenFile(guid)) {
+                        ConvertLogic.Sound.WwiseBank bank = new ConvertLogic.Sound.WwiseBank(bankStream);
+                        foreach (ConvertLogic.Sound.BankObjectEvent bankEvent in bank.ObjectsOfType<ConvertLogic.Sound.BankObjectEvent>()) {
+                            foreach (uint eventAction in bankEvent.Actions) {
+                                ConvertLogic.Sound.BankObjectEventAction action = bank.Objects[eventAction] as ConvertLogic.Sound.BankObjectEventAction;
+                                if (action == null) continue;
+                                WWiseBankEvent @event = new WWiseBankEvent {Type = action.Type};
+                                bankInfo.Events.Add(@event);
+                                if (action.ReferenceObjectID == 0) continue;
+                                if (action.Scope != ConvertLogic.Sound.BankObjectEventAction.EventActionScope.GameObjectReference) continue;
+                                foreach (KeyValuePair<ConvertLogic.Sound.BankObjectEventAction.EventActionParameterType,object> actionParameter in action.Parameters) {
+                                    if (actionParameter.Key == ConvertLogic.Sound.BankObjectEventAction
+                                            .EventActionParameterType.Play) {
+                                        @event.StartDelay = (uint) actionParameter.Value;
+                                    }
+                                }
+                                if (!bank.Objects.ContainsKey(action.ReferenceObjectID)) continue;
+                                ConvertLogic.Sound.IBankObject referencedObject = bank.Objects[action.ReferenceObjectID];
+                                if (referencedObject is ConvertLogic.Sound.BankObjectSoundSFX sfxObject) {
+                                    @event.SoundID = sfxObject.SoundID;
+                                }
+                            }
+                        }
+                    }
+                    
                     break;
                 case 0xB3:
                     if (info.MaterialDatas.ContainsKey(guid)) break;

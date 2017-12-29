@@ -3,15 +3,15 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
     public class OSCE : IChunk {
-        public string Identifier => "OSCE"; // ECSO - Effect Chunk ??????
+        public string Identifier => "OSCE"; // ECSO - Effect Chunk Sound ??
         public string RootIdentifier => "TCFE"; // EFCT - Effect
     
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public ulong Sound;  // so this isn't an effect(?)
-            public ulong unk1;
-            public ulong unk2;
-            public ulong unk3;
+            public ulong Sound;
+            public ulong Unknown1;
+            public short Unknown2;
+            public ulong Unknown3;
         }
 
         public Structure Data { get; private set; }
