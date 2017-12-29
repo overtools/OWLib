@@ -208,10 +208,6 @@ namespace DataTool.SaveLogic {
             internal static readonly int[] DXGI_BC4 = { 79, 80, 91 };
             internal static readonly int[] DXGI_BC5 = { 82, 83, 84 };
         }
-        
-        public static float[] TriplePass(float x, float y) {
-            return new[] { x, x, x };
-        }
 
         public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong texture) {
             bool convertTextures = true;
@@ -251,8 +247,8 @@ namespace DataTool.SaveLogic {
                 
                 // conversion utils
                 uint fourCC = header.Format().ToPixelFormat().fourCC;
-                bool isBC5 = TextureConfig.DXGI_BC5.Contains((int) header.format);
-                bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int) header.format) || isBC5 ||
+                bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int) header.format) || 
+                                   TextureConfig.DXGI_BC5.Contains((int) header.format) ||
                                    fourCC == TextureConfig.FOURCC_ATI1 || fourCC == TextureConfig.FOURCC_ATI2;
 
                 ImageFormat imageFormat = null;
@@ -266,14 +262,8 @@ namespace DataTool.SaveLogic {
                 if (isBcffValid && imageFormat != null) {
                     convertedStream.Position = 0;
                     BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
-                    if (isBC5) {
-                        // overwatch normal maps (/tangent maps?) seem to always be BC5 and not BC4
-                        decompressor.CreateImage(BlockDecompressor.NormalMapPass);
-                    } else {
-                        decompressor.CreateImage(TriplePass);
-                    }
+                    decompressor.CreateImage();
                     decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
-
                     return;
                 }
 
