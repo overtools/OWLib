@@ -17,6 +17,6 @@ namespace STULib.Types {
         public STUGUID[] Virtual041;
 
         [STUField(0x939ABB2C)]
-        public STUGUID[] Materials;
+        public STUGUID[] MaterialDatas;
     }
 }

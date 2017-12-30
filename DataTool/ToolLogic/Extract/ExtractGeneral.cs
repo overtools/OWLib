@@ -33,7 +33,7 @@ namespace DataTool.ToolLogic.Extract {
                 if (invMaster == null) continue;
 
                 var achivementUnlocks = invMaster.AchievementUnlocks?.Unlocks?.Select(it => GatherUnlock((ulong) it)).ToList();
-                SprayAndImage.SaveItems(basePath, null, "General", "Achievements", flags, achivementUnlocks);
+                SprayAndIcon.SaveItems(basePath, null, "General", "Achievements", flags, achivementUnlocks);
 
                 if (invMaster.EventGeneralUnlocks != null) {
                     foreach (var eventUnlocks in invMaster.EventGeneralUnlocks) {
@@ -41,7 +41,7 @@ namespace DataTool.ToolLogic.Extract {
 
                         var eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event];
                         var unlocks = eventUnlocks.Unlocks.Unlocks.Select(it => GatherUnlock((ulong) it)).ToList();
-                        SprayAndImage.SaveItems(basePath, null, "General", eventKey, flags, unlocks);
+                        SprayAndIcon.SaveItems(basePath, null, "General", eventKey, flags, unlocks);
                     }
                 }
 
@@ -53,7 +53,7 @@ namespace DataTool.ToolLogic.Extract {
                             unlocks.Add(GatherUnlock(unlock));
                     }
 
-                    SprayAndImage.SaveItems(basePath, null, "General", "Standard", flags, unlocks.ToList());
+                    SprayAndIcon.SaveItems(basePath, null, "General", "Standard", flags, unlocks.ToList());
                     Portrait.SaveItems(basePath, null, "General", "Standard", flags, unlocks.ToList());
                 }
             }

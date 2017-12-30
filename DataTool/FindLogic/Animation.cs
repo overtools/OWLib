@@ -358,7 +358,7 @@ namespace DataTool.FindLogic {
                     Cosmetic cosmetic = GetInstance<Cosmetic>(animationGUID);
                     if (cosmetic is Emote) {
                         Emote cosmeticEmote = cosmetic as Emote;
-                        existingAnimations = FindAnimations(existingAnimations, models, cosmeticEmote.AnimationList, replacements);
+                        existingAnimations = FindAnimations(existingAnimations, models, cosmeticEmote.BlendTreeSet, replacements);
                     } else if (cosmetic is Pose) {
                         Pose cosmeticPose = cosmetic as Pose;
                         existingAnimations = FindAnimations(existingAnimations, models, cosmeticPose.PoseResource, replacements);

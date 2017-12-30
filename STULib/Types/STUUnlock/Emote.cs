@@ -8,7 +8,7 @@ namespace STULib.Types.STUUnlock {
         public STUVec3 Unknown1;
 
         [STUField(0x2B8351DA)]
-        public STUGUID AnimationList;
+        public STUGUID BlendTreeSet;
 
         [STUField(0x69150A1D)]
         public STUVec3 Unknown3;

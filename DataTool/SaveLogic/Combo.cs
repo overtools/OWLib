@@ -20,9 +20,11 @@ namespace DataTool.SaveLogic {
             foreach (FindLogic.Combo.ModelInfoNew model in info.Models.Values) {
                 SaveModel(flags, path, info, model.GUID);
             }
+
             foreach (FindLogic.Combo.EffectInfoCombo effectInfo in info.Effects.Values) {
                 SaveEffect(flags, path, info, effectInfo.GUID);
             }
+
             foreach (FindLogic.Combo.EntityInfoNew entity in info.Entities.Values) {
                 SaveEntity(flags, path, info, entity.GUID);
             }
@@ -33,13 +35,15 @@ namespace DataTool.SaveLogic {
             FindLogic.Combo.EntityInfoNew entityInfo = info.Entities[entity];
             Entity.OWEntityWriter entityWriter = new Entity.OWEntityWriter();
             string entityDir = Path.Combine(path, "Entities", entityInfo.GetName());
-            string outputFile = Path.Combine(entityDir, entityInfo.GetName()+entityWriter.Format);
+            string outputFile = Path.Combine(entityDir, entityInfo.GetName() + entityWriter.Format);
             CreateDirectoryFromFile(outputFile);
 
             using (Stream entityOutputStream = File.OpenWrite(outputFile)) {
                 entityOutputStream.SetLength(0);
                 entityWriter.Write(entityOutputStream, entityInfo, info);
             }
+
+            if (!info.SaveConfig.SaveAnimationEffects) return;
             foreach (ulong animation in entityInfo.Animations) {
                 SaveAnimationEffectReference(flags, entityDir, info, animation, entityInfo.Model);
             }
@@ -49,48 +53,56 @@ namespace DataTool.SaveLogic {
             ulong animation, ulong model) {
             FindLogic.Combo.AnimationInfoNew animationInfo = info.Animations[animation];
             Effect.OWAnimWriter animWriter = new Effect.OWAnimWriter();
-            string file = Path.Combine(path, Model.AnimationEffectDir, animationInfo.GetNameIndex()+animWriter.Format);
+            string file = Path.Combine(path, Model.AnimationEffectDir,
+                animationInfo.GetNameIndex() + animWriter.Format);
             CreateDirectoryFromFile(file);
             using (Stream outputStream = File.OpenWrite(file)) {
                 animWriter.WriteReference(outputStream, info, animationInfo, model);
             }
         }
 
-        public static void SaveAnimation(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong animation, ulong model) {
+        public static void SaveAnimation(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong animation,
+            ulong model) {
             bool convertAnims = false;
             if (flags is ExtractFlags extractFlags) {
                 convertAnims = extractFlags.ConvertAnimations && !extractFlags.Raw;
                 if (extractFlags.SkipAnimations) return;
             }
+
             SEAnimWriter animWriter = new SEAnimWriter();
             FindLogic.Combo.AnimationInfoNew animationInfo = info.Animations[animation];
-            
+
             using (Stream animStream = OpenFile(animation)) {
                 if (animStream == null) {
                     return;
                 }
-                    
+
                 OWLib.Animation parsedAnimation = new OWLib.Animation(animStream);
                 animStream.Position = 0;
 
-                string animationDirectory = Path.Combine(path, "Animations", parsedAnimation.Header.priority.ToString());
+                string animationDirectory =
+                    Path.Combine(path, "Animations", parsedAnimation.Header.priority.ToString());
 
                 if (convertAnims) {
-                    string animOutput = Path.Combine(animationDirectory, animationInfo.GetNameIndex()+animWriter.Format);
+                    string animOutput = Path.Combine(animationDirectory,
+                        animationInfo.GetNameIndex() + animWriter.Format);
                     CreateDirectoryFromFile(animOutput);
                     using (Stream fileStream = new FileStream(animOutput, FileMode.Create)) {
                         animWriter.Write(parsedAnimation, fileStream, new object[] { });
                     }
                 } else {
-                    string rawAnimOutput = Path.Combine(animationDirectory, $"{animationInfo.GetNameIndex()}.{GUID.Type(animation):X3}");
+                    string rawAnimOutput = Path.Combine(animationDirectory,
+                        $"{animationInfo.GetNameIndex()}.{GUID.Type(animation):X3}");
                     CreateDirectoryFromFile(rawAnimOutput);
                     using (Stream fileStream = new FileStream(rawAnimOutput, FileMode.Create)) {
                         animStream.CopyTo(fileStream);
                     }
                 }
             }
+
+            if (!info.SaveConfig.SaveAnimationEffects) return;
             FindLogic.Combo.EffectInfoCombo animationEffect;
-            
+
             // just create a fake effect if it doesn't exist
             if (animationInfo.Effect == 0) {
                 animationEffect = new FindLogic.Combo.EffectInfoCombo(0) {Effect = new EffectParser.EffectInfo()};
@@ -98,15 +110,18 @@ namespace DataTool.SaveLogic {
             } else {
                 animationEffect = info.AnimationEffects[animationInfo.Effect];
             }
+
             Effect.OWAnimWriter owAnimWriter = new Effect.OWAnimWriter();
             string animationEffectDir = Path.Combine(path, Model.AnimationEffectDir, animationInfo.GetNameIndex());
-            string animationEffectFile = Path.Combine(animationEffectDir, $"{animationInfo.GetNameIndex()}{owAnimWriter.Format}");
+            string animationEffectFile =
+                Path.Combine(animationEffectDir, $"{animationInfo.GetNameIndex()}{owAnimWriter.Format}");
             CreateDirectoryFromFile(animationEffectFile);
             using (Stream fileStream = new FileStream(animationEffectFile, FileMode.Create)) {
                 fileStream.SetLength(0);
                 Dictionary<ulong, List<STUVoiceLineInstance>> svceLines = Effect.GetSVCELines(animationEffect.Effect);
                 owAnimWriter.Write(fileStream, info, animationInfo, animationEffect, model, svceLines);
             }
+
             SaveEffectExtras(flags, animationEffectDir, info, animationEffect.Effect);
         }
 
@@ -118,7 +133,7 @@ namespace DataTool.SaveLogic {
                 FindLogic.Combo.SoundInfoNew soundInfo = info.Sounds[osceInfo.Sound];
                 string osceDir = Path.Combine(soundDirectory, soundInfo.GetName());
                 CreateDirectoryFromFile(osceDir + "\\harrypotter.png");
-                foreach (KeyValuePair<uint,ulong> soundPair in soundInfo.Sounds) {
+                foreach (KeyValuePair<uint, ulong> soundPair in soundInfo.Sounds) {
                     SaveSoundFile(flags, osceDir, info, soundPair.Value, false);
                 }
             }
@@ -130,9 +145,9 @@ namespace DataTool.SaveLogic {
             string effectDirectory = Path.Combine(path, "Effects", effectInfo.GetName());
             string effectFile = Path.Combine(effectDirectory, $"{GUID.LongKey(effect):X12}{effectWriter.Format}");
             CreateDirectoryFromFile(effectFile);
-            
+
             Dictionary<ulong, List<STUVoiceLineInstance>> svceLines = Effect.GetSVCELines(effectInfo.Effect);
-            
+
             // foreach (KeyValuePair<ulong,List<STUVoiceLineInstance>> svceLine in svceLines) {
             //     foreach (STUVoiceLineInstance voiceLineInstance in svceLine.Value) {
             //         foreach (STUSoundWrapper wrapper in new [] {voiceLineInstance.SoundContainer.Sound1, 
@@ -145,7 +160,7 @@ namespace DataTool.SaveLogic {
             //     }
             // }
             SaveEffectExtras(flags, effectDirectory, info, effectInfo.Effect);
-            
+
             using (Stream effectOutputStream = File.OpenWrite(effectFile)) {
                 effectOutputStream.SetLength(0);
                 effectWriter.Write(effectOutputStream, effectInfo, info, svceLines);
@@ -170,21 +185,24 @@ namespace DataTool.SaveLogic {
             foreach (ulong looseMaterial in modelInfo.LooseMaterials) {
                 SaveMaterial(flags, modelDirectory, info, looseMaterial);
             }
-            
+
             foreach (ulong modelAnimation in modelInfo.Animations) {
                 SaveAnimation(flags, modelDirectory, info, modelAnimation, model);
             }
         }
 
-        public static void SaveModelLook(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong modelLook) {
+        public static void SaveModelLook(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            ulong modelLook) {
             Model.OWMatWriter14 materialWriter = new Model.OWMatWriter14();
             FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelLook];
-            string modelLookPath = Path.Combine(path, "ModelLooks", $"{modelLookInfo.GetNameIndex()}{materialWriter.Format}");
+            string modelLookPath =
+                Path.Combine(path, "ModelLooks", $"{modelLookInfo.GetNameIndex()}{materialWriter.Format}");
             CreateDirectoryFromFile(modelLookPath);
             using (Stream modelLookOutputStream = File.OpenWrite(modelLookPath)) {
                 modelLookOutputStream.SetLength(0);
                 materialWriter.Write(modelLookOutputStream, info, modelLookInfo);
             }
+
             foreach (ulong modelLookMaterial in modelLookInfo.Materials) {
                 SaveMaterial(flags, path, info, modelLookMaterial);
             }
@@ -193,17 +211,18 @@ namespace DataTool.SaveLogic {
         public static void SaveMaterial(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong material) {
             FindLogic.Combo.MaterialInfo materialInfo = info.Materials[material];
             FindLogic.Combo.MaterialDataInfo materialDataInfo = info.MaterialDatas[materialInfo.MaterialData];
-            
+
             Model.OWMatWriter14 materialWriter = new Model.OWMatWriter14();
-            
+
             string textureDirectory = Path.Combine(path, "Textures");
-            string materialPath = Path.Combine(path, "Materials", $"{materialInfo.GetNameIndex()}{materialWriter.Format}");
+            string materialPath =
+                Path.Combine(path, "Materials", $"{materialInfo.GetNameIndex()}{materialWriter.Format}");
             CreateDirectoryFromFile(materialPath);
             using (Stream materialOutputStream = File.OpenWrite(materialPath)) {
                 materialOutputStream.SetLength(0);
                 materialWriter.Write(materialOutputStream, info, materialInfo);
             }
-                        
+
             foreach (KeyValuePair<ulong, ImageDefinition.ImageType> texture in materialDataInfo.Textures) {
                 SaveTexture(flags, textureDirectory, info, texture.Key);
             }
@@ -214,6 +233,24 @@ namespace DataTool.SaveLogic {
                 if (!textureInfo.Loose) continue;
                 SaveTexture(flags, path, info, textureInfo.GUID);
             }
+        }
+
+        public static void SaveAllMaterials(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
+            foreach (ulong material in info.Materials.Keys) {
+                SaveMaterial(flags, path, info, material);
+            }
+        }
+        
+        #warning This method does not support animation effects
+        public static void SaveAllAnimations(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
+            bool beforeSaveAnimEffects = info.SaveConfig.SaveAnimationEffects;
+            info.SaveConfig.SaveAnimationEffects = false;
+            
+            foreach (ulong material in info.Animations.Keys) {
+                SaveAnimation(flags, path, info, material, 0);
+            }
+
+            info.SaveConfig.SaveAnimationEffects = beforeSaveAnimEffects;
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -276,7 +313,7 @@ namespace DataTool.SaveLogic {
                 // guess the TGA users are stuck with the DirectXTex stuff for now.
 
                 convertedStream.Position = 0;
-                if (isBcffValid && imageFormat != null) {
+                if (isBcffValid && imageFormat != null && convertedStream.Length != 0) {
                     BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
                     decompressor.CreateImage();
                     decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);

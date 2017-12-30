@@ -197,9 +197,9 @@ namespace DataTool.ToolLogic.Extract {
                 foreach (ItemInfo itemInfo in achievementUnlocks) {
                     Dictionary<string, string> tags = new Dictionary<string, string> {{"event", "base"}, {"rarity", itemInfo.Rarity}};
                     if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
-                        SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Achievements", flags, itemInfo);
+                        SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, "Achievements", flags, itemInfo);
                     } else if (itemInfo.Type == "PlayerIcon" && config.ContainsKey("icon") && config["icon"].ShouldDo(itemInfo.Name, tags)) {
-                        SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Achievements", flags, itemInfo);
+                        SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, "Achievements", flags, itemInfo);
                     } else if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
                         Skin.Save(flags, $"{basePath}\\{RootDir}", hero, $"Achievement\\{itemInfo.Rarity}", itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
                     } else if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
@@ -224,10 +224,10 @@ namespace DataTool.ToolLogic.Extract {
                     foreach (ItemInfo itemInfo in dUnlocks) {
                         Dictionary<string, string> tags = new Dictionary<string, string> {{"event", "base"}, {"rarity", itemInfo.Rarity}};
                         if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
-                            SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
+                            SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
                         }
                         if (itemInfo.Type == "PlayerIcon" && config.ContainsKey("icon") && config["icon"].ShouldDo(itemInfo.Name, tags)) {
-                            SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
+                            SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
                         }
                         if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
                             Skin.Save(flags, $"{basePath}\\{RootDir}", hero, itemInfo.Rarity, itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
@@ -256,10 +256,10 @@ namespace DataTool.ToolLogic.Extract {
                     foreach (ItemInfo itemInfo in eUnlocks) {
                         Dictionary<string, string> tags = new Dictionary<string, string> {{"event", eventUnlocks.Event.ToString().ToLowerInvariant()}, {"rarity", itemInfo.Rarity.ToLowerInvariant()}};
                         if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
-                            SprayAndImage.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
+                            SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
                         }
                         if (itemInfo.Type == "PlayerIcon" && config.ContainsKey("icon") && config["icon"].ShouldDo(itemInfo.Name, tags)) {
-                            SprayAndImage.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
+                            SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
                         }
                         if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
                             Skin.Save(flags, $"{basePath}\\{RootDir}", hero, itemInfo.Rarity, itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);

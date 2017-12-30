@@ -7,6 +7,6 @@ namespace STULib.Types.STUUnlock {
         public STUEffectReference Effect;
 
         [STUField(0x1B25AB90)]
-        public STUEffectReference CosmeticUnknownEffect;
+        public STUEffectReference Effect2;
     }
 }

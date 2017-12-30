@@ -10,6 +10,7 @@ using STULib.Types;
 using STULib.Types.AnimationList.x021;
 using STULib.Types.Generic;
 using STULib.Types.Statescript.Components;
+using STULib.Types.STUUnlock;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -35,6 +36,7 @@ namespace DataTool.FindLogic {
             public Dictionary<ulong, SoundFileInfo> SoundFiles;
 
             public ComboConfig Config = new ComboConfig();
+            public ComboSaveConfig SaveConfig = new ComboSaveConfig();
 
             public ComboInfo() {
                 Entities = new Dictionary<ulong, EntityInfoNew>();
@@ -59,6 +61,21 @@ namespace DataTool.FindLogic {
                     Entities[entity].Name = name.TrimEnd(' ');
                 }
             }
+
+            public void SetTextureName(ulong texture, string name, Dictionary<ulong, ulong> replacements=null) {
+                if (replacements != null) texture = GetReplacement(texture, replacements);
+                if (Textures.ContainsKey(texture)) {
+                    Textures[texture].Name = name.TrimEnd(' ');
+                }
+            }
+        }
+
+        public class ComboConfig {
+            public bool DoExistingEntities = false;
+        }
+
+        public class ComboSaveConfig {
+            public bool SaveAnimationEffects = true;
         }
         
         public class ComboType {
@@ -180,7 +197,7 @@ namespace DataTool.FindLogic {
             public MaterialDataInfo(ulong guid) : base(guid) { }
         }
 
-        public class TextureInfoNew : ComboType {
+        public class TextureInfoNew : ComboNameable {
             public bool UseData;
             public ulong DataGUID => (GUID & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
             public bool Loose;
@@ -238,10 +255,6 @@ namespace DataTool.FindLogic {
             if (replacements == null) return guid;
             if (replacements.ContainsKey(guid)) return replacements[guid];
             return guid;
-        }
-
-        public class ComboConfig {
-            public bool DoExistingEntities = false;
         }
         
         public static ComboInfo Find(ComboInfo info, ulong guid, Dictionary<ulong, ulong> replacements=null , ComboContext context=null) {
@@ -647,6 +660,37 @@ namespace DataTool.FindLogic {
                         }
                     }
                     
+                    break;
+                case 0xA5:
+                    // hmm, if existing?
+                    Cosmetic cosmetic = GetInstance<Cosmetic>(guid);
+
+                    if (cosmetic.GetType() == typeof(Spray)) {
+                        Spray sprayCosmetic = (Spray) cosmetic;
+                        Find(info, sprayCosmetic.Effect2?.Effect, replacements, context);
+                        Find(info, sprayCosmetic.Effect2?.EffectLook, replacements, context);
+                        Find(info, sprayCosmetic.Effect?.EffectLook, replacements, context);
+                        Find(info, sprayCosmetic.Effect?.Effect, replacements, context);
+                    } else if (cosmetic.GetType() == typeof(PlayerIcon)) {
+                        PlayerIcon playerIconCosmetic = (PlayerIcon) cosmetic;
+                        Find(info, playerIconCosmetic.Effect?.EffectLook, replacements, context);
+                        Find(info, playerIconCosmetic.Effect?.Effect, replacements, context);
+                    } else if (cosmetic.GetType() == typeof(HighlightIntro)) {
+                        HighlightIntro cosmeticHighlightIntro = (HighlightIntro) cosmetic;
+                        Find(info, cosmeticHighlightIntro.Animation, replacements, context);
+                    } else if (cosmetic.GetType() == typeof(Emote)) {
+                        Emote cosmeticEmote = (Emote) cosmetic;
+                        Find(info, cosmeticEmote.BlendTreeSet, replacements, context);
+                    }
+
+                    break;
+                case 0xA8:
+                    // hmm, if existing?
+                    STUEffectLook effectLook = GetInstance<STUEffectLook>(guid);
+                    if (effectLook == null) break;
+                    foreach (Common.STUGUID materialData in effectLook.MaterialDatas) {
+                        Find(info, materialData, replacements, context);
+                    }
                     break;
                 case 0xB3:
                     if (info.MaterialDatas.ContainsKey(guid)) break;

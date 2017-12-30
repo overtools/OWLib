@@ -40,7 +40,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
                 Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
 
-                foreach (STUEffectReference sprayKey in new[] {spray.CosmeticUnknownEffect, spray.Effect}) {
+                foreach (STUEffectReference sprayKey in new[] {spray.Effect2, spray.Effect}) {
                     using (Stream file = OpenFile(sprayKey.Effect)) {
                         using (Chunked chunked = new Chunked(file)) {
                             foreach (IChunk chunk in chunked.Chunks) {

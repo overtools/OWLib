@@ -92,7 +92,7 @@ namespace DataTool.FindLogic {
                 case 0xA8:
                     STUEffectLook effectLook = GetInstance<STUEffectLook>(textureGUID);
                     if (effectLook == null) break;
-                    foreach (Common.STUGUID decalMaterial in effectLook.Materials) {
+                    foreach (Common.STUGUID decalMaterial in effectLook.MaterialDatas) {
                         if (!Files.ContainsKey(decalMaterial)) continue;
                         existingTextures = FindTextures(existingTextures, decalMaterial, name, forceZero, replacements);
                     }
