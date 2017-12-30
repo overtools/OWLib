@@ -4,16 +4,16 @@ using STULib.Types.AnimationList.x021;
 using STULib.Types.Generic;
 
 namespace STULib.Types.AnimationList.x020 {
-    [STU(0xE7BEFDCE)]
-    public class STU_E7BEFDCE : Common.STUInstance {
+    [STU(0xE7BEFDCE, "STUAnimBlendDriverParam")]
+    public class STUAnimBlendDriverParam : Common.STUInstance {
         [STUField(0xFC9313F1)]
         public STU_6754CB2C m_FC9313F1;
 
         [STUField(0x00EE3F3C)]
         public STU_15EF3A7E m_00EE3F3C;
 
-        [STUField(0xC62D91EB, EmbeddedInstance = true)]
-        public STU_5861C542 m_C62D91EB;
+        [STUField(0xC62D91EB, "m_source", EmbeddedInstance = true)]
+        public STU_5861C542 Source;
 
         [STUField(0x7CDE6A4B)]
         public Enums.STUEnum_E123E435 m_7CDE6A4B;

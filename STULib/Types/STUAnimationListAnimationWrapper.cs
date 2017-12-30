@@ -3,8 +3,8 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0x215BE8F3)]
-    public class STUAnimationListAnimationWrapper : STUAnimationListWrapperBase {
+    public class STUAnimationListAnimationWrapper : STUAnimationListWrapperBase {  // old = 7EA9A81B
         [STUField(0x07DD813E)]
-        public STUGUID Animation;  // STU_92389E46
+        public STUGUID Value;  // STUAnimation
     }
 }

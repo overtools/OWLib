@@ -27,14 +27,14 @@ namespace STULib.Types {
         [STUField(0x4FF98D41, EmbeddedInstance = true)]
         public STU_C1A2DB26 m_4FF98D41;  // todo: where used
 
-        [STUField(0x2C54AEAF)]
-        public Enums.STUEnumAchievementGroup Group;
+        [STUField(0x2C54AEAF, "m_category")]
+        public Enums.STUEnumAchievementGroup Category;
 
-        [STUField(0x07DD813E)]
-        public int PCRewardPoints;  // todo: this is currently interchangeable with XboxGamerscore
+        [STUField(0x07DD813E, "m_value")]
+        public int Value;  // todo: this is currently interchangeable with XboxGamerscore
 
         [STUField(0x628D48CC)]
-        public int XboxGamerscore;  // todo: this is currently interchangeable with PCRewardPoints
+        public int XboxGamerscore;  // todo: this is currently interchangeable with Value
 
         [STUField(0x59D52DA5)]
         public Enums.STUEnumPS4Trophy PS4Trophy;
@@ -48,8 +48,8 @@ namespace STULib.Types {
         [STUField(0xA20DCD80)]
         public ulong m_A20DCD80;
 
-        [STUField(0x0619C597)]
-        public Enums.STUEnum_9EAD8C06 m_0619C597;
+        [STUField(0x0619C597, "m_type")]
+        public Enums.STUEnum_9EAD8C06 Type;
 
         [STUField(0x967A138B)]
         public Enums.STUEnum_AB6CE3D1 m_967A138B;

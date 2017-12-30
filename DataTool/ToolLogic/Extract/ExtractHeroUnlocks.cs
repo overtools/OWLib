@@ -7,15 +7,16 @@ using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.SaveLogic.Unlock;
+using DataTool.ToolLogic.List;
 using OWLib;
 using STULib.Types;
 using STULib.Types.Generic;
-using STULib.Types.STUUnlock;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
-using Texture = DataTool.SaveLogic.Texture;
+using Texture = DataTool.FindLogic.Texture;
 
 namespace DataTool.ToolLogic.Extract {
     // syntax:
@@ -67,6 +68,7 @@ namespace DataTool.ToolLogic.Extract {
             ["soldier"] = "soldier: 76",
             ["lucio"] = "lúcio",
             ["torbjorn"] = "torbjörn",
+            ["torb"] = "torbjörn",
             ["dva"] = "d.va"
         };
 
@@ -156,6 +158,7 @@ namespace DataTool.ToolLogic.Extract {
                     // heroNameActual = "Unknown";
                 }
                 heroNameActual = heroNameActual.TrimEnd(' ');
+                heroFileName = heroFileName.TrimEnd(' ');
 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
                 foreach (string key in new [] {heroNameActual.ToLowerInvariant(), "*"}) {
@@ -188,19 +191,19 @@ namespace DataTool.ToolLogic.Extract {
                     }
                 }
                 
-                List<ItemInfo> weaponSkins = List.ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks)?.SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList(); // eww?
+                List<ItemInfo> weaponSkins = ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks)?.SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList(); // eww?
 
                 var achievementUnlocks = GatherUnlocks(unlocks?.SystemUnlocks?.Unlocks?.Select(it => (ulong)it)).ToList();
                 foreach (ItemInfo itemInfo in achievementUnlocks) {
                     Dictionary<string, string> tags = new Dictionary<string, string> {{"event", "base"}, {"rarity", itemInfo.Rarity}};
                     if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
-                        SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Achievements", flags, itemInfo);
+                        SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Achievements", flags, itemInfo);
                     } else if (itemInfo.Type == "PlayerIcon" && config.ContainsKey("icon") && config["icon"].ShouldDo(itemInfo.Name, tags)) {
-                        SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Achievements", flags, itemInfo);
+                        SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Achievements", flags, itemInfo);
                     } else if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
-                        SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\{RootDir}", hero, $"Achievement\\{itemInfo.Rarity}", itemInfo.Unlock as Skin, weaponSkins, abilities, false);
+                        Skin.Save(flags, $"{basePath}\\{RootDir}", hero, $"Achievement\\{itemInfo.Rarity}", itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
                     } else if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
-                        SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
+                        AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
                     } 
                     //else {
                     //    if (Debugger.IsAttached) Debugger.Break();
@@ -210,7 +213,7 @@ namespace DataTool.ToolLogic.Extract {
 
                 if (npc) {
                     foreach (STUHero.Skin skin in hero.Skins) {
-                        SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\{RootDir}", hero, skin, false);
+                        Skin.Save(flags, $"{basePath}\\{RootDir}", hero, skin, false);
                     }
                     continue;
                 }
@@ -221,25 +224,25 @@ namespace DataTool.ToolLogic.Extract {
                     foreach (ItemInfo itemInfo in dUnlocks) {
                         Dictionary<string, string> tags = new Dictionary<string, string> {{"event", "base"}, {"rarity", itemInfo.Rarity}};
                         if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
+                            SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
                         }
                         if (itemInfo.Type == "PlayerIcon" && config.ContainsKey("icon") && config["icon"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
+                            SprayAndImage.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
                         }
                         if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\{RootDir}", hero, itemInfo.Rarity, itemInfo.Unlock as Skin, weaponSkins, abilities, false);
+                            Skin.Save(flags, $"{basePath}\\{RootDir}", hero, itemInfo.Rarity, itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
                         }
                         if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
+                            AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
                         }
                         if (itemInfo.Type == "HighlightIntro" && config.ContainsKey("highlightintro") && config["highlightintro"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
+                            AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
                         }
                         if (itemInfo.Type == "Emote" && config.ContainsKey("emote") && config["emote"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
+                            AnimationItem.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
                         }
                         if (itemInfo.Type == "VoiceLine" && config.ContainsKey("voiceline") && config["voiceline"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.VoiceLine.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo, hero);
+                            VoiceLine.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo, hero);
                         }
                     }
                 }
@@ -253,36 +256,36 @@ namespace DataTool.ToolLogic.Extract {
                     foreach (ItemInfo itemInfo in eUnlocks) {
                         Dictionary<string, string> tags = new Dictionary<string, string> {{"event", eventUnlocks.Event.ToString().ToLowerInvariant()}, {"rarity", itemInfo.Rarity.ToLowerInvariant()}};
                         if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
+                            SprayAndImage.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
                         }
                         if (itemInfo.Type == "PlayerIcon" && config.ContainsKey("icon") && config["icon"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.SprayAndImage.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
+                            SprayAndImage.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
                         }
                         if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.Skin.Save(flags, $"{basePath}\\{RootDir}", hero, itemInfo.Rarity, itemInfo.Unlock as Skin, weaponSkins, abilities, false);
+                            Skin.Save(flags, $"{basePath}\\{RootDir}", hero, itemInfo.Rarity, itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, abilities, false);
                         }
                         if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
+                            AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
                         }
                         if (itemInfo.Type == "HighlightIntro" && config.ContainsKey("highlightintro") && config["highlightintro"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
+                            AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
                         }
                         if (itemInfo.Type == "Emote" && config.ContainsKey("emote") && config["emote"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
+                            AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
                         }
                         if (itemInfo.Type == "VoiceLine" && config.ContainsKey("voiceline") && config["voiceline"].ShouldDo(itemInfo.Name, tags)) {
-                            SaveLogic.Unlock.VoiceLine.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo, hero);
+                            VoiceLine.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo, hero);
                         }
                     }
                 }
 
                 var heroTextures = new Dictionary<ulong, List<TextureInfo>>();
-                heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource1, "Icon", true);
-                heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource2, "Portrait", true);
-                heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource3, "unknown", true); // Same as Icon for now, doesn't get saved as its a dupe of icon
+                heroTextures = Texture.FindTextures(heroTextures, hero.ImageResource1, "Icon", true);
+                heroTextures = Texture.FindTextures(heroTextures, hero.ImageResource2, "Portrait", true);
+                heroTextures = Texture.FindTextures(heroTextures, hero.ImageResource3, "unknown", true); // Same as Icon for now, doesn't get saved as its a dupe of icon
                 // heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.SpectatorIcon, "Spectator Icon", true); // Also same as icon except has some transparency
-                heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.ImageResource4, "Avatar", true);
-                Texture.Save(flags, Path.Combine(basePath, RootDir, heroFileName, "GUI"), heroTextures);
+                heroTextures = Texture.FindTextures(heroTextures, hero.ImageResource4, "Avatar", true);
+                SaveLogic.Texture.Save(flags, Path.Combine(basePath, RootDir, heroFileName, "GUI"), heroTextures);
             }
         }
     }

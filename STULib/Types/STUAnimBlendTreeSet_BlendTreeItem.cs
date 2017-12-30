@@ -4,10 +4,10 @@ using STULib.Types.AnimationList.x021;
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0xDDD18945)]
-    public class STUAnimationListInfoSub : STUInstance {
-        [STUField(0x560940DC)]
-        public STU_7DDC51BC m_560940DC;
+    [STU(0xDDD18945, "STUAnimBlendTreeSet_BlendTreeItem")]
+    public class STUAnimBlendTreeSet_BlendTreeItem : STUInstance {
+        [STUField(0x560940DC, "m_onFinished")]
+        public STUAnimBlendTree_OnFinished OnFinished;
 
         [STUField(0xC0214513)]
         public STUGUID SecondaryList;  // STU_67866D38
@@ -27,8 +27,8 @@ namespace STULib.Types {
         [STUField(0x274F833F, EmbeddedInstance = true)]
         public STU_89F8DBB3 m_274F833F;
 
-        [STUField(0x384DE14F)]
-        public STU_99EA3F94 m_384DE14F;
+        [STUField(0x384DE14F, "m_retargetParams")]
+        public STUAnimBlendTreeSet_RetargetParams RetargetParams;
 
         [STUField(0xE54B9419)]
         public uint m_E54B9419;

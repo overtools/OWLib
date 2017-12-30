@@ -6,6 +6,6 @@ namespace STULib.Types.AnimationList.x021 {
     [STU(0xF6279B0F)]
     public class STU_F6279B0F : Common.STUInstance {
         [STUField(0xA747A384)]
-        public STU_C43ABAA7 m_A747A384;
+        public STUAnimCurveCompiled m_A747A384;
     }
 }

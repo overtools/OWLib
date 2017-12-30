@@ -8,7 +8,7 @@ namespace OWLib.Types.Chunk {
     
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public ulong soundDataKey;  // so this isn't an effect(?)
+            public ulong Sound;  // so this isn't an effect(?)
             public ulong unk1;
             public ulong unk2;
             public ulong unk3;

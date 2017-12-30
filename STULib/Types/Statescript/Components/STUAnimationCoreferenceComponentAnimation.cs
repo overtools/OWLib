@@ -5,7 +5,7 @@ using STULib.Types.Generic;
 namespace STULib.Types.Statescript.Components {
     [STU(0xFB16F341)]
     public class STUAnimationCoreferenceComponentAnimation : Common.STUInstance {
-        [STUField(0x3F5B86A4)]
+        [STUField(0x3F5B86A4, "m_animation")]
         public Common.STUGUID Animation;
 
         [STUField(0x7DC1550F)]

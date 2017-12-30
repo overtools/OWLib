@@ -8,6 +8,7 @@ using STULib.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
+using Texture = DataTool.FindLogic.Texture;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-abilities", Description = "Extract abilities", TrackTypes = new ushort[] {0x9E}, CustomFlags = typeof(ExtractFlags))]
@@ -37,7 +38,7 @@ namespace DataTool.ToolLogic.Extract {
                 string name = GetValidFilename(GetString(loadout.Name).TrimEnd().Replace(".", "_")) ?? $"Unknown{GUID.Index(key):X}";
                 
                 Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                textures = FindLogic.Texture.FindTextures(textures, loadout.Texture);
+                textures = Texture.FindTextures(textures, loadout.Texture);
 
                 using (Stream videoStream = OpenFile(loadout.InfoMovie)) {
                     if (videoStream != null) {

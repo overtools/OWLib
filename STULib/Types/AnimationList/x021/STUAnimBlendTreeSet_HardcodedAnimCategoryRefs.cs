@@ -3,8 +3,8 @@
 using STULib.Types.Generic;
 
 namespace STULib.Types.AnimationList.x021 {
-    [STU(0xC8704AD4)]
-    public class STU_C8704AD4 : Common.STUInstance {
+    [STU(0xC8704AD4, "STUAnimBlendTreeSet_HardcodedAnimCategoryRefs")]
+    public class STUAnimBlendTreeSet_HardcodedAnimCategoryRefs : Common.STUInstance {
         [STUField(0x013F5402)]
         public Common.STUGUID m_013F5402;  // STU_CB5A89D2
 

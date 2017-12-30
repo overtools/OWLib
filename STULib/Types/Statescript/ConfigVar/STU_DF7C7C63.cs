@@ -5,8 +5,8 @@ using STULib.Types.Statescript.Components;
 namespace STULib.Types.Statescript.ConfigVar {
     [STU(0xDF7C7C63)]
     public class STU_DF7C7C63 : STUStatescriptDataStoreBase3 {
-        [STUField(0xA83C2C26, EmbeddedInstance = true)]
-        public STUConfigVar m_A83C2C26;
+        [STUField(0xA83C2C26, "m_entity", EmbeddedInstance = true)]
+        public STUConfigVar Entity;
 
         [STUField(0xF24E4110, EmbeddedInstance = true)]
         public STUConfigVar m_F24E4110;

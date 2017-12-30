@@ -14,8 +14,8 @@ using OWLib.Types.Chunk;
 using OWLib.Types.Chunk.LDOM;
 using OWLib.Types.Map;
 using OWLib.Writer;
+using STULib.Types.Generic;
 using static DataTool.Helper.IO;
-using Common = STULib.Types.Generic.Common;
 
 namespace DataTool.SaveLogic {
     public class Model {
@@ -502,28 +502,21 @@ namespace DataTool.SaveLogic {
                     if (hardpoints != null) {
                         // attachments
                         foreach (PRHM.HardPoint hp in hardpoints.HardPoints) {
-                            writer.Write(IdToString("attachment_", GUID.Index(hp.HardPointGUID)));
-                            Matrix4 mat = hp.matrix.ToOpenTK();
+                            writer.Write(IdToString("hardpoint", GUID.Index(hp.HardPointGUID)));
+                            Matrix4 mat = hp.Matrix.ToOpenTK();
+
                             Vector3 pos = mat.ExtractTranslation();
                             Quaternion rot = mat.ExtractRotation();
 
-
-                            if (skeleton != null) {
+                            // for parent bone relative stuff
+                            /*if (skeleton != null) {
                                 int index = skeleton.IDs.TakeWhile(id => id != GUID.Index(hp.GUIDx012)).Count();
 
                                 if (index != skeleton.IDs.Length) {
                                     Vector3 parPos = RefPoseWriter.GetPos(skeleton, index);
                                     pos -= parPos;
-                            
-                                    Quaternion parRot = RefPoseWriter.GetRotTest(skeleton, index);
-                                    // Quaternion parRot = RefPoseWriter.GetRotTest(skeleton, (short)index, hierarchy);
-                                    rot -= parRot;
                                 }
-                            }
-                            
-                            // rot.W -= parRot.W;
-                            // rot.X -= parRot.W;
-                            
+                            }*/
                             
                             writer.Write(pos.X);
                             writer.Write(pos.Y);

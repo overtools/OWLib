@@ -4,16 +4,16 @@ using STULib.Types.AnimationList.x021;
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0xFC47A2ED)]
-    public class STUAnimationListInfo : STUInstance {
+    [STU(0xFC47A2ED, "STUAnimBlendTreeSet")]
+    public class STUAnimBlendTreeSet : STUInstance {
         [STUField(0x0D7DD9D2)]
         public STUVec3A m_0D7DD9D2;
 
         [STUField(0x8D0B5147)]
         public STUVec3A m_8D0B5147;
 
-        [STUField(0x93DA6E7C)]
-        public STU_C8704AD4 m_93DA6E7C;
+        [STUField(0x93DA6E7C, "m_hardcodedAnimCategoryRefs")]
+        public STUAnimBlendTreeSet_HardcodedAnimCategoryRefs HardcodedAnimCategoryRefs;
 
         [STUField(0x8610C654)]
         public STUGUID Skeleton;
@@ -24,14 +24,14 @@ namespace STULib.Types {
         [STUField(0x85CC326B)]
         public STU_DF9B7DE2 m_85CC326B;
 
-        [STUField(0x6DDF40DD)]
-        public STU_F3942997[] m_6DDF40DD;
+        [STUField(0x6DDF40DD, "m_bonePoseOverrideItems")]
+        public STUAnimBlendTreeSet_BonePoseOverrideItem[] BonePoseOverrideItems;
 
         [STUField(0x253EE7C8, ForceNotBuffer = true, Demangle = false)]
         public STUGUID[] GUIDx014Array;
 
-        [STUField(0x6AFCD1A5)]
-        public STUAnimationListInfoSub[] SubInfos;
+        [STUField(0x6AFCD1A5, "m_blendTreeItems")]
+        public STUAnimBlendTreeSet_BlendTreeItem[] BlendTreeItems;
 
         [STUField(0xF9CA7995)]
         public uint[] m_F9CA7995;
@@ -63,8 +63,8 @@ namespace STULib.Types {
         [STUField(0x84935843, Demangle = false)]
         public STUGUID GUIDx014;
 
-        [STUField(0x384DE14F)]
-        public STU_99EA3F94 m_384DE14F;
+        [STUField(0x384DE14F, "m_retargetParams")]
+        public STUAnimBlendTreeSet_RetargetParams RetargetParams;
 
         [STUField(0x29EFF18D)]
         public uint m_29EFF18D;

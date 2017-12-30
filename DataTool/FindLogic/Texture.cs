@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using OWLib;
+using OWLib.Types;
 using STULib.Types;
 using STULib.Types.Generic;
 using static DataTool.Helper.STUHelper;
-using OWLib.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 
@@ -128,17 +128,6 @@ namespace DataTool.FindLogic {
                     //     }
                     // }
                     
-                    break;
-                case 0x03:
-                    // STUStatescriptComponentMaster container = GetInstance<STUStatescriptComponentMaster>(textureGUID);
-                    //  foreach (KeyValuePair<ulong, STUStatescriptComponent> statescriptComponent in container.Components) {
-                    //      STUStatescriptComponent component = statescriptComponent.Value;
-                    //      if (component == null) continue;
-                    //      if (component is STUModelComponent) {
-                    //          STUModelComponent modelComponent = component as STUModelComponent;
-                    //          existingTextures = FindTextures(existingTextures, modelComponent.Material);
-                    //      }
-                    // }
                     break;
                 default:
                     Debugger.Log(0, "DataTool.FindLogic.Texture", $"[DataTool.FindLogic.Texture] Unhandled type: {GUID.Type(textureGUID):X3}\n");

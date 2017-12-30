@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataTool.DataModels;
 using DataTool.Flag;
+using OWLib;
 using STULib.Types;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
-using DataTool.DataModels;
-using OWLib;
 
 // ReSharper disable SuspiciousTypeConversion.Global
 

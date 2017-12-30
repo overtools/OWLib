@@ -6,6 +6,6 @@ namespace STULib.Types.AnimationList.x021 {
     [STU(0x9907336E)]
     public class STU_9907336E : STUAnimationListWrapperBase {
         [STUField(0x07DD813E)]
-        public Common.STUGUID m_07DD813E;  // STU_F9134815
+        public Common.STUGUID m_07DD813E;  // STUHardPoint
     }
 }

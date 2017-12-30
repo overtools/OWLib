@@ -27,8 +27,8 @@ namespace STULib.Types.GameParams {
         [STUField(0x65184E78, EmbeddedInstance = true)]
         public STU_96788737 m_65184E78;
 
-        [STUField(0x2C54AEAF)]
-        public STUEnum_F2F62E3D UnknownEnum;
+        [STUField(0x2C54AEAF, "m_category")]
+        public STUEnum_F2F62E3D Category;
 
         [STUField(0x37D4F9CD)]
         public int UnknownInt;

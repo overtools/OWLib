@@ -11,6 +11,7 @@ using STULib.Types.STUUnlock;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
+using Texture = DataTool.FindLogic.Texture;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-animspray", Description = "Extract animated sprays (debug)", TrackTypes = new ushort[] {0xA5}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
@@ -46,8 +47,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
                                 if (chunk.GetType() != typeof(SSCE)) continue;
                                 SSCE ssce = chunk as SSCE;
                                 if (ssce == null) continue;
-                                FindLogic.Texture.FindTextures(textures, new Common.STUGUID(ssce.Data.definition_key), null, true);
-                                FindLogic.Texture.FindTextures(textures, new Common.STUGUID(ssce.Data.material_key), null, true);
+                                Texture.FindTextures(textures, new Common.STUGUID(ssce.Data.TextureDefinition), null, true);
+                                Texture.FindTextures(textures, new Common.STUGUID(ssce.Data.Material), null, true);
                             }
                         }
                     }

@@ -5,7 +5,7 @@ using STULib.Types.Generic;
 namespace STULib.Types.Statescript.ConfigVar {
     [STU(0x12B8954B)]
     public class STU_12B8954B : STUStatescriptDataStoreBase4 {
-        [STUField(0x3F5B86A4)]
-        public Common.STUGUID m_3F5B86A4;
+        [STUField(0x3F5B86A4, "m_animation")]
+        public Common.STUGUID Animation;
     }
 }

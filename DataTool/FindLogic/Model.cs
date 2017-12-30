@@ -100,6 +100,13 @@ namespace DataTool.FindLogic {
             AddGUID(models, newElement, new HashSet<TextureInfo>(textures), animations, replacements, skeleton);
         }
 
+        public static ModelInfo GetModelInfo(HashSet<ModelInfo> models, ulong model, Dictionary<ulong, ulong> replacements) {
+            if (model == 0) return null;
+            if (replacements.ContainsKey(model)) model = new Common.STUGUID(replacements[model]);
+            ModelInfo modelInfo = models.FirstOrDefault(x => x.GUID == model);
+            return modelInfo;
+        }
+
         public static void AddGUID(HashSet<ModelInfo> models, Common.STUGUID newElement, HashSet<TextureInfo> textures, HashSet<AnimationInfo> animations, Dictionary<ulong, ulong> replacements, Common.STUGUID skeleton=null) {
             if (newElement == null) return;
 
@@ -252,11 +259,12 @@ namespace DataTool.FindLogic {
 
             switch (GUID.Type(modelGUID)) {
                 case 0x03:
-                    STUEntityDefinition container = GetInstance<STUEntityDefinition>(modelGUID);
-                    if (container == null) break;
+                    STUEntityDefinition entityDefinition = GetInstance<STUEntityDefinition>(modelGUID);
+                    if (entityDefinition == null) break;
                     Common.STUGUID entityModel = null;
+                    Common.STUGUID entitySound = null;
                     HashSet<AnimationInfo> animations = new HashSet<AnimationInfo>();
-                    foreach (KeyValuePair<ulong, STUEntityComponent> statescriptComponent in container.Components.OrderBy(x => x.Value?.GetType() != typeof(STUModelComponent))) {
+                    foreach (KeyValuePair<ulong, STUEntityComponent> statescriptComponent in entityDefinition.Components.OrderBy(x => x.Value?.GetType() != typeof(STUModelComponent))) {
                         STUEntityComponent component = statescriptComponent.Value;
                         if (component == null) continue;
                         if (component.GetType() == typeof(STUModelComponent)) {
@@ -268,8 +276,8 @@ namespace DataTool.FindLogic {
                             
                             AddEntity(existingModels, modelGUID, entityModel, replacements, new HashSet<AnimationInfo>());
                             
-                            if (container.Children != null) {
-                                foreach (STUChildEntityDefinition entityChild in container.Children) {
+                            if (entityDefinition.Children != null) {
+                                foreach (STUChildEntityDefinition entityChild in entityDefinition.Children) {
                                     existingModels = FindModels(existingModels, entityChild?.Entity, replacements);
                                     if (entityModel != null && entityChild != null) {
                                         STUModelComponent childModelComponent = GetInstance<STUModelComponent>(entityChild.Entity);
@@ -291,6 +299,10 @@ namespace DataTool.FindLogic {
                             // AddGUID(models, newElement, new HashSet<TextureInfo>(textureList), animations, replacements, skeleton);
                             
                             existingModels = FindModels(existingModels, modelComponent?.Look, replacements);  // get all referenced models
+                        }
+                        if (component.GetType() == typeof(STUEntitySoundMaster)) {
+                            STUEntitySoundMaster soundMaster = component as STUEntitySoundMaster;
+                            entitySound = soundMaster.SoundMaster;
                         }
                         if (component.GetType() == typeof(STUFirstPersonComponent)) {  // 003 sub-reference
                             STUFirstPersonComponent sub003 = component as STUFirstPersonComponent;
@@ -324,11 +336,16 @@ namespace DataTool.FindLogic {
                             animations = Animation.FindAnimations(animations, existingModels, ssUnlock.Unlock, replacements);
                         }
                     }
-                    
+                    if (entitySound != null) {
+                        foreach (AnimationInfo animation in animations) {
+                            animation.SoundMaster = entitySound;
+                        }
+                    }
                     if (entityModel != null) {  // we want all anims
                         AddGUID(existingModels, entityModel, new Dictionary<ulong, List<TextureInfo>>(), animations, replacements);
                         AddEntity(existingModels, modelGUID, entityModel, replacements, animations);
                     }
+                    
                     break;
                 case 0x0D:
                     existingModels = FindChunked(existingModels, modelGUID, replacements);
@@ -359,7 +376,7 @@ namespace DataTool.FindLogic {
                         existingModels = FindModels(existingModels, statescriptDataStoreComponent.Component, replacements);
                     }
                     foreach (STUStatescriptDataStoreMaterial statescriptDataStoreMaterial in stuTemp.Instances.OfType<STUStatescriptDataStoreMaterial>()) {
-                        existingModels = FindModels(existingModels, statescriptDataStoreMaterial.Material, replacements);
+                        existingModels = FindModels(existingModels, statescriptDataStoreMaterial.ModelLook, replacements);
                     }
                     foreach (STUConfigVarEffect statescriptDataStoreEffect in stuTemp.Instances.OfType<STUConfigVarEffect>()) {
                         existingModels = FindModels(existingModels, statescriptDataStoreEffect.Effect, replacements);

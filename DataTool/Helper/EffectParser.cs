@@ -45,10 +45,10 @@ namespace DataTool.Helper {
             public ulong Hardpoint;
             public IChunk PreviousChunk;
 
-            public ChunkPlaybackInfo(EffectChunkComponent component, IChunk previousChunk) {
+            public ChunkPlaybackInfo(PMCEInfo component, IChunk previousChunk) {
                 if (component != null) {
                     TimeInfo = new ChunkPlaybackTimeInfo {StartTime = component.StartTime, EndTime = component.EndTime};
-                    Hardpoint = component.Data.Hardpoint;
+                    Hardpoint = component.Hardpoint;
                 } else {
                     Hardpoint = 0;
                 }
@@ -89,11 +89,16 @@ namespace DataTool.Helper {
         }
 
         public IEnumerable<KeyValuePair<ChunkPlaybackInfo, IChunk>> GetChunks() {
-            EffectChunkComponent lastComponent = null;
+            PMCEInfo lastComponent = null;
             IChunk lastChunk = null;
+            // TCFE effect = Chunk.GetAllOfType<TCFE>().First().Value;
             for (int i = 0; i < Chunk.Chunks.Count; i++) {
                 if (Chunk?.Chunks[i]?.GetType() == typeof(EffectChunkComponent)) {
-                    lastComponent = Chunk.Chunks[i] as EffectChunkComponent;
+                    EffectChunkComponent pmce = Chunk.Chunks[i] as EffectChunkComponent;
+                    if (pmce == null) continue;
+                    lastComponent = new PMCEInfo {Hardpoint = pmce.Data.Hardpoint, StartTime = pmce.StartTime, EndTime = pmce.EndTime};
+                    // if (effect.Hardpoints == null) continue;
+                    // if (effect.Hardpoints.Length <= pmce.Data.Index) continue;
                     continue;
                 }
 
@@ -132,7 +137,7 @@ namespace DataTool.Helper {
         }
 
         public static void AddOSCE(EffectInfo effect, OSCE osce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
-            OSCEInfo newInfo = new OSCEInfo {PlaybackInfo = playbackInfo, Sound = osce.Data.soundDataKey};
+            OSCEInfo newInfo = new OSCEInfo {PlaybackInfo = playbackInfo, Sound = osce.Data.Sound};
             if (replacements.ContainsKey(newInfo.Sound)) newInfo.Sound = replacements[newInfo.Sound];
             effect.OSCEs.Add(newInfo);
         }
@@ -157,8 +162,8 @@ namespace DataTool.Helper {
         }
 
         public static void AddSSCE(EffectInfo effectInfo, SSCE ssce, Type lastType, Dictionary<ulong, ulong> replacements) {
-            ulong def = ssce.Data.definition_key;
-            ulong mat = ssce.Data.material_key;
+            ulong def = ssce.Data.TextureDefinition;
+            ulong mat = ssce.Data.Material;
             if (replacements.ContainsKey(def)) def = replacements[def];
             if (replacements.ContainsKey(mat)) mat = replacements[mat];
             if (lastType == typeof(RPCE)) {
@@ -167,8 +172,31 @@ namespace DataTool.Helper {
                 rpceInfo.Material = mat;
             }
         }
+        
+        public static void AddSVCE(EffectInfo effect, SVCE svce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
+            SVCEInfo newInfo = new SVCEInfo {PlaybackInfo = playbackInfo, VoiceStimulus = svce.Data.VoiceStimulus};
+            if (replacements.ContainsKey(newInfo.VoiceStimulus)) newInfo.VoiceStimulus = replacements[newInfo.VoiceStimulus];
+            effect.SVCEs.Add(newInfo);
+        }
 
         public void Process(EffectInfo effectInfo, KeyValuePair<ChunkPlaybackInfo, IChunk> chunk, Dictionary<ulong, ulong> replacements) {
+            // todo: STUVoiceStimulus has f3099f20/m_volume
+            // probably more stuff too
+            
+            
+            // hey have some notes about particles:
+            // 000000003CEC.006 - 000000001D3D.08F = ana - guardian:
+            //     one RPCE, 61 chunks
+            //     seems to be at correct position with rpce at rot: x=90
+            
+            // 000000003796.006 - 000000001A31.08F = genji - warrior's salute:
+            //     one RPCE, 64 chunks.
+            
+            // VCCE might be a texture/material transform
+            // A B C D = R G B A
+            // see 'extract-debug-vcce'
+            
+            
             if (effectInfo == null) return;
             if (chunk.Value == null) return;
             if (chunk.Value.GetType() == typeof(TCFE)) {
@@ -224,6 +252,12 @@ namespace DataTool.Helper {
 
                 AddSSCE(effectInfo, ssce, chunk.Key.PreviousChunk?.GetType(), replacements);
             }
+            if (chunk.Value.GetType() == typeof(SVCE)) {
+                SVCE svce = chunk.Value as SVCE;
+                if (svce == null) return;
+
+                AddSVCE(effectInfo, svce, chunk.Key, replacements);
+            }
         }
 
         public class EffectChunkInfo {
@@ -262,6 +296,16 @@ namespace DataTool.Helper {
             public ulong Material;
             public ulong TextureDefiniton;
         }
+        
+        public class SVCEInfo : EffectChunkInfo {
+            public ulong VoiceStimulus;
+        }
+        
+        public class PMCEInfo : EffectChunkInfo {
+            public float StartTime;
+            public float EndTime;
+            public ulong Hardpoint;
+        }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public class EffectInfo {
@@ -271,12 +315,14 @@ namespace DataTool.Helper {
             public List<FECEInfo> FECEs;
             public List<NECEInfo> NECEs;
             public List<RPCEInfo> RPCEs;
+            public List<SVCEInfo> SVCEs;
             public ulong GUID;
+
+            public ulong SoundMaster; // 05F for VoiceStimuli
 
             public float EffectLength; // seconds
             
             // todo: many more chunks
-            // todo: svce: (only if used in an anim somewhere)
             // todo: OSCE / 02C is controlled by the bnk?
 
             public void SetupEffect() {
@@ -286,6 +332,7 @@ namespace DataTool.Helper {
                 NECEs = new List<NECEInfo>();
                 FECEs = new List<FECEInfo>();
                 RPCEs = new List<RPCEInfo>();
+                SVCEs = new List<SVCEInfo>();
             }
         }
     }

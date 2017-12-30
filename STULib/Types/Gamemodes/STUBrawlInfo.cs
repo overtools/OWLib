@@ -21,7 +21,7 @@ namespace STULib.Types.Gamemodes {
         [STUField(0xDB2577DB)]
         public STUEnum_56DF3C94[] UnknownEnum;
 
-        [STUField(0xCA7E6EDC)]
-        public STUGUID Name;
+        [STUField(0xCA7E6EDC, "m_description")]
+        public STUGUID Description;
     }
 }

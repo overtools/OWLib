@@ -6,8 +6,8 @@ using STULib.Types.AnimationList.x021.Enums;
 namespace STULib.Types.AnimationList.x020 {
     [STU(0xBDE6CC74)]
     public class STU_BDE6CC74 : STU_8C127DE2 {
-        [STUField(0xBA891264)]
-        public STU_25B808BD m_BA891264;
+        [STUField(0xBA891264, "m_dataFlow")]
+        public STU_25B808BD DataFlow;
 
         [STUField(0xE3BC608F)]
         public STU_25B808BD m_E3BC608F;

@@ -5,8 +5,8 @@ using STULib.Types.Generic;
 namespace STULib.Types.AnimationList.x021 {
     [STU(0x65436ABC)]
     public class STU_65436ABC : Common.STUInstance {
-        [STUField(0x2C54AEAF)]
-        public Common.STUGUID m_2C54AEAF;  // STU_CB5A89D2
+        [STUField(0x2C54AEAF, "m_category")]
+        public Common.STUGUID Category;  // STU_CB5A89D2
 
         [STUField(0xB1F28FCA)]
         public byte m_B1F28FCA;

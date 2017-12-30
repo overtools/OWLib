@@ -96,7 +96,7 @@ namespace DataTool.ToolLogic.List {
 
                 string name = GetString(achievement.Name);
                 string desc = GetString(achievement.Description);
-                string group = achievement.Group.ToString();
+                string group = achievement.Category.ToString();
                 ItemInfo item = GatherUnlock(achievement.Reward);
                 Reward reward = new Reward(achievement.Reward, item.Name, item.Type, item.Rarity);
                 heroItemMapping.TryGetValue(item.GUID, out string hero);

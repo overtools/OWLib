@@ -7,10 +7,10 @@ using DataTool.SaveLogic;
 using OWLib;
 using STULib.Types;
 using STULib.Types.Lootboxes;
+using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
-using Common = STULib.Types.Generic.Common;
 using Model = DataTool.FindLogic.Model;
 using Sound = DataTool.FindLogic.Sound;
 
@@ -48,7 +48,7 @@ namespace DataTool.ToolLogic.Extract {
                 models = Model.FindModels(models, lootbox.Effect1);
                 models = Model.FindModels(models, lootbox.Effect2);
                 models = Model.FindModels(models, lootbox.Effect3);
-                models = Model.FindModels(models, lootbox.Look1);
+                models = Model.FindModels(models, lootbox.ModelLook);
                 models = Model.FindModels(models, lootbox.Look2);
                 
                 Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();

@@ -7,8 +7,8 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types {
     [STU(0x47C34433)]
     public class STU_47C34433 : STUInstance {
-        [STUField(0x2D124BE2)]
-        public STUGUID m_2D124BE2;  // STU_871BD3D0
+        [STUField(0x2D124BE2, "m_model")]
+        public STUGUID Model;  // STUModel
 
         [STUField(0x2F08CD5E)]
         public STU_D9E3E761[] m_2F08CD5E;

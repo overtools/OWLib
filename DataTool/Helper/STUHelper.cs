@@ -1,15 +1,15 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DataTool.DataModels;
+using OWLib;
 using STULib;
+using STULib.Impl;
 using STULib.Types;
 using STULib.Types.STUUnlock;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static STULib.Types.Generic.Common;
-using DataTool.DataModels;
-using STULib.Impl;
 
 namespace DataTool.Helper {
     public static class STUHelper {
@@ -68,7 +68,7 @@ namespace DataTool.Helper {
             }
 
             if (name == null)
-                name = $"{OWLib.GUID.LongKey(key):X12}";
+                name = $"{GUID.LongKey(key):X12}";
 
             return new ItemInfo(name, unlock.CosmeticRarity.ToString(), unlock.GetType().Name, description, availableIn, unlock, key);
         }

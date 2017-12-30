@@ -8,7 +8,7 @@ namespace STULib.Types.AnimationList.x021 {
         [STUField(0x6DE8A8A1)]
         public ulong m_6DE8A8A1;
 
-        [STUField(0x07DD813E)]
-        public ulong m_07DD813E;
+        [STUField(0x07DD813E, "m_value")]
+        public ulong Value;
     }
 }

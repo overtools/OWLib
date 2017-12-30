@@ -65,6 +65,10 @@
       <Project>{e08e1e48-6585-4137-8405-661c62c10713}</Project>
       <Name>CascLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataTool\DataTool.csproj">
+      <Project>{9d1a3dcc-37bf-4979-acd8-3e998e19ce71}</Project>
+      <Name>DataTool</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OverTool\OverTool.csproj">
       <Project>{55122bf8-cc39-4936-b8f1-cf8e87195971}</Project>
       <Name>OverTool</Name>

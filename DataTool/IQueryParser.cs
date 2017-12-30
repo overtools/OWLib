@@ -128,8 +128,17 @@ namespace DataTool {
                         string[] afterSplit = afterHeroOpt.Split('=');
 
                         string type = afterSplit[0].ToLowerInvariant();
-                        QueryType typeObj = queryTypes.FirstOrDefault(x => x.Name.ToLowerInvariant() == type);
-                        if (typeObj == null) {
+                        
+                        List<QueryType> types = new List<QueryType>();
+                        if (type == "*") {
+                            types = queryTypes;
+                        } else {
+                            types.Add(queryTypes.FirstOrDefault(x => x.Name.ToLowerInvariant() == type));
+                        }
+
+
+                        foreach (QueryType typeObj in types) {
+                            if (typeObj == null) {
                             Log($"\r\nUnknown type: {type}\r\n");
                             QueryHelp(queryTypes);
                             return null;
@@ -146,49 +155,50 @@ namespace DataTool {
                         Array.Copy(afterSplit, 1, items, 0, afterSplit.Length - 1);
                         items = string.Join("=", items).Split(',');
                         bool isBracket = false;
-                        foreach (string item in items) {
-                            string realItem = item.ToLowerInvariant();
-                            bool nextNotBracket = false;
+                            foreach (string item in items) {
+                                string realItem = item.ToLowerInvariant();
+                                bool nextNotBracket = false;
 
-                            if (item.StartsWith("(") && item.EndsWith(")")) {
-                                realItem = item.Remove(0, 1);
-                                realItem = realItem.Remove(realItem.Length - 1);
-                                isBracket = true;
-                                nextNotBracket = true;
-                            } else if (item.StartsWith("(")) {
-                                isBracket = true;
-                                realItem = item.Remove(0, 1);
-                            } else if (item.EndsWith(")")) {
-                                nextNotBracket = true;
-                                realItem = item.Remove(item.Length - 1);
-                            }
+                                if (item.StartsWith("(") && item.EndsWith(")")) {
+                                    realItem = item.Remove(0, 1);
+                                    realItem = realItem.Remove(realItem.Length - 1);
+                                    isBracket = true;
+                                    nextNotBracket = true;
+                                } else if (item.StartsWith("(")) {
+                                    isBracket = true;
+                                    realItem = item.Remove(0, 1);
+                                } else if (item.EndsWith(")")) {
+                                    nextNotBracket = true;
+                                    realItem = item.Remove(item.Length - 1);
+                                }
 
-                            if (!isBracket) {
-                                if (!realItem.StartsWith("!")) {
-                                    parsedTypes[hero][typeObj.Name].Allowed.Add(realItem);
+                                if (!isBracket) {
+                                    if (!realItem.StartsWith("!")) {
+                                        parsedTypes[hero][typeObj.Name].Allowed.Add(realItem);
+                                    } else {
+                                        parsedTypes[hero][typeObj.Name].Disallowed.Add(realItem.Remove(0, 1));
+                                    }
                                 } else {
-                                    parsedTypes[hero][typeObj.Name].Disallowed.Add(realItem.Remove(0, 1));
-                                }
-                            } else {
-                                string[] kv = realItem.Split('=');
-                                string tagName = kv[0].ToLowerInvariant();
-                                string tagValue = kv[1].ToLowerInvariant();
-                                QueryTag tagObj =
-                                    typeObj.Tags.FirstOrDefault(x => x.Name.ToLowerInvariant() == tagName);
-                                if (tagObj == null) {
-                                    Log($"\r\nUnknown tag: {tagName}\r\n");
-                                    QueryHelp(queryTypes);
-                                    return null;
-                                }
+                                    string[] kv = realItem.Split('=');
+                                    string tagName = kv[0].ToLowerInvariant();
+                                    string tagValue = kv[1].ToLowerInvariant();
+                                    QueryTag tagObj =
+                                        typeObj.Tags.FirstOrDefault(x => x.Name.ToLowerInvariant() == tagName);
+                                    if (tagObj == null) {
+                                        Log($"\r\nUnknown tag: {tagName}\r\n");
+                                        QueryHelp(queryTypes);
+                                        return null;
+                                    }
 
-                                parsedTypes[hero][typeObj.Name].Tags[tagName] = tagValue;
+                                    parsedTypes[hero][typeObj.Name].Tags[tagName] = tagValue;
+                                }
+                                if (nextNotBracket) isBracket = false;
                             }
-                            if (nextNotBracket) isBracket = false;
-                        }
 
-                        if (parsedTypes[hero][typeObj.Name].Allowed.Count == 0 &&
-                            parsedTypes[hero][typeObj.Name].Tags.Count > 0) {
-                            parsedTypes[hero][typeObj.Name].Allowed = new List<string> {"*"};
+                            if (parsedTypes[hero][typeObj.Name].Allowed.Count == 0 &&
+                                parsedTypes[hero][typeObj.Name].Tags.Count > 0) {
+                                parsedTypes[hero][typeObj.Name].Allowed = new List<string> {"*"};
+                            }
                         }
                     }
                 }

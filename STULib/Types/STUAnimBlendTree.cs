@@ -5,13 +5,13 @@ using STULib.Types.AnimationList.x021;
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0x67866D38)]
-    public class STUAnimationListSecondary : STUInstance {
+    [STU(0x67866D38, "STUAnimBlendTree")]
+    public class STUAnimBlendTree : STUInstance {
         [STUField(0x85CC326B)]
         public STU_DF9B7DE2 m_85CC326B;
 
-        [STUField(0x0B15B894, EmbeddedInstance = true)]
-        public STUAnimationListSecondaryContainer[] Containers;
+        [STUField(0x0B15B894, "m_animNodes", EmbeddedInstance = true)]
+        public STUAnimNode_Base[] AnimNodes;
 
         [STUField(0xF9CA7995)]
         public uint[] m_F9CA7995;

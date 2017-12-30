@@ -10,6 +10,6 @@ namespace STULib.Types.AnimationList.x020 {
         public STU_25B808BD m_6688487C;
 
         [STUField(0x3B52E7A3)]
-        public Common.STUGUID m_3B52E7A3;  // STU_F9134815
+        public Common.STUGUID m_3B52E7A3;  // STUHardPoint
     }
 }

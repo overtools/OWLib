@@ -63,10 +63,13 @@ namespace STUClassFixer {
                                     STUInstanceJSON instance = instanceJson[instanceChecksum];
                                     STUInstanceJSON.STUFieldJSON field = instance.GetField(fieldChecksum);
                                     if (fieldNames.ContainsKey(fieldChecksum)) {
-                                        if (!line.Contains(fieldNames[fieldChecksum])) {
-                                            newLine = newLine.Substring(0, newLine.LastIndexOf(")]", StringComparison.InvariantCulture));
-                                            newLine = newLine + $", \"{fieldNames[fieldChecksum]}\")]";
-                                        }
+                                        // find where "([", then insert name
+                                        // e.g [STUField(0xD229B093)] => [STUField("bilbo", 0xD229B093)]
+                                        
+                                        // if (!line.Contains(fieldNames[fieldChecksum])) {
+                                        //     newLine = newLine.Substring(0, newLine.LastIndexOf(")]", StringComparison.InvariantCulture));
+                                        //     newLine = newLine + $", \"{fieldNames[fieldChecksum]}\")]";
+                                        // }
                                     }
                                     if ((field.SerializationType == 2 || field.SerializationType == 3) && !line.Contains("EmbeddedInstance")) {
                                         newLine = newLine.Substring(0, newLine.LastIndexOf(")]", StringComparison.InvariantCulture));

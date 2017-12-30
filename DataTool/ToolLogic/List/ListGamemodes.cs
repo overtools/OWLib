@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DataTool.Flag;
 using DataTool.Helper;
 using STULib.Types;
@@ -8,7 +9,6 @@ using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static STULib.Types.Generic.Common;
-using System.Collections.Generic;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-gamemodes", Description = "List game modes", IsSensitive = true, TrackTypes = new ushort[] {0xC7}, CustomFlags = typeof(ListFlags))]
@@ -134,7 +134,7 @@ namespace DataTool.ToolLogic.List {
                     var mapMeta = GetInstance<STUMap>(guid);
                     if (mapMeta == null) continue;
 
-                    var mapName = GetString(mapMeta.Name);
+                    var mapName = GetString(mapMeta.DisplayName);
                     mapNames.Add(mapName);
                 }
 
@@ -147,7 +147,7 @@ namespace DataTool.ToolLogic.List {
 
             var gamemodeData = GetInstance<STUGamemode>(guid);
             Log($"{iD}Gamemode Data:");
-            Log($"{iD+1}Type: {GetString(gamemodeData.Name) ?? "N/A"}");
+            Log($"{iD+1}Type: {GetString(gamemodeData.DisplayName) ?? "N/A"}");
 
             if (gamemodeData.Teams != null) {
                 Log($"{iD+1}Teams:");
@@ -178,7 +178,7 @@ namespace DataTool.ToolLogic.List {
                 var brawlContainer = GetInstance<STUBrawlInfoContainer>(guid);
                 if (brawlContainer == null) continue;
 
-                var bName = GetString(brawlContainer.BrawlInfo.Name);
+                var bName = GetString(brawlContainer.BrawlInfo.Description);
                 Log($"{iD+1}[{ii}] {bName}:");
                 ii++;
                 

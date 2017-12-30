@@ -219,8 +219,8 @@ namespace OverTool.ExtractLogic {
                 SSCE[] ssces = chunked.GetAllOfTypeFlat<SSCE>();
                 foreach (SSCE ssce in ssces) {
                     if (layers != null) {
-                        FindTexturesAnonymous8(ssce.Data.material_key, layers, replace, parsed, map, handler);
-                        FindTexturesAnonymousB3(ssce.Data.definition_key, layers, replace, parsed, map, handler);
+                        FindTexturesAnonymous8(ssce.Data.Material, layers, replace, parsed, map, handler);
+                        FindTexturesAnonymousB3(ssce.Data.TextureDefinition, layers, replace, parsed, map, handler);
                     }
                 }
                 RPCE[] prces = chunked.GetAllOfTypeFlat<RPCE>();

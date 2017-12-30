@@ -92,6 +92,7 @@ namespace DataTool.Helper {
         }
 
         public static string GetString(ulong guid) {
+            if (guid == 0) return null;  // don't even try
             try {
                 using (Stream stream = OpenFile(Files[guid])) {
                     return stream == null ? null : new OWString(stream);

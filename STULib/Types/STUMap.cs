@@ -18,7 +18,7 @@ namespace STULib.Types {
         public STUGUID StateStringA;
 
         [STUField(0x5DB91CE2, "m_displayName")]
-        public STUGUID Name;
+        public STUGUID DisplayName;
 
         [STUField(0x86C1CFAB)]
         public STUGUID ImageResource1;

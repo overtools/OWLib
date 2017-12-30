@@ -6,7 +6,7 @@ using STULib.Types.Generic;
 namespace STULib.Types.AnimationList.x021 {
     [STU(0x8C127DE2)]
     public class STU_8C127DE2 : Common.STUInstance {
-        [STUField(0x0619C597)]
-        public STUEnum_981FD5ED m_0619C597;
+        [STUField(0x0619C597, "m_type")]
+        public STUEnum_981FD5ED Type;
     }
 }

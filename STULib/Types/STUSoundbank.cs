@@ -49,7 +49,7 @@ namespace STULib.Types {
         public STUGUID[] SoundOther;
 
         [STUField(0x72F2A9FA)]
-        public uint[] m_72F2A9FA;
+        public uint[] IDs;
 
         [STUField(0x5A7EC887)]
         public uint[] m_5A7EC887;

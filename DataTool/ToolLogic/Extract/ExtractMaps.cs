@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.SaveLogic;
 using DataTool.ToolLogic.List;
 using STULib.Types;
 using static DataTool.Program;
@@ -43,6 +44,7 @@ namespace DataTool.ToolLogic.Extract {
             }
             
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+            if (parsedTypes == null) {QueryHelp(QueryTypes); return;}
             foreach (ulong key in TrackedFiles[0x9F]) {
                 STUMap map = GetInstance<STUMap>(key);
                 ListMaps.MapInfo mapInfo = ListMaps.GetMap(key);
@@ -63,7 +65,7 @@ namespace DataTool.ToolLogic.Extract {
                 
                 if (config.Count == 0) continue;
                 
-                SaveLogic.Map.Save(flags, map, key, basePath);
+                Map.Save(flags, map, key, basePath);
             }
         }
 

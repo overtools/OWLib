@@ -175,7 +175,7 @@ namespace DataTool {
                         }
                         
                         ISTU stu = ISTU.NewInstance(stream, BuildVersion);
-                        STUEncryptionKey ek = stu.Instances.OfType<STUEncryptionKey>().First();
+                        STUEncryptionKey ek = stu.Instances.OfType<STUEncryptionKey>().FirstOrDefault();
                         if (ek != null && !KeyService.keys.ContainsKey(ek.LongRevKey)) {
                             KeyService.keys.Add(ek.LongRevKey, ek.KeyValue);
                             Log("Added Encryption Key {0}, Value: {1}", ek.KeyNameProper, ek.Key);

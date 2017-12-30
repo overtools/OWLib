@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
@@ -36,16 +37,23 @@ namespace DataTool.SaveLogic {
                             using (Stream outputStream = File.OpenWrite(outputPath)) {
                                 soundStream.CopyTo(outputStream);
                             }
+                            // ConvertLogic.Sound.WwiseRIFFVorbis vorbis =
+                            //     new ConvertLogic.Sound.WwiseRIFFVorbis(soundStream,
+                            //         "Third Party\\packed_codebooks_aoTuV_603.bin");
+                            // using (Stream outputStream = File.OpenWrite(outputPathOgg+"2")) {
+                            //     vorbis.ConvertToOgg(outputStream);
+                            // }
                         }
+                        
                         if (convertWem) {
-                            System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+                            Process pProcess = new Process();
                             pProcess.StartInfo.FileName = "Third Party\\ww2ogg.exe";
                             pProcess.StartInfo.Arguments = $"\"{outputPath}\" --pcb \"Third Party\\packed_codebooks_aoTuV_603.bin\" -o \"{outputPathOgg}\"";
                             pProcess.StartInfo.UseShellExecute = false;
                             pProcess.StartInfo.RedirectStandardOutput = true;
                             pProcess.Start();
                             pProcess.WaitForExit();                            
-                            System.Diagnostics.Process pProcess2 = new System.Diagnostics.Process();
+                            Process pProcess2 = new Process();
                             pProcess2.StartInfo.FileName = "Third Party\\revorb.exe";
                             pProcess2.StartInfo.Arguments = $"\"{outputPathOgg}\"";
                             pProcess2.StartInfo.UseShellExecute = false;
@@ -106,8 +114,8 @@ namespace DataTool.SaveLogic {
                     }
                 }
                 if (convertWem) {
-                    System.Diagnostics.Process pProcess =
-                        new System.Diagnostics.Process {
+                    Process pProcess =
+                        new Process {
                             StartInfo = {
                                 FileName = "Third Party\\ww2ogg.exe",
                                 Arguments =
@@ -118,8 +126,8 @@ namespace DataTool.SaveLogic {
                         };
                     pProcess.Start();
                     pProcess.WaitForExit();
-                    System.Diagnostics.Process pProcess2 =
-                        new System.Diagnostics.Process {
+                    Process pProcess2 =
+                        new Process {
                             StartInfo = {
                                 FileName = "Third Party\\revorb.exe",
                                 Arguments = $"\"{outputPathOgg}\"",

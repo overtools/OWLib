@@ -607,7 +607,7 @@ namespace STUHashTool {
 
                 todoInstances = GetClassTodos(todoInstances);
                 
-                const string stuNamespace = "STULib.Types.prehash";
+                const string stuNamespace = "STULib.Types.posthash";
                 const string enumNamespace = stuNamespace+".Enums";
                 
                 foreach (string t in todoInstances) {
@@ -687,6 +687,7 @@ namespace STUHashTool {
                     // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000199.068") continue;
                     // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000BF7.01B") continue;
                     // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "00000000012E.01B") continue;
+                    // if (file != 1116892707587883018) continue;  // 020
                     using (Stream fileStream = Util.OpenFile(records[file], handler)) {
                         // STULib.Types.Map.Map map = new STULib.Types.Map.Map(fileStream, uint.MaxValue);
                         ISTU fileSTU = ISTU.NewInstance(fileStream, uint.MaxValue);
