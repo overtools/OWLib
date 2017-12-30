@@ -334,6 +334,12 @@ namespace DataTool.SaveLogic {
                 using (Stream outputStream = File.OpenWrite(outputFile)) {
                     soundStream.CopyTo(outputStream);
                 }
+                // ConvertLogic.Sound.WwiseRIFFVorbis vorbis =
+                //     new ConvertLogic.Sound.WwiseRIFFVorbis(soundStream,
+                //         "Third Party\\packed_codebooks_aoTuV_603.bin");
+                // using (Stream outputStream = File.OpenWrite(outputFileOgg+"2")) {
+                //     vorbis.ConvertToOgg(outputStream);
+                // }
             }
 
             if (!convertWem) return;
