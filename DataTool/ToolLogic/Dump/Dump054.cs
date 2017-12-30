@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using DataTool.Flag;
 using DataTool.Helper;
 using STULib.Types.ZeroFiveFour;
@@ -85,13 +84,11 @@ namespace DataTool.ToolLogic.Dump {
                                 if (preset.Brawls != null) {
                                     foreach (var guid in preset.Brawls) {
                                         var brawlInfo = GetInstance<STUBrawlInfoContainer>(guid);
-                                        Log($"{indent + 4}{GetString(brawlInfo.BrawlInfo.Name)}");
-                                        Debugger.Break();
+                                        Log($"{indent + 4}{GetString(brawlInfo.BrawlInfo.Description)}");
                                     }
                                 }
                             }
                         }
-                        Debugger.Break();
                         break;
                     default:
                         //Debugger.Break();
