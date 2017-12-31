@@ -107,6 +107,7 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSound.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSoundBank.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVCCE.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVoiceMaster.cs" />
     <Compile Include="ToolLogic\Extract\ExtractAbilities.cs" />
     <Compile Include="ToolLogic\Extract\ExtractHeroUnlocks.cs" />
     <Compile Include="ToolLogic\Extract\ExtractGeneral.cs" />

@@ -3,7 +3,7 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0xB466CBBD)]
-    public class STUSoundMaster : STUInstance {  // todo: these names are so bad
+    public class STUVoiceMaster : STUInstance {  // todo: these names are so bad
         [STUField(0xF51B70C4, EmbeddedInstance = true)]
         public STUVoiceLineInstance[] VoiceLineInstances;
 

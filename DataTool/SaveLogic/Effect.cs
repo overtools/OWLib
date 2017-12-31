@@ -389,9 +389,9 @@ namespace DataTool.SaveLogic {
         public static Dictionary<ulong, List<STUVoiceLineInstance>> GetSVCELines(EffectParser.EffectInfo effect) {
             Dictionary<ulong, List<STUVoiceLineInstance>> svceLines = new Dictionary<ulong, List<STUVoiceLineInstance>>();
             if (effect.SoundMaster == 0 || effect.SVCEs.Count == 0) return svceLines;
-            STUSoundMaster soundMaster = GetInstance<STUSoundMaster>(effect.SoundMaster);
+            STUVoiceMaster voiceMaster = GetInstance<STUVoiceMaster>(effect.SoundMaster);
             foreach (EffectParser.SVCEInfo svceInfo in effect.SVCEs) {
-                svceLines[svceInfo.VoiceStimulus] = soundMaster.VoiceLineInstances.Where(x => x.SoundDataContainer.Group == svceInfo.VoiceStimulus).ToList();
+                svceLines[svceInfo.VoiceStimulus] = voiceMaster.VoiceLineInstances.Where(x => x.SoundDataContainer.VoiceStimulus == svceInfo.VoiceStimulus).ToList();
             }
             return svceLines;
         }

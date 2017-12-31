@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace DataTool.FindLogic {
             public Dictionary<ulong, WWiseBankInfo> SoundBanks;
             public Dictionary<ulong, SoundFileInfo> VoiceSoundFiles;
             public Dictionary<ulong, SoundFileInfo> SoundFiles;
+            public Dictionary<ulong, VoiceMasterInfo> VoiceMasters;
 
             public ComboConfig Config = new ComboConfig();
             public ComboSaveConfig SaveConfig = new ComboSaveConfig();
@@ -53,6 +55,7 @@ namespace DataTool.FindLogic {
                 SoundBanks = new Dictionary<ulong, WWiseBankInfo>();
                 VoiceSoundFiles = new Dictionary<ulong, SoundFileInfo>();
                 SoundFiles = new Dictionary<ulong, SoundFileInfo>();
+                VoiceMasters = new Dictionary<ulong, VoiceMasterInfo>();
             }
 
             public void SetEntityName(ulong entity, string name, Dictionary<ulong, ulong> replacements=null) {
@@ -72,6 +75,7 @@ namespace DataTool.FindLogic {
 
         public class ComboConfig {
             public bool DoExistingEntities = false;
+            public bool FullLog = false;
         }
 
         public class ComboSaveConfig {
@@ -114,6 +118,24 @@ namespace DataTool.FindLogic {
             public override string GetNameIndex() {
                 return GetValidFilename(Name) ?? OWLib.GUID.Index(GUID).ToString("X12");
             }
+        }
+
+        public class VoiceMasterInfo : ComboType {
+            public VoiceMasterInfo(ulong guid) : base(guid) { }
+            
+            public Dictionary<ulong, HashSet<VoiceLineInstanceInfo>> VoiceLineInstances;
+            // key = 078 voice stimulus
+        }
+
+        public class VoiceLineInstanceInfo {
+            public ulong GUIDx06F;
+            public ulong GUIDx09B;
+            public ulong GUIDx03C;
+            public ulong GUIDx070;
+            public ulong GUIDx02C;
+            public ulong VoiceStimulus;
+            public ulong Subtitle;
+            public HashSet<ulong> SoundFiles;
         }
         
         public class SoundFileInfo : ComboType {
@@ -271,6 +293,10 @@ namespace DataTool.FindLogic {
             
             if (guid == 0) return info;
             guid = GetReplacement(guid, replacements);
+
+            if (info.Config.FullLog) {
+                Console.Out.WriteLine($"[DataTool.FindLogic.Combo]: Searching in {GetFileName(guid)}");
+            }
             
             // Debugger break area:
             // if (GetFileName(guid) == "000000000F6D.00C") Debugger.Break(); // tracer chest blue spinny thing
@@ -349,13 +375,15 @@ namespace DataTool.FindLogic {
                             } else if (component.GetType() == typeof(STUUnlockComponent)) {
                                 STUUnlockComponent ssUnlock = component as STUUnlockComponent;
                                 Find(info, ssUnlock.Unlock, replacements, entityContext);
-                            } if (component.GetType() == typeof(STUFirstPersonComponent)) {
+                            } else if (component.GetType() == typeof(STUFirstPersonComponent)) {
                                 STUFirstPersonComponent firstPersonComponent = component as STUFirstPersonComponent;
                                 Find(info, firstPersonComponent?.Entity, replacements);  // clean context
-                            }
-                            if (component.GetType() == typeof(STUSecondaryEffectComponent)) {
+                            } else if (component.GetType() == typeof(STUSecondaryEffectComponent)) {
                                 STUSecondaryEffectComponent secondaryEffectComponent = component as STUSecondaryEffectComponent;
                                 Find(info, secondaryEffectComponent?.Effect, replacements, entityContext);
+                            } else if (component.GetType() == typeof(STUEntityVoiceMaster)) {
+                                STUEntityVoiceMaster voiceComponent = component as STUEntityVoiceMaster;
+                                Find(info, voiceComponent?.VoiceMaster, replacements, entityContext);
                             }
                         }
                     }
@@ -661,6 +689,60 @@ namespace DataTool.FindLogic {
                     }
                     
                     break;
+                case 0x5F:
+                    if (info.VoiceMasters.ContainsKey(guid)) break;
+
+                    STUVoiceMaster voiceMaster = GetInstance<STUVoiceMaster>(guid);
+
+                    if (voiceMaster == null) break;
+                    
+                    VoiceMasterInfo voiceMasterInfo = new VoiceMasterInfo(guid);
+                    info.VoiceMasters[guid] = voiceMasterInfo;
+
+                    if (voiceMaster.VoiceLineInstances == null) break;
+                    voiceMasterInfo.VoiceLineInstances = new Dictionary<ulong, HashSet<VoiceLineInstanceInfo>>();
+                    for (int i = 0; i < voiceMaster.VoiceLineInstances.Length; i++) {
+                        STUVoiceLineInstance voiceLineInstance = voiceMaster.VoiceLineInstances[i];
+                        if (voiceLineInstance == null) continue;
+
+                        VoiceLineInstanceInfo voiceLineInstanceInfo =
+                            new VoiceLineInstanceInfo {
+                                GUIDx06F = voiceMaster.VirtualGUIDs06F[i],
+                                GUIDx09B = voiceMaster.VirtualGUIDs09B[i],
+                                GUIDx03C = voiceLineInstance.m_D0C28030,
+                                Subtitle = voiceLineInstance.Subtitle
+                            };
+                        if (voiceLineInstance.SoundDataContainer != null) {
+                            voiceLineInstanceInfo.GUIDx070 = voiceLineInstance.SoundDataContainer.GUIDx070;
+                            voiceLineInstanceInfo.VoiceStimulus = voiceLineInstance.SoundDataContainer.VoiceStimulus;
+                            voiceLineInstanceInfo.GUIDx02C = voiceLineInstance.SoundDataContainer.SoundbankMasterResource;
+                        } else {
+                            Console.Out.WriteLine("[DataTool.FindLogic.Combo]: ERROR: voice data container was null (please contact the developers)");
+                            if (Debugger.IsAttached) {
+                                Debugger.Break();
+                            }
+                            break;
+                        }
+                        
+                        voiceLineInstanceInfo.SoundFiles = new HashSet<ulong>();
+
+                        if (voiceLineInstance.SoundContainer != null) {
+                            foreach (STUSoundWrapper soundWrapper in new []{voiceLineInstance.SoundContainer.Sound1, 
+                                voiceLineInstance.SoundContainer.Sound2, voiceLineInstance.SoundContainer.Sound3, 
+                                voiceLineInstance.SoundContainer.Sound4}) {
+                                if (soundWrapper == null) continue;
+                                voiceLineInstanceInfo.SoundFiles.Add(soundWrapper.SoundResource);
+                                Find(info, soundWrapper.SoundResource, replacements, context);
+                            }
+                        }
+
+                        if (!voiceMasterInfo.VoiceLineInstances.ContainsKey(voiceLineInstanceInfo.VoiceStimulus)) {
+                            voiceMasterInfo.VoiceLineInstances[voiceLineInstanceInfo.VoiceStimulus] = new HashSet<VoiceLineInstanceInfo>();
+                        }
+                        voiceMasterInfo.VoiceLineInstances[voiceLineInstanceInfo.VoiceStimulus].Add(voiceLineInstanceInfo);
+                    }
+                    
+                    break;
                 case 0xA5:
                     // hmm, if existing?
                     Cosmetic cosmetic = GetInstance<Cosmetic>(guid);
@@ -691,6 +773,11 @@ namespace DataTool.FindLogic {
                     foreach (Common.STUGUID materialData in effectLook.MaterialDatas) {
                         Find(info, materialData, replacements, context);
                     }
+                    break;
+                case 0xB2:
+                    if (info.VoiceSoundFiles.ContainsKey(guid)) break;
+                    SoundFileInfo voiceSoundFileInfo = new SoundFileInfo(guid);
+                    info.VoiceSoundFiles[guid] = voiceSoundFileInfo;
                     break;
                 case 0xB3:
                     if (info.MaterialDatas.ContainsKey(guid)) break;

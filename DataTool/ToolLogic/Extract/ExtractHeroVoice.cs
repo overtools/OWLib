@@ -87,21 +87,21 @@ namespace DataTool.ToolLogic.Extract {
                 
                 if (config.Count == 0) continue;
                 
-                STUEntitySoundMaster soundMasterContainer = GetInstance<STUEntitySoundMaster>(hero.EntityMain);
+                STUEntityVoiceMaster soundMasterContainer = GetInstance<STUEntityVoiceMaster>(hero.EntityMain);
 
                 if (soundMasterContainer == null) {
                     Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: soundMaster not found");
                     return;
                 }
 
-                STUSoundMaster master = GetInstance<STUSoundMaster>(soundMasterContainer.SoundMaster);
+                STUVoiceMaster master = GetInstance<STUVoiceMaster>(soundMasterContainer.VoiceMaster);
                 
                 string heroFileName = GetValidFilename(heroNameActual);
 
                 foreach (STUVoiceLineInstance voiceLineInstance in master.VoiceLineInstances) {
-                    if (voiceLineInstance?.SoundDataContainer?.Group == null) continue;
-                    string outputDirectory = Path.Combine(basePath, OutputDir, heroFileName, GetFileName(voiceLineInstance.SoundDataContainer.Group)) + Path.DirectorySeparatorChar;
-                    if (config.ContainsKey("groupRestriction") && !config["groupRestriction"].ShouldDo(GetFileName(voiceLineInstance.SoundDataContainer.Group))) continue;
+                    if (voiceLineInstance?.SoundDataContainer?.VoiceStimulus == null) continue;
+                    string outputDirectory = Path.Combine(basePath, OutputDir, heroFileName, GetFileName(voiceLineInstance.SoundDataContainer.VoiceStimulus)) + Path.DirectorySeparatorChar;
+                    if (config.ContainsKey("groupRestriction") && !config["groupRestriction"].ShouldDo(GetFileName(voiceLineInstance.SoundDataContainer.VoiceStimulus))) continue;
                     foreach (STUSoundWrapper soundWrapper in new [] {voiceLineInstance.SoundContainer.Sound1, voiceLineInstance.SoundContainer.Sound2, voiceLineInstance.SoundContainer.Sound3, voiceLineInstance.SoundContainer.Sound4}) {
                         if (soundWrapper == null) continue;
                         if (config.ContainsKey("soundRestriction") && !config["soundRestriction"].ShouldDo(GetFileName(soundWrapper.SoundResource))) continue;

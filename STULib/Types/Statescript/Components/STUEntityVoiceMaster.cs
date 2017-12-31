@@ -4,8 +4,8 @@ using STULib.Types.Generic;
 
 namespace STULib.Types.Statescript.Components {
     [STU(0x8745618A)]
-    public class STUEntitySoundMaster : STUEntityComponent {
+    public class STUEntityVoiceMaster : STUEntityComponent {
         [STUField(0x8A4FF89C)]
-        public Common.STUGUID SoundMaster;  // STULib.Types.STUSoundMaster
+        public Common.STUGUID VoiceMaster;  // STULib.Types.STUSoundMaster
     }
 }

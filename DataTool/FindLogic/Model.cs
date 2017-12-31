@@ -257,9 +257,9 @@ namespace DataTool.FindLogic {
                             
                             existingModels = FindModels(existingModels, modelComponent?.Look, replacements);  // get all referenced models
                         }
-                        if (component.GetType() == typeof(STUEntitySoundMaster)) {
-                            STUEntitySoundMaster soundMaster = component as STUEntitySoundMaster;
-                            entitySound = soundMaster.SoundMaster;
+                        if (component.GetType() == typeof(STUEntityVoiceMaster)) {
+                            STUEntityVoiceMaster soundMaster = component as STUEntityVoiceMaster;
+                            entitySound = soundMaster.VoiceMaster;
                         }
                         if (component.GetType() == typeof(STUFirstPersonComponent)) {  // 003 sub-reference
                             STUFirstPersonComponent sub003 = component as STUFirstPersonComponent;

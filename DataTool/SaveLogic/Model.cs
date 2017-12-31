@@ -55,10 +55,6 @@ namespace DataTool.SaveLogic {
                     foreach (ulong modelLookMaterial in modelLookInfo.Materials) {
                         FindLogic.Combo.MaterialInfo materialInfo = info.Materials[modelLookMaterial];
                         writer.Write($"..\\..\\Materials\\{materialInfo.GetNameIndex()}{Format}");
-                        writer.Write(materialInfo.IDs.Count);
-                        foreach (ulong id in materialInfo.IDs) {
-                            writer.Write(id);
-                        }
                     }
                 }
             }

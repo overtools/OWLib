@@ -127,7 +127,7 @@ namespace DataTool.FindLogic {
 
             switch (GUID.Type(soundGUID)) {
                 case 0x05F:
-                    STUSoundMaster th = GetInstance<STUSoundMaster>(soundGUID);
+                    STUVoiceMaster th = GetInstance<STUVoiceMaster>(soundGUID);
                     if (th == null) break;
                     foreach (STUVoiceLineInstance soundThingy in th.VoiceLineInstances) {
                         string subtitle1 = null;
@@ -205,9 +205,9 @@ namespace DataTool.FindLogic {
                     foreach (KeyValuePair<ulong,STUEntityComponent> statescriptComponent in container.Components) {
                         STUEntityComponent component = statescriptComponent.Value;
                         if (component == null) continue;
-                        if (component.GetType() == typeof(STUEntitySoundMaster)) {
-                            STUEntitySoundMaster ssSoundMaster = component as STUEntitySoundMaster;
-                            existingSounds = FindSounds(existingSounds, ssSoundMaster?.SoundMaster, null, forceZero, toplevelKey, replacements);
+                        if (component.GetType() == typeof(STUEntityVoiceMaster)) {
+                            STUEntityVoiceMaster ssSoundMaster = component as STUEntityVoiceMaster;
+                            existingSounds = FindSounds(existingSounds, ssSoundMaster?.VoiceMaster, null, forceZero, toplevelKey, replacements);
                         } else if (component.GetType() == typeof(STUStatescript07A)) {
                             STUStatescript07A ss07A = component as STUStatescript07A;
                             existingSounds = FindSounds(existingSounds, ss07A?.GUIDx07A, null, forceZero, toplevelKey, replacements);

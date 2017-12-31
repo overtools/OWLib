@@ -329,7 +329,7 @@
     <Compile Include="Types\Statescript\Components\STUStatescript07A.cs" />
     <Compile Include="Types\Statescript\Components\STUEntityComponent.cs" />
     <Compile Include="Types\Statescript\Components\STUEntityComponent2.cs" />
-    <Compile Include="Types\Statescript\Components\STUEntitySoundMaster.cs" />
+    <Compile Include="Types\Statescript\Components\STUEntityVoiceMaster.cs" />
     <Compile Include="Types\Statescript\Components\STUFirstPersonComponent.cs" />
     <Compile Include="Types\Statescript\Components\STUUnlockComponent.cs" />
     <Compile Include="Types\Statescript\Components\STURigidBodyConfig.cs" />
@@ -446,7 +446,7 @@
     <Compile Include="Types\STUSoundDataContainer.cs" />
     <Compile Include="Types\STUSoundInfo.cs" />
     <Compile Include="Types\STUSoundInfoContainer.cs" />
-    <Compile Include="Types\STUSoundMaster.cs" />
+    <Compile Include="Types\STUVoiceMaster.cs" />
     <Compile Include="Types\STUSoundWrapper.cs" />
     <Compile Include="Types\STUEntityDefinition.cs" />
     <Compile Include="Types\STUSubtitle.cs" />

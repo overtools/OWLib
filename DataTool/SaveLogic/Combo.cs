@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using BCFF;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -122,20 +125,31 @@ namespace DataTool.SaveLogic {
                 owAnimWriter.Write(fileStream, info, animationInfo, animationEffect, model, svceLines);
             }
 
-            SaveEffectExtras(flags, animationEffectDir, info, animationEffect.Effect);
+            if (animationEffect.GUID != 0) {
+                SaveEffectExtras(flags, animationEffectDir, info, animationEffect.Effect);
+            }
         }
 
         public static void SaveEffectExtras(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
             EffectParser.EffectInfo effectInfo) {
             string soundDirectory = Path.Combine(path, "Sounds");
+            HashSet<ulong> done = new HashSet<ulong>();
             foreach (EffectParser.OSCEInfo osceInfo in effectInfo.OSCEs) {
-                if (osceInfo.Sound == 0) continue;
-                FindLogic.Combo.SoundInfoNew soundInfo = info.Sounds[osceInfo.Sound];
-                string osceDir = Path.Combine(soundDirectory, soundInfo.GetName());
-                CreateDirectoryFromFile(osceDir + "\\harrypotter.png");
-                foreach (KeyValuePair<uint, ulong> soundPair in soundInfo.Sounds) {
-                    SaveSoundFile(flags, osceDir, info, soundPair.Value, false);
-                }
+                if (osceInfo.Sound == 0 || done.Contains(osceInfo.Sound)) continue;
+                SaveSound(flags, soundDirectory, info, osceInfo.Sound);
+                done.Add(osceInfo.Sound);
+            }
+        }
+
+        public static void SaveSound(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong sound) {
+            FindLogic.Combo.SoundInfoNew soundInfo = info.Sounds[sound];
+            string soundDir = Path.Combine(path, soundInfo.GetName());
+            CreateDirectoryFromFile(soundDir + "\\harrypotter.png");
+            HashSet<ulong> done = new HashSet<ulong>();
+            foreach (KeyValuePair<uint, ulong> soundPair in soundInfo.Sounds) {
+                if (done.Contains(soundPair.Value)) continue;
+                SaveSoundFile(flags, soundDir, info, soundPair.Value, false);
+                done.Add(soundPair.Value);
             }
         }
 
@@ -341,13 +355,28 @@ namespace DataTool.SaveLogic {
                     // erm, so if you add an end quote to this then it breaks.
                     // but start one on it's own is fine (we need something for "Winged Victory")
                     
-                    pProcess.Start();
-                    // pProcess.WaitForExit(); // not using this is kinda dangerous but I don't care
-                    // when texconv writes with to the console -nologo is has done/failed conversion
-                    string line = pProcess.StandardOutput.ReadLine();
-                    if (line?.Contains($"{filePath}.dds FAILED") == false) {  // fallback if convert fails
-                        File.Delete($"{filePath}.dds");
-                    }
+                    Task.Run( () => {  Console.WriteLine("Task {0} (asyncTask) executing on Thread {1}",
+                            Task.CurrentId,
+                            Thread.CurrentThread.ManagedThreadId);
+                        pProcess.Start();
+                        // pProcess.WaitForExit(); // not using this is kinda dangerous but I don't care
+                        // when texconv writes with to the console -nologo is has done/failed conversion
+                        string line = pProcess.StandardOutput.ReadLine();
+                        if (line?.Contains($"{filePath}.dds FAILED") == false) {  // fallback if convert fails
+                            File.Delete($"{filePath}.dds");
+                        }
+                    });
+                    
+                    long time_ago; //in a galaxy far away
+                    
+                    
+                    
+                    
+                    
+                    
+                    // ... there was slow conversion.
+                    // then I pooped out that Task system you can see above.
+                    // yes it is basically cheesing past the problem.
                 }
             }
         }
@@ -386,7 +415,7 @@ namespace DataTool.SaveLogic {
                     Arguments =
                         $"\"{outputFile}\" --pcb \"Third Party\\packed_codebooks_aoTuV_603.bin\" -o \"{outputFileOgg}\"",
                     UseShellExecute = false,
-                    RedirectStandardOutput = true
+                    RedirectStandardOutput = true,
                 }
             };
             Process pProcess2 = new Process {
@@ -397,12 +426,15 @@ namespace DataTool.SaveLogic {
                 }
             };
             
-            
-            // TODO: MAJOR, THIS IS WAAAAAAAAAAAAAAAAY TOO SLOW.
-            pProcess.Start();
-            pProcess.WaitForExit();
-            pProcess2.Start();
-            File.Delete(outputFile);
+            // i'm sorry
+            Task.Run( () => {  Console.WriteLine("Task {0} (asyncTask) executing on Thread {1}",
+                    Task.CurrentId,
+                    Thread.CurrentThread.ManagedThreadId);
+                pProcess.Start();
+                pProcess.WaitForExit();
+                pProcess2.Start();
+                File.Delete(outputFile);
+            });
         }
     }
 }
