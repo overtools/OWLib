@@ -11,7 +11,19 @@
         public static object CLIFlagInt(string @in) {
             return int.Parse(@in);
         }
+        
+        public static object CLIFlagLOD(string @in) {
+            @in = @in.ToLowerInvariant();
+            if (@in == "lowest") {
+                return (byte)0xFF;
+            }
 
+            if (@in == "highest") {
+                return (byte)0;
+            }
+            return byte.Parse(@in);
+        }
+        
         public static object CLIFlagChar(string @in) {
             if (@in.Length == 0) {
                 return (char)0;

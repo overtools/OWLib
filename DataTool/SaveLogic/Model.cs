@@ -112,7 +112,13 @@ namespace DataTool.SaveLogic {
             }
 
             // ReSharper disable once InconsistentNaming
-            public void Write(Chunked chunked, Stream output, List<byte> LODs, object[] data, ModelInfo modelInfo) {
+            public void Write(ICLIFlags flags, Chunked chunked, Stream output, List<byte> LODs, object[] data, ModelInfo modelInfo) {
+
+                byte? flagLOD = null;
+                if (flags is ExtractFlags extractFlags) {
+                    flagLOD = extractFlags.LOD;
+                }
+                
                 IChunk chunk = chunked.FindNextChunk("MNRM").Value;
                 if (chunk == null) {
                     return;
@@ -220,7 +226,21 @@ namespace DataTool.SaveLogic {
                     Dictionary<byte, List<int>> LODMap = new Dictionary<byte, List<int>>();
                     uint sz = 0;
                     uint lookForLod = 0;
+
+                    if (model.Submeshes.Any(x => x.lod == flagLOD)) {
+                        lookForLod = (byte) flagLOD;
+                    } else if (flagLOD != null) {
+                        SubmeshDescriptor nextLowest = model.Submeshes.Where(p => p.lod < flagLOD).OrderBy(x => x.lod).LastOrDefault();
+                        if (nextLowest.verticesToDraw == 0 && nextLowest.indexCount == 0) { // not real mesh
+                            SubmeshDescriptor nextHighest = model.Submeshes.Where(p => p.lod > flagLOD).OrderBy(x => x.lod).FirstOrDefault();
+                            lookForLod = nextHighest.lod;
+                        } else {
+                            lookForLod = nextLowest.lod;
+                        }
+                    }
+                    
                     bool lodOnly = data.Length > 3 && data[3] is bool && (bool) data[3];
+                    lodOnly = true; // k
                     for (int i = 0; i < model.Submeshes.Length; ++i) {
                         SubmeshDescriptor submesh = model.Submeshes[i];
                         if (data.Length > 4 && data[4] is bool && (bool) data[4]) {
@@ -228,9 +248,9 @@ namespace DataTool.SaveLogic {
                                 continue;
                             }
                         }
-                        if (LODs != null && !LODs.Contains(submesh.lod)) {
-                            continue;
-                        }
+                        // if (LODs != null && !LODs.Contains(submesh.lod)) {
+                        //     continue;
+                        // }
                         if (lodOnly && lookForLod > 0 && submesh.lod != lookForLod) {
                             continue;
                         }
@@ -635,7 +655,7 @@ namespace DataTool.SaveLogic {
                         Path.Combine(basePath, $"{GUID.LongKey(model.GUID):X12}{mdlWriter.Format}"),
                         FileMode.Create)) {
                     fileStream.SetLength(0);
-                    mdlWriter.Write(mdl, fileStream, lods, new object[] {true, $"{GUID.LongKey(model.GUID):X12}{writer14.Format}", name, null, true}, model);
+                    mdlWriter.Write(flags, mdl, fileStream, lods, new object[] {true, $"{GUID.LongKey(model.GUID):X12}{writer14.Format}", name, null, true}, model);
                 }
                 if (mdl.HasChunk<lksm>()) {
                     using (Stream fileStream =
