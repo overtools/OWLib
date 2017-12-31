@@ -90,22 +90,22 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map01 obj = (Map01)map.Records[i];
-                    string modelFn = $"{GUID.Index(obj.Header.model):X12}{modelFormat.Format}";
+                    string modelFn = $"{GUID.Index(obj.Header.Model):X12}{modelFormat.Format}";
                     writer.Write(modelFn);
-                    if (!ret[0].ContainsKey(obj.Header.model)) {
-                        ret[0].Add(obj.Header.model, new List<string>());
+                    if (!ret[0].ContainsKey(obj.Header.Model)) {
+                        ret[0].Add(obj.Header.Model, new List<string>());
                     }
-                    ret[0][obj.Header.model].Add(modelFn);
+                    ret[0][obj.Header.Model].Add(modelFn);
                     writer.Write(obj.Header.groupCount);
                     for (int j = 0; j < obj.Header.groupCount; ++j) {
                         Map01.Map01Group group = obj.Groups[j];
                         string materialFn =
-                            $"{GUID.Index(obj.Header.model):X12}_{GUID.Index(group.material):X12}.owmat";
+                            $"{GUID.Index(obj.Header.Model):X12}_{GUID.Index(group.ModelLook):X12}.owmat";
                         writer.Write(materialFn);
-                        if (!ret[1].ContainsKey(group.material)) {
-                            ret[1].Add(group.material, new List<string>());
+                        if (!ret[1].ContainsKey(group.ModelLook)) {
+                            ret[1].Add(group.ModelLook, new List<string>());
                         }
-                        ret[1][group.material].Add(materialFn);
+                        ret[1][group.ModelLook].Add(materialFn);
                         writer.Write(group.recordCount);
                         for (int k = 0; k < group.recordCount; ++k) {
                             Map01.Map01GroupRecord record = obj.Records[j][k];
@@ -141,8 +141,8 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map02 obj = (Map02)detail1.Records[i];
-                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}{modelFormat.Format}";
-                    string matFn = $"{GUID.LongKey(obj.Header.model):X12}.owmat";
+                    string modelFn = $"{GUID.LongKey(obj.Header.Model):X12}{modelFormat.Format}";
+                    string matFn = $"{GUID.LongKey(obj.Header.Model):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);
@@ -156,16 +156,16 @@ namespace OWLib.Writer {
                     writer.Write(obj.Header.rotation.z);
                     writer.Write(obj.Header.rotation.w);
 
-                    if (!ret[0].ContainsKey(obj.Header.model)) {
-                        ret[0].Add(obj.Header.model, new List<string>());
+                    if (!ret[0].ContainsKey(obj.Header.Model)) {
+                        ret[0].Add(obj.Header.Model, new List<string>());
                     }
-                    ret[0][obj.Header.model].Add(modelFn);
+                    ret[0][obj.Header.Model].Add(modelFn);
 
 
-                    if (!ret[1].ContainsKey(obj.Header.material)) {
-                        ret[1].Add(obj.Header.material, new List<string>());
+                    if (!ret[1].ContainsKey(obj.Header.ModelLook)) {
+                        ret[1].Add(obj.Header.ModelLook, new List<string>());
                     }
-                    ret[1][obj.Header.material].Add(matFn);
+                    ret[1][obj.Header.ModelLook].Add(matFn);
                 }
 
                 for (int i = 0; i < detail2.Records.Length; ++i) {
@@ -173,8 +173,8 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map08 obj = (Map08)detail2.Records[i];
-                    string modelFn = $"{GUID.LongKey(obj.Header.model):X12}{modelFormat.Format}";
-                    string matFn = $"{GUID.LongKey(obj.Header.model):X12}.owmat";
+                    string modelFn = $"{GUID.LongKey(obj.Header.Model):X12}{modelFormat.Format}";
+                    string matFn = $"{GUID.LongKey(obj.Header.Model):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);
@@ -188,16 +188,16 @@ namespace OWLib.Writer {
                     writer.Write(obj.Header.rotation.z);
                     writer.Write(obj.Header.rotation.w);
 
-                    if (!ret[0].ContainsKey(obj.Header.model)) {
-                        ret[0].Add(obj.Header.model, new List<string>());
+                    if (!ret[0].ContainsKey(obj.Header.Model)) {
+                        ret[0].Add(obj.Header.Model, new List<string>());
                     }
-                    ret[0][obj.Header.model].Add(modelFn);
+                    ret[0][obj.Header.Model].Add(modelFn);
 
 
-                    if (!ret[1].ContainsKey(obj.Header.material)) {
-                        ret[1].Add(obj.Header.material, new List<string>());
+                    if (!ret[1].ContainsKey(obj.Header.ModelLook)) {
+                        ret[1].Add(obj.Header.ModelLook, new List<string>());
                     }
-                    ret[1][obj.Header.material].Add(matFn);
+                    ret[1][obj.Header.ModelLook].Add(matFn);
                 }
 
                 for (int i = 0; i < props.Records.Length; ++i) {
@@ -209,7 +209,7 @@ namespace OWLib.Writer {
                         continue;
                     }
                     string modelFn = $"{GUID.LongKey(obj.ModelKey):X12}{modelFormat.Format}";
-                    string matFn = $"{GUID.LongKey(obj.MaterialKey):X12}.owmat";
+                    string matFn = $"{GUID.LongKey(obj.ModelLook):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
                     writer.Write(obj.Header.position.x);
@@ -229,10 +229,10 @@ namespace OWLib.Writer {
                     ret[0][obj.ModelKey].Add(modelFn);
 
 
-                    if (!ret[1].ContainsKey(obj.MaterialKey)) {
-                        ret[1].Add(obj.MaterialKey, new List<string>());
+                    if (!ret[1].ContainsKey(obj.ModelLook)) {
+                        ret[1].Add(obj.ModelLook, new List<string>());
                     }
-                    ret[1][obj.MaterialKey].Add(matFn);
+                    ret[1][obj.ModelLook].Add(matFn);
                 }
 
                 // Extension 1.1 - Lights

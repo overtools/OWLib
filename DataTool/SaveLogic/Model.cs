@@ -174,6 +174,7 @@ namespace DataTool.SaveLogic {
             }
 
             // ReSharper disable once InconsistentNaming
+            // data is object[] { bool exportAttachments, string materialReference, string modelName, bool onlyOneLOD, bool skipCollision }
             public void Write(Chunked chunked, Stream output, List<byte> LODs, object[] data, ModelInfo modelInfo) {
                 IChunk chunk = chunked.FindNextChunk("MNRM").Value;
                 if (chunk == null) {

@@ -31,10 +31,10 @@ namespace STULib {
         }
 
         internal static bool CheckCompatVersion(FieldInfo field, uint buildVersion) {
-            IEnumerable<BuildVersionRangeAttribute> buildVersionRanges = field.GetCustomAttributes<BuildVersionRangeAttribute>();
-            IEnumerable<BuildVersionRangeAttribute> buildVersionRangeAttributes = buildVersionRanges as BuildVersionRangeAttribute[] ?? buildVersionRanges.ToArray();
+           
+            BuildVersionRangeAttribute[] buildVersionRanges = (BuildVersionRangeAttribute[])Attribute.GetCustomAttributes(field, typeof(BuildVersionRangeAttribute), false);
 
-            return !buildVersionRangeAttributes.Any() || buildVersionRangeAttributes.Any(buildVersionRange => buildVersion >= buildVersionRange?.Min && buildVersion <= buildVersionRange.Max);
+            return !buildVersionRanges.Any() || buildVersionRanges.Any(buildVersionRange => buildVersion >= buildVersionRange?.Min && buildVersion <= buildVersionRange.Max);
         }
 
 
@@ -56,11 +56,9 @@ namespace STULib {
             List<Type> types = asm.GetTypes().Where(type => type != t && t.IsAssignableFrom(type)).ToList();
             
             foreach (Type type in types) {
-                IEnumerable<STUAttribute> stuAttributes = type.GetCustomAttributes<STUAttribute>();
-                IEnumerable<STUAttribute> attributes = stuAttributes as STUAttribute[] ?? stuAttributes.ToArray();
+                STUAttribute[] attributes = (STUAttribute[])Attribute.GetCustomAttributes(type, typeof(STUAttribute), true);
                 
-                IEnumerable<STUSuppressWarningAttribute> stuWarningAttributes = type.GetCustomAttributes<STUSuppressWarningAttribute>();
-                IEnumerable<STUSuppressWarningAttribute> warningAttributes = stuWarningAttributes as STUSuppressWarningAttribute[] ?? stuWarningAttributes.ToArray();
+                STUSuppressWarningAttribute[] warningAttributes = (STUSuppressWarningAttribute[])Attribute.GetCustomAttributes(type, typeof(STUSuppressWarningAttribute), true);
                 if (!attributes.Any()) {
                     continue;
                 }

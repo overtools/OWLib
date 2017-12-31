@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using DataTool.FindLogic;
 using DataTool.Flag;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
 using STULib.Types;
-using STULib.Types.Generic;
 using STULib.Types.Statescript.Components;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
@@ -38,9 +36,8 @@ namespace DataTool.SaveLogic {
             public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data) {
                 return false;
             }
-    
-            public HashSet<ModelInfo> Write(Stream output, STULib.Types.Map.Map map, STULib.Types.Map.Map detail1, STULib.Types.Map.Map detail2, STULib.Types.Map.Map props, STULib.Types.Map.Map lights, string name, IDataWriter modelFormat, HashSet<ModelInfo> models) {
-                
+            
+            public void Write(Stream output, STULib.Types.Map.Map map, STULib.Types.Map.Map detail1, STULib.Types.Map.Map detail2, STULib.Types.Map.Map props, STULib.Types.Map.Map lights, string name, IDataWriter modelFormat, FindLogic.Combo.ComboInfo info) {
                 if (modelFormat == null) {
                     modelFormat = new OWMDLWriter();
                 }
@@ -102,16 +99,15 @@ namespace DataTool.SaveLogic {
                             continue;
                         }
                         Map01 obj = (Map01)t;
-                        string modelFn = $"Models\\{GUID.LongKey(obj.Header.model):X12}.{GUID.Type(obj.Header.model):X3}\\{GUID.LongKey(obj.Header.model):X12}{modelFormat.Format}";
+                        string modelFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}{modelFormat.Format}";
                         writer.Write(modelFn);
                         writer.Write(obj.Header.groupCount);
-                        FindLogic.Model.AddGUID(models, new Common.STUGUID(obj.Header.model), new Dictionary<ulong, List<TextureInfo>>(), null, null);
+                        FindLogic.Combo.Find(info, obj.Header.Model);
                         for (int j = 0; j < obj.Header.groupCount; ++j) {
                             Map01.Map01Group group = obj.Groups[j];
-                            string materialFn = $"Models\\{GUID.LongKey(obj.Header.model):X12}.{GUID.Type(obj.Header.model):X3}\\{GUID.LongKey(obj.Header.model):X12}.owmat";
-                            Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                            textures = FindLogic.Texture.FindTextures(textures, new Common.STUGUID(@group.material));
-                            FindLogic.Model.AddGUID(models, new Common.STUGUID(obj.Header.model), textures, null, null);
+                            string materialFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}.owmat";
+
+                            FindLogic.Combo.Find(info, group.ModelLook, null, new FindLogic.Combo.ComboContext {Model = obj.Header.Model});
                             
                             writer.Write(materialFn);
                             writer.Write(group.recordCount);
@@ -150,11 +146,11 @@ namespace DataTool.SaveLogic {
                             continue;
                         }
                         Map02 obj = (Map02)t;
-                        string modelFn = $"Models\\{GUID.LongKey(obj.Header.model):X12}.{GUID.Type(obj.Header.model):X3}\\{GUID.LongKey(obj.Header.model):X12}{modelFormat.Format}";
-                        string matFn = $"Models\\{GUID.LongKey(obj.Header.model):X12}.{GUID.Type(obj.Header.model):X3}\\{GUID.LongKey(obj.Header.model):X12}.owmat";
-                        Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                        textures = FindLogic.Texture.FindTextures(textures, new Common.STUGUID(obj.Header.material));
-                        FindLogic.Model.AddGUID(models, new Common.STUGUID(obj.Header.model), textures, null, null);
+                        string modelFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}{modelFormat.Format}";
+                        string matFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}.owmat";
+
+                        FindLogic.Combo.Find(info, obj.Header.Model);
+                        FindLogic.Combo.Find(info, obj.Header.ModelLook, null, new FindLogic.Combo.ComboContext {Model = obj.Header.Model});
                         writer.Write(modelFn);
                         writer.Write(matFn);
                         writer.Write(obj.Header.position.x);
@@ -174,11 +170,11 @@ namespace DataTool.SaveLogic {
                             continue;
                         }
                         Map08 obj = (Map08)t;
-                        string modelFn = $"Models\\{GUID.LongKey(obj.Header.model):X12}.{GUID.Type(obj.Header.model):X3}\\{GUID.LongKey(obj.Header.model):X12}{modelFormat.Format}";
-                        string matFn = $"Models\\{GUID.LongKey(obj.Header.model):X12}.{GUID.Type(obj.Header.model):X3}\\{GUID.LongKey(obj.Header.model):X12}.owmat";
-                        Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                        textures = FindLogic.Texture.FindTextures(textures, new Common.STUGUID(obj.Header.material));
-                        FindLogic.Model.AddGUID(models, new Common.STUGUID(obj.Header.model), textures, null, null);
+                        string modelFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}{modelFormat.Format}";
+                        string matFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}.owmat";
+                        
+                        FindLogic.Combo.Find(info, obj.Header.Model);
+                        FindLogic.Combo.Find(info, obj.Header.ModelLook, null, new FindLogic.Combo.ComboContext {Model = obj.Header.Model});
                         writer.Write(modelFn);
                         writer.Write(matFn);
                         writer.Write(obj.Header.position.x);
@@ -203,9 +199,8 @@ namespace DataTool.SaveLogic {
                         }
                         string modelFn = $"Models\\{GUID.LongKey(obj.ModelKey):X12}.{GUID.Type(obj.ModelKey):X3}\\{GUID.LongKey(obj.ModelKey):X12}{modelFormat.Format}";
                         string matFn = $"Models\\{GUID.LongKey(obj.ModelKey):X12}.{GUID.Type(obj.ModelKey):X3}\\{GUID.LongKey(obj.ModelKey):X12}.owmat";
-                        Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                        textures = FindLogic.Texture.FindTextures(textures, new Common.STUGUID(obj.MaterialKey));
-                        FindLogic.Model.AddGUID(models, new Common.STUGUID(obj.ModelKey), textures, null, null);
+                        FindLogic.Combo.Find(info, obj.ModelKey);
+                        FindLogic.Combo.Find(info, obj.ModelLook, null, new FindLogic.Combo.ComboContext {Model = obj.ModelKey});
                         writer.Write(modelFn);
                         writer.Write(matFn);
                         writer.Write(obj.Header.position.x);
@@ -277,7 +272,6 @@ namespace DataTool.SaveLogic {
                         writer.Write(obj.Header.unknown7A);
                         writer.Write(obj.Header.unknown7B);
                     }
-                    return models;
                 }
             }
         }
@@ -316,12 +310,10 @@ namespace DataTool.SaveLogic {
             //     SaveLogic.Texture.Save(flags, Path.Combine(mapPath, "override"), textures);
             // }
             
-            HashSet<ModelInfo> models = new HashSet<ModelInfo>();
-            
             OWMDLWriter modelWriter = new OWMDLWriter();
             OWMap14Writer owmap = new OWMap14Writer();
             
-            // FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
+            FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
 
             using (Stream mapStream = OpenFile(map.GetDataKey(1))) {
                 STULib.Types.Map.Map mapData = new STULib.Types.Map.Map(mapStream, BuildVersion);
@@ -349,13 +341,12 @@ namespace DataTool.SaveLogic {
                                 Map0B mapprop = (Map0B) mapBData.Records[i];
 
                                 if (mapprop == null) continue;
-                                // FindLogic.Combo.Find(comboInfo, mapprop.Header.binding);
-                                models = FindLogic.Model.FindModels(models, new Common.STUGUID(mapprop.Header.binding));
+                                FindLogic.Combo.Find(comboInfo, mapprop.Header.binding);
                                 STUModelComponent component =
                                     GetInstance<STUModelComponent>(mapprop.Header.binding);
 
                                 if (component == null) continue;
-                                mapprop.MaterialKey = component.Look;
+                                mapprop.ModelLook = component.Look;
                                 mapprop.ModelKey = component.Model;
                                 mapBData.Records[i] = mapprop;
                             }
@@ -364,20 +355,20 @@ namespace DataTool.SaveLogic {
                                 STULib.Types.Map.Map mapLData = new STULib.Types.Map.Map(mapLStream, BuildVersion);
                                 using (Stream outputStream = File.Open(Path.Combine(mapPath, $"{name}.owmap"),
                                     FileMode.Create, FileAccess.Write)) {
-                                    models = owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name,
-                                        modelWriter, models);
+                                    owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name,
+                                        modelWriter, comboInfo);
                                 }
                             }
                         }
                     }
                 }
             }
+            Combo.Save(flags, mapPath, comboInfo);
             
-            Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
-            music = FindLogic.Sound.FindSounds(music, map.EffectMusic, null, true);
-            Sound.Save(flags, Path.Combine(mapPath, "Sound", "Music"), music);
+            // Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
+            // music = FindLogic.Sound.FindSounds(music, map.EffectMusic, null, true);
+            // Sound.Save(flags, Path.Combine(mapPath, "Sound", "Music"), music);
             
-            // SaveLogic.Combo.Save(flags, mapPath, comboInfo);
 
             // if (map.EffectAnnouncer != null) {
             //     using (Stream announcerStream = OpenFile(map.EffectAnnouncer)) {
@@ -398,15 +389,11 @@ namespace DataTool.SaveLogic {
             //     // }
             // }
 
-            foreach (ModelInfo model in models) {
-                Model.Save(flags, Path.Combine(mapPath, "Models"), model, $"Map:{GUID.Index(key):X} Model:{GUID.Index(model.GUID):X}");
-            }
-
-            if (map.SoundMasterResource != null) {
-                Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
-                sounds = FindLogic.Sound.FindSounds(sounds, map.SoundMasterResource);
-                Sound.Save(flags, Path.Combine(mapPath, "Sound", "SoundMaster"), sounds);
-            }
+            // if (map.SoundMasterResource != null) {
+            //     Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
+            //     sounds = FindLogic.Sound.FindSounds(sounds, map.SoundMasterResource);
+            //     Sound.Save(flags, Path.Combine(mapPath, "Sound", "SoundMaster"), sounds);
+            // }
         }
     }
 }

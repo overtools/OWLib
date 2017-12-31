@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using DataTool.Helper;
 using OWLib;
 using OWLib.Types;
@@ -39,6 +40,7 @@ namespace DataTool.FindLogic {
 
             public ComboConfig Config = new ComboConfig();
             public ComboSaveConfig SaveConfig = new ComboSaveConfig();
+            public ComboSaveRuntimeData SaveRuntimeData = null;
 
             public ComboInfo() {
                 Entities = new Dictionary<ulong, EntityInfoNew>();
@@ -80,6 +82,19 @@ namespace DataTool.FindLogic {
 
         public class ComboSaveConfig {
             public bool SaveAnimationEffects = true;
+        }
+
+        public class ComboSaveRuntimeData {
+            public List<Task> Tasks;
+            public bool Threads;
+
+            public ComboSaveRuntimeData() {
+                if (Flags != null) {
+                    Threads = Flags.Threads;
+                }
+                
+                Tasks = new List<Task>();
+            }
         }
         
         public class ComboType {

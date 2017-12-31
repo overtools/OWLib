@@ -11,8 +11,8 @@ namespace OWLib.Types.Map {
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Map02Header {
-            public ulong model;
-            public ulong material;
+            public ulong Model;
+            public ulong ModelLook;
             public MapVec3 position;
             public MapVec3 scale;
             public MapQuat rotation;

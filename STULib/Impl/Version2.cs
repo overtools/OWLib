@@ -370,7 +370,11 @@ namespace STULib.Impl {
             BinaryReader reader) {
             Dictionary<uint, FieldInfo> fieldMap = CreateFieldMap(GetValidFields(type));
 
-            uint? instanceChecksum = instance.GetType().GetCustomAttributes<STUAttribute>().FirstOrDefault()?.Checksum;
+            uint? instanceChecksum = (Attribute.GetCustomAttribute(instance.GetType(), typeof(STUAttribute), false) as STUAttribute)?.Checksum;
+
+            if (instance is STUInstance stuInstance && instanceChecksum != null) {
+                stuInstance.InstanceChecksum = (uint)instanceChecksum;
+            }
 
             foreach (STUInstanceField writtenField in writtenFields) {
                 if (!fieldMap.ContainsKey(writtenField.FieldChecksum)) {
@@ -588,7 +592,7 @@ namespace STULib.Impl {
                     }
                     foreach (KeyValuePair<KeyValuePair<Type, object>, KeyValuePair<uint, ulong>> hashmapRequest in HashmapRequests) {
                         // keyval = instanceIndex: mapIndex
-                        hashmapRequest.Key.Value.GetType().GetMethod("Set").Invoke(hashmapRequest.Key.Value, new object[] {hashmapRequest.Value.Value, instances[hashmapRequest.Value.Key]});
+                        hashmapRequest.Key.Value.GetType().GetMethod("Set")?.Invoke(hashmapRequest.Key.Value, new object[] {hashmapRequest.Value.Value, instances[hashmapRequest.Value.Key]});
                         if (instances[hashmapRequest.Value.Key] != null) {
                             instances[hashmapRequest.Value.Key].Usage = InstanceUsage.HashmapElement;
                         }
@@ -596,14 +600,12 @@ namespace STULib.Impl {
                 }
             }
             foreach (STUInstance instance in Instances) {
-                uint? instanceChecksum =
-                    instance?.GetType().GetCustomAttributes<STUAttribute>().FirstOrDefault()?.Checksum;
-                if (instanceChecksum == null) continue;
-                if (!SuppressedWarnings.ContainsKey((uint) instanceChecksum)) continue;
-                if (SuppressedWarnings[(uint) instanceChecksum]
+                if (instance == null) continue;
+                if (!SuppressedWarnings.ContainsKey(instance.InstanceChecksum)) continue;
+                if (SuppressedWarnings[instance.InstanceChecksum]
                     .All(warn => warn.Type != STUWarningType.MissingInstance)) continue;
 
-                foreach (STUSuppressWarningAttribute warningAttribute in SuppressedWarnings[(uint) instanceChecksum]
+                foreach (STUSuppressWarningAttribute warningAttribute in SuppressedWarnings[instance.InstanceChecksum]
                     .Where(warn => warn.Type == STUWarningType.MissingInstance)) {
                     if (missingInstances.Contains(warningAttribute.InstanceChecksum)) {
                         missingInstances.Remove(warningAttribute.InstanceChecksum);

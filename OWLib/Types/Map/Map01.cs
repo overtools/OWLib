@@ -7,7 +7,7 @@ namespace OWLib.Types.Map {
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Map01Header {
-            public ulong model;
+            public ulong Model;
             public uint groupCount;
             public uint totalRecordCount;
             public uint mask;
@@ -18,7 +18,7 @@ namespace OWLib.Types.Map {
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Map01Group {
-            public ulong material;
+            public ulong ModelLook;
             public uint size;
             public uint recordCount;
         }
