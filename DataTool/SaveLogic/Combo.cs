@@ -234,7 +234,7 @@ namespace DataTool.SaveLogic {
         private static void SaveOWModelFile(string modelPath, Model.OWModelWriter14 modelWriter, FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelInfoNew modelInfo, Stream modelStream) {
             using (Stream modelOutputStream = File.OpenWrite(modelPath)) {
                 modelOutputStream.SetLength(0);
-                modelWriter.Write(modelOutputStream, info, modelInfo);
+                modelWriter.Write(modelOutputStream, info, modelInfo, modelStream);
             } 
             modelStream.Dispose();
         }
@@ -399,9 +399,14 @@ namespace DataTool.SaveLogic {
             // if (convertType == "tga") imageFormat = Im.... oh
             // so there is no TGA image format.
             // guess the TGA users are stuck with the DirectXTex stuff for now.
+            
+            if (convertedStream.Length == 0) {
+                WriteFile(Stream.Null, $"{filePath}.{convertType}");
+                return;
+            }
 
             convertedStream.Position = 0;
-            if (isBcffValid && imageFormat != null && convertedStream.Length != 0) {
+            if (isBcffValid && imageFormat != null) {
                 BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
                 decompressor.CreateImage();
                 decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
@@ -483,20 +488,14 @@ namespace DataTool.SaveLogic {
             string outputFile = Path.Combine(directory, $"{soundFileInfo.GetName()}.wem");
             string outputFileOgg = Path.ChangeExtension(outputFile, "ogg");
             CreateDirectoryFromFile(outputFile);
-            using (Stream outputStream = File.OpenWrite(outputFile)) {
-                stream.CopyTo(outputStream);
-            }
-            stream.Dispose();
-            Process pProcess = new Process {
-                StartInfo = {
-                    FileName = "Third Party\\ww2ogg.exe",
-                    Arguments =
-                        $"\"{outputFile}\" --pcb \"Third Party\\packed_codebooks_aoTuV_603.bin\" -o \"{outputFileOgg}\"",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true
+
+            using (ConvertLogic.Sound.WwiseRIFFVorbis vorbis = new ConvertLogic.Sound.WwiseRIFFVorbis(stream, "Third Party\\packed_codebooks_aoTuV_603.bin")) {
+                using (Stream outputStream = File.OpenWrite(outputFileOgg)) {
+                    vorbis.ConvertToOgg(outputStream);
                 }
-            };
-            Process pProcess2 = new Process {
+            }
+            
+            Process revorbProcess = new Process {
                 StartInfo = {
                     FileName = "Third Party\\revorb.exe",
                     Arguments = $"\"{outputFileOgg}\"",
@@ -505,10 +504,7 @@ namespace DataTool.SaveLogic {
                 }
             };
             
-            pProcess.Start();
-            pProcess.WaitForExit();
-            pProcess2.Start();
-            File.Delete(outputFile);
+            revorbProcess.Start();
         }
 
         public static void SaveSoundFile(ICLIFlags flags, string directory, FindLogic.Combo.ComboInfo info, ulong soundFile, bool voice) {
@@ -524,12 +520,6 @@ namespace DataTool.SaveLogic {
             Stream soundStream = OpenFile(soundFile);  // disposed by thread
             if (soundStream == null) return;
             
-            // ConvertLogic.Sound.WwiseRIFFVorbis vorbis =
-            //     new ConvertLogic.Sound.WwiseRIFFVorbis(soundStream,
-            //         "Third Party\\packed_codebooks_aoTuV_603.bin");
-            // using (Stream outputStream = File.OpenWrite(outputFileOgg+"2")) {
-            //     vorbis.ConvertToOgg(outputStream);
-            // }
 
             if (!convertWem) return;
             if (info.SaveRuntimeData.Threads) {

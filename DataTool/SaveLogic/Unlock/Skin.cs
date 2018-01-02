@@ -16,13 +16,6 @@ using static DataTool.Helper.Logger;
 
 namespace DataTool.SaveLogic.Unlock {
     public class Skin {
-        public static void Save(ICLIFlags flags, string path, STUHero hero, STUHero.Skin skin, bool quiet = true) {
-            STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinOverride);
-            if (!quiet) Log($"Extracting skin {GetString(hero.Name)} {GetFileName(skin.SkinOverride)}");
-            if (!quiet) Log("\tFinding models");
-            Save(flags, GetFileName(skin.SkinOverride), path, hero, "", skinOverride, null, null, quiet);
-        }
-
         public static void Save(ICLIFlags flags, string skinName, string path, STUHero hero, string rarity, STUSkinOverride skinOverride, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet = true) {
             string heroName = GetString(hero.Name);
             string heroPath = GetValidFilename(heroName);
@@ -40,6 +33,7 @@ namespace DataTool.SaveLogic.Unlock {
             Dictionary<Common.STUGUID, Common.STUGUID> replacements = skinOverride.ProperReplacements ?? new Dictionary<Common.STUGUID, Common.STUGUID>();
             Dictionary<ulong, ulong> realReplacements = replacements.ToDictionary(x => (ulong)x.Key, y => (ulong)y.Value);
             
+            LoudLog("\tFinding");
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             FindLogic.Combo.Find(info, hero.EntityMain, realReplacements);
             FindLogic.Combo.Find(info, hero.EntityHeroSelect, realReplacements);
@@ -89,7 +83,9 @@ namespace DataTool.SaveLogic.Unlock {
             info.SetEntityName(hero.EntityMain, $"{heroName}-Base");
             info.SetEntityName(hero.EntityHighlightIntro, $"{heroName}-HighlightIntro");
             
-            SaveLogic.Combo.Save(flags, basePath, info);
+            LoudLog("\tSaving");
+            SaveLogic.Combo.Save(flags, basePath, info);            
+            LoudLog("\tDone");
             
             /*            
             if (!quiet) Log("\tFinding sounds");
@@ -129,10 +125,15 @@ namespace DataTool.SaveLogic.Unlock {
                 Sound.Save(flags, Path.Combine(basePath, "Sounds"), extractSounds);
             }*/
         }
+        
+        public static void Save(ICLIFlags flags, string path, STUHero hero, STUHero.Skin skin, bool quiet = true) {
+            STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinOverride);
+            if (!quiet) Log($"Extracting skin {GetString(hero.Name)} {GetFileName(skin.SkinOverride)}");
+            Save(flags, GetFileName(skin.SkinOverride), path, hero, "", skinOverride, null, null, quiet);
+        }
 
         public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STULib.Types.STUUnlock.Skin skin, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet=true) {
             if (!quiet) Log($"Extracting skin {GetString(hero.Name)} {GetString(skin.CosmeticName)}");
-            if (!quiet) Log("\tFinding models");
             if (weaponSkins == null) weaponSkins = new List<ItemInfo>();
             
             STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinResource);

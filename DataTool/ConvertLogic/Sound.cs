@@ -35,89 +35,51 @@ namespace DataTool.ConvertLogic {
         public static ushort SwapBytes(ushort x) => (ushort) SwapBytes((uint) x);
 
         public class Packet {
-            public long Offset;
-            public ushort Size;
-            public uint AbsoluteGranule;
-            public bool NoGranule;
+            private readonly long _offset;
+            private readonly ushort _size;
+            private readonly uint _absoluteGranule;
+            private readonly bool _noGranule;
 
             public Packet(BinaryReader reader, long offset, bool littleEndian, bool noGranule = false) {
-                NoGranule = noGranule;
-                Offset = offset;
-                reader.BaseStream.Seek(Offset, SeekOrigin.Begin);
+                _noGranule = noGranule;
+                _offset = offset;
+                reader.BaseStream.Seek(_offset, SeekOrigin.Begin);
                 if (littleEndian) {
-                    Size = reader.ReadUInt16();
+                    _size = reader.ReadUInt16();
                     // _size = read_16_le(i);
-                    if (!NoGranule) {
-                        AbsoluteGranule = reader.ReadUInt32();
+                    if (!_noGranule) {
+                        _absoluteGranule = reader.ReadUInt32();
                     }
                 } else {
                     Debugger.Break();
-                    Size = SwapBytes(reader.ReadUInt16());
-                    if (!NoGranule) {
-                        AbsoluteGranule = SwapBytes(reader.ReadUInt32());
+                    _size = SwapBytes(reader.ReadUInt16());
+                    if (!_noGranule) {
+                        _absoluteGranule = SwapBytes(reader.ReadUInt32());
                     }
                 }
             }
 
-            public long header_size() {
-                return NoGranule ? 2 : 6;
+            public long HeaderSize() {
+                return _noGranule ? 2 : 6;
             }
 
-            public long offset() {
-                return Offset + header_size();
+            public long Offset() {
+                return _offset + HeaderSize();
             }
 
-            public ushort size() {
-                return Size;
-            }
-
-            public uint granule() {
-                return AbsoluteGranule;
-            }
-
-            public long next_offset() {
-                return Offset + header_size() + Size;
-            }
-        }
-
-        /* Old 8 byte header #1#
-        class Packet_8 {
-            long _offset;
-            uint _size;
-            uint _absolute_granule;
-
-            public Packet_8(BinaryReader reader, long o, bool little_endian) {
-                reader.BaseStream.Seek(_offset, SeekOrigin.Current);
-                if (little_endian) {
-                    _size = reader.ReadUInt32();
-                    _absolute_granule = reader.ReadUInt32();
-                } else {
-                    _size = SwapBytes(reader.ReadUInt32());
-                    _absolute_granule = SwapBytes(reader.ReadUInt32());
-                }
-            }
-
-            long header_size() {
-                return 8;
-            }
-
-            long offset() {
-                return _offset + header_size();
-            }
-
-            uint size() {
+            public ushort Size() {
                 return _size;
             }
 
-            uint granule() {
-                return _absolute_granule;
+            public uint Granule() {
+                return _absoluteGranule;
             }
 
-            long next_offset() {
-                return _offset + header_size() + _size;
+            public long NextOffset() {
+                return _offset + HeaderSize() + _size;
             }
-        };*/
-
+        }
+        
         public class VorbisPacketHeader {
             public byte Type;
 
@@ -470,8 +432,18 @@ namespace DataTool.ConvertLogic {
                 //         break;
                 // }
             }
+            
+            public static int Ilog(uint v) {
+                int ret = 0;
+                while (v != 0) {
+                    ret++;
+                    v >>= 1;
+                }
 
-            private void GenerateOggHeader(BitOggstream os, bool[] modeBlockflag, int modeBits) {
+                return ret;
+            }
+
+            private void GenerateOggHeader(BitOggstream os, out bool[] modeBlockflag, out int modeBits) {
                 // Identification packet
                 {
                     VorbisPacketHeader vhead = new VorbisPacketHeader(1);
@@ -560,45 +532,469 @@ namespace DataTool.ConvertLogic {
                     
                     Packet setupPacket = new Packet(_reader, _dataOffset+_setupPacketOffset, _littleEndian, _noGranule);
 
-                    _reader.BaseStream.Position = setupPacket.offset();
-                    if (setupPacket.granule() != 0) throw new Exception("setup packet granule != 0");
+                    _reader.BaseStream.Position = setupPacket.Offset();
+                    if (setupPacket.Granule() != 0) throw new Exception("setup packet granule != 0");
                     
-                    BitStream bitStream = new BitStream(_reader);
+                    BitStream ss = new BitStream(_reader);
                     
                     BitUint codebookCountLess1 = new BitUint(8);
-                    bitStream.Read(codebookCountLess1);
+                    ss.Read(codebookCountLess1);
 
-                    uint codeboookCount = codebookCountLess1 + 1;
+                    uint codebookCount = codebookCountLess1 + 1;
                     os.Write(codebookCountLess1);
                     
                     // if (inline codebooks) // not used here, always external
                     
                     CodebookLibrary library = new CodebookLibrary(_codebooksFile);
 
-                    for (int i = 0; i < codeboookCount; i++) {
+                    for (int i = 0; i < codebookCount; i++) {
                         BitUint codebookID = new BitUint(10);
-                        bitStream.Read(codebookID);
-                        library.Rebuild(codebookID.AsInt(), os); // todo: build once and just reuse data.
+                        ss.Read(codebookID);
+                        try {
+                            library.Rebuild(codebookID.AsInt(), os); // todo: build once and just reuse data.
+                        } catch (CodebookLibrary.InvalidID e) {
+                            //         B         C         V
+                            //    4    2    4    3    5    6
+                            // 0100 0010 0100 0011 0101 0110
+                            // \_______|____ ___|/
+                            //              X
+                            //            11 0100 0010
+
+                            if (codebookID != 0x342) throw;
+                            BitUint codebookIdentifier = new BitUint(14);
+                            ss.Read(codebookIdentifier);
+
+                            //         B         C         V
+                            //    4    2    4    3    5    6
+                            // 0100 0010 0100 0011 0101 0110
+                            //           \_____|_ _|_______/
+                            //                   X
+                            //         01 0101 10 01 0000
+                            if (codebookIdentifier == 0x159) {
+                                // starts with BCV, probably --full-setup
+                                throw new Exception( "invalid codebook id 0x342, try --full-setup");
+                            }
+
+                            // just an invalid codebook
+                            throw;
+                        }
                     }
+                    
+                    BitUint timeCountLess1 = new BitUint(6, 0);
+                    os.Write(timeCountLess1);
+                    BitUint dummyTimeValue = new BitUint(16, 0);
+                    os.Write(dummyTimeValue);
+                    
+                    // if (_fullSetup) not used here, always false
+
+                    {
+                        // floor count
+                        BitUint floorCountLess1 = new BitUint(6);
+                        ss.Read(floorCountLess1);
+                        uint floorCount = floorCountLess1 + 1;
+                        os.Write(floorCountLess1);
+                        
+                        // rebuild floors
+                        for (uint i = 0; i < floorCount; i++) {
+                            BitUint floorType = new BitUint(16, 1);
+                            os.Write(floorType);
+                            
+                            BitUint floor1Partitions = new BitUint(5);
+                            ss.Read(floor1Partitions);
+                            os.Write(floor1Partitions);
+                            
+                            
+                            uint[] floor1PartitionClassList = new uint[floor1Partitions];
+
+                            uint maximumClass = 0;
+                            for (int j = 0; j < floor1Partitions; j++) {
+                                BitUint floor1PartitionClass = new BitUint(4);
+                                ss.Read(floor1PartitionClass);
+                                os.Write(floor1PartitionClass);
+
+                                floor1PartitionClassList[j] = floor1PartitionClass;
+
+                                if (floor1PartitionClass > maximumClass) {
+                                    maximumClass = floor1PartitionClass;
+                                }
+                            }
+                            uint[] floor1ClassDimensionsList = new uint[maximumClass+1];
+
+                            for (int j = 0; j <= maximumClass; j++) {
+                                BitUint classDimensionsLess1 = new BitUint(3);
+                                ss.Read(classDimensionsLess1);
+                                os.Write(classDimensionsLess1);
+
+                                floor1ClassDimensionsList[j] = classDimensionsLess1 + 1;
+                                
+                                BitUint classSubclasses = new BitUint(2);
+                                ss.Read(classSubclasses);
+                                os.Write(classSubclasses);
+
+                                if (classSubclasses != 0) {
+                                    BitUint masterBook = new BitUint(8);
+                                    ss.Read(masterBook);
+                                    os.Write(masterBook);
+                                    
+                                    if (masterBook >= codebookCount)
+                                        throw new Exception("invalid floor1 masterbook");
+                                }
+                                
+                                for (uint k = 0; k < 1U<<classSubclasses.AsInt(); k++) {
+                                    BitUint subclassBookPlus1 = new BitUint(8);
+                                    ss.Read(subclassBookPlus1);
+                                    os.Write(subclassBookPlus1);
+
+                                    int subclassBook = subclassBookPlus1.AsInt()-1;
+                                    if (subclassBook >= 0 && subclassBook >= codebookCount)
+                                        throw new Exception("invalid floor1 subclass book");
+                                }
+                            }
+                            
+                            BitUint floor1MultiplierLess1 = new BitUint(2);
+                            ss.Read(floor1MultiplierLess1);
+                            os.Write(floor1MultiplierLess1);
+                                
+                            BitUint rangebits = new BitUint(4);
+                            ss.Read(rangebits);
+                            os.Write(rangebits);
+                                
+                            for (uint j = 0; j < floor1Partitions; j++) {
+                                uint currentClassNumber = floor1PartitionClassList[j];
+                                for (uint k = 0; k < floor1ClassDimensionsList[currentClassNumber]; k++) {
+                                    BitUint x = new BitUint(rangebits);
+                                    ss.Read(x);
+                                    os.Write(x);
+                                }
+                            }
+                        }
+                        
+                        // residue count
+                        BitUint residueCountLess1 = new BitUint(6);
+                        ss.Read(residueCountLess1);
+                        uint residueCount = residueCountLess1 + 1;
+                        os.Write(residueCountLess1);
+
+                        for (uint i = 0; i < residueCount; i++) {
+                            BitUint residueType = new BitUint(2);
+                            ss.Read(residueType);
+                            os.Write(new BitUint(16, residueType));
+                            
+                            if (residueType > 2) throw new Exception("invalid residue type");
+                            
+                            BitUint residueBegin = new BitUint(24);
+                            BitUint residueEnd = new BitUint(24);
+                            BitUint residuePartitionSizeLess1 = new BitUint(24);
+                            BitUint residueClassificationsLess1 = new BitUint(6);
+                            BitUint residueClassbook = new BitUint(8);
+                            
+                            ss.Read(residueBegin);
+                            ss.Read(residueEnd);
+                            ss.Read(residuePartitionSizeLess1);
+                            ss.Read(residueClassificationsLess1);
+                            ss.Read(residueClassbook);
+                            uint residueClassifications = residueClassificationsLess1 + 1;
+                            os.Write(residueBegin);
+                            os.Write(residueEnd);
+                            os.Write(residuePartitionSizeLess1);
+                            os.Write(residueClassificationsLess1);
+                            os.Write(residueClassbook);
+                            
+                            if (residueClassbook >= codebookCount) throw new Exception("invalid residue classbook");
+
+                            uint[] residueCascade = new uint[residueClassifications];
+                            for (uint j = 0; j < residueClassifications; j++) {
+                                BitUint highBits = new BitUint(5, 0);
+                                BitUint lowBits = new BitUint(3);
+
+                                ss.Read(lowBits);
+                                os.Write(lowBits);
+                                
+                                BitUint bitFlag = new BitUint(1);
+                                ss.Read(bitFlag);
+                                os.Write(bitFlag);
+                                if (bitFlag == 1) {
+                                    ss.Read(highBits);
+                                    os.Write(highBits);
+                                }
+
+                                residueCascade[j] = highBits * 8 + lowBits;
+                            }
+
+                            for (uint j = 0; j < residueClassifications; j++) {
+                                for (int k = 0; k < 8; k++) {
+                                    if ((residueCascade[j] & (1 << k)) != 0)
+                                    {
+                                        BitUint residueBook = new BitUint(8);
+                                        ss.Read(residueBook);
+                                        os.Write(residueBook);
+
+                                        if (residueBook >= codebookCount) throw new Exception("invalid residue book");
+                                    }
+                                }
+                            }
+                        }
+                        
+                        BitUint mappingCountLess1 = new BitUint(6);
+                        ss.Read(mappingCountLess1);
+                        uint mappingCount = mappingCountLess1 + 1;
+                        os.Write(mappingCountLess1);
+
+                        for (uint i = 0; i < mappingCount; i++) {
+                            // always mapping type 0, the only one
+                            BitUint mappingType = new BitUint(16, 0);
+                            os.Write(mappingType);
+                            
+                            BitUint submapsFlag = new BitUint(1);
+                            ss.Read(submapsFlag);
+                            os.Write(submapsFlag);
+
+                            uint submaps = 1;
+                            if (submapsFlag == 1) {
+                                BitUint submapsLess1 = new BitUint(4);
+                                ss.Read(submapsLess1);
+                                submaps = submapsLess1 + 1;
+                                os.Write(submapsLess1);
+                            }
+                            
+                            BitUint squarePolarFlag = new BitUint(1);
+                            ss.Read(squarePolarFlag);
+                            os.Write(squarePolarFlag);
+
+                            if (squarePolarFlag == 1) {
+                                BitUint couplingStepsLess1 = new BitUint(8);
+                                ss.Read(couplingStepsLess1);
+                                uint couplingSteps = couplingStepsLess1 + 1;
+                                os.Write(couplingStepsLess1);
+
+                                for (uint j = 0; j < couplingSteps; j++) {
+                                    BitUint magnitude = new BitUint((uint) Ilog((uint) (_channels - 1)));
+                                    BitUint angle = new BitUint((uint) Ilog((uint) (_channels - 1)));
+                                    
+                                    ss.Read(magnitude);
+                                    ss.Read(angle);
+                                    
+                                    os.Write(magnitude);
+                                    os.Write(angle);
+                                    
+                                    if (angle == magnitude || magnitude >= _channels || angle >= _channels) throw new Exception("invalid coupling");
+                                }
+                            }
+                            
+                            // a rare reserved field not removed by Ak!
+                            BitUint mappingReserved = new BitUint(2);
+                            ss.Read(mappingReserved);
+                            os.Write(mappingReserved);
+                            if (0 != mappingReserved) throw new Exception("mapping reserved field nonzero");
+
+                            if (submaps > 1) {
+                                for (uint j = 0; j < _channels; j++) {
+                                    BitUint mappingMux = new BitUint(4);
+                                    ss.Read(mappingMux);
+                                    os.Write(mappingMux);
+                                    
+                                    if (mappingMux >= submaps) throw new Exception("mapping_mux >= submaps");
+                                }
+                            }
+
+                            for (uint j = 0; j < submaps; j++) {
+                                BitUint timeConfig = new BitUint(8);
+                                ss.Read(timeConfig);
+                                os.Write(timeConfig);
+                                
+                                BitUint floorNumber = new BitUint(8);
+                                ss.Read(floorNumber);
+                                os.Write(floorNumber);
+                                
+                                if (floorNumber >= floorCount) throw new Exception("invalid floor mapping");
+                                
+                                BitUint residueNumber = new BitUint(8);
+                                ss.Read(residueNumber);
+                                os.Write(residueNumber);
+                                
+                                if (residueNumber >= residueCount) throw new Exception("invalid residue mapping");
+                            }
+                        }
+                        
+                        // mode count
+                        BitUint modeCountLess1 = new BitUint(6);
+                        ss.Read(modeCountLess1);
+                        uint modeCount = modeCountLess1 + 1;
+                        os.Write(modeCountLess1);
+                        
+                        modeBlockflag = new bool[modeCount];
+                        modeBits = Ilog(modeCount - 1);
+
+                        for (uint i = 0; i < modeCount; i++) {
+                            BitUint blockFlag = new BitUint(1);
+                            ss.Read(blockFlag);
+                            os.Write(blockFlag);
+
+                            modeBlockflag[i] = blockFlag != 0;
+                            
+                            // only 0 valid for windowtype and transformtype
+                            BitUint windowType = new BitUint(16, 0);
+                            BitUint transformType = new BitUint(16, 0);
+                            os.Write(windowType);
+                            os.Write(transformType);
+                            
+                            BitUint mapping = new BitUint(8);
+                            ss.Read(mapping);
+                            os.Write(mapping);
+                            if (mapping >= mappingCount) throw new Exception("invalid mode mapping");
+                        }
+                    }
+                    
+                    BitUint framing = new BitUint(1, 1);
+                    os.Write(framing);
+                    
+                    os.FlushPage();
+                
+                    if ((ss.TotalBitsRead+7)/8 != setupPacket.Size()) throw new Exception("didn't read exactly setup packet");
+
+                    if (setupPacket.NextOffset() != _dataOffset + _firstAudioPacketOffset) throw new Exception("first audio packet doesn't follow setup packet");
                 }
             }
 
             public void ConvertToOgg(Stream outputStream) {
                 using (BinaryWriter writer = new BinaryWriter(outputStream)) {
                     outputStream.SetLength(0);
-                    BitOggstream oggstream = new BitOggstream(writer);
-                    bool[] modeBlockflag = null;
-                    int modeBits = 0;
-                    bool prevBlockflag = false;
+                    BitOggstream os = new BitOggstream(writer);
+                    
     
+                    bool[] modeBlockflag;
+                    int modeBits;
+                    bool prevBlockflag = false;
                     if (_headerTriadPresent){
                         throw new Exception("unsuppored");
                         // generate_ogg_header_with_triad(os);
                     }
                     else {
-                        GenerateOggHeader(oggstream, modeBlockflag, modeBits);
+                        GenerateOggHeader(os, out modeBlockflag, out modeBits);
                     }
 
+                    // audio pages
+                    {
+                        long offset = _dataOffset + _firstAudioPacketOffset;
+                        
+                        while (offset < _dataOffset + _dataSize) {
+                            uint size;
+                            uint granule;
+                            long packetHeaderSize;
+                            long packetPayloadOffset;
+                            long nextOffset;
+
+                            if (_oldPacketHeaders) {
+                                throw new Exception("unsupported (if this happens please message the devs)");
+                            } else {
+                                Packet audioPacket = new Packet(_reader, offset, _littleEndian, _noGranule);
+                                packetHeaderSize = audioPacket.HeaderSize();
+                                size = audioPacket.Size();
+                                packetPayloadOffset = audioPacket.Offset();
+                                granule = audioPacket.Granule();
+                                nextOffset = audioPacket.NextOffset();
+                            }
+                            
+                            if (offset + packetHeaderSize > _dataOffset + _dataSize) {
+                                throw new Exception("page header truncated");
+                            }
+
+                            offset = packetPayloadOffset;
+
+                            _reader.BaseStream.Position = packetPayloadOffset;
+
+                            if (granule == 0xFFFFFFFF) {
+                                os.SetGranule(1);
+                            } else {
+                                os.SetGranule(granule);
+                            }
+
+                            if (_modPackets) {
+                                if (modeBlockflag == null) {
+                                    throw new Exception("didn't load blockflag");
+                                }
+                                
+                                BitUint packetType = new BitUint(1, 0);
+                                os.Write(packetType);
+
+                                BitUint modeNumberP;
+                                BitUint remainderP;
+
+                                {
+                                    // collect mode number from first byte
+                                    BitStream ss = new BitStream(_reader);
+                                    
+                                    // IN/OUT: N bit mode number (max 6 bits)
+                                    modeNumberP = new BitUint((uint)modeBits);
+                                    ss.Read(modeNumberP);
+                                    os.Write(modeNumberP);
+                                    
+                                    // IN: remaining bits of first (input) byte
+                                    remainderP = new BitUint((uint)(8-modeBits));
+                                    ss.Read(remainderP);
+                                }
+
+                                if (modeBlockflag[modeNumberP]) {
+                                    // long window, peek at next frame
+                                    _reader.BaseStream.Position = nextOffset;
+                                    bool nextBlockflag = false;
+                                    if (nextOffset + packetHeaderSize <= _dataOffset + _dataSize) {
+                                        // mod_packets always goes with 6-byte headers
+                                        Packet audioPacket = new Packet(_reader, nextOffset, _littleEndian, _noGranule);
+                                        uint nextPacketSize = audioPacket.Size();
+
+                                        if (nextPacketSize > 0) {
+                                            _reader.BaseStream.Position = audioPacket.Offset();
+                                            
+                                            BitStream ss = new BitStream(_reader);
+                                            BitUint nextModeNumber = new BitUint((uint)modeBits);
+                                            ss.Read(nextModeNumber);
+
+                                            nextBlockflag = modeBlockflag[nextModeNumber];
+                                        }
+                                    }
+                                    
+                                    BitUint prevWindowType = new BitUint(1, (uint)(prevBlockflag ? 1 : 0));
+                                    os.Write(prevWindowType);
+                                    
+                                    BitUint nextWindowType = new BitUint(1, (uint)(nextBlockflag ? 1 : 0));
+                                    os.Write(nextWindowType);
+
+                                    _reader.BaseStream.Position = offset + 1;
+                                }
+
+                                prevBlockflag = modeBlockflag[modeNumberP];
+                                
+                                os.Write(remainderP);
+                            } else {
+                                // nothing unusual for first byte
+                                int v = _reader.ReadByte();
+                                if (v < 0) {
+                                    throw new Exception("file truncated");
+                                }
+                                BitUint c = new BitUint(8, (uint)v);
+                                os.Write(c);
+                            }
+                            
+                            // remainder of packet
+                            for (uint i = 1; i < size; i++) {
+                                int v = _reader.ReadByte();
+                                if (v < 0)
+                                {
+                                    throw new Exception("file truncated");
+                                }
+                                BitUint c = new BitUint(8, (uint)v);
+                                os.Write(c);
+                            }
+
+                            offset = nextOffset;
+                            os.FlushPage(false, offset == _dataOffset+_dataSize);
+                        }
+
+                        if (offset > _dataOffset + _dataSize) {
+                            throw new Exception("page truncated");
+                        }
+                    }
                 }
             }
 
@@ -1110,6 +1506,10 @@ namespace DataTool.ConvertLogic {
                 for (uint i = 0; i < _payloadBytes; i++) {
                     _pageBuffer[(int) SizeEnum.HeaderBytes + segments + i] =
                         _pageBuffer[(int) SizeEnum.HeaderBytes + (int) SizeEnum.MaxSegments + i];
+                    // if ((int) SizeEnum.HeaderBytes + (int) SizeEnum.MaxSegments + i == 4155) {
+                    //     uint test = (int) SizeEnum.HeaderBytes + segments + i;
+                    //     Debugger.Break();
+                    // }
                 }
 
                 _pageBuffer[0] = (byte) 'O';
@@ -1202,7 +1602,7 @@ namespace DataTool.ConvertLogic {
         }
     }
 
-    public class BitStream {
+    public class BitStream : IDisposable {
         private readonly BinaryReader _reader;
         private byte _current;
         public byte BitsLeft;
@@ -1231,6 +1631,10 @@ namespace DataTool.ConvertLogic {
             for (int i = 0; i < bitUint.BitSize; i++) {
                 if (GetBit()) bitUint.Value |= (1U << i);
             }
+        }
+
+        public void Dispose() {
+            _reader?.Dispose();
         }
     }
 
@@ -1270,24 +1674,183 @@ namespace DataTool.ConvertLogic {
         }
 
         public void Rebuild(int codebookID, BitOggstream os) {
-            byte? cb = GetCodebook(codebookID);
+            long? cbIndexStart = GetCodebook(codebookID);
             ulong cbSize;
 
             {
                 long signedCbSize = GetCodebookSize(codebookID);
-                if (cb == null || -1 == signedCbSize) throw new InvalidID();
+                if (cbIndexStart == null || -1 == signedCbSize) throw new InvalidID();
                 cbSize = (ulong) signedCbSize;
             }
+
+            long cbStartIndex = (long)cbIndexStart;
+            long unsignedSize = (long) cbSize;
+            
+            Stream codebookStream = new MemoryStream();
+            for (long i = cbStartIndex; i < unsignedSize+cbStartIndex; i++) {
+                codebookStream.WriteByte(CodebookData[i]);
+            }
+            
+            BinaryReader reader = new BinaryReader(codebookStream);
+            BitStream bitStream = new BitStream(reader);
+            reader.BaseStream.Position = 0;
             
             
             // todo: the rest of the stuff
-            
-            throw new NotImplementedException();
+            Rebuild(bitStream, cbSize, os);
         }
 
-        public byte? GetCodebook(int i) {
+        public void Rebuild(BitStream bis, ulong cbSize, BitOggstream bos) {
+            /* IN: 4 bit dimensions, 14 bit entry count */
+            BitUint dimensions = new BitUint(4);
+            BitUint entries = new BitUint(14);
+            bis.Read(dimensions);
+            bis.Read(entries);
+            
+            /* OUT: 24 bit identifier, 16 bit dimensions, 24 bit entry count */
+            bos.Write(new BitUint(24, 0x564342));
+            bos.Write(new BitUint(16, dimensions));
+            bos.Write(new BitUint(24, entries));
+            
+            /* IN/OUT: 1 bit ordered flag */
+            BitUint ordered = new BitUint(1);
+            bis.Read(ordered);
+            bos.Write(ordered);
+
+            if (ordered == 1) {
+                /* IN/OUT: 5 bit initial length */
+                BitUint initialLength = new BitUint(5);
+                bis.Read(initialLength);
+                bos.Write(initialLength);
+
+                int currentEntry = 0;
+                while (currentEntry < entries) {
+                    /* IN/OUT: ilog(entries-current_entry) bit count w/ given length */
+                    BitUint number = new BitUint((uint)Sound.WwiseRIFFVorbis.Ilog((uint)(entries-currentEntry)));
+                    bis.Read(number);
+                    bos.Write(number);
+                    currentEntry = (int)(currentEntry+number); 
+                }
+                if (currentEntry > entries) throw new Exception("current_entry out of range");
+            } else {
+                /* IN: 3 bit codeword length length, 1 bit sparse flag */
+                BitUint codewordLengthLength = new BitUint(3);
+                BitUint sparse = new BitUint(1);
+                bis.Read(codewordLengthLength);
+                bis.Read(sparse);
+                
+                if (0 == codewordLengthLength || 5 < codewordLengthLength)
+                {
+                    throw new Exception("nonsense codeword length");
+                }
+                
+                /* OUT: 1 bit sparse flag */
+                bos.Write(sparse);
+                //if (sparse)
+                //{
+                //    cout << "Sparse" << endl;
+                //}
+                //else
+                //{
+                //    cout << "Nonsparse" << endl;
+                //}
+                for (int i = 0; i < entries; i++)
+                {
+                    bool presentBool = true;
+
+                    if (sparse == 1)
+                    {
+                        /* IN/OUT 1 bit sparse presence flag */
+                        BitUint present = new BitUint(1);
+                        bis.Read(present);
+                        bos.Write(present);
+
+                        presentBool = 0 != present;
+                    }
+
+                    if (presentBool) {
+                        /* IN: n bit codeword length-1 */
+                        BitUint codewordLength = new BitUint(codewordLengthLength);
+                        bis.Read(codewordLength);
+
+                        /* OUT: 5 bit codeword length-1 */
+                        bos.Write(new BitUint(5, codewordLength));
+                    }
+                }
+            } // done with lengths
+            
+            // lookup table
+            
+            /* IN: 1 bit lookup type */
+            BitUint lookupType = new BitUint(1);
+            bis.Read(lookupType);
+            /* OUT: 4 bit lookup type */
+            bos.Write(new BitUint(4, lookupType));
+            
+            if (lookupType == 0) {
+                //cout << "no lookup table" << endl;
+            } else if (lookupType == 1) {
+                //cout << "lookup type 1" << endl;
+
+                /* IN/OUT: 32 bit minimum length, 32 bit maximum length, 4 bit value length-1, 1 bit sequence flag */
+                BitUint min = new BitUint(32);
+                BitUint max = new BitUint(32);
+                BitUint valueLength = new BitUint(4);
+                BitUint sequenceFlag = new BitUint(1);
+                bis.Read(min);
+                bis.Read(max);
+                bis.Read(valueLength);
+                bis.Read(sequenceFlag);
+                
+                bos.Write(min);
+                bos.Write(max);
+                bos.Write(valueLength);
+                bos.Write(sequenceFlag);
+
+                uint quantvals = _bookMaptype1Quantvals(entries, dimensions);
+                for (uint i = 0; i < quantvals; i++)
+                {
+                    /* IN/OUT: n bit value */
+                    BitUint val = new BitUint(valueLength+1);
+                    bis.Read(val);
+                    bos.Write(val);
+                }
+            }
+            
+            /* check that we used exactly all bytes */
+            /* note: if all bits are used in the last byte there will be one extra 0 byte */
+            
+            if (0 != cbSize && bis.TotalBitsRead / 8 + 1 != (int)cbSize) {
+                throw new Exception($"{cbSize}, {bis.TotalBitsRead / 8 + 1}");
+            }
+        }
+
+        private uint _bookMaptype1Quantvals(uint entries, uint dimensions) {
+            /* get us a starting hint, we'll polish it below */
+            int bits = Sound.WwiseRIFFVorbis.Ilog(entries);
+            int vals = (int) (entries >> (int) ((bits - 1) * (dimensions - 1) / dimensions));
+            while (true) {
+                uint acc = 1;
+                uint acc1 = 1;
+                uint i;
+                for (i = 0; i < dimensions; i++) {
+                    acc = (uint) (acc * vals);
+                    acc1 = (uint) (acc * vals + 1);
+                }
+
+                if (acc <= entries && acc1 > entries) {
+                    return (uint) vals;
+                } else {
+                    if (acc > entries) vals--;
+                    else vals++;
+                }
+            }
+        }
+
+        public long? GetCodebook(int i) {
             if (i >= _codebookCount-1 || i < 0) return null;
-            return CodebookData[CodebookOffsets[i]];
+            return CodebookOffsets[i];  // return the offset
+            // CodebookData[CodebookOffsets[i]]
         }
 
         public long GetCodebookSize(int i) {

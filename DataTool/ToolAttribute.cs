@@ -9,8 +9,8 @@ namespace DataTool {
         public bool IsSensitive = false;
         public Type CustomFlags = null;
 
-        public ToolAttribute(string Keyword) {
-            this.Keyword = Keyword;
+        public ToolAttribute(string keyword) {
+            Keyword = keyword;
         }
     }
 }

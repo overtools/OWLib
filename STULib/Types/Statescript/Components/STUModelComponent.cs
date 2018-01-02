@@ -9,7 +9,7 @@ namespace STULib.Types.Statescript.Components {
         public Common.STUGUID AnimBlendTreeSet;  // STUAnimBlendTreeSet
 
         [STUField(0x36F54327)]
-        public Common.STUGUID m_36F54327;  // STUAnimBlendTree
+        public Common.STUGUID AnimBlendTree;  // STUAnimBlendTree
 
         [STUField(0x9C3F817E)]
         public Common.STUGUID Skeleton;  // STUSkeleton

@@ -41,8 +41,8 @@ namespace DataTool {
         [CLIFlag(Default = false, Flag = "rcn", Help = "use (R)CN? CMF", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool RCN;
 
-        [CLIFlag(Default = true, Flag = "threads", Help = "Use multiple threads", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
-        public bool Threads;
+        // [CLIFlag(Default = true, Flag = "threads", Help = "Use multiple threads", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool Threads = false;  // disabled for now because it's not great
 
         public override bool Validate() => true;
     }

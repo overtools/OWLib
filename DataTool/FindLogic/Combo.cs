@@ -184,6 +184,7 @@ namespace DataTool.FindLogic {
         public class EntityInfoNew : ComboNameable {
             public ulong Model;
             public ulong Effect; // todo: STUEffectComponent defined instead of model is like a model in behaviour?
+            public ulong VoiceMaster;
             public HashSet<ulong> Animations;
             
             public List<ChildEntityReferenceNew> Children;
@@ -314,7 +315,19 @@ namespace DataTool.FindLogic {
             }
             
             // Debugger break area:
-            // if (GetFileName(guid) == "000000000F6D.00C") Debugger.Break(); // tracer chest blue spinny thing
+            // if (GetFileName(guid) == "000000000F6D.00C") Debugger.Break();  // tracer chest blue spinny thing
+            // in 216172782113785973 / 000000000875.00D
+            // in 216172782113784100 / 000000000124.00D
+            // if (GetFileName(guid) == "00000000302E.00C") Debugger.Break();  // tracer chest blue spinny thing (NO COLOUR)
+            // in 216172782113785973 / 000000000875.00D
+            // in 216172782113784100 / 000000000124.00D
+            
+            // 000000000124.00D - Playable ent, hardpoint = x11
+            // 000000000875.00D - Main ent, hardpoint = null
+            
+            // 508906757892874256 / 000000002010.08F = ANCR_badass_POTG effect
+            // 288230376151718579 / 000000001AB3.003 = shield entity
+            
 
             uint guidType = GUID.Type(guid);
             if (guidType == 0 || guidType == 1) return info;
@@ -369,6 +382,7 @@ namespace DataTool.FindLogic {
                                 Find(info, modelComponent.Model, replacements, entityContext);
                                 Find(info, modelComponent.Look, replacements, entityContext);
                                 Find(info, modelComponent.AnimBlendTreeSet, replacements, entityContext);
+                                Find(info, modelComponent.AnimBlendTree, replacements, entityContext);
                             } else if (component.GetType() == typeof(STUEffectComponent)) {
                                 STUEffectComponent effectComponent = component as STUEffectComponent;
                                 if (effectComponent == null) continue;
@@ -398,7 +412,9 @@ namespace DataTool.FindLogic {
                                 Find(info, secondaryEffectComponent?.Effect, replacements, entityContext);
                             } else if (component.GetType() == typeof(STUEntityVoiceMaster)) {
                                 STUEntityVoiceMaster voiceComponent = component as STUEntityVoiceMaster;
-                                Find(info, voiceComponent?.VoiceMaster, replacements, entityContext);
+                                if (voiceComponent?.VoiceMaster == null) continue;
+                                entityInfo.VoiceMaster = GetReplacement(voiceComponent.VoiceMaster, replacements);
+                                Find(info, voiceComponent.VoiceMaster, replacements, entityContext);
                             }
                         }
                     }

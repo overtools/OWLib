@@ -154,22 +154,20 @@ namespace DataTool.SaveLogic {
             }
 
 
-            public void Write(Stream output, FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelInfoNew modelInfo) {
+            public void Write(Stream output, FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelInfoNew modelInfo, Stream modelStream) {
                 // erm, we need to wrap for now
-                using (Stream modelStream = OpenFile(modelInfo.GUID)) {
-                    using (Chunked modelChunked = new Chunked(modelStream)) {
-                        string materialPath = "";
-                        OWMatWriter14 materialWriter = new OWMatWriter14();
-                        if (modelInfo.ModelLooks.Count > 0) {
-                            FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelInfo.ModelLooks.First()];
-                            materialPath = Path.Combine("ModelLooks",
-                                modelLookInfo.GetNameIndex() + materialWriter.Format);
-                        }
-                        // data is object[] { bool exportAttachments, string materialReference, string modelName, bool onlyOneLOD, bool skipCollision }
-                        Write(modelChunked, output, new List<byte>(new byte[] {0, 1, 0xFF}), 
-                            new object[] {true, materialPath, $"Model {GetFileName(modelInfo.GUID)}", null, true},
-                            new ModelInfo(modelInfo.GUID));
+                using (Chunked modelChunked = new Chunked(modelStream)) {
+                    string materialPath = "";
+                    OWMatWriter14 materialWriter = new OWMatWriter14();
+                    if (modelInfo.ModelLooks.Count > 0) {
+                        FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelInfo.ModelLooks.First()];
+                        materialPath = Path.Combine("ModelLooks",
+                            modelLookInfo.GetNameIndex() + materialWriter.Format);
                     }
+                    // data is object[] { bool exportAttachments, string materialReference, string modelName, bool onlyOneLOD, bool skipCollision }
+                    Write(modelChunked, output, new List<byte>(new byte[] {0, 1, 0xFF}), 
+                        new object[] {true, materialPath, $"Model {GetFileName(modelInfo.GUID)}", null, true},
+                        new ModelInfo(modelInfo.GUID));
                 }
             }
 
