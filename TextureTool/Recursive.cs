@@ -33,6 +33,7 @@ namespace TextureTool {
                             ntype = "04D";
                         }
                         string nindex = fn004.Substring(fn004.Length - 12, 4);
+                        // {dDest}\\{ntype}\\{nindex}\\{fn004}.004
                         string nDDS = string.Format("{0}{1}{3}{1}{4}{1}{2}.dds", dDest, Path.DirectorySeparatorChar, fn004, ntype, nindex);
                         string nDDSd = Path.GetDirectoryName(nDDS);
                         if (!Directory.Exists(nDDSd)) {

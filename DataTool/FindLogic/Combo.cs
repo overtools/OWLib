@@ -109,7 +109,7 @@ namespace DataTool.FindLogic {
             }
         
             public virtual string GetNameIndex() {
-                return OWLib.GUID.Index(GUID).ToString("X12");
+                return $"{GUID & 0xFFFFFFFFFFFF:X12}";
             }
         }
         
@@ -131,7 +131,7 @@ namespace DataTool.FindLogic {
             }
 
             public override string GetNameIndex() {
-                return GetValidFilename(Name) ?? OWLib.GUID.Index(GUID).ToString("X12");
+                return GetValidFilename(Name) ?? $"{GUID & 0xFFFFFFFFFFFF:X12}";
             }
         }
 
@@ -237,7 +237,8 @@ namespace DataTool.FindLogic {
 
         public class TextureInfoNew : ComboNameable {
             public bool UseData;
-            public ulong DataGUID => (GUID & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
+            public ulong DataGUID;
+
             public bool Loose;
             public TextureInfoNew(ulong guid) : base(guid) { }
         }
@@ -315,15 +316,19 @@ namespace DataTool.FindLogic {
             }
             
             // Debugger break area:
-            // if (GetFileName(guid) == "000000000F6D.00C") Debugger.Break();  // tracer chest blue spinny thing
+            // if (GetFileName(guid) == "000000000F6D.00C") Debugger.Break();  // TIME VORTEX MANIPULATOR / TARDIS
             // in 216172782113785973 / 000000000875.00D
             // in 216172782113784100 / 000000000124.00D
-            // if (GetFileName(guid) == "00000000302E.00C") Debugger.Break();  // tracer chest blue spinny thing (NO COLOUR)
+            // if (GetFileName(guid) == "00000000302E.00C") Debugger.Break();  // albino TARDIS (NO COLOUR)
             // in 216172782113785973 / 000000000875.00D
             // in 216172782113784100 / 000000000124.00D
             
             // 000000000124.00D - Playable ent, hardpoint = x11
             // 000000000875.00D - Main ent, hardpoint = null
+            
+            // if (GetFileName(guid) == "0000000050F2.00C") Debugger.Break();  // renhardt OWL
+            
+            // if (GetFileName(guid) == "000000000AA9.008") Debugger.Break();
             
             // 508906757892874256 / 000000002010.08F = ANCR_badass_POTG effect
             // 288230376151718579 / 000000001AB3.003 = shield entity
@@ -426,9 +431,10 @@ namespace DataTool.FindLogic {
                 case 0x4:
                     if (info.Textures.ContainsKey(guid)) break;
                     TextureInfoNew textureInfo = new TextureInfoNew(guid);
-                    ulong dataKey = (guid & 0xFFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
+                    ulong dataKey = (guid & 0xF0FFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
                     bool useData = Files.ContainsKey(dataKey);
                     textureInfo.UseData = useData;
+                    textureInfo.DataGUID = dataKey;
                     info.Textures[guid] = textureInfo;
 
                     if (context.Material == 0) {
@@ -674,6 +680,7 @@ namespace DataTool.FindLogic {
                         Find(info, sound.Inner.Soundbank, replacements, context);
                         soundInfo.Bank = GetReplacement(sound.Inner.Soundbank, replacements);
 
+                        if (sound.Inner.IDs == null) break; 
                         soundInfo.Sounds = new Dictionary<uint, ulong>();
                         for (int i = 0; i < sound.Inner.IDs.Length; i++) {
                             ulong soundFileRef = sound.Inner.Sounds[i];

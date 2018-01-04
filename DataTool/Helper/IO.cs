@@ -55,7 +55,7 @@ namespace DataTool.Helper {
         }
 
         public static string GetFileName(ulong guid) {
-            return $"{GUID.LongKey(guid):X12}.{GUID.Type(guid):X3}";
+            return $"{guid & 0xFFFFFFFFFFFF:X12}.{GUID.Type(guid):X3}";
         }
 
         public static void WriteFile(Stream stream, string filename) {

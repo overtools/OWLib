@@ -195,6 +195,7 @@ namespace DataTool.SaveLogic {
             FindLogic.Combo.SoundInfoNew soundInfo = info.Sounds[sound];
             string soundDir = Path.Combine(path, soundInfo.GetName());
             CreateDirectoryFromFile(soundDir + "\\harrypotter.png");
+            if (soundInfo.Sounds == null) return;
             HashSet<ulong> done = new HashSet<ulong>();
             foreach (KeyValuePair<uint, ulong> soundPair in soundInfo.Sounds) {
                 if (done.Contains(soundPair.Value)) continue;
@@ -345,6 +346,14 @@ namespace DataTool.SaveLogic {
             }
             Wait(info);
         }
+
+        public static void SaveAllModelLooks(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
+            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
+            foreach (ulong material in info.ModelLooks.Keys) {
+                SaveModelLook(flags, path, info, material);
+            }
+            Wait(info);
+        }
         #warning This method does not support animation effects
         public static void SaveAllAnimations(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
             info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
@@ -374,7 +383,7 @@ namespace DataTool.SaveLogic {
             Stream convertedStream;
             TextureHeader header;
             
-            if (dataStream != null) {                
+            if (dataStream != null) {
                 OWLib.Texture textObj = new OWLib.Texture(headerStream, dataStream);
                 convertedStream = textObj.Save();
                 header = textObj.Header;

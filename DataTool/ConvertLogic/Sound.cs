@@ -94,11 +94,11 @@ namespace DataTool.ConvertLogic {
         [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable")]
         [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
         [SuppressMessage("ReSharper", "NotAccessedField.Local")]
+        // ported from ww2ogg
         public class WwiseRIFFVorbis : IDisposable {
             private string _codebooksFile;
             private Stream _stream;
             private BinaryReader _reader;
-#pragma warning disable 414
             private bool _littleEndian;
             private long _fileSize;
             private uint _riffSize;
@@ -143,7 +143,6 @@ namespace DataTool.ConvertLogic {
             private uint _uid;
             private byte _blocksize0Pow;
             private byte _blocksize1Pow;
-#pragma warning restore 414
             
             public WwiseRIFFVorbis(Stream stream, string codebooksFile) {
                 _codebooksFile = codebooksFile;

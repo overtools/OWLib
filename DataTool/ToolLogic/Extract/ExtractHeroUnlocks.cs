@@ -175,11 +175,12 @@ namespace DataTool.ToolLogic.Extract {
                 if (config.Count == 0) continue;
                 
                 var unlocks = GetInstance<STUHeroUnlocks>(hero.LootboxUnlocks);
-                if (unlocks?.Unlocks == null && !npc)
-                    continue;
-                if (unlocks?.LootboxUnlocks != null && npc) {
-                    continue;
-                }
+                // todo: temp for owl stuff
+                // if (unlocks?.Unlocks == null && !npc)
+                //     continue;
+                // if (unlocks?.LootboxUnlocks != null && npc) {
+                //     continue;
+                // }
                 
                 Log($"Processing data for {heroNameActual}...");
 
@@ -213,7 +214,9 @@ namespace DataTool.ToolLogic.Extract {
 
                 if (npc) {
                     foreach (STUHero.Skin skin in hero.Skins) {
-                        Skin.Save(flags, $"{basePath}\\{RootDir}", hero, skin, false);
+                        if (config.ContainsKey("skin") && config["skin"].ShouldDo(GetFileName(skin.SkinOverride))) {
+                            Skin.Save(flags, $"{basePath}\\{RootDir}", hero, skin, false);
+                        }
                     }
                     continue;
                 }

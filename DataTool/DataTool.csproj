@@ -104,6 +104,7 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugEffectLook.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugEntities.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugNewEntities.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugOWL.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugRAMTest.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSound.cs" />
@@ -175,9 +176,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Third Party\texconv.license.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Third Party\ww2ogg.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Third Party\ww2ogg.license.txt">

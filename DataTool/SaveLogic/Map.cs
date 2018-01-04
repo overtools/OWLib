@@ -329,10 +329,13 @@ namespace DataTool.SaveLogic {
                             mapBStream.Position =
                                 (long) (Math.Ceiling(mapBStream.Position / 16.0f) * 16); // Future proofing (?)
                             
-                            // type 0x75526BC2 kills the parser
+                            // type 0x75526BC2 sometimes kills the parser
                             // foreach (ISTU stu in mapBData.STUs) {
+                            //     STU_75526BC2 mapInstanceMain = stu.Instances.OfType<STU_75526BC2>().FirstOrDefault();
+                            //     if (mapInstanceMain == null) continue;
                             //     
                             // }
+                            // int test = mapBData.STUs.Count(x => x.TypeHashes.Contains(0x75526BC2));
 
                             for (int i = 0; i < mapBData.Records.Length; ++i) {
                                 if (mapBData.Records[i] != null && mapBData.Records[i].GetType() != typeof(Map0B)) {

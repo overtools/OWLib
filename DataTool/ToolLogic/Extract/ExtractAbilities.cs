@@ -37,8 +37,10 @@ namespace DataTool.ToolLogic.Extract {
                 
                 string name = GetValidFilename(GetString(loadout.Name).TrimEnd().Replace(".", "_")) ?? $"Unknown{GUID.Index(key):X}";
                 
-                Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
-                textures = Texture.FindTextures(textures, loadout.Texture);
+                
+                Combo.ComboInfo info = new Combo.ComboInfo();
+                Combo.Find(info, loadout.Texture);
+                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, folderName, name), info);
 
                 using (Stream videoStream = OpenFile(loadout.InfoMovie)) {
                     if (videoStream != null) {
@@ -46,7 +48,6 @@ namespace DataTool.ToolLogic.Extract {
                         WriteFile(videoStream, Path.Combine(basePath, folderName, name, $"{GUID.LongKey(loadout.InfoMovie):X12}.bk2"));
                     }
                 }
-                SaveLogic.Texture.Save(flags, Path.Combine(basePath, folderName, name), textures);
             }
         }
     }
