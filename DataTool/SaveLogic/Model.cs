@@ -681,7 +681,7 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void Save(ICLIFlags flags, string path, ModelInfo model, string name, string fileNameOverride=null, Dictionary<Common.STUGUID, string> entityNames=null) {
+        public static void Save(ICLIFlags flags, string path, ModelInfo model, string name, string fileNameOverride=null, Dictionary<ulong, string> entityNames=null) {
             bool convertModels = true;
             if (flags is ExtractFlags extractFlags) {
                 convertModels = extractFlags.ConvertModels && !extractFlags.Raw;
@@ -741,7 +741,7 @@ namespace DataTool.SaveLogic {
                 } else {
                     if (model.Skeleton != null) Debugger.Log(0, "DataTool.SaveLogic.Model", "[DataTool.SaveLogic.Model]: lksm chunk doesn't exist but skeleton does");
                 }
-                if (entityNames == null) entityNames = new Dictionary<Common.STUGUID, string>();
+                if (entityNames == null) entityNames = new Dictionary<ulong, string>();
                 Entity.SaveAnimations(flags, basePath, model.Animations, model.GUID, AnimationEffectDir, false, entityNames);
             } else {
                 using (Stream fileStream =

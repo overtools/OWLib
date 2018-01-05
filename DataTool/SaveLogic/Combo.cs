@@ -232,10 +232,10 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void SaveOWModelFile(string modelPath, Model.OWModelWriter14 modelWriter, FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelInfoNew modelInfo, Stream modelStream) {
+        private static void SaveOWModelFile(ICLIFlags flags, string modelPath, Model.OWModelWriter14 modelWriter, FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelInfoNew modelInfo, Stream modelStream) {
             using (Stream modelOutputStream = File.OpenWrite(modelPath)) {
                 modelOutputStream.SetLength(0);
-                modelWriter.Write(modelOutputStream, info, modelInfo, modelStream);
+                modelWriter.Write(flags, modelOutputStream, info, modelInfo, modelStream);
             } 
             modelStream.Dispose();
         }
@@ -251,10 +251,10 @@ namespace DataTool.SaveLogic {
 
             if (info.SaveRuntimeData.Threads) {
                 info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
-                    SaveOWModelFile(modelPath, modelWriter, info, modelInfo, modelStream);
+                    SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream);
                 }));
             } else {
-                SaveOWModelFile(modelPath, modelWriter, info, modelInfo, modelStream);
+                SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream);
             }
             
             
