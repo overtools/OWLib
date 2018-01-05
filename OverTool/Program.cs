@@ -128,8 +128,7 @@ namespace OverTool {
                 float version = float.Parse(versionMatch.Value);
 
                 if (version > 1.13) {
-                    Console.Out.WriteLine("Overtool only works with Overwatch version 1.13 and below! You are using {0}", config.BuildName);
-                    Console.Out.WriteLine("Exiting...");
+                    Console.Out.WriteLine("WARNING: Overtool only works with Overwatch version 1.13 and below! You are using {0}", config.BuildName);
                 }
             }
 
