@@ -3,7 +3,7 @@
 using OWLib;
 using static STULib.Types.Generic.Common;
 
-namespace STULib.Types {
+namespace STULib.Types.Lootboxes {
     [STU(0x56B6D12E, "STULootbox")]
     public class STULootbox : STUInstance {
         [STUField(0xCBE2DADD)]

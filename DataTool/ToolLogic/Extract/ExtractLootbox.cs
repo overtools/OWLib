@@ -6,6 +6,7 @@ using DataTool.Flag;
 using DataTool.SaveLogic;
 using OWLib;
 using STULib.Types;
+using STULib.Types.Lootboxes;
 using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 using static DataTool.Program;

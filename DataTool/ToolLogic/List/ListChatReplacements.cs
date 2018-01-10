@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DataTool.Flag;
 using DataTool.Helper;
 using STULib.Types;
+using STULib.Types.Chat;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
