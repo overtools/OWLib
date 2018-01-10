@@ -25,7 +25,7 @@ namespace STULib.Types.STUUnlock {
         public STUGUID[] CosmeticUnknownArray;  // virtual
 
         [STUField(0x8EEF1251)]
-        public int CosmeticUnknown;
+        public int CosmeticSortOrder;
 
         [STUField(0xDAD2E3A2)]
         public STUGUID CosmeticTextureResource;

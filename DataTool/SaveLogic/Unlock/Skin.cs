@@ -137,7 +137,7 @@ namespace DataTool.SaveLogic.Unlock {
             if (weaponSkins == null) weaponSkins = new List<ItemInfo>();
             
             STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinResource);
-            Save(flags, GetString(skin.CosmeticName), path, hero, rarity, skinOverride, weaponSkins, abilities, quiet);
+            Save(flags, GetString(skin.CosmeticName).TrimEnd(' '), path, hero, rarity, skinOverride, weaponSkins, abilities, quiet);
         }
     }
 }

@@ -57,9 +57,9 @@ namespace DataTool.SaveLogic {
                             pProcess2.StartInfo.FileName = "Third Party\\revorb.exe";
                             pProcess2.StartInfo.Arguments = $"\"{outputPathOgg}\"";
                             pProcess2.StartInfo.UseShellExecute = false;
-                            pProcess.StartInfo.RedirectStandardOutput = true;
+                            pProcess2.StartInfo.RedirectStandardOutput = true;
+                            pProcess2.StartInfo.RedirectStandardError = true;
                             pProcess2.Start();
-                            pProcess.WaitForExit();
                             File.Delete(outputPath);
                         }
                     }

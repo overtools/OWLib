@@ -16,7 +16,7 @@ namespace DataTool.DataModels {
 	    public ulong GUID;
 
 	    public ItemInfo(string name, string rarity, string type, string description, string availableIn, Cosmetic unlock, ulong guid) {
-	        Name = name;
+	        Name = name.TrimEnd(' '); // ffs blizz, why do the names end in a space sometimes
 	        Rarity = rarity;
 	        Type = type;
 	        Description = description;
