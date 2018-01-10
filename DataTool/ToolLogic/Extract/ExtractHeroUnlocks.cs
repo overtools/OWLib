@@ -196,6 +196,7 @@ namespace DataTool.ToolLogic.Extract {
 
                 var achievementUnlocks = GatherUnlocks(unlocks?.SystemUnlocks?.Unlocks?.Select(it => (ulong)it)).ToList();
                 foreach (ItemInfo itemInfo in achievementUnlocks) {
+                    if (itemInfo == null) continue;
                     Dictionary<string, string> tags = new Dictionary<string, string> {{"event", "base"}, {"rarity", itemInfo.Rarity}};
                     if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
                         SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, "Achievements", flags, itemInfo);
@@ -225,6 +226,7 @@ namespace DataTool.ToolLogic.Extract {
                     var dUnlocks = GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it)).ToList();
                     
                     foreach (ItemInfo itemInfo in dUnlocks) {
+                        if (itemInfo == null) continue;
                         Dictionary<string, string> tags = new Dictionary<string, string> {{"event", "base"}, {"rarity", itemInfo.Rarity}};
                         if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
                             SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, "Standard", flags, itemInfo);
@@ -257,6 +259,7 @@ namespace DataTool.ToolLogic.Extract {
                     var eUnlocks = eventUnlocks.Unlocks.Unlocks.Select(it => GatherUnlock(it)).ToList();
 
                     foreach (ItemInfo itemInfo in eUnlocks) {
+                        if (itemInfo == null) continue;
                         Dictionary<string, string> tags = new Dictionary<string, string> {{"event", eventUnlocks.Event.ToString().ToLowerInvariant()}, {"rarity", itemInfo.Rarity.ToLowerInvariant()}};
                         if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
                             SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);

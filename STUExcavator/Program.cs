@@ -93,6 +93,7 @@ namespace STUExcavator {
             
             foreach (KeyValuePair<ushort,HashSet<ulong>> keyValuePair in TrackedFiles.OrderBy(x => x.Key)) {
                 string type = keyValuePair.Key.ToString("X3");
+                if (type == "09C" || type == "062" || type == "077") continue;
                 Log($"Processing type: {type}");
                 types[type] = Excavate(keyValuePair.Key, keyValuePair.Value);
                 
