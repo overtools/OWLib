@@ -32,7 +32,7 @@ namespace DataTool.ToolLogic.Extract {
                 STUGlobalInventoryMaster invMaster = GetInstance<STUGlobalInventoryMaster>(key);
                 if (invMaster == null) continue;
 
-                var achivementUnlocks = invMaster.AchievementUnlocks?.Unlocks?.Select(it => GatherUnlock((ulong) it)).ToList();
+                var achivementUnlocks = invMaster.AchievementUnlocks?.Unlocks?.Select(it => GatherUnlock((ulong) it)).Where(i => i != null).ToList();
                 SprayAndImage.SaveItems(basePath, null, "General", "Achievements", flags, achivementUnlocks);
 
                 if (invMaster.EventGeneralUnlocks != null) {
@@ -40,7 +40,7 @@ namespace DataTool.ToolLogic.Extract {
                         if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
 
                         var eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event];
-                        var unlocks = eventUnlocks.Unlocks.Unlocks.Select(it => GatherUnlock((ulong) it)).ToList();
+                        var unlocks = eventUnlocks.Unlocks.Unlocks.Select(it => GatherUnlock((ulong) it)).Where(i => i != null).ToList();
                         SprayAndImage.SaveItems(basePath, null, "General", eventKey, flags, unlocks);
                     }
                 }
@@ -49,8 +49,11 @@ namespace DataTool.ToolLogic.Extract {
                     var unlocks = new HashSet<ItemInfo>();
                     foreach (var levelUnlocks in invMaster.LevelUnlocks) {
                         if (levelUnlocks?.Unlocks == null) continue;
-                        foreach (var unlock in levelUnlocks.Unlocks)
-                            unlocks.Add(GatherUnlock(unlock));
+                        foreach (var unlock in levelUnlocks.Unlocks) {
+                            var u = GatherUnlock(unlock);
+                            if (u == null) continue;
+                            unlocks.Add(u);
+                        }
                     }
 
                     SprayAndImage.SaveItems(basePath, null, "General", "Standard", flags, unlocks.ToList());

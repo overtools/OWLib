@@ -12,6 +12,7 @@ namespace DataTool.SaveLogic.Unlock {
         public static void SaveItems(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, List<ItemInfo> items) {
             var textures = new Dictionary<string, Dictionary<ulong, List<TextureInfo>>>();
             foreach (var item in items) {
+                if (item == null) continue; // Shouldn't happen but just in case
                 var name = GetValidFilename(item.Name);
                 string type;
                 STUEffectReference effect;
