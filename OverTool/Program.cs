@@ -128,7 +128,10 @@ namespace OverTool {
                 float version = float.Parse(versionMatch.Value);
 
                 if (version > 1.13) {
-                    Console.Out.WriteLine("WARNING: Overtool only works with Overwatch version 1.13 and below! You are using {0}", config.BuildName);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Out.WriteLine("==========\nWARNING: Overtool only works with Overwatch version 1.13 and below! You are using {0}!", config.BuildName);
+                    Console.Out.WriteLine("You must use DataTool for Overwatch 1.14 and above!\n==========");
+                    Console.ResetColor();
                 }
             }
 
