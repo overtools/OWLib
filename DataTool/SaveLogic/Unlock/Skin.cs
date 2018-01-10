@@ -30,7 +30,7 @@ namespace DataTool.SaveLogic.Unlock {
                 }
             }
             
-            Dictionary<Common.STUGUID, Common.STUGUID> replacements = skinOverride.ProperReplacements ?? new Dictionary<Common.STUGUID, Common.STUGUID>();
+            Dictionary<Common.STUGUID, Common.STUGUID> replacements = skinOverride.ProperReplacements.ToDictionary(x => new Common.STUGUID(x.Key), y => new Common.STUGUID(y.Value));
             Dictionary<ulong, ulong> realReplacements = replacements.ToDictionary(x => (ulong)x.Key, y => (ulong)y.Value);
             
             LoudLog("\tFinding");

@@ -72,3 +72,7 @@ F3942997, STUAnimBlendTreeSet_BonePoseOverrideItem
 DDD18945, STUAnimBlendTreeSet_BlendTreeItem
 99EA3F94, STUAnimBlendTreeSet_RetargetParams
 7DDC51BC, STUAnimBlendTree_OnFinished
+25C4F930, STUGraphNode
+CEAA4897, STUGraphPlug
+7B6EA463, STUStatescriptGraphWithOverrides
+5866C45E, STUStatescriptSchemaEntry

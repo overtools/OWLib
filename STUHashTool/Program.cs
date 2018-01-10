@@ -385,7 +385,8 @@ namespace STUHashTool {
                 using (Stream file1Stream = File.Open(file1, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     using (Stream file2Stream = File.Open(file2, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                         // if (classCount >= 3) break;
-                        // if (!file1.EndsWith("000B00000864.0BC")) continue;
+                        // if (!file1.EndsWith("000B00000864.0BC")) continue;  // owl map data
+                        // if (!file1.EndsWith("000000000C6E.01B")) continue;  // owl zen graph
                         
                         ISTU file1STU = ISTU.NewInstance(file1Stream, uint.MaxValue, type);
                         Version2Comparer file1STU2 = (Version2Comparer) file1STU;
@@ -608,7 +609,7 @@ namespace STUHashTool {
 
                 todoInstances = GetClassTodos(todoInstances);
                 
-                const string stuNamespace = "STULib.Types.posthash";
+                const string stuNamespace = "STULib.Types.posthashowl";
                 const string enumNamespace = stuNamespace+".Enums";
                 
                 foreach (string t in todoInstances) {
@@ -691,7 +692,9 @@ namespace STUHashTool {
                     // if (file != 1116892707587883018) continue;  // 020
                     // if (file != 1116892707587883363) continue; // 020 reaper hero select
                     // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000864.09F") continue;
-                    if (GUID.Index(file) != 0x817) continue; // owl map1
+                    // if (GUID.Index(file) != 0x817) continue; // owl map1
+                    // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000C6E.01B") continue;  // owl zen graph
+
                     using (Stream fileStream = Util.OpenFile(records[file], handler)) {
                         // STULib.Types.Map.Map map = new STULib.Types.Map.Map(fileStream, uint.MaxValue);
                         ISTU fileSTU = ISTU.NewInstance(fileStream, uint.MaxValue);

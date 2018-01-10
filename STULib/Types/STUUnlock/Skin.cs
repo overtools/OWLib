@@ -6,5 +6,11 @@ namespace STULib.Types.STUUnlock {
     public class Skin : Cosmetic {
         [STUField(0x4C167404)]
         public STUGUID SkinResource;
+
+        [STUField(0x0B1BA7C1)]
+        public STUGUID m_0B1BA7C1;
+
+        [STUField(0x5B66C189)]
+        public int m_5B66C189;
     }
 }

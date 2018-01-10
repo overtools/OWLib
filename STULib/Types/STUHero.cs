@@ -152,6 +152,9 @@ namespace STULib.Types {
 
             [STUField(0xFF72C038)]
             public STUVec3 UnknownVec3_c;
+
+            [STUField(0xC68C8155)]
+            public STUGUID Loadout;
         }
 
         [STU(0xC0D5117B)]

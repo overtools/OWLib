@@ -73,7 +73,8 @@ namespace DataTool.SaveLogic {
                     }
                     
                     foreach (KeyValuePair<ulong,ImageDefinition.ImageType> texture in materialDataInfo.Textures) {
-                        writer.Write($"..\\Textures\\{GUID.LongKey(texture.Key):X12}.dds");
+                        FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[texture.Key];
+                        writer.Write($"..\\Textures\\{textureInfo.GetNameIndex()}.dds");
                         writer.Write((uint)texture.Value);
                     }
                 }

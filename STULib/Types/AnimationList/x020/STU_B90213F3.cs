@@ -2,6 +2,6 @@
 
 namespace STULib.Types.AnimationList.x020 {
     [STU(0xB90213F3)]
-    public class STU_B90213F3 : STU_25C4F930 {
+    public class STU_B90213F3 : STUGraphNode {
     }
 }

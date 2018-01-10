@@ -9,9 +9,9 @@ namespace STULib.Types.AnimationList.x020 {
         public Common.STUUUID UniqueID;
 
         [STUField(0x498B0009, EmbeddedInstance = true)]
-        public STU_CEAA4897 m_498B0009;
+        public STUGraphPlug m_498B0009;
 
         [STUField(0xEA1269DF, EmbeddedInstance = true)]
-        public STU_CEAA4897 m_EA1269DF;
+        public STUGraphPlug m_EA1269DF;
     }
 }

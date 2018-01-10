@@ -83,7 +83,7 @@
     <Compile Include="Types\AnimationList\x020\STU_17845EB6.cs" />
     <Compile Include="Types\AnimationList\x020\STU_19BF28AB.cs" />
     <Compile Include="Types\AnimationList\x020\STU_225FAAA8.cs" />
-    <Compile Include="Types\AnimationList\x020\STU_25C4F930.cs" />
+    <Compile Include="Types\AnimationList\x020\STUGraphNode.cs" />
     <Compile Include="Types\AnimationList\x020\STU_27833576.cs" />
     <Compile Include="Types\AnimationList\x020\STU_295A9417.cs" />
     <Compile Include="Types\AnimationList\x020\STU_298296AE.cs" />
@@ -157,7 +157,7 @@
     <Compile Include="Types\AnimationList\x020\STU_C5A1F4D4.cs" />
     <Compile Include="Types\AnimationList\x020\STU_C9E2FF36.cs" />
     <Compile Include="Types\AnimationList\x020\STU_CB30C7C3.cs" />
-    <Compile Include="Types\AnimationList\x020\STU_CEAA4897.cs" />
+    <Compile Include="Types\AnimationList\x020\STUGraphPlug.cs" />
     <Compile Include="Types\AnimationList\x020\STU_CF46F0EB.cs" />
     <Compile Include="Types\AnimationList\x020\STU_D2CD8F5A.cs" />
     <Compile Include="Types\AnimationList\x020\STU_D3FE890D.cs" />
@@ -334,9 +334,9 @@
     <Compile Include="Types\Statescript\Components\STUUnlockComponent.cs" />
     <Compile Include="Types\Statescript\Components\STURigidBodyConfig.cs" />
     <Compile Include="Types\Statescript\Components\STUBreakableConfig.cs" />
-    <Compile Include="Types\Statescript\Components\STU_5866C45E.cs" />
+    <Compile Include="Types\Statescript\Components\STUStatescriptSchemaEntry.cs" />
     <Compile Include="Types\Statescript\Components\STU_61386B75.cs" />
-    <Compile Include="Types\Statescript\Components\STU_7B6EA463.cs" />
+    <Compile Include="Types\Statescript\Components\STUStatescriptGraphWithOverrides.cs" />
     <Compile Include="Types\Statescript\Components\STU_9EA55F3D.cs" />
     <Compile Include="Types\Statescript\Components\STUClothConfig.cs" />
     <Compile Include="Types\Statescript\Components\STURagdollConfig.cs" />
@@ -469,6 +469,7 @@
     <Compile Include="Types\STUUnlock\Weapon.cs" />
     <Compile Include="Types\STUVoiceLineInstance.cs" />
     <Compile Include="Types\STUHeroWeapon.cs" />
+    <Compile Include="Types\STULeagueTeam.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OWLib\OWLib.csproj">

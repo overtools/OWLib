@@ -160,6 +160,10 @@
       <Project>{FCF6F515-0870-4CB4-8A55-1363D20B01A0}</Project>
       <Name>OWReplayLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\revorbstd\RevorbStd.csproj">
+      <Project>{c3130ece-02d9-4be6-9883-75351822e7de}</Project>
+      <Name>RevorbStd</Name>
+    </ProjectReference>
     <ProjectReference Include="..\STULib\STULib.csproj">
       <Project>{996012b0-3693-4642-ac44-5aa8865ee44a}</Project>
       <Name>STULib</Name>

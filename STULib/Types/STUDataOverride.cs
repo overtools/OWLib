@@ -34,6 +34,6 @@ namespace STULib.Types {
         [STUField(0x258A7D5C)]
         public STUHashMap<STUOverrideFileChange> Replacements;  // key is before
 
-        public Dictionary<STUGUID, STUGUID> ProperReplacements => Replacements?.ToDictionary(x => new STUGUID(x.Key), x => x.Value.New);
+        public Dictionary<ulong, ulong> ProperReplacements => Replacements?.ToDictionary(x => x.Key, x => (ulong)x.Value.New);
     }
 }

@@ -330,7 +330,7 @@ namespace DataTool.FindLogic {
                         existingModels = FindModels(existingModels, statescriptDataStoreComponent.Component, replacements);
                     }
                     foreach (STUStatescriptDataStoreComponent2 statescriptDataStoreComponent in stuTemp.Instances.OfType<STUStatescriptDataStoreComponent2>()) {
-                        existingModels = FindModels(existingModels, statescriptDataStoreComponent.Component, replacements);
+                        existingModels = FindModels(existingModels, statescriptDataStoreComponent.Entity, replacements);
                     }
                     foreach (STUStatescriptDataStoreMaterial statescriptDataStoreMaterial in stuTemp.Instances.OfType<STUStatescriptDataStoreMaterial>()) {
                         existingModels = FindModels(existingModels, statescriptDataStoreMaterial.ModelLook, replacements);

@@ -479,8 +479,10 @@ namespace DataTool.SaveLogic {
             } else {
                 Stream headerStream = OpenFile(textureInfo.GUID);
                 Stream dataStream = null;
-                if (textureInfo.UseData) {                
+                if (headerStream == null) return;
+                if (textureInfo.UseData) {
                     dataStream = OpenFile(textureInfo.DataGUID);
+                    if (dataStream == null) return;
                 }
 
                 if (info.SaveRuntimeData.Threads) {
@@ -498,22 +500,39 @@ namespace DataTool.SaveLogic {
             string outputFileOgg = Path.ChangeExtension(outputFile, "ogg");
             CreateDirectoryFromFile(outputFile);
 
-            using (ConvertLogic.Sound.WwiseRIFFVorbis vorbis = new ConvertLogic.Sound.WwiseRIFFVorbis(stream, "Third Party\\packed_codebooks_aoTuV_603.bin")) {
+            using (ConvertLogic.Sound.WwiseRIFFVorbis vorbis =
+                new ConvertLogic.Sound.WwiseRIFFVorbis(stream, "Third Party\\packed_codebooks_aoTuV_603.bin")) {
+                Stream vorbisStream = new MemoryStream();
+                vorbis.ConvertToOgg(vorbisStream);
+                vorbisStream.Position = 0;
+                // using (Stream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream)) {
+                //     using (Stream outputStream = File.OpenWrite(outputFileOgg)) {
+                //         outputStream.SetLength(0);
+                //         revorbStream.Position = 0;
+                //         revorbStream.CopyTo(outputStream);
+                //     }
+                // }
                 using (Stream outputStream = File.OpenWrite(outputFileOgg)) {
-                    vorbis.ConvertToOgg(outputStream);
+                    outputStream.SetLength(0);
+                    vorbisStream.CopyTo(outputStream);
                 }
+                // using (Stream outputStream = File.OpenWrite(outputFile)) {
+                //     outputStream.SetLength(0);
+                //     stream.Position = 0;
+                //     stream.CopyTo(outputStream);
+                // }
             }
             
-            Process revorbProcess = new Process {
-                StartInfo = {
-                    FileName = "Third Party\\revorb.exe",
-                    Arguments = $"\"{outputFileOgg}\"",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true
-                }
-            };
-            
-            revorbProcess.Start();
+            // Process revorbProcess = new Process {
+            //     StartInfo = {
+            //         FileName = "Third Party\\revorb.exe",
+            //         Arguments = $"\"{outputFileOgg}\"",
+            //         UseShellExecute = false,
+            //         RedirectStandardOutput = true
+            //     }
+            // };
+            // 
+            // revorbProcess.Start();
         }
 
         public static void SaveSoundFile(ICLIFlags flags, string directory, FindLogic.Combo.ComboInfo info, ulong soundFile, bool voice) {
@@ -528,9 +547,11 @@ namespace DataTool.SaveLogic {
 
             Stream soundStream = OpenFile(soundFile);  // disposed by thread
             if (soundStream == null) return;
-            
 
-            if (!convertWem) return;
+            if (!convertWem) {
+                // todo
+                return;
+            }
             if (info.SaveRuntimeData.Threads) {
                 info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
                     ConvertSoundFile(soundStream, soundFileInfo, directory);

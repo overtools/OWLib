@@ -6,7 +6,7 @@ namespace STULib.Types.Statescript.Components {
     [STU(0x61386B75)]
     public class STU_61386B75 : Common.STUInstance {
         [STUField(0xC71EA6BC)]
-        public STU_7B6EA463 m_C71EA6BC;
+        public STUStatescriptGraphWithOverrides m_C71EA6BC;
 
         [STUField(0x4D5597A8)]
         public Common.STUGUID GUIDx01B;  // STU_6BE90C5C

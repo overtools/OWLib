@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DataTool.Flag;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
+using STULib;
 using STULib.Types;
+// using STULib.Types.posthash;
 using STULib.Types.Statescript.Components;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
@@ -77,7 +80,7 @@ namespace DataTool.SaveLogic {
                         if (t != null && t.GetType() != typeof(Map0B)) {
                             continue;
                         }
-                        if (((Map0B)t).ModelKey == 0) {
+                        if (((Map0B)t).Model == 0) {
                             continue;
                         }
                         size++;
@@ -99,15 +102,16 @@ namespace DataTool.SaveLogic {
                             continue;
                         }
                         Map01 obj = (Map01)t;
-                        string modelFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}{modelFormat.Format}";
+                        FindLogic.Combo.Find(info, obj.Header.Model);
+                        FindLogic.Combo.ModelInfoNew modelInfo = info.Models[obj.Header.Model];
+                        string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}{modelFormat.Format}";
                         writer.Write(modelFn);
                         writer.Write(obj.Header.groupCount);
-                        FindLogic.Combo.Find(info, obj.Header.Model);
                         for (int j = 0; j < obj.Header.groupCount; ++j) {
                             Map01.Map01Group group = obj.Groups[j];
-                            string materialFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}.owmat";
-
                             FindLogic.Combo.Find(info, group.ModelLook, null, new FindLogic.Combo.ComboContext {Model = obj.Header.Model});
+                            FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[group.ModelLook];
+                            string materialFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
                             
                             writer.Write(materialFn);
                             writer.Write(group.recordCount);
@@ -146,11 +150,15 @@ namespace DataTool.SaveLogic {
                             continue;
                         }
                         Map02 obj = (Map02)t;
-                        string modelFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}{modelFormat.Format}";
-                        string matFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}.owmat";
-
+                        
                         FindLogic.Combo.Find(info, obj.Header.Model);
                         FindLogic.Combo.Find(info, obj.Header.ModelLook, null, new FindLogic.Combo.ComboContext {Model = obj.Header.Model});
+
+                        FindLogic.Combo.ModelInfoNew modelInfo = info.Models[obj.Header.Model];
+                        FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[obj.Header.ModelLook]; 
+                        string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}{modelFormat.Format}";
+                        string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
+                        
                         writer.Write(modelFn);
                         writer.Write(matFn);
                         writer.Write(obj.Header.position.x);
@@ -170,11 +178,15 @@ namespace DataTool.SaveLogic {
                             continue;
                         }
                         Map08 obj = (Map08)t;
-                        string modelFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}{modelFormat.Format}";
-                        string matFn = $"Models\\{GUID.LongKey(obj.Header.Model):X12}.{GUID.Type(obj.Header.Model):X3}\\{GUID.LongKey(obj.Header.Model):X12}.owmat";
                         
                         FindLogic.Combo.Find(info, obj.Header.Model);
                         FindLogic.Combo.Find(info, obj.Header.ModelLook, null, new FindLogic.Combo.ComboContext {Model = obj.Header.Model});
+
+                        FindLogic.Combo.ModelInfoNew modelInfo = info.Models[obj.Header.Model];
+                        FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[obj.Header.ModelLook]; 
+                        string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}{modelFormat.Format}";
+                        string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
+                        
                         writer.Write(modelFn);
                         writer.Write(matFn);
                         writer.Write(obj.Header.position.x);
@@ -194,13 +206,18 @@ namespace DataTool.SaveLogic {
                             continue;
                         }
                         Map0B obj = (Map0B)t;
-                        if (obj.ModelKey == 0) {
+                        if (obj.Model == 0) {
                             continue;
                         }
-                        string modelFn = $"Models\\{GUID.LongKey(obj.ModelKey):X12}.{GUID.Type(obj.ModelKey):X3}\\{GUID.LongKey(obj.ModelKey):X12}{modelFormat.Format}";
-                        string matFn = $"Models\\{GUID.LongKey(obj.ModelKey):X12}.{GUID.Type(obj.ModelKey):X3}\\{GUID.LongKey(obj.ModelKey):X12}.owmat";
-                        FindLogic.Combo.Find(info, obj.ModelKey);
-                        FindLogic.Combo.Find(info, obj.ModelLook, null, new FindLogic.Combo.ComboContext {Model = obj.ModelKey});
+                        
+                        FindLogic.Combo.Find(info, obj.Model);
+                        FindLogic.Combo.Find(info, obj.ModelLook, null, new FindLogic.Combo.ComboContext {Model = obj.Model});
+
+                        FindLogic.Combo.ModelInfoNew modelInfo = info.Models[obj.Model];
+                        FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[obj.ModelLook]; 
+                        string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}{modelFormat.Format}";
+                        string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
+                        
                         writer.Write(modelFn);
                         writer.Write(matFn);
                         writer.Write(obj.Header.position.x);
@@ -314,7 +331,8 @@ namespace DataTool.SaveLogic {
             OWMap14Writer owmap = new OWMap14Writer();
             
             FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
-
+            FindLogic.Combo.Find(comboInfo, map.MapDataResource1);
+            
             using (Stream mapStream = OpenFile(map.GetDataKey(1))) {
                 STULib.Types.Map.Map mapData = new STULib.Types.Map.Map(mapStream, BuildVersion);
                 using (Stream map2Stream = OpenFile(map.GetDataKey(2))) {
@@ -331,9 +349,8 @@ namespace DataTool.SaveLogic {
                             
                             // type 0x75526BC2 sometimes kills the parser
                             // foreach (ISTU stu in mapBData.STUs) {
-                            //     STU_75526BC2 mapInstanceMain = stu.Instances.OfType<STU_75526BC2>().FirstOrDefault();
-                            //     if (mapInstanceMain == null) continue;
-                            //     
+                            //     STUStatescriptComponentInstanceData componentInstanceData = stu.Instances.OfType<STUStatescriptComponentInstanceData>().FirstOrDefault();
+                            //     if (componentInstanceData == null) continue;
                             // }
                             // int test = mapBData.STUs.Count(x => x.TypeHashes.Contains(0x75526BC2));
 
@@ -350,7 +367,7 @@ namespace DataTool.SaveLogic {
 
                                 if (component == null) continue;
                                 mapprop.ModelLook = component.Look;
-                                mapprop.ModelKey = component.Model;
+                                mapprop.Model = component.Model;
                                 mapBData.Records[i] = mapprop;
                             }
 

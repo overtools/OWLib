@@ -6,6 +6,6 @@ namespace STULib.Types.Statescript.ConfigVar {
     [STU(0x43CF7A79)]
     public class STUStatescriptDataStoreComponent2 : STUStatescriptDataStoreBase2 {
         [STUField(0x7DD89F4F)]
-        public Common.STUGUID Component;  // STULib.Types.STUStatescriptComponentMaster
+        public Common.STUGUID Entity;  // STUEntityDefinition
     }
 }

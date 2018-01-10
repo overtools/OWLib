@@ -63,7 +63,7 @@ namespace OWLib.Writer {
                     if (props.Records[i] != null && props.Records[i].GetType() != typeof(Map0B)) {
                         continue;
                     }
-                    if (((Map0B)props.Records[i]).ModelKey == 0) {
+                    if (((Map0B)props.Records[i]).Model == 0) {
                         continue;
                     }
                     size++;
@@ -205,10 +205,10 @@ namespace OWLib.Writer {
                         continue;
                     }
                     Map0B obj = (Map0B)props.Records[i];
-                    if (obj.ModelKey == 0) {
+                    if (obj.Model == 0) {
                         continue;
                     }
-                    string modelFn = $"{GUID.LongKey(obj.ModelKey):X12}{modelFormat.Format}";
+                    string modelFn = $"{GUID.LongKey(obj.Model):X12}{modelFormat.Format}";
                     string matFn = $"{GUID.LongKey(obj.ModelLook):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
@@ -223,10 +223,10 @@ namespace OWLib.Writer {
                     writer.Write(obj.Header.rotation.z);
                     writer.Write(obj.Header.rotation.w);
 
-                    if (!ret[0].ContainsKey(obj.ModelKey)) {
-                        ret[0].Add(obj.ModelKey, new List<string>());
+                    if (!ret[0].ContainsKey(obj.Model)) {
+                        ret[0].Add(obj.Model, new List<string>());
                     }
-                    ret[0][obj.ModelKey].Add(modelFn);
+                    ret[0][obj.Model].Add(modelFn);
 
 
                     if (!ret[1].ContainsKey(obj.ModelLook)) {

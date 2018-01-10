@@ -15,6 +15,7 @@ namespace DataTool.SaveLogic.Unlock {
 
 
         public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, ItemInfo item) {
+            if (item == null) return;
             string name = GetValidFilename(item.Name).TrimEnd(' ');
             string type;
 

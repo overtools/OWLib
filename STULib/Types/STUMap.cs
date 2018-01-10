@@ -91,7 +91,7 @@ namespace STULib.Types {
             public STUGUID Override;
 
             [STUField(0x7DD89F4F)]
-            public STUGUID Component;
+            public STUGUID Entity;
         }
 
         public ulong DataKey => (MapDataResource1 & ~0xFFFFFFFF00000000ul) | 0x0DD0000100000000ul;

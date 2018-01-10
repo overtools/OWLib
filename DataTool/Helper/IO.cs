@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -94,7 +96,12 @@ namespace DataTool.Helper {
             try {
                 return CASC.Encoding.GetEntry(hash, out EncodingEntry enc) ? CASC.OpenFile(enc.Key) : null;
             }
-            catch {
+            catch (Exception e) {
+                if (e is BLTEKeyException exception) {
+                    #if DEBUG
+                    Debugger.Log(0, "DataTool", $"[DataTool:CASC]: Missing key: {exception.MissingKey:X16}\r\n");
+                    #endif
+                }
                 return null;
             }
         }

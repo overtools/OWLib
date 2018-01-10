@@ -47,19 +47,15 @@ namespace DataTool.ToolLogic.Extract {
                 Combo.Find(info, lootbox.Effect3);
                 Combo.Find(info, lootbox.ModelLook);
                 Combo.Find(info, lootbox.Look2);
-                SaveLogic.Combo.Save(flags, Path.Combine(basePath, Container, name), info);
-
+                
+                Combo.Find(info, 288230376151716950);  // coin chest, todo
+                // 00000000315A.00C in 000000001456.003 (288230376151716950)
+                
                 foreach (STULootBoxShopCard lootboxShopCard in lootbox.ShopCards) {
                     Combo.Find(info, lootboxShopCard.Texture);
                 }
                 SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, name, "ShopCards"), info);
-                
-                Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
-                foreach (Common.STUGUID guid in new [] {lootbox.Effect1, lootbox.Effect2, lootbox.Effect3, lootbox.Entity2, lootbox.Entity}) {
-                    music = Sound.FindSounds(music, guid, null, true);
-                }
-            
-                SaveLogic.Sound.Save(toolFlags, Path.Combine(basePath, $"{Container}", name, "Music"), music);
+                SaveLogic.Combo.Save(flags, Path.Combine(basePath, Container, name), info);
             }
         }
     }

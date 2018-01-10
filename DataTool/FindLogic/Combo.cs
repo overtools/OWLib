@@ -8,9 +8,11 @@ using DataTool.Helper;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.Chunk;
+using STULib;
 using STULib.Types;
 using STULib.Types.AnimationList.x021;
 using STULib.Types.Generic;
+// using STULib.Types.posthash;
 using STULib.Types.Statescript.Components;
 using STULib.Types.STUUnlock;
 using static DataTool.Helper.STUHelper;
@@ -37,6 +39,7 @@ namespace DataTool.FindLogic {
             public Dictionary<ulong, SoundFileInfo> VoiceSoundFiles;
             public Dictionary<ulong, SoundFileInfo> SoundFiles;
             public Dictionary<ulong, VoiceMasterInfo> VoiceMasters;
+            public Dictionary<ulong, MapInfoNew> Maps;
 
             public ComboConfig Config = new ComboConfig();
             public ComboSaveConfig SaveConfig = new ComboSaveConfig();
@@ -58,6 +61,7 @@ namespace DataTool.FindLogic {
                 VoiceSoundFiles = new Dictionary<ulong, SoundFileInfo>();
                 SoundFiles = new Dictionary<ulong, SoundFileInfo>();
                 VoiceMasters = new Dictionary<ulong, VoiceMasterInfo>();
+                Maps = new Dictionary<ulong, MapInfoNew>();
             }
 
             public void SetEntityName(ulong entity, string name, Dictionary<ulong, ulong> replacements=null) {
@@ -133,6 +137,12 @@ namespace DataTool.FindLogic {
             public override string GetNameIndex() {
                 return GetValidFilename(Name) ?? $"{GUID & 0xFFFFFFFFFFFF:X12}";
             }
+        }
+
+        public class MapInfoNew : ComboType {
+            public MapInfoNew(ulong guid) : base(guid) { }
+
+            public ulong SkyboxModel;  // todo
         }
 
         public class VoiceMasterInfo : ComboType {
@@ -295,6 +305,14 @@ namespace DataTool.FindLogic {
             if (replacements.ContainsKey(guid)) return replacements[guid];
             return guid;
         }
+
+        private static ulong GetMapDataRoot(ulong map) {
+            return (map & ~0xFFFFFFFF00000000ul) | 0x0DD0000100000000ul;
+        }
+
+        private static ulong GetMapDataKey(ulong map, ushort type) {
+            return (GetMapDataRoot(map) & ~0xFFFF00000000ul) | ((ulong) type << 32);
+        }
         
         public static ComboInfo Find(ComboInfo info, ulong guid, Dictionary<ulong, ulong> replacements=null , ComboContext context=null) {
             if (info == null) info = new ComboInfo();
@@ -327,6 +345,7 @@ namespace DataTool.FindLogic {
             // 000000000875.00D - Main ent, hardpoint = null
             
             // if (GetFileName(guid) == "0000000050F2.00C") Debugger.Break();  // renhardt OWL
+            // if (GetFileName(guid) == "000000005100.00C") Debugger.Break();  // zen OWL
             
             // if (GetFileName(guid) == "000000000AA9.008") Debugger.Break();
             
@@ -337,6 +356,42 @@ namespace DataTool.FindLogic {
             uint guidType = GUID.Type(guid);
             if (guidType == 0 || guidType == 1) return info;
             switch (guidType) {
+                case 0x2:
+                    if (info.Maps.ContainsKey(guid)) break;
+                    
+                    MapInfoNew mapInfo = new MapInfoNew(guid);
+                    info.Maps[guid] = mapInfo;
+                    
+                    // <read the actual 002>
+                    // todo
+                    // </read the actual 002>
+
+                    using (Stream mapBStream = OpenFile(GetMapDataKey(guid, 0xB))) {
+                        STULib.Types.Map.Map mapBData = new STULib.Types.Map.Map(mapBStream, BuildVersion, true);
+                        foreach (ISTU stu in mapBData.STUs) {
+                            Dictionary<ulong, ulong> thisReplacements = new Dictionary<ulong, ulong>();
+                            // STUStatescriptComponentInstanceData componentInstanceData = stu.Instances.OfType<STUStatescriptComponentInstanceData>().FirstOrDefault();
+                            // if (componentInstanceData == null) continue;
+                            // foreach (STUStatescriptGraphWithOverrides graph in componentInstanceData.m_6D10093E) {
+                            //     ComboContext graphContext = new ComboContext(); // wipe?
+                            //     foreach (STUStatescriptSchemaEntry schemaEntry in graph.m_1EB5A024) {
+                            //         if (schemaEntry.Value == null) continue;
+                            //         if (schemaEntry.Value is STU_9EA8D0BA schemaX9Ea) {
+                            //             Find(info, schemaX9Ea.m_4C167404, thisReplacements, graphContext);
+                            //         } else if (schemaEntry.Value is STUStatescriptDataStoreComponent2 schemaEntity2) {
+                            //             Find(info, schemaEntity2.Entity, thisReplacements);  // wipe context again
+                            //             graphContext.Entity = GetReplacement(schemaEntity2.Entity, thisReplacements);
+                            //             graphContext.Model = info.Entities[graphContext.Entity].Model;
+                            //             graphContext.Effect = info.Entities[graphContext.Entity].Effect;
+                            //         } else if (schemaEntry.Value is STU_12B8954B schemaX12B) {
+                            //             Find(info, schemaX12B.Animation, thisReplacements, graphContext);
+                            //         }
+                            //     }
+                            // }
+                        }
+                    }
+
+                    break;
                 case 0x3:
                     if (info.Config == null || info.Config.DoExistingEntities == false) {
                         if (info.Entities.ContainsKey(guid)) break;
@@ -803,6 +858,17 @@ namespace DataTool.FindLogic {
                         Find(info, cosmeticEmote.BlendTreeSet, replacements, context);
                     }
 
+                    break;
+                case 0xA6:
+                    // why not
+                    if (replacements == null) break;
+                    STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(guid);
+                    if (skinOverride?.Replacements == null) break;
+                    foreach (KeyValuePair<ulong,ulong> replacement in skinOverride.ProperReplacements) {
+                        if (replacements.ContainsKey(replacement.Key)) continue;
+                        replacements[replacement.Key] = replacement.Value;
+                    }
+                    // replacements one object that gets modified
                     break;
                 case 0xA8:
                     // hmm, if existing?

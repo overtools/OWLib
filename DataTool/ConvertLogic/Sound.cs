@@ -856,7 +856,7 @@ namespace DataTool.ConvertLogic {
             }
 
             public void ConvertToOgg(Stream outputStream) {
-                using (BinaryWriter writer = new BinaryWriter(outputStream)) {
+                using (BinaryWriter writer = new BinaryWriter(outputStream, Encoding.Default, true)) {  // leave open
                     outputStream.SetLength(0);
                     BitOggstream os = new BitOggstream(writer);
                     

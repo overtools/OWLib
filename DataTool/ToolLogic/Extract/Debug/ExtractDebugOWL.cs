@@ -6,13 +6,13 @@ using DataTool.Flag;
 using OWLib;
 using OWLib.Types;
 using STULib.Types;
-using STULib.Types.Generic;
+using STULib.Types.STUUnlock;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-owl", Description = "Extract owl skins (debug)", TrackTypes = new ushort[] {0xB3, 0x8, 0xA6, 0x4}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-owl", Description = "Extract owl skins (debug)", TrackTypes = new ushort[] {0xB3, 0x8, 0xA6, 0x4, 0xA5}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugOWL : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
@@ -41,7 +41,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 throw new Exception("no output path");
             }
 
-            const string container = "DebugOWL";
+            const string container = "DebugOWL2";
             string path = Path.Combine(basePath, container);
 
             // foreach (ulong key in TrackedFiles[0xB3]) {
@@ -73,16 +73,23 @@ namespace DataTool.ToolLogic.Extract.Debug {
             //     // }
             // }
             
-            List<string> added = ExtractDebugNewEntities.GetAddedFiles("D:\\ow\\OverwatchDataManager\\versions\\1.18.1.2.42076\\data.json");
+            List<string> added = ExtractDebugNewEntities.GetAddedFiles("D:\\ow\\OverwatchDataManager\\versions\\1.19.1.3.42563\\data.json");
 
             Combo.ComboInfo imgInfo = new Combo.ComboInfo();
             // Combo.Find(imgInfo, 864691265894168957ul);
-            foreach (ulong key in TrackedFiles[0x4]) {
+            foreach (ulong key in TrackedFiles[0xA5]) {
                 string name = GetFileName(key);
                 if (!added.Contains(name)) continue;
-                Combo.Find(imgInfo, key);
+                Skin skin = GetInstance<Skin>(key);
+                if (skin == null) continue;
             }
-            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(path, "Tex"), imgInfo);
+
+            // foreach (ulong key in TrackedFiles[0x4]) {
+            //     string name = GetFileName(key);
+            //     if (!added.Contains(name)) continue;
+            //     Combo.Find(imgInfo, key);
+            // }
+            // SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(path, "Tex"), imgInfo);
 
             return;
             
@@ -94,7 +101,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 
                 Combo.ComboInfo info = new Combo.ComboInfo();
                 Combo.ComboInfo info2 = new Combo.ComboInfo();
-                foreach (KeyValuePair<Common.STUGUID, Common.STUGUID> overrideReplacement in @override.ProperReplacements) {
+                foreach (KeyValuePair<ulong, ulong> overrideReplacement in @override.ProperReplacements) {
                     Combo.Find(info, overrideReplacement.Key);
                     Combo.Find(info2, overrideReplacement.Value);
                 }

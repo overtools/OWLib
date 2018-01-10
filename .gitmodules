@@ -4,3 +4,6 @@
 [submodule "bcffnet"]
 	path = bcffnet
 	url = https://github.com/healingbrew/bcffnet
+[submodule "revorbstd"]
+	path = revorbstd
+	url = https://github.com/healingbrew/revorbstd

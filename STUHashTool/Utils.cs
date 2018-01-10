@@ -11,6 +11,7 @@ using OWLib;
 using STULib;
 using STULib.Impl;
 using STULib.Types;
+using STULib.Types.AnimationList.x020;
 using STULib.Types.Gamemodes;
 using STULib.Types.GameParams;
 using STULib.Types.STUUnlock;
@@ -233,6 +234,12 @@ namespace STUHashTool {
                 if (value.GetType().IsClass) {
                     if (recursionGuard.Contains(value)) return $"[{GetType(fieldInfo, value.GetType())}] (Recursion Error)";
                     List<object> newRecursionGuard = new List<object>(recursionGuard) {value};
+                    
+                    // make viewing graphs nicer
+                    if (fieldInfo != null && fieldInfo.Name == "ParentNode" && fieldInfo.DeclaringType == typeof(STUGraphPlug)) {
+                        return $"[{GetType(fieldInfo, value.GetType())}] NodeReference: m_uniqueID: [u32] {(value as STUGraphNode)?.UniqueID.ToString() ?? "null"}";
+                    }
+                    
                     return $"[{GetType(fieldInfo, value.GetType())}] \r\n{DumpInstance(value, helper+1, newRecursionGuard)}";
                 }
                 return "";
