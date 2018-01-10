@@ -9,6 +9,7 @@ namespace DataTool.SaveLogic.Unlock {
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             
             foreach (ItemInfo item in items) {
+                if (item == null) continue;
                 if (!(item.Unlock is STULib.Types.STUUnlock.Portrait unlock)) continue;
                 string tier = unlock.Tier.ToString();
 

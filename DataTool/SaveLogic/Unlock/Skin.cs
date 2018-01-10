@@ -133,6 +133,7 @@ namespace DataTool.SaveLogic.Unlock {
         }
 
         public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STULib.Types.STUUnlock.Skin skin, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet=true) {
+            if (skin == null) return;
             if (!quiet) Log($"Extracting skin {GetString(hero.Name)} {GetString(skin.CosmeticName)}");
             if (weaponSkins == null) weaponSkins = new List<ItemInfo>();
             

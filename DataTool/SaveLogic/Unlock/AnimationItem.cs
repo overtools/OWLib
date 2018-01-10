@@ -6,6 +6,7 @@ using static DataTool.Helper.IO;
 namespace DataTool.SaveLogic.Unlock {
     public class AnimationItem {
         public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, ItemInfo item) {
+            if (item == null) return;
             string properType = item.Type;
             switch (item.Type) {
                 case "Pose":
