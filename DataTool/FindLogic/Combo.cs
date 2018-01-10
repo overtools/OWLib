@@ -567,6 +567,12 @@ namespace DataTool.FindLogic {
                     EffectParser.EffectInfo effectInfo = new EffectParser.EffectInfo();
                     effectInfo.GUID = guid;
                     effectInfo.SetupEffect();
+                    
+                    if (guidType == 0xD) {
+                        info.Effects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
+                    } else if (guidType == 0x8F) {
+                        info.AnimationEffects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
+                    }
 
                     using (Stream effectStream = OpenFile(guid)) {
                         if (effectStream == null) break;
@@ -634,13 +640,6 @@ namespace DataTool.FindLogic {
                                 }
                             }
                         }
-                    }
-
-
-                    if (guidType == 0xD) {
-                        info.Effects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
-                    } else if (guidType == 0x8F) {
-                        info.AnimationEffects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
                     }
                     
                     break;

@@ -155,10 +155,14 @@ namespace DataTool.SaveLogic {
             if (!info.SaveConfig.SaveAnimationEffects) return;
             FindLogic.Combo.EffectInfoCombo animationEffect;
 
+            
             // just create a fake effect if it doesn't exist
             if (animationInfo.Effect == 0) {
                 animationEffect = new FindLogic.Combo.EffectInfoCombo(0) {Effect = new EffectParser.EffectInfo()};
                 animationEffect.Effect.SetupEffect();
+            } else if (info.Effects.ContainsKey(animationInfo.Effect)) {
+                // wot, why
+                animationEffect = info.Effects[animationInfo.Effect];
             } else {
                 animationEffect = info.AnimationEffects[animationInfo.Effect];
             }
