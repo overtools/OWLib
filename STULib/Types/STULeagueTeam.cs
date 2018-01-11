@@ -1,4 +1,5 @@
-﻿using STULib.Types.Generic;
+﻿using STULib.Types.Enums;
+using STULib.Types.Generic;
 
 namespace STULib.Types {
     [STU(0x73AE9738)]
@@ -19,12 +20,6 @@ namespace STULib.Types {
         public Common.STUGUID Colours;
 
         [STUField(0xAA53A680)]
-        public LeagueDivision Division;
-    }
-    
-    [STUEnum(0x5A789F71)]
-    public enum LeagueDivision : uint {
-        Pacific = 1,
-        Atlantic = 2
+        public STUEnumLeagueDivision Division;
     }
 }
