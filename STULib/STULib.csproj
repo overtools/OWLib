@@ -261,6 +261,7 @@
     <Compile Include="Types\Enums\LoadoutCategory.cs" />
     <Compile Include="Types\Enums\STUEnumAchievementGroup.cs" />
     <Compile Include="Types\Enums\STUEnumEventID.cs" />
+    <Compile Include="Types\Enums\STUEnumLeagueDivision.cs" />
     <Compile Include="Types\Enums\STUEnumPortraitTier.cs" />
     <Compile Include="Types\Enums\STUEnumPS4Trophy.cs" />
     <Compile Include="Types\Enums\STUEnumRarity.cs" />
@@ -425,6 +426,7 @@
     <Compile Include="Types\STULanguageMonths.cs" />
     <Compile Include="Types\STULanguagePunctuation.cs" />
     <Compile Include="Types\STULanguageWeekdays.cs" />
+    <Compile Include="Types\STULeagueTeam.cs" />
     <Compile Include="Types\STULoadout.cs" />
     <Compile Include="Types\STULootbox.cs" />
     <Compile Include="Types\STULootBoxCelebrationOverride.cs" />
