@@ -56,7 +56,14 @@ namespace DataTool.SaveLogic.Unlock {
                     weaponOverride.ProperReplacements?.ToDictionary(x => (ulong) x.Key, y => (ulong) y.Value) ??
                     new Dictionary<ulong, ulong>();
 
-                foreach (STUHero.WeaponEntity heroWeapon in hero.WeaponComponents1.Concat(hero.WeaponComponents2)) {
+                List<STUHero.WeaponEntity> weaponEntities = new List<STUHero.WeaponEntity>();
+                if (hero.WeaponComponents1 != null) {
+                    weaponEntities.AddRange(hero.WeaponComponents1);
+                }
+                if (hero.WeaponComponents2 != null) {
+                    weaponEntities.AddRange(hero.WeaponComponents2);
+                }
+                foreach (STUHero.WeaponEntity heroWeapon in weaponEntities) {
                     FindLogic.Combo.Find(info, heroWeapon.Entity, weaponReplacements);
                     STUModelComponent modelComponent = GetInstance<STUModelComponent>(heroWeapon.Entity);
                     if (modelComponent?.Look == null || weaponSkinName == null) continue;
