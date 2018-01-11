@@ -55,6 +55,14 @@ namespace DataTool.SaveLogic {
             }
         }
 
+        public static void SaveVoiceStimulus(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo) {
+
+            foreach (ulong soundFile in voiceLineInstanceInfo.SoundFiles) {
+                SaveSoundFile(flags, path, info, soundFile, true);
+            }
+        }
+
         public static void SaveEntity(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
             ulong entity) {
             FindLogic.Combo.EntityInfoNew entityInfo = info.Entities[entity];
@@ -371,6 +379,18 @@ namespace DataTool.SaveLogic {
             
             Wait(info);
         }
+
+        public static void SaveVoiceStimuli(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            IEnumerable<FindLogic.Combo.VoiceLineInstanceInfo> voiceLineInstances, bool split) {
+            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
+            foreach (FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstance in voiceLineInstances) {
+                string thisPath = path;
+                if (split) {
+                    thisPath = Path.Combine(path, GetFileName(voiceLineInstance.VoiceStimulus));
+                }
+                SaveVoiceStimulus(flags, thisPath, info, voiceLineInstance);
+            }
+        }
         
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -527,16 +547,16 @@ namespace DataTool.SaveLogic {
                 // }
             }
             
-            // Process revorbProcess = new Process {
-            //     StartInfo = {
-            //         FileName = "Third Party\\revorb.exe",
-            //         Arguments = $"\"{outputFileOgg}\"",
-            //         UseShellExecute = false,
-            //         RedirectStandardOutput = true
-            //     }
-            // };
-            // 
-            // revorbProcess.Start();
+            Process revorbProcess = new Process {
+                StartInfo = {
+                    FileName = "Third Party\\revorb.exe",
+                    Arguments = $"\"{outputFileOgg}\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                }
+            };
+            
+            revorbProcess.Start();
         }
 
         public static void SaveSoundFile(ICLIFlags flags, string directory, FindLogic.Combo.ComboInfo info, ulong soundFile, bool voice) {

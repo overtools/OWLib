@@ -10,9 +10,9 @@ using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using OWLib;
-using STULib;
 using STULib.Types;
 using static DataTool.Helper.Logger;
+using static DataTool.Helper.STUHelper;
 using Logger = CASCLib.Logger;
 
 namespace DataTool {
@@ -176,12 +176,11 @@ namespace DataTool {
                         if (stream == null) {
                             continue;
                         }
-                        
-                        ISTU stu = ISTU.NewInstance(stream, BuildVersion);
-                        STUEncryptionKey ek = stu.Instances.OfType<STUEncryptionKey>().FirstOrDefault();
-                        if (ek != null && !KeyService.keys.ContainsKey(ek.LongRevKey)) {
-                            KeyService.keys.Add(ek.LongRevKey, ek.KeyValue);
-                            Log("Added Encryption Key {0}, Value: {1}", ek.KeyNameProper, ek.Key);
+
+                        STUEncryptionKey encryptionKey = GetInstance<STUEncryptionKey>(key);
+                        if (encryptionKey != null && !KeyService.keys.ContainsKey(encryptionKey.LongRevKey)) {
+                            KeyService.keys.Add(encryptionKey.LongRevKey, encryptionKey.KeyValue);
+                            Log("Added Encryption Key {0}, Value: {1}", encryptionKey.KeyNameProper, encryptionKey.Key);
                         }
                     }
                 }

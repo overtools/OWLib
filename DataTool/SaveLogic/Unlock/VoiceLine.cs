@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using DataTool.DataModels;
-using DataTool.FindLogic;
 using DataTool.Flag;
 using OWLib;
 using OWLib.Types.Chunk;
@@ -16,42 +14,36 @@ namespace DataTool.SaveLogic.Unlock {
     public class VoiceLine {
         public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, ItemInfo item, STUHero hero) {
             if (item == null) return;
+            if (!(item.Unlock is STULib.Types.STUUnlock.VoiceLine vl)) return;
             const string type = "VoiceLines";
             string name = GetValidFilename(item.Name).Replace(".", "");
 
             STUEntityVoiceMaster soundMasterContainer = GetInstance<STUEntityVoiceMaster>(hero.EntityMain);
 
-            if (soundMasterContainer == null) {
+            if (soundMasterContainer?.VoiceMaster == null) {
                 Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: soundMaster not found");
                 return;
             }
-
-            STUVoiceMaster master = GetInstance<STUVoiceMaster>(soundMasterContainer.VoiceMaster);
-
-            if (!(item.Unlock is STULib.Types.STUUnlock.VoiceLine vl)) return;
             
-            List<STUVoiceLineInstance> lines;
+            FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
+            FindLogic.Combo.Find(info, soundMasterContainer.VoiceMaster);
 
+            FindLogic.Combo.VoiceMasterInfo voiceMasterInfo = info.VoiceMasters[soundMasterContainer.VoiceMaster];
+            
+            List<FindLogic.Combo.VoiceLineInstanceInfo> voiceLineInstances = new List<FindLogic.Combo.VoiceLineInstanceInfo>();
             using (Stream vlStream = OpenFile(vl.EffectResource)) {
                 using (Chunked vlChunk = new Chunked(vlStream)) {
-                    SVCE svce = vlChunk.GetAllOfTypeFlat<SVCE>().FirstOrDefault();
-                    if (svce == null) return;
-
-                    lines = master.VoiceLineInstances.Where(x => x.SoundDataContainer.VoiceStimulus == svce.Data.VoiceStimulus).ToList();
+                    foreach (SVCE svce in vlChunk.GetAllOfTypeFlat<SVCE>()) {
+                        if (svce == null) continue;
+                        if (voiceMasterInfo.VoiceLineInstances.ContainsKey(svce.Data.VoiceStimulus)) {
+                            voiceLineInstances.AddRange(voiceMasterInfo.VoiceLineInstances[svce.Data.VoiceStimulus]);
+                        }
+                    }
                 }
             }
             
             string output = Path.Combine(basePath, containerName, heroName ?? "", type, folderName, name);
-
-            foreach (STUVoiceLineInstance voiceLineInstance in lines) {
-                foreach (STUSoundWrapper wrapper in new [] {voiceLineInstance.SoundContainer.Sound1, 
-                    voiceLineInstance.SoundContainer.Sound2, voiceLineInstance.SoundContainer.Sound3, 
-                    voiceLineInstance.SoundContainer.Sound4}) {
-                    if (wrapper != null) {
-                        Sound.Save(flags, output, new Dictionary<ulong, List<SoundInfo>> {{0, new List<SoundInfo> {new SoundInfo {GUID = wrapper.SoundResource}}}}, false);
-                    }
-                }
-            }
+            Combo.SaveVoiceStimuli(flags, output, info, voiceLineInstances, false);
         }
     }
 }

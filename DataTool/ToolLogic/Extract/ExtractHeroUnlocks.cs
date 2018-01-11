@@ -175,12 +175,12 @@ namespace DataTool.ToolLogic.Extract {
                 if (config.Count == 0) continue;
                 
                 var unlocks = GetInstance<STUHeroUnlocks>(hero.LootboxUnlocks);
-                // todo: temp for owl stuff
-                // if (unlocks?.Unlocks == null && !npc)
-                //     continue;
-                // if (unlocks?.LootboxUnlocks != null && npc) {
-                //     continue;
-                // }
+                
+                if (unlocks?.Unlocks == null && !npc)
+                    continue;
+                if (unlocks?.LootboxUnlocks != null && npc) {
+                    continue;
+                }
                 
                 Log($"Processing data for {heroNameActual}...");
 
