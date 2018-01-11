@@ -17,7 +17,7 @@ namespace DataTool.SaveLogic.Unlock {
         public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, ItemInfo item, STUHero hero) {
             if (item == null) return;
             const string type = "VoiceLines";
-            string name = GetValidFilename(item.Name);
+            string name = GetValidFilename(item.Name).Replace(".", "");
 
             STUEntityVoiceMaster soundMasterContainer = GetInstance<STUEntityVoiceMaster>(hero.EntityMain);
 
@@ -41,7 +41,7 @@ namespace DataTool.SaveLogic.Unlock {
                 }
             }
             
-            string output = Path.Combine(basePath, containerName, heroName ?? "", type, folderName, name.Replace(".", "_"));
+            string output = Path.Combine(basePath, containerName, heroName ?? "", type, folderName, name);
 
             foreach (STUVoiceLineInstance voiceLineInstance in lines) {
                 foreach (STUSoundWrapper wrapper in new [] {voiceLineInstance.SoundContainer.Sound1, 
