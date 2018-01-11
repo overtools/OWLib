@@ -67,6 +67,10 @@
     <Compile Include="STUOverride.cs" />
     <Compile Include="STUFieldAttribute.cs" />
     <Compile Include="STUWarning.cs" />
+    <Compile Include="Types\ZeroCE\STU_09B5DE67.cs" />
+    <Compile Include="Types\ZeroCE\STU_176E7ACB.cs" />
+    <Compile Include="Types\ZeroCE\STU_2854069F.cs" />
+    <Compile Include="Types\ZeroCE\STU_6B3A03D7.cs" />
     <Compile Include="Types\AnimationList\x020\Enums\STUEnum_258358CE.cs" />
     <Compile Include="Types\AnimationList\x020\Enums\STUEnum_825C1F1A.cs" />
     <Compile Include="Types\AnimationList\x020\Enums\STUEnum_AD2CA2C1.cs" />
@@ -471,6 +475,8 @@
     <Compile Include="Types\STUUnlock\Weapon.cs" />
     <Compile Include="Types\STUVoiceLineInstance.cs" />
     <Compile Include="Types\STUHeroWeapon.cs" />
+    <Compile Include="Types\ZeroCE\STU_7CD6F719.cs" />
+    <Compile Include="Types\ZeroCE\STU_8880FCB0.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OWLib\OWLib.csproj">

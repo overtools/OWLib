@@ -125,6 +125,7 @@
     <Compile Include="ToolLogic\List\ListKeys.cs" />
     <Compile Include="ToolLogic\List\ListMaps.cs" />
     <Compile Include="ToolLogic\List\ListGamemodes.cs" />
+    <Compile Include="ToolLogic\List\ListOwlTeams.cs" />
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
     <Compile Include="ToolLogic\List\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
