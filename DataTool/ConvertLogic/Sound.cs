@@ -1115,7 +1115,9 @@ namespace DataTool.ConvertLogic {
                             val = reader.ReadUInt32();
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            Debugger.Log(0, "[DataTool.Convertlogic.Sound]", $"Unhandled EventActionParameterTyp: {parameterType}\r\n");
+                            // throw new ArgumentOutOfRangeException();
+                            continue;
                     }
                     Parameters.Add(new KeyValuePair<EventActionParameterType, object>(parameterType, val));
                 }

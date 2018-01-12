@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DataTool.Flag;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
-using STULib;
 using STULib.Types;
 // using STULib.Types.posthash;
 using STULib.Types.Statescript.Components;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
+using static DataTool.Helper.Logger;
 
 namespace DataTool.SaveLogic {
     public class Map {
@@ -302,7 +301,7 @@ namespace DataTool.SaveLogic {
             // music testing:
             //     loadmusic = 00000008565B.03F
             
-            if (!Flags.Quiet) Console.Out.WriteLine($"Saving map: {name} ({GUID.Index(key):X})");
+            LoudLog($"Extracting map {name}\\{GUID.Index(key):X}");
 
             // if (map.Gamemodes != null) {
             //     foreach (Common.STUGUID gamemodeGUID in map.Gamemodes) {
@@ -331,6 +330,7 @@ namespace DataTool.SaveLogic {
             OWMap14Writer owmap = new OWMap14Writer();
             
             FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
+            LoudLog("\tFinding");
             FindLogic.Combo.Find(comboInfo, map.MapDataResource1);
             
             using (Stream mapStream = OpenFile(map.GetDataKey(1))) {
@@ -383,6 +383,7 @@ namespace DataTool.SaveLogic {
                     }
                 }
             }
+            LoudLog("\tSaving");
             Combo.Save(flags, mapPath, comboInfo);
             
             // Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
@@ -414,6 +415,7 @@ namespace DataTool.SaveLogic {
             //     sounds = FindLogic.Sound.FindSounds(sounds, map.SoundMasterResource);
             //     Sound.Save(flags, Path.Combine(mapPath, "Sound", "SoundMaster"), sounds);
             // }
+            LoudLog("\tDone");
         }
     }
 }

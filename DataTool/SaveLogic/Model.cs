@@ -49,6 +49,11 @@ namespace DataTool.SaveLogic {
                 using (BinaryWriter writer = new BinaryWriter(output)) {
                     writer.Write(VersionMajor);
                     writer.Write(VersionMinor);
+                    if (modelLookInfo.Materials == null) {
+                        writer.Write(0L);
+                        writer.Write((uint)OWMatType.ModelLook);
+                        return;
+                    }
                     writer.Write(modelLookInfo.Materials.LongCount());
                     writer.Write((uint)OWMatType.ModelLook);
                     

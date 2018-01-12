@@ -305,6 +305,7 @@ namespace DataTool.SaveLogic {
                 SaveOWMaterialModelLookFile(path, modelLookInfo, materialWriter, info);
             }
 
+            if (modelLookInfo.Materials == null) return;
             foreach (ulong modelLookMaterial in modelLookInfo.Materials) {
                 SaveMaterial(flags, path, info, modelLookMaterial);
             }

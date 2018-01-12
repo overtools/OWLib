@@ -549,6 +549,7 @@ namespace STULib.Impl {
                         if (_InstanceTypes.ContainsKey(InstanceInfo[i].InstanceChecksum)) {
                             int fieldListIndex = reader.ReadInt32();
                             if (InstanceFields.Length <= fieldListIndex || fieldListIndex < 0) {
+                                if (fieldListIndex == -1) continue;  // don't bother logging this anymore
                                 Debugger.Log(0, "STU",
                                     $"[Version2:{InstanceInfo[i].InstanceChecksum:X}]: Instance field list was not valid ({fieldListIndex})\n");
                                 // todo: why does this happen? Does it just mean that the instance doesn't exist?
