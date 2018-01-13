@@ -32,5 +32,11 @@ namespace STULib.Types.STUUnlock {
 
         [STUField(0xBDB2D444)]
         public STUGUID CosmeticUnknownGUID;
+        
+        [STUField(0x0B1BA7C1)]
+        public STUGUID LeagueTeam;
+
+        [STUField(0x5B66C189)]
+        public int m_5B66C189;
     }
 }

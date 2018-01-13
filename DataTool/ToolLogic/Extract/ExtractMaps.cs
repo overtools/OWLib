@@ -47,6 +47,7 @@ namespace DataTool.ToolLogic.Extract {
             if (parsedTypes == null) {QueryHelp(QueryTypes); return;}
             foreach (ulong key in TrackedFiles[0x9F]) {
                 STUMap map = GetInstance<STUMap>(key);
+                if (map == null) continue;
                 ListMaps.MapInfo mapInfo = ListMaps.GetMap(key);
                 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();

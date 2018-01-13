@@ -8,14 +8,14 @@ using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-owl-teams", Description = "List owl teams", TrackTypes = new ushort[] {0x0EC}, CustomFlags = typeof(ListFlags), IsSensitive = true)]
+    [Tool("list-owl-teams", Description = "List OWL teams", TrackTypes = new ushort[] {0xEC}, CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListShit : JSONTool, ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
         }
 
         public void Parse(ICLIFlags toolFlags) {
-            foreach (ulong key in TrackedFiles[0x0EC]) {
+            foreach (ulong key in TrackedFiles[0xEC]) {
                 var data = GetInstance<STULeagueTeam>(key);
                 var teamColors = GetInstance<STU_8880FCB0>(data.Colours);
                 

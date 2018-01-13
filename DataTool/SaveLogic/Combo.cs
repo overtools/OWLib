@@ -207,12 +207,22 @@ namespace DataTool.SaveLogic {
             FindLogic.Combo.SoundInfoNew soundInfo = info.Sounds[sound];
             string soundDir = Path.Combine(path, soundInfo.GetName());
             CreateDirectoryFromFile(soundDir + "\\harrypotter.png");
-            if (soundInfo.Sounds == null) return;
+
             HashSet<ulong> done = new HashSet<ulong>();
-            foreach (KeyValuePair<uint, ulong> soundPair in soundInfo.Sounds) {
-                if (done.Contains(soundPair.Value)) continue;
-                SaveSoundFile(flags, soundDir, info, soundPair.Value, false);
-                done.Add(soundPair.Value);
+            if (soundInfo.Sounds != null) {
+                foreach (KeyValuePair<uint, ulong> soundPair in soundInfo.Sounds) {
+                    if (done.Contains(soundPair.Value)) continue;
+                    SaveSoundFile(flags, soundDir, info, soundPair.Value, false);
+                    done.Add(soundPair.Value);
+                }
+            }
+
+            if (soundInfo.OtherSounds != null) {
+                foreach (ulong otherSound in soundInfo.OtherSounds) {
+                    if (done.Contains(otherSound)) continue;
+                    SaveSoundFile(flags, soundDir, info, otherSound, false);
+                    done.Add(otherSound);
+                }
             }
         }
 
@@ -321,6 +331,16 @@ namespace DataTool.SaveLogic {
             }
         }
 
+        private static void SaveVoiceMasterInternal(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            ulong voiceMaster) {
+            string thisPath = Path.Combine(path, GetFileName(voiceMaster));
+
+            FindLogic.Combo.VoiceMasterInfo voiceMasterInfo = info.VoiceMasters[voiceMaster];
+            foreach (KeyValuePair<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> stimuliSet in voiceMasterInfo.VoiceLineInstances) {
+                SaveVoiceStimuliInternal(flags, thisPath, info, stimuliSet.Value, true);
+            }
+        }
+
         public static void SaveMaterial(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong material) {
             FindLogic.Combo.MaterialInfo materialInfo = info.Materials[material];
             FindLogic.Combo.MaterialDataInfo materialDataInfo = info.MaterialDatas[materialInfo.MaterialData];
@@ -352,6 +372,7 @@ namespace DataTool.SaveLogic {
             }
             Wait(info);
         }
+        
         public static void SaveAllMaterials(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
             info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
             foreach (ulong material in info.Materials.Keys) {
@@ -367,6 +388,7 @@ namespace DataTool.SaveLogic {
             }
             Wait(info);
         }
+        
         #warning This method does not support animation effects
         public static void SaveAllAnimations(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
             info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
@@ -381,9 +403,25 @@ namespace DataTool.SaveLogic {
             Wait(info);
         }
 
+        public static void SaveVoiceMaster(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            FindLogic.Combo.VoiceMasterInfo voiceMasterInfo) {
+            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
+            
+            SaveVoiceMasterInternal(flags, path, info, voiceMasterInfo.GUID);
+            
+            Wait(info);
+        }
+
         public static void SaveVoiceStimuli(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
             IEnumerable<FindLogic.Combo.VoiceLineInstanceInfo> voiceLineInstances, bool split) {
             info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
+            SaveVoiceStimuliInternal(flags, path, info, voiceLineInstances, split);
+            Wait(info);
+        }
+        
+        // internal stuff for helpers (for internal use)
+        private static void SaveVoiceStimuliInternal(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            IEnumerable<FindLogic.Combo.VoiceLineInstanceInfo> voiceLineInstances, bool split) {
             foreach (FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstance in voiceLineInstances) {
                 string thisPath = path;
                 if (split) {
@@ -392,7 +430,6 @@ namespace DataTool.SaveLogic {
                 SaveVoiceStimulus(flags, thisPath, info, voiceLineInstance);
             }
         }
-        
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public static class TextureConfig {

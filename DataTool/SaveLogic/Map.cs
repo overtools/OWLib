@@ -297,6 +297,8 @@ namespace DataTool.SaveLogic {
             
             if (GetString(map.VariantName) != null) name = GetValidFilename(GetString(map.VariantName));
 
+            if (map.SoundMasterResource == null) return;
+
             // if (name != "EICHENWALDE (HALLOWEEN)") return;
             // music testing:
             //     loadmusic = 00000008565B.03F
@@ -329,9 +331,9 @@ namespace DataTool.SaveLogic {
             OWMDLWriter modelWriter = new OWMDLWriter();
             OWMap14Writer owmap = new OWMap14Writer();
             
-            FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
+            FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             LoudLog("\tFinding");
-            FindLogic.Combo.Find(comboInfo, map.MapDataResource1);
+            FindLogic.Combo.Find(info, map.MapDataResource1);
             
             using (Stream mapStream = OpenFile(map.GetDataKey(1))) {
                 STULib.Types.Map.Map mapData = new STULib.Types.Map.Map(mapStream, BuildVersion);
@@ -361,7 +363,7 @@ namespace DataTool.SaveLogic {
                                 Map0B mapprop = (Map0B) mapBData.Records[i];
 
                                 if (mapprop == null) continue;
-                                FindLogic.Combo.Find(comboInfo, mapprop.Header.binding);
+                                FindLogic.Combo.Find(info, mapprop.Header.binding);
                                 STUModelComponent component =
                                     GetInstance<STUModelComponent>(mapprop.Header.binding);
 
@@ -376,15 +378,19 @@ namespace DataTool.SaveLogic {
                                 using (Stream outputStream = File.Open(Path.Combine(mapPath, $"{name}.owmap"),
                                     FileMode.Create, FileAccess.Write)) {
                                     owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name,
-                                        modelWriter, comboInfo);
+                                        modelWriter, info);
                                 }
                             }
                         }
                     }
                 }
             }
+
+            FindLogic.Combo.Find(info, map.EffectAnnouncer);
+            FindLogic.Combo.Find(info, map.EffectMusic);
+            
             LoudLog("\tSaving");
-            Combo.Save(flags, mapPath, comboInfo);
+            Combo.Save(flags, mapPath, info);
             
             // Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
             // music = FindLogic.Sound.FindSounds(music, map.EffectMusic, null, true);
@@ -409,6 +415,17 @@ namespace DataTool.SaveLogic {
             //     //     }
             //     // }
             // }
+
+            if (map.SoundMasterResource != null) {
+                FindLogic.Combo.ComboInfo soundInfo = new FindLogic.Combo.ComboInfo();
+                FindLogic.Combo.Find(soundInfo, map.SoundMasterResource);
+
+                if (soundInfo.VoiceMasters.ContainsKey(map.SoundMasterResource)) {
+                    string soundPath = Path.Combine(mapPath, "Sound");
+                    FindLogic.Combo.VoiceMasterInfo voiceMasterInfo = soundInfo.VoiceMasters[map.SoundMasterResource];
+                    Combo.SaveVoiceMaster(flags, soundPath, soundInfo, voiceMasterInfo);
+                }
+            }
 
             // if (map.SoundMasterResource != null) {
             //     Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();

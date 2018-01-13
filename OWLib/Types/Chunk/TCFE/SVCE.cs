@@ -9,6 +9,8 @@ namespace OWLib.Types.Chunk {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
             public ulong VoiceStimulus;
+            public int Zero;
+            public uint Unknown;
         }
 
         public Structure Data { get; private set; }

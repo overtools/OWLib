@@ -169,6 +169,7 @@ namespace DataTool.FindLogic {
 
         public class SoundInfoNew : ComboType {
             public Dictionary<uint, ulong> Sounds;
+            public HashSet<ulong> OtherSounds;
             public ulong Bank;
             public SoundInfoNew(ulong guid) : base(guid) { }
         }
@@ -729,6 +730,14 @@ namespace DataTool.FindLogic {
                     STUSound sound = GetInstance<STUSound>(guid);
                     SoundInfoNew soundInfo = new SoundInfoNew(guid);
                     info.Sounds[guid] = soundInfo;
+
+                    if (sound?.Inner?.SoundOther != null) {
+                        soundInfo.OtherSounds = new HashSet<ulong>();
+                        foreach (Common.STUGUID soundOther in sound.Inner.SoundOther) {
+                            soundInfo.OtherSounds.Add(GetReplacement(soundOther, replacements));
+                            Find(info, soundOther, replacements, context);
+                        }
+                    }
 
                     if (sound?.Inner?.Soundbank != null) {
                         Find(info, sound.Inner.Soundbank, replacements, context);

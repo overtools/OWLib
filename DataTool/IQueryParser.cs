@@ -11,33 +11,50 @@ namespace DataTool {
         public string Type;
         public List<string> Allowed;
         public List<string> Disallowed;
-        public Dictionary<string, string> Tags;
+        public Dictionary<string, TagValue> Tags;
 
 
         public ParsedArg Combine(ParsedArg second) {
             if (second == null) return new ParsedArg { Type = Type, Allowed = Allowed, Disallowed = Disallowed, Tags = Tags};
-            Dictionary<string, string> tagsNew = Tags;
-            foreach (KeyValuePair<string,string> tag in second.Tags) {
+            Dictionary<string, TagValue> tagsNew = Tags;
+            foreach (KeyValuePair<string,TagValue> tag in second.Tags) {
                 tagsNew[tag.Key] = tag.Value;
             }
             return new ParsedArg {Type = Type, Allowed = Allowed.Concat(second.Allowed).ToList(), 
                 Disallowed = Disallowed.Concat(second.Disallowed).ToList(), Tags = tagsNew};
         }
 
-        public bool ShouldDo(string name, Dictionary<string, string> tagVals=null) {
+        public bool ShouldDo(string name, Dictionary<string, TagExpectedValue> tagVals=null) {
             if (tagVals != null) {
-                foreach (KeyValuePair<string, string> tagVal in tagVals) {
+                foreach (KeyValuePair<string, TagExpectedValue> tagVal in tagVals) {
                     if (!Tags.ContainsKey(tagVal.Key.ToLowerInvariant())) continue;
-                    string tag = Tags[tagVal.Key.ToLowerInvariant()];
-                    if (tag.StartsWith("!")) {
-                        if (string.Equals(tag.Remove(0, 1), tagVal.Value, StringComparison.InvariantCultureIgnoreCase)) return false;
-                    } else {
-                        if (!string.Equals(tag, tagVal.Value, StringComparison.InvariantCultureIgnoreCase)) return false;
+
+                    if (!tagVal.Value.Values.Any(x => {
+                        TagValue tag = Tags[tagVal.Key.ToLowerInvariant()];
+
+                        if (x.StartsWith("!")) {
+                            if (tag.IsEqual(x.Remove(0, 1))) return false;
+                        } else {
+                            if (!tag.IsEqual(x)) return false;
+                        }
+
+                        return true;
+                    })) {
+                        return false;
                     }
+
                 }
             }
             string nameReal = name.ToLowerInvariant();
             return (Allowed.Contains(nameReal) || Allowed.Contains("*")) && (!Disallowed.Contains(nameReal) || !Disallowed.Contains("*"));
+        }
+    }
+
+    public class TagExpectedValue {
+        public List<string> Values;
+        
+        public TagExpectedValue(params string[] args) {
+            Values = args.ToList();
         }
     }
     
@@ -51,10 +68,24 @@ namespace DataTool {
     public class QueryTag {
         public string Name;
         public List<string> Options;
+        public Type ValueType = typeof(TagValue);
 
         public QueryTag(string name, List<string> options) {
             Name = name;
             Options = options;
+        }
+    }
+
+    public class TagValue {
+        public string Value;
+        public QueryTag Tag;
+
+        public virtual bool IsEqual(string query) {
+            return StringEqual(query, Value);
+        }
+
+        protected bool StringEqual(string a, string b) {
+            return string.Equals(a, b, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 
@@ -119,7 +150,7 @@ namespace DataTool {
                             Type = type.Name,
                             Allowed = new List<string> {"*"},
                             Disallowed = new List<string>(),
-                            Tags = new Dictionary<string, string>()
+                            Tags = new Dictionary<string, TagValue>()
                         };
                     }
                     // everything for this hero
@@ -148,7 +179,7 @@ namespace DataTool {
                             Type = typeObj.Name,
                             Allowed = new List<string>(),
                             Disallowed = new List<string>(),
-                            Tags = new Dictionary<string, string>()
+                            Tags = new Dictionary<string, TagValue>()
                         };
 
                         string[] items = new string[afterSplit.Length - 1];
@@ -190,7 +221,11 @@ namespace DataTool {
                                         return null;
                                     }
 
-                                    parsedTypes[hero][typeObj.Name].Tags[tagName] = tagValue;
+                                    TagValue valueObject = (TagValue)Activator.CreateInstance(tagObj.ValueType);
+                                    valueObject.Value = tagValue;
+                                    valueObject.Tag = tagObj;
+
+                                    parsedTypes[hero][typeObj.Name].Tags[tagName] = valueObject;
                                 }
                                 if (nextNotBracket) isBracket = false;
                             }
