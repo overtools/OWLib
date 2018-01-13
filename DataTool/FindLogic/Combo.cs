@@ -1,4 +1,5 @@
-﻿using System;
+﻿// using STULib.Types.posthash;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,12 +13,12 @@ using STULib;
 using STULib.Types;
 using STULib.Types.AnimationList.x021;
 using STULib.Types.Generic;
-// using STULib.Types.posthash;
 using STULib.Types.Statescript.Components;
 using STULib.Types.STUUnlock;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
+using Map = STULib.Types.Map.Map;
 
 namespace DataTool.FindLogic {
     public static class Combo {
@@ -368,7 +369,7 @@ namespace DataTool.FindLogic {
                     // </read the actual 002>
 
                     using (Stream mapBStream = OpenFile(GetMapDataKey(guid, 0xB))) {
-                        STULib.Types.Map.Map mapBData = new STULib.Types.Map.Map(mapBStream, BuildVersion, true);
+                        Map mapBData = new Map(mapBStream, BuildVersion, true);
                         foreach (ISTU stu in mapBData.STUs) {
                             Dictionary<ulong, ulong> thisReplacements = new Dictionary<ulong, ulong>();
                             // STUStatescriptComponentInstanceData componentInstanceData = stu.Instances.OfType<STUStatescriptComponentInstanceData>().FirstOrDefault();
@@ -775,8 +776,7 @@ namespace DataTool.FindLogic {
                                 if (action.ReferenceObjectID == 0) continue;
                                 if (action.Scope != ConvertLogic.Sound.BankObjectEventAction.EventActionScope.GameObjectReference) continue;
                                 foreach (KeyValuePair<ConvertLogic.Sound.BankObjectEventAction.EventActionParameterType,object> actionParameter in action.Parameters) {
-                                    if (actionParameter.Key == ConvertLogic.Sound.BankObjectEventAction
-                                            .EventActionParameterType.Play) {
+                                    if (actionParameter.Key == ConvertLogic.Sound.BankObjectEventAction.EventActionParameterType.Play) {
                                         @event.StartDelay = (uint) actionParameter.Value;
                                     }
                                 }

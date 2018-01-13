@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
@@ -8,7 +7,6 @@ using STULib.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
-using Texture = DataTool.FindLogic.Texture;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-abilities", Description = "Extract abilities", TrackTypes = new ushort[] {0x9E}, CustomFlags = typeof(ExtractFlags))]

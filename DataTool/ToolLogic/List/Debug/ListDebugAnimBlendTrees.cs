@@ -1,10 +1,9 @@
-﻿using System;
+﻿// using STULib.Types.prehash;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using DataTool.Flag;
 using STULib.Types;
 using STULib.Types.Generic;
-// using STULib.Types.prehash;
 using STULib.Types.Statescript.Components;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;

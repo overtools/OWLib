@@ -1,12 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using DataTool.FindLogic;
 using DataTool.Flag;
-using STULib.Types;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
-using static DataTool.Helper.STUHelper;
-using System.Collections.Generic;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-ram-test", Description = "Ram test (debug)", TrackTypes = new ushort[] {0x4}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]

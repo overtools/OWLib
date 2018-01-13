@@ -1,4 +1,5 @@
-﻿using System;
+﻿// using STULib.Types.posthash;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using DataTool.Flag;
@@ -7,7 +8,6 @@ using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
 using STULib.Types;
-// using STULib.Types.posthash;
 using STULib.Types.Statescript.Components;
 using static DataTool.Program;
 using static DataTool.Helper.IO;

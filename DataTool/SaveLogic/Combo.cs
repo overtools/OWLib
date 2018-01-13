@@ -402,6 +402,15 @@ namespace DataTool.SaveLogic {
             
             Wait(info);
         }
+        
+        public static void SaveVoiceMaster(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            ulong voiceMasterInfo) {
+            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
+            
+            SaveVoiceMasterInternal(flags, path, info, voiceMasterInfo);
+            
+            Wait(info);
+        }
 
         public static void SaveVoiceMaster(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
             FindLogic.Combo.VoiceMasterInfo voiceMasterInfo) {

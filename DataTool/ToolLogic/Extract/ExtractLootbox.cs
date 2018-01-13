@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using OWLib;
 using STULib.Types;
-using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
-using Combo = DataTool.FindLogic.Combo;
-using Sound = DataTool.FindLogic.Sound;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-lootbox", Description = "Extract lootbox models", TrackTypes = new ushort[] {0xCF}, CustomFlags = typeof(ExtractFlags))]
