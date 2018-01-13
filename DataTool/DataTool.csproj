@@ -78,7 +78,6 @@
     <Compile Include="IQueryParser.cs" />
     <Compile Include="ITool.cs" />
     <Compile Include="JSON\GUIDConverter.cs" />
-    <Compile Include="SaveLogic\Animation.cs" />
     <Compile Include="SaveLogic\Combo.cs" />
     <Compile Include="SaveLogic\Effect.cs" />
     <Compile Include="SaveLogic\Entity.cs" />
@@ -88,8 +87,6 @@
     <Compile Include="SaveLogic\Unlock\Portrait.cs" />
     <Compile Include="SaveLogic\Unlock\Skin.cs" />
     <Compile Include="SaveLogic\Unlock\SprayAndIcon.cs" />
-    <Compile Include="SaveLogic\Sound.cs" />
-    <Compile Include="SaveLogic\Texture.cs" />
     <Compile Include="SaveLogic\Unlock\VoiceLine.cs" />
     <Compile Include="ThreadProvider.cs" />
     <Compile Include="ToolFlags.cs" />

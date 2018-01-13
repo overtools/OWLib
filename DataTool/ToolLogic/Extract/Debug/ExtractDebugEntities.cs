@@ -38,8 +38,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 HashSet<ModelInfo> models = Model.FindModels(null, new Common.STUGUID(key));
                 foreach (ModelInfo model in models) {
                     CreateDirectoryFromFile(Path.Combine(basePath, GetFileName(key), "jeffK"));
-                    SaveLogic.Model.Save(toolFlags, Path.Combine(basePath, GetFileName(key), "Models"), model, $"Entity {GUID.Index(key):X} Model {GUID.Index(model.GUID):X}");
-                    Entity.Save(flags, Path.Combine(basePath, GetFileName(key), "Entities"), model.Entities.Values);
+                    // SaveLogic.Model.Save(toolFlags, Path.Combine(basePath, GetFileName(key), "Models"), model, $"Entity {GUID.Index(key):X} Model {GUID.Index(model.GUID):X}");
+                    // Entity.Save(flags, Path.Combine(basePath, GetFileName(key), "Entities"), model.Entities.Values);
                 }
             }
         }

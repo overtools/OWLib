@@ -32,7 +32,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 // STUEffectLook look = GetInstance<STUEffectLook>(key);
                 Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();
                 Texture.FindTextures(textures, new Common.STUGUID(key), null, true);
-                SaveLogic.Texture.Save(flags, Path.Combine(basePath, container, GetFileName(key)), textures);
+                // SaveLogic.Texture.Save(flags, Path.Combine(basePath, container, GetFileName(key)), textures);
             }
         }
     }

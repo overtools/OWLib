@@ -55,7 +55,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 }
                 string path = Path.Combine(basePath, container, GetValidFilename(GetString(spray.CosmeticName))).Replace(".", "").TrimEnd();
                 CreateDirectoryFromFile(path + "\\dfsdfsd");
-                SaveLogic.Texture.Save(flags, path, textures);
+                // SaveLogic.Texture.Save(flags, path, textures);
             }
         }
     }

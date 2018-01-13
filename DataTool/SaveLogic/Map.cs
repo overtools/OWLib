@@ -297,12 +297,6 @@ namespace DataTool.SaveLogic {
             
             if (GetString(map.VariantName) != null) name = GetValidFilename(GetString(map.VariantName));
 
-            if (map.SoundMasterResource == null) return;
-
-            // if (name != "EICHENWALDE (HALLOWEEN)") return;
-            // music testing:
-            //     loadmusic = 00000008565B.03F
-            
             LoudLog($"Extracting map {name}\\{GUID.Index(key):X}");
 
             // if (map.Gamemodes != null) {
@@ -387,23 +381,12 @@ namespace DataTool.SaveLogic {
             }
 
             FindLogic.Combo.Find(info, map.EffectAnnouncer);
+            info.SetEffectName(map.EffectAnnouncer, "LoadAnnouncer");
             FindLogic.Combo.Find(info, map.EffectMusic);
+            info.SetEffectName(map.EffectMusic, "LoadMusic");
             
             LoudLog("\tSaving");
             Combo.Save(flags, mapPath, info);
-            
-            // Dictionary<ulong, List<SoundInfo>> music = new Dictionary<ulong, List<SoundInfo>>();
-            // music = FindLogic.Sound.FindSounds(music, map.EffectMusic, null, true);
-            // Sound.Save(flags, Path.Combine(mapPath, "Sound", "Music"), music);
-            
-
-            // if (map.EffectAnnouncer != null) {
-            //     using (Stream announcerStream = OpenFile(map.EffectAnnouncer)) {
-            //         using (Chunked announcerChunk = new Chunked(announcerStream)) {
-            //             
-            //         }
-            //     }
-            // }
             
             // if (extractFlags.ConvertModels) {
             //     string physicsFile = Path.Combine(mapPath, "Models", "physics", "physics.owmdl");
@@ -426,12 +409,7 @@ namespace DataTool.SaveLogic {
                     Combo.SaveVoiceMaster(flags, soundPath, soundInfo, voiceMasterInfo);
                 }
             }
-
-            // if (map.SoundMasterResource != null) {
-            //     Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
-            //     sounds = FindLogic.Sound.FindSounds(sounds, map.SoundMasterResource);
-            //     Sound.Save(flags, Path.Combine(mapPath, "Sound", "SoundMaster"), sounds);
-            // }
+            
             LoudLog("\tDone");
         }
     }

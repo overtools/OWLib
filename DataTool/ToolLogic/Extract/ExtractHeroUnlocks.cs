@@ -223,14 +223,17 @@ namespace DataTool.ToolLogic.Extract {
                         SaveItemInfo(itemInfo, basePath, heroFileName, flags, hero, eventKey, config, tags, weaponSkins);
                     }
                 }
-
-                var heroTextures = new Dictionary<ulong, List<TextureInfo>>();
-                heroTextures = Texture.FindTextures(heroTextures, hero.ImageResource1, "Icon", true);
-                heroTextures = Texture.FindTextures(heroTextures, hero.ImageResource2, "Portrait", true);
-                heroTextures = Texture.FindTextures(heroTextures, hero.ImageResource3, "unknown", true); // Same as Icon for now, doesn't get saved as its a dupe of icon
-                // heroTextures = FindLogic.Texture.FindTextures(heroTextures, hero.SpectatorIcon, "Spectator Icon", true); // Also same as icon except has some transparency
-                heroTextures = Texture.FindTextures(heroTextures, hero.ImageResource4, "Avatar", true);
-                SaveLogic.Texture.Save(flags, Path.Combine(basePath, RootDir, heroFileName, "GUI"), heroTextures);
+                
+                Combo.ComboInfo guiInfo = new Combo.ComboInfo();
+                Combo.Find(guiInfo, hero.ImageResource1);
+                Combo.Find(guiInfo, hero.ImageResource2);
+                Combo.Find(guiInfo, hero.ImageResource3);
+                Combo.Find(guiInfo, hero.ImageResource4);
+                guiInfo.SetTextureName(hero.ImageResource1, "Icon");
+                guiInfo.SetTextureName(hero.ImageResource2, "Portrait");
+                guiInfo.SetTextureName(hero.ImageResource4, "Avatar");
+                guiInfo.SetTextureName(hero.SpectatorIcon, "SpectatorIcon");
+                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, RootDir, heroFileName, "GUI"), guiInfo);
             }
         }
 
@@ -250,6 +253,9 @@ namespace DataTool.ToolLogic.Extract {
             } else {
                 tags["leagueTeam"] = new TagExpectedValue("none");
             }
+            
+            if (eventKey == "Achievement" && itemInfo.Type == "Skin") itemInfo.Rarity = "";
+            
             
             tags["rarity"] = new TagExpectedValue(itemInfo.Rarity);
             

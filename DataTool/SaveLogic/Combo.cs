@@ -14,7 +14,6 @@ using DataTool.ToolLogic.Extract;
 using OWLib;
 using OWLib.Types;
 using OWLib.Writer;
-using STULib.Types;
 using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic {
@@ -121,13 +120,11 @@ namespace DataTool.SaveLogic {
 
         private static void SaveOWAnimFile(string animationEffectFile, FindLogic.Combo.EffectInfoCombo animationEffect, 
             FindLogic.Combo.AnimationInfoNew animationInfo, FindLogic.Combo.ComboInfo info, 
-            Effect.OWAnimWriter owAnimWriter, ulong model) {
+            Effect.OWAnimWriter owAnimWriter, ulong model, Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines) {
             CreateDirectoryFromFile(animationEffectFile);
 
             using (Stream fileStream = new FileStream(animationEffectFile, FileMode.Create)) {
                 fileStream.SetLength(0);
-                Dictionary<ulong, List<STUVoiceLineInstance>> svceLines =
-                    Effect.GetSVCELines(animationEffect.Effect);
                 owAnimWriter.Write(fileStream, info, animationInfo, animationEffect, model, svceLines);
             }
         }
@@ -179,27 +176,33 @@ namespace DataTool.SaveLogic {
             string animationEffectDir = Path.Combine(path, Model.AnimationEffectDir, animationInfo.GetNameIndex());
             string animationEffectFile =
                 Path.Combine(animationEffectDir, $"{animationInfo.GetNameIndex()}{owAnimWriter.Format}");
+            Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines = new Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>>();
+            if (animationEffect.GUID != 0) {
+                SaveEffectExtras(flags, animationEffectDir, info, animationEffect.Effect, out svceLines);
+            }
             if (info.SaveRuntimeData.Threads) {
                 info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
-                        SaveOWAnimFile(animationEffectFile, animationEffect, animationInfo, info, owAnimWriter, model);
+                        SaveOWAnimFile(animationEffectFile, animationEffect, animationInfo, info, owAnimWriter, model, svceLines);
                     }));
             } else {
-                SaveOWAnimFile(animationEffectFile, animationEffect, animationInfo, info, owAnimWriter, model);
-            }
-            
-            if (animationEffect.GUID != 0) {
-                SaveEffectExtras(flags, animationEffectDir, info, animationEffect.Effect);
+                SaveOWAnimFile(animationEffectFile, animationEffect, animationInfo, info, owAnimWriter, model, svceLines);
             }
         }
 
         public static void SaveEffectExtras(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
-            EffectParser.EffectInfo effectInfo) {
+            EffectParser.EffectInfo effectInfo, out Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines) {
             string soundDirectory = Path.Combine(path, "Sounds");
+            svceLines = GetSVCELines(effectInfo, info);
+            
             HashSet<ulong> done = new HashSet<ulong>();
             foreach (EffectParser.OSCEInfo osceInfo in effectInfo.OSCEs) {
                 if (osceInfo.Sound == 0 || done.Contains(osceInfo.Sound)) continue;
                 SaveSound(flags, soundDirectory, info, osceInfo.Sound);
                 done.Add(osceInfo.Sound);
+            }
+            
+            foreach (KeyValuePair<ulong,HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLine in svceLines) {
+                SaveVoiceStimuli(flags, soundDirectory, info, svceLine.Value, true);
             }
         }
 
@@ -226,27 +229,26 @@ namespace DataTool.SaveLogic {
             }
         }
 
+        private static Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> GetSVCELines(EffectParser.EffectInfo effectInfo, FindLogic.Combo.ComboInfo info) {
+            Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> output = new Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>>();
+            if (effectInfo.SVCEs.Count == 0 || effectInfo.SoundMaster == 0) return output;
+
+            foreach (EffectParser.SVCEInfo svceInfo in effectInfo.SVCEs) {
+                output[svceInfo.VoiceStimulus] = info.VoiceMasters[effectInfo.SoundMaster]
+                    .VoiceLineInstances[svceInfo.VoiceStimulus];
+            }
+
+            return output;
+        }
+
         public static void SaveEffect(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong effect) {
             Effect.OWEffectWriter effectWriter = new Effect.OWEffectWriter();
             FindLogic.Combo.EffectInfoCombo effectInfo = info.Effects[effect];
             string effectDirectory = Path.Combine(path, "Effects", effectInfo.GetName());
-            string effectFile = Path.Combine(effectDirectory, $"{GUID.LongKey(effect):X12}{effectWriter.Format}");
+            string effectFile = Path.Combine(effectDirectory, $"{effectInfo.GetNameIndex()}{effectWriter.Format}");
             CreateDirectoryFromFile(effectFile);
 
-            Dictionary<ulong, List<STUVoiceLineInstance>> svceLines = Effect.GetSVCELines(effectInfo.Effect);
-
-            // foreach (KeyValuePair<ulong,List<STUVoiceLineInstance>> svceLine in svceLines) {
-            //     foreach (STUVoiceLineInstance voiceLineInstance in svceLine.Value) {
-            //         foreach (STUSoundWrapper wrapper in new [] {voiceLineInstance.SoundContainer.Sound1, 
-            //             voiceLineInstance.SoundContainer.Sound2, voiceLineInstance.SoundContainer.Sound3, 
-            //             voiceLineInstance.SoundContainer.Sound4}) {
-            //             if (wrapper != null) {
-            //                 Sound.Save(flags, $"{effect}\\Sounds\\{svceLine.Key}", new Dictionary<ulong, List<SoundInfo>> {{0, new List<SoundInfo> {new SoundInfo {GUID = wrapper.SoundResource}}}}, false);
-            //             }
-            //         }
-            //     }
-            // }
-            SaveEffectExtras(flags, effectDirectory, info, effectInfo.Effect);
+            SaveEffectExtras(flags, effectDirectory, info, effectInfo.Effect, out Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines);
 
             using (Stream effectOutputStream = File.OpenWrite(effectFile)) {
                 effectOutputStream.SetLength(0);

@@ -47,7 +47,7 @@ namespace DataTool.SaveLogic {
                 }
             }
             
-            public void Write(Stream output, FindLogic.Combo.EffectInfoCombo effectInfo, FindLogic.Combo.ComboInfo info, Dictionary<ulong, List<STUVoiceLineInstance>> svceLines) {
+            public void Write(Stream output, FindLogic.Combo.EffectInfoCombo effectInfo, FindLogic.Combo.ComboInfo info, Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines) {
                 using (BinaryWriter writer = new BinaryWriter(output)) {
                     Write(writer, effectInfo, info, svceLines);
                 }
@@ -55,7 +55,7 @@ namespace DataTool.SaveLogic {
             
             
             // combo
-            public void Write(BinaryWriter writer, FindLogic.Combo.EffectInfoCombo effectInfo, FindLogic.Combo.ComboInfo info, Dictionary<ulong, List<STUVoiceLineInstance>> svceLines) {
+            public void Write(BinaryWriter writer, FindLogic.Combo.EffectInfoCombo effectInfo, FindLogic.Combo.ComboInfo info, Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines) {
                 writer.Write(new string(Identifier));
                 writer.Write(VersionMajor);
                 writer.Write(VersionMinor);
@@ -126,20 +126,15 @@ namespace DataTool.SaveLogic {
                     WriteTime(writer, svceInfo.PlaybackInfo);
                     writer.Write(GUID.Index(svceInfo.VoiceStimulus));
                     if (svceLines.ContainsKey(svceInfo.VoiceStimulus)) {
-                        List<STUVoiceLineInstance> lines = svceLines[svceInfo.VoiceStimulus];
+                        HashSet<FindLogic.Combo.VoiceLineInstanceInfo> lines = svceLines[svceInfo.VoiceStimulus];
                         writer.Write(lines.Count);
 
-                        foreach (STUVoiceLineInstance voiceLineInstance in lines) {
-                            STUSoundWrapper[] sounds = {
-                                voiceLineInstance.SoundContainer.Sound1,
-                                voiceLineInstance.SoundContainer.Sound2,
-                                voiceLineInstance.SoundContainer.Sound3,
-                                voiceLineInstance.SoundContainer.Sound4
-                            };
-                            sounds = sounds.Where(x => x != null).ToArray();
-                            writer.Write(sounds.Length);
-                            foreach (STUSoundWrapper wrapper in sounds) {
-                                writer.Write($"Sounds\\{GUID.LongKey(wrapper.SoundResource):X12}.ogg");
+                        foreach (FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstance in lines) {
+                            writer.Write(voiceLineInstance.SoundFiles.Count);
+                            foreach (ulong soundFile in voiceLineInstance.SoundFiles) {
+                                FindLogic.Combo.SoundFileInfo soundFileInfo =
+                                    info.VoiceSoundFiles[soundFile];
+                                writer.Write($"Sounds\\{soundFileInfo.GetNameIndex()}.ogg");
                             }
                         }
                     } else {
@@ -320,7 +315,7 @@ namespace DataTool.SaveLogic {
             
             public void Write(Stream output, FindLogic.Combo.ComboInfo info, FindLogic.Combo.AnimationInfoNew animation,
                 FindLogic.Combo.EffectInfoCombo animationEffect, ulong model, 
-                Dictionary<ulong, List<STUVoiceLineInstance>> svceLines) {
+                Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines) {
                 using (BinaryWriter writer = new BinaryWriter(output)) {
                     writer.Write(new string(Identifier));
                     writer.Write(VersionMajor);
@@ -383,61 +378,6 @@ namespace DataTool.SaveLogic {
 
             public Dictionary<ulong, List<string>>[] Write(Stream output, OWLib.Map map, OWLib.Map detail1, OWLib.Map detail2, OWLib.Map props, OWLib.Map lights, string name, IDataWriter modelFormat) {
                 throw new NotImplementedException();
-            }
-        }
-
-        public static Dictionary<ulong, List<STUVoiceLineInstance>> GetSVCELines(EffectParser.EffectInfo effect) {
-            Dictionary<ulong, List<STUVoiceLineInstance>> svceLines = new Dictionary<ulong, List<STUVoiceLineInstance>>();
-            if (effect.SoundMaster == 0 || effect.SVCEs.Count == 0) return svceLines;
-            STUVoiceMaster voiceMaster = GetInstance<STUVoiceMaster>(effect.SoundMaster);
-            foreach (EffectParser.SVCEInfo svceInfo in effect.SVCEs) {
-                svceLines[svceInfo.VoiceStimulus] = voiceMaster.VoiceLineInstances.Where(x => x.SoundDataContainer.VoiceStimulus == svceInfo.VoiceStimulus).ToList();
-            }
-            return svceLines;
-        }
-        
-        public static void Save(ICLIFlags flags, string path, EffectParser.EffectInfo effect, bool isAnim = false, Dictionary<ulong, string> entityNames=null, Dictionary<ulong, List<STUVoiceLineInstance>> svceLines=null) {
-            string thisPath = isAnim ? path : Path.Combine(path, GetFileName(effect.GUID));
-            OWEffectWriter writer = new OWEffectWriter();
-            
-            Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
-            foreach (EffectParser.OSCEInfo osceInfo in effect.OSCEs) {
-                sounds = FindLogic.Sound.FindSounds(sounds, new Common.STUGUID(osceInfo.Sound));
-            }
-
-            if (svceLines == null) {
-                svceLines = GetSVCELines(effect);
-            }
-
-            foreach (KeyValuePair<ulong,List<STUVoiceLineInstance>> valuePair in svceLines) {
-                foreach (STUVoiceLineInstance voiceLineInstance in valuePair.Value) {
-                    foreach (STUSoundWrapper wrapper in new [] {voiceLineInstance.SoundContainer.Sound1, 
-                        voiceLineInstance.SoundContainer.Sound2, voiceLineInstance.SoundContainer.Sound3, 
-                        voiceLineInstance.SoundContainer.Sound4}) {
-                        if (wrapper != null) {
-                            Sound.Save(flags, $"{thisPath}\\Sounds", new Dictionary<ulong, List<SoundInfo>> {{0, new List<SoundInfo> {new SoundInfo {GUID = wrapper.SoundResource}}}}, false);
-                        }
-                    }
-                }
-            }
-            
-            Sound.Save(flags, $"{thisPath}\\Sounds", sounds);
-
-            if (!isAnim) {
-                CreateDirectoryFromFile($"{thisPath}\\ffsdfs");
-                using (Stream fileStream =
-                    new FileStream($"{thisPath}\\{GetFileName(effect.GUID)}.oweffect", FileMode.Create)) {
-                    fileStream.SetLength(0);
-                    writer.Write(fileStream, effect, entityNames, svceLines);
-                }
-            }
-
-            if (isAnim) {
-                // should go in sub dir
-                path = Path.Combine(path, "Effects");
-            } // fece and this go last
-            foreach (EffectParser.FECEInfo feceInfo in effect.FECEs) {
-                Save(flags, path, feceInfo.Effect, false, entityNames);
             }
         }
     }

@@ -30,7 +30,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             foreach (ulong key in TrackedFiles[0x5F]) {
                 Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
                 Sound.FindSounds(sounds, new Common.STUGUID(key));
-                SaveLogic.Sound.Save(flags, Path.Combine(basePath, GetFileName(key)) + Path.DirectorySeparatorChar, sounds, false);
+                // SaveLogic.Sound.Save(flags, Path.Combine(basePath, GetFileName(key)) + Path.DirectorySeparatorChar, sounds, false);
             }
         }
     }

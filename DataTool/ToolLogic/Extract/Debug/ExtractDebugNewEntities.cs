@@ -57,8 +57,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 models = Model.FindModels(models, new Common.STUGUID(key));
 
                 foreach (ModelInfo model in models) {
-                    SaveLogic.Model.Save(flags, Path.Combine(basePath, container, name, "Models"), model, $"New {key}");
-                    Entity.Save(flags, Path.Combine(basePath, container, name, "Entities"), model.Entities.Values, new Dictionary<ulong, string>());
+                    // SaveLogic.Model.Save(flags, Path.Combine(basePath, container, name, "Models"), model, $"New {key}");
+                    // Entity.Save(flags, Path.Combine(basePath, container, name, "Entities"), model.Entities.Values, new Dictionary<ulong, string>());
                 }
             }
         }

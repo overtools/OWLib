@@ -119,54 +119,5 @@ namespace DataTool.SaveLogic {
                 throw new NotImplementedException();
             }
         }
-        
-        public static void Save(ICLIFlags flags, string path, IEnumerable<EntityInfo> entities, Dictionary<ulong, string> entityNames=null) {
-            OWEntityWriter owEntityWriter = new OWEntityWriter();
-            if (entityNames == null) entityNames = new Dictionary<ulong, string>();
-            foreach (EntityInfo entity in entities) {
-                //using (Stream entityStream = OpenFile(entity.GUID)) {
-                //    if (entityStream == null) {
-                //        continue;
-                //    }           
-                string entityName = entity.GUID.ToString();
-                if (entityNames.ContainsKey(entity.GUID)) entityName = GetValidFilename(entityNames[entity.GUID]);
-                string basePath = Path.Combine(path, entityName);
-                CreateDirectoryFromFile($"{basePath}\\GabeN");
-                using (Stream fileStream =
-                    new FileStream($"{basePath}\\{entityName}{owEntityWriter.Format}", FileMode.Create)) {
-                    fileStream.SetLength(0);
-                    owEntityWriter.Write(fileStream, entity, entityNames);
-                }
-                
-                SaveAnimations(flags, basePath, entity.Animations, entity.Model, "Animations", true, entityNames);
-                //}
-            }
-        }
-
-        public static void SaveAnimations(ICLIFlags flags, string path, HashSet<AnimationInfo> animations, 
-            ulong model, string dirname="Animations", bool isReference=false, 
-            Dictionary<ulong, string> entityNames=null) {
-            Effect.OWAnimWriter owAnimWriter = new Effect.OWAnimWriter();
-            if (entityNames == null && isReference) throw new Exception("Entity names were not given to SaveLogic.Entity.SaveAnimations(isReference=false)");
-            foreach (AnimationInfo animation in animations) {
-                string name = GetValidFilename(animation.Name);
-                if (name == null) name = GUID.LongKey(animation.GUID).ToString("X12");
-                CreateDirectoryFromFile($"{path}\\{dirname}\\{name}\\drfdfd");
-                Dictionary<ulong, List<STUVoiceLineInstance>> svceLines = null;
-                using (Stream fileStream =
-                    new FileStream($"{path}\\{dirname}\\{name}\\{name}.owanim", FileMode.Create)) {
-                    fileStream.SetLength(0);
-                    if (isReference) {
-                        owAnimWriter.WriteReference(fileStream, animation, model);
-                    } else {
-                        svceLines = Effect.GetSVCELines(animation);
-                        owAnimWriter.Write(fileStream, animation, model, entityNames, svceLines);
-                    }
-                }
-                if (!isReference) {
-                    Effect.Save(flags, $"{path}\\{dirname}\\{name}", animation, true, entityNames, svceLines);
-                }
-            }
-        }
     }
 }

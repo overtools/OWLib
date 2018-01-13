@@ -12,7 +12,6 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
-using Sound = DataTool.SaveLogic.Sound;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-voice", Description = "Extract hero voice sounds", TrackTypes = new ushort[] {0x75}, CustomFlags = typeof(ExtractFlags))]
@@ -49,7 +48,7 @@ namespace DataTool.ToolLogic.Extract {
             Log($"{indent+1}\"Moira\"");
         }
 
-        private static string OutputDir = "HeroVoice";
+        private static string Container = "HeroVoice";
 
         public void SaveHeroSounds(ICLIFlags toolFlags) {
             string basePath;
@@ -89,26 +88,17 @@ namespace DataTool.ToolLogic.Extract {
                 
                 STUEntityVoiceMaster soundMasterContainer = GetInstance<STUEntityVoiceMaster>(hero.EntityMain);
 
-                if (soundMasterContainer == null) {
+                if (soundMasterContainer?.VoiceMaster == null) {
                     Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: soundMaster not found");
                     return;
                 }
-
-                STUVoiceMaster master = GetInstance<STUVoiceMaster>(soundMasterContainer.VoiceMaster);
                 
                 string heroFileName = GetValidFilename(heroNameActual);
-
-                foreach (STUVoiceLineInstance voiceLineInstance in master.VoiceLineInstances) {
-                    if (voiceLineInstance?.SoundDataContainer?.VoiceStimulus == null) continue;
-                    string outputDirectory = Path.Combine(basePath, OutputDir, heroFileName, GetFileName(voiceLineInstance.SoundDataContainer.VoiceStimulus)) + Path.DirectorySeparatorChar;
-                    if (config.ContainsKey("groupRestriction") && !config["groupRestriction"].ShouldDo(GetFileName(voiceLineInstance.SoundDataContainer.VoiceStimulus))) continue;
-                    foreach (STUSoundWrapper soundWrapper in new [] {voiceLineInstance.SoundContainer.Sound1, voiceLineInstance.SoundContainer.Sound2, voiceLineInstance.SoundContainer.Sound3, voiceLineInstance.SoundContainer.Sound4}) {
-                        if (soundWrapper == null) continue;
-                        if (config.ContainsKey("soundRestriction") && !config["soundRestriction"].ShouldDo(GetFileName(soundWrapper.SoundResource))) continue;
-                        SoundInfo sound = new SoundInfo {GUID = soundWrapper.SoundResource};
-                        Sound.Save(flags, outputDirectory, sound);
-                    }
-                }
+                
+                Combo.ComboInfo info = new Combo.ComboInfo();
+                Combo.Find(info, soundMasterContainer.VoiceMaster);
+                
+                SaveLogic.Combo.SaveVoiceMaster(flags, Path.Combine(basePath, Container, heroFileName), info, soundMasterContainer.VoiceMaster);
             }
         }
     }

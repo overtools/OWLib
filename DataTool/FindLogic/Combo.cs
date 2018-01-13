@@ -78,6 +78,16 @@ namespace DataTool.FindLogic {
                     Textures[texture].Name = name.TrimEnd(' ');
                 }
             }
+            
+            public void SetEffectName(ulong effect, string name, Dictionary<ulong, ulong> replacements=null) {
+                if (replacements != null) effect = GetReplacement(effect, replacements);
+                if (Effects.ContainsKey(effect)) {
+                    Effects[effect].Name = name.TrimEnd(' ');
+                }
+                if (AnimationEffects.ContainsKey(effect)) {
+                    AnimationEffects[effect].Name = name.TrimEnd(' ');
+                }
+            }
         }
 
         public class ComboConfig {
@@ -186,7 +196,7 @@ namespace DataTool.FindLogic {
             public WWiseBankInfo(ulong guid) : base(guid) { }
         }
         
-        public class EffectInfoCombo : ComboType {
+        public class EffectInfoCombo : ComboNameable {
             // wrap
             public EffectParser.EffectInfo Effect;
 
@@ -478,6 +488,19 @@ namespace DataTool.FindLogic {
                                 entityInfo.VoiceMaster = GetReplacement(voiceComponent.VoiceMaster, replacements);
                                 Find(info, voiceComponent.VoiceMaster, replacements, entityContext);
                             }
+                        }
+                    }
+
+                    // assign voice master to effects
+                    if (entityInfo.VoiceMaster != 0) {
+                        foreach (ulong entityAnimation in entityInfo.Animations) {
+                            AnimationInfoNew entityAnimationInfo = info.Animations[entityAnimation];
+                            if (entityAnimationInfo.Effect == 0) continue;
+                            EffectInfoCombo entityAnimationEffectInfo = null;
+                            if (info.Effects.ContainsKey(entityAnimationInfo.Effect)) entityAnimationEffectInfo = info.Effects[entityAnimationInfo.Effect];
+                            if (info.AnimationEffects.ContainsKey(entityAnimationInfo.Effect)) entityAnimationEffectInfo = info.AnimationEffects[entityAnimationInfo.Effect];
+                            if (entityAnimationEffectInfo == null) continue;
+                            entityAnimationEffectInfo.Effect.SoundMaster = entityInfo.VoiceMaster;
                         }
                     }
 
