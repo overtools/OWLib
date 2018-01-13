@@ -1,4 +1,4 @@
-version: 1.19.0.{build}-rc2
+version: 1.19.0.{build}
 image: Visual Studio 2017
 configuration: Release
 platform: Any CPU
