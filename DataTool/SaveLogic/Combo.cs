@@ -265,22 +265,36 @@ namespace DataTool.SaveLogic {
         }
 
         public static void SaveModel(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong model) {
-            Model.OWModelWriter14 modelWriter = new Model.OWModelWriter14();
-            FindLogic.Combo.ModelInfoNew modelInfo = info.Models[model];
-            string modelDirectory = Path.Combine(path, "Models", modelInfo.GetName());
-            string modelPath = Path.Combine(modelDirectory, $"{modelInfo.GetNameIndex()}{modelWriter.Format}");
-            CreateDirectoryFromFile(modelPath);
+            bool convertModels = true;
 
-            Stream modelStream = OpenFile(modelInfo.GUID);
-
-            if (info.SaveRuntimeData.Threads) {
-                info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
-                    SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream);
-                }));
-            } else {
-                SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream);
+            if (flags is ExtractFlags extractFlags) {
+                convertModels = extractFlags.ConvertModels  && !extractFlags.Raw;
+                if (extractFlags.SkipModels) return;
             }
             
+            FindLogic.Combo.ModelInfoNew modelInfo = info.Models[model];
+            string modelDirectory = Path.Combine(path, "Models", modelInfo.GetName());
+
+            if (convertModels) {
+                Model.OWModelWriter14 modelWriter = new Model.OWModelWriter14();
+                
+                string modelPath = Path.Combine(modelDirectory, $"{modelInfo.GetNameIndex()}{modelWriter.Format}");
+                CreateDirectoryFromFile(modelPath);
+
+                Stream modelStream = OpenFile(modelInfo.GUID);
+
+                if (info.SaveRuntimeData.Threads) {
+                    info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
+                        SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream);
+                    }));
+                } else {
+                    SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream);
+                }
+            } else {
+                using (Stream modelStream = OpenFile(modelInfo.GUID)) {
+                    WriteFile(modelStream, Path.Combine(modelDirectory, modelInfo.GetNameIndex()+".00C"));
+                }
+            }
             
             foreach (ulong modelModelLook in modelInfo.ModelLooks) {
                 SaveModelLook(flags, modelDirectory, info, modelModelLook);
@@ -457,7 +471,7 @@ namespace DataTool.SaveLogic {
             TextureHeader header;
             
             if (dataStream != null) {
-                OWLib.Texture textObj = new OWLib.Texture(headerStream, dataStream);
+                Texture textObj = new Texture(headerStream, dataStream);
                 convertedStream = textObj.Save();
                 header = textObj.Header;
                 headerStream.Dispose();
@@ -622,10 +636,9 @@ namespace DataTool.SaveLogic {
             if (soundStream == null) return;
 
             if (!convertWem) {
-                // todo
-                return;
-            }
-            if (info.SaveRuntimeData.Threads) {
+                WriteFile(soundStream, Path.Combine(directory, $"{soundFileInfo.GetName()}.wem"));
+                soundStream.Dispose();
+            } else if (info.SaveRuntimeData.Threads) {
                 info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
                     ConvertSoundFile(soundStream, soundFileInfo, directory);
                 }));
