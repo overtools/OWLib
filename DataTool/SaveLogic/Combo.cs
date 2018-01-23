@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BCFF;
+using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.Extract;
@@ -95,7 +96,7 @@ namespace DataTool.SaveLogic {
 
         private static void ConvertAnimation(Stream animStream, string path, bool convertAnims, SEAnimWriter animWriter, FindLogic.Combo.AnimationInfoNew animationInfo) {
             animStream.Position = 0;
-            OWLib.Animation parsedAnimation = new OWLib.Animation(animStream);
+            Animation parsedAnimation = new Animation(animStream);
 
             string animationDirectory =
                 Path.Combine(path, "Animations", parsedAnimation.Header.priority.ToString());
@@ -256,24 +257,42 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void SaveOWModelFile(ICLIFlags flags, string modelPath, Model.OWModelWriter14 modelWriter, FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelInfoNew modelInfo, Stream modelStream) {
+        private static void SaveOWModelFile(ICLIFlags flags, string modelPath, Model.OWModelWriter14 modelWriter,
+            FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelInfoNew modelInfo, Stream modelStream, bool doRefpose,
+            string refposePath) {
+            Stream refposeStream = new MemoryStream();
             using (Stream modelOutputStream = File.OpenWrite(modelPath)) {
                 modelOutputStream.SetLength(0);
-                modelWriter.Write(flags, modelOutputStream, info, modelInfo, modelStream);
-            } 
+                modelWriter.Write(flags, modelOutputStream, info, modelInfo, modelStream, refposeStream);
+            }
+
+            if (doRefpose && refposeStream.Length > 0) {
+                using (Stream refposeOutputStream = File.OpenWrite(refposePath)) {
+                    refposeOutputStream.SetLength(0);
+                    refposeStream.CopyTo(refposeOutputStream);
+                }
+            }
+
             modelStream.Dispose();
+            refposeStream.Dispose();
         }
 
         public static void SaveModel(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong model) {
             bool convertModels = true;
+            bool doRefpose = false;
 
             if (flags is ExtractFlags extractFlags) {
                 convertModels = extractFlags.ConvertModels  && !extractFlags.Raw;
+                doRefpose = extractFlags.ExtractRefpose;
                 if (extractFlags.SkipModels) return;
             }
             
             FindLogic.Combo.ModelInfoNew modelInfo = info.Models[model];
             string modelDirectory = Path.Combine(path, "Models", modelInfo.GetName());
+            string refposePath = "";
+            if (doRefpose) {
+                refposePath = Path.Combine(modelDirectory, modelInfo.GetNameIndex()+".smd");
+            }
 
             if (convertModels) {
                 Model.OWModelWriter14 modelWriter = new Model.OWModelWriter14();
@@ -285,11 +304,17 @@ namespace DataTool.SaveLogic {
 
                 if (info.SaveRuntimeData.Threads) {
                     info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
-                        SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream);
+                        SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream, doRefpose, refposePath);
                     }));
                 } else {
-                    SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream);
+                    SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream, doRefpose, refposePath);
                 }
+
+                if (doRefpose) {
+                    
+                }
+                
+                
             } else {
                 using (Stream modelStream = OpenFile(modelInfo.GUID)) {
                     WriteFile(modelStream, Path.Combine(modelDirectory, modelInfo.GetNameIndex()+".00C"));
@@ -587,8 +612,8 @@ namespace DataTool.SaveLogic {
             string outputFileOgg = Path.ChangeExtension(outputFile, "ogg");
             CreateDirectoryFromFile(outputFile);
 
-            using (ConvertLogic.Sound.WwiseRIFFVorbis vorbis =
-                new ConvertLogic.Sound.WwiseRIFFVorbis(stream, "Third Party\\packed_codebooks_aoTuV_603.bin")) {
+            using (Sound.WwiseRIFFVorbis vorbis =
+                new Sound.WwiseRIFFVorbis(stream, "Third Party\\packed_codebooks_aoTuV_603.bin")) {
                 Stream vorbisStream = new MemoryStream();
                 vorbis.ConvertToOgg(vorbisStream);
                 vorbisStream.Position = 0;

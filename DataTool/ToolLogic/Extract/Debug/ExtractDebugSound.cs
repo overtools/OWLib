@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using STULib.Types.Generic;
 using static DataTool.Program;
-using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-sound", Description = "Extract sounds (debug)", TrackTypes = new ushort[] {0x5F}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]

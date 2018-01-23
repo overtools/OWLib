@@ -1,4 +1,5 @@
 ﻿// using STULib.Types.posthash;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -523,7 +524,15 @@ namespace DataTool.FindLogic {
                     
                     break;
                 case 0x6:
-                    if (info.Animations.ContainsKey(guid)) break;
+                    if (info.Animations.ContainsKey(guid)) {
+                        if (context.Model != 0) {
+                            info.Models[context.Model].Animations.Add(guid);
+                        }
+                        if (context.Entity != 0) {
+                            info.Entities[context.Entity].Animations.Add(guid);
+                        }
+                        break;
+                    }
                     AnimationInfoNew animationInfo = new AnimationInfoNew(guid);
 
                     ComboContext animationContext = context.Clone();
@@ -670,7 +679,12 @@ namespace DataTool.FindLogic {
                     break;
                     
                 case 0x1A:
-                    if (info.ModelLooks.ContainsKey(guid)) break;
+                    if (info.ModelLooks.ContainsKey(guid)) {
+                        if (context.Model != 0) {
+                            info.Models[context.Model].ModelLooks.Add(guid);
+                        }
+                        break;
+                    }
                     
                     STUModelLook modelLook = GetInstance<STUModelLook>(guid);
                     if (modelLook == null) break;

@@ -1,4 +1,5 @@
 ﻿// using STULib.Types.posthash;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +23,7 @@ namespace DataTool.SaveLogic {
             public char[] Identifier => new [] { 'O' };
             public string Name => "OWM Map Format";
     
-            public bool Write(OWLib.Animation anim, Stream output, object[] data) {
+            public bool Write(Animation anim, Stream output, object[] data) {
                 return false;
             }
 

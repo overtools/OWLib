@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using APPLIB;
@@ -15,6 +14,7 @@ using OWLib.Types.Chunk.LDOM;
 using OWLib.Types.Map;
 using OWLib.Writer;
 using static DataTool.Helper.IO;
+using Animation = OWLib.Animation;
 
 namespace DataTool.SaveLogic {
     public class Model {
@@ -122,7 +122,7 @@ namespace DataTool.SaveLogic {
                 return true;
             }
     
-            public bool Write(OWLib.Animation anim, Stream output, object[] data) {
+            public bool Write(Animation anim, Stream output, object[] data) {
                 return false;
             }
 
@@ -150,7 +150,7 @@ namespace DataTool.SaveLogic {
                 throw new NotImplementedException();
             }
 
-            public bool Write(OWLib.Animation anim, Stream output, params object[] data) {
+            public bool Write(Animation anim, Stream output, params object[] data) {
                 throw new NotImplementedException();
             }
 
@@ -160,7 +160,14 @@ namespace DataTool.SaveLogic {
             }
 
 
-            public void Write(ICLIFlags flags, Stream output, FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelInfoNew modelInfo, Stream modelStream) {
+            public void Write(ICLIFlags flags, Stream output, FindLogic.Combo.ComboInfo info,
+                FindLogic.Combo.ModelInfoNew modelInfo, Stream modelStream, Stream refposeStream) {
+                bool doRefpose = false;
+
+                if (flags is ExtractFlags extractFlags) {
+                    doRefpose = extractFlags.ExtractRefpose;
+                }
+                
                 // erm, we need to wrap for now
                 using (Chunked modelChunked = new Chunked(modelStream)) {
                     string materialPath = "";
@@ -174,6 +181,11 @@ namespace DataTool.SaveLogic {
                     Write(flags, modelChunked, output, new List<byte>(new byte[] {0, 1, 0xFF}), 
                         new object[] {true, materialPath, $"Model {GetFileName(modelInfo.GUID)}", null, true},
                         new ModelInfo(modelInfo.GUID));
+
+                    if (!doRefpose) return;
+                    RefPoseWriter refPoseWriter = new RefPoseWriter();
+                    refPoseWriter.Write(modelChunked, refposeStream, true);
+                    refposeStream.Position = 0;
                 }
             }
 

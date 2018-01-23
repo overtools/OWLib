@@ -12,7 +12,6 @@ using OWLib;
 using OWLib.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
-using Texture = OWLib.Texture;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-thread-demo", Description = "Threading demo (debug)", TrackTypes = new ushort[] {0x4}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]

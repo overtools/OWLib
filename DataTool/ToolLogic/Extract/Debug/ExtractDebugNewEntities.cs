@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
-using DataTool.SaveLogic;
 using Newtonsoft.Json.Linq;
 using STULib.Types.Generic;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
-using Model = DataTool.FindLogic.Model;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-newents", Description = "Extract new enities (debug)", TrackTypes = new ushort[] {0x3}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]

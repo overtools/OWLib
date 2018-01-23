@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
-using DataTool.SaveLogic;
-using OWLib;
 using STULib.Types;
 using STULib.Types.Generic;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
-using Model = DataTool.FindLogic.Model;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-ent", Description = "Extract entities (debug)", TrackTypes = new ushort[] {0x3}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]

@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms.VisualStyles;
 using DataTool.DataModels;
 using DataTool.Flag;
-using OWLib;
 using STULib.Types;
 using STULib.Types.Generic;
 using STULib.Types.Statescript.Components;

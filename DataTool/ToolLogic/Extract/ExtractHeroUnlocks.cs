@@ -15,7 +15,6 @@ using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
-using Texture = DataTool.FindLogic.Texture;
 
 namespace DataTool.ToolLogic.Extract {
     // syntax:

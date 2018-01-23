@@ -7,6 +7,7 @@ using OWLib.Types.Chunk;
 using OWLib.Types.Map;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using APPLIB;
 using OWLib.Types.Chunk.LDOM;
 
@@ -18,11 +19,15 @@ namespace OWLib.Writer {
         private CultureInfo culture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
         public WriterSupport SupportLevel => WriterSupport.BONE | WriterSupport.POSE | WriterSupport.MODEL | WriterSupport.REFPOSE;
 
+        public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, params object[] data) {
+            throw new NotImplementedException();
+        }
+
         public bool Write(Map10 physics, Stream output, object[] data) {
             return false;
         }
         
-        public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, object[] data) {
+        public bool Write(Chunked model, Stream output, bool keepOpen=false) {
             culture.NumberFormat.NumberDecimalSeparator = ".";
             System.Threading.Thread.CurrentThread.CurrentCulture = culture;
             IChunk chunk = model.FindNextChunk("lksm").Value;
@@ -77,7 +82,7 @@ namespace OWLib.Writer {
                     clothIndex++;
                 }
             }
-            using (StreamWriter writer = new StreamWriter(output)) {
+            using (StreamWriter writer = new StreamWriter(output, Encoding.Default, 512, keepOpen)) {
                 writer.WriteLine("{0}", skeleton.Data.bonesAbs);
                 writer.WriteLine("version 1");
                 writer.WriteLine("nodes");

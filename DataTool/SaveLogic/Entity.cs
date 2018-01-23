@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.FindLogic;
-using DataTool.Flag;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
-using STULib.Types;
 using static DataTool.Helper.IO;
+using Animation = OWLib.Animation;
 
 namespace DataTool.SaveLogic {
     public class Entity {
@@ -111,7 +110,7 @@ namespace DataTool.SaveLogic {
                 throw new NotImplementedException();
             }
 
-            public bool Write(OWLib.Animation anim, Stream output, params object[] data) {
+            public bool Write(Animation anim, Stream output, params object[] data) {
                 throw new NotImplementedException();
             }
 
