@@ -901,6 +901,9 @@ namespace DataTool.FindLogic {
                     } else if (cosmetic.GetType() == typeof(Emote)) {
                         Emote cosmeticEmote = (Emote) cosmetic;
                         Find(info, cosmeticEmote.BlendTreeSet, replacements, context);
+                    } else if (cosmetic.GetType() == typeof(Pose)) {
+                        Pose cosmeticpose = (Pose) cosmetic;
+                        Find(info, cosmeticpose.PoseResource, replacements, context);
                     }
 
                     break;
@@ -945,6 +948,15 @@ namespace DataTool.FindLogic {
                         }
                     }
                     
+                    break;
+                case 0xBF:
+                    STUPose pose = GetInstance<STUPose>(guid);
+                    if (pose == null) break;
+                    Find(info, pose.Animation, replacements, context);
+
+                    foreach (STUPoseSub poseSub in new [] {pose.Sub1, pose.Sub2, pose.Sub3}) {
+                        Find(info, poseSub.Animation, replacements, context);
+                    }
                     break;
                 default:
                     Debugger.Log(0, "DataTool", $"[DataTool.FindLogic.Combo]: Unhandled type: {guidType:X3}\r\n");
