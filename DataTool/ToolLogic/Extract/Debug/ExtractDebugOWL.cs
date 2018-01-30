@@ -90,6 +90,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 if (!added.Contains(name)) continue;
                 Combo.Find(imgInfo, key);
             }
+            Console.Out.WriteLine("ok i do save");
             SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(path, "Tex"), imgInfo);
 
             return;
