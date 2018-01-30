@@ -73,23 +73,24 @@ namespace DataTool.ToolLogic.Extract.Debug {
             //     // }
             // }
             
-            List<string> added = ExtractDebugNewEntities.GetAddedFiles("D:\\ow\\OverwatchDataManager\\versions\\1.19.1.3.42563\\data.json");
+            List<string> added = ExtractDebugNewEntities.GetAddedFiles("D:\\ow\\OverwatchDataManager\\versions\\1.19.3.1.43036\\data.json");
 
             Combo.ComboInfo imgInfo = new Combo.ComboInfo();
             // Combo.Find(imgInfo, 864691265894168957ul);
-            foreach (ulong key in TrackedFiles[0xA5]) {
-                string name = GetFileName(key);
-                if (!added.Contains(name)) continue;
-                Skin skin = GetInstance<Skin>(key);
-                if (skin == null) continue;
-            }
+            //foreach (ulong key in TrackedFiles[0xA5]) {
+            //    string name = GetFileName(key);
+            //    if (!added.Contains(name)) continue;
+            //    Skin skin = GetInstance<Skin>(key);
+            //    if (skin == null) continue;
+            //}
 
-            // foreach (ulong key in TrackedFiles[0x4]) {
-            //     string name = GetFileName(key);
-            //     if (!added.Contains(name)) continue;
-            //     Combo.Find(imgInfo, key);
-            // }
-            // SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(path, "Tex"), imgInfo);
+            foreach (ulong key in TrackedFiles[0x4]) {
+                string name = GetFileName(key);
+                if (name[3] == 'F') continue;  // :thonk:
+                if (!added.Contains(name)) continue;
+                Combo.Find(imgInfo, key);
+            }
+            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(path, "Tex"), imgInfo);
 
             return;
             
