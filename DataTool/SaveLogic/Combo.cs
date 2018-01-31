@@ -235,8 +235,10 @@ namespace DataTool.SaveLogic {
             if (effectInfo.SVCEs.Count == 0 || effectInfo.SoundMaster == 0) return output;
 
             foreach (EffectParser.SVCEInfo svceInfo in effectInfo.SVCEs) {
-                output[svceInfo.VoiceStimulus] = info.VoiceMasters[effectInfo.SoundMaster]
-                    .VoiceLineInstances[svceInfo.VoiceStimulus];
+                Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> instances = info.VoiceMasters[effectInfo.SoundMaster].VoiceLineInstances;
+                if (instances.ContainsKey(svceInfo.VoiceStimulus)) {
+                    output[svceInfo.VoiceStimulus] = instances[svceInfo.VoiceStimulus];
+                }
             }
 
             return output;
