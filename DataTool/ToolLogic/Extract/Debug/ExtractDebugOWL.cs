@@ -73,7 +73,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             //     // }
             // }
             
-            List<string> added = ExtractDebugNewEntities.GetAddedFiles("D:\\ow\\OverwatchDataManager\\versions\\1.19.3.1.43036\\data.json");
+            List<string> added = ExtractDebugNewEntities.GetAddedFiles("D:\\ow\\OverwatchDataManager\\versions\\1.20.0.2.43435\\data.json");
 
             Combo.ComboInfo imgInfo = new Combo.ComboInfo();
             // Combo.Find(imgInfo, 864691265894168957ul);
