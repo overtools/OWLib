@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using DataTool.Flag;
 using STULib.Types;
 using STULib.Types.Generic;
-using STULib.Types.Statescript.Components;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;

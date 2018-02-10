@@ -11,3 +11,4 @@ namespace STULib.Types {
         public STUGUID LootboxUnlock;  // STULib.Types.STUUnlock.Cosmetic
     }
 }
+

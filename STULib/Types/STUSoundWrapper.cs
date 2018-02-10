@@ -3,12 +3,15 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0xD744301C)]
-    public class STUSoundWrapper : STUInstance {
-        // todo: these names are so bad
+    public class STUSoundWrapper : STUInstance { // todo: these names are so bad
         [STUField(0x3C099E86)]
         public STUGUID SoundResource;
 
         [STUField(0x45123429)]
         public Enums.STUEnum_C4294B0E m_45123429;
+
+        [STULib.STUField(0x5E15FBE2)]
+        public float m_5E15FBE2;
     }
 }
+

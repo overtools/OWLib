@@ -18,8 +18,6 @@ namespace STULib {
         public static Dictionary<uint, Type> InstanceTypes => _InstanceTypes;
         public static Dictionary<uint, Type> EnumTypes => _EnumTypes;
 
-        protected static Dictionary<uint, List<STUSuppressWarningAttribute>> SuppressedWarnings;
-
         public HashSet<uint> TypeHashes { get; protected set; } = new HashSet<uint>();
         
         internal Dictionary<KeyValuePair<object, FieldInfo>, int> EmbedRequests;
@@ -46,10 +44,9 @@ namespace STULib {
             return parent.Concat(type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)).ToArray();
         }
 
-        protected internal static void LoadInstanceTypes() {
+        public static void LoadInstanceTypes() {
             _InstanceTypes = new Dictionary<uint, Type>();
             _InstanceNames = new Dictionary<Type, string>();
-            SuppressedWarnings = new Dictionary<uint, List<STUSuppressWarningAttribute>>();
 
             Assembly asm = typeof(STUInstance).Assembly;
             Type t = typeof(STUInstance);
@@ -58,7 +55,6 @@ namespace STULib {
             foreach (Type type in types) {
                 STUAttribute[] attributes = (STUAttribute[])Attribute.GetCustomAttributes(type, typeof(STUAttribute), true);
                 
-                STUSuppressWarningAttribute[] warningAttributes = (STUSuppressWarningAttribute[])Attribute.GetCustomAttributes(type, typeof(STUSuppressWarningAttribute), true);
                 if (!attributes.Any()) {
                     continue;
                 }
@@ -93,12 +89,6 @@ namespace STULib {
                     _InstanceNames[type] = attrib.Name;
                     _InstanceTypes[attrib.Checksum] = type;
                     break;  // todo: MAJOR: fixes inherited types overriding parent checksums
-                }
-                foreach (STUSuppressWarningAttribute warn in warningAttributes) {
-                    if (!SuppressedWarnings.ContainsKey(warn.ThisInstance)) {
-                        SuppressedWarnings[warn.ThisInstance] = new List<STUSuppressWarningAttribute>();
-                    }
-                    SuppressedWarnings[warn.ThisInstance].Add(warn);
                 }
             }
             Type t2 = typeof(Enum);
@@ -156,7 +146,6 @@ namespace STULib {
             _InstanceTypes = new Dictionary<uint, Type>();
             _EnumTypes = new Dictionary<uint, Type>();
             _InstanceNames = new Dictionary<Type, string>();
-            SuppressedWarnings = new Dictionary<uint, List<STUSuppressWarningAttribute>>();
         }
 
         public abstract void Dispose();

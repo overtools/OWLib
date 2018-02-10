@@ -32,6 +32,9 @@ namespace STULib.Types {
 
         [STUField(0xB62657B8)]
         public byte m_B62657B8;
+
+        [STULib.STUField(0x166243EC)]
+        public byte m_166243EC;
     }
 
     [STU(0x0EBAF735)]
@@ -82,3 +85,4 @@ namespace STULib.Types {
         public byte m_573D3605;
     }
 }
+

@@ -12,10 +12,8 @@ using OWLib.Types;
 using OWLib.Types.Chunk;
 using STULib;
 using STULib.Types;
-using STULib.Types.AnimationList.x021;
+using STULib.Types.Dump;
 using STULib.Types.Generic;
-using STULib.Types.Statescript.Components;
-using STULib.Types.STUUnlock;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -883,26 +881,26 @@ namespace DataTool.FindLogic {
                     break;
                 case 0xA5:
                     // hmm, if existing?
-                    Cosmetic cosmetic = GetInstance<Cosmetic>(guid);
+                    STUUnlock cosmetic = GetInstance<STUUnlock>(guid);
 
-                    if (cosmetic.GetType() == typeof(Spray)) {
-                        Spray sprayCosmetic = (Spray) cosmetic;
+                    if (cosmetic.GetType() == typeof(STUUnlock_Spray)) {
+                        STUUnlock_Spray sprayCosmetic = (STUUnlock_Spray) cosmetic;
                         Find(info, sprayCosmetic.Effect2?.Effect, replacements, context);
                         Find(info, sprayCosmetic.Effect2?.EffectLook, replacements, context);
                         Find(info, sprayCosmetic.Effect?.EffectLook, replacements, context);
                         Find(info, sprayCosmetic.Effect?.Effect, replacements, context);
-                    } else if (cosmetic.GetType() == typeof(PlayerIcon)) {
-                        PlayerIcon playerIconCosmetic = (PlayerIcon) cosmetic;
+                    } else if (cosmetic.GetType() == typeof(STUUnlock_PlayerIcon)) {
+                        STUUnlock_PlayerIcon playerIconCosmetic = (STUUnlock_PlayerIcon) cosmetic;
                         Find(info, playerIconCosmetic.Effect?.EffectLook, replacements, context);
                         Find(info, playerIconCosmetic.Effect?.Effect, replacements, context);
-                    } else if (cosmetic.GetType() == typeof(HighlightIntro)) {
-                        HighlightIntro cosmeticHighlightIntro = (HighlightIntro) cosmetic;
+                    } else if (cosmetic.GetType() == typeof(STUUnlock_HighlightIntro)) {
+                        STUUnlock_HighlightIntro cosmeticHighlightIntro = (STUUnlock_HighlightIntro) cosmetic;
                         Find(info, cosmeticHighlightIntro.Animation, replacements, context);
-                    } else if (cosmetic.GetType() == typeof(Emote)) {
-                        Emote cosmeticEmote = (Emote) cosmetic;
+                    } else if (cosmetic.GetType() == typeof(STUUnlock_Emote)) {
+                        STUUnlock_Emote cosmeticEmote = (STUUnlock_Emote) cosmetic;
                         Find(info, cosmeticEmote.BlendTreeSet, replacements, context);
-                    } else if (cosmetic.GetType() == typeof(Pose)) {
-                        Pose cosmeticpose = (Pose) cosmetic;
+                    } else if (cosmetic.GetType() == typeof(STUUnlock_Pose)) {
+                        STUUnlock_Pose cosmeticpose = (STUUnlock_Pose) cosmetic;
                         Find(info, cosmeticpose.PoseResource, replacements, context);
                     }
 

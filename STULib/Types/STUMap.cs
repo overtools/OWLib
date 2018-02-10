@@ -43,8 +43,6 @@ namespace STULib.Types {
 
         [STUField(0xAF869CEC)]
         public byte[] Checksum;  // used for highlights / verifying things
-        // see: https://github.com/willkirkby/overwatch-highlights/tree/master/OverwatchHighlights/MapChecksumDB.cs#L9
-        // (static storage of ChecksumString)
 
         [STUField(0xC6599DEB)]
         public STUGUID ImageResource3;
@@ -76,30 +74,45 @@ namespace STULib.Types {
         [STUField(0x38F33424)]
         public STUGUID MapDataResource3;
 
-        [STU(0xAC40722C)]
-        public class STUMapUnknownNested1 : STUInstance {
-            [STUField(0x4E87690F)]
-            public STUGUID Unknown1;
+        [STULib.STUField(0x506FA8D8)]
+        public string m_506FA8D8;
 
-            [STUField(0xED999C8B)]
-            public STUGUID Unknown2;
-        }
+        [STULib.STUField(0xD7A516EC)]
+        public string m_D7A516EC;
 
-        [STU(0x7D6D8405)]
-        public class STU_7D6D8405 : STUInstance {
-            [STUField(0xC0A83121)]
-            public STUGUID Override;
+        [STULib.STUField(0xCA7E6EDC, "m_description")]
+        public string Description;
 
-            [STUField(0x7DD89F4F)]
-            public STUGUID Entity;
-        }
+        [STULib.STUField(0xEBE72514)]
+        public STULib.Types.Generic.Common.STUGUID m_EBE72514;
+
+        [STULib.STUField(0xD58D0365)]
+        public STULib.Types.Generic.Common.STUGUID m_D58D0365;
 
         public ulong DataKey => (MapDataResource1 & ~0xFFFFFFFF00000000ul) | 0x0DD0000100000000ul;
-
         public ulong GetDataKey(ushort type) {
             return (DataKey & ~0xFFFF00000000ul) | ((ulong) type << 32);
         }
 
         public string ChecksumString => string.Join("", Checksum.Select(a => a.ToString("x2")));
     }
+    
+    [STU(0xAC40722C)]
+    public class STUMapUnknownNested1 : STUInstance {
+        [STUField(0x4E87690F)]
+        public STUGUID Unknown1;
+
+        [STUField(0xED999C8B)]
+        public STUGUID Unknown2;
+    }
+
+    [STU(0x7D6D8405)]
+    public class STU_7D6D8405 : STUInstance {
+        [STUField(0xC0A83121)]
+        public STUGUID Override;
+
+        [STUField(0x7DD89F4F)]
+        public STUGUID Entity;
+    }
 }
+

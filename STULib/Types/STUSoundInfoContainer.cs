@@ -5,3 +5,4 @@ namespace STULib.Types {
         public STUSoundInfo SoundInfo;
     }
 }
+

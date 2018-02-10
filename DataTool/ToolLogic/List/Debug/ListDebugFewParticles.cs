@@ -3,7 +3,7 @@ using System.IO;
 using DataTool.Flag;
 using OWLib;
 using OWLib.Types.Chunk;
-using STULib.Types.STUUnlock;
+using STULib.Types;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
@@ -21,7 +21,7 @@ namespace DataTool.ToolLogic.List.Debug {
 
         public void GetFewParticles() {
             foreach (ulong key in TrackedFiles[0xA5]) {
-                HighlightIntro highlightIntro = GetInstance<HighlightIntro>(key);
+                STUUnlock_HighlightIntro highlightIntro = GetInstance<STUUnlock_HighlightIntro>(key);
                 if (highlightIntro?.Animation == null) continue;
                 using (Stream animStream = OpenFile(highlightIntro.Animation)) {
                     using (BinaryReader animReader = new BinaryReader(animStream)) {

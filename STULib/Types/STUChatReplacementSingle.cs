@@ -26,3 +26,4 @@ namespace STULib.Types {
         public ulong m_EDE36CB7;
     }
 }
+

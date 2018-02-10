@@ -6,7 +6,6 @@ using DataTool.Flag;
 using OWLib;
 using OWLib.Types;
 using STULib.Types;
-using STULib.Types.STUUnlock;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;

@@ -18,3 +18,4 @@ namespace STULib.Types {
         public bool IsSpecial => Unknown1 > 0;
     }
 }
+

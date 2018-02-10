@@ -50,3 +50,4 @@ namespace STULib.Types {
         public STUModelMaterial[] Materials;
     }
 }
+

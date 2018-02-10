@@ -6,7 +6,6 @@ using OWLib;
 using STULib;
 using STULib.Impl;
 using STULib.Types;
-using STULib.Types.STUUnlock;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static STULib.Types.Generic.Common;
@@ -53,17 +52,17 @@ namespace DataTool.Helper {
         }
 
         public static ItemInfo GatherUnlock(ulong key) {
-            Cosmetic unlock = GetInstance<Cosmetic>(key);
+            STUUnlock unlock = GetInstance<STUUnlock>(key);
             if (unlock == null) return null;
 
             string name = GetString(unlock.CosmeticName);
             string description = GetDescriptionString(unlock.CosmeticDescription);
             string availableIn = GetString(unlock.CosmeticAvailableIn);
 
-            if (unlock is Currency) {
-                name = $"{(unlock as Currency).Amount} Credits";
-            } else if (unlock is Portrait) {
-                Portrait portrait = unlock as Portrait;
+            if (unlock is STUUnlock_Currency) {
+                name = $"{(unlock as STUUnlock_Currency).Amount} Credits";
+            } else if (unlock is STULevelPortrait) {
+                STULevelPortrait portrait = unlock as STULevelPortrait;
                 name = $"{portrait.Tier} Star: {portrait.Star} Level: {portrait.Level}";
             }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using DataTool.Flag;
 using DataTool.Helper;
-using STULib.Types.GameParams;
+using STULib.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;

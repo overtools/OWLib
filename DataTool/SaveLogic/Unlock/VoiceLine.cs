@@ -6,7 +6,6 @@ using DataTool.Flag;
 using OWLib;
 using OWLib.Types.Chunk;
 using STULib.Types;
-using STULib.Types.Statescript.Components;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
@@ -14,7 +13,7 @@ namespace DataTool.SaveLogic.Unlock {
     public class VoiceLine {
         public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, ItemInfo item, STUHero hero) {
             if (item == null) return;
-            if (!(item.Unlock is STULib.Types.STUUnlock.VoiceLine vl)) return;
+            if (!(item.Unlock is STUUnlock_VoiceLine vl)) return;
             const string type = "VoiceLines";
             string name = GetValidFilename(item.Name).Replace(".", "");
 

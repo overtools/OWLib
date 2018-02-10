@@ -2,6 +2,7 @@
 using System.IO;
 using DataTool.DataModels;
 using DataTool.Flag;
+using STULib.Types;
 
 namespace DataTool.SaveLogic.Unlock {
     public class Portrait {
@@ -10,7 +11,7 @@ namespace DataTool.SaveLogic.Unlock {
             
             foreach (ItemInfo item in items) {
                 if (item == null) continue;
-                if (!(item.Unlock is STULib.Types.STUUnlock.Portrait unlock)) continue;
+                if (!(item.Unlock is STULevelPortrait unlock)) continue;
                 string tier = unlock.Tier.ToString();
 
                 if (unlock.StarImage != null) {

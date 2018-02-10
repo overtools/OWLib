@@ -9,7 +9,6 @@ using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
 using STULib.Types;
-using STULib.Types.Statescript.Components;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;

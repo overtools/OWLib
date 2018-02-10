@@ -1,85 +1,342 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using STUHashTool;
+using STULib;
 using STULib.Impl.Version2HashComparer;
-using static DataTool.Helper.IO;
+using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
 
 namespace STUClassFixer {
     internal class Program {
-        public static void Main(string[] args) {
-            string inputDir = args[0];
-            string outputDir = args[1];
+        public static List<string> InvalidTypes;
+        public static Dictionary<uint, string> FieldNames;
+        public static Dictionary<uint, string> EnumNames;
+        public static Dictionary<uint, string> InstanceNames;
+        public static string OutputDirectory;
+        public static string InputDirectory;
 
+        public static void CleanDirectory(string directory) {
+            foreach (string subdirectory in Directory.EnumerateDirectories(directory)) {
+                CleanDirectory(subdirectory);
+            }
+
+            foreach (string file in Directory.EnumerateFiles(directory)) {
+                File.Delete(file);
+            }
+        }
+
+        public static void CreateDirectory(string directory) {
+            if (!Directory.Exists(directory)) {
+                Directory.CreateDirectory(directory);
+            }
+        }
+        
+        
+        public static void Main(string[] args) {
+            InputDirectory = args[0];
+            OutputDirectory = args[1];
+            
+            CreateDirectory(OutputDirectory);
+            CleanDirectory(OutputDirectory);
+            
             Dictionary<uint, STUInstanceJSON> instanceJson = STUHashTool.Program.LoadInstanceJson("RegisteredSTUTypes.json");
-            STUHashTool.Program.LoadHashCSV("KnownFields.csv", out Dictionary<uint, string> fieldNames);
+            STUHashTool.Program.LoadHashCSV("KnownFields.csv", out FieldNames);
+            STUHashTool.Program.LoadHashCSV("KnownTypes.csv", out InstanceNames);
+            STUHashTool.Program.LoadHashCSV("KnownEnums.csv", out EnumNames);
             Version2Comparer.InstanceJSON = instanceJson;
 
-            // foreach (KeyValuePair<uint,string> fieldName in fieldNames) {
-            //     Console.Out.WriteLine($"{fieldName.Value} => {STUHashTool.ClassBuilder.FixFieldName(fieldName.Value)}");
-            // }
+            ISTU.LoadInstanceTypes();
             
-            // todo: fix field names too
-
-            Regex hashRegex = new Regex(@"0x(\w+)");
+            InvalidTypes = STUHashTool.Program.LoadInvalidTypes("IgnoredBrokenSTUs.txt");
             
-            foreach (string file in Directory.EnumerateFiles(inputDir, "*.cs", SearchOption.AllDirectories)) {
-                // if (!file.Contains("STUHero")) continue;
-                Console.WriteLine(file);
+            // fix existing classes
+            FixClasses();
+            
+            // add any classes that don't exist
+            AddNewClasses(instanceJson);
+        }
 
-                int bracketLevel = 0;
-                Dictionary<uint, int> classEnds = new Dictionary<uint, int>();
+        public static void FixClasses() {
+            foreach (string file in Directory.EnumerateFiles(InputDirectory, "*.cs", SearchOption.AllDirectories)) {
+                FixClass(file);
+            }
+        }
 
-                string newFilePath = $"{outputDir}{file.Replace(inputDir, "")}";
-                CreateDirectoryFromFile(newFilePath);
-                using (StreamWriter newFileStream = new StreamWriter(newFilePath)) {
-                    foreach (string line in File.ReadAllLines(file)) {
-                        string newLine = line;
-                        if (line.Contains("{")) bracketLevel++;
-                        if (line.Contains("}")) bracketLevel--;
-                        if (line.Contains("[STU(0x")) {
-                            Match instanceMatch = hashRegex.Match(line);
-                            if (instanceMatch.Success) {
-                                uint checksum = uint.Parse(instanceMatch.Groups[1].Value, NumberStyles.HexNumber);
-                                classEnds[checksum] = bracketLevel;
-                            }
-                        } else if (line.Contains("}")) {
-                            foreach (KeyValuePair<uint,int> classEnd in new Dictionary<uint, int>(classEnds)) {
-                                if (classEnd.Value == bracketLevel) {
-                                    classEnds.Remove(classEnd.Key);
-                                }
-                            }
-                        } else if (line.Contains("[STUField(0x")) {
-                            if (classEnds.Count != 0) { // non-stu fields exist
-                                int biggestLevel = classEnds.Max(x => x.Value);
-                                uint instanceChecksum = classEnds.FirstOrDefault(x => x.Value == biggestLevel).Key;
-                                Match fieldMatch = hashRegex.Match(line);
-                                uint fieldChecksum = uint.Parse(fieldMatch.Groups[1].Value, NumberStyles.HexNumber);
-                                if (!instanceJson.ContainsKey(instanceChecksum)) {
-                                    Console.Out.WriteLine($"Instance {instanceChecksum} does not exist");
-                                } else {
-                                    STUInstanceJSON instance = instanceJson[instanceChecksum];
-                                    STUInstanceJSON.STUFieldJSON field = instance.GetField(fieldChecksum);
-                                    if (fieldNames.ContainsKey(fieldChecksum)) {
-                                        // find where "([", then insert name
-                                        // e.g [STUField(0xD229B093)] => [STUField("bilbo", 0xD229B093)]
-                                        
-                                        // if (!line.Contains(fieldNames[fieldChecksum])) {
-                                        //     newLine = newLine.Substring(0, newLine.LastIndexOf(")]", StringComparison.InvariantCulture));
-                                        //     newLine = newLine + $", \"{fieldNames[fieldChecksum]}\")]";
-                                        // }
-                                    }
-                                    if ((field.SerializationType == 2 || field.SerializationType == 3) && !line.Contains("EmbeddedInstance")) {
-                                        newLine = newLine.Substring(0, newLine.LastIndexOf(")]", StringComparison.InvariantCulture));
-                                        newLine = newLine + ", EmbeddedInstance = true)]";
-                                    }
-                                }
-                            }
+        public class InstanceCode {
+            public List<FieldCode> Fields;
+            public List<string> Lines;
+
+            public List<string> ExtraLines;
+
+            // parsing
+            public uint StartLine;
+            public uint EndLine;
+            public uint IndentLevel;
+            public bool IsDone;
+            
+            // info
+            public uint Hash;
+            public string Comment;
+            public string Name;
+            
+            public static Regex HashRegex = new Regex(@"0x(\w+)");
+
+            public InstanceCode(uint indentLevel) {
+                Lines = new List<string>();
+                IndentLevel = indentLevel;
+            }
+
+            public void Feed(string line) {
+                if (IsDone) return;
+                Lines.Add(line);
+            }
+
+            public static bool Check(string line) {
+                return line.Contains("[STU(0x") || line.Contains("[STULib.STU(0x");
+            }
+
+            public void ParseFedLines() {
+                string prevLine = "";
+                Fields = new List<FieldCode>();
+                ExtraLines = new List<string>();
+
+                int lineIndex = 0;
+                
+                foreach (string line in Lines) {
+                    string realLine = line.TrimStart(' ');
+                    if (lineIndex == 0) {
+                        Match instanceMatch = HashRegex.Match(line);
+                        if (instanceMatch.Success) {
+                            Hash = uint.Parse(instanceMatch.Groups[1].Value, NumberStyles.HexNumber);
                         }
-                        newFileStream.WriteLine(newLine.TrimEnd(' '));
+                    } else if (FieldCode.Check(prevLine, realLine)) {
+                        Fields.Add(new FieldCode(prevLine, realLine));
+                    } else if (lineIndex != 0 && lineIndex != 1 && !string.IsNullOrEmpty(realLine) && !FieldCode.Check(realLine, null) && !Check(realLine)) {
+                        ExtraLines.Add(line);
                     }
+                
+                    prevLine = line;
+                    lineIndex++;
+                }
+            }
+
+            public void UpdateFields(Dictionary<uint, string> fieldNames) {
+                if (Version2Comparer.InstanceJSON.ContainsKey(Hash)) {
+                    var instance = Version2Comparer.InstanceJSON[Hash];
+
+                    foreach (STUInstanceJSON.STUFieldJSON field in instance.Fields) {
+                        if (Fields.All(x => x.Hash != field.Hash)) {
+                            Fields.Add(new FieldCode(field));
+                        }
+                    }
+                }
+            }
+
+            public void Write(StringBuilder output) {
+                int fieldIndex = 0;
+                foreach (FieldCode field in Fields) {
+                    //string commentString = "";
+                    //if (field.Comment != null) {
+                    //    commentString = $"  // {field.Comment}"; 
+                    //}
+                    const string indent = "        ";
+
+                    output.AppendLine(indent+field.HeaderLine);
+                    output.AppendLine(indent+field.ContentLine);
+
+                    if (fieldIndex != Fields.Count - 1) {
+                        output.AppendLine();
+                    }
+
+                    //output.AppendLine($"        {field.AccessLevel} {field.Type} {field.Name};{commentString}");
+                    fieldIndex++;
+                }
+
+                if (ExtraLines.Count > 0) {
+                    output.AppendLine();
+                }
+                foreach (string extraLine in ExtraLines) {
+                    output.AppendLine(extraLine);
+                }
+            }
+        }
+
+        [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
+        public class FieldCode {
+            public uint Hash;
+            public string Type;
+            public string Name;
+            public string AccessLevel;
+            public string Comment;
+
+            public string HeaderLine;
+            public string ContentLine;
+            
+            internal string DebuggerDisplay => $"FieldCode: {Hash:X8}";
+            
+            public FieldCode(string headerLine, string contentLine) {
+                InitFromLines(headerLine, contentLine);
+            }
+
+            private void InitFromLines(string headerLine, string contentLine) {
+                HeaderLine = headerLine.TrimStart(' ');
+                ContentLine = contentLine.TrimStart(' ');
+                
+                Match instanceMatch = InstanceCode.HashRegex.Match(HeaderLine);
+                if (instanceMatch.Success) {
+                    Hash = uint.Parse(instanceMatch.Groups[1].Value, NumberStyles.HexNumber);
+                }
+
+                string[] commentArray = ContentLine.Split(new [] {@"//"}, StringSplitOptions.None);
+
+                if (commentArray.Length > 1) {
+                    Comment = commentArray[1].TrimStart(' ');
+                }
+
+                string[] parts = ContentLine.Split(' ');
+
+                AccessLevel = parts[0];
+                Type = parts[1];
+                Name = parts[2].TrimEnd(';');
+            }
+
+            public FieldCode(STUInstanceJSON.STUFieldJSON field) {
+                FieldData wrappedField = new FieldData(field);
+                
+                ClassBuilder.WriteField(out string headerLine, out string contentLine, "    ", "this isn't used ;)", wrappedField, InstanceNames, FieldNames, EnumNames, false, "STULib.Types.Dump.");
+                
+                InitFromLines(headerLine, contentLine);
+            }
+
+            public static bool Check(string line1, string line2) {
+                if (line1.StartsWith(@"//") || (line2 != null && line2.StartsWith(@"//"))) return false;
+                return line1.Contains("[STUField(0x") || line1.Contains("[STULib.STUField(0x");
+            }
+        }
+
+        public static void FixClass(string file) {
+            List<InstanceCode> instances = new List<InstanceCode>();
+            uint bracketLevel = 0;
+
+            string previousLine = "";
+            uint lineIndex = 0;
+            string[] lines = File.ReadAllLines(file);
+            
+            foreach (string line in lines) {
+                if (line.Contains("{")) bracketLevel++;
+                if (line.Contains("}")) bracketLevel--;
+                
+                if (InstanceCode.Check(previousLine)) {
+                    InstanceCode instance = new InstanceCode(bracketLevel) {StartLine = lineIndex};
+                    instance.Feed(previousLine);
+                    instances.Add(instance);
+                }
+
+                foreach (InstanceCode instance in instances) {
+                    if (bracketLevel < instance.IndentLevel && !instance.IsDone) {
+                        instance.IsDone = true;
+                        instance.EndLine = lineIndex-1;
+                        continue;
+                    }
+
+                    if (bracketLevel >= instance.IndentLevel) {
+                        instance.Feed(line);
+                    }
+                }
+
+                previousLine = line;
+                lineIndex++;
+            }
+
+            if (instances.Count == 0) return;
+
+            StringBuilder output = new StringBuilder();
+            
+            foreach (InstanceCode instance in instances) {
+                instance.ParseFedLines();
+                instance.UpdateFields(FieldNames);
+            }
+            
+            lineIndex = 0;
+            foreach (string line in lines) {
+                bool writeNormal = true;
+
+                foreach (InstanceCode instance in instances) {
+                    if (instance.StartLine < lineIndex && instance.EndLine >= lineIndex) {
+                        writeNormal = false;
+                    }
+
+                    if (lineIndex == instance.StartLine+1) {
+                        instance.Write(output);
+                    }
+                }
+
+                if (writeNormal) {
+                    output.AppendLine(line);
+                }
+                
+                lineIndex++;
+            }
+            
+            
+            Console.Out.WriteLine(output);
+            string outTest = OutputDirectory+file.Replace(InputDirectory, "");
+
+            if (file.Contains("STUMap")) {
+                
+            }
+
+            WriteStringToFile(output.ToString(), outTest);
+        }
+
+        public static void WriteStringToFile(string data, string file) {
+            CreateDirectory(Path.GetDirectoryName(file));
+            
+            using (Stream classOutput = File.OpenWrite(file)) {
+                classOutput.SetLength(0);
+                using (TextWriter writer = new StreamWriter(classOutput)) {
+                    writer.WriteLine(data);
+                }
+            }
+        }
+
+        public static void AddNewClasses(Dictionary<uint, STUInstanceJSON> instanceJson) {
+            const string dumpNamespace = "Dump";
+            const string enumNamespace = "Enums";
+            
+            CreateDirectory(Path.Combine(OutputDirectory, dumpNamespace));
+            CreateDirectory(Path.Combine(OutputDirectory, dumpNamespace, "Enums"));
+            foreach (KeyValuePair<uint, STUInstanceJSON> json in Version2Comparer.InstanceJSON) {
+                if (InvalidTypes.Contains(json.Value.Name)) continue;
+                if (ISTU.InstanceTypes.ContainsKey(json.Value.Hash)) continue;
+                InstanceData instanceData = Version2Comparer.GetData(json.Key);
+                ClassBuilder builder = new ClassBuilder(instanceData);
+                string @class = builder.Build(InstanceNames, EnumNames, FieldNames, $"STULib.Types.{dumpNamespace}", true, false);
+                string className = $"STU_{instanceData.Checksum:X8}";
+                if (InstanceNames.ContainsKey(instanceData.Checksum)) {
+                    className = InstanceNames[instanceData.Checksum];
+                }
+
+                WriteStringToFile(@class, Path.Combine(OutputDirectory, dumpNamespace, $"{className}.cs"));
+                
+                foreach (FieldData field in instanceData.Fields) {
+                    if (!field.IsEnum && !field.IsEnumArray) continue;
+                    if (ISTU.EnumTypes.ContainsKey(field.EnumChecksum)) continue;
+                    EnumBuilder enumBuilder = new EnumBuilder(new STUEnumData {
+                        Type = STUHashTool.Program.GetSizeType(field.Size),
+                        Checksum = field.EnumChecksum
+                    });
+                    string @enum = enumBuilder.Build(new Dictionary<uint, string>(), $"STUExcavator.Types.{enumNamespace}", true);
+                    string enumName = $"STUEnum_{field.EnumChecksum:X8}";
+                    if (EnumNames.ContainsKey(field.EnumChecksum)) {
+                        enumName = EnumNames[field.EnumChecksum];
+                    }
+                    WriteStringToFile(@enum, Path.Combine(OutputDirectory, dumpNamespace, enumNamespace, $"{enumName}.cs"));
                 }
             }
         }

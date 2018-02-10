@@ -20,3 +20,4 @@ namespace STULib.Types {
         public float UnknownFloat;
     }
 }
+

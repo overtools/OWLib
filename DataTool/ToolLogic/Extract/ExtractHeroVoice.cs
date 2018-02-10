@@ -7,7 +7,6 @@ using DataTool.Flag;
 using DataTool.Helper;
 using OWLib;
 using STULib.Types;
-using STULib.Types.Statescript.Components;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
 using static DataTool.Program;

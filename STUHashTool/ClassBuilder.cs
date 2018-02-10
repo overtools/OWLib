@@ -28,6 +28,78 @@ namespace STUHashTool {
             return FirstCharToUpper(name.Substring(2)).Replace("_", "");
         }
 
+        public static void WriteField(out string headerLine, out string contentLine, string fieldIndentString, string @namespace, 
+            FieldData field, Dictionary<uint, string> instanceNames, Dictionary<uint, string> fieldNames, 
+            Dictionary<uint, string> enumNames, bool properTypePaths, string beforeImbedInlineType=null) {
+            string type = Program.GetType(field, properTypePaths);
+            string fieldName = $"m_{field.Checksum:X8}";
+            string fieldTypeDef = properTypePaths ? "STULib.STUField": "STUField";
+            string fieldDefinition = $"[{fieldTypeDef}(0x{field.Checksum:X8}";
+            if (fieldNames.ContainsKey(field.Checksum)) {
+                fieldDefinition = fieldDefinition + $", \"{fieldNames[field.Checksum]}\"";
+                fieldName = FixFieldName(fieldNames[field.Checksum]);
+            }
+            if (field.IsEmbed || field.IsEmbedArray) {
+                fieldDefinition = fieldDefinition + ", EmbeddedInstance = true";
+            }
+            fieldDefinition = fieldDefinition + ")]";
+            if (field.SerializationType == 12 || field.SerializationType == 13) {
+                type = properTypePaths ? "STULib.Types.Generic.Common.STUGUID": "STUGUID";
+            }
+            string guidComment = "";
+            if (field.IsGUIDOther || field.IsGUIDOtherArray) {
+                guidComment = field.Type;
+                if (instanceNames.ContainsKey(field.TypeInstanceChecksum)) guidComment = instanceNames[field.TypeInstanceChecksum];
+                if (ISTU.InstanceTypes.ContainsKey(field.TypeInstanceChecksum))
+                    guidComment = ISTU.InstanceTypes[field.TypeInstanceChecksum].ProperName();
+                guidComment = $"  // {guidComment}";
+            }
+            if (field.IsInline || field.IsEmbed || field.IsEmbedArray || field.IsInlineArray) {  //  
+                string instanceType = $"{beforeImbedInlineType}STU_{field.TypeInstanceChecksum:X8}";
+                if (instanceNames.ContainsKey(field.TypeInstanceChecksum)) {
+                    instanceType = instanceNames[field.TypeInstanceChecksum];
+                }
+                if (ISTU.InstanceTypes.ContainsKey(field.TypeInstanceChecksum))
+                    instanceType = ISTU.InstanceTypes[field.TypeInstanceChecksum].ProperName();
+                headerLine = $"{fieldIndentString}{fieldDefinition}";
+                contentLine = $"{fieldIndentString}public {instanceType}{(field.IsEmbedArray || field.IsInlineArray ? "[]" : "")} {fieldName};";
+            } else if (type == null && !field.IsEnum && !field.IsEnumArray && !field.IsHashMap) {
+                Debugger.Log(0, "STUHashTool", $"[STUHashTool:class] Unhandled type: \"{field.Type}\" (st: {field.SerializationType})\n");
+                headerLine = $"{fieldIndentString}//{fieldDefinition}";
+                contentLine = $"{fieldIndentString}//public object {fieldName};  // todo: unhandled type: {field.Type} (st: {field.SerializationType})";
+            } else if (field.IsPrimitive || field.IsGUID || field.IsGUIDOther) {
+                headerLine = $"{fieldIndentString}{fieldDefinition}";
+                contentLine = $"{fieldIndentString}public {type} {fieldName};{guidComment}";
+            } else if (field.IsPrimitiveArray || field.IsGUIDArray || field.IsGUIDOtherArray) {
+                headerLine = $"{fieldIndentString}{fieldDefinition}";
+                contentLine = $"{fieldIndentString}public {type}[] {fieldName};{guidComment}";
+            } else if (field.IsHashMap) {
+                string hmInstanceName = $"{beforeImbedInlineType}STU_{field.HashMapChecksum:X8}";
+                if (instanceNames.ContainsKey(field.HashMapChecksum)) {
+                    hmInstanceName = $"{@namespace}.{instanceNames[field.HashMapChecksum]}";
+                }
+                if (ISTU.InstanceTypes.ContainsKey(field.HashMapChecksum)) {
+                    hmInstanceName = ISTU.InstanceTypes[field.HashMapChecksum].ProperName();
+                }
+                headerLine = $"{fieldIndentString}{fieldDefinition}";
+                string hashmapDef = properTypePaths ? "STULib.Types.Generic.Common.STUHashMap" : "STUHashMap";
+                contentLine = $"{fieldIndentString}public {hashmapDef}<{hmInstanceName}> {fieldName};";
+            } else if (field.IsEnum || field.IsEnumArray) {
+                string enumName = $"{@namespace}.Enums.STUEnum_{field.EnumChecksum:X8}";
+                if (enumNames.ContainsKey(field.EnumChecksum)) {
+                    enumName = $"{@namespace}.Enums.{enumNames[field.EnumChecksum]}";
+                }
+                if (ISTU.EnumTypes.ContainsKey(field.EnumChecksum)) {
+                    enumName = ISTU.EnumTypes[field.EnumChecksum].ProperName();
+                }
+                headerLine = $"{fieldIndentString}{fieldDefinition}";
+                contentLine = $"{fieldIndentString}public {enumName}{(field.IsEnumArray ? "[]" : "")} {fieldName};";
+            } else {
+                Debugger.Log(0, "STUHashTool",
+                    $"[STUHashTool:class]: Unhandled Serialization type {field.SerializationType} of field {field.Checksum:X8}\n");
+                throw new Exception();  // ok this is bad now
+            }
+        }
 
         public string Build(Dictionary<uint, string> instanceNames, Dictionary<uint, string> enumNames, Dictionary<uint, string> fieldNames, string @namespace="STULib.Types", bool addUsings=false, bool properTypePaths=false) {
             StringBuilder sb = new StringBuilder();
@@ -69,73 +141,10 @@ namespace STUHashTool {
                 : $"{indentString}public class {instanceName} : {parentName} {{");
 
             foreach (FieldData field in InstanceData.Fields) {
-                string type = Program.GetType(field, properTypePaths);
-                string fieldName = $"m_{field.Checksum:X8}";
-                string fieldTypeDef = properTypePaths ? "STULib.STUField": "STUField";
-                string fieldDefinition = $"[{fieldTypeDef}(0x{field.Checksum:X8}";
-                if (fieldNames.ContainsKey(field.Checksum)) {
-                    fieldDefinition = fieldDefinition + $", \"{fieldNames[field.Checksum]}\"";
-                    fieldName = FixFieldName(fieldNames[field.Checksum]);
-                }
-                if (field.IsEmbed || field.IsEmbedArray) {
-                    fieldDefinition = fieldDefinition + ", EmbeddedInstance = true";
-                }
-                fieldDefinition = fieldDefinition + ")]";
-                if (field.SerializationType == 12 || field.SerializationType == 13) {
-                    type = properTypePaths ? "STULib.Types.Generic.Common.STUGUID": "STUGUID";
-                }
-                string guidComment = "";
-                if (field.IsGUIDOther || field.IsGUIDOtherArray) {
-                    guidComment = field.Type;
-                    if (instanceNames.ContainsKey(field.TypeInstanceChecksum)) guidComment = instanceNames[field.TypeInstanceChecksum];
-                    if (ISTU.InstanceTypes.ContainsKey(field.TypeInstanceChecksum))
-                        guidComment = ISTU.InstanceTypes[field.TypeInstanceChecksum].ProperName();
-                    guidComment = $"  // {guidComment}";
-                }
-                if (field.IsInline || field.IsEmbed || field.IsEmbedArray || field.IsInlineArray) {  //  
-                    string instanceType = $"STU_{field.TypeInstanceChecksum:X8}";
-                    if (instanceNames.ContainsKey(field.TypeInstanceChecksum)) {
-                        instanceType = instanceNames[field.TypeInstanceChecksum];
-                    }
-                    if (ISTU.InstanceTypes.ContainsKey(field.TypeInstanceChecksum))
-                        instanceType = ISTU.InstanceTypes[field.TypeInstanceChecksum].ProperName();
-                    sb.AppendLine($"{fieldIndentString}{fieldDefinition}");
-                    sb.AppendLine($"{fieldIndentString}public {instanceType}{(field.IsEmbedArray||field.IsInlineArray ? "[]" : "")} {fieldName};");
-                } else if (type == null && !field.IsEnum && !field.IsEnumArray && !field.IsHashMap) {
-                    Debugger.Log(0, "STUHashTool", $"[STUHashTool:class] Unhandled type: \"{field.Type}\" (st: {field.SerializationType})\n");
-                    sb.AppendLine($"{fieldIndentString}//{fieldDefinition}");
-                    sb.AppendLine($"{fieldIndentString}//public object {fieldName};  // todo: unhandled type: {field.Type} (st: {field.SerializationType})");
-                } else if (field.IsPrimitive || field.IsGUID || field.IsGUIDOther) {
-                    sb.AppendLine($"{fieldIndentString}{fieldDefinition}");
-                    sb.AppendLine($"{fieldIndentString}public {type} {fieldName};{guidComment}");
-                } else if (field.IsPrimitiveArray || field.IsGUIDArray || field.IsGUIDOtherArray) {
-                    sb.AppendLine($"{fieldIndentString}{fieldDefinition}");
-                    sb.AppendLine($"{fieldIndentString}public {type}[] {fieldName};{guidComment}");
-                } else if (field.IsHashMap) {
-                    string hmInstanceName = $"STU_{field.HashMapChecksum:X8}";
-                    if (instanceNames.ContainsKey(field.HashMapChecksum)) {
-                        hmInstanceName = $"{@namespace}.{instanceNames[field.HashMapChecksum]}";
-                    }
-                    if (ISTU.InstanceTypes.ContainsKey(field.HashMapChecksum)) {
-                        hmInstanceName = ISTU.InstanceTypes[field.HashMapChecksum].ProperName();
-                    }
-                    sb.AppendLine($"{fieldIndentString}{fieldDefinition}");
-                    string hashmapDef = properTypePaths ? "STULib.Types.Generic.Common.STUHashMap" : "STUHashMap";
-                    sb.AppendLine($"{fieldIndentString}public {hashmapDef}<{hmInstanceName}> {fieldName};");
-                } else if (field.IsEnum || field.IsEnumArray) {
-                    string enumName = $"{@namespace}.Enums.STUEnum_{field.EnumChecksum:X8}";
-                    if (enumNames.ContainsKey(field.EnumChecksum)) {
-                        enumName = $"{@namespace}.Enums.{enumNames[field.EnumChecksum]}";
-                    }
-                    if (ISTU.EnumTypes.ContainsKey(field.EnumChecksum)) {
-                        enumName = ISTU.EnumTypes[field.EnumChecksum].ProperName();
-                    }
-                    sb.AppendLine($"{fieldIndentString}{fieldDefinition}");
-                    sb.AppendLine($"{fieldIndentString}public {enumName}{(field.IsEnumArray ? "[]" : "")} {fieldName};");
-                } else {
-                    Debugger.Log(0, "STUHashTool",
-                        $"[STUHashTool:class]: Unhandled Serialization type {field.SerializationType} of field {InstanceData.Checksum:X8}:{field.Checksum:X8}\n");
-                }
+                WriteField(out string headerLine, out string contentLine, fieldIndentString, @namespace, field, 
+                    instanceNames, fieldNames, enumNames, properTypePaths);
+                sb.AppendLine(headerLine);
+                sb.AppendLine(contentLine);
 
                 if (fieldCounter != InstanceData.Fields.Length) {
                     sb.AppendLine();

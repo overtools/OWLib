@@ -14,3 +14,4 @@ namespace STULib.Types {
         public uint RankUpperBound;
     }
 }
+

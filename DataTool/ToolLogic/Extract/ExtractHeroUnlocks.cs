@@ -193,7 +193,7 @@ namespace DataTool.ToolLogic.Extract {
                 }
 
                 if (npc) {
-                    foreach (STUHero.Skin skin in hero.Skins) {
+                    foreach (STUHeroSkin skin in hero.Skins) {
                         if (config.ContainsKey("skin") && config["skin"].ShouldDo(GetFileName(skin.SkinOverride))) {
                             Skin.Save(flags, $"{basePath}\\{RootDir}", hero, skin, false);
                         }
@@ -265,7 +265,7 @@ namespace DataTool.ToolLogic.Extract {
                 SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
             }
             if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
-                Skin.Save(flags, $"{basePath}\\{RootDir}", hero, $"{eventKey}\\{itemInfo.Rarity}", itemInfo.Unlock as STULib.Types.STUUnlock.Skin, weaponSkins, null, false);
+                Skin.Save(flags, $"{basePath}\\{RootDir}", hero, $"{eventKey}\\{itemInfo.Rarity}", itemInfo.Unlock as STUUnlock_Skin, weaponSkins, null, false);
             }
             if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
                 AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);

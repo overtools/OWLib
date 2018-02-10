@@ -11,7 +11,7 @@ namespace STULib.Types {
         public Enums.STUEnum_1AA009C2 Type;
 
         [STUField(0x967A138B)]
-        public Enums.STUEnum_AB6CE3D1 m_967A138B;
+        public STUEnum_AB6CE3D1 m_967A138B;
 
         [STUField(0x07D0F7AA)]
         public int m_07D0F7AA;
@@ -133,3 +133,4 @@ namespace STULib.Types {
     // todo: BDD783B9
     // todo: D931E2CF
     // todo: C9F4617F
+

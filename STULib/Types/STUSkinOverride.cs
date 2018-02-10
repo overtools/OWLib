@@ -41,3 +41,4 @@ namespace STULib.Types {
         public byte m_E9DA85BB;
     }
 }
+

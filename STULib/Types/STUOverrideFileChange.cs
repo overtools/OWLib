@@ -6,5 +6,9 @@ namespace STULib.Types {
     public class STUOverrideFileChange : STUInstance {
         [STUField(0x3D884507, Demangle = false)]
         public STUGUID New;
+
+        [STULib.STUField(0xDA71BEFE)]
+        public byte m_DA71BEFE;
     }
 }
+

@@ -17,3 +17,4 @@ namespace STULib.Types {
         public STUSubtitle Subtitle4;
     }
 }
+

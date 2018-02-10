@@ -1,4 +1,4 @@
-﻿using STULib.Types.Enums;
+using STULib.Types.Enums;
 using STULib.Types.Generic;
 
 namespace STULib.Types {
@@ -23,3 +23,4 @@ namespace STULib.Types {
         public STUEnumLeagueDivision Division;
     }
 }
+

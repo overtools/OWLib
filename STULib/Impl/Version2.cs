@@ -378,20 +378,8 @@ namespace STULib.Impl {
 
             foreach (STUInstanceField writtenField in writtenFields) {
                 if (!fieldMap.ContainsKey(writtenField.FieldChecksum)) {
-                    bool noFieldWarn = false;
-                    if (instanceChecksum != null) {
-                        if (SuppressedWarnings.ContainsKey((uint) instanceChecksum)) {
-                            if (SuppressedWarnings[(uint) instanceChecksum].Any(warn =>
-                                warn.Type == STUWarningType.MissingField &&
-                                warn.FieldChecksum == writtenField.FieldChecksum)) {
-                                noFieldWarn = true;
-                            }
-                        }
-                    }
-                    if (!noFieldWarn) {
-                        Debugger.Log(0, "STU",
-                            $"[STU:{type}]: Unknown field {writtenField.FieldChecksum:X8} ({writtenField.FieldSize} bytes)\n");
-                    }
+                    Debugger.Log(0, "STU",
+                        $"[STU:{type}]: Unknown field {writtenField.FieldChecksum:X8} ({writtenField.FieldSize} bytes)\n");
                     if (writtenField.FieldSize == 0) {
                         uint size = reader.ReadUInt32();
                         reader.BaseStream.Position += size;
@@ -597,19 +585,6 @@ namespace STULib.Impl {
                         if (instances[hashmapRequest.Value.Key] != null) {
                             instances[hashmapRequest.Value.Key].Usage = InstanceUsage.HashmapElement;
                         }
-                    }
-                }
-            }
-            foreach (STUInstance instance in Instances) {
-                if (instance == null) continue;
-                if (!SuppressedWarnings.ContainsKey(instance.InstanceChecksum)) continue;
-                if (SuppressedWarnings[instance.InstanceChecksum]
-                    .All(warn => warn.Type != STUWarningType.MissingInstance)) continue;
-
-                foreach (STUSuppressWarningAttribute warningAttribute in SuppressedWarnings[instance.InstanceChecksum]
-                    .Where(warn => warn.Type == STUWarningType.MissingInstance)) {
-                    if (missingInstances.Contains(warningAttribute.InstanceChecksum)) {
-                        missingInstances.Remove(warningAttribute.InstanceChecksum);
                     }
                 }
             }

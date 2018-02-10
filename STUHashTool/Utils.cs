@@ -11,10 +11,6 @@ using OWLib;
 using STULib;
 using STULib.Impl;
 using STULib.Types;
-using STULib.Types.AnimationList.x020;
-using STULib.Types.Gamemodes;
-using STULib.Types.GameParams;
-using STULib.Types.STUUnlock;
 using static STULib.Types.Generic.Common;
 using static DataTool.Helper.IO;
 using Console = Colorful.Console;
@@ -146,17 +142,17 @@ namespace STUHashTool {
                         return $"{baseString} {encryptionKey?.KeyNameProper}:{encryptionKey?.Key}";
                     case 0xA5:
                         instances = GetInstances(guid, _handler, _map);
-                        Cosmetic unlock = instances.OfType<Cosmetic>().First();
+                        STUUnlock unlock = instances.OfType<STUUnlock>().First();
                         string baseString2 = $"\r\n{indentHelper + 1}[{GetGUIDTypeName(guid)}";
                         if (unlock == null) return null;
-                        if (unlock is Currency) {
-                            return $"{baseString2}:Credits] {(unlock as Currency).Amount} Credits";
-                        } else if (unlock is Portrait) {
-                            Portrait portrait = unlock as Portrait;
+                        if (unlock is STUUnlock_Currency) {
+                            return $"{baseString2}:Credits] {(unlock as STUUnlock_Currency).Amount} Credits";
+                        } else if (unlock is STULevelPortrait) {
+                            STULevelPortrait portrait = unlock as STULevelPortrait;
                             return
                                 $"{baseString2}:Credits] {portrait.Tier} Star:{portrait.Star} Level:{portrait.Level}";
-                        } else if (unlock is CompetitiveCurrencyReward) {
-                            CompetitiveCurrencyReward competitiveCurrencyReward = unlock as CompetitiveCurrencyReward;
+                        } else if (unlock is STUCompetitiveCurrencyReward) {
+                            STUCompetitiveCurrencyReward competitiveCurrencyReward = unlock as STUCompetitiveCurrencyReward;
                             return
                                 $"{baseString2}:CompetitivePoints] {competitiveCurrencyReward.Amount} points";
                         } else {

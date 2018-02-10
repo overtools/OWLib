@@ -8,3 +8,4 @@ namespace STULib.Types {
         public STUHeroVoiceEntry[] Sounds;
     }
 }
+

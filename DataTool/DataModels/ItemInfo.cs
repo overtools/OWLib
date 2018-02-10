@@ -1,6 +1,6 @@
 ﻿using DataTool.JSON;
 using Newtonsoft.Json;
-using STULib.Types.STUUnlock;
+using STULib.Types;
 
 namespace DataTool.DataModels {
     [JsonObject(MemberSerialization.OptOut)]
@@ -11,11 +11,11 @@ namespace DataTool.DataModels {
 	    public string Description;
 	    public string AvailableIn;
 	    [JsonIgnore]
-	    public Cosmetic Unlock;
+	    public STUUnlock Unlock;
 	    [JsonConverter(typeof(GUIDConverter))]
 	    public ulong GUID;
 
-	    public ItemInfo(string name, string rarity, string type, string description, string availableIn, Cosmetic unlock, ulong guid) {
+	    public ItemInfo(string name, string rarity, string type, string description, string availableIn, STUUnlock unlock, ulong guid) {
 	        Name = name.TrimEnd(' '); // ffs blizz, why do the names end in a space sometimes
 	        Rarity = rarity;
 	        Type = type;

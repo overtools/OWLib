@@ -47,7 +47,7 @@ namespace STULib.Types {
 
         [STUField(0xFA2D81E7)]
         public byte m_FA2D81E7;
-        
+
         public string EventNameNormal => ItemEvents.GetInstance().GetEventNormal((ulong)Event);
         public string EventName => ItemEvents.GetInstance().GetEvent((ulong)Event);
     }
@@ -61,3 +61,4 @@ namespace STULib.Types {
         public STUGUID Text;  // STU_B456B24F
     }
 }
+

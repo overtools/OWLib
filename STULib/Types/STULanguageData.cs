@@ -32,3 +32,4 @@ namespace STULib.Types {
         public string AD;
     }
 }
+

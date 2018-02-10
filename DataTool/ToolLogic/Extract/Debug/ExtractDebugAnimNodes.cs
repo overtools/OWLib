@@ -5,7 +5,7 @@ using DataTool.Flag;
 using DataTool.ToolLogic.List;
 using Newtonsoft.Json;
 using STULib.Types;
-using STULib.Types.AnimationList.x020;
+using STULib.Types.Dump;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 

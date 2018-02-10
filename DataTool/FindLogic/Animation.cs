@@ -7,11 +7,8 @@ using DataTool.Helper;
 using OWLib;
 using OWLib.Types.Chunk;
 using STULib.Types;
-using STULib.Types.AnimationList.x020;
-using STULib.Types.AnimationList.x021;
+using STULib.Types.Dump;
 using STULib.Types.Generic;
-using STULib.Types.Statescript.Components;
-using STULib.Types.STUUnlock;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
@@ -355,15 +352,15 @@ namespace DataTool.FindLogic {
                     // }
                     break;
                 case 0xA5:
-                    Cosmetic cosmetic = GetInstance<Cosmetic>(animationGUID);
-                    if (cosmetic is Emote) {
-                        Emote cosmeticEmote = cosmetic as Emote;
+                    STUUnlock cosmetic = GetInstance<STUUnlock>(animationGUID);
+                    if (cosmetic is STUUnlock_Emote) {
+                        STUUnlock_Emote cosmeticEmote = cosmetic as STUUnlock_Emote;
                         existingAnimations = FindAnimations(existingAnimations, models, cosmeticEmote.BlendTreeSet, replacements);
-                    } else if (cosmetic is Pose) {
-                        Pose cosmeticPose = cosmetic as Pose;
+                    } else if (cosmetic is STUUnlock_Pose) {
+                        STUUnlock_Pose cosmeticPose = cosmetic as STUUnlock_Pose;
                         existingAnimations = FindAnimations(existingAnimations, models, cosmeticPose.PoseResource, replacements);
-                    } else if (cosmetic is HighlightIntro) {
-                        HighlightIntro cosmeticHighlightIntro = cosmetic as HighlightIntro;
+                    } else if (cosmetic is STUUnlock_HighlightIntro) {
+                        STUUnlock_HighlightIntro cosmeticHighlightIntro = cosmetic as STUUnlock_HighlightIntro;
                         existingAnimations = FindAnimations(existingAnimations, models, cosmeticHighlightIntro.Animation, replacements);
                         SetName(existingAnimations, cosmeticHighlightIntro.Animation, $"HighlightIntro-{GetString(cosmeticHighlightIntro.CosmeticName)}", replacements);
                     }

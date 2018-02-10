@@ -7,7 +7,6 @@ using OWLib;
 using OWLib.Types.Chunk;
 using STULib.Types;
 using STULib.Types.Generic;
-using STULib.Types.Statescript.Components;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 

@@ -14,3 +14,4 @@ namespace STULib.Types {
         public STUGUID[] m_9E240596;
     }
 }
+

@@ -4,12 +4,14 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types {
     [STU(0x25DA0DF5)]
     public class STUMapDataBinding : STUInstance {
-        // connects 002 to 09F
-        // todo: use for list-highlights
         [STUField(0x242E748D, ForceNotBuffer = true, Demangle = false)]
         public STUGUID[] MapDatas;
 
         [STUField(0x669A4581, ForceNotBuffer = true, Demangle = false)]
         public STUGUID[] MapMetadatas;
+
+        // connects 002 to 09F
+        // todo: use for list-highlights
     }
 }
+

@@ -7,7 +7,6 @@ using OWLib;
 using OWLib.Types.Chunk;
 using STULib.Types;
 using STULib.Types.Generic;
-using STULib.Types.STUUnlock;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
@@ -35,7 +34,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             const string container = "DebugAnimatedSprays";
             
             foreach (ulong key in TrackedFiles[0xA5]) {
-                Spray spray = GetInstance<Spray>(key);
+                STUUnlock_Spray spray = GetInstance<STUUnlock_Spray>(key);
                 if (spray == null) continue;
 
                 Dictionary<ulong, List<TextureInfo>> textures = new Dictionary<ulong, List<TextureInfo>>();

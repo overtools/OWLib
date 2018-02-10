@@ -5,8 +5,6 @@ using DataTool.DataModels;
 using DataTool.Flag;
 using STULib.Types;
 using STULib.Types.Generic;
-using STULib.Types.Statescript.Components;
-using STULib.Types.STUUnlock;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
@@ -24,7 +22,7 @@ namespace DataTool.SaveLogic.Unlock {
             Dictionary<uint, ItemInfo> realWeaponSkins = new Dictionary<uint, ItemInfo>();
             if (weaponSkins != null) {
                 foreach (ItemInfo weaponSkin in weaponSkins) {
-                    realWeaponSkins[((Weapon) weaponSkin.Unlock).Index] = weaponSkin;
+                    realWeaponSkins[((STUUnlock_Weapon) weaponSkin.Unlock).Index] = weaponSkin;
                 }
             }
             
@@ -54,14 +52,14 @@ namespace DataTool.SaveLogic.Unlock {
                     weaponOverride.ProperReplacements?.ToDictionary(x => x.Key, y => y.Value) ??
                     new Dictionary<ulong, ulong>();
 
-                List<STUHero.WeaponEntity> weaponEntities = new List<STUHero.WeaponEntity>();
+                List<STUHeroWeaponEntity> weaponEntities = new List<STUHeroWeaponEntity>();
                 if (hero.WeaponComponents1 != null) {
                     weaponEntities.AddRange(hero.WeaponComponents1);
                 }
                 if (hero.WeaponComponents2 != null) {
                     weaponEntities.AddRange(hero.WeaponComponents2);
                 }
-                foreach (STUHero.WeaponEntity heroWeapon in weaponEntities) {
+                foreach (STUHeroWeaponEntity heroWeapon in weaponEntities) {
                     FindLogic.Combo.Find(info, heroWeapon.Entity, weaponReplacements);
                     STUModelComponent modelComponent = GetInstance<STUModelComponent>(heroWeapon.Entity);
                     if (modelComponent?.Look == null || weaponSkinName == null) continue;
@@ -114,13 +112,13 @@ namespace DataTool.SaveLogic.Unlock {
             LoudLog("\tDone");
         }
         
-        public static void Save(ICLIFlags flags, string path, STUHero hero, STUHero.Skin skin, bool quiet = true) {
+        public static void Save(ICLIFlags flags, string path, STUHero hero, STUHeroSkin skin, bool quiet = true) {
             STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinOverride);
             LoudLog($"Extracting skin {GetString(hero.Name)} {GetFileName(skin.SkinOverride)}");
             Save(flags, GetFileName(skin.SkinOverride), path, hero, "", skinOverride, null, null, quiet);
         }
 
-        public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STULib.Types.STUUnlock.Skin skin, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet=true) {
+        public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STUUnlock_Skin skin, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet=true) {
             if (skin == null) return;
             LoudLog($"Extracting skin {GetString(hero.Name)} {GetString(skin.CosmeticName)}");
             if (weaponSkins == null) weaponSkins = new List<ItemInfo>();

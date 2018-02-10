@@ -13,13 +13,6 @@ namespace STULib.Types {
         [STUField(0x2F709539, "m_key")]
         public byte[] KeyValue;
 
-        public string Key => BitConverter.ToString(KeyValue).Replace("-", string.Empty);
-
-        public ulong LongKey => ulong.Parse(KeyName, System.Globalization.NumberStyles.HexNumber);
-        public ulong LongRevKey => BitConverter.ToUInt64(BitConverter.GetBytes(LongKey).Reverse().ToArray(), 0);
-
-        public string KeyNameProper => LongRevKey.ToString("X16");
-
         [STUField(0x7EEFB57A)]
         public uint Unknown3;
 
@@ -29,19 +22,25 @@ namespace STULib.Types {
         [STUField(0xDA765F6C)]
         public uint Unknown5;
 
-        [STU(0x0CABB5CE)]
-        public class STU_0CABB5CE {
-            [STUField(0x643BEFB1)]
-            public int Unknown1;
+        public string Key => BitConverter.ToString(KeyValue).Replace("-", string.Empty);
+        public ulong LongKey => ulong.Parse(KeyName, System.Globalization.NumberStyles.HexNumber);
+        public ulong LongRevKey => BitConverter.ToUInt64(BitConverter.GetBytes(LongKey).Reverse().ToArray(), 0);
+        public string KeyNameProper => LongRevKey.ToString("X16");
+    }
+    
+    [STU(0x0CABB5CE)]
+    public class STU_0CABB5CE {
+        [STUField(0x643BEFB1)]
+        public int Unknown1;
 
-            [STUField(0x44ABE251)]
-            public int Unknown2;
+        [STUField(0x44ABE251)]
+        public int Unknown2;
 
-            [STUField(0x2CA853F9)]
-            public int Unknown3;
+        [STUField(0x2CA853F9)]
+        public int Unknown3;
 
-            [STUField(0x27ADAA07)]
-            public int Unknown4;
-        }
+        [STUField(0x27ADAA07)]
+        public int Unknown4;
     }
 }
+

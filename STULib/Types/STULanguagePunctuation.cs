@@ -44,3 +44,4 @@ namespace STULib.Types {
         public int m_FAC0C198;
     }
 }
+

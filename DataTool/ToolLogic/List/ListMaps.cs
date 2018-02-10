@@ -6,7 +6,6 @@ using DataTool.JSON;
 using Newtonsoft.Json;
 using OWLib;
 using STULib.Types;
-using STULib.Types.Gamemodes;
 using STULib.Types.Generic;
 using static DataTool.Helper.IO;
 using static DataTool.Program;

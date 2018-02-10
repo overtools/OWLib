@@ -7,3 +7,4 @@ namespace STULib.Types {
         public string UnknownString;
     }
 }
+

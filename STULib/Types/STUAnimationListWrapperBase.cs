@@ -8,3 +8,4 @@ namespace STULib.Types {
         public uint m_63DEDAC0;
     }
 }
+

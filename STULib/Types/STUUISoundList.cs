@@ -26,3 +26,4 @@ namespace STULib.Types {
         public float m_2E33F839;
     }
 }
+

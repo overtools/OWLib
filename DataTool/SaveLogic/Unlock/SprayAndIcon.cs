@@ -2,7 +2,7 @@
 using System.IO;
 using DataTool.DataModels;
 using DataTool.Flag;
-using STULib.Types.STUUnlock;
+using STULib.Types;
 using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic.Unlock {
@@ -20,10 +20,10 @@ namespace DataTool.SaveLogic.Unlock {
             string type;
 
             switch (item.Unlock) {
-                case PlayerIcon _:
+                case STUUnlock_PlayerIcon _:
                     type = "Icons";
                     break;
-                case Spray _:
+                case STUUnlock_Spray _:
                     type = "Sprays";
                     break;
                 default:

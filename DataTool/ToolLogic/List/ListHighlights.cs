@@ -8,8 +8,6 @@ using Newtonsoft.Json;
 using OWReplayLib;
 using OWReplayLib.Types;
 using STULib.Types;
-using STULib.Types.Gamemodes;
-using STULib.Types.STUUnlock;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
@@ -147,7 +145,7 @@ namespace DataTool.ToolLogic.List {
             outputJson.Hero = GetString(hero?.Name);
             outputJson.Player = infoNew.PlayerName;
                 
-            HighlightIntro intro = GetInstance<HighlightIntro>(infoNew.HighlightIntro);
+            STUUnlock_HighlightIntro intro = GetInstance<STUUnlock_HighlightIntro>(infoNew.HighlightIntro);
             outputJson.HighlightIntro = GetString(intro.CosmeticName);
             
             // todo: outputJson.WeaponSkin
@@ -173,19 +171,19 @@ namespace DataTool.ToolLogic.List {
                 VoiceLines = new List<string>()
             };
             foreach (uint sprayId in heroInfo.SprayIds) {
-                Spray spray = GetInstance<Spray>(GetCosmeticKey(sprayId));
+                STUUnlock_Spray spray = GetInstance<STUUnlock_Spray>(GetCosmeticKey(sprayId));
                 outputHero.Sprays.Add(GetString(spray.CosmeticName));
             }
             foreach (uint emoteId in heroInfo.EmoteIds) {
-                Emote emote = GetInstance<Emote>(GetCosmeticKey(emoteId));
+                STUUnlock_Emote emote = GetInstance<STUUnlock_Emote>(GetCosmeticKey(emoteId));
                 outputHero.Emotes.Add(GetString(emote.CosmeticName));
             }
                 
             foreach (uint voiceLineId in heroInfo.VoiceLineIds) {
-                VoiceLine voiceLine = GetInstance<VoiceLine>(GetCosmeticKey(voiceLineId));
+                STUUnlock_VoiceLine voiceLine = GetInstance<STUUnlock_VoiceLine>(GetCosmeticKey(voiceLineId));
                 outputHero.VoiceLines.Add(GetString(voiceLine.CosmeticName));
             }
-            HighlightIntro intro = GetInstance<HighlightIntro>(GetCosmeticKey(heroInfo.HighlightIntro));
+            STUUnlock_HighlightIntro intro = GetInstance<STUUnlock_HighlightIntro>(GetCosmeticKey(heroInfo.HighlightIntro));
             outputHero.HighlightIntro = GetString(intro.CosmeticName);
                 
             // Skin skin = GetInstance<Skin>(GetSkinKey(heroInfo.SkinId));  // todo: this is by skin override
