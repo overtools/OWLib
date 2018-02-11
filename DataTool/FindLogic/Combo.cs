@@ -363,6 +363,9 @@ namespace DataTool.FindLogic {
             // 508906757892874256 / 000000002010.08F = ANCR_badass_POTG effect
             // 288230376151718579 / 000000001AB3.003 = shield entity
             
+            //if (GetFileName(guid) == "0000000014EF.003") Debugger.Break();  // ilios windmill
+            //if (GetFileName(guid) == "0000000014F4.003") Debugger.Break();  // ilios bigboat
+            
 
             uint guidType = GUID.Type(guid);
             if (guidType == 0 || guidType == 1) return info;

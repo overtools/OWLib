@@ -5,10 +5,10 @@ namespace STULib.Types.Dump {
     [STU(0x3AA5CB04)]
     public class STU_3AA5CB04 : STULib.Types.STUEntityComponent2 {
         [STUField(0xC9D669B6)]
-        public STUGUID m_C9D669B6;  // STUAnimation
+        public STUGUID Animation;  // STUAnimation
 
         [STUField(0xD91EF907)]
-        public STUGUID m_D91EF907;
+        public STUGUID Model;
 
         [STUField(0x7D921E31, EmbeddedInstance = true)]
         public STULib.Types.Dump.STU_2BA91EC5 m_7D921E31;
