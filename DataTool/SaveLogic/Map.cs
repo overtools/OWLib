@@ -399,14 +399,14 @@ namespace DataTool.SaveLogic {
             //     // }
             // }
 
-            if (map.SoundMasterResource != null) {
+            if (map.VoiceSet != null) {
                 FindLogic.Combo.ComboInfo soundInfo = new FindLogic.Combo.ComboInfo();
-                FindLogic.Combo.Find(soundInfo, map.SoundMasterResource);
+                FindLogic.Combo.Find(soundInfo, map.VoiceSet);
 
-                if (soundInfo.VoiceMasters.ContainsKey(map.SoundMasterResource)) {
+                if (soundInfo.VoiceSets.ContainsKey(map.VoiceSet)) {
                     string soundPath = Path.Combine(mapPath, "Sound");
-                    FindLogic.Combo.VoiceMasterInfo voiceMasterInfo = soundInfo.VoiceMasters[map.SoundMasterResource];
-                    Combo.SaveVoiceMaster(flags, soundPath, soundInfo, voiceMasterInfo);
+                    FindLogic.Combo.VoiceSetInfo voiceSetInfo = soundInfo.VoiceSets[map.VoiceSet];
+                    Combo.SaveVoiceSet(flags, soundPath, soundInfo, voiceSetInfo);
                 }
             }
             

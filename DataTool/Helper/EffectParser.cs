@@ -319,7 +319,7 @@ namespace DataTool.Helper {
             public List<SVCEInfo> SVCEs;
             public ulong GUID;
 
-            public ulong SoundMaster; // 05F for VoiceStimuli
+            public ulong VoiceSet; // 05F for VoiceStimuli
 
             public float EffectLength; // seconds
             

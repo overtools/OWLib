@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DataTool.FindLogic;
 using DataTool.Flag;
-using DataTool.Helper;
-using DataTool.JSON;
-using Newtonsoft.Json;
-using STULib.Types.Generic;
 using static DataTool.Program;
-using static DataTool.Helper.Logger;
+using static DataTool.Helper.STUHelper;
+using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-subtitles-real", Description = "List subtitles (from audio data)", TrackTypes = new ushort[] {0x5F}, CustomFlags = typeof(ListFlags))]
@@ -17,25 +13,8 @@ namespace DataTool.ToolLogic.List {
             throw new NotImplementedException();
         }
 
-        [JsonObject(MemberSerialization.OptOut)]
-        public class RealSubtitleInfo {
-            public string Subtitle;
-
-            [JsonConverter(typeof(GUIDConverter))]
-            public ulong SubtitleGUID;
-            
-            [JsonConverter(typeof(GUIDConverter))]
-            public ulong AudioGUID;
-
-            public RealSubtitleInfo(ulong guid, ulong audioGuid, string text) {
-                SubtitleGUID = guid;
-                AudioGUID = audioGuid;
-                Subtitle = text;
-            }
-        }
-
         public void Parse(ICLIFlags toolFlags) {
-            List<SoundInfo> subtitles = GetSubtitles();
+            GetSubtitles();
             
             // todo: json
 
@@ -44,27 +23,33 @@ namespace DataTool.ToolLogic.List {
             //         ParseJSON(subtitles, flags);
             //         return;
             //     }
-
-            IndentHelper indentLevel = new IndentHelper();
-            foreach (SoundInfo subtitle in subtitles) {
-                Log($"{subtitle.GUID.ToString()} - {subtitle.Subtitle}");
-            }
         }
 
-        public List<SoundInfo> GetSubtitles() {
-            Dictionary<ulong, List<SoundInfo>> sounds = new Dictionary<ulong, List<SoundInfo>>();
-            List<SoundInfo> subtitleSounds = new List<SoundInfo>();
+        public void GetSubtitles() {
+            Combo.ComboInfo comboInfo = new Combo.ComboInfo();
+
+            HashSet<KeyValuePair<ulong, ulong>> done = new HashSet<KeyValuePair<ulong, ulong>>();
 
             foreach (ulong key in TrackedFiles[0x5F]) {
-                sounds = Sound.FindSounds(sounds, new Common.STUGUID(key));
-                foreach (SoundInfo soundInfo in sounds.SelectMany(c => c.Value).Where(x => x.Subtitle != null).ToList()) {
-                    if (!subtitleSounds.Contains(soundInfo)) {
-                        subtitleSounds.Add(soundInfo);
+                Combo.Find(comboInfo, key);
+                if (!comboInfo.VoiceSets.ContainsKey(key)) continue;
+                foreach (KeyValuePair<ulong,HashSet<Combo.VoiceLineInstanceInfo>> lineInstance in comboInfo.VoiceSets[key].VoiceLineInstances) {
+                    foreach (Combo.VoiceLineInstanceInfo lineInstanceInfo in lineInstance.Value) {
+                        if (lineInstanceInfo.Subtitle != 0) {
+                            foreach (ulong soundInfoSound in lineInstanceInfo.SoundFiles) {
+                                PrintSubtitle(done, soundInfoSound, lineInstanceInfo.Subtitle);
+                            }
+                        }
                     }
                 }
             }
+        }
 
-            return subtitleSounds;
+        public void PrintSubtitle(HashSet<KeyValuePair<ulong, ulong>> done, ulong guid, ulong subtitleGUID) {
+            KeyValuePair<ulong, ulong> pair = new KeyValuePair<ulong, ulong>(guid, subtitleGUID);
+            if (done.Contains(pair)) return;
+            done.Add(pair);
+            Console.Out.WriteLine($"{GetFileName(guid)} - {GetSubtitleString(subtitleGUID)}");
         }
     }
 }

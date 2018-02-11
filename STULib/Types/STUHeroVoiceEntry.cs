@@ -5,7 +5,7 @@ namespace STULib.Types {
     [STU(0x19DE8C96)]
     public class STUHeroVoiceEntry : STUInstance {
         [STUField(0xB6C32079)]
-        public STUGUID SoundMasterResource;
+        public STUGUID VoiceSet;
 
         [STUField(0x8E01F39D)]
         public STUGUID[] m_8E01F39D;

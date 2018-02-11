@@ -4279,7 +4279,7 @@
     <Compile Include="Types\Statescript\ConfigVar\STUStatescriptDataStoreEncryptionKey.cs" />
     <Compile Include="Types\Statescript\ConfigVar\STUStatescriptDataStoreHero.cs" />
     <Compile Include="Types\Statescript\ConfigVar\STUStatescriptDataStoreMaterial.cs" />
-    <Compile Include="Types\Statescript\ConfigVar\STUStatescriptDataStoreSoundMaster.cs" />
+    <Compile Include="Types\Statescript\ConfigVar\STUConfigVarVoiceSet.cs" />
     <Compile Include="Types\Statescript\ConfigVar\STUStatescriptDataStoreString.cs" />
     <Compile Include="Types\Statescript\ConfigVar\STUStatescriptDataStoreUISoundList.cs" />
     <Compile Include="Types\STUAchievement.cs" />
@@ -4337,7 +4337,7 @@
     <Compile Include="Types\STUEntityComponent.cs" />
     <Compile Include="Types\STUEntityComponent2.cs" />
     <Compile Include="Types\STUEntityDefinition.cs" />
-    <Compile Include="Types\STUEntityVoiceMaster.cs" />
+    <Compile Include="Types\STUVoiceSetComponent.cs" />
     <Compile Include="Types\STUFirstPersonComponent.cs" />
     <Compile Include="Types\STUGamemode.cs" />
     <Compile Include="Types\STUGamemodeBaseInfo.cs" />
@@ -4422,7 +4422,7 @@
     <Compile Include="Types\STUUnlock_VoiceLine.cs" />
     <Compile Include="Types\STUUnlock_Weapon.cs" />
     <Compile Include="Types\STUVoiceLineInstance.cs" />
-    <Compile Include="Types\STUVoiceMaster.cs" />
+    <Compile Include="Types\STUVoiceSet.cs" />
     <Compile Include="Types\STU_C294A43B.cs" />
   </ItemGroup>
   <ItemGroup>

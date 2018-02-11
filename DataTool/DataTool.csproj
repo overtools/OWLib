@@ -62,7 +62,6 @@
     <Compile Include="FindLogic\Animation.cs" />
     <Compile Include="FindLogic\Combo.cs" />
     <Compile Include="FindLogic\Model.cs" />
-    <Compile Include="FindLogic\Sound.cs" />
     <Compile Include="FindLogic\Texture.cs" />
     <Compile Include="Flag\AliasAttribute.cs" />
     <Compile Include="Flag\CLIFlagAttribute.cs" />
@@ -104,11 +103,10 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugOWL.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugRAMTest.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSound.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSoundBank.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugThreadDemo.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVCCE.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVoiceMaster.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVoiceSet.cs" />
     <Compile Include="ToolLogic\Extract\ExtractAbilities.cs" />
     <Compile Include="ToolLogic\Extract\ExtractHeroUnlocks.cs" />
     <Compile Include="ToolLogic\Extract\ExtractGeneral.cs" />

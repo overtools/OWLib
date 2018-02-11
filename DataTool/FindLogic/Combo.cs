@@ -38,7 +38,7 @@ namespace DataTool.FindLogic {
             public Dictionary<ulong, WWiseBankInfo> SoundBanks;
             public Dictionary<ulong, SoundFileInfo> VoiceSoundFiles;
             public Dictionary<ulong, SoundFileInfo> SoundFiles;
-            public Dictionary<ulong, VoiceMasterInfo> VoiceMasters;
+            public Dictionary<ulong, VoiceSetInfo> VoiceSets;
             public Dictionary<ulong, MapInfoNew> Maps;
 
             public ComboConfig Config = new ComboConfig();
@@ -60,7 +60,7 @@ namespace DataTool.FindLogic {
                 SoundBanks = new Dictionary<ulong, WWiseBankInfo>();
                 VoiceSoundFiles = new Dictionary<ulong, SoundFileInfo>();
                 SoundFiles = new Dictionary<ulong, SoundFileInfo>();
-                VoiceMasters = new Dictionary<ulong, VoiceMasterInfo>();
+                VoiceSets = new Dictionary<ulong, VoiceSetInfo>();
                 Maps = new Dictionary<ulong, MapInfoNew>();
             }
 
@@ -155,8 +155,8 @@ namespace DataTool.FindLogic {
             public ulong SkyboxModel;  // todo
         }
 
-        public class VoiceMasterInfo : ComboType {
-            public VoiceMasterInfo(ulong guid) : base(guid) { }
+        public class VoiceSetInfo : ComboType {
+            public VoiceSetInfo(ulong guid) : base(guid) { }
             
             public Dictionary<ulong, HashSet<VoiceLineInstanceInfo>> VoiceLineInstances;
             // key = 078 voice stimulus
@@ -205,7 +205,7 @@ namespace DataTool.FindLogic {
         public class EntityInfoNew : ComboNameable {
             public ulong Model;
             public ulong Effect; // todo: STUEffectComponent defined instead of model is like a model in behaviour?
-            public ulong VoiceMaster;
+            public ulong VoiceSet;
             public HashSet<ulong> Animations;
             
             public List<ChildEntityReferenceNew> Children;
@@ -365,7 +365,10 @@ namespace DataTool.FindLogic {
             
             //if (GetFileName(guid) == "0000000014EF.003") Debugger.Break();  // ilios windmill
             //if (GetFileName(guid) == "0000000014F4.003") Debugger.Break();  // ilios bigboat
-            
+            //if (GetFileName(guid) == "000000001AF7.003") Debugger.Break();  // black forest (winter) windmill
+            //if (GetFileName(guid) == "000000001A2E.003") Debugger.Break();  // black forest (winter) spawndoor
+            //if (GetFileName(guid) == "000000001B4E.003") Debugger.Break();  // black forest (winter) middle cog
+            //if (GetFileName(guid) == "000000001BDB.003") Debugger.Break();  // black forest (winter) capture point
 
             uint guidType = GUID.Type(guid);
             if (guidType == 0 || guidType == 1) return info;
@@ -382,7 +385,7 @@ namespace DataTool.FindLogic {
 
                     using (Stream mapBStream = OpenFile(GetMapDataKey(guid, 0xB))) {
                         Map mapBData = new Map(mapBStream, BuildVersion, true);
-                        foreach (ISTU stu in mapBData.STUs) {
+                        foreach (ISTU mapBstu in mapBData.STUs) {
                             Dictionary<ulong, ulong> thisReplacements = new Dictionary<ulong, ulong>();
                             // STUStatescriptComponentInstanceData componentInstanceData = stu.Instances.OfType<STUStatescriptComponentInstanceData>().FirstOrDefault();
                             // if (componentInstanceData == null) continue;
@@ -412,6 +415,8 @@ namespace DataTool.FindLogic {
                     }
                     STUEntityDefinition entityDefinition = GetInstance<STUEntityDefinition>(guid);
                     if (entityDefinition == null) break;
+
+                    ISTU stu = OpenSTUSafe(guid);
                     
                     EntityInfoNew entityInfo = new EntityInfoNew(guid);
                     info.Entities[guid] = entityInfo;
@@ -484,17 +489,17 @@ namespace DataTool.FindLogic {
                             } else if (component.GetType() == typeof(STUSecondaryEffectComponent)) {
                                 STUSecondaryEffectComponent secondaryEffectComponent = component as STUSecondaryEffectComponent;
                                 Find(info, secondaryEffectComponent?.Effect, replacements, entityContext);
-                            } else if (component.GetType() == typeof(STUEntityVoiceMaster)) {
-                                STUEntityVoiceMaster voiceComponent = component as STUEntityVoiceMaster;
-                                if (voiceComponent?.VoiceMaster == null) continue;
-                                entityInfo.VoiceMaster = GetReplacement(voiceComponent.VoiceMaster, replacements);
-                                Find(info, voiceComponent.VoiceMaster, replacements, entityContext);
+                            } else if (component.GetType() == typeof(STUVoiceSetComponent)) {
+                                STUVoiceSetComponent voiceComponent = component as STUVoiceSetComponent;
+                                if (voiceComponent?.VoiceSet == null) continue;
+                                entityInfo.VoiceSet = GetReplacement(voiceComponent.VoiceSet, replacements);
+                                Find(info, voiceComponent.VoiceSet, replacements, entityContext);
                             }
                         }
                     }
 
                     // assign voice master to effects
-                    if (entityInfo.VoiceMaster != 0) {
+                    if (entityInfo.VoiceSet != 0) {
                         foreach (ulong entityAnimation in entityInfo.Animations) {
                             AnimationInfoNew entityAnimationInfo = info.Animations[entityAnimation];
                             if (entityAnimationInfo.Effect == 0) continue;
@@ -502,7 +507,7 @@ namespace DataTool.FindLogic {
                             if (info.Effects.ContainsKey(entityAnimationInfo.Effect)) entityAnimationEffectInfo = info.Effects[entityAnimationInfo.Effect];
                             if (info.AnimationEffects.ContainsKey(entityAnimationInfo.Effect)) entityAnimationEffectInfo = info.AnimationEffects[entityAnimationInfo.Effect];
                             if (entityAnimationEffectInfo == null) continue;
-                            entityAnimationEffectInfo.Effect.SoundMaster = entityInfo.VoiceMaster;
+                            entityAnimationEffectInfo.Effect.VoiceSet = entityInfo.VoiceSet;
                         }
                     }
 
@@ -829,25 +834,25 @@ namespace DataTool.FindLogic {
                     
                     break;
                 case 0x5F:
-                    if (info.VoiceMasters.ContainsKey(guid)) break;
+                    if (info.VoiceSets.ContainsKey(guid)) break;
 
-                    STUVoiceMaster voiceMaster = GetInstance<STUVoiceMaster>(guid);
+                    STUVoiceSet voiceSet = GetInstance<STUVoiceSet>(guid);
 
-                    if (voiceMaster == null) break;
+                    if (voiceSet == null) break;
                     
-                    VoiceMasterInfo voiceMasterInfo = new VoiceMasterInfo(guid);
-                    info.VoiceMasters[guid] = voiceMasterInfo;
+                    VoiceSetInfo voiceSetInfo = new VoiceSetInfo(guid);
+                    info.VoiceSets[guid] = voiceSetInfo;
 
-                    if (voiceMaster.VoiceLineInstances == null) break;
-                    voiceMasterInfo.VoiceLineInstances = new Dictionary<ulong, HashSet<VoiceLineInstanceInfo>>();
-                    for (int i = 0; i < voiceMaster.VoiceLineInstances.Length; i++) {
-                        STUVoiceLineInstance voiceLineInstance = voiceMaster.VoiceLineInstances[i];
+                    if (voiceSet.VoiceLineInstances == null) break;
+                    voiceSetInfo.VoiceLineInstances = new Dictionary<ulong, HashSet<VoiceLineInstanceInfo>>();
+                    for (int i = 0; i < voiceSet.VoiceLineInstances.Length; i++) {
+                        STUVoiceLineInstance voiceLineInstance = voiceSet.VoiceLineInstances[i];
                         if (voiceLineInstance == null) continue;
 
                         VoiceLineInstanceInfo voiceLineInstanceInfo =
                             new VoiceLineInstanceInfo {
-                                GUIDx06F = voiceMaster.VirtualGUIDs06F[i],
-                                GUIDx09B = voiceMaster.VirtualGUIDs09B[i],
+                                GUIDx06F = voiceSet.VirtualGUIDs06F[i],
+                                GUIDx09B = voiceSet.VirtualGUIDs09B[i],
                                 GUIDx03C = voiceLineInstance.m_D0C28030,
                                 Subtitle = voiceLineInstance.Subtitle
                             };
@@ -855,6 +860,7 @@ namespace DataTool.FindLogic {
                             voiceLineInstanceInfo.GUIDx070 = voiceLineInstance.SoundDataContainer.GUIDx070;
                             voiceLineInstanceInfo.VoiceStimulus = voiceLineInstance.SoundDataContainer.VoiceStimulus;
                             voiceLineInstanceInfo.GUIDx02C = voiceLineInstance.SoundDataContainer.SoundbankMasterResource;
+                            Find(info, voiceLineInstanceInfo.GUIDx02C, replacements, context);
                         } else {
                             Console.Out.WriteLine("[DataTool.FindLogic.Combo]: ERROR: voice data container was null (please contact the developers)");
                             if (Debugger.IsAttached) {
@@ -875,10 +881,10 @@ namespace DataTool.FindLogic {
                             }
                         }
 
-                        if (!voiceMasterInfo.VoiceLineInstances.ContainsKey(voiceLineInstanceInfo.VoiceStimulus)) {
-                            voiceMasterInfo.VoiceLineInstances[voiceLineInstanceInfo.VoiceStimulus] = new HashSet<VoiceLineInstanceInfo>();
+                        if (!voiceSetInfo.VoiceLineInstances.ContainsKey(voiceLineInstanceInfo.VoiceStimulus)) {
+                            voiceSetInfo.VoiceLineInstances[voiceLineInstanceInfo.VoiceStimulus] = new HashSet<VoiceLineInstanceInfo>();
                         }
-                        voiceMasterInfo.VoiceLineInstances[voiceLineInstanceInfo.VoiceStimulus].Add(voiceLineInstanceInfo);
+                        voiceSetInfo.VoiceLineInstances[voiceLineInstanceInfo.VoiceStimulus].Add(voiceLineInstanceInfo);
                     }
                     
                     break;

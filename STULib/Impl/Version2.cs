@@ -536,6 +536,10 @@ namespace STULib.Impl {
 
                         if (_InstanceTypes.ContainsKey(InstanceInfo[i].InstanceChecksum)) {
                             int fieldListIndex = reader.ReadInt32();
+                            // this is just testing:
+                            //if (fieldListIndex == -1) {
+                            //    fieldListIndex = i;
+                            //}
                             if (InstanceFields.Length <= fieldListIndex || fieldListIndex < 0) {
                                 if (fieldListIndex == -1) continue;  // don't bother logging this anymore
                                 Debugger.Log(0, "STU",

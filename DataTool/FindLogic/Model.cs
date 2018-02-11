@@ -257,9 +257,9 @@ namespace DataTool.FindLogic {
                             
                             existingModels = FindModels(existingModels, modelComponent?.Look, replacements);  // get all referenced models
                         }
-                        if (component.GetType() == typeof(STUEntityVoiceMaster)) {
-                            STUEntityVoiceMaster soundMaster = component as STUEntityVoiceMaster;
-                            entitySound = soundMaster.VoiceMaster;
+                        if (component.GetType() == typeof(STUVoiceSetComponent)) {
+                            STUVoiceSetComponent soundSetComponent = component as STUVoiceSetComponent;
+                            entitySound = soundSetComponent.VoiceSet;
                         }
                         if (component.GetType() == typeof(STUFirstPersonComponent)) {  // 003 sub-reference
                             STUFirstPersonComponent sub003 = component as STUFirstPersonComponent;
@@ -295,7 +295,7 @@ namespace DataTool.FindLogic {
                     }
                     if (entitySound != null) {
                         foreach (AnimationInfo animation in animations) {
-                            animation.SoundMaster = entitySound;
+                            animation.VoiceSet = entitySound;
                         }
                     }
                     if (entityModel != null) {  // we want all anims

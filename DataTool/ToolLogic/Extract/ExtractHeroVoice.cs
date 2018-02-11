@@ -85,19 +85,19 @@ namespace DataTool.ToolLogic.Extract {
                 
                 if (config.Count == 0) continue;
                 
-                STUEntityVoiceMaster soundMasterContainer = GetInstance<STUEntityVoiceMaster>(hero.EntityMain);
+                STUVoiceSetComponent soundSetComponentContainer = GetInstance<STUVoiceSetComponent>(hero.EntityMain);
 
-                if (soundMasterContainer?.VoiceMaster == null) {
-                    Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: soundMaster not found");
+                if (soundSetComponentContainer?.VoiceSet == null) {
+                    Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found");
                     return;
                 }
                 
                 string heroFileName = GetValidFilename(heroNameActual);
                 
                 Combo.ComboInfo info = new Combo.ComboInfo();
-                Combo.Find(info, soundMasterContainer.VoiceMaster);
+                Combo.Find(info, soundSetComponentContainer.VoiceSet);
                 
-                SaveLogic.Combo.SaveVoiceMaster(flags, Path.Combine(basePath, Container, heroFileName), info, soundMasterContainer.VoiceMaster);
+                SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName), info, soundSetComponentContainer.VoiceSet);
             }
         }
     }

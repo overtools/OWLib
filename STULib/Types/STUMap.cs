@@ -33,7 +33,7 @@ namespace STULib.Types {
         public STUGUID EffectAnnouncer;  // these should be right
 
         [STUField(0x7F5B54B2)]
-        public STUGUID SoundMasterResource;
+        public STUGUID VoiceSet;
 
         [STUField(0x762B6796, EmbeddedInstance = true)]
         public STU_7D6D8405[] UnknownArray;

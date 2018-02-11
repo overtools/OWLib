@@ -17,25 +17,25 @@ namespace DataTool.SaveLogic.Unlock {
             const string type = "VoiceLines";
             string name = GetValidFilename(item.Name).Replace(".", "");
 
-            STUEntityVoiceMaster soundMasterContainer = GetInstance<STUEntityVoiceMaster>(hero.EntityMain);
+            STUVoiceSetComponent soundSetComponentContainer = GetInstance<STUVoiceSetComponent>(hero.EntityMain);
 
-            if (soundMasterContainer?.VoiceMaster == null) {
-                Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: soundMaster not found");
+            if (soundSetComponentContainer?.VoiceSet == null) {
+                Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found");
                 return;
             }
             
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            FindLogic.Combo.Find(info, soundMasterContainer.VoiceMaster);
+            FindLogic.Combo.Find(info, soundSetComponentContainer.VoiceSet);
 
-            FindLogic.Combo.VoiceMasterInfo voiceMasterInfo = info.VoiceMasters[soundMasterContainer.VoiceMaster];
+            FindLogic.Combo.VoiceSetInfo voiceSetInfo = info.VoiceSets[soundSetComponentContainer.VoiceSet];
             
             List<FindLogic.Combo.VoiceLineInstanceInfo> voiceLineInstances = new List<FindLogic.Combo.VoiceLineInstanceInfo>();
             using (Stream vlStream = OpenFile(vl.EffectResource)) {
                 using (Chunked vlChunk = new Chunked(vlStream)) {
                     foreach (SVCE svce in vlChunk.GetAllOfTypeFlat<SVCE>()) {
                         if (svce == null) continue;
-                        if (voiceMasterInfo.VoiceLineInstances.ContainsKey(svce.Data.VoiceStimulus)) {
-                            voiceLineInstances.AddRange(voiceMasterInfo.VoiceLineInstances[svce.Data.VoiceStimulus]);
+                        if (voiceSetInfo.VoiceLineInstances.ContainsKey(svce.Data.VoiceStimulus)) {
+                            voiceLineInstances.AddRange(voiceSetInfo.VoiceLineInstances[svce.Data.VoiceStimulus]);
                         }
                     }
                 }

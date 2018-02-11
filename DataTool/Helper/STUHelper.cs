@@ -17,6 +17,11 @@ namespace DataTool.Helper {
             return GetString(description?.String);
         }
         
+        public static string GetSubtitleString(ulong key) {
+            STUSubtitle subtitle = GetInstance<STUSubtitle>(key);
+            return subtitle?.Text;
+        }
+        
         public static ISTU OpenSTUSafe(ulong key) {
             using (Stream stream = OpenFile(key)) {
                 return stream == null ? null : ISTU.NewInstance(stream, BuildVersion);

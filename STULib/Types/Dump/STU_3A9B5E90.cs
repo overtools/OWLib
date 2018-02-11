@@ -71,7 +71,7 @@ namespace STULib.Types.Dump {
         public STUGUID m_956158FF;  // STUEffect
 
         [STUField(0x7F5B54B2)]
-        public STUGUID m_7F5B54B2;  // STULib.Types.STUVoiceMaster
+        public STUGUID m_7F5B54B2;  // STULib.Types.STUVoiceSet
 
         [STUField(0x719AA043, EmbeddedInstance = true)]
         public STULib.Types.Dump.STU_01AA07B0[] m_719AA043;

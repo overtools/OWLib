@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using DataTool.Flag;
 using DataTool.Helper;
-using DataTool.SaveLogic;
 using DataTool.ToolLogic.List;
+using OWLib;
 using STULib.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
+using Map = DataTool.SaveLogic.Map;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-maps", Description = "Extract maps", TrackTypes = new ushort[] {0x9F, 0x0BC}, CustomFlags = typeof(ExtractFlags))]
@@ -51,7 +52,7 @@ namespace DataTool.ToolLogic.Extract {
                 ListMaps.MapInfo mapInfo = ListMaps.GetMap(key);
                 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
-                foreach (string name in new [] {mapInfo.Name, mapInfo.NameB, mapInfo.UniqueName, "*"}) {
+                foreach (string name in new [] {mapInfo.Name, mapInfo.NameB, mapInfo.UniqueName, GUID.Index(map.MapDataResource1).ToString("X"), "*"}) {
                     if (name == null) continue;
                     string theName = name.ToLowerInvariant();
                     if (!parsedTypes.ContainsKey(theName)) continue;

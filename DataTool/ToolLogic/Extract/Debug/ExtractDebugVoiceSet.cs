@@ -8,17 +8,17 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-voice-master", Description = "Extract voice master (debug)", TrackTypes = new ushort[] {0x5F}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
-    public class ExtractDebugVoiceMaster : ITool {
+    [Tool("extract-debug-voice-set", Description = "Extract voice set (debug)", TrackTypes = new ushort[] {0x5F}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    public class ExtractDebugVoiceSet : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
         }
 
         public void Parse(ICLIFlags toolFlags) {
-            ExtractVoiceMasters(toolFlags);
+            ExtractVoiceSets(toolFlags);
         }
 
-        public void ExtractVoiceMasters(ICLIFlags toolFlags) {
+        public void ExtractVoiceSets(ICLIFlags toolFlags) {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
@@ -26,14 +26,14 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 throw new Exception("no output path");
             }
 
-            const string container = "DebugVoiceMaster";
+            const string container = "DebugVoiceSet";
             
             foreach (ulong key in TrackedFiles[0x5F]) {
-                STUVoiceMaster voiceMaster = GetInstance<STUVoiceMaster>(key);
+                STUVoiceSet voiceSet = GetInstance<STUVoiceSet>(key);
 
                 string voiceMaterDir = Path.Combine(basePath, container, GetFileName(key));
 
-                foreach (STUVoiceLineInstance voiceLineInstance in voiceMaster.VoiceLineInstances) {
+                foreach (STUVoiceLineInstance voiceLineInstance in voiceSet.VoiceLineInstances) {
                     if (voiceLineInstance?.SoundDataContainer == null) continue;
                     
                     Combo.ComboInfo info = new Combo.ComboInfo();

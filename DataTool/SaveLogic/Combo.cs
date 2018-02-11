@@ -232,10 +232,10 @@ namespace DataTool.SaveLogic {
 
         private static Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> GetSVCELines(EffectParser.EffectInfo effectInfo, FindLogic.Combo.ComboInfo info) {
             Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> output = new Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>>();
-            if (effectInfo.SVCEs.Count == 0 || effectInfo.SoundMaster == 0) return output;
+            if (effectInfo.SVCEs.Count == 0 || effectInfo.VoiceSet == 0) return output;
 
             foreach (EffectParser.SVCEInfo svceInfo in effectInfo.SVCEs) {
-                Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> instances = info.VoiceMasters[effectInfo.SoundMaster].VoiceLineInstances;
+                Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> instances = info.VoiceSets[effectInfo.VoiceSet].VoiceLineInstances;
                 if (instances.ContainsKey(svceInfo.VoiceStimulus)) {
                     output[svceInfo.VoiceStimulus] = instances[svceInfo.VoiceStimulus];
                 }
@@ -374,12 +374,12 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void SaveVoiceMasterInternal(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
-            ulong voiceMaster) {
-            string thisPath = Path.Combine(path, GetFileName(voiceMaster));
+        private static void SaveVoiceSetInternal(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            ulong voiceSet) {
+            string thisPath = Path.Combine(path, GetFileName(voiceSet));
 
-            FindLogic.Combo.VoiceMasterInfo voiceMasterInfo = info.VoiceMasters[voiceMaster];
-            foreach (KeyValuePair<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> stimuliSet in voiceMasterInfo.VoiceLineInstances) {
+            FindLogic.Combo.VoiceSetInfo voiceSetInfo = info.VoiceSets[voiceSet];
+            foreach (KeyValuePair<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> stimuliSet in voiceSetInfo.VoiceLineInstances) {
                 SaveVoiceStimuliInternal(flags, thisPath, info, stimuliSet.Value, true);
             }
         }
@@ -446,20 +446,20 @@ namespace DataTool.SaveLogic {
             Wait(info);
         }
         
-        public static void SaveVoiceMaster(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
-            ulong voiceMasterInfo) {
+        public static void SaveVoiceSet(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            ulong voiceSet) {
             info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
             
-            SaveVoiceMasterInternal(flags, path, info, voiceMasterInfo);
+            SaveVoiceSetInternal(flags, path, info, voiceSet);
             
             Wait(info);
         }
 
-        public static void SaveVoiceMaster(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
-            FindLogic.Combo.VoiceMasterInfo voiceMasterInfo) {
+        public static void SaveVoiceSet(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            FindLogic.Combo.VoiceSetInfo voiceSetInfo) {
             info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
             
-            SaveVoiceMasterInternal(flags, path, info, voiceMasterInfo.GUID);
+            SaveVoiceSetInternal(flags, path, info, voiceSetInfo.GUID);
             
             Wait(info);
         }
