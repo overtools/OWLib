@@ -12,5 +12,3 @@ namespace STULib.Types {
         public Common.STUGUID[] Abilities;  // STULib.Types.STUAbilityInfo
     }
 }
-
-

@@ -9,5 +9,3 @@ namespace STULib.Types {
         public Common.STUGUID[] Heroes;  // STULib.Types.STUHero
     }
 }
-
-

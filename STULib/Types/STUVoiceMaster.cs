@@ -38,4 +38,3 @@ namespace STULib.Types {
         public byte m_2866DEC2;
     }
 }
-

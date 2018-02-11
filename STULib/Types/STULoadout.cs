@@ -35,5 +35,3 @@ namespace STULib.Types {
         public int WeaponIndex;
     }
 }
-
-

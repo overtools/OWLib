@@ -20,5 +20,3 @@ namespace STULib.Types {
         public STUEnum_E123E435 m_7CDE6A4B;
     }
 }
-
-

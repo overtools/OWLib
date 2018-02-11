@@ -142,5 +142,3 @@ namespace STULib.Types {
         public byte m_8F862EC7;
     }
 }
-
-

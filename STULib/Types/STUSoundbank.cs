@@ -85,5 +85,3 @@ namespace STULib.Types {
         public byte m_573D3605;
     }
 }
-
-

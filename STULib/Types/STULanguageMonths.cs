@@ -41,5 +41,3 @@ namespace STULib.Types {
         public string December;
     }
 }
-
-

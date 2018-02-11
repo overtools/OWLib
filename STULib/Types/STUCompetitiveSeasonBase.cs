@@ -38,5 +38,3 @@ namespace STULib.Types {
         public STUDateAndTime UnknownDT4;
     }
 }
-
-

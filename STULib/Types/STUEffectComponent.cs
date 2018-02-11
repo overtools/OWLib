@@ -12,5 +12,3 @@ namespace STULib.Types {
         public byte m_CA67473E;
     }
 }
-
-

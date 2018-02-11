@@ -9,5 +9,3 @@ namespace STULib.Types {
         public Common.STUGUID GUIDx07A;  // STU_569C801E
     }
 }
-
-

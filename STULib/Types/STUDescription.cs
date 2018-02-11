@@ -8,5 +8,3 @@ namespace STULib.Types {
         public STUGUID String;
     }
 }
-
-

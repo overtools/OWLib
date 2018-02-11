@@ -14,5 +14,3 @@ namespace STULib.Types {
         // todo: use for list-highlights
     }
 }
-
-

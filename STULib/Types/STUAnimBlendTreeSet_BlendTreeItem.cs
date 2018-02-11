@@ -34,5 +34,3 @@ namespace STULib.Types {
         public uint m_E54B9419;
     }
 }
-
-

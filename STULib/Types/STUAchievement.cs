@@ -64,5 +64,3 @@ namespace STULib.Types {
     public enum STUEnum_AB6CE3D1 : uint {
     }
 }
-
-

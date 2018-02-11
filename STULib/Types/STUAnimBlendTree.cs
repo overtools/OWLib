@@ -28,5 +28,3 @@ namespace STULib.Types {
         public uint m_191CEC72;
     }
 }
-
-

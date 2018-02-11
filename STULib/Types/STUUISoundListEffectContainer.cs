@@ -16,5 +16,3 @@ namespace STULib.Types {
     public enum STUEnum_BDE32585 : uint {
     }
 }
-
-

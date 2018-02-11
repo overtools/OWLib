@@ -38,5 +38,3 @@ namespace STULib.Types {
         public STUSound07ASub Sub11;
     }
 }
-
-

@@ -8,5 +8,3 @@ namespace STULib.Types {
         public Enums.STUEnum_1C8CB734[] UnknownEnum;
     }
 }
-
-

@@ -23,5 +23,3 @@ namespace STULib.Types {
         public STUEnumLeagueDivision Division;
     }
 }
-
-

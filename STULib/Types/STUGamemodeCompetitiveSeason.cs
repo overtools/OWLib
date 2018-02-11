@@ -22,5 +22,3 @@ namespace STULib.Types {
         public byte m_CEB5178B;
     }
 }
-
-

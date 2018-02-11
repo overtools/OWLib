@@ -195,6 +195,3 @@ namespace STULib.Types {
         public uint Unknown1;
     }
 }
-
-
-

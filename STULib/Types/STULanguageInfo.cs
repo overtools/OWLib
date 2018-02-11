@@ -39,5 +39,3 @@ namespace STULib.Types {
         public float m_D10EE147;
     }
 }
-
-

@@ -12,5 +12,3 @@ namespace STULib.Types {
         public STUGraphNode ParentNode;
     }
 }
-
-

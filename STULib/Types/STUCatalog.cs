@@ -7,4 +7,3 @@ namespace STULib.Types {
     //     public STUGUID[] Catalog;
     // }
 }
-

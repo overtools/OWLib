@@ -7,5 +7,3 @@ namespace STULib.Types {
         public Common.STUGUID Unlock;
     }
 }
-
-

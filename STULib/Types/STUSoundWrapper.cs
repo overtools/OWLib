@@ -14,5 +14,3 @@ namespace STULib.Types {
         public Enums.STUEnum_C4294B0E m_45123429;
     }
 }
-
-

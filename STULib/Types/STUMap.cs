@@ -114,5 +114,3 @@ namespace STULib.Types {
         public STUGUID Entity;
     }
 }
-
-

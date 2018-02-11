@@ -9,5 +9,3 @@ namespace STULib.Types {
         public Common.STUGUID[] Cosmetics;  // STU_42270D59
     }
 }
-
-

@@ -31,5 +31,3 @@ namespace STULib.Types {
         public STUGUID[] Unlocks;
     }
 }
-
-

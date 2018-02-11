@@ -24,5 +24,3 @@ namespace STULib.Types {
         public int MaxPlayers;
     }
 }
-
-

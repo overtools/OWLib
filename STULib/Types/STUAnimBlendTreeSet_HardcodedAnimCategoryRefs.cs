@@ -39,5 +39,3 @@ namespace STULib.Types {
         public Common.STUGUID m_A93A7786;  // STU_CB5A89D2
     }
 }
-
-

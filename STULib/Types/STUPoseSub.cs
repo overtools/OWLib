@@ -26,5 +26,3 @@ namespace STULib.Types {
         public STUVec3 Vec6;
     }
 }
-
-

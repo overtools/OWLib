@@ -61,5 +61,3 @@ namespace STULib.Types {
         public STUGUID Text;  // STU_B456B24F
     }
 }
-
-

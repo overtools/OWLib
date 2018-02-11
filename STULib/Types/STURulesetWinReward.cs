@@ -11,5 +11,3 @@ namespace STULib.Types {
         public int Unknown;
     }
 }
-
-

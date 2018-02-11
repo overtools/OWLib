@@ -24,5 +24,3 @@ namespace STULib.Types {
         public Common.STUVec3 Unknown3;
     }
 }
-
-

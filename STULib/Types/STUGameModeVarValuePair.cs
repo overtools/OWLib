@@ -13,5 +13,3 @@ namespace STULib.Types {
         public STU_02E4C615 Value;
     }
 }
-
-

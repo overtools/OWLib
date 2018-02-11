@@ -12,5 +12,3 @@ namespace STULib.Types {
         public uint Type;  // STUEnum_E5327514
     }
 }
-
-

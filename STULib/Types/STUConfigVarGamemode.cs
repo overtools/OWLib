@@ -10,5 +10,3 @@ namespace STULib.Types {
         public Common.STUGUID Gamemode;  // STULib.Types.STUGamemode
     }
 }
-
-

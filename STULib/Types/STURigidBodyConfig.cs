@@ -21,5 +21,3 @@ namespace STULib.Types {
         public byte m_3AA8336F;
     }
 }
-
-

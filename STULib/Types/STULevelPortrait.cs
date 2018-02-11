@@ -23,5 +23,3 @@ namespace STULib.Types {
         // todo: ImageResource => BorderResource, PortraitResource
     }
 }
-
-

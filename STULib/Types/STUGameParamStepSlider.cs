@@ -18,5 +18,3 @@ namespace STULib.Types {
         public int Default;
     }
 }
-
-

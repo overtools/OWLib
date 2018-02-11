@@ -14,5 +14,3 @@ namespace STULib.Types {
         public STUGUID Sound3;  // STULib.Types.STUSound
     }
 }
-
-

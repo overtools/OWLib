@@ -7,5 +7,3 @@ namespace STULib.Types {
         public STUEffectReference Effect;
     }
 }
-
-

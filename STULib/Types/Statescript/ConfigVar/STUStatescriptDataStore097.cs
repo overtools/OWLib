@@ -9,4 +9,3 @@ namespace STULib.Types.Statescript.ConfigVar {
         public Common.STUGUID GUIDx097;  // STU_8EFC337B
     }
 }
-

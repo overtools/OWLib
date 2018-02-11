@@ -133,5 +133,3 @@ namespace STULib.Types {
     // todo: BDD783B9
     // todo: D931E2CF
     // todo: C9F4617F
-
-

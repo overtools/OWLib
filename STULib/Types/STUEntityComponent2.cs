@@ -5,5 +5,3 @@ namespace STULib.Types {
     public class STUEntityComponent2 : STUEntityComponent {
     }
 }
-
-

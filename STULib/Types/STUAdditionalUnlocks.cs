@@ -11,5 +11,3 @@ namespace STULib.Types {
         public uint Level; // Level the item is available in? Base items have level 0
     }
 }
-
-

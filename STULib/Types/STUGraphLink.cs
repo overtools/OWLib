@@ -15,5 +15,3 @@ namespace STULib.Types {
         public STUGraphPlug m_EA1269DF;
     }
 }
-
-

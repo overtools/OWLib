@@ -38,5 +38,3 @@ namespace STULib.Types {
         public BlizzStringCollection ToReplace;
     }
 }
-
-

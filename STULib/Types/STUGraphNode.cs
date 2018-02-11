@@ -7,5 +7,3 @@ namespace STULib.Types {
     public class STUGraphNode : STU_8FAF5745 {
     }
 }
-
-

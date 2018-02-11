@@ -12,5 +12,3 @@ namespace STULib.Types {
         public ushort m_668D2844;
     }
 }
-
-

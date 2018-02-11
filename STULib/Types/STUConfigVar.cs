@@ -9,5 +9,3 @@ namespace STULib.Types {
         public ulong m_EE729DCB;  // pre = 83E83924
     }
 }
-
-

@@ -13,5 +13,3 @@ namespace STULib.Types {
         public STU_61386B75[] m_3BD16B9E;
     }
 }
-
-

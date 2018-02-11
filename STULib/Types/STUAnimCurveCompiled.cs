@@ -12,5 +12,3 @@ namespace STULib.Types {
         public float[] m_A321EBE9;
     }
 }
-
-

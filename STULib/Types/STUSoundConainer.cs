@@ -20,4 +20,3 @@ namespace STULib.Types {
         public STUSoundWrapper Sound4;
     }
 }
-

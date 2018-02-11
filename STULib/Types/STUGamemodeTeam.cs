@@ -33,5 +33,3 @@ namespace STULib.Types {
         public int MinPlayers;
     }
 }
-
-

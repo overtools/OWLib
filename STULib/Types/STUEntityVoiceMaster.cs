@@ -9,5 +9,3 @@ namespace STULib.Types {
         public Common.STUGUID VoiceMaster;  // STULib.Types.STUSoundMaster
     }
 }
-
-

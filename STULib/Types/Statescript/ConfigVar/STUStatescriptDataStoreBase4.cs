@@ -5,4 +5,3 @@ namespace STULib.Types.Statescript.ConfigVar {
     public class STUStatescriptDataStoreBase4 : STUStatescriptDataStoreBase {
     }
 }
-

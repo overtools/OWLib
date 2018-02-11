@@ -7,5 +7,3 @@ namespace STULib.Types {
     public class STUBrawlHeroContainer : Common.STUInstance {  // wat
     }
 }
-
-

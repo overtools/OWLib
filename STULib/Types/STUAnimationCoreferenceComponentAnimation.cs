@@ -21,5 +21,3 @@ namespace STULib.Types {
         public byte UnknownByte2;
     }
 }
-
-

@@ -40,5 +40,3 @@ namespace STULib.Types {
         public Dictionary<ulong, ulong> ProperReplacements => Replacements?.ToDictionary(x => x.Key, x => (ulong)x.Value.New);
     }
 }
-
-
