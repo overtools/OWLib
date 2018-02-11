@@ -16,3 +16,4 @@ namespace STULib.Types.Dump {
         public STU_295A9417[] m_134EE5BB;
     }
 }
+

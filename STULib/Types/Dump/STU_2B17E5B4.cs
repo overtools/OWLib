@@ -10,5 +10,9 @@ namespace STULib.Types.Dump {
 
         [STUField(0x51ED2012)]
         public int m_51ED2012;
+
+        [STULib.STUField(0xBD40D10D)]
+        public int m_BD40D10D;
     }
 }
+

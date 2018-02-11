@@ -16,3 +16,4 @@ namespace STULib.Types.Dump {
         public byte m_FEA5D1BB;
     }
 }
+

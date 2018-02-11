@@ -30,3 +30,4 @@ namespace STULib.Types.Dump {
         public float m_46715402;
     }
 }
+

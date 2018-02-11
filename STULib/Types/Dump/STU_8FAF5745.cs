@@ -18,3 +18,4 @@ namespace STULib.Types.Dump {
         public uint UniqueID;
     }
 }
+

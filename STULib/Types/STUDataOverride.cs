@@ -31,13 +31,14 @@ namespace STULib.Types {
         [STUField(0xBCC55571)]
         public STU_47C34433[] m_BCC55571;
 
-        [STUField(0x258A7D5C)]
-        public STUHashMap<STUOverrideFileChange> Replacements;  // key is before
-
         [STULib.STUField(0x50FDDF83)]
         public STULib.Types.Generic.Common.STUGUID m_50FDDF83;  // STULib.Types.Dump.STU_8880FCB0
+
+        [STUField(0x258A7D5C)]
+        public STUHashMap<STUOverrideFileChange> Replacements;  // key is before
 
         public Dictionary<ulong, ulong> ProperReplacements => Replacements?.ToDictionary(x => x.Key, x => (ulong)x.Value.New);
     }
 }
+
 

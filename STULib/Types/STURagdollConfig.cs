@@ -27,6 +27,9 @@ namespace STULib.Types {
         [STUField(0x99A72E75)]
         public int m_99A72E75;
 
+        [STULib.STUField(0x39943678)]
+        public byte m_39943678;
+
         [STUField(0xEDA30E4A)]
         public byte m_EDA30E4A;
 
@@ -36,11 +39,9 @@ namespace STULib.Types {
         [STUField(0x794ACECD)]
         public byte m_794ACECD;
 
-        [STULib.STUField(0x39943678)]
-        public byte m_39943678;
-
         [STULib.STUField(0x388DFDA7)]
         public byte m_388DFDA7;
     }
 }
+
 

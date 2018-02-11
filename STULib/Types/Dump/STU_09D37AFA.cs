@@ -12,3 +12,4 @@ namespace STULib.Types.Dump {
         public uint m_29EFF18D;
     }
 }
+

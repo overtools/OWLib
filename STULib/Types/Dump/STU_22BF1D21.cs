@@ -9,3 +9,4 @@ namespace STULib.Types.Dump {
         public Common.STUGUID Virtual01C;  // STU_9CADF2EC
     }
 }
+

@@ -7,3 +7,4 @@ namespace STULib.Types.Dump {
     public class STU_837D6183 : STUStatescriptDataStoreBase {
     }
 }
+

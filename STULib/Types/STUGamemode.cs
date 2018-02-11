@@ -39,6 +39,9 @@ namespace STULib.Types {
         [STUField(0xA8957901)]
         public Common.STUGUID Virtual0C3;  // STUCelebration
 
+        [STULib.STUField(0x7F5B54B2)]
+        public STULib.Types.Generic.Common.STUGUID m_7F5B54B2;
+
         [STUField(0xCBAE46D4)]
         public float m_CBAE46D4; // 3 for Snowball, 0 everything else
 
@@ -47,6 +50,9 @@ namespace STULib.Types {
 
         [STUField(0x8A5415B9)]
         public STUEnum_1964FED7 UnknownEnum;
+
+        [STULib.STUField(0x70064613)]
+        public byte m_70064613;
 
         [STUField(0xF3E24B6F)]
         public byte m_F3E24B6F; // 0 for Elimination/Deathmatch/Lucioball/Junkenstein/Snowball/Uprising/CTF, 1 everything else
@@ -60,12 +66,6 @@ namespace STULib.Types {
         [STUField(0x372E20EB)]
         public byte m_372E20EB; // 1 for Uprising, 0 everything else
 
-        [STULib.STUField(0x7F5B54B2)]
-        public STULib.Types.Generic.Common.STUGUID m_7F5B54B2;
-
-        [STULib.STUField(0x70064613)]
-        public byte m_70064613;
-
         [STULib.STUField(0xF40CE5D4)]
         public byte m_F40CE5D4;
 
@@ -73,4 +73,5 @@ namespace STULib.Types {
         public byte m_96C5A6F6;
     }
 }
+
 

@@ -4,6 +4,9 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types {
     [STU(0xF746901F)]
     public class STUSoundConainer : STUInstance {  // todo: these names are so bad
+        [STULib.STUField(0x5683B253, EmbeddedInstance = true)]
+        public STULib.Types.Dump.STU_4493ED2C[] m_5683B253;
+
         [STUField(0x798027DE, EmbeddedInstance = true)]
         public STUSoundWrapper Sound1;
 
@@ -17,3 +20,4 @@ namespace STULib.Types {
         public STUSoundWrapper Sound4;
     }
 }
+

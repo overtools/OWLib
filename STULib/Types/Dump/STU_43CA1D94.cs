@@ -7,3 +7,4 @@ namespace STULib.Types.Dump {
         public byte Value;
     }
 }
+

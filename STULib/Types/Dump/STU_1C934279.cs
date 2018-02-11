@@ -10,3 +10,4 @@ namespace STULib.Types.Dump {
         public Common.STUGUID m_EDDF9466;  // STUBrawlContainer
     }
 }
+

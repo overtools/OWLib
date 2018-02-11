@@ -27,3 +27,4 @@ namespace STULib.Types.Dump {
         public ushort m_0F764DCB;
     }
 }
+

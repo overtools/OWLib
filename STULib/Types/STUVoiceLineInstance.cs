@@ -20,3 +20,4 @@ namespace STULib.Types {
         public ulong m_38BFB46C;
     }
 }
+

@@ -48,7 +48,11 @@ namespace STULib.Types.Dump {
         [STUField(0x72E74657)]
         public byte m_72E74657;
 
+        [STULib.STUField(0x46544BA5)]
+        public byte m_46544BA5;
+
         [STUField(0x881FEF39)]
         public byte m_881FEF39;
     }
 }
+

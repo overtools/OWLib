@@ -15,3 +15,4 @@ namespace STULib.Types.Dump {
         public uint m_CFB09B58;
     }
 }
+

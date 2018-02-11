@@ -4,11 +4,11 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types {
     [STU(0x5C713BD4)]
     public class STUEffectReference : STUInstance {
-        [STUField(0x2B522C5B)]
-        public STUGUID EffectLook;
-
         [STUField(0x58D56DD4, "m_effect")]
         public STUGUID Effect;
+
+        [STUField(0x2B522C5B)]
+        public STUGUID EffectLook;
     }
 
     [STU(0x251E73C7)]
@@ -20,4 +20,5 @@ namespace STULib.Types {
         public STUGUID[] MaterialDatas;
     }
 }
+
 

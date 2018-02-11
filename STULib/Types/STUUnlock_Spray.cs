@@ -3,10 +3,11 @@
 namespace STULib.Types {
     [STU(0x84515D93)]
     public class STUUnlock_Spray : STUUnlock {
-        [STUField(0xABFBD552, EmbeddedInstance = true)]
-        public STUEffectReference Effect;
-
         [STUField(0x1B25AB90)]
         public STUEffectReference Effect2;
+
+        [STUField(0xABFBD552, EmbeddedInstance = true)]
+        public STUEffectReference Effect;
     }
 }
+

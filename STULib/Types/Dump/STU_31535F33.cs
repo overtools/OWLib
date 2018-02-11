@@ -10,3 +10,4 @@ namespace STULib.Types.Dump {
         public Common.STUGUID m_EE483487;  // STU_A0CFB0F7
     }
 }
+

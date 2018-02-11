@@ -7,3 +7,4 @@ namespace STULib.Types.Dump {
         public STU_A0675F24 m_E923C238;
     }
 }
+

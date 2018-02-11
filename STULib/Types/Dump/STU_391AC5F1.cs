@@ -7,3 +7,4 @@ namespace STULib.Types.Dump {
     public class STU_391AC5F1 : Common.STUInstance {
     }
 }
+

@@ -4,7 +4,6 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types {
     [STU(0xD89CF9B3)]
     public class STU_D89CF9B3 : STUInstance {
-        
     }
     
     [STU(0x5CF22AAB)]
@@ -40,4 +39,5 @@ namespace STULib.Types {
         public float m_D10EE147;
     }
 }
+
 

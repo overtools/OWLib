@@ -12,3 +12,4 @@ namespace STULib.Types.Dump {
         public Common.STUVec2 m_EB0EE538;
     }
 }
+

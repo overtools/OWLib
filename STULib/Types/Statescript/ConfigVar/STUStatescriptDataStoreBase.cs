@@ -7,3 +7,4 @@ namespace STULib.Types.Statescript.ConfigVar {
     public class STUStatescriptDataStoreBase : STU_252FDE3A {
     }
 }
+

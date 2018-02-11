@@ -12,3 +12,4 @@ namespace STULib.Types.Dump {
         public Common.STUGUID m_3B52E7A3;  // STUHardPoint
     }
 }
+

@@ -9,3 +9,4 @@ namespace STULib.Types.Statescript.ConfigVar {
         public Common.STUGUID EncryptionKey;  // STULib.Types.STUEncryptionKey
     }
 }
+

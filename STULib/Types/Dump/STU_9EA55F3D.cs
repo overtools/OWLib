@@ -12,3 +12,4 @@ namespace STULib.Types.Dump {
         public Common.STUGUID GUIDx05C;  // STU_A0CFB0F7
     }
 }
+

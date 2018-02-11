@@ -12,3 +12,4 @@ namespace STULib.Types.Dump {
         public ulong Value;
     }
 }
+

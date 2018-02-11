@@ -20,6 +20,9 @@ namespace STULib.Types {
         [STUField(0x9297ADB4, "m_look")]
         public Common.STUGUID Look;  // STULib.Types.STUModelLook
 
+        [STULib.STUField(0xA6041C8B)]
+        public STULib.Types.Dump.STU_CAAB2581 m_A6041C8B;
+
         [STUField(0x33DA887B)]
         public Common.STUGUID[] m_33DA887B;  // STU_CBD8CDF3
 
@@ -53,7 +56,11 @@ namespace STULib.Types {
         [STUField(0x2056559D)]
         public byte m_2056559D;
 
+        [STULib.STUField(0xADC54E57)]
+        public byte m_ADC54E57;
+
         [STUField(0x4A82B056)]
         public byte m_4A82B056;
     }
 }
+

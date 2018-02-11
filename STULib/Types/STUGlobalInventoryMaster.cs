@@ -29,13 +29,15 @@ namespace STULib.Types {
         [STUField(0x03F27C01)]
         public STULootBoxCurrencyUnlocks[] CurrencyUnlocks;
 
+        [STULib.STUField(0x0C6A363E)]
+        public STULib.Types.Dump.STU_F021DC6B[] m_0C6A363E;
+
         [STUField(0x88922C14)]
         public ulong[] m_88922C14;
 
-        [STUField(0x11AEB3FB)]
-        public int m_11AEB3FB;
-
         [STUField(0xE7377888)]
         public uint m_E7377888;
+
     }
 }
+

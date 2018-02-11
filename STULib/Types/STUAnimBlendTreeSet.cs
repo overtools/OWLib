@@ -21,6 +21,9 @@ namespace STULib.Types {
         [STUField(0x2ADF6453)]
         public STU_E779B62B[] m_2ADF6453;
 
+        [STULib.STUField(0x226CC159, EmbeddedInstance = true)]
+        public STULib.Types.Dump.STU_A323F0F5[] m_226CC159;
+
         [STUField(0x85CC326B)]
         public STU_DF9B7DE2 m_85CC326B;
 
@@ -70,3 +73,4 @@ namespace STULib.Types {
         public uint m_29EFF18D;
     }
 }
+

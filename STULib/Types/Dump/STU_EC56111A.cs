@@ -12,3 +12,4 @@ namespace STULib.Types.Dump {
         public STU_8C127DE2 Condition;
     }
 }
+

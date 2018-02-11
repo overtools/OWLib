@@ -7,6 +7,9 @@ namespace STULib.Types {
         [STUField(0xF51B70C4, EmbeddedInstance = true)]
         public STUVoiceLineInstance[] VoiceLineInstances;
 
+        [STULib.STUField(0x386B8E9C)]
+        public STULib.Types.Generic.Common.STUGUID m_386B8E9C;  // STULib.Types.STUSound
+
         [STUField(0x269FC4E9)]
         public STUGUID m_269FC4E9;
 
@@ -35,3 +38,4 @@ namespace STULib.Types {
         public byte m_2866DEC2;
     }
 }
+

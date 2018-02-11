@@ -5,3 +5,4 @@ namespace STULib.Types.Dump {
     public class STU_B90213F3 : STUGraphNode {
     }
 }
+

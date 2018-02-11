@@ -15,3 +15,4 @@ namespace STULib.Types.Dump {
         public float m_07DD813E;
     }
 }
+

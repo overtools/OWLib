@@ -57,6 +57,9 @@ namespace STULib.Types {
         [STUField(0x4EEA6AF4)]
         public Common.STUGUID[] BrawlInfo;  // STUBrawlContainer
 
+        [STULib.STUField(0x6F71E9AA)]
+        public STULib.Types.STUGamemodeVarValuePair[] m_6F71E9AA;
+
         [STUField(0x70045C77)]
         public STU_58E4EC09[] m_70045C77;
 
@@ -83,6 +86,9 @@ namespace STULib.Types {
 
         [STUField(0xD7E28280)]
         public Common.STUGUID m_D7E28280;
+
+        [STULib.STUField(0x679737B3)]
+        public STULib.Types.Generic.Common.STUGUID m_679737B3;  // STULib.Types.STUBrawl
 
         [STUField(0xAB6047ED)]
         public float m_AB6047ED;
@@ -132,14 +138,9 @@ namespace STULib.Types {
         [STUField(0xF011ED7A)]
         public byte m_F011ED7A;
 
-        [STULib.STUField(0x6F71E9AA)]
-        public STULib.Types.STUGamemodeVarValuePair[] m_6F71E9AA;
-
-        [STULib.STUField(0x679737B3)]
-        public STULib.Types.Generic.Common.STUGUID m_679737B3;  // STULib.Types.STUBrawl
-
         [STULib.STUField(0x8F862EC7)]
         public byte m_8F862EC7;
     }
 }
+
 

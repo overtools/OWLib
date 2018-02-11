@@ -10,3 +10,4 @@ namespace STULib.Types.Dump {
         public STUEnum_981FD5ED Type;
     }
 }
+

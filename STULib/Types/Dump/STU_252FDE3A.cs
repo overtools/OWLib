@@ -9,3 +9,4 @@ namespace STULib.Types.Dump {
         public Common.STUGUID BaseEncryptionKey;  // STULib.Types.STUEncryptionKey
     }
 }
+

@@ -10,3 +10,4 @@ namespace STULib.Types.Dump {
         public STU_CF110906[] m_CC732E55;
     }
 }
+

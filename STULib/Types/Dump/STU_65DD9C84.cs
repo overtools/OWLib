@@ -33,3 +33,4 @@ namespace STULib.Types.Dump {
         public ushort m_AE2D8911;
     }
 }
+

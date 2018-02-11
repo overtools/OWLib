@@ -9,3 +9,4 @@ namespace STULib.Types.Dump {
         public STUAnimCurveCompiled m_A747A384;
     }
 }
+

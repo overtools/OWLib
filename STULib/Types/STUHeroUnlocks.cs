@@ -4,17 +4,17 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types {
     [STU(0x8CE1D110)]
     public class STUHeroUnlocks : STUInstance {
-        [STUField(0x473494FF)]
-        public STULootBoxUnlocks[] LootboxUnlocks;
-
         [STUField(0xBF482AA3)]
         public STUUnlocks SystemUnlocks;
+
+        [STUField(0x9135A4B2)]
+        public STUUnlocks UnknownUnlocks;
 
         [STUField(0xDB803F2F)]
         public STUUnlocks[] Unlocks;
 
-        [STUField(0x9135A4B2)]
-        public STUUnlocks UnknownUnlocks;
+        [STUField(0x473494FF)]
+        public STULootBoxUnlocks[] LootboxUnlocks;
     }
     
     public class STULootBoxUnlocks : STUInstance {
@@ -31,4 +31,5 @@ namespace STULib.Types {
         public STUGUID[] Unlocks;
     }
 }
+
 

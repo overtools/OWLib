@@ -10,3 +10,4 @@ namespace STULib.Types.Dump {
         public STU_C9E2FF36[] m_134EE5BB;
     }
 }
+

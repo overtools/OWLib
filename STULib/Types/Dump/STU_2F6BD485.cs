@@ -7,3 +7,4 @@ namespace STULib.Types.Dump {
         public STUAnimNode_Base m_AF632ACD;
     }
 }
+

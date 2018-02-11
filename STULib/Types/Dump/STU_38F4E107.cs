@@ -16,3 +16,4 @@ namespace STULib.Types.Dump {
         public STUEnum_613C4AA2 m_28E3DD84;
     }
 }
+

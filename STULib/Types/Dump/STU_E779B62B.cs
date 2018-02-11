@@ -39,3 +39,4 @@ namespace STULib.Types.Dump {
         public float m_FAC45761;
     }
 }
+

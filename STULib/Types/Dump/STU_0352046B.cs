@@ -30,3 +30,4 @@ namespace STULib.Types.Dump {
         public int m_D7372AE3;
     }
 }
+

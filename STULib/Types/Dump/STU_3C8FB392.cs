@@ -28,3 +28,4 @@ namespace STULib.Types.Dump {
         public byte m_94024E3E;
     }
 }
+

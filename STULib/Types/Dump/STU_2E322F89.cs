@@ -5,3 +5,4 @@ namespace STULib.Types.Dump {
     public class STU_2E322F89 : STU_BB7A7240 {
     }
 }
+

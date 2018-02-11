@@ -12,3 +12,4 @@ namespace STULib.Types.Dump {
         public STUConfigVar m_F24E4110;
     }
 }
+

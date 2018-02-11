@@ -51,3 +51,4 @@ namespace STULib.Types.Dump {
         public byte m_BA663469;
     }
 }
+
