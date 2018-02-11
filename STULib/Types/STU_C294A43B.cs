@@ -2,7 +2,6 @@
 
 namespace STULib.Types {
     [STU(0xC294A43B)]
-    // ReSharper disable once InconsistentNaming
     public class STU_C294A43B : STUUnlock {  // some lootbox thing
         [STUField(0x7AB4E3F8)]
         public Enums.STUEnumEventID Event;

@@ -7,7 +7,6 @@ using System.Text;
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-
     public class BlizzStringCollection : ISTUHashToolPrintExtender {
         [STUField(0x1)]
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]

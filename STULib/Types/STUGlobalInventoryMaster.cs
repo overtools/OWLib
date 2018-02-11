@@ -6,11 +6,10 @@ namespace STULib.Types {
     public class STU_866672AD : Common.STUInstance {  // needs own home
     }
 
-
     [STU(0xC881FD3B)]
     public class STUGlobalInventoryMaster : STU_866672AD {
         [STUField(0xBF482AA3)]
-        public STUHeroUnlocks.STUUnlocks AchievementUnlocks;
+        public STUUnlocks AchievementUnlocks;
 
         [STUField(0xC84D463F)]
         public Common.STUGUID[] UnknownLootboxUnlocksA;  // STULib.Types.STUUnlock.Cosmetic
@@ -25,7 +24,7 @@ namespace STULib.Types {
         public STUAdditionalUnlocks[] LevelUnlocks; // Includes default sprays/icons and every level portrait
 
         [STUField(0x473494FF)]
-        public STUHeroUnlocks.STULootBoxUnlocks[] EventGeneralUnlocks;
+        public STULootBoxUnlocks[] EventGeneralUnlocks;
 
         [STUField(0x03F27C01)]
         public STULootBoxCurrencyUnlocks[] CurrencyUnlocks;

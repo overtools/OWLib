@@ -15,19 +15,20 @@ namespace STULib.Types {
 
         [STUField(0x9135A4B2)]
         public STUUnlocks UnknownUnlocks;
-        public class STULootBoxUnlocks : STUInstance {
+    }
+    
+    public class STULootBoxUnlocks : STUInstance {
         [STUField(0xDB803F2F, "m_unlocks")]
         public STUUnlocks Unlocks;
-
+            
         [STUField(0x7AB4E3F8)]
         public Enums.STUEnumEventID Event;
-        }
+    }
 
-        [STU(0x5ABF8769, "STUUnlocks")]
-        public class STUUnlocks : STUInstance {
+    [STU(0x5ABF8769, "STUUnlocks")]
+    public class STUUnlocks : STUInstance {
         [STUField(0xDB803F2F)]
         public STUGUID[] Unlocks;
-        }
     }
 }
 

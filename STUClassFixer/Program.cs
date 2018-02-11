@@ -97,7 +97,7 @@ namespace STUClassFixer {
             }
 
             public static bool Check(string line) {
-                return line.Contains("[STU(0x") || line.Contains("[STULib.STU(0x");
+                return (line.Contains("[STU(0x") || line.Contains("[STULib.STU(0x")) && !line.StartsWith(@"//");
             }
 
             public void ParseFedLines() {
@@ -139,21 +139,21 @@ namespace STUClassFixer {
 
             public void Write(StringBuilder output) {
                 int fieldIndex = 0;
-                foreach (FieldCode field in Fields) {
-                    //string commentString = "";
-                    //if (field.Comment != null) {
-                    //    commentString = $"  // {field.Comment}"; 
-                    //}
-                    const string indent = "        ";
 
-                    output.AppendLine(indent+field.HeaderLine);
-                    output.AppendLine(indent+field.ContentLine);
+                STUInstanceJSON instanceData = Version2Comparer.InstanceJSON[Hash];
 
+                const string indent = "        ";
+                
+                foreach (STUInstanceJSON.STUFieldJSON field in instanceData.Fields) {
+                    FieldCode fieldCode = Fields.First(x => x.Hash == field.Hash);
+
+                    output.AppendLine(indent+fieldCode.HeaderLine);
+                    output.AppendLine(indent+fieldCode.ContentLine);
+                    
                     if (fieldIndex != Fields.Count - 1) {
                         output.AppendLine();
                     }
-
-                    //output.AppendLine($"        {field.AccessLevel} {field.Type} {field.Name};{commentString}");
+                    
                     fieldIndex++;
                 }
 
@@ -208,7 +208,7 @@ namespace STUClassFixer {
             public FieldCode(STUInstanceJSON.STUFieldJSON field) {
                 FieldData wrappedField = new FieldData(field);
                 
-                ClassBuilder.WriteField(out string headerLine, out string contentLine, "    ", "this isn't used ;)", wrappedField, InstanceNames, FieldNames, EnumNames, false, "STULib.Types.Dump.");
+                ClassBuilder.WriteField(out string headerLine, out string contentLine, "    ", "STULib.Types.Dump", wrappedField, InstanceNames, FieldNames, EnumNames, true);
                 
                 InitFromLines(headerLine, contentLine);
             }
@@ -228,8 +228,9 @@ namespace STUClassFixer {
             string[] lines = File.ReadAllLines(file);
             
             foreach (string line in lines) {
-                if (line.Contains("{")) bracketLevel++;
-                if (line.Contains("}")) bracketLevel--;
+                string realLine = line.TrimStart(' ');
+                if (realLine.Contains("{")) bracketLevel++;
+                if (realLine.Contains("}")) bracketLevel--;
                 
                 if (InstanceCode.Check(previousLine)) {
                     InstanceCode instance = new InstanceCode(bracketLevel) {StartLine = lineIndex};
@@ -249,7 +250,7 @@ namespace STUClassFixer {
                     }
                 }
 
-                previousLine = line;
+                previousLine = realLine;
                 lineIndex++;
             }
 
@@ -283,13 +284,8 @@ namespace STUClassFixer {
                 lineIndex++;
             }
             
-            
             Console.Out.WriteLine(output);
             string outTest = OutputDirectory+file.Replace(InputDirectory, "");
-
-            if (file.Contains("STUMap")) {
-                
-            }
 
             WriteStringToFile(output.ToString(), outTest);
         }
@@ -331,7 +327,7 @@ namespace STUClassFixer {
                         Type = STUHashTool.Program.GetSizeType(field.Size),
                         Checksum = field.EnumChecksum
                     });
-                    string @enum = enumBuilder.Build(new Dictionary<uint, string>(), $"STUExcavator.Types.{enumNamespace}", true);
+                    string @enum = enumBuilder.Build(new Dictionary<uint, string>(), $"STULib.Types.{dumpNamespace}.{enumNamespace}", true);
                     string enumName = $"STUEnum_{field.EnumChecksum:X8}";
                     if (EnumNames.ContainsKey(field.EnumChecksum)) {
                         enumName = EnumNames[field.EnumChecksum];

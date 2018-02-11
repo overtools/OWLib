@@ -30,7 +30,7 @@ namespace STUHashTool {
 
         public static void WriteField(out string headerLine, out string contentLine, string fieldIndentString, string @namespace, 
             FieldData field, Dictionary<uint, string> instanceNames, Dictionary<uint, string> fieldNames, 
-            Dictionary<uint, string> enumNames, bool properTypePaths, string beforeImbedInlineType=null) {
+            Dictionary<uint, string> enumNames, bool properTypePaths) {
             string type = Program.GetType(field, properTypePaths);
             string fieldName = $"m_{field.Checksum:X8}";
             string fieldTypeDef = properTypePaths ? "STULib.STUField": "STUField";
@@ -55,9 +55,9 @@ namespace STUHashTool {
                 guidComment = $"  // {guidComment}";
             }
             if (field.IsInline || field.IsEmbed || field.IsEmbedArray || field.IsInlineArray) {  //  
-                string instanceType = $"{beforeImbedInlineType}STU_{field.TypeInstanceChecksum:X8}";
+                string instanceType = $"{@namespace}.STU_{field.TypeInstanceChecksum:X8}";
                 if (instanceNames.ContainsKey(field.TypeInstanceChecksum)) {
-                    instanceType = instanceNames[field.TypeInstanceChecksum];
+                    instanceType = $"{@namespace}.{instanceNames[field.TypeInstanceChecksum]}";
                 }
                 if (ISTU.InstanceTypes.ContainsKey(field.TypeInstanceChecksum))
                     instanceType = ISTU.InstanceTypes[field.TypeInstanceChecksum].ProperName();
@@ -74,7 +74,7 @@ namespace STUHashTool {
                 headerLine = $"{fieldIndentString}{fieldDefinition}";
                 contentLine = $"{fieldIndentString}public {type}[] {fieldName};{guidComment}";
             } else if (field.IsHashMap) {
-                string hmInstanceName = $"{beforeImbedInlineType}STU_{field.HashMapChecksum:X8}";
+                string hmInstanceName = $"{@namespace}.STU_{field.HashMapChecksum:X8}";
                 if (instanceNames.ContainsKey(field.HashMapChecksum)) {
                     hmInstanceName = $"{@namespace}.{instanceNames[field.HashMapChecksum]}";
                 }

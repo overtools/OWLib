@@ -62,7 +62,7 @@ namespace DataTool.ToolLogic.List {
                 }
 
                 if (invMaster.EventGeneralUnlocks != null) {
-                    foreach (STUHeroUnlocks.STULootBoxUnlocks eventUnlocks in invMaster.EventGeneralUnlocks) {
+                    foreach (STULootBoxUnlocks eventUnlocks in invMaster.EventGeneralUnlocks) {
                         if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
 
                         string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";

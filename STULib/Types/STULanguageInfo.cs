@@ -3,7 +3,11 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
     [STU(0xD89CF9B3)]
-    public class STU_D89CF9B3 : STUInstance {}
+    public class STU_D89CF9B3 : STUInstance {
+        
+    }
+    
+    [STU(0x5CF22AAB)]
     public class STULanguageInfo : STU_D89CF9B3 {
         [STUField(0x604EEA7E)]
         public STULanguageData Data;

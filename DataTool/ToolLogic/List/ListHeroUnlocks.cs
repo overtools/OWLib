@@ -88,7 +88,7 @@ namespace DataTool.ToolLogic.List {
             @return["Default"] = GatherUnlocks(unlocks.SystemUnlocks?.Unlocks?.Select(it => (ulong)it));
 
             if (unlocks.Unlocks != null) {
-                foreach (STUHeroUnlocks.STUUnlocks defaultUnlocks in unlocks.Unlocks) {
+                foreach (STUUnlocks defaultUnlocks in unlocks.Unlocks) {
                     if (defaultUnlocks?.Unlocks == null) continue;
 
                     if (!@return.ContainsKey("Standard"))
@@ -101,7 +101,7 @@ namespace DataTool.ToolLogic.List {
             }
 
             if (unlocks.LootboxUnlocks != null) {
-                foreach (STUHeroUnlocks.STULootBoxUnlocks eventUnlocks in unlocks.LootboxUnlocks) {
+                foreach (STULootBoxUnlocks eventUnlocks in unlocks.LootboxUnlocks) {
                     if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
 
                     string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";
