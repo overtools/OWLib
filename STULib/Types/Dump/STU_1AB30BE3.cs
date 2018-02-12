@@ -3,7 +3,7 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.Dump {
     [STU(0x1AB30BE3)]
-    public class STU_1AB30BE3 : STU_A46203AB {
+    public class STU_1AB30BE3 : STUComponentInstanceData {
         [STUField(0xDF9357CF)]
         public float m_DF9357CF;
 

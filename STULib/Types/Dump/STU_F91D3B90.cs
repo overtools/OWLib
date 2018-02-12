@@ -8,6 +8,6 @@ namespace STULib.Types.Dump {
         public STULib.Types.STUEntityComponent m_7AC92DDC;
 
         [STUField(0x16D6C33A, EmbeddedInstance = true)]
-        public STULib.Types.Dump.STU_A46203AB m_16D6C33A;
+        public STUComponentInstanceData m_16D6C33A;
     }
 }

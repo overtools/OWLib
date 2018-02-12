@@ -14,7 +14,7 @@ namespace STULib.Types.Dump {
         public string m_C48FF2B6;
 
         [STUField(0xAD261E73, EmbeddedInstance = true)]
-        public STULib.Types.Dump.STU_A46203AB[] m_AD261E73;
+        public STUComponentInstanceData[] m_AD261E73;
 
         [STUField(0x17758DA1)]
         public STUGUID[] m_17758DA1;  // STU_7A0B33DA

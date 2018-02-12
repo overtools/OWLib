@@ -3,7 +3,7 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.Dump {
     [STU(0x7D175935)]
-    public class STU_7D175935 : STU_A46203AB {
+    public class STU_7D175935 : STUComponentInstanceData {
         [STUField(0x3A6C757E)]
         public STULib.Types.Enums.STUEnumTeamType[] m_3A6C757E;
 

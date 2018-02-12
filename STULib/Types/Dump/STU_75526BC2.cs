@@ -3,7 +3,7 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.Dump {
     [STU(0x75526BC2)]
-    public class STU_75526BC2 : STU_A46203AB {
+    public class STU_75526BC2 : STUComponentInstanceData {
         [STUField(0x6D10093E)]
         public STULib.Types.STUStatescriptGraphWithOverrides[] m_6D10093E;
 

@@ -322,7 +322,6 @@
     <Compile Include="Types\Dump\STUEffect.cs" />
     <Compile Include="Types\Dump\STUGraph.cs" />
     <Compile Include="Types\Dump\STUHardPoint.cs" />
-    <Compile Include="Types\Dump\STULootBoxUnlocks.cs" />
     <Compile Include="Types\Dump\STUModel.cs" />
     <Compile Include="Types\Dump\STUSkeleton.cs" />
     <Compile Include="Types\Dump\STUStatescriptActionCriteria.cs" />
@@ -399,7 +398,6 @@
     <Compile Include="Types\Dump\STU_0298E7A6.cs" />
     <Compile Include="Types\Dump\STU_02A9E277.cs" />
     <Compile Include="Types\Dump\STU_02C0109E.cs" />
-    <Compile Include="Types\Dump\STUModelComponentInstanceData.cs" />
     <Compile Include="Types\Dump\STU_02E4C615.cs" />
     <Compile Include="Types\Dump\STU_02F7FEA4.cs" />
     <Compile Include="Types\Dump\STU_02FF18E6.cs" />
@@ -2858,7 +2856,6 @@
     <Compile Include="Types\Dump\STU_A408D74F.cs" />
     <Compile Include="Types\Dump\STU_A4262E73.cs" />
     <Compile Include="Types\Dump\STU_A4368A1E.cs" />
-    <Compile Include="Types\Dump\STU_A46203AB.cs" />
     <Compile Include="Types\Dump\STU_A4C8F8DB.cs" />
     <Compile Include="Types\Dump\STU_A4EA3ED5.cs" />
     <Compile Include="Types\Dump\STU_A4F22D6B.cs" />
@@ -4325,6 +4322,7 @@
     <Compile Include="Types\STUCompetitiveSeason.cs" />
     <Compile Include="Types\STUCompetitiveSeasonBase.cs" />
     <Compile Include="Types\STUCompetitiveSeasonRewards.cs" />
+    <Compile Include="Types\STUComponentInstanceData.cs" />
     <Compile Include="Types\STUConfigVar.cs" />
     <Compile Include="Types\STUConfigVarEffect.cs" />
     <Compile Include="Types\STUConfigVarGamemode.cs" />
@@ -4337,6 +4335,7 @@
     <Compile Include="Types\STUEntityComponent.cs" />
     <Compile Include="Types\STUEntityComponent2.cs" />
     <Compile Include="Types\STUEntityDefinition.cs" />
+    <Compile Include="Types\STUModelComponentInstanceData.cs" />
     <Compile Include="Types\STUVoiceSetComponent.cs" />
     <Compile Include="Types\STUFirstPersonComponent.cs" />
     <Compile Include="Types\STUGamemode.cs" />

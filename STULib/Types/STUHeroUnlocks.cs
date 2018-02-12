@@ -17,6 +17,7 @@ namespace STULib.Types {
         public STULootBoxUnlocks[] LootboxUnlocks;
     }
     
+    [STU(0xF818D652, "STULootBoxUnlocks")]
     public class STULootBoxUnlocks : STUInstance {
         [STUField(0xDB803F2F, "m_unlocks")]
         public STUUnlocks Unlocks;
