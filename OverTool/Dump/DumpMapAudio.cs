@@ -66,14 +66,14 @@ namespace OverTool {
                         }
 
                         for (int i = 0; i < mapB.Records.Length; ++i) {
-                            if (mapB.Records[i] != null && mapB.Records[i].GetType() != typeof(Map0B)) {
+                            if (mapB.Records[i] != null && mapB.Records[i].GetType() != typeof(MapEntity)) {
                                 continue;
                             }
-                            Map0B mapprop = (Map0B)mapB.Records[i];
-                            if (!map.ContainsKey(mapprop.Header.binding)) {
+                            MapEntity mapprop = (MapEntity)mapB.Records[i];
+                            if (!map.ContainsKey(mapprop.Header.Entity)) {
                                 continue;
                             }
-                            Sound.FindSoundsEx(mapprop.Header.binding, soundDone, soundData, map, handler, replace, master.DataKey(0xB));
+                            Sound.FindSoundsEx(mapprop.Header.Entity, soundDone, soundData, map, handler, replace, master.DataKey(0xB));
                         }
                     }
                 }

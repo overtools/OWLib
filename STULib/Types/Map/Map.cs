@@ -93,18 +93,23 @@ namespace STULib.Types.Map {
                             break;
                         }
                         ISTU tmp;
-                        try {
-                            tmp = ISTU.NewInstance(input, owVersion);
-                        }
-                        catch (ArgumentOutOfRangeException) {
-                            Debugger.Log(0, "STULib.Types.Map", "[STULib.Types.Map.Map]: Error while reading STU (fix the damn parser)\r\n");
-                            AlignPositionNew(reader);
-                            continue;
-                        }
+                        tmp = ISTU.NewInstance(input, owVersion);
                         
                         AlignPositionNew(reader, tmp as Version1);
                         STUInstances = new HashSet<uint>(STUInstances.Concat(tmp.TypeHashes).ToList());
                         STUs.Add(tmp);
+                    }
+                }
+
+                int stuIndex = 0;
+                foreach (IMapFormat record in Records) {
+                    if (record.GetType() != typeof(MapEntity)) continue;
+
+                    MapEntity mapEntity = (MapEntity) record;
+                    mapEntity.STUContainers = new List<object>();
+                    foreach (MapEntity.MapEntitySTUBinding binding in mapEntity.STUBindings) {
+                        mapEntity.STUContainers.Add(STUs[stuIndex]);
+                        stuIndex++;
                     }
                 }
             }

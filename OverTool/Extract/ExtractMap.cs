@@ -185,18 +185,18 @@ namespace OverTool {
                                             }
 
                                             for (int i = 0; i < mapBData.Records.Length; ++i) {
-                                                if (mapBData.Records[i] != null && mapBData.Records[i].GetType() != typeof(Map0B)) {
+                                                if (mapBData.Records[i] != null && mapBData.Records[i].GetType() != typeof(MapEntity)) {
                                                     continue;
                                                 }
-                                                Map0B mapprop = (Map0B)mapBData.Records[i];
-                                                if (!map.ContainsKey(mapprop.Header.binding)) {
+                                                MapEntity mapprop = (MapEntity)mapBData.Records[i];
+                                                if (!map.ContainsKey(mapprop.Header.Entity)) {
                                                     continue;
                                                 }
-                                                Sound.FindSoundsEx(mapprop.Header.binding, soundDone, soundData, map, handler, replace, master.DataKey(0xB));
+                                                Sound.FindSoundsEx(mapprop.Header.Entity, soundDone, soundData, map, handler, replace, master.DataKey(0xB));
                                                 HashSet<ulong> bindingModels = new HashSet<ulong>();
                                                 Dictionary<ulong, List<ImageLayer>> bindingTextures = new Dictionary<ulong, List<ImageLayer>>();
 
-                                                using (Stream bindingFile = Util.OpenFile(map[mapprop.Header.binding], handler)) {
+                                                using (Stream bindingFile = Util.OpenFile(map[mapprop.Header.Entity], handler)) {
                                                     STUD binding = new STUD(bindingFile, true, STUDManager.Instance, false, true);
                                                     foreach (ISTUDInstance instance in binding.Instances) {
                                                         if (instance == null) {

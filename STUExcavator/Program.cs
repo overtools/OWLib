@@ -19,6 +19,7 @@ using Version1 = STULib.Impl.Version1;
 using Version2 = STULib.Impl.Version2;
 using static DataTool.Helper.Logger;
 using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
+using Map = STULib.Types.Map.Map;
 
 namespace STUExcavator {
     public enum SerializationType {
@@ -94,6 +95,7 @@ namespace STUExcavator {
             foreach (KeyValuePair<ushort,HashSet<ulong>> keyValuePair in TrackedFiles.OrderBy(x => x.Key)) {
                 string type = keyValuePair.Key.ToString("X3");
                 if (type == "09C" || type == "062" || type == "077") continue;
+                
                 Log($"Processing type: {type}");
                 types[type] = Excavate(keyValuePair.Key, keyValuePair.Value);
                 
@@ -212,14 +214,8 @@ namespace STUExcavator {
                         asset.SerializationType = SerializationType.MapData;
                         asset.GUIDs = new HashSet<string>();
                         asset.STUInstances = new HashSet<string>();
-                        STULib.Types.Map.Map map;
                         reader.BaseStream.Position = 0;
-                        try {
-                            map = new STULib.Types.Map.Map(file, uint.MaxValue);
-                        }
-                        catch (ArgumentOutOfRangeException) {
-                            return asset;
-                        }
+                        Map map = new Map(file, uint.MaxValue);
                         foreach (ISTU stu in map.STUs) {
                             asset.GUIDs = new HashSet<string>(asset.GUIDs.Concat(GetGUIDs(stu)).ToList());
                             foreach (Common.STUInstance stuInstance in stu.Instances) {
@@ -228,6 +224,19 @@ namespace STUExcavator {
                                 asset.STUInstances.Add(attr.Checksum.ToString("X8"));
                             }
                         }
+                    } else if (type == 0x6) {
+                        asset.SerializationType = SerializationType.Raw;
+                        
+                        reader.BaseStream.Position = 0x18L;
+                        ulong effectKey = reader.ReadUInt64();
+                        
+                        reader.BaseStream.Position = 0;
+                        Animation animation = new Animation(reader.BaseStream);
+                        HashSet<string> guids = new HashSet<string>();
+                        if (animation.Header.F08Key != 0) guids.Add(IO.GetFileName(animation.Header.F08Key));
+                        if (effectKey != 0) guids.Add(IO.GetFileName(effectKey));
+
+                        asset.GUIDs = guids;
                     } else {
                         if (Version2.IsValidVersion(reader)) {   // why is there no magic, blizz pls
                             reader.BaseStream.Position = 0;

@@ -694,6 +694,13 @@ namespace STUHashTool {
                     // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000864.09F") continue;
                     // if (GUID.Index(file) != 0x817) continue; // owl map1
                     // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000C6E.01B") continue;  // owl zen graph
+                    
+                    // if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "00000000012C.054") continue;  // A99258EF STULobbyMapCatalogInfo - literally null
+                    
+
+                    //if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000B47.01B") continue;  // lobby statescript 1 - no nice guids
+                    //if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "0000000009D2.01B") continue;  // lobby statescript 2 - for cosmetic viewing?
+                    //if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000B8A.01B") continue;  // lobby statescript 3 - for lootbox opening
 
                     using (Stream fileStream = Util.OpenFile(records[file], handler)) {
                         // STULib.Types.Map.Map map = new STULib.Types.Map.Map(fileStream, uint.MaxValue);

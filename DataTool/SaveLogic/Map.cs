@@ -8,7 +8,10 @@ using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
+using STULib;
 using STULib.Types;
+using STULib.Types.Dump;
+using STULib.Types.Generic;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
@@ -39,7 +42,7 @@ namespace DataTool.SaveLogic {
                 return false;
             }
             
-            public void Write(Stream output, STULib.Types.Map.Map map, STULib.Types.Map.Map detail1, STULib.Types.Map.Map detail2, STULib.Types.Map.Map props, STULib.Types.Map.Map lights, string name, IDataWriter modelFormat, FindLogic.Combo.ComboInfo info) {
+            public void Write(Stream output, STULib.Types.Map.Map map, STULib.Types.Map.Map detail1, STULib.Types.Map.Map detail2, STULib.Types.Map.Map entities, STULib.Types.Map.Map lights, string name, IDataWriter modelFormat, FindLogic.Combo.ComboInfo info) {
                 if (modelFormat == null) {
                     modelFormat = new OWMDLWriter();
                 }
@@ -75,11 +78,11 @@ namespace DataTool.SaveLogic {
                         }
                         size++;
                     }
-                    foreach (IMapFormat t in props.Records) {
-                        if (t != null && t.GetType() != typeof(Map0B)) {
+                    foreach (IMapFormat t in entities.Records) {
+                        if (t != null && t.GetType() != typeof(MapEntity)) {
                             continue;
                         }
-                        if (((Map0B)t).Model == 0) {
+                        if (((MapEntity)t).Model == 0) {
                             continue;
                         }
                         size++;
@@ -200,35 +203,49 @@ namespace DataTool.SaveLogic {
                         writer.Write(obj.Header.rotation.w);
                     }
     
-                    foreach (IMapFormat t in props.Records) {
-                        if (t != null && t.GetType() != typeof(Map0B)) {
+                    foreach (IMapFormat t in entities.Records) {
+                        if (t != null && t.GetType() != typeof(MapEntity)) {
                             continue;
                         }
-                        Map0B obj = (Map0B)t;
-                        if (obj.Model == 0) {
+                        MapEntity mapEntity = (MapEntity)t;
+                        if (mapEntity.Model == 0) {
                             continue;
+                        }
+
+                        ulong modelLook = mapEntity.ModelLook;
+
+                        foreach (object container in mapEntity.STUContainers) {
+                            ISTU realContainer = (ISTU) container;
+
+                            foreach (Common.STUInstance instance in realContainer.Instances) {
+                                if (instance is STUModelComponentInstanceData modelComponentInstanceData) {
+                                    if (modelComponentInstanceData.Look != 0) {
+                                        modelLook = modelComponentInstanceData.Look;
+                                    }
+                                }
+                            }
                         }
                         
-                        FindLogic.Combo.Find(info, obj.Model);
-                        FindLogic.Combo.Find(info, obj.ModelLook, null, new FindLogic.Combo.ComboContext {Model = obj.Model});
+                        FindLogic.Combo.Find(info, mapEntity.Model);
+                        FindLogic.Combo.Find(info, modelLook, null, new FindLogic.Combo.ComboContext {Model = mapEntity.Model});
 
-                        FindLogic.Combo.ModelInfoNew modelInfo = info.Models[obj.Model];
-                        FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[obj.ModelLook]; 
+                        FindLogic.Combo.ModelInfoNew modelInfo = info.Models[mapEntity.Model];
+                        FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelLook]; 
                         string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}{modelFormat.Format}";
                         string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
                         
                         writer.Write(modelFn);
                         writer.Write(matFn);
-                        writer.Write(obj.Header.position.x);
-                        writer.Write(obj.Header.position.y);
-                        writer.Write(obj.Header.position.z);
-                        writer.Write(obj.Header.scale.x);
-                        writer.Write(obj.Header.scale.y);
-                        writer.Write(obj.Header.scale.z);
-                        writer.Write(obj.Header.rotation.x);
-                        writer.Write(obj.Header.rotation.y);
-                        writer.Write(obj.Header.rotation.z);
-                        writer.Write(obj.Header.rotation.w);
+                        writer.Write(mapEntity.Header.Position.x);
+                        writer.Write(mapEntity.Header.Position.y);
+                        writer.Write(mapEntity.Header.Position.z);
+                        writer.Write(mapEntity.Header.Scale.x);
+                        writer.Write(mapEntity.Header.Scale.y);
+                        writer.Write(mapEntity.Header.Scale.z);
+                        writer.Write(mapEntity.Header.Rotation.x);
+                        writer.Write(mapEntity.Header.Rotation.y);
+                        writer.Write(mapEntity.Header.Rotation.z);
+                        writer.Write(mapEntity.Header.Rotation.w);
                     }
     
                     // Extension 1.1 - Lights
@@ -336,42 +353,34 @@ namespace DataTool.SaveLogic {
                     STULib.Types.Map.Map map2Data = new STULib.Types.Map.Map(map2Stream, BuildVersion);
                     using (Stream map8Stream = OpenFile(map.GetDataKey(8))) {
                         STULib.Types.Map.Map map8Data = new STULib.Types.Map.Map(map8Stream, BuildVersion);
-                        using (Stream mapBStream = OpenFile(map.GetDataKey(0xB))) {
-                            STULib.Types.Map.Map mapBData =
-                                new STULib.Types.Map.Map(mapBStream, BuildVersion, true);
+                        using (Stream mapEntitiesStream = OpenFile(map.GetDataKey(0xB))) {
+                            STULib.Types.Map.Map mapEntities =
+                                new STULib.Types.Map.Map(mapEntitiesStream, BuildVersion, true);
 
-                            mapBStream.Position =
-                                (long) (Math.Ceiling(mapBStream.Position / 16.0f) * 16); // Future proofing (?)
-                            
-                            // type 0x75526BC2 sometimes kills the parser
-                            // foreach (ISTU stu in mapBData.STUs) {
-                            //     STUStatescriptComponentInstanceData componentInstanceData = stu.Instances.OfType<STUStatescriptComponentInstanceData>().FirstOrDefault();
-                            //     if (componentInstanceData == null) continue;
-                            // }
-                            // int test = mapBData.STUs.Count(x => x.TypeHashes.Contains(0x75526BC2));
+                            mapEntitiesStream.Position = (long) (Math.Ceiling(mapEntitiesStream.Position / 16.0f) * 16); // Future proofing (?)
 
-                            for (int i = 0; i < mapBData.Records.Length; ++i) {
-                                if (mapBData.Records[i] != null && mapBData.Records[i].GetType() != typeof(Map0B)) {
+                            for (int i = 0; i < mapEntities.Records.Length; ++i) {
+                                if (mapEntities.Records[i] != null && mapEntities.Records[i].GetType() != typeof(MapEntity)) {
                                     continue;
                                 }
-                                Map0B mapprop = (Map0B) mapBData.Records[i];
+                                MapEntity mapEntity = (MapEntity) mapEntities.Records[i];
 
-                                if (mapprop == null) continue;
-                                FindLogic.Combo.Find(info, mapprop.Header.binding);
+                                if (mapEntity == null) continue;
+                                FindLogic.Combo.Find(info, mapEntity.Header.Entity);
                                 STUModelComponent component =
-                                    GetInstance<STUModelComponent>(mapprop.Header.binding);
+                                    GetInstance<STUModelComponent>(mapEntity.Header.Entity);
 
                                 if (component == null) continue;
-                                mapprop.ModelLook = component.Look;
-                                mapprop.Model = component.Model;
-                                mapBData.Records[i] = mapprop;
+                                mapEntity.ModelLook = component.Look;
+                                mapEntity.Model = component.Model;
+                                mapEntities.Records[i] = mapEntity;
                             }
 
                             using (Stream mapLStream = OpenFile(map.GetDataKey(9))) {
                                 STULib.Types.Map.Map mapLData = new STULib.Types.Map.Map(mapLStream, BuildVersion);
                                 using (Stream outputStream = File.Open(Path.Combine(mapPath, $"{name}.owmap"),
                                     FileMode.Create, FileAccess.Write)) {
-                                    owmap.Write(outputStream, mapData, map2Data, map8Data, mapBData, mapLData, name,
+                                    owmap.Write(outputStream, mapData, map2Data, map8Data, mapEntities, mapLData, name,
                                         modelWriter, info);
                                 }
                             }

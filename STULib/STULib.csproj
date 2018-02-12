@@ -399,7 +399,7 @@
     <Compile Include="Types\Dump\STU_0298E7A6.cs" />
     <Compile Include="Types\Dump\STU_02A9E277.cs" />
     <Compile Include="Types\Dump\STU_02C0109E.cs" />
-    <Compile Include="Types\Dump\STU_02DEEEA0.cs" />
+    <Compile Include="Types\Dump\STUModelComponentInstanceData.cs" />
     <Compile Include="Types\Dump\STU_02E4C615.cs" />
     <Compile Include="Types\Dump\STU_02F7FEA4.cs" />
     <Compile Include="Types\Dump\STU_02FF18E6.cs" />

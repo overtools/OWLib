@@ -240,12 +240,7 @@ namespace DataTool.FindLogic {
             // main shader = 44, used to be A5
             // golden = 50
             
-            // ReSharper disable once InconsistentNaming
-            public HashSet<ulong> IDs;  
-            // dear blizz
-            // ...
-            // WHY DO YOU HAVE THE SAME MATERIAL MULTIPLE TIMES WITH DIFFERENT IDS. ONE OF THEM ISN'T EVEN USED
-            // AHHHHHHHHHHHHHHHHHHH
+            public HashSet<ulong> IDs;
             
             public MaterialInfo(ulong guid) : base(guid) { }
         }
@@ -385,8 +380,18 @@ namespace DataTool.FindLogic {
 
                     using (Stream mapBStream = OpenFile(GetMapDataKey(guid, 0xB))) {
                         Map mapBData = new Map(mapBStream, BuildVersion, true);
+
+                        //int stuCount = mapBData.Records.Sum(record => ((MapEntity) record).STUBindings.Length);
+                        //
+                        //Debug.Assert(stuCount == mapBData.STUs.Count);
+
                         foreach (ISTU mapBstu in mapBData.STUs) {
                             Dictionary<ulong, ulong> thisReplacements = new Dictionary<ulong, ulong>();
+                            //foreach (Common.STUInstance stuInstance in mapBstu.Instances) {
+                            //    if (stuInstance.GetType() == typeof(STU_83DEC8C7)) {
+                            //        
+                            //    }
+                            //}
                             // STUStatescriptComponentInstanceData componentInstanceData = stu.Instances.OfType<STUStatescriptComponentInstanceData>().FirstOrDefault();
                             // if (componentInstanceData == null) continue;
                             // foreach (STUStatescriptGraphWithOverrides graph in componentInstanceData.m_6D10093E) {
@@ -415,8 +420,6 @@ namespace DataTool.FindLogic {
                     }
                     STUEntityDefinition entityDefinition = GetInstance<STUEntityDefinition>(guid);
                     if (entityDefinition == null) break;
-
-                    ISTU stu = OpenSTUSafe(guid);
                     
                     EntityInfoNew entityInfo = new EntityInfoNew(guid);
                     info.Entities[guid] = entityInfo;
@@ -601,6 +604,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0xD:
                 case 0x8F:  // sorry for breaking order
+                case 0x8E:
                     if (info.Effects.ContainsKey(guid)) break;
                     if (info.AnimationEffects.ContainsKey(guid)) break;
                     
@@ -608,7 +612,7 @@ namespace DataTool.FindLogic {
                     effectInfo.GUID = guid;
                     effectInfo.SetupEffect();
                     
-                    if (guidType == 0xD) {
+                    if (guidType == 0xD || guidType == 0x8E) {
                         info.Effects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
                     } else if (guidType == 0x8F) {
                         info.AnimationEffects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};

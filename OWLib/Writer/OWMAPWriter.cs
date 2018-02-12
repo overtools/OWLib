@@ -60,10 +60,10 @@ namespace OWLib.Writer {
                     size++;
                 }
                 for (int i = 0; i < props.Records.Length; ++i) {
-                    if (props.Records[i] != null && props.Records[i].GetType() != typeof(Map0B)) {
+                    if (props.Records[i] != null && props.Records[i].GetType() != typeof(MapEntity)) {
                         continue;
                     }
-                    if (((Map0B)props.Records[i]).Model == 0) {
+                    if (((MapEntity)props.Records[i]).Model == 0) {
                         continue;
                     }
                     size++;
@@ -201,10 +201,10 @@ namespace OWLib.Writer {
                 }
 
                 for (int i = 0; i < props.Records.Length; ++i) {
-                    if (props.Records[i] != null && props.Records[i].GetType() != typeof(Map0B)) {
+                    if (props.Records[i] != null && props.Records[i].GetType() != typeof(MapEntity)) {
                         continue;
                     }
-                    Map0B obj = (Map0B)props.Records[i];
+                    MapEntity obj = (MapEntity)props.Records[i];
                     if (obj.Model == 0) {
                         continue;
                     }
@@ -212,16 +212,16 @@ namespace OWLib.Writer {
                     string matFn = $"{GUID.LongKey(obj.ModelLook):X12}.owmat";
                     writer.Write(modelFn);
                     writer.Write(matFn);
-                    writer.Write(obj.Header.position.x);
-                    writer.Write(obj.Header.position.y);
-                    writer.Write(obj.Header.position.z);
-                    writer.Write(obj.Header.scale.x);
-                    writer.Write(obj.Header.scale.y);
-                    writer.Write(obj.Header.scale.z);
-                    writer.Write(obj.Header.rotation.x);
-                    writer.Write(obj.Header.rotation.y);
-                    writer.Write(obj.Header.rotation.z);
-                    writer.Write(obj.Header.rotation.w);
+                    writer.Write(obj.Header.Position.x);
+                    writer.Write(obj.Header.Position.y);
+                    writer.Write(obj.Header.Position.z);
+                    writer.Write(obj.Header.Scale.x);
+                    writer.Write(obj.Header.Scale.y);
+                    writer.Write(obj.Header.Scale.z);
+                    writer.Write(obj.Header.Rotation.x);
+                    writer.Write(obj.Header.Rotation.y);
+                    writer.Write(obj.Header.Rotation.z);
+                    writer.Write(obj.Header.Rotation.w);
 
                     if (!ret[0].ContainsKey(obj.Model)) {
                         ret[0].Add(obj.Model, new List<string>());

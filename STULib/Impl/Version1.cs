@@ -155,8 +155,11 @@ namespace STULib.Impl {
                         skip = true;
                     }
                 }
-                if (isInlineInstance && (field.Name == nameof(STUInstance.InstanceChecksum) ||
-                                         field.Name == nameof(STUInstance.NextInstanceOffset))) skip = true;
+                
+                // todo: I thought that this was needed, but turns out that it breaks everything
+                //if (isInlineInstance && (field.Name == nameof(STUInstance.InstanceChecksum) ||
+                //                         field.Name == nameof(STUInstance.NextInstanceOffset))) skip = true;
+                
                 if (skip) {
                     continue;
                 }

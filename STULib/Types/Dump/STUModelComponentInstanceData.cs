@@ -2,8 +2,8 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.Dump {
-    [STU(0x02DEEEA0)]
-    public class STU_02DEEEA0 : STU_A46203AB {
+    [STU(0x02DEEEA0, "STUModelComponentInstanceData")]
+    public class STUModelComponentInstanceData : STU_A46203AB {
         [STUField(0x9297ADB4, "m_look")]
         public STUGUID Look;  // STULib.Types.STUModelLook
     }

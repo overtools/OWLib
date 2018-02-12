@@ -123,7 +123,7 @@
     <Compile Include="Types\Map\Map02.cs" />
     <Compile Include="Types\Map\Map08.cs" />
     <Compile Include="Types\Map\Map09.cs" />
-    <Compile Include="Types\Map\Map0B.cs" />
+    <Compile Include="Types\Map\MapEntity.cs" />
     <Compile Include="Types\Map\Map10.cs" />
     <Compile Include="Types\ModelTypes.cs" />
     <Compile Include="Types\STUDTypes.cs" />
