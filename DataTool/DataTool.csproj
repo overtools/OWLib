@@ -169,9 +169,6 @@
     <Content Include="GUIDNames.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Third Party\revorb.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Third Party\texconv.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -182,9 +179,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Third Party\packed_codebooks_aoTuV_603.bin">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Third Party\revorb.license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

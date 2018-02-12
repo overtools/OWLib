@@ -619,34 +619,14 @@ namespace DataTool.SaveLogic {
                 Stream vorbisStream = new MemoryStream();
                 vorbis.ConvertToOgg(vorbisStream);
                 vorbisStream.Position = 0;
-                // using (Stream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream)) {
-                //     using (Stream outputStream = File.OpenWrite(outputFileOgg)) {
-                //         outputStream.SetLength(0);
-                //         revorbStream.Position = 0;
-                //         revorbStream.CopyTo(outputStream);
-                //     }
-                // }
-                using (Stream outputStream = File.OpenWrite(outputFileOgg)) {
-                    outputStream.SetLength(0);
-                    vorbisStream.CopyTo(outputStream);
+                using (Stream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream)) {
+                    using (Stream outputStream = File.OpenWrite(outputFileOgg)) {
+                        outputStream.SetLength(0);
+                        revorbStream.Position = 0;
+                        revorbStream.CopyTo(outputStream);
+                    }
                 }
-                // using (Stream outputStream = File.OpenWrite(outputFile)) {
-                //     outputStream.SetLength(0);
-                //     stream.Position = 0;
-                //     stream.CopyTo(outputStream);
-                // }
             }
-            
-            Process revorbProcess = new Process {
-                StartInfo = {
-                    FileName = "Third Party\\revorb.exe",
-                    Arguments = $"\"{outputFileOgg}\"",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true
-                }
-            };
-            
-            revorbProcess.Start();
         }
 
         public static void SaveSoundFile(ICLIFlags flags, string directory, FindLogic.Combo.ComboInfo info, ulong soundFile, bool voice) {
