@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
+using OWLib;
 using STULib.Types;
 using STULib.Types.Generic;
 using static DataTool.Helper.STUHelper;
@@ -87,25 +88,30 @@ namespace DataTool.SaveLogic.Unlock {
 
             // this doesn't work yet.
             // todo: I need a good way to compare voice masters
-            /*string soundDirectory = Path.Combine(basePath, "Sound");
-            FindLogic.Combo.ComboInfo diffInfo = new FindLogic.Combo.ComboInfo();
+            string soundDirectory = Path.Combine(path, "Sound");
+            
+            FindLogic.Combo.ComboInfo diffInfoBefore = new FindLogic.Combo.ComboInfo();
+            FindLogic.Combo.ComboInfo diffInfoAfter = new FindLogic.Combo.ComboInfo();
+            
             foreach (KeyValuePair<ulong,ulong> replacement in replacements) {
-                uint diffReplacementIndex = GUID.Index(replacement.Value);
-                if (diffReplacementIndex == 0x2C || diffReplacementIndex == 0x5F || diffReplacementIndex == 0x3F || diffReplacementIndex == 0xB2) {
-                    FindLogic.Combo.Find(diffInfo, replacement.Value);
-                    FindLogic.Combo.Find(info, replacement.Key);
+                uint diffReplacementType = GUID.Type(replacement.Value);
+                if (diffReplacementType == 0x2C || diffReplacementType == 0x5F || diffReplacementType == 0x3F || diffReplacementType == 0xB2) {
+                    FindLogic.Combo.Find(diffInfoAfter, replacement.Value);
+                    FindLogic.Combo.Find(diffInfoBefore, replacement.Key);
                 }
             }
+            
+            diffInfoAfter.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData {Threads = false};
 
-            foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileInfo> diffInfoSoundFile in diffInfo.SoundFiles) {
-                if (info.SoundFiles.ContainsKey(diffInfoSoundFile.Key)) continue;
-                Combo.SaveSoundFile(flags, soundDirectory, diffInfo, diffInfoSoundFile.Key, false);
+            foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileInfo> soundFile in diffInfoAfter.SoundFiles) {
+                if (diffInfoBefore.SoundFiles.ContainsKey(soundFile.Key)) continue;
+                Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfter, soundFile.Key, false);
             }
             
-            foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileInfo> diffInfoSoundFile in diffInfo.VoiceSoundFiles) {
-                if (info.VoiceSoundFiles.ContainsKey(diffInfoSoundFile.Key)) continue;
-                Combo.SaveSoundFile(flags, soundDirectory, diffInfo, diffInfoSoundFile.Key, true);
-            }*/
+            foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileInfo> soundFile in diffInfoAfter.VoiceSoundFiles) {
+                if (diffInfoBefore.VoiceSoundFiles.ContainsKey(soundFile.Key)) continue;
+                Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfter, soundFile.Key, true);
+            }
             
             LoudLog("\tSaving");
             Combo.Save(flags, path, info);            
