@@ -50,6 +50,7 @@ namespace DataTool.ToolLogic.Extract {
                 STUMap map = GetInstance<STUMap>(key);
                 if (map == null) continue;
                 ListMaps.MapInfo mapInfo = ListMaps.GetMap(key);
+                mapInfo.Name = mapInfo.Name ?? "Title Screen";
                 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
                 foreach (string name in new [] {mapInfo.Name, mapInfo.NameB, mapInfo.UniqueName, GUID.Index(map.MapDataResource1).ToString("X"), "*"}) {
