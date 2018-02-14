@@ -615,7 +615,7 @@ namespace DataTool.SaveLogic {
             CreateDirectoryFromFile(outputFile);
 
             using (Sound.WwiseRIFFVorbis vorbis =
-                new Sound.WwiseRIFFVorbis(stream, "Third Party\\packed_codebooks_aoTuV_603.bin")) {
+                new Sound.WwiseRIFFVorbis(stream, Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party", "packed_codebooks_aoTuV_603.bin")))) {
                 Stream vorbisStream = new MemoryStream();
                 vorbis.ConvertToOgg(vorbisStream);
                 vorbisStream.Position = 0;
