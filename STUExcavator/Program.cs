@@ -297,7 +297,12 @@ namespace STUExcavator {
             List<Asset> assets = new List<Asset>();
             
             foreach (ulong guid in files) {
-                Asset asset = Excavate(type, guid);
+                Asset asset;
+                try {
+                    asset = Excavate(type, guid);
+                } catch {
+                    continue;
+                }
                 assets.Add(asset);
                 if (asset.GUIDs == null) continue;
                 foreach (string assetGUID in asset.GUIDs) {

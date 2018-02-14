@@ -310,7 +310,7 @@ namespace DataTool.SaveLogic {
         }
 
         public static void Save(ICLIFlags flags, STUMap map, ulong key, string basePath) {
-            string name = GetValidFilename(GetString(map.DisplayName)) ?? $"Unknown{GUID.Index(key):X}";
+            string name = GetValidFilename(GetString(map.DisplayName)) ?? "Title Screen";
             
             if (GetString(map.VariantName) != null) name = GetValidFilename(GetString(map.VariantName));
 

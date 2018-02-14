@@ -147,7 +147,7 @@ namespace DataTool.ToolLogic.List {
 
             string uniqueName;
             if (nameA == null) {
-                uniqueName = $"Unknown{GUID.Index(key):X}";
+                uniqueName = $"Title Screen:{GUID.Index(key):X}";
             } else {
                 uniqueName = nameA + $":{GUID.Index(key):X}";
             }
