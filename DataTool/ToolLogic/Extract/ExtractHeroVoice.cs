@@ -70,6 +70,7 @@ namespace DataTool.ToolLogic.Extract {
                 if (hero == null) continue;
 
                 string heroNameActual = (GetString(hero.Name) ?? $"Unknown{GUID.Index(heroFile)}").TrimEnd(' ');
+                Log($"Processing data for {heroNameActual}");
 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
                 foreach (string key in new [] {heroNameActual.ToLowerInvariant(), "*"}) {
