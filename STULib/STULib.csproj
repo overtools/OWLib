@@ -2368,7 +2368,7 @@
     <Compile Include="Types\Dump\STU_851FBF1A.cs" />
     <Compile Include="Types\Dump\STU_8529C204.cs" />
     <Compile Include="Types\Dump\STU_85438EDF.cs" />
-    <Compile Include="Types\Dump\STU_85618B21.cs" />
+    <Compile Include="Types\Dump\STUCatalog.cs" />
     <Compile Include="Types\Dump\STU_856F363B.cs" />
     <Compile Include="Types\Dump\STU_858A6EEC.cs" />
     <Compile Include="Types\Dump\STU_859CEF3C.cs" />
@@ -3377,7 +3377,7 @@
     <Compile Include="Types\Dump\STU_C7858FA5.cs" />
     <Compile Include="Types\Dump\STU_C7AB734A.cs" />
     <Compile Include="Types\Dump\STU_C7B0132C.cs" />
-    <Compile Include="Types\Dump\STU_C7BAA017.cs" />
+    <Compile Include="Types\Dump\STUStat.cs" />
     <Compile Include="Types\Dump\STU_C7C085F6.cs" />
     <Compile Include="Types\Dump\STU_C7CA6ECD.cs" />
     <Compile Include="Types\Dump\STU_C7E6E39D.cs" />
@@ -4367,7 +4367,7 @@
     <Compile Include="Types\STUHeroWeapon.cs" />
     <Compile Include="Types\STUHighlightType.cs" />
     <Compile Include="Types\STULanguageData.cs" />
-    <Compile Include="Types\STULanguageInfo.cs" />
+    <Compile Include="Types\STULocaleSettings.cs" />
     <Compile Include="Types\STULanguageMonths.cs" />
     <Compile Include="Types\STULanguagePunctuation.cs" />
     <Compile Include="Types\STULanguageWeekdays.cs" />

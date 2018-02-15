@@ -64,16 +64,16 @@ namespace STULib.Types {
         public STU_58E4EC09[] m_70045C77;
 
         [STUField(0x27326EE2)]
-        public Common.STUGUID m_27326EE2;  // STU_C7BAA017
+        public Common.STUGUID m_27326EE2;  // STUStat
 
         [STUField(0xBA265ADB)]
-        public Common.STUGUID[] m_BA265ADB;  // STU_C7BAA017
+        public Common.STUGUID[] m_BA265ADB;  // STUStat
 
         [STUField(0x920F5684)]
         public Common.STUGUID[] m_920F5684;  // STU_9CADF2EC
 
         [STUField(0x7B61EE6D)]
-        public Common.STUGUID[] m_7B61EE6D;  // STU_C7BAA017
+        public Common.STUGUID[] m_7B61EE6D;  // STUStat
 
         [STUField(0xECCC6D23)]
         public Common.STUGUID[] Achievements;  // STULib.Types.STUAchievement

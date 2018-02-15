@@ -2,8 +2,8 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.Dump {
-    [STU(0xC7BAA017)]
-    public class STU_C7BAA017 : STUInstance {
+    [STU(0xC7BAA017, "STUStat")]
+    public class STUStat : STUInstance {
         [STUField(0xB48F1D22, "m_name")]
         public STUGUID Name;
 
@@ -23,10 +23,10 @@ namespace STULib.Types.Dump {
         public STULib.Types.Enums.STUEnumTeamType[] m_D440A0F7;
 
         [STUField(0x4C9917C1)]
-        public STUGUID m_4C9917C1;  // STU_C7BAA017
+        public STUGUID m_4C9917C1;  // STUStat
 
         [STUField(0x155E2A47)]
-        public STUGUID m_155E2A47;  // STU_C7BAA017
+        public STUGUID m_155E2A47;  // STUStat
 
         [STUField(0x57817968, EmbeddedInstance = true)]
         public STULib.Types.Dump.STU_783B8A59 m_57817968;

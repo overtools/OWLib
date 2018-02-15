@@ -8,13 +8,13 @@ namespace STULib.Types.Dump {
         public STUGUID Name;  // STU_B456B24F
 
         [STUField(0x93235476)]
-        public STUGUID m_93235476;  // STU_C7BAA017
+        public STUGUID m_93235476;  // STUStat
 
         [STUField(0xB5B91051)]
-        public STUGUID m_B5B91051;  // STU_C7BAA017
+        public STUGUID m_B5B91051;  // STUStat
 
         [STUField(0x07EC21F2)]
-        public STUGUID m_07EC21F2;  // STU_C7BAA017
+        public STUGUID m_07EC21F2;  // STUStat
 
         [STUField(0xDAD2E3A2)]
         public STUGUID m_DAD2E3A2;

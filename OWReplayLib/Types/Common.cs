@@ -40,6 +40,9 @@ namespace OWReplayLib.Types {
             public IntFileReference[] VoiceLineIds;
             [Serializer.Types.DynamicSizeArray(typeof(int), typeof(IntFileReference))]
             public IntFileReference[] EmoteIds;
+
+            public int Unknown;
+            
             public FileReference HeroMasterKey;
         }
     }

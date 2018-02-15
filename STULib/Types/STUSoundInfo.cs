@@ -69,7 +69,7 @@ namespace STULib.Types {
     [STU(0xC9AAE3AE)]
     public class STU_C9AAE3AE : STUSoundInfo {
         [STUField(0xBC4326FF )]
-        public STUGUID m_BC4326FF;  // STU_C7BAA017
+        public STUGUID m_BC4326FF;  // STUStat
 
         [STUField(0xAF872E86)]
         public double m_AF872E86;
@@ -94,7 +94,7 @@ namespace STULib.Types {
     [STU(0x857C15FC)]
     public class STU_857C15FC : STUSoundInfo {
         [STUField(0xBC4326FF)]
-        public STUGUID m_BC4326FF;  // STU_C7BAA017
+        public STUGUID m_BC4326FF;  // STUStat
 
         [STUField(0xAF872E86)]
         public double m_AF872E86;

@@ -5,10 +5,10 @@ namespace STULib.Types.Dump {
     [STU(0x1DEBD356)]
     public class STU_1DEBD356 : STUInstance {
         [STUField(0xBC4326FF)]
-        public STUGUID m_BC4326FF;  // STU_C7BAA017
+        public STUGUID m_BC4326FF;  // STUStat
 
         [STUField(0x3C3D1A89)]
-        public STUGUID m_3C3D1A89;  // STU_C7BAA017
+        public STUGUID m_3C3D1A89;  // STUStat
 
         [STUField(0xBC9DC9A3)]
         public STUGUID[] m_BC9DC9A3;  // STULib.Types.STUGamemode

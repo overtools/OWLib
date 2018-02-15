@@ -8,7 +8,7 @@ namespace STULib.Types.Dump {
         public STUGUID m_4C9917C1;  // STU_C7BAA017
 
         [STUField(0x155E2A47)]
-        public STUGUID m_155E2A47;  // STU_C7BAA017
+        public STUGUID m_155E2A47;  // STUStat
 
         [STUField(0x6E01378E, EmbeddedInstance = true)]
         public STULib.Types.Dump.STU_92F31FA1 m_6E01378E;

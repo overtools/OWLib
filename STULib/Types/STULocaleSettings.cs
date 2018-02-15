@@ -6,8 +6,8 @@ namespace STULib.Types {
     public class STU_D89CF9B3 : STUInstance {
     }
     
-    [STU(0x5CF22AAB)]
-    public class STULanguageInfo : STU_D89CF9B3 {
+    [STU(0x5CF22AAB, "STULocaleSettings")]
+    public class STULocaleSettings : STU_D89CF9B3 {
         [STUField(0x604EEA7E)]
         public STULanguageData Data;
 

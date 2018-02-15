@@ -89,12 +89,17 @@ namespace OWReplayLib.Types {
             public float Unknown3;
             public float Unknown4;
             public uint Unknown5;
+            public uint Unknown6;
             public Vec3 Position;
             public Vec3 Direction;
             public Vec3 Up;
             public Common.FileReference HeroMasterKey;
             public Common.FileReference ItemSkinKey;
             public Common.FileReference ItemWSkinKey;
+
+            public ulong TeamA;
+            public ulong TeamB;
+            
             public Common.FileReference HighlightIntro;
             public Common.FileReference HighlightType;
             public ulong Timestamp;
