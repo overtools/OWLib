@@ -82,7 +82,7 @@ namespace DataTool.ToolLogic.List {
             if (unlocks == null) return;
             Log($"{iD}Unlocks:");
             foreach (var guid in unlocks) {
-                var unlock = GatherUnlock(guid);
+                var unlock = GatherUnlock(guid) ?? GatherUnlock(GetInstance<STUAchievement>(guid)?.Reward);
                 if (unlock != null)
                     Log($"{iD+1}{unlock.Name} ({unlock.Rarity} {unlock.Type})");
             }
@@ -93,9 +93,11 @@ namespace DataTool.ToolLogic.List {
             Log($"{iD}Achievements:");
             foreach (var guid in achievements) {
                 var achievement = GetInstance<STUAchievement>(guid);
+                if (achievement == null) continue;
+                
                 var unlock = GatherUnlock(achievement.Reward);
-                if (achievement != null)
-                    Log($"{iD+1}{GetString(achievement.Name)} - Reward: {unlock.Name} ({unlock.Rarity} {unlock.Type})");
+                if (unlock == null) continue;
+                Log($"{iD+1}{GetString(achievement.Name)} - Reward: {unlock.Name} ({unlock.Rarity} {unlock.Type})");
             }
         }
 
@@ -143,18 +145,16 @@ namespace DataTool.ToolLogic.List {
 
         private static void ParseGamemodeData(IndentHelper iD, STUGUID guid) {
             if (guid == null) return;
+            
 
             var gamemodeData = GetInstance<STUGamemode>(guid);
-            Log($"{iD}Gamemode Data:");
+            Log($"{iD}Gamemode Data (Can be overriden by Team Config):");
             Log($"{iD+1}Type: {GetString(gamemodeData.DisplayName) ?? "N/A"}");
 
             if (gamemodeData.Teams != null) {
                 Log($"{iD+1}Teams:");
                 foreach (var team in gamemodeData.Teams) {
-                    Log($"{iD+2}{team.TeamType}:");
-                    Log($"{iD+3}Max: {team.MaxPlayers}");
-                    Log($"{iD+3}Min: {team.MaxPlayers}");
-
+                    Log($"{iD+2}{team.TeamType}: {team.MaxPlayers}/{team.MaxPlayers} (Min/Max)");
                     if (team.AllowedHeroes != null) {
                         var allowedHeroes = new List<string>();
                         foreach (var heroguid in ((STUGamemodeHeroCollection) team.AllowedHeroes).Heroes) {
@@ -195,6 +195,11 @@ namespace DataTool.ToolLogic.List {
                             var teamType = teamConfig.BrawlTeamTypeContainer as STUBrawlTeamType;
                             Log($"{iD+4}Team: {teamType.TeamType}");
                         }
+                        else {
+                            Log($"{iD+4}Team: Blue ??");
+                        }
+                        
+                        Log($"{iD+4}Max Players: {teamConfig.MaxPlayers}");
 
                         if (teamConfig.AllowedHeroes != null) {
                             STUGUID[] heroes = null;
@@ -215,10 +220,10 @@ namespace DataTool.ToolLogic.List {
                         }
 
                         if (teamConfig.HeroOverrides != null) {
-                            Log($"{iD+4}Hero Overrides?:");
+                            Log($"{iD+4}Hero Overrides:");
                             foreach (var somethingElse in teamConfig.HeroOverrides) {
-                                var dsfds = somethingElse.Hero as STUBrawlHero;
-                                var hero = GetInstance<STUHero>(dsfds.Hero);
+                                var heroOverride = somethingElse.Hero as STUBrawlHero;
+                                var hero = GetInstance<STUHero>(heroOverride.Hero);
                                 Log($"{iD+5}Hero: {GetString(hero.Name)}");
                             }
                         }
