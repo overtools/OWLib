@@ -4349,7 +4349,7 @@
     <Compile Include="Types\STUGamemodeTeam.cs" />
     <Compile Include="Types\STUGameModeVarValuePair.cs" />
     <Compile Include="Types\STUGameParam.cs" />
-    <Compile Include="Types\STUGameParamBase.cs" />
+    <Compile Include="Types\STUGameRulesetSchema.cs" />
     <Compile Include="Types\STUGameParamBaseOptions.cs" />
     <Compile Include="Types\STUGameParamDropdown.cs" />
     <Compile Include="Types\STUGameParamDropdownOptions.cs" />

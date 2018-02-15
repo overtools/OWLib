@@ -171,7 +171,7 @@ namespace STUHashTool {
                     case 0xC6:
                         instances = GetInstances(guid, _handler, _map);
                         if (instances[0] == null) return null;
-                        STUGameParamBase gameRulsetSchema = instances[0] as STUGameParamBase;
+                        STUGameRulesetSchema gameRulsetSchema = instances[0] as STUGameRulesetSchema;
                         return $"{baseString} \"{GetOWString(gameRulsetSchema?.Name, _handler, _map)}\"";
                     case 0x75:
                         instances = GetInstances(guid, _handler, _map);

@@ -21,7 +21,7 @@ namespace DataTool.ToolLogic.List {
 
             var i = 0;
             foreach (var key in TrackedFiles[0xC6]) {
-                var parameter = GetInstance<STUGameParamBase>(key);
+                var parameter = GetInstance<STUGameRulesetSchema>(key);
                 if (parameter == null) continue;
       
                 Log($"{iD+1}[{i}]:");

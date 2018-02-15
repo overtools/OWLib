@@ -3,8 +3,8 @@
 using STULib.Types.Generic;
 
 namespace STULib.Types {
-    [STU(0xD353184F)]
-    public class STUGameParamBase : Common.STUInstance {
+    [STU(0xD353184F, "STUGameRulesetSchema")]
+    public class STUGameRulesetSchema : Common.STUInstance {
         [STUField(0xAA76FAD1)]
         public Common.STUGUID Name;
 
