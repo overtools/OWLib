@@ -961,11 +961,11 @@ namespace DataTool.FindLogic {
                     
                     break;
                 case 0xBF:
-                    STUPose pose = GetInstance<STUPose>(guid);
-                    if (pose == null) break;
-                    Find(info, pose.Animation, replacements, context);
+                    STULineupPose lineupPose = GetInstance<STULineupPose>(guid);
+                    if (lineupPose == null) break;
+                    Find(info, lineupPose.Animation, replacements, context);
 
-                    foreach (STUPoseSub poseSub in new [] {pose.Sub1, pose.Sub2, pose.Sub3}) {
+                    foreach (STUPoseSub poseSub in new [] {lineupPose.Sub1, lineupPose.Sub2, lineupPose.Sub3}) {
                         Find(info, poseSub.Animation, replacements, context);
                     }
                     break;

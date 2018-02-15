@@ -366,9 +366,9 @@ namespace DataTool.FindLogic {
                     }
                     break;
                 case 0xBF:
-                    STUPose pose = GetInstance<STUPose>(animationGUID);
-                    existingAnimations = FindAnimations(existingAnimations, models, pose.Animation, replacements);
-                    foreach (STUPoseSub poseSub in new [] {pose.Sub1, pose.Sub2, pose.Sub3}) {
+                    STULineupPose lineupPose = GetInstance<STULineupPose>(animationGUID);
+                    existingAnimations = FindAnimations(existingAnimations, models, lineupPose.Animation, replacements);
+                    foreach (STUPoseSub poseSub in new [] {lineupPose.Sub1, lineupPose.Sub2, lineupPose.Sub3}) {
                         existingAnimations = FindAnimations(existingAnimations, models, poseSub.Animation, replacements);
                     }
                     break;

@@ -2,8 +2,8 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types {
-    [STU(0x875F19AE)]
-    public class STUPose : STUInstance {
+    [STU(0x875F19AE, "STULineupPose")]
+    public class STULineupPose : STUInstance {
         [STUField(0xBEF008DE)]
         public STUPoseSub Sub1;
 

@@ -4384,7 +4384,7 @@
     <Compile Include="Types\STUModelLook.cs" />
     <Compile Include="Types\STUOverrideBase.cs" />
     <Compile Include="Types\STUOverrideFileChange.cs" />
-    <Compile Include="Types\STUPose.cs" />
+    <Compile Include="Types\STULineupPose.cs" />
     <Compile Include="Types\STUPoseSub.cs" />
     <Compile Include="Types\STURagdollConfig.cs" />
     <Compile Include="Types\STURigidBodyConfig.cs" />
