@@ -7,18 +7,16 @@ using OWLib.Types;
 namespace OWLib {
     public class Animation {
         // Public items, for writing
+        public AnimHeader Header { get; }
         public string Name;                 // The name of the animation. If no name can be provided, use the filename.
         public float Duration;              // How long the animtion is, in seconds.
         public float FramesPerSecond;       // The Number of frames per second. Duration * FPS = Total number of frames.
         public List<Keyframe> Animations;
 
         // Private Items
-        private AnimHeader header;
         private List<int> BoneList = new List<int>();
         private List<AnimInfoTable> InfoTables = new List<AnimInfoTable>();
-        private int InfoTableSize = 0;
-
-        public AnimHeader Header => header;
+        public int InfoTableSize;
 
         public static Vec4d UnpackRotation(ushort a, ushort b, ushort c) {
             Vec4d q = new Vec4d();
@@ -64,19 +62,19 @@ namespace OWLib {
             return value;
         }
 
-        public Animation(Stream animStream, bool leaveOpen = true) {
+        public Animation(Stream animStream, bool leaveOpen = true, bool alwaysAddBones=false) {
             Animations = new List<Keyframe>();
             // Convert OW Animation to our Animation Type
             using (BinaryReader animReader = new BinaryReader(animStream, Encoding.Default, leaveOpen)) {
-                header = animReader.Read<AnimHeader>();
+                Header = animReader.Read<AnimHeader>();
 
-                Duration = header.duration;
-                FramesPerSecond = header.fps;
-                InfoTableSize = (int)(header.fps * header.duration) + 1;
-                ushort bonecount = header.bonecount;
+                Duration = Header.duration;
+                FramesPerSecond = Header.fps;
+                InfoTableSize = (int)(Header.fps * Header.duration) + 1;
+                ushort bonecount = Header.bonecount;
 
-                animStream.Seek((long)header.boneListOffset, SeekOrigin.Begin);
-                for (uint i = 0; i < header.bonecount; i++) {
+                animStream.Seek((long)Header.boneListOffset, SeekOrigin.Begin);
+                for (uint i = 0; i < Header.bonecount; i++) {
                     int boneID = animReader.ReadInt32();
                     BoneList.Add(boneID);
                 }
@@ -88,8 +86,8 @@ namespace OWLib {
                 bool[,] hasPosition = new bool[bonecount, InfoTableSize];
                 bool[,] hasRotation = new bool[bonecount, InfoTableSize];
 
-                animStream.Seek((long)header.infoTableOffset, SeekOrigin.Begin);
-                for (int boneid = 0; boneid < header.bonecount; boneid++) {
+                animStream.Seek((long)Header.infoTableOffset, SeekOrigin.Begin);
+                for (int boneid = 0; boneid < Header.bonecount; boneid++) {
                     long animStreamPos = animStream.Position;
                     AnimInfoTable it = animReader.Read<AnimInfoTable>();
                     long SIO = (long)it.ScaleIndicesOffset * 4 + animStreamPos;
@@ -171,7 +169,7 @@ namespace OWLib {
                     kf.FramePosition = ((float)frame / FramesPerSecond);
                     kf.FramePositionI = frame;
                     kf.BoneFrames = new List<BoneAnimation>();
-                    for (int bone = 0; bone < header.bonecount; bone++) {
+                    for (int bone = 0; bone < Header.bonecount; bone++) {
                         // Build Value Data
                         BoneAnimation ba = new BoneAnimation();
                         ba.BoneID = BoneList[bone];
@@ -192,7 +190,7 @@ namespace OWLib {
                             FrameValue f = new FrameValue(AnimChannelID.ROTATION, v);
                             ba.Values.Add(f);
                         }
-                        if (ba.Values.Count > 0) {
+                        if (ba.Values.Count > 0 || alwaysAddBones) {
                             kf.BoneFrames.Add(ba);
                         }
                     }
