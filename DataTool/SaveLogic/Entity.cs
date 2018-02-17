@@ -22,45 +22,6 @@ namespace DataTool.SaveLogic {
             
             public string Name => "OWM Entity Format";
             
-            public void Write(Stream output, EntityInfo entity, Dictionary<ulong, string> nameOverrides) {
-                using (BinaryWriter writer = new BinaryWriter(output)) {
-                    writer.Write(new string(Identifier));
-                    writer.Write(VersionMajor);
-                    writer.Write(VersionMinor);
-
-                    string thisFile = GUID.Index(entity.GUID).ToString("X");
-                    if (nameOverrides.ContainsKey(entity.GUID)) {
-                        thisFile = nameOverrides[entity.GUID];
-                    }
-                    
-                    writer.Write(thisFile);
-                    writer.Write(GetFileName(entity.Model));
-                    writer.Write(GUID.Index(entity.GUID));
-                    writer.Write(GUID.Index(entity.Model));
-                    
-                    writer.Write(entity.Children.Count(x => x.GUID != null && x.GUID != 0));
-                    foreach (ChildEntityReference childEntityReference in entity.Children) {
-                        string childFile = GetFileName(childEntityReference.GUID);
-                        if (childEntityReference.GUID == null || childEntityReference.GUID == 0) {
-                            continue;
-                        }
-                        if (nameOverrides.ContainsKey(childEntityReference.GUID)) {
-                            childFile = GetValidFilename(nameOverrides[childEntityReference.GUID]);
-                        }
-                        writer.Write(childFile);
-                        writer.Write((ulong)childEntityReference.Hardpoint);
-                        writer.Write((ulong)childEntityReference.Variable);
-                        writer.Write(GUID.Index(childEntityReference.Hardpoint));
-                        writer.Write(GUID.Index(childEntityReference.Variable));
-                        if (childEntityReference.Hardpoint != null) {
-                            writer.Write(Model.OWModelWriter14.IdToString("hardpoint", GUID.Index(childEntityReference.Hardpoint)));
-                        } else {
-                            writer.Write("null"); // erm, k
-                        }
-                    }
-                }
-            }
-            
             public void Write(Stream output, FindLogic.Combo.EntityInfoNew entity, FindLogic.Combo.ComboInfo info) {
                 using (BinaryWriter writer = new BinaryWriter(output)) {
                     writer.Write(new string(Identifier));

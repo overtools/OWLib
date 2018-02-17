@@ -332,36 +332,6 @@ namespace DataTool.SaveLogic {
                     effectWriter.Write(writer, animationEffect, info, svceLines);
                 }
             }
-            
-            public void Write(Stream output, AnimationInfo animation, ulong model, Dictionary<ulong, string> entityNames, Dictionary<ulong, List<STUVoiceLineInstance>> svceLines) {
-                using (BinaryWriter writer = new BinaryWriter(output)) {
-                    writer.Write(new string(Identifier));
-                    writer.Write(VersionMajor);
-                    writer.Write(VersionMinor);
-                    writer.Write(GUID.Index(animation.GUID));
-                    writer.Write(animation.FPS);
-                    writer.Write((int)OWAnimType.Data);
-                    
-                    writer.Write($"Models\\{GetFileName(model)}\\Animations\\{animation.Priority}\\{GUID.LongKey(animation.GUID):X12}.seanim");
-                    writer.Write($"Models\\{GetFileName(model)}\\{GUID.LongKey(model):X12}.owmdl");
-                    // wrap oweffect
-                    OWEffectWriter effectWriter = new OWEffectWriter();
-                    effectWriter.Write(writer, animation, entityNames, svceLines);
-                }
-            }
-
-            public void WriteReference(Stream output, AnimationInfo animation, ulong model) {
-                using (BinaryWriter writer = new BinaryWriter(output)) {
-                    writer.Write(new string(Identifier));
-                    writer.Write(VersionMajor);
-                    writer.Write(VersionMinor);
-                    writer.Write(GUID.Index(animation.GUID));
-                    writer.Write(animation.FPS);
-                    writer.Write((int)OWAnimType.Reference);
-                    
-                    writer.Write($"Models\\{GetFileName(model)}\\{Model.AnimationEffectDir}\\{GUID.LongKey(animation.GUID):X12}\\{GUID.LongKey(animation.GUID):X12}{Format}"); // so I can change it in DataTool and not go mad
-                }
-            }
 
             public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, params object[] data) {
                 throw new NotImplementedException();

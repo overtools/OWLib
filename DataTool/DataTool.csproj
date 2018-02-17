@@ -59,10 +59,7 @@
   <ItemGroup>
     <Compile Include="ConvertLogic\Sound.cs" />
     <Compile Include="DataModels\ItemInfo.cs" />
-    <Compile Include="FindLogic\Animation.cs" />
     <Compile Include="FindLogic\Combo.cs" />
-    <Compile Include="FindLogic\Model.cs" />
-    <Compile Include="FindLogic\Texture.cs" />
     <Compile Include="Flag\AliasAttribute.cs" />
     <Compile Include="Flag\CLIFlagAttribute.cs" />
     <Compile Include="Flag\Converter.cs" />
@@ -94,11 +91,8 @@
     <Compile Include="ToolAttribute.cs" />
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimatedSpray.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimNodes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugComboDemo.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugEffectLook.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugEntities.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugNewEntities.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugOWL.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugRAMTest.cs" />
@@ -118,7 +112,6 @@
     <Compile Include="ToolLogic\List\Debug\ListDebugAnimBlendTrees.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugFewParticles.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugSoundbanks.cs" />
-    <Compile Include="ToolLogic\List\Debug\ListDebugDecal.cs" />
     <Compile Include="ToolLogic\List\ListAchievements.cs" />
     <Compile Include="ToolLogic\List\ListGameParams.cs" />
     <Compile Include="ToolLogic\List\ListFlags.cs" />

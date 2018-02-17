@@ -701,6 +701,9 @@ namespace STUHashTool {
                     //if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000B47.01B") continue;  // lobby statescript 1 - no nice guids
                     //if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "0000000009D2.01B") continue;  // lobby statescript 2 - for cosmetic viewing?
                     //if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000B8A.01B") continue;  // lobby statescript 3 - for lootbox opening
+                    
+                    //if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "000000000019.0C5") continue;  // tutorial gamemode
+                    if ($"{GUID.LongKey(file):X12}.{GUID.Type(file):X3}" != "0000000013A4.01B") continue;  // tutorial gamemode - team0 statescript
 
                     using (Stream fileStream = Util.OpenFile(records[file], handler)) {
                         // STULib.Types.Map.Map map = new STULib.Types.Map.Map(fileStream, uint.MaxValue);

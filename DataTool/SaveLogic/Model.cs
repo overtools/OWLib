@@ -84,43 +84,6 @@ namespace DataTool.SaveLogic {
                     }
                 }
             }
-
-            public bool Write(Stream output, ModelInfo model, Dictionary<TextureInfo, TextureType> typeData) {
-                const ushort versionMajor = 1;
-                const ushort versionMinor = 2;
-    
-                using (BinaryWriter writer = new BinaryWriter(output)) {
-                    writer.Write(versionMajor);
-                    writer.Write(versionMinor);
-                    
-                    Dictionary<ulong, List<TextureInfo>> materials = new Dictionary<ulong, List<TextureInfo>>();
-    
-                    foreach (TextureInfo modelTexture in model.Textures) {
-                        if (modelTexture.MaterialID == 0) continue;
-                        if (!materials.ContainsKey(modelTexture.MaterialID)) materials[modelTexture.MaterialID] = new List<TextureInfo>();
-                        materials[modelTexture.MaterialID].Add(modelTexture);
-                    }
-                    
-                    writer.Write(materials.LongCount());
-    
-                    foreach (KeyValuePair<ulong,List<TextureInfo>> material in materials) {
-                        writer.Write(material.Key);
-                        writer.Write(material.Value.Count);
-                        foreach (TextureInfo texture in material.Value) {
-                            string name = $"Textures\\{GUID.LongKey(texture.GUID):X12}.dds";
-                        
-                            writer.Write(name);
-                            if (typeData != null && typeData.ContainsKey(texture)) {
-                                writer.Write((byte)DDSTypeDetect.Detect(typeData[texture]));
-                            } else {
-                                writer.Write((byte)0xFF);
-                            }
-                            writer.Write((uint)texture.Type);
-                        }
-                    }
-                }
-                return true;
-            }
     
             public bool Write(Animation anim, Stream output, object[] data) {
                 return false;
@@ -180,7 +143,7 @@ namespace DataTool.SaveLogic {
                     // data is object[] { bool exportAttachments, string materialReference, string modelName, bool onlyOneLOD, bool skipCollision }
                     Write(flags, modelChunked, output, new List<byte>(new byte[] {0, 1, 0xFF}), 
                         new object[] {true, materialPath, $"Model {GetFileName(modelInfo.GUID)}", null, true},
-                        new ModelInfo(modelInfo.GUID));
+                        modelInfo);
 
                     if (!doRefpose) return;
                     RefPoseWriter refPoseWriter = new RefPoseWriter();
@@ -191,7 +154,7 @@ namespace DataTool.SaveLogic {
 
             // ReSharper disable once InconsistentNaming
             // data is object[] { bool exportAttachments, string materialReference, string modelName, bool onlyOneLOD, bool skipCollision }
-            public void Write(ICLIFlags flags, Chunked chunked, Stream output, List<byte> LODs, object[] data, ModelInfo modelInfo) {
+            public void Write(ICLIFlags flags, Chunked chunked, Stream output, List<byte> LODs, object[] data, FindLogic.Combo.ModelInfoNew modelInfo) {
 
                 byte? flagLOD = null;
                 if (flags is ExtractFlags extractFlags) {

@@ -300,7 +300,8 @@ namespace STUExcavator {
                 Asset asset;
                 try {
                     asset = Excavate(type, guid);
-                } catch {
+                } catch (Exception e) {
+                    Console.Out.WriteLine(e);
                     continue;
                 }
                 assets.Add(asset);
