@@ -74,7 +74,7 @@ namespace DataTool.Helper {
             if (name == null)
                 name = $"{GUID.LongKey(key):X12}";
 
-            return new ItemInfo(name, unlock.CosmeticRarity.ToString(), unlock.GetType().Name, description, availableIn, unlock, key);
+            return new ItemInfo(name, unlock.CosmeticRarity.ToString(), unlock.RealName, description, availableIn, unlock, key);
         }
     }
 }
