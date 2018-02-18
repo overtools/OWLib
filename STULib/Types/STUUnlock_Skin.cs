@@ -5,6 +5,8 @@ using STULib.Types.Generic;
 namespace STULib.Types {
     [STU(0xE05E4446)]
     public class STUUnlock_Skin : STUUnlock {
+        public override string RealName => "Skin";
+
         [STUField(0x4C167404)]
         public Common.STUGUID SkinResource;
     }

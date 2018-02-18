@@ -3,6 +3,8 @@
 namespace STULib.Types {
     [STU(0x54BC2188)]
     public class STUUnlock_PlayerIcon : STUUnlock {
+        public override string RealName => "PlayerIcon";
+        
         [STUField(0x1B25AB90)]
         public STUEffectReference Effect;
     }

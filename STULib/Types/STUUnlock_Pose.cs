@@ -5,6 +5,8 @@ using STULib.Types.Generic;
 namespace STULib.Types {
     [STU(0xC6A72877, "STUUnlock_Pose")]
     public class STUUnlock_Pose : STUUnlock {
+        public override string RealName => "Pose";
+
         [STUField(0x2E5FBA99)]
         public Common.STUGUID PoseResource;
     }

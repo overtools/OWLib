@@ -3,6 +3,8 @@ using STULib.Types.Generic;
 namespace STULib.Types {
     [STU(0x6760479E, "STUUnlock")]
     public class STUUnlock: Common.STUInstance {
+        public virtual string RealName => "STUUnlock";
+        
         [STUField(0xB48F1D22, "m_name")]
         public Common.STUGUID CosmeticName;
 
@@ -39,7 +41,7 @@ namespace STULib.Types {
         [STUField(0x1A546C64)]
         public byte CosmeticUnknownByte;
 
-        [STULib.STUField(0x40926C4A)]
+        [STUField(0x40926C4A)]
         public byte m_40926C4A;
     }
 }

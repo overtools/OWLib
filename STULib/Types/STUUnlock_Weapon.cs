@@ -3,6 +3,8 @@
 namespace STULib.Types {
     [STU(0xC23F89EB, "STUUnlock_Weapon")]
     public class STUUnlock_Weapon : STUUnlock {
+        public override string RealName => "Weapon";
+
         [STUField(0xCDEF1203)]
         public uint Index;
     }
