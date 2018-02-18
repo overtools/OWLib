@@ -4,6 +4,7 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types.Enums {   
     [STUEnum(0x5A789F71)]
     public enum STUEnumLeagueDivision : uint {
+        None = 0,
         Pacific = 1,
         Atlantic = 2
     }
