@@ -30,6 +30,8 @@ namespace DataTool.ToolLogic.List {
                 Log($"{iD}{lootboxSet.Key}");
                 foreach (var lootbox in lootboxSet.Value)
                     Log($"{iD+1}{lootbox}");
+
+                Log();
             }
         }
 

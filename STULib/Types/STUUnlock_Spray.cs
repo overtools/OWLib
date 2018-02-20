@@ -3,6 +3,8 @@
 namespace STULib.Types {
     [STU(0x84515D93)]
     public class STUUnlock_Spray : STUUnlock {
+        public override string RealName => "Spray";
+
         [STUField(0x1B25AB90)]
         public STUEffectReference Effect2;
 

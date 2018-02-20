@@ -75,17 +75,12 @@ namespace DataTool.ToolLogic.List {
                 }
 
             var iD = new IndentHelper();
-            var i = 0;
             foreach (KeyValuePair<string, MapInfo> map in maps) {
-
-                Log($"[{i}]");
-                i++;
-
                 var data = map.Value;
 
-                Log($"{iD+1}Name: {data.Name ?? map.Key}");
+                Log($"{iD}{data.Name ?? map.Key}");
 
-                if (!string.IsNullOrEmpty(data.NameB)) Log($"{iD+1}NameB: {data.NameB}");
+                if (!string.IsNullOrEmpty(data.NameB)) Log($"{iD+1}Alt Name: {data.NameB}");
 
                 if (!string.IsNullOrEmpty(data.Description)) Log($"{iD+1}Desc: {data.Description}");
                 if (!string.IsNullOrEmpty(data.DescriptionB)) Log($"{iD+1}DescB: {data.DescriptionB}");
