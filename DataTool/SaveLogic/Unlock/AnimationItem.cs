@@ -9,11 +9,8 @@ namespace DataTool.SaveLogic.Unlock {
             if (item == null) return;
             string properType = item.Type;
             switch (item.Type) {
-                case "STUUnlock_Pose":
+                case "Pose":
                     properType = "VictoryPose";
-                    break;
-                case "STUUnlock_HighlightIntro":
-                    properType = "HighlightIntro";
                     break;
             }
             
