@@ -142,7 +142,6 @@
     <Compile Include="Types\Dump\Enums\STUEnum_3A37989A.cs" />
     <Compile Include="Types\Dump\Enums\STUEnum_3BED1D03.cs" />
     <Compile Include="Types\Dump\Enums\STUEnum_3C2F5875.cs" />
-    <Compile Include="Types\Dump\Enums\STUEnum_3D26984C.cs" />
     <Compile Include="Types\Dump\Enums\STUEnum_3D49D804.cs" />
     <Compile Include="Types\Dump\Enums\STUEnum_3F198330.cs" />
     <Compile Include="Types\Dump\Enums\STUEnum_4045113F.cs" />
@@ -179,7 +178,6 @@
     <Compile Include="Types\Dump\Enums\STUEnum_5A68D8E4.cs" />
     <Compile Include="Types\Dump\Enums\STUEnum_5B361C17.cs" />
     <Compile Include="Types\Dump\Enums\STUEnum_5CDF102A.cs" />
-    <Compile Include="Types\Dump\Enums\STUEnum_5D8C1DCC.cs" />
     <Compile Include="Types\Dump\Enums\STUEnum_5F827B4A.cs" />
     <Compile Include="Types\Dump\Enums\STUEnum_5FD29C2C.cs" />
     <Compile Include="Types\Dump\Enums\STUEnum_613C4AA2.cs" />
@@ -1097,7 +1095,6 @@
     <Compile Include="Types\Dump\STU_30C89937.cs" />
     <Compile Include="Types\Dump\STU_30D5C50F.cs" />
     <Compile Include="Types\Dump\STU_30DC2528.cs" />
-    <Compile Include="Types\Dump\STU_30E8CEFC.cs" />
     <Compile Include="Types\Dump\STU_310D6529.cs" />
     <Compile Include="Types\Dump\STU_311AE098.cs" />
     <Compile Include="Types\Dump\STU_3127FBDD.cs" />
@@ -1794,7 +1791,6 @@
     <Compile Include="Types\Dump\STU_5F887DF9.cs" />
     <Compile Include="Types\Dump\STU_5F94FAF9.cs" />
     <Compile Include="Types\Dump\STU_5FAABA03.cs" />
-    <Compile Include="Types\Dump\STU_5FB3E9BA.cs" />
     <Compile Include="Types\Dump\STU_5FBA8278.cs" />
     <Compile Include="Types\Dump\STU_5FD84627.cs" />
     <Compile Include="Types\Dump\STU_5FDDF6E9.cs" />
@@ -1855,7 +1851,6 @@
     <Compile Include="Types\Dump\STU_629D3B64.cs" />
     <Compile Include="Types\Dump\STU_62AC68D2.cs" />
     <Compile Include="Types\Dump\STU_62B56BAE.cs" />
-    <Compile Include="Types\Dump\STU_62D3E890.cs" />
     <Compile Include="Types\Dump\STU_62DA2C0B.cs" />
     <Compile Include="Types\Dump\STU_62E5EE1B.cs" />
     <Compile Include="Types\Dump\STU_63172E83.cs" />
@@ -4237,6 +4232,8 @@
     <Compile Include="Types\Dump\STU_FFFF862A.cs" />
     <Compile Include="Types\Enums\LoadoutCategory.cs" />
     <Compile Include="Types\Enums\STUEnumAchievementGroup.cs" />
+    <Compile Include="Types\Enums\STUEnumChatCommands.cs" />
+    <Compile Include="Types\Enums\STUEnumChatGroups.cs" />
     <Compile Include="Types\Enums\STUEnumEventID.cs" />
     <Compile Include="Types\Enums\STUEnumLeagueDivision.cs" />
     <Compile Include="Types\Enums\STUEnumPortraitTier.cs" />
@@ -4311,6 +4308,9 @@
     <Compile Include="Types\STUBrawlTeamTypeContainer.cs" />
     <Compile Include="Types\STUBreakableConfig.cs" />
     <Compile Include="Types\STUCatalog.cs" />
+    <Compile Include="Types\STUChatChannelDefinition.cs" />
+    <Compile Include="Types\STUChatCommand.cs" />
+    <Compile Include="Types\STUChatContainer.cs" />
     <Compile Include="Types\STUChatReplacementContainer.cs" />
     <Compile Include="Types\STUChatReplacementGroup.cs" />
     <Compile Include="Types\STUChatReplacementSingle.cs" />
