@@ -162,10 +162,6 @@ namespace OWLib.Types.Chunk.LDOM {
                             reader.BaseStream.Position = Descriptors[i].section8Offset;
                             NodeBones[i] = new Dictionary<int, short>();
                             for (int nodeIndex = 0; nodeIndex < Descriptors[i].driverNodeCount; nodeIndex++) {
-                                // short bind1 = reader.ReadInt16();
-                                // if (bind1 == 0) break;
-                                // short bind2 = reader.ReadInt16();
-                                // NodeBones[i][bind1] = bind2;
                                 NodeBones[i][nodeIndex] = reader.ReadInt16();
                             }
                         }
