@@ -20,7 +20,7 @@ namespace STULib.Types.Dump {
         public STULib.Types.Dump.STU_27958A58[] m_22638E8E;
 
         [STUField(0xEF646D9F)]
-        public STUGUID m_EF646D9F;  // STU_3CC8FAC9
+        public STUGUID m_EF646D9F;  // STUUXLink
 
         [STUField(0xB93CB2D5, EmbeddedInstance = true)]
         public STULib.Types.Dump.STU_A0BDC3D3 m_B93CB2D5;

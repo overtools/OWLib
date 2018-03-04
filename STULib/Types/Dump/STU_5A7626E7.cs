@@ -5,7 +5,7 @@ namespace STULib.Types.Dump {
     [STU(0x5A7626E7)]
     public class STU_5A7626E7 : STUStatescriptState {
         [STUField(0xC8F5C5B2)]
-        public STUGUID m_C8F5C5B2;  // STU_3CC8FAC9
+        public STUGUID m_C8F5C5B2;  // STUUXLink
 
         [STUField(0x16E99765, EmbeddedInstance = true)]
         public STULib.Types.Dump.STU_904BFCEC m_16E99765;

@@ -7,7 +7,7 @@ namespace STULib.Types.Dump {
     [STU(0xD5D1A63B)]
     public class STU_D5D1A63B : STUStatescriptDataStoreBase {
         [STUField(0x525BD5FF)]
-        public Common.STUGUID m_525BD5FF;  // STU_3CC8FAC9
+        public Common.STUGUID m_525BD5FF;  // STUUXLink
     }
 }
 

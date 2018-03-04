@@ -5,7 +5,7 @@ namespace STULib.Types.Dump {
     [STU(0xC5C07DF0)]
     public class STU_C5C07DF0 : STUStatescriptOutputPlug {
         [STUField(0xA99B047B)]
-        public STUGUID m_A99B047B;  // STU_3CC8FAC9
+        public STUGUID m_A99B047B;  // STUUXLink
 
         [STUField(0x93CDFD2F)]
         public STULib.Types.Dump.Enums.STUEnum_3F198330 m_93CDFD2F;

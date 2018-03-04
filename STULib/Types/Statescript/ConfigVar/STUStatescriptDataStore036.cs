@@ -6,6 +6,6 @@ namespace STULib.Types.Statescript.ConfigVar {
     [STU(0xD32D54AA)]
     public class STUStatescriptDataStore036 : STUStatescriptDataStoreBase {
         [STUField(0x3E8CDE6B)]
-        public Common.STUGUID GUIDx036;  // STU_3CC8FAC9
+        public Common.STUGUID GUIDx036;  // STUUXLink
     }
 }

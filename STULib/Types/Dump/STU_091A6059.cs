@@ -11,7 +11,7 @@ namespace STULib.Types.Dump {
         public STUGUID m_98D1699F;
 
         [STUField(0xAC8C7456)]
-        public STUGUID m_AC8C7456;  // STU_3CC8FAC9
+        public STUGUID m_AC8C7456;  // STUUXLink
 
         [STUField(0xC08C4427)]
         public string m_C08C4427;
@@ -23,7 +23,7 @@ namespace STULib.Types.Dump {
         public string m_5FBF5E3A;
 
         [STUField(0xFD53ECB8)]
-        public STUGUID m_FD53ECB8;  // STU_3CC8FAC9
+        public STUGUID m_FD53ECB8;  // STUUXLink
 
         [STUField(0xF1A601CE)]
         public string m_F1A601CE;

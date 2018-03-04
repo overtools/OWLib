@@ -14,7 +14,7 @@ namespace STULib.Types.Dump {
         public STULib.Types.Dump.STU_E2A59CFA[] m_E0C94370;
 
         [STUField(0x530E371B)]
-        public STUGUID m_530E371B;  // STU_3CC8FAC9
+        public STUGUID m_530E371B;  // STUUXLink
 
         [STUField(0x19B2212F)]
         public float m_19B2212F;

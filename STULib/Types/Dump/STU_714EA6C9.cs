@@ -8,6 +8,6 @@ namespace STULib.Types.Dump {
         public STUGUID Name;
 
         [STUField(0x5E000370)]
-        public STUGUID m_5E000370;  // STU_3CC8FAC9
+        public STUGUID m_5E000370;  // STUUXLink
     }
 }

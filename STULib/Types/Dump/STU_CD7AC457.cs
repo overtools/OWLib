@@ -8,7 +8,7 @@ namespace STULib.Types.Dump {
         public STULib.Types.Dump.STU_07142C70[] m_B36D527E;
 
         [STUField(0xA780C655)]
-        public STUGUID m_A780C655;  // STU_3CC8FAC9
+        public STUGUID m_A780C655;  // STUUXLink
 
         [STUField(0x7292116E, EmbeddedInstance = true)]
         public STULib.Types.Dump.STU_A0BDC3D3 m_7292116E;

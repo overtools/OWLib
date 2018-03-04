@@ -1277,7 +1277,7 @@
     <Compile Include="Types\Dump\STU_3C9C4F2F.cs" />
     <Compile Include="Types\Dump\STU_3CB3EC97.cs" />
     <Compile Include="Types\Dump\STU_3CC8C779.cs" />
-    <Compile Include="Types\Dump\STU_3CC8FAC9.cs" />
+    <Compile Include="Types\Dump\STUUXLink.cs" />
     <Compile Include="Types\Dump\STU_3CD5636B.cs" />
     <Compile Include="Types\Dump\STU_3CD83F9A.cs" />
     <Compile Include="Types\Dump\STU_3CE15663.cs" />

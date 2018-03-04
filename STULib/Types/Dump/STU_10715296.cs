@@ -11,7 +11,7 @@ namespace STULib.Types.Dump {
         public string m_2194BA21;
 
         [STUField(0x15192D8D)]
-        public STUGUID m_15192D8D;  // STU_3CC8FAC9
+        public STUGUID m_15192D8D;  // STUUXLink
 
         [STUField(0x020A677B, EmbeddedInstance = true)]
         public STULib.Types.Dump.STU_10715296[] m_020A677B;

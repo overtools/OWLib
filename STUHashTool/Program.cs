@@ -259,7 +259,7 @@ namespace STUHashTool {
                     PrintHelp();
                     return;
                 }
-                if (args[0] == "compare-debug" && args.Length == 2) {}
+                if ((args[0] == "compare-debug" || args[0] == "typeinfo") && args.Length == 2) {}
                 else if (args[0] == "class" && args.Length == 2) {}
                 else if (args[0] != "list" && args.Length < 3) {
                     PrintHelp();
@@ -362,6 +362,18 @@ namespace STUHashTool {
                 case "dir-rec":
                     // todo: recurse over every type
                     throw new NotImplementedException();
+                case "typeinfo":
+                    string folder = args[1];
+                    
+                    InstanceJSON = LoadInstanceJson(Path.Combine(folder, "RegisteredSTUTypes.json"));
+                    
+                    LoadHashCSV(Path.Combine(folder, "KnownTypes.csv"), out InstanceNames);
+                    LoadHashCSV(Path.Combine(folder, "KnownFields.csv"), out FieldNames);
+                    LoadHashCSV(Path.Combine(folder, "KnownEnums.csv"), out EnumNames);
+
+                    directory1 = null;
+                    directory2 = null;
+                    break;
             }
 
             List<string> both = files2.Intersect(files1).ToList();
@@ -715,16 +727,18 @@ namespace STUHashTool {
                 }
             } else if (mode == "newhashes-test") {
                 // testing thing, trying to guess fields and whatever
-                Dictionary<KeyValuePair<uint, uint>, uint> fieldOccurrences = new Dictionary<KeyValuePair<uint, uint>, uint>();
+                Dictionary<KeyValuePair<uint, uint>, uint> fieldOccurrences =
+                    new Dictionary<KeyValuePair<uint, uint>, uint>();
                 Dictionary<uint, uint> totalFieldOccurr = new Dictionary<uint, uint>();
-                foreach (KeyValuePair<uint,STUInstanceJSON> oldInstance in OldInstanceJSON) {
-                    foreach (KeyValuePair<uint,STUInstanceJSON> newInstance in InstanceJSON) {
+                foreach (KeyValuePair<uint, STUInstanceJSON> oldInstance in OldInstanceJSON) {
+                    foreach (KeyValuePair<uint, STUInstanceJSON> newInstance in InstanceJSON) {
                         if (oldInstance.Value.Fields.Length != newInstance.Value.Fields.Length) continue;
                         if (oldInstance.Value.Parent != null && oldInstance.Value.Parent == null) continue;
                         if (oldInstance.Value.Parent == null && oldInstance.Value.Parent != null) continue;
 
                         bool bad = false;
-                        Dictionary<KeyValuePair<uint, uint>, uint> tempFieldOccurr = new Dictionary<KeyValuePair<uint, uint>, uint>();
+                        Dictionary<KeyValuePair<uint, uint>, uint> tempFieldOccurr =
+                            new Dictionary<KeyValuePair<uint, uint>, uint>();
 
                         for (int i = 0; i < newInstance.Value.Fields.Length; i++) {
                             STUInstanceJSON.STUFieldJSON oldField = oldInstance.Value.Fields[i];
@@ -735,7 +749,7 @@ namespace STUHashTool {
                                 oldField.SerializationType == 10 || oldField.SerializationType == 11) {
                                 if (oldField.Type != newField.Type) bad = true;
                             }
-                            
+
                             if (FieldNames.ContainsKey(oldField.Hash)) {
                                 KeyValuePair<uint, uint>
                                     kv = new KeyValuePair<uint, uint>(oldField.Hash, newField.Hash);
@@ -746,21 +760,84 @@ namespace STUHashTool {
                                         tempFieldOccurr[kv] = 0;
                                     }
                                 }
+
                                 tempFieldOccurr[new KeyValuePair<uint, uint>(oldField.Hash, newField.Hash)]++;
                             }
                         }
+
                         if (bad) continue;
-                        foreach (KeyValuePair<KeyValuePair<uint,uint>,uint> pair in tempFieldOccurr) {
-                            
+                        foreach (KeyValuePair<KeyValuePair<uint, uint>, uint> pair in tempFieldOccurr) {
+
                             fieldOccurrences[pair.Key] = pair.Value;
                         }
                     }
                 }
-                IOrderedEnumerable<KeyValuePair<KeyValuePair<uint, uint>, uint>> sortedDict = from entry in fieldOccurrences orderby entry.Value descending select entry;
+
+                IOrderedEnumerable<KeyValuePair<KeyValuePair<uint, uint>, uint>> sortedDict =
+                    from entry in fieldOccurrences orderby entry.Value descending select entry;
                 foreach (KeyValuePair<KeyValuePair<uint, uint>, uint> fieldChange in sortedDict) {
                     if (fieldChange.Value < 10) continue;
-                    Console.Out.WriteLine($"{fieldChange.Key.Key:X}:{fieldChange.Key.Value:X}:{FieldNames[fieldChange.Key.Key]} Count: {fieldChange.Value}");
+                    Console.Out.WriteLine(
+                        $"{fieldChange.Key.Key:X}:{fieldChange.Key.Value:X}:{FieldNames[fieldChange.Key.Key]} Count: {fieldChange.Value}");
                 }
+            } else if (mode == "typeinfo") {
+                StringBuilder sb = new StringBuilder();
+                foreach (KeyValuePair<uint,STUInstanceJSON> stuType in InstanceJSON) {
+                    string instanceName;
+                    if (InstanceNames.ContainsKey(stuType.Key)) {
+                        instanceName = InstanceNames[stuType.Key];
+                    } else {
+                        instanceName = $"STU_{stuType.Key:X8}!";  // ! is to help with ctrl+f
+                    }
+                    sb.AppendLine($"{stuType.Key:X8}|{instanceName}");
+                    foreach (STUInstanceJSON.STUFieldJSON field in stuType.Value.Fields) {
+                        FieldData fieldData = new FieldData(field);
+                        string fieldName;
+                        if (FieldNames.ContainsKey(field.Hash)) {
+                            fieldName = FieldNames[field.Hash];
+                        } else {
+                            fieldName = $"m_{field.Hash:X8}";
+                        }
+
+                        string fieldType;
+                        if (fieldData.IsEmbed || fieldData.IsEmbedArray || fieldData.IsInline ||
+                            fieldData.IsInlineArray || fieldData.IsGUIDOtherArray || fieldData.IsGUIDOther) {
+                            if (InstanceNames.ContainsKey(fieldData.TypeInstanceChecksum)) {
+                                fieldType = InstanceNames[fieldData.TypeInstanceChecksum];
+                            } else {
+                                fieldType = fieldData.Type;
+                            }
+                            if (fieldData.IsGUID || fieldData.IsGUIDOther) {
+                                fieldType = "guid<" + fieldType + ">";
+                            }
+                        } else if (fieldData.IsGUID || fieldData.IsGUIDArray) {
+                            fieldType = "guid";
+                        } else if (fieldData.IsEnum || fieldData.IsEnumArray) {
+                            if (EnumNames.ContainsKey(fieldData.EnumChecksum)) {
+                                fieldType = EnumNames[fieldData.EnumChecksum];
+                            } else {
+                                fieldType = $"STUEnum_{fieldData.EnumChecksum:X8}";
+                            }
+                        } else if (fieldData.IsHashMap) {
+                            if (InstanceNames.ContainsKey(fieldData.HashMapChecksum)) {
+                                fieldType = InstanceNames[fieldData.HashMapChecksum];
+                            } else {
+                                fieldType = fieldData.Type;
+                            }
+                            fieldType = "hashmap<" + fieldType + ">";
+                        } else {
+                            fieldType = fieldData.Type;
+                        }
+
+                        if (fieldData.IsPrimitiveArray || fieldData.IsEmbedArray || fieldData.IsInlineArray ||
+                            fieldData.IsGUIDArray || fieldData.IsGUIDOtherArray || fieldData.IsEnumArray) {
+                            fieldType = "array<" + fieldType + ">";
+                        }
+                        
+                        sb.AppendLine($"    {fieldType} {field.Hash:X8}|{fieldName}");
+                    }
+                }
+                Console.Out.WriteLine(sb);
             } else if (mode != "compare-debug") {
                 foreach (KeyValuePair<uint, InstanceTally> it in instanceChangeTally) {
                     foreach (KeyValuePair<uint, List<CompareResult>> id in it.Value.ResultDict) {
@@ -778,7 +855,7 @@ namespace STUHashTool {
                         }
                     }
                 }
-            }
+            } 
             if (Debugger.IsAttached) {
                 List<KeyValuePair<uint, STUInstanceInfo>> instanes = Instances.Where(x => x.Value.IsChained).ToList();
                 List<KeyValuePair<uint, InstanceData>> realinstanes = RealInstances.ToList();

@@ -3,7 +3,7 @@ using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.Dump {
     [STU(0xF22B361B)]
-    public class STU_F22B361B : STU_3CC8FAC9 {
+    public class STU_F22B361B : STUUXLink {
         [STUField(0xC1526ED9)]
         public STUGUID m_C1526ED9;
     }

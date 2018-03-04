@@ -5,7 +5,7 @@ namespace STULib.Types.Dump {
     [STU(0x21661BA4)]
     public class STU_21661BA4 : STU_94CB64FD {
         [STUField(0x3F9F43F1)]
-        public STUGUID m_3F9F43F1;  // STU_3CC8FAC9
+        public STUGUID m_3F9F43F1;  // STUUXLink
 
         [STUField(0xAECD07C2, EmbeddedInstance = true)]
         public STULib.Types.Dump.STU_21661BA4[] m_AECD07C2;
