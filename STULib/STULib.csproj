@@ -2655,7 +2655,7 @@
     <Compile Include="Types\Dump\STU_9901D443.cs" />
     <Compile Include="Types\Dump\STU_9907336E.cs" />
     <Compile Include="Types\Dump\STU_9910B864.cs" />
-    <Compile Include="Types\Dump\STU_9911A927.cs" />
+    <Compile Include="Types\Dump\STULocalIdleAnimComponent.cs" />
     <Compile Include="Types\Dump\STU_991B5F56.cs" />
     <Compile Include="Types\Dump\STU_99257985.cs" />
     <Compile Include="Types\Dump\STU_992CD1C4.cs" />

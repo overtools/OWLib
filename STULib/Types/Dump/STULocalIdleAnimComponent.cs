@@ -2,9 +2,8 @@
 using static STULib.Types.Generic.Common;
 
 namespace STULib.Types.Dump {
-    [STU(0x9911A927)]
-    public class STU_9911A927 : STULib.Types.STUEntityComponent {  // oldhash = D13AB3AA
-        // maybe something for looping animations, used for black forest windmill
+    [STU(0x9911A927, "STULocalIdleAnimComponent")]
+    public class STULocalIdleAnimComponent : STUEntityComponent {  // oldhash = D13AB3AA
         [STUField(0xC9D669B6)]
         public STUGUID Animation;  // STUAnimation
 

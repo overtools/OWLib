@@ -8,6 +8,7 @@ using System.Text;
 using CASCLib;
 using DataTool;
 using DataTool.Helper;
+using DataTool.JSON;
 using Microsoft.CSharp;
 using Newtonsoft.Json;
 using OWLib;
@@ -47,6 +48,9 @@ namespace STUExcavator {
         public HashSet<string> GUIDs;
         public SerializationType SerializationType;
         public HashSet<string> STUInstances;
+
+        [JsonIgnore]
+        public string JSONDump;
     }
     
     public class Program {
@@ -55,6 +59,10 @@ namespace STUExcavator {
         public static List<string> InvalidTypes;
         public static CASCConfig Config;
         public static CASCHandler CASC;
+        
+        public static Dictionary<uint, string> EnumNames = new Dictionary<uint, string>();
+        public static Dictionary<uint, string> FieldNames = new Dictionary<uint, string>();
+        public static Dictionary<uint, string> InstanceNames = new Dictionary<uint, string>();
         // dawn of a new project
         // STUExcavator:
         // go through all stu files and find GUIDs
@@ -67,6 +75,13 @@ namespace STUExcavator {
             string overwatchDir = args[0];
             string outputDir = args[1];
             const string language = "enUS";
+            
+            // usage: "STUExcavator overwatch_dir output_dir [dataset_dir]"
+
+            string datasetFolder = "";
+            if (args.Length >= 3) {
+                datasetFolder = args[2];
+            }
 
             // casc setup
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
@@ -82,8 +97,18 @@ namespace STUExcavator {
             TrackedFiles = DataTool.Program.TrackedFiles;
             
             // prepare Version2Comparer
-            Version2Comparer.InstanceJSON = STUHashTool.Program.LoadInstanceJson("RegisteredSTUTypes.json");
-            InvalidTypes = STUHashTool.Program.LoadInvalidTypes("IgnoredBrokenSTUs.txt");
+            Version2Comparer.InstanceJSON = STUHashTool.Program.LoadInstanceJson(Path.Combine(datasetFolder, "RegisteredSTUTypes.json"));
+            InvalidTypes = STUHashTool.Program.LoadInvalidTypes(Path.Combine(datasetFolder, "IgnoredBrokenSTUs.txt"));
+            //STUHashTool.Program.LoadHashCSV(Path.Combine(datasetFolder, "KnownFields.csv"), out FieldNames);
+            //STUHashTool.Program.LoadHashCSV(Path.Combine(datasetFolder, "KnownEnums.csv"), out EnumNames);
+            //STUHashTool.Program.LoadHashCSV(Path.Combine(datasetFolder, "KnownTypes.csv"), out InstanceNames);
+            FieldNames = new Dictionary<uint, string>();
+            EnumNames = new Dictionary<uint, string>();
+            InstanceNames = new Dictionary<uint, string>();
+            
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
+                Converters = new List<JsonConverter> {new GUIDArrayConverter(), new GUIDConverter()}
+            };
             
             // wipe ISTU
             ISTU.Clear();
@@ -112,12 +137,21 @@ namespace STUExcavator {
                 if (types[type].Assets == null) continue;
                 foreach (Asset asset in types[type].Assets) {
                     string assetFile = Path.Combine(outputDir, type, "assets", $"{asset.GUID}.json");
+                    string assetFileJson = Path.Combine(outputDir, type, "jsondump", $"{asset.GUID}.json");
                     IO.CreateDirectoryFromFile(assetFile);
+                    IO.CreateDirectoryFromFile(assetFileJson);
                     using (Stream assetStream = File.OpenWrite(assetFile)) {
                         assetStream.SetLength(0);
                         string assetJson = JsonConvert.SerializeObject(asset, Formatting.Indented);
                         using (TextWriter writer = new StreamWriter(assetStream)) {
                             writer.WriteLine(assetJson);
+                        }
+                    }
+                    if (asset.JSONDump == null) continue;
+                    using (Stream assetStream = File.OpenWrite(assetFileJson)) {
+                        assetStream.SetLength(0);
+                        using (TextWriter writer = new StreamWriter(assetStream)) {
+                            writer.WriteLine(asset.JSONDump);
                         }
                     }
                 }
@@ -135,8 +169,7 @@ namespace STUExcavator {
                 if (doneInstances.Contains(instanceData.Checksum)) continue;
                 doneInstances.Add(instanceData.Checksum);
                 ClassBuilder builder = new ClassBuilder(instanceData);
-                string @class = builder.Build(new Dictionary<uint, string>(),
-                    new Dictionary<uint, string>(), new Dictionary<uint, string>(), "STUExcavator.Types", false, true);
+                string @class = builder.Build(InstanceNames, EnumNames, FieldNames, "STUExcavator.Types", false, true);
                 sb.AppendLine(@class);
 
                 foreach (FieldData field in instanceData.Fields) {
@@ -147,7 +180,7 @@ namespace STUExcavator {
                         Type = STUHashTool.Program.GetSizeType(field.Size),
                         Checksum = field.EnumChecksum
                     });
-                    sb.AppendLine(enumBuilder.Build(new Dictionary<uint, string>(), "STUExcavator.Types.Enums", true));
+                    sb.AppendLine(enumBuilder.Build(EnumNames, "STUExcavator.Types.Enums", true));
                 }
             }
 
@@ -172,6 +205,7 @@ namespace STUExcavator {
             foreach (KeyValuePair<uint, STUInstanceJSON> json in Version2Comparer.InstanceJSON) {
                 if (InvalidTypes.Contains(json.Value.Name)) continue;
                 Type compiledInst = assembly.GetType($"STUExcavator.Types.{json.Value.Name}");
+                if (compiledInst == null) continue;
                 ISTU.InstanceTypes[json.Value.Hash] = compiledInst;
             }
         }
@@ -255,10 +289,21 @@ namespace STUExcavator {
                                 // foreach (uint typeHash in stuVersion2.TypeHashes) {
                                 //     asset.STUInstances.Add(typeHash.ToString("X8"));
                                 // }
+                                asset.JSONDump = "";
+                                StringBuilder sb = new StringBuilder();
+
+                                int i = 0;
                                 foreach (Common.STUInstance stuInstance in stuVersion2.Instances.Concat(stuVersion2.HiddenInstances)) {
                                     STUAttribute attr = stuInstance?.GetType().GetCustomAttributes<STUAttribute>().FirstOrDefault();
                                     if (attr == null) continue;
-                                    asset.STUInstances.Add(attr.Checksum.ToString("X8"));
+                                    asset.STUInstances.Add($"{attr.Checksum:X8}");
+                                    
+                                    if (stuInstance.Usage != Common.InstanceUsage.Root) continue;
+                                    if (i != 0) sb.AppendLine();
+                                    sb.AppendLine($"{attr.Checksum:X8}:");
+                                    sb.AppendLine(JsonConvert.SerializeObject(stuInstance, Formatting.Indented));
+                                    asset.JSONDump += sb.ToString();
+                                    i++;
                                 }
                             }
                         }

@@ -10,9 +10,8 @@ namespace DataTool.JSON {
             writer.WriteStartObject();
 
             writer.WritePropertyName("Key");
-            ulong key = 0;
-            STUGUID guid = value as STUGUID;
-            if (guid != null) {
+            ulong key;
+            if (value is STUGUID guid) {
                 key = guid;
             } else {
                 key = (ulong)value;
@@ -37,10 +36,11 @@ namespace DataTool.JSON {
     public class GUIDArrayConverter : GUIDConverter {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {          
             ulong[] keys;
-            STUGUID[] guid = value as STUGUID[];
-            if (guid != null) {
-                // ReSharper disable once SuspiciousTypeConversion.Global
-                keys = guid.Cast<ulong>().ToArray();
+            if (value is STUGUID[] guid) {
+                keys = new ulong[guid.Length];
+                for (int i = 0; i < guid.Length; i++) {
+                    keys[i] = guid[i];
+                }
             } else {
                 keys = (ulong[])value;
             }
@@ -58,7 +58,7 @@ namespace DataTool.JSON {
         }
 
         public override bool CanConvert(Type objectType) {
-            return typeof(STUGUID[]).IsAssignableFrom(objectType) || typeof(ulong).IsAssignableFrom(objectType);
+            return typeof(STUGUID[]).IsAssignableFrom(objectType) || typeof(ulong[]).IsAssignableFrom(objectType);
         }
     }
 }
