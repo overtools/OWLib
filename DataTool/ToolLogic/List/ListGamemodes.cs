@@ -127,7 +127,7 @@ namespace DataTool.ToolLogic.List {
         private static void ParseMaps(IndentHelper iD, STUGUID mapBinding) {
             if (mapBinding == null) return;
             try {
-                var map = GetInstance<STUMapDataBinding>(mapBinding);
+                var map = GetInstance<STUMapCatalog>(mapBinding);
                 if (map?.MapMetadatas == null) return;
 
                 var mapNames = new List<string>();

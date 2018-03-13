@@ -23,7 +23,7 @@ namespace STULib.Types {
         [STUField(0xAA8E1BB0)]
         public Common.STUGUID[] CosmeticUnknownArray;  // virtual
 
-        [STUField(0x3446F580, "m_description")]
+        [STUField(0x3446F580)]
         public Common.STUGUID CosmeticDescription;
 
         [STUField(0x0B1BA7C1)]

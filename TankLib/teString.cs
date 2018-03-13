@@ -1,0 +1,47 @@
+﻿using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+
+namespace TankLib {
+    /// <summary>Tank string</summary>
+    public class teString {
+        /// <summary>Value of the string</summary>
+        public string Value;
+        public teEnums.SDAM Mutability;
+
+        public teString(string value) {
+            Value = value;
+            Mutability = teEnums.SDAM.NONE;
+        }
+        
+        public teString(string value, teEnums.SDAM mutability) {
+            Value = value;
+            Mutability = mutability;
+        }
+        
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct ArchiveStringHeader {
+            public ulong Offset;
+            public uint Unknown1;
+            public uint References;
+        }
+
+        public teString(Stream stream) {
+            using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8)) {
+                ArchiveStringHeader header = reader.Read<ArchiveStringHeader>();
+                stream.Position = (long)header.Offset;
+                char[] bytes = reader.ReadChars((int)(stream.Length - stream.Position));
+
+                Value = new string(bytes).TrimEnd('\0');
+            }
+        }
+
+        public static implicit operator string(teString @string) {
+            return @string.Value;
+        }
+
+        public override string ToString() {
+            return Value;
+        }
+    }
+}

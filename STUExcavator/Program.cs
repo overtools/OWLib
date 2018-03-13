@@ -91,7 +91,7 @@ namespace STUExcavator {
             DataTool.Program.TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
             DataTool.Program.CASC = CASC;
             DataTool.Program.Root = CASC.Root as OwRootHandler;
-            DataTool.Program.Flags = new ToolFlags {OverwatchDirectory = outputDir, Language = language};
+            DataTool.Program.Flags = new ToolFlags {OverwatchDirectory = overwatchDir, Language = language};
             IO.MapCMF(true);
             Files = DataTool.Program.Files;
             TrackedFiles = DataTool.Program.TrackedFiles;

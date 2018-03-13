@@ -19,7 +19,7 @@ namespace STULib.Types {
         [STUField(0xF2D8DE15)]
         public STUGUID[] VirtualReference2;
 
-        [STUField(0x3446F580, "m_description")]
+        [STUField(0x3446F580)]
         public STUGUID Description;
 
         [STUField(0x322C521A)]

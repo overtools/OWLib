@@ -4379,7 +4379,7 @@
     <Compile Include="Types\STULootBoxCurrencyRarityUnlock.cs" />
     <Compile Include="Types\STULootBoxCurrencyUnlocks.cs" />
     <Compile Include="Types\STUMap.cs" />
-    <Compile Include="Types\STUMapDataBinding.cs" />
+    <Compile Include="Types\STUMapCatalog.cs" />
     <Compile Include="Types\STUModelComponent.cs" />
     <Compile Include="Types\STUModelLook.cs" />
     <Compile Include="Types\STUOverrideBase.cs" />

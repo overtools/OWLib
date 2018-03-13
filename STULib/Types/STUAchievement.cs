@@ -6,7 +6,7 @@ namespace STULib.Types {
         [STUField(0xB48F1D22, "m_name")]
         public Common.STUGUID Name;
 
-        [STUField(0xCA7E6EDC)]
+        [STUField(0xCA7E6EDC, "m_description")]
         public Common.STUGUID Description;
 
         [STUField(0x290B2ADF)]

@@ -19,7 +19,5 @@ namespace STULib.Types {
 
         [STUField(0x78A2AC5C, "m_stars")]
         public ushort Star;
-
-        // todo: ImageResource => BorderResource, PortraitResource
     }
 }

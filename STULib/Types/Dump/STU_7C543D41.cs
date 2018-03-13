@@ -4,7 +4,7 @@ using static STULib.Types.Generic.Common;
 namespace STULib.Types.Dump {
     [STU(0x7C543D41)]
     public class STU_7C543D41 : STUInstance {
-        [STUField(0x3D83C363)]
-        public STULib.Types.Dump.STU_5BB2E270[] m_3D83C363;
+        [STUField(0x3D83C363, "m_assets")]
+        public STULib.Types.Dump.STU_5BB2E270[] Assets;
     }
 }
