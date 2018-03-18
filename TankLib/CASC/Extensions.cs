@@ -14,6 +14,7 @@ namespace TankLib.CASC {
         }
 
         /// <summary>Read a big endian 32-bit int</summary>
+        // ReSharper disable once InconsistentNaming
         public static int ReadInt32BE(this BinaryReader reader) {
             byte[] val = reader.ReadBytes(4);
             return val[3] | (val[2] << 8) | (val[1] << 16) | (val[0] << 24);

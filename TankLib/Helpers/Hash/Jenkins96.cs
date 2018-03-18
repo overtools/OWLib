@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace TankLib.Helpers.Hash {
     // Implementation of Bob Jenkins' hash function in C# (96 bit internal state)
     public class Jenkins96 : HashAlgorithm {
         private ulong _hashValue;
-        private static readonly byte[] _hashBytes = new byte[0];
+        private readonly byte[] _hashBytes = new byte[0];
 
         private static uint Rot(uint x, int k) {
             return (x << k) | (x >> (32 - k));
@@ -13,7 +14,7 @@ namespace TankLib.Helpers.Hash {
 
         public ulong ComputeHash(string str, bool fix = true) {
             string tempstr = fix ? str.Replace('/', '\\').ToUpperInvariant() : str;
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(tempstr);
+            byte[] data = Encoding.ASCII.GetBytes(tempstr);
             ComputeHash(data);
             return _hashValue;
         }

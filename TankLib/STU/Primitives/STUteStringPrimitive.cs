@@ -2,6 +2,7 @@
 using System.IO;
 
 namespace TankLib.STU.Primitives {
+    /// <inheritdoc />
     /// <summary>teString STU primitive</summary>
     public class STUteStringPrimitive : IStructuredDataPrimitiveFactory {
         public object Deserialize(teStructuredData data, STUField_Info field) {

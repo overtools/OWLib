@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 
 namespace TankLib {
     /// <summary>Tank Texture, type 004</summary>
@@ -12,7 +13,7 @@ namespace TankLib {
         public uint Size;
         public TextureTypes.DXGI_PIXEL_FORMAT Format;
         
-        /// <summary>Load the texture from a stream</summary>
+        /// <summary>Load texture from a stream</summary>
         public teTexture(Stream stream) {
             using (BinaryReader imageReader = new BinaryReader(stream)) {
                 Header = imageReader.Read<TextureTypes.TextureHeader>();
@@ -49,7 +50,7 @@ namespace TankLib {
                 }
                 Payload.SaveToDDS(stream, keepOpen);
             } else {
-                using (BinaryWriter ddsWriter = new BinaryWriter(stream, System.Text.Encoding.Default, keepOpen)) {
+                using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
                     TextureTypes.DDSHeader dds = Header.ToDDSHeader();
                     ddsWriter.Write(dds);
                     if (dds.Format.FourCC == 808540228) {

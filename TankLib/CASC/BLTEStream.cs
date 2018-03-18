@@ -191,18 +191,18 @@ namespace TankLib.CASC {
             ulong keyName = BitConverter.ToUInt64(keyNameBytes, 0);
             SalsaKey = keyName;
 
-            byte IVSize = data[keyNameSize + 2];
+            byte ivSize = data[keyNameSize + 2];
 
-            if (IVSize != 4 || IVSize > 0x10)
+            if (ivSize != 4 || ivSize > 0x10)
                 throw new BLTEDecoderException("IVSize != 4 || IVSize > 0x10");
 
-            byte[] IVpart = new byte[IVSize];
-            Array.Copy(data, keyNameSize + 3, IVpart, 0, IVSize);
+            byte[] ivPart = new byte[ivSize];
+            Array.Copy(data, keyNameSize + 3, ivPart, 0, ivSize);
 
-            if (data.Length < IVSize + keyNameSize + 4)
+            if (data.Length < ivSize + keyNameSize + 4)
                 throw new BLTEDecoderException("data.Length < IVSize + keyNameSize + 4");
 
-            int dataOffset = keyNameSize + IVSize + 3;
+            int dataOffset = keyNameSize + ivSize + 3;
 
             byte encType = data[dataOffset];
 
@@ -212,11 +212,11 @@ namespace TankLib.CASC {
             dataOffset++;
 
             // expand to 8 bytes
-            byte[] IV = new byte[8];
-            Array.Copy(IVpart, IV, IVpart.Length);
+            byte[] iv = new byte[8];
+            Array.Copy(ivPart, iv, ivPart.Length);
 
             // magic
-            for (int shift = 0, i = 0; i < sizeof(int); shift += 8, i++) IV[i] ^= (byte) ((index >> shift) & 0xFF);
+            for (int shift = 0, i = 0; i < sizeof(int); shift += 8, i++) iv[i] ^= (byte) ((index >> shift) & 0xFF);
 
             byte[] key = TACTKeyService.GetKey(keyName);
 
@@ -224,7 +224,7 @@ namespace TankLib.CASC {
                 throw new BLTEKeyException(keyName);
 
             if (encType == EncryptionSalsa20) {
-                ICryptoTransform decryptor = TACTKeyService.SalsaInstance.CreateDecryptor(key, IV);
+                ICryptoTransform decryptor = TACTKeyService.SalsaInstance.CreateDecryptor(key, iv);
 
                 return decryptor.TransformFinalBlock(data, dataOffset, data.Length - dataOffset);
             }

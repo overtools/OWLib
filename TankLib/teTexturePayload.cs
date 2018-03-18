@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 
 namespace TankLib {
     /// <summary>Tank Texture Payload, type 04D</summary>
@@ -15,7 +16,7 @@ namespace TankLib {
         /// <summary>Parent texture object</summary>
         public teTexture Header;
 
-        /// <summary>Load the payload from the parent texture + payload stream</summary>
+        /// <summary>Load payload from the parent texture + payload stream</summary>
         /// <param name="header">Parent texture object</param>
         /// <param name="payloadStream">Stream to load from</param>
         public teTexturePayload(teTexture header, Stream payloadStream) {
@@ -55,7 +56,7 @@ namespace TankLib {
         /// <param name="stream">Stream to be written to</param>
         /// <param name="keepOpen">Keep the stream open after writing</param>
         public void SaveToDDS(Stream stream, bool keepOpen=false) {
-            using (BinaryWriter ddsWriter = new BinaryWriter(stream, System.Text.Encoding.Default, keepOpen)) {
+            using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
                 TextureTypes.DDSHeader dds = Header.Header.ToDDSHeader();
                 ddsWriter.Write(dds);
                 if (dds.Format.FourCC == 808540228) {

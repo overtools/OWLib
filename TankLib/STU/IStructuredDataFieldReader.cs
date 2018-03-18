@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using TankLib.STU.DataTypes;
 
 namespace TankLib.STU {
     /// <summary>STU field reader interface</summary>
@@ -34,8 +33,8 @@ namespace TankLib.STU {
             bool isStruct = target.FieldType.IsValueType && !target.FieldType.IsPrimitive;
 
             if (isStruct) {
-                MethodInfo method = typeof(Extensions).GetMethod(nameof(Extensions.Read)).MakeGenericMethod(target.FieldType);
-                return method.Invoke(data.Data, new object[] { data.Data });
+                MethodInfo method = typeof(Extensions).GetMethod(nameof(Extensions.Read))?.MakeGenericMethod(target.FieldType);
+                return method?.Invoke(data.Data, new object[] { data.Data });
             }
             
             throw new NotImplementedException();
@@ -71,7 +70,9 @@ namespace TankLib.STU {
             if (value == -1) return;
             if (value < data.Instances.Length)  {
                 STUInstance embeddedInstance = data.Instances[value];
-                embeddedInstance.Usage = TypeUsage.Embed;
+                if (embeddedInstance != null) {
+                    embeddedInstance.Usage = TypeUsage.Embed;
+                }
                 
                 target.SetValue(instance, embeddedInstance);
             }
@@ -83,7 +84,9 @@ namespace TankLib.STU {
             if (value == -1) return;
             if (value < data.Instances.Length) {
                 STUInstance embeddedInstance = data.Instances[value];
-                embeddedInstance.Usage = TypeUsage.EmbedArray;
+                if (embeddedInstance != null) {
+                    embeddedInstance.Usage = TypeUsage.EmbedArray;
+                }
                 
                 target.SetValue(embeddedInstance, index);
             } else {

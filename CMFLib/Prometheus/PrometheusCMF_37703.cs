@@ -1,5 +1,4 @@
-﻿using System.Security.AccessControl;
-using static CMFLib.CMFHandler;
+﻿using static CMFLib.CMFHandler;
 
 namespace CMFLib.Prometheus {
     [CMFMetadata(AutoDetectVersion = true, BuildVersions = new uint[] { }, App = CMFApplication.Prometheus)]

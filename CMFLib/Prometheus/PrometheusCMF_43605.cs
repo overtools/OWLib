@@ -19,7 +19,7 @@ namespace CMFLib.Prometheus {
             byte[] buffer = new byte[length];
 
             uint kidx = Keytable[header.DataCount & 511];
-            uint increment = header.EntryCount + digest[SignedMod(header.EntryCount, CMFHandler.SHA1_DIGESTSIZE)];
+            uint increment = header.EntryCount + digest[SignedMod(header.EntryCount, SHA1_DIGESTSIZE)];
             for (int i = 0; i != length; ++i) {
                 kidx += increment;
                 buffer[i] ^= digest[SignedMod(kidx, SHA1_DIGESTSIZE)];

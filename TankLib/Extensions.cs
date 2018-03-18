@@ -20,7 +20,7 @@ namespace TankLib {
             int size = Marshal.SizeOf<T>();
             byte[] buf = new byte[size];
             IntPtr ptr = Marshal.AllocHGlobal(size);
-            Marshal.StructureToPtr<T>(obj, ptr, true);
+            Marshal.StructureToPtr(obj, ptr, true);
             Marshal.Copy(ptr, buf, 0, size);
             Marshal.FreeHGlobal(ptr);
             writer.Write(buf, 0, size);
@@ -96,11 +96,7 @@ namespace TankLib {
         }
         
         public static uint ByteSize(this TextureTypes.TextureType T) {
-            if (T == TextureTypes.TextureType.DXT5) {
-                return 16;
-            } else {
-                return 8;
-            }
+            return T == TextureTypes.TextureType.DXT5 ? 16u : 8u;
         }
         #endregion
     }

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
-namespace TankLib.STU.DataTypes {
+namespace TankLib.STU {
     /// <summary>Instance usage</summary>
     public enum TypeUsage {
         /// <summary>Root type</summary>
@@ -31,8 +32,11 @@ namespace TankLib.STU.DataTypes {
         public TypeUsage Usage = TypeUsage.Root;
 
         /// <summary>Read a specified STU field</summary>
-        protected void DeserializeField(teStructuredData assetFile, STUField_Info fieldInfo, Dictionary<uint, KeyValuePair<FieldInfo, STUFieldAttribute>> fields) {
+        protected void DeserializeField(teStructuredData assetFile, STUField_Info fieldInfo,
+            Dictionary<uint, KeyValuePair<FieldInfo, STUFieldAttribute>> fields, STUAttribute stuAttribute) {
             if (!fields.ContainsKey(fieldInfo.Hash)) {
+                string name = stuAttribute.Name ?? $"STU_{stuAttribute.Hash:X8}";
+                Debugger.Log(0, "STUInstance", $"Unhandled field: {name}:{fieldInfo.Hash:X8}\r\n");
                 return;
             }
 
@@ -85,6 +89,7 @@ namespace TankLib.STU.DataTypes {
             BinaryReader data = assetFile.Data;
 
             uint instanceHash = teStructuredData.Manager.InstancesInverted[GetType()];
+            STUAttribute stuAttribute = teStructuredData.Manager.InstanceAttributes[instanceHash];
             Dictionary<uint, KeyValuePair<FieldInfo, STUFieldAttribute>> fields = teStructuredData.Manager.FieldAttributes[instanceHash];
 
             if (assetFile.Format == teStructuredDataFormat.V2) {
@@ -100,7 +105,7 @@ namespace TankLib.STU.DataTypes {
                     }
                     long startPosition = data.BaseStream.Position;
                 
-                    DeserializeField(assetFile, stuField, fields);
+                    DeserializeField(assetFile, stuField, fields, stuAttribute);
 
                     data.BaseStream.Position = startPosition + fieldSize;
 
@@ -114,7 +119,7 @@ namespace TankLib.STU.DataTypes {
                 foreach (uint fieldHash in fieldOrder) {
                     STUField_Info stuField = new STUField_Info {Hash = fieldHash, Size = -1};
                     
-                    DeserializeField(assetFile, stuField, fields);
+                    DeserializeField(assetFile, stuField, fields, stuAttribute);
                 }
             }
         }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using TankLib.Chunks;
 
 namespace TankLib {
@@ -14,7 +16,7 @@ namespace TankLib {
         public int Size;
         public int Unknown;
 
-        public string StringIdentifier => System.Text.Encoding.ASCII.GetString(BitConverter.GetBytes(ID)).ReverseXor();
+        public string StringIdentifier => Encoding.ASCII.GetString(BitConverter.GetBytes(ID)).ReverseXor();
 
         public new string ToString() {
             return base.ToString() + $" ({StringIdentifier})";
@@ -29,13 +31,14 @@ namespace TankLib {
         public ushort Unknown2;
         public ushort Unknown3;
 
-        public string StringIdentifier => System.Text.Encoding.ASCII.GetString(BitConverter.GetBytes(ID)).ReverseXor();
+        public string StringIdentifier => Encoding.ASCII.GetString(BitConverter.GetBytes(ID)).ReverseXor();
 
         public new string ToString() {
             return base.ToString() + $" ({StringIdentifier})";
         }
     }
     
+    /// <summary>"Chunked" file parser</summary>
     public class teChunkedData {
         public const uint Magic = 0xF123456F;
 
@@ -44,7 +47,7 @@ namespace TankLib {
         
         public static teChunkManager Manager = new teChunkManager();
 
-        /// <summary>Copy bytes</summary>
+        /// <summary>Copy bytes from one <see cref="Stream"/> to another</summary>
         /// <param name="input">The stream to read from</param>
         /// <param name="output">The stream to write to</param>
         /// <param name="size">Number of bytes to read and write</param>
@@ -55,8 +58,8 @@ namespace TankLib {
             buffer = null;
         }
         
-        /// <summary>Load chunk data from a stream</summary>
-        /// <param name="input">The source stream</param>
+        /// <summary>Load chunk data from a <see cref="Stream"/></summary>
+        /// <param name="input">The source <see cref="Stream"/>></param>
         public teChunkedData(Stream input) {
             if (input == null) {
                 return;
@@ -78,8 +81,6 @@ namespace TankLib {
                     teChunkDataEntry entry = reader.Read<teChunkDataEntry>();
                     next = start + input.Position + entry.Size;
                     
-                    Console.Out.WriteLine(entry.StringIdentifier);
-                    
                     IChunk chunk = Manager.CreateChunkInstance(entry.StringIdentifier, Header.StringIdentifier);
                     if (chunk != null) {
                         MemoryStream dataStream = new MemoryStream(entry.Size);
@@ -98,9 +99,29 @@ namespace TankLib {
 
             Chunks = chunks.ToArray();
         }
+
+        public IEnumerable<T> EnumerateChunks<T>() where T : IChunk {
+            foreach (IChunk chunk in Chunks) {
+                if (chunk is T cast) {
+                    yield return cast;
+                }
+            }
+        }
+
+        public bool HasChunk<T>() where T : IChunk {
+            return Chunks.Any(x => x is T);
+        }
+
+        public T GetChunk<T>() where T : IChunk {
+            return (T)Chunks.FirstOrDefault(x => x is T);
+        }
+
+        public IEnumerable<IChunk> GetChunks<T>() where T : IChunk {
+            return Chunks.Where(x => x is T);
+        }
     }
 
-    /// <summary>Manages chunk types</summary>
+    /// <summary>Chunk type manager</summary>
     public class teChunkManager {
         /// <summary>Chunk type lookup</summary>
         public Dictionary<string, Type> ChunkTypes;
@@ -115,9 +136,9 @@ namespace TankLib {
             AddAssemblyChunks(typeof(IChunk).Assembly);
         }
         
-        /// <summary>Add all chunk types in an Assembly</summary>
-        /// <param name="assembly">The assembly to load from</param>
-        private void AddAssemblyChunks(Assembly assembly) {
+        /// <summary>Add all chunk types in an <see cref="Assembly"/></summary>
+        /// <param name="assembly">The <see cref="Assembly"/> to load from</param>
+        public void AddAssemblyChunks(Assembly assembly) {
             Type t = typeof(IChunk);
             List<Type> types = assembly.GetTypes().Where(type => type != t && t.IsAssignableFrom(type)).ToList();
             foreach (Type type in types) {
@@ -133,7 +154,7 @@ namespace TankLib {
         public void AddChunk(Type type) {
             IChunk instance = (IChunk)Activator.CreateInstance(type);
             if (instance.ID == null) {
-                System.Diagnostics.Debugger.Log(0, "teChunkManager", $"{type.FullName} has no identifier!\r\n");
+                Debugger.Log(0, "teChunkManager", $"{type.FullName} has no identifier!\r\n");
                 return;
             }
             ChunkTypes.Add(instance.ID, type);
@@ -148,8 +169,8 @@ namespace TankLib {
             }
             
             if (UnhandledChunks.Add(id)) {
-                if (System.Diagnostics.Debugger.IsAttached) {
-                    System.Diagnostics.Debugger.Log(0, "teChunkManager", $"No handler for {rootID}:{id}\r\n");
+                if (Debugger.IsAttached) {
+                    Debugger.Log(0, "teChunkManager", $"No handler for {rootID}:{id}\r\n");
                 }
             }
                 

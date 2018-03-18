@@ -67,8 +67,8 @@ namespace TankLib.CASC.Handlers {
                     byte indexHigh = br.ReadByte();
                     int indexLow = br.ReadInt32BE();
 
-                    info.Index = (indexHigh << 2 | (byte)((indexLow & 0xC0000000) >> 30));
-                    info.Offset = (indexLow & 0x3FFFFFFF);
+                    info.Index = indexHigh << 2 | (byte)((indexLow & 0xC0000000) >> 30);
+                    info.Offset = indexLow & 0x3FFFFFFF;
 
                     //for (int j = 3; j < 8; j++)
                     //    buf[7 - j] = br.ReadByte();
@@ -116,8 +116,9 @@ namespace TankLib.CASC.Handlers {
         }
 
         public unsafe IndexEntry GetIndexInfo(MD5Hash key) {
-            ulong* ptr = (ulong*)&key;
-            ptr[1] &= 0xFF;
+            // todo: wot does this do?
+            //ulong* ptr = (ulong*)&key;
+            //ptr[1] &= 0xFF;
 
             if (!_localIndexData.TryGetValue(key, out IndexEntry result))
                 Debugger.Log(0, "CASC", $"LocalIndexHandler: missing index: {key.ToHexString()}\r\n");

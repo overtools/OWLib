@@ -34,9 +34,16 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.5.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -61,13 +68,23 @@
     <Compile Include="CASC\MD5.cs" />
     <Compile Include="Chunks\IChunk.cs" />
     <Compile Include="Chunks\teEffectChunkComponent.cs" />
+    <Compile Include="Chunks\teModelChunk_Cloth.cs" />
     <Compile Include="Chunks\teModelChunk_Hardpoint.cs" />
+    <Compile Include="Chunks\teModelChunk_Model.cs" />
+    <Compile Include="Chunks\teModelChunk_RenderMesh.cs" />
+    <Compile Include="Chunks\teModelChunk_Skeleton.cs" />
+    <Compile Include="Chunks\teModelChunk_STU.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="ExportFormats\OverawatchMaterial.cs" />
+    <Compile Include="ExportFormats\OverwatchModel.cs" />
+    <Compile Include="ExportFormats\SeanimAnimation.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Helpers\Hash\CRC.cs" />
     <Compile Include="Helpers\Hash\Jenkins96.cs" />
     <Compile Include="Helpers\ISerializable.cs" />
     <Compile Include="Helpers\SerializableHelper.cs" />
+    <Compile Include="Math\Half\Half.cs" />
+    <Compile Include="Math\Half\HalfHelper.cs" />
     <Compile Include="Math\teColorRGB.cs" />
     <Compile Include="Math\teColorRGBA.cs" />
     <Compile Include="Math\teMtx43A.cs" />
@@ -78,7 +95,6 @@
     <Compile Include="Math\teVec3A.cs" />
     <Compile Include="Math\teVec4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="STU\DataTypes\STUInstance.cs" />
     <Compile Include="STU\ISerializable_STU.cs" />
     <Compile Include="STU\IStructuredDataFieldReader.cs" />
     <Compile Include="STU\Primitives\STUf32Primitive.cs" />
@@ -86,17 +102,23 @@
     <Compile Include="STU\IStructuredDataPrimitiveFactory.cs" />
     <Compile Include="STU\Primitives\STUu64Primitive.cs" />
     <Compile Include="STU\STUAttribute.cs" />
+    <Compile Include="STU\STUInstance.cs" />
     <Compile Include="STU\teStructuredData.cs" />
     <Compile Include="STU\teStructuredDataAssetRef.cs" />
     <Compile Include="STU\teStructuredDataDataStructures.cs" />
     <Compile Include="STU\teStructuredDataDateAndTime.cs" />
     <Compile Include="STU\teStructuredDataMgr.cs" />
+    <Compile Include="STU\Types\STUModel.cs" />
     <Compile Include="STU\Types\STUModelLook.cs" />
+    <Compile Include="STU\Types\STU_BE9DDFDF.cs" />
+    <Compile Include="teAnimation.cs" />
     <Compile Include="teChunkedData.cs" />
     <Compile Include="teEnums.cs" />
+    <Compile Include="TelemetryHandler.cs" />
     <Compile Include="teMaterial.cs" />
     <Compile Include="teMaterialData.cs" />
     <Compile Include="teResourceGUID.cs" />
+    <Compile Include="teSkeleton.cs" />
     <Compile Include="teString.cs" />
     <Compile Include="teTexture.cs" />
     <Compile Include="teTexturePayload.cs" />
@@ -107,6 +129,9 @@
       <Project>{3b5d1227-f0f7-48e4-9ac0-757b87f8c64f}</Project>
       <Name>CMFLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

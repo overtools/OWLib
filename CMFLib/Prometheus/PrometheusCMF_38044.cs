@@ -1,7 +1,7 @@
 using static CMFLib.CMFHandler;
 
 namespace CMFLib.Prometheus {
-    [CMFMetadata(AutoDetectVersion = true, BuildVersions = new uint[1] {38024}, App = CMFApplication.Prometheus)]
+    [CMFMetadata(AutoDetectVersion = true, BuildVersions = new uint[] {38024}, App = CMFApplication.Prometheus)]
     public class PrometheusCMF_38044 : ICMFProvider {
         public byte[] Key(CMFHeader header, string name, byte[] digest, int length) {
             byte[] buffer = new byte[length];

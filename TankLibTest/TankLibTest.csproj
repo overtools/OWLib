@@ -46,6 +46,10 @@
       <Project>{e08e1e48-6585-4137-8405-661c62c10713}</Project>
       <Name>CascLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CMFLib\CMFLib.csproj">
+      <Project>{3b5d1227-f0f7-48e4-9ac0-757b87f8c64f}</Project>
+      <Name>CMFLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DataTool\DataTool.csproj">
       <Project>{9d1a3dcc-37bf-4979-acd8-3e998e19ce71}</Project>
       <Name>DataTool</Name>

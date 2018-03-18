@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
+using TankLib.Helpers;
 using TankLib.Helpers.Hash;
-using TankLib.STU.DataTypes;
 
 namespace TankLib.STU {
     /// <summary>
@@ -41,7 +40,7 @@ namespace TankLib.STU {
         #endregion
 
         /// <summary>Data start position</summary>
-        private long _startPos;
+        private readonly long _startPos;
    
         /// <summary>Load STU asset from a stream</summary>
         /// <param name="stream">The stream to load from</param>
@@ -107,9 +106,9 @@ namespace TankLib.STU {
             reader.BaseStream.Position = _startPos;
             HeaderChecksum = CRC.CRC64(reader.ReadBytes(36));
             reader.BaseStream.Position = _startPos;
-            Helpers.SerializableHelper.Deserialize(reader, out InstanceInfo);
-            Helpers.SerializableHelper.Deserialize(reader, out InlinedTypesInfo);
-            Helpers.SerializableHelper.Deserialize(reader, out FieldInfoBags);
+            SerializableHelper.Deserialize(reader, out InstanceInfo);
+            SerializableHelper.Deserialize(reader, out InlinedTypesInfo);
+            SerializableHelper.Deserialize(reader, out FieldInfoBags);
             
             int dynDataSize = reader.ReadInt32();
             int dynDataOff = reader.ReadInt32();
@@ -133,13 +132,16 @@ namespace TankLib.STU {
                 }
             }
             
-            for (var i = 0; i != InstanceInfo.Count; ++i) {
+            for (int i = 0; i != InstanceInfo.Count; ++i) {
                 STUInstance_Info info = InstanceInfo[i];
                 STUInstance instance = Instances[i];
 
                 long startPosition = Data.Position();
-                instance.Deserialize(this);
-                long endPosition = Data.Position();
+
+                if (instance != null) {
+                    instance.Deserialize(this);
+                    long endPosition = Data.Position();
+                }
 
                 Data.BaseStream.Position = startPosition + info.Size;
                 //if (endPosition - startPosition != info.Size)
@@ -150,8 +152,7 @@ namespace TankLib.STU {
         /// <summary>Gets the STUInstance at an offset</summary>
         public STUInstance GetInstanceAtOffset(long offset) {
             if (Format != teStructuredDataFormat.V1) throw new InvalidOperationException();
-            if (!_instanceOffsets.ContainsKey(offset)) return null;
-            return _instanceOffsets[offset];
+            return !_instanceOffsets.ContainsKey(offset) ? null : _instanceOffsets[offset];
         }
 
         /// <summary>Cleanup after deserializing asset</summary>

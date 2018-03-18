@@ -13,16 +13,10 @@ namespace TankLib.CASC {
     /// </summary>
     public class CASCHandler {
         /// <summary>Local indices</summary>
-        private readonly LocalIndexHandler _localIndex;
+        public readonly LocalIndexHandler LocalIndex;
         
         /// <summary>CDN (remote) indices</summary>
-        private readonly CDNIndexHandler _cdnIndex;
-        
-        /// <summary>Internal file streams</summary>
-        private readonly Dictionary<int, Stream> _dataStreams = new Dictionary<int, Stream>();
-        
-        // /// <summary>Jenkins hash calulator</summary>
-        // private static readonly Jenkins96 Hasher = new Jenkins96();
+        public readonly CDNIndexHandler CDNIndex;
         
         /// <summary>Encoding file handler</summary>
         public readonly EncodingHandler EncodingHandler;
@@ -32,6 +26,12 @@ namespace TankLib.CASC {
         
         /// <summary>Root file handler</summary>
         public readonly RootHandler RootHandler;
+        
+        /// <summary>Internal file streams</summary>
+        private readonly Dictionary<int, Stream> _dataStreams = new Dictionary<int, Stream>();
+        
+        // /// <summary>Jenkins hash calulator</summary>
+        // private static readonly Jenkins96 Hasher = new Jenkins96();
 
         /// <summary>Config for this handler</summary>
         public readonly CASCConfig Config;
@@ -44,18 +44,18 @@ namespace TankLib.CASC {
                 Debugger.Log(0, "CASC", "CASCHandler: loading local indices\r\n");
 
                 using (PerfCounter _ = new PerfCounter("LocalIndexHandler.Initialize()")) {
-                    _localIndex = LocalIndexHandler.Initialize(config, worker);
+                    LocalIndex = LocalIndexHandler.Initialize(config, worker);
                 }
 
-                Debugger.Log(0, "CASC", $"CASCHandler: loaded {_localIndex.Count} local indexes\r\n");
+                Debugger.Log(0, "CASC", $"CASCHandler: loaded {LocalIndex.Count} local indexes\r\n");
             } else {  // todo: supposed to do this?
                 Debugger.Log(0, "CASC", "CASCHandler: loading CDN indices\r\n");
 
                 using (PerfCounter _ = new PerfCounter("CDNIndexHandler.Initialize()")) {
-                    _cdnIndex = CDNIndexHandler.Initialize(config, worker);
+                    CDNIndex = CDNIndexHandler.Initialize(config, worker);
                 }
 
-                Debugger.Log(0, "CASC", $"CASCHandler: loaded {_cdnIndex.Count} CDN indexes\r\n");
+                Debugger.Log(0, "CASC", $"CASCHandler: loaded {CDNIndex.Count} CDN indexes\r\n");
             }
 
             // old CASCHandler
@@ -144,25 +144,22 @@ namespace TankLib.CASC {
         /// <summary>Open a file strean from encoding hash</summary>
         public Stream OpenFile(MD5Hash key) {
             try {
-                if (Config.OnlineMode)
-                    return OpenFileOnline(key);
-                return OpenFileLocal(key);
+                return Config.OnlineMode ? OpenFileOnline(key) : OpenFileLocal(key);
             } catch (Exception exc) when (!(exc is BLTEKeyException)) {
                 throw;  // todo?
-                //return OpenFileOnline(key);
             }
         }
 
         #region Local
         /// <summary>Open a local file strean from encoding hash</summary>
-        private Stream OpenFileLocal(MD5Hash key) {
+        protected BLTEStream OpenFileLocal(MD5Hash key) {
             Stream stream = GetLocalDataStream(key);
 
             return new BLTEStream(stream, key);
         }
 
         protected Stream GetLocalDataStream(MD5Hash key) {
-            IndexEntry idxInfo = _localIndex.GetIndexInfo(key);
+            IndexEntry idxInfo = LocalIndex.GetIndexInfo(key);
             if (idxInfo == null) Debugger.Log(0, "CASC", $"CASCHandler: Local index missing: {key.ToHexString()}\r\n");
 
             if (idxInfo == null)
@@ -211,19 +208,19 @@ namespace TankLib.CASC {
 
         #region Online        
         /// <summary>Open an online file strean from encoding hash</summary>
-        protected Stream OpenFileOnline(MD5Hash key) {
-            IndexEntry idxInfo = _cdnIndex.GetIndexInfo(key);
+        protected BLTEStream OpenFileOnline(MD5Hash key) {
+            IndexEntry idxInfo = CDNIndex.GetIndexInfo(key);
             return OpenFileOnlineInternal(idxInfo, key);
         }
         
-        protected Stream OpenFileOnlineInternal(IndexEntry idxInfo, MD5Hash key) {
+        protected BLTEStream OpenFileOnlineInternal(IndexEntry idxInfo, MD5Hash key) {
             Stream s = null;
             foreach (string host in Config.CDNHosts) {
                 try {
                     if (idxInfo != null) {
-                        s = _cdnIndex.OpenDataFile(idxInfo, host);
+                        s = CDNIndex.OpenDataFile(idxInfo, host);
                     } else {
-                        s = _cdnIndex.OpenDataFileDirect(key, host);
+                        s = CDNIndex.OpenDataFileDirect(key, host);
                     }
                 } catch {
                     continue;

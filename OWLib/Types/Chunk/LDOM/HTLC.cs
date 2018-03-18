@@ -140,7 +140,6 @@ namespace OWLib.Types.Chunk.LDOM {
         public HeaderInfo Header { get; private set; }
         public ClothNode[][] Nodes { get; private set; }
         public ClothDesc[] Descriptors { get; private set; }
-        public Dictionary<int, int>[] BoneMap { get; private set; }
         public Dictionary<int, short>[] NodeBones { get; private set; }
 
         public void Parse(Stream input) {
@@ -151,7 +150,6 @@ namespace OWLib.Types.Chunk.LDOM {
                     Descriptors = new ClothDesc[Header.descCount];
                     input.Position = Header.descOffset;
                     Nodes = new ClothNode[Header.descCount][];
-                    BoneMap = new Dictionary<int, int>[Header.descCount];
                     NodeBones = new Dictionary<int, short>[Header.descCount];
                     for (ulong i = 0; i < Header.descCount; ++i) {
                         Descriptors[i] = reader.Read<ClothDesc>();

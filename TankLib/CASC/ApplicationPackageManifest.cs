@@ -239,13 +239,13 @@ namespace TankLib.CASC {
                     CMF = new ContentManifestFile(name, cmfStream, worker);
                 }
 
-                uint[][] dependencies;
+                //uint[][] dependencies;
                 if (!RootHandler.LoadPackages) {
                     Packages = new APMPackage[0];
                     Indexes = new PackageIndex[0];
                     Records = new PackageIndexRecord[0][];
-                    dependencies = new uint[0][];
-                    return;
+                    //dependencies = new uint[0][];
+                    //return;
                 }
 
 /*                Packages = new APMPackage[Header.GetPackageCount()];

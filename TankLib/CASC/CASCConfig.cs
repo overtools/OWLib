@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using CMFLib;
 using TankLib.CASC.ConfigFiles;
 using TankLib.CASC.Handlers;
-using TankLib.CASC.Remote;
 
 namespace TankLib.CASC {
     /// <summary>CASC handler config</summary>
@@ -190,7 +190,7 @@ namespace TankLib.CASC {
                 for (int i = 0; i < 8; ++i) {
                     key = reverseKey.Substring(i * 2, 2) + key;
                 }
-                ulong keyL = ulong.Parse(key, System.Globalization.NumberStyles.HexNumber);
+                ulong keyL = ulong.Parse(key, NumberStyles.HexNumber);
                 if (overwrite || !existingKeys.ContainsKey(keyL)) {
                     existingKeys[keyL] = pair.Value[0].ToByteArray();
                 }

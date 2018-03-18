@@ -5,7 +5,7 @@ namespace TankLib.CASC.Helpers {
     /// <summary>Performance tracker</summary>
     public sealed class PerfCounter : IDisposable {
         private readonly Stopwatch _sw;
-        private string _name;
+        private readonly string _name;
 
         public PerfCounter(string name) {
             _name = name;

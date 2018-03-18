@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using TankLib.STU.DataTypes;
-using TankLib.STU.Types;
 
 namespace TankLib.STU {
     /// <summary>Manages StructuredData objects. Singleton</summary>
@@ -102,6 +101,7 @@ namespace TankLib.STU {
             if (Instances.ContainsKey(hash)) {
                 return (STUInstance)Activator.CreateInstance(Instances[hash]);
             }
+            Debugger.Log(0, "teStructuredDataMgr", $"Unhandled instance: {hash:X8}\r\n");
             return null;
         }
 

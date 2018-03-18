@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using TankLib.Chunks;
 
 namespace TankLib.Helpers {
     public class SerializableHelper {

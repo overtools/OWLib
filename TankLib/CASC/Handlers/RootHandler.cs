@@ -20,7 +20,7 @@ namespace TankLib.CASC.Handlers {
     }
     
     public class RootHandler {
-        public const bool LoadPackages = false;
+        public static bool LoadPackages = false;
         
         protected readonly Jenkins96 Hasher = new Jenkins96();
         private readonly Dictionary<ulong, RootEntry> _rootData = new Dictionary<ulong, RootEntry>();

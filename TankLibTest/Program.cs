@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Security.Cryptography;
 using CASCLib;
 using DataTool;
 using DataTool.Helper;
 using STULib;
 using TankLib;
 using TankLib.STU;
-using TankLib.STU.DataTypes;
-using TankLib.STU.Types;
 
 namespace TankLibTest {
     internal class Program {
@@ -36,12 +33,29 @@ namespace TankLibTest {
             Files = DataTool.Program.Files;
             TrackedFiles = DataTool.Program.TrackedFiles;
             
+            Console.Out.WriteLine(TelemetryHandler.GetDeviceModel());
+            Console.Out.WriteLine(TelemetryHandler.GetWindowsFriendlyName());
+            Console.Out.WriteLine(TelemetryHandler.GetDeviceManufacturer());
+            Console.Out.WriteLine(TelemetryHandler.GetComponentVersion());
+            
+            //Telemetry.Init("0", "0");
+            //Telemetry.SetTelementryEnabled(true);
+            //Telemetry.TrackEvent("hello");
+            //Telemetry.Flush();
+            
             //TestString();
             //TestMaterial();
-            //TestChunked();
+            TestChunked();
             //TestTexture();
             //TestTexturePayload();
-            TestSTU();
+            //TestSTU();
+            //TestAnimation();
+        }
+        
+        public static void TestAnimation() {
+            using (Stream stream = IO.OpenFile(0xA000000000042D9)) {
+                teAnimation animation = new teAnimation(stream);
+            }
         }
 
         public static void TestSTU() {
@@ -60,7 +74,7 @@ namespace TankLibTest {
                 
                 sw.Restart();
                 for (int i = 0; i < iterateCount; i++) {
-                    ISTU structuredData = ISTU.NewInstance(stuStream, UInt32.MaxValue);
+                    ISTU structuredData = ISTU.NewInstance(stuStream, uint.MaxValue);
                     stuStream.Position = 0;
                 }
                 sw.Stop();
@@ -104,12 +118,12 @@ namespace TankLibTest {
 
         public static void TestChunked() {
             // reaper eternal rest:
-            using (Stream chunkedStream = IO.OpenFile(0x710000000000E54)) {
-                teChunkedData chunked = new teChunkedData(chunkedStream);
-            }
+            //using (Stream chunkedStream = IO.OpenFile(0x710000000000E54)) {
+            //    teChunkedData chunked = new teChunkedData(chunkedStream);
+            //}
             
             // model:
-            using (Stream chunkedStream = IO.OpenFile(0xD0000000000432A)) {
+            using (Stream chunkedStream = IO.OpenFile(0xD00000000004286)) {
                 teChunkedData chunked = new teChunkedData(chunkedStream);
             }
         }
@@ -127,8 +141,6 @@ namespace TankLibTest {
                 using (Stream matDataStream = IO.OpenFile((ulong) material.Header.MaterialData)) {
                     teMaterialData materialData = new teMaterialData(matDataStream);
                 }
-                
-                
             }
         }
     }

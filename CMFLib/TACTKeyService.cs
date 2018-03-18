@@ -85,7 +85,7 @@ namespace CMFLib {
                         if (string.IsNullOrWhiteSpace(line)) {
                             continue;
                         }
-                        string[] c = line.Split(new char[1] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                        string[] c = line.Split(new [] {' '}, StringSplitOptions.RemoveEmptyEntries);
                         if (c.Length < 2) {
                             continue;
                         }

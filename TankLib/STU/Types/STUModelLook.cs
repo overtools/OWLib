@@ -1,6 +1,4 @@
-﻿using TankLib.STU.DataTypes;
-
-namespace TankLib.STU.Types {
+﻿namespace TankLib.STU.Types {
     
     // TODO: REWRITE, FOR TESTING ONLY
     [STU(0x5207484B, "STUModelLook")]

@@ -11,17 +11,29 @@ namespace TankLib.Chunks {
         /// <summary>MHRP header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct HardpointHeader {
+            /// <summary>Number of hardpoints</summary>
             public int HardpointCount;
+            
+            /// <summary>Number of unknown values</summary>
             public int UnknownCount;
+            
+            /// <summary>Offset to hardpoint array</summary>
             public long HardpointOffset;
+            
+            /// <summary>Offset to unknown array</summary>
             public long UnknownOffset;
         }
         
         /// <summary>A single model hardpoint</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Hardpoint {
+            /// <summary>4x4 matrix</summary>
             public teMtx44A Matrix;
+            
+            /// <summary>03C Hardpoint GUID</summary>
             public teResourceGUID GUID;
+            
+            /// <summary>012 Bone GUID</summary>
             public teResourceGUID ParentBone;
 
             public ulong Unknown1;
