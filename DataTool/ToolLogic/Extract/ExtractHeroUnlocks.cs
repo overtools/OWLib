@@ -146,14 +146,11 @@ namespace DataTool.ToolLogic.Extract {
 
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
-
-            int temp = 0;
+            
             foreach (STUHero hero in heroes) {
                 if (hero == null) continue;
-                string heroNameActual = $"test{temp}";
+                string heroNameActual = GetString(hero.Name);
                 string heroFileName = GetValidFilename(heroNameActual);
-                //string heroNameActual = GetString(hero.Name);
-                //string heroFileName = GetValidFilename(heroNameActual);
 
                 if (heroFileName == null) {
                     continue;
@@ -237,8 +234,6 @@ namespace DataTool.ToolLogic.Extract {
                 guiInfo.SetTextureName(hero.ImageResource4, "Avatar");
                 guiInfo.SetTextureName(hero.SpectatorIcon, "SpectatorIcon");
                 SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, RootDir, heroFileName, "GUI"), guiInfo);
-                
-                temp++;
             }
         }
 
