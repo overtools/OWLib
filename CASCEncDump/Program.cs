@@ -28,6 +28,9 @@ namespace CASCEncDump {
             // casc setup
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
             Config.Languages = new HashSet<string> {language};
+            Config.LoadContentManifest = false;
+            Config.LoadPackageManifest = false;
+            
             CASC = CASCHandler.Open(Config);
 
             //var temp = Config.Builds[Config.ActiveBuild].KeyValue;
@@ -38,10 +41,10 @@ namespace CASCEncDump {
             
             MapCMF(language);
 
-            using (BinaryReader reader = CASC.OpenPatchFile()) {
-                char a = reader.ReadChar();
-                char b = reader.ReadChar();
-            }
+            //using (BinaryReader reader = CASC.OpenPatchFile()) {
+            //    char a = reader.ReadChar();
+            //    char b = reader.ReadChar();
+            //}
 
             if (mode == "dump") {
                 DumpEnc(args);

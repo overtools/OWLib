@@ -99,7 +99,9 @@ namespace TankLib.CASC {
         public string PatchArchiveGroup => _cdnConfig["patch-archive-group"][0];
         
         public string BuildName => GetActiveBuild()?["Version"] ?? _versionsData[_versionsIndex]["VersionsName"];
-        
+
+        public bool LoadPackageManifest = true;
+        public bool LoadContentManifest = true;
         #endregion
         
         

@@ -121,18 +121,20 @@ namespace TankLib.CASC.Handlers {
                     _rootData[cmfNameHash] = new RootEntry {MD5 = cmf, LocaleFlags = _rootData[apmNameHash].LocaleFlags, ContentFlags = ContentFlags.None};
                     //CASCFile.Files[cmfNameHash] = new CASCFile(cmfNameHash, cmfname);
 
-                    using (Stream apmStream = casc.OpenFile(apmEnc.Key)) {
-                        try {
-                            Console.Out.WriteLine("Loading APM {0}", name);
-                            worker?.ReportProgress(0, $"Loading APM {name}...");
-                            ApplicationPackageManifest apm = new ApplicationPackageManifest(name, cmf, apmStream, casc, _rootData[apmNameHash].LocaleFlags, cmfname, worker);
-                            APMFiles.Add(apm);
-                        } catch(CryptographicException) {
-                            worker?.ReportProgress(0, "CMF decryption failed");
-                            Console.Error.WriteLine("CMF Procedure is outdated, cannot parse {0}\r\nPlease update CMFLib", name);
-                            Debugger.Log(0, "CASC", $"RootHandler: CMF decryption procedure outdated, unable to parse {name}\r\n");
-                            Environment.Exit(0x636D6614);
-                            //Logger.GracefulExit(0x636D6614);
+                    if (casc.Config.LoadPackageManifest) {
+                        using (Stream apmStream = casc.OpenFile(apmEnc.Key)) {
+                            try {
+                                Console.Out.WriteLine("Loading APM {0}", name);
+                                worker?.ReportProgress(0, $"Loading APM {name}...");
+                                ApplicationPackageManifest apm = new ApplicationPackageManifest(name, cmf, apmStream, casc, _rootData[apmNameHash].LocaleFlags, cmfname, worker);
+                                APMFiles.Add(apm);
+                            } catch(CryptographicException) {
+                                worker?.ReportProgress(0, "CMF decryption failed");
+                                Console.Error.WriteLine("CMF Procedure is outdated, cannot parse {0}\r\nPlease update CMFLib", name);
+                                Debugger.Log(0, "CASC", $"RootHandler: CMF decryption procedure outdated, unable to parse {name}\r\n");
+                                Environment.Exit(0x636D6614);
+                                //Logger.GracefulExit(0x636D6614);
+                            }
                         }
                     }
                 }

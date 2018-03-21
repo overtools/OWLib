@@ -235,8 +235,11 @@ namespace TankLib.CASC {
                 if (!casc.EncodingHandler.GetEntry(cmfhash, out EncodingEntry cmfEnc)) {
                     return;
                 }
-                using (Stream cmfStream = casc.OpenFile(cmfEnc.Key)) {
-                    CMF = new ContentManifestFile(cmfname, cmfStream, worker);
+
+                if (casc.Config.LoadContentManifest) {
+                    using (Stream cmfStream = casc.OpenFile(cmfEnc.Key)) {
+                        CMF = new ContentManifestFile(cmfname, cmfStream, worker);
+                    }  
                 }
 
                 //uint[][] dependencies;
