@@ -16,6 +16,10 @@ namespace CASCEncDump {
         public static CASCHandler CASC;
         public static uint BuildVersion;
         
+        public static string RawDir => $"dump\\{BuildVersion}\\raw";
+        public static string ConvertDir => $"dump\\{BuildVersion}\\convert";
+        public static string NonBLTEDir => $"dump\\{BuildVersion}\\nonblte";
+        
         public static void Main(string[] args) {
             string overwatchDir = args[0];
             string mode = args[1];
@@ -24,6 +28,7 @@ namespace CASCEncDump {
             // Usage:
             // {overwatch dir} dump  --  Dump hashes
             // {overwatch dir} compare {other ver num}  --  Extract added files (requires dump from other version)
+            // {overwatch dir} nonblte  --  Extract non-blte files
 
             // casc setup
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
@@ -48,10 +53,12 @@ namespace CASCEncDump {
 
             if (mode == "dump") {
                 DumpEnc(args);
-            }
-
-            if (mode == "compare") {
+            } else if (mode == "compare") {
                 CompareEnc(args);
+            } else if (mode == "nonblte") {
+                DumpNonBLTE(args);
+            } else {
+                throw new Exception($"unknown mode: {mode}");
             }
         }
 
@@ -73,16 +80,39 @@ namespace CASCEncDump {
             }
         }
 
+        public static void DumpNonBLTE(string[] args) {
+            Directory.CreateDirectory(NonBLTEDir);
+            foreach (KeyValuePair<MD5Hash, IndexEntry> indexEntry in CASC.LocalIndex.LocalIndexData) {
+                string md5 = indexEntry.Key.ToHexString();
+                MD5Hash md5Obj = new MD5Hash();
+
+                try {
+                    Stream rawStream = CASC.OpenIndexInfo(indexEntry.Value, md5Obj, false);
+
+                    using (BinaryReader reader = new BinaryReader(rawStream)) {
+                        uint magic = reader.ReadUInt32();
+
+                        if (magic == BLTEStream.BLTEMagic) continue;
+
+                        rawStream.Position = 0;
+
+                        using (Stream file = File.OpenWrite(Path.Combine(NonBLTEDir, md5) + ".nonblte")) {
+                            rawStream.CopyTo(file);
+                        }
+                    }
+                } catch (Exception e) {
+                    Console.Out.WriteLine(e);
+                }
+            }
+        }
+
         public static void CompareEnc(string[] args) {
             string otherVerNum = args[2];
             
             HashSet<ulong> missingKeys = new HashSet<ulong>();
-            
-            
-            string rawDir = $"dump\\{BuildVersion}\\raw";
-            string convertDir = $"dump\\{BuildVersion}\\convert";
-            Directory.CreateDirectory(rawDir);
-            Directory.CreateDirectory(convertDir);
+
+            Directory.CreateDirectory(RawDir);
+            Directory.CreateDirectory(ConvertDir);
 
             string[] otherHashes;
             using (StreamReader reader = new StreamReader($"{otherVerNum}.idxhashes")) {
@@ -117,31 +147,17 @@ namespace CASCEncDump {
             foreach (KeyValuePair<MD5Hash,IndexEntry> indexEntry in CASC.LocalIndex.LocalIndexData) {
                 string md5 = indexEntry.Key.ToHexString();
 
-                //if (!otherHashes.Contains(md5)) {
+                if (!otherHashes.Contains(md5)) {
                     try {
                         Stream rawStream = CASC.OpenIndexInfo(indexEntry.Value, md5Obj, false);
-
-                        using (BinaryReader reader = new BinaryReader(rawStream)) {
-                            uint magic = reader.ReadUInt32();
-
-                            if (magic == BLTEStream.BLTEMagic) continue;
-                            
-                            rawStream.Position = 0;
-                            
-                            using (Stream file = File.OpenWrite(Path.Combine(rawDir, md5) + ".zbsdiff")) {
-                                rawStream.CopyTo(file);
-                            }
-                        }
-                        continue;
-                        
                         
                         Stream stream = new BLTEStream(rawStream, md5Obj);
                         
-                        TryConvertFile(stream, convertDir, md5);
+                        TryConvertFile(stream, ConvertDir, md5);
 
                         stream.Position = 0;
 
-                        using (Stream file = File.OpenWrite(Path.Combine(rawDir, md5))) {
+                        using (Stream file = File.OpenWrite(Path.Combine(RawDir, md5))) {
                             stream.CopyTo(file);
                         }
                         
@@ -156,7 +172,7 @@ namespace CASCEncDump {
                             Console.Out.WriteLine(e);
                         }
                     }
-                //}
+                }
             }
         }
 
