@@ -94,7 +94,8 @@ namespace DataTool.Helper {
 
         public static Stream OpenFile(MD5Hash hash) {
             try {
-                return CASC.Encoding.GetEntry(hash, out EncodingEntry enc) ? CASC.OpenFile(enc.Key) : null;
+                bool temp = CASC.Encoding.GetEntry(hash, out EncodingEntry enc);
+                return temp ? CASC.OpenFile(enc.Key) : null;
             }
             catch (Exception e) {
                 if (e is BLTEKeyException exception) {
@@ -127,13 +128,21 @@ namespace DataTool.Helper {
 
         public static string GetString(ulong guid) {
             if (guid == 0) return null;  // don't even try
-            try {
-                using (Stream stream = OpenFile(Files[guid])) {
-                    return stream == null ? null : new OWString(stream);
-                }
+            //try {
+            //    using (Stream stream = OpenFile(Files[guid])) {
+            //        return stream == null ? null : new OWString(stream);
+            //    }
+            //}
+            //catch {
+            //    return null;
+            //}
+            if (!Files.ContainsKey(guid)) {
+                throw new Exception();
             }
-            catch {
-                return null;
+            using (Stream stream = OpenFile(Files[guid])) {
+                if (stream == null) return null;
+                OWString owString = new OWString(stream);
+                return owString;
             }
         }
 
@@ -156,7 +165,9 @@ namespace DataTool.Helper {
                         if (!TrackedFiles.ContainsKey(id)) TrackedFiles[id] = new HashSet<ulong>();
                         TrackedFiles[id].Add(pair.Value.id);
                     }
-
+                    
+                    //Console.Out.WriteLine($"{GetFileName(pair.Value.id)} : {pair.Value.HashKey.ToHexString()}");
+                    
                     Files[pair.Value.id] = pair.Value.HashKey;
                 }
             }
