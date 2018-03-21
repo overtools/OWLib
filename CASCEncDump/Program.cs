@@ -16,8 +16,10 @@ namespace CASCEncDump {
         public static CASCHandler CASC;
         public static uint BuildVersion;
         
-        public static string RawDir => $"dump\\{BuildVersion}\\raw";
-        public static string ConvertDir => $"dump\\{BuildVersion}\\convert";
+        public static string RawIdxDir => $"dump\\{BuildVersion}\\idx\\raw";
+        public static string RawEncDir => $"dump\\{BuildVersion}\\enc\\raw";
+        public static string ConvertIdxDir => $"dump\\{BuildVersion}\\idx\\convert";
+        public static string ConvertEncDir => $"dump\\{BuildVersion}\\enc\\convert";
         public static string NonBLTEDir => $"dump\\{BuildVersion}\\nonblte";
         
         public static void Main(string[] args) {
@@ -27,7 +29,8 @@ namespace CASCEncDump {
             
             // Usage:
             // {overwatch dir} dump  --  Dump hashes
-            // {overwatch dir} compare {other ver num}  --  Extract added files (requires dump from other version)
+            // {overwatch dir} compare-enc {other ver num}  --  Extract added files from encoding (requires dump from other version)
+            // {overwatch dir} compare-idx {other ver num}  --  Extract added files from indices (requires dump from other version)
             // {overwatch dir} nonblte  --  Extract non-blte files
 
             // casc setup
@@ -53,8 +56,10 @@ namespace CASCEncDump {
 
             if (mode == "dump") {
                 DumpEnc(args);
-            } else if (mode == "compare") {
+            } else if (mode == "compare-enc") {
                 CompareEnc(args);
+            } else if (mode == "compare-idx") {
+                CompareIdx(args);
             } else if (mode == "nonblte") {
                 DumpNonBLTE(args);
             } else {
@@ -106,42 +111,19 @@ namespace CASCEncDump {
             }
         }
 
-        public static void CompareEnc(string[] args) {
+        public static void CompareIdx(string[] args) {
             string otherVerNum = args[2];
             
             HashSet<ulong> missingKeys = new HashSet<ulong>();
 
-            Directory.CreateDirectory(RawDir);
-            Directory.CreateDirectory(ConvertDir);
+            Directory.CreateDirectory(RawIdxDir);
+            Directory.CreateDirectory(ConvertIdxDir);
 
             string[] otherHashes;
             using (StreamReader reader = new StreamReader($"{otherVerNum}.idxhashes")) {
                 otherHashes = reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).ToArray();
             }
-
-            /*foreach (KeyValuePair<MD5Hash, EncodingEntry> entry in CASC.EncodingHandler.Entries) {
-                string md5 = entry.Key.ToHexString();
-
-                if (!otherHashes.Contains(md5)) {
-                    try {
-                        Stream stream = CASC.OpenFile(entry.Value.Key);
-                        
-                        TryConvertFile(stream, convertDir, md5);
-
-                        stream.Position = 0;
-
-                        using (Stream file = File.OpenWrite(Path.Combine(rawDir, md5))) {
-                            stream.CopyTo(file);
-                        }
-                    } catch (Exception e) {
-                        if (e is BLTEKeyException exception) {
-                            if (missingKeys.Add(exception.MissingKey)) {
-                                Console.Out.WriteLine($"Missing key: {exception.MissingKey:X16}");
-                            }
-                        }
-                    }
-                }
-            }*/
+            
             MD5Hash md5Obj = new MD5Hash();
 
             foreach (KeyValuePair<MD5Hash,IndexEntry> indexEntry in CASC.LocalIndex.LocalIndexData) {
@@ -153,11 +135,11 @@ namespace CASCEncDump {
                         
                         Stream stream = new BLTEStream(rawStream, md5Obj);
                         
-                        TryConvertFile(stream, ConvertDir, md5);
+                        TryConvertFile(stream, ConvertIdxDir, md5);
 
                         stream.Position = 0;
 
-                        using (Stream file = File.OpenWrite(Path.Combine(RawDir, md5))) {
+                        using (Stream file = File.OpenWrite(Path.Combine(RawIdxDir, md5))) {
                             stream.CopyTo(file);
                         }
                         
@@ -174,6 +156,45 @@ namespace CASCEncDump {
                     }
                 }
             }
+        }
+
+        public static void CompareEnc(string[] args) {
+            string otherVerNum = args[2];
+            
+            HashSet<ulong> missingKeys = new HashSet<ulong>();
+
+            Directory.CreateDirectory(RawEncDir);
+            Directory.CreateDirectory(ConvertEncDir);
+
+            string[] otherHashes;
+            using (StreamReader reader = new StreamReader($"{otherVerNum}.idxhashes")) {
+                otherHashes = reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).ToArray();
+            }
+
+            foreach (KeyValuePair<MD5Hash, EncodingEntry> entry in CASC.EncodingHandler.Entries) {
+                string md5 = entry.Key.ToHexString();
+
+                if (!otherHashes.Contains(md5)) {
+                    try {
+                        Stream stream = CASC.OpenFile(entry.Value.Key);
+                        
+                        TryConvertFile(stream, ConvertEncDir, md5);
+
+                        stream.Position = 0;
+
+                        using (Stream file = File.OpenWrite(Path.Combine(RawEncDir, md5))) {
+                            stream.CopyTo(file);
+                        }
+                    } catch (Exception e) {
+                        if (e is BLTEKeyException exception) {
+                            if (missingKeys.Add(exception.MissingKey)) {
+                                Console.Out.WriteLine($"Missing key: {exception.MissingKey:X16}");
+                            }
+                        }
+                    }
+                }
+            }    
+            
         }
 
         public static void TryConvertFile(Stream stream, string convertDir, string md5) {
@@ -201,6 +222,12 @@ namespace CASCEncDump {
                             file.SetLength(0);
                             model.Write(file);
                         }
+                    }
+                } else if (magic == 0x4D4F5649) {  // MOVI
+                    stream.Position = 128;
+                    using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".bk2")) {
+                        file.SetLength(0);
+                        stream.CopyTo(file);
                     }
                 } else {
                     try {
