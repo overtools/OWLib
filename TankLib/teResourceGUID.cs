@@ -99,7 +99,12 @@ namespace TankLib {
         
         /// <summary>String representation of this GUID</summary>
         public override string ToString() {
-            return $"{GUID & 0xFFFFFFFFFFFF:X12}.{Type(GUID):X3}";
+            return AsString(GUID);
+        }
+
+        /// <summary>String representation a GUID</summary>
+        public static string AsString(ulong guid) {
+            return $"{guid & 0xFFFFFFFFFFFF:X12}.{Type(guid):X3}";
         }
     }
 }

@@ -54,7 +54,7 @@ namespace TankLib.CASC.Handlers {
                     // how do we handle multiple keys?
                     for (int ki = 0; ki < keysCount; ++ki) {
                         MD5Hash key = stream.Read<MD5Hash>();
-
+                        
                         // use first key for now
                         if (ki == 0)
                             entry.Key = key;
@@ -62,8 +62,6 @@ namespace TankLib.CASC.Handlers {
                             // todo: log spam
                             //Debugger.Log(0, "CASC", $"Multiple encoding keys for MD5 {md5.ToHexString()}: {key.ToHexString()}\r\n");
                         }
-
-                        
                     }
                     
                     _encodingData.Add(md5, entry);

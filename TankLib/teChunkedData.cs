@@ -57,46 +57,56 @@ namespace TankLib {
             output.Write(buffer, 0, size);
             buffer = null;
         }
-        
+
         /// <summary>Load chunk data from a <see cref="Stream"/></summary>
         /// <param name="input">The source <see cref="Stream"/>></param>
-        public teChunkedData(Stream input) {
+        /// <param name="keepOpen">Keep the stream open after reading</param>
+        public teChunkedData(Stream input, bool keepOpen=false) {
             if (input == null) {
                 return;
             }
-            
+
+            using (BinaryReader reader = new BinaryReader(input, Encoding.UTF8, keepOpen)) {
+                Read(reader);
+            }
+        }
+        
+        /// <summary>Load chunk data from a <see cref="BinaryReader"/></summary>
+        /// <param name="reader">The source <see cref="BinaryReader"/>></param>
+        public teChunkedData(BinaryReader reader) {
+            Read(reader);
+        }
+
+        private void Read(BinaryReader reader) {
+            long start = reader.BaseStream.Position;
+
             List<IChunk> chunks = new List<IChunk>();
 
-            long start = input.Position;
-
-            using (BinaryReader reader = new BinaryReader(input)) {
-                Header = reader.Read<teChunkDataHeader>();
-                if (Header.Magic != Magic) {
-                    Header = default(teChunkDataHeader);
-                    return;
-                }
-
-                long next = start + input.Position;
-                while (next < Header.Size) {
-                    teChunkDataEntry entry = reader.Read<teChunkDataEntry>();
-                    next = start + input.Position + entry.Size;
-                    
-                    IChunk chunk = Manager.CreateChunkInstance(entry.StringIdentifier, Header.StringIdentifier);
-                    if (chunk != null) {
-                        MemoryStream dataStream = new MemoryStream(entry.Size);
-                        CopyBytes(input, dataStream, entry.Size);
-                        dataStream.Position = 0;
-                        
-                        chunk.Parse(dataStream);
-                        
-                        dataStream.Dispose();
-                    }
-                    
-                    chunks.Add(chunk);
-                    input.Position = next;
-                }
+            Header = reader.Read<teChunkDataHeader>();
+            if (Header.Magic != Magic) {
+                Header = default(teChunkDataHeader);
+                return;
             }
 
+            long next = start + reader.BaseStream.Position;
+            while (next < Header.Size) {
+                teChunkDataEntry entry = reader.Read<teChunkDataEntry>();
+                next = start + reader.BaseStream.Position + entry.Size;
+                    
+                IChunk chunk = Manager.CreateChunkInstance(entry.StringIdentifier, Header.StringIdentifier);
+                if (chunk != null) {
+                    MemoryStream dataStream = new MemoryStream(entry.Size);
+                    CopyBytes(reader.BaseStream, dataStream, entry.Size);
+                    dataStream.Position = 0;
+                        
+                    chunk.Parse(dataStream);
+                        
+                    dataStream.Dispose();
+                }
+                    
+                chunks.Add(chunk);
+                reader.BaseStream.Position = next;
+            }
             Chunks = chunks.ToArray();
         }
 

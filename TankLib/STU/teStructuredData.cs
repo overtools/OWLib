@@ -155,7 +155,7 @@ namespace TankLib.STU {
             return !_instanceOffsets.ContainsKey(offset) ? null : _instanceOffsets[offset];
         }
 
-        /// <summary>Cleanup after deserializing asset</summary>
+        /// <summary>Cleanup after deserializing</summary>
         private void FinishDeserialize() {
             Data?.Dispose();
             DynData?.Dispose();
@@ -163,7 +163,7 @@ namespace TankLib.STU {
             DynData = null;
         }
 
-        /// <summary>The the primary instance of this asset</summary>
+        /// <summary>Get the primary instance of this asset</summary>
         public T GetMainInstance<T>() where T : STUInstance {
             if (Instances.Length == 0) return null;
             return Instances[0] as T;

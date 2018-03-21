@@ -37,7 +37,7 @@ namespace TankLib.CASC {
         public static bool Graceful = false;
         private const byte EncryptionSalsa20 = 0x53;
         private const byte EncryptionArc4 = 0x41;
-        private const int BLTEMagic = 0x45544c42;
+        public const int BLTEMagic = 0x45544c42;
 
         private BinaryReader _reader;
         private MemoryStream _memStream;

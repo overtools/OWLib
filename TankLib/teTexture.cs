@@ -14,21 +14,30 @@ namespace TankLib {
         public TextureTypes.DXGI_PIXEL_FORMAT Format;
         
         /// <summary>Load texture from a stream</summary>
-        public teTexture(Stream stream) {
-            using (BinaryReader imageReader = new BinaryReader(stream)) {
-                Header = imageReader.Read<TextureTypes.TextureHeader>();
-                Size = Header.DataSize;
-                Format = Header.Format;
-
-                if (Header.DataSize == 0) {
-                    PayloadRequired = true;
-                    return;
-                }
-
-                stream.Seek(128, SeekOrigin.Begin);
-                Data = new byte[Header.DataSize];
-                stream.Read(Data, 0, (int)Header.DataSize);
+        public teTexture(Stream stream, bool keepOpen=false) {
+            using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, keepOpen)) {
+                Read(reader);
             }
+        }
+        
+        /// <summary>Load texture from a stream</summary>
+        public teTexture(BinaryReader reader) {
+            Read(reader);
+        }
+
+        private void Read(BinaryReader reader) {
+            Header = reader.Read<TextureTypes.TextureHeader>();
+            Size = Header.DataSize;
+            Format = Header.Format;
+
+            if (Header.DataSize == 0) {
+                PayloadRequired = true;
+                return;
+            }
+
+            reader.Seek(128);
+            Data = new byte[Header.DataSize];
+            reader.Read(Data, 0, (int)Header.DataSize);
         }
 
         /// <summary>Load the texture payload</summary>

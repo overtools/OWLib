@@ -212,7 +212,7 @@ namespace TankLib.CASC {
         public string Name;
         
         public ApplicationPackageManifest(string name, MD5Hash cmfhash, Stream stream, CASCHandler casc,
-            LocaleFlags locale, BackgroundWorkerEx worker = null) {
+            LocaleFlags locale, string cmfname, BackgroundWorkerEx worker = null) {
             Locale = locale;
             Name = name;
             
@@ -236,7 +236,7 @@ namespace TankLib.CASC {
                     return;
                 }
                 using (Stream cmfStream = casc.OpenFile(cmfEnc.Key)) {
-                    CMF = new ContentManifestFile(name, cmfStream, worker);
+                    CMF = new ContentManifestFile(cmfname, cmfStream, worker);
                 }
 
                 //uint[][] dependencies;

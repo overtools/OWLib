@@ -102,7 +102,7 @@ namespace CMFLib {
                         }
                         if (enabled && !dict.ContainsKey(v)) {
                             dict.Add(v, c[1].ToByteArray());
-                        } else {
+                        } else if (!enabled) {
                             if (dict.ContainsKey(v)) {
                                 dict.Remove(v);
                             }

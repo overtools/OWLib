@@ -50,7 +50,11 @@ namespace CMFLib {
                 }
             }
 
-            return new KeyValuePair<byte[], byte[]>(provider.Key(header, name, digest, 32), provider.IV(header, name, digest, 16));
+            byte[] iv = provider.IV(header, name, digest, 16);
+            
+            //Console.Out.WriteLine($"{name}: {string.Join(" ", iv.Select(x => x.ToString("X2")))}");
+            
+            return new KeyValuePair<byte[], byte[]>(provider.Key(header, name, digest, 32), iv);
         }
         
         private static byte[] CreateDigest(string value) {

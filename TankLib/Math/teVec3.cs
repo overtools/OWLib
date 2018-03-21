@@ -15,6 +15,12 @@ namespace TankLib.Math {
         /// <summary>Z component</summary>
         public float Z;
 
+        public teVec3(float x, float y, float z) {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+
         public teVec3(IReadOnlyList<float> val) {
             if (val.Count != 3) {
                 throw new InvalidDataException();
@@ -22,6 +28,10 @@ namespace TankLib.Math {
             X = val[0];
             Y = val[1];
             Z = val[2];
+        }
+        
+        public static teVec3 operator -(teVec3 left, teVec3 right) {
+            return new teVec3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
         }
     }
 }

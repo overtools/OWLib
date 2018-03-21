@@ -34,7 +34,7 @@ namespace TankLib.CASC {
                 worker?.ReportProgress(0, $"Loading CMF {name}...");
                 
                 if (Header.Magic >= 0x636D6614) {
-                    using (BinaryReader decryptedReader = DecryptCMF(cmfreader, name)) {
+                    using (BinaryReader decryptedReader = DecryptCMF(cmfreader, Path.GetFileName(name))) {
                         ParseCMF(decryptedReader);
                     }
                 }

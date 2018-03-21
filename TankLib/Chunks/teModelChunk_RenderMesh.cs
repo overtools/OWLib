@@ -128,10 +128,28 @@ namespace TankLib.Chunks {
             Unk8 = 128
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct MeshFace {
+            public ushort V1;
+            public ushort V2;
+            public ushort V3;
+
+            public MeshFaceExport ToExportStruct() {
+                return new MeshFaceExport {V1 = V1, V2 = V2, V3 = V3};
+            }
+        }
+        
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct MeshFaceExport {
+            public int V1;
+            public int V2;
+            public int V3;
+        }
+
         /// <summary>Parsed submesh</summary>
         public class Submesh {
             /// <summary>Vertex positions</summary>
-            public teVec3[] Positions;
+            public teVec3[] Vertices;
             
             /// <summary>Vertex normals</summary>
             public teVec3[] Normals;
@@ -153,24 +171,28 @@ namespace TankLib.Chunks {
             /// <summary>Vertex bone weights</summary>
             public float[][] BoneWeights;
             
-            /// <summary>Triangle indices</summary>
-            public ushort[] Indices;
+            /// <summary>Triangles</summary>
+            public MeshFace[] Faces;
             
             /// <summary>Source descriptor</summary>
             public SubmeshDescriptor Descriptor;
 
+            /// <summary>Number of UV maps</summary>
+            public byte UVCount;
+
             public Submesh(SubmeshDescriptor submeshDescriptor, byte uvCount) {
                 Descriptor = submeshDescriptor;
+                UVCount = uvCount;
                 
-                Positions = new teVec3[submeshDescriptor.VerticesToDraw];
+                Vertices = new teVec3[submeshDescriptor.VerticesToDraw];
                 Normals = new teVec3[submeshDescriptor.VerticesToDraw];
                 Tangents = new teVec4[submeshDescriptor.VerticesToDraw];
                 IDs = new uint[submeshDescriptor.VerticesToDraw];
                 
-                Indices = new ushort[submeshDescriptor.IndicesToDraw];
+                Faces = new MeshFace[submeshDescriptor.IndicesToDraw/3];
                 
                 UV = new teVec2[submeshDescriptor.VerticesToDraw][];
-                
+                    
                 //UV = new teVec2[uvCount][];
                 //for (int i = 0; i < uvCount; i++) {
                 //    UV[i] = new teVec2[submeshDescriptor.VerticesToDraw];
@@ -354,20 +376,37 @@ namespace TankLib.Chunks {
                 Submesh submesh = new Submesh(submeshDescriptor, uvCount);
                 
                 reader.BaseStream.Position = ibo.DataStreamPointer + submeshDescriptor.IndexStart * 2;
-                
                 Dictionary<int, ushort> indexRemap = new Dictionary<int, ushort>();
                 Dictionary<int, int> indexRemapInvert = new Dictionary<int, int>();
-                for (int j = 0; j < submeshDescriptor.IndicesToDraw; ++j) {
-                    ushort indice = reader.ReadUInt16();
-                    if (indexRemap.ContainsKey(indice)) {
-                        indice = indexRemap[indice];
+                
+                // todo: make this cleaner
+                for (int j = 0; j < submeshDescriptor.IndicesToDraw / 3; ++j) {
+                    MeshFace index = reader.Read<MeshFace>();
+                    ushort v1;
+                    ushort v2;
+                    ushort v3;
+                    if (indexRemap.ContainsKey(index.V1)) {
+                        v1 = indexRemap[index.V1];  // "index of", value = fake index
                     } else {
-                        ushort indiceNew = (ushort) indexRemap.Count;
-                        indexRemap[indice] = indiceNew;
-                        indexRemapInvert[indiceNew] = indice;
-                        indice = indiceNew;
+                        v1 = (ushort) indexRemap.Count;
+                        indexRemap[index.V1] = v1;
+                        indexRemapInvert[v1] = index.V1;
                     }
-                    submesh.Indices[j] = indice;
+                    if (indexRemap.ContainsKey(index.V2)) {
+                        v2 = indexRemap[index.V2];
+                    } else {
+                        v2 = (ushort) indexRemap.Count;
+                        indexRemap[index.V2] = v2;
+                        indexRemapInvert[v2] = index.V2;
+                    }
+                    if (indexRemap.ContainsKey(index.V3)) {
+                        v3 = indexRemap[index.V3];
+                    } else {
+                        v3 = (ushort) indexRemap.Count;
+                        indexRemap[index.V3] = v3;
+                        indexRemapInvert[v3] = index.V3;
+                    }
+                    submesh.Faces[j] = new MeshFace {V1 = v1, V2 = v2, V3 = v3};
                 }
                 
                 VertexElementDescriptor[][] elements = SplitVBE(VertexElements[submeshDescriptor.VertexBuffer]);
@@ -382,7 +421,7 @@ namespace TankLib.Chunks {
                             case SemanticType.Position:
                                 if (element.Index == 0) {
                                     float[] position = (float[]) value;
-                                    submesh.Positions[k] = new teVec3(position);
+                                    submesh.Vertices[k] = new teVec3(position);
                                 } else {
                                    Debugger.Log(2, "teModelChunk_RenderMesh",
                                        $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");

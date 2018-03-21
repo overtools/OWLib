@@ -15,5 +15,12 @@ namespace TankLib.Math {
         
         /// <summary>W component</summary>
         public float W;
+
+        public teQuat(float x, float y, float z, float w) {
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
+        }
     }
 }

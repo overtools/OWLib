@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{128125C9-6C90-4599-A74C-78925ED0AA94}</ProjectGuid>
+    <ProjectGuid>{E113D014-50BE-4D59-9A8D-E407CFC0D80F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TankLibTest</RootNamespace>
-    <AssemblyName>TankLibTest</AssemblyName>
+    <RootNamespace>CASCEncDump</RootNamespace>
+    <AssemblyName>CASCEncDump</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -46,9 +46,9 @@
       <Project>{3b5d1227-f0f7-48e4-9ac0-757b87f8c64f}</Project>
       <Name>CMFLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\STULib\STULib.csproj">
-      <Project>{996012b0-3693-4642-ac44-5aa8865ee44a}</Project>
-      <Name>STULib</Name>
+    <ProjectReference Include="..\OWLib\OWLib.csproj">
+      <Project>{353c0d05-c505-4df4-909e-624fd94a7d3b}</Project>
+      <Name>OWLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\TankLib\TankLib.csproj">
       <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>

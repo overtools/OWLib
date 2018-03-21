@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using CASCLib;
-using DataTool;
-using DataTool.Helper;
 using STULib;
 using TankLib;
+using TankLib.CASC;
+using TankLib.CASC.Handlers;
 using TankLib.STU;
 
 namespace TankLibTest {
     internal class Program {
         public static Dictionary<ulong, MD5Hash> Files;
-        public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
         public static CASCConfig Config;
         public static CASCHandler CASC;
         
@@ -23,15 +21,9 @@ namespace TankLibTest {
             // casc setup
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
             Config.Languages = new HashSet<string> {language};
-            CASC = CASCHandler.OpenStorage(Config);
-            DataTool.Program.Files = new Dictionary<ulong, MD5Hash>();
-            DataTool.Program.TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
-            DataTool.Program.CASC = CASC;
-            DataTool.Program.Root = CASC.Root as OwRootHandler;
-            DataTool.Program.Flags = new ToolFlags {OverwatchDirectory = overwatchDir, Language = language};
-            IO.MapCMF(true);
-            Files = DataTool.Program.Files;
-            TrackedFiles = DataTool.Program.TrackedFiles;
+            CASC = CASCHandler.Open(Config);
+            
+            MapCMF(language);
             
             Console.Out.WriteLine(TelemetryHandler.GetDeviceModel());
             Console.Out.WriteLine(TelemetryHandler.GetWindowsFriendlyName());
@@ -43,17 +35,17 @@ namespace TankLibTest {
             //Telemetry.TrackEvent("hello");
             //Telemetry.Flush();
             
-            //TestString();
+            TestString();
             //TestMaterial();
-            TestChunked();
+            //TestChunked();
             //TestTexture();
             //TestTexturePayload();
             //TestSTU();
             //TestAnimation();
         }
-        
+
         public static void TestAnimation() {
-            using (Stream stream = IO.OpenFile(0xA000000000042D9)) {
+            using (Stream stream = OpenFile(0xA000000000042D9)) {
                 teAnimation animation = new teAnimation(stream);
             }
         }
@@ -63,7 +55,7 @@ namespace TankLibTest {
 
             const int iterateCount = 100000;
 
-            using (Stream stuStream = IO.OpenFile(0x980000000005632)) {  // 000000005632.01A
+            using (Stream stuStream = OpenFile(0x980000000005632)) {  // 000000005632.01A
                 sw.Restart();
                 for (int i = 0; i < iterateCount; i++) {
                     teStructuredData structuredData = new teStructuredData(stuStream);
@@ -94,10 +86,10 @@ namespace TankLibTest {
             teResourceGUID guid = (teResourceGUID)0xC00000000000A00;
             teResourceGUID payloadGuid = (teResourceGUID)(((ulong)guid & 0xF0FFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL);
             teTexture texture;
-            using (Stream textureStream = IO.OpenFile((ulong) guid)) {
+            using (Stream textureStream = OpenFile((ulong) guid)) {
                 texture = new teTexture(textureStream);
             }
-            using (Stream texturePayloadStream = IO.OpenFile((ulong) payloadGuid)) {
+            using (Stream texturePayloadStream = OpenFile((ulong) payloadGuid)) {
                 texture.LoadPayload(texturePayloadStream);
             }
             
@@ -108,7 +100,7 @@ namespace TankLibTest {
 
         public static void TestTexture() {
             teResourceGUID guid = (teResourceGUID)0xC0000000000C708;
-            using (Stream textureStream = IO.OpenFile((ulong) guid)) {
+            using (Stream textureStream = OpenFile((ulong) guid)) {
                 teTexture texture = new teTexture(textureStream);
                 using (Stream file = File.OpenWrite(guid+".dds")) {
                     texture.SaveToDDS(file);
@@ -123,24 +115,61 @@ namespace TankLibTest {
             //}
             
             // model:
-            using (Stream chunkedStream = IO.OpenFile(0xD00000000004286)) {
+            using (Stream chunkedStream = OpenFile(0xD00000000004286)) {
                 teChunkedData chunked = new teChunkedData(chunkedStream);
             }
         }
 
         public static void TestString() {
-            using (Stream stringStream = IO.OpenFile(0xDE000000000758E)) {
+            using (Stream stringStream = OpenFile(0xDE000000000758E)) {
                 teString @string = new teString(stringStream);
             }
         }
 
         public static void TestMaterial() {
-            using (Stream matStream = IO.OpenFile(0xE0000000000133E)) {
+            using (Stream matStream = OpenFile(0xE0000000000133E)) {
                 teMaterial material = new teMaterial(matStream);
 
-                using (Stream matDataStream = IO.OpenFile((ulong) material.Header.MaterialData)) {
+                using (Stream matDataStream = OpenFile((ulong) material.Header.MaterialData)) {
                     teMaterialData materialData = new teMaterialData(matDataStream);
                 }
+            }
+        }
+        
+        
+        public static void MapCMF(string locale) {
+            Files = new Dictionary<ulong, MD5Hash>();
+            foreach (ApplicationPackageManifest apm in CASC.RootHandler.APMFiles) {
+                const string searchString = "rdev";
+                if (!apm.Name.ToLowerInvariant().Contains(searchString)) {
+                    continue;
+                }
+                if (!apm.Name.ToLowerInvariant().Contains("l" + locale.ToLowerInvariant())) {
+                    continue;
+                }
+                foreach (KeyValuePair<ulong, CMFHashData> pair in apm.CMF.Map) {
+                    Files[pair.Value.id] = pair.Value.HashKey;
+                }
+            }
+        }
+        
+        public static Stream OpenFile(ulong guid) {
+            return OpenFile(CASC, Files[guid], guid);
+        }
+        
+        public static Stream OpenFile(CASCHandler casc, MD5Hash hash, ulong guid) {
+            try {
+                bool found = casc.EncodingHandler.GetEntry(hash, out EncodingEntry enc);
+                if (!found) {
+                    Debugger.Log(0, "TankLibTest:CASC", $"Missing encoding entry for {teResourceGUID.AsString(guid)}\r\n");
+                }
+                return found ? casc.OpenFile(enc.Key) : null;
+            }
+            catch (Exception e) {
+                if (e is BLTEKeyException exception) {
+                    Debugger.Log(0, "TankLibTest:CASC", $"Missing key: {exception.MissingKey:X16}\r\n");
+                }
+                return null;
             }
         }
     }

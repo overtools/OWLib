@@ -8,9 +8,9 @@ using TankLib.CASC.Helpers;
 namespace TankLib.CASC.Handlers {
     public class LocalIndexHandler {
         private static readonly MD5HashComparer Comparer = new MD5HashComparer();
-        private Dictionary<MD5Hash, IndexEntry> _localIndexData = new Dictionary<MD5Hash, IndexEntry>(Comparer);
+        public Dictionary<MD5Hash, IndexEntry> LocalIndexData = new Dictionary<MD5Hash, IndexEntry>(Comparer);
 
-        public int Count => _localIndexData.Count;
+        public int Count => LocalIndexData.Count;
 
         private LocalIndexHandler() {}
 
@@ -81,8 +81,8 @@ namespace TankLib.CASC.Handlers {
 
                     // duplicate keys wtf...
                     //IndexData[key] = info; // use last key
-                    if (!_localIndexData.ContainsKey(key)) // use first key
-                        _localIndexData.Add(key, info);
+                    if (!LocalIndexData.ContainsKey(key)) // use first key
+                        LocalIndexData.Add(key, info);
                 }
 
                 padPos = (dataLen + 0x0FFF) & 0xFFFFF000;
@@ -117,18 +117,18 @@ namespace TankLib.CASC.Handlers {
 
         public unsafe IndexEntry GetIndexInfo(MD5Hash key) {
             // todo: wot does this do?
-            //ulong* ptr = (ulong*)&key;
-            //ptr[1] &= 0xFF;
+            ulong* ptr = (ulong*)&key;
+            ptr[1] &= 0xFF;
 
-            if (!_localIndexData.TryGetValue(key, out IndexEntry result))
+            if (!LocalIndexData.TryGetValue(key, out IndexEntry result))
                 Debugger.Log(0, "CASC", $"LocalIndexHandler: missing index: {key.ToHexString()}\r\n");
 
             return result;
         }
 
         public void Clear() {
-            _localIndexData.Clear();
-            _localIndexData = null;
+            LocalIndexData.Clear();
+            LocalIndexData = null;
         }
     }
 }

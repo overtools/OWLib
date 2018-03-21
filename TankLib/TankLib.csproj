@@ -75,6 +75,7 @@
     <Compile Include="Chunks\teModelChunk_Skeleton.cs" />
     <Compile Include="Chunks\teModelChunk_STU.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="ExportFormats\IExportFormat.cs" />
     <Compile Include="ExportFormats\OverawatchMaterial.cs" />
     <Compile Include="ExportFormats\OverwatchModel.cs" />
     <Compile Include="ExportFormats\SeanimAnimation.cs" />

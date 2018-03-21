@@ -37,7 +37,6 @@ namespace TankLib.CASC {
         public readonly CASCConfig Config;
 
         private CASCHandler(CASCConfig config, BackgroundWorkerEx worker) {
-            // old CASCHandlerBase
             Config = config;
 
             if (!config.OnlineMode) {
@@ -57,8 +56,7 @@ namespace TankLib.CASC {
 
                 Debugger.Log(0, "CASC", $"CASCHandler: loaded {CDNIndex.Count} CDN indexes\r\n");
             }
-
-            // old CASCHandler
+            
             Debugger.Log(0, "CASC", "CASCHandler: loading encoding data\r\n");
 
             using (PerfCounter _ = new PerfCounter("new EncodingHandler()")) {
@@ -83,7 +81,7 @@ namespace TankLib.CASC {
             Debugger.Log(0, "CASC", "CASCHandler: loading root data\r\n");
 
             using (PerfCounter _ = new PerfCounter("new RootHandler()")) {
-                using (BinaryReader fs = OpenRootFile(EncodingHandler)) {
+                using (BinaryReader fs = OpenRootFile()) {
                     RootHandler = new RootHandler(fs, worker, this);
                 }
             }
@@ -141,10 +139,19 @@ namespace TankLib.CASC {
              return null;
         }*/
 
-        /// <summary>Open a file strean from encoding hash</summary>
+        /// <summary>Open a file stream from encoding hash</summary>
         public Stream OpenFile(MD5Hash key) {
             try {
                 return Config.OnlineMode ? OpenFileOnline(key) : OpenFileLocal(key);
+            } catch (Exception exc) when (!(exc is BLTEKeyException)) {
+                throw;  // todo?
+            }
+        }
+        
+        /// <summary>Open a file stream from encoding hash and skip proper loading</summary>
+        public Stream OpenFileRaw(MD5Hash key) {
+            try {
+                return Config.OnlineMode ? OpenFileOnline(key) : GetLocalDataStream(key);  // todo: online support
             } catch (Exception exc) when (!(exc is BLTEKeyException)) {
                 throw;  // todo?
             }
@@ -160,11 +167,15 @@ namespace TankLib.CASC {
 
         protected Stream GetLocalDataStream(MD5Hash key) {
             IndexEntry idxInfo = LocalIndex.GetIndexInfo(key);
-            if (idxInfo == null) Debugger.Log(0, "CASC", $"CASCHandler: Local index missing: {key.ToHexString()}\r\n");
+            //if (idxInfo == null) Debugger.Log(0, "CASC", $"CASCHandler: Local index missing: {key.ToHexString()}\r\n");
 
             if (idxInfo == null)
                 throw new Exception("local index missing");
 
+            return OpenIndexInfo(idxInfo, key);
+        }
+
+        public Stream OpenIndexInfo(IndexEntry idxInfo, MD5Hash key, bool checkHash = true) {
             Stream dataStream = GetDataStream(idxInfo.Index);
             dataStream.Position = idxInfo.Offset;
 
@@ -172,8 +183,10 @@ namespace TankLib.CASC {
                 byte[] md5 = reader.ReadBytes(16);
                 Array.Reverse(md5);
 
-                if (!key.EqualsTo9(md5))
-                    throw new Exception("local data corrupted");
+                if (checkHash) {
+                    if (!key.EqualsTo9(md5))
+                        throw new Exception("local data corrupted");
+                }
 
                 int size = reader.ReadInt32();
 
@@ -238,29 +251,34 @@ namespace TankLib.CASC {
 
         #region Internal CASC files
         /// <summary>Open Install file</summary>
-        protected BinaryReader OpenInstallFile(EncodingHandler enc) {
-            if (!enc.GetEntry(Config.InstallMD5, out EncodingEntry encInfo))
+        protected BinaryReader OpenInstallFile() {
+            if (!EncodingHandler.GetEntry(Config.InstallMD5, out EncodingEntry encInfo))
                 throw new FileNotFoundException("encoding info for install file missing!");
 
             return new BinaryReader(OpenFile(encInfo.Key));
         }
 
         /// <summary>Open Download file</summary>
-        protected BinaryReader OpenDownloadFile(EncodingHandler enc) {
-            if (!enc.GetEntry(Config.DownloadMD5, out EncodingEntry encInfo))
+        protected BinaryReader OpenDownloadFile() {
+            if (!EncodingHandler.GetEntry(Config.DownloadMD5, out EncodingEntry encInfo))
                 throw new FileNotFoundException("encoding info for download file missing!");
 
             return new BinaryReader(OpenFile(encInfo.Key));
         }
 
         /// <summary>Open Root file</summary>
-        protected BinaryReader OpenRootFile(EncodingHandler enc) {
-            if (!enc.GetEntry(Config.RootMD5, out EncodingEntry encInfo))
+        protected BinaryReader OpenRootFile() {
+            if (!EncodingHandler.GetEntry(Config.RootMD5, out EncodingEntry encInfo))
                 throw new FileNotFoundException("encoding info for root file missing!");
 
             return new BinaryReader(OpenFile(encInfo.Key));
         }
-
+        
+        /// <summary>Open Patch file</summary>
+        public BinaryReader OpenPatchFile() {
+            return new BinaryReader(OpenFileRaw(Config.PatchMD5));
+        }
+        
         /// <summary>Open Encoding file</summary>
         protected BinaryReader OpenEncodingFile() {
             return new BinaryReader(OpenFile(Config.EncodingKey));

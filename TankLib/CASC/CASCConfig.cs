@@ -40,6 +40,8 @@ namespace TankLib.CASC {
 
         public static string GetDataFolder() => "data/casc";
         
+        private int _versionsIndex; // todo
+        
         #region CDN Properties
         
         public List<string> Archives => _cdnConfig["archives"];
@@ -64,16 +66,18 @@ namespace TankLib.CASC {
         }
         public MD5Hash RootMD5 => Builds[ActiveBuild]["root"][0].ToByteArray().ToMD5();
         public MD5Hash InstallMD5 => Builds[ActiveBuild]["install"][0].ToByteArray().ToMD5();
-        public string InstallSize => Builds[ActiveBuild]["install-size"][0];
+        public MD5Hash PatchMD5 => Builds[ActiveBuild]["patch"][0].ToByteArray().ToMD5();
         public MD5Hash DownloadMD5 => Builds[ActiveBuild]["download"][0].ToByteArray().ToMD5();
-        public string DownloadSize => Builds[ActiveBuild]["download-size"][0];
-        //public MD5Hash PartialPriorityMD5 => _Builds[ActiveBuild]["partial-priority"][0].ToByteArray().ToMD5();
-        //public string PartialPrioritySize => _Builds[ActiveBuild]["partial-priority-size"][0];
         public MD5Hash EncodingMD5 => Builds[ActiveBuild]["encoding"][0].ToByteArray().ToMD5();
         public MD5Hash EncodingKey => Builds[ActiveBuild]["encoding"][1].ToByteArray().ToMD5();
+        //public MD5Hash PartialPriorityMD5 => _Builds[ActiveBuild]["partial-priority"][0].ToByteArray().ToMD5();
+        
+        public string DownloadSize => Builds[ActiveBuild]["download-size"][0];        
+        public string InstallSize => Builds[ActiveBuild]["install-size"][0];
+        //public string PartialPrioritySize => _Builds[ActiveBuild]["partial-priority-size"][0];        
         public string EncodingSize => Builds[ActiveBuild]["encoding-size"][0];
-        public MD5Hash PatchKey => Builds[ActiveBuild]["patch"][0].ToByteArray().ToMD5();
         public string PatchSize => Builds[ActiveBuild]["patch-size"][0];
+        
         public string BuildUID => Builds[ActiveBuild]["build-uid"][0];
         //public static string GlobalCustomCDN;
         public string CDNHost => CDNHosts[0];
@@ -93,6 +97,8 @@ namespace TankLib.CASC {
         public string ArchiveGroup => _cdnConfig["archive-group"][0];
         public List<string> PatchArchives => _cdnConfig["patch-archives"];
         public string PatchArchiveGroup => _cdnConfig["patch-archive-group"][0];
+        
+        public string BuildName => GetActiveBuild()?["Version"] ?? _versionsData[_versionsIndex]["VersionsName"];
         
         #endregion
         

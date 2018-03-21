@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
+using CMFLib;
 
 namespace TankLib.CASC.Remote {
     public class CacheMetaData
