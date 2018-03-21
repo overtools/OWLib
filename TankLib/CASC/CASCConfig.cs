@@ -183,6 +183,9 @@ namespace TankLib.CASC {
                 }
             }
 
+            // for debugging:
+            //var buildInfo = config.Builds[config.ActiveBuild];
+
             return config;
         }
         

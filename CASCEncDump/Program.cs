@@ -167,7 +167,7 @@ namespace CASCEncDump {
             Directory.CreateDirectory(ConvertEncDir);
 
             string[] otherHashes;
-            using (StreamReader reader = new StreamReader($"{otherVerNum}.idxhashes")) {
+            using (StreamReader reader = new StreamReader($"{otherVerNum}.enchashes")) {
                 otherHashes = reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).ToArray();
             }
 
@@ -198,7 +198,7 @@ namespace CASCEncDump {
         }
 
         public static void TryConvertFile(Stream stream, string convertDir, string md5) {
-            List<byte> lods = new List<byte>(new byte[3] { 0, 1, 0xFF });
+            //List<byte> lods = new List<byte>(new byte[3] { 0, 1, 0xFF });
 
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
                 uint magic = reader.ReadUInt32();
