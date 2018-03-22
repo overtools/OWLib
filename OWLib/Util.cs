@@ -121,12 +121,13 @@ namespace OWLib {
             if (record.Flags.HasFlag(ContentFlags.Bundle))
             {
                 offset = record.Offset;
-                handler.Encoding.GetEntry(record.Hash, out enc);
             }
-            else
+
+            if(!handler.Encoding.GetEntry(record.Hash, out enc))
             {
-                handler.Encoding.GetEntry(record.Hash, out enc);
+                return null;
             }
+
             MemoryStream ms = new MemoryStream((int)record.Size);
 
             try
