@@ -161,7 +161,7 @@ namespace OWLib {
         }
 
         public static string ToStringA(this OWRecord i) {
-            return $"{GUID.LongKey(i.key):X12}.{GUID.Type(i.key):X3}";
+            return GUID.AsString(i.key);
         }
     }
 }

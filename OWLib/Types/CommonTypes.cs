@@ -62,7 +62,7 @@ namespace OWLib.Types {
         }
 
         public new string ToString() {
-            return $"{GUID.LongKey(key):X12}.{GUID.Type(key):X3}";
+            return GUID.AsString(key);
         }
     }
 

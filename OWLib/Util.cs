@@ -68,7 +68,7 @@ namespace OWLib {
                 } else {
                     if (got.GetType().Name == "STUGUID" && got.GetType().Namespace == "STULib.Types.Generic") {
                         ulong key = (ulong)GetInstanceField(got.GetType(), got, "Key");
-                        Console.Out.WriteLine($"{padding}{info.Name}: {GUID.LongKey(key):X12}.{GUID.Type(key):X3}");
+                        Console.Out.WriteLine($"{padding}{info.Name}: {GUID.AsString(key)}");
                     } else {
                         Console.Out.WriteLine("{0}{1}: {2:X8}", padding, info.Name, info.GetValue(instance).ToString());
                     }
@@ -139,13 +139,13 @@ namespace OWLib {
             }
             catch (Exception ex)
             {
-                Console.Out.WriteLine("Error {0} with file {2:X12}.{3:X3} ({1})", ex.Message, TypeAlias(GUID.Type(record.GUID)), GUID.LongKey(record.GUID), GUID.Type(record.GUID));
+                Console.Out.WriteLine("Error {0} with file {2} ({1})", ex.Message, TypeAlias(GUID.Type(record.GUID)), GUID.AsString(record.GUID));
                 return null;
             }
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 System.Diagnostics.Debugger.Log(0, "CASC:IO",
-                    $"[CASC:IO] Opened file {GUID.LongKey(record.GUID):X12}.{GUID.Type(record.GUID):X3}\n");
+                    $"[CASC:IO] Opened file {GUID.AsString(record.GUID)}\n");
             }
             return ms;
         }

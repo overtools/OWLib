@@ -94,7 +94,7 @@ namespace STULib.Types.Generic {
             }
 
             public new string ToString() {
-                return $"{GUID.LongKey(Key):X12}.{GUID.Type(Key):X3}";
+                return GUID.AsString(Key);
             }
 
             public ulong[] GetGUIDs() {

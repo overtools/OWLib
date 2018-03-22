@@ -691,7 +691,7 @@ namespace STUHashTool
                 Util.MapCMF(root, handler, records, track, "enUS");
                 foreach (ulong file in track[fileShort]) {
                     if (!records.ContainsKey(file)) {
-                        Debugger.Log(0, "STUHashTool:test", $"Unable to open file: {file:X} ({GUID.LongKey(file):X12}.{GUID.Type(file):X3})\n");
+                        Debugger.Log(0, "STUHashTool:test", $"Unable to open file: {file:X} ({GUID.AsString(file)})\n");
                         continue;
                     }
                     //if (file != 288230376151714901 && file != 288230376151712128) continue;
@@ -720,7 +720,7 @@ namespace STUHashTool
                     using (Stream fileStream = Util.OpenFile(records[file], handler)) {
                         // STULib.Types.Map.Map map = new STULib.Types.Map.Map(fileStream, uint.MaxValue);
                         ISTU fileSTU = ISTU.NewInstance(fileStream, uint.MaxValue);
-                        Console.WriteLine($"Loaded: {file:X12} {GUID.LongKey(file):X12}.{GUID.Type(file):X3}", Color.LightGray);
+                        Console.WriteLine($"Loaded: {file:X12} {GUID.AsString(file)}", Color.LightGray);
                         Utils.DumpSTUFull((Version2) fileSTU, handler, records, 
                             testinstanceWildcard == "*" ? null: testinstanceWildcard);
                     }

@@ -1,0 +1,255 @@
+﻿using DataTool;
+using DataTool.Flag;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static CASCLib.ApplicationPackageManifest.Types;
+using static DataTool.Program;
+using static DataTool.Helper.IO;
+using static DataTool.Helper.Logger;
+using System.Reflection;
+using OWLib;
+using CASCLib;
+using System.Globalization;
+using System.IO;
+
+namespace PackageTool
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+
+            Files = new Dictionary<ulong, PackageRecord>();
+            TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
+
+
+            Flags = FlagParser.Parse<ToolFlags>();
+            if (Flags == null)
+            {
+                return;
+            }
+
+            #region Initialize CASC
+            Log("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Util.GetVersion());
+            Log("Initializing CASC...");
+            Log("Set language to {0}", Flags.Language);
+            CDNIndexHandler.Cache.Enabled = Flags.UseCache;
+            CDNIndexHandler.Cache.CacheData = Flags.CacheData;
+            CDNIndexHandler.Cache.Validate = Flags.ValidateCache;
+            // ngdp:us:pro
+            // http:us:pro:us.patch.battle.net:1119
+            if (Flags.OverwatchDirectory.ToLowerInvariant().Substring(0, 5) == "ngdp:")
+            {
+                string cdn = Flags.OverwatchDirectory.Substring(5, 4);
+                string[] parts = Flags.OverwatchDirectory.Substring(5).Split(':');
+                string region = "us";
+                string product = "pro";
+                if (parts.Length > 1)
+                {
+                    region = parts[1];
+                }
+                if (parts.Length > 2)
+                {
+                    product = parts[2];
+                }
+                if (cdn == "bnet")
+                {
+                    Config = CASCConfig.LoadOnlineStorageConfig(product, region);
+                }
+                else
+                {
+                    if (cdn == "http")
+                    {
+                        string host = string.Join(":", parts.Skip(3));
+                        Config = CASCConfig.LoadOnlineStorageConfig(host, product, region, true, true, true);
+                    }
+                }
+            }
+            else
+            {
+                Config = CASCConfig.LoadLocalStorageConfig(Flags.OverwatchDirectory, !Flags.SkipKeys, false);
+            }
+            Config.Languages = new HashSet<string>(new[] { Flags.Language });
+            #endregion
+
+            BuildVersion = uint.Parse(Config.BuildName.Split('.').Last());
+
+            if (Flags.SkipKeys)
+            {
+                Log("Disabling Key auto-detection...");
+            }
+
+            Log("Using Overwatch Version {0}", Config.BuildName);
+            CASC = CASCHandler.OpenStorage(Config);
+            Root = CASC.Root as OwRootHandler;
+            if (Root == null)
+            {
+                ErrorLog("Not a valid overwatch installation");
+                return;
+            }
+            
+            if (!Root.APMFiles.Any())
+            {
+                ErrorLog("Could not find the files for language {0}. Please confirm that you have that language installed, and are using the names from the target language.", Flags.Language);
+                if (!Flags.GracefulExit)
+                {
+                    return;
+                }
+            }
+
+            string[] result = new string[Flags.Positionals.Length - 3];
+            Array.Copy(Flags.Positionals, 3, result, 0, Flags.Positionals.Length - 3);
+
+            switch (Flags.Mode.ToLower())
+            {
+                case "extract":
+                    Extract(result);
+                    break;
+                case "search":
+                    Search(result);
+                    break;
+                case "search-type":
+                    SearchType(result);
+                    break;
+                case "info":
+                    Info(result);
+                    break;
+                default:
+                    Console.Out.WriteLine("Available modes: extract, search, search-type, info");
+                    break;
+            }
+        }
+
+        private static void Extract(string[] args)
+        {
+            string output = args.FirstOrDefault();
+            ulong[] guids = args.Skip(1).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+            if (string.IsNullOrWhiteSpace(output))
+            {
+                return;
+            }
+
+            Dictionary<ulong, PackageRecord[]> records = new Dictionary<ulong, PackageRecord[]>();
+            Dictionary<ulong, PackageRecord[]> totalRecords = new Dictionary<ulong, PackageRecord[]>();
+            Dictionary<ulong, ulong[]> siblings = new Dictionary<ulong, ulong[]>();
+            Dictionary<ulong, Package> packages = new Dictionary<ulong, Package>();
+
+            foreach (ApplicationPackageManifest apm in (CASC.Root as OwRootHandler).APMFiles)
+            {
+                for (int i = 0; i < apm.PackageEntries.Length; ++i)
+                {
+                    PackageEntry entry = apm.PackageEntries[i];
+                    if (guids.Contains(GUID.LongKey(entry.PackageGUID)) || guids.Contains(GUID.Index(entry.PackageGUID)))
+                    {
+                        packages[entry.PackageGUID] = apm.Packages[i];
+                        siblings[entry.PackageGUID] = apm.PackageSiblings[i];
+                        records[entry.PackageGUID] = apm.Records[i];
+                    }
+                    totalRecords[entry.PackageGUID] = apm.Records[i];
+                }
+            }
+
+            foreach (ulong key in records.Keys)
+            {
+                Save(output, key, records[key]);
+                foreach (ulong sibling in siblings[key])
+                {
+                    if (totalRecords.ContainsKey(sibling))
+                    {
+                        Save(output, key, sibling, totalRecords[sibling]);
+                    }
+                }
+            }
+        }
+
+        private static void Save(string output, ulong key, PackageRecord[] value) => Save(output, key, key, value);
+
+        private static void Save(string output, ulong parentKey, ulong myKey, PackageRecord[] records)
+        {
+            string dest = Path.Combine(output, GUID.AsString(parentKey));
+            if (myKey != parentKey)
+            {
+                dest = Path.Combine(dest, "sib", GUID.AsString(myKey));
+            }
+
+            foreach (PackageRecord record in records)
+            {
+                using (Stream file = OpenFile(record))
+                {
+                    InfoLog("Saved {0}", Path.Combine(dest, GUID.AsString(record.GUID)));
+                    WriteFile(file, Path.Combine(dest, GUID.AsString(record.GUID)));
+                }
+            }
+        }
+
+        private static void Search(string[] args)
+        {
+            ulong[] guids = args.Skip(1).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+
+            foreach (ApplicationPackageManifest apm in (CASC.Root as OwRootHandler).APMFiles)
+            {
+                for (int i = 0; i < apm.PackageEntries.Length; ++i)
+                {
+                    PackageEntry entry = apm.PackageEntries[i];
+                    PackageRecord[] records = apm.Records[i];
+
+                    foreach (PackageRecord record in records.Where(x => guids.Contains(x.GUID) || guids.Contains(GUID.Type(x.GUID)) || guids.Contains(GUID.Index(x.GUID))))
+                    {
+                        Log("Found {0} in package {1}", GUID.AsString(record.GUID), GUID.AsString(entry.PackageGUID));
+                    }
+                }
+            }
+        }
+
+        private static void SearchType(string[] args)
+        {
+            ulong[] guids = args.Skip(1).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+
+            foreach (ApplicationPackageManifest apm in (CASC.Root as OwRootHandler).APMFiles)
+            {
+                for (int i = 0; i < apm.PackageEntries.Length; ++i)
+                {
+                    PackageEntry entry = apm.PackageEntries[i];
+                    PackageRecord[] records = apm.Records[i];
+
+                    foreach (PackageRecord record in records.Where(x => guids.Contains(GUID.Type(x.GUID))))
+                    {
+                        Log("Found {0} in package {1}", GUID.AsString(record.GUID), GUID.AsString(entry.PackageGUID));
+                    }
+                }
+            }
+        }
+
+        private static void Info(string[] args)
+        {
+            ulong[] guids = args.Skip(1).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+
+            foreach (ApplicationPackageManifest apm in (CASC.Root as OwRootHandler).APMFiles)
+            {
+                for (int i = 0; i < apm.PackageEntries.Length; ++i)
+                {
+                    PackageEntry entry = apm.PackageEntries[i];
+                    if (guids.Contains(GUID.LongKey(entry.PackageGUID)) || guids.Contains(GUID.Index(entry.PackageGUID)))
+                    {
+                        Log("Package {0}:", GUID.AsString(entry.PackageGUID));
+                        Log("\tEntry: {0}", GUID.AsString(entry.EntryPointGUID));
+                        Log("\tPrimary: {0}", GUID.AsString(entry.PrimaryGUID));
+                        Log("\tSecondary: {0}", GUID.AsString(entry.SecondaryGUID));
+                        Log("\tKey: {0}", GUID.AsString(entry.Key));
+                        Log("\tUnknowns: {0}, {1}", entry.Unknown1, entry.Unknown2);
+                        Log("\t{0} records", apm.Records[i].Length);
+                        Log("\t{0} siblings", apm.PackageSiblings[i].Length);
+                        foreach (ulong sibling in apm.PackageSiblings[i])
+                        {
+                            Log("\t\t{0}", GUID.AsString(sibling));
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

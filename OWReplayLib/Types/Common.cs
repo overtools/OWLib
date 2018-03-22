@@ -9,7 +9,7 @@ namespace OWReplayLib.Types {
             public ulong Key;
 
             public override string ToString() {
-                return $"{GUID.LongKey(Key):X12}.{GUID.Type(Key):X3}";
+                return GUID.AsString(Key);
             }
 
             public static implicit operator ulong(FileReference obj) {
