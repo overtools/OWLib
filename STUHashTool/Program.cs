@@ -8,16 +8,16 @@ using System.Linq;
 using System.Text;
 using CASCLib;
 using Newtonsoft.Json.Linq;
-using OverTool;
 using OWLib;
 using STULib;
 using STULib.Impl.Version2HashComparer;
+using static CASCLib.ApplicationPackageManifest.Types;
 using Console = System.Console;
 using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
-using Util = OverTool.Util;
 using Version2 = STULib.Impl.Version2;
 
-namespace STUHashTool {
+namespace STUHashTool
+{
     public class InstanceTally {
         public uint Count;
         public Dictionary<uint, uint> FieldOccurrences;
@@ -679,7 +679,7 @@ namespace STUHashTool {
             } else if (mode == "test") {
                 ushort fileShort = ushort.Parse(testFileType, NumberStyles.HexNumber);
                     
-                Dictionary<ulong, Record> records = new Dictionary<ulong, Record>();
+                Dictionary<ulong, PackageRecord> records = new Dictionary<ulong, PackageRecord>();
                 Dictionary<ushort, List<ulong>> track = new Dictionary<ushort, List<ulong>> {
                     [fileShort] = new List<ulong>()
                 };

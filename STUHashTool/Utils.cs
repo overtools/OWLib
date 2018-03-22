@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using CASCLib;
 using DataTool.Helper;
-using OverTool;
 using OWLib;
 using STULib;
 using STULib.Impl;
@@ -14,7 +13,7 @@ using STULib.Types;
 using static STULib.Types.Generic.Common;
 using static DataTool.Helper.IO;
 using Console = Colorful.Console;
-using Util = OverTool.Util;
+using static CASCLib.ApplicationPackageManifest.Types;
 
 namespace STUHashTool {
     public class Utils {
@@ -26,20 +25,20 @@ namespace STUHashTool {
                                                 BindingFlags.DeclaredOnly)).ToArray();
         }
 
-        internal static string GetOWString(ulong guid, CASCHandler handler, Dictionary<ulong, Record> map) {
+        internal static string GetOWString(ulong guid, CASCHandler handler, Dictionary<ulong, PackageRecord> map) {
             if (guid == 0 || !map.ContainsKey(guid)) return null;
             Stream str = Util.OpenFile(map[guid], handler);
             OWString ows = new OWString(str);
             return ows;
         }
 
-        internal static STUInstance[] GetInstances(ulong guid, CASCHandler handler, Dictionary<ulong, Record> map) {
+        internal static STUInstance[] GetInstances(ulong guid, CASCHandler handler, Dictionary<ulong, PackageRecord> map) {
             Stream str = Util.OpenFile(map[guid], handler);
             ISTU stu = ISTU.NewInstance(str, uint.MaxValue);
             return stu.Instances.ToArray();
         }
 
-        public static void DumpSTUFull(Version2 stu, CASCHandler handler, Dictionary<ulong, Record> map,
+        public static void DumpSTUFull(Version2 stu, CASCHandler handler, Dictionary<ulong, PackageRecord> map,
             string instanceWildcard = null) {
             // tries to properly dump an STU to the console
             // uses handler to load GUIDs, and process the types
@@ -88,9 +87,9 @@ namespace STUHashTool {
 
         public class STUDebugger {
             private readonly CASCHandler _handler;
-            private readonly Dictionary<ulong, Record> _map;
+            private readonly Dictionary<ulong, PackageRecord> _map;
             
-            public STUDebugger(CASCHandler handler, Dictionary<ulong, Record> map) {
+            public STUDebugger(CASCHandler handler, Dictionary<ulong, PackageRecord> map) {
                 _handler = handler;
                 _map = map;
             }

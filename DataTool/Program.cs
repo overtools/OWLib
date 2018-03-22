@@ -11,13 +11,14 @@ using DataTool.Flag;
 using DataTool.Helper;
 using OWLib;
 using STULib.Types;
+using static CASCLib.ApplicationPackageManifest.Types;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 using Logger = CASCLib.Logger;
 
 namespace DataTool {
     public class Program {
-        public static Dictionary<ulong, MD5Hash> Files;
+        public static Dictionary<ulong, PackageRecord> Files;
         public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
         public static CASCHandler CASC;
         public static CASCConfig Config;
@@ -31,7 +32,7 @@ namespace DataTool {
         private static void Main() {
             Console.OutputEncoding = Encoding.UTF8;
 
-            Files = new Dictionary<ulong, MD5Hash>();
+            Files = new Dictionary<ulong, PackageRecord>();
             TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
 
             #region Tool Detection

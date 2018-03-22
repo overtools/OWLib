@@ -133,6 +133,11 @@ namespace DataTool.ToolLogic.List {
             foreach (Common.STUGUID ability in hero.Abilities) {
                 AbilityInfo abi = GetAbility(ability);
 
+                if(abi == null)
+                {
+                    continue;
+                }
+
                 string name = abi.Name == null ? $"Unknown{GUID.Index(ability):X}" : $"{abi.Name}:{GUID.Index(ability):X}";               
                 @return[name] = abi;
             }
