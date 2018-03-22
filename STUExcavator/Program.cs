@@ -21,6 +21,7 @@ using Version2 = STULib.Impl.Version2;
 using static DataTool.Helper.Logger;
 using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
 using Map = STULib.Types.Map.Map;
+using static CASCLib.ApplicationPackageManifest.Types;
 
 namespace STUExcavator {
     public enum SerializationType {
@@ -54,7 +55,7 @@ namespace STUExcavator {
     }
     
     public class Program {
-        public static Dictionary<ulong, MD5Hash> Files;
+        public static Dictionary<ulong, PackageRecord> Files;
         public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
         public static List<string> InvalidTypes;
         public static CASCConfig Config;
@@ -87,7 +88,7 @@ namespace STUExcavator {
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
             Config.Languages = new HashSet<string> {language};
             CASC = CASCHandler.OpenStorage(Config);
-            DataTool.Program.Files = new Dictionary<ulong, MD5Hash>();
+            DataTool.Program.Files = new Dictionary<ulong, PackageRecord>();
             DataTool.Program.TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
             DataTool.Program.CASC = CASC;
             DataTool.Program.Root = CASC.Root as OwRootHandler;
