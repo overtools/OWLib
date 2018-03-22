@@ -10,9 +10,12 @@ using OWLib;
 using static CASCLib.ApplicationPackageManifest.Types;
 using static DataTool.Program;
 
-namespace DataTool.Helper {
-    public static class IO {
-        public static string GetValidFilename(string filename) {
+namespace DataTool.Helper
+{
+    public static class IO
+    {
+        public static string GetValidFilename(string filename)
+        {
             if (filename == null) return null;
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
             string invalidReStr = $@"[{invalidChars}]+";
@@ -29,14 +32,17 @@ namespace DataTool.Helper {
                 (current, reservedWordPattern) => Regex.Replace(current, reservedWordPattern, "_reservedWord_.",
                     RegexOptions.IgnoreCase));
         }
-        
+
         public static Dictionary<uint, Dictionary<uint, string>> GUIDTable = new Dictionary<uint, Dictionary<uint, string>>();
 
-        public static void LoadGUIDTable() {
+        public static void LoadGUIDTable()
+        {
             if (!File.Exists("GUIDNames.csv")) return;
             int i = 0;
-            foreach (string line in File.ReadAllLines("GUIDNames.csv")) {
-                if (i == 0) {
+            foreach (string line in File.ReadAllLines("GUIDNames.csv"))
+            {
+                if (i == 0)
+                {
                     i++;
                     continue;
                 }
@@ -48,51 +54,60 @@ namespace DataTool.Helper {
                 uint index = uint.Parse(indexString, NumberStyles.HexNumber);
                 uint type = uint.Parse(typeString, NumberStyles.HexNumber);
 
-                if (!GUIDTable.ContainsKey(type)) {
+                if (!GUIDTable.ContainsKey(type))
+                {
                     GUIDTable[type] = new Dictionary<uint, string>();
                 }
                 GUIDTable[type][index] = name;
-                
+
                 i++;
             }
         }
 
-        public static string GetFileName(ulong guid) {
+        public static string GetFileName(ulong guid)
+        {
             return $"{guid & 0xFFFFFFFFFFFF:X12}.{GUID.Type(guid):X3}";
         }
 
-        public static void WriteFile(Stream stream, string filename) {
+        public static void WriteFile(Stream stream, string filename)
+        {
             if (stream == null) return;
             string path = Path.GetDirectoryName(filename);
-            if (!Directory.Exists(path) && path != null) {
+            if (!Directory.Exists(path) && path != null)
+            {
                 Directory.CreateDirectory(path);
             }
 
-            using (Stream file = File.OpenWrite(filename)) {
+            using (Stream file = File.OpenWrite(filename))
+            {
                 file.SetLength(0); // ensure no leftover data
                 stream.CopyTo(file);
             }
         }
 
-        public static void WriteFile(Stream stream, ulong guid, string path) {
-            if (stream == null || guid == 0) {
+        public static void WriteFile(Stream stream, ulong guid, string path)
+        {
+            if (stream == null || guid == 0)
+            {
                 return;
             }
 
             // string filename = GUIDTable.ContainsKey(guid) ? GUIDTable[guid] : GetFileName(guid);
             string filename = GetFileName(guid);
-            
+
             WriteFile(stream, Path.Combine(path, filename));
-            
-            if (!Directory.Exists(path)) {
+
+            if (!Directory.Exists(path))
+            {
                 Directory.CreateDirectory(path);
             }
 
-            using (Stream file = File.OpenWrite(Path.Combine(path, filename))) {
+            using (Stream file = File.OpenWrite(Path.Combine(path, filename)))
+            {
                 stream.CopyTo(file);
             }
         }
-        
+
         public static void CopyBytes(Stream i, Stream o, int sz)
         {
             byte[] buffer = new byte[sz];
@@ -109,7 +124,7 @@ namespace DataTool.Helper {
             {
                 offset = record.Offset;
             }
-            if(!CASC.Encoding.GetEntry(record.Hash, out enc))
+            if (!CASC.Encoding.GetEntry(record.Hash, out enc))
             {
                 return null;
             }
@@ -135,57 +150,80 @@ namespace DataTool.Helper {
             return ms;
         }
 
-        public static Stream OpenFile(ulong guid) {
-            try {
+        public static Stream OpenFile(ulong guid)
+        {
+            try
+            {
                 return OpenFile(Files[guid]);
             }
-            catch {
+            catch
+            {
                 return null;
             }
         }
 
-        public static void CreateDirectoryFromFile(string path) {
+        public static void CreateDirectoryFromFile(string path)
+        {
             string dir = Path.GetDirectoryName(path);
-            if (string.IsNullOrWhiteSpace(dir)) {
+            if (string.IsNullOrWhiteSpace(dir))
+            {
                 return;
             }
-            if (!Directory.Exists(dir)) {
+            if (!Directory.Exists(dir))
+            {
                 Directory.CreateDirectory(dir);
             }
         }
 
-        public static string GetString(ulong guid) {
+        public static string GetString(ulong guid)
+        {
             if (guid == 0) return null;  // don't even try
-            try {
-                using (Stream stream = OpenFile(Files[guid])) {
-                    return stream == null ? null : new OWString(stream);
-                }
+            //try {
+            //    using (Stream stream = OpenFile(Files[guid])) {
+            //        return stream == null ? null : new OWString(stream);
+            //    }
+            //}
+            //catch {
+            //    return null;
+            //}
+            if (!Files.ContainsKey(guid))
+            {
+                throw new Exception();
             }
-            catch {
-                return null;
+            using (Stream stream = OpenFile(Files[guid]))
+            {
+                if (stream == null) return null;
+                OWString owString = new OWString(stream);
+                return owString;
             }
         }
 
-        public static void MapCMF(bool mapAll=false) {
-            if (Root == null || CASC == null) {
+        public static void MapCMF(bool mapAll = false)
+        {
+            if (Root == null || CASC == null)
+            {
                 return;
             }
 
-            foreach (ApplicationPackageManifest apm in Root.APMFiles) {
+            foreach (ApplicationPackageManifest apm in Root.APMFiles)
+            {
                 string searchString = Flags.RCN ? "rcn" : "rdev";
-                if (!apm.Name.ToLowerInvariant().Contains(searchString)) {
+                if (!apm.Name.ToLowerInvariant().Contains(searchString))
+                {
                     continue;
                 }
-                if (!apm.Name.ToLowerInvariant().Contains("l" + Flags.Language.ToLowerInvariant())) {
+                if (!apm.Name.ToLowerInvariant().Contains("l" + Flags.Language.ToLowerInvariant()))
+                {
                     continue;
                 }
-                foreach (KeyValuePair<ulong, PackageRecord> pair in apm.FirstOccurence) {
+                foreach (KeyValuePair<ulong, PackageRecord> pair in apm.FirstOccurence)
+                {
                     ushort id = GUID.Type(pair.Key);
-                    if (TrackedFiles != null && (TrackedFiles.ContainsKey(id) || mapAll)) {
+                    if (TrackedFiles != null && (TrackedFiles.ContainsKey(id) || mapAll))
+                    {
                         if (!TrackedFiles.ContainsKey(id)) TrackedFiles[id] = new HashSet<ulong>();
                         TrackedFiles[id].Add(pair.Value.GUID);
                     }
-
                     Files[pair.Value.GUID] = pair.Value;
                 }
             }

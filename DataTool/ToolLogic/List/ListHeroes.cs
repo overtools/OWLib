@@ -132,6 +132,7 @@ namespace DataTool.ToolLogic.List {
 
             foreach (Common.STUGUID ability in hero.Abilities) {
                 AbilityInfo abi = GetAbility(ability);
+                if (abi == null) continue;
 
                 if(abi == null)
                 {

@@ -146,8 +146,9 @@ namespace DataTool.ToolLogic.Extract {
 
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
-
+            
             foreach (STUHero hero in heroes) {
+                if (hero == null) continue;
                 string heroNameActual = GetString(hero.Name);
                 string heroFileName = GetValidFilename(heroNameActual);
 
