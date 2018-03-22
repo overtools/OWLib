@@ -32,8 +32,6 @@ namespace TankLib.CASC.Handlers {
                 worker?.ReportProgress((int)(++idxIndex / (float)idxFiles.Count * 100));
             }
 
-            Debugger.Log(0, "CASC", $"LocalIndexHandler: loaded {handler.Count} indexes\r\n");
-
             return handler;
         }
 

@@ -21,6 +21,8 @@ namespace CASCEncDump {
         public static string ConvertIdxDir => $"dump\\{BuildVersion}\\idx\\convert";
         public static string ConvertEncDir => $"dump\\{BuildVersion}\\enc\\convert";
         public static string NonBLTEDir => $"dump\\{BuildVersion}\\nonblte";
+        public static string KeyFilesDir => $"dump\\{BuildVersion}\\keyfiles";
+        public static string AllCMFDir => $"dump\\{BuildVersion}\\allcmf";
         
         public static void Main(string[] args) {
             string overwatchDir = args[0];
@@ -32,14 +34,19 @@ namespace CASCEncDump {
             // {overwatch dir} compare-enc {other ver num}  --  Extract added files from encoding (requires dump from other version)
             // {overwatch dir} compare-idx {other ver num}  --  Extract added files from indices (requires dump from other version)
             // {overwatch dir} nonblte  --  Extract non-blte files
+            // {overwatch dir} extract-encoding  --  Extract encoding file
+            // {overwatch dir} addcmf  --  Extract all files from the cmf
 
             // casc setup
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
             Config.Languages = new HashSet<string> {language};
-            Config.LoadContentManifest = false;
-            Config.LoadPackageManifest = false;
+            if (mode != "allcmf") {
+                Config.LoadContentManifest = false;
+                Config.LoadPackageManifest = false;
+            }
             
             CASC = CASCHandler.Open(Config);
+            MapCMF(language);
 
             //var temp = Config.Builds[Config.ActiveBuild].KeyValue;
             BuildVersion = uint.Parse(Config.BuildName.Split('.').Last());
@@ -47,7 +54,6 @@ namespace CASCEncDump {
             // c:\\ow\\game\\Overwatch dump
             // "D:\Games\Overwatch Test" compare 44022
             
-            MapCMF(language);
 
             //using (BinaryReader reader = CASC.OpenPatchFile()) {
             //    char a = reader.ReadChar();
@@ -62,8 +68,40 @@ namespace CASCEncDump {
                 CompareIdx(args);
             } else if (mode == "nonblte") {
                 DumpNonBLTE(args);
+            } else if (mode == "extract-encoding") {
+                ExtractEncodingFile(args);
+            } else if (mode == "allcmf") {
+                AllCMF(args);
             } else {
                 throw new Exception($"unknown mode: {mode}");
+            }
+        }
+
+        public static void AllCMF(string[] args) {
+            Directory.CreateDirectory(AllCMFDir);
+            foreach (KeyValuePair<ulong,MD5Hash> cmfFile in Files) {
+                if (teResourceGUID.Type(cmfFile.Key) != 0x77) continue;  // todo
+                try {
+                    using (Stream stream = OpenFile(cmfFile.Key)) {
+                        if (stream == null) continue;
+                        string typeDir = Path.Combine(AllCMFDir, teResourceGUID.Type(cmfFile.Key).ToString("X3"));
+                        Directory.CreateDirectory(typeDir);
+                        using (Stream file = File.OpenWrite(Path.Combine(typeDir, teResourceGUID.AsString(cmfFile.Key)))) {
+                            stream.CopyTo(file);
+                        }
+                    }
+                } catch (Exception e) {
+                    Console.Out.WriteLine(e);
+                }
+            }
+        }
+
+        public static void ExtractEncodingFile(string[] args) {
+            Directory.CreateDirectory(KeyFilesDir);
+            using (BinaryReader reader = CASC.OpenEncodingKeyFile()) {
+                using (Stream file = File.OpenWrite(Path.Combine(KeyFilesDir, "encoding"))) {
+                    reader.BaseStream.CopyTo(file);
+                }
             }
         }
 
@@ -190,6 +228,8 @@ namespace CASCEncDump {
                             if (missingKeys.Add(exception.MissingKey)) {
                                 Console.Out.WriteLine($"Missing key: {exception.MissingKey:X16}");
                             }
+                        } else {
+                            Console.Out.WriteLine(e);
                         }
                     }
                 }

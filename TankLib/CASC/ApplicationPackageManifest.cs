@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
 using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
@@ -40,7 +41,7 @@ namespace TankLib.CASC {
         public uint unk_1;
         public uint numDeps;
         public ulong unk_2;
-        public ulong bundleKey; // Requires some sorcery, see Key
+        public teResourceGUID bundleKey; // Requires some sorcery, see Key
         public ulong unk_3;
         public MD5Hash bundleContentKey;
 
@@ -81,13 +82,13 @@ namespace TankLib.CASC {
         public uint unk_1;
         public uint numDeps;
         public ulong unk_2;
-        public ulong bundleKey;
+        public teResourceGUID bundleKey;
         public ulong unk_3;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct PackageIndexRecord {
-        public ulong Key; // Requires some sorcery, see Key
+        public teResourceGUID Key; // Requires some sorcery, see Key
         public uint Flags; // Flags. Has 0x40000000 when in bundle, otherwise in encoding
         public uint Offset; // Offset into bundle
         public int Size;
@@ -108,18 +109,18 @@ namespace TankLib.CASC {
     
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct PackageIndexRecordItem {
-        public ulong Key; // Requires some sorcery, see Key
+        public teResourceGUID Key; // Requires some sorcery, see Key
         public uint Flags; // Flags. Has 0x40000000 when in bundle, otherwise in encoding
         public uint Offset; // Offset into bundle
     }
     
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public class APMPackage {
-        public ulong localKey;
-        public ulong primaryKey;
-        public ulong externalKey;
+        public teResourceGUID localKey;
+        public teResourceGUID primaryKey;
+        public teResourceGUID externalKey;
         public ulong encryptionKeyHash;
-        public ulong packageKey;
+        public teResourceGUID packageKey;
         public uint unk_0;
         public uint unk_1; // size?
         public uint unk_2;
@@ -144,11 +145,11 @@ namespace TankLib.CASC {
     
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct APMPackageItem {
-        public ulong localKey;
-        public ulong primaryKey;
-        public ulong externalKey;
+        public teResourceGUID localKey;
+        public teResourceGUID primaryKey;
+        public teResourceGUID externalKey;
         public ulong encryptionKeyHash;
-        public ulong packageKey;
+        public teResourceGUID packageKey;
         public uint unk_0;
         public uint unk_1; // size?
         public uint unk_2;
@@ -217,6 +218,11 @@ namespace TankLib.CASC {
             Name = name;
             
             using (BinaryReader reader = new BinaryReader(stream)) {
+                //using (Stream file = File.OpenWrite(Path.GetFileName(name))) {
+                //    stream.CopyTo(file);
+                //    stream.Position = 0;
+                //}
+                
                 ulong version = reader.ReadUInt64();
                 stream.Position -= 8;
                 if (version >= 39028) {
@@ -242,23 +248,25 @@ namespace TankLib.CASC {
                     }  
                 }
 
-                //uint[][] dependencies;
-                if (!RootHandler.LoadPackages) {
-                    Packages = new APMPackage[0];
-                    Indexes = new PackageIndex[0];
-                    Records = new PackageIndexRecord[0][];
-                    //dependencies = new uint[0][];
-                    //return;
-                }
+                uint[][] dependencies;
+                //if (!RootHandler.LoadPackages) {
+                //    Packages = new APMPackage[0];
+                //    Indexes = new PackageIndex[0];
+                //    Records = new PackageIndexRecord[0][];
+                //    //dependencies = new uint[0][];
+                //    return;
+                //}
 
-/*                Packages = new APMPackage[Header.GetPackageCount()];
+                Packages = new APMPackage[Header.GetPackageCount()];
                 Indexes = new PackageIndex[Header.GetPackageCount()];
                 Records = new PackageIndexRecord[Header.GetPackageCount()][];
                 dependencies = new uint[Header.GetPackageCount()][];
+                
+                return;
 
                 for (int j = 0; j < Packages.Length; j++) {
                     Packages[j] = new APMPackage(reader.Read<APMPackageItem>());
-                    Packages[j].indexContentKey = CMFMap[Packages[j].packageKey].HashKey;
+                    Packages[j].indexContentKey = CMF.Map[(ulong)Packages[j].packageKey].HashKey;
 
                     if (!casc.EncodingHandler.GetEntry(Packages[j].indexContentKey, out EncodingEntry pkgIndexEnc)) {
                         continue;
@@ -279,7 +287,7 @@ string.Format("./Packages/{0}/{1:X}.pkgindx", name, packages[j].packageKey);
 
                         Indexes[j] = new PackageIndex(pkgIndexReader.Read<PackageIndexItem>());
                         try {
-                            Indexes[j].bundleContentKey = CMFMap[Indexes[j].bundleKey].HashKey;
+                            Indexes[j].bundleContentKey = CMF.Map[(ulong)Indexes[j].bundleKey].HashKey;
                         }
                         catch {
                             // ignored
@@ -293,12 +301,15 @@ string.Format("./Packages/{0}/{1:X}.pkgindx", name, packages[j].packageKey);
 
                                 for (int k = 0; k < recs.Length; k++) {
                                     recs[k] = new PackageIndexRecord(recordsReader.Read<PackageIndexRecordItem>());
-                                    recs[k].ContentKey = CMFMap[recs[k].Key].HashKey;
-                                    EncodingEntry encInfo;
-                                    if (casc.EncodingHandler.GetEntry(recs[k].ContentKey, out encInfo)) {
+                                    bool shouldntEnc = (recs[k].Flags & 0x40000000) != 0;
+                                    recs[k].ContentKey = CMF.Map[(ulong)recs[k].Key].HashKey;
+                                    if (casc.EncodingHandler.GetEntry(recs[k].ContentKey, out EncodingEntry encInfo)) {
                                         recs[k].Size =
                                             encInfo
                                                 .Size; // WHY DOES THIS WORK? ARE BUNDLED FILES NOT ACTUALLY IN A BUNDLE ANYMORE?
+                                        if (shouldntEnc) {
+                                            
+                                        }
                                     }
                                 }
                                 Records[j] = recs;
@@ -314,7 +325,7 @@ string.Format("./Packages/{0}/{1:X}.pkgindx", name, packages[j].packageKey);
 
                         dependencies[j] = deps;
                     }
-                }*/
+                }
             }
         }
     }

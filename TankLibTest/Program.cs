@@ -159,6 +159,8 @@ namespace TankLibTest {
         
         public static Stream OpenFile(CASCHandler casc, MD5Hash hash, ulong guid) {
             try {
+                //return casc.EncodingHandler.GetEntry(hash, out EncodingEntry enc) ? casc.OpenFile(enc.Key) : null;
+                
                 bool found = casc.EncodingHandler.GetEntry(hash, out EncodingEntry enc);
                 if (!found) {
                     Debugger.Log(0, "TankLibTest:CASC", $"Missing encoding entry for {teResourceGUID.AsString(guid)}\r\n");

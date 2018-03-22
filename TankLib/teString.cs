@@ -27,6 +27,7 @@ namespace TankLib {
         }
 
         public teString(Stream stream) {
+            if (stream == null) return;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8)) {
                 ArchiveStringHeader header = reader.Read<ArchiveStringHeader>();
                 stream.Position = (long)header.Offset;

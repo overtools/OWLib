@@ -46,7 +46,7 @@ namespace TankLib.CASC {
                     LocalIndex = LocalIndexHandler.Initialize(config, worker);
                 }
 
-                Debugger.Log(0, "CASC", $"CASCHandler: loaded {LocalIndex.Count} local indexes\r\n");
+                Debugger.Log(0, "CASC", $"CASCHandler: loaded {LocalIndex.Count} local indices\r\n");
             } else {  // todo: supposed to do this?
                 Debugger.Log(0, "CASC", "CASCHandler: loading CDN indices\r\n");
 
@@ -57,15 +57,20 @@ namespace TankLib.CASC {
                 Debugger.Log(0, "CASC", $"CASCHandler: loaded {CDNIndex.Count} CDN indexes\r\n");
             }
             
-            Debugger.Log(0, "CASC", "CASCHandler: loading encoding data\r\n");
-
+            Debugger.Log(0, "CASC", "CASCHandler: loading encoding entries\r\n");
             using (PerfCounter _ = new PerfCounter("new EncodingHandler()")) {
-                using (BinaryReader fs = OpenEncodingFile()) {
-                    EncodingHandler = new EncodingHandler(fs, worker);
+                using (BinaryReader encodingReader = OpenEncodingKeyFile()) {
+                    EncodingHandler = new EncodingHandler(encodingReader, worker);
                 }
             }
+            Debugger.Log(0, "CASC", $"CASCHandler: loaded {EncodingHandler.Count} encoding entries\r\n");
 
-            Debugger.Log(0, "CASC", $"CASCHandler: loaded {EncodingHandler.Count} encoding data\r\n");
+            Debugger.Log(0, "CASC", "CASCHandler: loading root data\r\n");
+            using (PerfCounter _ = new PerfCounter("new RootHandler()")) {
+                using (BinaryReader rootReader = OpenRootKeyFile()) {
+                    RootHandler = new RootHandler(rootReader, worker, this);
+                }
+            }
 
             //if ((CASCConfig.LoadFlags & LoadFlags.Download) != 0)
             //{
@@ -77,16 +82,6 @@ namespace TankLib.CASC {
             //    }
             //    Debugger.Log(0, "CASC", $"CASCHandler: loaded {EncodingHandler.Count} download data\r\n");
             //}
-
-            Debugger.Log(0, "CASC", "CASCHandler: loading root data\r\n");
-
-            using (PerfCounter _ = new PerfCounter("new RootHandler()")) {
-                using (BinaryReader fs = OpenRootFile()) {
-                    RootHandler = new RootHandler(fs, worker, this);
-                }
-            }
-
-            Debugger.Log(0, "CASC", $"CASCHandler: loaded {RootHandler.Count} root data\r\n");
 
             //if ((CASCConfig.LoadFlags & LoadFlags.Install) != 0) {
             //    Debugger.Log(0, "CASC", "CASCHandler: loading install data\r\n");
@@ -251,7 +246,7 @@ namespace TankLib.CASC {
 
         #region Internal CASC files
         /// <summary>Open Install file</summary>
-        protected BinaryReader OpenInstallFile() {
+        protected BinaryReader OpenInstallKeyFile() {
             if (!EncodingHandler.GetEntry(Config.InstallMD5, out EncodingEntry encInfo))
                 throw new FileNotFoundException("encoding info for install file missing!");
 
@@ -259,7 +254,7 @@ namespace TankLib.CASC {
         }
 
         /// <summary>Open Download file</summary>
-        protected BinaryReader OpenDownloadFile() {
+        protected BinaryReader OpenDownloadKeyFile() {
             if (!EncodingHandler.GetEntry(Config.DownloadMD5, out EncodingEntry encInfo))
                 throw new FileNotFoundException("encoding info for download file missing!");
 
@@ -267,7 +262,7 @@ namespace TankLib.CASC {
         }
 
         /// <summary>Open Root file</summary>
-        protected BinaryReader OpenRootFile() {
+        protected BinaryReader OpenRootKeyFile() {
             if (!EncodingHandler.GetEntry(Config.RootMD5, out EncodingEntry encInfo))
                 throw new FileNotFoundException("encoding info for root file missing!");
 
@@ -275,12 +270,12 @@ namespace TankLib.CASC {
         }
         
         /// <summary>Open Patch file</summary>
-        public BinaryReader OpenPatchFile() {
+        public BinaryReader OpenPatchKeyFile() {
             return new BinaryReader(OpenFileRaw(Config.PatchMD5));
         }
         
         /// <summary>Open Encoding file</summary>
-        protected BinaryReader OpenEncodingFile() {
+        public BinaryReader OpenEncodingKeyFile() {
             return new BinaryReader(OpenFile(Config.EncodingKey));
         }
         
