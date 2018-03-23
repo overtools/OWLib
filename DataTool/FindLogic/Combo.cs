@@ -732,6 +732,7 @@ namespace DataTool.FindLogic {
                     
                     STUAnimationListAnimationWrapper[] wrappers2 =
                         GetAllInstances<STUAnimationListAnimationWrapper>(guid);
+                    if (wrappers2 == null) break;
                     foreach (STUAnimationListAnimationWrapper animationWrapper in wrappers2) {
                         Find(info, animationWrapper?.Value, replacements, context);
                     }
