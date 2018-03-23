@@ -101,22 +101,21 @@ namespace PackageTool
                 }
             }
 
-            string[] result = new string[Flags.Positionals.Length - 3];
-            Array.Copy(Flags.Positionals, 3, result, 0, Flags.Positionals.Length - 3);
+            string[] modeArgs = Flags.Positionals.Skip(2).ToArray();
 
             switch (Flags.Mode.ToLower())
             {
                 case "extract":
-                    Extract(result);
+                    Extract(modeArgs);
                     break;
                 case "search":
-                    Search(result);
+                    Search(modeArgs);
                     break;
                 case "search-type":
-                    SearchType(result);
+                    SearchType(modeArgs);
                     break;
                 case "info":
-                    Info(result);
+                    Info(modeArgs);
                     break;
                 default:
                     Console.Out.WriteLine("Available modes: extract, search, search-type, info");
@@ -180,15 +179,21 @@ namespace PackageTool
             {
                 using (Stream file = OpenFile(record))
                 {
-                    InfoLog("Saved {0}", Path.Combine(dest, GUID.AsString(record.GUID)));
-                    WriteFile(file, Path.Combine(dest, GUID.AsString(record.GUID)));
+                    string tmp = Path.Combine(dest, $"{GUID.Type(record.GUID):X3}");
+                    if(!Directory.Exists(tmp))
+                    {
+                        Directory.CreateDirectory(tmp);
+                    }
+                    tmp = Path.Combine(tmp, GUID.AsString(record.GUID));
+                    InfoLog("Saved {0}", tmp);
+                    WriteFile(file, tmp);
                 }
             }
         }
 
         private static void Search(string[] args)
         {
-            ulong[] guids = args.Skip(1).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+            ulong[] guids = args.Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
 
             foreach (ApplicationPackageManifest apm in (CASC.Root as OwRootHandler).APMFiles)
             {
@@ -199,7 +204,7 @@ namespace PackageTool
 
                     foreach (PackageRecord record in records.Where(x => guids.Contains(x.GUID) || guids.Contains(GUID.Type(x.GUID)) || guids.Contains(GUID.Index(x.GUID))))
                     {
-                        Log("Found {0} in package {1}", GUID.AsString(record.GUID), GUID.AsString(entry.PackageGUID));
+                        Log("Found {0} in package {1:X12}", GUID.AsString(record.GUID), GUID.LongKey(entry.PackageGUID));
                     }
                 }
             }
@@ -207,7 +212,7 @@ namespace PackageTool
 
         private static void SearchType(string[] args)
         {
-            ulong[] guids = args.Skip(1).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+            ulong[] guids = args.Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
 
             foreach (ApplicationPackageManifest apm in (CASC.Root as OwRootHandler).APMFiles)
             {
@@ -218,7 +223,7 @@ namespace PackageTool
 
                     foreach (PackageRecord record in records.Where(x => guids.Contains(GUID.Type(x.GUID))))
                     {
-                        Log("Found {0} in package {1}", GUID.AsString(record.GUID), GUID.AsString(entry.PackageGUID));
+                        Log("Found {0} in package {1:X12}", GUID.AsString(record.GUID), GUID.LongKey(entry.PackageGUID));
                     }
                 }
             }
@@ -226,7 +231,7 @@ namespace PackageTool
 
         private static void Info(string[] args)
         {
-            ulong[] guids = args.Skip(1).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+            ulong[] guids = args.Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
 
             foreach (ApplicationPackageManifest apm in (CASC.Root as OwRootHandler).APMFiles)
             {
@@ -235,11 +240,11 @@ namespace PackageTool
                     PackageEntry entry = apm.PackageEntries[i];
                     if (guids.Contains(GUID.LongKey(entry.PackageGUID)) || guids.Contains(GUID.Index(entry.PackageGUID)))
                     {
-                        Log("Package {0}:", GUID.AsString(entry.PackageGUID));
+                        Log("Package {0:X12}:", GUID.LongKey(entry.PackageGUID));
                         Log("\tEntry: {0}", GUID.AsString(entry.EntryPointGUID));
                         Log("\tPrimary: {0}", GUID.AsString(entry.PrimaryGUID));
                         Log("\tSecondary: {0}", GUID.AsString(entry.SecondaryGUID));
-                        Log("\tKey: {0}", GUID.AsString(entry.Key));
+                        Log("\tKey: {0:X16}", entry.Key);
                         Log("\tUnknowns: {0}, {1}", entry.Unknown1, entry.Unknown2);
                         Log("\t{0} records", apm.Records[i].Length);
                         Log("\t{0} siblings", apm.PackageSiblings[i].Length);

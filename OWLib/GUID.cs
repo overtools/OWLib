@@ -24,7 +24,7 @@ namespace OWLib {
         }
 
         public static ulong LongKey(ulong key) {
-            return Attribute(key, AttributeEnum.Index | AttributeEnum.Locale | AttributeEnum.Reserved | AttributeEnum.Region | AttributeEnum.Platform);
+            return Attribute(key, (AttributeEnum)0xFFFFFFFFFFFFUL);
         }
 
         public static uint Index(ulong key) {
