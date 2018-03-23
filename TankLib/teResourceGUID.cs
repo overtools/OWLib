@@ -24,18 +24,17 @@ namespace TankLib {
             GUID = guid;
         }
 
-        #region Helpers
         public static ulong Attribute(ulong key, AttributeEnum flags) {
             return key & (ulong)flags;
         }
 
         public static ulong LongKey(ulong key) {
-            return Attribute(key, AttributeEnum.Index | AttributeEnum.Locale | AttributeEnum.Region | AttributeEnum.Platform);
+            return Attribute(key, (AttributeEnum)0xFFFFFFFFFFFFUL);
         }
 
         /// <summary>Unique ID</summary>
         public static uint Index(ulong key) {
-            return (uint)(Attribute(key, AttributeEnum.Index));
+            return (uint)Attribute(key, AttributeEnum.Index);
         }
 
         /// <summary>The locale that this GUID was authored for</summary>
@@ -43,17 +42,17 @@ namespace TankLib {
             return (byte)(Attribute(key, AttributeEnum.Locale) >> 32);
         }
 
-        /// <summary>Reserved for engine usage</summary>
+        /// <summary>The reserved component</summary>
         public static byte Reserved(ulong key) {
             return (byte)(Attribute(key, AttributeEnum.Reserved) >> 37);
         }
 
-        /// <summary>The region that this GUID was authored for</summary>
+        /// <summary>Region that this GUID was authored for</summary>
         public static byte Region(ulong key) {
             return (byte)(Attribute(key, AttributeEnum.Region) >> 39);
         }
 
-        /// <summary>The platform that this GUID was authored for</summary>
+        /// <summary>Platform that this GUID was authored for</summary>
         public static byte Platform(ulong key) {
             return (byte)(Attribute(key, AttributeEnum.Platform) >> 44);
         }
@@ -72,10 +71,10 @@ namespace TankLib {
             return (ushort)(num + 1);
         }
 
+        /// <summary>Reserverd engine component of this GUID</summary>
         public static byte Engine(ulong key) {
             return (byte)(Attribute(key, AttributeEnum.Engine) >> 60);
         }
-        #endregion
 
         /// <summary>Dump info about a guid</summary>
         public static void DumpAttributes(TextWriter @out, ulong key) {
@@ -104,7 +103,7 @@ namespace TankLib {
 
         /// <summary>String representation a GUID</summary>
         public static string AsString(ulong guid) {
-            return $"{guid & 0xFFFFFFFFFFFF:X12}.{Type(guid):X3}";
+            return $"{LongKey(guid):X12}.{Type(guid):X3}";
         }
     }
 }

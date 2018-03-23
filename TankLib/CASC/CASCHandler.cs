@@ -36,6 +36,9 @@ namespace TankLib.CASC {
         /// <summary>Config for this handler</summary>
         public readonly CASCConfig Config;
 
+        /// <summary>Cached data</summary>
+        public static readonly Cache Cache = new Cache("CASCCache");
+
         private CASCHandler(CASCConfig config, BackgroundWorkerEx worker) {
             Config = config;
 
@@ -51,7 +54,7 @@ namespace TankLib.CASC {
                 Debugger.Log(0, "CASC", "CASCHandler: loading CDN indices\r\n");
 
                 using (PerfCounter _ = new PerfCounter("CDNIndexHandler.Initialize()")) {
-                    CDNIndex = CDNIndexHandler.Initialize(config, worker);
+                    CDNIndex = CDNIndexHandler.Initialize(config, worker, Cache);
                 }
 
                 Debugger.Log(0, "CASC", $"CASCHandler: loaded {CDNIndex.Count} CDN indexes\r\n");
@@ -99,40 +102,6 @@ namespace TankLib.CASC {
         public static CASCHandler Open(CASCConfig config, BackgroundWorkerEx worker = null) {
             return new CASCHandler(config, worker);
         }
-
-        public bool GetEncodingEntry(ulong hash, out EncodingEntry enc) {  // todo: unused here?
-            IEnumerable<RootEntry> rootInfos = RootHandler.GetEntries(hash);
-            IEnumerable<RootEntry> rootEntries = rootInfos as RootEntry[] ?? rootInfos.ToArray();
-            if (rootEntries.Any())
-                return EncodingHandler.GetEntry(rootEntries.First().MD5, out enc);
-
-            enc = default(EncodingEntry);
-            return false;
-        }
-
-
-        //public Stream OpenFile(string name) => OpenFile(Hasher.ComputeHash(name));
-
-        /* public Stream OpenFile(ulong hash) {
-             if (GetEncodingEntry(hash, out EncodingEntry encInfo))
-                 return OpenFile(encInfo.Key);
-             
-             if (RootHandler.GetEntry(hash, out RootEntry entry))
-                 if ((entry.ContentFlags & ContentFlags.Bundle) != ContentFlags.None)
-                     if (EncodingHandler.GetEntry(entry.pkgIndex.bundleContentKey, out encInfo))
-                         using (Stream bundle = OpenFile(encInfo.Key)) {
-                             MemoryStream ms = new MemoryStream();
- 
-                             bundle.Position = entry.pkgIndexRec.Offset;
-                             bundle.CopyBytes(ms, entry.pkgIndexRec.Size);
- 
-                             return ms;
-                         }
-
-             //if (CASCConfig.ThrowOnFileNotFound)
-             //    throw new FileNotFoundException($"{hash:X16}");
-             return null;
-        }*/
 
         /// <summary>Open a file stream from encoding hash</summary>
         public Stream OpenFile(MD5Hash key) {

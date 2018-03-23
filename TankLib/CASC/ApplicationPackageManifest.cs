@@ -1,330 +1,260 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
 using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
 
 namespace TankLib.CASC {
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct APMEntry {
-        public uint Index;
-        public uint hashA;
-        public uint hashB;
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct CMFEntry {
-        public uint Index;
-        public uint hashA;
-        public uint hashB;
-    }
-    
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct CMFHashData {
-        public ulong id;
-        public uint flags;
-        public MD5Hash HashKey;
-    }
-    
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct PackageIndex {
-        public long recordsOffset; // Offset to GZIP compressed records chunk, read (recordsSize + numRecords) bytes here
-
-        public long unkOffset_0;
-        public long unkOffset_1;
-        public long depsOffset; // Offset to dependencies chunk, read numDeps * uint here
-        public ulong unk_0;
-        public uint numUnk_0;
-        public uint numRecords;
-        public uint numUnk_1;
-        public uint recordsSize;
-        public uint unk_1;
-        public uint numDeps;
-        public ulong unk_2;
-        public teResourceGUID bundleKey; // Requires some sorcery, see Key
-        public ulong unk_3;
-        public MD5Hash bundleContentKey;
-
-        public PackageIndex(PackageIndexItem package) {
-            recordsOffset = package.recordsOffset;
-            unkOffset_0 = package.unkOffset_0;
-            unkOffset_1 = package.unkOffset_1;
-            depsOffset = package.depsOffset;
-            unk_0 = package.unk_0;
-            numRecords = package.numRecords;
-            numUnk_0 = package.numUnk_0;
-            numUnk_1 = package.numUnk_1;
-            recordsSize = package.recordsSize;
-            unk_1 = package.unk_1;
-            numDeps = package.numDeps;
-            unk_2 = package.unk_2;
-            bundleKey = package.bundleKey;
-            unk_3 = package.unk_3;
-        }
-
-        public static explicit operator PackageIndex(PackageIndexItem package) {
-            PackageIndex a = new PackageIndex(package);
-            return a;
-        }
-    }
-    
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct PackageIndexItem {
-        public long recordsOffset;
-        public long unkOffset_0;
-        public long unkOffset_1;
-        public long depsOffset;
-        public ulong unk_0;
-        public uint numUnk_0;
-        public uint numRecords;
-        public uint numUnk_1;
-        public uint recordsSize;
-        public uint unk_1;
-        public uint numDeps;
-        public ulong unk_2;
-        public teResourceGUID bundleKey;
-        public ulong unk_3;
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct PackageIndexRecord {
-        public teResourceGUID Key; // Requires some sorcery, see Key
-        public uint Flags; // Flags. Has 0x40000000 when in bundle, otherwise in encoding
-        public uint Offset; // Offset into bundle
-        public int Size;
-        public MD5Hash ContentKey; // If it doesn't have the above flag (0x40000000) look it up in encoding
-
-        public PackageIndexRecord(PackageIndexRecordItem record) {
-            Key = record.Key;
-            Flags = record.Flags;
-            Offset = record.Offset;
-            Size = 0;
-        }
-
-        public static explicit operator PackageIndexRecord(PackageIndexRecordItem record) {
-            PackageIndexRecord a = new PackageIndexRecord(record);
-            return a;
-        }
-    }
-    
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct PackageIndexRecordItem {
-        public teResourceGUID Key; // Requires some sorcery, see Key
-        public uint Flags; // Flags. Has 0x40000000 when in bundle, otherwise in encoding
-        public uint Offset; // Offset into bundle
-    }
-    
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public class APMPackage {
-        public teResourceGUID localKey;
-        public teResourceGUID primaryKey;
-        public teResourceGUID externalKey;
-        public ulong encryptionKeyHash;
-        public teResourceGUID packageKey;
-        public uint unk_0;
-        public uint unk_1; // size?
-        public uint unk_2;
-        public MD5Hash indexContentKey;
-
-        public APMPackage(APMPackageItem package) {
-            localKey = package.localKey;
-            primaryKey = package.primaryKey;
-            externalKey = package.externalKey;
-            encryptionKeyHash = package.encryptionKeyHash;
-            packageKey = package.packageKey;
-            unk_0 = package.unk_0;
-            unk_1 = package.unk_1;
-            unk_2 = package.unk_2;
-        }
-
-        public static explicit operator APMPackage(APMPackageItem package) {
-            APMPackage a = new APMPackage(package);
-            return a;
-        }
-    }
-    
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct APMPackageItem {
-        public teResourceGUID localKey;
-        public teResourceGUID primaryKey;
-        public teResourceGUID externalKey;
-        public ulong encryptionKeyHash;
-        public teResourceGUID packageKey;
-        public uint unk_0;
-        public uint unk_1; // size?
-        public uint unk_2;
-    }
-    
-    /// <summary>APM file</summary>
     public class ApplicationPackageManifest {
-        public interface IAPMHeader {
-            uint GetPackageCount();
-            void SetPackageCount(uint value);
-            uint GetEntryCount();
-            ulong GetBuildVersion();
-            uint GetBuildNumber();
-        }
+        public static class Types {
+            [StructLayout(LayoutKind.Sequential, Pack = 4)]
+            public struct Header {
+                public ulong Build;
+                public ulong Unknown1;
+                public uint PackageCount;
+                public uint Unknown2;
+                public uint EntryCount;
+                public uint Checksum;
+            };
 
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct APMHeader39028 : IAPMHeader {
-            public ulong BuildVersion;
-            public ulong Unknown1; // zero
-            public uint BuildNumber;
-            public uint PackageCount; // zero;
-            public uint EntryCount;
-            public uint Checksum;
-
-            public void SetPackageCount(uint value) {
-                PackageCount = value;
+            [StructLayout(LayoutKind.Sequential, Pack = 4)]
+            public struct Entry {
+                public uint Index;
+                public ulong Hash;
             }
 
-            public uint GetPackageCount() => PackageCount;
-            public uint GetEntryCount() => EntryCount;
-            public ulong GetBuildVersion() => BuildVersion;
-            public uint GetBuildNumber() => BuildNumber;
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct APMHeader17 : IAPMHeader {
-            public ulong BuildVersion;
-            public uint BuildNumber;
-            public uint PackageCount; // zero;
-            public uint EntryCount;
-            public uint Checksum;
-
-            public void SetPackageCount(uint value) {
-                PackageCount = value;
+            [StructLayout(LayoutKind.Sequential, Pack = 4)]
+            public struct PackageEntry {
+                public ulong EntryPointGUID; // virtual most likely
+                public ulong PrimaryGUID; // real
+                public ulong SecondaryGUID; // real
+                public ulong Key; // encryption
+                public ulong PackageGUID; // 077 file
+                public ulong Unknown1;
+                public uint Unknown2;
             }
 
-            public uint GetPackageCount() => PackageCount;
-            public uint GetEntryCount() => EntryCount;
-            public ulong GetBuildVersion() => BuildVersion;
-            public uint GetBuildNumber() => BuildNumber;
+            public enum PackageCompressionMethod : uint {
+                Uncompressed = 0,
+                Gzip = 1,
+            }
+
+            [StructLayout(LayoutKind.Sequential, Pack = 4)]
+            public struct Package {
+                public long OffsetRecords;
+                public long OffsetSiblings;
+                public long OffsetUnknown;
+                public long OffsetSiblings2;
+                public ulong Unknown1;
+                public uint Unknown2;
+                public uint RecordCount;
+                public PackageCompressionMethod CompressionMethod;
+                public ulong SizeRecords;
+                public uint SiblingCount;
+                public uint Checksum;
+                public uint Unknown3;
+                public ulong BundleGUID; // 095 file
+                public ulong Unknown4;
+            }
+
+            [StructLayout(LayoutKind.Sequential, Pack = 4)]
+            public struct PackageRecordRaw {
+                public ulong GUID;
+                public ContentFlags Flags;
+                public uint Offset;
+            }
+
+            [StructLayout(LayoutKind.Sequential, Pack = 4)]
+            public struct PackageRecord {
+                public ulong GUID;
+                public ContentFlags Flags;
+                public uint Offset;
+                public uint Size;
+                public MD5Hash Hash;
+            }
         }
 
-        public readonly IAPMHeader Header;
-        public readonly APMPackage[] Packages;
-        public readonly APMEntry[] Entries;
-        public readonly PackageIndex[] Indexes;
-        public readonly PackageIndexRecord[][] Records;
-        public readonly ContentManifestFile CMF;
+        public string Name { get; }
+
+        public Types.Header Header;
+        public Types.Entry[] Entries;
+        public Types.PackageEntry[] PackageEntries;
+        public Types.Package[] Packages;
+        public Types.PackageRecord[][] Records;
+        public ulong[][] PackageSiblings;
+        public Dictionary<ulong, Types.PackageRecord> FirstOccurence = new Dictionary<ulong, Types.PackageRecord>();
+
+        public ContentManifestFile CMF;
 
         public LocaleFlags Locale;
-        public string Name;
-        
-        public ApplicationPackageManifest(string name, MD5Hash cmfhash, Stream stream, CASCHandler casc,
-            LocaleFlags locale, string cmfname, BackgroundWorkerEx worker = null) {
-            Locale = locale;
+
+        public ApplicationPackageManifest(string name, MD5Hash cmfhash, Stream stream, CASCHandler casc, string cmfname,
+            BackgroundWorkerEx worker = null) {
             Name = name;
-            
-            using (BinaryReader reader = new BinaryReader(stream)) {
-                //using (Stream file = File.OpenWrite(Path.GetFileName(name))) {
-                //    stream.CopyTo(file);
-                //    stream.Position = 0;
-                //}
-                
-                ulong version = reader.ReadUInt64();
-                stream.Position -= 8;
-                if (version >= 39028) {
-                    Header = reader.Read<APMHeader39028>();
-                }
-                else {
-                    Header = reader.Read<APMHeader17>();
+
+            EncodingEntry cmfEncoding;
+            if (!casc.EncodingHandler.GetEntry(cmfhash, out cmfEncoding)) {
+                return;
+            }
+
+            using (Stream cmfStream = casc.OpenFile(cmfEncoding.Key)) {
+                CMF = new ContentManifestFile(cmfname, cmfStream, worker);
+
+                using (BinaryReader reader = new BinaryReader(stream)) {
+                    Header = reader.Read<Types.Header>();
+
+                    if (CASCHandler.Cache.CacheAPM && CacheFileExists(Header.Build)) {
+                        LoadCache(Header.Build);
+                        GatherFirstCMF(casc);
+                        return;
+                    }
+
+                    Entries = reader.ReadArray<Types.Entry>((int) Header.EntryCount);
+                    PackageEntries = reader.ReadArray<Types.PackageEntry>((int) Header.PackageCount);
+
+                    Packages = new Types.Package[Header.PackageCount];
+                    Records = new Types.PackageRecord[Header.PackageCount][];
+                    PackageSiblings = new ulong[Header.PackageCount][];
+
+                    for (uint i = 0; i < Header.PackageCount; ++i) {
+                        Types.PackageEntry entry = PackageEntries[i];
+                        if (!CMF.Map.ContainsKey(entry.PackageGUID)) {
+                            continue; // lol?
+                        }
+
+                        EncodingEntry packageEncoding;
+                        if (!casc.EncodingHandler.GetEntry(CMF.Map[entry.PackageGUID].HashKey, out packageEncoding))
+                            continue;
+                        using (Stream packageStream = casc.OpenFile(packageEncoding.Key))
+                        using (BinaryReader packageReader = new BinaryReader(packageStream)) {
+                            Packages[i] = packageReader.Read<Types.Package>();
+
+                            if (Packages[i].SiblingCount > 0) {
+                                packageStream.Position = Packages[i].OffsetSiblings;
+                                PackageSiblings[i] = packageReader.ReadArray<ulong>((int) Packages[i].SiblingCount);
+                            } else {
+                                PackageSiblings[i] = new ulong[0];
+                            }
+
+                            packageStream.Position = Packages[i].OffsetRecords;
+                            Types.PackageRecordRaw[] recordsRaw;
+                            using (GZipStream recordGunzipped = new GZipStream(packageStream, CompressionMode.Decompress))
+                            using (BinaryReader recordReader = new BinaryReader(recordGunzipped)) {
+                                recordsRaw = recordReader.ReadArray<Types.PackageRecordRaw>((int) Packages[i].RecordCount);
+                                Records[i] = new Types.PackageRecord[Packages[i].RecordCount];
+                            }
+
+                            for (uint j = 0; j < Packages[i].RecordCount; ++j) {
+                                Types.PackageRecordRaw rawRecord = recordsRaw[j];
+                                Types.PackageRecord record = new Types.PackageRecord {
+                                    GUID = rawRecord.GUID,
+                                    Flags = rawRecord.Flags,
+                                    Offset = rawRecord.Offset,
+                                    Hash = default(MD5Hash)
+                                };
+                                ContentManifestFile.HashData recordCMF = CMF.Map[record.GUID];
+                                if (record.Flags.HasFlag(ContentFlags.Bundle)) {
+                                    record.Hash = CMF.Map[Packages[i].BundleGUID].HashKey;
+                                } else {
+                                    if (CMF.Map.ContainsKey(record.GUID)) {
+                                        record.Hash = recordCMF.HashKey;
+                                    }
+                                }
+
+                                record.Size = recordCMF.Size;
+                                Records[i][j] = record;
+
+                                if (!FirstOccurence.ContainsKey(record.GUID)) {
+                                    FirstOccurence[record.GUID] = record;
+                                }
+                            }
+                        }
+                    }
                 }
 
-                Entries = new APMEntry[Header.GetEntryCount()];
-                for (int j = 0; j < Entries.Length; j++) {
-                    Entries[j] = reader.Read<APMEntry>();
+                if (CASCHandler.Cache.CacheAPM) {
+                    SaveCache(Header.Build);
                 }
-                Header.SetPackageCount((uint) ((stream.Length - stream.Position) / Marshal.SizeOf(typeof(APMPackage))));
 
-                if (!casc.EncodingHandler.GetEntry(cmfhash, out EncodingEntry cmfEnc)) {
+                GatherFirstCMF(casc);
+            }
+        }
+
+        private bool CacheFileExists(ulong build) => File.Exists(CacheFile(build));
+
+        private string CacheFile(ulong build) =>
+            Path.Combine(CASCHandler.Cache.APMCachePath, $"{build}_{Path.GetFileNameWithoutExtension(Name)}.apmcached");
+
+        private void SaveCache(ulong build) {
+            if (CacheFileExists(build)) {
+                return;
+            }
+
+            using (Stream file = File.OpenWrite(CacheFile(build)))
+            using (BinaryWriter writer = new BinaryWriter(file)) {
+                writer.Write(1UL);
+                writer.Write(Entries.Length);
+                writer.WriteStructArray(Entries);
+                writer.Write(PackageEntries.Length);
+                writer.WriteStructArray(PackageEntries);
+                writer.WriteStructArray(Packages);
+                for (int i = 0; i < PackageEntries.Length; ++i) {
+                    writer.Write(Records[i].Length);
+                    writer.WriteStructArray(Records[i]);
+                    writer.Write(PackageSiblings[i].Length);
+                    writer.WriteStructArray(PackageSiblings[i]);
+                }
+            }
+        }
+
+        private void LoadCache(ulong build) {
+            if (!CacheFileExists(build)) {
+                return;
+            }
+
+            using (Stream file = File.OpenRead(CacheFile(build)))
+            using (BinaryReader reader = new BinaryReader(file)) {
+                if (reader.ReadUInt64() > 1) {
                     return;
                 }
 
-                if (casc.Config.LoadContentManifest) {
-                    using (Stream cmfStream = casc.OpenFile(cmfEnc.Key)) {
-                        CMF = new ContentManifestFile(cmfname, cmfStream, worker);
-                    }  
+                int entryCount = reader.ReadInt32();
+                Entries = reader.ReadArray<Types.Entry>(entryCount);
+                int packageEntryCount = reader.ReadInt32();
+                PackageEntries = reader.ReadArray<Types.PackageEntry>(packageEntryCount);
+                Packages = reader.ReadArray<Types.Package>(packageEntryCount);
+
+                Records = new Types.PackageRecord[packageEntryCount][];
+                PackageSiblings = new ulong[packageEntryCount][];
+
+                for (int i = 0; i < packageEntryCount; ++i) {
+                    int recordCount = reader.ReadInt32();
+                    Records[i] = reader.ReadArray<Types.PackageRecord>(recordCount);
+                    int siblingCount = reader.ReadInt32();
+                    PackageSiblings[i] = reader.ReadArray<ulong>(siblingCount);
+
+                    foreach (Types.PackageRecord record in Records[i]) {
+                        if (!FirstOccurence.ContainsKey(record.GUID)) {
+                            FirstOccurence[record.GUID] = record;
+                        }
+                    }
                 }
+            }
+        }
 
-                uint[][] dependencies;
-                //if (!RootHandler.LoadPackages) {
-                //    Packages = new APMPackage[0];
-                //    Indexes = new PackageIndex[0];
-                //    Records = new PackageIndexRecord[0][];
-                //    //dependencies = new uint[0][];
-                //    return;
-                //}
-
-                Packages = new APMPackage[Header.GetPackageCount()];
-                Indexes = new PackageIndex[Header.GetPackageCount()];
-                Records = new PackageIndexRecord[Header.GetPackageCount()][];
-                dependencies = new uint[Header.GetPackageCount()][];
-                
-                return;
-
-                for (int j = 0; j < Packages.Length; j++) {
-                    Packages[j] = new APMPackage(reader.Read<APMPackageItem>());
-                    Packages[j].indexContentKey = CMF.Map[(ulong)Packages[j].packageKey].HashKey;
-
-                    if (!casc.EncodingHandler.GetEntry(Packages[j].indexContentKey, out EncodingEntry pkgIndexEnc)) {
-                        continue;
-                    }
-
-                    using (Stream pkgIndexStream = casc.OpenFile(pkgIndexEnc.Key))
-                    using (BinaryReader pkgIndexReader = new BinaryReader(pkgIndexStream)) {
-#if OUTPUT_PKG // Write out Package Index files
-                        string pkgfilename =
-string.Format("./Packages/{0}/{1:X}.pkgindx", name, packages[j].packageKey);
-                        string pkgPathname = pkgfilename.Substring(0, pkgfilename.LastIndexOf('/'));
-                        Directory.CreateDirectory(pkgPathname);
-                        Stream pkgWriter = File.Create(pkgfilename);
-                        pkgIndexStream.CopyTo(pkgWriter);
-                        pkgWriter.Close();
-                        pkgIndexStream.Seek(0, SeekOrigin.Begin);
-#endif
-
-                        Indexes[j] = new PackageIndex(pkgIndexReader.Read<PackageIndexItem>());
-                        try {
-                            Indexes[j].bundleContentKey = CMF.Map[(ulong)Indexes[j].bundleKey].HashKey;
-                        }
-                        catch {
-                            // ignored
-                        }
-                        pkgIndexStream.Position = Indexes[j].recordsOffset;
-
-                        using (GZipStream recordsStream =
-                            new GZipStream(pkgIndexStream, CompressionMode.Decompress, true)) {
-                            using (BinaryReader recordsReader = new BinaryReader(recordsStream)) {
-                                PackageIndexRecord[] recs = new PackageIndexRecord[Indexes[j].numRecords];
-
-                                for (int k = 0; k < recs.Length; k++) {
-                                    recs[k] = new PackageIndexRecord(recordsReader.Read<PackageIndexRecordItem>());
-                                    bool shouldntEnc = (recs[k].Flags & 0x40000000) != 0;
-                                    recs[k].ContentKey = CMF.Map[(ulong)recs[k].Key].HashKey;
-                                    if (casc.EncodingHandler.GetEntry(recs[k].ContentKey, out EncodingEntry encInfo)) {
-                                        recs[k].Size =
-                                            encInfo
-                                                .Size; // WHY DOES THIS WORK? ARE BUNDLED FILES NOT ACTUALLY IN A BUNDLE ANYMORE?
-                                        if (shouldntEnc) {
-                                            
-                                        }
-                                    }
-                                }
-                                Records[j] = recs;
-                            }
-                        }
-
-                        pkgIndexStream.Position = Indexes[j].depsOffset;
-
-                        uint[] deps = new uint[Indexes[j].numDeps];
-
-                        for (int k = 0; k < deps.Length; k++)
-                            deps[k] = pkgIndexReader.ReadUInt32();
-
-                        dependencies[j] = deps;
-                    }
+        private void GatherFirstCMF(CASCHandler casc) {
+            foreach (KeyValuePair<ulong, ContentManifestFile.HashData> pair in CMF.Map) {
+                if (FirstOccurence.ContainsKey(pair.Key)) continue;
+                EncodingEntry info = new EncodingEntry();
+                if (casc.EncodingHandler.GetEntry(pair.Value.HashKey, out info)) {
+                    FirstOccurence[pair.Key] = new Types.PackageRecord {
+                        Flags = 0,
+                        GUID = pair.Key,
+                        Hash = pair.Value.HashKey,
+                        Offset = 0,
+                        Size = (uint) info.Size
+                    };
                 }
             }
         }

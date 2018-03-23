@@ -178,7 +178,9 @@ namespace TankLib.CASC {
                         try {
                             Enum.Parse(typeof(LocaleFlags), tag.Substring(0, 4));
                             config.Languages.Add(tag);
-                        } catch { }
+                        } catch {
+                            // ignored
+                        }
                     }
                 }
             }

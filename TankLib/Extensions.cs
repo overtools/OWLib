@@ -1,30 +1,72 @@
-﻿using System;
-using System.IO;
-using System.Runtime.InteropServices;
+﻿using System.IO;
 using System.Text;
+using TankLib.Helpers;
 
 namespace TankLib {
     public static class Extensions {
         #region BinaryReader
+        //public static T Read<T>(this BinaryReader reader) where T : struct {
+        //    int size = Marshal.SizeOf<T>();
+        //    byte[] buf = reader.ReadBytes(size);
+        //    IntPtr ptr = Marshal.AllocHGlobal(size);
+        //    Marshal.Copy(buf, 0, ptr, size);
+        //    T obj = Marshal.PtrToStructure<T>(ptr);
+        //    Marshal.FreeHGlobal(ptr);
+        //    return obj;
+        //}
+        //public static void Write<T>(this BinaryWriter writer, T obj) where T : struct {
+        //    int size = Marshal.SizeOf<T>();
+        //    byte[] buf = new byte[size];
+        //    IntPtr ptr = Marshal.AllocHGlobal(size);
+        //    Marshal.StructureToPtr(obj, ptr, true);
+        //    Marshal.Copy(ptr, buf, 0, size);
+        //    Marshal.FreeHGlobal(ptr);
+        //    writer.Write(buf, 0, size);
+        //}
         public static T Read<T>(this BinaryReader reader) where T : struct {
-            int size = Marshal.SizeOf<T>();
-            byte[] buf = reader.ReadBytes(size);
-            IntPtr ptr = Marshal.AllocHGlobal(size);
-            Marshal.Copy(buf, 0, ptr, size);
-            T obj = Marshal.PtrToStructure<T>(ptr);
-            Marshal.FreeHGlobal(ptr);
-            return obj;
+            byte[] result = reader.ReadBytes(FastStruct<T>.Size);
+
+            return FastStruct<T>.ArrayToStructure(result);
         }
 
-        public static void Write<T>(this BinaryWriter writer, T obj) where T : struct {
-            int size = Marshal.SizeOf<T>();
-            byte[] buf = new byte[size];
-            IntPtr ptr = Marshal.AllocHGlobal(size);
-            Marshal.StructureToPtr(obj, ptr, true);
-            Marshal.Copy(ptr, buf, 0, size);
-            Marshal.FreeHGlobal(ptr);
-            writer.Write(buf, 0, size);
+        public static T[] ReadArray<T>(this BinaryReader reader) where T : struct
+        {
+            int numBytes = (int)reader.ReadInt64();
+            if (numBytes == 0)
+            {
+                return new T[0];
+            }
+
+            byte[] result = reader.ReadBytes(numBytes);
+
+            reader.BaseStream.Position += (0 - numBytes) & 0x07;
+            return FastStruct<T>.ReadArray(result);
         }
+
+        public static void Write<T>(this BinaryWriter writer, T @struct) where T : struct
+        {
+            writer.Write(FastStruct<T>.StructureToArray(@struct));
+        }
+        
+        public static void WriteStructArray<T>(this BinaryWriter writer, T[] @struct) where T : struct
+        {
+            writer.Write(FastStruct<T>.WriteArray(@struct));
+        }
+
+        public static T[] ReadArray<T>(this BinaryReader reader, int count) where T : struct
+        {
+            if(count == 0)
+            {
+                return new T[0];
+            }
+
+            int numBytes = FastStruct<T>.Size * count;
+
+            byte[] result = reader.ReadBytes(numBytes);
+
+            return FastStruct<T>.ReadArray(result);
+        }
+
         
         public static long Position(this BinaryReader reader) => reader.BaseStream.Position;
 

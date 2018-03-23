@@ -20,18 +20,19 @@ namespace TankLib.CASC.Handlers {
         private CASCConfig _config;
         private BackgroundWorkerEx _worker;
         private SyncDownloader _downloader;
-        public static readonly CDNCache Cache = new CDNCache("CascCache");
+        private readonly Cache _cache;
 
         public int Count => _cdnIndexData.Count;
 
-        private CDNIndexHandler(CASCConfig cascConfig, BackgroundWorkerEx worker) {
+        private CDNIndexHandler(CASCConfig cascConfig, BackgroundWorkerEx worker, Cache cache) {
             _config = cascConfig;
             _worker = worker;
             _downloader = new SyncDownloader(worker);
+            _cache = cache;
         }
 
-        public static CDNIndexHandler Initialize(CASCConfig config, BackgroundWorkerEx worker) {
-            CDNIndexHandler handler = new CDNIndexHandler(config, worker);
+        public static CDNIndexHandler Initialize(CASCConfig config, BackgroundWorkerEx worker, Cache cache) {
+            CDNIndexHandler handler = new CDNIndexHandler(config, worker, cache);
 
             worker?.ReportProgress(0, "Loading \"CDN indexes\"...");
 
@@ -87,7 +88,7 @@ namespace TankLib.CASC.Handlers {
                               "/" + archive + ".index";
                 string url = "http://" + host + "/" + file;
                 try {
-                    Stream stream = Cache.OpenFile(file, url, false);
+                    Stream stream = _cache.OpenCDNFile(file, url, false);
                     if (stream == null) {
                         stream = _downloader.OpenFile(url);
                         if (stream == null) continue;
@@ -119,7 +120,7 @@ namespace TankLib.CASC.Handlers {
                           archive;
             string url = "http://" + cdnHost + "/" + file;
 
-            Stream stream = Cache.OpenFile(file, url, true);
+            Stream stream = _cache.OpenCDNFile(file, url, true);
 
             if (stream != null) {
                 stream.Position = entry.Offset;
@@ -161,7 +162,7 @@ namespace TankLib.CASC.Handlers {
                           keyStr;
             string url = "http://" + CDNHost + "/" + file;
 
-            Stream stream = Cache.OpenFile(file, url, false);
+            Stream stream = _cache.OpenCDNFile(file, url, false);
 
             return stream ?? _downloader.OpenFile(url);
         }
@@ -172,7 +173,7 @@ namespace TankLib.CASC.Handlers {
                 string url = "http://" + host + "/" + file;
 
                 try {
-                    Stream stream = Cache.OpenFile(file, url, false);
+                    Stream stream = CASCHandler.Cache.OpenCDNFile(file, url, false);
 
                     if (stream != null) return stream;
 

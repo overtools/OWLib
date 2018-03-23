@@ -4,10 +4,10 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using CMFLib;
+using TankLib.CASC.Remote;
 
-namespace TankLib.CASC.Remote {
-    public class CacheMetaData
-    {
+namespace TankLib.CASC {
+    public class CacheMetaData {
         public long Size { get; }
         public byte[] MD5 { get; }
 
@@ -40,31 +40,46 @@ namespace TankLib.CASC.Remote {
         }
     }
 
-    public class CDNCache {
-        public bool Enabled { get; set; } = true;
-        public bool CacheData { get; set; } = true;
-        public bool Validate { get; set; } = false;
+    public class Cache {
+        public bool CacheCDN = true;
+        public bool CacheCDNData = true;
+        public bool ValidateCDN = false;
 
+        public bool CacheAPM = true;
+        
         private readonly string _cachePath;
+        
+        public readonly string CDNCachePath;
+        public readonly string APMCachePath;
+        
         private readonly SyncDownloader _downloader = new SyncDownloader(null);
 
         private readonly MD5 _md5 = MD5.Create();
 
-        public CDNCache(string path) {
+        public Cache(string path) {
             _cachePath = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), path);
-            if (Enabled) {
-                if (!Directory.Exists(_cachePath)) {
-                    Directory.CreateDirectory(_cachePath);
+            CDNCachePath = Path.Combine(_cachePath, "CDN");
+            APMCachePath = Path.Combine(_cachePath, "APM");
+            
+            if (CacheCDN) {
+                if (!Directory.Exists(CDNCachePath)) {
+                    Directory.CreateDirectory(CDNCachePath);
                 }
-                Console.Out.WriteLine("CASC CDN Cache path is {0}", _cachePath);
+                Console.Out.WriteLine("CASC Cache path is {0}", _cachePath);
+            }
+
+            if (CacheAPM) {
+                if (!Directory.Exists(APMCachePath)) {
+                    Directory.CreateDirectory(APMCachePath);
+                }
             }
         }
 
-        public Stream OpenFile(string name, string url, bool isData) {
-            if (!Enabled)
+        public Stream OpenCDNFile(string name, string url, bool isData) {
+            if (!CacheCDN)
                 return null;
 
-            if (isData && !CacheData)
+            if (isData && !CacheCDNData)
                 return null;
 
             string file = Path.Combine(_cachePath, name);
@@ -80,7 +95,7 @@ namespace TankLib.CASC.Remote {
                 }
             }
 
-            if (Validate) {
+            if (ValidateCDN) {
                 CacheMetaData meta = CacheMetaData.Load(file) ?? _downloader.GetMetaData(url, file);
 
                 if (meta == null)

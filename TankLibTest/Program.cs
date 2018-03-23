@@ -7,10 +7,11 @@ using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
 using TankLib.STU;
+using static TankLib.CASC.ApplicationPackageManifest.Types;
 
 namespace TankLibTest {
     internal class Program {
-        public static Dictionary<ulong, MD5Hash> Files;
+        public static Dictionary<ulong, PackageRecord> Files;
         public static CASCConfig Config;
         public static CASCHandler CASC;
         
@@ -21,6 +22,7 @@ namespace TankLibTest {
             // casc setup
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
             Config.Languages = new HashSet<string> {language};
+            //ApplicationPackageManifest.USE_CACHE = false;
             CASC = CASCHandler.Open(Config);
             
             MapCMF(language);
@@ -138,7 +140,7 @@ namespace TankLibTest {
         
         
         public static void MapCMF(string locale) {
-            Files = new Dictionary<ulong, MD5Hash>();
+            Files = new Dictionary<ulong, PackageRecord>();
             foreach (ApplicationPackageManifest apm in CASC.RootHandler.APMFiles) {
                 const string searchString = "rdev";
                 if (!apm.Name.ToLowerInvariant().Contains(searchString)) {
@@ -147,32 +149,37 @@ namespace TankLibTest {
                 if (!apm.Name.ToLowerInvariant().Contains("l" + locale.ToLowerInvariant())) {
                     continue;
                 }
-                foreach (KeyValuePair<ulong, CMFHashData> pair in apm.CMF.Map) {
-                    Files[pair.Value.id] = pair.Value.HashKey;
+                foreach (KeyValuePair<ulong, PackageRecord> pair in apm.FirstOccurence) {
+                    Files[pair.Value.GUID] = pair.Value;
                 }
             }
         }
         
         public static Stream OpenFile(ulong guid) {
-            return OpenFile(CASC, Files[guid], guid);
+            return OpenFile(Files[guid]);
         }
-        
-        public static Stream OpenFile(CASCHandler casc, MD5Hash hash, ulong guid) {
+
+        public static Stream OpenFile(PackageRecord record) {
+            long offset = 0;
+            EncodingEntry enc;
+            if (record.Flags.HasFlag(ContentFlags.Bundle)) offset = record.Offset;
+            if (!CASC.EncodingHandler.GetEntry(record.Hash, out enc)) return null;
+
+            MemoryStream ms = new MemoryStream((int) record.Size);
             try {
-                //return casc.EncodingHandler.GetEntry(hash, out EncodingEntry enc) ? casc.OpenFile(enc.Key) : null;
-                
-                bool found = casc.EncodingHandler.GetEntry(hash, out EncodingEntry enc);
-                if (!found) {
-                    Debugger.Log(0, "TankLibTest:CASC", $"Missing encoding entry for {teResourceGUID.AsString(guid)}\r\n");
-                }
-                return found ? casc.OpenFile(enc.Key) : null;
-            }
-            catch (Exception e) {
+                Stream fstream = CASC.OpenFile(enc.Key);
+                fstream.Position = offset;
+                fstream.CopyBytes(ms, (int) record.Size);
+                ms.Position = 0;
+            } catch (Exception e) {
                 if (e is BLTEKeyException exception) {
-                    Debugger.Log(0, "TankLibTest:CASC", $"Missing key: {exception.MissingKey:X16}\r\n");
+                    Debugger.Log(0, "DataTool", $"[DataTool:CASC]: Missing key: {exception.MissingKey:X16}\r\n");
                 }
+
                 return null;
             }
+
+            return ms;
         }
     }
 }

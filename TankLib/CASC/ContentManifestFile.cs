@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using CMFLib;
 using TankLib.CASC.Helpers;
@@ -7,14 +8,19 @@ using TankLib.CASC.Helpers;
 namespace TankLib.CASC {
     /// <summary>CMF file</summary>
     public class ContentManifestFile {
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct HashData {
+            public ulong GUID;
+            public uint Size;
+            public MD5Hash HashKey;
+        }
+        
         /// <summary>Header data</summary>
         public readonly CMFHeader Header;
         
-        public List<CMFHashData> HashList;
-        
-        public List<CMFEntry> Entries;
-        
-        public Dictionary<ulong, CMFHashData> Map;
+        public HashData[] HashList;
+        public ApplicationPackageManifest.Types.Entry[] Entries;
+        public Dictionary<ulong, HashData> Map;
         
         /// <summary>Read teh file</summary>
         /// <param name="name">APM name</param>
@@ -45,18 +51,12 @@ namespace TankLib.CASC {
         }
         
         internal void ParseCMF(BinaryReader cmfreader) {
-            Entries = new List<CMFEntry>((int) Header.EntryCount);
-            for (uint i = 0; i < Header.EntryCount; i++) {
-                CMFEntry a = cmfreader.Read<CMFEntry>();
-                Entries.Add(a);
-            }
-
-            HashList = new List<CMFHashData>((int) Header.DataCount);
-            Map = new Dictionary<ulong, CMFHashData>((int) Header.DataCount);
-            for (uint i = 0; i < Header.DataCount; i++) {
-                CMFHashData a = cmfreader.Read<CMFHashData>();
-                HashList.Add(a);
-                Map[a.id] = a;
+            Entries = cmfreader.ReadArray<ApplicationPackageManifest.Types.Entry>((int)Header.EntryCount);
+            
+            HashList = cmfreader.ReadArray<HashData>((int)Header.DataCount);
+            Map = new Dictionary<ulong, HashData>((int)Header.DataCount);
+            for (uint i = 0; i < (int)Header.DataCount; i++) {
+                Map[HashList[i].GUID] = HashList[i];
             }
         }
 

@@ -306,8 +306,8 @@ namespace CASCEncDump {
                 if (!apm.Name.ToLowerInvariant().Contains("l" + locale.ToLowerInvariant())) {
                     continue;
                 }
-                foreach (KeyValuePair<ulong, CMFHashData> pair in apm.CMF.Map) {
-                    Files[pair.Value.id] = pair.Value.HashKey;
+                foreach (KeyValuePair<ulong, ContentManifestFile.HashData> pair in apm.CMF.Map) {
+                    Files[pair.Value.GUID] = pair.Value.HashKey;
                 }
             }
         }
