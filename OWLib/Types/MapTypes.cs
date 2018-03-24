@@ -85,4 +85,33 @@ namespace OWLib.Types {
         public byte type;
         public uint size;
     }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct MapEnviornment
+    {
+        public Matrix3x4B M0;
+        public Matrix4B M1;
+        public Matrix4B M2;
+        public Matrix4B M3;
+
+        public ulong UnknownGUID0;
+        public ulong SkyEnviornmentCubemap;
+        public ulong BakedLighting;
+        public ulong BakedShadow;
+        public ulong LUT;
+        public ulong SkyboxModel;
+        public ulong SkyboxModelLook;
+        public ulong MapEnviornmentSound; // 055 file.
+        public ulong GroundEnviornmentCubemap;
+        public ulong BlendEnviornmentCubemap;
+        public ulong Text;
+        public ulong UnknownGUID1;
+
+        public Matrix3x4B M4;
+        public Matrix4B M5;
+        public Matrix4B M6;
+        public Matrix3x4B M7;
+
+        public ulong UnknownGUID2;
+    }
 }

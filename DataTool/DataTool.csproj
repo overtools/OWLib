@@ -107,6 +107,7 @@
     <Compile Include="ToolLogic\Extract\ExtractGeneral.cs" />
     <Compile Include="ToolLogic\Extract\ExtractHeroVoice.cs" />
     <Compile Include="ToolLogic\Extract\ExtractLootbox.cs" />
+    <Compile Include="ToolLogic\Extract\ExtractLUT.cs" />
     <Compile Include="ToolLogic\Extract\ExtractMaps.cs" />
     <Compile Include="ToolLogic\Extract\ExtractFlags.cs" />
     <Compile Include="ToolLogic\Extract\ExtractNPCs.cs" />
