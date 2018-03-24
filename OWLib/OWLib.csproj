@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
+    <Compile Include="LUT.cs" />
     <Compile Include="Third Party\APPLIB\C3D.cs" />
     <Compile Include="DDSTypeDetect.cs" />
     <Compile Include="DXBC.cs" />
