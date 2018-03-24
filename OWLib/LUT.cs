@@ -14,10 +14,9 @@ namespace OWLib
                 "32 32 32",
             };
 
-            List<string> lines = new List<string>();
+            SortedList<int, string> lines = new SortedList<int, string>();
 
-            float @base = (float)byte.MaxValue / 2.0f; // signed?
-            // float @base = (float)byte.MaxValue / 1.0f; // unsigned?
+            float @base = (float)byte.MaxValue;
 
             for (int y = 0; y < 32; y++)
             {
@@ -32,14 +31,13 @@ namespace OWLib
 
                     s += $"{rgb[0]} {rgb[1]} {rgb[2]}";
 
-                    lines.Add(s);
+                    lines.Add((neutral[0] << 16) + (neutral[1] << 8) + neutral[2], s);
                 }
             }
+            
+            realLines.AddRange(lines.Values);
 
-            lines.Sort(); // sanity, i guess.
-            realLines.AddRange(lines);
-
-            return string.Join("\n", lines);
+            return string.Join("\n", realLines);
         }
     }
 }
