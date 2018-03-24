@@ -43,14 +43,14 @@ namespace DataTool.ToolLogic.Extract
             Log($"{indent + 1}\"Ilios\" \"Oasis\"");
         }
 
-        private string OCIOChunk(MapInfo info, ulong key)
+        private string OCIOChunk(MapInfo info)
         {
             return $@"  - !<Look>
     name: {info.UniqueName}
     process_space: linear
     transform: !<GroupTransform>
       children:
-        - !<FileTransform> {{src: ow_map_{GUID.LongKey(key):X12}.spi3d, interpolation: linear}}";
+        - !<FileTransform> {{src: ow_map_{GetValidFilename(info.UniqueName.Replace(' ', '_'))}.spi3d, interpolation: linear}}";
         }
 
         public void SaveMaps(ICLIFlags toolFlags)
@@ -77,7 +77,6 @@ namespace DataTool.ToolLogic.Extract
             {
 
                 Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
-                if (parsedTypes == null) { QueryHelp(QueryTypes); return; }
                 HashSet<ulong> done = new HashSet<ulong>();
                 foreach (ulong key in TrackedFiles[0x39])
                 {
@@ -86,11 +85,6 @@ namespace DataTool.ToolLogic.Extract
 
                     for (int i = 0; i < binding.MapDatas.Length; ++i)
                     {
-                        if (!done.Add(binding.MapDatas[i]))
-                        {
-                            continue;
-                        }
-
                         ulong dataKey = binding.MapDatas[i];
                         ulong metaKey = binding.MapMetadatas[i];
 
@@ -103,26 +97,34 @@ namespace DataTool.ToolLogic.Extract
                         MapInfo mapInfo = GetMap(metaKey);
                         mapInfo.Name = mapInfo.Name ?? "Title Screen";
 
-                        Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
-                        foreach (string name in new[] { mapInfo.Name, mapInfo.NameB, mapInfo.UniqueName, GUID.Index(map.MapDataResource1).ToString("X"), "*" })
+                        if (parsedTypes != null)
                         {
-                            if (name == null) continue;
-                            string theName = name.ToLowerInvariant();
-                            if (!parsedTypes.ContainsKey(theName)) continue;
-                            foreach (KeyValuePair<string, ParsedArg> parsedArg in parsedTypes[theName])
+                            Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
+                            foreach (string name in new[] { mapInfo.Name, mapInfo.NameB, mapInfo.UniqueName, GUID.Index(map.MapDataResource1).ToString("X"), "*" })
                             {
-                                if (config.ContainsKey(parsedArg.Key))
+                                if (name == null) continue;
+                                string theName = name.ToLowerInvariant();
+                                if (!parsedTypes.ContainsKey(theName)) continue;
+                                foreach (KeyValuePair<string, ParsedArg> parsedArg in parsedTypes[theName])
                                 {
-                                    config[parsedArg.Key] = config[parsedArg.Key].Combine(parsedArg.Value);
-                                }
-                                else
-                                {
-                                    config[parsedArg.Key] = parsedArg.Value.Combine(null); // clone for safety
+                                    if (config.ContainsKey(parsedArg.Key))
+                                    {
+                                        config[parsedArg.Key] = config[parsedArg.Key].Combine(parsedArg.Value);
+                                    }
+                                    else
+                                    {
+                                        config[parsedArg.Key] = parsedArg.Value.Combine(null); // clone for safety
+                                    }
                                 }
                             }
+
+                            if (config.Count == 0) continue;
                         }
 
-                        if (config.Count == 0) continue;
+                        if (!done.Add(binding.MapDatas[i]))
+                        {
+                            continue;
+                        }
 
                         using (Stream data = OpenFile(dataKey))
                         {
@@ -146,18 +148,19 @@ namespace DataTool.ToolLogic.Extract
                                     info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData { Threads = false };
                                     info.Textures.Add(env.LUT, new FindLogic.Combo.TextureInfoNew(env.LUT)
                                     {
-                                        Name = $"ow_map_{GUID.LongKey(dataKey):X12}"
+                                        Name = $"ow_map_{GetValidFilename(mapInfo.UniqueName.Replace(' ', '_'))}"
                                     });
                                     SaveLogic.Combo.SaveTexture(flags, basePath, info, env.LUT);
 
                                     lutStream.Position = 128;
 
                                     string lut = LUT.SPILUT1024x32(lutStream);
-                                    using (Stream spilut = File.OpenWrite(Path.Combine(basePath, $"ow_map_{GUID.LongKey(dataKey):X12}.spi3d")))
+                                    using (Stream spilut = File.OpenWrite(Path.Combine(basePath, $"ow_map_{GetValidFilename(mapInfo.UniqueName.Replace(' ', '_'))}.spi3d")))
                                     using (TextWriter spilutWriter = new StreamWriter(spilut))
                                     {
                                         spilutWriter.WriteLine(lut);
-                                        ocioWriter.WriteLine(OCIOChunk(mapInfo, dataKey));
+                                        ocioWriter.WriteLine(OCIOChunk(mapInfo));
+                                        InfoLog("Saved LUT for {0}", mapInfo.UniqueName);
                                     }
                                 }
                             }
