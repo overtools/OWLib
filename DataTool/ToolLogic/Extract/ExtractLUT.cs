@@ -46,7 +46,7 @@ namespace DataTool.ToolLogic.Extract
         private string OCIOChunk(MapInfo info)
         {
             return $@"  - !<Look>
-    name: {info.UniqueName}
+    name: {GetValidFilename(info.UniqueName.Replace(':', '-'))}
     process_space: linear
     transform: !<GroupTransform>
       children:
