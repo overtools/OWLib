@@ -103,7 +103,7 @@ namespace STULib.Types.Map {
 
                 int stuIndex = 0;
                 foreach (IMapFormat record in Records) {
-                    if (record.GetType() != typeof(MapEntity)) continue;
+                    if (record?.GetType() != typeof(MapEntity)) continue;
 
                     MapEntity mapEntity = (MapEntity) record;
                     mapEntity.STUContainers = new List<object>();
