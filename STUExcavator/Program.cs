@@ -106,9 +106,10 @@ namespace STUExcavator {
             FieldNames = new Dictionary<uint, string>();
             EnumNames = new Dictionary<uint, string>();
             InstanceNames = new Dictionary<uint, string>();
-            
+
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
-                Converters = new List<JsonConverter> {new GUIDArrayConverter(), new GUIDConverter()}
+                Converters = new List<JsonConverter> { new GUIDArrayConverter(), new GUIDConverter() },
+                PreserveReferencesHandling = PreserveReferencesHandling.All
             };
             
             // wipe ISTU
