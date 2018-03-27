@@ -304,9 +304,9 @@ namespace STUExcavator {
                                     if (i != 0) sb.AppendLine();
                                     sb.AppendLine($"{attr.Checksum:X8}:");
                                     sb.AppendLine(JsonConvert.SerializeObject(stuInstance, Formatting.Indented));
-                                    asset.JSONDump += sb.ToString();
                                     i++;
                                 }
+                                asset.JSONDump = sb.ToString();
                             }
                         }
                     }
