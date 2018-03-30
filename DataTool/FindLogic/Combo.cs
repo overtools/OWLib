@@ -895,12 +895,12 @@ namespace DataTool.FindLogic {
                                 GUIDx06F = voiceSet.VirtualGUIDs06F[i],
                                 GUIDx09B = voiceSet.VirtualGUIDs09B[i],
                                 GUIDx03C = voiceLineInstance.m_D0C28030,
-                                Subtitle = voiceLineInstance.Subtitle
+                                Subtitle = GetReplacement(voiceLineInstance.Subtitle, replacements)
                             };
                         if (voiceLineInstance.SoundDataContainer != null) {
-                            voiceLineInstanceInfo.GUIDx070 = voiceLineInstance.SoundDataContainer.GUIDx070;
-                            voiceLineInstanceInfo.VoiceStimulus = voiceLineInstance.SoundDataContainer.VoiceStimulus;
-                            voiceLineInstanceInfo.GUIDx02C = voiceLineInstance.SoundDataContainer.SoundbankMasterResource;
+                            voiceLineInstanceInfo.GUIDx070 = GetReplacement(voiceLineInstance.SoundDataContainer.GUIDx070, replacements);
+                            voiceLineInstanceInfo.VoiceStimulus = GetReplacement(voiceLineInstance.SoundDataContainer.VoiceStimulus, replacements);
+                            voiceLineInstanceInfo.GUIDx02C = GetReplacement(voiceLineInstance.SoundDataContainer.SoundbankMasterResource, replacements);
                             Find(info, voiceLineInstanceInfo.GUIDx02C, replacements, context);
                         } else {
                             Console.Out.WriteLine("[DataTool.FindLogic.Combo]: ERROR: voice data container was null (please contact the developers)");
@@ -917,7 +917,7 @@ namespace DataTool.FindLogic {
                                 voiceLineInstance.SoundContainer.Sound2, voiceLineInstance.SoundContainer.Sound3, 
                                 voiceLineInstance.SoundContainer.Sound4}) {
                                 if (soundWrapper == null) continue;
-                                voiceLineInstanceInfo.SoundFiles.Add(soundWrapper.SoundResource);
+                                voiceLineInstanceInfo.SoundFiles.Add(GetReplacement(soundWrapper.SoundResource, replacements));
                                 Find(info, soundWrapper.SoundResource, replacements, context);
                             }
                         }
