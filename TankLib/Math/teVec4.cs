@@ -17,6 +17,13 @@ namespace TankLib.Math {
         
         /// <summary>W component</summary>
         public float W;
+        
+        public teVec4(float x, float y, float z, float w) {
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
+        }
 
         public teVec4(IReadOnlyList<float> val) {
             if (val.Count != 4) {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
@@ -134,7 +133,7 @@ namespace TankLib.CASC {
             //if (idxInfo == null) Debugger.Log(0, "CASC", $"CASCHandler: Local index missing: {key.ToHexString()}\r\n");
 
             if (idxInfo == null)
-                throw new Exception("local index missing");
+                throw new LocalIndexMissingException();
 
             return OpenIndexInfo(idxInfo, key);
         }

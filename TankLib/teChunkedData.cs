@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using TankLib.CASC;
 using TankLib.Chunks;
 
 namespace TankLib {
@@ -47,17 +48,6 @@ namespace TankLib {
         
         public static teChunkManager Manager = new teChunkManager();
 
-        /// <summary>Copy bytes from one <see cref="Stream"/> to another</summary>
-        /// <param name="input">The stream to read from</param>
-        /// <param name="output">The stream to write to</param>
-        /// <param name="size">Number of bytes to read and write</param>
-        private static void CopyBytes(Stream input, Stream output, int size) {
-            byte[] buffer = new byte[size];
-            input.Read(buffer, 0, size);
-            output.Write(buffer, 0, size);
-            buffer = null;
-        }
-
         /// <summary>Load chunk data from a <see cref="Stream"/></summary>
         /// <param name="input">The source <see cref="Stream"/>></param>
         /// <param name="keepOpen">Keep the stream open after reading</param>
@@ -77,26 +67,26 @@ namespace TankLib {
             Read(reader);
         }
 
-        private void Read(BinaryReader reader) {
+        private unsafe void Read(BinaryReader reader) {
             long start = reader.BaseStream.Position;
 
             List<IChunk> chunks = new List<IChunk>();
 
             Header = reader.Read<teChunkDataHeader>();
             if (Header.Magic != Magic) {
-                Header = default(teChunkDataHeader);
                 return;
             }
 
-            long next = start + reader.BaseStream.Position;
+            long next = reader.BaseStream.Position - start;  // rel stream pos
+            
             while (next < Header.Size) {
                 teChunkDataEntry entry = reader.Read<teChunkDataEntry>();
-                next = start + reader.BaseStream.Position + entry.Size;
+                next += entry.Size + sizeof(teChunkDataEntry);
                     
                 IChunk chunk = Manager.CreateChunkInstance(entry.StringIdentifier, Header.StringIdentifier);
                 if (chunk != null) {
                     MemoryStream dataStream = new MemoryStream(entry.Size);
-                    CopyBytes(reader.BaseStream, dataStream, entry.Size);
+                    reader.BaseStream.CopyBytes(dataStream, entry.Size);
                     dataStream.Position = 0;
                         
                     chunk.Parse(dataStream);
@@ -105,7 +95,7 @@ namespace TankLib {
                 }
                     
                 chunks.Add(chunk);
-                reader.BaseStream.Position = next;
+                reader.BaseStream.Position = next + start;
             }
             Chunks = chunks.ToArray();
         }

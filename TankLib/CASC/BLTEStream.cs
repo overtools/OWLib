@@ -51,7 +51,7 @@ namespace TankLib.CASC {
         public override bool CanSeek => true;
         public override bool CanWrite => false;
         public override long Length => _length;
-
+        
         public override long Position {
             get => _memStream.Position;
             set {

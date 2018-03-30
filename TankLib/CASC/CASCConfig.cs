@@ -102,6 +102,7 @@ namespace TankLib.CASC {
 
         public bool LoadPackageManifest = true;
         public bool LoadContentManifest = true;
+        public bool APMFailSilent = false;
         #endregion
         
         

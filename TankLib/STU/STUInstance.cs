@@ -35,7 +35,7 @@ namespace TankLib.STU {
         protected void DeserializeField(teStructuredData assetFile, STUField_Info fieldInfo,
             Dictionary<uint, KeyValuePair<FieldInfo, STUFieldAttribute>> fields, STUAttribute stuAttribute) {
             if (!fields.ContainsKey(fieldInfo.Hash)) {
-                string name = stuAttribute.Name ?? $"STU_{stuAttribute.Hash:X8}";
+                string name = stuAttribute.Name ?? $"STU_{stuAttribute.Hash:X8}";  // todo: dis slow
                 Debugger.Log(0, "STUInstance", $"Unhandled field: {name}:{fieldInfo.Hash:X8}\r\n");
                 return;
             }

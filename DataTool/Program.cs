@@ -5,23 +5,24 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using CASCLib;
+using CMFLib;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using OWLib;
 using STULib.Types;
+using TankLib.CASC;
+using TankLib.CASC.Handlers;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
-using Logger = CASCLib.Logger;
 
 namespace DataTool {
     public class Program {
-        public static Dictionary<ulong, MD5Hash> Files;
+        public static Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord> Files;
         public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
         public static CASCHandler CASC;
         public static CASCConfig Config;
-        public static OwRootHandler Root;
+        public static RootHandler Root;
         public static ToolFlags Flags;
         public static uint BuildVersion;
         public static bool IsPTR;
@@ -31,7 +32,7 @@ namespace DataTool {
         private static void Main() {
             Console.OutputEncoding = Encoding.UTF8;
 
-            Files = new Dictionary<ulong, MD5Hash>();
+            Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
             TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
 
             #region Tool Detection
@@ -62,7 +63,7 @@ namespace DataTool {
                 return;
             }
 
-            Logger.EXIT = !Flags.GracefulExit;
+            //Logger.EXIT = !Flags.GracefulExit;
 
             ITool targetTool = null;
             ICLIFlags targetToolFlags = null;
@@ -99,46 +100,49 @@ namespace DataTool {
             Log("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Util.GetVersion());
             Log("Initializing CASC...");
             Log("Set language to {0}", Flags.Language);
-            CDNIndexHandler.Cache.Enabled = Flags.UseCache;
-            CDNIndexHandler.Cache.CacheData = Flags.CacheData;
-            CDNIndexHandler.Cache.Validate = Flags.ValidateCache;
+            
+            //CDNIndexHandler.Cache.Enabled = Flags.UseCache;
+            //CDNIndexHandler.Cache.CacheData = Flags.CacheData;
+            //CDNIndexHandler.Cache.Validate = Flags.ValidateCache;
+            
             // ngdp:us:pro
             // http:us:pro:us.patch.battle.net:1119
             if (Flags.OverwatchDirectory.ToLowerInvariant().Substring(0, 5) == "ngdp:") {
-                string cdn = Flags.OverwatchDirectory.Substring(5, 4);
-                string[] parts = Flags.OverwatchDirectory.Substring(5).Split(':');
-                string region = "us";
-                string product = "pro"; 
-                if (parts.Length > 1) {
-                    region = parts[1];
-                }
-                if (parts.Length > 2) {
-                    product = parts[2];
-                }
-                if (cdn == "bnet") {
-                    Config = CASCConfig.LoadOnlineStorageConfig(product, region);
-                } else {
-                    if (cdn == "http") {
-                        string host = string.Join(":", parts.Skip(3));
-                        Config = CASCConfig.LoadOnlineStorageConfig(host, product, region, true, true, true);
-                    }
-                }
+                throw new Exception();
+                //string cdn = Flags.OverwatchDirectory.Substring(5, 4);
+                //string[] parts = Flags.OverwatchDirectory.Substring(5).Split(':');
+                //string region = "us";
+                //string product = "pro"; 
+                //if (parts.Length > 1) {
+                //    region = parts[1];
+                //}
+                //if (parts.Length > 2) {
+                //    product = parts[2];
+                //}
+                //if (cdn == "bnet") {
+                //    Config = CASCConfig.LoadOnlineStorageConfig(product, region);
+                //} else {
+                //    if (cdn == "http") {
+                //        string host = string.Join(":", parts.Skip(3));
+                //        Config = CASCConfig.LoadOnlineStorageConfig(host, product, region, true, true, true);
+                //    }
+                //}
             } else {
                 Config = CASCConfig.LoadLocalStorageConfig(Flags.OverwatchDirectory, !Flags.SkipKeys, false);
             }
             Config.Languages = new HashSet<string>(new[] { Flags.Language });
             #endregion
 
-            try {
-                foreach (Dictionary<string, string> build in Config.BuildInfo) {
-                    if (!build.ContainsKey("Tags")) continue;
-                    if (build["Tags"].Contains("XX?")) IsPTR = true;
-                    // us ptr region is known as XX, so just look for it in the tags.
-                    // this should work... untested for Asia
-                }
-            } catch (NullReferenceException) {
-                // erm, cdn causes issues with this.
-            }
+            //try {
+            //    foreach (Dictionary<string, string> build in Config.BuildInfo) {
+            //        if (!build.ContainsKey("Tags")) continue;
+            //        if (build["Tags"].Contains("XX?")) IsPTR = true;
+            //        // us ptr region is known as XX, so just look for it in the tags.
+            //        // this should work... untested for Asia
+            //    }
+            //} catch (NullReferenceException) {
+            //    // erm, cdn causes issues with this.
+            //}
             
             BuildVersion = uint.Parse(Config.BuildName.Split('.').Last());
 
@@ -147,12 +151,12 @@ namespace DataTool {
             }
 
             Log("Using Overwatch Version {0}", Config.BuildName);
-            CASC = CASCHandler.OpenStorage(Config);
-            Root = CASC.Root as OwRootHandler;
-            if (Root== null) {
-                ErrorLog("Not a valid overwatch installation");
-                return;
-            }
+            CASC = CASCHandler.Open(Config);
+            Root = CASC.RootHandler;
+            //if (Root== null) {
+            //    ErrorLog("Not a valid overwatch installation");
+            //    return;
+            //}
 
             // Fail when trying to extract data from a specified language with 2 or less files found.
             if (!Root.APMFiles.Any()) {
@@ -168,6 +172,11 @@ namespace DataTool {
             IO.LoadGUIDTable();
             Sound.WwiseBank.GetReady();
 
+            //foreach (KeyValuePair<ushort, HashSet<ulong>> type in TrackedFiles.OrderBy(x => x.Key)) {
+            //    //Console.Out.WriteLine($"Found type: {type.Key:X4} ({type.Value.Count} files)");
+            //    Console.Out.WriteLine($"Found type: {type.Key:X4}");
+            //}
+
             #region Key Detection
             if (!Flags.SkipKeys) {
                 Log("Adding Encryption Keys...");
@@ -182,8 +191,8 @@ namespace DataTool {
                         }
 
                         STUEncryptionKey encryptionKey = GetInstance<STUEncryptionKey>(key);
-                        if (encryptionKey != null && !KeyService.keys.ContainsKey(encryptionKey.LongRevKey)) {
-                            KeyService.keys.Add(encryptionKey.LongRevKey, encryptionKey.KeyValue);
+                        if (encryptionKey != null && !TACTKeyService.Keys.ContainsKey(encryptionKey.LongRevKey)) {
+                            TACTKeyService.Keys.Add(encryptionKey.LongRevKey, encryptionKey.KeyValue);
                             Log("Added Encryption Key {0}, Value: {1}", encryptionKey.KeyNameProper, encryptionKey.Key);
                         }
                     }

@@ -6,7 +6,7 @@ namespace STULib.Types.Enums {
         Halloween = 2,
         Winter = 3,
         LunarNewYear = 4,
-        Uprising = 5,
+        Archives = 5,
         Anniversary = 6,
         Golden = 7
     }

@@ -192,11 +192,6 @@ namespace TankLib.Chunks {
                 Faces = new MeshFace[submeshDescriptor.IndicesToDraw/3];
                 
                 UV = new teVec2[submeshDescriptor.VerticesToDraw][];
-                    
-                //UV = new teVec2[uvCount][];
-                //for (int i = 0; i < uvCount; i++) {
-                //    UV[i] = new teVec2[submeshDescriptor.VerticesToDraw];
-                //}
                 
                 BoneIndices = new ushort[submeshDescriptor.VerticesToDraw][];
                 BoneWeights = new float[submeshDescriptor.VerticesToDraw][];
@@ -256,36 +251,24 @@ namespace TankLib.Chunks {
         #region Parser Subfunctions
         private void ParseVBO(BinaryReader reader) {
             reader.BaseStream.Position = Header.VertexBufferDesciptorPointer;
-            for (int i = 0; i < Header.VertexBufferDescriptorCount; ++i) {
-                VertexBufferDescriptor descriptor = reader.Read<VertexBufferDescriptor>();
-                VertexBuffers[i] = descriptor;
-            }
+            VertexBuffers = reader.ReadArray<VertexBufferDescriptor>(Header.VertexBufferDescriptorCount);
             for (int i = 0; i < Header.VertexBufferDescriptorCount; ++i)
                 VertexElements[i] = ParseVBE(reader, VertexBuffers[i]);
         }
 
         private void ParseIBO(BinaryReader reader) {
             reader.BaseStream.Position = Header.IndexBufferDescriptorPointer;
-            for (int i = 0; i < Header.IndexBufferDescriptorCount; ++i) {
-                IndexBufferDescriptor descriptor = reader.Read<IndexBufferDescriptor>();
-                IndexBuffers[i] = descriptor;
-            }
+            IndexBuffers = reader.ReadArray<IndexBufferDescriptor>(Header.IndexBufferDescriptorCount);
         }
 
         private void ParseSubmesh(BinaryReader reader) {
             reader.BaseStream.Position = Header.SubmeshDescriptorPointer;
-            for (int i = 0; i < Header.SubmeshCount; ++i) {
-                SubmeshDescriptor submesh = reader.Read<SubmeshDescriptor>();
-                SubmeshDescriptors[i] = submesh;
-            }
+            SubmeshDescriptors = reader.ReadArray<SubmeshDescriptor>(Header.SubmeshCount);
         }
 
         private VertexElementDescriptor[] ParseVBE(BinaryReader reader, VertexBufferDescriptor descriptor) {
             reader.BaseStream.Position = descriptor.VertexElementDescriptorPointer;
-            VertexElementDescriptor[] elements = new VertexElementDescriptor[descriptor.VertexElementDescriptorCount];
-            for (int i = 0; i < descriptor.VertexElementDescriptorCount; ++i)
-                elements[i] = reader.Read<VertexElementDescriptor>();
-            return elements;
+            return reader.ReadArray<VertexElementDescriptor>(descriptor.VertexElementDescriptorCount);
         }
 
         // split VBE by stream

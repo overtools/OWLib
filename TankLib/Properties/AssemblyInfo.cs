@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("TankLib")]
-[assembly: AssemblyDescription("A library for interacting with the filesystem of Blizzard's \"Tank Engine\"")]
+[assembly: AssemblyDescription("A library for loading and exporting data from Blizzard's \"Tank Engine\"")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Overtools")]
 [assembly: AssemblyProduct("TankLib")]

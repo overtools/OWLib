@@ -275,8 +275,8 @@ namespace DataTool.SaveLogic {
                 }
             }
 
-            modelStream.Dispose();
-            refposeStream.Dispose();
+            modelStream?.Dispose();
+            refposeStream?.Dispose();
         }
 
         public static void SaveModel(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong model) {
@@ -412,6 +412,33 @@ namespace DataTool.SaveLogic {
             foreach (FindLogic.Combo.TextureInfoNew textureInfo in info.Textures.Values) {
                 if (!textureInfo.Loose) continue;
                 SaveTexture(flags, path, info, textureInfo.GUID);
+            }
+            Wait(info);
+        }
+        
+        public static void SaveAllStrings(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
+            foreach (FindLogic.Combo.StringInfo stringInfo in info.Strings.Values) {
+                if (stringInfo.Value == null) continue;
+                string file = Path.Combine(path, stringInfo.GetName()) + ".txt";
+                CreateDirectoryFromFile(file);
+                using (StreamWriter writer = new StreamWriter(file)) {
+                    writer.Write(stringInfo.Value);
+                }
+            }
+        }
+        
+        public static void SaveAllSoundFiles(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
+            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
+            foreach (FindLogic.Combo.SoundFileInfo soundInfo in info.SoundFiles.Values) {
+                SaveSoundFile(flags, path, info, soundInfo.GUID, false);
+            }
+            Wait(info);
+        }
+        
+        public static void SaveAllVoiceSoundFiles(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
+            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
+            foreach (FindLogic.Combo.SoundFileInfo soundInfo in info.VoiceSoundFiles.Values) {
+                SaveSoundFile(flags, path, info, soundInfo.GUID, true);
             }
             Wait(info);
         }
@@ -613,19 +640,24 @@ namespace DataTool.SaveLogic {
             string outputFile = Path.Combine(directory, $"{soundFileInfo.GetName()}.wem");
             string outputFileOgg = Path.ChangeExtension(outputFile, "ogg");
             CreateDirectoryFromFile(outputFile);
-
-            using (Sound.WwiseRIFFVorbis vorbis =
-                new Sound.WwiseRIFFVorbis(stream, Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party", "packed_codebooks_aoTuV_603.bin")))) {
-                Stream vorbisStream = new MemoryStream();
-                vorbis.ConvertToOgg(vorbisStream);
-                vorbisStream.Position = 0;
-                using (Stream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream)) {
-                    using (Stream outputStream = File.OpenWrite(outputFileOgg)) {
-                        outputStream.SetLength(0);
-                        revorbStream.Position = 0;
-                        revorbStream.CopyTo(outputStream);
+            try {
+                using (Sound.WwiseRIFFVorbis vorbis =
+                    new Sound.WwiseRIFFVorbis(stream,
+                        Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party",
+                            "packed_codebooks_aoTuV_603.bin")))) {
+                    Stream vorbisStream = new MemoryStream();
+                    vorbis.ConvertToOgg(vorbisStream);
+                    vorbisStream.Position = 0;
+                    using (Stream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream)) {
+                        using (Stream outputStream = File.OpenWrite(outputFileOgg)) {
+                            outputStream.SetLength(0);
+                            revorbStream.Position = 0;
+                            revorbStream.CopyTo(outputStream);
+                        }
                     }
                 }
+            } catch (Exception e) {
+                Console.Out.WriteLine(e);
             }
         }
 

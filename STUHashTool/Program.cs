@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using OverTool;
 using OWLib;
 using STULib;
+using STULib.Impl;
 using STULib.Impl.Version2HashComparer;
 using Console = System.Console;
 using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
@@ -721,8 +722,12 @@ namespace STUHashTool {
                         // STULib.Types.Map.Map map = new STULib.Types.Map.Map(fileStream, uint.MaxValue);
                         ISTU fileSTU = ISTU.NewInstance(fileStream, uint.MaxValue);
                         Console.WriteLine($"Loaded: {file:X12} {GUID.LongKey(file):X12}.{GUID.Type(file):X3}", Color.LightGray);
-                        Utils.DumpSTUFull((Version2) fileSTU, handler, records, 
-                            testinstanceWildcard == "*" ? null: testinstanceWildcard);
+                        if (fileSTU is Version1) {
+                            Console.Out.WriteLine("ver1 :(");
+                        } else {
+                            Utils.DumpSTUFull((Version2) fileSTU, handler, records, 
+                                testinstanceWildcard == "*" ? null: testinstanceWildcard); 
+                        }
                     }
                 }
             } else if (mode == "newhashes-test") {

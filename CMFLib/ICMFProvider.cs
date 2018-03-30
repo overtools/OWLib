@@ -2,8 +2,8 @@
 
 namespace CMFLib {
     public interface ICMFProvider {
-        byte[] Key(CMFHeader header, string name, byte[] digest, int length);
-        byte[] IV(CMFHeader header, string name, byte[] digest, int length);
+        byte[] Key(CMFHeaderCommon header, string name, byte[] digest, int length);
+        byte[] IV(CMFHeaderCommon header, string name, byte[] digest, int length);
     }
 
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]

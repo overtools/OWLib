@@ -3,6 +3,6 @@
 namespace TankLib.Helpers {
     public interface ISerializable {
         void Deserialize(BinaryReader reader);
-        //void Serialize(BinaryWriter writer);
+        void Serialize(BinaryWriter writer);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DataTool.Flag;
 using DataTool.JSON;
 using Newtonsoft.Json;
+using OWLib;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
@@ -48,7 +50,7 @@ namespace DataTool.ToolLogic.Dump {
         public List<StringInfo> GetStrings() {
             var strings = new List<StringInfo>();
 
-            foreach (var key in TrackedFiles[0x7C]) {
+            foreach (var key in TrackedFiles[0x7C].OrderBy(GUID.Index)) {
                 var str = GetString(key);
                 var fileName = GetFileName(key);
                 if (str == null || fileName == null) continue;

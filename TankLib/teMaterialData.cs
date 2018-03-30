@@ -21,6 +21,7 @@ namespace TankLib {
 
         public MatDataHeader Header;
         public teMaterialDataTexture[] Textures;
+        public teMaterialDataUnknown[] Unknowns;
 
         /// <summary>Load material data from a stream</summary>
         public teMaterialData(Stream stream) {
@@ -30,14 +31,22 @@ namespace TankLib {
                 if (Header.TextureOffset > 0) {
                     reader.BaseStream.Position = Header.TextureOffset;
                     
-                    Textures = new teMaterialDataTexture[Header.TextureCount];
+                    Textures = reader.ReadArray<teMaterialDataTexture>(Header.TextureCount);
+                }
 
-                    for (int i = 0; i < Header.TextureCount; i++) {
-                        Textures[i] = reader.Read<teMaterialDataTexture>();
-                    }
+                if (Header.Offset4 > 0) {
+                    reader.BaseStream.Position = Header.Offset4;
+
+                    Unknowns = reader.ReadArray<teMaterialDataUnknown>(Header.Offset4Count);
                 }
             }
         }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct teMaterialDataUnknown {
+        public ulong A;
+        public ulong B;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

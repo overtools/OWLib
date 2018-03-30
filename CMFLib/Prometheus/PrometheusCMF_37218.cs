@@ -3,7 +3,7 @@
 namespace CMFLib.Prometheus {
     [CMFMetadata(AutoDetectVersion = true, BuildVersions = new uint[] { }, App = CMFApplication.Prometheus)]
     public class PrometheusCMF_37218 : ICMFProvider {
-        public byte[] Key(CMFHeader header, string name, byte[] digest, int length) {
+        public byte[] Key(CMFHeaderCommon header, string name, byte[] digest, int length) {
             byte[] buffer = new byte[length];
 
             uint kidx = Constrain(header.BuildVersion * length);
@@ -16,7 +16,7 @@ namespace CMFLib.Prometheus {
             return buffer;
         }
 
-        public byte[] IV(CMFHeader header, string name, byte[] digest, int length) {
+        public byte[] IV(CMFHeaderCommon header, string name, byte[] digest, int length) {
             byte[] buffer = new byte[length];
 
             uint kidx = (uint) (digest[7] + (ushort) (header.DataCount & 511));

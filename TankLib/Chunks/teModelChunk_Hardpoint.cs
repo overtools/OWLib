@@ -54,20 +54,13 @@ namespace TankLib.Chunks {
                 Header = reader.Read<HardpointHeader>();
                 
                 if (Header.HardpointOffset > 0) {
-                    Hardpoints = new Hardpoint[Header.HardpointCount];
                     input.Position = Header.HardpointOffset;
-                    for (uint i = 0; i < Header.HardpointCount; ++i) {
-                        Hardpoints[i] = reader.Read<Hardpoint>();
-                    }
+                    Hardpoints = reader.ReadArray<Hardpoint>(Header.HardpointCount);
                 }
 
                 if (Header.UnknownOffset > 0) {
-                    Unknown = new byte[Header.UnknownCount];
                     input.Position = Header.UnknownOffset;
-
-                    for (int i = 0; i < Header.UnknownCount; i++) {
-                        Unknown[i] = reader.ReadByte();
-                    }
+                    Unknown = reader.ReadArray<byte>(Header.UnknownCount);
                 }
             }
         }

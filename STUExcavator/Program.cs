@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using CASCLib;
 using DataTool;
 using DataTool.Helper;
 using DataTool.JSON;
@@ -16,6 +15,7 @@ using STUHashTool;
 using STULib;
 using STULib.Impl.Version2HashComparer;
 using STULib.Types.Generic;
+using TankLib.CASC;
 using Version1 = STULib.Impl.Version1;
 using Version2 = STULib.Impl.Version2;
 using static DataTool.Helper.Logger;
@@ -54,7 +54,7 @@ namespace STUExcavator {
     }
     
     public class Program {
-        public static Dictionary<ulong, MD5Hash> Files;
+        public static Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord> Files;
         public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
         public static List<string> InvalidTypes;
         public static CASCConfig Config;
@@ -86,13 +86,13 @@ namespace STUExcavator {
             // casc setup
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
             Config.Languages = new HashSet<string> {language};
-            CASC = CASCHandler.OpenStorage(Config);
-            DataTool.Program.Files = new Dictionary<ulong, MD5Hash>();
+            CASC = CASCHandler.Open(Config);
+            DataTool.Program.Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
             DataTool.Program.TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
             DataTool.Program.CASC = CASC;
-            DataTool.Program.Root = CASC.Root as OwRootHandler;
+            DataTool.Program.Root = CASC.RootHandler;
             DataTool.Program.Flags = new ToolFlags {OverwatchDirectory = overwatchDir, Language = language};
-            IO.MapCMF(true);
+            IO.MapCMF();
             Files = DataTool.Program.Files;
             TrackedFiles = DataTool.Program.TrackedFiles;
             

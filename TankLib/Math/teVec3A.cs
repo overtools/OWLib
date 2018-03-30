@@ -12,5 +12,11 @@ namespace TankLib.Math {
         
         /// <summary>Z component</summary>
         public float Z;
+
+        public teVec3A(float x, float y, float z) {
+            X = x;
+            Y = y;
+            Z = z;
+        }
     }
 }

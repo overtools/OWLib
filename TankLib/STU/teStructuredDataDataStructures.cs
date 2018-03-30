@@ -5,16 +5,6 @@ using TankLib.Helpers;
 
 namespace TankLib.STU {
     #region V2
-    public sealed class STUField_Info : ISerializable {
-        public uint Hash;
-        public int Size;
-
-        public void Deserialize(BinaryReader reader) {
-            Hash = reader.ReadUInt32();
-            Size = reader.ReadInt32();
-        }
-    }
-    
     public sealed class STUBag<T> : List<T>, ISerializable where T : ISerializable, new() {
         public void Deserialize(BinaryReader reader)  {
             int size = reader.ReadInt32();
@@ -29,9 +19,28 @@ namespace TankLib.STU {
             }
             reader.BaseStream.Position = oldPosition;
         }
+
+        public void Serialize(BinaryWriter writer) {
+            throw new System.NotImplementedException();
+        }
     }
     
-    public sealed class STUInstance_Info : ISerializable {
+    public class STUField_Info : ISerializable {
+        public uint Hash;
+        public int Size;
+
+        public void Deserialize(BinaryReader reader) {
+            Hash = reader.ReadUInt32();
+            Size = reader.ReadInt32();
+        }
+
+        public void Serialize(BinaryWriter writer) {
+            throw new System.NotImplementedException();
+        }
+    }
+    
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct STUInstance_Info : ISerializable {
         public uint Hash;
         public uint EmbedderFieldHash; // Help me find a better name?
         public int EmbedderInstanceIdx; // Help me find a better name?
@@ -43,15 +52,24 @@ namespace TankLib.STU {
             EmbedderInstanceIdx = reader.ReadInt32();
             Size = reader.ReadInt32();
         }
+
+        public void Serialize(BinaryWriter writer) {
+            throw new System.NotImplementedException();
+        }
     }
     
-    public sealed class STUInlineArray_Info : ISerializable {
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct STUInlineArray_Info : ISerializable {
         public uint TypeHash;
         public int ArrayCount; // Size of the array that references this type.
 
         public void Deserialize(BinaryReader reader) {
             TypeHash = reader.ReadUInt32();
             ArrayCount = reader.ReadInt32();
+        }
+
+        public void Serialize(BinaryWriter writer) {
+            throw new System.NotImplementedException();
         }
     }
     #endregion

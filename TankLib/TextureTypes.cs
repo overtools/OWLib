@@ -136,7 +136,7 @@ namespace TankLib {
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        [Flags] // todo?
+        [Flags]
         public enum TEXTURE_FLAGS : byte {
             UNKNOWN1 = 0x01,
             DIFFUSE = 0x02,

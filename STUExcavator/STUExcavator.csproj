@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>STUExcavator</RootNamespace>
     <AssemblyName>STUExcavator</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -48,10 +48,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CASCExplorer\CascLib\CascLib.csproj">
-      <Project>{E08E1E48-6585-4137-8405-661C62C10713}</Project>
-      <Name>CascLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DataTool\DataTool.csproj">
       <Project>{9d1a3dcc-37bf-4979-acd8-3e998e19ce71}</Project>
       <Name>DataTool</Name>
@@ -71,6 +67,10 @@
     <ProjectReference Include="..\STULib\STULib.csproj">
       <Project>{996012B0-3693-4642-AC44-5AA8865EE44A}</Project>
       <Name>STULib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TankLib\TankLib.csproj">
+      <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>
+      <Name>TankLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -166,6 +166,7 @@ namespace STULib.Impl {
                 if (!CheckCompatVersion(field, _buildVersion)) {
                     continue;
                 }
+                
                 if (field.FieldType.IsArray) {
                     long offset = reader.ReadInt64();
                     if (offset == 0 || offset <= -1) {
@@ -266,6 +267,7 @@ namespace STULib.Impl {
             reader.BaseStream.Position = offset + Start;
 
             if (_InstanceTypes.ContainsKey(checksum)) {
+                //Console.Out.WriteLine(checksum.ToString("X"));
                 Type type = _InstanceTypes[checksum];
                 object instance = Activator.CreateInstance(type);
                 _instances[offset] = InitializeObject(instance, type, reader, false, false) as STUInstance;

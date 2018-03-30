@@ -5,8 +5,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using CASCLib;
-using OWLib;
+using TankLib;
+using TankLib.CASC;
+using TankLib.CASC.Handlers;
 using static DataTool.Program;
 
 namespace DataTool.Helper {
@@ -57,7 +58,7 @@ namespace DataTool.Helper {
         }
 
         public static string GetFileName(ulong guid) {
-            return $"{guid & 0xFFFFFFFFFFFF:X12}.{GUID.Type(guid):X3}";
+            return teResourceGUID.AsString(guid);
         }
 
         public static void WriteFile(Stream stream, string filename) {
@@ -92,19 +93,39 @@ namespace DataTool.Helper {
             }
         }
 
-        public static Stream OpenFile(MD5Hash hash) {
+        public static Stream OpenFile(ApplicationPackageManifest.Types.PackageRecord record) {
+            long offset = 0;
+            EncodingEntry enc;
+            if (record.Flags.HasFlag(ContentFlags.Bundle)) offset = record.Offset;
+            if (!CASC.EncodingHandler.GetEntry(record.LoadHash, out enc)) return null;
+
+            MemoryStream ms = new MemoryStream((int) record.Size);
             try {
-                bool temp = CASC.Encoding.GetEntry(hash, out EncodingEntry enc);
-                return temp ? CASC.OpenFile(enc.Key) : null;
-            }
-            catch (Exception e) {
+                Stream fstream = CASC.OpenFile(enc.Key);
+                fstream.Position = offset;
+                fstream.CopyBytes(ms, (int) record.Size);
+                ms.Position = 0;
+            } catch (Exception e) {
                 if (e is BLTEKeyException exception) {
-                    #if DEBUG
+#if DEBUG
                     Debugger.Log(0, "DataTool", $"[DataTool:CASC]: Missing key: {exception.MissingKey:X16}\r\n");
-                    #endif
+#endif
                 }
+
                 return null;
             }
+
+            return ms;
+        }
+        
+        public static Stream OpenFile2(ApplicationPackageManifest.Types.PackageRecord record, out ulong salsa) {
+            salsa = 0;
+            if (!CASC.EncodingHandler.GetEntry(record.LoadHash, out EncodingEntry enc)) return null;
+            
+            Stream fstream = CASC.OpenFile(enc.Key);
+            salsa = ((BLTEStream) fstream).SalsaKey;
+
+            return fstream;
         }
         
         public static Stream OpenFile(ulong guid) {
@@ -128,47 +149,43 @@ namespace DataTool.Helper {
 
         public static string GetString(ulong guid) {
             if (guid == 0) return null;  // don't even try
-            //try {
-            //    using (Stream stream = OpenFile(Files[guid])) {
-            //        return stream == null ? null : new OWString(stream);
-            //    }
-            //}
-            //catch {
-            //    return null;
-            //}
-            if (!Files.ContainsKey(guid)) {
-                throw new Exception();
+            try {
+                using (Stream stream = OpenFile(Files[guid])) {
+                    return stream == null ? null : new teString(stream);
+                }
             }
-            using (Stream stream = OpenFile(Files[guid])) {
-                if (stream == null) return null;
-                OWString owString = new OWString(stream);
-                return owString;
+            catch {
+                return null;
             }
         }
 
-        public static void MapCMF(bool mapAll=false) {
+        public static void MapCMF() {
             if (Root == null || CASC == null) {
                 return;
             }
 
-            foreach (APMFile apm in Root.APMFiles) {
-                string searchString = Flags.RCN ? "rcn" : "rdev";
+            Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
+            TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
+            foreach (ApplicationPackageManifest apm in CASC.RootHandler.APMFiles) {
+                const string searchString = "rdev";
                 if (!apm.Name.ToLowerInvariant().Contains(searchString)) {
                     continue;
                 }
-                if (!apm.Name.ToLowerInvariant().Contains("l" + Flags.Language.ToLowerInvariant())) {
-                    continue;
+
+                if (Flags?.Language != null) {
+                    if (!apm.Name.ToLowerInvariant().Contains("l" + Flags.Language.ToLowerInvariant())) {
+                        continue;
+                    }
                 }
-                foreach (KeyValuePair<ulong, CMFHashData> pair in apm.CMFMap) {
-                    ushort id = GUID.Type(pair.Key);
-                    if (TrackedFiles != null && (TrackedFiles.ContainsKey(id) || mapAll)) {
-                        if (!TrackedFiles.ContainsKey(id)) TrackedFiles[id] = new HashSet<ulong>();
-                        TrackedFiles[id].Add(pair.Value.id);
+                
+                foreach (KeyValuePair<ulong, ApplicationPackageManifest.Types.PackageRecord> pair in apm.FirstOccurence) {
+                    ushort type = teResourceGUID.Type(pair.Key);
+                    if (!TrackedFiles.ContainsKey(type)) {
+                        TrackedFiles[type] = new HashSet<ulong>();
                     }
                     
-                    //Console.Out.WriteLine($"{GetFileName(pair.Value.id)} : {pair.Value.HashKey.ToHexString()}");
-                    
-                    Files[pair.Value.id] = pair.Value.HashKey;
+                    TrackedFiles[type].Add(pair.Key);
+                    Files[pair.Value.GUID] = pair.Value;
                 }
             }
         }

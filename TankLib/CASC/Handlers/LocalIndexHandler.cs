@@ -118,8 +118,9 @@ namespace TankLib.CASC.Handlers {
             ulong* ptr = (ulong*)&key;
             ptr[1] &= 0xFF;
 
-            if (!LocalIndexData.TryGetValue(key, out IndexEntry result))
+            if (!LocalIndexData.TryGetValue(key, out IndexEntry result)) {
                 Debugger.Log(0, "CASC", $"LocalIndexHandler: missing index: {key.ToHexString()}\r\n");
+            }
 
             return result;
         }

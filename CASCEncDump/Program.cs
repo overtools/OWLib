@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using CMFLib;
 using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
@@ -23,6 +25,7 @@ namespace CASCEncDump {
         public static string NonBLTEDir => $"dump\\{BuildVersion}\\nonblte";
         public static string KeyFilesDir => $"dump\\{BuildVersion}\\keyfiles";
         public static string AllCMFDir => $"dump\\{BuildVersion}\\allcmf";
+        public static string GUIDSDir => $"dump\\{BuildVersion}\\guids";
         
         public static void Main(string[] args) {
             string overwatchDir = args[0];
@@ -40,7 +43,7 @@ namespace CASCEncDump {
             // casc setup
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
             Config.Languages = new HashSet<string> {language};
-            if (mode != "allcmf") {
+            if (mode != "allcmf" && mode != "dump-guids" && mode != "compare-guids" && mode != "dump-cmf") {
                 Config.LoadContentManifest = false;
                 Config.LoadPackageManifest = false;
             }
@@ -61,7 +64,7 @@ namespace CASCEncDump {
             //}
 
             if (mode == "dump") {
-                DumpEnc(args);
+                Dump(args);
             } else if (mode == "compare-enc") {
                 CompareEnc(args);
             } else if (mode == "compare-idx") {
@@ -72,15 +75,78 @@ namespace CASCEncDump {
                 ExtractEncodingFile(args);
             } else if (mode == "allcmf") {
                 AllCMF(args);
+            } else if (mode == "dump-guids") {
+                DumpGUIDs(args);
+            } else if (mode == "compare-guids") {
+                CompareGUIDs(args); 
+            } else if (mode == "dump-cmf") {
+                DumpCMF(args);
             } else {
                 throw new Exception($"unknown mode: {mode}");
             }
         }
 
+        public static void DumpCMF(string[] args) {
+            using (StreamWriter writer = new StreamWriter($"{BuildVersion}.cmfhashes")) {
+                foreach (KeyValuePair<ulong,MD5Hash> file in Files) {
+                    writer.WriteLine(file.Value.ToHexString());
+                }
+            }
+        }
+
+        public static void DumpGUIDs(string[] args) {
+            using (StreamWriter writer = new StreamWriter($"{BuildVersion}.guids")) {
+                foreach (KeyValuePair<ulong,MD5Hash> file in Files) {
+                    writer.WriteLine(file.Key.ToString("X"));
+                }
+            }
+        }
+
+        public static void CompareGUIDs(string[] args) {
+            string otherVerNum = args[2];
+
+            Directory.CreateDirectory(GUIDSDir);  // file name is the vesion it is compared to
+
+            ulong[] last;
+            using (StreamReader reader = new StreamReader($"{otherVerNum}.guids")) {
+                last = reader.ReadToEnd().Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+            }
+
+            List<ulong> added = new List<ulong>();
+            List<ulong> removed = new List<ulong>();
+
+            //foreach (KeyValuePair<ulong,MD5Hash> file in Files) {
+            //    if (!last.Contains(file.Key)) {
+            //        added.Add(file.Key);
+            //    }
+            //}
+            //foreach (ulong prev in last) {
+            //    if (!Files.ContainsKey(prev)) {
+            //        removed.Add(prev);
+            //    }
+            //}
+            added = Files.Keys.Except(last).ToList();
+            removed = last.Except(Files.Keys).ToList();
+            
+            using (StreamWriter writer = new StreamWriter(Path.Combine(GUIDSDir, $"{otherVerNum}.added"))) {
+                foreach (ulong addedFile in added) {
+                    writer.WriteLine(teResourceGUID.AsString(addedFile));
+                }
+            }
+            
+            using (StreamWriter writer = new StreamWriter(Path.Combine(GUIDSDir, $"{otherVerNum}.removed"))) {
+                foreach (ulong removedFile in removed) {
+                    writer.WriteLine(teResourceGUID.AsString(removedFile));
+                }
+            }
+        }
+
         public static void AllCMF(string[] args) {
+            ushort[] types = args.Skip(2).Select(x => ushort.Parse(x, NumberStyles.HexNumber)).ToArray();
+            
             Directory.CreateDirectory(AllCMFDir);
             foreach (KeyValuePair<ulong,MD5Hash> cmfFile in Files) {
-                if (teResourceGUID.Type(cmfFile.Key) != 0x77) continue;  // todo
+                if (!types.Contains(teResourceGUID.Type(cmfFile.Key))) continue;
                 try {
                     using (Stream stream = OpenFile(cmfFile.Key)) {
                         if (stream == null) continue;
@@ -105,7 +171,7 @@ namespace CASCEncDump {
             }
         }
 
-        public static void DumpEnc(string[] args) {
+        public static void Dump(string[] args) {
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.enchashes")) {
                 foreach (KeyValuePair<MD5Hash,EncodingEntry> entry in CASC.EncodingHandler.Entries) {
                     string md5 = entry.Key.ToHexString();
@@ -206,13 +272,29 @@ namespace CASCEncDump {
 
             string[] otherHashes;
             using (StreamReader reader = new StreamReader($"{otherVerNum}.enchashes")) {
-                otherHashes = reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).ToArray();
+                otherHashes = reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
             }
+
+            Dictionary<MD5Hash, int> otherHashDict = new Dictionary<MD5Hash, int>(new MD5HashComparer());
+            foreach (MD5Hash hash in otherHashes.Select(x => x.ToByteArray().ToMD5())) {
+                otherHashDict[hash] = 0;
+            }
+            
+            //int preexistingCount = 0;
+            //int newCount = 0;
+            //foreach (KeyValuePair<MD5Hash, EncodingEntry> entry in CASC.EncodingHandler.Entries) {
+            //    //string md5 = entry.Key.ToHexString();
+            //    if (!otherHashDict.ContainsKey(entry.Key)) {
+            //        newCount++;
+            //    } else {
+            //        preexistingCount++;
+            //    }
+            //}
 
             foreach (KeyValuePair<MD5Hash, EncodingEntry> entry in CASC.EncodingHandler.Entries) {
                 string md5 = entry.Key.ToHexString();
 
-                if (!otherHashes.Contains(md5)) {
+                if (!otherHashDict.ContainsKey(entry.Key)) {
                     try {
                         Stream stream = CASC.OpenFile(entry.Value.Key);
                         
@@ -233,8 +315,7 @@ namespace CASCEncDump {
                         }
                     }
                 }
-            }    
-            
+            }
         }
 
         public static void TryConvertFile(Stream stream, string convertDir, string md5) {
@@ -255,14 +336,14 @@ namespace CASCEncDump {
                     //    }
                     //}
 
-                    teChunkedData chunkedData = new teChunkedData(reader);
-                    if (chunkedData.Header.StringIdentifier == "MODL") {
-                        OverwatchModel model = new OverwatchModel(chunkedData);
-                        using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".owmdl")) {
-                            file.SetLength(0);
-                            model.Write(file);
-                        }
-                    }
+                    //teChunkedData chunkedData = new teChunkedData(reader);
+                    //if (chunkedData.Header.StringIdentifier == "MODL") {
+                    //    OverwatchModel model = new OverwatchModel(chunkedData);
+                    //    using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".owmdl")) {
+                    //        file.SetLength(0);
+                    //        model.Write(file);
+                    //    }
+                    //}
                 } else if (magic == 0x4D4F5649) {  // MOVI
                     stream.Position = 128;
                     using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".bk2")) {
@@ -270,27 +351,55 @@ namespace CASCEncDump {
                         stream.CopyTo(file);
                     }
                 } else {
-                    try {
-                        teTexture texture = new teTexture(reader);
-                        if (!texture.PayloadRequired && texture.Size <= stream.Length && 
-                            (texture.Header.Type == TextureTypes.TEXTURE_FLAGS.CUBEMAP ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.DIFFUSE ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.MULTISURFACE ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN1 ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN2 ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN4 ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN5 ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.WORLD) && 
-                            texture.Header.Height < 10000 && texture.Header.Width < 10000 && texture.Header.DataSize > 68) {
-                            using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".dds")) {
-                                file.SetLength(0);
-                                texture.SaveToDDS(file);
-                                Console.Out.WriteLine(texture.Header.DataSize);
+                    // ok might be a heckin bundle
+                    int i = 0;
+                    
+                    while (reader.BaseStream.Position < reader.BaseStream.Length) {
+                        try {
+                            magic = reader.ReadUInt32();
+                            if (magic != teChunkedData.Magic) {
+                                reader.BaseStream.Position -= 3;
+                                continue;
                             }
+                            reader.BaseStream.Position -= 4;
+                            teChunkedData chunkedData = new teChunkedData(reader);
+                            if (chunkedData.Header.StringIdentifier == "MODL") {
+                                OverwatchModel model = new OverwatchModel(chunkedData);
+                                using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + $"-{i}.owmdl")) {
+                                    file.SetLength(0);
+                                    model.Write(file);
+                                }
+                            }
+    
+                            i++;
+                        } catch (Exception) {
+                            // fine
                         }
-                    } catch (Exception) {
-                        // fine
                     }
+
+                    //try {
+                    //    //teStructuredData structuredData =new teStructuredData(stream, true);
+                    //    
+                    //    teTexture texture = new teTexture(reader);
+                    //    if (!texture.PayloadRequired && texture.Size <= stream.Length && 
+                    //        (texture.Header.Type == TextureTypes.TEXTURE_FLAGS.CUBEMAP ||
+                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.DIFFUSE ||
+                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.MULTISURFACE ||
+                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN1 ||
+                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN2 ||
+                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN4 ||
+                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN5 ||
+                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.WORLD) && 
+                    //        texture.Header.Height < 10000 && texture.Header.Width < 10000 && texture.Header.DataSize > 68) {
+                    //        using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".dds")) {
+                    //            file.SetLength(0);
+                    //            texture.SaveToDDS(file);
+                    //            Console.Out.WriteLine(texture.Header.DataSize);
+                    //        }
+                    //    }
+                    //} catch (Exception) {
+                    //    // fine
+                    //}
                 }
             }
         }

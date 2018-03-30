@@ -34,15 +34,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.ApplicationInsights, Version=2.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.2.5.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -53,6 +47,7 @@
     <Compile Include="CASC\CASCHandler.cs" />
     <Compile Include="CASC\Cache.cs" />
     <Compile Include="CASC\ContentManifestFile.cs" />
+    <Compile Include="CASC\Exceptions.cs" />
     <Compile Include="CASC\Handlers\CDNIndexHandler.cs" />
     <Compile Include="CASC\Handlers\DownloadHandler.cs" />
     <Compile Include="CASC\Handlers\EncodingHandler.cs" />
@@ -82,7 +77,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Helpers\FastStruct.cs" />
     <Compile Include="Helpers\Hash\CRC.cs" />
-    <Compile Include="Helpers\Hash\Jenkins96.cs" />
     <Compile Include="Helpers\ISerializable.cs" />
     <Compile Include="Helpers\SerializableHelper.cs" />
     <Compile Include="Math\Half\Half.cs" />
@@ -116,7 +110,6 @@
     <Compile Include="teAnimation.cs" />
     <Compile Include="teChunkedData.cs" />
     <Compile Include="teEnums.cs" />
-    <Compile Include="TelemetryHandler.cs" />
     <Compile Include="teMaterial.cs" />
     <Compile Include="teMaterialData.cs" />
     <Compile Include="teResourceGUID.cs" />
@@ -125,15 +118,13 @@
     <Compile Include="teTexture.cs" />
     <Compile Include="teTexturePayload.cs" />
     <Compile Include="TextureTypes.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CMFLib\CMFLib.csproj">
       <Project>{3b5d1227-f0f7-48e4-9ac0-757b87f8c64f}</Project>
       <Name>CMFLib</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

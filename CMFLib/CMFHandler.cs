@@ -28,7 +28,7 @@ namespace CMFLib {
             AddProviders(asm);
         }
         
-        public static KeyValuePair<byte[], byte[]> GenerateKeyIV(string name, CMFHeader header, CMFApplication app) {
+        public static KeyValuePair<byte[], byte[]> GenerateKeyIV(string name, CMFHeaderCommon header, CMFApplication app) {
             if (!Providers.ContainsKey(app)) {
                 FindProviders(app);
             }
@@ -50,11 +50,13 @@ namespace CMFLib {
                 }
             }
 
+            byte[] key = provider.Key(header, name, digest, 32);
             byte[] iv = provider.IV(header, name, digest, 16);
             
-            //Console.Out.WriteLine($"{name}: {string.Join(" ", iv.Select(x => x.ToString("X2")))}");
+            Console.Out.WriteLine($"{name}: key={string.Join(" ", key.Select(x => x.ToString("X2")))}");
+            Console.Out.WriteLine($"{name}: iv={string.Join(" ", iv.Select(x => x.ToString("X2")))}");
             
-            return new KeyValuePair<byte[], byte[]>(provider.Key(header, name, digest, 32), iv);
+            return new KeyValuePair<byte[], byte[]>(key, iv);
         }
         
         private static byte[] CreateDigest(string value) {

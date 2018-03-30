@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>DataTool</RootNamespace>
     <AssemblyName>DataTool</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -94,7 +94,6 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimNodes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugComboDemo.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugNewEntities.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugOWL.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugRAMTest.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSoundBank.cs" />
@@ -112,6 +111,7 @@
     <Compile Include="ToolLogic\List\Debug\ListDebugAnimBlendTrees.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugFewParticles.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugSoundbanks.cs" />
+    <Compile Include="ToolLogic\List\Debug\ListDebugUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListAchievements.cs" />
     <Compile Include="ToolLogic\List\ListChatStuff.cs" />
     <Compile Include="ToolLogic\List\ListGameParams.cs" />
@@ -138,9 +138,9 @@
       <Project>{9793cb2e-094a-41c9-81bc-27e60620538d}</Project>
       <Name>BCFF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CASCExplorer\CascLib\CascLib.csproj">
-      <Project>{e08e1e48-6585-4137-8405-661c62c10713}</Project>
-      <Name>CascLib</Name>
+    <ProjectReference Include="..\CMFLib\CMFLib.csproj">
+      <Project>{3b5d1227-f0f7-48e4-9ac0-757b87f8c64f}</Project>
+      <Name>CMFLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\OWLib\OWLib.csproj">
       <Project>{353c0d05-c505-4df4-909e-624fd94a7d3b}</Project>
@@ -157,6 +157,10 @@
     <ProjectReference Include="..\STULib\STULib.csproj">
       <Project>{996012b0-3693-4642-ac44-5aa8865ee44a}</Project>
       <Name>STULib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TankLib\TankLib.csproj">
+      <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>
+      <Name>TankLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

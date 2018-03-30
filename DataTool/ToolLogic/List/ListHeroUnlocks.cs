@@ -104,7 +104,12 @@ namespace DataTool.ToolLogic.List {
                 foreach (STULootBoxUnlocks eventUnlocks in unlocks.LootboxUnlocks) {
                     if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
 
-                    string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";
+                    string eventKey;
+                    if (ItemEvents.GetInstance().EventsNormal.ContainsKey((uint) eventUnlocks.Event)) {
+                        eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";
+                    } else {
+                        eventKey = $"Unknown{eventUnlocks.Event}";
+                    }
 
                     if (!@return.ContainsKey(eventKey)) {
                         @return[eventKey] = new HashSet<ItemInfo>();

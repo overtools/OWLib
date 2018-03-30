@@ -68,7 +68,6 @@ namespace TankLib.ExportFormats {
                     writer.Write(submesh.UVCount);
                     
                     writer.Write(submesh.Vertices.Length);
-                    //writer.Write(submesh.Indices.Length/3);
                     writer.Write(submesh.Faces.Length);
 
                     for (int j = 0; j < submesh.Vertices.Length; j++) {
@@ -95,13 +94,7 @@ namespace TankLib.ExportFormats {
                             writer.Write((byte)0);
                         }
                     }
-
-                    //for (int j = 0; j < submesh.Indices.Length/3; j+=3) {
-                    //    writer.Write((byte)3);
-                    //    writer.Write((int)submesh.Indices[j]);
-                    //    writer.Write((int)submesh.Indices[j+1]);
-                    //    writer.Write((int)submesh.Indices[j+2]);
-                    //}
+                    
                     foreach (teModelChunk_RenderMesh.MeshFace face in submesh.Faces) {
                         writer.Write((byte)3);
                         writer.Write(face.ToExportStruct());

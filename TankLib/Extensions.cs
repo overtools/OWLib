@@ -5,27 +5,8 @@ using TankLib.Helpers;
 namespace TankLib {
     public static class Extensions {
         #region BinaryReader
-        //public static T Read<T>(this BinaryReader reader) where T : struct {
-        //    int size = Marshal.SizeOf<T>();
-        //    byte[] buf = reader.ReadBytes(size);
-        //    IntPtr ptr = Marshal.AllocHGlobal(size);
-        //    Marshal.Copy(buf, 0, ptr, size);
-        //    T obj = Marshal.PtrToStructure<T>(ptr);
-        //    Marshal.FreeHGlobal(ptr);
-        //    return obj;
-        //}
-        //public static void Write<T>(this BinaryWriter writer, T obj) where T : struct {
-        //    int size = Marshal.SizeOf<T>();
-        //    byte[] buf = new byte[size];
-        //    IntPtr ptr = Marshal.AllocHGlobal(size);
-        //    Marshal.StructureToPtr(obj, ptr, true);
-        //    Marshal.Copy(ptr, buf, 0, size);
-        //    Marshal.FreeHGlobal(ptr);
-        //    writer.Write(buf, 0, size);
-        //}
         public static T Read<T>(this BinaryReader reader) where T : struct {
             byte[] result = reader.ReadBytes(FastStruct<T>.Size);
-
             return FastStruct<T>.ArrayToStructure(result);
         }
 

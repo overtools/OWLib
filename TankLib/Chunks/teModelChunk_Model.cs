@@ -21,7 +21,7 @@ namespace TankLib.Chunks {
             public ushort Unknown6;
             public long Unknown7;
             public long Unknown8;
-            public long MaterialPointer;
+            public long MaterialOffset;
         }
         
         /// <summary>Header data</summary>
@@ -33,12 +33,9 @@ namespace TankLib.Chunks {
             using (BinaryReader reader = new BinaryReader(input)) {
                 Header = reader.Read<ModelHeader>();
                 
-                if (Header.MaterialPointer > 0) {
-                    input.Position = Header.MaterialPointer;
-                    Materials = new ulong[Header.MaterialCount];
-                    for(ushort i = 0; i < Header.MaterialCount; ++i) {
-                        Materials[i] = reader.ReadUInt64();
-                    }
+                if (Header.MaterialOffset > 0) {
+                    input.Position = Header.MaterialOffset;
+                    Materials = reader.ReadArray<ulong>(Header.MaterialCount);
                 }
             }
         }

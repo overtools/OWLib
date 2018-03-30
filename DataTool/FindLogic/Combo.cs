@@ -14,6 +14,7 @@ using STULib;
 using STULib.Types;
 using STULib.Types.Dump;
 using STULib.Types.Generic;
+using TankLib;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -40,6 +41,7 @@ namespace DataTool.FindLogic {
             public Dictionary<ulong, SoundFileInfo> SoundFiles;
             public Dictionary<ulong, VoiceSetInfo> VoiceSets;
             public Dictionary<ulong, MapInfoNew> Maps;
+            public Dictionary<ulong, StringInfo> Strings;
 
             public ComboConfig Config = new ComboConfig();
             public ComboSaveConfig SaveConfig = new ComboSaveConfig();
@@ -62,6 +64,7 @@ namespace DataTool.FindLogic {
                 SoundFiles = new Dictionary<ulong, SoundFileInfo>();
                 VoiceSets = new Dictionary<ulong, VoiceSetInfo>();
                 Maps = new Dictionary<ulong, MapInfoNew>();
+                Strings = new Dictionary<ulong, StringInfo>();
             }
 
             public void SetEntityName(ulong entity, string name, Dictionary<ulong, ulong> replacements=null) {
@@ -147,6 +150,12 @@ namespace DataTool.FindLogic {
             public override string GetNameIndex() {
                 return GetValidFilename(Name) ?? $"{GUID & 0xFFFFFFFFFFFF:X12}";
             }
+        }
+
+        public class StringInfo : ComboType {
+            public StringInfo(ulong guid) : base(guid) {}
+
+            public string Value;
         }
 
         public class MapInfoNew : ComboType {
@@ -806,6 +815,7 @@ namespace DataTool.FindLogic {
                     info.SoundFiles[guid] = soundFileInfo;
                     break;
                 case 0x43:
+                    break;  // todo: broken in 1.22
                     if (info.SoundBanks.ContainsKey(guid)) break;
                     
                     WWiseBankInfo bankInfo = new WWiseBankInfo(guid);
@@ -841,6 +851,9 @@ namespace DataTool.FindLogic {
                     if (info.VoiceSets.ContainsKey(guid)) break;
 
                     STUVoiceSet voiceSet = GetInstance<STUVoiceSet>(guid);
+
+                    //string firstName = IO.GetString(voiceSet.m_269FC4E9);
+                    //string lastName = IO.GetString(voiceSet.m_C0835C08);
 
                     if (voiceSet == null) break;
                     
@@ -891,6 +904,15 @@ namespace DataTool.FindLogic {
                         voiceSetInfo.VoiceLineInstances[voiceLineInstanceInfo.VoiceStimulus].Add(voiceLineInstanceInfo);
                     }
                     
+                    break;
+                case 0x7C:
+                    if (info.Strings.ContainsKey(guid)) break;
+                    
+                    StringInfo stringInfo = new StringInfo(guid) {
+                        Value = GetString(guid)
+                    };
+
+                    info.Strings[guid] = stringInfo;
                     break;
                 case 0xA5:
                     // hmm, if existing?

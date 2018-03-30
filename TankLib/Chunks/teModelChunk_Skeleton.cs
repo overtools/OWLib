@@ -53,8 +53,9 @@ namespace TankLib.Chunks {
                 Header = reader.Read<SkeletonHeader>();
                 
                 Hierarchy = new short[Header.BonesAbs];
-                input.Position = Header.Hierarchy1Offset;
-                if(input.Position > 0) {
+                
+                if (Header.Hierarchy1Offset > 0) {
+                    input.Position = Header.Hierarchy1Offset;
                     for(int i = 0; i < Header.BonesAbs; ++i) {
                         input.Position += 4L;
                         Hierarchy[i] = reader.ReadInt16();
@@ -68,48 +69,36 @@ namespace TankLib.Chunks {
                 Matrices34 = new teMtx43A[Header.BonesAbs];
                 Matrices34Inverted = new teMtx43A[Header.BonesAbs];
 
-                input.Position = Header.Matrix44Offset;
-                if(input.Position > 0) {
-                    for(int i = 0; i < Header.BonesAbs; ++i) {
-                        Matrices[i] = reader.Read<teMtx44A>();
-                    }
+                if (Header.Matrix44Offset > 0) {
+                    input.Position = Header.Matrix44Offset;
+                    Matrices = reader.ReadArray<teMtx44A>(Header.BonesAbs);
                 }
 
-                input.Position = Header.Matrix44iOffset;
-                if(input.Position > 0) {
-                    for(int i = 0; i < Header.BonesAbs; ++i) {
-                        MatricesInverted[i] = reader.Read<teMtx44A>();
-                    }
+                if (Header.Matrix44iOffset > 0) {
+                    input.Position = Header.Matrix44iOffset;
+                    MatricesInverted = reader.ReadArray<teMtx44A>(Header.BonesAbs);
                 }
 
-                input.Position = Header.Matrix43Offset;
-                if(input.Position > 0) {
-                    for(int i = 0; i < Header.BonesAbs; ++i) {
-                        Matrices34[i] = reader.Read<teMtx43A>();
-                    }
+                if (Header.Matrix43Offset > 0) {
+                    input.Position = Header.Matrix43Offset;
+                    Matrices34 = reader.ReadArray<teMtx43A>(Header.BonesAbs);
                 }
 
-                input.Position = Header.Matrix43iOffset;
-                if(input.Position > 0) {
-                    for(int i = 0; i < Header.BonesAbs; ++i) {
-                        Matrices34Inverted[i] = reader.Read<teMtx43A>();
-                    }
+                if (Header.Matrix43iOffset > 0) {
+                    input.Position = Header.Matrix43iOffset;
+                    Matrices34Inverted = reader.ReadArray<teMtx43A>(Header.BonesAbs);
                 }
 
                 Lookup = new ushort[Header.RemapCount];
-                input.Position = Header.RemapOffset;
-                if(input.Position > 0) {
-                    for(int i = 0; i < Header.RemapCount; ++i) {
-                        Lookup[i] = reader.ReadUInt16();
-                    }
+                if (Header.RemapOffset > 0) {
+                    input.Position = Header.RemapOffset;
+                    Lookup = reader.ReadArray<ushort>();
                 }
 
                 IDs = new uint[Header.BonesAbs];
-                input.Position = Header.IDOffset;
-                if(input.Position > 0) {
-                    for(int i = 0; i < Header.BonesAbs; ++i) {
-                        IDs[i] = reader.ReadUInt32();
-                    }
+                if (Header.IDOffset > 0) {
+                    input.Position = Header.IDOffset;
+                    IDs = reader.ReadArray<uint>();
                 }
             }
         }
