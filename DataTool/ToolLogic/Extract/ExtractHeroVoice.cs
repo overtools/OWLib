@@ -181,7 +181,7 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             info = new Combo.ComboInfo();
-            Combo.Find(info, Combo.GetReplacement(soundSetComponentContainer.VoiceSet, replacements));
+            Combo.Find(info, Combo.GetReplacement(soundSetComponentContainer.VoiceSet, replacements), replacements);
             if (baseComponent != default(STUVoiceSetComponent) && baseCombo != default(Combo.ComboInfo)) {
                 if(!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, baseComponent.VoiceSet, Combo.GetReplacement(soundSetComponentContainer.VoiceSet, replacements)))
                 {
