@@ -14,60 +14,72 @@ using static DataTool.Helper.STUHelper;
 using System.Linq;
 using DataTool.DataModels;
 
-namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-hero-voice", Description = "Extract hero voice sounds", TrackTypes = new ushort[] {0x75}, CustomFlags = typeof(ExtractFlags))]
-    public class ExtractHeroVoice : QueryParser, ITool, IQueryParser {
-        public List<QueryType> QueryTypes => new List<QueryType> {new QueryType {Name = "soundRestriction"}, new QueryType {Name = "groupRestriction"}};
+namespace DataTool.ToolLogic.Extract
+{
+    [Tool("extract-hero-voice", Description = "Extract hero voice sounds", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ExtractFlags))]
+    public class ExtractHeroVoice : QueryParser, ITool, IQueryParser
+    {
+        public List<QueryType> QueryTypes => new List<QueryType> { new QueryType { Name = "soundRestriction" }, new QueryType { Name = "groupRestriction" } };
 
         public Dictionary<string, string> QueryNameOverrides => ExtractHeroUnlocks.HeroMapping;
 
-        public void IntegrateView(object sender) {
+        public void IntegrateView(object sender)
+        {
             throw new NotImplementedException();
         }
 
-        public void Parse(ICLIFlags toolFlags) {
+        public void Parse(ICLIFlags toolFlags)
+        {
             SaveHeroSounds(toolFlags);
         }
-        
-        protected override void QueryHelp(List<QueryType> types) {
+
+        protected override void QueryHelp(List<QueryType> types)
+        {
             IndentHelper indent = new IndentHelper();
-            
+
             Log("Please specify what you want to extract:");
-            Log($"{indent+1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
-            Log($"{indent+1}Each query should be surrounded by \", and individual queries should be seperated by spaces");
-            
-            Log($"{indent+1}All hero names are in your selected locale");
-                        
+            Log($"{indent + 1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
+            Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be seperated by spaces");
+
+            Log($"{indent + 1}All hero names are in your selected locale");
+
             Log("\r\nTypes:");
-            foreach (QueryType argType in types) {
-                Log($"{indent+1}{argType.Name}");
+            foreach (QueryType argType in types)
+            {
+                Log($"{indent + 1}{argType.Name}");
             }
-            
+
             Log("\r\nExample commands: ");
-            Log($"{indent+1}\"Lúcio|soundRestriction=00000000B56B.0B2\"");
-            Log($"{indent+1}\"Torbjörn|groupRestriction=0000000000CD.078\"");
-            Log($"{indent+1}\"Moira\"");
+            Log($"{indent + 1}\"Lúcio|soundRestriction=00000000B56B.0B2\"");
+            Log($"{indent + 1}\"Torbjörn|groupRestriction=0000000000CD.078\"");
+            Log($"{indent + 1}\"Moira\"");
         }
 
         private static string Container = "HeroVoice";
 
-        public void SaveHeroSounds(ICLIFlags toolFlags) {
+        public void SaveHeroSounds(ICLIFlags toolFlags)
+        {
             string basePath;
-            if (toolFlags is ExtractFlags flags) {
+            if (toolFlags is ExtractFlags flags)
+            {
                 basePath = flags.OutputPath;
-            } else {
+            }
+            else
+            {
                 throw new Exception("no output path");
             }
-            
-            if (flags.Positionals.Length < 4) {
+
+            if (flags.Positionals.Length < 4)
+            {
                 QueryHelp(QueryTypes);
                 return;
             }
 
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
-            
-            foreach (ulong heroFile in TrackedFiles[0x75]) {
+
+            foreach (ulong heroFile in TrackedFiles[0x75])
+            {
                 STUHero hero = GetInstance<STUHero>(heroFile);
                 if (hero == null) continue;
 
@@ -75,17 +87,22 @@ namespace DataTool.ToolLogic.Extract {
                 Log($"Processing data for {heroNameActual}");
 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
-                foreach (string key in new [] {heroNameActual.ToLowerInvariant(), "*"}) {
+                foreach (string key in new[] { heroNameActual.ToLowerInvariant(), "*" })
+                {
                     if (!parsedTypes.ContainsKey(key)) continue;
-                    foreach (KeyValuePair<string,ParsedArg> parsedArg in parsedTypes[key]) {
-                        if (config.ContainsKey(parsedArg.Key)) {
+                    foreach (KeyValuePair<string, ParsedArg> parsedArg in parsedTypes[key])
+                    {
+                        if (config.ContainsKey(parsedArg.Key))
+                        {
                             config[parsedArg.Key] = config[parsedArg.Key].Combine(parsedArg.Value);
-                        } else {
+                        }
+                        else
+                        {
                             config[parsedArg.Key] = parsedArg.Value.Combine(null); // clone for safety
                         }
                     }
                 }
-                
+
                 if (config.Count == 0) continue;
                 
                 STUVoiceSetComponent baseComponent = default(STUVoiceSetComponent);
@@ -93,9 +110,10 @@ namespace DataTool.ToolLogic.Extract {
 
                 string heroFileName = GetValidFilename(heroNameActual);
 
-                if (SaveSet(flags, basePath, hero.EntityMain, heroFileName, "Default", ref baseComponent, ref baseInfo)) {
+                if (SaveSet(flags, basePath, hero.EntityMain, heroFileName, "Default", ref baseComponent, ref baseInfo))
+                {
                     var unlocks = GetInstance<STUHeroUnlocks>(hero.LootboxUnlocks);
-                    if(unlocks == null)
+                    if (unlocks == null)
                     {
                         continue;
                     }
@@ -106,6 +124,11 @@ namespace DataTool.ToolLogic.Extract {
                     foreach (ItemInfo itemInfo in achievementUnlocks)
                     {
                         if (itemInfo == null)
+                        {
+                            continue;
+                        }
+
+                        if ((itemInfo.Unlock as STUUnlock_Skin)?.LeagueTeam != 0)
                         {
                             continue;
                         }
@@ -133,6 +156,11 @@ namespace DataTool.ToolLogic.Extract {
                                 continue;
                             }
 
+                            if ((itemInfo.Unlock as STUUnlock_Skin)?.LeagueTeam != 0)
+                            {
+                                continue;
+                            }
+
                             SaveSkin(flags, (itemInfo.Unlock as STUUnlock_Skin)?.SkinResource, basePath, hero, heroFileName, itemInfo.Name, baseComponent, baseInfo);
                         }
                     }
@@ -140,11 +168,16 @@ namespace DataTool.ToolLogic.Extract {
                     foreach (var eventUnlocks in unlocks.LootboxUnlocks)
                     {
                         if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
-                        
+
                         var eUnlocks = eventUnlocks.Unlocks.Unlocks.Select(it => GatherUnlock(it)).Where(item => item?.Unlock is STUUnlock_Skin).ToList();
                         foreach (ItemInfo itemInfo in eUnlocks)
                         {
                             if (itemInfo == null)
+                            {
+                                continue;
+                            }
+
+                            if ((itemInfo.Unlock as STUUnlock_Skin)?.LeagueTeam != 0)
                             {
                                 continue;
                             }
@@ -167,7 +200,10 @@ namespace DataTool.ToolLogic.Extract {
             STUVoiceSetComponent component = default(STUVoiceSetComponent);
             Combo.ComboInfo info = default(Combo.ComboInfo);
 
-            SaveSet(flags, basePath, hero.EntityMain, heroFileName, name, ref component, ref info, baseComponent, baseInfo, skin.ProperReplacements);
+            if (SaveSet(flags, basePath, hero.EntityMain, heroFileName, GetValidFilename(name), ref component, ref info, baseComponent, baseInfo, skin.ProperReplacements))
+            {
+                return;
+            }
         }
 
         public static bool SaveSet(ICLIFlags flags, string basePath, ulong entityMain, string heroFileName, string skin, ref STUVoiceSetComponent soundSetComponentContainer, ref Combo.ComboInfo info, STUVoiceSetComponent baseComponent = null, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null)
@@ -182,12 +218,15 @@ namespace DataTool.ToolLogic.Extract {
 
             info = new Combo.ComboInfo();
             Combo.Find(info, Combo.GetReplacement(soundSetComponentContainer.VoiceSet, replacements), replacements);
-            if (baseComponent != default(STUVoiceSetComponent) && baseCombo != default(Combo.ComboInfo)) {
-                if(!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, baseComponent.VoiceSet, Combo.GetReplacement(soundSetComponentContainer.VoiceSet, replacements)))
+            if (baseComponent != null && baseCombo != null)
+            {
+                if (!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, baseComponent.VoiceSet, Combo.GetReplacement(soundSetComponentContainer.VoiceSet, replacements)))
                 {
                     return false;
                 }
             }
+
+            Log("Saving {0}", skin);
 
             SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName, skin), info, Combo.GetReplacement(soundSetComponentContainer.VoiceSet, replacements));
 

@@ -321,7 +321,7 @@ namespace DataTool.FindLogic {
         }
 
         public static bool RemoveDuplicateVoiceSetEntries(ComboInfo @base, ref ComboInfo target, ulong voiceSet, ulong targetVoiceSet) {
-            if (!@base.VoiceSets.ContainsKey(voiceSet) || target.VoiceSets.ContainsKey(targetVoiceSet)) {
+            if (!@base.VoiceSets.ContainsKey(voiceSet) || !target.VoiceSets.ContainsKey(targetVoiceSet)) {
                 return false;
             }
 
@@ -350,7 +350,7 @@ namespace DataTool.FindLogic {
                         hasData = true;
                     }
                 }
-                @target.VoiceSets[voiceSet].VoiceLineInstances[pair.Key] = newSet;
+                @target.VoiceSets[targetVoiceSet].VoiceLineInstances[pair.Key] = newSet;
             }
 
             return hasData;
