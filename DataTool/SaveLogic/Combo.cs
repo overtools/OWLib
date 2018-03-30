@@ -109,6 +109,7 @@ namespace DataTool.SaveLogic {
                     animWriter.Write(parsedAnimation, fileStream, new object[] { });
                 }
             } else {
+                animStream.Position = 0;
                 string rawAnimOutput = Path.Combine(animationDirectory,
                     $"{animationInfo.GetNameIndex()}.{GUID.Type(animationInfo.GUID):X3}");
                 CreateDirectoryFromFile(rawAnimOutput);
