@@ -319,7 +319,43 @@ namespace DataTool.FindLogic {
         private static ulong GetMapDataKey(ulong map, ushort type) {
             return (GetMapDataRoot(map) & ~0xFFFF00000000ul) | ((ulong) type << 32);
         }
-        
+
+        public static bool RemoveDuplicateVoiceSetEntries(ComboInfo @base, ref ComboInfo target, ulong voiceSet, ulong targetVoiceSet) {
+            if (!@base.VoiceSets.ContainsKey(voiceSet) || target.VoiceSets.ContainsKey(targetVoiceSet)) {
+                return false;
+            }
+
+            HashSet<ulong> keys = new HashSet<ulong>();
+            foreach (KeyValuePair<ulong, HashSet<VoiceLineInstanceInfo>> pair in @base.VoiceSets[voiceSet].VoiceLineInstances) {
+                foreach (VoiceLineInstanceInfo voice in pair.Value) {
+                    foreach (ulong guid in voice.SoundFiles) {
+                        keys.Add(guid);
+                    }
+                }
+            }
+
+            bool hasData = false;
+
+            // we have to call toarray here to "freeze" the GC stack and allow us to modify the "original" without C# bitching.
+            foreach (KeyValuePair<ulong, HashSet<VoiceLineInstanceInfo>> pair in @target.VoiceSets[targetVoiceSet].VoiceLineInstances.ToArray()) {
+                HashSet<VoiceLineInstanceInfo> newSet = new HashSet<VoiceLineInstanceInfo>();
+                foreach (VoiceLineInstanceInfo voice in pair.Value) {
+                    foreach (ulong guid in voice.SoundFiles.ToArray()) {  // and here
+                        if (!keys.Add(guid)) {
+                            voice.SoundFiles.Remove(guid);
+                        }
+                    }
+                    if (voice.SoundFiles.Count > 0) {
+                        newSet.Add(voice);
+                        hasData = true;
+                    }
+                }
+                @target.VoiceSets[voiceSet].VoiceLineInstances[pair.Key] = newSet;
+            }
+
+            return hasData;
+        }
+
         public static ComboInfo Find(ComboInfo info, ulong guid, Dictionary<ulong, ulong> replacements=null , ComboContext context=null) {
             if (info == null) info = new ComboInfo();
             if (context == null) context = new ComboContext();

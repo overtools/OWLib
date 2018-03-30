@@ -11,6 +11,8 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
+using System.Linq;
+using DataTool.DataModels;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-voice", Description = "Extract hero voice sounds", TrackTypes = new ushort[] {0x75}, CustomFlags = typeof(ExtractFlags))]
@@ -86,20 +88,110 @@ namespace DataTool.ToolLogic.Extract {
                 
                 if (config.Count == 0) continue;
                 
-                STUVoiceSetComponent soundSetComponentContainer = GetInstance<STUVoiceSetComponent>(hero.EntityMain);
+                STUVoiceSetComponent baseComponent = default(STUVoiceSetComponent);
+                Combo.ComboInfo baseInfo = default(Combo.ComboInfo);
 
-                if (soundSetComponentContainer?.VoiceSet == null) {
-                    Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found");
-                    return;
-                }
-                
                 string heroFileName = GetValidFilename(heroNameActual);
-                
-                Combo.ComboInfo info = new Combo.ComboInfo();
-                Combo.Find(info, soundSetComponentContainer.VoiceSet);
-                
-                SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName), info, soundSetComponentContainer.VoiceSet);
+
+                if (SaveSet(flags, basePath, hero.EntityMain, heroFileName, "Default", ref baseComponent, ref baseInfo)) {
+                    var unlocks = GetInstance<STUHeroUnlocks>(hero.LootboxUnlocks);
+                    if(unlocks == null)
+                    {
+                        continue;
+                    }
+
+                    bool npc = unlocks.LootboxUnlocks == null;
+
+                    var achievementUnlocks = GatherUnlocks(unlocks?.SystemUnlocks?.Unlocks?.Select(it => (ulong)it)).Where(item => item?.Unlock is STUUnlock_Skin).ToList();
+                    foreach (ItemInfo itemInfo in achievementUnlocks)
+                    {
+                        if (itemInfo == null)
+                        {
+                            continue;
+                        }
+
+                        SaveSkin(flags, (itemInfo.Unlock as STUUnlock_Skin)?.SkinResource, basePath, hero, heroFileName, itemInfo.Name, baseComponent, baseInfo);
+                    }
+
+                    if (npc)
+                    {
+                        foreach (STUHeroSkin skin in hero.Skins)
+                        {
+                            SaveSkin(flags, skin.SkinOverride, basePath, hero, heroFileName, GetFileName(skin.SkinOverride), baseComponent, baseInfo);
+                        }
+                        continue;
+                    }
+
+                    foreach (var defaultUnlocks in unlocks.Unlocks)
+                    {
+                        var dUnlocks = GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong)it)).Where(item => item?.Unlock is STUUnlock_Skin).ToList();
+
+                        foreach (ItemInfo itemInfo in dUnlocks)
+                        {
+                            if (itemInfo == null)
+                            {
+                                continue;
+                            }
+
+                            SaveSkin(flags, (itemInfo.Unlock as STUUnlock_Skin)?.SkinResource, basePath, hero, heroFileName, itemInfo.Name, baseComponent, baseInfo);
+                        }
+                    }
+
+                    foreach (var eventUnlocks in unlocks.LootboxUnlocks)
+                    {
+                        if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
+                        
+                        var eUnlocks = eventUnlocks.Unlocks.Unlocks.Select(it => GatherUnlock(it)).Where(item => item?.Unlock is STUUnlock_Skin).ToList();
+                        foreach (ItemInfo itemInfo in eUnlocks)
+                        {
+                            if (itemInfo == null)
+                            {
+                                continue;
+                            }
+
+                            SaveSkin(flags, (itemInfo.Unlock as STUUnlock_Skin)?.SkinResource, basePath, hero, heroFileName, itemInfo.Name, baseComponent, baseInfo);
+                        }
+                    }
+                }
             }
+        }
+
+        public static void SaveSkin(ICLIFlags flags, ulong skinResource, string basePath, STUHero hero, string heroFileName, string name, STUVoiceSetComponent baseComponent, Combo.ComboInfo baseInfo)
+        {
+            STUSkinOverride skin = GetInstance<STUSkinOverride>(skinResource);
+            if (skin == null)
+            {
+                return;
+            }
+
+            STUVoiceSetComponent component = default(STUVoiceSetComponent);
+            Combo.ComboInfo info = default(Combo.ComboInfo);
+
+            SaveSet(flags, basePath, hero.EntityMain, heroFileName, name, ref component, ref info, baseComponent, baseInfo, skin.ProperReplacements);
+        }
+
+        public static bool SaveSet(ICLIFlags flags, string basePath, ulong entityMain, string heroFileName, string skin, ref STUVoiceSetComponent soundSetComponentContainer, ref Combo.ComboInfo info, STUVoiceSetComponent baseComponent = null, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null)
+        {
+            soundSetComponentContainer = GetInstance<STUVoiceSetComponent>(Combo.GetReplacement(entityMain, replacements));
+
+            if (soundSetComponentContainer?.VoiceSet == null)
+            {
+                Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found");
+                return false;
+            }
+
+            info = new Combo.ComboInfo();
+            Combo.Find(info, Combo.GetReplacement(soundSetComponentContainer.VoiceSet, replacements));
+            if (baseComponent != default(STUVoiceSetComponent) && baseCombo != default(Combo.ComboInfo)) {
+                if(!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, baseComponent.VoiceSet, soundSetComponentContainer.VoiceSet))
+                {
+                    return false;
+                }
+            }
+
+            SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName, skin), info, soundSetComponentContainer.VoiceSet);
+
+            return true;
         }
     }
 }
