@@ -4335,6 +4335,7 @@
     <Compile Include="Types\STUEntityComponent.cs" />
     <Compile Include="Types\STUEntityComponent2.cs" />
     <Compile Include="Types\STUEntityDefinition.cs" />
+    <Compile Include="Types\STUMapDataBinding.cs" />
     <Compile Include="Types\STUModelComponentInstanceData.cs" />
     <Compile Include="Types\STUVoiceSetComponent.cs" />
     <Compile Include="Types\STUFirstPersonComponent.cs" />
@@ -4379,7 +4380,6 @@
     <Compile Include="Types\STULootBoxCurrencyRarityUnlock.cs" />
     <Compile Include="Types\STULootBoxCurrencyUnlocks.cs" />
     <Compile Include="Types\STUMap.cs" />
-    <Compile Include="Types\STUMapDataBinding.cs" />
     <Compile Include="Types\STUModelComponent.cs" />
     <Compile Include="Types\STUModelLook.cs" />
     <Compile Include="Types\STUOverrideBase.cs" />
