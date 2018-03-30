@@ -183,13 +183,13 @@ namespace DataTool.ToolLogic.Extract {
             info = new Combo.ComboInfo();
             Combo.Find(info, Combo.GetReplacement(soundSetComponentContainer.VoiceSet, replacements));
             if (baseComponent != default(STUVoiceSetComponent) && baseCombo != default(Combo.ComboInfo)) {
-                if(!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, baseComponent.VoiceSet, soundSetComponentContainer.VoiceSet))
+                if(!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, baseComponent.VoiceSet, Combo.GetReplacement(soundSetComponentContainer.VoiceSet, replacements)))
                 {
                     return false;
                 }
             }
 
-            SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName, skin), info, soundSetComponentContainer.VoiceSet);
+            SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName, skin), info, Combo.GetReplacement(soundSetComponentContainer.VoiceSet, replacements));
 
             return true;
         }
