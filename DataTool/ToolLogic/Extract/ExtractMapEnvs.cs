@@ -95,15 +95,15 @@ namespace DataTool.ToolLogic.Extract
                             SaveSound(flags, basePath, Path.Combine("Sound", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.MapEnviornmentSound);
                         if (!flags.SkipMapEnviornmentLUT && done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name)))
                         {
-                            SaveTex(flags, basePath, "LUT", false, fname, env.LUT);
+                            SaveTex(flags, basePath, "LUT", fname, env.LUT);
                             SaveLUT(flags, basePath, "SPILUT", fname, env.LUT, Path.Combine(basePath, "SPILUT", "config.ocio"), mapInfo);
                         }
                         if (!flags.SkipMapEnviornmentBlendCubemap && done.Add(new KeyValuePair<ulong, string>(env.BlendEnviornmentCubemap, mapInfo.Name)))
-                            SaveTex(flags, basePath, "BlendCubemap", true, fname, env.BlendEnviornmentCubemap);
+                            SaveTex(flags, basePath, "BlendCubemap", fname, env.BlendEnviornmentCubemap);
                         if (!flags.SkipMapEnviornmentGroundCubemap && done.Add(new KeyValuePair<ulong, string>(env.GroundEnviornmentCubemap, mapInfo.Name)))
-                            SaveTex(flags, basePath, "GroundCubemap", true, fname, env.GroundEnviornmentCubemap);
+                            SaveTex(flags, basePath, "GroundCubemap", fname, env.GroundEnviornmentCubemap);
                         if (!flags.SkipMapEnviornmentSkyCubemap && done.Add(new KeyValuePair<ulong, string>(env.SkyEnviornmentCubemap, mapInfo.Name)))
-                            SaveTex(flags, basePath, "SkyCubemap", true, fname, env.SkyEnviornmentCubemap);
+                            SaveTex(flags, basePath, "SkyCubemap", fname, env.SkyEnviornmentCubemap);
                         if (!flags.SkipMapEnviornmentSkybox && done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel ^ env.SkyboxModelLook, mapInfo.Name)))
                             SaveMdl(flags, basePath, Path.Combine("Skybox", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.SkyboxModel, env.SkyboxModelLook);
                         if (!flags.SkipMapEnviornmentEntity && done.Add(new KeyValuePair<ulong, string>(env.StateScript, mapInfo.Name)))
@@ -199,7 +199,7 @@ namespace DataTool.ToolLogic.Extract
             SaveLogic.Combo.SaveAllMaterials(flags, Path.Combine(basePath, part), info);
         }
 
-        private void SaveTex(ExtractFlags flags, string basePath, string part, bool overrideExport, string filename, ulong key)
+        private void SaveTex(ExtractFlags flags, string basePath, string part, string filename, ulong key)
         {
             if(key == 0)
             {
@@ -212,13 +212,7 @@ namespace DataTool.ToolLogic.Extract
             {
                 Name = filename
             });
-            string saved = flags.ConvertTexturesType;
-            if (overrideExport)
-            {
-                flags.ConvertTexturesType = "dds";
-            }
             SaveLogic.Combo.SaveTexture(flags, Path.Combine(basePath, part), info, key);
-            flags.ConvertTexturesType = saved;
         }
     }
 }
