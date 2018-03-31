@@ -94,7 +94,7 @@ namespace OWLib.Types {
         public Matrix4B M2;
         public Matrix4B M3;
 
-        public ulong UnknownGUID0;
+        public ulong StateScript;
         public ulong SkyEnviornmentCubemap;
         public ulong BakedLighting;
         public ulong BakedShadow;

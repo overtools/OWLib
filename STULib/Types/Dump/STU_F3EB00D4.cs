@@ -5,7 +5,7 @@ namespace STULib.Types.Dump {
     [STU(0xF3EB00D4)]
     public class STU_F3EB00D4 : STUInstance {
         [STUField(0xB3685B0D)]
-        public STUGUID m_B3685B0D;  // STULib.Types.STUSound
+        public STUGUID SoundResource;  // STULib.Types.STUSound
 
         [STUField(0xF7BBC834)]
         public STUGUID m_F7BBC834;  // STU_6BA402D7

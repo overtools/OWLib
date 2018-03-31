@@ -221,30 +221,72 @@ namespace DataTool {
                 }
                 Log("  {0, -23} | {1}", attrib.Keyword, desc);
             }
-
-            Dictionary<string, List<Type>> sortedTools = new Dictionary<string, List<Type>>();
             
+            Dictionary<Type, List<Type>> sortedTools = new Dictionary<Type, List<Type>>();
+
             foreach (Type t in tools) {
                 ToolAttribute attrib = t.GetCustomAttribute<ToolAttribute>();
                 if (attrib.Keyword == null) continue;
                 if (!attrib.Keyword.Contains("-")) continue;
-                
-                string result = attrib.Keyword.Split('-').First();
-                
-                if (!sortedTools.ContainsKey(result)) sortedTools[result] = new List<Type>();
-                sortedTools[result].Add(t);
+                if (!typeof(ICLIFlags).IsAssignableFrom(attrib.CustomFlags)) continue;
+
+                if (!sortedTools.ContainsKey(attrib.CustomFlags))
+                {
+                    sortedTools[attrib.CustomFlags] = new List<Type>();
+                }
+
+                sortedTools[attrib.CustomFlags].Add(t);
             }
 
-            foreach (KeyValuePair<string,List<Type>> toolType in sortedTools) {
-                Type firstTool = toolType.Value.FirstOrDefault();
-                ToolAttribute attrib = firstTool?.GetCustomAttribute<ToolAttribute>();
-                if (attrib?.CustomFlags == null) continue;
-                Type flags = attrib.CustomFlags;
-                if (!typeof(ICLIFlags).IsAssignableFrom(attrib.CustomFlags)) continue;
+
+            foreach (KeyValuePair<Type, List<Type>> toolType in sortedTools.OrderBy(x => x.Key.Name.Length).OrderBy(x => x.Key.Name)) {
+                Type flags = toolType.Key;
                 Log();
-                Log("Flags for {0}-*", toolType.Key);
+
+                string child = flags.Name;
+
+                if(flags.BaseType != flags && flags.BaseType != typeof(Object) && !flags.BaseType.IsAbstract && !flags.BaseType.IsInterface)
+                {
+                    child = $"{child} based on {flags.BaseType.Name}";
+                }
+
+                if (toolType.Value.Count > 1)
+                {
+                    Log("Flags for {0}* ({1})", FindCommonSubstring(toolType.Value.Select(x => x.GetCustomAttribute<ToolAttribute>().Keyword).Where(x => x != null)), child);
+                }
+                else
+                {
+                    Log("Flags for {0} ({1})", toolType.Value.First().GetCustomAttribute<ToolAttribute>().Keyword, child);
+                }
                 typeof(FlagParser).GetMethod("FullHelp").MakeGenericMethod(flags).Invoke(null, new object[] { null, true });
             }
+        }
+
+        private static string FindCommonSubstring(IEnumerable<string> enumerable)
+        {
+            if(enumerable.Count() == 1)
+            {
+                return enumerable.First();
+            }
+
+            string longest = enumerable.OrderBy(x => x.Length).Last();
+            HashSet<string> skip = new HashSet<string>();
+            for (int i = 0; i < longest.Length; ++i)
+            {
+                foreach(string str in enumerable)
+                {
+                    if (!skip.Contains(str) && str[i] != longest[i])
+                    {
+                        if(i == 0)
+                        {
+                            skip.Add(str);
+                            continue;
+                        }
+                        return longest.Substring(0, i);
+                    }
+                }
+            }
+            return longest;
         }
     }
 }

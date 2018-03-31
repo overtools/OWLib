@@ -81,6 +81,10 @@ namespace DataTool.Flag {
             FieldInfo[] fields = iface.GetFields();
 
             foreach (FieldInfo field in fields) {
+                if(!field.DeclaringType.Equals(iface))
+                {
+                    continue;
+                }
                 CLIFlagAttribute flagattr = field.GetCustomAttribute<CLIFlagAttribute>(true);
                 if (flagattr == null) {
                     continue;
