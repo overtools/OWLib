@@ -208,10 +208,8 @@ namespace DataTool.ToolLogic.Extract
 
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData { Threads = false };
-            info.Textures.Add(key, new FindLogic.Combo.TextureInfoNew(key)
-            {
-                Name = filename
-            });
+            FindLogic.Combo.Find(info, key);
+            info.SetTextureName(key, filename);
             SaveLogic.Combo.SaveTexture(flags, Path.Combine(basePath, part), info, key);
         }
     }
