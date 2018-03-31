@@ -58,62 +58,58 @@ namespace DataTool.ToolLogic.Extract
                 Directory.CreateDirectory(basePath);
             }
 
-            if (!Directory.Exists(Path.Combine(basePath, "SPILUT")))
+            if (!flags.SkipMapEnviornmentLUT && File.Exists(Path.Combine(basePath, "SPILUT", "config.ocio")))
             {
-                Directory.CreateDirectory(Path.Combine(basePath, "SPILUT"));
+                File.Delete(Path.Combine(basePath, "SPILUT", "config.ocio"));
             }
 
-            using (Stream ocioStream = File.OpenWrite(Path.Combine(basePath, "SPILUT", "config.ocio")))
-            using (TextWriter ocioWriter = new StreamWriter(ocioStream))
+            HashSet<KeyValuePair<ulong, string>> done = new HashSet<KeyValuePair<ulong, string>>();
+            foreach (ulong metaKey in TrackedFiles[0x9F])
             {
-                HashSet<KeyValuePair<ulong, string>> done = new HashSet<KeyValuePair<ulong, string>>();
-                foreach (ulong metaKey in TrackedFiles[0x9F])
+                STUMap map = GetInstance<STUMap>(metaKey);
+                if (map == null)
                 {
-                    STUMap map = GetInstance<STUMap>(metaKey);
-                    if (map == null)
+                    continue;
+                }
+
+                MapInfo mapInfo = GetMap(metaKey);
+                mapInfo.Name = mapInfo.Name ?? "Title Screen";
+                mapInfo.NameB = mapInfo.NameB ?? mapInfo.Name;
+
+                ulong dataKey = map.MapDataResource1;
+
+                using (Stream data = OpenFile(dataKey))
+                {
+                    if (data == null)
                     {
                         continue;
                     }
 
-                    MapInfo mapInfo = GetMap(metaKey);
-                    mapInfo.Name = mapInfo.Name ?? "Title Screen";
-                    mapInfo.NameB = mapInfo.NameB ?? mapInfo.Name;
-
-                    ulong dataKey = map.MapDataResource1;
-
-                    using (Stream data = OpenFile(dataKey))
+                    using (BinaryReader dataReader = new BinaryReader(data))
                     {
-                        if (data == null)
+                        MapEnviornment env = dataReader.Read<MapEnviornment>();
+
+                        string fname = $"ow_map_{GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")}";
+
+                        if (!flags.SkipMapEnviornmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnviornmentSound, mapInfo.Name)))
+                            SaveSound(flags, basePath, Path.Combine("Sound", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.MapEnviornmentSound);
+                        if (!flags.SkipMapEnviornmentLUT && done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name)))
                         {
-                            continue;
+                            SaveTex(flags, basePath, "LUT", false, fname, env.LUT);
+                            SaveLUT(flags, basePath, "SPILUT", fname, env.LUT, Path.Combine(basePath, "SPILUT", "config.ocio"), mapInfo);
                         }
+                        if (!flags.SkipMapEnviornmentBlendCubemap && done.Add(new KeyValuePair<ulong, string>(env.BlendEnviornmentCubemap, mapInfo.Name)))
+                            SaveTex(flags, basePath, "BlendCubemap", true, fname, env.BlendEnviornmentCubemap);
+                        if (!flags.SkipMapEnviornmentGroundCubemap && done.Add(new KeyValuePair<ulong, string>(env.GroundEnviornmentCubemap, mapInfo.Name)))
+                            SaveTex(flags, basePath, "GroundCubemap", true, fname, env.GroundEnviornmentCubemap);
+                        if (!flags.SkipMapEnviornmentSkyCubemap && done.Add(new KeyValuePair<ulong, string>(env.SkyEnviornmentCubemap, mapInfo.Name)))
+                            SaveTex(flags, basePath, "SkyCubemap", true, fname, env.SkyEnviornmentCubemap);
+                        if (!flags.SkipMapEnviornmentSkybox && done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel ^ env.SkyboxModelLook, mapInfo.Name)))
+                            SaveMdl(flags, basePath, Path.Combine("Skybox", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.SkyboxModel, env.SkyboxModelLook);
+                        if (!flags.SkipMapEnviornmentEntity && done.Add(new KeyValuePair<ulong, string>(env.StateScript, mapInfo.Name)))
+                            SaveEntity(flags, basePath, Path.Combine("Entity", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.StateScript);
 
-                        using (BinaryReader dataReader = new BinaryReader(data))
-                        {
-                            MapEnviornment env = dataReader.Read<MapEnviornment>();
-
-                            string fname = $"ow_map_{GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")}";
-
-                            if (!flags.SkipMapEnviornmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnviornmentSound, mapInfo.Name)))
-                                SaveSound(flags, basePath, Path.Combine("Sound", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.MapEnviornmentSound);
-                            if (!flags.SkipMapEnviornmentLUT && done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name)))
-                            {
-                                SaveTex(flags, basePath, "LUT", false, fname, env.LUT);
-                                SaveLUT(flags, basePath, "SPILUT", fname, env.LUT, ocioWriter, mapInfo);
-                            }
-                            if (!flags.SkipMapEnviornmentBlendCubemap && done.Add(new KeyValuePair<ulong, string>(env.BlendEnviornmentCubemap, mapInfo.Name)))
-                                SaveTex(flags, basePath, "BlendCubemap", true, fname, env.BlendEnviornmentCubemap);
-                            if (!flags.SkipMapEnviornmentGroundCubemap && done.Add(new KeyValuePair<ulong, string>(env.GroundEnviornmentCubemap, mapInfo.Name)))
-                                SaveTex(flags, basePath, "GroundCubemap", true, fname, env.GroundEnviornmentCubemap);
-                            if (!flags.SkipMapEnviornmentSkyCubemap && done.Add(new KeyValuePair<ulong, string>(env.SkyEnviornmentCubemap, mapInfo.Name)))
-                                SaveTex(flags, basePath, "SkyCubemap", true, fname, env.SkyEnviornmentCubemap);
-                            if (!flags.SkipMapEnviornmentSkybox && done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel ^ env.SkyboxModelLook, mapInfo.Name)))
-                                SaveMdl(flags, basePath, Path.Combine("Skybox", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.SkyboxModel, env.SkyboxModelLook);
-                            if (!flags.SkipMapEnviornmentEntity && done.Add(new KeyValuePair<ulong, string>(env.StateScript, mapInfo.Name)))
-                                SaveEntity(flags, basePath, Path.Combine("Entity", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.StateScript);
-
-                            InfoLog("Saved enviornment data for {0}", mapInfo.NameB);
-                        }
+                        InfoLog("Saved enviornment data for {0}", mapInfo.NameB);
                     }
                 }
             }
@@ -140,9 +136,14 @@ namespace DataTool.ToolLogic.Extract
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, part), info);
         }
 
-        private void SaveLUT(ExtractFlags flags, string basePath, string part, string fname, ulong key, TextWriter ocioWriter, MapInfo mapInfo)
+        private void SaveLUT(ExtractFlags flags, string basePath, string part, string fname, ulong key, string ocioPath, MapInfo mapInfo)
         {
-            if(key == 0)
+            if (!Directory.Exists(Path.Combine(basePath, part)))
+            {
+                Directory.CreateDirectory(Path.Combine(basePath, part));
+            }
+
+            if (key == 0)
             {
                 return;
             }
@@ -161,7 +162,10 @@ namespace DataTool.ToolLogic.Extract
                 using (TextWriter spilutWriter = new StreamWriter(spilut))
                 {
                     spilutWriter.WriteLine(lut);
-                    ocioWriter.WriteLine(OCIOChunk(mapInfo, fname));
+                    using (TextWriter ocioWriter = File.AppendText(Path.Combine(ocioPath)))
+                    {
+                        ocioWriter.WriteLine(OCIOChunk(mapInfo, fname));
+                    }
                 }
             }
         }
