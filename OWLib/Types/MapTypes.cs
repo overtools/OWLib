@@ -87,7 +87,7 @@ namespace OWLib.Types {
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct MapEnviornment
+    public struct MapEnvironment
     {
         public Matrix3x4B M0;
         public Matrix4B M1;
@@ -95,15 +95,15 @@ namespace OWLib.Types {
         public Matrix4B M3;
 
         public ulong StateScript;
-        public ulong SkyEnviornmentCubemap;
+        public ulong SkyEnvironmentCubemap;
         public ulong BakedLighting;
         public ulong BakedShadow;
         public ulong LUT;
         public ulong SkyboxModel;
         public ulong SkyboxModelLook;
-        public ulong MapEnviornmentSound; // 055 file.
-        public ulong GroundEnviornmentCubemap;
-        public ulong BlendEnviornmentCubemap;
+        public ulong MapEnvironmentSound; // 055 file.
+        public ulong GroundEnvironmentCubemap;
+        public ulong BlendEnvironmentCubemap;
         public ulong Text;
         public ulong UnknownGUID1;
 

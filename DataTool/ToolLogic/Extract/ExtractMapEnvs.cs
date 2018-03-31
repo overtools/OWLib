@@ -16,7 +16,7 @@ using STULib.Types.Dump;
 
 namespace DataTool.ToolLogic.Extract
 {
-    [Tool("extract-map-envs", Description = "Extract map enviornment data", TrackTypes = new ushort[] { 0x9F }, CustomFlags = typeof(ExtractMapEnvFlags))]
+    [Tool("extract-map-envs", Description = "Extract map environment data", TrackTypes = new ushort[] { 0x9F }, CustomFlags = typeof(ExtractMapEnvFlags))]
     public class ExtractMapEnvs : QueryParser, ITool
     {
         public void IntegrateView(object sender)
@@ -51,14 +51,14 @@ namespace DataTool.ToolLogic.Extract
                 throw new Exception("no output path");
             }
 
-            basePath = Path.Combine(basePath, "Enviornments");
+            basePath = Path.Combine(basePath, "Environments");
 
             if (!Directory.Exists(basePath))
             {
                 Directory.CreateDirectory(basePath);
             }
 
-            if (!flags.SkipMapEnviornmentLUT && File.Exists(Path.Combine(basePath, "SPILUT", "config.ocio")))
+            if (!flags.SkipMapEnvironmentLUT && File.Exists(Path.Combine(basePath, "SPILUT", "config.ocio")))
             {
                 File.Delete(Path.Combine(basePath, "SPILUT", "config.ocio"));
             }
@@ -87,29 +87,29 @@ namespace DataTool.ToolLogic.Extract
 
                     using (BinaryReader dataReader = new BinaryReader(data))
                     {
-                        MapEnviornment env = dataReader.Read<MapEnviornment>();
+                        MapEnvironment env = dataReader.Read<MapEnvironment>();
 
                         string fname = $"ow_map_{GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")}";
 
-                        if (!flags.SkipMapEnviornmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnviornmentSound, mapInfo.Name)))
-                            SaveSound(flags, basePath, Path.Combine("Sound", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.MapEnviornmentSound);
-                        if (!flags.SkipMapEnviornmentLUT && done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name)))
+                        if (!flags.SkipMapEnvironmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnvironmentSound, mapInfo.Name)))
+                            SaveSound(flags, basePath, Path.Combine("Sound", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.MapEnvironmentSound);
+                        if (!flags.SkipMapEnvironmentLUT && done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name)))
                         {
                             SaveTex(flags, basePath, "LUT", fname, env.LUT);
                             SaveLUT(flags, basePath, "SPILUT", fname, env.LUT, Path.Combine(basePath, "SPILUT", "config.ocio"), mapInfo);
                         }
-                        if (!flags.SkipMapEnviornmentBlendCubemap && done.Add(new KeyValuePair<ulong, string>(env.BlendEnviornmentCubemap, mapInfo.Name)))
-                            SaveTex(flags, basePath, "BlendCubemap", fname, env.BlendEnviornmentCubemap);
-                        if (!flags.SkipMapEnviornmentGroundCubemap && done.Add(new KeyValuePair<ulong, string>(env.GroundEnviornmentCubemap, mapInfo.Name)))
-                            SaveTex(flags, basePath, "GroundCubemap", fname, env.GroundEnviornmentCubemap);
-                        if (!flags.SkipMapEnviornmentSkyCubemap && done.Add(new KeyValuePair<ulong, string>(env.SkyEnviornmentCubemap, mapInfo.Name)))
-                            SaveTex(flags, basePath, "SkyCubemap", fname, env.SkyEnviornmentCubemap);
-                        if (!flags.SkipMapEnviornmentSkybox && done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel ^ env.SkyboxModelLook, mapInfo.Name)))
+                        if (!flags.SkipMapEnvironmentBlendCubemap && done.Add(new KeyValuePair<ulong, string>(env.BlendEnvironmentCubemap, mapInfo.Name)))
+                            SaveTex(flags, basePath, "BlendCubemap", fname, env.BlendEnvironmentCubemap);
+                        if (!flags.SkipMapEnvironmentGroundCubemap && done.Add(new KeyValuePair<ulong, string>(env.GroundEnvironmentCubemap, mapInfo.Name)))
+                            SaveTex(flags, basePath, "GroundCubemap", fname, env.GroundEnvironmentCubemap);
+                        if (!flags.SkipMapEnvironmentSkyCubemap && done.Add(new KeyValuePair<ulong, string>(env.SkyEnvironmentCubemap, mapInfo.Name)))
+                            SaveTex(flags, basePath, "SkyCubemap", fname, env.SkyEnvironmentCubemap);
+                        if (!flags.SkipMapEnvironmentSkybox && done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel ^ env.SkyboxModelLook, mapInfo.Name)))
                             SaveMdl(flags, basePath, Path.Combine("Skybox", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.SkyboxModel, env.SkyboxModelLook);
-                        if (!flags.SkipMapEnviornmentEntity && done.Add(new KeyValuePair<ulong, string>(env.StateScript, mapInfo.Name)))
+                        if (!flags.SkipMapEnvironmentEntity && done.Add(new KeyValuePair<ulong, string>(env.StateScript, mapInfo.Name)))
                             SaveEntity(flags, basePath, Path.Combine("Entity", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.StateScript);
 
-                        InfoLog("Saved enviornment data for {0}", mapInfo.NameB);
+                        InfoLog("Saved Environment data for {0}", mapInfo.NameB);
                     }
                 }
             }
