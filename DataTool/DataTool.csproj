@@ -84,7 +84,6 @@
     <Compile Include="SaveLogic\Unlock\Skin.cs" />
     <Compile Include="SaveLogic\Unlock\SprayAndIcon.cs" />
     <Compile Include="SaveLogic\Unlock\VoiceLine.cs" />
-    <Compile Include="ThreadProvider.cs" />
     <Compile Include="ToolFlags.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,7 +96,6 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugRAMTest.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSoundBank.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugThreadDemo.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugType.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVCCE.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVoiceSet.cs" />

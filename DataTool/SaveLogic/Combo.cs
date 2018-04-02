@@ -6,7 +6,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using BCFF;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
@@ -23,11 +22,7 @@ namespace DataTool.SaveLogic {
             info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
             
             foreach (FindLogic.Combo.EntityInfoNew entity in info.Entities.Values) {
-                if (info.SaveRuntimeData.Threads) {
-                    info.SaveRuntimeData.Tasks.Add(Task.Run(() => { SaveEntity(flags, path, info, entity.GUID); }));
-                } else {
-                    SaveEntity(flags, path, info, entity.GUID);
-                }
+                SaveEntity(flags, path, info, entity.GUID);
             }
             foreach (FindLogic.Combo.EffectInfoCombo effectInfo in info.Effects.Values) {
                 SaveEffect(flags, path, info, effectInfo.GUID);
@@ -147,14 +142,7 @@ namespace DataTool.SaveLogic {
                 }
                 MemoryStream animMemStream = new MemoryStream();
                 animStream.CopyTo(animMemStream);
-
-                if (info.SaveRuntimeData.Threads) {
-                    info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
-                        ConvertAnimation(animMemStream, path, convertAnims, animationInfo);
-                    }));
-                } else {
-                    ConvertAnimation(animMemStream, path, convertAnims, animationInfo);
-                }
+                ConvertAnimation(animMemStream, path, convertAnims, animationInfo);
                 
             }
 
@@ -181,13 +169,8 @@ namespace DataTool.SaveLogic {
             if (animationEffect.GUID != 0) {
                 SaveEffectExtras(flags, animationEffectDir, info, animationEffect.Effect, out svceLines);
             }
-            if (info.SaveRuntimeData.Threads) {
-                info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
-                        SaveOWAnimFile(animationEffectFile, animationEffect, animationInfo, info, owAnimWriter, model, svceLines);
-                    }));
-            } else {
-                SaveOWAnimFile(animationEffectFile, animationEffect, animationInfo, info, owAnimWriter, model, svceLines);
-            }
+            
+            SaveOWAnimFile(animationEffectFile, animationEffect, animationInfo, info, owAnimWriter, model, svceLines);
         }
 
         public static void SaveEffectExtras(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
@@ -276,7 +259,7 @@ namespace DataTool.SaveLogic {
             }
 
             modelStream?.Dispose();
-            refposeStream?.Dispose();
+            refposeStream.Dispose();
         }
 
         public static void SaveModel(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong model) {
@@ -303,20 +286,8 @@ namespace DataTool.SaveLogic {
                 CreateDirectoryFromFile(modelPath);
 
                 Stream modelStream = OpenFile(modelInfo.GUID);
-
-                if (info.SaveRuntimeData.Threads) {
-                    info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
-                        SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream, doRefpose, refposePath);
-                    }));
-                } else {
-                    SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream, doRefpose, refposePath);
-                }
-
-                if (doRefpose) {
-                    
-                }
                 
-                
+                SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream, doRefpose, refposePath);
             } else {
                 using (Stream modelStream = OpenFile(modelInfo.GUID)) {
                     WriteFile(modelStream, Path.Combine(modelDirectory, modelInfo.GetNameIndex()+".00C"));
@@ -350,13 +321,8 @@ namespace DataTool.SaveLogic {
             ulong modelLook) {
             Model.OWMatWriter14 materialWriter = new Model.OWMatWriter14();
             FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelLook];
-            if (info.SaveRuntimeData.Threads) {
-                info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
-                    SaveOWMaterialModelLookFile(path, modelLookInfo, materialWriter, info);
-                }));
-            } else {
-                SaveOWMaterialModelLookFile(path, modelLookInfo, materialWriter, info);
-            }
+            
+            SaveOWMaterialModelLookFile(path, modelLookInfo, materialWriter, info);
 
             if (modelLookInfo.Materials == null) return;
             foreach (ulong modelLookMaterial in modelLookInfo.Materials) {
@@ -391,14 +357,8 @@ namespace DataTool.SaveLogic {
             Model.OWMatWriter14 materialWriter = new Model.OWMatWriter14();
 
             string textureDirectory = Path.Combine(path, "Textures");
-
-            if (info.SaveRuntimeData.Threads) {
-                info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
-                    SaveOWMaterialFile(path, materialInfo, materialWriter, info);
-                }));
-            } else {
-                SaveOWMaterialFile(path, materialInfo, materialWriter, info);
-            }
+            
+            SaveOWMaterialFile(path, materialInfo, materialWriter, info);
 
             foreach (KeyValuePair<ulong, ImageDefinition.ImageType> texture in materialDataInfo.Textures) {
                 SaveTexture(flags, textureDirectory, info, texture.Key);
@@ -622,14 +582,7 @@ namespace DataTool.SaveLogic {
                     dataStream = OpenFile(textureInfo.DataGUID);
                     if (dataStream == null) return;
                 }
-
-                if (info.SaveRuntimeData.Threads) {
-                    info.SaveRuntimeData.Tasks.Add(Task.Run(() =>{
-                        ConvertTexture(convertType, filePath, path, headerStream, dataStream);
-                    }));
-                } else {
-                    ConvertTexture(convertType, filePath, path, headerStream, dataStream);
-                }
+                ConvertTexture(convertType, filePath, path, headerStream, dataStream);
             }
         }
 
@@ -674,10 +627,6 @@ namespace DataTool.SaveLogic {
             if (!convertWem) {
                 WriteFile(soundStream, Path.Combine(directory, $"{soundFileInfo.GetName()}.wem"));
                 soundStream.Dispose();
-            } else if (info.SaveRuntimeData.Threads) {
-                info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
-                    ConvertSoundFile(soundStream, soundFileInfo, directory);
-                }));
             } else {
                 ConvertSoundFile(soundStream, soundFileInfo, directory);
             }

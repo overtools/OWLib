@@ -103,13 +103,8 @@ namespace DataTool.FindLogic {
 
         public class ComboSaveRuntimeData {
             public List<Task> Tasks;
-            public bool Threads;
 
             public ComboSaveRuntimeData() {
-                if (Flags != null) {
-                    Threads = Flags.Threads;
-                }
-                
                 Tasks = new List<Task>();
             }
         }

@@ -202,6 +202,7 @@ namespace DataTool {
             Stopwatch stopwatch = new Stopwatch();
             
             Log("Tooling...");
+            stopwatch.Start();
             targetTool.Parse(targetToolFlags);
             stopwatch.Stop();
             
