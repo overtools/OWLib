@@ -74,6 +74,10 @@ namespace DataTool.Helper {
             }
         }
 
+        public static void WriteFile(ulong guid, string path) {
+            WriteFile(OpenFile(guid), guid, path);
+        }
+
         public static void WriteFile(Stream stream, ulong guid, string path) {
             if (stream == null || guid == 0) {
                 return;
@@ -91,6 +95,10 @@ namespace DataTool.Helper {
             using (Stream file = File.OpenWrite(Path.Combine(path, filename))) {
                 stream.CopyTo(file);
             }
+        }
+
+        public static Stream OpenFile(teResourceGUID guid) {
+            return OpenFile((ulong)guid);
         }
 
         public static Stream OpenFile(ApplicationPackageManifest.Types.PackageRecord record) {

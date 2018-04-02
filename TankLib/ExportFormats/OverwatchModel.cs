@@ -4,6 +4,9 @@ using TankLib.Chunks;
 using TankLib.Math;
 
 namespace TankLib.ExportFormats {
+    /// <summary>
+    /// OWMDL format
+    /// </summary>
     public class OverwatchModel : IExportFormat {
         private readonly teChunkedData _data;
         
@@ -38,7 +41,7 @@ namespace TankLib.ExportFormats {
                 
                 if (skeleton != null) {
                     for (int j = 0; j < skeleton.Header.BonesAbs; ++j) {
-                        writer.Write(IdToString("bone", skeleton.IDs[j]));
+                        writer.Write(GetBoneName(skeleton.IDs[j]));
                         short parent = skeleton.Hierarchy[j];
                         if (parent == -1) {
                             parent = (short)j;
@@ -103,6 +106,10 @@ namespace TankLib.ExportFormats {
                     i++;
                 }
             }
+        }
+
+        public static string GetBoneName(uint id) {
+            return IdToString("bone", id);
         }
         
         public static string IdToString(string prefix, uint id) {  // hmm

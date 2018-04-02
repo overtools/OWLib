@@ -8,19 +8,29 @@ namespace TankLib {
         public struct MatDataHeader {
             public long Offset1;
             public long Offset2;
+            
+            /// <summary>Texture definition offset</summary>
             public long TextureOffset;
             public long Offset4;
             public uint unk1;
             public ushort unk2;
             public ushort unk3;
+            
+            /// <summary>Texture definition count</summary>
             public byte TextureCount;
+            
             public byte Offset4Count;
             public ushort unk4;
             public uint unk5;
         }
 
+        /// <summary>Header data</summary>
         public MatDataHeader Header;
+        
+        /// <summary>Texture definitions</summary>
         public teMaterialDataTexture[] Textures;
+        
+        /// <summary>Unknown definitions</summary>
         public teMaterialDataUnknown[] Unknowns;
 
         /// <summary>Load material data from a stream</summary>
@@ -49,10 +59,18 @@ namespace TankLib {
         public ulong B;
     }
 
+    /// <summary>MaterialData Texture</summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct teMaterialDataTexture {
+        /// <summary>Texture GUID</summary>
+        /// <remarks>File type 004</remarks>
         public teResourceGUID Texture;
+        
+        /// <summary>Shader input type</summary>
+        /// <remarks>Matches up on teShaderInstance</remarks>
         public teShaderTextureType Type;
+        
+        /// <summary>Unknown flags</summary>
         public byte Flags;
     }
 

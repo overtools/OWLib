@@ -73,7 +73,7 @@
     <Compile Include="ExportFormats\IExportFormat.cs" />
     <Compile Include="ExportFormats\OverawatchMaterial.cs" />
     <Compile Include="ExportFormats\OverwatchModel.cs" />
-    <Compile Include="ExportFormats\SeanimAnimation.cs" />
+    <Compile Include="ExportFormats\SEAnim.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Helpers\FastStruct.cs" />
     <Compile Include="Helpers\Hash\CRC.cs" />
@@ -113,6 +113,9 @@
     <Compile Include="teMaterial.cs" />
     <Compile Include="teMaterialData.cs" />
     <Compile Include="teResourceGUID.cs" />
+    <Compile Include="teShaderCode.cs" />
+    <Compile Include="teShaderGroup.cs" />
+    <Compile Include="teShaderInstance.cs" />
     <Compile Include="teSkeleton.cs" />
     <Compile Include="teString.cs" />
     <Compile Include="teTexture.cs" />

@@ -199,11 +199,13 @@ namespace TankLib.Chunks {
                                 NodeBones[i][nodeIndex] = reader.ReadInt16();
                             }
                         }
-                        
-                        Nodes[i] = new ClothNode[Descriptors[i].DriverNodeCount];
-                        reader.BaseStream.Position = Descriptors[i].Section1Offset;
-                        for (int nodeIndex = 0; nodeIndex < Descriptors[i].DriverNodeCount; nodeIndex++) {
-                            Nodes[i][nodeIndex] = new ClothNode(reader);
+
+                        if (Descriptors[i].Section1Offset > 0) {
+                            Nodes[i] = new ClothNode[Descriptors[i].DriverNodeCount];
+                            reader.BaseStream.Position = Descriptors[i].Section1Offset;
+                            for (int nodeIndex = 0; nodeIndex < Descriptors[i].DriverNodeCount; nodeIndex++) {
+                                Nodes[i][nodeIndex] = new ClothNode(reader);
+                            } 
                         }
 
                         reader.BaseStream.Position = nextStartPos;

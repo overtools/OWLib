@@ -125,6 +125,10 @@ namespace TankLib {
             public bool IsWorld() {
                 return (Type & TEXTURE_FLAGS.WORLD) == TEXTURE_FLAGS.WORLD;
             }
+            
+            public TextureType GetFormat() {
+                return TextureTypeFromHeaderByte((byte)Format);
+            }
         }
         
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

@@ -70,5 +70,13 @@ namespace CMFLib {
         public uint DataCount;
         public uint EntryCount;
         public uint Magic;
+
+        public bool IsV22() {
+            return IsV22(BuildVersion);
+        }
+        
+        public static bool IsV22(uint buildVersion) {
+            return buildVersion >= 45104 && buildVersion != 45214;
+        }
     }
 }

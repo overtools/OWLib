@@ -199,9 +199,14 @@ namespace DataTool {
                 }
             }
             #endregion
-
+            Stopwatch stopwatch = new Stopwatch();
+            
             Log("Tooling...");
             targetTool.Parse(targetToolFlags);
+            stopwatch.Stop();
+            
+            Console.Out.WriteLine($"Execution finished in {stopwatch.Elapsed} seconds");
+
             if (Debugger.IsAttached) {
                 Debugger.Break();
             }

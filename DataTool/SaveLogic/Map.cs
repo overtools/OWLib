@@ -1,6 +1,4 @@
-﻿// using STULib.Types.posthash;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using DataTool.Flag;

@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
 namespace TankLib.Math {
     /// <summary>3 component XYZ vector</summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    [DebuggerDisplay("X: {X}, Y: {Y}, Z: {Z}")]
     public struct teVec3 {
         /// <summary>X component</summary>
         public float X;
@@ -19,6 +21,12 @@ namespace TankLib.Math {
             X = x;
             Y = y;
             Z = z;
+        }
+
+        public teVec3(double x, double y, double z) {
+            X = (float) x;
+            Y = (float) y;
+            Z = (float) z;
         }
 
         public teVec3(IReadOnlyList<float> val) {

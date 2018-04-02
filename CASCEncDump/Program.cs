@@ -56,12 +56,6 @@ namespace CASCEncDump {
 
             // c:\\ow\\game\\Overwatch dump
             // "D:\Games\Overwatch Test" compare 44022
-            
-
-            //using (BinaryReader reader = CASC.OpenPatchFile()) {
-            //    char a = reader.ReadChar();
-            //    char b = reader.ReadChar();
-            //}
 
             if (mode == "dump") {
                 Dump(args);
@@ -112,21 +106,8 @@ namespace CASCEncDump {
                 last = reader.ReadToEnd().Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
             }
 
-            List<ulong> added = new List<ulong>();
-            List<ulong> removed = new List<ulong>();
-
-            //foreach (KeyValuePair<ulong,MD5Hash> file in Files) {
-            //    if (!last.Contains(file.Key)) {
-            //        added.Add(file.Key);
-            //    }
-            //}
-            //foreach (ulong prev in last) {
-            //    if (!Files.ContainsKey(prev)) {
-            //        removed.Add(prev);
-            //    }
-            //}
-            added = Files.Keys.Except(last).ToList();
-            removed = last.Except(Files.Keys).ToList();
+            List<ulong> added = Files.Keys.Except(last).ToList();
+            List<ulong> removed = last.Except(Files.Keys).ToList();
             
             using (StreamWriter writer = new StreamWriter(Path.Combine(GUIDSDir, $"{otherVerNum}.added"))) {
                 foreach (ulong addedFile in added) {
@@ -279,17 +260,6 @@ namespace CASCEncDump {
             foreach (MD5Hash hash in otherHashes.Select(x => x.ToByteArray().ToMD5())) {
                 otherHashDict[hash] = 0;
             }
-            
-            //int preexistingCount = 0;
-            //int newCount = 0;
-            //foreach (KeyValuePair<MD5Hash, EncodingEntry> entry in CASC.EncodingHandler.Entries) {
-            //    //string md5 = entry.Key.ToHexString();
-            //    if (!otherHashDict.ContainsKey(entry.Key)) {
-            //        newCount++;
-            //    } else {
-            //        preexistingCount++;
-            //    }
-            //}
 
             foreach (KeyValuePair<MD5Hash, EncodingEntry> entry in CASC.EncodingHandler.Entries) {
                 string md5 = entry.Key.ToHexString();
@@ -326,24 +296,14 @@ namespace CASCEncDump {
                 
                 stream.Position = 0;
                 if (magic == teChunkedData.Magic) {
-                    
-                    //Chunked chunked = new Chunked(stream);
-                    //if (chunked.Header.StringIdentifier == "MODL".ReverseXor()) {
-                    //    OWMDLWriter writer = new OWMDLWriter();
-                    //    using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".owmdl")) {
-                    //        file.SetLength(0);
-                    //        writer.Write(chunked, file, lods, null, new object[] {true, null, null, true, false});
-                    //    }
-                    //}
-
-                    //teChunkedData chunkedData = new teChunkedData(reader);
-                    //if (chunkedData.Header.StringIdentifier == "MODL") {
-                    //    OverwatchModel model = new OverwatchModel(chunkedData);
-                    //    using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".owmdl")) {
-                    //        file.SetLength(0);
-                    //        model.Write(file);
-                    //    }
-                    //}
+                    teChunkedData chunkedData = new teChunkedData(reader);
+                    if (chunkedData.Header.StringIdentifier == "MODL") {
+                        OverwatchModel model = new OverwatchModel(chunkedData);
+                        using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".owmdl")) {
+                            file.SetLength(0);
+                            model.Write(file);
+                        }
+                    }
                 } else if (magic == 0x4D4F5649) {  // MOVI
                     stream.Position = 128;
                     using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".bk2")) {
@@ -352,8 +312,7 @@ namespace CASCEncDump {
                     }
                 } else {
                     // ok might be a heckin bundle
-                    int i = 0;
-                    
+                    /*int i = 0;
                     while (reader.BaseStream.Position < reader.BaseStream.Length) {
                         try {
                             magic = reader.ReadUInt32();
@@ -375,31 +334,31 @@ namespace CASCEncDump {
                         } catch (Exception) {
                             // fine
                         }
-                    }
+                    }*/
 
-                    //try {
-                    //    //teStructuredData structuredData =new teStructuredData(stream, true);
-                    //    
-                    //    teTexture texture = new teTexture(reader);
-                    //    if (!texture.PayloadRequired && texture.Size <= stream.Length && 
-                    //        (texture.Header.Type == TextureTypes.TEXTURE_FLAGS.CUBEMAP ||
-                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.DIFFUSE ||
-                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.MULTISURFACE ||
-                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN1 ||
-                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN2 ||
-                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN4 ||
-                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN5 ||
-                    //         texture.Header.Type == TextureTypes.TEXTURE_FLAGS.WORLD) && 
-                    //        texture.Header.Height < 10000 && texture.Header.Width < 10000 && texture.Header.DataSize > 68) {
-                    //        using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".dds")) {
-                    //            file.SetLength(0);
-                    //            texture.SaveToDDS(file);
-                    //            Console.Out.WriteLine(texture.Header.DataSize);
-                    //        }
-                    //    }
-                    //} catch (Exception) {
-                    //    // fine
-                    //}
+                    try {
+                        //teStructuredData structuredData =new teStructuredData(stream, true);
+                        
+                        teTexture texture = new teTexture(reader);
+                        if (!texture.PayloadRequired && texture.Size <= stream.Length && 
+                            (texture.Header.Type == TextureTypes.TEXTURE_FLAGS.CUBEMAP ||
+                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.DIFFUSE ||
+                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.MULTISURFACE ||
+                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN1 ||
+                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN2 ||
+                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN4 ||
+                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN5 ||
+                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.WORLD) && 
+                            texture.Header.Height < 10000 && texture.Header.Width < 10000 && texture.Header.DataSize > 68) {
+                            using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".dds")) {
+                                file.SetLength(0);
+                                texture.SaveToDDS(file);
+                                Console.Out.WriteLine(texture.Header.DataSize);
+                            }
+                        }
+                    } catch (Exception) {
+                        // fine
+                    }
                 }
             }
         }

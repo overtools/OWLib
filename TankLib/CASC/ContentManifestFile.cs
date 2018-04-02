@@ -52,7 +52,7 @@ namespace TankLib.CASC {
                 
             // todo: the int of Header21 is converted to uint without checking
                 
-            if (cmfVersion >= 45104) {
+            if (CMFHeaderCommon.IsV22(cmfVersion)) {
                 Header = reader.Read<CMFHeader22>().Upgrade();
             } else if (cmfVersion >= 39028) {
                 Header = reader.Read<CMFHeader21>().Upgrade();
@@ -71,7 +71,7 @@ namespace TankLib.CASC {
         }
 
         protected void ParseCMF(BinaryReader cmfreader) {
-            if (Header.BuildVersion >= 45104) {
+            if (Header.IsV22()) {
                 Entries = cmfreader.ReadArray<ApplicationPackageManifest.Types.Entry>((int)Header.EntryCount);
             } else {
                 Entries = cmfreader.ReadArray<ApplicationPackageManifest.Types.Entry21>((int)Header.EntryCount).Select(x => x.GetEntry()).ToArray();

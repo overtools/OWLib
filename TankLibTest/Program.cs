@@ -8,6 +8,7 @@ using STULib;
 using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
+using TankLib.ExportFormats;
 using TankLib.STU;
 using static TankLib.CASC.ApplicationPackageManifest.Types;
 
@@ -77,8 +78,8 @@ namespace TankLibTest {
             //TestTexture();
             //TestTexturePayload();
             //TestSTU();
-            //TestAnimation();
-            TestSTUv1();
+            TestAnimation();
+            //TestSTUv1();
         }
 
         public static void TestSTUv1() {
@@ -202,8 +203,14 @@ namespace TankLibTest {
         }
 
         public static void TestAnimation() {
-            using (Stream stream = OpenFile(0xA000000000042D9)) {
+            using (Stream stream = OpenFile(0xA000000000042D9)) {  // ANCR_base_3p_ohHai_POTG
                 teAnimation animation = new teAnimation(stream);
+                
+                SEAnim seAnim = new SEAnim(animation);
+
+                using (Stream file = File.OpenWrite($"test.{seAnim.Extension}")) {
+                    seAnim.Write(file);
+                }
             }
         }
 

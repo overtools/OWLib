@@ -98,8 +98,10 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSoundBank.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugThreadDemo.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugType.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVCCE.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVoiceSet.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugShaders.cs" />
     <Compile Include="ToolLogic\Extract\ExtractAbilities.cs" />
     <Compile Include="ToolLogic\Extract\ExtractHeroUnlocks.cs" />
     <Compile Include="ToolLogic\Extract\ExtractGeneral.cs" />

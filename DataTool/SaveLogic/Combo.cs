@@ -13,8 +13,8 @@ using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.Extract;
 using OWLib;
-using OWLib.Types;
-using OWLib.Writer;
+using TankLib;
+using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic {
@@ -94,19 +94,20 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void ConvertAnimation(Stream animStream, string path, bool convertAnims, SEAnimWriter animWriter, FindLogic.Combo.AnimationInfoNew animationInfo) {
+        private static void ConvertAnimation(Stream animStream, string path, bool convertAnims, FindLogic.Combo.AnimationInfoNew animationInfo) {
             animStream.Position = 0;
-            Animation parsedAnimation = new Animation(animStream);
+            teAnimation parsedAnimation = new teAnimation(animStream);
 
             string animationDirectory =
-                Path.Combine(path, "Animations", parsedAnimation.Header.priority.ToString());
+                Path.Combine(path, "Animations", parsedAnimation.Header.Priority.ToString());
 
             if (convertAnims) {
+                SEAnim seAnim = new SEAnim(parsedAnimation);
                 string animOutput = Path.Combine(animationDirectory,
-                    animationInfo.GetNameIndex() + animWriter.Format);
+                    animationInfo.GetNameIndex() + seAnim.Extension);
                 CreateDirectoryFromFile(animOutput);
                 using (Stream fileStream = new FileStream(animOutput, FileMode.Create)) {
-                    animWriter.Write(parsedAnimation, fileStream, new object[] { });
+                    seAnim.Write(fileStream);
                 }
             } else {
                 string rawAnimOutput = Path.Combine(animationDirectory,
@@ -137,8 +138,7 @@ namespace DataTool.SaveLogic {
                 convertAnims = extractFlags.ConvertAnimations && !extractFlags.Raw;
                 if (extractFlags.SkipAnimations) return;
             }
-
-            SEAnimWriter animWriter = new SEAnimWriter();
+            
             FindLogic.Combo.AnimationInfoNew animationInfo = info.Animations[animation];
 
             using (Stream animStream = OpenFile(animation)) {
@@ -150,10 +150,10 @@ namespace DataTool.SaveLogic {
 
                 if (info.SaveRuntimeData.Threads) {
                     info.SaveRuntimeData.Tasks.Add(Task.Run(() => {
-                        ConvertAnimation(animMemStream, path, convertAnims, animWriter, animationInfo);
+                        ConvertAnimation(animMemStream, path, convertAnims, animationInfo);
                     }));
                 } else {
-                    ConvertAnimation(animMemStream, path, convertAnims, animWriter, animationInfo);
+                    ConvertAnimation(animMemStream, path, convertAnims, animationInfo);
                 }
                 
             }
@@ -521,25 +521,22 @@ namespace DataTool.SaveLogic {
         
         private static void ConvertTexture(string convertType, string filePath, string path, Stream headerStream, Stream dataStream) {
             CreateDirectoryFromFile(path);
-            Stream convertedStream;
-            TextureHeader header;
-            
-            if (dataStream != null) {
-                Texture textObj = new Texture(headerStream, dataStream);
-                convertedStream = textObj.Save();
-                header = textObj.Header;
-                headerStream.Dispose();
-                dataStream.Dispose();
-            } else {
-                TextureLinear textObj = new TextureLinear(headerStream);
-                convertedStream = textObj.Save();
-                header = textObj.Header;
-                headerStream.Dispose();
+
+            teTexture texture = new teTexture(headerStream);
+            if (texture.PayloadRequired && dataStream == null) {
+                Debugger.Log(0, "DataTool.SaveLogic.Combo", "Unable to load texture payload\r\n");
+                return;
             }
+            if (dataStream != null) {
+                teTexturePayload payload = new teTexturePayload(texture, dataStream);
+                texture.SetPayload(payload);
+            }
+
+            Stream convertedStream = texture.SaveToDDS(true);
             
-            uint fourCC = header.Format().ToPixelFormat().fourCC;
-            bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int) header.format) ||
-                               TextureConfig.DXGI_BC5.Contains((int) header.format) ||
+            uint fourCC = texture.Header.GetFormat().ToPixelFormat().FourCC;
+            bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int) texture.Header.Format) ||
+                               TextureConfig.DXGI_BC5.Contains((int) texture.Header.Format) ||
                                fourCC == TextureConfig.FOURCC_ATI1 || fourCC == TextureConfig.FOURCC_ATI2;
 
             ImageFormat imageFormat = null;

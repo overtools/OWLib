@@ -19,6 +19,7 @@ namespace TankLib {
             Mutability = mutability;
         }
         
+        /// <summary>Header for 07C and 0A9 strings</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct ArchiveStringHeader {
             public ulong Offset;
@@ -26,6 +27,10 @@ namespace TankLib {
             public uint References;
         }
 
+        /// <summary>
+        /// Load "ArchiveString" from a stream
+        /// </summary>
+        /// <param name="stream">The stream to load from</param>
         public teString(Stream stream) {
             if (stream == null) return;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8)) {

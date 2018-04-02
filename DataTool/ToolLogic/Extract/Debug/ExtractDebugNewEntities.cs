@@ -47,7 +47,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             // key = content hash, value = type
             foreach (KeyValuePair<ulong,ApplicationPackageManifest.Types.PackageRecord> file in Files) {
                 ushort fileType = teResourceGUID.Type(file.Key);
-                if (!types.Contains(fileType)) continue;
+                //if (!types.Contains(fileType)) continue;
                 if (fileType == 0x9C) continue;  // bundle
                 if (fileType == 0x77) continue;  // package indice
 
@@ -127,7 +127,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             
             //const string dataPath = "D:\\ow\\OverwatchDataManager\\versions\\1.18.1.2.42076\\data.json";
             //const string dataPath = "D:\\ow\\OverwatchDataManager\\versions\\1.20.0.2.43435\\data.json";
-            const string dataPath = "D:\\ow\\OverwatchDataManager\\versions\\1.17.0.3.41713\\data.json";
+            //const string dataPath = "D:\\ow\\OverwatchDataManager\\versions\\1.17.0.3.41713\\data.json";
 
             //VersionInfo versionInfo = GetVersionInfo(dataPath);
             VersionInfo versionInfo = GetVersionInfoFake(@"D:\Code\Repos\overtool\OWLib-main\CASCEncDump\bin\Debug\44916.cmfhashes");
@@ -141,7 +141,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             const string container = "DebugNewEntities2";
             
             Combo.ComboInfo info = new Combo.ComboInfo();          
-            AddNewHash(info, versionInfo, 0x7C);
+            AddNewHash(info, versionInfo, 0x4, 0x7C, 0xC, 0xB2, 0x3F);
             
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, container), info);
             SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, container, "Sounds"), info);

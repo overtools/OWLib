@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
+using CMFLib;
 using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
 
@@ -157,7 +158,7 @@ namespace TankLib.CASC {
                 ulong build = reader.ReadUInt64();
                 reader.BaseStream.Position = 0;
                 
-                if (build >= 45104) {
+                if (CMFHeaderCommon.IsV22((uint)build)) {
                     Header = reader.Read<Types.Header22>().Upgrade();
                 } else {
                     Header = reader.Read<Types.Header>();
@@ -169,7 +170,7 @@ namespace TankLib.CASC {
                     return;
                 }
 
-                if (Header.Build >= 45104) {
+                if (CMFHeaderCommon.IsV22((uint)Header.Build)) {
                     Entries = reader.ReadArray<Types.Entry>((int)Header.EntryCount);
                     PackageEntries = reader.ReadArray<Types.PackageEntry>((int)Header.PackageCount);
                 } else {
@@ -194,7 +195,7 @@ namespace TankLib.CASC {
                     using (BinaryReader packageReader = new BinaryReader(packageStream)) {
                         Packages[i] = packageReader.Read<Types.Package>();
                         
-                        if (Header.Build >= 45104) {  // todo: hack
+                        if (CMFHeaderCommon.IsV22((uint)Header.Build)) {  // todo: hack
                             Packages[i].SiblingCount *= 2;
                         }
 

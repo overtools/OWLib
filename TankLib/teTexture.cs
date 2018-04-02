@@ -49,6 +49,15 @@ namespace TankLib {
             Payload = new teTexturePayload(this, payloadStream);
         }
 
+        /// <summary>Set the texture payload</summary>
+        /// <param name="payload">The texture payload</param>
+        public void SetPayload(teTexturePayload payload) {
+            if (!PayloadRequired) throw new Exceptions.TexturePayloadNotRequiredException();
+            if (Payload != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
+            
+            Payload = payload;
+        }
+
         /// <summary>Save DDS to stream</summary>
         /// <param name="stream">Stream to be written to</param>
         /// <param name="keepOpen">Keep the stream open after writing</param>
