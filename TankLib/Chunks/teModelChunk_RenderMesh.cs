@@ -94,8 +94,8 @@ namespace TankLib.Chunks {
             Normal = 0x1,
             Color = 0x2,
             Tangent = 0x3,
-            BoneIndices = 0x4,
-            BoneWeight = 0x5,
+            BlendIndices = 0x4,
+            BlendWeight = 0x5,
             Unknown1 = 0x6,
             Unknown2 = 0x7,
             Unknown3 = 0x8,
@@ -114,17 +114,18 @@ namespace TankLib.Chunks {
             UINT32 = 0xC
         }
         
-        
         [Flags]
-        public enum SubmeshFlags : byte {
-            Unk1 = 1,
-            Unk2 = 2,
-            Unk3 = 4,
-            Unk4 = 8,
+        public enum SubmeshFlags : byte {  // todo: i'm not 100% sure about these
+            Unk1 = 1,  // ?? nothing
+            NonStatic = 2,  // moveable or animated
+            Opaque = 4,
+            Unk4 = 8,  // everything that isn't MinDetail?
+            
             /// <summary>Mesh with really low detail</summary>
             MinDetail = 16,
-            Unk6 = 32,
-            Unk7 = 64,
+            
+            Unk6 = 32,  // same as NonStatic (-cloth physics?)
+            Vegetation = 64,
             Unk8 = 128
         }
 
@@ -424,7 +425,7 @@ namespace TankLib.Chunks {
                                 submesh.UV[k][element.Index] = teVec2.FromHalf(uv);
                             }
                                 break;
-                            case SemanticType.BoneIndices:
+                            case SemanticType.BlendIndices:
                                 if (element.Index == 0) {
                                     byte[] boneIndex = (byte[]) value;
                                     submesh.BoneIndices[k] = new ushort[boneIndex.Length];
@@ -436,7 +437,7 @@ namespace TankLib.Chunks {
                                         $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");
                                 }
                                 break;
-                            case SemanticType.BoneWeight:
+                            case SemanticType.BlendWeight:
                                 if (element.Index == 0) {
                                     submesh.BoneWeights[k] = (float[]) value;
                                 } else {

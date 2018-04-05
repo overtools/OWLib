@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using DataTool.Flag;
 using OWLib;
 using STULib.Types;
@@ -48,7 +47,7 @@ namespace DataTool.ToolLogic.List.Debug {
 
                             if (unlock == null) {
                                 try {
-                                    using (Stream stream = OpenFile2(Files[unlockKey], out ulong _)) { }
+                                    using (OpenFileUnsafe(Files[unlockKey], out ulong _)) { }
                                 } catch (BLTEKeyException e) {
                                     Console.Out.WriteLine($"Missing key: {e.MissingKey:X}");
                                 }

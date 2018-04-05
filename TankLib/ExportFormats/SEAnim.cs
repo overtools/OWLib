@@ -132,12 +132,12 @@ namespace TankLib.ExportFormats {
             }
         }
         
-        private void WriteString(BinaryWriter writer, string str) {
+        private static void WriteString(BinaryWriter writer, string str) {
             writer.Write(Encoding.Default.GetBytes(str));
             writer.Write((byte)0);
         }
         
-        private void WriteFrameT(BinaryWriter writer, byte frameWidth, int value) {
+        private static void WriteFrameT(BinaryWriter writer, byte frameWidth, int value) {
             if (frameWidth == 1) {
                 writer.Write((byte)value);
             } else if (frameWidth == 2) {
@@ -147,7 +147,7 @@ namespace TankLib.ExportFormats {
             }
         }
 
-        private void WriteFrames3D(BinaryWriter writer, byte frameWidth, Dictionary<int, teVec3> frames, float fac = 1.0f) {
+        private static void WriteFrames3D(BinaryWriter writer, byte frameWidth, Dictionary<int, teVec3> frames, float fac = 1.0f) {
             WriteFrameT(writer, frameWidth, frames.Count);
 
             foreach (KeyValuePair<int, teVec3> pair in frames) {
@@ -158,7 +158,7 @@ namespace TankLib.ExportFormats {
             }
         }
 
-        private void WriteFrames4D(BinaryWriter writer, byte frameWidth, Dictionary<int, teQuat> frames) {
+        private static void WriteFrames4D(BinaryWriter writer, byte frameWidth, Dictionary<int, teQuat> frames) {
             WriteFrameT(writer, frameWidth, frames.Count);
 
             foreach (KeyValuePair<int, teQuat> pair in frames) {

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using STULib;
+using STULib.Types;
 using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
@@ -74,12 +76,14 @@ namespace TankLibTest {
             //TestBinarySpeed();
             //TestString();
             //TestMaterial();
-            //TestChunked();
+            TestChunked();
             //TestTexture();
             //TestTexturePayload();
             //TestSTU();
-            TestAnimation();
+            //TestAnimation();
             //TestSTUv1();
+
+            //FindHeroSkins();
         }
 
         public static void TestSTUv1() {
@@ -284,7 +288,10 @@ namespace TankLibTest {
             //}
 
             // model:
-            using (Stream chunkedStream = OpenFile(0xD00000000004286)) {
+            //using (Stream chunkedStream = OpenFile(0xD00000000004286)) {
+            //    teChunkedData chunked = new teChunkedData(chunkedStream);
+            //}
+            using (Stream chunkedStream = OpenFile(0xD000000000053AF)) {  // orisa nyxl
                 teChunkedData chunked = new teChunkedData(chunkedStream);
             }
             
@@ -408,6 +415,14 @@ namespace TankLibTest {
             }
 
             return ms;
+        }
+        
+        public static string GetString(ulong guid) {
+            try {
+                return new teString(OpenFile(guid));
+            } catch (Exception) {
+                return null;
+            }
         }
     }
 

@@ -11,6 +11,7 @@ using TankLib.CASC.Handlers;
 using static DataTool.Program;
 
 namespace DataTool.Helper {
+    // ReSharper disable once InconsistentNaming
     public static class IO {
         public static string GetValidFilename(string filename) {
             if (filename == null) return null;
@@ -100,19 +101,28 @@ namespace DataTool.Helper {
         public static Stream OpenFile(teResourceGUID guid) {
             return OpenFile((ulong)guid);
         }
-
+        
+        public static Dictionary<MD5Hash, byte[]> BundleCache = new Dictionary<MD5Hash, byte[]>(new MD5HashComparer());
+        
         public static Stream OpenFile(ApplicationPackageManifest.Types.PackageRecord record) {
-            long offset = 0;
             EncodingEntry enc;
-            if (record.Flags.HasFlag(ContentFlags.Bundle)) offset = record.Offset;
             if (!CASC.EncodingHandler.GetEntry(record.LoadHash, out enc)) return null;
 
-            MemoryStream ms = new MemoryStream((int) record.Size);
             try {
-                Stream fstream = CASC.OpenFile(enc.Key);
-                fstream.Position = offset;
-                fstream.CopyBytes(ms, (int) record.Size);
-                ms.Position = 0;
+                if (record.Flags.HasFlag(ContentFlags.Bundle)) {
+                    if (!BundleCache.ContainsKey(record.LoadHash)) {
+                        using (Stream bundleStream = CASC.OpenFile(enc.Key)) {
+                            byte[] buf = new byte[bundleStream.Length];
+                            bundleStream.Read(buf, 0, (int)bundleStream.Length);
+                            BundleCache[record.LoadHash] = buf;
+                        }
+                    }
+                    MemoryStream stream = new MemoryStream((int)record.Size);
+                    stream.Write(BundleCache[record.LoadHash], (int)record.Offset, (int)record.Size);
+                    stream.Position = 0;
+                    return stream;
+                }
+                return CASC.OpenFile(enc.Key);
             } catch (Exception e) {
                 if (e is BLTEKeyException exception) {
 #if DEBUG
@@ -122,11 +132,9 @@ namespace DataTool.Helper {
 
                 return null;
             }
-
-            return ms;
         }
         
-        public static Stream OpenFile2(ApplicationPackageManifest.Types.PackageRecord record, out ulong salsa) {
+        public static Stream OpenFileUnsafe(ApplicationPackageManifest.Types.PackageRecord record, out ulong salsa) {
             salsa = 0;
             if (!CASC.EncodingHandler.GetEntry(record.LoadHash, out EncodingEntry enc)) return null;
             
@@ -171,11 +179,11 @@ namespace DataTool.Helper {
             if (Root == null || CASC == null) {
                 return;
             }
+            const string searchString = "rdev";
 
             Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
             TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
             foreach (ApplicationPackageManifest apm in CASC.RootHandler.APMFiles) {
-                const string searchString = "rdev";
                 if (!apm.Name.ToLowerInvariant().Contains(searchString)) {
                     continue;
                 }

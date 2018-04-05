@@ -31,6 +31,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             string path = Path.Combine(basePath, container);
             
             WriteType(0x88, path);
+            //WriteType(0x43, path);
         }
 
         public void WriteType(ushort type, string path) {

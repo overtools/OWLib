@@ -32,22 +32,17 @@ namespace TankLib {
                 Color5 = new uint[Size];
 
                 if ((byte) parent.Header.Format > 72) {
-                    for (int i = 0; i < Size; ++i) {
-                        Color3[i] = dataReader.ReadUInt16();
-                    }
-                    for (int i = 0; i < Size; ++i) {
+                    Color3 = dataReader.ReadArray<ushort>((int)Size);
+                    
+                    for (int i = 0; i < Size; ++i) {  // todo: can make this faster
                         Color4[i] = dataReader.ReadUInt16();
                         Color5[i] = dataReader.ReadUInt32();
                     }
                 }
 
                 if ((byte) parent.Header.Format < 80) {
-                    for (int i = 0; i < Size; ++i) {
-                        Color1[i] = dataReader.ReadUInt32();
-                    }
-                    for (int i = 0; i < Size; ++i) {
-                        Color2[i] = dataReader.ReadUInt32();
-                    }
+                    Color1 = dataReader.ReadArray<uint>((int)Size);
+                    Color2 = dataReader.ReadArray<uint>((int)Size);
                 }
             }
         }

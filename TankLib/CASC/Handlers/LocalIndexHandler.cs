@@ -3,19 +3,42 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using TankLib.CASC.Helpers;
 
 namespace TankLib.CASC.Handlers {
     public class LocalIndexHandler {
         private static readonly MD5HashComparer Comparer = new MD5HashComparer();
-        public Dictionary<MD5Hash, IndexEntry> LocalIndexData = new Dictionary<MD5Hash, IndexEntry>(Comparer);
+        private readonly CASCConfig _config;
+        
+        /// <summary>Local indices</summary>
+        public Dictionary<MD5Hash, IndexEntry> Indices = new Dictionary<MD5Hash, IndexEntry>(Comparer);
+        
+        /// <summary>Number of local indices</summary>
+        public int Count => Indices.Count;
 
-        public int Count => LocalIndexData.Count;
+        /// <summary>Internal file streams</summary>
+        private readonly Dictionary<int, Stream> _dataStreams;
+        
+        /// <summary>
+        /// Data stream locks. Prevents multiple threads from using the stream at the same time 
+        /// </summary>
+        private readonly Dictionary<int, object[]> _dataLocks;
 
-        private LocalIndexHandler() {}
+
+        private LocalIndexHandler(CASCConfig config) {
+            _config = config;
+            
+            _dataLocks = new Dictionary<int, object[]>();
+            _dataStreams = new Dictionary<int, Stream>();
+
+            for (int i = 0; i < 0x40; i++) { // err, hopefully enough
+                _dataLocks[i] = new object[0];
+            }
+        }
 
         public static LocalIndexHandler Initialize(CASCConfig config, BackgroundWorkerEx worker) {
-            LocalIndexHandler handler = new LocalIndexHandler();
+            LocalIndexHandler handler = new LocalIndexHandler(config);
 
             List<string> idxFiles = GetIdxFiles(config);
 
@@ -79,8 +102,8 @@ namespace TankLib.CASC.Handlers {
 
                     // duplicate keys wtf...
                     //IndexData[key] = info; // use last key
-                    if (!LocalIndexData.ContainsKey(key)) // use first key
-                        LocalIndexData.Add(key, info);
+                    if (!Indices.ContainsKey(key)) // use first key
+                        Indices.Add(key, info);
                 }
 
                 padPos = (dataLen + 0x0FFF) & 0xFFFFF000;
@@ -118,16 +141,61 @@ namespace TankLib.CASC.Handlers {
             ulong* ptr = (ulong*)&key;
             ptr[1] &= 0xFF;
 
-            if (!LocalIndexData.TryGetValue(key, out IndexEntry result)) {
+            if (!Indices.TryGetValue(key, out IndexEntry result)) {
                 Debugger.Log(0, "CASC", $"LocalIndexHandler: missing index: {key.ToHexString()}\r\n");
             }
 
             return result;
         }
 
+        public Stream OpenIndexInfo(IndexEntry idxInfo, MD5Hash key, bool checkHash = true) {
+            lock (_dataLocks[idxInfo.Index]) {
+                Stream dataStream = GetDataStream(idxInfo.Index);
+                dataStream.Position = idxInfo.Offset;
+
+                using (BinaryReader reader = new BinaryReader(dataStream, Encoding.ASCII, true)) {
+                    byte[] md5 = reader.ReadBytes(16);
+                    Array.Reverse(md5);
+
+                    if (checkHash) {
+                        if (!key.EqualsTo9(md5))
+                            throw new Exception("local data corrupted");
+                    }
+
+                    int size = reader.ReadInt32();
+
+                    if (size != idxInfo.Size)
+                        throw new Exception("local data corrupted");
+
+                    //byte[] unkData1 = reader.ReadBytes(2);
+                    //byte[] unkData2 = reader.ReadBytes(8);
+                    dataStream.Position += 10;
+
+                    byte[] data = reader.ReadBytes(idxInfo.Size - 30);
+
+                    return new MemoryStream(data);
+                }
+            }
+        }
+
+        private Stream GetDataStream(int index) {
+            if (_dataStreams.TryGetValue(index, out Stream stream))
+                return stream;
+
+            string dataFolder = CASCConfig.GetDataFolder();
+            string dataFile = Path.Combine(_config.BasePath, dataFolder, "data", $"data.{index:D3}");
+
+            stream = new FileStream(dataFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+            _dataStreams[index] = stream;
+
+            return stream;
+        }
+
+
         public void Clear() {
-            LocalIndexData.Clear();
-            LocalIndexData = null;
+            Indices.Clear();
+            Indices = null;
         }
     }
 }

@@ -243,7 +243,7 @@ namespace DataTool.ToolLogic.Extract {
 
             if (itemInfo.Unlock.LeagueTeam != null) {
                 STULeagueTeam team = GetInstance<STULeagueTeam>(itemInfo.Unlock.LeagueTeam);
-                tags["leagueTeam"] = new TagExpectedValue(GetString(team.Abbreviation),  // NXL
+                tags["leagueTeam"] = new TagExpectedValue(GetString(team.Abbreviation),  // NY
                     GetString(team.Location),  // New York
                     GetString(team.Name),  // Excelsior
                     $"{GetString(team.Location)} {GetString(team.Name)}",  // New York Excelsior

@@ -162,7 +162,7 @@ namespace CASCEncDump {
             }
             
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.idxhashes")) {
-                foreach (KeyValuePair<MD5Hash, IndexEntry> entry in CASC.LocalIndex.LocalIndexData) {
+                foreach (KeyValuePair<MD5Hash, IndexEntry> entry in CASC.LocalIndex.Indices) {
                     string md5 = entry.Key.ToHexString();
                     
                     writer.WriteLine(md5);
@@ -172,12 +172,12 @@ namespace CASCEncDump {
 
         public static void DumpNonBLTE(string[] args) {
             Directory.CreateDirectory(NonBLTEDir);
-            foreach (KeyValuePair<MD5Hash, IndexEntry> indexEntry in CASC.LocalIndex.LocalIndexData) {
+            foreach (KeyValuePair<MD5Hash, IndexEntry> indexEntry in CASC.LocalIndex.Indices) {
                 string md5 = indexEntry.Key.ToHexString();
                 MD5Hash md5Obj = new MD5Hash();
 
                 try {
-                    Stream rawStream = CASC.OpenIndexInfo(indexEntry.Value, md5Obj, false);
+                    Stream rawStream = CASC.LocalIndex.OpenIndexInfo(indexEntry.Value, md5Obj, false);
 
                     using (BinaryReader reader = new BinaryReader(rawStream)) {
                         uint magic = reader.ReadUInt32();
@@ -211,12 +211,12 @@ namespace CASCEncDump {
             
             MD5Hash md5Obj = new MD5Hash();
 
-            foreach (KeyValuePair<MD5Hash,IndexEntry> indexEntry in CASC.LocalIndex.LocalIndexData) {
+            foreach (KeyValuePair<MD5Hash,IndexEntry> indexEntry in CASC.LocalIndex.Indices) {
                 string md5 = indexEntry.Key.ToHexString();
 
                 if (!otherHashes.Contains(md5)) {
                     try {
-                        Stream rawStream = CASC.OpenIndexInfo(indexEntry.Value, md5Obj, false);
+                        Stream rawStream = CASC.LocalIndex.OpenIndexInfo(indexEntry.Value, md5Obj, false);
                         
                         Stream stream = new BLTEStream(rawStream, md5Obj);
                         

@@ -99,8 +99,6 @@ namespace DataTool.SaveLogic.Unlock {
                     FindLogic.Combo.Find(diffInfoAfter, replacement.Value);
                     FindLogic.Combo.Find(diffInfoBefore, replacement.Key);
                 }
-            
-                diffInfoAfter.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
 
                 foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileInfo> soundFile in diffInfoAfter.SoundFiles) {
                     if (diffInfoBefore.SoundFiles.ContainsKey(soundFile.Key)) continue;

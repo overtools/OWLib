@@ -49,7 +49,7 @@ namespace VersionManager.Modes {
                         AssetData assetData = new AssetData {ContentHash = asset.ContentHash, TACTKey = 0, PackageRecord = file.Value};
                         
                         try {
-                            using (Stream stream = IO.OpenFile2(file.Value, out assetData.TACTKey)) {
+                            using (Stream stream = IO.OpenFileUnsafe(file.Value, out assetData.TACTKey)) {
                                 BLTEStream blteStream = (BLTEStream) stream;
                                 assetData.TACTKey = blteStream.SalsaKey;
                                 //var hash = md5.ComputeHash(stream).ToMD5().ToHexString();

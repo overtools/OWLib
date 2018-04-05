@@ -170,6 +170,11 @@ namespace TankLib {
             }
         }
 
+        /// <summary>
+        /// Read rotation value
+        /// </summary>
+        /// <param name="reader">Source reader</param>
+        /// <returns>Rotation value</returns>
         private static teQuat ReadRotation(BinaryReader reader) {
             ushort x = reader.ReadUInt16();
             ushort y = reader.ReadUInt16();
@@ -178,6 +183,11 @@ namespace TankLib {
             return UnpackRotation(x, y, z);
         }
 
+        /// <summary>
+        /// Read position value
+        /// </summary>
+        /// <param name="reader">Source reader</param>
+        /// <returns>Position value</returns>
         private static teVec3 ReadPosition(BinaryReader reader) {
             float x = reader.ReadSingle();
             float y = reader.ReadSingle();
@@ -186,6 +196,11 @@ namespace TankLib {
             return new teVec3(x, y, z);
         }
 
+        /// <summary>
+        /// Read scale value
+        /// </summary>
+        /// <param name="reader">Source reader</param>
+        /// <returns>Scale value</returns>
         private static teVec3 ReadScale(BinaryReader reader) {
             ushort x = reader.ReadUInt16();
             ushort y = reader.ReadUInt16();
@@ -194,6 +209,13 @@ namespace TankLib {
             return UnpackScale(x, y, z);
         }
         
+        /// <summary>
+        /// Unpack rotation value
+        /// </summary>
+        /// <param name="a">Packed A component</param>
+        /// <param name="b">Packed B component</param>
+        /// <param name="c">Packed C component</param>
+        /// <returns>Unpacked rotation value</returns>
         private static teQuat UnpackRotation(ushort a, ushort b, ushort c) {
             teQuat q = new teQuat();
 
@@ -226,6 +248,13 @@ namespace TankLib {
             return q;
         }
         
+        /// <summary>
+        /// Unpack scale value
+        /// </summary>
+        /// <param name="x">Packed X component</param>
+        /// <param name="y">Packed Y component</param>
+        /// <param name="z">Packed Z component</param>
+        /// <returns>Unpacked scale value</returns>
         private static teVec3 UnpackScale(ushort x, ushort y, ushort z) {
             double xd = x / 1024d;
             double yd = y / 1024d;

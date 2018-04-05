@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using BCFF;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
@@ -19,8 +18,6 @@ using static DataTool.Helper.IO;
 namespace DataTool.SaveLogic {
     public class Combo {
         public static void Save(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
-            
             foreach (FindLogic.Combo.EntityInfoNew entity in info.Entities.Values) {
                 SaveEntity(flags, path, info, entity.GUID);
             }
@@ -33,21 +30,6 @@ namespace DataTool.SaveLogic {
             
             // rules for threads:
             // CASC IO MUST BE DONE IN MAIN THREAD. NO EXCEPTIONS
-
-            Wait(info); 
-        }
-
-        public static void Wait(FindLogic.Combo.ComboInfo info) {
-            // ewwwwwwwwwwwwwww
-            while (true) {
-                try {
-                    if (info.SaveRuntimeData.Tasks.All(x => x.IsCompleted)) break;
-                }
-                catch (InvalidOperationException) {
-                    // complaining about collection being modified
-                }
-                Thread.Sleep(200);
-            }
         }
 
         public static void SaveVoiceStimulus(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
@@ -99,7 +81,7 @@ namespace DataTool.SaveLogic {
             if (convertAnims) {
                 SEAnim seAnim = new SEAnim(parsedAnimation);
                 string animOutput = Path.Combine(animationDirectory,
-                    animationInfo.GetNameIndex() + seAnim.Extension);
+                    animationInfo.GetNameIndex() + "." + seAnim.Extension);
                 CreateDirectoryFromFile(animOutput);
                 using (Stream fileStream = new FileStream(animOutput, FileMode.Create)) {
                     seAnim.Write(fileStream);
@@ -368,12 +350,10 @@ namespace DataTool.SaveLogic {
 
         // helpers (NOT FOR INTERNAL USE)
         public static void SaveLooseTextures(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
             foreach (FindLogic.Combo.TextureInfoNew textureInfo in info.Textures.Values) {
                 if (!textureInfo.Loose) continue;
                 SaveTexture(flags, path, info, textureInfo.GUID);
             }
-            Wait(info);
         }
         
         public static void SaveAllStrings(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
@@ -388,40 +368,31 @@ namespace DataTool.SaveLogic {
         }
         
         public static void SaveAllSoundFiles(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
             foreach (FindLogic.Combo.SoundFileInfo soundInfo in info.SoundFiles.Values) {
                 SaveSoundFile(flags, path, info, soundInfo.GUID, false);
             }
-            Wait(info);
         }
         
         public static void SaveAllVoiceSoundFiles(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
             foreach (FindLogic.Combo.SoundFileInfo soundInfo in info.VoiceSoundFiles.Values) {
                 SaveSoundFile(flags, path, info, soundInfo.GUID, true);
             }
-            Wait(info);
         }
         
         public static void SaveAllMaterials(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
             foreach (ulong material in info.Materials.Keys) {
                 SaveMaterial(flags, path, info, material);
             }
-            Wait(info);
         }
 
         public static void SaveAllModelLooks(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
             foreach (ulong material in info.ModelLooks.Keys) {
                 SaveModelLook(flags, path, info, material);
             }
-            Wait(info);
         }
         
         #warning This method does not support animation effects
         public static void SaveAllAnimations(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
             bool beforeSaveAnimEffects = info.SaveConfig.SaveAnimationEffects;
             info.SaveConfig.SaveAnimationEffects = false;
             
@@ -429,33 +400,21 @@ namespace DataTool.SaveLogic {
                 SaveAnimation(flags, path, info, material, 0);
             }
             info.SaveConfig.SaveAnimationEffects = beforeSaveAnimEffects;
-            
-            Wait(info);
         }
         
-        public static void SaveVoiceSet(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+        public static void SaveVoiceSet(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, 
             ulong voiceSet) {
-            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
-            
             SaveVoiceSetInternal(flags, path, info, voiceSet);
-            
-            Wait(info);
         }
 
         public static void SaveVoiceSet(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
             FindLogic.Combo.VoiceSetInfo voiceSetInfo) {
-            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
-            
             SaveVoiceSetInternal(flags, path, info, voiceSetInfo.GUID);
-            
-            Wait(info);
         }
 
         public static void SaveVoiceStimuli(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
             IEnumerable<FindLogic.Combo.VoiceLineInstanceInfo> voiceLineInstances, bool split) {
-            info.SaveRuntimeData = new FindLogic.Combo.ComboSaveRuntimeData();
             SaveVoiceStimuliInternal(flags, path, info, voiceLineInstances, split);
-            Wait(info);
         }
         
         // internal stuff for helpers (for internal use)

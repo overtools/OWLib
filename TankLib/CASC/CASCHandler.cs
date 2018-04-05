@@ -134,55 +134,12 @@ namespace TankLib.CASC {
 
             if (idxInfo == null)
                 throw new LocalIndexMissingException();
-
-            return OpenIndexInfo(idxInfo, key);
-        }
-
-        public Stream OpenIndexInfo(IndexEntry idxInfo, MD5Hash key, bool checkHash = true) {
-            Stream dataStream = GetDataStream(idxInfo.Index);
-            dataStream.Position = idxInfo.Offset;
-
-            using (BinaryReader reader = new BinaryReader(dataStream, Encoding.ASCII, true)) {
-                byte[] md5 = reader.ReadBytes(16);
-                Array.Reverse(md5);
-
-                if (checkHash) {
-                    if (!key.EqualsTo9(md5))
-                        throw new Exception("local data corrupted");
-                }
-
-                int size = reader.ReadInt32();
-
-                if (size != idxInfo.Size)
-                    throw new Exception("local data corrupted");
-
-                //byte[] unkData1 = reader.ReadBytes(2);
-                //byte[] unkData2 = reader.ReadBytes(8);
-                dataStream.Position += 10;
-
-                byte[] data = reader.ReadBytes(idxInfo.Size - 30);
-
-                return new MemoryStream(data);
-            }
-        }
-
-        private Stream GetDataStream(int index) {
-            if (_dataStreams.TryGetValue(index, out Stream stream))
-                return stream;
-
-            string dataFolder = CASCConfig.GetDataFolder();
-
-            string dataFile = Path.Combine(Config.BasePath, dataFolder, "data", $"data.{index:D3}");
-
-            stream = new FileStream(dataFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-
-            _dataStreams[index] = stream;
-
-            return stream;
+            
+            return LocalIndex.OpenIndexInfo(idxInfo, key);
         }
         #endregion
 
-        #region Online        
+        #region Online
         /// <summary>Open an online file strean from encoding hash</summary>
         protected BLTEStream OpenFileOnline(MD5Hash key) {
             IndexEntry idxInfo = CDNIndex.GetIndexInfo(key);

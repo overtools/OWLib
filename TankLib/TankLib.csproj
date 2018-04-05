@@ -63,6 +63,8 @@
     <Compile Include="CASC\MD5.cs" />
     <Compile Include="Chunks\IChunk.cs" />
     <Compile Include="Chunks\teEffectChunkComponent.cs" />
+    <Compile Include="Chunks\teEffectChunkEntityControl.cs" />
+    <Compile Include="Chunks\teEffectChunkVoiceStimulus.cs" />
     <Compile Include="Chunks\teModelChunk_Cloth.cs" />
     <Compile Include="Chunks\teModelChunk_Hardpoint.cs" />
     <Compile Include="Chunks\teModelChunk_Model.cs" />

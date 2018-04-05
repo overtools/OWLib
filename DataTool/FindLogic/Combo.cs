@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using DataTool.Helper;
 using OWLib;
 using OWLib.Types;
@@ -14,7 +13,6 @@ using STULib;
 using STULib.Types;
 using STULib.Types.Dump;
 using STULib.Types.Generic;
-using TankLib;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -45,7 +43,6 @@ namespace DataTool.FindLogic {
 
             public ComboConfig Config = new ComboConfig();
             public ComboSaveConfig SaveConfig = new ComboSaveConfig();
-            public ComboSaveRuntimeData SaveRuntimeData = null;
 
             public ComboInfo() {
                 Entities = new Dictionary<ulong, EntityInfoNew>();
@@ -99,14 +96,6 @@ namespace DataTool.FindLogic {
 
         public class ComboSaveConfig {
             public bool SaveAnimationEffects = true;
-        }
-
-        public class ComboSaveRuntimeData {
-            public List<Task> Tasks;
-
-            public ComboSaveRuntimeData() {
-                Tasks = new List<Task>();
-            }
         }
         
         public class ComboType {
@@ -368,7 +357,7 @@ namespace DataTool.FindLogic {
             //if (GetFileName(guid) == "000000001A2E.003") Debugger.Break();  // black forest (winter) spawndoor
             //if (GetFileName(guid) == "000000001B4E.003") Debugger.Break();  // black forest (winter) middle cog
             //if (GetFileName(guid) == "000000001BDB.003") Debugger.Break();  // black forest (winter) capture point
-
+            
             uint guidType = GUID.Type(guid);
             if (guidType == 0 || guidType == 1) return info;
             switch (guidType) {
@@ -591,7 +580,7 @@ namespace DataTool.FindLogic {
                         materialInfo = info.Materials[guid];
                     }
                     materialInfo.IDs.Add(context.MaterialID);
-                    materialInfo.Shader = material.Header.Shader;
+                    materialInfo.Shader = GetReplacement(material.Header.Shader, replacements);
 
                     if (context.ModelLook == 0 && context.Model != 0) {
                         info.Models[context.Model].LooseMaterials.Add(guid);
@@ -810,7 +799,7 @@ namespace DataTool.FindLogic {
                     info.SoundFiles[guid] = soundFileInfo;
                     break;
                 case 0x43:
-                    break;  // todo: broken in 1.22
+                    break;  // todo: broken in 1.22. looks like wwise was updated?
                     if (info.SoundBanks.ContainsKey(guid)) break;
                     
                     WWiseBankInfo bankInfo = new WWiseBankInfo(guid);
