@@ -19,6 +19,7 @@ using static DataTool.Helper.STUHelper;
 namespace DataTool {
     public class Program {
         public static Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord> Files;
+        public static Dictionary<ulong, ContentManifestFile.HashData> CMFMap;
         public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
         public static CASCHandler CASC;
         public static CASCConfig Config;

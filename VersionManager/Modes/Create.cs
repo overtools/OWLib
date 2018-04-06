@@ -41,7 +41,8 @@ namespace VersionManager.Modes {
             if (manifest.UsedCMF) {
                 int i = 0;
                 foreach (KeyValuePair<ulong, ApplicationPackageManifest.Types.PackageRecord> file in Files) {
-                    Asset asset = new Asset {GUID = file.Key, ContentHash = file.Value.ContentHash};
+                    ContentManifestFile.HashData cmfRecord = CMFMap[file.Key];
+                    Asset asset = new Asset {GUID = file.Key, ContentHash = cmfRecord.HashKey};
 
                     if (!doneFiles.Contains(asset.ContentHash)) {
                         doneFiles.Add(asset.ContentHash);

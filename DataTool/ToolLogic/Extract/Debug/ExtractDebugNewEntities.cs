@@ -51,7 +51,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 if (fileType == 0x9C) continue;  // bundle
                 if (fileType == 0x77) continue;  // package indice
 
-                if (!versionInfo.ContentHashes.Contains(file.Value.ContentHash)) {
+                ContentManifestFile.HashData cmfRecord = CMFMap[file.Key];
+
+                if (!versionInfo.ContentHashes.Contains(cmfRecord.HashKey)) {
                     if (fileType == 0x4 && teResourceGUID.Locale(file.Key) == 0xF) continue; // ? 
                     if (fileType == 0x4 && teResourceGUID.Locale(file.Key) == 0x1F) continue; // ? 
                     if (fileType == 0x4 && teResourceGUID.Locale(file.Key) == 0x2F) continue; // ? 
@@ -62,16 +64,16 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
                     //string currentHash = file.Value.ContentHash.ToHexString();
                     
-                    addedHashes[file.Value.ContentHash] = fileType;
-                    hashGUIDs[file.Value.ContentHash] = file.Key; // todo
+                    addedHashes[cmfRecord.HashKey] = fileType;
+                    hashGUIDs[cmfRecord.HashKey] = file.Key; // todo
 
-                    using (Stream stream = OpenFile(file.Value)) {
-                        if (stream == null) continue;
-                        var hash = md5.ComputeHash(stream).ToMD5();
-                        if (!comparer.Equals(hash, file.Value.ContentHash)) {
-                    
-                        }
-                    }
+                    //using (Stream stream = OpenFile(file.Value)) {
+                    //    if (stream == null) continue;
+                    //    var hash = md5.ComputeHash(stream).ToMD5();
+                    //    if (!comparer.Equals(hash, cmfRecord.HashKey)) {
+                    //
+                    //    }
+                    //}
                 }
             }
 

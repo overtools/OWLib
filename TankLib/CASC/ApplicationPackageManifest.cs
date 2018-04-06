@@ -110,8 +110,6 @@ namespace TankLib.CASC {
                 public ContentFlags Flags;
                 public uint Offset;
                 public uint Size;
-
-                public MD5Hash ContentHash;
                 public MD5Hash LoadHash;
             }
         }
@@ -164,18 +162,18 @@ namespace TankLib.CASC {
                     Header = reader.Read<Types.Header>();
                 }
 
-                if (CASCHandler.Cache.CacheAPM && CacheFileExists(Header.Build)) {
-                    LoadCache(Header.Build);
-                    GatherFirstCMF(casc);
-                    return;
-                }
-
                 if (CMFHeaderCommon.IsV22((uint)Header.Build)) {
                     Entries = reader.ReadArray<Types.Entry>((int)Header.EntryCount);
                     PackageEntries = reader.ReadArray<Types.PackageEntry>((int)Header.PackageCount);
                 } else {
                     Entries = reader.ReadArray<Types.Entry21>((int)Header.EntryCount).Select(x => x.GetEntry()).ToArray();
                     PackageEntries = reader.ReadArray<Types.PackageEntry21>((int)Header.PackageCount).Select(x => x.GetPackage()).ToArray();
+                }
+
+                if (CASCHandler.Cache.CacheAPM && CacheFileExists(Header.Build)) {
+                    LoadCache(Header.Build);
+                    GatherFirstCMF(casc);
+                    return;
                 }
 
                 Packages = new Types.Package[Header.PackageCount];
@@ -221,9 +219,7 @@ namespace TankLib.CASC {
                             Types.PackageRecord record = new Types.PackageRecord {
                                 GUID = rawRecord.GUID,
                                 Flags = rawRecord.Flags,
-                                Offset = rawRecord.Offset,
-                                LoadHash = default(MD5Hash),
-                                ContentHash = recordCMF.HashKey
+                                Offset = rawRecord.Offset
                             };
                             if (record.Flags.HasFlag(ContentFlags.Bundle)) {
                                 record.LoadHash = CMF.Map[Packages[i].BundleGUID].HashKey;
@@ -232,8 +228,8 @@ namespace TankLib.CASC {
                                     record.LoadHash = recordCMF.HashKey;
                                 }
                             }
-
                             record.Size = recordCMF.Size;
+                            
                             Records[i][j] = record;
 
                             if (!FirstOccurence.ContainsKey(record.GUID)) {
@@ -264,14 +260,19 @@ namespace TankLib.CASC {
             using (Stream file = File.OpenWrite(CacheFile(build)))
             using (BinaryWriter writer = new BinaryWriter(file)) {
                 writer.Write(APM_VERSION);
-                writer.Write(Entries.Length);
-                writer.WriteStructArray(Entries);
-                writer.Write(PackageEntries.Length);
-                writer.WriteStructArray(PackageEntries);
+                
                 writer.WriteStructArray(Packages);
+                
                 for (int i = 0; i < PackageEntries.Length; ++i) {
                     writer.Write(Records[i].Length);
-                    writer.WriteStructArray(Records[i]);
+                    
+                    foreach (Types.PackageRecord record in Records[i]) {
+                        writer.Write(record.GUID);
+                        writer.Write((uint)record.Flags);
+                        writer.Write(record.Offset);
+                        writer.Write(record.LoadHash);
+                    }
+                    
                     writer.Write(PackageSiblings[i].Length);
                     writer.WriteStructArray(PackageSiblings[i]);
                 }
@@ -289,10 +290,7 @@ namespace TankLib.CASC {
                     return;
                 }
 
-                int entryCount = reader.ReadInt32();
-                Entries = reader.ReadArray<Types.Entry>(entryCount);
-                int packageEntryCount = reader.ReadInt32();
-                PackageEntries = reader.ReadArray<Types.PackageEntry>(packageEntryCount);
+                int packageEntryCount = PackageEntries.Length;
                 Packages = reader.ReadArray<Types.Package>(packageEntryCount);
 
                 Records = new Types.PackageRecord[packageEntryCount][];
@@ -300,7 +298,20 @@ namespace TankLib.CASC {
 
                 for (int i = 0; i < packageEntryCount; ++i) {
                     int recordCount = reader.ReadInt32();
-                    Records[i] = reader.ReadArray<Types.PackageRecord>(recordCount);
+                    
+                    Records[i] = new Types.PackageRecord[recordCount];
+                    for (int j = 0; j < recordCount; j++) {
+                        Types.PackageRecord record = new Types.PackageRecord {
+                            GUID = reader.ReadUInt64(),
+                            Flags = (ContentFlags)reader.ReadUInt32(),
+                            Offset = reader.ReadUInt32(),
+                            LoadHash = reader.Read<MD5Hash>()
+                        };
+                        record.Size = CMF.Map[record.GUID].Size;
+
+                        Records[i][j] = record;
+                    }
+                    
                     int siblingCount = reader.ReadInt32();
                     PackageSiblings[i] = reader.ReadArray<ulong>(siblingCount);
 
@@ -319,12 +330,10 @@ namespace TankLib.CASC {
                 EncodingEntry info;
                 if (casc.EncodingHandler.GetEntry(pair.Value.HashKey, out info)) {
                     FirstOccurence[pair.Key] = new Types.PackageRecord {
-                        Flags = 0,
                         GUID = pair.Key,
                         LoadHash = pair.Value.HashKey,
                         Offset = 0,
-                        Size = (uint) info.Size,
-                        ContentHash = pair.Value.HashKey // we're loading directly from encoding
+                        Flags = 0
                     };
                 }
             }
