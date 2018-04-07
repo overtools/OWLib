@@ -537,13 +537,14 @@ namespace DataTool.SaveLogic {
                 return;
             }
 
-            convertedStream.Position = 0;
+            /*
             if (convertType == "tga" || convertType == "tif" || convertType == "dds") {
                 // we need the dds for tif conversion
                 WriteFile(convertedStream, $"{filePath}.dds");
             }
 
             convertedStream.Close();
+            */
 
             if (convertType != "tif" && convertType != "tga") return;
 
@@ -554,19 +555,27 @@ namespace DataTool.SaveLogic {
                     FileName = "Third Party\\texconv.exe",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
                     Arguments =
-                        $"\"{filePath}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{path}"
+                        $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{path}"
                 }
             };
-            // -wiclossless?
+
+            convertedStream.Position = 0;
+            byte[] data = new byte[convertedStream.Length];
+            convertedStream.Read(data, 0, data.Length);
+            convertedStream.Dispose();
 
             // erm, so if you add an end quote to this then it breaks.
             // but start one on it's own is fine (we need something for "Winged Victory")
             pProcess.Start();
+            pProcess.StandardInput.BaseStream.WriteAsync(data, 0, data.Length).Wait();
+            pProcess.StandardInput.BaseStream.Dispose();
+
             // pProcess.WaitForExit(); // not using this is kinda dangerous but I don't care
             // when texconv writes with to the console -nologo is has done/failed conversion
             string line = pProcess.StandardOutput.ReadLine();
-            if (line?.Contains($"{filePath}.dds FAILED") == false) {
+            if (line?.Contains($"FAILED") == false) { 
                 // fallback if convert fails
                 File.Delete($"{filePath}.dds");
             }
