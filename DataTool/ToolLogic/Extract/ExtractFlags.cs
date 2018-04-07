@@ -4,10 +4,13 @@ namespace DataTool.ToolLogic.Extract {
     public class ExtractFlags : ICLIFlags {
         [CLIFlag(Help = "Output path", Positional = 2, Required = true)]
         public string OutputPath;
-        
-        [CLIFlag(Default = "tif", Flag = "convert-textures-type", Help = "Texture ouput type", Valid = new[] { "dds", "tif", "tga"})]
+
+        [CLIFlag(Default = "tif", Flag = "convert-textures-type", Help = "Texture ouput type", Valid = new[] { "dds", "tif", "tga" })]
         public string ConvertTexturesType;
-        
+
+        [CLIFlag(Default = true, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool ConvertTexturesLossless;
+
         [CLIFlag(Default = true, Flag = "convert-textures", Help = "Convert .004 files to {convert-textures-type}", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertTextures;
         

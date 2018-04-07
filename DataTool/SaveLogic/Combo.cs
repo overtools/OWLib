@@ -493,7 +493,7 @@ namespace DataTool.SaveLogic {
             internal static readonly int[] DXGI_BC5 = { 82, 83, 84 };
         }
         
-        private static void ConvertTexture(string convertType, string filePath, string path, Stream headerStream, Stream dataStream) {
+        private static void ConvertTexture(string convertType, bool lossless, string filePath, string path, Stream headerStream, Stream dataStream) {
             CreateDirectoryFromFile(path);
             Stream convertedStream;
             TextureHeader header;
@@ -546,13 +546,16 @@ namespace DataTool.SaveLogic {
             convertedStream.Close();
 
             if (convertType != "tif" && convertType != "tga") return;
+
+            string losslessFlag = lossless ? "-wiclossless" : string.Empty;
+
             Process pProcess = new Process {
                 StartInfo = {
                     FileName = "Third Party\\texconv.exe",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     Arguments =
-                        $"\"{filePath}.dds\" -y -wicmulti -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{path}"
+                        $"\"{filePath}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{path}"
                 }
             };
             // -wiclossless?
@@ -571,11 +574,13 @@ namespace DataTool.SaveLogic {
 
         public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong texture) {
             bool convertTextures = true;
+            bool lossless = false;
             string convertType = "dds";
 
             if (flags is ExtractFlags extractFlags) {
                 convertTextures = extractFlags.ConvertTextures  && !extractFlags.Raw;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
+                lossless = extractFlags.ConvertTexturesLossless;
                 if (extractFlags.SkipTextures) return;
             }
             path += Path.DirectorySeparatorChar;
@@ -602,10 +607,10 @@ namespace DataTool.SaveLogic {
 
                 if (info.SaveRuntimeData.Threads) {
                     info.SaveRuntimeData.Tasks.Add(Task.Run(() =>{
-                        ConvertTexture(convertType, filePath, path, headerStream, dataStream);
+                        ConvertTexture(convertType, lossless, filePath, path, headerStream, dataStream);
                     }));
                 } else {
-                    ConvertTexture(convertType, filePath, path, headerStream, dataStream);
+                    ConvertTexture(convertType, lossless, filePath, path, headerStream, dataStream);
                 }
             }
         }
