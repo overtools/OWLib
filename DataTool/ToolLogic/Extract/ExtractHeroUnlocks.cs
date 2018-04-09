@@ -37,7 +37,7 @@ namespace DataTool.ToolLogic.Extract {
             Name = name;
             Tags = new List<QueryTag> {
                 new QueryTag("rarity", new List<string>{"common", "rare", "legendary"}),
-                new QueryTag("event", new List<string>{"base", "summergames", "halloween", "winter", "lunarnewyear", "uprising", "anniversary"}),
+                new QueryTag("event", new List<string>{"base", "summergames", "halloween", "winter", "lunarnewyear", "archives", "anniversary"}),
                 new QueryTag("leagueTeam", new List<string>())
             };
         }
