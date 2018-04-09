@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using DataTool;
 using static CASCLib.ApplicationPackageManifest.Types;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
@@ -14,6 +14,8 @@ using OWLib;
 using CASCLib;
 using System.Globalization;
 using System.IO;
+using DataTool.ToolLogic.Extract;
+using DataTool.ConvertLogic;
 
 namespace PackageTool
 {
@@ -117,6 +119,9 @@ namespace PackageTool
                 case "info":
                     Info(modeArgs);
                     break;
+                case "convert":
+                    Convert(modeArgs);
+                    break;
                 default:
                     Console.Out.WriteLine("Available modes: extract, search, search-type, info");
                     break;
@@ -162,6 +167,47 @@ namespace PackageTool
                         Save(output, key, sibling, totalRecords[sibling]);
                     }
                 }
+            }
+        }
+
+        private static void Convert(string[] args)
+        {
+            string output = args.FirstOrDefault();
+            ulong[] guids = args.Skip(1).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+            if (string.IsNullOrWhiteSpace(output))
+            {
+                return;
+            }
+
+            Dictionary<ulong, PackageRecord[]> records = new Dictionary<ulong, PackageRecord[]>();
+            Dictionary<ulong, Package> packages = new Dictionary<ulong, Package>();
+
+            foreach (ApplicationPackageManifest apm in (CASC.Root as OwRootHandler).APMFiles)
+            {
+                for (int i = 0; i < apm.PackageEntries.Length; ++i)
+                {
+                    PackageEntry entry = apm.PackageEntries[i];
+                    if (guids.Contains(GUID.LongKey(entry.PackageGUID)) || guids.Contains(GUID.Index(entry.PackageGUID)))
+                    {
+                        packages[entry.PackageGUID] = apm.Packages[i];
+                        records[entry.PackageGUID] = apm.Records[i];
+                    }
+                }
+            }
+
+            ICLIFlags flags = FlagParser.Parse<ExtractFlags>();
+            MapCMF();
+            LoadGUIDTable();
+            Sound.WwiseBank.GetReady();
+            DataTool.FindLogic.Combo.ComboInfo info = new DataTool.FindLogic.Combo.ComboInfo();
+            foreach (ulong key in records.Keys)
+            {
+                string dest = Path.Combine(output, GUID.AsString(key));
+                foreach (PackageRecord record in records[key])
+                {
+                    DataTool.FindLogic.Combo.Find(info, record.GUID);
+                }
+                DataTool.SaveLogic.Combo.Save(flags, dest, info);
             }
         }
 
@@ -241,10 +287,6 @@ namespace PackageTool
                     if (guids.Contains(GUID.LongKey(entry.PackageGUID)) || guids.Contains(GUID.Index(entry.PackageGUID)))
                     {
                         Log("Package {0:X12}:", GUID.LongKey(entry.PackageGUID));
-                        Log("\tEntry: {0}", GUID.AsString(entry.EntryPointGUID));
-                        Log("\tPrimary: {0}", GUID.AsString(entry.PrimaryGUID));
-                        Log("\tSecondary: {0}", GUID.AsString(entry.SecondaryGUID));
-                        Log("\tKey: {0:X16}", entry.Key);
                         Log("\tUnknowns: {0}, {1}", entry.Unknown1, entry.Unknown2);
                         Log("\t{0} records", apm.Records[i].Length);
                         Log("\t{0} siblings", apm.PackageSiblings[i].Length);
