@@ -563,7 +563,7 @@ namespace DataTool.SaveLogic {
             // pProcess.WaitForExit(); // not using this is kinda dangerous but I don't care
             // when texconv writes with to the console -nologo is has done/failed conversion
             string line = pProcess.StandardOutput.ReadLine();
-            if (line?.Contains("FAILED") == false) {
+            if (line?.Contains("FAILED") == true) {
                 convertedStream.Position = 0;
                 WriteFile(convertedStream, $"{filePath}.dds");
             }
