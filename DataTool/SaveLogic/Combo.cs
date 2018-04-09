@@ -521,7 +521,7 @@ namespace DataTool.SaveLogic {
             // guess the TGA users are stuck with the DirectXTex stuff for now.
             
             convertedStream.Position = 0;
-            if (convertType == "dds") {
+            if (convertType == "dds" || convertedStream.Length == 0) {
                 WriteFile(convertedStream, $"{filePath}.{convertType}");
                 return;
             }
