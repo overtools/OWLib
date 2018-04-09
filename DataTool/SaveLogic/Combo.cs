@@ -528,6 +528,7 @@ namespace DataTool.SaveLogic {
             
             ImageFormat imageFormat = null;
             if (convertType == "tif") imageFormat = ImageFormat.Tiff;
+            if (convertType == "png") imageFormat = ImageFormat.Png;
             
             if (isBcffValid && imageFormat != null) {
                 BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
