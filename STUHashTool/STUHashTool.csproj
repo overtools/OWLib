@@ -81,6 +81,10 @@
       <Project>{996012b0-3693-4642-ac44-5aa8865ee44a}</Project>
       <Name>STULib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TankLib\TankLib.csproj">
+      <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>
+      <Name>TankLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="IgnoredBrokenSTUs.txt">

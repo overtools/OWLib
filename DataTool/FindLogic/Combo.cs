@@ -13,6 +13,7 @@ using STULib;
 using STULib.Types;
 using STULib.Types.Dump;
 using STULib.Types.Generic;
+using TankLib;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -239,7 +240,7 @@ namespace DataTool.FindLogic {
         }
 
         public class MaterialDataInfo : ComboType {
-            public Dictionary<ulong, ImageDefinition.ImageType> Textures;
+            public Dictionary<ulong, teShaderTextureType> Textures;
 
             public MaterialDataInfo(ulong guid) : base(guid) { }
         }
@@ -304,6 +305,10 @@ namespace DataTool.FindLogic {
             if (replacements.ContainsKey(guid)) return replacements[guid];
             return guid;
         }
+        
+        public static ulong GetReplacement(teResourceGUID guid, Dictionary<ulong, ulong> replacements) {
+            return GetReplacement((ulong) guid, replacements);
+        }
 
         private static ulong GetMapDataRoot(ulong map) {
             return (map & ~0xFFFFFFFF00000000ul) | 0x0DD0000100000000ul;
@@ -311,6 +316,10 @@ namespace DataTool.FindLogic {
 
         private static ulong GetMapDataKey(ulong map, ushort type) {
             return (GetMapDataRoot(map) & ~0xFFFF00000000ul) | ((ulong) type << 32);
+        }
+       
+        public static ComboInfo Find(ComboInfo info, teResourceGUID guid, Dictionary<ulong, ulong> replacements=null , ComboContext context=null) {
+            return Find(info, (ulong) guid, replacements, context);
         }
         
         public static ComboInfo Find(ComboInfo info, ulong guid, Dictionary<ulong, ulong> replacements=null , ComboContext context=null) {
@@ -568,19 +577,21 @@ namespace DataTool.FindLogic {
                 case 0x8:
                     if (info.Materials.ContainsKey(guid) && (info.Materials[guid].IDs.Contains(context.MaterialID) || context.MaterialID == 0)) break;
                     // ^ break if material exists and has id, or id is 0
-                    Material material = new Material(OpenFile(guid), 0);
+                    teMaterial material = new teMaterial(OpenFile(guid));
+                    
                     MaterialInfo materialInfo;
                     if (!info.Materials.ContainsKey(guid)) {
                         materialInfo = new MaterialInfo(guid) {
-                            MaterialData = GetReplacement(material.Header.ImageDefinition, replacements),
+                            MaterialData = GetReplacement(material.Header.MaterialData, replacements),
                             IDs = new HashSet<ulong>()
                         };
                         info.Materials[guid] = materialInfo;
                     } else {
                         materialInfo = info.Materials[guid];
                     }
+                    
                     materialInfo.IDs.Add(context.MaterialID);
-                    materialInfo.Shader = GetReplacement(material.Header.Shader, replacements);
+                    materialInfo.Shader = GetReplacement(material.Header.ShaderSource, replacements);
 
                     if (context.ModelLook == 0 && context.Model != 0) {
                         info.Models[context.Model].LooseMaterials.Add(guid);
@@ -588,7 +599,7 @@ namespace DataTool.FindLogic {
                     
                     ComboContext materialContext = context.Clone();
                     materialContext.Material = guid;
-                    Find(info, material.Header.ImageDefinition, replacements, materialContext);
+                    Find(info, material.Header.MaterialData, replacements, materialContext);
                     break;
                 case 0xC:
                     if (info.Models.ContainsKey(guid)) break;
@@ -939,8 +950,8 @@ namespace DataTool.FindLogic {
                     // hmm, if existing?
                     STUEffectLook effectLook = GetInstance<STUEffectLook>(guid);
                     if (effectLook == null) break;
-                    foreach (Common.STUGUID materialData in effectLook.MaterialDatas) {
-                        Find(info, materialData, replacements, context);
+                    foreach (Common.STUGUID effectLookMaterialData in effectLook.MaterialDatas) {
+                        Find(info, effectLookMaterialData, replacements, context);
                     }
                     break;
                 case 0xB2:
@@ -956,12 +967,13 @@ namespace DataTool.FindLogic {
                     MaterialDataInfo materialDataInfo = new MaterialDataInfo(guid);
 
                     info.MaterialDatas[guid] = materialDataInfo;
-                    ImageDefinition def = new ImageDefinition(OpenFile(guid));
-                    if (def.Layers != null) {
-                        materialDataInfo.Textures = new Dictionary<ulong, ImageDefinition.ImageType>();
-                        foreach (ImageLayer layer in def.Layers) {
-                            Find(info, layer.Key, replacements, materialDataContext);
-                            materialDataInfo.Textures[layer.Key] = layer.Type;
+                    
+                    teMaterialData materialData = new teMaterialData(OpenFile(guid));
+                    if (materialData.Textures != null) {
+                        materialDataInfo.Textures = new Dictionary<ulong, teShaderTextureType>();
+                        foreach (teMaterialDataTexture matDataTex in materialData.Textures) {
+                            Find(info, (ulong)matDataTex.Texture, replacements, materialDataContext);
+                            materialDataInfo.Textures[(ulong)matDataTex.Texture] = matDataTex.Type;
                         }
                     }
                     

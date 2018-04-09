@@ -342,7 +342,7 @@ namespace DataTool.SaveLogic {
             
             SaveOWMaterialFile(path, materialInfo, materialWriter, info);
 
-            foreach (KeyValuePair<ulong, ImageDefinition.ImageType> texture in materialDataInfo.Textures) {
+            foreach (KeyValuePair<ulong, teShaderTextureType> texture in materialDataInfo.Textures) {
                 SaveTexture(flags, textureDirectory, info, texture.Key);
             }
         }

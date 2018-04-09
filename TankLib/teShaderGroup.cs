@@ -17,6 +17,9 @@ namespace TankLib {
             /// <summary>teShaderSource that this group was generated from</summary>
             /// <remarks>088 GUID</remarks>
             public long ShaderSource;
+            
+            /// <summary>A virtual reference. Usage unknown</summary>
+            /// <remarks>00F GUID</remarks>
             public long GUIDx00F;
 
             public ulong Unknown;

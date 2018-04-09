@@ -2,6 +2,9 @@
 using System.IO;
 
 namespace TankLib.ExportFormats {
+    /// <summary>
+    /// OWMAT format
+    /// </summary>
     public class OverawatchMaterial : IExportFormat {
         public string Extension => "owmat";
         

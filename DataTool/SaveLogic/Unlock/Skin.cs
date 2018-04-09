@@ -49,9 +49,7 @@ namespace DataTool.SaveLogic.Unlock {
                     weaponSkinName = GetValidFilename(GetString(realWeaponSkins[replacementIndex].Unlock.CosmeticName));
                 }
 
-                Dictionary<ulong, ulong> weaponReplacements =
-                    weaponOverride.ProperReplacements?.ToDictionary(x => x.Key, y => y.Value) ??
-                    new Dictionary<ulong, ulong>();
+                Dictionary<ulong, ulong> weaponReplacements = weaponOverride.ProperReplacements ?? new Dictionary<ulong, ulong>();
 
                 List<STUHeroWeaponEntity> weaponEntities = new List<STUHeroWeaponEntity>();
                 if (hero.WeaponComponents1 != null) {

@@ -74,8 +74,13 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="ExportFormats\IExportFormat.cs" />
     <Compile Include="ExportFormats\OverawatchMaterial.cs" />
+    <Compile Include="ExportFormats\OverwatchAnim.cs" />
+    <Compile Include="ExportFormats\OverwatchEffect.cs" />
+    <Compile Include="ExportFormats\OverwatchEntity.cs" />
+    <Compile Include="ExportFormats\OverwatchMap.cs" />
     <Compile Include="ExportFormats\OverwatchModel.cs" />
     <Compile Include="ExportFormats\SEAnim.cs" />
+    <Compile Include="ExportFormats\SkeletonRefpose.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Helpers\FastStruct.cs" />
     <Compile Include="Helpers\Hash\CRC.cs" />
@@ -110,6 +115,8 @@
     <Compile Include="STU\Types\STUModelLook.cs" />
     <Compile Include="STU\Types\STU_BE9DDFDF.cs" />
     <Compile Include="teAnimation.cs" />
+    <Compile Include="teAssetPackage.cs" />
+    <Compile Include="teAssetPackagePayload.cs" />
     <Compile Include="teChunkedData.cs" />
     <Compile Include="teEnums.cs" />
     <Compile Include="teMaterial.cs" />

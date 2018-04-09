@@ -82,8 +82,6 @@ namespace TankLibTest {
             //TestSTU();
             //TestAnimation();
             //TestSTUv1();
-
-            //FindHeroSkins();
         }
 
         public static void TestSTUv1() {

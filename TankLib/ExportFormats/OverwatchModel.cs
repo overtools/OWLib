@@ -8,13 +8,13 @@ namespace TankLib.ExportFormats {
     /// OWMDL format
     /// </summary>
     public class OverwatchModel : IExportFormat {
+        public string Extension => "owmdl";
+
         private readonly teChunkedData _data;
         
         public OverwatchModel(teChunkedData chunkedData) {
             _data = chunkedData;
         }
-
-        public string Extension => "owmdl";
         
         public void Write(Stream stream) {
             teModelChunk_RenderMesh renderMesh = _data.GetChunk<teModelChunk_RenderMesh>();

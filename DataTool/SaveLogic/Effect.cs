@@ -24,12 +24,6 @@ namespace DataTool.SaveLogic {
             public const ushort VersionMajor = 1;
             public const ushort VersionMinor = 2;
 
-            public void Write(Stream output, EffectParser.EffectInfo effect, Dictionary<ulong, string> entityNames, Dictionary<ulong, List<STUVoiceLineInstance>> svceLines) {
-                using (BinaryWriter writer = new BinaryWriter(output)) {
-                    Write(writer, effect, entityNames, svceLines);
-                }
-            }
-
             public static void WriteTime(BinaryWriter writer, EffectParser.ChunkPlaybackInfo playbackInfo) {
                 writer.Write(playbackInfo.TimeInfo == null);
                 if (playbackInfo.TimeInfo != null) {
@@ -51,7 +45,6 @@ namespace DataTool.SaveLogic {
                     Write(writer, effectInfo, info, svceLines);
                 }
             }
-            
             
             // combo
             public void Write(BinaryWriter writer, FindLogic.Combo.EffectInfoCombo effectInfo, FindLogic.Combo.ComboInfo info, Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines) {
@@ -134,108 +127,6 @@ namespace DataTool.SaveLogic {
                                 FindLogic.Combo.SoundFileInfo soundFileInfo =
                                     info.VoiceSoundFiles[soundFile];
                                 writer.Write($"Sounds\\{soundFileInfo.GetNameIndex()}.ogg");
-                            }
-                        }
-                    } else {
-                        writer.Write(0);
-                    }
-                }
-
-                // foreach (EffectParser.FECEInfo feceInfo in effect.FECEs) {
-                //     WriteTime(writer, feceInfo.PlaybackInfo);
-                //     writer.Write(feceInfo.GUID);
-                // }
-                // 
-                // foreach (EffectParser.OSCEInfo osceInfo in effect.OSCEs) {
-                //     // this needs preprocessing, get the sounds
-                //     WriteTime(writer, osceInfo.PlaybackInfo);
-                //     writer.Write(osceInfo.Sound);
-                // }
-            }
-
-            // old
-            public void Write(BinaryWriter writer, EffectParser.EffectInfo effect, Dictionary<ulong, string> entityNames, Dictionary<ulong, List<STUVoiceLineInstance>> svceLines) {
-                writer.Write(new string(Identifier));
-                writer.Write(VersionMajor);
-                writer.Write(VersionMinor);
-                
-                writer.Write(GUID.Index(effect.GUID));
-                writer.Write(effect.EffectLength);
-                
-                writer.Write(effect.DMCEs.Count);
-                writer.Write(effect.CECEs.Count);
-                writer.Write(effect.NECEs.Count);
-                writer.Write(effect.RPCEs.Count);
-                writer.Write(effect.FECEs.Count);
-                writer.Write(effect.OSCEs.Count);
-                writer.Write(effect.SVCEs.Count);
-
-                foreach (EffectParser.DMCEInfo dmceInfo in effect.DMCEs) {
-                    WriteTime(writer, dmceInfo.PlaybackInfo);
-                    writer.Write(dmceInfo.Animation);
-                    writer.Write(dmceInfo.Material);
-                    writer.Write(dmceInfo.Model);
-                    writer.Write($"Models\\{GetFileName(dmceInfo.Model)}\\{GUID.LongKey(dmceInfo.Model):X12}.owmdl");
-                    if (dmceInfo.Animation == 0) {
-                        writer.Write("null");
-                    } else {
-                        writer.Write($"Models\\{GetFileName(dmceInfo.Model)}\\{Model.AnimationEffectDir}\\{GUID.LongKey(dmceInfo.Animation):X12}\\{GUID.LongKey(dmceInfo.Animation):X12}.owanim");
-                    }
-                }
-
-                foreach (EffectParser.CECEInfo ceceInfo in effect.CECEs) {
-                    WriteTime(writer, ceceInfo.PlaybackInfo);
-                    writer.Write((byte)ceceInfo.Action);
-                    writer.Write(ceceInfo.Animation);
-                    writer.Write(ceceInfo.EntityVariable);
-                    writer.Write(GUID.Index(ceceInfo.EntityVariable));
-                    if (ceceInfo.Animation != 0) {
-                        writer.Write($"{Model.AnimationEffectDir}\\{GUID.LongKey(ceceInfo.Animation):X12}\\{GUID.LongKey(ceceInfo.Animation):X12}.owanim");
-                    } else {
-                        writer.Write("null");
-                    }
-                }
-                
-                foreach (EffectParser.NECEInfo neceInfo in effect.NECEs) {
-                    WriteTime(writer, neceInfo.PlaybackInfo);
-                    writer.Write(neceInfo.GUID);
-                    writer.Write(GUID.Index(neceInfo.Variable));
-                    string entityName = $"{GetFileName(neceInfo.GUID)}";
-                    if (entityNames.ContainsKey(new Common.STUGUID(neceInfo.GUID))) {
-                        entityName = GetValidFilename(entityNames[new Common.STUGUID(neceInfo.GUID)]);
-                    }
-                    
-                    writer.Write($"Entities\\{entityName}\\{entityName}.owentity");
-                }
-                
-                foreach (EffectParser.RPCEInfo rpceInfo in effect.RPCEs) {
-                    WriteTime(writer, rpceInfo.PlaybackInfo);
-                    writer.Write(rpceInfo.Model);
-                    // todo: make the materials work
-                    writer.Write(rpceInfo.Material);
-                    //writer.Write(rpceInfo.TextureDefiniton);
-                    
-                    writer.Write($"Models\\{GetFileName(rpceInfo.Model)}\\{GUID.LongKey(rpceInfo.Model):X12}.owmdl");
-                }
-
-                foreach (EffectParser.SVCEInfo svceInfo in effect.SVCEs) {
-                    WriteTime(writer, svceInfo.PlaybackInfo);
-                    writer.Write(GUID.Index(svceInfo.VoiceStimulus));
-                    if (svceLines.ContainsKey(svceInfo.VoiceStimulus)) {
-                        List<STUVoiceLineInstance> lines = svceLines[svceInfo.VoiceStimulus];
-                        writer.Write(lines.Count);
-
-                        foreach (STUVoiceLineInstance voiceLineInstance in lines) {
-                            STUSoundWrapper[] sounds = {
-                                voiceLineInstance.SoundContainer.Sound1,
-                                voiceLineInstance.SoundContainer.Sound2,
-                                voiceLineInstance.SoundContainer.Sound3,
-                                voiceLineInstance.SoundContainer.Sound4
-                            };
-                            sounds = sounds.Where(x => x != null).ToArray();
-                            writer.Write(sounds.Length);
-                            foreach (STUSoundWrapper wrapper in sounds) {
-                                writer.Write($"Sounds\\{GUID.LongKey(wrapper.SoundResource):X12}.ogg");
                             }
                         }
                     } else {

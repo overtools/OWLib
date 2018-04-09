@@ -11,6 +11,7 @@ using OWLib;
 using STULib;
 using STULib.Impl;
 using STULib.Types;
+using TankLib;
 using static STULib.Types.Generic.Common;
 using static DataTool.Helper.IO;
 using Console = Colorful.Console;
@@ -28,9 +29,9 @@ namespace STUHashTool {
 
         internal static string GetOWString(ulong guid, CASCHandler handler, Dictionary<ulong, Record> map) {
             if (guid == 0 || !map.ContainsKey(guid)) return null;
-            Stream str = Util.OpenFile(map[guid], handler);
-            OWString ows = new OWString(str);
-            return ows;
+            Stream stream = Util.OpenFile(map[guid], handler);
+            teString stringValue = new teString(stream);
+            return stringValue;
         }
 
         internal static STUInstance[] GetInstances(ulong guid, CASCHandler handler, Dictionary<ulong, Record> map) {

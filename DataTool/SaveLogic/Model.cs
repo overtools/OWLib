@@ -12,6 +12,7 @@ using OWLib.Types.Chunk;
 using OWLib.Types.Chunk.LDOM;
 using OWLib.Types.Map;
 using OWLib.Writer;
+using TankLib;
 using static DataTool.Helper.IO;
 using Animation = OWLib.Animation;
 
@@ -76,7 +77,7 @@ namespace DataTool.SaveLogic {
                         writer.Write(id);
                     }
                     
-                    foreach (KeyValuePair<ulong,ImageDefinition.ImageType> texture in materialDataInfo.Textures) {
+                    foreach (KeyValuePair<ulong, teShaderTextureType> texture in materialDataInfo.Textures) {
                         FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[texture.Key];
                         writer.Write($"..\\Textures\\{textureInfo.GetNameIndex()}.dds");
                         writer.Write((uint)texture.Value);
