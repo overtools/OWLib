@@ -516,37 +516,25 @@ namespace DataTool.SaveLogic {
                                TextureConfig.DXGI_BC5.Contains((int) header.format) ||
                                fourCC == TextureConfig.FOURCC_ATI1 || fourCC == TextureConfig.FOURCC_ATI2;
 
-            ImageFormat imageFormat = null;
-
-            if (convertType == "tif") imageFormat = ImageFormat.Tiff;
-
             // if (convertType == "tga") imageFormat = Im.... oh
             // so there is no TGA image format.
             // guess the TGA users are stuck with the DirectXTex stuff for now.
             
-            if (convertedStream.Length == 0) {
-                WriteFile(Stream.Null, $"{filePath}.{convertType}");
+            convertedStream.Position = 0;
+            if (convertType == "dds") {
+                WriteFile(convertedStream, $"{filePath}.{convertType}");
                 return;
             }
-
-            convertedStream.Position = 0;
+            
+            ImageFormat imageFormat = null;
+            if (convertType == "tif") imageFormat = ImageFormat.Tiff;
+            
             if (isBcffValid && imageFormat != null) {
                 BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
                 decompressor.CreateImage();
                 decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
                 return;
             }
-
-            /*
-            if (convertType == "tga" || convertType == "tif" || convertType == "dds") {
-                // we need the dds for tif conversion
-                WriteFile(convertedStream, $"{filePath}.dds");
-            }
-
-            convertedStream.Close();
-            */
-
-            if (convertType != "tif" && convertType != "tga") return;
 
             string losslessFlag = lossless ? "-wiclossless" : string.Empty;
 
@@ -575,9 +563,9 @@ namespace DataTool.SaveLogic {
             // pProcess.WaitForExit(); // not using this is kinda dangerous but I don't care
             // when texconv writes with to the console -nologo is has done/failed conversion
             string line = pProcess.StandardOutput.ReadLine();
-            if (line?.Contains($"FAILED") == false) { 
-                // fallback if convert fails
-                File.Delete($"{filePath}.dds");
+            if (line?.Contains("FAILED") == false) {
+                convertedStream.Position = 0;
+                WriteFile(convertedStream, $"{filePath}.dds");
             }
         }
 
