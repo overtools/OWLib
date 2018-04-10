@@ -78,6 +78,7 @@ namespace TankLib.CASC {
             }
             
             HashList = cmfreader.ReadArray<HashData>((int)Header.DataCount);
+            
             Map = new Dictionary<ulong, HashData>((int)Header.DataCount);
             for (uint i = 0; i < (int)Header.DataCount; i++) {
                 Map[HashList[i].GUID] = HashList[i];

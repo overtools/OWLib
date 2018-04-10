@@ -93,7 +93,7 @@ namespace TankLib.CASC {
                 public uint SiblingCount;
                 public uint Checksum;
                 public uint Unknown3;
-                public ulong BundleGUID; // 095 file
+                public ulong BundleGUID; // 09C file
                 public ulong Unknown4;
             }
 
@@ -267,10 +267,12 @@ namespace TankLib.CASC {
                     writer.Write(Records[i].Length);
                     
                     foreach (Types.PackageRecord record in Records[i]) {
-                        writer.Write(record.GUID);
-                        writer.Write((uint)record.Flags);
-                        writer.Write(record.Offset);
-                        writer.Write(record.LoadHash);
+                        Types.PackageRecordRaw cacheRecord = new Types.PackageRecordRaw {
+                            Offset = record.Offset,
+                            GUID = record.GUID,
+                            Flags = record.Flags
+                        };
+                        writer.Write(cacheRecord);
                     }
                     
                     writer.Write(PackageSiblings[i].Length);
@@ -301,13 +303,21 @@ namespace TankLib.CASC {
                     
                     Records[i] = new Types.PackageRecord[recordCount];
                     for (int j = 0; j < recordCount; j++) {
+                        Types.PackageRecordRaw cacheRecord = reader.Read<Types.PackageRecordRaw>();
+                        
                         Types.PackageRecord record = new Types.PackageRecord {
-                            GUID = reader.ReadUInt64(),
-                            Flags = (ContentFlags)reader.ReadUInt32(),
-                            Offset = reader.ReadUInt32(),
-                            LoadHash = reader.Read<MD5Hash>()
+                            Flags = cacheRecord.Flags,
+                            GUID = cacheRecord.GUID,
+                            Offset = cacheRecord.Offset,
                         };
-                        record.Size = CMF.Map[record.GUID].Size;
+                        ContentManifestFile.HashData cmfRecord = CMF.Map[cacheRecord.GUID];
+                        record.Size = cmfRecord.Size;
+
+                        if (record.Flags.HasFlag(ContentFlags.Bundle)) {
+                            record.LoadHash = CMF.Map[Packages[i].BundleGUID].HashKey;
+                        } else {
+                            record.LoadHash = cmfRecord.HashKey;    
+                        }
 
                         Records[i][j] = record;
                     }
