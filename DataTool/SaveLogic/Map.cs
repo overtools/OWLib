@@ -355,19 +355,16 @@ namespace DataTool.SaveLogic {
             FindLogic.Combo.Find(info, map.MapDataResource1);
 
             MapEnvironment? env = null;
+            using (Stream data = OpenFile(map.MapDataResource1)) {
+                if (data != null) {
+                    using (BinaryReader dataReader = new BinaryReader(data)) {
+                        env = dataReader.Read<MapEnvironment>();
+                    }
+                }
+            }
             
             using (Stream mapStream = OpenFile(map.GetDataKey(1))) {
                 STULib.Types.Map.Map mapData = new STULib.Types.Map.Map(mapStream, BuildVersion);
-                
-                ulong dataKey = map.MapDataResource1;
-
-                using (Stream data = OpenFile(dataKey)) {
-                    if (data != null) {
-                        using (BinaryReader dataReader = new BinaryReader(data)) {
-                            env = dataReader.Read<MapEnvironment>();
-                        }
-                    }
-                }
 
                 using (Stream map2Stream = OpenFile(map.GetDataKey(2))) {
                     if (map2Stream == null) return;
