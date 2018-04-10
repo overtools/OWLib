@@ -353,9 +353,22 @@ namespace DataTool.SaveLogic {
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             LoudLog("\tFinding");
             FindLogic.Combo.Find(info, map.MapDataResource1);
+
+            MapEnvironment? env = null;
             
             using (Stream mapStream = OpenFile(map.GetDataKey(1))) {
                 STULib.Types.Map.Map mapData = new STULib.Types.Map.Map(mapStream, BuildVersion);
+                
+                ulong dataKey = map.MapDataResource1;
+
+                using (Stream data = OpenFile(dataKey)) {
+                    if (data != null) {
+                        using (BinaryReader dataReader = new BinaryReader(data)) {
+                            env = dataReader.Read<MapEnvironment>();
+                        }
+                    }
+                }
+
                 using (Stream map2Stream = OpenFile(map.GetDataKey(2))) {
                     if (map2Stream == null) return;
                     STULib.Types.Map.Map map2Data = new STULib.Types.Map.Map(map2Stream, BuildVersion);
@@ -396,25 +409,28 @@ namespace DataTool.SaveLogic {
                     }
                 }
             }
-
+            
             FindLogic.Combo.Find(info, map.EffectAnnouncer);
             info.SetEffectName(map.EffectAnnouncer, "LoadAnnouncer");
             FindLogic.Combo.Find(info, map.EffectMusic);
             info.SetEffectName(map.EffectMusic, "LoadMusic");
+
+            ulong announcerVoiceSet = 0;
+            if (env != null) {
+                STUVoiceSetComponent voiceSetComponent = GetInstance<STUVoiceSetComponent>(env.Value.EntityDefinition);
+                if (voiceSetComponent != null) {
+                    FindLogic.Combo.Find(info, voiceSetComponent.VoiceSet);
+                    info.SetEffectVoiceSet(map.EffectAnnouncer, voiceSetComponent.VoiceSet);
+                    info.SetEffectVoiceSet(map.EffectMusic, voiceSetComponent.VoiceSet);
+                }
+            }
             
             LoudLog("\tSaving");
             Combo.Save(flags, mapPath, info);
-            
-            // if (extractFlags.ConvertModels) {
-            //     string physicsFile = Path.Combine(mapPath, "Models", "physics", "physics.owmdl");
-            //     // CreateDirectoryFromFile(physicsFile);
-            //     // using (Stream map10Stream = OpenFile(map.GetDataKey(0x10))) {
-            //     //     Map10 physics = new Map10(map10Stream);
-            //     //     using (Stream outputStream = File.Open(physicsFile, FileMode.Create, FileAccess.Write)) {
-            //     //         modelWriter.Write(physics, outputStream, new object[0]);
-            //     //     }
-            //     // }
-            // }
+            if (announcerVoiceSet != 0) {
+                // we don't want this saved in full
+                info.VoiceSets.Remove(announcerVoiceSet);
+            }
             
             if (map.VoiceSet != null) {
                 FindLogic.Combo.Find(info, map.VoiceSet);

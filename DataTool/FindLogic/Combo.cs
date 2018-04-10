@@ -87,6 +87,15 @@ namespace DataTool.FindLogic {
                     AnimationEffects[effect].Name = name.TrimEnd(' ');
                 }
             }
+
+            public void SetEffectVoiceSet(ulong effect, ulong voiceSet) {
+                if (AnimationEffects.ContainsKey(effect)) SetEffectVoiceSet(AnimationEffects[effect], voiceSet);
+                if (Effects.ContainsKey(effect)) SetEffectVoiceSet(Effects[effect], voiceSet);
+            }
+
+            public void SetEffectVoiceSet(EffectInfoCombo effect, ulong voiceSet) {
+                effect.Effect.VoiceSet = voiceSet;
+            }
         }
 
         public class ComboConfig {

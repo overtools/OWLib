@@ -106,8 +106,8 @@ namespace DataTool.ToolLogic.Extract
                             SaveTex(flags, basePath, "SkyCubemap", fname, env.SkyEnvironmentCubemap);
                         if (!flags.SkipMapEnvironmentSkybox && done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel ^ env.SkyboxModelLook, mapInfo.Name)))
                             SaveMdl(flags, basePath, Path.Combine("Skybox", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.SkyboxModel, env.SkyboxModelLook);
-                        if (!flags.SkipMapEnvironmentEntity && done.Add(new KeyValuePair<ulong, string>(env.StateScript, mapInfo.Name)))
-                            SaveEntity(flags, basePath, Path.Combine("Entity", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.StateScript);
+                        if (!flags.SkipMapEnvironmentEntity && done.Add(new KeyValuePair<ulong, string>(env.EntityDefinition, mapInfo.Name)))
+                            SaveEntity(flags, basePath, Path.Combine("Entity", GetValidFilename($"{mapInfo.NameB}_{GUID.Index(mapInfo.MetadataGUID):X}")), env.EntityDefinition);
 
                         InfoLog("Saved Environment data for {0}", mapInfo.NameB);
                     }
