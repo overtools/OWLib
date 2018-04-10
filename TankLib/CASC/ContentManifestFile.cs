@@ -22,6 +22,7 @@ namespace TankLib.CASC {
         public HashData[] HashList;
         public ApplicationPackageManifest.Types.Entry[] Entries;
         public Dictionary<ulong, HashData> Map;
+        public Dictionary<ulong, int> IndexMap;
         
         /// <summary>Read a CMF file</summary>
         /// <param name="name">APM name</param>
@@ -80,8 +81,10 @@ namespace TankLib.CASC {
             HashList = cmfreader.ReadArray<HashData>((int)Header.DataCount);
             
             Map = new Dictionary<ulong, HashData>((int)Header.DataCount);
+            IndexMap = new Dictionary<ulong, int>((int)Header.DataCount);
             for (uint i = 0; i < (int)Header.DataCount; i++) {
                 Map[HashList[i].GUID] = HashList[i];
+                IndexMap[HashList[i].GUID] = (int)i;
             }
         }
 

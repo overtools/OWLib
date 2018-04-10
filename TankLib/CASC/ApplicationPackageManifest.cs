@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -97,7 +98,7 @@ namespace TankLib.CASC {
                 public ulong Unknown4;
             }
 
-            [StructLayout(LayoutKind.Sequential, Pack = 4)]
+            [StructLayout(LayoutKind.Sequential, Pack = 4)]  // size = 16
             public struct PackageRecordRaw {
                 public ulong GUID;
                 public ContentFlags Flags;
@@ -111,6 +112,13 @@ namespace TankLib.CASC {
                 public uint Offset;
                 public uint Size;
                 public MD5Hash LoadHash;
+            }
+
+            [Flags]
+            public enum CacheRecordFlags : byte {
+                None = 0,
+                UseFlags = 1,
+                UseOffset = 2
             }
         }
 
@@ -142,8 +150,7 @@ namespace TankLib.CASC {
                 stream.Position = 0;
             }
 
-            EncodingEntry cmfEncoding;
-            if (!casc.EncodingHandler.GetEntry(cmfhash, out cmfEncoding)) {
+            if (!casc.EncodingHandler.GetEntry(cmfhash, out EncodingEntry cmfEncoding)) {
                 return;
             }
 
@@ -171,9 +178,10 @@ namespace TankLib.CASC {
                 }
 
                 if (CASCHandler.Cache.CacheAPM && CacheFileExists(Header.Build)) {
-                    LoadCache(Header.Build);
-                    GatherFirstCMF(casc);
-                    return;
+                    if (LoadCache(Header.Build)) {  // if cache is invalid, we'll regenerate
+                        GatherFirstCMF(casc);
+                        return;
+                    }
                 }
 
                 Packages = new Types.Package[Header.PackageCount];
@@ -262,17 +270,24 @@ namespace TankLib.CASC {
                 writer.Write(APM_VERSION);
                 
                 writer.WriteStructArray(Packages);
-                
+
                 for (int i = 0; i < PackageEntries.Length; ++i) {
                     writer.Write(Records[i].Length);
                     
                     foreach (Types.PackageRecord record in Records[i]) {
-                        Types.PackageRecordRaw cacheRecord = new Types.PackageRecordRaw {
-                            Offset = record.Offset,
-                            GUID = record.GUID,
-                            Flags = record.Flags
-                        };
-                        writer.Write(cacheRecord);
+                        Types.CacheRecordFlags flags = Types.CacheRecordFlags.None;
+                        if (record.Flags != ContentFlags.None) flags |= Types.CacheRecordFlags.UseFlags;
+                        if (record.Offset != 0) flags |= Types.CacheRecordFlags.UseOffset;
+                        writer.Write((byte)flags);
+                        
+                        writer.Write(CMF.IndexMap[record.GUID]);
+                        if (flags.HasFlag(Types.CacheRecordFlags.UseFlags)) {
+                            writer.Write((uint)record.Flags);
+                        }
+
+                        if (flags.HasFlag(Types.CacheRecordFlags.UseOffset)) {
+                            writer.Write(record.Offset);
+                        }
                     }
                     
                     writer.Write(PackageSiblings[i].Length);
@@ -281,15 +296,15 @@ namespace TankLib.CASC {
             }
         }
 
-        private void LoadCache(ulong build) {
+        private bool LoadCache(ulong build) {
             if (!CacheFileExists(build)) {
-                return;
+                return false;
             }
 
             using (Stream file = File.OpenRead(CacheFile(build)))
             using (BinaryReader reader = new BinaryReader(file)) {
                 if(reader.ReadUInt64() != APM_VERSION) {
-                    return;
+                    return false;
                 }
 
                 int packageEntryCount = PackageEntries.Length;
@@ -303,14 +318,19 @@ namespace TankLib.CASC {
                     
                     Records[i] = new Types.PackageRecord[recordCount];
                     for (int j = 0; j < recordCount; j++) {
-                        Types.PackageRecordRaw cacheRecord = reader.Read<Types.PackageRecordRaw>();
-                        
-                        Types.PackageRecord record = new Types.PackageRecord {
-                            Flags = cacheRecord.Flags,
-                            GUID = cacheRecord.GUID,
-                            Offset = cacheRecord.Offset,
-                        };
-                        ContentManifestFile.HashData cmfRecord = CMF.Map[cacheRecord.GUID];
+                        Types.PackageRecord record = new Types.PackageRecord();
+
+                        Types.CacheRecordFlags flags = (Types.CacheRecordFlags)reader.ReadByte();
+                        ContentManifestFile.HashData cmfRecord = CMF.HashList[reader.ReadInt32()];
+                        if (flags.HasFlag(Types.CacheRecordFlags.UseFlags)) {
+                            record.Flags = (ContentFlags)reader.ReadUInt32();
+                        }
+
+                        if (flags.HasFlag(Types.CacheRecordFlags.UseOffset)) {
+                            record.Offset = reader.ReadUInt32();
+                        }
+
+                        record.GUID = cmfRecord.GUID;
                         record.Size = cmfRecord.Size;
 
                         if (record.Flags.HasFlag(ContentFlags.Bundle)) {
@@ -332,13 +352,14 @@ namespace TankLib.CASC {
                     }
                 }
             }
+
+            return true;
         }
 
         private void GatherFirstCMF(CASCHandler casc) {
             foreach (KeyValuePair<ulong, ContentManifestFile.HashData> pair in CMF.Map) {
                 if (FirstOccurence.ContainsKey(pair.Key)) continue;
-                EncodingEntry info;
-                if (casc.EncodingHandler.GetEntry(pair.Value.HashKey, out info)) {
+                if (casc.EncodingHandler.GetEntry(pair.Value.HashKey, out _)) {
                     FirstOccurence[pair.Key] = new Types.PackageRecord {
                         GUID = pair.Key,
                         LoadHash = pair.Value.HashKey,
