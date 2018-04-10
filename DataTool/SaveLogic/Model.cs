@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using APPLIB;
 using DataTool.Flag;
 using DataTool.ToolLogic.Extract;
@@ -12,11 +13,61 @@ using OWLib.Types.Chunk;
 using OWLib.Types.Chunk.LDOM;
 using OWLib.Types.Map;
 using OWLib.Writer;
+using STULib;
+using STULib.Types.Dump;
 using static DataTool.Helper.IO;
 using Animation = OWLib.Animation;
+using static DataTool.Program;
 
 namespace DataTool.SaveLogic {
     public class Model {
+        // temp until tanklib
+        public class MSTUChunk : IChunk {
+            public string Identifier => "UTSM";
+
+            public string RootIdentifier => "LDOM";
+            
+            /// <summary>MSTU header</summary>
+            [StructLayout(LayoutKind.Sequential, Pack = 4)]
+            public struct ModelSTUHeader {
+                public long Offset;
+                public long Size;
+            }
+        
+            /// <summary>Header data</summary>
+            public ModelSTUHeader Header;
+
+            public STUModel StructuredData;
+
+            public void Parse(Stream input) {
+                using (BinaryReader reader = new BinaryReader(input)) {
+                    Header = reader.Read<ModelSTUHeader>();
+
+                    reader.BaseStream.Position = Header.Offset;
+                
+                    MemoryStream stream = new MemoryStream();
+                    CopyBytes(input, stream, (int)Header.Size);
+                    stream.Position = 0;
+                
+                    StructuredData = ISTU.NewInstance(stream, BuildVersion).Instances.FirstOrDefault() as STUModel;
+                }
+            }
+            
+            private static void CopyBytes(Stream i, Stream o, int sz) {
+                byte[] buffer = new byte[sz];
+                i.Read(buffer, 0, sz);
+                o.Write(buffer, 0, sz);
+                buffer = null;
+            }
+
+            private static bool _chunkAdded;
+            public static void EnsureAdded() {
+                if (_chunkAdded) return;
+                ChunkManager.Instance.AddChunk(typeof(MSTUChunk));
+                _chunkAdded = true;
+            }
+        }
+        
         public const string AnimationEffectDir = "AnimationEffects";
         
         // things with 14 are for 1.14+
@@ -129,6 +180,8 @@ namespace DataTool.SaveLogic {
                     doRefpose = extractFlags.ExtractRefpose;
                 }
                 
+                MSTUChunk.EnsureAdded();
+                
                 // erm, we need to wrap for now
                 using (Chunked modelChunked = new Chunked(modelStream)) {
                     string materialPath = "";
@@ -179,6 +232,7 @@ namespace DataTool.SaveLogic {
                     hardpoints = (PRHM) chunk;
                 }
                 HTLC cloth = chunked.FindNextChunk("HTLC").Value as HTLC;
+                MSTUChunk mstuChunk = chunked.GetAllOfTypeFlat<MSTUChunk>().FirstOrDefault();
 
                 short[] hierarchy = (short[]) skeleton?.Hierarchy.Clone();
                 Dictionary<int, HTLC.ClothNode> nodeMap = new Dictionary<int, HTLC.ClothNode>();
@@ -281,7 +335,7 @@ namespace DataTool.SaveLogic {
                     }
                     
                     writer.Write(sz);
-                    writer.Write(hardpoints?.HardPoints.Length ?? 0);
+                    writer.Write(mstuChunk?.StructuredData.Hardpoints?.Length ?? 0);
 
                     if (skeleton != null) {
                         for (int i = 0; i < skeleton.Data.bonesAbs; ++i) {
@@ -374,26 +428,81 @@ namespace DataTool.SaveLogic {
                         }
                     }
 
-                    if (hardpoints != null) {
-                        // attachments
-                        foreach (PRHM.HardPoint hp in hardpoints.HardPoints) {
-                            writer.Write(IdToString("hardpoint", GUID.Index(hp.HardPointGUID)));
-                            Matrix4 mat = hp.Matrix.ToOpenTK();
+                    if (mstuChunk.StructuredData.Hardpoints != null) {
+                        foreach (STUModelHardpoint modelHardpoint in mstuChunk.StructuredData.Hardpoints) {
+                            writer.Write(IdToString("hardpoint", GUID.Index(modelHardpoint.m_EDF0511C)));
 
-                            Vector3 pos = mat.ExtractTranslation();
-                            Quaternion rot = mat.ExtractRotation();
+                            Vector3 bonePos = new Vector3();
+                            Quaternion boneRot = Quaternion.Identity;
+                            //Vec4d boneRot2 = new Vec4d();
+
+                            // todo: this isn't good enough
                             
-                            writer.Write(pos.X);
-                            writer.Write(pos.Y);
-                            writer.Write(pos.Z);
-                            writer.Write(rot.X);
-                            writer.Write(rot.Y);
-                            writer.Write(rot.Z);
-                            writer.Write(rot.W);
+                            if (modelHardpoint.m_FF592924 != 0) {
+                                // recalculate to world space. IM SORRY. blender is dumb
+                                
+                                int boneIdx = skeleton.IDs.TakeWhile(id => id != GUID.Index(modelHardpoint.m_FF592924)).Count();
+
+                                Matrix3x4 bone = skeleton.Matrices34[boneIdx];
+                                boneRot = new Quaternion(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
+                                //boneRot2 = new Vec4d(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
+                                //boneRot = RefPoseWriter.GetGlobalRot(skeleton, (short) boneIdx, hierarchy);
+                                bonePos = new Vector3(bone[2, 0], bone[2, 1], bone[2, 2]);
+                            }
+
+                            // saving in world space.
+                            if (modelHardpoint.Position != null) {
+                                writer.Write(modelHardpoint.Position.X + bonePos.X);
+                                writer.Write(modelHardpoint.Position.Y + bonePos.Y);
+                                writer.Write(modelHardpoint.Position.Z + bonePos.Z);
+                            } else {
+                                // world space = abs parent pos
+                                writer.Write(bonePos.X);  
+                                writer.Write(bonePos.Y);
+                                writer.Write(bonePos.Z);
+                            }
+                            
+                            if (modelHardpoint.Rotation != null) {
+                                /*var rot = new Vec4d(modelHardpoint.Rotation.X, modelHardpoint.Rotation.Y, 
+                                    modelHardpoint.Rotation.Z, modelHardpoint.Rotation.W).toEuler();
+                                if (modelHardpoint.m_FF592924 != 0) {
+                                    var boneRotEuler = boneRot2.toEuler();
+
+                                    rot.x += boneRotEuler.x;
+                                    rot.y += boneRotEuler.y;
+                                    rot.z += boneRotEuler.z;
+                                }
+
+                                var quatRot = new Vec4d().fromEuler(rot);
+                                
+                                writer.Write((float)quatRot.x);
+                                writer.Write((float)quatRot.y);
+                                writer.Write((float)quatRot.z);
+                                writer.Write((float)quatRot.w);*/
+                                
+                                Quaternion rot = new Quaternion(modelHardpoint.Rotation.X,
+                                    modelHardpoint.Rotation.Y, modelHardpoint.Rotation.Z, modelHardpoint.Rotation.W);
+                                if (modelHardpoint.m_FF592924 != 0) {
+                                    rot *= boneRot;
+                                }
+                                writer.Write(rot.X);
+                                writer.Write(rot.Y);
+                                writer.Write(rot.Z);
+                                writer.Write(rot.W);
+                            } else {
+                                // world space = abs parent rot
+                                writer.Write(boneRot.X);
+                                writer.Write(boneRot.Y);
+                                writer.Write(boneRot.Z);
+                                writer.Write(boneRot.W);
+                                
+                                //writer.Write(0ul);
+                                //writer.Write(0ul);
+                            }
                         }
-                        // extension 1.1
-                        foreach (PRHM.HardPoint hp in hardpoints.HardPoints) {
-                            writer.Write(IdToString("bone", GUID.Index(hp.GUIDx012)));
+                        
+                        foreach (STUModelHardpoint modelHardpoint in mstuChunk.StructuredData.Hardpoints) {
+                            writer.Write(IdToString("bone", GUID.Index(modelHardpoint.m_FF592924)));
                         }
                     }
 

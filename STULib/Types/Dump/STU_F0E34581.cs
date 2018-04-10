@@ -16,10 +16,10 @@ namespace STULib.Types.Dump {
         [STUField(0xFF592924)]
         public ulong m_FF592924;
 
-        [STUField(0xAF9D3A0C)]
-        public STUQuaternion m_AF9D3A0C;
+        [STUField(0xAF9D3A0C, "m_rotation")]
+        public STUQuaternion Rotation;
 
-        [STUField(0x7DC1550F)]
-        public STUVec3 m_7DC1550F;
+        [STUField(0x7DC1550F, "m_position")]
+        public STUVec3 Position;
     }
 }

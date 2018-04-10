@@ -112,8 +112,13 @@ namespace DataTool.SaveLogic {
                         for (int j = 0; j < obj.Header.groupCount; ++j) {
                             Map01.Map01Group group = obj.Groups[j];
                             FindLogic.Combo.Find(info, group.ModelLook, null, new FindLogic.Combo.ComboContext {Model = obj.Header.Model});
-                            FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[group.ModelLook];
-                            string materialFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
+                            string materialFn;
+                            if (!info.ModelLooks.ContainsKey(group.ModelLook)) {
+                                materialFn = ""; // encrypted
+                            } else {
+                                FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[group.ModelLook];
+                                materialFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
+                            }    
                             
                             writer.Write(materialFn);
                             writer.Write(group.recordCount);
@@ -230,9 +235,12 @@ namespace DataTool.SaveLogic {
                         FindLogic.Combo.Find(info, modelLook, null, new FindLogic.Combo.ComboContext {Model = mapEntity.Model});
 
                         FindLogic.Combo.ModelInfoNew modelInfo = info.Models[mapEntity.Model];
-                        FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelLook]; 
+                        string matFn = "";
+                        if (info.ModelLooks.ContainsKey(modelLook)) {
+                            FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelLook];
+                            matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
+                        }
                         string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}{modelFormat.Format}";
-                        string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
                         
                         writer.Write(modelFn);
                         writer.Write(matFn);
@@ -407,16 +415,18 @@ namespace DataTool.SaveLogic {
             //     //     }
             //     // }
             // }
-
+            
             if (map.VoiceSet != null) {
-                FindLogic.Combo.ComboInfo soundInfo = new FindLogic.Combo.ComboInfo();
-                FindLogic.Combo.Find(soundInfo, map.VoiceSet);
+                FindLogic.Combo.Find(info, map.VoiceSet);
+            }
+            
+            string soundPath = Path.Combine(mapPath, "Sound");
+            string voiceSetsPath = Path.Combine(soundPath, "VoiceSets");
+            string otherSoundsPath = Path.Combine(soundPath, "SFX");
 
-                if (soundInfo.VoiceSets.ContainsKey(map.VoiceSet)) {
-                    string soundPath = Path.Combine(mapPath, "Sound");
-                    FindLogic.Combo.VoiceSetInfo voiceSetInfo = soundInfo.VoiceSets[map.VoiceSet];
-                    Combo.SaveVoiceSet(flags, soundPath, soundInfo, voiceSetInfo);
-                }
+            Combo.SaveVoiceSets(flags, voiceSetsPath, info);
+            foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileInfo> sound in info.SoundFiles) {
+                Combo.SaveSoundFile(flags, otherSoundsPath, info, sound.Key, false);
             }
             
             LoudLog("\tDone");

@@ -19,8 +19,8 @@ namespace STULib.Types.Dump {
         [STUField(0xFD232466, EmbeddedInstance = true)]
         public STULib.Types.Dump.STU_F0E34581[] m_FD232466;
 
-        [STUField(0xC45F5F6F, EmbeddedInstance = true)]
-        public STULib.Types.Dump.STU_BE9DDFDF[] m_C45F5F6F;
+        [STUField(0xC45F5F6F, "m_hardpoints", EmbeddedInstance = true)]
+        public STULib.Types.Dump.STUModelHardpoint[] Hardpoints;
 
         [STUField(0xCB4D298D, EmbeddedInstance = true)]
         public STULib.Types.Dump.STU_2DD96D6D[] m_CB4D298D;

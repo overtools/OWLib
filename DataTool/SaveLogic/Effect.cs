@@ -105,9 +105,15 @@ namespace DataTool.SaveLogic {
                     WriteTime(writer, neceInfo.PlaybackInfo);
                     writer.Write(neceInfo.GUID);
                     writer.Write(GUID.Index(neceInfo.Variable));
-                    FindLogic.Combo.EntityInfoNew entityInfo = info.Entities[neceInfo.GUID];
+
+                    if (!info.Entities.ContainsKey(neceInfo.GUID)) {
+                        // didn't account for encrypted content -_-
+                        writer.Write("null");
+                    } else {
+                        FindLogic.Combo.EntityInfoNew entityInfo = info.Entities[neceInfo.GUID];
                     
-                    writer.Write($"Entities\\{entityInfo.GetName()}\\{entityInfo.GetName()}.owentity");
+                        writer.Write($"Entities\\{entityInfo.GetName()}\\{entityInfo.GetName()}.owentity");
+                    }
                 }
                 
                 foreach (EffectParser.RPCEInfo rpceInfo in effect.RPCEs) {

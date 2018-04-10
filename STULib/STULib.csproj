@@ -3226,7 +3226,7 @@
     <Compile Include="Types\Dump\STU_BE772C9F.cs" />
     <Compile Include="Types\Dump\STU_BE7A8749.cs" />
     <Compile Include="Types\Dump\STU_BE9A0B3E.cs" />
-    <Compile Include="Types\Dump\STU_BE9DDFDF.cs" />
+    <Compile Include="Types\Dump\STUModelHardpoint.cs" />
     <Compile Include="Types\Dump\STU_BEA1592D.cs" />
     <Compile Include="Types\Dump\STU_BEA2287D.cs" />
     <Compile Include="Types\Dump\STU_BEA9D130.cs" />

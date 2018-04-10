@@ -127,12 +127,11 @@ namespace OWLib.Writer {
         }
         
         public static Quaternion GetGlobalRot(lksm skeleton, short s, IReadOnlyList<short> hierarchy) {
-            if (skeleton.Matrices34Inverted.Length <= s || s == -1) return new Quaternion();
+            if (skeleton.Matrices34Inverted.Length <= s || s == -1) return Quaternion.Identity;
             Matrix3x4 bone = skeleton.Matrices34Inverted[s];
             Quaternion quat = new Quaternion(bone[0, 3], bone[0, 0], bone[0, 1], bone[0, 2]);
-            Quaternion parent = new Quaternion();
-            if (hierarchy.Count > s) parent = GetGlobalRot(skeleton, hierarchy[s], hierarchy);
-            return quat + parent;
+            if (hierarchy.Count > s) return quat * GetGlobalRot(skeleton, hierarchy[s], hierarchy);
+            return quat;
         }
 
         public static Vector3 GetPos(lksm skeleton, int index) {
@@ -198,7 +197,7 @@ namespace OWLib.Writer {
                     writer.Write($" {node.Y-parentY:0.000000}");
                     writer.Write($" {node.Z-parentZ:0.000000}");
                     writer.WriteLine(" 0 0 0");
-                    }
+                }
             }
             
             return true;

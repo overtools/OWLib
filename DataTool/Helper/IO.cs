@@ -178,20 +178,8 @@ namespace DataTool.Helper
         public static string GetString(ulong guid)
         {
             if (guid == 0) return null;  // don't even try
-            //try {
-            //    using (Stream stream = OpenFile(Files[guid])) {
-            //        return stream == null ? null : new OWString(stream);
-            //    }
-            //}
-            //catch {
-            //    return null;
-            //}
-            if (!Files.ContainsKey(guid))
-            {
-                throw new Exception();
-            }
-            using (Stream stream = OpenFile(Files[guid]))
-            {
+            if (!Files.ContainsKey(guid)) return null;
+            using (Stream stream = OpenFile(Files[guid])) {
                 if (stream == null) return null;
                 OWString owString = new OWString(stream);
                 return owString;

@@ -387,6 +387,7 @@ namespace DataTool.SaveLogic {
 
         public static void SaveMaterial(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong material) {
             FindLogic.Combo.MaterialInfo materialInfo = info.Materials[material];
+            if (!info.MaterialDatas.ContainsKey(materialInfo.MaterialData)) return;  // heckin encryted content
             FindLogic.Combo.MaterialDataInfo materialDataInfo = info.MaterialDatas[materialInfo.MaterialData];
 
             Model.OWMatWriter14 materialWriter = new Model.OWMatWriter14();
@@ -445,6 +446,12 @@ namespace DataTool.SaveLogic {
             info.SaveConfig.SaveAnimationEffects = beforeSaveAnimEffects;
             
             Wait(info);
+        }
+
+        public static void SaveVoiceSets(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
+            foreach (KeyValuePair<ulong,FindLogic.Combo.VoiceSetInfo> voiceSet in info.VoiceSets) {
+                SaveVoiceSet(flags, path, info, voiceSet.Value);
+            }
         }
         
         public static void SaveVoiceSet(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,

@@ -241,11 +241,6 @@ namespace PackageTool
                     if (guids.Contains(GUID.LongKey(entry.PackageGUID)) || guids.Contains(GUID.Index(entry.PackageGUID)))
                     {
                         Log("Package {0:X12}:", GUID.LongKey(entry.PackageGUID));
-                        Log("\tEntry: {0}", GUID.AsString(entry.EntryPointGUID));
-                        Log("\tPrimary: {0}", GUID.AsString(entry.PrimaryGUID));
-                        Log("\tSecondary: {0}", GUID.AsString(entry.SecondaryGUID));
-                        Log("\tKey: {0:X16}", entry.Key);
-                        Log("\tUnknowns: {0}, {1}", entry.Unknown1, entry.Unknown2);
                         Log("\t{0} records", apm.Records[i].Length);
                         Log("\t{0} siblings", apm.PackageSiblings[i].Length);
                         foreach (ulong sibling in apm.PackageSiblings[i])
