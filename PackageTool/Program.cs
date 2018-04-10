@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DataTool;
 using static CASCLib.ApplicationPackageManifest.Types;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
