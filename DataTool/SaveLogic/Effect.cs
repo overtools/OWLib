@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DataTool.FindLogic;
 using DataTool.Helper;
 using OWLib;
 using OWLib.Types;
@@ -312,6 +311,10 @@ namespace DataTool.SaveLogic {
                     writer.Write(animation.FPS);
                     writer.Write((int)OWAnimType.Reference);
 
+                    if (model == 0) {
+                        writer.Write("null");
+                        return;
+                    }
                     FindLogic.Combo.ModelInfoNew modelInfo = info.Models[model];
                     
                     writer.Write($"Models\\{modelInfo.GetName()}\\{Model.AnimationEffectDir}\\{animation.GetNameIndex()}\\{animation.GetNameIndex()}{Format}"); // so I can change it in DataTool and not go mad
