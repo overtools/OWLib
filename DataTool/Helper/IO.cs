@@ -183,6 +183,7 @@ namespace DataTool.Helper {
 
             Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
             TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
+            CMFMap = new Dictionary<ulong, ContentManifestFile.HashData>();
             foreach (ApplicationPackageManifest apm in CASC.RootHandler.APMFiles) {
                 if (!apm.Name.ToLowerInvariant().Contains(searchString)) {
                     continue;
@@ -202,6 +203,8 @@ namespace DataTool.Helper {
                     
                     TrackedFiles[type].Add(pair.Key);
                     Files[pair.Value.GUID] = pair.Value;
+
+                    CMFMap[pair.Value.GUID] = apm.CMF.Map[pair.Value.GUID];
                 }
             }
         }

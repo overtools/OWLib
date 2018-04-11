@@ -281,7 +281,7 @@ namespace TankLib.CASC {
                     foreach (Types.PackageRecord record in Records[i]) {
                         Types.CacheRecordFlags flags = Types.CacheRecordFlags.None;
 
-                        if (record.Flags != ContentFlags.None && record.Flags != ContentFlags.Bundle) {
+                        if (record.Flags != ContentFlags.None) {
                             flags |= Types.CacheRecordFlags.UseFlags;
                         }
                         if (record.Offset != 0) flags |= Types.CacheRecordFlags.UseOffset;

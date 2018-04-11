@@ -128,11 +128,12 @@ namespace DataTool.ToolLogic.Extract.Debug {
             // data.json has a list under the key "added_raw" that contains all of the added files.
             
             //const string dataPath = "D:\\ow\\OverwatchDataManager\\versions\\1.18.1.2.42076\\data.json";
-            //const string dataPath = "D:\\ow\\OverwatchDataManager\\versions\\1.20.0.2.43435\\data.json";
+            const string dataPath = "D:\\ow\\OverwatchDataManager\\versions\\1.20.0.2.43435\\data.json";
             //const string dataPath = "D:\\ow\\OverwatchDataManager\\versions\\1.17.0.3.41713\\data.json";
 
             //VersionInfo versionInfo = GetVersionInfo(dataPath);
             VersionInfo versionInfo = GetVersionInfoFake(@"D:\Code\Repos\overtool\OWLib-main\CASCEncDump\bin\Debug\44916.cmfhashes");
+            //VersionInfo versionInfo = GetVersionInfoFake(@"D:\Code\Repos\overtool\OWLib-main\CASCEncDump\bin\Debug\45104.cmfhashes");
             
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
@@ -143,7 +144,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
             const string container = "DebugNewEntities2";
             
             Combo.ComboInfo info = new Combo.ComboInfo();          
-            AddNewHash(info, versionInfo, 0x4, 0x7C, 0xC, 0xB2, 0x3F);
+            //AddNewHash(info, versionInfo, 0x4, 0x7C, 0xC, 0xB2);
+            AddNewHash(info, versionInfo, 0x4);
             
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, container), info);
             SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, container, "Sounds"), info);
