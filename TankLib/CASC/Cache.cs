@@ -4,62 +4,28 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using CMFLib;
+using LZ4;
 using TankLib.CASC.Remote;
 
 namespace TankLib.CASC {
-    public class CacheMetaData {
-        public long Size { get; }
-        public byte[] MD5 { get; }
-
-        public CacheMetaData(long size, byte[] md5) {
-            Size = size;
-            MD5 = md5;
-        }
-
-        public void Save(string file) {
-            File.WriteAllText(file + ".dat", $"{Size} {MD5.ToHexString()}");
-        }
-
-        public static CacheMetaData Load(string file) {
-            if (File.Exists(file + ".dat")) {
-                string[] tokens = File.ReadAllText(file + ".dat").Split(' ');
-                return new CacheMetaData(Convert.ToInt64(tokens[0]), tokens[1].ToByteArray());
-            }
-
-            return null;
-        }
-
-        public static CacheMetaData AddToCache(HttpWebResponse resp, string file) {
-            if (!resp.Headers[HttpResponseHeader.ETag].Contains(":")) {
-                return null;
-            }
-            string md5 = resp.Headers[HttpResponseHeader.ETag].Split(':')[0].Substring(1);
-            CacheMetaData meta = new CacheMetaData(resp.ContentLength, md5.ToByteArray());
-            meta.Save(file);
-            return meta;
-        }
-    }
-
     public class Cache {
         public bool CacheCDN = true;
         public bool CacheCDNData = true;
-        public bool ValidateCDN = false;
 
         public bool CacheAPM = true;
-        
-        private readonly string _cachePath;
         
         public readonly string CDNCachePath;
         public readonly string APMCachePath;
         
-        private readonly SyncDownloader _downloader = new SyncDownloader(null);
-
-        private readonly MD5 _md5 = MD5.Create();
+        private readonly string _cachePath;
+        private readonly SyncDownloader _downloader;
 
         public Cache(string path) {
             _cachePath = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), path);
             CDNCachePath = Path.Combine(_cachePath, "CDN");
             APMCachePath = Path.Combine(_cachePath, "APM");
+            
+            _downloader = new SyncDownloader();
             
             if (CacheCDN) {
                 if (!Directory.Exists(CDNCachePath)) {
@@ -94,28 +60,11 @@ namespace TankLib.CASC {
                     return null;
                 }
             }
-
-            if (ValidateCDN) {
-                CacheMetaData meta = CacheMetaData.Load(file) ?? _downloader.GetMetaData(url, file);
-
-                if (meta == null)
-                    throw new Exception($"unable to validate file {file}");
-
-                bool sizeOk, md5Ok;
-
-                using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
-                    sizeOk = fs.Length == meta.Size;
-                    md5Ok = _md5.ComputeHash(fs).EqualsTo(meta.MD5);
-                }
-
-                if (!sizeOk || !md5Ok) {
-                    if (!_downloader.DownloadFile(url, file)) {
-                        return null;
-                    }
-                }
+            
+            using (Stream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (LZ4Stream lz4Stream = new LZ4Stream(fs, LZ4StreamMode.Decompress)) {
+                return lz4Stream;
             }
-
-            return new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         }
 
         public bool HasFile(string name) {

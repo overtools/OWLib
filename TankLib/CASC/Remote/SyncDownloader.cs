@@ -1,36 +1,19 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Net;
-using TankLib.CASC.Helpers;
+using LZ4;
 
 namespace TankLib.CASC.Remote {
     public class SyncDownloader {
-        private readonly BackgroundWorkerEx _progressReporter;
-
-        public SyncDownloader(BackgroundWorkerEx progressReporter) {
-            _progressReporter = progressReporter;
-        }
-
         public bool DownloadFile(string url, string path) {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
-            
-            Debugger.Log(0, "CASC", $"SyncDownloader: Downloading file {url}\r\n");
 
-            HttpWebRequest request = WebRequest.CreateHttp(url);
+            using (Stream stream = OpenFile(url)) {
+                if (stream == null) return false;
 
-            using (HttpWebResponse resp = (HttpWebResponse) request.GetResponseAsync().Result) {
-                if (resp.ContentLength == 0) return false;
-
-                if (resp.Headers[HttpResponseHeader.ETag] == null || resp.StatusCode != HttpStatusCode.OK) return false;
-
-                using (Stream stream = resp.GetResponseStream()) {
-                    if (stream == null) return false;
-
-                    using (Stream fs = new FileStream(path, FileMode.Create, FileAccess.Write)) {
-                        CacheMetaData.AddToCache(resp, path);
-                        CopyToStream(stream, fs, resp.ContentLength);
-                        return true;
-                    }
+                using (Stream fs = new FileStream(path, FileMode.Create, FileAccess.Write)) {
+                    using (LZ4Stream lz4Stream = new LZ4Stream(fs, LZ4StreamMode.Compress))
+                        stream.CopyTo(lz4Stream);
+                    return true;
                 }
             }
         }
@@ -54,35 +37,13 @@ namespace TankLib.CASC.Remote {
             }
         }
 
-        public CacheMetaData GetMetaData(string url, string file) {
-            try {
-                HttpWebRequest request = WebRequest.CreateHttp(url);
-                request.Method = "HEAD";
-
-                using (HttpWebResponse resp = (HttpWebResponse) request.GetResponseAsync().Result) {
-                    return CacheMetaData.AddToCache(resp, file);
-                }
-            } catch {
-                return null;
-            }
-        }
-
         private void CopyToStream(Stream src, Stream dst, long len) {
-            long done = 0;
-
             byte[] buf = new byte[0x1000];
 
             int count;
             do {
-                if (_progressReporter != null && _progressReporter.CancellationPending)
-                    return;
-
                 count = src.Read(buf, 0, buf.Length);
                 dst.Write(buf, 0, count);
-
-                done += count;
-
-                _progressReporter?.ReportProgress((int) (done / (float) len * 100));
             } while (count > 0);
         }
     }

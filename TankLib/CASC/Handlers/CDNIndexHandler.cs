@@ -27,7 +27,7 @@ namespace TankLib.CASC.Handlers {
         private CDNIndexHandler(CASCConfig cascConfig, BackgroundWorkerEx worker, Cache cache) {
             _config = cascConfig;
             _worker = worker;
-            _downloader = new SyncDownloader(worker);
+            _downloader = new SyncDownloader();
             _cache = cache;
         }
 
@@ -153,14 +153,14 @@ namespace TankLib.CASC.Handlers {
             }
         }
 
-        public Stream OpenDataFileDirect(MD5Hash key, string CDNHost) {
+        public Stream OpenDataFileDirect(MD5Hash key, string cdnHost) {
             string keyStr = key.ToHexString().ToLower();
 
             _worker?.ReportProgress(0, $"Downloading \"{keyStr}\" file...");
 
             string file = _config.CDNPath + "/data/" + keyStr.Substring(0, 2) + "/" + keyStr.Substring(2, 2) + "/" +
                           keyStr;
-            string url = "http://" + CDNHost + "/" + file;
+            string url = "http://" + cdnHost + "/" + file;
 
             Stream stream = _cache.OpenCDNFile(file, url, false);
 
