@@ -128,8 +128,13 @@ namespace DataTool.SaveLogic {
                     }
                     
                     foreach (KeyValuePair<ulong,ImageDefinition.ImageType> texture in materialDataInfo.Textures) {
-                        FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[texture.Key];
-                        writer.Write($"..\\Textures\\{textureInfo.GetNameIndex()}.dds");
+                        if (info.Textures.ContainsKey(texture.Key)) {
+                            FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[texture.Key];
+                            writer.Write($"..\\Textures\\{textureInfo.GetNameIndex()}.dds");
+                        } else {
+                            writer.Write("");
+                        }
+                        
                         writer.Write((uint)texture.Value);
                     }
                 }

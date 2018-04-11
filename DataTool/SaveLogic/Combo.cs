@@ -403,6 +403,7 @@ namespace DataTool.SaveLogic {
             }
 
             foreach (KeyValuePair<ulong, ImageDefinition.ImageType> texture in materialDataInfo.Textures) {
+                if (!info.Textures.ContainsKey(texture.Key)) continue;
                 SaveTexture(flags, textureDirectory, info, texture.Key);
             }
         }
