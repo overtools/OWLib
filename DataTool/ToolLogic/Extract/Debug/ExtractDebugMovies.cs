@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using DataTool.Flag;
@@ -67,6 +66,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
                             };
                             SaveLogic.Combo.SaveSoundFile(flags, Path.Combine(basePath, container, GUID.LongKey(key).ToString("X12")), audioInfo, movi.MasterAudio, false);
                         }
+                        videoStream.Position = 128;  // wrapped in "MOVI" for some reason
+                        WriteFile(videoStream, Path.Combine(basePath, container, $"{GUID.LongKey(key):X12}.bk2"));
                     }
                 }
             }
