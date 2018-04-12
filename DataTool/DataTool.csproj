@@ -93,6 +93,7 @@
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimNodes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugComboDemo.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugMovies.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugNewEntities.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugOWL.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugRAMTest.cs" />
