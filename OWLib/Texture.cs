@@ -29,7 +29,7 @@ namespace OWLib {
 
                     if (Format == TextureType.Unknown)
                     {
-                        RawData = dataReader.ReadBytes((int)(dataStream.Length - dataStream.Position));
+                        RawData = dataReader.ReadBytes((int)RawHeader.imageSize);
                     }
                     else
                     {
