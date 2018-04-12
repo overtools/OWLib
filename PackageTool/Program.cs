@@ -121,9 +121,24 @@ namespace PackageTool
                 case "convert":
                     Convert(modeArgs);
                     break;
+                case "types":
+                    Types(modeArgs);
+                    break;
                 default:
                     Console.Out.WriteLine("Available modes: extract, search, search-type, info");
                     break;
+            }
+        }
+
+        private static void Types(string[] args)
+        {
+            IOrderedEnumerable<ulong> unique = new HashSet<ulong>(Root.APMFiles.SelectMany(x => x.FirstOccurence.Keys).Select(x => GUID.Attribute(x, GUID.AttributeEnum.Type))).OrderBy(x => x >> 48);
+
+            foreach(ulong key in unique)
+            {
+                ushort sh = (ushort)(key >> 48);
+                ushort shBE = (ushort)(((sh & 0xFF) << 8) | sh >> 8);
+                Console.Out.WriteLine($"{shBE:X4} : {sh:X4} : {GUID.Type(key):X3}");
             }
         }
 
@@ -247,7 +262,7 @@ namespace PackageTool
                     PackageEntry entry = apm.PackageEntries[i];
                     PackageRecord[] records = apm.Records[i];
 
-                    foreach (PackageRecord record in records.Where(x => guids.Contains(x.GUID) || guids.Contains(GUID.Type(x.GUID)) || guids.Contains(GUID.Index(x.GUID))))
+                    foreach (PackageRecord record in records.Where(x => guids.Contains(x.GUID) || guids.Contains(GUID.Type(x.GUID)) || guids.Contains(GUID.Index(x.GUID)) || guids.Contains(GUID.LongKey(x.GUID))))
                     {
                         Log("Found {0} in package {1:X12}", GUID.AsString(record.GUID), GUID.LongKey(entry.PackageGUID));
                     }

@@ -79,7 +79,8 @@ namespace DataTool.ToolLogic.List {
                 var data = map.Value;
 
                 Log($"{iD}{data.Name ?? map.Key}");
-
+                Log($"{iD+1}Key: {GUID.Index(data.MetadataGUID):X}");
+                
                 if (!string.IsNullOrEmpty(data.NameB)) Log($"{iD+1}Alt Name: {data.NameB}");
 
                 if (!string.IsNullOrEmpty(data.Description)) Log($"{iD+1}Desc: {data.Description}");
@@ -93,7 +94,7 @@ namespace DataTool.ToolLogic.List {
                 }
 
                 if (data.Gamemodes != null) {
-                    Log($"{iD+1}Gamemodes:");
+                    Log($"{iD+1}Gamemodes:"); 
                     data.Gamemodes.ForEach(m => Log($"{iD+2}{m.Name}"));
                 }
 

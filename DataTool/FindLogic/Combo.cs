@@ -564,18 +564,40 @@ namespace DataTool.FindLogic {
                     
                     break;
                 case 0x4:
+                case 0xF1:
                     if (info.Textures.ContainsKey(guid)) break;
                     TextureInfoNew textureInfo = new TextureInfoNew(guid);
                     ulong dataKey = (guid & 0xF0FFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
+                    if (guidType == 0xF1)
+                    {
+                        for (ulong i = 0; i < 63; ++i)
+                        {
+                            if (Files.ContainsKey(dataKey | (i << 39)))
+                            {
+                                dataKey = dataKey | (i << 39);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // sometimes a texture is too small to create mipmaps.
+                        ulong newDataKey = (guid & 0xF0FFFFFFFFUL) | 0x0320000000000000UL;
+                        if (!Files.ContainsKey(dataKey) && Files.ContainsKey(newDataKey))
+                        {
+                            dataKey = newDataKey;
+                        }
+                    }
                     bool useData = Files.ContainsKey(dataKey);
                     textureInfo.UseData = useData;
                     textureInfo.DataGUID = dataKey;
                     info.Textures[guid] = textureInfo;
 
-                    if (context.Material == 0) {
+                    if (context.Material == 0)
+                    {
                         textureInfo.Loose = true;
                     }
-                    
+
                     break;
                 case 0x6:
                     if (info.Animations.ContainsKey(guid)) {
