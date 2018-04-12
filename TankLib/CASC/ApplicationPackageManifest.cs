@@ -205,15 +205,16 @@ namespace TankLib.CASC {
                     using (BinaryReader packageReader = new BinaryReader(packageStream)) {
                         Packages[i] = packageReader.Read<Types.Package>();
                         
-                        //if (CMFHeaderCommon.IsV22((uint)Header.Build)) {  // todo: hack
-                        //    Packages[i].SiblingCount *= 2;
-                        //}
-                        //if (Packages[i].SiblingCount > 0) {
-                        //    packageStream.Position = Packages[i].OffsetSiblings;
-                        //    //PackageSiblings[i] = packageReader.ReadArray<ulong>((int) Packages[i].SiblingCount);
-                        //} else {
-                        //    //PackageSiblings[i] = new ulong[0];
-                        //}
+                        if (CMFHeaderCommon.IsV22((uint)Header.Build)) {  // todo: hack
+                            //Packages[i].SiblingCount *= 2;
+                            Packages[i].SiblingCount = 0;
+                        }
+                        if (Packages[i].SiblingCount > 0) {
+                            packageStream.Position = Packages[i].OffsetSiblings;
+                            PackageSiblings[i] = packageReader.ReadArray<ulong>((int) Packages[i].SiblingCount);
+                        } else {
+                            PackageSiblings[i] = new ulong[0];
+                        }
 
                         packageStream.Position = Packages[i].OffsetRecords;
                         Types.PackageRecordRaw[] recordsRaw;
@@ -274,40 +275,10 @@ namespace TankLib.CASC {
             using (LZ4Stream lz4Stream = new LZ4Stream(file, LZ4StreamMode.Compress, LZ4StreamFlags.HighCompression))
             using (BinaryWriter writer = new BinaryWriter(lz4Stream)) {
                 writer.Write(APM_VERSION);
-                
                 writer.WriteStructArray(Packages);
-
-                int prevIndex = 0;
                 for (int i = 0; i < PackageEntries.Length; ++i) {
                     writer.Write(Records[i].Length);
-                    
-                    foreach (Types.PackageRecord record in Records[i]) {
-                        Types.CacheRecordFlags flags = Types.CacheRecordFlags.None;
-
-                        if (record.Flags != ContentFlags.None) {
-                            flags |= Types.CacheRecordFlags.UseFlags;
-                        }
-                        if (record.Offset != 0) flags |= Types.CacheRecordFlags.UseOffset;
-                        int index = CMF.IndexMap[record.GUID];
-                        if (index == prevIndex + 1) {
-                            flags |= Types.CacheRecordFlags.SequentialIndex;
-                        }
-                        
-                        writer.Write((byte)flags);
-                        if (!flags.HasFlag(Types.CacheRecordFlags.SequentialIndex)) {
-                            writer.Write(index);
-                        }
-                        if (flags.HasFlag(Types.CacheRecordFlags.UseFlags)) {
-                            writer.Write((uint)record.Flags);
-                        }
-
-                        if (flags.HasFlag(Types.CacheRecordFlags.UseOffset)) {
-                            writer.Write(record.Offset);
-                        }
-                        
-                        prevIndex = index;
-                    }
-                    
+                    writer.WriteStructArray(Records[i]);
                     writer.Write(PackageSiblings[i].Length);
                     writer.WriteStructArray(PackageSiblings[i]);
                 }
@@ -332,44 +303,9 @@ namespace TankLib.CASC {
                 Records = new Types.PackageRecord[packageEntryCount][];
                 PackageSiblings = new ulong[packageEntryCount][];
 
-                int prevIndex = 0;
                 for (int i = 0; i < packageEntryCount; ++i) {
                     int recordCount = reader.ReadInt32();
-                    
-                    Records[i] = new Types.PackageRecord[recordCount];
-                    for (int j = 0; j < recordCount; j++) {
-                        Types.PackageRecord record = new Types.PackageRecord();
-
-                        Types.CacheRecordFlags flags = (Types.CacheRecordFlags)reader.ReadByte();
-                        int index;
-                        if (flags.HasFlag(Types.CacheRecordFlags.SequentialIndex)) {
-                            index = prevIndex + 1;
-                        } else {
-                            index = reader.ReadInt32();
-                        }
-                        ContentManifestFile.HashData cmfRecord = CMF.HashList[index];
-                        if (flags.HasFlag(Types.CacheRecordFlags.UseFlags)) {
-                            record.Flags = (ContentFlags)reader.ReadUInt32();
-                        }
-
-                        if (flags.HasFlag(Types.CacheRecordFlags.UseOffset)) {
-                            record.Offset = reader.ReadUInt32();
-                        }
-
-                        record.GUID = cmfRecord.GUID;
-                        record.Size = cmfRecord.Size;
-
-                        if (record.Flags.HasFlag(ContentFlags.Bundle)) {
-                            record.LoadHash = CMF.Map[Packages[i].BundleGUID].HashKey;
-                        } else {
-                            record.LoadHash = cmfRecord.HashKey;    
-                        }
-
-                        Records[i][j] = record;
-                        
-                        prevIndex = index;
-                    }
-                    
+                    Records[i] = reader.ReadArray<Types.PackageRecord>(recordCount);
                     int siblingCount = reader.ReadInt32();
                     PackageSiblings[i] = reader.ReadArray<ulong>(siblingCount);
 

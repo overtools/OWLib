@@ -67,7 +67,7 @@ namespace TankLibTest {
         
         public static void Main(string[] args) {
             Setup(args);
-            CASCHandler.Cache.CacheAPM = false;
+            //CASCHandler.Cache.CacheAPM = false;
             
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
