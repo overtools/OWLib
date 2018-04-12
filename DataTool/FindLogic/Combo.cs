@@ -570,7 +570,19 @@ namespace DataTool.FindLogic {
                     ulong dataKey = (guid & 0xF0FFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
                     if (guidType == 0xF1)
                     {
-                        dataKey |= 0x0000010000000001UL;
+                        for (ulong i = 0; i < 32; ++i)
+                        {
+                            if (Files.ContainsKey(dataKey | (i << 40)))
+                            {
+                                dataKey = dataKey | (i << 40);
+                                break;
+                            }
+                            else if (Files.ContainsKey(dataKey | (i << 39)))
+                            {
+                                dataKey = dataKey | (i << 39);
+                                break;
+                            }
+                        }
                     }
                     bool useData = Files.ContainsKey(dataKey);
                     textureInfo.UseData = useData;
