@@ -121,9 +121,24 @@ namespace PackageTool
                 case "convert":
                     Convert(modeArgs);
                     break;
+                case "types":
+                    Types(modeArgs);
+                    break;
                 default:
                     Console.Out.WriteLine("Available modes: extract, search, search-type, info");
                     break;
+            }
+        }
+
+        private static void Types(string[] args)
+        {
+            IOrderedEnumerable<ulong> unique = new HashSet<ulong>(Root.APMFiles.SelectMany(x => x.FirstOccurence.Keys).Select(x => GUID.Attribute(x, GUID.AttributeEnum.Type))).OrderBy(x => x >> 48);
+
+            foreach(ulong key in unique)
+            {
+                ushort sh = (ushort)(key >> 48);
+                ushort shBE = (ushort)(((sh & 0xFF) << 8) | sh >> 8);
+                Console.Out.WriteLine($"{shBE:X4} : {sh:X4} : {GUID.Type(key):X3}");
             }
         }
 
