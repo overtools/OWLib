@@ -579,6 +579,15 @@ namespace DataTool.FindLogic {
                             }
                         }
                     }
+                    else
+                    {
+                        // sometimes a texture is too small to create mipmaps.
+                        ulong newDataKey = (guid & 0xF0FFFFFFFFUL) | 0x0320000000000000UL;
+                        if (!Files.ContainsKey(dataKey) && Files.ContainsKey(newDataKey))
+                        {
+                            dataKey = newDataKey;
+                        }
+                    }
                     bool useData = Files.ContainsKey(dataKey);
                     textureInfo.UseData = useData;
                     textureInfo.DataGUID = dataKey;
