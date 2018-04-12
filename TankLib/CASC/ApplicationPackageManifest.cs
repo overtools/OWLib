@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using CMFLib;
 using LZ4;
 using TankLib.CASC.Handlers;
@@ -190,29 +191,29 @@ namespace TankLib.CASC {
                 Records = new Types.PackageRecord[Header.PackageCount][];
                 PackageSiblings = new ulong[Header.PackageCount][];
 
-                for (uint i = 0; i < Header.PackageCount; ++i) {
+                Parallel.For(0, Header.PackageCount, i =>
+                {
                     Types.PackageEntry entry = PackageEntries[i];
                     if (!CMF.Map.ContainsKey(entry.PackageGUID)) {
-                        continue; // lol?
+                        return; // lol?
                     }
 
                     EncodingEntry packageEncoding;
                     if (!casc.EncodingHandler.GetEntry(CMF.Map[entry.PackageGUID].HashKey, out packageEncoding))
-                        continue;
+                        return;
                     using (Stream packageStream = casc.OpenFile(packageEncoding.Key))
                     using (BinaryReader packageReader = new BinaryReader(packageStream)) {
                         Packages[i] = packageReader.Read<Types.Package>();
                         
-                        if (CMFHeaderCommon.IsV22((uint)Header.Build)) {  // todo: hack
-                            Packages[i].SiblingCount *= 2;
-                        }
-
-                        if (Packages[i].SiblingCount > 0) {
-                            packageStream.Position = Packages[i].OffsetSiblings;
-                            PackageSiblings[i] = packageReader.ReadArray<ulong>((int) Packages[i].SiblingCount);
-                        } else {
-                            PackageSiblings[i] = new ulong[0];
-                        }
+                        //if (CMFHeaderCommon.IsV22((uint)Header.Build)) {  // todo: hack
+                        //    Packages[i].SiblingCount *= 2;
+                        //}
+                        //if (Packages[i].SiblingCount > 0) {
+                        //    packageStream.Position = Packages[i].OffsetSiblings;
+                        //    //PackageSiblings[i] = packageReader.ReadArray<ulong>((int) Packages[i].SiblingCount);
+                        //} else {
+                        //    //PackageSiblings[i] = new ulong[0];
+                        //}
 
                         packageStream.Position = Packages[i].OffsetRecords;
                         Types.PackageRecordRaw[] recordsRaw;
@@ -242,12 +243,14 @@ namespace TankLib.CASC {
                             
                             Records[i][j] = record;
 
-                            if (!FirstOccurence.ContainsKey(record.GUID)) {
-                                FirstOccurence[record.GUID] = record;
+                            lock (FirstOccurence) {
+                                if (!FirstOccurence.ContainsKey(record.GUID)) {
+                                    FirstOccurence[record.GUID] = record;
+                                }
                             }
                         }
                     }
-                }
+                });
             }
 
             if (CASCHandler.Cache.CacheAPM) {

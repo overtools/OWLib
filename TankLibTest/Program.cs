@@ -67,7 +67,13 @@ namespace TankLibTest {
         
         public static void Main(string[] args) {
             Setup(args);
+            CASCHandler.Cache.CacheAPM = false;
+            
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             LoadCASC();
+            stopwatch.Stop();
+            Console.Out.WriteLine(stopwatch.Elapsed);
             //Telemetry.Init("0", "0");
             //Telemetry.SetTelementryEnabled(true);
             //Telemetry.TrackEvent("hello");
@@ -76,7 +82,7 @@ namespace TankLibTest {
             //TestBinarySpeed();
             //TestString();
             //TestMaterial();
-            TestChunked();
+            //TestChunked();
             //TestTexture();
             //TestTexturePayload();
             //TestSTU();
