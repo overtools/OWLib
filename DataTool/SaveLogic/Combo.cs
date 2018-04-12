@@ -597,7 +597,7 @@ namespace DataTool.SaveLogic {
             if (!convertTextures) {
                 CreateDirectoryFromFile(path);
                 using (Stream textureStream = OpenFile(textureInfo.GUID))
-                    WriteFile(textureStream, $"{filePath}.004");
+                    WriteFile(textureStream, $"{filePath}.{GUID.Type(textureInfo.GUID):X3}");
 
                 if (!textureInfo.UseData) return;
                 using (Stream textureStream = OpenFile(textureInfo.DataGUID))

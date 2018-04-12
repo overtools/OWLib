@@ -564,18 +564,24 @@ namespace DataTool.FindLogic {
                     
                     break;
                 case 0x4:
+                case 0xF1:
                     if (info.Textures.ContainsKey(guid)) break;
                     TextureInfoNew textureInfo = new TextureInfoNew(guid);
                     ulong dataKey = (guid & 0xF0FFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
+                    if (guidType == 0xF1)
+                    {
+                        dataKey |= 0x0000010000000001UL;
+                    }
                     bool useData = Files.ContainsKey(dataKey);
                     textureInfo.UseData = useData;
                     textureInfo.DataGUID = dataKey;
                     info.Textures[guid] = textureInfo;
 
-                    if (context.Material == 0) {
+                    if (context.Material == 0)
+                    {
                         textureInfo.Loose = true;
                     }
-                    
+
                     break;
                 case 0x6:
                     if (info.Animations.ContainsKey(guid)) {

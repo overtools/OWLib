@@ -262,7 +262,7 @@ namespace PackageTool
                     PackageEntry entry = apm.PackageEntries[i];
                     PackageRecord[] records = apm.Records[i];
 
-                    foreach (PackageRecord record in records.Where(x => guids.Contains(x.GUID) || guids.Contains(GUID.Type(x.GUID)) || guids.Contains(GUID.Index(x.GUID))))
+                    foreach (PackageRecord record in records.Where(x => guids.Contains(x.GUID) || guids.Contains(GUID.Type(x.GUID)) || guids.Contains(GUID.Index(x.GUID)) || guids.Contains(GUID.LongKey(x.GUID))))
                     {
                         Log("Found {0} in package {1:X12}", GUID.AsString(record.GUID), GUID.LongKey(entry.PackageGUID));
                     }
