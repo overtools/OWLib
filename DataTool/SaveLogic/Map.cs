@@ -411,9 +411,13 @@ namespace DataTool.SaveLogic {
             info.SetEffectName(map.EffectAnnouncer, "LoadAnnouncer");
             FindLogic.Combo.Find(info, map.EffectMusic);
             info.SetEffectName(map.EffectMusic, "LoadMusic");
+  
+            if (map.VoiceSet != null) {
+                FindLogic.Combo.Find(info, map.VoiceSet);
+            }
 
-            ulong announcerVoiceSet = 0;
             if (env != null) {
+                FindLogic.Combo.Find(info, env.Value.EntityDefinition);
                 STUVoiceSetComponent voiceSetComponent = GetInstance<STUVoiceSetComponent>(env.Value.EntityDefinition);
                 if (voiceSetComponent != null) {
                     FindLogic.Combo.Find(info, voiceSetComponent.VoiceSet);
@@ -424,14 +428,6 @@ namespace DataTool.SaveLogic {
             
             LoudLog("\tSaving");
             Combo.Save(flags, mapPath, info);
-            if (announcerVoiceSet != 0) {
-                // we don't want this saved in full
-                info.VoiceSets.Remove(announcerVoiceSet);
-            }
-            
-            if (map.VoiceSet != null) {
-                FindLogic.Combo.Find(info, map.VoiceSet);
-            }
             
             string soundPath = Path.Combine(mapPath, "Sound");
             string voiceSetsPath = Path.Combine(soundPath, "VoiceSets");
