@@ -214,7 +214,12 @@ namespace DataTool.ToolLogic.Extract {
                 foreach (var eventUnlocks in unlocks.LootboxUnlocks) {
                     if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
 
-                    var eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event];
+                    string eventKey;
+                    if (!ItemEvents.GetInstance().EventsNormal.ContainsKey((uint) eventUnlocks.Event)) {
+                        eventKey = $"Unknown{eventUnlocks.Event}";
+                    } else {
+                        eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event];
+                    }
                     var eUnlocks = eventUnlocks.Unlocks.Unlocks.Select(it => GatherUnlock(it)).ToList();
 
                     foreach (ItemInfo itemInfo in eUnlocks) {
