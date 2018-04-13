@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TankView.ViewResources;
 
 namespace TankView
 {
@@ -20,14 +21,49 @@ namespace TankView
     /// </summary>
     public partial class MainWindow : Window
     {
+        public RsrcNGDPPatchHosts NGDPPatchHosts { get; private set; }
+
         public MainWindow()
         {
+            NGDPPatchHosts = new RsrcNGDPPatchHosts();
+            if (!NGDPPatchHosts.Any(x => x.Active))
+            {
+                NGDPPatchHosts[0].Active = true;
+            }
+
             InitializeComponent();
+            DataContext = this;
+            // FolderView.ItemsSource = ;
+            // FolderItemList.ItemsSource = ;
+        }
+
+        public string ModuloTitle {
+            get {
+                return "TankView";
+            }
         }
 
         private void Exit(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void NGDPHostChange(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem)
+            {
+                foreach (var node in NGDPPatchHosts.Where(x => x.Active))
+                {
+                    node.Active = false;
+                }
+
+                if (!NGDPPatchHosts.Any(x => x.Active))
+                {
+                    (menuItem.DataContext as PatchHost).Active = true;
+                }
+
+                CollectionViewSource.GetDefaultView(NGDPPatchHosts).Refresh();
+            }
         }
     }
 }

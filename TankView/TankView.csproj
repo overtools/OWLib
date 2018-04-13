@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewResources\PatchHost.cs" />
     <Compile Include="ViewResources\RsrcNGDPPatchHosts.cs" />
     <Compile Include="ViewResources\RsrcRecentLocations.cs" />
     <Page Include="MainWindow.xaml">
