@@ -52,14 +52,9 @@ namespace TankView
         {
             if (sender is MenuItem menuItem)
             {
-                foreach (var node in NGDPPatchHosts.Where(x => x.Active))
+                foreach (var node in NGDPPatchHosts.Where(x => x.Active && x.GetHashCode() != (menuItem.DataContext as PatchHost).GetHashCode()))
                 {
                     node.Active = false;
-                }
-
-                if (!NGDPPatchHosts.Any(x => x.Active))
-                {
-                    (menuItem.DataContext as PatchHost).Active = true;
                 }
 
                 CollectionViewSource.GetDefaultView(NGDPPatchHosts).Refresh();

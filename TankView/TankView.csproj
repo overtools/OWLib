@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ObjectModel\ObservableHashCollection.cs" />
     <Compile Include="ViewResources\PatchHost.cs" />
     <Compile Include="ViewResources\RsrcNGDPPatchHosts.cs" />
     <Compile Include="ViewResources\RsrcRecentLocations.cs" />
@@ -102,5 +103,6 @@
       <Name>TankLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

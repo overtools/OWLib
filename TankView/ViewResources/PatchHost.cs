@@ -21,5 +21,10 @@ namespace TankView.ViewResources
             Name = v2;
             _active = (null as bool?) ?? false; // todo: check 
         }
+
+        public override int GetHashCode()
+        {
+            return Host.ToLowerInvariant().GetHashCode();
+        }
     }
 }

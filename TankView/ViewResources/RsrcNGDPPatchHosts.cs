@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using TankView.ObjectModel;
 
 namespace TankView.ViewResources
 {
-    public class RsrcNGDPPatchHosts : ObservableCollection<PatchHost>
+    public class RsrcNGDPPatchHosts : ObservableHashCollection<PatchHost>
     {
         public RsrcNGDPPatchHosts()
         {
