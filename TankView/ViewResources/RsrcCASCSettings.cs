@@ -1,13 +1,15 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using TankLib.CASC;
 
 namespace TankView.ViewResources
 {
-    public class RsrcCacheInfo : INotifyPropertyChanged
+    public class RsrcCASCSettings : INotifyPropertyChanged
     {
         private bool _cdn = Properties.Settings.Default.CacheCDN;
         private bool _data = Properties.Settings.Default.CacheData;
         private bool _apm = Properties.Settings.Default.CacheAPM;
+        private bool _threading = Properties.Settings.Default.DisableThreading;
 
         public bool CDN {
             get {
@@ -47,12 +49,26 @@ namespace TankView.ViewResources
                 NotifyPropertyChanged(nameof(APM));
             }
         }
-        
-        public RsrcCacheInfo()
+
+        public bool DisableThreading {
+            get {
+                return _threading;
+            }
+            set {
+                _threading = value;
+                Properties.Settings.Default.DisableThreading = value;
+                Properties.Settings.Default.Save();
+                CASCConfig.MaxThreads = value ? 1 : Environment.ProcessorCount;
+                NotifyPropertyChanged(nameof(DisableThreading));
+            }
+        }
+
+        public RsrcCASCSettings()
         {
             CASCHandler.Cache.CacheCDN = CDN;
             CASCHandler.Cache.CacheCDNData = Data;
             CASCHandler.Cache.CacheAPM = APM;
+            CASCConfig.MaxThreads = DisableThreading ? 1 : Environment.ProcessorCount;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

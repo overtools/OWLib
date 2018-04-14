@@ -63,7 +63,7 @@
     <Compile Include="ObjectModel\ObservableHashCollection.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ViewResources\PatchHost.cs" />
-    <Compile Include="ViewResources\RsrcCacheInfo.cs" />
+    <Compile Include="ViewResources\RsrcCASCSettings.cs" />
     <Compile Include="ViewResources\RsrcNGDPPatchHosts.cs" />
     <Compile Include="ViewResources\RsrcProgressInfo.cs" />
     <Compile Include="ViewResources\RsrcRecentLocations.cs" />

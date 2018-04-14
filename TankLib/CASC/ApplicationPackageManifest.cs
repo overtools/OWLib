@@ -195,7 +195,9 @@ namespace TankLib.CASC {
                 worker?.ReportProgress(0, $"Loading {Name} packages");
                 int c = 0;
                 object l = new object();
-                Parallel.For(0, Header.PackageCount, i => {
+                Parallel.For(0, Header.PackageCount, new ParallelOptions {
+                    MaxDegreeOfParallelism = CASCConfig.MaxThreads
+                }, i => {
                     lock (l) {
                         c++;
                     }
@@ -332,7 +334,9 @@ namespace TankLib.CASC {
             worker?.ReportProgress(0, "Rebuilding occurence list...");
             int c = 0;
             object l = new object();
-            Parallel.For(0, CMF.Map.Count, i => {
+            Parallel.For(0, CMF.Map.Count, new ParallelOptions {
+                MaxDegreeOfParallelism = CASCConfig.MaxThreads
+            }, i => {
                 KeyValuePair<ulong, ContentManifestFile.HashData> pair = CMF.Map.ElementAt(i);
                 lock (l) {
                     c++;

@@ -81,5 +81,17 @@ namespace TankView.Properties {
                 this["CacheAPM"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisableThreading {
+            get {
+                return ((bool)(this["DisableThreading"]));
+            }
+            set {
+                this["DisableThreading"] = value;
+            }
+        }
     }
 }

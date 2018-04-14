@@ -19,8 +19,8 @@
         <Menu Grid.Row="0">
             <MenuItem Header="File">
                 <MenuItem Header="Open...">
-                    <MenuItem Header="NGDP" Click="OpenNGDP"></MenuItem>
                     <MenuItem Header="CASC" Click="OpenCASC"></MenuItem>
+                    <MenuItem Header="NGDP" Click="OpenNGDP"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="Recent..." ItemsSource="{Binding RecentLocations}">
                     <MenuItem.ItemContainerStyle>
@@ -32,6 +32,14 @@
                 </MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Exit" Click="Exit"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="CASC" DataContext="{Binding CASCSettings}">
+                <MenuItem Header="Cache">
+                    <MenuItem Header="Cache CDN Indices" IsChecked="{Binding CDN, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
+                    <MenuItem Header="Cache CDN Data" IsChecked="{Binding Data, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
+                    <MenuItem Header="Cache APM" IsChecked="{Binding APM, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
+                </MenuItem>
+                <MenuItem Header="Disable Threading" IsChecked="{Binding DisableThreading, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
             </MenuItem>
             <MenuItem Header="NGDP">
                 <MenuItem Header="Patch Host" ItemsSource="{Binding NGDPPatchHosts}">
@@ -45,11 +53,6 @@
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
-            </MenuItem>
-            <MenuItem Header="Cache" DataContext="{Binding CacheInfo}">
-                <MenuItem Header="Cache CDN Indices" IsChecked="{Binding CDN, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
-                <MenuItem Header="Cache CDN Data" IsChecked="{Binding Data, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
-                <MenuItem Header="Cache APM" IsChecked="{Binding APM, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
             </MenuItem>
         </Menu>
         <Grid Grid.Row="1">

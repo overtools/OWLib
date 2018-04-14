@@ -25,7 +25,7 @@ namespace TankView
         public RsrcNGDPPatchHosts NGDPPatchHosts { get; set; }
         public RsrcRecentLocations RecentLocations { get; set; }
         public RsrcProgressInfo ProgressInfo { get; set; }
-        public RsrcCacheInfo CacheInfo { get; set; }
+        public RsrcCASCSettings CASCSettings { get; set; }
 
         public static CASCConfig Config;
         public static CASCHandler CASC;
@@ -39,7 +39,7 @@ namespace TankView
             NGDPPatchHosts = new RsrcNGDPPatchHosts();
             RecentLocations = new RsrcRecentLocations();
             ProgressInfo = new RsrcProgressInfo();
-            CacheInfo = new RsrcCacheInfo();
+            CASCSettings = new RsrcCASCSettings();
 
             ProgressSlave.OnProgress += UpdateProgress;
 
