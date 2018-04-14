@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using CMFLib;
 using LZ4;
@@ -192,9 +193,13 @@ namespace TankLib.CASC {
                 Records = new Types.PackageRecord[Header.PackageCount][];
                 PackageSiblings = new ulong[Header.PackageCount][];
                 worker?.ReportProgress(0, $"Loading {Name} packages");
+                int c = 0;
+                object l = new object();
                 Parallel.For(0, Header.PackageCount, i => {
+                    lock (l) {
+                        c++;
+                    }
                     if (worker != null && i % Environment.ProcessorCount == 0) {
-                        long c = Records.LongCount(x => x != null);
                         worker.ReportProgress((int)(((float)c / (float)Header.PackageCount) * 100), $"Loading {Name} packages {c}/{Header.PackageCount}");
                     }
                     Types.PackageEntry entry = PackageEntries[i];
@@ -245,21 +250,15 @@ namespace TankLib.CASC {
                                 }
                             }
                             record.Size = recordCMF.Size;
-
+                            lock(FirstOccurence) {
+                                if (!FirstOccurence.ContainsKey(record.GUID)) {
+                                    FirstOccurence[record.GUID] = record;
+                                }
+                            }
                             Records[i][j] = record;
                         }
                     }
                 });
-
-                worker?.ReportProgress(0, "Building occurence list...");
-                for (long i = 0; i < Header.PackageCount; ++i) {
-                    worker?.ReportProgress((int)(((float)i / (float)Packages.Length) * 100), "Building occurence list...");
-                    foreach (Types.PackageRecord record in Records[i]) {
-                        if (!FirstOccurence.ContainsKey(record.GUID)) {
-                            FirstOccurence[record.GUID] = record;
-                        }
-                    }
-                }
             }
 
             if (CASCHandler.Cache.CacheAPM) {
@@ -331,19 +330,28 @@ namespace TankLib.CASC {
 
         private void GatherFirstCMF(CASCHandler casc, ProgressReportSlave worker = null) {
             worker?.ReportProgress(0, "Rebuilding occurence list...");
-            for(int i = 0; i < CMF.Map.Count; ++i) {
+            int c = 0;
+            object l = new object();
+            Parallel.For(0, CMF.Map.Count, i => {
                 KeyValuePair<ulong, ContentManifestFile.HashData> pair = CMF.Map.ElementAt(i);
-                worker?.ReportProgress((int)(((float)i / (float)Packages.Length) * 100), "Rebuilding occurence list...");
-                if (FirstOccurence.ContainsKey(pair.Key)) continue;
-                if (casc.EncodingHandler.GetEntry(pair.Value.HashKey, out _)) {
-                    FirstOccurence[pair.Key] = new Types.PackageRecord {
-                        GUID = pair.Key,
-                        LoadHash = pair.Value.HashKey,
-                        Offset = 0,
-                        Flags = 0
-                    };
+                lock (l) {
+                    c++;
                 }
-            }
+                if (worker != null && c % Environment.ProcessorCount == 0) {
+                    worker?.ReportProgress((int)(((float)c / (float)CMF.Map.Count) * 100), "Rebuilding occurence list...");
+                }
+                lock(FirstOccurence) { 
+                    if (FirstOccurence.ContainsKey(pair.Key)) return;
+                    if (casc.EncodingHandler.GetEntry(pair.Value.HashKey, out _)) {
+                        FirstOccurence[pair.Key] = new Types.PackageRecord {
+                            GUID = pair.Key,
+                            LoadHash = pair.Value.HashKey,
+                            Offset = 0,
+                            Flags = 0
+                        };
+                    }
+                }
+            });
         }
     }
 }
