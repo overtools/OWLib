@@ -76,9 +76,15 @@
                 <ColumnDefinition Width="1*" MinWidth="250"/>
             </Grid.ColumnDefinitions>
             <TreeView Grid.Column="0" x:Name="FolderView" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" AllowDrop="False" ItemsSource="{Binding Root, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" ItemTemplate="{StaticResource FolderDataView}">
+                <TreeView.Resources>
+                    <ContextMenu x:Key="ExtractTree">
+                        <MenuItem Header="Extract" Click="ExtractFolder"></MenuItem>
+                    </ContextMenu>
+                </TreeView.Resources>
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <EventSetter Event="Selected" Handler="ChangeActiveNode"/>
+                        <Setter Property="ContextMenu" Value="{StaticResource ExtractTree}"/>
                     </Style>
                 </TreeView.ItemContainerStyle>
             </TreeView>

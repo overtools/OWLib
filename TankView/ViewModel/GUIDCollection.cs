@@ -36,7 +36,7 @@ namespace TankView.ViewModel
             }
         }
 
-        public Folder Data = new Folder("/");
+        public Folder Data = new Folder("/", "/");
 
         public GUIDCollection(CASCConfig Config, CASCHandler CASC, ProgressReportSlave Slave)
         {
@@ -54,7 +54,7 @@ namespace TankView.ViewModel
             {
                 c++;
                 Slave?.ReportProgress((int)(((float)c / (float)total) * 100));
-                AddEntry(entry.Key, 0, entry.Value, 0, ContentFlags.None, LocaleFlags.None);
+                AddEntry(entry.Key, 0, entry.Value, 0, 0, ContentFlags.None, LocaleFlags.None);
             }
 
             foreach(ApplicationPackageManifest apm in this.CASC.RootHandler.APMFiles.OrderBy(x => x.Name).ToArray())
@@ -66,7 +66,7 @@ namespace TankView.ViewModel
                     {
                         Slave?.ReportProgress((int)(((float)c / (float)total) * 100));
                     }
-                    AddEntry($"files/{Path.GetFileNameWithoutExtension(apm.Name)}/{GUID.Type(record.Key):X3}", record.Key, record.Value.LoadHash, (int)record.Value.Size, record.Value.Flags, apm.Locale);
+                    AddEntry($"files/{Path.GetFileNameWithoutExtension(apm.Name)}/{GUID.Type(record.Key):X3}", record.Key, record.Value.LoadHash, (int)record.Value.Size, (int)record.Value.Offset, record.Value.Flags, apm.Locale);
                 }
             }
 
@@ -109,7 +109,7 @@ namespace TankView.ViewModel
             }
         }
 
-        private void AddEntry(string path, ulong guid, MD5Hash hash, int size, ContentFlags flags, LocaleFlags locale)
+        private void AddEntry(string path, ulong guid, MD5Hash hash, int size, int offset, ContentFlags flags, LocaleFlags locale)
         {
             string dir = guid != 0 ? path : Path.GetDirectoryName(path);
             string filename = guid != 0 ? $"{GUID.Attribute(guid, (GUID.AttributeEnum)0xFFFFFFFFFFFFUL):X12}.{GUID.Type(guid):X3}" : Path.GetFileName(path);
@@ -136,7 +136,9 @@ namespace TankView.ViewModel
             d.Files.Add(new GUIDEntry
             {
                 Filename = filename,
+                FullPath = Path.Combine(d.FullPath, filename),
                 Size = size,
+                Offset = offset,
                 Flags = flags,
                 Locale = locale,
                 Hash = hash

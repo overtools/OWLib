@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace TankView.ViewModel
 {
     public class Folder
     {
-        public Folder(string name)
+        public Folder(string name, string fullPath)
         {
             Name = name;
+            FullPath = fullPath;
         }
 
         public string Name { get; set; }
+        public string FullPath { get; set; }
         public List<Folder> Folders { get; set; } = new List<Folder>();
         public List<GUIDEntry> Files { get; set; } = new List<GUIDEntry>();
 
@@ -21,7 +24,7 @@ namespace TankView.ViewModel
                 return Folders.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             }
             set {
-                Folders.Add(new Folder(name));
+                throw new NotImplementedException("this[]");
             }
         }
 
@@ -34,7 +37,7 @@ namespace TankView.ViewModel
         {
             if (!HasFolder(part))
             {
-                Folders.Add(new Folder(part));
+                Folders.Add(new Folder(part, Path.Combine(FullPath, part)));
             }
         }
     }

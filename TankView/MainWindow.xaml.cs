@@ -1,6 +1,8 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using TankLib.CASC;
+using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
 using TankView.ViewModel;
 
@@ -29,7 +32,19 @@ namespace TankView
         public static CASCConfig Config;
         public static CASCHandler CASC;
 
-        public bool IsReady { get; set; } = true;
+        private bool ready = true;
+        public bool IsReady {
+            get {
+                return ready;
+            } set {
+                ready = value;
+                if(value)
+                {
+                    ProgressSlave.ReportProgress(0, "Idle");
+                }
+                NotifyPropertyChanged(nameof(IsReady));
+            }
+        }
 
         private ProgressReportSlave ProgressSlave = new ProgressReportSlave();
 
@@ -149,7 +164,6 @@ namespace TankView
             CollectionViewSource.GetDefaultView(RecentLocations).Refresh();
 
             IsReady = false;
-            NotifyPropertyChanged(nameof(IsReady));
 
             Config = null;
             CASC = null;
@@ -172,12 +186,9 @@ namespace TankView
                     MessageBox.Show("Error while loading CASC", e.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 }
 
-                ProgressSlave.ReportProgress(0, "Idle");
-
                 ViewContext.Send(new SendOrPostCallback(delegate
                 {
                     IsReady = true;
-                    NotifyPropertyChanged(nameof(IsReady));
                 }), null);
             });
         }
@@ -206,7 +217,100 @@ namespace TankView
 
         private void ExtractFiles(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException(nameof(ExtractFiles));
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            dialog.EnsurePathExists = true;
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                ExtractFiles(dialog.FileName, FolderItemList.SelectedItems.OfType<GUIDEntry>());
+            }
+        }
+
+        private void ExtractFiles(string outPath, IEnumerable<GUIDEntry> files)
+        {
+            IsReady = false;
+
+            HashSet<string> directories = new HashSet<string>(files.Select(x => Path.Combine(outPath, Path.GetDirectoryName(x.FullPath.Substring(1)))));
+            foreach (string directory in directories)
+            {
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+            }
+
+            Task.Run(delegate
+            {
+                int c = 0;
+                int t = files.Count();
+                ProgressSlave?.ReportProgress(0, "Saving files...");
+                Parallel.ForEach(files, new ParallelOptions
+                {
+                    MaxDegreeOfParallelism = CASCConfig.MaxThreads
+                }, (entry) =>
+                {
+                    c++;
+                    if (c % ((int)(t * 0.005) + 1) == 0)
+                    {
+                        ProgressSlave?.ReportProgress((int)(((float)c / (float)t) * 100));
+                    }
+                    try
+                    {
+                        if (CASC.EncodingHandler.GetEntry(entry.Hash, out EncodingEntry enc))
+                        {
+                            using (Stream i = CASC.OpenFile(enc.Key))
+                            using (Stream o = File.OpenWrite(Path.Combine(outPath, entry.FullPath.Substring(1))))
+                            {
+                                if (entry.Flags.HasFlag(ContentFlags.Bundle))
+                                {
+                                    i.Position = entry.Offset;
+                                    i.CopyBytes(o, entry.Size);
+                                }
+                                else
+                                {
+                                    i.CopyTo(o);
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                });
+
+                ViewContext.Send(new SendOrPostCallback(delegate
+                {
+                    IsReady = true;
+                }), null);
+            });
+        }
+
+        private void ExtractFolder(string outPath, Folder folder, ref List<GUIDEntry> files)
+        {
+            files.AddRange(folder.Files);
+            foreach (Folder f in folder.Folders)
+            {
+                ExtractFolder(outPath, f, ref files);
+            }
+        }
+
+        private void ExtractFolder(string outPath, Folder folder)
+        {
+            List<GUIDEntry> files = new List<GUIDEntry>();
+            ExtractFolder(outPath, folder, ref files);
+            ExtractFiles(outPath, files);
+        }
+
+        private void ExtractFolder(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            dialog.EnsurePathExists = true;
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                ExtractFolder(dialog.FileName, (sender as FrameworkElement).DataContext as Folder);
+            }
         }
     }
 }
