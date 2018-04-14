@@ -18,7 +18,7 @@ namespace TankView
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public SynchronizationContext ViewContext { get; }
 
@@ -30,7 +30,16 @@ namespace TankView
         public static CASCConfig Config;
         public static CASCHandler CASC;
 
+        public bool IsReady { get; set; } = true;
+
         private ProgressReportSlave ProgressSlave = new ProgressReportSlave();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void NotifyPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
 
         public MainWindow()
         {
@@ -140,11 +149,21 @@ namespace TankView
             RecentLocations.Add(path);
             CollectionViewSource.GetDefaultView(RecentLocations).Refresh();
 
+            IsReady = false;
+            NotifyPropertyChanged(nameof(IsReady));
+
             Task.Run(delegate
             {
+                ApplicationPackageManifest.SaneChecking = false;
+
                 Config = CASCConfig.LoadLocalStorageConfig(path, true, true);
 
                 CASC = CASCHandler.Open(Config, ProgressSlave);
+                ViewContext.Send(new SendOrPostCallback(delegate
+                {
+                    IsReady = true;
+                    NotifyPropertyChanged(nameof(IsReady));
+                }), null);
             });
         }
     }

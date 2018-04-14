@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -133,7 +134,7 @@ namespace TankLib.CASC {
         public Types.Package[] Packages;
         public Types.PackageRecord[][] Records;
         public ulong[][] PackageSiblings;
-        public Dictionary<ulong, Types.PackageRecord> FirstOccurence = new Dictionary<ulong, Types.PackageRecord>();
+        public ConcurrentDictionary<ulong, Types.PackageRecord> FirstOccurence = new ConcurrentDictionary<ulong, Types.PackageRecord>();
 
         public ContentManifestFile CMF;
         public MD5Hash CMFHash;
@@ -198,10 +199,8 @@ namespace TankLib.CASC {
                 Parallel.For(0, Header.PackageCount, new ParallelOptions {
                     MaxDegreeOfParallelism = CASCConfig.MaxThreads
                 }, i => {
-                    lock (l) {
-                        c++;
-                    }
-                    if (worker != null && i % Environment.ProcessorCount == 0) {
+                    c++;
+                    if (worker != null && i % 500 == 0) {
                         worker.ReportProgress((int)(((float)c / (float)Header.PackageCount) * 100), $"Loading {Name} packages {c}/{Header.PackageCount}");
                     }
                     Types.PackageEntry entry = PackageEntries[i];
@@ -252,10 +251,8 @@ namespace TankLib.CASC {
                                 }
                             }
                             record.Size = recordCMF.Size;
-                            lock(FirstOccurence) {
-                                if (!FirstOccurence.ContainsKey(record.GUID)) {
-                                    FirstOccurence[record.GUID] = record;
-                                }
+                            if (!FirstOccurence.ContainsKey(record.GUID)) {
+                                FirstOccurence[record.GUID] = record;
                             }
                             Records[i][j] = record;
                         }
@@ -321,7 +318,7 @@ namespace TankLib.CASC {
 
                     foreach (Types.PackageRecord record in Records[i]) {
                         if (!FirstOccurence.ContainsKey(record.GUID)) {
-                            FirstOccurence[record.GUID] = record;
+                            FirstOccurence.TryAdd(record.GUID, record);
                         }
                     }
                 }
@@ -329,6 +326,8 @@ namespace TankLib.CASC {
 
             return true;
         }
+
+        public static bool SaneChecking = true;
 
         private void GatherFirstCMF(CASCHandler casc, ProgressReportSlave worker = null) {
             worker?.ReportProgress(0, "Rebuilding occurence list...");
@@ -338,22 +337,18 @@ namespace TankLib.CASC {
                 MaxDegreeOfParallelism = CASCConfig.MaxThreads
             }, i => {
                 KeyValuePair<ulong, ContentManifestFile.HashData> pair = CMF.Map.ElementAt(i);
-                lock (l) {
-                    c++;
-                }
-                if (worker != null && c % Environment.ProcessorCount == 0) {
+                c++;
+                if (worker != null && c % 500 == 0) {
                     worker?.ReportProgress((int)(((float)c / (float)CMF.Map.Count) * 100), "Rebuilding occurence list...");
                 }
-                lock(FirstOccurence) { 
-                    if (FirstOccurence.ContainsKey(pair.Key)) return;
-                    if (casc.EncodingHandler.GetEntry(pair.Value.HashKey, out _)) {
-                        FirstOccurence[pair.Key] = new Types.PackageRecord {
-                            GUID = pair.Key,
-                            LoadHash = pair.Value.HashKey,
-                            Offset = 0,
-                            Flags = 0
-                        };
-                    }
+                if (FirstOccurence.ContainsKey(pair.Key)) return;
+                if ((SaneChecking && casc.EncodingHandler.GetEntry(pair.Value.HashKey, out _)) || !SaneChecking) {
+                    FirstOccurence.TryAdd(pair.Key, new Types.PackageRecord {
+                        GUID = pair.Key,
+                        LoadHash = pair.Value.HashKey,
+                        Offset = 0,
+                        Flags = 0
+                    });
                 }
             });
         }

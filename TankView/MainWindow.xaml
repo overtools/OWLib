@@ -19,13 +19,14 @@
         <Menu Grid.Row="0">
             <MenuItem Header="File">
                 <MenuItem Header="Open...">
-                    <MenuItem Header="CASC" Click="OpenCASC"></MenuItem>
-                    <MenuItem Header="NGDP" Click="OpenNGDP"></MenuItem>
+                    <MenuItem Header="CASC" Click="OpenCASC" IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"></MenuItem>
+                    <MenuItem Header="NGDP" Click="OpenNGDP" IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="Recent..." ItemsSource="{Binding RecentLocations}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem">
                             <Setter Property="Header" Value="{Binding}"/>
+                            <Setter Property="IsEnabled" Value="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
                             <EventSetter Event="Click" Handler="OpenRecent"/>
                         </Style>
                     </MenuItem.ItemContainerStyle>
