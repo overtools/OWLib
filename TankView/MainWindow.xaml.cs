@@ -159,11 +159,18 @@ namespace TankView
 
             Task.Run(delegate
             {
-                Config = CASCConfig.LoadLocalStorageConfig(path, true, true);
+                try
+                {
+                    Config = CASCConfig.LoadLocalStorageConfig(path, true, true);
 
-                CASC = CASCHandler.Open(Config, ProgressSlave);
+                    CASC = CASCHandler.Open(Config, ProgressSlave);
 
-                BuildTree();
+                    BuildTree();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Error while loading CASC", e.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                }
 
                 ProgressSlave.ReportProgress(0, "Idle");
 

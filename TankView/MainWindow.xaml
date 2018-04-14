@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TankView"
         xmlns:vm="clr-namespace:TankView.ViewModel"
         xmlns:om="clr-namespace:TankView.ObjectModel"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -69,6 +69,7 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="Extract" Click="ExtractFiles"></MenuItem>
         </Menu>
         <Grid Grid.Row="1" DataContext="{Binding GUIDTree}">
             <Grid.ColumnDefinitions>
@@ -94,14 +95,6 @@
                                 <GridViewColumn Header="Size" DisplayMemberBinding="{Binding Size, Converter={StaticResource SizeConverter}}"/>
                             </GridView>
                         </ListView.View>
-                        <ListView.Resources>
-                            <ContextMenu x:Key="ExtractMenu">
-                                <MenuItem Header="Extract..." Click="ExtractFiles"/>
-                            </ContextMenu>
-                            <Style TargetType="{x:Type ListViewItem}">
-                                <Setter Property="ContextMenu" Value="{StaticResource ExtractMenu}"/>
-                            </Style>
-                        </ListView.Resources>
                     </ListView>
                 </TabItem>
             </TabControl>
