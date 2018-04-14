@@ -2,13 +2,13 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace TankView.ViewResources
+namespace TankView.ViewModel
 {
-    public class RsrcRecentLocations : ObservableCollection<string>
+    public class RecentLocations : ObservableCollection<string>
     {
         List<string> CachedLocations = new List<string>();
 
-        public RsrcRecentLocations()
+        public RecentLocations()
         {
             if(Properties.Settings.Default.RecentLocations == null)
             {

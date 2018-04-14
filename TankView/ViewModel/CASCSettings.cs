@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using TankLib.CASC;
 
-namespace TankView.ViewResources
+namespace TankView.ViewModel
 {
-    public class RsrcCASCSettings : INotifyPropertyChanged
+    public class CASCSettings : INotifyPropertyChanged
     {
         private bool _cdn = Properties.Settings.Default.CacheCDN;
         private bool _data = Properties.Settings.Default.CacheData;
@@ -63,7 +63,7 @@ namespace TankView.ViewResources
             }
         }
 
-        public RsrcCASCSettings()
+        public CASCSettings()
         {
             CASCHandler.Cache.CacheCDN = CDN;
             CASCHandler.Cache.CacheCDNData = Data;

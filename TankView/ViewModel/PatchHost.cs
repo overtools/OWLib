@@ -1,4 +1,4 @@
-﻿namespace TankView.ViewResources
+﻿namespace TankView.ViewModel
 {
     public class PatchHost
     {
