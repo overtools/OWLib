@@ -14,7 +14,7 @@ namespace TankLib.CASC.Handlers {
         private const int ChunkSize = 4096;
         public int Count => _encodingData.Count;
 
-        public EncodingHandler(BinaryReader stream, BackgroundWorkerEx worker) {
+        public EncodingHandler(BinaryReader stream, ProgressReportSlave worker) {
             worker?.ReportProgress(0, "Loading \"encoding\"...");
 
             stream.Skip(2); // EN
@@ -103,8 +103,14 @@ namespace TankLib.CASC.Handlers {
             }
         }
 
-        public bool GetEntry(MD5Hash md5, out EncodingEntry enc) {
+        public bool GetEntry(MD5Hash md5, out EncodingEntry enc)
+        {
             return _encodingData.TryGetValue(md5, out enc);
+        }
+
+        public bool HasEntry(MD5Hash md5)
+        {
+            return _encodingData.ContainsKey(md5);
         }
 
         public void Clear() {

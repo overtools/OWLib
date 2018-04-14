@@ -28,7 +28,7 @@ namespace TankLib.CASC {
         /// <param name="name">APM name</param>
         /// <param name="stream">Source stream</param>
         /// <param name="worker">Background worker</param>
-        public ContentManifestFile(string name, Stream stream, BackgroundWorkerEx worker) {
+        public ContentManifestFile(string name, Stream stream, ProgressReportSlave worker) {
             //using (Stream file = File.OpenWrite(Path.GetFileName(name))) {
             //    stream.CopyTo(file);
             //    stream.Position = 0;
@@ -46,7 +46,7 @@ namespace TankLib.CASC {
 
         protected ContentManifestFile() {}
 
-        protected void Read(BinaryReader reader, string name, BackgroundWorkerEx worker=null) {
+        protected void Read(BinaryReader reader, string name, ProgressReportSlave worker=null) {
             reader.BaseStream.Position = 0;
             uint cmfVersion = reader.ReadUInt32();
             reader.BaseStream.Position = 0;

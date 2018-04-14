@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using CMFLib;
 using LZ4;
@@ -132,7 +134,7 @@ namespace TankLib.CASC {
         public Types.Package[] Packages;
         public Types.PackageRecord[][] Records;
         public ulong[][] PackageSiblings;
-        public Dictionary<ulong, Types.PackageRecord> FirstOccurence = new Dictionary<ulong, Types.PackageRecord>();
+        public ConcurrentDictionary<ulong, Types.PackageRecord> FirstOccurence = new ConcurrentDictionary<ulong, Types.PackageRecord>();
 
         public ContentManifestFile CMF;
         public MD5Hash CMFHash;
@@ -143,7 +145,7 @@ namespace TankLib.CASC {
         private const ulong APM_VERSION = 22;
 
         public void Load(string name, MD5Hash cmfhash, Stream stream, CASCHandler casc, string cmfname,
-            BackgroundWorkerEx worker = null) {
+            ProgressReportSlave worker = null) {
             Name = name;
             CMFHash = cmfhash;
             CMFName = Path.GetFileName(cmfname);
@@ -161,6 +163,8 @@ namespace TankLib.CASC {
             using (Stream cmfStream = casc.OpenFile(cmfEncoding.Key)) {
                 CMF = new ContentManifestFile(CMFName, cmfStream, worker);
             }
+
+            FirstOccurence = new ConcurrentDictionary<ulong, Types.PackageRecord>(Environment.ProcessorCount + 2, CMF.Map.Count);
 
             using (BinaryReader reader = new BinaryReader(stream)) {
                 ulong build = reader.ReadUInt64();
@@ -181,8 +185,9 @@ namespace TankLib.CASC {
                 }
 
                 if (CASCHandler.Cache.CacheAPM && CacheFileExists(Header.Build)) {
+                    worker?.ReportProgress(0, "Loading cached data...");
                     if (LoadCache(Header.Build)) {  // if cache is invalid, we'll regenerate
-                        GatherFirstCMF(casc);
+                        GatherFirstCMF(casc, worker);
                         return;
                     }
                 }
@@ -190,9 +195,16 @@ namespace TankLib.CASC {
                 Packages = new Types.Package[Header.PackageCount];
                 Records = new Types.PackageRecord[Header.PackageCount][];
                 PackageSiblings = new ulong[Header.PackageCount][];
-
-                Parallel.For(0, Header.PackageCount, i =>
-                {
+                worker?.ReportProgress(0, $"Loading {Name} packages");
+                int c = 0;
+                object l = new object();
+                Parallel.For(0, Header.PackageCount, new ParallelOptions {
+                    MaxDegreeOfParallelism = CASCConfig.MaxThreads
+                }, i => {
+                    c++;
+                    if (worker != null && i % 500 == 0) {
+                        worker.ReportProgress((int)(((float)c / (float)Header.PackageCount) * 100), $"Loading {Name} packages {c}/{Header.PackageCount}");
+                    }
                     Types.PackageEntry entry = PackageEntries[i];
                     if (!CMF.Map.ContainsKey(entry.PackageGUID)) {
                         return; // lol?
@@ -204,14 +216,14 @@ namespace TankLib.CASC {
                     using (Stream packageStream = casc.OpenFile(packageEncoding.Key))
                     using (BinaryReader packageReader = new BinaryReader(packageStream)) {
                         Packages[i] = packageReader.Read<Types.Package>();
-                        
+
                         if (CMFHeaderCommon.IsV22((uint)Header.Build)) {  // todo: hack
                             //Packages[i].SiblingCount *= 2;
                             Packages[i].SiblingCount = 0;
                         }
                         if (Packages[i].SiblingCount > 0) {
                             packageStream.Position = Packages[i].OffsetSiblings;
-                            PackageSiblings[i] = packageReader.ReadArray<ulong>((int) Packages[i].SiblingCount);
+                            PackageSiblings[i] = packageReader.ReadArray<ulong>((int)Packages[i].SiblingCount);
                         } else {
                             PackageSiblings[i] = new ulong[0];
                         }
@@ -220,13 +232,13 @@ namespace TankLib.CASC {
                         Types.PackageRecordRaw[] recordsRaw;
                         using (GZipStream recordGunzipped = new GZipStream(packageStream, CompressionMode.Decompress))
                         using (BinaryReader recordReader = new BinaryReader(recordGunzipped)) {
-                            recordsRaw = recordReader.ReadArray<Types.PackageRecordRaw>((int) Packages[i].RecordCount);
+                            recordsRaw = recordReader.ReadArray<Types.PackageRecordRaw>((int)Packages[i].RecordCount);
                             Records[i] = new Types.PackageRecord[Packages[i].RecordCount];
                         }
 
                         for (uint j = 0; j < Packages[i].RecordCount; ++j) {
                             Types.PackageRecordRaw rawRecord = recordsRaw[j];
-                            
+
                             ContentManifestFile.HashData recordCMF = CMF.Map[rawRecord.GUID];
                             Types.PackageRecord record = new Types.PackageRecord {
                                 GUID = rawRecord.GUID,
@@ -241,24 +253,21 @@ namespace TankLib.CASC {
                                 }
                             }
                             record.Size = recordCMF.Size;
-                            
-                            Records[i][j] = record;
-
-                            lock (FirstOccurence) {
-                                if (!FirstOccurence.ContainsKey(record.GUID)) {
-                                    FirstOccurence[record.GUID] = record;
-                                }
+                            if (!FirstOccurence.ContainsKey(record.GUID)) {
+                                FirstOccurence[record.GUID] = record;
                             }
+                            Records[i][j] = record;
                         }
                     }
                 });
             }
 
             if (CASCHandler.Cache.CacheAPM) {
+                worker?.ReportProgress(0, "Caching data...");
                 SaveCache(Header.Build);
             }
 
-            GatherFirstCMF(casc);
+            GatherFirstCMF(casc, worker);
         }
 
         private bool CacheFileExists(ulong build) => File.Exists(CacheFile(build));
@@ -311,7 +320,7 @@ namespace TankLib.CASC {
 
                     foreach (Types.PackageRecord record in Records[i]) {
                         if (!FirstOccurence.ContainsKey(record.GUID)) {
-                            FirstOccurence[record.GUID] = record;
+                            FirstOccurence.TryAdd(record.GUID, record);
                         }
                     }
                 }
@@ -320,18 +329,30 @@ namespace TankLib.CASC {
             return true;
         }
 
-        private void GatherFirstCMF(CASCHandler casc) {
-            foreach (KeyValuePair<ulong, ContentManifestFile.HashData> pair in CMF.Map) {
-                if (FirstOccurence.ContainsKey(pair.Key)) continue;
-                if (casc.EncodingHandler.GetEntry(pair.Value.HashKey, out _)) {
-                    FirstOccurence[pair.Key] = new Types.PackageRecord {
-                        GUID = pair.Key,
-                        LoadHash = pair.Value.HashKey,
-                        Offset = 0,
-                        Flags = 0
-                    };
+        public static bool SaneChecking = true;
+
+        private void GatherFirstCMF(CASCHandler casc, ProgressReportSlave worker = null) {
+            worker?.ReportProgress(0, "Rebuilding occurence list...");
+            int c = 0;
+            object l = new object();
+            ContentManifestFile.HashData[] data = CMF.Map.Values.ToArray();
+            Parallel.For(0, data.Length, new ParallelOptions {
+                MaxDegreeOfParallelism = CASCConfig.MaxThreads
+            }, i => {
+                c++;
+                if (worker != null && c % 500 == 0) {
+                    worker?.ReportProgress((int)(((float)c / (float)CMF.Map.Count) * 100), "Rebuilding occurence list...");
                 }
-            }
+                if (FirstOccurence.ContainsKey(data[i].GUID)) return;
+                if (SaneChecking && !casc.EncodingHandler.HasEntry(data[i].HashKey)) return;
+                FirstOccurence.TryAdd(data[i].GUID, new Types.PackageRecord {
+                    GUID = data[i].GUID,
+                    LoadHash = data[i].HashKey,
+                    Size = data[i].Size,
+                    Offset = 0,
+                    Flags = 0
+                });
+            });
         }
     }
 }

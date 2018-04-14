@@ -39,6 +39,8 @@ namespace TankLib.CASC {
         public string CustomCDNHost;
 
         public static string GetDataFolder() => "data/casc";
+
+        public static int MaxThreads = Environment.ProcessorCount;
         
         private int _versionsIndex; // todo
         

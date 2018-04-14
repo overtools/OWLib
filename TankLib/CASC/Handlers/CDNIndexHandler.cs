@@ -18,20 +18,20 @@ namespace TankLib.CASC.Handlers {
         private Dictionary<MD5Hash, IndexEntry> _cdnIndexData = new Dictionary<MD5Hash, IndexEntry>(Comparer);
 
         private CASCConfig _config;
-        private BackgroundWorkerEx _worker;
+        private ProgressReportSlave _worker;
         private SyncDownloader _downloader;
         private readonly Cache _cache;
 
         public int Count => _cdnIndexData.Count;
 
-        private CDNIndexHandler(CASCConfig cascConfig, BackgroundWorkerEx worker, Cache cache) {
+        private CDNIndexHandler(CASCConfig cascConfig, ProgressReportSlave worker, Cache cache) {
             _config = cascConfig;
             _worker = worker;
             _downloader = new SyncDownloader();
             _cache = cache;
         }
 
-        public static CDNIndexHandler Initialize(CASCConfig config, BackgroundWorkerEx worker, Cache cache) {
+        public static CDNIndexHandler Initialize(CASCConfig config, ProgressReportSlave worker, Cache cache) {
             CDNIndexHandler handler = new CDNIndexHandler(config, worker, cache);
 
             worker?.ReportProgress(0, "Loading \"CDN indexes\"...");

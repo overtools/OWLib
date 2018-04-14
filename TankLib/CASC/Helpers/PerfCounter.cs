@@ -14,6 +14,9 @@ namespace TankLib.CASC.Helpers {
 
         public void Dispose() {
             _sw.Stop();
+            if (Debugger.IsAttached) {
+                Debugger.Log(1, "Perf", $"[{_name}] {_sw.ElapsedMilliseconds}ms {_sw.ElapsedTicks}t\n");
+            }
         }
     }
 }

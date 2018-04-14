@@ -14,7 +14,7 @@ namespace TankLib.CASC.Handlers {
 
         public readonly bool LoadedAPMWithoutErrors;
         
-        public RootHandler(BinaryReader stream, BackgroundWorkerEx worker, CASCHandler casc) {
+        public RootHandler(BinaryReader stream, ProgressReportSlave worker, CASCHandler casc) {
             worker?.ReportProgress(0, "Loading APM data...");
 
             string str = Encoding.ASCII.GetString(stream.ReadBytes((int)stream.BaseStream.Length));

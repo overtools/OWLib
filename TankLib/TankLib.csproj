@@ -61,7 +61,7 @@
     <Compile Include="CASC\ConfigFiles\BarSeparatedConfig.cs" />
     <Compile Include="CASC\ConfigFiles\KeyValueConfig.cs" />
     <Compile Include="CASC\Extensions.cs" />
-    <Compile Include="CASC\Helpers\BackgroundWorkerEx.cs" />
+    <Compile Include="CASC\Helpers\ProgressReportSlave.cs" />
     <Compile Include="CASC\Flags.cs" />
     <Compile Include="CASC\MD5.cs" />
     <Compile Include="Chunks\IChunk.cs" />
