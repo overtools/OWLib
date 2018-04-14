@@ -1,9 +1,16 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Threading;
+using TankLib;
+using TankLib.CASC;
+using TankLib.CASC.Helpers;
 using TankView.ViewResources;
 
 namespace TankView
@@ -13,13 +20,28 @@ namespace TankView
     /// </summary>
     public partial class MainWindow : Window
     {
-        public RsrcNGDPPatchHosts NGDPPatchHosts { get; private set; }
-        public RsrcRecentLocations RecentLocations { get; private set; }
+        public SynchronizationContext ViewContext { get; }
+
+        public RsrcNGDPPatchHosts NGDPPatchHosts { get; set; }
+        public RsrcRecentLocations RecentLocations { get; set; }
+        public RsrcProgressInfo ProgressInfo { get; set; }
+        public RsrcCacheInfo CacheInfo { get; set; }
+
+        public static CASCConfig Config;
+        public static CASCHandler CASC;
+
+        private ProgressReportSlave ProgressSlave = new ProgressReportSlave();
 
         public MainWindow()
         {
+            ViewContext = SynchronizationContext.Current;
+
             NGDPPatchHosts = new RsrcNGDPPatchHosts();
             RecentLocations = new RsrcRecentLocations();
+            ProgressInfo = new RsrcProgressInfo();
+            CacheInfo = new RsrcCacheInfo();
+
+            ProgressSlave.OnProgress += UpdateProgress;
 
             if (!NGDPPatchHosts.Any(x => x.Active))
             {
@@ -30,6 +52,21 @@ namespace TankView
             DataContext = this;
             // FolderView.ItemsSource = ;
             // FolderItemList.ItemsSource = ;
+        }
+
+        private void UpdateProgress(object sender, ProgressChangedEventArgs @event)
+        {
+            ViewContext.Send(x =>
+            {
+                if (x is ProgressChangedEventArgs evt)
+                {
+                    if (evt.UserState != null && evt.UserState is string state)
+                    {
+                        ProgressInfo.State = state;
+                    }
+                    ProgressInfo.Percentage = evt.ProgressPercentage;
+                }
+            }, @event);
         }
 
         public string ModuloTitle {
@@ -102,6 +139,13 @@ namespace TankView
         {
             RecentLocations.Add(path);
             CollectionViewSource.GetDefaultView(RecentLocations).Refresh();
+
+            Task.Run(delegate
+            {
+                Config = CASCConfig.LoadLocalStorageConfig(path, true, true);
+
+                CASC = CASCHandler.Open(Config, ProgressSlave);
+            });
         }
     }
 }

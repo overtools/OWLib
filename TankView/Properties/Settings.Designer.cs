@@ -45,5 +45,41 @@ namespace TankView.Properties {
                 this["RecentLocations"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CacheCDN {
+            get {
+                return ((bool)(this["CacheCDN"]));
+            }
+            set {
+                this["CacheCDN"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CacheData {
+            get {
+                return ((bool)(this["CacheData"]));
+            }
+            set {
+                this["CacheData"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CacheAPM {
+            get {
+                return ((bool)(this["CacheAPM"]));
+            }
+            set {
+                this["CacheAPM"] = value;
+            }
+        }
     }
 }

@@ -46,6 +46,11 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="Cache" DataContext="{Binding CacheInfo}">
+                <MenuItem Header="Cache CDN Indices" IsChecked="{Binding CDN, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
+                <MenuItem Header="Cache CDN Data" IsChecked="{Binding Data, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
+                <MenuItem Header="Cache APM" IsChecked="{Binding APM, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
+            </MenuItem>
         </Menu>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -69,11 +74,11 @@
                 </TabItem>
             </TabControl>
         </Grid>
-        <StatusBar Grid.Row="2">
+        <StatusBar Grid.Row="2" DataContext="{Binding ProgressInfo}">
             <StatusBarItem VerticalContentAlignment="Stretch">
-                <ProgressBar Width="242" Height="Auto" Value="50"></ProgressBar>
+                <ProgressBar Width="242" Height="Auto" Value="{Binding Percentage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></ProgressBar>
             </StatusBarItem>
-            <StatusBarItem Content="Idle"></StatusBarItem>
+            <StatusBarItem Content="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></StatusBarItem>
         </StatusBar>
     </Grid>
 </Window>

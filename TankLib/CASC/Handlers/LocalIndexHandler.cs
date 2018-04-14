@@ -37,7 +37,7 @@ namespace TankLib.CASC.Handlers {
             }
         }
 
-        public static LocalIndexHandler Initialize(CASCConfig config, BackgroundWorkerEx worker) {
+        public static LocalIndexHandler Initialize(CASCConfig config, ProgressReportSlave worker) {
             LocalIndexHandler handler = new LocalIndexHandler(config);
 
             List<string> idxFiles = GetIdxFiles(config);

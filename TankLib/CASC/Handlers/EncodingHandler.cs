@@ -14,7 +14,7 @@ namespace TankLib.CASC.Handlers {
         private const int ChunkSize = 4096;
         public int Count => _encodingData.Count;
 
-        public EncodingHandler(BinaryReader stream, BackgroundWorkerEx worker) {
+        public EncodingHandler(BinaryReader stream, ProgressReportSlave worker) {
             worker?.ReportProgress(0, "Loading \"encoding\"...");
 
             stream.Skip(2); // EN

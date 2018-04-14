@@ -38,7 +38,7 @@ namespace TankLib.CASC {
         /// <summary>Cached data</summary>
         public static readonly Cache Cache = new Cache("CASCCache");
 
-        private CASCHandler(CASCConfig config, BackgroundWorkerEx worker) {
+        private CASCHandler(CASCConfig config, ProgressReportSlave worker) {
             Config = config;
 
             if (!config.OnlineMode) {
@@ -98,7 +98,7 @@ namespace TankLib.CASC {
         }
 
         /// <summary>Create a new handler</summary>
-        public static CASCHandler Open(CASCConfig config, BackgroundWorkerEx worker = null) {
+        public static CASCHandler Open(CASCConfig config, ProgressReportSlave worker = null) {
             return new CASCHandler(config, worker);
         }
 
