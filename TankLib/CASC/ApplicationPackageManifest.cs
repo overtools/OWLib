@@ -327,8 +327,6 @@ namespace TankLib.CASC {
             return true;
         }
 
-        public static bool SaneChecking = true;
-
         private void GatherFirstCMF(CASCHandler casc, ProgressReportSlave worker = null) {
             worker?.ReportProgress(0, "Rebuilding occurence list...");
             int c = 0;
@@ -342,10 +340,11 @@ namespace TankLib.CASC {
                     worker?.ReportProgress((int)(((float)c / (float)CMF.Map.Count) * 100), "Rebuilding occurence list...");
                 }
                 if (FirstOccurence.ContainsKey(pair.Key)) return;
-                if ((SaneChecking && casc.EncodingHandler.GetEntry(pair.Value.HashKey, out _)) || !SaneChecking) {
+                if (casc.EncodingHandler.GetEntry(pair.Value.HashKey, out EncodingEntry enc)) {
                     FirstOccurence.TryAdd(pair.Key, new Types.PackageRecord {
                         GUID = pair.Key,
                         LoadHash = pair.Value.HashKey,
+                        Size = (uint)enc.Size,
                         Offset = 0,
                         Flags = 0
                     });
