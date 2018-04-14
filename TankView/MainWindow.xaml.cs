@@ -159,6 +159,9 @@ namespace TankView
                 Config = CASCConfig.LoadLocalStorageConfig(path, true, true);
 
                 CASC = CASCHandler.Open(Config, ProgressSlave);
+
+                ProgressSlave.ReportProgress(0, "Idle");
+
                 ViewContext.Send(new SendOrPostCallback(delegate
                 {
                     IsReady = true;
