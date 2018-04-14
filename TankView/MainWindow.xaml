@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:TankView"
         xmlns:vm="clr-namespace:TankView.ViewModel"
         xmlns:om="clr-namespace:TankView.ObjectModel"
-        xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -69,7 +68,7 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Extract" Click="ExtractFiles"></MenuItem>
+            <MenuItem Header="Extract" Click="ExtractFiles" IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"></MenuItem>
         </Menu>
         <Grid Grid.Row="1" DataContext="{Binding GUIDTree}">
             <Grid.ColumnDefinitions>
