@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassBuilder.cs" />
     <Compile Include="InstanceBuilder.cs" />
     <Compile Include="EnumBuilder.cs" />
     <Compile Include="ModeResult.cs" />
