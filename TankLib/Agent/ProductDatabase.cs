@@ -1,5 +1,6 @@
 ﻿using ProtoBuf;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using TankLib.Agent.Protobuf;
 
@@ -10,7 +11,7 @@ namespace TankLib.Agent
         public string FilePath { get; }
         public Database Data { get; }
 
-        public ProductDatabase(string path = null)
+        public ProductDatabase(string path = null, bool singleInstall = false)
         {
             FilePath = path;
             if(string.IsNullOrWhiteSpace(FilePath))
@@ -20,7 +21,20 @@ namespace TankLib.Agent
 
             using (Stream product = File.OpenRead(FilePath))
             {
-                Data = Serializer.Deserialize<Database>(product);
+                if (singleInstall)
+                {
+                    Data = new Database
+                    {
+                        ProductInstalls = new List<ProductInstall>
+                        {
+                            Serializer.Deserialize<ProductInstall>(product)
+                        }
+                    };
+                }
+                else
+                {
+                    Data = Serializer.Deserialize<Database>(product);
+                }
             }
         }
     }
