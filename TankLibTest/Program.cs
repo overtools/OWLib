@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using STULib;
-using STULib.Types;
 using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;

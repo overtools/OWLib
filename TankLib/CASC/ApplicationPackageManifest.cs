@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using CMFLib;
 using LZ4;
@@ -125,6 +123,14 @@ namespace TankLib.CASC {
                 UseOffset = 2,
                 SequentialIndex = 4
             }
+
+            [StructLayout(LayoutKind.Sequential, Pack = 4)]
+            public struct CachePackageRecord {
+                public int Index;
+                public ContentFlags Flags;
+                public uint Offset;
+                public uint Size;
+            }
         }
 
         public string Name;
@@ -197,13 +203,12 @@ namespace TankLib.CASC {
                 PackageSiblings = new ulong[Header.PackageCount][];
                 worker?.ReportProgress(0, $"Loading {Name} packages");
                 int c = 0;
-                object l = new object();
                 Parallel.For(0, Header.PackageCount, new ParallelOptions {
                     MaxDegreeOfParallelism = CASCConfig.MaxThreads
                 }, i => {
                     c++;
                     if (worker != null && i % 500 == 0) {
-                        worker.ReportProgress((int)(((float)c / (float)Header.PackageCount) * 100), $"Loading {Name} packages {c}/{Header.PackageCount}");
+                        worker.ReportProgress((int)((float)c / Header.PackageCount * 100), $"Loading {Name} packages {c}/{Header.PackageCount}");
                     }
                     Types.PackageEntry entry = PackageEntries[i];
                     if (!CMF.Map.ContainsKey(entry.PackageGUID)) {
@@ -287,7 +292,19 @@ namespace TankLib.CASC {
                 writer.WriteStructArray(Packages);
                 for (int i = 0; i < PackageEntries.Length; ++i) {
                     writer.Write(Records[i].Length);
-                    writer.WriteStructArray(Records[i]);
+                    
+                    Types.CachePackageRecord[] cacheRecords = new Types.CachePackageRecord[Records[i].Length];
+                    for (int j = 0; j < Records[i].Length; j++) {
+                        Types.PackageRecord record = Records[i][j];
+                        cacheRecords[j] = new Types.CachePackageRecord {
+                            Index = CMF.IndexMap[record.GUID],
+                            Flags = record.Flags,
+                            Offset = record.Offset,
+                            Size = record.Size
+                        };
+                    }
+                    writer.WriteStructArray(cacheRecords);
+                    
                     writer.Write(PackageSiblings[i].Length);
                     writer.WriteStructArray(PackageSiblings[i]);
                 }
@@ -311,19 +328,47 @@ namespace TankLib.CASC {
 
                 Records = new Types.PackageRecord[packageEntryCount][];
                 PackageSiblings = new ulong[packageEntryCount][];
+                
+                Types.CachePackageRecord[][] cacheRecords = new Types.CachePackageRecord[packageEntryCount][];
 
-                for (int i = 0; i < packageEntryCount; ++i) {
+                for (int i = 0; i < packageEntryCount; i++) {
                     int recordCount = reader.ReadInt32();
-                    Records[i] = reader.ReadArray<Types.PackageRecord>(recordCount);
+                    cacheRecords[i] = reader.ReadArray<Types.CachePackageRecord>(recordCount);
                     int siblingCount = reader.ReadInt32();
                     PackageSiblings[i] = reader.ReadArray<ulong>(siblingCount);
+                }
 
-                    foreach (Types.PackageRecord record in Records[i]) {
+                Parallel.For(0, packageEntryCount, new ParallelOptions { MaxDegreeOfParallelism = CASCConfig.MaxThreads }, i =>
+                {
+                    Types.CachePackageRecord[] cache = cacheRecords[i];
+                    Records[i] = new Types.PackageRecord[cache.Length];
+
+                    Types.Package package = Packages[i];
+                    MD5Hash bundleLoadHash;
+                    if (package.BundleGUID != 0) {
+                        bundleLoadHash = CMF.Map[package.BundleGUID].HashKey;
+                    }
+
+                    for (int j = 0; j < cache.Length; j++) {
+                        Types.CachePackageRecord cacheRecord = cache[j];
+                        ContentManifestFile.HashData cmfRecord = CMF.HashList[cacheRecord.Index];
+                        Types.PackageRecord record = new Types.PackageRecord {
+                            GUID = cmfRecord.GUID,
+                            Size = cacheRecord.Size,
+                            Flags = cacheRecord.Flags,
+                            Offset = cacheRecord.Offset
+                        };
+                        if ((record.Flags & ContentFlags.Bundle) != 0) {
+                            record.LoadHash = bundleLoadHash;
+                        } else {
+                            record.LoadHash = cmfRecord.HashKey;
+                        }
                         if (!FirstOccurence.ContainsKey(record.GUID)) {
                             FirstOccurence.TryAdd(record.GUID, record);
                         }
+                        Records[i][j] = record;
                     }
-                }
+                });
             }
 
             return true;
@@ -334,14 +379,13 @@ namespace TankLib.CASC {
         private void GatherFirstCMF(CASCHandler casc, ProgressReportSlave worker = null) {
             worker?.ReportProgress(0, "Rebuilding occurence list...");
             int c = 0;
-            object l = new object();
             ContentManifestFile.HashData[] data = CMF.Map.Values.ToArray();
             Parallel.For(0, data.Length, new ParallelOptions {
                 MaxDegreeOfParallelism = CASCConfig.MaxThreads
             }, i => {
                 c++;
                 if (worker != null && c % 500 == 0) {
-                    worker?.ReportProgress((int)(((float)c / (float)CMF.Map.Count) * 100), "Rebuilding occurence list...");
+                    worker.ReportProgress((int)((float)c / CMF.Map.Count * 100), "Rebuilding occurence list...");
                 }
                 if (FirstOccurence.ContainsKey(data[i].GUID)) return;
                 if (SaneChecking && !casc.EncodingHandler.HasEntry(data[i].HashKey)) return;
