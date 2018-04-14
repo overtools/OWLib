@@ -103,8 +103,14 @@ namespace TankLib.CASC.Handlers {
             }
         }
 
-        public bool GetEntry(MD5Hash md5, out EncodingEntry enc) {
+        public bool GetEntry(MD5Hash md5, out EncodingEntry enc)
+        {
             return _encodingData.TryGetValue(md5, out enc);
+        }
+
+        public bool HasEntry(MD5Hash md5)
+        {
+            return _encodingData.ContainsKey(md5);
         }
 
         public void Clear() {

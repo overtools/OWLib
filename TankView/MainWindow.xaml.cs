@@ -154,6 +154,8 @@ namespace TankView
 
             Task.Run(delegate
             {
+                //ApplicationPackageManifest.SaneChecking = false;
+
                 Config = CASCConfig.LoadLocalStorageConfig(path, true, true);
 
                 CASC = CASCHandler.Open(Config, ProgressSlave);

@@ -164,6 +164,8 @@ namespace TankLib.CASC {
                 CMF = new ContentManifestFile(CMFName, cmfStream, worker);
             }
 
+            FirstOccurence = new ConcurrentDictionary<ulong, Types.PackageRecord>(Environment.ProcessorCount + 2, CMF.Map.Count);
+
             using (BinaryReader reader = new BinaryReader(stream)) {
                 ulong build = reader.ReadUInt64();
                 reader.BaseStream.Position = 0;
@@ -327,28 +329,29 @@ namespace TankLib.CASC {
             return true;
         }
 
+        public static bool SaneChecking = true;
+
         private void GatherFirstCMF(CASCHandler casc, ProgressReportSlave worker = null) {
             worker?.ReportProgress(0, "Rebuilding occurence list...");
             int c = 0;
             object l = new object();
-            Parallel.For(0, CMF.Map.Count, new ParallelOptions {
+            ContentManifestFile.HashData[] data = CMF.Map.Values.ToArray();
+            Parallel.For(0, data.Length, new ParallelOptions {
                 MaxDegreeOfParallelism = CASCConfig.MaxThreads
             }, i => {
-                KeyValuePair<ulong, ContentManifestFile.HashData> pair = CMF.Map.ElementAt(i);
                 c++;
                 if (worker != null && c % 500 == 0) {
                     worker?.ReportProgress((int)(((float)c / (float)CMF.Map.Count) * 100), "Rebuilding occurence list...");
                 }
-                if (FirstOccurence.ContainsKey(pair.Key)) return;
-                if (casc.EncodingHandler.GetEntry(pair.Value.HashKey, out EncodingEntry enc)) {
-                    FirstOccurence.TryAdd(pair.Key, new Types.PackageRecord {
-                        GUID = pair.Key,
-                        LoadHash = pair.Value.HashKey,
-                        Size = (uint)enc.Size,
-                        Offset = 0,
-                        Flags = 0
-                    });
-                }
+                if (FirstOccurence.ContainsKey(data[i].GUID)) return;
+                if (SaneChecking && !casc.EncodingHandler.HasEntry(data[i].HashKey)) return;
+                FirstOccurence.TryAdd(data[i].GUID, new Types.PackageRecord {
+                    GUID = data[i].GUID,
+                    LoadHash = data[i].HashKey,
+                    Size = data[i].Size,
+                    Offset = 0,
+                    Flags = 0
+                });
             });
         }
     }
