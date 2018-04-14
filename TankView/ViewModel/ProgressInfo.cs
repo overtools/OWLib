@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace TankView.ViewResources
+namespace TankView.ViewModel
 {
-    public class RsrcProgressInfo : INotifyPropertyChanged
+    public class ProgressInfo : INotifyPropertyChanged
     {
         private string _state = "Idle";
         private int _pc = 0;

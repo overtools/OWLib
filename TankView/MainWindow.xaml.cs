@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Threading;
-using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Helpers;
-using TankView.ViewResources;
+using TankView.ViewModel;
 
 namespace TankView
 {
@@ -22,10 +20,11 @@ namespace TankView
     {
         public SynchronizationContext ViewContext { get; }
 
-        public RsrcNGDPPatchHosts NGDPPatchHosts { get; set; }
-        public RsrcRecentLocations RecentLocations { get; set; }
-        public RsrcProgressInfo ProgressInfo { get; set; }
-        public RsrcCASCSettings CASCSettings { get; set; }
+        public NGDPPatchHosts NGDPPatchHosts { get; set; }
+        public RecentLocations RecentLocations { get; set; }
+        public ProgressInfo ProgressInfo { get; set; }
+        public CASCSettings CASCSettings { get; set; }
+        public GUIDCollection GUIDTree { get; set; }
 
         public static CASCConfig Config;
         public static CASCHandler CASC;
@@ -45,10 +44,10 @@ namespace TankView
         {
             ViewContext = SynchronizationContext.Current;
 
-            NGDPPatchHosts = new RsrcNGDPPatchHosts();
-            RecentLocations = new RsrcRecentLocations();
-            ProgressInfo = new RsrcProgressInfo();
-            CASCSettings = new RsrcCASCSettings();
+            NGDPPatchHosts = new NGDPPatchHosts();
+            RecentLocations = new RecentLocations();
+            ProgressInfo = new ProgressInfo();
+            CASCSettings = new CASCSettings();
 
             ProgressSlave.OnProgress += UpdateProgress;
 
@@ -93,7 +92,7 @@ namespace TankView
         {
             if (sender is MenuItem menuItem)
             {
-                foreach (var node in NGDPPatchHosts.Where(x => x.Active && x.GetHashCode() != (menuItem.DataContext as PatchHost).GetHashCode()))
+                foreach (PatchHost node in NGDPPatchHosts.Where(x => x.Active && x.GetHashCode() != (menuItem.DataContext as PatchHost).GetHashCode()))
                 {
                     node.Active = false;
                 }
@@ -122,7 +121,7 @@ namespace TankView
         {
             if (sender is MenuItem menuItem)
             {
-                var path = menuItem.DataContext as string;
+                string path = menuItem.DataContext as string;
                 RecentLocations.Add(path);
                 CollectionViewSource.GetDefaultView(RecentLocations).Refresh();
 
@@ -152,13 +151,19 @@ namespace TankView
             IsReady = false;
             NotifyPropertyChanged(nameof(IsReady));
 
+            Config = null;
+            CASC = null;
+            GUIDTree = null;
+            NotifyPropertyChanged(nameof(GUIDTree));
+            GC.Collect();
+
             Task.Run(delegate
             {
-                //ApplicationPackageManifest.SaneChecking = false;
-
                 Config = CASCConfig.LoadLocalStorageConfig(path, true, true);
 
                 CASC = CASCHandler.Open(Config, ProgressSlave);
+
+                BuildTree();
 
                 ProgressSlave.ReportProgress(0, "Idle");
 
@@ -168,6 +173,33 @@ namespace TankView
                     NotifyPropertyChanged(nameof(IsReady));
                 }), null);
             });
+        }
+
+        private void BuildTree()
+        {
+            GUIDTree = new GUIDCollection(Config, CASC, ProgressSlave);
+            NotifyPropertyChanged(nameof(GUIDTree));
+        }
+
+        private void ChangeActiveNode(object sender, RoutedEventArgs e)
+        {
+            if(e.Handled)
+            {
+                return;
+            }
+
+            if (sender is TreeViewItem item)
+            {
+                Folder folder = item.DataContext as Folder;
+                GUIDTree.SelectedEntries = folder.Files;
+                NotifyPropertyChanged(nameof(GUIDTree));
+                e.Handled = true;
+            }
+        }
+
+        private void ExtractFiles(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException(nameof(ExtractFiles));
         }
     }
 }

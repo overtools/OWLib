@@ -203,7 +203,7 @@ namespace TankLib.CASC {
                 }, i => {
                     c++;
                     if (worker != null && i % 500 == 0) {
-                        worker.ReportProgress((int)(((float)c / (float)Header.PackageCount) * 100), $"Loading {Name} packages {c}/{Header.PackageCount}");
+                        worker.ReportProgress((int)(((float)c / (float)Header.PackageCount) * 100));
                     }
                     Types.PackageEntry entry = PackageEntries[i];
                     if (!CMF.Map.ContainsKey(entry.PackageGUID)) {
@@ -341,7 +341,7 @@ namespace TankLib.CASC {
             }, i => {
                 c++;
                 if (worker != null && c % 500 == 0) {
-                    worker?.ReportProgress((int)(((float)c / (float)CMF.Map.Count) * 100), "Rebuilding occurence list...");
+                    worker?.ReportProgress((int)(((float)c / (float)CMF.Map.Count) * 100));
                 }
                 if (FirstOccurence.ContainsKey(data[i].GUID)) return;
                 if (SaneChecking && !casc.EncodingHandler.HasEntry(data[i].HashKey)) return;

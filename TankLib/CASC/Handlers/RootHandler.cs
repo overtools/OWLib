@@ -12,6 +12,8 @@ namespace TankLib.CASC.Handlers {
     public class RootHandler {
         public readonly List<ApplicationPackageManifest> APMFiles = new List<ApplicationPackageManifest>();
 
+        public readonly Dictionary<string, MD5Hash> RootFiles = new Dictionary<string, MD5Hash>();
+
         public readonly bool LoadedAPMWithoutErrors;
         
         public RootHandler(BinaryReader stream, ProgressReportSlave worker, CASCHandler casc) {
@@ -38,8 +40,11 @@ namespace TankLib.CASC.Handlers {
                 string[] filedata = array[i].Split('|');
                 string name = filedata[nameComponentIdx];
 
+                MD5Hash md5 = filedata[md5ComponentIdx].ToByteArray().ToMD5();
+
+                RootFiles[name] = md5;
+
                 if (Path.GetExtension(name) != ".cmf" || !name.Contains("RDEV")) continue;
-                MD5Hash cmfMD5 = filedata[md5ComponentIdx].ToByteArray().ToMD5();
                 if (casc.Config.Languages != null) {
                     bool @break = true;
                     foreach (string lang in casc.Config.Languages) {
@@ -52,10 +57,11 @@ namespace TankLib.CASC.Handlers {
                     }
                 }
 
-                if (!casc.EncodingHandler.GetEntry(cmfMD5, out _)) {
+                if (!casc.EncodingHandler.GetEntry(md5, out _)) {
                     continue;
                 }
-                cmfHashes.Add(name, cmfMD5);
+
+                cmfHashes.Add(name, md5);
             }
 
             LoadedAPMWithoutErrors = true;
