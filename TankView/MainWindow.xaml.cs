@@ -28,6 +28,7 @@ namespace TankView
         public ProgressInfo ProgressInfo { get; set; }
         public CASCSettings CASCSettings { get; set; }
         public GUIDCollection GUIDTree { get; set; }
+        public ProductLocations ProductAgent { get; set; }
 
         public static CASCConfig Config;
         public static CASCHandler CASC;
@@ -63,6 +64,7 @@ namespace TankView
             RecentLocations = new RecentLocations();
             ProgressInfo = new ProgressInfo();
             CASCSettings = new CASCSettings();
+            ProductAgent = new ProductLocations();
 
             ProgressSlave.OnProgress += UpdateProgress;
 
@@ -148,6 +150,14 @@ namespace TankView
                 {
                     OpenCASC(path);
                 }
+            }
+        }
+
+        private void OpenAgent(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem)
+            {
+                OpenCASC(menuItem.Tag as string);
             }
         }
 

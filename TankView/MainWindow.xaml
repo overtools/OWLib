@@ -44,6 +44,17 @@
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
+                <MenuItem Header="Battle.net" ItemsSource="{Binding ProductAgent}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Path=Label}"/>
+                            <Setter Property="Tag" Value="{Binding Path=Value}"/>
+                            <Setter Property="IsEnabled" Value="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+                            <Setter Property="ToolTip" Value="{Binding Path=Value}"/>
+                            <EventSetter Event="Click" Handler="OpenAgent"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Exit" Click="Exit"></MenuItem>
             </MenuItem>

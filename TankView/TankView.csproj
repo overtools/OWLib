@@ -78,6 +78,8 @@
     <Compile Include="ViewModel\PatchHost.cs" />
     <Compile Include="ViewModel\CASCSettings.cs" />
     <Compile Include="ViewModel\NGDPPatchHosts.cs" />
+    <Compile Include="ViewModel\ProductLocation.cs" />
+    <Compile Include="ViewModel\ProductLocations.cs" />
     <Compile Include="ViewModel\ProgressInfo.cs" />
     <Compile Include="ViewModel\RecentLocations.cs" />
     <Page Include="MainWindow.xaml">
