@@ -9,10 +9,10 @@ using System.Windows;
 // associated with an assembly.
 [assembly: AssemblyTitle("TankView")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyConfiguration("TankLib")]
+[assembly: AssemblyCompany("overtools")]
 [assembly: AssemblyProduct("TankView")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCopyright("MIT License")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

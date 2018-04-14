@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TankView.ViewResources;
 
 namespace TankView
@@ -22,10 +14,13 @@ namespace TankView
     public partial class MainWindow : Window
     {
         public RsrcNGDPPatchHosts NGDPPatchHosts { get; private set; }
+        public RsrcRecentLocations RecentLocations { get; private set; }
 
         public MainWindow()
         {
             NGDPPatchHosts = new RsrcNGDPPatchHosts();
+            RecentLocations = new RsrcRecentLocations();
+
             if (!NGDPPatchHosts.Any(x => x.Active))
             {
                 NGDPPatchHosts[0].Active = true;
@@ -59,6 +54,54 @@ namespace TankView
 
                 CollectionViewSource.GetDefaultView(NGDPPatchHosts).Refresh();
             }
+        }
+
+        private void OpenNGDP(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException(nameof(OpenNGDP));
+        }
+
+        private void OpenCASC(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            dialog.EnsurePathExists = true;
+            if(dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                OpenCASC(dialog.FileName);
+            }
+        }
+
+        private void OpenRecent(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem)
+            {
+                var path = menuItem.DataContext as string;
+                RecentLocations.Add(path);
+                CollectionViewSource.GetDefaultView(RecentLocations).Refresh();
+
+                if (path?.StartsWith("ngdp://") == true)
+                {
+                    OpenNGDP(path);
+                }
+                else
+                {
+                    OpenCASC(path);
+                }
+            }
+        }
+
+        private void OpenNGDP(string path)
+        {
+            RecentLocations.Add(path);
+            CollectionViewSource.GetDefaultView(RecentLocations).Refresh();
+            throw new NotImplementedException(nameof(OpenNGDP));
+        }
+
+        private void OpenCASC(string path)
+        {
+            RecentLocations.Add(path);
+            CollectionViewSource.GetDefaultView(RecentLocations).Refresh();
         }
     }
 }

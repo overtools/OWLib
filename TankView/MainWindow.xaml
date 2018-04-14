@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TankView"
         xmlns:rsrc="clr-namespace:TankView.ViewResources"
+        xmlns:om="clr-namespace:TankView.ObjectModel"
         mc:Ignorable="d"
         Title="{Binding ModuloTitle}" DataContext="{Binding RelativeSource={RelativeSource Self}}" Height="450" Width="800" MinWidth="800" MinHeight="450">
     <Window.Resources>
-        <rsrc:RsrcRecentLocations x:Key="RecentLocations"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -19,10 +19,17 @@
         <Menu Grid.Row="0">
             <MenuItem Header="File">
                 <MenuItem Header="Open...">
-                    <MenuItem Header="NGDP"></MenuItem>
-                    <MenuItem Header="CASC"></MenuItem>
+                    <MenuItem Header="NGDP" Click="OpenNGDP"></MenuItem>
+                    <MenuItem Header="CASC" Click="OpenCASC"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Recent..." ItemsSource="{DynamicResource RecentLocations}"></MenuItem>
+                <MenuItem Header="Recent..." ItemsSource="{Binding RecentLocations}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding}"/>
+                            <EventSetter Event="Click" Handler="OpenRecent"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Exit" Click="Exit"></MenuItem>
             </MenuItem>
