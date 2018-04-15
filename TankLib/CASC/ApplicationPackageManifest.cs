@@ -79,7 +79,7 @@ namespace TankLib.CASC {
 
             public enum PackageCompressionMethod : uint {
                 Uncompressed = 0,
-                Gzip = 1,
+                Gzip = 1
             }
 
             [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -116,14 +116,6 @@ namespace TankLib.CASC {
                 public MD5Hash LoadHash;
             }
 
-            [Flags]
-            public enum CacheRecordFlags : byte {
-                None = 0,
-                UseFlags = 1,
-                UseOffset = 2,
-                SequentialIndex = 4
-            }
-
             [StructLayout(LayoutKind.Sequential, Pack = 4)]
             public struct CachePackageRecord {
                 public int Index;
@@ -150,8 +142,9 @@ namespace TankLib.CASC {
         
         private const ulong APM_VERSION = 22;
 
-        public void Load(string name, MD5Hash cmfhash, Stream stream, CASCHandler casc, string cmfname,
+        public void Load(string name, MD5Hash cmfhash, Stream stream, CASCHandler casc, string cmfname, LocaleFlags locale,
             ProgressReportSlave worker = null) {
+            Locale = locale;
             Name = name;
             CMFHash = cmfhash;
             CMFName = Path.GetFileName(cmfname);

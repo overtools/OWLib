@@ -91,7 +91,7 @@ namespace TankLib.CASC.Handlers {
                             try {
                                 Console.Out.WriteLine("Loading APM {0}", name);
                                 worker?.ReportProgress(0, $"Loading APM {name}...");
-                                apm.Load(name, cmf, apmStream, casc, cmfname, worker);
+                                apm.Load(name, cmf, apmStream, casc, cmfname, apmLang, worker);
                             } catch (CryptographicException) {
                                 LoadedAPMWithoutErrors = false;
                                 if (!casc.Config.APMFailSilent) {
