@@ -125,10 +125,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OWLib\OWLib.csproj">
-      <Project>{353C0D05-C505-4DF4-909E-624FD94A7D3B}</Project>
-      <Name>OWLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TankLib\TankLib.csproj">
       <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>
       <Name>TankLib</Name>
