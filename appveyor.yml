@@ -30,6 +30,10 @@ before_package:
     del /F /Q CASCExplorer\CASCConsole\bin\Release\*.pdb
 
     del /F /Q CASCExplorer\CASCConsole\bin\Release\*.xml
+
+    del /F /Q TankView\bin\Release\*.pdb
+
+    del /F /Q TankView\bin\Release\*.xml
 artifacts:
 - path: dist/Release
   name: toolchain-release
