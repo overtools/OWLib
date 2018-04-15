@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using CASCLib;
+using DataTool;
 using DataTool.Helper;
-using OverTool;
 using OWLib;
 using STULib;
 using STULib.Impl;
@@ -15,7 +15,6 @@ using TankLib;
 using static STULib.Types.Generic.Common;
 using static DataTool.Helper.IO;
 using Console = Colorful.Console;
-using Util = OverTool.Util;
 
 namespace STUHashTool {
     public class Utils {
@@ -27,20 +26,21 @@ namespace STUHashTool {
                                                 BindingFlags.DeclaredOnly)).ToArray();
         }
 
-        internal static string GetOWString(ulong guid, CASCHandler handler, Dictionary<ulong, Record> map) {
+        internal static string GetOWString(ulong guid, CASCHandler handler, Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord> map) {
             if (guid == 0 || !map.ContainsKey(guid)) return null;
-            Stream stream = Util.OpenFile(map[guid], handler);
+            Stream stream = IO.OpenFile(guid);
             teString stringValue = new teString(stream);
             return stringValue;
         }
 
-        internal static STUInstance[] GetInstances(ulong guid, CASCHandler handler, Dictionary<ulong, Record> map) {
-            Stream str = Util.OpenFile(map[guid], handler);
-            ISTU stu = ISTU.NewInstance(str, uint.MaxValue);
+        internal static STUInstance[] GetInstances(ulong guid, CASCHandler handler, Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord> map)
+        {
+            Stream stream = IO.OpenFile(guid);
+            ISTU stu = ISTU.NewInstance(stream, uint.MaxValue);
             return stu.Instances.ToArray();
         }
 
-        public static void DumpSTUFull(Version2 stu, CASCHandler handler, Dictionary<ulong, Record> map,
+        public static void DumpSTUFull(Version2 stu, CASCHandler handler, Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord> map,
             string instanceWildcard = null) {
             // tries to properly dump an STU to the console
             // uses handler to load GUIDs, and process the types
@@ -89,9 +89,9 @@ namespace STUHashTool {
 
         public class STUDebugger {
             private readonly CASCHandler _handler;
-            private readonly Dictionary<ulong, Record> _map;
+            private readonly Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord> _map;
             
-            public STUDebugger(CASCHandler handler, Dictionary<ulong, Record> map) {
+            public STUDebugger(CASCHandler handler, Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord> map) {
                 _handler = handler;
                 _map = map;
             }

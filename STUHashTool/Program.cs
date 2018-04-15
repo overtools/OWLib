@@ -8,14 +8,14 @@ using System.Linq;
 using System.Text;
 using CASCLib;
 using Newtonsoft.Json.Linq;
-using OverTool;
+using DataTool;
+using DataTool.Helper;
 using OWLib;
 using STULib;
 using STULib.Impl;
 using STULib.Impl.Version2HashComparer;
 using Console = System.Console;
 using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
-using Util = OverTool.Util;
 using Version2 = STULib.Impl.Version2;
 
 namespace STUHashTool {
@@ -678,6 +678,7 @@ namespace STUHashTool {
                     }
                 }
             } else if (mode == "test") {
+#if false
                 ushort fileShort = ushort.Parse(testFileType, NumberStyles.HexNumber);
                     
                 Dictionary<ulong, Record> records = new Dictionary<ulong, Record>();
@@ -730,6 +731,7 @@ namespace STUHashTool {
                         }
                     }
                 }
+#endif
             } else if (mode == "newhashes-test") {
                 // testing thing, trying to guess fields and whatever
                 Dictionary<KeyValuePair<uint, uint>, uint> fieldOccurrences =

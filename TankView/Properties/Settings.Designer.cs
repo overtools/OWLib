@@ -93,5 +93,17 @@ namespace TankView.Properties {
                 this["DisableThreading"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LoadAllLanguages {
+            get {
+                return ((bool)(this["LoadAllLanguages"]));
+            }
+            set {
+                this["LoadAllLanguages"] = value;
+            }
+        }
     }
 }

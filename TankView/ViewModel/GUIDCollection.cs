@@ -1,9 +1,9 @@
-﻿using OWLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
@@ -66,7 +66,7 @@ namespace TankView.ViewModel
                     {
                         Slave?.ReportProgress((int)(((float)c / (float)total) * 100));
                     }
-                    AddEntry($"files/{Path.GetFileNameWithoutExtension(apm.Name)}/{GUID.Type(record.Key):X3}", record.Key, record.Value.LoadHash, (int)record.Value.Size, (int)record.Value.Offset, record.Value.Flags, apm.Locale);
+                    AddEntry($"files/{Path.GetFileNameWithoutExtension(apm.Name)}/{teResourceGUID.Type(record.Key):X3}", record.Key, record.Value.LoadHash, (int)record.Value.Size, (int)record.Value.Offset, record.Value.Flags, apm.Locale);
                 }
             }
 
@@ -112,7 +112,7 @@ namespace TankView.ViewModel
         private void AddEntry(string path, ulong guid, MD5Hash hash, int size, int offset, ContentFlags flags, LocaleFlags locale)
         {
             string dir = guid != 0 ? path : Path.GetDirectoryName(path);
-            string filename = guid != 0 ? $"{GUID.Attribute(guid, (GUID.AttributeEnum)0xFFFFFFFFFFFFUL):X12}.{GUID.Type(guid):X3}" : Path.GetFileName(path);
+            string filename = guid != 0 ? teResourceGUID.AsString(guid) : Path.GetFileName(path);
 
             Folder d = Data;
 

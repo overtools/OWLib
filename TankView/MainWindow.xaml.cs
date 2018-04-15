@@ -185,7 +185,7 @@ namespace TankView
             {
                 try
                 {
-                    Config = CASCConfig.LoadLocalStorageConfig(path, true, true);
+                    Config = CASCConfig.LoadLocalStorageConfig(path, true, CASCSettings.LoadAllLanguages);
 
                     CASC = CASCHandler.Open(Config, ProgressSlave);
 
@@ -194,6 +194,10 @@ namespace TankView
                 catch (Exception e)
                 {
                     MessageBox.Show("Error while loading CASC", e.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    if(System.Diagnostics.Debugger.IsAttached)
+                    {
+                        throw;
+                    }
                 }
 
                 ViewContext.Send(new SendOrPostCallback(delegate

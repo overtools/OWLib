@@ -64,6 +64,7 @@
                     <MenuItem Header="Cache CDN Data" IsChecked="{Binding Data, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
                     <MenuItem Header="Cache APM" IsChecked="{Binding APM, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
                 </MenuItem>
+                <MenuItem Header="Load all installed languages" IsChecked="{Binding LoadAllLanguages, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
                 <MenuItem Header="Disable Threading" IsChecked="{Binding DisableThreading, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
             </MenuItem>
             <MenuItem Header="NGDP">

@@ -54,7 +54,7 @@ namespace TankLibTest {
             string overwatchDir = args[0];
             
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
-            Config.Languages = new HashSet<string> {Language};
+            Config.SpeechLanguage = Config.TextLanguage = Language;
         }
 
         public static void LoadCASC() {

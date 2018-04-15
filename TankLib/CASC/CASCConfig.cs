@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using CMFLib;
+using TankLib.Agent;
+using TankLib.Agent.Protobuf;
 using TankLib.CASC.ConfigFiles;
 using TankLib.CASC.Handlers;
 
@@ -13,6 +15,8 @@ namespace TankLib.CASC {
         private BarSeparatedConfig _buildInfo;
         private BarSeparatedConfig _cdnData;
         private BarSeparatedConfig _versionsData;
+
+        private ProductInstall InstallData;
         
         /// <summary>Build configs</summary>
         public List<KeyValueConfig> Builds { get; private set; }
@@ -21,26 +25,35 @@ namespace TankLib.CASC {
         public KeyValueConfig KeyRing { get; private set; }
 
         /// <summary>Region</summary>
-        public string Region;
-        
+        public string Region { get; set; }
+
         /// <summary>Online storage</summary>
-        public bool OnlineMode;
-        
+        public bool OnlineMode { get; set; }
+
         /// <summary>Storage root</summary>
-        public string BasePath;
-        
+        public string BasePath { get; set; }
+
         /// <summary>Active build number</summary>
-        public int ActiveBuild;
-        
-        /// <summary>Selected languages</summary>
-        public HashSet<string> Languages;
-        
+        public int ActiveBuild { get; set; }
+
+        /// <summary>Selected Speech Language</summary>
+        public string SpeechLanguage { get; set; }
+
+        /// <summary>Selected Text Language</summary>
+        public string TextLanguage { get; set; }
+
+        /// <summary>Installed Languages</summary>
+        public HashSet<string> InstalledLanguages;
+
+        /// <summary>Load speech/text languages if false or all installed languages if true</summary>
+        public bool LoadAllInstalledLanguages { get; set; }
+
         /// <summary>CDN URI</summary>
-        public string CustomCDNHost;
+        public string CustomCDNHost { get; set; }
 
         public static string GetDataFolder() => "data/casc";
 
-        public static int MaxThreads = Environment.ProcessorCount;
+        public static int MaxThreads { get; set; } = Environment.ProcessorCount;
         
         private int _versionsIndex; // todo
         
@@ -114,8 +127,16 @@ namespace TankLib.CASC {
                 BasePath = basePath
             };
 
-            string buildInfoPath = Path.Combine(basePath, ".build.info");
+            try {
+                string productDbPath = Path.Combine(basePath, ".product.db");
+                config.InstallData = new ProductDatabase(productDbPath, true).Data.ProductInstalls[0];
+            } catch { }
 
+            config.SpeechLanguage = config.InstallData?.Settings?.SelectedSpeechLanguage ?? "enUS";
+            config.TextLanguage = config.InstallData?.Settings?.SelectedTextLanguage ?? "enUS";
+
+            string buildInfoPath = Path.Combine(basePath, ".build.info");
+            
             using (Stream buildInfoStream = new FileStream(buildInfoPath, FileMode.Open)) {
                 config._buildInfo = BarSeparatedConfig.Read(buildInfoStream);
             }
@@ -172,19 +193,16 @@ namespace TankLib.CASC {
                 }
             }
 
-            if (loadMultipleLangs) {
-                config.Languages = new HashSet<string>();
-                if (bi.ContainsKey("Tags") && bi["Tags"].Trim().Length > 0) {
-                    string[] tags = bi["Tags"].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            config.InstalledLanguages = new HashSet<string>();
+            config.LoadAllInstalledLanguages = loadMultipleLangs;
+            if (bi.ContainsKey("Tags") && bi["Tags"].Trim().Length > 0) {
+                string[] tags = bi["Tags"].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    foreach (string tag in tags) {
-                        try {
-                            Enum.Parse(typeof(LocaleFlags), tag.Substring(0, 4));
-                            config.Languages.Add(tag);
-                        } catch {
-                            // ignored
-                        }
-                    }
+                foreach (string tag in tags) {
+                    try {
+                        Enum.Parse(typeof(LocaleFlags), tag.Substring(0, 4));
+                        config.InstalledLanguages.Add(tag);
+                    } catch { }
                 }
             }
 

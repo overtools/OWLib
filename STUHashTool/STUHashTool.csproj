@@ -69,10 +69,6 @@
       <Project>{9d1a3dcc-37bf-4979-acd8-3e998e19ce71}</Project>
       <Name>DataTool</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OverTool\OverTool.csproj">
-      <Project>{55122bf8-cc39-4936-b8f1-cf8e87195971}</Project>
-      <Name>OverTool</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OWLib\OWLib.csproj">
       <Project>{353c0d05-c505-4df4-909e-624fd94a7d3b}</Project>
       <Name>OWLib</Name>
