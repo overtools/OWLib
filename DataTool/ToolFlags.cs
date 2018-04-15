@@ -7,11 +7,16 @@ namespace DataTool {
         
         [CLIFlag(Flag = "mode", Positional = 1, Help = "Extraction Mode", Required = true)]
         public string Mode;
-
-        [CLIFlag(Default = "enUS", Flag = "language", Help = "Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" })]
+        
+        [CLIFlag(Default = null, Flag = "language", Help = "Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" })]
         [Alias(Alias = "L")]
         [Alias(Alias = "lang")]
         public string Language;
+
+        [CLIFlag(Default = null, Flag = "speech-language", Help = "Speech Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" })]
+        [Alias(Alias = "T")]
+        [Alias(Alias = "speechlang")]
+        public string SpeechLanguage;
 
         [CLIFlag(Default = false, Flag = "graceful-exit", Help = "When enabled don't crash on invalid CMF Encryption", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool GracefulExit;

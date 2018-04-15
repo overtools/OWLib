@@ -85,7 +85,7 @@ namespace STUExcavator {
 
             // casc setup
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
-            Config.Languages = new HashSet<string> {language};
+            Config.SpeechLanguage = Config.TextLanguage = language;
             CASC = CASCHandler.Open(Config);
             DataTool.Program.Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
             DataTool.Program.TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();

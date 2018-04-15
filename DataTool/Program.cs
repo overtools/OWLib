@@ -100,12 +100,19 @@ namespace DataTool {
             #region Initialize CASC
             Log("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Util.GetVersion());
             Log("Initializing CASC...");
-            Log("Set language to {0}", Flags.Language);
-            
+            if (Flags.Language != null)
+            {
+                Log("Set language to {0}", Flags.Language);
+            }
+            if (Flags.SpeechLanguage != null)
+            {
+                Log("Set speech language to {0}", Flags.SpeechLanguage);
+            }
+
             //CDNIndexHandler.Cache.Enabled = Flags.UseCache;
             //CDNIndexHandler.Cache.CacheData = Flags.CacheData;
             //CDNIndexHandler.Cache.Validate = Flags.ValidateCache;
-            
+
             // ngdp:us:pro
             // http:us:pro:us.patch.battle.net:1119
             if (Flags.OverwatchDirectory.ToLowerInvariant().Substring(0, 5) == "ngdp:") {
@@ -131,7 +138,8 @@ namespace DataTool {
             } else {
                 Config = CASCConfig.LoadLocalStorageConfig(Flags.OverwatchDirectory, !Flags.SkipKeys, false);
             }
-            Config.Languages = new HashSet<string>(new[] { Flags.Language });
+            Config.SpeechLanguage = Flags.SpeechLanguage ?? Flags.Language ?? Config.SpeechLanguage;
+            Config.TextLanguage = Flags.Language ?? Config.TextLanguage;
             #endregion
 
             //try {
@@ -144,7 +152,7 @@ namespace DataTool {
             //} catch (NullReferenceException) {
             //    // erm, cdn causes issues with this.
             //}
-            
+
             BuildVersion = uint.Parse(Config.BuildName.Split('.').Last());
 
             if (Flags.SkipKeys) {
