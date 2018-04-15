@@ -28,6 +28,7 @@ namespace TankLibHelper {
             StringBuilder importBuilder = new StringBuilder();  // ahh rewrite
 
             bool importedTankMath = false;
+            bool importedEnums = false;
 
             {
                 //WriteDefaultHeader(builder, "Instance", "TankLibHelper.InstanceBuilder");
@@ -55,6 +56,11 @@ namespace TankLibHelper {
                 if (_importTankMathTypes.Contains(field.Type) && !importedTankMath) {
                     importedTankMath = true;
                     importBuilder.AppendLine("using TankLib.Math;");
+                }
+
+                if ((field.SerializationType == 8 || field.SerializationType == 9) && !importedEnums) {
+                    importedEnums = true;
+                    importBuilder.AppendLine("using TankLib.STU.Types.Enums;");
                 }
                 
                 i++;
@@ -133,6 +139,9 @@ namespace TankLibHelper {
 
             if (field.SerializationType == 12 || field.SerializationType == 13) {
                 uint hash = uint.Parse(field.Type.Split('_')[1], NumberStyles.HexNumber);
+                if (!Info.Instances.ContainsKey(hash)) {
+                    return nameof(teStructuredDataAssetRef<ulong>) + "<ulong>";
+                }
                 return nameof(teStructuredDataAssetRef<ulong>) + $"<{Info.GetInstanceName(hash)}>";
             }
             

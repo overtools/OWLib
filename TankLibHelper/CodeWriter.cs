@@ -1,5 +1,5 @@
 ﻿using System;
-using TankLib.STU.Types;
+//using TankLib.STU.Types;
 
 namespace TankLibHelper {
     // wip testing thing. might become a real thing eventually
@@ -38,9 +38,9 @@ namespace TankLibHelper {
             using (writer.Namespace("TankLib.STU.Types")) {
                 writer.Comment("this is bad");
                 using (writer.Class("STUModelLook")) {
-                    using (writer.Field("m_materials", typeof(STUModelMaterial))) {
-                        
-                    }
+                    //using (writer.Field("m_materials", typeof(STUModelMaterial))) {
+                    //    
+                    //}
                 }
 
                 using (writer.Enum("STUUnlockRarity")) {

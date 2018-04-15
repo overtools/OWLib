@@ -134,10 +134,6 @@
     <Compile Include="STU\teStructuredDataDateAndTime.cs" />
     <Compile Include="STU\teStructuredDataHashMap.cs" />
     <Compile Include="STU\teStructuredDataMgr.cs" />
-    <Compile Include="STU\Types\STUModel.cs" />
-    <Compile Include="STU\Types\STUModelInfo.cs" />
-    <Compile Include="STU\Types\STUModelLook.cs" />
-    <Compile Include="STU\Types\STUModelHardpoint.cs" />
     <Compile Include="teAnimation.cs" />
     <Compile Include="teAssetPackage.cs" />
     <Compile Include="teAssetPackagePayload.cs" />
