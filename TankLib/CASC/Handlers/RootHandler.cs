@@ -45,16 +45,9 @@ namespace TankLib.CASC.Handlers {
                 RootFiles[name] = md5;
 
                 if (Path.GetExtension(name) != ".cmf" || !name.Contains("RDEV")) continue;
-                if (casc.Config.Languages != null) {
-                    bool @break = true;
-                    foreach (string lang in casc.Config.Languages) {
-                        if (name.Contains("L" + lang)) {
-                            @break = false;
-                        }
-                    }
-                    if (@break) {
-                        continue;
-                    }
+
+                if (!IsValidLanguage(casc.Config, name)) {
+                    continue;
                 }
 
                 if (!casc.EncodingHandler.GetEntry(md5, out _)) {
@@ -73,21 +66,13 @@ namespace TankLib.CASC.Handlers {
                 if (Path.GetExtension(name) == ".apm") {
                     MD5Hash apmMD5 = filedata[md5ComponentIdx].ToByteArray().ToMD5();
                     LocaleFlags apmLang = HeurFigureLangFromName(Path.GetFileNameWithoutExtension(name));
-                    
+
                     if (!name.Contains("RDEV")) {
                         continue;
                     }
-                    if (casc.Config.Languages != null) {
-                        bool skip = true;
-                        foreach (string lang in casc.Config.Languages) {
-                            if (name.Contains("L" + lang)) {
-                                skip = false;
-                                break;
-                            }
-                        }
-                        if (skip) {
-                            continue;
-                        }
+
+                    if (!IsValidLanguage(casc.Config, name)) {
+                        continue;
                     }
 
                     if (!casc.EncodingHandler.GetEntry(apmMD5, out EncodingEntry apmEnc)) {
@@ -107,7 +92,7 @@ namespace TankLib.CASC.Handlers {
                                 Console.Out.WriteLine("Loading APM {0}", name);
                                 worker?.ReportProgress(0, $"Loading APM {name}...");
                                 apm.Load(name, cmf, apmStream, casc, cmfname, worker);
-                            } catch(CryptographicException) {
+                            } catch (CryptographicException) {
                                 LoadedAPMWithoutErrors = false;
                                 if (!casc.Config.APMFailSilent) {
                                     worker?.ReportProgress(0, "CMF decryption failed");
@@ -128,7 +113,30 @@ namespace TankLib.CASC.Handlers {
                 worker?.ReportProgress((int)(i / (array.Length / 100f)));
             }
         }
-        
+
+        private static bool IsValidLanguage(CASCConfig config, string name) {
+            if (config.LoadAllInstalledLanguages) {
+                if (config.InstalledLanguages != null) {
+                    foreach (string lang in config.InstalledLanguages) {
+                        if (name.Contains("L" + lang))
+                        {
+                            return true;
+                        }
+                    }
+                } else {
+                    return true;
+                }
+            } else {
+                if (name.Contains("speech") && name.Contains("L" + config.SpeechLanguage)) {
+                    return true;
+                } else if (!name.Contains("speech") && name.Contains("L" + config.TextLanguage)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private static LocaleFlags HeurFigureLangFromName(string name) {
             string tag = name.Split('_').Reverse().Single(v => v[0] == 'L' && v.Length == 5);
             if (tag == null) {

@@ -42,7 +42,7 @@ namespace CASCEncDump {
 
             // casc setup
             Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
-            Config.Languages = new HashSet<string> {language};
+            Config.SpeechLanguage = Config.TextLanguage = language;
             if (mode != "allcmf" && mode != "dump-guids" && mode != "compare-guids" && mode != "dump-cmf") {
                 Config.LoadContentManifest = false;
                 Config.LoadPackageManifest = false;

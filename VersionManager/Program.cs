@@ -21,7 +21,12 @@ namespace VersionManager {
             #region Initialize CASC
             Log("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, TankLib.Util.GetVersion(typeof(Program).Assembly));
             Log("Initializing CASC...");
-            Log("Set language to {0}", Flags.Language);
+            if (Flags.Language != null) {
+                Log("Set language to {0}", Flags.Language);
+            }
+            if (Flags.SpeechLanguage != null) {
+                Log("Set speech language to {0}", Flags.SpeechLanguage);
+            }
             // ngdp:us:pro
             // http:us:pro:us.patch.battle.net:1119
             if (Flags.OverwatchDirectory.ToLowerInvariant().Substring(0, 5) == "ngdp:") {
@@ -48,7 +53,8 @@ namespace VersionManager {
             } else {
                 DataTool.Program.Config = CASCConfig.LoadLocalStorageConfig(Flags.OverwatchDirectory, true, false);
             }
-            DataTool.Program.Config.Languages = new HashSet<string>(new[] { Flags.Language });
+            DataTool.Program.Config.SpeechLanguage = Flags.SpeechLanguage ?? Flags.Language ?? DataTool.Program.Config.SpeechLanguage;
+            DataTool.Program.Config.TextLanguage = Flags.Language ?? DataTool.Program.Config.TextLanguage;
             #endregion
 
             DataTool.Program.BuildVersion = uint.Parse(DataTool.Program.Config.BuildName.Split('.').Last());

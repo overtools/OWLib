@@ -9,6 +9,7 @@ namespace TankView.ViewModel
         private bool _cdn = Properties.Settings.Default.CacheCDN;
         private bool _data = Properties.Settings.Default.CacheData;
         private bool _apm = Properties.Settings.Default.CacheAPM;
+        private bool _loadall = Properties.Settings.Default.LoadAllLanguages;
         private bool _threading = Properties.Settings.Default.DisableThreading;
 
         public bool CDN {
@@ -47,6 +48,18 @@ namespace TankView.ViewModel
                 Properties.Settings.Default.Save();
                 CASCHandler.Cache.CacheAPM = value;
                 NotifyPropertyChanged(nameof(APM));
+            }
+        }
+
+        public bool LoadAllLanguages {
+            get {
+                return _loadall;
+            }
+            set {
+                _loadall = value;
+                Properties.Settings.Default.LoadAllLanguages = value;
+                Properties.Settings.Default.Save();
+                NotifyPropertyChanged(nameof(LoadAllLanguages));
             }
         }
 
