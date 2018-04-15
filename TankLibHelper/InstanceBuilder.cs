@@ -21,7 +21,7 @@ namespace TankLibHelper {
         }
         
         private static readonly List<string> ImportTankMathTypes = new List<string> {"teColorRGB", "teColorRGBA", "teEntityID", 
-             "teMtx43A", "teQuat", "teUUID", "teVec4", "teVec3A", "teVec3", "teVec2"};
+             "teMtx43A", "teQuat", "teUUID", "teVec4", "teVec3A", "teVec3", "teVec2", "DBID"};
 
         public override string BuildCSharp() {
             StringBuilder builder = new StringBuilder();
