@@ -13,7 +13,6 @@ namespace TankLibHelper {
         public Dictionary<uint, string> KnownFields;
         public List<uint> BrokenInstances;
         public Dictionary<uint, STUInstanceJSON> Instances;
-        public List<uint> PrimaryInstances;
 
         private readonly string _directory;
         
@@ -24,25 +23,25 @@ namespace TankLibHelper {
             KnownFields = new Dictionary<uint, string>();
             KnownInstances = new Dictionary<uint, string>();
             Instances = new Dictionary<uint, STUInstanceJSON>();
-            PrimaryInstances = new List<uint>();
             
             Load(directory);
-
-            PrimaryInstances = Instances.Keys.ToList();
         }
 
         private void Load(string directory) {
-            
             LoadBrokenInstances(Path.Combine(directory, "IgnoredBrokenSTUs.txt"));
             LoadInstances(Path.Combine(directory, "RegisteredSTUTypes.json"));
             
+            LoadNames(directory);
+        }
+
+        private void LoadNames(string directory) {
             LoadHashCSV(Path.Combine(directory, "KnownTypes.csv"), KnownInstances);
             LoadHashCSV(Path.Combine(directory, "KnownFields.csv"), KnownFields);
             LoadHashCSV(Path.Combine(directory, "KnownEnums.csv"), KnownEnums);
         }
 
         public void LoadExtra(string directory) {
-            Load(directory);
+            LoadNames(directory);
         }
         
         public string GetInstanceName(uint hash) {

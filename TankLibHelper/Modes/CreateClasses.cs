@@ -26,9 +26,11 @@ namespace TankLibHelper.Modes {
                 try14Hashes = args[3] == "true";
             }
 
-            _info = new StructuredDataInfo(dataDirectory);
             if (try14Hashes) {
-                _info.LoadExtra(StructuredDataInfo.GetDefaultDirectory());
+                _info = new StructuredDataInfo(StructuredDataInfo.GetDefaultDirectory());
+                _info.LoadExtra(dataDirectory);
+            } else {
+                _info = new StructuredDataInfo(dataDirectory);
             }
             BuilderConfig instanceBuilderConfig = new BuilderConfig {
                 Namespace = "TankLib.STU.Types"
@@ -44,17 +46,16 @@ namespace TankLibHelper.Modes {
 
             Dictionary<string, STUFieldJSON> enumFields = new Dictionary<string, STUFieldJSON>();
 
-            foreach (uint instanceHash in _info.PrimaryInstances) {
-                STUInstanceJSON instance = _info.Instances[instanceHash];
-                if (_info.BrokenInstances.Contains(instanceHash)) {
+            foreach (KeyValuePair<uint, STUInstanceJSON> instance in _info.Instances) {
+                if (_info.BrokenInstances.Contains(instance.Key)) {
                     continue;
                 }
 
-                InstanceBuilder instanceBuilder = new InstanceBuilder(instanceBuilderConfig, _info, instance);
+                InstanceBuilder instanceBuilder = new InstanceBuilder(instanceBuilderConfig, _info, instance.Value);
                 
                 BuildAndWriteCSharp(instanceBuilder, generatedDirectory);
 
-                foreach (var field in instance.Fields) {
+                foreach (var field in instance.Value.Fields) {
                     if (field.SerializationType != 8 && field.SerializationType != 9) continue;
 
                     if (!enumFields.ContainsKey(field.Type)) {
