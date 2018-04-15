@@ -7,6 +7,7 @@ namespace TankLibHelper.Modes {
     public class CreateClasses : IMode {
         public string Mode => "createclasses";
         private StructuredDataInfo _info;
+        private StructuredDataInfo _infoTry14;
 
         public ModeResult Run(string[] args) {
             if (args.Length < 2) {
@@ -15,14 +16,24 @@ namespace TankLibHelper.Modes {
             }
             string outDirectory = args[1];
             string dataDirectory;
+            bool try14Hashes = false;
 
             if (args.Length >= 3) {
                 dataDirectory = args[2];
             } else {
                 dataDirectory = StructuredDataInfo.GetDefaultDirectory();
             }
-            
-            _info = new StructuredDataInfo(dataDirectory);
+
+            if (args.Length >= 4) {
+                try14Hashes = args[3] == "true";
+            }
+
+            if (try14Hashes) {
+                _infoTry14 = new StructuredDataInfo(dataDirectory);
+                _info = new StructuredDataInfo(StructuredDataInfo.GetDefaultDirectory());
+            } else {
+                _info = new StructuredDataInfo(dataDirectory);
+            }
             BuilderConfig instanceBuilderConfig = new BuilderConfig {
                 Namespace = "TankLib.STU.Types"
             };
@@ -41,8 +52,15 @@ namespace TankLibHelper.Modes {
                 if (_info.BrokenInstances.Contains(instance.Key)) {
                     continue;
                 }
+
+                StructuredDataInfo thisInfo;
+                if (try14Hashes && _infoTry14.Instances.ContainsKey(instance.Key)) {
+                    thisInfo = _infoTry14;
+                } else {
+                    thisInfo = _info;
+                }
+                InstanceBuilder instanceBuilder = new InstanceBuilder(instanceBuilderConfig, thisInfo, instance.Value);
                 
-                InstanceBuilder instanceBuilder = new InstanceBuilder(instanceBuilderConfig, _info, instance.Value);
                 BuildAndWriteCSharp(instanceBuilder, generatedDirectory);
 
                 foreach (var field in instance.Value.Fields) {
@@ -50,13 +68,11 @@ namespace TankLibHelper.Modes {
 
                     if (!enumFields.ContainsKey(field.Type)) {
                         enumFields[field.Type] = field;
+                        
+                        EnumBuilder enumBuilder = new EnumBuilder(enumBuilderConfig, thisInfo, field);
+                        BuildAndWriteCSharp(enumBuilder, generatedEnumsDirectory);
                     }
                 }
-            }
-
-            foreach (KeyValuePair<string,STUFieldJSON> @enum in enumFields) {
-                EnumBuilder enumBuilder = new EnumBuilder(enumBuilderConfig, _info, @enum.Value);
-                BuildAndWriteCSharp(enumBuilder, generatedEnumsDirectory);
             }
 
             return ModeResult.Success;

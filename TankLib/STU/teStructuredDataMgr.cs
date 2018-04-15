@@ -18,7 +18,7 @@ namespace TankLib.STU {
         public Dictionary<uint, Dictionary<uint, KeyValuePair<FieldInfo, STUFieldAttribute>>> FieldAttributes;
         public Dictionary<uint, uint[]> InstanceFields;  // in the correct order
 
-        private readonly HashSet<uint> _missingInstances = new HashSet<uint>();
+        private readonly HashSet<uint> _missingInstances;
 
         public teStructuredDataMgr() {
             Factories = new Dictionary<Type, IStructuredDataPrimitiveFactory>();

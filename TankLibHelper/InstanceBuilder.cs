@@ -20,7 +20,7 @@ namespace TankLibHelper {
             }
         }
         
-        private static readonly List<string> _importTankMathTypes = new List<string> {"teColorRGB", "teColorRGBA", "teEntityID", 
+        private static readonly List<string> ImportTankMathTypes = new List<string> {"teColorRGB", "teColorRGBA", "teEntityID", 
              "teMtx43A", "teQuat", "teUUID", "teVec4", "teVec3A", "teVec3", "teVec2"};
 
         public override string BuildCSharp() {
@@ -53,7 +53,7 @@ namespace TankLibHelper {
                 }
                 BuildFieldCSharp(field, builder);
 
-                if (_importTankMathTypes.Contains(field.Type) && !importedTankMath) {
+                if (ImportTankMathTypes.Contains(field.Type) && !importedTankMath) {
                     importedTankMath = true;
                     importBuilder.AppendLine("using TankLib.Math;");
                 }
