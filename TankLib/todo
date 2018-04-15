@@ -1,1 +1,1 @@
-teMtx43A has size bit of 64?! 8 bytes. half floats?
+teMtx43A is 64 bytes, probably another thing where A means another value (or row/col in this case) (e.g. teVec3A is float4)

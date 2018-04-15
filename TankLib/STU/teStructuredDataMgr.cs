@@ -18,6 +18,7 @@ namespace TankLib.STU {
         public Dictionary<uint, Dictionary<uint, KeyValuePair<FieldInfo, STUFieldAttribute>>> FieldAttributes;
         public Dictionary<uint, uint[]> InstanceFields;  // in the correct order
 
+        private readonly HashSet<uint> _missingInstances = new HashSet<uint>();
 
         public teStructuredDataMgr() {
             Factories = new Dictionary<Type, IStructuredDataPrimitiveFactory>();
@@ -35,6 +36,8 @@ namespace TankLib.STU {
             AddAssemblyInstances(assembly);
             AddAssemblyFieldReaders(assembly);
             AddAssemblyFactories(assembly);
+            
+            _missingInstances = new HashSet<uint>();
         }
 
         private List<Type> GetAssemblyTypes<T>(Assembly assembly) {
@@ -101,7 +104,10 @@ namespace TankLib.STU {
             if (Instances.ContainsKey(hash)) {
                 return (STUInstance)Activator.CreateInstance(Instances[hash]);
             }
-            Debugger.Log(0, "teStructuredDataMgr", $"Unhandled instance: {hash:X8}\r\n");
+
+            if (_missingInstances.Add(hash)) {
+                Debugger.Log(0, "teStructuredDataMgr", $"Unhandled instance: {hash:X8}\r\n");
+            }
             return null;
         }
 

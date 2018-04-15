@@ -131,3 +131,5 @@ B89B3EF9,STUAnimNode_ToTargetDirectionIK
 295A9417,STUAnimNode_Blend2dChild
 DE44D504,STUAnimNode_TransitionToChildBase
 EAF06763,STUAnimNode_AnimBlendTreeProxy
+23F2C185,STUVoiceCategory
+3FBD80C6,STUVoiceStimulus

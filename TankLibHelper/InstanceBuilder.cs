@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using TankLib;
@@ -18,12 +19,18 @@ namespace TankLibHelper {
                 _parentName = Info.GetInstanceName(_instance.Parent);
             }
         }
+        
+        private static readonly List<string> _importTankMathTypes = new List<string> {"teColorRGB", "teColorRGBA", "teEntityID", 
+             "teMtx43A", "teQuat", "teUUID", "teVec4", "teVec3A", "teVec3", "teVec2"};
 
         public override string BuildCSharp() {
             StringBuilder builder = new StringBuilder();
+            StringBuilder importBuilder = new StringBuilder();  // ahh rewrite
+
+            bool importedTankMath = false;
 
             {
-                WriteDefaultHeader(builder, "Instance", "TankLibHelper.InstanceBuilder");
+                //WriteDefaultHeader(builder, "Instance", "TankLibHelper.InstanceBuilder");
 
                 if (Info.KnownInstances.ContainsKey(_instance.Hash)) {
                     builder.AppendLine($"    [{nameof(STUAttribute)}(0x{_instance.Hash:X8}, \"{Name}\")]");
@@ -44,6 +51,12 @@ namespace TankLibHelper {
                     builder.AppendLine();
                 }
                 BuildFieldCSharp(field, builder);
+
+                if (_importTankMathTypes.Contains(field.Type) && !importedTankMath) {
+                    importedTankMath = true;
+                    importBuilder.AppendLine("using TankLib.Math;");
+                }
+                
                 i++;
             }
 
@@ -52,7 +65,7 @@ namespace TankLibHelper {
                 builder.AppendLine("}"); // close namespace
             }
 
-            return builder.ToString();
+            return GetDefaultHeader("Instance", "TankLibHelper.InstanceBuilder", importBuilder.ToString()) + builder;
         }
 
         private void BuildFieldCSharp(STUFieldJSON field, StringBuilder builder) {
@@ -107,7 +120,7 @@ namespace TankLibHelper {
 
             if (field.SerializationType == 7) {
                 uint hash = uint.Parse(field.Type.Split('_')[1], NumberStyles.HexNumber);
-                return $"teStructuredDataHashMap<{Info.GetInstanceName(hash)}>";
+                return $"{nameof(teStructuredDataHashMap<STUInstance>)}<{Info.GetInstanceName(hash)}>";
             }
 
             if (field.SerializationType == 8 || field.SerializationType == 9) {  // 8 = enum, 9 = enum array
@@ -169,13 +182,15 @@ namespace TankLibHelper {
                 case "teMtx43A":
                     return nameof(teMtx43A);  // todo: supposed to be 4x4?
                 case "teEntityID":
-                    return "teEntityID";  // todo
+                    return nameof(teEntityID);
                 case "teUUID":
-                    return "teUUID"; // todo
+                    return nameof(teUUID);
                 case "teStructuredDataDateAndTime":
-                    return "teStructuredDataDateAndTime";
+                    return nameof(teStructuredDataDateAndTime);
+                
+                // ISerializable_STU
                 case "DBID":
-                    return "DBID"; // todo
+                    return nameof(DBID);
             }
             throw new NotImplementedException();
         }

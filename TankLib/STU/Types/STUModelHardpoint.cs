@@ -1,5 +1,6 @@
 ﻿using TankLib.Math;
 
+// ReSharper disable All
 namespace TankLib.STU.Types {
     [STU(0xF0E34581)]
     public class STU_F0E34581 : STUInstance {
@@ -16,13 +17,13 @@ namespace TankLib.STU.Types {
         public teResourceGUID m_FF592924;
 
         [STUField(0xAF9D3A0C)]
-        public teQuat m_AF9D3A0C;
+        public teQuat m_rotation;
 
         [STUField(0x7DC1550F)]
-        public teVec3 m_7DC1550F;
+        public teVec3 m_position;
     }
     
     [STU(0xBE9DDFDF)]
-    public class STU_BE9DDFDF : STU_F0E34581 {
+    public class STUModelHardpoint : STU_F0E34581 {
     }
 }
