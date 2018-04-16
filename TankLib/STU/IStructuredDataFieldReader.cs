@@ -29,6 +29,11 @@ namespace TankLib.STU {
 
                 return ret;
             }
+
+            if (target.FieldType.IsEnum) {
+                IStructuredDataPrimitiveFactory factory = manager.Factories[target.FieldType.GetEnumUnderlyingType()];
+                return factory.Deserialize(data, field);
+            }
             
             bool isStruct = target.FieldType.IsValueType && !target.FieldType.IsPrimitive;
 
@@ -66,10 +71,24 @@ namespace TankLib.STU {
     /// <summary>STU field reader for reading embedded instances</summary>
     public class EmbeddedInstanceFieldReader : IStructuredDataFieldReader {
         public void Deserialize(teStructuredDataMgr manager, teStructuredData data, STUField_Info field, object instance, FieldInfo target) {
-            int value = data.Data.ReadInt32();
-            if (value == -1) return;
-            if (value < data.Instances.Length)  {
-                STUInstance embeddedInstance = data.Instances[value];
+            if (data.Format == teStructuredDataFormat.V2) {
+                int value = data.Data.ReadInt32();
+            
+                if (value == -1) return;
+                if (value < data.Instances.Length)  {
+                    STUInstance embeddedInstance = data.Instances[value];
+                    if (embeddedInstance != null) {
+                        embeddedInstance.Usage = TypeUsage.Embed;
+                    }
+                
+                    target.SetValue(instance, embeddedInstance);
+                }
+            } else if (data.Format == teStructuredDataFormat.V1) {
+                long value = data.Data.ReadInt64();
+            
+                if (value == 0) return;
+                
+                STUInstance embeddedInstance = data.GetInstanceAtOffset(value);
                 if (embeddedInstance != null) {
                     embeddedInstance.Usage = TypeUsage.Embed;
                 }

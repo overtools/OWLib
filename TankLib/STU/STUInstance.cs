@@ -61,21 +61,41 @@ namespace TankLib.STU {
                     }
                     
                 } else {
-                    BinaryReader data = assetFile.Data;
-                    BinaryReader dynData = assetFile.DynData;
+                    if (assetFile.Format == teStructuredDataFormat.V2) {
+                        BinaryReader data = assetFile.Data;
+                        BinaryReader dynData = assetFile.DynData;
 
-                    int offset = data.ReadInt32();
-                    if (offset == -1) return;
-                    dynData.Seek(offset);
-                    int size = dynData.ReadInt32();
-                    if (size == 0) return;
-                    array = Array.CreateInstance(elementType, size);
-                    uint unknown = dynData.ReadUInt32();
-                    dynData.Seek(dynData.ReadInt64()); // Seek to dataoffset
+                        int offset = data.ReadInt32();
+                        if (offset == -1) return;
+                        dynData.Seek(offset);
+                        int size = dynData.ReadInt32();
+                        if (size == 0) return;
+                        array = Array.CreateInstance(elementType, size);
+                        uint unknown = dynData.ReadUInt32();
+                        dynData.Seek(dynData.ReadInt64()); // Seek to dataoffset
       
-                    for (int i = 0; i != size; ++i) {
-                        reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
+                        for (int i = 0; i != size; ++i) {
+                            reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
+                        }
+                    } else {
+                        int offset = assetFile.Data.ReadInt32();
+                        if (offset == 0 || offset == -1) {
+                            array = null;
+                        } else {
+                            long afterPos = assetFile.Data.Position();
+
+                            assetFile.Data.BaseStream.Position = offset;
+                            int count = assetFile.Data.ReadInt32();
+                            array = Array.CreateInstance(elementType, count);
+                            for (int i = 0; i < count; i++) {
+                                int subOffset = assetFile.Data.ReadInt32();
+                                array.SetValue(assetFile.GetInstanceAtOffset(subOffset), i);
+                            }
+
+                            assetFile.Data.BaseStream.Position = afterPos;
+                        }
                     }
+                    
                 }
                 field.Key.SetValue(this, array);
 
@@ -93,7 +113,6 @@ namespace TankLib.STU {
             Dictionary<uint, KeyValuePair<FieldInfo, STUFieldAttribute>> fields = teStructuredData.Manager.FieldAttributes[instanceHash];
 
             if (assetFile.Format == teStructuredDataFormat.V2) {
-
                 int fieldBagIdx = data.ReadInt32();
                 if (fieldBagIdx == -1) return;
                 if (fieldBagIdx >= assetFile.FieldInfoBags.Count)

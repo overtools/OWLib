@@ -16,20 +16,34 @@ namespace TankLib.STU {
         }
         
         public static implicit operator ulong(teStructuredDataAssetRef<T> assetRef) {
+            if (assetRef == null) return 0;
             return assetRef.GUID.GUID;
         }
 
         public void Deserialize(teStructuredData data, STUField_Info field) {
-            Padding = 0xFFFFFFFFFFFFFFFF;
-            ulong guid = data.Data.ReadUInt64();
-            Deobfuscate(data.HeaderChecksum, field.Hash, guid);
-            // no padding out of array
+            
+            if (data.Format == teStructuredDataFormat.V2) {
+                Padding = 0xFFFFFFFFFFFFFFFF; // no padding out of array
+                ulong guid = data.Data.ReadUInt64();
+                Deobfuscate(data.HeaderChecksum, field.Hash, guid);
+            } else if (data.Format == teStructuredDataFormat.V1) {
+                data.Data.ReadUInt64();  // ??
+                data.Data.ReadUInt32();  // ??
+                
+                Padding = data.Data.ReadUInt64();
+                ulong guid = data.Data.ReadUInt64();
+                GUID = (teResourceGUID) guid;
+            }
         }
 
         public void Deserialize_Array(teStructuredData data, STUField_Info field) {
             Padding = data.DynData.ReadUInt64();
             ulong guid = data.DynData.ReadUInt64();
-            Deobfuscate(data.HeaderChecksum, field.Hash, guid);
+            if (data.Format == teStructuredDataFormat.V2) {
+                Deobfuscate(data.HeaderChecksum, field.Hash, guid);
+            } else if (data.Format == teStructuredDataFormat.V1) {
+                GUID = (teResourceGUID) guid;
+            }
         }
         
         private void Deobfuscate(ulong headerChecksum, uint fieldHash, ulong guid) {

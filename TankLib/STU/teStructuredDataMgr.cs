@@ -93,11 +93,33 @@ namespace TankLib.STU {
                 STUFieldAttribute fieldAttribute = field.GetCustomAttribute<STUFieldAttribute>();
                 if (fieldAttribute == null) continue;
                 if (fieldAttribute.Hash == 0) continue;
-                fieldOrderTemp.Add(fieldAttribute.Hash);
+                //fieldOrderTemp.Add(fieldAttribute.Hash);
 
                 FieldAttributes[attribute.Hash][fieldAttribute.Hash] = new KeyValuePair<FieldInfo, STUFieldAttribute>(field, fieldAttribute);
             }
-            InstanceFields[attribute.Hash] = fieldOrderTemp.ToArray();
+            
+            //InstanceFields[attribute.Hash] = fieldOrderTemp.ToArray();
+            InstanceFields[attribute.Hash] = GetFieldOrder(type).ToArray();  // shrug
+        }
+
+        public List<uint> GetFieldOrder(Type type) {
+            List<uint> parentFields = new List<uint>();
+            if (type.BaseType != typeof(STUInstance)) {
+                parentFields = GetFieldOrder(type.BaseType);
+            }
+            List<uint> fields = new List<uint>();
+
+            foreach (FieldInfo field in type.GetFields(BindingFlags.Public
+                                                       | BindingFlags.Instance
+                                                       | BindingFlags.DeclaredOnly)) {
+                STUFieldAttribute fieldAttribute = field.GetCustomAttribute<STUFieldAttribute>();
+                if (fieldAttribute == null) continue;
+                if (fieldAttribute.Hash == 0) continue;
+                fields.Add(fieldAttribute.Hash);
+            }
+            var temp = parentFields.Concat(fields).ToList();
+            //var temp = fields.Concat(parentFields).ToList();
+            return temp;
         }
 
         public STUInstance CreateInstance(uint hash) {

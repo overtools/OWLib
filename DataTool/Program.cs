@@ -200,10 +200,9 @@ namespace DataTool {
                         }
 
                         STUEncryptionKey encryptionKey = GetInstance<STUEncryptionKey>(key);
-                        if (encryptionKey != null && !TACTKeyService.Keys.ContainsKey(encryptionKey.LongRevKey)) {
-                            TACTKeyService.Keys.Add(encryptionKey.LongRevKey, encryptionKey.KeyValue);
-                            Log("Added Encryption Key {0}, Value: {1}", encryptionKey.KeyNameProper, encryptionKey.Key);
-                        }
+                        if (encryptionKey == null || encryptionKey.LongKey == 0 || TACTKeyService.Keys.ContainsKey(encryptionKey.LongRevKey)) continue;
+                        TACTKeyService.Keys.Add(encryptionKey.LongRevKey, encryptionKey.KeyValue);
+                        Log("Added Encryption Key {0}, Value: {1}", encryptionKey.KeyNameProper, encryptionKey.KeyValueString);
                     }
                 }
             }

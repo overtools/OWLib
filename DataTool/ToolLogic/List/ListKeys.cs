@@ -52,7 +52,7 @@ namespace DataTool.ToolLogic.List {
             foreach (ulong key in TrackedFiles[0x90]) {
                 STUEncryptionKey encryptionKey = GetInstance<STUEncryptionKey>(key);
                 if (encryptionKey == null) continue;
-                @return[GetFileName(key)] = new KeyInfo(key, encryptionKey.KeyNameProper, encryptionKey.Key);
+                @return[GetFileName(key)] = new KeyInfo(key, encryptionKey.KeyNameProper, encryptionKey.KeyValueString);
             }
 
             return @return;

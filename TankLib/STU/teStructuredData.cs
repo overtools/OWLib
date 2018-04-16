@@ -81,11 +81,12 @@ namespace TankLib.STU {
                 reader.BaseStream.Position = record.Offset + _startPos;
                 uint instanceHash = reader.ReadUInt32();
                 uint nextOffset = reader.ReadUInt32();
-                reader.BaseStream.Position = position;
                 
                 STUInstance instance = Manager.CreateInstance(instanceHash);
                 _instanceOffsets[record.Offset] = instance;
                 Instances[i] = instance;
+                
+                reader.BaseStream.Position = position;
             }
 
             Data = reader;  // hmm
@@ -98,6 +99,25 @@ namespace TankLib.STU {
                 uint instanceHash = reader.ReadUInt32();
                 uint nextOffset = reader.ReadUInt32();
                 Instances[i].Deserialize(this);
+                
+                // dump instance
+                //Directory.CreateDirectory("STUV1Dump");
+                //using (Stream dumpFile = File.OpenWrite($"STUV1Dump\\{Instances[i].GetType().Name}_{i}")) {
+                //    dumpFile.SetLength(0);
+                //    int next;
+                //    {
+                //        IEnumerable<STUInstanceRecordV1> more = instanceTable.Where(x => x.Offset > record.Offset);
+                //        if (more.Any()) {
+                //            next = instanceTable.Where(x => x.Offset > record.Offset).Min(x => x.Offset);
+                //        } else {
+                //            next = (int)Data.BaseStream.Length; // err, not great
+                //        }
+                //    }
+                //    reader.BaseStream.Position = record.Offset + _startPos;
+                //    int size = next - (int) reader.BaseStream.Position;
+                //    byte[] buf = reader.ReadBytes(size);
+                //    dumpFile.Write(buf, 0, size);
+                //}
             }
         }
 

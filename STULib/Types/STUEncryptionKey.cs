@@ -22,7 +22,7 @@ namespace STULib.Types {
         [STUField(0x7EEFB57A)]
         public uint Unknown3;
 
-        public string Key => BitConverter.ToString(KeyValue).Replace("-", string.Empty);
+        public string KeyValueString => BitConverter.ToString(KeyValue).Replace("-", string.Empty);
         public ulong LongKey => ulong.Parse(KeyName, System.Globalization.NumberStyles.HexNumber);
         public ulong LongRevKey => BitConverter.ToUInt64(BitConverter.GetBytes(LongKey).Reverse().ToArray(), 0);
         public string KeyNameProper => LongRevKey.ToString("X16");

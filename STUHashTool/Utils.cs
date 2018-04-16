@@ -140,7 +140,7 @@ namespace STUHashTool {
                         instances = GetInstances(guid, _handler, _map);
                         if (instances[0] == null) return null;
                         STUEncryptionKey encryptionKey = instances[0] as STUEncryptionKey;
-                        return $"{baseString} {encryptionKey?.KeyNameProper}:{encryptionKey?.Key}";
+                        return $"{baseString} {encryptionKey?.KeyNameProper}:{encryptionKey?.KeyValueString}";
                     case 0xA5:
                         instances = GetInstances(guid, _handler, _map);
                         STUUnlock unlock = instances.OfType<STUUnlock>().First();

@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
 using TankLib.CASC;
-//using TankLib.STU;
-//using TankLib.STU.Types;
+using TankLib.STU;
+using TankLib.STU.Types;
 
 namespace TankLib.Chunks {
     /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace TankLib.Chunks {
         /// <summary>Header data</summary>
         public ModelSTUHeader Header;
 
-        //public STUModel StructuredData;
+        public STUModel StructuredData;
 
         public void Parse(Stream input) {
             using (BinaryReader reader = new BinaryReader(input)) {
@@ -32,7 +32,7 @@ namespace TankLib.Chunks {
                 input.CopyBytes(stream, (int)Header.Size);
                 stream.Position = 0;
                 
-                //StructuredData = new teStructuredData(stream).GetMainInstance<STUModel>();
+                StructuredData = new teStructuredData(stream).GetMainInstance<STUModel>();
             }
         }
     }

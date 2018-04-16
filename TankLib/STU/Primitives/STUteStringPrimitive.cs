@@ -6,12 +6,29 @@ namespace TankLib.STU.Primitives {
     /// <summary>teString STU primitive</summary>
     public class STUteStringPrimitive : IStructuredDataPrimitiveFactory {
         public object Deserialize(teStructuredData data, STUField_Info field) {
-            int offset = data.Data.ReadInt32();
-            if (offset == -1) return null;
-            data.DynData.BaseStream.Position = offset;
-            Deserialize(data.DynData, out string value);
+            if (data.Format == teStructuredDataFormat.V2) {
+                int offset = data.Data.ReadInt32();
+                if (offset == -1) return null;
+                data.DynData.BaseStream.Position = offset;
+                Deserialize(data.DynData, out string value);
             
-            return new teString(value);
+                return new teString(value);
+            }
+            if (data.Format == teStructuredDataFormat.V1) {
+                int infoOffset = data.Data.ReadInt32();
+                if (infoOffset == -1 || infoOffset == 0) {
+                    return null;
+                }
+
+                long posAfter = data.Data.Position();
+                data.Data.BaseStream.Position = infoOffset;
+                
+                Deserialize(data.Data, out string value);
+                data.Data.BaseStream.Position = posAfter;
+            
+                return new teString(value);
+            }
+            throw new NotImplementedException();
         }
 
         public object DeserializeArray(teStructuredData data, STUField_Info field) {
