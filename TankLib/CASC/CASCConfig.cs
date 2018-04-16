@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using CMFLib;
 using TankLib.Agent;
 using TankLib.Agent.Protobuf;
@@ -54,6 +55,13 @@ namespace TankLib.CASC {
         public static string GetDataFolder() => "data/casc";
 
         public static int MaxThreads { get; set; } = Environment.ProcessorCount;
+
+        private static readonly string[] PTR_TAGS = new[]{
+            "test",
+            "ptr"
+        };
+
+        public bool IsPTR => PTR_TAGS.Contains(InstallData?.Uid.Split('_').Last()) == true;
         
         private int _versionsIndex; // todo
         

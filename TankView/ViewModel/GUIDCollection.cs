@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
@@ -16,6 +19,17 @@ namespace TankView.ViewModel
         private CASCConfig Config;
         private CASCHandler CASC;
         private ProgressReportSlave Slave;
+
+        private Dictionary<ulong, PackageRecord> hashMap = new Dictionary<ulong, PackageRecord>();
+
+        private GUIDEntry _top;
+        public GUIDEntry TopSelectedEntry {
+            get {
+                return _top;
+            } set {
+                _top = value;
+            }
+        }
 
         private List<GUIDEntry> _selected = null;
         public List<GUIDEntry> SelectedEntries {
@@ -61,6 +75,10 @@ namespace TankView.ViewModel
             {
                 foreach (KeyValuePair<ulong, PackageRecord> record in apm.FirstOccurence.OrderBy(x => x.Key).ToArray())
                 {
+                    if (!hashMap.ContainsKey(record.Key))
+                    {
+                        hashMap[record.Key] = record.Value;
+                    }
                     c++;
                     if (c % 10000 == 0)
                     {
@@ -136,6 +154,7 @@ namespace TankView.ViewModel
             d.Files.Add(new GUIDEntry
             {
                 Filename = filename,
+                GUID = guid,
                 FullPath = Path.Combine(d.FullPath, filename),
                 Size = size,
                 Offset = offset,

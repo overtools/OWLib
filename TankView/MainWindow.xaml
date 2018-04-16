@@ -103,7 +103,7 @@
             <GridSplitter Grid.Column="0" Width="3" HorizontalAlignment="Right" VerticalAlignment="Stretch" ResizeDirection="Columns" ShowsPreview="True" ResizeBehavior="CurrentAndNext"/>
             <TabControl Grid.Column="1">
                 <TabItem Header="Tree">
-                    <ListView x:Name="FolderItemList" ItemsSource="{Binding SelectedEntries, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+                    <ListView x:Name="FolderItemList" SelectedItem="{Binding TopSelectedEntry, Mode=OneWayToSource}" ItemsSource="{Binding SelectedEntries, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="GUID" DisplayMemberBinding="{Binding Filename}"/>
@@ -114,6 +114,18 @@
                         </ListView.View>
                     </ListView>
                 </TabItem>
+                <TabItem Header="STU" IsEnabled="False">
+                    <TreeView x:Name="STUView" ItemsSource="{Binding STUContext, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+                        
+                    </TreeView>
+                </TabItem>
+                <TabItem Header="Image" IsEnabled="False">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Image x:Name="ImageSrc" Source="{Binding ImageContext, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+                        </Image>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="Hex" IsEnabled="False"></TabItem>
             </TabControl>
         </Grid>
         <StatusBar Grid.Row="2" DataContext="{Binding ProgressInfo}">

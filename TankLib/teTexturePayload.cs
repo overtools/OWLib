@@ -12,6 +12,7 @@ namespace TankLib {
         public ushort[] Color3;
         public ushort[] Color4;
         public uint[] Color5;
+        public byte[] RawData;
 
         /// <summary>Parent texture object</summary>
         public teTexture Parent;
@@ -23,6 +24,11 @@ namespace TankLib {
             Parent = parent;
             using (BinaryReader dataReader = new BinaryReader(payloadStream)) {
                 Header = dataReader.Read<TextureTypes.TexturePayloadHeader>();
+
+                if(parent.Header.GetTextureType() == TextureTypes.TextureType.Unknown) {
+                    RawData = dataReader.ReadBytes((int)Header.ImageSize);
+                    return;
+                }
 
                 Size = Header.ImageSize / parent.Header.GetTextureType().ByteSize();
                 Color1 = new uint[Size];
@@ -54,7 +60,7 @@ namespace TankLib {
             using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
                 TextureTypes.DDSHeader dds = Parent.Header.ToDDSHeader();
                 ddsWriter.Write(dds);
-                if (dds.Format.FourCC == 808540228) {
+                if (dds.Format.FourCC == (int)TextureTypes.TextureType.Unknown) {
                     TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
                         Format = (uint)Parent.Header.Format,
                         Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
@@ -63,6 +69,10 @@ namespace TankLib {
                         Misc2 = 0
                     };
                     ddsWriter.Write(d10);
+                }
+                if (RawData != null) {
+                    stream.Write(RawData, 0, (int)Header.ImageSize);
+                    return;
                 }
                 for (int i = 0; i < Size; ++i) {
                     if ((byte)Parent.Header.Format > 72) {

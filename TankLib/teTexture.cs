@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 
 namespace TankLib {
@@ -39,6 +40,13 @@ namespace TankLib {
             Data = new byte[Header.DataSize];
             reader.Read(Data, 0, (int)Header.DataSize);
         }
+
+        public teResourceGUID GetPayloadGUID(teResourceGUID textureResource)
+        {
+            return new teResourceGUID(((ulong)textureResource & 0xF0FFFFFFFFUL) | ((ulong)((byte)(Header.Indice - 1)) << 32)  | 0x0320000000000000UL);
+        }
+
+        public ulong GetPayloadGUID(ulong gUID) => (ulong)GetPayloadGUID(new teResourceGUID(gUID));
 
         /// <summary>Load the texture payload</summary>
         /// <param name="payloadStream">The payload stream</param>
