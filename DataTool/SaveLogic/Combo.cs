@@ -518,63 +518,64 @@ namespace DataTool.SaveLogic {
                 header = textObj.Header;
                 headerStream.Dispose();
             }
-            
-            uint fourCC = header.Format().ToPixelFormat().fourCC;
-            bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int) header.format) ||
-                               TextureConfig.DXGI_BC5.Contains((int) header.format) ||
-                               fourCC == TextureConfig.FOURCC_ATI1 || fourCC == TextureConfig.FOURCC_ATI2;
 
-            // if (convertType == "tga") imageFormat = Im.... oh
-            // so there is no TGA image format.
-            // guess the TGA users are stuck with the DirectXTex stuff for now.
-            
-            convertedStream.Position = 0;
-            if (convertType == "dds" || convertedStream.Length == 0) {
-                WriteFile(convertedStream, $"{filePath}.{convertType}");
-                return;
-            }
-            
-            ImageFormat imageFormat = null;
-            if (convertType == "tif") imageFormat = ImageFormat.Tiff;
-            if (convertType == "png") imageFormat = ImageFormat.Png;
-            
-            if (isBcffValid && imageFormat != null) {
-                BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
-                decompressor.CreateImage();
-                decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
-                return;
-            }
+            using (convertedStream) {
+                uint fourCC = header.Format().ToPixelFormat().fourCC;
+                bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int)header.format) ||
+                                   TextureConfig.DXGI_BC5.Contains((int)header.format) ||
+                                   fourCC == TextureConfig.FOURCC_ATI1 || fourCC == TextureConfig.FOURCC_ATI2;
 
-            string losslessFlag = lossless ? "-wiclossless" : string.Empty;
+                // if (convertType == "tga") imageFormat = Im.... oh
+                // so there is no TGA image format.
+                // guess the TGA users are stuck with the DirectXTex stuff for now.
 
-            Process pProcess = new Process {
-                StartInfo = {
+                convertedStream.Position = 0;
+                if (convertType == "dds" || convertedStream.Length == 0) {
+                    WriteFile(convertedStream, $"{filePath}.{convertType}");
+                    return;
+                }
+
+                ImageFormat imageFormat = null;
+                if (convertType == "tif") imageFormat = ImageFormat.Tiff;
+                if (convertType == "png") imageFormat = ImageFormat.Png;
+
+                if (isBcffValid && imageFormat != null) {
+                    BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
+                    decompressor.CreateImage();
+                    decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
+                    return;
+                }
+
+                string losslessFlag = lossless ? "-wiclossless" : string.Empty;
+
+                Process pProcess = new Process {
+                    StartInfo = {
                     FileName = "Third Party\\texconv.exe",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
                     Arguments =
                         $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{path}"
                 }
-            };
+                };
+                pProcess.EnableRaisingEvents = true;
 
-            convertedStream.Position = 0;
-            byte[] data = new byte[convertedStream.Length];
-            convertedStream.Read(data, 0, data.Length);
-            convertedStream.Dispose();
-
-            // erm, so if you add an end quote to this then it breaks.
-            // but start one on it's own is fine (we need something for "Winged Victory")
-            pProcess.Start();
-            pProcess.StandardInput.BaseStream.WriteAsync(data, 0, data.Length).Wait();
-            pProcess.StandardInput.BaseStream.Dispose();
-
-            // pProcess.WaitForExit(); // not using this is kinda dangerous but I don't care
-            // when texconv writes with to the console -nologo is has done/failed conversion
-            string line = pProcess.StandardOutput.ReadLine();
-            if (line?.Contains("FAILED") == true) {
+                // erm, so if you add an end quote to this then it breaks.
+                // but start one on it's own is fine (we need something for "Winged Victory")
+                pProcess.Start();
                 convertedStream.Position = 0;
-                WriteFile(convertedStream, $"{filePath}.dds");
+                convertedStream.CopyTo(pProcess.StandardInput.BaseStream);
+                pProcess.StandardInput.BaseStream.Close();
+
+                // pProcess.WaitForExit(); // not using this is kinda dangerous but I don't care
+                // when texconv writes with to the console -nologo is has done/failed conversion
+                string line = pProcess.StandardOutput.ReadLine();
+                if (line?.Contains("FAILED") == true) {
+                    convertedStream.Position = 0;
+                    WriteFile(convertedStream, $"{filePath}.dds");
+                }
             }
         }
 
