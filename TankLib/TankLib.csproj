@@ -2433,7 +2433,7 @@
     <Compile Include="STU\Types\STU_6BA402D7.cs" />
     <Compile Include="STU\Types\STU_6BA4C85E.cs" />
     <Compile Include="STU\Types\STU_6BAB3D2D.cs" />
-    <Compile Include="STU\Types\STU_6BB3C6F8.cs" />
+    <Compile Include="STU\Types\STUVoiceConversationLine.cs" />
     <Compile Include="STU\Types\STU_6BC00853.cs" />
     <Compile Include="STU\Types\STU_6BC13553.cs" />
     <Compile Include="STU\Types\STU_6BC2531E.cs" />

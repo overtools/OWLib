@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUVoiceStimulus> m_401F5484;
 
         [STUFieldAttribute(0xF79D31F9, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_6BB3C6F8[] m_F79D31F9;
+        public STUVoiceConversationLine[] m_F79D31F9;
 
         [STUFieldAttribute(0x4FF98D41, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_C1A2DB26 m_4FF98D41;
