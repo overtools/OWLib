@@ -36,7 +36,7 @@ namespace TankLib.STU.Types {
         public STU_67E91024[] m_9991363C;
 
         [STUFieldAttribute(0xA35BFD43, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_99007908[] m_A35BFD43;
+        public STUAnimationTrackOverride[] m_A35BFD43;
 
         [STUFieldAttribute(0x563C7626)]
         public float m_563C7626;

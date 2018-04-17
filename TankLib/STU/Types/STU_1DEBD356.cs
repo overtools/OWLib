@@ -19,8 +19,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF872D711)]
         public teStructuredDataAssetRef<ulong> m_F872D711;
 
-        [STUFieldAttribute(0x9CDDC24D)]
-        public double m_9CDDC24D;
+        [STUFieldAttribute(0x9CDDC24D, "m_weight")]
+        public double m_weight;
 
         [STUFieldAttribute(0x288AE3BC)]
         public double m_288AE3BC;

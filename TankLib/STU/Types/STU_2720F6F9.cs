@@ -14,31 +14,31 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUDataFlow> m_87489076;
 
         [STUFieldAttribute(0x63691AF6, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_63691AF6;
+        public STUAnimConfigWeightSet m_63691AF6;
 
         [STUFieldAttribute(0x34EA4470, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_34EA4470;
+        public STUAnimConfigWeightSet m_34EA4470;
 
         [STUFieldAttribute(0x099F3E75, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_099F3E75;
+        public STUAnimConfigWeightSet m_099F3E75;
 
         [STUFieldAttribute(0x0CCE726E, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_0CCE726E;
+        public STUAnimConfigWeightSet m_0CCE726E;
 
         [STUFieldAttribute(0xED840ACB, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_ED840ACB;
+        public STUAnimConfigWeightSet m_ED840ACB;
 
         [STUFieldAttribute(0x0DCDCE86, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_0DCDCE86;
+        public STUAnimConfigWeightSet m_0DCDCE86;
 
         [STUFieldAttribute(0x8AD014A4, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_8AD014A4;
+        public STUAnimConfigWeightSet m_8AD014A4;
 
         [STUFieldAttribute(0xF64B2B67, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_F64B2B67;
+        public STUAnimConfigWeightSet m_F64B2B67;
 
         [STUFieldAttribute(0x3B439936, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_3B439936;
+        public STUAnimConfigWeightSet m_3B439936;
 
         [STUFieldAttribute(0x68CABF96)]
         public float m_68CABF96;

@@ -17,8 +17,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xAE42D53E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_7CD6F719 m_AE42D53E;
 
-        [STUFieldAttribute(0x939ABB2C)]
-        public teStructuredDataAssetRef<ulong> m_939ABB2C;
+        [STUFieldAttribute(0x939ABB2C, "m_materialData")]
+        public teStructuredDataAssetRef<ulong> m_materialData;
 
         [STUFieldAttribute(0x94C9FBD7)]
         public teColorRGBA m_94C9FBD7;

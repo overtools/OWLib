@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUVoiceStimulus> m_401F5484;
 
         [STUFieldAttribute(0x386B8E9C)]
-        public teStructuredDataAssetRef<STU_04118DBD> m_386B8E9C;
+        public teStructuredDataAssetRef<STUSound> m_386B8E9C;
 
         [STUFieldAttribute(0xBA5545D6)]
         public teStructuredDataAssetRef<STU_2B407D38> m_BA5545D6;
@@ -25,8 +25,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x4FF98D41, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_C1A2DB26 m_4FF98D41;
 
-        [STUFieldAttribute(0x9CDDC24D)]
-        public float m_9CDDC24D;
+        [STUFieldAttribute(0x9CDDC24D, "m_weight")]
+        public float m_weight;
 
         [STUFieldAttribute(0xB4D405A1)]
         public uint m_B4D405A1;

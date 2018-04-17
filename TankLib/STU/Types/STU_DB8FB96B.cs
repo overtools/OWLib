@@ -4,7 +4,7 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xDB8FB96B)]
-    public class STU_DB8FB96B : STU_866672AD {
+    public class STU_DB8FB96B : STUGenericSettings_Base {
         [STUFieldAttribute(0x93AE549B)]
         public teColorRGBA m_93AE549B;
 

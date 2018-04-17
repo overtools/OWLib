@@ -20,8 +20,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x6E01378E)]
         public teStructuredDataAssetRef<ulong>[] m_6E01378E;
 
-        [STUFieldAttribute(0xD440A0F7)]
-        public Enum_8F2CDF51[] m_D440A0F7;
+        [STUFieldAttribute(0xD440A0F7, "m_teams")]
+        public Enum_8F2CDF51[] m_teams;
 
         [STUFieldAttribute(0x4C9917C1)]
         public teStructuredDataAssetRef<STUStat> m_4C9917C1;

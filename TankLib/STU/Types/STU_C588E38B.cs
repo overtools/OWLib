@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xC588E38B)]
     public class STU_C588E38B : STUInstance {
-        [STUFieldAttribute(0x25274294)]
-        public byte[] m_25274294;
+        [STUFieldAttribute(0x25274294, "m_data")]
+        public byte[] m_data;
     }
 }

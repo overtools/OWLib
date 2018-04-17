@@ -10,13 +10,13 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xED9A28ED, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_A8EFC6F0 m_ED9A28ED;
 
-        [STUFieldAttribute(0x9556D6E4, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_A8EFC6F0 m_9556D6E4;
+        [STUFieldAttribute(0x9556D6E4, "m_crouch", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_A8EFC6F0 m_crouch;
 
         [STUFieldAttribute(0xBDD95289, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_A8EFC6F0 m_BDD95289;
 
-        [STUFieldAttribute(0x45A7A69C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_A8EFC6F0 m_45A7A69C;
+        [STUFieldAttribute(0x45A7A69C, "m_default", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_A8EFC6F0 m_default;
     }
 }

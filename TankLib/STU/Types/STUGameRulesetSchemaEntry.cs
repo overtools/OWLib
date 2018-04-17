@@ -5,8 +5,8 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0x074EDCB9, "STUGameRulesetSchemaEntry")]
     public class STUGameRulesetSchemaEntry : STUInstance {
-        [STUFieldAttribute(0xAA76FAD1)]
-        public teStructuredDataAssetRef<ulong> m_AA76FAD1;
+        [STUFieldAttribute(0xAA76FAD1, "m_displayText")]
+        public teStructuredDataAssetRef<ulong> m_displayText;
 
         [STUFieldAttribute(0x7DF418A5)]
         public teStructuredDataAssetRef<ulong> m_7DF418A5;

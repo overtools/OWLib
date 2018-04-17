@@ -40,11 +40,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x26DCA69D, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_F92E0197 m_26DCA69D;
 
-        [STUFieldAttribute(0xEC42051A, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_57C43142 m_EC42051A;
+        [STUFieldAttribute(0xEC42051A, "m_userWeights", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimUserWeights m_userWeights;
 
-        [STUFieldAttribute(0xF0E4656D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_19354E9E m_F0E4656D;
+        [STUFieldAttribute(0xF0E4656D, "m_globalLayerMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimGlobalLayerMultipliers m_globalLayerMultipliers;
 
         [STUFieldAttribute(0xE56B739B)]
         public float m_E56B739B;
@@ -79,7 +79,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x83CE3EB5)]
         public float m_83CE3EB5;
 
-        [STUFieldAttribute(0x5620DA50, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_7C094509 m_5620DA50;
+        [STUFieldAttribute(0x5620DA50, "m_globalWeightMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_7C094509 m_globalWeightMultipliers;
     }
 }

@@ -19,14 +19,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xEC4CAE23)]
         public teStructuredDataAssetRef<STUDataFlow> m_EC4CAE23;
 
-        [STUFieldAttribute(0x5620DA50, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_B0D9AEDF m_5620DA50;
+        [STUFieldAttribute(0x5620DA50, "m_globalWeightMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimGlobalWeightMultipliers m_globalWeightMultipliers;
 
-        [STUFieldAttribute(0xEC42051A, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_57C43142 m_EC42051A;
+        [STUFieldAttribute(0xEC42051A, "m_userWeights", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimUserWeights m_userWeights;
 
-        [STUFieldAttribute(0xF0E4656D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_19354E9E m_F0E4656D;
+        [STUFieldAttribute(0xF0E4656D, "m_globalLayerMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimGlobalLayerMultipliers m_globalLayerMultipliers;
 
         [STUFieldAttribute(0xE11298F3)]
         public float m_E11298F3;

@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x2AA453C0)]
     public class STU_2AA453C0 : STUStatescriptOutputPlug {
-        [STUFieldAttribute(0x9CDDC24D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_9CDDC24D;
+        [STUFieldAttribute(0x9CDDC24D, "m_weight", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_weight;
     }
 }

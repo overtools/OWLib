@@ -4,10 +4,10 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x949FA931, "STUAnimConfigBoneWeight_Item")]
     public class STUAnimConfigBoneWeight_Item : STUInstance {
-        [STUFieldAttribute(0x9CDDC24D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_ABD8FE73 m_9CDDC24D;
+        [STUFieldAttribute(0x9CDDC24D, "m_weight", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_ABD8FE73 m_weight;
 
-        [STUFieldAttribute(0xF97609C8)]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_F97609C8;
+        [STUFieldAttribute(0xF97609C8, "m_bone")]
+        public teStructuredDataAssetRef<STU_7A0B33DA> m_bone;
     }
 }

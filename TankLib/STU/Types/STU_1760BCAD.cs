@@ -4,10 +4,10 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x1760BCAD)]
     public class STU_1760BCAD : STU_7639CFC1 {
-        [STUFieldAttribute(0x7594F80E)]
-        public int m_7594F80E;
+        [STUFieldAttribute(0x7594F80E, "m_min")]
+        public int m_min;
 
-        [STUFieldAttribute(0x7CEA65C7)]
-        public int m_7CEA65C7;
+        [STUFieldAttribute(0x7CEA65C7, "m_max")]
+        public int m_max;
     }
 }

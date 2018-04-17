@@ -4,14 +4,14 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x569C801E)]
     public class STU_569C801E : STUInstance {
-        [STUFieldAttribute(0x9556D6E4, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_6F01D053 m_9556D6E4;
+        [STUFieldAttribute(0x9556D6E4, "m_crouch", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_6F01D053 m_crouch;
 
         [STUFieldAttribute(0x3661B9E8, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_6F01D053 m_3661B9E8;
 
-        [STUFieldAttribute(0x5F150DBC, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_6F01D053 m_5F150DBC;
+        [STUFieldAttribute(0x5F150DBC, "m_jump", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_6F01D053 m_jump;
 
         [STUFieldAttribute(0x1E890BF5, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_6F01D053 m_1E890BF5;

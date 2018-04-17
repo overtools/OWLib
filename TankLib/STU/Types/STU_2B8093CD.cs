@@ -13,14 +13,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA848F2C7)]
         public teStructuredDataAssetRef<STU_4B259FE1> m_A848F2C7;
 
-        [STUFieldAttribute(0x2C05CD95)]
-        public teStructuredDataAssetRef<STU_25DA0DF5> m_2C05CD95;
+        [STUFieldAttribute(0x2C05CD95, "m_catalog")]
+        public teStructuredDataAssetRef<STUMapCatalog> m_catalog;
 
-        [STUFieldAttribute(0x4EEA6AF4)]
-        public teStructuredDataAssetRef<ulong>[] m_4EEA6AF4;
+        [STUFieldAttribute(0x4EEA6AF4, "m_rulesets")]
+        public teStructuredDataAssetRef<ulong>[] m_rulesets;
 
         [STUFieldAttribute(0x6F71E9AA, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_9783E116[] m_6F71E9AA;
+        public STUGameModeVarValuePair[] m_6F71E9AA;
 
         [STUFieldAttribute(0x70045C77, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_58E4EC09[] m_70045C77;

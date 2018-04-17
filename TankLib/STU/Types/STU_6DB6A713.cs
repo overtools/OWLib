@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x6DB6A713)]
     public class STU_6DB6A713 : STU_A2B9762B {
-        [STUFieldAttribute(0x25274294, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUModelHardpoint m_25274294;
+        [STUFieldAttribute(0x25274294, "m_data", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUModelHardpoint m_data;
     }
 }

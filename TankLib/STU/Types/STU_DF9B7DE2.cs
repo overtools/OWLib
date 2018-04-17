@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xDF9B7DE2)]
     public class STU_DF9B7DE2 : STUInstance {
-        [STUFieldAttribute(0x7EEFB57A)]
-        public ushort m_7EEFB57A;
+        [STUFieldAttribute(0x7EEFB57A, "m_flags")]
+        public ushort m_flags;
     }
 }

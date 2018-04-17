@@ -5,13 +5,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xF3EB00D4)]
     public class STU_F3EB00D4 : STUInstance {
         [STUFieldAttribute(0xB3685B0D)]
-        public teStructuredDataAssetRef<STU_04118DBD> m_B3685B0D;
+        public teStructuredDataAssetRef<STUSound> m_B3685B0D;
 
         [STUFieldAttribute(0xF7BBC834)]
         public teStructuredDataAssetRef<STU_6BA402D7> m_F7BBC834;
 
-        [STUFieldAttribute(0xBD1B72B9)]
-        public teStructuredDataAssetRef<STU_89006ADB> m_BD1B72B9;
+        [STUFieldAttribute(0xBD1B72B9, "m_soundSwitch")]
+        public teStructuredDataAssetRef<STUSoundSwitch> m_soundSwitch;
 
         [STUFieldAttribute(0xEE400AC2)]
         public teStructuredDataAssetRef<STU_D184C474> m_EE400AC2;

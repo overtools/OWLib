@@ -22,7 +22,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x36F8C331)]
         public ulong m_36F8C331;
 
-        [STUFieldAttribute(0x7EEFB57A)]
-        public uint m_7EEFB57A;
+        [STUFieldAttribute(0x7EEFB57A, "m_flags")]
+        public uint m_flags;
     }
 }

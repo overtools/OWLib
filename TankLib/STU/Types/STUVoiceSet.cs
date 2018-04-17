@@ -9,7 +9,7 @@ namespace TankLib.STU.Types {
         public STUVoiceLineInstance[] m_voiceLineInstances;
 
         [STUFieldAttribute(0x386B8E9C)]
-        public teStructuredDataAssetRef<STU_04118DBD> m_386B8E9C;
+        public teStructuredDataAssetRef<STUSound> m_386B8E9C;
 
         [STUFieldAttribute(0x269FC4E9)]
         public teStructuredDataAssetRef<ulong> m_269FC4E9;

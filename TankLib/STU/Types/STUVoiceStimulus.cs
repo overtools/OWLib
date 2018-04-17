@@ -9,7 +9,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STU_F38E9E14> m_87DCD58E;
 
         [STUFieldAttribute(0x099F25C9)]
-        public teStructuredDataAssetRef<STU_866672AD> m_099F25C9;
+        public teStructuredDataAssetRef<STUGenericSettings_Base> m_099F25C9;
 
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
         public teStructuredDataAssetRef<STUVoiceCategory> m_category;

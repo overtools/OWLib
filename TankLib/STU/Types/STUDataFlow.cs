@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xD2929F20, "STUDataFlow")]
     public class STUDataFlow : STUInstance {
         [STUFieldAttribute(0x0619C597, "m_type", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_41D3910F m_type;
+        public STUDataFlowType m_type;
 
         [STUFieldAttribute(0x1B90FF5F)]
         public Enum_53E780F3 m_1B90FF5F;

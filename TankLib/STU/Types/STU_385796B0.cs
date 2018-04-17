@@ -18,7 +18,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STU_7A0B33DA> m_A74DE280;
 
         [STUFieldAttribute(0x0AD400C5)]
-        public teStructuredDataAssetRef<STU_8BDCD4C6> m_0AD400C5;
+        public teStructuredDataAssetRef<STUAnimBoneWeightMask> m_0AD400C5;
 
         [STUFieldAttribute(0xD4F15C60)]
         public teVec3 m_D4F15C60;

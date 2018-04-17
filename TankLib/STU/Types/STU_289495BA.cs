@@ -8,13 +8,13 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STU_804DEAB9> m_3D3E8125;
 
         [STUFieldAttribute(0x386B8E9C)]
-        public teStructuredDataAssetRef<STU_04118DBD> m_386B8E9C;
+        public teStructuredDataAssetRef<STUSound> m_386B8E9C;
 
         [STUFieldAttribute(0x48A387B6)]
         public float m_48A387B6;
 
-        [STUFieldAttribute(0x5DC5168B)]
-        public uint m_5DC5168B;
+        [STUFieldAttribute(0x5DC5168B, "m_width")]
+        public uint m_width;
 
         [STUFieldAttribute(0xA16426C6, "m_height")]
         public uint m_height;

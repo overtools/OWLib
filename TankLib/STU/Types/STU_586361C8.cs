@@ -4,11 +4,11 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x586361C8)]
     public class STU_586361C8 : STUInstance {
-        [STUFieldAttribute(0x9CDDC24D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_ABD8FE73 m_9CDDC24D;
+        [STUFieldAttribute(0x9CDDC24D, "m_weight", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_ABD8FE73 m_weight;
 
-        [STUFieldAttribute(0xF97609C8)]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_F97609C8;
+        [STUFieldAttribute(0xF97609C8, "m_bone")]
+        public teStructuredDataAssetRef<STU_7A0B33DA> m_bone;
 
         [STUFieldAttribute(0xC7E4EB10)]
         public byte m_C7E4EB10;

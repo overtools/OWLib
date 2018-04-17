@@ -5,11 +5,11 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0xC5BE2B08)]
     public class STU_C5BE2B08 : STU_9F7A0E66 {
-        [STUFieldAttribute(0x7594F80E)]
-        public float m_7594F80E;
+        [STUFieldAttribute(0x7594F80E, "m_min")]
+        public float m_min;
 
-        [STUFieldAttribute(0x7CEA65C7)]
-        public float m_7CEA65C7;
+        [STUFieldAttribute(0x7CEA65C7, "m_max")]
+        public float m_max;
 
         [STUFieldAttribute(0xD62358FA)]
         public float m_D62358FA;

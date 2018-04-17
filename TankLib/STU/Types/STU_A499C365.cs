@@ -7,14 +7,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0AF7AD2A)]
         public teStructuredDataAssetRef<ulong> m_0AF7AD2A;
 
-        [STUFieldAttribute(0x7594F80E)]
-        public float m_7594F80E;
+        [STUFieldAttribute(0x7594F80E, "m_min")]
+        public float m_min;
 
-        [STUFieldAttribute(0x7CEA65C7)]
-        public float m_7CEA65C7;
+        [STUFieldAttribute(0x7CEA65C7, "m_max")]
+        public float m_max;
 
-        [STUFieldAttribute(0x45A7A69C)]
-        public float m_45A7A69C;
+        [STUFieldAttribute(0x45A7A69C, "m_default")]
+        public float m_default;
 
         [STUFieldAttribute(0xED39107B)]
         public byte m_ED39107B;

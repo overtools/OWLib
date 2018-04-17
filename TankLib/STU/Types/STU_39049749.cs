@@ -5,8 +5,8 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0x39049749)]
     public class STU_39049749 : STUInstance {
-        [STUFieldAttribute(0x2C05CD95)]
-        public teStructuredDataAssetRef<STU_25DA0DF5> m_2C05CD95;
+        [STUFieldAttribute(0x2C05CD95, "m_catalog")]
+        public teStructuredDataAssetRef<STUMapCatalog> m_catalog;
 
         [STUFieldAttribute(0xE02BEE24, "m_celebration")]
         public teStructuredDataAssetRef<STUCelebration> m_celebration;

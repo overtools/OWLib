@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xB44A42A0)]
         public Enum_E7FEC166 m_B44A42A0;
 
-        [STUFieldAttribute(0xAF872E86)]
-        public float m_AF872E86;
+        [STUFieldAttribute(0xAF872E86, "m_amount")]
+        public float m_amount;
     }
 }

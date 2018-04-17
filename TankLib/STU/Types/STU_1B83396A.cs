@@ -11,31 +11,31 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUAnimation> m_C027E938;
 
         [STUFieldAttribute(0x34EA4470, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_34EA4470;
+        public STUAnimConfigWeightSet m_34EA4470;
 
         [STUFieldAttribute(0xED840ACB, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_ED840ACB;
+        public STUAnimConfigWeightSet m_ED840ACB;
 
         [STUFieldAttribute(0xF64B2B67, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A1B96C48 m_F64B2B67;
+        public STUAnimConfigWeightSet m_F64B2B67;
 
-        [STUFieldAttribute(0x5620DA50, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_B0D9AEDF m_5620DA50;
+        [STUFieldAttribute(0x5620DA50, "m_globalWeightMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimGlobalWeightMultipliers m_globalWeightMultipliers;
 
         [STUFieldAttribute(0x979FAA93, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_06591AEB m_979FAA93;
+        public STUAnimConfigAimWeightSet m_979FAA93;
 
         [STUFieldAttribute(0x07BCBE01, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_06591AEB m_07BCBE01;
+        public STUAnimConfigAimWeightSet m_07BCBE01;
 
         [STUFieldAttribute(0x09DDB5BC, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_06591AEB m_09DDB5BC;
+        public STUAnimConfigAimWeightSet m_09DDB5BC;
 
-        [STUFieldAttribute(0xEC42051A, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_57C43142 m_EC42051A;
+        [STUFieldAttribute(0xEC42051A, "m_userWeights", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimUserWeights m_userWeights;
 
-        [STUFieldAttribute(0xF0E4656D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_19354E9E m_F0E4656D;
+        [STUFieldAttribute(0xF0E4656D, "m_globalLayerMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimGlobalLayerMultipliers m_globalLayerMultipliers;
 
         [STUFieldAttribute(0xE8502460)]
         public float m_E8502460;

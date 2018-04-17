@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA85E1803, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_41999460[] m_A85E1803;
 
-        [STUFieldAttribute(0xF72DF349)]
-        public Enum_BDE32585 m_F72DF349;
+        [STUFieldAttribute(0xF72DF349, "m_contactType")]
+        public STUContactType m_contactType;
     }
 }

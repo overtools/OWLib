@@ -14,7 +14,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xE3C80AC9)]
         public teColorRGBA m_E3C80AC9;
 
-        [STUFieldAttribute(0xB8938E78)]
-        public teColorRGBA m_B8938E78;
+        [STUFieldAttribute(0xB8938E78, "m_backgroundColor")]
+        public teColorRGBA m_backgroundColor;
     }
 }

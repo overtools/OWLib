@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xD353184F, "STUGameRulesetSchema")]
     public class STUGameRulesetSchema : STUInstance {
-        [STUFieldAttribute(0xAA76FAD1)]
-        public teStructuredDataAssetRef<ulong> m_AA76FAD1;
+        [STUFieldAttribute(0xAA76FAD1, "m_displayText")]
+        public teStructuredDataAssetRef<ulong> m_displayText;
 
         [STUFieldAttribute(0x16B4863C, "m_entries", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameRulesetSchemaEntry[] m_entries;

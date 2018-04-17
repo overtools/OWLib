@@ -4,29 +4,29 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xB243F612)]
     public class STU_B243F612 : STU_C7C085F6 {
-        [STUFieldAttribute(0x9A7ECA46)]
-        public teStructuredDataAssetRef<STUAnimation> m_9A7ECA46;
+        [STUFieldAttribute(0x9A7ECA46, "m_runN")]
+        public teStructuredDataAssetRef<STUAnimation> m_runN;
 
-        [STUFieldAttribute(0xB3DD0020)]
-        public teStructuredDataAssetRef<STUAnimation> m_B3DD0020;
+        [STUFieldAttribute(0xB3DD0020, "m_runE")]
+        public teStructuredDataAssetRef<STUAnimation> m_runE;
 
-        [STUFieldAttribute(0xACB0FAE2)]
-        public teStructuredDataAssetRef<STUAnimation> m_ACB0FAE2;
+        [STUFieldAttribute(0xACB0FAE2, "m_runS")]
+        public teStructuredDataAssetRef<STUAnimation> m_runS;
 
-        [STUFieldAttribute(0xE45FBD36)]
-        public teStructuredDataAssetRef<STUAnimation> m_E45FBD36;
+        [STUFieldAttribute(0xE45FBD36, "m_runW")]
+        public teStructuredDataAssetRef<STUAnimation> m_runW;
 
-        [STUFieldAttribute(0x59860ABF)]
-        public teStructuredDataAssetRef<STUAnimation> m_59860ABF;
+        [STUFieldAttribute(0x59860ABF, "m_runAimAdditiveN")]
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveN;
 
-        [STUFieldAttribute(0x7E2A7D18)]
-        public teStructuredDataAssetRef<STUAnimation> m_7E2A7D18;
+        [STUFieldAttribute(0x7E2A7D18, "m_runAimAdditiveE")]
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveE;
 
-        [STUFieldAttribute(0x30AC076A)]
-        public teStructuredDataAssetRef<STUAnimation> m_30AC076A;
+        [STUFieldAttribute(0x30AC076A, "m_runAimAdditiveS")]
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveS;
 
-        [STUFieldAttribute(0x6A64DD95)]
-        public teStructuredDataAssetRef<STUAnimation> m_6A64DD95;
+        [STUFieldAttribute(0x6A64DD95, "m_runAimAdditiveW")]
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveW;
 
         [STUFieldAttribute(0xB9839141)]
         public teStructuredDataAssetRef<STU_7A6F6DC0> m_B9839141;
@@ -43,26 +43,26 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x1FB4D322)]
         public teStructuredDataAssetRef<STUDataFlow> m_1FB4D322;
 
-        [STUFieldAttribute(0x5620DA50, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_B0D9AEDF m_5620DA50;
+        [STUFieldAttribute(0x5620DA50, "m_globalWeightMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimGlobalWeightMultipliers m_globalWeightMultipliers;
 
-        [STUFieldAttribute(0xEC42051A, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_57C43142 m_EC42051A;
+        [STUFieldAttribute(0xEC42051A, "m_userWeights", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimUserWeights m_userWeights;
 
-        [STUFieldAttribute(0xF0E4656D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_19354E9E m_F0E4656D;
+        [STUFieldAttribute(0xF0E4656D, "m_globalLayerMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimGlobalLayerMultipliers m_globalLayerMultipliers;
 
-        [STUFieldAttribute(0x4366D221)]
-        public float m_4366D221;
+        [STUFieldAttribute(0x4366D221, "m_runSpeedN")]
+        public float m_runSpeedN;
 
-        [STUFieldAttribute(0xB5ECB1C4)]
-        public float m_B5ECB1C4;
+        [STUFieldAttribute(0xB5ECB1C4, "m_runSpeedE")]
+        public float m_runSpeedE;
 
-        [STUFieldAttribute(0x7201BAA6)]
-        public float m_7201BAA6;
+        [STUFieldAttribute(0x7201BAA6, "m_runSpeedS")]
+        public float m_runSpeedS;
 
-        [STUFieldAttribute(0xB1C32752)]
-        public float m_B1C32752;
+        [STUFieldAttribute(0xB1C32752, "m_runSpeedW")]
+        public float m_runSpeedW;
 
         [STUFieldAttribute(0xD80506E4)]
         public float m_D80506E4;

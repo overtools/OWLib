@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STU_9CADF2EC> m_AC0061B5;
 
         [STUFieldAttribute(0x37AB13D3, "m_hero")]
-        public teStructuredDataAssetRef<STU_7C3457DC> m_hero;
+        public teStructuredDataAssetRef<STUHero> m_hero;
 
         [STUFieldAttribute(0x948F409B)]
         public teStructuredDataAssetRef<STUEntityDefinition> m_948F409B;

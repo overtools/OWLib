@@ -14,8 +14,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x89C0D8DA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_4294267F[] m_89C0D8DA;
 
-        [STUFieldAttribute(0x25274294, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_A2B9762B m_25274294;
+        [STUFieldAttribute(0x25274294, "m_data", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_A2B9762B m_data;
 
         [STUFieldAttribute(0xAF9D3A0C, "m_rotation")]
         public teQuat m_rotation;

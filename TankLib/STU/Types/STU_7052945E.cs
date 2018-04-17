@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public teString m_FA1FDF0D;
 
         [STUFieldAttribute(0x91E8FA23, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_0EBAF735[] m_91E8FA23;
+        public STUSoundBankDataVersion[] m_91E8FA23;
     }
 }

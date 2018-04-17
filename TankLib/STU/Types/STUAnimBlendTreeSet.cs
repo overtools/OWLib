@@ -46,8 +46,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBA53D5ED, "m_guid")]
         public ulong m_guid;
 
-        [STUFieldAttribute(0x84935843)]
-        public ulong m_84935843;
+        [STUFieldAttribute(0x84935843, "m_rootAnimAliasGUID")]
+        public ulong m_rootAnimAliasGUID;
 
         [STUFieldAttribute(0x384DE14F, "m_retargetParams", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimBlendTreeSet_RetargetParams m_retargetParams;

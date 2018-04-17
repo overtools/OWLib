@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x71908FCD)]
-    public class STU_71908FCD : STU_866672AD {
+    public class STU_71908FCD : STUGenericSettings_Base {
         [STUFieldAttribute(0x80543A5C)]
         public teStructuredDataAssetRef<STUStat> m_80543A5C;
 

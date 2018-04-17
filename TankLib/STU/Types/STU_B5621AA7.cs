@@ -7,7 +7,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x5DC61E59)]
         public teStructuredDataAssetRef<STU_2B8093CD> m_5DC61E59;
 
-        [STUFieldAttribute(0x9CDDC24D)]
-        public int m_9CDDC24D;
+        [STUFieldAttribute(0x9CDDC24D, "m_weight")]
+        public int m_weight;
     }
 }

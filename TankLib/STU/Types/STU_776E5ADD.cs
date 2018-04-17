@@ -5,9 +5,9 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x776E5ADD)]
     public class STU_776E5ADD : STU_848957AF {
         [STUFieldAttribute(0x3FE1EA9E, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_B13E2A22[] m_3FE1EA9E;
+        public STUGameRulesetSchemaValueEnumChoice[] m_3FE1EA9E;
 
-        [STUFieldAttribute(0x45A7A69C)]
-        public teStructuredDataAssetRef<STU_9CADF2EC> m_45A7A69C;
+        [STUFieldAttribute(0x45A7A69C, "m_default")]
+        public teStructuredDataAssetRef<STU_9CADF2EC> m_default;
     }
 }

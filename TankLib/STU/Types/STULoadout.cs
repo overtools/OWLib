@@ -30,7 +30,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong>[] m_B1124918;
 
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
-        public Enum_0243CBF9 m_category;
+        public LoadoutCategory m_category;
 
         [STUFieldAttribute(0x0E679979)]
         public int m_0E679979;

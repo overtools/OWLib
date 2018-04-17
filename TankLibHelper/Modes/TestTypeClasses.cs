@@ -26,6 +26,7 @@ namespace TankLibHelper.Modes {
 
             foreach (ulong file in Types[type]) {
                 using (Stream stream = OpenFile(file)) {
+                    if (stream == null) continue;
                     teStructuredData structuredData = new teStructuredData(stream);
                 }
             }

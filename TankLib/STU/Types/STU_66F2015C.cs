@@ -10,8 +10,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBDD95289)]
         public teStructuredDataAssetRef<STUAnimation> m_BDD95289;
 
-        [STUFieldAttribute(0x9556D6E4)]
-        public teStructuredDataAssetRef<STUAnimation> m_9556D6E4;
+        [STUFieldAttribute(0x9556D6E4, "m_crouch")]
+        public teStructuredDataAssetRef<STUAnimation> m_crouch;
 
         [STUFieldAttribute(0xED9A28ED)]
         public teStructuredDataAssetRef<STUAnimation> m_ED9A28ED;

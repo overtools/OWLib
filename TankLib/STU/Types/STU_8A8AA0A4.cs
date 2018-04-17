@@ -10,7 +10,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x03613078)]
         public teStructuredDataAssetRef<ulong> m_03613078;
 
-        [STUFieldAttribute(0x45A7A69C)]
-        public byte m_45A7A69C;
+        [STUFieldAttribute(0x45A7A69C, "m_default")]
+        public byte m_default;
     }
 }
