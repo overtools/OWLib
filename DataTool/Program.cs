@@ -179,7 +179,7 @@ namespace DataTool {
                         }
 
                         STUEncryptionKey encryptionKey = GetInstance<STUEncryptionKey>(key);
-                        if (encryptionKey != null && !KeyService.keys.ContainsKey(encryptionKey.LongRevKey)) {
+                        if (encryptionKey != null && encryptionKey.LongKey != 0 && !KeyService.keys.ContainsKey(encryptionKey.LongRevKey)) {
                             KeyService.keys.Add(encryptionKey.LongRevKey, encryptionKey.KeyValue);
                             Log("Added Encryption Key {0}, Value: {1}", encryptionKey.KeyNameProper, encryptionKey.Key);
                         }
