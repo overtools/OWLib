@@ -16,8 +16,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBFDEB7F1, "m_height")]
         public float m_height;
 
-        [STUFieldAttribute(0xB654A30D)]
-        public float m_B654A30D;
+        [STUFieldAttribute(0xB654A30D, "m_depth")]
+        public float m_depth;
 
         [STUFieldAttribute(0xA0B19AE0)]
         public float m_A0B19AE0;

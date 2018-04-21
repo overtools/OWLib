@@ -8,8 +8,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xC71EA6BC, "m_graph", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGraph m_graph;
 
-        [STUFieldAttribute(0x9B2111C5, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_C2DC60F6[] m_9B2111C5;
+        [STUFieldAttribute(0x9B2111C5, "m_nodes", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUStatescriptBase[] m_nodes;
 
         [STUFieldAttribute(0xE6E7A042, "m_states", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptState[] m_states;
@@ -42,7 +42,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong>[] m_9CEC6985;
 
         [STUFieldAttribute(0x41A83970, "m_remoteSyncNodes", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_C2DC60F6[] m_remoteSyncNodes;
+        public STUStatescriptBase[] m_remoteSyncNodes;
 
         [STUFieldAttribute(0x434A5521, "m_syncVars", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUStatescriptSyncVar[] m_syncVars;

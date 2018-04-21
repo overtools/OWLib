@@ -11,8 +11,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xDF647B95)]
         public Enum_BC00E017 m_DF647B95;
 
-        [STUFieldAttribute(0x35EC21DC)]
-        public Enum_4368B765 m_35EC21DC;
+        [STUFieldAttribute(0x35EC21DC, "m_interrupt")]
+        public Enum_4368B765 m_interrupt;
 
         [STUFieldAttribute(0xA73F2EBE)]
         public float m_A73F2EBE;

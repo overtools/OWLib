@@ -21,8 +21,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF7EF3000)]
         public teUUID m_F7EF3000;
 
-        [STUFieldAttribute(0x78A08312)]
-        public teString m_78A08312;
+        [STUFieldAttribute(0x78A08312, "m_string")]
+        public teString m_string;
 
         [STUFieldAttribute(0xEA8E6A19)]
         public byte[] m_EA8E6A19;
@@ -129,8 +129,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF170BC4D)]
         public float m_F170BC4D;
 
-        [STUFieldAttribute(0x0D90D271)]
-        public Enum_0EF092C3 m_0D90D271;
+        [STUFieldAttribute(0x0D90D271, "m_enum")]
+        public Enum_0EF092C3 m_enum;
 
         [STUFieldAttribute(0x58C99FBE)]
         public uint m_58C99FBE;

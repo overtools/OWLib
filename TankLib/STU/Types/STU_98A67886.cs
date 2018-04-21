@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x98A67886)]
     public class STU_98A67886 : STU_440D818B {
-        [STUFieldAttribute(0x95DF33CE)]
-        public teStructuredDataAssetRef<STU_B77FCA72> m_95DF33CE;
+        [STUFieldAttribute(0x95DF33CE, "m_screen")]
+        public teStructuredDataAssetRef<STU_B77FCA72> m_screen;
 
         [STUFieldAttribute(0x0CDFEDC6)]
         public teStructuredDataAssetRef<STU_B77FCA72> m_0CDFEDC6;

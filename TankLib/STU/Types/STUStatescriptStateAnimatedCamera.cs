@@ -41,12 +41,12 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_2DCE8B53;
 
         [STUFieldAttribute(0x6854990D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F6279B0F m_6854990D;
+        public STUAnimCurve m_6854990D;
 
         [STUFieldAttribute(0x665704C8, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F6279B0F m_665704C8;
+        public STUAnimCurve m_665704C8;
 
         [STUFieldAttribute(0xB318A744, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F6279B0F m_B318A744;
+        public STUAnimCurve m_B318A744;
     }
 }

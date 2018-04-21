@@ -132,8 +132,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF170BC4D)]
         public float m_F170BC4D;
 
-        [STUFieldAttribute(0x0D90D271)]
-        public Enum_0EF092C3 m_0D90D271;
+        [STUFieldAttribute(0x0D90D271, "m_enum")]
+        public Enum_0EF092C3 m_enum;
 
         [STUFieldAttribute(0x5FA78ECF)]
         public short m_5FA78ECF;

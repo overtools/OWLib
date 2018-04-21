@@ -7,8 +7,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x2D3CDFA9, "m_hardPoint", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_57C7508E m_hardPoint;
 
-        [STUFieldAttribute(0x4D2DB658, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_6B62E4AD m_4D2DB658;
+        [STUFieldAttribute(0x4D2DB658, "m_identifier", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_6B62E4AD m_identifier;
 
         [STUFieldAttribute(0xF72DF349, "m_contactType", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_A3ECD978 m_contactType;

@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x04E03364)]
     public class STU_04E03364 : STU_7C27312D {
-        [STUFieldAttribute(0xBA10B1B7)]
-        public float m_BA10B1B7;
+        [STUFieldAttribute(0xBA10B1B7, "m_defaultValue")]
+        public float m_defaultValue;
     }
 }

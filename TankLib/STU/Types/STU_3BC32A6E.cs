@@ -5,10 +5,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x3BC32A6E)]
     public class STU_3BC32A6E : STUInstance {
         [STUFieldAttribute(0x25B2A624, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_9F1D18DD[] m_25B2A624;
+        public STUAICellData[] m_25B2A624;
 
         [STUFieldAttribute(0xD7C9DAAC, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_C588E38B[] m_D7C9DAAC;
+        public STUAICellBytes[] m_D7C9DAAC;
 
         [STUFieldAttribute(0x64893F8F)]
         public ulong m_64893F8F;

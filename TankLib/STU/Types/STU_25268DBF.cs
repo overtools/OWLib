@@ -4,10 +4,10 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x25268DBF)]
     public class STU_25268DBF : STU_115D40BB {
-        [STUFieldAttribute(0xDC71317C)]
-        public float m_DC71317C;
+        [STUFieldAttribute(0xDC71317C, "m_start")]
+        public float m_start;
 
-        [STUFieldAttribute(0x04B2C103)]
-        public float m_04B2C103;
+        [STUFieldAttribute(0x04B2C103, "m_end")]
+        public float m_end;
     }
 }

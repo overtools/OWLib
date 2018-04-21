@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUHardPoint> m_hardPoint;
 
         [STUFieldAttribute(0x49F782CE)]
-        public teStructuredDataAssetRef<STU_9CADF2EC> m_49F782CE;
+        public teStructuredDataAssetRef<STUIdentifier> m_49F782CE;
 
         [STUFieldAttribute(0x2263EA37)]
         public byte m_2263EA37;

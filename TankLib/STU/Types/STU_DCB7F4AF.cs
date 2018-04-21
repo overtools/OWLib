@@ -3,6 +3,6 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xDCB7F4AF)]
-    public class STU_DCB7F4AF : STU_1482DDBB {
+    public class STU_DCB7F4AF : STUConfigVarBoolBase {
     }
 }

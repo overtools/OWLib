@@ -7,13 +7,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x5BB2E270)]
     public class STU_5BB2E270 : STUInstance {
         [STUFieldAttribute(0xB8DC6D46)]
-        public teStructuredDataAssetRef<STU_8880FCB0> m_B8DC6D46;
+        public teStructuredDataAssetRef<STUTeamColor> m_B8DC6D46;
 
         [STUFieldAttribute(0x5DB91CE2, "m_displayName")]
         public teStructuredDataAssetRef<ulong> m_displayName;
 
         [STUFieldAttribute(0x91346D6A)]
-        public teStructuredDataAssetRef<STU_9CADF2EC> m_91346D6A;
+        public teStructuredDataAssetRef<STUIdentifier> m_91346D6A;
 
         [STUFieldAttribute(0x11C761F7)]
         public ulong m_11C761F7;

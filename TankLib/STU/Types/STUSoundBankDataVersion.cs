@@ -19,8 +19,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x72F2A9FA, "m_wwiseWEMFileIDs")]
         public uint[] m_wwiseWEMFileIDs;
 
-        [STUFieldAttribute(0x5A7EC887, "m_wwiseWEMStreamID")]
-        public uint[] m_wwiseWEMStreamID;
+        [STUFieldAttribute(0x5A7EC887, "m_wwiseWEMStreamIDs")]
+        public uint[] m_wwiseWEMStreamIDs;
 
         [STUFieldAttribute(0xF99A0938)]
         public teString m_F99A0938;

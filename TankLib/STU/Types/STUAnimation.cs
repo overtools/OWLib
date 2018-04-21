@@ -17,8 +17,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA7FE4B94)]
         public teString m_A7FE4B94;
 
-        [STUFieldAttribute(0x818D011C)]
-        public teStructuredDataAssetRef<STUSkeleton> m_818D011C;
+        [STUFieldAttribute(0x818D011C, "m_skeleton")]
+        public teStructuredDataAssetRef<STUSkeleton> m_skeleton;
 
         [STUFieldAttribute(0x694849B1)]
         public teStructuredDataAssetRef<STUAnimation> m_694849B1;

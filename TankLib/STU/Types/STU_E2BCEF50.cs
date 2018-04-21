@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xE2BCEF50)]
-    public class STU_E2BCEF50 : STU_DD856C32 {
+    public class STU_E2BCEF50 : STUStatescriptAction {
         [STUFieldAttribute(0x3CFA3EE6, "m_locale", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_locale;
 

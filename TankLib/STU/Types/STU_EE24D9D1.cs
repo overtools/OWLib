@@ -10,7 +10,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xB763BD10)]
         public uint m_B763BD10;
 
-        [STUFieldAttribute(0xFE1C5928)]
-        public uint m_FE1C5928;
+        [STUFieldAttribute(0xFE1C5928, "m_fileSize")]
+        public uint m_fileSize;
     }
 }

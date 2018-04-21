@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xC01465B8)]
     public class STU_C01465B8 : SDD_Line3D {
-        [STUFieldAttribute(0xFFB46958)]
-        public float m_FFB46958;
+        [STUFieldAttribute(0xFFB46958, "fRadius")]
+        public float fRadius;
     }
 }

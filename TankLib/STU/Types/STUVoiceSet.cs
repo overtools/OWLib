@@ -20,8 +20,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA9277D84)]
         public teStructuredDataAssetRef<ulong> m_A9277D84;
 
-        [STUFieldAttribute(0xF7FA2CAC)]
-        public ulong[] m_F7FA2CAC;
+        [STUFieldAttribute(0xF7FA2CAC, "m_voiceLineGuids")]
+        public ulong[] m_voiceLineGuids;
 
         [STUFieldAttribute(0xD1ABBE04)]
         public ulong[] m_D1ABBE04;

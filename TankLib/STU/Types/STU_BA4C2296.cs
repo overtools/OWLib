@@ -7,11 +7,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0A84537A)]
         public teStructuredDataAssetRef<STU_1B872806> m_0A84537A;
 
-        [STUFieldAttribute(0xDC71317C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_DC71317C;
+        [STUFieldAttribute(0xDC71317C, "m_start", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_start;
 
-        [STUFieldAttribute(0x04B2C103, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_04B2C103;
+        [STUFieldAttribute(0x04B2C103, "m_end", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_end;
 
         [STUFieldAttribute(0x4A5CA514, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_4A5CA514;

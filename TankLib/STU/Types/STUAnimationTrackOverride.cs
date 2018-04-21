@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x99007908, "STUAnimationTrackOverride")]
     public class STUAnimationTrackOverride : STUInstance {
         [STUFieldAttribute(0xF46C7A7F, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F6279B0F m_F46C7A7F;
+        public STUAnimCurve m_F46C7A7F;
 
         [STUFieldAttribute(0xBA891264, "m_dataFlow")]
         public teStructuredDataAssetRef<STUDataFlow> m_dataFlow;

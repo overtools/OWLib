@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x1760BCAD)]
-    public class STU_1760BCAD : STU_7639CFC1 {
+    public class STU_1760BCAD : STUConfigVarIntBase {
         [STUFieldAttribute(0x7594F80E, "m_min")]
         public int m_min;
 

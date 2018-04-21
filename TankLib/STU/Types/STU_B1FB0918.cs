@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xB1FB0918)]
-    public class STU_B1FB0918 : STU_7639CFC1 {
+    public class STU_B1FB0918 : STUConfigVarIntBase {
         [STUFieldAttribute(0x4CE56BC0, "m_currency")]
         public Enum_686430C5 m_currency;
     }

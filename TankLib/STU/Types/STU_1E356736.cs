@@ -11,6 +11,6 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_19A8584E;
 
         [STUFieldAttribute(0xE16940C4, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F6279B0F m_E16940C4;
+        public STUAnimCurve m_E16940C4;
     }
 }

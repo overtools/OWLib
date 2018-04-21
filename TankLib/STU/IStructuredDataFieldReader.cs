@@ -59,6 +59,11 @@ namespace TankLib.STU {
 
                 return ret;
             }
+
+            if (elementType.IsEnum) {
+                IStructuredDataPrimitiveFactory factory = manager.Factories[elementType.GetEnumUnderlyingType()];
+                return Enum.ToObject(elementType, factory.DeserializeArray(data, field));
+            }
             
             throw new NotImplementedException();
         }

@@ -8,8 +8,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x34A798D4)]
         public Enum_E7FEC166[] m_34A798D4;
 
-        [STUFieldAttribute(0x4D2DB658)]
-        public teStructuredDataAssetRef<STU_9CADF2EC> m_4D2DB658;
+        [STUFieldAttribute(0x4D2DB658, "m_identifier")]
+        public teStructuredDataAssetRef<STUIdentifier> m_identifier;
 
         [STUFieldAttribute(0xF1CB3BA0, "m_text")]
         public teStructuredDataAssetRef<ulong> m_text;

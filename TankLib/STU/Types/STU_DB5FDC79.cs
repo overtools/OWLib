@@ -52,10 +52,10 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x51DC4874, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_51DC4874;
 
-        [STUFieldAttribute(0x3C5E3E62, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_3C5E3E62;
+        [STUFieldAttribute(0x3C5E3E62, "m_spread", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_spread;
 
-        [STUFieldAttribute(0xA39847B8, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUStatescriptStateWeaponVolley m_A39847B8;
+        [STUFieldAttribute(0xA39847B8, "m_volley", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUStatescriptStateWeaponVolley m_volley;
     }
 }

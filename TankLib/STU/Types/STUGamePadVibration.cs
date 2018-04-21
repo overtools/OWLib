@@ -5,12 +5,12 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x7068CCE6, "STUGamePadVibration")]
     public class STUGamePadVibration : STUInstance {
         [STUFieldAttribute(0x1FB75847, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F6279B0F m_1FB75847;
+        public STUAnimCurve m_1FB75847;
 
         [STUFieldAttribute(0x54053299, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F6279B0F m_54053299;
+        public STUAnimCurve m_54053299;
 
-        [STUFieldAttribute(0x890536B8)]
-        public float m_890536B8;
+        [STUFieldAttribute(0x890536B8, "m_duration")]
+        public float m_duration;
     }
 }

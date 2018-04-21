@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x0268E7D5, "STUStatescriptWeaponVolleyMuzzle")]
     public class STUStatescriptWeaponVolleyMuzzle : STUInstance {
-        [STUFieldAttribute(0x5C2242DE, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_5C2242DE;
+        [STUFieldAttribute(0x5C2242DE, "m_entityHandle", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_entityHandle;
 
         [STUFieldAttribute(0x2D3CDFA9, "m_hardPoint", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_hardPoint;

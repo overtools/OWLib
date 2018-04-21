@@ -5,7 +5,7 @@ using TankLib.Math;
 namespace TankLib.STU.Types {
     [STUAttribute(0xDCEBC0CC, "SDD_AnimFrame")]
     public class SDD_AnimFrame : SDD_3D {
-        [STUFieldAttribute(0x5B298FF6)]
-        public teVec4 m_5B298FF6;
+        [STUFieldAttribute(0x5B298FF6, "RotationScaled")]
+        public teVec4 RotationScaled;
     }
 }

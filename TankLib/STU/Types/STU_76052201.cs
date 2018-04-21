@@ -16,8 +16,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBA53D5ED, "m_guid")]
         public ulong m_guid;
 
-        [STUFieldAttribute(0xFE1C5928)]
-        public long m_FE1C5928;
+        [STUFieldAttribute(0xFE1C5928, "m_fileSize")]
+        public long m_fileSize;
 
         [STUFieldAttribute(0x36F8C331)]
         public ulong m_36F8C331;

@@ -17,12 +17,12 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUStat> m_3C913635;
 
         [STUFieldAttribute(0xC02094E7, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_D10B25CA[] m_C02094E7;
+        public STUProfileOverviewGeneralStat[] m_C02094E7;
 
         [STUFieldAttribute(0x03A7C226)]
         public teStructuredDataAssetRef<ulong>[] m_03A7C226;
 
         [STUFieldAttribute(0xAF2B1493, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_3FBEDE0E[] m_AF2B1493;
+        public STUProfileStatCategory[] m_AF2B1493;
     }
 }

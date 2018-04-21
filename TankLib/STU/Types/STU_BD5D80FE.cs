@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xBD5D80FE)]
-    public class STU_BD5D80FE : STU_252FDE3A {
+    public class STU_BD5D80FE : STUConfigVarResource {
         [STUFieldAttribute(0x5DC61E59, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_5DC61E59;
 

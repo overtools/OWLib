@@ -7,8 +7,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x8B434C0C)]
         public teStructuredDataAssetRef<STUUXLink> m_8B434C0C;
 
-        [STUFieldAttribute(0xECF27C36)]
-        public teString m_ECF27C36;
+        [STUFieldAttribute(0xECF27C36, "m_message")]
+        public teString m_message;
 
         [STUFieldAttribute(0xF7EC33C5)]
         public uint m_F7EC33C5;

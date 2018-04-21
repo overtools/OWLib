@@ -3,6 +3,6 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x737C5C41)]
-    public class STU_737C5C41 : STU_773DC32C {
+    public class STU_737C5C41 : STUMirroredEntityComponent {
     }
 }

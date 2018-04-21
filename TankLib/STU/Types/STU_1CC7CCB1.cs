@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x1CC7CCB1)]
     public class STU_1CC7CCB1 : STU_05BDD390 {
         [STUFieldAttribute(0xC62D91EB, "m_source", ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A90901B3 m_source;
+        public STUTextureSource m_source;
 
         [STUFieldAttribute(0xA890C57D)]
         public uint m_A890C57D;

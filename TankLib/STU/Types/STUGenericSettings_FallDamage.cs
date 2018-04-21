@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong>[] m_7B5AE194;
 
         [STUFieldAttribute(0x13024362, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F6279B0F m_13024362;
+        public STUAnimCurve m_13024362;
 
         [STUFieldAttribute(0x7690E074)]
         public float m_7690E074;

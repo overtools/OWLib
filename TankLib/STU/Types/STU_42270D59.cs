@@ -18,7 +18,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong>[] m_71818BC5;
 
         [STUFieldAttribute(0xB8DC6D46)]
-        public teStructuredDataAssetRef<STU_8880FCB0> m_B8DC6D46;
+        public teStructuredDataAssetRef<STUTeamColor> m_B8DC6D46;
 
         [STUFieldAttribute(0x70D5F086, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_882807BA[] m_70D5F086;

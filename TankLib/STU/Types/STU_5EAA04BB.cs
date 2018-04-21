@@ -4,15 +4,15 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x5EAA04BB)]
-    public class STU_5EAA04BB : STU_DD856C32 {
-        [STUFieldAttribute(0xBC2A8DA3, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_814D595E[] m_BC2A8DA3;
+    public class STU_5EAA04BB : STUStatescriptAction {
+        [STUFieldAttribute(0xBC2A8DA3, "m_params", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_814D595E[] m_params;
 
         [STUFieldAttribute(0x15C19570, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVarDynamic m_15C19570;
 
-        [STUFieldAttribute(0x4D5597A8, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_4D5597A8;
+        [STUFieldAttribute(0x4D5597A8, "m_script", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_script;
 
         [STUFieldAttribute(0x92A85396, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_92A85396;

@@ -4,11 +4,11 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x441B50E4)]
     public class STU_441B50E4 : STUStatescriptState {
-        [STUFieldAttribute(0xBC4326FF)]
-        public teStructuredDataAssetRef<STUStat> m_BC4326FF;
+        [STUFieldAttribute(0xBC4326FF, "m_stat")]
+        public teStructuredDataAssetRef<STUStat> m_stat;
 
-        [STUFieldAttribute(0x118D9D9F)]
-        public teStructuredDataAssetRef<ulong>[] m_118D9D9F;
+        [STUFieldAttribute(0x118D9D9F, "m_stats")]
+        public teStructuredDataAssetRef<ulong>[] m_stats;
 
         [STUFieldAttribute(0xD32CB484)]
         public teStructuredDataAssetRef<ulong>[] m_D32CB484;

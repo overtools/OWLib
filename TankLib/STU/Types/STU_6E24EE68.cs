@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x6E24EE68)]
     public class STU_6E24EE68 : STU_C7C085F6 {
         [STUFieldAttribute(0xC4EF5D15)]
-        public teStructuredDataAssetRef<STU_3E4FCBC8> m_C4EF5D15;
+        public teStructuredDataAssetRef<STUAnimSynchGroup> m_C4EF5D15;
 
         [STUFieldAttribute(0xBD2F9E2A)]
         public teStructuredDataAssetRef<STUAnimation> m_BD2F9E2A;
@@ -32,16 +32,16 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUAnimation> m_FA6440EE;
 
         [STUFieldAttribute(0xB9839141)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_B9839141;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_B9839141;
 
         [STUFieldAttribute(0xDA055D06)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_DA055D06;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_DA055D06;
 
         [STUFieldAttribute(0xEE8AE282)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_EE8AE282;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_EE8AE282;
 
         [STUFieldAttribute(0xBF930850)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_BF930850;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_BF930850;
 
         [STUFieldAttribute(0x13695AA9)]
         public teStructuredDataAssetRef<STUDataFlow> m_13695AA9;

@@ -5,7 +5,7 @@ using TankLib.Math;
 namespace TankLib.STU.Types {
     [STUAttribute(0xBE0222CD, "SDD_Line3D")]
     public class SDD_Line3D : SDD_3D {
-        [STUFieldAttribute(0x982D7B62)]
-        public teVec3 m_982D7B62;
+        [STUFieldAttribute(0x982D7B62, "vPosTo_WS")]
+        public teVec3 vPosTo_WS;
     }
 }

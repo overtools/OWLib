@@ -23,7 +23,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0B96B2B7)]
         public teColorRGBA m_0B96B2B7;
 
-        [STUFieldAttribute(0xBDD95289)]
-        public teColorRGBA m_BDD95289;
+        [STUFieldAttribute(0xBDD95289, "m_movement")]
+        public teColorRGBA m_movement;
     }
 }

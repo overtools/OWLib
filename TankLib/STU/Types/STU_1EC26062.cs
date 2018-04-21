@@ -14,7 +14,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUAnimation> m_9ECA41E6;
 
         [STUFieldAttribute(0x4D1965CD)]
-        public teStructuredDataAssetRef<STU_3E4FCBC8> m_4D1965CD;
+        public teStructuredDataAssetRef<STUAnimSynchGroup> m_4D1965CD;
 
         [STUFieldAttribute(0x3D90A5A2)]
         public float m_3D90A5A2;

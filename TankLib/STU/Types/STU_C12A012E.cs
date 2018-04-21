@@ -12,8 +12,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x6FFE2CDA)]
         public float m_6FFE2CDA;
 
-        [STUFieldAttribute(0x7CDE6A4B)]
-        public Enum_18F42478 m_7CDE6A4B;
+        [STUFieldAttribute(0x7CDE6A4B, "m_mode")]
+        public Enum_18F42478 m_mode;
 
         [STUFieldAttribute(0xF3D0818C)]
         public float m_F3D0818C;

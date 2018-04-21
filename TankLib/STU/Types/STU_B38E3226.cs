@@ -15,12 +15,12 @@ namespace TankLib.STU.Types {
         public uint[] m_F9CA7995;
 
         [STUFieldAttribute(0xA76B4746, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_978A87DE[] m_A76B4746;
+        public STUAnimGameData_PoseData[] m_A76B4746;
 
         [STUFieldAttribute(0xA867458D, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_CE2BEF36[] m_A867458D;
 
-        [STUFieldAttribute(0x818D011C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_2BA91EC5 m_818D011C;
+        [STUFieldAttribute(0x818D011C, "m_skeleton", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_2BA91EC5 m_skeleton;
     }
 }

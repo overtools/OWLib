@@ -5,7 +5,7 @@ using TankLib.Math;
 namespace TankLib.STU.Types {
     [STUAttribute(0xAB132518)]
     public class STU_AB132518 : STU_7C27312D {
-        [STUFieldAttribute(0xBA10B1B7)]
-        public teColorRGBA m_BA10B1B7;
+        [STUFieldAttribute(0xBA10B1B7, "m_defaultValue")]
+        public teColorRGBA m_defaultValue;
     }
 }

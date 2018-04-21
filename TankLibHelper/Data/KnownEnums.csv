@@ -1,7 +1,8 @@
 Hash, Name
-E95E2013,STUStatType
-4E56D01D,STUWeaponType
-4CAFD36F,STUUnlockRarity
-0243CBF9,LoadoutCategory
-56DF3C94,STUXPGainType
-BDE32585,STUContactType
+0243CBF9, LoadoutCategory
+3D26984C, STUChatCommandType
+BDE32585, STUContactType
+E95E2013, STUStatType
+4CAFD36F, STUUnlockRarity
+4E56D01D, STUWeaponType
+56DF3C94, STUXPGainType

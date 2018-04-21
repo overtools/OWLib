@@ -13,8 +13,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x6A7AE821, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_CCC326B7 m_6A7AE821;
 
-        [STUFieldAttribute(0x04B2C103, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_CCC326B7 m_04B2C103;
+        [STUFieldAttribute(0x04B2C103, "m_end", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_CCC326B7 m_end;
 
         [STUFieldAttribute(0x837D495C, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_9907336E m_837D495C;

@@ -17,7 +17,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUTexture> m_09E32A58;
 
         [STUFieldAttribute(0xF0A9405A)]
-        public teStructuredDataAssetRef<STU_8880FCB0> m_F0A9405A;
+        public teStructuredDataAssetRef<STUTeamColor> m_F0A9405A;
 
         [STUFieldAttribute(0xB999DDE2)]
         public teStructuredDataAssetRef<STU_58B3D0D0> m_B999DDE2;

@@ -4,11 +4,11 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x6050CBD9)]
     public class STU_6050CBD9 : STU_C7C085F6 {
-        [STUFieldAttribute(0xBDD95289)]
-        public teStructuredDataAssetRef<STUAnimation> m_BDD95289;
+        [STUFieldAttribute(0xBDD95289, "m_movement")]
+        public teStructuredDataAssetRef<STUAnimation> m_movement;
 
-        [STUFieldAttribute(0x2B6D89C1)]
-        public teStructuredDataAssetRef<STUAnimation> m_2B6D89C1;
+        [STUFieldAttribute(0x2B6D89C1, "m_idle")]
+        public teStructuredDataAssetRef<STUAnimation> m_idle;
 
         [STUFieldAttribute(0xA09915DA)]
         public teStructuredDataAssetRef<STUAnimation> m_A09915DA;

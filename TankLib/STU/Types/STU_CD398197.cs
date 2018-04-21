@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xCD398197)]
     public class STU_CD398197 : STUStatescriptOutputPlug {
-        [STUFieldAttribute(0x4D2DB658)]
-        public teStructuredDataAssetRef<STU_9CADF2EC> m_4D2DB658;
+        [STUFieldAttribute(0x4D2DB658, "m_identifier")]
+        public teStructuredDataAssetRef<STUIdentifier> m_identifier;
     }
 }

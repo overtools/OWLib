@@ -5,7 +5,7 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0xF4431A1F)]
     public class STU_F4431A1F : STU_FA84B5C0 {
-        [STUFieldAttribute(0x7CDE6A4B)]
-        public Enum_83A79DFF m_7CDE6A4B;
+        [STUFieldAttribute(0x7CDE6A4B, "m_mode")]
+        public Enum_83A79DFF m_mode;
     }
 }

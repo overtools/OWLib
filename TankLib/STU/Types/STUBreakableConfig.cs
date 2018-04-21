@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x44897C73, "STUBreakableConfig")]
     public class STUBreakableConfig : STUInstance {
-        [STUFieldAttribute(0xE1B0C07F)]
-        public byte m_E1B0C07F;
+        [STUFieldAttribute(0xE1B0C07F, "m_clientOnly")]
+        public byte m_clientOnly;
 
         [STUFieldAttribute(0xEDA30E4A)]
         public byte m_EDA30E4A;

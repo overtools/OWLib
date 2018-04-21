@@ -10,14 +10,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xC84D463F)]
         public teStructuredDataAssetRef<ulong>[] m_C84D463F;
 
-        [STUFieldAttribute(0x50C6BC40, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STULootBoxCelebrationOverride[] m_50C6BC40;
+        [STUFieldAttribute(0x50C6BC40, "m_lootBoxCelebrationOverrides", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STULootBoxCelebrationOverride[] m_lootBoxCelebrationOverrides;
 
-        [STUFieldAttribute(0x22D62B2D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STURulesetWinReward[] m_22D62B2D;
+        [STUFieldAttribute(0x22D62B2D, "m_rulesetWinRewards", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STURulesetWinReward[] m_rulesetWinRewards;
 
-        [STUFieldAttribute(0x9A4245F2, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUAdditionalUnlocks[] m_9A4245F2;
+        [STUFieldAttribute(0x9A4245F2, "m_additionalUnlocks", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAdditionalUnlocks[] m_additionalUnlocks;
 
         [STUFieldAttribute(0x473494FF, ReaderType = typeof(InlineInstanceFieldReader))]
         public STULootBoxUnlocks[] m_473494FF;

@@ -1,210 +1,297 @@
 Hash, Name
-BB99FCD3,m_rarity
-B48F1D22,m_name
-F1CB3BA0,m_text
-2C01908B,m_level
-78A2AC5C,m_stars
-8F736177,m_rank
-C71EA6BC,m_graph
-41A83970,m_remoteSyncNodes
-434A5521,m_syncVars
-88256056,m_operations
-EBCF63C6,m_nodesBitCount
-1754C98D,m_statesBitCount
-02FABAC2,m_remoteSyncNodesBitCount
-475EA078,m_syncVarsBitCount
-979E8BDE,m_links
-C4E39595,m_transitionPlug
-E965193B,m_beginPlug
-F198FD3A,m_abortPlug
-984573B1,m_onBeginPlug
-8BC64AEB,m_onEndPlug
-64338F79,m_subgraphPlug
-8C4782E9,m_outPlug
-E6E7A042,m_states
-EF6581D3,m_timeout
-5DA62D02,m_onAbortPlug
-A0B58111,m_onFinishedPlug
-54653E9B,m_inPlug
-5FB4504B,m_truePlug
-3868F518,m_parentNode
-07DD813E,m_value
-592D15F7,m_out_Var
-2F709539,m_key
-A4975E0A,m_falsePlug
-BAA74493,m_condition
-EB4F2408,m_gamemode
-BB16810A,m_priority
-D3116304,m_topSubgraphPlug
-C72FEA39,m_underSubgraphPlug
-58D56DD4,m_effect
-F21D13AC,m_data
-5DB91CE2,m_displayName
-37AB13D3,m_hero
-7B95AB93,m_loadouts
-CA7E6EDC,m_description
-FC33191B,m_logicalButton
-3CD6DC1E,m_texture
-2C54AEAF,m_category
-C8D38D7B,m_infoMovie
-2D124BE2,m_model
-523339C1,m_animBlendTreeSet
-9297ADB4,m_look
-14256239,m_ragdollConfig
-A7A9DA23,m_clothConfig
-93178192,m_rigidBodyConfig
-DEB1159A,m_breakableConfig
-A83C2C26,m_entity
-041CE51F,m_modelLook
-E02BEE24,m_celebration
-D75586C0,m_shopCards
-BAFDAFBA,m_materials
-3F5B86A4,m_animation
-312C5F1A,m_materialEffects
-0BCD10D6,m_materialEffect
-33E51FDC,m_material
-0B15B894,m_animNodes
-6EAB6810,m_comment
-A10A5EAF,m_pos
-E3B4FA5C,m_uniqueID
-14F95E1B,m_dampingFactor
-C62D91EB,m_source
-BA891264,m_dataFlow
-C14EEC71,m_animTrackOverrides
-0619C597,m_type
-2D3CDFA9,m_hardPoint
-93DA6E7C,m_hardcodedAnimCategoryRefs
-6DDF40DD,m_bonePoseOverrideItems
-6AFCD1A5,m_blendTreeItems
-384DE14F,m_retargetParams
-560940DC,m_onFinished
-3D83C363,m_assets
-16B4863C,m_entries
-F63B1D41,m_playScriptHotReloadBehavior
-DB803F2F,m_unlocks
-BA53D5ED,m_guid
-E54B9419,m_uniqueID
-0DE1BA16,m_layers
-F81F4386,m_startTime
-FBEBAD6F,m_endTime
-436BEFE6,m_child
-131257CD,m_root
-3CFA3EE6,m_locale
-B0EDB99C,m_lootbox
-F5087894,m_unlock
-E52AB6E7,m_info
-C45F5F6F,m_hardpoints
-E3798C00,m_targets
-E390CDB8,m_stateGroup
-AA8E1BB0,m_targetTags
-4CE56BC0,m_currency
-F51B70C4,m_voiceLineInstances
-909EE308,m_valueKeys
-A321EBE9,m_timeKeys
-F29E4995,m_childEntityData
-A16426C6,m_height
-ED61D926,m_radius
-03AD3873,m_ignoreEntities
-7404C882,m_castFilter
-351BD93F,m_projectileMotions
-BAA390E1,m_projectileEntity
-81F1D90B,m_projectileVisual
-F9808409,m_aimID
-26E68021,m_projectileSpeed
-F2AE0897,m_numProjectilesPerShot
-02F3F5D4,m_numShotsPerSecond
-7DD89F4F,m_entityDef
-FC460291,m_boxes
-7D5499A6,m_speed
-BBC9EFFF,m_out_CooldownVar
-1A9F17E4,m_out_StackVar
-7DC1550F,m_position
-38F997AB,m_entityDefinition
-C15DCB47,m_IKItems
-A4712A0A,m_treeCRC
-134EE5BB,m_children
-4E86E083,m_transitions
-B4FF0E2F,m_animAlias
-AF9D3A0C,m_rotation
-B1C6CDA2,m_volume
-9502010D,m_active
-A0D4ABDE,m_emote
-2E5FBA99,m_pose
-CDEF1203,m_weaponType
-F4104199,m_muzzles
-0D50490E,m_triangles
-950BBA06,m_gameplayEntity
-AC91BECC,m_previewEmoteEntity
-FF3C2071,m_achievements
-FCD2B649,m_previewWeaponEntities
-45A7A69C,m_default
-7594F80E,m_min
-7CEA65C7,m_max
-57351687,m_versionedBankData
-75754566,m_soundBank
-48A42D80,m_soundWEMFiles
-316EBD9D,m_soundWEMStreams
-72F2A9FA,m_wwiseWEMFileIDs
-5A7EC887,m_wwiseWEMStreamID
-5CEC8D67,m_wwiseEventIDPlay
-EE7B11F5,m_wwiseEventIDStop
-84935843,m_rootAnimAliasGUID
-AA76FAD1,m_displayText
-DA642982,m_loadoutOverrides
-D440A0F7,m_teams
-E04197AF,m_gameRulesetSchemas
-2C05CD95,m_catalog
-4EEA6AF4,m_rulesets
-59C86C8D,m_availableHeroes
-EA2B516F,m_bodyVars
-AF872E86,m_amount
-479BD164,m_vibration
-5BD110A8,m_reticleType
-B8938E78,m_backgroundColor
-9A7ECA46,m_runN
-B3A8AA36,m_runNE
-B3DD0020,m_runE
-C096526A,m_runSE
-ACB0FAE2,m_runS
-3BDC38AE,m_runSW
-E45FBD36,m_runW
-AC019267,m_runNW
-5620DA50,m_globalWeightMultipliers
-EC42051A,m_userWeights
-F0E4656D,m_globalLayerMultipliers
-4366D221,m_runSpeedN
-C02F21EC,m_runSpeedNE
-B5ECB1C4,m_runSpeedE
-87E3D7BA,m_runSpeedSE
-7201BAA6,m_runSpeedS
-9BED74A8,m_runSpeedSW
-B1C32752,m_runSpeedW
-F3EFB6A0,m_runSpeedNW
-59860ABF,m_runAimAdditiveN
-51871150,m_runAimAdditiveNE
-7E2A7D18,m_runAimAdditiveE
-A7AB64E8,m_runAimAdditiveSE
-30AC076A,m_runAimAdditiveS
-5E229E24,m_runAimAdditiveSW
-6A64DD95,m_runAimAdditiveW
-C06F384E,m_runAimAdditiveNW
-9CDDC24D,m_weight
-5C307091,m_vars
-A1AD5DD2,m_header
-25274294,m_data
-B91CFF97,m_base
-5DC5168B,m_width
-EF348BCF,m_glyphs
-17DC8735,m_kerningPairs
-939ABB2C,m_materialData
-4E87690F,m_map
-7EEFB57A,m_flags
-1A71903A,m_keyID
-9556D6E4,m_crouch
-5F150DBC,m_jump
-F72DF349,m_contactType
-128926DC,m_parent
-A31770AF,m_parameter
-A45D0278,m_switch
-BD1B72B9,m_soundSwitch
-F97609C8,m_bone
+F198FD3A, m_abortPlug
+FF3C2071, m_achievements
+9502010D, m_active
+9A4245F2, m_additionalUnlocks
+F9808409, m_aimID
+AF872E86, m_amount
+B4FF0E2F, m_animAlias
+3F5B86A4, m_animation
+523339C1, m_animBlendTreeSet
+0B15B894, m_animNodes
+2B2C5C7F, m_animParamUpdater
+F3E60FB5, m_animRecoilImpulseFactor
+C14EEC71, m_animTrackOverrides
+EF601C02, m_aNodes
+F92402E9, m_answer
+3D83C363, m_assets
+59C86C8D, m_availableHeroes
+B8938E78, m_backgroundColor
+B91CFF97, m_base
+E965193B, m_beginPlug
+9F827CDD, m_bindings
+6AFCD1A5, m_blendTreeItems
+EA2B516F, m_bodyVars
+F97609C8, m_bone
+6DDF40DD, m_bonePoseOverrideItems
+FC460291, m_boxes
+7E48C526, m_breakable
+DEB1159A, m_breakableConfig
+7404C882, m_castFilter
+2C05CD95, m_catalog
+2EB919C9, m_categories
+2C54AEAF, m_category
+E02BEE24, m_celebration
+2EBF6046, m_chatChannelColor
+52A8EBBB, m_chatChannelName
+B54004FA, m_chatChannels
+9CB9B86D, m_chatChannelType
+F5B138A2, m_chatCommandAliases
+75D955D6, m_chatCommands
+7371BDE0, m_chatCommandType
+436BEFE6, m_child
+F29E4995, m_childEntityData
+134EE5BB, m_children
+E1B0C07F, m_clientOnly
+A7A9DA23, m_clothConfig
+6EAB6810, m_comment
+A747A384, m_compiled
+BAA74493, m_condition
+57CBDD1E, m_configVars
+F72DF349, m_contactType
+2F9541A4, m_crc
+9556D6E4, m_crouch
+ED9A28ED, m_crouchMovement
+4CE56BC0, m_currency
+14F95E1B, m_dampingFactor
+F21D13AC, m_data
+25274294, m_data
+BA891264, m_dataFlow
+45A7A69C, m_default
+CA7E6EDC, m_description
+97259BF6, m_difficultyProfiles
+5DB91CE2, m_displayName
+AA76FAD1, m_displayText
+890536B8, m_duration
+03AEACC1, m_dynamicVars
+58D56DD4, m_effect
+A0D4ABDE, m_emote
+04B2C103, m_end
+FBEBAD6F, m_endTime
+A83C2C26, m_entity
+7DD89F4F, m_entityDef
+38F997AB, m_entityDefinition
+5C2242DE, m_entityHandle
+16B4863C, m_entries
+0D90D271, m_enum
+7C7B1C8D, m_expression
+E1FA44F9, m_externalRefs
+F6862FE7, m_falloff
+A4975E0A, m_falsePlug
+FE1C5928, m_fileSize
+C9D22FAA, m_fixedDataFlow
+7EEFB57A, m_flags
+414693F8, m_fogProjectedTexture
+882D0868, m_fragments
+9AD6CC25, m_gameData
+EB4F2408, m_gamemode
+950BBA06, m_gameplayEntity
+AB634626, m_gameplaySettings
+E04197AF, m_gameRulesetSchemas
+D65E1B08, m_geoSetFlags
+F0E4656D, m_globalLayerMultipliers
+5620DA50, m_globalWeightMultipliers
+EF348BCF, m_glyphs
+C71EA6BC, m_graph
+BA53D5ED, m_guid
+93DA6E7C, m_hardcodedAnimCategoryRefs
+2D3CDFA9, m_hardPoint
+C45F5F6F, m_hardpoints
+A1AD5DD2, m_header
+A16426C6, m_height
+37AB13D3, m_hero
+FC1FFB1E, m_heroSpecificSettings
+4D2DB658, m_identifier
+2B6D89C1, m_idle
+03AD3873, m_ignoreEntities
+C15DCB47, m_IKItems
+E52AB6E7, m_info
+C8D38D7B, m_infoMovie
+54653E9B, m_inPlug
+EA1269DF, m_inputPlug
+48486367, m_instigator
+35EC21DC, m_interrupt
+128F7430, m_items
+4E9118C5, m_jointData
+5F150DBC, m_jump
+17DC8735, m_kerningPairs
+2F709539, m_key
+1A71903A, m_keyID
+E9DB0633, m_knockbackRings
+0DE1BA16, m_layers
+2C01908B, m_level
+979E8BDE, m_links
+DA642982, m_loadoutOverrides
+7B95AB93, m_loadouts
+3CFA3EE6, m_locale
+FC33191B, m_logicalButton
+9297ADB4, m_look
+B0EDB99C, m_lootbox
+50C6BC40, m_lootBoxCelebrationOverrides
+4E87690F, m_map
+EA58FA50, m_mapGUID
+33E51FDC, m_material
+939ABB2C, m_materialData
+0BCD10D6, m_materialEffect
+312C5F1A, m_materialEffects
+BAFDAFBA, m_materials
+7CEA65C7, m_max
+7594F80E, m_min
+7CDE6A4B, m_mode
+2D124BE2, m_model
+041CE51F, m_modelLook
+0FD4CCC6, m_modifyHealth
+BDD95289, m_movement
+F4104199, m_muzzles
+B48F1D22, m_name
+F91B8EDD, m_nodeCount
+9B2111C5, m_nodes
+EBCF63C6, m_nodesBitCount
+F2AE0897, m_numProjectilesPerShot
+02F3F5D4, m_numShotsPerSecond
+5DA62D02, m_onAbortPlug
+984573B1, m_onBeginPlug
+A36EEE40, m_onComingUpPlug
+8BC64AEB, m_onEndPlug
+560940DC, m_onFinished
+A0B58111, m_onFinishedPlug
+133B14AC, m_onGoingDownPlug
+70646E0D, m_onMinShotsPlug
+EFF7FAE7, m_opcodes
+88256056, m_operations
+BBC9EFFF, m_out_CooldownVar
+1A9F17E4, m_out_StackVar
+592D15F7, m_out_Var
+8C4782E9, m_outPlug
+498B0009, m_outputPlug
+A31770AF, m_parameter
+BC2A8DA3, m_params
+128926DC, m_parent
+3868F518, m_parentNode
+F63B1D41, m_playScriptHotReloadBehavior
+A10A5EAF, m_pos
+2E5FBA99, m_pose
+03E0A520, m_poseDataVecs
+7DC1550F, m_position
+AC91BECC, m_previewEmoteEntity
+FCD2B649, m_previewWeaponEntities
+BB16810A, m_priority
+962EBF26, m_projectedTexture
+BAA390E1, m_projectileEntity
+BA490EB9, m_projectileLifetime
+351BD93F, m_projectileMotions
+26E68021, m_projectileSpeed
+81F1D90B, m_projectileVisual
+6CDE6226, m_proxyCount
+ED61D926, m_radius
+14256239, m_ragdollConfig
+8F736177, m_rank
+BB99FCD3, m_rarity
+41A83970, m_remoteSyncNodes
+02FABAC2, m_remoteSyncNodesBitCount
+1CB29B8C, m_residencyMultipliers
+384DE14F, m_retargetParams
+5BD110A8, m_reticleType
+93178192, m_rigidBodyConfig
+131257CD, m_root
+84935843, m_rootAnimAliasGUID
+AF9D3A0C, m_rotation
+4EEA6AF4, m_rulesets
+22D62B2D, m_rulesetWinRewards
+7E2A7D18, m_runAimAdditiveE
+59860ABF, m_runAimAdditiveN
+51871150, m_runAimAdditiveNE
+C06F384E, m_runAimAdditiveNW
+30AC076A, m_runAimAdditiveS
+A7AB64E8, m_runAimAdditiveSE
+5E229E24, m_runAimAdditiveSW
+6A64DD95, m_runAimAdditiveW
+B3DD0020, m_runE
+9A7ECA46, m_runN
+B3A8AA36, m_runNE
+AC019267, m_runNW
+ACB0FAE2, m_runS
+C096526A, m_runSE
+B5ECB1C4, m_runSpeedE
+4366D221, m_runSpeedN
+C02F21EC, m_runSpeedNE
+F3EFB6A0, m_runSpeedNW
+7201BAA6, m_runSpeedS
+87E3D7BA, m_runSpeedSE
+9BED74A8, m_runSpeedSW
+B1C32752, m_runSpeedW
+3BDC38AE, m_runSW
+E45FBD36, m_runW
+4D5597A8, m_script
+9472AB02, m_segments
+9A861B79, m_serverOnly
+B2C0B929, m_settingId
+27315EFA, m_settings
+D75586C0, m_shopCards
+ADDACE26, m_showHUDWarningIndicator
+818D011C, m_skeleton
+75754566, m_soundBank
+BD1B72B9, m_soundSwitch
+48A42D80, m_soundWEMFiles
+316EBD9D, m_soundWEMStreams
+C62D91EB, m_source
+7D5499A6, m_speed
+E0584DD8, m_speedScalar
+3C5E3E62, m_spread
+78A2AC5C, m_stars
+DC71317C, m_start
+F81F4386, m_startTime
+BC4326FF, m_stat
+E390CDB8, m_stateGroup
+E6E7A042, m_states
+1754C98D, m_statesBitCount
+118D9D9F, m_stats
+78A08312, m_string
+64338F79, m_subgraphPlug
+A45D0278, m_switch
+434A5521, m_syncVars
+475EA078, m_syncVarsBitCount
+E3798C00, m_targets
+AA8E1BB0, m_targetTags
+D440A0F7, m_teams
+F1CB3BA0, m_text
+3CD6DC1E, m_texture
+A321EBE9, m_timeKeys
+EF6581D3, m_timeout
+8A5FECAC, m_tip
+E6C098A8, m_tips
+D3116304, m_topSubgraphPlug
+C4E39595, m_transitionPlug
+4E86E083, m_transitions
+A4712A0A, m_treeCRC
+0D50490E, m_triangles
+5FB4504B, m_truePlug
+0619C597, m_type
+C72FEA39, m_underSubgraphPlug
+E3B4FA5C, m_uniqueID
+E54B9419, m_uniqueID
+F5087894, m_unlock
+DB803F2F, m_unlocks
+81AF6609, m_usageCategory
+EC42051A, m_userWeights
+07DD813E, m_value
+909EE308, m_valueKeys
+5C307091, m_vars
+92D7C726, m_vecArray
+57351687, m_versionedBankData
+479BD164, m_vibration
+464225DD, m_voiceChatSettings
+8A4FF89C, m_voiceDefinition
+F7FA2CAC, m_voiceLineGuids
+F51B70C4, m_voiceLineInstances
+A39847B8, m_volley
+B1C6CDA2, m_volume
+CDEF1203, m_weaponType
+9CDDC24D, m_weight
+5DC5168B, m_width
+5CEC8D67, m_wwiseEventIDPlay
+EE7B11F5, m_wwiseEventIDStop
+72F2A9FA, m_wwiseWEMFileIDs
+5A7EC887, m_wwiseWEMStreamIDs
+780CEDBD, m_XPGains
+A4E3DBA5, m_zones

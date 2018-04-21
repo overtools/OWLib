@@ -5,8 +5,8 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0x9D6CF8AC)]
     public class STU_9D6CF8AC : STUStatescriptState {
-        [STUFieldAttribute(0xBC2A8DA3, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_EF930FD7[] m_BC2A8DA3;
+        [STUFieldAttribute(0xBC2A8DA3, "m_params", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_EF930FD7[] m_params;
 
         [STUFieldAttribute(0xF8274C10, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVarFilter m_F8274C10;

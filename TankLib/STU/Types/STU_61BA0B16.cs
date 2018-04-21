@@ -25,8 +25,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA42882DF)]
         public float m_A42882DF;
 
-        [STUFieldAttribute(0x6CF6BB26)]
-        public uint m_6CF6BB26;
+        [STUFieldAttribute(0x6CF6BB26, "m_entityID")]
+        public uint m_entityID;
 
         [STUFieldAttribute(0x199F6AD9)]
         public int m_199F6AD9;

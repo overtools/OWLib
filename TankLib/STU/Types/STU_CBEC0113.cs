@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xCBEC0113)]
-    public class STU_CBEC0113 : STU_1482DDBB {
+    public class STU_CBEC0113 : STUConfigVarBoolBase {
         [STUFieldAttribute(0xF81F4386, "m_startTime")]
         public teStructuredDataDateAndTime m_startTime;
 

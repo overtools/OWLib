@@ -9,10 +9,10 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong>[] m_1A37A8D5;
 
         [STUFieldAttribute(0xA8F4AE5B)]
-        public teStructuredDataAssetRef<STU_9CADF2EC> m_A8F4AE5B;
+        public teStructuredDataAssetRef<STUIdentifier> m_A8F4AE5B;
 
         [STUFieldAttribute(0x3400CBD2)]
-        public teStructuredDataAssetRef<STU_9CADF2EC> m_3400CBD2;
+        public teStructuredDataAssetRef<STUIdentifier> m_3400CBD2;
 
         [STUFieldAttribute(0xD2464EEA)]
         public teStructuredDataAssetRef<ulong>[] m_D2464EEA;

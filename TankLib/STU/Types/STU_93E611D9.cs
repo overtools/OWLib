@@ -4,11 +4,11 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x93E611D9)]
     public class STU_93E611D9 : STU_140AAB2C {
-        [STUFieldAttribute(0x962EBF26)]
-        public teStructuredDataAssetRef<STUTexture> m_962EBF26;
+        [STUFieldAttribute(0x962EBF26, "m_projectedTexture")]
+        public teStructuredDataAssetRef<STUTexture> m_projectedTexture;
 
-        [STUFieldAttribute(0x414693F8)]
-        public teStructuredDataAssetRef<STUTexture> m_414693F8;
+        [STUFieldAttribute(0x414693F8, "m_fogProjectedTexture")]
+        public teStructuredDataAssetRef<STUTexture> m_fogProjectedTexture;
 
         [STUFieldAttribute(0x5DC5168B, "m_width")]
         public float m_width;

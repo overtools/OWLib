@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xF7B7C883, "SDD_Sphere3D")]
     public class SDD_Sphere3D : SDD_3D {
-        [STUFieldAttribute(0xFFB46958)]
-        public float m_FFB46958;
+        [STUFieldAttribute(0xFFB46958, "fRadius")]
+        public float fRadius;
     }
 }

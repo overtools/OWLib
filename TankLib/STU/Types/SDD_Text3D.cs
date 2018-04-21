@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xFCE18E3E, "SDD_Text3D")]
     public class SDD_Text3D : SDD_3D {
-        [STUFieldAttribute(0x3B8BA7C7)]
-        public teString m_3B8BA7C7;
+        [STUFieldAttribute(0x3B8BA7C7, "Text")]
+        public teString Text;
     }
 }

@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x542E2844)]
     public class STU_542E2844 : STUUXLink {
-        [STUFieldAttribute(0x79CA545A)]
-        public teStructuredDataAssetRef<ulong> m_79CA545A;
+        [STUFieldAttribute(0x79CA545A, "m_effectGUID")]
+        public teStructuredDataAssetRef<ulong> m_effectGUID;
     }
 }

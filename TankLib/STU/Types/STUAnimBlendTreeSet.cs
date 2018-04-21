@@ -34,11 +34,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x85453F7B)]
         public teStructuredDataAssetRef<ulong>[] m_85453F7B;
 
-        [STUFieldAttribute(0xE1FA44F9)]
-        public ulong[] m_E1FA44F9;
+        [STUFieldAttribute(0xE1FA44F9, "m_externalRefs")]
+        public ulong[] m_externalRefs;
 
-        [STUFieldAttribute(0x2B2C5C7F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_72C48DD7 m_2B2C5C7F;
+        [STUFieldAttribute(0x2B2C5C7F, "m_animParamUpdater", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_72C48DD7 m_animParamUpdater;
 
         [STUFieldAttribute(0xD1467FCA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_391AC5F1 m_D1467FCA;
@@ -52,7 +52,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x384DE14F, "m_retargetParams", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimBlendTreeSet_RetargetParams m_retargetParams;
 
-        [STUFieldAttribute(0x2F9541A4)]
-        public int m_2F9541A4;
+        [STUFieldAttribute(0x2F9541A4, "m_crc")]
+        public int m_crc;
     }
 }

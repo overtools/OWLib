@@ -8,10 +8,10 @@ namespace TankLib.STU.Types {
         public STU_731A00B5[] m_33522782;
 
         [STUFieldAttribute(0xEB44B6BE, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F6279B0F m_EB44B6BE;
+        public STUAnimCurve m_EB44B6BE;
 
         [STUFieldAttribute(0x5B875268, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F6279B0F m_5B875268;
+        public STUAnimCurve m_5B875268;
 
         [STUFieldAttribute(0x4F2CB32E)]
         public float m_4F2CB32E;

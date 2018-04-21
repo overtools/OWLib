@@ -19,8 +19,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xCDB4356F)]
         public teStructuredDataAssetRef<STUHardPoint> m_CDB4356F;
 
-        [STUFieldAttribute(0x4D2DB658)]
-        public teStructuredDataAssetRef<STU_9CADF2EC> m_4D2DB658;
+        [STUFieldAttribute(0x4D2DB658, "m_identifier")]
+        public teStructuredDataAssetRef<STUIdentifier> m_identifier;
 
         [STUFieldAttribute(0x31C5E7E4, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_CB79EE74 m_31C5E7E4;

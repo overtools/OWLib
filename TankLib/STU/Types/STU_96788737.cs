@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STU_C5243F93> m_logicalButton;
 
         [STUFieldAttribute(0xD61F784B)]
-        public teStructuredDataAssetRef<STU_9CADF2EC> m_D61F784B;
+        public teStructuredDataAssetRef<STUIdentifier> m_D61F784B;
     }
 }

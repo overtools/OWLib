@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x7B45B325, "STUConfigVarFloat")]
-    public class STUConfigVarFloat : STU_F9C57875 {
+    public class STUConfigVarFloat : STUConfigVarFloatBase {
         [STUFieldAttribute(0x07DD813E, "m_value")]
         public float m_value;
     }

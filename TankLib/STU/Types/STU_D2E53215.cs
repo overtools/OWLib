@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xD2E53215)]
     public class STU_D2E53215 : STUStatescriptState {
         [STUFieldAttribute(0xF46C7A7F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F6279B0F m_F46C7A7F;
+        public STUAnimCurve m_F46C7A7F;
 
         [STUFieldAttribute(0x57237EAB, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_57237EAB;

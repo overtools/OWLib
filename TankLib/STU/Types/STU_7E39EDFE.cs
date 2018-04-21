@@ -7,11 +7,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xFC33191B, "m_logicalButton", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_logicalButton;
 
-        [STUFieldAttribute(0x133B14AC, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUStatescriptOutputPlug m_133B14AC;
+        [STUFieldAttribute(0x133B14AC, "m_onGoingDownPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUStatescriptOutputPlug m_onGoingDownPlug;
 
-        [STUFieldAttribute(0xA36EEE40, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUStatescriptOutputPlug m_A36EEE40;
+        [STUFieldAttribute(0xA36EEE40, "m_onComingUpPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUStatescriptOutputPlug m_onComingUpPlug;
 
         [STUFieldAttribute(0x80AF45FB, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_904BFCEC m_80AF45FB;

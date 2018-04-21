@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xB5C0F593, "m_guid")]
         public ulong m_guid;
 
-        [STUFieldAttribute(0x2AA1F78D)]
-        public teColorRGBA m_2AA1F78D;
+        [STUFieldAttribute(0x2AA1F78D, "m_color")]
+        public teColorRGBA m_color;
     }
 }

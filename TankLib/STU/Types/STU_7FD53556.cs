@@ -11,8 +11,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x35D812D6, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_25B808BD m_35D812D6;
 
-        [STUFieldAttribute(0x7CDE6A4B)]
-        public Enum_258358CE m_7CDE6A4B;
+        [STUFieldAttribute(0x7CDE6A4B, "m_mode")]
+        public Enum_258358CE m_mode;
 
         [STUFieldAttribute(0xC73B6DD4)]
         public ushort m_C73B6DD4;

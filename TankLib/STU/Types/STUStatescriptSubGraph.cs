@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xB79960CE, "STUStatescriptSubGraph")]
-    public class STUStatescriptSubGraph : STU_B67D66ED {
+    public class STUStatescriptSubGraph : STUGraphContainer {
         [STUFieldAttribute(0x0B1AA8CA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptSubGraph m_0B1AA8CA;
     }

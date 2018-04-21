@@ -4,10 +4,10 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x5F2BDDF4, "teAITotemGraph")]
     public class teAITotemGraph : STUInstance {
-        [STUFieldAttribute(0x890D0584, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_C611D2BA[] m_890D0584;
+        [STUFieldAttribute(0x890D0584, "Totems", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public teAITotem[] Totems;
 
-        [STUFieldAttribute(0xF6546C73)]
-        public teStructuredDataHashMap<STU_C611D2BA> m_F6546C73;
+        [STUFieldAttribute(0xF6546C73, "SurfaceIdToTotemMap")]
+        public teStructuredDataHashMap<teAITotem> SurfaceIdToTotemMap;
     }
 }

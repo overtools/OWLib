@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xD6389D18)]
     public class STU_D6389D18 : STU_C7C085F6 {
         [STUFieldAttribute(0x6DC4FCF5, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F6279B0F m_6DC4FCF5;
+        public STUAnimCurve m_6DC4FCF5;
 
         [STUFieldAttribute(0x9A7ECA46, "m_runN")]
         public teStructuredDataAssetRef<STUAnimation> m_runN;
@@ -56,28 +56,28 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveNW;
 
         [STUFieldAttribute(0xB9839141)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_B9839141;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_B9839141;
 
         [STUFieldAttribute(0x15B3D057)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_15B3D057;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_15B3D057;
 
         [STUFieldAttribute(0xDA055D06)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_DA055D06;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_DA055D06;
 
         [STUFieldAttribute(0xE03E58A2)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_E03E58A2;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_E03E58A2;
 
         [STUFieldAttribute(0xEE8AE282)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_EE8AE282;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_EE8AE282;
 
         [STUFieldAttribute(0xC22DDE0E)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_C22DDE0E;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_C22DDE0E;
 
         [STUFieldAttribute(0xBF930850)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_BF930850;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_BF930850;
 
         [STUFieldAttribute(0x12D1E793)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_12D1E793;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_12D1E793;
 
         [STUFieldAttribute(0x1FB4D322)]
         public teStructuredDataAssetRef<STUDataFlow> m_1FB4D322;

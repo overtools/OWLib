@@ -4,43 +4,43 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x4654A34B, "SDD_PackedDraw")]
     public class SDD_PackedDraw : STUInstance {
-        [STUFieldAttribute(0x1261C3B9, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_TextBlock[] m_1261C3B9;
+        [STUFieldAttribute(0x1261C3B9, "TextBlocks", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_TextBlock[] TextBlocks;
 
-        [STUFieldAttribute(0x6B1F0518, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_Rect2D[] m_6B1F0518;
+        [STUFieldAttribute(0x6B1F0518, "Rect2Ds", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_Rect2D[] Rect2Ds;
 
-        [STUFieldAttribute(0x1E3DFC86, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_Text3D[] m_1E3DFC86;
+        [STUFieldAttribute(0x1E3DFC86, "Text3Ds", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_Text3D[] Text3Ds;
 
-        [STUFieldAttribute(0x3ACBBC8C, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_Line3D[] m_3ACBBC8C;
+        [STUFieldAttribute(0x3ACBBC8C, "Line3Ds", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_Line3D[] Line3Ds;
 
-        [STUFieldAttribute(0x024D8737, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_Sphere3D[] m_024D8737;
+        [STUFieldAttribute(0x024D8737, "Sphere3Ds", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_Sphere3D[] Sphere3Ds;
 
         [STUFieldAttribute(0x1ADA2F78, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_C01465B8[] m_1ADA2F78;
 
-        [STUFieldAttribute(0xB798076C, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_Point3D[] m_B798076C;
+        [STUFieldAttribute(0xB798076C, "Point3Ds", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_Point3D[] Point3Ds;
 
-        [STUFieldAttribute(0x06F7CD27, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_Capsule3D[] m_06F7CD27;
+        [STUFieldAttribute(0x06F7CD27, "Capsule3Ds", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_Capsule3D[] Capsule3Ds;
 
-        [STUFieldAttribute(0xEF688A99, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_AABB3D[] m_EF688A99;
+        [STUFieldAttribute(0xEF688A99, "AABB3Ds", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_AABB3D[] AABB3Ds;
 
-        [STUFieldAttribute(0x2367E322, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_AnimFrame[] m_2367E322;
+        [STUFieldAttribute(0x2367E322, "AnimFrames", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_AnimFrame[] AnimFrames;
 
-        [STUFieldAttribute(0xD730B72B, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_TriList[] m_D730B72B;
+        [STUFieldAttribute(0xD730B72B, "TriLists", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_TriList[] TriLists;
 
         [STUFieldAttribute(0x97950EA4, ReaderType = typeof(InlineInstanceFieldReader))]
         public SDD_OBB3D[] m_97950EA4;
 
-        [STUFieldAttribute(0x0A11C604, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_AITacticalVolume[] m_0A11C604;
+        [STUFieldAttribute(0x0A11C604, "AITacicalVolumes", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_AITacticalVolume[] AITacicalVolumes;
     }
 }

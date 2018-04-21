@@ -29,16 +29,16 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveW;
 
         [STUFieldAttribute(0xB9839141)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_B9839141;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_B9839141;
 
         [STUFieldAttribute(0xDA055D06)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_DA055D06;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_DA055D06;
 
         [STUFieldAttribute(0xEE8AE282)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_EE8AE282;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_EE8AE282;
 
         [STUFieldAttribute(0xBF930850)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_BF930850;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_BF930850;
 
         [STUFieldAttribute(0x1FB4D322)]
         public teStructuredDataAssetRef<STUDataFlow> m_1FB4D322;

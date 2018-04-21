@@ -14,8 +14,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF5E50593, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_E3E39626 m_F5E50593;
 
-        [STUFieldAttribute(0x818D011C)]
-        public teStructuredDataAssetRef<STUSkeleton> m_818D011C;
+        [STUFieldAttribute(0x818D011C, "m_skeleton")]
+        public teStructuredDataAssetRef<STUSkeleton> m_skeleton;
 
         [STUFieldAttribute(0xFD232466, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_F0E34581[] m_FD232466;
@@ -38,11 +38,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x37ED05D0)]
         public teStructuredDataAssetRef<STUModel> m_37ED05D0;
 
-        [STUFieldAttribute(0x7E48C526, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_22BD6AAD m_7E48C526;
+        [STUFieldAttribute(0x7E48C526, "m_breakable", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUBreakable m_breakable;
 
-        [STUFieldAttribute(0x81AF6609)]
-        public Enum_950F7205 m_81AF6609;
+        [STUFieldAttribute(0x81AF6609, "m_usageCategory")]
+        public Enum_950F7205 m_usageCategory;
 
         [STUFieldAttribute(0x87916047)]
         public Enum_790E517D m_87916047;

@@ -32,7 +32,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUAnimation> m_2B7B0496;
 
         [STUFieldAttribute(0x4D1965CD)]
-        public teStructuredDataAssetRef<STU_3E4FCBC8> m_4D1965CD;
+        public teStructuredDataAssetRef<STUAnimSynchGroup> m_4D1965CD;
 
         [STUFieldAttribute(0x9AA1B25A)]
         public teStructuredDataAssetRef<STUDataFlow> m_9AA1B25A;

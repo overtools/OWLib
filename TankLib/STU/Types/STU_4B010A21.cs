@@ -7,7 +7,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x5DC61E59)]
         public teStructuredDataAssetRef<STU_2B8093CD> m_5DC61E59;
 
-        [STUFieldAttribute(0xDC71317C)]
-        public teStructuredDataDateAndTime m_DC71317C;
+        [STUFieldAttribute(0xDC71317C, "m_start")]
+        public teStructuredDataDateAndTime m_start;
     }
 }

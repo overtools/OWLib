@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x6FEE499E)]
-    public class STU_6FEE499E : STU_DD856C32 {
+    public class STU_6FEE499E : STUStatescriptAction {
         [STUFieldAttribute(0x93CDFD2F)]
         public Enum_2637CD6D m_93CDFD2F;
     }

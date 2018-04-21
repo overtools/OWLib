@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STUUnlocks m_71D9486D;
 
         [STUFieldAttribute(0xED999C8B)]
-        public teStructuredDataAssetRef<STU_9CADF2EC> m_ED999C8B;
+        public teStructuredDataAssetRef<STUIdentifier> m_ED999C8B;
 
         [STUFieldAttribute(0xF81F4386, "m_startTime")]
         public teStructuredDataDateAndTime m_startTime;

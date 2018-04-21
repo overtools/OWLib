@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xC19EA8BD)]
     public class STU_C19EA8BD : STUInstance {
-        [STUFieldAttribute(0x4D2DB658)]
-        public uint m_4D2DB658;
+        [STUFieldAttribute(0x4D2DB658, "m_identifier")]
+        public uint m_identifier;
     }
 }

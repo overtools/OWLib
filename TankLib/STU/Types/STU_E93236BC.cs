@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xE93236BC)]
     public class STU_E93236BC : STUInstance {
         [STUFieldAttribute(0x864A1F44, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_978A87DE m_864A1F44;
+        public STUAnimGameData_PoseData m_864A1F44;
     }
 }

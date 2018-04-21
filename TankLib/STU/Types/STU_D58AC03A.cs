@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xD58AC03A)]
-    public class STU_D58AC03A : STU_2549D83D {
+    public class STU_D58AC03A : STUStatescriptScreenVM {
         [STUFieldAttribute(0x661BF6E7)]
         public teString m_661BF6E7;
 

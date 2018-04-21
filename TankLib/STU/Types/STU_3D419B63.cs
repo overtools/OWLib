@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x3D419B63)]
-    public class STU_3D419B63 : STU_DD856C32 {
+    public class STU_3D419B63 : STUStatescriptAction {
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
         public teStructuredDataAssetRef<STUVoiceCategory> m_category;
 

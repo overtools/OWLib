@@ -46,6 +46,7 @@
     <Compile Include="InstanceBuilder.cs" />
     <Compile Include="EnumBuilder.cs" />
     <Compile Include="ModeResult.cs" />
+    <Compile Include="Modes\AlphabetData.cs" />
     <Compile Include="Modes\CreateClasses.cs" />
     <Compile Include="Modes\IMode.cs" />
     <Compile Include="Modes\TestClasses.cs" />

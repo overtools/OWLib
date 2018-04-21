@@ -109,7 +109,7 @@ namespace TankLibHelper {
                 if (val != "N/A") {
                     uint hash = uint.Parse(split[0], NumberStyles.HexNumber);
                     if (dict.ContainsKey(hash)) {
-                        Debugger.Log(0, "StructuredDataInfo", $"Known hash already exists ({Path.GetFileName(filepath)}). This={val}, preexisting={dict[hash]}");
+                        Debugger.Log(0, "StructuredDataInfo", $"Known hash already exists ({Path.GetFileName(filepath)}). This={val}, preexisting={dict[hash]}\r\n");
                         continue;
                         //throw new Exception($"Known hash already exists ({Path.GetFileName(filepath)}). This={val}, preexisting={dict[hash]}");
                     }

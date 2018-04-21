@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x0DB9E66B)]
     public class STU_0DB9E66B : STUStatescriptState {
         [STUFieldAttribute(0xAFAB6CCD, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_4A7AC5BF[] m_AFAB6CCD;
+        public STUStatescriptModifyHealthTag[] m_AFAB6CCD;
 
         [STUFieldAttribute(0xE3798C00, "m_targets", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_targets;

@@ -5,13 +5,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x9B27333E)]
     public class STU_9B27333E : STU_05BDD390 {
         [STUFieldAttribute(0x09795964, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A90901B3 m_09795964;
+        public STUTextureSource m_09795964;
 
         [STUFieldAttribute(0x7FF10AD7, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A90901B3 m_7FF10AD7;
+        public STUTextureSource m_7FF10AD7;
 
         [STUFieldAttribute(0x58C61359, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A90901B3 m_58C61359;
+        public STUTextureSource m_58C61359;
 
         [STUFieldAttribute(0x1EC2CD1A)]
         public float m_1EC2CD1A;

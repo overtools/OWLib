@@ -11,8 +11,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x062A927D)]
         public ulong[] m_062A927D;
 
-        [STUFieldAttribute(0xEA58FA50)]
-        public ulong m_EA58FA50;
+        [STUFieldAttribute(0xEA58FA50, "m_mapGUID")]
+        public ulong m_mapGUID;
 
         [STUFieldAttribute(0x706EEE09)]
         public teEntityID m_706EEE09;

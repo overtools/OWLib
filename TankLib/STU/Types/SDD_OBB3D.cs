@@ -5,16 +5,16 @@ using TankLib.Math;
 namespace TankLib.STU.Types {
     [STUAttribute(0x860D9700, "SDD_OBB3D")]
     public class SDD_OBB3D : SDD_3D {
-        [STUFieldAttribute(0x97FAE625)]
-        public teVec3 m_97FAE625;
+        [STUFieldAttribute(0x97FAE625, "vBasisX")]
+        public teVec3 vBasisX;
 
-        [STUFieldAttribute(0xE0FDD6B3)]
-        public teVec3 m_E0FDD6B3;
+        [STUFieldAttribute(0xE0FDD6B3, "vBasisY")]
+        public teVec3 vBasisY;
 
-        [STUFieldAttribute(0x79F48709)]
-        public teVec3 m_79F48709;
+        [STUFieldAttribute(0x79F48709, "vBasisZ")]
+        public teVec3 vBasisZ;
 
-        [STUFieldAttribute(0xC826BAF5)]
-        public teVec3 m_C826BAF5;
+        [STUFieldAttribute(0xC826BAF5, "vHalfDims")]
+        public teVec3 vHalfDims;
     }
 }

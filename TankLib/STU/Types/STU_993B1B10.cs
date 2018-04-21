@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x993B1B10)]
-    public class STU_993B1B10 : STU_773DC32C {
+    public class STU_993B1B10 : STUMirroredEntityComponent {
         [STUFieldAttribute(0x508251E8, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_870745EA m_508251E8;
 
@@ -11,6 +11,6 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUHardPoint> m_24961D41;
 
         [STUFieldAttribute(0xCD486A71, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_0519019F[] m_CD486A71;
+        public STUAIWeaponFireControlInfo[] m_CD486A71;
     }
 }

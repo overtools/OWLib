@@ -10,7 +10,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xFBDB2615)]
         public float m_FBDB2615;
 
-        [STUFieldAttribute(0xD940990C)]
-        public teString[] m_D940990C;
+        [STUFieldAttribute(0xD940990C, "TextBlock")]
+        public teString[] TextBlock;
     }
 }

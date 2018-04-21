@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xF6A17A1C, "SDD_TriList")]
     public class SDD_TriList : SDD_Base {
-        [STUFieldAttribute(0x320FB5B4, ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_Tri[] m_320FB5B4;
+        [STUFieldAttribute(0x320FB5B4, "TriList", ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_Tri[] TriList;
     }
 }

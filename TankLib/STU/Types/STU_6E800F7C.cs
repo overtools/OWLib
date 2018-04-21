@@ -5,25 +5,25 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x6E800F7C)]
     public class STU_6E800F7C : STU_4AA38EA8 {
         [STUFieldAttribute(0x5E813688, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A90901B3 m_5E813688;
+        public STUTextureSource m_5E813688;
 
         [STUFieldAttribute(0x7BE15319, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A90901B3 m_7BE15319;
+        public STUTextureSource m_7BE15319;
 
         [STUFieldAttribute(0x99039FC8, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A90901B3 m_99039FC8;
+        public STUTextureSource m_99039FC8;
 
         [STUFieldAttribute(0x4DA3254A, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A90901B3 m_4DA3254A;
+        public STUTextureSource m_4DA3254A;
 
         [STUFieldAttribute(0xA665A5E4, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A90901B3 m_A665A5E4;
+        public STUTextureSource m_A665A5E4;
 
         [STUFieldAttribute(0x369489D8, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A90901B3 m_369489D8;
+        public STUTextureSource m_369489D8;
 
         [STUFieldAttribute(0xF0A9405A)]
-        public teStructuredDataAssetRef<STU_8880FCB0> m_F0A9405A;
+        public teStructuredDataAssetRef<STUTeamColor> m_F0A9405A;
 
         [STUFieldAttribute(0xC276CF5C)]
         public teStructuredDataAssetRef<STU_C6A37088> m_C276CF5C;

@@ -4,17 +4,17 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x66F2015C)]
     public class STU_66F2015C : STU_C7C085F6 {
-        [STUFieldAttribute(0x2B6D89C1)]
-        public teStructuredDataAssetRef<STUAnimation> m_2B6D89C1;
+        [STUFieldAttribute(0x2B6D89C1, "m_idle")]
+        public teStructuredDataAssetRef<STUAnimation> m_idle;
 
-        [STUFieldAttribute(0xBDD95289)]
-        public teStructuredDataAssetRef<STUAnimation> m_BDD95289;
+        [STUFieldAttribute(0xBDD95289, "m_movement")]
+        public teStructuredDataAssetRef<STUAnimation> m_movement;
 
         [STUFieldAttribute(0x9556D6E4, "m_crouch")]
         public teStructuredDataAssetRef<STUAnimation> m_crouch;
 
-        [STUFieldAttribute(0xED9A28ED)]
-        public teStructuredDataAssetRef<STUAnimation> m_ED9A28ED;
+        [STUFieldAttribute(0xED9A28ED, "m_crouchMovement")]
+        public teStructuredDataAssetRef<STUAnimation> m_crouchMovement;
 
         [STUFieldAttribute(0xA09915DA)]
         public teStructuredDataAssetRef<STUAnimation> m_A09915DA;
@@ -59,7 +59,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUAnimation> m_098679D1;
 
         [STUFieldAttribute(0xE9746119)]
-        public teStructuredDataAssetRef<STU_3E4FCBC8> m_E9746119;
+        public teStructuredDataAssetRef<STUAnimSynchGroup> m_E9746119;
 
         [STUFieldAttribute(0xB55FB9B2)]
         public float m_B55FB9B2;

@@ -10,8 +10,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF9CA7995)]
         public uint[] m_F9CA7995;
 
-        [STUFieldAttribute(0x2B2C5C7F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_72C48DD7 m_2B2C5C7F;
+        [STUFieldAttribute(0x2B2C5C7F, "m_animParamUpdater", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_72C48DD7 m_animParamUpdater;
 
         [STUFieldAttribute(0xD1467FCA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_391AC5F1 m_D1467FCA;

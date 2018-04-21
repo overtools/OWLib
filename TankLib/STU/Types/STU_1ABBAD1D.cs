@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUAnimation> m_AB4E1359;
 
         [STUFieldAttribute(0x37D84DA4)]
-        public teStructuredDataAssetRef<STU_7A6F6DC0> m_37D84DA4;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_37D84DA4;
 
         [STUFieldAttribute(0x5620DA50, "m_globalWeightMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimGlobalWeightMultipliers m_globalWeightMultipliers;

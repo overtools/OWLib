@@ -4,10 +4,10 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x2A531C50, "SDD_Print")]
     public class SDD_Print : SDD_Base {
-        [STUFieldAttribute(0x6A74E708)]
-        public teString m_6A74E708;
+        [STUFieldAttribute(0x6A74E708, "SortText")]
+        public teString SortText;
 
-        [STUFieldAttribute(0x3B8BA7C7)]
-        public teString m_3B8BA7C7;
+        [STUFieldAttribute(0x3B8BA7C7, "Text")]
+        public teString Text;
     }
 }

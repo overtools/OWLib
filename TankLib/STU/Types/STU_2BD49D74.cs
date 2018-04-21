@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x2BD49D74)]
-    public class STU_2BD49D74 : STU_773DC32C {
+    public class STU_2BD49D74 : STUMirroredEntityComponent {
         [STUFieldAttribute(0x5DB91CE2, "m_displayName")]
         public teStructuredDataAssetRef<ulong> m_displayName;
 

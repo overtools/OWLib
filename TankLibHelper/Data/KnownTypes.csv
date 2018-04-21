@@ -1,190 +1,275 @@
 Hash, Name
-56B6D12E, STULootBox
+33752503, StatEventScoreScaler
 0CC07049, STUAchievement
-C6A72877, STUUnlock_Pose
-C23F89EB, STUUnlock_Weapon
-614BC677, STUUnlock_Currency
-0B517D2E, STUUnlock_Emote
-6760479E, STUUnlock
-7236F6E3, STUStatescriptGraph
-142AE6FA, STUGraph
-6E63F8E1, STUGraphLink
-2B14FF12, STUStatescriptSyncVar
-354E75FA, STUStatescriptOperationPattern
-5C7F719D, STUStatescriptOperation
-5981B16B, STUStatescriptSchema
-7C37840C, STUStatescriptState
-1E50E1A8, STUStatescriptEntry
-B79960CE, STUStatescriptSubGraph
-268E773B, STUStatescriptInputPlug
-FC999513, STUStatescriptStateGroup
-4421B506, STUStatescriptOutputPlug
-6540C278, STUStatescriptStateWait
-D05AEF31, STUConfigVar
-BD6F5F83, STUStatescriptActionSendGameMessage
-4B093107, STUConfigVarDynamic
-52B46D44, STUStatescriptActionCriteria
-7B45B325, STUConfigVarFloat
-594C2D80, STUStatescriptStateStack
-1C95493A, STUStatescriptRemoteSyncVar
-B567AADA, STUConfigVarBool
-AFFC8378, STUConfigVarEffect
-07A0E32F, STULoadout
-F2646A89, STUHeroWeapon
 5C499B8E, STUAdditionalUnlocks
-F818D652, STULootBoxUnlocks
-5ABF8769, STUUnlocks
+8FE674F9, STUAIBehaviorComponent
+C588E38B, STUAICellBytes
+9F1D18DD, STUAICellData
+CB198A7C, STUAIDifficultyProfile
+0519019F, STUAIWeaponFireControlInfo
+865FBB7E, STUAnimAlias
+92389E46, STUAnimation
+A6DD7672, STUAnimationPermutation
+99007908, STUAnimationTrackOverride
+E7BEFDCE, STUAnimBlendDriverParam
+F731C873, STUAnimBlendTimeParams
+67866D38, STUAnimBlendTree
+7DDC51BC, STUAnimBlendTree_OnFinished
+2BB5472B, STUAnimBlendTree_OnFinished_WeightDriver
+BE20B7F5, STUAnimBlendTree_SlotAnimation
+FC47A2ED, STUAnimBlendTreeSet
+DDD18945, STUAnimBlendTreeSet_BlendTreeItem
+F3942997, STUAnimBlendTreeSet_BonePoseOverrideItem
+C8704AD4, STUAnimBlendTreeSet_HardcodedAnimCategoryRefs
+99EA3F94, STUAnimBlendTreeSet_RetargetParams
+8BDCD4C6, STUAnimBoneWeightMask
+70BFB706, STUAnimBoneWeightMask_Item
+CB5A89D2, STUAnimCategory
+06591AEB, STUAnimConfigAimWeightSet
+949FA931, STUAnimConfigBoneWeight_Item
+A1B96C48, STUAnimConfigWeightSet
+F6279B0F, STUAnimCurve
+C43ABAA7, STUAnimCurveCompiled
+978A87DE, STUAnimGameData_PoseData
+19354E9E, STUAnimGlobalLayerMultipliers
+B0D9AEDF, STUAnimGlobalWeightMultipliers
+7A6F6DC0, STUAnimIdentifier
+CB6035BA, STUAnimNode_Animation
+C8B1D2D7, STUAnimNode_AnimationPose2d
+32443B67, STUAnimNode_AnimationTrackOverride
+EAF06763, STUAnimNode_AnimBlendTreeProxy
+15B4F157, STUAnimNode_Base
+3C6A88BF, STUAnimNode_Blend2d
+295A9417, STUAnimNode_Blend2dChild
+F34A7244, STUAnimNode_BlendPartition
+19BF28AB, STUAnimNode_BlendPartition_ExtraPartitionBoneItem
+A311F881, STUAnimNode_Strafe
+EC56111A, STUAnimNode_StrafeProfileOverride
+B89B3EF9, STUAnimNode_ToTargetDirectionIK
+2F920E29, STUAnimNode_ToTargetDirectionIKItem
+DE44D504, STUAnimNode_TransitionToChildBase
+9260236F, STUAnimParamUpdater_Biped3P
+8C8C0627, STUAnimParamUpdater_SnapTurnScriptedAnimAlias
+9288D2C6, STUAnimParamUpdater_TurnParameters
+3E4FCBC8, STUAnimSynchGroup
+5ACD7C67, STUAnimTriangulationMap
+0352046B, STUAnimTriangulationMap_Triangle
+57C43142, STUAnimUserWeights
+22BD6AAD, STUBreakable
+44897C73, STUBreakableConfig
+B70590E4, STUCaptureAreaComponent
+805BE5CA, STUCaptureAreaResidencyMultiplier
+AB698943, STUCaptureAreaSegment
+85618B21, STUCatalog
+ACCDE63F, STUCelebration
+6EFDBD73, STUCharacterMoverComponent
+62D3E890, STUChatChannelDefinition
+5FB3E9BA, STUChatCommand
+1D9159F2, STUChildEntityDefinition
+A6F1FE9E, STUClothConfig
+A46203AB, STUComponentInstanceData
+D05AEF31, STUConfigVar
+B567AADA, STUConfigVarBool
+1482DDBB, STUConfigVarBoolBase
+3C61114B, STUConfigVarColor
+78D39627, STUConfigVarColorBase
+4B093107, STUConfigVarDynamic
+AFFC8378, STUConfigVarEffect
+A7E04FB2, STUConfigVarExpression
+3D579F4F, STUConfigVarExpressionData
+17E6DDEB, STUConfigVarExpressionFragment
+8BB02FF3, STUConfigVarFilter
+7B45B325, STUConfigVarFloat
+F9C57875, STUConfigVarFloatBase
+F264A657, STUConfigVarGamePadVibration
+12E434A1, STUConfigVarInt
+C398258A, STUConfigVarInt64
+21885D25, STUConfigVarInt64Base
+7639CFC1, STUConfigVarIntBase
+E896B267, STUConfigVarNumeric
+252FDE3A, STUConfigVarResource
+F0D5C4EB, STUConfigVarUInt
+27937BC6, STUConfigVarUInt64
+0E8EC485, STUConfigVarUInt64Base
+A3822DC1, STUConfigVarUIntBase
+E5C38E9F, STUConfigVarVec2
+3FBF91F3, STUConfigVarVec3
+1413B6A1, STUConfigVarVecBase
+F7C4B7FD, STUCreateArmIkItem
+D2929F20, STUDataFlow
+41D3910F, STUDataFlowType
+DFDA46C7, STUDataFlowType_ColorRGB
+BF0D20BE, STUDataFlowType_ColorRGBA
+26A4CEF1, STUDataFlowType_EntityID
+BB90194B, STUDataFlowType_Float
+A62858A1, STUDataFlowType_GUID
+5FAABA03, STUDataFlowType_Vec2
+A748E281, STUDataFlowType_Vec3
+BDA5B839, STUDataFlowType_Vec4
+DA2D62F7, STUDynamicTreeDef
+99257985, STUECAISpawnerInstanceData
+6BC00853, STUECCaptureAreaInstanceData
+CE1A4D26, STUEffect
+251E73C7, STUEffectLook
+7395D144, STUEntityComponent
+73BB2F3A, STUEntityDefinition
+70A6A466, STUEscortComponent
+D76664B9, STUEscortRadius
+9D28963F, STUFirstPersonComponent
+494C33C4, STUGameMode
+57AEDFA2, STUGameModeBodyVars
+456C3C15, STUGameModeLoadoutOverride
+34ECF4D2, STUGameModeSpecificBehaviorScripts
+D797394C, STUGameModeTeam
+9783E116, STUGameModeVarValuePair
+7068CCE6, STUGamePadVibration
+43F40C0F, STUGameRuleset
+2E1A0A0B, STUGameRulesetGameMode
+D353184F, STUGameRulesetSchema
+074EDCB9, STUGameRulesetSchemaEntry
+B13E2A22, STUGameRulesetSchemaValueEnumChoice
+87C00EC0, STUGameRulesetTeam
+866672AD, STUGenericSettings_Base
+30E8CEFC, STUGenericSettings_Chat
+A10FCCD3, STUGenericSettings_FallDamage
+6021C7EC, STUGenericSettings_HeroSettings
+7725B6D6, STUGenericSettings_Nameplates
+B7148D95, STUGenericSettings_Reticle
+017ED998, STUGenericSettings_Sound_ClientApp
+40906896, STUGenericSettings_XPGains
+142AE6FA, STUGraph
+B67D66ED, STUGraphContainer
+8FAF5745, STUGraphItem
+6E63F8E1, STUGraphLink
+25C4F930, STUGraphNode
+CEAA4897, STUGraphPlug
+F9134815, STUHardPoint
+A658CA1C, STUHealthComponent
+7C3457DC, STUHero
+2A879F6B, STUHeroSettingBase
+EADA21EC, STUHeroSettingBool
+B87D57AA, STUHeroSettingCategory
+76B1DB1F, STUHeroSettingFloat
+90A50AC1, STUHeroSettingIdentifier
+24DF4688, STUHeroSpecificSettings
+F2646A89, STUHeroWeapon
+9CADF2EC, STUIdentifier
+875F19AE, STULineupPose
+07A0E32F, STULoadout
+5CF22AAB, STULocaleSettings
+9911A927, STULocalIdleAnimComponent
+19C333CE, STULocalPersistedBinding
+E8B1E584, STULocalPersistedGameplaySettings
+A4EA3ED5, STULocalPersistedHeroSetting
+71B08A4C, STULocalPersistedSettings
+BC91AC98, STULocalPersistedVoiceChatSettings
+56B6D12E, STULootBox
 6CBC2E3F, STULootBoxCelebrationOverride
 9FFCF237, STULootBoxCurrencyRarityUnlock
 16F7C0EA, STULootBoxCurrencyUnlocks
-899CC976, STURulesetWinReward
-00C21225, STUVoiceLineInstance
-FC47A2ED, STUAnimBlendTreeSet
-67866D38, STUAnimBlendTree
-5E569E7A, STUSkeleton
-871BD3D0, STUModel
-D788E54C, STURagdollConfig
-A6F1FE9E, STUClothConfig
-3E03052C, STURigidBodyConfig
-73BB2F3A, STUEntityDefinition
-191835F9, STUModelComponent
-1D9159F2, STUChildEntityDefinition
-44897C73, STUBreakableConfig
-7395D144, STUEntityComponent
-9D28963F, STUFirstPersonComponent
-F9134815, STUHardPoint
 819B4F6D, STULootBoxShopCard
-ACCDE63F, STUCelebration
-CE1A4D26, STUEffect
-0B792564, STUTexture
+F818D652, STULootBoxUnlocks
+25DA0DF5, STUMapCatalog
+E1111C8D, STUMapFont
+5A5653E7, STUMapFontData
+B1FDD8AF, STUMapFontGlyph
+DC866FA7, STUMapFontHeader
+CFFB28E5, STUMapFontKerningPair
+4D03ED2B, STUMaterialEffect
+773DC32C, STUMirroredEntityComponent
+3AA5CB04, STUMirroredIdleAnimComponent
+871BD3D0, STUModel
+191835F9, STUModelComponent
+02DEEEA0, STUModelComponentInstanceData
+BE9DDFDF, STUModelHardpoint
+113187F5, STUModelInfo
 5207484B, STUModelLook
 494B66C1, STUModelMaterial
-A6DD7672, STUAnimationPermutation
-92389E46, STUAnimation
-4D03ED2B, STUMaterialEffect
-E7BEFDCE, STUAnimBlendDriverParam
-32443B67, STUAnimNode_AnimationTrackOverride
-CB6035BA, STUAnimNode_Animation
-15B4F157, STUAnimNode_Base
-C43ABAA7, STUAnimCurveCompiled
-C8704AD4, STUAnimBlendTreeSet_HardcodedAnimCategoryRefs
-F3942997, STUAnimBlendTreeSet_BonePoseOverrideItem
-DDD18945, STUAnimBlendTreeSet_BlendTreeItem
-99EA3F94, STUAnimBlendTreeSet_RetargetParams
-7DDC51BC, STUAnimBlendTree_OnFinished
-25C4F930, STUGraphNode
-CEAA4897, STUGraphPlug
+289495BA, STUMovie
+D10B25CA, STUProfileOverviewGeneralStat
+3FBEDE0E, STUProfileStatCategory
+2B1A5E8C, STUProjectileVisualComponent
+2DB5899F, STUPvPGameComponent
+D788E54C, STURagdollConfig
+3E03052C, STURigidBodyConfig
+899CC976, STURulesetWinReward
+5E569E7A, STUSkeleton
+04118DBD, STUSound
+D96BC652, STUSoundBank
+0EBAF735, STUSoundBankDataVersion
+B613AECA, STUSoundImportanceFactor
+D96D3396, STUSoundParameter
+89006ADB, STUSoundSwitch
+C7BAA017, STUStat
+D2EA359E, STUStatescriptAbilityVarToSet
+DD856C32, STUStatescriptAction
+52B46D44, STUStatescriptActionCriteria
+BD6F5F83, STUStatescriptActionSendGameMessage
+C2DC60F6, STUStatescriptBase
+FD024F42, STUStatescriptComponent
+75526BC2, STUStatescriptComponentInstanceData
+74F95AE2, STUStatescriptDeflectProjectileBox
+1E50E1A8, STUStatescriptEntry
+7236F6E3, STUStatescriptGraph
 7B6EA463, STUStatescriptGraphWithOverrides
+268E773B, STUStatescriptInputPlug
+A8BC2948, STUStatescriptModifyHealth
+36750DD0, STUStatescriptModifyHealthKnockbackRing
+4A7AC5BF, STUStatescriptModifyHealthTag
+5C7F719D, STUStatescriptOperation
+354E75FA, STUStatescriptOperationPattern
+4421B506, STUStatescriptOutputPlug
+1C95493A, STUStatescriptRemoteSyncVar
+5981B16B, STUStatescriptSchema
 5866C45E, STUStatescriptSchemaEntry
+7C37840C, STUStatescriptState
+C38B92B4, STUStatescriptStateAbility
+CA60E86E, STUStatescriptStateAnim
+6621502E, STUStatescriptStateAnimatedCamera
+60FC201F, STUStatescriptStateCosmeticEntity
+BB1054F4, STUStatescriptStateCreateEntity
+0EC57928, STUStatescriptStateDeflectProjectiles
+56779D28, STUStatescriptStateGamePadVibration
+FC999513, STUStatescriptStateGroup
+B480A974, STUStatescriptStateLogicalButton
+826613B7, STUStatescriptStateModifyHealth
+2CBEBF06, STUStatescriptStatePet
+01D67FA0, STUStatescriptStateShockwave
+594C2D80, STUStatescriptStateStack
+41E3C7A7, STUStatescriptStateTrackTargets
+6540C278, STUStatescriptStateWait
+EED6D952, STUStatescriptStateWeaponVolley
+B79960CE, STUStatescriptSubGraph
+2B14FF12, STUStatescriptSyncVar
+61235676, STUStatescriptWeaponProjectileDataFlow
+6CF1089B, STUStatescriptWeaponProjectileEntity
+487AE227, STUStatescriptWeaponProjectileMotion
+F18160D1, STUStatescriptWeaponProjectileVisual
+A1D1B633, STUStatescriptWeaponVolleyLaunch
+0268E7D5, STUStatescriptWeaponVolleyMuzzle
+08184980, STUTargetTag
+445E7678, STUTargetTagComponent
+8880FCB0, STUTeamColor
+E15F9581, STUTestInheritStruct
+72956B0E, STUTestStruct
+0B792564, STUTexture
+A90901B3, STUTextureSource
+F3A63FB4, STUTip
+6760479E, STUUnlock
+614BC677, STUUnlock_Currency
+0B517D2E, STUUnlock_Emote
+C6A72877, STUUnlock_Pose
+8A9D1F89, STUUnlock_VoiceLine
+C23F89EB, STUUnlock_Weapon
+5ABF8769, STUUnlocks
+23F2C185, STUVoiceCategory
+6BB3C6F8, STUVoiceConversationLine
+00C21225, STUVoiceLineInstance
 B466CBBD, STUVoiceSet
 8745618A, STUVoiceSetComponent
-02DEEEA0, STUModelComponentInstanceData
-A46203AB, STUComponentInstanceData
-D353184F, STUGameRulesetSchema
-875F19AE, STULineupPose
-5CF22AAB, STULocaleSettings
-C7BAA017, STUStat
-9911A927, STULocalIdleAnimComponent
-2BB5472B,STUAnimBlendTree_OnFinished_WeightDriver
-BE20B7F5,STUAnimBlendTree_SlotAnimation
-D2929F20,STUDataFlow
-CB5A89D2,STUAnimCategory
-074EDCB9,STUGameRulesetSchemaEntry
-113187F5,STUModelInfo
-BE9DDFDF,STUModelHardpoint
-08184980,STUTargetTag
-865FBB7E,STUAnimAlias
-8A9D1F89,STUUnlock_VoiceLine
-2B1A5E8C,STUProjectileVisualComponent
-70A6A466,STUEscortComponent
-D76664B9,STUEscortRadius
-445E7678,STUTargetTagComponent
-8BB02FF3,STUConfigVarFilter
-EED6D952,STUStatescriptStateWeaponVolley
-487AE227,STUStatescriptWeaponProjectileMotion
-6CF1089B,STUStatescriptWeaponProjectileEntity
-F18160D1,STUStatescriptWeaponProjectileVisual
-A1D1B633,STUStatescriptWeaponVolleyLaunch
-41E3C7A7,STUStatescriptStateTrackTargets
-60FC201F,STUStatescriptStateCosmeticEntity
-F7C4B7FD,STUCreateArmIkItem
-D2EA359E,STUStatescriptAbilityVarToSet
-74F95AE2,STUStatescriptDeflectProjectileBox
-0EC57928,STUStatescriptStateDeflectProjectiles
-CA60E86E,STUStatescriptStateAnim
-01D67FA0,STUStatescriptStateShockwave
-C38B92B4,STUStatescriptStateAbility
-BB1054F4,STUStatescriptStateCreateEntity
-2CBEBF06,STUStatescriptStatePet
-A311F881,STUAnimNode_Strafe
-EC56111A,STUAnimNode_StrafeProfileOverride
-F34A7244,STUAnimNode_BlendPartition
-F731C873,STUAnimBlendTimeParams
-19BF28AB,STUAnimNode_BlendPartition_ExtraPartitionBoneItem
-C8B1D2D7,STUAnimNode_AnimationPose2d
-B89B3EF9,STUAnimNode_ToTargetDirectionIK
-2F920E29,STUAnimNode_ToTargetDirectionIKItem
-949FA931,STUAnimConfigBoneWeight_Item
-3C6A88BF,STUAnimNode_Blend2d
-5ACD7C67,STUAnimTriangulationMap
-295A9417,STUAnimNode_Blend2dChild
-DE44D504,STUAnimNode_TransitionToChildBase
-EAF06763,STUAnimNode_AnimBlendTreeProxy
-23F2C185,STUVoiceCategory
-3FBD80C6,STUVoiceStimulus
-0268E7D5,STUStatescriptWeaponVolleyMuzzle
-0352046B,STUAnimTriangulationMap_Triangle
-7C3457DC,STUHero
-33752503,StatEventScoreScaler
-41D3910F,STUDataFlowType
-BB90194B,STUDataFlowType_Float
-A748E281,STUDataFlowType_Vec3
-BF0D20BE,STUDataFlowType_ColorRGBA
-A62858A1,STUDataFlowType_GUID
-BDA5B839,STUDataFlowType_Vec4
-5FAABA03,STUDataFlowType_Vec2
-DFDA46C7,STUDataFlowType_ColorRGB
-26A4CEF1,STUDataFlowType_EntityID
-04118DBD,STUSound
-0EBAF735,STUSoundBankDataVersion
-D96BC652,STUSoundBank
-494C33C4,STUGameMode
-9783E116,STUGameModeVarValuePair
-D797394C,STUGameModeTeam
-456C3C15,STUGameModeLoadoutOverride
-25DA0DF5,STUMapCatalog
-43F40C0F,STUGameRuleset
-2E1A0A0B,STUGameRulesetGameMode
-87C00EC0,STUGameRulesetTeam
-B13E2A22,STUGameRulesetSchemaValueEnumChoice
-0699809D,STUXPGain
-7068CCE6,STUGamePadVibration
-F264A657,STUConfigVarGamePadVibration
-56779D28,STUStatescriptStateGamePadVibration
-6621502E,STUStatescriptStateAnimatedCamera
-A10FCCD3,STUGenericSettings_FallDamage
-99007908,STUAnimationTrackOverride
-7725B6D6,STUGenericSettings_Nameplates
-B7148D95,STUGenericSettings_Reticle
-017ED998,STUGenericSettings_Sound_ClientApp
-B613AECA,STUSoundImportanceFactor
-57AEDFA2,STUGameModeBodyVars
-8BDCD4C6,STUAnimBoneWeightMask
-B0D9AEDF,STUAnimGlobalWeightMultipliers
-57C43142,STUAnimUserWeights
-19354E9E,STUAnimGlobalLayerMultipliers
-A1B96C48,STUAnimConfigWeightSet
-06591AEB,STUAnimConfigAimWeightSet
-866672AD,STUGenericSettings_Base
-E1111C8D,STUMapFont
-5A5653E7,STUMapFontData
-DC866FA7,STUMapFontHeader
-B1FDD8AF,STUMapFontGlyph
-CFFB28E5,STUMapFontKerningPair
-251E73C7,STUEffectLook
-85618B21,STUCatalog
-AEBBF451,STUVoiceStimulusCatalog
-89006ADB,STUSoundSwitch
-D96D3396,STUSoundParameter
-70BFB706,STUAnimBoneWeightMask_Item
-6BB3C6F8,STUVoiceConversationLine
+3FBD80C6, STUVoiceStimulus
+AEBBF451, STUVoiceStimulusCatalog
+B1B9C667, STUWaypointInstanceData
+15CB6532, STUWeaponComponent
+61386B75, STUWeaponDefinition
+0699809D, STUXPGain
