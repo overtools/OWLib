@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -179,7 +180,7 @@ namespace TankView
             CASC = null;
             GUIDTree = null;
             NotifyPropertyChanged(nameof(GUIDTree));
-            GC.Collect();
+            GCSettings.LatencyMode = GCLatencyMode.Batch;
 
             Task.Run(delegate
             {
@@ -194,10 +195,15 @@ namespace TankView
                 catch (Exception e)
                 {
                     MessageBox.Show("Error while loading CASC", e.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-                    if(System.Diagnostics.Debugger.IsAttached)
+                    if (System.Diagnostics.Debugger.IsAttached)
                     {
                         throw;
                     }
+                }
+                finally
+                {
+                    GCSettings.LatencyMode = GCLatencyMode.Interactive;
+                    GC.Collect();
                 }
 
                 ViewContext.Send(new SendOrPostCallback(delegate
