@@ -194,7 +194,7 @@ namespace TankView
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Error while loading CASC", e.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                     if (System.Diagnostics.Debugger.IsAttached)
                     {
                         throw;
