@@ -45,15 +45,6 @@ namespace TankView.ViewModel
                     MemoryStream stream = new MemoryStream(value);
                     PngBitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.None);
                     _frame = decoder.Frames[0];
-                    double dpi = 96;
-                    int width = _frame.PixelWidth;
-                    int height = _frame.PixelHeight;
-
-                    int stride = width * 4; // 4 bytes per pixel
-                    byte[] pixelData = new byte[stride * height];
-                    _frame.CopyPixels(pixelData, stride, 0);
-
-                    _frame = BitmapSource.Create(width, height, dpi, dpi, _frame.Format, null, pixelData, stride);
                 }
                 _image = value;
                 NotifyPropertyChanged(nameof(ValidImage));
