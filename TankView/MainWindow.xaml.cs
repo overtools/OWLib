@@ -13,6 +13,7 @@ using System.Windows.Data;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
+using TankView.Helper;
 using TankView.ViewModel;
 
 namespace TankView
@@ -276,21 +277,10 @@ namespace TankView
                     }
                     try
                     {
-                        if (CASC.EncodingHandler.GetEntry(entry.Hash, out EncodingEntry enc))
+                        using (Stream i = IOHelper.OpenFile(entry))
+                        using (Stream o = File.OpenWrite(Path.Combine(outPath, entry.FullPath.Substring(1))))
                         {
-                            using (Stream i = CASC.OpenFile(enc.Key))
-                            using (Stream o = File.OpenWrite(Path.Combine(outPath, entry.FullPath.Substring(1))))
-                            {
-                                if (entry.Flags.HasFlag(ContentFlags.Bundle))
-                                {
-                                    i.Position = entry.Offset;
-                                    i.CopyBytes(o, entry.Size);
-                                }
-                                else
-                                {
-                                    i.CopyTo(o);
-                                }
-                            }
+                            i.CopyTo(o);
                         }
                     }
                     catch

@@ -114,15 +114,14 @@
                         </ListView.View>
                     </ListView>
                 </TabItem>
-                <TabItem Header="STU" IsEnabled="False">
+                <TabItem Header="STU" IsEnabled="{Binding ValidSTU, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                     <TreeView x:Name="STUView" ItemsSource="{Binding STUContext, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                         
                     </TreeView>
                 </TabItem>
-                <TabItem Header="Image" IsEnabled="False">
+                <TabItem Header="Image" IsEnabled="{Binding ValidImage, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                        <Image x:Name="ImageSrc" Source="{Binding ImageContext, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
-                        </Image>
+                        <Image Source="{Binding ImageSource}"/>
                     </ScrollViewer>
                 </TabItem>
                 <TabItem Header="Hex" IsEnabled="False"></TabItem>

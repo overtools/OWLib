@@ -451,7 +451,7 @@ namespace DataTool.SaveLogic {
                 texture.SetPayload(payload);
             }
 
-            Stream convertedStream = texture.SaveToDDS(true);
+            Stream convertedStream = texture.SaveToDDS();
             
             uint fourCC = texture.Header.GetFormat().ToPixelFormat().FourCC;
             bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int) texture.Header.Format) ||

@@ -10,6 +10,7 @@ using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
+using TankView.Helper;
 using static TankLib.CASC.ApplicationPackageManifest.Types;
 
 namespace TankView.ViewModel
@@ -20,14 +21,63 @@ namespace TankView.ViewModel
         private CASCHandler CASC;
         private ProgressReportSlave Slave;
 
-        private Dictionary<ulong, PackageRecord> hashMap = new Dictionary<ulong, PackageRecord>();
-
         private GUIDEntry _top;
         public GUIDEntry TopSelectedEntry {
             get {
                 return _top;
             } set {
+                ImageSource = ImageHelper.ConvertDDS(value, DirectXTexNet.DXGI_FORMAT.R8G8B8A8_UNORM, ImageHelper.ImageFormat.PNG, 0);
                 _top = value;
+                NotifyPropertyChanged(nameof(TopSelectedEntry));
+            }
+        }
+
+
+        private BitmapSource _frame = null;
+
+        private byte[] _image = null;
+        public byte[] ImageSource {
+            get {
+                return _image;
+            } set {
+                if (value != null)
+                {
+                    MemoryStream stream = new MemoryStream(value);
+                    PngBitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.None);
+                    _frame = decoder.Frames[0];
+                    double dpi = 96;
+                    int width = _frame.PixelWidth;
+                    int height = _frame.PixelHeight;
+
+                    int stride = width * 4; // 4 bytes per pixel
+                    byte[] pixelData = new byte[stride * height];
+                    _frame.CopyPixels(pixelData, stride, 0);
+
+                    _frame = BitmapSource.Create(width, height, dpi, dpi, _frame.Format, null, pixelData, stride);
+                }
+                _image = value;
+                NotifyPropertyChanged(nameof(ValidImage));
+                NotifyPropertyChanged(nameof(ImageWidth));
+                NotifyPropertyChanged(nameof(ImageHeight));
+                NotifyPropertyChanged(nameof(ImageSource));
+            }
+        }
+
+        public bool ValidImage {
+            get {
+                return _image != null;
+            }
+        }
+
+        public double ImageWidth {
+            get {
+                return _frame?.Width ?? 0;
+            }
+        }
+
+        public double ImageHeight {
+            get {
+                return _frame?.Height ?? 0;
             }
         }
 
@@ -68,23 +118,19 @@ namespace TankView.ViewModel
             {
                 c++;
                 Slave?.ReportProgress((int)(((float)c / (float)total) * 100));
-                AddEntry(entry.Key, 0, entry.Value, 0, 0, ContentFlags.None, LocaleFlags.None);
+                AddEntry(entry.Key, 0, null, entry.Value, 0, 0, ContentFlags.None, LocaleFlags.None);
             }
 
             foreach(ApplicationPackageManifest apm in this.CASC.RootHandler.APMFiles.OrderBy(x => x.Name).ToArray())
             {
                 foreach (KeyValuePair<ulong, PackageRecord> record in apm.FirstOccurence.OrderBy(x => x.Key).ToArray())
                 {
-                    if (!hashMap.ContainsKey(record.Key))
-                    {
-                        hashMap[record.Key] = record.Value;
-                    }
                     c++;
                     if (c % 10000 == 0)
                     {
                         Slave?.ReportProgress((int)(((float)c / (float)total) * 100));
                     }
-                    AddEntry($"files/{Path.GetFileNameWithoutExtension(apm.Name)}/{teResourceGUID.Type(record.Key):X3}", record.Key, record.Value.LoadHash, (int)record.Value.Size, (int)record.Value.Offset, record.Value.Flags, apm.Locale);
+                    AddEntry($"files/{Path.GetFileNameWithoutExtension(apm.Name)}/{teResourceGUID.Type(record.Key):X3}", record.Key, apm, record.Value.LoadHash, (int)record.Value.Size, (int)record.Value.Offset, record.Value.Flags, apm.Locale);
                 }
             }
 
@@ -127,7 +173,7 @@ namespace TankView.ViewModel
             }
         }
 
-        private void AddEntry(string path, ulong guid, MD5Hash hash, int size, int offset, ContentFlags flags, LocaleFlags locale)
+        private void AddEntry(string path, ulong guid, ApplicationPackageManifest apm, MD5Hash hash, int size, int offset, ContentFlags flags, LocaleFlags locale)
         {
             string dir = guid != 0 ? path : Path.GetDirectoryName(path);
             string filename = guid != 0 ? teResourceGUID.AsString(guid) : Path.GetFileName(path);
@@ -160,7 +206,8 @@ namespace TankView.ViewModel
                 Offset = offset,
                 Flags = flags,
                 Locale = locale,
-                Hash = hash
+                Hash = hash,
+                APM = apm
             });
         }
 
