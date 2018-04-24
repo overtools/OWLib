@@ -1,4 +1,6 @@
 ﻿using DataTool.Flag;
+using System.Collections.Generic;
+using TankLib;
 
 namespace DataTool {
     public class ToolFlags : ICLIFlags {
@@ -45,6 +47,12 @@ namespace DataTool {
 
         [CLIFlag(Default = false, Flag = "rcn", Help = "use (R)CN? CMF", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool RCN;
+
+        [CLIFlag(Flag = "force-replace-guid", Help = "Replace these GUIDs", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagGUIDDict" })]
+        public Dictionary<ulong, ulong> ForcedReplacements;
+
+        [CLIFlag(Flag = "ignore-guid", Help = "Ignore these GUIDs", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagGUIDArray" })]
+        public List<ulong> IgnoreGUIDs;
 
         public override bool Validate() => true;
     }

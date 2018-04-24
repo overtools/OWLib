@@ -34,7 +34,12 @@ namespace DataTool.Flag {
                         singulars.Add(flagattr.Flag);
                     } else {
                         string x = flagattr.Flag;
-                        if (flagattr.Default != null && flagattr.NeedsValue) {
+                        Type t = field.FieldType;
+                        if (t.IsGenericType && t.GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>))) {
+                            x = $"[--{x} key=value]";
+                        } else if (t.IsGenericType && t.GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>))) {
+                            x = $"[--{x} value]";
+                        } else if (flagattr.Default != null && flagattr.NeedsValue) {
                             x = $"[--{x}[={flagattr.Default}]]";
                         } else if (flagattr.NeedsValue) {
                             x = $"[--{x}=value]";
@@ -174,6 +179,12 @@ namespace DataTool.Flag {
             return Parse<T>(extraHelp, Environment.GetCommandLineArgs().Skip(1).ToArray());
         }
 
+        private enum FieldKind {
+            Default,
+            Array,
+            Dictionary
+        }
+
         public static T Parse<T>(Action extraHelp, string[] args) where T : ICLIFlags {
             if (args.Length == 0) {
                 FullHelp<T>(extraHelp);
@@ -190,8 +201,41 @@ namespace DataTool.Flag {
             HashSet<string> presence = new HashSet<string>();
             List<string> positionals = new List<string>();
             Dictionary<string, string> values = new Dictionary<string, string>();
+            Dictionary<string, Dictionary<string, string>> dictionaryValues = new Dictionary<string, Dictionary<string, string>>();
+            Dictionary<string, List<string>> arrayValues = new Dictionary<string, List<string>>();
 
-            foreach (string arg in args) {
+            FieldInfo[] fields = iface.GetFields();
+            foreach (FieldInfo field in fields) {
+                if (field.Name == "Positionals") {
+                    continue;
+                }
+                CLIFlagAttribute flagattr = field.GetCustomAttribute<CLIFlagAttribute>(true);
+                if (flagattr == null) {
+                    continue;
+                }
+                Type t = field.FieldType;
+                if (t.IsGenericType && t.GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>))) {
+                    AliasAttribute[] aliasattrs = field.GetCustomAttributes<AliasAttribute>(true).ToArray();
+                    if (aliasattrs.Length > 0) {
+                        foreach (AliasAttribute aliasattr in aliasattrs) {
+                            dictionaryValues.Add(aliasattr.Alias, new Dictionary<string, string>());
+                        }
+                    }
+                    dictionaryValues.Add(flagattr.Flag, new Dictionary<string, string>());
+                }
+                if (t.IsGenericType && t.GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>))) {
+                    AliasAttribute[] aliasattrs = field.GetCustomAttributes<AliasAttribute>(true).ToArray();
+                    if (aliasattrs.Length > 0) {
+                        foreach (AliasAttribute aliasattr in aliasattrs) {
+                            arrayValues.Add(aliasattr.Alias, new List<string>());
+                        }
+                    }
+                    arrayValues.Add(flagattr.Flag, new List<string>());
+                }
+            }
+
+            for(int i = 0; i < args.Length; ++i) {
+                string arg = args[i];
                 if (arg[0] == '-') {
                     if (arg[1] == '-') {
                         string name = arg.Substring(2);
@@ -205,7 +249,19 @@ namespace DataTool.Flag {
                             name = name.Substring(0, name.IndexOf('='));
                         }
                         presence.Add(name);
-                        values[name] = value;
+                        if (dictionaryValues.ContainsKey(name)) {
+                            string key = args[++i];
+                            if (key.Contains('='))
+                            {
+                                value = key.Substring(key.IndexOf('=') + 1);
+                                key = key.Substring(0, key.IndexOf('='));
+                            }
+                            dictionaryValues[name][key] = value;
+                        } else if (arrayValues.ContainsKey(name)) {
+                            arrayValues[name].Add(args[++i]);
+                        } else {
+                            values[name] = value;
+                        }
                     } else {
                         char[] letters = arg.Substring(1).ToArray();
                         foreach (char letter in letters) {
@@ -222,15 +278,26 @@ namespace DataTool.Flag {
                             if (arg.Contains('=')) {
                                 value = arg.Substring(arg.IndexOf('=') + 1);
                             }
-                            values[letter.ToString()] = value;
+                            string name = letter.ToString();
+                            if (dictionaryValues.ContainsKey(name)) {
+                                string key = args[++i];
+                                if (key.Contains('=')) {
+                                    value = key.Substring(key.IndexOf('=') + 1);
+                                    key = key.Substring(0, key.IndexOf('='));
+                                }
+                                dictionaryValues[name][key] = value;
+                            } else if (arrayValues.ContainsKey(name)) {
+                                arrayValues[name].Add(args[++i]);
+                            } else {
+                                values[name] = value;
+                            }
                         }
                     }
                 } else {
                     positionals.Add(arg);
                 }
             }
-
-            FieldInfo[] fields = iface.GetFields();
+            
             foreach (FieldInfo field in fields) {
                 if (field.Name == "Positionals") {
                     field.SetValue(instance, positionals.ToArray());
@@ -240,7 +307,17 @@ namespace DataTool.Flag {
                 if (flagattr == null) {
                     continue;
                 }
+                FieldKind kind = FieldKind.Default;
+                Type t = field.FieldType;
+                if (t.IsGenericType && t.GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>))) {
+                    kind = FieldKind.Dictionary;
+                }
+                else if (t.IsGenericType && t.GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>))) {
+                    kind = FieldKind.Array;
+                }
                 object value = flagattr.Default;
+                object key = string.Empty;
+                bool insertedValue = false;
                 if (flagattr.Positional > -1) {
                     if (positionals.Count > flagattr.Positional) {
                         value = positionals[flagattr.Positional];
@@ -251,12 +328,26 @@ namespace DataTool.Flag {
                         if (aliasattrs.Length > 0) {
                             foreach (AliasAttribute aliasattr in aliasattrs) {
                                 if (presence.Contains(aliasattr.Alias)) {
-                                    value = values[aliasattr.Alias];
+                                    insertedValue = true;
+                                    if (kind == FieldKind.Default) {
+                                        value = values[aliasattr.Alias];
+                                    } else if (kind == FieldKind.Dictionary) {
+                                        value = dictionaryValues[aliasattr.Alias];
+                                    } else if (kind == FieldKind.Array) {
+                                        value = arrayValues[aliasattr.Alias];
+                                    }
                                 }
                             }
                         }
                     } else {
-                        value = values[flagattr.Flag];
+                        insertedValue = true;
+                        if (kind == FieldKind.Default) {
+                            value = values[flagattr.Flag];
+                        } else if (kind == FieldKind.Dictionary) {
+                            value = dictionaryValues[flagattr.Flag];
+                        } else if (kind == FieldKind.Array) {
+                            value = arrayValues[flagattr.Flag];
+                        }
                     }
                 }
                 if (value != null) {
@@ -267,13 +358,23 @@ namespace DataTool.Flag {
                             return null;
                         }
                     }
-                    if (flagattr.Parser != null && (value as string) != null && flagattr.Parser.Length == 2) {
+                    if (flagattr.Parser != null && insertedValue && flagattr.Parser.Length == 2) {
                         Type parserclass = Type.GetType(flagattr.Parser[0]);
                         MethodInfo method = parserclass?.GetMethod(flagattr.Parser[1]);
                         if (method != null) {
                             ParameterInfo[] @params = method.GetParameters();
-                            if (@params.Length == 1 && @params[0].ParameterType.Name == "String" && method.ReturnType.Name == "Object") {
-                                value = method.Invoke(null, new object[] { (string)value });
+                            if (kind == FieldKind.Default) {
+                                if (@params.Length == 1 && @params[0].ParameterType.Name == "String" && method.ReturnType.Name == "Object") {
+                                    value = method.Invoke(null, new object[] { (string)value });
+                                }
+                            } else if (kind == FieldKind.Dictionary) {
+                                if (@params.Length == 1 && @params[0].ParameterType.Name == "Dictionary`2" && method.ReturnType.Name == "Object") {
+                                    value = method.Invoke(null, new object[] { (Dictionary<string, string>)value });
+                                }
+                            } else if (kind == FieldKind.Array) {
+                                if (@params.Length == 1 && @params[0].ParameterType.Name == "List`1" && method.ReturnType.Name == "Object") {
+                                    value = method.Invoke(null, new object[] { (List<string>)value });
+                                }
                             }
                         }
                     }
@@ -282,6 +383,8 @@ namespace DataTool.Flag {
                     Console.Error.WriteLine($"Flag {flagattr.Flag} is required");
                     FullHelp<T>(extraHelp);
                     return null;
+                } else if(field.FieldType.IsClass && field.FieldType.GetConstructor(Type.EmptyTypes) != null) {
+                    field.SetValue(instance, Activator.CreateInstance(field.FieldType));
                 }
             }
             return instance;
