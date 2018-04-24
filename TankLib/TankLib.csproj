@@ -11,6 +11,8 @@
     <AssemblyName>TankLib</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,9 +36,13 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DynamicExpresso.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicExpresso.Core.2.0.0\lib\net461\DynamicExpresso.Core.dll</HintPath>
+    </Reference>
     <Reference Include="LZ4, Version=1.0.15.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd">
       <HintPath>..\packages\lz4net.1.0.15.93\lib\net4-client\LZ4.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="protobuf-net, Version=2.3.7.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.3.7\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
@@ -48,6 +54,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
+    <Reference Include="ZstdNet, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZstdNet.1.3.3\lib\net45\ZstdNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Agent\ProductDatabase.cs" />
@@ -96,6 +105,9 @@
     <Compile Include="Helpers\FastStruct.cs" />
     <Compile Include="Helpers\Hash\CRC.cs" />
     <Compile Include="Helpers\ISerializable.cs" />
+    <Compile Include="teHeroData.cs" />
+    <Compile Include="teReplay.cs" />
+    <Compile Include="DataSerializer\Logical.cs" />
     <Compile Include="Helpers\SerializableHelper.cs" />
     <Compile Include="Math\DBID.cs" />
     <Compile Include="Math\Half\Half.cs" />
@@ -112,6 +124,8 @@
     <Compile Include="Math\teVec3A.cs" />
     <Compile Include="Math\teVec4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="teHighlight.cs" />
+    <Compile Include="DataSerializer\Serializer.cs" />
     <Compile Include="STU\ISerializable_STU.cs" />
     <Compile Include="STU\IStructuredDataFieldReader.cs" />
     <Compile Include="STU\Primitives\STUf32Primitive.cs" />
@@ -4902,6 +4916,7 @@
     <Compile Include="teAnimation.cs" />
     <Compile Include="teAssetPackage.cs" />
     <Compile Include="teAssetPackagePayload.cs" />
+    <Compile Include="teChecksum.cs" />
     <Compile Include="teChunkedData.cs" />
     <Compile Include="teEnums.cs" />
     <Compile Include="teMaterial.cs" />
@@ -4931,6 +4946,13 @@
     <Content Include="todo" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\ZstdNet.1.3.3\build\ZstdNet.targets" Condition="Exists('..\packages\ZstdNet.1.3.3\build\ZstdNet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\ZstdNet.1.3.3\build\ZstdNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ZstdNet.1.3.3\build\ZstdNet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
     <Target Name="BeforeBuild">
