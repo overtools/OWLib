@@ -55,7 +55,7 @@ namespace TankLib
         public uint Unknown6;
         [DynamicSizeArray(typeof(byte), typeof(FillerStruct))]
         public FillerStruct[] FillerStructs;
-
+        
         public class HighlightInfo : ReadableData
         {
             [NullPaddedString]
@@ -87,6 +87,7 @@ namespace TankLib
             public teUUID UUID;
         }
 
+        [Skip]
         public static readonly int MAGIC = Util.GetMagicBytesBE('p', 'h', 'l'); // Player HighLight
 
         [Skip]

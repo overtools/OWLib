@@ -36,6 +36,7 @@ namespace TankLib
             public teHeroData[] Heroes;
         }
 
+        [Skip]
         public static readonly int MAGIC = Util.GetMagicBytesBE('p', 'r', 'p'); // Player RePlay
 
         public teReplay(Stream stream, bool leaveOpen = false)
