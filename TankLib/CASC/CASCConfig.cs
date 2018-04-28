@@ -43,44 +43,6 @@ namespace TankLib.CASC {
         /// <summary>Selected Text Language</summary>
         public string TextLanguage { get; set; }
 
-        public static CASCConfig LoadFromString(string overwatchDirectory, bool skipKeys = false, bool multipleLangs = false)
-        {
-            if (overwatchDirectory.ToLowerInvariant().Substring(0, 5) == "ngdp:")
-            {
-                string cdn = overwatchDirectory.Substring(5, 4);
-                string[] parts = overwatchDirectory.Substring(5).Split(':');
-                string region = "us";
-                string product = "pro";
-                if (parts.Length > 1)
-                {
-                    region = parts[1];
-                }
-                if (parts.Length > 2)
-                {
-                    product = parts[2];
-                }
-                if (cdn == "bnet")
-                {
-                    throw new NotImplementedException("LoadOnlineStorageConfig");
-                    //return LoadOnlineStorageConfig(product, region);
-                }
-                else if (cdn == "http")
-                {
-                    string host = string.Join(":", parts.Skip(3));
-                    throw new NotImplementedException("LoadOnlineStorageConfig");
-                    //return LoadOnlineStorageConfig(host, product, region, true, true, true);
-                }
-                else
-                {
-                    throw new NotImplementedException($"network type {cdn} is not supported");
-                }
-            }
-            else
-            {
-                return LoadLocalStorageConfig(overwatchDirectory, skipKeys, multipleLangs);
-            }
-        }
-
         /// <summary>Installed Languages</summary>
         public HashSet<string> InstalledLanguages;
 
@@ -166,7 +128,75 @@ namespace TankLib.CASC {
         public bool APMFailSilent = false;
         #endregion
         
-        
+        /// <summary>
+        ///  Converts a path URN to CASC-valid info.
+        ///  i.e.
+        ///     ngdp:us:pro
+        ///     http:us:pro:us.patch.battle.net:1119
+        ///     C:\Games\Overwatch
+        /// </summary>
+        /// <param name="overwatchDirectory"></param>
+        /// <param name="skipKeys"></param>
+        /// <param name="multipleLangs"></param>
+        /// <returns>CASCConfig</returns>
+        public static CASCConfig LoadFromString(string overwatchDirectory, bool skipKeys = false, bool multipleLangs = false)
+        {
+            if (overwatchDirectory.ToLowerInvariant().Substring(0, 5) == "ngdp:")
+            {
+                string cdn = overwatchDirectory.Substring(5, 4);
+                string[] parts = overwatchDirectory.Substring(5).Split(':');
+                string region = "us";
+                string product = "pro";
+                if (parts.Length > 1)
+                {
+                    region = parts[1];
+                }
+                if (parts.Length > 2)
+                {
+                    product = parts[2];
+                }
+                if (cdn == "bnet")
+                {
+                    return LoadOnlineStorageConfig($"{region}.patch.battle.net:1119", product, region);
+                }
+                else if (cdn == "http")
+                {
+                    string host = string.Join(":", parts.Skip(3));
+                    return LoadOnlineStorageConfig(host, product, region, skipKeys, multipleLangs);
+                }
+                else
+                {
+                    throw new NotImplementedException($"network type {cdn} is not supported");
+                }
+            }
+            else
+            {
+                return LoadLocalStorageConfig(overwatchDirectory, skipKeys, multipleLangs);
+            }
+        }
+
+        /// <summary>
+        ///     Loads data from online sources such as NGDP 
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="product"></param>
+        /// <param name="region"></param>
+        /// <param name="skpiKeys"></param>
+        /// <param name="multipleLangs"></param>
+        /// <param name="useLatestBuild"></param>
+        /// <returns></returns>
+        private static CASCConfig LoadOnlineStorageConfig(string host, string product, string region, bool skpiKeys = false, bool multipleLangs = false, bool useLatestBuild = true)
+        {
+            throw new NotImplementedException(nameof(LoadOnlineStorageConfig));
+        }
+
+        /// <summary>
+        ///     Loads data from disk
+        /// </summary>
+        /// <param name="basePath"></param>
+        /// <param name="useKeyring"></param>
+        /// <param name="loadMultipleLangs"></param>
+        /// <returns></returns>
         public static CASCConfig LoadLocalStorageConfig(string basePath, bool useKeyring, bool loadMultipleLangs) {
             CASCConfig config = new CASCConfig {
                 OnlineMode = false,

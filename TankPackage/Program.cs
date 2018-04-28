@@ -9,7 +9,6 @@ using DataTool;
 using DataTool.Flag;
 using DataTool.ToolLogic.Extract;
 using DataTool.ConvertLogic;
-
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
@@ -43,9 +42,7 @@ namespace TankPackage
             CASCHandler.Cache.CacheAPM = Flags.UseCache;
             CASCHandler.Cache.CacheCDN = Flags.UseCache;
             CASCHandler.Cache.CacheCDNData = Flags.CacheData;
-            // ngdp:us:pro
-            // http:us:pro:us.patch.battle.net:1119
-            CASCConfig.LoadFromString(Flags.OverwatchDirectory);
+            CASCConfig.LoadFromString(Flags.OverwatchDirectory, Flags.SkipKeys);
             Config.SpeechLanguage = Flags.SpeechLanguage ?? Flags.Language ?? Config.SpeechLanguage;
             Config.TextLanguage = Flags.Language ?? Config.TextLanguage;
             #endregion
@@ -177,16 +174,16 @@ namespace TankPackage
             MapCMF();
             LoadGUIDTable();
             Sound.WwiseBank.GetReady();
-            DataTool.FindLogic.Combo.ComboInfo info = new DataTool.FindLogic.Combo.ComboInfo();
-            foreach (ulong key in records.Keys)
+            Parallel.ForEach(records.Keys, (key) =>
             {
+                DataTool.FindLogic.Combo.ComboInfo info = new DataTool.FindLogic.Combo.ComboInfo();
                 string dest = Path.Combine(output, teResourceGUID.AsString(key));
                 foreach (PackageRecord record in records[key])
                 {
                     DataTool.FindLogic.Combo.Find(info, record.GUID);
                 }
                 DataTool.SaveLogic.Combo.Save(flags, dest, info);
-            }
+            });
         }
 
         private static void Save(string output, ulong key, PackageRecord[] value) => Save(output, key, key, value);
