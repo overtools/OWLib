@@ -8,8 +8,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x4CED72F5)]
         public teStructuredDataAssetRef<ulong> m_4CED72F5;
 
-        [STUFieldAttribute(0xF96A9F40)]
-        public teStructuredDataAssetRef<ulong> m_F96A9F40;
+        [STUFieldAttribute(0xF96A9F40, "m_commandDescription")]
+        public teStructuredDataAssetRef<ulong> m_commandDescription;
 
         [STUFieldAttribute(0xF5B138A2, "m_chatCommandAliases")]
         public teStructuredDataAssetRef<ulong>[] m_chatCommandAliases;

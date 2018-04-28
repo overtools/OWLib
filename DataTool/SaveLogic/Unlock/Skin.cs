@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
 using OWLib;
@@ -12,7 +11,7 @@ using static DataTool.Helper.Logger;
 
 namespace DataTool.SaveLogic.Unlock {
     public class Skin {
-        public static void Save(ICLIFlags flags, string skinName, string basePath, STUHero hero, string rarity, STUSkinOverride skinOverride, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet = true) {
+        public static void Save(ICLIFlags flags, string skinName, string basePath, STUHero hero, string rarity, STUSkinOverride skinOverride, List<ItemInfo> weaponSkins) {
             string heroName = GetString(hero.Name);
             string heroNamePath = GetValidFilename(heroName) ?? "Unknown";
             heroNamePath = heroNamePath.TrimEnd(' ');
@@ -60,12 +59,10 @@ namespace DataTool.SaveLogic.Unlock {
                 }
                 foreach (STUHeroWeaponEntity heroWeapon in weaponEntities) {
                     FindLogic.Combo.Find(info, heroWeapon.Entity, weaponReplacements);
-                    STUModelComponent modelComponent = GetInstance<STUModelComponent>(heroWeapon.Entity);
-                    if (modelComponent?.Look == null || weaponSkinName == null) continue;
-                    ulong modelLook = FindLogic.Combo.GetReplacement(modelComponent.Look, weaponReplacements);
-                    if (!info.ModelLooks.ContainsKey(modelLook)) continue;
-                    FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelLook];
-                    modelLookInfo.Name = weaponSkinName;
+                    if (weaponSkinName == null) continue;
+                    TankLib.STU.Types.STUModelComponent modelComponent = GetInstanceNew<TankLib.STU.Types.STUModelComponent>(heroWeapon.Entity);
+                    if (modelComponent?.m_look == null) continue;
+                    info.SetModelLookName(modelComponent.m_look, weaponSkinName);
                 }
                 
                 replacementIndex++;
@@ -97,6 +94,11 @@ namespace DataTool.SaveLogic.Unlock {
                     FindLogic.Combo.Find(diffInfoAfter, replacement.Value);
                     FindLogic.Combo.Find(diffInfoBefore, replacement.Key);
                 }
+                
+                foreach (KeyValuePair<ulong, FindLogic.Combo.VoiceSetInfo> voiceSet in diffInfoAfter.VoiceSets) {
+                    if (diffInfoBefore.VoiceSets.ContainsKey(voiceSet.Key)) continue;
+                    Combo.SaveVoiceSet(flags, soundDirectory, diffInfoAfter, voiceSet.Key);
+                }
 
                 foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileInfo> soundFile in diffInfoAfter.SoundFiles) {
                     if (diffInfoBefore.SoundFiles.ContainsKey(soundFile.Key)) continue;
@@ -114,19 +116,19 @@ namespace DataTool.SaveLogic.Unlock {
             LoudLog("\tDone");
         }
         
-        public static void Save(ICLIFlags flags, string path, STUHero hero, STUHeroSkin skin, bool quiet = true) {
+        public static void Save(ICLIFlags flags, string path, STUHero hero, STUHeroSkin skin) {
             STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinOverride);
             LoudLog($"Extracting skin {GetString(hero.Name)} {GetFileName(skin.SkinOverride)}");
-            Save(flags, GetFileName(skin.SkinOverride), path, hero, "", skinOverride, null, null, quiet);
+            Save(flags, GetFileName(skin.SkinOverride), path, hero, "", skinOverride, null);
         }
 
-        public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STUUnlock_Skin skin, List<ItemInfo> weaponSkins, List<STULoadout> abilities, bool quiet=true) {
+        public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STUUnlock_Skin skin, List<ItemInfo> weaponSkins) {
             if (skin == null) return;
             LoudLog($"Extracting skin {GetString(hero.Name)} {GetString(skin.CosmeticName)}");
             if (weaponSkins == null) weaponSkins = new List<ItemInfo>();
             
             STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinResource);
-            Save(flags, GetString(skin.CosmeticName).TrimEnd(' '), path, hero, rarity, skinOverride, weaponSkins, abilities, quiet);
+            Save(flags, GetString(skin.CosmeticName).TrimEnd(' '), path, hero, rarity, skinOverride, weaponSkins);
         }
     }
 }

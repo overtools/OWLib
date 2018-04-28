@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x06B5A4F1, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_FC28C044 m_06B5A4F1;
 
-        [STUFieldAttribute(0x9352A840)]
-        public teVec3 m_9352A840;
+        [STUFieldAttribute(0x9352A840, "m_direction")]
+        public teVec3 m_direction;
     }
 }

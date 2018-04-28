@@ -2,9 +2,9 @@
 using System.Runtime.InteropServices;
 
 namespace TankLib.Math {
-    /// <summary>4x3 matrix</summary>
+    /// <summary>4x4 (4x3+A) matrix</summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct teMtx43A {  // todo 43 = 4x3 matrix?
+    public struct teMtx43A {
         public float M01;
         public float M02;
         public float M03;
@@ -19,6 +19,12 @@ namespace TankLib.Math {
         public float M10;
         public float M11;
         public float M12;
+        
+        // A:
+        public float M13;
+        public float M14;
+        public float M15;
+        public float M16;
         
         // ewwwwwwwwwww
         public float this[int rowIndex, int columnIndex] {
@@ -60,6 +66,19 @@ namespace TankLib.Math {
                                 return M11;
                             case 3:
                                 return M12;
+                            default:
+                                throw new IndexOutOfRangeException("You tried to access this matrix at: (" + rowIndex + ", " + columnIndex + ")");
+                        }
+                    case 3:
+                        switch (columnIndex) {
+                            case 0:
+                                return M14;
+                            case 1:
+                                return M15;
+                            case 2:
+                                return M15;
+                            case 3:
+                                return M16;
                             default:
                                 throw new IndexOutOfRangeException("You tried to access this matrix at: (" + rowIndex + ", " + columnIndex + ")");
                         }
@@ -118,6 +137,24 @@ namespace TankLib.Math {
                                 break;
                             case 3:
                                 M12 = value;
+                                break;
+                            default:
+                                throw new IndexOutOfRangeException("You tried to access this matrix at: (" + rowIndex + ", " + columnIndex + ")");
+                        }
+                        break;
+                    case 3:
+                        switch (columnIndex) {
+                            case 0:
+                                M13 = value;
+                                break;
+                            case 1:
+                                M14 = value;
+                                break;
+                            case 2:
+                                M15 = value;
+                                break;
+                            case 3:
+                                M16 = value;
                                 break;
                             default:
                                 throw new IndexOutOfRangeException("You tried to access this matrix at: (" + rowIndex + ", " + columnIndex + ")");

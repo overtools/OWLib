@@ -14,6 +14,6 @@ namespace TankLib.STU.Types {
         public STU_72C48DD7 m_animParamUpdater;
 
         [STUFieldAttribute(0xD1467FCA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_391AC5F1 m_D1467FCA;
+        public STUAnimGameData_Base m_D1467FCA;
     }
 }

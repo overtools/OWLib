@@ -8,7 +8,6 @@ using OWLib.Types.Map;
 using OWLib.Writer;
 using STULib;
 using STULib.Types;
-using STULib.Types.Dump;
 using STULib.Types.Generic;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
@@ -343,7 +342,7 @@ namespace DataTool.SaveLogic {
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             LoudLog("\tFinding");
             FindLogic.Combo.Find(info, map.MapDataResource1);
-            
+
             using (Stream mapStream = OpenFile(map.GetDataKey(1))) {
                 STULib.Types.Map.Map mapData = new STULib.Types.Map.Map(mapStream, BuildVersion);
                 using (Stream map2Stream = OpenFile(map.GetDataKey(2))) {
@@ -355,12 +354,15 @@ namespace DataTool.SaveLogic {
                             STULib.Types.Map.Map mapEntities =
                                 new STULib.Types.Map.Map(mapEntitiesStream, BuildVersion, true);
 
-                            mapEntitiesStream.Position = (long) (Math.Ceiling(mapEntitiesStream.Position / 16.0f) * 16); // Future proofing (?)
+                            mapEntitiesStream.Position =
+                                (long) (Math.Ceiling(mapEntitiesStream.Position / 16.0f) * 16); // Future proofing (?)
 
                             for (int i = 0; i < mapEntities.Records.Length; ++i) {
-                                if (mapEntities.Records[i] != null && mapEntities.Records[i].GetType() != typeof(MapEntity)) {
+                                if (mapEntities.Records[i] != null &&
+                                    mapEntities.Records[i].GetType() != typeof(MapEntity)) {
                                     continue;
                                 }
+
                                 MapEntity mapEntity = (MapEntity) mapEntities.Records[i];
 
                                 if (mapEntity == null) continue;

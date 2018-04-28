@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x6E24EE68)]
     public class STU_6E24EE68 : STU_C7C085F6 {
-        [STUFieldAttribute(0xC4EF5D15)]
-        public teStructuredDataAssetRef<STUAnimSynchGroup> m_C4EF5D15;
+        [STUFieldAttribute(0xC4EF5D15, "m_synchGroup")]
+        public teStructuredDataAssetRef<STUAnimSynchGroup> m_synchGroup;
 
         [STUFieldAttribute(0xBD2F9E2A)]
         public teStructuredDataAssetRef<STUAnimation> m_BD2F9E2A;

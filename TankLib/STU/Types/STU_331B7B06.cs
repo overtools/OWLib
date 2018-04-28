@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public ulong m_F9C9453C;
 
         [STUFieldAttribute(0xEB45D767, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_391AC5F1 m_EB45D767;
+        public STUAnimGameData_Base m_EB45D767;
 
         [STUFieldAttribute(0x53A1B672)]
         public byte m_53A1B672;

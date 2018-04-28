@@ -28,7 +28,7 @@ namespace TankLib.Chunks {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Hardpoint {
             /// <summary>4x4 matrix</summary>
-            public teMtx44A Matrix;
+            public teMtx44 Matrix;
             
             /// <summary>03C Hardpoint GUID</summary>
             public teResourceGUID GUID;

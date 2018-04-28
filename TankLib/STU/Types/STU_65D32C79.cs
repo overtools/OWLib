@@ -5,8 +5,8 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0x65D32C79)]
     public class STU_65D32C79 : STU_74A3AEC7 {
-        [STUFieldAttribute(0x056D3E39, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_CACA2D30 m_056D3E39;
+        [STUFieldAttribute(0x056D3E39, "m_heroes", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_CACA2D30 m_heroes;
 
         [STUFieldAttribute(0xB44A42A0)]
         public Enum_E7FEC166 m_B44A42A0;

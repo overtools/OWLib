@@ -43,7 +43,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             IO.WriteFile((ulong)material.Header.GUIDx03A, rawPath);
             IO.WriteFile((ulong)material.Header.MaterialData, rawPath);
             
-            teShaderGroup shaderGroup = new teShaderGroup(IO.OpenFile(material.Header.ShaderGroup));
+            teShaderGroup shaderGroup = new teShaderGroup(IO.OpenFile((ulong)material.Header.ShaderGroup));
 
             foreach (ulong shaderGroupInstance in shaderGroup.Instances) {
                 teShaderInstance instance = new teShaderInstance(IO.OpenFile(shaderGroupInstance));

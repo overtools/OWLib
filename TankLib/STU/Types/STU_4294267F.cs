@@ -5,8 +5,8 @@ using TankLib.Math;
 namespace TankLib.STU.Types {
     [STUAttribute(0x4294267F)]
     public class STU_4294267F : STUInstance {
-        [STUFieldAttribute(0x11B47C68)]
-        public teUUID m_11B47C68;
+        [STUFieldAttribute(0x11B47C68, "m_id")]
+        public teUUID m_id;
 
         [STUFieldAttribute(0xB48F1D22, "m_name")]
         public teString m_name;

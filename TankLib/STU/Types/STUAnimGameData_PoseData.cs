@@ -12,7 +12,7 @@ namespace TankLib.STU.Types {
         public teVec3A[] m_poseDataVecs;
 
         [STUFieldAttribute(0xD65E1B08, "m_geoSetFlags", ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_2B388E5C[] m_geoSetFlags;
+        public STUAnimGameData_GeoSetFlags[] m_geoSetFlags;
 
         [STUFieldAttribute(0xDB11C2C0)]
         public uint m_DB11C2C0;

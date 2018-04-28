@@ -7,6 +7,8 @@ using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
 using TankLib.STU;
+using TankLib.STU.Primitives;
+using TankLib.STU.Types;
 
 namespace TankLibHelper.Modes {
     public class TestTypeClasses : IMode {
@@ -25,13 +27,40 @@ namespace TankLibHelper.Modes {
             MapCMF("enUS"); // heck
 
             foreach (ulong file in Types[type]) {
+                string filename = teResourceGUID.AsString(file);
                 using (Stream stream = OpenFile(file)) {
                     if (stream == null) continue;
                     teStructuredData structuredData = new teStructuredData(stream);
+
+                    //STUGameRuleset ruleset = structuredData.GetMainInstance<STUGameRuleset>();
+                    //if (ruleset.m_gamemode.m_gamemode == 157625986957967397) {
+                    //    foreach (STUGameRulesetTeam team in ruleset.m_gamemode.m_teams) {
+                    //        if (team.m_availableHeroes == null) continue;
+                    //        if (team.m_availableHeroes is STU_C45DE560 heroSkinOverrides) {
+                    //            foreach (teStructuredDataAssetRef<ulong> heroSkinOverride in heroSkinOverrides.m_62E537BD) {
+                    //                STU_42270D59 skin = GetInst<STU_42270D59>(heroSkinOverride);
+                    //                foreach (KeyValuePair<ulong,STU_3E88143F> rep in skin.m_258A7D5C) {
+                    //                    Console.Out.WriteLine($"{teResourceGUID.AsString(rep.Key)} : {teResourceGUID.AsString(rep.Value.m_3D884507)}");
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
             }
             
             return ModeResult.Success;
+        }
+
+        public teStructuredData GetStructuredData(ulong guid) {
+            using (Stream stream = OpenFile(guid)) {
+                if (stream == null) return null;
+                return new teStructuredData(stream);
+            }
+        }
+        
+        public T GetInst<T>(ulong guid) where T : STUInstance {
+            return GetStructuredData(guid)?.GetMainInstance<T>();
         }
         
         public Stream OpenFile(ulong guid) {

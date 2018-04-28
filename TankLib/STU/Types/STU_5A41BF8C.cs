@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x5A41BF8C)]
     public class STU_5A41BF8C : STUInstance {
-        [STUFieldAttribute(0x0F88291F, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_DA6FFDEE m_0F88291F;
+        [STUFieldAttribute(0x0F88291F, "m_weightDriver", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_DA6FFDEE m_weightDriver;
 
         [STUFieldAttribute(0x772299C4)]
         public float m_772299C4;

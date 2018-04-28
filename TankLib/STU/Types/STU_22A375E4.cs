@@ -12,10 +12,10 @@ namespace TankLib.STU.Types {
         public teVec2[] m_0EC67F50;
 
         [STUFieldAttribute(0xF0CF068D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_6BC13553 m_F0CF068D;
+        public STUAnimGameData_BlendDriver m_F0CF068D;
 
         [STUFieldAttribute(0x8D244EC2, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_6BC13553 m_8D244EC2;
+        public STUAnimGameData_BlendDriver m_8D244EC2;
 
         [STUFieldAttribute(0x5E009A60)]
         public byte m_5E009A60;

@@ -4,11 +4,11 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xF3104738)]
     public class STU_F3104738 : STUStatescriptState {
-        [STUFieldAttribute(0x68666D2D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_543CF5E7[] m_68666D2D;
+        [STUFieldAttribute(0x68666D2D, "m_hitReactions", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAIHitReaction[] m_hitReactions;
 
-        [STUFieldAttribute(0x85FF200D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_83587DEE[] m_85FF200D;
+        [STUFieldAttribute(0x85FF200D, "m_bodyPartDamageGroups", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAIBodyPartDamageGroup[] m_bodyPartDamageGroups;
 
         [STUFieldAttribute(0x51EFC23E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_0912964B[] m_51EFC23E;

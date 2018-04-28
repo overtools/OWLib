@@ -20,10 +20,10 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x2E61937B, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_2E61937B;
 
-        [STUFieldAttribute(0xC3E03C7F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_C3E03C7F;
+        [STUFieldAttribute(0xC3E03C7F, "m_color", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_color;
 
-        [STUFieldAttribute(0x9352A840)]
-        public Enum_45F0592D m_9352A840;
+        [STUFieldAttribute(0x9352A840, "m_direction")]
+        public Enum_45F0592D m_direction;
     }
 }

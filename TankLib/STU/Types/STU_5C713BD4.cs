@@ -7,7 +7,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x58D56DD4, "m_effect")]
         public teStructuredDataAssetRef<STUEffect> m_effect;
 
-        [STUFieldAttribute(0x2B522C5B)]
-        public teStructuredDataAssetRef<STUEffectLook> m_2B522C5B;
+        [STUFieldAttribute(0x2B522C5B, "m_effectLook")]
+        public teStructuredDataAssetRef<STUEffectLook> m_effectLook;
     }
 }

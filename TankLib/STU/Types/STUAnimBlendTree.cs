@@ -16,8 +16,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBF7A74B0, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_8C127DE2[] m_BF7A74B0;
 
-        [STUFieldAttribute(0xD6497916, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_CB30C7C3 m_D6497916;
+        [STUFieldAttribute(0xD6497916, "m_rootNode", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_CB30C7C3 m_rootNode;
 
         [STUFieldAttribute(0xA4712A0A, "m_treeCRC")]
         public uint m_treeCRC;

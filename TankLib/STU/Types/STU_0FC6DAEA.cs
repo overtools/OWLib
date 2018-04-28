@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x0FC6DAEA)]
     public class STU_0FC6DAEA : STUStatescriptAction {
-        [STUFieldAttribute(0xA250F973, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_5B8A4389 m_A250F973;
+        [STUFieldAttribute(0xA250F973, "m_POTGData", ReaderType = typeof(InlineInstanceFieldReader))]
+        public PlayOfTheGameData m_POTGData;
     }
 }

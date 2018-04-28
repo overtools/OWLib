@@ -14,8 +14,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x4D5597A8, "m_script", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_script;
 
-        [STUFieldAttribute(0x92A85396, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_92A85396;
+        [STUFieldAttribute(0x92A85396, "m_gameMessage", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_gameMessage;
 
         [STUFieldAttribute(0xD11CBE74)]
         public Enum_2CFF77C1 m_D11CBE74;

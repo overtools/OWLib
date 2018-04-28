@@ -178,19 +178,19 @@ namespace DataTool.SaveLogic {
             CreateDirectoryFromFile(soundDir + "\\harrypotter.png");
 
             HashSet<ulong> done = new HashSet<ulong>();
-            if (soundInfo.Sounds != null) {
-                foreach (KeyValuePair<uint, ulong> soundPair in soundInfo.Sounds) {
+            if (soundInfo.SoundFiles != null) {
+                foreach (KeyValuePair<uint, ulong> soundPair in soundInfo.SoundFiles) {
                     if (done.Contains(soundPair.Value)) continue;
                     SaveSoundFile(flags, soundDir, info, soundPair.Value, false);
                     done.Add(soundPair.Value);
                 }
             }
 
-            if (soundInfo.OtherSounds != null) {
-                foreach (ulong otherSound in soundInfo.OtherSounds) {
-                    if (done.Contains(otherSound)) continue;
-                    SaveSoundFile(flags, soundDir, info, otherSound, false);
-                    done.Add(otherSound);
+            if (soundInfo.SoundStreams != null) {
+                foreach (KeyValuePair<uint, ulong> soundStream in soundInfo.SoundStreams) {
+                    if (done.Contains(soundStream.Value)) continue;
+                    SaveSoundFile(flags, soundDir, info, soundStream.Value, false);
+                    done.Add(soundStream.Value);
                 }
             }
         }
@@ -224,27 +224,7 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void SaveOWModelFile(ICLIFlags flags, string modelPath, Model.OWModelWriter14 modelWriter,
-            FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelInfoNew modelInfo, Stream modelStream, bool doRefpose,
-            string refposePath) {
-            Stream refposeStream = new MemoryStream();
-            using (Stream modelOutputStream = File.OpenWrite(modelPath)) {
-                modelOutputStream.SetLength(0);
-                modelWriter.Write(flags, modelOutputStream, info, modelInfo, modelStream, refposeStream);
-            }
-
-            if (doRefpose && refposeStream.Length > 0) {
-                using (Stream refposeOutputStream = File.OpenWrite(refposePath)) {
-                    refposeOutputStream.SetLength(0);
-                    refposeStream.CopyTo(refposeOutputStream);
-                }
-            }
-
-            modelStream?.Dispose();
-            refposeStream.Dispose();
-        }
-
-        public static void SaveModel(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong model) {
+        public static void SaveModel(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong modelGUID) {
             bool convertModels = true;
             bool doRefpose = false;
 
@@ -254,22 +234,32 @@ namespace DataTool.SaveLogic {
                 if (extractFlags.SkipModels) return;
             }
             
-            FindLogic.Combo.ModelInfoNew modelInfo = info.Models[model];
+            FindLogic.Combo.ModelInfoNew modelInfo = info.Models[modelGUID];
             string modelDirectory = Path.Combine(path, "Models", modelInfo.GetName());
-            string refposePath = "";
-            if (doRefpose) {
-                refposePath = Path.Combine(modelDirectory, modelInfo.GetNameIndex()+".smd");
-            }
 
             if (convertModels) {
-                Model.OWModelWriter14 modelWriter = new Model.OWModelWriter14();
-                
-                string modelPath = Path.Combine(modelDirectory, $"{modelInfo.GetNameIndex()}{modelWriter.Format}");
+                string modelPath = Path.Combine(modelDirectory, $"{modelInfo.GetNameIndex()}.owmdl");
                 CreateDirectoryFromFile(modelPath);
 
-                Stream modelStream = OpenFile(modelInfo.GUID);
-                
-                SaveOWModelFile(flags, modelPath, modelWriter, info, modelInfo, modelStream, doRefpose, refposePath);
+                using (Stream modelStream = OpenFile(modelInfo.GUID)) {
+                    teChunkedData chunkedData = new teChunkedData(modelStream);
+                    
+                    OverwatchModel model = new OverwatchModel(chunkedData);
+                    if (modelInfo.ModelLooks.Count > 0) {
+                        FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelInfo.ModelLooks.First()];
+                        model.ModelLookFileName = Path.Combine("ModelLooks",
+                            modelLookInfo.GetNameIndex() + ".owmat");
+                    }
+                    using (Stream fileStream = File.OpenWrite(modelPath)) {
+                        fileStream.SetLength(0);
+                        model.Write(fileStream);
+                    }
+
+                    if (doRefpose) {
+                        string refposePath = Path.Combine(modelDirectory, modelInfo.GetNameIndex()+".smd");
+                        // todo
+                    }
+                }
             } else {
                 using (Stream modelStream = OpenFile(modelInfo.GUID)) {
                     WriteFile(modelStream, Path.Combine(modelDirectory, modelInfo.GetNameIndex()+".00C"));
@@ -285,7 +275,7 @@ namespace DataTool.SaveLogic {
             }
 
             foreach (ulong modelAnimation in modelInfo.Animations) {
-                SaveAnimation(flags, modelDirectory, info, modelAnimation, model);
+                SaveAnimation(flags, modelDirectory, info, modelAnimation, modelGUID);
             }
         }
 
@@ -437,81 +427,8 @@ namespace DataTool.SaveLogic {
             internal static readonly int[] DXGI_BC4 = { 79, 80, 91 };
             internal static readonly int[] DXGI_BC5 = { 82, 83, 84 };
         }
-        
-        private static void ConvertTexture(string convertType, string filePath, string path, Stream headerStream, Stream dataStream) {
-            CreateDirectoryFromFile(path);
 
-            teTexture texture = new teTexture(headerStream);
-            if (texture.PayloadRequired && dataStream == null) {
-                Debugger.Log(0, "DataTool.SaveLogic.Combo", "Unable to load texture payload\r\n");
-                return;
-            }
-            if (dataStream != null) {
-                teTexturePayload payload = new teTexturePayload(texture, dataStream);
-                texture.SetPayload(payload);
-            }
-
-            Stream convertedStream = texture.SaveToDDS(true);
-            
-            uint fourCC = texture.Header.GetFormat().ToPixelFormat().FourCC;
-            bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int) texture.Header.Format) ||
-                               TextureConfig.DXGI_BC5.Contains((int) texture.Header.Format) ||
-                               fourCC == TextureConfig.FOURCC_ATI1 || fourCC == TextureConfig.FOURCC_ATI2;
-
-            ImageFormat imageFormat = null;
-
-            if (convertType == "tif") imageFormat = ImageFormat.Tiff;
-
-            // if (convertType == "tga") imageFormat = Im.... oh
-            // so there is no TGA image format.
-            // guess the TGA users are stuck with the DirectXTex stuff for now.
-            
-            if (convertedStream.Length == 0) {
-                WriteFile(Stream.Null, $"{filePath}.{convertType}");
-                return;
-            }
-
-            convertedStream.Position = 0;
-            if (isBcffValid && imageFormat != null) {
-                BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
-                decompressor.CreateImage();
-                decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
-                return;
-            }
-
-            convertedStream.Position = 0;
-            if (convertType == "tga" || convertType == "tif" || convertType == "dds") {
-                // we need the dds for tif conversion
-                WriteFile(convertedStream, $"{filePath}.dds");
-            }
-
-            convertedStream.Close();
-
-            if (convertType != "tif" && convertType != "tga") return;
-            Process pProcess = new Process {
-                StartInfo = {
-                    FileName = "Third Party\\texconv.exe",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    Arguments =
-                        $"\"{filePath}.dds\" -y -wicmulti -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{path}"
-                }
-            };
-            // -wiclossless?
-
-            // erm, so if you add an end quote to this then it breaks.
-            // but start one on it's own is fine (we need something for "Winged Victory")
-            pProcess.Start();
-            // pProcess.WaitForExit(); // not using this is kinda dangerous but I don't care
-            // when texconv writes with to the console -nologo is has done/failed conversion
-            string line = pProcess.StandardOutput.ReadLine();
-            if (line?.Contains($"{filePath}.dds FAILED") == false) {
-                // fallback if convert fails
-                File.Delete($"{filePath}.dds");
-            }
-        }
-
-        public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong texture) {
+        public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong textureGUID) {
             bool convertTextures = true;
             string convertType = "dds";
 
@@ -522,26 +439,79 @@ namespace DataTool.SaveLogic {
             }
             path += Path.DirectorySeparatorChar;
 
-            FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[texture];
+            FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[textureGUID];
             string filePath = Path.Combine(path, $"{textureInfo.GetNameIndex()}");
 
+            CreateDirectoryFromFile(path);
             if (!convertTextures) {
-                CreateDirectoryFromFile(path);
-                using (Stream textureStream = OpenFile(textureInfo.GUID))
+                using (Stream textureStream = OpenFile(textureInfo.GUID)) {
+                    teTexture texture = new teTexture(textureStream, true);
+                    textureStream.Position = 0;
                     WriteFile(textureStream, $"{filePath}.004");
 
-                if (!textureInfo.UseData) return;
-                using (Stream textureStream = OpenFile(textureInfo.DataGUID))
-                    WriteFile(textureStream, $"{filePath}.04D");
-            } else {
-                Stream headerStream = OpenFile(textureInfo.GUID);
-                Stream dataStream = null;
-                if (headerStream == null) return;
-                if (textureInfo.UseData) {
-                    dataStream = OpenFile(textureInfo.DataGUID);
-                    if (dataStream == null) return;
+                    if (!texture.PayloadRequired) return;
+                    using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID)))
+                        WriteFile(texturePayloadStream, $"{filePath}.04D");
                 }
-                ConvertTexture(convertType, filePath, path, headerStream, dataStream);
+            } else {
+                using (Stream textureStream = OpenFile(textureGUID)) {
+                    teTexture texture = new teTexture(textureStream);
+
+                    if (texture.PayloadRequired) {
+                        texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID)));
+                    }
+
+                    using (Stream convertedStream = texture.SaveToDDS(true)) {
+                        if (convertedStream.Length == 0) {
+                            WriteFile(convertedStream, $"{filePath}.{convertType}");
+                            return;
+                        }
+                        
+                        uint fourCC = texture.Header.GetFormat().ToPixelFormat().FourCC;
+                        bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int) texture.Header.Format) ||
+                                           TextureConfig.DXGI_BC5.Contains((int) texture.Header.Format) ||
+                                           fourCC == TextureConfig.FOURCC_ATI1 || fourCC == TextureConfig.FOURCC_ATI2;
+
+                        ImageFormat imageFormat = null;
+                        if (convertType == "tif") imageFormat = ImageFormat.Tiff;
+                        // if (convertType == "tga") imageFormat = Im.... oh
+                        // so there is no TGA image format.
+                        // guess the TGA users are stuck with the DirectXTex stuff for now.
+
+                        convertedStream.Position = 0;
+                        if (isBcffValid && imageFormat != null) {
+                            BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
+                            decompressor.CreateImage();
+                            decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
+                            return;
+                        }
+
+                        convertedStream.Position = 0;
+                        if (convertType == "tga" || convertType == "tif" || convertType == "dds") {
+                            // we need the dds for tif conversion
+                            WriteFile(convertedStream, $"{filePath}.dds");
+                        }
+                    }
+                    if (convertType != "tif" && convertType != "tga") return;
+                    using (Process texconvProcess = new Process {
+                        StartInfo = {
+                            FileName = "Third Party\\texconv.exe",
+                            UseShellExecute = false,
+                            RedirectStandardOutput = true,
+                            Arguments =
+                                $"\"{filePath}.dds\" -y -wicmulti -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{path}"
+                        }
+                    }) {
+                        texconvProcess.Start();
+                        // pProcess.WaitForExit(); // not using this is kinda dangerous but I don't care
+                        // when texconv writes with to the console -nologo is has done/failed conversion
+                        string line = texconvProcess.StandardOutput.ReadLine();
+                        if (line?.Contains($"{filePath}.dds FAILED") == false) {
+                            // fallback if convert fails
+                            File.Delete($"{filePath}.dds");
+                        }
+                    }
+                }
             }
         }
 

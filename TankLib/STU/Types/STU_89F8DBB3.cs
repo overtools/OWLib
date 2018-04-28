@@ -16,10 +16,10 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUAnimBoneWeightMask> m_3CFF054B;
 
         [STUFieldAttribute(0xD1A08C94, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_38F4E107[] m_D1A08C94;
+        public STUAnimBlendTree_PlayAnimCancelItem[] m_D1A08C94;
 
         [STUFieldAttribute(0xB2E34614)]
-        public Enum_9F4E2CAC m_B2E34614;
+        public STUPlayAnimSlot m_B2E34614;
 
         [STUFieldAttribute(0x9EFA9957)]
         public float m_9EFA9957;

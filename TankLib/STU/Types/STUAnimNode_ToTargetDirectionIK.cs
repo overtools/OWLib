@@ -10,8 +10,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x4ABE6B19, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimBlendDriverParam m_4ABE6B19;
 
-        [STUFieldAttribute(0x0F88291F, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_25B808BD m_0F88291F;
+        [STUFieldAttribute(0x0F88291F, "m_weightDriver", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_25B808BD m_weightDriver;
 
         [STUFieldAttribute(0xE33AA964, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_ABD8FE73 m_E33AA964;

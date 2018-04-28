@@ -17,7 +17,7 @@ namespace TankLib.STU.Types {
         public STU_3B150012 m_F6E6D4B1;
 
         [STUFieldAttribute(0x9AD6CC25, "m_gameData", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_391AC5F1 m_gameData;
+        public STUAnimGameData_Base m_gameData;
 
         [STUFieldAttribute(0xCCB4CD4A)]
         public ulong m_CCB4CD4A;

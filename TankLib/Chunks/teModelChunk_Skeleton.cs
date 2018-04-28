@@ -39,10 +39,10 @@ namespace TankLib.Chunks {
         /// <summary>Header data</summary>
         public SkeletonHeader Header;
         
-        public teMtx44A[] Matrices;
-        public teMtx44A[] MatricesInverted;
-        public teMtx43A[] Matrices34;
-        public teMtx43A[] Matrices34Inverted;
+        public teMtx44[] Matrices;
+        public teMtx44[] MatricesInverted;
+        public teMtx43[] Matrices34;
+        public teMtx43[] Matrices34Inverted;
         public short[] Hierarchy;
         public ushort[] Lookup;
         // ReSharper disable once InconsistentNaming
@@ -64,41 +64,41 @@ namespace TankLib.Chunks {
                 
                 // todo: should be 3x4 mat not 4x3?
 
-                Matrices = new teMtx44A[Header.BonesAbs];
-                MatricesInverted = new teMtx44A[Header.BonesAbs];
-                Matrices34 = new teMtx43A[Header.BonesAbs];
-                Matrices34Inverted = new teMtx43A[Header.BonesAbs];
+                Matrices = new teMtx44[Header.BonesAbs];
+                MatricesInverted = new teMtx44[Header.BonesAbs];
+                Matrices34 = new teMtx43[Header.BonesAbs];
+                Matrices34Inverted = new teMtx43[Header.BonesAbs];
 
                 if (Header.Matrix44Offset > 0) {
                     input.Position = Header.Matrix44Offset;
-                    Matrices = reader.ReadArray<teMtx44A>(Header.BonesAbs);
+                    Matrices = reader.ReadArray<teMtx44>(Header.BonesAbs);
                 }
 
                 if (Header.Matrix44iOffset > 0) {
                     input.Position = Header.Matrix44iOffset;
-                    MatricesInverted = reader.ReadArray<teMtx44A>(Header.BonesAbs);
+                    MatricesInverted = reader.ReadArray<teMtx44>(Header.BonesAbs);
                 }
 
                 if (Header.Matrix43Offset > 0) {
                     input.Position = Header.Matrix43Offset;
-                    Matrices34 = reader.ReadArray<teMtx43A>(Header.BonesAbs);
+                    Matrices34 = reader.ReadArray<teMtx43>(Header.BonesAbs);
                 }
 
                 if (Header.Matrix43iOffset > 0) {
                     input.Position = Header.Matrix43iOffset;
-                    Matrices34Inverted = reader.ReadArray<teMtx43A>(Header.BonesAbs);
+                    Matrices34Inverted = reader.ReadArray<teMtx43>(Header.BonesAbs);
                 }
 
                 Lookup = new ushort[Header.RemapCount];
                 if (Header.RemapOffset > 0) {
                     input.Position = Header.RemapOffset;
-                    Lookup = reader.ReadArray<ushort>();
+                    Lookup = reader.ReadArray<ushort>(Header.RemapCount);
                 }
 
                 IDs = new uint[Header.BonesAbs];
                 if (Header.IDOffset > 0) {
                     input.Position = Header.IDOffset;
-                    IDs = reader.ReadArray<uint>();
+                    IDs = reader.ReadArray<uint>(Header.BonesAbs);
                 }
             }
         }

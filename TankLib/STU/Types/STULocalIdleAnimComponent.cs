@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x9911A927, "STULocalIdleAnimComponent")]
     public class STULocalIdleAnimComponent : STUEntityComponent {
-        [STUFieldAttribute(0xC9D669B6)]
-        public teStructuredDataAssetRef<STUAnimation> m_C9D669B6;
+        [STUFieldAttribute(0xC9D669B6, "m_idleAnimation")]
+        public teStructuredDataAssetRef<STUAnimation> m_idleAnimation;
 
         [STUFieldAttribute(0xEDF6D105)]
         public float m_EDF6D105;

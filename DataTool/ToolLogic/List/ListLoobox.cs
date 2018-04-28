@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
-using STULib.Types;
+using OWLib;
+using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
@@ -17,7 +18,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public void Parse(ICLIFlags toolFlags) {
-            var lootboxes = GetLootboxes();
+            Dictionary<string, List<string>> lootboxes = GetLootboxes();
 
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
@@ -25,10 +26,10 @@ namespace DataTool.ToolLogic.List {
                     return;
                 }
 
-            var iD = new IndentHelper();
-            foreach (var lootboxSet in lootboxes) {
+            IndentHelper iD = new IndentHelper();
+            foreach (KeyValuePair<string, List<string>> lootboxSet in lootboxes) {
                 Log($"{iD}{lootboxSet.Key}");
-                foreach (var lootbox in lootboxSet.Value)
+                foreach (string lootbox in lootboxSet.Value)
                     Log($"{iD+1}{lootbox}");
 
                 Log();
@@ -39,11 +40,11 @@ namespace DataTool.ToolLogic.List {
             Dictionary<string, List<string>> @return = new Dictionary<string, List<string>>();
 
             foreach (ulong key in TrackedFiles[0xCF]) {
-                var lootbox = GetInstance<STULootbox>(key);
+                STULootBox lootbox = GetInstanceNew<STULootBox>(key);
 
                 if (lootbox == null) continue;
 
-                @return[lootbox.EventNameNormal] = lootbox.ShopCards.Select(l => GetString(l.Text) ?? "Unknown").ToList();
+                @return[ItemEvents.GetInstance().GetEventNormal((ulong)lootbox.m_7AB4E3F8)] = lootbox.m_shopCards.Select(l => GetString(l.m_90EB924A) ?? "Unknown").ToList();
             }
 
             return @return;

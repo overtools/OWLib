@@ -10,8 +10,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x5F150DBC, "m_jump", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_A8EFC6F0 m_jump;
 
-        [STUFieldAttribute(0x4376ACB9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_A8EFC6F0 m_4376ACB9;
+        [STUFieldAttribute(0x4376ACB9, "m_additiveFiring", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_A8EFC6F0 m_additiveFiring;
 
         [STUFieldAttribute(0xF01470D0, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_A8EFC6F0 m_F01470D0;

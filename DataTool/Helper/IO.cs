@@ -97,10 +97,6 @@ namespace DataTool.Helper {
                 stream.CopyTo(file);
             }
         }
-
-        public static Stream OpenFile(teResourceGUID guid) {
-            return OpenFile((ulong)guid);
-        }
         
         public static Dictionary<MD5Hash, byte[]> BundleCache = new Dictionary<MD5Hash, byte[]>(new MD5HashComparer());
         

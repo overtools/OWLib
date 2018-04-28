@@ -7,6 +7,7 @@ using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
+using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
 using Animation = OWLib.Animation;
 
@@ -55,7 +56,7 @@ namespace DataTool.SaveLogic {
                         writer.Write(GUID.Index(childEntityReference.Hardpoint));
                         writer.Write(GUID.Index(childEntityReference.Variable));
                         if (childEntityReference.Hardpoint != 0) {
-                            writer.Write(Model.OWModelWriter14.IdToString("hardpoint", GUID.Index(childEntityReference.Hardpoint)));
+                            writer.Write(OverwatchModel.IdToString("hardpoint", GUID.Index(childEntityReference.Hardpoint)));
                         } else {
                             writer.Write("null"); // erm, k
                         }

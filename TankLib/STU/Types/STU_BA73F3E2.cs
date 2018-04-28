@@ -6,6 +6,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xBA73F3E2)]
     public class STU_BA73F3E2 : STUStatescriptState {
         [STUFieldAttribute(0xC5846D90)]
-        public Enum_909B56BB[] m_C5846D90;
+        public STULogicalButton[] m_C5846D90;
     }
 }

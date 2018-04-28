@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x3AA5CB04, "STUMirroredIdleAnimComponent")]
     public class STUMirroredIdleAnimComponent : STUMirroredEntityComponent {
-        [STUFieldAttribute(0xC9D669B6)]
-        public teStructuredDataAssetRef<STUAnimation> m_C9D669B6;
+        [STUFieldAttribute(0xC9D669B6, "m_idleAnimation")]
+        public teStructuredDataAssetRef<STUAnimation> m_idleAnimation;
 
         [STUFieldAttribute(0xD91EF907)]
         public teStructuredDataAssetRef<ulong> m_D91EF907;

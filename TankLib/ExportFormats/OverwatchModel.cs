@@ -11,6 +11,9 @@ namespace TankLib.ExportFormats {
         public string Extension => "owmdl";
 
         private readonly teChunkedData _data;
+
+        public string ModelLookFileName;
+        public string Name;
         
         public OverwatchModel(teChunkedData chunkedData) {
             _data = chunkedData;
@@ -22,12 +25,21 @@ namespace TankLib.ExportFormats {
             teModelChunk_Skeleton skeleton = _data.GetChunk<teModelChunk_Skeleton>();
             teModelChunk_Hardpoint hardpoints = _data.GetChunk<teModelChunk_Hardpoint>();
             teModelChunk_Cloth cloth = _data.GetChunk<teModelChunk_Cloth>();
+            teModelChunk_STU stu = _data.GetChunk<teModelChunk_STU>();
             
             using (BinaryWriter writer = new BinaryWriter(stream)) {
                 writer.Write((ushort)1);
                 writer.Write((ushort)1);  // todo: not full support
-                writer.Write((byte)0);
-                writer.Write((byte)0);
+                if (ModelLookFileName == null) {   // mat ref
+                    writer.Write((byte)0);
+                } else {
+                    writer.Write(ModelLookFileName);
+                }
+                if (Name == null) {   // model name
+                    writer.Write((byte)0);
+                } else {
+                    writer.Write(Name);
+                }
 
                 if (skeleton != null) {
                     writer.Write(skeleton.Header.BonesAbs);
@@ -35,7 +47,8 @@ namespace TankLib.ExportFormats {
                     writer.Write((ushort)0);
                 }
                 
-                teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh.Submeshes.Where(x => x != null).ToArray(); // .Descriptor.LOD == 0
+                // todo: specify lod
+                teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh.Submeshes.Where(x => x.Descriptor.LOD == 1 || x.Descriptor.LOD == 255).ToArray(); // .Descriptor.LOD == 0
                 writer.Write((uint)submeshes.Length);
                 writer.Write(0);  // hardpoints
                 
@@ -48,19 +61,14 @@ namespace TankLib.ExportFormats {
                         }
                         writer.Write(parent);
                         
-                        teMtx43A bone = skeleton.Matrices34[j];
-                        teQuat rot = new teQuat(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
-                        teVec3 scl = new teVec3(bone[1, 0], bone[1, 1], bone[1, 2]);
-                        teVec3 pos = new teVec3(bone[2, 0], bone[2, 1], bone[2, 2]);
-                        //if (nodeMap.ContainsKey(j)) {
-                        //    HTLC.ClothNode thisNode = nodeMap[j];
-                        //    pos.X = thisNode.X;
-                        //    pos.Y = thisNode.Y;
-                        //    pos.Z = thisNode.Z;
-                        //}
-                        writer.Write(pos);
-                        writer.Write(scl);
-                        writer.Write(rot);
+                        teMtx43 boneMat = skeleton.Matrices34[j];
+                        teQuat rotation = new teQuat(boneMat[0, 0], boneMat[0, 1], boneMat[0, 2], boneMat[0, 3]);
+                        teVec3 scale = new teVec3(boneMat[1, 0], boneMat[1, 1], boneMat[1, 2]);
+                        teVec3 translation = new teVec3(boneMat[2, 0], boneMat[2, 1], boneMat[2, 2]);
+                        
+                        writer.Write(translation);
+                        writer.Write(scale);
+                        writer.Write(rotation);
                     }
                 }
 
@@ -71,7 +79,7 @@ namespace TankLib.ExportFormats {
                     writer.Write(submesh.UVCount);
                     
                     writer.Write(submesh.Vertices.Length);
-                    writer.Write(submesh.Faces.Length);
+                    writer.Write(submesh.Indices.Length/3);
 
                     for (int j = 0; j < submesh.Vertices.Length; j++) {
                         writer.Write(submesh.Vertices[j]);
@@ -83,7 +91,7 @@ namespace TankLib.ExportFormats {
                             writer.Write(uv);
                         }
                         
-                        if (skeleton != null) {
+                        if (skeleton != null && submesh.BoneIndices[j] != null) {
                             writer.Write((byte)4);
                             writer.Write(skeleton.Lookup[submesh.BoneIndices[j][0]]);
                             writer.Write(skeleton.Lookup[submesh.BoneIndices[j][1]]);
@@ -97,10 +105,12 @@ namespace TankLib.ExportFormats {
                             writer.Write((byte)0);
                         }
                     }
-                    
-                    foreach (teModelChunk_RenderMesh.MeshFace face in submesh.Faces) {
+
+                    for (int j = 0; j < submesh.Descriptor.IndicesToDraw; j+=3) {
                         writer.Write((byte)3);
-                        writer.Write(face.ToExportStruct());
+                        writer.Write((int)submesh.Indices[j]);
+                        writer.Write((int)submesh.Indices[j+1]);
+                        writer.Write((int)submesh.Indices[j+2]);
                     }
                     
                     i++;

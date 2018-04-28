@@ -132,8 +132,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
             //const string dataPath = "D:\\ow\\OverwatchDataManager\\versions\\1.17.0.3.41713\\data.json";
 
             //VersionInfo versionInfo = GetVersionInfo(dataPath);
-            VersionInfo versionInfo = GetVersionInfoFake(@"D:\Code\Repos\overtool\OWLib-main\CASCEncDump\bin\Debug\44916.cmfhashes");
-            //VersionInfo versionInfo = GetVersionInfoFake(@"D:\Code\Repos\overtool\OWLib-main\CASCEncDump\bin\Debug\45104.cmfhashes");
+            //VersionInfo versionInfo = GetVersionInfoFake(@"D:\Code\Repos\overtool\OWLib-main\CASCEncDump\bin\Debug\44916.cmfhashes");
+            VersionInfo versionInfo = GetVersionInfoFake(@"D:\Code\Repos\overtool\OWLib-main\CASCEncDump\bin\Debug\45104.cmfhashes");
             
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
@@ -141,7 +141,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 throw new Exception("no output path");
             }
 
-            const string container = "DebugNewEntities2";
+            const string container = "DebugNewEntities3";
             
             Combo.ComboInfo info = new Combo.ComboInfo();          
             //AddNewHash(info, versionInfo, 0x4, 0x7C, 0xC, 0xB2);

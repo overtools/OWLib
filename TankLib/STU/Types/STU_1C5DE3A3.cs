@@ -13,8 +13,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x948F409B)]
         public teStructuredDataAssetRef<STUEntityDefinition> m_948F409B;
 
-        [STUFieldAttribute(0xC0A83121)]
-        public teStructuredDataAssetRef<STU_42270D59> m_C0A83121;
+        [STUFieldAttribute(0xC0A83121, "m_skin")]
+        public teStructuredDataAssetRef<STUSkinTheme> m_skin;
 
         [STUFieldAttribute(0xB00E7BC2, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUStatescriptGraphWithOverrides[] m_B00E7BC2;

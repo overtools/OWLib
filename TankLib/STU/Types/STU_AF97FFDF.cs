@@ -25,8 +25,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xCC84D865)]
         public int m_CC84D865;
 
-        [STUFieldAttribute(0x16D6D2C4)]
-        public int m_16D6D2C4;
+        [STUFieldAttribute(0x16D6D2C4, "m_rank")]
+        public int m_rank;
 
         [STUFieldAttribute(0xF40C44B2)]
         public int m_F40C44B2;

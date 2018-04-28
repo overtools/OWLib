@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xED822AE4)]
     public class STU_ED822AE4 : STU_11E07FD7 {
-        [STUFieldAttribute(0xB141AAE4, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_6B62E4AD m_B141AAE4;
+        [STUFieldAttribute(0xB141AAE4, "m_entityID", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_6B62E4AD m_entityID;
 
         [STUFieldAttribute(0x3F5B86A4, "m_animation", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_9F539B09 m_animation;

@@ -14,8 +14,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD7ED647E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_D7ED647E;
 
-        [STUFieldAttribute(0xC3E03C7F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_C3E03C7F;
+        [STUFieldAttribute(0xC3E03C7F, "m_color", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_color;
 
         [STUFieldAttribute(0x5DA62D02, "m_onAbortPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptOutputPlug m_onAbortPlug;

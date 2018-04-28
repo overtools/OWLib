@@ -7,14 +7,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBC2A8DA3, "m_params", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_814D595E[] m_params;
 
-        [STUFieldAttribute(0x92A85396, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_92A85396;
+        [STUFieldAttribute(0x92A85396, "m_gameMessage", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_gameMessage;
 
         [STUFieldAttribute(0xBB16810A, "m_priority", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_priority;
 
-        [STUFieldAttribute(0x8A12D912, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F121C8C5 m_8A12D912;
+        [STUFieldAttribute(0x8A12D912, "m_target", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_F121C8C5 m_target;
 
         [STUFieldAttribute(0x67FD6A60)]
         public byte m_67FD6A60;

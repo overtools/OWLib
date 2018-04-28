@@ -6,13 +6,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xD788E54C, "STURagdollConfig")]
     public class STURagdollConfig : STUInstance {
         [STUFieldAttribute(0xFE263D30)]
-        public Enum_8A184A5C m_FE263D30;
+        public STURagdollMode m_FE263D30;
 
         [STUFieldAttribute(0x0094F094)]
-        public Enum_8A184A5C m_0094F094;
+        public STURagdollMode m_0094F094;
 
         [STUFieldAttribute(0xB8BEFA67)]
-        public Enum_8A184A5C m_B8BEFA67;
+        public STURagdollMode m_B8BEFA67;
 
         [STUFieldAttribute(0x055B5368)]
         public float m_055B5368;

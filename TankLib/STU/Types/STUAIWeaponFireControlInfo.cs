@@ -12,7 +12,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUHardPoint> m_C3657821;
 
         [STUFieldAttribute(0x4F5E7D4C)]
-        public Enum_909B56BB m_4F5E7D4C;
+        public STULogicalButton m_4F5E7D4C;
 
         [STUFieldAttribute(0xED6D601D)]
         public uint m_ED6D601D;

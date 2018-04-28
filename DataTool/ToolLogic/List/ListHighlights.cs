@@ -8,9 +8,14 @@ using Newtonsoft.Json;
 using OWReplayLib;
 using OWReplayLib.Types;
 using STULib.Types;
+using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
+using STUHero = STULib.Types.STUHero;
+using STUMap = STULib.Types.STUMap;
+using STUUnlock_Emote = STULib.Types.STUUnlock_Emote;
+using STUUnlock_VoiceLine = STULib.Types.STUUnlock_VoiceLine;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-highlights", Description = "List user highlights", TrackTypes = new ushort[] {}, CustomFlags = typeof(ListFlags))]
@@ -196,8 +201,8 @@ namespace DataTool.ToolLogic.List {
         }
 
         protected string GetGamemode(ulong guid) {
-            STUGamemode gamemode = GetInstance<STUGamemode>(guid);
-            return GetString(gamemode?.DisplayName);
+            STUGameMode gamemode = GetInstanceNew<STUGameMode>(guid);
+            return GetString(gamemode?.m_displayName);
         }
 
         protected ReplayJSON GetReplay(Highlight.Replay replay) {

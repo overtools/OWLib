@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace TankLibHelper.Modes {
     public class CreateClasses : IMode {
@@ -14,7 +15,6 @@ namespace TankLibHelper.Modes {
             }
             string outDirectory = args[1];
             string dataDirectory;
-            bool try14Hashes = false;
 
             if (args.Length >= 3) {
                 dataDirectory = args[2];
@@ -22,16 +22,13 @@ namespace TankLibHelper.Modes {
                 dataDirectory = StructuredDataInfo.GetDefaultDirectory();
             }
 
-            if (args.Length >= 4) {
-                try14Hashes = args[3] == "true";
-            }
+            string[] extraData = args.Skip(3).ToArray();
 
-            if (try14Hashes) {
-                _info = new StructuredDataInfo(StructuredDataInfo.GetDefaultDirectory());
-                _info.LoadExtra(dataDirectory);
-            } else {
-                _info = new StructuredDataInfo(dataDirectory);
+            _info = new StructuredDataInfo(dataDirectory);
+            foreach (string extra in extraData) {
+                _info.LoadExtra(extra);
             }
+            
             BuilderConfig instanceBuilderConfig = new BuilderConfig {
                 Namespace = "TankLib.STU.Types"
             };
@@ -50,6 +47,9 @@ namespace TankLibHelper.Modes {
                 if (_info.BrokenInstances.Contains(instance.Key)) {
                     continue;
                 }
+                //if (instance.Key == 0x440233A5) {  // for generating the mirror types with oldhash
+                //    continue;
+                //}
 
                 InstanceBuilder instanceBuilder = new InstanceBuilder(instanceBuilderConfig, _info, instance.Value);
                 

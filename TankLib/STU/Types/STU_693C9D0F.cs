@@ -7,11 +7,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD61D7377, "m_level")]
         public int m_level;
 
-        [STUFieldAttribute(0x4DEA7F48)]
-        public int m_4DEA7F48;
+        [STUFieldAttribute(0x4DEA7F48, "m_stars")]
+        public int m_stars;
 
-        [STUFieldAttribute(0x16D6D2C4)]
-        public int m_16D6D2C4;
+        [STUFieldAttribute(0x16D6D2C4, "m_rank")]
+        public int m_rank;
 
         [STUFieldAttribute(0x9F2C4E78)]
         public int m_9F2C4E78;

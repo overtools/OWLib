@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public teString m_59351F33;
 
         [STUFieldAttribute(0xD27AE46D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_39049749[] m_D27AE46D;
+        public STULobbyMapCatalogInfo[] m_D27AE46D;
     }
 }

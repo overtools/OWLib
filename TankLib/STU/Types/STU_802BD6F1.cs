@@ -5,10 +5,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x802BD6F1)]
     public class STU_802BD6F1 : STU_9881546F {
         [STUFieldAttribute(0xF0CF068D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_6BC13553 m_F0CF068D;
+        public STUAnimGameData_BlendDriver m_F0CF068D;
 
         [STUFieldAttribute(0x8D244EC2, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_6BC13553 m_8D244EC2;
+        public STUAnimGameData_BlendDriver m_8D244EC2;
 
         [STUFieldAttribute(0xDCE0A21F)]
         public short m_DCE0A21F;

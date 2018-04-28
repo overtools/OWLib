@@ -1,31 +1,26 @@
-﻿// using STULib.Types.posthash;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DataTool.Helper;
-using OWLib;
-using OWLib.Types;
-using OWLib.Types.Chunk;
-using STULib;
-using STULib.Types;
-using STULib.Types.Dump;
-using STULib.Types.Generic;
 using TankLib;
+using TankLib.STU;
+using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
-using static DataTool.Program;
-using Map = STULib.Types.Map.Map;
+using STUVoiceLineInstance = STULib.Types.STUVoiceLineInstance;
+using STUVoiceSet = STULib.Types.STUVoiceSet;
 
 namespace DataTool.FindLogic {
     public static class Combo {
+        private static HashSet<ushort> _unhandledTypes = new HashSet<ushort>();
+        
         public class ComboInfo {
             // keep everything at top level, stops us from doing the same things again.
             // everything here is unsorted, but we can use GUIDs as references.
             public Dictionary<ulong, EntityInfoNew> Entities;
-            public Dictionary<ulong, HashSet<ulong>> EntitiesByVar;
+            public Dictionary<ulong, HashSet<ulong>> EntitiesByIdentifier;
             public Dictionary<ulong, ModelInfoNew> Models;
             public Dictionary<ulong, MaterialInfo> Materials;
             public Dictionary<ulong, MaterialDataInfo> MaterialDatas;
@@ -47,7 +42,7 @@ namespace DataTool.FindLogic {
 
             public ComboInfo() {
                 Entities = new Dictionary<ulong, EntityInfoNew>();
-                EntitiesByVar = new Dictionary<ulong, HashSet<ulong>>();
+                EntitiesByIdentifier = new Dictionary<ulong, HashSet<ulong>>();
                 Models = new Dictionary<ulong, ModelInfoNew>();
                 Materials = new Dictionary<ulong, MaterialInfo>();
                 MaterialDatas = new Dictionary<ulong, MaterialDataInfo>();
@@ -86,6 +81,13 @@ namespace DataTool.FindLogic {
                 }
                 if (AnimationEffects.ContainsKey(effect)) {
                     AnimationEffects[effect].Name = name.TrimEnd(' ');
+                }
+            }
+
+            public void SetModelLookName(ulong look, string name, Dictionary<ulong, ulong> replacements=null) {
+                if (replacements != null) look = GetReplacement(look, replacements);
+                if (ModelLooks.ContainsKey(look)) {
+                    ModelLooks[look].Name = name.TrimEnd(' ');
                 }
             }
         }
@@ -172,9 +174,9 @@ namespace DataTool.FindLogic {
         }
 
         public class SoundInfoNew : ComboType {
-            public Dictionary<uint, ulong> Sounds;
-            public HashSet<ulong> OtherSounds;
-            public ulong Bank;
+            public Dictionary<uint, ulong> SoundFiles;
+            public Dictionary<uint, ulong> SoundStreams;
+            public ulong SoundBank;
             public SoundInfoNew(ulong guid) : base(guid) { }
         }
 
@@ -215,9 +217,9 @@ namespace DataTool.FindLogic {
             public ulong GUID;
 
             public ChildEntityReferenceNew(STUChildEntityDefinition childEntityDefinition, Dictionary<ulong, ulong> replacements) {
-                GUID = GetReplacement(childEntityDefinition.Entity, replacements);
-                Hardpoint = childEntityDefinition.HardPoint;
-                Variable = childEntityDefinition.Variable;
+                GUID = GetReplacement((ulong)childEntityDefinition.m_child, replacements);
+                Hardpoint = childEntityDefinition.m_hardPoint;
+                Variable = childEntityDefinition.m_49F782CE;
             }
         }
 
@@ -228,7 +230,7 @@ namespace DataTool.FindLogic {
 
         public class MaterialInfo : ComboType {
             public ulong MaterialData;
-            public ulong Shader;
+            public ulong ShaderSource;
             
             // shader info;
             // main shader = 44, used to be A5
@@ -246,9 +248,6 @@ namespace DataTool.FindLogic {
         }
 
         public class TextureInfoNew : ComboNameable {
-            public bool UseData;
-            public ulong DataGUID;
-
             public bool Loose;
             public TextureInfoNew(ulong guid) : base(guid) { }
         }
@@ -290,7 +289,7 @@ namespace DataTool.FindLogic {
             public ulong MaterialData;
             
             // Child entities
-            public ulong EntityVariable;
+            public ulong ChildEntityIdentifier;
 
             public ComboContext Clone() {
                 return new ComboContext {
@@ -305,10 +304,6 @@ namespace DataTool.FindLogic {
             if (replacements.ContainsKey(guid)) return replacements[guid];
             return guid;
         }
-        
-        public static ulong GetReplacement(teResourceGUID guid, Dictionary<ulong, ulong> replacements) {
-            return GetReplacement((ulong) guid, replacements);
-        }
 
         private static ulong GetMapDataRoot(ulong map) {
             return (map & ~0xFFFFFFFF00000000ul) | 0x0DD0000100000000ul;
@@ -316,10 +311,6 @@ namespace DataTool.FindLogic {
 
         private static ulong GetMapDataKey(ulong map, ushort type) {
             return (GetMapDataRoot(map) & ~0xFFFF00000000ul) | ((ulong) type << 32);
-        }
-       
-        public static ComboInfo Find(ComboInfo info, teResourceGUID guid, Dictionary<ulong, ulong> replacements=null , ComboContext context=null) {
-            return Find(info, (ulong) guid, replacements, context);
         }
         
         public static ComboInfo Find(ComboInfo info, ulong guid, Dictionary<ulong, ulong> replacements=null , ComboContext context=null) {
@@ -367,16 +358,16 @@ namespace DataTool.FindLogic {
             //if (GetFileName(guid) == "000000001B4E.003") Debugger.Break();  // black forest (winter) middle cog
             //if (GetFileName(guid) == "000000001BDB.003") Debugger.Break();  // black forest (winter) capture point
             
-            uint guidType = GUID.Type(guid);
+            ushort guidType = teResourceGUID.Type(guid);
             if (guidType == 0 || guidType == 1) return info;
             switch (guidType) {
                 case 0x2:
                     if (info.Maps.ContainsKey(guid)) break;
-                    
+
                     MapInfoNew mapInfo = new MapInfoNew(guid);
                     info.Maps[guid] = mapInfo;
-                    
-                    // <read the actual 002>
+
+                    /*// <read the actual 002>
                     // todo
                     // </read the actual 002>
 
@@ -413,92 +404,96 @@ namespace DataTool.FindLogic {
                             //     }
                             // }
                         }
-                    }
+                    }*/
 
                     break;
                 case 0x3:
                     if (info.Config == null || info.Config.DoExistingEntities == false) {
                         if (info.Entities.ContainsKey(guid)) break;
                     }
-                    STUEntityDefinition entityDefinition = GetInstance<STUEntityDefinition>(guid);
+
+                    STUEntityDefinition entityDefinition = GetInstanceNew<STUEntityDefinition>(guid);
                     if (entityDefinition == null) break;
-                    
+
                     EntityInfoNew entityInfo = new EntityInfoNew(guid);
                     info.Entities[guid] = entityInfo;
 
                     ComboContext entityContext = context.Clone();
                     entityContext.Entity = guid;
 
-                    if (context.EntityVariable != 0) {
-                        if (!info.EntitiesByVar.ContainsKey(context.EntityVariable)) {
-                            info.EntitiesByVar[context.EntityVariable] = new HashSet<ulong>();
+                    if (context.ChildEntityIdentifier != 0) {
+                        if (!info.EntitiesByIdentifier.ContainsKey(context.ChildEntityIdentifier)) {
+                            info.EntitiesByIdentifier[context.ChildEntityIdentifier] = new HashSet<ulong>();
                         }
-                        info.EntitiesByVar[context.EntityVariable].Add(guid);
+
+                        info.EntitiesByIdentifier[context.ChildEntityIdentifier].Add(guid);
                     }
-                    
-                    if (entityDefinition.Children != null) {
+
+                    if (entityDefinition.m_childEntityData != null) {
                         entityInfo.Children = new List<ChildEntityReferenceNew>();
-                        foreach (STUChildEntityDefinition childEntityDefinition in entityDefinition.Children) {
+                        foreach (STUChildEntityDefinition childEntityDefinition in entityDefinition.m_childEntityData) {
                             if (childEntityDefinition == null) continue;
                             ComboContext childContext = new ComboContext {
-                                EntityVariable = childEntityDefinition.Variable
+                                ChildEntityIdentifier = childEntityDefinition.m_49F782CE
                             };
-                            Find(info, childEntityDefinition.Entity, replacements, childContext);
-                            if (info.Entities.ContainsKey(GetReplacement(childEntityDefinition.Entity, replacements))) {  // sometimes the entity can't be loaded
+                            Find(info, (ulong)childEntityDefinition.m_child, replacements, childContext);
+                            if (info.Entities.ContainsKey(GetReplacement((ulong)childEntityDefinition.m_child, replacements))) {
+                                // sometimes the entity can't be loaded
                                 entityInfo.Children.Add(new ChildEntityReferenceNew(childEntityDefinition, replacements));
                             }
                         }
                     }
-                    
-                    if (entityDefinition.Components != null) {
-                        STUEntityComponent[] components = entityDefinition.Components.Values
-                            .OrderBy(x => x?.GetType() != typeof(STUModelComponent) && 
+
+                    if (entityDefinition.m_8AF8F4F5 != null) {
+                        STUEntityComponent[] components = entityDefinition.m_8AF8F4F5.Values
+                            .OrderBy(x => x?.GetType() != typeof(STUModelComponent) &&
                                           x?.GetType() != typeof(STUEffectComponent)).ToArray();
                         // STUModelComponent first because we need model for context
                         // STUEffectComponent second(ish) because we need effect for context
                         foreach (STUEntityComponent component in components) {
                             if (component == null) continue;
-                            if (component.GetType() == typeof(STUModelComponent)) {
-                                STUModelComponent modelComponent = component as STUModelComponent;
-                                if (modelComponent == null) continue;
-                                entityContext.Model = GetReplacement(modelComponent.Model, replacements);
+                            if (component is STUModelComponent modelComponent) {
+                                entityContext.Model = GetReplacement(modelComponent.m_model, replacements);
 
-                                Find(info, modelComponent.Model, replacements, entityContext);
-                                Find(info, modelComponent.Look, replacements, entityContext);
-                                Find(info, modelComponent.AnimBlendTreeSet, replacements, entityContext);
-                                Find(info, modelComponent.AnimBlendTree, replacements, entityContext);
-                            } else if (component.GetType() == typeof(STUEffectComponent)) {
-                                STUEffectComponent effectComponent = component as STUEffectComponent;
-                                if (effectComponent == null) continue;
-                                entityContext.Effect = GetReplacement(effectComponent.Effect, replacements);
-                                Find(info, effectComponent.Effect, replacements, entityContext);
-                            // } else if (component.GetType() == typeof(STUStatescript01B)) {
-                            //     STUStatescript01B ss01B = component as STUStatescript01B;
-                            //     if (ss01B == null) continue;
-                            //     Find(info, ss01B.GUIDx01B, replacements, context);
-                            //     foreach (STU_61386B75 stu61386B75 in ss01B.m_3BD16B9E) {
-                            //         Find(info, stu61386B75?.GUIDx01B, replacements, context);
-                            //     }
-                            } else if (component.GetType() == typeof(STUAnimationCoreferenceComponent)) {
-                                STUAnimationCoreferenceComponent ssAnims = component as STUAnimationCoreferenceComponent;
-                                if (ssAnims?.Animations == null) continue;
-                                foreach (STUAnimationCoreferenceComponentAnimation ssAnim in ssAnims.Animations) {
-                                    Find(info, ssAnim.Animation, replacements, entityContext);
+                                Find(info, modelComponent.m_model, replacements, entityContext);
+                                Find(info, modelComponent.m_look, replacements, entityContext);
+                                Find(info, modelComponent.m_animBlendTreeSet, replacements, entityContext);
+                                Find(info, modelComponent.m_36F54327, replacements, entityContext);
+                            } else if (component is STUEffectComponent effectComponent) {
+                                entityContext.Effect = GetReplacement(effectComponent.m_effect, replacements);
+                                Find(info, effectComponent.m_effect, replacements, entityContext);
+                            } else if (component is STUStatescriptComponent statescriptComponent) {
+                                if (statescriptComponent.m_B634821A != null) {
+                                    foreach (STUStatescriptGraphWithOverrides graphWithOverrides in statescriptComponent.m_B634821A) {
+                                        Find(info, graphWithOverrides, replacements, context);
+                                    }
                                 }
-                            } else if (component.GetType() == typeof(STUUnlockComponent)) {
-                                STUUnlockComponent ssUnlock = component as STUUnlockComponent;
-                                Find(info, ssUnlock.Unlock, replacements, entityContext);
-                            } else if (component.GetType() == typeof(STUFirstPersonComponent)) {
-                                STUFirstPersonComponent firstPersonComponent = component as STUFirstPersonComponent;
-                                Find(info, firstPersonComponent?.Entity, replacements);  // clean context
-                            } else if (component.GetType() == typeof(STUSecondaryEffectComponent)) {
-                                STUSecondaryEffectComponent secondaryEffectComponent = component as STUSecondaryEffectComponent;
-                                Find(info, secondaryEffectComponent?.Effect, replacements, entityContext);
-                            } else if (component.GetType() == typeof(STUVoiceSetComponent)) {
-                                STUVoiceSetComponent voiceComponent = component as STUVoiceSetComponent;
-                                if (voiceComponent?.VoiceSet == null) continue;
-                                entityInfo.VoiceSet = GetReplacement(voiceComponent.VoiceSet, replacements);
-                                Find(info, voiceComponent.VoiceSet, replacements, entityContext);
+                            } else if (component is STUWeaponComponent weaponComponent) {
+                                Find(info, weaponComponent.m_C63E11DD, replacements, context);
+                                if (weaponComponent.m_3BD16B9E != null) {
+                                    foreach (STUWeaponDefinition weaponDefinition in weaponComponent.m_3BD16B9E) {
+                                        Find(info, weaponDefinition.m_script, replacements, context);
+                                        Find(info, weaponDefinition.m_graph, replacements, context);
+                                    }
+                                }
+                            } else if (component is STUVoiceSetComponent voiceSetComponent) {
+                                entityInfo.VoiceSet = GetReplacement(voiceSetComponent.m_voiceDefinition, replacements);
+                                Find(info, voiceSetComponent.m_voiceDefinition, replacements, entityContext);
+                            } else if (component is STUFirstPersonComponent firstPersonComponent) {
+                                Find(info, firstPersonComponent.m_entity, replacements, entityContext);
+                            } else if (component is STUHealthComponent healthComponent) {
+                                Find(info, healthComponent.m_63FBB2D3, replacements, entityContext);
+                            } else if (component is STULocalIdleAnimComponent localIdleAnimComponent) {
+                                Find(info, localIdleAnimComponent.m_idleAnimation, replacements, entityContext);
+                            } else if (component is STUMirroredIdleAnimComponent mirroredIdleAnimComponent) {
+                                Find(info, mirroredIdleAnimComponent.m_idleAnimation, replacements, entityContext);
+                            } else if (component is STU_05DE82F2 unkComponent1) {
+                                Find(info, unkComponent1.m_4A83FA61, replacements, entityContext);
+                            } else if (component is STU_3CFA8C4A unkComponent2) {
+                                if (unkComponent2.m_entries == null) continue;
+                                foreach (STU_FB16F341 unkComponent2Entry in unkComponent2.m_entries) {
+                                    Find(info, unkComponent2Entry.m_animation, replacements, entityContext);
+                                }
                             }
                         }
                     }
@@ -509,8 +504,10 @@ namespace DataTool.FindLogic {
                             AnimationInfoNew entityAnimationInfo = info.Animations[entityAnimation];
                             if (entityAnimationInfo.Effect == 0) continue;
                             EffectInfoCombo entityAnimationEffectInfo = null;
-                            if (info.Effects.ContainsKey(entityAnimationInfo.Effect)) entityAnimationEffectInfo = info.Effects[entityAnimationInfo.Effect];
-                            if (info.AnimationEffects.ContainsKey(entityAnimationInfo.Effect)) entityAnimationEffectInfo = info.AnimationEffects[entityAnimationInfo.Effect];
+                            if (info.Effects.ContainsKey(entityAnimationInfo.Effect))
+                                entityAnimationEffectInfo = info.Effects[entityAnimationInfo.Effect];
+                            if (info.AnimationEffects.ContainsKey(entityAnimationInfo.Effect))
+                                entityAnimationEffectInfo = info.AnimationEffects[entityAnimationInfo.Effect];
                             if (entityAnimationEffectInfo == null) continue;
                             entityAnimationEffectInfo.Effect.VoiceSet = entityInfo.VoiceSet;
                         }
@@ -518,32 +515,31 @@ namespace DataTool.FindLogic {
 
                     entityInfo.Model = entityContext.Model;
                     entityInfo.Effect = entityContext.Effect;
-                    
+
                     break;
                 case 0x4:
                     if (info.Textures.ContainsKey(guid)) break;
                     TextureInfoNew textureInfo = new TextureInfoNew(guid);
-                    ulong dataKey = (guid & 0xF0FFFFFFFFUL) | 0x100000000UL | 0x0320000000000000UL;
-                    bool useData = Files.ContainsKey(dataKey);
-                    textureInfo.UseData = useData;
-                    textureInfo.DataGUID = dataKey;
                     info.Textures[guid] = textureInfo;
 
                     if (context.Material == 0) {
                         textureInfo.Loose = true;
                     }
-                    
+
                     break;
                 case 0x6:
                     if (info.Animations.ContainsKey(guid)) {
                         if (context.Model != 0) {
                             info.Models[context.Model].Animations.Add(guid);
                         }
+
                         if (context.Entity != 0) {
                             info.Entities[context.Entity].Animations.Add(guid);
                         }
+
                         break;
                     }
+
                     AnimationInfoNew animationInfo = new AnimationInfoNew(guid);
 
                     ComboContext animationContext = context.Clone();
@@ -568,6 +564,7 @@ namespace DataTool.FindLogic {
                     if (context.Model != 0) {
                         info.Models[context.Model].Animations.Add(guid);
                     }
+
                     if (context.Entity != 0) {
                         info.Entities[context.Entity].Animations.Add(guid);
                     }
@@ -575,31 +572,32 @@ namespace DataTool.FindLogic {
                     info.Animations[guid] = animationInfo;
                     break;
                 case 0x8:
-                    if (info.Materials.ContainsKey(guid) && (info.Materials[guid].IDs.Contains(context.MaterialID) || context.MaterialID == 0)) break;
+                    if (info.Materials.ContainsKey(guid) &&
+                        (info.Materials[guid].IDs.Contains(context.MaterialID) || context.MaterialID == 0)) break;
                     // ^ break if material exists and has id, or id is 0
                     teMaterial material = new teMaterial(OpenFile(guid));
-                    
+
                     MaterialInfo materialInfo;
                     if (!info.Materials.ContainsKey(guid)) {
                         materialInfo = new MaterialInfo(guid) {
-                            MaterialData = GetReplacement(material.Header.MaterialData, replacements),
+                            MaterialData = GetReplacement((ulong)material.Header.MaterialData, replacements),
                             IDs = new HashSet<ulong>()
                         };
                         info.Materials[guid] = materialInfo;
                     } else {
                         materialInfo = info.Materials[guid];
                     }
-                    
+
                     materialInfo.IDs.Add(context.MaterialID);
-                    materialInfo.Shader = GetReplacement(material.Header.ShaderSource, replacements);
+                    materialInfo.ShaderSource = GetReplacement((ulong)material.Header.ShaderSource, replacements);
 
                     if (context.ModelLook == 0 && context.Model != 0) {
                         info.Models[context.Model].LooseMaterials.Add(guid);
                     }
-                    
+
                     ComboContext materialContext = context.Clone();
                     materialContext.Material = guid;
-                    Find(info, material.Header.MaterialData, replacements, materialContext);
+                    Find(info, (ulong)material.Header.MaterialData, replacements, materialContext);
                     break;
                 case 0xC:
                     if (info.Models.ContainsKey(guid)) break;
@@ -607,48 +605,50 @@ namespace DataTool.FindLogic {
                     info.Models[guid] = modelInfo;
                     break;
                 case 0xD:
-                case 0x8F:  // sorry for breaking order
+                case 0x8F: // sorry for breaking order
                 case 0x8E:
                     if (info.Effects.ContainsKey(guid)) break;
                     if (info.AnimationEffects.ContainsKey(guid)) break;
-                    
+
                     EffectParser.EffectInfo effectInfo = new EffectParser.EffectInfo();
                     effectInfo.GUID = guid;
                     effectInfo.SetupEffect();
-                    
+
                     if (guidType == 0xD || guidType == 0x8E) {
                         info.Effects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
                     } else if (guidType == 0x8F) {
                         info.AnimationEffects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
                     }
 
-                    using (Stream effectStream = OpenFile(guid)) {
+                    /*using (Stream effectStream = OpenFile(guid)) {
                         if (effectStream == null) break;
                         using (Chunked effectChunked = new Chunked(effectStream, true, ChunkManager.Instance)) {
                             EffectParser parser = new EffectParser(effectChunked, guid);
                             ulong lastModel = 0;
-                            
+
                             foreach (KeyValuePair<EffectParser.ChunkPlaybackInfo, IChunk> chunk in parser.GetChunks()) {
                                 if (chunk.Value == null || chunk.Value.GetType() == typeof(MemoryChunk)) continue;
 
                                 parser.Process(effectInfo, chunk, replacements);
-                                
+
                                 if (chunk.Value.GetType() == typeof(DMCE)) {
                                     DMCE dmce = chunk.Value as DMCE;
                                     if (dmce == null) continue;
-                                    ComboContext dmceContext = new ComboContext {Model = GetReplacement(dmce.Data.Model, replacements)};
+                                    ComboContext dmceContext = new ComboContext {
+                                        Model = GetReplacement(dmce.Data.Model, replacements)
+                                    };
                                     Find(info, dmce.Data.Model, replacements, dmceContext);
                                     Find(info, dmce.Data.Look, replacements, dmceContext);
                                     Find(info, dmce.Data.Animation, replacements, dmceContext);
                                 } else if (chunk.Value.GetType() == typeof(FECE)) {
                                     FECE fece = chunk.Value as FECE;
                                     if (fece == null) continue;
-                                    Find(info, fece.Data.Effect, replacements);  // clean context
+                                    Find(info, fece.Data.Effect, replacements); // clean context
                                 } else if (chunk.Value.GetType() == typeof(NECE)) {
                                     NECE nece = chunk.Value as NECE;
                                     if (nece == null) continue;
                                     ComboContext neceContext =
-                                        new ComboContext {EntityVariable = nece.Data.EntityVariable};
+                                        new ComboContext {ChildEntityIdentifier = nece.Data.EntityVariable};
                                     Find(info, nece.Data.Entity, replacements, neceContext);
                                 } else if (chunk.Value.GetType() == typeof(SSCE)) {
                                     SSCE ssce = chunk.Value as SSCE;
@@ -661,9 +661,9 @@ namespace DataTool.FindLogic {
                                     CECE cece = chunk.Value as CECE;
                                     if (cece == null) continue;
                                     Find(info, cece.Data.Animation, replacements);
-                                    if (!info.EntitiesByVar.ContainsKey(cece.Data.EntityVariable)) continue;
+                                    if (!info.EntitiesByIdentifier.ContainsKey(cece.Data.EntityVariable)) continue;
                                     if (cece.Data.Animation == 0) continue;
-                                    foreach (ulong ceceEntity in info.EntitiesByVar[cece.Data.EntityVariable]) {
+                                    foreach (ulong ceceEntity in info.EntitiesByIdentifier[cece.Data.EntityVariable]) {
                                         EntityInfoNew ceceEntityInfo = info.Entities[ceceEntity];
                                         ceceEntityInfo.Animations.Add(cece.Data.Animation);
                                         if (ceceEntityInfo.Model != 0) {
@@ -671,7 +671,7 @@ namespace DataTool.FindLogic {
                                         }
                                     }
                                 }
-                                
+
                                 if (chunk.Value.GetType() == typeof(OSCE)) {
                                     OSCE osce = chunk.Value as OSCE;
                                     if (osce == null) continue;
@@ -688,120 +688,156 @@ namespace DataTool.FindLogic {
                                 }
                             }
                         }
-                    }
-                    
+                    }*/
+
                     break;
-                    
+
                 case 0x1A:
                     if (info.ModelLooks.ContainsKey(guid)) {
                         if (context.Model != 0) {
                             info.Models[context.Model].ModelLooks.Add(guid);
                         }
+
                         break;
                     }
-                    
-                    STUModelLook modelLook = GetInstance<STUModelLook>(guid);
+
+                    STUModelLook modelLook = GetInstanceNew<STUModelLook>(guid);
                     if (modelLook == null) break;
-                    
+
                     ModelLookInfo modelLookInfo = new ModelLookInfo(guid);
                     info.ModelLooks[guid] = modelLookInfo;
-                    
+
                     ComboContext modelLookContext = context.Clone();
+                    modelLookContext.ModelLook = guid;
+                    
+                    if (modelLook.m_materials != null) {
+                        modelLookInfo.Materials = new HashSet<ulong>();
+                        foreach (STUModelMaterial modelLookMaterial in modelLook.m_materials) {
+                            FindModelMaterial(info, modelLookMaterial, modelLookInfo, modelLookContext, replacements);
+                        }
+                    }
+
+                    //if (modelLook.m_materialEffects != null) {
+                    //    if (modelLookInfo.Materials == null) modelLookInfo.Materials = new HashSet<ulong>();
+                    //    foreach (STUMaterialEffect materialEffect in modelLook.m_materialEffects) {
+                    //        foreach (STUModelMaterial materialEffectMaterial in materialEffect.m_materials) {
+                    //            FindModelMaterial(info, materialEffectMaterial, modelLookInfo, modelLookContext, replacements);
+                    //        }
+                    //    }
+                    //}
                     
                     if (context.Model != 0) {
                         info.Models[context.Model].ModelLooks.Add(guid);
                     }
-                    
-                    modelLookContext.ModelLook = guid;
-                    if (modelLook.Materials != null) {
-                        modelLookInfo.Materials = new HashSet<ulong>();
-                        foreach (STUModelMaterial modelLookMaterial in modelLook.Materials) {
-                            if (modelLookMaterial == null || modelLookMaterial.Material == 0) continue;
-                            modelLookInfo.Materials.Add(GetReplacement(modelLookMaterial.Material, replacements));
-                            ComboContext modelLookMaterialContext = modelLookContext.Clone();
-                            modelLookMaterialContext.MaterialID = modelLookMaterial.ID;
-                            Find(info, modelLookMaterial.Material, replacements, modelLookMaterialContext);
-                        }
-                    }
 
                     break;
+                case 0x1B:
+                    STUConfigVar[] configVars = GetInstancesNew<STUConfigVar>(guid);
+                    if (configVars == null) break;
+
+                    foreach (STUConfigVar configVar in configVars) {
+                        Find(info, configVar, replacements, context);
+                    }
+                    //STUStatescriptGraph graph = GetInstanceNew<STUStatescriptGraph>(guid);
+                    //if (graph == null) break;
+                    //foreach (STUStatescriptBase node in graph.m_nodes) {
+                    //    if (node is STUStatescriptStateCosmeticEntity cosmeticEntity) {
+                    //        Find(info, cosmeticEntity.m_entityDef, replacements, context);
+                    //    } else if (node is STUStatescriptStateWeaponVolley weaponVolley) {
+                    //        if (weaponVolley.m_projectileEntity != null) {
+                    //            Find(info, weaponVolley.m_projectileEntity.m_entityDef, replacements, context);
+                    //        }
+                    //    } else if (node is STUStatescriptStatePet statePet) {
+                    //        Find(info, statePet.m_entityDefinition, replacements, context);
+                    //    } else if (node is STUStatescriptActionEffect actionEffect) {
+                    //        Find(info, actionEffect.m_effect, replacements, context);
+                    //    } else if (node is STUStatescriptActionCreateEntity actionEntity) {
+                    //        Find(info, actionEntity.m_entityDef, replacements, context);
+                    //    } else if (node is STUStatescriptActionPlayScript actionPlayScript) {
+                    //        Find(info, actionPlayScript.m_script, replacements, context);
+                    //    } 
+                    //}
+                    break;
                 case 0x20:
-                    // todo: how do blend trees work
-                    // STUAnimBlendTree blendTree = GetInstance<STUAnimBlendTree>(guid);
-                    // foreach (STUAnimNode_Base blendTreeAnimNode in blendTree.AnimNodes) {
-                    //     if (blendTreeAnimNode is STUAnimNode_Animation animNodeAnimation) {
-                    //         Find(info, animNodeAnimation.Animation?.Value, replacements, context);
-                    //     }
-                    // }
-                    
-                    STUAnimationListAnimationWrapper[] wrappers2 =
-                        GetAllInstances<STUAnimationListAnimationWrapper>(guid);
-                    foreach (STUAnimationListAnimationWrapper animationWrapper in wrappers2) {
-                        Find(info, animationWrapper?.Value, replacements, context);
+                    STUAnimBlendTree blendTree = GetInstanceNew<STUAnimBlendTree>(guid);
+                    foreach (STUAnimNode_Base animNode in blendTree.m_animNodes) {
+                        if (animNode is STUAnimNode_Animation animNodeAnimation) {
+                            Find(info, animNodeAnimation?.m_animation?.m_value, replacements, context);
+                        } else if (animNode is STUAnimNode_AnimationPose2d animNodePose2D) {
+                            Find(info, animNodePose2D?.m_animation?.m_value, replacements, context);
+                        }
                     }
                     break;
                 case 0x21:
-                    STUAnimBlendTreeSet blendTreeSet = GetInstance<STUAnimBlendTreeSet>(guid);
+                    STUAnimBlendTreeSet blendTreeSet = GetInstanceNew<STUAnimBlendTreeSet>(guid);
                     if (blendTreeSet == null) break;
-                    foreach (STUAnimBlendTreeSet_BlendTreeItem blendTreeItem in blendTreeSet.BlendTreeItems) {
-                        if (blendTreeItem?.AnimationContainer?.Animations != null) {
-                            foreach (STUAnimationListAnimationWrapper listAnimationWrapper in blendTreeItem.AnimationContainer.Animations) {
-                                Find(info, listAnimationWrapper?.Value, replacements, context);
-                            }
-                        }
-                        Find(info, blendTreeItem?.SecondaryList, replacements, context);
-                        if (blendTreeItem?.m_9AD6CC25 != null) {
-                            if (blendTreeItem.m_9AD6CC25.GetType() == typeof(STU_7D00A73D)) {
-                                STU_7D00A73D infosub7D00Converted = blendTreeItem.m_9AD6CC25 as STU_7D00A73D;
-                                if (infosub7D00Converted?.m_083DC038 != null) {
-                                    foreach (STU_65DD9C84 sub7D00Sub in infosub7D00Converted.m_083DC038) {
-                                       Find(info, sub7D00Sub?.Animation, replacements, context);
-                                    }
+                    
+                    foreach (ulong externalRef in blendTreeSet.m_externalRefs) {
+                        Find(info, externalRef, replacements, context);
+                    }
+
+                    foreach (STUAnimBlendTreeSet_BlendTreeItem blendTreeItem in blendTreeSet.m_blendTreeItems) {
+                        Find(info, blendTreeItem.m_C0214513, replacements, context);
+
+                        if (blendTreeItem.m_gameData is STU_7D00A73D animGameDataUnk1) {
+                            if (animGameDataUnk1.m_animDatas != null) {
+                                foreach (STUAnimGameData_AnimationData gameDataAnimationData in animGameDataUnk1.m_animDatas) {
+                                    Find(info, gameDataAnimationData.m_9FCB2C8A, replacements, context);
                                 }
-                                
                             }
                         }
-                        if (blendTreeItem?.OnFinished?.m_6CB79D25 != null) {
-                            foreach (STU_BE20B7F5 blendTreeSetOnFinishedThing in blendTreeItem.OnFinished.m_6CB79D25) {
-                                Find(info, blendTreeSetOnFinishedThing?.Animation, replacements, context);
+                        
+                        if (blendTreeItem?.m_onFinished?.m_slotAnims != null) {
+                            foreach (STUAnimBlendTree_SlotAnimation blendTreeSlotAnimation in blendTreeItem.m_onFinished.m_slotAnims) {
+                                Find(info, blendTreeSlotAnimation?.m_animation, replacements, context);
                             }
                         }
                     }
-                    // erm, k
-                    foreach (Common.STUGUID listInfoReference in blendTreeSet.References) {
-                        Find(info, listInfoReference, replacements, context);
-                    }
-                    // STUAnimationListAnimationWrapper[] wrappers =
-                    //     GetAllInstances<STUAnimationListAnimationWrapper>(guid);
-                    // foreach (STUAnimationListAnimationWrapper animationWrapper in wrappers) {
-                    //     Find(info, animationWrapper?.Value, replacements, context);
-                    // }
                     break;
                 case 0x2C:
                     if (info.Sounds.ContainsKey(guid)) break;
-                    STUSound sound = GetInstance<STUSound>(guid);
+
+                    STUSound sound = GetInstanceNew<STUSound>(guid);
+                    if (sound == null) break;
+                    
                     SoundInfoNew soundInfo = new SoundInfoNew(guid);
                     info.Sounds[guid] = soundInfo;
 
-                    if (sound?.Inner?.SoundOther != null) {
-                        soundInfo.OtherSounds = new HashSet<ulong>();
-                        foreach (Common.STUGUID soundOther in sound.Inner.SoundOther) {
-                            soundInfo.OtherSounds.Add(GetReplacement(soundOther, replacements));
-                            Find(info, soundOther, replacements, context);
-                        }
-                    }
+                    if (sound.m_versionedBankData != null) {
+                        if (sound.m_versionedBankData.m_soundWEMFiles != null) {
+                            soundInfo.SoundFiles = new Dictionary<uint, ulong>();
 
-                    if (sound?.Inner?.Soundbank != null) {
-                        Find(info, sound.Inner.Soundbank, replacements, context);
-                        soundInfo.Bank = GetReplacement(sound.Inner.Soundbank, replacements);
-
-                        if (sound.Inner.IDs == null) break; 
-                        soundInfo.Sounds = new Dictionary<uint, ulong>();
-                        for (int i = 0; i < sound.Inner.IDs.Length; i++) {
-                            ulong soundFileRef = sound.Inner.Sounds[i];
-                            soundInfo.Sounds[sound.Inner.IDs[i]] = GetReplacement(soundFileRef, replacements);
-                            Find(info, soundFileRef, replacements, context);
+                            int i = 0;
+                            foreach (teStructuredDataAssetRef<ulong> soundWemFile in sound.m_versionedBankData.m_soundWEMFiles) {
+                                Find(info, soundWemFile, replacements, context);
+                                
+                                soundInfo.SoundFiles[sound.m_versionedBankData.m_wwiseWEMFileIDs[i]] = GetReplacement(soundWemFile, replacements);
+                                i++;
+                            }
                         }
+                        if (sound.m_versionedBankData.m_soundWEMStreams != null) {
+                            soundInfo.SoundStreams = new Dictionary<uint, ulong>();
+                            
+                            int i = 0;
+                            foreach (teStructuredDataAssetRef<ulong> soundWemStream in sound.m_versionedBankData.m_soundWEMStreams) {
+                                Find(info, soundWemStream, replacements, context);
+                                
+                                soundInfo.SoundStreams[sound.m_versionedBankData.m_wwiseWEMStreamIDs[i]] = GetReplacement(soundWemStream, replacements);
+                                i++;
+                            }
+                        }
+
+                        if (sound.m_versionedBankData.m_09D4067B != null) {
+                            foreach (teStructuredDataAssetRef<ulong> soundUnk1 in sound.m_versionedBankData.m_09D4067B) {
+                                Find(info, soundUnk1, replacements, context);
+                            }
+                        }
+                        if (sound.m_versionedBankData.m_4587972B != null) {
+                            foreach (teStructuredDataAssetRef<ulong> soundUnk2 in sound.m_versionedBankData.m_4587972B) {
+                                Find(info, soundUnk2, replacements, context);
+                            }
+                        }
+                        Find(info, sound.m_versionedBankData.m_soundBank);
                     }
                     break;
                 case 0x3F:
@@ -884,7 +920,7 @@ namespace DataTool.FindLogic {
                         voiceLineInstanceInfo.SoundFiles = new HashSet<ulong>();
 
                         if (voiceLineInstance.SoundContainer != null) {
-                            foreach (STUSoundWrapper soundWrapper in new []{voiceLineInstance.SoundContainer.Sound1, 
+                            foreach (STULib.Types.STUSoundWrapper soundWrapper in new []{voiceLineInstance.SoundContainer.Sound1, 
                                 voiceLineInstance.SoundContainer.Sound2, voiceLineInstance.SoundContainer.Sound3, 
                                 voiceLineInstance.SoundContainer.Sound4}) {
                                 if (soundWrapper == null) continue;
@@ -911,46 +947,45 @@ namespace DataTool.FindLogic {
                     break;
                 case 0xA5:
                     // hmm, if existing?
-                    STUUnlock cosmetic = GetInstance<STUUnlock>(guid);
+                    STUUnlock cosmetic = GetInstanceNew<STUUnlock>(guid);
 
-                    if (cosmetic.GetType() == typeof(STUUnlock_Spray)) {
-                        STUUnlock_Spray sprayCosmetic = (STUUnlock_Spray) cosmetic;
-                        Find(info, sprayCosmetic.Effect2?.Effect, replacements, context);
-                        Find(info, sprayCosmetic.Effect2?.EffectLook, replacements, context);
-                        Find(info, sprayCosmetic.Effect?.EffectLook, replacements, context);
-                        Find(info, sprayCosmetic.Effect?.Effect, replacements, context);
-                    } else if (cosmetic.GetType() == typeof(STUUnlock_PlayerIcon)) {
-                        STUUnlock_PlayerIcon playerIconCosmetic = (STUUnlock_PlayerIcon) cosmetic;
-                        Find(info, playerIconCosmetic.Effect?.EffectLook, replacements, context);
-                        Find(info, playerIconCosmetic.Effect?.Effect, replacements, context);
-                    } else if (cosmetic.GetType() == typeof(STUUnlock_HighlightIntro)) {
-                        STUUnlock_HighlightIntro cosmeticHighlightIntro = (STUUnlock_HighlightIntro) cosmetic;
-                        Find(info, cosmeticHighlightIntro.Animation, replacements, context);
-                    } else if (cosmetic.GetType() == typeof(STUUnlock_Emote)) {
-                        STUUnlock_Emote cosmeticEmote = (STUUnlock_Emote) cosmetic;
-                        Find(info, cosmeticEmote.BlendTreeSet, replacements, context);
-                    } else if (cosmetic.GetType() == typeof(STUUnlock_Pose)) {
-                        STUUnlock_Pose cosmeticpose = (STUUnlock_Pose) cosmetic;
-                        Find(info, cosmeticpose.PoseResource, replacements, context);
+                    if (cosmetic is STUUnlock_Emote unlockEmote) {
+                        Find(info, unlockEmote.m_2B8351DA, replacements, context);
+                    } else if (cosmetic is STUUnlock_Pose unlockPose) {
+                        Find(info, unlockPose.m_pose, replacements, context);
+                    } else if (cosmetic is STUUnlock_VoiceLine unlockVoiceLine) {
+                        Find(info, unlockVoiceLine.m_F57B051E, replacements, context);
+                        Find(info, unlockVoiceLine.m_1B25AB90?.m_effect, replacements, context);
+                        Find(info, unlockVoiceLine.m_1B25AB90?.m_effectLook, replacements, context);
+                    } else if (cosmetic is STU_84515D93 unlockSpray) {
+                        Find(info, unlockSpray.m_1B25AB90?.m_effect, replacements, context);
+                        Find(info, unlockSpray.m_1B25AB90?.m_effectLook, replacements, context);
+                        
+                        Find(info, unlockSpray.m_ABFBD552?.m_effect, replacements, context);
+                        Find(info, unlockSpray.m_ABFBD552?.m_effectLook, replacements, context);
+                    } else if (cosmetic is STU_54BC2188 unlockIcon) {
+                        Find(info, unlockIcon.m_1B25AB90?.m_effect, replacements, context);
+                        Find(info, unlockIcon.m_1B25AB90?.m_effectLook, replacements, context);
+                    } else if (cosmetic is STU_8E77E8A1 unlockHighlightIntro) {
+                        Find(info, unlockHighlightIntro.m_animation, replacements, context);
                     }
 
                     break;
                 case 0xA6:
                     // why not
-                    if (replacements == null) break;
-                    STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(guid);
-                    if (skinOverride?.Replacements == null) break;
-                    foreach (KeyValuePair<ulong,ulong> replacement in skinOverride.ProperReplacements) {
-                        if (replacements.ContainsKey(replacement.Key)) continue;
-                        replacements[replacement.Key] = replacement.Value;
-                    }
-                    // replacements one object that gets modified
-                    break;
+                    //if (replacements == null) break;
+                    //STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(guid);
+                    //if (skinOverride?.Replacements == null) break;
+                    //foreach (KeyValuePair<ulong,ulong> replacement in skinOverride.ProperReplacements) {
+                    //    if (replacements.ContainsKey(replacement.Key)) continue;
+                    //    replacements[replacement.Key] = replacement.Value;
+                    //}
+                    //// replacements one object that gets modified
+                    //break;
                 case 0xA8:
                     // hmm, if existing?
-                    STUEffectLook effectLook = GetInstance<STUEffectLook>(guid);
-                    if (effectLook == null) break;
-                    foreach (Common.STUGUID effectLookMaterialData in effectLook.MaterialDatas) {
+                    STUEffectLook effectLook = GetInstanceNew<STUEffectLook>(guid);
+                    foreach (teStructuredDataAssetRef<ulong> effectLookMaterialData in effectLook.m_materialData) {
                         Find(info, effectLookMaterialData, replacements, context);
                     }
                     break;
@@ -979,20 +1014,67 @@ namespace DataTool.FindLogic {
                     
                     break;
                 case 0xBF:
-                    STULineupPose lineupPose = GetInstance<STULineupPose>(guid);
+                    STULineupPose lineupPose = GetInstanceNew<STULineupPose>(guid);
                     if (lineupPose == null) break;
-                    Find(info, lineupPose.Animation, replacements, context);
+                    
+                    Find(info, lineupPose.m_E599EB7C, replacements, context);
 
-                    foreach (STUPoseSub poseSub in new [] {lineupPose.Sub1, lineupPose.Sub2, lineupPose.Sub3}) {
-                        Find(info, poseSub.Animation, replacements, context);
-                    }
+                    Find(info, lineupPose.m_0189332F?.m_11E0A658, replacements, context);
+                    Find(info, lineupPose.m_BEF008DE?.m_11E0A658, replacements, context);
+                    Find(info, lineupPose.m_DE70F501?.m_11E0A658, replacements, context);
                     break;
                 default:
-                    Debugger.Log(0, "DataTool", $"[DataTool.FindLogic.Combo]: Unhandled type: {guidType:X3}\r\n");
+                    if (_unhandledTypes.Add(guidType)) {
+                        Debugger.Log(0, "DataTool", $"[DataTool.FindLogic.Combo]: Unhandled type: {guidType:X3}\r\n");
+                    }
                     break;
             }
 
             return info;
         }
-    }
+
+        private static void Find(ComboInfo info, STUStatescriptGraphWithOverrides graphWithOverrides, Dictionary<ulong, ulong> replacements, ComboContext context) {
+            if (graphWithOverrides == null) return;
+            Find(info, graphWithOverrides.m_graph, replacements, context);
+            if (graphWithOverrides.m_1EB5A024 != null) {
+                foreach (STUStatescriptSchemaEntry schemaEntry in graphWithOverrides.m_1EB5A024) {
+                    Find(info, schemaEntry.m_value, replacements, context);
+                }
+            }
+        }
+
+        private static void Find(ComboInfo info, STUConfigVar configVar, Dictionary<ulong, ulong> replacements, ComboContext context) {
+            if (configVar == null) return;
+            if (configVar is STU_8556841E configVarEntity) {
+                Find(info, configVarEntity.m_entityDef, replacements, context);
+            } else if (configVar is STUConfigVarEffect configVarEffect) {
+                Find(info, configVarEffect.m_effect, replacements, context);
+            } else if (configVar is STU_105E1BCC configVarScript) {
+                // prolly STUConfigVarStatescriptGraph but there are two types that I can't tell from eachother
+                Find(info, configVarScript.m_graph, replacements, context);
+            } else if (configVar is STU_433DFB35 configVarScript2) {
+                Find(info, configVarScript2.m_graph, replacements, context);
+            } else if (configVar is STUConfigVarAnimation configVarAnim) {
+                Find(info, configVarAnim.m_animation, replacements, context);
+            } else if (configVar is STUConfigVarModelLook configVarModelLook) {
+                Find(info, (ulong)configVarModelLook.m_modelLook, replacements, context);
+            } else if (configVar is STUConfigVarExpression configVarExpression) {
+                if (configVarExpression.m_configVars != null) {
+                    foreach (STUConfigVar subVar in configVarExpression.m_configVars) {
+                        Find(info, subVar, replacements, context);
+                    }
+                }
+            } else if (configVar is STUConfigVarTexture configVarTexture) {
+                Find(info, configVarTexture.m_texture, replacements, context);
+            }
+        }
+
+        private static void FindModelMaterial(ComboInfo info, STUModelMaterial modelMaterial, ModelLookInfo modelLookInfo, ComboContext modelLookContext, Dictionary<ulong, ulong> replacements) {
+            if (modelMaterial == null || modelMaterial.m_material == 0) return;
+            modelLookInfo.Materials.Add(GetReplacement((ulong)modelMaterial.m_material, replacements));
+            ComboContext modelMaterialContext = modelLookContext.Clone();
+            modelMaterialContext.MaterialID = modelMaterial.m_DC05EA3B;
+            Find(info, (ulong)modelMaterial.m_material, replacements, modelMaterialContext);
+        }
+     }
 }

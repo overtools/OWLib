@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x40DA6CDF)]
     public class STU_40DA6CDF : STUInstance {
-        [STUFieldAttribute(0x401F5484)]
-        public teStructuredDataAssetRef<STUVoiceStimulus> m_401F5484;
+        [STUFieldAttribute(0x401F5484, "m_stimulus")]
+        public teStructuredDataAssetRef<STUVoiceStimulus> m_stimulus;
 
         [STUFieldAttribute(0x386B8E9C)]
         public teStructuredDataAssetRef<STUSound> m_386B8E9C;

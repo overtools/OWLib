@@ -4,7 +4,7 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x7D00A73D)]
-    public class STU_7D00A73D : STU_391AC5F1 {
+    public class STU_7D00A73D : STUAnimGameData_Base {
         [STUFieldAttribute(0x44B8E377)]
         public teVec3A m_44B8E377;
 
@@ -14,8 +14,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x9B2111C5, "m_nodes", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_9881546F[] m_nodes;
 
-        [STUFieldAttribute(0x083DC038, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_65DD9C84[] m_083DC038;
+        [STUFieldAttribute(0x083DC038, "m_animDatas", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimGameData_AnimationData[] m_animDatas;
 
         [STUFieldAttribute(0xFEAA968B, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_09D37AFA[] m_FEAA968B;

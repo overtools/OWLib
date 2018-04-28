@@ -2,6 +2,7 @@
 
 // ReSharper disable All
 namespace TankLib.STU.Types.Enums {
+    [STUEnumAttribute(0x0243CBF9, "LoadoutCategory")]
     public enum LoadoutCategory : uint {
     }
 }

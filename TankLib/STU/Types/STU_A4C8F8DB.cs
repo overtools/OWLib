@@ -8,8 +8,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xAF9D3A0C, "m_rotation")]
         public teQuat m_rotation;
 
-        [STUFieldAttribute(0xC3E03C7F)]
-        public teColorRGB m_C3E03C7F;
+        [STUFieldAttribute(0xC3E03C7F, "m_color")]
+        public teColorRGB m_color;
 
         [STUFieldAttribute(0xA1C4B45C)]
         public float m_A1C4B45C;

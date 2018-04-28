@@ -5,27 +5,27 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xE7C72A53)]
     public class STU_E7C72A53 : STU_C7C085F6 {
         [STUFieldAttribute(0xF1E2351A, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_0B08FAD5 m_F1E2351A;
+        public STUAnimConfigRandomAnimation m_F1E2351A;
 
         [STUFieldAttribute(0x1F6BBC4D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_0B08FAD5 m_1F6BBC4D;
+        public STUAnimConfigRandomAnimation m_1F6BBC4D;
 
         [STUFieldAttribute(0x65ECFB36, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_0B08FAD5 m_65ECFB36;
+        public STUAnimConfigRandomAnimation m_65ECFB36;
 
         [STUFieldAttribute(0x50093CB3, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_0B08FAD5 m_50093CB3;
+        public STUAnimConfigRandomAnimation m_50093CB3;
 
         [STUFieldAttribute(0xEB3B9DC5, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_0B08FAD5 m_EB3B9DC5;
+        public STUAnimConfigRandomAnimation m_EB3B9DC5;
 
         [STUFieldAttribute(0xD061F2BA, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_0B08FAD5 m_D061F2BA;
+        public STUAnimConfigRandomAnimation m_D061F2BA;
 
         [STUFieldAttribute(0x34E4918C, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_0B08FAD5 m_34E4918C;
+        public STUAnimConfigRandomAnimation m_34E4918C;
 
         [STUFieldAttribute(0xBE79DC62, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_0B08FAD5 m_BE79DC62;
+        public STUAnimConfigRandomAnimation m_BE79DC62;
     }
 }

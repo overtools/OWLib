@@ -66,7 +66,7 @@ namespace TankLib.STU.Types {
         public STUStatescriptOutputPlug m_onFinishedPlug;
 
         [STUFieldAttribute(0xB2E34614)]
-        public Enum_9F4E2CAC m_B2E34614;
+        public STUPlayAnimSlot m_B2E34614;
 
         [STUFieldAttribute(0x0637108B)]
         public byte m_0637108B;

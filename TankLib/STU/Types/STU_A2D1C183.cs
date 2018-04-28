@@ -12,11 +12,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x1D1FCA2F)]
         public teVec3A m_1D1FCA2F;
 
-        [STUFieldAttribute(0x802E0900)]
-        public DBID m_802E0900;
+        [STUFieldAttribute(0x802E0900, "m_DBID")]
+        public DBID m_DBID;
 
-        [STUFieldAttribute(0xF7EF3000)]
-        public teUUID m_F7EF3000;
+        [STUFieldAttribute(0xF7EF3000, "m_uuid")]
+        public teUUID m_uuid;
 
         [STUFieldAttribute(0xEA8E6A19)]
         public byte[] m_EA8E6A19;

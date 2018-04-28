@@ -9,8 +9,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xB889E02C)]
         public teStructuredDataAssetRef<STU_58B3D0D0> m_B889E02C;
 
-        [STUFieldAttribute(0xC3E03C7F)]
-        public teColorRGB m_C3E03C7F;
+        [STUFieldAttribute(0xC3E03C7F, "m_color")]
+        public teColorRGB m_color;
 
         [STUFieldAttribute(0x6419B140)]
         public teColorRGB m_6419B140;

@@ -3,7 +3,7 @@ using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using OWLib;
-using STULib.Types;
+using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
@@ -30,20 +30,20 @@ namespace DataTool.ToolLogic.Extract {
             const string folderName = "Abilities";
             
             foreach (ulong key in TrackedFiles[0x9E]) {
-                STULoadout loadout = GetInstance<STULoadout>(key);
+                STULoadout loadout = GetInstanceNew<STULoadout>(key);
                 if (loadout == null) continue;
                 
-                string name = GetValidFilename(GetString(loadout.Name).TrimEnd().Replace(".", "_")) ?? $"Unknown{GUID.Index(key):X}";
+                string name = GetValidFilename(GetString(loadout.m_9290B942).TrimEnd().Replace(".", "_")) ?? $"Unknown{GUID.Index(key):X}";
                 
                 
                 Combo.ComboInfo info = new Combo.ComboInfo();
-                Combo.Find(info, loadout.Texture);
+                Combo.Find(info, loadout.m_texture);
                 SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, folderName, name), info);
 
-                using (Stream videoStream = OpenFile(loadout.InfoMovie)) {
+                using (Stream videoStream = OpenFile(loadout.m_infoMovie)) {
                     if (videoStream != null) {
                         videoStream.Position = 128;  // wrapped in "MOVI" for some reason
-                        WriteFile(videoStream, Path.Combine(basePath, folderName, name, $"{GUID.LongKey(loadout.InfoMovie):X12}.bk2"));
+                        WriteFile(videoStream, Path.Combine(basePath, folderName, name, $"{GUID.LongKey(loadout.m_infoMovie):X12}.bk2"));
                     }
                 }
             }

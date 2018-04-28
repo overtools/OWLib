@@ -4,7 +4,7 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xB38E3226)]
-    public class STU_B38E3226 : STU_391AC5F1 {
+    public class STU_B38E3226 : STUAnimGameData_Base {
         [STUFieldAttribute(0x44B8E377)]
         public teVec3A m_44B8E377;
 

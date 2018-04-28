@@ -3,6 +3,6 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x0A7690BB)]
-    public class STU_0A7690BB : STU_7A7F2732 {
+    public class STU_0A7690BB : STUStatescriptStateUXPresenter {
     }
 }

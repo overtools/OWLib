@@ -8,8 +8,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x38F997AB, "m_entityDefinition")]
         public teStructuredDataAssetRef<STUEntityDefinition> m_entityDefinition;
 
-        [STUFieldAttribute(0xC0A83121)]
-        public teStructuredDataAssetRef<STU_F6CCDAFC> m_C0A83121;
+        [STUFieldAttribute(0xC0A83121, "m_skin")]
+        public teStructuredDataAssetRef<STUSkin> m_skin;
 
         [STUFieldAttribute(0xC48FF2B6)]
         public teString m_C48FF2B6;

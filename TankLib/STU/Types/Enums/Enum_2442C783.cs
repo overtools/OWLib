@@ -2,6 +2,7 @@
 
 // ReSharper disable All
 namespace TankLib.STU.Types.Enums {
+    [STUEnumAttribute(0x2442C783)]
     public enum Enum_2442C783 : ulong {
     }
 }

@@ -200,7 +200,7 @@ namespace TankLib.Chunks {
                             }
                         }
 
-                        if (Descriptors[i].Section1Offset > 0) {
+                        if (Descriptors[i].Section1Offset > 0 && Descriptors[i].Section1Offset != 4692750811720056850) {  // todo: wtf2
                             Nodes[i] = new ClothNode[Descriptors[i].DriverNodeCount];
                             reader.BaseStream.Position = Descriptors[i].Section1Offset;
                             for (int nodeIndex = 0; nodeIndex < Descriptors[i].DriverNodeCount; nodeIndex++) {

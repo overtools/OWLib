@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x4AA6CA44)]
     public class STU_4AA6CA44 : STUInstance {
         [STUFieldAttribute(0x0D30E40C, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_60090FCE[] m_0D30E40C;
+        public STUStatescriptWeaponProjectileExplosionRing[] m_0D30E40C;
 
         [STUFieldAttribute(0x7CE05C4B, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_7CE05C4B;

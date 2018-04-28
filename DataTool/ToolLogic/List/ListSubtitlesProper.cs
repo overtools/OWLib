@@ -37,7 +37,7 @@ namespace DataTool.ToolLogic.List {
                     foreach (Combo.VoiceLineInstanceInfo lineInstanceInfo in lineInstance.Value) {
                         if (lineInstanceInfo.Subtitle != 0) {
                             foreach (ulong soundInfoSound in lineInstanceInfo.SoundFiles) {
-                                PrintSubtitle(done, soundInfoSound, lineInstanceInfo.Subtitle);
+                                PrintSubtitle(done, key, soundInfoSound, lineInstanceInfo.Subtitle);
                             }
                         }
                     }
@@ -45,11 +45,11 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public void PrintSubtitle(HashSet<KeyValuePair<ulong, ulong>> done, ulong guid, ulong subtitleGUID) {
+        public void PrintSubtitle(HashSet<KeyValuePair<ulong, ulong>> done, ulong voiceSet, ulong guid, ulong subtitleGUID) {
             KeyValuePair<ulong, ulong> pair = new KeyValuePair<ulong, ulong>(guid, subtitleGUID);
             if (done.Contains(pair)) return;
             done.Add(pair);
-            Console.Out.WriteLine($"{GetFileName(guid)} - {GetSubtitleString(subtitleGUID)}");
+            Console.Out.WriteLine($"{GetFileName(voiceSet)}: {GetFileName(guid)} - {GetSubtitleString(subtitleGUID)}");
         }
     }
 }

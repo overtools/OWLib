@@ -2,6 +2,7 @@
 
 // ReSharper disable All
 namespace TankLib.STU.Types.Enums {
+    [STUEnumAttribute(0xBABC4175)]
     public enum Enum_BABC4175 : uint {
     }
 }

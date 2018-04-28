@@ -87,8 +87,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xE1258EC1, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_5E493D8B[] m_E1258EC1;
 
-        [STUFieldAttribute(0x84625AA3, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_63172E83[] m_84625AA3;
+        [STUFieldAttribute(0x84625AA3, "m_skinThemes", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_63172E83[] m_skinThemes;
 
         [STUFieldAttribute(0xE25DDDA1)]
         public teColorRGBA m_E25DDDA1;

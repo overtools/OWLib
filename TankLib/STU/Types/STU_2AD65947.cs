@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x2AD65947)]
-    public class STU_2AD65947 : STU_7A7F2732 {
+    public class STU_2AD65947 : STUStatescriptStateUXPresenter {
         [STUFieldAttribute(0x511ACA3E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVarDynamic m_511ACA3E;
 

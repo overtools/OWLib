@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using TankLib.Helpers;
 using TankLib.Helpers.Hash;
@@ -187,6 +188,14 @@ namespace TankLib.STU {
         public T GetMainInstance<T>() where T : STUInstance {
             if (Instances.Length == 0) return null;
             return Instances[0] as T;
+        }
+        
+        public T GetInstance<T>() where T : STUInstance {
+            return Instances.OfType<T>().FirstOrDefault();
+        }
+        
+        public IEnumerable<T> GetInstances<T>() where T : STUInstance {
+            return Instances.OfType<T>();
         }
     }
 

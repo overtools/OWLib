@@ -8,8 +8,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x38F997AB, "m_entityDefinition")]
         public teStructuredDataAssetRef<STUEntityDefinition> m_entityDefinition;
 
-        [STUFieldAttribute(0xC68C8155)]
-        public teStructuredDataAssetRef<STULoadout> m_C68C8155;
+        [STUFieldAttribute(0xC68C8155, "m_loadout")]
+        public teStructuredDataAssetRef<STULoadout> m_loadout;
 
         [STUFieldAttribute(0xAF9D3A0C, "m_rotation")]
         public teQuat m_rotation;

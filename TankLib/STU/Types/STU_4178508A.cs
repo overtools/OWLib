@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         public float[] m_0EC67F50;
 
         [STUFieldAttribute(0x3A5231AD, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_6BC13553 m_3A5231AD;
+        public STUAnimGameData_BlendDriver m_3A5231AD;
 
         [STUFieldAttribute(0x5E009A60)]
         public byte m_5E009A60;

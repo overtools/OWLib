@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x836EE22E)]
     public class STU_836EE22E : STUGenericSettings_Base {
         [STUFieldAttribute(0xD27AE46D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F5B49504[] m_D27AE46D;
+        public STUCustomGameBrowserMapCatalogInfo[] m_D27AE46D;
 
         [STUFieldAttribute(0xE349AC2C)]
         public teStructuredDataAssetRef<ulong> m_E349AC2C;

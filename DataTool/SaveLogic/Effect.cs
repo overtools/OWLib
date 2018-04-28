@@ -10,6 +10,7 @@ using OWLib.Types.Map;
 using OWLib.Writer;
 using STULib.Types;
 using STULib.Types.Generic;
+using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
 using Animation = OWLib.Animation;
 
@@ -34,7 +35,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(0f);
                 }
                 if (playbackInfo.Hardpoint != 0) {
-                    writer.Write(Model.OWModelWriter14.IdToString("hardpoint", GUID.Index(playbackInfo.Hardpoint)));
+                    writer.Write(OverwatchModel.IdToString("hardpoint", GUID.Index(playbackInfo.Hardpoint)));
                 } else {
                     writer.Write("null");
                 }

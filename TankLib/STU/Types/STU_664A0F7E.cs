@@ -7,11 +7,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA83C2C26, "m_entity", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_24117401 m_entity;
 
-        [STUFieldAttribute(0xB141AAE4, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_6B62E4AD m_B141AAE4;
+        [STUFieldAttribute(0xB141AAE4, "m_entityID", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_6B62E4AD m_entityID;
 
-        [STUFieldAttribute(0x4C167404, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_7F8DF540 m_4C167404;
+        [STUFieldAttribute(0x4C167404, "m_skinTheme", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_7F8DF540 m_skinTheme;
 
         [STUFieldAttribute(0xB8DC6D46, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_898D5815 m_B8DC6D46;

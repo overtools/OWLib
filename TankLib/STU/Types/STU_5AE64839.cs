@@ -4,20 +4,20 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x5AE64839)]
     public class STU_5AE64839 : STUInstance {
-        [STUFieldAttribute(0x96926224, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUDynamicTreeDef m_96926224;
+        [STUFieldAttribute(0x96926224, "m_dynamicTreeDef", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUDynamicTreeDef m_dynamicTreeDef;
 
-        [STUFieldAttribute(0xD4677044, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_7FE73B95[] m_D4677044;
+        [STUFieldAttribute(0xD4677044, "m_volumes", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAITacticalVolume[] m_volumes;
 
-        [STUFieldAttribute(0x48483CDC, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_82339442[] m_48483CDC;
+        [STUFieldAttribute(0x48483CDC, "m_chokes", ReaderType = typeof(InlineInstanceFieldReader))]
+        public AITacticalChoke[] m_chokes;
 
         [STUFieldAttribute(0xB1E00012)]
         public int[] m_B1E00012;
 
-        [STUFieldAttribute(0x2032E7EA, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_20CA83FA m_2032E7EA;
+        [STUFieldAttribute(0x2032E7EA, "m_metaData", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAITacticalMetaData m_metaData;
 
         [STUFieldAttribute(0x276CC7EC)]
         public int m_276CC7EC;

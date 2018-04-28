@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUIdentifier> m_ED999C8B;
 
         [STUFieldAttribute(0x4E87690F, "m_map")]
-        public teStructuredDataAssetRef<STU_3A9B5E90> m_map;
+        public teStructuredDataAssetRef<STUMap> m_map;
     }
 }

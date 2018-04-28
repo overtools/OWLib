@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x70340028)]
     public class STU_70340028 : STU_5BF8DA7A {
-        [STUFieldAttribute(0xC4EF5D15, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_51A9D9C7 m_C4EF5D15;
+        [STUFieldAttribute(0xC4EF5D15, "m_synchGroup", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_51A9D9C7 m_synchGroup;
     }
 }

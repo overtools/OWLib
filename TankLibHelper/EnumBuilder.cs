@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
+using TankLib.STU;
 
 namespace TankLibHelper {
     public class EnumBuilder : ClassBuilder {
@@ -25,6 +26,16 @@ namespace TankLibHelper {
             StringBuilder builder = new StringBuilder();
             
             WriteDefaultHeader(builder, "Enum", "TankLibHelper.EnumBuilder");
+
+            string attribute;
+
+            if (!Info.KnownEnums.ContainsKey(_hash)) {
+                attribute = $"[{nameof(STUEnumAttribute)}(0x{_hash:X8})]";
+            } else {
+                attribute = $"[{nameof(STUEnumAttribute)}(0x{_hash:X8}, \"{Info.GetEnumName(_hash)}\")]";
+            }
+            
+            builder.AppendLine($"    {attribute}");
 
             string type = GetSizeType(_field.Size);
             builder.AppendLine($"    public enum {Name} : {type} {{");

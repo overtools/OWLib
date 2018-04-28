@@ -8,13 +8,13 @@ namespace TankLib.STU.Types {
         public STUAnimBlendTimeParams m_C41767A5;
 
         [STUFieldAttribute(0x83CE3EB5, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F13F1466 m_83CE3EB5;
+        public STUAnimOverrideBlendTime m_83CE3EB5;
 
         [STUFieldAttribute(0x8330FD13, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F13F1466 m_8330FD13;
+        public STUAnimOverrideBlendTime m_8330FD13;
 
         [STUFieldAttribute(0x07629FBC, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F13F1466 m_07629FBC;
+        public STUAnimOverrideBlendTime m_07629FBC;
 
         [STUFieldAttribute(0xA74C24A3, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_ABD8FE73 m_A74C24A3;

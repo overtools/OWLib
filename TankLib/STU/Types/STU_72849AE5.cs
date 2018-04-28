@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x72849AE5)]
     public class STU_72849AE5 : STUStatescriptState {
         [STUFieldAttribute(0x89402D74, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_633EDFC2[] m_89402D74;
+        public STUStatescriptSubScriptInitData[] m_89402D74;
 
         [STUFieldAttribute(0x5DA62D02, "m_onAbortPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptOutputPlug m_onAbortPlug;

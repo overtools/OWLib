@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x2E9A1C08)]
     public class STU_2E9A1C08 : STUInstance {
         [STUFieldAttribute(0x321C3BCE, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F3D263C3 m_321C3BCE;
+        public STUAnimConfigBoneWeightMask m_321C3BCE;
 
         [STUFieldAttribute(0xEB0EE538)]
         public teVec2 m_EB0EE538;

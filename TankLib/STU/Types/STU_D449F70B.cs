@@ -5,8 +5,8 @@ using TankLib.Math;
 namespace TankLib.STU.Types {
     [STUAttribute(0xD449F70B)]
     public class STU_D449F70B : STU_A323F0F5 {
-        [STUFieldAttribute(0x8A12D912, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_F9E17188 m_8A12D912;
+        [STUFieldAttribute(0x8A12D912, "m_target", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_F9E17188 m_target;
 
         [STUFieldAttribute(0x11467156)]
         public teVec2 m_11467156;

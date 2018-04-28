@@ -171,9 +171,9 @@ namespace TankLib.Chunks {
             
             /// <summary>Vertex bone weights</summary>
             public float[][] BoneWeights;
-            
-            /// <summary>Triangles</summary>
-            public MeshFace[] Faces;
+
+            /// <summary>Triangle indices</summary>
+            public ushort[] Indices;
             
             /// <summary>Source descriptor</summary>
             public SubmeshDescriptor Descriptor;
@@ -190,7 +190,7 @@ namespace TankLib.Chunks {
                 Tangents = new teVec4[submeshDescriptor.VerticesToDraw];
                 IDs = new uint[submeshDescriptor.VerticesToDraw];
                 
-                Faces = new MeshFace[submeshDescriptor.IndicesToDraw/3];
+                Indices = new ushort[submeshDescriptor.IndicesToDraw];
                 
                 UV = new teVec2[submeshDescriptor.VerticesToDraw][];
                 
@@ -364,33 +364,18 @@ namespace TankLib.Chunks {
                 Dictionary<int, int> indexRemapInvert = new Dictionary<int, int>();
                 
                 // todo: make this cleaner
-                for (int j = 0; j < submeshDescriptor.IndicesToDraw / 3; ++j) {
-                    MeshFace index = reader.Read<MeshFace>();
-                    ushort v1;
-                    ushort v2;
-                    ushort v3;
-                    if (indexRemap.ContainsKey(index.V1)) {
-                        v1 = indexRemap[index.V1];  // "index of", value = fake index
+                for (int j = 0; j < submeshDescriptor.IndicesToDraw; j++) {
+                    ushort index = reader.ReadUInt16();
+                    ushort newIndex;
+                    if (indexRemap.ContainsKey(index)) {
+                        newIndex = indexRemap[index];  // "index of", value = fake index
                     } else {
-                        v1 = (ushort) indexRemap.Count;
-                        indexRemap[index.V1] = v1;
-                        indexRemapInvert[v1] = index.V1;
+                        newIndex = (ushort) indexRemap.Count;
+                        indexRemap[index] = newIndex;
+                        indexRemapInvert[newIndex] = index;
                     }
-                    if (indexRemap.ContainsKey(index.V2)) {
-                        v2 = indexRemap[index.V2];
-                    } else {
-                        v2 = (ushort) indexRemap.Count;
-                        indexRemap[index.V2] = v2;
-                        indexRemapInvert[v2] = index.V2;
-                    }
-                    if (indexRemap.ContainsKey(index.V3)) {
-                        v3 = indexRemap[index.V3];
-                    } else {
-                        v3 = (ushort) indexRemap.Count;
-                        indexRemap[index.V3] = v3;
-                        indexRemapInvert[v3] = index.V3;
-                    }
-                    submesh.Faces[j] = new MeshFace {V1 = v1, V2 = v2, V3 = v3};
+
+                    submesh.Indices[j] = newIndex;
                 }
                 
                 VertexElementDescriptor[][] elements = SplitVBE(VertexElements[submeshDescriptor.VertexBuffer]);

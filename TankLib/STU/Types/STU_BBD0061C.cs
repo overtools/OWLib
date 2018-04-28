@@ -4,11 +4,11 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xBBD0061C)]
     public class STU_BBD0061C : STUInstance {
-        [STUFieldAttribute(0x056D3E39, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_31BC1BD1[] m_056D3E39;
+        [STUFieldAttribute(0x056D3E39, "m_heroes", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_31BC1BD1[] m_heroes;
 
-        [STUFieldAttribute(0x6CED5899, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_13E59842[] m_6CED5899;
+        [STUFieldAttribute(0x6CED5899, "m_skins", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_13E59842[] m_skins;
 
         [STUFieldAttribute(0xD5D2B982, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_7EF21B28[] m_D5D2B982;

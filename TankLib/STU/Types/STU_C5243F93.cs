@@ -12,7 +12,7 @@ namespace TankLib.STU.Types {
         public STUInputLogicalButtonCategory m_category;
 
         [STUFieldAttribute(0x3C9341F5, "m_logicalButton")]
-        public Enum_909B56BB m_logicalButton;
+        public STULogicalButton m_logicalButton;
 
         [STUFieldAttribute(0xF6D8234A)]
         public Enum_0DEE7CD5 m_F6D8234A;

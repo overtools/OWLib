@@ -17,8 +17,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x81C8D603)]
         public teVec3 m_81C8D603;
 
-        [STUFieldAttribute(0xC3E03C7F)]
-        public teColorRGB m_C3E03C7F;
+        [STUFieldAttribute(0xC3E03C7F, "m_color")]
+        public teColorRGB m_color;
 
         [STUFieldAttribute(0xAB55CE22)]
         public float m_AB55CE22;

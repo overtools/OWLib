@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUTeamColor> m_B8DC6D46;
 
         [STUFieldAttribute(0x5E9665E3)]
-        public teStructuredDataAssetRef<STU_42270D59> m_5E9665E3;
+        public teStructuredDataAssetRef<STUSkinTheme> m_5E9665E3;
 
         [STUFieldAttribute(0x3F5B86A4, "m_animation")]
         public teStructuredDataAssetRef<STUAnimation> m_animation;

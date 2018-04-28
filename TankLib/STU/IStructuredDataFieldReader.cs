@@ -65,6 +65,13 @@ namespace TankLib.STU {
                 return Enum.ToObject(elementType, factory.DeserializeArray(data, field));
             }
             
+            bool isStruct = elementType.IsValueType && !elementType.IsPrimitive;
+
+            if (isStruct) {
+                MethodInfo method = typeof(Extensions).GetMethod(nameof(Extensions.Read))?.MakeGenericMethod(elementType);
+                return method?.Invoke(data.DynData, new object[] { data.DynData });
+            }
+            
             throw new NotImplementedException();
         }
 

@@ -11,11 +11,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x3F5B86A4, "m_animation", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_215BE8F3 m_animation;
 
-        [STUFieldAttribute(0x65033558, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_C1C7CF4E m_65033558;
+        [STUFieldAttribute(0x65033558, "m_animSlotID", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_C1C7CF4E m_animSlotID;
 
-        [STUFieldAttribute(0xC4EF5D15, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_51A9D9C7 m_C4EF5D15;
+        [STUFieldAttribute(0xC4EF5D15, "m_synchGroup", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_51A9D9C7 m_synchGroup;
 
         [STUFieldAttribute(0x562445C2, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_51A9D9C7 m_562445C2;

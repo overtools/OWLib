@@ -12,7 +12,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STU_4D28219D> m_27643B96;
 
         [STUFieldAttribute(0x939ABB2C, "m_materialData")]
-        public teStructuredDataAssetRef<STU_9C37EB4E> m_materialData;
+        public teStructuredDataAssetRef<STUMaterialData> m_materialData;
 
         [STUFieldAttribute(0x996D7449, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_4B6F9A4C m_996D7449;

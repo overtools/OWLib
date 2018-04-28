@@ -5,8 +5,8 @@ using TankLib.Math;
 namespace TankLib.STU.Types {
     [STUAttribute(0x653C3526)]
     public class STU_653C3526 : STUInstance {
-        [STUFieldAttribute(0xC3E03C7F)]
-        public teColorRGB m_C3E03C7F;
+        [STUFieldAttribute(0xC3E03C7F, "m_color")]
+        public teColorRGB m_color;
 
         [STUFieldAttribute(0xAE2D8911)]
         public int m_AE2D8911;
