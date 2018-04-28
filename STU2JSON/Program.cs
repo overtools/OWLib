@@ -1,20 +1,74 @@
 ﻿using Newtonsoft.Json;
-using STULib;
+using TankLib.STU;
 using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
+using TankLib;
+using System.Reflection;
 
 namespace STU2JSON
 {
     class Program
     {
+        public class GUIDConverter : JsonConverter
+        {
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            {
+                writer.WriteStartObject();
+
+                writer.WritePropertyName("Key");
+                Type type = value.GetType();
+                ulong key;
+                if (value is teResourceGUID guid)
+                {
+                    key = (ulong)guid;
+                }
+                else
+                {
+                    MethodInfo info = type.GetMethods().FirstOrDefault(x => x.Name == "op_Implicit" && x.ReturnType.FullName == "System.UInt64");
+                    if (info == null)
+                    {
+                        key = (ulong)value;
+                    }
+                    else
+                    {
+                        key = (ulong)info.Invoke(null, new object[] { value });
+                    }
+                }
+                writer.WriteValue($"{key:X16}");
+
+                writer.WritePropertyName("String");
+                writer.WriteValue($"{teResourceGUID.LongKey(key):X12}.{teResourceGUID.Type(key):X3}");
+
+                writer.WriteEndObject();
+            }
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            {
+                return 0;
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return typeof(teStructuredDataAssetRef<>).Name == objectType.Name || typeof(teResourceGUID).IsAssignableFrom(objectType) || typeof(ulong).IsAssignableFrom(objectType);
+            }
+        }
+
         static void Main(string[] args)
         {
             if (args.Length < 2)
             {
-                Console.Error.WriteLine("Usage: STUEHUEHUEHUE stu_file/dir output_dir");
+                Console.Error.WriteLine("Usage: STU2JSON stu_file/dir output_dir");
                 return;
             }
+
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> { new GUIDConverter() },
+                PreserveReferencesHandling = PreserveReferencesHandling.All,
+                Formatting = Formatting.Indented
+            };
 
             MagicTheGathering(Path.GetFullPath(args[0]), Path.GetFullPath(args[1]));
         }
@@ -54,15 +108,21 @@ namespace STU2JSON
             {
                 try
                 {
-                    ISTU stu = ISTU.NewInstance(stream, uint.MaxValue, null);
+                    teStructuredData stu = new teStructuredData(stream, true);
+                    string prefix = string.Empty;
+                    if(stu.Instances.Length == 1)
+                    {
+                        prefix = $"{filename}_";
+                        targetDir = output;
+                    }
                     if (!Directory.Exists(targetDir))
                     {
                         Directory.CreateDirectory(targetDir);
                     }
                     for (int i = 0; i < stu.Instances.Count(); ++i)
                     {
-                        string target = Path.Combine(targetDir, $"{i}_{stu.Instances.ElementAt(i).InstanceChecksum}.json");
-                        File.WriteAllText(target, JsonConvert.SerializeObject(stu.Instances.ElementAt(i) as object, Formatting.Indented));
+                        string target = Path.Combine(targetDir, $"{prefix}{i}_{stu.InstanceInfo[i].Hash:X8}.json");
+                        File.WriteAllText(target, JsonConvert.SerializeObject(stu.Instances[i] as object, Formatting.Indented));
                     }
                 }
                 catch
