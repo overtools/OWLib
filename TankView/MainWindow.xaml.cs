@@ -1,7 +1,7 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime;
@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using TankLib.CASC;
-using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
 using TankView.Helper;
 using TankView.ViewModel;
@@ -196,7 +196,7 @@ namespace TankView
                 catch (Exception e)
                 {
                     MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-                    if (System.Diagnostics.Debugger.IsAttached)
+                    if (Debugger.IsAttached)
                     {
                         throw;
                     }

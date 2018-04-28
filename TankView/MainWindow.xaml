@@ -32,8 +32,8 @@
         <Menu Grid.Row="0">
             <MenuItem Header="File">
                 <MenuItem Header="Open...">
-                    <MenuItem Header="CASC" Click="OpenCASC" IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"></MenuItem>
-                    <MenuItem Header="NGDP" Click="OpenNGDP" IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"></MenuItem>
+                    <MenuItem Header="CASC" Click="OpenCASC" IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                    <MenuItem Header="NGDP" Click="OpenNGDP" IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
                 </MenuItem>
                 <MenuItem Header="Recent..." ItemsSource="{Binding RecentLocations}">
                     <MenuItem.ItemContainerStyle>
@@ -55,8 +55,8 @@
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
-                <Separator></Separator>
-                <MenuItem Header="Exit" Click="Exit"></MenuItem>
+                <Separator />
+                <MenuItem Header="Exit" Click="Exit" />
             </MenuItem>
             <MenuItem Header="CASC" DataContext="{Binding CASCSettings}">
                 <MenuItem Header="Cache">
@@ -80,7 +80,7 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Extract" Click="ExtractFiles" IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"></MenuItem>
+            <MenuItem Header="Extract" Click="ExtractFiles" IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
         </Menu>
         <Grid Grid.Row="1" DataContext="{Binding GUIDTree}">
             <Grid.ColumnDefinitions>
@@ -90,7 +90,7 @@
             <TreeView Grid.Column="0" x:Name="FolderView" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" AllowDrop="False" ItemsSource="{Binding Root, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" ItemTemplate="{StaticResource FolderDataView}">
                 <TreeView.Resources>
                     <ContextMenu x:Key="ExtractTree">
-                        <MenuItem Header="Extract" Click="ExtractFolder"></MenuItem>
+                        <MenuItem Header="Extract" Click="ExtractFolder" />
                     </ContextMenu>
                 </TreeView.Resources>
                 <TreeView.ItemContainerStyle>
@@ -115,23 +115,21 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="STU" IsEnabled="{Binding ValidSTU}">
-                    <TreeView x:Name="STUView" ItemsSource="{Binding STUContext}">
-                        
-                    </TreeView>
+                    <TreeView x:Name="STUView" ItemsSource="{Binding STUContext}" />
                 </TabItem>
                 <TabItem Header="Image" IsEnabled="{Binding ValidImage, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <Image Source="{Binding ImageSource}" Width="{Binding ImageWidth}" Height="{Binding ImageHeight}"/>
                     </ScrollViewer>
                 </TabItem>
-                <TabItem Header="Hex" IsEnabled="{Binding ValidFile}"></TabItem>
+                <TabItem Header="Hex" IsEnabled="{Binding ValidFile}" />
             </TabControl>
         </Grid>
         <StatusBar Grid.Row="2" DataContext="{Binding ProgressInfo}">
             <StatusBarItem VerticalContentAlignment="Stretch">
-                <ProgressBar Width="242" Height="Auto" Value="{Binding Percentage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></ProgressBar>
+                <ProgressBar Width="242" Height="Auto" Value="{Binding Percentage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
             </StatusBarItem>
-            <StatusBarItem Content="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></StatusBarItem>
+            <StatusBarItem Content="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
         </StatusBar>
     </Grid>
 </Window>

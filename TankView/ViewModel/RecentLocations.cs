@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
+using TankView.Properties;
 
 namespace TankView.ViewModel
 {
@@ -10,13 +12,13 @@ namespace TankView.ViewModel
 
         public RecentLocations()
         {
-            if(Properties.Settings.Default.RecentLocations == null)
+            if(Settings.Default.RecentLocations == null)
             {
-                Properties.Settings.Default.RecentLocations = new System.Collections.Specialized.StringCollection();
+                Settings.Default.RecentLocations = new StringCollection();
             }
 
-            string[] locations = new string[Properties.Settings.Default.RecentLocations.Count];
-            CachedLocations = Properties.Settings.Default.RecentLocations.Cast<string>().ToList();
+            string[] locations = new string[Settings.Default.RecentLocations.Count];
+            CachedLocations = Settings.Default.RecentLocations.Cast<string>().ToList();
             foreach (string location in CachedLocations) {
                 base.Add(location);
             }
@@ -33,9 +35,9 @@ namespace TankView.ViewModel
             {
                 Remove(CachedLocations.ElementAt(7));
             }
-            Properties.Settings.Default.RecentLocations = new System.Collections.Specialized.StringCollection();
-            Properties.Settings.Default.RecentLocations.AddRange(CachedLocations.ToArray());
-            Properties.Settings.Default.Save();
+            Settings.Default.RecentLocations = new StringCollection();
+            Settings.Default.RecentLocations.AddRange(CachedLocations.ToArray());
+            Settings.Default.Save();
         }
 
         public new void Remove(string path)

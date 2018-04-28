@@ -1,4 +1,6 @@
-﻿namespace TankView.ViewModel
+﻿using TankView.Properties;
+
+namespace TankView.ViewModel
 {
     public class PatchHost
     {
@@ -11,8 +13,8 @@
             } set {
                 if (value == true)
                 {
-                    Properties.Settings.Default.NGDPHost = GetHashCode();
-                    Properties.Settings.Default.Save();
+                    Settings.Default.NGDPHost = GetHashCode();
+                    Settings.Default.Save();
                 }
                 _active = value;
             }
@@ -22,7 +24,7 @@
         {
             Host = v1;
             Name = v2;
-            _active = Properties.Settings.Default.NGDPHost == GetHashCode(); // todo: check 
+            _active = Settings.Default.NGDPHost == GetHashCode(); // todo: check 
         }
 
         public override int GetHashCode()

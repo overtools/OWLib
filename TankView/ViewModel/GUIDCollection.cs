@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using DirectXTexNet;
 using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
@@ -26,7 +25,7 @@ namespace TankView.ViewModel
             get {
                 return _top;
             } set {
-                ImageSource = ImageHelper.ConvertDDS(value, DirectXTexNet.DXGI_FORMAT.R8G8B8A8_UNORM, ImageHelper.ImageFormat.PNG, 0);
+                ImageSource = ImageHelper.ConvertDDS(value, DXGI_FORMAT.R8G8B8A8_UNORM, ImageHelper.ImageFormat.PNG, 0);
                 _top = value;
                 NotifyPropertyChanged(nameof(TopSelectedEntry));
             }

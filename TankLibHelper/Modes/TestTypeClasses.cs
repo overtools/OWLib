@@ -7,8 +7,6 @@ using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
 using TankLib.STU;
-using TankLib.STU.Primitives;
-using TankLib.STU.Types;
 
 namespace TankLibHelper.Modes {
     public class TestTypeClasses : IMode {

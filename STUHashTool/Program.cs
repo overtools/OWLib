@@ -1,22 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CASCLib;
 using Newtonsoft.Json.Linq;
-using DataTool;
-using DataTool.Helper;
-using OWLib;
 using STULib;
-using STULib.Impl;
 using STULib.Impl.Version2HashComparer;
 using Console = System.Console;
 using InstanceData = STULib.Impl.Version2HashComparer.InstanceData;
-using Version2 = STULib.Impl.Version2;
 
 namespace STUHashTool {
     public class InstanceTally {

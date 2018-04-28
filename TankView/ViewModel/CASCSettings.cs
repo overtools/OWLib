@@ -1,16 +1,17 @@
 ﻿using System;
 using System.ComponentModel;
 using TankLib.CASC;
+using TankView.Properties;
 
 namespace TankView.ViewModel
 {
     public class CASCSettings : INotifyPropertyChanged
     {
-        private bool _cdn = Properties.Settings.Default.CacheCDN;
-        private bool _data = Properties.Settings.Default.CacheData;
-        private bool _apm = Properties.Settings.Default.CacheAPM;
-        private bool _loadall = Properties.Settings.Default.LoadAllLanguages;
-        private bool _threading = Properties.Settings.Default.DisableThreading;
+        private bool _cdn = Settings.Default.CacheCDN;
+        private bool _data = Settings.Default.CacheData;
+        private bool _apm = Settings.Default.CacheAPM;
+        private bool _loadall = Settings.Default.LoadAllLanguages;
+        private bool _threading = Settings.Default.DisableThreading;
 
         public bool CDN {
             get {
@@ -18,8 +19,8 @@ namespace TankView.ViewModel
             }
             set {
                 _cdn = value;
-                Properties.Settings.Default.CacheCDN = value;
-                Properties.Settings.Default.Save();
+                Settings.Default.CacheCDN = value;
+                Settings.Default.Save();
                 CASCHandler.Cache.CacheCDN = value;
                 NotifyPropertyChanged(nameof(CDN));
             }
@@ -31,8 +32,8 @@ namespace TankView.ViewModel
             }
             set {
                 _data = value;
-                Properties.Settings.Default.CacheData = value;
-                Properties.Settings.Default.Save();
+                Settings.Default.CacheData = value;
+                Settings.Default.Save();
                 CASCHandler.Cache.CacheCDNData = value;
                 NotifyPropertyChanged(nameof(Data));
             }
@@ -44,8 +45,8 @@ namespace TankView.ViewModel
             }
             set {
                 _apm = value;
-                Properties.Settings.Default.CacheAPM = value;
-                Properties.Settings.Default.Save();
+                Settings.Default.CacheAPM = value;
+                Settings.Default.Save();
                 CASCHandler.Cache.CacheAPM = value;
                 NotifyPropertyChanged(nameof(APM));
             }
@@ -57,8 +58,8 @@ namespace TankView.ViewModel
             }
             set {
                 _loadall = value;
-                Properties.Settings.Default.LoadAllLanguages = value;
-                Properties.Settings.Default.Save();
+                Settings.Default.LoadAllLanguages = value;
+                Settings.Default.Save();
                 NotifyPropertyChanged(nameof(LoadAllLanguages));
             }
         }
@@ -69,8 +70,8 @@ namespace TankView.ViewModel
             }
             set {
                 _threading = value;
-                Properties.Settings.Default.DisableThreading = value;
-                Properties.Settings.Default.Save();
+                Settings.Default.DisableThreading = value;
+                Settings.Default.Save();
                 CASCConfig.MaxThreads = value ? 1 : Environment.ProcessorCount;
                 NotifyPropertyChanged(nameof(DisableThreading));
             }
