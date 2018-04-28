@@ -43,6 +43,44 @@ namespace TankLib.CASC {
         /// <summary>Selected Text Language</summary>
         public string TextLanguage { get; set; }
 
+        public static CASCConfig LoadFromString(string overwatchDirectory, bool skipKeys = false, bool multipleLangs = false)
+        {
+            if (overwatchDirectory.ToLowerInvariant().Substring(0, 5) == "ngdp:")
+            {
+                string cdn = overwatchDirectory.Substring(5, 4);
+                string[] parts = overwatchDirectory.Substring(5).Split(':');
+                string region = "us";
+                string product = "pro";
+                if (parts.Length > 1)
+                {
+                    region = parts[1];
+                }
+                if (parts.Length > 2)
+                {
+                    product = parts[2];
+                }
+                if (cdn == "bnet")
+                {
+                    throw new NotImplementedException("LoadOnlineStorageConfig");
+                    //return LoadOnlineStorageConfig(product, region);
+                }
+                else if (cdn == "http")
+                {
+                    string host = string.Join(":", parts.Skip(3));
+                    throw new NotImplementedException("LoadOnlineStorageConfig");
+                    //return LoadOnlineStorageConfig(host, product, region, true, true, true);
+                }
+                else
+                {
+                    throw new NotImplementedException($"network type {cdn} is not supported");
+                }
+            }
+            else
+            {
+                return LoadLocalStorageConfig(overwatchDirectory, skipKeys, multipleLangs);
+            }
+        }
+
         /// <summary>Installed Languages</summary>
         public HashSet<string> InstalledLanguages;
 
