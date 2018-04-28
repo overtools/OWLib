@@ -46,6 +46,8 @@ namespace TankLib.CASC {
 
         protected ContentManifestFile() {}
 
+        public static readonly int ENCRYPTED_MAGIC = Util.GetMagicBytes('c', 'm', 'f');
+
         protected void Read(BinaryReader reader, string name, ProgressReportSlave worker=null) {
             reader.BaseStream.Position = 0;
             uint cmfVersion = reader.ReadUInt32();
@@ -62,7 +64,7 @@ namespace TankLib.CASC {
             }
             worker?.ReportProgress(0, $"Loading CMF {name}...");
                 
-            if (Header.Magic >= 0x636D6614) {
+            if (Header.Magic >> 8 == ENCRYPTED_MAGIC) {
                 using (BinaryReader decryptedReader = DecryptCMF(reader, name)) {
                     ParseCMF(decryptedReader);
                 }

@@ -4,8 +4,6 @@ using System.ComponentModel;
 namespace TankLib.CASC.Helpers {
     /// <summary>Reports on progress</summary>
     public class ProgressReportSlave {
-        private int _lastProgressPercentage;
-
         private object @lock = new object();
 
         public event Action<object, ProgressChangedEventArgs> OnProgress;

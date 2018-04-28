@@ -149,10 +149,6 @@
       <Project>{353c0d05-c505-4df4-909e-624fd94a7d3b}</Project>
       <Name>OWLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OWReplayLib\OWReplayLib.csproj">
-      <Project>{FCF6F515-0870-4CB4-8A55-1363D20B01A0}</Project>
-      <Name>OWReplayLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\revorbstd\RevorbStd.csproj">
       <Project>{c3130ece-02d9-4be6-9883-75351822e7de}</Project>
       <Name>RevorbStd</Name>

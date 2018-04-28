@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +13,7 @@ using System.Windows.Data;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
+using TankView.Helper;
 using TankView.ViewModel;
 
 namespace TankView
@@ -179,7 +181,7 @@ namespace TankView
             CASC = null;
             GUIDTree = null;
             NotifyPropertyChanged(nameof(GUIDTree));
-            GC.Collect();
+            GCSettings.LatencyMode = GCLatencyMode.Batch;
 
             Task.Run(delegate
             {
@@ -193,11 +195,16 @@ namespace TankView
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Error while loading CASC", e.Message, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-                    if(System.Diagnostics.Debugger.IsAttached)
+                    MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    if (System.Diagnostics.Debugger.IsAttached)
                     {
                         throw;
                     }
+                }
+                finally
+                {
+                    GCSettings.LatencyMode = GCLatencyMode.Interactive;
+                    GC.Collect();
                 }
 
                 ViewContext.Send(new SendOrPostCallback(delegate
@@ -270,21 +277,10 @@ namespace TankView
                     }
                     try
                     {
-                        if (CASC.EncodingHandler.GetEntry(entry.Hash, out EncodingEntry enc))
+                        using (Stream i = IOHelper.OpenFile(entry))
+                        using (Stream o = File.OpenWrite(Path.Combine(outPath, entry.FullPath.Substring(1))))
                         {
-                            using (Stream i = CASC.OpenFile(enc.Key))
-                            using (Stream o = File.OpenWrite(Path.Combine(outPath, entry.FullPath.Substring(1))))
-                            {
-                                if (entry.Flags.HasFlag(ContentFlags.Bundle))
-                                {
-                                    i.Position = entry.Offset;
-                                    i.CopyBytes(o, entry.Size);
-                                }
-                                else
-                                {
-                                    i.CopyTo(o);
-                                }
-                            }
+                            i.CopyTo(o);
                         }
                     }
                     catch

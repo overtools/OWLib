@@ -13,7 +13,7 @@ namespace TankLib.STU {
     public class teStructuredData {
         // ReSharper disable once InconsistentNaming
         /// <summary>"v1" STU magic number</summary>
-        public const int STRUCTURED_DATA_IMMUTABLE_MAGIC = 0x53545544;
+        public static readonly int STRUCTURED_DATA_IMMUTABLE_MAGIC = Util.GetMagicBytes('S', 'T', 'U', 'D');
         public static readonly teStructuredDataMgr Manager = new teStructuredDataMgr();
         
         /// <summary>CRC64 of the header</summary>

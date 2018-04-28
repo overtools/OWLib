@@ -54,13 +54,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\STULib\STULib.csproj">
-      <Project>{996012b0-3693-4642-ac44-5aa8865ee44a}</Project>
-      <Name>STULib</Name>
-    </ProjectReference>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
+    <ProjectReference Include="..\TankLib\TankLib.csproj">
+      <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>
+      <Name>TankLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -12,5 +12,6 @@ namespace TankView.ViewModel
         public LocaleFlags Locale { get; set; }
         public MD5Hash Hash { get; set; }
         public ulong GUID { get; set; }
+        public ApplicationPackageManifest APM { get; set; }
     }
 }

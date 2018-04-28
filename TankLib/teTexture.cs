@@ -41,12 +41,17 @@ namespace TankLib {
             reader.Read(Data, 0, (int)Header.DataSize);
         }
 
-        public teResourceGUID GetPayloadGUID(teResourceGUID textureResource)
+        public teResourceGUID GetPayloadGUID(teResourceGUID textureResource, int region = 1)
         {
-            return new teResourceGUID(((ulong)textureResource & 0xF0FFFFFFFFUL) | ((ulong)((byte)(Header.Indice - 1)) << 32)  | 0x0320000000000000UL);
+            ulong guid = ((ulong)textureResource & 0xF0FFFFFFFFUL) | ((ulong)((byte)(Header.Indice - 1)) << 32) | 0x0320000000000000UL;
+            if(teResourceGUID.Type((ulong)textureResource) == 0xF1)
+            {
+                guid |= ((ulong)region << 40);
+            }
+            return new teResourceGUID(guid);
         }
 
-        public ulong GetPayloadGUID(ulong gUID) => (ulong)GetPayloadGUID(new teResourceGUID(gUID));
+        public ulong GetPayloadGUID(ulong gUID, int region = 1) => (ulong)GetPayloadGUID(new teResourceGUID(gUID), region);
 
         /// <summary>Load the texture payload</summary>
         /// <param name="payloadStream">The payload stream</param>
@@ -95,10 +100,10 @@ namespace TankLib {
         }
 
         /// <summary>Save DDS to stream</summary>
-        /// <param name="keepOpen">Keep the stream open after writing</param>
-        public Stream SaveToDDS(bool keepOpen=false) {
+        public Stream SaveToDDS() {
             MemoryStream stream = new MemoryStream();
-            SaveToDDS(stream, keepOpen);
+            SaveToDDS(stream, true);
+            stream.Position = 0;
             return stream;
         }
     }

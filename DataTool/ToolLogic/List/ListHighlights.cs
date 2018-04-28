@@ -5,8 +5,7 @@ using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using Newtonsoft.Json;
-using OWReplayLib;
-using OWReplayLib.Types;
+using TankLib;
 using STULib.Types;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
@@ -56,7 +55,7 @@ namespace DataTool.ToolLogic.List {
         [JsonObject(MemberSerialization.OptOut)]
         public class HighlightJSON {
             public string UUID;
-            public uint PlayerID;
+            public long PlayerID;
             public string Flags;
             public string Map;
             public string Gamemode;
@@ -143,20 +142,20 @@ namespace DataTool.ToolLogic.List {
         
         protected ulong GetCosmeticKey(uint key) => (key & ~0xFFFFFFFF00000000ul) | 0x0250000000000000ul;
 
-        protected HighlightInfoJSON GetHighlightInfo(Highlight.HighlightInfoNew infoNew) {
+        protected HighlightInfoJSON GetHighlightInfo(teHighlight.HighlightInfo infoNew) {
             HighlightInfoJSON outputJson = new HighlightInfoJSON();
-            STUHero hero = GetInstance<STUHero>(infoNew.HeroMasterKey);
+            STUHero hero = GetInstance<STUHero>((ulong)infoNew.Hero);
 
             outputJson.Hero = GetString(hero?.Name);
             outputJson.Player = infoNew.PlayerName;
                 
-            STUUnlock_HighlightIntro intro = GetInstance<STUUnlock_HighlightIntro>(infoNew.HighlightIntro);
+            STUUnlock_HighlightIntro intro = GetInstance<STUUnlock_HighlightIntro>((ulong)infoNew.HighlightIntro);
             outputJson.HighlightIntro = GetString(intro.CosmeticName);
             
             // todo: outputJson.WeaponSkin
             // todo: outputJson.Skin
                 
-            STUHighlightType highlightType = GetInstance<STUHighlightType>(infoNew.HighlightType);
+            STUHighlightType highlightType = GetInstance<STUHighlightType>((ulong)infoNew.HighlightType);
             outputJson.HighlightType = GetString(highlightType?.Name) ?? "";
             return outputJson;
         }
@@ -166,8 +165,8 @@ namespace DataTool.ToolLogic.List {
             return GetString(map.DisplayName);
         }
 
-        protected HeroInfoJSON GetHeroInfo(Common.HeroInfo heroInfo) {
-            STUHero hero = GetInstance<STUHero>(heroInfo.HeroMasterKey);
+        protected HeroInfoJSON GetHeroInfo(teHeroData heroInfo) {
+            STUHero hero = GetInstance<STUHero>((ulong)heroInfo.Hero);
 
             HeroInfoJSON outputHero = new HeroInfoJSON {
                 Hero = GetString(hero.Name),
@@ -205,41 +204,41 @@ namespace DataTool.ToolLogic.List {
             return GetString(gamemode?.m_displayName);
         }
 
-        protected ReplayJSON GetReplay(Highlight.Replay replay) {
+        protected ReplayJSON GetReplay(teReplay replay) {
             ReplayJSON output = new ReplayJSON {BuildNumber = replay.BuildNumber};
 
-            ulong mapMetadataKey = (replay.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
+            ulong mapMetadataKey = ((ulong)replay.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
             output.Map = GetMapName(mapMetadataKey);
             output.HighlightInfo = GetHighlightInfo(replay.HighlightInfo);
-            output.Gamemode = GetGamemode(replay.Gamemode);
+            output.Gamemode = GetGamemode((ulong)replay.Gamemode);
             
             return output;
         } 
         
         public HighlightJSON GetHighlight(string file) {
-            HighlightReader reader = HighlightReader.FromFile(file);
+            teHighlight highlight = new teHighlight(File.OpenRead(file));
             
             HighlightJSON output = new HighlightJSON {
-                PlayerID = reader.Data.PlayerId,
-                Flags = reader.Data.Flags.ToString(),
+                PlayerID = highlight.PlayerId,
+                Flags = highlight.Flags.ToString(),
                 HeroInfo = new List<HeroInfoJSON>(),
                 HighlightInfo = new List<HighlightInfoJSON>(),
-                UUID = reader.Data.Info[0]?.UUID.ToString()
+                UUID = highlight.Info.FirstOrDefault()?.UUID.ToString()
             };
             
-            ulong mapMetadataKey = (reader.Data.MapDataKey & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
+            ulong mapMetadataKey = ((ulong)highlight.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
             output.Map = GetMapName(mapMetadataKey);
 
-            foreach (Common.HeroInfo heroInfo in reader.Data.HeroInfo) {
+            foreach (teHeroData heroInfo in highlight.Heroes) {
                 output.HeroInfo.Add(GetHeroInfo(heroInfo));
             }
 
-            foreach (Highlight.HighlightInfoNew infoNew in reader.Data.Info) {
+            foreach (teHighlight.HighlightInfo infoNew in highlight.Info) {
                 output.HighlightInfo.Add(GetHighlightInfo(infoNew));
             }
 
-            output.Replay = GetReplay(reader.Data.Replay);
-            output.Gamemode = GetGamemode(reader.Data.Gamemode);
+            output.Replay = GetReplay(new teReplay(highlight.Replay));
+            output.Gamemode = GetGamemode((ulong)highlight.Gamemode);
             
             return output;
         }
