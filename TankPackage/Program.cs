@@ -38,7 +38,14 @@ namespace TankPackage
             #region Initialize CASC
             Log("{0} v{1}", Assembly.GetExecutingAssembly().GetName().Name, Util.GetVersion());
             Log("Initializing CASC...");
-            Log("Set language to {0}", Flags.Language);
+            if (Flags.Language != null)
+            {
+                Log("Set language to {0}", Flags.Language);
+            }
+            if (Flags.SpeechLanguage != null)
+            {
+                Log("Set speech language to {0}", Flags.SpeechLanguage);
+            }
             CASCHandler.Cache.CacheAPM = Flags.UseCache;
             CASCHandler.Cache.CacheCDN = Flags.UseCache;
             CASCHandler.Cache.CacheCDNData = Flags.CacheData;

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using TankLib;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace STU2JSON
 {
@@ -92,10 +93,10 @@ namespace STU2JSON
             string[] files = Directory.GetFiles(path).Concat(Directory.GetDirectories(path)).ToArray();
             Console.Out.WriteLine($"Folder: {path}");
             output = Path.Combine(output, Path.GetFileName(path));
-            foreach (string file in files)
+            Parallel.ForEach(files, file =>
             {
                 MagicTheGathering(file, output);
-            }
+            });
         }
 
         // Parse File
@@ -110,7 +111,8 @@ namespace STU2JSON
                 {
                     teStructuredData stu = new teStructuredData(stream, true);
                     string prefix = string.Empty;
-                    if(stu.Instances.Length == 1)
+                    IEnumerable<int> instances = stu.Instances.Select((x, i) => new KeyValuePair<int, STUInstance>(i, x)).Where(x => x.Value.Usage == TypeUsage.Root).Select(x => x.Key);
+                    if (instances.Count() == 1)
                     {
                         prefix = $"{filename}_";
                         targetDir = output;
@@ -119,7 +121,7 @@ namespace STU2JSON
                     {
                         Directory.CreateDirectory(targetDir);
                     }
-                    for (int i = 0; i < stu.Instances.Count(); ++i)
+                    foreach (int i in instances)
                     {
                         string target = Path.Combine(targetDir, $"{prefix}{i}_{stu.InstanceInfo[i].Hash:X8}.json");
                         File.WriteAllText(target, JsonConvert.SerializeObject(stu.Instances[i] as object, Formatting.Indented));

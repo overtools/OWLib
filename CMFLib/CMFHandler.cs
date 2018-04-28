@@ -52,10 +52,10 @@ namespace CMFLib {
 
             byte[] key = provider.Key(header, name, digest, 32);
             byte[] iv = provider.IV(header, name, digest, 16);
-            
+#if DEBUG
             Console.Out.WriteLine($"{name}: key={string.Join(" ", key.Select(x => x.ToString("X2")))}");
             Console.Out.WriteLine($"{name}: iv={string.Join(" ", iv.Select(x => x.ToString("X2")))}");
-            
+#endif   
             return new KeyValuePair<byte[], byte[]>(key, iv);
         }
         

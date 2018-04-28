@@ -58,10 +58,12 @@ namespace TankLib.CASC {
 
         private static readonly string[] PTR_TAGS = new[]{
             "test",
-            "ptr"
+            "ptr",
+            "beta",
+            "alpha"
         };
 
-        public bool IsPTR => PTR_TAGS.Contains(BuildUID.Split('_').Last()) || PTR_TAGS.Contains(BuildName.Split('-').Last().ToLower());
+        public bool IsPTR => PTR_TAGS.Contains(InstallData?.Uid.Split('_').Last()) || PTR_TAGS.Contains(BuildName.Split('-').Last().ToLower());
         
         private int _versionsIndex; // todo
         

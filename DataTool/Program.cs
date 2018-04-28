@@ -117,17 +117,6 @@ namespace DataTool {
             Config.TextLanguage = Flags.Language ?? Config.TextLanguage;
             #endregion
 
-            //try {
-            //    foreach (Dictionary<string, string> build in Config.BuildInfo) {
-            //        if (!build.ContainsKey("Tags")) continue;
-            //        if (build["Tags"].Contains("XX?")) IsPTR = true;
-            //        // us ptr region is known as XX, so just look for it in the tags.
-            //        // this should work... untested for Asia
-            //    }
-            //} catch (NullReferenceException) {
-            //    // erm, cdn causes issues with this.
-            //}
-
             BuildVersion = uint.Parse(Config.BuildVersion.Split('.').Last());
 
             if (Flags.SkipKeys) {
