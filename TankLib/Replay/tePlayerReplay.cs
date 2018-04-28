@@ -1,12 +1,10 @@
 ﻿using System.IO;
 using System.Text;
-using TankLib.DataSerializer;
-using static TankLib.teHighlight;
-using static TankLib.DataSerializer.Logical;
+using TankLib.Helpers.DataSerializer;
 
-namespace TankLib
+namespace TankLib.Replay
 {
-    public class teReplay : ReadableData
+    public class tePlayerReplay : ReadableData
     {
         public byte FormatVersion;
         public uint BuildNumber;
@@ -18,11 +16,11 @@ namespace TankLib
         public teChecksum MapChecksum;
         public int ParamsBlockLength;
         public ReplayParams Params;
-        [Conditional("(helper.BitwiseAnd(Unknown1, 4)) != 0", new[] { "Unknown1" })]
+        [Logical.Conditional("(helper.BitwiseAnd(Unknown1, 4)) != 0", new[] { "Unknown1" })]
         public int HighlightInfoLength;
-        [Conditional("(helper.BitwiseAnd(Unknown1, 4)) != 0", new[] { "Unknown1" })]
-        public HighlightInfo HighlightInfo;
-        [ZstdBuffer(ZstdBufferSize.StreamEnd)]
+        [Logical.Conditional("(helper.BitwiseAnd(Unknown1, 4)) != 0", new[] { "Unknown1" })]
+        public tePlayerHighlight.HighlightInfo HighlightInfo;
+        [Logical.ZstdBuffer(Logical.ZstdBufferSize.StreamEnd)]
         public byte[] DecompressedBuffer;
 
         public class ReplayParams : ReadableData
@@ -32,14 +30,14 @@ namespace TankLib
             public ulong ExpectedDurationMS;
             public ulong StartMS;
             public ulong EndMS;
-            [DynamicSizeArray(typeof(int), typeof(teHeroData))]
-            public teHeroData[] Heroes;
+            [Logical.DynamicSizeArrayAttribute(typeof(int), typeof(HeroData))]
+            public HeroData[] Heroes;
         }
 
-        [Skip]
+        [Logical.Skip]
         public static readonly int MAGIC = Util.GetMagicBytesBE('p', 'r', 'p'); // Player RePlay
 
-        public teReplay(Stream stream, bool leaveOpen = false)
+        public tePlayerReplay(Stream stream, bool leaveOpen = false)
         {
             using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, leaveOpen))
             {

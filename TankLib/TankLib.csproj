@@ -85,7 +85,7 @@
     <Compile Include="Chunks\IChunk.cs" />
     <Compile Include="Chunks\teEffectChunkComponent.cs" />
     <Compile Include="Chunks\teEffectChunkEntityControl.cs" />
-    <Compile Include="Chunks\teEffectChunkVoiceStimulus.cs" />
+    <Compile Include="Chunks\teEffectComponentVoiceStimulus.cs" />
     <Compile Include="Chunks\teModelChunk_Cloth.cs" />
     <Compile Include="Chunks\teModelChunk_Hardpoint.cs" />
     <Compile Include="Chunks\teModelChunk_Model.cs" />
@@ -103,12 +103,12 @@
     <Compile Include="ExportFormats\SEAnim.cs" />
     <Compile Include="ExportFormats\SkeletonRefpose.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Helpers\DataSerializer\Logical.cs" />
+    <Compile Include="Helpers\DataSerializer\Serializer.cs" />
     <Compile Include="Helpers\FastStruct.cs" />
     <Compile Include="Helpers\Hash\CRC.cs" />
     <Compile Include="Helpers\ISerializable.cs" />
-    <Compile Include="teHeroData.cs" />
-    <Compile Include="teReplay.cs" />
-    <Compile Include="DataSerializer\Logical.cs" />
+    <Compile Include="Replay\HeroData.cs" />
     <Compile Include="Helpers\SerializableHelper.cs" />
     <Compile Include="Math\DBID.cs" />
     <Compile Include="Math\Half\Half.cs" />
@@ -126,8 +126,8 @@
     <Compile Include="Math\teVec3A.cs" />
     <Compile Include="Math\teVec4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="teHighlight.cs" />
-    <Compile Include="DataSerializer\Serializer.cs" />
+    <Compile Include="Replay\tePlayerHighlight.cs" />
+    <Compile Include="Replay\tePlayerReplay.cs" />
     <Compile Include="STU\ISerializable_STU.cs" />
     <Compile Include="STU\IStructuredDataFieldReader.cs" />
     <Compile Include="STU\Primitives\STUf32Primitive.cs" />
