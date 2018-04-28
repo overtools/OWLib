@@ -461,7 +461,7 @@ namespace DataTool.SaveLogic {
                         texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID)));
                     }
 
-                    using (Stream convertedStream = texture.SaveToDDS(true)) {
+                    using (Stream convertedStream = texture.SaveToDDS()) {
                         if (convertedStream.Length == 0) {
                             WriteFile(convertedStream, $"{filePath}.{convertType}");
                             return;
