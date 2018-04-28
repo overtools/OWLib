@@ -109,35 +109,10 @@ namespace DataTool {
                 Log("Set speech language to {0}", Flags.SpeechLanguage);
             }
 
-            //CDNIndexHandler.Cache.Enabled = Flags.UseCache;
-            //CDNIndexHandler.Cache.CacheData = Flags.CacheData;
-            //CDNIndexHandler.Cache.Validate = Flags.ValidateCache;
-
-            // ngdp:us:pro
-            // http:us:pro:us.patch.battle.net:1119
-            if (Flags.OverwatchDirectory.ToLowerInvariant().Substring(0, 5) == "ngdp:") {
-                throw new Exception();
-                //string cdn = Flags.OverwatchDirectory.Substring(5, 4);
-                //string[] parts = Flags.OverwatchDirectory.Substring(5).Split(':');
-                //string region = "us";
-                //string product = "pro"; 
-                //if (parts.Length > 1) {
-                //    region = parts[1];
-                //}
-                //if (parts.Length > 2) {
-                //    product = parts[2];
-                //}
-                //if (cdn == "bnet") {
-                //    Config = CASCConfig.LoadOnlineStorageConfig(product, region);
-                //} else {
-                //    if (cdn == "http") {
-                //        string host = string.Join(":", parts.Skip(3));
-                //        Config = CASCConfig.LoadOnlineStorageConfig(host, product, region, true, true, true);
-                //    }
-                //}
-            } else {
-                Config = CASCConfig.LoadLocalStorageConfig(Flags.OverwatchDirectory, !Flags.SkipKeys, false);
-            }
+            CASCHandler.Cache.CacheAPM = Flags.UseCache;
+            CASCHandler.Cache.CacheCDN = Flags.UseCache;
+            CASCHandler.Cache.CacheCDNData = Flags.CacheData;
+            Config = CASCConfig.LoadFromString(Flags.OverwatchDirectory, Flags.SkipKeys);
             Config.SpeechLanguage = Flags.SpeechLanguage ?? Flags.Language ?? Config.SpeechLanguage;
             Config.TextLanguage = Flags.Language ?? Config.TextLanguage;
             #endregion
