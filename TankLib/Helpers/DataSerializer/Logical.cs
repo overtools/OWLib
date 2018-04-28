@@ -9,11 +9,11 @@ using System.Text;
 using DynamicExpresso;
 using ZstdNet;
 
-namespace TankLib.DataSerializer
+namespace TankLib.Helpers.DataSerializer
 {
     public class Logical
     {
-        public class Skip : IConditionalType
+        public class Skip : ConditionalType
         {
             public override bool ShouldDo(FieldInfo[] fields, object owner)
             {
@@ -21,7 +21,7 @@ namespace TankLib.DataSerializer
             }
         }
 
-        public class Default : IReadableType
+        public class Default : ReadableType
         {
             public override object Read(BinaryReader reader, FieldInfo field)
             {
@@ -34,7 +34,7 @@ namespace TankLib.DataSerializer
             }
         }
 
-        public class Conditional : IConditionalType
+        public class Conditional : ConditionalType
         {
             public string Expression;
             public string[] Variables;
@@ -59,7 +59,7 @@ namespace TankLib.DataSerializer
             }
         }
 
-        public class FixedSizeArrayAttribute : IReadableType
+        public class FixedSizeArrayAttribute : ReadableType
         {
             protected Type Type;
             protected uint Count;
@@ -94,7 +94,7 @@ namespace TankLib.DataSerializer
             }
         }
 
-        public class DynamicSizeArrayAttribute : IReadableType
+        public class DynamicSizeArrayAttribute : ReadableType
         {
             public Type CountType;
             public Type Type;
@@ -136,7 +136,7 @@ namespace TankLib.DataSerializer
             }
         }
 
-        public class NullPaddedStringAttribute : IReadableType
+        public class NullPaddedStringAttribute : ReadableType
         {
             public Encoding EncodingType;
             public int? TotalWidth;
@@ -176,7 +176,7 @@ namespace TankLib.DataSerializer
             StreamEnd = 1
         }
 
-        public class ZstdBuffer : IReadableType
+        public class ZstdBuffer : ReadableType
         {
             public ZstdBufferSize Size;
             public long CompressedSize;

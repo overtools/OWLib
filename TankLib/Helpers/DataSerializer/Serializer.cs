@@ -5,12 +5,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using static TankLib.DataSerializer.Logical;
 
-namespace TankLib.DataSerializer
+namespace TankLib.Helpers.DataSerializer
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-    public abstract class IReadableType : Attribute
+    public abstract class ReadableType : Attribute
     {
         public virtual object Read(BinaryReader reader, FieldInfo field)
         {
@@ -34,7 +33,7 @@ namespace TankLib.DataSerializer
     }
 
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-    public abstract class IConditionalType : Attribute
+    public abstract class ConditionalType : Attribute
     {
         public virtual bool ShouldDo(FieldInfo[] fields, object owner)
         {
@@ -44,9 +43,9 @@ namespace TankLib.DataSerializer
 
     public class ReadableData
     {
-        [Skip]
+        [Logical.Skip]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        internal Dictionary<string, IReadableType> __readabledata_attrs = new Dictionary<string, IReadableType>();
+        internal Dictionary<string, ReadableType> __readabledata_attrs = new Dictionary<string, ReadableType>();
 
         public long GetMutableSize(Type t, object obj)
         {
@@ -54,10 +53,10 @@ namespace TankLib.DataSerializer
             long size = 0;
             foreach (FieldInfo field in fields)
             {
-                IReadableType type = field.GetCustomAttributes<IReadableType>().FirstOrDefault();
-                if (type == null) type = new Default();
+                ReadableType type = field.GetCustomAttributes<ReadableType>().FirstOrDefault();
+                if (type == null) type = new Logical.Default();
 
-                IEnumerable<IConditionalType> conditions = field.GetCustomAttributes<IConditionalType>();
+                IEnumerable<ConditionalType> conditions = field.GetCustomAttributes<ConditionalType>();
 
                 if (field.FieldType.IsArray || field.GetValue(obj) is string)
                 {
@@ -104,7 +103,7 @@ namespace TankLib.DataSerializer
         {
             FieldInfo[] fields = ReaderHelper.GetFields(t);
             long size = 0;
-            Dictionary<string, IReadableType> attrs = null;
+            Dictionary<string, ReadableType> attrs = null;
 
             if (t.IsSubclassOf(typeof(ReadableData)))
             {
@@ -113,15 +112,15 @@ namespace TankLib.DataSerializer
 
             foreach (FieldInfo field in fields)
             {
-                IReadableType type = field.GetCustomAttributes<IReadableType>()
-                    .FirstOrDefault(x => x.GetType() != typeof(Conditional));
-                if (type == null) type = new Default();
+                ReadableType type = field.GetCustomAttributes<ReadableType>()
+                    .FirstOrDefault(x => x.GetType() != typeof(Logical.Conditional));
+                if (type == null) type = new Logical.Default();
                 if (breakStartField != null && field.Name == breakStartField)
                     return size + (breakIncludeBaseStartSize ? type.GetNoDataStartSize(field, field.GetValue(obj)) : 0);
 
-                IEnumerable<IConditionalType> conditions = field.GetCustomAttributes<IConditionalType>();
+                IEnumerable<ConditionalType> conditions = field.GetCustomAttributes<ConditionalType>();
                 bool skip = false;
-                foreach (IConditionalType condition in conditions)
+                foreach (ConditionalType condition in conditions)
                 {
                     if (!condition.ShouldDo(fields, obj)) skip = true;
                 }
@@ -195,20 +194,20 @@ namespace TankLib.DataSerializer
             FieldInfo[] fields = ReaderHelper.GetFields(GetType());
             foreach (FieldInfo field in fields)
             {
-                IReadableType type = field.GetCustomAttributes<IReadableType>().FirstOrDefault();
+                ReadableType type = field.GetCustomAttributes<ReadableType>().FirstOrDefault();
 
-                IEnumerable<IConditionalType> conditions = field.GetCustomAttributes<IConditionalType>();
+                IEnumerable<ConditionalType> conditions = field.GetCustomAttributes<ConditionalType>();
                 bool skip = false;
-                foreach (IConditionalType condition in conditions)
+                foreach (ConditionalType condition in conditions)
                 {
                     if (!condition.ShouldDo(fields, this)) skip = true;
                 }
 
                 if (skip) continue;
 
-                if (type == null) type = new Default();
+                if (type == null) type = new Logical.Default();
                 field.SetValue(this, type.Read(reader, field));
-                if (__readabledata_attrs == null) __readabledata_attrs = new Dictionary<string, IReadableType>();
+                if (__readabledata_attrs == null) __readabledata_attrs = new Dictionary<string, ReadableType>();
                 __readabledata_attrs[field.Name] = type;
             }
         }
@@ -238,19 +237,19 @@ namespace TankLib.DataSerializer
         {
             switch (t.Name)
             {
+                case "UInt64":
+                case "Int64":
+                    return 8;
                 case "Int32":
                 case "UInt32":
                 case "Single":
                     return 4;
-                case "Char":
-                case "Byte":
-                    return 1;
-                case "UInt64":
-                case "Int64":
-                    return 8;
                 case "UInt16":
                 case "Int16":
                     return 2;
+                case "Char":
+                case "Byte":
+                    return 1;
 
             }
             throw new Exception("unknown type");
@@ -287,7 +286,7 @@ namespace TankLib.DataSerializer
 
             if (isStruct)
             {
-                MethodInfo method = typeof(TankLib.Extensions).GetMethod("Read").MakeGenericMethod(type);
+                MethodInfo method = typeof(Extensions).GetMethod(nameof(Extensions.Read)).MakeGenericMethod(type);
                 return method.Invoke(reader, new object[] { reader });
             }
 

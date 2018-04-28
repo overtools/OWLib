@@ -5,8 +5,8 @@ using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using Newtonsoft.Json;
-using TankLib;
 using STULib.Types;
+using TankLib.Replay;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
@@ -142,7 +142,7 @@ namespace DataTool.ToolLogic.List {
         
         protected ulong GetCosmeticKey(uint key) => (key & ~0xFFFFFFFF00000000ul) | 0x0250000000000000ul;
 
-        protected HighlightInfoJSON GetHighlightInfo(teHighlight.HighlightInfo infoNew) {
+        protected HighlightInfoJSON GetHighlightInfo(tePlayerHighlight.HighlightInfo infoNew) {
             HighlightInfoJSON outputJson = new HighlightInfoJSON();
             STUHero hero = GetInstance<STUHero>((ulong)infoNew.Hero);
 
@@ -165,7 +165,7 @@ namespace DataTool.ToolLogic.List {
             return GetString(map.DisplayName);
         }
 
-        protected HeroInfoJSON GetHeroInfo(teHeroData heroInfo) {
+        protected HeroInfoJSON GetHeroInfo(HeroData heroInfo) {
             STUHero hero = GetInstance<STUHero>((ulong)heroInfo.Hero);
 
             HeroInfoJSON outputHero = new HeroInfoJSON {
@@ -204,41 +204,41 @@ namespace DataTool.ToolLogic.List {
             return GetString(gamemode?.m_displayName);
         }
 
-        protected ReplayJSON GetReplay(teReplay replay) {
-            ReplayJSON output = new ReplayJSON {BuildNumber = replay.BuildNumber};
+        protected ReplayJSON GetReplay(tePlayerReplay playerReplay) {
+            ReplayJSON output = new ReplayJSON {BuildNumber = playerReplay.BuildNumber};
 
-            ulong mapMetadataKey = ((ulong)replay.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
+            ulong mapMetadataKey = ((ulong)playerReplay.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
             output.Map = GetMapName(mapMetadataKey);
-            output.HighlightInfo = GetHighlightInfo(replay.HighlightInfo);
-            output.Gamemode = GetGamemode((ulong)replay.Gamemode);
+            output.HighlightInfo = GetHighlightInfo(playerReplay.HighlightInfo);
+            output.Gamemode = GetGamemode((ulong)playerReplay.Gamemode);
             
             return output;
         } 
         
         public HighlightJSON GetHighlight(string file) {
-            teHighlight highlight = new teHighlight(File.OpenRead(file));
+            tePlayerHighlight playerHighlight = new tePlayerHighlight(File.OpenRead(file));
             
             HighlightJSON output = new HighlightJSON {
-                PlayerID = highlight.PlayerId,
-                Flags = highlight.Flags.ToString(),
+                PlayerID = playerHighlight.PlayerId,
+                Flags = playerHighlight.Flags.ToString(),
                 HeroInfo = new List<HeroInfoJSON>(),
                 HighlightInfo = new List<HighlightInfoJSON>(),
-                UUID = highlight.Info.FirstOrDefault()?.UUID.ToString()
+                UUID = playerHighlight.Info.FirstOrDefault()?.UUID.ToString()
             };
             
-            ulong mapMetadataKey = ((ulong)highlight.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
+            ulong mapMetadataKey = ((ulong)playerHighlight.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
             output.Map = GetMapName(mapMetadataKey);
 
-            foreach (teHeroData heroInfo in highlight.Heroes) {
+            foreach (HeroData heroInfo in playerHighlight.Heroes) {
                 output.HeroInfo.Add(GetHeroInfo(heroInfo));
             }
 
-            foreach (teHighlight.HighlightInfo infoNew in highlight.Info) {
+            foreach (tePlayerHighlight.HighlightInfo infoNew in playerHighlight.Info) {
                 output.HighlightInfo.Add(GetHighlightInfo(infoNew));
             }
 
-            output.Replay = GetReplay(new teReplay(highlight.Replay));
-            output.Gamemode = GetGamemode((ulong)highlight.Gamemode);
+            output.Replay = GetReplay(new tePlayerReplay(playerHighlight.Replay));
+            output.Gamemode = GetGamemode((ulong)playerHighlight.Gamemode);
             
             return output;
         }

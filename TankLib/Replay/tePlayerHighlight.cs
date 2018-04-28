@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using TankLib.Helpers.DataSerializer;
 using TankLib.Math;
-using TankLib.DataSerializer;
-using static TankLib.DataSerializer.Logical;
 
-namespace TankLib
+namespace TankLib.Replay
 {
-    public class teHighlight : ReadableData
+    public class tePlayerHighlight : ReadableData
     {
         public class FillerStruct : ReadableData
         {
@@ -31,7 +30,7 @@ namespace TankLib
         {
             Top5Highlight = 0x0, // Displayed in the "Top 5" section
             PlayOfTheGame = 0x1, // POTG
-            ManualHighlight = 0x4, // if false, game will display "New" label
+            ManualHighlight = 0x4 // if false, game will display "New" label
         }
 
         public byte FormatVersion;
@@ -47,18 +46,18 @@ namespace TankLib
         public HighlightUIFlags Flags;
         public teResourceGUID Map;
         public teResourceGUID Gamemode;
-        [DynamicSizeArray(typeof(int), typeof(HighlightInfo))]
+        [Logical.DynamicSizeArrayAttribute(typeof(int), typeof(HighlightInfo))]
         public HighlightInfo[] Info;
-        [DynamicSizeArray(typeof(int), typeof(teHeroData))]
-        public teHeroData[] Heroes;
+        [Logical.DynamicSizeArrayAttribute(typeof(int), typeof(HeroData))]
+        public HeroData[] Heroes;
         public uint Unknown5;
         public uint Unknown6;
-        [DynamicSizeArray(typeof(byte), typeof(FillerStruct))]
+        [Logical.DynamicSizeArrayAttribute(typeof(byte), typeof(FillerStruct))]
         public FillerStruct[] FillerStructs;
         
         public class HighlightInfo : ReadableData
         {
-            [NullPaddedString]
+            [Logical.NullPaddedStringAttribute]
             public string PlayerName;
 
             public byte UnknownByte;
@@ -87,13 +86,13 @@ namespace TankLib
             public teUUID UUID;
         }
 
-        [Skip]
+        [Logical.Skip]
         public static readonly int MAGIC = Util.GetMagicBytesBE('p', 'h', 'l'); // Player HighLight
 
-        [Skip]
+        [Logical.Skip]
         public MemoryStream Replay;
 
-        public teHighlight(Stream stream, bool leaveOpen = false)
+        public tePlayerHighlight(Stream stream, bool leaveOpen = false)
         {
             using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, leaveOpen))
             {

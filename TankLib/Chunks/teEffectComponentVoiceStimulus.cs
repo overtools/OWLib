@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace TankLib.Chunks {
-    public class teEffectChunkVoiceStimulus : IChunk {
+    public class teEffectComponentVoiceStimulus : IChunk {
         public string ID => "ECVS";
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
