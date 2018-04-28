@@ -26,7 +26,7 @@ namespace DataTool {
         public static RootHandler Root;
         public static ToolFlags Flags;
         public static uint BuildVersion;
-        public static bool IsPTR;
+        public static bool IsPTR => Config?.IsPTR == true;
 
         public static bool ValidKey(ulong key) => Files.ContainsKey(key);
         
@@ -128,13 +128,13 @@ namespace DataTool {
             //    // erm, cdn causes issues with this.
             //}
 
-            BuildVersion = uint.Parse(Config.BuildName.Split('.').Last());
+            BuildVersion = uint.Parse(Config.BuildVersion.Split('.').Last());
 
             if (Flags.SkipKeys) {
                 Log("Disabling Key auto-detection...");
             }
 
-            Log("Using Overwatch Version {0}", Config.BuildName);
+            Log("Using Overwatch Version {0}", Config.BuildVersion);
             CASC = CASCHandler.Open(Config);
             Root = CASC.RootHandler;
             //if (Root== null) {

@@ -61,7 +61,7 @@ namespace TankLib.CASC {
             "ptr"
         };
 
-        public bool IsPTR => PTR_TAGS.Contains(InstallData?.Uid.Split('_').Last()) == true;
+        public bool IsPTR => PTR_TAGS.Contains(BuildUID.Split('_').Last()) || PTR_TAGS.Contains(BuildName.Split('-').Last().ToLower());
         
         private int _versionsIndex; // todo
         
@@ -100,9 +100,9 @@ namespace TankLib.CASC {
         //public string PartialPrioritySize => _Builds[ActiveBuild]["partial-priority-size"][0];        
         public string EncodingSize => Builds[ActiveBuild]["encoding-size"][0];
         public string PatchSize => Builds[ActiveBuild]["patch-size"][0];
-        
+
         public string BuildUID => Builds[ActiveBuild]["build-uid"][0];
-        //public static string GlobalCustomCDN;
+        public string BuildName => Builds[ActiveBuild]["build-name"][0];
         public string CDNHost => CDNHosts[0];
         public string CDNUrl {
             get {
@@ -121,7 +121,7 @@ namespace TankLib.CASC {
         public List<string> PatchArchives => _cdnConfig["patch-archives"];
         public string PatchArchiveGroup => _cdnConfig["patch-archive-group"][0];
         
-        public string BuildName => GetActiveBuild()?["Version"] ?? _versionsData[_versionsIndex]["VersionsName"];
+        public string BuildVersion => GetActiveBuild()?["Version"] ?? _versionsData[_versionsIndex]["VersionsName"];
 
         public bool LoadPackageManifest = true;
         public bool LoadContentManifest = true;

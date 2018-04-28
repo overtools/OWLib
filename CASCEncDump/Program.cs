@@ -52,7 +52,7 @@ namespace CASCEncDump {
             MapCMF(language);
 
             //var temp = Config.Builds[Config.ActiveBuild].KeyValue;
-            BuildVersion = uint.Parse(Config.BuildName.Split('.').Last());
+            BuildVersion = uint.Parse(Config.BuildVersion.Split('.').Last());
 
             // c:\\ow\\game\\Overwatch dump
             // "D:\Games\Overwatch Test" compare 44022

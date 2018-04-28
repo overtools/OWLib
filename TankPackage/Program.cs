@@ -47,14 +47,14 @@ namespace TankPackage
             Config.TextLanguage = Flags.Language ?? Config.TextLanguage;
             #endregion
 
-            BuildVersion = uint.Parse(Config.BuildName.Split('.').Last());
+            BuildVersion = uint.Parse(Config.BuildVersion.Split('.').Last());
 
             if (Flags.SkipKeys)
             {
                 Log("Disabling Key auto-detection...");
             }
 
-            Log("Using Overwatch Version {0}", Config.BuildName);
+            Log("Using Overwatch Version {0}", Config.BuildVersion);
             CASC = CASCHandler.Open(Config);
             Root = CASC.RootHandler;
             if (Root == null)
