@@ -1137,9 +1137,10 @@ namespace DataTool.ConvertLogic {
             
             public void Read(BinaryReader reader) {
                 // using a different structure to the wiki :thinking:
-                Location = (SoundLocation)reader.ReadUInt32();
-                
-                byte unknown = reader.ReadByte();
+                Location = (SoundLocation)reader.ReadByte();
+
+                ushort u1 = reader.ReadUInt16();
+                ushort u2 = reader.ReadUInt16();
 
                 SoundID = reader.ReadUInt32();
             }
@@ -1177,7 +1178,7 @@ namespace DataTool.ConvertLogic {
             public uint[] Actions;
             
             public void Read(BinaryReader reader) {
-                uint numActions = reader.ReadUInt32();
+                byte numActions = reader.ReadByte();
 
                 Actions = new uint[numActions];
                 for (int i = 0; i < numActions; i++) {
