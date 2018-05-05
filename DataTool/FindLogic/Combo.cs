@@ -874,7 +874,6 @@ namespace DataTool.FindLogic {
                     info.SoundFiles[guid] = soundFileInfo;
                     break;
                 case 0x43:
-                    break;  // todo: parser dies on some files. they updated wwise? (new water bullet sfx)
                     if (info.SoundBanks.ContainsKey(guid)) break;
                     
                     WWiseBankInfo bankInfo = new WWiseBankInfo(guid);
