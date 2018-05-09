@@ -85,7 +85,10 @@ namespace DataTool.ToolLogic.List {
 
             STUHeroUnlocks unlocks = GetInstance<STUHeroUnlocks>(guid);
             if (unlocks == null) return null;
-            @return["Default"] = GatherUnlocks(unlocks.SystemUnlocks?.Unlocks?.Select(it => (ulong)it));
+            
+            var systemUnlocks = GatherUnlocks(unlocks.SystemUnlocks?.Unlocks?.Select(it => (ulong)it));
+            @return["Default"] = new HashSet<ItemInfo>(systemUnlocks.Where(i => i.Unlock.LeagueTeam == null));
+            @return["OWL"] = new HashSet<ItemInfo>(systemUnlocks.Where(i => i.Unlock.LeagueTeam != null));
 
             if (unlocks.Unlocks != null) {
                 foreach (STUUnlocks defaultUnlocks in unlocks.Unlocks) {
