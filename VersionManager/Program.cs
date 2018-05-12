@@ -57,9 +57,9 @@ namespace VersionManager {
             DataTool.Program.Config.TextLanguage = Flags.Language ?? DataTool.Program.Config.TextLanguage;
             #endregion
 
-            DataTool.Program.BuildVersion = uint.Parse(DataTool.Program.Config.BuildName.Split('.').Last());
+            DataTool.Program.BuildVersion = uint.Parse(DataTool.Program.Config.BuildVersion.Split('.').Last());
 
-            Log("Using Overwatch Version {0}", DataTool.Program.Config.BuildName);
+            Log("Using Overwatch Version {0}", DataTool.Program.Config.BuildVersion);
             DataTool.Program.CASC = CASCHandler.Open(DataTool.Program.Config);
             DataTool.Program.Root = DataTool.Program.CASC.RootHandler;
             

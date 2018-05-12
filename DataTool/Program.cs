@@ -26,7 +26,7 @@ namespace DataTool {
         public static RootHandler Root;
         public static ToolFlags Flags;
         public static uint BuildVersion;
-        public static bool IsPTR;
+        public static bool IsPTR => Config?.IsPTR == true;
 
         public static bool ValidKey(ulong key) => Files.ContainsKey(key);
         
@@ -109,57 +109,21 @@ namespace DataTool {
                 Log("Set speech language to {0}", Flags.SpeechLanguage);
             }
 
-            //CDNIndexHandler.Cache.Enabled = Flags.UseCache;
-            //CDNIndexHandler.Cache.CacheData = Flags.CacheData;
-            //CDNIndexHandler.Cache.Validate = Flags.ValidateCache;
-
-            // ngdp:us:pro
-            // http:us:pro:us.patch.battle.net:1119
-            if (Flags.OverwatchDirectory.ToLowerInvariant().Substring(0, 5) == "ngdp:") {
-                throw new Exception();
-                //string cdn = Flags.OverwatchDirectory.Substring(5, 4);
-                //string[] parts = Flags.OverwatchDirectory.Substring(5).Split(':');
-                //string region = "us";
-                //string product = "pro"; 
-                //if (parts.Length > 1) {
-                //    region = parts[1];
-                //}
-                //if (parts.Length > 2) {
-                //    product = parts[2];
-                //}
-                //if (cdn == "bnet") {
-                //    Config = CASCConfig.LoadOnlineStorageConfig(product, region);
-                //} else {
-                //    if (cdn == "http") {
-                //        string host = string.Join(":", parts.Skip(3));
-                //        Config = CASCConfig.LoadOnlineStorageConfig(host, product, region, true, true, true);
-                //    }
-                //}
-            } else {
-                Config = CASCConfig.LoadLocalStorageConfig(Flags.OverwatchDirectory, !Flags.SkipKeys, false);
-            }
+            CASCHandler.Cache.CacheAPM = Flags.UseCache;
+            CASCHandler.Cache.CacheCDN = Flags.UseCache;
+            CASCHandler.Cache.CacheCDNData = Flags.CacheData;
+            Config = CASCConfig.LoadFromString(Flags.OverwatchDirectory, Flags.SkipKeys);
             Config.SpeechLanguage = Flags.SpeechLanguage ?? Flags.Language ?? Config.SpeechLanguage;
             Config.TextLanguage = Flags.Language ?? Config.TextLanguage;
             #endregion
 
-            //try {
-            //    foreach (Dictionary<string, string> build in Config.BuildInfo) {
-            //        if (!build.ContainsKey("Tags")) continue;
-            //        if (build["Tags"].Contains("XX?")) IsPTR = true;
-            //        // us ptr region is known as XX, so just look for it in the tags.
-            //        // this should work... untested for Asia
-            //    }
-            //} catch (NullReferenceException) {
-            //    // erm, cdn causes issues with this.
-            //}
-
-            BuildVersion = uint.Parse(Config.BuildName.Split('.').Last());
+            BuildVersion = uint.Parse(Config.BuildVersion.Split('.').Last());
 
             if (Flags.SkipKeys) {
                 Log("Disabling Key auto-detection...");
             }
 
-            Log("Using Overwatch Version {0}", Config.BuildName);
+            Log("Using Overwatch Version {0}", Config.BuildVersion);
             CASC = CASCHandler.Open(Config);
             Root = CASC.RootHandler;
             //if (Root== null) {

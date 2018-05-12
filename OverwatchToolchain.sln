@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankLibHelper", "TankLibHel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankView", "TankView\TankView.csproj", "{C29334C6-48B8-4D1D-9071-7C91FDF8255F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankPackage", "TankPackage\TankPackage.csproj", "{7BDF341B-AB08-4F4A-83F4-6F9265B161A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{C29334C6-48B8-4D1D-9071-7C91FDF8255F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C29334C6-48B8-4D1D-9071-7C91FDF8255F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C29334C6-48B8-4D1D-9071-7C91FDF8255F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BDF341B-AB08-4F4A-83F4-6F9265B161A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BDF341B-AB08-4F4A-83F4-6F9265B161A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BDF341B-AB08-4F4A-83F4-6F9265B161A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BDF341B-AB08-4F4A-83F4-6F9265B161A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -165,6 +171,7 @@ Global
 		{39869F7A-4116-44C6-86B0-F8121DC32769} = {E953E84B-C7C0-4739-B65F-B7FD8D8B459F}
 		{C62BF6BE-3EC4-45AB-A935-0EAEC8840CB5} = {E953E84B-C7C0-4739-B65F-B7FD8D8B459F}
 		{C29334C6-48B8-4D1D-9071-7C91FDF8255F} = {E953E84B-C7C0-4739-B65F-B7FD8D8B459F}
+		{7BDF341B-AB08-4F4A-83F4-6F9265B161A5} = {E953E84B-C7C0-4739-B65F-B7FD8D8B459F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {225E86D0-10B9-4E96-8ED4-B8C90CB70682}
