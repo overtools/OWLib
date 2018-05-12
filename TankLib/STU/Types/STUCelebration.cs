@@ -4,11 +4,11 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xACCDE63F, "STUCelebration")]
     public class STUCelebration : STUInstance {
-        [STUFieldAttribute(0x71D9486D, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUUnlocks m_71D9486D;
+        [STUFieldAttribute(0x71D9486D, "m_celebrationUnlocks", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUUnlocks m_celebrationUnlocks;
 
-        [STUFieldAttribute(0xED999C8B)]
-        public teStructuredDataAssetRef<STUIdentifier> m_ED999C8B;
+        [STUFieldAttribute(0xED999C8B, "m_celebrationType")]
+        public teStructuredDataAssetRef<STUIdentifier> m_celebrationType;
 
         [STUFieldAttribute(0xF81F4386, "m_startTime")]
         public teStructuredDataDateAndTime m_startTime;

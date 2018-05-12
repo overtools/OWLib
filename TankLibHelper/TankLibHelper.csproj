@@ -63,6 +63,7 @@
     <Compile Include="ModeResult.cs" />
     <Compile Include="Modes\AlphaBetaData.cs" />
     <Compile Include="Modes\CreateClasses.cs" />
+    <Compile Include="Modes\DumpHashes.cs" />
     <Compile Include="Modes\FindMirrorTypes.cs" />
     <Compile Include="Modes\IMode.cs" />
     <Compile Include="Modes\TestTypeClasses.cs" />

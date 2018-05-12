@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
     public class THSE : IChunk {
-        public string Identifier => "THSE"; // ECHT - Effect ?????
+        public string Identifier => "THSE"; // ESHT - Effect ?????
         public string RootIdentifier => "TCFE"; // EFCT - Effect
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

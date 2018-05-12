@@ -389,3 +389,6 @@ B1B9C667, STUWaypointInstanceData
 15CB6532, STUWeaponComponent
 61386B75, STUWeaponDefinition
 0699809D, STUXPGain
+
+218AFE48, STUConfigVarUUID
+78A999D8, STUConfigVarUUIDBase

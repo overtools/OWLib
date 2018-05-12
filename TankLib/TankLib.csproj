@@ -84,8 +84,14 @@
     <Compile Include="CASC\MD5.cs" />
     <Compile Include="Chunks\IChunk.cs" />
     <Compile Include="Chunks\teEffectChunkComponent.cs" />
-    <Compile Include="Chunks\teEffectChunkEntityControl.cs" />
+    <Compile Include="Chunks\teEffect_CAT.cs" />
+    <Compile Include="Chunks\teEffectComponentEffect.cs" />
+    <Compile Include="Chunks\teEffectComponentEntity.cs" />
+    <Compile Include="Chunks\teEffectComponentEntityControl.cs" />
+    <Compile Include="Chunks\teEffectComponentModel.cs" />
+    <Compile Include="Chunks\teEffectComponentSound.cs" />
     <Compile Include="Chunks\teEffectComponentVoiceStimulus.cs" />
+    <Compile Include="Chunks\teEffect_SHT.cs" />
     <Compile Include="Chunks\teModelChunk_Cloth.cs" />
     <Compile Include="Chunks\teModelChunk_Hardpoint.cs" />
     <Compile Include="Chunks\teModelChunk_Model.cs" />
@@ -126,8 +132,10 @@
     <Compile Include="Math\teVec3A.cs" />
     <Compile Include="Math\teVec4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Replay\ReplayChecksum.cs" />
     <Compile Include="Replay\tePlayerHighlight.cs" />
     <Compile Include="Replay\tePlayerReplay.cs" />
+    <Compile Include="STU\InstanceExtensions.cs" />
     <Compile Include="STU\ISerializable_STU.cs" />
     <Compile Include="STU\IStructuredDataFieldReader.cs" />
     <Compile Include="STU\Primitives\STUf32Primitive.cs" />
@@ -1443,7 +1451,7 @@
     <Compile Include="STU\Types\STU_2170BC57.cs" />
     <Compile Include="STU\Types\STU_2186A97C.cs" />
     <Compile Include="STU\Types\STU_2187A0E8.cs" />
-    <Compile Include="STU\Types\STU_218AFE48.cs" />
+    <Compile Include="STU\Types\STUConfigVarUUID.cs" />
     <Compile Include="STU\Types\STU_219E8527.cs" />
     <Compile Include="STU\Types\STU_21A13145.cs" />
     <Compile Include="STU\Types\STU_21B064F1.cs" />
@@ -2796,7 +2804,7 @@
     <Compile Include="STU\Types\STU_78863ACE.cs" />
     <Compile Include="STU\Types\STU_789F95B2.cs" />
     <Compile Include="STU\Types\STU_78A70403.cs" />
-    <Compile Include="STU\Types\STU_78A999D8.cs" />
+    <Compile Include="STU\Types\STUConfigVarUUIDBase.cs" />
     <Compile Include="STU\Types\STU_78BB5AA0.cs" />
     <Compile Include="STU\Types\STU_78BF9026.cs" />
     <Compile Include="STU\Types\STU_78CD68B3.cs" />
@@ -4918,9 +4926,9 @@
     <Compile Include="teAnimation.cs" />
     <Compile Include="teAssetPackage.cs" />
     <Compile Include="teAssetPackagePayload.cs" />
-    <Compile Include="teChecksum.cs" />
     <Compile Include="teChunkedData.cs" />
-    <Compile Include="teEnums.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="teMapChunk.cs" />
     <Compile Include="teMaterial.cs" />
     <Compile Include="teMaterialData.cs" />
     <Compile Include="teResourceGUID.cs" />

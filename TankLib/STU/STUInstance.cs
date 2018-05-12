@@ -48,23 +48,20 @@ namespace TankLib.STU {
                 Type elementType = field.Key.FieldType.GetElementType();
                 if (elementType == null) return;
                 Array array;
-                // todo: has to be hardcoded as Ver1 doesn't carry this info
-                if (fieldInfo.Size == 0 || reader is InlineInstanceFieldReader) {  // inline
-                    BinaryReader data = assetFile.Data;
+                
+                BinaryReader data = assetFile.Data;
+                BinaryReader dynData = assetFile.DynData;
+                
+                if (assetFile.Format == teStructuredDataFormat.V2) {
+                    if (fieldInfo.Size == 0 || reader is InlineInstanceFieldReader) {  // inline
+                        int size = data.ReadInt32();
+                        if (size == 0) return;
+                        array = Array.CreateInstance(elementType, size);
 
-                    int size = data.ReadInt32();
-                    if (size == 0) return;
-                    array = Array.CreateInstance(elementType, size);
-      
-                    for (int i = 0; i != size; ++i) {
-                        reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
-                    }
-                    
-                } else {
-                    if (assetFile.Format == teStructuredDataFormat.V2) {
-                        BinaryReader data = assetFile.Data;
-                        BinaryReader dynData = assetFile.DynData;
-
+                        for (int i = 0; i != size; ++i) {
+                            reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
+                        }
+                    } else {
                         int offset = data.ReadInt32();
                         if (offset == -1) return;
                         dynData.Seek(offset);
@@ -77,25 +74,34 @@ namespace TankLib.STU {
                         for (int i = 0; i != size; ++i) {
                             reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
                         }
-                    } else {
-                        int offset = assetFile.Data.ReadInt32();
-                        if (offset == 0 || offset == -1) {
-                            array = null;
-                        } else {
-                            long afterPos = assetFile.Data.Position();
-
-                            assetFile.Data.BaseStream.Position = offset;
-                            int count = assetFile.Data.ReadInt32();
-                            array = Array.CreateInstance(elementType, count);
-                            for (int i = 0; i < count; i++) {
-                                int subOffset = assetFile.Data.ReadInt32();
-                                array.SetValue(assetFile.GetInstanceAtOffset(subOffset), i);
-                            }
-
-                            assetFile.Data.BaseStream.Position = afterPos;
-                        }
                     }
-                    
+                } else {
+                    long offset = data.ReadInt64();
+
+                    if (offset <= 0) {
+                        array = null;
+                    } else {
+                        long position = data.Position();
+
+                        data.BaseStream.Position = offset + assetFile.StartPos;
+
+                        long count = data.ReadInt64();
+                        long subOffset = data.ReadInt64();
+
+                        if (count != -1 && subOffset > 0) {
+                            array = Array.CreateInstance(elementType, count);
+
+                            data.BaseStream.Position = subOffset + assetFile.StartPos;
+                                
+                            for (int i = 0; i != count; ++i) {
+                                reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
+                            }
+                        } else {
+                            array = null;
+                        }
+                            
+                        data.BaseStream.Position = position + 8;
+                    }
                 }
                 field.Key.SetValue(this, array);
 
@@ -133,6 +139,10 @@ namespace TankLib.STU {
                     //    throw new InvalidDataException($"read len != field size. Type: '{GetType().Name}', Field: {stuField.Hash:X8}, Data offset: {startPosition}");
                 }
             } else if (assetFile.Format == teStructuredDataFormat.V1) {
+                if (instanceHash == 3929064937) {
+                    Debugger.Break();
+                }
+                
                 uint[] fieldOrder = teStructuredData.Manager.InstanceFields[instanceHash];
 
                 foreach (uint fieldHash in fieldOrder) {

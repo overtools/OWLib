@@ -7,14 +7,14 @@ namespace TankLib {
     public class teString {
         /// <summary>Value of the string</summary>
         public string Value;
-        public teEnums.SDAM Mutability;
+        public Enums.SDAM Mutability;
 
         public teString(string value) {
             Value = value;
-            Mutability = teEnums.SDAM.NONE;
+            Mutability = Enums.SDAM.NONE;
         }
         
-        public teString(string value, teEnums.SDAM mutability) {
+        public teString(string value, Enums.SDAM mutability) {
             Value = value;
             Mutability = mutability;
         }

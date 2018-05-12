@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace OWLib.Types.Chunk {
     public class TACE : IChunk {
-        public string Identifier => "TACE"; // ECHT - Effect Chunk ?????
+        public string Identifier => "TACE"; // ECAT - Effect Chunk ?????
         public string RootIdentifier => "TCFE"; // EFCT - Effect
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

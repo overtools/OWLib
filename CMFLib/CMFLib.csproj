@@ -108,6 +108,7 @@
     <Compile Include="Prometheus\PrometheusCMF_45420.cs" />
     <Compile Include="Prometheus\PrometheusCMF_45752.cs" />
     <Compile Include="Prometheus\PrometheusCMF_46137.cs" />
+    <Compile Include="Prometheus\PrometheusCMF_46510.cs" />
     <Compile Include="TACTKeyService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

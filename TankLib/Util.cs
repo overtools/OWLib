@@ -99,6 +99,11 @@ namespace TankLib {
                 return file.Version;
             }
             return file.Version + "-git-" + attrib.InformationalVersion;
-        }   
+        }
+
+        public static List<Type> GetAssemblyTypes<T>(Assembly assembly) {
+            List<Type> types = assembly.GetTypes().Where(type => type != typeof(T) && typeof(T).IsAssignableFrom(type)).ToList();
+            return types;
+        }
     }
 }

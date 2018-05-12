@@ -6,7 +6,7 @@ using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using OWLib;
-using STULib.Types;
+using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
 using static DataTool.Program;
@@ -66,10 +66,10 @@ namespace DataTool.ToolLogic.Extract {
             if (parsedTypes == null) return;
             
             foreach (ulong heroFile in TrackedFiles[0x75]) {
-                STUHero hero = GetInstance<STUHero>(heroFile);
+                STUHero hero = GetInstanceNew<STUHero>(heroFile);
                 if (hero == null) continue;
 
-                string heroNameActual = (GetString(hero.Name) ?? $"Unknown{GUID.Index(heroFile)}").TrimEnd(' ');
+                string heroNameActual = (GetString(hero.m_0EDCE350) ?? $"Unknown{GUID.Index(heroFile)}").TrimEnd(' ');
 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
                 foreach (string key in new [] {heroNameActual.ToLowerInvariant(), "*"}) {
@@ -87,9 +87,9 @@ namespace DataTool.ToolLogic.Extract {
                 
                 Log($"Processing data for {heroNameActual}");
                 
-                STUVoiceSetComponent soundSetComponentContainer = GetInstance<STUVoiceSetComponent>(hero.EntityMain);
+                STUVoiceSetComponent voiceSetComponent = GetInstanceNew<STUVoiceSetComponent>(hero.m_gameplayEntity);
 
-                if (soundSetComponentContainer?.VoiceSet == null) {
+                if (voiceSetComponent?.m_voiceDefinition == null) {
                     Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found");
                     return;
                 }
@@ -97,9 +97,9 @@ namespace DataTool.ToolLogic.Extract {
                 string heroFileName = GetValidFilename(heroNameActual);
                 
                 Combo.ComboInfo info = new Combo.ComboInfo();
-                Combo.Find(info, soundSetComponentContainer.VoiceSet);
+                Combo.Find(info, voiceSetComponent.m_voiceDefinition);
                 
-                SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName), info, soundSetComponentContainer.VoiceSet);
+                SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName), info, voiceSetComponent.m_voiceDefinition);
             }
         }
     }

@@ -37,11 +37,13 @@ namespace DataTool.Helper {
             return (stu?.Instances.Concat(ver2.HiddenInstances).OfType<T>().ToArray() ?? new T[0]);
         }
 
+        [Obsolete("GetInstances<T> is deprecated, please use GetInstancesNew<T> instead.")]
         public static T[] GetInstances<T>(ulong key) where T : Common.STUInstance  {
             ISTU stu = OpenSTUSafe(key);
             return stu?.Instances.OfType<T>().ToArray() ?? new T[0];
         }
 
+        [Obsolete("GetInstance<T> is deprecated, please use GetInstanceNew<T> instead.")]
         public static T GetInstance<T>(ulong key) where T : Common.STUInstance  {
             ISTU stu = OpenSTUSafe(key);
             return stu?.Instances.OfType<T>().FirstOrDefault();
@@ -67,8 +69,8 @@ namespace DataTool.Helper {
             }
         }
 
-        public static HashSet<ItemInfo> GatherUnlocks(IEnumerable<ulong> GUIDs) {
-            var @return = new HashSet<ItemInfo>();
+        public static HashSet<Unlock> GatherUnlocks(IEnumerable<ulong> GUIDs) {
+            var @return = new HashSet<Unlock>();
             if (GUIDs == null) return @return;
             foreach (var GUID in GUIDs) {
                 var unlock = GatherUnlock(GUID);
@@ -78,7 +80,7 @@ namespace DataTool.Helper {
             return @return;
         }
 
-        public static ItemInfo GatherUnlock(ulong key) {
+        public static Unlock GatherUnlock(ulong key) {
             STUUnlock unlock = GetInstance<STUUnlock>(key);
             if (unlock == null) return null;
 
@@ -96,7 +98,7 @@ namespace DataTool.Helper {
             if (name == null)
                 name = $"{GUID.LongKey(key):X12}";
 
-            return new ItemInfo(name, unlock.CosmeticRarity.ToString(), unlock.RealName, description, availableIn, unlock, key);
+            return new Unlock(name, unlock.CosmeticRarity.ToString(), unlock.RealName, description, availableIn, unlock, key);
         }
     }
 }

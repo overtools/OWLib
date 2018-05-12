@@ -46,7 +46,7 @@ namespace DataTool.ToolLogic.Extract {
                 }
 
                 if (invMaster.LevelUnlocks != null) {
-                    var unlocks = new HashSet<ItemInfo>();
+                    var unlocks = new HashSet<Unlock>();
                     foreach (var levelUnlocks in invMaster.LevelUnlocks) {
                         if (levelUnlocks?.Unlocks == null) continue;
                         foreach (var unlock in levelUnlocks.Unlocks)

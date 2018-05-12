@@ -3,10 +3,10 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace TankLib
+namespace TankLib.Replay
 {
     [StructLayout(LayoutKind.Explicit, Pack = 4, Size = 32)]
-    public unsafe struct teChecksum
+    public unsafe struct ReplayChecksum
     {
         private static readonly byte[] Key = {
             0x0C, 0x1A, 0xAB, 0xE8, 0xCC, 0xBF, 0x85, 0xBB, 0x77, 0x7B, 0xE2, 0xD0, 0xCB, 0x68, 0xD7, 0x35,
@@ -16,7 +16,7 @@ namespace TankLib
         [FieldOffset(0)]
         public fixed byte Data[32];
 
-        public teChecksum(string data)
+        public ReplayChecksum(string data)
         {
             fixed (byte* ptr = Data)
             {
@@ -27,7 +27,7 @@ namespace TankLib
             }
         }
 
-        public teChecksum(byte[] data)
+        public ReplayChecksum(byte[] data)
         {
             if (data.Length != 32)
             {
@@ -40,11 +40,11 @@ namespace TankLib
             }
         }
 
-        public static teChecksum Compute(byte[] input)
+        public static ReplayChecksum Compute(byte[] input)
         {
             using (HMACSHA256 sha256 = new HMACSHA256(Key))
             {
-                return new teChecksum(sha256.ComputeHash(input));
+                return new ReplayChecksum(sha256.ComputeHash(input));
             }
         }
 
@@ -64,7 +64,7 @@ namespace TankLib
             }
         }
 
-        public static implicit operator byte[] (teChecksum that)
+        public static implicit operator byte[] (ReplayChecksum that)
         {
             unsafe
             {

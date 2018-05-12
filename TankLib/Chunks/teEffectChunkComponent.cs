@@ -12,7 +12,7 @@ namespace TankLib.Chunks {
         public struct ComponentHeader {  // this is messy and only just works
             public long StartTimeOffset;
             public long EndTimeOffset;
-            public ulong Hardpoint;
+            public teResourceGUID Hardpoint;
             public float FloatOneA;
             public float FloatOneB;
             public long Unk;

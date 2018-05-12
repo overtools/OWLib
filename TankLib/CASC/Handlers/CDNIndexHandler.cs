@@ -174,7 +174,6 @@ namespace TankLib.CASC.Handlers {
 
                 try {
                     Stream stream = CASCHandler.Cache.OpenCDNFile(file, url, false);
-
                     if (stream != null) return stream;
 
                     return OpenFileDirect(url);

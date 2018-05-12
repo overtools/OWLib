@@ -13,7 +13,7 @@ namespace TankLib.Replay
         public byte Unknown1;
         public uint Unknown2;
         public uint Unknown3;
-        public teChecksum MapChecksum;
+        public ReplayChecksum MapChecksum;
         public int ParamsBlockLength;
         public ReplayParams Params;
         [Logical.Conditional("(helper.BitwiseAnd(Unknown1, 4)) != 0", new[] { "Unknown1" })]

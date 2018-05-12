@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -60,7 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConvertLogic\Sound.cs" />
-    <Compile Include="DataModels\ItemInfo.cs" />
+    <Compile Include="DataModels\Hero.cs" />
+    <Compile Include="DataModels\Unlock.cs" />
+    <Compile Include="DataModels\Loadout.cs" />
     <Compile Include="FindLogic\Combo.cs" />
     <Compile Include="Flag\AliasAttribute.cs" />
     <Compile Include="Flag\CLIFlagAttribute.cs" />

@@ -11,7 +11,7 @@ using static DataTool.Helper.Logger;
 
 namespace DataTool.SaveLogic.Unlock {
     public class Skin {
-        public static void Save(ICLIFlags flags, string skinName, string basePath, STUHero hero, string rarity, STUSkinOverride skinOverride, List<ItemInfo> weaponSkins) {
+        public static void Save(ICLIFlags flags, string skinName, string basePath, STUHero hero, string rarity, STUSkinOverride skinOverride, List<DataModels.Unlock> weaponSkins) {
             string heroName = GetString(hero.Name);
             string heroNamePath = GetValidFilename(heroName) ?? "Unknown";
             heroNamePath = heroNamePath.TrimEnd(' ');
@@ -19,10 +19,10 @@ namespace DataTool.SaveLogic.Unlock {
             string path = Path.Combine(basePath,
                 $"{heroNamePath}\\Skins\\{rarity}\\{GetValidFilename(skinName)}");
             
-            Dictionary<uint, ItemInfo> realWeaponSkins = new Dictionary<uint, ItemInfo>();
+            Dictionary<uint, DataModels.Unlock> realWeaponSkins = new Dictionary<uint, DataModels.Unlock>();
             if (weaponSkins != null) {
-                foreach (ItemInfo weaponSkin in weaponSkins) {
-                    realWeaponSkins[((STUUnlock_Weapon) weaponSkin.Unlock).Index] = weaponSkin;
+                foreach (DataModels.Unlock weaponSkin in weaponSkins) {
+                    realWeaponSkins[((STUUnlock_Weapon) weaponSkin.STU).Index] = weaponSkin;
                 }
             }
             
@@ -45,7 +45,7 @@ namespace DataTool.SaveLogic.Unlock {
 
                 string weaponSkinName = null;
                 if (realWeaponSkins.ContainsKey(replacementIndex)) {
-                    weaponSkinName = GetValidFilename(GetString(realWeaponSkins[replacementIndex].Unlock.CosmeticName));
+                    weaponSkinName = GetValidFilename(GetString(realWeaponSkins[replacementIndex].STU.CosmeticName));
                 }
 
                 Dictionary<ulong, ulong> weaponReplacements = weaponOverride.ProperReplacements ?? new Dictionary<ulong, ulong>();
@@ -122,10 +122,10 @@ namespace DataTool.SaveLogic.Unlock {
             Save(flags, GetFileName(skin.SkinOverride), path, hero, "", skinOverride, null);
         }
 
-        public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STUUnlock_Skin skin, List<ItemInfo> weaponSkins) {
+        public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STUUnlock_Skin skin, List<DataModels.Unlock> weaponSkins) {
             if (skin == null) return;
             LoudLog($"Extracting skin {GetString(hero.Name)} {GetString(skin.CosmeticName)}");
-            if (weaponSkins == null) weaponSkins = new List<ItemInfo>();
+            if (weaponSkins == null) weaponSkins = new List<DataModels.Unlock>();
             
             STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinResource);
             Save(flags, GetString(skin.CosmeticName).TrimEnd(' '), path, hero, rarity, skinOverride, weaponSkins);

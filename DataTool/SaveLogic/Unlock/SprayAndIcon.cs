@@ -7,19 +7,19 @@ using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic.Unlock {
     public class SprayAndIcon {
-        public static void SaveItems(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, List<ItemInfo> items) {
-            foreach (ItemInfo item in items) {
+        public static void SaveItems(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, List<DataModels.Unlock> items) {
+            foreach (DataModels.Unlock item in items) {
                 SaveItem(basePath, heroName, containerName, folderName, flags, item);
             }
         }
 
 
-        public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, ItemInfo item) {
+        public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, DataModels.Unlock item) {
             if (item == null) return;
             string name = GetValidFilename(item.Name).TrimEnd(' ').Replace(".", "");
             string type;
 
-            switch (item.Unlock) {
+            switch (item.STU) {
                 case STUUnlock_PlayerIcon _:
                     type = "Icons";
                     break;

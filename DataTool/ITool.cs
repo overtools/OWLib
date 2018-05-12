@@ -22,6 +22,7 @@ namespace DataTool {
                 CreateDirectoryFromFile(toolFlags.Output);
 
                 using (Stream file = File.OpenWrite(toolFlags.Output)) {
+                    file.SetLength(0);
                     using (TextWriter writer = new StreamWriter(file)) {
                         writer.WriteLine(json);
                     }

@@ -11,9 +11,9 @@ using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic.Unlock {
     public class VoiceLine {
-        public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, ItemInfo item, STUHero hero) {
+        public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, DataModels.Unlock item, STUHero hero) {
             if (item == null) return;
-            if (!(item.Unlock is STUUnlock_VoiceLine vl)) return;
+            if (!(item.STU is STUUnlock_VoiceLine vl)) return;
             const string type = "VoiceLines";
             string name = GetValidFilename(item.Name).Replace(".", "");
 

@@ -51,7 +51,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 teShaderCode shaderCode = new teShaderCode(IO.OpenFile(instance.Header.ShaderCode));
 
                 //if (shaderCode.Header.ShaderType != teEnums.teSHADER_TYPE.PIXEL) continue;
-                if (shaderCode.Header.ShaderType != teEnums.teSHADER_TYPE.VERTEX) continue;
+                if (shaderCode.Header.ShaderType != Enums.teSHADER_TYPE.VERTEX) continue;
                 //if (shaderCode.Header.ShaderType != teEnums.teSHADER_TYPE.COMPUTE) continue;
                 using (Stream file = File.OpenWrite(Path.Combine(path, IO.GetFileName(instance.Header.ShaderCode)))) {
                     file.SetLength(0);

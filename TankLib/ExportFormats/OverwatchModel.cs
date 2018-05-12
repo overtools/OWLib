@@ -48,7 +48,7 @@ namespace TankLib.ExportFormats {
                 }
                 
                 // todo: specify lod
-                teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh.Submeshes.Where(x => x.Descriptor.LOD == 1 || x.Descriptor.LOD == 255).ToArray(); // .Descriptor.LOD == 0
+                teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh.Submeshes.Where(x => x.Descriptor.LOD == 1 || x.Descriptor.LOD == -1).ToArray(); // .Descriptor.LOD == 0
                 writer.Write((uint)submeshes.Length);
                 writer.Write(0);  // hardpoints
                 

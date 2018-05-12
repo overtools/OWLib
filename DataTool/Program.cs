@@ -269,7 +269,7 @@ namespace DataTool {
                 if (!typeof(ICLIFlags).IsAssignableFrom(attrib.CustomFlags)) continue;
                 Log();
                 Log("Flags for {0}-*", toolType.Key);
-                typeof(FlagParser).GetMethod("FullHelp").MakeGenericMethod(flags).Invoke(null, new object[] { null, true });
+                typeof(FlagParser).GetMethod(nameof(FlagParser.FullHelp)).MakeGenericMethod(flags).Invoke(null, new object[] { null, true });
             }
         }
     }

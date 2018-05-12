@@ -33,10 +33,6 @@ namespace STULib.Types.Generic {
             [STUField(STUVersionOnly = new uint[] { 4 })]  // dont
             public InstanceUsage Usage = InstanceUsage.Root;
 
-            // Version 2.0 prefix
-            //[STUField(STUVersionOnly = new uint[] {2})]
-            //public uint FieldListIndex;
-
             public override string ToString() {
                 return ISTU.GetName(GetType());
             }

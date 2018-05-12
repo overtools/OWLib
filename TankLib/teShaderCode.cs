@@ -24,7 +24,7 @@ namespace TankLib {
             public int DataSize;
             
             /// <summary>Shader type</summary>
-            public teEnums.teSHADER_TYPE ShaderType;
+            public Enums.teSHADER_TYPE ShaderType;
         }
 
         /// <summary>Header Data</summary>

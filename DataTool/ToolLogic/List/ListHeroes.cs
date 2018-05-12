@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
 using Newtonsoft.Json;
 using OWLib;
-using STULib.Types;
-using STULib.Types.Generic;
+using TankLib.Math;
+using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
@@ -23,57 +24,23 @@ namespace DataTool.ToolLogic.List {
         public class HeroInfo {
             public string Name;
             public string Description;
-            public string Color;
-            public Dictionary<string, AbilityInfo> Abilities;
+            public teColorRGBA Color;
+            public List<Loadout> Loadouts;
 
             [JsonConverter(typeof(GUIDConverter))]
             public ulong GUID;
             
-            public HeroInfo(ulong guid, string name, string description, string color, Dictionary<string, AbilityInfo> abilities) {
+            public HeroInfo(ulong guid, string name, string description, teColorRGBA color, List<Loadout> loadouts) {
                 GUID = guid;
                 Name = name;
                 Description = description;
                 Color = color;
-                Abilities = abilities;
-            }
-        }
-
-        [JsonObject(MemberSerialization.OptOut)]
-        public class AbilityInfo {
-            public string Name;
-            public string Type;
-            public string Description;
-            
-            [JsonConverter(typeof(GUIDConverter))]
-            public ulong GUID;
-
-            public AbilityInfo() {}
-
-            public AbilityInfoInner ToInner() {
-                return new AbilityInfoInner(GUID, Name, new List<string> {Description}, Type);
-            }
-            
-            public AbilityInfo(ulong guid, string name, string description, string type) {
-                GUID = guid;
-                Name = name;
-                Type = type;
-                Description = description;
-            }
-        }
-
-        public class AbilityInfoInner : AbilityInfo {
-            public List<string> Descriptions;
-            
-            public AbilityInfoInner(ulong guid, string name, List<string> descriptions, string type) {
-                GUID = guid;
-                Name = name;
-                Type = type;
-                Descriptions = descriptions;
+                Loadouts = loadouts;
             }
         }
 
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<string, HeroInfo> heroes = GetHeroes();
+            Dictionary<string, Hero> heroes = GetHeroes();
 
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
@@ -83,32 +50,19 @@ namespace DataTool.ToolLogic.List {
 
             IndentHelper indentLevel = new IndentHelper();
             
-            foreach (KeyValuePair<string, HeroInfo> hero in heroes) {
+            foreach (KeyValuePair<string, Hero> hero in heroes) {
                 Log($"{hero.Value.Name}");
                 if (hero.Value.Description != null)
                     Log($"{indentLevel + 1}Description: {hero.Value.Description}");
                 
-                if (hero.Value.Color != null)
-                    Log($"{indentLevel + 1}Color: {hero.Value.Color}");
+                Log($"{indentLevel + 1}Color: {hero.Value.GalleryColor}");
 
-                if (hero.Value.Abilities != null) {
-                    Dictionary<string, AbilityInfoInner> abilities = new Dictionary<string, AbilityInfoInner>();
+                if (hero.Value.Loadouts != null) {
 
-                    foreach (KeyValuePair<string, AbilityInfo> ability in hero.Value.Abilities) {
-                        if (!abilities.ContainsKey(ability.Value.Name)) {
-                            abilities[ability.Value.Name] = ability.Value.ToInner();
-                        } else {
-                            abilities[ability.Value.Name].Descriptions.Add(ability.Value.Description);
-                        }
-                    }
-
-                    Log($"{indentLevel + 1}Abilities:");
-                    foreach (KeyValuePair<string, AbilityInfoInner> ability in abilities) {
-                        Log($"{indentLevel + 2}{ability.Value.Name}: {ability.Value.Type}");
-                        foreach (string description in ability.Value.Descriptions) {
-                            if (description == null) continue;
-                            Log($"{indentLevel + 3}{description}");
-                        }
+                    Log($"{indentLevel + 1}Loadouts:");
+                    foreach (Loadout loadout in hero.Value.Loadouts) {
+                        Log($"{indentLevel + 2}{loadout.Name}: {loadout.Category}");
+                        Log($"{indentLevel + 3}{loadout.Description}");
                     }
                 }
 
@@ -116,46 +70,16 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public AbilityInfo GetAbility(Common.STUGUID key) {
-            STULoadout ability = GetInstance<STULoadout>(key);
-            if (ability == null) return null;
-
-            return new AbilityInfo(key, GetString(ability.Name), GetString(ability.Description), ability.Category.ToString());
-        }
-
-        public Dictionary<string, AbilityInfo> GetAbilities(STUHero hero) {
-            Dictionary<string, AbilityInfo> @return = new Dictionary<string, AbilityInfo>();
-
-            if (hero.Abilities == null) {
-                return null;
-            }
-
-            foreach (Common.STUGUID ability in hero.Abilities) {
-                AbilityInfo abi = GetAbility(ability);
-                if (abi == null) continue;
-
-                string name = abi.Name == null ? $"Unknown{GUID.Index(ability):X}" : $"{abi.Name}:{GUID.Index(ability):X}";               
-                @return[name] = abi;
-            }
-            
-            return @return;
-        }
-
-        public Dictionary<string, HeroInfo> GetHeroes() {
-            Dictionary<string, HeroInfo> @return = new Dictionary<string, HeroInfo>();
+        public Dictionary<string, Hero> GetHeroes() {
+            Dictionary<string, Hero> @return = new Dictionary<string, Hero>();
 
             foreach (ulong key in TrackedFiles[0x75]) {
-                STUHero hero = GetInstance<STUHero>(key);
+                STUHero hero = GetInstanceNew<STUHero>(key);
                 if (hero == null) continue;
 
-                string name = GetString(hero.Name) ?? $"Unknown{GUID.Index(key):X}";
-                string description = GetDescriptionString(hero.Description);
-                string color = null;
+                string name = GetString(hero.m_0EDCE350) ?? $"Unknown{GUID.Index(key):X}";
 
-                if (hero.GalleryColor != null)
-                    color = hero.GalleryColor.Hex();
-
-                @return[name] = new HeroInfo(key, name, description, color, GetAbilities(hero));
+                @return[name] = new Hero(key, hero);
             }
 
             return @return;

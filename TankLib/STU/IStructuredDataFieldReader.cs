@@ -96,9 +96,9 @@ namespace TankLib.STU {
                     target.SetValue(instance, embeddedInstance);
                 }
             } else if (data.Format == teStructuredDataFormat.V1) {
-                long value = data.Data.ReadInt64();
+                int value = data.Data.ReadInt32();
             
-                if (value == 0) return;
+                if (value <= 0) return;
                 
                 STUInstance embeddedInstance = data.GetInstanceAtOffset(value);
                 if (embeddedInstance != null) {
@@ -110,18 +110,31 @@ namespace TankLib.STU {
         }
         
         public void Deserialize_Array(teStructuredDataMgr manager, teStructuredData data, STUField_Info field, Array target, int index) {
-            int value = data.DynData.ReadInt32();
-            data.DynData.ReadInt32(); // Padding for in-place deserialization
-            if (value == -1) return;
-            if (value < data.Instances.Length) {
-                STUInstance embeddedInstance = data.Instances[value];
+            if (data.Format == teStructuredDataFormat.V2) {
+                int value = data.DynData.ReadInt32();
+                data.DynData.ReadInt32(); // Padding for in-place deserialization
+                if (value == -1) return;
+                if (value < data.Instances.Length) {
+                    STUInstance embeddedInstance = data.Instances[value];
+                    if (embeddedInstance != null) {
+                        embeddedInstance.Usage = TypeUsage.EmbedArray;
+                    }
+
+                    target.SetValue(embeddedInstance, index);
+                } else {
+                    throw new ArgumentOutOfRangeException(
+                        $"Instance index is out of range. Id: {value}, Type: EmbeddedInstanceFieldReader, DynData offset: {data.DynData.Position() - 8}");
+                }
+            } else if (data.Format == teStructuredDataFormat.V1) {
+                long offset = data.Data.ReadInt64();
+                if (offset == -1) return;
+                
+                STUInstance embeddedInstance = data.GetInstanceAtOffset(offset);
                 if (embeddedInstance != null) {
                     embeddedInstance.Usage = TypeUsage.EmbedArray;
                 }
                 
                 target.SetValue(embeddedInstance, index);
-            } else {
-                throw new ArgumentOutOfRangeException($"Instance index is out of range. Id: {value}, Type: EmbeddedInstanceFieldReader, DynData offset: {data.DynData.Position() - 8}");
             }
         }
     }
@@ -138,6 +151,8 @@ namespace TankLib.STU {
             STUInstance instanceObj = (STUInstance) DeserializeArrayInternal(manager, data, field, target);
             instanceObj.Usage = TypeUsage.InlineArray;
             target.SetValue(instanceObj, index);
+            
+            //data.Data.ReadUInt32();  // who knows
         }
     }
 }

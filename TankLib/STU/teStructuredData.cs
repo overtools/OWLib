@@ -33,6 +33,7 @@ namespace TankLib.STU {
 
         #region V1
         private Dictionary<long, STUInstance> _instanceOffsets;
+        public STUInstanceRecordV1[] InstanceInfoV1;
         #endregion
         
         #region Streams
@@ -41,45 +42,60 @@ namespace TankLib.STU {
         #endregion
 
         /// <summary>Data start position</summary>
-        private readonly long _startPos;
+        internal readonly long StartPos;
+
+        private bool _preserveStream;
    
         /// <summary>Load STU asset from a stream</summary>
         /// <param name="stream">The stream to load from</param>
         /// <param name="keepOpen">Leave the stream open after reading</param>
         public teStructuredData(Stream stream, bool keepOpen=false) {
-            _startPos = stream.Position;
+            StartPos = stream.Position;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, keepOpen)) {
-                uint magic = reader.ReadUInt32();
-
-                if (magic == STRUCTURED_DATA_IMMUTABLE_MAGIC) {
-                    Format = teStructuredDataFormat.V1;
-                    DeserializeV1(reader);
-                } else {
-                    // "v2" stu with no magic :(
-                    Format = teStructuredDataFormat.V2;
-                    if (stream.Length < 36) throw new EndOfStreamException("Invalid STU asset. Truncated header.");
-                    DeserializeV2(reader);
-                }
+                Deserialize(reader);
             }
             FinishDeserialize();
+        }
+        
+        /// <summary>Load STU asset from a BinaryReader</summary>
+        /// <param name="reader">The BinaryReader to load from</param>
+        public teStructuredData(BinaryReader reader) {
+            _preserveStream = true;
+            StartPos = reader.BaseStream.Position;
+            Deserialize(reader);
+            FinishDeserialize();
+        }
+
+        private void Deserialize(BinaryReader reader) {
+            uint magic = reader.ReadUInt32();
+
+            if (magic == STRUCTURED_DATA_IMMUTABLE_MAGIC) {
+                Format = teStructuredDataFormat.V1;
+                DeserializeV1(reader);
+            } else {
+                // "v2" stu with no magic :(
+                Format = teStructuredDataFormat.V2;
+                if (reader.BaseStream.Length < 36) throw new EndOfStreamException("Invalid STU asset. Truncated header.");
+                DeserializeV2(reader);
+            }
         }
 
         /// <summary>Read a "Version1" STU asset</summary>
         private void DeserializeV1(BinaryReader reader) {
             _instanceOffsets = new Dictionary<long, STUInstance>();
             
-            reader.BaseStream.Position = _startPos;
+            reader.BaseStream.Position = StartPos;
 
             STUHeaderV1 header = reader.Read<STUHeaderV1>();
             
-            STUInstanceRecordV1[] instanceTable = new STUInstanceRecordV1[header.InstanceCount];
+            InstanceInfoV1 = new STUInstanceRecordV1[header.InstanceCount];
             Instances = new STUInstance[header.InstanceCount];
             for (int i = 0; i < header.InstanceCount; i++) {
                 STUInstanceRecordV1 record = reader.Read<STUInstanceRecordV1>();
-                instanceTable[i] = record;
+                InstanceInfoV1[i] = record;
                 
                 long position = reader.BaseStream.Position;
-                reader.BaseStream.Position = record.Offset + _startPos;
+                reader.BaseStream.Position = record.Offset + StartPos;
                 uint instanceHash = reader.ReadUInt32();
                 uint nextOffset = reader.ReadUInt32();
                 
@@ -93,10 +109,10 @@ namespace TankLib.STU {
             Data = reader;  // hmm
 
             for (int i = 0; i < header.InstanceCount; i++) {
-                STUInstanceRecordV1 record = instanceTable[i];
+                STUInstanceRecordV1 record = InstanceInfoV1[i];
 
                 if (Instances[i] == null) continue;
-                reader.BaseStream.Position = record.Offset + _startPos;
+                reader.BaseStream.Position = record.Offset + StartPos;
                 uint instanceHash = reader.ReadUInt32();
                 uint nextOffset = reader.ReadUInt32();
                 Instances[i].Deserialize(this);
@@ -124,9 +140,9 @@ namespace TankLib.STU {
 
         /// <summary>Read a "Version2" STU asset</summary>
         private void DeserializeV2(BinaryReader reader) {
-            reader.BaseStream.Position = _startPos;
+            reader.BaseStream.Position = StartPos;
             HeaderChecksum = CRC.CRC64(reader.ReadBytes(36));
-            reader.BaseStream.Position = _startPos;
+            reader.BaseStream.Position = StartPos;
             SerializableHelper.Deserialize(reader, out InstanceInfo);
             SerializableHelper.Deserialize(reader, out InlinedTypesInfo);
             SerializableHelper.Deserialize(reader, out FieldInfoBags);
@@ -135,14 +151,14 @@ namespace TankLib.STU {
             int dynDataOff = reader.ReadInt32();
             int dataBufferOffset = reader.ReadInt32();
             if (dynDataSize > 0) {
-                reader.BaseStream.Position = dynDataOff + _startPos;
+                reader.BaseStream.Position = dynDataOff + StartPos;
                 DynData = new BinaryReader(new MemoryStream(reader.ReadBytes(dynDataSize)));
             }
             if (dataBufferOffset < reader.BaseStream.Length) {
                 long dataSize = reader.BaseStream.Length - dataBufferOffset;
                 if (dataSize > int.MaxValue) throw new Exception("oops");
 
-                reader.BaseStream.Position = dataBufferOffset + _startPos;
+                reader.BaseStream.Position = dataBufferOffset + StartPos;
                 Data = new BinaryReader(new MemoryStream(reader.ReadBytes((int)dataSize)));
             }
 
@@ -178,10 +194,13 @@ namespace TankLib.STU {
 
         /// <summary>Cleanup after deserializing</summary>
         private void FinishDeserialize() {
-            Data?.Dispose();
-            DynData?.Dispose();
+            if (!_preserveStream) {
+                Data?.Dispose();
+                DynData?.Dispose();
+            }
             Data = null;
             DynData = null;
+            
         }
 
         /// <summary>Get the primary instance of this asset</summary>

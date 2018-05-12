@@ -2,12 +2,13 @@
 using System.Runtime.InteropServices;
 
 namespace TankLib.Chunks {
-    public class teEffectComponentVoiceStimulus : IChunk {
-        public string ID => "ECVS";
+    public class teEffectComponentEntity : IChunk {
+        public string ID => "ECEN";
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public teResourceGUID VoiceStimulus;
+            public teResourceGUID Entity;
+            public teResourceGUID Identifier;
         }
 
         public Structure Header;

@@ -973,15 +973,15 @@ namespace DataTool.FindLogic {
                     break;
                 case 0xA6:
                     // why not
-                    //if (replacements == null) break;
-                    //STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(guid);
-                    //if (skinOverride?.Replacements == null) break;
-                    //foreach (KeyValuePair<ulong,ulong> replacement in skinOverride.ProperReplacements) {
-                    //    if (replacements.ContainsKey(replacement.Key)) continue;
-                    //    replacements[replacement.Key] = replacement.Value;
-                    //}
-                    //// replacements one object that gets modified
-                    //break;
+                    if (replacements == null) break;
+                    STUSkinTheme skinOverride = GetInstanceNew<STUSkinTheme>(guid);
+                    if (skinOverride?.m_258A7D5C == null) break;
+                    foreach (KeyValuePair<ulong, STU_3E88143F> replacement in skinOverride.m_258A7D5C) {
+                        if (replacements.ContainsKey(replacement.Key)) continue;
+                        replacements[replacement.Key] = replacement.Value.m_3D884507;
+                    }
+                    // replacements one object that gets modified
+                    break;
                 case 0xA8:
                     // hmm, if existing?
                     STUEffectLook effectLook = GetInstanceNew<STUEffectLook>(guid);

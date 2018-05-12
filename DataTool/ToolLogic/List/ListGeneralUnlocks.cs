@@ -28,12 +28,12 @@ namespace DataTool.ToolLogic.List {
                 }
             }
 
-            foreach (KeyValuePair<string,  HashSet<ItemInfo>> groupPair in unlocks) {
+            foreach (KeyValuePair<string,  HashSet<Unlock>> groupPair in unlocks) {
                 if (groupPair.Value?.Count == 0) continue;
 
                 if (groupPair.Value != null) {
                     Log(groupPair.Key);
-                    foreach (ItemInfo unlock in groupPair.Value) {
+                    foreach (Unlock unlock in groupPair.Value) {
                         if (unlock?.Name == null) continue;
                         Log("\t{0} ({1} {2})", unlock.Name, unlock.Rarity, unlock.Type);
                     }
@@ -41,21 +41,21 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public Dictionary<string, HashSet<ItemInfo>> GetUnlocks() {
-            Dictionary<string, HashSet<ItemInfo>> @return = new Dictionary<string, HashSet<ItemInfo>>();
+        public Dictionary<string, HashSet<Unlock>> GetUnlocks() {
+            Dictionary<string, HashSet<Unlock>> @return = new Dictionary<string, HashSet<Unlock>>();
             foreach (ulong key in TrackedFiles[0x54]) {
                 STUGlobalInventoryMaster invMaster = GetInstance<STUGlobalInventoryMaster>(key);
                 if (invMaster == null) continue;
 
                 @return["Achievement"] = GatherUnlocks(invMaster.AchievementUnlocks?.Unlocks?.Select(it => (ulong)it));
 
-                @return["Standard"] = new HashSet<ItemInfo>();
+                @return["Standard"] = new HashSet<Unlock>();
 
                 if (invMaster.LevelUnlocks != null) {
                     foreach (STUAdditionalUnlocks levelUnlocks in invMaster.LevelUnlocks) {
                         if (levelUnlocks?.Unlocks == null) continue;
 
-                        foreach (ItemInfo info in GatherUnlocks(levelUnlocks.Unlocks.Select(it => (ulong)it))) {
+                        foreach (Unlock info in GatherUnlocks(levelUnlocks.Unlocks.Select(it => (ulong)it))) {
                             @return["Standard"].Add(info);
                         }
                     }
@@ -68,9 +68,9 @@ namespace DataTool.ToolLogic.List {
                         string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";
 
                         if (!@return.ContainsKey(eventKey))
-                            @return[eventKey] = new HashSet<ItemInfo>();
+                            @return[eventKey] = new HashSet<Unlock>();
 
-                        foreach (ItemInfo info in GatherUnlocks(eventUnlocks.Unlocks.Unlocks.Select(it => (ulong)it))) {
+                        foreach (Unlock info in GatherUnlocks(eventUnlocks.Unlocks.Unlocks.Select(it => (ulong)it))) {
                             @return[eventKey].Add(info);
                         }
                     }

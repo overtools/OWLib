@@ -48,7 +48,7 @@ namespace TankLib.CASC {
             if (isData && !CacheCDNData)
                 return null;
 
-            string file = Path.Combine(_cachePath, name);
+            string file = Path.Combine(CDNCachePath, name);
 
             
             Debugger.Log(0, "CASC", $"CDNCache: Opening file {file}\r\n");
@@ -60,15 +60,13 @@ namespace TankLib.CASC {
                     return null;
                 }
             }
-            
-            using (Stream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (LZ4Stream lz4Stream = new LZ4Stream(fs, LZ4StreamMode.Decompress)) {
-                return lz4Stream;
-            }
+
+            Stream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            return new LZ4Stream(fs, LZ4StreamMode.Decompress);
         }
 
         public bool HasFile(string name) {
-            return File.Exists(Path.Combine(_cachePath, name));
+            return File.Exists(Path.Combine(CDNCachePath, name));
         }
     }
 }

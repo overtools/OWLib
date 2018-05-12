@@ -6,13 +6,14 @@ using STULib.Types;
 
 namespace DataTool.SaveLogic.Unlock {
     public class Portrait {
-        public static void SaveItems(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, IEnumerable<ItemInfo> items) {
-            FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
+        public static void SaveItems(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, IEnumerable<DataModels.Unlock> items) {
             
-            foreach (ItemInfo item in items) {
+            foreach (DataModels.Unlock item in items) {
                 if (item == null) continue;
-                if (!(item.Unlock is STULevelPortrait unlock)) continue;
+                if (!(item.STU is STULevelPortrait unlock)) continue;
                 string tier = unlock.Tier.ToString();
+                
+                FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
 
                 if (unlock.StarImage != null) {
                     FindLogic.Combo.Find(info, unlock.StarImage);
@@ -31,8 +32,7 @@ namespace DataTool.SaveLogic.Unlock {
                     info.SetTextureName(unlock.BorderImage, $"Border - {borderNum}");
                 }
                 
-                Combo.SaveLooseTextures(flags, Path.Combine(basePath, containerName, "Portraits", tier), info); 
-                info.Textures = new Dictionary<ulong, FindLogic.Combo.TextureInfoNew>();  // quite naughty
+                Combo.SaveLooseTextures(flags, Path.Combine(basePath, containerName, "Portraits", tier), info);
             }
         }
     }

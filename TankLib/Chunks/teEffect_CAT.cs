@@ -2,12 +2,13 @@
 using System.Runtime.InteropServices;
 
 namespace TankLib.Chunks {
-    public class teEffectComponentVoiceStimulus : IChunk {
-        public string ID => "ECVS";
+    // ReSharper disable once InconsistentNaming
+    public class teEffect_CAT : IChunk {
+        public string ID => "ECAT";
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public teResourceGUID VoiceStimulus;
+            public teResourceGUID Hardpoint;
         }
 
         public Structure Header;

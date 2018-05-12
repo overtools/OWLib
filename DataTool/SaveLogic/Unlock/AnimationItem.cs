@@ -5,7 +5,7 @@ using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic.Unlock {
     public class AnimationItem {
-        public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, ItemInfo item) {
+        public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, DataModels.Unlock item) {
             if (item == null) return;
             string properType = item.Type;
             switch (item.Type) {

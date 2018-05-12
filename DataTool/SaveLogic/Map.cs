@@ -7,12 +7,17 @@ using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
 using STULib;
-using STULib.Types;
 using STULib.Types.Generic;
+using TankLib;
+using TankLib.STU;
+using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
+using STUMap = STULib.Types.STUMap;
+using STUModelComponent = STULib.Types.STUModelComponent;
+using STUModelComponentInstanceData = STULib.Types.STUModelComponentInstanceData;
 
 namespace DataTool.SaveLogic {
     public class Map {
@@ -308,6 +313,7 @@ namespace DataTool.SaveLogic {
 
         public static void Save(ICLIFlags flags, STUMap map, ulong key, string basePath) {
             string name = GetValidFilename(GetString(map.DisplayName)) ?? "Title Screen";
+            //string name = map.m_506FA8D8;
             
             if (GetString(map.VariantName) != null) name = GetValidFilename(GetString(map.VariantName));
 
@@ -342,6 +348,23 @@ namespace DataTool.SaveLogic {
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             LoudLog("\tFinding");
             FindLogic.Combo.Find(info, map.MapDataResource1);
+
+            using (Stream mapEntitiesStream = OpenFile(map.GetDataKey((byte)Enums.teMAP_PLACEABLE_TYPE.TEXT))) {
+                //WriteFile(mapEntitiesStream, Path.Combine(mapPath, "2.0BC"));
+                mapEntitiesStream.Position = 0;
+                teMapPlaceableData mapChunk = new teMapPlaceableData(mapEntitiesStream);
+                
+                unsafe {
+                    var test = sizeof(teMapPlaceableData.CommonStructure);
+                }
+            }
+
+            //for (ushort i = 0; i < 255; i++) {
+            //    using (Stream mapChunkStream = OpenFile(map.GetDataKey(i))) {
+            //        if (mapChunkStream == null) continue;
+            //        WriteFile(mapChunkStream, Path.Combine(mapPath, $"{(Enums.teMAP_PLACEABLE_TYPE)i}.0BC"));
+            //    }
+            //}
 
             using (Stream mapStream = OpenFile(map.GetDataKey(1))) {
                 STULib.Types.Map.Map mapData = new STULib.Types.Map.Map(mapStream, BuildVersion);
@@ -389,6 +412,27 @@ namespace DataTool.SaveLogic {
                 }
             }
 
+            {
+                FindLogic.Combo.Find(info, map.ImageResource1);
+                FindLogic.Combo.Find(info, map.ImageResource2);
+                FindLogic.Combo.Find(info, map.ImageResource3);
+
+                if (map.Gamemodes != null) {
+                    foreach (Common.STUGUID gamemodeGUID in map.Gamemodes) {
+                        STUGameMode gameMode = GetInstanceNew<STUGameMode>(gamemodeGUID);
+                        if (gameMode == null) continue;
+
+                        FindLogic.Combo.Find(info, gameMode.m_6EB38130);  // 004
+                        FindLogic.Combo.Find(info, gameMode.m_CF63B633);  // 01B
+
+                        foreach (STUGameModeTeam team in gameMode.m_teams) {
+                            FindLogic.Combo.Find(info, team.m_76E8C82A);  // 01B
+                            FindLogic.Combo.Find(info, team.m_A2781AA4);  // 01B
+                        }
+                    }
+                }
+            }
+
             FindLogic.Combo.Find(info, map.EffectAnnouncer);
             info.SetEffectName(map.EffectAnnouncer, "LoadAnnouncer");
             FindLogic.Combo.Find(info, map.EffectMusic);
@@ -396,6 +440,7 @@ namespace DataTool.SaveLogic {
             
             LoudLog("\tSaving");
             Combo.Save(flags, mapPath, info);
+            Combo.SaveLooseTextures(flags, Path.Combine(mapPath, "Textures"), info);
             
             // if (extractFlags.ConvertModels) {
             //     string physicsFile = Path.Combine(mapPath, "Models", "physics", "physics.owmdl");

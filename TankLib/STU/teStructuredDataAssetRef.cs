@@ -12,6 +12,7 @@ namespace TankLib.STU {
         }
 
         public static implicit operator teResourceGUID(teStructuredDataAssetRef<T> assetRef) {
+            if (assetRef == null) return new teResourceGUID();
             return assetRef.GUID;
         }
         
@@ -21,15 +22,11 @@ namespace TankLib.STU {
         }
 
         public void Deserialize(teStructuredData data, STUField_Info field) {
-            
             if (data.Format == teStructuredDataFormat.V2) {
                 Padding = 0xFFFFFFFFFFFFFFFF; // no padding out of array
                 ulong guid = data.Data.ReadUInt64();
                 Deobfuscate(data.HeaderChecksum, field.Hash, guid);
             } else if (data.Format == teStructuredDataFormat.V1) {
-                data.Data.ReadUInt64();  // ??
-                data.Data.ReadUInt32();  // ??
-                
                 Padding = data.Data.ReadUInt64();
                 ulong guid = data.Data.ReadUInt64();
                 GUID = (teResourceGUID) guid;
@@ -37,11 +34,13 @@ namespace TankLib.STU {
         }
 
         public void Deserialize_Array(teStructuredData data, STUField_Info field) {
-            Padding = data.DynData.ReadUInt64();
-            ulong guid = data.DynData.ReadUInt64();
             if (data.Format == teStructuredDataFormat.V2) {
+                Padding = data.DynData.ReadUInt64();
+                ulong guid = data.DynData.ReadUInt64();
                 Deobfuscate(data.HeaderChecksum, field.Hash, guid);
             } else if (data.Format == teStructuredDataFormat.V1) {
+                Padding = data.Data.ReadUInt64();
+                ulong guid = data.Data.ReadUInt64();
                 GUID = (teResourceGUID) guid;
             }
         }

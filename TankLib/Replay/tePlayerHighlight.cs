@@ -34,7 +34,7 @@ namespace TankLib.Replay
         }
 
         public byte FormatVersion;
-        public teChecksum Checksum;
+        public ReplayChecksum Checksum;
         public int DataLength;
         public long Unknown1;
         public long Unknown2;

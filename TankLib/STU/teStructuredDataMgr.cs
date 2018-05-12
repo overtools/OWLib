@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using static TankLib.Util;
 
 namespace TankLib.STU {
     /// <summary>Manages StructuredData objects. Singleton</summary>
@@ -39,11 +40,6 @@ namespace TankLib.STU {
             
             _missingInstances = new HashSet<uint>();
         }
-
-        private List<Type> GetAssemblyTypes<T>(Assembly assembly) {
-            List<Type> types = assembly.GetTypes().Where(type => type != typeof(T) && typeof(T).IsAssignableFrom(type)).ToList();
-            return types;
-        }
         
         public void AddAssemblyFactories(Assembly assembly) {
             foreach (Type type in GetAssemblyTypes<IStructuredDataPrimitiveFactory>(assembly)) {
@@ -71,9 +67,6 @@ namespace TankLib.STU {
         
         public void AddAssemblyInstances(Assembly assembly) {
             foreach (Type type in GetAssemblyTypes<STUInstance>(assembly)) {
-                if (type.IsInterface) {
-                    continue;
-                }
                 AddInstance(type);
             }
         }

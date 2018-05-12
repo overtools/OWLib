@@ -10,7 +10,7 @@ namespace TankLib.STU.Primitives {
                 int offset = data.Data.ReadInt32();
                 if (offset == -1) return null;
                 data.DynData.BaseStream.Position = offset;
-                Deserialize(data.DynData, out string value);
+                Deserialize(data, data.DynData, out string value);
             
                 return new teString(value);
             }
@@ -21,9 +21,9 @@ namespace TankLib.STU.Primitives {
                 }
 
                 long posAfter = data.Data.Position();
-                data.Data.BaseStream.Position = infoOffset;
+                data.Data.BaseStream.Position = infoOffset + data.StartPos;
                 
-                Deserialize(data.Data, out string value);
+                Deserialize(data, data.Data, out string value);
                 data.Data.BaseStream.Position = posAfter;
             
                 return new teString(value);
@@ -35,24 +35,24 @@ namespace TankLib.STU.Primitives {
             BinaryReader dynData = data.DynData;
             long offset = dynData.ReadInt64();
             
-            teEnums.SDAM mutability = (teEnums.SDAM)dynData.ReadInt64(); // SDAM_NONE = 0, SDAM_MUTABLE = 1, SDAM_IMMUTABLE = 2
+            Enums.SDAM mutability = (Enums.SDAM)dynData.ReadInt64(); // SDAM_NONE = 0, SDAM_MUTABLE = 1, SDAM_IMMUTABLE = 2
             // Debug.Assert(Mutability == teEnums.SDAM.IMMUTABLE, "teString.unk != 2 (not immutable)");
             
             long pos = dynData.BaseStream.Position;
             dynData.Seek(offset);
             
-            Deserialize(dynData, out string value);
+            Deserialize(data, dynData, out string value);
             dynData.Seek(pos);
             
             return new teString(value, mutability);
         }
 
-        private void Deserialize(BinaryReader reader, out string value) {
+        private void Deserialize(teStructuredData data, BinaryReader reader, out string value) {
             int size = reader.ReadInt32();
             if (size != 0) {
                 uint checksum = reader.ReadUInt32();
                 long offset = reader.ReadInt64();
-                reader.BaseStream.Position = offset;
+                reader.BaseStream.Position = offset + data.StartPos;
                 value = reader.ReadString(size);
             } else {
                 value = string.Empty;

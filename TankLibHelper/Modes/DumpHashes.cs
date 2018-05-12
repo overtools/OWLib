@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace TankLibHelper.Modes {
-    public class AlphaBetaData : IMode {  // wow nice name
-        public string Mode => "alphabetadata";
+    public class DumpHashes : IMode {
+        public string Mode => "dumphashes";
 
         public ModeResult Run(string[] args) {
             string output = args[1];
@@ -18,17 +17,15 @@ namespace TankLibHelper.Modes {
             
             StructuredDataInfo info = new StructuredDataInfo(dataPath);
             
-            WriteFile(info.KnownEnums, Path.Combine(output, "KnownEnums.csv"));
-            WriteFile(info.KnownInstances, Path.Combine(output, "KnownTypes.csv"));
-            WriteFile(info.KnownFields, Path.Combine(output, "KnownFields.csv"));
+            WriteFile(info.Instances, Path.Combine(output, "hashes.txt"));
             
             return ModeResult.Success;
         }
 
-        public static void WriteFile(Dictionary<uint, string> source, string output) {
+        public static void WriteFile(Dictionary<uint, STUInstanceJSON> source, string output) {
             using (StreamWriter writer = new StreamWriter(output)) {
-                foreach (KeyValuePair<uint, string> hashPair in source.OrderBy(x => x.Value)) {
-                    writer.WriteLine($"{hashPair.Key:X8}, {hashPair.Value}");
+                foreach (KeyValuePair<uint, STUInstanceJSON> hashPair in source) {
+                    writer.WriteLine($"{hashPair.Key:X8}");
                 }
             }
         }

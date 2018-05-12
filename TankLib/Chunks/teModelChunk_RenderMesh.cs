@@ -53,7 +53,7 @@ namespace TankLib.Chunks {
             public byte VertexBuffer;
             public SubmeshFlags Flags;
             public byte Material;
-            public byte LOD;
+            public sbyte LOD;  // -1 = all
             public uint Unknown5;
         }
         

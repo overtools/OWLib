@@ -184,10 +184,10 @@ namespace DataTool.ToolLogic.Extract {
                 
                 Log($"Processing data for {heroNameActual}...");
                 
-                List<ItemInfo> weaponSkins = ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks)?.SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList(); // eww?
+                List<Unlock> weaponSkins = ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks)?.SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList(); // eww?
 
                 var achievementUnlocks = GatherUnlocks(unlocks?.SystemUnlocks?.Unlocks?.Select(it => (ulong)it)).ToList();
-                foreach (ItemInfo itemInfo in achievementUnlocks) {
+                foreach (Unlock itemInfo in achievementUnlocks) {
                     if (itemInfo == null) continue;
                     Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
                     SaveItemInfo(itemInfo, basePath, heroFileName, flags, hero, "Achievement", config, tags, weaponSkins);
@@ -205,7 +205,7 @@ namespace DataTool.ToolLogic.Extract {
                 foreach (var defaultUnlocks in unlocks.Unlocks)  {
                     var dUnlocks = GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it)).ToList();
                     
-                    foreach (ItemInfo itemInfo in dUnlocks) {
+                    foreach (Unlock itemInfo in dUnlocks) {
                         Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
                         SaveItemInfo(itemInfo, basePath, heroFileName, flags, hero, "Standard", config, tags, weaponSkins);
                     }
@@ -222,7 +222,7 @@ namespace DataTool.ToolLogic.Extract {
                     }
                     var eUnlocks = eventUnlocks.Unlocks.Unlocks.Select(it => GatherUnlock(it)).ToList();
 
-                    foreach (ItemInfo itemInfo in eUnlocks) {
+                    foreach (Unlock itemInfo in eUnlocks) {
                         if (itemInfo == null) continue;
                         Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue(eventUnlocks.Event.ToString().ToLowerInvariant())}};
                         SaveItemInfo(itemInfo, basePath, heroFileName, flags, hero, eventKey, config, tags, weaponSkins);
@@ -242,12 +242,12 @@ namespace DataTool.ToolLogic.Extract {
             }
         }
 
-        public void SaveItemInfo(ItemInfo itemInfo, string basePath, string heroFileName, ICLIFlags flags, STUHero hero, 
-            string eventKey, Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, List<ItemInfo> weaponSkins) {
-            if (itemInfo?.Unlock == null) return;
+        public void SaveItemInfo(Unlock itemInfo, string basePath, string heroFileName, ICLIFlags flags, STUHero hero, 
+            string eventKey, Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, List<Unlock> weaponSkins) {
+            if (itemInfo?.STU == null) return;
 
-            if (itemInfo.Unlock.LeagueTeam != null) {
-                STULeagueTeam team = GetInstance<STULeagueTeam>(itemInfo.Unlock.LeagueTeam);
+            if (itemInfo.STU.LeagueTeam != null) {
+                STULeagueTeam team = GetInstance<STULeagueTeam>(itemInfo.STU.LeagueTeam);
                 tags["leagueTeam"] = new TagExpectedValue(GetString(team.Abbreviation),  // NY
                     GetString(team.Location),  // New York
                     GetString(team.Name),  // Excelsior
@@ -271,7 +271,7 @@ namespace DataTool.ToolLogic.Extract {
                 SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
             }
             if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
-                Skin.Save(flags, $"{basePath}\\{RootDir}", hero, $"{eventKey}\\{itemInfo.Rarity}", itemInfo.Unlock as STUUnlock_Skin, weaponSkins);
+                Skin.Save(flags, $"{basePath}\\{RootDir}", hero, $"{eventKey}\\{itemInfo.Rarity}", itemInfo.STU as STUUnlock_Skin, weaponSkins);
             }
             if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
                 AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);

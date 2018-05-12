@@ -5,11 +5,11 @@ using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
 using Newtonsoft.Json;
-using STULib.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
+using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-achievements", Description = "List achievements", TrackTypes = new ushort[] {0x68, 0x75}, CustomFlags = typeof(ListFlags))]
@@ -84,21 +84,18 @@ namespace DataTool.ToolLogic.List {
         }
 
         public List<AchievementInfo> GetAchievements() {
-            Log("Fetching achievements");
             List<AchievementInfo> achievementList = new List<AchievementInfo>();
             IDictionary<ulong, string> heroItemMapping = GetHeroItemMapping();
 
-            Log("Mapping achievement data \n");
-
             foreach (ulong key in TrackedFiles[0x68]) {
-                STUAchievement achievement = GetInstance<STUAchievement>(key);
+                STUAchievement achievement = GetInstanceNew<STUAchievement>(key);
                 if (achievement == null) continue;
 
-                string name = GetString(achievement.Name);
-                string desc = GetString(achievement.Description);
-                string group = achievement.Category.ToString();
-                ItemInfo item = GatherUnlock(achievement.Reward);
-                Reward reward = new Reward(achievement.Reward, item.Name, item.Type, item.Rarity);
+                string name = GetString(achievement.m_name);
+                string desc = GetString(achievement.m_description);
+                string group = achievement.m_category.ToString();
+                Unlock item = GatherUnlock(achievement.m_unlock);
+                Reward reward = new Reward(achievement.m_unlock, item.Name, item.Type, item.Rarity);
                 heroItemMapping.TryGetValue(item.GUID, out string hero);
                 
                 achievementList.Add(new AchievementInfo(key, name, group, desc, hero, reward));
@@ -108,23 +105,22 @@ namespace DataTool.ToolLogic.List {
         }
 
         private static IDictionary<ulong, string> GetHeroItemMapping() {
-            Log("Generating hero to item mapping");
             Dictionary<ulong, string> @return = new Dictionary<ulong, string>();
 
             foreach (var key in TrackedFiles[0x75]) {
-                STUHero hero = GetInstance<STUHero>(key);
-                if (hero?.LootboxUnlocks == null) continue;
+                STUHero hero = GetInstanceNew<STUHero>(key);
+                if (hero?.m_485AA39C == null) continue;
 
-                string heroName = GetString(hero.Name);
+                string heroName = GetString(hero.m_0EDCE350);
 
-                Dictionary<string, HashSet<ItemInfo>> unlocks = ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks);
+                Dictionary<string, HashSet<Unlock>> unlocks = ListHeroUnlocks.GetUnlocksForHero(hero.m_485AA39C);
                 
-                foreach (KeyValuePair<string, HashSet<ItemInfo>> unlockPair in unlocks) {
+                foreach (KeyValuePair<string, HashSet<Unlock>> unlockPair in unlocks) {
                     if (unlockPair.Value?.Count == 0 || unlockPair.Value == null) {
                         continue;
                     }
                     
-                    foreach (ItemInfo unlock in unlockPair.Value) {
+                    foreach (Unlock unlock in unlockPair.Value) {
                         @return[unlock.GUID] = heroName;
                     }
                 }
