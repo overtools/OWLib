@@ -112,28 +112,41 @@ namespace TankLib.STU {
                 STUInstanceRecordV1 record = InstanceInfoV1[i];
 
                 if (Instances[i] == null) continue;
-                reader.BaseStream.Position = record.Offset + StartPos;
-                uint instanceHash = reader.ReadUInt32();
-                uint nextOffset = reader.ReadUInt32();
-                Instances[i].Deserialize(this);
                 
                 // dump instance
-                //Directory.CreateDirectory("STUV1Dump");
-                //using (Stream dumpFile = File.OpenWrite($"STUV1Dump\\{Instances[i].GetType().Name}_{i}")) {
-                //    dumpFile.SetLength(0);
-                //    int next;
-                //    {
-                //        IEnumerable<STUInstanceRecordV1> more = instanceTable.Where(x => x.Offset > record.Offset);
-                //        if (more.Any()) {
-                //            next = instanceTable.Where(x => x.Offset > record.Offset).Min(x => x.Offset);
-                //        } else {
-                //            next = (int)Data.BaseStream.Length; // err, not great
-                //        }
-                //    }
-                //    reader.BaseStream.Position = record.Offset + _startPos;
-                //    int size = next - (int) reader.BaseStream.Position;
-                //    byte[] buf = reader.ReadBytes(size);
-                //    dumpFile.Write(buf, 0, size);
+                /*reader.BaseStream.Position = record.Offset + StartPos;
+                Directory.CreateDirectory("STUV1Dump");
+                using (Stream dumpFile = File.OpenWrite($"STUV1Dump\\{Instances[i].GetType().Name}_{i}")) {
+                    dumpFile.SetLength(0);
+                    int next;
+                    {
+                        IEnumerable<STUInstanceRecordV1> more = InstanceInfoV1.Where(x => x.Offset > record.Offset);
+                        if (more.Any()) {
+                            next = InstanceInfoV1.Where(x => x.Offset > record.Offset).Min(x => x.Offset);
+                        } else {
+                            next = (int)Data.BaseStream.Length; // err, not great
+                        }
+                    }
+                    reader.BaseStream.Position = record.Offset + StartPos;
+                    int size = next - (int) reader.BaseStream.Position;
+                    byte[] buf = reader.ReadBytes(size);
+                    dumpFile.Write(buf, 0, size);
+                }*/
+                
+                reader.BaseStream.Position = record.Offset + StartPos;
+                
+                uint instanceHash = reader.ReadUInt32();
+                uint nextOffset = reader.ReadUInt32();
+                
+                //if (instanceHash == 0xEA30C5E9) continue;
+                //if (instanceHash == 0x05C7059E) {
+                //    Debugger.Break();
+                //}
+                
+                Instances[i].Deserialize(this);
+                
+                //if (instanceHash == 0x05C7059E) {
+                //    Debugger.Break();
                 //}
             }
         }

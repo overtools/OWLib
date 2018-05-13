@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DataTool.Helper;
+using OWLib;
+using OWLib.Types.Chunk;
 using TankLib;
 using TankLib.STU;
 using TankLib.STU.Types;
@@ -14,7 +16,7 @@ using STUVoiceSet = STULib.Types.STUVoiceSet;
 
 namespace DataTool.FindLogic {
     public static class Combo {
-        private static HashSet<ushort> _unhandledTypes = new HashSet<ushort>();
+        private static readonly HashSet<ushort> UnhandledTypes = new HashSet<ushort>();
         
         public class ComboInfo {
             // keep everything at top level, stops us from doing the same things again.
@@ -580,7 +582,7 @@ namespace DataTool.FindLogic {
                     MaterialInfo materialInfo;
                     if (!info.Materials.ContainsKey(guid)) {
                         materialInfo = new MaterialInfo(guid) {
-                            MaterialData = GetReplacement((ulong)material.Header.MaterialData, replacements),
+                            MaterialData = GetReplacement(material.Header.MaterialData, replacements),
                             IDs = new HashSet<ulong>()
                         };
                         info.Materials[guid] = materialInfo;
@@ -589,7 +591,7 @@ namespace DataTool.FindLogic {
                     }
 
                     materialInfo.IDs.Add(context.MaterialID);
-                    materialInfo.ShaderSource = GetReplacement((ulong)material.Header.ShaderSource, replacements);
+                    materialInfo.ShaderSource = GetReplacement(material.Header.ShaderSource, replacements);
 
                     if (context.ModelLook == 0 && context.Model != 0) {
                         info.Models[context.Model].LooseMaterials.Add(guid);
@@ -597,7 +599,7 @@ namespace DataTool.FindLogic {
 
                     ComboContext materialContext = context.Clone();
                     materialContext.Material = guid;
-                    Find(info, (ulong)material.Header.MaterialData, replacements, materialContext);
+                    Find(info, material.Header.MaterialData, replacements, materialContext);
                     break;
                 case 0xC:
                     if (info.Models.ContainsKey(guid)) break;
@@ -620,7 +622,7 @@ namespace DataTool.FindLogic {
                         info.AnimationEffects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
                     }
 
-                    /*using (Stream effectStream = OpenFile(guid)) {
+                    using (Stream effectStream = OpenFile(guid)) {
                         if (effectStream == null) break;
                         using (Chunked effectChunked = new Chunked(effectStream, true, ChunkManager.Instance)) {
                             EffectParser parser = new EffectParser(effectChunked, guid);
@@ -688,7 +690,7 @@ namespace DataTool.FindLogic {
                                 }
                             }
                         }
-                    }*/
+                    }
 
                     break;
 
@@ -1024,7 +1026,7 @@ namespace DataTool.FindLogic {
                     Find(info, lineupPose.m_DE70F501?.m_11E0A658, replacements, context);
                     break;
                 default:
-                    if (_unhandledTypes.Add(guidType)) {
+                    if (UnhandledTypes.Add(guidType)) {
                         Debugger.Log(0, "DataTool", $"[DataTool.FindLogic.Combo]: Unhandled type: {guidType:X3}\r\n");
                     }
                     break;
@@ -1076,5 +1078,5 @@ namespace DataTool.FindLogic {
             modelMaterialContext.MaterialID = modelMaterial.m_DC05EA3B;
             Find(info, (ulong)modelMaterial.m_material, replacements, modelMaterialContext);
         }
-     }
+    }
 }

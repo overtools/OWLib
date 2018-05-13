@@ -54,6 +54,7 @@ namespace DataTool.SaveLogic {
             }
 
             if (!info.SaveConfig.SaveAnimationEffects) return;
+            if (entityInfo.Model == 0) return; 
             foreach (ulong animation in entityInfo.Animations) {
                 SaveAnimationEffectReference(flags, entityDir, info, animation, entityInfo.Model);
             }

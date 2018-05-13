@@ -110,6 +110,12 @@ namespace TankLib {
         /// <returns>Size</returns>
         public static long Size(this BinaryReader reader)
             => reader.BaseStream.Length;
+
+        public static void BoundaryAlign(this BinaryReader reader, int boundary) {
+            long value = reader.BaseStream.Position;
+            long nearestMultiple = boundary * ((value - 1) / boundary + 1);
+            reader.BaseStream.Position = nearestMultiple;
+        }
         #endregion
 
         #region Random Utils

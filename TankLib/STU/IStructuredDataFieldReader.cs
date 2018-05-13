@@ -151,8 +151,6 @@ namespace TankLib.STU {
             STUInstance instanceObj = (STUInstance) DeserializeArrayInternal(manager, data, field, target);
             instanceObj.Usage = TypeUsage.InlineArray;
             target.SetValue(instanceObj, index);
-            
-            //data.Data.ReadUInt32();  // who knows
         }
     }
 }

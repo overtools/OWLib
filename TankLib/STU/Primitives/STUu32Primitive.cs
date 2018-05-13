@@ -8,7 +8,11 @@ namespace TankLib.STU.Primitives {
         }
 
         public object DeserializeArray(teStructuredData data, STUField_Info field) {
-            return data.DynData.ReadUInt32();
+            if (data.Format == teStructuredDataFormat.V2) {
+                return data.DynData.ReadUInt32();
+            } else {
+                return data.Data.ReadUInt32();
+            }
         }
 
         public Type GetValueType() {

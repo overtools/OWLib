@@ -57,9 +57,9 @@ namespace TankLib {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct PlaceableDataHeader {
             /// <summary>
-            /// Number of records
+            /// Number of placeables
             /// </summary>
-            public uint RecordCount;
+            public uint PlaceableCount;
             
             /// <summary>
             /// Offset to component instance data STUs
@@ -70,9 +70,9 @@ namespace TankLib {
             public uint InstanceDataOffset;
             
             /// <summary>
-            /// Offset to records
+            /// Offset to placeables
             /// </summary>
-            public uint RecordOffset;
+            public uint PlaceableOffset;
             
             public uint Unknown2;
         }
@@ -89,13 +89,13 @@ namespace TankLib {
         protected override void Read(BinaryReader reader) {
             Header = reader.Read<PlaceableDataHeader>();
             
-            if (Header.RecordOffset > 0) {
-                reader.BaseStream.Position = Header.RecordOffset;
+            if (Header.PlaceableOffset > 0) {
+                reader.BaseStream.Position = Header.PlaceableOffset;
                 
-                CommonStructures = new CommonStructure[Header.RecordCount];
-                Placeables = new IMapPlaceable[Header.RecordCount];
+                CommonStructures = new CommonStructure[Header.PlaceableCount];
+                Placeables = new IMapPlaceable[Header.PlaceableCount];
 
-                for (int i = 0; i < Header.RecordCount; i++) {
+                for (int i = 0; i < Header.PlaceableCount; i++) {
                     long beforePos = reader.BaseStream.Position;
 
                     CommonStructure commonStructure = reader.Read<CommonStructure>();
@@ -107,6 +107,7 @@ namespace TankLib {
                 }
 
                 if (CommonStructures.Length > 0 && CommonStructures[0].Type == teMAP_PLACEABLE_TYPE.ENTITY && Header.InstanceDataOffset > 0) {
+                    int execCount = 0;
                     reader.BaseStream.Position = Header.InstanceDataOffset+16;
                     foreach (IMapPlaceable placeable in Placeables) {
                         if (!(placeable is teMapPlaceableEntity entity)) continue;
@@ -114,18 +115,31 @@ namespace TankLib {
                         entity.InstanceData = new STUComponentInstanceData[entity.Header.InstanceDataCount];
                         for (int i = 0; i < entity.Header.InstanceDataCount; i++) {
                             long beforePos = reader.BaseStream.Position;
-                            teStructuredData structuredData = new teStructuredData(reader);
-                            entity.InstanceData[i] = structuredData.GetInstance<STUComponentInstanceData>();
-                            AlignPositionNew(beforePos, reader, structuredData);
+                            try {
+                                teStructuredData structuredData = new teStructuredData(reader);
+                                entity.InstanceData[i] = structuredData.GetInstance<STUComponentInstanceData>();
+                                AlignPosition(beforePos, reader, structuredData);
+                            } catch (Exception e) {
+                                execCount++;
+                                AlignPositionInternal(reader, beforePos + 8); // try and recover
+                            }
                         }
+                    }
+
+                    if (execCount > 0) {
+                        Debugger.Log(0, "teMapChunk", $"Threw {execCount} exceptions when trying to parse entity instance data\r\n");
                     }
                 }
             }
         }
         
-        private void AlignPositionNew(long start, BinaryReader reader, teStructuredData stu) {
+        private void AlignPosition(long start, BinaryReader reader, teStructuredData stu) {
             long maxOffset = stu.InstanceInfoV1.Max(x => x.Offset)+start;
-            for (long i = maxOffset+4; i < reader.BaseStream.Length; i++) {
+            AlignPositionInternal(reader, maxOffset+8);
+        }
+
+        private void AlignPositionInternal(BinaryReader reader, long pos) {
+            for (long i = pos; i < reader.BaseStream.Length; i++) {
                 reader.BaseStream.Position = i;
                 if (reader.BaseStream.Position + 4 > reader.BaseStream.Length) {
                     reader.BaseStream.Position = reader.BaseStream.Length;
@@ -209,7 +223,7 @@ namespace TankLib {
         
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public teResourceGUID Entity;  // 003
+            public teResourceGUID EntityDefinition;  // 003
             public teResourceGUID Identifier1;  // 01C
             public teResourceGUID Identifier2;  // 01C
             public teVec3 Translation;

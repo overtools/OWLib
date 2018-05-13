@@ -74,9 +74,9 @@ namespace TankLibTest {
             //Console.Out.WriteLine(stopwatch.Elapsed);
             
             //TestBinarySpeed();
-            //TestString();
+            TestString();
             //TestMaterial();
-            TestChunked();
+            //TestChunked();
             //TestTexture();
             //TestTexturePayload();
             //TestSTU();
@@ -313,7 +313,7 @@ namespace TankLibTest {
         }
 
         public static void TestString() {
-            using (Stream stringStream = OpenFile(0xDE000000000758E)) {
+            using (Stream stringStream = OpenFile(0xDE0000000004A0E)) {
                 teString @string = new teString(stringStream);
             }
         }

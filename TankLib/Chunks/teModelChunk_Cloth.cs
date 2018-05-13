@@ -44,6 +44,7 @@ namespace TankLib.Chunks {
             public uint UnkE;
             public ushort UnkF;
             public ushort Unk10;
+            public ulong Unk11Padding;
             public teResourceGUID Unk11;
             public teResourceGUID Unk12;
             public ulong UnkPadding;

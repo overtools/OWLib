@@ -78,20 +78,19 @@ namespace TankLib.STU {
                 } else {
                     long offset = data.ReadInt64();
 
+                    long position = data.Position();
                     if (offset <= 0) {
                         array = null;
                     } else {
-                        long position = data.Position();
-
                         data.BaseStream.Position = offset + assetFile.StartPos;
 
                         long count = data.ReadInt64();
-                        long subOffset = data.ReadInt64();
+                        long dataOffset = data.ReadInt64();
 
-                        if (count != -1 && subOffset > 0) {
+                        if (count != -1 && dataOffset > 0) {
                             array = Array.CreateInstance(elementType, count);
 
-                            data.BaseStream.Position = subOffset + assetFile.StartPos;
+                            data.BaseStream.Position = dataOffset + assetFile.StartPos;
                                 
                             for (int i = 0; i != count; ++i) {
                                 reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);
@@ -99,9 +98,8 @@ namespace TankLib.STU {
                         } else {
                             array = null;
                         }
-                            
-                        data.BaseStream.Position = position + 8;
                     }
+                    data.BaseStream.Position = position + 8;
                 }
                 field.Key.SetValue(this, array);
 
@@ -139,13 +137,18 @@ namespace TankLib.STU {
                     //    throw new InvalidDataException($"read len != field size. Type: '{GetType().Name}', Field: {stuField.Hash:X8}, Data offset: {startPosition}");
                 }
             } else if (assetFile.Format == teStructuredDataFormat.V1) {
-                if (instanceHash == 3929064937) {
-                    Debugger.Break();
-                }
-                
+                //if (instanceHash == 0xEA30C5E9 || instanceHash == 0x298FC27F || instanceHash == 0x75526BC2 ||
+                //    instanceHash == 0x5C7059E || instanceHash == 0x646FF8C3 || instanceHash == 0xAD5967B3 || 
+                //    instanceHash == 0x74F13350) {
+                //    Debugger.Log(0, "STUInstnace", "HACK: SKIPPING DESERIALIZE\r\n");
+                //    return;
+                //    //Debugger.Break();
+                //}
                 uint[] fieldOrder = teStructuredData.Manager.InstanceFields[instanceHash];
 
                 foreach (uint fieldHash in fieldOrder) {
+                    //long fieldStart = data.BaseStream.Position;
+                    
                     STUField_Info stuField = new STUField_Info {Hash = fieldHash, Size = -1};
                     
                     DeserializeField(assetFile, stuField, fields, stuAttribute);

@@ -88,7 +88,7 @@ namespace TankLib {
             @out.WriteLine();
         }
         
-        public static explicit operator ulong(teResourceGUID guid) {
+        public static implicit operator ulong(teResourceGUID guid) {
             return guid.GUID;
         }
         
