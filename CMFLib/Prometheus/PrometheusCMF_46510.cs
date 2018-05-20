@@ -1,20 +1,22 @@
-﻿namespace CMFLib.Prometheus {
+﻿using static CMFLib.CMFHandler;
+
+namespace CMFLib.Prometheus {
     [CMFMetadata(AutoDetectVersion = true, BuildVersions = new uint[] { 46457 }, App = CMFApplication.Prometheus)]
     public class PrometheusCMF_46510 : ICMFProvider {
         public byte[] Key(CMFHeaderCommon header, string name, byte[] digest, int length) {
             byte[] buffer = new byte[length];
 
-            uint kidx = Keytable[CMFHandler.SignedMod(length * Keytable[0], 512)];
+            uint kidx = Keytable[SignedMod(length * Keytable[0], 512)];
             for (int i = 0; i != length; ++i)
             {
-                buffer[i] = Keytable[CMFHandler.SignedMod(kidx, 512)];
-                switch (CMFHandler.SignedMod(kidx, 3))
+                buffer[i] = Keytable[SignedMod(kidx, 512)];
+                switch (SignedMod(kidx, 3))
                 {
                     case 0:
                         kidx += 103;
                         break;
                     case 1:
-                        kidx = (uint)CMFHandler.SignedMod(4 * kidx, header.BuildVersion);
+                        kidx = (uint)SignedMod(4 * kidx, header.BuildVersion);
                         break;
                     case 2:
                         --kidx;
@@ -32,9 +34,9 @@
             uint increment = header.BuildVersion * header.DataCount % 7;
             for (int i = 0; i != length; ++i)
             {
-                buffer[i] = Keytable[CMFHandler.SignedMod(kidx, 512)];
+                buffer[i] = Keytable[SignedMod(kidx, 512)];
                 kidx += increment;
-                buffer[i] ^= digest[CMFHandler.SignedMod(kidx - 73 , CMFHandler.SHA1_DIGESTSIZE)];
+                buffer[i] ^= digest[SignedMod(kidx - 73 , SHA1_DIGESTSIZE)];
             }
 
             return buffer;
