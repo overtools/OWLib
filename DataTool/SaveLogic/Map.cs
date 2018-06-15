@@ -16,6 +16,8 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
 using STUMap = STULib.Types.STUMap;
 using STUModelComponentInstanceData = STULib.Types.STUModelComponentInstanceData;
+using static DataTool.Program;
+using STUModelComponent = STULib.Types.STUModelComponent;
 
 namespace DataTool.SaveLogic {
     public class Map {
@@ -351,11 +353,11 @@ namespace DataTool.SaveLogic {
                     //    size++;
                     //}
                     int entitiesWithModelCount = 0;
-                    STUModelComponent[] modelComponents = new STUModelComponent[entities.Header.PlaceableCount];
+                    TankLib.STU.Types.STUModelComponent[] modelComponents = new TankLib.STU.Types.STUModelComponent[entities.Header.PlaceableCount];
                     
                     for (int i = 0; i < entities.Header.PlaceableCount; i++) {
                         teMapPlaceableEntity entity = (teMapPlaceableEntity) entities.Placeables[i];
-                        STUModelComponent component = GetInstanceNew<STUModelComponent>(entity.Header.EntityDefinition);
+                        TankLib.STU.Types.STUModelComponent component = GetInstanceNew<TankLib.STU.Types.STUModelComponent>(entity.Header.EntityDefinition);
                         //STUEntityDefinition entityDefinition = GetInstanceNew<STUEntityDefinition>(entity.Header.EntityDefinition);
                         if (component != null) {
                             entitiesWithModelCount++;
@@ -615,7 +617,7 @@ namespace DataTool.SaveLogic {
             //    }
             //}
 
-            /*using (Stream mapStream = OpenFile(map.GetDataKey(1))) {
+            using (Stream mapStream = OpenFile(map.GetDataKey(1))) {
                 STULib.Types.Map.Map mapData = new STULib.Types.Map.Map(mapStream, BuildVersion);
                 using (Stream map2Stream = OpenFile(map.GetDataKey(2))) {
                     if (map2Stream == null) return;
@@ -659,7 +661,7 @@ namespace DataTool.SaveLogic {
                         }
                     }
                 }
-            }*/
+            }
 
             //STULib.Types.Map.Map mapEntities;
             //
@@ -668,14 +670,14 @@ namespace DataTool.SaveLogic {
             //        new STULib.Types.Map.Map(mapEntitiesStream, uint.MaxValue, true);
             //}
 
-            teMapPlaceableData placeableModelGroups = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.MODEL_GROUP);
-            teMapPlaceableData placeableSingleModels = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.SINGLE_MODEL);
-            teMapPlaceableData placeable8 = GetPlaceableData(map, 8);
-            teMapPlaceableData placeableLights = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.LIGHT);
-            teMapPlaceableData placeableEntities = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.ENTITY);
-
-            owmap.Write(new MemoryStream(), placeableModelGroups, placeableSingleModels, placeable8, placeableEntities,
-                placeableLights, name, info);
+            // teMapPlaceableData placeableModelGroups = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.MODEL_GROUP);
+            // teMapPlaceableData placeableSingleModels = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.SINGLE_MODEL);
+            // teMapPlaceableData placeable8 = GetPlaceableData(map, 8);
+            // teMapPlaceableData placeableLights = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.LIGHT);
+            // teMapPlaceableData placeableEntities = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.ENTITY);
+            //
+            // owmap.Write(new MemoryStream(), placeableModelGroups, placeableSingleModels, placeable8, placeableEntities,
+            //     placeableLights, name, info);
 
             {
                 FindLogic.Combo.Find(info, map.ImageResource1);

@@ -106,4 +106,16 @@ namespace TankLib {
             return types;
         }
     }
+
+    [Flags]
+    public enum TestByteFlags : byte {
+        F00000001 = 0x1,
+        F00000002 = 0x2,
+        F00000004 = 0x4,
+        F00000008 = 0x8,
+        F00000010 = 0x10,
+        F00000020 = 0x20,
+        F00000040 = 0x40,
+        F00000080 = 0x80
+    }
 }

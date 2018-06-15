@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using DataTool.Flag;
-using DataTool.Helper;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using TankLib;
@@ -30,9 +29,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
             HashSet<uint> hashes = new HashSet<uint>();
 
-            foreach (ulong GUID in TrackedFiles[0x86]) {
-                teShaderInstance instance = new teShaderInstance(IO.OpenFile(GUID));
-                teShaderCode shaderCode = new teShaderCode(IO.OpenFile(instance.Header.ShaderCode));
+            foreach (ulong guid in TrackedFiles[0x86]) {
+                teShaderInstance instance = new teShaderInstance(OpenFile(guid));
+                teShaderCode shaderCode = new teShaderCode(OpenFile(instance.Header.ShaderCode));
 
                 //if (shaderCode.Header.ShaderType != Enums.teSHADER_TYPE.PIXEL) continue;
                 //if (shaderCode.Header.ShaderType != Enums.teSHADER_TYPE.VERTEX) continue;
@@ -40,7 +39,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 
                 if (instance.TextureInputs == null) continue;
                 foreach (teShaderInstance.TextureInputDefinition inputDefinition in instance.TextureInputs) {
-                    hashes.Add((uint)inputDefinition.TextureType);
+                    hashes.Add(inputDefinition.NameHash);
                 }
             }
 

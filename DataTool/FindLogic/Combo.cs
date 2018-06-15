@@ -244,7 +244,7 @@ namespace DataTool.FindLogic {
         }
 
         public class MaterialDataInfo : ComboType {
-            public Dictionary<ulong, teShaderTextureType> Textures;
+            public Dictionary<ulong, uint> Textures;
 
             public MaterialDataInfo(ulong guid) : base(guid) { }
         }
@@ -1007,10 +1007,10 @@ namespace DataTool.FindLogic {
                     
                     teMaterialData materialData = new teMaterialData(OpenFile(guid));
                     if (materialData.Textures != null) {
-                        materialDataInfo.Textures = new Dictionary<ulong, teShaderTextureType>();
+                        materialDataInfo.Textures = new Dictionary<ulong, uint>();
                         foreach (teMaterialDataTexture matDataTex in materialData.Textures) {
-                            Find(info, (ulong)matDataTex.Texture, replacements, materialDataContext);
-                            materialDataInfo.Textures[(ulong)matDataTex.Texture] = matDataTex.Type;
+                            Find(info, matDataTex.Texture, replacements, materialDataContext);
+                            materialDataInfo.Textures[matDataTex.Texture] = matDataTex.NameHash;
                         }
                     }
                     

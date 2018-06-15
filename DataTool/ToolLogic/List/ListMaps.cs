@@ -78,7 +78,7 @@ namespace DataTool.ToolLogic.List {
             foreach (KeyValuePair<string, MapInfo> map in maps) {
                 var data = map.Value;
 
-                Log($"{iD}{data.Name ?? map.Key}");
+                Log($"{iD}{data.Name ?? map.Key} ({map.Value.MetadataGUID:X8})");
 
                 if (!string.IsNullOrEmpty(data.NameB)) Log($"{iD+1}Alt Name: {data.NameB}");
 

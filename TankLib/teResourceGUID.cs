@@ -105,5 +105,13 @@ namespace TankLib {
         public static string AsString(ulong guid) {
             return $"{LongKey(guid):X12}.{Type(guid):X3}";
         }
+
+        public override int GetHashCode() {
+            return GUID.GetHashCode();
+        }
+
+        public bool Equals(teResourceGUID other) {
+            return GUID == other.GUID;
+        }
     }
 }

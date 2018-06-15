@@ -77,7 +77,7 @@ namespace DataTool.SaveLogic {
                         writer.Write(id);
                     }
                     
-                    foreach (KeyValuePair<ulong, teShaderTextureType> texture in materialDataInfo.Textures) {
+                    foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.Textures) {
                         FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[texture.Key];
                         writer.Write($"..\\Textures\\{textureInfo.GetNameIndex()}.dds");
                         writer.Write((uint)texture.Value);

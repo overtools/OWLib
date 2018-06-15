@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace TankLib {
@@ -13,7 +14,7 @@ namespace TankLib {
             public long TextureOffset;
             public long Offset4;
             public uint unk1;
-            public ushort unk2;
+            public ushort BufferPartCount;
             public ushort unk3;
             
             /// <summary>Texture definition count</summary>
@@ -33,6 +34,9 @@ namespace TankLib {
         /// <summary>Unknown definitions</summary>
         public teMaterialDataUnknown[] Unknowns;
 
+        /// <summary>Constant buffer definitions</summary>
+        public teMaterialDataBufferPart[] BufferParts;
+
         /// <summary>Load material data from a stream</summary>
         public teMaterialData(Stream stream) {
             using (BinaryReader reader = new BinaryReader(stream)) {
@@ -49,7 +53,53 @@ namespace TankLib {
 
                     Unknowns = reader.ReadArray<teMaterialDataUnknown>(Header.Offset4Count);
                 }
+                if (Header.Offset1 > 0) {
+                    reader.BaseStream.Position = Header.Offset1;
+                    BufferParts = new teMaterialDataBufferPart[Header.BufferPartCount];
+                    for (int i = 0; i < Header.BufferPartCount; i++) {
+                        BufferParts[i] = new teMaterialDataBufferPart(reader);
+                    }
+                }
             }
+        }
+    }
+
+    public class teMaterialDataBufferPart {
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct HeaderData {
+            public uint Hash;
+            public TestByteFlags Flags;
+            public byte Size;
+            public short Unknown;
+        }
+
+        public HeaderData Header;
+        public byte[] Data;
+
+        public teMaterialDataBufferPart(BinaryReader reader) {
+            Header = reader.Read<HeaderData>();
+            int size = Header.Size;
+            byte intFlags = (byte) Header.Flags;
+
+            if (intFlags == 10) {
+                size *= 16;
+            } else if (intFlags == 8) {
+                size *= 8;
+            } else if (intFlags == 11) {
+                size *= 16;
+            } else if (intFlags == 3) {
+                size *= 4;
+            } else if (intFlags == 2) {
+                size *= 4;
+            } else if (intFlags == 6) {
+                size *= 4;
+            } else if (intFlags == 9) {
+                size *= 12;
+            } else {
+                throw new Exception($"teMaterialDataWeirdBuffer: Unsure how much to read for data ({intFlags}, flags: {Header.Flags}, offset: {reader.BaseStream.Position})");
+            }
+
+            Data = reader.ReadBytes(size);
         }
     }
 
@@ -66,16 +116,11 @@ namespace TankLib {
         /// <remarks>File type 004</remarks>
         public teResourceGUID Texture;
         
-        /// <summary>Shader input type</summary>
+        /// <summary>CRC32 of input name</summary>
         /// <remarks>Matches up on teShaderInstance</remarks>
-        public teShaderTextureType Type;
+        public uint NameHash;
         
         /// <summary>Unknown flags</summary>
         public byte Flags;
-    }
-
-    public enum teShaderTextureType : uint {
-        None = 0,
-        DiffuseAO = 2903569922  // Alpha channel is AO
     }
 }

@@ -97,7 +97,10 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebug0EE.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimNodes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugComboDemo.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugMaterialData.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugNewEntities.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugOWLBuffers.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugPackageFinder.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugRAMTest.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugShaderHashes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />

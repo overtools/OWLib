@@ -16,11 +16,11 @@ namespace TankLib {
             
             /// <summary>teShaderSource that this group was generated from</summary>
             /// <remarks>088 GUID</remarks>
-            public long ShaderSource;
+            public teResourceGUID ShaderSource;
             
             /// <summary>A virtual reference. Usage unknown</summary>
             /// <remarks>00F GUID</remarks>
-            public long GUIDx00F;
+            public teResourceGUID GUIDx00F;
 
             public ulong Unknown;
             
@@ -32,7 +32,7 @@ namespace TankLib {
         public GroupHeader Header;
         
         /// <summary>ShaderInstances</summary>
-        public ulong[] Instances;
+        public teResourceGUID[] Instances;
         
         /// <summary>
         /// Read ShaderGroup from a stream
@@ -57,7 +57,7 @@ namespace TankLib {
             
             if (Header.InstanceOffset > 0) {
                 reader.BaseStream.Position = Header.InstanceOffset;
-                Instances = reader.ReadArray<ulong>(Header.InstanceCount);
+                Instances = reader.ReadArray<teResourceGUID>(Header.InstanceCount);
             }
         }
     }

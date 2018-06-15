@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
 using TankLib.STU;
+using TankLib.STU.Types;
 
 namespace TankLibHelper.Modes {
     public class TestTypeClasses : IMode {
@@ -29,6 +31,11 @@ namespace TankLibHelper.Modes {
                 using (Stream stream = OpenFile(file)) {
                     if (stream == null) continue;
                     teStructuredData structuredData = new teStructuredData(stream);
+
+                    STUSkinTheme skinTheme = structuredData.GetMainInstance<STUSkinTheme>();
+                    //if (skinTheme.m_50FDDF83 != null) {
+                    //    continue;
+                    //}
 
                     //STUGameRuleset ruleset = structuredData.GetMainInstance<STUGameRuleset>();
                     //if (ruleset.m_gamemode.m_gamemode == 157625986957967397) {

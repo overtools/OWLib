@@ -46,7 +46,12 @@ namespace TankLib.ExportFormats {
                 } else {
                     writer.Write((ushort)0);
                 }
-                
+
+                if (renderMesh == null) {
+                    writer.Write(0u);
+                    writer.Write(0);
+                    return;
+                }
                 // todo: specify lod
                 teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh.Submeshes.Where(x => x.Descriptor.LOD == 1 || x.Descriptor.LOD == -1).ToArray(); // .Descriptor.LOD == 0
                 writer.Write((uint)submeshes.Length);
