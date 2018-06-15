@@ -81,19 +81,20 @@ namespace TankLib {
             int size = Header.Size;
             byte intFlags = (byte) Header.Flags;
 
-            if (intFlags == 10) {
+            // todo: actually use the damn flags
+            if (intFlags == 10) { // F00000002, F00000008
                 size *= 16;
-            } else if (intFlags == 8) {
+            } else if (intFlags == 8) { // F00000008
                 size *= 8;
-            } else if (intFlags == 11) {
+            } else if (intFlags == 11) { // F00000001, F00000002, F00000008
                 size *= 16;
-            } else if (intFlags == 3) {
+            } else if (intFlags == 3) { // F00000001, F00000002
                 size *= 4;
-            } else if (intFlags == 2) {
+            } else if (intFlags == 2) { // F00000002
                 size *= 4;
-            } else if (intFlags == 6) {
+            } else if (intFlags == 6) { // F00000002, F00000004
                 size *= 4;
-            } else if (intFlags == 9) {
+            } else if (intFlags == 9) { // F00000001, F00000008
                 size *= 12;
             } else {
                 throw new Exception($"teMaterialDataWeirdBuffer: Unsure how much to read for data ({intFlags}, flags: {Header.Flags}, offset: {reader.BaseStream.Position})");
