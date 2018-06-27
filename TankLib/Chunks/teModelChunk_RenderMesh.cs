@@ -80,27 +80,12 @@ namespace TankLib.Chunks {
         
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct VertexElementDescriptor {
-            public SemanticType Type;
+            public teShaderInstance.ShaderInputUse Type;
             public byte Index;
             public SemanticFormat Format;
             public byte Stream;
             public ushort Classification;
             public ushort Offset;
-        }
-
-        /// <summary>Vertex semantic type</summary>
-        public enum SemanticType : byte {
-            Position = 0x0,
-            Normal = 0x1,
-            Color = 0x2,
-            Tangent = 0x3,
-            BlendIndices = 0x4,
-            BlendWeight = 0x5,
-            Unknown1 = 0x6,
-            Unknown2 = 0x7,
-            Unknown3 = 0x8,
-            UV = 0x9,
-            ID = 0x10
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -174,6 +159,9 @@ namespace TankLib.Chunks {
 
             /// <summary>Triangle indices</summary>
             public ushort[] Indices;
+
+            public teColorRGBA[] Color1;
+            public teColorRGBA[] Color2;
             
             /// <summary>Source descriptor</summary>
             public SubmeshDescriptor Descriptor;
@@ -194,6 +182,9 @@ namespace TankLib.Chunks {
                 
                 UV = new teVec2[submeshDescriptor.VerticesToDraw][];
                 
+                Color1 = new teColorRGBA[submeshDescriptor.VerticesToDraw];
+                Color2 = new teColorRGBA[submeshDescriptor.VerticesToDraw];
+                
                 BoneIndices = new ushort[submeshDescriptor.VerticesToDraw][];
                 BoneWeights = new float[submeshDescriptor.VerticesToDraw][];
                 for (int i = 0; i < submeshDescriptor.VerticesToDraw; i++) {
@@ -205,7 +196,7 @@ namespace TankLib.Chunks {
         }
         
         /// <summary>Unhandled vertex semantic types</summary>
-        private static readonly HashSet<SemanticType> UnhandledSemanticTypes = new HashSet<SemanticType>();
+        private static readonly HashSet<teShaderInstance.ShaderInputUse> UnhandledSemanticTypes = new HashSet<teShaderInstance.ShaderInputUse>();
         
         /// <summary>Header data</summary>
         public RenderMeshHeader Header;
@@ -355,7 +346,7 @@ namespace TankLib.Chunks {
                 SubmeshDescriptor submeshDescriptor = SubmeshDescriptors[i];
                 //VertexBufferDescriptor vbo = VertexBuffers[submeshDescriptor.VertexBuffer];
                 IndexBufferDescriptor ibo = IndexBuffers[submeshDescriptor.IndexBuffer];
-                byte uvCount = GetMaxIndex(VertexElements[submeshDescriptor.VertexBuffer], SemanticType.UV);
+                byte uvCount = GetMaxIndex(VertexElements[submeshDescriptor.VertexBuffer], teShaderInstance.ShaderInputUse.TexCoord);
                 
                 Submesh submesh = new Submesh(submeshDescriptor, uvCount);
                 
@@ -387,7 +378,7 @@ namespace TankLib.Chunks {
                         if (element.Format == SemanticFormat.NONE) break;
                         object value = Stride[submeshDescriptor.VertexBuffer][j][offset][l];
                         switch (element.Type) {
-                            case SemanticType.Position:
+                            case teShaderInstance.ShaderInputUse.Position:
                                 if (element.Index == 0) {
                                     float[] position = (float[]) value;
                                     submesh.Vertices[k] = new teVec3(position);
@@ -396,7 +387,7 @@ namespace TankLib.Chunks {
                                        $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");
                                 }
                                 break;
-                            case SemanticType.Normal:
+                            case teShaderInstance.ShaderInputUse.Normal:
                                 if (element.Index == 0) {
                                     float[] normal = (float[]) value;
                                     submesh.Normals[k] = new teVec3(normal.Take(3).ToArray());
@@ -405,12 +396,12 @@ namespace TankLib.Chunks {
                                         $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");
                                 }
                                 break;
-                            case SemanticType.UV: {
+                            case teShaderInstance.ShaderInputUse.TexCoord: {
                                 ushort[] uv = (ushort[]) value;
                                 submesh.UV[k][element.Index] = teVec2.FromHalf(uv);
                             }
                                 break;
-                            case SemanticType.BlendIndices:
+                            case teShaderInstance.ShaderInputUse.BlendIndices:
                                 if (element.Index == 0) {
                                     byte[] boneIndex = (byte[]) value;
                                     submesh.BoneIndices[k] = new ushort[boneIndex.Length];
@@ -422,7 +413,7 @@ namespace TankLib.Chunks {
                                         $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");
                                 }
                                 break;
-                            case SemanticType.BlendWeight:
+                            case teShaderInstance.ShaderInputUse.BlendWeights:
                                 if (element.Index == 0) {
                                     submesh.BoneWeights[k] = (float[]) value;
                                 } else {
@@ -430,13 +421,25 @@ namespace TankLib.Chunks {
                                         $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");
                                 }
                                 break;
-                            case SemanticType.Tangent:
+                            case teShaderInstance.ShaderInputUse.Tangent:
                                 float[] tangent = (float[]) value;
                                 submesh.Tangents[k] = new teVec4(tangent);
                                 break;
-                            case SemanticType.ID:
+                            case teShaderInstance.ShaderInputUse.VertexIndex:  // todo: lolno
                                 uint id = (uint) value;
                                 submesh.IDs[k] = id;
+                                break;
+                            case teShaderInstance.ShaderInputUse.Color:
+                                float[] col = (float[]) value;
+                                if (element.Index == 0) {
+                                    submesh.Color1[k] = new teColorRGBA(col);
+                                } else if (element.Index == 1) {
+                                    submesh.Color2[k] = new teColorRGBA(col);
+                                } else {
+                                    Debugger.Log(2, "teModelChunk_RenderMesh",
+                                        $"Unhandled vertex color index: {element.Index:X}\n");
+                                }
+
                                 break;
                             default:
                                 if (UnhandledSemanticTypes.Add(element.Type) && Debugger.IsAttached) {
@@ -452,7 +455,7 @@ namespace TankLib.Chunks {
             }
         }
 
-        private byte GetMaxIndex(VertexElementDescriptor[] elements, SemanticType type) {
+        private byte GetMaxIndex(VertexElementDescriptor[] elements, teShaderInstance.ShaderInputUse type) {
             byte max = 0;
             foreach (VertexElementDescriptor element in elements)
                 if (element.Type == type) max = System.Math.Max(max, element.Index);

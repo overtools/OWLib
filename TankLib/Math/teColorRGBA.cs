@@ -1,4 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace TankLib.Math {
     /// <summary>4 component RGBA color</summary>
@@ -15,6 +17,16 @@ namespace TankLib.Math {
         
         /// <summary>Alpha component</summary>
         public float A;
+        
+        public teColorRGBA(IReadOnlyList<float> val) {
+            if (val.Count != 4) {
+                throw new InvalidDataException();
+            }
+            R = val[0];
+            G = val[1];
+            B = val[2];
+            A = val[3];
+        }
 
         public static bool operator ==(teColorRGBA a, teColorRGBA b) {
             return a.Equals(b);

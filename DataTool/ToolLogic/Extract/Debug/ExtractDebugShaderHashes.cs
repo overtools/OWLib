@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DataTool.Flag;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -31,22 +32,31 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
             foreach (ulong guid in TrackedFiles[0x86]) {
                 teShaderInstance instance = new teShaderInstance(OpenFile(guid));
-                teShaderCode shaderCode = new teShaderCode(OpenFile(instance.Header.ShaderCode));
+                //teShaderCode shaderCode = new teShaderCode(OpenFile(instance.Header.ShaderCode));
 
                 //if (shaderCode.Header.ShaderType != Enums.teSHADER_TYPE.PIXEL) continue;
                 //if (shaderCode.Header.ShaderType != Enums.teSHADER_TYPE.VERTEX) continue;
                 //if (shaderCode.Header.ShaderType != Enums.teSHADER_TYPE.COMPUTE) continue;
                 
-                if (instance.TextureInputs == null) continue;
-                foreach (teShaderInstance.TextureInputDefinition inputDefinition in instance.TextureInputs) {
-                    hashes.Add(inputDefinition.NameHash);
+                if (instance.ShaderResources != null) {
+                    foreach (teShaderInstance.ShaderResourceDefinition inputDefinition in instance.ShaderResources) {
+                        hashes.Add(inputDefinition.NameHash);
+                    }
+                }
+
+                if (instance.BufferParts != null) {
+                    foreach (teShaderInstance.BufferPart[] bufferParts in instance.BufferParts) {
+                        foreach (teShaderInstance.BufferPart part in bufferParts) {
+                            hashes.Add(part.Hash);
+                        }
+                    }
                 }
             }
 
             string path = Path.Combine(basePath, container, "hashes.txt");
             CreateDirectoryFromFile(path);
             using (StreamWriter writer = new StreamWriter(path)) {
-                foreach (uint hash in hashes) {
+                foreach (uint hash in hashes.OrderBy(x => x)) {
                     writer.WriteLine($"{hash:X8}");
                 }
             }

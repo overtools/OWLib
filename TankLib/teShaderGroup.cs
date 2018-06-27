@@ -9,23 +9,25 @@ namespace TankLib {
             /// <summary>ShaderInstance array offset</summary>
             public long InstanceOffset;
             
-            public long OffsetB;
+            public long HashOffset;
             public long OffsetC;
             public long OffsetD;
             public long OffsetE;
             
             /// <summary>teShaderSource that this group was generated from</summary>
             /// <remarks>088 GUID</remarks>
-            public teResourceGUID ShaderSource;
+            public teResourceGUID SourceGUID;
             
             /// <summary>A virtual reference. Usage unknown</summary>
             /// <remarks>00F GUID</remarks>
-            public teResourceGUID GUIDx00F;
+            public teResourceGUID CacheGUID;
 
             public ulong Unknown;
             
-            /// <summary>ShaderInstance count</summary>
-            public int InstanceCount;
+            /// <summary>Number of referenced shaders</summary>
+            public int NumShaders;  // m_numShaders
+
+            public byte ShaderStateFlags;
         }
 
         /// <summary>Header Data</summary>
@@ -33,6 +35,8 @@ namespace TankLib {
         
         /// <summary>ShaderInstances</summary>
         public teResourceGUID[] Instances;
+
+        public uint[] Hashes;
         
         /// <summary>
         /// Read ShaderGroup from a stream
@@ -57,8 +61,23 @@ namespace TankLib {
             
             if (Header.InstanceOffset > 0) {
                 reader.BaseStream.Position = Header.InstanceOffset;
-                Instances = reader.ReadArray<teResourceGUID>(Header.InstanceCount);
+                Instances = reader.ReadArray<teResourceGUID>(Header.NumShaders);
             }
+
+            if (Header.HashOffset > 0) {
+                reader.BaseStream.Position = Header.HashOffset;
+                Hashes = reader.ReadArray<uint>(Header.NumShaders);
+            }
+        }
+
+        public teResourceGUID GetShaderByHash(uint hash) {
+            if (Hashes == null) return (teResourceGUID) 0;
+            for (int i = 0; i < Header.NumShaders; i++) {
+                if (Hashes[i] == hash) {
+                    return Instances[i];
+                }
+            }
+            return (teResourceGUID) 0;
         }
     }
 }

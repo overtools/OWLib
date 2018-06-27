@@ -31,26 +31,6 @@ namespace TankLibHelper.Modes {
                 using (Stream stream = OpenFile(file)) {
                     if (stream == null) continue;
                     teStructuredData structuredData = new teStructuredData(stream);
-
-                    STUSkinTheme skinTheme = structuredData.GetMainInstance<STUSkinTheme>();
-                    //if (skinTheme.m_50FDDF83 != null) {
-                    //    continue;
-                    //}
-
-                    //STUGameRuleset ruleset = structuredData.GetMainInstance<STUGameRuleset>();
-                    //if (ruleset.m_gamemode.m_gamemode == 157625986957967397) {
-                    //    foreach (STUGameRulesetTeam team in ruleset.m_gamemode.m_teams) {
-                    //        if (team.m_availableHeroes == null) continue;
-                    //        if (team.m_availableHeroes is STU_C45DE560 heroSkinOverrides) {
-                    //            foreach (teStructuredDataAssetRef<ulong> heroSkinOverride in heroSkinOverrides.m_62E537BD) {
-                    //                STU_42270D59 skin = GetInst<STU_42270D59>(heroSkinOverride);
-                    //                foreach (KeyValuePair<ulong,STU_3E88143F> rep in skin.m_258A7D5C) {
-                    //                    Console.Out.WriteLine($"{teResourceGUID.AsString(rep.Key)} : {teResourceGUID.AsString(rep.Value.m_3D884507)}");
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-                    //}
                 }
             }
             
