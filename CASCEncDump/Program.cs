@@ -10,6 +10,8 @@ using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
 using TankLib.ExportFormats;
+using TankLib.STU;
+using TankLib.STU.Types;
 
 namespace CASCEncDump {
     internal class Program {
@@ -222,25 +224,27 @@ namespace CASCEncDump {
                         
                         TryConvertFile(stream, ConvertIdxDir, md5);
 
-                        stream.Position = 0;
-
-                        using (Stream file = File.OpenWrite(Path.Combine(RawIdxDir, md5))) {
-                            stream.CopyTo(file);
-                        }
+                        //stream.Position = 0;
+                        //using (Stream file = File.OpenWrite(Path.Combine(RawIdxDir, md5))) {
+                        //    stream.CopyTo(file);
+                        //}
                         
                         rawStream.Dispose();
                         stream.Dispose();
                     } catch (Exception e) {
-                        if (e is BLTEKeyException exception) {
-                            if (missingKeys.Add(exception.MissingKey)) {
-                                Console.Out.WriteLine($"Missing key: {exception.MissingKey:X16}");
-                            }
-                        } else {
-                            Console.Out.WriteLine(e);
-                        }
+                        //if (e is BLTEKeyException exception) {
+                        //    if (missingKeys.Add(exception.MissingKey)) {
+                        //        Console.Out.WriteLine($"Missing key: {exception.MissingKey:X16}");
+                        //    }
+                        //} else {
+                        //    Console.Out.WriteLine(e);
+                        //}
                     }
                 }
             }
+
+            Console.Write("done");
+            Console.ReadLine();
         }
 
         public static void CompareEnc(string[] args) {
@@ -270,11 +274,10 @@ namespace CASCEncDump {
                         
                         TryConvertFile(stream, ConvertEncDir, md5);
 
-                        stream.Position = 0;
-
-                        using (Stream file = File.OpenWrite(Path.Combine(RawEncDir, md5))) {
-                            stream.CopyTo(file);
-                        }
+                        //stream.Position = 0;
+                        //using (Stream file = File.OpenWrite(Path.Combine(RawEncDir, md5))) {
+                        //    stream.CopyTo(file);
+                        //}
                     } catch (Exception e) {
                         if (e is BLTEKeyException exception) {
                             if (missingKeys.Add(exception.MissingKey)) {
@@ -353,8 +356,28 @@ namespace CASCEncDump {
                             using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".dds")) {
                                 file.SetLength(0);
                                 texture.SaveToDDS(file);
-                                Console.Out.WriteLine(texture.Header.DataSize);
                             }
+                        }
+                    } catch (Exception) {
+                        // fine
+                    }
+
+                    try {
+                        stream.Position = 0;
+                        teStructuredData structuredData =new teStructuredData(stream, true);
+
+                        if (structuredData.GetInstance<STU_1DA7C021>() != null) {
+                            var key = structuredData.GetInstance<STU_1DA7C021>();
+                            
+                            Console.Out.WriteLine("found key");
+                            var longKey = ulong.Parse(key.m_keyID, NumberStyles.HexNumber);
+                            var longRevKey = BitConverter.ToUInt64(BitConverter.GetBytes(longKey).Reverse().ToArray(), 0);
+                            var keyValueString = BitConverter.ToString(key.m_key).Replace("-", string.Empty);
+                            var keyNameProper = longRevKey.ToString("X16");
+                            Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}",keyNameProper, keyValueString);
+                        }
+                        if (structuredData.GetInstance<STUHero>() != null) {
+                            
                         }
                     } catch (Exception) {
                         // fine

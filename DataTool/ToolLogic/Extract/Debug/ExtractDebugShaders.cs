@@ -62,19 +62,21 @@ namespace DataTool.ToolLogic.Extract.Debug {
             //SaveMaterial(path, 0xE00000000005C70, "Moira - Blackwatch - Decals");
             //SaveMaterial(path, 0xE0000000000562D, "Moira - Blackwatch - Face");
             //SaveCompute(path);
-            
-            
 
-            string allPath = Path.Combine(path, "All");
-            foreach (ulong inst in TrackedFiles[0x86]) {
-                SaveShaderInstance(allPath, inst, teResourceGUID.AsString(inst));
-            }
-            return;
-            SaveMaterial(path, 0xE00000000002381, "Chateau - Tall bush");
+            // string allPath = Path.Combine(path, "All");
+            // foreach (ulong inst in TrackedFiles[0x86]) {
+            //     SaveShaderInstance(allPath, inst, teResourceGUID.AsString(inst));
+            // }
+            // return;
             
-            SavePostFX(path);
-            SaveScreenQuad(path);
-            Save088(path);
+            SaveMaterial(path, 0xE00000000002381, "Chateau - Tall bush");
+            SaveMaterial(path, 0xE00000000004D29, "Chateau - Lake");
+            SaveMaterial(path, 0xE00000000004F0B, "Chateau - Background - Road");
+            SaveMaterial(path, 0xE00000000004EFF, "Chateau - Background - House");
+            
+            //SavePostFX(path);
+            //SaveScreenQuad(path);
+            //Save088(path);
         }
         
         public void Save088(string basePath) {

@@ -61,8 +61,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     }
                 }
 
-                if (instance.BufferParts != null) {
-                    foreach (teMaterialDataBufferPart bufferPart in instance.BufferParts) {
+                if (instance.StaticInputs != null) {
+                    foreach (teMaterialDataStaticInput bufferPart in instance.StaticInputs) {
                         if (missing.Contains(bufferPart.Header.Hash)) {
                             Console.Out.WriteLine($"{bufferPart.Header.Hash:X8} - {teResourceGUID.AsString(guid)} (buffer part)");
                         }

@@ -8,23 +8,23 @@ namespace TankLib {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct ShaderCodeHeader {
             /// <summary>Offset to DXBC data</summary>
-            public long DataOffset;
+            public long DataOffset; // 0
             
             /// <summary>Offset to unknown data</summary>
-            public long OffsetB;
+            public long OffsetB; // 8
             
-            public uint UnknownFF;
+            public uint UnknownFF; // 16
             
             /// <summary>Unknown data count</summary>
-            public uint CountB;
+            public uint StreamOutDescCount; // 20
             
-            public uint Unknown;
+            public uint Unknown; // 24
             
             /// <summary>Size of DXBC data</summary>
-            public int DataSize;
+            public int DataSize;  // 28
             
             /// <summary>Shader type</summary>
-            public Enums.teSHADER_TYPE ShaderType;
+            public Enums.teSHADER_TYPE ShaderType;  // 32
         }
 
         /// <summary>Header Data</summary>

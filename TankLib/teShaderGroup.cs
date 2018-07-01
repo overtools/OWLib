@@ -7,25 +7,27 @@ namespace TankLib {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct GroupHeader {
             /// <summary>ShaderInstance array offset</summary>
-            public long InstanceOffset;
+            public long InstanceOffset; // 0
             
-            public long HashOffset;
-            public long OffsetC;
-            public long OffsetD;
-            public long OffsetE;
+            public long HashOffset; // 8
+            public long FlagsOffset; // 16
+            
+            public long OffsetD; // 24
+            public long OffsetE; // 32
             
             /// <summary>teShaderSource that this group was generated from</summary>
             /// <remarks>088 GUID</remarks>
-            public teResourceGUID SourceGUID;
+            public teResourceGUID SourceGUID; // 40
             
             /// <summary>A virtual reference. Usage unknown</summary>
             /// <remarks>00F GUID</remarks>
-            public teResourceGUID CacheGUID;
+            public teResourceGUID CacheGUID; // 48
 
-            public ulong Unknown;
+            public uint Unknown; // 56
+            public uint Flags; // 60
             
             /// <summary>Number of referenced shaders</summary>
-            public int NumShaders;  // m_numShaders
+            public int NumShaders;  // m_numShaders, 64
 
             public byte ShaderStateFlags;
         }
@@ -36,7 +38,12 @@ namespace TankLib {
         /// <summary>ShaderInstances</summary>
         public teResourceGUID[] Instances;
 
+        public ulong[] InstanceFlags;
+
         public uint[] Hashes;
+
+        public ShaderQuality[] ShaderQualities;
+        public ShaderUnk[] ShaderUnks;
         
         /// <summary>
         /// Read ShaderGroup from a stream
@@ -68,6 +75,37 @@ namespace TankLib {
                 reader.BaseStream.Position = Header.HashOffset;
                 Hashes = reader.ReadArray<uint>(Header.NumShaders);
             }
+
+            if (Header.FlagsOffset > 0) {
+                reader.BaseStream.Position = Header.FlagsOffset;
+                InstanceFlags = reader.ReadArray<ulong>(Header.NumShaders);
+            }
+
+            {
+                reader.BaseStream.Position = 72;
+                ShaderQualities = reader.ReadArray<ShaderQuality>(5);
+
+                reader.BaseStream.Position = 104;
+                ShaderUnks = reader.ReadArray<ShaderUnk>(5);
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct ShaderQuality {
+            public short VertexIndex;
+            public short PixelIndex;
+
+            public short UnkA;
+            public short UnkB;
+        }
+        
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct ShaderUnk {
+            public short Vertex;
+            public short Pixel;
+
+            public short UnkA;
+            public short UnkB;
         }
 
         public teResourceGUID GetShaderByHash(uint hash) {
