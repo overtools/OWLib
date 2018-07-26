@@ -64,7 +64,7 @@ namespace DataTool.ToolLogic.List {
 
         public static Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> GetUnlocks() {
             Dictionary<string, Dictionary<string, HashSet<ItemInfo>>> @return = new Dictionary<string, Dictionary<string, HashSet<ItemInfo>>>();
-            foreach (ulong key in TrackedFiles[0x75]) {
+            foreach (ulong key in TrackedFiles[0x75].OrderBy(GUID.Index)) {
                 STUHero hero = GetInstance<STUHero>(key);
                 if (hero == null) continue;
 

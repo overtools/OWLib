@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -104,7 +105,7 @@ namespace DataTool.ToolLogic.List {
                 achievementList.Add(new AchievementInfo(key, name, group, desc, hero, reward));
             }
 
-            return achievementList;
+            return achievementList.OrderBy(a => a.GUID).ToList();
         }
 
         private static IDictionary<ulong, string> GetHeroItemMapping() {

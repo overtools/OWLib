@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
 using Newtonsoft.Json;
+using OWLib;
 using STULib.Types;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
@@ -67,7 +69,7 @@ namespace DataTool.ToolLogic.List {
         public Dictionary<string, SubtitleInfo> GetSubtitles() {
             Dictionary<string, SubtitleInfo> @return = new Dictionary<string, SubtitleInfo>();
 
-            foreach (ulong key in TrackedFiles[0x71]) {
+            foreach (ulong key in TrackedFiles[0x71].OrderBy(GUID.Index)) {
                 STUSubtitleContainer subtitleContainer = GetInstance<STUSubtitleContainer>(key);
                 if (subtitleContainer == null) continue;
 

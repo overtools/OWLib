@@ -43,7 +43,7 @@ namespace DataTool.ToolLogic.List {
 
         public Dictionary<string, HashSet<ItemInfo>> GetUnlocks() {
             Dictionary<string, HashSet<ItemInfo>> @return = new Dictionary<string, HashSet<ItemInfo>>();
-            foreach (ulong key in TrackedFiles[0x54]) {
+            foreach (ulong key in TrackedFiles[0x54].OrderBy(GUID.Index)) {
                 STUGlobalInventoryMaster invMaster = GetInstance<STUGlobalInventoryMaster>(key);
                 if (invMaster == null) continue;
 

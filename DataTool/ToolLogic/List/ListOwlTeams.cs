@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DataTool.Flag;
 using DataTool.JSON;
 using Newtonsoft.Json;
@@ -80,7 +81,7 @@ namespace DataTool.ToolLogic.List {
                 @return.Add(new OwlTeam(key, name, location, abbreviation, data.Division, data));
             }
 
-            return @return;
+            return @return.OrderBy(o => o.GUID).ToList();
         }
     }
 }

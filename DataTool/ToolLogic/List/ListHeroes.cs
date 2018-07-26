@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
@@ -134,11 +135,6 @@ namespace DataTool.ToolLogic.List {
                 AbilityInfo abi = GetAbility(ability);
                 if (abi == null) continue;
 
-                if(abi == null)
-                {
-                    continue;
-                }
-
                 string name = abi.Name == null ? $"Unknown{GUID.Index(ability):X}" : $"{abi.Name}:{GUID.Index(ability):X}";               
                 @return[name] = abi;
             }
@@ -149,7 +145,7 @@ namespace DataTool.ToolLogic.List {
         public Dictionary<string, HeroInfo> GetHeroes() {
             Dictionary<string, HeroInfo> @return = new Dictionary<string, HeroInfo>();
 
-            foreach (ulong key in TrackedFiles[0x75]) {
+            foreach (ulong key in TrackedFiles[0x75].OrderBy(GUID.Index)) {
                 STUHero hero = GetInstance<STUHero>(key);
                 if (hero == null) continue;
 

@@ -10,8 +10,9 @@ namespace DataTool.DataModels {
 	    public string Type;
 	    public string Description;
 	    public string AvailableIn;
-	    [JsonIgnore]
+	    
 	    public STUUnlock Unlock;
+
 	    [JsonConverter(typeof(GUIDConverter))]
 	    public ulong GUID;
 
