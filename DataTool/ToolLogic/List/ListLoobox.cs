@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
 using Newtonsoft.Json;
 using STULib.Types;
+using STULib.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
@@ -21,20 +21,22 @@ namespace DataTool.ToolLogic.List {
         
         [JsonObject(MemberSerialization.OptOut)]
         public class LootboxInfo {
-            public string Name;
             public string Event;
+            public STUEnumEventID EventId;
+            public string Name;
             public List<string> Strings;
             public List<string> Boxes;
 
             [JsonConverter(typeof(GUIDConverter))]
             public ulong GUID;
             
-            public LootboxInfo(ulong guid, string name, string eventName, List<string> strings, List<string> boxes) {
-                GUID = guid;
-                Name = name;
+            public LootboxInfo(ulong guid, string name, string eventName, STUEnumEventID eventId, List<string> strings, List<string> boxes) {
                 Event = eventName;
+                EventId = eventId;
+                Name = name;
                 Strings = strings;
                 Boxes = boxes;
+                GUID = guid;
             }
         }
 
@@ -69,10 +71,10 @@ namespace DataTool.ToolLogic.List {
                 var strings = lootbox.Strings.Select(l => GetString(l) ?? "Unknown").ToList();
                 var boxes = lootbox.ShopCards.Select(l => GetString(l.Text) ?? "Unknown").ToList();
 
-                lootboxList.Add(new LootboxInfo(key, name, lootbox.EventNameNormal, strings, boxes));
+                lootboxList.Add(new LootboxInfo(key, name, lootbox.EventNameNormal, lootbox.Event, strings, boxes));
             }
 
-            return lootboxList;
+            return lootboxList.OrderBy(l => (int) l.EventId).ToList();
         }
     }
 }
