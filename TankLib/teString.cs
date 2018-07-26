@@ -8,6 +8,8 @@ namespace TankLib {
         /// <summary>Value of the string</summary>
         public string Value;
         public Enums.SDAM Mutability;
+        
+        public teString() {}
 
         public teString(string value) {
             Value = value;
@@ -43,7 +45,7 @@ namespace TankLib {
         }
 
         public static implicit operator string(teString @string) {
-            return @string.Value;
+            return @string?.Value;
         }
 
         public override string ToString() {

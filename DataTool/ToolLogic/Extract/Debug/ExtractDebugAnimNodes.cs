@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using DataTool.Flag;
-using DataTool.ToolLogic.List;
+using DataTool.Helper;
 using Newtonsoft.Json;
-using STULib.Types;
-using STULib.Types.Dump;
+using TankLib;
+using TankLib.STU.Types;
+//using STULib.Types;
+//using STULib.Types.Dump;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-anim-nodes", Description = "Extract anim nodes (debug)", TrackTypes = new ushort[] {0x20}, CustomFlags = typeof(ListFlags), IsSensitive = true)]
+    [Tool("extract-debug-anim-nodes", Description = "Extract anim nodes (debug)", TrackTypes = new ushort[] {0x20}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugAnimNodes : JSONTool, ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
@@ -50,12 +53,16 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         public void SaveAnimNodes(ICLIFlags toolFlags) {
-            ListFlags flags = toolFlags as ListFlags;
-            
+            if (!(toolFlags is ExtractFlags flags)) {
+                throw new Exception("wat");
+            }
+            string path = Path.Combine(flags.OutputPath, "DebugAnimNodes");
+            IO.CreateDirectoryFromFile(Path.Combine(path, "daivd clyde"));
+
             // I didn't want to write code for a viewer so use: https://github.com/cb109/qtnodes
             
             foreach (ulong key in TrackedFiles[0x20]) {
-                if (key != 1116892707587883363) continue; // 020 reaper hero select
+                /*if (key != 1116892707587883363) continue; // 020 reaper hero select
                 STUAnimBlendTree tree = GetInstance<STUAnimBlendTree>(key);
                 GraphRoot root = new GraphRoot {nodes = new List<GraphNode>(), edges = new List<GraphEdge>()};
                 if (tree?.AnimNodes == null) continue;
@@ -76,12 +83,92 @@ namespace DataTool.ToolLogic.Extract.Debug {
                         }
                     }
                 }
-                ParseJSON(root, flags);
+                ParseJSON(root, flags);*/
                 
                 // notes: (all oldhash)
                 // {STU_2D84E49E} for strafe stuff
                 
                 // <= breakpoint here
+                GraphRoot root = new GraphRoot {nodes = new List<GraphNode>(), edges = new List<GraphEdge>()};
+
+                STUAnimBlendTree blendTree = GetInstanceNew<STUAnimBlendTree>(key);
+                if (blendTree.m_animNodes == null) continue;
+                foreach (STUAnimNode_Base animNode in blendTree.m_animNodes) {
+                    ParseNode(root, animNode);
+                }
+
+                string json = JsonConvert.SerializeObject(root, Formatting.Indented);
+                string output = Path.Combine(path, $"{teResourceGUID.AsString(key)}.json");
+                using (Stream file = File.OpenWrite(output)) {
+                    file.SetLength(0);
+                    using (TextWriter writer = new StreamWriter(file)) {
+                        writer.WriteLine(json);
+                    }
+                }
+            }
+        }
+
+        public void ParseNode(GraphRoot root, STUAnimNode_Base animNode) {
+            if (animNode == null) return;
+            
+            string name = $"{animNode.GetType().Name} - {animNode.m_uniqueID}";
+
+            if (animNode.m_layers != null) {
+                foreach (STU_40274C18 layer in animNode.m_layers) {
+                    AddChild(root, layer, animNode.m_uniqueID);
+                }
+            }
+
+            if (animNode is STUAnimNode_StateMachine stateMachine) {
+                if (stateMachine.m_children != null) {
+                    foreach (STU_74173BA8 child in stateMachine.m_children) {
+                        AddChild(root, child, animNode.m_uniqueID);
+                    }
+                }
+            }
+            if (animNode is STU_C0F7EA53 unk1) {
+                if (unk1.m_children != null) {
+                    foreach (STU_597F8A0B child in unk1.m_children) {
+                        AddChild(root, child, animNode.m_uniqueID);
+                    }
+                }
+            }
+            if (animNode is STU_F7384072 unk2) {
+                if (unk2.m_children != null) {
+                    foreach (STU_F632355B child in unk2.m_children) {
+                        AddChild(root, child, animNode.m_uniqueID);
+                    }
+                }
+            }
+            if (animNode is STU_58C5699C unk3) {
+                if (unk3.m_child != null) {
+                    AddChild(root, unk3.m_child, animNode.m_uniqueID);
+                }
+            }
+            if (animNode is STUAnimNode_BranchByCategory byCategory) {
+                if (byCategory.m_children != null) {
+                    foreach (STU_C9E2FF36 child in byCategory.m_children) {
+                        AddChild(root, child, animNode.m_uniqueID);
+                    }
+                }
+            }
+
+            if (animNode is STUAnimNode_Animation anim) {
+                if (anim.m_animation != null) {
+                    if (anim.m_animation.m_63DEDAC0 != 0) {
+                        name += $" - {anim.m_animation.m_63DEDAC0-1}";
+                    }
+                }
+            }
+            
+            root.nodes.Add(new GraphNode {x = animNode.m_pos.X, y = animNode.m_pos.Y, 
+                uuid = animNode.m_uniqueID.ToString(), @class = "MaxObject", name = name});
+        }
+
+        public void AddChild(GraphRoot root, STU_2F6BD485 child, uint parentId) {
+            if (child.m_AF632ACD != null) {
+                uint parId = child.m_AF632ACD.m_uniqueID;
+                root.edges.Add(new GraphEdge {source_nodeId = parentId.ToString(), target_name = "parent", source_name = "children", target_nodeId = parId.ToString()});
             }
         }
     }

@@ -5,7 +5,9 @@ using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib;
+using TankLib.STU.Types;
 using static DataTool.Program;
+using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-shaders", Description = "Extract shaders for a material (debug)", TrackTypes = new ushort[] {0x8}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
@@ -52,6 +54,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
             string path = Path.Combine(basePath, container);
             
+            //TestModelLook(0x98000000000682F); // Chateau - Lake
+            
             //SaveMaterial(path, 0xE00000000004F46, "Chateau - Tower - Body");
             //SaveMaterial(path, 0xE00000000004F45, "Chateau - Tower - Borders");
             //SaveMaterial(path, 0xE00000000004D4B, "Chateau - Tower - Windows");
@@ -69,15 +73,23 @@ namespace DataTool.ToolLogic.Extract.Debug {
             // }
             // return;
             
-            SaveMaterial(path, 0xE00000000002381, "Chateau - Tall bush");
+            //SaveMaterial(path, 0xE00000000002381, "Chateau - Tall bush");
             SaveMaterial(path, 0xE00000000004D29, "Chateau - Lake");
-            SaveMaterial(path, 0xE00000000004F0B, "Chateau - Background - Road");
-            SaveMaterial(path, 0xE00000000004EFF, "Chateau - Background - House");
+            //SaveMaterial(path, 0xE00000000004F0B, "Chateau - Background - Road");
+            //SaveMaterial(path, 0xE00000000004EFF, "Chateau - Background - House");
+            //SaveMaterial(path, 0xE00000000004F46, "Chateau - Tower - Body");
+            //SaveMaterial(path, 0xE000000000040C0, "Orisa - Classic - Main");
+            //SaveMaterial(path, 0xE00000000005BBB, "Brigitte - Classic - Hair");
+            
             
             //SavePostFX(path);
             //SaveScreenQuad(path);
             //Save088(path);
         }
+
+        public void TestModelLook(ulong guid) {
+            STUModelLook modelLook = GetInstanceNew<STUModelLook>(guid);
+        } 
         
         public void Save088(string basePath) {
             var path = Path.Combine(basePath, "088");
