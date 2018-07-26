@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
@@ -66,7 +67,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<string, MapInfo> maps = GetMaps();
+            List<MapInfo> maps = GetMaps();
 
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
@@ -75,27 +76,27 @@ namespace DataTool.ToolLogic.List {
                 }
 
             var iD = new IndentHelper();
-            foreach (KeyValuePair<string, MapInfo> map in maps) {
-                var data = map.Value;
+            foreach (var map in maps) {
 
-                Log($"{iD}{data.Name ?? map.Key}");
-                Log($"{iD+1}Key: {GUID.Index(data.MetadataGUID):X}");
+                Log($"{iD}{map.Name ?? map.UniqueName}");
+                Log($"{iD+1}Unique Name: {map.UniqueName}");
+                Log($"{iD+1}Key: {GUID.Index(map.MetadataGUID):X}");
                 
-                if (!string.IsNullOrEmpty(data.NameB)) Log($"{iD+1}Alt Name: {data.NameB}");
+                if (!string.IsNullOrEmpty(map.NameB)) Log($"{iD+1}Alt Name: {map.NameB}");
 
-                if (!string.IsNullOrEmpty(data.Description)) Log($"{iD+1}Desc: {data.Description}");
-                if (!string.IsNullOrEmpty(data.DescriptionB)) Log($"{iD+1}DescB: {data.DescriptionB}");
-                if (!string.IsNullOrEmpty(data.Subline)) Log($"{iD+1}Subline: {data.Subline}");
+                if (!string.IsNullOrEmpty(map.Description)) Log($"{iD+1}Desc: {map.Description}");
+                if (!string.IsNullOrEmpty(map.DescriptionB)) Log($"{iD+1}DescB: {map.DescriptionB}");
+                if (!string.IsNullOrEmpty(map.Subline)) Log($"{iD+1}Subline: {map.Subline}");
 
-                if (data.StateA != null || data.StateB != null) {
+                if (map.StateA != null || map.StateB != null) {
                     Log($"{iD+1}States:");
-                    Log($"{iD+2}{data.StateA}");
-                    Log($"{iD+2}{data.StateB}");
+                    Log($"{iD+2}{map.StateA}");
+                    Log($"{iD+2}{map.StateB}");
                 }
 
-                if (data.Gamemodes != null) {
+                if (map.Gamemodes != null) {
                     Log($"{iD+1}Gamemodes:"); 
-                    data.Gamemodes.ForEach(m => Log($"{iD+2}{m.Name}"));
+                    map.Gamemodes.ForEach(m => Log($"{iD+2}{m.Name}"));
                 }
 
                 Log();
@@ -151,16 +152,17 @@ namespace DataTool.ToolLogic.List {
                 map.MapDataResource1, map.MapDataResource2, gamemodes);
         }
 
-        public Dictionary<string, MapInfo> GetMaps() {
-            Dictionary<string, MapInfo> @return = new Dictionary<string, MapInfo>();
+        public List<MapInfo> GetMaps() {
+            List<MapInfo> @return = new List<MapInfo>();
 
             foreach (ulong key in TrackedFiles[0x9F]) {
                 MapInfo map = GetMap(key);
                 if (map == null) continue;
-                @return[map.UniqueName] = map;
+                
+                @return.Add(map);
             }
 
-            return @return;
+            return @return.OrderBy(m => m.MetadataGUID).ToList();
         }
     }
 }
