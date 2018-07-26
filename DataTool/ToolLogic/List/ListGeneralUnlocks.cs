@@ -47,7 +47,7 @@ namespace DataTool.ToolLogic.List {
                 STUGlobalInventoryMaster invMaster = GetInstance<STUGlobalInventoryMaster>(key);
                 if (invMaster == null) continue;
 
-                @return["Achievement"] = GatherUnlocks(invMaster.AchievementUnlocks?.Unlocks?.Select(it => (ulong)it));
+                @return["Achievement"] = GatherUnlocks(invMaster.AchievementUnlocks?.Unlocks?.Select(it => (ulong)it).OrderBy(GUID.Index));
 
                 @return["Standard"] = new HashSet<ItemInfo>();
 
@@ -55,7 +55,7 @@ namespace DataTool.ToolLogic.List {
                     foreach (STUAdditionalUnlocks levelUnlocks in invMaster.LevelUnlocks) {
                         if (levelUnlocks?.Unlocks == null) continue;
 
-                        foreach (ItemInfo info in GatherUnlocks(levelUnlocks.Unlocks.Select(it => (ulong)it))) {
+                        foreach (ItemInfo info in GatherUnlocks(levelUnlocks.Unlocks.Select(it => (ulong)it).OrderBy(GUID.Index))) {
                             @return["Standard"].Add(info);
                         }
                     }
@@ -70,7 +70,7 @@ namespace DataTool.ToolLogic.List {
                         if (!@return.ContainsKey(eventKey))
                             @return[eventKey] = new HashSet<ItemInfo>();
 
-                        foreach (ItemInfo info in GatherUnlocks(eventUnlocks.Unlocks.Unlocks.Select(it => (ulong)it))) {
+                        foreach (ItemInfo info in GatherUnlocks(eventUnlocks.Unlocks.Unlocks.Select(it => (ulong)it).OrderBy(GUID.Index))) {
                             @return[eventKey].Add(info);
                         }
                     }
