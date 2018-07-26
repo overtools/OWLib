@@ -11,7 +11,11 @@ namespace TankLib.Agent
         public string FilePath { get; }
         public Database Data { get; }
 
-        public ProductDatabase(string path = null, bool singleInstall = false)
+        public ProductDatabase() : this(null, false) { }
+
+        public ProductDatabase(string path) : this(path, true) { }
+
+        public ProductDatabase(string path, bool singleInstall)
         {
             FilePath = path;
             if(string.IsNullOrWhiteSpace(FilePath))
