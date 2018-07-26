@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.JSON;
+using Newtonsoft.Json;
 using STULib.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -14,6 +17,25 @@ namespace DataTool.ToolLogic.List {
     public class ListLoobox : JSONTool, ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
+        }
+        
+        [JsonObject(MemberSerialization.OptOut)]
+        public class LootboxInfo {
+            public string Name;
+            public string Event;
+            public List<string> Strings;
+            public List<string> Boxes;
+
+            [JsonConverter(typeof(GUIDConverter))]
+            public ulong GUID;
+            
+            public LootboxInfo(ulong guid, string name, string eventName, List<string> strings, List<string> boxes) {
+                GUID = guid;
+                Name = name;
+                Event = eventName;
+                Strings = strings;
+                Boxes = boxes;
+            }
         }
 
         public void Parse(ICLIFlags toolFlags) {
@@ -27,26 +49,30 @@ namespace DataTool.ToolLogic.List {
 
             var iD = new IndentHelper();
             foreach (var lootboxSet in lootboxes) {
-                Log($"{iD}{lootboxSet.Key}");
-                foreach (var lootbox in lootboxSet.Value)
+                Log($"{iD}{lootboxSet.Event}");
+                foreach (var lootbox in lootboxSet.Boxes)
                     Log($"{iD+1}{lootbox}");
 
                 Log();
             }
         }
 
-        public Dictionary<string, List<string>> GetLootboxes() {
-            Dictionary<string, List<string>> @return = new Dictionary<string, List<string>>();
+        public List<LootboxInfo> GetLootboxes() {
+            List<LootboxInfo> lootboxList = new List<LootboxInfo>();
 
             foreach (ulong key in TrackedFiles[0xCF]) {
                 var lootbox = GetInstance<STULootbox>(key);
-
+                
                 if (lootbox == null) continue;
 
-                @return[lootbox.EventNameNormal] = lootbox.ShopCards.Select(l => GetString(l.Text) ?? "Unknown").ToList();
+                var name = GetString(lootbox.Name);
+                var strings = lootbox.Strings.Select(l => GetString(l) ?? "Unknown").ToList();
+                var boxes = lootbox.ShopCards.Select(l => GetString(l.Text) ?? "Unknown").ToList();
+
+                lootboxList.Add(new LootboxInfo(key, name, lootbox.EventNameNormal, strings, boxes));
             }
 
-            return @return;
+            return lootboxList;
         }
     }
 }
