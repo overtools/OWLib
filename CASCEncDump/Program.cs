@@ -232,11 +232,12 @@ namespace CASCEncDump {
                         rawStream.Dispose();
                         stream.Dispose();
                     } catch (Exception e) {
-                        //if (e is BLTEKeyException exception) {
-                        //    if (missingKeys.Add(exception.MissingKey)) {
-                        //        Console.Out.WriteLine($"Missing key: {exception.MissingKey:X16}");
-                        //    }
-                        //} else {
+                        if (e is BLTEKeyException exception) {
+                            if (missingKeys.Add(exception.MissingKey)) {
+                                Console.Out.WriteLine($"Missing key: {exception.MissingKey:X16}");
+                            }
+                        } 
+                        //else {
                         //    Console.Out.WriteLine(e);
                         //}
                     }
