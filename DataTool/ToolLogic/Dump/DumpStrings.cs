@@ -51,6 +51,19 @@ namespace DataTool.ToolLogic.Dump {
             var strings = new List<StringInfo>();
 
             foreach (var key in TrackedFiles[0x7C].OrderBy(GUID.Index)) {
+                if (key == 0xDE0000000006415) {
+                    continue;
+                    // @OVERWATCH DEVELOPERS
+                    // @OVERWATCH DEVELOPERS
+                    // @OVERWATCH DEVELOPERS
+                    // @OVERWATCH DEVELOPERS
+                    
+                    // PLEASE CHECK THIS STRING
+                    // THANKS
+                    
+                    // YOU WILL KNOW WHAT I MEAN
+                }
+                
                 var str = GetString(key);
                 var fileName = GetFileName(key);
                 if (str == null || fileName == null) continue;
