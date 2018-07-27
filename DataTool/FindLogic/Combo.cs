@@ -526,7 +526,7 @@ namespace DataTool.FindLogic {
                                 STUAnimationCoreferenceComponent ssAnims = component as STUAnimationCoreferenceComponent;
                                 if (ssAnims?.Animations == null) continue;
                                 foreach (STUAnimationCoreferenceComponentAnimation ssAnim in ssAnims.Animations) {
-                                    Find(info, ssAnim.Animation, replacements, entityContext);
+                                    Find(info, ssAnim?.Animation, replacements, entityContext);
                                 }
                             } else if (component.GetType() == typeof(STUUnlockComponent)) {
                                 STUUnlockComponent ssUnlock = component as STUUnlockComponent;
