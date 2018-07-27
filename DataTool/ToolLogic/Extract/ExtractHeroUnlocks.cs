@@ -176,7 +176,8 @@ namespace DataTool.ToolLogic.Extract {
                 
                 var unlocks = GetInstance<STUHeroUnlocks>(hero.LootboxUnlocks);
                 
-                if (unlocks?.Unlocks == null && !npc)
+                // todo: does this even work
+                if (unlocks?.TankLibPlease == null && !npc)
                     continue;
                 if (unlocks?.LootboxUnlocks != null && npc) {
                     continue;
@@ -202,8 +203,8 @@ namespace DataTool.ToolLogic.Extract {
                     continue;
                 }
 
-                foreach (var defaultUnlocks in unlocks.Unlocks)  {
-                    var dUnlocks = GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it)).ToList();
+                foreach (var defaultUnlocks in unlocks.TankLibPlease)  {
+                    var dUnlocks = GatherUnlocks(defaultUnlocks.m_unlocks.Unlocks.Select(it => (ulong) it)).ToList();
                     
                     foreach (ItemInfo itemInfo in dUnlocks) {
                         Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};

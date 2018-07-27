@@ -90,14 +90,14 @@ namespace DataTool.ToolLogic.List {
             @return["Default"] = new HashSet<ItemInfo>(systemUnlocks.Where(i => i.Unlock.LeagueTeam == null));
             @return["OWL"] = new HashSet<ItemInfo>(systemUnlocks.Where(i => i.Unlock.LeagueTeam != null));
 
-            if (unlocks.Unlocks != null) {
-                foreach (STUUnlocks defaultUnlocks in unlocks.Unlocks) {
-                    if (defaultUnlocks?.Unlocks == null) continue;
+            if (unlocks.TankLibPlease != null) {
+                foreach (STU_1757E817 defaultUnlocks in unlocks.TankLibPlease) {
+                    if (defaultUnlocks?.m_unlocks?.Unlocks == null) continue;
 
                     if (!@return.ContainsKey("Standard"))
                         @return["Standard"] = new HashSet<ItemInfo>();
 
-                    foreach (ItemInfo info in GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it))) {
+                    foreach (ItemInfo info in GatherUnlocks(defaultUnlocks.m_unlocks.Unlocks.Select(it => (ulong) it))) {
                         @return["Standard"].Add(info);
                     }
                 }

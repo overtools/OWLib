@@ -15,6 +15,18 @@ namespace STULib.Types {
 
         [STUField(0x473494FF)]
         public STULootBoxUnlocks[] LootboxUnlocks;
+        
+        [STUFieldAttribute(0x7846C401)]
+        public STU_1757E817[] TankLibPlease;
+    }
+    
+    [STUAttribute(0x1757E817)]
+    public class STU_1757E817 : STUInstance {
+        [STUFieldAttribute(0xDB803F2F, "m_unlocks")]
+        public STUUnlocks m_unlocks;
+
+        [STUFieldAttribute(0x2C01908B, "m_level")]
+        public int m_level;
     }
     
     [STU(0xF818D652, "STULootBoxUnlocks")]
