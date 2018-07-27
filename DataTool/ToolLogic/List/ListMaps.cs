@@ -5,8 +5,7 @@ using DataTool.Helper;
 using DataTool.JSON;
 using Newtonsoft.Json;
 using OWLib;
-using STULib.Types;
-using STULib.Types.Generic;
+using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
@@ -102,30 +101,30 @@ namespace DataTool.ToolLogic.List {
         }
 
         public static MapInfo GetMap(ulong key) {
-            STUMap map = GetInstance<STUMap>(key);
+            STU_02514B6A map = GetInstanceNew<STU_02514B6A>(key);
             if (map == null) return null;
 
-            string nameA = GetString(map.DisplayName);
-            string nameB = GetString(map.VariantName);
+            string nameA = GetString(map.m_displayName);
+            string nameB = GetString(map.m_1C706502);
+            string subline = GetString(map.m_EBCFAD22);
 
-            string descA = GetString(map.DescriptionA);
-            string descB = GetString(map.DescriptionB);
-            string subline = GetString(map.SublineString);
+            string descA = GetString(map.m_389CB894);
+            string descB = GetString(map.m_ACB95597);
 
-            string stateA = GetString(map.StateStringA);
-            string stateB = GetString(map.StateStringB);
+            string stateA = GetString(map.m_5AFE2F61);
+            string stateB = GetString(map.m_8EBADA44);
 
             List<GamemodeInfo> gamemodes = null;
-            if (map.Gamemodes != null) {
+            if (map.m_5FF3ACFB != null) {
                 gamemodes = new List<GamemodeInfo>();
-                foreach (Common.STUGUID guid in map.Gamemodes) {
-                    STUGamemode gamemode = GetInstance<STUGamemode>(guid);
+                foreach (ulong guid in map.m_D608E9F3) {
+                    STUGameMode gamemode = GetInstanceNew<STUGameMode>(guid);
                     if (gamemode == null) {
                         continue;
                     }
                         
                     gamemodes.Add(new GamemodeInfo {
-                        Name = GetString(gamemode.DisplayName),
+                        Name = GetString(gamemode.m_displayName),
                         GUID = guid
                     });
                 }
@@ -147,7 +146,7 @@ namespace DataTool.ToolLogic.List {
                 uniqueName = nameA + $":{GUID.Index(key):X}";
             }
             return new MapInfo(uniqueName, key, nameA, nameB, descA, descB, subline, stateA, stateB,
-                map.MapDataResource1, map.MapDataResource2, gamemodes);
+                map.m_map, map.m_38F33424, gamemodes);
         }
 
         public Dictionary<string, MapInfo> GetMaps() {
