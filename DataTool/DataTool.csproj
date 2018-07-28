@@ -94,6 +94,7 @@
     <Compile Include="ToolAttribute.cs" />
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebug0EE.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimNodes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugMaterialData.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugNewEntities.cs" />
