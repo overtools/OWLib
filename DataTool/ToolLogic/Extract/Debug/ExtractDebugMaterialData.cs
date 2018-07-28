@@ -47,8 +47,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 Console.Out.WriteLine($"{pair.Key:X8}: {pair.Value} times");
             }*/
             
-            // vertex shader "textures"
-            uint[] missing = {0x63BE04A7, 0xDF863C6F, 0x2CCD68F5, 0x30B83102};
+            // global value
+            uint[] missing = {0x8395A3E4};
             
             foreach (ulong guid in Program.TrackedFiles[0xB3]) {
                 teMaterialData instance = new teMaterialData(IO.OpenFile(guid));

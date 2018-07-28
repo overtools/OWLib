@@ -7,6 +7,8 @@ E95E2013, STUStatType
 4E56D01D, STUWeaponType
 56DF3C94, STUXPGainType
 
-8A184A5C,STURagdollMode
-909B56BB,STULogicalButton
-9F4E2CAC,STUPlayAnimSlot
+8A184A5C, STURagdollMode
+909B56BB, STULogicalButton
+9F4E2CAC, STUPlayAnimSlot
+
+8F2CDF51, TeamIndex

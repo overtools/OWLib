@@ -432,3 +432,14 @@ F13353CA, STULineupPoseVariant
 2BD49D74, STUPetComponent
 02514B6A, STUMapHeader
 AC40722C, STUMapCelebrationOverride
+1DA7C021, STUResourceKey
+C3EE0CD6, STUConfigVarResourceKey
+A7AAA35A, STUConfigVarGetSkinOverride
+0539C988, STUFogData
+610E3DD8, STUBloomData
+C18DC9CD, STUMapLayer
+5CEF8CD7, STUEnlightenData
+0CB105FA, STUThumbnailData
+58B3D0D0, STUEmptyAsset
+E93236BC, STUAnimGameData_Animation
+66BB2EF3, STUNumberSettings
