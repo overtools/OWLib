@@ -154,14 +154,10 @@ namespace DataTool.ToolLogic.Extract
                         foreach (ItemInfo itemInfo in dUnlocks)
                         {
                             if (itemInfo == null)
-                            {
                                 continue;
-                            }
 
                             if ((itemInfo.Unlock as STUUnlock_Skin)?.LeagueTeam != 0)
-                            {
                                 continue;
-                            }
 
                             SaveSkin(flags, (itemInfo.Unlock as STUUnlock_Skin)?.SkinResource, basePath, hero, heroFileName, itemInfo.Name, baseComponent, baseInfo);
                         }
