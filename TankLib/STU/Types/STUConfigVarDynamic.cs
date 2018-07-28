@@ -3,17 +3,11 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x4B093107, "STUConfigVarDynamic")]
-    public class STUConfigVarDynamic : STUConfigVar {
-        [STUFieldAttribute(0xA8B82C98)]
-        public ushort m_A8B82C98;
+    public class STUConfigVarDynamic : STU_076E0DBA {
+        [STUFieldAttribute(0x4D2DB658, "m_identifier")]
+        public ushort m_identifier;
 
-        [STUFieldAttribute(0x558CE4F3)]
-        public ushort m_558CE4F3;
-
-        [STUFieldAttribute(0xC5A678A9)]
-        public ushort m_C5A678A9;
-
-        [STUFieldAttribute(0xE3D60A30)]
-        public ushort m_E3D60A30;
+        [STUFieldAttribute(0x60DB8F99)]
+        public byte m_60DB8F99;
     }
 }

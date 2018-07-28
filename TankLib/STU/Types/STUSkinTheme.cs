@@ -4,21 +4,21 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x42270D59, "STUSkinTheme")]
-    public class STUSkinTheme : STU_B7EEA3BE {
-        [STUFieldAttribute(0xA5C9CA02)]
-        public teString m_A5C9CA02;
+    public class STUSkinTheme : STUSkinBase {
+        [STUFieldAttribute(0xA5C9CA02, "m_internalName")]
+        public teString m_internalName;
 
         [STUFieldAttribute(0xECCC4A5D)]
         public teStructuredDataAssetRef<ulong> m_ECCC4A5D;
 
         [STUFieldAttribute(0x88F5CF3E, "m_heroWeapons")]
-        public teStructuredDataAssetRef<ulong>[] m_heroWeapons;
+        public teStructuredDataAssetRef<STUHeroWeapon>[] m_heroWeapons;
 
         [STUFieldAttribute(0x71818BC5)]
-        public teStructuredDataAssetRef<ulong>[] m_71818BC5;
+        public teStructuredDataAssetRef<STUEffect>[] m_71818BC5;
 
-        [STUFieldAttribute(0xB8DC6D46)]
-        public teStructuredDataAssetRef<STUTeamColor> m_B8DC6D46;
+        [STUFieldAttribute(0xB8DC6D46, "m_teamColor")]
+        public teStructuredDataAssetRef<STUTeamColor> m_teamColor;
 
         [STUFieldAttribute(0x70D5F086, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_882807BA[] m_70D5F086;

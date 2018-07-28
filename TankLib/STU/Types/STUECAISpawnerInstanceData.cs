@@ -15,7 +15,7 @@ namespace TankLib.STU.Types {
         public STUStatescriptGraphWithOverrides[] m_E5CEAD94;
 
         [STUFieldAttribute(0xCD66847E)]
-        public Enum_8F2CDF51 m_CD66847E;
+        public TeamIndex m_CD66847E;
 
         [STUFieldAttribute(0x8A10B520)]
         public byte m_8A10B520;

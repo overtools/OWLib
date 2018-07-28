@@ -446,8 +446,8 @@ namespace DataTool.FindLogic {
                         }
                     }
 
-                    if (entityDefinition.m_8AF8F4F5 != null) {
-                        STUEntityComponent[] components = entityDefinition.m_8AF8F4F5.Values
+                    if (entityDefinition.m_componentMap != null) {
+                        STUEntityComponent[] components = entityDefinition.m_componentMap.Values
                             .OrderBy(x => x?.GetType() != typeof(STUModelComponent) &&
                                           x?.GetType() != typeof(STUEffectComponent)).ToArray();
                         // STUModelComponent first because we need model for context
@@ -471,9 +471,9 @@ namespace DataTool.FindLogic {
                                     }
                                 }
                             } else if (component is STUWeaponComponent weaponComponent) {
-                                Find(info, weaponComponent.m_C63E11DD, replacements, context);
-                                if (weaponComponent.m_3BD16B9E != null) {
-                                    foreach (STUWeaponDefinition weaponDefinition in weaponComponent.m_3BD16B9E) {
+                                Find(info, weaponComponent.m_managerScript, replacements, context);
+                                if (weaponComponent.m_weapons != null) {
+                                    foreach (STUWeaponDefinition weaponDefinition in weaponComponent.m_weapons) {
                                         Find(info, weaponDefinition.m_script, replacements, context);
                                         Find(info, weaponDefinition.m_graph, replacements, context);
                                     }
@@ -805,7 +805,8 @@ namespace DataTool.FindLogic {
                     SoundInfoNew soundInfo = new SoundInfoNew(guid);
                     info.Sounds[guid] = soundInfo;
 
-                    if (sound.m_versionedBankData != null) {
+                    // todo m_versionedBankData is gone
+                    /*if (sound.m_versionedBankData != null) {
                         if (sound.m_versionedBankData.m_soundWEMFiles != null) {
                             soundInfo.SoundFiles = new Dictionary<uint, ulong>();
 
@@ -840,7 +841,7 @@ namespace DataTool.FindLogic {
                             }
                         }
                         Find(info, sound.m_versionedBankData.m_soundBank);
-                    }
+                    }*/
                     break;
                 case 0x3F:
                     if (info.SoundFiles.ContainsKey(guid)) break;
@@ -952,23 +953,23 @@ namespace DataTool.FindLogic {
                     STUUnlock cosmetic = GetInstanceNew<STUUnlock>(guid);
 
                     if (cosmetic is STUUnlock_Emote unlockEmote) {
-                        Find(info, unlockEmote.m_2B8351DA, replacements, context);
+                        Find(info, unlockEmote.m_emoteBlendTreeSet, replacements, context);
                     } else if (cosmetic is STUUnlock_Pose unlockPose) {
                         Find(info, unlockPose.m_pose, replacements, context);
                     } else if (cosmetic is STUUnlock_VoiceLine unlockVoiceLine) {
                         Find(info, unlockVoiceLine.m_F57B051E, replacements, context);
                         Find(info, unlockVoiceLine.m_1B25AB90?.m_effect, replacements, context);
                         Find(info, unlockVoiceLine.m_1B25AB90?.m_effectLook, replacements, context);
-                    } else if (cosmetic is STU_84515D93 unlockSpray) {
+                    } else if (cosmetic is STUUnlock_SprayPaint unlockSpray) {
                         Find(info, unlockSpray.m_1B25AB90?.m_effect, replacements, context);
                         Find(info, unlockSpray.m_1B25AB90?.m_effectLook, replacements, context);
                         
                         Find(info, unlockSpray.m_ABFBD552?.m_effect, replacements, context);
                         Find(info, unlockSpray.m_ABFBD552?.m_effectLook, replacements, context);
-                    } else if (cosmetic is STU_54BC2188 unlockIcon) {
+                    } else if (cosmetic is STUUnlock_AvatarPortrait unlockIcon) {
                         Find(info, unlockIcon.m_1B25AB90?.m_effect, replacements, context);
                         Find(info, unlockIcon.m_1B25AB90?.m_effectLook, replacements, context);
-                    } else if (cosmetic is STU_8E77E8A1 unlockHighlightIntro) {
+                    } else if (cosmetic is STUUnlock_POTGAnimation unlockHighlightIntro) {
                         Find(info, unlockHighlightIntro.m_animation, replacements, context);
                     }
 
@@ -977,8 +978,8 @@ namespace DataTool.FindLogic {
                     // why not
                     if (replacements == null) break;
                     STUSkinTheme skinOverride = GetInstanceNew<STUSkinTheme>(guid);
-                    if (skinOverride?.m_258A7D5C == null) break;
-                    foreach (KeyValuePair<ulong, STU_3E88143F> replacement in skinOverride.m_258A7D5C) {
+                    if (skinOverride?.m_runtimeOverrides == null) break;
+                    foreach (KeyValuePair<ulong, STUSkinRuntimeOverride> replacement in skinOverride.m_runtimeOverrides) {
                         if (replacements.ContainsKey(replacement.Key)) continue;
                         replacements[replacement.Key] = replacement.Value.m_3D884507;
                     }

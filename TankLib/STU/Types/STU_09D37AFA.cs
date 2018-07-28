@@ -7,7 +7,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD229B093)]
         public float[] m_D229B093;
 
-        [STUFieldAttribute(0x29EFF18D)]
-        public uint m_29EFF18D;
+        [STUFieldAttribute(0x29EFF18D, "m_crc")]
+        public uint m_crc;
     }
 }

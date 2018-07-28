@@ -16,7 +16,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBC474019, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_40DA6CDF m_BC474019;
 
-        [STUFieldAttribute(0x38BFB46C)]
-        public ulong m_38BFB46C;
+        [STUFieldAttribute(0x38BFB46C, "m_resourceKey")]
+        public ulong m_resourceKey;
     }
 }

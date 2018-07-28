@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         public STUStatescriptSchema m_2D9815BA;
 
         [STUFieldAttribute(0x0A01F19E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_8B68F073 m_0A01F19E;
+        public STUGameModeLegacy m_0A01F19E;
 
         [STUFieldAttribute(0xC9EE018D)]
         public byte m_C9EE018D;

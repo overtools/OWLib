@@ -21,6 +21,6 @@ namespace TankLib.STU.Types {
         public STU_CE2BEF36[] m_A867458D;
 
         [STUFieldAttribute(0x818D011C, "m_skeleton", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_2BA91EC5 m_skeleton;
+        public STUAnimGameData_Skeleton m_skeleton;
     }
 }

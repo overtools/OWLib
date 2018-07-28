@@ -29,8 +29,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xDD27AC95)]
         public float m_DD27AC95;
 
-        [STUFieldAttribute(0xF6658B6B)]
-        public Enum_A3FB08F9 m_F6658B6B;
+        [STUFieldAttribute(0xF6658B6B, "m_loadData")]
+        public Enum_A3FB08F9 m_loadData;
 
         [STUFieldAttribute(0xBB16810A, "m_priority")]
         public uint m_priority;
@@ -47,8 +47,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x9502010D, "m_active")]
         public byte m_active;
 
-        [STUFieldAttribute(0xDC30A92A)]
-        public byte m_DC30A92A;
+        [STUFieldAttribute(0xDC30A92A, "m_announcer")]
+        public byte m_announcer;
 
         [STUFieldAttribute(0xAB866031)]
         public byte m_AB866031;

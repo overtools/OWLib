@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x3403B7AC)]
     public class STU_3403B7AC : STUComponentInstanceData {
-        [STUFieldAttribute(0x27D324B3)]
-        public ushort m_27D324B3;
+        [STUFieldAttribute(0x02B467C6)]
+        public ushort m_02B467C6;
 
         [STUFieldAttribute(0xBD631144)]
         public ushort m_BD631144;

@@ -53,7 +53,7 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_F6BF1466;
 
         [STUFieldAttribute(0xBBC9EFFF, "m_out_CooldownVar", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_out_CooldownVar;
+        public STU_076E0DBA m_out_CooldownVar;
 
         [STUFieldAttribute(0xF495731F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_F495731F;
@@ -68,7 +68,7 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_C558D07B;
 
         [STUFieldAttribute(0x1A9F17E4, "m_out_StackVar", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_out_StackVar;
+        public STU_076E0DBA m_out_StackVar;
 
         [STUFieldAttribute(0x343E99EE, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_343E99EE;

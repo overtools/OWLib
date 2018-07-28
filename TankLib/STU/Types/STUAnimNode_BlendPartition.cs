@@ -25,12 +25,6 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x3C82DF27, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_629D3B64[] m_3C82DF27;
 
-        [STUFieldAttribute(0x1E729D6E)]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_1E729D6E;
-
-        [STUFieldAttribute(0xDD12C224)]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_DD12C224;
-
         [STUFieldAttribute(0x78E7248F, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimNode_BlendPartition_ExtraPartitionBoneItem[] m_78E7248F;
 

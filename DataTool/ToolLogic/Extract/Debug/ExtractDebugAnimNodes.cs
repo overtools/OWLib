@@ -114,7 +114,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             string name = $"{animNode.GetType().Name} - {animNode.m_uniqueID}";
 
             if (animNode.m_layers != null) {
-                foreach (STU_40274C18 layer in animNode.m_layers) {
+                foreach (STUAnimNode_LayerChild layer in animNode.m_layers) {
                     AddChild(root, layer, animNode.m_uniqueID);
                 }
             }
@@ -126,14 +126,14 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     }
                 }
             }
-            if (animNode is STU_C0F7EA53 unk1) {
+            if (animNode is STUAnimNode_Random unk1) {
                 if (unk1.m_children != null) {
                     foreach (STU_597F8A0B child in unk1.m_children) {
                         AddChild(root, child, animNode.m_uniqueID);
                     }
                 }
             }
-            if (animNode is STU_F7384072 unk2) {
+            if (animNode is STUAnimNode_Sequence unk2) {
                 if (unk2.m_children != null) {
                     foreach (STU_F632355B child in unk2.m_children) {
                         AddChild(root, child, animNode.m_uniqueID);

@@ -13,7 +13,7 @@ namespace TankLib.STU.Types {
         public STU_A23BFD3B[] m_106543DC;
 
         [STUFieldAttribute(0x3A6C757E)]
-        public Enum_8F2CDF51[] m_3A6C757E;
+        public TeamIndex[] m_3A6C757E;
 
         [STUFieldAttribute(0xE005252F)]
         public Enum_FB7F61B4[] m_E005252F;

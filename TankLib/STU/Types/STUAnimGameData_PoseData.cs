@@ -14,8 +14,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD65E1B08, "m_geoSetFlags", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimGameData_GeoSetFlags[] m_geoSetFlags;
 
-        [STUFieldAttribute(0xDB11C2C0)]
-        public uint m_DB11C2C0;
+        [STUFieldAttribute(0xDB11C2C0, "m_animationID")]
+        public uint m_animationID;
 
         [STUFieldAttribute(0xE0D91786)]
         public uint m_E0D91786;
@@ -23,8 +23,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x7EEFB57A, "m_flags")]
         public ushort m_flags;
 
-        [STUFieldAttribute(0xAE2D8911)]
-        public ushort m_AE2D8911;
+        [STUFieldAttribute(0xAE2D8911, "m_index")]
+        public ushort m_index;
 
         [STUFieldAttribute(0x3016B9A1)]
         public ushort m_3016B9A1;

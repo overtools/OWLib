@@ -31,8 +31,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0AEA1B48)]
         public teStructuredDataAssetRef<ulong> m_0AEA1B48;
 
-        [STUFieldAttribute(0x28994152)]
-        public teStructuredDataAssetRef<ulong> m_28994152;
+        [STUFieldAttribute(0x28994152, "m_deathEffect")]
+        public teStructuredDataAssetRef<ulong> m_deathEffect;
 
         [STUFieldAttribute(0xA1CE6CE9)]
         public float m_A1CE6CE9;

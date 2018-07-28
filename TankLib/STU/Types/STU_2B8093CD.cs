@@ -10,14 +10,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0503A846)]
         public teStructuredDataAssetRef<STUIdentifier> m_0503A846;
 
-        [STUFieldAttribute(0xA848F2C7)]
-        public teStructuredDataAssetRef<STU_4B259FE1> m_A848F2C7;
-
         [STUFieldAttribute(0x2C05CD95, "m_catalog")]
         public teStructuredDataAssetRef<STUMapCatalog> m_catalog;
 
         [STUFieldAttribute(0x4EEA6AF4, "m_rulesets")]
-        public teStructuredDataAssetRef<ulong>[] m_rulesets;
+        public teStructuredDataAssetRef<STUGameRuleset>[] m_rulesets;
 
         [STUFieldAttribute(0x6F71E9AA, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameModeVarValuePair[] m_6F71E9AA;
@@ -29,19 +26,22 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUStat> m_27326EE2;
 
         [STUFieldAttribute(0xBA265ADB)]
-        public teStructuredDataAssetRef<ulong>[] m_BA265ADB;
+        public teStructuredDataAssetRef<STUStat>[] m_BA265ADB;
 
         [STUFieldAttribute(0x920F5684)]
-        public teStructuredDataAssetRef<ulong>[] m_920F5684;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_920F5684;
 
         [STUFieldAttribute(0x7B61EE6D)]
-        public teStructuredDataAssetRef<ulong>[] m_7B61EE6D;
+        public teStructuredDataAssetRef<STUStat>[] m_7B61EE6D;
+
+        [STUFieldAttribute(0xA848F2C7)]
+        public teStructuredDataAssetRef<STU_4B259FE1> m_A848F2C7;
 
         [STUFieldAttribute(0xECCC6D23)]
-        public teStructuredDataAssetRef<ulong>[] m_ECCC6D23;
+        public teStructuredDataAssetRef<STUAchievement>[] m_ECCC6D23;
 
         [STUFieldAttribute(0xB1449DF7)]
-        public teStructuredDataAssetRef<ulong>[] m_B1449DF7;
+        public teStructuredDataAssetRef<STUUnlock>[] m_B1449DF7;
 
         [STUFieldAttribute(0x7FB46D96, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_2B17E5B4[] m_7FB46D96;
@@ -69,6 +69,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x5E1EE04A)]
         public byte m_5E1EE04A;
+
+        [STUFieldAttribute(0x08E3EC71)]
+        public byte m_08E3EC71;
 
         [STUFieldAttribute(0x157AF68C)]
         public byte m_157AF68C;
@@ -102,5 +105,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x8F862EC7)]
         public byte m_8F862EC7;
+
+        [STUFieldAttribute(0xE566638A)]
+        public byte m_E566638A;
     }
 }

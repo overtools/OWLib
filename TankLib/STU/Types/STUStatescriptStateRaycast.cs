@@ -27,16 +27,16 @@ namespace TankLib.STU.Types {
         public STUConfigVarFilter m_castFilter;
 
         [STUFieldAttribute(0x23974AAB, "m_out_HitSomething", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_out_HitSomething;
+        public STU_076E0DBA m_out_HitSomething;
 
         [STUFieldAttribute(0x70E41E8A, "m_out_HitEntity", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_out_HitEntity;
+        public STU_076E0DBA m_out_HitEntity;
 
         [STUFieldAttribute(0xB3FC76F3, "m_out_HitPointWS", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_out_HitPointWS;
+        public STU_076E0DBA m_out_HitPointWS;
 
         [STUFieldAttribute(0x3BDBD513, "m_out_HitNormal", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_out_HitNormal;
+        public STU_076E0DBA m_out_HitNormal;
 
         [STUFieldAttribute(0x0619C597, "m_type")]
         public Enum_54CE6D16 m_type;

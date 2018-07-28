@@ -17,13 +17,13 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_priority;
 
         [STUFieldAttribute(0x2B717EC8, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_2B717EC8;
+        public STU_076E0DBA m_2B717EC8;
 
         [STUFieldAttribute(0x8FEA3023, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_8FEA3023;
+        public STU_076E0DBA m_8FEA3023;
 
         [STUFieldAttribute(0x1BCC45B9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_1BCC45B9;
+        public STU_076E0DBA m_1BCC45B9;
 
         [STUFieldAttribute(0xEC1B83C7, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_EC1B83C7;

@@ -5,18 +5,18 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x3A9B5E90, "STUMap")]
-    public class STUMap : STU_8FFAF278 {
+    public class STUMap : STUShippable {
         [STUFieldAttribute(0xA64028C7, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_0539C988 m_A64028C7;
+        public STUFogData m_A64028C7;
 
-        [STUFieldAttribute(0x3F652A51, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A4C8F8DB m_3F652A51;
+        [STUFieldAttribute(0x3F652A51, "m_directionalData", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_A4C8F8DB m_directionalData;
 
         [STUFieldAttribute(0x00A81A8E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_C148094E m_00A81A8E;
 
-        [STUFieldAttribute(0x58C61359, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_610E3DD8 m_58C61359;
+        [STUFieldAttribute(0x58C61359, "m_bloom", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUBloomData m_bloom;
 
         [STUFieldAttribute(0xD7A516EC)]
         public teString m_D7A516EC;
@@ -27,8 +27,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x5DB91CE2, "m_displayName")]
         public teStructuredDataAssetRef<ulong> m_displayName;
 
-        [STUFieldAttribute(0xC8EBCDFA)]
-        public teString[] m_C8EBCDFA;
+        [STUFieldAttribute(0xC8EBCDFA, "m_aliases")]
+        public teString[] m_aliases;
 
         [STUFieldAttribute(0x5AFE2F61)]
         public teStructuredDataAssetRef<ulong> m_5AFE2F61;
@@ -54,8 +54,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xEBCFAD22)]
         public teStructuredDataAssetRef<ulong> m_EBCFAD22;
 
-        [STUFieldAttribute(0x5FF3ACFB, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_AC40722C[] m_5FF3ACFB;
+        [STUFieldAttribute(0x5FF3ACFB, "m_celebrationOverrides", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUMapCelebrationOverride[] m_celebrationOverrides;
 
         [STUFieldAttribute(0x1C706502)]
         public teStructuredDataAssetRef<ulong> m_1C706502;
@@ -66,11 +66,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x32102087)]
         public teStructuredDataAssetRef<STUTexture> m_32102087;
 
-        [STUFieldAttribute(0xA0AE2E3E)]
-        public teStructuredDataAssetRef<STUEffect> m_A0AE2E3E;
+        [STUFieldAttribute(0xA0AE2E3E, "m_musicTease")]
+        public teStructuredDataAssetRef<STUEffect> m_musicTease;
 
-        [STUFieldAttribute(0x956158FF)]
-        public teStructuredDataAssetRef<STUEffect> m_956158FF;
+        [STUFieldAttribute(0x956158FF, "m_announcerWelcome")]
+        public teStructuredDataAssetRef<STUEffect> m_announcerWelcome;
 
         [STUFieldAttribute(0x7F5B54B2)]
         public teStructuredDataAssetRef<STUVoiceSet> m_7F5B54B2;
@@ -82,16 +82,16 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STU_387B4158> m_4FAD0FE9;
 
         [STUFieldAttribute(0x0DE1BA16, "m_layers")]
-        public teStructuredDataAssetRef<ulong>[] m_layers;
+        public teStructuredDataAssetRef<STUMapLayer>[] m_layers;
 
         [STUFieldAttribute(0x0BF8AB9F)]
         public teStructuredDataAssetRef<STUEntityDefinition> m_0BF8AB9F;
 
         [STUFieldAttribute(0xD608E9F3)]
-        public teStructuredDataAssetRef<ulong>[] m_D608E9F3;
+        public teStructuredDataAssetRef<STUGameMode>[] m_D608E9F3;
 
-        [STUFieldAttribute(0x3310BDBD)]
-        public teStructuredDataAssetRef<STUTexture> m_3310BDBD;
+        [STUFieldAttribute(0x3310BDBD, "m_colorRemap")]
+        public teStructuredDataAssetRef<STUTexture> m_colorRemap;
 
         [STUFieldAttribute(0xEAE71612)]
         public teStructuredDataAssetRef<STUModel> m_EAE71612;
@@ -99,8 +99,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xFF76B5BA)]
         public teStructuredDataAssetRef<STUModelLook> m_FF76B5BA;
 
-        [STUFieldAttribute(0x8CB50C5F)]
-        public teStructuredDataAssetRef<STU_5CEF8CD7> m_8CB50C5F;
+        [STUFieldAttribute(0x8CB50C5F, "m_lightingData")]
+        public teStructuredDataAssetRef<STUEnlightenData> m_lightingData;
 
         [STUFieldAttribute(0x2A9103F4)]
         public teStructuredDataAssetRef<STU_4E793099> m_2A9103F4;
@@ -117,11 +117,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x837D2E43)]
         public teStructuredDataAssetRef<STUTexture> m_837D2E43;
 
-        [STUFieldAttribute(0xF0535DCF, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_63ABE55E[] m_F0535DCF;
+        [STUFieldAttribute(0xF0535DCF, "m_reflectionData", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_63ABE55E[] m_reflectionData;
 
-        [STUFieldAttribute(0x38F33424)]
-        public teStructuredDataAssetRef<STUMap> m_38F33424;
+        [STUFieldAttribute(0x38F33424, "m_baseMap")]
+        public teStructuredDataAssetRef<STUMap> m_baseMap;
 
         [STUFieldAttribute(0xF542263E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_7D6D8405[] m_F542263E;
@@ -129,11 +129,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x62354864)]
         public ulong m_62354864;
 
+        [STUFieldAttribute(0x2A21F33E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_D555EDB7 m_2A21F33E;
+
         [STUFieldAttribute(0x7A429A56)]
         public teVec3 m_7A429A56;
 
-        [STUFieldAttribute(0x1DD3A0CD)]
-        public Enum_A0F51DCC m_1DD3A0CD;
+        [STUFieldAttribute(0x1DD3A0CD, "m_mapType")]
+        public Enum_A0F51DCC m_mapType;
 
         [STUFieldAttribute(0x44D13CC2)]
         public int m_44D13CC2;
@@ -149,6 +152,21 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x7A0ED288)]
         public float m_7A0ED288;
+
+        [STUFieldAttribute(0xE9C19903)]
+        public float m_E9C19903;
+
+        [STUFieldAttribute(0xA5DB02FF)]
+        public float m_A5DB02FF;
+
+        [STUFieldAttribute(0xB11C9D0C)]
+        public float m_B11C9D0C;
+
+        [STUFieldAttribute(0x2858B0FC)]
+        public float m_2858B0FC;
+
+        [STUFieldAttribute(0x57B6FFF0)]
+        public int m_57B6FFF0;
 
         [STUFieldAttribute(0x2EA54891)]
         public float m_2EA54891;
@@ -188,5 +206,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x95216F5F)]
         public byte m_95216F5F;
+
+        [STUFieldAttribute(0xF2665D5E)]
+        public byte m_F2665D5E;
     }
 }

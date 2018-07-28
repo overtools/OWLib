@@ -11,14 +11,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xC0A83121, "m_skin")]
         public teStructuredDataAssetRef<STUSkin> m_skin;
 
-        [STUFieldAttribute(0xC48FF2B6)]
-        public teString m_C48FF2B6;
+        [STUFieldAttribute(0xC48FF2B6, "m_embeddedSkin")]
+        public teString m_embeddedSkin;
 
-        [STUFieldAttribute(0xAD261E73, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUComponentInstanceData[] m_AD261E73;
+        [STUFieldAttribute(0xAD261E73, "m_placementData", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUComponentInstanceData[] m_placementData;
 
         [STUFieldAttribute(0x17758DA1)]
-        public teStructuredDataAssetRef<ulong>[] m_17758DA1;
+        public teStructuredDataAssetRef<STUBoneLabel>[] m_17758DA1;
 
         [STUFieldAttribute(0x1EA749A8)]
         public teVec3 m_1EA749A8;

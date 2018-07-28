@@ -7,8 +7,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x09E32A58)]
         public teStructuredDataAssetRef<STUTexture> m_09E32A58;
 
+        [STUFieldAttribute(0x369489D8)]
+        public teStructuredDataAssetRef<STUTexture> m_369489D8;
+
         [STUFieldAttribute(0xB999DDE2)]
-        public teStructuredDataAssetRef<STU_58B3D0D0> m_B999DDE2;
+        public teStructuredDataAssetRef<STUEmptyAsset> m_B999DDE2;
 
         [STUFieldAttribute(0xAB865FDF)]
         public float m_AB865FDF;
@@ -21,5 +24,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x1A864EF2)]
         public float m_1A864EF2;
+
+        [STUFieldAttribute(0x4A195F0E)]
+        public byte m_4A195F0E;
     }
 }

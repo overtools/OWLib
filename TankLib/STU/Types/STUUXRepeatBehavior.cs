@@ -8,8 +8,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x6BA2A431, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_D3733E9D m_6BA2A431;
 
-        [STUFieldAttribute(0xD6568441)]
-        public Enum_C4185663 m_D6568441;
+        [STUFieldAttribute(0xD6568441, "m_repeatBehavior")]
+        public Enum_C4185663 m_repeatBehavior;
 
         [STUFieldAttribute(0x18ED922B)]
         public float m_18ED922B;

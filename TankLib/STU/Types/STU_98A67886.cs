@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x98A67886)]
-    public class STU_98A67886 : STU_440D818B {
+    public class STU_98A67886 : STUUXComponent {
         [STUFieldAttribute(0x95DF33CE, "m_screen")]
         public teStructuredDataAssetRef<STU_B77FCA72> m_screen;
 

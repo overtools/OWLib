@@ -5,8 +5,8 @@ using TankLib.Math;
 namespace TankLib.STU.Types {
     [STUAttribute(0xC6A37088)]
     public class STU_C6A37088 : STUInstance {
-        [STUFieldAttribute(0xD326911E)]
-        public teStructuredDataAssetRef<STU_0CB105FA> m_D326911E;
+        [STUFieldAttribute(0xD326911E, "m_thumbnailData")]
+        public teStructuredDataAssetRef<STUThumbnailData> m_thumbnailData;
 
         [STUFieldAttribute(0x27643B96)]
         public teStructuredDataAssetRef<STU_4D28219D> m_27643B96;
@@ -25,6 +25,12 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x69300B47, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_314750D1 m_69300B47;
+
+        [STUFieldAttribute(0x77E70F30)]
+        public byte m_77E70F30;
+
+        [STUFieldAttribute(0x0A03D48D)]
+        public byte m_0A03D48D;
 
         [STUFieldAttribute(0x0B243D00)]
         public byte m_0B243D00;

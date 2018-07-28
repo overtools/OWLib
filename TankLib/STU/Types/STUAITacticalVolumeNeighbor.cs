@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xC4BE37A6, "STUAITacticalVolumeNeighbor")]
     public class STUAITacticalVolumeNeighbor : STUInstance {
-        [STUFieldAttribute(0xAE2D8911)]
-        public int m_AE2D8911;
+        [STUFieldAttribute(0xAE2D8911, "m_index")]
+        public int m_index;
     }
 }

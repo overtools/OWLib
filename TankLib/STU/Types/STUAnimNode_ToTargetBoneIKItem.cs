@@ -34,25 +34,22 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD7244775, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_ABD8FE73 m_D7244775;
 
-        [STUFieldAttribute(0x8D9AA8D5, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F7E4CDAC m_8D9AA8D5;
-
         [STUFieldAttribute(0xADC6E8F7)]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_ADC6E8F7;
+        public teStructuredDataAssetRef<STUBoneLabel> m_ADC6E8F7;
 
         [STUFieldAttribute(0xFF4A06D9)]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_FF4A06D9;
+        public teStructuredDataAssetRef<STUBoneLabel> m_FF4A06D9;
 
-        [STUFieldAttribute(0xA9C41A1C)]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_A9C41A1C;
+        [STUFieldAttribute(0xA9C41A1C, "m_endBone")]
+        public teStructuredDataAssetRef<STUBoneLabel> m_endBone;
 
         [STUFieldAttribute(0x50524C35)]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_50524C35;
+        public teStructuredDataAssetRef<STUBoneLabel> m_50524C35;
 
-        [STUFieldAttribute(0x01986408)]
-        public teStructuredDataAssetRef<STUHardPoint> m_01986408;
+        [STUFieldAttribute(0x01986408, "m_endHardpoint")]
+        public teStructuredDataAssetRef<STUHardPoint> m_endHardpoint;
 
         [STUFieldAttribute(0xB68CCF54)]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_B68CCF54;
+        public teStructuredDataAssetRef<STUBoneLabel> m_B68CCF54;
     }
 }

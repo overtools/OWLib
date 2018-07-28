@@ -28,12 +28,6 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF2B3F5D4, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_ABD8FE73 m_F2B3F5D4;
 
-        [STUFieldAttribute(0xA3952545)]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_A3952545;
-
-        [STUFieldAttribute(0xE5F95337)]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_E5F95337;
-
         [STUFieldAttribute(0xAB34269B, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimNode_StrafeProfileOverride[] m_AB34269B;
 

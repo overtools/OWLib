@@ -7,8 +7,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x58D56DD4, "m_effect", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_effect;
 
-        [STUFieldAttribute(0xB8DC6D46, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_B8DC6D46;
+        [STUFieldAttribute(0xB8DC6D46, "m_teamColor", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_teamColor;
 
         [STUFieldAttribute(0x3E3E203A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_3E3E203A;
@@ -66,6 +66,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xA40C76AA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_A40C76AA;
+
+        [STUFieldAttribute(0x31DC818B, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_31DC818B;
 
         [STUFieldAttribute(0x6A3C1510)]
         public byte m_6A3C1510;

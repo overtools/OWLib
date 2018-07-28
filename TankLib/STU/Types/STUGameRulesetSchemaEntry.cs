@@ -15,10 +15,10 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUIdentifier> m_3E783677;
 
         [STUFieldAttribute(0x7E3ED979)]
-        public teStructuredDataAssetRef<ulong>[] m_7E3ED979;
+        public teStructuredDataAssetRef<STUTargetTag>[] m_7E3ED979;
 
         [STUFieldAttribute(0x34993B2E)]
-        public teStructuredDataAssetRef<ulong>[] m_34993B2E;
+        public teStructuredDataAssetRef<STUTargetTag>[] m_34993B2E;
 
         [STUFieldAttribute(0x07DD813E, "m_value", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_848957AF m_value;

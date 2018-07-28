@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x594C2D80, "STUStatescriptStateStack")]
     public class STUStatescriptStateStack : STUStatescriptState {
         [STUFieldAttribute(0x592D15F7, "m_out_Var", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_out_Var;
+        public STU_076E0DBA m_out_Var;
 
         [STUFieldAttribute(0xBB16810A, "m_priority", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_priority;

@@ -10,9 +10,6 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x770CFAB9)]
         public teString m_770CFAB9;
 
-        [STUFieldAttribute(0x69869C2D)]
-        public teStructuredDataAssetRef<STU_D3A5CA91> m_69869C2D;
-
         [STUFieldAttribute(0x6B6C5ED5)]
         public uint m_6B6C5ED5;
 

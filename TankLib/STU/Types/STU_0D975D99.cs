@@ -21,7 +21,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUTexture> m_E21E76C2;
 
         [STUFieldAttribute(0xB999DDE2)]
-        public teStructuredDataAssetRef<STU_58B3D0D0> m_B999DDE2;
+        public teStructuredDataAssetRef<STUEmptyAsset> m_B999DDE2;
 
         [STUFieldAttribute(0x0D1E502E)]
         public teColorRGB m_0D1E502E;

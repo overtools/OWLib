@@ -7,7 +7,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD60798A0)]
         public uint m_D60798A0;
 
-        [STUFieldAttribute(0xAD409EB1)]
-        public byte m_AD409EB1;
+        [STUFieldAttribute(0xAD409EB1, "m_isFrozen")]
+        public byte m_isFrozen;
     }
 }

@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xAFE67DBF)]
     public class STU_AFE67DBF : STUStatescriptScreenVM {
-        [STUFieldAttribute(0x058BE3BD)]
-        public teString m_058BE3BD;
+        [STUFieldAttribute(0x058BE3BD, "m_distanceString")]
+        public teString m_distanceString;
 
         [STUFieldAttribute(0x4B7664AB, "m_pos")]
         public float m_pos;

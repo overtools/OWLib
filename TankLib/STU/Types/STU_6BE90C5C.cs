@@ -5,12 +5,12 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x6BE90C5C)]
     public class STU_6BE90C5C : STUInstance {
         [STUFieldAttribute(0xD2464EEA)]
-        public teStructuredDataAssetRef<ulong>[] m_D2464EEA;
+        public teStructuredDataAssetRef<STU_6BE90C5C>[] m_D2464EEA;
 
         [STUFieldAttribute(0xFF44FD8B, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptSchema m_FF44FD8B;
 
-        [STUFieldAttribute(0x151AD444, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUStatescriptSchema m_151AD444;
+        [STUFieldAttribute(0x151AD444, "m_publicSchema", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUStatescriptSchema m_publicSchema;
     }
 }

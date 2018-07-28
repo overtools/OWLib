@@ -7,8 +7,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x05CD9782)]
         public teString m_05CD9782;
 
-        [STUFieldAttribute(0xC8EBCDFA)]
-        public teString[] m_C8EBCDFA;
+        [STUFieldAttribute(0xC8EBCDFA, "m_aliases")]
+        public teString[] m_aliases;
 
         [STUFieldAttribute(0x51EC50D6)]
         public uint m_51EC50D6;

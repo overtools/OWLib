@@ -3,12 +3,12 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x5CF22AAB, "STULocaleSettings")]
-    public class STULocaleSettings : STU_D89CF9B3 {
+    public class STULocaleSettings : STULocalizationSettings {
         [STUFieldAttribute(0x604EEA7E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_8AC6C71B m_604EEA7E;
 
-        [STUFieldAttribute(0xD20AEFD7, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_66BB2EF3 m_D20AEFD7;
+        [STUFieldAttribute(0xD20AEFD7, "m_numberSettings", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUNumberSettings m_numberSettings;
 
         [STUFieldAttribute(0x3CFA3EE6, "m_locale")]
         public teString m_locale;
@@ -16,8 +16,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x586CC049)]
         public teString m_586CC049;
 
-        [STUFieldAttribute(0xE9A6FA8E)]
-        public teString m_E9A6FA8E;
+        [STUFieldAttribute(0xE9A6FA8E, "m_genderData")]
+        public teString m_genderData;
 
         [STUFieldAttribute(0x9AE3C787)]
         public teString m_9AE3C787;

@@ -14,18 +14,18 @@ namespace TankLib.STU.Types {
         public STUStatescriptOutputPlug m_5CFA99B8;
 
         [STUFieldAttribute(0xD77D7C01, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_D77D7C01;
+        public STU_076E0DBA m_D77D7C01;
 
         [STUFieldAttribute(0x648C94C2, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_648C94C2;
+        public STU_076E0DBA m_648C94C2;
 
         [STUFieldAttribute(0x51A432FC, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_51A432FC;
+        public STU_076E0DBA m_51A432FC;
 
         [STUFieldAttribute(0x9E31FC52, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_9E31FC52;
+        public STU_076E0DBA m_9E31FC52;
 
         [STUFieldAttribute(0x959EDB2D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_959EDB2D;
+        public STU_076E0DBA m_959EDB2D;
     }
 }

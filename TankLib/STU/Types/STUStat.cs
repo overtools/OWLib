@@ -12,16 +12,16 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_9F574E87;
 
         [STUFieldAttribute(0x2F5D06B7)]
-        public teStructuredDataAssetRef<ulong>[] m_2F5D06B7;
+        public teStructuredDataAssetRef<STU_4B259FE1>[] m_2F5D06B7;
 
         [STUFieldAttribute(0x056D3E39, "m_heroes")]
-        public teStructuredDataAssetRef<ulong>[] m_heroes;
+        public teStructuredDataAssetRef<STUHero>[] m_heroes;
 
         [STUFieldAttribute(0x6E01378E)]
-        public teStructuredDataAssetRef<ulong>[] m_6E01378E;
+        public teStructuredDataAssetRef<STUMap>[] m_6E01378E;
 
         [STUFieldAttribute(0xD440A0F7, "m_teams")]
-        public Enum_8F2CDF51[] m_teams;
+        public TeamIndex[] m_teams;
 
         [STUFieldAttribute(0x4C9917C1)]
         public teStructuredDataAssetRef<STUStat> m_4C9917C1;

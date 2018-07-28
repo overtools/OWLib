@@ -367,8 +367,8 @@ namespace CASCEncDump {
                         stream.Position = 0;
                         teStructuredData structuredData =new teStructuredData(stream, true);
 
-                        if (structuredData.GetInstance<STU_1DA7C021>() != null) {
-                            var key = structuredData.GetInstance<STU_1DA7C021>();
+                        if (structuredData.GetInstance<STUResourceKey>() != null) {
+                            var key = structuredData.GetInstance<STUResourceKey>();
                             
                             Console.Out.WriteLine("found key");
                             var longKey = ulong.Parse(key.m_keyID, NumberStyles.HexNumber);

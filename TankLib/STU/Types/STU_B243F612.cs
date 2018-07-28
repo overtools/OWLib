@@ -28,6 +28,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x6A64DD95, "m_runAimAdditiveW")]
         public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveW;
 
+        [STUFieldAttribute(0x07D3BC68)]
+        public teStructuredDataAssetRef<STUDataFlow> m_07D3BC68;
+
         [STUFieldAttribute(0xB9839141)]
         public teStructuredDataAssetRef<STUAnimIdentifier> m_B9839141;
 

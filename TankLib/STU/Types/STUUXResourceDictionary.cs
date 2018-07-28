@@ -13,7 +13,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBBA15F10)]
         public teStructuredDataAssetRef<ulong>[] m_BBA15F10;
 
-        [STUFieldAttribute(0x3547155A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_EDCF5A52 m_3547155A;
+        [STUFieldAttribute(0x3547155A, "m_resourceKeyLookup", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_EDCF5A52 m_resourceKeyLookup;
     }
 }

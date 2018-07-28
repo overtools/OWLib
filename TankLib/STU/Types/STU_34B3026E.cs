@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x34B3026E)]
     public class STU_34B3026E : STUStatescriptAction {
-        [STUFieldAttribute(0x646B9249)]
-        public byte m_646B9249;
+        [STUFieldAttribute(0x646B9249, "m_complete")]
+        public byte m_complete;
     }
 }

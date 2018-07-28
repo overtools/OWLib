@@ -4,10 +4,10 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x882807BA)]
     public class STU_882807BA : STUInstance {
-        [STUFieldAttribute(0xF0A9405A)]
-        public teStructuredDataAssetRef<STUTeamColor> m_F0A9405A;
+        [STUFieldAttribute(0xF0A9405A, "m_sourceTeam")]
+        public teStructuredDataAssetRef<STUTeamColor> m_sourceTeam;
 
-        [STUFieldAttribute(0xC16A0BCD)]
-        public teStructuredDataAssetRef<STUSkinTheme> m_C16A0BCD;
+        [STUFieldAttribute(0xC16A0BCD, "m_generatedSkinTheme")]
+        public teStructuredDataAssetRef<STUSkinTheme> m_generatedSkinTheme;
     }
 }

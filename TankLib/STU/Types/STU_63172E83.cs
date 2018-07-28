@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUSkin> m_0029461B;
 
         [STUFieldAttribute(0x88F5CF3E, "m_heroWeapons")]
-        public teStructuredDataAssetRef<ulong>[] m_heroWeapons;
+        public teStructuredDataAssetRef<STUHeroWeapon>[] m_heroWeapons;
 
         [STUFieldAttribute(0x7B95C2A2)]
         public byte m_7B95C2A2;

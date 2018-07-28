@@ -5,13 +5,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x875F19AE, "STULineupPose")]
     public class STULineupPose : STUInstance {
         [STUFieldAttribute(0xBEF008DE, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F13353CA m_BEF008DE;
+        public STULineupPoseVariant m_BEF008DE;
 
         [STUFieldAttribute(0x0189332F, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F13353CA m_0189332F;
+        public STULineupPoseVariant m_0189332F;
 
         [STUFieldAttribute(0xDE70F501, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F13353CA m_DE70F501;
+        public STULineupPoseVariant m_DE70F501;
 
         [STUFieldAttribute(0xE599EB7C)]
         public teStructuredDataAssetRef<ulong> m_E599EB7C;

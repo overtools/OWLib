@@ -24,7 +24,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_infoMovie;
 
         [STUFieldAttribute(0x7E3ED979)]
-        public teStructuredDataAssetRef<ulong>[] m_7E3ED979;
+        public teStructuredDataAssetRef<STUTargetTag>[] m_7E3ED979;
 
         [STUFieldAttribute(0xB1124918)]
         public teStructuredDataAssetRef<ulong>[] m_B1124918;

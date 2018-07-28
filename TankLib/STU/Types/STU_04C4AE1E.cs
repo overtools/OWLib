@@ -8,8 +8,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x40BC00E1)]
         public teStructuredDataAssetRef<STUTexture> m_40BC00E1;
 
-        [STUFieldAttribute(0xE75BEDA5)]
-        public ulong m_E75BEDA5;
+        [STUFieldAttribute(0xE75BEDA5, "m_heroGUID")]
+        public ulong m_heroGUID;
 
         [STUFieldAttribute(0x43A82F64)]
         public teColorRGBA m_43A82F64;

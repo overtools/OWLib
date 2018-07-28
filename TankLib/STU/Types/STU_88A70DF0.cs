@@ -11,6 +11,6 @@ namespace TankLib.STU.Types {
         public STU_7FA0F929[] m_21AC6F4E;
 
         [STUFieldAttribute(0xE6E7A042, "m_states")]
-        public teStructuredDataAssetRef<ulong>[] m_states;
+        public teStructuredDataAssetRef<STU_FA258ECC>[] m_states;
     }
 }

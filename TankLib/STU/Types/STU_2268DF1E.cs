@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x2268DF1E)]
     public class STU_2268DF1E : STU_C55609C4 {
-        [STUFieldAttribute(0x6E1EC5AF)]
-        public teString m_6E1EC5AF;
+        [STUFieldAttribute(0x6E1EC5AF, "m_commandText")]
+        public teString m_commandText;
 
         [STUFieldAttribute(0x864D4660, "m_output")]
         public teString m_output;
@@ -33,5 +33,11 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x3BCB93E4)]
         public int m_3BCB93E4;
+
+        [STUFieldAttribute(0x19B2212F)]
+        public float m_19B2212F;
+
+        [STUFieldAttribute(0xDEEF47F6)]
+        public byte m_DEEF47F6;
     }
 }

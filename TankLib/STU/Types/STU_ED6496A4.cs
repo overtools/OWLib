@@ -8,15 +8,15 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_F67A953D;
 
         [STUFieldAttribute(0xA8D226DC, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_A8D226DC;
+        public STU_076E0DBA m_A8D226DC;
 
         [STUFieldAttribute(0x68FE8980, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_68FE8980;
+        public STU_076E0DBA m_68FE8980;
 
         [STUFieldAttribute(0xE18AD956, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_E18AD956;
+        public STU_076E0DBA m_E18AD956;
 
         [STUFieldAttribute(0x0A7ACC79, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_0A7ACC79;
+        public STU_076E0DBA m_0A7ACC79;
     }
 }

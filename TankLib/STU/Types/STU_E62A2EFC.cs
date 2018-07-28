@@ -5,6 +5,9 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0xE62A2EFC)]
     public class STU_E62A2EFC : STU_4EFF450F {
+        [STUFieldAttribute(0x8E89B7FD)]
+        public teStructuredDataAssetRef<STUContactSet> m_8E89B7FD;
+
         [STUFieldAttribute(0x7ACAB593)]
         public float m_7ACAB593;
 
@@ -67,5 +70,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xEB4BB3FC)]
         public byte m_EB4BB3FC;
+
+        [STUFieldAttribute(0xDCE29CD8)]
+        public byte m_DCE29CD8;
     }
 }

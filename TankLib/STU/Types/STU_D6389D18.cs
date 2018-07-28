@@ -55,6 +55,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xC06F384E, "m_runAimAdditiveNW")]
         public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveNW;
 
+        [STUFieldAttribute(0x07D3BC68)]
+        public teStructuredDataAssetRef<STUDataFlow> m_07D3BC68;
+
         [STUFieldAttribute(0xB9839141)]
         public teStructuredDataAssetRef<STUAnimIdentifier> m_B9839141;
 
@@ -84,6 +87,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xAAB69AB4)]
         public teStructuredDataAssetRef<STUAnimBoneWeightMask> m_AAB69AB4;
+
+        [STUFieldAttribute(0x72E5E820)]
+        public teStructuredDataAssetRef<STUAnimBoneWeightMask> m_72E5E820;
 
         [STUFieldAttribute(0x5620DA50, "m_globalWeightMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimGlobalWeightMultipliers m_globalWeightMultipliers;
@@ -123,6 +129,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x27BE5765)]
         public float m_27BE5765;
+
+        [STUFieldAttribute(0x287F50B3)]
+        public byte m_287F50B3;
 
         [STUFieldAttribute(0x5E009A60)]
         public byte m_5E009A60;

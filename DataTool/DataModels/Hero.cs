@@ -25,7 +25,7 @@ namespace DataTool.DataModels {
             Name = GetString(hero.m_0EDCE350);
             Description = GetDescriptionString(hero.m_3446F580);
             
-            GalleryColor = hero.m_E25DDDA1;
+            GalleryColor = hero.m_heroColor;
 
             //if (hero.m_skinThemes != null) {
             //    SkinThemes = new List<HeroSkinTheme>();
@@ -34,9 +34,9 @@ namespace DataTool.DataModels {
             //    }
             //}
             
-            if (hero.m_77FED604 != null) {
+            if (hero.m_heroLoadout != null) {
                 Loadouts = new List<Loadout>();
-                foreach (ulong loadout in hero.m_77FED604) {
+                foreach (ulong loadout in hero.m_heroLoadout) {
                     STULoadout stuLoadout = GetInstanceNew<STULoadout>(loadout);
                     if (stuLoadout == null) continue;
                     
@@ -60,7 +60,7 @@ namespace DataTool.DataModels {
 
             if (skinTheme.m_heroWeapons == null) return;
             HeroWeapons = new List<ulong>();
-            foreach (teStructuredDataAssetRef<ulong> heroWeapon in skinTheme.m_heroWeapons) {
+            foreach (teStructuredDataAssetRef<STUHeroWeapon> heroWeapon in skinTheme.m_heroWeapons) {
                 HeroWeapons.Add(heroWeapon);
             }
         }

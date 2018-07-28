@@ -21,7 +21,7 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_CE9D5515;
 
         [STUFieldAttribute(0x1DEF59FA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_1DEF59FA;
+        public STU_076E0DBA m_1DEF59FA;
 
         [STUFieldAttribute(0x4BA4C058)]
         public Enum_92FF29E3 m_4BA4C058;

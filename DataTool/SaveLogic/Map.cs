@@ -693,8 +693,8 @@ namespace DataTool.SaveLogic {
                         FindLogic.Combo.Find(info, gameMode.m_CF63B633);  // 01B
 
                         foreach (STUGameModeTeam team in gameMode.m_teams) {
-                            FindLogic.Combo.Find(info, team.m_76E8C82A);  // 01B
-                            FindLogic.Combo.Find(info, team.m_A2781AA4);  // 01B
+                            FindLogic.Combo.Find(info, team.m_bodyScript);  // 01B
+                            FindLogic.Combo.Find(info, team.m_controllerScript);  // 01B
                         }
                     }
                 }

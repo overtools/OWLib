@@ -5,9 +5,9 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x50A4471B)]
     public class STU_50A4471B : STUStatescriptStateUXPresenter {
         [STUFieldAttribute(0x13B336ED, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_13B336ED;
+        public STU_076E0DBA m_13B336ED;
 
         [STUFieldAttribute(0x358BE6A8, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_358BE6A8;
+        public STU_076E0DBA m_358BE6A8;
     }
 }

@@ -4,10 +4,10 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x10764043, "STUUXReferences")]
     public class STUUXReferences : STUInstance {
-        [STUFieldAttribute(0x213692AE)]
-        public teStructuredDataAssetRef<ulong>[] m_213692AE;
+        [STUFieldAttribute(0x213692AE, "m_resourceDictionaries")]
+        public teStructuredDataAssetRef<ulong>[] m_resourceDictionaries;
 
         [STUFieldAttribute(0xB1B74816, "m_resources", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_22DB169C[] m_resources;
+        public STUUXResource[] m_resources;
     }
 }

@@ -39,8 +39,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x33461301)]
         public float m_33461301;
 
-        [STUFieldAttribute(0xFADFE325)]
-        public Enum_8F2CDF51 m_FADFE325;
+        [STUFieldAttribute(0xFADFE325, "m_initialTeam")]
+        public TeamIndex m_initialTeam;
 
         [STUFieldAttribute(0x6675D16B)]
         public int m_6675D16B;

@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUTexture> m_color;
 
         [STUFieldAttribute(0xB999DDE2)]
-        public teStructuredDataAssetRef<STU_58B3D0D0> m_B999DDE2;
+        public teStructuredDataAssetRef<STUEmptyAsset> m_B999DDE2;
 
         [STUFieldAttribute(0x4ED21288)]
         public float m_4ED21288;

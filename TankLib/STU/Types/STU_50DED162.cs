@@ -7,8 +7,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xB5DC183D)]
         public teStructuredDataAssetRef<ulong> m_B5DC183D;
 
-        [STUFieldAttribute(0x96058974)]
-        public teStructuredDataAssetRef<ulong> m_96058974;
+        [STUFieldAttribute(0x96058974, "m_rankTexture")]
+        public teStructuredDataAssetRef<ulong> m_rankTexture;
 
         [STUFieldAttribute(0xD61335E8)]
         public int m_D61335E8;

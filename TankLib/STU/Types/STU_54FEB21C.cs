@@ -11,13 +11,13 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_7C8AD485;
 
         [STUFieldAttribute(0xC7A42E2A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_C7A42E2A;
+        public STU_076E0DBA m_C7A42E2A;
 
         [STUFieldAttribute(0xF8CE386A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_F8CE386A;
+        public STU_076E0DBA m_F8CE386A;
 
         [STUFieldAttribute(0xC46403A5, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_C46403A5;
+        public STU_076E0DBA m_C46403A5;
 
         [STUFieldAttribute(0x5DA62D02, "m_onAbortPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptOutputPlug m_onAbortPlug;

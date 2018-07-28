@@ -34,8 +34,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x007B7A4B)]
         public uint m_007B7A4B;
 
-        [STUFieldAttribute(0xC2854590)]
-        public byte m_C2854590;
+        [STUFieldAttribute(0xC2854590, "m_isHostile")]
+        public byte m_isHostile;
 
         [STUFieldAttribute(0xBA4297D8)]
         public byte m_BA4297D8;
@@ -46,7 +46,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x51D8D776)]
         public byte m_51D8D776;
 
-        [STUFieldAttribute(0x57CA7452)]
-        public byte m_57CA7452;
+        [STUFieldAttribute(0x57CA7452, "m_isRanked")]
+        public byte m_isRanked;
     }
 }

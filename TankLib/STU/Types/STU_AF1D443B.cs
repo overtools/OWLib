@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xAF1D443B)]
     public class STU_AF1D443B : STUMirroredEntityComponent {
         [STUFieldAttribute(0xF97609C8, "m_bone")]
-        public teStructuredDataAssetRef<STU_7A0B33DA> m_bone;
+        public teStructuredDataAssetRef<STUBoneLabel> m_bone;
     }
 }

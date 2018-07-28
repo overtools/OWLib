@@ -12,13 +12,16 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUModelLook> m_look;
 
         [STUFieldAttribute(0x2756356E)]
-        public teStructuredDataAssetRef<STU_58B3D0D0> m_2756356E;
+        public teStructuredDataAssetRef<STUEmptyAsset> m_2756356E;
 
         [STUFieldAttribute(0x1EA749A8)]
         public teVec3 m_1EA749A8;
 
         [STUFieldAttribute(0x11665D35)]
         public uint m_11665D35;
+
+        [STUFieldAttribute(0xDD193DC7)]
+        public int m_DD193DC7;
 
         [STUFieldAttribute(0x40CE1934)]
         public byte m_40CE1934;
@@ -31,5 +34,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xBA6E2567)]
         public byte m_BA6E2567;
+
+        [STUFieldAttribute(0x77E70F30)]
+        public byte m_77E70F30;
     }
 }

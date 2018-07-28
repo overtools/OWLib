@@ -7,8 +7,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x9E8C0CDA)]
         public teString m_9E8C0CDA;
 
-        [STUFieldAttribute(0x5130277A)]
-        public teString m_5130277A;
+        [STUFieldAttribute(0x5130277A, "m_legalText")]
+        public teString m_legalText;
 
         [STUFieldAttribute(0xEA75E4E3)]
         public teString m_EA75E4E3;

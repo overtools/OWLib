@@ -10,11 +10,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x1FD467D8)]
         public teStructuredDataAssetRef<STUUXLink> m_1FD467D8;
 
-        [STUFieldAttribute(0xA28F21A7)]
-        public teString m_A28F21A7;
+        [STUFieldAttribute(0xA28F21A7, "m_elapsedTime")]
+        public teString m_elapsedTime;
 
-        [STUFieldAttribute(0xE86C4532)]
-        public teString m_E86C4532;
+        [STUFieldAttribute(0xE86C4532, "m_estimatedTime")]
+        public teString m_estimatedTime;
 
         [STUFieldAttribute(0x98110E78)]
         public teString m_98110E78;
@@ -22,11 +22,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x5C1F0171)]
         public teStructuredDataAssetRef<STUUXLink> m_5C1F0171;
 
-        [STUFieldAttribute(0xFD438D55)]
-        public teString m_FD438D55;
+        [STUFieldAttribute(0xFD438D55, "m_leaverTime")]
+        public teString m_leaverTime;
 
-        [STUFieldAttribute(0x4B0385A1)]
-        public byte m_4B0385A1;
+        [STUFieldAttribute(0x4B0385A1, "m_isSearching")]
+        public byte m_isSearching;
 
         [STUFieldAttribute(0xE4628BCF)]
         public byte m_E4628BCF;

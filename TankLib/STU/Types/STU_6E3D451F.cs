@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x6E3D451F)]
     public class STU_6E3D451F : STUUXLink {
-        [STUFieldAttribute(0xA78EC647)]
-        public teString m_A78EC647;
+        [STUFieldAttribute(0xA78EC647, "m_targetKey")]
+        public teString m_targetKey;
     }
 }

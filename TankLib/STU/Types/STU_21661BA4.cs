@@ -19,11 +19,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBC296D94, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_A0BDC3D3 m_BC296D94;
 
-        [STUFieldAttribute(0xEC3CE801)]
-        public byte m_EC3CE801;
+        [STUFieldAttribute(0xEC3CE801, "m_isExpanded")]
+        public byte m_isExpanded;
 
-        [STUFieldAttribute(0x3F39322E)]
-        public byte m_3F39322E;
+        [STUFieldAttribute(0x3F39322E, "m_isSelected")]
+        public byte m_isSelected;
 
         [STUFieldAttribute(0xD1EDB02F)]
         public byte m_D1EDB02F;

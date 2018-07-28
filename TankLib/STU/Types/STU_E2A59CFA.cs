@@ -7,7 +7,10 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA5249DE6, "m_text")]
         public teString m_text;
 
-        [STUFieldAttribute(0xF1C86903)]
-        public teString m_F1C86903;
+        [STUFieldAttribute(0xF1C86903, "m_plainText")]
+        public teString m_plainText;
+
+        [STUFieldAttribute(0x904F1CFE)]
+        public teString m_904F1CFE;
     }
 }

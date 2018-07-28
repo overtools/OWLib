@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xAEBBF451, "STUVoiceStimulusCatalog")]
     public class STUVoiceStimulusCatalog : STUInstance {
         [STUFieldAttribute(0x3D83C363, "m_assets", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_2F427ADA[] m_assets;
+        public STUVoiceStimulusHeader[] m_assets;
     }
 }

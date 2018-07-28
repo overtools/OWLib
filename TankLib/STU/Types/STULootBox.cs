@@ -5,14 +5,14 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0x56B6D12E, "STULootBox")]
     public class STULootBox : STUInstance {
-        [STUFieldAttribute(0xCBE2DADD)]
-        public teStructuredDataAssetRef<STUEntityDefinition> m_CBE2DADD;
+        [STUFieldAttribute(0xCBE2DADD, "m_chestEntity")]
+        public teStructuredDataAssetRef<STUEntityDefinition> m_chestEntity;
 
-        [STUFieldAttribute(0xB2F9D222)]
-        public teStructuredDataAssetRef<STUEntityDefinition> m_B2F9D222;
+        [STUFieldAttribute(0xB2F9D222, "m_baseEntity")]
+        public teStructuredDataAssetRef<STUEntityDefinition> m_baseEntity;
 
-        [STUFieldAttribute(0x3970E137)]
-        public teStructuredDataAssetRef<STUEffect> m_3970E137;
+        [STUFieldAttribute(0x3970E137, "m_idleEffect")]
+        public teStructuredDataAssetRef<STUEffect> m_idleEffect;
 
         [STUFieldAttribute(0xFFE7768F)]
         public teStructuredDataAssetRef<STUEffect> m_FFE7768F;
@@ -23,8 +23,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x041CE51F, "m_modelLook")]
         public teStructuredDataAssetRef<STUModelLook> m_modelLook;
 
-        [STUFieldAttribute(0x9B180535)]
-        public teStructuredDataAssetRef<STUModelLook> m_9B180535;
+        [STUFieldAttribute(0x9B180535, "m_baseModelLook")]
+        public teStructuredDataAssetRef<STUModelLook> m_baseModelLook;
 
         [STUFieldAttribute(0xB48F1D22, "m_name")]
         public teStructuredDataAssetRef<STUUXDisplayText> m_name;
@@ -36,15 +36,15 @@ namespace TankLib.STU.Types {
         public STULootBoxShopCard[] m_shopCards;
 
         [STUFieldAttribute(0x3DFAC8CA)]
-        public teStructuredDataAssetRef<ulong>[] m_3DFAC8CA;
+        public teStructuredDataAssetRef<STUUXDisplayText>[] m_3DFAC8CA;
 
-        [STUFieldAttribute(0x7AB4E3F8)]
-        public Enum_BABC4175 m_7AB4E3F8;
+        [STUFieldAttribute(0x7AB4E3F8, "m_lootboxType")]
+        public Enum_BABC4175 m_lootboxType;
 
         [STUFieldAttribute(0x45C33D76)]
         public byte m_45C33D76;
 
-        [STUFieldAttribute(0xFA2D81E7)]
-        public byte m_FA2D81E7;
+        [STUFieldAttribute(0xFA2D81E7, "m_hidePucks")]
+        public byte m_hidePucks;
     }
 }

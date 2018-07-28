@@ -10,7 +10,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xE4A7B00A)]
         public teString m_E4A7B00A;
 
-        [STUFieldAttribute(0xA7FE4B94)]
-        public teString m_A7FE4B94;
+        [STUFieldAttribute(0xA7FE4B94, "m_sourceSet")]
+        public teString m_sourceSet;
     }
 }

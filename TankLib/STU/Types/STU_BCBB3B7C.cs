@@ -10,10 +10,10 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x112A0315, "m_error")]
         public teString m_error;
 
-        [STUFieldAttribute(0xAA2EF69A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_A0BDC3D3 m_AA2EF69A;
+        [STUFieldAttribute(0xAA2EF69A, "m_enterGame", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_A0BDC3D3 m_enterGame;
 
-        [STUFieldAttribute(0x74BB97E2)]
-        public byte m_74BB97E2;
+        [STUFieldAttribute(0x74BB97E2, "m_enteringGame")]
+        public byte m_enteringGame;
     }
 }

@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUHero> m_hero;
 
         [STUFieldAttribute(0x7B95AB93, "m_loadouts")]
-        public teStructuredDataAssetRef<ulong>[] m_loadouts;
+        public teStructuredDataAssetRef<STULoadout>[] m_loadouts;
     }
 }

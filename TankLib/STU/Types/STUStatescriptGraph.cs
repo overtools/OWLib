@@ -17,20 +17,20 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x16B4863C, "m_entries", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptEntry[] m_entries;
 
-        [STUFieldAttribute(0x47B51C49)]
-        public teString m_47B51C49;
+        [STUFieldAttribute(0x47B51C49, "m_consoleCommand")]
+        public teString m_consoleCommand;
 
         [STUFieldAttribute(0x8DC71AA3)]
-        public teStructuredDataAssetRef<ulong>[] m_8DC71AA3;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_8DC71AA3;
 
         [STUFieldAttribute(0x44D31832)]
-        public teStructuredDataAssetRef<ulong>[] m_44D31832;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_44D31832;
 
         [STUFieldAttribute(0xA1183166)]
-        public teStructuredDataAssetRef<ulong>[] m_A1183166;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_A1183166;
 
         [STUFieldAttribute(0x0D92E2AF)]
-        public teStructuredDataAssetRef<ulong>[] m_0D92E2AF;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_0D92E2AF;
 
         [STUFieldAttribute(0x2919DF46)]
         public int[] m_2919DF46;
@@ -39,7 +39,7 @@ namespace TankLib.STU.Types {
         public int[] m_680A2CB2;
 
         [STUFieldAttribute(0x9CEC6985)]
-        public teStructuredDataAssetRef<ulong>[] m_9CEC6985;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_9CEC6985;
 
         [STUFieldAttribute(0x41A83970, "m_remoteSyncNodes", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptBase[] m_remoteSyncNodes;
@@ -56,8 +56,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xFF44FD8B, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptSchema m_FF44FD8B;
 
-        [STUFieldAttribute(0x151AD444, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUStatescriptSchema m_151AD444;
+        [STUFieldAttribute(0x151AD444, "m_publicSchema", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUStatescriptSchema m_publicSchema;
 
         [STUFieldAttribute(0xF63B1D41, "m_playScriptHotReloadBehavior")]
         public Enum_CE6658F5 m_playScriptHotReloadBehavior;
@@ -65,8 +65,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBE8E52CD)]
         public uint m_BE8E52CD;
 
-        [STUFieldAttribute(0x55B1663D)]
-        public Enum_447977DB m_55B1663D;
+        [STUFieldAttribute(0x55B1663D, "m_predictionBehavior")]
+        public Enum_447977DB m_predictionBehavior;
 
         [STUFieldAttribute(0xEBCF63C6, "m_nodesBitCount")]
         public int m_nodesBitCount;

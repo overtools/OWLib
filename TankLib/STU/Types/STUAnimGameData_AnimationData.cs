@@ -13,8 +13,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD8514AD9)]
         public float m_D8514AD9;
 
-        [STUFieldAttribute(0x38158126)]
-        public float m_38158126;
+        [STUFieldAttribute(0x38158126, "m_movementSpeed")]
+        public float m_movementSpeed;
 
         [STUFieldAttribute(0xF81F4386, "m_startTime")]
         public float m_startTime;
@@ -28,7 +28,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x7EEFB57A, "m_flags")]
         public ushort m_flags;
 
-        [STUFieldAttribute(0xAE2D8911)]
-        public ushort m_AE2D8911;
+        [STUFieldAttribute(0xAE2D8911, "m_index")]
+        public ushort m_index;
     }
 }

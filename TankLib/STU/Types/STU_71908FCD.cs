@@ -20,7 +20,7 @@ namespace TankLib.STU.Types {
         public STUProfileOverviewGeneralStat[] m_C02094E7;
 
         [STUFieldAttribute(0x03A7C226)]
-        public teStructuredDataAssetRef<ulong>[] m_03A7C226;
+        public teStructuredDataAssetRef<STUStat>[] m_03A7C226;
 
         [STUFieldAttribute(0xAF2B1493, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUProfileStatCategory[] m_AF2B1493;

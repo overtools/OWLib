@@ -21,10 +21,10 @@ namespace TankLib.STU.Types {
         public teVec3A[] m_0559A5B3;
 
         [STUFieldAttribute(0x218D3FDF, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A4262E73[] m_218D3FDF;
+        public STUDataFlowStream_Float[] m_218D3FDF;
 
         [STUFieldAttribute(0x6297A36A, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_B2172366[] m_6297A36A;
+        public STUDataFlowStream_Guid[] m_6297A36A;
 
         [STUFieldAttribute(0xDAE5CCBB)]
         public ulong m_DAE5CCBB;

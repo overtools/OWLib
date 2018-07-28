@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xD66BFB3A)]
-    public class STU_D66BFB3A : STU_8B68F073 {
+    public class STU_D66BFB3A : STUGameModeLegacy {
         [STUFieldAttribute(0x5EF69B1D)]
         public uint m_5EF69B1D;
 

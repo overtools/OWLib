@@ -35,11 +35,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x07DD813E, "m_value")]
         public int m_value;
 
-        [STUFieldAttribute(0x628D48CC)]
-        public int m_628D48CC;
+        [STUFieldAttribute(0x628D48CC, "m_gamerScore")]
+        public int m_gamerScore;
 
-        [STUFieldAttribute(0x59D52DA5)]
-        public Enum_8E40F295 m_59D52DA5;
+        [STUFieldAttribute(0x59D52DA5, "m_trophy")]
+        public Enum_8E40F295 m_trophy;
 
         [STUFieldAttribute(0x5351832E)]
         public int m_5351832E;

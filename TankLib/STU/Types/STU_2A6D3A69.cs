@@ -13,7 +13,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF7EC33C5)]
         public uint m_F7EC33C5;
 
-        [STUFieldAttribute(0x3F39322E)]
-        public byte m_3F39322E;
+        [STUFieldAttribute(0x3F39322E, "m_isSelected")]
+        public byte m_isSelected;
     }
 }

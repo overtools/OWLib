@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xBBD17665, "STUUXRoutedCommand")]
     public class STUUXRoutedCommand : STU_A0BDC3D3 {
-        [STUFieldAttribute(0x1AD4EC1E)]
-        public uint m_1AD4EC1E;
+        [STUFieldAttribute(0x1AD4EC1E, "m_commandKey")]
+        public uint m_commandKey;
     }
 }

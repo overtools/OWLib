@@ -11,10 +11,10 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x8355F260)]
         public float[] m_8355F260;
 
-        [STUFieldAttribute(0xA8E85C23)]
-        public teColorRGB[] m_A8E85C23;
+        [STUFieldAttribute(0xA8E85C23, "m_colorValues")]
+        public teColorRGB[] m_colorValues;
 
-        [STUFieldAttribute(0xA4AD54FD)]
-        public teColorRGB[] m_A4AD54FD;
+        [STUFieldAttribute(0xA4AD54FD, "m_colorDelta")]
+        public teColorRGB[] m_colorDelta;
     }
 }

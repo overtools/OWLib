@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x14D22614)]
     public class STU_14D22614 : STU_0D3E9B37 {
-        [STUFieldAttribute(0xB8DC6D46)]
-        public teStructuredDataAssetRef<STUTeamColor> m_B8DC6D46;
+        [STUFieldAttribute(0xB8DC6D46, "m_teamColor")]
+        public teStructuredDataAssetRef<STUTeamColor> m_teamColor;
 
         [STUFieldAttribute(0x5E9665E3)]
         public teStructuredDataAssetRef<STUSkinTheme> m_5E9665E3;

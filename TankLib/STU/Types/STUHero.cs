@@ -5,7 +5,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x7C3457DC, "STUHero")]
-    public class STUHero : STU_8FFAF278 {
+    public class STUHero : STUShippable {
         [STUFieldAttribute(0x950BBA06, "m_gameplayEntity")]
         public teStructuredDataAssetRef<STUEntityDefinition> m_gameplayEntity;
 
@@ -13,13 +13,13 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_0EDCE350;
 
         [STUFieldAttribute(0xE04197AF, "m_gameRulesetSchemas")]
-        public teStructuredDataAssetRef<ulong>[] m_gameRulesetSchemas;
+        public teStructuredDataAssetRef<STUGameRulesetSchema>[] m_gameRulesetSchemas;
 
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
         public teStructuredDataAssetRef<STUIdentifier> m_category;
 
         [STUFieldAttribute(0xF2D8DE15)]
-        public teStructuredDataAssetRef<ulong>[] m_F2D8DE15;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_F2D8DE15;
 
         [STUFieldAttribute(0x3446F580)]
         public teStructuredDataAssetRef<STU_96ABC153> m_3446F580;
@@ -63,26 +63,26 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA341183E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_8A1F18F9[] m_A341183E;
 
-        [STUFieldAttribute(0x77FED604)]
-        public teStructuredDataAssetRef<ulong>[] m_77FED604;
+        [STUFieldAttribute(0x77FED604, "m_heroLoadout")]
+        public teStructuredDataAssetRef<STULoadout>[] m_heroLoadout;
 
         [STUFieldAttribute(0xD12CB4EA)]
-        public teStructuredDataAssetRef<ulong>[] m_D12CB4EA;
+        public teStructuredDataAssetRef<STU_1DEBD356>[] m_D12CB4EA;
 
-        [STUFieldAttribute(0x485AA39C)]
-        public teStructuredDataAssetRef<STU_8CE1D110> m_485AA39C;
+        [STUFieldAttribute(0x485AA39C, "m_heroProgression")]
+        public teStructuredDataAssetRef<STUProgressionUnlocks> m_heroProgression;
 
         [STUFieldAttribute(0x418F797D, ReaderType = typeof(InlineInstanceFieldReader))]
         public StatEventScoreScaler[] m_418F797D;
 
         [STUFieldAttribute(0xFF3C2071, "m_achievements")]
-        public teStructuredDataAssetRef<ulong>[] m_achievements;
+        public teStructuredDataAssetRef<STUAchievement>[] m_achievements;
 
-        [STUFieldAttribute(0xA5C9CA02)]
-        public teString m_A5C9CA02;
+        [STUFieldAttribute(0xA5C9CA02, "m_internalName")]
+        public teString m_internalName;
 
-        [STUFieldAttribute(0x893AAB2B)]
-        public teStructuredDataAssetRef<ulong>[] m_893AAB2B;
+        [STUFieldAttribute(0x893AAB2B, "m_heroEffects")]
+        public teStructuredDataAssetRef<STUEffect>[] m_heroEffects;
 
         [STUFieldAttribute(0xE1258EC1, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_5E493D8B[] m_E1258EC1;
@@ -90,14 +90,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x84625AA3, "m_skinThemes", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_63172E83[] m_skinThemes;
 
-        [STUFieldAttribute(0xE25DDDA1)]
-        public teColorRGBA m_E25DDDA1;
+        [STUFieldAttribute(0xE25DDDA1, "m_heroColor")]
+        public teColorRGBA m_heroColor;
 
         [STUFieldAttribute(0x44D13CC2)]
         public int m_44D13CC2;
 
-        [STUFieldAttribute(0xAF4EC410)]
-        public Enum_C1DAF32A m_AF4EC410;
+        [STUFieldAttribute(0xAF4EC410, "m_heroSize")]
+        public Enum_C1DAF32A m_heroSize;
 
         [STUFieldAttribute(0x7D88A63A)]
         public Enum_0C014B4A m_7D88A63A;

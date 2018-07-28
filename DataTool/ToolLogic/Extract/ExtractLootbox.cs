@@ -34,21 +34,21 @@ namespace DataTool.ToolLogic.Extract {
                 STULootBox lootbox = GetInstanceNew<STULootBox>(key);
                 if (lootbox == null) continue;
                 
-                string name = GetValidFilename(lootbox.m_7AB4E3F8.ToString()) ?? $"Unknown{GUID.Index(key):X}";
+                string name = GetValidFilename(lootbox.m_lootboxType.ToString()) ?? $"Unknown{GUID.Index(key):X}";
 
-                Combo.ComboInfo info = Combo.Find(null, lootbox.m_B2F9D222);  // 003
-                Combo.Find(info, lootbox.m_CBE2DADD);  // 003
-                Combo.Find(info, lootbox.m_3970E137);  // 00D
+                Combo.ComboInfo info = Combo.Find(null, lootbox.m_baseEntity);  // 003
+                Combo.Find(info, lootbox.m_chestEntity);  // 003
+                Combo.Find(info, lootbox.m_idleEffect);  // 00D
                 Combo.Find(info, lootbox.m_FEC3ED62);  // 00D
                 Combo.Find(info, lootbox.m_FFE7768F);  // 00D
-                Combo.Find(info, lootbox.m_9B180535);  // 01A
+                Combo.Find(info, lootbox.m_baseModelLook);  // 01A
                 Combo.Find(info, lootbox.m_modelLook);
                 
-                Combo.Find(info, 288230376151716950);  // coin chest, todo
+                Combo.Find(info, 0x400000000001456);  // coin chest, todo
                 // 00000000315A.00C in 000000001456.003 (288230376151716950)
                 
                 foreach (STULootBoxShopCard lootboxShopCard in lootbox.m_shopCards) {
-                    Combo.Find(info, lootboxShopCard.m_87EACF5F);  // 004
+                    Combo.Find(info, lootboxShopCard.m_cardTexture);  // 004
                 }
                 SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, name, "ShopCards"), info);
                 SaveLogic.Combo.Save(flags, Path.Combine(basePath, Container, name), info);

@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STU_D1724396 m_B8935A1E;
 
         [STUFieldAttribute(0xAA8E1BB0, "m_targetTags")]
-        public teStructuredDataAssetRef<ulong>[] m_targetTags;
+        public teStructuredDataAssetRef<STUTargetTag>[] m_targetTags;
 
         [STUFieldAttribute(0x66630149, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUStatescriptGraphWithOverrides[] m_66630149;

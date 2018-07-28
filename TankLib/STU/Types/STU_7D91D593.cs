@@ -10,8 +10,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x4C66BDF0)]
         public teStructuredDataAssetRef<STUAnimation> m_4C66BDF0;
 
-        [STUFieldAttribute(0xD32FA452)]
-        public teStructuredDataAssetRef<STUDataFlow> m_D32FA452;
+        [STUFieldAttribute(0xD32FA452, "m_categoryDataFlow")]
+        public teStructuredDataAssetRef<STUDataFlow> m_categoryDataFlow;
 
         [STUFieldAttribute(0x9A94649A)]
         public teStructuredDataAssetRef<STUDataFlow> m_9A94649A;

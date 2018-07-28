@@ -17,7 +17,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STU_7A68A730> m_6148094F;
 
         [STUFieldAttribute(0xDDF3EE5C)]
-        public teStructuredDataAssetRef<STU_A408D74F> m_DDF3EE5C;
+        public teStructuredDataAssetRef<STUVoiceConversation> m_DDF3EE5C;
 
         [STUFieldAttribute(0x38F3ED5E)]
         public teString m_38F3ED5E;
@@ -39,5 +39,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x9502010D, "m_active")]
         public byte m_active;
+
+        [STUFieldAttribute(0xB4799113)]
+        public byte m_B4799113;
     }
 }

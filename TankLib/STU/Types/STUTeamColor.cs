@@ -5,14 +5,14 @@ using TankLib.Math;
 namespace TankLib.STU.Types {
     [STUAttribute(0x8880FCB0, "STUTeamColor")]
     public class STUTeamColor : STUInstance {
-        [STUFieldAttribute(0x5A7D86C7, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_6B3A03D7 m_5A7D86C7;
+        [STUFieldAttribute(0x5A7D86C7, "m_characterData", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_6B3A03D7 m_characterData;
 
-        [STUFieldAttribute(0x80B01FC2, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_2854069F m_80B01FC2;
+        [STUFieldAttribute(0x80B01FC2, "m_effectsData", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_2854069F m_effectsData;
 
-        [STUFieldAttribute(0xD74D5F6F, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_176E7ACB m_D74D5F6F;
+        [STUFieldAttribute(0xD74D5F6F, "m_uiData", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_176E7ACB m_uiData;
 
         [STUFieldAttribute(0xAE42D53E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_7CD6F719 m_AE42D53E;

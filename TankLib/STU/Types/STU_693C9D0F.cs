@@ -13,17 +13,17 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x16D6D2C4, "m_rank")]
         public int m_rank;
 
-        [STUFieldAttribute(0x9F2C4E78)]
-        public int m_9F2C4E78;
+        [STUFieldAttribute(0x9F2C4E78, "m_rankedLevel")]
+        public int m_rankedLevel;
 
-        [STUFieldAttribute(0xE24BEF4D)]
-        public int m_E24BEF4D;
+        [STUFieldAttribute(0xE24BEF4D, "m_rankedTier")]
+        public int m_rankedTier;
 
-        [STUFieldAttribute(0xBEF6A51D)]
-        public byte m_BEF6A51D;
+        [STUFieldAttribute(0xBEF6A51D, "m_inSocial")]
+        public byte m_inSocial;
 
-        [STUFieldAttribute(0x99238F34)]
-        public byte m_99238F34;
+        [STUFieldAttribute(0x99238F34, "m_isBot")]
+        public byte m_isBot;
 
         [STUFieldAttribute(0xEB934B49)]
         public byte m_EB934B49;

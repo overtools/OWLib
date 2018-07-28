@@ -4,10 +4,10 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x82EACB6A)]
     public class STU_82EACB6A : STUConfigVarEntityID {
-        [STUFieldAttribute(0xF24E4110, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_F24E4110;
+        [STUFieldAttribute(0xF24E4110, "m_slot", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_slot;
 
-        [STUFieldAttribute(0x33B0B2B6, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_33B0B2B6;
+        [STUFieldAttribute(0x33B0B2B6, "m_team", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_team;
     }
 }

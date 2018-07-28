@@ -10,13 +10,13 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x5E44D8C3)]
         public teStructuredDataAssetRef<STUTexture> m_5E44D8C3;
 
-        [STUFieldAttribute(0xEC613BC5)]
-        public teStructuredDataAssetRef<STUTexture> m_EC613BC5;
+        [STUFieldAttribute(0xEC613BC5, "m_starData")]
+        public teStructuredDataAssetRef<STUTexture> m_starData;
 
         [STUFieldAttribute(0xCB803FD9)]
         public float m_CB803FD9;
 
-        [STUFieldAttribute(0x01D31F55)]
-        public float m_01D31F55;
+        [STUFieldAttribute(0x01D31F55, "m_twinkleSpeed")]
+        public float m_twinkleSpeed;
     }
 }

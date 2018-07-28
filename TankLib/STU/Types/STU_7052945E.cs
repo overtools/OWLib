@@ -4,10 +4,10 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x7052945E)]
     public class STU_7052945E : STUInstance {
-        [STUFieldAttribute(0xFA1FDF0D)]
-        public teString m_FA1FDF0D;
+        [STUFieldAttribute(0x27D46586)]
+        public teString m_27D46586;
 
-        [STUFieldAttribute(0x91E8FA23, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUSoundBankDataVersion[] m_91E8FA23;
+        [STUFieldAttribute(0xD32A05C5, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_C069C27F[] m_D32A05C5;
     }
 }

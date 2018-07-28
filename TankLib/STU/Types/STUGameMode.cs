@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x494C33C4, "STUGameMode")]
     public class STUGameMode : STUInstance {
         [STUFieldAttribute(0xA43573F4)]
-        public teStructuredDataAssetRef<ulong>[] m_A43573F4;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_A43573F4;
 
         [STUFieldAttribute(0xCF63B633)]
         public teStructuredDataAssetRef<STU_6BE90C5C> m_CF63B633;
@@ -27,7 +27,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_6EB38130;
 
         [STUFieldAttribute(0xE04197AF, "m_gameRulesetSchemas")]
-        public teStructuredDataAssetRef<ulong>[] m_gameRulesetSchemas;
+        public teStructuredDataAssetRef<STUGameRulesetSchema>[] m_gameRulesetSchemas;
 
         [STUFieldAttribute(0xD440A0F7, "m_teams", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameModeTeam[] m_teams;
@@ -35,8 +35,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xDA642982, "m_loadoutOverrides", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameModeLoadoutOverride[] m_loadoutOverrides;
 
-        [STUFieldAttribute(0xA8957901)]
-        public teStructuredDataAssetRef<STUCelebration> m_A8957901;
+        [STUFieldAttribute(0xA8957901, "m_requiredCelebration")]
+        public teStructuredDataAssetRef<STUCelebration> m_requiredCelebration;
 
         [STUFieldAttribute(0x7F5B54B2)]
         public teStructuredDataAssetRef<ulong> m_7F5B54B2;
@@ -47,8 +47,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x37D4F9CD)]
         public int m_37D4F9CD;
 
-        [STUFieldAttribute(0x8A5415B9)]
-        public Enum_1964FED7 m_8A5415B9;
+        [STUFieldAttribute(0x8A5415B9, "m_gameModeType")]
+        public Enum_1964FED7 m_gameModeType;
 
         [STUFieldAttribute(0x70064613)]
         public byte m_70064613;

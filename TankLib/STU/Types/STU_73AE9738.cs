@@ -20,8 +20,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xDA688288)]
         public teStructuredDataAssetRef<ulong> m_DA688288;
 
-        [STUFieldAttribute(0xB8DC6D46)]
-        public teStructuredDataAssetRef<ulong> m_B8DC6D46;
+        [STUFieldAttribute(0xB8DC6D46, "m_teamColor")]
+        public teStructuredDataAssetRef<ulong> m_teamColor;
 
         [STUFieldAttribute(0xAA53A680)]
         public Enum_5A789F71 m_AA53A680;

@@ -7,7 +7,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0EF347AE, "m_regex")]
         public teString m_regex;
 
-        [STUFieldAttribute(0xB8813C39)]
-        public byte m_B8813C39;
+        [STUFieldAttribute(0xB8813C39, "m_invert")]
+        public byte m_invert;
     }
 }

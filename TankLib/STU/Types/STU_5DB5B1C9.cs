@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public STU_754341EB m_graph;
 
         [STUFieldAttribute(0xB2B29774)]
-        public teStructuredDataAssetRef<ulong>[] m_B2B29774;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_B2B29774;
     }
 }

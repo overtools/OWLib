@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xB792BE50, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_64C11507 m_B792BE50;
 
-        [STUFieldAttribute(0xB94B8ADD)]
-        public Enum_3C2F5875 m_B94B8ADD;
+        [STUFieldAttribute(0xB94B8ADD, "m_stringComparison")]
+        public Enum_3C2F5875 m_stringComparison;
     }
 }

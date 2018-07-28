@@ -6,14 +6,17 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0x5BB2E270)]
     public class STU_5BB2E270 : STUInstance {
-        [STUFieldAttribute(0xB8DC6D46)]
-        public teStructuredDataAssetRef<STUTeamColor> m_B8DC6D46;
+        [STUFieldAttribute(0xB8DC6D46, "m_teamColor")]
+        public teStructuredDataAssetRef<STUTeamColor> m_teamColor;
 
         [STUFieldAttribute(0x5DB91CE2, "m_displayName")]
         public teStructuredDataAssetRef<ulong> m_displayName;
 
         [STUFieldAttribute(0x91346D6A)]
         public teStructuredDataAssetRef<STUIdentifier> m_91346D6A;
+
+        [STUFieldAttribute(0xB30C5FE6)]
+        public teStructuredDataAssetRef<STUIdentifier> m_B30C5FE6;
 
         [STUFieldAttribute(0x11C761F7)]
         public ulong m_11C761F7;
@@ -23,6 +26,12 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x14AFB2CB)]
         public teColorRGB m_14AFB2CB;
+
+        [STUFieldAttribute(0x378B8B45)]
+        public teColorRGB m_378B8B45;
+
+        [STUFieldAttribute(0x3C2B54A3)]
+        public teColorRGB m_3C2B54A3;
 
         [STUFieldAttribute(0x7E541DD0)]
         public int m_7E541DD0;

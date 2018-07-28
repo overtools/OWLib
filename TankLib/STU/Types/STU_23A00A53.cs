@@ -10,8 +10,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x53FCEDBF, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_53FCEDBF;
 
-        [STUFieldAttribute(0x0A84537A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_0A84537A;
+        [STUFieldAttribute(0x0A84537A, "m_contactSet", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_contactSet;
 
         [STUFieldAttribute(0x5BC939F0, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_5BC939F0;
@@ -29,6 +29,6 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_485109CB;
 
         [STUFieldAttribute(0x7AD5153D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_7AD5153D;
+        public STU_076E0DBA m_7AD5153D;
     }
 }

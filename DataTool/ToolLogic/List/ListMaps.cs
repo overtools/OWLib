@@ -101,7 +101,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public static MapInfo GetMap(ulong key) {
-            STU_02514B6A map = GetInstanceNew<STU_02514B6A>(key);
+            STUMapHeader map = GetInstanceNew<STUMapHeader>(key);
             if (map == null) return null;
 
             string nameA = GetString(map.m_displayName);
@@ -115,7 +115,8 @@ namespace DataTool.ToolLogic.List {
             string stateB = GetString(map.m_8EBADA44);
 
             List<GamemodeInfo> gamemodes = null;
-            if (map.m_5FF3ACFB != null) {
+            
+            if (map.m_D608E9F3 != null) {
                 gamemodes = new List<GamemodeInfo>();
                 foreach (ulong guid in map.m_D608E9F3) {
                     STUGameMode gamemode = GetInstanceNew<STUGameMode>(guid);
@@ -128,8 +129,12 @@ namespace DataTool.ToolLogic.List {
                         GUID = guid
                     });
                 }
-
-            }
+            } 
+            
+            // if (map.m_celebrationOverrides != null) {
+            //     
+            //
+            // }
 
             if (!string.IsNullOrEmpty(nameA) && !string.IsNullOrEmpty(nameB) && nameB.Equals(nameA)) {
                 nameB = null;
@@ -146,7 +151,7 @@ namespace DataTool.ToolLogic.List {
                 uniqueName = nameA + $":{GUID.Index(key):X}";
             }
             return new MapInfo(uniqueName, key, nameA, nameB, descA, descB, subline, stateA, stateB,
-                map.m_map, map.m_38F33424, gamemodes);
+                map.m_map, map.m_baseMap, gamemodes);
         }
 
         public Dictionary<string, MapInfo> GetMaps() {

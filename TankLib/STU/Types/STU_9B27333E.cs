@@ -10,8 +10,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x7FF10AD7, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUTextureSource m_7FF10AD7;
 
-        [STUFieldAttribute(0x58C61359, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUTextureSource m_58C61359;
+        [STUFieldAttribute(0x58C61359, "m_bloom", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUTextureSource m_bloom;
 
         [STUFieldAttribute(0x1EC2CD1A)]
         public float m_1EC2CD1A;

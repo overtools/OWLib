@@ -5,20 +5,20 @@ using TankLib.Math;
 namespace TankLib.STU.Types {
     [STUAttribute(0x5244F231)]
     public class STU_5244F231 : STUUXViewModel {
-        [STUFieldAttribute(0x94FADF7F)]
-        public teString m_94FADF7F;
+        [STUFieldAttribute(0x94FADF7F, "m_stringValue")]
+        public teString m_stringValue;
 
-        [STUFieldAttribute(0x913D7864)]
-        public teStructuredDataAssetRef<STUUXLink> m_913D7864;
+        [STUFieldAttribute(0x913D7864, "m_idValue")]
+        public teStructuredDataAssetRef<STUUXLink> m_idValue;
 
-        [STUFieldAttribute(0x19FDF5A2)]
-        public teStructuredDataAssetRef<ulong> m_19FDF5A2;
+        [STUFieldAttribute(0x19FDF5A2, "m_textValue")]
+        public teStructuredDataAssetRef<ulong> m_textValue;
 
-        [STUFieldAttribute(0x9653DC83)]
-        public teStructuredDataAssetRef<ulong> m_9653DC83;
+        [STUFieldAttribute(0x9653DC83, "m_textureValue")]
+        public teStructuredDataAssetRef<ulong> m_textureValue;
 
-        [STUFieldAttribute(0x33F1ADD9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_570284D5[] m_33F1ADD9;
+        [STUFieldAttribute(0x33F1ADD9, "m_collectionValue", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_570284D5[] m_collectionValue;
 
         [STUFieldAttribute(0xD485A69D, "m_command", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_A0BDC3D3 m_command;
@@ -29,19 +29,19 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x740DBBB7, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_570284D5 m_740DBBB7;
 
-        [STUFieldAttribute(0xF861F976)]
-        public teColorRGBA m_F861F976;
+        [STUFieldAttribute(0xF861F976, "m_colorValue")]
+        public teColorRGBA m_colorValue;
 
-        [STUFieldAttribute(0x35B305C7)]
-        public int m_35B305C7;
+        [STUFieldAttribute(0x35B305C7, "m_intValue")]
+        public int m_intValue;
 
         [STUFieldAttribute(0x5D275D5A)]
         public uint m_5D275D5A;
 
-        [STUFieldAttribute(0x2F2C9154)]
-        public float m_2F2C9154;
+        [STUFieldAttribute(0x2F2C9154, "m_floatValue")]
+        public float m_floatValue;
 
-        [STUFieldAttribute(0x1A1BF027)]
-        public byte m_1A1BF027;
+        [STUFieldAttribute(0x1A1BF027, "m_boolValue")]
+        public byte m_boolValue;
     }
 }

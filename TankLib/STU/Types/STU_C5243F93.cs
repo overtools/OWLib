@@ -14,11 +14,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x3C9341F5, "m_logicalButton")]
         public STULogicalButton m_logicalButton;
 
-        [STUFieldAttribute(0xF6D8234A)]
-        public Enum_0DEE7CD5 m_F6D8234A;
+        [STUFieldAttribute(0xF6D8234A, "m_modeFlags")]
+        public Enum_0DEE7CD5 m_modeFlags;
 
-        [STUFieldAttribute(0x482CDBED)]
-        public float m_482CDBED;
+        [STUFieldAttribute(0x482CDBED, "m_sortValue")]
+        public float m_sortValue;
 
         [STUFieldAttribute(0x946AA91D)]
         public Enum_3D49D804 m_946AA91D;

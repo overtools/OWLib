@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STUModelMaterial[] m_materials;
 
         [STUFieldAttribute(0x33DA887B)]
-        public teStructuredDataAssetRef<ulong>[] m_33DA887B;
+        public teStructuredDataAssetRef<STU_CBD8CDF3>[] m_33DA887B;
 
         [STUFieldAttribute(0x05692DC5, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimationPermutation[] m_05692DC5;
@@ -17,7 +17,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUMaterialEffect> m_7B5D8241;
 
         [STUFieldAttribute(0xC03306D7)]
-        public teStructuredDataAssetRef<ulong>[] m_C03306D7;
+        public teStructuredDataAssetRef<STUModel>[] m_C03306D7;
 
         [STUFieldAttribute(0x312C5F1A, "m_materialEffects", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUMaterialEffect[] m_materialEffects;

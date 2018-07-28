@@ -5,10 +5,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xA90901B3, "STUTextureSource")]
     public class STUTextureSource : STUInstance {
         [STUFieldAttribute(0xC62D91EB, "m_source")]
-        public teStructuredDataAssetRef<STU_58B3D0D0> m_source;
+        public teStructuredDataAssetRef<STUEmptyAsset> m_source;
 
         [STUFieldAttribute(0xFC8A9084)]
-        public teStructuredDataAssetRef<STU_58B3D0D0> m_FC8A9084;
+        public teStructuredDataAssetRef<STUEmptyAsset> m_FC8A9084;
 
         [STUFieldAttribute(0xC46FB879)]
         public teString m_C46FB879;

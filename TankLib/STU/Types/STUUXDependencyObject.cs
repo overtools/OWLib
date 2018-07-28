@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xA30AC223, "STUUXDependencyObject")]
     public class STUUXDependencyObject : STUUXObject {
-        [STUFieldAttribute(0xCCBAB44D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_540641B9[] m_CCBAB44D;
+        [STUFieldAttribute(0xCCBAB44D, "m_localValues", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_540641B9[] m_localValues;
     }
 }

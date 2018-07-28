@@ -32,27 +32,27 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_7CC7DEEB;
 
         [STUFieldAttribute(0xCD00DCDD, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_CD00DCDD;
+        public STU_076E0DBA m_CD00DCDD;
 
         [STUFieldAttribute(0xC1D23260, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_C1D23260;
+        public STU_076E0DBA m_C1D23260;
 
         [STUFieldAttribute(0x04FA3651, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_04FA3651;
+        public STU_076E0DBA m_04FA3651;
 
         [STUFieldAttribute(0xA419F60B, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_A419F60B;
+        public STU_076E0DBA m_A419F60B;
 
         [STUFieldAttribute(0x7D8362C9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_7D8362C9;
+        public STU_076E0DBA m_7D8362C9;
 
         [STUFieldAttribute(0xC9B354ED, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_C9B354ED;
+        public STU_076E0DBA m_C9B354ED;
 
         [STUFieldAttribute(0xCC379567, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_CC379567;
+        public STU_076E0DBA m_CC379567;
 
         [STUFieldAttribute(0x05143217, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_05143217;
+        public STU_076E0DBA m_05143217;
     }
 }

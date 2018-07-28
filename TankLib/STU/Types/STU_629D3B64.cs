@@ -4,8 +4,8 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x629D3B64)]
     public class STU_629D3B64 : STU_2F6BD485 {
-        [STUFieldAttribute(0x37429C94, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUAnimBlendTimeParams m_37429C94;
+        [STUFieldAttribute(0x37429C94, "m_blendTime", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimBlendTimeParams m_blendTime;
 
         [STUFieldAttribute(0x93BDC60C, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_ABD8FE73 m_93BDC60C;

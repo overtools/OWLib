@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xC3E03C7F, "m_color")]
         public teColorRGB m_color;
 
-        [STUFieldAttribute(0xAE2D8911)]
-        public int m_AE2D8911;
+        [STUFieldAttribute(0xAE2D8911, "m_index")]
+        public int m_index;
     }
 }

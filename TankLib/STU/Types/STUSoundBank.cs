@@ -7,8 +7,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF99A0938)]
         public teString m_F99A0938;
 
-        [STUFieldAttribute(0xFA1FDF0D)]
-        public teString m_FA1FDF0D;
+        [STUFieldAttribute(0x27D46586)]
+        public teString m_27D46586;
+
+        [STUFieldAttribute(0x2075DBF6, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_0FA0034C[] m_2075DBF6;
 
         [STUFieldAttribute(0xF7805734)]
         public uint m_F7805734;

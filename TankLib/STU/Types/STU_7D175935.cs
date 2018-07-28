@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x7D175935)]
     public class STU_7D175935 : STUComponentInstanceData {
         [STUFieldAttribute(0x3A6C757E)]
-        public Enum_8F2CDF51[] m_3A6C757E;
+        public TeamIndex[] m_3A6C757E;
 
         [STUFieldAttribute(0x4139D2F1)]
         public int m_4139D2F1;

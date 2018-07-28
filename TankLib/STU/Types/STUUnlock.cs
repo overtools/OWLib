@@ -14,20 +14,23 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBDB2D444)]
         public teStructuredDataAssetRef<ulong> m_BDB2D444;
 
-        [STUFieldAttribute(0x84F3DCC0)]
-        public teStructuredDataAssetRef<ulong> m_84F3DCC0;
+        [STUFieldAttribute(0xBEE9BCDA)]
+        public teStructuredDataAssetRef<STUIdentifier>[] m_BEE9BCDA;
 
         [STUFieldAttribute(0x53145FAF)]
         public teStructuredDataAssetRef<ulong> m_53145FAF;
 
         [STUFieldAttribute(0xAA8E1BB0, "m_targetTags")]
-        public teStructuredDataAssetRef<ulong>[] m_targetTags;
+        public teStructuredDataAssetRef<STUTargetTag>[] m_targetTags;
 
         [STUFieldAttribute(0x3446F580)]
         public teStructuredDataAssetRef<STU_96ABC153> m_3446F580;
 
         [STUFieldAttribute(0x0B1BA7C1)]
         public teStructuredDataAssetRef<ulong> m_0B1BA7C1;
+
+        [STUFieldAttribute(0xEDE36CB7, "m_resourceKeyId")]
+        public ulong m_resourceKeyId;
 
         [STUFieldAttribute(0xBB99FCD3, "m_rarity")]
         public STUUnlockRarity m_rarity;

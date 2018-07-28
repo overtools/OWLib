@@ -24,11 +24,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x3A205C9C)]
         public teStructuredDataAssetRef<STUTexture> m_3A205C9C;
 
-        [STUFieldAttribute(0xF0A9405A)]
-        public teStructuredDataAssetRef<STUTeamColor> m_F0A9405A;
+        [STUFieldAttribute(0xF0A9405A, "m_sourceTeam")]
+        public teStructuredDataAssetRef<STUTeamColor> m_sourceTeam;
 
         [STUFieldAttribute(0xB999DDE2)]
-        public teStructuredDataAssetRef<STU_58B3D0D0> m_B999DDE2;
+        public teStructuredDataAssetRef<STUEmptyAsset> m_B999DDE2;
 
         [STUFieldAttribute(0x36517B3B)]
         public teVec2 m_36517B3B;

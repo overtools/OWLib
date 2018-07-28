@@ -16,7 +16,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xFBEBAD6F, "m_endTime")]
         public teStructuredDataDateAndTime m_endTime;
 
-        [STUFieldAttribute(0xEDE36CB7)]
-        public ulong m_EDE36CB7;
+        [STUFieldAttribute(0xEDE36CB7, "m_resourceKeyId")]
+        public ulong m_resourceKeyId;
     }
 }

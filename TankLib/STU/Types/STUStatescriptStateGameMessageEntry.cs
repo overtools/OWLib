@@ -15,16 +15,16 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_gameMessage;
 
         [STUFieldAttribute(0xFF703F20, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_FF703F20;
+        public STU_076E0DBA m_FF703F20;
 
         [STUFieldAttribute(0x44D0D060, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_44D0D060;
+        public STU_076E0DBA m_44D0D060;
 
         [STUFieldAttribute(0xB60ABDA4, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_B60ABDA4;
+        public STU_076E0DBA m_B60ABDA4;
 
         [STUFieldAttribute(0x82B03EC1, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_82B03EC1;
+        public STU_076E0DBA m_82B03EC1;
 
         [STUFieldAttribute(0x452862E6, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_904BFCEC m_452862E6;

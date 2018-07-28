@@ -28,17 +28,17 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF1A601CE)]
         public teString m_F1A601CE;
 
-        [STUFieldAttribute(0x32BC347F)]
-        public ulong m_32BC347F;
+        [STUFieldAttribute(0x32BC347F, "m_unlockGUID")]
+        public ulong m_unlockGUID;
 
-        [STUFieldAttribute(0xE75BEDA5)]
-        public ulong m_E75BEDA5;
+        [STUFieldAttribute(0xE75BEDA5, "m_heroGUID")]
+        public ulong m_heroGUID;
 
-        [STUFieldAttribute(0x52DFB67C)]
-        public ulong m_52DFB67C;
+        [STUFieldAttribute(0x52DFB67C, "m_assetGUID")]
+        public ulong m_assetGUID;
 
-        [STUFieldAttribute(0x7292116E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_A0BDC3D3 m_7292116E;
+        [STUFieldAttribute(0x7292116E, "m_equipUnlock", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_A0BDC3D3 m_equipUnlock;
 
         [STUFieldAttribute(0x4032D107, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_A0BDC3D3 m_4032D107;
@@ -52,8 +52,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x526087F6, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_A0BDC3D3 m_526087F6;
 
-        [STUFieldAttribute(0x2A0F81E0, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_A0BDC3D3 m_2A0F81E0;
+        [STUFieldAttribute(0x2A0F81E0, "m_previewUnlock", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_A0BDC3D3 m_previewUnlock;
 
         [STUFieldAttribute(0x8689AEDD)]
         public int m_8689AEDD;
@@ -64,20 +64,20 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xC4646834)]
         public int m_C4646834;
 
-        [STUFieldAttribute(0x3F39322E)]
-        public byte m_3F39322E;
+        [STUFieldAttribute(0x3F39322E, "m_isSelected")]
+        public byte m_isSelected;
 
-        [STUFieldAttribute(0x234C7105)]
-        public byte m_234C7105;
+        [STUFieldAttribute(0x234C7105, "m_isLocked")]
+        public byte m_isLocked;
 
         [STUFieldAttribute(0x78140927)]
         public byte m_78140927;
 
-        [STUFieldAttribute(0xB2F05CA0)]
-        public byte m_B2F05CA0;
+        [STUFieldAttribute(0xB2F05CA0, "m_isEquipped")]
+        public byte m_isEquipped;
 
-        [STUFieldAttribute(0xA198200E)]
-        public byte m_A198200E;
+        [STUFieldAttribute(0xA198200E, "m_isUsable")]
+        public byte m_isUsable;
 
         [STUFieldAttribute(0x1F72D39F)]
         public byte m_1F72D39F;

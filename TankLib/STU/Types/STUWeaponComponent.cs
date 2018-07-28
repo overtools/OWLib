@@ -4,10 +4,10 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x15CB6532, "STUWeaponComponent")]
     public class STUWeaponComponent : STUMirroredEntityComponent {
-        [STUFieldAttribute(0xC63E11DD)]
-        public teStructuredDataAssetRef<STU_6BE90C5C> m_C63E11DD;
+        [STUFieldAttribute(0xC63E11DD, "m_managerScript")]
+        public teStructuredDataAssetRef<STU_6BE90C5C> m_managerScript;
 
-        [STUFieldAttribute(0x3BD16B9E, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUWeaponDefinition[] m_3BD16B9E;
+        [STUFieldAttribute(0x3BD16B9E, "m_weapons", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUWeaponDefinition[] m_weapons;
     }
 }

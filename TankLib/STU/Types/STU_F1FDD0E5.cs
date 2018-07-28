@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xF1FDD0E5)]
     public class STU_F1FDD0E5 : STUUXObject {
-        [STUFieldAttribute(0x2525ED0B)]
-        public teStructuredDataAssetRef<STUUXLink> m_2525ED0B;
+        [STUFieldAttribute(0x2525ED0B, "m_linkGUID")]
+        public teStructuredDataAssetRef<STUUXLink> m_linkGUID;
     }
 }

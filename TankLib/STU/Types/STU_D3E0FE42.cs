@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xD3E0FE42)]
-    public class STU_D3E0FE42 : STU_48A39D9B {
+    public class STU_D3E0FE42 : STU_94320319 {
         [STUFieldAttribute(0xE1D625B8)]
         public teStructuredDataAssetRef<STU_9B9182A6> m_E1D625B8;
 
@@ -11,10 +11,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUIdentifier> m_8D37DA2B;
 
         [STUFieldAttribute(0x652A1759)]
-        public teStructuredDataAssetRef<ulong>[] m_652A1759;
-
-        [STUFieldAttribute(0x8CF4A632, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_7FA0F929[] m_8CF4A632;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_652A1759;
 
         [STUFieldAttribute(0x953FCD8A)]
         public byte m_953FCD8A;

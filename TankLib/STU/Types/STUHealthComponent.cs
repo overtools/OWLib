@@ -7,8 +7,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x73AEA60D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_9EA55F3D[] m_73AEA60D;
 
-        [STUFieldAttribute(0x28994152)]
-        public teStructuredDataAssetRef<ulong> m_28994152;
+        [STUFieldAttribute(0x28994152, "m_deathEffect")]
+        public teStructuredDataAssetRef<ulong> m_deathEffect;
 
         [STUFieldAttribute(0x63FBB2D3)]
         public teStructuredDataAssetRef<ulong> m_63FBB2D3;

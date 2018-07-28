@@ -44,8 +44,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x11012D0E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_15EF3A7E m_11012D0E;
 
-        [STUFieldAttribute(0xBCC400FE, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_15EF3A7E m_BCC400FE;
+        [STUFieldAttribute(0x3E3C159E, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_15EF3A7E m_3E3C159E;
+
+        [STUFieldAttribute(0xBCC400FE, "m_disableEffect", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_15EF3A7E m_disableEffect;
 
         [STUFieldAttribute(0xC14EEC71, "m_animTrackOverrides", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimNode_AnimationTrackOverride[] m_animTrackOverrides;

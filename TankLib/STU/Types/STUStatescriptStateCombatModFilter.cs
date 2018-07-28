@@ -6,10 +6,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x6226036A, "STUStatescriptStateCombatModFilter")]
     public class STUStatescriptStateCombatModFilter : STUStatescriptState {
         [STUFieldAttribute(0xF60AA143)]
-        public teStructuredDataAssetRef<ulong>[] m_F60AA143;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_F60AA143;
 
         [STUFieldAttribute(0x5CFFCBAE)]
-        public teStructuredDataAssetRef<ulong>[] m_5CFFCBAE;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_5CFFCBAE;
 
         [STUFieldAttribute(0x60703B1E)]
         public teStructuredDataAssetRef<ulong> m_60703B1E;
@@ -27,13 +27,13 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_893AABFC;
 
         [STUFieldAttribute(0x50AE7CEC, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_50AE7CEC;
+        public STU_076E0DBA m_50AE7CEC;
 
         [STUFieldAttribute(0x6E2088FE, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_6E2088FE;
+        public STU_076E0DBA m_6E2088FE;
 
         [STUFieldAttribute(0xE1AD18EA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_E1AD18EA;
+        public STU_076E0DBA m_E1AD18EA;
 
         [STUFieldAttribute(0x022C9016, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptOutputPlug m_022C9016;

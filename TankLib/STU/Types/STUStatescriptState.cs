@@ -19,8 +19,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xE965193B, "m_beginPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptInputPlug m_beginPlug;
 
-        [STUFieldAttribute(0xF198FD3A, "m_abortPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_1CCEA5F7 m_abortPlug;
+        [STUFieldAttribute(0xF198FD3A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_1CCEA5F7 m_F198FD3A;
 
         [STUFieldAttribute(0x984573B1, "m_onBeginPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_DA98CA6D m_onBeginPlug;

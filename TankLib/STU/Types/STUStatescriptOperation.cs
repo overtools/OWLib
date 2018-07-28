@@ -7,10 +7,10 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xE8302243)]
         public ulong m_E8302243;
 
-        [STUFieldAttribute(0xBE4E7528)]
-        public int m_BE4E7528;
+        [STUFieldAttribute(0xBE4E7528, "m_opData")]
+        public int m_opData;
 
-        [STUFieldAttribute(0x619AB3DB)]
-        public byte m_619AB3DB;
+        [STUFieldAttribute(0x619AB3DB, "m_opType")]
+        public byte m_opType;
     }
 }

@@ -4,11 +4,20 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xC294A43B)]
-    public class STU_C294A43B : STUUnlock {
-        [STUFieldAttribute(0x7AB4E3F8)]
-        public Enum_BABC4175 m_7AB4E3F8;
+    public class STU_C294A43B : STU_895A2A7A {
+        [STUFieldAttribute(0x3CC2088A)]
+        public teStructuredDataAssetRef<STUHero> m_3CC2088A;
+
+        [STUFieldAttribute(0x7AB4E3F8, "m_lootboxType")]
+        public Enum_BABC4175 m_lootboxType;
 
         [STUFieldAttribute(0xD8A49A4D)]
         public int m_D8A49A4D;
+
+        [STUFieldAttribute(0x2F922165)]
+        public STUUnlockRarity m_2F922165;
+
+        [STUFieldAttribute(0x48A41554)]
+        public byte m_48A41554;
     }
 }

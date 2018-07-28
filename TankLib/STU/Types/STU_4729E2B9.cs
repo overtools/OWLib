@@ -3,6 +3,6 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x4729E2B9)]
-    public class STU_4729E2B9 : STU_8B68F073 {
+    public class STU_4729E2B9 : STUGameModeLegacy {
     }
 }

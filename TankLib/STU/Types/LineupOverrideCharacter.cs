@@ -10,7 +10,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x7DD89F4F, "m_entityDef")]
         public teStructuredDataAssetRef<ulong> m_entityDef;
 
-        [STUFieldAttribute(0xEF19F506)]
-        public teStructuredDataAssetRef<STUUnlock> m_EF19F506;
+        [STUFieldAttribute(0xEF19F506, "m_poseUnlock")]
+        public teStructuredDataAssetRef<STUUnlock> m_poseUnlock;
     }
 }

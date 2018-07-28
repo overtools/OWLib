@@ -3,8 +3,8 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x38134051)]
-    public class STU_38134051 : STU_22DB169C {
+    public class STU_38134051 : STUUXResource {
         [STUFieldAttribute(0xB5C0F593, "m_guid")]
-        public teStructuredDataAssetRef<STU_84840C20> m_guid;
+        public teStructuredDataAssetRef<STUFontFamily> m_guid;
     }
 }

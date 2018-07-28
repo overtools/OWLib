@@ -32,7 +32,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 STU_73AE9738 teamDef = GetInstanceNew<STU_73AE9738>(teamColorGuid);
                 string name = $"{GetString(teamDef.m_4BA3B3CE)} {GetString(teamDef.m_137210AF)}";
                 
-                STUTeamColor teamColor = GetInstanceNew<STUTeamColor>(teamDef.m_B8DC6D46);
+                STUTeamColor teamColor = GetInstanceNew<STUTeamColor>(teamDef.m_teamColor);
                 using (Stream stream = OpenFile(teamColor.m_materialData)) {
                     teMaterialData materialData = new teMaterialData(stream);
                 }

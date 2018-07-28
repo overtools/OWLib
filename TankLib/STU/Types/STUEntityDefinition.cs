@@ -14,8 +14,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF29E4995, "m_childEntityData", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUChildEntityDefinition[] m_childEntityData;
 
-        [STUFieldAttribute(0x8AF8F4F5)]
-        public teStructuredDataHashMap<STUEntityComponent> m_8AF8F4F5;
+        [STUFieldAttribute(0x8AF8F4F5, "m_componentMap")]
+        public teStructuredDataHashMap<STUEntityComponent> m_componentMap;
 
         [STUFieldAttribute(0x87916047)]
         public Enum_790E517D m_87916047;

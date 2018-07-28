@@ -7,14 +7,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xC9D669B6, "m_idleAnimation")]
         public teStructuredDataAssetRef<STUAnimation> m_idleAnimation;
 
-        [STUFieldAttribute(0xD91EF907)]
-        public teStructuredDataAssetRef<ulong> m_D91EF907;
+        [STUFieldAttribute(0xD91EF907, "m_collisionModel")]
+        public teStructuredDataAssetRef<ulong> m_collisionModel;
 
         [STUFieldAttribute(0x7D921E31, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_2BA91EC5 m_7D921E31;
+        public STUAnimGameData_Skeleton m_7D921E31;
 
         [STUFieldAttribute(0x25D54A00, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_E93236BC m_25D54A00;
+        public STUAnimGameData_Animation m_25D54A00;
 
         [STUFieldAttribute(0x422B4A8E)]
         public int m_422B4A8E;

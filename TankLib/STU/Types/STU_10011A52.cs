@@ -4,11 +4,11 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x10011A52)]
     public class STU_10011A52 : STUInstance {
+        [STUFieldAttribute(0xDB803F2F, "m_unlocks", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_601E7678[] m_unlocks;
+
         [STUFieldAttribute(0x08D19750)]
         public teStructuredDataAssetRef<STUUXDisplayText> m_08D19750;
-
-        [STUFieldAttribute(0x03EB0E34)]
-        public teStructuredDataAssetRef<STUUnlock> m_03EB0E34;
 
         [STUFieldAttribute(0x456B5F79)]
         public teStructuredDataAssetRef<STUCelebration> m_456B5F79;
@@ -21,9 +21,6 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x291F2404)]
         public long m_291F2404;
-
-        [STUFieldAttribute(0x4C824229)]
-        public int m_4C824229;
 
         [STUFieldAttribute(0x181A7823)]
         public int m_181A7823;

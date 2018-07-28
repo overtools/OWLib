@@ -8,14 +8,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA0D4ABDE, "m_emote")]
         public teStructuredDataAssetRef<STUAnimAlias> m_emote;
 
-        [STUFieldAttribute(0x2B8351DA)]
-        public teStructuredDataAssetRef<STUAnimBlendTreeSet> m_2B8351DA;
+        [STUFieldAttribute(0x2B8351DA, "m_emoteBlendTreeSet")]
+        public teStructuredDataAssetRef<STUAnimBlendTreeSet> m_emoteBlendTreeSet;
 
         [STUFieldAttribute(0x89C64674)]
         public teStructuredDataAssetRef<ulong> m_89C64674;
 
         [STUFieldAttribute(0x7E3ED979)]
-        public teStructuredDataAssetRef<ulong>[] m_7E3ED979;
+        public teStructuredDataAssetRef<STUTargetTag>[] m_7E3ED979;
 
         [STUFieldAttribute(0x28814AE5)]
         public teVec3 m_28814AE5;

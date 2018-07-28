@@ -17,12 +17,12 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUCelebration> m_115DDDBF;
 
         [STUFieldAttribute(0xE9443298)]
-        public teStructuredDataAssetRef<ulong>[] m_E9443298;
+        public teStructuredDataAssetRef<STUHero>[] m_E9443298;
 
         [STUFieldAttribute(0xB0199D5E)]
         public teStructuredDataAssetRef<ulong>[] m_B0199D5E;
 
-        [STUFieldAttribute(0xEDE36CB7)]
-        public ulong m_EDE36CB7;
+        [STUFieldAttribute(0xEDE36CB7, "m_resourceKeyId")]
+        public ulong m_resourceKeyId;
     }
 }

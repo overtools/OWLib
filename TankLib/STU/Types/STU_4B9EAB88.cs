@@ -11,13 +11,13 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUIdentifier> m_61BE261F;
 
         [STUFieldAttribute(0xAA8E1BB0, "m_targetTags")]
-        public teStructuredDataAssetRef<ulong>[] m_targetTags;
+        public teStructuredDataAssetRef<STUTargetTag>[] m_targetTags;
 
         [STUFieldAttribute(0xD5CBDE3E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_15A11424[] m_D5CBDE3E;
 
         [STUFieldAttribute(0xB95EAA86)]
-        public teStructuredDataAssetRef<ulong>[] m_B95EAA86;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_B95EAA86;
 
         [STUFieldAttribute(0xE9985F18, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_B33D34BA m_E9985F18;

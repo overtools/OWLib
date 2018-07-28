@@ -38,6 +38,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xC1903771, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_C1903771;
 
+        [STUFieldAttribute(0x7AB75223, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_7AB75223;
+
         [STUFieldAttribute(0xD2D11CE9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_4AA6CA44 m_D2D11CE9;
 
@@ -81,16 +84,16 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_58631C73;
 
         [STUFieldAttribute(0x24E351A4, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_24E351A4;
+        public STU_076E0DBA m_24E351A4;
 
         [STUFieldAttribute(0x17770E7E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_17770E7E;
+        public STU_076E0DBA m_17770E7E;
 
         [STUFieldAttribute(0x3FFC9EB9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_3FFC9EB9;
+        public STU_076E0DBA m_3FFC9EB9;
 
         [STUFieldAttribute(0x505472EF, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_505472EF;
+        public STU_076E0DBA m_505472EF;
 
         [STUFieldAttribute(0x70646E0D, "m_onMinShotsPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptOutputPlug m_onMinShotsPlug;

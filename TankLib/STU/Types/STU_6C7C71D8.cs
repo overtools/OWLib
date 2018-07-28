@@ -32,15 +32,15 @@ namespace TankLib.STU.Types {
         public STUStatescriptOutputPlug m_9B77AA38;
 
         [STUFieldAttribute(0x4A2BA527, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_4A2BA527;
+        public STU_076E0DBA m_4A2BA527;
 
         [STUFieldAttribute(0x182435FB, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_182435FB;
+        public STU_076E0DBA m_182435FB;
 
         [STUFieldAttribute(0x1B038F02, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_1B038F02;
+        public STU_076E0DBA m_1B038F02;
 
         [STUFieldAttribute(0x2B8E9543, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_2B8E9543;
+        public STU_076E0DBA m_2B8E9543;
     }
 }

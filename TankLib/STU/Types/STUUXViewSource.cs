@@ -10,7 +10,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x15192D8D, "m_source")]
         public teStructuredDataAssetRef<STU_B77FCA72> m_source;
 
-        [STUFieldAttribute(0x5D681197)]
-        public byte m_5D681197;
+        [STUFieldAttribute(0x5D681197, "m_isRoot")]
+        public byte m_isRoot;
     }
 }

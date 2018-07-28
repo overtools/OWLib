@@ -13,8 +13,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xCF58324E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameModeVarValuePair[] m_CF58324E;
 
-        [STUFieldAttribute(0x33B0B2B6, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_2BA92134 m_33B0B2B6;
+        [STUFieldAttribute(0x33B0B2B6, "m_team", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_2BA92134 m_team;
 
         [STUFieldAttribute(0x59C86C8D, "m_availableHeroes", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_5427ADC1 m_availableHeroes;

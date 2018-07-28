@@ -4,16 +4,19 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x6294EAF5)]
     public class STU_6294EAF5 : STUStatescriptState {
+        [STUFieldAttribute(0x7D5F216E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVarBoolBase m_7D5F216E;
+
         [STUFieldAttribute(0x4E5DA723, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_4E5DA723;
+        public STU_076E0DBA m_4E5DA723;
 
         [STUFieldAttribute(0xECA030C1, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_ECA030C1;
+        public STU_076E0DBA m_ECA030C1;
 
         [STUFieldAttribute(0x78A264E5, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_78A264E5;
+        public STU_076E0DBA m_78A264E5;
 
         [STUFieldAttribute(0xFCCB9102, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_FCCB9102;
+        public STU_076E0DBA m_FCCB9102;
     }
 }

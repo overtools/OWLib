@@ -19,11 +19,11 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x9297ADB4, "m_look")]
         public teStructuredDataAssetRef<STUModelLook> m_look;
 
-        [STUFieldAttribute(0xA6041C8B, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_CAAB2581 m_A6041C8B;
+        [STUFieldAttribute(0xA6041C8B, "m_collisionConfig", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUCollisionConfig m_collisionConfig;
 
         [STUFieldAttribute(0x33DA887B)]
-        public teStructuredDataAssetRef<ulong>[] m_33DA887B;
+        public teStructuredDataAssetRef<STU_CBD8CDF3>[] m_33DA887B;
 
         [STUFieldAttribute(0x14256239, "m_ragdollConfig", ReaderType = typeof(InlineInstanceFieldReader))]
         public STURagdollConfig m_ragdollConfig;

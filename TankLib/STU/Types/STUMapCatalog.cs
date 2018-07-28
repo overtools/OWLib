@@ -4,10 +4,10 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x25DA0DF5, "STUMapCatalog")]
     public class STUMapCatalog : STUInstance {
-        [STUFieldAttribute(0x242E748D)]
-        public ulong[] m_242E748D;
+        [STUFieldAttribute(0x242E748D, "m_mapGUIDs")]
+        public ulong[] m_mapGUIDs;
 
-        [STUFieldAttribute(0x669A4581)]
-        public ulong[] m_669A4581;
+        [STUFieldAttribute(0x669A4581, "m_headerGUIDs")]
+        public ulong[] m_headerGUIDs;
     }
 }

@@ -11,9 +11,9 @@ namespace TankLib.STU.Types {
         public STUStatescriptOutputPlug m_160B5DBE;
 
         [STUFieldAttribute(0x5ED803CF, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_5ED803CF;
+        public STU_076E0DBA m_5ED803CF;
 
         [STUFieldAttribute(0x0A7A0E8E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarDynamic m_0A7A0E8E;
+        public STU_076E0DBA m_0A7A0E8E;
     }
 }

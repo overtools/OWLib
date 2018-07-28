@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_6EB38130;
 
         [STUFieldAttribute(0x4EEA6AF4, "m_rulesets")]
-        public teStructuredDataAssetRef<ulong>[] m_rulesets;
+        public teStructuredDataAssetRef<STUGameRuleset>[] m_rulesets;
 
         [STUFieldAttribute(0x5202A5B4)]
         public ulong m_5202A5B4;

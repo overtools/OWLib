@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xDBC82D48)]
     public class STU_DBC82D48 : STU_BB05BF11 {
-        [STUFieldAttribute(0xCC84D865)]
-        public int m_CC84D865;
+        [STUFieldAttribute(0xCC84D865, "m_index")]
+        public int m_index;
     }
 }

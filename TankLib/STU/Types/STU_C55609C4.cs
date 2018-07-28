@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xC55609C4)]
     public class STU_C55609C4 : STUUXViewModel {
-        [STUFieldAttribute(0x82804596)]
-        public byte m_82804596;
+        [STUFieldAttribute(0x82804596, "m_isActive")]
+        public byte m_isActive;
     }
 }

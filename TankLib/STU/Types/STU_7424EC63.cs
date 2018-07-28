@@ -37,8 +37,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x5897A15F)]
         public float m_5897A15F;
 
-        [STUFieldAttribute(0xECC4F4BF)]
-        public uint m_ECC4F4BF;
+        [STUFieldAttribute(0xECC4F4BF, "m_renderScale")]
+        public uint m_renderScale;
 
         [STUFieldAttribute(0xF9BE3BCB)]
         public uint m_F9BE3BCB;
@@ -73,14 +73,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x4003FE34)]
         public uint m_4003FE34;
 
-        [STUFieldAttribute(0xC4C1014A)]
-        public float m_C4C1014A;
+        [STUFieldAttribute(0xC4C1014A, "m_renderGamma")]
+        public float m_renderGamma;
 
-        [STUFieldAttribute(0x10E6262B)]
-        public float m_10E6262B;
+        [STUFieldAttribute(0x10E6262B, "m_renderContrast")]
+        public float m_renderContrast;
 
-        [STUFieldAttribute(0x73DE4E66)]
-        public float m_73DE4E66;
+        [STUFieldAttribute(0x73DE4E66, "m_renderBrightness")]
+        public float m_renderBrightness;
 
         [STUFieldAttribute(0x58ACCEDB)]
         public uint m_58ACCEDB;
@@ -97,8 +97,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xEEFDB007)]
         public byte m_EEFDB007;
 
-        [STUFieldAttribute(0x14F5C93B)]
-        public byte m_14F5C93B;
+        [STUFieldAttribute(0x14F5C93B, "m_isDefault")]
+        public byte m_isDefault;
 
         [STUFieldAttribute(0x50ED8236)]
         public byte m_50ED8236;

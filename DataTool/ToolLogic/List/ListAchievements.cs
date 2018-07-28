@@ -109,11 +109,11 @@ namespace DataTool.ToolLogic.List {
 
             foreach (var key in TrackedFiles[0x75]) {
                 STUHero hero = GetInstanceNew<STUHero>(key);
-                if (hero?.m_485AA39C == null) continue;
+                if (hero?.m_heroProgression == null) continue;
 
                 string heroName = GetString(hero.m_0EDCE350);
 
-                Dictionary<string, HashSet<Unlock>> unlocks = ListHeroUnlocks.GetUnlocksForHero(hero.m_485AA39C);
+                Dictionary<string, HashSet<Unlock>> unlocks = ListHeroUnlocks.GetUnlocksForHero(hero.m_heroProgression);
                 
                 foreach (KeyValuePair<string, HashSet<Unlock>> unlockPair in unlocks) {
                     if (unlockPair.Value?.Count == 0 || unlockPair.Value == null) {

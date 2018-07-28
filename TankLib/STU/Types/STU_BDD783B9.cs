@@ -5,8 +5,8 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0xBDD783B9)]
     public class STU_BDD783B9 : STU_2F33B1B7 {
-        [STUFieldAttribute(0x33B0B2B6)]
-        public Enum_8F2CDF51 m_33B0B2B6;
+        [STUFieldAttribute(0x33B0B2B6, "m_team")]
+        public TeamIndex m_team;
 
         [STUFieldAttribute(0xEB5492C4)]
         public byte m_EB5492C4;

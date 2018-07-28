@@ -22,8 +22,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x369489D8, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUTextureSource m_369489D8;
 
-        [STUFieldAttribute(0xF0A9405A)]
-        public teStructuredDataAssetRef<STUTeamColor> m_F0A9405A;
+        [STUFieldAttribute(0xF0A9405A, "m_sourceTeam")]
+        public teStructuredDataAssetRef<STUTeamColor> m_sourceTeam;
 
         [STUFieldAttribute(0xC276CF5C)]
         public teStructuredDataAssetRef<STU_C6A37088> m_C276CF5C;

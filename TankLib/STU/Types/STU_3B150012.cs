@@ -4,35 +4,35 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x3B150012)]
     public class STU_3B150012 : STUInstance {
-        [STUFieldAttribute(0x02C8D79B, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_ABD8FE73[] m_02C8D79B;
+        [STUFieldAttribute(0x02C8D79B, "m_configFloats", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_ABD8FE73[] m_configFloats;
 
-        [STUFieldAttribute(0xA644A847, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_F7E4CDAC[] m_A644A847;
+        [STUFieldAttribute(0xA644A847, "m_configVec2s", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_F7E4CDAC[] m_configVec2s;
 
-        [STUFieldAttribute(0xDF4522EB, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_DCF8E34E[] m_DF4522EB;
+        [STUFieldAttribute(0xDF4522EB, "m_configVec3s", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_DCF8E34E[] m_configVec3s;
 
-        [STUFieldAttribute(0xD3C25641, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_15EF3A7E[] m_D3C25641;
+        [STUFieldAttribute(0xD3C25641, "m_configBools", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_15EF3A7E[] m_configBools;
 
-        [STUFieldAttribute(0x417ECCDD, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_215BE8F3[] m_417ECCDD;
+        [STUFieldAttribute(0x417ECCDD, "m_configAnimations", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_215BE8F3[] m_configAnimations;
 
-        [STUFieldAttribute(0x4575B0BA, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_C6AA0CA6[] m_4575B0BA;
+        [STUFieldAttribute(0x4575B0BA, "m_configAnimAlias", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_C6AA0CA6[] m_configAnimAlias;
 
-        [STUFieldAttribute(0xCDB1E41F, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_4831B16F[] m_CDB1E41F;
+        [STUFieldAttribute(0xCDB1E41F, "m_configAnimCategory", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_4831B16F[] m_configAnimCategory;
 
-        [STUFieldAttribute(0x0C683E26, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_25B808BD[] m_0C683E26;
+        [STUFieldAttribute(0x0C683E26, "m_configDataFlow", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_25B808BD[] m_configDataFlow;
 
-        [STUFieldAttribute(0x75023832, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_51A9D9C7[] m_75023832;
+        [STUFieldAttribute(0x75023832, "m_configAnimSynchGroups", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_51A9D9C7[] m_configAnimSynchGroups;
 
-        [STUFieldAttribute(0x3A90289E, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_C1C7CF4E[] m_3A90289E;
+        [STUFieldAttribute(0x3A90289E, "m_configAnimIdentifiers", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_C1C7CF4E[] m_configAnimIdentifiers;
 
         [STUFieldAttribute(0x62AF3B51, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_CCC326B7[] m_62AF3B51;
@@ -40,16 +40,16 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x8EFE9287, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_9907336E[] m_8EFE9287;
 
-        [STUFieldAttribute(0xC35F7D4A, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_A0675F24[] m_C35F7D4A;
+        [STUFieldAttribute(0xC35F7D4A, "m_configAnimBoneWeightMasks", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_A0675F24[] m_configAnimBoneWeightMasks;
 
-        [STUFieldAttribute(0x93EA5A15, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_3426C7F2[] m_93EA5A15;
+        [STUFieldAttribute(0x93EA5A15, "m_configAnimCurves", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_3426C7F2[] m_configAnimCurves;
 
         [STUFieldAttribute(0xFA7268E4)]
         public uint m_FA7268E4;
 
-        [STUFieldAttribute(0x29EFF18D)]
-        public uint m_29EFF18D;
+        [STUFieldAttribute(0x29EFF18D, "m_crc")]
+        public uint m_crc;
     }
 }

@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x68A5034A)]
-    public class STU_68A5034A : STU_8FFAF278 {
+    public class STU_68A5034A : STUShippable {
         [STUFieldAttribute(0x0201671C)]
         public teStructuredDataAssetRef<STU_68A5034A> m_0201671C;
 
@@ -12,13 +12,13 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STU_68A5034A> m_skin;
 
         [STUFieldAttribute(0x7F09E612)]
-        public teStructuredDataAssetRef<ulong>[] m_7F09E612;
+        public teStructuredDataAssetRef<STU_68A5034A>[] m_7F09E612;
 
         [STUFieldAttribute(0x9F657FFB)]
-        public teStructuredDataAssetRef<ulong>[] m_9F657FFB;
+        public teStructuredDataAssetRef<STU_68A5034A>[] m_9F657FFB;
 
         [STUFieldAttribute(0xE7DE6A4B)]
-        public teStructuredDataAssetRef<ulong>[] m_E7DE6A4B;
+        public teStructuredDataAssetRef<STU_68A5034A>[] m_E7DE6A4B;
 
         [STUFieldAttribute(0x40F8879E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_E75FE496[] m_40F8879E;
@@ -30,10 +30,10 @@ namespace TankLib.STU.Types {
         public int[] m_7DB92D38;
 
         [STUFieldAttribute(0xCBA4B39F)]
-        public teStructuredDataAssetRef<ulong>[] m_CBA4B39F;
+        public teStructuredDataAssetRef<STU_68A5034A>[] m_CBA4B39F;
 
         [STUFieldAttribute(0x690071AC)]
-        public teStructuredDataAssetRef<ulong>[] m_690071AC;
+        public teStructuredDataAssetRef<STU_68A5034A>[] m_690071AC;
 
         [STUFieldAttribute(0x957ADFF3)]
         public ulong m_957ADFF3;

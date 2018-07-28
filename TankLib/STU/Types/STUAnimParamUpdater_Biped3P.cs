@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STUAnimParamUpdater_TurnParameters m_D5AF8608;
 
         [STUFieldAttribute(0x6B655AEE)]
-        public teStructuredDataAssetRef<ulong>[] m_6B655AEE;
+        public teStructuredDataAssetRef<STUAnimAlias>[] m_6B655AEE;
 
         [STUFieldAttribute(0x49E4067A, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimParamUpdater_SnapTurnScriptedAnimAlias[] m_49E4067A;
@@ -16,8 +16,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA6400617, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_90A7ED45 m_A6400617;
 
-        [STUFieldAttribute(0x253A1D29, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_DA39F6FE m_253A1D29;
+        [STUFieldAttribute(0x045D3D91, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_E0AB3A20 m_045D3D91;
 
         [STUFieldAttribute(0xAFA9EED7, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_1AC9AD09 m_AFA9EED7;

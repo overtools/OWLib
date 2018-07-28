@@ -5,14 +5,14 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0xD797394C, "STUGameModeTeam")]
     public class STUGameModeTeam : STUInstance {
-        [STUFieldAttribute(0xA2781AA4)]
-        public teStructuredDataAssetRef<STU_6BE90C5C> m_A2781AA4;
+        [STUFieldAttribute(0xA2781AA4, "m_controllerScript")]
+        public teStructuredDataAssetRef<STU_6BE90C5C> m_controllerScript;
 
         [STUFieldAttribute(0x6F71E9AA, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameModeVarValuePair[] m_6F71E9AA;
 
-        [STUFieldAttribute(0x76E8C82A)]
-        public teStructuredDataAssetRef<STU_6BE90C5C> m_76E8C82A;
+        [STUFieldAttribute(0x76E8C82A, "m_bodyScript")]
+        public teStructuredDataAssetRef<STU_6BE90C5C> m_bodyScript;
 
         [STUFieldAttribute(0xEA2B516F, "m_bodyVars", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameModeBodyVars[] m_bodyVars;
@@ -20,8 +20,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x59C86C8D, "m_availableHeroes", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_5427ADC1 m_availableHeroes;
 
-        [STUFieldAttribute(0x33B0B2B6)]
-        public Enum_8F2CDF51 m_33B0B2B6;
+        [STUFieldAttribute(0x33B0B2B6, "m_team")]
+        public TeamIndex m_team;
 
         [STUFieldAttribute(0x7FA93ED4)]
         public int m_7FA93ED4;

@@ -7,8 +7,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD900A4F6, "m_instanceID")]
         public teString m_instanceID;
 
-        [STUFieldAttribute(0x685F2338)]
-        public teString m_685F2338;
+        [STUFieldAttribute(0x685F2338, "m_mapName")]
+        public teString m_mapName;
 
         [STUFieldAttribute(0xCA2B86CD)]
         public teString m_CA2B86CD;

@@ -7,7 +7,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0EE72694)]
         public teStructuredDataAssetRef<STUTexture> m_0EE72694;
 
-        [STUFieldAttribute(0x79E5C961)]
-        public teString m_79E5C961;
+        [STUFieldAttribute(0x79E5C961, "m_rewardText")]
+        public teString m_rewardText;
     }
 }
