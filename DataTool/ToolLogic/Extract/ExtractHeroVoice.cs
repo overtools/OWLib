@@ -146,9 +146,10 @@ namespace DataTool.ToolLogic.Extract
                         continue;
                     }
 
-                    foreach (var defaultUnlocks in unlocks.Unlocks)
+                    // todo: not this
+                    foreach (var defaultUnlocks in unlocks.TankLibPlease)
                     {
-                        var dUnlocks = GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong)it)).Where(item => item?.Unlock is STUUnlock_Skin).ToList();
+                        var dUnlocks = GatherUnlocks(defaultUnlocks.m_unlocks.Unlocks.Select(it => (ulong)it)).Where(item => item?.Unlock is STUUnlock_Skin).ToList();
 
                         foreach (ItemInfo itemInfo in dUnlocks)
                         {
