@@ -443,3 +443,15 @@ C18DC9CD, STUMapLayer
 58B3D0D0, STUEmptyAsset
 E93236BC, STUAnimGameData_Animation
 66BB2EF3, STUNumberSettings
+BED93F9B, STUAnimNode_LockMain
+7A0B33DA, STUBoneLabel
+0BD5EA17, STUAnimBoneSet
+419E5D60, STUAnimationSettings
+CAAB2581, STUCollisionConfig
+003C517B, STUPlaybackProperties
+D89CF9B3, STULocalizationSettings
+A4262E73, STUDataFlowStream_Float
+B2172366, STUDataFlowStream_Guid
+84840C20, STUFontFamily
+2F427ADA, STUVoiceStimulusHeader
+A21064F1, STUConfigVarGetLootBoxAsset

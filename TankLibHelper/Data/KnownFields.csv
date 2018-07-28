@@ -477,3 +477,17 @@ F6658B6B, m_loadData
 DC30A92A, m_announcer
 E9A6FA8E, m_genderData
 D20AEFD7, m_numberSettings
+50558D63, m_bones
+7CBECA0C, m_hardPoints
+19EFD1DB, m_animationSettings
+A7FE4B94, m_sourceSet
+4B309629, m_animationEffect
+B64D5A14, m_previewModel
+563C7626, m_compressionScale
+38833852, m_compressionType
+38158126, m_movementSpeed
+A6041C8B, m_collisionConfig
+C16160E2, m_dataFlowGUID
+75161A21, m_lineGUID
+1A8738BF, m_stimuliGUID
+03EB0E34, m_lootBoxGUID
