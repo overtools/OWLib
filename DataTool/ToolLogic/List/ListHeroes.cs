@@ -24,7 +24,7 @@ namespace DataTool.ToolLogic.List {
         public class HeroInfo {
             public string Name;
             public string Description;
-            public teColorRGBA Color;
+            public string Color;
             public List<Loadout> Loadouts;
 
             [JsonConverter(typeof(GUIDConverter))]
@@ -34,7 +34,7 @@ namespace DataTool.ToolLogic.List {
                 GUID = guid;
                 Name = name;
                 Description = description;
-                Color = color;
+                Color = color.ToHex();
                 Loadouts = loadouts;
             }
         }
@@ -55,7 +55,7 @@ namespace DataTool.ToolLogic.List {
                 if (hero.Value.Description != null)
                     Log($"{indentLevel + 1}Description: {hero.Value.Description}");
                 
-                Log($"{indentLevel + 1}Color: {hero.Value.GalleryColor}");
+                Log($"{indentLevel + 1}Color: {hero.Value.GalleryColor.ToHex()}");
 
                 if (hero.Value.Loadouts != null) {
 
