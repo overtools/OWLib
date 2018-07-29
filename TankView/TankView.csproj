@@ -80,6 +80,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataToolSimView.xaml.cs">
+      <DependentUpon>DataToolSimView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helper\ImageHelper.cs" />
     <Compile Include="Helper\IOHelper.cs" />
     <Compile Include="ObjectModel\EnumConverter.cs" />
@@ -96,6 +99,10 @@
     <Compile Include="ViewModel\ProductLocations.cs" />
     <Compile Include="ViewModel\ProgressInfo.cs" />
     <Compile Include="ViewModel\RecentLocations.cs" />
+    <Page Include="DataToolSimView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

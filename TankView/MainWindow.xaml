@@ -80,7 +80,8 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Extract" Click="ExtractFiles" IsEnabled="{Binding IsReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+            <MenuItem Header="Extract" Click="ExtractFiles" IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+            <MenuItem Header="DataTool" Click="OpenOrFocusSimView" IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
         </Menu>
         <Grid Grid.Row="1" DataContext="{Binding GUIDTree}">
             <Grid.ColumnDefinitions>
@@ -114,15 +115,11 @@
                         </ListView.View>
                     </ListView>
                 </TabItem>
-                <TabItem Header="STU" IsEnabled="{Binding ValidSTU}">
-                    <TreeView x:Name="STUView" ItemsSource="{Binding STUContext}" />
-                </TabItem>
                 <TabItem Header="Image" IsEnabled="{Binding ValidImage, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <Image Source="{Binding ImageSource}" Width="{Binding ImageWidth}" Height="{Binding ImageHeight}"/>
                     </ScrollViewer>
                 </TabItem>
-                <TabItem Header="Hex" IsEnabled="{Binding ValidFile}" />
             </TabControl>
         </Grid>
         <StatusBar Grid.Row="2" DataContext="{Binding ProgressInfo}">
