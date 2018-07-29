@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.List;
-using OWLib;
-using STULib.Types;
+using TankLib;
+using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
@@ -47,13 +47,13 @@ namespace DataTool.ToolLogic.Extract {
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) {QueryHelp(QueryTypes); return;}
             foreach (ulong key in TrackedFiles[0x9F]) {
-                STUMap map = GetInstance<STUMap>(key);
+                STUMapHeader map = GetInstanceNew<STUMapHeader>(key);
                 if (map == null) continue;
                 ListMaps.MapInfo mapInfo = ListMaps.GetMap(key);
                 mapInfo.Name = mapInfo.Name ?? "Title Screen";
 
                 Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, mapInfo.Name, mapInfo.NameB,
-                    mapInfo.UniqueName, GUID.Index(map.MapDataResource1).ToString("X"), "*");
+                    mapInfo.UniqueName, teResourceGUID.Index(map.m_map).ToString("X"), "*");
                 
                 if (config.Count == 0) continue;
                 

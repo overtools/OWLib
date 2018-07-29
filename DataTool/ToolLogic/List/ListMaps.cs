@@ -4,7 +4,7 @@ using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
 using Newtonsoft.Json;
-using OWLib;
+using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -146,9 +146,9 @@ namespace DataTool.ToolLogic.List {
 
             string uniqueName;
             if (nameA == null) {
-                uniqueName = $"Title Screen:{GUID.Index(key):X}";
+                uniqueName = $"Title Screen:{teResourceGUID.Index(key):X}";
             } else {
-                uniqueName = nameA + $":{GUID.Index(key):X}";
+                uniqueName = nameA + $":{teResourceGUID.Index(key):X}";
             }
             return new MapInfo(uniqueName, key, nameA, nameB, descA, descB, subline, stateA, stateB,
                 map.m_map, map.m_baseMap, gamemodes);

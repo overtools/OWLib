@@ -2,7 +2,7 @@
 using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
-using OWLib;
+using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -34,7 +34,7 @@ namespace DataTool.ToolLogic.Extract {
                 STULootBox lootbox = GetInstanceNew<STULootBox>(key);
                 if (lootbox == null) continue;
                 
-                string name = GetValidFilename(lootbox.m_lootboxType.ToString()) ?? $"Unknown{GUID.Index(key):X}";
+                string name = GetValidFilename(lootbox.m_lootboxType.ToString()) ?? $"Unknown{teResourceGUID.Index(key):X}";
 
                 Combo.ComboInfo info = Combo.Find(null, lootbox.m_baseEntity);  // 003
                 Combo.Find(info, lootbox.m_chestEntity);  // 003

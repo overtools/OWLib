@@ -6,6 +6,7 @@ using DataTool.Flag;
 using OWLib;
 using STULib.Types;
 using STULib.Types.Generic;
+using TankLib;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
@@ -31,7 +32,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             
             
             foreach (ulong key in TrackedFiles[0x2C]) {
-                if (GUID.Index(key) != 0x3BAF) continue;  // used in Reaper's Eternal Rest intro. (eerie background + door break)
+                if (teResourceGUID.Index(key) != 0x3BAF) continue;  // used in Reaper's Eternal Rest intro. (eerie background + door break)
                 STUSound sound = GetInstance<STUSound>(key);
                 Dictionary<uint, Common.STUGUID> soundIDs = new Dictionary<uint, Common.STUGUID>();
                 if (sound.Inner == null) continue;

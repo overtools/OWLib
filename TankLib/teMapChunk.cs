@@ -302,6 +302,16 @@ namespace TankLib {
         }
     }
     
+    public class teMapPlaceable8 : IMapPlaceable {
+        public teMAP_PLACEABLE_TYPE Type => (teMAP_PLACEABLE_TYPE)8;
+
+        public teMapPlaceableSingleModel.Structure Header;
+
+        public void Read(BinaryReader reader) {
+            Header = reader.Read<teMapPlaceableSingleModel.Structure>();
+        }
+    }
+    
     public class teMapPlaceableText : IMapPlaceable {
         public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.TEXT;
         

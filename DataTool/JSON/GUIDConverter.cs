@@ -22,7 +22,7 @@ namespace DataTool.JSON {
             writer.WriteValue($"{key:X16}");
 
             writer.WritePropertyName("String");
-            writer.WriteValue($"{GUID.LongKey(key):X12}.{GUID.Type(key):X3}");
+            writer.WriteValue(teResourceGUID.AsString(key));
 
             writer.WriteEndObject();
         }
@@ -54,7 +54,7 @@ namespace DataTool.JSON {
                 writer.WritePropertyName("Key");
                 writer.WriteValue($"{key:X16}");
                 writer.WritePropertyName("String");
-                writer.WriteValue($"{GUID.LongKey(key):X12}.{GUID.Type(key):X3}");
+                writer.WriteValue(teResourceGUID.AsString(key));
                 writer.WriteEndObject();
             }
             writer.WriteEndArray();

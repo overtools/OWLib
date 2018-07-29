@@ -3,6 +3,7 @@ using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using OWLib;
+using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -43,7 +44,7 @@ namespace DataTool.ToolLogic.Extract {
                 using (Stream videoStream = OpenFile(loadout.m_infoMovie)) {
                     if (videoStream != null) {
                         videoStream.Position = 128;  // wrapped in "MOVI" for some reason
-                        WriteFile(videoStream, Path.Combine(basePath, folderName, name, $"{GUID.LongKey(loadout.m_infoMovie):X12}.bk2"));
+                        WriteFile(videoStream, Path.Combine(basePath, folderName, name, $"{teResourceGUID.LongKey(loadout.m_infoMovie):X12}.bk2"));
                     }
                 }
             }

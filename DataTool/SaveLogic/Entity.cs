@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DataTool.FindLogic;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
+using TankLib;
 using TankLib.ExportFormats;
-using static DataTool.Helper.IO;
 using Animation = OWLib.Animation;
 
 namespace DataTool.SaveLogic {
@@ -38,9 +37,9 @@ namespace DataTool.SaveLogic {
                         FindLogic.Combo.EffectInfoCombo effectInfo = info.Effects[entity.Effect];
                         writer.Write(effectInfo.GetName());
                     } else {writer.Write("null");}
-                    writer.Write(GUID.Index(entity.GUID));
-                    writer.Write(GUID.Index(entity.Model));
-                    writer.Write(GUID.Index(entity.Effect));
+                    writer.Write(teResourceGUID.Index(entity.GUID));
+                    writer.Write(teResourceGUID.Index(entity.Model));
+                    writer.Write(teResourceGUID.Index(entity.Effect));
 
                     if (entity.Children == null) {
                         writer.Write(0);
@@ -53,10 +52,10 @@ namespace DataTool.SaveLogic {
                         writer.Write(childEntityInfo.GetName());
                         writer.Write(childEntityReference.Hardpoint);
                         writer.Write(childEntityReference.Variable);
-                        writer.Write(GUID.Index(childEntityReference.Hardpoint));
-                        writer.Write(GUID.Index(childEntityReference.Variable));
+                        writer.Write(teResourceGUID.Index(childEntityReference.Hardpoint));
+                        writer.Write(teResourceGUID.Index(childEntityReference.Variable));
                         if (childEntityReference.Hardpoint != 0) {
-                            writer.Write(OverwatchModel.IdToString("hardpoint", GUID.Index(childEntityReference.Hardpoint)));
+                            writer.Write(OverwatchModel.IdToString("hardpoint", teResourceGUID.Index(childEntityReference.Hardpoint)));
                         } else {
                             writer.Write("null"); // erm, k
                         }

@@ -34,7 +34,7 @@ namespace DataTool.Helper {
             ISTU stu = OpenSTUSafe(key);
             Version2 ver2 = stu as Version2;
             if (ver2 == null) return null;
-            return (stu?.Instances.Concat(ver2.HiddenInstances).OfType<T>().ToArray() ?? new T[0]);
+            return stu.Instances.Concat(ver2.HiddenInstances).OfType<T>().ToArray();
         }
 
         [Obsolete("GetInstances<T> is deprecated, please use GetInstancesNew<T> instead.")]
@@ -67,39 +67,6 @@ namespace DataTool.Helper {
             } catch (Exception) {
                 return null;
             }
-        }
-
-        public static HashSet<Unlock> GatherUnlocks(IEnumerable<ulong> guids) {
-            var @return = new HashSet<Unlock>();
-            if (guids == null) return @return;
-            foreach (var guid in guids) {
-                var unlock = GatherUnlock(guid);
-                if (unlock == null) continue;
-                @return.Add(unlock);
-            }
-            return @return;
-        }
-
-        public static Unlock GatherUnlock(ulong key) {
-            throw new NotImplementedException();
-            /*STUUnlock unlock = GetInstance<STUUnlock>(key);
-            if (unlock == null) return null;
-
-            string name = GetString(unlock.CosmeticName);
-            string description = GetDescriptionString(unlock.CosmeticDescription);
-            string availableIn = GetString(unlock.CosmeticAvailableIn);
-
-            if (unlock is STUUnlock_Currency) {
-                name = $"{(unlock as STUUnlock_Currency).Amount} Credits";
-            } else if (unlock is STULevelPortrait) {
-                STULevelPortrait portrait = unlock as STULevelPortrait;
-                name = $"{portrait.Tier} Star: {portrait.Star} Level: {portrait.Level}";
-            }
-
-            if (name == null)
-                name = $"{GUID.LongKey(key):X12}";
-
-            return new Unlock(name, unlock.CosmeticRarity.ToString(), unlock.RealName, description, availableIn, unlock, key);*/
         }
     }
 }

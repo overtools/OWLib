@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using DataTool.FindLogic;
 using DataTool.Helper;
 using OWLib;
 using OWLib.Types;
 using OWLib.Types.Map;
 using OWLib.Writer;
-using STULib.Types;
-using STULib.Types.Generic;
+using TankLib;
 using TankLib.ExportFormats;
-using static DataTool.Helper.IO;
 using Animation = OWLib.Animation;
 
 namespace DataTool.SaveLogic {
@@ -35,7 +31,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(0f);
                 }
                 if (playbackInfo.Hardpoint != 0) {
-                    writer.Write(OverwatchModel.IdToString("hardpoint", GUID.Index(playbackInfo.Hardpoint)));
+                    writer.Write(OverwatchModel.IdToString("hardpoint", teResourceGUID.Index(playbackInfo.Hardpoint)));
                 } else {
                     writer.Write("null");
                 }
@@ -55,7 +51,7 @@ namespace DataTool.SaveLogic {
 
                 EffectParser.EffectInfo effect = effectInfo.Effect;
                 
-                writer.Write(GUID.Index(effect.GUID));
+                writer.Write(teResourceGUID.Index(effect.GUID));
                 writer.Write(effect.EffectLength);
                 
                 writer.Write(effect.DMCEs.Count);
@@ -86,7 +82,7 @@ namespace DataTool.SaveLogic {
                     writer.Write((byte)ceceInfo.Action);
                     writer.Write(ceceInfo.Animation);
                     writer.Write(ceceInfo.EntityVariable);
-                    writer.Write(GUID.Index(ceceInfo.EntityVariable));
+                    writer.Write(teResourceGUID.Index(ceceInfo.EntityVariable));
                     if (ceceInfo.Animation != 0) {
                         FindLogic.Combo.AnimationInfoNew animationInfo = info.Animations[ceceInfo.Animation];
                         writer.Write($"{Model.AnimationEffectDir}\\{animationInfo.GetNameIndex()}\\{animationInfo.GetNameIndex()}.owanim");
@@ -98,7 +94,7 @@ namespace DataTool.SaveLogic {
                 foreach (EffectParser.NECEInfo neceInfo in effect.NECEs) {
                     WriteTime(writer, neceInfo.PlaybackInfo);
                     writer.Write(neceInfo.GUID);
-                    writer.Write(GUID.Index(neceInfo.Variable));
+                    writer.Write(teResourceGUID.Index(neceInfo.Variable));
                     FindLogic.Combo.EntityInfoNew entityInfo = info.Entities[neceInfo.GUID];
                     
                     writer.Write($"Entities\\{entityInfo.GetName()}\\{entityInfo.GetName()}.owentity");
@@ -117,7 +113,7 @@ namespace DataTool.SaveLogic {
 
                 foreach (EffectParser.SVCEInfo svceInfo in effect.SVCEs) {
                     WriteTime(writer, svceInfo.PlaybackInfo);
-                    writer.Write(GUID.Index(svceInfo.VoiceStimulus));
+                    writer.Write(teResourceGUID.Index(svceInfo.VoiceStimulus));
                     if (svceLines.ContainsKey(svceInfo.VoiceStimulus)) {
                         HashSet<FindLogic.Combo.VoiceLineInstanceInfo> lines = svceLines[svceInfo.VoiceStimulus];
                         writer.Write(lines.Count);
@@ -194,7 +190,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(new string(Identifier));
                     writer.Write(VersionMajor);
                     writer.Write(VersionMinor);
-                    writer.Write(GUID.Index(animation.GUID));
+                    writer.Write(teResourceGUID.Index(animation.GUID));
                     writer.Write(animation.FPS);
                     writer.Write((int)OWAnimType.Reference);
 
@@ -211,7 +207,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(new string(Identifier));
                     writer.Write(VersionMajor);
                     writer.Write(VersionMinor);
-                    writer.Write(GUID.Index(animation.GUID));
+                    writer.Write(teResourceGUID.Index(animation.GUID));
                     writer.Write(animation.FPS);
                     writer.Write((int)OWAnimType.Data);
                     
