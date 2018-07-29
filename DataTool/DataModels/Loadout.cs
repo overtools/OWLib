@@ -1,4 +1,5 @@
 ﻿using System;
+using DataTool.Helper;
 using DataTool.JSON;
 using Newtonsoft.Json;
 using STULib.Types.Enums;
@@ -17,7 +18,17 @@ namespace DataTool.DataModels {
         [JsonConverter(typeof(GUIDConverter))]
         public ulong MovieGUID;
 
+        public Loadout(ulong key) {
+            STULoadout loadout = STUHelper.GetInstanceNew<STULoadout>(key);
+            if (loadout == null) return;
+            Init(key, loadout);
+        }
+
         public Loadout(ulong key, STULoadout loadout) {
+            Init(key, loadout);
+        }
+
+        private void Init(ulong key, STULoadout loadout) {
             GUID = key;
             MovieGUID = loadout.m_infoMovie;
             

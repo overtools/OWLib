@@ -520,6 +520,7 @@ namespace DataTool.FindLogic {
 
                     break;
                 case 0x4:
+                case 0xF1:
                     if (info.Textures.ContainsKey(guid)) break;
                     TextureInfoNew textureInfo = new TextureInfoNew(guid);
                     info.Textures[guid] = textureInfo;

@@ -2,93 +2,75 @@
 using System.IO;
 using DataTool.DataModels;
 using DataTool.Flag;
-using OWLib;
-using STULib.Types;
-using STULib.Types.Generic;
-using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.IO;
+using DataTool.Helper;
+using TankLib;
+using TankLib.STU;
+using TankLib.STU.Types;
 using static DataTool.Helper.Logger;
+using static DataTool.Helper.STUHelper;
 
 namespace DataTool.SaveLogic.Unlock {
     public static class Skin {
-        public static void Save(ICLIFlags flags, string skinName, string basePath, STUHero hero, string rarity, STUSkinOverride skinOverride, List<DataModels.Unlock> weaponSkins) {
-            /*string heroName = GetString(hero.Name);
-            string heroNamePath = GetValidFilename(heroName) ?? "Unknown";
-            heroNamePath = heroNamePath.TrimEnd(' ');
+        public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock, STUHero hero) {
+            if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
+            STUSkinTheme skinTheme = GetInstanceNew<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
+            if (skinTheme == null) return;
             
-            string path = Path.Combine(basePath,
-                $"{heroNamePath}\\Skins\\{rarity}\\{GetValidFilename(skinName)}");
+            LoudLog($"Extracting skin {IO.GetString(hero.m_0EDCE350)} {unlock.Name}");
+            Save(flags, directory, skinTheme, hero);
+        }
+
+        public static void Save(ICLIFlags flags, string directory, STUSkinBase skin, STUHero hero) {
+            Dictionary<ulong, ulong> replacements = GetReplacements(skin);
             
-            Dictionary<uint, DataModels.Unlock> realWeaponSkins = new Dictionary<uint, DataModels.Unlock>();
-            if (weaponSkins != null) {
-                foreach (DataModels.Unlock weaponSkin in weaponSkins) {
-                    realWeaponSkins[((STUUnlock_Weapon) weaponSkin.STU).Index] = weaponSkin;
-                }
-            }
+            Log("\tFinding");
             
-            Dictionary<ulong, ulong> replacements = skinOverride.ProperReplacements;
-            
-            LoudLog("\tFinding");
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            FindLogic.Combo.Find(info, hero.EntityMain, replacements);
-            FindLogic.Combo.Find(info, hero.EntityHeroSelect, replacements);
-            FindLogic.Combo.Find(info, hero.EntityHighlightIntro, replacements);
-            FindLogic.Combo.Find(info, hero.EntityPlayable, replacements);
-            FindLogic.Combo.Find(info, hero.EntityThirdPerson, replacements);
-
-            info.Config.DoExistingEntities = true;
             
-            uint replacementIndex = 0;
-            foreach (Common.STUGUID weaponOverrideGUID in skinOverride.Weapons) {
-                STUHeroWeapon weaponOverride = GetInstance<STUHeroWeapon>(weaponOverrideGUID);
-                if (weaponOverride == null) continue;
-
-                string weaponSkinName = null;
-                if (realWeaponSkins.ContainsKey(replacementIndex)) {
-                    weaponSkinName = GetValidFilename(GetString(realWeaponSkins[replacementIndex].STU.CosmeticName));
-                }
-
-                Dictionary<ulong, ulong> weaponReplacements = weaponOverride.ProperReplacements ?? new Dictionary<ulong, ulong>();
-
-                List<STUHeroWeaponEntity> weaponEntities = new List<STUHeroWeaponEntity>();
-                if (hero.WeaponComponents1 != null) {
-                    weaponEntities.AddRange(hero.WeaponComponents1);
-                }
-                if (hero.WeaponComponents2 != null) {
-                    weaponEntities.AddRange(hero.WeaponComponents2);
-                }
-                foreach (STUHeroWeaponEntity heroWeapon in weaponEntities) {
-                    FindLogic.Combo.Find(info, heroWeapon.Entity, weaponReplacements);
-                    if (weaponSkinName == null) continue;
-                    TankLib.STU.Types.STUModelComponent modelComponent = GetInstanceNew<TankLib.STU.Types.STUModelComponent>(heroWeapon.Entity);
-                    if (modelComponent?.m_look == null) continue;
-                    info.SetModelLookName(modelComponent.m_look, weaponSkinName);
-                }
-                
-                replacementIndex++;
-            }
-            info.Config.DoExistingEntities = false;
-
-            foreach (Common.STUGUID guiImage in new[] {hero.ImageResource1, hero.ImageResource2, hero.ImageResource3, 
-                hero.ImageResource3, hero.ImageResource4, skinOverride.SkinImage, hero.SpectatorIcon}) {
-                FindLogic.Combo.Find(info, guiImage, replacements);
-            }
-            Combo.SaveLooseTextures(flags, Path.Combine(path, "GUI"), info);
-
-            info.SetEntityName(hero.EntityHeroSelect, $"{heroName}-HeroSelect");
-            info.SetEntityName(hero.EntityPlayable, $"{heroName}-Playable-ThirdPerson");
-            info.SetEntityName(hero.EntityThirdPerson, $"{heroName}-ThirdPerson");
-            info.SetEntityName(hero.EntityMain, $"{heroName}-Base");
-            info.SetEntityName(hero.EntityHighlightIntro, $"{heroName}-HighlightIntro");
-
-            string soundDirectory = Path.Combine(path, "Sound");
+            FindLogic.Combo.Find(info, hero.m_gameplayEntity, replacements);
+            info.SetEntityName(hero.m_gameplayEntity, "Gameplay3P");
             
-            FindLogic.Combo.ComboInfo diffInfoBefore = new FindLogic.Combo.ComboInfo();
-            FindLogic.Combo.ComboInfo diffInfoAfter = new FindLogic.Combo.ComboInfo();
+            FindLogic.Combo.Find(info, hero.m_previewEmoteEntity, replacements);
+            info.SetEntityName(hero.m_previewEmoteEntity, "PreviewEmote");
+            
+            FindLogic.Combo.Find(info, hero.m_322C521A, replacements);
+            info.SetEntityName(hero.m_322C521A, "Showcase");
+            
+            FindLogic.Combo.Find(info, hero.m_26D71549, replacements);
+            info.SetEntityName(hero.m_26D71549, "HeroGallery");
+            
+            FindLogic.Combo.Find(info, hero.m_8125713E, replacements);
+            info.SetEntityName(hero.m_8125713E, "HighlightIntro");
+            
+
+            if (skin is STUSkinTheme skinTheme) {
+                info.Config.DoExistingEntities = true;
+                foreach (var weaponOverrideGUID in skinTheme.m_heroWeapons) {
+                    STUHeroWeapon heroWeapon = GetInstanceNew<STUHeroWeapon>(weaponOverrideGUID);
+                    if (heroWeapon == null) continue;
+
+                    Dictionary<ulong, ulong> weaponReplacements = GetReplacements(heroWeapon);
+
+                    SavePreviewWeapons(info, weaponReplacements, hero.m_previewWeaponEntities);
+                    SavePreviewWeapons(info, weaponReplacements, hero.m_C2FE396F);
+                }
+                info.Config.DoExistingEntities = false;
+            }
+
+            foreach (teStructuredDataAssetRef<STUTexture> texture in new[] {hero.m_D3A31F29, hero.m_DAD2E3A2, hero.m_D696F2F6, hero.m_EA6FF023, hero.m_D90B256D}) {
+                FindLogic.Combo.Find(info, texture, replacements);
+            }
+            
+            Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), info);
 
             if (replacements != null) {
+                string soundDirectory = Path.Combine(directory, "Sound");
+            
+                FindLogic.Combo.ComboInfo diffInfoBefore = new FindLogic.Combo.ComboInfo();
+                FindLogic.Combo.ComboInfo diffInfoAfter = new FindLogic.Combo.ComboInfo();
+                
                 foreach (KeyValuePair<ulong,ulong> replacement in replacements) {
-                    uint diffReplacementType = GUID.Type(replacement.Value);
+                    uint diffReplacementType = teResourceGUID.Type(replacement.Value);
                     if (diffReplacementType != 0x2C && diffReplacementType != 0x5F && diffReplacementType != 0x3F &&
                         diffReplacementType != 0xB2) continue;
                     FindLogic.Combo.Find(diffInfoAfter, replacement.Value);
@@ -110,25 +92,32 @@ namespace DataTool.SaveLogic.Unlock {
                     Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfter, soundFile.Key, true);
                 }
             }
-            
-            LoudLog("\tSaving");
-            Combo.Save(flags, path, info);            
-            LoudLog("\tDone");*/
-        }
-        
-        public static void Save(ICLIFlags flags, string path, STUHero hero, STUHeroSkin skin) {
-            STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinOverride);
-            LoudLog($"Extracting skin {GetString(hero.Name)} {GetFileName(skin.SkinOverride)}");
-            Save(flags, GetFileName(skin.SkinOverride), path, hero, "", skinOverride, null);
+
+            Log("\tSaving");
+            Combo.Save(flags, directory, info);
+            Log("\tDone");;
         }
 
-        public static void Save(ICLIFlags flags, string path, STUHero hero, string rarity, STUUnlock_Skin skin, List<DataModels.Unlock> weaponSkins) {
-            if (skin == null) return;
-            LoudLog($"Extracting skin {GetString(hero.Name)} {GetString(skin.CosmeticName)}");
-            if (weaponSkins == null) weaponSkins = new List<DataModels.Unlock>();
-            
-            STUSkinOverride skinOverride = GetInstance<STUSkinOverride>(skin.SkinResource);
-            Save(flags, GetString(skin.CosmeticName).TrimEnd(' '), path, hero, rarity, skinOverride, weaponSkins);
+        private static void SavePreviewWeapons(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> weaponReplacements, STU_A0872511[] entities) {
+            if (entities == null) return;
+            foreach (STU_A0872511 weaponEntity in entities) {
+                FindLogic.Combo.Find(info, weaponEntity.m_entityDefinition, weaponReplacements);
+
+                if (weaponEntity.m_loadout == 0) continue;
+                Loadout loadout = new Loadout(weaponEntity.m_loadout);
+                info.SetEntityName(weaponEntity.m_entityDefinition, $"{loadout.Name}-{teResourceGUID.Index(weaponEntity.m_entityDefinition)}");
+            }
+        }
+
+        public static Dictionary<ulong, ulong> GetReplacements(STUSkinBase skin) {
+            if (skin.m_runtimeOverrides != null) {
+                Dictionary<ulong, ulong> replacements = new Dictionary<ulong, ulong>();
+                foreach (KeyValuePair<ulong,STUSkinRuntimeOverride> @override in skin.m_runtimeOverrides) {
+                    replacements[@override.Key] = @override.Value.m_3D884507;
+                }
+                return replacements;
+            }
+            return null;
         }
     }
 }

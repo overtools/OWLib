@@ -185,13 +185,13 @@ namespace DataTool.ToolLogic.Extract {
 
                 if (progressionUnlocks.OtherUnlocks != null) { // achievements and stuff
                     Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
-                    SaveUnlocks(flags, progressionUnlocks.OtherUnlocks, heroPath, "Achievement", config, tags, voiceSet);
+                    SaveUnlocks(flags, progressionUnlocks.OtherUnlocks, heroPath, "Achievement", config, tags, voiceSet, hero);
                 }
 
                 if (progressionUnlocks.LevelUnlocks != null) { // default unlocks
                     Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
                     foreach (LevelUnlocks levelUnlocks in progressionUnlocks.LevelUnlocks) {
-                        SaveUnlocks(flags, levelUnlocks.Unlocks, heroPath, "Default", config, tags, voiceSet);
+                        SaveUnlocks(flags, levelUnlocks.Unlocks, heroPath, "Default", config, tags, voiceSet, hero);
                     }
                 }
 
@@ -209,7 +209,7 @@ namespace DataTool.ToolLogic.Extract {
                             {"event", new TagExpectedValue(lootboxName.Replace(" ", "").ToLowerInvariant())}
                         };
 
-                        SaveUnlocks(flags, lootBoxUnlocks.Unlocks, heroPath, lootboxName, config, tags, voiceSet);
+                        SaveUnlocks(flags, lootBoxUnlocks.Unlocks, heroPath, lootboxName, config, tags, voiceSet, hero);
                     }
                 }
 
@@ -282,15 +282,15 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public void SaveUnlocks(ICLIFlags flags, Unlock[] unlocks, string path, string eventKey,
-            Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, VoiceSet voiceSet) {
+            Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, VoiceSet voiceSet, STUHero hero) {
             foreach (Unlock unlock in unlocks) {
-                SaveUnlock(flags, unlock, path, eventKey, config, tags, voiceSet);
+                SaveUnlock(flags, unlock, path, eventKey, config, tags, voiceSet, hero);
             }
         }
 
         public void SaveUnlock(ICLIFlags flags, Unlock unlock, string path, string eventKey,
             Dictionary<string, ParsedArg> config,
-            Dictionary<string, TagExpectedValue> tags, VoiceSet voiceSet) {
+            Dictionary<string, TagExpectedValue> tags, VoiceSet voiceSet, STUHero hero) {
             string rarity;
 
             if (unlock.STU.m_0B1BA7C1 == null) {
@@ -332,6 +332,10 @@ namespace DataTool.ToolLogic.Extract {
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_VoiceLine))) {
                 VoiceLine.Save(flags, thisPath, unlock, voiceSet);
             }
+            
+            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SkinTheme))) {
+                Skin.Save(flags, thisPath, unlock, hero);
+            }
         }
 
         private static bool ShouldDo(Unlock unlock, Dictionary<string, ParsedArg> config,
@@ -341,50 +345,5 @@ namespace DataTool.ToolLogic.Extract {
             string typeLower = type.ToLowerInvariant();
             return unlock.Type == type && config.ContainsKey(typeLower) && config[typeLower].ShouldDo(unlock.Name, tags);
         }
-
-        /*public void SaveItemInfo(Unlock itemInfo, string basePath, string heroFileName, ICLIFlags flags, STUHero hero, 
-            string eventKey, Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, List<Unlock> weaponSkins) {
-            if (itemInfo?.STU == null) return;
-
-            if (itemInfo.STU.LeagueTeam != null) {
-                STULeagueTeam team = GetInstanceNew<STULeagueTeam>(itemInfo.STU.LeagueTeam);
-                tags["leagueTeam"] = new TagExpectedValue(GetString(team.Abbreviation),  // NY
-                    GetString(team.Location),  // New York
-                    GetString(team.Name),  // Excelsior
-                    $"{GetString(team.Location)} {GetString(team.Name)}",  // New York Excelsior
-                    "*");  // all
-                eventKey = "League";
-                itemInfo.Rarity = "";
-            } else {
-                tags["leagueTeam"] = new TagExpectedValue("none");
-            }
-            
-            if (eventKey == "Achievement" && itemInfo.Type == "Skin") itemInfo.Rarity = "";
-            
-            
-            tags["rarity"] = new TagExpectedValue(itemInfo.Rarity);
-            
-            if (itemInfo.Type == "Spray" && config.ContainsKey("spray") && config["spray"].ShouldDo(itemInfo.Name, tags)) {
-                SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
-            }
-            if (itemInfo.Type == "PlayerIcon" && config.ContainsKey("icon") && config["icon"].ShouldDo(itemInfo.Name, tags)) {
-                SprayAndIcon.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
-            }
-            if (itemInfo.Type == "Skin" && config.ContainsKey("skin") && config["skin"].ShouldDo(itemInfo.Name, tags)) {
-                Skin.Save(flags, $"{basePath}\\{RootDir}", hero, $"{eventKey}\\{itemInfo.Rarity}", itemInfo.STU as STUUnlock_Skin, weaponSkins);
-            }
-            if (itemInfo.Type == "Pose" && config.ContainsKey("victorypose") && config["victorypose"].ShouldDo(itemInfo.Name, tags)) {
-                AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
-            }
-            if (itemInfo.Type == "HighlightIntro" && config.ContainsKey("highlightintro") && config["highlightintro"].ShouldDo(itemInfo.Name, tags)) {
-                AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
-            }
-            if (itemInfo.Type == "Emote" && config.ContainsKey("emote") && config["emote"].ShouldDo(itemInfo.Name, tags)) {
-                AnimationItem.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo);
-            }
-            if (itemInfo.Type == "VoiceLine" && config.ContainsKey("voiceline") && config["voiceline"].ShouldDo(itemInfo.Name, tags)) {
-                VoiceLine.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo, hero);
-            }
-        }*/
     }
 }
