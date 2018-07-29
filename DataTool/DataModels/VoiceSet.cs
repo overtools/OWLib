@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using Newtonsoft.Json;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels {
+    [JsonObject(MemberSerialization.OptOut)]
     public class VoiceSet {
         public Dictionary<ulong, VoiceLineInstance> VoiceLines;
 
@@ -53,6 +55,7 @@ namespace DataTool.DataModels {
         }
     }
 
+    [JsonObject(MemberSerialization.OptOut)]
     public class VoiceLineInstance {
         public List<ulong> VoiceSounds;
         public teResourceGUID VoiceConversation;

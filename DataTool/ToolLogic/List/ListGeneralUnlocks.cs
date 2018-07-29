@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
-using OWLib;
-using STULib.Types;
+using DataTool.ToolLogic.Extract;
+using TankLib.STU.Types;
 using static DataTool.Program;
-using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
-
-// ReSharper disable SuspiciousTypeConversion.Global
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-general-unlocks", Description = "List general unlocks", TrackTypes = new ushort[] { 0x54 }, CustomFlags = typeof(ListFlags))]
@@ -27,57 +22,32 @@ namespace DataTool.ToolLogic.List {
                     return;
                 }
             }
+            
+            ListHeroUnlocks.DisplayUnlocks("Other", unlocks.OtherUnlocks);
 
-            foreach (KeyValuePair<string,  HashSet<Unlock>> groupPair in unlocks) {
-                if (groupPair.Value?.Count == 0) continue;
+            if (unlocks.LootBoxesUnlocks != null) {
+                foreach (LootBoxUnlocks lootBoxUnlocks in unlocks.LootBoxesUnlocks) {
+                    string boxName = ExtractHeroUnlocks.GetLootBoxName(lootBoxUnlocks.LootBoxType);
+                        
+                    ListHeroUnlocks.DisplayUnlocks(boxName, lootBoxUnlocks.Unlocks);
+                }
+            }
 
-                if (groupPair.Value != null) {
-                    Log(groupPair.Key);
-                    foreach (Unlock unlock in groupPair.Value) {
-                        if (unlock?.Name == null) continue;
-                        Log("\t{0} ({1} {2})", unlock.Name, unlock.Rarity, unlock.Type);
-                    }
+            if (unlocks.AdditionalUnlocks != null) {
+                foreach (AdditionalUnlocks additionalUnlocks in unlocks.AdditionalUnlocks) {
+                    ListHeroUnlocks.DisplayUnlocks($"Level {additionalUnlocks.Level}", additionalUnlocks.Unlocks);
                 }
             }
         }
 
-        public Dictionary<string, HashSet<Unlock>> GetUnlocks() {
-            Dictionary<string, HashSet<Unlock>> @return = new Dictionary<string, HashSet<Unlock>>();
+        public PlayerProgression GetUnlocks() {
             foreach (ulong key in TrackedFiles[0x54]) {
-                STUGlobalInventoryMaster invMaster = GetInstance<STUGlobalInventoryMaster>(key);
-                if (invMaster == null) continue;
+                STUGenericSettings_PlayerProgression playerProgression = GetInstanceNew<STUGenericSettings_PlayerProgression>(key);
+                if (playerProgression == null) continue;
 
-                @return["Achievement"] = GatherUnlocks(invMaster.AchievementUnlocks?.Unlocks?.Select(it => (ulong)it));
-
-                @return["Standard"] = new HashSet<Unlock>();
-
-                if (invMaster.LevelUnlocks != null) {
-                    foreach (STUAdditionalUnlocks levelUnlocks in invMaster.LevelUnlocks) {
-                        if (levelUnlocks?.Unlocks == null) continue;
-
-                        foreach (Unlock info in GatherUnlocks(levelUnlocks.Unlocks.Select(it => (ulong)it))) {
-                            @return["Standard"].Add(info);
-                        }
-                    }
-                }
-
-                if (invMaster.EventGeneralUnlocks != null) {
-                    foreach (STULootBoxUnlocks eventUnlocks in invMaster.EventGeneralUnlocks) {
-                        if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
-
-                        string eventKey = $"Event/{ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event]}";
-
-                        if (!@return.ContainsKey(eventKey))
-                            @return[eventKey] = new HashSet<Unlock>();
-
-                        foreach (Unlock info in GatherUnlocks(eventUnlocks.Unlocks.Unlocks.Select(it => (ulong)it))) {
-                            @return[eventKey].Add(info);
-                        }
-                    }
-                }
+                return new PlayerProgression(playerProgression);
             }
-
-            return @return;
+            return null;
         }
     }
 }

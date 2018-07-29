@@ -59,6 +59,7 @@ namespace DataTool.DataModels {
         }
     }
 
+    [JsonObject(MemberSerialization.OptOut)]
     public class LootBoxUnlocks {
         /// <summary>
         /// Unlocks
@@ -80,6 +81,7 @@ namespace DataTool.DataModels {
     /// <summary>
     /// Level Unlocks data model
     /// </summary>
+    [JsonObject(MemberSerialization.OptOut)]
     public class LevelUnlocks {
         /// <summary>
         /// Unlocks

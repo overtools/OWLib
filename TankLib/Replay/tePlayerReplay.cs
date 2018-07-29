@@ -9,7 +9,7 @@ namespace TankLib.Replay
         public byte FormatVersion;
         public uint BuildNumber;
         public teResourceGUID Map;
-        public teResourceGUID Gamemode;
+        public teResourceGUID GameMode;
         public byte Unknown1;
         public uint Unknown2;
         public uint Unknown3;

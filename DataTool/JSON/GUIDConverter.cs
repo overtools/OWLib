@@ -2,6 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json;
 using OWLib;
+using TankLib;
 using static STULib.Types.Generic.Common;
 
 namespace DataTool.JSON {
@@ -11,7 +12,9 @@ namespace DataTool.JSON {
 
             writer.WritePropertyName("Key");
             ulong key;
-            if (value is STUGUID guid) {
+            if (value is teResourceGUID resourceGUID) {
+                key = resourceGUID;
+            } else if (value is STUGUID guid) {
                 key = guid;
             } else {
                 key = (ulong)value;

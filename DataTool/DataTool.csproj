@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConvertLogic\Sound.cs" />
+    <Compile Include="DataModels\LootBox.cs" />
+    <Compile Include="DataModels\PlayerProgression.cs" />
     <Compile Include="DataModels\Hero.cs" />
     <Compile Include="DataModels\ProgressionUnlocks.cs" />
     <Compile Include="DataModels\TeamDefinition.cs" />
@@ -101,9 +103,7 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimNodes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugMaterialData.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugNewEntities.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugOWLBuffers.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugPackageFinder.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugRAMTest.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugShaderHashes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSoundBank.cs" />
@@ -120,10 +120,7 @@
     <Compile Include="ToolLogic\Extract\ExtractMaps.cs" />
     <Compile Include="ToolLogic\Extract\ExtractFlags.cs" />
     <Compile Include="ToolLogic\Extract\ExtractNPCs.cs" />
-    <Compile Include="ToolLogic\List\Debug\ListDebugAnimBlendTrees.cs" />
-    <Compile Include="ToolLogic\List\Debug\ListDebugFewParticles.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugHeroSettings.cs" />
-    <Compile Include="ToolLogic\List\Debug\ListDebugSoundbanks.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListAchievements.cs" />
     <Compile Include="ToolLogic\List\ListChatSettings.cs" />
@@ -134,9 +131,9 @@
     <Compile Include="ToolLogic\List\ListHeroUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListHighlights.cs" />
     <Compile Include="ToolLogic\List\ListLoobox.cs" />
-    <Compile Include="ToolLogic\List\ListKeys.cs" />
+    <Compile Include="ToolLogic\List\ListResourceKeys.cs" />
     <Compile Include="ToolLogic\List\ListMaps.cs" />
-    <Compile Include="ToolLogic\List\ListGamemodes.cs" />
+    <Compile Include="ToolLogic\List\ListGameModes.cs" />
     <Compile Include="ToolLogic\List\ListOwlTeams.cs" />
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
     <Compile Include="ToolLogic\List\ListChatReplacements.cs" />

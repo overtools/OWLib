@@ -30,30 +30,24 @@ namespace DataTool.ToolLogic.Extract {
             foreach (var key in TrackedFiles[0x54]) {
                 STUGenericSettings_PlayerProgression progression = GetInstanceNew<STUGenericSettings_PlayerProgression>(key);
                 if (progression == null) continue;
+                
+                PlayerProgression playerProgression = new PlayerProgression(progression);
 
-                if (progression.m_lootBoxesUnlocks != null) {
-                    foreach (STULootBoxUnlocks lootBoxUnlocks in progression.m_lootBoxesUnlocks) {
-                        if (lootBoxUnlocks.m_unlocks == null) continue;
-                        
-                        string boxName = ExtractHeroUnlocks.GetLootBoxName((uint)lootBoxUnlocks.m_lootboxType);
-                
-                        Unlock[] unlocks = Unlock.GetArray(lootBoxUnlocks.m_unlocks);
-                
-                        ExtractHeroUnlocks.SaveUnlocks(flags, unlocks, path, boxName, null, null, null, null);
+                if (playerProgression.LootBoxesUnlocks != null) {
+                    foreach (LootBoxUnlocks lootBoxUnlocks in playerProgression.LootBoxesUnlocks) {
+                        string boxName = ExtractHeroUnlocks.GetLootBoxName(lootBoxUnlocks.LootBoxType);
+                        ExtractHeroUnlocks.SaveUnlocks(flags, lootBoxUnlocks.Unlocks, path, boxName, null, null, null, null);
                     }
                 }
-                if (progression.m_additionalUnlocks != null) {
-                    foreach (STUAdditionalUnlocks additionalUnlocks in progression.m_additionalUnlocks) {
-                        if (additionalUnlocks == null) continue;
-                        Unlock[] unlocks = Unlock.GetArray(additionalUnlocks.m_unlocks);
-                        
-                        ExtractHeroUnlocks.SaveUnlocks(flags, unlocks, path, "Standard", null, null, null, null);
+
+                if (playerProgression.AdditionalUnlocks != null) {
+                    foreach (AdditionalUnlocks additionalUnlocks in playerProgression.AdditionalUnlocks) {
+                        ExtractHeroUnlocks.SaveUnlocks(flags, additionalUnlocks.Unlocks, path, "Standard", null, null, null, null);
                     }
                 }
-                if (progression.m_otherUnlocks != null) {
-                    Unlock[] unlocks = Unlock.GetArray(progression.m_otherUnlocks);
-                    
-                    ExtractHeroUnlocks.SaveUnlocks(flags, unlocks, path, "Achievement", null, null, null, null);
+
+                if (playerProgression.OtherUnlocks != null) {
+                    ExtractHeroUnlocks.SaveUnlocks(flags, playerProgression.OtherUnlocks, path, "Achievement", null, null, null, null);
                 }
             }
         }

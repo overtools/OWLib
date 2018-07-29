@@ -3,8 +3,8 @@ using System.IO;
 using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
-using OWLib;
-using OWLib.Types.Chunk;
+using TankLib;
+using TankLib.Chunks;
 using TankLib.STU.Types;
 
 namespace DataTool.SaveLogic.Unlock {
@@ -16,14 +16,13 @@ namespace DataTool.SaveLogic.Unlock {
 
             HashSet<ulong> voiceLines = new HashSet<ulong>();
             using (Stream vlStream = IO.OpenFile(vl.m_F57B051E)) {
-                using (Chunked vlChunk = new Chunked(vlStream)) {
-                    foreach (SVCE svce in vlChunk.GetAllOfTypeFlat<SVCE>()) {
-                        if (svce == null) continue;
+                
+                teChunkedData chunkedData = new teChunkedData(vlStream);
 
-                        if (voiceSet.Stimuli.ContainsKey(svce.Data.VoiceStimulus)) {
-                            foreach (var voiceLine in voiceSet.Stimuli[svce.Data.VoiceStimulus]) {
-                                voiceLines.Add(voiceLine);
-                            }
+                foreach (teEffectComponentVoiceStimulus voiceStimulus in chunkedData.GetChunks<teEffectComponentVoiceStimulus>()) {
+                    if (voiceSet.Stimuli.ContainsKey(voiceStimulus.Header.VoiceStimulus)) {
+                        foreach (var voiceLine in voiceSet.Stimuli[voiceStimulus.Header.VoiceStimulus]) {
+                            voiceLines.Add(voiceLine);
                         }
                     }
                 }

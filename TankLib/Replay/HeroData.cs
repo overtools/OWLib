@@ -6,7 +6,7 @@ namespace TankLib.Replay
     {
         public uint SkinId;
         public uint WeaponSkinId;
-        public uint HighlightIntro;
+        public uint POTGAnimation;
         [Logical.DynamicSizeArrayAttribute(typeof(int), typeof(uint))]
         public uint[] SprayIds;
         [Logical.DynamicSizeArrayAttribute(typeof(int), typeof(uint))]

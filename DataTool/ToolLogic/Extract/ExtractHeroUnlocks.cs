@@ -10,6 +10,7 @@ using DataTool.SaveLogic.Unlock;
 using OWLib;
 using STULib.Types.Generic;
 using TankLib.STU.Types;
+using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
@@ -314,6 +315,10 @@ namespace DataTool.ToolLogic.Extract {
                 return lootboxName;
             }
             return $"Unknown{type}";
+        }
+
+        public static string GetLootBoxName(Enum_BABC4175 lootBoxType) {
+            return GetLootBoxName((uint)lootBoxType);
         }
     }
 }

@@ -116,8 +116,8 @@ namespace TankLib {
             return (T)Chunks.FirstOrDefault(x => x is T);
         }
 
-        public IEnumerable<IChunk> GetChunks<T>() where T : IChunk {
-            return Chunks.Where(x => x is T);
+        public IEnumerable<T> GetChunks<T>() where T : IChunk {
+            return Chunks.OfType<T>();
         }
     }
 

@@ -1,11 +1,8 @@
 ﻿using System;
 using DataTool.DataModels;
 using DataTool.Flag;
-using TankLib.STU.Types;
-using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
-using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-owl-teams", Description = "List OWL teams", TrackTypes = new ushort[] {0xEC}, CustomFlags = typeof(ListFlags), IsSensitive = true)]

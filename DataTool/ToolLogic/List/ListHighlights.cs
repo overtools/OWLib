@@ -11,10 +11,9 @@ using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
-using STUHero = STULib.Types.STUHero;
-using STUMap = STULib.Types.STUMap;
-using STUUnlock_Emote = STULib.Types.STUUnlock_Emote;
-using STUUnlock_VoiceLine = STULib.Types.STUUnlock_VoiceLine;
+using STUHero = TankLib.STU.Types.STUHero;
+using STUUnlock_Emote = TankLib.STU.Types.STUUnlock_Emote;
+using STUUnlock_VoiceLine = TankLib.STU.Types.STUUnlock_VoiceLine;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-highlights", Description = "List user highlights", TrackTypes = new ushort[] {}, CustomFlags = typeof(ListFlags))]
@@ -26,7 +25,7 @@ namespace DataTool.ToolLogic.List {
         [JsonObject(MemberSerialization.OptOut)]
         public class ReplayJSON {
             public uint BuildNumber;
-            public string Gamemode;
+            public string GameMode;
             public HighlightInfoJSON HighlightInfo;
             public string Map;
         }
@@ -58,7 +57,7 @@ namespace DataTool.ToolLogic.List {
             public long PlayerID;
             public string Flags;
             public string Map;
-            public string Gamemode;
+            public string GameMode;
             public List<HeroInfoJSON> HeroInfo;
             public List<HighlightInfoJSON> HighlightInfo;
             public ReplayJSON Replay;
@@ -99,7 +98,7 @@ namespace DataTool.ToolLogic.List {
                 }
                 Log($"{indent}{highlight.UUID}:");
                 Log($"{indent+1}Map: {highlight.Map}");
-                Log($"{indent+1}Gamemode: {highlight.Gamemode}");
+                Log($"{indent+1}Gamemode: {highlight.GameMode}");
                 Log($"{indent+1}HighlightInfo:");
                 for (int i = 0; i < highlight.HighlightInfo.Count; i++) {
                     Log($"{indent+2}[{i}] {{");
@@ -132,7 +131,7 @@ namespace DataTool.ToolLogic.List {
                 }
                 Log($"{indent+1}Replay: {{");
                 Log($"{indent+2}Map: {highlight.Replay.Map}");
-                Log($"{indent+2}Gamemode: {highlight.Replay.Gamemode}");
+                Log($"{indent+2}Gamemode: {highlight.Replay.GameMode}");
                 Log($"{indent+2}HighlightInfo:");
                 PrintHighlightInfoJSON(highlight.Replay.HighlightInfo, indent+3);
                 Log($"{indent+1}}}");
@@ -144,51 +143,51 @@ namespace DataTool.ToolLogic.List {
 
         protected HighlightInfoJSON GetHighlightInfo(tePlayerHighlight.HighlightInfo infoNew) {
             HighlightInfoJSON outputJson = new HighlightInfoJSON();
-            STUHero hero = GetInstance<STUHero>((ulong)infoNew.Hero);
+            STUHero hero = GetInstanceNew<STUHero>(infoNew.Hero);
 
-            outputJson.Hero = GetString(hero?.Name);
+            outputJson.Hero = GetString(hero?.m_0EDCE350);
             outputJson.Player = infoNew.PlayerName;
                 
-            STUUnlock_HighlightIntro intro = GetInstance<STUUnlock_HighlightIntro>((ulong)infoNew.HighlightIntro);
+            STUUnlock_HighlightIntro intro = GetInstance<STUUnlock_HighlightIntro>(infoNew.HighlightIntro);
             outputJson.HighlightIntro = GetString(intro.CosmeticName);
             
             // todo: outputJson.WeaponSkin
             // todo: outputJson.Skin
                 
-            STUHighlightType highlightType = GetInstance<STUHighlightType>((ulong)infoNew.HighlightType);
+            STUHighlightType highlightType = GetInstance<STUHighlightType>(infoNew.HighlightType);
             outputJson.HighlightType = GetString(highlightType?.Name) ?? "";
             return outputJson;
         }
 
-        protected string GetMapName(ulong key) {
-            STUMap map = GetInstance<STUMap>(key);
-            return GetString(map.DisplayName);
+        protected static string GetMapName(ulong key) {
+            STUMapHeader map = GetInstanceNew<STUMapHeader>(key);
+            return GetString(map.m_displayName);
         }
 
         protected HeroInfoJSON GetHeroInfo(HeroData heroInfo) {
-            STUHero hero = GetInstance<STUHero>((ulong)heroInfo.Hero);
+            STUHero hero = GetInstanceNew<STUHero>(heroInfo.Hero);
 
             HeroInfoJSON outputHero = new HeroInfoJSON {
-                Hero = GetString(hero.Name),
+                Hero = GetString(hero.m_0EDCE350),
                 Sprays = new List<string>(),
                 Emotes = new List<string>(),
                 VoiceLines = new List<string>()
             };
             foreach (uint sprayId in heroInfo.SprayIds) {
-                STUUnlock_Spray spray = GetInstance<STUUnlock_Spray>(GetCosmeticKey(sprayId));
-                outputHero.Sprays.Add(GetString(spray.CosmeticName));
+                STUUnlock_SprayPaint spray = GetInstanceNew<STUUnlock_SprayPaint>(GetCosmeticKey(sprayId));
+                outputHero.Sprays.Add(GetString(spray.m_name));
             }
             foreach (uint emoteId in heroInfo.EmoteIds) {
-                STUUnlock_Emote emote = GetInstance<STUUnlock_Emote>(GetCosmeticKey(emoteId));
-                outputHero.Emotes.Add(GetString(emote.CosmeticName));
+                STUUnlock_Emote emote = GetInstanceNew<STUUnlock_Emote>(GetCosmeticKey(emoteId));
+                outputHero.Emotes.Add(GetString(emote.m_name));
             }
                 
             foreach (uint voiceLineId in heroInfo.VoiceLineIds) {
-                STUUnlock_VoiceLine voiceLine = GetInstance<STUUnlock_VoiceLine>(GetCosmeticKey(voiceLineId));
-                outputHero.VoiceLines.Add(GetString(voiceLine.CosmeticName));
+                STUUnlock_VoiceLine voiceLine = GetInstanceNew<STUUnlock_VoiceLine>(GetCosmeticKey(voiceLineId));
+                outputHero.VoiceLines.Add(GetString(voiceLine.m_name));
             }
-            STUUnlock_HighlightIntro intro = GetInstance<STUUnlock_HighlightIntro>(GetCosmeticKey(heroInfo.HighlightIntro));
-            outputHero.HighlightIntro = GetString(intro.CosmeticName);
+            STUUnlock_POTGAnimation intro = GetInstanceNew<STUUnlock_POTGAnimation>(GetCosmeticKey(heroInfo.POTGAnimation));
+            outputHero.HighlightIntro = GetString(intro.m_name);
                 
             // Skin skin = GetInstance<Skin>(GetSkinKey(heroInfo.SkinId));  // todo: this is by skin override
             // outputHero.Skin = GetString(skin?.CosmeticName);
@@ -207,10 +206,10 @@ namespace DataTool.ToolLogic.List {
         protected ReplayJSON GetReplay(tePlayerReplay playerReplay) {
             ReplayJSON output = new ReplayJSON {BuildNumber = playerReplay.BuildNumber};
 
-            ulong mapMetadataKey = ((ulong)playerReplay.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
+            ulong mapMetadataKey = (playerReplay.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
             output.Map = GetMapName(mapMetadataKey);
             output.HighlightInfo = GetHighlightInfo(playerReplay.HighlightInfo);
-            output.Gamemode = GetGamemode((ulong)playerReplay.Gamemode);
+            output.GameMode = GetGamemode(playerReplay.GameMode);
             
             return output;
         } 
@@ -226,8 +225,8 @@ namespace DataTool.ToolLogic.List {
                 UUID = playerHighlight.Info.FirstOrDefault()?.UUID.ToString()
             };
             
-            ulong mapMetadataKey = ((ulong)playerHighlight.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
-            output.Map = GetMapName(mapMetadataKey);
+            ulong mapHeaderGuid = (playerHighlight.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
+            output.Map = GetMapName(mapHeaderGuid);
 
             foreach (HeroData heroInfo in playerHighlight.Heroes) {
                 output.HeroInfo.Add(GetHeroInfo(heroInfo));
@@ -238,7 +237,7 @@ namespace DataTool.ToolLogic.List {
             }
 
             output.Replay = GetReplay(new tePlayerReplay(playerHighlight.Replay));
-            output.Gamemode = GetGamemode((ulong)playerHighlight.Gamemode);
+            output.GameMode = GetGamemode(playerHighlight.GameMode);
             
             return output;
         }

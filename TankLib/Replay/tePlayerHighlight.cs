@@ -45,7 +45,7 @@ namespace TankLib.Replay
         public long PlayerId;
         public HighlightUIFlags Flags;
         public teResourceGUID Map;
-        public teResourceGUID Gamemode;
+        public teResourceGUID GameMode;
         [Logical.DynamicSizeArrayAttribute(typeof(int), typeof(HighlightInfo))]
         public HighlightInfo[] Info;
         [Logical.DynamicSizeArrayAttribute(typeof(int), typeof(HeroData))]

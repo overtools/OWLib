@@ -11,7 +11,7 @@ using static STULib.Types.Generic.Common;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-gamemodes", Description = "List game modes", IsSensitive = true, TrackTypes = new ushort[] {0xC7}, CustomFlags = typeof(ListFlags))]
-    public class ListGamemodes : ITool {
+    public class ListGameModes : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
         }

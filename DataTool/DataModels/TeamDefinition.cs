@@ -1,9 +1,11 @@
-﻿using TankLib.STU.Types;
+﻿using Newtonsoft.Json;
+using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels {
+    [JsonObject(MemberSerialization.OptOut)]
     public class TeamDefinition {
         public string Name;
         public string Location;
