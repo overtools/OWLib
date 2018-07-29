@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using DataTool.DataModels;
+using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic.Unlock;
@@ -151,8 +152,6 @@ namespace DataTool.ToolLogic.Extract {
 
                 if (heroNameActual == null) {
                     continue;
-                    // heroFileName = "Unknown";
-                    // heroNameActual = "Unknown";
                 }
 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
@@ -183,9 +182,38 @@ namespace DataTool.ToolLogic.Extract {
                     continue;
                 }
 
+                {
+                    Combo.ComboInfo guiInfo = new Combo.ComboInfo();
+                    Combo.Find(guiInfo, hero.m_D696F2F6);
+                    guiInfo.SetTextureName(hero.m_D696F2F6, "Icon");
+                    
+                    Combo.Find(guiInfo, hero.m_D90B256D);
+                    guiInfo.SetTextureName(hero.m_D90B256D, "Portrait");
+                                        
+                    Combo.Find(guiInfo, hero.m_EA6FF023);
+                    guiInfo.SetTextureName(hero.m_EA6FF023, "Avatar");
+                    
+                    Combo.Find(guiInfo, hero.m_D3A31F29);
+                    guiInfo.SetTextureName(hero.m_D3A31F29, "SpectatorIcon");
+                    
+                    Combo.Find(guiInfo, hero.m_DAD2E3A2);
+
+                    SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(heroPath, "GUI"), guiInfo);
+                }
+
                 if (progressionUnlocks.OtherUnlocks != null) { // achievements and stuff
                     Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
                     SaveUnlocks(flags, progressionUnlocks.OtherUnlocks, heroPath, "Achievement", config, tags, voiceSet, hero);
+                }
+                
+                if (npc) {
+                    foreach (var skin in hero.m_skinThemes) {
+                        if (!config.ContainsKey("skin") && config["skin"].ShouldDo(GetFileName(skin.m_5E9665E3)))
+                            continue;
+                        Skin.Save(flags, Path.Combine(heroPath, Unlock.GetTypeName(typeof(STUUnlock_SkinTheme)), "NPC", 
+                            GetFileName(skin.m_5E9665E3)), skin, hero);
+                    }
+                    continue;
                 }
 
                 if (progressionUnlocks.LevelUnlocks != null) { // default unlocks
@@ -212,72 +240,6 @@ namespace DataTool.ToolLogic.Extract {
                         SaveUnlocks(flags, lootBoxUnlocks.Unlocks, heroPath, lootboxName, config, tags, voiceSet, hero);
                     }
                 }
-
-                /*var unlocks = GetInstanceNew<STUProgressionUnlocks>(hero.m_heroProgression);
-                
-                if (unlocks?.m_7846C401 == null && !npc)
-                    continue;
-                if (unlocks?.m_lootBoxesUnlocks != null && npc) {
-                    continue;
-                }
-                
-                Log($"Processing data for {heroNameActual}...");
-                
-                List<Unlock> weaponSkins = ListHeroUnlocks.GetUnlocksForHero(hero.m_heroProgression)?.SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList(); // eww?
-
-                var achievementUnlocks = GatherUnlocks(unlocks?.m_otherUnlocks?.m_unlocks.Select(x => (ulong)x.GUID)).ToList();
-                foreach (Unlock itemInfo in achievementUnlocks) {
-                    if (itemInfo == null) continue;
-                    Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
-                    SaveItemInfo(itemInfo, basePath, heroFileName, flags, hero, "Achievement", config, tags, weaponSkins);
-                }
-
-                if (npc) {
-                    foreach (var skin in hero.m_skinThemes) {
-                        if (config.ContainsKey("skin") && config["skin"].ShouldDo(GetFileName(skin.m_5E9665E3))) {
-                            Skin.Save(flags, $"{basePath}\\{RootDir}", hero, skin);
-                        }
-                    }
-                    continue;
-                }
-
-                foreach (var defaultUnlocks in unlocks.m_7846C401)  {
-                    var dUnlocks = GatherUnlocks(defaultUnlocks.m_unlocks.m_unlocks.Select(it => (ulong) it)).ToList();
-                    
-                    foreach (Unlock itemInfo in dUnlocks) {
-                        Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
-                        SaveItemInfo(itemInfo, basePath, heroFileName, flags, hero, "Standard", config, tags, weaponSkins);
-                    }
-                }
-
-                foreach (var eventUnlocks in unlocks.m_lootBoxesUnlocks) {
-                    if (eventUnlocks?.m_unlocks?.m_unlocks == null) continue;
-
-                    string eventKey;
-                    if (!ItemEvents.GetInstance().EventsNormal.ContainsKey((uint) eventUnlocks.m_lootboxType)) {
-                        eventKey = $"Unknown{eventUnlocks.m_lootboxType}";
-                    } else {
-                        eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.m_lootboxType];
-                    }
-                    var eUnlocks = eventUnlocks.m_unlocks.m_unlocks.Select(it => GatherUnlock(it)).ToList();
-
-                    foreach (Unlock itemInfo in eUnlocks) {
-                        if (itemInfo == null) continue;
-                        Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue(eventUnlocks.m_lootboxType.ToString().ToLowerInvariant())}};
-                        SaveItemInfo(itemInfo, basePath, heroFileName, flags, hero, eventKey, config, tags, weaponSkins);
-                    }
-                }
-                
-                Combo.ComboInfo guiInfo = new Combo.ComboInfo();
-                Combo.Find(guiInfo, hero.ImageResource1);
-                Combo.Find(guiInfo, hero.ImageResource2);
-                Combo.Find(guiInfo, hero.ImageResource3);
-                Combo.Find(guiInfo, hero.ImageResource4);
-                guiInfo.SetTextureName(hero.ImageResource1, "Icon");
-                guiInfo.SetTextureName(hero.ImageResource2, "Portrait");
-                guiInfo.SetTextureName(hero.ImageResource4, "Avatar");
-                guiInfo.SetTextureName(hero.SpectatorIcon, "SpectatorIcon");
-                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, RootDir, heroFileName, "GUI"), guiInfo);*/
             }
         }
 
@@ -310,7 +272,7 @@ namespace DataTool.ToolLogic.Extract {
             }
             tags["rarity"] = new TagExpectedValue(unlock.Rarity.ToString());
             
-            string thisPath = Path.Combine(path, unlock.Type, eventKey, rarity, GetValidFilename(unlock.Name).Replace(".", ""));
+            string thisPath = Path.Combine(path, unlock.Type, eventKey, rarity, GetValidFilename(unlock.GetName()).Replace(".", ""));
             
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SprayPaint))) {
                 SprayAndIcon.Save(flags, thisPath, unlock);
@@ -343,7 +305,7 @@ namespace DataTool.ToolLogic.Extract {
 
             string type = Unlock.GetTypeName(unlockType);
             string typeLower = type.ToLowerInvariant();
-            return unlock.Type == type && config.ContainsKey(typeLower) && config[typeLower].ShouldDo(unlock.Name, tags);
+            return unlock.Type == type && config.ContainsKey(typeLower) && config[typeLower].ShouldDo(unlock.GetName(), tags);
         }
     }
 }

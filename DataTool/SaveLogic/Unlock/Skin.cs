@@ -16,7 +16,14 @@ namespace DataTool.SaveLogic.Unlock {
             STUSkinTheme skinTheme = GetInstanceNew<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
             if (skinTheme == null) return;
             
-            LoudLog($"Extracting skin {IO.GetString(hero.m_0EDCE350)} {unlock.Name}");
+            Log($"Extracting skin {IO.GetString(hero.m_0EDCE350)} {unlock.Name}");
+            Save(flags, directory, skinTheme, hero);
+        }
+
+        public static void Save(ICLIFlags flags, string directory, STU_63172E83 skin, STUHero hero) {
+            STUSkinTheme skinTheme = GetInstanceNew<STUSkinTheme>(skin.m_5E9665E3);
+            if (skinTheme == null) return;
+            Log($"Extracting skin {IO.GetString(hero.m_0EDCE350)} {IO.GetFileName(skin.m_5E9665E3)}");
             Save(flags, directory, skinTheme, hero);
         }
 
@@ -95,7 +102,7 @@ namespace DataTool.SaveLogic.Unlock {
 
             Log("\tSaving");
             Combo.Save(flags, directory, info);
-            Log("\tDone");;
+            Log("\tDone");
         }
 
         private static void SavePreviewWeapons(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> weaponReplacements, STU_A0872511[] entities) {

@@ -61,7 +61,7 @@ namespace DataTool.DataModels {
 		}
 
 		private void Init(STUUnlock unlock, ulong guid) {
-			Name = GetString(unlock.m_name).TrimEnd(' '); // ffs blizz, why do the names end in a space sometimes
+			Name = GetString(unlock.m_name)?.TrimEnd(' '); // ffs blizz, why do the names end in a space sometimes
 			AvailableIn = GetString(unlock.m_53145FAF);
 			Rarity = unlock.m_rarity;
 			Description = GetDescriptionString(unlock.m_3446F580);
@@ -70,6 +70,10 @@ namespace DataTool.DataModels {
 			STU = unlock;
 
 			Type = GetTypeName(unlock);
+		}
+
+		public string GetName() {
+			return Name ?? GetFileName(GUID);
 		}
 
 	    /// <summary>
