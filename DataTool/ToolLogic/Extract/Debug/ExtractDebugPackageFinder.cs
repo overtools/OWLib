@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DataTool.Flag;
 using TankLib;
 using TankLib.CASC;

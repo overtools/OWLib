@@ -1,28 +1,15 @@
-﻿using System.IO;
-using DataTool.DataModels;
-using DataTool.Flag;
-using static DataTool.Helper.IO;
+﻿using DataTool.Flag;
 
 namespace DataTool.SaveLogic.Unlock {
-    public class AnimationItem {
-        public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, DataModels.Unlock item) {
-            if (item == null) return;
-            string properType = item.Type;
-            switch (item.Type) {
-                case "Pose":
-                    properType = "VictoryPose";
-                    break;
-            }
-            
-            string output = Path.Combine(basePath, containerName, heroName ?? "", properType, folderName, GetValidFilename(item.Name).Replace(".", ""));
-
+    public static class AnimationItem {
+        public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock) {
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            FindLogic.Combo.Find(info, item.GUID);
+            FindLogic.Combo.Find(info, unlock.GUID);
             
             info.SaveConfig.SaveAnimationEffects = false;  // todo: unsupported here due to relative paths used by OWEffect
             
-            Combo.Save(flags, output, info);
-            Combo.SaveAllAnimations(flags, output, info);
+            Combo.Save(flags, directory, info);
+            Combo.SaveAllAnimations(flags, directory, info);
         }
     }
 }

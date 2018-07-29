@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DataTool.DataModels;
 using DataTool.Flag;
-using DataTool.SaveLogic.Unlock;
-using DataTool.ToolLogic.List;
-using STULib.Types;
-using static DataTool.Program;
-using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-skin", Description = "Extract skins (debug)", TrackTypes = new ushort[] {0x75}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
@@ -21,7 +13,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         public void GetHeroes(ICLIFlags toolFlags) {
-            string basePath;
+            /*string basePath;
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
             } else {
@@ -40,7 +32,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 foreach (Unlock skin in skins) {
                     Skin.Save(flags, $"{basePath}\\HeroSkinDebug", hero, skin.Rarity, skin.STU as STUUnlock_Skin, weaponSkins);
                 }
-            }
+            }*/
         }
     }
 }

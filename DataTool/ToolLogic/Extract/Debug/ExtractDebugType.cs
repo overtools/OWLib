@@ -1,12 +1,8 @@
 ﻿using System;
 using System.IO;
-using DataTool.FindLogic;
 using DataTool.Flag;
-using DataTool.Helper;
-using STULib.Types;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
-using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-type", Description = "Extract type (debug)", TrackTypes = new ushort[] {}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]

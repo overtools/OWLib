@@ -88,17 +88,17 @@ namespace DataTool.ToolLogic.List {
             IDictionary<ulong, string> heroItemMapping = GetHeroItemMapping();
 
             foreach (ulong key in TrackedFiles[0x68]) {
-                STUAchievement achievement = GetInstanceNew<STUAchievement>(key);
-                if (achievement == null) continue;
-
-                string name = GetString(achievement.m_name);
-                string desc = GetString(achievement.m_description);
-                string group = achievement.m_category.ToString();
-                Unlock item = GatherUnlock(achievement.m_unlock);
-                Reward reward = new Reward(achievement.m_unlock, item.Name, item.Type, item.Rarity);
-                heroItemMapping.TryGetValue(item.GUID, out string hero);
-                
-                achievementList.Add(new AchievementInfo(key, name, group, desc, hero, reward));
+                // STUAchievement achievement = GetInstanceNew<STUAchievement>(key);
+                // if (achievement == null) continue;
+                //
+                // string name = GetString(achievement.m_name);
+                // string desc = GetString(achievement.m_description);
+                // string group = achievement.m_category.ToString();
+                // Unlock item = GatherUnlock(achievement.m_unlock);
+                // Reward reward = new Reward(achievement.m_unlock, item.Name, item.Type, item.Rarity);
+                // heroItemMapping.TryGetValue(item.GUID, out string hero);
+                //
+                // achievementList.Add(new AchievementInfo(key, name, group, desc, hero, reward));
             }
 
             return achievementList;
@@ -107,7 +107,7 @@ namespace DataTool.ToolLogic.List {
         private static IDictionary<ulong, string> GetHeroItemMapping() {
             Dictionary<ulong, string> @return = new Dictionary<ulong, string>();
 
-            foreach (var key in TrackedFiles[0x75]) {
+            /*foreach (var key in TrackedFiles[0x75]) {
                 STUHero hero = GetInstanceNew<STUHero>(key);
                 if (hero?.m_heroProgression == null) continue;
 
@@ -124,7 +124,7 @@ namespace DataTool.ToolLogic.List {
                         @return[unlock.GUID] = heroName;
                     }
                 }
-            }
+            }*/
 
             return @return;
         }

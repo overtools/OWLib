@@ -1,4 +1,5 @@
 ﻿using System;
+using DataTool.DataModels;
 using DataTool.Flag;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
@@ -15,14 +16,10 @@ namespace DataTool.ToolLogic.List {
 
         public void Parse(ICLIFlags toolFlags) {
             foreach (ulong key in TrackedFiles[0xEC]) {
-                var data = GetInstanceNew<STU_73AE9738>(key);
-                //var teamColors = GetInstanceNew<STUTeamColor>(data.m_B8DC6D46);
-                var location = GetString(data.m_4BA3B3CE);
-                var name = GetString(data.m_137210AF);
-                var fullName = $"{location} {(string.Equals(location, name) ? "" : name)}".Trim();
+                TeamDefinition teamDef = new TeamDefinition(key);
                 
-                Log($"{fullName} ({GetString(data.m_0945E50A)})");
-                Log($"\t  Division: {data.m_AA53A680}");
+                Log($"{teamDef.FullName} ({teamDef.Abbreviation})");
+                Log($"    Division: {teamDef.Division}");
                 
                 // todo: fix later or something
                 // tbh i don't think anyone is that interested

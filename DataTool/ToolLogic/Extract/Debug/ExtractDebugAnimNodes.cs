@@ -7,8 +7,6 @@ using DataTool.Helper;
 using Newtonsoft.Json;
 using TankLib;
 using TankLib.STU.Types;
-//using STULib.Types;
-//using STULib.Types.Dump;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 

@@ -10,9 +10,9 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
 
 namespace DataTool.SaveLogic.Unlock {
-    public class Skin {
+    public static class Skin {
         public static void Save(ICLIFlags flags, string skinName, string basePath, STUHero hero, string rarity, STUSkinOverride skinOverride, List<DataModels.Unlock> weaponSkins) {
-            string heroName = GetString(hero.Name);
+            /*string heroName = GetString(hero.Name);
             string heroNamePath = GetValidFilename(heroName) ?? "Unknown";
             heroNamePath = heroNamePath.TrimEnd(' ');
             
@@ -113,7 +113,7 @@ namespace DataTool.SaveLogic.Unlock {
             
             LoudLog("\tSaving");
             Combo.Save(flags, path, info);            
-            LoudLog("\tDone");
+            LoudLog("\tDone");*/
         }
         
         public static void Save(ICLIFlags flags, string path, STUHero hero, STUHeroSkin skin) {

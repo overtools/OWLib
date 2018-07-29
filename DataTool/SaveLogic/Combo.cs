@@ -543,7 +543,7 @@ namespace DataTool.SaveLogic {
 
         public static void SaveSoundFile(ICLIFlags flags, string directory, FindLogic.Combo.ComboInfo info, ulong soundFile, bool voice) {
             // info.SaveConfig.Tasks.Add(Task.Run(() => { SaveSoundFile(flags, directory, info, soundFile, voice); }));
-            bool convertWem = false;
+            bool convertWem = true;
             if (flags is ExtractFlags extractFlags) {
                 convertWem = extractFlags.ConvertSound && !extractFlags.Raw;
                 if (extractFlags.SkipSound) return;

@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using DataTool.DataModels;
 using DataTool.Flag;
-using STULib.Types;
 
 namespace DataTool.SaveLogic.Unlock {
-    public class Portrait {
+    public static class Portrait {
         public static void SaveItems(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, IEnumerable<DataModels.Unlock> items) {
             
-            foreach (DataModels.Unlock item in items) {
+            /*foreach (DataModels.Unlock item in items) {
                 if (item == null) continue;
                 if (!(item.STU is STULevelPortrait unlock)) continue;
                 string tier = unlock.Tier.ToString();
@@ -33,7 +30,7 @@ namespace DataTool.SaveLogic.Unlock {
                 }
                 
                 Combo.SaveLooseTextures(flags, Path.Combine(basePath, containerName, "Portraits", tier), info);
-            }
+            }*/
         }
     }
 }

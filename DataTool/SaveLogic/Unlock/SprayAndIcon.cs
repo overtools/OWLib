@@ -1,45 +1,25 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using DataTool.DataModels;
+﻿using System;
+using System.Collections.Generic;
 using DataTool.Flag;
-using STULib.Types;
-using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic.Unlock {
-    public class SprayAndIcon {
+    public static class SprayAndIcon {
         public static void SaveItems(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, List<DataModels.Unlock> items) {
-            foreach (DataModels.Unlock item in items) {
-                SaveItem(basePath, heroName, containerName, folderName, flags, item);
-            }
+            throw new NotImplementedException();
+            //foreach (DataModels.Unlock item in items) {
+            //    SaveItem(basePath, heroName, containerName, folderName, flags, item);
+            //}
         }
 
-
-        public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, DataModels.Unlock item) {
-            if (item == null) return;
-            string name = GetValidFilename(item.Name).TrimEnd(' ').Replace(".", "");
-            string type;
-
-            switch (item.STU) {
-                case STUUnlock_PlayerIcon _:
-                    type = "Icons";
-                    break;
-                case STUUnlock_Spray _:
-                    type = "Sprays";
-                    break;
-                default:
-                    return;
-            }
-            
+        public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock) {
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            FindLogic.Combo.Find(info, item.GUID);
-            
-            string output = Path.Combine(basePath, containerName, heroName ?? "", type, folderName, name);
+            FindLogic.Combo.Find(info, unlock.GUID);
             
             // hmm, resaving the default spray over and over again (ref'd by SSCE) is kinda bad.
             
-            Combo.SaveLooseTextures(flags, output, info);
-            Combo.SaveAllMaterials(flags, output, info);
-            Combo.Save(flags, output, info);
+            Combo.SaveLooseTextures(flags, directory, info);
+            Combo.SaveAllMaterials(flags, directory, info);
+            Combo.Save(flags, directory, info);
         }
     }
 }

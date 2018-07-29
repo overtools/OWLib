@@ -6,10 +6,10 @@ using System.Text.RegularExpressions;
 
 namespace OWLib {
     public class ItemEvents {
-        private Dictionary<ulong, string> events;
-        private Dictionary<ulong, string> eventsNormal;
-        public IReadOnlyDictionary<ulong, string> Events => events;
-        public IReadOnlyDictionary<ulong, string> EventsNormal => eventsNormal;
+        private readonly Dictionary<uint, string> events;
+        private readonly Dictionary<uint, string> _eventsNormal;
+        public IReadOnlyDictionary<uint, string> Events => events;
+        public IReadOnlyDictionary<uint, string> EventsNormal => _eventsNormal;
 
         private static ItemEvents Instance;
 
@@ -24,17 +24,17 @@ namespace OWLib {
         }
 
         public ItemEvents() {
-            events = new Dictionary<ulong, string>();
-            eventsNormal = new Dictionary<ulong, string>();
+            events = new Dictionary<uint, string>();
+            _eventsNormal = new Dictionary<uint, string>();
             if (File.Exists(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\ow.events")) {
                 using (Stream f = File.OpenRead(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\ow.events")) {
                     using (TextReader r = new StreamReader(f)) {
                         string line = null;
-                        ulong idx = 0;
+                        uint idx = 0;
                         while ((line = r.ReadLine()) != null) {
                             line = line.Split('#')[0].Trim();
                             if (line.Length > 0) {
-                                eventsNormal[idx] = line;
+                                _eventsNormal[idx] = line;
                                 string @event = REPLACE.Replace(line.Replace(' ', '_').ToUpper(), "");
                                 if (@event.Length > 0) {
                                     events[idx++] = @event;
@@ -46,7 +46,7 @@ namespace OWLib {
             }
         }
 
-        public string GetEventNormal(ulong id) => events.ContainsKey(id) ? eventsNormal[id] : $"Event {id}";
-        public string GetEvent(ulong id) => events.ContainsKey(id) ? events[id] : $"EVENT_{id}";
+        public string GetEventNormal(uint id) => events.ContainsKey(id) ? _eventsNormal[id] : $"Event {id}";
+        public string GetEvent(uint id) => events.ContainsKey(id) ? events[id] : $"EVENT_{id}";
     }
 }

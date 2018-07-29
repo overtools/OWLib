@@ -7,7 +7,7 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xFE8289E1)]
         public ulong[] m_FE8289E1;
 
-        [STUFieldAttribute(0xBA5545D6)]
-        public ulong m_BA5545D6;
+        [STUFieldAttribute(0xBA5545D6, "m_set")]
+        public ulong m_set;
     }
 }

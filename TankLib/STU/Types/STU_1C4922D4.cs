@@ -13,8 +13,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0FAB01F2)]
         public teStructuredDataAssetRef<STUEffect> m_0FAB01F2;
 
-        [STUFieldAttribute(0xD0C28030)]
-        public teStructuredDataAssetRef<STUHardPoint> m_D0C28030;
+        [STUFieldAttribute(0xD0C28030, "m_effectHardpoint")]
+        public teStructuredDataAssetRef<STUHardPoint> m_effectHardpoint;
 
         [STUFieldAttribute(0xCDB4356F)]
         public teStructuredDataAssetRef<STUHardPoint> m_CDB4356F;

@@ -44,7 +44,7 @@ namespace DataTool.ToolLogic.List {
 
                 if (lootbox == null) continue;
 
-                @return[ItemEvents.GetInstance().GetEventNormal((ulong)lootbox.m_lootboxType)] = lootbox.m_shopCards.Select(l => GetString(l.m_cardText) ?? "Unknown").ToList();
+                @return[ItemEvents.GetInstance().GetEventNormal((uint)lootbox.m_lootboxType)] = lootbox.m_shopCards.Select(l => GetString(l.m_cardText) ?? "Unknown").ToList();
             }
 
             return @return;

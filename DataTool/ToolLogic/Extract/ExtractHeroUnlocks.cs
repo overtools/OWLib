@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using DataTool.DataModels;
-using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic.Unlock;
-using DataTool.ToolLogic.List;
 using OWLib;
-using STULib.Types;
+using STULib.Types.Generic;
+using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
@@ -88,7 +86,7 @@ namespace DataTool.ToolLogic.Extract {
         public List<STUHero> GetHeroes() {
             var @return = new List<STUHero>();
             foreach (ulong key in TrackedFiles[0x75]) {
-                var hero = GetInstance<STUHero>(key);
+                var hero = GetInstanceNew<STUHero>(key);
                 // if (hero?.Name == null || hero.LootboxUnlocks == null) continue;
 
                 @return.Add(hero);
@@ -149,16 +147,13 @@ namespace DataTool.ToolLogic.Extract {
             
             foreach (STUHero hero in heroes) {
                 if (hero == null) continue;
-                string heroNameActual = GetString(hero.Name);
-                string heroFileName = GetValidFilename(heroNameActual);
+                string heroNameActual = GetString(hero.m_0EDCE350);
 
-                if (heroFileName == null) {
+                if (heroNameActual == null) {
                     continue;
                     // heroFileName = "Unknown";
                     // heroNameActual = "Unknown";
                 }
-                heroNameActual = heroNameActual.TrimEnd(' ');
-                heroFileName = heroFileName.TrimEnd(' ');
 
                 Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
                 foreach (string key in new [] {heroNameActual.ToLowerInvariant(), "*"}) {
@@ -172,21 +167,65 @@ namespace DataTool.ToolLogic.Extract {
                     }
                 }
                 
+                heroNameActual = heroNameActual.TrimEnd(' ');
+                string heroFileName = GetValidFilename(heroNameActual);
+                
                 if (config.Count == 0) continue;
+
+                string heroPath = Path.Combine(basePath, RootDir, heroFileName);
                 
-                var unlocks = GetInstance<STUHeroUnlocks>(hero.LootboxUnlocks);
-                
-                if (unlocks?.Unlocks == null && !npc)
+                VoiceSet voiceSet = new VoiceSet(hero);
+                ProgressionUnlocks progressionUnlocks = new ProgressionUnlocks(hero);
+                if (progressionUnlocks.LevelUnlocks == null && !npc) {
                     continue;
-                if (unlocks?.LootboxUnlocks != null && npc) {
+                }
+                if (progressionUnlocks.LootBoxesUnlocks != null && npc) {
+                    continue;
+                }
+
+                if (progressionUnlocks.OtherUnlocks != null) { // achievements and stuff
+                    Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
+                    SaveUnlocks(flags, progressionUnlocks.OtherUnlocks, heroPath, "Achievement", config, tags, voiceSet);
+                }
+
+                if (progressionUnlocks.LevelUnlocks != null) { // default unlocks
+                    Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
+                    foreach (LevelUnlocks levelUnlocks in progressionUnlocks.LevelUnlocks) {
+                        SaveUnlocks(flags, levelUnlocks.Unlocks, heroPath, "Default", config, tags, voiceSet);
+                    }
+                }
+
+                if (progressionUnlocks.LootBoxesUnlocks != null) {
+                    foreach (LootBoxUnlocks lootBoxUnlocks in progressionUnlocks.LootBoxesUnlocks) {
+                        if (lootBoxUnlocks.Unlocks == null) continue;
+                        string lootboxName;
+                        if (!ItemEvents.GetInstance().EventsNormal.ContainsKey((uint)lootBoxUnlocks.LootBoxType)) {
+                            lootboxName = $"Unknown{lootBoxUnlocks.LootBoxType}";
+                        } else {
+                            lootboxName = ItemEvents.GetInstance().EventsNormal[(uint)lootBoxUnlocks.LootBoxType];
+                        }
+                        
+                        var tags = new Dictionary<string, TagExpectedValue> {
+                            {"event", new TagExpectedValue(lootboxName.Replace(" ", "").ToLowerInvariant())}
+                        };
+
+                        SaveUnlocks(flags, lootBoxUnlocks.Unlocks, heroPath, lootboxName, config, tags, voiceSet);
+                    }
+                }
+
+                /*var unlocks = GetInstanceNew<STUProgressionUnlocks>(hero.m_heroProgression);
+                
+                if (unlocks?.m_7846C401 == null && !npc)
+                    continue;
+                if (unlocks?.m_lootBoxesUnlocks != null && npc) {
                     continue;
                 }
                 
                 Log($"Processing data for {heroNameActual}...");
                 
-                List<Unlock> weaponSkins = ListHeroUnlocks.GetUnlocksForHero(hero.LootboxUnlocks)?.SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList(); // eww?
+                List<Unlock> weaponSkins = ListHeroUnlocks.GetUnlocksForHero(hero.m_heroProgression)?.SelectMany(x => x.Value.Where(y => y.Type == "Weapon")).ToList(); // eww?
 
-                var achievementUnlocks = GatherUnlocks(unlocks?.SystemUnlocks?.Unlocks?.Select(it => (ulong)it)).ToList();
+                var achievementUnlocks = GatherUnlocks(unlocks?.m_otherUnlocks?.m_unlocks.Select(x => (ulong)x.GUID)).ToList();
                 foreach (Unlock itemInfo in achievementUnlocks) {
                     if (itemInfo == null) continue;
                     Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
@@ -194,16 +233,16 @@ namespace DataTool.ToolLogic.Extract {
                 }
 
                 if (npc) {
-                    foreach (STUHeroSkin skin in hero.Skins) {
-                        if (config.ContainsKey("skin") && config["skin"].ShouldDo(GetFileName(skin.SkinOverride))) {
+                    foreach (var skin in hero.m_skinThemes) {
+                        if (config.ContainsKey("skin") && config["skin"].ShouldDo(GetFileName(skin.m_5E9665E3))) {
                             Skin.Save(flags, $"{basePath}\\{RootDir}", hero, skin);
                         }
                     }
                     continue;
                 }
 
-                foreach (var defaultUnlocks in unlocks.Unlocks)  {
-                    var dUnlocks = GatherUnlocks(defaultUnlocks.Unlocks.Select(it => (ulong) it)).ToList();
+                foreach (var defaultUnlocks in unlocks.m_7846C401)  {
+                    var dUnlocks = GatherUnlocks(defaultUnlocks.m_unlocks.m_unlocks.Select(it => (ulong) it)).ToList();
                     
                     foreach (Unlock itemInfo in dUnlocks) {
                         Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue("base")}};
@@ -211,20 +250,20 @@ namespace DataTool.ToolLogic.Extract {
                     }
                 }
 
-                foreach (var eventUnlocks in unlocks.LootboxUnlocks) {
-                    if (eventUnlocks?.Unlocks?.Unlocks == null) continue;
+                foreach (var eventUnlocks in unlocks.m_lootBoxesUnlocks) {
+                    if (eventUnlocks?.m_unlocks?.m_unlocks == null) continue;
 
                     string eventKey;
-                    if (!ItemEvents.GetInstance().EventsNormal.ContainsKey((uint) eventUnlocks.Event)) {
-                        eventKey = $"Unknown{eventUnlocks.Event}";
+                    if (!ItemEvents.GetInstance().EventsNormal.ContainsKey((uint) eventUnlocks.m_lootboxType)) {
+                        eventKey = $"Unknown{eventUnlocks.m_lootboxType}";
                     } else {
-                        eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.Event];
+                        eventKey = ItemEvents.GetInstance().EventsNormal[(uint)eventUnlocks.m_lootboxType];
                     }
-                    var eUnlocks = eventUnlocks.Unlocks.Unlocks.Select(it => GatherUnlock(it)).ToList();
+                    var eUnlocks = eventUnlocks.m_unlocks.m_unlocks.Select(it => GatherUnlock(it)).ToList();
 
                     foreach (Unlock itemInfo in eUnlocks) {
                         if (itemInfo == null) continue;
-                        Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue(eventUnlocks.Event.ToString().ToLowerInvariant())}};
+                        Dictionary<string, TagExpectedValue> tags = new Dictionary<string, TagExpectedValue> {{"event", new TagExpectedValue(eventUnlocks.m_lootboxType.ToString().ToLowerInvariant())}};
                         SaveItemInfo(itemInfo, basePath, heroFileName, flags, hero, eventKey, config, tags, weaponSkins);
                     }
                 }
@@ -238,16 +277,77 @@ namespace DataTool.ToolLogic.Extract {
                 guiInfo.SetTextureName(hero.ImageResource2, "Portrait");
                 guiInfo.SetTextureName(hero.ImageResource4, "Avatar");
                 guiInfo.SetTextureName(hero.SpectatorIcon, "SpectatorIcon");
-                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, RootDir, heroFileName, "GUI"), guiInfo);
+                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, RootDir, heroFileName, "GUI"), guiInfo);*/
             }
         }
 
-        public void SaveItemInfo(Unlock itemInfo, string basePath, string heroFileName, ICLIFlags flags, STUHero hero, 
+        public void SaveUnlocks(ICLIFlags flags, Unlock[] unlocks, string path, string eventKey,
+            Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, VoiceSet voiceSet) {
+            foreach (Unlock unlock in unlocks) {
+                SaveUnlock(flags, unlock, path, eventKey, config, tags, voiceSet);
+            }
+        }
+
+        public void SaveUnlock(ICLIFlags flags, Unlock unlock, string path, string eventKey,
+            Dictionary<string, ParsedArg> config,
+            Dictionary<string, TagExpectedValue> tags, VoiceSet voiceSet) {
+            string rarity;
+
+            if (unlock.STU.m_0B1BA7C1 == null) {
+                rarity = unlock.Rarity.ToString();
+                tags["leagueTeam"] = new TagExpectedValue("none");
+            } else {
+                TeamDefinition teamDef = new TeamDefinition(unlock.STU.m_0B1BA7C1);
+                tags["leagueTeam"] = new TagExpectedValue(teamDef.Abbreviation,  // NY
+                    teamDef.Location,  // New York
+                    teamDef.Name,  // Excelsior
+                    teamDef.FullName,  // New York Excelsior
+                    "*");  // all
+                
+                // nice file structure
+                rarity = "";
+                eventKey = "League";
+            }
+            tags["rarity"] = new TagExpectedValue(unlock.Rarity.ToString());
+            
+            string thisPath = Path.Combine(path, unlock.Type, eventKey, rarity, GetValidFilename(unlock.Name).Replace(".", ""));
+            
+            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SprayPaint))) {
+                SprayAndIcon.Save(flags, thisPath, unlock);
+            }
+            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_AvatarPortrait))) {
+                SprayAndIcon.Save(flags, thisPath, unlock);
+            }
+            
+            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_POTGAnimation))) {
+                AnimationItem.Save(flags, thisPath, unlock);
+            }
+            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_Emote))) {
+                AnimationItem.Save(flags, thisPath, unlock);
+            }
+            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_Pose))) {
+                AnimationItem.Save(flags, thisPath, unlock);
+            }
+
+            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_VoiceLine))) {
+                VoiceLine.Save(flags, thisPath, unlock, voiceSet);
+            }
+        }
+
+        private static bool ShouldDo(Unlock unlock, Dictionary<string, ParsedArg> config,
+            Dictionary<string, TagExpectedValue> tags, Type unlockType) {
+
+            string type = Unlock.GetTypeName(unlockType);
+            string typeLower = type.ToLowerInvariant();
+            return unlock.Type == type && config.ContainsKey(typeLower) && config[typeLower].ShouldDo(unlock.Name, tags);
+        }
+
+        /*public void SaveItemInfo(Unlock itemInfo, string basePath, string heroFileName, ICLIFlags flags, STUHero hero, 
             string eventKey, Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, List<Unlock> weaponSkins) {
             if (itemInfo?.STU == null) return;
 
             if (itemInfo.STU.LeagueTeam != null) {
-                STULeagueTeam team = GetInstance<STULeagueTeam>(itemInfo.STU.LeagueTeam);
+                STULeagueTeam team = GetInstanceNew<STULeagueTeam>(itemInfo.STU.LeagueTeam);
                 tags["leagueTeam"] = new TagExpectedValue(GetString(team.Abbreviation),  // NY
                     GetString(team.Location),  // New York
                     GetString(team.Name),  // Excelsior
@@ -285,6 +385,6 @@ namespace DataTool.ToolLogic.Extract {
             if (itemInfo.Type == "VoiceLine" && config.ContainsKey("voiceline") && config["voiceline"].ShouldDo(itemInfo.Name, tags)) {
                 VoiceLine.SaveItem(basePath, heroFileName, RootDir, eventKey, flags, itemInfo, hero);
             }
-        }
+        }*/
     }
 }

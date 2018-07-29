@@ -69,11 +69,11 @@ namespace DataTool.Helper {
             }
         }
 
-        public static HashSet<Unlock> GatherUnlocks(IEnumerable<ulong> GUIDs) {
+        public static HashSet<Unlock> GatherUnlocks(IEnumerable<ulong> guids) {
             var @return = new HashSet<Unlock>();
-            if (GUIDs == null) return @return;
-            foreach (var GUID in GUIDs) {
-                var unlock = GatherUnlock(GUID);
+            if (guids == null) return @return;
+            foreach (var guid in guids) {
+                var unlock = GatherUnlock(guid);
                 if (unlock == null) continue;
                 @return.Add(unlock);
             }
@@ -81,7 +81,8 @@ namespace DataTool.Helper {
         }
 
         public static Unlock GatherUnlock(ulong key) {
-            STUUnlock unlock = GetInstance<STUUnlock>(key);
+            throw new NotImplementedException();
+            /*STUUnlock unlock = GetInstance<STUUnlock>(key);
             if (unlock == null) return null;
 
             string name = GetString(unlock.CosmeticName);
@@ -98,7 +99,7 @@ namespace DataTool.Helper {
             if (name == null)
                 name = $"{GUID.LongKey(key):X12}";
 
-            return new Unlock(name, unlock.CosmeticRarity.ToString(), unlock.RealName, description, availableIn, unlock, key);
+            return new Unlock(name, unlock.CosmeticRarity.ToString(), unlock.RealName, description, availableIn, unlock, key);*/
         }
     }
 }

@@ -20,25 +20,6 @@ namespace DataTool.ToolLogic.List {
             throw new NotImplementedException();
         }
 
-        [JsonObject(MemberSerialization.OptOut)]
-        public class HeroInfo {
-            public string Name;
-            public string Description;
-            public teColorRGBA Color;
-            public List<Loadout> Loadouts;
-
-            [JsonConverter(typeof(GUIDConverter))]
-            public ulong GUID;
-            
-            public HeroInfo(ulong guid, string name, string description, teColorRGBA color, List<Loadout> loadouts) {
-                GUID = guid;
-                Name = name;
-                Description = description;
-                Color = color;
-                Loadouts = loadouts;
-            }
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             Dictionary<string, Hero> heroes = GetHeroes();
 

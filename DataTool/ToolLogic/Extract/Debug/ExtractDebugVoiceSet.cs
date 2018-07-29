@@ -2,11 +2,9 @@
 using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
-using STULib.Types;
 using TankLib;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
-using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-voiceset", Description = "Extract VoiceSets (debug)", TrackTypes = new ushort[] {0x5F}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]

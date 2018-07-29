@@ -48,8 +48,8 @@ namespace STULib.Types {
         [STUField(0xFA2D81E7)]
         public byte m_FA2D81E7;
 
-        public string EventNameNormal => ItemEvents.GetInstance().GetEventNormal((ulong)Event);
-        public string EventName => ItemEvents.GetInstance().GetEvent((ulong)Event);
+        public string EventNameNormal => ItemEvents.GetInstance().GetEventNormal((uint)Event);
+        public string EventName => ItemEvents.GetInstance().GetEvent((uint)Event);
     }
     
     [STU(0x819B4F6D, "STULootBoxShopCard")]

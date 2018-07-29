@@ -1,48 +1,54 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using DataTool.DataModels;
 using DataTool.Flag;
+using DataTool.Helper;
 using OWLib;
 using OWLib.Types.Chunk;
-using STULib.Types;
-using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.IO;
+using TankLib.STU.Types;
 
 namespace DataTool.SaveLogic.Unlock {
-    public class VoiceLine {
-        public static void SaveItem(string basePath, string heroName, string containerName, string folderName, ICLIFlags flags, DataModels.Unlock item, STUHero hero) {
-            if (item == null) return;
-            if (!(item.STU is STUUnlock_VoiceLine vl)) return;
-            const string type = "VoiceLines";
-            string name = GetValidFilename(item.Name).Replace(".", "");
-
-            STUVoiceSetComponent soundSetComponentContainer = GetInstance<STUVoiceSetComponent>(hero.EntityMain);
-
-            if (soundSetComponentContainer?.VoiceSet == null) {
-                Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found");
-                return;
-            }
+    public static class VoiceLine {
+        public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock, VoiceSet voiceSet) {
+            if (voiceSet == null) return;
             
-            FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            FindLogic.Combo.Find(info, soundSetComponentContainer.VoiceSet);
+            if (!(unlock.STU is STUUnlock_VoiceLine vl)) return;
 
-            FindLogic.Combo.VoiceSetInfo voiceSetInfo = info.VoiceSets[soundSetComponentContainer.VoiceSet];
-            
-            List<FindLogic.Combo.VoiceLineInstanceInfo> voiceLineInstances = new List<FindLogic.Combo.VoiceLineInstanceInfo>();
-            using (Stream vlStream = OpenFile(vl.EffectResource)) {
+            HashSet<ulong> voiceLines = new HashSet<ulong>();
+            using (Stream vlStream = IO.OpenFile(vl.m_F57B051E)) {
                 using (Chunked vlChunk = new Chunked(vlStream)) {
                     foreach (SVCE svce in vlChunk.GetAllOfTypeFlat<SVCE>()) {
                         if (svce == null) continue;
-                        if (voiceSetInfo.VoiceLineInstances.ContainsKey(svce.Data.VoiceStimulus)) {
-                            voiceLineInstances.AddRange(voiceSetInfo.VoiceLineInstances[svce.Data.VoiceStimulus]);
+
+                        if (voiceSet.Stimuli.ContainsKey(svce.Data.VoiceStimulus)) {
+                            foreach (var voiceLine in voiceSet.Stimuli[svce.Data.VoiceStimulus]) {
+                                voiceLines.Add(voiceLine);
+                            }
                         }
                     }
                 }
             }
             
-            string output = Path.Combine(basePath, containerName, heroName ?? "", type, folderName, name);
-            Combo.SaveVoiceStimuli(flags, output, info, voiceLineInstances, false);
+            SaveVoiceLines(flags, voiceLines, voiceSet, directory);
+        }
+        
+        public static void SaveVoiceLines(ICLIFlags flags, HashSet<ulong> lines, VoiceSet voiceSet, string directory) {
+            FindLogic.Combo.ComboInfo fakeComboInfo = new FindLogic.Combo.ComboInfo();
+
+            foreach (ulong line in lines) {
+                VoiceLineInstance voiceLineInstance = voiceSet.VoiceLines[line];
+
+                SaveVoiceLine(flags, voiceLineInstance, directory, fakeComboInfo);
+            }
+        }
+
+        public static void SaveVoiceLine(ICLIFlags flags, VoiceLineInstance voiceLineInstance, string directory, FindLogic.Combo.ComboInfo combo) {
+            foreach (ulong soundFile in voiceLineInstance.VoiceSounds) {
+                FindLogic.Combo.SoundFileInfo fakeSoundFileInfo = new FindLogic.Combo.SoundFileInfo(soundFile);
+                combo.VoiceSoundFiles[soundFile] = fakeSoundFileInfo;
+                
+                Combo.SaveSoundFile(flags, directory, combo, soundFile, true);
+            }
         }
     }
 }

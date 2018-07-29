@@ -1730,7 +1730,7 @@
     <Compile Include="STU\Types\STU_2B17E5B4.cs" />
     <Compile Include="STU\Types\STU_2B2E2F6D.cs" />
     <Compile Include="STU\Types\STU_2B33EE38.cs" />
-    <Compile Include="STU\Types\STU_2B407D38.cs" />
+    <Compile Include="STU\Types\STUVoiceLineSet.cs" />
     <Compile Include="STU\Types\STU_2B4E4CB2.cs" />
     <Compile Include="STU\Types\STU_2B4F838B.cs" />
     <Compile Include="STU\Types\STU_2B502958.cs" />
@@ -2050,7 +2050,7 @@
     <Compile Include="STU\Types\STU_408BEEE0.cs" />
     <Compile Include="STU\Types\STU_40A335F4.cs" />
     <Compile Include="STU\Types\STU_40AC5AE4.cs" />
-    <Compile Include="STU\Types\STU_40DA6CDF.cs" />
+    <Compile Include="STU\Types\STUVoiceLine.cs" />
     <Compile Include="STU\Types\STU_40E05F6B.cs" />
     <Compile Include="STU\Types\STU_41043472.cs" />
     <Compile Include="STU\Types\STU_412635DE.cs" />

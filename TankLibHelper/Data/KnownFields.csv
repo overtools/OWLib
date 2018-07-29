@@ -491,3 +491,8 @@ C16160E2, m_dataFlowGUID
 75161A21, m_lineGUID
 1A8738BF, m_stimuliGUID
 03EB0E34, m_lootBoxGUID
+BC474019, m_voiceLineRuntime
+D0C28030, m_effectHardpoint
+DDF3EE5C, m_voiceConversation
+386B8E9C, m_externalSound
+BA5545D6, m_set

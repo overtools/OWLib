@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.Flag;
+using TankLib;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
-using TankLib;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-shaderhashes", Description = "Extract shader hashes (debug)", TrackTypes = new ushort[] {0x86}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]

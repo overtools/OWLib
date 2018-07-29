@@ -27,10 +27,40 @@ namespace TankLibHelper.Modes {
             MapCMF("enUS"); // heck
 
             foreach (ulong file in Types[type]) {
+                //if (teResourceGUID.Index(file) != 0x1B) {
+                //    continue;
+                //}
+                
                 string filename = teResourceGUID.AsString(file);
                 using (Stream stream = OpenFile(file)) {
                     if (stream == null) continue;
                     teStructuredData structuredData = new teStructuredData(stream);
+
+                    STUVoiceSet voiceSet = structuredData.GetInstance<STUVoiceSet>();
+
+                    if (voiceSet?.m_voiceLineInstances == null) continue;
+                    foreach (STUVoiceLineInstance lineInstance in voiceSet.m_voiceLineInstances) {
+                        if (lineInstance.m_voiceLineRuntime != null) {
+                            teResourceGUID stimuli = lineInstance.m_voiceLineRuntime.m_stimulus;
+                            teResourceGUID convo = lineInstance.m_voiceLineRuntime.m_voiceConversation;
+
+                            //if (teResourceGUID.Index(stimuli) != 0x2C1) continue;
+                            
+                            if (lineInstance.m_voiceLineRuntime.m_4FF98D41 != null) {
+                                var condition = lineInstance.m_voiceLineRuntime.m_4FF98D41;
+                                if (condition is STU_32A19631 condA) {
+                                    if (condA.m_4FF98D41 is STU_D815520F heroCond) {
+                                        
+                                    }
+                                }
+                            }
+
+                            if (convo != 0) {
+                                STUVoiceStimulus stimulus = GetInst<STUVoiceStimulus>(stimuli);
+                                STUVoiceConversation conversation = GetInst<STUVoiceConversation>(convo);
+                            }
+                        }
+                    }
                 }
             }
             

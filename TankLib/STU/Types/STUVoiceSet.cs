@@ -8,8 +8,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF51B70C4, "m_voiceLineInstances", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUVoiceLineInstance[] m_voiceLineInstances;
 
-        [STUFieldAttribute(0x386B8E9C)]
-        public teStructuredDataAssetRef<STUSound> m_386B8E9C;
+        [STUFieldAttribute(0x386B8E9C, "m_externalSound")]
+        public teStructuredDataAssetRef<STUSound> m_externalSound;
 
         [STUFieldAttribute(0x269FC4E9)]
         public teStructuredDataAssetRef<ulong> m_269FC4E9;
