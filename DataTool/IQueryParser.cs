@@ -240,5 +240,22 @@ namespace DataTool {
             }
             return parsedTypes;
         }
+
+        protected Dictionary<string, ParsedArg> GetQuery(Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes, params string[] names) {
+            Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
+            foreach (string name in names) {
+                if (name == null) continue;
+                string theName = name.ToLowerInvariant();
+                if (!parsedTypes.ContainsKey(theName)) continue;
+                foreach (KeyValuePair<string,ParsedArg> parsedArg in parsedTypes[theName]) {
+                    if (config.ContainsKey(parsedArg.Key)) {
+                        config[parsedArg.Key] = config[parsedArg.Key].Combine(parsedArg.Value);
+                    } else {
+                        config[parsedArg.Key] = parsedArg.Value.Combine(null); // clone for safety
+                    }
+                }
+            }
+            return config;
+        }
     }
 }

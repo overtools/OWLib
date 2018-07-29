@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
 using Newtonsoft.Json;
-using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
-using static DataTool.Helper.STUHelper;
-using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-achievements", Description = "List achievements", TrackTypes = new ushort[] {0x68, 0x75}, CustomFlags = typeof(ListFlags))]

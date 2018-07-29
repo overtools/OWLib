@@ -51,20 +51,9 @@ namespace DataTool.ToolLogic.Extract {
                 if (map == null) continue;
                 ListMaps.MapInfo mapInfo = ListMaps.GetMap(key);
                 mapInfo.Name = mapInfo.Name ?? "Title Screen";
-                
-                Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
-                foreach (string name in new [] {mapInfo.Name, mapInfo.NameB, mapInfo.UniqueName, GUID.Index(map.MapDataResource1).ToString("X"), "*"}) {
-                    if (name == null) continue;
-                    string theName = name.ToLowerInvariant();
-                    if (!parsedTypes.ContainsKey(theName)) continue;
-                    foreach (KeyValuePair<string,ParsedArg> parsedArg in parsedTypes[theName]) {
-                        if (config.ContainsKey(parsedArg.Key)) {
-                            config[parsedArg.Key] = config[parsedArg.Key].Combine(parsedArg.Value);
-                        } else {
-                            config[parsedArg.Key] = parsedArg.Value.Combine(null); // clone for safety
-                        }
-                    }
-                }
+
+                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, mapInfo.Name, mapInfo.NameB,
+                    mapInfo.UniqueName, GUID.Index(map.MapDataResource1).ToString("X"), "*");
                 
                 if (config.Count == 0) continue;
                 

@@ -71,17 +71,7 @@ namespace DataTool.ToolLogic.Extract {
 
                 string heroNameActual = (GetString(hero.m_0EDCE350) ?? $"Unknown{GUID.Index(heroFile)}").TrimEnd(' ');
 
-                Dictionary<string, ParsedArg> config = new Dictionary<string, ParsedArg>();
-                foreach (string key in new [] {heroNameActual.ToLowerInvariant(), "*"}) {
-                    if (!parsedTypes.ContainsKey(key)) continue;
-                    foreach (KeyValuePair<string,ParsedArg> parsedArg in parsedTypes[key]) {
-                        if (config.ContainsKey(parsedArg.Key)) {
-                            config[parsedArg.Key] = config[parsedArg.Key].Combine(parsedArg.Value);
-                        } else {
-                            config[parsedArg.Key] = parsedArg.Value.Combine(null); // clone for safety
-                        }
-                    }
-                }
+                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*");
                 
                 if (config.Count == 0) continue;
                 
