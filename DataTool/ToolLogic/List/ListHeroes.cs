@@ -36,7 +36,7 @@ namespace DataTool.ToolLogic.List {
                 if (hero.Value.Description != null)
                     Log($"{indentLevel + 1}Description: {hero.Value.Description}");
                 
-                Log($"{indentLevel + 1}Color: {hero.Value.GalleryColor}");
+                Log($"{indentLevel + 1}Color: {hero.Value.GalleryColor.ToHex()}");
 
                 if (hero.Value.Loadouts != null) {
 

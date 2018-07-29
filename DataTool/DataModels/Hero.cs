@@ -15,6 +15,7 @@ namespace DataTool.DataModels {
         
         public string Name;
         public string Description;
+        
         public teColorRGBA GalleryColor;
 
         public List<Loadout> Loadouts;

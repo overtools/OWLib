@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Drawing;
+using Newtonsoft.Json;
 
 namespace TankLib.Math {
     /// <summary>4 component RGBA color</summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    [JsonObject(MemberSerialization.OptOut)]
     public struct teColorRGBA {
         /// <summary>Red component</summary>
         public float R;
@@ -22,10 +25,24 @@ namespace TankLib.Math {
             if (val.Count != 4) {
                 throw new InvalidDataException();
             }
+
             R = val[0];
             G = val[1];
             B = val[2];
             A = val[3];
+        }
+        
+        public static implicit operator Color(teColorRGBA obj) {
+            return Color.FromArgb (
+                (int) (obj.R * 255f),
+                (int) (obj.G * 255f),
+                (int) (obj.B * 255f)
+            );
+        }
+
+        public string ToHex() {
+            Color c = this;
+            return $"#{c.Name}";
         }
 
         public static bool operator ==(teColorRGBA a, teColorRGBA b) {
