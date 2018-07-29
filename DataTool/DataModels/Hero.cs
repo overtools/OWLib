@@ -15,7 +15,10 @@ namespace DataTool.DataModels {
         
         public string Name;
         public string Description;
+        
+        [JsonIgnore]
         public teColorRGBA GalleryColor;
+        public string HeroColor; // Used for JSON Logging purposes, HEX version of GalleryColor
 
         public List<Loadout> Loadouts;
         public List<HeroSkinTheme> SkinThemes;
@@ -26,6 +29,7 @@ namespace DataTool.DataModels {
             Description = GetDescriptionString(hero.m_3446F580);
             
             GalleryColor = hero.m_heroColor;
+            HeroColor = hero.m_heroColor.ToHex();
 
             //if (hero.m_skinThemes != null) {
             //    SkinThemes = new List<HeroSkinTheme>();
