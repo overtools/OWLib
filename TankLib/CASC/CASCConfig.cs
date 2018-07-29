@@ -17,7 +17,7 @@ namespace TankLib.CASC {
         private BarSeparatedConfig _cdnData;
         private BarSeparatedConfig _versionsData;
 
-        private ProductInstall InstallData;
+        public ProductInstall InstallData;
         
         /// <summary>Build configs</summary>
         public List<KeyValueConfig> Builds { get; private set; }

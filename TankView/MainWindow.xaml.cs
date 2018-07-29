@@ -46,8 +46,11 @@ namespace TankView
                     ProgressSlave.ReportProgress(0, "Idle");
                 }
                 NotifyPropertyChanged(nameof(IsReady));
+                NotifyPropertyChanged(nameof(IsDataReady));
             }
         }
+
+        public bool IsDataReady => IsReady && CASC?.RootHandler?.LoadedAPMWithoutErrors == true;
 
         private ProgressReportSlave ProgressSlave = new ProgressReportSlave();
 
@@ -189,6 +192,11 @@ namespace TankView
                 {
                     Config = CASCConfig.LoadLocalStorageConfig(path, true, CASCSettings.LoadAllLanguages);
 
+                    if(Config.InstallData?.Uid != null && Config.InstallData.Uid != "prometheus")
+                    {
+                        MessageBox.Show($"The branch \"{Config.InstallData.Uid}\" is not supported!\nThis might result in failure to load.\nProceed with caution.", "Unsupported Branch", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    }
+                    
                     CASC = CASCHandler.Open(Config, ProgressSlave);
 
                     BuildTree();
@@ -234,6 +242,17 @@ namespace TankView
                 NotifyPropertyChanged(nameof(GUIDTree));
                 e.Handled = true;
             }
+        }
+        
+        private void OpenOrFocusSimView(object sender, RoutedEventArgs e)
+        {
+            var instance = Application.Current.Windows.OfType<DataToolSimView>().FirstOrDefault();
+            if(instance == null)
+            {
+                instance = new DataToolSimView();
+            }
+            instance.Owner = this;
+            instance.PostInitialize();
         }
 
         private void ExtractFiles(object sender, RoutedEventArgs e)
