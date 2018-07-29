@@ -226,12 +226,7 @@ namespace DataTool.ToolLogic.Extract {
                 if (progressionUnlocks.LootBoxesUnlocks != null) {
                     foreach (LootBoxUnlocks lootBoxUnlocks in progressionUnlocks.LootBoxesUnlocks) {
                         if (lootBoxUnlocks.Unlocks == null) continue;
-                        string lootboxName;
-                        if (!ItemEvents.GetInstance().EventsNormal.ContainsKey((uint)lootBoxUnlocks.LootBoxType)) {
-                            lootboxName = $"Unknown{lootBoxUnlocks.LootBoxType}";
-                        } else {
-                            lootboxName = ItemEvents.GetInstance().EventsNormal[(uint)lootBoxUnlocks.LootBoxType];
-                        }
+                        string lootboxName = GetLootBoxName((uint)lootBoxUnlocks.LootBoxType);
                         
                         var tags = new Dictionary<string, TagExpectedValue> {
                             {"event", new TagExpectedValue(lootboxName.Replace(" ", "").ToLowerInvariant())}
@@ -243,34 +238,39 @@ namespace DataTool.ToolLogic.Extract {
             }
         }
 
-        public void SaveUnlocks(ICLIFlags flags, Unlock[] unlocks, string path, string eventKey,
+        public static void SaveUnlocks(ICLIFlags flags, Unlock[] unlocks, string path, string eventKey,
             Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, VoiceSet voiceSet, STUHero hero) {
+            if (unlocks == null) return;
             foreach (Unlock unlock in unlocks) {
                 SaveUnlock(flags, unlock, path, eventKey, config, tags, voiceSet, hero);
             }
         }
 
-        public void SaveUnlock(ICLIFlags flags, Unlock unlock, string path, string eventKey,
+        public static void SaveUnlock(ICLIFlags flags, Unlock unlock, string path, string eventKey,
             Dictionary<string, ParsedArg> config,
             Dictionary<string, TagExpectedValue> tags, VoiceSet voiceSet, STUHero hero) {
             string rarity;
 
-            if (unlock.STU.m_0B1BA7C1 == null) {
-                rarity = unlock.Rarity.ToString();
-                tags["leagueTeam"] = new TagExpectedValue("none");
-            } else {
-                TeamDefinition teamDef = new TeamDefinition(unlock.STU.m_0B1BA7C1);
-                tags["leagueTeam"] = new TagExpectedValue(teamDef.Abbreviation,  // NY
-                    teamDef.Location,  // New York
-                    teamDef.Name,  // Excelsior
-                    teamDef.FullName,  // New York Excelsior
-                    "*");  // all
+            if (tags != null) {
+                if (unlock.STU.m_0B1BA7C1 == null) {
+                    rarity = unlock.Rarity.ToString();
+                    tags["leagueTeam"] = new TagExpectedValue("none");
+                } else {
+                    TeamDefinition teamDef = new TeamDefinition(unlock.STU.m_0B1BA7C1);
+                    tags["leagueTeam"] = new TagExpectedValue(teamDef.Abbreviation,  // NY
+                        teamDef.Location,  // New York
+                        teamDef.Name,  // Excelsior
+                        teamDef.FullName,  // New York Excelsior
+                        "*");  // all
                 
-                // nice file structure
-                rarity = "";
-                eventKey = "League";
+                    // nice file structure
+                    rarity = "";
+                    eventKey = "League";
+                }
+                tags["rarity"] = new TagExpectedValue(unlock.Rarity.ToString());
+            } else {
+                rarity = ""; // for general unlocks
             }
-            tags["rarity"] = new TagExpectedValue(unlock.Rarity.ToString());
             
             string thisPath = Path.Combine(path, unlock.Type, eventKey, rarity, GetValidFilename(unlock.GetName()).Replace(".", ""));
             
@@ -305,7 +305,15 @@ namespace DataTool.ToolLogic.Extract {
 
             string type = Unlock.GetTypeName(unlockType);
             string typeLower = type.ToLowerInvariant();
+            if (config == null) return true;
             return unlock.Type == type && config.ContainsKey(typeLower) && config[typeLower].ShouldDo(unlock.GetName(), tags);
+        }
+
+        public static string GetLootBoxName(uint type) {
+            if (ItemEvents.GetInstance().EventsNormal.TryGetValue(type, out string lootboxName)) {
+                return lootboxName;
+            }
+            return $"Unknown{type}";
         }
     }
 }

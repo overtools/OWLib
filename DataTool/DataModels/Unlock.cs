@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DataTool.JSON;
 using Newtonsoft.Json;
+using TankLib.STU;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.STUHelper;
@@ -144,7 +145,11 @@ namespace DataTool.DataModels {
 		/// <summary>Get an array of <see cref="Unlock"/> from STUUnlocks</summary>
 		/// <inheritdoc cref="GetArray(System.Collections.Generic.IEnumerable{ulong})"/>>
 	    public static Unlock[] GetArray(STUUnlocks unlocks) {
-		    return GetArray(unlocks?.m_unlocks.Select(x => (ulong) x));
+		    return GetArray(unlocks?.m_unlocks);
 	    }
-    }
+
+		public static Unlock[] GetArray(teStructuredDataAssetRef<STUUnlock>[] unlocks) {
+			return GetArray(unlocks?.Select(x => (ulong) x));
+		}
+	}
 }
