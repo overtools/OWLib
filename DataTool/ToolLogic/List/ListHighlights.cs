@@ -5,7 +5,6 @@ using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using Newtonsoft.Json;
-using STULib.Types;
 using TankLib.Replay;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
@@ -148,14 +147,14 @@ namespace DataTool.ToolLogic.List {
             outputJson.Hero = GetString(hero?.m_0EDCE350);
             outputJson.Player = infoNew.PlayerName;
                 
-            STUUnlock_HighlightIntro intro = GetInstance<STUUnlock_HighlightIntro>(infoNew.HighlightIntro);
-            outputJson.HighlightIntro = GetString(intro.CosmeticName);
+            STUUnlock_POTGAnimation intro = GetInstanceNew<STUUnlock_POTGAnimation>(infoNew.HighlightIntro);
+            outputJson.HighlightIntro = GetString(intro.m_name);
             
             // todo: outputJson.WeaponSkin
             // todo: outputJson.Skin
                 
-            STUHighlightType highlightType = GetInstance<STUHighlightType>(infoNew.HighlightType);
-            outputJson.HighlightType = GetString(highlightType?.Name) ?? "";
+            STU_C25281C3 highlightType = GetInstanceNew<STU_C25281C3>(infoNew.HighlightType);
+            outputJson.HighlightType = GetString(highlightType?.m_description) ?? "";
             return outputJson;
         }
 

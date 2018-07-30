@@ -36,7 +36,6 @@ namespace DataTool.ToolLogic.Extract {
                 
                 string name = GetValidFilename(GetString(loadout.m_9290B942).TrimEnd().Replace(".", "_")) ?? $"Unknown{GUID.Index(key):X}";
                 
-                
                 Combo.ComboInfo info = new Combo.ComboInfo();
                 Combo.Find(info, loadout.m_texture);
                 SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, folderName, name), info);

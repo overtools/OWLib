@@ -1,4 +1,4 @@
-using static CMFLib.CMFHandler;
+using static CMFLib.Helpers;
 
 namespace CMFLib.Prometheus {
     [CMFMetadata(AutoDetectVersion = true, BuildVersions = new uint[] {38024}, App = CMFApplication.Prometheus)]

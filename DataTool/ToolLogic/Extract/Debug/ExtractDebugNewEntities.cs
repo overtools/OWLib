@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using Newtonsoft.Json.Linq;
@@ -42,7 +41,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             MD5HashComparer comparer = new MD5HashComparer();
             Dictionary<MD5Hash, ushort> addedHashes = new Dictionary<MD5Hash, ushort>(comparer);
             Dictionary<MD5Hash, ulong> hashGUIDs = new Dictionary<MD5Hash, ulong>(comparer);
-            var md5 = MD5.Create();
+            //var md5 = MD5.Create();
             
             // key = content hash, value = type
             foreach (KeyValuePair<ulong,ApplicationPackageManifest.Types.PackageRecord> file in Files) {

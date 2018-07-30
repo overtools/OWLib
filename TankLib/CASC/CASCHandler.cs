@@ -25,18 +25,12 @@ namespace TankLib.CASC {
         
         /// <summary>Root file handler</summary>
         public readonly RootHandler RootHandler;
-        
-        /// <summary>Internal file streams</summary>
-        private readonly Dictionary<int, Stream> _dataStreams = new Dictionary<int, Stream>();
-        
-        // /// <summary>Jenkins hash calulator</summary>
-        // private static readonly Jenkins96 Hasher = new Jenkins96();
 
         /// <summary>Config for this handler</summary>
         public readonly CASCConfig Config;
 
         /// <summary>Cached data</summary>
-        public static readonly Cache Cache = new Cache("CASCCache");
+        public static readonly Cache Cache = new Cache("CASCCache"); 
 
         private CASCHandler(CASCConfig config, ProgressReportSlave worker) {
             Config = config;

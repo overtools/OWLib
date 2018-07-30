@@ -89,21 +89,28 @@ namespace TankLib.CASC.Handlers {
                         using (Stream apmStream = casc.OpenFile(apmEnc.Key)) {
                             ApplicationPackageManifest apm = new ApplicationPackageManifest();
                             try {
-                                Console.Out.WriteLine("Loading APM {0}", name);
+                                TankLib.Helpers.Logger.Info("CASC",
+                                    $"Loading APM {Path.GetFileNameWithoutExtension(name)}");
                                 worker?.ReportProgress(0, $"Loading APM {name}...");
                                 apm.Load(name, cmf, apmStream, casc, cmfname, apmLang, worker);
                             } catch (CryptographicException) {
                                 LoadedAPMWithoutErrors = false;
                                 if (!casc.Config.APMFailSilent) {
                                     worker?.ReportProgress(0, "CMF decryption failed");
-                                    Console.Error.WriteLine("CMF Procedure is outdated, cannot parse {0}\r\nPlease update CMFLib", name);
-                                    Debugger.Log(0, "CASC", $"RootHandler: CMF decryption procedure outdated, unable to parse {name}\r\n");
+                                    TankLib.Helpers.Logger.Error("CASC",
+                                        "Fatal - CMF deryption failed. Please update DataTool.");
+                                    Debugger.Log(0, "CASC",
+                                        $"RootHandler: CMF decryption procedure outdated, unable to parse {name}\r\n");
                                     if (Debugger.IsAttached) {
                                         Debugger.Break();
                                     }
+
                                     Environment.Exit(0x636D6614);
                                     //Logger.GracefulExit(0x636D6614);
                                 }
+                            } catch (LocalIndexMissingException) {
+                                // something doesn't exist for this language, we can't load
+                                continue;
                             }
                             APMFiles.Add(apm);
                         }

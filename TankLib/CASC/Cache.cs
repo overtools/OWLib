@@ -1,9 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Net;
-using System.Security.Cryptography;
-using CMFLib;
 using LZ4;
 using TankLib.CASC.Remote;
 
@@ -31,7 +27,6 @@ namespace TankLib.CASC {
                 if (!Directory.Exists(CDNCachePath)) {
                     Directory.CreateDirectory(CDNCachePath);
                 }
-                Console.Out.WriteLine("CASC Cache path is {0}", _cachePath);
             }
 
             if (CacheAPM) {

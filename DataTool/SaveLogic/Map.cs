@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows.Forms;
 using DataTool.Flag;
 using TankLib;
 using TankLib.ExportFormats;
@@ -214,7 +215,7 @@ namespace DataTool.SaveLogic {
             var variantName = GetString(map.m_1C706502);
             if (variantName != null) name = GetValidFilename(variantName);
 
-            Log($"Extracting map {name}\\{teResourceGUID.Index(key):X}");
+            LoudLog($"Extracting map {name}\\{teResourceGUID.Index(key):X}");
             
             // TODO: MAP11 HAS CHANGED
             // TODO: MAP10 TOO?
@@ -257,6 +258,7 @@ namespace DataTool.SaveLogic {
 
                         FindLogic.Combo.Find(info, gameMode.m_6EB38130);  // 004
                         FindLogic.Combo.Find(info, gameMode.m_CF63B633);  // 01B
+                        FindLogic.Combo.Find(info, gameMode.m_7F5B54B2);  // game mode voice set
 
                         foreach (STUGameModeTeam team in gameMode.m_teams) {
                             FindLogic.Combo.Find(info, team.m_bodyScript);  // 01B
@@ -275,16 +277,10 @@ namespace DataTool.SaveLogic {
             Combo.Save(flags, mapPath, info);
             Combo.SaveLooseTextures(flags, Path.Combine(mapPath, "Textures"), info);
             
-            // if (map.VoiceSet != null) {
-            //     FindLogic.Combo.ComboInfo soundInfo = new FindLogic.Combo.ComboInfo();
-            //     FindLogic.Combo.Find(soundInfo, map.VoiceSet);
-            //
-            //     if (soundInfo.VoiceSets.ContainsKey(map.VoiceSet)) {
-            //         string soundPath = Path.Combine(mapPath, "Sound");
-            //         FindLogic.Combo.VoiceSetInfo voiceSetInfo = soundInfo.VoiceSets[map.VoiceSet];
-            //         Combo.SaveVoiceSet(flags, soundPath, soundInfo, voiceSetInfo);
-            //     }
-            // }
+            if (map.m_7F5B54B2 != 0) {
+                FindLogic.Combo.Find(info, map.m_7F5B54B2);
+            }
+            Combo.SaveAllVoiceSets(flags, Path.Combine(mapPath, "Sound"), info);
             
             LoudLog("\tDone");
         }

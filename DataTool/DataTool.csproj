@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConvertLogic\Sound.cs" />
+    <Compile Include="DataModels\Achievement.cs" />
+    <Compile Include="DataModels\GameMode.cs" />
     <Compile Include="DataModels\LootBox.cs" />
     <Compile Include="DataModels\PlayerProgression.cs" />
     <Compile Include="DataModels\Hero.cs" />
@@ -106,7 +108,6 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugPackageFinder.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugShaderHashes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSoundBank.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugType.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVCCE.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVoiceSet.cs" />
@@ -121,7 +122,6 @@
     <Compile Include="ToolLogic\Extract\ExtractFlags.cs" />
     <Compile Include="ToolLogic\Extract\ExtractNPCs.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugHeroSettings.cs" />
-    <Compile Include="ToolLogic\List\Debug\ListDebugUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListAchievements.cs" />
     <Compile Include="ToolLogic\List\ListChatSettings.cs" />
     <Compile Include="ToolLogic\List\ListGameParams.cs" />
@@ -159,10 +159,6 @@
     <ProjectReference Include="..\revorbstd\RevorbStd.csproj">
       <Project>{c3130ece-02d9-4be6-9883-75351822e7de}</Project>
       <Name>RevorbStd</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\STULib\STULib.csproj">
-      <Project>{996012b0-3693-4642-ac44-5aa8865ee44a}</Project>
-      <Name>STULib</Name>
     </ProjectReference>
     <ProjectReference Include="..\TankLib\TankLib.csproj">
       <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>

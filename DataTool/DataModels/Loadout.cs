@@ -2,8 +2,8 @@
 using DataTool.Helper;
 using DataTool.JSON;
 using Newtonsoft.Json;
-using STULib.Types.Enums;
 using TankLib.STU.Types;
+using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels {

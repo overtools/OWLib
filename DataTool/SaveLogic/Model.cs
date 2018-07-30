@@ -72,8 +72,8 @@ namespace DataTool.SaveLogic {
                     writer.Write(materialDataInfo.Textures.LongCount());
                     writer.Write((uint)OWMatType.Material);
                     writer.Write(GUID.Index(materialInfo.ShaderSource));
-                    writer.Write(materialInfo.IDs.Count);
-                    foreach (ulong id in materialInfo.IDs) {
+                    writer.Write(materialInfo.MaterialIDs.Count);
+                    foreach (ulong id in materialInfo.MaterialIDs) {
                         writer.Write(id);
                     }
                     

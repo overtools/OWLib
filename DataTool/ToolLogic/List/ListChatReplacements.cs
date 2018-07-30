@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DataTool.Flag;
 using DataTool.Helper;
-using STULib.Types;
+using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
@@ -10,7 +10,7 @@ using static DataTool.Helper.STUHelper;
 
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-chat-replacements", Description = "List chat replacements", TrackTypes = new ushort[] {0x54, 0x7F}, CustomFlags = typeof(ListFlags))]
+    /*[Tool("list-chat-replacements", Description = "List chat replacements", TrackTypes = new ushort[] {0x54, 0x7F}, CustomFlags = typeof(ListFlags))]
     public class ListChatReplacements : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
@@ -82,5 +82,5 @@ namespace DataTool.ToolLogic.List {
                 }
             }
         }
-    }
+    }*/
 }

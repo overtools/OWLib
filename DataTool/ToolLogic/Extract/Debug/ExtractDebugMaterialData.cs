@@ -16,12 +16,12 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         public void GetSoundbanks(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            //string basePath;
+            //if (toolFlags is ExtractFlags flags) {
+            //    basePath = flags.OutputPath;
+            //} else {
+            //    throw new Exception("no output path");
+            //}
 
             // buffer parts
             /*uint[] missing = {0x72955E70, 0x8CA81224, 0x62081FBD, 0xC1BE91CC, 0xEB5DC7CE, 0xBC78DB46};

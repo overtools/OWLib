@@ -11,8 +11,6 @@ using TankLib.STU;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
-using STUVoiceLineInstance = STULib.Types.STUVoiceLineInstance;
-using STUVoiceSet = STULib.Types.STUVoiceSet;
 
 namespace DataTool.FindLogic {
     public static class Combo {
@@ -164,9 +162,10 @@ namespace DataTool.FindLogic {
             public ulong GUIDx06F;
             public ulong GUIDx09B;
             public ulong GUIDx03C;
-            public ulong GUIDx070;
-            public ulong GUIDx02C;
+            public ulong VoiceLineSet;
+            public ulong ExternalSound;
             public ulong VoiceStimulus;
+            public ulong VoiceConversation;
             public ulong Subtitle;
             public HashSet<ulong> SoundFiles;
         }
@@ -238,7 +237,7 @@ namespace DataTool.FindLogic {
             // main shader = 44, used to be A5
             // golden = 50
             
-            public HashSet<ulong> IDs;
+            public HashSet<ulong> MaterialIDs;
             
             public MaterialInfo(ulong guid) : base(guid) { }
         }
@@ -305,14 +304,6 @@ namespace DataTool.FindLogic {
             if (replacements == null) return guid;
             if (replacements.ContainsKey(guid)) return replacements[guid];
             return guid;
-        }
-
-        private static ulong GetMapDataRoot(ulong map) {
-            return (map & ~0xFFFFFFFF00000000ul) | 0x0DD0000100000000ul;
-        }
-
-        private static ulong GetMapDataKey(ulong map, ushort type) {
-            return (GetMapDataRoot(map) & ~0xFFFF00000000ul) | ((ulong) type << 32);
         }
         
         public static ComboInfo Find(ComboInfo info, ulong guid, Dictionary<ulong, ulong> replacements=null , ComboContext context=null) {
@@ -576,7 +567,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0x8:
                     if (info.Materials.ContainsKey(guid) &&
-                        (info.Materials[guid].IDs.Contains(context.MaterialID) || context.MaterialID == 0)) break;
+                        (info.Materials[guid].MaterialIDs.Contains(context.MaterialID) || context.MaterialID == 0)) break;
                     // ^ break if material exists and has id, or id is 0
                     teMaterial material = new teMaterial(OpenFile(guid));
 
@@ -584,14 +575,14 @@ namespace DataTool.FindLogic {
                     if (!info.Materials.ContainsKey(guid)) {
                         materialInfo = new MaterialInfo(guid) {
                             MaterialData = GetReplacement(material.Header.MaterialData, replacements),
-                            IDs = new HashSet<ulong>()
+                            MaterialIDs = new HashSet<ulong>()
                         };
                         info.Materials[guid] = materialInfo;
                     } else {
                         materialInfo = info.Materials[guid];
                     }
 
-                    materialInfo.IDs.Add(context.MaterialID);
+                    materialInfo.MaterialIDs.Add(context.MaterialID);
                     materialInfo.ShaderSource = GetReplacement(material.Header.ShaderSource, replacements);
 
                     if (context.ModelLook == 0 && context.Model != 0) {
@@ -806,43 +797,42 @@ namespace DataTool.FindLogic {
                     SoundInfoNew soundInfo = new SoundInfoNew(guid);
                     info.Sounds[guid] = soundInfo;
 
-                    // todo m_versionedBankData is gone
-                    /*if (sound.m_versionedBankData != null) {
-                        if (sound.m_versionedBankData.m_soundWEMFiles != null) {
+                    if (sound.m_C32C2195 != null) {
+                        if (sound.m_C32C2195.m_soundWEMFiles != null) {
                             soundInfo.SoundFiles = new Dictionary<uint, ulong>();
 
                             int i = 0;
-                            foreach (teStructuredDataAssetRef<ulong> soundWemFile in sound.m_versionedBankData.m_soundWEMFiles) {
+                            foreach (teStructuredDataAssetRef<STU_FBCC5EB2> soundWemFile in sound.m_C32C2195.m_soundWEMFiles) {
                                 Find(info, soundWemFile, replacements, context);
                                 
-                                soundInfo.SoundFiles[sound.m_versionedBankData.m_wwiseWEMFileIDs[i]] = GetReplacement(soundWemFile, replacements);
+                                soundInfo.SoundFiles[sound.m_C32C2195.m_wwiseWEMFileIDs[i]] = GetReplacement(soundWemFile, replacements);
                                 i++;
                             }
                         }
-                        if (sound.m_versionedBankData.m_soundWEMStreams != null) {
+                        if (sound.m_C32C2195.m_soundWEMStreams != null) {
                             soundInfo.SoundStreams = new Dictionary<uint, ulong>();
                             
                             int i = 0;
-                            foreach (teStructuredDataAssetRef<ulong> soundWemStream in sound.m_versionedBankData.m_soundWEMStreams) {
+                            foreach (teStructuredDataAssetRef<STU_FBCC5EB2> soundWemStream in sound.m_C32C2195.m_soundWEMStreams) {
                                 Find(info, soundWemStream, replacements, context);
                                 
-                                soundInfo.SoundStreams[sound.m_versionedBankData.m_wwiseWEMStreamIDs[i]] = GetReplacement(soundWemStream, replacements);
+                                soundInfo.SoundStreams[sound.m_C32C2195.m_wwiseWEMStreamIDs[i]] = GetReplacement(soundWemStream, replacements);
                                 i++;
                             }
                         }
 
-                        if (sound.m_versionedBankData.m_09D4067B != null) {
-                            foreach (teStructuredDataAssetRef<ulong> soundUnk1 in sound.m_versionedBankData.m_09D4067B) {
+                        if (sound.m_C32C2195.m_09D4067B != null) {
+                            foreach (teStructuredDataAssetRef<STU_C77C3128> soundUnk1 in sound.m_C32C2195.m_09D4067B) {
                                 Find(info, soundUnk1, replacements, context);
                             }
                         }
-                        if (sound.m_versionedBankData.m_4587972B != null) {
-                            foreach (teStructuredDataAssetRef<ulong> soundUnk2 in sound.m_versionedBankData.m_4587972B) {
+                        if (sound.m_C32C2195.m_4587972B != null) {
+                            foreach (teStructuredDataAssetRef<STU_221B83D5> soundUnk2 in sound.m_C32C2195.m_4587972B) {
                                 Find(info, soundUnk2, replacements, context);
                             }
                         }
-                        Find(info, sound.m_versionedBankData.m_soundBank);
-                    }*/
+                        Find(info, sound.m_C32C2195.m_soundBank);
+                    }
                     break;
                 case 0x3F:
                     if (info.SoundFiles.ContainsKey(guid)) break;
@@ -885,7 +875,7 @@ namespace DataTool.FindLogic {
                 case 0x5F:
                     if (info.VoiceSets.ContainsKey(guid)) break;
 
-                    STUVoiceSet voiceSet = GetInstance<STUVoiceSet>(guid);
+                    STUVoiceSet voiceSet = GetInstanceNew<STUVoiceSet>(guid);
 
                     //string firstName = IO.GetString(voiceSet.m_269FC4E9);
                     //string lastName = IO.GetString(voiceSet.m_C0835C08);
@@ -895,24 +885,25 @@ namespace DataTool.FindLogic {
                     VoiceSetInfo voiceSetInfo = new VoiceSetInfo(guid);
                     info.VoiceSets[guid] = voiceSetInfo;
 
-                    if (voiceSet.VoiceLineInstances == null) break;
+                    if (voiceSet.m_voiceLineInstances == null) break;
                     voiceSetInfo.VoiceLineInstances = new Dictionary<ulong, HashSet<VoiceLineInstanceInfo>>();
-                    for (int i = 0; i < voiceSet.VoiceLineInstances.Length; i++) {
-                        STUVoiceLineInstance voiceLineInstance = voiceSet.VoiceLineInstances[i];
+                    for (int i = 0; i < voiceSet.m_voiceLineInstances.Length; i++) {
+                        STUVoiceLineInstance voiceLineInstance = voiceSet.m_voiceLineInstances[i];
                         if (voiceLineInstance == null) continue;
 
                         VoiceLineInstanceInfo voiceLineInstanceInfo =
                             new VoiceLineInstanceInfo {
-                                GUIDx06F = voiceSet.VirtualGUIDs06F[i],
-                                GUIDx09B = voiceSet.VirtualGUIDs09B[i],
-                                GUIDx03C = voiceLineInstance.m_D0C28030,
-                                Subtitle = voiceLineInstance.Subtitle
+                                GUIDx06F = voiceSet.m_voiceLineGuids[i],
+                                GUIDx09B = voiceSet.m_D1ABBE04[i],
+                                GUIDx03C = voiceLineInstance.m_effectHardpoint,
+                                Subtitle = voiceLineInstance.m_43C90056
                             };
-                        if (voiceLineInstance.SoundDataContainer != null) {
-                            voiceLineInstanceInfo.GUIDx070 = voiceLineInstance.SoundDataContainer.GUIDx070;
-                            voiceLineInstanceInfo.VoiceStimulus = voiceLineInstance.SoundDataContainer.VoiceStimulus;
-                            voiceLineInstanceInfo.GUIDx02C = voiceLineInstance.SoundDataContainer.SoundbankMasterResource;
-                            Find(info, voiceLineInstanceInfo.GUIDx02C, replacements, context);
+                        if (voiceLineInstance.m_voiceLineRuntime != null) {
+                            voiceLineInstanceInfo.VoiceLineSet = voiceLineInstance.m_voiceLineRuntime.m_set;
+                            voiceLineInstanceInfo.VoiceStimulus = voiceLineInstance.m_voiceLineRuntime.m_stimulus;
+                            voiceLineInstanceInfo.ExternalSound = voiceLineInstance.m_voiceLineRuntime.m_externalSound;
+                            voiceLineInstanceInfo.VoiceConversation = voiceLineInstance.m_voiceLineRuntime.m_voiceConversation;
+                            Find(info, voiceLineInstanceInfo.ExternalSound, replacements, context);
                         } else {
                             Console.Out.WriteLine("[DataTool.FindLogic.Combo]: ERROR: voice data container was null (please contact the developers)");
                             if (Debugger.IsAttached) {
@@ -923,13 +914,14 @@ namespace DataTool.FindLogic {
                         
                         voiceLineInstanceInfo.SoundFiles = new HashSet<ulong>();
 
-                        if (voiceLineInstance.SoundContainer != null) {
-                            foreach (STULib.Types.STUSoundWrapper soundWrapper in new []{voiceLineInstance.SoundContainer.Sound1, 
-                                voiceLineInstance.SoundContainer.Sound2, voiceLineInstance.SoundContainer.Sound3, 
-                                voiceLineInstance.SoundContainer.Sound4}) {
-                                if (soundWrapper == null) continue;
-                                voiceLineInstanceInfo.SoundFiles.Add(soundWrapper.SoundResource);
-                                Find(info, soundWrapper.SoundResource, replacements, context);
+                        if (voiceLineInstance.m_AF226247 != null) {
+                            foreach (var soundFile in new[] {
+                                voiceLineInstance.m_AF226247.m_1485B834, voiceLineInstance.m_AF226247.m_798027DE,
+                                voiceLineInstance.m_AF226247.m_A84AA2B5, voiceLineInstance.m_AF226247.m_D872E45C
+                            }) {
+                                if (soundFile == null) continue;
+                                voiceLineInstanceInfo.SoundFiles.Add(soundFile.m_3C099E86);
+                                Find(info, soundFile.m_3C099E86, replacements, context);
                             }
                         }
 

@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CMFApplication.cs" />
-    <Compile Include="CMFHandler.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="CMFHeader.cs" />
     <Compile Include="Crypto\Salsa20.cs" />
     <Compile Include="Extensions.cs" />

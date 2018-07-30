@@ -551,7 +551,7 @@ namespace DataTool.ConvertLogic {
                         ss.Read(codebookID);
                         try {
                             library.Rebuild(codebookID.AsInt(), os); // todo: build once and just reuse data.
-                        } catch (CodebookLibrary.InvalidID e) {
+                        } catch (CodebookLibrary.InvalidID) {
                             //         B         C         V
                             //    4    2    4    3    5    6
                             // 0100 0010 0100 0011 0101 0110

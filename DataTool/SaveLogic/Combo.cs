@@ -340,6 +340,12 @@ namespace DataTool.SaveLogic {
         
 
         // helpers (NOT FOR INTERNAL USE)
+        public static void SaveAllVoiceSets(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo soundInfo) {
+            foreach (KeyValuePair<ulong,FindLogic.Combo.VoiceSetInfo> voiceSet in soundInfo.VoiceSets) {
+                SaveVoiceSet(flags, path, soundInfo, voiceSet.Value);
+            }
+        }
+        
         public static void SaveLooseTextures(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
             foreach (FindLogic.Combo.TextureInfoNew textureInfo in info.Textures.Values) {
                 if (!textureInfo.Loose) continue;

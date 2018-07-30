@@ -21,10 +21,10 @@ namespace CMFLib.Prometheus {
             int keytableIndex = Math.Max((2 * digest[13] - length) % 512, 0);
 
             uint kidx = Keytable[keytableIndex];
-            uint increment = header.EntryCount + digest[header.EntryCount % CMFHandler.SHA1_DIGESTSIZE];
+            uint increment = header.EntryCount + digest[header.EntryCount % Helpers.SHA1_DIGESTSIZE];
             for (int i = 0; i != length; ++i) {
                 kidx += increment;
-                buffer[i] = digest[kidx % CMFHandler.SHA1_DIGESTSIZE];
+                buffer[i] = digest[kidx % Helpers.SHA1_DIGESTSIZE];
             }
 
             return buffer;

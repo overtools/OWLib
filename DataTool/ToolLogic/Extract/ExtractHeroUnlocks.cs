@@ -8,7 +8,6 @@ using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic.Unlock;
 using OWLib;
-using STULib.Types.Generic;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
@@ -141,8 +140,6 @@ namespace DataTool.ToolLogic.Extract {
                 QueryHelp(QueryTypes);
                 return;
             }
-            
-            Log("Initializing...");
 
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
@@ -161,6 +158,8 @@ namespace DataTool.ToolLogic.Extract {
                 string heroFileName = GetValidFilename(heroNameActual);
                 
                 if (config.Count == 0) continue;
+                
+                Log($"Processing unlocks for {heroNameActual}");
 
                 string heroPath = Path.Combine(basePath, RootDir, heroFileName);
                 

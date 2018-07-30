@@ -7,7 +7,7 @@
             uint kidx = Keytable[header.BuildVersion & 511];
             uint increment = header.BuildVersion * header.DataCount % 7;
             for (int i = 0; i != length; ++i) {
-                buffer[i] = Keytable[CMFHandler.SignedMod(kidx, 512)];
+                buffer[i] = Keytable[Helpers.SignedMod(kidx, 512)];
                 kidx += increment;
             }
 
@@ -21,7 +21,7 @@
             uint increment = header.EntryCount + digest[header.EntryCount % 20];
             for (int i = 0; i != length; ++i) {
                 kidx += increment;
-                buffer[i] ^= digest[CMFHandler.SignedMod(kidx, CMFHandler.SHA1_DIGESTSIZE)];
+                buffer[i] ^= digest[Helpers.SignedMod(kidx, Helpers.SHA1_DIGESTSIZE)];
             }
 
             return buffer;

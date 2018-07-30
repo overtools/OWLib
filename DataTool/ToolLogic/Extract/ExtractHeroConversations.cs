@@ -106,10 +106,10 @@ namespace DataTool.ToolLogic.Extract {
                     string convoDir = Path.Combine(path, heroNameActual, GetFileName(lineInstance.VoiceConversation));
                     foreach (STUVoiceConversationLine line in conversation.m_voiceConversationLine) {
                         string linePath = Path.Combine(convoDir, line.m_B4D405A1.ToString());
-                        foreach (KeyValuePair<ulong, VoiceSet> voiceSet in heroVoiceSets) {
-                            if (voiceSet.Value.VoiceLines.ContainsKey(line.m_lineGUID)) {
-                                VoiceLine.SaveVoiceLine(flags, lineInstance, linePath, comboInfo);
-                            }
+                        foreach (VoiceSet voiceSet in heroVoiceSets.Values) {
+                            if (voiceSet.VoiceLines.ContainsKey(line.m_lineGUID)) {
+                                VoiceLine.SaveVoiceLine(flags, voiceSet.VoiceLines[line.m_lineGUID], linePath, comboInfo);
+                            }    
                         }
                     }
                 }

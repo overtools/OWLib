@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
 using Newtonsoft.Json;
-using OWLib;
 using TankLib;
-using static STULib.Types.Generic.Common;
 
 namespace DataTool.JSON {
     public class GUIDConverter : JsonConverter {
@@ -14,8 +11,6 @@ namespace DataTool.JSON {
             ulong key;
             if (value is teResourceGUID resourceGUID) {
                 key = resourceGUID;
-            } else if (value is STUGUID guid) {
-                key = guid;
             } else {
                 key = (ulong)value;
             }
@@ -32,17 +27,17 @@ namespace DataTool.JSON {
         }
 
         public override bool CanConvert(Type objectType) {
-            return typeof(STUGUID).IsAssignableFrom(objectType) || typeof(ulong).IsAssignableFrom(objectType);
+            return typeof(teResourceGUID).IsAssignableFrom(objectType) || typeof(ulong).IsAssignableFrom(objectType);
         }
     }
     
     public class GUIDArrayConverter : GUIDConverter {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {          
             ulong[] keys;
-            if (value is STUGUID[] guid) {
-                keys = new ulong[guid.Length];
-                for (int i = 0; i < guid.Length; i++) {
-                    keys[i] = guid[i];
+            if (value is teResourceGUID[] resourceGUIDs) {
+                keys = new ulong[resourceGUIDs.Length];
+                for (int i = 0; i < resourceGUIDs.Length; i++) {
+                    keys[i] = resourceGUIDs[i];
                 }
             } else {
                 keys = (ulong[])value;
@@ -61,7 +56,7 @@ namespace DataTool.JSON {
         }
 
         public override bool CanConvert(Type objectType) {
-            return typeof(STUGUID[]).IsAssignableFrom(objectType) || typeof(ulong[]).IsAssignableFrom(objectType);
+            return typeof(teResourceGUID[]).IsAssignableFrom(objectType) || typeof(ulong[]).IsAssignableFrom(objectType);
         }
     }
 }

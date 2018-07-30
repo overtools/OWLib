@@ -185,9 +185,16 @@ namespace TankLib.CASC {
 
                 if (CASCHandler.Cache.CacheAPM && CacheFileExists(Header.Build)) {
                     worker?.ReportProgress(0, "Loading cached data...");
-                    if (LoadCache(Header.Build)) {  // if cache is invalid, we'll regenerate
-                        GatherFirstCMF(casc, worker);
-                        return;
+                    
+                    try {
+                        if (LoadCache(Header.Build)) {  // if cache is invalid, we'll regenerate
+                            GatherFirstCMF(casc, worker);
+                            return;
+                        }
+                    }
+                    catch {
+                        TankLib.Helpers.Logger.Error("CASC", $"Failed to load APM Cache {Path.GetFileName(CacheFile(Header.Build))}");
+                        File.Delete(CacheFile(Header.Build));
                     }
                 }
 
@@ -195,13 +202,40 @@ namespace TankLib.CASC {
                 Records = new Types.PackageRecord[Header.PackageCount][];
                 PackageSiblings = new ulong[Header.PackageCount][];
                 worker?.ReportProgress(0, $"Loading {Name} packages");
-                int c = 0;
+                try {
+                    LoadPackages(casc, worker);
+                } catch (AggregateException e) {
+                    // return nice exception to RootHandler
+                    if (e.InnerException != null) {
+                        throw e.InnerException;
+                    }
+                }
+            }
+            if (!Console.IsOutputRedirected) {
+                Console.Write(new string(' ', Console.WindowWidth-1)+"\r");
+            }
+
+            if (CASCHandler.Cache.CacheAPM) {
+                TankLib.Helpers.Logger.Debug("CASC", $"Caching APM {name}");
+                worker?.ReportProgress(0, "Caching data...");
+                SaveCache(Header.Build);
+            }
+
+            GatherFirstCMF(casc, worker);
+        }
+
+        private void LoadPackages(CASCHandler casc, ProgressReportSlave worker) {
+            int c = 0;
                 Parallel.For(0, Header.PackageCount, new ParallelOptions {
                     MaxDegreeOfParallelism = CASCConfig.MaxThreads
                 }, i => {
                     c++;
-                    if (worker != null && i % 500 == 0) {
-                        worker.ReportProgress((int)((float)c / Header.PackageCount * 100));
+                    if (c % 1000 == 0) {
+                        if (!Console.IsOutputRedirected) {
+                            Console.Out.Write($"Loading packages: {System.Math.Floor(c / (float)Header.PackageCount * 10000) / 100:F0}% ({c}/{Header.PackageCount})\r");
+                        }
+                        
+                        worker?.ReportProgress((int)((float)c / Header.PackageCount * 100));
                     }
                     Types.PackageEntry entry = PackageEntries[i];
                     if (!CMF.Map.ContainsKey(entry.PackageGUID)) {
@@ -258,14 +292,6 @@ namespace TankLib.CASC {
                         }
                     }
                 });
-            }
-
-            if (CASCHandler.Cache.CacheAPM) {
-                worker?.ReportProgress(0, "Caching data...");
-                SaveCache(Header.Build);
-            }
-
-            GatherFirstCMF(casc, worker);
         }
 
         private bool CacheFileExists(ulong build) => File.Exists(CacheFile(build));
