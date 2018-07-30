@@ -5091,6 +5091,7 @@
     <Compile Include="teAssetPackagePayload.cs" />
     <Compile Include="teChunkedData.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="teMap.cs" />
     <Compile Include="teMapChunk.cs" />
     <Compile Include="teMaterial.cs" />
     <Compile Include="teMaterialData.cs" />

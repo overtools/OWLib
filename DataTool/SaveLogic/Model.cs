@@ -61,18 +61,24 @@ namespace DataTool.SaveLogic {
                     FindLogic.Combo.MaterialDataInfo materialDataInfo = Info.MaterialDatas[MaterialInfo.MaterialData];
                     writer.Write(VersionMajor);
                     writer.Write(VersionMinor);
-                    writer.Write(materialDataInfo.Textures.LongCount());
+                    if (materialDataInfo.Textures != null) {
+                        writer.Write(materialDataInfo.Textures.LongCount());
+                    } else {
+                        writer.Write(0L);
+                    }
                     writer.Write((uint)OWMatType.Material);
                     writer.Write(teResourceGUID.Index(MaterialInfo.ShaderSource));
                     writer.Write(MaterialInfo.MaterialIDs.Count);
                     foreach (ulong id in MaterialInfo.MaterialIDs) {
                         writer.Write(id);
                     }
-                    
-                    foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.Textures) {
-                        FindLogic.Combo.TextureInfoNew textureInfo = Info.Textures[texture.Key];
-                        writer.Write($"..\\Textures\\{textureInfo.GetNameIndex()}.dds");
-                        writer.Write(texture.Value);
+
+                    if (materialDataInfo.Textures != null) {
+                        foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.Textures) {
+                            FindLogic.Combo.TextureInfoNew textureInfo = Info.Textures[texture.Key];
+                            writer.Write($"..\\Textures\\{textureInfo.GetNameIndex()}.dds");
+                            writer.Write(texture.Value);
+                        }
                     }
                 }
             }

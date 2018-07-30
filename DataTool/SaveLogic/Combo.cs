@@ -329,8 +329,10 @@ namespace DataTool.SaveLogic {
             
             SaveOWMaterialFile(path, materialInfo, info);
 
-            foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.Textures) {
-                SaveTexture(flags, textureDirectory, info, texture.Key);
+            if (materialDataInfo.Textures != null) {
+                foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.Textures) {
+                    SaveTexture(flags, textureDirectory, info, texture.Key);
+                }
             }
         }
         

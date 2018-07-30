@@ -485,8 +485,8 @@ namespace DataTool.ConvertLogic {
                     VorbisPacketHeader vhead = new VorbisPacketHeader(3);
                     os.Write(vhead);
                     
-                    // const string vendor = "Converted from Audiokinetic Wwise by DataTool";
-                    const string vendor = "converted from Audiokinetic Wwise by ww2ogg 0.24"; // I want the correct checksums for now
+                    const string vendor = "Converted from Audiokinetic Wwise by DataTool";
+                    //const string vendor = "converted from Audiokinetic Wwise by ww2ogg 0.24"; // I want the correct checksums for now
                     
                     BitUint vendorSize = new BitUint(32, (uint)vendor.Length);
                     os.Write(vendorSize);
@@ -1137,9 +1137,10 @@ namespace DataTool.ConvertLogic {
             
             public void Read(BinaryReader reader) {
                 // using a different structure to the wiki :thinking:
-                Location = (SoundLocation)reader.ReadUInt32();
-                
-                byte unknown = reader.ReadByte();
+                Location = (SoundLocation)reader.ReadByte();
+
+                ushort u1 = reader.ReadUInt16();
+                ushort u2 = reader.ReadUInt16();
 
                 SoundID = reader.ReadUInt32();
             }
@@ -1177,7 +1178,7 @@ namespace DataTool.ConvertLogic {
             public uint[] Actions;
             
             public void Read(BinaryReader reader) {
-                uint numActions = reader.ReadUInt32();
+                byte numActions = reader.ReadByte();
 
                 Actions = new uint[numActions];
                 for (int i = 0; i < numActions; i++) {

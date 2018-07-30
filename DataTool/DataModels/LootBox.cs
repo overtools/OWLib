@@ -55,8 +55,9 @@ namespace DataTool.DataModels {
             {5, "Archives"},
             {6, "Anniversary"},
             {7, "Golden"},
-            {8, "Legendary Anniversary"},
-            {9, "Hammond"}
+            {8, "Internal"},
+            {9, "Legendary Anniversary"},
+            {10, "Hammond"}
         };
     }
 

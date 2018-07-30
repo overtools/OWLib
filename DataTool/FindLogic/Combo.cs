@@ -305,6 +305,42 @@ namespace DataTool.FindLogic {
             return guid;
         }
         
+        public static bool RemoveDuplicateVoiceSetEntries(ComboInfo @base, ref ComboInfo target, ulong voiceSet, ulong targetVoiceSet) {
+            if (!@base.VoiceSets.ContainsKey(voiceSet) || !target.VoiceSets.ContainsKey(targetVoiceSet)) {
+                return false;
+            }
+
+            HashSet<ulong> keys = new HashSet<ulong>();
+            foreach (KeyValuePair<ulong, HashSet<VoiceLineInstanceInfo>> pair in @base.VoiceSets[voiceSet].VoiceLineInstances) {
+                foreach (VoiceLineInstanceInfo voice in pair.Value) {
+                    foreach (ulong guid in voice.SoundFiles) {
+                        keys.Add(guid);
+                    }
+                }
+            }
+
+            bool hasData = false;
+
+            // we have to call toarray here to "freeze" the GC stack and allow us to modify the "original" without C# bitching.
+            foreach (KeyValuePair<ulong, HashSet<VoiceLineInstanceInfo>> pair in target.VoiceSets[targetVoiceSet].VoiceLineInstances.ToArray()) {
+                HashSet<VoiceLineInstanceInfo> newSet = new HashSet<VoiceLineInstanceInfo>();
+                foreach (VoiceLineInstanceInfo voice in pair.Value) {
+                    foreach (ulong guid in voice.SoundFiles.ToArray()) {  // and here
+                        if (!keys.Add(guid)) {
+                            voice.SoundFiles.Remove(guid);
+                        }
+                    }
+                    if (voice.SoundFiles.Count > 0) {
+                        newSet.Add(voice);
+                        hasData = true;
+                    }
+                }
+                target.VoiceSets[targetVoiceSet].VoiceLineInstances[pair.Key] = newSet;
+            }
+
+            return hasData;
+        }
+        
         public static ComboInfo Find(ComboInfo info, ulong guid, Dictionary<ulong, ulong> replacements=null , ComboContext context=null) {
             if (info == null) info = new ComboInfo();
             if (context == null) context = new ComboContext();
@@ -819,7 +855,8 @@ namespace DataTool.FindLogic {
                     info.SoundFiles[guid] = soundFileInfo;
                     break;
                 case 0x43:
-                    break;  // todo: broken in 1.22. looks like wwise was updated?
+                    // todo: no point parsing this right now, not used
+                    break;
                     if (info.SoundBanks.ContainsKey(guid)) break;
                     
                     WWiseBankInfo bankInfo = new WWiseBankInfo(guid);

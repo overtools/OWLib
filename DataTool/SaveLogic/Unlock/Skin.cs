@@ -78,8 +78,8 @@ namespace DataTool.SaveLogic.Unlock {
                 
                 foreach (KeyValuePair<ulong,ulong> replacement in replacements) {
                     uint diffReplacementType = teResourceGUID.Type(replacement.Value);
-                    if (diffReplacementType != 0x2C && diffReplacementType != 0x5F && diffReplacementType != 0x3F &&
-                        diffReplacementType != 0xB2) continue;
+                    if (diffReplacementType != 0x2C && diffReplacementType != 0x3F &&
+                        diffReplacementType != 0xB2) continue; // no voice sets, use extract-hero-voice
                     FindLogic.Combo.Find(diffInfoAfter, replacement.Value);
                     FindLogic.Combo.Find(diffInfoBefore, replacement.Key);
                 }
