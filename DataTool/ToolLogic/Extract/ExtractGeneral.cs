@@ -35,7 +35,7 @@ namespace DataTool.ToolLogic.Extract {
 
                 if (playerProgression.LootBoxesUnlocks != null) {
                     foreach (LootBoxUnlocks lootBoxUnlocks in playerProgression.LootBoxesUnlocks) {
-                        string boxName = ExtractHeroUnlocks.GetLootBoxName(lootBoxUnlocks.LootBoxType);
+                        string boxName = LootBox.GetName(lootBoxUnlocks.LootBoxType);
                         ExtractHeroUnlocks.SaveUnlocks(flags, lootBoxUnlocks.Unlocks, path, boxName, null, null, null, null);
                     }
                 }

@@ -10,7 +10,6 @@ using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.Extract;
-using OWLib;
 using TankLib;
 using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
@@ -27,9 +26,6 @@ namespace DataTool.SaveLogic {
             foreach (FindLogic.Combo.ModelInfoNew model in info.Models.Values) {
                 SaveModel(flags, path, info, model.GUID);
             }
-            
-            // rules for threads:
-            // CASC IO MUST BE DONE IN MAIN THREAD. NO EXCEPTIONS
         }
 
         public static void SaveVoiceStimulus(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
@@ -41,34 +37,38 @@ namespace DataTool.SaveLogic {
         }
 
         public static void SaveEntity(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
-            ulong entity) {
-            FindLogic.Combo.EntityInfoNew entityInfo = info.Entities[entity];
-            Entity.OWEntityWriter entityWriter = new Entity.OWEntityWriter();
+            ulong entityGuid) {
+            FindLogic.Combo.EntityInfoNew entityInfo = info.Entities[entityGuid];
+            
+            Entity.OverwatchEntity entity = new Entity.OverwatchEntity(entityInfo, info);
+            
             string entityDir = Path.Combine(path, "Entities", entityInfo.GetName());
-            string outputFile = Path.Combine(entityDir, entityInfo.GetName() + entityWriter.Format);
+            string outputFile = Path.Combine(entityDir, entityInfo.GetName() + $".{entity.Extension}");
             CreateDirectoryFromFile(outputFile);
 
             using (Stream entityOutputStream = File.OpenWrite(outputFile)) {
                 entityOutputStream.SetLength(0);
-                entityWriter.Write(entityOutputStream, entityInfo, info);
+                entity.Write(entityOutputStream);
             }
 
             if (!info.SaveConfig.SaveAnimationEffects) return;
             if (entityInfo.Model == 0) return; 
             foreach (ulong animation in entityInfo.Animations) {
-                SaveAnimationEffectReference(flags, entityDir, info, animation, entityInfo.Model);
+                SaveAnimationEffectReference(entityDir, info, animation, entityInfo.Model);
             }
         }
 
-        public static void SaveAnimationEffectReference(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+        public static void SaveAnimationEffectReference(string path, FindLogic.Combo.ComboInfo info,
             ulong animation, ulong model) {
             FindLogic.Combo.AnimationInfoNew animationInfo = info.Animations[animation];
-            Effect.OWAnimWriter animWriter = new Effect.OWAnimWriter();
-            string file = Path.Combine(path, Model.AnimationEffectDir,
-                animationInfo.GetNameIndex() + animWriter.Format);
+            
+            Effect.OverwatchAnimationEffectReference reference = new Effect.OverwatchAnimationEffectReference(info, animationInfo, model);
+            
+            string file = Path.Combine(path, Effect.OverwatchAnimationEffect.AnimationEffectDir,
+                animationInfo.GetNameIndex() + $".{reference.Extension}");
             CreateDirectoryFromFile(file);
             using (Stream outputStream = File.OpenWrite(file)) {
-                animWriter.WriteReference(outputStream, info, animationInfo, model);
+                reference.Write(outputStream);
             }
         }
 
@@ -89,24 +89,13 @@ namespace DataTool.SaveLogic {
                 }
             } else {
                 string rawAnimOutput = Path.Combine(animationDirectory,
-                    $"{animationInfo.GetNameIndex()}.{GUID.Type(animationInfo.GUID):X3}");
+                    $"{animationInfo.GetNameIndex()}.{teResourceGUID.Type(animationInfo.GUID):X3}");
                 CreateDirectoryFromFile(rawAnimOutput);
                 using (Stream fileStream = new FileStream(rawAnimOutput, FileMode.Create)) {
                     animStream.CopyTo(fileStream);
                 }
             }
             animStream.Dispose();
-        }
-
-        private static void SaveOWAnimFile(string animationEffectFile, FindLogic.Combo.EffectInfoCombo animationEffect, 
-            FindLogic.Combo.AnimationInfoNew animationInfo, FindLogic.Combo.ComboInfo info, 
-            Effect.OWAnimWriter owAnimWriter, ulong model, Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines) {
-            CreateDirectoryFromFile(animationEffectFile);
-
-            using (Stream fileStream = new FileStream(animationEffectFile, FileMode.Create)) {
-                fileStream.SetLength(0);
-                owAnimWriter.Write(fileStream, info, animationInfo, animationEffect, model, svceLines);
-            }
         }
 
         public static void SaveAnimation(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong animation,
@@ -144,16 +133,21 @@ namespace DataTool.SaveLogic {
                 animationEffect = info.AnimationEffects[animationInfo.Effect];
             }
 
-            Effect.OWAnimWriter owAnimWriter = new Effect.OWAnimWriter();
-            string animationEffectDir = Path.Combine(path, Model.AnimationEffectDir, animationInfo.GetNameIndex());
-            string animationEffectFile =
-                Path.Combine(animationEffectDir, $"{animationInfo.GetNameIndex()}{owAnimWriter.Format}");
+            string animationEffectDir = Path.Combine(path, Effect.OverwatchAnimationEffect.AnimationEffectDir, animationInfo.GetNameIndex());
+            
             Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines = new Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>>();
             if (animationEffect.GUID != 0) {
                 SaveEffectExtras(flags, animationEffectDir, info, animationEffect.Effect, out svceLines);
             }
-            
-            SaveOWAnimFile(animationEffectFile, animationEffect, animationInfo, info, owAnimWriter, model, svceLines);
+            Effect.OverwatchAnimationEffect output = new Effect.OverwatchAnimationEffect(info, animationEffect, svceLines, animationInfo, model);
+            string animationEffectFile =
+                Path.Combine(animationEffectDir, $"{animationInfo.GetNameIndex()}.{output.Extension}");
+            CreateDirectoryFromFile(animationEffectFile);
+
+            using (Stream fileStream = new FileStream(animationEffectFile, FileMode.Create)) {
+                fileStream.SetLength(0);
+                output.Write(fileStream);
+            }
         }
 
         public static void SaveEffectExtras(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
@@ -211,17 +205,18 @@ namespace DataTool.SaveLogic {
         }
 
         public static void SaveEffect(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong effect) {
-            Effect.OWEffectWriter effectWriter = new Effect.OWEffectWriter();
             FindLogic.Combo.EffectInfoCombo effectInfo = info.Effects[effect];
             string effectDirectory = Path.Combine(path, "Effects", effectInfo.GetName());
-            string effectFile = Path.Combine(effectDirectory, $"{effectInfo.GetNameIndex()}{effectWriter.Format}");
-            CreateDirectoryFromFile(effectFile);
 
             SaveEffectExtras(flags, effectDirectory, info, effectInfo.Effect, out Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines);
 
+            Effect.OverwatchEffect output = new Effect.OverwatchEffect(info, effectInfo, svceLines);
+            string effectFile = Path.Combine(effectDirectory, $"{effectInfo.GetNameIndex()}.{output.Extension}");
+            CreateDirectoryFromFile(effectFile);
+            
             using (Stream effectOutputStream = File.OpenWrite(effectFile)) {
                 effectOutputStream.SetLength(0);
-                effectWriter.Write(effectOutputStream, effectInfo, info, svceLines);
+                output.Write(effectOutputStream);
             }
         }
 
@@ -245,7 +240,7 @@ namespace DataTool.SaveLogic {
                 using (Stream modelStream = OpenFile(modelInfo.GUID)) {
                     teChunkedData chunkedData = new teChunkedData(modelStream);
                     
-                    OverwatchModel model = new OverwatchModel(chunkedData);
+                    OverwatchModel model = new OverwatchModel(chunkedData, modelInfo.GUID);
                     if (modelInfo.ModelLooks.Count > 0) {
                         FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelInfo.ModelLooks.First()];
                         model.ModelLookFileName = Path.Combine("ModelLooks",
@@ -280,22 +275,24 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveOWMaterialModelLookFile(string path, FindLogic.Combo.ModelLookInfo modelLookInfo, Model.OWMatWriter14 materialWriter, FindLogic.Combo.ComboInfo info) {
+        public static void SaveOWMaterialModelLookFile(string path, FindLogic.Combo.ModelLookInfo modelLookInfo, FindLogic.Combo.ComboInfo info) {
+            Model.OverwatchModelLook modelLook = new Model.OverwatchModelLook(info, modelLookInfo);
+            
             string modelLookPath =
-                Path.Combine(path, "ModelLooks", $"{modelLookInfo.GetNameIndex()}{materialWriter.Format}");
+                Path.Combine(path, "ModelLooks", $"{modelLookInfo.GetNameIndex()}.{modelLook.Extension}");
             CreateDirectoryFromFile(modelLookPath);
             using (Stream modelLookOutputStream = File.OpenWrite(modelLookPath)) {
                 modelLookOutputStream.SetLength(0);
-                materialWriter.Write(modelLookOutputStream, info, modelLookInfo);
+                modelLook.Write(modelLookOutputStream);
             }
         }
 
         public static void SaveModelLook(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
             ulong modelLook) {
-            Model.OWMatWriter14 materialWriter = new Model.OWMatWriter14();
+            //Model.OWMatWriter14 materialWriter = new Model.OWMatWriter14();
             FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelLook];
             
-            SaveOWMaterialModelLookFile(path, modelLookInfo, materialWriter, info);
+            SaveOWMaterialModelLookFile(path, modelLookInfo, info);
 
             if (modelLookInfo.Materials == null) return;
             foreach (ulong modelLookMaterial in modelLookInfo.Materials) {
@@ -303,13 +300,14 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveOWMaterialFile(string path, FindLogic.Combo.MaterialInfo materialInfo, Model.OWMatWriter14 materialWriter, FindLogic.Combo.ComboInfo info) {
+        public static void SaveOWMaterialFile(string path, FindLogic.Combo.MaterialInfo materialInfo, FindLogic.Combo.ComboInfo info) {
+            Model.OverwatchMaterial material = new Model.OverwatchMaterial(info, materialInfo);
             string materialPath =
-                Path.Combine(path, "Materials", $"{materialInfo.GetNameIndex()}{materialWriter.Format}");
+                Path.Combine(path, "Materials", $"{materialInfo.GetNameIndex()}.{material.Extension}");
             CreateDirectoryFromFile(materialPath);
             using (Stream materialOutputStream = File.OpenWrite(materialPath)) {
                 materialOutputStream.SetLength(0);
-                materialWriter.Write(materialOutputStream, info, materialInfo);
+                material.Write(materialOutputStream);
             }
         }
 
@@ -327,11 +325,9 @@ namespace DataTool.SaveLogic {
             FindLogic.Combo.MaterialInfo materialInfo = info.Materials[material];
             FindLogic.Combo.MaterialDataInfo materialDataInfo = info.MaterialDatas[materialInfo.MaterialData];
 
-            Model.OWMatWriter14 materialWriter = new Model.OWMatWriter14();
-
             string textureDirectory = Path.Combine(path, "Textures");
             
-            SaveOWMaterialFile(path, materialInfo, materialWriter, info);
+            SaveOWMaterialFile(path, materialInfo, info);
 
             foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.Textures) {
                 SaveTexture(flags, textureDirectory, info, texture.Key);

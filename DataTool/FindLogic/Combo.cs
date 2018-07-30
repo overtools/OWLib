@@ -4,9 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DataTool.Helper;
-using OWLib;
-using OWLib.Types.Chunk;
 using TankLib;
+using TankLib.Chunks;
 using TankLib.STU;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
@@ -615,71 +614,51 @@ namespace DataTool.FindLogic {
                     }
 
                     using (Stream effectStream = OpenFile(guid)) {
-                        if (effectStream == null) break;
-                        using (Chunked effectChunked = new Chunked(effectStream, true, ChunkManager.Instance)) {
-                            EffectParser parser = new EffectParser(effectChunked, guid);
-                            ulong lastModel = 0;
+                        teChunkedData chunkedData = new teChunkedData(effectStream);
+                        EffectParser parser = new EffectParser(chunkedData, guid);
 
-                            foreach (KeyValuePair<EffectParser.ChunkPlaybackInfo, IChunk> chunk in parser.GetChunks()) {
-                                if (chunk.Value == null || chunk.Value.GetType() == typeof(MemoryChunk)) continue;
+                        ulong lastParticleModel = 0;
 
-                                parser.Process(effectInfo, chunk, replacements);
+                        foreach (KeyValuePair<EffectParser.ChunkPlaybackInfo, IChunk> chunk in parser.GetChunks()) {
+                            parser.Process(effectInfo, chunk, replacements);
 
-                                if (chunk.Value.GetType() == typeof(DMCE)) {
-                                    DMCE dmce = chunk.Value as DMCE;
-                                    if (dmce == null) continue;
-                                    ComboContext dmceContext = new ComboContext {
-                                        Model = GetReplacement(dmce.Data.Model, replacements)
-                                    };
-                                    Find(info, dmce.Data.Model, replacements, dmceContext);
-                                    Find(info, dmce.Data.Look, replacements, dmceContext);
-                                    Find(info, dmce.Data.Animation, replacements, dmceContext);
-                                } else if (chunk.Value.GetType() == typeof(FECE)) {
-                                    FECE fece = chunk.Value as FECE;
-                                    if (fece == null) continue;
-                                    Find(info, fece.Data.Effect, replacements); // clean context
-                                } else if (chunk.Value.GetType() == typeof(NECE)) {
-                                    NECE nece = chunk.Value as NECE;
-                                    if (nece == null) continue;
-                                    ComboContext neceContext =
-                                        new ComboContext {ChildEntityIdentifier = nece.Data.EntityVariable};
-                                    Find(info, nece.Data.Entity, replacements, neceContext);
-                                } else if (chunk.Value.GetType() == typeof(SSCE)) {
-                                    SSCE ssce = chunk.Value as SSCE;
-                                    if (ssce == null) continue;
-                                    ComboContext ssceContext = new ComboContext();
-                                    if (lastModel != 0) ssceContext.Model = lastModel;
-                                    Find(info, ssce.Data.Material, replacements, ssceContext);
-                                    Find(info, ssce.Data.TextureDefinition, replacements, ssceContext);
-                                } else if (chunk.Value.GetType() == typeof(CECE)) {
-                                    CECE cece = chunk.Value as CECE;
-                                    if (cece == null) continue;
-                                    Find(info, cece.Data.Animation, replacements);
-                                    if (!info.EntitiesByIdentifier.ContainsKey(cece.Data.EntityVariable)) continue;
-                                    if (cece.Data.Animation == 0) continue;
-                                    foreach (ulong ceceEntity in info.EntitiesByIdentifier[cece.Data.EntityVariable]) {
-                                        EntityInfoNew ceceEntityInfo = info.Entities[ceceEntity];
-                                        ceceEntityInfo.Animations.Add(cece.Data.Animation);
-                                        if (ceceEntityInfo.Model != 0) {
-                                            info.Models[ceceEntityInfo.Model].Animations.Add(cece.Data.Animation);
-                                        }
+                            if (chunk.Value is teEffectComponentModel model) {
+                                ComboContext dmceContext = new ComboContext {
+                                    Model = GetReplacement(model.Header.Model, replacements)
+                                };
+                                Find(info, model.Header.Model, replacements, dmceContext);
+                                Find(info, model.Header.ModelLook, replacements, dmceContext);
+                                Find(info, model.Header.Animation, replacements, dmceContext);
+                            } else if (chunk.Value is teEffectComponentEffect effect) {
+                                Find(info, effect.Header.Effect, replacements); // clean context
+                            } else if (chunk.Value is teEffectComponentEntity entity) {
+                                ComboContext neceContext =
+                                    new ComboContext {ChildEntityIdentifier = entity.Header.Identifier};
+                                Find(info, entity.Header.Entity, replacements, neceContext);
+                            } else if (chunk.Value is teEffectComponentEntityControl entityControl) {
+                                if (entityControl.Header.Animation == 0) continue;
+                                Find(info, entityControl.Header.Animation, replacements);
+                                if (!info.EntitiesByIdentifier.ContainsKey(entityControl.Header.Identifier)) continue;
+                                foreach (ulong ceceEntity in info.EntitiesByIdentifier[entityControl.Header.Identifier]) {
+                                    EntityInfoNew ceceEntityInfo = info.Entities[ceceEntity];
+                                    ceceEntityInfo.Animations.Add(entityControl.Header.Animation);
+                                    if (ceceEntityInfo.Model != 0) {
+                                        info.Models[ceceEntityInfo.Model].Animations.Add(entityControl.Header.Animation);
                                     }
                                 }
-
-                                if (chunk.Value.GetType() == typeof(OSCE)) {
-                                    OSCE osce = chunk.Value as OSCE;
-                                    if (osce == null) continue;
-                                    Find(info, osce.Data.Sound, replacements);
-                                }
-
-                                if (chunk.Value.GetType() == typeof(RPCE)) {
-                                    RPCE rpce = chunk.Value as RPCE;
-                                    if (rpce == null) continue;
-                                    Find(info, rpce.Data.Model, replacements);
-                                    lastModel = GetReplacement(rpce.Data.Model, replacements);
-                                } else {
-                                    lastModel = 0;
-                                }
+                            } else if (chunk.Value is teEffectComponentSound soundComponent) {
+                                Find(info, soundComponent.Header.Sound, replacements);
+                            } else if (chunk.Value is teEffectComponent_SS shaders) {
+                                ComboContext ssceContext = new ComboContext {Model = lastParticleModel};
+                                Find(info, shaders.Header.Material, replacements, ssceContext);
+                                Find(info, shaders.Header.MaterialData, replacements, ssceContext);
+                            }
+                            
+                            if (chunk.Value is teEffectComponentParticle particle) {
+                                Find(info, particle.Header.Model, replacements);
+                                lastParticleModel = GetReplacement(particle.Header.Model, replacements);
+                            } else {
+                                lastParticleModel = 0;
                             }
                         }
                     }

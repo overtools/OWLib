@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using TankLib.Chunks;
 using TankLib.Math;
@@ -14,22 +15,25 @@ namespace TankLib.ExportFormats {
 
         public string ModelLookFileName;
         public string Name;
+        public ulong GUID;
         
-        public OverwatchModel(teChunkedData chunkedData) {
+        public OverwatchModel(teChunkedData chunkedData, ulong guid) {
             _data = chunkedData;
+
+            GUID = guid;
         }
         
         public void Write(Stream stream) {
             teModelChunk_RenderMesh renderMesh = _data.GetChunk<teModelChunk_RenderMesh>();
             teModelChunk_Model model = _data.GetChunk<teModelChunk_Model>();
             teModelChunk_Skeleton skeleton = _data.GetChunk<teModelChunk_Skeleton>();
-            teModelChunk_Hardpoint hardpoints = _data.GetChunk<teModelChunk_Hardpoint>();
+            //teModelChunk_Hardpoint hardpoints = _data.GetChunk<teModelChunk_Hardpoint>();
             teModelChunk_Cloth cloth = _data.GetChunk<teModelChunk_Cloth>();
             teModelChunk_STU stu = _data.GetChunk<teModelChunk_STU>();
             
             using (BinaryWriter writer = new BinaryWriter(stream)) {
                 writer.Write((ushort)1);
-                writer.Write((ushort)1);  // todo: not full support
+                writer.Write((ushort)5);  // todo: not full support
                 if (ModelLookFileName == null) {   // mat ref
                     writer.Write((byte)0);
                 } else {
@@ -77,9 +81,9 @@ namespace TankLib.ExportFormats {
                     }
                 }
 
-                int i = 0;
+                int submeshIdx = 0;
                 foreach (teModelChunk_RenderMesh.Submesh submesh in submeshes) {
-                    writer.Write($"Submesh_{i}.{model.Materials[submesh.Descriptor.Material]:X16}");
+                    writer.Write($"Submesh_{submeshIdx}.{model.Materials[submesh.Descriptor.Material]:X16}");
                     writer.Write(model.Materials[submesh.Descriptor.Material]);
                     writer.Write(submesh.UVCount);
                     
@@ -118,8 +122,37 @@ namespace TankLib.ExportFormats {
                         writer.Write((int)submesh.Indices[j+2]);
                     }
                     
-                    i++;
+                    submeshIdx++;
                 }
+
+                if (false) { // hardpoints
+                    
+                }
+                
+                // ext 1.3: old cloth
+                writer.Write(0);
+                
+                // ext 1.4: embedded refpose
+                if (skeleton != null) {
+                    for (int i = 0; i < skeleton.Header.BonesAbs; ++i) {
+                        writer.Write(IdToString("bone", skeleton.IDs[i]));
+                        short parent = skeleton.Hierarchy[i];
+                        writer.Write(parent);
+
+                        teMtx43 bone = skeleton.Matrices34Inverted[i];
+                        
+                        teQuat quat = new teQuat(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
+                        teVec3 scl = new teVec3(bone[1, 0], bone[1, 1], bone[1, 2]);
+                        teVec3 pos = new teVec3(bone[2, 0], bone[2, 1], bone[2, 2]);
+                        
+                        teVec3 rot = quat.ToEulerAngles();
+                        writer.Write(pos);
+                        writer.Write(scl);
+                        writer.Write(rot);
+                    }
+                }
+                
+                writer.Write(teResourceGUID.Index(GUID));
             }
         }
 

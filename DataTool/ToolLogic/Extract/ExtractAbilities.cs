@@ -2,7 +2,6 @@
 using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
-using OWLib;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
@@ -34,7 +33,7 @@ namespace DataTool.ToolLogic.Extract {
                 STULoadout loadout = GetInstanceNew<STULoadout>(key);
                 if (loadout == null) continue;
                 
-                string name = GetValidFilename(GetString(loadout.m_9290B942).TrimEnd().Replace(".", "_")) ?? $"Unknown{GUID.Index(key):X}";
+                string name = GetValidFilename(GetString(loadout.m_9290B942).TrimEnd().Replace(".", "_")) ?? $"Unknown{teResourceGUID.Index(key):X}";
                 
                 Combo.ComboInfo info = new Combo.ComboInfo();
                 Combo.Find(info, loadout.m_texture);

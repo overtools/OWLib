@@ -13,7 +13,7 @@ namespace TankLib.Chunks {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
             public teResourceGUID Animation;
-            public teResourceGUID EntityIdentifier;
+            public teResourceGUID Identifier;
             public Action Action;
         }
         

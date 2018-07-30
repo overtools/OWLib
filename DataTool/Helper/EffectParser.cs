@@ -1,46 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using OWLib;
-using OWLib.Types.Chunk;
+using TankLib;
+using TankLib.Chunks;
 
 namespace DataTool.Helper {
     public class EffectParser {
-        public Chunked Chunk;
+        public teChunkedData ChunkedData;
         public ulong GUID;
 
-        public EffectParser(Chunked chunked, ulong guid) {
-            Chunk = chunked;
+        public EffectParser(teChunkedData chunked, ulong guid) {
+            ChunkedData = chunked;
             GUID = guid;
         }
 
-        public class ChunkPlaybackTimeInfo : IEquatable<ChunkPlaybackTimeInfo> {
+        public class ChunkPlaybackTimeInfo {
             public float StartTime;
             public float EndTime;
-
-            public bool Equals(ChunkPlaybackTimeInfo other) {
-                if (ReferenceEquals(null, other)) return false;
-                if (ReferenceEquals(this, other)) return true;
-                return StartTime.Equals(other.StartTime) && EndTime.Equals(other.EndTime);
-            }
-
-            public override bool Equals(object obj) {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != GetType()) return false;
-                return Equals((ChunkPlaybackTimeInfo) obj);
-            }
-
-            public override int GetHashCode() {
-                unchecked {
-                    return (StartTime.GetHashCode() * 397) ^ EndTime.GetHashCode();
-                }
-            }
         }
 
-        public class ChunkPlaybackInfo : IEquatable<ChunkPlaybackInfo> {
+        public class ChunkPlaybackInfo {
             public ChunkPlaybackTimeInfo TimeInfo;
             public ulong Hardpoint;
             public IChunk PreviousChunk;
@@ -54,28 +33,6 @@ namespace DataTool.Helper {
                 }
                 
                 PreviousChunk = previousChunk;
-            }
-
-            public bool Equals(ChunkPlaybackInfo other) {
-                if (ReferenceEquals(null, other)) return false;
-                if (ReferenceEquals(this, other)) return true;
-                return Equals(TimeInfo, other.TimeInfo) && Hardpoint == other.Hardpoint && Equals(PreviousChunk, other.PreviousChunk);
-            }
-
-            public override bool Equals(object obj) {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != GetType()) return false;
-                return Equals((ChunkPlaybackInfo) obj);
-            }
-
-            public override int GetHashCode() {
-                unchecked {
-                    int hashCode = (TimeInfo != null ? TimeInfo.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ Hardpoint.GetHashCode();
-                    hashCode = (hashCode * 397) ^ (PreviousChunk != null ? PreviousChunk.GetHashCode() : 0);
-                    return hashCode;
-                }
             }
         }
 
@@ -91,12 +48,11 @@ namespace DataTool.Helper {
         public IEnumerable<KeyValuePair<ChunkPlaybackInfo, IChunk>> GetChunks() {
             PMCEInfo lastComponent = null;
             IChunk lastChunk = null;
-            // TCFE effect = Chunk.GetAllOfType<TCFE>().First().Value;
-            for (int i = 0; i < Chunk.Chunks.Count; i++) {
-                if (Chunk?.Chunks[i]?.GetType() == typeof(EffectChunkComponent)) {
-                    EffectChunkComponent pmce = Chunk.Chunks[i] as EffectChunkComponent;
-                    if (pmce == null) continue;
-                    lastComponent = new PMCEInfo {Hardpoint = pmce.Data.Hardpoint, StartTime = pmce.StartTime, EndTime = pmce.EndTime};
+            for (int i = 0; i < ChunkedData.Chunks.Length; i++) {
+                if (ChunkedData?.Chunks[i]?.GetType() == typeof(teEffectChunkComponent)) {
+                    teEffectChunkComponent component = ChunkedData.Chunks[i] as teEffectChunkComponent;
+                    if (component == null) continue;
+                    lastComponent = new PMCEInfo {Hardpoint = component.Header.Hardpoint, StartTime = component.StartTime, EndTime = component.EndTime};
                     // if (effect.Hardpoints == null) continue;
                     // if (effect.Hardpoints.Length <= pmce.Data.Index) continue;
                     continue;
@@ -104,18 +60,18 @@ namespace DataTool.Helper {
 
                 ChunkPlaybackInfo playbackInfo = new ChunkPlaybackInfo(lastComponent, lastChunk);
 
-                yield return new KeyValuePair<ChunkPlaybackInfo, IChunk>(playbackInfo, Chunk.Chunks[i]);
+                yield return new KeyValuePair<ChunkPlaybackInfo, IChunk>(playbackInfo, ChunkedData.Chunks[i]);
 
                 lastComponent = null;
-                lastChunk = Chunk.Chunks[i];
+                lastChunk = ChunkedData.Chunks[i];
             }
         }
 
-        public static void AddDMCE(EffectInfo effect, DMCE dmce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
+        public static void AddDMCE(EffectInfo effect, teEffectComponentModel model, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
             DMCEInfo newInfo = new DMCEInfo {
-                Model = dmce.Data.Model,
-                Material = dmce.Data.Look,
-                Animation = dmce.Data.Animation,
+                Model = model.Header.Model,
+                Material = model.Header.ModelLook,
+                Animation = model.Header.Animation,
                 PlaybackInfo = playbackInfo
             };
             if (replacements.ContainsKey(newInfo.Model)) newInfo.Model = replacements[newInfo.Model];
@@ -124,20 +80,20 @@ namespace DataTool.Helper {
             effect.DMCEs.Add(newInfo);
         }
 
-        public static void AddCECE(EffectInfo effect, CECE cece, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
+        public static void AddCECE(EffectInfo effect, teEffectComponentEntityControl control, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
             CECEInfo newInfo = new CECEInfo {
-                Animation = cece.Data.Animation,
+                Animation = control.Header.Animation,
                 PlaybackInfo = playbackInfo,
-                Action = cece.Data.Action,
-                EntityVariable = cece.Data.EntityVariable
+                Action = control.Header.Action,
+                Identifier = control.Header.Identifier
             };
             if (replacements.ContainsKey(newInfo.Animation)) newInfo.Animation = replacements[newInfo.Animation];
-            if (replacements.ContainsKey(newInfo.EntityVariable)) newInfo.EntityVariable = replacements[newInfo.EntityVariable];
+            if (replacements.ContainsKey(newInfo.Identifier)) newInfo.Identifier = replacements[newInfo.Identifier];
             effect.CECEs.Add(newInfo);
         }
 
-        public static void AddOSCE(EffectInfo effect, OSCE osce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
-            OSCEInfo newInfo = new OSCEInfo {PlaybackInfo = playbackInfo, Sound = osce.Data.Sound};
+        public static void AddOSCE(EffectInfo effect, teEffectComponentSound osce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
+            OSCEInfo newInfo = new OSCEInfo {PlaybackInfo = playbackInfo, Sound = osce.Header.Sound};
             if (replacements.ContainsKey(newInfo.Sound)) newInfo.Sound = replacements[newInfo.Sound];
             effect.OSCEs.Add(newInfo);
         }
@@ -148,14 +104,14 @@ namespace DataTool.Helper {
             effect.FECEs.Add(newInfo);
         }
         
-        public static void AddNECE(EffectInfo effect, NECE nece, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
-            NECEInfo newInfo = new NECEInfo {PlaybackInfo = playbackInfo, GUID = nece.Data.Entity, Variable = nece.Data.EntityVariable};
+        public static void AddNECE(EffectInfo effect, teEffectComponentEntity nece, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
+            NECEInfo newInfo = new NECEInfo {PlaybackInfo = playbackInfo, GUID = nece.Header.Entity, Identifier = nece.Header.Identifier};
             if (replacements.ContainsKey(newInfo.GUID)) newInfo.GUID = replacements[newInfo.GUID];
-            if (replacements.ContainsKey(newInfo.Variable)) newInfo.Variable = replacements[newInfo.Variable];
+            if (replacements.ContainsKey(newInfo.Identifier)) newInfo.Identifier = replacements[newInfo.Identifier];
             effect.NECEs.Add(newInfo);
         }
         
-        public static void AddRPCE(EffectInfo effect, RPCE rpce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
+        /*public static void AddRPCE(EffectInfo effect, RPCE rpce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
             RPCEInfo newInfo = new RPCEInfo {PlaybackInfo = playbackInfo, Model = rpce.Data.Model};
             if (replacements.ContainsKey(newInfo.Model)) newInfo.Model = replacements[newInfo.Model];
             effect.RPCEs.Add(newInfo);
@@ -171,10 +127,10 @@ namespace DataTool.Helper {
                 rpceInfo.TextureDefiniton = def;
                 rpceInfo.Material = mat;
             }
-        }
+        }*/
         
-        public static void AddSVCE(EffectInfo effect, SVCE svce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
-            SVCEInfo newInfo = new SVCEInfo {PlaybackInfo = playbackInfo, VoiceStimulus = svce.Data.VoiceStimulus};
+        public static void AddSVCE(EffectInfo effect, teEffectComponentVoiceStimulus svce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
+            SVCEInfo newInfo = new SVCEInfo {PlaybackInfo = playbackInfo, VoiceStimulus = svce.Header.VoiceStimulus};
             if (replacements.ContainsKey(newInfo.VoiceStimulus)) newInfo.VoiceStimulus = replacements[newInfo.VoiceStimulus];
             effect.SVCEs.Add(newInfo);
         }
@@ -200,65 +156,51 @@ namespace DataTool.Helper {
             if (effectInfo == null) return;
             if (chunk.Value == null) return;
             if (replacements == null) replacements = new Dictionary<ulong, ulong>();
-            if (chunk.Value.GetType() == typeof(TCFE)) {
-                TCFE tcfe = chunk.Value as TCFE;
-                if (tcfe == null) return; 
-                effectInfo.EffectLength = tcfe.Data.EndTime1;
+            
+            // if (chunk.Value.GetType() == typeof(TCFE)) {
+            //     TCFE tcfe = chunk.Value as TCFE;
+            //     if (tcfe == null) return; 
+            //     effectInfo.EffectLength = tcfe.Data.EndTime1;
+            // } else
+            
+            if (chunk.Value is teEffectComponentModel model) {
+                AddDMCE(effectInfo, model, chunk.Key, replacements);
             }
-            if (chunk.Value.GetType() == typeof(DMCE)) {
-                DMCE dmce = chunk.Value as DMCE;
-                if (dmce == null) return;
-                AddDMCE(effectInfo, dmce, chunk.Key, replacements);
+            if (chunk.Value is teEffectComponentEntityControl control) {
+                AddCECE(effectInfo, control, chunk.Key, replacements);
             }
-            if (chunk.Value.GetType() == typeof(CECE)) {
-                CECE cece = chunk.Value as CECE;
-                if (cece == null) return;
-                AddCECE(effectInfo, cece, chunk.Key, replacements);
-            }
-            if (chunk.Value.GetType() == typeof(OSCE)) {
-                OSCE osce = chunk.Value as OSCE;
-                if (osce == null) return;
-                AddOSCE(effectInfo, osce, chunk.Key, replacements);
-            }
-            if (chunk.Value.GetType() == typeof(FECE)) {
-                FECE fece = chunk.Value as FECE;
-                if (fece == null) return;
+            if (chunk.Value is teEffectComponentSound sound) {
+                AddOSCE(effectInfo, sound, chunk.Key, replacements);
+            } else if (chunk.Value is teEffectComponentEffect effectComponentEffect) {
                 EffectInfo feceInfo = null;
-                ulong effectKey = fece.Data.Effect;
-                if (replacements.ContainsKey(fece.Data.Effect)) effectKey = replacements[fece.Data.Effect];
-                using (Stream feceStream = IO.OpenFile(effectKey)) {
-                    if (feceStream != null) {
-                        using (Chunked feceChunkednew = new Chunked(feceStream)) {
-                            EffectParser sub = new EffectParser(feceChunkednew, fece.Data.Effect);
-                            feceInfo = sub.ProcessAll(replacements);
-                        }
+                ulong effectGuid = effectComponentEffect.Header.Effect;
+                if (replacements.ContainsKey(effectGuid)) effectGuid = replacements[effectGuid];
+                using (Stream effectStream = IO.OpenFile(effectGuid)) {
+                    if (effectStream != null) {
+                        teChunkedData subChunked = new teChunkedData(effectStream);
+                        EffectParser sub = new EffectParser(subChunked, effectGuid);
+                        feceInfo = sub.ProcessAll(replacements);
                     }
                 }
                 
-                AddFECE(effectInfo, fece.Data.Effect, feceInfo, chunk.Key, replacements);
+                AddFECE(effectInfo, effectGuid, feceInfo, chunk.Key, replacements);
+            } else if (chunk.Value is teEffectComponentEntity entity) {
+                AddNECE(effectInfo, entity, chunk.Key, replacements);
+            } else if (chunk.Value is teEffectComponentVoiceStimulus voiceStimulus) {
+                AddSVCE(effectInfo, voiceStimulus, chunk.Key, replacements);
             }
-            if (chunk.Value.GetType() == typeof(NECE)) {
-                NECE nece = chunk.Value as NECE;
-                if (nece == null) return;
-                AddNECE(effectInfo, nece, chunk.Key, replacements);
-            }
-            if (chunk.Value.GetType() == typeof(RPCE)) {
-                RPCE rpce = chunk.Value as RPCE;
-                if (rpce == null) return;
-                AddRPCE(effectInfo, rpce, chunk.Key, replacements);
-            }
-            if (chunk.Value.GetType() == typeof(SSCE)) {
-                SSCE ssce = chunk.Value as SSCE;
-                if (ssce == null) return;
-
-                AddSSCE(effectInfo, ssce, chunk.Key.PreviousChunk?.GetType(), replacements);
-            }
-            if (chunk.Value.GetType() == typeof(SVCE)) {
-                SVCE svce = chunk.Value as SVCE;
-                if (svce == null) return;
-
-                AddSVCE(effectInfo, svce, chunk.Key, replacements);
-            }
+            // if (chunk.Value.GetType() == typeof(RPCE)) {
+            //     RPCE rpce = chunk.Value as RPCE;
+            //     if (rpce == null) return;
+            //     AddRPCE(effectInfo, rpce, chunk.Key, replacements);
+            // }
+            // if (chunk.Value.GetType() == typeof(SSCE)) {
+            //     SSCE ssce = chunk.Value as SSCE;
+            //     if (ssce == null) return;
+            //
+            //     AddSSCE(effectInfo, ssce, chunk.Key.PreviousChunk?.GetType(), replacements);
+            // }
+            
         }
 
         public class EffectChunkInfo {
@@ -273,8 +215,8 @@ namespace DataTool.Helper {
 
         public class CECEInfo : EffectChunkInfo {
             public ulong Animation;
-            public ulong EntityVariable;
-            public CECE.CECEAction Action;
+            public ulong Identifier;
+            public teEffectComponentEntityControl.Action Action;
         }
 
         public class OSCEInfo : EffectChunkInfo {
@@ -288,7 +230,7 @@ namespace DataTool.Helper {
         
         public class NECEInfo : EffectChunkInfo {
             public ulong GUID;
-            public ulong Variable;
+            public ulong Identifier;
         }
 
         public class RPCEInfo : EffectChunkInfo {

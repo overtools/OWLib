@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using static OWLib.Extensions;
+using static TankLib.Extensions;
 
 namespace DataTool.ConvertLogic {
     public static class Sound {

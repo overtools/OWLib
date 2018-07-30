@@ -302,7 +302,7 @@ namespace CASCEncDump {
                 if (magic == teChunkedData.Magic) {
                     teChunkedData chunkedData = new teChunkedData(reader);
                     if (chunkedData.Header.StringIdentifier == "MODL") {
-                        OverwatchModel model = new OverwatchModel(chunkedData);
+                        OverwatchModel model = new OverwatchModel(chunkedData, 0);
                         using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".owmdl")) {
                             file.SetLength(0);
                             model.Write(file);

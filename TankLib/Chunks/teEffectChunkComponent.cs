@@ -33,9 +33,25 @@ namespace TankLib.Chunks {
             // public short Unk5;
             // public short Unk6;
         }
+
+        public ComponentHeader Header;
+
+        public float StartTime;
+        public float EndTime;
         
         public void Parse(Stream stream) {
-            //throw new System.NotImplementedException();
+            using (BinaryReader reader = new BinaryReader(stream)) {
+                Header = reader.Read<ComponentHeader>();
+                
+                if (Header.StartTimeOffset != 0) {
+                    reader.BaseStream.Position = Header.StartTimeOffset;
+                    StartTime = reader.ReadSingle();
+                }
+                if (Header.EndTimeOffset != 0) {
+                    reader.BaseStream.Position = Header.EndTimeOffset;
+                    EndTime = reader.ReadSingle();
+                }
+            }
         }
     }
 }

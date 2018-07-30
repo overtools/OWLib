@@ -89,6 +89,8 @@
     <Compile Include="CASC\MD5.cs" />
     <Compile Include="Chunks\IChunk.cs" />
     <Compile Include="Chunks\teEffectChunkComponent.cs" />
+    <Compile Include="Chunks\teEffectComponentParticle.cs" />
+    <Compile Include="Chunks\teEffectComponent_SS.cs" />
     <Compile Include="Chunks\teEffect_CAT.cs" />
     <Compile Include="Chunks\teEffectComponentEffect.cs" />
     <Compile Include="Chunks\teEffectComponentEntity.cs" />
@@ -105,11 +107,6 @@
     <Compile Include="Chunks\teModelChunk_STU.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="ExportFormats\IExportFormat.cs" />
-    <Compile Include="ExportFormats\OverawatchMaterial.cs" />
-    <Compile Include="ExportFormats\OverwatchAnim.cs" />
-    <Compile Include="ExportFormats\OverwatchEffect.cs" />
-    <Compile Include="ExportFormats\OverwatchEntity.cs" />
-    <Compile Include="ExportFormats\OverwatchMap.cs" />
     <Compile Include="ExportFormats\OverwatchModel.cs" />
     <Compile Include="ExportFormats\SEAnim.cs" />
     <Compile Include="ExportFormats\SkeletonRefpose.cs" />

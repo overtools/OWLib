@@ -7,9 +7,7 @@ using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic.Unlock;
-using OWLib;
 using TankLib.STU.Types;
-using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
@@ -216,7 +214,7 @@ namespace DataTool.ToolLogic.Extract {
                 if (progressionUnlocks.LootBoxesUnlocks != null) {
                     foreach (LootBoxUnlocks lootBoxUnlocks in progressionUnlocks.LootBoxesUnlocks) {
                         if (lootBoxUnlocks.Unlocks == null) continue;
-                        string lootboxName = GetLootBoxName((uint)lootBoxUnlocks.LootBoxType);
+                        string lootboxName = LootBox.GetName((uint)lootBoxUnlocks.LootBoxType);
                         
                         var tags = new Dictionary<string, TagExpectedValue> {
                             {"event", new TagExpectedValue(lootboxName.Replace(" ", "").ToLowerInvariant())}
@@ -299,15 +297,6 @@ namespace DataTool.ToolLogic.Extract {
             return unlock.Type == type && config.ContainsKey(typeLower) && config[typeLower].ShouldDo(unlock.GetName(), tags);
         }
 
-        public static string GetLootBoxName(uint type) {
-            if (ItemEvents.GetInstance().EventsNormal.TryGetValue(type, out string lootboxName)) {
-                return lootboxName;
-            }
-            return $"Unknown{type}";
-        }
-
-        public static string GetLootBoxName(Enum_BABC4175 lootBoxType) {
-            return GetLootBoxName((uint)lootBoxType);
-        }
+        
     }
 }

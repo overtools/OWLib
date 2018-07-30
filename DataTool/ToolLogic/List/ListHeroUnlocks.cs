@@ -39,7 +39,7 @@ namespace DataTool.ToolLogic.List {
 
                 if (heroPair.Value.LootBoxesUnlocks != null) {
                     foreach (LootBoxUnlocks lootBoxUnlocks in heroPair.Value.LootBoxesUnlocks) {
-                        string boxName = ExtractHeroUnlocks.GetLootBoxName(lootBoxUnlocks.LootBoxType);
+                        string boxName = LootBox.GetName(lootBoxUnlocks.LootBoxType);
                         
                         DisplayUnlocks(boxName, lootBoxUnlocks.Unlocks);
                     }

@@ -1,128 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using APPLIB;
-using DataTool.Flag;
-using DataTool.ToolLogic.Extract;
-using OpenTK;
-using OWLib;
-using OWLib.Types;
-using OWLib.Types.Chunk;
-using OWLib.Types.Chunk.LDOM;
-using OWLib.Types.Map;
-using OWLib.Writer;
 using TankLib;
-using static DataTool.Helper.IO;
-using Animation = OWLib.Animation;
+using TankLib.ExportFormats;
 
 namespace DataTool.SaveLogic {
     public class Model {
-        public const string AnimationEffectDir = "AnimationEffects";
-        
-        // things with 14 are for 1.14+
-        public class OWMatWriter14 : IDataWriter {
-            public string Format => ".owmat";
-            public char[] Identifier => new[] { 'W' };
-            public string Name => "OWM Material Format (1.14+)";
-            public WriterSupport SupportLevel => WriterSupport.MATERIAL | WriterSupport.MATERIAL_DEF;
-    
-            public bool Write(Map10 physics, Stream output, object[] data) {
-                return false;
-            }
-    
-            public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers,
-                object[] data) {
-                return false;
+        public class OverwatchModelLook : IExportFormat {
+            public string Extension => "owmat";
+
+            protected FindLogic.Combo.ComboInfo Info;
+            protected FindLogic.Combo.ModelLookInfo ModelLookInfo;
+
+            public OverwatchModelLook(FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelLookInfo modelLookInfo) {
+                Info = info;
+                ModelLookInfo = modelLookInfo;
             }
 
+            public void Write(Stream stream) {
+                using (BinaryWriter writer = new BinaryWriter(stream)) {
+                    writer.Write(OverwatchMaterial.VersionMajor);
+                    writer.Write(OverwatchMaterial.VersionMinor);
+                    if (ModelLookInfo.Materials == null) {
+                        writer.Write(0L);
+                        writer.Write((uint)OverwatchMaterial.OWMatType.ModelLook);
+                        return;
+                    }
+                    writer.Write(ModelLookInfo.Materials.LongCount());
+                    writer.Write((uint)OverwatchMaterial.OWMatType.ModelLook);
+                    
+                    foreach (ulong modelLookMaterial in ModelLookInfo.Materials) {
+                        FindLogic.Combo.MaterialInfo materialInfo = Info.Materials[modelLookMaterial];
+                        writer.Write($"..\\..\\Materials\\{materialInfo.GetNameIndex()}.{Extension}");
+                    }
+                }
+            }
+        }
+
+        public class OverwatchMaterial : IExportFormat {
+            public string Extension => "owmat";
+            
+            public const ushort VersionMajor = 2;
+            public const ushort VersionMinor = 0;
+            
             public enum OWMatType : uint {
                 Material = 0,
                 ModelLook = 1
             }
-
-            public const ushort VersionMajor = 2;
-            public const ushort VersionMinor = 0;
-            // ver 2.0+ writes materials seperately from ModelLooks
-
-            public void Write(Stream output, FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelLookInfo modelLookInfo) {
-                using (BinaryWriter writer = new BinaryWriter(output)) {
-                    writer.Write(VersionMajor);
-                    writer.Write(VersionMinor);
-                    if (modelLookInfo.Materials == null) {
-                        writer.Write(0L);
-                        writer.Write((uint)OWMatType.ModelLook);
-                        return;
-                    }
-                    writer.Write(modelLookInfo.Materials.LongCount());
-                    writer.Write((uint)OWMatType.ModelLook);
-                    
-                    foreach (ulong modelLookMaterial in modelLookInfo.Materials) {
-                        FindLogic.Combo.MaterialInfo materialInfo = info.Materials[modelLookMaterial];
-                        writer.Write($"..\\..\\Materials\\{materialInfo.GetNameIndex()}{Format}");
-                    }
-                }
-            }
             
-            public void Write(Stream output, FindLogic.Combo.ComboInfo info, FindLogic.Combo.MaterialInfo materialInfo) {
-                using (BinaryWriter writer = new BinaryWriter(output)) {
-                    FindLogic.Combo.MaterialDataInfo materialDataInfo = info.MaterialDatas[materialInfo.MaterialData];
+            protected FindLogic.Combo.ComboInfo Info;
+            protected FindLogic.Combo.MaterialInfo MaterialInfo;
+
+            public OverwatchMaterial(FindLogic.Combo.ComboInfo info, FindLogic.Combo.MaterialInfo materialInfo) {
+                Info = info;
+                MaterialInfo = materialInfo;
+            }
+
+            public void Write(Stream stream) {
+                using (BinaryWriter writer = new BinaryWriter(stream)) {
+                    FindLogic.Combo.MaterialDataInfo materialDataInfo = Info.MaterialDatas[MaterialInfo.MaterialData];
                     writer.Write(VersionMajor);
                     writer.Write(VersionMinor);
                     writer.Write(materialDataInfo.Textures.LongCount());
                     writer.Write((uint)OWMatType.Material);
-                    writer.Write(GUID.Index(materialInfo.ShaderSource));
-                    writer.Write(materialInfo.MaterialIDs.Count);
-                    foreach (ulong id in materialInfo.MaterialIDs) {
+                    writer.Write(teResourceGUID.Index(MaterialInfo.ShaderSource));
+                    writer.Write(MaterialInfo.MaterialIDs.Count);
+                    foreach (ulong id in MaterialInfo.MaterialIDs) {
                         writer.Write(id);
                     }
                     
                     foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.Textures) {
-                        FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[texture.Key];
+                        FindLogic.Combo.TextureInfoNew textureInfo = Info.Textures[texture.Key];
                         writer.Write($"..\\Textures\\{textureInfo.GetNameIndex()}.dds");
-                        writer.Write((uint)texture.Value);
+                        writer.Write(texture.Value);
                     }
                 }
             }
-    
-            public bool Write(Animation anim, Stream output, object[] data) {
-                return false;
-            }
-
-            public Dictionary<ulong, List<string>>[] Write(Stream output, OWLib.Map map, OWLib.Map detail1, OWLib.Map detail2, OWLib.Map props, OWLib.Map lights, string name,
-                IDataWriter modelFormat) {
-                throw new NotImplementedException();
-            }
         }
-        
-        public class OWModelWriter14 : IDataWriter {
-            public string Format => ".owmdl";
-            public char[] Identifier => new[] {'w'};
-            public string Name => "OWM Model Format";
-
-            public WriterSupport SupportLevel => WriterSupport.VERTEX | WriterSupport.UV | WriterSupport.BONE |
-                                                 WriterSupport.POSE | WriterSupport.MATERIAL |
-                                                 WriterSupport.ATTACHMENT | WriterSupport.MODEL;
-
-
-            public bool Write(Map10 physics, Stream output, object[] data) {
-                throw new NotImplementedException();
-            }
-            
-            public bool Write(Chunked model, Stream output, List<byte> LODs, Dictionary<ulong, List<ImageLayer>> layers, params object[] data) {
-                throw new NotImplementedException();
-            }
-
-            public bool Write(Animation anim, Stream output, params object[] data) {
-                throw new NotImplementedException();
-            }
-
-            public Dictionary<ulong, List<string>>[] Write(Stream output, OWLib.Map map, OWLib.Map detail1, OWLib.Map detail2, OWLib.Map props, OWLib.Map lights, string name,
-                IDataWriter modelFormat) {
-                throw new NotImplementedException();
-            }
-
-            public void Write(ICLIFlags flags, Stream output, FindLogic.Combo.ComboInfo info,
+            /*public void Write(ICLIFlags flags, Stream output, FindLogic.Combo.ComboInfo info,
                 FindLogic.Combo.ModelInfoNew modelInfo, Stream modelStream, Stream refposeStream) {
                 bool doRefpose = false;
 
@@ -149,8 +104,8 @@ namespace DataTool.SaveLogic {
                     refPoseWriter.Write(modelChunked, refposeStream, true);
                     refposeStream.Position = 0;
                 }
-            }
-
+            }*/
+            /*
             // ReSharper disable once InconsistentNaming
             // data is object[] { bool exportAttachments, string materialReference, string modelName, bool onlyOneLOD, bool skipCollision }
             public void Write(ICLIFlags flags, Chunked chunked, Stream output, List<byte> LODs, object[] data, FindLogic.Combo.ModelInfoNew modelInfo) {
@@ -463,6 +418,6 @@ namespace DataTool.SaveLogic {
             public static string IdToString(string prefix, uint id) {
                 return $"{prefix}_{id:X4}";
             }
-        }
+        }*/
     }
 }

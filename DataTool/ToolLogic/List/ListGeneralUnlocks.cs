@@ -27,7 +27,7 @@ namespace DataTool.ToolLogic.List {
 
             if (unlocks.LootBoxesUnlocks != null) {
                 foreach (LootBoxUnlocks lootBoxUnlocks in unlocks.LootBoxesUnlocks) {
-                    string boxName = ExtractHeroUnlocks.GetLootBoxName(lootBoxUnlocks.LootBoxType);
+                    string boxName = LootBox.GetName(lootBoxUnlocks.LootBoxType);
                         
                     ListHeroUnlocks.DisplayUnlocks(boxName, lootBoxUnlocks.Unlocks);
                 }
