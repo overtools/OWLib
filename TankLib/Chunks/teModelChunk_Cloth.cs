@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -213,6 +214,51 @@ namespace TankLib.Chunks {
                     }
                 }
             }
+        }
+
+        public short[] CreateFakeHierarchy(teModelChunk_Skeleton skeleton) {
+            short[] hierarchy = (short[]) skeleton.Hierarchy.Clone();
+            Dictionary<int, ClothNode> nodeMap = new Dictionary<int, ClothNode>();
+            
+            uint clothIndex = 0;
+            foreach (ClothNode[] nodeCollection in Nodes) {
+                if (nodeCollection == null) continue;
+                int nodeIndex = 0;
+                foreach (ClothNode node in nodeCollection) {
+                    int parentRaw = node.VerticalParent;
+                    if (NodeBones[clothIndex].ContainsKey(nodeIndex) &&
+                        NodeBones[clothIndex].ContainsKey(parentRaw)) {
+                        if (NodeBones[clothIndex][nodeIndex] != -1) {
+                            hierarchy[NodeBones[clothIndex][nodeIndex]] =
+                                NodeBones[clothIndex][parentRaw];
+                            if (NodeBones[clothIndex][parentRaw] == -1) {
+                                ClothNodeWeight weightedBone =
+                                    node.Bones.Aggregate((i1, i2) => i1.Weight > i2.Weight ? i1 : i2);
+                                hierarchy[NodeBones[clothIndex][nodeIndex]] = weightedBone.Bone;
+                            }
+                        }
+                    } else {
+                        if (NodeBones[clothIndex].ContainsKey(nodeIndex)) {
+                            if (NodeBones[clothIndex][nodeIndex] != -1) {
+                                hierarchy[NodeBones[clothIndex][nodeIndex]] = -1;
+                                ClothNodeWeight weightedBone =
+                                    node.Bones.Aggregate((i1, i2) => i1.Weight > i2.Weight ? i1 : i2);
+                                hierarchy[NodeBones[clothIndex][nodeIndex]] = weightedBone.Bone;
+                            }
+                        }
+                    }
+                    if (NodeBones[clothIndex].ContainsKey(nodeIndex)) {
+                        if (NodeBones[clothIndex][nodeIndex] != -1) {
+                            nodeMap[NodeBones[clothIndex][nodeIndex]] = node;
+                        }
+                    }
+
+                    nodeIndex++;
+                }
+                clothIndex++;
+            }
+
+            return hierarchy;
         }
     }
 }

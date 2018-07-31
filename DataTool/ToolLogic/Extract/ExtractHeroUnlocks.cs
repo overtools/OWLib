@@ -66,8 +66,10 @@ namespace DataTool.ToolLogic.Extract {
             ["torbjorn"] = "torbjörn",
             ["torb"] = "torbjörn",
             ["dva"] = "d.va",
+            ["starcraft_pro"] = "d.va",
             ["hammond"] = "wrecking ball",
-            ["baguette"] = "brigitte"
+            ["baguette"] = "brigitte",
+            ["burrito"] = "brigitte"
         };
 
         public Dictionary<string, string> QueryNameOverrides => HeroMapping;
