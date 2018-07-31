@@ -1,6 +1,3 @@
-[submodule "CASCExplorer"]
-	path = CASCExplorer
-	url = https://github.com/overtools/CASCExplorer.git
 [submodule "bcffnet"]
 	path = bcffnet
 	url = https://github.com/healingbrew/bcffnet

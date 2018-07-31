@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using STULib;
 using TankLib;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
@@ -83,13 +82,7 @@ namespace TankLibTest {
             //TestAnimation();
             //TestSTUv1();
         }
-
-        public static void TestSTUv1() {
-            using (Stream stream = OpenFile(837669530690912383)) {  // 00000000007F.05E
-                //teStructuredData structuredData = new teStructuredData(stream);
-                ISTU stu = ISTU.NewInstance(stream, UInt32.MaxValue);
-            }
-        }
+        
         public static void TestBinarySpeed() {
             Stopwatch stopwatch = new Stopwatch();
             
