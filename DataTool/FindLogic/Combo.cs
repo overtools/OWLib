@@ -89,6 +89,14 @@ namespace DataTool.FindLogic {
                     ModelLooks[look].Name = name.TrimEnd(' ');
                 }
             }
+            
+            public void SetEffectVoiceSet(ulong effect, ulong voiceSet) {
+                if (AnimationEffects.ContainsKey(effect)) SetEffectVoiceSet(AnimationEffects[effect], voiceSet);
+                if (Effects.ContainsKey(effect)) SetEffectVoiceSet(Effects[effect], voiceSet);
+            }
+            public void SetEffectVoiceSet(EffectInfoCombo effect, ulong voiceSet) {
+                effect.Effect.VoiceSet = voiceSet;
+            }
         }
 
         public class ComboConfig {
@@ -532,12 +540,8 @@ namespace DataTool.FindLogic {
                             AnimationInfoNew entityAnimationInfo = info.Animations[entityAnimation];
                             if (entityAnimationInfo.Effect == 0) continue;
                             EffectInfoCombo entityAnimationEffectInfo = null;
-                            if (info.Effects.ContainsKey(entityAnimationInfo.Effect))
-                                entityAnimationEffectInfo = info.Effects[entityAnimationInfo.Effect];
-                            if (info.AnimationEffects.ContainsKey(entityAnimationInfo.Effect))
-                                entityAnimationEffectInfo = info.AnimationEffects[entityAnimationInfo.Effect];
-                            if (entityAnimationEffectInfo == null) continue;
-                            entityAnimationEffectInfo.Effect.VoiceSet = entityInfo.VoiceSet;
+
+                            info.SetEffectVoiceSet(entityAnimationEffectInfo.GUID, entityInfo.VoiceSet);
                         }
                     }
 

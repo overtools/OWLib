@@ -207,11 +207,11 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void Save(ICLIFlags flags, STUMapHeader map, ulong key, string basePath) {
-            string name = GetValidFilename(GetString(map.m_displayName)) ?? "Title Screen";
+        public static void Save(ICLIFlags flags, STUMapHeader mapHeader, ulong key, string basePath) {
+            string name = GetValidFilename(GetString(mapHeader.m_displayName)) ?? "Title Screen";
             //string name = map.m_506FA8D8;
 
-            var variantName = GetString(map.m_1C706502);
+            var variantName = GetString(mapHeader.m_1C706502);
             if (variantName != null) name = GetValidFilename(variantName);
 
             LoudLog($"Extracting map {name}\\{teResourceGUID.Index(key):X}");
@@ -225,7 +225,7 @@ namespace DataTool.SaveLogic {
             
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             LoudLog("\tFinding");
-            FindLogic.Combo.Find(info, map.m_map);
+            FindLogic.Combo.Find(info, mapHeader.m_map);
 
             //for (ushort i = 0; i < 255; i++) {
             //    using (Stream mapChunkStream = OpenFile(map.GetDataKey(i))) {
@@ -234,11 +234,11 @@ namespace DataTool.SaveLogic {
             //    }
             //}
 
-            teMapPlaceableData placeableModelGroups = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.MODEL_GROUP);
-            teMapPlaceableData placeableSingleModels = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.SINGLE_MODEL);
-            teMapPlaceableData placeable8 = GetPlaceableData(map, 8);
-            teMapPlaceableData placeableLights = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.LIGHT);
-            teMapPlaceableData placeableEntities = GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.ENTITY);
+            teMapPlaceableData placeableModelGroups = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.MODEL_GROUP);
+            teMapPlaceableData placeableSingleModels = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.SINGLE_MODEL);
+            teMapPlaceableData placeable8 = GetPlaceableData(mapHeader, 8);
+            teMapPlaceableData placeableLights = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.LIGHT);
+            teMapPlaceableData placeableEntities = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.ENTITY);
             
             OverwatchMap exportMap = new OverwatchMap(name, info, placeableSingleModels, placeableModelGroups, placeable8, placeableEntities, placeableLights);
             using (Stream outputStream = File.OpenWrite(Path.Combine(mapPath, $"{name}.{exportMap.Extension}"))) {
@@ -246,12 +246,12 @@ namespace DataTool.SaveLogic {
             }
 
             {
-                FindLogic.Combo.Find(info, map.m_86C1CFAB);
-                FindLogic.Combo.Find(info, map.m_9386E669);
-                FindLogic.Combo.Find(info, map.m_C6599DEB);
+                FindLogic.Combo.Find(info, mapHeader.m_86C1CFAB);
+                FindLogic.Combo.Find(info, mapHeader.m_9386E669);
+                FindLogic.Combo.Find(info, mapHeader.m_C6599DEB);
 
-                if (map.m_D608E9F3 != null) {
-                    foreach (teResourceGUID gamemodeGUID in map.m_D608E9F3) {
+                if (mapHeader.m_D608E9F3 != null) {
+                    foreach (teResourceGUID gamemodeGUID in mapHeader.m_D608E9F3) {
                         STUGameMode gameMode = GetInstance<STUGameMode>(gamemodeGUID);
                         if (gameMode == null) continue;
 
@@ -267,17 +267,37 @@ namespace DataTool.SaveLogic {
                 }
             }
 
-            FindLogic.Combo.Find(info, map.m_announcerWelcome);
-            info.SetEffectName(map.m_announcerWelcome, "AnnouncerWelcome");
-            FindLogic.Combo.Find(info, map.m_musicTease);
-            info.SetEffectName(map.m_musicTease, "MusicTease");
+            FindLogic.Combo.Find(info, mapHeader.m_announcerWelcome);
+            info.SetEffectName(mapHeader.m_announcerWelcome, "AnnouncerWelcome");
+            FindLogic.Combo.Find(info, mapHeader.m_musicTease);
+            info.SetEffectName(mapHeader.m_musicTease, "MusicTease");
+
+            ulong announcerVoiceSet = 0;
+            using (Stream stream = OpenFile(mapHeader.m_map)) {
+                if (stream != null) {
+                    using (BinaryReader reader = new BinaryReader(stream)) {
+                        teMap map = reader.Read<teMap>();
+
+                        STUVoiceSetComponent voiceSetComponent =
+                            GetInstance<STUVoiceSetComponent>(map.EntityDefinition);
+                        announcerVoiceSet = voiceSetComponent?.m_voiceDefinition;
+                        FindLogic.Combo.Find(info, announcerVoiceSet);
+                        
+                        info.SetEffectVoiceSet(mapHeader.m_announcerWelcome, announcerVoiceSet);
+                    }
+                }
+            }
             
             LoudLog("\tSaving");
             Combo.Save(flags, mapPath, info);
             Combo.SaveLooseTextures(flags, Path.Combine(mapPath, "Textures"), info);
             
-            if (map.m_7F5B54B2 != 0) {
-                FindLogic.Combo.Find(info, map.m_7F5B54B2);
+            if (mapHeader.m_7F5B54B2 != 0) {  // map voice set. not announcer
+                FindLogic.Combo.Find(info, mapHeader.m_7F5B54B2);
+            }
+
+            if (announcerVoiceSet != 0) {  // whole thing in env mode, not here
+                info.VoiceSets.Remove(announcerVoiceSet);
             }
             Combo.SaveAllVoiceSets(flags, Path.Combine(mapPath, "Sound"), info);
             

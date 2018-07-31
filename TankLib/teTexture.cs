@@ -50,7 +50,7 @@ namespace TankLib {
             return new teResourceGUID(guid);
         }
 
-        public ulong GetPayloadGUID(ulong gUID, int region = 1) => GetPayloadGUID(new teResourceGUID(gUID), region);
+        public ulong GetPayloadGUID(ulong guid, int region = 1) => GetPayloadGUID(new teResourceGUID(guid), region);
 
         /// <summary>Load the texture payload</summary>
         /// <param name="payloadStream">The payload stream</param>
