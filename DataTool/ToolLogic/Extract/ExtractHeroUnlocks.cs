@@ -33,7 +33,7 @@ namespace DataTool.ToolLogic.Extract {
         public CosmeticType(string name) {
             Name = name;
             Tags = new List<QueryTag> {
-                new QueryTag("rarity", new List<string>{"common", "rare", "legendary"}),
+                new QueryTag("rarity", new List<string>{"common", "rare", "epic", "legendary"}),
                 new QueryTag("event", new List<string>{"base", "summergames", "halloween", "winter", "lunarnewyear", "archives", "anniversary"}),
                 new QueryTag("leagueTeam", new List<string>())
             };
