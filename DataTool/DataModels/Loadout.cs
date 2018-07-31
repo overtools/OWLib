@@ -19,7 +19,7 @@ namespace DataTool.DataModels {
         public ulong MovieGUID;
 
         public Loadout(ulong key) {
-            STULoadout loadout = STUHelper.GetInstanceNew<STULoadout>(key);
+            STULoadout loadout = STUHelper.GetInstance<STULoadout>(key);
             if (loadout == null) return;
             Init(key, loadout);
         }

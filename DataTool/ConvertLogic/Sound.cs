@@ -1364,7 +1364,6 @@ namespace DataTool.ConvertLogic {
     }
 
     
-    // todo: this is closer than before but data is written wrong.
     public class BitOggstream : IDisposable {
         private readonly BinaryWriter _os;
 

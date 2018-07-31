@@ -15,7 +15,7 @@ namespace DataTool.ToolLogic.List {
 
         public void Parse(ICLIFlags toolFlags) {
             foreach (ulong key in TrackedFiles[0x54]) {
-                STUGenericSettings_Chat chat = GetInstanceNew<STUGenericSettings_Chat>(key);
+                STUGenericSettings_Chat chat = GetInstance<STUGenericSettings_Chat>(key);
                 if (chat == null) continue;
 
                 Console.Out.WriteLine("Chat Channels:");

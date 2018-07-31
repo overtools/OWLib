@@ -37,7 +37,7 @@ namespace DataTool.ToolLogic.List {
             List<LootBox> @return = new List<LootBox>();
 
             foreach (ulong key in TrackedFiles[0xCF]) {
-                STULootBox lootbox = GetInstanceNew<STULootBox>(key);
+                STULootBox lootbox = GetInstance<STULootBox>(key);
                 if (lootbox == null) continue;
 
                 @return.Add(new LootBox(lootbox));

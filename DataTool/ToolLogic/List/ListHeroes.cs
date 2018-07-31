@@ -52,7 +52,7 @@ namespace DataTool.ToolLogic.List {
             Dictionary<string, Hero> @return = new Dictionary<string, Hero>();
 
             foreach (ulong key in TrackedFiles[0x75]) {
-                STUHero hero = GetInstanceNew<STUHero>(key);
+                STUHero hero = GetInstance<STUHero>(key);
                 if (hero == null) continue;
 
                 string name = GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(key):X}";

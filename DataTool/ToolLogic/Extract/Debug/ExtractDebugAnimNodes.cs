@@ -89,7 +89,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 // <= breakpoint here
                 GraphRoot root = new GraphRoot {nodes = new List<GraphNode>(), edges = new List<GraphEdge>()};
 
-                STUAnimBlendTree blendTree = GetInstanceNew<STUAnimBlendTree>(key);
+                STUAnimBlendTree blendTree = GetInstance<STUAnimBlendTree>(key);
                 if (blendTree.m_animNodes == null) continue;
                 foreach (STUAnimNode_Base animNode in blendTree.m_animNodes) {
                     ParseNode(root, animNode);

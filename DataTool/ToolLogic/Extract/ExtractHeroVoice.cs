@@ -80,7 +80,7 @@ namespace DataTool.ToolLogic.Extract
 
             foreach (ulong heroFile in TrackedFiles[0x75])
             {
-                STUHero hero = GetInstanceNew<STUHero>(heroFile);
+                STUHero hero = GetInstance<STUHero>(heroFile);
                 if (hero == null) continue;
 
                 string heroNameActual = (GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(heroFile)}").TrimEnd(' ');
@@ -148,7 +148,7 @@ namespace DataTool.ToolLogic.Extract
 
         public static void SaveSkin(ICLIFlags flags, ulong skinResource, string basePath, STUHero hero, string heroFileName, string name, STUVoiceSetComponent baseComponent, Combo.ComboInfo baseInfo)
         {
-            STUSkinTheme skin = GetInstanceNew<STUSkinTheme>(skinResource);
+            STUSkinTheme skin = GetInstance<STUSkinTheme>(skinResource);
             if (skin == null)
             {
                 return;
@@ -165,7 +165,7 @@ namespace DataTool.ToolLogic.Extract
 
         public static bool SaveSet(ICLIFlags flags, string basePath, ulong entityMain, string heroFileName, string skin, ref STUVoiceSetComponent voiceSetComponent, ref Combo.ComboInfo info, STUVoiceSetComponent baseComponent = null, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null)
         {
-            voiceSetComponent = GetInstanceNew<STUVoiceSetComponent>(Combo.GetReplacement(entityMain, replacements));
+            voiceSetComponent = GetInstance<STUVoiceSetComponent>(Combo.GetReplacement(entityMain, replacements));
 
             if (voiceSetComponent?.m_voiceDefinition == null)
             {

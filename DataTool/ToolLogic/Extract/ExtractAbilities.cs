@@ -30,7 +30,7 @@ namespace DataTool.ToolLogic.Extract {
             const string folderName = "Abilities";
             
             foreach (ulong key in TrackedFiles[0x9E]) {
-                STULoadout loadout = GetInstanceNew<STULoadout>(key);
+                STULoadout loadout = GetInstance<STULoadout>(key);
                 if (loadout == null) continue;
                 
                 string name = GetValidFilename(GetString(loadout.m_9290B942).TrimEnd().Replace(".", "_")) ?? $"Unknown{teResourceGUID.Index(key):X}";

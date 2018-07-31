@@ -2,9 +2,6 @@
 using System.Linq;
 
 namespace DataTool.Helper {
-    public static class StringHelper {
-    }
-    
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
     public class IndentHelper {
         private readonly uint _indentLevel;

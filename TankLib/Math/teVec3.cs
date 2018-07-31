@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using SharpDX;
 
 namespace TankLib.Math {
     /// <summary>3 component XYZ vector</summary>
@@ -38,8 +39,16 @@ namespace TankLib.Math {
             Z = val[2];
         }
         
+        public static teVec3 operator +(teVec3 left, teVec3 right) {
+            return new teVec3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+        }
+        
         public static teVec3 operator -(teVec3 left, teVec3 right) {
             return new teVec3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+        }
+
+        public static implicit operator Vector3(teVec3 vec) {
+            return new Vector3(vec.X, vec.Y, vec.Z);
         }
     }
 }

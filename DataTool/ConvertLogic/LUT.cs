@@ -2,7 +2,7 @@
 using System.IO;
 
 namespace DataTool.ConvertLogic {
-    public class LUT {
+    public static class LUT {
         public static string SPILUT1024x32(Stream lutimage) {
             List<string> realLines = new List<string>
             {

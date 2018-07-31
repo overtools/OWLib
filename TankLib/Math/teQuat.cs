@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using SharpDX;
 using static System.Math;
 
 namespace TankLib.Math {
@@ -33,6 +34,11 @@ namespace TankLib.Math {
             W = (float) w;
         }
         
+        public static teQuat Identity => new teQuat(0, 0, 0, 1);
+        
+        public static teQuat operator *(teQuat left, teQuat right) {
+            return Multiply(ref left, ref right);
+        }
         
         private enum EulerParity {
             Even,
@@ -48,7 +54,7 @@ namespace TankLib.Math {
             S,
             R
         }
-        
+
         public teVec3 ToEulerAngles() {
             return EulerFromQuat(0, 1, 2, 0, EulerParity.Even, EulerRepeat.No, EulerFrame.S);
         }
@@ -127,6 +133,31 @@ namespace TankLib.Math {
             // ReSharper restore CompareOfFloatsByEqualityOperator
             
             return vec3;
+        }
+        
+        public static teQuat Multiply(ref teQuat left, ref teQuat right) {
+            teQuat result;
+            float lx = left.X;
+            float ly = left.Y;
+            float lz = left.Z;
+            float lw = left.W;
+            float rx = right.X;
+            float ry = right.Y;
+            float rz = right.Z;
+            float rw = right.W;
+            float a = ly * rz - lz * ry;
+            float b = lz * rx - lx * rz;
+            float c = lx * ry - ly * rx;
+            float d = lx * rx + ly * ry + lz * rz;
+            result.X = lx * rw + rx * lw + a;
+            result.Y = ly * rw + ry * lw + b;
+            result.Z = lz * rw + rz * lw + c;
+            result.W = lw * rw - d;
+            return result;
+        }
+
+        public static implicit operator Quaternion(teQuat quat) {
+            return new Quaternion(quat.X, quat.Y, quat.Z, quat.W);
         }
     }
 }

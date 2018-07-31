@@ -50,7 +50,7 @@ namespace DataTool.ToolLogic.List {
             Dictionary<string, KeyInfo> @return = new Dictionary<string, KeyInfo>();
 
             foreach (ulong key in TrackedFiles[0x90]) {
-                STUResourceKey resourceKey = GetInstanceNew<STUResourceKey>(key);
+                STUResourceKey resourceKey = GetInstance<STUResourceKey>(key);
                 if (resourceKey == null) continue;
                 @return[GetFileName(key)] = new KeyInfo(key, resourceKey.GetKeyIDString(), resourceKey.GetKeyValueString());
             }

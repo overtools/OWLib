@@ -63,7 +63,7 @@ namespace DataTool.ToolLogic.Extract
             HashSet<KeyValuePair<ulong, string>> done = new HashSet<KeyValuePair<ulong, string>>();
             foreach (ulong metaKey in TrackedFiles[0x9F])
             {
-                STUMapHeader map = GetInstanceNew<STUMapHeader>(metaKey);
+                STUMapHeader map = GetInstance<STUMapHeader>(metaKey);
                 if (map == null)
                 {
                     continue;
@@ -168,7 +168,7 @@ namespace DataTool.ToolLogic.Extract
 
         private void SaveSound(ExtractFlags flags, string basePath, string part, ulong key)
         {
-            STU_F3EB00D4 stu = GetInstanceNew<STU_F3EB00D4>(key); // todo: should be named
+            STU_F3EB00D4 stu = GetInstance<STU_F3EB00D4>(key); // todo: should be named
             if(stu == null || stu.m_B3685B0D == 0)
             {
                 return;

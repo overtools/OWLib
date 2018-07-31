@@ -173,7 +173,7 @@ namespace DataTool {
                             continue;
                         }
 
-                        STUResourceKey resourceKey = GetInstanceNew<STUResourceKey>(key);
+                        STUResourceKey resourceKey = GetInstance<STUResourceKey>(key);
                         if (resourceKey == null || resourceKey.GetKeyID() == 0 || TACTKeyService.Keys.ContainsKey(resourceKey.GetReverseKeyID())) continue;
                         TACTKeyService.Keys.Add(resourceKey.GetReverseKeyID(), resourceKey.m_key);
                         TankLib.Helpers.Logger.Info("Core", $"Added ResourceKey {resourceKey.GetKeyIDString()}, Value: {resourceKey.GetKeyValueString()}");

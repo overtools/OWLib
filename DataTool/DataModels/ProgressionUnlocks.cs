@@ -30,7 +30,7 @@ namespace DataTool.DataModels {
         public LootBoxUnlocks[] LootBoxesUnlocks;
 
         public ProgressionUnlocks(STUHero hero) {
-            var unlocks = STUHelper.GetInstanceNew<STUProgressionUnlocks>(hero.m_heroProgression);
+            var unlocks = STUHelper.GetInstance<STUProgressionUnlocks>(hero.m_heroProgression);
             Init(unlocks);
         }
 

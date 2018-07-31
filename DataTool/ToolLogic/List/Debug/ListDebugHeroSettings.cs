@@ -19,7 +19,7 @@ namespace DataTool.ToolLogic.List.Debug {
 
         public void GetSoundbanks() {
             foreach (ulong key in Program.TrackedFiles[0x54]) {
-                STUGenericSettings_HeroSettings settings = GetInstanceNew<STUGenericSettings_HeroSettings>(key);
+                STUGenericSettings_HeroSettings settings = GetInstance<STUGenericSettings_HeroSettings>(key);
                 if (settings == null) continue;
                 
                 Dictionary<ulong, string> categories = new Dictionary<ulong, string>();
@@ -29,7 +29,7 @@ namespace DataTool.ToolLogic.List.Debug {
                 }
 
                 foreach (STUHeroSpecificSettings heroSpecificSettings in settings.m_heroSpecificSettings) {
-                    STUHero hero = GetInstanceNew<STUHero>(heroSpecificSettings.m_hero);
+                    STUHero hero = GetInstance<STUHero>(heroSpecificSettings.m_hero);
                     Console.Out.WriteLine($"{GetString(hero.m_0EDCE350)}:");
                     
                     PrintSettings(settings.m_142A3CA9.Concat(heroSpecificSettings.m_settings).ToArray(), categories);

@@ -58,7 +58,7 @@ namespace DataTool.SaveLogic {
 
                     for (int i = 0; i < Entities.Header.PlaceableCount; i++) {
                         teMapPlaceableEntity entity = (teMapPlaceableEntity) Entities.Placeables[i];
-                        STUModelComponent component = GetInstanceNew<STUModelComponent>(entity.Header.EntityDefinition);
+                        STUModelComponent component = GetInstance<STUModelComponent>(entity.Header.EntityDefinition);
                         if (component != null) {
                             entitiesWithModelCount++;
                             modelComponents[i] = component;
@@ -253,7 +253,7 @@ namespace DataTool.SaveLogic {
 
                 if (map.m_D608E9F3 != null) {
                     foreach (teResourceGUID gamemodeGUID in map.m_D608E9F3) {
-                        STUGameMode gameMode = GetInstanceNew<STUGameMode>(gamemodeGUID);
+                        STUGameMode gameMode = GetInstance<STUGameMode>(gamemodeGUID);
                         if (gameMode == null) continue;
 
                         FindLogic.Combo.Find(info, gameMode.m_6EB38130);  // 004

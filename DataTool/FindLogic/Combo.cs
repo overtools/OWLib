@@ -440,7 +440,7 @@ namespace DataTool.FindLogic {
                         if (info.Entities.ContainsKey(guid)) break;
                     }
 
-                    STUEntityDefinition entityDefinition = GetInstanceNew<STUEntityDefinition>(guid);
+                    STUEntityDefinition entityDefinition = GetInstance<STUEntityDefinition>(guid);
                     if (entityDefinition == null) break;
 
                     EntityInfoNew entityInfo = new EntityInfoNew(guid);
@@ -710,7 +710,7 @@ namespace DataTool.FindLogic {
                         break;
                     }
 
-                    STUModelLook modelLook = GetInstanceNew<STUModelLook>(guid);
+                    STUModelLook modelLook = GetInstance<STUModelLook>(guid);
                     if (modelLook == null) break;
 
                     ModelLookInfo modelLookInfo = new ModelLookInfo(guid);
@@ -741,7 +741,7 @@ namespace DataTool.FindLogic {
 
                     break;
                 case 0x1B:
-                    STUConfigVar[] configVars = GetInstancesNew<STUConfigVar>(guid);
+                    STUConfigVar[] configVars = GetInstances<STUConfigVar>(guid);
                     if (configVars == null) break;
 
                     foreach (STUConfigVar configVar in configVars) {
@@ -768,7 +768,7 @@ namespace DataTool.FindLogic {
                     //}
                     break;
                 case 0x20:
-                    STUAnimBlendTree blendTree = GetInstanceNew<STUAnimBlendTree>(guid);
+                    STUAnimBlendTree blendTree = GetInstance<STUAnimBlendTree>(guid);
                     foreach (STUAnimNode_Base animNode in blendTree.m_animNodes) {
                         if (animNode is STUAnimNode_Animation animNodeAnimation) {
                             Find(info, animNodeAnimation?.m_animation?.m_value, replacements, context);
@@ -778,7 +778,7 @@ namespace DataTool.FindLogic {
                     }
                     break;
                 case 0x21:
-                    STUAnimBlendTreeSet blendTreeSet = GetInstanceNew<STUAnimBlendTreeSet>(guid);
+                    STUAnimBlendTreeSet blendTreeSet = GetInstance<STUAnimBlendTreeSet>(guid);
                     if (blendTreeSet == null) break;
                     
                     foreach (ulong externalRef in blendTreeSet.m_externalRefs) {
@@ -806,7 +806,7 @@ namespace DataTool.FindLogic {
                 case 0x2C:
                     if (info.Sounds.ContainsKey(guid)) break;
 
-                    STUSound sound = GetInstanceNew<STUSound>(guid);
+                    STUSound sound = GetInstance<STUSound>(guid);
                     if (sound == null) break;
                     
                     SoundInfoNew soundInfo = new SoundInfoNew(guid);
@@ -891,7 +891,7 @@ namespace DataTool.FindLogic {
                 case 0x5F:
                     if (info.VoiceSets.ContainsKey(guid)) break;
 
-                    STUVoiceSet voiceSet = GetInstanceNew<STUVoiceSet>(guid);
+                    STUVoiceSet voiceSet = GetInstance<STUVoiceSet>(guid);
 
                     //string firstName = IO.GetString(voiceSet.m_269FC4E9);
                     //string lastName = IO.GetString(voiceSet.m_C0835C08);
@@ -959,7 +959,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0xA5:
                     // hmm, if existing?
-                    STUUnlock cosmetic = GetInstanceNew<STUUnlock>(guid);
+                    STUUnlock cosmetic = GetInstance<STUUnlock>(guid);
 
                     if (cosmetic is STUUnlock_Emote unlockEmote) {
                         Find(info, unlockEmote.m_emoteBlendTreeSet, replacements, context);
@@ -986,7 +986,7 @@ namespace DataTool.FindLogic {
                 case 0xA6:
                     // why not
                     if (replacements == null) break;
-                    STUSkinTheme skinOverride = GetInstanceNew<STUSkinTheme>(guid);
+                    STUSkinTheme skinOverride = GetInstance<STUSkinTheme>(guid);
                     if (skinOverride?.m_runtimeOverrides == null) break;
                     foreach (KeyValuePair<ulong, STUSkinRuntimeOverride> replacement in skinOverride.m_runtimeOverrides) {
                         if (replacements.ContainsKey(replacement.Key)) continue;
@@ -996,7 +996,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0xA8:
                     // hmm, if existing?
-                    STUEffectLook effectLook = GetInstanceNew<STUEffectLook>(guid);
+                    STUEffectLook effectLook = GetInstance<STUEffectLook>(guid);
                     foreach (teStructuredDataAssetRef<ulong> effectLookMaterialData in effectLook.m_materialData) {
                         Find(info, effectLookMaterialData, replacements, context);
                     }
@@ -1026,7 +1026,7 @@ namespace DataTool.FindLogic {
                     
                     break;
                 case 0xBF:
-                    STULineupPose lineupPose = GetInstanceNew<STULineupPose>(guid);
+                    STULineupPose lineupPose = GetInstance<STULineupPose>(guid);
                     if (lineupPose == null) break;
                     
                     Find(info, lineupPose.m_E599EB7C, replacements, context);

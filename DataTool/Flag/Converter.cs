@@ -17,15 +17,7 @@ namespace DataTool.Flag {
             return int.Parse(@in);
         }
         
-        public static object CLIFlagLOD(string @in) {
-            @in = @in.ToLowerInvariant();
-            if (@in == "lowest") {
-                return (byte)0xFF;
-            }
-
-            if (@in == "highest") {
-                return (byte)0;
-            }
+        public static object CLIFlagByte(string @in) {
             return byte.Parse(@in);
         }
         

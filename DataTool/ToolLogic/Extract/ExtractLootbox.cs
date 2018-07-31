@@ -31,7 +31,7 @@ namespace DataTool.ToolLogic.Extract {
             
             
             foreach (ulong key in TrackedFiles[0xCF]) {
-                STULootBox lootbox = GetInstanceNew<STULootBox>(key);
+                STULootBox lootbox = GetInstance<STULootBox>(key);
                 if (lootbox == null) continue;
                 
                 string name = GetValidFilename(lootbox.m_lootboxType.ToString()) ?? $"Unknown{teResourceGUID.Index(key):X}";

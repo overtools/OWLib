@@ -28,7 +28,7 @@ namespace DataTool.ToolLogic.Extract {
             string path = Path.Combine(basePath, "General");
 
             foreach (var key in TrackedFiles[0x54]) {
-                STUGenericSettings_PlayerProgression progression = GetInstanceNew<STUGenericSettings_PlayerProgression>(key);
+                STUGenericSettings_PlayerProgression progression = GetInstance<STUGenericSettings_PlayerProgression>(key);
                 if (progression == null) continue;
                 
                 PlayerProgression playerProgression = new PlayerProgression(progression);

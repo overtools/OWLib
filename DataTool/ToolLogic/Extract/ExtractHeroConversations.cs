@@ -68,15 +68,15 @@ namespace DataTool.ToolLogic.Extract {
             Dictionary<ulong, STUHero> heroes = new Dictionary<ulong, STUHero>();
             
             foreach (ulong heroGuid in Program.TrackedFiles[0x75]) {
-                STUHero hero = GetInstanceNew<STUHero>(heroGuid);
+                STUHero hero = GetInstance<STUHero>(heroGuid);
                 if (hero == null) continue;
-                STUVoiceSetComponent voiceSetComponent = GetInstanceNew<STUVoiceSetComponent>(hero.m_gameplayEntity);
+                STUVoiceSetComponent voiceSetComponent = GetInstance<STUVoiceSetComponent>(hero.m_gameplayEntity);
 
                 if (voiceSetComponent?.m_voiceDefinition == null) {
                     Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found");
                     continue;
                 }
-                STUVoiceSet set = GetInstanceNew<STUVoiceSet>(voiceSetComponent.m_voiceDefinition);
+                STUVoiceSet set = GetInstance<STUVoiceSet>(voiceSetComponent.m_voiceDefinition);
                 if (set == null) continue;
 
                 heroVoiceSets[heroGuid] = new VoiceSet(set);
@@ -101,7 +101,7 @@ namespace DataTool.ToolLogic.Extract {
 
                 foreach (VoiceLineInstance lineInstance in set.VoiceLines.Values) {
                     if (lineInstance.VoiceConversation == 0) continue;
-                    STUVoiceConversation conversation = GetInstanceNew<STUVoiceConversation>(lineInstance.VoiceConversation);
+                    STUVoiceConversation conversation = GetInstance<STUVoiceConversation>(lineInstance.VoiceConversation);
                         
                     string convoDir = Path.Combine(path, heroNameActual, GetFileName(lineInstance.VoiceConversation));
                     foreach (STUVoiceConversationLine line in conversation.m_voiceConversationLine) {

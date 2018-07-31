@@ -101,7 +101,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public static MapInfo GetMap(ulong key) {
-            STUMapHeader map = GetInstanceNew<STUMapHeader>(key);
+            STUMapHeader map = GetInstance<STUMapHeader>(key);
             if (map == null) return null;
 
             string nameA = GetString(map.m_displayName);
@@ -119,7 +119,7 @@ namespace DataTool.ToolLogic.List {
             if (map.m_D608E9F3 != null) {
                 gamemodes = new List<GamemodeInfo>();
                 foreach (ulong guid in map.m_D608E9F3) {
-                    STUGameMode gamemode = GetInstanceNew<STUGameMode>(guid);
+                    STUGameMode gamemode = GetInstance<STUGameMode>(guid);
                     if (gamemode == null) {
                         continue;
                     }

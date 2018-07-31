@@ -19,7 +19,7 @@ namespace DataTool.DataModels {
         }
 
         public TeamDefinition(ulong guid) {
-            var def = GetInstanceNew<STU_73AE9738>(guid);
+            var def = GetInstance<STU_73AE9738>(guid);
             Init(def);
         }
 

@@ -68,7 +68,7 @@ namespace DataTool.ToolLogic.List {
             Dictionary<string, SubtitleInfo> @return = new Dictionary<string, SubtitleInfo>();
 
             foreach (ulong key in TrackedFiles[0x71]) {
-                STU_7A68A730 subtitleContainer = GetInstanceNew<STU_7A68A730>(key);
+                STU_7A68A730 subtitleContainer = GetInstance<STU_7A68A730>(key);
                 if (subtitleContainer == null) continue;
 
                 @return[GetFileName(key)] = new SubtitleInfo(key, GetSubtitlesInternal(subtitleContainer));

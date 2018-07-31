@@ -41,7 +41,7 @@ namespace DataTool.ToolLogic.List {
             List<Achievement> achievements = new List<Achievement>();
 
             foreach (ulong key in TrackedFiles[0x68]) {
-                STUAchievement achievement = GetInstanceNew<STUAchievement>(key);
+                STUAchievement achievement = GetInstance<STUAchievement>(key);
                 if (achievement == null) continue;
                 
                 Achievement model = new Achievement(achievement);

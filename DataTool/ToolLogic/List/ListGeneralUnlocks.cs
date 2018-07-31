@@ -42,7 +42,7 @@ namespace DataTool.ToolLogic.List {
 
         public PlayerProgression GetUnlocks() {
             foreach (ulong key in TrackedFiles[0x54]) {
-                STUGenericSettings_PlayerProgression playerProgression = GetInstanceNew<STUGenericSettings_PlayerProgression>(key);
+                STUGenericSettings_PlayerProgression playerProgression = GetInstance<STUGenericSettings_PlayerProgression>(key);
                 if (playerProgression == null) continue;
 
                 return new PlayerProgression(playerProgression);

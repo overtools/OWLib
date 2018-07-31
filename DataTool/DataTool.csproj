@@ -44,9 +44,6 @@
       <HintPath>$(SolutionDir)\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
-      <HintPath>$(SolutionDir)\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -81,7 +78,7 @@
     <Compile Include="Helper\IO.cs" />
     <Compile Include="Helper\LinqExtensions.cs" />
     <Compile Include="Helper\Logger.cs" />
-    <Compile Include="Helper\StringHelper.cs" />
+    <Compile Include="Helper\IndentHelper.cs" />
     <Compile Include="Helper\STUHelper.cs" />
     <Compile Include="IQueryParser.cs" />
     <Compile Include="ITool.cs" />

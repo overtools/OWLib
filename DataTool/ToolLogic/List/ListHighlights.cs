@@ -142,29 +142,29 @@ namespace DataTool.ToolLogic.List {
 
         protected HighlightInfoJSON GetHighlightInfo(tePlayerHighlight.HighlightInfo infoNew) {
             HighlightInfoJSON outputJson = new HighlightInfoJSON();
-            STUHero hero = GetInstanceNew<STUHero>(infoNew.Hero);
+            STUHero hero = GetInstance<STUHero>(infoNew.Hero);
 
             outputJson.Hero = GetString(hero?.m_0EDCE350);
             outputJson.Player = infoNew.PlayerName;
                 
-            STUUnlock_POTGAnimation intro = GetInstanceNew<STUUnlock_POTGAnimation>(infoNew.HighlightIntro);
+            STUUnlock_POTGAnimation intro = GetInstance<STUUnlock_POTGAnimation>(infoNew.HighlightIntro);
             outputJson.HighlightIntro = GetString(intro.m_name);
             
             // todo: outputJson.WeaponSkin
             // todo: outputJson.Skin
                 
-            STU_C25281C3 highlightType = GetInstanceNew<STU_C25281C3>(infoNew.HighlightType);
+            STU_C25281C3 highlightType = GetInstance<STU_C25281C3>(infoNew.HighlightType);
             outputJson.HighlightType = GetString(highlightType?.m_description) ?? "";
             return outputJson;
         }
 
         protected static string GetMapName(ulong key) {
-            STUMapHeader map = GetInstanceNew<STUMapHeader>(key);
+            STUMapHeader map = GetInstance<STUMapHeader>(key);
             return GetString(map.m_displayName);
         }
 
         protected HeroInfoJSON GetHeroInfo(HeroData heroInfo) {
-            STUHero hero = GetInstanceNew<STUHero>(heroInfo.Hero);
+            STUHero hero = GetInstance<STUHero>(heroInfo.Hero);
 
             HeroInfoJSON outputHero = new HeroInfoJSON {
                 Hero = GetString(hero.m_0EDCE350),
@@ -173,19 +173,19 @@ namespace DataTool.ToolLogic.List {
                 VoiceLines = new List<string>()
             };
             foreach (uint sprayId in heroInfo.SprayIds) {
-                STUUnlock_SprayPaint spray = GetInstanceNew<STUUnlock_SprayPaint>(GetCosmeticKey(sprayId));
+                STUUnlock_SprayPaint spray = GetInstance<STUUnlock_SprayPaint>(GetCosmeticKey(sprayId));
                 outputHero.Sprays.Add(GetString(spray.m_name));
             }
             foreach (uint emoteId in heroInfo.EmoteIds) {
-                STUUnlock_Emote emote = GetInstanceNew<STUUnlock_Emote>(GetCosmeticKey(emoteId));
+                STUUnlock_Emote emote = GetInstance<STUUnlock_Emote>(GetCosmeticKey(emoteId));
                 outputHero.Emotes.Add(GetString(emote.m_name));
             }
                 
             foreach (uint voiceLineId in heroInfo.VoiceLineIds) {
-                STUUnlock_VoiceLine voiceLine = GetInstanceNew<STUUnlock_VoiceLine>(GetCosmeticKey(voiceLineId));
+                STUUnlock_VoiceLine voiceLine = GetInstance<STUUnlock_VoiceLine>(GetCosmeticKey(voiceLineId));
                 outputHero.VoiceLines.Add(GetString(voiceLine.m_name));
             }
-            STUUnlock_POTGAnimation intro = GetInstanceNew<STUUnlock_POTGAnimation>(GetCosmeticKey(heroInfo.POTGAnimation));
+            STUUnlock_POTGAnimation intro = GetInstance<STUUnlock_POTGAnimation>(GetCosmeticKey(heroInfo.POTGAnimation));
             outputHero.HighlightIntro = GetString(intro.m_name);
                 
             // Skin skin = GetInstance<Skin>(GetSkinKey(heroInfo.SkinId));  // todo: this is by skin override
@@ -198,7 +198,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         protected string GetGamemode(ulong guid) {
-            STUGameMode gamemode = GetInstanceNew<STUGameMode>(guid);
+            STUGameMode gamemode = GetInstance<STUGameMode>(guid);
             return GetString(gamemode?.m_displayName);
         }
 

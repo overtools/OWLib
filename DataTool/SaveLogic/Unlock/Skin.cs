@@ -13,7 +13,7 @@ namespace DataTool.SaveLogic.Unlock {
     public static class Skin {
         public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock, STUHero hero) {
             if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
-            STUSkinTheme skinTheme = GetInstanceNew<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
+            STUSkinTheme skinTheme = GetInstance<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
             if (skinTheme == null) return;
             
             LoudLog($"Extracting skin {IO.GetString(hero.m_0EDCE350)} {unlock.Name}");
@@ -21,7 +21,7 @@ namespace DataTool.SaveLogic.Unlock {
         }
 
         public static void Save(ICLIFlags flags, string directory, STU_63172E83 skin, STUHero hero) {
-            STUSkinTheme skinTheme = GetInstanceNew<STUSkinTheme>(skin.m_5E9665E3);
+            STUSkinTheme skinTheme = GetInstance<STUSkinTheme>(skin.m_5E9665E3);
             if (skinTheme == null) return;
             LoudLog($"Extracting skin {IO.GetString(hero.m_0EDCE350)} {IO.GetFileName(skin.m_5E9665E3)}");
             Save(flags, directory, skinTheme, hero);
@@ -53,7 +53,7 @@ namespace DataTool.SaveLogic.Unlock {
             if (skin is STUSkinTheme skinTheme) {
                 info.Config.DoExistingEntities = true;
                 foreach (var weaponOverrideGUID in skinTheme.m_heroWeapons) {
-                    STUHeroWeapon heroWeapon = GetInstanceNew<STUHeroWeapon>(weaponOverrideGUID);
+                    STUHeroWeapon heroWeapon = GetInstance<STUHeroWeapon>(weaponOverrideGUID);
                     if (heroWeapon == null) continue;
 
                     Dictionary<ulong, ulong> weaponReplacements = GetReplacements(heroWeapon);

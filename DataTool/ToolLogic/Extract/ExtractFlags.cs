@@ -8,6 +8,9 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = "tif", Flag = "convert-textures-type", Help = "Texture ouput type", Valid = new[] { "dds", "tif", "tga"})]
         public string ConvertTexturesType;
         
+        [CLIFlag(Default = false, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool ConvertTexturesLossless;
+        
         [CLIFlag(Default = true, Flag = "convert-textures", Help = "Convert .004 files to {convert-textures-type}", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertTextures;
         
@@ -39,7 +42,7 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "raw", Help = "Skip all conversion", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool Raw;
 
-        [CLIFlag(Default = (byte)0, Flag = "lod", Help = "Force extracted model LOD", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagLOD" })]
+        [CLIFlag(Default = (byte)1, Flag = "lod", Help = "Force extracted model LOD", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagByte" })]
         public byte LOD;
         
         // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]

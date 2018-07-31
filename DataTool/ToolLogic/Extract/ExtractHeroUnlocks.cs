@@ -85,7 +85,7 @@ namespace DataTool.ToolLogic.Extract {
         public List<STUHero> GetHeroes() {
             var @return = new List<STUHero>();
             foreach (ulong key in TrackedFiles[0x75]) {
-                var hero = GetInstanceNew<STUHero>(key);
+                var hero = GetInstance<STUHero>(key);
                 // if (hero?.Name == null || hero.LootboxUnlocks == null) continue;
 
                 @return.Add(hero);
@@ -129,6 +129,7 @@ namespace DataTool.ToolLogic.Extract {
             Log($"{indent+1}\"Reaper|spray=(event=!halloween)\" \t\t(extract all of Reper's sprays that are not from Halloween)");
             Log($"{indent+1}\"Reaper|skin=(rarity=legendary)\" \t\t(extract all of Reaper's legendary skins)");
             Log($"{indent+1}\"Reaper|spray=!Cute,*\" \t\t(extract all of Reaper's sprays except \"Cute\")");
+            Log($"{indent+1}\"*|skin=(leagueteam=none)\" \t\t(extract skins for every hero ignoring Overwatch League skins)");
             
             // Log("https://www.youtube.com/watch?v=9Deg7VrpHbM");
         }

@@ -56,7 +56,7 @@ namespace DataTool.DataModels {
 	    }
 		
 		public Unlock(ulong guid) {
-			var unlock = GetInstanceNew<STUUnlock>(guid);
+			var unlock = GetInstance<STUUnlock>(guid);
 			if (unlock == null) return;
 			Init(unlock, guid);
 		}
@@ -134,7 +134,7 @@ namespace DataTool.DataModels {
 		    if (guids == null) return null;
 		    List<Unlock> unlocks = new List<Unlock>();
 		    foreach (ulong guid in guids) {
-			    STUUnlock stu = GetInstanceNew<STUUnlock>(guid);
+			    STUUnlock stu = GetInstance<STUUnlock>(guid);
 			    if (stu == null) continue;
 			    Unlock unlock = new Unlock(stu, guid);
 			    unlocks.Add(unlock);

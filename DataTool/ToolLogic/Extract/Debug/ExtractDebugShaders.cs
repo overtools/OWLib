@@ -88,7 +88,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         public void TestModelLook(ulong guid) {
-            STUModelLook modelLook = GetInstanceNew<STUModelLook>(guid);
+            STUModelLook modelLook = GetInstance<STUModelLook>(guid);
         } 
         
         public void Save088(string basePath) {

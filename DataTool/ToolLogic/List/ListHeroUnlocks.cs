@@ -62,7 +62,7 @@ namespace DataTool.ToolLogic.List {
         public static Dictionary<string, ProgressionUnlocks> GetUnlocks() {
             Dictionary<string, ProgressionUnlocks> @return = new Dictionary<string, ProgressionUnlocks>();
             foreach (ulong key in TrackedFiles[0x75]) {
-                STUHero hero = GetInstanceNew<STUHero>(key);
+                STUHero hero = GetInstance<STUHero>(key);
                 if (hero == null) continue;
 
                 string name = GetString(hero.m_0EDCE350);

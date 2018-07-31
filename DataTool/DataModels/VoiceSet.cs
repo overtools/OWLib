@@ -13,13 +13,13 @@ namespace DataTool.DataModels {
         public Dictionary<ulong, HashSet<ulong>> Stimuli;
 
         public VoiceSet(STUHero hero) {
-            STUVoiceSetComponent voiceSetComponent = GetInstanceNew<STUVoiceSetComponent>(hero.m_gameplayEntity);
+            STUVoiceSetComponent voiceSetComponent = GetInstance<STUVoiceSetComponent>(hero.m_gameplayEntity);
 
             if (voiceSetComponent?.m_voiceDefinition == null) {
                 Debugger.Log(0, "DataTool.DataModels.VoiceSet", "Hero VoiceSet not found");
                 return;
             }
-            STUVoiceSet set = GetInstanceNew<STUVoiceSet>(voiceSetComponent.m_voiceDefinition);
+            STUVoiceSet set = GetInstance<STUVoiceSet>(voiceSetComponent.m_voiceDefinition);
             if (set == null) return;
             
             Init(set);

@@ -17,7 +17,7 @@ namespace DataTool.ToolLogic.List {
         public List<GameMode> GetGameModes() {
             List<GameMode> gameModes = new List<GameMode>();
             foreach (var guid in TrackedFiles[0xC5]) {
-                STUGameMode gameMode = GetInstanceNew<STUGameMode>(guid);
+                STUGameMode gameMode = GetInstance<STUGameMode>(guid);
                 if (gameMode == null) continue;
 
                 gameModes.Add(new GameMode(gameMode));

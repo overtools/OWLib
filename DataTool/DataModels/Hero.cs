@@ -38,7 +38,7 @@ namespace DataTool.DataModels {
             if (hero.m_heroLoadout != null) {
                 Loadouts = new List<Loadout>();
                 foreach (ulong loadout in hero.m_heroLoadout) {
-                    STULoadout stuLoadout = GetInstanceNew<STULoadout>(loadout);
+                    STULoadout stuLoadout = GetInstance<STULoadout>(loadout);
                     if (stuLoadout == null) continue;
                     
                     Loadouts.Add(new Loadout(loadout, stuLoadout));

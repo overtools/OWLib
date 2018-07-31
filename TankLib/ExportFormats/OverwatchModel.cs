@@ -1,8 +1,9 @@
-﻿using System.Drawing.Drawing2D;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
+using SharpDX;
 using TankLib.Chunks;
 using TankLib.Math;
+using TankLib.STU.Types;
 
 namespace TankLib.ExportFormats {
     /// <summary>
@@ -16,19 +17,19 @@ namespace TankLib.ExportFormats {
         public string ModelLookFileName;
         public string Name;
         public ulong GUID;
+        public sbyte TargetLod;
         
-        public OverwatchModel(teChunkedData chunkedData, ulong guid) {
+        public OverwatchModel(teChunkedData chunkedData, ulong guid, sbyte targetLod=1) {
             _data = chunkedData;
-
             GUID = guid;
+            TargetLod = targetLod;
         }
         
         public void Write(Stream stream) {
             teModelChunk_RenderMesh renderMesh = _data.GetChunk<teModelChunk_RenderMesh>();
             teModelChunk_Model model = _data.GetChunk<teModelChunk_Model>();
             teModelChunk_Skeleton skeleton = _data.GetChunk<teModelChunk_Skeleton>();
-            //teModelChunk_Hardpoint hardpoints = _data.GetChunk<teModelChunk_Hardpoint>();
-            teModelChunk_Cloth cloth = _data.GetChunk<teModelChunk_Cloth>();
+            //teModelChunk_Cloth cloth = _data.GetChunk<teModelChunk_Cloth>();
             teModelChunk_STU stu = _data.GetChunk<teModelChunk_STU>();
             
             using (BinaryWriter writer = new BinaryWriter(stream)) {
@@ -56,10 +57,15 @@ namespace TankLib.ExportFormats {
                     writer.Write(0);
                     return;
                 }
-                // todo: specify lod
-                teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh.Submeshes.Where(x => x.Descriptor.LOD == 1 || x.Descriptor.LOD == -1).ToArray(); // .Descriptor.LOD == 0
+                teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh.Submeshes.Where(x => x.Descriptor.LOD == TargetLod || x.Descriptor.LOD == -1).ToArray();
+                
                 writer.Write((uint)submeshes.Length);
-                writer.Write(0);  // hardpoints
+                
+                if (stu?.StructuredData.m_hardPoints != null) {
+                    writer.Write(stu.StructuredData.m_hardPoints.Length);
+                } else {
+                    writer.Write(0);  // hardpoints
+                }
                 
                 if (skeleton != null) {
                     for (int j = 0; j < skeleton.Header.BonesAbs; ++j) {
@@ -124,9 +130,39 @@ namespace TankLib.ExportFormats {
                     
                     submeshIdx++;
                 }
+                
+                
+                if (stu?.StructuredData.m_hardPoints != null) {
+                    foreach (STUModelHardpoint hardPoint in stu.StructuredData.m_hardPoints) {
+                        writer.Write(IdToString("hardpoint", teResourceGUID.Index(hardPoint.m_EDF0511C)));
+                        
+                        Matrix parentMat = Matrix.Identity;
+                        if (hardPoint.m_FF592924 != 0 && skeleton != null) {
+                            int boneIdx = skeleton.IDs.TakeWhile(id => id != teResourceGUID.Index(hardPoint.m_FF592924))
+                                .Count();
+                            
+                            teMtx43 boneMat = skeleton.Matrices34[boneIdx];
+                            teQuat rotation = new teQuat(boneMat[0, 0], boneMat[0, 1], boneMat[0, 2], boneMat[0, 3]);
+                            teVec3 scale = new teVec3(boneMat[1, 0], boneMat[1, 1], boneMat[1, 2]);
+                            teVec3 translation = new teVec3(boneMat[2, 0], boneMat[2, 1], boneMat[2, 2]);
+                            parentMat = Matrix.Scaling(scale) *
+                                        Matrix.RotationQuaternion(rotation) *
+                                        Matrix.Translation(translation);
+                        }
 
-                if (false) { // hardpoints
-                    
+                        Matrix hardPointMat = Matrix.RotationQuaternion(hardPoint.m_rotation) *
+                                              Matrix.Translation(hardPoint.m_position);
+
+                        hardPointMat = hardPointMat * parentMat;
+                        hardPointMat.Decompose(out Vector3 _, out Quaternion rot, out Vector3 pos);
+                        
+                        writer.Write(pos);
+                        writer.Write(rot);
+                    }
+
+                    foreach (STUModelHardpoint modelHardpoint in stu.StructuredData.m_hardPoints) {
+                        writer.Write(IdToString("bone", teResourceGUID.Index(modelHardpoint.m_FF592924)));
+                    }
                 }
                 
                 // ext 1.3: old cloth
