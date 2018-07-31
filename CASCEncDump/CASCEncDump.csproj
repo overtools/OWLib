@@ -47,10 +47,6 @@
       <Project>{3b5d1227-f0f7-48e4-9ac0-757b87f8c64f}</Project>
       <Name>CMFLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OWLib\OWLib.csproj">
-      <Project>{353c0d05-c505-4df4-909e-624fd94a7d3b}</Project>
-      <Name>OWLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TankLib\TankLib.csproj">
       <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>
       <Name>TankLib</Name>

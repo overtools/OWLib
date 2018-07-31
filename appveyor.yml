@@ -23,30 +23,16 @@ before_package:
 
     del /F /Q dist\Release\*.xml
 
-    del /F /Q CASCExplorer\CASCExplorer\bin\Release\*.pdb
-
-    del /F /Q CASCExplorer\CASCExplorer\bin\Release\*.xml
-
-    del /F /Q CASCExplorer\CASCConsole\bin\Release\*.pdb
-
-    del /F /Q CASCExplorer\CASCConsole\bin\Release\*.xml
-
     del /F /Q TankView\bin\Release\*.pdb
 
     del /F /Q TankView\bin\Release\*.xml
 artifacts:
 - path: dist/Release
   name: toolchain-release
-- path: dist/Release/CascLib.dll
-  name: CascLib
-- path: dist/Release/OWLib.dll
-  name: OWLib
-- path: dist/Release/OWReplayLib.dll
-  name: OWReplayLib
-- path: CASCExplorer/CASCExplorer/bin/Release
-  name: CASCExplorer
-- path: CASCExplorer/CASCConsole/bin/Release
-  name: CASCConsole
+- path: dist/Release/CMFLib.dll
+  name: CMFLib
+- path: dist/Release/TankLib.dll
+  name: TankLib
 - path: TankView/bin/Release
   name: TankView
 cache:
