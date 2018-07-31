@@ -89,8 +89,8 @@
     <Compile Include="SaveLogic\Map.cs" />
     <Compile Include="SaveLogic\Model.cs" />
     <Compile Include="SaveLogic\Unlock\AnimationItem.cs" />
-    <Compile Include="SaveLogic\Unlock\Portrait.cs" />
-    <Compile Include="SaveLogic\Unlock\Skin.cs" />
+    <Compile Include="SaveLogic\Unlock\PortraitFrame.cs" />
+    <Compile Include="SaveLogic\Unlock\SkinTheme.cs" />
     <Compile Include="SaveLogic\Unlock\SprayAndIcon.cs" />
     <Compile Include="SaveLogic\Unlock\VoiceLine.cs" />
     <Compile Include="ToolFlags.cs" />

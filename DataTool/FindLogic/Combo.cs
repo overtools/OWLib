@@ -539,9 +539,8 @@ namespace DataTool.FindLogic {
                         foreach (ulong entityAnimation in entityInfo.Animations) {
                             AnimationInfoNew entityAnimationInfo = info.Animations[entityAnimation];
                             if (entityAnimationInfo.Effect == 0) continue;
-                            EffectInfoCombo entityAnimationEffectInfo = null;
 
-                            info.SetEffectVoiceSet(entityAnimationEffectInfo.GUID, entityInfo.VoiceSet);
+                            info.SetEffectVoiceSet(entityAnimationInfo.Effect, entityInfo.VoiceSet);
                         }
                     }
 

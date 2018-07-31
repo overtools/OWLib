@@ -10,27 +10,27 @@ using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.SaveLogic.Unlock {
-    public static class Skin {
+    public static class SkinTheme {
         public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock, STUHero hero) {
             if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
             STUSkinTheme skinTheme = GetInstance<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
             if (skinTheme == null) return;
             
-            LoudLog($"Extracting skin {IO.GetString(hero.m_0EDCE350)} {unlock.Name}");
+            LoudLog($"\tExtracting skin {unlock.Name}");
             Save(flags, directory, skinTheme, hero);
         }
 
         public static void Save(ICLIFlags flags, string directory, STU_63172E83 skin, STUHero hero) {
             STUSkinTheme skinTheme = GetInstance<STUSkinTheme>(skin.m_5E9665E3);
             if (skinTheme == null) return;
-            LoudLog($"Extracting skin {IO.GetString(hero.m_0EDCE350)} {IO.GetFileName(skin.m_5E9665E3)}");
+            LoudLog($"\tExtracting skin {IO.GetFileName(skin.m_5E9665E3)}");
             Save(flags, directory, skinTheme, hero);
         }
 
         public static void Save(ICLIFlags flags, string directory, STUSkinBase skin, STUHero hero) {
             Dictionary<ulong, ulong> replacements = GetReplacements(skin);
             
-            LoudLog("\tFinding");
+            LoudLog("\t\tFinding");
             
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             
@@ -100,9 +100,9 @@ namespace DataTool.SaveLogic.Unlock {
                 }
             }
 
-            LoudLog("\tSaving");
+            LoudLog("\t\tSaving");
             Combo.Save(flags, directory, info);
-            LoudLog("\tDone");
+            LoudLog("\t\tDone");
         }
 
         private static void SavePreviewWeapons(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> weaponReplacements, STU_A0872511[] entities) {

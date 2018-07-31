@@ -74,7 +74,7 @@ namespace DataTool.DataModels {
 		}
 
 		public string GetName() {
-			return Name ?? GetFileName(GUID);
+			return Name?.Replace(".", "") ?? GetFileName(GUID);
 		}
 
 	    /// <summary>

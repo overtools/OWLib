@@ -159,8 +159,6 @@ namespace DataTool.ToolLogic.Extract {
                 string heroFileName = GetValidFilename(heroNameActual);
                 
                 if (config.Count == 0) continue;
-                
-                Log($"Processing unlocks for {heroNameActual}");
 
                 string heroPath = Path.Combine(basePath, RootDir, heroFileName);
                 
@@ -172,6 +170,8 @@ namespace DataTool.ToolLogic.Extract {
                 if (progressionUnlocks.LootBoxesUnlocks != null && npc) {
                     continue;
                 }
+                
+                Log($"Processing unlocks for {heroNameActual}");
 
                 {
                     Combo.ComboInfo guiInfo = new Combo.ComboInfo();
@@ -201,8 +201,8 @@ namespace DataTool.ToolLogic.Extract {
                     foreach (var skin in hero.m_skinThemes) {
                         if (!config.ContainsKey("skin") && config["skin"].ShouldDo(GetFileName(skin.m_5E9665E3)))
                             continue;
-                        Skin.Save(flags, Path.Combine(heroPath, Unlock.GetTypeName(typeof(STUUnlock_SkinTheme)), "NPC", 
-                            GetFileName(skin.m_5E9665E3)), skin, hero);
+                        SkinTheme.Save(flags, Path.Combine(heroPath, Unlock.GetTypeName(typeof(STUUnlock_SkinTheme)), 
+                            string.Empty, GetFileName(skin.m_5E9665E3)), skin, hero);
                     }
                     continue;
                 }
@@ -263,7 +263,7 @@ namespace DataTool.ToolLogic.Extract {
                 rarity = ""; // for general unlocks
             }
             
-            string thisPath = Path.Combine(path, unlock.Type, eventKey, rarity, GetValidFilename(unlock.GetName()).Replace(".", ""));
+            string thisPath = Path.Combine(path, unlock.Type, eventKey, rarity, GetValidFilename(unlock.GetName()));
             
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SprayPaint))) {
                 SprayAndIcon.Save(flags, thisPath, unlock);
@@ -287,7 +287,12 @@ namespace DataTool.ToolLogic.Extract {
             }
             
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SkinTheme))) {
-                Skin.Save(flags, thisPath, unlock, hero);
+                SkinTheme.Save(flags, thisPath, unlock, hero);
+            }
+            
+            if (ShouldDo(unlock, config, tags, typeof(STUUnlock_PortraitFrame))) {
+                thisPath = Path.Combine(path, unlock.Type);
+                PortraitFrame.Save(flags, thisPath, unlock);
             }
         }
 
@@ -296,10 +301,9 @@ namespace DataTool.ToolLogic.Extract {
 
             string type = Unlock.GetTypeName(unlockType);
             string typeLower = type.ToLowerInvariant();
-            if (config == null) return true;
-            return unlock.Type == type && config.ContainsKey(typeLower) && config[typeLower].ShouldDo(unlock.GetName(), tags);
+            if (config == null) return unlock.Type == type;
+            return unlock.Type == type && config.ContainsKey(typeLower) &&
+                   config[typeLower].ShouldDo(unlock.GetName(), tags);
         }
-
-        
     }
 }

@@ -158,7 +158,7 @@ namespace DataTool.ToolLogic.Extract
             Combo.ComboInfo info = default;
 
             SaveSet(flags, basePath, hero.m_gameplayEntity, heroFileName, GetValidFilename(name), ref component,
-                ref info, baseComponent, baseInfo, Skin.GetReplacements(skin));
+                ref info, baseComponent, baseInfo, SkinTheme.GetReplacements(skin));
         }
 
         public static bool SaveSet(ICLIFlags flags, string basePath, ulong entityMain, string heroFileName, string skin, ref STUVoiceSetComponent voiceSetComponent, ref Combo.ComboInfo info, STUVoiceSetComponent baseComponent = null, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null)
@@ -181,7 +181,7 @@ namespace DataTool.ToolLogic.Extract
                 }
             }
 
-            Log("Saving {0}", skin);
+            Log("\tSaving {0}", skin);
 
             SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName, skin), info, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements));
 

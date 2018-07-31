@@ -33,7 +33,7 @@ namespace DataTool.ToolLogic.Extract {
                 STULoadout loadout = GetInstance<STULoadout>(key);
                 if (loadout == null) continue;
                 
-                string name = GetValidFilename(GetString(loadout.m_9290B942).TrimEnd().Replace(".", "_")) ?? $"Unknown{teResourceGUID.Index(key):X}";
+                string name = GetValidFilename(GetString(loadout.m_name)?.TrimEnd().Replace(".", "_")) ?? $"Unknown{teResourceGUID.Index(key):X}";
                 
                 Combo.ComboInfo info = new Combo.ComboInfo();
                 Combo.Find(info, loadout.m_texture);

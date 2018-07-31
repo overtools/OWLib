@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using TankLib;
@@ -19,7 +20,7 @@ namespace DataTool.ToolLogic.Extract {
             GetLootboxes(toolFlags);
         }
 
-        public const string Container = "Lootboxes";
+        public const string Container = "LootBoxes";
 
         public void GetLootboxes(ICLIFlags toolFlags) {
             string basePath;
@@ -33,8 +34,8 @@ namespace DataTool.ToolLogic.Extract {
             foreach (ulong key in TrackedFiles[0xCF]) {
                 STULootBox lootbox = GetInstance<STULootBox>(key);
                 if (lootbox == null) continue;
-                
-                string name = GetValidFilename(lootbox.m_lootboxType.ToString()) ?? $"Unknown{teResourceGUID.Index(key):X}";
+
+                string name = LootBox.GetName(lootbox.m_lootboxType);
 
                 Combo.ComboInfo info = Combo.Find(null, lootbox.m_baseEntity);  // 003
                 Combo.Find(info, lootbox.m_chestEntity);  // 003
