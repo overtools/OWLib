@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
 namespace TankLib {
@@ -43,15 +42,15 @@ namespace TankLib {
 
         public teResourceGUID GetPayloadGUID(teResourceGUID textureResource, int region = 1)
         {
-            ulong guid = ((ulong)textureResource & 0xF0FFFFFFFFUL) | ((ulong)((byte)(Header.Indice - 1)) << 32) | 0x0320000000000000UL;
-            if(teResourceGUID.Type((ulong)textureResource) == 0xF1)
+            ulong guid = (textureResource & 0xF0FFFFFFFFUL) | ((ulong)((byte)(Header.Indice - 1)) << 32) | 0x0320000000000000UL;
+            if(teResourceGUID.Type(textureResource) == 0xF1)
             {
                 guid |= ((ulong)region << 40);
             }
             return new teResourceGUID(guid);
         }
 
-        public ulong GetPayloadGUID(ulong gUID, int region = 1) => (ulong)GetPayloadGUID(new teResourceGUID(gUID), region);
+        public ulong GetPayloadGUID(ulong gUID, int region = 1) => GetPayloadGUID(new teResourceGUID(gUID), region);
 
         /// <summary>Load the texture payload</summary>
         /// <param name="payloadStream">The payload stream</param>

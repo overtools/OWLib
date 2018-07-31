@@ -6,7 +6,7 @@ using TankLib.Math;
 
 namespace TankLib.Replay
 {
-    public class tePlayerHighlight : ReadableData
+    public sealed class tePlayerHighlight : ReadableData
     {
         public class FillerStruct : ReadableData
         {
@@ -17,7 +17,7 @@ namespace TankLib.Replay
         }
 
         [Flags]
-        public enum HighlightUIFlags : int
+        public enum HighlightUIFlags 
         {
             Top5Highlight = 0x1, // Displayed in the "Top 5" section
             ManualHighlight = 0x2, // Displayed in the "36 manual highlights" section
@@ -87,6 +87,7 @@ namespace TankLib.Replay
         }
 
         [Logical.Skip]
+        // ReSharper disable once InconsistentNaming
         public static readonly int MAGIC = Util.GetMagicBytesBE('p', 'h', 'l'); // Player HighLight
 
         [Logical.Skip]

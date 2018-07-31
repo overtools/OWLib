@@ -14,10 +14,10 @@ namespace TankLibHelper {
         public List<uint> BrokenInstances;
         public Dictionary<uint, STUInstanceJSON> Instances;
 
-        private readonly string _directory;
+        //private readonly string _directory;
         
         public StructuredDataInfo(string directory) {
-            _directory = directory;
+            //_directory = directory;
             BrokenInstances = new List<uint>();
             KnownEnums = new Dictionary<uint, string>();
             KnownFields = new Dictionary<uint, string>();

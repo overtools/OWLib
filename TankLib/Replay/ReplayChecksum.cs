@@ -50,28 +50,22 @@ namespace TankLib.Replay
 
         public override string ToString()
         {
-            unsafe
+            StringBuilder bob = new StringBuilder(64);
+            fixed (byte* ptr = Data)
             {
-                StringBuilder bob = new StringBuilder(64);
-                fixed (byte* ptr = Data)
+                for (int i = 0; i < 32; ++i)
                 {
-                    for (int i = 0; i < 32; ++i)
-                    {
-                        bob.Append(ptr[i].ToString("X2"));
-                    }
+                    bob.Append(ptr[i].ToString("X2"));
                 }
-                return bob.ToString();
             }
+            return bob.ToString();
         }
 
         public static implicit operator byte[] (ReplayChecksum that)
         {
-            unsafe
-            {
-                byte[] b = new byte[32];
-                Marshal.Copy((IntPtr)that.Data, b, 0, 32);
-                return b;
-            }
+            byte[] b = new byte[32];
+            Marshal.Copy((IntPtr)that.Data, b, 0, 32);
+            return b;
         }
     }
 }

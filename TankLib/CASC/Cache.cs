@@ -12,14 +12,13 @@ namespace TankLib.CASC {
         
         public readonly string CDNCachePath;
         public readonly string APMCachePath;
-        
-        private readonly string _cachePath;
+
         private readonly SyncDownloader _downloader;
 
         public Cache(string path) {
-            _cachePath = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), path);
-            CDNCachePath = Path.Combine(_cachePath, "CDN");
-            APMCachePath = Path.Combine(_cachePath, "APM");
+            string cachePath = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), path);
+            CDNCachePath = Path.Combine(cachePath, "CDN");
+            APMCachePath = Path.Combine(cachePath, "APM");
             
             _downloader = new SyncDownloader();
             

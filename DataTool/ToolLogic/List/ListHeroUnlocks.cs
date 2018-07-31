@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using DataTool.DataModels;
 using DataTool.Flag;
-using DataTool.ToolLogic.Extract;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;

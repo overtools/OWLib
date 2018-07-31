@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using DataTool.JSON;
-using DataTool.ToolLogic.Extract;
 using Newtonsoft.Json;
 using TankLib;
 using TankLib.STU.Types;
@@ -36,7 +35,7 @@ namespace DataTool.DataModels {
         }
 
         public static string GetName(uint type) {
-            if (_lootBoxNames.TryGetValue(type, out string lootboxName)) {
+            if (LootBoxNames.TryGetValue(type, out string lootboxName)) {
                 return lootboxName;
             }
             return $"Unknown{type}";
@@ -46,7 +45,7 @@ namespace DataTool.DataModels {
             return GetName((uint)lootBoxType);
         }
         
-        private static readonly Dictionary<uint, string> _lootBoxNames = new Dictionary<uint, string> {
+        private static readonly Dictionary<uint, string> LootBoxNames = new Dictionary<uint, string> {
             {0, "Base"},
             {1, "Summer Games"},
             {2, "Halloween"},

@@ -119,7 +119,7 @@ namespace TankLib {
                                 teStructuredData structuredData = new teStructuredData(reader);
                                 entity.InstanceData[i] = structuredData.GetInstance<STUComponentInstanceData>();
                                 AlignPosition(beforePos, reader, structuredData);
-                            } catch (Exception e) {
+                            } catch (Exception) {
                                 execCount++;
                                 AlignPositionInternal(reader, beforePos + 8); // try and recover
                             }

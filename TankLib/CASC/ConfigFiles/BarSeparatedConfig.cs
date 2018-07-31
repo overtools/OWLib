@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace TankLib.CASC.ConfigFiles {
@@ -41,7 +41,7 @@ namespace TankLib.CASC.ConfigFiles {
                     result.Data.Add(new Dictionary<string, string>());
 
                     for (int i = 0; i < tokens.Length; ++i) {
-                        Debug.Assert(fields != null, nameof(fields) + " != null");
+                        if (fields == null) throw new NullReferenceException(nameof(fields));
                         result.Data[lineNum - 1].Add(fields[i], tokens[i]);
                     }
                 }

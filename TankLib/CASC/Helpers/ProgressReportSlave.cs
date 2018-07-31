@@ -4,26 +4,23 @@ using System.ComponentModel;
 namespace TankLib.CASC.Helpers {
     /// <summary>Reports on progress</summary>
     public class ProgressReportSlave {
-        private object @lock = new object();
+        private readonly object _lock = new object();
 
         public event Action<object, ProgressChangedEventArgs> OnProgress;
 
-        public ProgressReportSlave() {
-        }
-
         public void ReportProgress(int percentProgress)
         {
-            lock (@lock)
+            lock (_lock)
             {
-                OnProgress.Invoke(this, new ProgressChangedEventArgs(percentProgress, null));
+                OnProgress?.Invoke(this, new ProgressChangedEventArgs(percentProgress, null));
             }
         }
 
         public void ReportProgress(int percentProgress, object userState)
         {
-            lock (@lock)
+            lock (_lock)
             {
-                OnProgress.Invoke(this, new ProgressChangedEventArgs(percentProgress, userState));
+                OnProgress?.Invoke(this, new ProgressChangedEventArgs(percentProgress, userState));
             }
         }
     }

@@ -1,7 +1,5 @@
 ﻿using System;
 
 namespace TankLib.CASC {
-    public class LocalIndexMissingException : Exception {
-        public LocalIndexMissingException() { }
-    }
+    public class LocalIndexMissingException : Exception { }
 }

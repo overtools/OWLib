@@ -49,6 +49,7 @@ namespace TankLib.CASC {
 
         protected ContentManifestFile() {}
 
+        // ReSharper disable once InconsistentNaming
         public static readonly int ENCRYPTED_MAGIC = Util.GetMagicBytes('c', 'm', 'f');
 
         protected void Read(BinaryReader reader, string name, ProgressReportSlave worker=null) {

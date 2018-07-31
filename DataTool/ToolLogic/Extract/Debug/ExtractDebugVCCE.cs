@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -7,7 +7,7 @@ using static DataTool.Program;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    /*[Tool("extract-debug-vcce", Description = "Extract VCCE as png (debug)", TrackTypes = new ushort[] {0x8F}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-vcce", Description = "Extract VCCE as png (debug)", TrackTypes = new ushort[] {0x8F}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugVCCE : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
@@ -54,5 +54,5 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 }
             }
         }
-    }*/
-}
+    }
+}*/

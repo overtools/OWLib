@@ -140,6 +140,7 @@ namespace TankLib.CASC {
 
         public LocaleFlags Locale;
         
+        // ReSharper disable once InconsistentNaming
         private const ulong APM_VERSION = 22;
 
         public void Load(string name, MD5Hash cmfhash, Stream stream, CASCHandler casc, string cmfname, LocaleFlags locale,

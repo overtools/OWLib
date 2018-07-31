@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Windows.Forms;
 using DataTool.Flag;
 using TankLib;
 using TankLib.ExportFormats;

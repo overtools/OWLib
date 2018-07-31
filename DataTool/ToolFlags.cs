@@ -1,6 +1,4 @@
 ﻿using DataTool.Flag;
-using System.Collections.Generic;
-using TankLib;
 
 namespace DataTool {
     public class ToolFlags : ICLIFlags {
@@ -46,6 +44,7 @@ namespace DataTool {
         public bool Expert;
 
         [CLIFlag(Default = false, Flag = "rcn", Help = "use (R)CN? CMF", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        // ReSharper disable once InconsistentNaming
         public bool RCN;
 
         // todo: maybe sombody should implement these

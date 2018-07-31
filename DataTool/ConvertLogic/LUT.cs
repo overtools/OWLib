@@ -13,17 +13,17 @@ namespace DataTool.ConvertLogic {
 
             SortedList<int, string> lines = new SortedList<int, string>();
 
-            float @base = (float)byte.MaxValue;
+            float @base = byte.MaxValue;
 
             for (int y = 0; y < 32; y++)
             {
                 for (int x = 0; x < 1024; x++)
                 {
-                    int[] neutral = new int[] { (x % 32), y, (x / 32) }; // 1024x32
+                    int[] neutral = { x % 32, y, x / 32 }; // 1024x32
 
                     string s = $"{neutral[0]} {neutral[1]} {neutral[2]} ";
 
-                    float[] rgb = new float[] { (float)lutimage.ReadByte() / @base, (float)lutimage.ReadByte() / @base, (float)lutimage.ReadByte() / @base };
+                    float[] rgb = { lutimage.ReadByte() / @base, lutimage.ReadByte() / @base, lutimage.ReadByte() / @base };
                     lutimage.ReadByte(); // alpha.
 
                     s += $"{rgb[0]} {rgb[1]} {rgb[2]}";

@@ -119,7 +119,7 @@
     <Compile Include="ExportFormats\IExportFormat.cs" />
     <Compile Include="ExportFormats\OverwatchModel.cs" />
     <Compile Include="ExportFormats\SEAnim.cs" />
-    <Compile Include="ExportFormats\SkeletonRefpose.cs" />
+    <Compile Include="ExportFormats\RefPoseSkeleton.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Helpers\DataSerializer\Logical.cs" />
     <Compile Include="Helpers\DataSerializer\Serializer.cs" />

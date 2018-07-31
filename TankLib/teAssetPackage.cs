@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace TankLib {
     /// <summary>Tank AssetPakage, file type 077</summary>
@@ -16,7 +17,7 @@ namespace TankLib {
         }
 
         private void Read(BinaryReader reader) {
-            
+            throw new NotImplementedException();
         }
     }
 }

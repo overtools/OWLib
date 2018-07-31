@@ -45,6 +45,7 @@ namespace TankLib.Helpers.DataSerializer
     {
         [Logical.Skip]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        // ReSharper disable once InconsistentNaming
         internal Dictionary<string, ReadableType> __readabledata_attrs = new Dictionary<string, ReadableType>();
 
         public long GetMutableSize(Type t, object obj)
@@ -286,6 +287,7 @@ namespace TankLib.Helpers.DataSerializer
 
             if (isStruct)
             {
+                // ReSharper disable once PossibleNullReferenceException
                 MethodInfo method = typeof(Extensions).GetMethod(nameof(Extensions.Read)).MakeGenericMethod(type);
                 return method.Invoke(reader, new object[] { reader });
             }

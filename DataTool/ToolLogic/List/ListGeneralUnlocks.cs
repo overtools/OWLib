@@ -1,7 +1,6 @@
 ﻿using System;
 using DataTool.DataModels;
 using DataTool.Flag;
-using DataTool.ToolLogic.Extract;
 using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;

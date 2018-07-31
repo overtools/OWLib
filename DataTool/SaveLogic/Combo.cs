@@ -251,7 +251,7 @@ namespace DataTool.SaveLogic {
                         
                         using (Stream fileStream = File.OpenWrite(refposePath)) {
                             fileStream.SetLength(0);
-                            var refpose = new Model.RefPoseSkeleton(chunkedData);
+                            var refpose = new RefPoseSkeleton(chunkedData);
                             refpose.Write(fileStream);
                         }
                     }

@@ -80,7 +80,7 @@ namespace TankLib.STU {
             Instances[attribute.Hash] = type;
             InstancesInverted[type] = attribute.Hash;
             FieldAttributes[attribute.Hash] = new Dictionary<uint, KeyValuePair<FieldInfo, STUFieldAttribute>>();
-            List<uint> fieldOrderTemp = new List<uint>();
+            //List<uint> fieldOrderTemp = new List<uint>();
 
             foreach (FieldInfo field in type.GetFields()) {
                 STUFieldAttribute fieldAttribute = field.GetCustomAttribute<STUFieldAttribute>();

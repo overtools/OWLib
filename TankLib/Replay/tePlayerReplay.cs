@@ -4,7 +4,7 @@ using TankLib.Helpers.DataSerializer;
 
 namespace TankLib.Replay
 {
-    public class tePlayerReplay : ReadableData
+    public sealed class tePlayerReplay : ReadableData
     {
         public byte FormatVersion;
         public uint BuildNumber;
@@ -35,6 +35,7 @@ namespace TankLib.Replay
         }
 
         [Logical.Skip]
+        // ReSharper disable once InconsistentNaming
         public static readonly int MAGIC = Util.GetMagicBytesBE('p', 'r', 'p'); // Player RePlay
 
         public tePlayerReplay(Stream stream, bool leaveOpen = false)

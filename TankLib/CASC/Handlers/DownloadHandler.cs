@@ -1,5 +1,5 @@
-﻿namespace TankLib.CASC.Handlers {
-    /*public class DownloadEntry {
+﻿/*namespace TankLib.CASC.Handlers {
+    public class DownloadEntry {
         public int Index;
 
         public IEnumerable<KeyValuePair<string, DownloadTag>> Tags;
@@ -87,5 +87,5 @@
             _downloadData.Clear();
             _downloadData = null;
         }
-    }*/
-}
+    }
+}*/

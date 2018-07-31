@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace TankLib.Chunks {
+    // ReSharper disable once InconsistentNaming
     public class teEffectComponent_SS : IChunk {
         public string ID => "ECSS";
 
