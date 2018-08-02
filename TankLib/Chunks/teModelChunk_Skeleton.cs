@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
+using SharpDX;
 using TankLib.Math;
 
 namespace TankLib.Chunks {
@@ -101,6 +102,20 @@ namespace TankLib.Chunks {
                     IDs = reader.ReadArray<uint>(Header.BonesAbs);
                 }
             }
+        }
+
+        public void GetWorldSpace(int idx, out teVec3 scale, out teQuat rotation, out teVec3 translation) {
+            teMtx43 parBoneMat = Matrices34[idx];
+            scale = new teVec3(parBoneMat[1, 0], parBoneMat[1, 1], parBoneMat[1, 2]);
+            rotation = new teQuat(parBoneMat[0, 0], parBoneMat[0, 1],parBoneMat[0, 2], parBoneMat[0, 3]);
+            translation = new teVec3(parBoneMat[2, 0], parBoneMat[2, 1], parBoneMat[2, 2]);
+        }
+
+        public Matrix GetWorldSpace(int idx) {
+            GetWorldSpace(idx, out teVec3 scale, out teQuat rotation, out teVec3 translation);
+            return Matrix.Scaling(scale) *
+                   Matrix.RotationQuaternion(rotation) *
+                   Matrix.Translation(translation);
         }
     }
 }

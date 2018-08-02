@@ -216,9 +216,9 @@ namespace TankLib.Chunks {
             }
         }
 
-        public short[] CreateFakeHierarchy(teModelChunk_Skeleton skeleton) {
+        public short[] CreateFakeHierarchy(teModelChunk_Skeleton skeleton, out Dictionary<int, ClothNode> nodeMap) {
             short[] hierarchy = (short[]) skeleton.Hierarchy.Clone();
-            Dictionary<int, ClothNode> nodeMap = new Dictionary<int, ClothNode>();
+            nodeMap = new Dictionary<int, ClothNode>();
             
             uint clothIndex = 0;
             foreach (ClothNode[] nodeCollection in Nodes) {

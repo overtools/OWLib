@@ -65,6 +65,7 @@ namespace DataTool.ToolLogic.Extract {
             ["lucio"] = "lúcio",
             ["torbjorn"] = "torbjörn",
             ["torb"] = "torbjörn",
+            ["toblerone"] = "torbjörn",
             ["dva"] = "d.va",
             ["starcraft_pro"] = "d.va",
             ["starcraft_pro_but_not_actually_because_michael_chu_retconned_it"] = "d.va",

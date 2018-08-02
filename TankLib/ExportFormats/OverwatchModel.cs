@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using SharpDX;
 using TankLib.Chunks;
@@ -29,7 +30,7 @@ namespace TankLib.ExportFormats {
             teModelChunk_RenderMesh renderMesh = _data.GetChunk<teModelChunk_RenderMesh>();
             teModelChunk_Model model = _data.GetChunk<teModelChunk_Model>();
             teModelChunk_Skeleton skeleton = _data.GetChunk<teModelChunk_Skeleton>();
-            //teModelChunk_Cloth cloth = _data.GetChunk<teModelChunk_Cloth>();
+            teModelChunk_Cloth cloth = _data.GetChunk<teModelChunk_Cloth>();
             teModelChunk_STU stu = _data.GetChunk<teModelChunk_STU>();
             
             using (BinaryWriter writer = new BinaryWriter(stream)) {
@@ -46,7 +47,14 @@ namespace TankLib.ExportFormats {
                     writer.Write(Name);
                 }
 
+                short[] hierarchy = null;
+                Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap = null;
                 if (skeleton != null) {
+                    if (cloth != null) {
+                        hierarchy = cloth.CreateFakeHierarchy(skeleton, out clothNodeMap);
+                    } else {
+                        hierarchy = skeleton.Hierarchy;
+                    }
                     writer.Write(skeleton.Header.BonesAbs);
                 } else {
                     writer.Write((ushort)0);
@@ -68,19 +76,15 @@ namespace TankLib.ExportFormats {
                 }
                 
                 if (skeleton != null) {
-                    for (int j = 0; j < skeleton.Header.BonesAbs; ++j) {
-                        writer.Write(GetBoneName(skeleton.IDs[j]));
-                        short parent = skeleton.Hierarchy[j];
+                    for (int i = 0; i < skeleton.Header.BonesAbs; ++i) {
+                        writer.Write(GetBoneName(skeleton.IDs[i]));
+                        short parent = hierarchy[i];
                         if (parent == -1) {
-                            parent = (short)j;
+                            parent = (short)i;
                         }
                         writer.Write(parent);
                         
-                        teMtx43 boneMat = skeleton.Matrices34[j];
-                        teQuat rotation = new teQuat(boneMat[0, 0], boneMat[0, 1], boneMat[0, 2], boneMat[0, 3]);
-                        teVec3 scale = new teVec3(boneMat[1, 0], boneMat[1, 1], boneMat[1, 2]);
-                        teVec3 translation = new teVec3(boneMat[2, 0], boneMat[2, 1], boneMat[2, 2]);
-                        
+                        skeleton.GetWorldSpace(i, out teVec3 scale, out teQuat rotation, out teVec3 translation);
                         writer.Write(translation);
                         writer.Write(scale);
                         writer.Write(rotation);
@@ -140,14 +144,8 @@ namespace TankLib.ExportFormats {
                         if (hardPoint.m_FF592924 != 0 && skeleton != null) {
                             int boneIdx = skeleton.IDs.TakeWhile(id => id != teResourceGUID.Index(hardPoint.m_FF592924))
                                 .Count();
-                            
-                            teMtx43 boneMat = skeleton.Matrices34[boneIdx];
-                            teQuat rotation = new teQuat(boneMat[0, 0], boneMat[0, 1], boneMat[0, 2], boneMat[0, 3]);
-                            teVec3 scale = new teVec3(boneMat[1, 0], boneMat[1, 1], boneMat[1, 2]);
-                            teVec3 translation = new teVec3(boneMat[2, 0], boneMat[2, 1], boneMat[2, 2]);
-                            parentMat = Matrix.Scaling(scale) *
-                                        Matrix.RotationQuaternion(rotation) *
-                                        Matrix.Translation(translation);
+
+                            parentMat = skeleton.GetWorldSpace(boneIdx);
                         }
 
                         Matrix hardPointMat = Matrix.RotationQuaternion(hardPoint.m_rotation) *
@@ -172,23 +170,43 @@ namespace TankLib.ExportFormats {
                 if (skeleton != null) {
                     for (int i = 0; i < skeleton.Header.BonesAbs; ++i) {
                         writer.Write(IdToString("bone", skeleton.IDs[i]));
-                        short parent = skeleton.Hierarchy[i];
+                        short parent = hierarchy[i];
                         writer.Write(parent);
 
-                        teMtx43 bone = skeleton.Matrices34Inverted[i];
-                        
-                        teQuat quat = new teQuat(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
-                        teVec3 scl = new teVec3(bone[1, 0], bone[1, 1], bone[1, 2]);
-                        teVec3 pos = new teVec3(bone[2, 0], bone[2, 1], bone[2, 2]);
+                        GetRefPoseTransform(i, hierarchy, skeleton, clothNodeMap, out teVec3 scale, out teQuat quat,
+                            out teVec3 translation);
                         
                         teVec3 rot = quat.ToEulerAngles();
-                        writer.Write(pos);
-                        writer.Write(scl);
+                        writer.Write(translation);
+                        writer.Write(scale);
                         writer.Write(rot);
                     }
                 }
                 
                 writer.Write(teResourceGUID.Index(GUID));
+            }
+        }
+
+        public static void GetRefPoseTransform(int i, short[] hierarchy, teModelChunk_Skeleton skeleton, 
+            Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap, out teVec3 scale, out teQuat quat, 
+            out teVec3 translation) {
+            if (clothNodeMap != null && clothNodeMap.ContainsKey(i)) {
+                Matrix thisMat = skeleton.GetWorldSpace(i);
+                Matrix parentMat = skeleton.GetWorldSpace(hierarchy[i]);
+                            
+                Matrix newParentMat = thisMat * Matrix.Invert(parentMat);
+
+                newParentMat.Decompose(out Vector3 scl2, out Quaternion rot2, out Vector3 pos2);
+                            
+                quat = new teQuat(rot2.X, rot2.Y, rot2.Z, rot2.W);
+                scale = new teVec3(scl2.X, scl2.Y, scl2.Z);
+                translation = new teVec3(pos2.X, pos2.Y, pos2.Z);
+            } else {
+                teMtx43 bone = skeleton.Matrices34Inverted[i];
+                        
+                scale = new teVec3(bone[1, 0], bone[1, 1], bone[1, 2]);
+                quat = new teQuat(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
+                translation = new teVec3(bone[2, 0], bone[2, 1], bone[2, 2]);
             }
         }
 
