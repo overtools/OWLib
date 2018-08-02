@@ -118,8 +118,14 @@ namespace DataTool {
             Config.SpeechLanguage = Flags.SpeechLanguage ?? Flags.Language ?? Config.SpeechLanguage;
             Config.TextLanguage = Flags.Language ?? Config.TextLanguage;
 
-            if (Config.InstallData?.Uid != null && Config.InstallData.Uid != "prometheus") {
-                TankLib.Helpers.Logger.Warn("Core", $"The branch \"{Config.InstallData.Uid}\" is not supported!. This might result in failure to load. Proceed with caution.");
+            if (Config != null) {
+                if (Flags.Language != null && !Config.InstallData.Settings.Languages.Select(x => x.Language).Contains(Flags.Language)) {
+                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", Flags.Language);
+                }
+
+                if (Config.InstallData.Uid != "prometheus") {
+                    TankLib.Helpers.Logger.Warn("Core", $"The branch \"{Config.InstallData.Uid}\" is not supported!. This might result in failure to load. Proceed with caution.");
+                }
             }
             #endregion
 
@@ -143,10 +149,14 @@ namespace DataTool {
             //    return;
             //}
 
+            if (Config.InstallData != null) {
+                
+            }
+            
             // Fail when trying to extract data from a specified language with 2 or less files found.
             if (!Root.APMFiles.Any()) {
                 TankLib.Helpers.Logger.Error("Core", "Unable to load APM files for language {0}. Please confirm that you have that language installed.", Flags.Language);
-                return;
+                    return;
             }
 
             TankLib.Helpers.Logger.Info("Core", "Mapping storage");

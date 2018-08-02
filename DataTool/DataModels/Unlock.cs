@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DataTool.JSON;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using TankLib.STU;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
@@ -29,6 +30,7 @@ namespace DataTool.DataModels {
 		/// Unlock rarity
 		/// </summary>
 		/// <see cref="STUUnlockRarity"/>
+		[JsonConverter(typeof(StringEnumConverter))]
 	    public STUUnlockRarity Rarity;
 		
 		/// <summary>

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
@@ -10,6 +11,8 @@ namespace DataTool.DataModels {
         public string Name;
         public string Location;
         public string Abbreviation;
+        
+        [JsonConverter(typeof(StringEnumConverter))]
         public Enum_5A789F71 Division;
 
         public string FullName;

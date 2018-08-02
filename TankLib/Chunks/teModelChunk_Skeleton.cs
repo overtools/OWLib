@@ -62,8 +62,6 @@ namespace TankLib.Chunks {
                         Hierarchy[i] = reader.ReadInt16();
                     }
                 }
-                
-                // todo: should be 3x4 mat not 4x3?
 
                 Matrices = new teMtx44[Header.BonesAbs];
                 MatricesInverted = new teMtx44[Header.BonesAbs];

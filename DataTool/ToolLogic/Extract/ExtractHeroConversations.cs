@@ -14,7 +14,8 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-hero-convo", Description = "Extract hero voice conversations", TrackTypes = new ushort[] {0x75}, CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-hero-convo", Description = "Extract hero voice conversations", TrackTypes = new ushort[] {0x75},
+        CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
         public List<QueryType> QueryTypes => new List<QueryType> {new QueryType {Name = "FakeType"}};
 
@@ -27,21 +28,21 @@ namespace DataTool.ToolLogic.Extract {
         public void Parse(ICLIFlags toolFlags) {
             ExtractHeroConvos(toolFlags);
         }
-        
+
         protected override void QueryHelp(List<QueryType> types) {
             IndentHelper indent = new IndentHelper();
-            
+
             Log("Please specify what you want to extract:");
-            Log($"{indent+1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
-            Log($"{indent+1}Each query should be surrounded by \", and individual queries should be seperated by spaces");
-            
-            Log($"{indent+1}All hero names are in your selected locale");
-            
+            Log($"{indent + 1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
+            Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be seperated by spaces");
+
+            Log($"{indent + 1}All hero names are in your selected locale");
+
             Log("\r\nExample commands: ");
-            Log($"{indent+1}\"Lúcio\"");
-            Log($"{indent+1}\"Torbjörn\"");
-            Log($"{indent+1}\"Moira\"");
-            Log($"{indent+1}\"Wrecking Ball\"");
+            Log($"{indent + 1}\"Lúcio\"");
+            Log($"{indent + 1}\"Torbjörn\"");
+            Log($"{indent + 1}\"Moira\"");
+            Log($"{indent + 1}\"Wrecking Ball\"");
         }
 
         private const string Container = "HeroConvo";
@@ -53,7 +54,7 @@ namespace DataTool.ToolLogic.Extract {
             } else {
                 throw new Exception("no output path");
             }
-            
+
             if (flags.Positionals.Length < 4) {
                 QueryHelp(QueryTypes);
                 return;
@@ -61,21 +62,24 @@ namespace DataTool.ToolLogic.Extract {
 
             string path = Path.Combine(basePath, Container);
 
-            Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+            Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes =
+                ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
 
             Dictionary<ulong, VoiceSet> heroVoiceSets = new Dictionary<ulong, VoiceSet>();
             Dictionary<ulong, STUHero> heroes = new Dictionary<ulong, STUHero>();
-            
+
             foreach (ulong heroGuid in Program.TrackedFiles[0x75]) {
                 STUHero hero = GetInstance<STUHero>(heroGuid);
                 if (hero == null) continue;
                 STUVoiceSetComponent voiceSetComponent = GetInstance<STUVoiceSetComponent>(hero.m_gameplayEntity);
 
                 if (voiceSetComponent?.m_voiceDefinition == null) {
-                    Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine", "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found");
+                    Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine",
+                        "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found\r\n");
                     continue;
                 }
+
                 STUVoiceSet set = GetInstance<STUVoiceSet>(voiceSetComponent.m_voiceDefinition);
                 if (set == null) continue;
 
@@ -85,14 +89,23 @@ namespace DataTool.ToolLogic.Extract {
 
             Combo.ComboInfo comboInfo = new Combo.ComboInfo();
 
+            // Dictionary<uint, string> mapNames = new Dictionary<uint, string>();
+            // foreach (ulong mapGuid in Program.TrackedFiles[0x9F]) {
+            //     STUMapHeader mapHeader = GetInstance<STUMapHeader>(mapGuid);
+            //     if (mapHeader == null) continue;
+            //
+            //     mapNames[teResourceGUID.Index(mapGuid)] = GetValidFilename(GetString(mapHeader.m_1C706502) ?? GetString(mapHeader.m_displayName));
+            // }
+
             foreach (ulong heroGuid in Program.TrackedFiles[0x75]) {
                 if (!heroes.ContainsKey(heroGuid)) continue;
                 STUHero hero = heroes[heroGuid];
 
-                string heroNameActual = (GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(heroGuid)}").TrimEnd(' ');
+                string heroNameActual =
+                    (GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(heroGuid)}").TrimEnd(' ');
 
                 Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*");
-                
+
                 if (config.Count == 0) continue;
                 Log($"Processing data for {heroNameActual}");
                 heroNameActual = GetValidFilename(heroNameActual);
@@ -100,20 +113,57 @@ namespace DataTool.ToolLogic.Extract {
                 VoiceSet set = heroVoiceSets[heroGuid];
 
                 foreach (VoiceLineInstance lineInstance in set.VoiceLines.Values) {
+                    // if (lineInstance.STU.m_voiceLineRuntime.m_4FF98D41 != null) {
+                    //     var cond = lineInstance.STU.m_voiceLineRuntime.m_4FF98D41;
+                    //
+                    //     HandleCondition(flags, comboInfo, lineInstance, path, heroNameActual, cond, mapNames);
+                    // }
+
                     if (lineInstance.VoiceConversation == 0) continue;
-                    STUVoiceConversation conversation = GetInstance<STUVoiceConversation>(lineInstance.VoiceConversation);
-                        
+                    STUVoiceConversation conversation =
+                        GetInstance<STUVoiceConversation>(lineInstance.VoiceConversation);
+
                     string convoDir = Path.Combine(path, heroNameActual, GetFileName(lineInstance.VoiceConversation));
                     foreach (STUVoiceConversationLine line in conversation.m_voiceConversationLine) {
                         string linePath = Path.Combine(convoDir, line.m_B4D405A1.ToString());
                         foreach (VoiceSet voiceSet in heroVoiceSets.Values) {
                             if (voiceSet.VoiceLines.ContainsKey(line.m_lineGUID)) {
-                                VoiceLine.SaveVoiceLine(flags, voiceSet.VoiceLines[line.m_lineGUID], linePath, comboInfo);
-                            }    
+                                VoiceLine.SaveVoiceLine(flags, voiceSet.VoiceLines[line.m_lineGUID], linePath,
+                                    comboInfo);
+                            }
                         }
                     }
                 }
             }
         }
+
+        /*public void HandleCondition(ICLIFlags flags, Combo.ComboInfo comboInfo, VoiceLineInstance lineInstance,
+            string path, string heroNameActual, STU_C1A2DB26 cond, Dictionary<uint, string> mapNames) {
+            if (cond is STU_32A19631 cond2) {
+                var subCond = cond2.m_4FF98D41;
+
+                HandleCondition(flags, comboInfo, lineInstance, path, heroNameActual, subCond, mapNames);
+            } else {
+                
+            }
+        }
+        
+        public void HandleCondition(ICLIFlags flags, Combo.ComboInfo comboInfo, VoiceLineInstance lineInstance,
+            string path, string heroNameActual, STU_2F33B1B7 cond, Dictionary<uint, string> mapNames) {
+
+            if (cond is STU_7C69EA0F arrayCond) {
+                foreach (STU_C1A2DB26 arrayElem in arrayCond.m_4FF98D41) {
+                    HandleCondition(flags, comboInfo, lineInstance, path, heroNameActual, arrayElem, mapNames);
+                }
+            }
+            
+            if (cond is STU_E9DB72FF mapCond) {
+                VoiceLine.SaveVoiceLine(flags, lineInstance, Path.Combine(path, heroNameActual, "Maps", mapNames[teResourceGUID.Index(mapCond.m_map)]), comboInfo);
+            }
+
+            if (cond is STU_C37857A5 celebrationCond) {
+                VoiceLine.SaveVoiceLine(flags, lineInstance, Path.Combine(path, heroNameActual, "Celebrations", GetFileName(celebrationCond.m_celebrationType)), comboInfo);
+            }
+        }*/
     }
 }

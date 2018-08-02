@@ -59,9 +59,15 @@ namespace DataTool.DataModels {
     public class VoiceLineInstance {
         public List<ulong> VoiceSounds;
         public teResourceGUID VoiceConversation;
+
+        [JsonIgnore]
+        public STUVoiceLineInstance STU;  // todo: ideally not here
+        
         // todo: more fields and stuff.
         
         public VoiceLineInstance(STUVoiceLineInstance instance) {
+            STU = instance;
+            
             if (instance.m_AF226247 != null) {
                 VoiceSounds = new List<ulong>();
                 foreach (var soundFile in new[] {

@@ -10,6 +10,9 @@ namespace DataTool.DataModels {
     [JsonObject(MemberSerialization.OptOut)]
     public class LootBox {
         public string Name;
+        
+        // note: not string becuase we actually want the int here
+        // todo: should populate this enum or something
         public Enum_BABC4175 LootBoxType;
 
         public LootBoxShopCard[] ShopCards;

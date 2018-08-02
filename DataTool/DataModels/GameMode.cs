@@ -1,5 +1,6 @@
 ﻿using DataTool.JSON;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
@@ -9,6 +10,8 @@ namespace DataTool.DataModels {
     [JsonObject(MemberSerialization.OptOut)]
     public class GameMode {
         public string DisplayName;
+        
+        [JsonConverter(typeof(StringEnumConverter))]
         public Enum_1964FED7 Type;
         
         [JsonConverter(typeof(GUIDArrayConverter))]

@@ -471,6 +471,7 @@ namespace DataTool.SaveLogic {
                         convertedStream.Position = 0;
                         if (convertType == "dds" || convertedStream.Length == 0) {
                             WriteFile(convertedStream, $"{filePath}.dds");
+                            return;
                         }
                         
                         uint fourCC = texture.Header.GetFormat().ToPixelFormat().FourCC;
@@ -528,8 +529,7 @@ namespace DataTool.SaveLogic {
         }
 
         private static void ConvertSoundFile(Stream stream, FindLogic.Combo.SoundFileInfo soundFileInfo, string directory) {
-            string outputFile = Path.Combine(directory, $"{soundFileInfo.GetName()}.wem");
-            string outputFileOgg = Path.ChangeExtension(outputFile, "ogg");
+            string outputFile = Path.Combine(directory, $"{soundFileInfo.GetName()}.ogg");
             CreateDirectoryFromFile(outputFile);
             try {
                 using (Sound.WwiseRIFFVorbis vorbis =
@@ -540,7 +540,7 @@ namespace DataTool.SaveLogic {
                     vorbis.ConvertToOgg(vorbisStream);
                     vorbisStream.Position = 0;
                     using (Stream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream)) {
-                        using (Stream outputStream = File.OpenWrite(outputFileOgg)) {
+                        using (Stream outputStream = File.OpenWrite(outputFile)) {
                             outputStream.SetLength(0);
                             revorbStream.Position = 0;
                             revorbStream.CopyTo(outputStream);
@@ -561,14 +561,14 @@ namespace DataTool.SaveLogic {
             
             FindLogic.Combo.SoundFileInfo soundFileInfo = voice ? info.VoiceSoundFiles[soundFile] : info.SoundFiles[soundFile];
 
-            Stream soundStream = OpenFile(soundFile);  // disposed by thread
-            if (soundStream == null) return;
+            using (Stream soundStream = OpenFile(soundFile)) {
+                if (soundStream == null) return;
 
-            if (!convertWem) {
-                WriteFile(soundStream, Path.Combine(directory, $"{soundFileInfo.GetName()}.wem"));
-                soundStream.Dispose();
-            } else {
-                ConvertSoundFile(soundStream, soundFileInfo, directory);
+                if (!convertWem) {
+                    WriteFile(soundStream, Path.Combine(directory, $"{soundFileInfo.GetName()}.wem"));
+                } else {
+                    ConvertSoundFile(soundStream, soundFileInfo, directory);
+                }
             }
         }
     }

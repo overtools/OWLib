@@ -1,5 +1,6 @@
 ﻿using DataTool.Helper;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 
@@ -70,6 +71,7 @@ namespace DataTool.DataModels {
         /// Loot Box type
         /// </summary>
         /// <see cref="Enum_BABC4175"/>
+       [JsonConverter(typeof(StringEnumConverter))]
         public Enum_BABC4175 LootBoxType;
 
         public LootBoxUnlocks(STULootBoxUnlocks lootBoxUnlocks) {
