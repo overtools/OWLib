@@ -35,7 +35,7 @@ namespace TankLib.ExportFormats {
             
             using (BinaryWriter writer = new BinaryWriter(stream)) {
                 writer.Write((ushort)1);
-                writer.Write((ushort)5);  // todo: not full support
+                writer.Write((ushort)5);
                 if (ModelLookFileName == null) {   // mat ref
                     writer.Write((byte)0);
                 } else {

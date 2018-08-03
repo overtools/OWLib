@@ -19,9 +19,7 @@ namespace TankLib.STU {
             return (GetChunkRoot(w) & ~0xFFFF00000000ul) | ((ulong) type << 32);
         }
         #endregion
-
-
-
+        
         #region STUResourceKey
 
         public static ulong GetKeyID(this STUResourceKey key) {
@@ -40,6 +38,16 @@ namespace TankLib.STU {
             return key.GetReverseKeyID().ToString("X16");
         }
 
+        #endregion
+        
+        #region STUEntityDefinition
+        
+        public static T GetComponent<T>(this STUEntityDefinition w) where T : STUInstance {
+            if (teStructuredData.Manager.InstancesInverted.TryGetValue(typeof(T), out uint hash)) {
+                return w.m_componentMap[hash] as T;
+            }
+            return null;
+        }
         #endregion
     }
 }

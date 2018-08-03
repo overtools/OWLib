@@ -45,7 +45,7 @@ namespace DataTool.SaveLogic {
                 }
             }
 
-            public void WriteEffect(BinaryWriter writer) {
+            protected void WriteEffect(BinaryWriter writer) {
                 writer.Write("oweffect");
                 writer.Write(EffectVersionMajor);
                 writer.Write(EffectVersionMinor);
