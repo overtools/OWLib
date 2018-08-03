@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DynamicExpresso.Core, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\DynamicExpresso.Core.2.1.0\lib\net461\DynamicExpresso.Core.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\DynamicExpresso.Core.2.1.0\lib\net461\DynamicExpresso.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="LZ4, Version=1.0.15.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd">
@@ -46,19 +46,19 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.3.15.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67">
-      <HintPath>..\packages\protobuf-net.2.3.15\lib\net40\protobuf-net.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\protobuf-net.2.3.15\lib\net40\protobuf-net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1">
-      <HintPath>..\packages\SharpDX.4.2.0-ci259\lib\net45\SharpDX.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\SharpDX.4.2.0-ci259\lib\net45\SharpDX.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1">
-      <HintPath>..\packages\SharpDX.Mathematics.4.2.0-ci259\lib\net45\SharpDX.Mathematics.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\SharpDX.Mathematics.4.2.0-ci259\lib\net45\SharpDX.Mathematics.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
