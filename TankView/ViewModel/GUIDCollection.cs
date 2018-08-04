@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using DirectXTexNet;
 using TankLib;
@@ -10,11 +11,12 @@ using TankLib.CASC;
 using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
 using TankView.Helper;
+using TankView.View;
 using static TankLib.CASC.ApplicationPackageManifest.Types;
 
 namespace TankView.ViewModel
 {
-    public class GUIDCollection : INotifyPropertyChanged
+    public class GUIDCollection : INotifyPropertyChanged, IDisposable
     {
         private CASCConfig Config;
         private CASCHandler CASC;
@@ -25,37 +27,79 @@ namespace TankView.ViewModel
             get {
                 return _top;
             } set {
-                ImageSource = ImageHelper.ConvertDDS(value, DXGI_FORMAT.R8G8B8A8_UNORM, ImageHelper.ImageFormat.PNG, 0);
+                if (PreviewControl is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+                switch (DataHelper.GetDataType(value))
+                {
+                    case DataHelper.DataType.Image:
+                        {
+                            PreviewSource = DataHelper.ConvertDDS(value, DXGI_FORMAT.R8G8B8A8_UNORM, DataHelper.ImageFormat.PNG, 0);
+                            PreviewControl = new PreviewDataImage();
+                        }
+                        break;
+                    case DataHelper.DataType.Sound:
+                        {
+                            PreviewSource = DataHelper.ConvertSound(value);
+                            PreviewControl = new PreviewDataSound();
+                            (PreviewControl as PreviewDataSound).SetAudio(PreviewSource as Stream);
+                        }
+                        break;
+                    case DataHelper.DataType.Model:
+                        {
+                            PreviewSource = null;
+                            PreviewControl = new PreviewDataModel();
+                        }
+                        break;
+                    default:
+                        {
+                            PreviewSource = null;
+                            PreviewControl = null;
+                        }
+                        break;
+                }
+
                 _top = value;
                 NotifyPropertyChanged(nameof(TopSelectedEntry));
             }
         }
 
+        private Control _control = null;
 
-        private BitmapSource _frame = null;
-
-        private byte[] _image = null;
-        public byte[] ImageSource {
+        public Control PreviewControl {
             get {
-                return _image;
+                return _control;
             } set {
-                if (value != null)
-                {
-                    MemoryStream stream = new MemoryStream(value);
-                    PngBitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.None);
-                    _frame = decoder.Frames[0];
-                }
-                _image = value;
-                NotifyPropertyChanged(nameof(ValidImage));
-                NotifyPropertyChanged(nameof(ImageWidth));
-                NotifyPropertyChanged(nameof(ImageHeight));
-                NotifyPropertyChanged(nameof(ImageSource));
+                _control = value;
+                NotifyPropertyChanged(nameof(PreviewControl));
             }
         }
 
-        public bool ValidImage {
+        private BitmapSource _frame = null;
+
+        private object _previewData = null;
+        public object PreviewSource {
             get {
-                return _image != null;
+                return _previewData;
+            } set {
+                if (value != null)
+                {
+                    switch (DataHelper.GetDataType(_top))
+                    {
+                        case DataHelper.DataType.Image:
+                            {
+                                MemoryStream stream = new MemoryStream((byte[])value);
+                                PngBitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.None);
+                                _frame = decoder.Frames[0];
+                            }
+                            break;
+                    }
+                }
+                _previewData = value;
+                NotifyPropertyChanged(nameof(ImageWidth));
+                NotifyPropertyChanged(nameof(ImageHeight));
+                NotifyPropertyChanged(nameof(PreviewSource));
             }
         }
 
@@ -91,6 +135,8 @@ namespace TankView.ViewModel
         }
 
         public Folder Data = new Folder("/", "/");
+
+        public GUIDCollection() { }
 
         public GUIDCollection(CASCConfig Config, CASCHandler CASC, ProgressReportSlave Slave)
         {
@@ -206,6 +252,14 @@ namespace TankView.ViewModel
         public void NotifyPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public void Dispose()
+        {
+            if (PreviewControl is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
         }
     }
 }

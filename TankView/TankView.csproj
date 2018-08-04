@@ -18,7 +18,7 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,11 +26,11 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -59,9 +59,19 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>$(SolutionDir)\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.9.0-preview1\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.Vorbis, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.Vorbis.1.0.0.0\lib\net35\NAudio.Vorbis.dll</HintPath>
+    </Reference>
+    <Reference Include="NVorbis, Version=0.8.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NVorbis.0.8.4.0\lib\NVorbis.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -83,7 +93,7 @@
     <Compile Include="DataToolSimView.xaml.cs">
       <DependentUpon>DataToolSimView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helper\ImageHelper.cs" />
+    <Compile Include="Helper\DataHelper.cs" />
     <Compile Include="Helper\IOHelper.cs" />
     <Compile Include="ObjectModel\EnumConverter.cs" />
     <Compile Include="ObjectModel\ObservableHashCollection.cs" />
@@ -99,6 +109,15 @@
     <Compile Include="ViewModel\ProductLocations.cs" />
     <Compile Include="ViewModel\ProgressInfo.cs" />
     <Compile Include="ViewModel\RecentLocations.cs" />
+    <Compile Include="View\PreviewDataImage.xaml.cs">
+      <DependentUpon>PreviewDataImage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PreviewDataModel.xaml.cs">
+      <DependentUpon>PreviewDataModel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PreviewDataSound.xaml.cs">
+      <DependentUpon>PreviewDataSound.xaml</DependentUpon>
+    </Compile>
     <Page Include="DataToolSimView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -115,6 +134,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\PreviewDataImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PreviewDataModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PreviewDataSound.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -146,6 +177,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataTool\DataTool.csproj">
+      <Project>{9d1a3dcc-37bf-4979-acd8-3e998e19ce71}</Project>
+      <Name>DataTool</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TankLib\TankLib.csproj">
       <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>
       <Name>TankLib</Name>

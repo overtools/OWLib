@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="TankView.View.PreviewDataSound"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TankView.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="400">
+    <StackPanel>
+        <WrapPanel Margin="0,15,0,0" Height="32" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Click="Play" Margin="0,0,15,0">Play</Button>
+            <Button Click="Pause" Margin="0,0,15,0">Pause</Button>
+            <Button Click="Stop">Stop</Button>
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

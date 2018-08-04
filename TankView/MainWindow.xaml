@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TankView"
+        xmlns:tank="clr-namespace:TankView.View"
         xmlns:vm="clr-namespace:TankView.ViewModel"
         xmlns:om="clr-namespace:TankView.ObjectModel"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -102,8 +103,12 @@
                 </TreeView.ItemContainerStyle>
             </TreeView>
             <GridSplitter Grid.Column="0" Width="3" HorizontalAlignment="Right" VerticalAlignment="Stretch" ResizeDirection="Columns" ShowsPreview="True" ResizeBehavior="CurrentAndNext"/>
-            <TabControl Grid.Column="1">
-                <TabItem Header="Tree">
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="250" MinHeight="250"/>
+                    <RowDefinition Height="1*" MinHeight="100"/>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0">
                     <ListView x:Name="FolderItemList" SelectedItem="{Binding TopSelectedEntry, Mode=OneWayToSource}" ItemsSource="{Binding SelectedEntries, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
                         <ListView.View>
                             <GridView>
@@ -114,13 +119,12 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                </TabItem>
-                <TabItem Header="Image" IsEnabled="{Binding ValidImage, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                        <Image Source="{Binding ImageSource}" Width="{Binding ImageWidth}" Height="{Binding ImageHeight}"/>
-                    </ScrollViewer>
-                </TabItem>
-            </TabControl>
+                </DockPanel>
+                <GridSplitter Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" ResizeDirection="Rows" ShowsPreview="True" ResizeBehavior="CurrentAndNext"/>
+                <DockPanel Grid.Row="1">
+                    <ContentControl Content="{Binding PreviewControl}"/>
+                </DockPanel>
+            </Grid>
         </Grid>
         <StatusBar Grid.Row="2" DataContext="{Binding ProgressInfo}">
             <StatusBarItem VerticalContentAlignment="Stretch">

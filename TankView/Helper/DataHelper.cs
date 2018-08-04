@@ -7,7 +7,7 @@ using TankView.ViewModel;
 
 namespace TankView.Helper
 {
-    public static class ImageHelper
+    public static class DataHelper
     {
         [Flags]
         public enum CoInit : uint
@@ -31,16 +31,49 @@ namespace TankView.Helper
             BMP
         }
 
+        public enum DataType
+        {
+            Unknown,
+            Image,
+            Sound,
+            Model
+        };
+
+        public static DataType GetDataType(GUIDEntry value)
+        {
+            if (value == null || value.GUID == 0)
+            {
+                return DataType.Unknown;
+            }
+            ushort type = teResourceGUID.Type(value.GUID);
+            if (type == 0x004 || type == 0x0F1)
+            {
+                return DataType.Image;
+            }
+            if (type == 0x03F || type == 0x0B2 || type == 0x0BB)
+            {
+                return DataType.Sound;
+            }
+            if(type == 0x00C)
+            {
+                return DataType.Model;
+            }
+            return DataType.Unknown;
+        }
+
+        internal static object ConvertSound(GUIDEntry value)
+        {
+            MemoryStream ms = new MemoryStream();
+            DataTool.SaveLogic.Combo.ConvertSoundFile(IOHelper.OpenFile(value), ms);
+            ms.Position = 0;
+            return ms;
+        }
+
         public static byte[] ConvertDDS(GUIDEntry value, DXGI_FORMAT targetFormat, ImageFormat imageFormat, int frame)
         {
             try
             {
-                if(value == null || value.GUID == 0)
-                {
-                    return null;
-                }
-                ushort type = teResourceGUID.Type(value.GUID);
-                if (type != 0x004 && type != 0x0F1)
+                if(GetDataType(value) != DataType.Image)
                 {
                     return null;
                 }

@@ -528,26 +528,39 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void ConvertSoundFile(Stream stream, FindLogic.Combo.SoundFileInfo soundFileInfo, string directory) {
+        private static void ConvertSoundFile(Stream stream, FindLogic.Combo.SoundFileInfo soundFileInfo, string directory)
+        {
             string outputFile = Path.Combine(directory, $"{soundFileInfo.GetName()}.ogg");
             CreateDirectoryFromFile(outputFile);
-            try {
+            using (Stream outputStream = File.OpenWrite(outputFile))
+            {
+                outputStream.SetLength(0);
+                ConvertSoundFile(stream, outputStream);
+            }
+        }
+
+
+        public static void ConvertSoundFile(Stream stream, Stream outputStream)
+        {
+            try
+            {
                 using (Sound.WwiseRIFFVorbis vorbis =
                     new Sound.WwiseRIFFVorbis(stream,
                         Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party",
-                            "packed_codebooks_aoTuV_603.bin")))) {
+                            "packed_codebooks_aoTuV_603.bin"))))
+                {
                     Stream vorbisStream = new MemoryStream();
                     vorbis.ConvertToOgg(vorbisStream);
                     vorbisStream.Position = 0;
-                    using (Stream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream)) {
-                        using (Stream outputStream = File.OpenWrite(outputFile)) {
-                            outputStream.SetLength(0);
-                            revorbStream.Position = 0;
-                            revorbStream.CopyTo(outputStream);
-                        }
+                    using (Stream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream))
+                    {
+                        revorbStream.Position = 0;
+                        revorbStream.CopyTo(outputStream);
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Console.Out.WriteLine(e);
             }
         }
