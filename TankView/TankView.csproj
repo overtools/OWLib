@@ -18,7 +18,7 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,11 +26,11 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -96,6 +96,7 @@
     <Compile Include="Helper\DataHelper.cs" />
     <Compile Include="Helper\IOHelper.cs" />
     <Compile Include="ObjectModel\EnumConverter.cs" />
+    <Compile Include="ObjectModel\InvertBoolConverter.cs" />
     <Compile Include="ObjectModel\ObservableHashCollection.cs" />
     <Compile Include="ObjectModel\SizeConverter.cs" />
     <Compile Include="Settings.cs" />
@@ -117,6 +118,9 @@
     </Compile>
     <Compile Include="View\PreviewDataSound.xaml.cs">
       <DependentUpon>PreviewDataSound.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PreviewDataString.xaml.cs">
+      <DependentUpon>PreviewDataString.xaml</DependentUpon>
     </Compile>
     <Page Include="DataToolSimView.xaml">
       <SubType>Designer</SubType>
@@ -143,6 +147,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PreviewDataSound.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PreviewDataString.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

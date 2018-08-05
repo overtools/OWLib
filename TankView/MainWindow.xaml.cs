@@ -39,9 +39,10 @@ namespace TankView
         public bool IsReady {
             get {
                 return ready;
-            } set {
+            }
+            set {
                 ready = value;
-                if(value)
+                if (value)
                 {
                     ProgressSlave.ReportProgress(0, "Idle");
                 }

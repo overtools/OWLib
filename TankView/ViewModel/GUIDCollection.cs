@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using DirectXTexNet;
@@ -11,6 +12,7 @@ using TankLib.CASC;
 using TankLib.CASC.Handlers;
 using TankLib.CASC.Helpers;
 using TankView.Helper;
+using TankView.Properties;
 using TankView.View;
 using static TankLib.CASC.ApplicationPackageManifest.Types;
 
@@ -27,41 +29,60 @@ namespace TankView.ViewModel
             get {
                 return _top;
             } set {
-                if (PreviewControl is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
-                switch (DataHelper.GetDataType(value))
-                {
-                    case DataHelper.DataType.Image:
-                        {
-                            PreviewSource = DataHelper.ConvertDDS(value, DXGI_FORMAT.R8G8B8A8_UNORM, DataHelper.ImageFormat.PNG, 0);
-                            PreviewControl = new PreviewDataImage();
-                        }
-                        break;
-                    case DataHelper.DataType.Sound:
-                        {
-                            PreviewSource = DataHelper.ConvertSound(value);
-                            PreviewControl = new PreviewDataSound();
-                            (PreviewControl as PreviewDataSound).SetAudio(PreviewSource as Stream);
-                        }
-                        break;
-                    case DataHelper.DataType.Model:
-                        {
-                            PreviewSource = null;
-                            PreviewControl = new PreviewDataModel();
-                        }
-                        break;
-                    default:
-                        {
-                            PreviewSource = null;
-                            PreviewControl = null;
-                        }
-                        break;
-                }
-
+                UpdateControl(value);
                 _top = value;
                 NotifyPropertyChanged(nameof(TopSelectedEntry));
+            }
+        }
+
+        private void UpdateControl(GUIDEntry value)
+        {
+            if (PreviewControl is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+            if (PreviewSource is IDisposable disposable2)
+            {
+                disposable2.Dispose();
+            }
+            if (!ShowPreview)
+            {
+                PreviewSource = null;
+                PreviewControl = null;
+            }
+            switch (DataHelper.GetDataType(value))
+            {
+                case DataHelper.DataType.Image:
+                    {
+                        PreviewSource = DataHelper.ConvertDDS(value, DXGI_FORMAT.R8G8B8A8_UNORM, DataHelper.ImageFormat.PNG, 0);
+                        PreviewControl = new PreviewDataImage();
+                    }
+                    break;
+                case DataHelper.DataType.Sound:
+                    {
+                        PreviewSource = DataHelper.ConvertSound(value);
+                        PreviewControl = new PreviewDataSound();
+                        (PreviewControl as PreviewDataSound).SetAudio(PreviewSource as Stream);
+                    }
+                    break;
+                case DataHelper.DataType.Model:
+                    {
+                        PreviewSource = null;
+                        PreviewControl = new PreviewDataModel();
+                    }
+                    break;
+                case DataHelper.DataType.String:
+                    {
+                        PreviewSource = DataHelper.GetString(value);
+                        PreviewControl = new PreviewDataString();
+                    }
+                    break;
+                default:
+                    {
+                        PreviewSource = null;
+                        PreviewControl = null;
+                    }
+                    break;
             }
         }
 
@@ -77,12 +98,47 @@ namespace TankView.ViewModel
         }
 
         private BitmapSource _frame = null;
+        
+        public bool ShowPreview {
+            get {
+                return Settings.Default.ShowPreview;
+            }
+            set {
+                Settings.Default.ShowPreview = value;
+                Settings.Default.Save();
+                UpdateControl(_top);
+                NotifyPropertyChanged(nameof(ShowPreview));
+                NotifyPropertyChanged(nameof(ListRow));
+                NotifyPropertyChanged(nameof(PreviewRow));
+            }
+        }
+
+        public GridLength ListRow {
+            get {
+                if (ShowPreview)
+                {
+                    return new GridLength(250, GridUnitType.Pixel);
+                }
+                return new GridLength(1, GridUnitType.Star);
+            }
+        }
+
+        public GridLength PreviewRow {
+            get {
+                if (ShowPreview)
+                {
+                    return new GridLength(1, GridUnitType.Star);
+                }
+                return new GridLength(0);
+            }
+        }
 
         private object _previewData = null;
         public object PreviewSource {
             get {
                 return _previewData;
             } set {
+                _frame = null;
                 if (value != null)
                 {
                     switch (DataHelper.GetDataType(_top))
@@ -166,7 +222,14 @@ namespace TankView.ViewModel
                     {
                         Slave?.ReportProgress((int)(((float)c / (float)total) * 100));
                     }
-                    AddEntry($"files/{Path.GetFileNameWithoutExtension(apm.Name)}/{teResourceGUID.Type(record.Key):X3}", record.Key, apm, record.Value.LoadHash, (int)record.Value.Size, (int)record.Value.Offset, record.Value.Flags, apm.Locale);
+                    ushort typeVal = teResourceGUID.Type(record.Key);
+                    string typeStr = typeVal.ToString("X3");
+                    DataHelper.DataType typeData = DataHelper.GetDataType(typeVal);
+                    if(typeData != DataHelper.DataType.Unknown)
+                    {
+                        typeStr = $"{typeStr} ({typeData.ToString()})";
+                    }
+                    AddEntry($"files/{Path.GetFileNameWithoutExtension(apm.Name)}/{typeStr}", record.Key, apm, record.Value.LoadHash, (int)record.Value.Size, (int)record.Value.Offset, record.Value.Flags, apm.Locale);
                 }
             }
 
@@ -259,6 +322,10 @@ namespace TankView.ViewModel
             if (PreviewControl is IDisposable disposable)
             {
                 disposable.Dispose();
+            }
+            if (PreviewSource is IDisposable disposable2)
+            {
+                disposable2.Dispose();
             }
         }
     }

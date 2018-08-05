@@ -19,6 +19,8 @@
     <Window.Resources>
         <om:SizeConverter x:Key="SizeConverter"/>
         <om:EnumConverter x:Key="EnumConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolVisbilityConverter"/>
+        <om:InvertBoolConverter x:Key="InvertBoolConverter"/>
         <!-- hahahah slay me -->
         <HierarchicalDataTemplate x:Key="FolderDataView" DataType="{x:Type TypeName=vm:Folder}" ItemsSource="{Binding Folders}">
             <TextBlock Text="{Binding Path=Name, Mode=OneWay}"/>
@@ -59,32 +61,35 @@
                 <Separator />
                 <MenuItem Header="Exit" Click="Exit" />
             </MenuItem>
-            <MenuItem Header="CASC" DataContext="{Binding CASCSettings}">
-                <MenuItem Header="Cache">
-                    <MenuItem Header="Cache CDN Indices" IsChecked="{Binding CDN, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
-                    <MenuItem Header="Cache CDN Data" IsChecked="{Binding Data, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
-                    <MenuItem Header="Cache APM" IsChecked="{Binding APM, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
+            <MenuItem Header="Options">
+                <MenuItem Header="CASC" DataContext="{Binding CASCSettings}">
+                    <MenuItem Header="Cache">
+                        <MenuItem Header="Cache CDN Indices" IsChecked="{Binding CDN, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
+                        <MenuItem Header="Cache CDN Data" IsChecked="{Binding Data, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
+                        <MenuItem Header="Cache APM" IsChecked="{Binding APM, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
+                    </MenuItem>
+                    <MenuItem Header="Load all installed languages" IsChecked="{Binding LoadAllLanguages, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
+                    <MenuItem Header="Disable Threading" IsChecked="{Binding DisableThreading, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
                 </MenuItem>
-                <MenuItem Header="Load all installed languages" IsChecked="{Binding LoadAllLanguages, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
-                <MenuItem Header="Disable Threading" IsChecked="{Binding DisableThreading, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
-            </MenuItem>
-            <MenuItem Header="NGDP">
-                <MenuItem Header="Patch Host" ItemsSource="{Binding NGDPPatchHosts}">
-                    <MenuItem.ItemContainerStyle>
-                        <Style TargetType="MenuItem">
-                            <Setter Property="Header" Value="{Binding Path=Name}"/>
-                            <Setter Property="Tag" Value="{Binding Path=Host}"/>
-                            <Setter Property="IsCheckable" Value="True"/>
-                            <Setter Property="IsChecked" Value="{Binding Path=Active}"/>
-                            <EventSetter Event="Click" Handler="NGDPHostChange"/>
-                        </Style>
-                    </MenuItem.ItemContainerStyle>
+                <MenuItem Header="NGDP">
+                    <MenuItem Header="Patch Host" ItemsSource="{Binding NGDPPatchHosts}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Header" Value="{Binding Path=Name}"/>
+                                <Setter Property="Tag" Value="{Binding Path=Host}"/>
+                                <Setter Property="IsCheckable" Value="True"/>
+                                <Setter Property="IsChecked" Value="{Binding Path=Active}"/>
+                                <EventSetter Event="Click" Handler="NGDPHostChange"/>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
                 </MenuItem>
+                <MenuItem Header="Preview" DataContext="{Binding GUIDTree}" IsChecked="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsCheckable="True"/>
             </MenuItem>
             <MenuItem Header="Extract" Click="ExtractFiles" IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
             <MenuItem Header="DataTool" Click="OpenOrFocusSimView" IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
         </Menu>
-        <Grid Grid.Row="1" DataContext="{Binding GUIDTree}">
+        <Grid Grid.Row="1" DataContext="{Binding GUIDTree}" Name="MainView">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" MinWidth="250"/>
                 <ColumnDefinition Width="1*" MinWidth="250"/>
@@ -105,8 +110,8 @@
             <GridSplitter Grid.Column="0" Width="3" HorizontalAlignment="Right" VerticalAlignment="Stretch" ResizeDirection="Columns" ShowsPreview="True" ResizeBehavior="CurrentAndNext"/>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="250" MinHeight="250"/>
-                    <RowDefinition Height="1*" MinHeight="100"/>
+                    <RowDefinition Height="{Binding ListRow, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" MinHeight="250"/>
+                    <RowDefinition Height="{Binding PreviewRow, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0">
                     <ListView x:Name="FolderItemList" SelectedItem="{Binding TopSelectedEntry, Mode=OneWayToSource}" ItemsSource="{Binding SelectedEntries, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
@@ -120,8 +125,8 @@
                         </ListView.View>
                     </ListView>
                 </DockPanel>
-                <GridSplitter Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" ResizeDirection="Rows" ShowsPreview="True" ResizeBehavior="CurrentAndNext"/>
-                <DockPanel Grid.Row="1">
+                <GridSplitter IsEnabled="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Visibility="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BoolVisbilityConverter}}" Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" ResizeDirection="Rows" ShowsPreview="True" ResizeBehavior="CurrentAndNext"/>
+                <DockPanel IsEnabled="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Visibility="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BoolVisbilityConverter}}" Grid.Row="1">
                     <ContentControl Content="{Binding PreviewControl}"/>
                 </DockPanel>
             </Grid>
