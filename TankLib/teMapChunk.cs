@@ -257,7 +257,7 @@ namespace TankLib {
             public byte Unknown2D;
             public uint Unknown3A;
             public uint Unknown3B;
-            public uint Type;      // 1 = Spot Light, 2 = Point Light, 0 = Directional?
+            public teLIGHTTYPE Type;
             public teColorRGB Color;
             public teVec3 UnknownPos1;
             public teQuat UnknownQuat1;
