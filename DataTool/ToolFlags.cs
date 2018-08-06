@@ -54,9 +54,12 @@ namespace DataTool {
         // [CLIFlag(Flag = "ignore-guid", Help = "Ignore these GUIDs", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagGUIDArray" })]
         // public List<ulong> IgnoreGUIDs;
 
-        [CLIFlag(Default = false, Flag = "deduplicate", Help = "Re-use textures from other models", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = false, Flag = "deduplicate-textures", Help = "Re-use textures from other models", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         [Alias(Alias = "0")]
         public bool Deduplicate;
+
+        [CLIFlag(Default = null, Flag = "scratchdb", NeedsValue = true, Help = "Directory for persistent database storage for deduplication info")]
+        public string ScratchDBPath;
 
         public override bool Validate() => true;
     }
