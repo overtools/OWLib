@@ -194,6 +194,9 @@ namespace DataTool {
             
             Stopwatch stopwatch = new Stopwatch();
             TankLib.Helpers.Logger.Info("Core", "Tooling...");
+            if (Flags.Deduplicate) {
+                TankLib.Helpers.Logger.Warn("Core", "Will attempt to deduplicate files if extracting...");
+            }
             stopwatch.Start();
             targetTool.Parse(targetToolFlags);
             stopwatch.Stop();

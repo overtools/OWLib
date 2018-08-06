@@ -54,6 +54,10 @@ namespace DataTool {
         // [CLIFlag(Flag = "ignore-guid", Help = "Ignore these GUIDs", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagGUIDArray" })]
         // public List<ulong> IgnoreGUIDs;
 
+        [CLIFlag(Default = false, Flag = "deduplicate", Help = "Re-use textures from other models", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [Alias(Alias = "0")]
+        public bool Deduplicate;
+
         public override bool Validate() => true;
     }
 }

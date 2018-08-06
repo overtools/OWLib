@@ -16,6 +16,8 @@ using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic {
     public class Combo {
+        public static Dictionary<ulong, ScratchPath> SaveScratch = new Dictionary<ulong, ScratchPath>();
+
         public static void Save(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
             foreach (FindLogic.Combo.EntityInfoNew entity in info.Entities.Values) {
                 SaveEntity(path, info, entity.GUID);
@@ -94,6 +96,31 @@ namespace DataTool.SaveLogic {
                     animStream.CopyTo(fileStream);
                 }
             }
+        }
+
+        public class ScratchPath {
+            private string x;
+            private Uri AbsoluteUri { get; set; }
+
+            public ScratchPath(string path) {
+                x = path;
+                AbsoluteUri = new Uri(Path.GetFullPath(path));
+            }
+
+            public string MakeRelative(string cwd) {
+                Uri folder = new Uri(Path.GetFullPath(cwd) + Path.DirectorySeparatorChar);
+                return Uri.UnescapeDataString(folder.MakeRelativeUri(AbsoluteUri).ToString().Replace('/', Path.DirectorySeparatorChar));
+            }
+        }
+
+        public static string GetScratchRelative(ulong GUID, string cwd, string basePath) {
+            if (!Program.Flags.Deduplicate) {
+                return basePath;
+            }
+            if (SaveScratch.ContainsKey(GUID)) {
+                return SaveScratch[GUID].MakeRelative(cwd);
+            }
+            return basePath;
         }
 
         public static void SaveAnimation(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong animation,
@@ -447,6 +474,13 @@ namespace DataTool.SaveLogic {
 
             FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[textureGUID];
             string filePath = Path.Combine(path, $"{textureInfo.GetNameIndex()}");
+
+            if (Program.Flags.Deduplicate) {
+                if(SaveScratch.ContainsKey(textureGUID)) {
+                    return;
+                }
+                SaveScratch[textureGUID] = new ScratchPath($"{filePath}.{convertType}");
+            }
 
             CreateDirectoryFromFile(path);
             if (!convertTextures) {
