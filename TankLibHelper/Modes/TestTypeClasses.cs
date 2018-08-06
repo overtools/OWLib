@@ -41,6 +41,13 @@ namespace TankLibHelper.Modes {
                 return new teStructuredData(stream);
             }
         }
+
+        public string GetString(ulong guid) {
+            using (Stream stream = OpenFile(guid)) {
+                if (stream == null) return null;
+                return new teString(stream);
+            }
+        }
         
         public T GetInst<T>(ulong guid) where T : STUInstance {
             return GetStructuredData(guid)?.GetMainInstance<T>();

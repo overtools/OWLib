@@ -31,10 +31,17 @@ namespace TankLib {
             REFLECTIONPOINT = 0x4,
             LABEL = 0x6,
             TEXT = 0x7,
-            
-            LIGHT = 0x9,  // not confirmed
-            
+
+            LIGHT = 0x9, // not confirmed
+
             ENTITY = 0xB
+        }
+
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public enum teLIGHTTYPE : uint {
+            POINT = 0,
+            FRUSTUM = 1,
+            NONE = 2
         }
     }
 }

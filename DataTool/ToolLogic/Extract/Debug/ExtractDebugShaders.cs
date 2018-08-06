@@ -122,6 +122,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
             // 0xE10000000000002 = DrawDefaultShaderClipSpace
             // 0xE10000000000001 = DrawDefaultShader
             // 0xE10000000000066 = canvas
+            
+            // 0xE1000000000000A = Lighting Env
 
             foreach (ulong guid in TrackedFiles[0x88]) {
                 using (Stream stream = IO.OpenFile((guid))) {
