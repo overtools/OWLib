@@ -76,7 +76,11 @@ namespace DataTool.SaveLogic {
                     if (materialDataInfo.Textures != null) {
                         foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.Textures) {
                             FindLogic.Combo.TextureInfoNew textureInfo = Info.Textures[texture.Key];
-                            writer.Write($"..\\Textures\\{textureInfo.GetNameIndex()}.dds");
+                            if (stream is FileStream fs) {
+                                writer.Write(Combo.GetScratchRelative(textureInfo.GUID, Path.GetDirectoryName(fs.Name), $@"..\Textures\{textureInfo.GetNameIndex()}.dds"));
+                            } else {
+                                writer.Write($@"..\Textures\{textureInfo.GetNameIndex()}.dds");
+                            }
                             writer.Write(texture.Value);
                         }
                     }

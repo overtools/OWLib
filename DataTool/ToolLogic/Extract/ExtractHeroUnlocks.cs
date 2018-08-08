@@ -67,9 +67,11 @@ namespace DataTool.ToolLogic.Extract {
             ["torb"] = "torbjörn",
             ["toblerone"] = "torbjörn",
             ["dva"] = "d.va",
+            ["fanservice"] = "d.va",
             ["starcraft_pro"] = "d.va",
             ["starcraft_pro_but_not_actually_because_michael_chu_retconned_it"] = "d.va",
             ["hammond"] = "wrecking ball",
+            ["hamster"] = "wrecking ball",
             ["baguette"] = "brigitte",
             ["burrito"] = "brigitte"
         };

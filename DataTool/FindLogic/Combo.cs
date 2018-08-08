@@ -14,7 +14,7 @@ using static DataTool.Helper.IO;
 namespace DataTool.FindLogic {
     public static class Combo {
         private static readonly HashSet<ushort> UnhandledTypes = new HashSet<ushort>();
-        
+
         public class ComboInfo {
             // keep everything at top level, stops us from doing the same things again.
             // everything here is unsorted, but we can use GUIDs as references.

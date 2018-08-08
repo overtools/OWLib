@@ -194,11 +194,23 @@ namespace DataTool {
             
             Stopwatch stopwatch = new Stopwatch();
             TankLib.Helpers.Logger.Info("Core", "Tooling...");
+            if (Flags.Deduplicate) {
+                TankLib.Helpers.Logger.Warn("ScratchDB", "Will attempt to deduplicate files if extracting...");
+                if(!string.IsNullOrWhiteSpace(Flags.ScratchDBPath)) {
+                    TankLib.Helpers.Logger.Warn("ScratchDB", "Loading deduplication database...");
+                    SaveLogic.Combo.LoadScratchDB(Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db"));
+                }
+            }
             stopwatch.Start();
             targetTool.Parse(targetToolFlags);
             stopwatch.Stop();
             
             TankLib.Helpers.Logger.Success("Core", $"Execution finished in {stopwatch.Elapsed} seconds");
+
+            if(Flags.Deduplicate && !string.IsNullOrWhiteSpace(Flags.ScratchDBPath)) {
+                TankLib.Helpers.Logger.Warn("ScratchDB", "Saving deduplication database...");
+                SaveLogic.Combo.SaveScratchDB(Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db"));
+            }
 
             if (Debugger.IsAttached) {
                 Debugger.Break();
