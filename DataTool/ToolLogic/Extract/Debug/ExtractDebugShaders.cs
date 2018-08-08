@@ -84,7 +84,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             
             //SavePostFX(path);
             //SaveScreenQuad(path);
-            //Save088(path);
+            Save088(path);
         }
 
         public void TestModelLook(ulong guid) {
@@ -126,10 +126,12 @@ namespace DataTool.ToolLogic.Extract.Debug {
             // 0xE1000000000000A = Lighting Env
 
             foreach (ulong guid in TrackedFiles[0x88]) {
-                using (Stream stream = IO.OpenFile((guid))) {
+                using (Stream stream = IO.OpenFile(guid)) {
                     teShaderGroup shaderGroup = new teShaderGroup(stream);
+
+                    string groupPath = Path.Combine(path, teResourceGUID.AsString(guid));
                 
-                    SaveShaderGroup(shaderGroup, path);
+                    SaveShaderGroup(shaderGroup, groupPath);
                 }
             }
         }
@@ -257,11 +259,18 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         public void SaveShaderGroup(teShaderGroup shaderGroup, string path) {
+            int i = 0;
             foreach (ulong shaderGroupInstance in shaderGroup.Instances) {
                 teShaderInstance instance = new teShaderInstance(IO.OpenFile(shaderGroupInstance));
                 teShaderCode shaderCode = new teShaderCode(IO.OpenFile(instance.Header.ShaderCode));
 
-                SaveShaderInstance(path, shaderGroupInstance, null, instance, shaderCode);
+                string name = null;
+                if (shaderGroup.Hashes != null && shaderGroup.Hashes[i] != 0) {
+                    name = shaderGroup.Hashes[i].ToString("X8");
+                }
+
+                SaveShaderInstance(path, shaderGroupInstance, name, instance, shaderCode);
+                i++;
             }
         }
 

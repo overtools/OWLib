@@ -33,7 +33,10 @@ namespace DataTool.ToolLogic.List {
             foreach (ulong key in TrackedFiles[0x5F]) {
                 Combo.Find(comboInfo, key);
                 if (!comboInfo.VoiceSets.ContainsKey(key)) continue;
-                foreach (KeyValuePair<ulong,HashSet<Combo.VoiceLineInstanceInfo>> lineInstance in comboInfo.VoiceSets[key].VoiceLineInstances) {
+
+                Combo.VoiceSetInfo voiceSetInfo = comboInfo.VoiceSets[key];
+                if (voiceSetInfo.VoiceLineInstances == null) continue;
+                foreach (KeyValuePair<ulong,HashSet<Combo.VoiceLineInstanceInfo>> lineInstance in voiceSetInfo.VoiceLineInstances) {
                     foreach (Combo.VoiceLineInstanceInfo lineInstanceInfo in lineInstance.Value) {
                         if (lineInstanceInfo.Subtitle != 0) {
                             foreach (ulong soundInfoSound in lineInstanceInfo.SoundFiles) {

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace TankLib.Chunks {
     // ReSharper disable once InconsistentNaming
-    public class teEffectComponent_SS : IChunk {
+    public class teEffectChunkShaderSetup : IChunk {
         public string ID => "ECSS";
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

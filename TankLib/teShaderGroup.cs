@@ -29,7 +29,7 @@ namespace TankLib {
             /// <summary>Number of referenced shaders</summary>
             public int NumShaders;  // m_numShaders, 64
 
-            public byte ShaderStateFlags;
+            public Enums.teSHADER_STATE ShaderStateFlags;
         }
 
         /// <summary>Header Data</summary>
