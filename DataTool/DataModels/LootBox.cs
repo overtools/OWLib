@@ -47,7 +47,15 @@ namespace DataTool.DataModels {
         public static string GetName(Enum_BABC4175 lootBoxType) {
             return GetName((uint)lootBoxType);
         }
-        
+
+        public static string GetBasicName(uint type) {
+            return GetName(type).Replace(" ", "").ToLowerInvariant();
+        }
+
+        public static string GetBasicName(Enum_BABC4175 lootBoxType) {
+            return GetBasicName((uint) lootBoxType);
+        }
+
         private static readonly Dictionary<uint, string> LootBoxNames = new Dictionary<uint, string> {
             {0, "Base"},
             {1, "Summer Games"},

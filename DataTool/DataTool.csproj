@@ -109,6 +109,7 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugPackageFinder.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugShaderHashes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
+    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSpecialHelper.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugType.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVCCE.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVoiceSet.cs" />

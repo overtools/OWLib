@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
@@ -35,7 +36,8 @@ namespace DataTool.ToolLogic.Extract {
             Tags = new List<QueryTag> {
                 new QueryTag("rarity", new List<string>{"common", "rare", "epic", "legendary"}),
                 new QueryTag("event", new List<string>{"base", "summergames", "halloween", "winter", "lunarnewyear", "archives", "anniversary"}),
-                new QueryTag("leagueTeam", new List<string>())
+                new QueryTag("leagueTeam", new List<string>()),
+                new QueryTag("special", new List<string> {"sg2018"})
             };
         }
     }
@@ -223,10 +225,10 @@ namespace DataTool.ToolLogic.Extract {
                 if (progressionUnlocks.LootBoxesUnlocks != null) {
                     foreach (LootBoxUnlocks lootBoxUnlocks in progressionUnlocks.LootBoxesUnlocks) {
                         if (lootBoxUnlocks.Unlocks == null) continue;
-                        string lootboxName = LootBox.GetName((uint)lootBoxUnlocks.LootBoxType);
+                        string lootboxName = LootBox.GetName(lootBoxUnlocks.LootBoxType);
                         
                         var tags = new Dictionary<string, TagExpectedValue> {
-                            {"event", new TagExpectedValue(lootboxName.Replace(" ", "").ToLowerInvariant())}
+                            {"event", new TagExpectedValue(LootBox.GetBasicName(lootBoxUnlocks.LootBoxType))}
                         };
 
                         SaveUnlocks(flags, lootBoxUnlocks.Unlocks, heroPath, lootboxName, config, tags, voiceSet, hero);
@@ -265,6 +267,17 @@ namespace DataTool.ToolLogic.Extract {
                     eventKey = "League";
                 }
                 tags["rarity"] = new TagExpectedValue(unlock.Rarity.ToString());
+                
+                //if (UnlockData.SummerGames2016.Contains(unlock.GUID)) {
+                //    tags["special"] = new TagExpectedValue("sg2016");
+                //} if (UnlockData.SummerGames2017.Contains(unlock.GUID)) {
+                //    tags["special"] = new TagExpectedValue("sg2017");
+                //} else 
+                if (UnlockData.SummerGames2018.Contains(unlock.GUID)) {
+                    tags["special"] = new TagExpectedValue("sg2018");
+                } else {
+                    tags["special"] = new TagExpectedValue("none");
+                }
             } else {
                 rarity = ""; // for general unlocks
             }

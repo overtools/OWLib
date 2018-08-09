@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DataTool.FindLogic;
@@ -88,10 +89,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
         public class VersionInfo {
             public HashSet<MD5Hash> ContentHashes;
             public HashSet<ulong> GUIDs;
-            public HashSet<ulong> Added;
         }
 
-        public VersionInfo GetVersionInfoFake(string path) {
+        public static VersionInfo GetVersionInfoFake(string path) {
             VersionInfo info = new VersionInfo {
                 GUIDs = new HashSet<ulong>(),
                 ContentHashes = new HashSet<MD5Hash>(new MD5HashComparer())
@@ -103,8 +103,20 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
             return info;
         }
+        
+        public static VersionInfo GetGUIDVersionInfo(string path) {
+            VersionInfo info = new VersionInfo {
+                GUIDs = new HashSet<ulong>()
+            };
+            
+            using (StreamReader reader = new StreamReader(path)) {
+                info.GUIDs = new HashSet<ulong>(reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => ulong.Parse(x, NumberStyles.HexNumber)));
+            }
 
-        public VersionInfo GetVersionInfo(string path) {
+            return info;
+        }
+
+        public static VersionInfo GetVersionInfo(string path) {
             VersionInfo info = new VersionInfo {
                 GUIDs = new HashSet<ulong>(),
                 ContentHashes = new HashSet<MD5Hash>(new MD5HashComparer())
