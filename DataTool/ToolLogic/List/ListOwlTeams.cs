@@ -18,6 +18,7 @@ namespace DataTool.ToolLogic.List {
                 Log($"{teamDef.FullName} ({teamDef.Abbreviation})");
                 Log($"    Division: {teamDef.Division}");
                 
+
                 // todo: fix later or something
                 // tbh i don't think anyone is that interested
                 //Log($"\t     Color: {teamColors/.Hex()}");

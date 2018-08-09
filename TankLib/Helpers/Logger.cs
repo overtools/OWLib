@@ -1,4 +1,5 @@
 ﻿using System;
+using static TankLib.Helpers.ConsoleSwatch;
 
 namespace TankLib.Helpers {
     public static class Logger {
@@ -12,23 +13,86 @@ namespace TankLib.Helpers {
 
         public static bool Enabled = true;
         public static bool UseColor = true;
-        
-        private static void Log(ConsoleColor color, string category, string message, params object[] arg) {
+
+        public static void Log4Bit(ConsoleColor color, bool newLine, string category, string message, params object[] arg) {
             if (!Enabled) return;
             if (UseColor) {
                 Console.ForegroundColor = color;
             }
 
-            string output;
-            if (ShowTime) {
-                output = $"{DateTime.Now.ToLocalTime().ToLongTimeString()} [{category}] {message}";
-            } else {
-                output = $"[{category}] {message}";
+            string output = message;
+            if (!string.IsNullOrWhiteSpace(category)) {
+                output = $"[{category}] {output}";
             }
-            Console.Out.WriteLine(output, arg);
+            if (ShowTime) {
+                output = $"{DateTime.Now.ToLocalTime().ToLongTimeString()} {output}";
+            }
+            Console.Out.Write(output, arg);
             if (UseColor) {
                 Console.ForegroundColor = ConsoleColor.Gray; // erm, reset
             }
+            if(newLine) {
+                Console.Out.WriteLine();
+            }
+        }
+
+        private static void Log24Bit(ConsoleColor color, string category, string message, params object[] arg) {
+            if (!Enabled) return;
+            if (!EnableVT()) {
+                Log4Bit(color, true, category, message, arg);
+                return;
+            }
+            Log24Bit(color.AsDOSColor().AsXTermColor().ToForeground(), null, true, category, message, arg);
+        }
+
+        private static void Log24Bit(DOSColor color, string category, string message, params object[] arg) {
+            if (!Enabled) return;
+            if (!EnableVT()) {
+                Log4Bit(color.AsConsoleColor(), true, category, message, arg);
+                return;
+            }
+            Log24Bit(color.AsXTermColor().ToForeground(), null, true, category, message, arg);
+        }
+
+        private static void Log24Bit(XTermColor color, string category, string message, params object[] arg) {
+            if (!Enabled) return;
+            if (!EnableVT()) {
+                Log4Bit(ConsoleColor.Gray, true, category, message, arg);
+                return;
+            }
+            Log24Bit(color.ToForeground(), null, true, category, message, arg);
+        }
+
+        public static void Log24Bit(string foreground, string background, bool newLine, string category, string message, params object[] arg) {
+            if (!Enabled) return;
+            if (!EnableVT()) {
+                Log4Bit(ConsoleColor.Gray, true, category, message, arg);
+                return;
+            }
+            if (UseColor && !string.IsNullOrWhiteSpace(foreground)) {
+                Console.Out.Write(foreground);
+            }
+            if (UseColor && !string.IsNullOrWhiteSpace(background)) {
+                Console.Out.Write(background);
+            }
+            string output = message;
+            if (!string.IsNullOrWhiteSpace(category)) {
+                output = $"[{category}] {output}";
+            }
+            if (ShowTime) {
+                output = $"{DateTime.Now.ToLocalTime().ToLongTimeString()} {output}";
+            }
+            Console.Out.Write(output, arg);
+            if (UseColor && (!string.IsNullOrWhiteSpace(foreground) || !string.IsNullOrWhiteSpace(background))) {
+                Console.Out.Write(ColorReset);
+            }
+            if (newLine) {
+                Console.Out.WriteLine();
+            }
+        }
+
+        public static void Log(ConsoleColor color, string category, string message, params object[] arg) {
+            Log24Bit(color, category, message, arg);
         }
         
         public static void Success(string catgory, string message, params object[] arg) {
@@ -36,7 +100,7 @@ namespace TankLib.Helpers {
         }
         
         public static void Info(string catgory, string message, params object[] arg) {
-            Log(ConsoleColor.Gray, catgory, message, arg);
+            Log(ConsoleColor.White, catgory, message, arg);
         }
         
         public static void Debug(string catgory, string message, params object[] arg) {
