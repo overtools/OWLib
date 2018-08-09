@@ -94,7 +94,7 @@ namespace DataTool.DataModels {
 				return "Skin";
 			}
 			if (type == typeof(STUUnlock_AvatarPortrait)) {
-				return "PlayerIcon";
+				return "Icon";
 			}
 			if (type == typeof(STUUnlock_Emote)) {
 				return "Emote";

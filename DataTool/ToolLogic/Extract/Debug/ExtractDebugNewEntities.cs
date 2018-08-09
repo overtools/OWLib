@@ -144,7 +144,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
             //VersionInfo versionInfo = GetVersionInfo(dataPath);
             //VersionInfo versionInfo = GetVersionInfoFake(@"D:\Code\Repos\overtool\OWLib-main\CASCEncDump\bin\Debug\44916.cmfhashes");
-            VersionInfo versionInfo = GetVersionInfoFake(@"D:\Code\Repos\overtool\OWLib-main\CASCEncDump\bin\Debug\47946.cmfhashes");
+            VersionInfo versionInfo = GetVersionInfoFake(@"D:\ow\resources\verdata\49154.cmfhashes");
             
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
@@ -155,8 +155,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
             const string container = "DebugNewEntities3";
             
             Combo.ComboInfo info = new Combo.ComboInfo();
-            AddNewHash(info, versionInfo, 0x7C);
-            //AddNewHash(info, versionInfo, 0x4);
+            //AddNewHash(info, versionInfo, 0x7C);
+            AddNewHash(info, versionInfo, 0x3F, 0xB2);
             
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, container), info);
             SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, container, "Sounds"), info);
