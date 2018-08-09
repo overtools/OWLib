@@ -7,6 +7,7 @@ using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
+using System;
 
 namespace DataTool.SaveLogic {
     public static class Map {
@@ -58,7 +59,7 @@ namespace DataTool.SaveLogic {
                     for (int i = 0; i < Entities.Header.PlaceableCount; i++) {
                         teMapPlaceableEntity entity = (teMapPlaceableEntity) Entities.Placeables[i];
                         STUModelComponent component = GetInstance<STUModelComponent>(entity.Header.EntityDefinition);
-                        if (component != null) {
+                        if (component != null && teResourceGUID.Index(component.m_model) > 1 && teResourceGUID.Index(component.m_look) > 1) {
                             entitiesWithModelCount++;
                             modelComponents[i] = component;
                         }
@@ -68,7 +69,7 @@ namespace DataTool.SaveLogic {
                                  entitiesWithModelCount)); // nr details
                     writer.Write(Lights.Header.PlaceableCount); // nr Lights
 
-                    foreach (IMapPlaceable mapPlaceable in ModelGroups.Placeables) {
+                    foreach (IMapPlaceable mapPlaceable in ModelGroups.Placeables ?? Array.Empty<IMapPlaceable>()) {
                         teMapPlaceableModelGroup modelGroup = (teMapPlaceableModelGroup) mapPlaceable;
 
                         FindLogic.Combo.Find(Info, modelGroup.Header.Model);
@@ -96,7 +97,7 @@ namespace DataTool.SaveLogic {
                         }
                     }
 
-                    foreach (IMapPlaceable mapPlaceable in SingleModels.Placeables) {
+                    foreach (IMapPlaceable mapPlaceable in SingleModels.Placeables ?? Array.Empty<IMapPlaceable>()) {
                         teMapPlaceableSingleModel singleModel = (teMapPlaceableSingleModel) mapPlaceable;
 
                         FindLogic.Combo.Find(Info, singleModel.Header.Model);
@@ -116,7 +117,7 @@ namespace DataTool.SaveLogic {
                         writer.Write(singleModel.Header.Rotation);
                     }
 
-                    foreach (IMapPlaceable mapPlaceable in Eights.Placeables) {
+                    foreach (IMapPlaceable mapPlaceable in Eights.Placeables ?? Array.Empty<IMapPlaceable>()) {
                         teMapPlaceable8 placeable8 = (teMapPlaceable8) mapPlaceable;
 
                         FindLogic.Combo.Find(Info, placeable8.Header.Model);
@@ -137,12 +138,12 @@ namespace DataTool.SaveLogic {
                         writer.Write(placeable8.Header.Rotation);
                     }
 
-                    for (int i = 0; i < Entities.Placeables.Length; i++) {
+                    for (int i = 0; i < Entities.Placeables?.Length; i++) {
                         var entity = (teMapPlaceableEntity) Entities.Placeables[i];
                         
                         STUModelComponent modelComponent = modelComponents[i];
                         if (modelComponent == null) continue;
-                        
+
                         ulong model = modelComponent.m_model;
                         ulong modelLook = modelComponent.m_look;
 
@@ -152,7 +153,7 @@ namespace DataTool.SaveLogic {
                                 modelLook = modelComponentInstanceData.m_look;
                             }
                         }
-
+                        
                         FindLogic.Combo.Find(Info, model);
                         FindLogic.Combo.Find(Info, modelLook, null, new FindLogic.Combo.ComboContext {Model = model});
 
@@ -169,7 +170,7 @@ namespace DataTool.SaveLogic {
                     }
 
                     // Extension 1.1 - Lights
-                    foreach (IMapPlaceable mapPlaceable in Lights.Placeables) {
+                    foreach (IMapPlaceable mapPlaceable in Lights.Placeables ?? Array.Empty<IMapPlaceable>()) {
                         var light = (teMapPlaceableLight) mapPlaceable;
 
                         writer.Write(light.Header.Translation);
@@ -215,7 +216,7 @@ namespace DataTool.SaveLogic {
             if (variantName != null) name = variantName;
 
             LoudLog($"Extracting map {name}\\{teResourceGUID.Index(key):X}");
-            name = GetValidFilename(variantName);
+            name = GetValidFilename(name);
             
             // TODO: MAP11 HAS CHANGED
             // TODO: MAP10 TOO?

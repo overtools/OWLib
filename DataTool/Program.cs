@@ -31,7 +31,10 @@ namespace DataTool {
         public static bool ValidKey(ulong key) => Files.ContainsKey(key);
         
         private static void Main() {
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) => Console.ForegroundColor = ConsoleColor.Red;  // errrrrrr
+            AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
+            Process.GetCurrentProcess().EnableRaisingEvents = true;
+            AppDomain.CurrentDomain.ProcessExit += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
+            Console.CancelKeyPress += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
             Console.OutputEncoding = Encoding.UTF8;
 
             Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
@@ -198,7 +201,12 @@ namespace DataTool {
                 TankLib.Helpers.Logger.Warn("ScratchDB", "Will attempt to deduplicate files if extracting...");
                 if(!string.IsNullOrWhiteSpace(Flags.ScratchDBPath)) {
                     TankLib.Helpers.Logger.Warn("ScratchDB", "Loading deduplication database...");
-                    SaveLogic.Combo.LoadScratchDB(Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db"));
+                    var dbPath = Flags.ScratchDBPath;
+                    if (!File.Exists(dbPath))
+                    {
+                        dbPath = Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db");
+                    }
+                    SaveLogic.Combo.LoadScratchDB(dbPath);
                 }
             }
             stopwatch.Start();
@@ -216,7 +224,21 @@ namespace DataTool {
                 Debugger.Break();
             }
         }
-        
+
+        [DebuggerStepThrough]
+        private static void ExceptionHandler(object sender, UnhandledExceptionEventArgs e) {
+            Exception ex = e.ExceptionObject as Exception;
+            if (ex != null) {
+                TankLib.Helpers.Logger.Error("NULL", ex.ToString());
+                if (Debugger.IsAttached) {
+                    throw ex;
+                }
+            }
+            unchecked {
+                Environment.Exit((int)0xDEADBEEF);
+            }
+        }
+
         internal class ToolComparer : IComparer<Type> {
             public int Compare(Type x, Type y) {
                 ToolAttribute xT = x.GetCustomAttribute<ToolAttribute>();
