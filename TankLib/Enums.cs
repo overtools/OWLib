@@ -46,7 +46,7 @@ namespace TankLib {
         
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         [Flags]
-        public enum teSHADER_STATE : uint {
+        public enum teSHADER_STATE : byte {
             DECAL = 2,
             REFRACTIVE = 0x10,
             
