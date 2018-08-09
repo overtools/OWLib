@@ -687,7 +687,7 @@ namespace DataTool.FindLogic {
                                 }
                             } else if (chunk.Value is teEffectComponentSound soundComponent) {
                                 Find(info, soundComponent.Header.Sound, replacements);
-                            } else if (chunk.Value is teEffectComponent_SS shaders) {
+                            } else if (chunk.Value is teEffectChunkShaderSetup shaders) {
                                 ComboContext ssceContext = new ComboContext {Model = lastParticleModel};
                                 Find(info, shaders.Header.Material, replacements, ssceContext);
                                 Find(info, shaders.Header.MaterialData, replacements, ssceContext);

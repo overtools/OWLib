@@ -208,13 +208,14 @@ namespace DataTool.SaveLogic {
         }
 
         public static void Save(ICLIFlags flags, STUMapHeader mapHeader, ulong key, string basePath) {
-            string name = GetValidFilename(GetString(mapHeader.m_displayName)) ?? "Title Screen";
+            string name = GetString(mapHeader.m_displayName) ?? "Title Screen";
             //string name = map.m_506FA8D8;
 
             var variantName = GetString(mapHeader.m_1C706502);
-            if (variantName != null) name = GetValidFilename(variantName);
+            if (variantName != null) name = variantName;
 
             LoudLog($"Extracting map {name}\\{teResourceGUID.Index(key):X}");
+            name = GetValidFilename(variantName);
             
             // TODO: MAP11 HAS CHANGED
             // TODO: MAP10 TOO?

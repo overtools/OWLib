@@ -75,6 +75,8 @@ namespace DataTool.ToolLogic.Extract
 
                 ulong dataKey = map.m_map;
 
+                //if (teResourceGUID.Index(dataKey) != 0x7A4) continue;
+                
                 using (Stream data = OpenFile(dataKey))
                 {
                     if (data == null)
@@ -87,6 +89,10 @@ namespace DataTool.ToolLogic.Extract
                         teMap env = dataReader.Read<teMap>();
 
                         string fname = $"ow_map_{GetValidFilename($"{mapInfo.NameB}_{teResourceGUID.Index(mapInfo.MetadataGUID):X}")}";
+
+                        //using (Stream lightingStream = OpenFile(env.BakedLighting)) {
+                        //    teLightingManifest lightingManifest = new teLightingManifest(lightingStream);   
+                        //}
 
                         if (!flags.SkipMapEnvironmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnvironmentSound, mapInfo.Name)))
                             SaveSound(flags, basePath, Path.Combine("Sound", GetValidFilename($"{mapInfo.NameB}_{teResourceGUID.Index(mapInfo.MetadataGUID):X}")), env.MapEnvironmentSound);

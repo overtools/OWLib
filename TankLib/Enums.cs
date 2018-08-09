@@ -43,5 +43,22 @@ namespace TankLib {
             FRUSTUM = 1,
             NONE = 2
         }
+        
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [Flags]
+        public enum teSHADER_STATE : uint {
+            DECAL = 2,
+            REFRACTIVE = 0x10,
+            
+            ALL_BLEND_MODES = 0x3F
+        }
+        
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [Flags]
+        public enum teSHADER_FEATURE_FLAG : uint {
+            REFRACTION_OFFSETS = 9,
+            REFRACTION_TOP = 0xA,
+            REFRACTION_UNDER = 0xB
+        }
     }
 }

@@ -10,18 +10,18 @@ namespace TankLib {
         public teMtx44 M2;
         public teMtx44 M3;
 
-        public ulong EntityDefinition;
-        public ulong SkyEnvironmentCubemap;
-        public ulong BakedLighting;
-        public ulong BakedShadow;
-        public ulong LUT;
-        public ulong SkyboxModel;
-        public ulong SkyboxModelLook;
-        public ulong MapEnvironmentSound; // 055 file.
-        public ulong GroundEnvironmentCubemap;
-        public ulong BlendEnvironmentCubemap;
-        public ulong Text;
-        public ulong UnknownGUID1;
+        public teResourceGUID EntityDefinition;
+        public teResourceGUID SkyEnvironmentCubemap;
+        public teResourceGUID BakedLighting;
+        public teResourceGUID BakedShadow;
+        public teResourceGUID LUT;
+        public teResourceGUID SkyboxModel;
+        public teResourceGUID SkyboxModelLook;
+        public teResourceGUID MapEnvironmentSound; // 055 file.
+        public teResourceGUID GroundEnvironmentCubemap;
+        public teResourceGUID BlendEnvironmentCubemap;
+        public teResourceGUID Text;
+        public teResourceGUID Guid0B5;
 
         public teMtx43 M4;
         public teMtx44 M5;
