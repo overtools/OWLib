@@ -31,7 +31,7 @@ namespace DataTool {
         public static bool ValidKey(ulong key) => Files.ContainsKey(key);
         
         private static void Main() {
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) => Console.ForegroundColor = ConsoleColor.Red;  // errrrrrr
+            AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
             Console.OutputEncoding = Encoding.UTF8;
 
             Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
@@ -216,7 +216,21 @@ namespace DataTool {
                 Debugger.Break();
             }
         }
-        
+
+        [DebuggerStepThrough]
+        private static void ExceptionHandler(object sender, UnhandledExceptionEventArgs e) {
+            Exception ex = e.ExceptionObject as Exception;
+            if (ex != null) {
+                TankLib.Helpers.Logger.Error("NULL", ex.ToString());
+                if (Debugger.IsAttached) {
+                    throw ex;
+                }
+            }
+            unchecked {
+                Environment.Exit((int)0xDEADBEEF);
+            }
+        }
+
         internal class ToolComparer : IComparer<Type> {
             public int Compare(Type x, Type y) {
                 ToolAttribute xT = x.GetCustomAttribute<ToolAttribute>();

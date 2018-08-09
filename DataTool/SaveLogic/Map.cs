@@ -58,7 +58,7 @@ namespace DataTool.SaveLogic {
                     for (int i = 0; i < Entities.Header.PlaceableCount; i++) {
                         teMapPlaceableEntity entity = (teMapPlaceableEntity) Entities.Placeables[i];
                         STUModelComponent component = GetInstance<STUModelComponent>(entity.Header.EntityDefinition);
-                        if (component != null) {
+                        if (component != null && teResourceGUID.Index(component.m_model) > 1 && teResourceGUID.Index(component.m_look) > 1) {
                             entitiesWithModelCount++;
                             modelComponents[i] = component;
                         }
@@ -142,7 +142,7 @@ namespace DataTool.SaveLogic {
                         
                         STUModelComponent modelComponent = modelComponents[i];
                         if (modelComponent == null) continue;
-                        
+
                         ulong model = modelComponent.m_model;
                         ulong modelLook = modelComponent.m_look;
 
@@ -152,7 +152,7 @@ namespace DataTool.SaveLogic {
                                 modelLook = modelComponentInstanceData.m_look;
                             }
                         }
-
+                        
                         FindLogic.Combo.Find(Info, model);
                         FindLogic.Combo.Find(Info, modelLook, null, new FindLogic.Combo.ComboContext {Model = model});
 
@@ -175,7 +175,7 @@ namespace DataTool.SaveLogic {
                         writer.Write(light.Header.Translation);
                         writer.Write(light.Header.Rotation);
                         
-                        writer.Write(light.Header.Type);
+                        writer.Write((uint)light.Header.Type);
                         writer.Write(light.Header.LightFOV);
                         writer.Write(light.Header.Color);
                         
