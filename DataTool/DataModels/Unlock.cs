@@ -154,4 +154,10 @@ namespace DataTool.DataModels {
 			return GetArray(unlocks?.Select(x => (ulong) x));
 		}
 	}
+
+	public static class UnlockData {
+		//public static readonly ulong[] SummerGames2016 = new ulong[] {0, 1, 2, 3};
+		//public static readonly ulong[] SummerGames2017 = new ulong[] {0, 1, 2, 3};
+		public static readonly ulong[] SummerGames2018 = new ulong[] { }; // todo: populate before release
+	}
 }
