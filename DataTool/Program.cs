@@ -32,6 +32,9 @@ namespace DataTool {
         
         private static void Main() {
             AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
+            Process.GetCurrentProcess().EnableRaisingEvents = true;
+            AppDomain.CurrentDomain.ProcessExit += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
+            Console.CancelKeyPress += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
             Console.OutputEncoding = Encoding.UTF8;
 
             Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
