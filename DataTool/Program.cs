@@ -201,6 +201,11 @@ namespace DataTool {
                 TankLib.Helpers.Logger.Warn("ScratchDB", "Will attempt to deduplicate files if extracting...");
                 if(!string.IsNullOrWhiteSpace(Flags.ScratchDBPath)) {
                     TankLib.Helpers.Logger.Warn("ScratchDB", "Loading deduplication database...");
+                    var dbPath = Flags.ScratchDBPath;
+                    if (!File.Exists(dbPath))
+                    {
+                        dbPath = Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db");
+                    }
                     SaveLogic.Combo.LoadScratchDB(Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db"));
                 }
             }

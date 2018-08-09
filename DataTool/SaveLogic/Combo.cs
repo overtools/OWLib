@@ -238,7 +238,7 @@ namespace DataTool.SaveLogic {
 
         public static void LoadScratchDB(string dbPath) {
             if (!File.Exists(dbPath)) {
-                TankLib.Helpers.Logger.Error("ScratchDB", $"Database does not exist");
+                TankLib.Helpers.Logger.Error("ScratchDB", $"Database {dbPath} does not exist");
                 return;
             }
 
