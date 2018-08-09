@@ -175,7 +175,7 @@ namespace DataTool.SaveLogic {
                         writer.Write(light.Header.Translation);
                         writer.Write(light.Header.Rotation);
                         
-                        writer.Write(light.Header.Type);
+                        writer.Write((uint)light.Header.Type);
                         writer.Write(light.Header.LightFOV);
                         writer.Write(light.Header.Color);
                         
@@ -208,13 +208,14 @@ namespace DataTool.SaveLogic {
         }
 
         public static void Save(ICLIFlags flags, STUMapHeader mapHeader, ulong key, string basePath) {
-            string name = GetValidFilename(GetString(mapHeader.m_displayName)) ?? "Title Screen";
+            string name = GetString(mapHeader.m_displayName) ?? "Title Screen";
             //string name = map.m_506FA8D8;
 
             var variantName = GetString(mapHeader.m_1C706502);
-            if (variantName != null) name = GetValidFilename(variantName);
+            if (variantName != null) name = variantName;
 
             LoudLog($"Extracting map {name}\\{teResourceGUID.Index(key):X}");
+            name = GetValidFilename(variantName);
             
             // TODO: MAP11 HAS CHANGED
             // TODO: MAP10 TOO?
