@@ -206,7 +206,7 @@ namespace DataTool {
                     {
                         dbPath = Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db");
                     }
-                    SaveLogic.Combo.LoadScratchDB(Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db"));
+                    SaveLogic.Combo.LoadScratchDB(dbPath);
                 }
             }
             stopwatch.Start();
