@@ -18,13 +18,15 @@ namespace TankLib {
             /// <summary>Unknown data count</summary>
             public uint StreamOutDescCount; // 20
             
-            public uint Unknown; // 24
+            public uint Unknown1; // 24
             
             /// <summary>Size of DXBC data</summary>
             public int DataSize;  // 28
             
             /// <summary>Shader type</summary>
             public Enums.teSHADER_TYPE ShaderType;  // 32
+
+            public uint Unknown2;  // maybe hash or something. sometimes 0
         }
 
         /// <summary>Header Data</summary>

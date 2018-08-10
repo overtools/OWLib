@@ -217,11 +217,11 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
                 if (instance.BufferHeaders == null) continue;
                 foreach (teShaderInstance.BufferHeader bufferHeader in instance.BufferHeaders) {
-                    if (!bufferOccr.ContainsKey(bufferHeader.Unknown2)) {
-                        bufferOccr[bufferHeader.Unknown2] = 0;
+                    if (!bufferOccr.ContainsKey(bufferHeader.Hash)) {
+                        bufferOccr[bufferHeader.Hash] = 0;
                     }
 
-                    bufferOccr[bufferHeader.Unknown2]++;
+                    bufferOccr[bufferHeader.Hash]++;
                 }
 
                 //if (shaderCode.Header.ShaderType == Enums.teSHADER_TYPE.COMPUTE) {

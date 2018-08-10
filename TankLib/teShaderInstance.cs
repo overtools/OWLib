@@ -236,10 +236,10 @@ namespace TankLib {
         public struct BufferHeader {
             public long PartOffset;
             public long SkeletonOffset;
-            public ulong Unknown2;
+            public ulong Hash;
             public int BufferSize;
             public short PartCount;
-            public short BufferIndex;
+            public short Register;
         }
     }
 }
