@@ -23,7 +23,7 @@ namespace DataTool.SaveLogic {
 
             public teMapPlaceableData SingleModels;
             public teMapPlaceableData ModelGroups;
-            public teMapPlaceableData Eights;
+            public teMapPlaceableData Models;
             public teMapPlaceableData Entities;
             public teMapPlaceableData Lights;
             
@@ -35,7 +35,7 @@ namespace DataTool.SaveLogic {
 
                 SingleModels = singleModels;
                 ModelGroups = modelGroups;
-                Eights = placeable8;
+                Models = placeable8;
                 Entities = entities;
                 Lights = lights;
             }
@@ -65,7 +65,7 @@ namespace DataTool.SaveLogic {
                         }
                     }
 
-                    writer.Write((uint)(SingleModels.Header.PlaceableCount + Eights.Header.PlaceableCount +
+                    writer.Write((uint)(SingleModels.Header.PlaceableCount + Models.Header.PlaceableCount +
                                  entitiesWithModelCount)); // nr details
                     writer.Write(Lights.Header.PlaceableCount); // nr Lights
 
@@ -117,15 +117,15 @@ namespace DataTool.SaveLogic {
                         writer.Write(singleModel.Header.Rotation);
                     }
 
-                    foreach (IMapPlaceable mapPlaceable in Eights.Placeables ?? Array.Empty<IMapPlaceable>()) {
-                        teMapPlaceable8 placeable8 = (teMapPlaceable8) mapPlaceable;
+                    foreach (IMapPlaceable mapPlaceable in Models.Placeables ?? Array.Empty<IMapPlaceable>()) {
+                        teMapPlaceableModel placeableModel = (teMapPlaceableModel) mapPlaceable;
 
-                        FindLogic.Combo.Find(Info, placeable8.Header.Model);
-                        FindLogic.Combo.Find(Info, placeable8.Header.ModelLook, null,
-                            new FindLogic.Combo.ComboContext {Model = placeable8.Header.Model});
+                        FindLogic.Combo.Find(Info, placeableModel.Header.Model);
+                        FindLogic.Combo.Find(Info, placeableModel.Header.ModelLook, null,
+                            new FindLogic.Combo.ComboContext {Model = placeableModel.Header.Model});
 
-                        FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[placeable8.Header.Model];
-                        FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[placeable8.Header.ModelLook];
+                        FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[placeableModel.Header.Model];
+                        FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[placeableModel.Header.ModelLook];
                         string modelFn =
                             $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl";
                         string matFn =
@@ -133,9 +133,9 @@ namespace DataTool.SaveLogic {
 
                         writer.Write(modelFn);
                         writer.Write(matFn);
-                        writer.Write(placeable8.Header.Translation);
-                        writer.Write(placeable8.Header.Scale);
-                        writer.Write(placeable8.Header.Rotation);
+                        writer.Write(placeableModel.Header.Translation);
+                        writer.Write(placeableModel.Header.Scale);
+                        writer.Write(placeableModel.Header.Rotation);
                     }
 
                     for (int i = 0; i < Entities.Placeables?.Length; i++) {

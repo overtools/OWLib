@@ -156,7 +156,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             
             Combo.ComboInfo info = new Combo.ComboInfo();
             //AddNewHash(info, versionInfo, 0x7C);
-            AddNewHash(info, versionInfo, 0x3F, 0xB2);
+            AddNewHash(info, versionInfo, 0x4);
             
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, container), info);
             SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, container, "Sounds"), info);

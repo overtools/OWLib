@@ -29,12 +29,23 @@ namespace TankLib {
             SINGLE_MODEL = 0x2,
             OCCLUDER = 0x3,
             REFLECTIONPOINT = 0x4,
+            CLUTTER = 0x5,
             LABEL = 0x6,
             TEXT = 0x7,
+            MODEL = 0x8,
+            LIGHT = 0x9,
+            AREA = 0xA,
+            ENTITY = 0xB,
+            SOUND = 0xC,
+            EFFECT = 0xD,
+            FOG = 0xE,
+            INDOORBOX = 0xF,
+            POSTPROCESSING = 0x10,
+            PLANAR_REFLECTION_SURFACE = 0x11
+            // MAP_CHUNK_COLLISION = 0x12
+            // MAP_CHUNK_PATHING 0x13
+            // MAP_CHUNK_SOUNDAREA = 0x14
 
-            LIGHT = 0x9, // not confirmed
-
-            ENTITY = 0xB
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
