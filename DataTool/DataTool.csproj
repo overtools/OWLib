@@ -90,6 +90,7 @@
     <Compile Include="SaveLogic\Entity.cs" />
     <Compile Include="SaveLogic\Map.cs" />
     <Compile Include="SaveLogic\Model.cs" />
+    <Compile Include="SaveLogic\ScratchDB.cs" />
     <Compile Include="SaveLogic\Unlock\AnimationItem.cs" />
     <Compile Include="SaveLogic\Unlock\PortraitFrame.cs" />
     <Compile Include="SaveLogic\Unlock\SkinTheme.cs" />

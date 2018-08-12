@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
 using BCFF;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
@@ -17,7 +16,7 @@ using static DataTool.Helper.IO;
 
 namespace DataTool.SaveLogic {
     public class Combo {
-        public static Dictionary<ulong, ScratchPath> ScratchDB = new Dictionary<ulong, ScratchPath>();
+        public static ScratchDB ScratchDBInstance = new ScratchDB();
 
         public static void Save(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
             foreach (FindLogic.Combo.EntityInfoNew entity in info.Entities.Values) {
@@ -99,27 +98,12 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public class ScratchPath {
-            public string AbsolutePath { get; private set; }
-            private Uri AbsoluteUri { get; set; }
-
-            public ScratchPath(string path) {
-                AbsolutePath = Path.GetFullPath(path);
-                AbsoluteUri = new Uri(AbsolutePath);
-            }
-
-            public string MakeRelative(string cwd) {
-                Uri folder = new Uri(Path.GetFullPath(cwd) + Path.DirectorySeparatorChar);
-                return Uri.UnescapeDataString(folder.MakeRelativeUri(AbsoluteUri).ToString().Replace('/', Path.DirectorySeparatorChar));
-            }
-        }
-
         public static string GetScratchRelative(ulong GUID, string cwd, string basePath) {
             if (!Program.Flags.Deduplicate) {
                 return basePath;
             }
-            if (ScratchDB.ContainsKey(GUID)) {
-                return ScratchDB[GUID].MakeRelative(cwd);
+            if (ScratchDBInstance.HasRecord(GUID)) {
+                return ScratchDBInstance[GUID].MakeRelative(cwd);
             }
             return basePath;
         }
@@ -210,76 +194,6 @@ namespace DataTool.SaveLogic {
                 }
             }
         }
-
-        public static void SaveScratchDB(string dbPath) {
-            if (ScratchDB.Count == 0) {
-                return;
-            }
-            if (File.Exists(dbPath)) {
-                File.Delete(dbPath);
-            }
-
-            string dir = Path.GetDirectoryName(dbPath);
-            if (!Directory.Exists(dir)) {
-                Directory.CreateDirectory(dir);
-            }
-
-            using (Stream file = File.OpenWrite(dbPath))
-            using (BinaryWriter writer = new BinaryWriter(file, Encoding.Unicode)) {
-                writer.Write((short)2);
-                writer.Write(dbPath);
-                writer.Write((ulong)ScratchDB.LongCount());
-                foreach (KeyValuePair<ulong, ScratchPath> pair in ScratchDB) {
-                    writer.Write(pair.Key);
-                    writer.Write(pair.Value.AbsolutePath);
-                }
-            }
-        }
-
-        public static void LoadScratchDB(string dbPath) {
-            if (!File.Exists(dbPath)) {
-                TankLib.Helpers.Logger.Error("ScratchDB", $"Database {dbPath} does not exist");
-                return;
-            }
-
-            using (Stream file = File.OpenRead(dbPath))
-            using (BinaryReader reader = new BinaryReader(file, Encoding.Unicode)) {
-                short version = reader.ReadInt16();
-                Action<BinaryReader, string> method = ScratchDBLogic.ElementAtOrDefault(version);
-                if (method == null) {
-                    TankLib.Helpers.Logger.Error("ScratchDB", $"Database is version {version} which is not supported");
-                    return;
-                }
-                try {
-                    method(reader, dbPath);
-                } catch (Exception e) {
-                    TankLib.Helpers.Logger.Error("ScratchDB", e.ToString());
-                }
-            }
-        }
-
-        private static List<Action<BinaryReader, string>> ScratchDBLogic = new List<Action<BinaryReader, string>>() {
-            null,
-            (reader, dbPath) => {
-                ulong amount = reader.ReadUInt64();
-                for(ulong i = 0; i < amount; ++i) {
-                    ulong guid = reader.ReadUInt64();
-                    string path = reader.ReadString();
-                    ScratchDB[guid] = new ScratchPath(path);
-                }
-            },
-            (reader, dbPath) => {
-                if (reader.ReadString() != dbPath) {
-                    return;
-                }
-                ulong amount = reader.ReadUInt64();
-                for(ulong i = 0; i < amount; ++i) {
-                    ulong guid = reader.ReadUInt64();
-                    string path = reader.ReadString();
-                    ScratchDB[guid] = new ScratchPath(path);
-                }
-            }
-        };
 
         private static Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> GetSVCELines(EffectParser.EffectInfo effectInfo, FindLogic.Combo.ComboInfo info) {
             Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> output = new Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>>();
@@ -547,10 +461,10 @@ namespace DataTool.SaveLogic {
             string filePath = Path.Combine(path, $"{textureInfo.GetNameIndex()}");
 
             if (Program.Flags.Deduplicate) {
-                if(ScratchDB.ContainsKey(textureGUID)) {
+                if(ScratchDBInstance.HasRecord(textureGUID)) {
                     return;
                 }
-                ScratchDB[textureGUID] = new ScratchPath($"{filePath}.{convertType}");
+                ScratchDBInstance[textureGUID] = new ScratchDB.ScratchPath($"{filePath}.{convertType}");
             }
 
             CreateDirectoryFromFile(path);
