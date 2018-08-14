@@ -78,7 +78,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             //SaveMaterial(path, 0xE00000000004F0B, "Chateau - Background - Road");
             //SaveMaterial(path, 0xE00000000004EFF, "Chateau - Background - House");
             //SaveMaterial(path, 0xE00000000004F46, "Chateau - Tower - Body");
-            //SaveMaterial(path, 0xE000000000040C0, "Orisa - Classic - Main");
+            SaveMaterial(path, 0xE000000000040C0, "Orisa - Classic - Main");
             //SaveMaterial(path, 0xE00000000005BBB, "Brigitte - Classic - Hair");
             
             
@@ -102,7 +102,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             //    }
             //}
             
-            // 0xE1000000000001E = dev object shaders
+            // 0xE1000000000001E = dev object shaders / UBER_SHADER_DEBUG_SHAPE
             // 0xE1000000000001A = LightShaders
             // 0xE1000000000001B = Shadow Composite
             // 0xE1000000000003E = Light Process
@@ -122,6 +122,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             // 0xE10000000000002 = DrawDefaultShaderClipSpace
             // 0xE10000000000001 = DrawDefaultShader
             // 0xE10000000000066 = canvas
+            // 0xE100000000000C1 = ImGui
             
             // 0xE1000000000000A = Lighting Env
 

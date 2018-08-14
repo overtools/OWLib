@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Linq;
 using DataTool.Flag;
-using DataTool.Helper;
-using TankLib;
 
 namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-materialdata", Description = "Extract material data hashes (debug)", TrackTypes = new ushort[] {0x86}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
@@ -78,8 +75,22 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 0xDD4FF96B,
                 0xB50639D8
             };
+            
+            /*HashSet<ulong> buffers = new HashSet<ulong>();
+            foreach (var guid in Program.TrackedFiles[0x86]) {
+                teShaderInstance shaderInstance = new teShaderInstance(IO.OpenFile(guid));
+                if (shaderInstance.BufferHeaders == null) continue;
+                foreach (teShaderInstance.BufferHeader bufferHeader in shaderInstance.BufferHeaders) {
+                    buffers.Add(bufferHeader.Hash);
+                    //if (bufferHeader.Hash == 0xC367945EB4F78189) {
+                    //    if (bufferHeader.PartCount > 0) {
+                    //        
+                    //    }
+                    //}
+                }
+            }*/
 
-            foreach (ulong guid in Program.TrackedFiles[0xB3]) {
+            /*foreach (ulong guid in Program.TrackedFiles[0xB3]) {
                 teMaterialData instance = new teMaterialData(IO.OpenFile(guid));
                 
                 //if (instance.Textures != null) {
@@ -97,7 +108,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                         }
                     }
                 }
-            }
+            }*/
         }
     }
 }

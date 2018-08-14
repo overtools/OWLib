@@ -480,6 +480,7 @@ namespace DataTool.SaveLogic {
                 }
             } else {
                 using (Stream textureStream = OpenFile(textureGUID)) {
+                    if (textureStream == null) return;
                     teTexture texture = new teTexture(textureStream);
 
                     if (texture.PayloadRequired) {

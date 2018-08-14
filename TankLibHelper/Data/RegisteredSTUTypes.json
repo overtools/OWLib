@@ -662,6 +662,18 @@
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 248
+      },
+      {
+        "name": "C4B0E2D5",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 256
+      },
+      {
+        "name": "5CF4834B",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 264
       }
     ]
   },
@@ -3360,7 +3372,7 @@
         "type": "s32",
         "serializationType": 0,
         "size": 4,
-        "offset": 160
+        "offset": 168
       }
     ]
   },
@@ -3939,7 +3951,7 @@
         "type": "s32",
         "serializationType": 0,
         "size": 4,
-        "offset": 160
+        "offset": 168
       }
     ]
   },
@@ -5751,6 +5763,17 @@
       }
     ]
   },
+  "STU_DCD3ACD9": {
+    "parent": "STU_A30EF84D",
+    "fields": [
+      {
+        "name": "7678A475",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 16
+      }
+    ]
+  },
   "STU_43CA1D94": {
     "parent": "STU_02E4C615",
     "fields": [
@@ -5770,14 +5793,14 @@
         "name": "3F5B86A4",
         "type": "STU_92389E46",
         "serializationType": 12,
-        "offset": 160
+        "offset": 168
       },
       {
         "name": "0619C597",
         "type": "E5327514",
         "serializationType": 8,
         "size": 4,
-        "offset": 176
+        "offset": 184
       }
     ]
   },
@@ -6830,6 +6853,23 @@
         "type": "STU_73BB2F3A",
         "serializationType": 12,
         "offset": 48
+      }
+    ]
+  },
+  "STU_BC479EEE": {
+    "parent": "STU_D05AEF31",
+    "fields": [
+      {
+        "name": "EFF36296",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 16
+      },
+      {
+        "name": "56677272",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 24
       }
     ]
   },
@@ -8238,6 +8278,30 @@
     "parent": "STU_64C11507",
     "fields": []
   },
+  "STU_0ECFA22B": {
+    "parent": "STU_D05AEF31",
+    "fields": [
+      {
+        "name": "42F7C8E6",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 16
+      },
+      {
+        "name": "3DD9FCAE",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 24
+      },
+      {
+        "name": "FFC44A1D",
+        "type": "AD184A21",
+        "serializationType": 8,
+        "size": 4,
+        "offset": 32
+      }
+    ]
+  },
   "STU_85E5C2D4": {
     "parent": "STU_11E07FD7",
     "fields": [
@@ -9017,17 +9081,6 @@
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 24
-      }
-    ]
-  },
-  "STU_90E98EA0": {
-    "parent": "STU_DD856C32",
-    "fields": [
-      {
-        "name": "AB3F45C1",
-        "type": "STU_D05AEF31",
-        "serializationType": 2,
-        "offset": 136
       }
     ]
   },
@@ -12807,6 +12860,17 @@
     "parent": "STU_1482DDBB",
     "fields": []
   },
+  "STU_E868F8F6": {
+    "parent": "STU_252FDE3A",
+    "fields": [
+      {
+        "name": "37AB13D3",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 32
+      }
+    ]
+  },
   "STU_CF5571C1": {
     "parent": "STU_DD856C32",
     "fields": []
@@ -13984,6 +14048,35 @@
       }
     ]
   },
+  "STU_6E650898": {
+    "parent": "STU_7C37840C",
+    "fields": [
+      {
+        "name": "D48A98B1",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 224
+      },
+      {
+        "name": "5C130DC9",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 232
+      },
+      {
+        "name": "75082DB6",
+        "type": "STU_076E0DBA",
+        "serializationType": 2,
+        "offset": 240
+      },
+      {
+        "name": "E8F94F90",
+        "type": "STU_4421B506",
+        "serializationType": 2,
+        "offset": 248
+      }
+    ]
+  },
   "STU_1B0E6B4D": {
     "parent": "STU_7C37840C",
     "fields": [
@@ -14453,6 +14546,10 @@
   },
   "STU_4CB0950F": {
     "parent": "STU_6810506D",
+    "fields": []
+  },
+  "STU_B7B2269A": {
+    "parent": "STU_D05AEF31",
     "fields": []
   },
   "STU_317ECFC6": {
@@ -15268,13 +15365,13 @@
         "name": "1B25AB90",
         "type": "STU_5C713BD4",
         "serializationType": 4,
-        "offset": 160
+        "offset": 168
       },
       {
         "name": "ABFBD552",
         "type": "STU_5C713BD4",
         "serializationType": 2,
-        "offset": 200
+        "offset": 208
       }
     ]
   },
@@ -15773,6 +15870,10 @@
         "offset": 520
       }
     ]
+  },
+  "STU_0EC242FA": {
+    "parent": "STU_7639CFC1",
+    "fields": []
   },
   "STU_E442A33D": {
     "parent": "STU_6D3ED020",
@@ -17134,7 +17235,7 @@
         "type": "s32",
         "serializationType": 0,
         "size": 4,
-        "offset": 160
+        "offset": 168
       }
     ]
   },
@@ -17370,11 +17471,31 @@
         "offset": 88
       },
       {
+        "name": "E02BEE24",
+        "type": "STU_ACCDE63F",
+        "serializationType": 12,
+        "offset": 104
+      },
+      {
         "name": "AA53A680",
         "type": "5A789F71",
         "serializationType": 8,
         "size": 4,
-        "offset": 104
+        "offset": 120
+      },
+      {
+        "name": "0BFA3FBB",
+        "type": "s32",
+        "serializationType": 0,
+        "size": 4,
+        "offset": 124
+      },
+      {
+        "name": "5F830928",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1,
+        "offset": 128
       }
     ]
   },
@@ -20824,34 +20945,34 @@
         "name": "949D9C2A",
         "type": "File Reference",
         "serializationType": 10,
-        "offset": 160
+        "offset": 168
       },
       {
         "name": "A4A66AB6",
         "type": "File Reference",
         "serializationType": 10,
-        "offset": 176
+        "offset": 184
       },
       {
         "name": "8F736177",
         "type": "161443EA",
         "serializationType": 8,
         "size": 4,
-        "offset": 192
+        "offset": 200
       },
       {
         "name": "2C01908B",
         "type": "u16",
         "serializationType": 0,
         "size": 2,
-        "offset": 196
+        "offset": 204
       },
       {
         "name": "78A2AC5C",
         "type": "u16",
         "serializationType": 0,
         "size": 2,
-        "offset": 198
+        "offset": 206
       }
     ]
   },
@@ -28039,25 +28160,31 @@
         "offset": 32
       },
       {
+        "name": "34AC2796",
+        "type": "STU_1ED304DF",
+        "serializationType": 5,
+        "offset": 48
+      },
+      {
         "name": "F81F4386",
         "type": "teStructuredDataDateAndTime",
         "serializationType": 0,
         "size": 8,
-        "offset": 48
+        "offset": 64
       },
       {
         "name": "FBEBAD6F",
         "type": "teStructuredDataDateAndTime",
         "serializationType": 0,
         "size": 8,
-        "offset": 56
+        "offset": 72
       },
       {
         "name": "EDE36CB7",
         "type": "u64",
         "serializationType": 0,
         "size": 8,
-        "offset": 64
+        "offset": 80
       }
     ]
   },
@@ -33570,6 +33697,12 @@
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 360
+      },
+      {
+        "name": "E4ED3FB6",
+        "type": "STU_076E0DBA",
+        "serializationType": 2,
+        "offset": 368
       }
     ]
   },
@@ -33820,6 +33953,17 @@
         "serializationType": 8,
         "size": 4,
         "offset": 436
+      }
+    ]
+  },
+  "STU_EBFB1C2C": {
+    "parent": "STU_DD856C32",
+    "fields": [
+      {
+        "name": "3236D6DC",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 136
       }
     ]
   },
@@ -35827,6 +35971,23 @@
         "serializationType": 8,
         "size": 4,
         "offset": 136
+      }
+    ]
+  },
+  "STU_D68203F6": {
+    "parent": "STU_7A7F2732",
+    "fields": [
+      {
+        "name": "DB803F2F",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 352
+      },
+      {
+        "name": "2679831C",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 360
       }
     ]
   },
@@ -41102,6 +41263,10 @@
       }
     ]
   },
+  "STU_3F784E6C": {
+    "parent": "STU_1482DDBB",
+    "fields": []
+  },
   "STU_54302FEA": {
     "parent": null,
     "fields": [
@@ -42503,7 +42668,15 @@
   },
   "STU_8B2A4F9F": {
     "parent": "STU_7A7F2732",
-    "fields": []
+    "fields": [
+      {
+        "name": "C25E3CF3",
+        "type": "u8",
+        "serializationType": 0,
+        "size": 1,
+        "offset": 352
+      }
+    ]
   },
   "STU_18ADE228": {
     "parent": "STU_28F49095",
@@ -46876,35 +47049,35 @@
         "name": "3CC2088A",
         "type": "STU_7C3457DC",
         "serializationType": 12,
-        "offset": 160
+        "offset": 168
       },
       {
         "name": "7AB4E3F8",
         "type": "BABC4175",
         "serializationType": 8,
         "size": 4,
-        "offset": 176
+        "offset": 184
       },
       {
         "name": "D8A49A4D",
         "type": "s32",
         "serializationType": 0,
         "size": 4,
-        "offset": 180
+        "offset": 188
       },
       {
         "name": "2F922165",
         "type": "4CAFD36F",
         "serializationType": 8,
         "size": 4,
-        "offset": 184
+        "offset": 192
       },
       {
         "name": "48A41554",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 188
+        "offset": 196
       }
     ]
   },
@@ -54063,21 +54236,8 @@
     ]
   },
   "STU_5671E063": {
-    "parent": "STU_7A7F2732",
-    "fields": [
-      {
-        "name": "EFF36296",
-        "type": "STU_D05AEF31",
-        "serializationType": 2,
-        "offset": 352
-      },
-      {
-        "name": "99C0ACC3",
-        "type": "STU_076E0DBA",
-        "serializationType": 2,
-        "offset": 360
-      }
-    ]
+    "parent": "STU_D68203F6",
+    "fields": []
   },
   "STU_3C8FB392": {
     "parent": "STU_9881546F",
@@ -54757,39 +54917,39 @@
         "name": "A0D4ABDE",
         "type": "STU_865FBB7E",
         "serializationType": 12,
-        "offset": 160
+        "offset": 168
       },
       {
         "name": "2B8351DA",
         "type": "STU_FC47A2ED",
         "serializationType": 12,
-        "offset": 176
+        "offset": 184
       },
       {
         "name": "89C64674",
         "type": "File Reference",
         "serializationType": 10,
-        "offset": 192
+        "offset": 200
       },
       {
         "name": "7E3ED979",
         "type": "STU_0A29DB0D",
         "serializationType": 13,
-        "offset": 208
+        "offset": 216
       },
       {
         "name": "28814AE5",
         "type": "teVec3",
         "serializationType": 0,
         "size": 12,
-        "offset": 224
+        "offset": 232
       },
       {
         "name": "69150A1D",
         "type": "teVec3",
         "serializationType": 0,
         "size": 12,
-        "offset": 236
+        "offset": 244
       }
     ]
   },
@@ -55231,20 +55391,20 @@
         "type": "7D856D3B",
         "serializationType": 9,
         "size": 4,
-        "offset": 160
+        "offset": 168
       },
       {
         "name": "DB803F2F",
         "type": "STU_6760479E",
         "serializationType": 13,
-        "offset": 176
+        "offset": 184
       },
       {
         "name": "D10618D1",
         "type": "u32",
         "serializationType": 0,
         "size": 4,
-        "offset": 192
+        "offset": 200
       }
     ]
   },
@@ -55340,6 +55500,10 @@
         "offset": 24
       }
     ]
+  },
+  "STU_68C1A08A": {
+    "parent": "STU_1482DDBB",
+    "fields": []
   },
   "STU_B280E352": {
     "parent": "STU_092AFD09",
@@ -56664,74 +56828,80 @@
         "offset": 496
       },
       {
+        "name": "2A0FB8BB",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 504
+      },
+      {
         "name": "43478CAD",
         "type": "3BED1D03",
         "serializationType": 8,
         "size": 4,
-        "offset": 504
+        "offset": 512
       },
       {
         "name": "DD792FF0",
         "type": "B101E48A",
         "serializationType": 8,
         "size": 4,
-        "offset": 508
+        "offset": 516
       },
       {
         "name": "08285CD6",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 512
+        "offset": 520
       },
       {
         "name": "0297060F",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 513
+        "offset": 521
       },
       {
         "name": "95FFC3C5",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 514
+        "offset": 522
       },
       {
         "name": "8D13DD07",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 515
+        "offset": 523
       },
       {
         "name": "2F5FAF65",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 516
+        "offset": 524
       },
       {
         "name": "32AFE9AA",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 517
+        "offset": 525
       },
       {
         "name": "E4A295CE",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 518
+        "offset": 526
       },
       {
         "name": "1C2A9945",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 519
+        "offset": 527
       }
     ]
   },
@@ -56765,13 +56935,13 @@
         "name": "1B25AB90",
         "type": "STU_5C713BD4",
         "serializationType": 4,
-        "offset": 160
+        "offset": 168
       },
       {
         "name": "F57B051E",
         "type": "File Reference",
         "serializationType": 10,
-        "offset": 200
+        "offset": 208
       }
     ]
   },
@@ -58171,23 +58341,6 @@
   "STU_6000A687": {
     "parent": "STU_1482DDBB",
     "fields": []
-  },
-  "STU_47400DA1": {
-    "parent": "STU_7A7F2732",
-    "fields": [
-      {
-        "name": "0B1BA7C1",
-        "type": "STU_D05AEF31",
-        "serializationType": 2,
-        "offset": 352
-      },
-      {
-        "name": "47AE235A",
-        "type": "STU_076E0DBA",
-        "serializationType": 2,
-        "offset": 360
-      }
-    ]
   },
   "STU_D59ACDBC": {
     "parent": "STU_54D6A5F9",
@@ -60570,41 +60723,47 @@
         "offset": 256
       },
       {
-        "name": "F6862FE7",
+        "name": "4A518273",
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 264
       },
       {
-        "name": "D80AEDB1",
+        "name": "F6862FE7",
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 272
       },
       {
-        "name": "3E3DFE0F",
+        "name": "D80AEDB1",
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 280
       },
       {
-        "name": "015FF666",
+        "name": "3E3DFE0F",
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 288
       },
       {
-        "name": "66D29548",
+        "name": "015FF666",
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 296
+      },
+      {
+        "name": "66D29548",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 304
       },
       {
         "name": "86CE02DE",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 304
+        "offset": 312
       }
     ]
   },
@@ -60721,6 +60880,29 @@
   "STU_DC866FA7": {
     "parent": null,
     "fields": []
+  },
+  "STU_817BB7C6": {
+    "parent": "STU_252FDE3A",
+    "fields": [
+      {
+        "name": "A9D270A9",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 32
+      },
+      {
+        "name": "37AB13D3",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 40
+      },
+      {
+        "name": "1D78837A",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 48
+      }
+    ]
   },
   "STU_9756A276": {
     "parent": "STU_7395D144",
@@ -64260,10 +64442,16 @@
         "offset": 144
       },
       {
-        "name": "369DD84E",
+        "name": "668CB309",
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 152
+      },
+      {
+        "name": "369DD84E",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 160
       }
     ]
   },
@@ -65192,6 +65380,12 @@
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 296
+      },
+      {
+        "name": "8A93A5B5",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 304
       }
     ]
   },
@@ -70102,84 +70296,90 @@
         "offset": 128
       },
       {
-        "name": "A872C70E",
+        "name": "A83E38DA",
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 136
       },
       {
+        "name": "A872C70E",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 144
+      },
+      {
         "name": "DBAC4DDB",
         "type": "STU_8BB02FF3",
         "serializationType": 2,
-        "offset": 144
+        "offset": 152
       },
       {
         "name": "4D05C91D",
         "type": "STU_D05AEF31",
         "serializationType": 2,
-        "offset": 152
+        "offset": 160
       },
       {
         "name": "313BE2FB",
         "type": "STU_D05AEF31",
         "serializationType": 2,
-        "offset": 160
+        "offset": 168
       },
       {
         "name": "CF39A346",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 168
+        "offset": 176
       },
       {
         "name": "3E7A533D",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 169
+        "offset": 177
       },
       {
         "name": "50C84E9E",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 170
+        "offset": 178
       },
       {
         "name": "09528B11",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 171
+        "offset": 179
       },
       {
         "name": "76A6AE1A",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 172
+        "offset": 180
       },
       {
         "name": "49F60FB8",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 173
+        "offset": 181
       },
       {
         "name": "E6315025",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 174
+        "offset": 182
       },
       {
         "name": "C0423010",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 175
+        "offset": 183
       }
     ]
   },
@@ -70790,7 +70990,14 @@
   },
   "STU_49D35243": {
     "parent": "STU_7A7F2732",
-    "fields": []
+    "fields": [
+      {
+        "name": "E7295928",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 352
+      }
+    ]
   },
   "STU_57BDCAB6": {
     "parent": "STU_7C37840C",
@@ -71618,7 +71825,7 @@
         "type": "4E56D01D",
         "serializationType": 8,
         "size": 4,
-        "offset": 160
+        "offset": 168
       }
     ]
   },
@@ -72039,6 +72246,23 @@
   "STU_AA2F6FCC": {
     "parent": "STU_6E33838C",
     "fields": []
+  },
+  "STU_1A496D3C": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "11B47C68",
+        "type": "STU_9CADF2EC",
+        "serializationType": 12,
+        "offset": 0
+      },
+      {
+        "name": "3CD6DC1E",
+        "type": "STU_0B792564",
+        "serializationType": 12,
+        "offset": 16
+      }
+    ]
   },
   "STU_5C414402": {
     "parent": "STU_7C37840C",
@@ -73542,6 +73766,10 @@
       }
     ]
   },
+  "STU_A5A26BA2": {
+    "parent": "STU_7A7F2732",
+    "fields": []
+  },
   "STU_737C5C41": {
     "parent": "STU_773DC32C",
     "fields": []
@@ -74999,7 +75227,7 @@
         "name": "4C167404",
         "type": "STU_42270D59",
         "serializationType": 12,
-        "offset": 160
+        "offset": 168
       }
     ]
   },
@@ -78268,6 +78496,17 @@
       }
     ]
   },
+  "STU_1E866821": {
+    "parent": "STU_252FDE3A",
+    "fields": [
+      {
+        "name": "A9D270A9",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 32
+      }
+    ]
+  },
   "STU_BA6886C4": {
     "parent": "STU_64C11507",
     "fields": [
@@ -79634,20 +79873,20 @@
         "name": "CA7E6EDC",
         "type": "File Reference",
         "serializationType": 10,
-        "offset": 160
+        "offset": 168
       },
       {
         "name": "4D2DB658",
         "type": "STU_9CADF2EC",
         "serializationType": 12,
-        "offset": 176
+        "offset": 184
       },
       {
         "name": "F24E4110",
         "type": "A7098AAD",
         "serializationType": 8,
         "size": 4,
-        "offset": 192
+        "offset": 200
       }
     ]
   },
@@ -81170,18 +81409,31 @@
     "parent": "STU_54D6A5F9",
     "fields": [
       {
+        "name": "14D57989",
+        "type": "s32",
+        "serializationType": 1,
+        "offset": 120
+      },
+      {
         "name": "456B5F79",
         "type": "u64",
         "serializationType": 0,
         "size": 8,
-        "offset": 120
+        "offset": 136
+      },
+      {
+        "name": "120378C3",
+        "type": "s32",
+        "serializationType": 0,
+        "size": 4,
+        "offset": 144
       },
       {
         "name": "B1370BCB",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 128
+        "offset": 148
       }
     ]
   },
@@ -87320,6 +87572,17 @@
       }
     ]
   },
+  "STU_741749FF": {
+    "parent": "STU_252FDE3A",
+    "fields": [
+      {
+        "name": "DB803F2F",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 32
+      }
+    ]
+  },
   "STU_D0E551CA": {
     "parent": "STU_C7C085F6",
     "fields": [
@@ -89029,18 +89292,25 @@
         "offset": 152
       },
       {
+        "name": "A7B393BF",
+        "type": "5A7EBE59",
+        "serializationType": 8,
+        "size": 4,
+        "offset": 156
+      },
+      {
         "name": "1A546C64",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 156
+        "offset": 160
       },
       {
         "name": "40926C4A",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 157
+        "offset": 161
       }
     ]
   },
@@ -90512,34 +90782,47 @@
         "offset": 296
       },
       {
-        "name": "73F1803C",
-        "type": "STU_076E0DBA",
+        "name": "7CAED42E",
+        "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 304
       },
       {
-        "name": "FC2F7AAA",
+        "name": "73F1803C",
         "type": "STU_076E0DBA",
         "serializationType": 2,
         "offset": 312
       },
       {
-        "name": "0687866A",
-        "type": "STU_4421B506",
+        "name": "FC2F7AAA",
+        "type": "STU_076E0DBA",
         "serializationType": 2,
         "offset": 320
       },
       {
-        "name": "A0B58111",
+        "name": "0687866A",
         "type": "STU_4421B506",
         "serializationType": 2,
         "offset": 328
       },
       {
-        "name": "F96FC964",
+        "name": "A0B58111",
         "type": "STU_4421B506",
         "serializationType": 2,
         "offset": 336
+      },
+      {
+        "name": "F96FC964",
+        "type": "STU_4421B506",
+        "serializationType": 2,
+        "offset": 344
+      },
+      {
+        "name": "CB8B94CE",
+        "type": "D2BF23BC",
+        "serializationType": 8,
+        "size": 4,
+        "offset": 352
       }
     ]
   },
@@ -92028,7 +92311,14 @@
   },
   "STU_911B8FCF": {
     "parent": "STU_DD856C32",
-    "fields": []
+    "fields": [
+      {
+        "name": "9E67890E",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 136
+      }
+    ]
   },
   "STU_1308AA6A": {
     "parent": "STU_D71F17E2",
@@ -94655,135 +94945,111 @@
         "offset": 216
       },
       {
-        "name": "D3A31F29",
-        "type": "STU_0B792564",
-        "serializationType": 12,
+        "name": "8203BFE1",
+        "type": "STU_1A496D3C",
+        "serializationType": 5,
         "offset": 232
-      },
-      {
-        "name": "DAD2E3A2",
-        "type": "STU_0B792564",
-        "serializationType": 12,
-        "offset": 248
-      },
-      {
-        "name": "D696F2F6",
-        "type": "STU_0B792564",
-        "serializationType": 12,
-        "offset": 264
-      },
-      {
-        "name": "EA6FF023",
-        "type": "STU_0B792564",
-        "serializationType": 12,
-        "offset": 280
-      },
-      {
-        "name": "D90B256D",
-        "type": "STU_0B792564",
-        "serializationType": 12,
-        "offset": 296
       },
       {
         "name": "FC833C02",
         "type": "STU_C0D5117B",
         "serializationType": 5,
-        "offset": 312
+        "offset": 248
       },
       {
         "name": "A341183E",
         "type": "STU_8A1F18F9",
         "serializationType": 5,
-        "offset": 328
+        "offset": 264
       },
       {
         "name": "77FED604",
         "type": "STU_07A0E32F",
         "serializationType": 13,
-        "offset": 344
+        "offset": 280
       },
       {
         "name": "D12CB4EA",
         "type": "STU_1DEBD356",
         "serializationType": 13,
-        "offset": 360
+        "offset": 296
       },
       {
         "name": "485AA39C",
         "type": "STU_8CE1D110",
         "serializationType": 12,
-        "offset": 376
+        "offset": 312
       },
       {
         "name": "418F797D",
         "type": "STU_33752503",
         "serializationType": 5,
-        "offset": 392
+        "offset": 328
       },
       {
         "name": "FF3C2071",
         "type": "STU_0CC07049",
         "serializationType": 13,
-        "offset": 408
+        "offset": 344
       },
       {
         "name": "A5C9CA02",
         "type": "teString",
         "serializationType": 0,
-        "offset": 424
+        "offset": 360
       },
       {
         "name": "893AAB2B",
         "type": "STU_CE1A4D26",
         "serializationType": 13,
-        "offset": 440
+        "offset": 376
       },
       {
         "name": "E1258EC1",
         "type": "STU_5E493D8B",
         "serializationType": 5,
-        "offset": 456
+        "offset": 392
       },
       {
         "name": "84625AA3",
         "type": "STU_63172E83",
         "serializationType": 5,
-        "offset": 472
+        "offset": 408
       },
       {
         "name": "E25DDDA1",
         "type": "teColorRGBA",
         "serializationType": 0,
         "size": 16,
-        "offset": 488
+        "offset": 424
       },
       {
         "name": "44D13CC2",
         "type": "s32",
         "serializationType": 0,
         "size": 4,
-        "offset": 504
+        "offset": 440
       },
       {
         "name": "AF4EC410",
         "type": "C1DAF32A",
         "serializationType": 8,
         "size": 4,
-        "offset": 508
+        "offset": 444
       },
       {
         "name": "7D88A63A",
         "type": "0C014B4A",
         "serializationType": 8,
         "size": 4,
-        "offset": 512
+        "offset": 448
       },
       {
         "name": "62746D34",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 516
+        "offset": 452
       }
     ]
   },
@@ -94961,6 +95227,17 @@
   "STU_18BCF4E4": {
     "parent": "STU_1413B6A1",
     "fields": []
+  },
+  "STU_FA72F334": {
+    "parent": "STU_E4324757",
+    "fields": [
+      {
+        "name": "8A557E94",
+        "type": "File Reference",
+        "serializationType": 10,
+        "offset": 32
+      }
+    ]
   },
   "STU_F86AF375": {
     "parent": null,
@@ -99451,17 +99728,6 @@
       }
     ]
   },
-  "STU_DEFE21F8": {
-    "parent": "STU_7A7F2732",
-    "fields": [
-      {
-        "name": "EFF36296",
-        "type": "STU_D05AEF31",
-        "serializationType": 2,
-        "offset": 352
-      }
-    ]
-  },
   "STU_03461D6C": {
     "parent": "STU_866672AD",
     "fields": [
@@ -101865,6 +102131,17 @@
       }
     ]
   },
+  "STU_1425443C": {
+    "parent": "STU_252FDE3A",
+    "fields": [
+      {
+        "name": "FBF51820",
+        "type": "STU_D05AEF31",
+        "serializationType": 2,
+        "offset": 32
+      }
+    ]
+  },
   "STU_7DDC51BC": {
     "parent": null,
     "fields": [
@@ -102756,7 +103033,7 @@
         "name": "2E5FBA99",
         "type": "File Reference",
         "serializationType": 10,
-        "offset": 160
+        "offset": 168
       }
     ]
   },
@@ -104694,7 +104971,7 @@
         "type": "s32",
         "serializationType": 0,
         "size": 4,
-        "offset": 160
+        "offset": 168
       }
     ]
   },
@@ -104956,6 +105233,10 @@
       }
     ]
   },
+  "STU_7450D13D": {
+    "parent": "STU_D68203F6",
+    "fields": []
+  },
   "STU_AA789B0D": {
     "parent": "STU_81C5DE19",
     "fields": [
@@ -105215,18 +105496,25 @@
         "offset": 140
       },
       {
+        "name": "6DB41D17",
+        "type": "u16",
+        "serializationType": 0,
+        "size": 2,
+        "offset": 144
+      },
+      {
         "name": "D4A3C694",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 144
+        "offset": 146
       },
       {
         "name": "FD92C072",
         "type": "u8",
         "serializationType": 0,
         "size": 1,
-        "offset": 145
+        "offset": 147
       }
     ]
   },
@@ -106212,7 +106500,7 @@
         "name": "1B25AB90",
         "type": "STU_5C713BD4",
         "serializationType": 4,
-        "offset": 160
+        "offset": 168
       }
     ]
   },
@@ -107857,6 +108145,10 @@
       }
     ]
   },
+  "STU_D0EC0D98": {
+    "parent": "STU_D05AEF31",
+    "fields": []
+  },
   "STU_673C4DE3": {
     "parent": "STU_DD856C32",
     "fields": []
@@ -108950,6 +109242,24 @@
         "type": "STU_D05AEF31",
         "serializationType": 2,
         "offset": 40
+      }
+    ]
+  },
+  "STU_1ED304DF": {
+    "parent": null,
+    "fields": [
+      {
+        "name": "DB803F2F",
+        "type": "STU_5ABF8769",
+        "serializationType": 4,
+        "offset": 8
+      },
+      {
+        "name": "120378C3",
+        "type": "s32",
+        "serializationType": 0,
+        "size": 4,
+        "offset": 32
       }
     ]
   },

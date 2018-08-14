@@ -29,7 +29,7 @@ namespace DataTool {
                 foreach (KeyValuePair<string, TagExpectedValue> tagVal in tagVals) {
                     if (!Tags.ContainsKey(tagVal.Key.ToLowerInvariant())) continue;
 
-                    if (!tagVal.Value.Values.Any(x => {
+                    if (!tagVal.Value.Values.Where(x => x != null).Any(x => {
                         TagValue tag = Tags[tagVal.Key.ToLowerInvariant()];
 
                         if (x.StartsWith("!")) {

@@ -284,6 +284,16 @@ namespace TankLib {
     
     public class teMapPlaceableSingleModel : IMapPlaceable {
         public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.SINGLE_MODEL;
+
+        public teMapPlaceableModel.Structure Header;
+
+        public void Read(BinaryReader reader) {
+            Header = reader.Read<teMapPlaceableModel.Structure>();
+        }
+    }
+    
+    public class teMapPlaceableModel : IMapPlaceable {
+        public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.MODEL;
         
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
@@ -299,16 +309,6 @@ namespace TankLib {
 
         public void Read(BinaryReader reader) {
             Header = reader.Read<Structure>();
-        }
-    }
-    
-    public class teMapPlaceable8 : IMapPlaceable {
-        public teMAP_PLACEABLE_TYPE Type => (teMAP_PLACEABLE_TYPE)8;
-
-        public teMapPlaceableSingleModel.Structure Header;
-
-        public void Read(BinaryReader reader) {
-            Header = reader.Read<teMapPlaceableSingleModel.Structure>();
         }
     }
     
