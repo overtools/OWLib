@@ -251,17 +251,20 @@ namespace TankLib {
         /// <summary>
         /// Unpack scale value
         /// </summary>
-        /// <param name="x">Packed X component</param>
-        /// <param name="y">Packed Y component</param>
-        /// <param name="z">Packed Z component</param>
+        /// <param name="a">Packed X component</param>
+        /// <param name="b">Packed Y component</param>
+        /// <param name="c">Packed Z component</param>
         /// <returns>Unpacked scale value</returns>
-        private static teVec3 UnpackScale(ushort x, ushort y, ushort z) {
-            double xd = x / 1024d;
-            double yd = y / 1024d;
-            double zd = z / 1024d;
+        private static teVec3 UnpackScale(ushort a, ushort b, ushort c) {
+            double x = a / 1024d;
+            double y = b / 1024d;
+            double z = c / 1024d;
 
-            teVec3 value = new teVec3(xd, yd, zd);
-            return value;
+            double xDelta = (1 - x) / 1024d;
+            double yDelta = (1 - y) / 1024d;
+            double zDelta = (1 - z) / 1024d;
+            
+            return new teVec3(xDelta + 1, yDelta + 1, zDelta + 1);
         }
 
         /// <summary>
