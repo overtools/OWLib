@@ -228,7 +228,7 @@ namespace DataTool {
         private static void ExceptionHandler(object sender, UnhandledExceptionEventArgs e) {
             Exception ex = e.ExceptionObject as Exception;
             if (ex != null) {
-                TankLib.Helpers.Logger.Error("NULL", ex.ToString());
+                TankLib.Helpers.Logger.Error(null, ex.ToString());
                 if (Debugger.IsAttached) {
                     throw ex;
                 }

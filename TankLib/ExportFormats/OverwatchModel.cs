@@ -35,7 +35,7 @@ namespace TankLib.ExportFormats {
             
             using (BinaryWriter writer = new BinaryWriter(stream)) {
                 writer.Write((ushort)1);
-                writer.Write((ushort)5);
+                writer.Write((ushort)6);
                 if (ModelLookFileName == null) {   // mat ref
                     writer.Write((byte)0);
                 } else {
@@ -123,6 +123,9 @@ namespace TankLib.ExportFormats {
                         } else {
                             writer.Write((byte)0);
                         }
+
+                        writer.Write(submesh.Color1.ElementAtOrDefault(j));
+                        writer.Write(submesh.Color2.ElementAtOrDefault(j));
                     }
 
                     for (int j = 0; j < submesh.Descriptor.IndicesToDraw; j+=3) {

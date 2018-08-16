@@ -108,6 +108,9 @@ namespace DataTool.SaveLogic {
 
             using (Stream file = File.OpenRead(dbPath))
             using (BinaryReader reader = new BinaryReader(file, Encoding.Unicode)) {
+                if (file.Length - file.Position < 4) {
+                    TankLib.Helpers.Logger.Error("ScratchDB", "File is not long enough");
+                }
                 short version = reader.ReadInt16();
                 ScratchDBLogicMethod method = ScratchDBLogic.ElementAtOrDefault(version);
                 if (method == null) {
