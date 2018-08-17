@@ -116,8 +116,8 @@ namespace TankLib.STU {
         }
 
         public STUInstance CreateInstance(uint hash) {
-            if (Instances.ContainsKey(hash)) {
-                return (STUInstance)Activator.CreateInstance(Instances[hash]);
+            if (Instances.TryGetValue(hash, out Type instanceType)) {
+                return (STUInstance)Activator.CreateInstance(instanceType);
             }
 
             if (_missingInstances.Add(hash)) {

@@ -164,8 +164,8 @@ namespace TankLib {
         /// <param name="id">ID of instance to create</param>
         /// <param name="rootID">ID of the header chunk</param>
         public IChunk CreateChunkInstance(string id, string rootID) {
-            if (ChunkTypes.ContainsKey(id)) {
-                return (IChunk) Activator.CreateInstance(ChunkTypes[id]);
+            if (ChunkTypes.TryGetValue(id, out Type chunkType)) {
+                return (IChunk) Activator.CreateInstance(chunkType);
             }
             
             if (UnhandledChunks.Add(id)) {

@@ -11,6 +11,9 @@ namespace TankLib {
         /// <summary>Animation header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct AnimHeader {
+            /// <summary>
+            /// Animation "priority". Is 160 for many animations. No idea what it is used for
+            /// </summary>
             public uint Priority;
             
             /// <summary>Duration, in seconds</summary>
@@ -40,12 +43,14 @@ namespace TankLib {
             public long InfoTableOffset;
             
             /// <summary>Offset to end of animation</summary>
-            private long Size;
+            public long Size;
             
             /// <summary>Offset to end of file</summary>
-            private long Eof;
+            public long Eof;
             
-            private long Zero;
+            
+            /// <summary>Unknown value that is always 0. Maybe padding</summary>
+            public long Zero;
         }
         
         public struct InfoTable {

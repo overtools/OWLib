@@ -358,8 +358,8 @@ namespace TankLib.Chunks {
                 for (int j = 0; j < submeshDescriptor.IndicesToDraw; j++) {
                     ushort index = reader.ReadUInt16();
                     ushort newIndex;
-                    if (indexRemap.ContainsKey(index)) {
-                        newIndex = indexRemap[index];  // "index of", value = fake index
+                    if (indexRemap.TryGetValue(index, out ushort remappedIndex)) {
+                        newIndex = remappedIndex;  // "index of", value = fake index
                     } else {
                         newIndex = (ushort) indexRemap.Count;
                         indexRemap[index] = newIndex;

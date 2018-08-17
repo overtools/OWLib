@@ -69,7 +69,7 @@ namespace TankLib {
             public byte UnknownD;
             public short Zero;
             
-            /// <summary>Global sampler index</summary>
+            /// <summary>Global resource index</summary>
             /// <note>This is calculated at runtime, CRC is looked up in an array in the client</note>
             public short GlobalIndex;
         }

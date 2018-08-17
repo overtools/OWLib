@@ -18,8 +18,7 @@ namespace TankLib.STU {
         }
 
         protected object DeserializeInternal(teStructuredDataMgr manager, teStructuredData data, STUField_Info field, FieldInfo target) {
-            if (manager.Factories.ContainsKey(target.FieldType)) {
-                IStructuredDataPrimitiveFactory factory = manager.Factories[target.FieldType];
+            if (manager.Factories.TryGetValue(target.FieldType, out var factory)) {
                 return factory.Deserialize(data, field);
             }
 
@@ -31,8 +30,8 @@ namespace TankLib.STU {
             }
 
             if (target.FieldType.IsEnum) {
-                IStructuredDataPrimitiveFactory factory = manager.Factories[target.FieldType.GetEnumUnderlyingType()];
-                return factory.Deserialize(data, field);
+                IStructuredDataPrimitiveFactory enumFactory = manager.Factories[target.FieldType.GetEnumUnderlyingType()];
+                return enumFactory.Deserialize(data, field);
             }
             
             bool isStruct = target.FieldType.IsValueType && !target.FieldType.IsPrimitive;
@@ -48,8 +47,7 @@ namespace TankLib.STU {
         protected object DeserializeArrayInternal(teStructuredDataMgr manager, teStructuredData data, STUField_Info field, Array target) {
             Type elementType = target.GetType().GetElementType();
             if (elementType == null) throw new InvalidDataException("elementType is null");
-            if (manager.Factories.ContainsKey(elementType)) {
-                IStructuredDataPrimitiveFactory factory = manager.Factories[elementType];
+            if (manager.Factories.TryGetValue(elementType, out var factory)) {
                 return factory.DeserializeArray(data, field);
             }
 
@@ -61,8 +59,8 @@ namespace TankLib.STU {
             }
 
             if (elementType.IsEnum) {
-                IStructuredDataPrimitiveFactory factory = manager.Factories[elementType.GetEnumUnderlyingType()];
-                return Enum.ToObject(elementType, factory.DeserializeArray(data, field));
+                IStructuredDataPrimitiveFactory enumFactory = manager.Factories[elementType.GetEnumUnderlyingType()];
+                return Enum.ToObject(elementType, enumFactory.DeserializeArray(data, field));
             }
             
             bool isStruct = elementType.IsValueType && !elementType.IsPrimitive;

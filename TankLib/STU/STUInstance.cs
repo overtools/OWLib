@@ -34,13 +34,11 @@ namespace TankLib.STU {
         /// <summary>Read a specified STU field</summary>
         protected void DeserializeField(teStructuredData assetFile, STUField_Info fieldInfo,
             Dictionary<uint, KeyValuePair<FieldInfo, STUFieldAttribute>> fields, STUAttribute stuAttribute) {
-            if (!fields.ContainsKey(fieldInfo.Hash)) {
+            if (!fields.TryGetValue(fieldInfo.Hash, out var field)) {
                 string name = stuAttribute.Name ?? $"STU_{stuAttribute.Hash:X8}";  // todo: dis slow
                 Debugger.Log(0, "STUInstance", $"Unhandled field: {name}:{fieldInfo.Hash:X8} (size: {fieldInfo.Size})\r\n");
                 return;
             }
-
-            KeyValuePair<FieldInfo, STUFieldAttribute> field = fields[fieldInfo.Hash];
 
             IStructuredDataFieldReader reader = teStructuredData.Manager.FieldReaders[field.Value.ReaderType];
 

@@ -363,8 +363,8 @@ namespace TankLib {
         }
 
         public IMapPlaceable CreateType(teMapPlaceableData.CommonStructure commonStructure, BinaryReader reader) {
-            if (Types.ContainsKey(commonStructure.Type)) {
-                IMapPlaceable value = (IMapPlaceable)Activator.CreateInstance(Types[commonStructure.Type]);
+            if (Types.TryGetValue(commonStructure.Type, out Type placeableType)) {
+                IMapPlaceable value = (IMapPlaceable)Activator.CreateInstance(placeableType);
                 value.Read(reader);
                 return value;
             }
