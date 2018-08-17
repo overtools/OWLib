@@ -50,7 +50,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 throw new Exception("no output path");
             }
 
-            const string container = "DebugVoiceSet";
+            //const string container = "DebugVoiceSet";
 
             ulong loadGuid = 0x400000000000001;
             HashSet<teResourceGUID> loadedAssets = new HashSet<teResourceGUID>();

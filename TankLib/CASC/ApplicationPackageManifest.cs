@@ -243,8 +243,7 @@ namespace TankLib.CASC {
                         return; // lol?
                     }
 
-                    EncodingEntry packageEncoding;
-                    if (!casc.EncodingHandler.GetEntry(CMF.Map[entry.PackageGUID].HashKey, out packageEncoding))
+                    if (!casc.EncodingHandler.GetEntry(CMF.Map[entry.PackageGUID].HashKey, out EncodingEntry packageEncoding))
                         return;
                     using (Stream packageStream = casc.OpenFile(packageEncoding.Key))
                     using (BinaryReader packageReader = new BinaryReader(packageStream)) {

@@ -13,6 +13,7 @@ namespace TankLib.CASC {
     /// <summary>CASC handler config</summary>
     public class CASCConfig {
         private KeyValueConfig _cdnConfig;
+#warning TODO: NGDP still isn't supported.
         private BarSeparatedConfig _buildInfo;
         private BarSeparatedConfig _cdnData;
         private BarSeparatedConfig _versionsData;

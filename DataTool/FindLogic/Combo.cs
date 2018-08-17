@@ -642,8 +642,9 @@ namespace DataTool.FindLogic {
                     if (info.Effects.ContainsKey(guid)) break;
                     if (info.AnimationEffects.ContainsKey(guid)) break;
 
-                    EffectParser.EffectInfo effectInfo = new EffectParser.EffectInfo();
-                    effectInfo.GUID = guid;
+                    EffectParser.EffectInfo effectInfo = new EffectParser.EffectInfo {
+                        GUID = guid
+                    };
                     effectInfo.SetupEffect();
 
                     if (guidType == 0xD || guidType == 0x8E) {
@@ -859,7 +860,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0x43:
                     // todo: no point parsing this right now, not used
-                    break;
+#if ALL_FEATURES_WOULD_CEASE_TO_EXIST
                     if (info.SoundBanks.ContainsKey(guid)) break;
                     
                     WWiseBankInfo bankInfo = new WWiseBankInfo(guid);
@@ -889,7 +890,7 @@ namespace DataTool.FindLogic {
                             }
                         }
                     }
-                    
+#endif
                     break;
                 case 0x5F:
                     if (info.VoiceSets.ContainsKey(guid)) break;

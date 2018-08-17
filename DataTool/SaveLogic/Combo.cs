@@ -397,8 +397,8 @@ namespace DataTool.SaveLogic {
                 SaveModelLook(flags, path, info, material);
             }
         }
-        
-        #warning This method does not support animation effects
+
+#warning TODO: This method does not support animation effects
         public static void SaveAllAnimations(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
             bool beforeSaveAnimEffects = info.SaveConfig.SaveAnimationEffects;
             info.SaveConfig.SaveAnimationEffects = false;
