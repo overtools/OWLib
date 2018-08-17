@@ -122,8 +122,10 @@ namespace DataTool {
             Config.TextLanguage = Flags.Language ?? Config.TextLanguage;
 
             if (Config != null) {
-                if (Flags.Language != null && !Config.InstallData.Settings.Languages.Select(x => x.Language).Contains(Flags.Language)) {
-                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", Flags.Language);
+                if (!Config.InstallData.Settings.Languages.Select(x => x.Language).Contains(Config.TextLanguage)) {
+                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", Config.TextLanguage);
+                } else if (!Config.InstallData.Settings.Languages.Select(x => x.Language).Contains(Config.SpeechLanguage)) {
+                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", Config.SpeechLanguage);
                 }
 
                 if (Config.InstallData.Uid != "prometheus") {
