@@ -642,8 +642,9 @@ namespace DataTool.FindLogic {
                     if (info.Effects.ContainsKey(guid)) break;
                     if (info.AnimationEffects.ContainsKey(guid)) break;
 
-                    EffectParser.EffectInfo effectInfo = new EffectParser.EffectInfo();
-                    effectInfo.GUID = guid;
+                    EffectParser.EffectInfo effectInfo = new EffectParser.EffectInfo {
+                        GUID = guid
+                    };
                     effectInfo.SetupEffect();
 
                     if (guidType == 0xD || guidType == 0x8E) {

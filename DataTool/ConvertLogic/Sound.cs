@@ -1327,8 +1327,7 @@ namespace DataTool.ConvertLogic {
                             uint objectID = reader.ReadUInt32();
 
                             if (Types.ContainsKey(objectType)) {
-                                IBankObject bankObject = Activator.CreateInstance(Types[objectType]) as IBankObject;
-                                if (bankObject == null) continue;
+                                if (!(Activator.CreateInstance(Types[objectType]) is IBankObject bankObject)) continue;
                                 bankObject.Read(reader);
                                 Objects[objectID] = bankObject;
                             } else {
