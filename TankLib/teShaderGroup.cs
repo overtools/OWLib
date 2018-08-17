@@ -29,6 +29,7 @@ namespace TankLib {
             /// <summary>Number of referenced shaders</summary>
             public int NumShaders;  // m_numShaders, 64
 
+            /// <summary>Shader state flags</summary>
             public Enums.teSHADER_STATE ShaderStateFlags;
         }
 
@@ -38,8 +39,12 @@ namespace TankLib {
         /// <summary>ShaderInstances</summary>
         public teResourceGUID[] Instances;
 
+        /// <summary>Flags that are used to select the correct ShaderInstance pair based on parameters</summary>
         public ulong[] InstanceFlags;
 
+        /// <summary>
+        /// ShaderInstance "hashes". Used to identify instances in 088 groups.
+        /// </summary>
         public uint[] Hashes;
 
         public ShaderQuality[] ShaderQualities;
@@ -108,6 +113,12 @@ namespace TankLib {
             public short UnkB;
         }
 
+        /// <summary>
+        /// Get a ShaderInstance GUID from a "hash"
+        /// </summary>
+        /// <note>Mostly used on 088 groups</note>
+        /// <param name="hash">"Hash" associated with a specific ShaderInstance</param>
+        /// <returns></returns>
         public teResourceGUID GetShaderByHash(uint hash) {
             if (Hashes == null) return (teResourceGUID) 0;
             for (int i = 0; i < Header.NumShaders; i++) {

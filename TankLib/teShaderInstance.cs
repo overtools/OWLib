@@ -30,6 +30,8 @@ namespace TankLib {
             public uint PadB;  // 56
             
             public uint Unk1;  // 60
+            
+            /// <summary>CRC32b of the vertex input elements. Allows for easy layout reuse</summary>
             public uint ShaderInputCRC;  // 64
             
             //public short Unk3;
@@ -43,9 +45,10 @@ namespace TankLib {
             public byte Unk7;
             public byte Unk8;
 
+            /// <summary>Constant buffer count</summary>
             public sbyte NumConstantBuffers;  // 76
             
-            /// <summary>Texture input definition count</summary>
+            /// <summary>Shader resource definition count</summary>
             public sbyte NumShaderResources;  // 77
             public sbyte NumShaderRWResources;  // 78
             public sbyte SamplerStateCount;
@@ -60,10 +63,14 @@ namespace TankLib {
             /// <summary>Shader resource index</summary>
             public byte Register;  // 5
             
+            /// <summary>Type of shader resource this is</summary>
             public ShaderResourceType Type;  // 6
             public byte Format;  // 7
             public byte UnknownD;
             public short Zero;
+            
+            /// <summary>Global sampler index</summary>
+            /// <note>This is calculated at runtime, CRC is looked up in an array in the client</note>
             public short GlobalIndex;
         }
 
@@ -79,6 +86,9 @@ namespace TankLib {
             
             /// <summary>D3D register</summary>
             public short Register;
+            
+            /// <summary>Global sampler index</summary>
+            /// <note>This is calculated at runtime, CRC is looked up in an array in the client</note>
             public short GlobalIndex;
         }
 
@@ -117,7 +127,7 @@ namespace TankLib {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct InputElementDefinition {
             public ShaderInputUse InputUse;
-            public byte Index;
+            public byte Register;
             public ShaderInputForm Format;
 
             public byte Slot;
@@ -136,14 +146,19 @@ namespace TankLib {
         // ReSharper disable once InconsistentNaming
         public ShaderResourceDefinition[] RWShaderResources;
         
-        /// <summary>Shader constant buffer inputs</summary>
+        /// <summary>Shader samplers</summary>
         public SamplerState[] SamplerStates;
 
         /// <summary>Shader vertex layout</summary>
         public InputElementDefinition[] VertexLayout;
 
+        /// <summary>Shader constant buffer definitions</summary>
         public BufferHeader[] BufferHeaders;
+        
+        /// <summary>"Parts" that are combined together to create a shader constant buffer</summary>
         public BufferPart[][] BufferParts;
+        
+        /// <summary> The data skeleton that buffers are built on. null = no skeleton</summary>
         public byte[][] BufferSkeletons;
 
         /// <summary>
@@ -219,26 +234,45 @@ namespace TankLib {
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct BufferPart {
+            /// <summary>"Hash" of the data. Not sure if it is actually a hash or not</summary>
             public uint Hash;
+            
+            /// <summary>Size in bytes</summary>
             public ushort Size;
             public ushort Unk2Offset;
             public ushort Unk3Offset;
+            
+            /// <summary>Offset in bytes</summary>
             public ushort Offset;
             
             // unsure:
             public byte ElementSize;
             public byte ElementCount;
+            
+            /// <summary>If the "part" is global value or not?</summary>
             public byte IsDynamic; // todo: bool
             public byte Unknown;
         }
         
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct BufferHeader {
+            /// <summary>Offset to "part" definitions</summary>
             public long PartOffset;
+            
+            /// <summary>Offset to skeleton byte array</summary>
             public long SkeletonOffset;
+            
+            /// <summary>Identifier hash</summary>
             public ulong Hash;
+            
+            /// <summary>Size in bytes</summary>
             public int BufferSize;
+            
+            /// <summary>Number of "parts" that make up this buffer</summary>
+            /// <note>Most buffers now have no "parts" definied in the 086 data because blizzard keeps reading my code</note>
             public short PartCount;
+            
+            /// <summary>DX11 register</summary>
             public short Register;
         }
     }

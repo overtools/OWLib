@@ -1,7 +1,0 @@
-teMtx43A is 64 bytes, probably another thing where A means another value (or row/col in this case) (e.g. teVec3A is float4)
-
-todo: add enum values:
-    (used in)
-    ListAchievements
-    ExtractLootbox
-    ListHeroes

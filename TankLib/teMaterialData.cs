@@ -7,24 +7,28 @@ namespace TankLib {
     public class teMaterialData {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct MatDataHeader {
+            /// <summary>Offset to static input definitions</summary>
             public long StaticInputsOffset;  // 0
             public long Offset2;  // 8
             
-            /// <summary>Texture definition offset</summary>
+            /// <summary>Offset to texture definitions</summary>
             public long TextureOffset;  // 16
             
             public long Offset4;  // 24
             
-            public uint unk1;  // 28
+            public uint Unknown1;  // 28
+            
+            /// <summary>Number of static inputs </summary>
             public ushort StaticInputCount; // 32
-            public ushort unk3;
+            
+            public ushort Unknown3;
             
             /// <summary>Texture definition count</summary>
             public byte TextureCount;
             
             public byte Offset4Count;
-            public ushort unk4;
-            public uint unk5;
+            public ushort Unknown4;
+            public uint Unknown5;
         }
 
         /// <summary>Header data</summary>
