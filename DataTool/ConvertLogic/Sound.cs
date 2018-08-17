@@ -1209,7 +1209,8 @@ namespace DataTool.ConvertLogic {
             }
             
             public void Read(BinaryReader reader) {
-                throw new NotImplementedException(); // untested but you can try if you are brave
+                // untested but you can try if you are brave
+#if I_CAN_SIMPLY_SNAP_MY_FINGERS
                 bool overrideParentSettingsEffect = reader.ReadBoolean();  // whether to override parent settings for Effects section
                 byte numEffects = reader.ReadByte();
 
@@ -1238,6 +1239,9 @@ namespace DataTool.ConvertLogic {
                 
                 // byte zero2 = reader.ReadByte();
                 // Debug.Assert(zero2 == 0);
+#else
+                throw new NotImplementedException();
+#endif
             }
         }
         

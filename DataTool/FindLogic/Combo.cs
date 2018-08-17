@@ -859,7 +859,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0x43:
                     // todo: no point parsing this right now, not used
-                    break;
+#if ALL_FEATURES_WOULD_CEASE_TO_EXIST
                     if (info.SoundBanks.ContainsKey(guid)) break;
                     
                     WWiseBankInfo bankInfo = new WWiseBankInfo(guid);
@@ -889,7 +889,7 @@ namespace DataTool.FindLogic {
                             }
                         }
                     }
-                    
+#endif
                     break;
                 case 0x5F:
                     if (info.VoiceSets.ContainsKey(guid)) break;
