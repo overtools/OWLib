@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
 using TankLib.STU.Types;
@@ -33,8 +34,13 @@ namespace DataTool.ToolLogic.List {
                         DisplayUnlocks("Default", levelUnlocks.Unlocks);
                     }
                 }
-                
-                DisplayUnlocks("Other", heroPair.Value.OtherUnlocks);
+
+                if (heroPair.Value.OtherUnlocks != null) {
+                    var owlUnlocks = heroPair.Value.OtherUnlocks.Where(u => u.STU.m_0B1BA7C1 != null).ToArray();
+                    var otherUnlocks = heroPair.Value.OtherUnlocks.Where(u => u.STU.m_0B1BA7C1 == null).ToArray();
+                    DisplayUnlocks("Other", otherUnlocks);
+                    DisplayUnlocks("OWL", owlUnlocks);
+                }
 
                 if (heroPair.Value.LootBoxesUnlocks != null) {
                     foreach (LootBoxUnlocks lootBoxUnlocks in heroPair.Value.LootBoxesUnlocks) {
