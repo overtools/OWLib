@@ -20,9 +20,9 @@ namespace TankView.ViewModel
 {
     public class GUIDCollection : INotifyPropertyChanged, IDisposable
     {
-        private CASCConfig Config;
-        private CASCHandler CASC;
-        private ProgressReportSlave Slave;
+        private readonly CASCConfig Config;
+        private readonly CASCHandler CASC;
+        private readonly ProgressReportSlave Slave;
 
         private GUIDEntry _top;
         public GUIDEntry TopSelectedEntry {

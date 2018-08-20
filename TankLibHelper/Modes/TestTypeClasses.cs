@@ -59,9 +59,8 @@ namespace TankLibHelper.Modes {
 
         public Stream OpenFile(ApplicationPackageManifest.Types.PackageRecord record) {
             long offset = 0;
-            EncodingEntry enc;
             if (record.Flags.HasFlag(ContentFlags.Bundle)) offset = record.Offset;
-            if (!CASC.EncodingHandler.GetEntry(record.LoadHash, out enc)) return null;
+            if (!CASC.EncodingHandler.GetEntry(record.LoadHash, out EncodingEntry enc)) return null;
 
             MemoryStream ms = new MemoryStream((int) record.Size);
             try {

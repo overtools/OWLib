@@ -193,8 +193,7 @@ namespace DataTool.Flag {
 
             Type iface = typeof(T);
 
-            T instance = Activator.CreateInstance(iface) as T;
-            if (instance == null) {
+            if (!(Activator.CreateInstance(iface) is T instance)) {
                 return null;
             }
 

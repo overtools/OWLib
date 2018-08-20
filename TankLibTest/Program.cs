@@ -312,10 +312,8 @@ namespace TankLibTest {
         }
 
         public static void TestMaterial() {
-            teMaterial material;
-            teMaterialData materialData;
-            
-            LoadMaterial(0xE0000000000133E, out material, out materialData);
+
+            LoadMaterial(0xE0000000000133E, out teMaterial material, out teMaterialData materialData);
             //foreach (ulong guid in Types[0x8]) {
             //    teResourceGUID resourceGUID = (teResourceGUID) guid;
             //    LoadMaterial(guid, out material, out materialData);
@@ -387,9 +385,8 @@ namespace TankLibTest {
 
         public static Stream OpenFile(PackageRecord record) {
             long offset = 0;
-            EncodingEntry enc;
             if (record.Flags.HasFlag(ContentFlags.Bundle)) offset = record.Offset;
-            if (!CASC.EncodingHandler.GetEntry(record.LoadHash, out enc)) return null;
+            if (!CASC.EncodingHandler.GetEntry(record.LoadHash, out EncodingEntry enc)) return null;
 
             MemoryStream ms = new MemoryStream((int) record.Size);
             try {

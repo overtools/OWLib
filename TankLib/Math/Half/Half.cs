@@ -441,8 +441,7 @@ namespace TankLib.Math.Half {
         /// <returns>true if value is a System.Half and equal to this instance; otherwise, false.</returns>
         public override bool Equals(object obj) {
             bool result = false;
-            if (obj is Half) {
-                Half half = (Half)obj;
+            if (obj is Half half) {
                 if ((half == this) || (IsNaN(half) && IsNaN(this))) {
                     result = true;
                 }
@@ -677,8 +676,7 @@ namespace TankLib.Math.Half {
         /// </param>
         /// <returns>true if s was converted successfully; otherwise, false.</returns>
         public static bool TryParse(string value, out Half result) {
-            float f;
-            if (float.TryParse(value, out f)) {
+            if (float.TryParse(value, out float f)) {
                 result = (Half)f;
                 return true;
             }
@@ -711,8 +709,7 @@ namespace TankLib.Math.Half {
         /// </exception>
         public static bool TryParse(string value, NumberStyles style, IFormatProvider provider, out Half result) {
             bool parseResult = false;
-            float f;
-            if (float.TryParse(value, style, provider, out f)) {
+            if (float.TryParse(value, style, provider, out float f)) {
                 result = (Half)f;
                 parseResult = true;
             } else {

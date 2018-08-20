@@ -50,8 +50,7 @@ namespace DataTool.Helper {
             IChunk lastChunk = null;
             for (int i = 0; i < ChunkedData.Chunks.Length; i++) {
                 if (ChunkedData?.Chunks[i]?.GetType() == typeof(teEffectChunkComponent)) {
-                    teEffectChunkComponent component = ChunkedData.Chunks[i] as teEffectChunkComponent;
-                    if (component == null) continue;
+                    if (!(ChunkedData.Chunks[i] is teEffectChunkComponent component)) continue;
                     lastComponent = new PMCEInfo {Hardpoint = component.Header.Hardpoint, StartTime = component.StartTime, EndTime = component.EndTime};
                     // if (effect.Hardpoints == null) continue;
                     // if (effect.Hardpoints.Length <= pmce.Data.Index) continue;

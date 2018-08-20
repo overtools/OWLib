@@ -131,10 +131,12 @@ namespace TankView
 
         private void OpenCASC(object sender, RoutedEventArgs e)
         {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            dialog.IsFolderPicker = true;
-            dialog.EnsurePathExists = true;
-            if(dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true,
+                EnsurePathExists = true
+            };
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 OpenCASC(dialog.FileName);
             }
@@ -260,9 +262,11 @@ namespace TankView
 
         private void ExtractFiles(object sender, RoutedEventArgs e)
         {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            dialog.IsFolderPicker = true;
-            dialog.EnsurePathExists = true;
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true,
+                EnsurePathExists = true
+            };
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 ExtractFiles(dialog.FileName, FolderItemList.SelectedItems.OfType<GUIDEntry>());
@@ -336,9 +340,11 @@ namespace TankView
 
         private void ExtractFolder(object sender, RoutedEventArgs e)
         {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            dialog.IsFolderPicker = true;
-            dialog.EnsurePathExists = true;
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true,
+                EnsurePathExists = true
+            };
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 ExtractFolder(dialog.FileName, (sender as FrameworkElement).DataContext as Folder);

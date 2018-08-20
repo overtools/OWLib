@@ -101,8 +101,7 @@ namespace DataTool.Helper {
         public static Dictionary<MD5Hash, byte[]> BundleCache = new Dictionary<MD5Hash, byte[]>(new MD5HashComparer());
         
         public static Stream OpenFile(ApplicationPackageManifest.Types.PackageRecord record) {
-            EncodingEntry enc;
-            if (!CASC.EncodingHandler.GetEntry(record.LoadHash, out enc)) return null;
+            if (!CASC.EncodingHandler.GetEntry(record.LoadHash, out EncodingEntry enc)) return null;
 
             try {
                 if (record.Flags.HasFlag(ContentFlags.Bundle)) {

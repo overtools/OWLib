@@ -58,8 +58,7 @@ namespace TankLib.Math {
         }
 
         public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is teColorRGBA && Equals((teColorRGBA) obj);
+            return obj is teColorRGBA colorObj && Equals(colorObj);
         }
 
         public override int GetHashCode() {

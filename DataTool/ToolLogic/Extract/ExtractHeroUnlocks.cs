@@ -267,17 +267,8 @@ namespace DataTool.ToolLogic.Extract {
                     eventKey = "League";
                 }
                 tags["rarity"] = new TagExpectedValue(unlock.Rarity.ToString());
-                
-                //if (UnlockData.SummerGames2016.Contains(unlock.GUID)) {
-                //    tags["special"] = new TagExpectedValue("sg2016");
-                //} if (UnlockData.SummerGames2017.Contains(unlock.GUID)) {
-                //    tags["special"] = new TagExpectedValue("sg2017");
-                //} else 
-                if (UnlockData.SummerGames2018.Contains(unlock.GUID)) {
-                    tags["special"] = new TagExpectedValue("sg2018");
-                } else {
-                    tags["special"] = new TagExpectedValue("none");
-                }
+
+                tags["special"] = new TagExpectedValue(UnlockData.GetTagFor(unlock.GUID) ?? "none");
             } else {
                 rarity = ""; // for general unlocks
             }
