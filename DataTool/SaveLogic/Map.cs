@@ -60,15 +60,18 @@ namespace DataTool.SaveLogic {
                     writer.Write(ModelGroups.Header.PlaceableCount); // nr objects
 
                     int entitiesWithModelCount = 0;
-                    STUModelComponent[] modelComponents = new STUModelComponent[Entities.Header.PlaceableCount];
+                    STUModelComponent[][] modelComponents = new STUModelComponent[Entities.Header.PlaceableCount][];
 
                     for (int i = 0; i < Entities.Header.PlaceableCount; i++) {
                         teMapPlaceableEntity entity = (teMapPlaceableEntity) Entities.Placeables[i];
-                        STUModelComponent component = GetInstance<STUModelComponent>(entity.Header.EntityDefinition);
-                        if (component != null && teResourceGUID.Index(component.m_model) > 1 && teResourceGUID.Index(component.m_look) > 1) {
-                            entitiesWithModelCount++;
-                            modelComponents[i] = component;
+                        var components = GetInstances<STUModelComponent>(entity.Header.EntityDefinition).Where(component => teResourceGUID.Index(component.m_model) > 1 && teResourceGUID.Index(component.m_look) > 1);
+                        if(components.Count() == 0)
+                        {
+                            continue;
                         }
+                        modelComponents[i] = new STUModelComponent[components.Count()];
+                        entitiesWithModelCount += modelComponents[i].Length;
+                        modelComponents[i] = components.ToArray();
                     }
 
                     writer.Write((uint)(SingleModels.Header.PlaceableCount + Models.Header.PlaceableCount +
@@ -147,34 +150,36 @@ namespace DataTool.SaveLogic {
                     for (int i = 0; i < Entities.Placeables?.Length; i++) {
                         var entity = (teMapPlaceableEntity) Entities.Placeables[i];
                         
-                        STUModelComponent modelComponent = modelComponents[i];
-                        if (modelComponent == null) continue;
+                        STUModelComponent[] modelComponentss = modelComponents[i];
+                        if (modelComponentss == null) continue;
 
-                        ulong model = modelComponent.m_model;
-                        var modelLookSet = new List<ulong> { modelComponent.m_look };
+                        foreach (var modelComponent in modelComponentss) {
+                            ulong model = modelComponent.m_model;
+                            var modelLookSet = new List<ulong> { modelComponent.m_look };
 
-                        foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
-                            if (!(instanceData is STUModelComponentInstanceData modelComponentInstanceData)) continue;
-                            if (modelComponentInstanceData.m_look != 0) {
-                                modelLookSet.Add(modelComponentInstanceData.m_look);
+                            foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
+                                if (!(instanceData is STUModelComponentInstanceData modelComponentInstanceData)) continue;
+                                if (modelComponentInstanceData.m_look != 0) {
+                                    modelLookSet.Add(modelComponentInstanceData.m_look);
+                                }
                             }
-                        }
-                        
-                        FindLogic.Combo.Find(Info, model);
-                        foreach (var modelLook in modelLookSet) {
-                            FindLogic.Combo.Find(Info, modelLook, null, new FindLogic.Combo.ComboContext { Model = model });
-                        }
 
-                        FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[model];
-                        FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[modelLookSet.First()];
-                        string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl";
-                        string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
+                            FindLogic.Combo.Find(Info, model);
+                            foreach (var modelLook in modelLookSet) {
+                                FindLogic.Combo.Find(Info, modelLook, null, new FindLogic.Combo.ComboContext { Model = model });
+                            }
 
-                        writer.Write(modelFn);
-                        writer.Write(matFn);
-                        writer.Write(entity.Header.Translation);
-                        writer.Write(entity.Header.Scale);
-                        writer.Write(entity.Header.Rotation);
+                            FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[model];
+                            FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[modelLookSet.First()];
+                            string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl";
+                            string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
+
+                            writer.Write(modelFn);
+                            writer.Write(matFn);
+                            writer.Write(entity.Header.Translation);
+                            writer.Write(entity.Header.Scale);
+                            writer.Write(entity.Header.Rotation);
+                        }
                     }
 
                     // Extension 1.1 - Lights
@@ -232,9 +237,8 @@ namespace DataTool.SaveLogic {
                     }
 
                     // Extension 1.3 - Effects
-                    foreach (IMapPlaceable mapPlaceable in Lights.Placeables ?? Array.Empty<IMapPlaceable>())
+                    foreach (IMapPlaceable mapPlaceable in Effects.Placeables ?? Array.Empty<IMapPlaceable>())
                     {
-
                     }
                 }
             }
@@ -243,7 +247,6 @@ namespace DataTool.SaveLogic {
         public static void Save(ICLIFlags flags, STUMapHeader mapHeader, ulong key, string basePath) {
             string name = GetString(mapHeader.m_displayName) ?? "Title Screen";
             //string name = map.m_506FA8D8;
-
             var variantName = GetString(mapHeader.m_1C706502);
             if (variantName != null) name = variantName;
 
