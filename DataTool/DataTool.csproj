@@ -101,8 +101,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolAttribute.cs" />
-    <Compile Include="ToolLogic\Debug\DebugMapDump.cs" />
-    <Compile Include="ToolLogic\Debug\DebugVoodoo.cs" />
+    <Compile Include="ToolLogic\Dbg\DebugMapDump.cs" />
+    <Compile Include="ToolLogic\Dbg\DebugVoodoo.cs" />
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebug0EE.cs" />
