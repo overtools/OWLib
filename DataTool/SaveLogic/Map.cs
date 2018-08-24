@@ -227,7 +227,7 @@ namespace DataTool.SaveLogic {
                         writer.Write(Info.Sounds[sound.Header.Sound].SoundFiles.Count);
                         foreach(var soundfile in Info.Sounds[sound.Header.Sound].SoundFiles?.Values)
                         {
-                            writer.Write($@"Sounds\{Info.SoundFiles[soundfile].GetName()}.wem");
+                            writer.Write($@"Sounds\{Info.SoundFiles[soundfile].GetName()}.ogg");
                         }
                     }
 
