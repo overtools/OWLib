@@ -220,7 +220,7 @@ namespace DataTool.SaveLogic {
                         var sound = (teMapPlaceableSound)mapPlaceable;
                         FindLogic.Combo.Find(Info, sound.Header.Sound);
                         writer.Write(sound.Header.Translation);
-                        if(!Info.Sounds.ContainsKey(sound.Header.Sound) && Info.Sounds[sound.Header.Sound].SoundFiles != null) {
+                        if(!Info.Sounds.ContainsKey(sound.Header.Sound) && Info.Sounds[sound.Header.Sound].SoundFiles == null) {
                             writer.Write(0);
                             continue;
                         }
