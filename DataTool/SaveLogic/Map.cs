@@ -8,6 +8,8 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DataTool.SaveLogic {
     public static class Map {
@@ -99,7 +101,7 @@ namespace DataTool.SaveLogic {
 
                     foreach (IMapPlaceable mapPlaceable in SingleModels.Placeables ?? Array.Empty<IMapPlaceable>()) {
                         teMapPlaceableSingleModel singleModel = (teMapPlaceableSingleModel) mapPlaceable;
-
+                        
                         FindLogic.Combo.Find(Info, singleModel.Header.Model);
                         FindLogic.Combo.Find(Info, singleModel.Header.ModelLook, null,
                             new FindLogic.Combo.ComboContext {Model = singleModel.Header.Model});
@@ -119,7 +121,7 @@ namespace DataTool.SaveLogic {
 
                     foreach (IMapPlaceable mapPlaceable in Models.Placeables ?? Array.Empty<IMapPlaceable>()) {
                         teMapPlaceableModel placeableModel = (teMapPlaceableModel) mapPlaceable;
-
+                        
                         FindLogic.Combo.Find(Info, placeableModel.Header.Model);
                         FindLogic.Combo.Find(Info, placeableModel.Header.ModelLook, null,
                             new FindLogic.Combo.ComboContext {Model = placeableModel.Header.Model});
@@ -145,22 +147,25 @@ namespace DataTool.SaveLogic {
                         if (modelComponent == null) continue;
 
                         ulong model = modelComponent.m_model;
-                        ulong modelLook = modelComponent.m_look;
+                        var modelLookSet = new List<ulong> { modelComponent.m_look };
 
                         foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
                             if (!(instanceData is STUModelComponentInstanceData modelComponentInstanceData)) continue;
                             if (modelComponentInstanceData.m_look != 0) {
-                                modelLook = modelComponentInstanceData.m_look;
+                                modelLookSet.Add(modelComponentInstanceData.m_look);
                             }
                         }
                         
                         FindLogic.Combo.Find(Info, model);
-                        FindLogic.Combo.Find(Info, modelLook, null, new FindLogic.Combo.ComboContext {Model = model});
+                        foreach (var modelLook in modelLookSet) {
+                            FindLogic.Combo.Find(Info, modelLook, null, new FindLogic.Combo.ComboContext { Model = model });
+                        }
 
                         FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[model];
-                        FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[modelLook];
+                        var modelLookSetNamed = modelLookSet.Select(x => Info.ModelLooks[x].GetNameIndex());
+                        modelInfo.ModelLookSets.Add(modelLookSet);
                         string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl";
-                        string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
+                        string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{string.Join("_", modelLookSetNamed)}.owmat";
 
                         writer.Write(modelFn);
                         writer.Write(matFn);

@@ -274,9 +274,13 @@ namespace DataTool.SaveLogic {
                     WriteFile(modelStream, Path.Combine(modelDirectory, modelInfo.GetNameIndex()+".00C"));
                 }
             }
-            
+
             foreach (ulong modelModelLook in modelInfo.ModelLooks) {
                 SaveModelLook(flags, modelDirectory, info, modelModelLook);
+            }
+
+            foreach (IEnumerable<ulong> modelModelLookSet in modelInfo.ModelLookSets) {
+                SaveModelLookSet(flags, modelDirectory, info, modelModelLookSet);
             }
 
             foreach (ulong looseMaterial in modelInfo.LooseMaterials) {
@@ -303,7 +307,45 @@ namespace DataTool.SaveLogic {
         public static void SaveModelLook(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
             ulong modelLook) {
             FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelLook];
+
+            SaveOWMaterialModelLookFile(path, modelLookInfo, info);
+
+            if (modelLookInfo.Materials == null) return;
+            foreach (ulong modelLookMaterial in modelLookInfo.Materials) {
+                SaveMaterial(flags, path, info, modelLookMaterial);
+            }
+        }
+
+        public static void SaveModelLookSet(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+            IEnumerable<ulong> modelLookSet) {
+            if(modelLookSet.Count() < 2) {
+                if (modelLookSet.Count() < 1) {
+                    return;
+                }
+                SaveModelLook(flags, path, info, modelLookSet.ElementAt(0));
+                return;
+            }
+
+            FindLogic.Combo.ModelLookInfo modelLookInfo = new FindLogic.Combo.ModelLookInfo(0) {
+                Name = string.Join("_", modelLookSet.Select(x => info.ModelLooks.ContainsKey(x) ? info.ModelLooks[x].GetNameIndex() : $"{x & 0xFFFFFFFFFFFF:X12}")),
+                Materials = new HashSet<ulong>()
+            };
+
+            var doneIDs = new HashSet<ulong>();
             
+            foreach (ulong modelLookGuid in modelLookSet.Reverse()) {
+                if (info.ModelLooks.ContainsKey(modelLookGuid)) {
+                    foreach(var materialGuid in info.ModelLooks[modelLookGuid].Materials) {
+                        var material = info.Materials[materialGuid];
+                        if (doneIDs.Any(x => material.MaterialIDs.Contains(x))) {
+                            continue;
+                        }
+                        doneIDs.UnionWith(material.MaterialIDs);
+                        modelLookInfo.Materials.Add(materialGuid);
+                    }
+                }
+            }
+
             SaveOWMaterialModelLookFile(path, modelLookInfo, info);
 
             if (modelLookInfo.Materials == null) return;

@@ -264,11 +264,13 @@ namespace DataTool.FindLogic {
             public ulong Skeleton;
             public HashSet<ulong> Animations;
             public HashSet<ulong> ModelLooks;
+            public HashSet<IEnumerable<ulong>> ModelLookSets;
             public HashSet<ulong> LooseMaterials;
 
             public ModelInfoNew(ulong guid) : base(guid) {
                 Animations = new HashSet<ulong>();
                 ModelLooks = new HashSet<ulong>();
+                ModelLookSets = new HashSet<IEnumerable<ulong>>();
                 LooseMaterials = new HashSet<ulong>();
             }
         }
