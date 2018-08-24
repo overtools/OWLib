@@ -339,6 +339,27 @@ namespace TankLib {
         }
     }
 
+
+
+    public class teMapPlaceableDummy : IMapPlaceable {
+        public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.UNKNOWN;
+
+        public byte[] Data;
+        public int Size;
+
+        public teMapPlaceableDummy() { }
+
+        public teMapPlaceableDummy(int size)
+        {
+            Size = size;
+        }
+
+        public void Read(BinaryReader reader)
+        {
+            Data = reader.ReadBytes(Size);
+        }
+    }
+
     public class teMapPlaceableManager {
         public Dictionary<teMAP_PLACEABLE_TYPE, Type> Types;
         private readonly HashSet<teMAP_PLACEABLE_TYPE> _misingTypes; 
@@ -363,16 +384,14 @@ namespace TankLib {
         }
 
         public IMapPlaceable CreateType(teMapPlaceableData.CommonStructure commonStructure, BinaryReader reader) {
+            IMapPlaceable value = new teMapPlaceableDummy((int)commonStructure.Size);
             if (Types.TryGetValue(commonStructure.Type, out Type placeableType)) {
-                IMapPlaceable value = (IMapPlaceable)Activator.CreateInstance(placeableType);
-                value.Read(reader);
-                return value;
-            }
-
-            if (_misingTypes.Add(commonStructure.Type)) {
+                value = (IMapPlaceable)Activator.CreateInstance(placeableType);
+            } else if (_misingTypes.Add(commonStructure.Type)) {
                 Debugger.Log(0, "teMapPlaceableManager", $"Unhandled placeable type: {commonStructure.Type}\r\n");
             }
-            return null;
+            value.Read(reader);
+            return value;
         }
     }
 }
