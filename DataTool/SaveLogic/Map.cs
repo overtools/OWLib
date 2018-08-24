@@ -153,6 +153,8 @@ namespace DataTool.SaveLogic {
                         STUModelComponent[] modelComponents = modelComponentSets[i];
                         if (modelComponents == null) continue;
 
+                        FindLogic.Combo.Find(Info, entity.Header.EntityDefinition);
+
                         foreach (var modelComponent in modelComponents) {
                             ulong model = modelComponent.m_model;
                             var modelLookSet = new List<ulong> { modelComponent.m_look };
