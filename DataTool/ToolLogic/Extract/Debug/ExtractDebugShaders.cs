@@ -244,8 +244,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
         public void SaveMaterial(string basePath, ulong materialGUID, string name) {
             string path = Path.Combine(basePath, name, IO.GetFileName(materialGUID));
             string rawPath = Path.Combine(path, "raw");
-            IO.CreateDirectoryFromFile(path+"\\david");
-            IO.CreateDirectoryFromFile(rawPath+"\\will");
+            // IO.CreateDirectorySafe(path);
+            IO.CreateDirectorySafe(rawPath);
 
             teMaterial material = new teMaterial(IO.OpenFile(materialGUID));
             

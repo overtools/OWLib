@@ -176,7 +176,7 @@ namespace DataTool.SaveLogic {
         public static void SaveSound(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong sound) {
             FindLogic.Combo.SoundInfoNew soundInfo = info.Sounds[sound];
             string soundDir = Path.Combine(path, soundInfo.GetName());
-            CreateDirectoryFromFile(soundDir + "\\harrypotter.png");
+            CreateDirectorySafe(soundDir);
 
             HashSet<ulong> done = new HashSet<ulong>();
             if (soundInfo.SoundFiles != null) {

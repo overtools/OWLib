@@ -28,24 +28,28 @@ namespace DataTool.SaveLogic {
             public teMapPlaceableData Models;
             public teMapPlaceableData Entities;
             public teMapPlaceableData Lights;
-            
+            public teMapPlaceableData Sounds;
+            public teMapPlaceableData Effects;
+
             public OverwatchMap(string name, FindLogic.Combo.ComboInfo info, teMapPlaceableData singleModels,
-                teMapPlaceableData modelGroups, teMapPlaceableData placeable8, teMapPlaceableData entities,
-                teMapPlaceableData lights) {
+                teMapPlaceableData modelGroups, teMapPlaceableData models, teMapPlaceableData entities,
+                teMapPlaceableData lights, teMapPlaceableData sounds, teMapPlaceableData effects) {
                 Name = name;
                 Info = info;
 
                 SingleModels = singleModels;
                 ModelGroups = modelGroups;
-                Models = placeable8;
+                Models = models;
                 Entities = entities;
                 Lights = lights;
+                Sounds = sounds;
+                Effects = effects;
             }
 
             public void Write(Stream output) {
                 using (BinaryWriter writer = new BinaryWriter(output)) {
                     writer.Write((ushort) 1); // version major
-                    writer.Write((ushort) 1); // version minor
+                    writer.Write((ushort) 2); // version minor
 
                     if (Name.Length == 0) {
                         writer.Write((byte) 0);
@@ -208,6 +212,26 @@ namespace DataTool.SaveLogic {
                         writer.Write(light.Header.Unknown7A);
                         writer.Write(light.Header.Unknown7B);
                     }
+
+                    writer.Write(Sounds.Header.PlaceableCount); // nr Sounds
+
+                    // Extension 1.2 - Sounds
+                    foreach (IMapPlaceable mapPlaceable in Sounds.Placeables ?? Array.Empty<IMapPlaceable>()) {
+                        var sound = (teMapPlaceableSound)mapPlaceable;
+                        FindLogic.Combo.Find(Info, sound.Header.Sound);
+                        writer.Write(sound.Header.Translation);
+                        writer.Write(Info.Sounds[sound.Header.Sound].SoundFiles.Count);
+                        foreach(var soundfile in Info.Sounds[sound.Header.Sound].SoundFiles.Values)
+                        {
+                            writer.Write($@"Sounds\{Info.SoundFiles[soundfile].GetName()}");
+                        }
+                    }
+
+                    // Extension 1.3 - Effects
+                    foreach (IMapPlaceable mapPlaceable in Lights.Placeables ?? Array.Empty<IMapPlaceable>())
+                    {
+
+                    }
                 }
             }
         }
@@ -242,11 +266,13 @@ namespace DataTool.SaveLogic {
 
             teMapPlaceableData placeableModelGroups = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.MODEL_GROUP);
             teMapPlaceableData placeableSingleModels = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.SINGLE_MODEL);
-            teMapPlaceableData placeable8 = GetPlaceableData(mapHeader, 8);
+            teMapPlaceableData placeableModel = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.MODEL);
             teMapPlaceableData placeableLights = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.LIGHT);
             teMapPlaceableData placeableEntities = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.ENTITY);
-            
-            OverwatchMap exportMap = new OverwatchMap(name, info, placeableSingleModels, placeableModelGroups, placeable8, placeableEntities, placeableLights);
+            teMapPlaceableData placeableSounds = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.SOUND);
+            teMapPlaceableData placeableEffects = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.EFFECT);
+
+            OverwatchMap exportMap = new OverwatchMap(name, info, placeableSingleModels, placeableModelGroups, placeableModel, placeableEntities, placeableLights, placeableSounds, placeableEffects);
             using (Stream outputStream = File.OpenWrite(Path.Combine(mapPath, $"{name}.{exportMap.Extension}"))) {
                 exportMap.Write(outputStream);
             }
@@ -305,8 +331,9 @@ namespace DataTool.SaveLogic {
             if (announcerVoiceSet != 0) {  // whole thing in env mode, not here
                 info.VoiceSets.Remove(announcerVoiceSet);
             }
-            Combo.SaveAllVoiceSets(flags, Path.Combine(mapPath, "Sound"), info);
-            
+            Combo.SaveAllVoiceSets(flags, Path.Combine(mapPath, "VoiceSets"), info);
+            Combo.SaveAllSoundFiles(flags, Path.Combine(mapPath, "Sound"), info);
+
             LoudLog("\tDone");
         }
 

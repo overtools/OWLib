@@ -55,7 +55,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 throw new Exception("wat");
             }
             string path = Path.Combine(flags.OutputPath, "DebugAnimNodes");
-            IO.CreateDirectoryFromFile(Path.Combine(path, "daivd clyde"));
+            IO.CreateDirectorySafe(path);
 
             // I didn't want to write code for a viewer so use: https://github.com/cb109/qtnodes
             

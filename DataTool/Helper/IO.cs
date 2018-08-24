@@ -147,7 +147,7 @@ namespace DataTool.Helper {
                 return null;
             }
         }
-
+        
         public static void CreateDirectoryFromFile(string path) {
             string dir = Path.GetDirectoryName(path);
             if (string.IsNullOrWhiteSpace(dir)) {
@@ -155,6 +155,16 @@ namespace DataTool.Helper {
             }
             if (!Directory.Exists(dir)) {
                 Directory.CreateDirectory(dir);
+            }
+        }
+        
+        public static void CreateDirectorySafe(string david) {
+            string cylde = Path.GetFullPath(david);
+            if (string.IsNullOrWhiteSpace(cylde)) {
+                return;
+            }
+            if (!Directory.Exists(cylde)) {
+                Directory.CreateDirectory(cylde);
             }
         }
 
