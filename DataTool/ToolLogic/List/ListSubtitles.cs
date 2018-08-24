@@ -50,7 +50,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public void GetSubtitle(List<string> output, STU_A94C5E3B subtitle) {
-            if (subtitle == null) return;
+            if (subtitle?.m_text == null) return;
             output.Add(subtitle.m_text);
         }
 
@@ -61,6 +61,7 @@ namespace DataTool.ToolLogic.List {
             GetSubtitle(@return, subtileContainer.m_A84AA2B5);
             GetSubtitle(@return, subtileContainer.m_D872E45C);
             GetSubtitle(@return, subtileContainer.m_1485B834);
+            
             return @return.ToArray();
         }
 
