@@ -60,7 +60,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(ModelGroups.Header.PlaceableCount); // nr objects
 
                     int entitiesWithModelCount = 0;
-                    STUModelComponent[][] modelComponents = new STUModelComponent[Entities.Header.PlaceableCount][];
+                    STUModelComponent[][] modelComponentSets = new STUModelComponent[Entities.Header.PlaceableCount][];
 
                     for (int i = 0; i < Entities.Header.PlaceableCount; i++) {
                         teMapPlaceableEntity entity = (teMapPlaceableEntity) Entities.Placeables[i];
@@ -69,9 +69,9 @@ namespace DataTool.SaveLogic {
                         {
                             continue;
                         }
-                        modelComponents[i] = new STUModelComponent[components.Count()];
-                        entitiesWithModelCount += modelComponents[i].Length;
-                        modelComponents[i] = components.ToArray();
+                        modelComponentSets[i] = new STUModelComponent[components.Count()];
+                        entitiesWithModelCount += modelComponentSets[i].Length;
+                        modelComponentSets[i] = components.ToArray();
                     }
 
                     writer.Write((uint)(SingleModels.Header.PlaceableCount + Models.Header.PlaceableCount +
@@ -150,10 +150,10 @@ namespace DataTool.SaveLogic {
                     for (int i = 0; i < Entities.Placeables?.Length; i++) {
                         var entity = (teMapPlaceableEntity) Entities.Placeables[i];
                         
-                        STUModelComponent[] modelComponentss = modelComponents[i];
-                        if (modelComponentss == null) continue;
+                        STUModelComponent[] modelComponents = modelComponentSets[i];
+                        if (modelComponents == null) continue;
 
-                        foreach (var modelComponent in modelComponentss) {
+                        foreach (var modelComponent in modelComponents) {
                             ulong model = modelComponent.m_model;
                             var modelLookSet = new List<ulong> { modelComponent.m_look };
 
