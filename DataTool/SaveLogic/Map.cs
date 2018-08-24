@@ -162,10 +162,9 @@ namespace DataTool.SaveLogic {
                         }
 
                         FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[model];
-                        var modelLookSetNamed = modelLookSet.Select(x => Info.ModelLooks[x].GetNameIndex());
-                        modelInfo.ModelLookSets.Add(modelLookSet);
+                        FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[modelLookSet.First()];
                         string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl";
-                        string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{string.Join("_", modelLookSetNamed)}.owmat";
+                        string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
 
                         writer.Write(modelFn);
                         writer.Write(matFn);

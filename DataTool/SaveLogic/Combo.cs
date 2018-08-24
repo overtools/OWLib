@@ -279,9 +279,10 @@ namespace DataTool.SaveLogic {
                 SaveModelLook(flags, modelDirectory, info, modelModelLook);
             }
 
-            foreach (IEnumerable<ulong> modelModelLookSet in modelInfo.ModelLookSets) {
-                SaveModelLookSet(flags, modelDirectory, info, modelModelLookSet);
-            }
+            //
+            //foreach (IEnumerable<ulong> modelModelLookSet in modelInfo.ModelLookSets) {
+            //    SaveModelLookSet(flags, modelDirectory, info, modelModelLookSet);
+            //}
 
             foreach (ulong looseMaterial in modelInfo.LooseMaterials) {
                 SaveMaterial(flags, modelDirectory, info, looseMaterial);
