@@ -339,7 +339,44 @@ namespace TankLib {
         }
     }
 
+    public class teMapPlaceableSound : IMapPlaceable {
+        public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.SOUND;
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct Structure {
+            public teResourceGUID Sound;
+            public teVec3 Translation;
+            public teVec3 Scale;
+            public teQuat Rotation;
+        }
+
+        public Structure Header;
+
+        public void Read(BinaryReader reader) {
+            Header = reader.Read<Structure>();
+        }
+    }
+
+    public class teMapPlaceableEffect : IMapPlaceable {
+        public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.EFFECT;
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct Structure {
+            public teResourceGUID Effect;
+            public teVec3 Translation;
+            public teVec3 Scale;
+            public teQuat Rotation;
+            public teQuat Unknown;
+            public teQuat Unknown2;
+            public teVec2 Unknown3;
+        }
+
+        public Structure Header;
+
+        public void Read(BinaryReader reader) {
+            Header = reader.Read<Structure>();
+        }
+    }
 
     public class teMapPlaceableDummy : IMapPlaceable {
         public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.UNKNOWN;
