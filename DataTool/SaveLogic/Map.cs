@@ -64,7 +64,7 @@ namespace DataTool.SaveLogic {
 
                     for (int i = 0; i < Entities.Header.PlaceableCount; i++) {
                         teMapPlaceableEntity entity = (teMapPlaceableEntity) Entities.Placeables[i];
-                        var components = GetInstances<STUModelComponent>(entity.Header.EntityDefinition).Where(component => teResourceGUID.Index(component.m_model) > 1 && teResourceGUID.Index(component.m_look) > 1);
+                        var components = GetInstances<STUModelComponent>(entity.Header.EntityDefinition).Where(component => teResourceGUID.Index(component.m_model) > 1);
                         if(components.Count() == 0)
                         {
                             continue;
@@ -170,9 +170,13 @@ namespace DataTool.SaveLogic {
                             }
 
                             FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[model];
-                            FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[modelLookSet.First()];
                             string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl";
-                            string matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
+                            string matFn = "SnapeKilledDumbledore";
+                            try {
+                                FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[modelLookSet.First(x => x > 0)];
+                                matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
+                            }
+                            catch { }
 
                             writer.Write(modelFn);
                             writer.Write(matFn);
