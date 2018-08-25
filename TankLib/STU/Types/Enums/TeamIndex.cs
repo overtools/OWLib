@@ -4,5 +4,8 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x8F2CDF51, "TeamIndex")]
     public enum TeamIndex : uint {
+        TeamBlue = 0,
+        TeamRed = 1,
+        FFA = 4
     }
 }

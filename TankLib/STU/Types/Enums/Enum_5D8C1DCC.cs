@@ -4,5 +4,12 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x5D8C1DCC)]
     public enum Enum_5D8C1DCC : uint {
+        Error = 1,
+        System = 2,
+        Whisper = 3,
+        Group = 4,
+        Team = 5,
+        Match = 6,
+        General = 7
     }
 }
