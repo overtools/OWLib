@@ -173,7 +173,11 @@ namespace DataTool.SaveLogic {
 
                             FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[model];
                             string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl";
-                            string matFn = "SnapeKilledDumbledore";
+                            if (Info.Entities.ContainsKey(entity.Header.EntityDefinition))
+                            {
+                                modelFn = $"Entities\\{Info.Entities[entity.Header.EntityDefinition].GetName()}\\{Info.Entities[entity.Header.EntityDefinition].GetName()}.owentity";
+                            }
+                            string matFn = "null";
                             try {
                                 FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[modelLookSet.First(x => x > 0)];
                                 matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
