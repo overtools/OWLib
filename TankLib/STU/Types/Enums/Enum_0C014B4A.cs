@@ -4,5 +4,8 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x0C014B4A)]
     public enum Enum_0C014B4A : uint {
+        Unspecified = 0, // NPCs/Bastion
+        Male = 2,
+        Female = 3
     }
 }

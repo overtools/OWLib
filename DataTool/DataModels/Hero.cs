@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using DataTool.JSON;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using TankLib.Math;
 using TankLib.STU;
 using TankLib.STU.Types;
+using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
@@ -15,6 +17,9 @@ namespace DataTool.DataModels {
         
         public string Name;
         public string Description;
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public Enum_0C014B4A Gender;
         
         public teColorRGBA GalleryColor;
 
@@ -25,6 +30,7 @@ namespace DataTool.DataModels {
             GUID = guid;
             Name = GetString(hero.m_0EDCE350);
             Description = GetDescriptionString(hero.m_3446F580);
+            Gender = hero.Gender;
             
             GalleryColor = hero.m_heroColor;
 

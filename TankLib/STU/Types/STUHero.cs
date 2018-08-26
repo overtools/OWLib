@@ -100,7 +100,7 @@ namespace TankLib.STU.Types {
         public Enum_C1DAF32A m_heroSize;
 
         [STUFieldAttribute(0x7D88A63A)]
-        public Enum_0C014B4A m_7D88A63A;
+        public Enum_0C014B4A Gender;
 
         [STUFieldAttribute(0x62746D34)]
         public byte m_62746D34;

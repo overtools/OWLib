@@ -34,6 +34,8 @@ namespace DataTool.ToolLogic.List {
                 if (hero.Value.Description != null)
                     Log($"{indentLevel + 1}Description: {hero.Value.Description}");
                 
+                Log($"{indentLevel + 1}Gender: {hero.Value.Gender}");
+                
                 TankLib.Helpers.Logger.Log24Bit(ConsoleSwatch.ColorReset, null, false, null, $"{indentLevel + 1}Color: {hero.Value.GalleryColor.ToHex()} ");
                 TankLib.Helpers.Logger.Log24Bit(hero.Value.GalleryColor.ToForeground(), null, true, null, "██████");
 
