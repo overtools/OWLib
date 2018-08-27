@@ -20,7 +20,7 @@ namespace DataTool.SaveLogic {
 
         public static void Save(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
             foreach (FindLogic.Combo.EntityInfoNew entity in info.Entities.Values) {
-                SaveEntity(path, info, entity.GUID);
+                SaveEntity(flags, path, info, entity.GUID);
             }
             foreach (FindLogic.Combo.EffectInfoCombo effectInfo in info.Effects.Values) {
                 SaveEffect(flags, path, info, effectInfo.GUID);
@@ -38,7 +38,7 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveEntity(string path, FindLogic.Combo.ComboInfo info,
+        public static void SaveEntity(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
             ulong entityGuid) {
             FindLogic.Combo.EntityInfoNew entityInfo = info.Entities[entityGuid];
             
@@ -57,6 +57,10 @@ namespace DataTool.SaveLogic {
             if (entityInfo.Model == 0) return; 
             foreach (ulong animation in entityInfo.Animations) {
                 SaveAnimationEffectReference(entityDir, info, animation, entityInfo.Model);
+            }
+
+            foreach (ulong effect in entityInfo.Effects) {
+                SaveEffect(flags, entityDir, info, effect);
             }
         }
 

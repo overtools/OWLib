@@ -64,15 +64,15 @@ namespace TankLib {
                 return 0;
             }
 
-            IEnumerable<byte> v = chars;
+            IEnumerable<byte> v = chars.AsEnumerable();
 
             if (chars.Length == 3)
             {
-                v = v.Append((byte)0);
+                v = Enumerable.Append(v, (byte)0);
             }
             else if (chars.Length < 4)
             {
-                v = v.Concat(Enumerable.Repeat((byte)0, chars.Length - 4));
+                v = Enumerable.Concat(v, Enumerable.Repeat((byte)0, chars.Length - 4));
             }
 
             unsafe

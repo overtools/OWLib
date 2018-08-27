@@ -30,13 +30,13 @@ namespace DataTool.SaveLogic {
                         FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[Entity.Model];
                         writer.Write(modelInfo.GetName());
                     } else {writer.Write("null");}
-                    if (Entity.Effect != 0) {
-                        FindLogic.Combo.EffectInfoCombo effectInfo = Info.Effects[Entity.Effect];
+                    if (Entity.RootEffect != 0) {
+                        FindLogic.Combo.EffectInfoCombo effectInfo = Info.Effects[Entity.RootEffect];
                         writer.Write(effectInfo.GetName());
                     } else {writer.Write("null");}
                     writer.Write(teResourceGUID.Index(Entity.GUID));
                     writer.Write(teResourceGUID.Index(Entity.Model));
-                    writer.Write(teResourceGUID.Index(Entity.Effect));
+                    writer.Write(teResourceGUID.Index(Entity.RootEffect));
 
                     if (Entity.Children == null) {
                         writer.Write(0);

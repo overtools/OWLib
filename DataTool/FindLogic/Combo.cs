@@ -208,14 +208,18 @@ namespace DataTool.FindLogic {
 
         public class EntityInfoNew : ComboNameable {
             public ulong Model;
-            public ulong Effect; // todo: STUEffectComponent defined instead of model is like a model in behaviour?
+            public ulong RootEffect; // todo: STUEffectComponent defined instead of model is like a model in behaviour?
             public ulong VoiceSet;
             public HashSet<ulong> Animations;
-            
+            public HashSet<ulong> Effects;
+            public HashSet<ulong> AnimationEffects;
+
             public List<ChildEntityReferenceNew> Children;
 
             public EntityInfoNew(ulong guid) : base(guid) {
                 Animations = new HashSet<ulong>();
+                Effects = new HashSet<ulong>();
+                AnimationEffects = new HashSet<ulong>();
             }
         }
 
@@ -503,15 +507,15 @@ namespace DataTool.FindLogic {
                             } else if (component is STUStatescriptComponent statescriptComponent) {
                                 if (statescriptComponent.m_B634821A != null) {
                                     foreach (STUStatescriptGraphWithOverrides graphWithOverrides in statescriptComponent.m_B634821A) {
-                                        Find(info, graphWithOverrides, replacements, context);
+                                        Find(info, graphWithOverrides, replacements, entityContext);
                                     }
                                 }
                             } else if (component is STUWeaponComponent weaponComponent) {
-                                Find(info, weaponComponent.m_managerScript, replacements, context);
+                                Find(info, weaponComponent.m_managerScript, replacements, entityContext);
                                 if (weaponComponent.m_weapons != null) {
                                     foreach (STUWeaponDefinition weaponDefinition in weaponComponent.m_weapons) {
-                                        Find(info, weaponDefinition.m_script, replacements, context);
-                                        Find(info, weaponDefinition.m_graph, replacements, context);
+                                        Find(info, weaponDefinition.m_script, replacements, entityContext);
+                                        Find(info, weaponDefinition.m_graph, replacements, entityContext);
                                     }
                                 }
                             } else if (component is STUVoiceSetComponent voiceSetComponent) {
@@ -547,7 +551,7 @@ namespace DataTool.FindLogic {
                     }
 
                     entityInfo.Model = entityContext.Model;
-                    entityInfo.Effect = entityContext.Effect;
+                    entityInfo.RootEffect = entityContext.Effect;
 
                     break;
                 case 0x4:
@@ -649,10 +653,17 @@ namespace DataTool.FindLogic {
                     };
                     effectInfo.SetupEffect();
 
+
                     if (guidType == 0xD || guidType == 0x8E) {
                         info.Effects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
+                        if (context.Entity != 0) {
+                            info.Entities[context.Entity].Effects.Add(guid);
+                        }
                     } else if (guidType == 0x8F) {
                         info.AnimationEffects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
+                        if (context.Entity != 0) {
+                            info.Entities[context.Entity].AnimationEffects.Add(guid);
+                        }
                     }
 
                     using (Stream effectStream = OpenFile(guid)) {
