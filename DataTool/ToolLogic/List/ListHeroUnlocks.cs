@@ -49,6 +49,8 @@ namespace DataTool.ToolLogic.List {
                         DisplayUnlocks(boxName, lootBoxUnlocks.Unlocks);
                     }
                 }
+
+                Log(); // New line
             }
         }
 
@@ -57,7 +59,7 @@ namespace DataTool.ToolLogic.List {
             Log($"{start}\t{category} Unlocks");
 
             foreach (Unlock unlock in unlocks) {
-                Log($"{start}\t\t{unlock.GetName()} ({unlock.Rarity} {unlock.Type})");
+                Log($"{start}\t\t{unlock.GetName(true)} ({unlock.Rarity} {unlock.Type})");
                 if (unlock.Description != null) {
                     Log($"{start}\t\t\t{unlock.Description}");
                 }
