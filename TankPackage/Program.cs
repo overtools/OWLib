@@ -86,6 +86,9 @@ namespace TankPackage
                 case "extract":
                     Extract(modeArgs);
                     break;
+                case "extract-type":
+                    ExtractType(modeArgs);
+                    break;
                 case "search":
                     Search(modeArgs);
                     break;
@@ -116,6 +119,20 @@ namespace TankPackage
                 ushort sh = (ushort)(key >> 48);
                 ushort shBE = (ushort)(((sh & 0xFF) << 8) | sh >> 8);
                 Console.Out.WriteLine($"{shBE:X4} : {sh:X4} : {teResourceGUID.Type(key):X3}");
+            }
+        }
+
+        private static void ExtractType(string[] args)
+        {
+            string output = args.FirstOrDefault();
+            ulong[] guids = args.Skip(1).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+            if (string.IsNullOrWhiteSpace(output))
+            {
+                return;
+            }
+
+            foreach (ApplicationPackageManifest apm in Root.APMFiles) {
+                Save(output, apm.Header.Checksum, apm.FirstOccurence.Where(x => guids.Length == 0 || guids.Contains(teResourceGUID.Type(x.Key))).Select(x => x.Value));
             }
         }
 
