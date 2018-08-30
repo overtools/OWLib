@@ -160,11 +160,10 @@ namespace DataTool {
                 }
             };
             
-            
             TankLib.TACT.LoadHelper.PreLoad();
             Client = new ClientHandler(Flags.OverwatchDirectory, args);
+            TankLib.TACT.LoadHelper.PostLoad(Client);
             
-
             if (Client.AgentProduct.Uid != "prometheus") {
                 TankLib.Helpers.Logger.Warn("Core", $"The branch \"{Client.AgentProduct.Uid}\" is not supported!. This might result in failure to load. Proceed with caution.");
             }
@@ -174,7 +173,11 @@ namespace DataTool {
                 TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", args.SpeechLanguage);
             }
             
-            TankLib.TACT.Helper.PostLoad(Client);
+            TankHandler = Client.ProductHandler as ProductHandler_Tank;
+            if (TankHandler == null) {
+                TankLib.Helpers.Logger.Error("Core", $"Not a valid Overwatch installation (detected product: {Client.Product})");
+                return;
+            }
             
             BuildVersion = uint.Parse(Client.InstallationInfo.Values["Version"].Split('.').Last());
             if (BuildVersion < 39028) {
@@ -183,11 +186,6 @@ namespace DataTool {
                 TankLib.Helpers.Logger.Error("Core", "DataTool doesn't support this 1.14 release as it uses unmangeled hashes");
             } else if (BuildVersion < 49154) {
                 TankLib.Helpers.Logger.Error("Core", "This version of DataTool doesn't properly support versions below 1.26. Please downgrade DataTool.");
-            }
-            TankHandler = Client.ProductHandler as ProductHandler_Tank;
-            if (TankHandler == null) {
-                TankLib.Helpers.Logger.Error("Core", $"Not a valid Overwatch installation (detected product: {Client.Product})");
-                return;
             }
 
             foreach (KeyValuePair<ulong,ProductHandler_Tank.Asset> asset in TankHandler.Assets) {
