@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
@@ -60,7 +61,8 @@ namespace DataTool.ToolLogic.Extract {
             new CosmeticType("voiceline")
         };
         
-        public static Dictionary<string, string> HeroMapping = new Dictionary<string, string> {
+        [SuppressMessage("ReSharper", "StringLiteralTypo")]
+        public static readonly Dictionary<string, string> HeroMapping = new Dictionary<string, string> {
             ["soldier76"] = "soldier: 76",
             ["soldier 76"] = "soldier: 76",
             ["soldier"] = "soldier: 76",
@@ -109,7 +111,7 @@ namespace DataTool.ToolLogic.Extract {
             
             Log("Please specify what you want to extract:");
             Log($"{indent+1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
-            Log($"{indent+1}Each query should be surrounded by \", and individual queries should be seperated by spaces");
+            Log($"{indent+1}Each query should be surrounded by \", and individual queries should be separated by spaces");
             
             Log($"{indent+1}All hero and item names are in your selected locale");
                         
@@ -136,7 +138,7 @@ namespace DataTool.ToolLogic.Extract {
             Log($"{indent+1}\"D.Va|skin=(event=summergames)\"");
             Log($"{indent+1}\"Soldier: 76|skin=Daredevil: 76\" \"Roadhog|spray=Pixel\"");
             Log($"{indent+1}\"Reaper|spray=*\" \t(extract all of Reaper's sprays)");
-            Log($"{indent+1}\"Reaper|spray=(event=!halloween)\" \t\t(extract all of Reper's sprays that are not from Halloween)");
+            Log($"{indent+1}\"Reaper|spray=(event=!halloween)\" \t\t(extract all of Reaper's sprays that are not from Halloween)");
             Log($"{indent+1}\"Reaper|skin=(rarity=legendary)\" \t\t(extract all of Reaper's legendary skins)");
             Log($"{indent+1}\"Reaper|spray=!Cute,*\" \t\t(extract all of Reaper's sprays except \"Cute\")");
             Log($"{indent+1}\"*|skin=(leagueteam=none)\" \t\t(extract skins for every hero ignoring Overwatch League skins)");

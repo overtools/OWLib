@@ -25,7 +25,7 @@ namespace DataTool.ToolLogic.Extract {
             IndentHelper indent = new IndentHelper();
             Log("Please specify what you want to extract:");
             Log($"{indent+1}Command format: \"{{map name}}\" ");
-            Log($"{indent+1}Each query should be surrounded by \", and individual queries should be seperated by spaces");
+            Log($"{indent+1}Each query should be surrounded by \", and individual queries should be separated by spaces");
             
             
             Log($"{indent+1}Maps can be listed using the \"list-maps\" mode");

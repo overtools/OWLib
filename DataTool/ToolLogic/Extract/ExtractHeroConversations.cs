@@ -34,7 +34,7 @@ namespace DataTool.ToolLogic.Extract {
 
             Log("Please specify what you want to extract:");
             Log($"{indent + 1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
-            Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be seperated by spaces");
+            Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be separated by spaces");
 
             Log($"{indent + 1}All hero names are in your selected locale");
 
