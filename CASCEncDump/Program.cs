@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CMFLib;
 using TankLib;
-using TankLib.CASC;
-using TankLib.CASC.Handlers;
 using TankLib.ExportFormats;
 using TankLib.STU;
 using TankLib.STU.Types;
+using TACTLib.Client;
+using TACTLib.Container;
+using TACTLib.Core;
+using TACTLib.Core.Product.Tank;
 
 namespace CASCEncDump {
     internal class Program {
-        public static Dictionary<ulong, MD5Hash> Files;
-        public static CASCConfig Config;
-        public static CASCHandler CASC;
         public static uint BuildVersion;
         
         public static string RawIdxDir => $"dump\\{BuildVersion}\\idx\\raw";
@@ -28,6 +25,9 @@ namespace CASCEncDump {
         public static string KeyFilesDir => $"dump\\{BuildVersion}\\keyfiles";
         public static string AllCMFDir => $"dump\\{BuildVersion}\\allcmf";
         public static string GUIDDir => $"dump\\{BuildVersion}\\guids";
+
+        public static ClientHandler Client;
+        public static ProductHandler_Tank TankHandler;
         
         public static void Main(string[] args) {
             string overwatchDir = args[0];
@@ -43,18 +43,21 @@ namespace CASCEncDump {
             // {overwatch dir} addcmf  --  Extract all files from the cmf
 
             // casc setup
-            Config = CASCConfig.LoadLocalStorageConfig(overwatchDir, false, false);
-            Config.SpeechLanguage = Config.TextLanguage = language;
-            if (mode != "allcmf" && mode != "dump-guids" && mode != "compare-guids" && mode != "dump-cmf") {
-                Config.LoadContentManifest = false;
-                Config.LoadPackageManifest = false;
-            }
             
-            CASC = CASCHandler.Open(Config);
-            MapCMF(language);
+            ClientCreateArgs createArgs = new ClientCreateArgs {
+                Tank = new ClientCreateArgs.TankArgs {
+                     SpokenLanguage = language,
+                     TextLanguage = language,
+                }
+            };
+            if (mode != "allcmf" && mode != "dump-guids" && mode != "compare-guids" && mode != "dump-cmf") {
+                createArgs.Tank.LoadAPM = false;
+                createArgs.Tank.LoadCMF = false;
+            }
+            Client = new ClientHandler(overwatchDir, createArgs);
+            TankHandler = (ProductHandler_Tank)Client.ProductHandler;
 
-            //var temp = Config.Builds[Config.ActiveBuild].KeyValue;
-            BuildVersion = uint.Parse(Config.BuildVersion.Split('.').Last());
+            BuildVersion = uint.Parse(Client.InstallationInfo.Values["Version"].Split('.').Last());
 
             // c:\\ow\\game\\Overwatch dump
             // "D:\Games\Overwatch Test" compare 44022
@@ -65,10 +68,6 @@ namespace CASCEncDump {
                 CompareEnc(args);
             } else if (mode == "compare-idx") {
                 CompareIdx(args);
-            } else if (mode == "nonblte") {
-                DumpNonBLTE(args);
-            } else if (mode == "extract-encoding") {
-                ExtractEncodingFile(args);
             } else if (mode == "allcmf") {
                 AllCMF(args);
             } else if (mode == "dump-guids") {
@@ -84,15 +83,17 @@ namespace CASCEncDump {
 
         public static void DumpCMF(string[] args) {
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.cmfhashes")) {
-                foreach (KeyValuePair<ulong,MD5Hash> file in Files) {
-                    writer.WriteLine(file.Value.ToHexString());
+                foreach (KeyValuePair<ulong, ProductHandler_Tank.Asset> file in TankHandler.Assets) {
+                    TankHandler.UnpackAsset(file.Value, out var manifest, out var package, out var record);
+                    manifest.ContentManifest.TryGet(record.GUID, out var data);
+                    writer.WriteLine(data.ContentKey.ToHexString());
                 }
             }
         }
 
         public static void DumpGUIDs(string[] args) {
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.guids")) {
-                foreach (KeyValuePair<ulong,MD5Hash> file in Files) {
+                foreach (KeyValuePair<ulong, ProductHandler_Tank.Asset> file in TankHandler.Assets) {
                     writer.WriteLine(file.Key.ToString("X"));
                 }
             }
@@ -101,15 +102,15 @@ namespace CASCEncDump {
         public static void CompareGUIDs(string[] args) {
             string otherVerNum = args[2];
 
-            Directory.CreateDirectory(GUIDDir);  // file name is the vesion it is compared to
+            Directory.CreateDirectory(GUIDDir);  // file name is the version it is compared to
 
             ulong[] last;
             using (StreamReader reader = new StreamReader($"{otherVerNum}.guids")) {
                 last = reader.ReadToEnd().Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
             }
 
-            List<ulong> added = Files.Keys.Except(last).ToList();
-            List<ulong> removed = last.Except(Files.Keys).ToList();
+            List<ulong> added = TankHandler.Assets.Keys.Except(last).ToList();
+            List<ulong> removed = last.Except(TankHandler.Assets.Keys).ToList();
             
             using (StreamWriter writer = new StreamWriter(Path.Combine(GUIDDir, $"{otherVerNum}.added"))) {
                 foreach (ulong addedFile in added) {
@@ -128,14 +129,15 @@ namespace CASCEncDump {
             ushort[] types = args.Skip(2).Select(x => ushort.Parse(x, NumberStyles.HexNumber)).ToArray();
             
             Directory.CreateDirectory(AllCMFDir);
-            foreach (KeyValuePair<ulong,MD5Hash> cmfFile in Files) {
-                if (!types.Contains(teResourceGUID.Type(cmfFile.Key))) continue;
+            foreach (KeyValuePair<ulong, ProductHandler_Tank.Asset> asset in TankHandler.Assets) {
+                ushort type = teResourceGUID.Type(asset.Key);
+                if (!types.Contains(type)) continue;
                 try {
-                    using (Stream stream = OpenFile(cmfFile.Key)) {
+                    using (Stream stream = TankHandler.OpenFile(asset.Key)) {
                         if (stream == null) continue;
-                        string typeDir = Path.Combine(AllCMFDir, teResourceGUID.Type(cmfFile.Key).ToString("X3"));
+                        string typeDir = Path.Combine(AllCMFDir, type.ToString("X3"));
                         Directory.CreateDirectory(typeDir);
-                        using (Stream file = File.OpenWrite(Path.Combine(typeDir, teResourceGUID.AsString(cmfFile.Key)))) {
+                        using (Stream file = File.OpenWrite(Path.Combine(typeDir, teResourceGUID.AsString(asset.Key)))) {
                             stream.CopyTo(file);
                         }
                     }
@@ -145,18 +147,9 @@ namespace CASCEncDump {
             }
         }
 
-        public static void ExtractEncodingFile(string[] args) {
-            Directory.CreateDirectory(KeyFilesDir);
-            using (BinaryReader reader = CASC.OpenEncodingKeyFile()) {
-                using (Stream file = File.OpenWrite(Path.Combine(KeyFilesDir, "encoding"))) {
-                    reader.BaseStream.CopyTo(file);
-                }
-            }
-        }
-
         public static void Dump(string[] args) {
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.enchashes")) {
-                foreach (KeyValuePair<MD5Hash,EncodingEntry> entry in CASC.EncodingHandler.Entries) {
+                foreach (KeyValuePair<CKey, EncodingHandler.CKeyEntry> entry in Client.EncodingHandler.Entries) {
                     string md5 = entry.Key.ToHexString();
                     
                     writer.WriteLine(md5);
@@ -164,36 +157,10 @@ namespace CASCEncDump {
             }
             
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.idxhashes")) {
-                foreach (KeyValuePair<MD5Hash, IndexEntry> entry in CASC.LocalIndex.Indices) {
+                foreach (KeyValuePair<EKey, ContainerHandler.IndexEntry> entry in Client.ContainerHandler.IndexEntries) {
                     string md5 = entry.Key.ToHexString();
                     
                     writer.WriteLine(md5);
-                }
-            }
-        }
-
-        public static void DumpNonBLTE(string[] args) {
-            Directory.CreateDirectory(NonBLTEDir);
-            foreach (KeyValuePair<MD5Hash, IndexEntry> indexEntry in CASC.LocalIndex.Indices) {
-                string md5 = indexEntry.Key.ToHexString();
-                MD5Hash md5Obj = new MD5Hash();
-
-                try {
-                    Stream rawStream = CASC.LocalIndex.OpenIndexInfo(indexEntry.Value, md5Obj, false);
-
-                    using (BinaryReader reader = new BinaryReader(rawStream)) {
-                        uint magic = reader.ReadUInt32();
-
-                        if (magic == BLTEStream.BLTEMagic) continue;
-
-                        rawStream.Position = 0;
-
-                        using (Stream file = File.OpenWrite(Path.Combine(NonBLTEDir, md5) + ".nonblte")) {
-                            rawStream.CopyTo(file);
-                        }
-                    }
-                } catch (Exception e) {
-                    Console.Out.WriteLine(e);
                 }
             }
         }
@@ -210,26 +177,15 @@ namespace CASCEncDump {
             using (StreamReader reader = new StreamReader($"{otherVerNum}.idxhashes")) {
                 otherHashes = reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).ToArray();
             }
-            
-            MD5Hash md5Obj = new MD5Hash();
 
-            foreach (KeyValuePair<MD5Hash,IndexEntry> indexEntry in CASC.LocalIndex.Indices) {
+            foreach (KeyValuePair<EKey, ContainerHandler.IndexEntry> indexEntry in Client.ContainerHandler.IndexEntries) {
                 string md5 = indexEntry.Key.ToHexString();
 
                 if (!otherHashes.Contains(md5)) {
                     try {
-                        Stream rawStream = CASC.LocalIndex.OpenIndexInfo(indexEntry.Value, md5Obj, false);
-                        
-                        Stream stream = new BLTEStream(rawStream, md5Obj);
-                        
+                        Stream stream = Client.OpenEKey(indexEntry.Key);
                         TryConvertFile(stream, ConvertIdxDir, md5);
-
-                        //stream.Position = 0;
-                        //using (Stream file = File.OpenWrite(Path.Combine(RawIdxDir, md5))) {
-                        //    stream.CopyTo(file);
-                        //}
                         
-                        rawStream.Dispose();
                         stream.Dispose();
                     } catch (Exception e) {
                         if (e is BLTEKeyException exception) {
@@ -261,40 +217,31 @@ namespace CASCEncDump {
                 otherHashes = reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
             }
 
-            Dictionary<MD5Hash, int> otherHashDict = new Dictionary<MD5Hash, int>(new MD5HashComparer());
-            foreach (MD5Hash hash in otherHashes.Select(x => x.ToByteArray().ToMD5())) {
-                otherHashDict[hash] = 0;
+            HashSet<CKey> hashSet = new HashSet<CKey>(CASCKeyComparer.Instance);
+            foreach (CKey hash in otherHashes.Select(CKey.FromString)) {
+                hashSet.Add(hash);
             }
 
-            foreach (KeyValuePair<MD5Hash, EncodingEntry> entry in CASC.EncodingHandler.Entries) {
+            foreach (KeyValuePair<CKey, EncodingHandler.CKeyEntry> entry in Client.EncodingHandler.Entries) {
                 string md5 = entry.Key.ToHexString();
 
-                if (!otherHashDict.ContainsKey(entry.Key)) {
-                    try {
-                        Stream stream = CASC.OpenFile(entry.Value.Key);
-                        
-                        TryConvertFile(stream, ConvertEncDir, md5);
-
-                        //stream.Position = 0;
-                        //using (Stream file = File.OpenWrite(Path.Combine(RawEncDir, md5))) {
-                        //    stream.CopyTo(file);
-                        //}
-                    } catch (Exception e) {
-                        if (e is BLTEKeyException exception) {
-                            if (missingKeys.Add(exception.MissingKey)) {
-                                Console.Out.WriteLine($"Missing key: {exception.MissingKey:X16}");
-                            }
-                        } else {
-                            Console.Out.WriteLine(e);
+                if (hashSet.Contains(entry.Key)) continue;
+                try {
+                    Stream stream = Client.OpenCKey(entry.Key);
+                    TryConvertFile(stream, ConvertEncDir, md5);
+                } catch (Exception e) {
+                    if (e is BLTEKeyException exception) {
+                        if (missingKeys.Add(exception.MissingKey)) {
+                            Console.Out.WriteLine($"Missing key: {exception.MissingKey:X16}");
                         }
+                    } else {
+                        Console.Out.WriteLine(e);
                     }
                 }
             }
         }
 
         public static void TryConvertFile(Stream stream, string convertDir, string md5) {
-            //List<byte> lods = new List<byte>(new byte[3] { 0, 1, 0xFF });
-
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
                 uint magic = reader.ReadUInt32();
                 
@@ -377,45 +324,13 @@ namespace CASCEncDump {
                             var keyNameProper = longRevKey.ToString("X16");
                             Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}",keyNameProper, keyValueString);
                         }
-                        if (structuredData.GetInstance<STUHero>() != null) {
-                            
-                        }
+                        // if (structuredData.GetInstance<STUHero>() != null) {
+                        //     
+                        // }
                     } catch (Exception) {
                         // fine
                     }
                 }
-            }
-        }
-        
-        
-        public static void MapCMF(string locale) {
-            Files = new Dictionary<ulong, MD5Hash>();
-            foreach (ApplicationPackageManifest apm in CASC.RootHandler.APMFiles) {
-                const string searchString = "rdev";
-                if (!apm.Name.ToLowerInvariant().Contains(searchString)) {
-                    continue;
-                }
-                if (!apm.Name.ToLowerInvariant().Contains("l" + locale.ToLowerInvariant())) {
-                    continue;
-                }
-                foreach (KeyValuePair<ulong, ContentManifestFile.HashData> pair in apm.CMF.Map) {
-                    Files[pair.Value.GUID] = pair.Value.HashKey;
-                }
-            }
-        }
-        
-        public static Stream OpenFile(ulong guid) {
-            return OpenFile(CASC, Files[guid]);
-        }
-        
-        public static Stream OpenFile(CASCHandler casc, MD5Hash hash) {
-            try {
-                return casc.EncodingHandler.GetEntry(hash, out EncodingEntry enc) ? casc.OpenFile(enc.Key) : null;
-            } catch (Exception e) {
-                if (e is BLTEKeyException exception) {
-                    Debugger.Log(0, "TankLibTest:CASC", $"Missing key: {exception.MissingKey:X16}\r\n");
-                }
-                return null;
             }
         }
     }

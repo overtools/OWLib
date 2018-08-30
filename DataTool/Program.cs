@@ -5,31 +5,31 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using CMFLib;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
-using TankLib.CASC;
-using TankLib.CASC.Handlers;
-using TankLib.CASC.Helpers;
+using TankLib;
+using TankLib.Agent;
+using TankLib.Agent.Protobuf;
 using TankLib.STU;
 using TankLib.STU.Types;
+using TACTLib.Client;
+using TACTLib.Core.Product.Tank;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool {
     public class Program {
-        public static Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord> Files;
-        public static Dictionary<ulong, ContentManifestFile.HashData> CMFMap;
+        public static ClientHandler Client;
+        public static ProductHandler_Tank TankHandler;
         public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
-        public static CASCHandler CASC;
-        public static CASCConfig Config;
-        public static RootHandler Root;
+        public static ProductInstall ProductInstall;
+        
         public static ToolFlags Flags;
         public static uint BuildVersion;
-        public static bool IsPTR => Config?.IsPTR == true;
+        public static bool IsPTR => ProductInstall?.Uid == "prometheus_test";
 
-        public static bool ValidKey(ulong key) => Files.ContainsKey(key);
+        public static bool ValidKey(ulong key) => TankHandler.Assets.ContainsKey(key);
         
         private static void Main() {
             AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
@@ -100,28 +100,7 @@ namespace DataTool {
             //    Console.Out.WriteLine($"Found type: {type.Key:X4}");
             //}
 
-            #region Key Detection
-            if (!Flags.SkipKeys) {
-                TankLib.Helpers.Logger.Info("Core", "Checking ResourceKeys");
-
-                foreach (ulong key in TrackedFiles[0x90]) {
-                    if (!ValidKey(key)) {
-                        continue;
-                    }
-                    using (Stream stream = IO.OpenFile(Files[key])) {
-                        if (stream == null) {
-                            continue;
-                        }
-
-                        STUResourceKey resourceKey = GetInstance<STUResourceKey>(key);
-                        if (resourceKey == null || resourceKey.GetKeyID() == 0 || TACTKeyService.Keys.ContainsKey(resourceKey.GetReverseKeyID())) continue;
-                        TACTKeyService.Keys.Add(resourceKey.GetReverseKeyID(), resourceKey.m_key);
-                        TankLib.Helpers.Logger.Info("Core", $"Added ResourceKey {resourceKey.GetKeyIDString()}, Value: {resourceKey.GetKeyValueString()}");
-                    }
-                }
-            }
-            #endregion
-            
+            InitKeys();
             InitMisc();
             
             Stopwatch stopwatch = new Stopwatch();
@@ -165,7 +144,6 @@ namespace DataTool {
         }
 
         public static void InitStorage() {
-            Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
             TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
             
             if (Flags.Language != null)
@@ -177,27 +155,49 @@ namespace DataTool {
                 TankLib.Helpers.Logger.Info("CASC", $"Set speech language to {Flags.SpeechLanguage}");
             }
 
-            CASCHandler.Cache.CacheAPM = Flags.UseCache;
-            CASCHandler.Cache.CacheCDN = Flags.UseCache;
-            CASCHandler.Cache.CacheCDNData = Flags.CacheCDNData;
-            Config = CASCConfig.LoadFromString(Flags.OverwatchDirectory, Flags.SkipKeys);
-            Config.SpeechLanguage = Flags.SpeechLanguage ?? Flags.Language ?? Config.SpeechLanguage;
-            Config.TextLanguage = Flags.Language ?? Config.TextLanguage;
+            ClientCreateArgs args = new ClientCreateArgs {
+                Tank = new ClientCreateArgs.TankArgs {
+                    CacheAPM = Flags.UseCache,
+                    SpokenLanguage = Flags.SpeechLanguage,
+                    TextLanguage = Flags.Language
+                }
+            };
 
-            if (Config.InstallData != null) {
-                if (!Config.InstallData.Settings.Languages.Select(x => x.Language).Contains(Config.TextLanguage)) {
-                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", Config.TextLanguage);
-                } else if (!Config.InstallData.Settings.Languages.Select(x => x.Language).Contains(Config.SpeechLanguage)) {
-                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", Config.SpeechLanguage);
+            string productDBPath = Path.Combine(Flags.OverwatchDirectory, ".product.db");
+            if (File.Exists(productDBPath)) {
+                ProductInstall = new ProductDatabase(productDBPath, true).Data.ProductInstalls[0];
+
+                if (args.Tank.SpokenLanguage == null) {
+                    args.Tank.SpokenLanguage = ProductInstall.Settings.SelectedSpeechLanguage;
+                }
+                if (args.Tank.TextLanguage == null) {
+                    args.Tank.TextLanguage = ProductInstall.Settings.SelectedTextLanguage;
+                }
+                
+                if (!ProductInstall.Settings.Languages.Select(x => x.Language).Contains(args.Tank.TextLanguage)) {
+                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", args.Tank.TextLanguage);
+                } else if (!ProductInstall.Settings.Languages.Select(x => x.Language).Contains(args.Tank.SpokenLanguage)) {
+                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", args.Tank.SpokenLanguage);
                 }
 
-                if (Config.InstallData.Uid != "prometheus") {
-                    TankLib.Helpers.Logger.Warn("Core", $"The branch \"{Config.InstallData.Uid}\" is not supported!. This might result in failure to load. Proceed with caution.");
+                if (ProductInstall.Uid != "prometheus") {
+                    TankLib.Helpers.Logger.Warn("Core", $"The branch \"{ProductInstall.Uid}\" is not supported!. This might result in failure to load. Proceed with caution.");
+                }
+            } else {
+                if (args.Tank.SpokenLanguage == null) {
+                    args.Tank.SpokenLanguage = "enUS";
+                }
+
+                if (args.Tank.TextLanguage == null) {
+                    args.Tank.TextLanguage = "enUS";
                 }
             }
-
-            BuildVersion = uint.Parse(Config.BuildVersion.Split('.').Last());
-
+            
+            TankLib.TACT.Helper.PreLoad();
+            Client = new ClientHandler(Flags.OverwatchDirectory, args);
+            TankLib.TACT.Helper.PostLoad(Client);
+            
+            BuildVersion = uint.Parse(Client.InstallationInfo.Values["Version"].Split('.').Last());
             if (BuildVersion < 39028) {
                 TankLib.Helpers.Logger.Error("Core", "DataTool doesn't support Overwatch versions below 1.14. Please use OverTool");
             } else if (BuildVersion < 39241) {
@@ -205,27 +205,36 @@ namespace DataTool {
             } else if (BuildVersion < 49154) {
                 TankLib.Helpers.Logger.Error("Core", "This version of DataTool doesn't properly support versions below 1.26. Please downgrade DataTool.");
             }
-
-            TankLib.Helpers.Logger.Info("Core", $"Using Overwatch Version {Config.BuildVersion}");
-            TankLib.Helpers.Logger.Info("CASC", "Initializing...");
-            CASC = CASCHandler.Open(Config);
-            Root = CASC.RootHandler;
-            //if (Root== null) {
-            //    ErrorLog("Not a valid overwatch installation");
-            //    return;
-            //}
-            
-            // Fail when trying to extract data from a specified language with 2 or less files found.
-            if (!Root.APMFiles.Any()) {
-                TankLib.Helpers.Logger.Error("Core", "Unable to load APM files for language {0}. Please confirm that you have that language installed.", Flags.Language);
-                    return;
+            TankHandler = Client.ProductHandler as ProductHandler_Tank;
+            if (TankHandler == null) {
+                TankLib.Helpers.Logger.Error("Core", $"Not a valid Overwatch installation (detected product: {Client.Product})");
+                return;
             }
 
-            TankLib.Helpers.Logger.Info("Core", "Mapping storage");
-            TrackedFiles[0x90] = new HashSet<ulong>();
-            
-            using (PerfCounter _ = new PerfCounter("DataTool.Helper.IO::MapCMF"))
-            IO.MapCMF();
+            foreach (KeyValuePair<ulong,ProductHandler_Tank.Asset> asset in TankHandler.Assets) {
+                ushort type = teResourceGUID.Type(asset.Key);
+                if (!TrackedFiles.TryGetValue(type, out var typeMap)) {
+                    typeMap = new HashSet<ulong>();
+                    TrackedFiles[type] = typeMap;
+                }
+                typeMap.Add(asset.Key);
+            }
+        }
+
+        public static void InitKeys() {
+            if (!Flags.SkipKeys) {
+                TankLib.Helpers.Logger.Info("Core", "Checking ResourceKeys");
+
+                foreach (ulong key in TrackedFiles[0x90]) {
+                    if (!ValidKey(key)) {
+                        continue;
+                    }
+                    STUResourceKey resourceKey = GetInstance<STUResourceKey>(key);
+                    if (resourceKey == null || resourceKey.GetKeyID() == 0 || Client.ConfigHandler.Keyring.Keys.ContainsKey(resourceKey.GetReverseKeyID())) continue;
+                    Client.ConfigHandler.Keyring.AddKey(resourceKey.GetReverseKeyID(), resourceKey.m_key);
+                    TankLib.Helpers.Logger.Info("Core", $"Added ResourceKey {resourceKey.GetKeyIDString()}, Value: {resourceKey.GetKeyValueString()}");
+                }
+            }
         }
 
         [DebuggerStepThrough]

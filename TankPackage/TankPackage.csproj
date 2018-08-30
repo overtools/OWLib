@@ -56,6 +56,10 @@
       <Project>{9d1a3dcc-37bf-4979-acd8-3e998e19ce71}</Project>
       <Name>DataTool</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TACTLib\TACTLib\TACTLib.csproj">
+      <Project>{cc681fac-b05d-483f-9fa1-d8dec4871b99}</Project>
+      <Name>TACTLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TankLib\TankLib.csproj">
       <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>
       <Name>TankLib</Name>

@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using DataTool.Flag;
 using TankLib.STU;
@@ -65,4 +65,4 @@ namespace DataTool.ToolLogic.Extract.Debug {
             }
         }
     }
-}
+}*/

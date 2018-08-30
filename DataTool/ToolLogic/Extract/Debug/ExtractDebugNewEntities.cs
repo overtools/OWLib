@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -6,8 +6,6 @@ using System.Linq;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using Newtonsoft.Json.Linq;
-using TankLib;
-using TankLib.CASC;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
 using static CMFLib.Extensions;
@@ -38,14 +36,14 @@ namespace DataTool.ToolLogic.Extract.Debug {
             }
         }
 
-        public void AddNewHash(Combo.ComboInfo info, VersionInfo versionInfo, params ushort[] types) {
+        /*public void AddNewHash(Combo.ComboInfo info, VersionInfo versionInfo, params ushort[] types) {
             MD5HashComparer comparer = new MD5HashComparer();
             Dictionary<MD5Hash, ushort> addedHashes = new Dictionary<MD5Hash, ushort>(comparer);
             Dictionary<MD5Hash, ulong> hashGUIDs = new Dictionary<MD5Hash, ulong>(comparer);
             //var md5 = MD5.Create();
             
             // key = content hash, value = type
-            foreach (KeyValuePair<ulong,ApplicationPackageManifest.Types.PackageRecord> file in Files) {
+            /*foreach (KeyValuePair<ulong,ApplicationPackageManifest.Types.PackageRecord> file in Files) {
                 ushort fileType = teResourceGUID.Type(file.Key);
                 //if (!types.Contains(fileType)) continue;
                 if (fileType == 0x9C) continue;  // bundle
@@ -75,7 +73,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     //    }
                     //}
                 }
-            }
+            }#2#
 
             foreach (KeyValuePair<MD5Hash,ushort> addedHash in addedHashes) {
                 if (types.Contains(addedHash.Value)) {
@@ -84,7 +82,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     Combo.Find(info, guid);
                 }
             }
-        }
+        }#1#
 
         public class VersionInfo {
             public HashSet<MD5Hash> ContentHashes;
@@ -165,4 +163,4 @@ namespace DataTool.ToolLogic.Extract.Debug {
             SaveLogic.Combo.SaveAllStrings(flags, Path.Combine(basePath, container, "Strings"), info);
         }
     }
-}
+}*/

@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
-using TankLib.CASC;
 using TankLib.STU;
 using TankLib.STU.Types;
+using TACTLib.Helpers;
 
 namespace TankLib.Chunks {
     /// <inheritdoc />

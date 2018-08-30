@@ -6,8 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using TankLib.CASC;
 using TankLib.Chunks;
+using TACTLib.Helpers;
 
 namespace TankLib {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

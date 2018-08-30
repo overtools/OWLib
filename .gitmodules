@@ -4,3 +4,6 @@
 [submodule "revorbstd"]
 	path = revorbstd
 	url = https://github.com/healingbrew/revorbstd
+[submodule "TACTLib"]
+	path = TACTLib
+	url = https://github.com/overtools/TACTLib

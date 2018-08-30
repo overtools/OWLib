@@ -1,32 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using TankLib;
-using TankLib.CASC;
-using TankLib.CASC.Handlers;
 using TankLib.STU;
+using TACTLib.Client;
+using TACTLib.Core.Product.Tank;
 
 namespace TankLibHelper.Modes {
     public class TestTypeClasses : IMode {
         public string Mode => "testtypeclasses";
 
-        public Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord> Files;
-        public Dictionary<ushort, HashSet<ulong>> Types;
-        public CASCHandler CASC;
+        private ProductHandler_Tank _tankHandler;
 
         public ModeResult Run(string[] args) {
             string gameDir = args[1];
             ushort type = ushort.Parse(args[2], NumberStyles.HexNumber);
             
-            CASCConfig config = CASCConfig.LoadLocalStorageConfig(gameDir, true, false);
-            CASC = CASCHandler.Open(config);
-            MapCMF("enUS"); // heck
+            ClientCreateArgs createArgs = new ClientCreateArgs {
+                Tank = new ClientCreateArgs.TankArgs {
+                    SpokenLanguage = "enUS",
+                    TextLanguage = "enUS"
+                }
+            };
+            ClientHandler client = new ClientHandler(gameDir, createArgs);
+            _tankHandler = (ProductHandler_Tank)client.ProductHandler;
 
-            foreach (ulong file in Types[type]) {
-                string filename = teResourceGUID.AsString(file);
-                using (Stream stream = OpenFile(file)) {
+            foreach (var asset in _tankHandler.Assets) {
+                if (teResourceGUID.Type(asset.Key) != type) continue;
+                string filename = teResourceGUID.AsString(asset.Key);
+                using (Stream stream = _tankHandler.OpenFile(asset.Key)) {
                     if (stream == null) continue;
                     teStructuredData structuredData = new teStructuredData(stream);
                 }
@@ -36,14 +37,14 @@ namespace TankLibHelper.Modes {
         }
 
         public teStructuredData GetStructuredData(ulong guid) {
-            using (Stream stream = OpenFile(guid)) {
+            using (Stream stream = _tankHandler.OpenFile(guid)) {
                 if (stream == null) return null;
                 return new teStructuredData(stream);
             }
         }
 
         public string GetString(ulong guid) {
-            using (Stream stream = OpenFile(guid)) {
+            using (Stream stream = _tankHandler.OpenFile(guid)) {
                 if (stream == null) return null;
                 return new teString(stream);
             }
@@ -51,56 +52,6 @@ namespace TankLibHelper.Modes {
         
         public T GetInst<T>(ulong guid) where T : STUInstance {
             return GetStructuredData(guid)?.GetMainInstance<T>();
-        }
-        
-        public Stream OpenFile(ulong guid) {
-            return OpenFile(Files[guid]);
-        }
-
-        public Stream OpenFile(ApplicationPackageManifest.Types.PackageRecord record) {
-            long offset = 0;
-            if (record.Flags.HasFlag(ContentFlags.Bundle)) offset = record.Offset;
-            if (!CASC.EncodingHandler.GetEntry(record.LoadHash, out EncodingEntry enc)) return null;
-
-            MemoryStream ms = new MemoryStream((int) record.Size);
-            try {
-                Stream fstream = CASC.OpenFile(enc.Key);
-                fstream.Position = offset;
-                fstream.CopyBytes(ms, (int) record.Size);
-                ms.Position = 0;
-            } catch (Exception e) {
-                if (e is BLTEKeyException exception) {
-                    Debugger.Log(0, "DataTool", $"[DataTool:CASC]: Missing key: {exception.MissingKey:X16}\r\n");
-                }
-
-                return null;
-            }
-
-            return ms;
-        }
-        
-        public void MapCMF(string locale) {
-            Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
-            Types = new Dictionary<ushort, HashSet<ulong>>();
-            foreach (ApplicationPackageManifest apm in CASC.RootHandler.APMFiles) {
-                const string searchString = "rdev";
-                if (!apm.Name.ToLowerInvariant().Contains(searchString)) {
-                    continue;
-                }
-                if (!apm.Name.ToLowerInvariant().Contains("l" + locale.ToLowerInvariant())) {
-                    continue;
-                }
-
-                foreach (KeyValuePair<ulong, ApplicationPackageManifest.Types.PackageRecord> pair in apm.FirstOccurence) {
-                    ushort type = teResourceGUID.Type(pair.Key);
-                    if (!Types.ContainsKey(type)) {
-                        Types[type] = new HashSet<ulong>();
-                    }
-                    
-                    Types[type].Add(pair.Key);
-                    Files[pair.Value.GUID] = pair.Value;
-                }
-            }
         }
     }
 }
