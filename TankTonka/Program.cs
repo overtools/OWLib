@@ -89,29 +89,48 @@ namespace TankTonka {
 
             foreach (STUInstance instance in structuredData.Instances) {
                 if (instance == null) continue;
-                var fields = GetFields(instance.GetType(), true);
-                
-                foreach (FieldInfo field in fields) {
-                    object fieldValue = field.GetValue(instance);
-                    Type fieldType = field.FieldType;
-                    if (fieldValue == null) continue;
-
-                    if (fieldType.IsArray) {
-                        Type elementType = fieldType.GetElementType();
-                        IEnumerable enumerable = (IEnumerable) fieldValue;
-                        foreach (object val in enumerable) {
-                            STUv2ProcessField(record, val, elementType);
-                        }
-                    } else {
-                        STUv2ProcessField(record, fieldValue, fieldType);
-                    }
-                }
+                STUv2ProcessInstance(record, instance);
             }
 
             using (Stream outputFile = File.OpenWrite(Path.Combine(typeDir, $"{teResourceGUID.AsString(guid)}.json"))) {
                 outputFile.SetLength(0);
                 byte[] buf = JsonSerializer.PrettyPrintByteArray(JsonSerializer.Serialize(record));
                 outputFile.Write(buf, 0, buf.Length);
+            }
+        }
+
+        private static void STUv2ProcessInstance(AssetRecord record, STUInstance instance) {
+            var fields = GetFields(instance.GetType(), true);
+                
+            foreach (FieldInfo field in fields) {
+                object fieldValue = field.GetValue(instance);
+                Type fieldType = field.FieldType;
+                if (fieldValue == null) continue;
+
+                var fieldAttribute = field.GetCustomAttribute<STUFieldAttribute>();
+                if (fieldAttribute != null) {
+                    if (fieldAttribute.ReaderType == typeof(InlineInstanceFieldReader)) {
+                        if (!fieldType.IsArray) {
+                            STUv2ProcessInstance(record, (STUInstance)fieldValue);
+                        } else {
+                            IEnumerable enumerable = (IEnumerable) fieldValue;
+                            foreach (object val in enumerable) {
+                                STUv2ProcessInstance(record, (STUInstance)val);
+                            }
+                        }
+                        return;
+                    }
+                }
+
+                if (fieldType.IsArray) {
+                    Type elementType = fieldType.GetElementType();
+                    IEnumerable enumerable = (IEnumerable) fieldValue;
+                    foreach (object val in enumerable) {
+                        STUv2ProcessField(record, val, elementType);
+                    }
+                } else {
+                    STUv2ProcessField(record, fieldValue, fieldType);
+                }
             }
         }
 
