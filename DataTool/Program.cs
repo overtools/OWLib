@@ -11,6 +11,7 @@ using DataTool.Flag;
 using DataTool.Helper;
 using TankLib.CASC;
 using TankLib.CASC.Handlers;
+using TankLib.CASC.Helpers;
 using TankLib.STU;
 using TankLib.STU.Types;
 using static DataTool.Helper.Logger;
@@ -37,9 +38,6 @@ namespace DataTool {
             Console.CancelKeyPress += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
             Console.OutputEncoding = Encoding.UTF8;
 
-            Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
-            TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
-
             #region Tool Detection
             HashSet<Type> tools = new HashSet<Type>();
             {
@@ -52,13 +50,6 @@ namespace DataTool {
                         continue;
                     }
                     tools.Add(tt);
-
-                    if (attrib.TrackTypes == null) continue;
-                    foreach (ushort type in attrib.TrackTypes) {
-                        if (!TrackedFiles.ContainsKey(type)) {
-                            TrackedFiles[type] = new HashSet<ulong>();
-                        } 
-                    }
                 }
             }
             #endregion
@@ -67,8 +58,6 @@ namespace DataTool {
             if (Flags == null) {
                 return;
             }
-
-            //Logger.EXIT = !Flags.GracefulExit;
 
             ITool targetTool = null;
             ICLIFlags targetToolFlags = null;
@@ -104,72 +93,8 @@ namespace DataTool {
             TankLib.Helpers.Logger.Info("Core", $"{Assembly.GetExecutingAssembly().GetName().Name} v{TankLib.Util.GetVersion(typeof(Program).Assembly)}");
             TankLib.Helpers.Logger.Info("Core", $"CommandLine: [{string.Join(", ", Environment.GetCommandLineArgs().Skip(1).Select(x => $"\"{x}\""))}]");
 
-            #region Initialize CASC
-            if (Flags.Language != null)
-            {
-                TankLib.Helpers.Logger.Info("CASC", $"Set language to {Flags.Language}");
-            }
-            if (Flags.SpeechLanguage != null)
-            {
-                TankLib.Helpers.Logger.Info("CASC", $"Set speech language to {Flags.SpeechLanguage}");
-            }
-
-            CASCHandler.Cache.CacheAPM = Flags.UseCache;
-            CASCHandler.Cache.CacheCDN = Flags.UseCache;
-            CASCHandler.Cache.CacheCDNData = Flags.CacheData;
-            Config = CASCConfig.LoadFromString(Flags.OverwatchDirectory, Flags.SkipKeys);
-            Config.SpeechLanguage = Flags.SpeechLanguage ?? Flags.Language ?? Config.SpeechLanguage;
-            Config.TextLanguage = Flags.Language ?? Config.TextLanguage;
-
-            if (Config != null) {
-                if (!Config.InstallData.Settings.Languages.Select(x => x.Language).Contains(Config.TextLanguage)) {
-                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", Config.TextLanguage);
-                } else if (!Config.InstallData.Settings.Languages.Select(x => x.Language).Contains(Config.SpeechLanguage)) {
-                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", Config.SpeechLanguage);
-                }
-
-                if (Config.InstallData.Uid != "prometheus") {
-                    TankLib.Helpers.Logger.Warn("Core", $"The branch \"{Config.InstallData.Uid}\" is not supported!. This might result in failure to load. Proceed with caution.");
-                }
-            }
-            #endregion
-
-
-            BuildVersion = uint.Parse(Config.BuildVersion.Split('.').Last());
-
-            if (BuildVersion < 39028) {
-                TankLib.Helpers.Logger.Error("Core", "DataTool doesn't support Overwatch versions below 1.14. Please use OverTool");
-            } else if (BuildVersion < 39241) {
-                TankLib.Helpers.Logger.Error("Core", "DataTool doesn't support this 1.14 release as it uses unmangeled hashes");
-            } else if (BuildVersion < 49154) {
-                TankLib.Helpers.Logger.Error("Core", "This version of DataTool doesn't properly support versions below 1.26. Please downgrade DataTool.");
-            }
-
-            TankLib.Helpers.Logger.Info("Core", $"Using Overwatch Version {Config.BuildVersion}");
-            TankLib.Helpers.Logger.Info("CASC", "Initializing...");
-            CASC = CASCHandler.Open(Config);
-            Root = CASC.RootHandler;
-            //if (Root== null) {
-            //    ErrorLog("Not a valid overwatch installation");
-            //    return;
-            //}
-
-            if (Config.InstallData != null) {
-                
-            }
+            InitStorage();
             
-            // Fail when trying to extract data from a specified language with 2 or less files found.
-            if (!Root.APMFiles.Any()) {
-                TankLib.Helpers.Logger.Error("Core", "Unable to load APM files for language {0}. Please confirm that you have that language installed.", Flags.Language);
-                    return;
-            }
-
-            TankLib.Helpers.Logger.Info("Core", "Mapping storage");
-            TrackedFiles[0x90] = new HashSet<ulong>();
-            IO.MapCMF();
-            IO.LoadGUIDTable();
-            Sound.WwiseBank.GetReady();
-
             //foreach (KeyValuePair<ushort, HashSet<ulong>> type in TrackedFiles.OrderBy(x => x.Key)) {
             //    //Console.Out.WriteLine($"Found type: {type.Key:X4} ({type.Value.Count} files)");
             //    Console.Out.WriteLine($"Found type: {type.Key:X4}");
@@ -197,8 +122,24 @@ namespace DataTool {
             }
             #endregion
             
+            InitMisc();
+            
             Stopwatch stopwatch = new Stopwatch();
             TankLib.Helpers.Logger.Info("Core", "Tooling...");
+            stopwatch.Start();
+            targetTool.Parse(targetToolFlags);
+            stopwatch.Stop();
+            
+            TankLib.Helpers.Logger.Success("Core", $"Execution finished in {stopwatch.Elapsed} seconds");
+
+            ShutdownMisc();
+
+            if (Debugger.IsAttached) {
+                Debugger.Break();
+            }
+        }
+        
+        public static void InitMisc() {
             var dbPath = Flags.ScratchDBPath;
             if (Flags.Deduplicate) {
                 TankLib.Helpers.Logger.Warn("ScratchDB", "Will attempt to deduplicate files if extracting...");
@@ -210,25 +151,87 @@ namespace DataTool {
                     SaveLogic.Combo.ScratchDBInstance.Load(dbPath);
                 }
             }
-            stopwatch.Start();
-            targetTool.Parse(targetToolFlags);
-            stopwatch.Stop();
             
-            TankLib.Helpers.Logger.Success("Core", $"Execution finished in {stopwatch.Elapsed} seconds");
+            IO.LoadGUIDTable();
+            Sound.WwiseBank.GetReady();
+        }
 
+        public static void ShutdownMisc() {
+            var dbPath = Flags.ScratchDBPath;
             if(Flags.Deduplicate && !string.IsNullOrWhiteSpace(dbPath)) {
                 TankLib.Helpers.Logger.Warn("ScratchDB", "Saving deduplication database...");
                 SaveLogic.Combo.ScratchDBInstance.Save(dbPath);
             }
+        }
 
-            if (Debugger.IsAttached) {
-                Debugger.Break();
+        public static void InitStorage() {
+            Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
+            TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
+            
+            if (Flags.Language != null)
+            {
+                TankLib.Helpers.Logger.Info("CASC", $"Set language to {Flags.Language}");
             }
+            if (Flags.SpeechLanguage != null)
+            {
+                TankLib.Helpers.Logger.Info("CASC", $"Set speech language to {Flags.SpeechLanguage}");
+            }
+
+            CASCHandler.Cache.CacheAPM = Flags.UseCache;
+            CASCHandler.Cache.CacheCDN = Flags.UseCache;
+            CASCHandler.Cache.CacheCDNData = Flags.CacheCDNData;
+            Config = CASCConfig.LoadFromString(Flags.OverwatchDirectory, Flags.SkipKeys);
+            Config.SpeechLanguage = Flags.SpeechLanguage ?? Flags.Language ?? Config.SpeechLanguage;
+            Config.TextLanguage = Flags.Language ?? Config.TextLanguage;
+
+            if (Config.InstallData != null) {
+                if (!Config.InstallData.Settings.Languages.Select(x => x.Language).Contains(Config.TextLanguage)) {
+                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", Config.TextLanguage);
+                } else if (!Config.InstallData.Settings.Languages.Select(x => x.Language).Contains(Config.SpeechLanguage)) {
+                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", Config.SpeechLanguage);
+                }
+
+                if (Config.InstallData.Uid != "prometheus") {
+                    TankLib.Helpers.Logger.Warn("Core", $"The branch \"{Config.InstallData.Uid}\" is not supported!. This might result in failure to load. Proceed with caution.");
+                }
+            }
+
+            BuildVersion = uint.Parse(Config.BuildVersion.Split('.').Last());
+
+            if (BuildVersion < 39028) {
+                TankLib.Helpers.Logger.Error("Core", "DataTool doesn't support Overwatch versions below 1.14. Please use OverTool");
+            } else if (BuildVersion < 39241) {
+                TankLib.Helpers.Logger.Error("Core", "DataTool doesn't support this 1.14 release as it uses unmangeled hashes");
+            } else if (BuildVersion < 49154) {
+                TankLib.Helpers.Logger.Error("Core", "This version of DataTool doesn't properly support versions below 1.26. Please downgrade DataTool.");
+            }
+
+            TankLib.Helpers.Logger.Info("Core", $"Using Overwatch Version {Config.BuildVersion}");
+            TankLib.Helpers.Logger.Info("CASC", "Initializing...");
+            CASC = CASCHandler.Open(Config);
+            Root = CASC.RootHandler;
+            //if (Root== null) {
+            //    ErrorLog("Not a valid overwatch installation");
+            //    return;
+            //}
+            
+            // Fail when trying to extract data from a specified language with 2 or less files found.
+            if (!Root.APMFiles.Any()) {
+                TankLib.Helpers.Logger.Error("Core", "Unable to load APM files for language {0}. Please confirm that you have that language installed.", Flags.Language);
+                    return;
+            }
+
+            TankLib.Helpers.Logger.Info("Core", "Mapping storage");
+            TrackedFiles[0x90] = new HashSet<ulong>();
+            
+            using (PerfCounter _ = new PerfCounter("DataTool.Helper.IO::MapCMF"))
+            IO.MapCMF();
         }
 
         [DebuggerStepThrough]
         private static void ExceptionHandler(object sender, UnhandledExceptionEventArgs e) {
-            if (e.ExceptionObject is Exception ex) {
+            Exception ex = e.ExceptionObject as Exception;
+            if (ex != null) {
                 TankLib.Helpers.Logger.Error(null, ex.ToString());
                 if (Debugger.IsAttached) {
                     throw ex;

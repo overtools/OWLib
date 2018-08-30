@@ -48,7 +48,7 @@ namespace TankPackage
             }
             CASCHandler.Cache.CacheAPM = Flags.UseCache;
             CASCHandler.Cache.CacheCDN = Flags.UseCache;
-            CASCHandler.Cache.CacheCDNData = Flags.CacheData;
+            CASCHandler.Cache.CacheCDNData = Flags.CacheCDNData;
             Config = CASCConfig.LoadFromString(Flags.OverwatchDirectory, Flags.SkipKeys);
             Config.SpeechLanguage = Flags.SpeechLanguage ?? Flags.Language ?? Config.SpeechLanguage;
             Config.TextLanguage = Flags.Language ?? Config.TextLanguage;

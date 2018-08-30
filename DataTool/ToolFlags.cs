@@ -25,7 +25,7 @@ namespace DataTool {
         public bool UseCache;
 
         [CLIFlag(Default = true, Flag = "cache-data", Help = "Cache Data files from CDN", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
-        public bool CacheData;
+        public bool CacheCDNData;
 
         [CLIFlag(Default = false, Flag = "validate-cache", Help = "Validate files from CDN", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ValidateCache;

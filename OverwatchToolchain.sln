@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankView", "TankView\TankVi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankPackage", "TankPackage\TankPackage.csproj", "{7BDF341B-AB08-4F4A-83F4-6F9265B161A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankTonka", "TankTonka\TankTonka.csproj", "{CCD0AAAF-2428-4405-9C07-A8C8354A99C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{7BDF341B-AB08-4F4A-83F4-6F9265B161A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BDF341B-AB08-4F4A-83F4-6F9265B161A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BDF341B-AB08-4F4A-83F4-6F9265B161A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCD0AAAF-2428-4405-9C07-A8C8354A99C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCD0AAAF-2428-4405-9C07-A8C8354A99C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCD0AAAF-2428-4405-9C07-A8C8354A99C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCD0AAAF-2428-4405-9C07-A8C8354A99C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +92,7 @@ Global
 		{128125C9-6C90-4599-A74C-78925ED0AA94} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{7BDF341B-AB08-4F4A-83F4-6F9265B161A5} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{C29334C6-48B8-4D1D-9071-7C91FDF8255F} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
+		{CCD0AAAF-2428-4405-9C07-A8C8354A99C9} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {225E86D0-10B9-4E96-8ED4-B8C90CB70682}
