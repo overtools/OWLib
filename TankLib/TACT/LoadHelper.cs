@@ -3,7 +3,7 @@ using System.Reflection;
 using TACTLib.Client;
 
 namespace TankLib.TACT {
-    public static class Helper {
+    public static class LoadHelper {
         public static void PreLoad() {
             TACTLib.Logger.OnInfo += (category, message) => Helpers.Logger.Info(category, message);
             TACTLib.Logger.OnDebug += (category, message) => Helpers.Logger.Debug(category, message);

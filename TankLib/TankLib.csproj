@@ -5078,7 +5078,7 @@
     <Compile Include="STU\Types\teAITotem.cs" />
     <Compile Include="STU\Types\teAITotemGraph.cs" />
     <Compile Include="STU\Types\teAITotemSurfaceAdditionalData.cs" />
-    <Compile Include="TACT\Helper.cs" />
+    <Compile Include="TACT\LoadHelper.cs" />
     <Compile Include="teAnimation.cs" />
     <Compile Include="teAssetPackage.cs" />
     <Compile Include="teAssetPackagePayload.cs" />
