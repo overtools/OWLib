@@ -16,10 +16,8 @@ namespace TankLibHelper.Modes {
             ushort type = ushort.Parse(args[2], NumberStyles.HexNumber);
             
             ClientCreateArgs createArgs = new ClientCreateArgs {
-                Tank = new ClientCreateArgs.TankArgs {
-                    SpokenLanguage = "enUS",
-                    TextLanguage = "enUS"
-                }
+               SpeechLanguage = "enUS",
+               TextLanguage = "enUS"
             };
             ClientHandler client = new ClientHandler(gameDir, createArgs);
             _tankHandler = (ProductHandler_Tank)client.ProductHandler;

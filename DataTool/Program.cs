@@ -9,8 +9,6 @@ using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib;
-using TankLib.Agent;
-using TankLib.Agent.Protobuf;
 using TankLib.STU;
 using TankLib.STU.Types;
 using TACTLib.Client;
@@ -23,11 +21,10 @@ namespace DataTool {
         public static ClientHandler Client;
         public static ProductHandler_Tank TankHandler;
         public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
-        public static ProductInstall ProductInstall;
         
         public static ToolFlags Flags;
         public static uint BuildVersion;
-        public static bool IsPTR => ProductInstall?.Uid == "prometheus_test";
+        public static bool IsPTR => Client?.AgentProduct?.Uid == "prometheus_test";
 
         public static bool ValidKey(ulong key) => TankHandler.Assets.ContainsKey(key);
         
@@ -156,52 +153,28 @@ namespace DataTool {
             }
 
             ClientCreateArgs args = new ClientCreateArgs {
+                SpeechLanguage = Flags.SpeechLanguage,
+                TextLanguage = Flags.Language,
                 Tank = new ClientCreateArgs.TankArgs {
                     CacheAPM = Flags.UseCache,
-                    SpokenLanguage = Flags.SpeechLanguage,
-                    TextLanguage = Flags.Language
                 }
             };
-
-            string productDBPath = Path.Combine(Flags.OverwatchDirectory, ".product.db");
-            if (File.Exists(productDBPath)) {
-                ProductInstall = new ProductDatabase(productDBPath, true).Data.ProductInstalls[0];
-
-                if (args.Tank.SpokenLanguage == null) {
-                    args.Tank.SpokenLanguage = ProductInstall.Settings.SelectedSpeechLanguage;
-                }
-                if (args.Tank.TextLanguage == null) {
-                    args.Tank.TextLanguage = ProductInstall.Settings.SelectedTextLanguage;
-                }
-                
-                if (!ProductInstall.Settings.Languages.Select(x => x.Language).Contains(args.Tank.TextLanguage)) {
-                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", args.Tank.TextLanguage);
-                } else if (!ProductInstall.Settings.Languages.Select(x => x.Language).Contains(args.Tank.SpokenLanguage)) {
-                    TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", args.Tank.SpokenLanguage);
-                }
-
-                if (ProductInstall.Uid != "prometheus") {
-                    TankLib.Helpers.Logger.Warn("Core", $"The branch \"{ProductInstall.Uid}\" is not supported!. This might result in failure to load. Proceed with caution.");
-                }
-            } else {
-                if (args.Tank.SpokenLanguage == null) {
-                    args.Tank.SpokenLanguage = "enUS";
-                }
-
-                if (args.Tank.TextLanguage == null) {
-                    args.Tank.TextLanguage = "enUS";
-                }
-            }
+            
             
             TankLib.TACT.LoadHelper.PreLoad();
             Client = new ClientHandler(Flags.OverwatchDirectory, args);
-            TankLib.TACT.LoadHelper.PostLoad(Client);
             
-            TankHandler = Client.ProductHandler as ProductHandler_Tank;
-            if (TankHandler == null) {
-                TankLib.Helpers.Logger.Error("Core", $"Not a valid Overwatch installation (detected product: {Client.Product})");
-                return;
+
+            if (Client.AgentProduct.Uid != "prometheus") {
+                TankLib.Helpers.Logger.Warn("Core", $"The branch \"{Client.AgentProduct.Uid}\" is not supported!. This might result in failure to load. Proceed with caution.");
             }
+            if (!Client.AgentProduct.Settings.Languages.Select(x => x.Language).Contains(args.TextLanguage)) {
+                TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", args.TextLanguage);
+            } else if (!Client.AgentProduct.Settings.Languages.Select(x => x.Language).Contains(args.SpeechLanguage)) {
+                TankLib.Helpers.Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", args.SpeechLanguage);
+            }
+            
+            TankLib.TACT.Helper.PostLoad(Client);
             
             BuildVersion = uint.Parse(Client.InstallationInfo.Values["Version"].Split('.').Last());
             if (BuildVersion < 39028) {
@@ -210,6 +183,11 @@ namespace DataTool {
                 TankLib.Helpers.Logger.Error("Core", "DataTool doesn't support this 1.14 release as it uses unmangeled hashes");
             } else if (BuildVersion < 49154) {
                 TankLib.Helpers.Logger.Error("Core", "This version of DataTool doesn't properly support versions below 1.26. Please downgrade DataTool.");
+            }
+            TankHandler = Client.ProductHandler as ProductHandler_Tank;
+            if (TankHandler == null) {
+                TankLib.Helpers.Logger.Error("Core", $"Not a valid Overwatch installation (detected product: {Client.Product})");
+                return;
             }
 
             foreach (KeyValuePair<ulong,ProductHandler_Tank.Asset> asset in TankHandler.Assets) {

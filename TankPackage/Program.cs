@@ -40,6 +40,9 @@ namespace TankPackage
                 case "extract":
                     Extract(modeArgs);
                     break;
+                case "extract-type":
+                    ExtractType(modeArgs);
+                    break;
                 case "search":
                     Search(modeArgs);
                     break;
@@ -70,6 +73,21 @@ namespace TankPackage
                 ushort sh = (ushort)(key >> 48);
                 ushort shBE = (ushort)(((sh & 0xFF) << 8) | sh >> 8);
                 Console.Out.WriteLine($"{shBE:X4} : {sh:X4} : {teResourceGUID.Type(key):X3}");
+            }
+        }
+
+        private static void ExtractType(string[] args)
+        {
+            string output = args.FirstOrDefault();
+            ulong[] guids = args.Skip(1).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+            if (string.IsNullOrWhiteSpace(output))
+            {
+                return;
+            }
+
+            foreach (ProductHandler_Tank.Manifest apm in TankHandler.Manifests) {
+                var ids = apm.ContentManifest.IndexMap.Where(x => guids.Length == 0 || guids.Contains(teResourceGUID.Type(x.Key))).Select(x => x.Key);
+                Save(output, apm.PackageManifest.Header.Checksum, ids, apm.ContentManifest);
             }
         }
 
@@ -162,6 +180,25 @@ namespace TankPackage
                     }
 
                     tmp = Path.Combine(tmp, teResourceGUID.AsString(record.GUID));
+                    InfoLog("Saved {0}", tmp);
+                    WriteFile(file, tmp);
+                }
+            }
+
+            Parallel.ForEach(records, Body);
+        }
+        private static void Save(string output, ulong myKey, IEnumerable<ulong> records, ContentManifestFile cmf)
+        {
+            string dest = Path.Combine(output, teResourceGUID.AsString(myKey));
+
+            void Body(ulong guid) {
+                using (Stream file = cmf.OpenFile(Client, guid)) {
+                    string tmp = Path.Combine(dest, $"{teResourceGUID.Type(guid):X3}");
+                    if (!Directory.Exists(tmp)) {
+                        Directory.CreateDirectory(tmp);
+                    }
+
+                    tmp = Path.Combine(tmp, teResourceGUID.AsString(guid));
                     InfoLog("Saved {0}", tmp);
                     WriteFile(file, tmp);
                 }

@@ -45,10 +45,8 @@ namespace CASCEncDump {
             // casc setup
             
             ClientCreateArgs createArgs = new ClientCreateArgs {
-                Tank = new ClientCreateArgs.TankArgs {
-                     SpokenLanguage = language,
-                     TextLanguage = language,
-                }
+                SpeechLanguage = language,
+                TextLanguage = language
             };
             if (mode != "allcmf" && mode != "dump-guids" && mode != "compare-guids" && mode != "dump-cmf") {
                 createArgs.Tank.LoadAPM = false;
