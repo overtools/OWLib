@@ -8,7 +8,14 @@ namespace TankTonka.Models {
             Texture = 0x4,
             Anim = 0x6,
             Material = 0x8,
-            Model = 0xC
+            Model = 0xC,
+            Effect = 0xD,
+            DataFlow = 0x13,
+            AnimAlias = 0x14,
+            AnimCategory = 0x15,
+            AnimWeightBoneMask = 0x18,
+            ModelLook = 0x1A,
+            StatescriptGraph = 0x1B
         }
 
         public class StructuredDataInfo {
