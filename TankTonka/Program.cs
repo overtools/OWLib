@@ -20,19 +20,20 @@ namespace TankTonka {
         private static string _outputDirectory;
         
         public static void Main(string[] args) {
-            string overwatchDirectory = args[0];
-            _outputDirectory = args[1];
             const string locale = "enUS";
-            ushort[] types = args.Skip(2).Select(x => ushort.Parse(x, NumberStyles.HexNumber)).ToArray();
-            if (types.Length == 0) types = null;
-
+            
             DataTool.Program.Flags = new ToolFlags {
-                OverwatchDirectory = overwatchDirectory,
+                OverwatchDirectory = args[0],
                 Language = locale,
                 SpeechLanguage = locale,
                 UseCache = true,
                 CacheCDNData = true
             };
+            
+            _outputDirectory = args[1];
+            ushort[] types = args.Skip(2).Select(x => ushort.Parse(x, NumberStyles.HexNumber)).ToArray();
+            if (types.Length == 0) types = null;
+
             DataTool.Program.InitStorage();
             
             CompositeResolver.RegisterAndSetAsDefault(new IJsonFormatter[] {
@@ -67,10 +68,9 @@ namespace TankTonka {
             manifest.StructuredDataInfo = new Common.StructuredDataInfo();
             HashSet<Common.AssetRepoType> referenceTypes = new HashSet<Common.AssetRepoType>();
             
-            
             string typeDirectory = Path.Combine(_outputDirectory, type.ToString("X3"));
             string assetDirectory = Path.Combine(typeDirectory, "assets");
-            IO.CreateDirectoryFromFile(Path.Combine(assetDirectory, "jeff kaplan.png"));
+            IO.CreateDirectorySafe(assetDirectory);
 
             Parallel.ForEach(DataTool.Program.TrackedFiles[type], x => ProcessAssetSTUv2(x, assetDirectory));
 
@@ -132,8 +132,8 @@ namespace TankTonka {
                     record.References.Add((teResourceGUID)method.Invoke(null, new []{value}));
                     
                     // fuck reflection
-                    return;
                 }
+                return;
             }
 
             if (value is ulong @ulong) {
