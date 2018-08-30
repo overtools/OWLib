@@ -29,8 +29,8 @@ before_package:
 artifacts:
 - path: dist/Release
   name: toolchain-release
-- path: dist/Release/CMFLib.dll
-  name: CMFLib
+- path: dist/Release/TACTLib.dll
+  name: TACTLib
 - path: dist/Release/TankLib.dll
   name: TankLib
 - path: TankView/bin/Release
