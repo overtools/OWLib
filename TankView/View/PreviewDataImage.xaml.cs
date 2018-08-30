@@ -13,15 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TankView.View
-{
+namespace TankView.View {
     /// <summary>
     /// Interaction logic for PreviewDataImage.xaml
     /// </summary>
-    public partial class PreviewDataImage : UserControl
-    {
-        public PreviewDataImage()
-        {
+    public partial class PreviewDataImage : UserControl {
+        public PreviewDataImage() {
             InitializeComponent();
         }
     }

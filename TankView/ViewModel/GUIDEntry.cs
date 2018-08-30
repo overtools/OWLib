@@ -1,17 +1,15 @@
-﻿using TankLib.CASC;
+﻿using TACTLib;
+using TACTLib.Container;
+using TACTLib.Core.Product.Tank;
 
-namespace TankView.ViewModel
-{
-    public class GUIDEntry
-    {
-        public int Size { get; set; }
-        public int Offset { get; set; }
+namespace TankView.ViewModel {
+    public class GUIDEntry {
         public string Filename { get; set; }
-        public string FullPath { get; set; }
-        public ContentFlags Flags { get; set; }
-        public LocaleFlags Locale { get; set; }
-        public MD5Hash Hash { get; set; }
         public ulong GUID { get; set; }
-        public ApplicationPackageManifest APM { get; set; }
+        public string FullPath { get; set; }
+        public int Size { get; set; }
+        public string Locale { get; set; }
+        public CKey ContentKey { get; set; }
+        public ContentFlags Flags { get; set; }
     }
 }

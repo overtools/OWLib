@@ -4,16 +4,12 @@ using System.Collections.Specialized;
 using System.Linq;
 using TankView.Properties;
 
-namespace TankView.ViewModel
-{
-    public class RecentLocations : ObservableCollection<string>
-    {
+namespace TankView.ViewModel {
+    public class RecentLocations : ObservableCollection<string> {
         List<string> CachedLocations = new List<string>();
 
-        public RecentLocations()
-        {
-            if(Settings.Default.RecentLocations == null)
-            {
+        public RecentLocations() {
+            if (Settings.Default.RecentLocations == null) {
                 Settings.Default.RecentLocations = new StringCollection();
             }
 
@@ -24,30 +20,27 @@ namespace TankView.ViewModel
             }
         }
 
-        public new void Add(string path)
-        {
-            if (CachedLocations.Contains(path))
-            {
+        public new void Add(string path) {
+            if (CachedLocations.Contains(path)) {
                 Remove(path);
             }
+
             Insert(0, path);
-            while (CachedLocations.Count > 7)
-            {
+            while (CachedLocations.Count > 7) {
                 Remove(CachedLocations.ElementAt(7));
             }
+
             Settings.Default.RecentLocations = new StringCollection();
             Settings.Default.RecentLocations.AddRange(CachedLocations.ToArray());
             Settings.Default.Save();
         }
 
-        public new void Remove(string path)
-        {
+        public new void Remove(string path) {
             CachedLocations.Remove(path);
             base.Remove(path);
         }
 
-        public new void Insert(int i, string path)
-        {
+        public new void Insert(int i, string path) {
             CachedLocations.Insert(i, path);
             base.Insert(i, path);
         }

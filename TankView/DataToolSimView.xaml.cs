@@ -12,43 +12,27 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace TankView
-{
+namespace TankView {
     /// <summary>
     /// Interaction logic for DataToolSimView.xaml
     /// </summary>
-    public partial class DataToolSimView : Window
-    {
-        public DataToolSimView()
-        {
+    public partial class DataToolSimView : Window {
+        public DataToolSimView() {
             InitializeComponent();
         }
 
-        public void PostInitialize()
-        {
+        public void PostInitialize() {
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
             Activate();
             Show();
         }
 
-        private void ShowMaps(object sender, RoutedEventArgs e)
-        {
+        private void ShowMaps(object sender, RoutedEventArgs e) { }
 
-        }
+        private void ShowHeroes(object sender, RoutedEventArgs e) { }
 
-        private void ShowHeroes(object sender, RoutedEventArgs e)
-        {
+        private void ShowNPCs(object sender, RoutedEventArgs e) { }
 
-        }
-
-        private void ShowNPCs(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ShowGeneralItems(object sender, RoutedEventArgs e)
-        {
-
-        }
+        private void ShowGeneralItems(object sender, RoutedEventArgs e) { }
     }
 }
