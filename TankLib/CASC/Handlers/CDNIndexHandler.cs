@@ -105,7 +105,7 @@ namespace TankLib.CASC.Handlers {
 
                 string path = Path.Combine(_config.BasePath, dataFolder, "indices", archive + ".index");
 
-                using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+                using (FileStream fs = File.OpenRead(path)) {
                     ParseIndex(fs, i);
                 }
             } catch {

@@ -55,7 +55,7 @@ namespace TankLib.CASC {
                 }
             }
 
-            Stream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            Stream fs = File.OpenRead(file);
             return new LZ4Stream(fs, LZ4StreamMode.Decompress);
         }
 

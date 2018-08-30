@@ -59,7 +59,7 @@ namespace TankLib.CASC.Handlers {
         }
 
         private unsafe void ParseIndex(string idx) {
-            using (FileStream fs = new FileStream(idx, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (FileStream fs = File.OpenRead(idx))
             using (BinaryReader br = new BinaryReader(fs)) {
                 int h2Len = br.ReadInt32();
                 int h2Check = br.ReadInt32();
@@ -185,7 +185,7 @@ namespace TankLib.CASC.Handlers {
             string dataFolder = CASCConfig.GetDataFolder();
             string dataFile = Path.Combine(_config.BasePath, dataFolder, "data", $"data.{index:D3}");
 
-            stream = new FileStream(dataFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            stream = File.OpenRead(dataFile);
 
             _dataStreams[index] = stream;
 

@@ -216,7 +216,7 @@ namespace TankLib.CASC {
 
             string buildInfoPath = Path.Combine(basePath, ".build.info");
             
-            using (Stream buildInfoStream = new FileStream(buildInfoPath, FileMode.Open)) {
+            using (Stream buildInfoStream = File.OpenRead(buildInfoPath)) {
                 config._buildInfo = BarSeparatedConfig.Read(buildInfoStream);
             }
 
@@ -234,7 +234,7 @@ namespace TankLib.CASC {
             string buildKey = bi["BuildKey"];
             string buildCfgPath = Path.Combine(basePath, dataFolder, "config", buildKey.Substring(0, 2), buildKey.Substring(2, 2), buildKey);
             try {
-                using (Stream stream = new FileStream(buildCfgPath, FileMode.Open)) {
+                using (Stream stream = File.OpenRead(buildCfgPath)) {
                     config.Builds.Add(KeyValueConfig.Read(stream));
                 }
             } catch {
@@ -246,7 +246,7 @@ namespace TankLib.CASC {
             string cdnKey = bi["CDNKey"];
             string cdnCfgPath = Path.Combine(basePath, dataFolder, "config", cdnKey.Substring(0, 2), cdnKey.Substring(2, 2), cdnKey);
             try {
-                using (Stream stream = new FileStream(cdnCfgPath, FileMode.Open)) {
+                using (Stream stream = File.OpenRead(cdnCfgPath)) {
                     config._cdnConfig = KeyValueConfig.Read(stream);
                 }
             } catch {
@@ -259,7 +259,7 @@ namespace TankLib.CASC {
                 string keyringKey = bi["Keyring"];
                 string keyringCfgPath = Path.Combine(basePath, dataFolder, "config", keyringKey.Substring(0, 2), keyringKey.Substring(2, 2), keyringKey);
                 try {
-                    using (Stream stream = new FileStream(keyringCfgPath, FileMode.Open)) {
+                    using (Stream stream = File.OpenRead(keyringCfgPath)) {
                         config.KeyRing = KeyValueConfig.Read(stream);
                     }
                 } catch {
