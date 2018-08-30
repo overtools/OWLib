@@ -176,7 +176,7 @@ namespace TankView.ViewModel {
             foreach (var entry in this.Tank.RootFiles.OrderBy(x => x.FileName).ToArray()) {
                 c++;
                 Slave?.ReportProgress((int) (((float) c / (float) total) * 100));
-                AddEntry(entry.InstallPath, 0, entry.MD5, 0, "None");
+                AddEntry(entry.FileName, 0, entry.MD5, 0, "None");
             }
 
             foreach (var manifest in this.Tank.Manifests) {
@@ -232,6 +232,7 @@ namespace TankView.ViewModel {
 
         private void AddEntry(string path, ulong guid, CKey ckey, int size, string locale) {
             string dir = guid != 0 ? path : Path.GetDirectoryName(path);
+
             string filename = guid != 0 ? teResourceGUID.AsString(guid) : Path.GetFileName(path);
 
             Folder d = Data;
