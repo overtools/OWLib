@@ -11,16 +11,16 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertTexturesLossless;
         
-        [CLIFlag(Default = true, Flag = "convert-textures", Help = "Convert .004 files to {convert-textures-type}", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
+        [CLIFlag(Default = true, Flag = "convert-textures", Help = "Convert .004 files to {convert-textures-type}", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertTextures;
         
-        [CLIFlag(Default = true, Flag = "convert-sound", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
+        [CLIFlag(Default = true, Flag = "convert-sound", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertSound;
         
-        [CLIFlag(Default = true, Flag = "convert-models", Help = "Convert .00C files to .owmdl", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
+        [CLIFlag(Default = true, Flag = "convert-models", Help = "Convert .00C files to .owmdl", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertModels;
         
-        [CLIFlag(Default = true, Flag = "convert-animations", Help = "Convert .006 files to .seanim", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
+        [CLIFlag(Default = true, Flag = "convert-animations", Help = "Convert .006 files to .seanim", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertAnimations;
         
         [CLIFlag(Default = false, Flag = "skip-textures", Help = "Skip texture extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
