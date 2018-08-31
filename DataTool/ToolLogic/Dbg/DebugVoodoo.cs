@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
+using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.ToolLogic.Extract;
 using TankLib;
+using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Dbg {
-    [Tool("brrap", Description = "I hear da call", TrackTypes = new ushort[] {0x5E}, IsSensitive = true)]
+    [Tool("brrap", Description = "I hear da call", TrackTypes = new ushort[] {0x5E}, IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
     class DebugVoodoo : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
@@ -18,11 +21,15 @@ namespace DataTool.ToolLogic.Dbg {
                     d.CopyTo(f);
                 }
 
-                if (teResourceGUID.Index(guid) == 0x397) {
-                    System.Diagnostics.Debugger.Break();
-                }
-                
                 var stu = STUHelper.OpenSTUSafe(guid);
+                var texs = stu.GetInstances<STUUXTextureSource>();
+
+                var info = new Combo.ComboInfo();
+                
+                foreach (var tex in texs) {
+                    Combo.Find(info, tex.m_textureGUID);
+                }
+                SaveLogic.Combo.SaveLooseTextures(toolFlags, $@"C:\Overwatch\Tex\{teResourceGUID.AsString(guid)}\", info);
             }
         }
     }

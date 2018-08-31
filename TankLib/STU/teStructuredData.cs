@@ -83,36 +83,36 @@ namespace TankLib.STU {
         /// <summary>Read a "Version1" STU asset</summary>
         private void DeserializeV1(BinaryReader reader) {
             _instanceOffsets = new Dictionary<long, STUInstance>();
-            
+
             reader.BaseStream.Position = StartPos;
 
             STUHeaderV1 header = reader.Read<STUHeaderV1>();
-            
+
             InstanceInfoV1 = new STUInstanceRecordV1[header.InstanceCount];
             Instances = new STUInstance[header.InstanceCount];
             for (int i = 0; i < header.InstanceCount; i++) {
                 STUInstanceRecordV1 record = reader.Read<STUInstanceRecordV1>();
                 InstanceInfoV1[i] = record;
-                
+
                 long position = reader.BaseStream.Position;
                 reader.BaseStream.Position = record.Offset + StartPos;
                 uint instanceHash = reader.ReadUInt32();
                 uint nextOffset = reader.ReadUInt32();
-                
+
                 STUInstance instance = Manager.CreateInstance(instanceHash);
                 _instanceOffsets[record.Offset] = instance;
                 Instances[i] = instance;
-                
+
                 reader.BaseStream.Position = position;
             }
 
-            Data = reader;  // hmm
+            Data = reader; // hmm
 
             for (int i = 0; i < header.InstanceCount; i++) {
                 STUInstanceRecordV1 record = InstanceInfoV1[i];
 
                 if (Instances[i] == null) continue;
-                
+
                 // dump instance
                 /*reader.BaseStream.Position = record.Offset + StartPos;
                 Directory.CreateDirectory("STUV1Dump");
@@ -132,19 +132,21 @@ namespace TankLib.STU {
                     byte[] buf = reader.ReadBytes(size);
                     dumpFile.Write(buf, 0, size);
                 }*/
-                
+
                 reader.BaseStream.Position = record.Offset + StartPos;
-                
+
                 uint instanceHash = reader.ReadUInt32();
                 uint nextOffset = reader.ReadUInt32();
-                
+
                 //if (instanceHash == 0xEA30C5E9) continue;
                 //if (instanceHash == 0x05C7059E) {
                 //    Debugger.Break();
                 //}
-                
-                Instances[i].Deserialize(this);
-                
+
+                try {
+                    Instances[i].Deserialize(this);
+                } catch { }
+
                 //if (instanceHash == 0x05C7059E) {
                 //    Debugger.Break();
                 //}
