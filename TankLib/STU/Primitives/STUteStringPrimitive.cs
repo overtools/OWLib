@@ -15,7 +15,7 @@ namespace TankLib.STU.Primitives {
                 return new teString(value);
             }
             if (data.Format == teStructuredDataFormat.V1) {
-                int infoOffset = data.Data.ReadInt32();
+                long infoOffset = data.Data.ReadInt64(); data.Data.ReadInt64(); // haHAAA 64-bit
                 if (infoOffset == -1 || infoOffset == 0) {
                     return null;
                 }
