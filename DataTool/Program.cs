@@ -53,9 +53,37 @@ namespace DataTool {
                 }
             }
             #endregion
+            
+            FlagParser.LoadArgs();
+            
+            TankLib.Helpers.Logger.Info("Core", $"{Assembly.GetExecutingAssembly().GetName().Name} v{TankLib.Util.GetVersion(typeof(Program).Assembly)}");
+
+            TankLib.Helpers.Logger.Info("Core", $"CommandLine: [{string.Join(", ", FlagParser.AppArgs.Select(x => $"\"{x}\""))}]");
 
             Flags = FlagParser.Parse<ToolFlags>(() => PrintHelp(tools));
             if (Flags == null) {
+                return;
+            }
+
+            TankLib.Helpers.Logger.Warn("Core", $"CommandLineFile: {FlagParser.ArgFilePath}");
+            
+            if (Flags.SaveArgs) {
+                FlagParser.AppArgs = FlagParser.AppArgs.Where(x => !x.StartsWith("--arg")).ToArray();
+                FlagParser.SaveArgs(Flags.OverwatchDirectory);
+            } else if (Flags.ResetArgs || Flags.DeleteArgs) {
+                FlagParser.ResetArgs();
+                if (Flags.DeleteArgs) {
+                    FlagParser.DeleteArgs();
+                }
+                TankLib.Helpers.Logger.Info("Core", $"CommandLineNew: [{string.Join(", ", FlagParser.AppArgs.Select(x => $"\"{x}\""))}]");
+                Flags = FlagParser.Parse<ToolFlags>(() => PrintHelp(tools));
+                if (Flags == null) {
+                    return;
+                }
+            }
+            
+            if (string.IsNullOrWhiteSpace(Flags.OverwatchDirectory) || string.IsNullOrWhiteSpace(Flags.Mode)) {
+                PrintHelp(tools);
                 return;
             }
 
@@ -90,9 +118,6 @@ namespace DataTool {
                 return;
             }
             
-            TankLib.Helpers.Logger.Info("Core", $"{Assembly.GetExecutingAssembly().GetName().Name} v{TankLib.Util.GetVersion(typeof(Program).Assembly)}");
-            TankLib.Helpers.Logger.Info("Core", $"CommandLine: [{string.Join(", ", Environment.GetCommandLineArgs().Skip(1).Select(x => $"\"{x}\""))}]");
-
             InitStorage();
             
             //foreach (KeyValuePair<ushort, HashSet<ulong>> type in TrackedFiles.OrderBy(x => x.Key)) {
@@ -273,6 +298,7 @@ namespace DataTool {
             
             foreach (Type t in tools) {
                 ToolAttribute attrib = t.GetCustomAttribute<ToolAttribute>();
+                if (attrib.IsSensitive) continue;
                 if (attrib.Keyword == null) continue;
                 if (!attrib.Keyword.Contains("-")) continue;
                 

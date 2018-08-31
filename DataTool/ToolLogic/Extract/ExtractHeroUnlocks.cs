@@ -257,6 +257,9 @@ namespace DataTool.ToolLogic.Extract {
                     rarity = unlock.Rarity.ToString();
                     tags["leagueTeam"] = new TagExpectedValue("none");
                 } else {
+                    if (flags is ExtractFlags extractFlags && !extractFlags.GlobalAllowLeague) {
+                        return;
+                    }
                     TeamDefinition teamDef = new TeamDefinition(unlock.STU.m_0B1BA7C1);
                     tags["leagueTeam"] = new TagExpectedValue(teamDef.Abbreviation,  // NY
                         teamDef.Location,  // New York
@@ -274,6 +277,7 @@ namespace DataTool.ToolLogic.Extract {
             } else {
                 rarity = ""; // for general unlocks
             }
+            
             
             string thisPath = Path.Combine(path, unlock.Type, eventKey, rarity, GetValidFilename(unlock.GetName()));
             

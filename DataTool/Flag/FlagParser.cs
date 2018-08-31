@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using DataTool.Helper;
+using Newtonsoft.Json;
 
 namespace DataTool.Flag {
     public class FlagParser {
+        public static string[] AppArgs { get; set; } = Environment.GetCommandLineArgs().Skip(1).ToArray();
+
         public static T Parse<T>() where T : ICLIFlags {
-            return Parse<T>(null, Environment.GetCommandLineArgs().Skip(1).ToArray());
+            return Parse<T>(null, AppArgs);
         }
 
         public static void Help<T>(bool simple) where T : ICLIFlags {
@@ -176,7 +181,7 @@ namespace DataTool.Flag {
         }
 
         public static T Parse<T>(Action extraHelp) where T : ICLIFlags {
-            return Parse<T>(extraHelp, Environment.GetCommandLineArgs().Skip(1).ToArray());
+            return Parse<T>(extraHelp, AppArgs);
         }
 
         private enum FieldKind {
@@ -387,6 +392,29 @@ namespace DataTool.Flag {
                 }
             }
             return instance;
+        }
+        
+        public static string ArgFilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{AppDomain.CurrentDomain.FriendlyName}.args");
+        
+        public static void LoadArgs() {
+            if (File.Exists(ArgFilePath)) {
+                AppArgs = JsonConvert.DeserializeObject<string[]>(File.ReadAllText(ArgFilePath)).Concat(AppArgs).Distinct().ToArray();
+            }
+        }
+
+        public static void SaveArgs(params string[] extra) {
+            DeleteArgs();
+            File.WriteAllText(ArgFilePath, JsonConvert.SerializeObject(AppArgs.Where(x => x.StartsWith("-")).Concat(extra.Where(x => !string.IsNullOrWhiteSpace(x)))));
+        }
+
+        public static void ResetArgs() {
+            AppArgs = Environment.GetCommandLineArgs().Skip(1).ToArray();
+        }
+
+        public static void DeleteArgs() {
+            if (File.Exists(ArgFilePath)) {
+                File.Delete(ArgFilePath);
+            }
         }
     }
 }
