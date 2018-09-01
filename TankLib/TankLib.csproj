@@ -99,6 +99,7 @@
     <Compile Include="CASC\Flags.cs" />
     <Compile Include="CASC\MD5.cs" />
     <Compile Include="Chunks\IChunk.cs" />
+    <Compile Include="Chunks\teDataChunk_Dummy.cs" />
     <Compile Include="Chunks\teEffectChunkComponent.cs" />
     <Compile Include="Chunks\teEffectComponentParticle.cs" />
     <Compile Include="Chunks\teEffectChunkShaderSetup.cs" />
