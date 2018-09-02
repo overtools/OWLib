@@ -1,11 +1,16 @@
-﻿using Newtonsoft.Json;
-using TankLib.STU.Types;
+﻿ using System.Runtime.Serialization;
+ using TankLib.STU.Types;
 
 namespace DataTool.DataModels {
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class PlayerProgression {
+        [DataMember]
         public LootBoxUnlocks[] LootBoxesUnlocks;
+        
+        [DataMember]
         public AdditionalUnlocks[] AdditionalUnlocks;
+        
+        [DataMember]
         public Unlock[] OtherUnlocks;
         
         public PlayerProgression(STUGenericSettings_PlayerProgression progression) {
@@ -32,16 +37,18 @@ namespace DataTool.DataModels {
     /// <summary>
     /// Additional Unlocks data model
     /// </summary>
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class AdditionalUnlocks {
         /// <summary>
         /// Unlocks
         /// </summary>
+        [DataMember]
         public Unlock[] Unlocks;
         
         /// <summary>
         /// Level unlocked at
         /// </summary>
+        [DataMember]
         public uint Level;
 
         public AdditionalUnlocks(STUAdditionalUnlocks additionalUnlocks) {

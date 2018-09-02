@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
-using Newtonsoft.Json;
+using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-subtitles", Description = "List subtitles", TrackTypes = new ushort[] {0x71}, CustomFlags = typeof(ListFlags))]
@@ -17,33 +16,20 @@ namespace DataTool.ToolLogic.List {
             throw new NotImplementedException();
         }
 
-        [JsonObject(MemberSerialization.OptOut)]
-        public class SubtitleInfo {
-            public string[] Subtitles;
-
-            [JsonConverter(typeof(GUIDConverter))]
-            public ulong GUID;
-
-            public SubtitleInfo(ulong guid, string[] text) {
-                GUID = guid;
-                Subtitles = text;
-            }
-        }
-
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<string, SubtitleInfo> subtitles = GetSubtitles();
+            Dictionary<teResourceGUID, string[]> subtitles = GetSubtitles();
 
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
-                    ParseJSON(subtitles, flags);
+                    OutputJSON(subtitles, flags);
                     return;
                 }
 
-            IndentHelper indentLevel = new IndentHelper();
-            foreach (KeyValuePair<string, SubtitleInfo> subtitle in subtitles) {
+            IndentHelper i = new IndentHelper();
+            foreach (KeyValuePair<teResourceGUID, string[]> subtitle in subtitles) {
                 Log($"{subtitle.Key}");
-                foreach (string s in subtitle.Value.Subtitles) {
-                    Log($"{indentLevel+1}{s}");
+                foreach (string s in subtitle.Value) {
+                    Log($"{i+1}{s}");
                 }
                 Log();
             }
@@ -54,25 +40,25 @@ namespace DataTool.ToolLogic.List {
             output.Add(subtitle.m_text);
         }
 
-        public string[] GetSubtitlesInternal(STU_7A68A730 subtileContainer) {
+        public string[] GetSubtitlesInternal(STU_7A68A730 subtitleContainer) {
             List<string> @return = new List<string>();
 
-            GetSubtitle(@return, subtileContainer.m_798027DE);
-            GetSubtitle(@return, subtileContainer.m_A84AA2B5);
-            GetSubtitle(@return, subtileContainer.m_D872E45C);
-            GetSubtitle(@return, subtileContainer.m_1485B834);
+            GetSubtitle(@return, subtitleContainer.m_798027DE);
+            GetSubtitle(@return, subtitleContainer.m_A84AA2B5);
+            GetSubtitle(@return, subtitleContainer.m_D872E45C);
+            GetSubtitle(@return, subtitleContainer.m_1485B834);
             
             return @return.ToArray();
         }
 
-        public Dictionary<string, SubtitleInfo> GetSubtitles() {
-            Dictionary<string, SubtitleInfo> @return = new Dictionary<string, SubtitleInfo>();
+        public Dictionary<teResourceGUID, string[]> GetSubtitles() {
+            Dictionary<teResourceGUID, string[]> @return = new Dictionary<teResourceGUID, string[]>();
 
-            foreach (ulong key in TrackedFiles[0x71]) {
+            foreach (teResourceGUID key in TrackedFiles[0x71]) {
                 STU_7A68A730 subtitleContainer = GetInstance<STU_7A68A730>(key);
                 if (subtitleContainer == null) continue;
 
-                @return[GetFileName(key)] = new SubtitleInfo(key, GetSubtitlesInternal(subtitleContainer));
+                @return[key] = GetSubtitlesInternal(subtitleContainer);
             }
 
             return @return;

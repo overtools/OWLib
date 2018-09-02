@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using DataTool.Flag;
 using DataTool.Helper;
-using Newtonsoft.Json;
+using DataTool.JSON;
+using TankLib.Math;
 using TankLib.Replay;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
@@ -21,7 +23,7 @@ namespace DataTool.ToolLogic.List {
             throw new NotImplementedException();
         }
 
-        [JsonObject(MemberSerialization.OptOut)]
+        [DataContract]
         public class ReplayJSON {
             public uint BuildNumber;
             public string GameMode;
@@ -30,7 +32,7 @@ namespace DataTool.ToolLogic.List {
         }
         
 
-        [JsonObject(MemberSerialization.OptOut)]
+        [DataContract]
         public class HeroInfoJSON {
             public string Hero;
             public List<string> Sprays;
@@ -40,7 +42,7 @@ namespace DataTool.ToolLogic.List {
             public string Skin;
         }
         
-        [JsonObject(MemberSerialization.OptOut)]
+        [DataContract]
         public class HighlightInfoJSON {
             public string Player;
             public string Hero;
@@ -50,7 +52,7 @@ namespace DataTool.ToolLogic.List {
             public string HighlightType;
         }
         
-        [JsonObject(MemberSerialization.OptOut)]
+        [DataContract]
         public class HighlightJSON {
             public string UUID;
             public long PlayerID;
@@ -78,12 +80,18 @@ namespace DataTool.ToolLogic.List {
                 DirectoryInfo highlightsFolder = new DirectoryInfo(Path.Combine(userFolder.FullName,
                     $"{(Program.IsPTR ? "PTR\\" : "")}Highlights"));
                 if (!highlightsFolder.Exists) continue;
-                highlights.AddRange(highlightsFolder.GetFiles().Select(item => GetHighlight(item.FullName)));
+                foreach (FileInfo file in highlightsFolder.GetFiles()) {
+                    try {
+                        highlights.Add(GetHighlight(file.FullName));
+                    } catch (Exception) {
+                        Console.Out.WriteLine($"unable to parse {file.Name}");
+                    }
+                }
             }
             
             if (toolFlags is ListFlags flags) {
                 if (flags.JSON) {
-                    ParseJSON(highlights, flags);
+                    OutputJSON(highlights, flags);
                     return;
                 }
             }
@@ -221,7 +229,7 @@ namespace DataTool.ToolLogic.List {
                 Flags = playerHighlight.Flags.ToString(),
                 HeroInfo = new List<HeroInfoJSON>(),
                 HighlightInfo = new List<HighlightInfoJSON>(),
-                UUID = playerHighlight.Info.FirstOrDefault()?.UUID.ToString()
+                UUID = playerHighlight.Info.FirstOrDefault()?.UUID.Value.ToString()
             };
             
             ulong mapHeaderGuid = (playerHighlight.Map & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DataTool.FindLogic;
 using DataTool.Flag;
-using Newtonsoft.Json.Linq;
 using TankLib;
 using TankLib.CASC;
 using static DataTool.Program;
@@ -13,7 +12,7 @@ using static DataTool.Helper.IO;
 using static CMFLib.Extensions;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-newents", Description = "Extract new enities (debug)", TrackTypes = new ushort[] {0x3,0xD,0x8f,0x8e}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-newents", Description = "Extract new entities (debug)", TrackTypes = new ushort[] {0x3,0xD,0x8f,0x8e}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugNewEntities : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
@@ -117,19 +116,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         public static VersionInfo GetVersionInfo(string path) {
-            VersionInfo info = new VersionInfo {
-                GUIDs = new HashSet<ulong>(),
-                ContentHashes = new HashSet<MD5Hash>(new MD5HashComparer())
-            };
-            
-            JObject json = JObject.Parse(File.ReadAllText(path));
-            foreach (JToken token in json["all_raw"]) {
-                JProperty prop = (JProperty) token;
-                info.GUIDs.Add(ulong.Parse(prop.Name));
-                info.ContentHashes.Add(prop.Value["md5"].Value<string>().ToByteArray().ToMD5());
-            }
-            
-            return info;
+            throw new NotImplementedException();
         }
 
         public void ExtractNewEntities(ICLIFlags toolFlags) {

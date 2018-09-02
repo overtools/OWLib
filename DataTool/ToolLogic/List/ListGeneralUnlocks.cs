@@ -1,6 +1,7 @@
 ﻿using System;
 using DataTool.DataModels;
 using DataTool.Flag;
+using DataTool.JSON;
 using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
@@ -17,7 +18,7 @@ namespace DataTool.ToolLogic.List {
 
             if (toolFlags is ListFlags flags) {
                 if (flags.JSON) {
-                    ParseJSON(unlocks, flags);
+                    OutputJSON(unlocks, flags);
                     return;
                 }
             }

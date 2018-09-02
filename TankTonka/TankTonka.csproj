@@ -56,7 +56,6 @@
   <ItemGroup>
     <Compile Include="Formatters\AssetRepoTypeFormatter.cs" />
     <Compile Include="Formatters\FourCCFormatter.cs" />
-    <Compile Include="Formatters\ResourceGUIDFormatter.cs" />
     <Compile Include="Models\AssetRecord.cs" />
     <Compile Include="Models\Common.cs" />
     <Compile Include="Models\TypeManifest.cs" />

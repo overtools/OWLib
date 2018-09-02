@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.Serialization;
 using DataTool.Flag;
 using DataTool.Helper;
-using Newtonsoft.Json;
+using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
+using Utf8Json;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
@@ -18,7 +20,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         // nocaps is intentional
-        [JsonObject(MemberSerialization.OptOut)]
+        [DataContract]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         [SuppressMessage("ReSharper", "CollectionNeverQueried.Global")]
         public class GraphRoot {
@@ -26,7 +28,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             public List<GraphEdge> edges;
         }
 
-        [JsonObject(MemberSerialization.OptOut)]
+        [DataContract]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public class GraphNode {
             public float x;
@@ -36,7 +38,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             public string name;
         }
         
-        [JsonObject(MemberSerialization.OptOut)]
+        [DataContract]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public class GraphEdge {
             public string source_nodeId;
@@ -81,7 +83,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                         }
                     }
                 }
-                ParseJSON(root, flags);*/
+                OutputJSON(root, flags);*/
                 
                 // notes: (all oldhash)
                 // {STU_2D84E49E} for strafe stuff
@@ -95,13 +97,11 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     ParseNode(root, animNode);
                 }
 
-                string json = JsonConvert.SerializeObject(root, Formatting.Indented);
+                byte[] json = JsonSerializer.PrettyPrintByteArray(JsonSerializer.Serialize(root));
                 string output = Path.Combine(path, $"{teResourceGUID.AsString(key)}.json");
                 using (Stream file = File.OpenWrite(output)) {
                     file.SetLength(0);
-                    using (TextWriter writer = new StreamWriter(file)) {
-                        writer.WriteLine(json);
-                    }
+                    file.Write(json, 0, json.Length);
                 }
             }
         }

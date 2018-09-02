@@ -293,7 +293,7 @@ namespace DataTool.ToolLogic.Extract {
                 }
                 tags["rarity"] = new TagExpectedValue(unlock.Rarity.ToString());
 
-                tags["special"] = new TagExpectedValue(UnlockData.GetTagFor(unlock.GUID) ?? "none");
+                tags["special"] = new TagExpectedValue(unlock.Tag ?? "none");
             } else {
                 rarity = ""; // for general unlocks
             }

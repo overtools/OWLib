@@ -2,12 +2,10 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Drawing;
-using Newtonsoft.Json;
 
 namespace TankLib.Math {
     /// <summary>4 component RGBA color</summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    [JsonObject(MemberSerialization.OptOut)]
     public struct teColorRGBA {
         /// <summary>Red component</summary>
         public float R;

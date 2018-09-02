@@ -339,7 +339,7 @@ namespace TankLib.CASC {
             using (LZ4Stream lz4Stream = new LZ4Stream(file, LZ4StreamMode.Decompress))
             using (BinaryReader reader = new BinaryReader(lz4Stream)) {
                 if(reader.ReadUInt64() != APM_VERSION) {
-                    return false;
+                    throw new InvalidDataException();
                 }
 
                 int packageEntryCount = PackageEntries.Length;

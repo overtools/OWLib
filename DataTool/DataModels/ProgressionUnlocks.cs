@@ -1,6 +1,5 @@
-﻿using DataTool.Helper;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Runtime.Serialization;
+using DataTool.Helper;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 
@@ -8,26 +7,30 @@ namespace DataTool.DataModels {
     /// <summary>
     /// Progression data model
     /// </summary>
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class ProgressionUnlocks {
         /// <summary>
         /// "Other" Unlocks. Common examples are OWL skins and achievement rewards
         /// </summary>
+        [DataMember]
         public Unlock[] OtherUnlocks;
         
         /// <summary>
         /// Unknown Unlocks
         /// </summary>
+        [DataMember]
         public Unlock[] UnknownUnlocks;
         
         /// <summary>
         /// Unlocks granted at a specific level
         /// </summary>
+        [DataMember]
         public LevelUnlocks[] LevelUnlocks;
         
         /// <summary>
         /// Loot Box specific unlocks
         /// </summary>
+        [DataMember]
         public LootBoxUnlocks[] LootBoxesUnlocks;
 
         public ProgressionUnlocks(STUHero hero) {
@@ -59,19 +62,19 @@ namespace DataTool.DataModels {
             UnknownUnlocks = Unlock.GetArray(progressionUnlocks.m_9135A4B2);
         }
     }
-
-    [JsonObject(MemberSerialization.OptOut)]
+    
+    [DataContract]
     public class LootBoxUnlocks {
         /// <summary>
         /// Unlocks
         /// </summary>
+        [DataMember]
         public Unlock[] Unlocks;
         
         /// <summary>
         /// Loot Box type
         /// </summary>
         /// <see cref="Enum_BABC4175"/>
-       [JsonConverter(typeof(StringEnumConverter))]
         public Enum_BABC4175 LootBoxType;
 
         public LootBoxUnlocks(STULootBoxUnlocks lootBoxUnlocks) {
@@ -83,7 +86,7 @@ namespace DataTool.DataModels {
     /// <summary>
     /// Level Unlocks data model
     /// </summary>
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class LevelUnlocks {
         /// <summary>
         /// Unlocks

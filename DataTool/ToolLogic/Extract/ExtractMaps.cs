@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.List;
@@ -49,11 +50,11 @@ namespace DataTool.ToolLogic.Extract {
             foreach (ulong key in TrackedFiles[0x9F]) {
                 STUMapHeader map = GetInstance<STUMapHeader>(key);
                 if (map == null) continue;
-                ListMaps.MapInfo mapInfo = ListMaps.GetMap(key);
+                MapHeader mapInfo = ListMaps.GetMap(key);
                 mapInfo.Name = mapInfo.Name ?? "Title Screen";
 
-                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, mapInfo.Name, mapInfo.NameB,
-                    mapInfo.UniqueName, teResourceGUID.Index(map.m_map).ToString("X"), "*");
+                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, mapInfo.Name, mapInfo.VariantName,
+                    mapInfo.GetUniqueName(), mapInfo.GetName(), teResourceGUID.Index(map.m_map).ToString("X"), "*");
                 
                 if (config.Count == 0) continue;
                 

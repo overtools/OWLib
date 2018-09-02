@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DataTool.Helper;
-using Newtonsoft.Json;
+using Utf8Json;
 
 namespace DataTool.Flag {
     public class FlagParser {
@@ -398,13 +397,14 @@ namespace DataTool.Flag {
         
         public static void LoadArgs() {
             if (File.Exists(ArgFilePath)) {
-                AppArgs = JsonConvert.DeserializeObject<string[]>(File.ReadAllText(ArgFilePath)).Concat(AppArgs).Distinct().ToArray();
+                AppArgs = JsonSerializer.Deserialize<string[]>(File.ReadAllText(ArgFilePath)).Concat(AppArgs).Distinct().ToArray();
             }
         }
 
         public static void SaveArgs(params string[] extra) {
             DeleteArgs();
-            File.WriteAllText(ArgFilePath, JsonConvert.SerializeObject(AppArgs.Where(x => x.StartsWith("-")).Concat(extra.Where(x => !string.IsNullOrWhiteSpace(x)))));
+            var args = AppArgs.Where(x => x.StartsWith("-")).Concat(extra.Where(x => !string.IsNullOrWhiteSpace(x))).Reverse().ToArray();
+            File.WriteAllText(ArgFilePath, JsonSerializer.ToJsonString(args));
         }
 
         public static void ResetArgs() {

@@ -1,27 +1,36 @@
-﻿using DataTool.JSON;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Runtime.Serialization;
+using DataTool.JSON;
+using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
+using Utf8Json;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels {
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class TeamDefinition {
+        [DataMember]
         public string FullName;
+        
+        [DataMember]
         public string Name;
+        
+        [DataMember]
         public string Location;
+        
+        [DataMember]
         public string Abbreviation;
         
-        [JsonConverter(typeof(StringEnumConverter))]
+        [DataMember]
         public Enum_5A789F71 Division;
         
-        [JsonConverter(typeof(GUIDConverter))]
-        public ulong Logo;
+        [DataMember]
+        public teResourceGUID Logo;
         
-        [JsonConverter(typeof(GUIDConverter))]
-        public ulong LogoAlt;
+        [DataMember]
+        [JsonFormatter(typeof(ResourceGUIDFormatter))]
+        public teResourceGUID LogoAlt;
         
         public TeamDefinition(STU_73AE9738 def) {
             Init(def);
