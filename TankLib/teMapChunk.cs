@@ -386,9 +386,9 @@ namespace TankLib {
 
         public teMapPlaceableDummy() { }
 
-        public teMapPlaceableDummy(int size)
+        public unsafe teMapPlaceableDummy(int size)
         {
-            Size = size;
+            Size = size-sizeof(teMapPlaceableData.CommonStructure);
         }
 
         public void Read(BinaryReader reader)
