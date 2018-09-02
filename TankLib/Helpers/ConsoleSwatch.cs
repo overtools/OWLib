@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using TankLib.Math;
+// ReSharper disable IdentifierTypo
 
-namespace TankLib.Helpers
-{
+namespace TankLib.Helpers {
     public static class ConsoleSwatch {
         public enum XTermColor : byte {
             Black = 0,
@@ -289,35 +285,35 @@ namespace TankLib.Helpers
         }
 
         public static ConsoleColor AsConsoleColor(this DOSColor color) {
-            return (ConsoleColor)color;
+            return (ConsoleColor) color;
         }
 
         public static DOSColor AsDOSColor(this ConsoleColor color) {
-            return (DOSColor)color;
+            return (DOSColor) color;
         }
 
         public static XTermColor AsXTermColor(this DOSColor color) {
-            if (color == DOSColor.DarkGray)
-                return XTermColor.Grey;
-            if (color == DOSColor.DarkYellow)
-                return XTermColor.Yellow;
-            if (color == DOSColor.Yellow)
-                return XTermColor.LightYellow;
-            if (color == DOSColor.Gray)
-                return XTermColor.LightSlateGrey;
-
-            if (Enum.TryParse(color.ToString(), out XTermColor col)) {
-                return col;
+            // ReSharper disable once SwitchStatementMissingSomeCases
+            switch (color) {
+                case DOSColor.DarkGray:
+                    return XTermColor.Grey;
+                case DOSColor.DarkYellow:
+                    return XTermColor.Yellow;
+                case DOSColor.Yellow:
+                    return XTermColor.LightYellow;
+                case DOSColor.Gray:
+                    return XTermColor.LightSlateGrey;
+                default:
+                    return Enum.TryParse(color.ToString(), out XTermColor col) ? col : XTermColor.DarkSlateGray;
             }
-            return XTermColor.DarkSlateGray;
         }
 
         public static string ToForeground(this XTermColor color) {
-            return $"\x1b[38;5;{(byte)color}m";
+            return $"\x1b[38;5;{(byte) color}m";
         }
 
         public static string ToBackground(this XTermColor color) {
-            return $"\x1b[48;5;{(byte)color}m";
+            return $"\x1b[48;5;{(byte) color}m";
         }
 
         public static string ToForeground(this Color color) {
@@ -329,19 +325,19 @@ namespace TankLib.Helpers
         }
 
         public static string ToForeground(this teColorRGB color) {
-            return $"\x1b[38;2;{(int)(color.R * 255.0f)};{(int)(color.G * 255.0f)};{(int)(color.B * 255.0f)}m";
+            return $"\x1b[38;2;{(int) (color.R * 255.0f)};{(int) (color.G * 255.0f)};{(int) (color.B * 255.0f)}m";
         }
 
         public static string ToBackground(this teColorRGB color) {
-            return $"\x1b[48;2;{(int)(color.R * 255.0f)};{(int)(color.G * 255.0f)};{(int)(color.B * 255.0f)}m";
+            return $"\x1b[48;2;{(int) (color.R * 255.0f)};{(int) (color.G * 255.0f)};{(int) (color.B * 255.0f)}m";
         }
 
         public static string ToForeground(this teColorRGBA color) {
-            return $"\x1b[38;2;{(int)(color.R * 255.0f)};{(int)(color.G * 255.0f)};{(int)(color.B * 255.0f)}m";
+            return $"\x1b[38;2;{(int) (color.R * 255.0f)};{(int) (color.G * 255.0f)};{(int) (color.B * 255.0f)}m";
         }
 
         public static string ToBackground(this teColorRGBA color) {
-            return $"\x1b[48;2;{(int)(color.R * 255.0f)};{(int)(color.G * 255.0f)};{(int)(color.B * 255.0f)}m";
+            return $"\x1b[48;2;{(int) (color.R * 255.0f)};{(int) (color.G * 255.0f)};{(int) (color.B * 255.0f)}m";
         }
 
         public const string ColorReset = "\x1b[0m";
@@ -350,13 +346,14 @@ namespace TankLib.Helpers
         public static bool IsVTCapable { get; private set; } = Environment.OSVersion.Version.Major >= 6;
 
         public static bool EnableVT() {
-            if(IsVTEnabled) {
+            if (IsVTEnabled) {
                 return true;
             }
+
             if (!IsVTCapable) {
                 return false;
             }
-            
+
             unsafe {
                 IntPtr hOut = GetStdHandle(STD_OUTPUT_HANDLE);
                 if (hOut == INVALID_HANDLE_VALUE) {
@@ -383,8 +380,10 @@ namespace TankLib.Helpers
 
         [DllImport("Kernel32.dll")]
         private static extern IntPtr GetStdHandle(int nStdHandle);
+
         [DllImport("Kernel32.dll")]
-        private static unsafe extern bool GetConsoleMode(IntPtr hConsoleHandle, int* lpMode);
+        private static extern unsafe bool GetConsoleMode(IntPtr hConsoleHandle, int* lpMode);
+
         [DllImport("Kernel32.dll")]
         private static extern bool SetConsoleMode(IntPtr hConsoleHandle, int dwMode);
 

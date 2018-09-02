@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
+using TankLib.Helpers;
 using static DataTool.Helper.Logger;
 
 namespace DataTool {
@@ -15,16 +16,19 @@ namespace DataTool {
 
 
         public ParsedArg Combine(ParsedArg second) {
-            if (second == null) return new ParsedArg { Type = Type, Allowed = Allowed, Disallowed = Disallowed, Tags = Tags};
+            if (second == null) return new ParsedArg {Type = Type, Allowed = Allowed, Disallowed = Disallowed, Tags = Tags};
             Dictionary<string, TagValue> tagsNew = Tags;
-            foreach (KeyValuePair<string,TagValue> tag in second.Tags) {
+            foreach (KeyValuePair<string, TagValue> tag in second.Tags) {
                 tagsNew[tag.Key] = tag.Value;
             }
-            return new ParsedArg {Type = Type, Allowed = Allowed.Concat(second.Allowed).ToList(), 
-                Disallowed = Disallowed.Concat(second.Disallowed).ToList(), Tags = tagsNew};
+
+            return new ParsedArg {
+                Type = Type, Allowed = Allowed.Concat(second.Allowed).ToList(),
+                Disallowed = Disallowed.Concat(second.Disallowed).ToList(), Tags = tagsNew
+            };
         }
 
-        public bool ShouldDo(string name, Dictionary<string, TagExpectedValue> tagVals=null) {
+        public bool ShouldDo(string name, Dictionary<string, TagExpectedValue> tagVals = null) {
             if (tagVals != null) {
                 foreach (KeyValuePair<string, TagExpectedValue> tagVal in tagVals) {
                     if (!Tags.ContainsKey(tagVal.Key.ToLowerInvariant())) continue;
@@ -45,6 +49,7 @@ namespace DataTool {
 
                 }
             }
+
             string nameReal = name.ToLowerInvariant();
             return (Allowed.Contains(nameReal) || Allowed.Contains("*")) && (!Disallowed.Contains(nameReal) || !Disallowed.Contains("*"));
         }
@@ -52,12 +57,12 @@ namespace DataTool {
 
     public class TagExpectedValue {
         public List<string> Values;
-        
+
         public TagExpectedValue(params string[] args) {
             Values = args.ToList();
         }
     }
-    
+
     [DebuggerDisplay("ArgType: {" + nameof(Name) + "}")]
     public class QueryType {
         public string Name;
@@ -69,10 +74,12 @@ namespace DataTool {
         public string Name;
         public List<string> Options;
         public Type ValueType = typeof(TagValue);
+        public string Default;
 
-        public QueryTag(string name, List<string> options) {
+        public QueryTag(string name, List<string> options, string @default = null) {
             Name = name;
             Options = options;
+            Default = @default;
         }
     }
 
@@ -81,6 +88,9 @@ namespace DataTool {
 
         public TagValue(string value) {
             Value = value;
+        }
+
+        public TagValue() {
         }
 
         public virtual bool IsEqual(string query) {
@@ -92,9 +102,9 @@ namespace DataTool {
         }
     }
 
-    public interface IQueryParser {  // I want a consistent style
-        List<QueryType> QueryTypes {get;}
-        Dictionary<string, string> QueryNameOverrides {get;}
+    public interface IQueryParser { // I want a consistent style
+        List<QueryType> QueryTypes { get; }
+        Dictionary<string, string> QueryNameOverrides { get; }
     }
 
     public class QueryParser {
@@ -103,8 +113,8 @@ namespace DataTool {
 
             Log("Error parsing query:");
             Log($"{indent + 1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
-            Log(
-                $"{indent + 1}Each query should be surrounded by \", and individual queries should be seperated by spaces");
+            Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be separated by spaces");
+            Log($"{indent+1}All hero and item names are in your selected locale");
 
             Log("\r\nTypes:");
             foreach (QueryType argType in types) {
@@ -116,17 +126,22 @@ namespace DataTool {
             foreach (QueryType argType in types) {
                 if (argType.Tags == null) continue;
                 foreach (QueryTag argTypeTag in argType.Tags) {
-                    Log($"{indent + 1}{argTypeTag.Name}:");
+                    LogSL($"{indent + 1}{argTypeTag.Name}:");
+                    if (argTypeTag.Default != null) {
+                        TankLib.Helpers.Logger.Log24Bit(ConsoleSwatch.XTermColor.Wheat, false, Console.Out, null, $" \"{argTypeTag.Default}\"");
+                    }
+                    Log();
                     foreach (string option in argTypeTag.Options) {
                         Log($"{indent + 2}{option}");
                     }
                 }
+
                 break; // erm, ok
             }
         }
 
         protected Dictionary<string, Dictionary<string, ParsedArg>> ParseQuery(ICLIFlags flags,
-            List<QueryType> queryTypes, Dictionary<string, string> queryNameOverrides) {
+                                                                               List<QueryType> queryTypes, Dictionary<string, string> queryNameOverrides) {
             string[] result = new string[flags.Positionals.Length - 3];
             Array.Copy(flags.Positionals, 3, result, 0, flags.Positionals.Length - 3);
 
@@ -155,14 +170,26 @@ namespace DataTool {
                             Disallowed = new List<string>(),
                             Tags = new Dictionary<string, TagValue>()
                         };
+                        
+                        foreach (QueryTag tagObj in type.Tags.Where(x => x.Default != null)) {
+                            string tagName = tagObj.Name.ToLowerInvariant();
+                            if (parsedTypes[hero][type.Name].Tags.ContainsKey(tagName)) {
+                                continue;
+                            }
+                            TagValue valueObject = (TagValue) Activator.CreateInstance(tagObj.ValueType);
+                            valueObject.Value = tagObj.Default;
+
+                            parsedTypes[hero][type.Name].Tags[tagName] = valueObject;
+                        }
                     }
+
                     // everything for this hero
                 } else {
                     foreach (string afterHeroOpt in afterOpts) {
                         string[] afterSplit = afterHeroOpt.Split('=');
 
                         string type = afterSplit[0].ToLowerInvariant();
-                        
+
                         List<QueryType> types = new List<QueryType>();
                         if (type == "*") {
                             types = queryTypes;
@@ -173,22 +200,22 @@ namespace DataTool {
 
                         foreach (QueryType typeObj in types) {
                             if (typeObj == null) {
-                            Log($"\r\nUnknown type: {type}\r\n");
-                            QueryHelp(queryTypes);
-                            return null;
-                        }
+                                Log($"\r\nUnknown type: {type}\r\n");
+                                QueryHelp(queryTypes);
+                                return null;
+                            }
 
-                        parsedTypes[hero][typeObj.Name] = new ParsedArg {
-                            Type = typeObj.Name,
-                            Allowed = new List<string>(),
-                            Disallowed = new List<string>(),
-                            Tags = new Dictionary<string, TagValue>()
-                        };
+                            parsedTypes[hero][typeObj.Name] = new ParsedArg {
+                                Type = typeObj.Name,
+                                Allowed = new List<string>(),
+                                Disallowed = new List<string>(),
+                                Tags = new Dictionary<string, TagValue>()
+                            };
 
-                        string[] items = new string[afterSplit.Length - 1];
-                        Array.Copy(afterSplit, 1, items, 0, afterSplit.Length - 1);
-                        items = string.Join("=", items).Split(',');
-                        bool isBracket = false;
+                            string[] items = new string[afterSplit.Length - 1];
+                            Array.Copy(afterSplit, 1, items, 0, afterSplit.Length - 1);
+                            items = string.Join("=", items).Split(',');
+                            bool isBracket = false;
                             foreach (string item in items) {
                                 string realItem = item.ToLowerInvariant();
                                 bool nextNotBracket = false;
@@ -224,12 +251,24 @@ namespace DataTool {
                                         return null;
                                     }
 
-                                    TagValue valueObject = (TagValue)Activator.CreateInstance(tagObj.ValueType);
+                                    TagValue valueObject = (TagValue) Activator.CreateInstance(tagObj.ValueType);
                                     valueObject.Value = tagValue;
 
                                     parsedTypes[hero][typeObj.Name].Tags[tagName] = valueObject;
                                 }
+
                                 if (nextNotBracket) isBracket = false;
+                            }
+
+                            foreach (QueryTag tagObj in typeObj.Tags.Where(x => x.Default != null)) {
+                                string tagName = tagObj.Name.ToLowerInvariant();
+                                if (parsedTypes[hero][typeObj.Name].Tags.ContainsKey(tagName)) {
+                                    continue;
+                                }
+                                TagValue valueObject = (TagValue) Activator.CreateInstance(tagObj.ValueType);
+                                valueObject.Value = tagObj.Default;
+
+                                parsedTypes[hero][typeObj.Name].Tags[tagName] = valueObject;
                             }
 
                             if (parsedTypes[hero][typeObj.Name].Allowed.Count == 0 &&
@@ -240,6 +279,7 @@ namespace DataTool {
                     }
                 }
             }
+
             return parsedTypes;
         }
 
@@ -249,7 +289,7 @@ namespace DataTool {
                 if (name == null) continue;
                 string theName = name.ToLowerInvariant();
                 if (!parsedTypes.ContainsKey(theName)) continue;
-                foreach (KeyValuePair<string,ParsedArg> parsedArg in parsedTypes[theName]) {
+                foreach (KeyValuePair<string, ParsedArg> parsedArg in parsedTypes[theName]) {
                     if (config.ContainsKey(parsedArg.Key)) {
                         config[parsedArg.Key] = config[parsedArg.Key].Combine(parsedArg.Value);
                     } else {
@@ -257,6 +297,7 @@ namespace DataTool {
                     }
                 }
             }
+
             return config;
         }
     }

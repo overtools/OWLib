@@ -6,7 +6,6 @@ using DataTool.Helper;
 using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
-using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
@@ -37,8 +36,8 @@ namespace DataTool.ToolLogic.List {
                 
                 Log($"{indentLevel + 1}Gender: {hero.Value.Gender}");
                 
-                TankLib.Helpers.Logger.Log24Bit(ConsoleSwatch.ColorReset, null, false, null, $"{indentLevel + 1}Color: {hero.Value.GalleryColor.ToHex()} ");
-                TankLib.Helpers.Logger.Log24Bit(hero.Value.GalleryColor.ToForeground(), null, true, null, "██████");
+                TankLib.Helpers.Logger.Log24Bit(ConsoleSwatch.ColorReset, null, false, Console.Out, null, $"{indentLevel + 1}Color: {hero.Value.GalleryColor.ToHex()} ");
+                TankLib.Helpers.Logger.Log24Bit(hero.Value.GalleryColor.ToForeground(), null, true, Console.Out, null, "██████");
 
                 if (hero.Value.Loadouts != null) {
                     Log($"{indentLevel + 1}Loadouts:");

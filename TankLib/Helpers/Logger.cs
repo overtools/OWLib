@@ -1,20 +1,22 @@
 ﻿using System;
+using System.IO;
 using static TankLib.Helpers.ConsoleSwatch;
+// ReSharper disable UnusedMember.Local
 
 namespace TankLib.Helpers {
     public static class Logger {
         public static bool ShowTime = false;
 
-#if DEBUG
+    #if DEBUG
         public static bool ShowDebug = true;
-#else
+    #else
         public static bool ShowDebug = false;
-#endif
+    #endif
 
         public static bool Enabled = true;
         public static bool UseColor = true;
 
-        public static void Log4Bit(ConsoleColor color, bool newLine, string category, string message, params object[] arg) {
+        public static void Log4Bit(ConsoleColor color, bool newLine, TextWriter writer, string category, string message, params object[] arg) {
             if (!Enabled) return;
             if (UseColor) {
                 Console.ForegroundColor = color;
@@ -24,96 +26,132 @@ namespace TankLib.Helpers {
             if (!string.IsNullOrWhiteSpace(category)) {
                 output = $"[{category}] {output}";
             }
+
             if (ShowTime) {
                 output = $"{DateTime.Now.ToLocalTime().ToLongTimeString()} {output}";
             }
-            Console.Out.Write(output, arg);
+
+            if (arg.Length > 0) {
+                writer.Write(output, arg);
+            }
+            writer.Write(output);
+            
             if (UseColor) {
                 Console.ForegroundColor = ConsoleColor.Gray; // erm, reset
             }
-            if(newLine) {
-                Console.Out.WriteLine();
+
+            if (newLine) {
+                writer.WriteLine();
             }
         }
 
         private static void Log24Bit(ConsoleColor color, string category, string message, params object[] arg) {
+            Log24Bit(color, true, Console.Out, category, message, arg);
+        }
+
+        public static void Log24Bit(ConsoleColor color, bool newline, TextWriter writer, string category, string message, params object[] arg) {
             if (!Enabled) return;
             if (!EnableVT()) {
-                Log4Bit(color, true, category, message, arg);
+                Log4Bit(color, newline, writer, category, message, arg);
                 return;
             }
-            Log24Bit(color.AsDOSColor().AsXTermColor().ToForeground(), null, true, category, message, arg);
+
+            Log24Bit(color.AsDOSColor().AsXTermColor().ToForeground(), null, newline, writer, category, message, arg);
         }
 
         private static void Log24Bit(DOSColor color, string category, string message, params object[] arg) {
+            Log24Bit(color, true, Console.Out, category, message, arg);
+        }
+
+        public static void Log24Bit(DOSColor color, bool newline, TextWriter writer, string category, string message, params object[] arg) {
             if (!Enabled) return;
             if (!EnableVT()) {
-                Log4Bit(color.AsConsoleColor(), true, category, message, arg);
+                Log4Bit(color.AsConsoleColor(), newline, writer, category, message, arg);
                 return;
             }
-            Log24Bit(color.AsXTermColor().ToForeground(), null, true, category, message, arg);
+
+            Log24Bit(color.AsXTermColor().ToForeground(), null, newline, writer, category, message, arg);
         }
 
         private static void Log24Bit(XTermColor color, string category, string message, params object[] arg) {
-            if (!Enabled) return;
-            if (!EnableVT()) {
-                Log4Bit(ConsoleColor.Gray, true, category, message, arg);
-                return;
-            }
-            Log24Bit(color.ToForeground(), null, true, category, message, arg);
+            Log24Bit(color, true, Console.Out, category, message, arg);
         }
 
-        public static void Log24Bit(string foreground, string background, bool newLine, string category, string message, params object[] arg) {
+        public static void Log24Bit(XTermColor color, bool newline, TextWriter writer, string category, string message, params object[] arg) {
             if (!Enabled) return;
             if (!EnableVT()) {
-                Log4Bit(ConsoleColor.Gray, true, category, message, arg);
+                Log4Bit(ConsoleColor.Gray, newline, writer, category, message, arg);
                 return;
             }
+
+            Log24Bit(color.ToForeground(), null, newline, writer, category, message, arg);
+        }
+
+        private static void Log24Bit(string foreground, string background, bool newLine, string category, string message, params object[] arg) {
+            Log24Bit(foreground, background, newLine, Console.Out, category, message, arg);
+        }
+
+        public static void Log24Bit(string foreground, string background, bool newLine, TextWriter writer, string category, string message, params object[] arg) {
+            if (!Enabled) return;
+            if (!EnableVT()) {
+                Log4Bit(ConsoleColor.Gray, newLine, writer, category, message, arg);
+                return;
+            }
+
             if (UseColor && !string.IsNullOrWhiteSpace(foreground)) {
-                Console.Out.Write(foreground);
+                writer.Write(foreground);
             }
+
             if (UseColor && !string.IsNullOrWhiteSpace(background)) {
-                Console.Out.Write(background);
+                writer.Write(background);
             }
+
             string output = message;
             if (!string.IsNullOrWhiteSpace(category)) {
                 output = $"[{category}] {output}";
             }
+
             if (ShowTime) {
                 output = $"{DateTime.Now.ToLocalTime().ToLongTimeString()} {output}";
             }
-            Console.Out.Write(output, arg);
-            if (UseColor && (!string.IsNullOrWhiteSpace(foreground) || !string.IsNullOrWhiteSpace(background))) {
-                Console.Out.Write(ColorReset);
+
+            if (arg.Length > 0) {
+                writer.Write(output, arg);
             }
+            writer.Write(output);
+
+            if (UseColor && (!string.IsNullOrWhiteSpace(foreground) || !string.IsNullOrWhiteSpace(background))) {
+                writer.Write(ColorReset);
+            }
+
             if (newLine) {
-                Console.Out.WriteLine();
+                writer.WriteLine();
             }
         }
 
-        public static void Log(ConsoleColor color, string category, string message, params object[] arg) {
-            Log24Bit(color, category, message, arg);
+        public static void Log(ConsoleColor color, bool newline, bool stderr, string category, string message, params object[] arg) {
+            Log24Bit(color, newline, stderr ? Console.Error : Console.Out, category, message, arg);
         }
-        
-        public static void Success(string catgory, string message, params object[] arg) {
-            Log(ConsoleColor.Green, catgory, message, arg);
+
+        public static void Success(string category, string message, params object[] arg) {
+            Log(ConsoleColor.Green, true, false, category, message, arg);
         }
-        
-        public static void Info(string catgory, string message, params object[] arg) {
-            Log(ConsoleColor.White, catgory, message, arg);
+
+        public static void Info(string category, string message, params object[] arg) {
+            Log(ConsoleColor.White, true, false, category, message, arg);
         }
-        
-        public static void Debug(string catgory, string message, params object[] arg) {
+
+        public static void Debug(string category, string message, params object[] arg) {
             if (!ShowDebug) return;
-            Log(ConsoleColor.DarkGray, catgory, message, arg);
+            Log(ConsoleColor.DarkGray, true, false, category, message, arg);
         }
-        
-        public static void Warn(string catgory, string message, params object[] arg) {
-            Log(ConsoleColor.Yellow, catgory, message, arg);
+
+        public static void Warn(string category, string message, params object[] arg) {
+            Log(ConsoleColor.DarkYellow, true, false, category, message, arg);
         }
-        
-        public static void Error(string catgory, string message, params object[] arg) {
-            Log(ConsoleColor.Red, catgory, message, arg);
+
+        public static void Error(string category, string message, params object[] arg) {
+            Log(ConsoleColor.Red, true, true, category, message, arg);
         }
     }
 }

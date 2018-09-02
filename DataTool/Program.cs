@@ -32,11 +32,9 @@ namespace DataTool {
         public static bool ValidKey(ulong key) => Files.ContainsKey(key);
         
         private static void Main() {
-            AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
-            Process.GetCurrentProcess().EnableRaisingEvents = true;
-            AppDomain.CurrentDomain.ProcessExit += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
-            Console.CancelKeyPress += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
-            Console.OutputEncoding = Encoding.UTF8;
+            InitTankSettings();
+
+            HookConsole();
 
             #region Tool Detection
             HashSet<Type> tools = new HashSet<Type>();
@@ -107,6 +105,10 @@ namespace DataTool {
                 break;
             }
 
+            if (targetToolFlags == null) {
+                return;
+            }
+
             #endregion
 
             if (targetTool == null) {
@@ -163,7 +165,19 @@ namespace DataTool {
                 Debugger.Break();
             }
         }
-        
+
+        private static void HookConsole() {
+            AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
+            Process.GetCurrentProcess().EnableRaisingEvents = true;
+            AppDomain.CurrentDomain.ProcessExit += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
+            Console.CancelKeyPress += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
+            Console.OutputEncoding = Encoding.UTF8;
+        }
+
+        private static void InitTankSettings() {
+            TankLib.Helpers.Logger.ShowDebug = Debugger.IsAttached;
+        }
+
         public static void InitMisc() {
             var dbPath = Flags.ScratchDBPath;
             if (Flags.Deduplicate) {

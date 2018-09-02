@@ -383,7 +383,8 @@ namespace DataTool.Flag {
                     }
                     field.SetValue(instance, value);
                 } else if (flagattr.Required) {
-                    Console.Error.WriteLine($"Flag {flagattr.Flag} is required");
+                    Console.Error.WriteLine(string.IsNullOrWhiteSpace(flagattr.Flag) ? $"Positional {flagattr.Positional} is required" : $"Flag {flagattr.Flag} is required");
+
                     FullHelp<T>(extraHelp);
                     return null;
                 } else if(field.FieldType.IsClass && field.FieldType.GetConstructor(Type.EmptyTypes) != null) {
