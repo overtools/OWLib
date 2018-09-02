@@ -44,9 +44,6 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = (byte)1, Flag = "lod", Help = "Force extracted model LOD", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagByte" })]
         public byte LOD;
         
-        [CLIFlag(Default = false, Flag = "extract-league", Help = "Extract league skins", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
-        public bool GlobalAllowLeague;
-        
         [CLIFlag(Default = true, Flag = "spc-spray", Help = "", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
         public bool SprayOnlyImage;
         

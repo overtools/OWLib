@@ -78,7 +78,10 @@ namespace DataTool {
 
     public class TagValue {
         public string Value;
-        public QueryTag Tag;
+
+        public TagValue(string value) {
+            Value = value;
+        }
 
         public virtual bool IsEqual(string query) {
             return StringEqual(query, Value);
@@ -223,7 +226,6 @@ namespace DataTool {
 
                                     TagValue valueObject = (TagValue)Activator.CreateInstance(tagObj.ValueType);
                                     valueObject.Value = tagValue;
-                                    valueObject.Tag = tagObj;
 
                                     parsedTypes[hero][typeObj.Name].Tags[tagName] = valueObject;
                                 }

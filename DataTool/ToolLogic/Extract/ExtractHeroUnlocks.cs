@@ -30,6 +30,23 @@ namespace DataTool.ToolLogic.Extract {
     // "{hero name}|{type}=({tag name}={tag}),{item name}"
     // Roadhog
     
+    // future possibilities. could use the ingame filter system to try and give us better results
+    // hero|type=hello
+    // hero|skin=classic
+    // hero|skin=*,(rarity=common)
+    // "hero|skin=(category=overwatch)"
+    // "hero|skin=(category=achievements)"
+    // "hero|skin=(category=summer games)"
+    // "hero|skin=(category=halloween terror)"
+    // "hero|skin=(category=winter wonderland)"
+    // "hero|skin=(category=lunar new year)"
+    // "hero|skin=(category=archives)"
+    // "hero|skin=(category=anniversary)"
+    // "hero|skin=(category=competitive)"
+    // "hero|skin=(category=overwatch league)"
+    // "hero|skin=(category=special)"
+    // "hero|skin=(category=legacy)"
+    
     [DebuggerDisplay("CosmeticType: {" + nameof(Name) + "}")]
     public class CosmeticType : QueryType {
         public CosmeticType(string name) {
@@ -170,6 +187,12 @@ namespace DataTool.ToolLogic.Extract {
                 
                 if (config.Count == 0) continue;
 
+                if (config.TryGetValue(Unlock.GetTypeName(typeof(STUUnlock_SkinTheme)), out var thing)) {
+                    if (!thing.Tags.ContainsKey("leagueteam")) {
+                        thing.Tags["leagueteam"] = new TagValue("none");
+                    }
+                }
+
                 string heroPath = Path.Combine(basePath, RootDir, heroFileName);
                 
                 VoiceSet voiceSet = new VoiceSet(hero);
@@ -257,9 +280,6 @@ namespace DataTool.ToolLogic.Extract {
                     rarity = unlock.Rarity.ToString();
                     tags["leagueTeam"] = new TagExpectedValue("none");
                 } else {
-                    if (flags is ExtractFlags extractFlags && !extractFlags.GlobalAllowLeague) {
-                        return;
-                    }
                     TeamDefinition teamDef = new TeamDefinition(unlock.STU.m_0B1BA7C1);
                     tags["leagueTeam"] = new TagExpectedValue(teamDef.Abbreviation,  // NY
                         teamDef.Location,  // New York
