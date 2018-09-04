@@ -49,8 +49,7 @@ namespace CASCEncDump {
                 TextLanguage = language
             };
             if (mode != "allcmf" && mode != "dump-guids" && mode != "compare-guids" && mode != "dump-cmf") {
-                createArgs.Tank.LoadAPM = false;
-                createArgs.Tank.LoadCMF = false;
+                createArgs.Tank.LoadManifest = false;
             }
             Client = new ClientHandler(overwatchDir, createArgs);
             TankHandler = (ProductHandler_Tank)Client.ProductHandler;
