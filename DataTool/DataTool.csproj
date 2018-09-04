@@ -116,6 +116,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolAttribute.cs" />
+    <Compile Include="ToolLogic\Dbg\DebugEffect.cs" />
     <Compile Include="ToolLogic\Dbg\DebugMapDump.cs" />
     <Compile Include="ToolLogic\Dbg\DebugModelDump.cs" />
     <Compile Include="ToolLogic\Dbg\DebugModelSTU.cs" />
@@ -129,7 +130,6 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugNewEntities.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugPackageFinder.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugShaderHashes.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSkins.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSpecialHelper.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugType.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVCCE.cs" />

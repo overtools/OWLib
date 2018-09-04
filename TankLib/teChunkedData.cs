@@ -190,7 +190,7 @@ namespace TankLib {
             }
             
             #if DEBUG
-            return new teDataChunk_Dummy();
+            return new teDataChunk_Dummy(id);
             #endif
                 
             return null;

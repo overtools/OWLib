@@ -87,13 +87,13 @@ namespace DataTool.ToolLogic.Extract
                     {
                         teMap env = dataReader.Read<teMap>();
 
-                        string fname = $"ow_map_{GetValidFilename($"{mapInfo.GetName()}_{teResourceGUID.Index(mapInfo.MapGUID):X}")}";
+                        var mapName = GetValidFilename($"{mapInfo.GetName()}_{teResourceGUID.Index(mapInfo.MapGUID):X}");
+                        string fname = $"ow_map_{mapName}";
 
                         //using (Stream lightingStream = OpenFile(env.BakedLighting)) {
                         //    teLightingManifest lightingManifest = new teLightingManifest(lightingStream);   
                         //}
 
-                        var mapName = GetValidFilename($"{mapInfo.GetName()}_{teResourceGUID.Index(mapInfo.MapGUID):X}");
                         if (!flags.SkipMapEnvironmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnvironmentSound, mapInfo.Name)))
                             SaveSound(flags, basePath, Path.Combine("Sound", mapName), env.MapEnvironmentSound);
                         if (!flags.SkipMapEnvironmentLUT && done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name)))
