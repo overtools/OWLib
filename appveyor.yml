@@ -17,6 +17,9 @@ before_build:
 build:
   project: OverwatchToolchain.sln
   verbosity: minimal
+branches:
+  only:
+  - master
 before_package:
 - cmd: >-
     del /F /Q dist\Release\*.pdb
