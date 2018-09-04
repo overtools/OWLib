@@ -170,16 +170,18 @@ namespace DataTool {
                             Disallowed = new List<string>(),
                             Tags = new Dictionary<string, TagValue>()
                         };
-                        
-                        foreach (QueryTag tagObj in type.Tags.Where(x => x.Default != null)) {
-                            string tagName = tagObj.Name.ToLowerInvariant();
-                            if (parsedTypes[hero][type.Name].Tags.ContainsKey(tagName)) {
-                                continue;
-                            }
-                            TagValue valueObject = (TagValue) Activator.CreateInstance(tagObj.ValueType);
-                            valueObject.Value = tagObj.Default;
 
-                            parsedTypes[hero][type.Name].Tags[tagName] = valueObject;
+                        if (type.Tags != null) {
+                            foreach (QueryTag tagObj in type.Tags.Where(x => x.Default != null)) {
+                                string tagName = tagObj.Name.ToLowerInvariant();
+                                if (parsedTypes[hero][type.Name].Tags.ContainsKey(tagName)) {
+                                    continue;
+                                }
+                                TagValue valueObject = (TagValue) Activator.CreateInstance(tagObj.ValueType);
+                                valueObject.Value = tagObj.Default;
+
+                                parsedTypes[hero][type.Name].Tags[tagName] = valueObject;
+                            }
                         }
                     }
 
