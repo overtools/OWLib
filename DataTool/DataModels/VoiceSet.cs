@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using Newtonsoft.Json;
+using System.Runtime.Serialization;
+using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
+using Utf8Json;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels {
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class VoiceSet {
+        [DataMember]
         public Dictionary<ulong, VoiceLineInstance> VoiceLines;
 
+        [DataMember]
         public Dictionary<ulong, HashSet<ulong>> Stimuli;
 
         public VoiceSet(STUHero hero) {
@@ -55,29 +59,29 @@ namespace DataTool.DataModels {
         }
     }
 
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class VoiceLineInstance {
-        public List<ulong> VoiceSounds;
+        [DataMember]
+        [JsonFormatter(typeof(ResourceGUIDFormatter))]
+        public ulong[] VoiceSounds;
+        
+        [DataMember]
         public teResourceGUID VoiceConversation;
-
-        [JsonIgnore]
-        public STUVoiceLineInstance STU;  // todo: ideally not here
         
         // todo: more fields and stuff.
         
         public VoiceLineInstance(STUVoiceLineInstance instance) {
-            STU = instance;
-            
             if (instance.m_AF226247 != null) {
-                VoiceSounds = new List<ulong>();
+                var voiceSounds = new List<ulong>();
                 foreach (var soundFile in new[] {
                     instance.m_AF226247.m_1485B834, instance.m_AF226247.m_798027DE,
                     instance.m_AF226247.m_A84AA2B5, instance.m_AF226247.m_D872E45C
                 }) {
                     if (soundFile != null) {
-                        VoiceSounds.Add(soundFile.m_3C099E86);
+                        voiceSounds.Add(soundFile.m_3C099E86);
                     }
                 }
+                VoiceSounds = voiceSounds.ToArray();
             }
 
             if (instance.m_voiceLineRuntime != null) {

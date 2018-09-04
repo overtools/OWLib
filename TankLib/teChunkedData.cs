@@ -38,20 +38,21 @@ namespace TankLib {
             return base.ToString() + $" ({StringIdentifier})";
         }
     }
-    
+
     /// <summary>"Chunked" file parser</summary>
     public class teChunkedData {
         public const uint Magic = 0xF123456F;
 
         public IChunk[] Chunks;
+        public string[] ChunkTags;
         public teChunkDataHeader Header;
-        
+
         public static teChunkManager Manager = new teChunkManager();
 
         /// <summary>Load chunk data from a <see cref="Stream"/></summary>
         /// <param name="input">The source <see cref="Stream"/>></param>
         /// <param name="keepOpen">Keep the stream open after reading</param>
-        public teChunkedData(Stream input, bool keepOpen=false) {
+        public teChunkedData(Stream input, bool keepOpen = false) {
             if (input == null) {
                 return;
             }
@@ -60,7 +61,7 @@ namespace TankLib {
                 Read(reader);
             }
         }
-        
+
         /// <summary>Load chunk data from a <see cref="BinaryReader"/></summary>
         /// <param name="reader">The source <see cref="BinaryReader"/>></param>
         public teChunkedData(BinaryReader reader) {
@@ -71,33 +72,37 @@ namespace TankLib {
             long start = reader.BaseStream.Position;
 
             List<IChunk> chunks = new List<IChunk>();
+            List<string> chunkTags = new List<string>();
 
             Header = reader.Read<teChunkDataHeader>();
             if (Header.Magic != Magic) {
                 return;
             }
 
-            long next = reader.BaseStream.Position - start;  // rel stream pos
-            
+            long next = reader.BaseStream.Position - start; // rel stream pos
+
             while (next < Header.Size) {
                 teChunkDataEntry entry = reader.Read<teChunkDataEntry>();
                 next += entry.Size + sizeof(teChunkDataEntry);
-                    
+
                 IChunk chunk = Manager.CreateChunkInstance(entry.StringIdentifier, Header.StringIdentifier);
                 if (chunk != null) {
                     MemoryStream dataStream = new MemoryStream(entry.Size);
                     reader.BaseStream.CopyBytes(dataStream, entry.Size);
                     dataStream.Position = 0;
-                        
+
                     chunk.Parse(dataStream);
-                        
+
                     dataStream.Dispose();
                 }
-                    
+
+                chunkTags.Add(entry.StringIdentifier);
                 chunks.Add(chunk);
                 reader.BaseStream.Position = next + start;
             }
+
             Chunks = chunks.ToArray();
+            ChunkTags = chunkTags.ToArray();
         }
 
         public IEnumerable<T> EnumerateChunks<T>() where T : IChunk {
@@ -113,11 +118,21 @@ namespace TankLib {
         }
 
         public T GetChunk<T>() where T : IChunk {
-            return (T)Chunks.FirstOrDefault(x => x is T);
+            return (T) Chunks.FirstOrDefault(x => x is T);
         }
 
         public IEnumerable<T> GetChunks<T>() where T : IChunk {
             return Chunks.OfType<T>();
+        }
+
+        // Behold, the most disgusting LINQ you've ever seen.
+        public IChunk GetChunkByTag(string tag) {
+            return Chunks.ElementAtOrDefault(ChunkTags.Select((x, y) => new {Value = x, Index = y}).FirstOrDefault(x => x.Value == tag)?.Index ?? -1);
+        }
+
+        public IEnumerable<IChunk> GetChunksByTag(string tag) {
+            var indices = ChunkTags.Select((x, y) => new {Value = x, Index = y}).Where(x => x.Value == tag).Select(x => x.Index);
+            return Chunks.Select((x, y) => new {Value = x, Index = y}).Where(x => indices.Contains(x.Index)).Select(x => x.Value);
         }
     }
 
@@ -173,6 +188,10 @@ namespace TankLib {
                     Debugger.Log(0, "teChunkManager", $"No handler for {rootID}:{id}\r\n");
                 }
             }
+            
+            #if DEBUG
+            return new teDataChunk_Dummy(id);
+            #endif
                 
             return null;
         }

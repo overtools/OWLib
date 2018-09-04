@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
@@ -30,6 +29,23 @@ namespace DataTool.ToolLogic.Extract {
     // "{hero name}|{type}=({tag name}={tag}),{item name}"
     // Roadhog
     
+    // future possibilities. could use the in-game filter system to try and give us better results
+    // hero|type=hello
+    // hero|skin=classic
+    // hero|skin=*,(rarity=common)
+    // "hero|skin=(category=overwatch)"
+    // "hero|skin=(category=achievements)"
+    // "hero|skin=(category=summer games)"
+    // "hero|skin=(category=halloween terror)"
+    // "hero|skin=(category=winter wonderland)"
+    // "hero|skin=(category=lunar new year)"
+    // "hero|skin=(category=archives)"
+    // "hero|skin=(category=anniversary)"
+    // "hero|skin=(category=competitive)"
+    // "hero|skin=(category=overwatch league)"
+    // "hero|skin=(category=special)"
+    // "hero|skin=(category=legacy)"
+    
     [DebuggerDisplay("CosmeticType: {" + nameof(Name) + "}")]
     public class CosmeticType : QueryType {
         public CosmeticType(string name) {
@@ -37,7 +53,7 @@ namespace DataTool.ToolLogic.Extract {
             Tags = new List<QueryTag> {
                 new QueryTag("rarity", new List<string>{"common", "rare", "epic", "legendary"}),
                 new QueryTag("event", new List<string>{"base", "summergames", "halloween", "winter", "lunarnewyear", "archives", "anniversary"}),
-                new QueryTag("leagueTeam", new List<string>()),
+                new QueryTag("leagueTeam", new List<string>(), "none"),
                 new QueryTag("special", new List<string> {"sg2018"})
             };
         }
@@ -73,6 +89,7 @@ namespace DataTool.ToolLogic.Extract {
             ["dva"] = "d.va",
             ["fanservice"] = "d.va",
             ["starcraft_pro"] = "d.va",
+            ["nano_cola_shill"] = "d.va",
             ["starcraft_pro_but_not_actually_because_michael_chu_retconned_it"] = "d.va",
             ["hammond"] = "wrecking ball",
             ["hamster"] = "wrecking ball",
@@ -109,28 +126,7 @@ namespace DataTool.ToolLogic.Extract {
         protected override void QueryHelp(List<QueryType> types) {
             IndentHelper indent = new IndentHelper();
             
-            Log("Please specify what you want to extract:");
-            Log($"{indent+1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
-            Log($"{indent+1}Each query should be surrounded by \", and individual queries should be separated by spaces");
-            
-            Log($"{indent+1}All hero and item names are in your selected locale");
-                        
-            Log("\r\nTypes:");
-            foreach (QueryType argType in types) {
-                Log($"{indent+1}{argType.Name}");
-            }
-            
-            Log("\r\nTags:");
-
-            foreach (QueryType argType in types) {
-                foreach (QueryTag argTypeTag in argType.Tags) {
-                    Log($"{indent+1}{argTypeTag.Name}:");
-                    foreach (string option in argTypeTag.Options) {
-                        Log($"{indent+2}{option}");
-                    }
-                }
-                break;  // erm, ok
-            }
+            base.QueryHelp(types);
             
             Log("\r\nExample commands: ");
             Log($"{indent+1}\"Lúcio|skin=common\"");
@@ -270,10 +266,11 @@ namespace DataTool.ToolLogic.Extract {
                 }
                 tags["rarity"] = new TagExpectedValue(unlock.Rarity.ToString());
 
-                tags["special"] = new TagExpectedValue(UnlockData.GetTagFor(unlock.GUID) ?? "none");
+                tags["special"] = new TagExpectedValue(unlock.Tag ?? "none");
             } else {
                 rarity = ""; // for general unlocks
             }
+            
             
             string thisPath = Path.Combine(path, unlock.Type, eventKey, rarity, GetValidFilename(unlock.GetName()));
             

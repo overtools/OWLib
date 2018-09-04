@@ -2,10 +2,10 @@
 
 namespace DataTool {
     public class ToolFlags : ICLIFlags {
-        [CLIFlag(Flag = "directory", Positional = 0, Help = "Overwatch Directory", Required = true)]
+        [CLIFlag(Flag = "directory", Positional = 0, Help = "Overwatch Directory")]
         public string OverwatchDirectory;
         
-        [CLIFlag(Flag = "mode", Positional = 1, Help = "Extraction Mode", Required = true)]
+        [CLIFlag(Flag = "mode", Positional = 1, Help = "Extraction Mode")]
         public string Mode;
         
         [CLIFlag(Default = null, Flag = "language", Help = "Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" })]
@@ -60,6 +60,18 @@ namespace DataTool {
 
         [CLIFlag(Default = null, Flag = "scratchdb", NeedsValue = true, Help = "Directory for persistent database storage for deduplication info")]
         public string ScratchDBPath;
+
+        [CLIFlag(Default = false, Flag = "args-save", Help = "Save current arguments", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [Alias(Alias = "args")]
+        public bool SaveArgs;
+
+        [CLIFlag(Default = false, Flag = "args-reset", Help = "Reset program arguments", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [Alias(Alias = "argr")]
+        public bool ResetArgs;
+
+        [CLIFlag(Default = false, Flag = "args-delete", Help = "Delete saved program arguments", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [Alias(Alias = "argd")]
+        public bool DeleteArgs;
 
         public override bool Validate() => true;
     }

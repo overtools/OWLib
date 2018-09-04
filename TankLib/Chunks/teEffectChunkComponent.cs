@@ -11,7 +11,7 @@ namespace TankLib.Chunks {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct ComponentHeader {  // this is messy and only just works
             public long StartTimeOffset;
-            public long EndTimeOffset;
+            public long DurationOffset;
             public teResourceGUID Hardpoint;
             public float FloatOneA;
             public float FloatOneB;
@@ -37,7 +37,7 @@ namespace TankLib.Chunks {
         public ComponentHeader Header;
 
         public float StartTime;
-        public float EndTime;
+        public float Duration;
         
         public void Parse(Stream stream) {
             using (BinaryReader reader = new BinaryReader(stream)) {
@@ -47,9 +47,9 @@ namespace TankLib.Chunks {
                     reader.BaseStream.Position = Header.StartTimeOffset;
                     StartTime = reader.ReadSingle();
                 }
-                if (Header.EndTimeOffset != 0) {
-                    reader.BaseStream.Position = Header.EndTimeOffset;
-                    EndTime = reader.ReadSingle();
+                if (Header.DurationOffset != 0) {
+                    reader.BaseStream.Position = Header.DurationOffset;
+                    Duration = reader.ReadSingle();
                 }
             }
         }

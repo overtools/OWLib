@@ -1,40 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using DataTool.FindLogic;
 using DataTool.Flag;
+using DataTool.Helper;
+using DataTool.ToolLogic.Extract;
 using TankLib;
-using static DataTool.Helper.STUHelper;
+using TankLib.STU.Types;
 
-namespace DataTool.ToolLogic.Debug
-{
-    [Tool("brrap", Description = "I hear da call", TrackTypes = new ushort[] { 0x1B }, IsSensitive = true)]
-
-    class DebugVoodoo : ITool
-    {
-        public void IntegrateView(object sender)
-        {
+namespace DataTool.ToolLogic.Dbg {
+    [Tool("brrap", Description = "I hear da call", TrackTypes = new ushort[] {0x5E}, IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
+    class DebugVoodoo : ITool {
+        public void IntegrateView(object sender) {
             throw new NotImplementedException();
         }
 
-        public void Parse(ICLIFlags toolFlags)
-        {
-            var indices = new List<ulong>
-            {
-                0x0000000017C7,
-                0x0000000017C8,
-                0x0000000017F8,
-                0x0000000017FA,
-                0x00000000180B
-            };
-            foreach(var guid in Program.TrackedFiles[0x1B])
-            {
-                if(indices.Contains(teResourceGUID.LongKey(guid)))
-                {
-                    var stu = OpenSTUSafe(guid);
-                    System.Diagnostics.Debugger.Break();
+        public void Parse(ICLIFlags toolFlags) {
+            foreach (var guid in Program.TrackedFiles[0x5E]) {
+                using (Stream f = File.OpenWrite($@"C:\Overwatch\05E\{teResourceGUID.AsString(guid)}"))
+                using (Stream d = IO.OpenFile(guid)) {
+                    d.CopyTo(f);
                 }
+
+                var stu = STUHelper.OpenSTUSafe(guid);
+                var texs = stu.GetInstances<STUUXTextureSource>();
+
+                var info = new Combo.ComboInfo();
+                
+                foreach (var tex in texs) {
+                    Combo.Find(info, tex.m_textureGUID);
+                }
+                SaveLogic.Combo.SaveLooseTextures(toolFlags, $@"C:\Overwatch\Tex\{teResourceGUID.AsString(guid)}\", info);
             }
         }
     }

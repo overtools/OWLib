@@ -241,7 +241,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             }
         }
 
-        public void SaveMaterial(string basePath, ulong materialGUID, string name) {
+        public static void SaveMaterial(string basePath, ulong materialGUID, string name) {
             string path = Path.Combine(basePath, name, IO.GetFileName(materialGUID));
             string rawPath = Path.Combine(path, "raw");
             // IO.CreateDirectorySafe(path);
@@ -259,7 +259,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             SaveShaderGroup(shaderGroup, path);
         }
 
-        public void SaveShaderGroup(teShaderGroup shaderGroup, string path) {
+        public static void SaveShaderGroup(teShaderGroup shaderGroup, string path) {
             int i = 0;
             foreach (ulong shaderGroupInstance in shaderGroup.Instances) {
                 teShaderInstance instance = new teShaderInstance(IO.OpenFile(shaderGroupInstance));

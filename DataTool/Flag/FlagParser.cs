@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using Utf8Json;
 
 namespace DataTool.Flag {
     public class FlagParser {
+        public static string[] AppArgs { get; set; } = Environment.GetCommandLineArgs().Skip(1).ToArray();
+
         public static T Parse<T>() where T : ICLIFlags {
-            return Parse<T>(null, Environment.GetCommandLineArgs().Skip(1).ToArray());
+            return Parse<T>(null, AppArgs);
         }
 
         public static void Help<T>(bool simple) where T : ICLIFlags {
@@ -176,7 +180,7 @@ namespace DataTool.Flag {
         }
 
         public static T Parse<T>(Action extraHelp) where T : ICLIFlags {
-            return Parse<T>(extraHelp, Environment.GetCommandLineArgs().Skip(1).ToArray());
+            return Parse<T>(extraHelp, AppArgs);
         }
 
         private enum FieldKind {
@@ -379,7 +383,8 @@ namespace DataTool.Flag {
                     }
                     field.SetValue(instance, value);
                 } else if (flagattr.Required) {
-                    Console.Error.WriteLine($"Flag {flagattr.Flag} is required");
+                    Console.Error.WriteLine(string.IsNullOrWhiteSpace(flagattr.Flag) ? $"Positional {flagattr.Positional} is required" : $"Flag {flagattr.Flag} is required");
+
                     FullHelp<T>(extraHelp);
                     return null;
                 } else if(field.FieldType.IsClass && field.FieldType.GetConstructor(Type.EmptyTypes) != null) {
@@ -387,6 +392,30 @@ namespace DataTool.Flag {
                 }
             }
             return instance;
+        }
+        
+        public static string ArgFilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{AppDomain.CurrentDomain.FriendlyName}.args");
+        
+        public static void LoadArgs() {
+            if (File.Exists(ArgFilePath)) {
+                AppArgs = JsonSerializer.Deserialize<string[]>(File.ReadAllText(ArgFilePath)).Concat(AppArgs).Distinct().ToArray();
+            }
+        }
+
+        public static void SaveArgs(params string[] extra) {
+            DeleteArgs();
+            var args = AppArgs.Where(x => x.StartsWith("-")).Concat(extra.Where(x => !string.IsNullOrWhiteSpace(x))).Reverse().ToArray();
+            File.WriteAllText(ArgFilePath, JsonSerializer.ToJsonString(args));
+        }
+
+        public static void ResetArgs() {
+            AppArgs = Environment.GetCommandLineArgs().Skip(1).ToArray();
+        }
+
+        public static void DeleteArgs() {
+            if (File.Exists(ArgFilePath)) {
+                File.Delete(ArgFilePath);
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
+using DataTool.JSON;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 
@@ -17,7 +18,7 @@ namespace DataTool.ToolLogic.List {
             
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
-                    ParseJSON(teams, flags);
+                    OutputJSON(teams, flags);
                     return;
                 }
             

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
-using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
@@ -19,28 +19,27 @@ namespace DataTool.ToolLogic.List {
         }
 
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<string, Hero> heroes = GetHeroes();
+            Dictionary<teResourceGUID, Hero> heroes = GetHeroes();
 
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
-                    ParseJSON(heroes, flags);
+                    OutputJSON(heroes, flags);
                     return;
                 }
 
             IndentHelper indentLevel = new IndentHelper();
             
-            foreach (KeyValuePair<string, Hero> hero in heroes) {
+            foreach (KeyValuePair<teResourceGUID, Hero> hero in heroes) {
                 Log($"{hero.Value.Name}");
                 if (hero.Value.Description != null)
                     Log($"{indentLevel + 1}Description: {hero.Value.Description}");
                 
                 Log($"{indentLevel + 1}Gender: {hero.Value.Gender}");
                 
-                TankLib.Helpers.Logger.Log24Bit(ConsoleSwatch.ColorReset, null, false, null, $"{indentLevel + 1}Color: {hero.Value.GalleryColor.ToHex()} ");
-                TankLib.Helpers.Logger.Log24Bit(hero.Value.GalleryColor.ToForeground(), null, true, null, "██████");
+                TankLib.Helpers.Logger.Log24Bit(ConsoleSwatch.ColorReset, null, false, Console.Out, null, $"{indentLevel + 1}Color: {hero.Value.GalleryColor.ToHex()} ");
+                TankLib.Helpers.Logger.Log24Bit(hero.Value.GalleryColor.ToForeground(), null, true, Console.Out, null, "██████");
 
                 if (hero.Value.Loadouts != null) {
-
                     Log($"{indentLevel + 1}Loadouts:");
                     foreach (Loadout loadout in hero.Value.Loadouts) {
                         Log($"{indentLevel + 2}{loadout.Name}: {loadout.Category}");
@@ -52,16 +51,14 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public Dictionary<string, Hero> GetHeroes() {
-            Dictionary<string, Hero> @return = new Dictionary<string, Hero>();
+        public Dictionary<teResourceGUID, Hero> GetHeroes() {
+            Dictionary<teResourceGUID, Hero> @return = new Dictionary<teResourceGUID, Hero>();
 
-            foreach (ulong key in TrackedFiles[0x75]) {
+            foreach (teResourceGUID key in TrackedFiles[0x75]) {
                 STUHero hero = GetInstance<STUHero>(key);
                 if (hero == null) continue;
 
-                string name = GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(key):X}";
-
-                @return[name] = new Hero(key, hero);
+                @return[key] = new Hero(hero);
             }
 
             return @return;

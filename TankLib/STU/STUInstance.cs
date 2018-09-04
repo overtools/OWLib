@@ -89,6 +89,7 @@ namespace TankLib.STU {
                             array = Array.CreateInstance(elementType, count);
 
                             data.BaseStream.Position = dataOffset + assetFile.StartPos;
+                            assetFile.DynData = data;
                                 
                             for (int i = 0; i != count; ++i) {
                                 reader.Deserialize_Array(teStructuredData.Manager, assetFile, fieldInfo, array, i);

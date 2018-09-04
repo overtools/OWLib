@@ -1,35 +1,28 @@
-﻿using DataTool.JSON;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Runtime.Serialization;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels {
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class GameMode {
+        [DataMember]
         public string DisplayName;
         
-        [JsonConverter(typeof(StringEnumConverter))]
+        [DataMember]
         public Enum_1964FED7 Type;
         
-        [JsonConverter(typeof(GUIDArrayConverter))]
+        [DataMember]
         public teResourceGUID[] GameRulesetSchemas;
 
-        [JsonConverter(typeof(GUIDConverter))]
+        [DataMember]
         public teResourceGUID VoiceSet;
         
         public GameMode(STUGameMode gameMode) {
             DisplayName = GetString(gameMode.m_displayName);
 
-            if (gameMode.m_gameRulesetSchemas != null) {
-                GameRulesetSchemas = new teResourceGUID[gameMode.m_gameRulesetSchemas.Length];
-
-                for (int i = 0; i < GameRulesetSchemas.Length; i++) {
-                    GameRulesetSchemas[i] = gameMode.m_gameRulesetSchemas[i];
-                }
-            }
+            GameRulesetSchemas = Helper.JSON.FixArray(gameMode.m_gameRulesetSchemas);
 
             VoiceSet = gameMode.m_7F5B54B2;
             Type = gameMode.m_gameModeType;

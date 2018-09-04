@@ -48,9 +48,10 @@ namespace DataTool.ToolLogic.Debug
                             Directory.CreateDirectory(o);
                         }
                         teMapPlaceableData placable = GetPlaceableData(map, teType);
-                        for(int i = 0; i < placable.Header.PlaceableCount; ++i)
+                        for(int i = 0; i < placable.Header.PlaceableCount; ++i) 
                         {
-                            using (var f = File.OpenWrite(Path.Combine(o, placable.CommonStructures[i].UUID.Value.ToString("N"))))
+                            var commonStructure = placable.CommonStructures[i];
+                            using (var f = File.OpenWrite(Path.Combine(o, commonStructure.UUID.Value.ToString("N"))))
                             {
                                 f.Write(((teMapPlaceableDummy)placable.Placeables[i]).Data, 0, ((teMapPlaceableDummy)placable.Placeables[i]).Data.Length);
                             }

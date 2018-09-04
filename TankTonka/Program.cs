@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using DataTool;
 using DataTool.Helper;
+using DataTool.JSON;
 using TankLib;
 using TankLib.STU;
 using TankTonka.Formatters;

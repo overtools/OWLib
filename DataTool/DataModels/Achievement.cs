@@ -1,22 +1,27 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Runtime.Serialization;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels {
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class Achievement {
+        [DataMember]
         public string Name;
+        
+        [DataMember]
         public string Description;
+        
+        [DataMember]
         public Unlock Reward;
-
-        [JsonConverter(typeof(StringEnumConverter))]
+        
+        [DataMember]
         public Enum_8E40F295 Trophy;
         
-        [JsonConverter(typeof(StringEnumConverter))]
+        [DataMember]
         public Enum_116F9601 Category;
 
+        [DataMember]
         public int GamerScore;
 
         public Achievement(STUAchievement achievement) {

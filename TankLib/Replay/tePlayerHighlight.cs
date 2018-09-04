@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using TankLib.Helpers.DataSerializer;
 using TankLib.Math;
+using TankLib.STU.Types.Enums;
 
 namespace TankLib.Replay
 {
@@ -68,7 +69,7 @@ namespace TankLib.Replay
             public float Unknown3;
             public float Unknown4;
             public uint Elevation;
-            public uint TeamSpawnNumber;
+            public TeamIndex TeamIndex;
             public teVec3 Position;
             public teVec3 Direction;
             public teVec3 Up;
@@ -102,6 +103,13 @@ namespace TankLib.Replay
                     stream.Position -= 1;
                     Read(reader);
                     int size = reader.ReadInt32();
+                    
+                    // todo: data is sometimes wrong. too many "filler structs" read.
+                    //int expected = (int)reader.BaseStream.Length - (int)reader.BaseStream.Position;
+                    //if (size > reader.BaseStream.Length) {
+                    //    
+                    //}
+                    
                     Replay = new MemoryStream(reader.ReadBytes(size));
                 }
             }

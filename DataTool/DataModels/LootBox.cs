@@ -1,22 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using DataTool.JSON;
-using Newtonsoft.Json;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
+using Utf8Json;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels {
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class LootBox {
+        [DataMember]
         public string Name;
         
-        // note: not string becuase we actually want the int here
-        // todo: should populate this enum or something
+        [DataMember]
         public Enum_BABC4175 LootBoxType;
 
+        [DataMember]
         public LootBoxShopCard[] ShopCards;
 
+        [DataMember]
         public bool HidePucks;
 
         public LootBox(STULootBox lootBox) {
@@ -71,10 +74,12 @@ namespace DataTool.DataModels {
         };
     }
 
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class LootBoxShopCard {
+        [DataMember]
         public string Text;
-        [JsonConverter(typeof(GUIDConverter))]
+        
+        [DataMember]
         public teResourceGUID Texture;
 
         public LootBoxShopCard(STULootBoxShopCard shopCard) {

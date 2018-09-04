@@ -1,37 +1,38 @@
-﻿using DataTool.Helper;
+﻿using System.Runtime.Serialization;
+using DataTool.Helper;
 using DataTool.JSON;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
+using Utf8Json;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels {
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class Loadout {
+        [DataMember]
         public string Name;
+        
+        [DataMember]
         public string Description;
         
-        [JsonConverter(typeof(StringEnumConverter))]
+        [DataMember]
         public LoadoutCategory Category;
         
-        [JsonConverter(typeof(GUIDConverter))]
-        public ulong GUID;
-        [JsonConverter(typeof(GUIDConverter))]
-        public ulong MovieGUID;
+        [DataMember]
+        public teResourceGUID MovieGUID;
 
         public Loadout(ulong key) {
             STULoadout loadout = STUHelper.GetInstance<STULoadout>(key);
             if (loadout == null) return;
-            Init(key, loadout);
+            Init(loadout);
         }
 
-        public Loadout(ulong key, STULoadout loadout) {
-            Init(key, loadout);
+        public Loadout(STULoadout loadout) {
+            Init(loadout);
         }
 
-        private void Init(ulong key, STULoadout loadout) {
-            GUID = key;
+        private void Init(STULoadout loadout) {
             MovieGUID = loadout.m_infoMovie;
             
             Category = loadout.m_category;

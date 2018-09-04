@@ -29,11 +29,9 @@ namespace DataTool {
         public static bool ValidKey(ulong key) => TankHandler.Assets.ContainsKey(key);
         
         private static void Main() {
-            AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
-            Process.GetCurrentProcess().EnableRaisingEvents = true;
-            AppDomain.CurrentDomain.ProcessExit += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
-            Console.CancelKeyPress += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
-            Console.OutputEncoding = Encoding.UTF8;
+            InitTankSettings();
+
+            HookConsole();
 
             #region Tool Detection
             HashSet<Type> tools = new HashSet<Type>();
@@ -50,9 +48,37 @@ namespace DataTool {
                 }
             }
             #endregion
+            
+            FlagParser.LoadArgs();
+            
+            TankLib.Helpers.Logger.Info("Core", $"{Assembly.GetExecutingAssembly().GetName().Name} v{TankLib.Util.GetVersion(typeof(Program).Assembly)}");
+
+            TankLib.Helpers.Logger.Info("Core", $"CommandLine: [{string.Join(", ", FlagParser.AppArgs.Select(x => $"\"{x}\""))}]");
 
             Flags = FlagParser.Parse<ToolFlags>(() => PrintHelp(tools));
             if (Flags == null) {
+                return;
+            }
+
+            TankLib.Helpers.Logger.Warn("Core", $"CommandLineFile: {FlagParser.ArgFilePath}");
+            
+            if (Flags.SaveArgs) {
+                FlagParser.AppArgs = FlagParser.AppArgs.Where(x => !x.StartsWith("--arg")).ToArray();
+                FlagParser.SaveArgs(Flags.OverwatchDirectory);
+            } else if (Flags.ResetArgs || Flags.DeleteArgs) {
+                FlagParser.ResetArgs();
+                if (Flags.DeleteArgs) {
+                    FlagParser.DeleteArgs();
+                }
+                TankLib.Helpers.Logger.Info("Core", $"CommandLineNew: [{string.Join(", ", FlagParser.AppArgs.Select(x => $"\"{x}\""))}]");
+                Flags = FlagParser.Parse<ToolFlags>(() => PrintHelp(tools));
+                if (Flags == null) {
+                    return;
+                }
+            }
+            
+            if (string.IsNullOrWhiteSpace(Flags.OverwatchDirectory) || string.IsNullOrWhiteSpace(Flags.Mode)) {
+                PrintHelp(tools);
                 return;
             }
 
@@ -76,6 +102,10 @@ namespace DataTool {
                 break;
             }
 
+            if (targetToolFlags == null) {
+                return;
+            }
+
             #endregion
 
             if (targetTool == null) {
@@ -87,9 +117,6 @@ namespace DataTool {
                 return;
             }
             
-            TankLib.Helpers.Logger.Info("Core", $"{Assembly.GetExecutingAssembly().GetName().Name} v{TankLib.Util.GetVersion(typeof(Program).Assembly)}");
-            TankLib.Helpers.Logger.Info("Core", $"CommandLine: [{string.Join(", ", Environment.GetCommandLineArgs().Skip(1).Select(x => $"\"{x}\""))}]");
-
             InitStorage();
             
             //foreach (KeyValuePair<ushort, HashSet<ulong>> type in TrackedFiles.OrderBy(x => x.Key)) {
@@ -114,14 +141,26 @@ namespace DataTool {
                 Debugger.Break();
             }
         }
-        
+
+        private static void HookConsole() {
+            AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
+            Process.GetCurrentProcess().EnableRaisingEvents = true;
+            AppDomain.CurrentDomain.ProcessExit += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
+            Console.CancelKeyPress += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
+            Console.OutputEncoding = Encoding.UTF8;
+        }
+
+        private static void InitTankSettings() {
+            TankLib.Helpers.Logger.ShowDebug = Debugger.IsAttached;
+        }
+
         public static void InitMisc() {
             var dbPath = Flags.ScratchDBPath;
             if (Flags.Deduplicate) {
                 TankLib.Helpers.Logger.Warn("ScratchDB", "Will attempt to deduplicate files if extracting...");
                 if(!string.IsNullOrWhiteSpace(Flags.ScratchDBPath)) {
                     TankLib.Helpers.Logger.Warn("ScratchDB", "Loading deduplication database...");
-                    if (!File.Exists(dbPath)) {
+                    if (!File.Exists(dbPath) || new DirectoryInfo(dbPath).Exists) {
                         dbPath = Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db");
                     }
                     SaveLogic.Combo.ScratchDBInstance.Load(dbPath);
@@ -133,10 +172,16 @@ namespace DataTool {
         }
 
         public static void ShutdownMisc() {
-            var dbPath = Flags.ScratchDBPath;
-            if(Flags.Deduplicate && !string.IsNullOrWhiteSpace(dbPath)) {
-                TankLib.Helpers.Logger.Warn("ScratchDB", "Saving deduplication database...");
-                SaveLogic.Combo.ScratchDBInstance.Save(dbPath);
+            if (!string.IsNullOrWhiteSpace(Flags.ScratchDBPath)) {
+                var dbPath = Flags.ScratchDBPath;
+                if (!File.Exists(dbPath) || new DirectoryInfo(dbPath).Exists) {
+                    dbPath = Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db");
+                }
+
+                if (Flags.Deduplicate && !string.IsNullOrWhiteSpace(dbPath)) {
+                    TankLib.Helpers.Logger.Warn("ScratchDB", "Saving deduplication database...");
+                    SaveLogic.Combo.ScratchDBInstance.Save(dbPath);
+                }
             }
         }
 
@@ -259,6 +304,7 @@ namespace DataTool {
             
             foreach (Type t in tools) {
                 ToolAttribute attrib = t.GetCustomAttribute<ToolAttribute>();
+                if (attrib.IsSensitive) continue;
                 if (attrib.Keyword == null) continue;
                 if (!attrib.Keyword.Contains("-")) continue;
                 

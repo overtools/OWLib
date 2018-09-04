@@ -8,6 +8,7 @@ using static DataTool.Helper.IO;
 using static DataTool.ToolLogic.List.ListMaps;
 using System.IO;
 using DataTool.ConvertLogic;
+using DataTool.DataModels;
 using TankLib;
 using TankLib.STU.Types;
 
@@ -26,10 +27,10 @@ namespace DataTool.ToolLogic.Extract
             SaveMaps(toolFlags);
         }
 
-        private string OCIOChunk(MapInfo info, string fname)
+        private string OCIOChunk(MapHeader info, string fname)
         {
             return $@"  - !<Look>
-    name: {GetValidFilename($"{info.NameB.ToUpperInvariant()}_{teResourceGUID.Index(info.MetadataGUID):X}")}
+    name: {GetValidFilename($"{info.GetName().ToUpperInvariant()}_{teResourceGUID.Index(info.MapGUID):X}")}
     process_space: linear
     transform: !<GroupTransform>
       children:
@@ -69,9 +70,7 @@ namespace DataTool.ToolLogic.Extract
                     continue;
                 }
 
-                MapInfo mapInfo = GetMap(metaKey);
-                mapInfo.Name = mapInfo.Name ?? "Title Screen";
-                mapInfo.NameB = mapInfo.NameB ?? mapInfo.Name;
+                MapHeader mapInfo = GetMap(metaKey);
 
                 ulong dataKey = map.m_map;
 
@@ -88,14 +87,15 @@ namespace DataTool.ToolLogic.Extract
                     {
                         teMap env = dataReader.Read<teMap>();
 
-                        string fname = $"ow_map_{GetValidFilename($"{mapInfo.NameB}_{teResourceGUID.Index(mapInfo.MetadataGUID):X}")}";
+                        var mapName = GetValidFilename($"{mapInfo.GetName()}_{teResourceGUID.Index(mapInfo.MapGUID):X}");
+                        string fname = $"ow_map_{mapName}";
 
                         //using (Stream lightingStream = OpenFile(env.BakedLighting)) {
                         //    teLightingManifest lightingManifest = new teLightingManifest(lightingStream);   
                         //}
 
                         if (!flags.SkipMapEnvironmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnvironmentSound, mapInfo.Name)))
-                            SaveSound(flags, basePath, Path.Combine("Sound", GetValidFilename($"{mapInfo.NameB}_{teResourceGUID.Index(mapInfo.MetadataGUID):X}")), env.MapEnvironmentSound);
+                            SaveSound(flags, basePath, Path.Combine("Sound", mapName), env.MapEnvironmentSound);
                         if (!flags.SkipMapEnvironmentLUT && done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name)))
                         {
                             SaveTex(flags, basePath, "LUT", fname, env.LUT);
@@ -108,11 +108,11 @@ namespace DataTool.ToolLogic.Extract
                         if (!flags.SkipMapEnvironmentSkyCubemap && done.Add(new KeyValuePair<ulong, string>(env.SkyEnvironmentCubemap, mapInfo.Name)))
                             SaveTex(flags, basePath, "SkyCubemap", fname, env.SkyEnvironmentCubemap);
                         if (!flags.SkipMapEnvironmentSkybox && done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel ^ env.SkyboxModelLook, mapInfo.Name)))
-                            SaveMdl(flags, basePath, Path.Combine("Skybox", GetValidFilename($"{mapInfo.NameB}_{teResourceGUID.Index(mapInfo.MetadataGUID):X}")), env.SkyboxModel, env.SkyboxModelLook);
+                            SaveMdl(flags, basePath, Path.Combine("Skybox", mapName), env.SkyboxModel, env.SkyboxModelLook);
                         if (!flags.SkipMapEnvironmentEntity && done.Add(new KeyValuePair<ulong, string>(env.EntityDefinition, mapInfo.Name)))
-                            SaveEntity(flags, basePath, Path.Combine("Entity", GetValidFilename($"{mapInfo.NameB}_{teResourceGUID.Index(mapInfo.MetadataGUID):X}")), env.EntityDefinition);
+                            SaveEntity(flags, basePath, Path.Combine("Entity", mapName), env.EntityDefinition);
 
-                        InfoLog("Saved Environment data for {0}", mapInfo.NameB);
+                        InfoLog("Saved Environment data for {0}", mapInfo.GetUniqueName());
                     }
                 }
             }
@@ -138,7 +138,7 @@ namespace DataTool.ToolLogic.Extract
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, part), info);
         }
 
-        private void SaveLUT(ExtractFlags flags, string basePath, string part, string fname, ulong key, string ocioPath, MapInfo mapInfo)
+        private void SaveLUT(ExtractFlags flags, string basePath, string part, string fname, ulong key, string ocioPath, MapHeader map)
         {
             if (!Directory.Exists(Path.Combine(basePath, part)))
             {
@@ -166,7 +166,7 @@ namespace DataTool.ToolLogic.Extract
                     spilutWriter.WriteLine(lut);
                     using (TextWriter ocioWriter = File.AppendText(Path.Combine(ocioPath)))
                     {
-                        ocioWriter.WriteLine(OCIOChunk(mapInfo, fname));
+                        ocioWriter.WriteLine(OCIOChunk(map, fname));
                     }
                 }
             }

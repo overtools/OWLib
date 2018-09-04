@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using DataTool.JSON;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using TankLib;
 using TankLib.STU;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
+using Utf8Json;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
@@ -14,48 +15,53 @@ namespace DataTool.DataModels {
     /// <summary>
     /// Unlock data model
     /// </summary>
-    [JsonObject(MemberSerialization.OptOut)]
+    [DataContract]
     public class Unlock {
         /// <summary>
         /// Name of this unlock
         /// </summary>
+        [DataMember]
         public string Name;
         
         /// <summary>
         /// Description of this unlock
         /// </summary>
+        [DataMember]
         public string Description;
         
         /// <summary>
         /// Unlock rarity
         /// </summary>
         /// <see cref="STUUnlockRarity"/>
-        [JsonConverter(typeof(StringEnumConverter))]
+        [DataMember]
         public STUUnlockRarity Rarity;
         
         /// <summary>
         /// Where this unlock can be obtained from
         /// </summary>
         /// <example>"Available in Halloween Loot Boxes"</example>
+        [DataMember]
         public string AvailableIn;
 
         /// <summary>
         /// Friendly type name
         /// </summary>
+        [DataMember]
         public string Type;
         
         /// <summary>
         /// Internal StructuredData
         /// </summary>
-        [JsonIgnore]
+        [IgnoreDataMember]
         public STUUnlock STU;
 
-        [JsonConverter(typeof(GUIDConverter))]
-        public ulong GUID;
+        [DataMember]
+        public teResourceGUID GUID;
 
         /// <summary>
         /// DataTool specific Unlock Data Tag
         /// </summary>
+        [DataMember]
         public string Tag;
 
         public Unlock(STUUnlock unlock, ulong guid) {
@@ -74,7 +80,7 @@ namespace DataTool.DataModels {
             Rarity = unlock.m_rarity;
             Description = GetDescriptionString(unlock.m_3446F580);
 
-            GUID = guid;
+            GUID = (teResourceGUID)guid;
             STU = unlock;
 
             Type = GetTypeName(unlock);

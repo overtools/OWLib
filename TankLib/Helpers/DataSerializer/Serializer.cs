@@ -268,10 +268,18 @@ namespace TankLib.Helpers.DataSerializer
             bool isStruct = type.IsValueType && !type.IsPrimitive;
 
             if (type == typeof(byte)) return reader.ReadByte();
-            if (type == typeof(uint)) return reader.ReadUInt32();
+            if (type == typeof(sbyte)) return reader.ReadSByte();
+            
             if (type == typeof(int)) return reader.ReadInt32();
-            if (type == typeof(float)) return reader.ReadSingle();
+            if (type == typeof(uint)) return reader.ReadUInt32();
+            
+            if (type == typeof(short)) return reader.ReadInt16();
+            if (type == typeof(ushort)) return reader.ReadUInt16();
+            
+            if (type == typeof(long)) return reader.ReadInt64();
             if (type == typeof(ulong)) return reader.ReadUInt64();
+            
+            if (type == typeof(float)) return reader.ReadSingle();
 
             if (type.IsEnum)
             {
