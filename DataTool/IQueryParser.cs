@@ -148,6 +148,8 @@ namespace DataTool {
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes =
                 new Dictionary<string, Dictionary<string, ParsedArg>>();
 
+            if (result.Length == 0) return null;
+            
             foreach (string opt in result) {
                 if (opt.StartsWith("--")) continue; // ok so this is a flag
                 string[] split = opt.Split('|');
