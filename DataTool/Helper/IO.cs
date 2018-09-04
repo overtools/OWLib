@@ -72,6 +72,7 @@ namespace DataTool.Helper {
         }
 
         public static void WriteFile(ulong guid, string path) {
+            if (!TankHandler.Assets.ContainsKey(guid)) return;
             WriteFile(OpenFile(guid), guid, path);
         }
 
