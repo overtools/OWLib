@@ -9,6 +9,7 @@ using TankLib.ExportFormats;
 using TankLib.STU;
 using TankLib.STU.Types;
 using TACTLib.Client;
+using TACTLib.Client.HandlerArgs;
 using TACTLib.Container;
 using TACTLib.Core;
 using TACTLib.Core.Product.Tank;
@@ -49,7 +50,9 @@ namespace CASCEncDump {
                 TextLanguage = language
             };
             if (mode != "allcmf" && mode != "dump-guids" && mode != "compare-guids" && mode != "dump-cmf") {
-                createArgs.Tank.LoadManifest = false;
+                createArgs.HandlerArgs = new ClientCreateArgs_Tank {
+                    LoadManifest = true
+                };
             }
             Client = new ClientHandler(overwatchDir, createArgs);
             TankHandler = (ProductHandler_Tank)Client.ProductHandler;

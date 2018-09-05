@@ -12,6 +12,7 @@ using TankLib;
 using TankLib.STU;
 using TankLib.STU.Types;
 using TACTLib.Client;
+using TACTLib.Client.HandlerArgs;
 using TACTLib.Core.Product.Tank;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
@@ -200,7 +201,7 @@ namespace DataTool {
             ClientCreateArgs args = new ClientCreateArgs {
                 SpeechLanguage = Flags.SpeechLanguage,
                 TextLanguage = Flags.Language,
-                Tank = new ClientCreateArgs.TankArgs {
+                HandlerArgs = new ClientCreateArgs_Tank {
                     CacheAPM = Flags.UseCache,
                 }
             };

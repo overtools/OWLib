@@ -14,6 +14,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using TankView.Helper;
 using TankView.ViewModel;
 using TACTLib.Client;
+using TACTLib.Client.HandlerArgs;
 using TACTLib.Config;
 using TACTLib.Core;
 using TACTLib.Core.Product;
@@ -64,6 +65,8 @@ namespace TankView {
         }
 
         public MainWindow() {
+            ClientArgs.HandlerArgs = new ClientCreateArgs_Tank();
+            
             ViewContext = SynchronizationContext.Current;
 
             NGDPPatchHosts = new NGDPPatchHosts();

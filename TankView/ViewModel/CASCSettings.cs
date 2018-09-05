@@ -1,24 +1,24 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using TankView.Properties;
+using TACTLib.Client.HandlerArgs;
 
 namespace TankView.ViewModel {
     public class CASCSettings : INotifyPropertyChanged {
         private bool _apm = Settings.Default.CacheAPM;
 
         public bool APM {
-            get { return _apm; }
+            get => _apm;
             set {
                 _apm = value;
                 Settings.Default.CacheAPM = value;
                 Settings.Default.Save();
-                MainWindow.ClientArgs.Tank.CacheAPM = value;
+                ((ClientCreateArgs_Tank)MainWindow.ClientArgs.HandlerArgs).CacheAPM = value;
                 NotifyPropertyChanged(nameof(APM));
             }
         }
         
         public CASCSettings() {
-            MainWindow.ClientArgs.Tank.CacheAPM = APM;
+            ((ClientCreateArgs_Tank)MainWindow.ClientArgs.HandlerArgs).CacheAPM = APM;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
