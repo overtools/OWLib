@@ -39,9 +39,7 @@ namespace CASCEncDump {
             // {overwatch dir} dump  --  Dump hashes
             // {overwatch dir} compare-enc {other ver num}  --  Extract added files from encoding (requires dump from other version)
             // {overwatch dir} compare-idx {other ver num}  --  Extract added files from indices (requires dump from other version)
-            // {overwatch dir} nonblte  --  Extract non-blte files
-            // {overwatch dir} extract-encoding  --  Extract encoding file
-            // {overwatch dir} addcmf  --  Extract all files from the cmf
+            // {overwatch dir} allcmf  --  Extract all files from the cmf
 
             // casc setup
             
@@ -51,7 +49,7 @@ namespace CASCEncDump {
             };
             if (mode != "allcmf" && mode != "dump-guids" && mode != "compare-guids" && mode != "dump-cmf") {
                 createArgs.HandlerArgs = new ClientCreateArgs_Tank {
-                    LoadManifest = true
+                    LoadManifest = false
                 };
             }
             Client = new ClientHandler(overwatchDir, createArgs);
