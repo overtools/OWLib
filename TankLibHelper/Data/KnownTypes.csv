@@ -269,8 +269,8 @@ D10B25CA, STUProfileOverviewGeneralStat
 B6243CC3, STUPublishEntry
 2DB5899F, STUPvPGameComponent
 D788E54C, STURagdollConfig
-39B590A9, STURaycastReceiver
-5ECEFF67, STURaycastReceiverComponent
+39B590A9, STURayCastReceiver
+5ECEFF67, STURayCastReceiverComponent
 82E631CB, STURayCastReceiverOverride
 0051316E, STURayCastReceiverResult
 3E03052C, STURigidBodyConfig
@@ -338,7 +338,7 @@ B480A974, STUStatescriptStateLogicalButton
 A2D0B338, STUStatescriptStateMoveTo
 2CBEBF06, STUStatescriptStatePet
 D8915B1D, STUStatescriptStatePhysicsExplosion
-019E0826, STUStatescriptStateRaycast
+019E0826, STUStatescriptStateRayCast
 01D67FA0, STUStatescriptStateShockwave
 594C2D80, STUStatescriptStateStack
 164EF13B, STUStatescriptStateTrackRay
