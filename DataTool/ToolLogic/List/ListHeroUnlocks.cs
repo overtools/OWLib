@@ -64,6 +64,9 @@ namespace DataTool.ToolLogic.List {
                 if (unlock.Description != null) {
                     Log($"{start}\t\t\t{unlock.Description}");
                 }
+                if(unlock.AvailableIn != null) {
+                    Log($"{start}\t\t\t{unlock.AvailableIn}");
+                }
             }
         }
 
