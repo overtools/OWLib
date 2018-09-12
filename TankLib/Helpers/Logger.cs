@@ -21,8 +21,14 @@ namespace TankLib.Helpers {
             if (UseColor) {
                 Console.ForegroundColor = color;
             }
+            
 
             string output = message;
+
+            if (arg.Length > 0) {
+                output = string.Format(message, arg);
+            }
+
             if (!string.IsNullOrWhiteSpace(category)) {
                 output = $"[{category}] {output}";
             }
@@ -31,9 +37,6 @@ namespace TankLib.Helpers {
                 output = $"{DateTime.Now.ToLocalTime().ToLongTimeString()} {output}";
             }
 
-            if (arg.Length > 0) {
-                writer.Write(output, arg);
-            }
             writer.Write(output);
             
             if (UseColor) {
@@ -107,6 +110,11 @@ namespace TankLib.Helpers {
             }
 
             string output = message;
+
+            if (arg.Length > 0) {
+                output = string.Format(message, arg);
+            }
+
             if (!string.IsNullOrWhiteSpace(category)) {
                 output = $"[{category}] {output}";
             }
@@ -115,9 +123,6 @@ namespace TankLib.Helpers {
                 output = $"{DateTime.Now.ToLocalTime().ToLongTimeString()} {output}";
             }
 
-            if (arg.Length > 0) {
-                writer.Write(output, arg);
-            }
             writer.Write(output);
 
             if (UseColor && (!string.IsNullOrWhiteSpace(foreground) || !string.IsNullOrWhiteSpace(background))) {
