@@ -61,7 +61,7 @@ namespace DataTool {
                 return;
             }
 
-            TankLib.Helpers.Logger.Warn("Core", $"CommandLineFile: {FlagParser.ArgFilePath}");
+            TankLib.Helpers.Logger.Info("Core", $"CommandLineFile: {FlagParser.ArgFilePath}");
             
             if (Flags.SaveArgs) {
                 FlagParser.AppArgs = FlagParser.AppArgs.Where(x => !x.StartsWith("--arg")).ToArray();
