@@ -114,24 +114,6 @@ namespace TankLib.Chunks {
             Unk8 = 128
         }
 
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct MeshFace {
-            public ushort V1;
-            public ushort V2;
-            public ushort V3;
-
-            public MeshFaceExport ToExportStruct() {
-                return new MeshFaceExport {V1 = V1, V2 = V2, V3 = V3};
-            }
-        }
-        
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct MeshFaceExport {
-            public int V1;
-            public int V2;
-            public int V3;
-        }
-
         /// <summary>Parsed submesh</summary>
         public class Submesh {
             /// <summary>Vertex positions</summary>

@@ -31,14 +31,35 @@ namespace TankLib {
             public uint Unknown5;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct Unknown {
+            public ulong A;
+            public ulong B;
+        }
+
+        /// <summary>MaterialData Texture</summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct Texture {
+            /// <summary>Texture GUID</summary>
+            /// <remarks>File type 004</remarks>
+            public teResourceGUID TextureGUID;
+        
+            /// <summary>CRC32 of input name</summary>
+            /// <remarks>Matches up on teShaderInstance</remarks>
+            public uint NameHash;
+        
+            /// <summary>Unknown flags</summary>
+            public byte Flags;
+        }
+
         /// <summary>Header data</summary>
         public MatDataHeader Header;
         
         /// <summary>Texture definitions</summary>
-        public teMaterialDataTexture[] Textures;
+        public Texture[] Textures;
         
         /// <summary>Unknown definitions</summary>
-        public teMaterialDataUnknown[] Unknowns;
+        public Unknown[] Unknowns;
 
         /// <summary>Constant buffer definitions</summary>
         public teMaterialDataStaticInput[] StaticInputs;
@@ -50,15 +71,16 @@ namespace TankLib {
 
                 if (Header.TextureOffset > 0) {
                     reader.BaseStream.Position = Header.TextureOffset;
-                    
-                    Textures = reader.ReadArray<teMaterialDataTexture>(Header.TextureCount);
+
+                    Textures = reader.ReadArray<Texture>(Header.TextureCount);
                 }
 
                 if (Header.Offset4 > 0) {
                     reader.BaseStream.Position = Header.Offset4;
 
-                    Unknowns = reader.ReadArray<teMaterialDataUnknown>(Header.Offset4Count);
+                    Unknowns = reader.ReadArray<Unknown>(Header.Offset4Count);
                 }
+
                 if (Header.StaticInputsOffset > 0) {
                     reader.BaseStream.Position = Header.StaticInputsOffset;
                     StaticInputs = new teMaterialDataStaticInput[Header.StaticInputCount];
@@ -69,9 +91,9 @@ namespace TankLib {
             }
         }
 
-        public teMaterialDataTexture GetTexture(uint hash) {
+        public Texture GetTexture(uint hash) {
             if (Textures == null) return default;
-            foreach (teMaterialDataTexture texture in Textures) {
+            foreach (Texture texture in Textures) {
                 if (texture.NameHash == hash) {
                     return texture;
                 }
@@ -118,26 +140,5 @@ namespace TankLib {
 
             Data = reader.ReadBytes(size);
         }
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct teMaterialDataUnknown {
-        public ulong A;
-        public ulong B;
-    }
-
-    /// <summary>MaterialData Texture</summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct teMaterialDataTexture {
-        /// <summary>Texture GUID</summary>
-        /// <remarks>File type 004</remarks>
-        public teResourceGUID Texture;
-        
-        /// <summary>CRC32 of input name</summary>
-        /// <remarks>Matches up on teShaderInstance</remarks>
-        public uint NameHash;
-        
-        /// <summary>Unknown flags</summary>
-        public byte Flags;
     }
 }

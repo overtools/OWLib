@@ -56,7 +56,7 @@ namespace TankLib {
             public DXGI_PIXEL_FORMAT Format;
             public byte Surfaces;
             public byte Unknown2;
-            public byte Indice;
+            public byte PayloadCount;
             public byte Unknown3;
             public ushort Width;
             public ushort Height;
@@ -88,7 +88,7 @@ namespace TankLib {
 
                 if (IsCubemap()) ret.Caps2 = 0xFE00;
 
-                if (Mips > 1 && (Indice == 1 || IsCubemap())) {
+                if (Mips > 1 && (PayloadCount == 1 || IsCubemap())) {
                     ret.MipmapCount = Mips;
                     ret.Caps1 = 0x8 | 0x1000 | 0x400000;
                 }

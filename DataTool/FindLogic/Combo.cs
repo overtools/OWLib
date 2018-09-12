@@ -1035,9 +1035,9 @@ namespace DataTool.FindLogic {
                     teMaterialData materialData = new teMaterialData(OpenFile(guid));
                     if (materialData.Textures != null) {
                         materialDataInfo.Textures = new Dictionary<ulong, uint>();
-                        foreach (teMaterialDataTexture matDataTex in materialData.Textures) {
-                            Find(info, matDataTex.Texture, replacements, materialDataContext);
-                            materialDataInfo.Textures[matDataTex.Texture] = matDataTex.NameHash;
+                        foreach (teMaterialData.Texture matDataTex in materialData.Textures) {
+                            Find(info, matDataTex.TextureGUID, replacements, materialDataContext);
+                            materialDataInfo.Textures[matDataTex.TextureGUID] = matDataTex.NameHash;
                         }
                     }
                     

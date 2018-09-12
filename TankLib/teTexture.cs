@@ -30,7 +30,7 @@ namespace TankLib {
             Size = Header.DataSize;
             Format = Header.Format;
 
-            if (Header.DataSize == 0) {
+            if (Header.DataSize == 0 || Header.PayloadCount > 0) {
                 PayloadRequired = true;
                 return;
             }
@@ -42,7 +42,9 @@ namespace TankLib {
 
         public teResourceGUID GetPayloadGUID(teResourceGUID textureResource, int region = 1)
         {
-            ulong guid = (textureResource & 0xF0FFFFFFFFUL) | ((ulong)((byte)(Header.Indice - 1)) << 32) | 0x0320000000000000UL;
+            ulong guid = (textureResource & 0xF0FFFFFFFFUL) | ((ulong)((byte)(Header.PayloadCount - 1)) << 32) | 0x0320000000000000UL;
+            // so basically: thing | (payloadIdx & 0xF) << 32) | 0x320000000000000i64
+            
             if(teResourceGUID.Type(textureResource) == 0xF1)
             {
                 guid |= ((ulong)region << 40);

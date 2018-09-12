@@ -33,6 +33,24 @@ namespace TankLib {
             public Enums.teSHADER_STATE ShaderStateFlags;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct ShaderQuality {
+            public short VertexIndex;
+            public short PixelIndex;
+
+            public short UnkA;
+            public short UnkB;
+        }
+        
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct ShaderUnk {
+            public short Vertex;
+            public short Pixel;
+
+            public short UnkA;
+            public short UnkB;
+        }
+
         /// <summary>Header Data</summary>
         public GroupHeader Header;
         
@@ -93,24 +111,6 @@ namespace TankLib {
                 reader.BaseStream.Position = 104;
                 ShaderUnks = reader.ReadArray<ShaderUnk>(5);
             }
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct ShaderQuality {
-            public short VertexIndex;
-            public short PixelIndex;
-
-            public short UnkA;
-            public short UnkB;
-        }
-        
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct ShaderUnk {
-            public short Vertex;
-            public short Pixel;
-
-            public short UnkA;
-            public short UnkB;
         }
 
         /// <summary>
