@@ -42,6 +42,7 @@ namespace DataTool.SaveLogic.Unlock {
         }
 
         public static void SaveVoiceLine(ICLIFlags flags, VoiceLineInstance voiceLineInstance, string directory, FindLogic.Combo.ComboInfo combo) {
+            if (voiceLineInstance.VoiceSounds == null) return;
             foreach (ulong soundFile in voiceLineInstance.VoiceSounds) {
                 FindLogic.Combo.SoundFileInfo fakeSoundFileInfo = new FindLogic.Combo.SoundFileInfo(soundFile);
                 combo.VoiceSoundFiles[soundFile] = fakeSoundFileInfo;
