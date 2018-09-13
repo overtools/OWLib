@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -96,7 +97,12 @@ namespace DataTool.Helper {
         }
         
         public static Stream OpenFile(ulong guid) {
-            return TankHandler.OpenFile(guid);
+            try {
+                return TankHandler.OpenFile(guid);
+            } catch (Exception) {
+                TankLib.Helpers.Logger.Debug("Core", $"Unable to load file: {guid:X8}");
+                return null;
+            }
         }
         
         public static void CreateDirectoryFromFile(string path) {
