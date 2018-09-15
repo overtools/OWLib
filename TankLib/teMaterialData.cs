@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.InteropServices;
 
 namespace TankLib {
@@ -106,39 +105,25 @@ namespace TankLib {
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct HeaderData {
             public uint Hash;
-            public TestByteFlags Flags;
-            public byte Size;
+            public Type Flags;
+            public byte Count;
             public short Unknown;
         }
+
+        public enum Type : byte {
+            
+        }
+
+        public readonly int[] Sizes = {0, 4, 4, 4, 4, 4, 4, 8, 8, 0xC, 0x10, 0x10, 0x24, 0x30};
 
         public HeaderData Header;
         public byte[] Data;
 
         public teMaterialDataStaticInput(BinaryReader reader) {
             Header = reader.Read<HeaderData>();
-            int size = Header.Size;
-            byte intFlags = (byte) Header.Flags;
-
-            // todo: actually use the damn flags
-            if (intFlags == 10) { // F00000002, F00000008
-                size *= 16;
-            } else if (intFlags == 8) { // F00000008
-                size *= 8;
-            } else if (intFlags == 11) { // F00000001, F00000002, F00000008
-                size *= 16;
-            } else if (intFlags == 3) { // F00000001, F00000002
-                size *= 4;
-            } else if (intFlags == 2) { // F00000002
-                size *= 4;
-            } else if (intFlags == 6) { // F00000002, F00000004
-                size *= 4;
-            } else if (intFlags == 9) { // F00000001, F00000008
-                size *= 12;
-            } else {
-                throw new Exception($"teMaterialDataStaticInput: Unsure how much to read for data ({intFlags}, flags: {Header.Flags}, offset: {reader.BaseStream.Position})");
-            }
-
-            Data = reader.ReadBytes(size);
+            
+            byte idx = (byte) Header.Flags;
+            Data = reader.ReadBytes(Header.Count * Sizes[idx]);
         }
     }
 }
