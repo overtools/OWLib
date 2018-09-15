@@ -1,11 +1,19 @@
 ﻿using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace TankLib {
     /// <summary>Tank Texture Payload, type 04D</summary>
     public class teTexturePayload {
-        public TextureTypes.TexturePayloadHeader Header;
-        public TextureTypes.TextureType Format;
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct TexturePayloadHeader {
+            public uint Mips;
+            public uint Surfaces;
+            public uint ImageSize;
+            public uint HeaderSize;
+        }
+        
+        public TexturePayloadHeader Header;
         public uint Size;
         public uint[] Color1;
         public uint[] Color2;
@@ -14,16 +22,12 @@ namespace TankLib {
         public uint[] Color5;
         public byte[] RawData;
 
-        /// <summary>Parent texture object</summary>
-        public teTexture Parent;
-
         /// <summary>Load payload from the parent texture + payload stream</summary>
         /// <param name="parent">Parent texture object</param>
         /// <param name="payloadStream">Stream to load from</param>
         public teTexturePayload(teTexture parent, Stream payloadStream) {
-            Parent = parent;
             using (BinaryReader dataReader = new BinaryReader(payloadStream)) {
-                Header = dataReader.Read<TextureTypes.TexturePayloadHeader>();
+                Header = dataReader.Read<TexturePayloadHeader>();
 
                 if(parent.Header.GetTextureType() == TextureTypes.TextureType.Unknown) {
                     RawData = dataReader.ReadBytes((int)Header.ImageSize);
@@ -37,7 +41,7 @@ namespace TankLib {
                 Color4 = new ushort[Size];
                 Color5 = new uint[Size];
 
-                if ((byte) parent.Header.Format > 72) {
+                if (parent.Header.Format > 72) {
                     Color3 = dataReader.ReadArray<ushort>((int)Size);
                     
                     for (int i = 0; i < Size; ++i) {  // todo: can make this faster
@@ -46,7 +50,7 @@ namespace TankLib {
                     }
                 }
 
-                if ((byte) parent.Header.Format < 80) {
+                if (parent.Header.Format < 80) {
                     Color1 = dataReader.ReadArray<uint>((int)Size);
                     Color2 = dataReader.ReadArray<uint>((int)Size);
                 }
@@ -54,18 +58,19 @@ namespace TankLib {
         }
 
         /// <summary>Save DDS to stream</summary>
+        /// <param name="parentHeader">Parent teTexture header</param>
         /// <param name="stream">Stream to be written to</param>
         /// <param name="keepOpen">Keep the stream open after writing</param>
-        public void SaveToDDS(Stream stream, bool keepOpen=false) {
+        public void SaveToDDS(teTexture.TextureHeader parentHeader, Stream stream, bool keepOpen=false) {
             using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
-                TextureTypes.DDSHeader dds = Parent.Header.ToDDSHeader();
+                TextureTypes.DDSHeader dds = parentHeader.ToDDSHeader();
                 ddsWriter.Write(dds);
                 if (dds.Format.FourCC == (int)TextureTypes.TextureType.Unknown) {
                     TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
-                        Format = (uint)Parent.Header.Format,
+                        Format = parentHeader.Format,
                         Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
-                        Misc = (uint)(Parent.Header.IsCubemap() ? 0x4 : 0),
-                        Size = (uint)(Parent.Header.IsCubemap() ? 1 : Parent.Header.Surfaces),
+                        Misc = (uint)(parentHeader.IsCubemap() ? 0x4 : 0),
+                        Size = (uint)(parentHeader.IsCubemap() ? 1 : parentHeader.Surfaces),
                         Misc2 = 0
                     };
                     ddsWriter.Write(d10);
@@ -75,25 +80,26 @@ namespace TankLib {
                     return;
                 }
                 for (int i = 0; i < Size; ++i) {
-                    if ((byte)Parent.Header.Format > 72) {
+                    if (parentHeader.Format > 72) {
                         ddsWriter.Write(Color3[i]);
                         ddsWriter.Write(Color4[i]);
                         ddsWriter.Write(Color5[i]);
                     }
 
-                    if ((byte)Parent.Header.Format < 80) {
+                    if (parentHeader.Format < 80) {
                         ddsWriter.Write(Color1[i]);
                         ddsWriter.Write(Color2[i]);
                     }
                 }
             }
         }
-        
+
         /// <summary>Save DDS to stream</summary>
+        /// <param name="parentHeader">Parent teTexture header</param>
         /// <param name="keepOpen">Keep the stream open after writing</param>
-        public Stream SaveToDDS(bool keepOpen=false) {
+        public Stream SaveToDDS(teTexture.TextureHeader parentHeader, bool keepOpen=false) {
             MemoryStream stream = new MemoryStream();
-            SaveToDDS(stream, keepOpen);
+            SaveToDDS(parentHeader, stream, keepOpen);
             return stream;
         }
     }

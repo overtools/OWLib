@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace TankLib {
@@ -37,119 +36,15 @@ namespace TankLib {
 
         public enum TextureType : uint {
             Linear = 0,
-            ATI1 = 826889281,
-            ATI2 = 843666497,
-            DXT1 = 827611204,
-            DXT2 = 844388420,
-            DXT3 = 861165636,
-            DXT4 = 877942852,
-            DXT5 = 894720068,
-            RXGB = 1111971922,
-            Unknown = 808540228
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct TextureHeader {
-            public TEXTURE_FLAGS Type;
-            public byte Unknown1;
-            public byte Mips;
-            public DXGI_PIXEL_FORMAT Format;
-            public byte Surfaces;
-            public byte Unknown2;
-            public byte PayloadCount;
-            public byte Unknown3;
-            public ushort Width;
-            public ushort Height;
-            public uint DataSize;
-            public ulong ReferenceKey;
-            public ulong Unknown4;
-
-            public DDSHeader ToDDSHeader() {
-                DDSHeader ret = new DDSHeader {
-                    Magic = 0x20534444,
-                    Size = 124,
-                    Flags = 0x1 | 0x2 | 0x4 | 0x1000 | 0x20000,
-                    Height = Height,
-                    Width = Width,
-                    LinearSize = 0,
-                    Depth = 0,
-                    MipmapCount = 1,
-                    Format = GetTextureType().ToPixelFormat(),
-                    Caps1 = 0x1000,
-                    Caps2 = 0,
-                    Caps3 = 0,
-                    Caps4 = 0,
-                    Reserved2 = 0
-                };
-                if (Surfaces > 1) {
-                    ret.Caps1 = 0x8 | 0x1000;
-                    ret.Format = TextureType.Unknown.ToPixelFormat();
-                }
-
-                if (IsCubemap()) ret.Caps2 = 0xFE00;
-
-                if (Mips > 1 && (PayloadCount == 1 || IsCubemap())) {
-                    ret.MipmapCount = Mips;
-                    ret.Caps1 = 0x8 | 0x1000 | 0x400000;
-                }
-
-                return ret;
-            }
-
-            public TextureType GetTextureType() {
-                return TextureTypeFromHeaderByte((byte) Format);
-            }
-
-            public static TextureType TextureTypeFromHeaderByte(byte type) {
-                if (type == 70 || type == 71 || type == 72) return TextureType.DXT1;
-
-                if (type == 73 || type == 74 || type == 75) return TextureType.DXT3;
-
-                if (type == 76 || type == 77 || type == 78) return TextureType.DXT5;
-
-                if (type == 79 || type == 80 || type == 81) return TextureType.ATI1;
-
-                if (type == 82 || type == 83 || type == 84) return TextureType.ATI2;
-
-                return TextureType.Unknown;
-            }
-
-            public bool IsCubemap() {
-                return (Type & TEXTURE_FLAGS.CUBEMAP) == TEXTURE_FLAGS.CUBEMAP;
-            }
-
-            public bool IsMultisurface() {
-                return (Type & TEXTURE_FLAGS.MULTISURFACE) == TEXTURE_FLAGS.MULTISURFACE;
-            }
-
-            public bool IsWorld() {
-                return (Type & TEXTURE_FLAGS.WORLD) == TEXTURE_FLAGS.WORLD;
-            }
-            
-            public TextureType GetFormat() {
-                return TextureTypeFromHeaderByte((byte)Format);
-            }
-        }
-        
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct TexturePayloadHeader {
-            public uint Mips;
-            public uint Surfaces;
-            public uint ImageSize;
-            public uint HeaderSize;
-        }
-
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        [Flags]
-        public enum TEXTURE_FLAGS : byte {
-            UNKNOWN1 = 0x01,
-            DIFFUSE = 0x02,
-            UNKNOWN2 = 0x04,
-            CUBEMAP = 0x08,
-            UNKNOWN4 = 0x10,
-            WORLD = 0x20,
-            MULTISURFACE = 0x40,
-            UNKNOWN5 = 0x80
+            ATI1 = 0x31495441,
+            ATI2 = 0x32495441,
+            DXT1 = 0x31545844,
+            DXT2 = 0x32545844,
+            DXT3 = 0x33545844,
+            DXT4 = 0x34545844,
+            DXT5 = 0x35545844,
+            RXGB = 0x42475852,
+            Unknown = 0x30315844
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]

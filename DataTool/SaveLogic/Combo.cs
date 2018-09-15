@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -483,15 +482,6 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public static class TextureConfig {
-            internal const int FOURCC_DX10 = 808540228;
-            internal const int FOURCC_ATI1 = 826889281;
-            internal const int FOURCC_ATI2 = 843666497;
-            internal static readonly int[] DXGI_BC4 = { 79, 80, 91 };
-            internal static readonly int[] DXGI_BC5 = { 82, 83, 84 };
-        }
-
         public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong textureGUID) {
             bool convertTextures = true;
             string convertType = "dds";
@@ -542,14 +532,15 @@ namespace DataTool.SaveLogic {
                             return;
                         }
                         
-                        uint fourCC = texture.Header.GetFormat().ToPixelFormat().FourCC;
-                        bool isBcffValid = TextureConfig.DXGI_BC4.Contains((int) texture.Header.Format) ||
-                                           TextureConfig.DXGI_BC5.Contains((int) texture.Header.Format) ||
-                                           fourCC == TextureConfig.FOURCC_ATI1 || fourCC == TextureConfig.FOURCC_ATI2;
-                        
+                        bool isBcffValid = teTexture.DXGI_BC4.Contains(texture.Header.Format) || 
+                                           teTexture.DXGI_BC5.Contains(texture.Header.Format) ||
+                                           new[] {TextureTypes.TextureType.ATI1, 
+                                               TextureTypes.TextureType.ATI2}.Contains(texture.Header.GetTextureType());
                         
                         ImageFormat imageFormat = null;
                         if (convertType == "tif") imageFormat = ImageFormat.Tiff;
+                        if (convertType == "png") imageFormat = ImageFormat.Png;
+                        if (convertType == "jpg") imageFormat = ImageFormat.Jpeg;
                         // if (convertType == "tga") imageFormat = Im.... oh
                         // so there is no TGA image format.
                         // guess the TGA users are stuck with the DirectXTex stuff for now.

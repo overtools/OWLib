@@ -289,15 +289,15 @@ namespace CASCEncDump {
                         //teStructuredData structuredData =new teStructuredData(stream, true);
                         
                         teTexture texture = new teTexture(reader);
-                        if (!texture.PayloadRequired && texture.Size <= stream.Length && 
-                            (texture.Header.Type == TextureTypes.TEXTURE_FLAGS.CUBEMAP ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.DIFFUSE ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.MULTISURFACE ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN1 ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN2 ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN4 ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.UNKNOWN5 ||
-                             texture.Header.Type == TextureTypes.TEXTURE_FLAGS.WORLD) && 
+                        if (!texture.PayloadRequired && texture.Header.DataSize <= stream.Length && 
+                            (texture.Header.Flags == teTexture.Flags.CUBEMAP ||
+                             texture.Header.Flags == teTexture.Flags.DIFFUSE ||
+                             texture.Header.Flags == teTexture.Flags.MULTISURFACE ||
+                             texture.Header.Flags == teTexture.Flags.UNKNOWN1 ||
+                             texture.Header.Flags == teTexture.Flags.UNKNOWN2 ||
+                             texture.Header.Flags == teTexture.Flags.UNKNOWN4 ||
+                             texture.Header.Flags == teTexture.Flags.UNKNOWN5 ||
+                             texture.Header.Flags == teTexture.Flags.WORLD) && 
                             texture.Header.Height < 10000 && texture.Header.Width < 10000 && texture.Header.DataSize > 68) {
                             using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".dds")) {
                                 file.SetLength(0);
