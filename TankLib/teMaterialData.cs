@@ -114,7 +114,7 @@ namespace TankLib {
             
         }
 
-        public readonly int[] Sizes = {0, 4, 4, 4, 4, 4, 4, 8, 8, 0xC, 0x10, 0x10, 0x24, 0x30};
+        public static readonly int[] Sizes = {0, 4, 4, 4, 4, 4, 4, 8, 8, 0xC, 0x10, 0x10, 0x24, 0x30};
 
         public HeaderData Header;
         public byte[] Data;

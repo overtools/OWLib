@@ -73,12 +73,13 @@ namespace DataTool.ToolLogic.Extract.Debug {
             // }
             // return;
             
-            //SaveMaterial(path, 0xE00000000002381, "Chateau - Tall bush");
+            SaveMaterial(path, 0xE00000000002381, "Chateau - Tall bush");
             SaveMaterial(path, 0xE00000000004D29, "Chateau - Lake");
             //SaveMaterial(path, 0xE00000000004F0B, "Chateau - Background - Road");
             //SaveMaterial(path, 0xE00000000004EFF, "Chateau - Background - House");
             //SaveMaterial(path, 0xE00000000004F46, "Chateau - Tower - Body");
             SaveMaterial(path, 0xE000000000040C0, "Orisa - Classic - Main");
+            SaveMaterial(path, 0xE00000000000171, "Reaper - Classic - Main");
             //SaveMaterial(path, 0xE00000000005BBB, "Brigitte - Classic - Hair");
             
             
@@ -101,30 +102,6 @@ namespace DataTool.ToolLogic.Extract.Debug {
             //        SaveShaderGroup(shaderGroup, path2);
             //    }
             //}
-            
-            // 0xE1000000000001E = dev object shaders / UBER_SHADER_DEBUG_SHAPE
-            // 0xE1000000000001A = LightShaders
-            // 0xE1000000000001B = Shadow Composite
-            // 0xE1000000000003E = Light Process
-            // 0xE1000000000008D = HBAO
-            // 0xE100000000000AE = HBAO_CS
-            // 0xE1000000000008E = Light Compute
-            // 0xE100000000000A4 = Misc Compute
-            
-            // 0xE1000000000000D = StretchRenderTarget
-            // 0xE1000000000001F = Override
-            // 0xE100000000000A2 = ColorBlind
-            // 0xE10000000000020 = Model Default
-            // 0xE10000000000005 = DrawDefaultShaderDomino
-            // 0xE10000000000006 = DrawShaderDisplayAlphaClipSpace
-            // 0xE10000000000004 = DrawDefaultShaderClipSpaceNoAlpha
-            // 0xE10000000000003 = DrawDefaultShaderClipSpaceAdditive
-            // 0xE10000000000002 = DrawDefaultShaderClipSpace
-            // 0xE10000000000001 = DrawDefaultShader
-            // 0xE10000000000066 = canvas
-            // 0xE100000000000C1 = ImGui
-            
-            // 0xE1000000000000A = Lighting Env
 
             foreach (ulong guid in TrackedFiles[0x88]) {
                 using (Stream stream = IO.OpenFile(guid)) {
