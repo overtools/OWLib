@@ -4,7 +4,6 @@ using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib;
-using TankLib.STU;
 using TankLib.STU.Types;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
@@ -64,8 +63,9 @@ namespace DataTool.SaveLogic.Unlock {
                 info.Config.DoExistingEntities = false;
             }
 
-            foreach (teStructuredDataAssetRef<STUTexture> texture in new[] {hero.m_D3A31F29, hero.m_DAD2E3A2, hero.m_D696F2F6, hero.m_EA6FF023, hero.m_D90B256D}) {
-                FindLogic.Combo.Find(info, texture, replacements);
+            foreach (STU_1A496D3C tex in hero.m_8203BFE1) {
+                FindLogic.Combo.Find(info, tex.m_texture, replacements);
+                info.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
             }
             
             Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), info);

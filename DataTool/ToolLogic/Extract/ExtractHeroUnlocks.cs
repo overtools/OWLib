@@ -8,6 +8,7 @@ using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic.Unlock;
+using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
@@ -181,19 +182,11 @@ namespace DataTool.ToolLogic.Extract {
 
                 {
                     Combo.ComboInfo guiInfo = new Combo.ComboInfo();
-                    Combo.Find(guiInfo, hero.m_D696F2F6);
-                    guiInfo.SetTextureName(hero.m_D696F2F6, "Icon");
-                    
-                    Combo.Find(guiInfo, hero.m_D90B256D);
-                    guiInfo.SetTextureName(hero.m_D90B256D, "Portrait");
-                                        
-                    Combo.Find(guiInfo, hero.m_EA6FF023);
-                    guiInfo.SetTextureName(hero.m_EA6FF023, "Avatar");
-                    
-                    Combo.Find(guiInfo, hero.m_D3A31F29);
-                    guiInfo.SetTextureName(hero.m_D3A31F29, "SpectatorIcon");
-                    
-                    Combo.Find(guiInfo, hero.m_DAD2E3A2);
+
+                    foreach (STU_1A496D3C tex in hero.m_8203BFE1) {
+                        Combo.Find(guiInfo, tex.m_texture);
+                        guiInfo.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
+                    }
 
                     SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(heroPath, "GUI"), guiInfo);
                 }

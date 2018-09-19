@@ -3,8 +3,8 @@ using TankLib.STU.Types.Enums;
 
 // ReSharper disable All
 namespace TankLib.STU.Types {
-    [STUAttribute(0xC1A2DB26)]
-    public class STU_C1A2DB26 : STUInstance {
+    [STUAttribute(0xC1A2DB26, "STUCriteriaContainer")]
+    public class STUCriteriaContainer : STUInstance {
         [STUFieldAttribute(0xA20DCD80)]
         public ulong m_A20DCD80;
 

@@ -14,8 +14,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
         public teStructuredDataAssetRef<STUVoiceCategory> m_category;
 
-        [STUFieldAttribute(0x4FF98D41, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_C1A2DB26 m_4FF98D41;
+        [STUFieldAttribute(0x4FF98D41, "m_criteria", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUCriteriaContainer m_criteria;
 
         [STUFieldAttribute(0xDF647B95)]
         public Enum_BC00E017 m_DF647B95;

@@ -2,9 +2,9 @@
 
 // ReSharper disable All
 namespace TankLib.STU.Types {
-    [STUAttribute(0x5ECEFF67, "STURaycastReceiverComponent")]
-    public class STURaycastReceiverComponent : STUEntityComponent {
+    [STUAttribute(0x5ECEFF67, "STURayCastReceiverComponent")]
+    public class STURayCastReceiverComponent : STUEntityComponent {
         [STUFieldAttribute(0x6ADA2BDF, "m_raycastReceiver")]
-        public teStructuredDataAssetRef<STURaycastReceiver> m_raycastReceiver;
+        public teStructuredDataAssetRef<STURayCastReceiver> m_raycastReceiver;
     }
 }

@@ -7,8 +7,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0FEFF90F, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimBlendTreeSet_BlendTreeItem m_0FEFF90F;
 
-        [STUFieldAttribute(0xF9CA7995)]
-        public uint[] m_F9CA7995;
+        [STUFieldAttribute(0xF9CA7995, "m_paramIds")]
+        public uint[] m_paramIds;
 
         [STUFieldAttribute(0x2B2C5C7F, "m_animParamUpdater", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_72C48DD7 m_animParamUpdater;

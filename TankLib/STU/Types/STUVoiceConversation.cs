@@ -10,8 +10,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF79D31F9, "m_voiceConversationLine", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUVoiceConversationLine[] m_voiceConversationLine;
 
-        [STUFieldAttribute(0x4FF98D41, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_C1A2DB26 m_4FF98D41;
+        [STUFieldAttribute(0x4FF98D41, "m_criteria", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUCriteriaContainer m_criteria;
 
         [STUFieldAttribute(0x9CDDC24D, "m_weight")]
         public float m_weight;

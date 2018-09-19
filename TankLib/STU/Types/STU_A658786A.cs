@@ -4,6 +4,9 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xA658786A)]
     public class STU_A658786A : STUGenericSettings_Base {
+        [STUFieldAttribute(0x4B025BDD)]
+        public float m_4B025BDD;
+
         [STUFieldAttribute(0x449E4B34)]
         public float m_449E4B34;
 

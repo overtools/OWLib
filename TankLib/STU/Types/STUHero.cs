@@ -42,20 +42,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xC2FE396F, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_A0872511[] m_C2FE396F;
 
-        [STUFieldAttribute(0xD3A31F29)]
-        public teStructuredDataAssetRef<STUTexture> m_D3A31F29;
-
-        [STUFieldAttribute(0xDAD2E3A2)]
-        public teStructuredDataAssetRef<STUTexture> m_DAD2E3A2;
-
-        [STUFieldAttribute(0xD696F2F6)]
-        public teStructuredDataAssetRef<STUTexture> m_D696F2F6;
-
-        [STUFieldAttribute(0xEA6FF023)]
-        public teStructuredDataAssetRef<STUTexture> m_EA6FF023;
-
-        [STUFieldAttribute(0xD90B256D)]
-        public teStructuredDataAssetRef<STUTexture> m_D90B256D;
+        [STUFieldAttribute(0x8203BFE1, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_1A496D3C[] m_8203BFE1;
 
         [STUFieldAttribute(0xFC833C02, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_C0D5117B[] m_FC833C02;
@@ -99,8 +87,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xAF4EC410, "m_heroSize")]
         public Enum_C1DAF32A m_heroSize;
 
-        [STUFieldAttribute(0x7D88A63A)]
-        public Enum_0C014B4A Gender;
+        [STUFieldAttribute(0x7D88A63A, "m_gender")]
+        public Enum_0C014B4A m_gender;
 
         [STUFieldAttribute(0x62746D34)]
         public byte m_62746D34;

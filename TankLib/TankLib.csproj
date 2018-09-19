@@ -195,7 +195,6 @@
     <Compile Include="STU\Types\Enums\Enum_19FE2EB5.cs" />
     <Compile Include="STU\Types\Enums\Enum_1A77DFEC.cs" />
     <Compile Include="STU\Types\Enums\Enum_1A8EC894.cs" />
-    <Compile Include="STU\Types\Enums\Enum_1AA009C2.cs" />
     <Compile Include="STU\Types\Enums\Enum_1AE4E1A8.cs" />
     <Compile Include="STU\Types\Enums\Enum_1C8CB734.cs" />
     <Compile Include="STU\Types\Enums\Enum_1DA6CDFC.cs" />
@@ -206,7 +205,6 @@
     <Compile Include="STU\Types\Enums\Enum_2442C783.cs" />
     <Compile Include="STU\Types\Enums\Enum_2551B350.cs" />
     <Compile Include="STU\Types\Enums\Enum_258358CE.cs" />
-    <Compile Include="STU\Types\Enums\Enum_25C5DF4F.cs" />
     <Compile Include="STU\Types\Enums\Enum_25F056D0.cs" />
     <Compile Include="STU\Types\Enums\Enum_2637CD6D.cs" />
     <Compile Include="STU\Types\Enums\Enum_26EEC7FE.cs" />
@@ -272,7 +270,6 @@
     <Compile Include="STU\Types\Enums\Enum_5A789F71.cs" />
     <Compile Include="STU\Types\Enums\Enum_5A7EBE59.cs" />
     <Compile Include="STU\Types\Enums\Enum_5B361C17.cs" />
-    <Compile Include="STU\Types\Enums\Enum_5CDE8747.cs" />
     <Compile Include="STU\Types\Enums\Enum_5CDF102A.cs" />
     <Compile Include="STU\Types\Enums\Enum_5D8C1DCC.cs" />
     <Compile Include="STU\Types\Enums\Enum_5F827B4A.cs" />
@@ -281,7 +278,6 @@
     <Compile Include="STU\Types\Enums\Enum_629A6EE7.cs" />
     <Compile Include="STU\Types\Enums\Enum_62C9DE61.cs" />
     <Compile Include="STU\Types\Enums\Enum_650833F9.cs" />
-    <Compile Include="STU\Types\Enums\Enum_6590B910.cs" />
     <Compile Include="STU\Types\Enums\Enum_668716F0.cs" />
     <Compile Include="STU\Types\Enums\Enum_668FA6B6.cs" />
     <Compile Include="STU\Types\Enums\Enum_6842E392.cs" />
@@ -345,10 +341,12 @@
     <Compile Include="STU\Types\Enums\Enum_AB6997EB.cs" />
     <Compile Include="STU\Types\Enums\Enum_AB6CE3D1.cs" />
     <Compile Include="STU\Types\Enums\Enum_ACC1E6F7.cs" />
+    <Compile Include="STU\Types\Enums\Enum_AD184A21.cs" />
     <Compile Include="STU\Types\Enums\Enum_AD2CA2C1.cs" />
     <Compile Include="STU\Types\Enums\Enum_AD46F1CE.cs" />
     <Compile Include="STU\Types\Enums\Enum_ADA71829.cs" />
     <Compile Include="STU\Types\Enums\Enum_ADF0A7EE.cs" />
+    <Compile Include="STU\Types\Enums\Enum_AE1B6533.cs" />
     <Compile Include="STU\Types\Enums\Enum_B06ED6CF.cs" />
     <Compile Include="STU\Types\Enums\Enum_B0E46779.cs" />
     <Compile Include="STU\Types\Enums\Enum_B101E48A.cs" />
@@ -432,6 +430,7 @@
     <Compile Include="STU\Types\Enums\LoadoutCategory.cs" />
     <Compile Include="STU\Types\Enums\STUChatCommandType.cs" />
     <Compile Include="STU\Types\Enums\STUContactType.cs" />
+    <Compile Include="STU\Types\Enums\STUCriteriaType.cs" />
     <Compile Include="STU\Types\Enums\STUInputLogicalButtonCategory.cs" />
     <Compile Include="STU\Types\Enums\STULogicalButton.cs" />
     <Compile Include="STU\Types\Enums\STUPlayAnimSlot.cs" />
@@ -639,6 +638,15 @@
     <Compile Include="STU\Types\STUContactSet.cs" />
     <Compile Include="STU\Types\STUContactSetSTUContactSetComponent.cs" />
     <Compile Include="STU\Types\STUCreateArmIkItem.cs" />
+    <Compile Include="STU\Types\STUCriteria.cs" />
+    <Compile Include="STU\Types\STUCriteriaContainer.cs" />
+    <Compile Include="STU\Types\STUCriteria_HeroLevel.cs" />
+    <Compile Include="STU\Types\STUCriteria_IsHero.cs" />
+    <Compile Include="STU\Types\STUCriteria_OnMap.cs" />
+    <Compile Include="STU\Types\STUCriteria_PlayerLevel.cs" />
+    <Compile Include="STU\Types\STUCriteria_Stat.cs" />
+    <Compile Include="STU\Types\STUCriteria_Statescript.cs" />
+    <Compile Include="STU\Types\STUCriteria_Team.cs" />
     <Compile Include="STU\Types\STUCustomGameBrowserMapCatalogInfo.cs" />
     <Compile Include="STU\Types\STUDataFlow.cs" />
     <Compile Include="STU\Types\STUDataFlowStream_Float.cs" />
@@ -782,8 +790,8 @@
     <Compile Include="STU\Types\STURankedData.cs" />
     <Compile Include="STU\Types\STURankedSeason.cs" />
     <Compile Include="STU\Types\STURankedTierDefinition.cs" />
-    <Compile Include="STU\Types\STURaycastReceiver.cs" />
-    <Compile Include="STU\Types\STURaycastReceiverComponent.cs" />
+    <Compile Include="STU\Types\STURayCastReceiver.cs" />
+    <Compile Include="STU\Types\STURayCastReceiverComponent.cs" />
     <Compile Include="STU\Types\STURayCastReceiverOverride.cs" />
     <Compile Include="STU\Types\STURayCastReceiverResult.cs" />
     <Compile Include="STU\Types\STUResourceKey.cs" />
@@ -856,7 +864,7 @@
     <Compile Include="STU\Types\STUStatescriptStateMoveTo.cs" />
     <Compile Include="STU\Types\STUStatescriptStatePet.cs" />
     <Compile Include="STU\Types\STUStatescriptStatePhysicsExplosion.cs" />
-    <Compile Include="STU\Types\STUStatescriptStateRaycast.cs" />
+    <Compile Include="STU\Types\STUStatescriptStateRayCast.cs" />
     <Compile Include="STU\Types\STUStatescriptStateShockwave.cs" />
     <Compile Include="STU\Types\STUStatescriptStateStack.cs" />
     <Compile Include="STU\Types\STUStatescriptStateTrackRay.cs" />
@@ -978,7 +986,9 @@
     <Compile Include="STU\Types\STUVoiceCategory.cs" />
     <Compile Include="STU\Types\STUVoiceConversation.cs" />
     <Compile Include="STU\Types\STUVoiceConversationLine.cs" />
+    <Compile Include="STU\Types\STUVoiceLine.cs" />
     <Compile Include="STU\Types\STUVoiceLineInstance.cs" />
+    <Compile Include="STU\Types\STUVoiceLineSet.cs" />
     <Compile Include="STU\Types\STUVoiceSet.cs" />
     <Compile Include="STU\Types\STUVoiceSetComponent.cs" />
     <Compile Include="STU\Types\STUVoiceStimulus.cs" />
@@ -1029,6 +1039,7 @@
     <Compile Include="STU\Types\STU_01AE08F2.cs" />
     <Compile Include="STU\Types\STU_01B63B6D.cs" />
     <Compile Include="STU\Types\STU_01B7D341.cs" />
+    <Compile Include="STU\Types\STU_01BC951E.cs" />
     <Compile Include="STU\Types\STU_01BF4CB6.cs" />
     <Compile Include="STU\Types\STU_01BF62D9.cs" />
     <Compile Include="STU\Types\STU_01D0DF11.cs" />
@@ -1217,6 +1228,7 @@
     <Compile Include="STU\Types\STU_0DB9E66B.cs" />
     <Compile Include="STU\Types\STU_0DC58E3C.cs" />
     <Compile Include="STU\Types\STU_0E0BC8E0.cs" />
+    <Compile Include="STU\Types\STU_0E12DB21.cs" />
     <Compile Include="STU\Types\STU_0E272431.cs" />
     <Compile Include="STU\Types\STU_0E42EFCE.cs" />
     <Compile Include="STU\Types\STU_0E4B9278.cs" />
@@ -1229,6 +1241,7 @@
     <Compile Include="STU\Types\STU_0E918813.cs" />
     <Compile Include="STU\Types\STU_0EA156A2.cs" />
     <Compile Include="STU\Types\STU_0EC9EF75.cs" />
+    <Compile Include="STU\Types\STU_0ECFA22B.cs" />
     <Compile Include="STU\Types\STU_0EDDDB17.cs" />
     <Compile Include="STU\Types\STU_0EFA924A.cs" />
     <Compile Include="STU\Types\STU_0F1C106A.cs" />
@@ -1324,6 +1337,7 @@
     <Compile Include="STU\Types\STU_140AAB2C.cs" />
     <Compile Include="STU\Types\STU_140AAF33.cs" />
     <Compile Include="STU\Types\STU_141F470D.cs" />
+    <Compile Include="STU\Types\STU_1425443C.cs" />
     <Compile Include="STU\Types\STU_143DAF0C.cs" />
     <Compile Include="STU\Types\STU_14407FA5.cs" />
     <Compile Include="STU\Types\STU_144422F3.cs" />
@@ -1421,12 +1435,14 @@
     <Compile Include="STU\Types\STU_19DF1648.cs" />
     <Compile Include="STU\Types\STU_19EAC2DE.cs" />
     <Compile Include="STU\Types\STU_19EF0A50.cs" />
+    <Compile Include="STU\Types\STU_19FFE0AB.cs" />
     <Compile Include="STU\Types\STU_1A035F49.cs" />
     <Compile Include="STU\Types\STU_1A0461ED.cs" />
     <Compile Include="STU\Types\STU_1A0F0F25.cs" />
     <Compile Include="STU\Types\STU_1A1D85DB.cs" />
     <Compile Include="STU\Types\STU_1A39F1ED.cs" />
     <Compile Include="STU\Types\STU_1A3FA5B0.cs" />
+    <Compile Include="STU\Types\STU_1A496D3C.cs" />
     <Compile Include="STU\Types\STU_1A4F2ADE.cs" />
     <Compile Include="STU\Types\STU_1A74D480.cs" />
     <Compile Include="STU\Types\STU_1A7B9DD3.cs" />
@@ -1498,12 +1514,14 @@
     <Compile Include="STU\Types\STU_1E356736.cs" />
     <Compile Include="STU\Types\STU_1E41B675.cs" />
     <Compile Include="STU\Types\STU_1E7F5459.cs" />
+    <Compile Include="STU\Types\STU_1E866821.cs" />
     <Compile Include="STU\Types\STU_1E8ED5C4.cs" />
     <Compile Include="STU\Types\STU_1EA21567.cs" />
     <Compile Include="STU\Types\STU_1EB22BDB.cs" />
     <Compile Include="STU\Types\STU_1EBCFDD3.cs" />
     <Compile Include="STU\Types\STU_1EC26062.cs" />
     <Compile Include="STU\Types\STU_1EC9E138.cs" />
+    <Compile Include="STU\Types\STU_1ED304DF.cs" />
     <Compile Include="STU\Types\STU_1ED4F039.cs" />
     <Compile Include="STU\Types\STU_1EDAED77.cs" />
     <Compile Include="STU\Types\STU_1EF4B37C.cs" />
@@ -1538,7 +1556,6 @@
     <Compile Include="STU\Types\STU_210BAC8A.cs" />
     <Compile Include="STU\Types\STU_210EF289.cs" />
     <Compile Include="STU\Types\STU_21106037.cs" />
-    <Compile Include="STU\Types\STU_21190771.cs" />
     <Compile Include="STU\Types\STU_21323272.cs" />
     <Compile Include="STU\Types\STU_213A6F1A.cs" />
     <Compile Include="STU\Types\STU_215BE8F3.cs" />
@@ -1551,6 +1568,7 @@
     <Compile Include="STU\Types\STU_2187A0E8.cs" />
     <Compile Include="STU\Types\STU_219E8527.cs" />
     <Compile Include="STU\Types\STU_21A13145.cs" />
+    <Compile Include="STU\Types\STU_21A5BB52.cs" />
     <Compile Include="STU\Types\STU_21B064F1.cs" />
     <Compile Include="STU\Types\STU_21C21581.cs" />
     <Compile Include="STU\Types\STU_21CD7399.cs" />
@@ -1716,7 +1734,6 @@
     <Compile Include="STU\Types\STU_2B17E5B4.cs" />
     <Compile Include="STU\Types\STU_2B2E2F6D.cs" />
     <Compile Include="STU\Types\STU_2B33EE38.cs" />
-    <Compile Include="STU\Types\STUVoiceLineSet.cs" />
     <Compile Include="STU\Types\STU_2B4E4CB2.cs" />
     <Compile Include="STU\Types\STU_2B4F838B.cs" />
     <Compile Include="STU\Types\STU_2B502958.cs" />
@@ -1731,6 +1748,7 @@
     <Compile Include="STU\Types\STU_2BF5F776.cs" />
     <Compile Include="STU\Types\STU_2C019B38.cs" />
     <Compile Include="STU\Types\STU_2C091D22.cs" />
+    <Compile Include="STU\Types\STU_2C238626.cs" />
     <Compile Include="STU\Types\STU_2C671D7C.cs" />
     <Compile Include="STU\Types\STU_2C70D464.cs" />
     <Compile Include="STU\Types\STU_2C948C3D.cs" />
@@ -1762,7 +1780,6 @@
     <Compile Include="STU\Types\STU_2F0CC570.cs" />
     <Compile Include="STU\Types\STU_2F2E557C.cs" />
     <Compile Include="STU\Types\STU_2F303B54.cs" />
-    <Compile Include="STU\Types\STU_2F33B1B7.cs" />
     <Compile Include="STU\Types\STU_2F42ADA8.cs" />
     <Compile Include="STU\Types\STU_2F472437.cs" />
     <Compile Include="STU\Types\STU_2F4E2E3F.cs" />
@@ -2018,6 +2035,7 @@
     <Compile Include="STU\Types\STU_3F5FF726.cs" />
     <Compile Include="STU\Types\STU_3F650435.cs" />
     <Compile Include="STU\Types\STU_3F65FB99.cs" />
+    <Compile Include="STU\Types\STU_3F784E6C.cs" />
     <Compile Include="STU\Types\STU_3F861EC2.cs" />
     <Compile Include="STU\Types\STU_3F88EA3B.cs" />
     <Compile Include="STU\Types\STU_3F932C30.cs" />
@@ -2036,12 +2054,12 @@
     <Compile Include="STU\Types\STU_408BEEE0.cs" />
     <Compile Include="STU\Types\STU_40A335F4.cs" />
     <Compile Include="STU\Types\STU_40AC5AE4.cs" />
-    <Compile Include="STU\Types\STUVoiceLine.cs" />
     <Compile Include="STU\Types\STU_40E05F6B.cs" />
     <Compile Include="STU\Types\STU_41043472.cs" />
     <Compile Include="STU\Types\STU_412635DE.cs" />
     <Compile Include="STU\Types\STU_41484EE1.cs" />
     <Compile Include="STU\Types\STU_4157B4E9.cs" />
+    <Compile Include="STU\Types\STU_41589252.cs" />
     <Compile Include="STU\Types\STU_41667587.cs" />
     <Compile Include="STU\Types\STU_416D9897.cs" />
     <Compile Include="STU\Types\STU_4178508A.cs" />
@@ -2142,7 +2160,6 @@
     <Compile Include="STU\Types\STU_4729E2B9.cs" />
     <Compile Include="STU\Types\STU_473549CA.cs" />
     <Compile Include="STU\Types\STU_473D3BBD.cs" />
-    <Compile Include="STU\Types\STU_47400DA1.cs" />
     <Compile Include="STU\Types\STU_474242FA.cs" />
     <Compile Include="STU\Types\STU_47454DD1.cs" />
     <Compile Include="STU\Types\STU_475AAE8F.cs" />
@@ -2188,6 +2205,7 @@
     <Compile Include="STU\Types\STU_4A5C847B.cs" />
     <Compile Include="STU\Types\STU_4A6710B6.cs" />
     <Compile Include="STU\Types\STU_4A67370F.cs" />
+    <Compile Include="STU\Types\STU_4A6C4905.cs" />
     <Compile Include="STU\Types\STU_4A77EE0F.cs" />
     <Compile Include="STU\Types\STU_4A7A3740.cs" />
     <Compile Include="STU\Types\STU_4A8CA88B.cs" />
@@ -2468,6 +2486,7 @@
     <Compile Include="STU\Types\STU_5C4A19C7.cs" />
     <Compile Include="STU\Types\STU_5C503B46.cs" />
     <Compile Include="STU\Types\STU_5C5EA990.cs" />
+    <Compile Include="STU\Types\STU_5C779623.cs" />
     <Compile Include="STU\Types\STU_5C818A30.cs" />
     <Compile Include="STU\Types\STU_5CD96CBC.cs" />
     <Compile Include="STU\Types\STU_5CDC5CC0.cs" />
@@ -2528,6 +2547,7 @@
     <Compile Include="STU\Types\STU_6059B868.cs" />
     <Compile Include="STU\Types\STU_607A6040.cs" />
     <Compile Include="STU\Types\STU_6085B860.cs" />
+    <Compile Include="STU\Types\STU_60D2D598.cs" />
     <Compile Include="STU\Types\STU_60DA9E67.cs" />
     <Compile Include="STU\Types\STU_60F5EC44.cs" />
     <Compile Include="STU\Types\STU_60FA68DE.cs" />
@@ -2548,6 +2568,7 @@
     <Compile Include="STU\Types\STU_61C49636.cs" />
     <Compile Include="STU\Types\STU_61D59E77.cs" />
     <Compile Include="STU\Types\STU_61DACB9B.cs" />
+    <Compile Include="STU\Types\STU_61EA7F79.cs" />
     <Compile Include="STU\Types\STU_61FE0F01.cs" />
     <Compile Include="STU\Types\STU_62120293.cs" />
     <Compile Include="STU\Types\STU_621AF478.cs" />
@@ -2573,6 +2594,7 @@
     <Compile Include="STU\Types\STU_62E5EE1B.cs" />
     <Compile Include="STU\Types\STU_62F892D4.cs" />
     <Compile Include="STU\Types\STU_63172E83.cs" />
+    <Compile Include="STU\Types\STU_631D36C3.cs" />
     <Compile Include="STU\Types\STU_632B0263.cs" />
     <Compile Include="STU\Types\STU_632B74B9.cs" />
     <Compile Include="STU\Types\STU_63323E74.cs" />
@@ -2620,6 +2642,7 @@
     <Compile Include="STU\Types\STU_664A0F7E.cs" />
     <Compile Include="STU\Types\STU_666E2E42.cs" />
     <Compile Include="STU\Types\STU_6689C0A9.cs" />
+    <Compile Include="STU\Types\STU_66983F43.cs" />
     <Compile Include="STU\Types\STU_66A032BC.cs" />
     <Compile Include="STU\Types\STU_66A1D69A.cs" />
     <Compile Include="STU\Types\STU_66BB5E69.cs" />
@@ -2750,6 +2773,7 @@
     <Compile Include="STU\Types\STU_6E562A02.cs" />
     <Compile Include="STU\Types\STU_6E5C05CE.cs" />
     <Compile Include="STU\Types\STU_6E5C5F66.cs" />
+    <Compile Include="STU\Types\STU_6E650898.cs" />
     <Compile Include="STU\Types\STU_6E800F7C.cs" />
     <Compile Include="STU\Types\STU_6EA11D6C.cs" />
     <Compile Include="STU\Types\STU_6EA8533F.cs" />
@@ -2760,6 +2784,7 @@
     <Compile Include="STU\Types\STU_6EE06A6D.cs" />
     <Compile Include="STU\Types\STU_6EEE614E.cs" />
     <Compile Include="STU\Types\STU_6F01D053.cs" />
+    <Compile Include="STU\Types\STU_6F05F52E.cs" />
     <Compile Include="STU\Types\STU_6F42B9D1.cs" />
     <Compile Include="STU\Types\STU_6F61369B.cs" />
     <Compile Include="STU\Types\STU_6F8D93ED.cs" />
@@ -2816,6 +2841,7 @@
     <Compile Include="STU\Types\STU_737C5C41.cs" />
     <Compile Include="STU\Types\STU_737FF350.cs" />
     <Compile Include="STU\Types\STU_738FEFB1.cs" />
+    <Compile Include="STU\Types\STU_73908032.cs" />
     <Compile Include="STU\Types\STU_739A3C1E.cs" />
     <Compile Include="STU\Types\STU_73A32446.cs" />
     <Compile Include="STU\Types\STU_73AC4E2D.cs" />
@@ -2825,6 +2851,7 @@
     <Compile Include="STU\Types\STU_73F0B556.cs" />
     <Compile Include="STU\Types\STU_740808BB.cs" />
     <Compile Include="STU\Types\STU_74173BA8.cs" />
+    <Compile Include="STU\Types\STU_741749FF.cs" />
     <Compile Include="STU\Types\STU_741798BC.cs" />
     <Compile Include="STU\Types\STU_74217D0B.cs" />
     <Compile Include="STU\Types\STU_7424EC63.cs" />
@@ -2832,6 +2859,7 @@
     <Compile Include="STU\Types\STU_743B77E1.cs" />
     <Compile Include="STU\Types\STU_744BC2A9.cs" />
     <Compile Include="STU\Types\STU_744C502C.cs" />
+    <Compile Include="STU\Types\STU_7450D13D.cs" />
     <Compile Include="STU\Types\STU_7459F2CE.cs" />
     <Compile Include="STU\Types\STU_745A3DB8.cs" />
     <Compile Include="STU\Types\STU_746F8777.cs" />
@@ -2921,6 +2949,7 @@
     <Compile Include="STU\Types\STU_78EB1F0C.cs" />
     <Compile Include="STU\Types\STU_78F2E3C5.cs" />
     <Compile Include="STU\Types\STU_78F71BED.cs" />
+    <Compile Include="STU\Types\STU_792D361D.cs" />
     <Compile Include="STU\Types\STU_7947FBE4.cs" />
     <Compile Include="STU\Types\STU_79862BCB.cs" />
     <Compile Include="STU\Types\STU_798B41F4.cs" />
@@ -2997,6 +3026,7 @@
     <Compile Include="STU\Types\STU_7E2CED1D.cs" />
     <Compile Include="STU\Types\STU_7E2F2739.cs" />
     <Compile Include="STU\Types\STU_7E39EDFE.cs" />
+    <Compile Include="STU\Types\STU_7E3A0101.cs" />
     <Compile Include="STU\Types\STU_7E3B5755.cs" />
     <Compile Include="STU\Types\STU_7E679B3A.cs" />
     <Compile Include="STU\Types\STU_7E6D330C.cs" />
@@ -3050,6 +3080,7 @@
     <Compile Include="STU\Types\STU_815DA879.cs" />
     <Compile Include="STU\Types\STU_816E1D84.cs" />
     <Compile Include="STU\Types\STU_8171E7DE.cs" />
+    <Compile Include="STU\Types\STU_817BB7C6.cs" />
     <Compile Include="STU\Types\STU_8196246A.cs" />
     <Compile Include="STU\Types\STU_819F9FB2.cs" />
     <Compile Include="STU\Types\STU_81A9AB10.cs" />
@@ -3100,7 +3131,6 @@
     <Compile Include="STU\Types\STU_8556841E.cs" />
     <Compile Include="STU\Types\STU_856DA07A.cs" />
     <Compile Include="STU\Types\STU_856F363B.cs" />
-    <Compile Include="STU\Types\STU_857C15FC.cs" />
     <Compile Include="STU\Types\STU_858A6EEC.cs" />
     <Compile Include="STU\Types\STU_85939817.cs" />
     <Compile Include="STU\Types\STU_859CEF3C.cs" />
@@ -3267,7 +3297,6 @@
     <Compile Include="STU\Types\STU_90B26AC5.cs" />
     <Compile Include="STU\Types\STU_90C3BCEA.cs" />
     <Compile Include="STU\Types\STU_90CFE6AF.cs" />
-    <Compile Include="STU\Types\STU_90E98EA0.cs" />
     <Compile Include="STU\Types\STU_910CD45C.cs" />
     <Compile Include="STU\Types\STU_91121C01.cs" />
     <Compile Include="STU\Types\STU_911B8FCF.cs" />
@@ -3286,6 +3315,7 @@
     <Compile Include="STU\Types\STU_91EFD5B1.cs" />
     <Compile Include="STU\Types\STU_92073810.cs" />
     <Compile Include="STU\Types\STU_923A2AF6.cs" />
+    <Compile Include="STU\Types\STU_92584312.cs" />
     <Compile Include="STU\Types\STU_9278BE7E.cs" />
     <Compile Include="STU\Types\STU_927E78FE.cs" />
     <Compile Include="STU\Types\STU_928C04A2.cs" />
@@ -3455,10 +3485,10 @@
     <Compile Include="STU\Types\STU_9B7648C3.cs" />
     <Compile Include="STU\Types\STU_9B9182A6.cs" />
     <Compile Include="STU\Types\STU_9B98DD0C.cs" />
+    <Compile Include="STU\Types\STU_9BBC5E0C.cs" />
     <Compile Include="STU\Types\STU_9BBD561F.cs" />
     <Compile Include="STU\Types\STU_9BBFD125.cs" />
     <Compile Include="STU\Types\STU_9BC6CEE8.cs" />
-    <Compile Include="STU\Types\STU_9BD0750A.cs" />
     <Compile Include="STU\Types\STU_9BDF539E.cs" />
     <Compile Include="STU\Types\STU_9BF16236.cs" />
     <Compile Include="STU\Types\STU_9C01292F.cs" />
@@ -3610,6 +3640,7 @@
     <Compile Include="STU\Types\STU_A541268D.cs" />
     <Compile Include="STU\Types\STU_A557AC47.cs" />
     <Compile Include="STU\Types\STU_A58C1E63.cs" />
+    <Compile Include="STU\Types\STU_A5A26BA2.cs" />
     <Compile Include="STU\Types\STU_A5B77289.cs" />
     <Compile Include="STU\Types\STU_A5B9EAAD.cs" />
     <Compile Include="STU\Types\STU_A5BA4E77.cs" />
@@ -3637,6 +3668,7 @@
     <Compile Include="STU\Types\STU_A726F4DA.cs" />
     <Compile Include="STU\Types\STU_A74C30E0.cs" />
     <Compile Include="STU\Types\STU_A74C30EF.cs" />
+    <Compile Include="STU\Types\STU_A753DC79.cs" />
     <Compile Include="STU\Types\STU_A762D86D.cs" />
     <Compile Include="STU\Types\STU_A769CCFD.cs" />
     <Compile Include="STU\Types\STU_A778E8B3.cs" />
@@ -3700,6 +3732,7 @@
     <Compile Include="STU\Types\STU_AABE3901.cs" />
     <Compile Include="STU\Types\STU_AAE257E9.cs" />
     <Compile Include="STU\Types\STU_AAE6B567.cs" />
+    <Compile Include="STU\Types\STU_AB09F15F.cs" />
     <Compile Include="STU\Types\STU_AB1003EF.cs" />
     <Compile Include="STU\Types\STU_AB132518.cs" />
     <Compile Include="STU\Types\STU_AB134BDF.cs" />
@@ -3876,6 +3909,7 @@
     <Compile Include="STU\Types\STU_B719E73A.cs" />
     <Compile Include="STU\Types\STU_B75ED15A.cs" />
     <Compile Include="STU\Types\STU_B77FCA72.cs" />
+    <Compile Include="STU\Types\STU_B7B2269A.cs" />
     <Compile Include="STU\Types\STU_B7C66FFD.cs" />
     <Compile Include="STU\Types\STU_B7C96A17.cs" />
     <Compile Include="STU\Types\STU_B7D2C9C0.cs" />
@@ -3936,6 +3970,7 @@
     <Compile Include="STU\Types\STU_BBC763F9.cs" />
     <Compile Include="STU\Types\STU_BBD0061C.cs" />
     <Compile Include="STU\Types\STU_BBF32277.cs" />
+    <Compile Include="STU\Types\STU_BC479EEE.cs" />
     <Compile Include="STU\Types\STU_BC48636B.cs" />
     <Compile Include="STU\Types\STU_BC4D3063.cs" />
     <Compile Include="STU\Types\STU_BC5E4622.cs" />
@@ -3963,7 +3998,6 @@
     <Compile Include="STU\Types\STU_BDB687C1.cs" />
     <Compile Include="STU\Types\STU_BDB86C7B.cs" />
     <Compile Include="STU\Types\STU_BDC8129A.cs" />
-    <Compile Include="STU\Types\STU_BDD783B9.cs" />
     <Compile Include="STU\Types\STU_BDE6CC74.cs" />
     <Compile Include="STU\Types\STU_BE000386.cs" />
     <Compile Include="STU\Types\STU_BE078495.cs" />
@@ -4017,7 +4051,6 @@
     <Compile Include="STU\Types\STU_C168636D.cs" />
     <Compile Include="STU\Types\STU_C1771936.cs" />
     <Compile Include="STU\Types\STU_C19EA8BD.cs" />
-    <Compile Include="STU\Types\STU_C1A2DB26.cs" />
     <Compile Include="STU\Types\STU_C1AB3E05.cs" />
     <Compile Include="STU\Types\STU_C1AE5148.cs" />
     <Compile Include="STU\Types\STU_C1B3C816.cs" />
@@ -4035,7 +4068,6 @@
     <Compile Include="STU\Types\STU_C2541EA5.cs" />
     <Compile Include="STU\Types\STU_C25D0808.cs" />
     <Compile Include="STU\Types\STU_C264A9E7.cs" />
-    <Compile Include="STU\Types\STU_C27E676E.cs" />
     <Compile Include="STU\Types\STU_C294A43B.cs" />
     <Compile Include="STU\Types\STU_C2954B69.cs" />
     <Compile Include="STU\Types\STU_C29A52ED.cs" />
@@ -4209,6 +4241,7 @@
     <Compile Include="STU\Types\STU_CC623180.cs" />
     <Compile Include="STU\Types\STU_CC65A786.cs" />
     <Compile Include="STU\Types\STU_CC7B1B10.cs" />
+    <Compile Include="STU\Types\STU_CC90A18D.cs" />
     <Compile Include="STU\Types\STU_CCAD18DB.cs" />
     <Compile Include="STU\Types\STU_CCC326B7.cs" />
     <Compile Include="STU\Types\STU_CCC8BDC4.cs" />
@@ -4268,7 +4301,6 @@
     <Compile Include="STU\Types\STU_CFCE55DC.cs" />
     <Compile Include="STU\Types\STU_D0126785.cs" />
     <Compile Include="STU\Types\STU_D0275504.cs" />
-    <Compile Include="STU\Types\STU_D0364821.cs" />
     <Compile Include="STU\Types\STU_D055A609.cs" />
     <Compile Include="STU\Types\STU_D058C34B.cs" />
     <Compile Include="STU\Types\STU_D06FC89B.cs" />
@@ -4286,6 +4318,7 @@
     <Compile Include="STU\Types\STU_D0E0DA18.cs" />
     <Compile Include="STU\Types\STU_D0E28870.cs" />
     <Compile Include="STU\Types\STU_D0E551CA.cs" />
+    <Compile Include="STU\Types\STU_D0EC0D98.cs" />
     <Compile Include="STU\Types\STU_D108D947.cs" />
     <Compile Include="STU\Types\STU_D11C922F.cs" />
     <Compile Include="STU\Types\STU_D137ECA0.cs" />
@@ -4377,6 +4410,7 @@
     <Compile Include="STU\Types\STU_D53ECEAC.cs" />
     <Compile Include="STU\Types\STU_D555EDB7.cs" />
     <Compile Include="STU\Types\STU_D5589323.cs" />
+    <Compile Include="STU\Types\STU_D579ED9A.cs" />
     <Compile Include="STU\Types\STU_D57A0ABB.cs" />
     <Compile Include="STU\Types\STU_D584FE3E.cs" />
     <Compile Include="STU\Types\STU_D58AC03A.cs" />
@@ -4394,6 +4428,7 @@
     <Compile Include="STU\Types\STU_D65A9824.cs" />
     <Compile Include="STU\Types\STU_D661CB84.cs" />
     <Compile Include="STU\Types\STU_D66BFB3A.cs" />
+    <Compile Include="STU\Types\STU_D68203F6.cs" />
     <Compile Include="STU\Types\STU_D683D0FA.cs" />
     <Compile Include="STU\Types\STU_D6A91ABA.cs" />
     <Compile Include="STU\Types\STU_D6BB748C.cs" />
@@ -4436,7 +4471,6 @@
     <Compile Include="STU\Types\STU_D905F4C9.cs" />
     <Compile Include="STU\Types\STU_D906F79D.cs" />
     <Compile Include="STU\Types\STU_D90AD329.cs" />
-    <Compile Include="STU\Types\STU_D931E2CF.cs" />
     <Compile Include="STU\Types\STU_D9352DB1.cs" />
     <Compile Include="STU\Types\STU_D93B3F5E.cs" />
     <Compile Include="STU\Types\STU_D9480FD6.cs" />
@@ -4503,6 +4537,7 @@
     <Compile Include="STU\Types\STU_DCB7F4AF.cs" />
     <Compile Include="STU\Types\STU_DCBE00A4.cs" />
     <Compile Include="STU\Types\STU_DCBE60C9.cs" />
+    <Compile Include="STU\Types\STU_DCD3ACD9.cs" />
     <Compile Include="STU\Types\STU_DCD6F8D3.cs" />
     <Compile Include="STU\Types\STU_DCF1B085.cs" />
     <Compile Include="STU\Types\STU_DCF4C721.cs" />
@@ -4538,7 +4573,6 @@
     <Compile Include="STU\Types\STU_DEAFB921.cs" />
     <Compile Include="STU\Types\STU_DEBD057B.cs" />
     <Compile Include="STU\Types\STU_DEE097B9.cs" />
-    <Compile Include="STU\Types\STU_DEFE21F8.cs" />
     <Compile Include="STU\Types\STU_DF041A16.cs" />
     <Compile Include="STU\Types\STU_DF149761.cs" />
     <Compile Include="STU\Types\STU_DF25748E.cs" />
@@ -4623,7 +4657,6 @@
     <Compile Include="STU\Types\STU_E2DB55BC.cs" />
     <Compile Include="STU\Types\STU_E2DE4BB6.cs" />
     <Compile Include="STU\Types\STU_E2E07ACA.cs" />
-    <Compile Include="STU\Types\STU_E2E6A152.cs" />
     <Compile Include="STU\Types\STU_E2FC706C.cs" />
     <Compile Include="STU\Types\STU_E3120F31.cs" />
     <Compile Include="STU\Types\STU_E31C3EF7.cs" />
@@ -4708,6 +4741,7 @@
     <Compile Include="STU\Types\STU_E80D2FA4.cs" />
     <Compile Include="STU\Types\STU_E820EDF7.cs" />
     <Compile Include="STU\Types\STU_E834E718.cs" />
+    <Compile Include="STU\Types\STU_E868F8F6.cs" />
     <Compile Include="STU\Types\STU_E86BB6AD.cs" />
     <Compile Include="STU\Types\STU_E88BA88B.cs" />
     <Compile Include="STU\Types\STU_E8D4923E.cs" />
@@ -4725,7 +4759,6 @@
     <Compile Include="STU\Types\STU_E99950C5.cs" />
     <Compile Include="STU\Types\STU_E99CF825.cs" />
     <Compile Include="STU\Types\STU_E9B7223A.cs" />
-    <Compile Include="STU\Types\STU_E9DB72FF.cs" />
     <Compile Include="STU\Types\STU_E9DE9DF8.cs" />
     <Compile Include="STU\Types\STU_E9E5A493.cs" />
     <Compile Include="STU\Types\STU_EA134517.cs" />
@@ -4985,6 +5018,7 @@
     <Compile Include="STU\Types\STU_FA600F04.cs" />
     <Compile Include="STU\Types\STU_FA6A7E25.cs" />
     <Compile Include="STU\Types\STU_FA710F16.cs" />
+    <Compile Include="STU\Types\STU_FA72F334.cs" />
     <Compile Include="STU\Types\STU_FA7A1F98.cs" />
     <Compile Include="STU\Types\STU_FA84B5C0.cs" />
     <Compile Include="STU\Types\STU_FAA3F9A2.cs" />
@@ -5026,6 +5060,7 @@
     <Compile Include="STU\Types\STU_FCDF431D.cs" />
     <Compile Include="STU\Types\STU_FCEEB540.cs" />
     <Compile Include="STU\Types\STU_FD110684.cs" />
+    <Compile Include="STU\Types\STU_FD1A6CCF.cs" />
     <Compile Include="STU\Types\STU_FD1B33EC.cs" />
     <Compile Include="STU\Types\STU_FD20A05C.cs" />
     <Compile Include="STU\Types\STU_FD30AD69.cs" />
@@ -5033,6 +5068,7 @@
     <Compile Include="STU\Types\STU_FD40A188.cs" />
     <Compile Include="STU\Types\STU_FD41CB3C.cs" />
     <Compile Include="STU\Types\STU_FD568B57.cs" />
+    <Compile Include="STU\Types\STU_FD6961D8.cs" />
     <Compile Include="STU\Types\STU_FD6F2D16.cs" />
     <Compile Include="STU\Types\STU_FD6F82D1.cs" />
     <Compile Include="STU\Types\STU_FDA0D947.cs" />

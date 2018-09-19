@@ -25,8 +25,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x6AFCD1A5, "m_blendTreeItems", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimBlendTreeSet_BlendTreeItem[] m_blendTreeItems;
 
-        [STUFieldAttribute(0xF9CA7995)]
-        public uint[] m_F9CA7995;
+        [STUFieldAttribute(0xF9CA7995, "m_paramIds")]
+        public uint[] m_paramIds;
 
         [STUFieldAttribute(0x999F01F8, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_C898217C[] m_999F01F8;

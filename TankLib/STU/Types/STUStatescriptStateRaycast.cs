@@ -3,8 +3,8 @@ using TankLib.STU.Types.Enums;
 
 // ReSharper disable All
 namespace TankLib.STU.Types {
-    [STUAttribute(0x019E0826, "STUStatescriptStateRaycast")]
-    public class STUStatescriptStateRaycast : STUStatescriptState {
+    [STUAttribute(0x019E0826, "STUStatescriptStateRayCast")]
+    public class STUStatescriptStateRayCast : STUStatescriptState {
         [STUFieldAttribute(0x03AD3873, "m_ignoreEntities", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar[] m_ignoreEntities;
 

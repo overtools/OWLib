@@ -2,8 +2,8 @@
 
 // ReSharper disable All
 namespace TankLib.STU.Types {
-    [STUAttribute(0x39B590A9, "STURaycastReceiver")]
-    public class STURaycastReceiver : STUInstance {
+    [STUAttribute(0x39B590A9, "STURayCastReceiver")]
+    public class STURayCastReceiver : STUInstance {
         [STUFieldAttribute(0x6228373E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STURayCastReceiverOverride[] m_6228373E;
 

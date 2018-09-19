@@ -4,18 +4,18 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0xC9AAE3AE)]
-    public class STU_C9AAE3AE : STU_2F33B1B7 {
+    public class STU_C9AAE3AE : STUCriteria {
         [STUFieldAttribute(0xBC4326FF, "m_stat")]
         public teStructuredDataAssetRef<STUStat> m_stat;
 
         [STUFieldAttribute(0xAF872E86, "m_amount")]
         public double m_amount;
 
-        [STUFieldAttribute(0x411ABFEA)]
-        public ulong m_411ABFEA;
+        [STUFieldAttribute(0x411ABFEA, "m_context")]
+        public ulong m_context;
 
-        [STUFieldAttribute(0x4889445F)]
-        public uint m_4889445F;
+        [STUFieldAttribute(0x4889445F, "m_heroAmount")]
+        public uint m_heroAmount;
 
         [STUFieldAttribute(0x5D32D524)]
         public Enum_2D0A59BA m_5D32D524;

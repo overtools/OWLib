@@ -4,5 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x8B2A4F9F)]
     public class STU_8B2A4F9F : STUStatescriptStateUXPresenter {
+        [STUFieldAttribute(0xC25E3CF3)]
+        public byte m_C25E3CF3;
     }
 }

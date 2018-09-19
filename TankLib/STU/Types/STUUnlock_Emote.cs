@@ -17,10 +17,16 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x7E3ED979)]
         public teStructuredDataAssetRef<STUTargetTag>[] m_7E3ED979;
 
+        [STUFieldAttribute(0x421B4005)]
+        public teStructuredDataAssetRef<STU_6BE90C5C>[] m_421B4005;
+
         [STUFieldAttribute(0x28814AE5)]
         public teVec3 m_28814AE5;
 
         [STUFieldAttribute(0x69150A1D)]
         public teVec3 m_69150A1D;
+
+        [STUFieldAttribute(0x7AE191BC)]
+        public byte m_7AE191BC;
     }
 }

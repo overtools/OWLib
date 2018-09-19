@@ -5,7 +5,7 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0x0754BE49)]
     public class STU_0754BE49 : STU_709B76F6 {
-        [STUFieldAttribute(0x7D88A63A)]
-        public Enum_0C014B4A m_7D88A63A;
+        [STUFieldAttribute(0x7D88A63A, "m_gender")]
+        public Enum_0C014B4A m_gender;
     }
 }

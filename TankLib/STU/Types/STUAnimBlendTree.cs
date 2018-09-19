@@ -10,8 +10,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0B15B894, "m_animNodes", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUAnimNode_Base[] m_animNodes;
 
-        [STUFieldAttribute(0xF9CA7995)]
-        public uint[] m_F9CA7995;
+        [STUFieldAttribute(0xF9CA7995, "m_paramIds")]
+        public uint[] m_paramIds;
 
         [STUFieldAttribute(0xBF7A74B0, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_8C127DE2[] m_BF7A74B0;

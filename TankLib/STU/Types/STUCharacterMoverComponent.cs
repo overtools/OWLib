@@ -106,6 +106,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xE91D1664)]
         public float m_E91D1664;
 
+        [STUFieldAttribute(0x6DB41D17)]
+        public ushort m_6DB41D17;
+
         [STUFieldAttribute(0xD4A3C694)]
         public byte m_D4A3C694;
 

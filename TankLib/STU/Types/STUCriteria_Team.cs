@@ -3,8 +3,8 @@ using TankLib.STU.Types.Enums;
 
 // ReSharper disable All
 namespace TankLib.STU.Types {
-    [STUAttribute(0xBDD783B9)]
-    public class STU_BDD783B9 : STU_2F33B1B7 {
+    [STUAttribute(0xBDD783B9, "STUCriteria_Team")]
+    public class STUCriteria_Team : STUCriteria {
         [STUFieldAttribute(0x33B0B2B6, "m_team")]
         public TeamIndex m_team;
 

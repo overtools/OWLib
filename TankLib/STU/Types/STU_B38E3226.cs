@@ -11,8 +11,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x2A195E35)]
         public teVec3A m_2A195E35;
 
-        [STUFieldAttribute(0xF9CA7995)]
-        public uint[] m_F9CA7995;
+        [STUFieldAttribute(0xF9CA7995, "m_paramIds")]
+        public uint[] m_paramIds;
 
         [STUFieldAttribute(0xA76B4746, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimGameData_PoseData[] m_A76B4746;

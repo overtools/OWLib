@@ -52,6 +52,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0FD4CCC6, "m_modifyHealth", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptModifyHealth m_modifyHealth;
 
+        [STUFieldAttribute(0xA83E38DA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_A83E38DA;
+
         [STUFieldAttribute(0xA872C70E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_A872C70E;
 

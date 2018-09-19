@@ -3,9 +3,9 @@
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x3A85B7F9)]
-    public class STU_3A85B7F9 : STU_2F33B1B7 {
-        [STUFieldAttribute(0x4889445F)]
-        public uint m_4889445F;
+    public class STU_3A85B7F9 : STUCriteria {
+        [STUFieldAttribute(0x4889445F, "m_heroAmount")]
+        public uint m_heroAmount;
 
         [STUFieldAttribute(0x2C01908B, "m_level")]
         public uint m_level;

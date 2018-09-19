@@ -12,5 +12,14 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xA7FE4B94, "m_sourceSet")]
         public teString m_sourceSet;
+
+        [STUFieldAttribute(0xABCE4F5F, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_D579ED9A[] m_ABCE4F5F;
+
+        [STUFieldAttribute(0x31714AFC, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_FD1A6CCF[] m_31714AFC;
+
+        [STUFieldAttribute(0xD814579F, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_AB09F15F[] m_D814579F;
     }
 }

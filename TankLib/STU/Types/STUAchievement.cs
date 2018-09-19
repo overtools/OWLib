@@ -26,8 +26,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x4E291DCC)]
         public teString m_4E291DCC;
 
-        [STUFieldAttribute(0x4FF98D41, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_C1A2DB26 m_4FF98D41;
+        [STUFieldAttribute(0x4FF98D41, "m_criteria", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUCriteriaContainer m_criteria;
 
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
         public Enum_116F9601 m_category;

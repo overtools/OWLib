@@ -29,6 +29,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0B1BA7C1)]
         public teStructuredDataAssetRef<ulong> m_0B1BA7C1;
 
+        [STUFieldAttribute(0x38BFB46C, "m_resourceKey")]
+        public teStructuredDataAssetRef<STUResourceKey> m_resourceKey;
+
         [STUFieldAttribute(0xEDE36CB7, "m_resourceKeyId")]
         public ulong m_resourceKeyId;
 
@@ -40,6 +43,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x8EEF1251)]
         public int m_8EEF1251;
+
+        [STUFieldAttribute(0xA7B393BF)]
+        public Enum_5A7EBE59 m_A7B393BF;
 
         [STUFieldAttribute(0x1A546C64)]
         public byte m_1A546C64;

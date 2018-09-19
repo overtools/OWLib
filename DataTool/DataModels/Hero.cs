@@ -34,7 +34,7 @@ namespace DataTool.DataModels {
         public Hero(STUHero hero) {
             Name = GetString(hero.m_0EDCE350);
             Description = GetDescriptionString(hero.m_3446F580);
-            Gender = hero.Gender;
+            Gender = hero.m_gender;
             
             GalleryColor = hero.m_heroColor;
 
