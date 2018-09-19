@@ -457,3 +457,12 @@ B2172366, STUDataFlowStream_Guid
 A21064F1, STUConfigVarGetLootBoxAsset
 40DA6CDF, STUVoiceLine
 2B407D38, STUVoiceLineSet
+C1A2DB26, STUCriteriaContainer
+2F33B1B7, STUCriteria
+857C15FC, STUCriteria_Stat
+D0364821, STUCriteria_Statescript
+9BD0750A, STUCriteria_HeroLevel
+E9DB72FF, STUCriteria_OnMap
+BDD783B9, STUCriteria_Team
+C27E676E, STUCriteria_PlayerLevel
+D931E2CF, STUCriteria_IsHero

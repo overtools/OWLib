@@ -496,3 +496,11 @@ D0C28030, m_effectHardpoint
 DDF3EE5C, m_voiceConversation
 386B8E9C, m_externalSound
 BA5545D6, m_set
+
+7D88A63A, m_gender
+F9CA7995, m_paramIds
+4FF98D41, m_criteria
+7FE9F87A, m_heroGUID
+411ABFEA, m_context
+A2C1FA17, m_exactMap
+4889445F, m_heroAmount
