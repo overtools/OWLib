@@ -13,6 +13,58 @@ namespace DataTool.Flag {
             return Parse<T>(null, AppArgs);
         }
 
+        public static void CheckCollisions(Type baseType, Action<string, string> OnCollision) {
+            Type type = typeof(ICLIFlags);
+            IEnumerable<Type> flagSets = Assembly.GetExecutingAssembly().GetTypes().Where(x => !x.IsInterface && type.IsAssignableFrom(x) && !baseType.IsAssignableFrom(x));
+
+            HashSet<string> baseFlags = new HashSet<string>();
+            {
+                FieldInfo[] fields = baseType.GetFields();
+                foreach (FieldInfo field in fields) {
+                    CLIFlagAttribute flagAttr = field.GetCustomAttribute<CLIFlagAttribute>(true);
+                    if (flagAttr == null) {
+                        continue;
+                    }
+
+                    if (flagAttr.Positional > -1) {
+                        continue;
+                    }
+
+                    baseFlags.Add(flagAttr.Flag);
+                    AliasAttribute[] aliasAttrs = field.GetCustomAttributes<AliasAttribute>(true).ToArray();
+                    foreach (AliasAttribute aliasAttr in aliasAttrs) {
+                        baseFlags.Add(flagAttr.Flag);
+                    }
+                }
+            }
+
+            foreach (Type flagSet in flagSets) {
+                HashSet<string> currentFlags = new HashSet<string>();
+                FieldInfo[] fields = flagSet.GetFields();
+                foreach (FieldInfo field in fields) {
+                    CLIFlagAttribute flagAttr = field.GetCustomAttribute<CLIFlagAttribute>(true);
+                    if (flagAttr == null) {
+                        continue;
+                    }
+
+                    if (flagAttr.Positional > -1) {
+                        continue;
+                    }
+
+                    if (baseFlags.Contains(flagAttr.Flag) || !currentFlags.Add(flagAttr.Flag)) {
+                        OnCollision(flagAttr.Flag, flagSet.FullName);
+                    }
+                    
+                    AliasAttribute[] aliasAttrs = field.GetCustomAttributes<AliasAttribute>(true).ToArray();
+                    foreach (AliasAttribute aliasAttr in aliasAttrs) {
+                        if (baseFlags.Contains(aliasAttr.Alias) || !currentFlags.Add(aliasAttr.Alias)) {
+                            OnCollision(aliasAttr.Alias, flagSet.FullName);
+                        }
+                    }
+                }
+            }
+        }
+
         public static void Help<T>(bool simple) where T : ICLIFlags {
             Type iface = typeof(T);
 

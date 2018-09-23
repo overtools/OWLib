@@ -6,7 +6,7 @@ namespace DataTool.ToolLogic.List {
         public bool JSON;
         
         [CLIFlag(Flag = "out", Help = "Output JSON file")]
-        [Alias(Alias = "o")]
+        [Alias("o")]
         public string Output;
 
         public override bool Validate() => true;

@@ -9,13 +9,13 @@ namespace TankTonka {
         public string OverwatchDirectory;
         
         [CLIFlag(Default = null, Flag = "language", Help = "Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" })]
-        [Alias(Alias = "L")]
-        [Alias(Alias = "lang")]
+        [Alias("L")]
+        [Alias("lang")]
         public string Language;
 
         [CLIFlag(Default = null, Flag = "speech-language", Help = "Speech Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" })]
-        [Alias(Alias = "T")]
-        [Alias(Alias = "speechlang")]
+        [Alias("T")]
+        [Alias("speechlang")]
         public string SpeechLanguage;
         
         public override bool Validate() => true;

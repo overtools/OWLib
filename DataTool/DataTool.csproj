@@ -162,6 +162,8 @@
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
     <Compile Include="ToolLogic\List\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
+    <Compile Include="ToolLogic\Render\RenderFlags.cs" />
+    <Compile Include="ToolLogic\Render\RenderUIElements.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

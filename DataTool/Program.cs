@@ -50,6 +50,12 @@ namespace DataTool {
             }
             #endregion
             
+            #if DEBUG
+            FlagParser.CheckCollisions(typeof(ToolFlags), (flag, duplicate) => {
+                                               TankLib.Helpers.Logger.Error("Flag", $"The flag \"{flag}\" from {duplicate} is a duplicate!");
+                                           });
+            #endif
+            
             FlagParser.LoadArgs();
             
             TankLib.Helpers.Logger.Info("Core", $"{Assembly.GetExecutingAssembly().GetName().Name} v{TankLib.Util.GetVersion(typeof(Program).Assembly)}");
