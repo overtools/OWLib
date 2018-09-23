@@ -97,7 +97,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     ParseNode(root, animNode);
                 }
 
-                byte[] json = JsonSerializer.PrettyPrintByteArray(JsonSerializer.Serialize(root));
+                byte[] json = JsonSerializer.PrettyPrintByteArray(JsonSerializer.NonGeneric.Serialize(root.GetType(), root));
                 string output = Path.Combine(path, $"{teResourceGUID.AsString(key)}.json");
                 using (Stream file = File.OpenWrite(output)) {
                     file.SetLength(0);

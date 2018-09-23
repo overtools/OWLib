@@ -14,7 +14,7 @@ namespace DataTool.JSON {
             }, new[] {
                 StandardResolver.Default
             });
-            byte[] json = JsonSerializer.Serialize(jObj);
+            byte[] json = JsonSerializer.NonGeneric.Serialize(jObj.GetType(), jObj);
             if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
                 byte[] pretty = JsonSerializer.PrettyPrintByteArray(json);
 

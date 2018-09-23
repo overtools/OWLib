@@ -44,6 +44,10 @@
   <ItemGroup>
     <Reference Include="Microsoft.Build.Tasks.v4.0" />
     <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -101,6 +105,7 @@
     <Compile Include="ITool.cs" />
     <Compile Include="JSON\JSONTool.cs" />
     <Compile Include="JSON\ResourceGUIDFormatter.cs" />
+    <Compile Include="JSON\teResourceGUID_Newtonsoft.cs" />
     <Compile Include="SaveLogic\Combo.cs" />
     <Compile Include="SaveLogic\Effect.cs" />
     <Compile Include="SaveLogic\Entity.cs" />

@@ -74,12 +74,14 @@ namespace TankLib.STU {
                         }
                     }
                 } else {
-                    long offset = data.ReadInt64();
+                    long offset = data.ReadInt32();
+                    data.ReadInt32(); // :kyaah:
 
                     long position = data.Position();
                     if (offset <= 0) {
                         array = null;
                     } else {
+                        position += 8;
                         data.BaseStream.Position = offset + assetFile.StartPos;
 
                         long count = data.ReadInt64();
@@ -98,7 +100,7 @@ namespace TankLib.STU {
                             array = null;
                         }
                     }
-                    data.BaseStream.Position = position + 8;
+                    data.BaseStream.Position = position;
                 }
                 field.Key.SetValue(this, array);
 

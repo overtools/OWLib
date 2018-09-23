@@ -233,7 +233,7 @@ namespace DataTool.ToolLogic.Extract
         [CLIFlag(Default = false, Flag = "skip-map-env-skybox", Help = "Skip map Environment skybox extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SkipMapEnvironmentSkybox;
 
-        [CLIFlag(Default = false, Flag = "skip-map-env-ent", Help = "Skip map Environment entity extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = false, Flag = "skip-map-env-entity", Help = "Skip map Environment entity extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SkipMapEnvironmentEntity;
     }
 }

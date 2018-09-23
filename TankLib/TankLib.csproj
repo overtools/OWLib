@@ -144,6 +144,7 @@
     <Compile Include="STU\teStructuredDataDateAndTime.cs" />
     <Compile Include="STU\teStructuredDataHashMap.cs" />
     <Compile Include="STU\teStructuredDataMgr.cs" />
+    <Compile Include="STU\teStructuredDataV1Readers.cs" />
     <Compile Include="STU\Types\AITacticalChoke.cs" />
     <Compile Include="STU\Types\AITargetingInfo.cs" />
     <Compile Include="STU\Types\CaptureAreaResident.cs" />
