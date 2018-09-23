@@ -81,7 +81,6 @@ namespace TankLib.STU {
                     if (offset <= 0) {
                         array = null;
                     } else {
-                        position += 8;
                         data.BaseStream.Position = offset + assetFile.StartPos;
 
                         long count = data.ReadInt64();
@@ -100,7 +99,7 @@ namespace TankLib.STU {
                             array = null;
                         }
                     }
-                    data.BaseStream.Position = position;
+                    data.BaseStream.Position = position + 8;
                 }
                 field.Key.SetValue(this, array);
 

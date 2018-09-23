@@ -94,7 +94,7 @@ namespace TankLib.STU {
                     target.SetValue(instance, embeddedInstance);
                 }
             } else if (data.Format == teStructuredDataFormat.V1) {
-                int value = data.Data.ReadInt32();
+                int value = data.Data.ReadInt32(); data.Data.ReadInt32();
             
                 if (value <= 0) return;
                 
@@ -124,7 +124,7 @@ namespace TankLib.STU {
                         $"Instance index is out of range. Id: {value}, Type: EmbeddedInstanceFieldReader, DynData offset: {data.DynData.Position() - 8}");
                 }
             } else if (data.Format == teStructuredDataFormat.V1) {
-                long offset = data.Data.ReadInt64();
+                long offset = data.Data.ReadInt32(); data.Data.ReadInt32();
                 if (offset == -1) return;
                 
                 STUInstance embeddedInstance = data.GetInstanceAtOffset(offset);
@@ -140,12 +140,25 @@ namespace TankLib.STU {
     /// <summary>STU field reader for reading inline instances</summary>
     public class InlineInstanceFieldReader : DefaultStructuredDataFieldReader {
         public override void Deserialize(teStructuredDataMgr manager, teStructuredData data, STUField_Info field, object instance, FieldInfo target) {
+            if (data.Format == teStructuredDataFormat.V1) {
+                var n = data.Data.ReadInt64();
+                if (n > 0) {
+                    
+                }
+            }
+
             STUInstance instanceObj = (STUInstance) DeserializeInternal(manager, data, field, target);
             instanceObj.Usage = TypeUsage.Inline;
             target.SetValue(instance, instanceObj);
         }
         
         public override void Deserialize_Array(teStructuredDataMgr manager, teStructuredData data, STUField_Info field, Array target, int index) {
+            if (data.Format == teStructuredDataFormat.V1 && index == 0) {
+                var n = data.Data.ReadInt64();
+                if (n > 0) {
+                    
+                }
+            }
             STUInstance instanceObj = (STUInstance) DeserializeArrayInternal(manager, data, field, target);
             instanceObj.Usage = TypeUsage.InlineArray;
             target.SetValue(instanceObj, index);

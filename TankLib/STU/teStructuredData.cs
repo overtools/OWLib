@@ -146,9 +146,6 @@ namespace TankLib.STU {
             #if RELEASE
                 try {
             #endif
-                if (i == 37) {
-                    // ignored
-                }
                 Instances[i].Deserialize(this);
             #if RELEASE
                 } catch (Exception) {
