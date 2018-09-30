@@ -158,5 +158,31 @@ namespace TankLib.Helpers {
         public static void Error(string category, string message, params object[] arg) {
             Log(ConsoleColor.Red, true, true, category, message, arg);
         }
+        
+        public static string ReadLine(TextWriter writer, bool @private) {
+            StringBuilder builder = new StringBuilder();
+            ConsoleKeyInfo ch;
+            while ((ch = Console.ReadKey(true)).Key != ConsoleKey.Enter) {
+                if (ch.Key == ConsoleKey.Backspace) {
+                    if (builder.Length > 0) {
+                        if (!@private) {
+                            writer.Write(ch.KeyChar);
+                            writer.Write(" ");
+                            writer.Write(ch.KeyChar);
+                        }
+                        
+                        builder.Remove(builder.Length - 1, 1);
+                    } else {
+                        Console.Beep();
+                    }
+                } else {
+                    builder.Append(ch.KeyChar);
+                    
+                    if (!@private) writer.Write(ch.KeyChar);
+                }
+            }
+            writer.WriteLine();
+            return builder.ToString();
+        }
     }
 }
