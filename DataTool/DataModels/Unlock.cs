@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using DataTool.JSON;
 using TankLib;
 using TankLib.STU;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
-using Utf8Json;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 

@@ -38,11 +38,11 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 //if (shaderCode.Header.ShaderType != Enums.teSHADER_TYPE.VERTEX) continue;
                 //if (shaderCode.Header.ShaderType != Enums.teSHADER_TYPE.COMPUTE) continue;
                 
-                if (instance.ShaderResources != null) {
-                    foreach (teShaderInstance.ShaderResourceDefinition inputDefinition in instance.ShaderResources) {
-                        hashes.Add(inputDefinition.NameHash);
-                    }
-                }
+                //if (instance.ShaderResources != null) {
+                //    foreach (teShaderInstance.ShaderResourceDefinition inputDefinition in instance.ShaderResources) {
+                //        hashes.Add(inputDefinition.NameHash);
+                //    }
+                //}
 
                 if (instance.BufferParts != null) {
                     foreach (teShaderInstance.BufferPart[] bufferParts in instance.BufferParts) {

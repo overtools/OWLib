@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.SaveLogic;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Program;
@@ -77,11 +78,10 @@ namespace DataTool.ToolLogic.Extract.Debug {
             SaveMaterial(path, 0xE00000000004D29, "Chateau - Lake");
             //SaveMaterial(path, 0xE00000000004F0B, "Chateau - Background - Road");
             //SaveMaterial(path, 0xE00000000004EFF, "Chateau - Background - House");
-            //SaveMaterial(path, 0xE00000000004F46, "Chateau - Tower - Body");
+            SaveMaterial(path, 0xE00000000004F46, "Chateau - Tower - Body");
             SaveMaterial(path, 0xE000000000040C0, "Orisa - Classic - Main");
             SaveMaterial(path, 0xE00000000000171, "Reaper - Classic - Main");
-            //SaveMaterial(path, 0xE00000000005BBB, "Brigitte - Classic - Hair");
-            
+            SaveMaterial(path, 0xE00000000005BBB, "Brigitte - Classic - Hair");
             
             //SavePostFX(path);
             //SaveScreenQuad(path);
@@ -221,6 +221,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         public static void SaveMaterial(string basePath, ulong materialGUID, string name) {
             string path = Path.Combine(basePath, name, IO.GetFileName(materialGUID));
             string rawPath = Path.Combine(path, "raw");
+            string imgPath = Path.Combine(path, "img");
             // IO.CreateDirectorySafe(path);
             IO.CreateDirectorySafe(rawPath);
 
@@ -231,6 +232,20 @@ namespace DataTool.ToolLogic.Extract.Debug {
             IO.WriteFile(material.Header.ShaderGroup, rawPath);
             IO.WriteFile(material.Header.GUIDx03A, rawPath);
             IO.WriteFile(material.Header.MaterialData, rawPath);
+
+            using (Stream stream = IO.OpenFile(material.Header.MaterialData)) {
+                if (stream != null) {
+                    teMaterialData materialData = new teMaterialData(stream);
+                    if (materialData.Textures != null) {
+                        FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
+                        foreach (var texture in materialData.Textures) {
+                            FindLogic.Combo.Find(comboInfo, texture.TextureGUID);
+                            comboInfo.SetTextureName(texture.TextureGUID, texture.NameHash.ToString("X8"));
+                        }
+                        Combo.SaveLooseTextures(null, imgPath, comboInfo);
+                    }
+                }
+            }
             
             teShaderGroup shaderGroup = new teShaderGroup(IO.OpenFile(material.Header.ShaderGroup));
             SaveShaderGroup(shaderGroup, path);

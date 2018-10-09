@@ -26,34 +26,46 @@ namespace DataTool.ToolLogic.Dbg
         public void Parse(ICLIFlags toolFlags)
         {
             var flags = toolFlags as ExtractFlags;
-            // foreach (var guid in Program.TrackedFiles[0xA5])
-            // {
-            //     try {
-            //         Unlock unlock = new Unlock(guid);
-            //         if (unlock.Name == "Supercharger") {
-            //             
-            //         }
-            //     } catch (NotImplementedException) { }
-            // }
+            foreach (var guid in Program.TrackedFiles[0xA5])
+            {
+                SaveUnlock(guid);
+                //try {
+                //    Unlock unlock = new Unlock(guid);
+                //    if (unlock.Name == "Supercharger") {
+                //        
+                //    }
+                //} catch (NotImplementedException) { }
+            }
 
-            const ulong guid = 0x250000000000F90;
-            Unlock unlock = new Unlock(guid);
-
-            STUUnlock_POTGAnimation potgAnim = (STUUnlock_POTGAnimation)unlock.STU;
-            SaveAnimation(potgAnim.m_animation);
+            //const ulong guid = 0x250000000000F90;
+            //SaveUnlock(guid);
         }
 
-        private void SaveAnimation(ulong guid) {
+        private void SaveUnlock(ulong guid) {
+            Unlock unlock;
+            try {
+                unlock = new Unlock(guid);
+            } catch (NotImplementedException) {
+                return;
+            }
+            
+            STUUnlock_POTGAnimation potgAnim = unlock.STU as STUUnlock_POTGAnimation;
+            if (potgAnim == null) return;
+            if (potgAnim.m_animation == 0) return;
+            //if (unlock.Name != "Selfie") return;
+            SaveAnimation(Path.Combine(@"C:\ow\dump\1.28\effect", GetValidFilename(unlock.GetName())), potgAnim.m_animation);
+        }
+
+        private void SaveAnimation(string dir, ulong guid) {
             using (Stream animStream = OpenFile(guid)) {
                 teAnimation animation = new teAnimation(animStream);
 
-                if (animation.Header.Effect != 0) {
-                    SaveEffect(animation.Header.Effect);
-                }
+                if (animation.Header.Effect == 0) return;
+                SaveEffect(dir, animation.Header.Effect);
             }
         }
 
-        private void SaveEffect(ulong guid) {
+        private void SaveEffect(string dir, ulong guid) {
             using (Stream stream = OpenFile(guid)) {
                 teChunkedData chunkedData = new teChunkedData(stream);
 
@@ -61,9 +73,9 @@ namespace DataTool.ToolLogic.Dbg
 
                 foreach (IChunk chunk in chunkedData.Chunks) {
                     if (chunk is teEffectChunkShaderSetup shaderSetup) {
-                        if (teResourceGUID.Index(lastModel) != 0x296B) continue;  // the circle
+                        //if (teResourceGUID.Index(lastModel) != 0x296B) continue;  // the circle
                         
-                        ExtractDebugShaders.SaveMaterial(@"C:\ow\dump\1.27\effect", shaderSetup.Header.Material, GetFileName(guid));
+                        ExtractDebugShaders.SaveMaterial(dir, shaderSetup.Header.Material, GetFileName(guid));
                     }
                             
                     if (chunk is teEffectComponentParticle particle) {
@@ -73,10 +85,16 @@ namespace DataTool.ToolLogic.Dbg
                     }
                 }
 
+                foreach (teEffectComponentEntityControl entityControl in chunkedData.GetChunks<teEffectComponentEntityControl>()) {
+                    if (entityControl.Header.Animation == 0) continue;
+                    
+                    SaveAnimation(dir, entityControl.Header.Animation);
+                }
+
                 foreach (teEffectComponentModel model in chunkedData.GetChunks<teEffectComponentModel>()) {
                     if (model.Header.Animation == 0) continue;
                     
-                    SaveAnimation(model.Header.Animation);
+                    SaveAnimation(dir, model.Header.Animation);
                 }
             }
         }

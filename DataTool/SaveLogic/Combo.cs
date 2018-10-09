@@ -484,7 +484,7 @@ namespace DataTool.SaveLogic {
 
         public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong textureGUID) {
             bool convertTextures = true;
-            string convertType = "dds";
+            string convertType = "tif";
             bool lossless = false;
 
             if (flags is ExtractFlags extractFlags) {
@@ -507,7 +507,7 @@ namespace DataTool.SaveLogic {
 
             CreateDirectoryFromFile(path);
             if (!convertTextures) {
-                using (Stream textureStream = OpenFile(textureInfo.GUID)) {
+                using (Stream textureStream = OpenFile(textureGUID)) {
                     teTexture texture = new teTexture(textureStream, true);
                     textureStream.Position = 0;
                     WriteFile(textureStream, $"{filePath}.004");

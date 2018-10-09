@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using DataTool.Flag;
 using TankLib.STU;
@@ -19,9 +19,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
         
         public void SpecialHelper(ICLIFlags toolFlags) {
-            ExtractDebugNewEntities.VersionInfo versionInfo = ExtractDebugNewEntities.GetGUIDVersionInfo(@"D:\ow\resources\verdata\49154.guids");
+            var guids = ExtractDebugNewEntities.GetGUIDs(@"D:\ow\resources\verdata\49154.guids");
 
-            const Enum_BABC4175 lootboxType = Enum_BABC4175.SummerGames;
+            const Enum_BABC4175 lootboxType = Enum_BABC4175.Halloween;
 
             HashSet<ulong> addedUnlocks = new HashSet<ulong>();
             foreach (var progressionGuid in TrackedFiles[0x58]) {
@@ -29,7 +29,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 
                 if (progressionUnlocks?.m_lootBoxesUnlocks == null) continue;
                 foreach (STULootBoxUnlocks lootBoxUnlocks in progressionUnlocks.m_lootBoxesUnlocks) {
-                    ProcessLootBoxUnlocks(lootBoxUnlocks, versionInfo, lootboxType, addedUnlocks);
+                    ProcessLootBoxUnlocks(lootBoxUnlocks, guids, lootboxType, addedUnlocks);
                 }
             }
 
@@ -39,30 +39,30 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 if (playerProgression == null) continue;
                 
                 foreach (STULootBoxUnlocks lootBoxUnlocks in playerProgression.m_lootBoxesUnlocks) {
-                    ProcessLootBoxUnlocks(lootBoxUnlocks, versionInfo, lootboxType, addedUnlocks);
+                    ProcessLootBoxUnlocks(lootBoxUnlocks, guids, lootboxType, addedUnlocks);
                 }
 
                 break;
             }
             
-            Console.Out.WriteLine("public static readonly ulong[] SummerGames2018 = new ulong[] {");
+            Console.Out.WriteLine("new ulong[] {");
             foreach (ulong addedUnlock in addedUnlocks) {
                 Console.Out.WriteLine($"    0x{addedUnlock:X8},");
             }
             Console.Out.WriteLine("};");
         }
 
-        public static void ProcessLootBoxUnlocks(STULootBoxUnlocks lootBoxUnlocks, ExtractDebugNewEntities.VersionInfo versionInfo, Enum_BABC4175 lootboxType, HashSet<ulong> addedUnlocks) {
+        public static void ProcessLootBoxUnlocks(STULootBoxUnlocks lootBoxUnlocks, HashSet<ulong> guids, Enum_BABC4175 lootboxType, HashSet<ulong> addedUnlocks) {
             if (lootBoxUnlocks?.m_unlocks?.m_unlocks == null) return;
             if (lootBoxUnlocks.m_lootboxType != lootboxType) return;
             foreach (teStructuredDataAssetRef<STUUnlock> unlock in lootBoxUnlocks.m_unlocks.m_unlocks) {
                 //Unlock unlockModel = new Unlock(unlock);
                 //if (unlockModel.Type != "Skin") continue;
                 
-                if (!versionInfo.GUIDs.Contains(unlock)) {
+                if (!guids.Contains(unlock)) {
                     addedUnlocks.Add(unlock);
                 }
             }
         }
     }
-}*/
+}
