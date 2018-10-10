@@ -37,7 +37,7 @@ namespace TankLibHelper {
             ModeResult result = modeObject.Run(args);
 
             if (result == ModeResult.Fail) {
-                Console.Out.WriteLine($"\r\n{mode} failed to execute successsfully");
+                Console.Out.WriteLine($"\r\n{mode} failed to execute successfully");
             } else if (result == ModeResult.Success) {
                 Console.Out.WriteLine("\r\nDone");
             }

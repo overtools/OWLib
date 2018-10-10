@@ -1,4 +1,4 @@
-version: 1.28.0.{build}
+version: 1.29.0.{build}
 image: Visual Studio 2017
 configuration: Release
 platform: Any CPU

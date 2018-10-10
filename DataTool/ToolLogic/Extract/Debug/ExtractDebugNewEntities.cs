@@ -83,12 +83,12 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 throw new Exception("no output path");
             }
             
-            var contentHashes = GetContentHashes(@"D:\ow\resources\verdata\49154.cmfhashes");
+            var contentHashes = GetContentHashes(@"D:\ow\resources\verdata\50951.cmfhashes");
 
             const string container = "DebugNewEntities3";
             
             Combo.ComboInfo info = new Combo.ComboInfo();
-            AddNewByContentHash(info, contentHashes, 0x4);
+            AddNewByContentHash(info, contentHashes, 0x7C);
             
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, container), info);
             SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, container, "Sounds"), info);

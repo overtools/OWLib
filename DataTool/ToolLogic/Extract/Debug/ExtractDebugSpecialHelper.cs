@@ -19,7 +19,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
         
         public void SpecialHelper(ICLIFlags toolFlags) {
-            var guids = ExtractDebugNewEntities.GetGUIDs(@"D:\ow\resources\verdata\49154.guids");
+            var guids = ExtractDebugNewEntities.GetGUIDs(@"D:\ow\resources\verdata\50951.guids");
 
             const Enum_BABC4175 lootboxType = Enum_BABC4175.Halloween;
 

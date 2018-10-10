@@ -48,7 +48,6 @@ namespace DataTool.SaveLogic.Unlock {
             FindLogic.Combo.Find(info, hero.m_8125713E, replacements);
             info.SetEntityName(hero.m_8125713E, "HighlightIntro");
             
-
             if (skin is STUSkinTheme skinTheme) {
                 info.Config.DoExistingEntities = true;
                 foreach (var weaponOverrideGUID in skinTheme.m_heroWeapons) {

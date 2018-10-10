@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using TankLib.STU;
 using TankLib.STU.Types;
@@ -37,6 +36,7 @@ namespace DataTool.Helper {
             try {
         #endif
             using (Stream stream = OpenFile(key)) {
+                if (stream == null) return null;
                 return new teStructuredData(stream);
             }
         #if RELEASE

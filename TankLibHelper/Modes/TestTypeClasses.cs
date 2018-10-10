@@ -19,8 +19,11 @@ namespace TankLibHelper.Modes {
                SpeechLanguage = "enUS",
                TextLanguage = "enUS"
             };
+            
+            TankLib.TACT.LoadHelper.PreLoad();
             ClientHandler client = new ClientHandler(gameDir, createArgs);
             _tankHandler = (ProductHandler_Tank)client.ProductHandler;
+            TankLib.TACT.LoadHelper.PostLoad(client);
 
             foreach (var asset in _tankHandler.Assets) {
                 if (teResourceGUID.Type(asset.Key) != type) continue;
@@ -42,6 +45,7 @@ namespace TankLibHelper.Modes {
         }
 
         public string GetString(ulong guid) {
+            if (guid == 0) return null;
             using (Stream stream = _tankHandler.OpenFile(guid)) {
                 if (stream == null) return null;
                 return new teString(stream);
