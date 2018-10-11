@@ -6,10 +6,8 @@ namespace DataTool.JSON {
     public class teResourceGUID_Newtonsoft : JsonConverter<teResourceGUID> {
         public override void WriteJson(JsonWriter writer, teResourceGUID value, JsonSerializer serializer) {
             writer.WriteStartObject();
-            writer.WritePropertyName("Key");
+            writer.WritePropertyName(value.GUID.ToString("X8"));
             writer.WriteValue(value.ToString());
-            writer.WritePropertyName("GUID");
-            writer.WriteValue(value.GUID);
             writer.WriteEndObject();
         }
 

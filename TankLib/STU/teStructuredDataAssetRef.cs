@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace TankLib.STU {
     /// <summary>Asset reference</summary>
     public class teStructuredDataAssetRef<T> : ISerializable_STU {
+        [IgnoreDataMember]
         public ulong Padding;
         public teResourceGUID GUID;
 

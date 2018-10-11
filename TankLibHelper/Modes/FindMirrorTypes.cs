@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.HashFunction.CRCStandards;
+using System.Data.HashFunction.CRC;
 using System.IO;
 using System.Text;
 
@@ -23,15 +23,15 @@ namespace TankLibHelper.Modes {
             }
 
             _info = new StructuredDataInfo(dataDirectory);
-            
-            CRC32 crc32 = new CRC32();
+
+            ICRC crc32 = CRCFactory.Instance.Create(CRCConfig.CRC32);
 
             foreach (KeyValuePair<uint, string> instance in _info.KnownInstances) {
                 //if (instance.Value.StartsWith("STUStatescript")) {
                 if (instance.Value.StartsWith("M")) continue;
                 string mirrorType = instance.Value.Replace("STU", "M");
                 if (!mirrorType.StartsWith("M")) continue;
-                uint hash = BitConverter.ToUInt32(crc32.ComputeHash(Encoding.ASCII.GetBytes(mirrorType.ToLowerInvariant())), 0);
+                uint hash = BitConverter.ToUInt32(crc32.ComputeHash(Encoding.ASCII.GetBytes(mirrorType.ToLowerInvariant())).Hash, 0);
 
                 if (_info.Instances.ContainsKey(hash)) {
                     Console.Out.WriteLine($"{hash:X8}, {mirrorType}");

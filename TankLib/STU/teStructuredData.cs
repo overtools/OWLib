@@ -157,6 +157,8 @@ namespace TankLib.STU {
                 //    Debugger.Break();
                 //}
             }
+
+            Instances[0].Usage = TypeUsage.Root;
         }
 
         /// <summary>Read a "Version2" STU asset</summary>
