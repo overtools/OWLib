@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Input;
 
@@ -37,6 +38,10 @@ namespace DataTool.WPF.Tool {
         public event RoutedEventHandler OnClick;
         public object Payload { get; set; }
         public RoutedEventHandler ClickRouter { get; }
+        public int ImageWidth { get; set; } = 128;
+        public int ImageHeight { get; set; } = 128;
+        public int Width { get; set; } = 128;
+        public int Height { get; set; } = 152;
         
         public ImageGridEntry(string name, byte[] image) {
             Name = name;

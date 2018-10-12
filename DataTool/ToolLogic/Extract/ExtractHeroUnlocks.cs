@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using DataTool.DataModels;
@@ -111,8 +112,8 @@ namespace DataTool.ToolLogic.Extract {
             SaveUnlocksForHeroes(flags, heroes, basePath, NPCs);
         }
 
-        public Task<Control> GetToolControl(ProgressWorker worker) {
-            return WPF.Tool.Export.HeroUnlocksView.Get(worker); 
+        public Task<Control> GetToolControl(ProgressWorker worker, SynchronizationContext context) {
+            return WPF.Tool.Export.HeroUnlocksView.Get(worker, context); 
         }
 
         public List<STUHero> GetHeroes() {

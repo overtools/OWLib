@@ -33,6 +33,8 @@ namespace TankView {
         public GUIDCollection GUIDTree { get; set; } = new GUIDCollection();
         public ProductLocations ProductAgent { get; set; }
 
+        public string SearchText { get; set; } = string.Empty;
+
         public static ClientCreateArgs ClientArgs = new ClientCreateArgs();
 
         private bool ready = true;
@@ -78,9 +80,16 @@ namespace TankView {
             }
 
             InitializeComponent();
+            
             DataContext = this;
             // FolderView.ItemsSource = ;
             // FolderItemList.ItemsSource = ;
+        }
+
+        private void GUIDSearch(object sender, TextChangedEventArgs e) {
+            if (GUIDTree == null || e.Handled) return;
+            GUIDTree.Search = (e.Source as TextBox)?.Text;
+            e.Handled = true;
         }
 
         private void UpdateProgress(object sender, ProgressChangedEventArgs @event) {
@@ -158,6 +167,7 @@ namespace TankView {
                     DataTool.Program.TankHandler = DataTool.Program.Client.ProductHandler as ProductHandler_Tank;
                 } catch (Exception e) {
                     MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    IsReady = true;
                     if (Debugger.IsAttached) {
                         throw;
                     }
@@ -186,6 +196,7 @@ namespace TankView {
                     BuildTree();
                 } catch (Exception e) {
                     MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    IsReady = true;
                     if (Debugger.IsAttached) {
                         throw;
                     }
@@ -235,7 +246,7 @@ namespace TankView {
 
             instance.Owner = this;
             
-            instance.Show();
+            //instance.Show();
         }
 
         private void ExtractFiles(object sender, RoutedEventArgs e) {

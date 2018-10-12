@@ -100,6 +100,19 @@
                       IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
             <MenuItem Header="DataTool" Click="OpenOrFocusSimView"
                       IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+            
+            <MenuItem IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+                <MenuItem.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="300" TextChanged="GUIDSearch"
+                                 IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"></TextBox>
+                    </Grid>
+                </MenuItem.Header>
+            </MenuItem>
         </Menu>
         <Grid Grid.Row="1" DataContext="{Binding GUIDTree}" Name="MainView">
             <Grid.ColumnDefinitions>

@@ -9,10 +9,12 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type local:ImageGridEntry}">
-            <Button Command="{Binding ClickRouter}">
-                <StackPanel>
-                    <Image Source="{Binding Path=Image}"></Image>
-                    <TextBlock Text="{Binding Path=Name}"></TextBlock>
+            <Button Command="{Binding ClickRouter}" Width="{Binding Path=Width}" Height="{Binding Path=Height}" BorderThickness="0" Padding="0" Margin="5" Background="Transparent">
+                <StackPanel Orientation="Vertical" Width="{Binding Path=Width}" Height="{Binding Path=Height}">
+                    <Image Source="{Binding Path=Image}" Width="{Binding Path=ImageWidth}" Height="{Binding Path=ImageHeight}"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           Stretch="Fill"/>
+                    <TextBlock Text="{Binding Path=Name}" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
         </DataTemplate>

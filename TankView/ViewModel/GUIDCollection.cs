@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -146,10 +147,20 @@ namespace TankView.ViewModel {
 
         public double ImageHeight => _frame?.Height ?? 0;
 
+        private string searchQuery = string.Empty;
+
+        public string Search {
+            get => searchQuery;
+            set {
+                searchQuery = value?.Trim() ?? string.Empty;
+                NotifyPropertyChanged(nameof(SelectedEntries));
+            }
+        }
+
         private List<GUIDEntry> _selected = null;
 
         public List<GUIDEntry> SelectedEntries {
-            get => _selected;
+            get => !string.IsNullOrWhiteSpace(searchQuery) ? _selected.Where(x => CultureInfo.CurrentUICulture.CompareInfo.IndexOf(x.Filename, searchQuery, CompareOptions.IgnoreCase | CompareOptions.IgnoreSymbols | CompareOptions.IgnoreWidth) > -1).ToList() : _selected;
             set {
                 _selected = value.OrderBy(x => x.Filename).ToList();
                 NotifyPropertyChanged(nameof(SelectedEntries));

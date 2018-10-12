@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel;
-using System.Windows;
+using System.Threading;
 using System.Windows.Controls;
 
 namespace TankView {
     /// <summary>
     /// Interaction logic for DataToolSimView.xaml
     /// </summary>
-    public partial class DataToolSimView : Window {
-
+    public partial class DataToolSimView {
         private string _moduleName = "DataTool";
 
         public string ModuleName {
@@ -19,17 +18,21 @@ namespace TankView {
         }
 
         private Control _control;
-        
         public Control DataToolControl {
             get => _control;
             set {
                 _control = value;
-                MainSource.Children.Clear();
-                MainSource.Children.Add(DataToolControl);
-                NotifyPropertyChanged(nameof(DataToolControl));
+                ViewContext.Send((x) => {
+                    if (!(x is Control ctrl)) return;
+                    MainSource.Children.Clear();
+                    MainSource.Children.Add(ctrl);
+                    NotifyPropertyChanged(nameof(DataToolControl));
+                }, value);
             }
         }
 
+        public SynchronizationContext ViewContext { get; }
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void NotifyPropertyChanged(string name) {
@@ -38,6 +41,7 @@ namespace TankView {
         
         public DataToolSimView() {
             InitializeComponent();
+            ViewContext = SynchronizationContext.Current;
         }
     }
 }

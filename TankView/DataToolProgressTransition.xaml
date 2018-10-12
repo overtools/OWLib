@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TankView"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="DataTool Interop" Height="242" Width="150" ResizeMode="NoResize">
+        Title="DataTool Interop" Height="72" Width="500" ResizeMode="NoResize">
     <Grid>
         <StatusBar DataContext="{Binding ProgressInfo}">
             <StatusBarItem VerticalContentAlignment="Stretch">
