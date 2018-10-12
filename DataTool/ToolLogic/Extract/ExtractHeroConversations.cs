@@ -118,6 +118,8 @@ namespace DataTool.ToolLogic.Extract {
                     STUVoiceConversation conversation =
                         GetInstance<STUVoiceConversation>(lineInstance.VoiceConversation);
 
+                    if (conversation == null) continue; // wtf, blizz pls
+
                     string convoDir = Path.Combine(path, heroNameActual, GetFileName(lineInstance.VoiceConversation));
                     foreach (STUVoiceConversationLine line in conversation.m_voiceConversationLine) {
                         string linePath = Path.Combine(convoDir, line.m_B4D405A1.ToString());

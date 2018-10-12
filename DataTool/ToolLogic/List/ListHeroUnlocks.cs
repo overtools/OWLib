@@ -56,10 +56,10 @@ namespace DataTool.ToolLogic.List {
 
             foreach (Unlock unlock in unlocks) {
                 Log($"{start}\t\t{unlock.GetName(true)} ({unlock.Rarity} {unlock.Type})");
-                if (unlock.Description != null) {
+                if (!string.IsNullOrEmpty(unlock.Description)) {
                     Log($"{start}\t\t\t{unlock.Description}");
                 }
-                if(unlock.AvailableIn != null) {
+                if (!string.IsNullOrEmpty(unlock.AvailableIn)) {
                     Log($"{start}\t\t\t{unlock.AvailableIn}");
                 }
             }
