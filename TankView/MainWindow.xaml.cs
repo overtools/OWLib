@@ -10,21 +10,20 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using DataTool.WPF;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using TankView.Helper;
 using TankView.ViewModel;
 using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
-using TACTLib.Config;
-using TACTLib.Core;
-using TACTLib.Core.Product;
 using TACTLib.Core.Product.Tank;
+// ReSharper disable MemberCanBeMadeStatic.Local
 
 namespace TankView {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged {
+    public partial class MainWindow : INotifyPropertyChanged {
         public SynchronizationContext ViewContext { get; }
 
         public NGDPPatchHosts NGDPPatchHosts { get; set; }
@@ -36,9 +35,6 @@ namespace TankView {
 
         public static ClientCreateArgs ClientArgs = new ClientCreateArgs();
 
-        public static ClientHandler Client;
-        public static ProductHandler_Tank TankHandler;
-
         private bool ready = true;
 
         public bool IsReady {
@@ -46,7 +42,7 @@ namespace TankView {
             set {
                 ready = value;
                 if (value) {
-                    ProgressSlave.ReportProgress(0, "Idle");
+                    _progressWorker.ReportProgress(0, "Idle");
                 }
 
                 NotifyPropertyChanged(nameof(IsReady));
@@ -56,7 +52,7 @@ namespace TankView {
 
         public bool IsDataReady => IsReady;
 
-        private ProgressSlave ProgressSlave = new ProgressSlave();
+        private ProgressWorker _progressWorker = new ProgressWorker();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -66,7 +62,7 @@ namespace TankView {
 
         public MainWindow() {
             ClientArgs.HandlerArgs = new ClientCreateArgs_Tank();
-            
+
             ViewContext = SynchronizationContext.Current;
 
             NGDPPatchHosts = new NGDPPatchHosts();
@@ -75,7 +71,7 @@ namespace TankView {
             CASCSettings = new CASCSettings();
             ProductAgent = new ProductLocations();
 
-            ProgressSlave.OnProgress += UpdateProgress;
+            _progressWorker.OnProgress += UpdateProgress;
 
             if (!NGDPPatchHosts.Any(x => x.Active)) {
                 NGDPPatchHosts[0].Active = true;
@@ -89,13 +85,13 @@ namespace TankView {
 
         private void UpdateProgress(object sender, ProgressChangedEventArgs @event) {
             ViewContext.Send(x => {
-                                 if (!(x is ProgressChangedEventArgs evt)) return;
-                                 if (evt.UserState != null && evt.UserState is string state) {
-                                     ProgressInfo.State = state;
-                                 }
+                if (!(x is ProgressChangedEventArgs evt)) return;
+                if (evt.UserState != null && evt.UserState is string state) {
+                    ProgressInfo.State = state;
+                }
 
-                                 ProgressInfo.Percentage = evt.ProgressPercentage;
-                             }, @event);
+                ProgressInfo.Percentage = evt.ProgressPercentage;
+            }, @event);
         }
 
         public string ModuloTitle => "TankView";
@@ -147,52 +143,79 @@ namespace TankView {
         }
 
         private void OpenNGDP(string path) {
-            RecentLocations.Add(path);
-            CollectionViewSource.GetDefaultView(RecentLocations).Refresh();
             throw new NotImplementedException(nameof(OpenNGDP));
+            
+#pragma warning disable 162
+            // ReSharper disable once HeuristicUnreachableCode
+            PrepareTank(path);
+
+            Task.Run(delegate {
+                try {
+                    DataTool.Program.Client = new ClientHandler(null, ClientArgs);
+
+                    ClientArgs.Online = true;
+
+                    DataTool.Program.TankHandler = DataTool.Program.Client.ProductHandler as ProductHandler_Tank;
+                } catch (Exception e) {
+                    MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    if (Debugger.IsAttached) {
+                        throw;
+                    }
+                } finally {
+                    GCSettings.LatencyMode = GCLatencyMode.Interactive;
+                    GC.Collect();
+                    DataTool.Program.InitTrackedFiles();
+                }
+            });
+#pragma warning restore 162
         }
 
         private void OpenCASC(string path) {
+            PrepareTank(path);
+
+            Task.Run(delegate {
+                try {
+                    DataTool.Program.Client = new ClientHandler(path, ClientArgs);
+
+                    if (DataTool.Program.Client.AgentProduct.Uid != null && DataTool.Program.Client.AgentProduct.Uid != "prometheus") {
+                        MessageBox.Show($"The branch \"{DataTool.Program.Client.AgentProduct.Uid}\" is not supported!\nThis might result in failure to load.\nProceed with caution.", "Unsupported Branch", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    }
+
+                    DataTool.Program.TankHandler = DataTool.Program.Client.ProductHandler as ProductHandler_Tank;
+
+                    BuildTree();
+                } catch (Exception e) {
+                    MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    if (Debugger.IsAttached) {
+                        throw;
+                    }
+                } finally {
+                    GCSettings.LatencyMode = GCLatencyMode.Interactive;
+                    GC.Collect();
+                    DataTool.Program.InitTrackedFiles();
+                }
+
+                ViewContext.Send(delegate { IsReady = true; }, null);
+            });
+        }
+
+        private void PrepareTank(string path) {
             RecentLocations.Add(path);
             CollectionViewSource.GetDefaultView(RecentLocations).Refresh();
 
             IsReady = false;
 
-            Client = null;
-            TankHandler = null;
+            DataTool.Program.Client = null;
+            DataTool.Program.TankHandler = null;
             GUIDTree?.Dispose();
             GUIDTree = new GUIDCollection();
             NotifyPropertyChanged(nameof(GUIDTree));
             GCSettings.LatencyMode = GCLatencyMode.Batch;
-
-            Task.Run(delegate {
-                         try {
-                             Client = new ClientHandler(path, ClientArgs);
-
-                             if (Client.AgentProduct.Uid != null && Client.AgentProduct.Uid != "prometheus") {
-                                 MessageBox.Show($"The branch \"{Client.AgentProduct.Uid}\" is not supported!\nThis might result in failure to load.\nProceed with caution.", "Unsupported Branch", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
-                             }
-
-                             TankHandler = Client.ProductHandler as ProductHandler_Tank;;
-
-                             BuildTree();
-                         } catch (Exception e) {
-                             MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-                             if (Debugger.IsAttached) {
-                                 throw;
-                             }
-                         } finally {
-                             GCSettings.LatencyMode = GCLatencyMode.Interactive;
-                             GC.Collect();
-                         }
-
-                         ViewContext.Send(new SendOrPostCallback(delegate { IsReady = true; }), null);
-                     });
         }
 
         private void BuildTree() {
             GUIDTree?.Dispose();
-            GUIDTree = new GUIDCollection(Client, TankHandler, ProgressSlave);
+            GUIDTree = new GUIDCollection(DataTool.Program.Client, DataTool.Program.TankHandler, _progressWorker);
             NotifyPropertyChanged(nameof(GUIDTree));
         }
 
@@ -201,22 +224,18 @@ namespace TankView {
                 return;
             }
 
-            if (sender is TreeViewItem item) {
-                Folder folder = item.DataContext as Folder;
-                GUIDTree.SelectedEntries = folder.Files;
-                NotifyPropertyChanged(nameof(GUIDTree));
-                e.Handled = true;
-            }
+            if (!(sender is TreeViewItem item)) return;
+            if (item.DataContext is Folder folder) GUIDTree.SelectedEntries = folder.Files;
+            NotifyPropertyChanged(nameof(GUIDTree));
+            e.Handled = true;
         }
 
         private void OpenOrFocusSimView(object sender, RoutedEventArgs e) {
-            var instance = Application.Current.Windows.OfType<DataToolSimView>().FirstOrDefault();
-            if (instance == null) {
-                instance = new DataToolSimView();
-            }
+            var instance = Application.Current.Windows.OfType<DataToolListView>().FirstOrDefault() ?? new DataToolListView();
 
             instance.Owner = this;
-            instance.PostInitialize();
+            
+            instance.Show();
         }
 
         private void ExtractFiles(object sender, RoutedEventArgs e) {
@@ -232,7 +251,8 @@ namespace TankView {
         private void ExtractFiles(string outPath, IEnumerable<GUIDEntry> files) {
             IsReady = false;
 
-            HashSet<string> directories = new HashSet<string>(files.Select(x => Path.Combine(outPath, Path.GetDirectoryName(x.FullPath.Substring(1)))));
+            IEnumerable<GUIDEntry> guidEntries = files as GUIDEntry[] ?? files.ToArray();
+            HashSet<string> directories = new HashSet<string>(guidEntries.Select(x => Path.Combine(outPath, Path.GetDirectoryName(x.FullPath.Substring(1)) ?? string.Empty)));
             foreach (string directory in directories) {
                 if (!Directory.Exists(directory)) {
                     Directory.CreateDirectory(directory);
@@ -240,39 +260,41 @@ namespace TankView {
             }
 
             Task.Run(delegate {
-                         int c = 0;
-                         int t = files.Count();
-                         ProgressSlave?.ReportProgress(0, "Saving files...");
-                         Parallel.ForEach(files, new ParallelOptions {
-                             MaxDegreeOfParallelism = 4
-                         }, (entry) => {
-                                c++;
-                                if (c % ((int) (t * 0.005) + 1) == 0) {
-                                    ProgressSlave?.ReportProgress((int) (((float) c / (float) t) * 100));
-                                }
+                int c = 0;
+                int t = guidEntries.Count();
+                _progressWorker?.ReportProgress(0, "Saving files...");
+                Parallel.ForEach(guidEntries, new ParallelOptions {
+                    MaxDegreeOfParallelism = 4
+                }, (entry) => {
+                    c++;
+                    if (c % ((int) (t * 0.005) + 1) == 0) {
+                        _progressWorker?.ReportProgress((int) ((c / (float) t) * 100));
+                    }
 
-                                try {
-                                    using (Stream i = IOHelper.OpenFile(entry))
-                                    using (Stream o = File.OpenWrite(Path.Combine(outPath, entry.FullPath.Substring(1)))) {
-                                        i.CopyTo(o);
-                                    }
-                                } catch { }
-                            });
+                    try {
+                        using (Stream i = IOHelper.OpenFile(entry))
+                        using (Stream o = File.OpenWrite(Path.Combine(outPath, entry.FullPath.Substring(1)))) {
+                            i.CopyTo(o);
+                        }
+                    } catch {
+                        // ignored
+                    }
+                });
 
-                         ViewContext.Send(new SendOrPostCallback(delegate { IsReady = true; }), null);
-                     });
+                ViewContext.Send(delegate { IsReady = true; }, null);
+            });
         }
 
-        private void ExtractFolder(string outPath, Folder folder, ref List<GUIDEntry> files) {
+        private void ExtractFolder(Folder folder, ref List<GUIDEntry> files) {
             files.AddRange(folder.Files);
             foreach (Folder f in folder.Folders) {
-                ExtractFolder(outPath, f, ref files);
+                ExtractFolder(f, ref files);
             }
         }
 
         private void ExtractFolder(string outPath, Folder folder) {
             List<GUIDEntry> files = new List<GUIDEntry>();
-            ExtractFolder(outPath, folder, ref files);
+            ExtractFolder(folder, ref files);
             ExtractFiles(outPath, files);
         }
 
@@ -282,7 +304,7 @@ namespace TankView {
                 EnsurePathExists = true
             };
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok) {
-                ExtractFolder(dialog.FileName, (sender as FrameworkElement).DataContext as Folder);
+                ExtractFolder(dialog.FileName, (sender as FrameworkElement)?.DataContext as Folder);
             }
         }
     }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,12 +9,8 @@ using TankLib.Chunks;
 using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Dbg {
-    [Tool("te-model-chunk-stu", Description = "", TrackTypes = new ushort[] {0xC}, IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
+    [Tool("te-model-chunk-stu", Description = "", IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
     class DebugModelSTU : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             var flags = toolFlags as ExtractFlags;
             var testGuids = flags?.Positionals.Skip(3).Select(x => uint.Parse(x, System.Globalization.NumberStyles.HexNumber));

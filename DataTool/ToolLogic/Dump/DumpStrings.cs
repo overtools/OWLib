@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
@@ -9,12 +8,8 @@ using static DataTool.Program;
 using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.Dump {
-    [Tool("dump-strings", Description = "Dump strings", TrackTypes = new ushort[] { 0x7C }, CustomFlags = typeof(DumpFlags))]
+    [Tool("dump-strings", Description = "Dump strings", CustomFlags = typeof(DumpFlags))]
     public class DumpStrings : JSONTool, ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             var strings = GetStrings();
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.JSON;
@@ -7,12 +6,8 @@ using static DataTool.Program;
 using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-owl-teams", Description = "List OWL teams", TrackTypes = new ushort[] {0xEC}, CustomFlags = typeof(ListFlags), IsSensitive = true)]
+    [Tool("list-owl-teams", Description = "List OWL teams", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListOwlTeams : JSONTool, ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {;
             var teams = TrackedFiles[0xEC].Select(key => new TeamDefinition(key));
             

@@ -12,12 +12,8 @@ using static DataTool.Helper.Logger;
 using Map = DataTool.SaveLogic.Map;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-maps", Description = "Extract maps", TrackTypes = new ushort[] {0x9F, 0x0BC}, CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-maps", Description = "Extract maps", CustomFlags = typeof(ExtractFlags))]
     public class ExtractMaps : QueryParser, ITool, IQueryParser {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             SaveMaps(toolFlags);
         }

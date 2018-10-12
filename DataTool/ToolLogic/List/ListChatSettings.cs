@@ -7,12 +7,8 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-chat-settings", Description = "List chat settings", TrackTypes = new ushort[] {0x54}, CustomFlags = typeof(ListFlags))]
+    [Tool("list-chat-settings", Description = "List chat settings", CustomFlags = typeof(ListFlags))]
     public class ListChatSettings : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             foreach (ulong key in TrackedFiles[0x54]) {
                 STUGenericSettings_Chat chat = GetInstance<STUGenericSettings_Chat>(key);

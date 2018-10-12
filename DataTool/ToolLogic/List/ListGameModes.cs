@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.JSON;
@@ -9,12 +8,8 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-gamemodes", Description = "List game modes", IsSensitive = true, TrackTypes = new ushort[] {0xC5}, CustomFlags = typeof(ListFlags))]
+    [Tool("list-gamemodes", Description = "List game modes", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     public class ListGameModes : JSONTool, ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public List<GameMode> GetGameModes() {
             List<GameMode> gameModes = new List<GameMode>();
             foreach (var guid in TrackedFiles[0xC5]) {

@@ -6,27 +6,27 @@ using TACTLib.Core.Product.Tank;
 namespace TankView.Helper {
     public static class IOHelper {
         public static Stream OpenFile(CKey ckey) {
-            return MainWindow.Client.OpenCKey(ckey);
+            return DataTool.Program.Client.OpenCKey(ckey);
         }
 
         public static Stream OpenFile(EKey ekey) {
-            return MainWindow.Client.OpenEKey(ekey);
+            return DataTool.Program.Client.OpenEKey(ekey);
         }
 
         public static Stream OpenFile(ApplicationPackageManifest.PackageRecord packageRecord) {
-            return MainWindow.TankHandler.OpenFile(packageRecord.GUID);
+            return DataTool.Program.TankHandler.OpenFile(packageRecord.GUID);
         }
 
         public static Stream OpenFile(GUIDEntry entry) {
-            return entry.GUID != 0 ? MainWindow.TankHandler.OpenFile(entry.GUID) : MainWindow.Client.OpenCKey(entry.ContentKey);
+            return entry.GUID != 0 ? DataTool.Program.TankHandler.OpenFile(entry.GUID) : DataTool.Program.Client.OpenCKey(entry.ContentKey);
         }
 
         public static Stream OpenFile(ulong guid) {
-            return MainWindow.TankHandler.OpenFile(guid);
+            return DataTool.Program.TankHandler.OpenFile(guid);
         }
 
         public static bool HasFile(ulong guid) {
-            return MainWindow.TankHandler.Assets.ContainsKey(guid);
+            return DataTool.Program.TankHandler.Assets.ContainsKey(guid);
         }
     }
 }

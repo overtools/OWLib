@@ -11,12 +11,8 @@ using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-maps", Description = "List maps", TrackTypes = new ushort[] {0x9F}, CustomFlags = typeof(ListFlags))]
+    [Tool("list-maps", Description = "List maps", CustomFlags = typeof(ListFlags))]
     public class ListMaps : JSONTool, ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             Dictionary<teResourceGUID, MapHeader> maps = GetMaps();
 

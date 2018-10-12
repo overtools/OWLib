@@ -1,13 +1,8 @@
-﻿using System;
-using DataTool.Flag;
+﻿using DataTool.Flag;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-materialdata", Description = "Extract material data hashes (debug)", TrackTypes = new ushort[] {0x86}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-materialdata", Description = "Extract material data hashes (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugMaterialData : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             GetSoundbanks(toolFlags);
         }

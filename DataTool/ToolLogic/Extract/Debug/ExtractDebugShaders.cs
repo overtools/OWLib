@@ -11,12 +11,8 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-shaders", Description = "Extract shaders for a material (debug)", TrackTypes = new ushort[] {0x8}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-shaders", Description = "Extract shaders for a material (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugShaders : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             GetSoundbanks(toolFlags);
         }

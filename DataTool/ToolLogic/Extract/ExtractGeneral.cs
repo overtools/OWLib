@@ -7,12 +7,8 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-general", Description = "Extract general unlocks", TrackTypes = new ushort[] {0x54}, CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-general", Description = "Extract general unlocks", CustomFlags = typeof(ExtractFlags))]
     public class ExtractGeneral : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             GetGeneralUnlocks(toolFlags);
         }

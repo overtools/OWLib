@@ -6,7 +6,7 @@ using TankLib.CASC;
 using static DataTool.Program;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-packagefinder", Description = "Test package loading (debug)", TrackTypes = new ushort[] {}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-packagefinder", Description = "Test package loading (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugPackageFinder : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();

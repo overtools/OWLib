@@ -9,12 +9,8 @@ using TankLib.Helpers;
 using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool.ToolLogic.Render {
-    [Tool("render-ui-elements", Description = "Render UI elements", TrackTypes = new ushort[] {0x5E, 0x5A, 0x45}, CustomFlags = typeof(RenderFlags), IsSensitive = true)]
+    [Tool("render-ui-elements", Description = "Render UI elements", CustomFlags = typeof(RenderFlags), IsSensitive = true)]
     public class RenderUIElements : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             var flags = (RenderFlags) toolFlags;
             var output = Path.Combine(flags.OutputPath, "UI", "Render");

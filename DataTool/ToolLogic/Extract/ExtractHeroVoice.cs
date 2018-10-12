@@ -16,15 +16,11 @@ using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Extract
 {
-    [Tool("extract-hero-voice", Description = "Extract hero voice sounds", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-hero-voice", Description = "Extract hero voice sounds", CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroVoice : QueryParser, ITool, IQueryParser {
         public List<QueryType> QueryTypes => new List<QueryType> { new QueryType { Name = "soundRestriction" }, new QueryType { Name = "groupRestriction" } };
 
         public Dictionary<string, string> QueryNameOverrides => ExtractHeroUnlocks.HeroMapping;
-
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
 
         public void Parse(ICLIFlags toolFlags) {
             SaveHeroSounds(toolFlags);

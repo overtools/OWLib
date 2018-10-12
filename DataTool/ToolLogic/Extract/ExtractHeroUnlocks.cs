@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Controls;
 using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic.Unlock;
+using DataTool.WPF;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
@@ -60,12 +63,8 @@ namespace DataTool.ToolLogic.Extract {
         }
     }
     
-    [Tool("extract-unlocks", Description = "Extract hero cosmetics", TrackTypes = new ushort[] { 0x75 }, CustomFlags = typeof(ExtractFlags))]
-    public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
+    [Tool("extract-unlocks", Name="Hero Cosmetics", Description = "Extract hero cosmetics", CustomFlags = typeof(ExtractFlags))]
+    public class ExtractHeroUnlocks : QueryParser, IAwareTool, IQueryParser {
         protected virtual string RootDir => "Heroes";
         protected virtual bool NPCs => false;
         public List<QueryType> QueryTypes => new List<QueryType> {
@@ -110,6 +109,10 @@ namespace DataTool.ToolLogic.Extract {
 
             var heroes = GetHeroes();
             SaveUnlocksForHeroes(flags, heroes, basePath, NPCs);
+        }
+
+        public Task<Control> GetToolControl(ProgressWorker worker) {
+            return WPF.Tool.Export.HeroUnlocksView.Get(worker); 
         }
 
         public List<STUHero> GetHeroes() {

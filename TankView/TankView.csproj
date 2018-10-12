@@ -93,6 +93,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataToolListView.xaml.cs">
+      <DependentUpon>DataToolListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DataToolProgressTransition.xaml.cs">
+      <DependentUpon>DataToolProgressTransition.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DataToolSimView.xaml.cs">
       <DependentUpon>DataToolSimView.xaml</DependentUpon>
     </Compile>
@@ -102,7 +108,6 @@
     <Compile Include="ObjectModel\InvertBoolConverter.cs" />
     <Compile Include="ObjectModel\ObservableHashCollection.cs" />
     <Compile Include="ObjectModel\SizeConverter.cs" />
-    <Compile Include="ProgressSlave.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\Folder.cs" />
     <Compile Include="ViewModel\GUIDCollection.cs" />
@@ -126,6 +131,8 @@
     <Compile Include="View\PreviewDataString.xaml.cs">
       <DependentUpon>PreviewDataString.xaml</DependentUpon>
     </Compile>
+    <Page Include="DataToolListView.xaml" />
+    <Page Include="DataToolProgressTransition.xaml" />
     <Page Include="DataToolSimView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
@@ -10,12 +9,8 @@ using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-subtitles", Description = "List subtitles", TrackTypes = new ushort[] {0x71}, CustomFlags = typeof(ListFlags))]
+    [Tool("list-subtitles", Description = "List subtitles", CustomFlags = typeof(ListFlags))]
     public class ListSubtitles : JSONTool, ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             Dictionary<teResourceGUID, string[]> subtitles = GetSubtitles();
 

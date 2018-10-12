@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.JSON;
@@ -9,12 +8,8 @@ using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-lootbox", Description = "List lootboxes", TrackTypes = new ushort[] {0xCF}, CustomFlags = typeof(ListFlags))]
+    [Tool("list-lootbox", Description = "List lootboxes", CustomFlags = typeof(ListFlags))]
     public class ListLoobox : JSONTool, ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             List<LootBox> lootboxes = GetLootboxes();
 

@@ -10,7 +10,7 @@ using static DataTool.Helper.STUHelper;
 
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-chat-replacements", Description = "List chat replacements", TrackTypes = new ushort[] {0x54, 0x7F}, CustomFlags = typeof(ListFlags))]
+    [Tool("list-chat-replacements", Description = "List chat replacements", CustomFlags = typeof(ListFlags))]
     public class ListChatReplacements : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();

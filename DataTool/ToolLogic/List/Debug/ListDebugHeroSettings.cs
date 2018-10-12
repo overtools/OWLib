@@ -7,12 +7,8 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.List.Debug {
-    [Tool("list-debug-herosettings", Description = "List hero settings (debug)", TrackTypes = new ushort[] {0x54}, CustomFlags = typeof(ListFlags), IsSensitive = true)]
+    [Tool("list-debug-herosettings", Description = "List hero settings (debug)", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListDebugHeroSettings : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             GetSoundbanks();
         }

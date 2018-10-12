@@ -7,7 +7,7 @@ using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-game-params", Description = "List game paramaters", IsSensitive = true, TrackTypes = new ushort[] {0xC6}, CustomFlags = typeof(ListFlags))]
+    [Tool("list-game-params", Description = "List game paramaters", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     public class ListGameParams : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();

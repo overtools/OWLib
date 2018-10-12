@@ -8,12 +8,8 @@ using static DataTool.Helper.IO;
 using static DataTool.Program;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-shaderhashes", Description = "Extract shader hashes (debug)", TrackTypes = new ushort[] {0x86}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-shaderhashes", Description = "Extract shader hashes (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugShaderHashes : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             GetSoundbanks(toolFlags);
         }

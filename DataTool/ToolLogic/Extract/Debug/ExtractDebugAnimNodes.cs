@@ -13,12 +13,8 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-anim-nodes", Description = "Extract anim nodes (debug)", TrackTypes = new ushort[] {0x20}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-anim-nodes", Description = "Extract anim nodes (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugAnimNodes : JSONTool, ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         // nocaps is intentional
         [DataContract]
         [SuppressMessage("ReSharper", "InconsistentNaming")]

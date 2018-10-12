@@ -11,12 +11,8 @@ using TACTLib.Core.Product.Tank;
 using static DataTool.Program;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-newents", Description = "Extract new entities (debug)", TrackTypes = new ushort[] {}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-newents", Description = "Extract new entities (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugNewEntities : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             ExtractNewEntities(toolFlags);
         }

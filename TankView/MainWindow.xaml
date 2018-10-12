@@ -15,8 +15,12 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="{Binding ModuloTitle}" DataContext="{Binding RelativeSource={RelativeSource Self}}" Height="450"
-        Width="800" MinWidth="800" MinHeight="450">
+        Title="{Binding ModuloTitle}"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Height="450"
+        Width="800"
+        MinWidth="800"
+        MinHeight="450">
     <Window.Resources>
         <om:SizeConverter x:Key="SizeConverter" />
         <om:EnumConverter x:Key="EnumConverter" />

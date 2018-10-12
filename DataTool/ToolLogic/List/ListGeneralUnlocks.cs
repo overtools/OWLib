@@ -1,5 +1,4 @@
-﻿using System;
-using DataTool.DataModels;
+﻿using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.JSON;
 using TankLib.STU.Types;
@@ -7,12 +6,8 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-general-unlocks", Description = "List general unlocks", TrackTypes = new ushort[] { 0x54 }, CustomFlags = typeof(ListFlags))]
+    [Tool("list-general-unlocks", Description = "List general unlocks", CustomFlags = typeof(ListFlags))]
     public class ListGeneralUnlocks : JSONTool, ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             var unlocks = GetUnlocks();
 

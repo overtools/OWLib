@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -8,12 +7,8 @@ using TankLib;
 using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Dbg {
-    [Tool("brrap", Description = "I hear da call", TrackTypes = new ushort[] {0x5E}, IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
+    [Tool("brrap", Description = "I hear da call", IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
     class DebugVoodoo : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             foreach (var guid in Program.TrackedFiles[0x5E]) {
                 using (Stream f = File.OpenWrite($@"C:\Overwatch\05E\{teResourceGUID.AsString(guid)}"))

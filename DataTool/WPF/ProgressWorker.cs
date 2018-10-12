@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel;
 
-namespace TankView {
+namespace DataTool.WPF {
     /// <summary>Reports on progress</summary>
-    public class ProgressSlave {
+    public class ProgressWorker {
         private readonly object _lock = new object();
 
         public event Action<object, ProgressChangedEventArgs> OnProgress;

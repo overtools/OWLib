@@ -18,11 +18,6 @@ namespace DataTool.ToolLogic.Dbg
     [Tool("debug-effect", Description = "", IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
     class DebugEffect : ITool
     {
-        public void IntegrateView(object sender)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags)
         {
             var flags = toolFlags as ExtractFlags;

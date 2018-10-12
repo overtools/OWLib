@@ -9,12 +9,8 @@ using static DataTool.Program;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-0EE", Description = "Extract 0EE (debug)", TrackTypes = new ushort[] {0xEE}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-0EE", Description = "Extract 0EE (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebug0EE : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             Extract0EE(toolFlags);
         }

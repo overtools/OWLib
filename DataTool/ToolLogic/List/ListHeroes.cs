@@ -12,12 +12,8 @@ using static DataTool.Helper.STUHelper;
 using TankLib.Helpers;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-heroes", Description = "List heroes", TrackTypes = new ushort[] {0x75}, CustomFlags = typeof(ListFlags))]
+    [Tool("list-heroes", Description = "List heroes", CustomFlags = typeof(ListFlags))]
     public class ListHeroes : JSONTool, ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             Dictionary<teResourceGUID, Hero> heroes = GetHeroes();
 

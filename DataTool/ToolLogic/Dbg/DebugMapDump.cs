@@ -12,14 +12,9 @@ using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.Debug
 {
-    [Tool("te-map-placable-dump", Description = "", TrackTypes = new ushort[] { 0x9F }, IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
+    [Tool("te-map-placable-dump", Description = "", IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
     class DebugMapDump : ITool
     {
-        public void IntegrateView(object sender)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags)
         {
             var flags = toolFlags as ExtractFlags;

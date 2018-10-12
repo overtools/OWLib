@@ -14,16 +14,11 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-hero-convo", Description = "Extract hero voice conversations", TrackTypes = new ushort[] {0x75},
-        CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-hero-convo", Description = "Extract hero voice conversations", CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
         public List<QueryType> QueryTypes => new List<QueryType> {new QueryType {Name = "FakeType"}};
 
         public Dictionary<string, string> QueryNameOverrides => ExtractHeroUnlocks.HeroMapping;
-
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
 
         public void Parse(ICLIFlags toolFlags) {
             ExtractHeroConvos(toolFlags);

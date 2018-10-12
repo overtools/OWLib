@@ -10,12 +10,8 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-lootbox", Description = "Extract lootbox models", TrackTypes = new ushort[] {0xCF}, CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-lootbox", Description = "Extract lootbox models", CustomFlags = typeof(ExtractFlags))]
     public class ExtractLootbox : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             GetLootboxes(toolFlags);
         }

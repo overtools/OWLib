@@ -6,12 +6,8 @@ using TankLib;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-movies", Description = "Extract movies (debug)", TrackTypes = new ushort[] {0xB6}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-movies", Description = "Extract movies (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugMovies : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             ExtractMOVI(toolFlags);
         }

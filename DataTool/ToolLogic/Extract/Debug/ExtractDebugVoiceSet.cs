@@ -7,12 +7,8 @@ using static DataTool.Program;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-voiceset", Description = "Extract VoiceSets (debug)", TrackTypes = new ushort[] {0x5F}, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-voiceset", Description = "Extract VoiceSets (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugVoiceSet : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             ExtractVoiceSets(toolFlags);
         }

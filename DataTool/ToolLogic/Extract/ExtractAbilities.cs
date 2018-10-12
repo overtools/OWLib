@@ -9,12 +9,8 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-abilities", Description = "Extract abilities", TrackTypes = new ushort[] {0x9E}, CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-abilities", Description = "Extract abilities", CustomFlags = typeof(ExtractFlags))]
     public class ExtractAbilities : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             SaveAbilities(toolFlags);
         }

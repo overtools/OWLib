@@ -14,14 +14,9 @@ using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Extract
 {
-    [Tool("extract-map-envs", Description = "Extract map environment data", TrackTypes = new ushort[] { 0x9F }, CustomFlags = typeof(ExtractMapEnvFlags))]
+    [Tool("extract-map-envs", Description = "Extract map environment data", CustomFlags = typeof(ExtractMapEnvFlags))]
     public class ExtractMapEnvs : QueryParser, ITool
     {
-        public void IntegrateView(object sender)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags)
         {
             SaveMaps(toolFlags);

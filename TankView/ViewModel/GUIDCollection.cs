@@ -6,6 +6,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using DataTool.WPF;
+using DataTool.WPF.IO;
 using DirectXTexNet;
 using TankLib;
 using TankView.Helper;
@@ -19,7 +21,7 @@ namespace TankView.ViewModel {
     public class GUIDCollection : INotifyPropertyChanged, IDisposable {
         private readonly ClientHandler Client;
         private readonly ProductHandler_Tank Tank;
-        private readonly ProgressSlave Slave;
+        private readonly ProgressWorker _worker;
 
         private GUIDEntry _top;
 
@@ -48,7 +50,7 @@ namespace TankView.ViewModel {
 
             switch (DataHelper.GetDataType(value)) {
                 case DataHelper.DataType.Image: {
-                    PreviewSource = DataHelper.ConvertDDS(value, DXGI_FORMAT.R8G8B8A8_UNORM, DataHelper.ImageFormat.PNG, 0);
+                    PreviewSource = DataHelper.ConvertDDS(value, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.ImageFormat.PNG, 0);
                     PreviewControl = new PreviewDataImage();
                 }
                     break;
@@ -162,20 +164,20 @@ namespace TankView.ViewModel {
 
         public GUIDCollection() { }
 
-        public GUIDCollection(ClientHandler client, ProductHandler_Tank tank, ProgressSlave Slave) {
+        public GUIDCollection(ClientHandler client, ProductHandler_Tank tank, ProgressWorker worker) {
             this.Client = client;
             this.Tank = tank;
-            this.Slave = Slave;
+            this._worker = worker;
 
             long total = tank.RootFiles.Length + tank.Manifests.Select(x => x.ContentManifest.HashList.Length).Sum();
 
-            Slave?.ReportProgress(0, "Building file tree...");
+            worker?.ReportProgress(0, "Building file tree...");
 
             long c = 0;
 
             foreach (var entry in this.Tank.RootFiles.OrderBy(x => x.FileName).ToArray()) {
                 c++;
-                Slave?.ReportProgress((int) (((float) c / (float) total) * 100));
+                worker?.ReportProgress((int) (((float) c / (float) total) * 100));
                 AddEntry(entry.FileName, 0, entry.MD5, 0, "None");
             }
 
@@ -183,7 +185,7 @@ namespace TankView.ViewModel {
                 foreach (var record in manifest.ContentManifest.HashList) {
                     c++;
                     if (c % 10000 == 0) {
-                        Slave?.ReportProgress((int) (((float) c / (float) total) * 100));
+                        worker?.ReportProgress((int) (((float) c / (float) total) * 100));
                     }
 
                     ushort typeVal = teResourceGUID.Type(record.GUID);
@@ -197,7 +199,7 @@ namespace TankView.ViewModel {
                 }
             }
 
-            Slave?.ReportProgress(0, "Sorting tree...");
+            worker?.ReportProgress(0, "Sorting tree...");
             long t = GetSize(Root);
             Sort(Root, 0, t);
 
@@ -223,7 +225,7 @@ namespace TankView.ViewModel {
 
         private void Sort(List<Folder> parent, long c, long t) {
             c++;
-            Slave?.ReportProgress((int) (((float) c / (float) t) * 100));
+            _worker?.ReportProgress((int) (((float) c / (float) t) * 100));
             foreach (Folder folder in parent) {
                 folder.Folders = folder.Folders.OrderBy(x => x.Name).ToList();
                 Sort(folder.Folders, c, t);

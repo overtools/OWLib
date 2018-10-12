@@ -1,0 +1,19 @@
+<Window x:Class="TankView.DataToolProgressTransition"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:TankView"
+        mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="DataTool Interop" Height="242" Width="150" ResizeMode="NoResize">
+    <Grid>
+        <StatusBar DataContext="{Binding ProgressInfo}">
+            <StatusBarItem VerticalContentAlignment="Stretch">
+                <ProgressBar Width="242" Height="Auto"
+                             Value="{Binding Percentage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+            </StatusBarItem>
+            <StatusBarItem Content="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+        </StatusBar>
+    </Grid>
+</Window>

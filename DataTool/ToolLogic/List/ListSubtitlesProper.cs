@@ -7,12 +7,8 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-subtitles-real", Description = "List subtitles (from audio data)", TrackTypes = new ushort[] {0x5F}, CustomFlags = typeof(ListFlags))]
+    [Tool("list-subtitles-real", Description = "List subtitles (from audio data)", CustomFlags = typeof(ListFlags))]
     public class ListSubtitlesProper : ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
             GetSubtitles();
             
