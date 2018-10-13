@@ -102,8 +102,8 @@ namespace TankTonka {
                 unsafe {
                     fixed (byte* ptr = data) {
                         var i = 0;
-                        while (i + 8 < data.Length) {
-                            ulong sig = *((ulong*)ptr + i);
+                        while (i + 8 <= data.Length) {
+                            ulong sig = *(ulong*)(ptr + i);
                             if (DataTool.Program.ValidKey(sig)) {
                                 record.References.Add((teResourceGUID)sig);
                             }
