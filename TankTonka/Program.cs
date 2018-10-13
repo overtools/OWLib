@@ -72,6 +72,10 @@ namespace TankTonka {
         }
 
         private static void ProcessTypeBlob(ushort type, TypeManifest manifest) {
+            if (TypeClassifications.KnownPayload.Contains(type)) {
+                return;
+            }
+            
             manifest.StructuredDataInfo = new Common.StructuredDataInfo();
             HashSet<Common.AssetRepoType> referenceTypes = new HashSet<Common.AssetRepoType>();
 
