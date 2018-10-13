@@ -197,7 +197,7 @@ namespace DataTool {
             }
         }
 
-        public static void InitStorage() {
+        public static void InitStorage(bool online = true) {
             if (Flags.Language != null) {
                 TankLib.Helpers.Logger.Info("CASC", $"Set language to {Flags.Language}");
             }
@@ -211,7 +211,8 @@ namespace DataTool {
                 TextLanguage = Flags.Language,
                 HandlerArgs = new ClientCreateArgs_Tank {
                     CacheAPM = Flags.UseCache,
-                }
+                },
+                Online = online
             };
 
             TankLib.TACT.LoadHelper.PreLoad();

@@ -71,7 +71,12 @@ namespace TankLib {
             return (ushort)(num + 1);
         }
 
-        /// <summary>Reserverd engine component of this GUID</summary>
+        /// <summary>Type of this GUID, but manged</summary>
+        public static ushort MangledType(ulong key) {
+            return (ushort)(Attribute(key, AttributeEnum.Type) >> 48);
+        }
+
+        /// <summary>Reserved engine component of this GUID</summary>
         public static byte Engine(ulong key) {
             return (byte)(Attribute(key, AttributeEnum.Engine) >> 60);
         }
