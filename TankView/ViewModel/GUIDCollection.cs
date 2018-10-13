@@ -29,7 +29,12 @@ namespace TankView.ViewModel {
         public GUIDEntry TopSelectedEntry {
             get => _top;
             set {
-                UpdateControl(value);
+                try {
+                    UpdateControl(value);
+                } catch {
+                    // ignored
+                }
+
                 _top = value;
                 NotifyPropertyChanged(nameof(TopSelectedEntry));
             }

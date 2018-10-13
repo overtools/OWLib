@@ -27,7 +27,9 @@ namespace TankView.View {
                 vorbis = new VorbisWaveReader(data);
                 outputDevice.Volume = 1.0f;
                 outputDevice.Init(vorbis);
-            } catch { }
+            } catch {
+                // ignored
+            }
         }
 
         private void OnStopped(object sender, StoppedEventArgs e) {
@@ -48,7 +50,7 @@ namespace TankView.View {
         }
 
         private void Play(object sender, RoutedEventArgs e) {
-            if (outputDevice.PlaybackState == PlaybackState.Playing) {
+            if (outputDevice == null || outputDevice.PlaybackState == PlaybackState.Playing) {
                 return;
             }
 
@@ -56,7 +58,7 @@ namespace TankView.View {
         }
 
         private void Stop(object sender, RoutedEventArgs e) {
-            if (outputDevice.PlaybackState == PlaybackState.Stopped) {
+            if (outputDevice == null || outputDevice.PlaybackState == PlaybackState.Stopped) {
                 return;
             }
 
@@ -65,7 +67,7 @@ namespace TankView.View {
         }
 
         private void Pause(object sender, RoutedEventArgs e) {
-            if (outputDevice.PlaybackState == PlaybackState.Paused) {
+            if (outputDevice == null || outputDevice.PlaybackState == PlaybackState.Paused) {
                 return;
             }
 
