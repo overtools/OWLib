@@ -4,5 +4,14 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x5A7EBE59)]
     public enum Enum_5A7EBE59 : uint {
+        Skin = 0x0,
+        Pose = 0x1,
+        Emote = 0x2,
+        HeroicIntro = 0x3,
+        Spray = 0x4,
+        VoiceLine = 0x5,
+        WeaponSkin = 0x6,
+        Portrait = 0x7,
+        NonCosmetic = unchecked((uint)-1)
     }
 }
