@@ -53,6 +53,12 @@ namespace TankTonka {
                     ProcessType(type);
                 }
             }
+            
+            using (Stream outputFile = File.OpenWrite(Path.Combine(_outputDirectory, $"missing.json"))) {
+                outputFile.SetLength(0);
+                byte[] buf = JsonSerializer.PrettyPrintByteArray(JsonSerializer.Serialize(IO.MissingKeyLog.ToDictionary(x => x.Key.ToString("X16"), y => y.Value.Select(teResourceGUID.AsString).ToArray())));
+                outputFile.Write(buf, 0, buf.Length);
+            }
         }
 
         private static void ProcessType(ushort type) {

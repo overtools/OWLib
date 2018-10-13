@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TankLib;
+using TACTLib.Core;
 using static DataTool.Program;
 
 namespace DataTool.Helper {
@@ -96,10 +98,16 @@ namespace DataTool.Helper {
             }
         }
         
+        public static ConcurrentDictionary<ulong, HashSet<ulong>> MissingKeyLog = new ConcurrentDictionary<ulong, HashSet<ulong>>();
+        
         public static Stream OpenFile(ulong guid) {
             try {
                 return TankHandler.OpenFile(guid);
-            } catch (Exception) {
+            } catch (Exception e) {
+                if (e is BLTEKeyException keyException) {
+                    var set = MissingKeyLog.GetOrAdd(keyException.MissingKey, new HashSet<ulong>());
+                    set.Add(guid);
+                }
                 TankLib.Helpers.Logger.Debug("Core", $"Unable to load file: {guid:X8}");
                 return null;
             }
