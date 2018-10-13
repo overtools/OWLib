@@ -56,7 +56,7 @@ namespace TankTonka {
             
             using (Stream outputFile = File.OpenWrite(Path.Combine(_outputDirectory, $"missing.json"))) {
                 outputFile.SetLength(0);
-                byte[] buf = JsonSerializer.PrettyPrintByteArray(JsonSerializer.Serialize(IO.MissingKeyLog.ToDictionary(x => x.Key.ToString("X16"), y => y.Value.Select(teResourceGUID.AsString).ToArray())));
+                byte[] buf = JsonSerializer.PrettyPrintByteArray(JsonSerializer.Serialize(IO.MissingKeyLog.ToList()));
                 outputFile.Write(buf, 0, buf.Length);
             }
         }

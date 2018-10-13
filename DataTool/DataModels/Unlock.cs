@@ -100,10 +100,11 @@ namespace DataTool.DataModels {
         /// <returns>Friendly type name</returns>
         /// <exception cref="NotImplementedException">Unlock type is unknown</exception>
         private static string GetTypeName(STUUnlock unlock) {
-            if (unlock.m_A7B393BF != Enum_5A7EBE59.NonCosmetic) {
-                return unlock.m_A7B393BF.ToString();
-            }
             return GetTypeName(unlock.GetType());
+        }
+
+        public string GetTypeNameEnum() {
+            return STU.m_A7B393BF.ToString();
         }
 
         public static string GetTypeName(Type type) {

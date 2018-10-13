@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -98,15 +99,16 @@ namespace DataTool.Helper {
             }
         }
         
-        public static ConcurrentDictionary<ulong, HashSet<ulong>> MissingKeyLog = new ConcurrentDictionary<ulong, HashSet<ulong>>();
+        public static HashSet<ulong> MissingKeyLog = new HashSet<ulong>();
         
         public static Stream OpenFile(ulong guid) {
             try {
                 return TankHandler.OpenFile(guid);
             } catch (Exception e) {
                 if (e is BLTEKeyException keyException) {
-                    var set = MissingKeyLog.GetOrAdd(keyException.MissingKey, new HashSet<ulong>());
-                    set.Add(guid);
+                    if (MissingKeyLog.Add(keyException.MissingKey) && Debugger.IsAttached) {
+                        TankLib.Helpers.Logger.Warn("BLTE", $"Missing key: {keyException.MissingKey:X16}");
+                    }
                 }
                 TankLib.Helpers.Logger.Debug("Core", $"Unable to load file: {guid:X8}");
                 return null;

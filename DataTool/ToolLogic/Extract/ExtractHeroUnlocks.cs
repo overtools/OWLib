@@ -288,7 +288,7 @@ namespace DataTool.ToolLogic.Extract {
                 eventKey = eventMap[formalEventKey];
             }
 
-            string thisPath = Path.Combine(path, unlock.Type, eventKey, rarity, GetValidFilename(unlock.GetName()));
+            string thisPath = Path.Combine(path, unlock.GetTypeNameEnum(), eventKey, rarity, GetValidFilename(unlock.GetName()));
             
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SprayPaint))) {
                 SprayAndIcon.Save(flags, thisPath, unlock);
