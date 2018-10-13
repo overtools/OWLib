@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -147,6 +148,19 @@ namespace DataTool.ToolLogic.Extract {
             // Log("https://www.youtube.com/watch?v=9Deg7VrpHbM");
         }
 
+        private static Dictionary<teResourceGUID, string> EventConfig;
+
+        public static IReadOnlyDictionary<teResourceGUID, string> GetEventConfig() {
+            if (EventConfig != null) {
+                return EventConfig;
+            }
+
+            var stu = OpenSTUSafe(TrackedFiles[0x54].First(x => teResourceGUID.Index(x) == 0x16C));
+            var map = stu.GetInstance<STU_D7BD8322>();
+            EventConfig = map.m_categories.ToDictionary(x => x.m_id.GUID, y => GetString(y.m_name));
+            return EventConfig;
+        }
+
         public void SaveUnlocksForHeroes(ICLIFlags flags, IEnumerable<STUHero> heroes, string basePath, bool npc=false) {
             if (flags.Positionals.Length < 4) {
                 QueryHelp(QueryTypes);
@@ -267,8 +281,13 @@ namespace DataTool.ToolLogic.Extract {
             } else {
                 rarity = ""; // for general unlocks
             }
-            
-            
+
+            var eventMap = GetEventConfig();
+            var formalEventKey = unlock.STU.m_BEE9BCDA.FirstOrDefault(x => eventMap.ContainsKey(x));
+            if (eventMap.ContainsKey(formalEventKey)) {
+                eventKey = eventMap[formalEventKey];
+            }
+
             string thisPath = Path.Combine(path, unlock.Type, eventKey, rarity, GetValidFilename(unlock.GetName()));
             
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SprayPaint))) {
