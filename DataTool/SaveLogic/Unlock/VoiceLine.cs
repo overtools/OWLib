@@ -20,8 +20,8 @@ namespace DataTool.SaveLogic.Unlock {
                 teChunkedData chunkedData = new teChunkedData(vlStream);
 
                 foreach (teEffectComponentVoiceStimulus voiceStimulus in chunkedData.GetChunks<teEffectComponentVoiceStimulus>()) {
-                    if (voiceSet.Stimuli.ContainsKey(voiceStimulus.Header.VoiceStimulus)) {
-                        foreach (var voiceLine in voiceSet.Stimuli[voiceStimulus.Header.VoiceStimulus]) {
+                    if (voiceSet.Stimuli.TryGetValue(voiceStimulus.Header.VoiceStimulus, out var stimuliLines)) {
+                        foreach (var voiceLine in stimuliLines) {
                             voiceLines.Add(voiceLine);
                         }
                     }
