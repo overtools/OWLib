@@ -10,7 +10,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type local:ImageGridEntry}">
-            <materialDesign:Card Width="{Binding Path=Width}" Height="{Binding Path=Height}" Cursor="HandCursor">
+            <materialDesign:Card Width="{Binding Path=Width}" Height="{Binding Path=Height}" Cursor="{Binding Path=Cursor}">
                 <StackPanel Background="Transparent"> 
                     <Image Source="{Binding Path=Image}" Width="{Binding Path=ImageWidth}" Height="{Binding Path=ImageHeight}"
                            RenderOptions.BitmapScalingMode="HighQuality"

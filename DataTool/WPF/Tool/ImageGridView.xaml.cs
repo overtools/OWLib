@@ -46,6 +46,7 @@ namespace DataTool.WPF.Tool {
         public int ImageHeight { get; set; } = 128;
         public int Width { get; set; } = 128;
         public int Height { get; set; } = 152;
+        public Cursor Cursor { get; set; } = Cursors.Hand;
         
         public ImageGridEntry(string name, byte[] image) {
             Name = name;
