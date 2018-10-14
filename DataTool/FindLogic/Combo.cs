@@ -35,6 +35,7 @@ namespace DataTool.FindLogic {
             public Dictionary<ulong, VoiceSetInfo> VoiceSets;
             public Dictionary<ulong, MapInfoNew> Maps;
             public Dictionary<ulong, StringInfo> Strings;
+            public HashSet<ulong> DoneScripts;
 
             public ComboConfig Config = new ComboConfig();
             public ComboSaveConfig SaveConfig = new ComboSaveConfig();
@@ -57,6 +58,7 @@ namespace DataTool.FindLogic {
                 VoiceSets = new Dictionary<ulong, VoiceSetInfo>();
                 Maps = new Dictionary<ulong, MapInfoNew>();
                 Strings = new Dictionary<ulong, StringInfo>();
+                DoneScripts = new HashSet<ulong>();
             }
 
             public void SetEntityName(ulong entity, string name, Dictionary<ulong, ulong> replacements=null) {
@@ -766,6 +768,8 @@ namespace DataTool.FindLogic {
 
                     break;
                 case 0x1B:
+                    if (!info.DoneScripts.Add(guid)) break;
+                    
                     STUConfigVar[] configVars = GetInstances<STUConfigVar>(guid);
                     if (configVars == null) break;
 
