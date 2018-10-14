@@ -75,7 +75,7 @@ namespace TankView.Helper {
 
                 Stream ms = texture.SaveToDDS();
 
-                DDSConverter.ConvertDDS(ms, targetFormat, imageFormat, frame);
+                return DDSConverter.ConvertDDS(ms, targetFormat, imageFormat, frame);
             } catch {
                 // ignored
             }

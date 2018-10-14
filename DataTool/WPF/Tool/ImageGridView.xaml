@@ -3,24 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:DataTool.WPF.Tool"
              mc:Ignorable="d"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type local:ImageGridEntry}">
-            <Button Command="{Binding ClickRouter}" Width="{Binding Path=Width}" Height="{Binding Path=Height}" BorderThickness="0" Padding="0" Margin="5" Background="Transparent">
-                <StackPanel Orientation="Vertical" Width="{Binding Path=Width}" Height="{Binding Path=Height}">
+            <materialDesign:Card Width="{Binding Path=Width}" Height="{Binding Path=Height}" Cursor="HandCursor">
+                <StackPanel Background="Transparent"> 
                     <Image Source="{Binding Path=Image}" Width="{Binding Path=ImageWidth}" Height="{Binding Path=ImageHeight}"
                            RenderOptions.BitmapScalingMode="HighQuality"
                            Stretch="Fill"/>
-                    <TextBlock Text="{Binding Path=Name}" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Path=Name}" Background="Transparent"  Foreground="{DynamicResource MaterialDesignBody}" TextAlignment="Center" Width="{Binding Path=ImageWidth}"></TextBlock>
                 </StackPanel>
-            </Button>
+            </materialDesign:Card>
         </DataTemplate>
     </UserControl.Resources>
     <Grid Name="ImageGrid">
-        <ListBox ItemsSource="{Binding Path=Items, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+        <ListBox Name="ImageList" ItemsSource="{Binding Path=Items, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" SelectionChanged="SelectHandler" SelectionMode="Single">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel IsItemsHost="True"></WrapPanel>
@@ -29,3 +30,4 @@
         </ListBox>
     </Grid>
 </UserControl>
+

@@ -30,6 +30,7 @@ namespace TankView {
         public RecentLocations RecentLocations { get; set; }
         public ProgressInfo ProgressInfo { get; set; }
         public CASCSettings CASCSettings { get; set; }
+        public AppSettings AppSettings { get; set; }
         public GUIDCollection GUIDTree { get; set; } = new GUIDCollection();
         public ProductLocations ProductAgent { get; set; }
 
@@ -71,6 +72,7 @@ namespace TankView {
             RecentLocations = new RecentLocations();
             ProgressInfo = new ProgressInfo();
             CASCSettings = new CASCSettings();
+            AppSettings = new AppSettings();
             ProductAgent = new ProductLocations();
 
             _progressWorker.OnProgress += UpdateProgress;
@@ -214,6 +216,8 @@ namespace TankView {
             RecentLocations.Add(path);
             CollectionViewSource.GetDefaultView(RecentLocations).Refresh();
 
+            _progressWorker.ReportProgress(0, $"Preparing to load {path}");
+            
             IsReady = false;
 
             DataTool.Program.Client = null;
@@ -242,6 +246,12 @@ namespace TankView {
         }
 
         private void OpenOrFocusSimView(object sender, RoutedEventArgs e) {
+            var view = Application.Current.Windows.OfType<DataToolSimView>().FirstOrDefault();
+            if (view != null) {
+                view.Show();
+                return;
+            }
+            
             var instance = Application.Current.Windows.OfType<DataToolListView>().FirstOrDefault() ?? new DataToolListView();
 
             instance.Owner = this;
@@ -250,12 +260,21 @@ namespace TankView {
         }
 
         private void ExtractFiles(object sender, RoutedEventArgs e) {
+            var files = FolderItemList.SelectedItems.OfType<GUIDEntry>().ToArray();
+            if (files.Length == 0) {
+                files = FolderItemList.Items.OfType<GUIDEntry>().ToArray();
+            }
+
+            if (files.Length == 0) {
+                return;
+            }
+
             CommonOpenFileDialog dialog = new CommonOpenFileDialog {
                 IsFolderPicker = true,
                 EnsurePathExists = true
             };
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok) {
-                ExtractFiles(dialog.FileName, FolderItemList.SelectedItems.OfType<GUIDEntry>());
+                ExtractFiles(dialog.FileName, files);
             }
         }
 

@@ -8,12 +8,12 @@
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="DataTool Interop" Height="72" Width="500" ResizeMode="NoResize">
     <Grid>
-        <StatusBar DataContext="{Binding ProgressInfo}">
+        <StatusBar DataContext="{Binding ProgressInfo}" Background="{DynamicResource MaterialDesignPaper}">
             <StatusBarItem VerticalContentAlignment="Stretch">
                 <ProgressBar Width="242" Height="Auto"
                              Value="{Binding Percentage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
             </StatusBarItem>
-            <StatusBarItem Content="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+            <StatusBarItem Content="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Foreground="{DynamicResource MaterialDesignBody}" />
         </StatusBar>
     </Grid>
 </Window>

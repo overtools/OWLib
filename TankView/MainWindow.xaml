@@ -18,8 +18,8 @@
         Title="{Binding ModuloTitle}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Height="450"
-        Width="800"
-        MinWidth="800"
+        Width="865"
+        MinWidth="865"
         MinHeight="450">
     <Window.Resources>
         <om:SizeConverter x:Key="SizeConverter" />
@@ -95,6 +95,9 @@
                 <MenuItem Header="Preview" DataContext="{Binding GUIDTree}"
                           IsChecked="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                           IsCheckable="True" />
+                <MenuItem Header="DarkMode" DataContext="{Binding AppSettings}"
+                          IsChecked="{Binding EnableDarkMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                          IsCheckable="True" />
             </MenuItem>
             <MenuItem Header="Extract" Click="ExtractFiles"
                       IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
@@ -122,7 +125,7 @@
             <TreeView Grid.Column="0" x:Name="FolderView" VirtualizingPanel.IsVirtualizing="True"
                       VirtualizingPanel.VirtualizationMode="Recycling" AllowDrop="False"
                       ItemsSource="{Binding Root, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                      ItemTemplate="{StaticResource FolderDataView}">
+                      ItemTemplate="{StaticResource FolderDataView}" >
                 <TreeView.Resources>
                     <ContextMenu x:Key="ExtractTree">
                         <MenuItem Header="Extract" Click="ExtractFolder" />
@@ -132,6 +135,7 @@
                     <Style TargetType="{x:Type TreeViewItem}">
                         <EventSetter Event="Selected" Handler="ChangeActiveNode" />
                         <Setter Property="ContextMenu" Value="{StaticResource ExtractTree}" />
+                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"></Setter>
                     </Style>
                 </TreeView.ItemContainerStyle>
             </TreeView>
@@ -171,12 +175,12 @@
                 </DockPanel>
             </Grid>
         </Grid>
-        <StatusBar Grid.Row="2" DataContext="{Binding ProgressInfo}">
+        <StatusBar Grid.Row="2" DataContext="{Binding ProgressInfo}" Background="{DynamicResource MaterialDesignPaper}">
             <StatusBarItem VerticalContentAlignment="Stretch">
                 <ProgressBar Width="242" Height="Auto"
                              Value="{Binding Percentage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
             </StatusBarItem>
-            <StatusBarItem Content="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+            <StatusBarItem Content="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Foreground="{DynamicResource MaterialDesignBody}" />
         </StatusBar>
     </Grid>
 </Window>

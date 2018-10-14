@@ -113,6 +113,7 @@
     <Compile Include="ObjectModel\ObservableHashCollection.cs" />
     <Compile Include="ObjectModel\SizeConverter.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="ViewModel\AppSettings.cs" />
     <Compile Include="ViewModel\Folder.cs" />
     <Compile Include="ViewModel\GUIDCollection.cs" />
     <Compile Include="ViewModel\GUIDEntry.cs" />
