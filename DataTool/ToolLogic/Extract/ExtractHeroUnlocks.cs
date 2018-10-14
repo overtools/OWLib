@@ -115,7 +115,7 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public Task<Control> GetToolControl(ProgressWorker worker, SynchronizationContext context, Window window) {
-            return WPF.Tool.Export.HeroUnlocksView.Get(worker, context, window); 
+            return WPF.Tool.Export.HeroUnlocksView.Get(worker, context, window, NPCs); 
         }
 
         public List<STUHero> GetHeroes() {

@@ -1,12 +1,37 @@
 <Window x:Class="TankView.DataToolListView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TankView"
+        xmlns:vm="clr-namespace:TankView.ViewModel"
+        xmlns:om="clr-namespace:TankView.ObjectModel"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="DataToolListView" Height="450" Width="800">
+        Title="Select DataTool Mode"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Height="450"
+        Width="865"
+        MinWidth="865"
+        MinHeight="450">
     <Grid>
-        
+        <ListView x:Name="ToolList"
+                  ItemsSource="{Binding Tools, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
+                  SelectionChanged="ActivateTool">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}" />
+                    <GridViewColumn Header="Keyword" DisplayMemberBinding="{Binding Keyword}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

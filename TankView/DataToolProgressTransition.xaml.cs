@@ -28,7 +28,6 @@ namespace TankView {
 
             var window = new DataToolSimView {
                 ModuleName = name,
-                Owner = Owner,
                 Visibility = Visibility.Hidden
             };
 

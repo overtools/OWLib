@@ -249,14 +249,13 @@ namespace TankView {
             var view = Application.Current.Windows.OfType<DataToolSimView>().FirstOrDefault();
             if (view != null) {
                 view.Show();
+                view.Focus();
                 return;
             }
             
-            var instance = Application.Current.Windows.OfType<DataToolListView>().FirstOrDefault() ?? new DataToolListView();
-
-            instance.Owner = this;
-            
-            //instance.Show();
+            var instance = Application.Current.Windows.OfType<DataToolListView>().FirstOrDefault() ?? new DataToolListView { };
+            instance.Show();
+            instance.Focus();
         }
 
         private void ExtractFiles(object sender, RoutedEventArgs e) {
