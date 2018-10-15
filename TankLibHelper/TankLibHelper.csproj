@@ -71,6 +71,7 @@
     <Compile Include="Modes\CreateClasses.cs" />
     <Compile Include="Modes\DumpHashes.cs" />
     <Compile Include="Modes\FindMirrorTypes.cs" />
+    <Compile Include="Modes\GenerateKnownEnumNames.cs" />
     <Compile Include="Modes\IMode.cs" />
     <Compile Include="Modes\TestTypeClasses.cs" />
     <Compile Include="Modes\UpdateClasses.cs" />
@@ -82,6 +83,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\KnownEnumNames.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\RegisteredEnums.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\IgnoredBrokenSTUs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

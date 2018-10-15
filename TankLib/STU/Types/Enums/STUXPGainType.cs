@@ -4,5 +4,25 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x56DF3C94, "STUXPGainType")]
     public enum STUXPGainType : uint {
+        [STUFieldAttribute(0x46C27207)]
+        x46C27207 = 0x0,
+        [STUFieldAttribute(0x4ED539D8)]
+        x4ED539D8 = 0x1,
+        [STUFieldAttribute(0xA76A57E1)]
+        xA76A57E1 = 0x2,
+        [STUFieldAttribute(0xC052C03F)]
+        xC052C03F = 0x3,
+        [STUFieldAttribute(0xDFAE2B20)]
+        xDFAE2B20 = 0x4,
+        [STUFieldAttribute(0x702D544D)]
+        x702D544D = 0x5,
+        [STUFieldAttribute(0x84CDFC6E)]
+        x84CDFC6E = 0x6,
+        [STUFieldAttribute(0x9550DD48)]
+        x9550DD48 = 0x7,
+        [STUFieldAttribute(0x9E106078)]
+        x9E106078 = 0x8,
+        [STUFieldAttribute(0xF0A65551)]
+        xF0A65551 = 0x9,
     }
 }

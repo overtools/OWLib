@@ -11,8 +11,10 @@ namespace TankLibHelper {
         public Dictionary<uint, string> KnownInstances;
         public Dictionary<uint, string> KnownEnums;
         public Dictionary<uint, string> KnownFields;
+        public Dictionary<uint, string> KnownEnumNames;
         public List<uint> BrokenInstances;
         public Dictionary<uint, STUInstanceJSON> Instances;
+        public Dictionary<uint, STUEnumJSON> Enums;
 
         //private readonly string _directory;
         
@@ -22,7 +24,9 @@ namespace TankLibHelper {
             KnownEnums = new Dictionary<uint, string>();
             KnownFields = new Dictionary<uint, string>();
             KnownInstances = new Dictionary<uint, string>();
+            KnownEnumNames = new Dictionary<uint, string>();
             Instances = new Dictionary<uint, STUInstanceJSON>();
+            Enums = new Dictionary<uint, STUEnumJSON>();
             
             Load(directory);
         }
@@ -30,14 +34,14 @@ namespace TankLibHelper {
         private void Load(string directory) {
             LoadBrokenInstances(Path.Combine(directory, "IgnoredBrokenSTUs.txt"));
             LoadInstances(Path.Combine(directory, "RegisteredSTUTypes.json"));
-            
+            LoadEnums(Path.Combine(directory, "RegisteredEnums.json"));
             LoadNames(directory);
         }
-
         private void LoadNames(string directory) {
             LoadHashCSV(Path.Combine(directory, "KnownTypes.csv"), KnownInstances);
             LoadHashCSV(Path.Combine(directory, "KnownFields.csv"), KnownFields);
             LoadHashCSV(Path.Combine(directory, "KnownEnums.csv"), KnownEnums);
+            LoadHashCSV(Path.Combine(directory, "KnownEnumNames.csv"), KnownEnumNames);
         }
 
         public void LoadExtra(string directory) {
@@ -65,6 +69,13 @@ namespace TankLibHelper {
             return $"Enum_{hash:X8}";
         }
 
+        public string GetEnumValueName(uint hash) {
+            if (KnownEnumNames.ContainsKey(hash)) {
+                return KnownEnumNames[hash];
+            }
+            return $"x{hash:X8}";
+        }
+
         private void LoadInstances(string filename) {
             JObject stuTypesJson = JObject.Parse(File.ReadAllText(filename));
             foreach (KeyValuePair<string, JToken> pair in stuTypesJson) {
@@ -87,6 +98,31 @@ namespace TankLibHelper {
                         SerializationType = (int)field["serializationType"],
                         Size = field.Value<int>("size"),
                         Type = field.Value<string>("type")
+                    };
+                    i++;
+                }       
+            }
+        }
+
+        private void LoadEnums(string filename) {
+            JArray stuEnumJson = JArray.Parse(File.ReadAllText(filename));
+            foreach (JToken token in stuEnumJson) {
+                uint checksum = uint.Parse((string)token["hash"], NumberStyles.HexNumber);
+                STUEnumJSON instance = new STUEnumJSON {
+                    Hash = checksum
+                };
+                Enums[checksum] = instance;
+
+                JToken values = token["values"];
+                if (values == null) continue;
+                instance.Values = new STUEnumValueJSON[values.Count()];
+                
+                uint i = 0;
+                foreach (JToken value in values) {
+                    var valueText = (string) value["value"];
+                    instance.Values[i] = new STUEnumValueJSON {
+                        Hash = uint.Parse((string)value["hash"], NumberStyles.HexNumber),
+                        Value = valueText.StartsWith("-") ? (ulong)long.Parse(valueText) : ulong.Parse(valueText)
                     };
                     i++;
                 }       
@@ -141,6 +177,20 @@ namespace TankLibHelper {
         internal string DebuggerDisplay => $"{Hash:X8}{(Parent == 0 ? "" : $" (Parent: {Parent:X8})")}";
     }
     
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
+    public class STUEnumJSON {
+        public uint Hash;
+        public STUEnumValueJSON[] Values;
+        internal string DebuggerDisplay => $"{Hash:X8}";
+    }
+
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
+    public class STUEnumValueJSON {
+        public uint Hash;
+        public ulong Value;
+        internal string DebuggerDisplay => $"{Hash:X8}: {Value}";
+    }
+
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
     public class STUFieldJSON {
         public uint Hash;

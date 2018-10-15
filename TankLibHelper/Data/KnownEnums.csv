@@ -6,10 +6,24 @@ E95E2013, STUStatType
 4CAFD36F, STUUnlockRarity
 4E56D01D, STUWeaponType
 56DF3C94, STUXPGainType
-
 8A184A5C, STURagdollMode
 909B56BB, STULogicalButton
 9F4E2CAC, STUPlayAnimSlot
-
 8F2CDF51, TeamIndex
 1AA009C2, STUCriteriaType
+EF0DF8C0, LoadoutCategory
+3F970A9F, STUChatCommandType
+D61991A8, STUContactType
+281A4FD5, STUCriteriaType
+44A05FE3, STUInputLogicalButtonCategory
+492FEC63, STULocale
+DC1624CF, STULogicalButton
+B26EE6B7, STUPhaseOutType
+8C905AB8, STUPlayAnimSlot
+9D5D3829, STURagdollMode
+114956E8, STUStatType
+B3770108, STUUnlockRarity
+1B4947D2, STUUXKeyTimeType
+2001C460, STUWeaponType
+E6C2E533, STUXPGainType
+0CB7E361, TeamIndex

@@ -4,9 +4,17 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x161443EA)]
     public enum Enum_161443EA : uint {
-        Bronze = 1,
-        Sliver = 2,
-        Gold = 3,
-        Platinum = 4
+        [STUFieldAttribute(0x91D55538)]
+        x91D55538 = 0x0,
+        [STUFieldAttribute(0x0C1ADE62)]
+        Bronze = 0x1,
+        [STUFieldAttribute(0x0534BB83)]
+        Sliver = 0x2,
+        [STUFieldAttribute(0x91E4891F)]
+        Gold = 0x3,
+        [STUFieldAttribute(0x6A29B99B)]
+        Platinum = 0x4,
+        [STUFieldAttribute(0xC9CA261C)]
+        xC9CA261C = 0x5,
     }
 }

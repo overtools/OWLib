@@ -4,10 +4,15 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x8E40F295)]
     public enum Enum_8E40F295 : uint {
-        None = 0,  // this is applied on limited time achievements, Sony doesn't like them.
-        Bronze = 1,
-        Silver = 2,
-        Gold = 3,
-        Platinum = 4
+        [STUFieldAttribute(0xD27AEA24)]
+        None = 0x0,
+        [STUFieldAttribute(0x208351B7)]
+        Bronze = 0x1,
+        [STUFieldAttribute(0x9BB185E7)]
+        Silver = 0x2,
+        [STUFieldAttribute(0x90914889)]
+        Gold = 0x3,
+        [STUFieldAttribute(0xDD6A5B64)]
+        Platinum = 0x4,
     }
 }

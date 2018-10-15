@@ -4,5 +4,13 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x1B4947D2, "STUUXKeyTimeType")]
     public enum STUUXKeyTimeType : uint {
+        [STUFieldAttribute(0x8370D727)]
+        x8370D727 = 0x0,
+        [STUFieldAttribute(0x14EA2EA9)]
+        x14EA2EA9 = 0x1,
+        [STUFieldAttribute(0x3741D603)]
+        x3741D603 = 0x2,
+        [STUFieldAttribute(0xAAE8FCC4)]
+        xAAE8FCC4 = 0x3,
     }
 }

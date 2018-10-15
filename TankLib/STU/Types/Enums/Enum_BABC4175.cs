@@ -4,16 +4,33 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0xBABC4175)]
     public enum Enum_BABC4175 : uint {
-        Base = 0,
-        SummerGames = 1,
-        Halloween = 2,
-        Winter = 3,
-        LunarNewYear = 4,
-        Archives = 5,
-        Anniversary = 6,
-        Golden = 7,
-        Internal = 8 ,
-        LegendaryAnniversary = 9,
-        Hammond = 10,
+        [STUFieldAttribute(0x22A72C00)]
+        Base = 0x0,
+        [STUFieldAttribute(0x9722B6D4)]
+        SummerGames = 0x1,
+        [STUFieldAttribute(0x6771D6F5)]
+        Halloween = 0x2,
+        [STUFieldAttribute(0x641ED9C7)]
+        Winter = 0x3,
+        [STUFieldAttribute(0xC6836954)]
+        LunarNewYear = 0x4,
+        [STUFieldAttribute(0x31800B95)]
+        Archives = 0x5,
+        [STUFieldAttribute(0xBDBB3D54)]
+        Anniversary = 0x6,
+        [STUFieldAttribute(0x8B02F5D7)]
+        Golden = 0x7,
+        [STUFieldAttribute(0xD6954B53)]
+        Internal = 0x8,
+        [STUFieldAttribute(0x6C02F9A7)]
+        LegendaryAnniversary = 0x9,
+        [STUFieldAttribute(0xC026BA80)]
+        Hammond = 0xA,
+        [STUFieldAttribute(0xBE88B178)]
+        xBE88B178 = 0xB,
+        [STUFieldAttribute(0x8A0F302F)]
+        x8A0F302F = 0xC,
+        [STUFieldAttribute(0xC1854306)]
+        xC1854306 = 0xFFFFFF,
     }
 }

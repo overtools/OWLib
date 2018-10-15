@@ -4,5 +4,53 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x981FD5ED)]
     public enum Enum_981FD5ED : uint {
+        [STUFieldAttribute(0x7EB8741F)]
+        x7EB8741F = 0x0,
+        [STUFieldAttribute(0xE5B23172)]
+        xE5B23172 = 0x1,
+        [STUFieldAttribute(0x794EC311)]
+        x794EC311 = 0x2,
+        [STUFieldAttribute(0x9774E0F5)]
+        x9774E0F5 = 0x3,
+        [STUFieldAttribute(0x134412CB)]
+        x134412CB = 0x4,
+        [STUFieldAttribute(0x00564806)]
+        x00564806 = 0x5,
+        [STUFieldAttribute(0xBCB77C71)]
+        xBCB77C71 = 0x6,
+        [STUFieldAttribute(0xC76907C8)]
+        xC76907C8 = 0x7,
+        [STUFieldAttribute(0x7259C9AE)]
+        x7259C9AE = 0x8,
+        [STUFieldAttribute(0x2FE71A40)]
+        x2FE71A40 = 0x9,
+        [STUFieldAttribute(0x7C4DB5D8)]
+        x7C4DB5D8 = 0xA,
+        [STUFieldAttribute(0xD2393CAF)]
+        xD2393CAF = 0xB,
+        [STUFieldAttribute(0x69F4D3DA)]
+        x69F4D3DA = 0xC,
+        [STUFieldAttribute(0x8905E9AF)]
+        x8905E9AF = 0xD,
+        [STUFieldAttribute(0x1699FB1D)]
+        x1699FB1D = 0xE,
+        [STUFieldAttribute(0xE13A024A)]
+        xE13A024A = 0xF,
+        [STUFieldAttribute(0xB5D57637)]
+        xB5D57637 = 0x10,
+        [STUFieldAttribute(0x6CA4F209)]
+        x6CA4F209 = 0x11,
+        [STUFieldAttribute(0x7551DAEF)]
+        x7551DAEF = 0x12,
+        [STUFieldAttribute(0x3E0E82EC)]
+        x3E0E82EC = 0x13,
+        [STUFieldAttribute(0x1A93135F)]
+        x1A93135F = 0x14,
+        [STUFieldAttribute(0x2325DD14)]
+        x2325DD14 = 0x15,
+        [STUFieldAttribute(0x4B25EF5A)]
+        x4B25EF5A = 0x16,
+        [STUFieldAttribute(0xEEA44BF1)]
+        xEEA44BF1 = 0x17,
     }
 }

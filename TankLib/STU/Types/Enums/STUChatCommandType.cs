@@ -4,25 +4,53 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x3D26984C, "STUChatCommandType")]
     public enum STUChatCommandType : uint {
-        Invite = 0,
-        Accept = 1,
-        Decline = 2,
-        Kick = 3,
-        Leader = 4,
-        Leave = 5,
-        Team = 6,
-        Match = 7,
-        General = 8,
-        RemoveFriend = 9,
-        Group = 10,
-        JoinChannel = 11,
-        LeaveChannel = 12,
-        List = 13,
-        Logout = 14,
-        Join = 15,
-        Spectate = 16,
-        Whisper = 17,
-        Reply = 18,
-        HideChat = 20
+        [STUFieldAttribute(0x07D6B2F8)]
+        Invite = 0x0,
+        [STUFieldAttribute(0x7EBFC038)]
+        Accept = 0x1,
+        [STUFieldAttribute(0xE448A0C5)]
+        Decline = 0x2,
+        [STUFieldAttribute(0x99EE4316)]
+        Kick = 0x3,
+        [STUFieldAttribute(0x6ABA0C41)]
+        Leader = 0x4,
+        [STUFieldAttribute(0x88775165)]
+        Leave = 0x5,
+        [STUFieldAttribute(0x6EEC11F9)]
+        Team = 0x6,
+        [STUFieldAttribute(0x14061533)]
+        Match = 0x7,
+        [STUFieldAttribute(0xA5D398CC)]
+        General = 0x8,
+        [STUFieldAttribute(0x770D5C3B)]
+        RemoveFriend = 0x9,
+        [STUFieldAttribute(0x1AD5CB54)]
+        Group = 0xA,
+        [STUFieldAttribute(0x2DDAAEE4)]
+        JoinChannel = 0xB,
+        [STUFieldAttribute(0x970863F0)]
+        LeaveChannel = 0xC,
+        [STUFieldAttribute(0x9052D767)]
+        List = 0xD,
+        [STUFieldAttribute(0x9273B92A)]
+        Logout = 0xE,
+        [STUFieldAttribute(0x011D0857)]
+        Join = 0xF,
+        [STUFieldAttribute(0x95CBDCBC)]
+        Spectate = 0x10,
+        [STUFieldAttribute(0x29B7DB7B)]
+        Whisper = 0x11,
+        [STUFieldAttribute(0xAC9EB730)]
+        Reply = 0x12,
+        [STUFieldAttribute(0xB242D5AC)]
+        xB242D5AC = 0x13,
+        [STUFieldAttribute(0xC48777CB)]
+        HideChat = 0x14,
+        [STUFieldAttribute(0x666F904D)]
+        x666F904D = 0x15,
+        [STUFieldAttribute(0x3A19DAD2)]
+        x3A19DAD2 = 0x16,
+        [STUFieldAttribute(0x4AAF0C89)]
+        x4AAF0C89 = 0x17,
     }
 }

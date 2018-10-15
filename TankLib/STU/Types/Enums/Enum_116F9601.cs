@@ -4,12 +4,19 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x116F9601)]
     public enum Enum_116F9601 : uint {
-        General = 0,
-        Offence = 1,
-        Defence = 2,
-        Tank = 3,
-        Support = 4,
-        Map = 5,
-        Special = 6
+        [STUFieldAttribute(0xAE906266)]
+        General = 0x0,
+        [STUFieldAttribute(0x5E9296DA)]
+        Offence = 0x1,
+        [STUFieldAttribute(0x054664F9)]
+        Defence = 0x2,
+        [STUFieldAttribute(0x176DF6A0)]
+        Tank = 0x3,
+        [STUFieldAttribute(0x22DEB1EF)]
+        Support = 0x4,
+        [STUFieldAttribute(0xDE030846)]
+        Map = 0x5,
+        [STUFieldAttribute(0xD8275472)]
+        Special = 0x6,
     }
 }

@@ -4,5 +4,35 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x0EF092C3)]
     public enum Enum_0EF092C3 : uint {
+        [STUFieldAttribute(0xAF080CD3)]
+        xAF080CD3 = 0x0,
+        [STUFieldAttribute(0x8C1DBB2C)]
+        x8C1DBB2C = 0x1,
+        [STUFieldAttribute(0x845A8090)]
+        x845A8090 = 0x2,
+        [STUFieldAttribute(0xB440AD00)]
+        xB440AD00 = 0x10,
+        [STUFieldAttribute(0x40BE49C4)]
+        x40BE49C4 = 0x10,
+        [STUFieldAttribute(0xB2A3A8DE)]
+        xB2A3A8DE = 0x20,
+        [STUFieldAttribute(0xE434826E)]
+        xE434826E = 0x24,
+        [STUFieldAttribute(0x377CF230)]
+        x377CF230 = 0x2A,
+        [STUFieldAttribute(0xD8729F8E)]
+        xD8729F8E = 0x3,
+        [STUFieldAttribute(0x13D7E096)]
+        x13D7E096 = 0xFFFFFC,
+        [STUFieldAttribute(0x72E7DB07)]
+        x72E7DB07 = 0xFFFFFD,
+        [STUFieldAttribute(0x104A5E5E)]
+        x104A5E5E = 0x2B,
+        [STUFieldAttribute(0x1C656148)]
+        x1C656148 = 0xFFFFFD,
+        [STUFieldAttribute(0xECA165F4)]
+        xECA165F4 = 0x1,
+        [STUFieldAttribute(0xF83F83A8)]
+        xF83F83A8 = 0x0,
     }
 }

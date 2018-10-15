@@ -4,5 +4,9 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x4E56D01D, "STUWeaponType")]
     public enum STUWeaponType : uint {
+        [STUFieldAttribute(0xE87119C8)]
+        xE87119C8 = 0x0,
+        [STUFieldAttribute(0xF63DFCBD)]
+        xF63DFCBD = 0x1,
     }
 }

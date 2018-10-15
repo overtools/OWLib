@@ -4,5 +4,43 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0xBDE32585, "STUContactType")]
     public enum STUContactType : uint {
+        [STUFieldAttribute(0x8D843DC5)]
+        x8D843DC5 = 0x0,
+        [STUFieldAttribute(0x9C2F636D)]
+        x9C2F636D = 0x1,
+        [STUFieldAttribute(0xEC5F3249)]
+        xEC5F3249 = 0x2,
+        [STUFieldAttribute(0xDB80B841)]
+        xDB80B841 = 0x3,
+        [STUFieldAttribute(0xCAA7F1F4)]
+        xCAA7F1F4 = 0x4,
+        [STUFieldAttribute(0x1841F24F)]
+        x1841F24F = 0x5,
+        [STUFieldAttribute(0xC40157D8)]
+        xC40157D8 = 0x6,
+        [STUFieldAttribute(0x9A89C9AA)]
+        x9A89C9AA = 0x7,
+        [STUFieldAttribute(0x6916A7C1)]
+        x6916A7C1 = 0x8,
+        [STUFieldAttribute(0x38992696)]
+        x38992696 = 0x9,
+        [STUFieldAttribute(0x48920FDA)]
+        x48920FDA = 0xA,
+        [STUFieldAttribute(0xBDF9DF43)]
+        xBDF9DF43 = 0xB,
+        [STUFieldAttribute(0x52DC7FB5)]
+        x52DC7FB5 = 0xC,
+        [STUFieldAttribute(0xC4A76CC3)]
+        xC4A76CC3 = 0xD,
+        [STUFieldAttribute(0x31D4209B)]
+        x31D4209B = 0xE,
+        [STUFieldAttribute(0x75B01AEF)]
+        x75B01AEF = 0xF,
+        [STUFieldAttribute(0x5D54D312)]
+        x5D54D312 = 0x10,
+        [STUFieldAttribute(0x9BAEB254)]
+        x9BAEB254 = 0x11,
+        [STUFieldAttribute(0xE5D811C7)]
+        xE5D811C7 = 0x12,
     }
 }

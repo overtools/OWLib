@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -41,7 +42,7 @@ namespace TankLibHelper.Modes {
             Directory.CreateDirectory(generatedDirectory);
             Directory.CreateDirectory(generatedEnumsDirectory);
 
-            Dictionary<string, STUFieldJSON> enumFields = new Dictionary<string, STUFieldJSON>();
+            Dictionary<uint, STUFieldJSON> enumFields = new Dictionary<uint, STUFieldJSON>();
 
             foreach (KeyValuePair<uint, STUInstanceJSON> instance in _info.Instances) {
                 if (_info.BrokenInstances.Contains(instance.Key)) {
@@ -58,14 +59,25 @@ namespace TankLibHelper.Modes {
                 foreach (var field in instance.Value.Fields) {
                     if (field.SerializationType != 8 && field.SerializationType != 9) continue;
 
-                    if (!enumFields.ContainsKey(field.Type)) {
-                        enumFields[field.Type] = field;
+                    var enumType = uint.Parse(field.Type, NumberStyles.HexNumber);
+                    if (!enumFields.ContainsKey(enumType)) {
+                        enumFields[enumType] = field;
                         
                         EnumBuilder enumBuilder = new EnumBuilder(enumBuilderConfig, _info, field);
                         BuildAndWriteCSharp(enumBuilder, generatedEnumsDirectory);
                     }
                 }
             }
+
+            foreach (KeyValuePair<uint, STUEnumJSON> enumData in _info.Enums) {
+                if (enumFields.ContainsKey(enumData.Key)) continue;
+                EnumBuilder enumBuilder = new EnumBuilder(enumBuilderConfig, _info, new STUFieldJSON {
+                    Type = enumData.Key.ToString("X8"),
+                    Size = 4
+                });
+                BuildAndWriteCSharp(enumBuilder, generatedEnumsDirectory);
+            }
+
 
             return ModeResult.Success;
         }

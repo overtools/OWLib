@@ -4,5 +4,11 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x8A184A5C, "STURagdollMode")]
     public enum STURagdollMode : uint {
+        [STUFieldAttribute(0x4F190FE5)]
+        x4F190FE5 = 0x0,
+        [STUFieldAttribute(0x4423EC07)]
+        x4423EC07 = 0x1,
+        [STUFieldAttribute(0x3F4E8F00)]
+        x3F4E8F00 = 0x2,
     }
 }

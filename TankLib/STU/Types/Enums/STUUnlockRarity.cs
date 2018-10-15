@@ -4,10 +4,17 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x4CAFD36F, "STUUnlockRarity")]
     public enum STUUnlockRarity : uint {
-        Common = 0,
-        Rare = 1,
-        Epic = 2,
-        Legendary = 3,
-        Unobtainable = unchecked((uint)-1) // 4294967295
+        [STUFieldAttribute(0x04F85D85)]
+        Common = 0x0,
+        [STUFieldAttribute(0xC25BCFAD)]
+        Rare = 0x1,
+        [STUFieldAttribute(0xAF948D7A)]
+        Epic = 0x2,
+        [STUFieldAttribute(0x4585FFFF)]
+        Legendary = 0x3,
+        [STUFieldAttribute(0xEF68A54A)]
+        xEF68A54A = 0x4,
+        [STUFieldAttribute(0x3A3ADA03)]
+        x3A3ADA03 = 0xFFFFFF,
     }
 }

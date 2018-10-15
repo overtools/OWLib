@@ -4,12 +4,23 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x5D8C1DCC)]
     public enum Enum_5D8C1DCC : uint {
-        Error = 1,
-        System = 2,
-        Whisper = 3,
-        Group = 4,
-        Team = 5,
-        Match = 6,
-        General = 7
+        [STUFieldAttribute(0xC3A49A7C)]
+        xC3A49A7C = 0x0,
+        [STUFieldAttribute(0x5ADDBB89)]
+        Error = 0x1,
+        [STUFieldAttribute(0xDF488316)]
+        System = 0x2,
+        [STUFieldAttribute(0x127A82E9)]
+        Whisper = 0x3,
+        [STUFieldAttribute(0x698FE81F)]
+        Group = 0x4,
+        [STUFieldAttribute(0x7B17CA26)]
+        Team = 0x5,
+        [STUFieldAttribute(0xD0B2CF7A)]
+        Match = 0x6,
+        [STUFieldAttribute(0x86BE3868)]
+        General = 0x7,
+        [STUFieldAttribute(0x30DB6DD8)]
+        x30DB6DD8 = 0x8,
     }
 }

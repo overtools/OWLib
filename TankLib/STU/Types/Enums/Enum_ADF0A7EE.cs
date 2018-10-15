@@ -4,5 +4,17 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0xADF0A7EE)]
     public enum Enum_ADF0A7EE : uint {
+        [STUFieldAttribute(0x52F1B3E9)]
+        x52F1B3E9 = 0x0,
+        [STUFieldAttribute(0x328A2D36)]
+        x328A2D36 = 0x1,
+        [STUFieldAttribute(0xD06601F9)]
+        xD06601F9 = 0x2,
+        [STUFieldAttribute(0x83699F08)]
+        x83699F08 = 0x3,
+        [STUFieldAttribute(0x26D0B5D8)]
+        x26D0B5D8 = 0x4,
+        [STUFieldAttribute(0x8A7FF811)]
+        x8A7FF811 = 0x5,
     }
 }

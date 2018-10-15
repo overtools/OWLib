@@ -39,7 +39,34 @@ namespace TankLibHelper {
 
             string type = GetSizeType(_field.Size);
             builder.AppendLine($"    public enum {Name} : {type} {{");
-            
+
+            if (Info.Enums.ContainsKey(_hash)) {
+                var enumData = Info.Enums[_hash];
+                foreach (var @enum in enumData.Values) {
+                    if (!Info.KnownEnumNames.ContainsKey(_hash)) {
+                        attribute = $"[{nameof(STUFieldAttribute)}(0x{@enum.Hash:X8})]";
+                    } else {
+                        attribute = $"[{nameof(STUFieldAttribute)}(0x{@enum.Hash:X8}, \"{Info.GetEnumValueName(@enum.Hash)}\")]";
+                    }
+
+                    var safeValue = @enum.Value;
+                    // ReSharper disable once SwitchStatementMissingSomeCases
+                    switch (_field.Size) {
+                        case 1:
+                            safeValue = (byte)(safeValue % 0xFF);
+                            break;
+                        case 2:
+                            safeValue = (ushort)(safeValue % 0xFFFFF);
+                            break;
+                        case 4:
+                            safeValue = (uint)(safeValue % 0xFFFFFFFFFF);
+                            break;
+                    }
+
+                    builder.AppendLine($"        {attribute}");
+                    builder.AppendLine($"        {Info.GetEnumValueName(@enum.Hash)} = 0x{safeValue:X},");
+                }
+            }
             
             builder.AppendLine("    }");  // close enum
             builder.AppendLine("}");  // close namespace

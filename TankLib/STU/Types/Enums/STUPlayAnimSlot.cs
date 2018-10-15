@@ -4,5 +4,19 @@
 namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x9F4E2CAC, "STUPlayAnimSlot")]
     public enum STUPlayAnimSlot : uint {
+        [STUFieldAttribute(0x5F2F54DC)]
+        x5F2F54DC = 0x0,
+        [STUFieldAttribute(0x655A3B07)]
+        x655A3B07 = 0x1,
+        [STUFieldAttribute(0x43619957)]
+        x43619957 = 0x2,
+        [STUFieldAttribute(0x1276161E)]
+        x1276161E = 0x3,
+        [STUFieldAttribute(0x941750D3)]
+        x941750D3 = 0x4,
+        [STUFieldAttribute(0x20151291)]
+        x20151291 = 0x5,
+        [STUFieldAttribute(0xEA723063)]
+        xEA723063 = 0x6,
     }
 }
