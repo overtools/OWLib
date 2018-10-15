@@ -284,9 +284,11 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             var eventMap = GetEventConfig();
-            var formalEventKey = unlock.STU.m_BEE9BCDA.FirstOrDefault(x => eventMap.ContainsKey(x));
-            if (eventMap.ContainsKey(formalEventKey)) {
-                eventKey = eventMap[formalEventKey];
+            if (unlock.STU.m_BEE9BCDA != null) {
+                var formalEventKey = unlock.STU.m_BEE9BCDA.FirstOrDefault(x => eventMap.ContainsKey(x));
+                if (eventMap.ContainsKey(formalEventKey)) {
+                    eventKey = eventMap[formalEventKey];
+                }
             }
 
             string thisPath = Path.Combine(path, unlock.GetTypeNameEnum(), eventKey, rarity, GetValidFilename(unlock.GetName()));
