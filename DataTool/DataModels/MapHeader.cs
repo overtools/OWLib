@@ -2,6 +2,7 @@ using System.Runtime.Serialization;
 using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
+using TankLib.STU.Types.Enums;
 using Utf8Json;
 using static DataTool.Helper.IO;
 
@@ -20,10 +21,18 @@ namespace DataTool.DataModels {
         [DataMember]
         public teResourceGUID[] GameModes;
 
+        [DataMember]
+        public Enum_668FA6B6 State;
+
+        [DataMember]
+        public Enum_A0F51DCC MapType;
+
         public MapHeader(STUMapHeader mapHeader) {
             Name = GetString(mapHeader.m_displayName);
             VariantName = GetString(mapHeader.m_1C706502);
             MapGUID = mapHeader.m_map;
+            State = mapHeader.m_A125818B;
+            MapType = mapHeader.m_mapType;
 
             GameModes = Helper.JSON.FixArray(mapHeader.m_D608E9F3);
         }

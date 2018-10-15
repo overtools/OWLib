@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.Serialization;
 using TankLib;
 using TankLib.Math;
@@ -18,6 +19,9 @@ namespace DataTool.DataModels {
 
         [DataMember]
         public Enum_0C014B4A Gender;
+
+        [DataMember]
+        public Enum_C1DAF32A Size;
         
         [DataMember]
         public teColorRGBA GalleryColor;
@@ -32,6 +36,7 @@ namespace DataTool.DataModels {
             Name = GetString(hero.m_0EDCE350);
             Description = GetDescriptionString(hero.m_3446F580);
             Gender = hero.m_gender;
+            Size = hero.m_heroSize;
             
             GalleryColor = hero.m_heroColor;
 

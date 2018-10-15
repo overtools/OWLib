@@ -6,6 +6,7 @@ using DataTool.Helper;
 using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
+using TankLib.STU.Types.Enums;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
@@ -30,6 +31,8 @@ namespace DataTool.ToolLogic.List {
 
                 if (!string.IsNullOrEmpty(data.Name)) Log($"{iD+1}Name: {data.Name}");
                 if (!string.IsNullOrEmpty(data.VariantName)) Log($"{iD+1}VariantName: {data.VariantName}");
+                Log($"{iD+1}Status: {data.State}");
+                Log($"{iD+1}Type: {data.MapType}");
 
                 // if (!string.IsNullOrEmpty(data.Description)) Log($"{iD+1}Desc: {data.Description}");
                 // if (!string.IsNullOrEmpty(data.DescriptionB)) Log($"{iD+1}DescB: {data.DescriptionB}");

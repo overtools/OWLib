@@ -13,8 +13,8 @@ namespace TankLib.STU.Types.Enums {
         [STUFieldAttribute(0x4585FFFF)]
         Legendary = 0x3,
         [STUFieldAttribute(0xEF68A54A)]
-        xEF68A54A = 0x4,
+        Mythic = 0x4,
         [STUFieldAttribute(0x3A3ADA03)]
-        x3A3ADA03 = 0xFFFFFF,
+        Other = 0xFFFFFF,
     }
 }
