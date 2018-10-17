@@ -197,6 +197,7 @@
     <Compile Include="ToolLogic\Render\RenderFlags.cs" />
     <Compile Include="ToolLogic\Render\RenderUIElements.cs" />
     <Compile Include="WPF\DataToolWpfException.cs" />
+    <Compile Include="WPF\ImagingHelper.cs" />
     <Compile Include="WPF\IO\DDSConverter.cs" />
     <Compile Include="WPF\IO\Native.cs" />
     <Compile Include="WPF\ProgressWorker.cs" />

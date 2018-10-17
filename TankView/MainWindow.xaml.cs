@@ -84,6 +84,7 @@ namespace TankView {
             InitializeComponent();
             
             DataContext = this;
+
             // FolderView.ItemsSource = ;
             // FolderItemList.ItemsSource = ;
         }
@@ -335,6 +336,16 @@ namespace TankView {
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok) {
                 ExtractFolder(dialog.FileName, (sender as FrameworkElement)?.DataContext as Folder);
             }
+        }
+
+        private bool HasShown = false;
+        private void FirstChance(object sender, EventArgs e) {
+            if (HasShown) return;
+            
+            HasShown = true;
+
+            new AboutPage(this).Show();
+            Hide();
         }
     }
 }

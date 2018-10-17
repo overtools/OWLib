@@ -6,16 +6,15 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:DataTool.WPF.Tool"
              mc:Ignorable="d"
-             DataContext="{Binding RelativeSource={RelativeSource Self}}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type local:ImageGridEntry}">
-            <materialDesign:Card Width="{Binding Path=Width}" Height="{Binding Path=Height}" Cursor="{Binding Path=Cursor}">
-                <StackPanel Background="Transparent"> 
+            <materialDesign:Card Width="{Binding Path=Width}" Height="{Binding Path=Height}" Cursor="{Binding Path=Cursor}" Background="Transparent">
+                <StackPanel Background="Transparent" Orientation="Horizontal"> 
                     <Image Source="{Binding Path=Image}" Width="{Binding Path=ImageWidth}" Height="{Binding Path=ImageHeight}"
                            RenderOptions.BitmapScalingMode="HighQuality"
                            Stretch="Fill"/>
-                    <TextBlock Text="{Binding Path=Name}" Background="Transparent"  Foreground="{DynamicResource MaterialDesignBody}" TextAlignment="Center" Width="{Binding Path=ImageWidth}"></TextBlock>
+                    <TextBlock VerticalAlignment="Center" FontSize="26pt" Margin="5pt,0,0,0" Text="{Binding Path=Name}" Background="Transparent"  Foreground="{DynamicResource MaterialDesignBody}"></TextBlock>
                 </StackPanel>
             </materialDesign:Card>
         </DataTemplate>

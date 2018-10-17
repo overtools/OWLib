@@ -97,6 +97,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AboutPage.xaml.cs">
+      <DependentUpon>AboutPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DataToolListView.xaml.cs">
       <DependentUpon>DataToolListView.xaml</DependentUpon>
     </Compile>
@@ -136,6 +139,7 @@
     <Compile Include="View\PreviewDataString.xaml.cs">
       <DependentUpon>PreviewDataString.xaml</DependentUpon>
     </Compile>
+    <Page Include="AboutPage.xaml" />
     <Page Include="DataToolListView.xaml" />
     <Page Include="DataToolProgressTransition.xaml" />
     <Page Include="DataToolSimView.xaml">

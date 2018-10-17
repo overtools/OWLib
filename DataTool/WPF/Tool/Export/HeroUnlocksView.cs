@@ -50,7 +50,7 @@ namespace DataTool.WPF.Tool.Export {
                                     continue;
                                 }
 
-                                var tex = hero.m_8203BFE1.FirstOrDefault(x => teResourceGUID.Index(x.m_id) == 0x40C7)?.m_texture;
+                                var tex = hero.m_8203BFE1.FirstOrDefault(x => teResourceGUID.Index(x.m_id) == 0x40C9 || teResourceGUID.Index(x.m_id) == 0x40CA)?.m_texture;
 
                                 if (tex == 0) {
                                     tex = hero.m_8203BFE1.FirstOrDefault()?.m_texture;
@@ -58,6 +58,9 @@ namespace DataTool.WPF.Tool.Export {
 
                                 var image = new byte[] { };
 
+                                var width = 128;
+                                var height = 128;
+                                
                                 if (tex != 0) {
                                     teTexture texture = new teTexture(OpenFile(tex));
                                     if (texture.PayloadRequired) {
@@ -70,12 +73,15 @@ namespace DataTool.WPF.Tool.Export {
                                         }
                                     }
 
+                                    width = texture.Header.Width;
+                                    height = texture.Header.Height;
+
                                     Stream ms = texture.SaveToDDS();
 
                                     image = DDSConverter.ConvertDDS(ms, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.ImageFormat.PNG, 0);
                                 }
 
-                                var entry = control.Add(heroNameActual, image);
+                                var entry = control.Add(heroNameActual, image, 128, (int)ImagingHelper.CalculateSizeAS(height, width, 128));
                                 entry.Payload = progressionUnlocks;
                                 entry.OnClick += (sender, args) => {
                                     window.Close();

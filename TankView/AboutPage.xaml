@@ -1,0 +1,29 @@
+<Window x:Class="TankView.AboutPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:TankView"
+        mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        ContentRendered="FirstChance"
+        Title="About TankView" Height="250" Width="680" ResizeMode="NoResize">
+    <Grid>
+        <StackPanel Margin="5pt">
+            <TextBlock Name="ProgramName" FontSize="32pt" Text="{Binding Path=ProgramNameProp}"/>
+            <TextBlock Name="TagLine" Text="{Binding Path=TagLineProp}" Margin="0, 5pt"/>
+            <Separator Margin="0, 5pt"/>
+            <TextBlock Name="DisclaimerL1" Text="{Binding Path=DisclaimerL1Prop}" Margin="0, 5pt, 0, 0"/>    
+            <TextBlock Name="DisclaimerL2" Text="{Binding Path=DisclaimerL2Prop}" Margin="0, 5pt, 0, 0"/>    
+            <TextBlock Name="DisclaimerL3" Text="{Binding Path=DisclaimerL3Prop}" Margin="0, 5pt"/>
+            <Button Name="ContinueButton" Click="ContinueClick">Continue</Button>
+        </StackPanel>
+    </Grid>
+</Window>

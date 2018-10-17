@@ -13,8 +13,13 @@ namespace DataTool.WPF.Tool {
             InitializeComponent();
         }
 
-        public ImageGridEntry Add(string name, byte[] image) {
-            var entry = new ImageGridEntry(name, image);
+        public ImageGridEntry Add(string name, byte[] image, int width = 128, int height = 128) {
+            var entry = new ImageGridEntry(name, image) {
+                Width = width + 256,
+                Height = height,
+                ImageWidth = width,
+                ImageHeight = height
+            };
             Add(entry);
             NotifyPropertyChanged(nameof(Items));
             return entry;

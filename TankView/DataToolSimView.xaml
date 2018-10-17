@@ -17,9 +17,9 @@
         Title="{Binding Path=ModuleName}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Height="450"
-        Width="900"
-        MinWidth="900"
-        MinHeight="450">
+        MinHeight="450"
+        Width="1235"
+        MinWidth="1235">
     <Grid Name="MainSource">
     </Grid>
 </Window>

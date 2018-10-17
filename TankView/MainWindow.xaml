@@ -20,7 +20,10 @@
         Height="450"
         Width="865"
         MinWidth="865"
-        MinHeight="450">
+        MinHeight="450"
+        ContentRendered="FirstChance"
+        IsEnabled="False"
+        >
     <Window.Resources>
         <om:SizeConverter x:Key="SizeConverter" />
         <om:EnumConverter x:Key="EnumConverter" />
