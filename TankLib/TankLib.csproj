@@ -101,6 +101,7 @@
     <Compile Include="Helpers\Hash\CRC.cs" />
     <Compile Include="Helpers\ISerializable.cs" />
     <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Helpers\RememberMeStream.cs" />
     <Compile Include="Replay\HeroData.cs" />
     <Compile Include="Helpers\SerializableHelper.cs" />
     <Compile Include="Math\DBID.cs" />

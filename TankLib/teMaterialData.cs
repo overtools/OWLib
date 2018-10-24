@@ -1,33 +1,24 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
+using TankLib.Helpers;
 
 namespace TankLib {
     /// <summary>Tank Material Data, file type 0B3</summary>
     public class teMaterialData {
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Sequential, Pack = 4)] 
         public struct MatDataHeader {
             /// <summary>Offset to static input definitions</summary>
             public long StaticInputsOffset;  // 0
             public long Offset2;  // 8
-            
             /// <summary>Offset to texture definitions</summary>
             public long TextureOffset;  // 16
-            
             public long Offset4;  // 24
-            
-            public uint Unknown1;  // 28
-            
             /// <summary>Number of static inputs </summary>
-            public ushort StaticInputCount; // 32
-            
-            public ushort Unknown3;
-            
+            public uint StaticInputCount;  // 28
             /// <summary>Texture definition count</summary>
             public byte TextureCount;
-            
             public byte Offset4Count;
             public ushort Unknown4;
-            public uint Unknown5;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -105,25 +96,19 @@ namespace TankLib {
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct HeaderData {
             public uint Hash;
-            public Type Flags;
-            public byte Count;
-            public short Unknown;
+            public short Offset;
+            public short Size;
         }
-
-        public enum Type : byte {
-            
-        }
-
-        public static readonly int[] Sizes = {0, 4, 4, 4, 4, 4, 4, 8, 8, 0xC, 0x10, 0x10, 0x24, 0x30};
-
+        
         public HeaderData Header;
         public byte[] Data;
 
         public teMaterialDataStaticInput(BinaryReader reader) {
-            Header = reader.Read<HeaderData>();
-            
-            byte idx = (byte) Header.Flags;
-            Data = reader.ReadBytes(Header.Count * Sizes[idx]);
+            using (var rms = new RememberMeStream(reader)) {
+                Header = reader.Read<HeaderData>();
+                reader.BaseStream.Position = rms.Position + Header.Offset;
+                Data = reader.ReadBytes(Header.Size);
+            }
         }
     }
 }
