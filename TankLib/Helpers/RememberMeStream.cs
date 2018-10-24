@@ -6,12 +6,12 @@ namespace TankLib.Helpers {
         public long Position = 0;
         private Stream inner;
 
-        public RememberMeStream(Stream input) {
-            Position = input.Position;
+        public RememberMeStream(Stream input, long offset) {
+            Position = input.Position + offset;
             inner = input;
         }
 
-        public RememberMeStream(BinaryReader input) : this(input.BaseStream) { }
+        public RememberMeStream(BinaryReader input, long offset) : this(input.BaseStream, offset) { }
 
         public void Dispose() {
             inner.Position = Position;
