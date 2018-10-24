@@ -104,7 +104,7 @@ namespace TankLib {
         public byte[] Data;
 
         public teMaterialDataStaticInput(BinaryReader reader) {
-            using (var rms = new RememberMeStream(reader)) {
+            using (var rms = new RememberMeStream(reader, sizeof(HeaderData))) {
                 Header = reader.Read<HeaderData>();
                 reader.BaseStream.Position = rms.Position + Header.Offset;
                 Data = reader.ReadBytes(Header.Size);
