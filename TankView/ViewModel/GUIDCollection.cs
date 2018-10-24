@@ -63,7 +63,7 @@ namespace TankView.ViewModel {
                 case DataHelper.DataType.Sound: {
                     PreviewSource = DataHelper.ConvertSound(value);
                     PreviewControl = new PreviewDataSound();
-                    (PreviewControl as PreviewDataSound).SetAudio(PreviewSource as Stream);
+                    ((PreviewDataSound) PreviewControl).SetAudio(PreviewSource as Stream);
                 }
                     break;
                 case DataHelper.DataType.Model: {
@@ -86,7 +86,7 @@ namespace TankView.ViewModel {
             }
         }
 
-        private Control _control = null;
+        private Control _control;
 
         public Control PreviewControl {
             get => _control;
@@ -96,7 +96,7 @@ namespace TankView.ViewModel {
             }
         }
 
-        private BitmapSource _frame = null;
+        private BitmapSource _frame;
 
         public bool ShowPreview {
             get => Settings.Default.ShowPreview;
@@ -167,7 +167,7 @@ namespace TankView.ViewModel {
         public List<GUIDEntry> SelectedEntries {
             get => !string.IsNullOrWhiteSpace(searchQuery) ? _selected.Where(x => CultureInfo.CurrentUICulture.CompareInfo.IndexOf(x.Filename, searchQuery, CompareOptions.IgnoreCase | CompareOptions.IgnoreSymbols | CompareOptions.IgnoreWidth) > -1).ToList() : _selected;
             set {
-                _selected = value.OrderBy(x => x.Filename).ToList();
+                _selected = value.OrderBy(x => x?.Filename).ToList();
                 NotifyPropertyChanged(nameof(SelectedEntries));
             }
         }
@@ -223,7 +223,7 @@ namespace TankView.ViewModel {
             NotifyPropertyChanged(nameof(Root));
 
             try {
-                SelectedEntries = Data["RetailClient"]?.Files;
+                SelectedEntries = Data.Folders.FirstOrDefault(x => x.Name.EndsWith("Client"))?.Files ?? new List<GUIDEntry>();
             } catch (KeyNotFoundException) {
                 //
             }

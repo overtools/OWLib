@@ -24,7 +24,6 @@ namespace TankLib {
         /// <summary>Header for 07C and 0A9 strings</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct ArchiveStringHeader {
-            public ulong Offset;
             public uint Unknown1;
             public uint References;
         }
@@ -37,7 +36,6 @@ namespace TankLib {
             if (stream == null) return;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8)) {
                 ArchiveStringHeader header = reader.Read<ArchiveStringHeader>();
-                stream.Position = (long)header.Offset;
                 char[] bytes = reader.ReadChars((int)(stream.Length - stream.Position));
 
                 Value = new string(bytes).TrimEnd('\0');
