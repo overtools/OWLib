@@ -14,7 +14,10 @@ namespace TankLib {
             public long TextureOffset;  // 16
             public long Offset4;  // 24
             /// <summary>Number of static inputs </summary>
-            public uint StaticInputCount;  // 28
+            public short StaticInputCount;  // 28
+
+            public short Unk;
+            
             /// <summary>Texture definition count</summary>
             public byte TextureCount;
             public byte Offset4Count;
@@ -71,7 +74,7 @@ namespace TankLib {
                     Unknowns = reader.ReadArray<Unknown>(Header.Offset4Count);
                 }
 
-                if (Header.StaticInputsOffset > 0) {
+                if (Header.StaticInputsOffset > 0 && Header.StaticInputCount != -1) {
                     reader.BaseStream.Position = Header.StaticInputsOffset;
                     StaticInputs = new teMaterialDataStaticInput[Header.StaticInputCount];
                     for (int i = 0; i < Header.StaticInputCount; i++) {

@@ -163,7 +163,7 @@ namespace DataTool.DataModels {
         }
         
         /// <summary>Get an array of <see cref="Unlock"/> from STUUnlocks</summary>
-        /// <inheritdoc cref="GetArray(System.Collections.Generic.IEnumerable{ulong})"/>>
+        /// <inheritdoc cref="GetArray(System.Collections.Generic.IEnumerable{ulong})"/>
         public static Unlock[] GetArray(STUUnlocks unlocks) {
             return GetArray(unlocks?.m_unlocks);
         }

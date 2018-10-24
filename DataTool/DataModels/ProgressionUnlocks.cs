@@ -37,6 +37,11 @@ namespace DataTool.DataModels {
             var unlocks = STUHelper.GetInstance<STUProgressionUnlocks>(hero.m_heroProgression);
             Init(unlocks);
         }
+        
+        public ProgressionUnlocks(ulong guid) {
+            var unlocks = STUHelper.GetInstance<STUProgressionUnlocks>(guid);
+            Init(unlocks);
+        }
 
         private void Init(STUProgressionUnlocks progressionUnlocks) {
             if (progressionUnlocks == null) return;
