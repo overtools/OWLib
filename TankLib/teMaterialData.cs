@@ -103,7 +103,7 @@ namespace TankLib {
         public HeaderData Header;
         public byte[] Data;
 
-        public teMaterialDataStaticInput(BinaryReader reader) {
+        public unsafe teMaterialDataStaticInput(BinaryReader reader) {
             using (var rms = new RememberMeStream(reader, sizeof(HeaderData))) {
                 Header = reader.Read<HeaderData>();
                 reader.BaseStream.Position = rms.Position + Header.Offset;

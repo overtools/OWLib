@@ -3,7 +3,7 @@ using System.IO;
 
 namespace TankLib.Helpers {
     public class RememberMeStream : IDisposable {
-        public long Position = 0;
+        public long Position;
         private Stream inner;
 
         public RememberMeStream(Stream input, long offset) {

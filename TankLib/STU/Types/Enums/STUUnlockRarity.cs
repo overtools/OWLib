@@ -15,6 +15,6 @@ namespace TankLib.STU.Types.Enums {
         [STUFieldAttribute(0xEF68A54A)]
         Mythic = 0x4,
         [STUFieldAttribute(0x3A3ADA03)]
-        Other = 0xFFFFFF,
+        Unspecified = 0xFFFFFF,
     }
 }
