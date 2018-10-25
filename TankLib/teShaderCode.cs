@@ -27,7 +27,7 @@ namespace TankLib {
             public uint Unknown; // 32
             
             /// <summary>Shader type</summary>
-            public uint ShaderType;  // 36
+            public Enums.teSHADER_TYPE ShaderType;  // 36
             
             // etc
         }
