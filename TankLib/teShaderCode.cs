@@ -7,7 +7,7 @@ namespace TankLib {
         /// <summary>ShaderCode Header </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct ShaderCodeHeader {
-            /// <summary>Offset to DXBC data</summary>
+            /// <summary>Offset to data</summary>
             public long DataOffset; // 0
             
             /// <summary>Offset to unknown data</summary>
@@ -18,22 +18,22 @@ namespace TankLib {
             /// <summary>Unknown data count</summary>
             public uint StreamOutDescCount; // 20
             
-            public uint Unknown1; // 24
-            
-            /// <summary>Size of DXBC data</summary>
-            public int DataSize;  // 28
+            /// <summary>Size of compressed DXBC data</summary>
+            public int CompressedSize;  // 24
+
+            /// <summary>Size of decompressed DXBC data</summary>
+            public int UncompressedSize;  // 28
+
+            public uint Unknown; // 32
             
             /// <summary>Shader type</summary>
-            public Enums.teSHADER_TYPE ShaderType;  // 32
-
-            public uint Unknown2;  // maybe hash or something. sometimes 0
+            public uint ShaderType;  // 36
+            
+            // etc
         }
 
         /// <summary>Header Data</summary>
         public ShaderCodeHeader Header;
-        
-        /// <summary>Compiled DXBC Data</summary>
-        public byte[] Data;
         
         /// <summary>
         /// Read ShaderCode from a stream
@@ -55,11 +55,6 @@ namespace TankLib {
 
         private void Read(BinaryReader reader) {
             Header = reader.Read<ShaderCodeHeader>();
-            
-            if (Header.DataOffset >= 0) {
-                reader.BaseStream.Position = Header.DataOffset;
-                Data = reader.ReadBytes(Header.DataSize);
-            }
         }
     }
 }
