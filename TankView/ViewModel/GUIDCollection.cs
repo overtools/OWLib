@@ -181,37 +181,41 @@ namespace TankView.ViewModel {
         public GUIDCollection() { }
 
         public GUIDCollection(ClientHandler client, ProductHandler_Tank tank, ProgressWorker worker) {
-            this.Client = client;
-            this.Tank = tank;
-            this._worker = worker;
+            Client = client;
+            Tank = tank;
+            _worker = worker;
 
-            long total = tank.RootFiles.Length + tank.Manifests.Select(x => x.ContentManifest.HashList.Length).Sum();
+            int totalHashList = (tank.Manifests?.Where(x => x?.ContentManifest?.HashList != null).Select(x => x.ContentManifest.HashList.Length).Sum()).GetValueOrDefault();
+            long total = tank.RootFiles.Length + totalHashList;
 
             worker?.ReportProgress(0, "Building file tree...");
 
             long c = 0;
 
-            foreach (var entry in this.Tank.RootFiles.OrderBy(x => x.FileName).ToArray()) {
+            foreach (var entry in Tank.RootFiles.OrderBy(x => x.FileName).ToArray()) {
                 c++;
                 worker?.ReportProgress((int) (((float) c / (float) total) * 100));
                 AddEntry(entry.FileName, 0, entry.MD5, 0, "None");
             }
 
-            foreach (var manifest in this.Tank.Manifests) {
-                foreach (var record in manifest.ContentManifest.HashList) {
-                    c++;
-                    if (c % 10000 == 0) {
-                        worker?.ReportProgress((int) (((float) c / (float) total) * 100));
-                    }
+            if (totalHashList != default) {
 
-                    ushort typeVal = teResourceGUID.Type(record.GUID);
-                    string typeStr = typeVal.ToString("X3");
-                    DataHelper.DataType typeData = DataHelper.GetDataType(typeVal);
-                    if (typeData != DataHelper.DataType.Unknown) {
-                        typeStr = $"{typeStr} ({typeData.ToString()})";
-                    }
+                foreach (var manifest in Tank.Manifests) {
+                    foreach (var record in manifest.ContentManifest.HashList) {
+                        c++;
+                        if (c % 10000 == 0) {
+                            worker?.ReportProgress((int) (((float) c / (float) total) * 100));
+                        }
 
-                    AddEntry($"files/{Path.GetFileNameWithoutExtension(manifest.Name)}/{typeStr}", record.GUID, record.ContentKey, (int)record.Size, "None");
+                        ushort typeVal = teResourceGUID.Type(record.GUID);
+                        string typeStr = typeVal.ToString("X3");
+                        DataHelper.DataType typeData = DataHelper.GetDataType(typeVal);
+                        if (typeData != DataHelper.DataType.Unknown) {
+                            typeStr = $"{typeStr} ({typeData.ToString()})";
+                        }
+
+                        AddEntry($"files/{Path.GetFileNameWithoutExtension(manifest.Name)}/{typeStr}", record.GUID, record.ContentKey, (int) record.Size, "None");
+                    }
                 }
             }
 

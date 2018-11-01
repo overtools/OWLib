@@ -81,5 +81,17 @@ namespace TankView.Properties {
                 this["DarkMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LoadManifest {
+            get {
+                return ((bool)(this["LoadManifest"]));
+            }
+            set {
+                this["LoadManifest"] = value;
+            }
+        }
     }
 }
