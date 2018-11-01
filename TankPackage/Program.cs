@@ -258,11 +258,6 @@ namespace TankPackage
                     Log("Package {0:X12}:", teResourceGUID.LongKey(entry.PackageGUID));
                     Log("\tUnknowns: {0}, {1}", entry.Unknown1, entry.Unknown2);
                     Log("\t{0} records", apm.Records[i].Length);
-                    Log("\t{0} siblings", apm.PackageSiblings[i].Length);
-                    foreach (ulong sibling in apm.PackageSiblings[i])
-                    {
-                        Log("\t\t{0}", teResourceGUID.AsString(sibling));
-                    }
                 }
             }
         }
