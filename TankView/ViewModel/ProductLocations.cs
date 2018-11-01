@@ -7,10 +7,11 @@ using TACTLib.Agent.Protobuf;
 namespace TankView.ViewModel {
     public class ProductLocations : ObservableHashCollection<ProductLocation> {
         private static Dictionary<string, string> KnownUIDs = new Dictionary<string, string> {
-            {"prometheus", "Live Region"},
-            {"prometheus_dev", "Development Region"},
-            {"prometheus_test", "Public Test Region"},
-            {"prometheus_tournament", "Professional Region"}
+            {"prometheus", "Live"},
+            {"prometheus_dev", "Development"},
+            {"prometheus_test", "Public Test"},
+            {"prometheus_tournament", "Professional"},
+            {"prometheus_viewer", "Viewer"}
         };
 
         public ProductLocations() {
