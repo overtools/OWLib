@@ -13,6 +13,7 @@ using System.Windows.Data;
 using DataTool.WPF;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using TankView.Helper;
+using TankView.Properties;
 using TankView.ViewModel;
 using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
@@ -39,7 +40,7 @@ namespace TankView {
         public static ClientCreateArgs ClientArgs = new ClientCreateArgs();
 
         private bool ready = true;
-
+ 
         public bool IsReady {
             get => ready;
             set {
@@ -50,10 +51,13 @@ namespace TankView {
 
                 NotifyPropertyChanged(nameof(IsReady));
                 NotifyPropertyChanged(nameof(IsDataReady));
+                NotifyPropertyChanged(nameof(IsDataToolSafe));
             }
         }
 
-        public bool IsDataReady => IsReady;
+        public bool IsDataReady => IsReady && GUIDTree?.Data?.Folders.Count > 1;
+
+        public bool IsDataToolSafe => IsDataReady && (DataTool.Program.TankHandler?.Manifests?.Where(x => x?.ContentManifest?.HashList != null).Select(x => x.ContentManifest.HashList.Length).Sum()).GetValueOrDefault() != default;
 
         private ProgressWorker _progressWorker = new ProgressWorker();
 
@@ -190,26 +194,26 @@ namespace TankView {
                 try {
                     DataTool.Program.Client = new ClientHandler(path, ClientArgs);
 
-                    if (DataTool.Program.Client.AgentProduct.Uid != null && DataTool.Program.Client.AgentProduct.Uid != "prometheus") {
-                        MessageBox.Show($"The branch \"{DataTool.Program.Client.AgentProduct.Uid}\" is not supported!\nThis might result in failure to load.\nProceed with caution.", "Unsupported Branch", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
-                    }
-
                     DataTool.Program.TankHandler = DataTool.Program.Client.ProductHandler as ProductHandler_Tank;
 
                     BuildTree();
                 } catch (Exception e) {
                     MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-                    IsReady = true;
                     if (Debugger.IsAttached) {
                         throw;
                     }
                 } finally {
                     GCSettings.LatencyMode = GCLatencyMode.Interactive;
                     GC.Collect();
-                    DataTool.Program.InitTrackedFiles();
+                    if (Settings.Default.LoadManifest) {
+                        DataTool.Program.InitTrackedFiles();
+                    }
+                    ViewContext.Send(delegate { IsReady = true; NotifyPropertyChanged(nameof(IsReady)); }, null);
                 }
 
-                ViewContext.Send(delegate { IsReady = true; }, null);
+                if (DataTool.Program.Client?.AgentProduct?.Uid != null && DataTool.Program.Client.AgentProduct.Uid != "prometheus") {
+                    MessageBox.Show($"The branch \"{DataTool.Program.Client.AgentProduct.Uid}\" is not supported!\nThis might result in failure to load.\nProceed with caution.", "Unsupported Branch", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                }
             });
         }
 

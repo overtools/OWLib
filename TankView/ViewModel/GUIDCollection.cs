@@ -199,7 +199,6 @@ namespace TankView.ViewModel {
             }
 
             if (totalHashList != default) {
-
                 foreach (var manifest in Tank.Manifests) {
                     foreach (var record in manifest.ContentManifest.HashList) {
                         c++;

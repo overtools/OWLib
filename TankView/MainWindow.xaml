@@ -106,7 +106,7 @@
             <MenuItem Header="Extract" Click="ExtractFiles"
                       IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
             <MenuItem Header="DataTool" Click="OpenOrFocusSimView"
-                      IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                      IsEnabled="{Binding IsDataToolSafe, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
             
             <MenuItem IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                 <MenuItem.Header>
