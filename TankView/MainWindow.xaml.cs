@@ -57,7 +57,7 @@ namespace TankView {
 
         public bool IsDataReady => IsReady && GUIDTree?.Data?.Folders.Count > 1;
 
-        public bool IsDataToolSafe => IsDataReady && (DataTool.Program.TankHandler?.Manifests?.Where(x => x?.ContentManifest?.HashList != null).Select(x => x.ContentManifest.HashList.Length).Sum()).GetValueOrDefault() != default;
+        public bool IsDataToolSafe => IsDataReady && DataTool.Program.TankHandler?.MainContentManifest?.HashList != null;  // todo
 
         private ProgressWorker _progressWorker = new ProgressWorker();
 

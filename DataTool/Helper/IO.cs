@@ -146,39 +146,5 @@ namespace DataTool.Helper {
                 return null;
             }
         }
-
-        /*public static void MapCMF() {
-            if (Root == null || CASC == null) {
-                return;
-            }
-            const string searchString = "rdev";
-
-            Files = new Dictionary<ulong, ApplicationPackageManifest.Types.PackageRecord>();
-            TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
-            CMFMap = new Dictionary<ulong, ContentManifestFile.HashData>();
-            foreach (ApplicationPackageManifest apm in CASC.RootHandler.APMFiles) {
-                if (!apm.Name.ToLowerInvariant().Contains(searchString)) {
-                    continue;
-                }
-
-                if (Flags?.Language != null) {
-                    if (!apm.Name.ToLowerInvariant().Contains("l" + Flags.Language.ToLowerInvariant())) {
-                        continue;
-                    }
-                }
-                
-                foreach (KeyValuePair<ulong, ApplicationPackageManifest.Types.PackageRecord> pair in apm.FirstOccurence) {
-                    ushort type = teResourceGUID.Type(pair.Key);
-                    if (!TrackedFiles.ContainsKey(type)) {
-                        TrackedFiles[type] = new HashSet<ulong>();
-                    }
-                    
-                    TrackedFiles[type].Add(pair.Key);
-                    Files[pair.Value.GUID] = pair.Value;
-
-                    CMFMap[pair.Value.GUID] = apm.CMF.Map[pair.Value.GUID];
-                }
-            }
-        }*/
     }
 }

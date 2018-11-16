@@ -237,11 +237,11 @@ namespace DataTool {
 
             BuildVersion = uint.Parse(Client.InstallationInfo.Values["Version"].Split('.').Last());
             if (BuildVersion < 39028) {
-                TankLib.Helpers.Logger.Error("Core", "DataTool doesn't support Overwatch versions below 1.14. Please use OverTool");
+                TankLib.Helpers.Logger.Error("Core", "DataTool doesn't support Overwatch versions below 1.14. Please use OverTool.");
             } else if (BuildVersion < 39241) {
-                TankLib.Helpers.Logger.Error("Core", "DataTool doesn't support this 1.14 release as it uses un-mangled hashes");
-            } else if (BuildVersion < 49154) {
-                TankLib.Helpers.Logger.Error("Core", "This version of DataTool doesn't properly support versions below 1.26. Please downgrade DataTool.");
+                TankLib.Helpers.Logger.Error("Core", "DataTool doesn't support this 1.14 release as it uses un-mangled hashes.");
+            } else if (BuildVersion < 52320) {
+                TankLib.Helpers.Logger.Error("Core", "This version of DataTool doesn't support versions of Overwatch below 1.30. Please downgrade DataTool.");
             }
 
             InitTrackedFiles();

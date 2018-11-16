@@ -17,7 +17,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             ExtractNewEntities(toolFlags);
         }
         
-        public void AddNewByGUID(Combo.ComboInfo info, List<ulong> lastVerGuids, ushort type) {
+        public void AddNewByGUID(Combo.ComboInfo info, HashSet<ulong> lastVerGuids, ushort type) {
             foreach (ulong key in TrackedFiles[type]) {
                 if (lastVerGuids.Contains(key)) continue;
                 Combo.Find(info, key);
@@ -26,9 +26,10 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
         public void AddNewByContentHash(Combo.ComboInfo info, HashSet<CKey> contentHashes, params ushort[] types) {
             foreach (KeyValuePair<ulong,ProductHandler_Tank.Asset> asset in TankHandler.Assets) {
-                TankHandler.UnpackAsset(asset.Value, out var manifest, out var package, out var record);
-                
-                if (!manifest.ContentManifest.TryGet(record.GUID, out var cmfData)) {
+                TankHandler.UnpackAsset(asset.Value, out var package, out var record);
+
+                var cmf = TankHandler.GetContentManifestForAsset(asset.Key);
+                if (!cmf.TryGet(record.GUID, out var cmfData)) {
                     throw new FileNotFoundException();
                 }
                 
@@ -81,7 +82,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             
             var contentHashes = GetContentHashes(@"D:\ow\resources\verdata\50951.cmfhashes");
 
-            const string container = "DebugNewEntities3";
+            const string container = "DebugNewEntities";
             
             Combo.ComboInfo info = new Combo.ComboInfo();
             AddNewByContentHash(info, contentHashes, 0x7C);

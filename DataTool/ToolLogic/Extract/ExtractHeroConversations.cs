@@ -61,28 +61,13 @@ namespace DataTool.ToolLogic.Extract {
                 ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
 
-            Dictionary<ulong, VoiceSet> heroVoiceSets = new Dictionary<ulong, VoiceSet>();
-            Dictionary<ulong, STUHero> heroes = new Dictionary<ulong, STUHero>();
+            Dictionary<ulong, VoiceSet> allVoiceSets = new Dictionary<ulong, VoiceSet>();
+            foreach (var voiceSetGUID in Program.TrackedFiles[0x5F]) {
+                STUVoiceSet set = GetInstance<STUVoiceSet>(voiceSetGUID);
 
-            foreach (ulong heroGuid in Program.TrackedFiles[0x75]) {
-                STUHero hero = GetInstance<STUHero>(heroGuid);
-                if (hero == null) continue;
-                STUVoiceSetComponent voiceSetComponent = GetInstance<STUVoiceSetComponent>(hero.m_gameplayEntity);
-
-                if (voiceSetComponent?.m_voiceDefinition == null) {
-                    Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine",
-                        "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found\r\n");
-                    continue;
-                }
-
-                STUVoiceSet set = GetInstance<STUVoiceSet>(voiceSetComponent.m_voiceDefinition);
-                if (set == null) continue;
-
-                heroVoiceSets[heroGuid] = new VoiceSet(set);
-                heroes[heroGuid] = hero;
+                if (set?.m_voiceLineInstances == null) continue;
+                allVoiceSets[voiceSetGUID] = new VoiceSet(set);
             }
-
-            Combo.ComboInfo comboInfo = new Combo.ComboInfo();
 
             // Dictionary<uint, string> mapNames = new Dictionary<uint, string>();
             // foreach (ulong mapGuid in Program.TrackedFiles[0x9F]) {
@@ -92,9 +77,18 @@ namespace DataTool.ToolLogic.Extract {
             //     mapNames[teResourceGUID.Index(mapGuid)] = GetValidFilename(GetString(mapHeader.m_1C706502) ?? GetString(mapHeader.m_displayName));
             // }
 
+            Combo.ComboInfo comboInfo = new Combo.ComboInfo();
+
             foreach (ulong heroGuid in Program.TrackedFiles[0x75]) {
-                if (!heroes.ContainsKey(heroGuid)) continue;
-                STUHero hero = heroes[heroGuid];
+                STUHero hero = GetInstance<STUHero>(heroGuid);
+                if (hero == null) continue;
+                STUVoiceSetComponent voiceSetComponent = GetInstance<STUVoiceSetComponent>(hero.m_gameplayEntity);
+
+                if (voiceSetComponent?.m_voiceDefinition == null || !allVoiceSets.TryGetValue(voiceSetComponent.m_voiceDefinition, out var set)) {
+                    Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine",
+                                 "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found\r\n");
+                    continue;
+                }
 
                 string heroNameActual =
                     (GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(heroGuid)}").TrimEnd(' ');
@@ -104,8 +98,6 @@ namespace DataTool.ToolLogic.Extract {
                 if (config.Count == 0) continue;
                 Log($"Processing data for {heroNameActual}");
                 heroNameActual = GetValidFilename(heroNameActual);
-
-                VoiceSet set = heroVoiceSets[heroGuid];
 
                 foreach (VoiceLineInstance lineInstance in set.VoiceLines.Values) {
                     // if (lineInstance.STU.m_voiceLineRuntime.m_4FF98D41 != null) {
@@ -123,7 +115,7 @@ namespace DataTool.ToolLogic.Extract {
                     string convoDir = Path.Combine(path, heroNameActual, GetFileName(lineInstance.VoiceConversation));
                     foreach (STUVoiceConversationLine line in conversation.m_voiceConversationLine) {
                         string linePath = Path.Combine(convoDir, line.m_B4D405A1.ToString());
-                        foreach (VoiceSet voiceSet in heroVoiceSets.Values) {
+                        foreach (VoiceSet voiceSet in allVoiceSets.Values) {
                             if (voiceSet.VoiceLines.ContainsKey(line.m_lineGUID)) {
                                 VoiceLine.SaveVoiceLine(flags, voiceSet.VoiceLines[line.m_lineGUID], linePath,
                                     comboInfo);

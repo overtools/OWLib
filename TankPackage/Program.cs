@@ -85,9 +85,10 @@ namespace TankPackage
                 return;
             }
 
-            foreach (ProductHandler_Tank.Manifest apm in TankHandler.Manifests) {
-                var ids = apm.ContentManifest.IndexMap.Where(x => guids.Length == 0 || guids.Contains(teResourceGUID.Type(x.Key))).Select(x => x.Key);
-                Save(output, apm.PackageManifest.Header.Checksum, ids, apm.ContentManifest);
+            ApplicationPackageManifest apm = TankHandler.PackageManifest;
+            foreach (ContentManifestFile contentManifest in new [] {TankHandler.MainContentManifest, TankHandler.SpeechContentManifest}) {
+                var ids = contentManifest.IndexMap.Where(x => guids.Length == 0 || guids.Contains(teResourceGUID.Type(x.Key))).Select(x => x.Key);
+                Save(output, apm.Header.Checksum, ids, contentManifest);
             }
         }
 
@@ -104,18 +105,16 @@ namespace TankPackage
             Dictionary<ulong, PackageRecord[]> totalRecords = new Dictionary<ulong, PackageRecord[]>();
             Dictionary<ulong, Package> packages = new Dictionary<ulong, Package>();
 
-            foreach (ApplicationPackageManifest apm in TankHandler.Manifests.Select(x => x.PackageManifest))
+            ApplicationPackageManifest apm = TankHandler.PackageManifest;
+            for (int i = 0; i < apm.PackageEntries.Length; ++i)
             {
-                for (int i = 0; i < apm.PackageEntries.Length; ++i)
+                PackageEntry entry = apm.PackageEntries[i];
+                if (guids.Contains(teResourceGUID.LongKey(entry.PackageGUID)) || guids.Contains(teResourceGUID.Index(entry.PackageGUID)))
                 {
-                    PackageEntry entry = apm.PackageEntries[i];
-                    if (guids.Contains(teResourceGUID.LongKey(entry.PackageGUID)) || guids.Contains(teResourceGUID.Index(entry.PackageGUID)))
-                    {
-                        packages[entry.PackageGUID] = apm.Packages[i];
-                        records[entry.PackageGUID] = apm.Records[i];
-                    }
-                    totalRecords[entry.PackageGUID] = apm.Records[i];
+                    packages[entry.PackageGUID] = apm.Packages[i];
+                    records[entry.PackageGUID] = apm.Records[i];
                 }
+                totalRecords[entry.PackageGUID] = apm.Records[i];
             }
 
             foreach (ulong key in records.Keys)
@@ -136,15 +135,13 @@ namespace TankPackage
             Dictionary<ulong, PackageRecord[]> records = new Dictionary<ulong, PackageRecord[]>();
             Dictionary<ulong, Package> packages = new Dictionary<ulong, Package>();
 
-            foreach (ApplicationPackageManifest apm in TankHandler.Manifests.Select(x => x.PackageManifest))
+            var apm = TankHandler.PackageManifest;
+            for (int i = 0; i < apm.PackageEntries.Length; ++i)
             {
-                for (int i = 0; i < apm.PackageEntries.Length; ++i)
-                {
-                    PackageEntry entry = apm.PackageEntries[i];
-                    if (!guids.Contains(teResourceGUID.LongKey(entry.PackageGUID)) && !guids.Contains(teResourceGUID.Index(entry.PackageGUID))) continue;
-                    packages[entry.PackageGUID] = apm.Packages[i];
-                    records[entry.PackageGUID] = apm.Records[i];
-                }
+                PackageEntry entry = apm.PackageEntries[i];
+                if (!guids.Contains(teResourceGUID.LongKey(entry.PackageGUID)) && !guids.Contains(teResourceGUID.Index(entry.PackageGUID))) continue;
+                packages[entry.PackageGUID] = apm.Packages[i];
+                records[entry.PackageGUID] = apm.Records[i];
             }
 
             ICLIFlags flags = FlagParser.Parse<ExtractFlags>();
@@ -211,17 +208,15 @@ namespace TankPackage
         {
             ulong[] guids = args.Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
 
-            foreach (ApplicationPackageManifest apm in TankHandler.Manifests.Select(x => x.PackageManifest))
+            ApplicationPackageManifest apm = TankHandler.PackageManifest;
+            for (int i = 0; i < apm.PackageEntries.Length; ++i)
             {
-                for (int i = 0; i < apm.PackageEntries.Length; ++i)
-                {
-                    PackageEntry entry = apm.PackageEntries[i];
-                    PackageRecord[] records = apm.Records[i];
+                PackageEntry entry = apm.PackageEntries[i];
+                PackageRecord[] records = apm.Records[i];
 
-                    foreach (PackageRecord record in records.Where(x => guids.Contains(x.GUID) || guids.Contains(teResourceGUID.Type(x.GUID)) || guids.Contains(teResourceGUID.Index(x.GUID)) || guids.Contains(teResourceGUID.LongKey(x.GUID))))
-                    {
-                        Log("Found {0} in package {1:X12}", teResourceGUID.AsString(record.GUID), teResourceGUID.LongKey(entry.PackageGUID));
-                    }
+                foreach (PackageRecord record in records.Where(x => guids.Contains(x.GUID) || guids.Contains(teResourceGUID.Type(x.GUID)) || guids.Contains(teResourceGUID.Index(x.GUID)) || guids.Contains(teResourceGUID.LongKey(x.GUID))))
+                {
+                    Log("Found {0} in package {1:X12}", teResourceGUID.AsString(record.GUID), teResourceGUID.LongKey(entry.PackageGUID));
                 }
             }
         }
@@ -230,17 +225,15 @@ namespace TankPackage
         {
             ulong[] guids = args.Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
 
-            foreach (ApplicationPackageManifest apm in TankHandler.Manifests.Select(x => x.PackageManifest))
+            ApplicationPackageManifest apm = TankHandler.PackageManifest;
+            for (int i = 0; i < apm.PackageEntries.Length; ++i)
             {
-                for (int i = 0; i < apm.PackageEntries.Length; ++i)
-                {
-                    PackageEntry entry = apm.PackageEntries[i];
-                    PackageRecord[] records = apm.Records[i];
+                PackageEntry entry = apm.PackageEntries[i];
+                PackageRecord[] records = apm.Records[i];
 
-                    foreach (PackageRecord record in records.Where(x => guids.Contains(teResourceGUID.Type(x.GUID))))
-                    {
-                        Log("Found {0} in package {1:X12}", teResourceGUID.AsString(record.GUID), teResourceGUID.LongKey(entry.PackageGUID));
-                    }
+                foreach (PackageRecord record in records.Where(x => guids.Contains(teResourceGUID.Type(x.GUID))))
+                {
+                    Log("Found {0} in package {1:X12}", teResourceGUID.AsString(record.GUID), teResourceGUID.LongKey(entry.PackageGUID));
                 }
             }
         }
@@ -249,16 +242,14 @@ namespace TankPackage
         {
             ulong[] guids = args.Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
 
-            foreach (ApplicationPackageManifest apm in TankHandler.Manifests.Select(x => x.PackageManifest))
+            ApplicationPackageManifest apm = TankHandler.PackageManifest;
+            for (int i = 0; i < apm.PackageEntries.Length; ++i)
             {
-                for (int i = 0; i < apm.PackageEntries.Length; ++i)
-                {
-                    PackageEntry entry = apm.PackageEntries[i];
-                    if (!guids.Contains(teResourceGUID.LongKey(entry.PackageGUID)) && !guids.Contains(teResourceGUID.Index(entry.PackageGUID))) continue;
-                    Log("Package {0:X12}:", teResourceGUID.LongKey(entry.PackageGUID));
-                    Log("\tUnknowns: {0}, {1}", entry.Unknown1, entry.Unknown2);
-                    Log("\t{0} records", apm.Records[i].Length);
-                }
+                PackageEntry entry = apm.PackageEntries[i];
+                if (!guids.Contains(teResourceGUID.LongKey(entry.PackageGUID)) && !guids.Contains(teResourceGUID.Index(entry.PackageGUID))) continue;
+                Log("Package {0:X12}:", teResourceGUID.LongKey(entry.PackageGUID));
+                Log("\tUnknowns: {0}, {1}", entry.Unknown1, entry.Unknown2);
+                Log("\t{0} records", apm.Records[i].Length);
             }
         }
     }

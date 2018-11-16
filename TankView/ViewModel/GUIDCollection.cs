@@ -185,7 +185,7 @@ namespace TankView.ViewModel {
             Tank = tank;
             _worker = worker;
 
-            int totalHashList = (tank.Manifests?.Where(x => x?.ContentManifest?.HashList != null).Select(x => x.ContentManifest.HashList.Length).Sum()).GetValueOrDefault();
+            int totalHashList = tank.Assets.Count;
             long total = tank.RootFiles.Length + totalHashList;
 
             worker?.ReportProgress(0, "Building file tree...");
@@ -199,8 +199,8 @@ namespace TankView.ViewModel {
             }
 
             if (totalHashList != default) {
-                foreach (var manifest in Tank.Manifests) {
-                    foreach (var record in manifest.ContentManifest.HashList) {
+                foreach (ContentManifestFile contentManifest in new [] {Tank.MainContentManifest, Tank.SpeechContentManifest}) {
+                    foreach (var record in contentManifest.HashList) {
                         c++;
                         if (c % 10000 == 0) {
                             worker?.ReportProgress((int) (((float) c / (float) total) * 100));
@@ -213,7 +213,8 @@ namespace TankView.ViewModel {
                             typeStr = $"{typeStr} ({typeData.ToString()})";
                         }
 
-                        AddEntry($"files/{Path.GetFileNameWithoutExtension(manifest.Name)}/{typeStr}", record.GUID, record.ContentKey, (int) record.Size, "None");
+                        // todo: add cmf name again?
+                        AddEntry($"files/{typeStr}", record.GUID, record.ContentKey, (int) record.Size, "None");
                     }
                 }
             }

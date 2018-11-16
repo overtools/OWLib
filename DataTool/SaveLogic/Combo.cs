@@ -521,6 +521,9 @@ namespace DataTool.SaveLogic {
                     if (textureStream == null) return;
                     teTexture texture = new teTexture(textureStream);
 
+                    //if (texture.Header.Flags.HasFlag(teTexture.Flags.CUBEMAP)) return;
+                    // for diffing when they add/regen loads of cubemaps
+                    
                     if (texture.PayloadRequired) {
                         texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID)));
                     }
@@ -625,6 +628,7 @@ namespace DataTool.SaveLogic {
         }
 
         public static void SaveSoundFile(ICLIFlags flags, string directory, FindLogic.Combo.ComboInfo info, ulong soundFile, bool voice) {
+            if (soundFile == 0) return;
             bool convertWem = true;
             if (flags is ExtractFlags extractFlags) {
                 convertWem = extractFlags.ConvertSound && !extractFlags.Raw;

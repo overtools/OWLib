@@ -81,10 +81,10 @@ namespace CASCEncDump {
 
         public static void DumpCMF(string[] args) {
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.cmfhashes")) {
-                foreach (KeyValuePair<ulong, ProductHandler_Tank.Asset> file in TankHandler.Assets) {
-                    TankHandler.UnpackAsset(file.Value, out var manifest, out var package, out var record);
-                    manifest.ContentManifest.TryGet(record.GUID, out var data);
-                    writer.WriteLine(data.ContentKey.ToHexString());
+                foreach (ContentManifestFile contentManifestFile in new [] {TankHandler.MainContentManifest, TankHandler.SpeechContentManifest}) {
+                    foreach (ContentManifestFile.HashData hashData in contentManifestFile.HashList) {
+                        writer.WriteLine(hashData.ContentKey.ToHexString());
+                    }
                 }
             }
         }

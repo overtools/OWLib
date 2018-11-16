@@ -23,9 +23,8 @@ namespace TankLib {
         
         /// <summary>Header for 07C and 0A9 strings</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct ArchiveStringHeader {
-            public uint Unknown1;
-            public uint References;
+        public struct DisplayTextHeader {
+            public short Unknown;
         }
 
         /// <summary>
@@ -35,7 +34,7 @@ namespace TankLib {
         public teString(Stream stream) {
             if (stream == null) return;
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8)) {
-                ArchiveStringHeader header = reader.Read<ArchiveStringHeader>();
+                DisplayTextHeader header = reader.Read<DisplayTextHeader>();
                 char[] bytes = reader.ReadChars((int)(stream.Length - stream.Position));
 
                 Value = new string(bytes).TrimEnd('\0');
