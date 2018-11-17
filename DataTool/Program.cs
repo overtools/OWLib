@@ -219,6 +219,10 @@ namespace DataTool {
             Client = new ClientHandler(Flags.OverwatchDirectory, args);
             TankLib.TACT.LoadHelper.PostLoad(Client);
 
+            if (args.TextLanguage != "enUS") {
+                TankLib.Helpers.Logger.Warn("Core", "Reminder! When extracting data in other languages, the names of the heroes/skins/etc must be in the language you have chosen.");
+            }
+            
             if (Client.AgentProduct.Uid != "prometheus") {
                 TankLib.Helpers.Logger.Warn("Core", $"The branch \"{Client.AgentProduct.Uid}\" is not supported!. This might result in failure to load. Proceed with caution.");
             }
