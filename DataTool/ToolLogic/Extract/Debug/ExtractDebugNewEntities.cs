@@ -27,6 +27,12 @@ namespace DataTool.ToolLogic.Extract.Debug {
         public void AddNewByContentHash(Combo.ComboInfo info, HashSet<CKey> contentHashes, params ushort[] types) {
             foreach (KeyValuePair<ulong,ProductHandler_Tank.Asset> asset in TankHandler.Assets) {
                 TankHandler.UnpackAsset(asset.Value, out var package, out var record);
+                
+                ushort fileType = teResourceGUID.Type(asset.Key);
+                if (fileType == 0x9C) continue;  // bundle
+                if (fileType == 0x77) continue;  // package
+                
+                if (!types.Contains(fileType)) continue;
 
                 var cmf = TankHandler.GetContentManifestForAsset(asset.Key);
                 if (!cmf.TryGet(record.GUID, out var cmfData)) {
@@ -35,11 +41,6 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     continue;
                 }
                 
-                ushort fileType = teResourceGUID.Type(asset.Key);
-                if (fileType == 0x9C) continue;  // bundle
-                if (fileType == 0x77) continue;  // package
-                
-                if (!types.Contains(fileType)) continue;
                 if (contentHashes.Contains(cmfData.ContentKey)) continue;
 
                 if (fileType == 0x4) {
