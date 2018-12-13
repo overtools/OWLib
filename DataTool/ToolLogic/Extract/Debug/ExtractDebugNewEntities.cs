@@ -30,7 +30,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
                 var cmf = TankHandler.GetContentManifestForAsset(asset.Key);
                 if (!cmf.TryGet(record.GUID, out var cmfData)) {
-                    throw new FileNotFoundException();
+                    //throw new FileNotFoundException();
+                    // todo: wtf
+                    continue;
                 }
                 
                 ushort fileType = teResourceGUID.Type(asset.Key);
@@ -80,12 +82,13 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 throw new Exception("no output path");
             }
             
-            var contentHashes = GetContentHashes(@"D:\ow\resources\verdata\50951.cmfhashes");
+            var contentHashes = GetContentHashes(@"D:\ow\resources\verdata\52926.cmfhashes");
+            var guids = GetGUIDs(@"D:\ow\resources\verdata\52926.guids");
 
-            const string container = "DebugNewEntities";
+            const string container = "DebugNewEntities2";
             
             Combo.ComboInfo info = new Combo.ComboInfo();
-            AddNewByContentHash(info, contentHashes, 0x7C);
+            AddNewByGUID(info, guids, 0xC);
             
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, container), info);
             SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, container, "Sounds"), info);

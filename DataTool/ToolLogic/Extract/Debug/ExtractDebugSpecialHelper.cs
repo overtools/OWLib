@@ -15,9 +15,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
         
         public void SpecialHelper(ICLIFlags toolFlags) {
-            var guids = ExtractDebugNewEntities.GetGUIDs(@"D:\ow\resources\verdata\50951.guids");
+            var guids = ExtractDebugNewEntities.GetGUIDs(@"D:\ow\resources\verdata\52926.guids");
 
-            const Enum_BABC4175 lootboxType = Enum_BABC4175.Halloween;
+            const Enum_BABC4175 lootboxType = Enum_BABC4175.Winter;
 
             HashSet<ulong> addedUnlocks = new HashSet<ulong>();
             foreach (var progressionGuid in TrackedFiles[0x58]) {
@@ -43,7 +43,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             
             Console.Out.WriteLine("new ulong[] {");
             foreach (ulong addedUnlock in addedUnlocks) {
-                Console.Out.WriteLine($"    0x{addedUnlock:X8},");
+                Console.Out.WriteLine($"    0x{addedUnlock:X16},");
             }
             Console.Out.WriteLine("};");
         }

@@ -249,6 +249,7 @@ namespace DataTool.SaveLogic {
                     // Extension 1.3 - Effects
                     foreach (IMapPlaceable mapPlaceable in Effects.Placeables ?? Array.Empty<IMapPlaceable>())
                     {
+                        // todo: wtf
                     }
                 }
             }
