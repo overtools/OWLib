@@ -205,7 +205,7 @@ namespace DataTool.SaveLogic {
 
             foreach (EffectParser.SVCEInfo svceInfo in effectInfo.SVCEs) {
                 Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> instances = info.VoiceSets[effectInfo.VoiceSet].VoiceLineInstances;
-                if (instances.ContainsKey(svceInfo.VoiceStimulus)) {
+                if (instances?.ContainsKey(svceInfo.VoiceStimulus) == true) {
                     output[svceInfo.VoiceStimulus] = instances[svceInfo.VoiceStimulus];
                 }
             }
