@@ -1,11 +1,13 @@
-﻿using DataTool.Flag;
+﻿using System;
+using DataTool.Flag;
 
 namespace DataTool {
+    [Serializable]
     public class ToolFlags : ICLIFlags {
-        [CLIFlag(Flag = "directory", Positional = 0, Help = "Overwatch Directory")]
+        [CLIFlag(Flag = "directory", Positional = 0, NeedsValue = true, Required = true, Help = "Overwatch Directory")]
         public string OverwatchDirectory;
         
-        [CLIFlag(Flag = "mode", Positional = 1, Help = "Extraction Mode")]
+        [CLIFlag(Flag = "mode", Positional = 1, NeedsValue = true, Required = true, Help = "Extraction Mode")]
         public string Mode;
         
         [CLIFlag(Default = null, Flag = "language", Help = "Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" })]
@@ -25,6 +27,7 @@ namespace DataTool {
         public bool UseCache;
 
         [CLIFlag(Default = true, Flag = "cache-data", Help = "Cache Data files from CDN", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
+        // ReSharper disable once InconsistentNaming
         public bool CacheCDNData;
 
         [CLIFlag(Default = false, Flag = "validate-cache", Help = "Validate files from CDN", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]

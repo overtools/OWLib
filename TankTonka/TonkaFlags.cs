@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DataTool.Flag;
 
 namespace TankTonka {
+    [Serializable]
     public class TonkaFlags : ICLIFlags {
-        [CLIFlag(Flag = "directory", Positional = 0, Help = "Overwatch Directory", Required = true)]
+        [CLIFlag(Flag = "directory", Positional = 0, NeedsValue = true, Help = "Overwatch Directory", Required = true)]
         public string OverwatchDirectory;
         
         [CLIFlag(Default = null, Flag = "language", Help = "Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" })]

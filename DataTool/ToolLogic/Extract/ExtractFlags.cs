@@ -1,8 +1,10 @@
-﻿using DataTool.Flag;
+﻿using System;
+using DataTool.Flag;
 
 namespace DataTool.ToolLogic.Extract {
+    [Serializable]
     public class ExtractFlags : ICLIFlags {
-        [CLIFlag(Help = "Output path", Positional = 2, Required = true)]
+        [CLIFlag(Flag = "out-path", NeedsValue = true, Help = "Output path", Positional = 2, Required = true)]
         public string OutputPath;
         
         [CLIFlag(Default = "tif", Flag = "convert-textures-type", Help = "Texture output type", Valid = new[] { "dds", "tif", "tga", "png", "jpg", "hdr" })]
