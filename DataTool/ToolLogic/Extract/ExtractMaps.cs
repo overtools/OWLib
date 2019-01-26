@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -60,6 +61,7 @@ namespace DataTool.ToolLogic.Extract {
 
         public List<QueryType> QueryTypes => new List<QueryType> {new QueryType {Name = "MapFakeType"}};
         
+        [SuppressMessage("ReSharper", "StringLiteralTypo")]
         public static readonly Dictionary<string, string> MapMapping = new Dictionary<string, string> {
                                                                                                           ["horizon"] = "horizon lunar colony",
                                                                                                           ["moon"] = "horizon lunar colony",
