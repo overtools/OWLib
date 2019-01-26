@@ -119,8 +119,6 @@ namespace DataTool {
             if (targetTool == null) {
                 FlagParser.Help<ToolFlags>(false, new Dictionary<string, string>());
                 PrintHelp(false, tools);
-                if (Debugger.IsAttached) Debugger.Break();
-
                 return;
             }
 
@@ -143,8 +141,6 @@ namespace DataTool {
             Logger.Success("Core", $"Execution finished in {stopwatch.Elapsed} seconds");
 
             ShutdownMisc();
-
-            if (Debugger.IsAttached) Debugger.Break();
         }
 
         private static void HookConsole() {

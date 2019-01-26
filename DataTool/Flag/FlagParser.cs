@@ -13,7 +13,7 @@ namespace DataTool.Flag {
 
         public static string ArgFilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{AppDomain.CurrentDomain.FriendlyName}.args");
 
-        public static T Parse<T>() where T : ICLIFlags { return Parse<T>(null, AppArgs); }
+        public static T Parse<T>() where T : ICLIFlags => Parse<T>(null, AppArgs);
 
         public static void CheckCollisions(Type baseType, Action<string, string> OnCollision) {
             var type = typeof(ICLIFlags);
@@ -319,9 +319,12 @@ namespace DataTool.Flag {
                                        .OrderBy(x => x.attribute.Positional)
                                        .ToArray();
 
+            var positionalsField = default(FieldInfo);
+            var positionalsFixup = new List<(int, FieldInfo)>();
+            
             foreach (var (field, flagAttribute) in flagAttributes) {
                 if (flagAttribute.AllPositionals) {
-                    field.SetValue(instance, positionals.ToArray());
+                    positionalsField = field;
                     continue;
                 }
 
@@ -339,7 +342,7 @@ namespace DataTool.Flag {
                 var    insertedValue = false;
                 if (flagAttribute.Positional > -1) {
                     if (positionals.Count > flagAttribute.Positional) value = positionals[flagAttribute.Positional];
-                    if (presence.Contains(flagAttribute.Flag)) positionals.Insert(flagAttribute.Positional, string.Empty);
+                    if (presence.Contains(flagAttribute.Flag)) positionalsFixup.Add((flagAttribute.Positional, field));
                 }
 
                 if (!string.IsNullOrWhiteSpace(flagAttribute.Flag)) {
@@ -410,6 +413,14 @@ namespace DataTool.Flag {
                 } else if (field.FieldType.IsClass && field.FieldType.GetConstructor(Type.EmptyTypes) != null) {
                     field.SetValue(instance, Activator.CreateInstance(field.FieldType));
                 }
+            }
+
+            foreach (var (index, field) in positionalsFixup) {
+                positionals.Insert(index, field.GetValue(instance).ToString());
+            }
+
+            if (positionalsField != default) {
+                positionalsField.SetValue(instance, positionals.ToArray());
             }
 
             return instance;

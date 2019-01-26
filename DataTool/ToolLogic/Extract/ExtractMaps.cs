@@ -59,6 +59,16 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public List<QueryType> QueryTypes => new List<QueryType> {new QueryType {Name = "MapFakeType"}};
-        public Dictionary<string, string> QueryNameOverrides => new Dictionary<string, string>();
+        
+        public static readonly Dictionary<string, string> MapMapping = new Dictionary<string, string> {
+                                                                                                          ["horizon"] = "horizon lunar colony",
+                                                                                                          ["moon"] = "horizon lunar colony",
+                                                                                                          ["hlc"] = "horizon lunar colony",
+                                                                                                          ["anubis"] = "temple of anubis",
+                                                                                                          ["gibraltar"] = "watchpoint: gibraltar",
+                                                                                                          ["lijiang"] = "lijiang Tower"
+                                                                                                      };
+
+        public Dictionary<string, string> QueryNameOverrides => MapMapping;
     }
 }

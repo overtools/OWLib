@@ -623,7 +623,12 @@ namespace DataTool.FindLogic {
                     if (info.Materials.ContainsKey(guid) &&
                         (info.Materials[guid].MaterialIDs.Contains(context.MaterialID) || context.MaterialID == 0)) break;
                     // ^ break if material exists and has id, or id is 0
-                    teMaterial material = new teMaterial(OpenFile(guid));
+                    teMaterial material = null;
+                    try {
+                        material = new teMaterial(OpenFile(guid));
+                    } catch {
+                        break;
+                    }
 
                     MaterialInfo materialInfo;
                     if (!info.Materials.ContainsKey(guid)) {
