@@ -66,7 +66,16 @@ namespace DataTool.ToolLogic.Extract {
                                                                                                           ["hlc"] = "horizon lunar colony",
                                                                                                           ["anubis"] = "temple of anubis",
                                                                                                           ["gibraltar"] = "watchpoint: gibraltar",
-                                                                                                          ["lijiang"] = "lijiang Tower"
+                                                                                                          ["watchpoint"] = "watchpoint: gibraltar",
+                                                                                                          ["watchpoint gibraltar"] = "watchpoint: gibraltar",
+                                                                                                          ["lijiang"] = "lijiang tower",
+                                                                                                          ["estadio das ras"] = "estádio das rãs",
+                                                                                                          ["chateau guillard"] = "château guillard",
+                                                                                                          ["ecopoint"] = "ecopoint: antarctica",
+                                                                                                          ["antarctica"] = "ecopoint: antarctica",
+                                                                                                          ["ecopoint antarctica"] = "ecopoint: antarctica",
+                                                                                                          ["volskaya"] = "volskaya industries",
+                                                                                                          ["kings row"] = "king's row",
                                                                                                       };
 
         public Dictionary<string, string> QueryNameOverrides => MapMapping;
