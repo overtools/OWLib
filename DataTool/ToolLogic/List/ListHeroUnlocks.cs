@@ -4,6 +4,7 @@ using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.JSON;
 using TankLib.STU.Types;
+using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
@@ -61,6 +62,14 @@ namespace DataTool.ToolLogic.List {
                 }
                 if (!string.IsNullOrEmpty(unlock.AvailableIn)) {
                     Log($"{start}\t\t\t{unlock.AvailableIn}");
+                }
+
+                if (unlock.STU.m_0B1BA7C1 != null) {
+                    TeamDefinition teamDef = new TeamDefinition(unlock.STU.m_0B1BA7C1);
+                    Log($"{start}\t\t\tTeam: {teamDef.FullName}");
+                    #if DEBUG
+                    System.Diagnostics.Debug.Assert(teamDef.Division < Enum_5A789F71.x063F4077, "teamDef.Division >= Enum_5A789F71.x063F4077");
+                    #endif
                 }
             }
         }

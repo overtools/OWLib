@@ -59,7 +59,7 @@ namespace DataTool {
         public List<string> Values;
 
         public TagExpectedValue(params string[] args) {
-            Values = args.ToList();
+            Values = args.Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList();
         }
     }
 
