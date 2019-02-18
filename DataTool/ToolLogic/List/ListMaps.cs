@@ -6,7 +6,6 @@ using DataTool.Helper;
 using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
-using TankLib.STU.Types.Enums;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
@@ -31,6 +30,8 @@ namespace DataTool.ToolLogic.List {
 
                 if (!string.IsNullOrEmpty(data.Name)) Log($"{iD+1}Name: {data.Name}");
                 if (!string.IsNullOrEmpty(data.VariantName)) Log($"{iD+1}VariantName: {data.VariantName}");
+                if (!string.IsNullOrEmpty(data.Description)) Log($"{iD+1}Desc1: {data.Description}");
+                if (!string.IsNullOrEmpty(data.Description2)) Log($"{iD+1}Desc2: {data.Description2}");
                 Log($"{iD+1}Status: {data.State}");
                 Log($"{iD+1}Type: {data.MapType}");
 
@@ -50,7 +51,7 @@ namespace DataTool.ToolLogic.List {
                     foreach (teResourceGUID mode in data.GameModes) {
                         var stu = GetInstance<STUGameMode>(mode);
                         if (stu == null) continue;
-                        GameMode gameMode = new GameMode(stu);
+                        GameMode gameMode = new GameMode(stu, mode);
                         Console.Out.WriteLine($"{iD+2}{gameMode.DisplayName}");
                     }
                     //data.GameModes.ForEach(m => Log($"{iD+2}{m.Name}"));

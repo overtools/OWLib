@@ -16,7 +16,7 @@ namespace DataTool.ToolLogic.List {
                 STUGameMode gameMode = GetInstance<STUGameMode>(guid);
                 if (gameMode == null) continue;
 
-                gameModes.Add(new GameMode(gameMode));
+                gameModes.Add(new GameMode(gameMode, guid));
             }
 
             return gameModes;
@@ -34,7 +34,7 @@ namespace DataTool.ToolLogic.List {
 
             foreach (GameMode gameMode in gameModes) {
                 if (string.IsNullOrWhiteSpace(gameMode.DisplayName)) continue;
-                Log(gameMode.DisplayName);
+                Log($"{gameMode.DisplayName} ({gameMode.InternalName})");
             }
         }
     }
