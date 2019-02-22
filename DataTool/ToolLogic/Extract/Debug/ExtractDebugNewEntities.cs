@@ -82,14 +82,15 @@ namespace DataTool.ToolLogic.Extract.Debug {
             } else {
                 throw new Exception("no output path");
             }
-            
-            var contentHashes = GetContentHashes(@"D:\ow\resources\verdata\52926.cmfhashes");
-            var guids = GetGUIDs(@"D:\ow\resources\verdata\52926.guids");
+
+            const string ver = "54052";
+            var contentHashes = GetContentHashes($@"D:\ow\resources\verdata\{ver}.cmfhashes");
+            //var guids = GetGUIDs($@"D:\ow\resources\verdata\{ver}.guids");
 
             const string container = "DebugNewEntities2";
             
             Combo.ComboInfo info = new Combo.ComboInfo();
-            AddNewByGUID(info, guids, 0xC);
+            AddNewByContentHash(info, contentHashes, 0x4, 0x7C, 0x3F, 0xB2);
             
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, container), info);
             SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, container, "Sounds"), info);

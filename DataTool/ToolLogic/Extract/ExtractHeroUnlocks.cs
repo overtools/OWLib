@@ -218,7 +218,7 @@ namespace DataTool.ToolLogic.Extract {
                 
                 if (npc) {
                     foreach (var skin in hero.m_skinThemes) {
-                        if (!config.ContainsKey("skin") && config["skin"].ShouldDo(GetFileName(skin.m_5E9665E3)))
+                        if (!config.ContainsKey("skin") || !config["skin"].ShouldDo(GetFileName(skin.m_5E9665E3)))
                             continue;
                         SkinTheme.Save(flags, Path.Combine(heroPath, Unlock.GetTypeName(typeof(STUUnlock_SkinTheme)), 
                             string.Empty, GetFileName(skin.m_5E9665E3)), skin, hero);

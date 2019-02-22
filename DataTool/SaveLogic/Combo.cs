@@ -246,9 +246,11 @@ namespace DataTool.SaveLogic {
 
             if (convertModels) {
                 string modelPath = Path.Combine(modelDirectory, $"{modelInfo.GetNameIndex()}.owmdl");
-                CreateDirectoryFromFile(modelPath);
 
                 using (Stream modelStream = OpenFile(modelInfo.GUID)) {
+                    if (modelStream == null) return;
+                    CreateDirectoryFromFile(modelPath);
+                    
                     teChunkedData chunkedData = new teChunkedData(modelStream);
                     
                     OverwatchModel model = new OverwatchModel(chunkedData, modelInfo.GUID, (sbyte)lod);
@@ -374,6 +376,7 @@ namespace DataTool.SaveLogic {
             string thisPath = Path.Combine(path, GetFileName(voiceSet));
 
             FindLogic.Combo.VoiceSetInfo voiceSetInfo = info.VoiceSets[voiceSet];
+            if (voiceSetInfo.VoiceLineInstances == null) return;
             foreach (KeyValuePair<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> stimuliSet in voiceSetInfo.VoiceLineInstances) {
                 SaveVoiceStimuliInternal(flags, thisPath, info, stimuliSet.Value, true);
             }
@@ -637,6 +640,9 @@ namespace DataTool.SaveLogic {
             
             FindLogic.Combo.SoundFileInfo soundFileInfo = voice ? info.VoiceSoundFiles[soundFile] : info.SoundFiles[soundFile];
 
+            if (soundFile == 0x7C00000000AA0FB) {
+                
+            }
             using (Stream soundStream = OpenFile(soundFile)) {
                 if (soundStream == null) return;
 

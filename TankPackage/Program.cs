@@ -139,7 +139,7 @@ namespace TankPackage
             for (int i = 0; i < apm.PackageEntries.Length; ++i)
             {
                 PackageEntry entry = apm.PackageEntries[i];
-                if (!guids.Contains(teResourceGUID.LongKey(entry.PackageGUID)) && !guids.Contains(teResourceGUID.Index(entry.PackageGUID))) continue;
+                if (!guids.Contains(teResourceGUID.LongKey(entry.PackageGUID)) && !guids.Contains(teResourceGUID.Index(entry.PackageGUID)) && !guids.Contains(entry.PackageGUID)) continue;
                 packages[entry.PackageGUID] = apm.Packages[i];
                 records[entry.PackageGUID] = apm.Records[i];
             }
