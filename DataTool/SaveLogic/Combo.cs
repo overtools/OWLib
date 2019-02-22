@@ -640,9 +640,6 @@ namespace DataTool.SaveLogic {
             
             FindLogic.Combo.SoundFileInfo soundFileInfo = voice ? info.VoiceSoundFiles[soundFile] : info.SoundFiles[soundFile];
 
-            if (soundFile == 0x7C00000000AA0FB) {
-                
-            }
             using (Stream soundStream = OpenFile(soundFile)) {
                 if (soundStream == null) return;
 
