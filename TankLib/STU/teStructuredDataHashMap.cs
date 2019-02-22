@@ -36,7 +36,8 @@ namespace TankLib.STU {
                 } else {
                     if (value < assetFile.Instances.Length) {
                         STUInstance stuType = assetFile.Instances[value];
-                        if (stuType != null) stuType.Usage = TypeUsage.HashMap;
+                        if (stuType == null) continue;
+                        stuType.Usage = TypeUsage.HashMap;
 
                         if (stuType is T casted) Add(key, casted);
                         else
