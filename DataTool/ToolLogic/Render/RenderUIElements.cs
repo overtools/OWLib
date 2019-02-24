@@ -19,7 +19,7 @@ namespace DataTool.ToolLogic.Render {
         private Dictionary<Type, string> TargetMap = new Dictionary<Type, string>();
         
         public object Print(object instance, HashSet<object> visited, IndentHelperBase indent, string fieldName) {
-            var hmlNameTag = fieldName == null ? "" : $"hml:name=\"{fieldName}\"";
+            var hmlNameTag = fieldName == null ? "" : $" hml:name=\"{fieldName}\"";
 
             try {
                 if (!TargetMap.TryGetValue(instance.GetType(), out var target)) {
