@@ -11,6 +11,9 @@ namespace DataTool.DataModels {
     public class MapHeader {
         [DataMember]
         public string Name;
+
+        [DataMember]
+        public string MapName;
         
         [DataMember]
         public string Description;
@@ -35,6 +38,7 @@ namespace DataTool.DataModels {
 
         public MapHeader(STUMapHeader mapHeader) {
             Name = GetString(mapHeader.m_displayName);
+            MapName = mapHeader.m_mapName;
             VariantName = GetString(mapHeader.m_1C706502);
             Description = GetString(mapHeader.m_389CB894);
             Description2 = GetString(mapHeader.m_ACB95597);

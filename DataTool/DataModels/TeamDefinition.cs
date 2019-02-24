@@ -11,10 +11,10 @@ namespace DataTool.DataModels {
     [DataContract]
     public class TeamDefinition {
         [DataMember]
-        public string FullName;
+        public string Name;
         
         [DataMember]
-        public string Name;
+        public string FullName;
         
         [DataMember]
         public string Location;
