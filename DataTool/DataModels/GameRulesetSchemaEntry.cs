@@ -42,8 +42,8 @@ namespace DataTool.DataModels {
         
         private class RulesetValue_Switch : GenericRulesetValue {
             public string Name = "RulesetValue_Switch";
-            public string Option1;
-            public string Option2;
+            public string On;
+            public string Off;
             public int Default;
         }
         
@@ -68,8 +68,8 @@ namespace DataTool.DataModels {
                     };
                 case STU_8A8AA0A4 val2:
                     return new RulesetValue_Switch {
-                        Option1 = GetString(val2.m_9EC1DF9A),
-                        Option2 = GetString(val2.m_03613078),
+                        On = GetString(val2.m_9EC1DF9A),
+                        Off = GetString(val2.m_03613078),
                         Default = val2.m_default
                     };
                 case STU_776E5ADD val2:
