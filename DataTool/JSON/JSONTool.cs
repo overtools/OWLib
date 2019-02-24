@@ -22,7 +22,9 @@ namespace DataTool.JSON {
 
                 CreateDirectoryFromFile(toolFlags.Output);
 
-                using (Stream file = File.OpenWrite(toolFlags.Output)) {
+                var fileName = !toolFlags.Output.EndsWith(".json") ? $"{toolFlags.Output}.json" : toolFlags.Output; 
+
+                using (Stream file = File.OpenWrite(fileName)) {
                     file.SetLength(0);
                     file.Write(pretty, 0, pretty.Length);
                 }
