@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DataTool.DataModels;
+using DataTool.DataModels.Chat;
 using DataTool.Flag;
 using DataTool.JSON;
 using TankLib.STU.Types;
