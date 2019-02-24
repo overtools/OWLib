@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using System.Runtime.Serialization;
 using TankLib;
 using TankLib.Math;
@@ -8,7 +7,7 @@ using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
-namespace DataTool.DataModels {
+namespace DataTool.DataModels.Hero {
     [DataContract]
     public class Hero {
         [DataMember]
@@ -30,7 +29,7 @@ namespace DataTool.DataModels {
         public List<Loadout> Loadouts;
         
         [DataMember]
-        public List<HeroSkinTheme> SkinThemes;
+        public List<SkinTheme> SkinThemes;
 
         public Hero(STUHero hero) {
             Name = GetString(hero.m_0EDCE350);
@@ -56,25 +55,6 @@ namespace DataTool.DataModels {
                     Loadouts.Add(new Loadout(stuLoadout));
                 }
             }
-        }
-    }
-
-    [DataContract]
-    public class HeroSkinTheme {
-        [DataMember]
-        public teResourceGUID SkinTheme;
-        
-        [DataMember]
-        public teResourceGUID Skin;
-        
-        [DataMember]
-        public teResourceGUID[] HeroWeapons;
-
-        public HeroSkinTheme(STU_63172E83 skinTheme) {
-            SkinTheme = skinTheme.m_5E9665E3;
-            Skin = skinTheme.m_0029461B;
-
-            HeroWeapons = Helper.JSON.FixArray(skinTheme.m_heroWeapons);
         }
     }
 }

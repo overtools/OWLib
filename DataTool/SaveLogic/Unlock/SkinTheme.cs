@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using DataTool.DataModels;
+using DataTool.DataModels.Hero;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib;

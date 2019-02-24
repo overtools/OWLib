@@ -1,13 +1,11 @@
 ﻿using System.Runtime.Serialization;
 using DataTool.Helper;
-using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
-using Utf8Json;
 using static DataTool.Helper.IO;
 
-namespace DataTool.DataModels {
+namespace DataTool.DataModels.Hero {
     [DataContract]
     public class Loadout {
         [DataMember]

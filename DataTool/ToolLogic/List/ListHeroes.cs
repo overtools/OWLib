@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DataTool.DataModels;
+using DataTool.DataModels.Hero;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
