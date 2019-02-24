@@ -68,7 +68,7 @@ namespace DataTool.ToolLogic.List {
                     TeamDefinition teamDef = new TeamDefinition(unlock.STU.m_0B1BA7C1);
                     Log($"{start}\t\t\tTeam: {teamDef.FullName}");
                     #if DEBUG
-                    System.Diagnostics.Debug.Assert(teamDef.Division < Enum_5A789F71.x063F4077, "teamDef.Division >= Enum_5A789F71.x063F4077");
+                    System.Diagnostics.Debug.Assert(teamDef.Division < Enum_5A789F71.WorldCup, "teamDef.Division >= Enum_5A789F71.x063F4077");
                     #endif
                 }
             }

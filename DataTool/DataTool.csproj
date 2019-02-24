@@ -193,7 +193,7 @@
     <Compile Include="ToolLogic\List\ListResourceKeys.cs" />
     <Compile Include="ToolLogic\List\ListMaps.cs" />
     <Compile Include="ToolLogic\List\ListGameModes.cs" />
-    <Compile Include="ToolLogic\List\ListOwlTeams.cs" />
+    <Compile Include="ToolLogic\List\ListEsportsTeams.cs" />
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
     <Compile Include="ToolLogic\List\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
