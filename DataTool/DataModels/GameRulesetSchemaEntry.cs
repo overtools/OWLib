@@ -55,7 +55,7 @@ namespace DataTool.DataModels {
         
         private class RulesetValue_SelectOption {
             public string Name;
-            public string Id;
+            public string GUID;
         }
         
         private static GenericRulesetValue GetRulesetValue(STU_848957AF value) {
@@ -77,7 +77,7 @@ namespace DataTool.DataModels {
                         Default = val2.m_default.ToString(),
                         Options = val2.m_3FE1EA9E.Select(x => new RulesetValue_SelectOption {
                             Name = GetString(x.m_displayText),
-                            Id = x.m_identifier.ToString()
+                            GUID = x.m_identifier.ToString()
                         })
                     };
                 case STU_A499C365 val3:

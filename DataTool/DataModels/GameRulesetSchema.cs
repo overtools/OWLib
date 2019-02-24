@@ -9,7 +9,7 @@ namespace DataTool.DataModels {
     [DataContract]
     public class GameRulesetSchema {
         [DataMember]
-        public string Id;
+        public string GUID;
         
         [DataMember]
         public string Name;
@@ -18,7 +18,7 @@ namespace DataTool.DataModels {
         public IEnumerable<GameRulesetSchemaEntry> Entries;
         
         public GameRulesetSchema(STUGameRulesetSchema ruleset, ulong key) {
-            Id = teResourceGUID.AsString(key);
+            GUID = teResourceGUID.AsString(key);
             Name = GetString(ruleset.m_displayText);
             Entries = ruleset.m_entries != null ? ruleset.m_entries.Select(x => new GameRulesetSchemaEntry(x)) : Enumerable.Empty<GameRulesetSchemaEntry>();
         }
