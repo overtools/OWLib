@@ -1,40 +1,52 @@
-﻿using System;
-using System.Linq;
+﻿using System.Collections.Generic;
+using DataTool.DataModels;
 using DataTool.Flag;
+using DataTool.Helper;
+using DataTool.JSON;
 using TankLib.STU.Types;
 using static DataTool.Program;
+using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-chat-settings", Description = "List chat settings", CustomFlags = typeof(ListFlags))]
-    public class ListChatSettings : ITool {
+    public class ListChatSettings : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
-            foreach (ulong key in TrackedFiles[0x54]) {
-                STUGenericSettings_Chat chat = GetInstance<STUGenericSettings_Chat>(key);
-                if (chat == null) continue;
+            var chatData = GetChatData();
+            
+            if (toolFlags is ListFlags flags)
+                if (flags.JSON) {
+                    OutputJSON(chatData, flags);
+                    return;
+                }
 
-                Console.Out.WriteLine("Chat Channels:");
-                foreach (STUChatChannelDefinition chatChannel in chat.m_chatChannels) {
-                    Console.Out.WriteLine($"    {GetString(chatChannel.m_chatChannelName)}:");
-                    Console.Out.WriteLine($"        Type: {chatChannel.m_chatChannelType}");
-                    
-                    //Error = 1,
-                    //System = 2,
-                    //Whisper = 3,
-                    //Group = 4,
-                    //Team = 5,
-                    //Match = 6,
-                    //General = 7
-                }
-                
-                Console.Out.WriteLine("\r\nChat Commands:");
-                foreach (STUChatCommand chatCommand in chat.m_chatCommands) {
-                    Console.Out.WriteLine($"    {GetString(chatCommand.m_4CED72F5)}:");
-                    Console.Out.WriteLine($"        Description: {GetString(chatCommand.m_commandDescription)}");
-                    Console.Out.WriteLine($"        Aliases: {string.Join(", ", chatCommand.m_chatCommandAliases.Select(x => GetString(x)))}");
-                }
+            foreach (var chatGroup in chatData) {
+               Log("Channels:");
+               foreach (var channel in chatGroup.Channels) {
+                   Log($"\t{channel.Name} ({channel.Type})");
+               }
+               
+               Log("Commands:");
+               foreach (var command in chatGroup.Commands) {
+                   Log($"\t{command.Name} ({command.Type})");
+                   Log($"\t\t{command.Description}");
+                   Log($"\t\t{string.Join(", ", command.Aliases)}");
+               }
             }
+        }
+
+        private static List<ChatSettings> GetChatData() {
+            var chatSettings = new List<ChatSettings>();
+            
+            foreach (ulong key in TrackedFiles[0x54]) {
+                STUGenericSettings_Chat chatGroup = GetInstance<STUGenericSettings_Chat>(key);
+                if (chatGroup == null) continue;
+
+                var chat = new ChatSettings(chatGroup);
+                chatSettings.Add(chat);
+            }
+
+            return chatSettings;
         }
     }
 }
