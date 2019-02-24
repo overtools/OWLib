@@ -102,6 +102,8 @@
     <Compile Include="DataModels\Achievement.cs" />
     <Compile Include="DataModels\ChatSettings.cs" />
     <Compile Include="DataModels\GameMode.cs" />
+    <Compile Include="DataModels\GameRulesetSchema.cs" />
+    <Compile Include="DataModels\GameRulesetSchemaEntry.cs" />
     <Compile Include="DataModels\LootBox.cs" />
     <Compile Include="DataModels\MapHeader.cs" />
     <Compile Include="DataModels\PlayerProgression.cs" />

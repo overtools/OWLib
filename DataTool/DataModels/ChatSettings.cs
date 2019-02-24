@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using TankLib;
 using TankLib.Math;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
