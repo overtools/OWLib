@@ -52,7 +52,7 @@ namespace DataTool.ToolLogic.List {
                         var stu = GetInstance<STUGameMode>(mode);
                         if (stu == null) continue;
                         GameMode gameMode = new GameMode(stu, mode);
-                        Console.Out.WriteLine($"{iD+2}{gameMode.DisplayName}");
+                        Console.Out.WriteLine($"{iD+2}{gameMode.Name}");
                     }
                     //data.GameModes.ForEach(m => Log($"{iD+2}{m.Name}"));
                 }

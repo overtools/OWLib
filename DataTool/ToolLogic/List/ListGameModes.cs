@@ -33,8 +33,8 @@ namespace DataTool.ToolLogic.List {
 
 
             foreach (GameMode gameMode in gameModes) {
-                if (string.IsNullOrWhiteSpace(gameMode.DisplayName)) continue;
-                Log($"{gameMode.DisplayName} ({gameMode.InternalName})");
+                if (string.IsNullOrWhiteSpace(gameMode.Name)) continue;
+                Log($"{gameMode.Name} ({gameMode.InternalName})");
             }
         }
     }
