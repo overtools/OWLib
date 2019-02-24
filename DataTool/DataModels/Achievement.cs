@@ -10,6 +10,9 @@ namespace DataTool.DataModels {
         public string Name;
         
         [DataMember]
+        public string AchievementName;
+        
+        [DataMember]
         public string Description;
         
         [DataMember]
@@ -26,6 +29,7 @@ namespace DataTool.DataModels {
 
         public Achievement(STUAchievement achievement) {
             Name = GetString(achievement.m_name);
+            AchievementName = achievement.m_4E291DCC.Value;
             Description = GetString(achievement.m_description);
 
             Trophy = achievement.m_trophy;
