@@ -42,7 +42,7 @@ namespace DataTool.ToolLogic.List {
                 var rulesetSchema = GetInstance<STUGameRulesetSchema>(key);
                 if (rulesetSchema == null) continue;
 
-                var ruleset = new GameRulesetSchema(rulesetSchema);
+                var ruleset = new GameRulesetSchema(rulesetSchema, key);
                 gameRulesets.Add(ruleset);
             }
 
