@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace TankLib.STU {
     /// <summary>Instance usage</summary>
@@ -29,6 +30,7 @@ namespace TankLib.STU {
     /// <summary>Base STU instance class</summary>
     public class STUInstance : ISerializable_STU {
         /// <summary>Instance usage</summary>
+        [IgnoreDataMember]
         public TypeUsage Usage = TypeUsage.Root;
 
         /// <summary>Read a specified STU field</summary>

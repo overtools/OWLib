@@ -218,7 +218,7 @@ namespace DataTool.Flag {
             if (!(Activator.CreateInstance(iface) is T instance)) return null;
 
             var presence         = new HashSet<string>();
-            var positionals      = new List<string>();
+            var positionals      = new List<object>();
             var values           = new Dictionary<string, string>();
             var dictionaryValues = new Dictionary<string, Dictionary<string, string>>();
             var arrayValues      = new Dictionary<string, List<string>>();
@@ -313,6 +313,7 @@ namespace DataTool.Flag {
                     positionals.Add(arg);
                 }
             }
+            
 
             var flagAttributes = fields.Select(x => (field: x, attribute: x.GetCustomAttribute<CLIFlagAttribute>(true)))
                                        .Where(x => x.attribute != null)
@@ -320,7 +321,19 @@ namespace DataTool.Flag {
                                        .ToArray();
 
             var positionalsField = default(FieldInfo);
-            var positionalsFixup = new List<(int, FieldInfo)>();
+            
+            
+            var newPositionals = new List<object>(Enumerable.Repeat(default(object), Math.Max(0, flagAttributes.Max(x => x.attribute.Positional) + 1)));
+
+            var positionalTicker = 0;
+            foreach (var (field, flagAttribute) in flagAttributes.Where(x => x.attribute.Positional > -1)) {
+                if (!field.GetCustomAttributes<AliasAttribute>().Select(x => x.Alias).Concat(new[] {flagAttribute.Flag}).Any(x => presence.Contains(x))) {
+                    newPositionals[flagAttribute.Positional] = positionals.ElementAtOrDefault(positionalTicker);
+                    positionalTicker += 1;
+                }
+            }
+
+            positionals = newPositionals;
             
             foreach (var (field, flagAttribute) in flagAttributes) {
                 if (flagAttribute.AllPositionals) {
@@ -340,10 +353,7 @@ namespace DataTool.Flag {
                 var    value         = flagAttribute.Default;
                 object key           = string.Empty;
                 var    insertedValue = false;
-                if (flagAttribute.Positional > -1) {
-                    if (positionals.Count > flagAttribute.Positional) value = positionals[flagAttribute.Positional];
-                    if (presence.Contains(flagAttribute.Flag)) positionalsFixup.Add((flagAttribute.Positional, field));
-                }
+                if (flagAttribute.Positional > -1 && positionals.Count > flagAttribute.Positional && positionals[flagAttribute.Positional] != null) value = positionals[flagAttribute.Positional] ?? value;
 
                 if (!string.IsNullOrWhiteSpace(flagAttribute.Flag)) {
                     if (!presence.Contains(flagAttribute.Flag)) {
@@ -366,6 +376,10 @@ namespace DataTool.Flag {
                         else if (kind == FieldKind.Dictionary)
                             value                               = dictionaryValues[flagAttribute.Flag];
                         else if (kind == FieldKind.Array) value = arrayValues[flagAttribute.Flag];
+                    }
+
+                    if (flagAttribute.Positional > 0) {
+                        
                     }
                 }
 
@@ -415,12 +429,8 @@ namespace DataTool.Flag {
                 }
             }
 
-            foreach (var (index, field) in positionalsFixup) {
-                positionals.Insert(index, field.GetValue(instance).ToString());
-            }
-
             if (positionalsField != default) {
-                positionalsField.SetValue(instance, positionals.ToArray());
+                positionalsField.SetValue(instance, positionals.Select(x => x?.ToString()).ToArray());
             }
 
             return instance;

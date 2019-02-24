@@ -221,6 +221,10 @@
       <Project>{9793cb2e-094a-41c9-81bc-27e60620538d}</Project>
       <Name>BCFF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HealingML\HealingML\HealingML.csproj">
+      <Project>{939e5d93-09b7-4bad-8f28-1f204a58bbc4}</Project>
+      <Name>HealingML</Name>
+    </ProjectReference>
     <ProjectReference Include="..\revorbstd\RevorbStd.csproj">
       <Project>{c3130ece-02d9-4be6-9883-75351822e7de}</Project>
       <Name>RevorbStd</Name>
