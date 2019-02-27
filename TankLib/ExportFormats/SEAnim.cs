@@ -62,9 +62,11 @@ namespace TankLib.ExportFormats {
         }
 
         public teAnimation Animation;
+        private bool ScaleAnims;
 
-        public SEAnim(teAnimation animation) {
+        public SEAnim(teAnimation animation, bool scaleAnims) {
             Animation = animation;
+            ScaleAnims = scaleAnims;
         }
         
         public void Write(Stream stream) {
@@ -118,7 +120,12 @@ namespace TankLib.ExportFormats {
                     writer.Write((byte)0);
 
                     if (everHas.HasFlag(SEAnimPresence.BoneLocation)) {
-                        WriteFrames3D(writer, frameWidth, boneAnimation.Positions, 2.54f);
+                        float scale = 1.0f;
+
+                        if (ScaleAnims) {
+                            scale = 2.54f;
+                        }
+                        WriteFrames3D(writer, frameWidth, boneAnimation.Positions, scale);
                     }
 
                     if (everHas.HasFlag(SEAnimPresence.BoneRotation)) {
