@@ -77,14 +77,14 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void ConvertAnimation(Stream animStream, string path, bool convertAnims, FindLogic.Combo.AnimationInfoNew animationInfo) {
+        private static void ConvertAnimation(Stream animStream, string path, bool convertAnims, FindLogic.Combo.AnimationInfoNew animationInfo, bool scaleAnims) {
             teAnimation parsedAnimation = new teAnimation(animStream, true);
 
             string animationDirectory =
                 Path.Combine(path, "Animations", parsedAnimation.Header.Priority.ToString());
 
             if (convertAnims) {
-                SEAnim seAnim = new SEAnim(parsedAnimation);
+                SEAnim seAnim = new SEAnim(parsedAnimation, scaleAnims);
                 string animOutput = Path.Combine(animationDirectory,
                     animationInfo.GetNameIndex() + "." + seAnim.Extension);
                 CreateDirectoryFromFile(animOutput);
@@ -115,7 +115,9 @@ namespace DataTool.SaveLogic {
         public static void SaveAnimation(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong animation,
             ulong model) {
             bool convertAnims = false;
+            bool scaleAnims = false;
             if (flags is ExtractFlags extractFlags) {
+                scaleAnims = extractFlags.ScaleAnims;
                 convertAnims = extractFlags.ConvertAnimations && !extractFlags.Raw;
                 if (extractFlags.SkipAnimations) return;
             }
@@ -124,7 +126,7 @@ namespace DataTool.SaveLogic {
 
             using (Stream animStream = OpenFile(animation)) {
                 if (animStream == null) return;
-                ConvertAnimation(animStream, path, convertAnims, animationInfo);
+                ConvertAnimation(animStream, path, convertAnims, animationInfo, scaleAnims);
             }
 
             if (!info.SaveConfig.SaveAnimationEffects) return;
