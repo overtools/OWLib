@@ -49,7 +49,7 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = true, Flag = "spc-spray", Help = "", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
         public bool SprayOnlyImage;
         
-        [CLIFlag(Default = true, Flag = "scale-anims", Help = "set to true for Blender 2.79, false for Maya and when Blender SEAnim tools are updated for 2.8", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = true, Flag = "scale-anims", Help = "set to true for Blender 2.79, false for Maya and when Blender SEAnim tools are updated for 2.8", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
         public bool ScaleAnims;
 
         // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
