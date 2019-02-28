@@ -13,30 +13,11 @@ using TankLib.STU;
 using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool.ToolLogic.Render {
-    public class teResourceGUIDSerializer : ISerializer {
-        public SerializationTarget OverrideTarget => SerializationTarget.Object;
-        
-        private Dictionary<Type, string> TargetMap = new Dictionary<Type, string>();
-        
-        public object Print(object instance, HashSet<object> visited, IndentHelperBase indent, string fieldName) {
-            var hmlNameTag = fieldName == null ? "" : $" hml:name=\"{fieldName}\"";
-
-            try {
-                if (!TargetMap.TryGetValue(instance.GetType(), out var target)) {
-                    target = instance.GetType().GenericTypeArguments.First().Name;
-                }
-                return $"{indent}<tank:ref hml:id=\"{instance.GetHashCode()}\"{hmlNameTag} GUID=\"{instance}\" Target=\"{target}\"/>\n";
-            } catch {
-                return null;
-            }
-        }
-    }
-    
-    [Tool("render-ui-elements", Description = "Render UI elements", CustomFlags = typeof(RenderFlags), IsSensitive = true)]
-    public class RenderUIElements : ITool {
+    [Tool("render-statescript", Description = "Dump statescript to HML", CustomFlags = typeof(RenderFlags), IsSensitive = true)]
+    public class RenderStateScript : ITool {
         public void Parse(ICLIFlags toolFlags) {
             var flags = (RenderFlags) toolFlags;
-            var output = Path.Combine(flags.OutputPath, "UI", "Render");
+            var output = Path.Combine(flags.OutputPath, "Statescript", "HML");
             var settings = new JsonSerializerSettings {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 PreserveReferencesHandling = PreserveReferencesHandling.None,
@@ -53,7 +34,7 @@ namespace DataTool.ToolLogic.Render {
                 {typeof(teStructuredDataAssetRef<>), new teResourceGUIDSerializer()}
             };
 
-            foreach (var type in new ushort[] {0x5E, 0x5A, 0x45}) {
+            foreach (var type in new ushort[] {0x1B}) {
                 if (!Directory.Exists(Path.Combine(output, type.ToString("X3")))) {
                     Directory.CreateDirectory(Path.Combine(output, type.ToString("X3")));
                 }

@@ -201,6 +201,7 @@
     <Compile Include="ToolLogic\List\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
     <Compile Include="ToolLogic\Render\RenderFlags.cs" />
+    <Compile Include="ToolLogic\Render\RenderStateScript.cs" />
     <Compile Include="ToolLogic\Render\RenderUIElements.cs" />
     <Compile Include="WPF\DataToolWpfException.cs" />
     <Compile Include="WPF\ImagingHelper.cs" />
