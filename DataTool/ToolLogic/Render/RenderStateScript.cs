@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
-using DataTool.JSON;
 using HealingML;
 using TankLib;
-using Newtonsoft.Json;
 using TankLib.Helpers;
 using TankLib.STU;
 using Logger = TankLib.Helpers.Logger;
@@ -18,14 +15,6 @@ namespace DataTool.ToolLogic.Render {
         public void Parse(ICLIFlags toolFlags) {
             var flags = (RenderFlags) toolFlags;
             var output = Path.Combine(flags.OutputPath, "Statescript", "HML");
-            var settings = new JsonSerializerSettings {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                PreserveReferencesHandling = PreserveReferencesHandling.None,
-                TypeNameHandling = TypeNameHandling.All
-            };
-            settings.Converters.Add(new teResourceGUID_Newtonsoft());
-            settings.Converters.Add(new ulong_Newtonsoft());
-            settings.Converters.Add(new long_Newtonsoft());
             if (!Directory.Exists(output)) {
                 Directory.CreateDirectory(output);
             }
@@ -34,7 +23,7 @@ namespace DataTool.ToolLogic.Render {
                 {typeof(teStructuredDataAssetRef<>), new teResourceGUIDSerializer()}
             };
 
-            foreach (var type in new ushort[] {0x1B}) {
+            foreach (var type in new ushort[] {0x3B, 0x5C, 0x1B, 0xC6, 0xC0, 0x3}) {
                 if (!Directory.Exists(Path.Combine(output, type.ToString("X3")))) {
                     Directory.CreateDirectory(Path.Combine(output, type.ToString("X3")));
                 }

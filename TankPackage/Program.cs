@@ -28,6 +28,7 @@ namespace TankPackage
             {
                 return;
             }
+            var f = Flags;
             
             InitStorage();
             InitMisc();

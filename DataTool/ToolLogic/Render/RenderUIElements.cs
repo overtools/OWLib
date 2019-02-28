@@ -4,10 +4,8 @@ using System.IO;
 using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
-using DataTool.JSON;
 using HealingML;
 using TankLib;
-using Newtonsoft.Json;
 using TankLib.Helpers;
 using TankLib.STU;
 using Logger = TankLib.Helpers.Logger;
@@ -16,14 +14,16 @@ namespace DataTool.ToolLogic.Render {
     public class teResourceGUIDSerializer : ISerializer {
         public SerializationTarget OverrideTarget => SerializationTarget.Object;
         
-        private Dictionary<Type, string> TargetMap = new Dictionary<Type, string>();
+        private readonly Dictionary<Type, string> TargetMap = new Dictionary<Type, string>();
         
-        public object Print(object instance, HashSet<object> visited, IndentHelperBase indent, string fieldName) {
+        public object Print(object instance, IReadOnlyDictionary<Type, ISerializer> custom, HashSet<object> visited, IndentHelperBase indent, string fieldName) {
             var hmlNameTag = fieldName == null ? "" : $" hml:name=\"{fieldName}\"";
 
             try {
+                // ReSharper disable once InvertIf
                 if (!TargetMap.TryGetValue(instance.GetType(), out var target)) {
                     target = instance.GetType().GenericTypeArguments.First().Name;
+                    TargetMap[instance.GetType()] = target;
                 }
                 return $"{indent}<tank:ref hml:id=\"{instance.GetHashCode()}\"{hmlNameTag} GUID=\"{instance}\" Target=\"{target}\"/>\n";
             } catch {
@@ -37,14 +37,6 @@ namespace DataTool.ToolLogic.Render {
         public void Parse(ICLIFlags toolFlags) {
             var flags = (RenderFlags) toolFlags;
             var output = Path.Combine(flags.OutputPath, "UI", "Render");
-            var settings = new JsonSerializerSettings {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                PreserveReferencesHandling = PreserveReferencesHandling.None,
-                TypeNameHandling = TypeNameHandling.All
-            };
-            settings.Converters.Add(new teResourceGUID_Newtonsoft());
-            settings.Converters.Add(new ulong_Newtonsoft());
-            settings.Converters.Add(new long_Newtonsoft());
             if (!Directory.Exists(output)) {
                 Directory.CreateDirectory(output);
             }
