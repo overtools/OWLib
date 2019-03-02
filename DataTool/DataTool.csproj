@@ -100,6 +100,7 @@
     <Compile Include="ConvertLogic\LUT.cs" />
     <Compile Include="ConvertLogic\Sound.cs" />
     <Compile Include="DataModels\Achievement.cs" />
+    <Compile Include="DataModels\ArcadeMode.cs" />
     <Compile Include="DataModels\Chat\ChatChannel.cs" />
     <Compile Include="DataModels\Chat\ChatCommand.cs" />
     <Compile Include="DataModels\Chat\ChatSettings.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="ToolLogic\Extract\ExtractNPCs.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugHeroSettings.cs" />
     <Compile Include="ToolLogic\List\ListAchievements.cs" />
+    <Compile Include="ToolLogic\List\ListArcadeModes.cs" />
     <Compile Include="ToolLogic\List\ListChatSettings.cs" />
     <Compile Include="ToolLogic\List\ListGameParams.cs" />
     <Compile Include="ToolLogic\List\ListFlags.cs" />
