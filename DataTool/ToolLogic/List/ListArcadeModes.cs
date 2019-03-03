@@ -34,9 +34,13 @@ namespace DataTool.ToolLogic.List {
 
         private static List<ArcadeMode> GetData() {
             var arcades = new List<ArcadeMode>();
-            
-            foreach (ulong key in TrackedFiles[0xEE])
-                arcades.Add(new ArcadeMode(key));
+
+            foreach (ulong key in TrackedFiles[0xEE]) {
+                var arcade = new ArcadeMode(key);
+                
+                if (arcade.GUID != 0)
+                    arcades.Add(arcade);
+            }
 
             return arcades;
         }
