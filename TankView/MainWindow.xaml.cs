@@ -348,6 +348,11 @@ namespace TankView {
             
             HasShown = true;
 
+            if (Debugger.IsAttached) {
+                IsEnabled = true;
+                return;
+            }
+            
             new AboutPage(this).Show();
             Hide();
         }
