@@ -162,10 +162,31 @@ namespace TankView.ViewModel {
             }
         }
 
+        private string _orderBy = "FileName";
+        private bool _orderDescending = true;
+
+        public void OrderBy(string orderBy, ListSortDirection direction) {
+            _orderBy = orderBy;
+            _orderDescending = direction == ListSortDirection.Descending;
+            NotifyPropertyChanged(nameof(SelectedEntries));
+        }
+
         private List<GUIDEntry> _selected = null;
 
         public List<GUIDEntry> SelectedEntries {
-            get => !string.IsNullOrWhiteSpace(searchQuery) ? _selected.Where(x => CultureInfo.CurrentUICulture.CompareInfo.IndexOf(x.Filename, searchQuery, CompareOptions.IgnoreCase | CompareOptions.IgnoreSymbols | CompareOptions.IgnoreWidth) > -1).ToList() : _selected;
+            get {
+                var selectedWithSearch = !string.IsNullOrWhiteSpace(searchQuery) ? _selected.Where(x => CultureInfo.CurrentUICulture.CompareInfo.IndexOf(x.Filename, searchQuery, CompareOptions.IgnoreCase | CompareOptions.IgnoreSymbols | CompareOptions.IgnoreWidth) > -1).ToList() : _selected;
+
+                switch (_orderBy) {
+                    case "Size":
+                        return selectedWithSearch.OrderByWithDirection(x => x.Size, _orderDescending).ToList();
+                    case "FileName":
+                        return selectedWithSearch.OrderByWithDirection(x => x.GUID, _orderDescending).ToList();
+                    case "#":
+                    default:
+                        return selectedWithSearch;
+                }
+            }
             set {
                 _selected = value.OrderBy(x => x?.Filename).ToList();
                 NotifyPropertyChanged(nameof(SelectedEntries));

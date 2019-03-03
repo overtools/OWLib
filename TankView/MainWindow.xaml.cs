@@ -92,6 +92,41 @@ namespace TankView {
             // FolderView.ItemsSource = ;
             // FolderItemList.ItemsSource = ;
         }
+        
+        GridViewColumnHeader _lastHeaderClicked = null;
+        private ListSortDirection _lastDirection = ListSortDirection.Descending; 
+
+        void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e) {  
+            var headerClicked = e.OriginalSource as GridViewColumnHeader;
+    
+            if (headerClicked == null) return;
+            if (headerClicked.Role == GridViewColumnHeaderRole.Padding) return;
+            
+            ListSortDirection direction;
+            if (headerClicked != _lastHeaderClicked)  {  
+                direction = ListSortDirection.Descending;  
+            } else {
+                direction = _lastDirection == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
+            }  
+      
+            var columnBinding = headerClicked.Column.DisplayMemberBinding as Binding;
+            var sortBy = columnBinding?.Path.Path ?? headerClicked.Column.Header as string;
+    
+            GUIDTree.OrderBy(sortBy, direction);
+      
+            if (direction == ListSortDirection.Ascending) {  
+                headerClicked.Column.HeaderTemplate = Resources["HeaderTemplateArrowUp"] as DataTemplate;  
+            } else {  
+                headerClicked.Column.HeaderTemplate = Resources["HeaderTemplateArrowDown"] as DataTemplate;  
+            }  
+    
+            if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked) {  
+                _lastHeaderClicked.Column.HeaderTemplate = null;  
+            }  
+      
+            _lastHeaderClicked = headerClicked;  
+            _lastDirection = direction;
+        }
 
         private void GUIDSearch(object sender, TextChangedEventArgs e) {
             if (GUIDTree == null || e.Handled) return;
@@ -350,6 +385,9 @@ namespace TankView {
 
             if (Debugger.IsAttached) {
                 IsEnabled = true;
+                
+                // Use to auto load a dir at startup, useful or dev
+                // OpenCASC("");
                 return;
             }
             

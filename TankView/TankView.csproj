@@ -111,6 +111,7 @@
     </Compile>
     <Compile Include="Helper\DataHelper.cs" />
     <Compile Include="Helper\IOHelper.cs" />
+    <Compile Include="Helper\OrderByHelper.cs" />
     <Compile Include="ObjectModel\EnumConverter.cs" />
     <Compile Include="ObjectModel\InvertBoolConverter.cs" />
     <Compile Include="ObjectModel\ObservableHashCollection.cs" />

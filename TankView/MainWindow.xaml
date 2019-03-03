@@ -34,6 +34,25 @@
                                   ItemsSource="{Binding Folders}">
             <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
         </HierarchicalDataTemplate>
+        <DataTemplate x:Key="HeaderTemplateArrowUp">
+            <DockPanel>
+                <TextBlock HorizontalAlignment="Center" Text="{Binding}"/>
+                <Path x:Name="arrow"
+                      StrokeThickness = "1"                                     
+                      Fill            = "gray"
+                      Data            = "M 5,10 L 15,10 L 10,5 L 5,10"/>
+            </DockPanel>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="HeaderTemplateArrowDown">
+            <DockPanel>
+                <TextBlock HorizontalAlignment="Center" Text="{Binding}"/>
+                <Path x:Name="arrow"
+                      StrokeThickness = "1"                                     
+                      Fill            = "gray"
+                      Data            = "M 5,5 L 10,10 L 15,5 L 5,5"/>
+            </DockPanel>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -154,7 +173,8 @@
                 <DockPanel Grid.Row="0">
                     <ListView x:Name="FolderItemList" SelectedItem="{Binding TopSelectedEntry, Mode=OneWayToSource}"
                               ItemsSource="{Binding SelectedEntries, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                              VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+                              VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
+                              GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="GUID" DisplayMemberBinding="{Binding Filename}" />
@@ -163,7 +183,8 @@
                                 <GridViewColumn Header="Locale"
                                                 DisplayMemberBinding="{Binding Locale, Converter={StaticResource EnumConverter}}" />
                                 <GridViewColumn Header="Size"
-                                                DisplayMemberBinding="{Binding Size, Converter={StaticResource SizeConverter}}" />
+                                                DisplayMemberBinding="{Binding Size, Converter={StaticResource SizeConverter}}"
+                                                Width="130"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
