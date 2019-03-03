@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,7 +28,8 @@ namespace TankView.View {
                 vorbis = new VorbisWaveReader(data);
                 outputDevice.Volume = 1.0f;
                 outputDevice.Init(vorbis);
-            } catch {
+            } catch (Exception ex) {
+                Debugger.Log(0, "[TankView.Sound.SetAudio]", $"Error setting audio! {ex.Message}\n");
                 // ignored
             }
         }
@@ -54,7 +56,14 @@ namespace TankView.View {
                 return;
             }
 
-            outputDevice.Play();
+            try {
+                outputDevice.Play();
+            } catch (Exception ex) {
+                Debugger.Log(0, "[TankView.Sound.Play]", $"Error setting audio! {ex.Message}\n");
+                // ignored
+            }
+
+            
         }
 
         private void Stop(object sender, RoutedEventArgs e) {
