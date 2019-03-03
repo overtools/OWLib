@@ -1,0 +1,75 @@
+.inheritance .level6::before,
+.inheritance .level7::before,
+.inheritance .level8::before,
+.inheritance .level9::before,
+.inheritance .level10::before,
+.inheritance .level11::before,
+.inheritance .level12::before,
+.inheritance .level13::before,
+.inheritance .level14::before,
+.inheritance .level15::before {
+    content: '↳';
+    margin-right: 5px;
+}
+
+.inheritance .level6 {
+    margin-left: 6em;
+}
+
+.inheritance .level7 {
+    margin-left: 7em;
+}
+
+.inheritance .level8 {
+    margin-left: 8em;
+}
+
+.inheritance .level9 {
+    margin-left: 9em;
+}
+
+.inheritance .level10 {
+    margin-left: 10em;
+}
+
+.inheritance .level11 {
+    margin-left: 11em;
+}
+
+.inheritance .level12 {
+    margin-left: 12em;
+}
+
+.inheritance .level13 {
+    margin-left: 13em;
+}
+
+.inheritance .level14 {
+    margin-left: 14em;
+}
+
+.inheritance .level15 {
+    margin-left: 15em;
+}
+
+.implements, [classs="implements"] {
+	display: none;	
+}
+
+.inheritedMembers {
+	display: none;	
+}
+
+.note {
+	background: aliceblue;
+    padding: 8px;
+}
+
+p.note:before {
+    content: "Note: ";
+    font-weight: bold;
+}
+
+section .note {
+	display: none;	
+}

@@ -14,17 +14,20 @@ namespace TankView {
         public void SetDarkMode(bool enableDarkMode) {
             Resources.MergedDictionaries.Clear();
             Resources.MergedDictionaries.Add(new ResourceDictionary {
-                    Source = new Uri($"pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.{(enableDarkMode ? "Dark" : "Light")}.xaml")
-                });
+                Source = new Uri($"pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.{(enableDarkMode ? "Dark" : "Light")}.xaml")
+            });
             Resources.MergedDictionaries.Add(new ResourceDictionary {
-                    Source = new Uri("pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml")
-                });
+                Source = new Uri("pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml")
+            });
             Resources.MergedDictionaries.Add(new ResourceDictionary {
-                    Source = new Uri("pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml")
-                });
+                Source = new Uri("pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml")
+            });
             Resources.MergedDictionaries.Add(new ResourceDictionary {
-                    Source = new Uri("pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.DeepOrange.xaml")
-                });
+                Source = new Uri("pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.DeepOrange.xaml")
+            });
+            Resources.MergedDictionaries.Add(new ResourceDictionary {
+                Source = new Uri("pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml")
+            });
         }
     }
 }

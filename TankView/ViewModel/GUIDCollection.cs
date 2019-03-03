@@ -107,12 +107,17 @@ namespace TankView.ViewModel {
                 NotifyPropertyChanged(nameof(ShowPreview));
                 NotifyPropertyChanged(nameof(ListRow));
                 NotifyPropertyChanged(nameof(PreviewRow));
+                NotifyPropertyChanged(nameof(PreviewRowMin));
             }
         }
+
+        public bool ShowPreviewList => DataHelper.GetDataType(_selected.FirstOrDefault()) == DataHelper.DataType.Image;
 
         public GridLength ListRow => ShowPreview ? new GridLength(250, GridUnitType.Pixel) : new GridLength(1, GridUnitType.Star);
 
         public GridLength PreviewRow => ShowPreview ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+
+        public GridLength PreviewRowMin => ShowPreview ? new GridLength(50, GridUnitType.Pixel) : new GridLength(0);
 
         private object _previewData = null;
 
@@ -190,6 +195,7 @@ namespace TankView.ViewModel {
             set {
                 _selected = value.OrderBy(x => x?.Filename).ToList();
                 NotifyPropertyChanged(nameof(SelectedEntries));
+                NotifyPropertyChanged(nameof(ShowPreviewList));
             }
         }
 

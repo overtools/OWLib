@@ -7,6 +7,8 @@
         xmlns:tank="clr-namespace:TankView.View"
         xmlns:vm="clr-namespace:TankView.ViewModel"
         xmlns:om="clr-namespace:TankView.ObjectModel"
+        xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+        xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -25,10 +27,16 @@
         IsEnabled="False"
         >
     <Window.Resources>
+        <om:GUIDToImageConverter x:Key="GuidToImageConverter" />
         <om:SizeConverter x:Key="SizeConverter" />
         <om:EnumConverter x:Key="EnumConverter" />
         <BooleanToVisibilityConverter x:Key="BoolVisbilityConverter" />
         <om:InvertBoolConverter x:Key="InvertBoolConverter" />
+        <Style x:Key="mdTabControl" TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}"> 
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+            <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
+            <Setter Property="BorderThickness" Value="0,0,0,0" />
+        </Style>
         <!-- hahahah slay me -->
         <HierarchicalDataTemplate x:Key="FolderDataView" DataType="{x:Type TypeName=vm:Folder}"
                                   ItemsSource="{Binding Folders}">
@@ -164,41 +172,70 @@
             </TreeView>
             <GridSplitter Grid.Column="0" Width="3" HorizontalAlignment="Right" VerticalAlignment="Stretch"
                           ResizeDirection="Columns" ShowsPreview="True" ResizeBehavior="CurrentAndNext" />
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="{Binding ListRow, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                                   MinHeight="250" />
-                    <RowDefinition Height="{Binding PreviewRow, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
-                </Grid.RowDefinitions>
-                <DockPanel Grid.Row="0">
-                    <ListView x:Name="FolderItemList" SelectedItem="{Binding TopSelectedEntry, Mode=OneWayToSource}"
-                              ItemsSource="{Binding SelectedEntries, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                              VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
-                              GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="GUID" DisplayMemberBinding="{Binding Filename}" />
-                                <GridViewColumn Header="Flags"
-                                                DisplayMemberBinding="{Binding Flags, Converter={StaticResource EnumConverter}}" />
-                                <GridViewColumn Header="Locale"
-                                                DisplayMemberBinding="{Binding Locale, Converter={StaticResource EnumConverter}}" />
-                                <GridViewColumn Header="Size"
-                                                DisplayMemberBinding="{Binding Size, Converter={StaticResource SizeConverter}}"
-                                                Width="130"/>
-                            </GridView>
-                        </ListView.View>
+            <dragablz:TabablzControl Style="{StaticResource mdTabControl}" Grid.Column="1" x:Name="Tabs">
+                <dragablz:TabablzControl.InterTabController>
+                    <dragablz:InterTabController />
+                </dragablz:TabablzControl.InterTabController>
+                <TabItem Header="List">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{Binding ListRow, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                           MinHeight="250" />
+                            <RowDefinition Height="{Binding PreviewRow, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                           MinHeight="{Binding PreviewRowMin, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                        </Grid.RowDefinitions>
+                        <DockPanel Grid.Row="0">
+                            <ListView x:Name="FolderItemList" SelectedItem="{Binding TopSelectedEntry, Mode=OneWayToSource}"
+                                      ItemsSource="{Binding SelectedEntries, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
+                                      GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="GUID" DisplayMemberBinding="{Binding Filename}" />
+                                        <GridViewColumn Header="Flags"
+                                                        DisplayMemberBinding="{Binding Flags, Converter={StaticResource EnumConverter}}" />
+                                        <GridViewColumn Header="Locale"
+                                                        DisplayMemberBinding="{Binding Locale, Converter={StaticResource EnumConverter}}" />
+                                        <GridViewColumn Header="Size"
+                                                        DisplayMemberBinding="{Binding Size, Converter={StaticResource SizeConverter}}"
+                                                        Width="130"/>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </DockPanel>
+                        <GridSplitter IsEnabled="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                      Visibility="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BoolVisbilityConverter}}"
+                                      Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                                      ResizeDirection="Rows" ShowsPreview="True" ResizeBehavior="CurrentAndNext" />
+                        <DockPanel IsEnabled="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                   Visibility="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BoolVisbilityConverter}}"
+                                   Grid.Row="1">
+                            <ContentControl Content="{Binding PreviewControl}" />
+                        </DockPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Image" IsEnabled="{Binding ShowPreviewList, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BoolVisbilityConverter}}">
+                    <ListView x:Name="FolderImageList" ItemsSource="{Binding SelectedEntries, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" VirtualizingPanel.CacheLengthUnit="Page" VirtualizingPanel.CacheLength="1, 1" VirtualizingPanel.ScrollUnit="Item" VirtualizingPanel.VirtualizationMode="Recycling">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="200" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Image Grid.Row="0" Source="{Binding Converter={StaticResource GuidToImageConverter}}" Width="200" Height="200"></Image>
+                                    <TextBlock Grid.Row="1" Text="{Binding Filename}" TextAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <controls:VirtualizingWrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
                     </ListView>
-                </DockPanel>
-                <GridSplitter IsEnabled="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                              Visibility="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BoolVisbilityConverter}}"
-                              Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
-                              ResizeDirection="Rows" ShowsPreview="True" ResizeBehavior="CurrentAndNext" />
-                <DockPanel IsEnabled="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                           Visibility="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BoolVisbilityConverter}}"
-                           Grid.Row="1">
-                    <ContentControl Content="{Binding PreviewControl}" />
-                </DockPanel>
-            </Grid>
+                </TabItem>
+            </dragablz:TabablzControl>
         </Grid>
         <StatusBar Grid.Row="2" DataContext="{Binding ProgressInfo}" Background="{DynamicResource MaterialDesignPaper}">
             <StatusBarItem VerticalContentAlignment="Stretch">

@@ -299,9 +299,21 @@ namespace TankView {
         }
 
         private void ExtractFiles(object sender, RoutedEventArgs e) {
-            var files = FolderItemList.SelectedItems.OfType<GUIDEntry>().ToArray();
-            if (files.Length == 0) {
-                files = FolderItemList.Items.OfType<GUIDEntry>().ToArray();
+            GUIDEntry[] files = {};
+
+            switch (Tabs.SelectedIndex) {
+                case 0: {
+                    files = FolderItemList.SelectedItems.OfType<GUIDEntry>().ToArray();
+                    if (files.Length == 0) {
+                        files = FolderItemList.Items.OfType<GUIDEntry>().ToArray();
+                    }
+
+                    break;
+                }
+                case 1: {
+                    files = FolderImageList.SelectedItems.OfType<GUIDEntry>().ToArray();
+                    break;
+                }
             }
 
             if (files.Length == 0) {
