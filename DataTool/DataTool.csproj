@@ -109,6 +109,7 @@
     <Compile Include="DataModels\GameModes\GameMode.cs" />
     <Compile Include="DataModels\GameModes\GameRulesetSchema.cs" />
     <Compile Include="DataModels\GameModes\GameRulesetSchemaEntry.cs" />
+    <Compile Include="DataModels\GameModes\GameRulesetTeam.cs" />
     <Compile Include="DataModels\Hero\Hero.cs" />
     <Compile Include="DataModels\Hero\SkinTheme.cs" />
     <Compile Include="DataModels\Hero\Loadout.cs" />

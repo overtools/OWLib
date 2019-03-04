@@ -17,6 +17,8 @@ namespace DataTool.DataModels.GameModes {
 
         [DataMember]
         public GameMode GameMode;
+
+        public List<GameRulesetTeam> Teams;
         
         public GameRulesetGameMode(ulong key) {
             STUGameRulesetGameMode stu = GetInstance<STUGameRulesetGameMode>(key);
@@ -32,6 +34,9 @@ namespace DataTool.DataModels.GameModes {
             GUID = (teResourceGUID) key;
             Description = GetString(ruleset.m_description);
             GameMode = new GameMode(ruleset.m_gamemode);
+
+            if (ruleset.m_teams != null)
+                Teams = ruleset.m_teams.Select(x => new GameRulesetTeam(x)).ToList();
         }
     }
 }

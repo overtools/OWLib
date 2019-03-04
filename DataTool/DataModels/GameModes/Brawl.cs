@@ -50,10 +50,10 @@ namespace DataTool.DataModels.GameModes {
                 Rulesets = new List<GameRulesetGameMode>();
                 
                 foreach (var br in brawl.m_rulesets) {
-                    var shit = GetInstance<STUGameRuleset>(br);
-                    if (shit.m_gamemode == null) continue;
+                    var ruleset = GetInstance<STUGameRuleset>(br);
+                    if (ruleset.m_gamemode == null) continue;
 
-                    Rulesets.Add(new GameRulesetGameMode(shit.m_gamemode));
+                    Rulesets.Add(new GameRulesetGameMode(ruleset.m_gamemode));
                 }
             }
 
