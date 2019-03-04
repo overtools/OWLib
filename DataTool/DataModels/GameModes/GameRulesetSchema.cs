@@ -5,7 +5,7 @@ using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 
-namespace DataTool.DataModels {
+namespace DataTool.DataModels.GameModes {
     [DataContract]
     public class GameRulesetSchema {
         [DataMember]

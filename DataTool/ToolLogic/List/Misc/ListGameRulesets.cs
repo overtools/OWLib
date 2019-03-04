@@ -1,5 +1,5 @@
 ﻿using System;
-using DataTool.DataModels;
+using DataTool.DataModels.GameModes;
 using DataTool.Flag;
 using TankLib.STU.Types;
 using System.Collections.Generic;

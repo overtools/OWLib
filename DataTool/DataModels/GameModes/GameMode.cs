@@ -6,7 +6,7 @@ using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
-namespace DataTool.DataModels {
+namespace DataTool.DataModels.GameModes {
     [DataContract]
     public class GameMode {
         [DataMember]
