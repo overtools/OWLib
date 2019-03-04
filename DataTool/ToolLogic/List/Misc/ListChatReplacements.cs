@@ -9,8 +9,8 @@ using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
 
-namespace DataTool.ToolLogic.List {
-    [Tool("list-chat-replacements", Description = "List chat replacements", CustomFlags = typeof(ListFlags))]
+namespace DataTool.ToolLogic.List.Misc {
+    [Tool("list-chat-replacements", Description = "List chat replacements", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListChatReplacements : ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();

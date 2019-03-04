@@ -7,8 +7,8 @@ using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
-namespace DataTool.ToolLogic.List {
-    [Tool("list-chat-settings", Description = "List chat settings", CustomFlags = typeof(ListFlags))]
+namespace DataTool.ToolLogic.List.Misc {
+    [Tool("list-chat-settings", Description = "List chat settings", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListChatSettings : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var chatData = GetChatData();

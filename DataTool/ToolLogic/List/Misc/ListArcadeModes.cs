@@ -6,9 +6,9 @@ using DataTool.JSON;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 
-namespace DataTool.ToolLogic.List {
-    [Tool("list-arcade-modes", Description = "List arcade modes", CustomFlags = typeof(ListFlags))]
-    public class ListArcadeStuff : JSONTool, ITool {
+namespace DataTool.ToolLogic.List.Misc {
+    [Tool("list-arcade-modes", Description = "List arcade modes", CustomFlags = typeof(ListFlags), IsSensitive = true)]
+    public class ListArcadeModes : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
             

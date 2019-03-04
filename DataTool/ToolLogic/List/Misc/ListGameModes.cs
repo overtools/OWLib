@@ -7,8 +7,8 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
 
-namespace DataTool.ToolLogic.List {
-    [Tool("list-gamemodes", Description = "List game modes", IsSensitive = true, CustomFlags = typeof(ListFlags))]
+namespace DataTool.ToolLogic.List.Misc {
+    [Tool("list-gamemodes", Description = "List game modes", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListGameModes : JSONTool, ITool {
         public List<GameMode> GetGameModes() {
             List<GameMode> gameModes = new List<GameMode>();

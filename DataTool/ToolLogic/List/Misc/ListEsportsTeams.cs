@@ -6,7 +6,7 @@ using DataTool.JSON;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
 
-namespace DataTool.ToolLogic.List {
+namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-esport-teams", Description = "Lists eSport teams", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListEsportTeams : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {;

@@ -8,8 +8,8 @@ using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
-namespace DataTool.ToolLogic.List {
-    [Tool("list-game-rulesets", Description = "List game rulesets", IsSensitive = true, CustomFlags = typeof(ListFlags))]
+namespace DataTool.ToolLogic.List.Misc {
+    [Tool("list-game-rulesets", Description = "List game rulesets", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListGameParams : JSONTool, ITool {
         public void IntegrateView(object sender) {
             throw new NotImplementedException();
