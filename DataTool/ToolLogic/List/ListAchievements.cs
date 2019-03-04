@@ -12,15 +12,15 @@ namespace DataTool.ToolLogic.List {
     [Tool("list-achievements", Description = "List achievements", CustomFlags = typeof(ListFlags))]
     public class ListAchievements : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
-            List<Achievement> achievements = GetAchievements();
+            List<Achievement> data = GetData();
 
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
-                    OutputJSON(achievements, flags);
+                    OutputJSON(data, flags);
                     return;
                 }
 
-            foreach (Achievement achievement in achievements) {
+            foreach (Achievement achievement in data) {
                 var iD = new IndentHelper();
                 
                 Log($"{achievement.Name}");
@@ -33,15 +33,14 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public List<Achievement> GetAchievements() {
+        private static List<Achievement> GetData() {
             List<Achievement> achievements = new List<Achievement>();
 
             foreach (ulong key in TrackedFiles[0x68]) {
-                STUAchievement achievement = GetInstance<STUAchievement>(key);
-                if (achievement == null) continue;
+                var achievement = new Achievement(key);
+                if (achievement.GUID == 0) continue;
                 
-                Achievement model = new Achievement(achievement);
-                achievements.Add(model);
+                achievements.Add(achievement);
             }
 
             return achievements;

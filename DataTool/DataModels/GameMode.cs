@@ -4,6 +4,7 @@ using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
+using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels {
     [DataContract]
@@ -26,15 +27,25 @@ namespace DataTool.DataModels {
         [DataMember]
         public teResourceGUID VoiceSet;
         
-        public GameMode(STUGameMode gameMode, ulong key) {
+        public GameMode(ulong key) {
+            STUGameMode stu = GetInstance<STUGameMode>(key);
+            if (stu == null) return;
+            Init(stu, key);
+        }
+
+        public GameMode(STUGameMode stu) {
+            Init(stu);
+        }
+
+        private void Init(STUGameMode gamemode, ulong key = default) {
             GUID = (teResourceGUID) key;
-            Name = GetString(gameMode.m_displayName);
+            Name = GetString(gamemode.m_displayName);
             InternalName = GetInternalName(key);
 
-            GameRulesetSchemas = Helper.JSON.FixArray(gameMode.m_gameRulesetSchemas);
+            GameRulesetSchemas = Helper.JSON.FixArray(gamemode.m_gameRulesetSchemas);
 
-            VoiceSet = gameMode.m_7F5B54B2;
-            Type = gameMode.m_gameModeType;
+            VoiceSet = gamemode.m_7F5B54B2;
+            Type = gamemode.m_gameModeType;
         }
         
         private static string GetInternalName(ulong key) {

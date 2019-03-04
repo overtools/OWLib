@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.Serialization;
 using DataTool.JSON;
 using TankLib;
@@ -5,10 +6,14 @@ using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using Utf8Json;
 using static DataTool.Helper.IO;
+using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels {
     [DataContract]
     public class MapHeader {
+        [DataMember]
+        public teResourceGUID GUID;
+        
         [DataMember]
         public string Name;
 
@@ -35,8 +40,19 @@ namespace DataTool.DataModels {
 
         [DataMember]
         public Enum_A0F51DCC MapType;
+        
+        public MapHeader(ulong key) {
+            STUMapHeader stu = GetInstance<STUMapHeader>(key);
+            if (stu == null) return;
+            Init(stu, key);
+        }
 
-        public MapHeader(STUMapHeader mapHeader) {
+        public MapHeader(STUMapHeader stu) {
+            Init(stu);
+        }
+
+        public void Init(STUMapHeader mapHeader, ulong key = default) {
+            GUID = (teResourceGUID) key;
             Name = GetString(mapHeader.m_displayName);
             MapName = mapHeader.m_mapName;
             VariantName = GetString(mapHeader.m_1C706502);
@@ -49,6 +65,10 @@ namespace DataTool.DataModels {
             GameModes = Helper.JSON.FixArray(mapHeader.m_D608E9F3);
         }
 
+        public MapHeaderLite ToLite() {
+            return new MapHeaderLite(this);
+        } 
+
         public string GetName() {
             return VariantName ?? Name ?? "Title Screen";
         }
@@ -56,6 +76,25 @@ namespace DataTool.DataModels {
         public string GetUniqueName() {
             string name = GetName();
             return $"{name}:{teResourceGUID.Index(MapGUID):X}";
+        }
+    }
+
+    // Lighter version of the MapHeader, just used to make JSON exports less thicc if you only need basic map info
+    public class MapHeaderLite {
+        [DataMember]
+        public teResourceGUID GUID;
+        
+        [DataMember]
+        public string Name;
+        
+        [DataMember]
+        public teResourceGUID MapGUID;
+
+        public MapHeaderLite(MapHeader mapHeader) {
+            GUID = mapHeader.GUID;
+            Name = mapHeader.Name;
+            MapGUID = mapHeader.MapGUID;
+
         }
     }
 }

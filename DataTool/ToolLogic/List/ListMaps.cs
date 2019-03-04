@@ -51,7 +51,7 @@ namespace DataTool.ToolLogic.List {
                     foreach (teResourceGUID mode in data.GameModes) {
                         var stu = GetInstance<STUGameMode>(mode);
                         if (stu == null) continue;
-                        GameMode gameMode = new GameMode(stu, mode);
+                        GameMode gameMode = new GameMode(stu);
                         Console.Out.WriteLine($"{iD+2}{gameMode.Name}");
                     }
                     //data.GameModes.ForEach(m => Log($"{iD+2}{m.Name}"));

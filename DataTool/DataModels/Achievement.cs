@@ -1,11 +1,16 @@
 ﻿using System.Runtime.Serialization;
+using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
+using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels {
     [DataContract]
     public class Achievement {
+        [DataMember]
+        public teResourceGUID GUID;
+        
         [DataMember]
         public string Name;
         
@@ -26,8 +31,19 @@ namespace DataTool.DataModels {
 
         [DataMember]
         public int GamerScore;
+        
+        public Achievement(ulong key) {
+            STUAchievement stu = GetInstance<STUAchievement>(key);
+            if (stu == null) return;
+            Init(stu, key);
+        }
 
-        public Achievement(STUAchievement achievement) {
+        public Achievement(STUAchievement stu) {
+            Init(stu);
+        }
+
+        public void Init(STUAchievement achievement, ulong key = default) {
+            GUID = (teResourceGUID) key;
             Name = GetString(achievement.m_name);
             AchievementName = achievement.m_4E291DCC.Value;
             Description = GetString(achievement.m_description);

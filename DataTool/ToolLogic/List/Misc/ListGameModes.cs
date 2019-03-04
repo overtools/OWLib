@@ -12,11 +12,11 @@ namespace DataTool.ToolLogic.List.Misc {
     public class ListGameModes : JSONTool, ITool {
         public List<GameMode> GetGameModes() {
             List<GameMode> gameModes = new List<GameMode>();
-            foreach (var guid in TrackedFiles[0xC5]) {
-                STUGameMode gameMode = GetInstance<STUGameMode>(guid);
-                if (gameMode == null) continue;
+            foreach (var key in TrackedFiles[0xC5]) {
+                var gamemode = new GameMode(key);
+                if (gamemode.GUID == 0) continue;
 
-                gameModes.Add(new GameMode(gameMode, guid));
+                gameModes.Add(gamemode);
             }
 
             return gameModes;
