@@ -272,7 +272,7 @@ namespace CASCEncDump {
                             reader.BaseStream.Position -= 4;
                             teChunkedData chunkedData = new teChunkedData(reader);
                             if (chunkedData.Header.StringIdentifier == "MODL") {
-                                OverwatchModel model = new OverwatchModel(chunkedData);
+                                OverwatchModel model = new OverwatchModel(chunkedData, 0);
                                 using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + $"-{i}.owmdl")) {
                                     file.SetLength(0);
                                     model.Write(file);
