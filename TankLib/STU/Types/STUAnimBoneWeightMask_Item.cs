@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x70BFB706, "STUAnimBoneWeightMask_Item")]
     public class STUAnimBoneWeightMask_Item : STUInstance {
         [STUFieldAttribute(0xF97609C8, "m_bone")]
-        public teStructuredDataAssetRef<STUBoneLabel> m_bone;
+        public teStructuredDataAssetRef<ulong> m_bone;
 
         [STUFieldAttribute(0x9CDDC24D, "m_weight")]
         public float m_weight;

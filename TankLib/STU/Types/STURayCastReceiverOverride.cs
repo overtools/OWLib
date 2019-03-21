@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x82E631CB, "STURayCastReceiverOverride")]
     public class STURayCastReceiverOverride : STUInstance {
         [STUFieldAttribute(0x354CDA7A)]
-        public teStructuredDataAssetRef<STU_8EFC337B>[] m_354CDA7A;
+        public teStructuredDataAssetRef<ulong>[] m_354CDA7A;
 
         [STUFieldAttribute(0x8EB25F67, ReaderType = typeof(InlineInstanceFieldReader))]
         public STURayCastReceiverResult m_8EB25F67;

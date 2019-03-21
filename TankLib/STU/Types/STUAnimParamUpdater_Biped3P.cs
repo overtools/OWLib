@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STUAnimParamUpdater_TurnParameters m_D5AF8608;
 
         [STUFieldAttribute(0x6B655AEE)]
-        public teStructuredDataAssetRef<STUAnimAlias>[] m_6B655AEE;
+        public teStructuredDataAssetRef<ulong>[] m_6B655AEE;
 
         [STUFieldAttribute(0x49E4067A, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimParamUpdater_SnapTurnScriptedAnimAlias[] m_49E4067A;

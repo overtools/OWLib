@@ -11,6 +11,6 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_entityDef;
 
         [STUFieldAttribute(0xEF19F506, "m_poseUnlock")]
-        public teStructuredDataAssetRef<STUUnlock> m_poseUnlock;
+        public teStructuredDataAssetRef<ulong> m_poseUnlock;
     }
 }

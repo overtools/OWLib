@@ -17,13 +17,13 @@ namespace TankLib.STU.Types {
         public STU_8A1F18F9[] m_59A3437D;
 
         [STUFieldAttribute(0x6EC8E97B)]
-        public teStructuredDataAssetRef<STU_1DEBD356>[] m_6EC8E97B;
+        public teStructuredDataAssetRef<ulong>[] m_6EC8E97B;
 
         [STUFieldAttribute(0xAC32DCF0)]
-        public teStructuredDataAssetRef<STU_1DEBD356>[] m_AC32DCF0;
+        public teStructuredDataAssetRef<ulong>[] m_AC32DCF0;
 
         [STUFieldAttribute(0x29075121)]
-        public teStructuredDataAssetRef<STUGameMode>[] m_29075121;
+        public teStructuredDataAssetRef<ulong>[] m_29075121;
 
         [STUFieldAttribute(0x4508B2F4)]
         public double m_4508B2F4;

@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         public teString m_entryValue;
 
         [STUFieldAttribute(0x15192D8D, "m_source")]
-        public teStructuredDataAssetRef<STUUXLink> m_source;
+        public teStructuredDataAssetRef<ulong> m_source;
 
         [STUFieldAttribute(0x020A677B, "m_subValues", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_10715296[] m_subValues;

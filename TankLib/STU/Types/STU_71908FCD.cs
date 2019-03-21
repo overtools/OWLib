@@ -5,22 +5,22 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x71908FCD)]
     public class STU_71908FCD : STUGenericSettings_Base {
         [STUFieldAttribute(0x80543A5C)]
-        public teStructuredDataAssetRef<STUStat> m_80543A5C;
+        public teStructuredDataAssetRef<ulong> m_80543A5C;
 
         [STUFieldAttribute(0x5BBCCE2D)]
-        public teStructuredDataAssetRef<STUStat> m_5BBCCE2D;
+        public teStructuredDataAssetRef<ulong> m_5BBCCE2D;
 
         [STUFieldAttribute(0xCAF18889)]
-        public teStructuredDataAssetRef<STUStat> m_CAF18889;
+        public teStructuredDataAssetRef<ulong> m_CAF18889;
 
         [STUFieldAttribute(0x3C913635)]
-        public teStructuredDataAssetRef<STUStat> m_3C913635;
+        public teStructuredDataAssetRef<ulong> m_3C913635;
 
         [STUFieldAttribute(0xC02094E7, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUProfileOverviewGeneralStat[] m_C02094E7;
 
         [STUFieldAttribute(0x03A7C226)]
-        public teStructuredDataAssetRef<STUStat>[] m_03A7C226;
+        public teStructuredDataAssetRef<ulong>[] m_03A7C226;
 
         [STUFieldAttribute(0xAF2B1493, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUProfileStatCategory[] m_AF2B1493;

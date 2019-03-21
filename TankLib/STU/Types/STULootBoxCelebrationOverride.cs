@@ -5,9 +5,9 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x6CBC2E3F, "STULootBoxCelebrationOverride")]
     public class STULootBoxCelebrationOverride : STUInstance {
         [STUFieldAttribute(0xED999C8B, "m_celebrationType")]
-        public teStructuredDataAssetRef<STUIdentifier> m_celebrationType;
+        public teStructuredDataAssetRef<ulong> m_celebrationType;
 
         [STUFieldAttribute(0xB0EDB99C, "m_lootbox")]
-        public teStructuredDataAssetRef<STUUnlock> m_lootbox;
+        public teStructuredDataAssetRef<ulong> m_lootbox;
     }
 }

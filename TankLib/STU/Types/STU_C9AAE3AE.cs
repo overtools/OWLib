@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xC9AAE3AE)]
     public class STU_C9AAE3AE : STUCriteria {
         [STUFieldAttribute(0xBC4326FF, "m_stat")]
-        public teStructuredDataAssetRef<STUStat> m_stat;
+        public teStructuredDataAssetRef<ulong> m_stat;
 
         [STUFieldAttribute(0xAF872E86, "m_amount")]
         public double m_amount;

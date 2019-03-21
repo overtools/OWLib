@@ -16,7 +16,6 @@ using TankLib.TACT;
 using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
 using TACTLib.Core.Product.Tank;
-using Utf8Json;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 using Logger = TankLib.Helpers.Logger;

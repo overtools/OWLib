@@ -11,16 +11,16 @@ namespace TankLib.STU.Types {
         public STUAnimCurve m_F49CF9C3;
 
         [STUFieldAttribute(0x195D8A3E)]
-        public teStructuredDataAssetRef<STUAnimation> m_195D8A3E;
+        public teStructuredDataAssetRef<ulong> m_195D8A3E;
 
         [STUFieldAttribute(0x92575622)]
-        public teStructuredDataAssetRef<STUAnimation> m_92575622;
+        public teStructuredDataAssetRef<ulong> m_92575622;
 
         [STUFieldAttribute(0xC027E938)]
-        public teStructuredDataAssetRef<STUAnimation> m_C027E938;
+        public teStructuredDataAssetRef<ulong> m_C027E938;
 
         [STUFieldAttribute(0xEC4CAE23)]
-        public teStructuredDataAssetRef<STUDataFlow> m_EC4CAE23;
+        public teStructuredDataAssetRef<ulong> m_EC4CAE23;
 
         [STUFieldAttribute(0x63691AF6, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimConfigWeightSet m_63691AF6;

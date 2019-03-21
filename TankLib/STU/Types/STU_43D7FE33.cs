@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_name;
 
         [STUFieldAttribute(0x29E8F0CC, "m_mapCatalog")]
-        public teStructuredDataAssetRef<STUMapCatalog> m_mapCatalog;
+        public teStructuredDataAssetRef<ulong> m_mapCatalog;
 
         [STUFieldAttribute(0x7F965AB2, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_7459F2CE[] m_7F965AB2;

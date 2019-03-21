@@ -7,6 +7,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x41A3777D)]
         public teString m_41A3777D;
 
+        [STUFieldAttribute(0x7006FA69, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_BBBFC3C9 m_7006FA69;
+
         [STUFieldAttribute(0x491C8A84, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUAnimBoneWeightMask m_491C8A84;
 
@@ -25,11 +28,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x4DDA41EB)]
         public byte m_4DDA41EB;
 
-        [STUFieldAttribute(0x59DB9B44)]
-        public byte m_59DB9B44;
-
         [STUFieldAttribute(0x59903079)]
         public byte m_59903079;
+
+        [STUFieldAttribute(0xA794731B)]
+        public byte m_A794731B;
+
+        [STUFieldAttribute(0x59DB9B44)]
+        public byte m_59DB9B44;
 
         [STUFieldAttribute(0x7E0DCF00)]
         public byte m_7E0DCF00;
@@ -39,9 +45,6 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xFF8E0FC4)]
         public byte m_FF8E0FC4;
-
-        [STUFieldAttribute(0xA794731B)]
-        public byte m_A794731B;
 
         [STUFieldAttribute(0x37EE887D)]
         public byte m_37EE887D;

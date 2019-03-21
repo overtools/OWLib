@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x4D28219D)]
     public class STU_4D28219D : STUInstance {
         [STUFieldAttribute(0x128926DC, "m_parent")]
-        public teStructuredDataAssetRef<STU_4D28219D> m_parent;
+        public teStructuredDataAssetRef<ulong> m_parent;
 
         [STUFieldAttribute(0xC4F56606)]
         public teColorRGBA m_C4F56606;

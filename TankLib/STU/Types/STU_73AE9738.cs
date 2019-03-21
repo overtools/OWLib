@@ -24,7 +24,10 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_teamColor;
 
         [STUFieldAttribute(0xE02BEE24, "m_celebration")]
-        public teStructuredDataAssetRef<STUCelebration> m_celebration;
+        public teStructuredDataAssetRef<ulong> m_celebration;
+
+        [STUFieldAttribute(0x0A32AA01)]
+        public teStructuredDataAssetRef<ulong>[] m_0A32AA01;
 
         [STUFieldAttribute(0xAA53A680)]
         public Enum_5A789F71 m_AA53A680;

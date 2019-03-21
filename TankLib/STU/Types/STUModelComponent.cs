@@ -5,25 +5,25 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x191835F9, "STUModelComponent")]
     public class STUModelComponent : STUEntityComponent {
         [STUFieldAttribute(0x523339C1, "m_animBlendTreeSet")]
-        public teStructuredDataAssetRef<STUAnimBlendTreeSet> m_animBlendTreeSet;
+        public teStructuredDataAssetRef<ulong> m_animBlendTreeSet;
 
         [STUFieldAttribute(0x36F54327)]
-        public teStructuredDataAssetRef<STUAnimBlendTree> m_36F54327;
+        public teStructuredDataAssetRef<ulong> m_36F54327;
 
         [STUFieldAttribute(0x9C3F817E)]
-        public teStructuredDataAssetRef<STUSkeleton> m_9C3F817E;
+        public teStructuredDataAssetRef<ulong> m_9C3F817E;
 
         [STUFieldAttribute(0x2D124BE2, "m_model")]
-        public teStructuredDataAssetRef<STUModel> m_model;
+        public teStructuredDataAssetRef<ulong> m_model;
 
         [STUFieldAttribute(0x9297ADB4, "m_look")]
-        public teStructuredDataAssetRef<STUModelLook> m_look;
+        public teStructuredDataAssetRef<ulong> m_look;
 
         [STUFieldAttribute(0xA6041C8B, "m_collisionConfig", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUCollisionConfig m_collisionConfig;
 
         [STUFieldAttribute(0x33DA887B)]
-        public teStructuredDataAssetRef<STU_CBD8CDF3>[] m_33DA887B;
+        public teStructuredDataAssetRef<ulong>[] m_33DA887B;
 
         [STUFieldAttribute(0x14256239, "m_ragdollConfig", ReaderType = typeof(InlineInstanceFieldReader))]
         public STURagdollConfig m_ragdollConfig;
@@ -60,6 +60,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xADC54E57)]
         public byte m_ADC54E57;
+
+        [STUFieldAttribute(0xB287A07F)]
+        public byte m_B287A07F;
 
         [STUFieldAttribute(0x4A82B056)]
         public byte m_4A82B056;

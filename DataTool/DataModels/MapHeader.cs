@@ -1,10 +1,8 @@
 using System;
 using System.Runtime.Serialization;
-using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
-using Utf8Json;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
@@ -16,9 +14,6 @@ namespace DataTool.DataModels {
         
         [DataMember]
         public string Name;
-
-        [DataMember]
-        public string MapName;
         
         [DataMember]
         public string Description;
@@ -54,7 +49,6 @@ namespace DataTool.DataModels {
         public void Init(STUMapHeader mapHeader, ulong key = default) {
             GUID = (teResourceGUID) key;
             Name = GetString(mapHeader.m_displayName);
-            MapName = mapHeader.m_mapName;
             VariantName = GetString(mapHeader.m_1C706502);
             Description = GetString(mapHeader.m_389CB894);
             Description2 = GetString(mapHeader.m_ACB95597);

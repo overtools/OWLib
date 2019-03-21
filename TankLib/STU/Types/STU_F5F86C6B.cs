@@ -14,13 +14,13 @@ namespace TankLib.STU.Types {
         public teString m_D6BA6977;
 
         [STUFieldAttribute(0x08D19750)]
-        public teStructuredDataAssetRef<STUUXDisplayText> m_08D19750;
+        public teStructuredDataAssetRef<ulong> m_08D19750;
 
         [STUFieldAttribute(0x456B5F79)]
-        public teStructuredDataAssetRef<STUCelebration> m_456B5F79;
+        public teStructuredDataAssetRef<ulong> m_456B5F79;
 
         [STUFieldAttribute(0xAB9E98EC)]
-        public teStructuredDataAssetRef<STUTexture> m_AB9E98EC;
+        public teStructuredDataAssetRef<ulong> m_AB9E98EC;
 
         [STUFieldAttribute(0xBE1802E3)]
         public byte m_BE1802E3;

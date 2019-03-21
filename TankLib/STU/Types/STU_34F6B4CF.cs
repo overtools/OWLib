@@ -14,10 +14,10 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong>[] m_A7DC8A2F;
 
         [STUFieldAttribute(0x115DDDBF)]
-        public teStructuredDataAssetRef<STUCelebration> m_115DDDBF;
+        public teStructuredDataAssetRef<ulong> m_115DDDBF;
 
         [STUFieldAttribute(0xE9443298)]
-        public teStructuredDataAssetRef<STUHero>[] m_E9443298;
+        public teStructuredDataAssetRef<ulong>[] m_E9443298;
 
         [STUFieldAttribute(0xB0199D5E)]
         public teStructuredDataAssetRef<ulong>[] m_B0199D5E;

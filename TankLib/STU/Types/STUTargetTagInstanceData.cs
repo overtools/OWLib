@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x64100592, "STUTargetTagInstanceData")]
     public class STUTargetTagInstanceData : STUComponentInstanceData {
         [STUFieldAttribute(0xAA8E1BB0, "m_targetTags")]
-        public teStructuredDataAssetRef<STUTargetTag>[] m_targetTags;
+        public teStructuredDataAssetRef<ulong>[] m_targetTags;
 
         [STUFieldAttribute(0x2746D7E4)]
         public teUUID m_2746D7E4;

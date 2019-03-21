@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x38F4E107, "STUAnimBlendTree_PlayAnimCancelItem")]
     public class STUAnimBlendTree_PlayAnimCancelItem : STUInstance {
         [STUFieldAttribute(0xB4FF0E2F, "m_animAlias")]
-        public teStructuredDataAssetRef<STUAnimAlias> m_animAlias;
+        public teStructuredDataAssetRef<ulong> m_animAlias;
 
         [STUFieldAttribute(0xDB084D42, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimBlendTree_PlayAnimCancelCategory[] m_DB084D42;

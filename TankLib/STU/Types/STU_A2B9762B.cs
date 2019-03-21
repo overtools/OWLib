@@ -7,5 +7,8 @@ namespace TankLib.STU.Types {
     public class STU_A2B9762B : STUInstance {
         [STUFieldAttribute(0xE9A62AF1)]
         public Enum_790E517D m_E9A62AF1;
+
+        [STUFieldAttribute(0xCAB44FE3)]
+        public byte m_CAB44FE3;
     }
 }

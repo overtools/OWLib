@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xF2179AD1, "STUConfigVarModelLook")]
     public class STUConfigVarModelLook : STU_E4324757 {
         [STUFieldAttribute(0x041CE51F, "m_modelLook")]
-        public teStructuredDataAssetRef<STUModelLook> m_modelLook;
+        public teStructuredDataAssetRef<ulong> m_modelLook;
     }
 }

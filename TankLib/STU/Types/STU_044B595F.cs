@@ -20,7 +20,7 @@ namespace TankLib.STU.Types {
         public STU_27958A58[] m_22638E8E;
 
         [STUFieldAttribute(0xEF646D9F, "m_state")]
-        public teStructuredDataAssetRef<STUUXLink> m_state;
+        public teStructuredDataAssetRef<ulong> m_state;
 
         [STUFieldAttribute(0xB93CB2D5, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_A0BDC3D3 m_B93CB2D5;

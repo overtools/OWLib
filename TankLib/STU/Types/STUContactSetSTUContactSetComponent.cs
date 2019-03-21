@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x5054972D, "STUContactSetSTUContactSetComponent")]
     public class STUContactSetSTUContactSetComponent : STUEntityComponent {
         [STUFieldAttribute(0x0A84537A, "m_contactSet")]
-        public teStructuredDataAssetRef<STUContactSet> m_contactSet;
+        public teStructuredDataAssetRef<ulong> m_contactSet;
     }
 }

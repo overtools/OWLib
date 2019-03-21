@@ -6,10 +6,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x73BB2F3A, "STUEntityDefinition")]
     public class STUEntityDefinition : STUInstance {
         [STUFieldAttribute(0x8B9A461F)]
-        public teStructuredDataAssetRef<STUEntityDefinition> m_8B9A461F;
+        public teStructuredDataAssetRef<ulong> m_8B9A461F;
 
         [STUFieldAttribute(0x04A8896C)]
-        public teStructuredDataAssetRef<STUEntityDefinition> m_04A8896C;
+        public teStructuredDataAssetRef<ulong> m_04A8896C;
 
         [STUFieldAttribute(0xF29E4995, "m_childEntityData", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUChildEntityDefinition[] m_childEntityData;

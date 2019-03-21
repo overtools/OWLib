@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x9F08AA06)]
     public class STU_9F08AA06 : STU_CCAD18DB {
         [STUFieldAttribute(0x90119470, "m_enum")]
-        public teStructuredDataAssetRef<STU_53908303> m_enum;
+        public teStructuredDataAssetRef<ulong> m_enum;
 
         [STUFieldAttribute(0xADE95629, "m_items", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_8EFCB903[] m_items;

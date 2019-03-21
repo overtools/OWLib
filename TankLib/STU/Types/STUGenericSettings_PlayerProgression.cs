@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STUUnlocks m_otherUnlocks;
 
         [STUFieldAttribute(0xC84D463F)]
-        public teStructuredDataAssetRef<STUUnlock>[] m_C84D463F;
+        public teStructuredDataAssetRef<ulong>[] m_C84D463F;
 
         [STUFieldAttribute(0x50C6BC40, "m_lootBoxCelebrationOverrides", ReaderType = typeof(InlineInstanceFieldReader))]
         public STULootBoxCelebrationOverride[] m_lootBoxCelebrationOverrides;

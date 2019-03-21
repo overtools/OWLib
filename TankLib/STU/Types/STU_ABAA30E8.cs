@@ -5,12 +5,12 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xABAA30E8)]
     public class STU_ABAA30E8 : STUEntityComponent {
         [STUFieldAttribute(0x3A0E4D92)]
-        public teStructuredDataAssetRef<STUEffect> m_3A0E4D92;
+        public teStructuredDataAssetRef<ulong> m_3A0E4D92;
 
         [STUFieldAttribute(0xA822F16C)]
-        public teStructuredDataAssetRef<STUModel> m_A822F16C;
+        public teStructuredDataAssetRef<ulong> m_A822F16C;
 
         [STUFieldAttribute(0xEF2002AA)]
-        public teStructuredDataAssetRef<STUModelLook> m_EF2002AA;
+        public teStructuredDataAssetRef<ulong> m_EF2002AA;
     }
 }

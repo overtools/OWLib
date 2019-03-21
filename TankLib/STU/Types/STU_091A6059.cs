@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_98D1699F;
 
         [STUFieldAttribute(0xAC8C7456)]
-        public teStructuredDataAssetRef<STUUXLink> m_AC8C7456;
+        public teStructuredDataAssetRef<ulong> m_AC8C7456;
 
         [STUFieldAttribute(0xC08C4427, "m_name")]
         public teString m_name;
@@ -23,7 +23,7 @@ namespace TankLib.STU.Types {
         public teString m_5FBF5E3A;
 
         [STUFieldAttribute(0xFD53ECB8, "m_rarity")]
-        public teStructuredDataAssetRef<STUUXLink> m_rarity;
+        public teStructuredDataAssetRef<ulong> m_rarity;
 
         [STUFieldAttribute(0xF1A601CE)]
         public teString m_F1A601CE;

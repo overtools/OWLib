@@ -4,12 +4,12 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x6226036A, "STUStatescriptStateCombatModFilter")]
-    public class STUStatescriptStateCombatModFilter : STUStatescriptState {
+    public class STUStatescriptStateCombatModFilter : STU_FC063208 {
         [STUFieldAttribute(0xF60AA143)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_F60AA143;
+        public teStructuredDataAssetRef<ulong>[] m_F60AA143;
 
         [STUFieldAttribute(0x5CFFCBAE)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_5CFFCBAE;
+        public teStructuredDataAssetRef<ulong>[] m_5CFFCBAE;
 
         [STUFieldAttribute(0x60703B1E)]
         public teStructuredDataAssetRef<ulong> m_60703B1E;
@@ -17,8 +17,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x50530EAB, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_50530EAB;
 
-        [STUFieldAttribute(0xF8274C10, "m_filter", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVarFilter m_filter;
+        [STUFieldAttribute(0x6AA5D70F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVarFilter m_6AA5D70F;
 
         [STUFieldAttribute(0x941C56C2, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_941C56C2;
@@ -26,17 +26,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x893AABFC, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_893AABFC;
 
-        [STUFieldAttribute(0x50AE7CEC, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_076E0DBA m_50AE7CEC;
-
-        [STUFieldAttribute(0x6E2088FE, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_076E0DBA m_6E2088FE;
-
-        [STUFieldAttribute(0xE1AD18EA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_076E0DBA m_E1AD18EA;
-
-        [STUFieldAttribute(0x022C9016, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUStatescriptOutputPlug m_022C9016;
+        [STUFieldAttribute(0xF7872851, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_F7872851;
 
         [STUFieldAttribute(0x41B10FF2)]
         public Enum_32773B82 m_41B10FF2;

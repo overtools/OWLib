@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x28FE8FB4)]
     public class STU_28FE8FB4 : STUComponentInstanceData {
         [STUFieldAttribute(0xAA8E1BB0, "m_targetTags")]
-        public teStructuredDataAssetRef<STUTargetTag>[] m_targetTags;
+        public teStructuredDataAssetRef<ulong>[] m_targetTags;
 
         [STUFieldAttribute(0x9B2B1EC8, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_5BE35DC7[] m_9B2B1EC8;

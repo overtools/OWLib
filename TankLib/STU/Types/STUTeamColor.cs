@@ -14,9 +14,6 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD74D5F6F, "m_uiData", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_176E7ACB m_uiData;
 
-        [STUFieldAttribute(0xAE42D53E, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_7CD6F719 m_AE42D53E;
-
         [STUFieldAttribute(0x939ABB2C, "m_materialData")]
         public teStructuredDataAssetRef<ulong> m_materialData;
 

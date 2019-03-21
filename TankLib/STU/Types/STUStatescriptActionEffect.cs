@@ -5,6 +5,9 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0x0FF09DD0, "STUStatescriptActionEffect")]
     public class STUStatescriptActionEffect : STUStatescriptAction {
+        [STUFieldAttribute(0xBA891264, "m_dataFlow", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_13D35171[] m_dataFlow;
+
         [STUFieldAttribute(0x58D56DD4, "m_effect", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_effect;
 

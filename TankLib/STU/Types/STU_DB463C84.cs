@@ -7,13 +7,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xDB463C84)]
     public class STU_DB463C84 : STU_C80FEB45 {
         [STUFieldAttribute(0x3C6E9515)]
-        public teStructuredDataAssetRef<STUTexture> m_3C6E9515;
+        public teStructuredDataAssetRef<ulong> m_3C6E9515;
 
         [STUFieldAttribute(0x60C7A1E1)]
-        public teStructuredDataAssetRef<STUTexture> m_60C7A1E1;
+        public teStructuredDataAssetRef<ulong> m_60C7A1E1;
 
         [STUFieldAttribute(0xB99D8B71)]
-        public teStructuredDataAssetRef<STUTexture> m_B99D8B71;
+        public teStructuredDataAssetRef<ulong> m_B99D8B71;
 
         [STUFieldAttribute(0x43B2FD3F)]
         public teColorRGBA m_43B2FD3F;

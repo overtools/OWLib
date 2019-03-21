@@ -4,6 +4,9 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xF6CCDAFC, "STUSkin")]
     public class STUSkin : STUSkinBase {
+        [STUFieldAttribute(0x40996075)]
+        public teStructuredDataAssetRef<ulong> m_40996075;
+
         [STUFieldAttribute(0x0EDCE350)]
         public teStructuredDataAssetRef<ulong> m_0EDCE350;
 
@@ -14,16 +17,16 @@ namespace TankLib.STU.Types {
         public teString m_skinCode;
 
         [STUFieldAttribute(0x84625AA3, "m_skinThemes")]
-        public teStructuredDataAssetRef<STUSkinTheme>[] m_skinThemes;
+        public teStructuredDataAssetRef<ulong>[] m_skinThemes;
 
         [STUFieldAttribute(0x053595FD, "m_skinThumbnail")]
         public teStructuredDataAssetRef<ulong> m_skinThumbnail;
 
         [STUFieldAttribute(0xDBEF61FE, "m_skinEffects")]
-        public teStructuredDataAssetRef<STUEffect>[] m_skinEffects;
+        public teStructuredDataAssetRef<ulong>[] m_skinEffects;
 
         [STUFieldAttribute(0x38BFB46C, "m_resourceKey")]
-        public teStructuredDataAssetRef<STUResourceKey> m_resourceKey;
+        public teStructuredDataAssetRef<ulong> m_resourceKey;
 
         [STUFieldAttribute(0x49A51309)]
         public teString m_49A51309;

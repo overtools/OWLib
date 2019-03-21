@@ -12,19 +12,19 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_ECCC4A5D;
 
         [STUFieldAttribute(0x88F5CF3E, "m_heroWeapons")]
-        public teStructuredDataAssetRef<STUHeroWeapon>[] m_heroWeapons;
+        public teStructuredDataAssetRef<ulong>[] m_heroWeapons;
 
         [STUFieldAttribute(0x71818BC5)]
-        public teStructuredDataAssetRef<STUEffect>[] m_71818BC5;
+        public teStructuredDataAssetRef<ulong>[] m_71818BC5;
 
         [STUFieldAttribute(0xB8DC6D46, "m_teamColor")]
-        public teStructuredDataAssetRef<STUTeamColor> m_teamColor;
+        public teStructuredDataAssetRef<ulong> m_teamColor;
 
         [STUFieldAttribute(0x70D5F086, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_882807BA[] m_70D5F086;
 
         [STUFieldAttribute(0x02F889AE)]
-        public teStructuredDataAssetRef<STUSkinTheme> m_02F889AE;
+        public teStructuredDataAssetRef<ulong> m_02F889AE;
 
         [STUFieldAttribute(0xC3E03C7F, "m_color")]
         public teColorRGBA m_color;

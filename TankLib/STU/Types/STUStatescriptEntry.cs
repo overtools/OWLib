@@ -6,5 +6,8 @@ namespace TankLib.STU.Types {
     public class STUStatescriptEntry : STUStatescriptBase {
         [STUFieldAttribute(0x8C4782E9, "m_outPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptOutputPlug m_outPlug;
+
+        [STUFieldAttribute(0x5AEA0A51)]
+        public uint m_5AEA0A51;
     }
 }

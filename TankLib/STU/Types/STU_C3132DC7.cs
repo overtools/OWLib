@@ -6,10 +6,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xC3132DC7)]
     public class STU_C3132DC7 : STU_A3C7077A {
         [STUFieldAttribute(0xF0A9405A, "m_sourceTeam")]
-        public teStructuredDataAssetRef<STUTeamColor> m_sourceTeam;
+        public teStructuredDataAssetRef<ulong> m_sourceTeam;
 
         [STUFieldAttribute(0xB999DDE2)]
-        public teStructuredDataAssetRef<STUEmptyAsset> m_B999DDE2;
+        public teStructuredDataAssetRef<ulong> m_B999DDE2;
 
         [STUFieldAttribute(0x7943D34C)]
         public teColorRGB m_7943D34C;

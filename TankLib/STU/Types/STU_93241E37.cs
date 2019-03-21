@@ -11,19 +11,19 @@ namespace TankLib.STU.Types {
         public teString m_38B64266;
 
         [STUFieldAttribute(0xE02BEE24, "m_celebration")]
-        public teStructuredDataAssetRef<STUCelebration> m_celebration;
+        public teStructuredDataAssetRef<ulong> m_celebration;
 
         [STUFieldAttribute(0x08D19750)]
-        public teStructuredDataAssetRef<STUUXDisplayText> m_08D19750;
+        public teStructuredDataAssetRef<ulong> m_08D19750;
 
         [STUFieldAttribute(0xB9D14B98)]
-        public teStructuredDataAssetRef<STUUXDisplayText> m_B9D14B98;
+        public teStructuredDataAssetRef<ulong> m_B9D14B98;
 
         [STUFieldAttribute(0x87EACF5F, "m_cardTexture")]
-        public teStructuredDataAssetRef<STUTexture> m_cardTexture;
+        public teStructuredDataAssetRef<ulong> m_cardTexture;
 
         [STUFieldAttribute(0x2EB919C9, "m_categories")]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_categories;
+        public teStructuredDataAssetRef<ulong>[] m_categories;
 
         [STUFieldAttribute(0xD202A3D3)]
         public int m_D202A3D3;

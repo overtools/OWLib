@@ -29,8 +29,20 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x55F09219, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_09B5DE67 m_55F09219;
 
+        [STUFieldAttribute(0xF3C2AB9A, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_09B5DE67 m_F3C2AB9A;
+
         [STUFieldAttribute(0x584BDE7B, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_09B5DE67 m_584BDE7B;
+
+        [STUFieldAttribute(0x7912767E, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_09B5DE67 m_7912767E;
+
+        [STUFieldAttribute(0x9A17B219, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_09B5DE67 m_9A17B219;
+
+        [STUFieldAttribute(0x12B97E92, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_09B5DE67 m_12B97E92;
 
         [STUFieldAttribute(0x12361E87)]
         public teColorRGB m_12361E87;
@@ -85,6 +97,36 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x91BF5481)]
         public teColorRGB m_91BF5481;
+
+        [STUFieldAttribute(0x9FE9409F)]
+        public teColorRGB m_9FE9409F;
+
+        [STUFieldAttribute(0x3E8859DD)]
+        public teColorRGB m_3E8859DD;
+
+        [STUFieldAttribute(0xD5B8E6C3)]
+        public float m_D5B8E6C3;
+
+        [STUFieldAttribute(0xB68BF148)]
+        public float m_B68BF148;
+
+        [STUFieldAttribute(0xF66502B0)]
+        public float m_F66502B0;
+
+        [STUFieldAttribute(0x0C735F2D)]
+        public float m_0C735F2D;
+
+        [STUFieldAttribute(0x888104B2)]
+        public float m_888104B2;
+
+        [STUFieldAttribute(0xD76869E2)]
+        public float m_D76869E2;
+
+        [STUFieldAttribute(0x6B5CD9AD)]
+        public float m_6B5CD9AD;
+
+        [STUFieldAttribute(0xAC78BB56)]
+        public float m_AC78BB56;
 
         [STUFieldAttribute(0x0356A8BE)]
         public float m_0356A8BE;

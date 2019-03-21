@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x9FFCF237, "STULootBoxCurrencyRarityUnlock")]
     public class STULootBoxCurrencyRarityUnlock : STUInstance {
         [STUFieldAttribute(0xF5087894, "m_unlock")]
-        public teStructuredDataAssetRef<STUUnlock> m_unlock;
+        public teStructuredDataAssetRef<ulong> m_unlock;
 
         [STUFieldAttribute(0xBB99FCD3, "m_rarity")]
         public STUUnlockRarity m_rarity;

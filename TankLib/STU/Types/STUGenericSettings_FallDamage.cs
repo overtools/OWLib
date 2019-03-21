@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xA10FCCD3, "STUGenericSettings_FallDamage")]
     public class STUGenericSettings_FallDamage : STUGenericSettings_Base {
         [STUFieldAttribute(0x7B5AE194)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_7B5AE194;
+        public teStructuredDataAssetRef<ulong>[] m_7B5AE194;
 
         [STUFieldAttribute(0x13024362, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUAnimCurve m_13024362;

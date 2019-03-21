@@ -5,10 +5,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x38F95923, "STUUXViewSource")]
     public class STUUXViewSource : STUUXItemsControl {
         [STUFieldAttribute(0x7108ECE0, "m_id")]
-        public teStructuredDataAssetRef<STUUXLink> m_id;
+        public teStructuredDataAssetRef<ulong> m_id;
 
         [STUFieldAttribute(0x15192D8D, "m_source")]
-        public teStructuredDataAssetRef<STU_B77FCA72> m_source;
+        public teStructuredDataAssetRef<ulong> m_source;
 
         [STUFieldAttribute(0x5D681197, "m_isRoot")]
         public byte m_isRoot;

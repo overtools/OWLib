@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xA82CD4B2, "STUConfigVarDataFlow")]
     public class STUConfigVarDataFlow : STU_E4324757 {
         [STUFieldAttribute(0x5A6D4FBD)]
-        public teStructuredDataAssetRef<STUDataFlow> m_5A6D4FBD;
+        public teStructuredDataAssetRef<ulong> m_5A6D4FBD;
     }
 }

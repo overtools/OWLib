@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xA5447DAD, "STUConfigVarGameMessage")]
     public class STUConfigVarGameMessage : STUConfigVarResource {
         [STUFieldAttribute(0x92A85396, "m_gameMessage")]
-        public teStructuredDataAssetRef<STUGameMessage> m_gameMessage;
+        public teStructuredDataAssetRef<ulong> m_gameMessage;
     }
 }

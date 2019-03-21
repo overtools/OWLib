@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xD931E2CF, "STUCriteria_IsHero")]
     public class STUCriteria_IsHero : STUCriteria {
         [STUFieldAttribute(0x37AB13D3, "m_hero")]
-        public teStructuredDataAssetRef<STUHero> m_hero;
+        public teStructuredDataAssetRef<ulong> m_hero;
     }
 }

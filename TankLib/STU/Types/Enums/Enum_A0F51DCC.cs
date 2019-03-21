@@ -5,10 +5,10 @@ namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0xA0F51DCC)]
     public enum Enum_A0F51DCC : uint {
         [STUFieldAttribute(0xA9A588B3)]
-        Standard = 0x0,
+        xA9A588B3 = 0x0,
         [STUFieldAttribute(0xA5BB799F)]
-        Event = 0x1,
+        xA5BB799F = 0x1,
         [STUFieldAttribute(0x4224D20E)]
-        Scripted = 0x2,
+        x4224D20E = 0x2,
     }
 }

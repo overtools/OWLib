@@ -5,13 +5,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x6EBA453A)]
     public class STU_6EBA453A : STU_C7C085F6 {
         [STUFieldAttribute(0x172CAE5E)]
-        public teStructuredDataAssetRef<STUAnimation> m_172CAE5E;
+        public teStructuredDataAssetRef<ulong> m_172CAE5E;
 
         [STUFieldAttribute(0xEC4CAE23)]
-        public teStructuredDataAssetRef<STUDataFlow> m_EC4CAE23;
+        public teStructuredDataAssetRef<ulong> m_EC4CAE23;
 
         [STUFieldAttribute(0x2C9D1489)]
-        public teStructuredDataAssetRef<STUAnimation> m_2C9D1489;
+        public teStructuredDataAssetRef<ulong> m_2C9D1489;
 
         [STUFieldAttribute(0x5620DA50, "m_globalWeightMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimGlobalWeightMultipliers m_globalWeightMultipliers;

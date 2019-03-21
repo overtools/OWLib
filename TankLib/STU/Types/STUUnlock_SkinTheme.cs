@@ -5,6 +5,9 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xE05E4446, "STUUnlock_SkinTheme")]
     public class STUUnlock_SkinTheme : STUUnlock {
         [STUFieldAttribute(0x4C167404, "m_skinTheme")]
-        public teStructuredDataAssetRef<STUSkinTheme> m_skinTheme;
+        public teStructuredDataAssetRef<ulong> m_skinTheme;
+
+        [STUFieldAttribute(0x650CA813)]
+        public teStructuredDataAssetRef<ulong> m_650CA813;
     }
 }

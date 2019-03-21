@@ -83,11 +83,11 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 throw new Exception("no output path");
             }
 
-            const string ver = "54052";
+            const string ver = "54983";
             var contentHashes = GetContentHashes($@"D:\ow\resources\verdata\{ver}.cmfhashes");
             //var guids = GetGUIDs($@"D:\ow\resources\verdata\{ver}.guids");
 
-            const string container = "DebugNewEntities2";
+            const string container = "DebugNewEntities";
             
             Combo.ComboInfo info = new Combo.ComboInfo();
             AddNewByContentHash(info, contentHashes, 0x4, 0x7C, 0x3F, 0xB2);

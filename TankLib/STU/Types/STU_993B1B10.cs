@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STU_870745EA m_508251E8;
 
         [STUFieldAttribute(0x24961D41)]
-        public teStructuredDataAssetRef<STUHardPoint> m_24961D41;
+        public teStructuredDataAssetRef<ulong> m_24961D41;
 
         [STUFieldAttribute(0xCD486A71, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAIWeaponFireControlInfo[] m_CD486A71;

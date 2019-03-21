@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x9D28963F, "STUFirstPersonComponent")]
     public class STUFirstPersonComponent : STUEntityComponent {
         [STUFieldAttribute(0xA83C2C26, "m_entity")]
-        public teStructuredDataAssetRef<STUEntityDefinition> m_entity;
+        public teStructuredDataAssetRef<ulong> m_entity;
 
         [STUFieldAttribute(0x4B75D84E)]
         public float m_4B75D84E;

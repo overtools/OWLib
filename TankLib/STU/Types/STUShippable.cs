@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x8FFAF278, "STUShippable")]
     public class STUShippable : STUInstance {
         [STUFieldAttribute(0x38BFB46C, "m_resourceKey")]
-        public teStructuredDataAssetRef<STUResourceKey> m_resourceKey;
+        public teStructuredDataAssetRef<ulong> m_resourceKey;
 
         [STUFieldAttribute(0xBB16810A, "m_priority")]
         public Enum_D407CA8B m_priority;

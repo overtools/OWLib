@@ -46,10 +46,10 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x93EA5A15, "m_configAnimCurves", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_3426C7F2[] m_configAnimCurves;
 
+        [STUFieldAttribute(0x29EFF18D, "m_crc")]
+        public ulong m_crc;
+
         [STUFieldAttribute(0xFA7268E4)]
         public uint m_FA7268E4;
-
-        [STUFieldAttribute(0x29EFF18D, "m_crc")]
-        public uint m_crc;
     }
 }

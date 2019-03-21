@@ -4,6 +4,9 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xA311F881, "STUAnimNode_Strafe")]
     public class STUAnimNode_Strafe : STUAnimNode_Base {
+        [STUFieldAttribute(0xCE880AAB, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_25B808BD m_CE880AAB;
+
         [STUFieldAttribute(0x6E576DA0, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_25B808BD m_6E576DA0;
 

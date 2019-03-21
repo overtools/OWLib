@@ -28,8 +28,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x06F7CD27, "Capsule3Ds", ReaderType = typeof(InlineInstanceFieldReader))]
         public SDD_Capsule3D[] Capsule3Ds;
 
-        [STUFieldAttribute(0xEF688A99, "AABB3Ds", ReaderType = typeof(InlineInstanceFieldReader))]
-        public SDD_AABB3D[] AABB3Ds;
+        [STUFieldAttribute(0xEF688A99, ReaderType = typeof(InlineInstanceFieldReader))]
+        public SDD_AABB3D[] m_EF688A99;
 
         [STUFieldAttribute(0x2367E322, "AnimFrames", ReaderType = typeof(InlineInstanceFieldReader))]
         public SDD_AnimFrame[] AnimFrames;

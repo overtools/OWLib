@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x003C517B, "STUPlaybackProperties")]
     public class STUPlaybackProperties : STUInstance {
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
-        public teStructuredDataAssetRef<STUVoiceCategory> m_category;
+        public teStructuredDataAssetRef<ulong> m_category;
 
         [STUFieldAttribute(0xDF647B95)]
         public Enum_BC00E017 m_DF647B95;

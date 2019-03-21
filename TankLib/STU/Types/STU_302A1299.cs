@@ -20,12 +20,12 @@ namespace TankLib.STU.Types {
         public STU_C8D87B59[] m_A4977032;
 
         [STUFieldAttribute(0x01689346)]
-        public teStructuredDataAssetRef<STUIdentifier> m_01689346;
+        public teStructuredDataAssetRef<ulong> m_01689346;
 
         [STUFieldAttribute(0xF50771F7)]
-        public teStructuredDataAssetRef<STU_6BE90C5C>[] m_F50771F7;
+        public teStructuredDataAssetRef<ulong>[] m_F50771F7;
 
         [STUFieldAttribute(0x50AE5CF0)]
-        public teStructuredDataAssetRef<STU_6BE90C5C>[] m_50AE5CF0;
+        public teStructuredDataAssetRef<ulong>[] m_50AE5CF0;
     }
 }

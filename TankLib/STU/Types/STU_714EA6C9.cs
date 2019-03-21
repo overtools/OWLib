@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_name;
 
         [STUFieldAttribute(0x5E000370)]
-        public teStructuredDataAssetRef<STUUXLink> m_5E000370;
+        public teStructuredDataAssetRef<ulong> m_5E000370;
     }
 }

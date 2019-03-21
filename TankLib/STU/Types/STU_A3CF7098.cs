@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xA3CF7098)]
     public class STU_A3CF7098 : STU_14C01353 {
         [STUFieldAttribute(0x4E87690F, "m_map")]
-        public teStructuredDataAssetRef<STUMap> m_map;
+        public teStructuredDataAssetRef<ulong> m_map;
     }
 }

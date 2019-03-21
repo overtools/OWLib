@@ -4,5 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x67AFF7D7)]
     public class STU_67AFF7D7 : STUConfigVarBoolBase {
+        [STUFieldAttribute(0x67465E75, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_67465E75;
     }
 }

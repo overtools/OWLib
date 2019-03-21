@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x597E2EDC, "STUConfigVarLoadout")]
     public class STUConfigVarLoadout : STU_E4324757 {
         [STUFieldAttribute(0xC68C8155, "m_loadout")]
-        public teStructuredDataAssetRef<STULoadout> m_loadout;
+        public teStructuredDataAssetRef<ulong> m_loadout;
     }
 }

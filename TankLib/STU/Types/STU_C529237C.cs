@@ -6,10 +6,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xC529237C)]
     public class STU_C529237C : STU_A2B9762B {
         [STUFieldAttribute(0x38F997AB, "m_entityDefinition")]
-        public teStructuredDataAssetRef<STUEntityDefinition> m_entityDefinition;
+        public teStructuredDataAssetRef<ulong> m_entityDefinition;
 
         [STUFieldAttribute(0xC0A83121, "m_skin")]
-        public teStructuredDataAssetRef<STUSkin> m_skin;
+        public teStructuredDataAssetRef<ulong> m_skin;
 
         [STUFieldAttribute(0xC48FF2B6, "m_embeddedSkin")]
         public teString m_embeddedSkin;
@@ -18,7 +18,7 @@ namespace TankLib.STU.Types {
         public STUComponentInstanceData[] m_placementData;
 
         [STUFieldAttribute(0x17758DA1)]
-        public teStructuredDataAssetRef<STUBoneLabel>[] m_17758DA1;
+        public teStructuredDataAssetRef<ulong>[] m_17758DA1;
 
         [STUFieldAttribute(0x1EA749A8)]
         public teVec3 m_1EA749A8;
@@ -28,5 +28,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xF530632B)]
         public byte m_F530632B;
+
+        [STUFieldAttribute(0x77E70F30)]
+        public byte m_77E70F30;
     }
 }

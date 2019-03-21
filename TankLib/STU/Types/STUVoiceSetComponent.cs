@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x8745618A, "STUVoiceSetComponent")]
     public class STUVoiceSetComponent : STUEntityComponent {
         [STUFieldAttribute(0x8A4FF89C, "m_voiceDefinition")]
-        public teStructuredDataAssetRef<STUVoiceSet> m_voiceDefinition;
+        public teStructuredDataAssetRef<ulong> m_voiceDefinition;
     }
 }
