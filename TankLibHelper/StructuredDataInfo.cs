@@ -198,5 +198,9 @@ namespace TankLibHelper {
         public int SerializationType;
         public int Size = -1;
         internal string DebuggerDisplay => $"{Hash:X8} (Type: {Type})";
+
+        public uint GetSTUTypeHash() {
+            return uint.Parse(Type.Split('_')[1], NumberStyles.HexNumber);
+        }
     }
 }

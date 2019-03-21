@@ -24,6 +24,10 @@ namespace TankLibHelper {
              "teMtx43A", "teQuat", "teUUID", "teVec4", "teVec3A", "teVec3", "teVec2", "DBID"};
 
         public override string BuildCSharp() {
+            if (_instance.Parent != 0 && !Info.Instances.ContainsKey(_instance.Parent)) {
+                return null; // parent isn't registered for some reason
+            }
+
             StringBuilder builder = new StringBuilder();
             StringBuilder importBuilder = new StringBuilder();  // ahh rewrite
 
@@ -75,6 +79,14 @@ namespace TankLibHelper {
         }
 
         private void BuildFieldCSharp(STUFieldJSON field, StringBuilder builder) {
+            string linePrefix = string.Empty;
+            if (field.SerializationType == 2 || field.SerializationType == 3 || field.SerializationType == 4 || 
+                field.SerializationType == 5 || field.SerializationType == 7) {
+                if (!Info.Instances.ContainsKey(field.GetSTUTypeHash())) {
+                    linePrefix = "// ";
+                }
+            }
+            
             string attribute;
             {
                 attribute = $"[{nameof(STUFieldAttribute)}(0x{field.Hash:X8}";
@@ -101,8 +113,8 @@ namespace TankLibHelper {
                 definition = $"{type} {Info.GetFieldName(field.Hash)}";
             }
 
-            builder.AppendLine($"        {attribute}");
-            builder.AppendLine($"        public {definition};");
+            builder.AppendLine($"        {linePrefix}{attribute}");
+            builder.AppendLine($"        {linePrefix}public {definition};");
             
             // todo: what is going on with stuunlock
         }
@@ -119,13 +131,13 @@ namespace TankLibHelper {
         private string GetFieldTypeCSharp(STUFieldJSON field) {
             if ((field.SerializationType == 2 || field.SerializationType == 3 || field.SerializationType == 4 ||
                  field.SerializationType == 5) && field.Type.StartsWith("STU_")) {
-                uint hash = uint.Parse(field.Type.Split('_')[1], NumberStyles.HexNumber);
+                uint hash = field.GetSTUTypeHash();
 
                 return Info.GetInstanceName(hash);
             }
 
             if (field.SerializationType == 7) {
-                uint hash = uint.Parse(field.Type.Split('_')[1], NumberStyles.HexNumber);
+                uint hash = field.GetSTUTypeHash();
                 return $"{nameof(teStructuredDataHashMap<STUInstance>)}<{Info.GetInstanceName(hash)}>";
             }
 

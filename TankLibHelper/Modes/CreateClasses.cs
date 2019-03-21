@@ -84,6 +84,7 @@ namespace TankLibHelper.Modes {
 
         public void BuildAndWriteCSharp(ClassBuilder builder, string directory) {
             string instanceCode = builder.BuildCSharp();
+            if (instanceCode == null) return;
 
             using (StreamWriter file = new StreamWriter(Path.Combine(directory, builder.GetName()+".cs"))) {
                 file.Write(instanceCode);
