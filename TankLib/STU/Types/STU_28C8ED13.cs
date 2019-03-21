@@ -7,40 +7,40 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x28C8ED13)]
     public class STU_28C8ED13 : STU_A3C7077A {
         [STUFieldAttribute(0xD0A9CB68)]
-        public teStructuredDataAssetRef<STUTexture> m_D0A9CB68;
+        public teStructuredDataAssetRef<ulong> m_D0A9CB68;
 
         [STUFieldAttribute(0xE1E200DD)]
-        public teStructuredDataAssetRef<STUTexture> m_E1E200DD;
+        public teStructuredDataAssetRef<ulong> m_E1E200DD;
 
         [STUFieldAttribute(0x2370E609)]
-        public teStructuredDataAssetRef<STUTexture> m_2370E609;
+        public teStructuredDataAssetRef<ulong> m_2370E609;
 
         [STUFieldAttribute(0xE88B4D9C)]
-        public teStructuredDataAssetRef<STUTexture> m_E88B4D9C;
+        public teStructuredDataAssetRef<ulong> m_E88B4D9C;
 
         [STUFieldAttribute(0x09E32A58)]
-        public teStructuredDataAssetRef<STUTexture> m_09E32A58;
+        public teStructuredDataAssetRef<ulong> m_09E32A58;
 
         [STUFieldAttribute(0xC9AC8391)]
-        public teStructuredDataAssetRef<STUTexture> m_C9AC8391;
+        public teStructuredDataAssetRef<ulong> m_C9AC8391;
 
         [STUFieldAttribute(0xB999DDE2)]
-        public teStructuredDataAssetRef<STUEmptyAsset> m_B999DDE2;
+        public teStructuredDataAssetRef<ulong> m_B999DDE2;
 
         [STUFieldAttribute(0xDB643E43)]
-        public teStructuredDataAssetRef<STUDataFlow> m_DB643E43;
+        public teStructuredDataAssetRef<ulong> m_DB643E43;
 
         [STUFieldAttribute(0x456C6746)]
-        public teStructuredDataAssetRef<STUTexture> m_456C6746;
+        public teStructuredDataAssetRef<ulong> m_456C6746;
 
         [STUFieldAttribute(0x4E8D9CE4)]
-        public teStructuredDataAssetRef<STUTexture> m_4E8D9CE4;
+        public teStructuredDataAssetRef<ulong> m_4E8D9CE4;
 
         [STUFieldAttribute(0xA076415A)]
-        public teStructuredDataAssetRef<STUTexture> m_A076415A;
+        public teStructuredDataAssetRef<ulong> m_A076415A;
 
         [STUFieldAttribute(0xC875D6F2)]
-        public teStructuredDataAssetRef<STUTexture> m_C875D6F2;
+        public teStructuredDataAssetRef<ulong> m_C875D6F2;
 
         [STUFieldAttribute(0x3ABA5FA0)]
         public teColorRGB m_3ABA5FA0;

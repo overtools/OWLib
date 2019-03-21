@@ -851,7 +851,7 @@ namespace DataTool.FindLogic {
                             soundInfo.SoundFiles = new Dictionary<uint, ulong>();
 
                             int i = 0;
-                            foreach (teStructuredDataAssetRef<STU_FBCC5EB2> soundWemFile in sound.m_C32C2195.m_soundWEMFiles) {
+                            foreach (teStructuredDataAssetRef<ulong> soundWemFile in sound.m_C32C2195.m_soundWEMFiles) {
                                 Find(info, soundWemFile, replacements, context);
                                 
                                 soundInfo.SoundFiles[sound.m_C32C2195.m_wwiseWEMFileIDs[i]] = GetReplacement(soundWemFile, replacements);
@@ -862,7 +862,7 @@ namespace DataTool.FindLogic {
                             soundInfo.SoundStreams = new Dictionary<uint, ulong>();
                             
                             int i = 0;
-                            foreach (teStructuredDataAssetRef<STU_FBCC5EB2> soundWemStream in sound.m_C32C2195.m_soundWEMStreams) {
+                            foreach (teStructuredDataAssetRef<ulong> soundWemStream in sound.m_C32C2195.m_soundWEMStreams) {
                                 Find(info, soundWemStream, replacements, context);
                                 
                                 soundInfo.SoundStreams[sound.m_C32C2195.m_wwiseWEMStreamIDs[i]] = GetReplacement(soundWemStream, replacements);
@@ -871,12 +871,12 @@ namespace DataTool.FindLogic {
                         }
 
                         if (sound.m_C32C2195.m_09D4067B != null) {
-                            foreach (teStructuredDataAssetRef<STU_C77C3128> soundUnk1 in sound.m_C32C2195.m_09D4067B) {
+                            foreach (teStructuredDataAssetRef<ulong> soundUnk1 in sound.m_C32C2195.m_09D4067B) {
                                 Find(info, soundUnk1, replacements, context);
                             }
                         }
                         if (sound.m_C32C2195.m_4587972B != null) {
-                            foreach (teStructuredDataAssetRef<STU_221B83D5> soundUnk2 in sound.m_C32C2195.m_4587972B) {
+                            foreach (teStructuredDataAssetRef<ulong> soundUnk2 in sound.m_C32C2195.m_4587972B) {
                                 Find(info, soundUnk2, replacements, context);
                             }
                         }

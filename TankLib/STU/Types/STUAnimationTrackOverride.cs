@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STUAnimCurve m_animCurve;
 
         [STUFieldAttribute(0xBA891264, "m_dataFlow")]
-        public teStructuredDataAssetRef<STUDataFlow> m_dataFlow;
+        public teStructuredDataAssetRef<ulong> m_dataFlow;
 
         [STUFieldAttribute(0x07DD813E, "m_value")]
         public float m_value;

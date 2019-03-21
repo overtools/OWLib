@@ -13,16 +13,16 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF9CA7995, "m_paramIds")]
         public uint[] m_paramIds;
 
-        [STUFieldAttribute(0xBF7A74B0, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STU_8C127DE2[] m_BF7A74B0;
+        [STUFieldAttribute(0xBCAD245E)]
+        public ulong[] m_BCAD245E;
+
+        [STUFieldAttribute(0xA4712A0A, "m_treeCRC")]
+        public ulong m_treeCRC;
+
+        [STUFieldAttribute(0x191CEC72)]
+        public ulong m_191CEC72;
 
         [STUFieldAttribute(0xD6497916, "m_rootNode", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_CB30C7C3 m_rootNode;
-
-        [STUFieldAttribute(0xA4712A0A, "m_treeCRC")]
-        public uint m_treeCRC;
-
-        [STUFieldAttribute(0x191CEC72)]
-        public uint m_191CEC72;
     }
 }

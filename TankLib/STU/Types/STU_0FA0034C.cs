@@ -8,10 +8,10 @@ namespace TankLib.STU.Types {
         public teString m_FA1FDF0D;
 
         [STUFieldAttribute(0x48A42D80, "m_soundWEMFiles")]
-        public teStructuredDataAssetRef<STU_FBCC5EB2>[] m_soundWEMFiles;
+        public teStructuredDataAssetRef<ulong>[] m_soundWEMFiles;
 
         [STUFieldAttribute(0x316EBD9D, "m_soundWEMStreams")]
-        public teStructuredDataAssetRef<STU_FBCC5EB2>[] m_soundWEMStreams;
+        public teStructuredDataAssetRef<ulong>[] m_soundWEMStreams;
 
         [STUFieldAttribute(0x72F2A9FA, "m_wwiseWEMFileIDs")]
         public uint[] m_wwiseWEMFileIDs;
@@ -20,16 +20,16 @@ namespace TankLib.STU.Types {
         public uint[] m_wwiseWEMStreamIDs;
 
         [STUFieldAttribute(0x4587972B)]
-        public teStructuredDataAssetRef<STU_221B83D5>[] m_4587972B;
+        public teStructuredDataAssetRef<ulong>[] m_4587972B;
 
         [STUFieldAttribute(0x09D4067B)]
-        public teStructuredDataAssetRef<STU_C77C3128>[] m_09D4067B;
+        public teStructuredDataAssetRef<ulong>[] m_09D4067B;
 
         [STUFieldAttribute(0xF08EDDCA)]
-        public teStructuredDataAssetRef<STU_7CF4746D>[] m_F08EDDCA;
+        public teStructuredDataAssetRef<ulong>[] m_F08EDDCA;
 
         [STUFieldAttribute(0x75754566, "m_soundBank")]
-        public teStructuredDataAssetRef<STUSoundBank> m_soundBank;
+        public teStructuredDataAssetRef<ulong> m_soundBank;
 
         [STUFieldAttribute(0xACB34EFC)]
         public float m_ACB34EFC;

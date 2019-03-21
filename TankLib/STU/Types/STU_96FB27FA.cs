@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x96FB27FA)]
     public class STU_96FB27FA : STUInstance {
         [STUFieldAttribute(0xDB803F2F, "m_unlocks")]
-        public teStructuredDataAssetRef<STUUnlock>[] m_unlocks;
+        public teStructuredDataAssetRef<ulong>[] m_unlocks;
 
         [STUFieldAttribute(0xC9692536)]
         public long m_C9692536;

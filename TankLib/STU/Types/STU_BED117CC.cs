@@ -5,19 +5,19 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xBED117CC)]
     public class STU_BED117CC : STU_C7C085F6 {
         [STUFieldAttribute(0x037C2A15)]
-        public teStructuredDataAssetRef<STUAnimation> m_037C2A15;
+        public teStructuredDataAssetRef<ulong> m_037C2A15;
 
         [STUFieldAttribute(0xB5ED131B)]
-        public teStructuredDataAssetRef<STUAnimation> m_B5ED131B;
+        public teStructuredDataAssetRef<ulong> m_B5ED131B;
 
         [STUFieldAttribute(0x0CB894E0)]
-        public teStructuredDataAssetRef<STUAnimation> m_0CB894E0;
+        public teStructuredDataAssetRef<ulong> m_0CB894E0;
 
         [STUFieldAttribute(0x36012AA3)]
-        public teStructuredDataAssetRef<STUAnimation> m_36012AA3;
+        public teStructuredDataAssetRef<ulong> m_36012AA3;
 
         [STUFieldAttribute(0x8DBB5936)]
-        public teStructuredDataAssetRef<STUDataFlow> m_8DBB5936;
+        public teStructuredDataAssetRef<ulong> m_8DBB5936;
 
         [STUFieldAttribute(0x249150D5)]
         public float m_249150D5;

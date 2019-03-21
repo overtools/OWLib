@@ -5,6 +5,9 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0xC5BE2B08)]
     public class STU_C5BE2B08 : STU_9F7A0E66 {
+        [STUFieldAttribute(0x464FB148)]
+        public teStructuredDataAssetRef<ulong> m_464FB148;
+
         [STUFieldAttribute(0x7594F80E, "m_min")]
         public float m_min;
 
@@ -14,10 +17,10 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD62358FA)]
         public float m_D62358FA;
 
+        [STUFieldAttribute(0x16CCEFC8)]
+        public Enum_542A081B m_16CCEFC8;
+
         [STUFieldAttribute(0x444416F6)]
         public Enum_43D38C2E m_444416F6;
-
-        [STUFieldAttribute(0xF0B84AE7)]
-        public byte m_F0B84AE7;
     }
 }

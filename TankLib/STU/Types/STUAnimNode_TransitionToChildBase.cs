@@ -13,13 +13,13 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x287F50B3, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_15EF3A7E m_287F50B3;
 
+        [STUFieldAttribute(0x1B74A4CB, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_15EF3A7E m_1B74A4CB;
+
         [STUFieldAttribute(0x4E86E083, "m_transitions", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_298296AE[] m_transitions;
 
         [STUFieldAttribute(0x121C1319)]
         public byte m_121C1319;
-
-        [STUFieldAttribute(0x2FB39DE8)]
-        public byte m_2FB39DE8;
     }
 }

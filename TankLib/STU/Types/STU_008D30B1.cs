@@ -5,13 +5,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x008D30B1)]
     public class STU_008D30B1 : STUStatescriptAction {
         [STUFieldAttribute(0x616BEF5B)]
-        public teStructuredDataAssetRef<STUIdentifier> m_616BEF5B;
+        public teStructuredDataAssetRef<ulong> m_616BEF5B;
 
         [STUFieldAttribute(0xDE3C867C)]
         public teString m_DE3C867C;
 
         [STUFieldAttribute(0x9ACAD20A)]
-        public teStructuredDataAssetRef<STUIdentifier> m_9ACAD20A;
+        public teStructuredDataAssetRef<ulong> m_9ACAD20A;
 
         [STUFieldAttribute(0xAF872E86, "m_amount", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_amount;

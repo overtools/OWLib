@@ -5,13 +5,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x1DEBD356)]
     public class STU_1DEBD356 : STUInstance {
         [STUFieldAttribute(0xBC4326FF, "m_stat")]
-        public teStructuredDataAssetRef<STUStat> m_stat;
+        public teStructuredDataAssetRef<ulong> m_stat;
 
         [STUFieldAttribute(0x3C3D1A89)]
-        public teStructuredDataAssetRef<STUStat> m_3C3D1A89;
+        public teStructuredDataAssetRef<ulong> m_3C3D1A89;
 
         [STUFieldAttribute(0xBC9DC9A3)]
-        public teStructuredDataAssetRef<STUGameMode>[] m_BC9DC9A3;
+        public teStructuredDataAssetRef<ulong>[] m_BC9DC9A3;
 
         [STUFieldAttribute(0x2CA766BD)]
         public teStructuredDataAssetRef<ulong> m_2CA766BD;

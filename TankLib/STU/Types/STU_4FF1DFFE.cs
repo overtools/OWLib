@@ -12,13 +12,16 @@ namespace TankLib.STU.Types {
         public STU_7FA0F929[] m_21AC6F4E;
 
         [STUFieldAttribute(0xE6E7A042, "m_states")]
-        public teStructuredDataAssetRef<STU_FA258ECC>[] m_states;
+        public teStructuredDataAssetRef<ulong>[] m_states;
 
         [STUFieldAttribute(0x090DF4F9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_4FF1DFFE[] m_090DF4F9;
 
         [STUFieldAttribute(0x11B47C68, "m_id")]
         public teUUID m_id;
+
+        [STUFieldAttribute(0xF73BDFDA)]
+        public teString m_F73BDFDA;
 
         [STUFieldAttribute(0x9A9E72EC)]
         public byte m_9A9E72EC;

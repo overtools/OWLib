@@ -6,16 +6,16 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x494C33C4, "STUGameMode")]
     public class STUGameMode : STUInstance {
         [STUFieldAttribute(0xA43573F4)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_A43573F4;
+        public teStructuredDataAssetRef<ulong>[] m_A43573F4;
 
         [STUFieldAttribute(0xCF63B633)]
-        public teStructuredDataAssetRef<STU_6BE90C5C> m_CF63B633;
+        public teStructuredDataAssetRef<ulong> m_CF63B633;
 
         [STUFieldAttribute(0x3CE93B76, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameModeVarValuePair[] m_3CE93B76;
 
         [STUFieldAttribute(0xF88BA3B9)]
-        public teStructuredDataAssetRef<STU_6BE90C5C> m_F88BA3B9;
+        public teStructuredDataAssetRef<ulong> m_F88BA3B9;
 
         [STUFieldAttribute(0xAD4BF17F, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameModeVarValuePair[] m_AD4BF17F;
@@ -27,7 +27,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_6EB38130;
 
         [STUFieldAttribute(0xE04197AF, "m_gameRulesetSchemas")]
-        public teStructuredDataAssetRef<STUGameRulesetSchema>[] m_gameRulesetSchemas;
+        public teStructuredDataAssetRef<ulong>[] m_gameRulesetSchemas;
 
         [STUFieldAttribute(0xD440A0F7, "m_teams", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameModeTeam[] m_teams;
@@ -36,7 +36,7 @@ namespace TankLib.STU.Types {
         public STUGameModeLoadoutOverride[] m_loadoutOverrides;
 
         [STUFieldAttribute(0xA8957901, "m_requiredCelebration")]
-        public teStructuredDataAssetRef<STUCelebration> m_requiredCelebration;
+        public teStructuredDataAssetRef<ulong> m_requiredCelebration;
 
         [STUFieldAttribute(0x7F5B54B2)]
         public teStructuredDataAssetRef<ulong> m_7F5B54B2;
@@ -49,6 +49,12 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x8A5415B9, "m_gameModeType")]
         public Enum_1964FED7 m_gameModeType;
+
+        [STUFieldAttribute(0xE2B6AAC3)]
+        public Enum_3285FBF5 m_E2B6AAC3;
+
+        [STUFieldAttribute(0x7E0B4B96)]
+        public float m_7E0B4B96;
 
         [STUFieldAttribute(0x70064613)]
         public byte m_70064613;

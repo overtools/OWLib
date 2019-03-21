@@ -5,13 +5,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xB7EEA3BE, "STUSkinBase")]
     public class STUSkinBase : STUShippable {
         [STUFieldAttribute(0xAA8E1BB0, "m_targetTags")]
-        public teStructuredDataAssetRef<STUTargetTag>[] m_targetTags;
+        public teStructuredDataAssetRef<ulong>[] m_targetTags;
 
         [STUFieldAttribute(0xBCC55571, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_47C34433[] m_BCC55571;
 
         [STUFieldAttribute(0x50FDDF83)]
-        public teStructuredDataAssetRef<STUTeamColor> m_50FDDF83;
+        public teStructuredDataAssetRef<ulong> m_50FDDF83;
 
         [STUFieldAttribute(0x258A7D5C, "m_runtimeOverrides")]
         public teStructuredDataHashMap<STUSkinRuntimeOverride> m_runtimeOverrides;

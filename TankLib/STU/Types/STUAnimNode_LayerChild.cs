@@ -23,9 +23,6 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x4CDE1BE7)]
         public Enum_353C4AFF m_4CDE1BE7;
 
-        [STUFieldAttribute(0xBBAAC89F)]
-        public Enum_AD2CA2C1 m_BBAAC89F;
-
         [STUFieldAttribute(0x2C6F5BC0)]
         public Enum_96A73C9E m_2C6F5BC0;
 

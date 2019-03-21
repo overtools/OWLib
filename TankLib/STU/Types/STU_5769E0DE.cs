@@ -9,9 +9,6 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD1D68906)]
         public teUUID m_D1D68906;
 
-        [STUFieldAttribute(0xBD631144)]
-        public teVec3 m_BD631144;
-
         [STUFieldAttribute(0x3C0F8ED6)]
         public float m_3C0F8ED6;
 

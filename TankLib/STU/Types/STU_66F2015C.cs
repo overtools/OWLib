@@ -5,61 +5,61 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x66F2015C)]
     public class STU_66F2015C : STU_C7C085F6 {
         [STUFieldAttribute(0x2B6D89C1, "m_idle")]
-        public teStructuredDataAssetRef<STUAnimation> m_idle;
+        public teStructuredDataAssetRef<ulong> m_idle;
 
         [STUFieldAttribute(0xBDD95289, "m_movement")]
-        public teStructuredDataAssetRef<STUAnimation> m_movement;
+        public teStructuredDataAssetRef<ulong> m_movement;
 
         [STUFieldAttribute(0x9556D6E4, "m_crouch")]
-        public teStructuredDataAssetRef<STUAnimation> m_crouch;
+        public teStructuredDataAssetRef<ulong> m_crouch;
 
         [STUFieldAttribute(0xED9A28ED, "m_crouchMovement")]
-        public teStructuredDataAssetRef<STUAnimation> m_crouchMovement;
+        public teStructuredDataAssetRef<ulong> m_crouchMovement;
 
         [STUFieldAttribute(0xA09915DA)]
-        public teStructuredDataAssetRef<STUAnimation> m_A09915DA;
+        public teStructuredDataAssetRef<ulong> m_A09915DA;
 
         [STUFieldAttribute(0x17BBC6FC)]
-        public teStructuredDataAssetRef<STUAnimation> m_17BBC6FC;
+        public teStructuredDataAssetRef<ulong> m_17BBC6FC;
 
         [STUFieldAttribute(0x06674F53)]
-        public teStructuredDataAssetRef<STUAnimation> m_06674F53;
+        public teStructuredDataAssetRef<ulong> m_06674F53;
 
         [STUFieldAttribute(0xEA073914)]
-        public teStructuredDataAssetRef<STUAnimation> m_EA073914;
+        public teStructuredDataAssetRef<ulong> m_EA073914;
 
         [STUFieldAttribute(0xADFC762A)]
-        public teStructuredDataAssetRef<STUAnimation> m_ADFC762A;
+        public teStructuredDataAssetRef<ulong> m_ADFC762A;
 
         [STUFieldAttribute(0xD4788324)]
-        public teStructuredDataAssetRef<STUAnimation> m_D4788324;
+        public teStructuredDataAssetRef<ulong> m_D4788324;
 
         [STUFieldAttribute(0x61A98819)]
-        public teStructuredDataAssetRef<STUAnimation> m_61A98819;
+        public teStructuredDataAssetRef<ulong> m_61A98819;
 
         [STUFieldAttribute(0xB86BBFF7)]
-        public teStructuredDataAssetRef<STUAnimation> m_B86BBFF7;
+        public teStructuredDataAssetRef<ulong> m_B86BBFF7;
 
         [STUFieldAttribute(0x0EFACA16)]
-        public teStructuredDataAssetRef<STUAnimation> m_0EFACA16;
+        public teStructuredDataAssetRef<ulong> m_0EFACA16;
 
         [STUFieldAttribute(0x8C8093CC)]
-        public teStructuredDataAssetRef<STUAnimation> m_8C8093CC;
+        public teStructuredDataAssetRef<ulong> m_8C8093CC;
 
         [STUFieldAttribute(0x3EAAFA73)]
-        public teStructuredDataAssetRef<STUAnimation> m_3EAAFA73;
+        public teStructuredDataAssetRef<ulong> m_3EAAFA73;
 
         [STUFieldAttribute(0x774A3A08)]
-        public teStructuredDataAssetRef<STUAnimation> m_774A3A08;
+        public teStructuredDataAssetRef<ulong> m_774A3A08;
 
         [STUFieldAttribute(0x3B889F24)]
-        public teStructuredDataAssetRef<STUAnimation> m_3B889F24;
+        public teStructuredDataAssetRef<ulong> m_3B889F24;
 
         [STUFieldAttribute(0x098679D1)]
-        public teStructuredDataAssetRef<STUAnimation> m_098679D1;
+        public teStructuredDataAssetRef<ulong> m_098679D1;
 
         [STUFieldAttribute(0xE9746119)]
-        public teStructuredDataAssetRef<STUAnimSynchGroup> m_E9746119;
+        public teStructuredDataAssetRef<ulong> m_E9746119;
 
         [STUFieldAttribute(0xB55FB9B2)]
         public float m_B55FB9B2;

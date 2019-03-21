@@ -5,9 +5,9 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x96788737)]
     public class STU_96788737 : STUInstance {
         [STUFieldAttribute(0xFC33191B, "m_logicalButton")]
-        public teStructuredDataAssetRef<STU_C5243F93> m_logicalButton;
+        public teStructuredDataAssetRef<ulong> m_logicalButton;
 
         [STUFieldAttribute(0xD61F784B)]
-        public teStructuredDataAssetRef<STUIdentifier> m_D61F784B;
+        public teStructuredDataAssetRef<ulong> m_D61F784B;
     }
 }

@@ -5,10 +5,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x0B792564, "STUTexture")]
     public class STUTexture : STUInstance {
         [STUFieldAttribute(0xD326911E, "m_thumbnailData")]
-        public teStructuredDataAssetRef<STUThumbnailData> m_thumbnailData;
+        public teStructuredDataAssetRef<ulong> m_thumbnailData;
 
         [STUFieldAttribute(0x98E808AE)]
-        public teStructuredDataAssetRef<STUEmptyAsset> m_98E808AE;
+        public teStructuredDataAssetRef<ulong> m_98E808AE;
 
         [STUFieldAttribute(0x03376566, "m_textureType", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_05BDD390 m_textureType;

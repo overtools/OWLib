@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xB87D57AA, "STUHeroSettingCategory")]
     public class STUHeroSettingCategory : STUInstance {
         [STUFieldAttribute(0x4D2DB658, "m_identifier")]
-        public teStructuredDataAssetRef<STUIdentifier> m_identifier;
+        public teStructuredDataAssetRef<ulong> m_identifier;
 
         [STUFieldAttribute(0xB48F1D22, "m_name")]
         public teStructuredDataAssetRef<ulong> m_name;

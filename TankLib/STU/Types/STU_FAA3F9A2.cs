@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xFAA3F9A2)]
     public class STU_FAA3F9A2 : STUUXObject {
         [STUFieldAttribute(0xB02F7E60, "m_fontFamily")]
-        public teStructuredDataAssetRef<STUFontFamily> m_fontFamily;
+        public teStructuredDataAssetRef<ulong> m_fontFamily;
     }
 }

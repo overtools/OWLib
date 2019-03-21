@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xEA1E5047)]
     public class STU_EA1E5047 : STU_C7C085F6 {
         [STUFieldAttribute(0x84103042)]
-        public teStructuredDataAssetRef<STUDataFlow> m_84103042;
+        public teStructuredDataAssetRef<ulong> m_84103042;
 
         [STUFieldAttribute(0xABE79AB8)]
         public float m_ABE79AB8;

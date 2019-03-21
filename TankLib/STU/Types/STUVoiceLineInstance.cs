@@ -5,10 +5,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x00C21225, "STUVoiceLineInstance")]
     public class STUVoiceLineInstance : STUInstance {
         [STUFieldAttribute(0xD0C28030, "m_effectHardpoint")]
-        public teStructuredDataAssetRef<STUHardPoint> m_effectHardpoint;
+        public teStructuredDataAssetRef<ulong> m_effectHardpoint;
 
         [STUFieldAttribute(0x43C90056)]
-        public teStructuredDataAssetRef<STU_7A68A730> m_43C90056;
+        public teStructuredDataAssetRef<ulong> m_43C90056;
 
         [STUFieldAttribute(0xAF226247, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_F746901F m_AF226247;

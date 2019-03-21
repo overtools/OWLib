@@ -5,10 +5,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x0A55BCC0, "STUInputButtonBinding")]
     public class STUInputButtonBinding : STUInstance {
         [STUFieldAttribute(0xF5928F34)]
-        public teStructuredDataAssetRef<STU_51BAFC27> m_F5928F34;
+        public teStructuredDataAssetRef<ulong> m_F5928F34;
 
         [STUFieldAttribute(0x3C9341F5, "m_logicalButton")]
-        public teStructuredDataAssetRef<STU_C5243F93> m_logicalButton;
+        public teStructuredDataAssetRef<ulong> m_logicalButton;
 
         [STUFieldAttribute(0xE3DB6B8C)]
         public byte m_E3DB6B8C;

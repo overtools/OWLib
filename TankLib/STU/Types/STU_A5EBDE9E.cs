@@ -5,10 +5,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xA5EBDE9E)]
     public class STU_A5EBDE9E : STUStatescriptState {
         [STUFieldAttribute(0xE38A0060)]
-        public teStructuredDataAssetRef<STUVoiceLineSet> m_E38A0060;
+        public teStructuredDataAssetRef<ulong> m_E38A0060;
 
         [STUFieldAttribute(0xA41A5134)]
-        public teStructuredDataAssetRef<STUVoiceLine> m_A41A5134;
+        public teStructuredDataAssetRef<ulong> m_A41A5134;
 
         [STUFieldAttribute(0xE3798C00, "m_targets", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_targets;

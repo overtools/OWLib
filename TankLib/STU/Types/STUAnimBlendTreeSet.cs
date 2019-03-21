@@ -28,11 +28,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF9CA7995, "m_paramIds")]
         public uint[] m_paramIds;
 
+        [STUFieldAttribute(0xBCAD245E)]
+        public ulong[] m_BCAD245E;
+
         [STUFieldAttribute(0x999F01F8, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_C898217C[] m_999F01F8;
 
         [STUFieldAttribute(0x85453F7B)]
-        public teStructuredDataAssetRef<STUAnimCategory>[] m_85453F7B;
+        public teStructuredDataAssetRef<ulong>[] m_85453F7B;
 
         [STUFieldAttribute(0xE1FA44F9, "m_externalRefs")]
         public ulong[] m_externalRefs;

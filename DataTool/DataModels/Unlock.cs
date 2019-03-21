@@ -168,7 +168,7 @@ namespace DataTool.DataModels {
             return GetArray(unlocks?.m_unlocks);
         }
 
-        public static Unlock[] GetArray(teStructuredDataAssetRef<STUUnlock>[] unlocks) {
+        public static Unlock[] GetArray(teStructuredDataAssetRef<ulong>[] unlocks) {
             return GetArray(unlocks?.Select(x => (ulong) x));
         }
     }

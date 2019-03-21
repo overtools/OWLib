@@ -6,13 +6,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x39049749, "STULobbyMapCatalogInfo")]
     public class STULobbyMapCatalogInfo : STUInstance {
         [STUFieldAttribute(0x2C05CD95, "m_catalog")]
-        public teStructuredDataAssetRef<STUMapCatalog> m_catalog;
+        public teStructuredDataAssetRef<ulong> m_catalog;
 
         [STUFieldAttribute(0xE02BEE24, "m_celebration")]
-        public teStructuredDataAssetRef<STUCelebration> m_celebration;
+        public teStructuredDataAssetRef<ulong> m_celebration;
 
         [STUFieldAttribute(0x5A6D4FBD)]
-        public teStructuredDataAssetRef<STUDataFlow> m_5A6D4FBD;
+        public teStructuredDataAssetRef<ulong> m_5A6D4FBD;
 
         [STUFieldAttribute(0xBE382990)]
         public Enum_90451E4A m_BE382990;

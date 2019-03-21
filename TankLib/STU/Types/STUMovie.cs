@@ -5,10 +5,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x289495BA, "STUMovie")]
     public class STUMovie : STUInstance {
         [STUFieldAttribute(0x3D3E8125)]
-        public teStructuredDataAssetRef<STU_804DEAB9> m_3D3E8125;
+        public teStructuredDataAssetRef<ulong> m_3D3E8125;
 
         [STUFieldAttribute(0x386B8E9C, "m_externalSound")]
-        public teStructuredDataAssetRef<STUSound> m_externalSound;
+        public teStructuredDataAssetRef<ulong> m_externalSound;
 
         [STUFieldAttribute(0x48A387B6)]
         public float m_48A387B6;

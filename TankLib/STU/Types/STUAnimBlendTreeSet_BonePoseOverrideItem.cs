@@ -5,22 +5,22 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xF3942997, "STUAnimBlendTreeSet_BonePoseOverrideItem")]
     public class STUAnimBlendTreeSet_BonePoseOverrideItem : STUInstance {
         [STUFieldAttribute(0xD482D723)]
-        public teStructuredDataAssetRef<STUBoneLabel> m_D482D723;
+        public teStructuredDataAssetRef<ulong> m_D482D723;
 
         [STUFieldAttribute(0xEFF840E4)]
-        public teStructuredDataAssetRef<STUHardPoint> m_EFF840E4;
+        public teStructuredDataAssetRef<ulong> m_EFF840E4;
 
         [STUFieldAttribute(0x50524C35)]
-        public teStructuredDataAssetRef<STUBoneLabel> m_50524C35;
+        public teStructuredDataAssetRef<ulong> m_50524C35;
 
         [STUFieldAttribute(0x1C801B34)]
-        public teStructuredDataAssetRef<STUHardPoint> m_1C801B34;
+        public teStructuredDataAssetRef<ulong> m_1C801B34;
 
         [STUFieldAttribute(0x7620379A)]
-        public teStructuredDataAssetRef<STUDataFlow> m_7620379A;
+        public teStructuredDataAssetRef<ulong> m_7620379A;
 
         [STUFieldAttribute(0x81C83F5C)]
-        public teStructuredDataAssetRef<STUDataFlow> m_81C83F5C;
+        public teStructuredDataAssetRef<ulong> m_81C83F5C;
 
         [STUFieldAttribute(0x5481CE6D)]
         public byte m_5481CE6D;

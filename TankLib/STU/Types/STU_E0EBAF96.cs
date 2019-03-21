@@ -24,5 +24,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xAD5A8AD7)]
         public teStructuredDataAssetRef<ulong> m_AD5A8AD7;
+
+        [STUFieldAttribute(0x29A29FC3)]
+        public teStructuredDataAssetRef<ulong> m_29A29FC3;
     }
 }

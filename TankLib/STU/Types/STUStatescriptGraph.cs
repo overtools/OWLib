@@ -21,16 +21,16 @@ namespace TankLib.STU.Types {
         public teString m_consoleCommand;
 
         [STUFieldAttribute(0x8DC71AA3)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_8DC71AA3;
+        public teStructuredDataAssetRef<ulong>[] m_8DC71AA3;
 
         [STUFieldAttribute(0x44D31832)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_44D31832;
+        public teStructuredDataAssetRef<ulong>[] m_44D31832;
 
         [STUFieldAttribute(0xA1183166)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_A1183166;
+        public teStructuredDataAssetRef<ulong>[] m_A1183166;
 
         [STUFieldAttribute(0x0D92E2AF)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_0D92E2AF;
+        public teStructuredDataAssetRef<ulong>[] m_0D92E2AF;
 
         [STUFieldAttribute(0x2919DF46)]
         public int[] m_2919DF46;
@@ -39,7 +39,7 @@ namespace TankLib.STU.Types {
         public int[] m_680A2CB2;
 
         [STUFieldAttribute(0x9CEC6985)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_9CEC6985;
+        public teStructuredDataAssetRef<ulong>[] m_9CEC6985;
 
         [STUFieldAttribute(0x41A83970, "m_remoteSyncNodes", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptBase[] m_remoteSyncNodes;

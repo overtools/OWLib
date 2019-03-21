@@ -4,10 +4,5 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x225FAAA8)]
     public class STU_225FAAA8 : STU_8C127DE2 {
-        [STUFieldAttribute(0x6688487C, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_25B808BD m_6688487C;
-
-        [STUFieldAttribute(0x3B52E7A3)]
-        public teStructuredDataAssetRef<STUHardPoint> m_3B52E7A3;
     }
 }

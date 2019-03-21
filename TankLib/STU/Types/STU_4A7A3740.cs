@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x4A7A3740)]
     public class STU_4A7A3740 : STUCriteria {
         [STUFieldAttribute(0xEB4F2408, "m_gamemode")]
-        public teStructuredDataAssetRef<STUGameMode> m_gamemode;
+        public teStructuredDataAssetRef<ulong> m_gamemode;
     }
 }

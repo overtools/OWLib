@@ -6,22 +6,25 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x0D975D99)]
     public class STU_0D975D99 : STU_A3C7077A {
         [STUFieldAttribute(0xD44179EF)]
-        public teStructuredDataAssetRef<STUTexture> m_D44179EF;
+        public teStructuredDataAssetRef<ulong> m_D44179EF;
 
         [STUFieldAttribute(0x3AA2C479)]
-        public teStructuredDataAssetRef<STUTexture> m_3AA2C479;
+        public teStructuredDataAssetRef<ulong> m_3AA2C479;
 
         [STUFieldAttribute(0x92312B0F)]
-        public teStructuredDataAssetRef<STUTexture> m_92312B0F;
+        public teStructuredDataAssetRef<ulong> m_92312B0F;
 
         [STUFieldAttribute(0x2B46959A)]
-        public teStructuredDataAssetRef<STUTexture> m_2B46959A;
+        public teStructuredDataAssetRef<ulong> m_2B46959A;
 
         [STUFieldAttribute(0xE21E76C2)]
-        public teStructuredDataAssetRef<STUTexture> m_E21E76C2;
+        public teStructuredDataAssetRef<ulong> m_E21E76C2;
+
+        [STUFieldAttribute(0xF0A9405A, "m_sourceTeam")]
+        public teStructuredDataAssetRef<ulong> m_sourceTeam;
 
         [STUFieldAttribute(0xB999DDE2)]
-        public teStructuredDataAssetRef<STUEmptyAsset> m_B999DDE2;
+        public teStructuredDataAssetRef<ulong> m_B999DDE2;
 
         [STUFieldAttribute(0x0D1E502E)]
         public teColorRGB m_0D1E502E;
@@ -58,6 +61,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xE7514DA4)]
         public float m_E7514DA4;
+
+        [STUFieldAttribute(0x7FB44404)]
+        public byte m_7FB44404;
 
         [STUFieldAttribute(0xCBFD2F53)]
         public byte m_CBFD2F53;

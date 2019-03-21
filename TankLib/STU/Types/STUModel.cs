@@ -15,7 +15,7 @@ namespace TankLib.STU.Types {
         public STU_E3E39626 m_F5E50593;
 
         [STUFieldAttribute(0x818D011C, "m_skeleton")]
-        public teStructuredDataAssetRef<STUSkeleton> m_skeleton;
+        public teStructuredDataAssetRef<ulong> m_skeleton;
 
         [STUFieldAttribute(0xFD232466, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_F0E34581[] m_FD232466;
@@ -33,10 +33,10 @@ namespace TankLib.STU.Types {
         public STU_145F0B66[] m_0C8F8DC6;
 
         [STUFieldAttribute(0xE9A9B868)]
-        public teStructuredDataAssetRef<STU_CBD8CDF3>[] m_E9A9B868;
+        public teStructuredDataAssetRef<ulong>[] m_E9A9B868;
 
         [STUFieldAttribute(0x37ED05D0)]
-        public teStructuredDataAssetRef<STUModel> m_37ED05D0;
+        public teStructuredDataAssetRef<ulong> m_37ED05D0;
 
         [STUFieldAttribute(0x7E48C526, "m_breakable", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUBreakable m_breakable;

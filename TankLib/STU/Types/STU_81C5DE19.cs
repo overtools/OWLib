@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STUAnimBlendTree_OnFinished m_onFinished;
 
         [STUFieldAttribute(0xB4FF0E2F, "m_animAlias")]
-        public teStructuredDataAssetRef<STUAnimAlias> m_animAlias;
+        public teStructuredDataAssetRef<ulong> m_animAlias;
 
         [STUFieldAttribute(0xF94DAB61, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_9D30DD99 m_F94DAB61;

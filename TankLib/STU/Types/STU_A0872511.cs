@@ -6,10 +6,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xA0872511)]
     public class STU_A0872511 : STUInstance {
         [STUFieldAttribute(0x38F997AB, "m_entityDefinition")]
-        public teStructuredDataAssetRef<STUEntityDefinition> m_entityDefinition;
+        public teStructuredDataAssetRef<ulong> m_entityDefinition;
 
         [STUFieldAttribute(0xC68C8155, "m_loadout")]
-        public teStructuredDataAssetRef<STULoadout> m_loadout;
+        public teStructuredDataAssetRef<ulong> m_loadout;
 
         [STUFieldAttribute(0xAF9D3A0C, "m_rotation")]
         public teQuat m_rotation;

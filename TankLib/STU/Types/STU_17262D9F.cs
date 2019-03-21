@@ -7,43 +7,43 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x17262D9F)]
     public class STU_17262D9F : STU_C80FEB45 {
         [STUFieldAttribute(0x3C6E9515)]
-        public teStructuredDataAssetRef<STUTexture> m_3C6E9515;
+        public teStructuredDataAssetRef<ulong> m_3C6E9515;
 
         [STUFieldAttribute(0x60C7A1E1)]
-        public teStructuredDataAssetRef<STUTexture> m_60C7A1E1;
+        public teStructuredDataAssetRef<ulong> m_60C7A1E1;
 
         [STUFieldAttribute(0xB99D8B71)]
-        public teStructuredDataAssetRef<STUTexture> m_B99D8B71;
+        public teStructuredDataAssetRef<ulong> m_B99D8B71;
 
         [STUFieldAttribute(0xE45C5E73)]
-        public teStructuredDataAssetRef<STUTexture> m_E45C5E73;
+        public teStructuredDataAssetRef<ulong> m_E45C5E73;
 
         [STUFieldAttribute(0x6FA6AE0D)]
-        public teStructuredDataAssetRef<STUTexture> m_6FA6AE0D;
+        public teStructuredDataAssetRef<ulong> m_6FA6AE0D;
 
         [STUFieldAttribute(0x05E76907)]
-        public teStructuredDataAssetRef<STUTexture> m_05E76907;
+        public teStructuredDataAssetRef<ulong> m_05E76907;
 
         [STUFieldAttribute(0xE67B54B9)]
-        public teStructuredDataAssetRef<STUTexture> m_E67B54B9;
+        public teStructuredDataAssetRef<ulong> m_E67B54B9;
 
         [STUFieldAttribute(0xEFCB22D2)]
-        public teStructuredDataAssetRef<STUTexture> m_EFCB22D2;
+        public teStructuredDataAssetRef<ulong> m_EFCB22D2;
 
         [STUFieldAttribute(0x0403A33B)]
-        public teStructuredDataAssetRef<STUTexture> m_0403A33B;
+        public teStructuredDataAssetRef<ulong> m_0403A33B;
 
         [STUFieldAttribute(0x81CBCB37)]
-        public teStructuredDataAssetRef<STUTexture> m_81CBCB37;
+        public teStructuredDataAssetRef<ulong> m_81CBCB37;
 
         [STUFieldAttribute(0x7E62BAD4)]
-        public teStructuredDataAssetRef<STUTexture> m_7E62BAD4;
+        public teStructuredDataAssetRef<ulong> m_7E62BAD4;
 
         [STUFieldAttribute(0x0D106FAE)]
-        public teStructuredDataAssetRef<STUTexture> m_0D106FAE;
+        public teStructuredDataAssetRef<ulong> m_0D106FAE;
 
         [STUFieldAttribute(0x320EB966)]
-        public teStructuredDataAssetRef<STUTexture> m_320EB966;
+        public teStructuredDataAssetRef<ulong> m_320EB966;
 
         [STUFieldAttribute(0x39CA1A20)]
         public teVec2 m_39CA1A20;

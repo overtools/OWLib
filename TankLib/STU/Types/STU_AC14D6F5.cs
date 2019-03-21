@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xAC14D6F5)]
     public class STU_AC14D6F5 : STU_851FBF1A {
         [STUFieldAttribute(0x3CD6DC1E, "m_texture")]
-        public teStructuredDataAssetRef<STUTexture> m_texture;
+        public teStructuredDataAssetRef<ulong> m_texture;
 
         [STUFieldAttribute(0xA1C4B45C)]
         public float m_A1C4B45C;

@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public STUStatescriptGraphWithOverrides m_graph;
 
         [STUFieldAttribute(0x4D5597A8, "m_script")]
-        public teStructuredDataAssetRef<STU_6BE90C5C> m_script;
+        public teStructuredDataAssetRef<ulong> m_script;
     }
 }

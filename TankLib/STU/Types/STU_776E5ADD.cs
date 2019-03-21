@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public STUGameRulesetSchemaValueEnumChoice[] m_3FE1EA9E;
 
         [STUFieldAttribute(0x45A7A69C, "m_default")]
-        public teStructuredDataAssetRef<STUIdentifier> m_default;
+        public teStructuredDataAssetRef<ulong> m_default;
     }
 }

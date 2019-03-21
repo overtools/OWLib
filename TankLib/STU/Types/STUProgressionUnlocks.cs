@@ -4,16 +4,19 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x8CE1D110, "STUProgressionUnlocks")]
     public class STUProgressionUnlocks : STUInstance {
-        [STUFieldAttribute(0xBF482AA3, "m_otherUnlocks", ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUUnlocks m_otherUnlocks;
-
         [STUFieldAttribute(0x9135A4B2, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUUnlocks m_9135A4B2;
+
+        [STUFieldAttribute(0xBF482AA3, "m_otherUnlocks", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUUnlocks m_otherUnlocks;
 
         [STUFieldAttribute(0x7846C401, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_1757E817[] m_7846C401;
 
         [STUFieldAttribute(0x473494FF, "m_lootBoxesUnlocks", ReaderType = typeof(InlineInstanceFieldReader))]
         public STULootBoxUnlocks[] m_lootBoxesUnlocks;
+
+        [STUFieldAttribute(0x160B0466)]
+        public teStructuredDataAssetRef<ulong> m_160B0466;
     }
 }

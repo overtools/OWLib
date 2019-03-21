@@ -14,10 +14,10 @@ namespace TankLib.STU.Types {
         public STU_A92F620A[] m_5BB8DFF3;
 
         [STUFieldAttribute(0xEC70AD04)]
-        public teStructuredDataAssetRef<STUHero>[] m_EC70AD04;
+        public teStructuredDataAssetRef<ulong>[] m_EC70AD04;
 
         [STUFieldAttribute(0x590CF462)]
-        public teStructuredDataAssetRef<STUMap>[] m_590CF462;
+        public teStructuredDataAssetRef<ulong>[] m_590CF462;
 
         [STUFieldAttribute(0x1E4E5957)]
         public teStructuredDataAssetRef<ulong> m_1E4E5957;
@@ -32,7 +32,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_21EB3E73;
 
         [STUFieldAttribute(0x56E7DD46)]
-        public teStructuredDataAssetRef<STUMap>[] m_56E7DD46;
+        public teStructuredDataAssetRef<ulong>[] m_56E7DD46;
 
         [STUFieldAttribute(0xF82A8727)]
         public teStructuredDataDateAndTime m_F82A8727;

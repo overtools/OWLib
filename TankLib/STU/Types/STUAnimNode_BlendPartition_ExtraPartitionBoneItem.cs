@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         public STU_ABD8FE73 m_weight;
 
         [STUFieldAttribute(0xF97609C8, "m_bone")]
-        public teStructuredDataAssetRef<STUBoneLabel> m_bone;
+        public teStructuredDataAssetRef<ulong> m_bone;
 
         [STUFieldAttribute(0x9C09FA51)]
         public byte m_9C09FA51;

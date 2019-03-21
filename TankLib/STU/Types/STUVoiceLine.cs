@@ -5,19 +5,19 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x40DA6CDF, "STUVoiceLine")]
     public class STUVoiceLine : STUInstance {
         [STUFieldAttribute(0x401F5484, "m_stimulus")]
-        public teStructuredDataAssetRef<STUVoiceStimulus> m_stimulus;
+        public teStructuredDataAssetRef<ulong> m_stimulus;
 
         [STUFieldAttribute(0x386B8E9C, "m_externalSound")]
-        public teStructuredDataAssetRef<STUSound> m_externalSound;
+        public teStructuredDataAssetRef<ulong> m_externalSound;
 
         [STUFieldAttribute(0xBA5545D6, "m_set")]
-        public teStructuredDataAssetRef<STUVoiceLineSet> m_set;
+        public teStructuredDataAssetRef<ulong> m_set;
 
         [STUFieldAttribute(0x6148094F)]
-        public teStructuredDataAssetRef<STU_7A68A730> m_6148094F;
+        public teStructuredDataAssetRef<ulong> m_6148094F;
 
         [STUFieldAttribute(0xDDF3EE5C, "m_voiceConversation")]
-        public teStructuredDataAssetRef<STUVoiceConversation> m_voiceConversation;
+        public teStructuredDataAssetRef<ulong> m_voiceConversation;
 
         [STUFieldAttribute(0x38F3ED5E)]
         public teString m_38F3ED5E;

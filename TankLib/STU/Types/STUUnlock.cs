@@ -15,22 +15,28 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_BDB2D444;
 
         [STUFieldAttribute(0xBEE9BCDA)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_BEE9BCDA;
+        public teStructuredDataAssetRef<ulong>[] m_BEE9BCDA;
 
         [STUFieldAttribute(0x53145FAF)]
         public teStructuredDataAssetRef<ulong> m_53145FAF;
 
+        [STUFieldAttribute(0xF8150591)]
+        public teStructuredDataAssetRef<ulong> m_F8150591;
+
         [STUFieldAttribute(0xAA8E1BB0, "m_targetTags")]
-        public teStructuredDataAssetRef<STUTargetTag>[] m_targetTags;
+        public teStructuredDataAssetRef<ulong>[] m_targetTags;
 
         [STUFieldAttribute(0x3446F580)]
-        public teStructuredDataAssetRef<STU_96ABC153> m_3446F580;
+        public teStructuredDataAssetRef<ulong> m_3446F580;
 
         [STUFieldAttribute(0x0B1BA7C1)]
         public teStructuredDataAssetRef<ulong> m_0B1BA7C1;
 
+        [STUFieldAttribute(0xC92AF903)]
+        public teStructuredDataAssetRef<ulong>[] m_C92AF903;
+
         [STUFieldAttribute(0x38BFB46C, "m_resourceKey")]
-        public teStructuredDataAssetRef<STUResourceKey> m_resourceKey;
+        public teStructuredDataAssetRef<ulong> m_resourceKey;
 
         [STUFieldAttribute(0xEDE36CB7, "m_resourceKeyId")]
         public ulong m_resourceKeyId;

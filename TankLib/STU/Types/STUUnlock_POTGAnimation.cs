@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x8E77E8A1, "STUUnlock_POTGAnimation")]
     public class STUUnlock_POTGAnimation : STUUnlock {
         [STUFieldAttribute(0x3F5B86A4, "m_animation")]
-        public teStructuredDataAssetRef<STUAnimation> m_animation;
+        public teStructuredDataAssetRef<ulong> m_animation;
 
         [STUFieldAttribute(0x0619C597, "m_type")]
         public Enum_E5327514 m_type;

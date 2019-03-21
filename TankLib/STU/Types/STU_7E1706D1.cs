@@ -9,6 +9,6 @@ namespace TankLib.STU.Types {
         public teUUID m_40ADB62A;
 
         [STUFieldAttribute(0x4DE207E1)]
-        public teStructuredDataAssetRef<STUIdentifier> m_4DE207E1;
+        public teStructuredDataAssetRef<ulong> m_4DE207E1;
     }
 }

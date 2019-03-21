@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xC5C07DF0)]
     public class STU_C5C07DF0 : STUStatescriptOutputPlug {
         [STUFieldAttribute(0xA99B047B)]
-        public teStructuredDataAssetRef<STUUXLink> m_A99B047B;
+        public teStructuredDataAssetRef<ulong> m_A99B047B;
 
         [STUFieldAttribute(0x93CDFD2F)]
         public Enum_3F198330 m_93CDFD2F;

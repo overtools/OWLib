@@ -7,10 +7,10 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x4E87690F, "m_map", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_map;
 
-        [STUFieldAttribute(0x24A44C4A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_24A44C4A;
+        [STUFieldAttribute(0xDB469092, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_DB469092;
 
-        [STUFieldAttribute(0xF93E4686, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUStatescriptOutputPlug m_F93E4686;
+        [STUFieldAttribute(0x9613163D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_904BFCEC m_9613163D;
     }
 }

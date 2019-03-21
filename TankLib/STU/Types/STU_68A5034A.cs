@@ -6,34 +6,37 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x68A5034A)]
     public class STU_68A5034A : STUShippable {
         [STUFieldAttribute(0x0201671C)]
-        public teStructuredDataAssetRef<STU_68A5034A> m_0201671C;
+        public teStructuredDataAssetRef<ulong> m_0201671C;
 
         [STUFieldAttribute(0xC0A83121, "m_skin")]
-        public teStructuredDataAssetRef<STU_68A5034A> m_skin;
+        public teStructuredDataAssetRef<ulong> m_skin;
 
         [STUFieldAttribute(0x7F09E612)]
-        public teStructuredDataAssetRef<STU_68A5034A>[] m_7F09E612;
+        public teStructuredDataAssetRef<ulong>[] m_7F09E612;
 
         [STUFieldAttribute(0x9F657FFB)]
-        public teStructuredDataAssetRef<STU_68A5034A>[] m_9F657FFB;
+        public teStructuredDataAssetRef<ulong>[] m_9F657FFB;
+
+        [STUFieldAttribute(0x25989447, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_B5261A29[] m_25989447;
 
         [STUFieldAttribute(0xE7DE6A4B)]
-        public teStructuredDataAssetRef<STU_68A5034A>[] m_E7DE6A4B;
+        public teStructuredDataAssetRef<ulong>[] m_E7DE6A4B;
 
         [STUFieldAttribute(0x40F8879E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_E75FE496[] m_40F8879E;
 
-        [STUFieldAttribute(0xACEBA02F)]
-        public int[] m_ACEBA02F;
+        [STUFieldAttribute(0xEE691D90, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_2135E8B7[] m_EE691D90;
 
         [STUFieldAttribute(0x7DB92D38)]
         public int[] m_7DB92D38;
 
         [STUFieldAttribute(0xCBA4B39F)]
-        public teStructuredDataAssetRef<STU_68A5034A>[] m_CBA4B39F;
+        public teStructuredDataAssetRef<ulong>[] m_CBA4B39F;
 
         [STUFieldAttribute(0x690071AC)]
-        public teStructuredDataAssetRef<STU_68A5034A>[] m_690071AC;
+        public teStructuredDataAssetRef<ulong>[] m_690071AC;
 
         [STUFieldAttribute(0x957ADFF3)]
         public ulong m_957ADFF3;

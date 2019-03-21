@@ -5,11 +5,8 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0xB466CBBD, "STUVoiceSet")]
     public class STUVoiceSet : STUInstance {
-        [STUFieldAttribute(0xF51B70C4, "m_voiceLineInstances", ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUVoiceLineInstance[] m_voiceLineInstances;
-
         [STUFieldAttribute(0x386B8E9C, "m_externalSound")]
-        public teStructuredDataAssetRef<STUSound> m_externalSound;
+        public teStructuredDataAssetRef<ulong> m_externalSound;
 
         [STUFieldAttribute(0x269FC4E9)]
         public teStructuredDataAssetRef<ulong> m_269FC4E9;
@@ -19,6 +16,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xA9277D84)]
         public teStructuredDataAssetRef<ulong> m_A9277D84;
+
+        [STUFieldAttribute(0xF51B70C4, "m_voiceLineInstances", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUVoiceLineInstance[] m_voiceLineInstances;
 
         [STUFieldAttribute(0xF7FA2CAC, "m_voiceLineGuids")]
         public ulong[] m_voiceLineGuids;
