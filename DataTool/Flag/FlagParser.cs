@@ -13,7 +13,8 @@ namespace DataTool.Flag {
 
         public static string ArgFilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{AppDomain.CurrentDomain.FriendlyName}.args");
 
-        public static T Parse<T>() where T : ICLIFlags => Parse<T>(null, AppArgs);
+        public static T Parse<T>() where T : ICLIFlags => Parse<T>(null, AppArgs, null);
+        public static T Parse<T>(string[] args) where T : ICLIFlags => Parse<T>(null, AppArgs, args);
 
         public static void CheckCollisions(Type baseType, Action<string, string> OnCollision) {
             var type = typeof(ICLIFlags);
@@ -205,9 +206,9 @@ namespace DataTool.Flag {
             extraHelp?.Invoke(false);
         }
 
-        public static T Parse<T>(Action<bool> extraHelp) where T : ICLIFlags { return Parse<T>(extraHelp, AppArgs); }
+        public static T Parse<T>(Action<bool> extraHelp) where T : ICLIFlags { return Parse<T>(extraHelp, AppArgs, null); }
 
-        public static T Parse<T>(Action<bool> extraHelp, string[] args) where T : ICLIFlags {
+        public static T Parse<T>(Action<bool> extraHelp, string[] args, string[] forcedPositionals) where T : ICLIFlags {
             if (args.Length == 0) {
                 FullHelp<T>(extraHelp);
                 return null;
@@ -218,7 +219,7 @@ namespace DataTool.Flag {
             if (!(Activator.CreateInstance(iface) is T instance)) return null;
 
             var presence         = new HashSet<string>();
-            var positionals      = new List<object>();
+            var positionals      = new List<string>();
             var values           = new Dictionary<string, string>();
             var dictionaryValues = new Dictionary<string, Dictionary<string, string>>();
             var arrayValues      = new Dictionary<string, List<string>>();
@@ -313,7 +314,10 @@ namespace DataTool.Flag {
                     positionals.Add(arg);
                 }
             }
-            
+
+            if (forcedPositionals != null && forcedPositionals.Length > 0) {
+                positionals = forcedPositionals.ToList();
+            }
 
             var flagAttributes = fields.Select(x => (field: x, attribute: x.GetCustomAttribute<CLIFlagAttribute>(true)))
                                        .Where(x => x.attribute != null)
@@ -323,22 +327,36 @@ namespace DataTool.Flag {
             var positionalsField = default(FieldInfo);
             
             
-            var newPositionals = new List<object>(Enumerable.Repeat(default(object), Math.Max(positionals.Count, flagAttributes.Max(x => x.attribute.Positional) + 1)));
+            var newPositionals = new Dictionary<int, string>();
 
             var positionalTicker = 0;
+            var nextPositional = 0;
             foreach (var (field, flagAttribute) in flagAttributes.Where(x => x.attribute.Positional > -1)) {
-                if (!field.GetCustomAttributes<AliasAttribute>().Select(x => x.Alias).Concat(new[] {flagAttribute.Flag}).Any(x => presence.Contains(x))) {
+                var fieldFlags = field.GetCustomAttributes<AliasAttribute>().Select(x => x.Alias).Concat(new[] {flagAttribute.Flag}).ToArray();
+                if (!fieldFlags.Any(x => presence.Contains(x))) {
                     newPositionals[flagAttribute.Positional] = positionals.ElementAtOrDefault(positionalTicker);
-                    positionalTicker += 1;
+                    if (newPositionals[flagAttribute.Positional] != null) {
+                        positionalTicker += 1;
+                    }
+                } else {
+                    newPositionals[flagAttribute.Positional] = values.FirstOrDefault(x => fieldFlags.Contains(x.Key)).Value;
+                }
+
+                if (nextPositional == flagAttribute.Positional) {
+                    nextPositional += 1;
                 }
             }
 
             foreach (var positional in positionals.Skip(positionalTicker)) {
-                newPositionals[positionalTicker] = positionals.ElementAtOrDefault(positionalTicker);
+                while (newPositionals.ContainsKey(nextPositional)) {
+                    nextPositional += 1;
+                }
+                newPositionals[nextPositional] = positionals.ElementAtOrDefault(positionalTicker);
                 positionalTicker += 1;
+                nextPositional += 1;
             }
 
-            positionals = newPositionals;
+            positionals = newPositionals.OrderBy(x => x.Key).Select(x => x.Value).ToList();
             
             foreach (var (field, flagAttribute) in flagAttributes) {
                 if (flagAttribute.AllPositionals) {

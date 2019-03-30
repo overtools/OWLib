@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using HealingML;
 using TankLib;
 using TankLib.Helpers;
 using TankLib.STU;
+using TankLib.STU.Types;
 using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool.ToolLogic.Render {
@@ -23,7 +25,7 @@ namespace DataTool.ToolLogic.Render {
                 {typeof(teStructuredDataAssetRef<>), new teResourceGUIDSerializer()}
             };
 
-            foreach (var type in new ushort[] {0x3B, 0x5C, 0x1B, 0xC6, 0xC0, 0x3}) {
+            foreach (var type in new ushort[] {0x75}) {
                 if (!Directory.Exists(Path.Combine(output, type.ToString("X3")))) {
                     Directory.CreateDirectory(Path.Combine(output, type.ToString("X3")));
                 }
@@ -31,17 +33,58 @@ namespace DataTool.ToolLogic.Render {
                 foreach (var guid in Program.TrackedFiles[type]) {
                     Logger.Log24Bit(ConsoleSwatch.XTermColor.Purple5, true, Console.Out, null, $"Saving {teResourceGUID.AsString(guid)}");
                     
-                    using (Stream f = File.Open(Path.Combine(output, type.ToString("X3"), teResourceGUID.AsString(guid)), FileMode.Create))
-                    using (Stream d = IO.OpenFile(guid)) {
-                        d.CopyTo(f);
-                    }
-
                     var stu = STUHelper.OpenSTUSafe(guid);
 
-                    using (Stream f = File.Open(Path.Combine(output, type.ToString("X3"), teResourceGUID.AsString(guid) + ".xml"), FileMode.Create))
+                    var hero = stu.GetInstance<STUHero>();
+                    var name = IO.GetString(hero.m_0EDCE350);
+
+                    var gameplay = hero.m_gameplayEntity.GetSTU<STUEntityDefinition, ulong>();
+                    if (gameplay == null) continue;
+                    var dir = Path.Combine(output, type.ToString("X3"), IO.GetValidFilename(name ?? guid.ToString()));
+                    if (!Directory.Exists(dir)) {
+                        Directory.CreateDirectory(dir);
+                    }
+                    
+                    var graphComponent = gameplay.m_componentMap.Values.OfType<STUStatescriptComponent>().FirstOrDefault();
+                    var graphInstanceComponent = gameplay.m_componentMap.Values.OfType<STUStatescriptComponentInstanceData>().FirstOrDefault();
+
+                    using (Stream f = File.Open(Path.Combine(dir, "entity.xml"), FileMode.Create))
                     using (TextWriter w = new StreamWriter(f)) {
-                        w.WriteLine(Serializer.Print(stu?.Instances[0], serializers));
-//                        w.WriteLine(JsonConvert.SerializeObject(stu?.Instances[0], Formatting.Indented, settings));
+                        w.WriteLine(Serializer.Print(gameplay, serializers));
+                    }
+
+                    if (graphComponent != null) {
+                        using (Stream f = File.Open(Path.Combine(dir, "graphComponent.xml"), FileMode.Create))
+                        using (TextWriter w = new StreamWriter(f)) {
+                            w.WriteLine(Serializer.Print(graphComponent, serializers));
+                        }
+
+                        foreach (var graphGuid in graphComponent.m_B634821A) {
+                            var graph = STUHelper.GetInstance<STUStatescriptGraph>(graphGuid.m_graph);
+                            if (graph == null) continue;
+                            
+                            using (Stream f = File.Open(Path.Combine(dir, $"graph_{teResourceGUID.LongKey(graphGuid.m_graph):X}.xml"), FileMode.Create))
+                            using (TextWriter w = new StreamWriter(f)) {
+                                w.WriteLine(Serializer.Print(graph, serializers));
+                            }
+                        }
+                    }
+
+                    if (graphInstanceComponent != null) {
+                        using (Stream f = File.Open(Path.Combine(dir, "graphInstanceComponent.xml"), FileMode.Create))
+                        using (TextWriter w = new StreamWriter(f)) {
+                            w.WriteLine(Serializer.Print(graphInstanceComponent, serializers));
+                        }
+
+                        foreach (var graphGuid in graphInstanceComponent.m_6D10093E) {
+                            var graph = STUHelper.GetInstance<STUStatescriptGraph>(graphGuid.m_graph);
+                            if (graph == null) continue;
+                            
+                            using (Stream f = File.Open(Path.Combine(dir, $"graphInstance_{teResourceGUID.LongKey(graphGuid.m_graph):X}.xml"), FileMode.Create))
+                            using (TextWriter w = new StreamWriter(f)) {
+                                w.WriteLine(Serializer.Print(graph, serializers));
+                            }
+                        }
                     }
                 }
             }

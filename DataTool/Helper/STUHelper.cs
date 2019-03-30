@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using TankLib.STU;
 using TankLib.STU.Types;
@@ -28,6 +29,14 @@ namespace DataTool.Helper {
             if (key == 0) return null;
             teStructuredData structuredData = OpenSTUSafe(key);
             return structuredData?.GetInstances<T>().ToArray();
+        }
+        
+        public static T GetSTU<T, U>(this teStructuredDataAssetRef<U> @ref) where T : STUInstance {
+            return GetInstance<T>(@ref);
+        }
+        
+        public static T GetSTU<T>(this teStructuredDataAssetRef<T> @ref) where T : STUInstance {
+            return GetInstance<T>(@ref);
         }
 
         public static teStructuredData OpenSTUSafe(ulong key) {

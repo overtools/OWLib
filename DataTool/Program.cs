@@ -103,9 +103,9 @@ namespace DataTool {
                 if (attribute.CustomFlags != null) {
                     var flags = attribute.CustomFlags;
                     if (typeof(ICLIFlags).IsAssignableFrom(flags))
-                        targetToolFlags = typeof(FlagParser).GetMethod(nameof(FlagParser.Parse), new Type[] { })
+                        targetToolFlags = typeof(FlagParser).GetMethod(nameof(FlagParser.Parse), new [] { typeof(string[]) })
                                                             ?.MakeGenericMethod(flags)
-                                                            .Invoke(null, null) as ICLIFlags;
+                                                            .Invoke(null, new object[] { Flags.Positionals }) as ICLIFlags;
                 }
 
                 break;
