@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using DataTool.DataModels;
 using DataTool.FindLogic;
@@ -42,6 +43,17 @@ namespace DataTool.ToolLogic.Extract {
 
         private const string Container = "HeroConvo";
 
+        internal static string LanguageCodeToText(string lang) {
+            var c = CultureInfo.GetCultureInfoByIetfLanguageTag(lang.Substring(0, 2) + "-" + lang.Substring(2));
+
+            if (lang == "esMX") 
+                return c.EnglishName;
+            else if (lang.StartsWith("zh"))
+                return c.Parent.EnglishName.Replace("Legacy", string.Empty).Trim();
+            else
+                return c.Parent.EnglishName;
+        }
+
         public void ExtractHeroConvos(ICLIFlags toolFlags) {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
@@ -57,7 +69,7 @@ namespace DataTool.ToolLogic.Extract {
                 return;
             }
 
-            string path = Path.Combine(basePath, Container);
+            string path = Path.Combine(basePath, "Speech", LanguageCodeToText(Program.Flags.SpeechLanguage), Container);
 
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes =
                 ParseQuery(flags, QueryTypes, QueryNameOverrides);

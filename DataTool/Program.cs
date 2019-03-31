@@ -120,8 +120,12 @@ namespace DataTool {
                 PrintHelp(false, tools);
                 return;
             }
+            
 
             InitStorage();
+
+            Flags.Language = Flags.Language ?? Client.CreateArgs.TextLanguage;
+            Flags.SpeechLanguage = Flags.SpeechLanguage ?? Client.CreateArgs.SpeechLanguage;
 
             //foreach (KeyValuePair<ushort, HashSet<ulong>> type in TrackedFiles.OrderBy(x => x.Key)) {
             //    //Console.Out.WriteLine($"Found type: {type.Key:X4} ({type.Value.Count} files)");
