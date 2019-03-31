@@ -10,6 +10,7 @@ using static DataTool.Helper.Logger;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataTool.DataModels;
 
 namespace DataTool.SaveLogic {
     public static class Map {
@@ -256,10 +257,7 @@ namespace DataTool.SaveLogic {
         }
 
         public static void Save(ICLIFlags flags, STUMapHeader mapHeader, ulong key, string basePath) {
-            string name = GetString(mapHeader.m_displayName) ?? "Title Screen";
-            //string name = map.m_506FA8D8;
-            var variantName = GetString(mapHeader.m_1C706502);
-            if (variantName != null) name = variantName;
+            string name = new MapHeader(mapHeader).GetName();
 
             LoudLog($"Extracting map {name}\\{teResourceGUID.Index(key):X}");
             name = GetValidFilename(name);

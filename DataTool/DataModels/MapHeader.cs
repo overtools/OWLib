@@ -53,7 +53,7 @@ namespace DataTool.DataModels {
             Name = GetString(mapHeader.m_displayName);
             VariantName = GetString(mapHeader.m_1C706502);
             if (Name == null && VariantName == null) {
-                Name = ComputeInternalName(mapHeader.m_mapName ?? "Maps/LobbyMaps/Unknown");
+                Name = "LobbyMaps";
                 VariantName = ComputeInternalVariantName(mapHeader.m_mapName ?? "Maps/LobbyMaps/Unknown");
             }
             Description = GetString(mapHeader.m_389CB894);
@@ -67,16 +67,8 @@ namespace DataTool.DataModels {
 
         private string ComputeInternalVariantName(string s) {
             if (s == null) return "LobbyMaps";
-            var parts = s.Split('/', '\\').Reverse().Take(2).ToArray();
-            if (parts.Length == 0) return "LobbyMaps";
-            if (parts.Length == 1) return parts[0];
-            return $"{parts[1]} ({parts[0]})";
-        }
-        
-        private string ComputeInternalName(string s) {
-            if (s == null) return "LobbyMaps";
-            var parts = s.Split('/', '\\').Reverse().Take(2).LastOrDefault();
-            return parts ?? "LobbyMaps";
+            var parts = s.Split('/', '\\').LastOrDefault();
+            return $"LobbyMaps ({parts ?? "Unknown"})";
         }
 
         public MapHeaderLite ToLite() {

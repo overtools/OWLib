@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
@@ -163,8 +164,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         protected static string GetMapName(ulong key) {
-            STUMapHeader map = GetInstance<STUMapHeader>(key);
-            return GetString(map.m_displayName);
+            return new MapHeader(key).GetName();
         }
 
         protected HeroInfoJSON GetHeroInfo(HeroData heroInfo) {
