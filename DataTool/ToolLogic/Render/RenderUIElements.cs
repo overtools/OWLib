@@ -22,10 +22,15 @@ namespace DataTool.ToolLogic.Render {
             try {
                 // ReSharper disable once InvertIf
                 if (!TargetMap.TryGetValue(instance.GetType(), out var target)) {
-                    target = instance.GetType().GenericTypeArguments.First().Name;
-                    TargetMap[instance.GetType()] = target;
+                    if (instance.GetType().IsConstructedGenericType) {
+                        target = instance.GetType().GenericTypeArguments.First().Name;
+                        TargetMap[instance.GetType()] = target;
+                    } else {
+                        TargetMap[instance.GetType()] = "ulong";
+                    }
                 }
-                return $"{indent}<tank:ref hml:id=\"{instance.GetHashCode()}\"{hmlNameTag} GUID=\"{instance}\" Target=\"{target}\"/>\n";
+                var targetSafe = target == null || target == "ulong" ? "" : $"Target=\"{target}\"";
+                return $"{indent}<tank:ref hml:id=\"{instance.GetHashCode()}\"{hmlNameTag} GUID=\"{instance}\" {targetSafe}/>\n";
             } catch {
                 return null;
             }

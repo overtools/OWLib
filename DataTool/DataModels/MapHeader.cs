@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
@@ -50,6 +52,10 @@ namespace DataTool.DataModels {
             GUID = (teResourceGUID) key;
             Name = GetString(mapHeader.m_displayName);
             VariantName = GetString(mapHeader.m_1C706502);
+            if (Name == null && VariantName == null) {
+                Name = ComputeInternalName(mapHeader.m_mapName ?? "Maps/LobbyMaps/Unknown");
+                VariantName = ComputeInternalVariantName(mapHeader.m_mapName ?? "Maps/LobbyMaps/Unknown");
+            }
             Description = GetString(mapHeader.m_389CB894);
             Description2 = GetString(mapHeader.m_ACB95597);
             MapGUID = mapHeader.m_map;
@@ -59,12 +65,26 @@ namespace DataTool.DataModels {
             GameModes = Helper.JSON.FixArray(mapHeader.m_D608E9F3);
         }
 
+        private string ComputeInternalVariantName(string s) {
+            if (s == null) return "LobbyMaps";
+            var parts = s.Split('/', '\\').Reverse().Take(2).ToArray();
+            if (parts.Length == 0) return "LobbyMaps";
+            if (parts.Length == 1) return parts[0];
+            return $"{parts[1]} ({parts[0]})";
+        }
+        
+        private string ComputeInternalName(string s) {
+            if (s == null) return "LobbyMaps";
+            var parts = s.Split('/', '\\').Reverse().Take(2).LastOrDefault();
+            return parts ?? "LobbyMaps";
+        }
+
         public MapHeaderLite ToLite() {
             return new MapHeaderLite(this);
         } 
 
         public string GetName() {
-            return VariantName ?? Name ?? "Title Screen";
+            return VariantName ?? Name;
         }
 
         public string GetUniqueName() {
