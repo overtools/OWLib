@@ -252,7 +252,13 @@ namespace DataTool.ToolLogic.Extract {
             Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, VoiceSet voiceSet, STUHero hero) {
             if (unlocks == null) return;
             foreach (Unlock unlock in unlocks) {
-                SaveUnlock(flags, unlock, path, eventKey, config, tags, voiceSet, hero);
+                try {
+                    SaveUnlock(flags, unlock, path, eventKey, config, tags, voiceSet, hero);
+                } 
+                catch(Exception e)
+                {
+                    TankLib.Helpers.Logger.Error(null, e.ToString());
+                }
             }
         }
 

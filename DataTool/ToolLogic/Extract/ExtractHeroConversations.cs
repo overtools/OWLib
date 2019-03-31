@@ -49,6 +49,8 @@ namespace DataTool.ToolLogic.Extract {
             } else {
                 throw new Exception("no output path");
             }
+            
+            flags.SkipSound = false;
 
             if (flags.Positionals.Length < 4) {
                 QueryHelp(QueryTypes);
