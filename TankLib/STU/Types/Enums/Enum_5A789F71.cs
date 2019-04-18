@@ -11,7 +11,7 @@ namespace TankLib.STU.Types.Enums {
         [STUFieldAttribute(0x6B9A1ACC)]
         Atlantic = 0x2,
         [STUFieldAttribute(0x063F4077)]
-        x063F4077 = 0x3,
+        WorldCup = 0x3,
         [STUFieldAttribute(0x18E85E95)]
         x18E85E95 = 0x4,
     }

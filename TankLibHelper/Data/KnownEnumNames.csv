@@ -3,6 +3,7 @@ Hash, Name
 0534BB83, Sliver
 91E4891F, Gold
 6A29B99B, Platinum
+C9CA261C, Diamond
 A4D28108, Skin
 39580683, VictoryPose
 9D54855A, Emote
@@ -63,6 +64,8 @@ D0B2CF7A, Match
 D9730A25, None
 A3D3317A, Pacific
 6B9A1ACC, Atlantic
+063F4077, WorldCup
+1745B921, Neither
 5123F4E9, Male
 AFA0BA5C, Female
 D27AEA24, None
@@ -77,3 +80,11 @@ AE906266, General
 22DEB1EF, Support
 DE030846, Map
 D8275472, Special
+A9A588B3, Standard
+A5BB799F, Event
+4224D20E, Scripted
+9B5CE715, Small
+F7A961FD, Medium
+66A11B18, Large
+1A62C6F0, Enabled
+F4C0BC0F, Disabled
