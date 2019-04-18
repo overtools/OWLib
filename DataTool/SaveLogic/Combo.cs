@@ -140,8 +140,10 @@ namespace DataTool.SaveLogic {
             } else if (info.Effects.ContainsKey(animationInfo.Effect)) {
                 // wot, why
                 animationEffect = info.Effects[animationInfo.Effect];
-            } else {
+            } else if (info.AnimationEffects.ContainsKey(animationInfo.Effect)) {
                 animationEffect = info.AnimationEffects[animationInfo.Effect];
+            } else {
+                return;
             }
 
             string animationEffectDir = Path.Combine(path, Effect.OverwatchAnimationEffect.AnimationEffectDir, animationInfo.GetNameIndex());
