@@ -153,12 +153,13 @@ namespace TankLib.STU {
         }
         
         public override void Deserialize_Array(teStructuredDataMgr manager, teStructuredData data, STUField_Info field, Array target, int index) {
-            if (data.Format == teStructuredDataFormat.V1 && index == 0) {
-                var n = data.Data.ReadInt64();
-                if (n > 0) {
-                    
-                }
-            }
+            // todo: ???
+            //if (data.Format == teStructuredDataFormat.V1 && index == 0) {
+            //    var n = data.Data.ReadInt64();
+            //    if (n > 0) {
+            //        
+            //    }
+            //}
             STUInstance instanceObj = (STUInstance) DeserializeArrayInternal(manager, data, field, target);
             instanceObj.Usage = TypeUsage.InlineArray;
             target.SetValue(instanceObj, index);

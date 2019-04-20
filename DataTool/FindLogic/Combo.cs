@@ -1075,7 +1075,7 @@ namespace DataTool.FindLogic {
             return info;
         }
 
-        private static void Find(ComboInfo info, STUStatescriptGraphWithOverrides graphWithOverrides, Dictionary<ulong, ulong> replacements, ComboContext context) {
+        public static void Find(ComboInfo info, STUStatescriptGraphWithOverrides graphWithOverrides, Dictionary<ulong, ulong> replacements=null, ComboContext context=null) {
             if (graphWithOverrides == null) return;
             Find(info, graphWithOverrides.m_graph, replacements, context);
             if (graphWithOverrides.m_1EB5A024 != null) {
