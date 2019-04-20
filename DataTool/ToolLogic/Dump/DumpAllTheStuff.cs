@@ -24,6 +24,7 @@ namespace DataTool.ToolLogic.Dump {
             new ListHeroes().Parse(GetFlagsForCommand(flags,"heroes"));
             new ListLoobox().Parse(GetFlagsForCommand(flags,"lootboxes"));
             new ListMaps().Parse(GetFlagsForCommand(flags,"maps"));
+            new ListReportResponses().Parse(GetFlagsForCommand(flags,"report-responses"));
             new DumpStrings().Parse(GetFlagsForCommand(flags,"strings", true));
             new ListSubtitles().Parse(GetFlagsForCommand(flags,"subtitles"));
             new ListHeroUnlocks().Parse(GetFlagsForCommand(flags,"unlocks"));
