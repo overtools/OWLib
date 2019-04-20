@@ -27,6 +27,7 @@ namespace DataTool.ToolLogic.Dump {
             new DumpStrings().Parse(GetFlagsForCommand(flags,"strings", true));
             new ListSubtitles().Parse(GetFlagsForCommand(flags,"subtitles"));
             new ListHeroUnlocks().Parse(GetFlagsForCommand(flags,"unlocks"));
+            new DumpFileLists().Parse(toolFlags);
         }
         
         private static ListFlags GetFlagsForCommand(ExtractFlags flags, string output, bool useDumpFlags = false) {
