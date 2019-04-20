@@ -260,6 +260,7 @@ namespace DataTool.SaveLogic {
             string name = new MapHeader(mapHeader).GetName();
 
             LoudLog($"Extracting map {name}\\{teResourceGUID.Index(key):X}");
+            var nameStrict = GetValidFilename(name, true);
             name = GetValidFilename(name);
             
             // TODO: MAP11 HAS CHANGED
@@ -289,7 +290,7 @@ namespace DataTool.SaveLogic {
             teMapPlaceableData placeableEffects = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.EFFECT);
 
             OverwatchMap exportMap = new OverwatchMap(name, info, placeableSingleModels, placeableModelGroups, placeableModel, placeableEntities, placeableLights, placeableSounds, placeableEffects);
-            using (Stream outputStream = File.OpenWrite(Path.Combine(mapPath, $"{name}.{exportMap.Extension}"))) {
+            using (Stream outputStream = File.OpenWrite(Path.Combine(mapPath, $"{nameStrict}.{exportMap.Extension}"))) {
                 exportMap.Write(outputStream);
             }
 

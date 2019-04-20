@@ -37,6 +37,9 @@ namespace DataTool.DataModels {
 
         [DataMember]
         public Enum_A0F51DCC MapType;
+
+        [DataMember]
+        public string InternalName;
         
         public MapHeader(ulong key) {
             STUMapHeader stu = GetInstance<STUMapHeader>(key);
@@ -51,8 +54,9 @@ namespace DataTool.DataModels {
         public void Init(STUMapHeader mapHeader, ulong key = default) {
             GUID = (teResourceGUID) key;
             Name = GetString(mapHeader.m_displayName);
+            InternalName = mapHeader.m_mapName;
             VariantName = GetString(mapHeader.m_1C706502);
-            if (Name == null && VariantName == null) {
+            if (Name == null && VariantName == null || InternalName.Contains("LobbyMaps")) {
                 Name = "LobbyMaps";
                 VariantName = ComputeInternalVariantName(mapHeader.m_mapName ?? "Maps/LobbyMaps/Unknown");
             }
@@ -68,7 +72,7 @@ namespace DataTool.DataModels {
         private string ComputeInternalVariantName(string s) {
             if (s == null) return "LobbyMaps";
             var parts = s.Split('/', '\\').LastOrDefault();
-            return $"LobbyMaps ({parts ?? "Unknown"})";
+            return $"LobbyMaps\\{parts ?? "Unknown"}";
         }
 
         public MapHeaderLite ToLite() {

@@ -30,6 +30,7 @@ namespace DataTool.ToolLogic.List {
                 Log($"{iD}{data.GetUniqueName()} ({data.MapGUID:X8})");
 
                 if (!string.IsNullOrEmpty(data.Name)) Log($"{iD+1}Name: {data.Name}");
+                if (!string.IsNullOrEmpty(data.InternalName)) Log($"{iD+1}InternalName: {data.InternalName}");
                 if (!string.IsNullOrEmpty(data.VariantName)) Log($"{iD+1}VariantName: {data.VariantName}");
                 if (!string.IsNullOrEmpty(data.Description)) Log($"{iD+1}Desc1: {data.Description}");
                 if (!string.IsNullOrEmpty(data.Description2)) Log($"{iD+1}Desc2: {data.Description2}");

@@ -406,5 +406,19 @@ namespace TankView {
             new AboutPage(this).Show();
             Hide();
         }
+
+        private void ExtractFileList(object sender, RoutedEventArgs e) {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog {
+                IsFolderPicker = false,
+                EnsurePathExists = true,
+                DefaultExtension = ".txt",
+                DefaultFileName = "filelist.txt"
+            };
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok) {
+                var files = new List<GUIDEntry>();
+                ExtractFolder((sender as FrameworkElement)?.DataContext as Folder, ref files);
+                File.WriteAllLines(dialog.FileName, files.Select(x => x.FullPath));
+            }
+        }
     }
 }

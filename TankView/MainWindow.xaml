@@ -160,6 +160,7 @@
                 <TreeView.Resources>
                     <ContextMenu x:Key="ExtractTree">
                         <MenuItem Header="Extract" Click="ExtractFolder" />
+                        <MenuItem Header="Export List" Click="ExtractFileList" />
                     </ContextMenu>
                 </TreeView.Resources>
                 <TreeView.ItemContainerStyle>

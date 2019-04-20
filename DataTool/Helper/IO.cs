@@ -13,8 +13,16 @@ using static DataTool.Program;
 namespace DataTool.Helper {
     // ReSharper disable once InconsistentNaming
     public static class IO {
-        public static string GetValidFilename(string filename) {
+        public static string GetValidFilename(string filename, bool strict = false) {
             if (filename == null) return null;
+            var extra = "";
+            if (filename.StartsWith(@"LobbyMaps\")) {
+                if (!strict) {
+                    extra = @"LobbyMaps\";
+                }
+
+                filename = filename.Substring(10);
+            }
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
             string invalidReStr = $@"[{invalidChars}]+";
 
@@ -26,7 +34,7 @@ namespace DataTool.Helper {
 
             string sanitisedNamePart = Regex.Replace(filename, invalidReStr, "_");
 
-            return reservedWords.Select(reservedWord => $"^{reservedWord}\\.").Aggregate(sanitisedNamePart,
+            return extra + reservedWords.Select(reservedWord => $"^{reservedWord}\\.").Aggregate(sanitisedNamePart,
                 (current, reservedWordPattern) => Regex.Replace(current, reservedWordPattern, "_reservedWord_.",
                     RegexOptions.IgnoreCase));
         }

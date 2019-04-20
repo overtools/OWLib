@@ -25,7 +25,7 @@ namespace DataTool.ToolLogic.Extract
         private string OCIOChunk(MapHeader info, string fname)
         {
             return $@"  - !<Look>
-    name: {GetValidFilename($"{info.GetName().ToUpperInvariant()}_{teResourceGUID.Index(info.MapGUID):X}")}
+    name: {GetValidFilename($"{info.GetName().ToUpperInvariant()}_{teResourceGUID.Index(info.MapGUID):X}", true)}
     process_space: linear
     transform: !<GroupTransform>
       children:
@@ -83,7 +83,8 @@ namespace DataTool.ToolLogic.Extract
                         teMap env = dataReader.Read<teMap>();
 
                         var mapName = GetValidFilename($"{mapInfo.GetName()}_{teResourceGUID.Index(mapInfo.MapGUID):X}");
-                        string fname = $"ow_map_{mapName}";
+                        var mapNameStrict = GetValidFilename($"{mapInfo.GetName()}_{teResourceGUID.Index(mapInfo.MapGUID):X}", true);
+                        string fname = $"ow_map_{mapNameStrict}";
 
                         //using (Stream lightingStream = OpenFile(env.BakedLighting)) {
                         //    teLightingManifest lightingManifest = new teLightingManifest(lightingStream);   
