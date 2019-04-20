@@ -14,20 +14,20 @@ namespace DataTool.ToolLogic.Dump {
             if (flags.OutputPath == null)
                 throw new Exception("no output path");
 
-            new ListAchievements().Parse(GetFlagsForCommand(flags,"achievements"));
-            new ListArcadeModes().Parse(GetFlagsForCommand(flags,"arcade-modes"));
-            new ListChatSettings().Parse(GetFlagsForCommand(flags,"chat-settings"));
-            new ListEsportTeams().Parse(GetFlagsForCommand(flags,"esport-teams"));
-            new ListGameModes().Parse(GetFlagsForCommand(flags,"gamemodes"));
-            new ListGameParams().Parse(GetFlagsForCommand(flags,"game-rulesets"));
-            new ListGeneralUnlocks().Parse(GetFlagsForCommand(flags,"general-unlocks"));
-            new ListHeroes().Parse(GetFlagsForCommand(flags,"heroes"));
-            new ListLoobox().Parse(GetFlagsForCommand(flags,"lootboxes"));
-            new ListMaps().Parse(GetFlagsForCommand(flags,"maps"));
-            new ListReportResponses().Parse(GetFlagsForCommand(flags,"report-responses"));
-            new DumpStrings().Parse(GetFlagsForCommand(flags,"strings", true));
-            new ListSubtitles().Parse(GetFlagsForCommand(flags,"subtitles"));
-            new ListHeroUnlocks().Parse(GetFlagsForCommand(flags,"unlocks"));
+            new ListAchievements().Parse(GetFlagsForCommand(flags, "achievements"));
+            new ListArcadeModes().Parse(GetFlagsForCommand(flags, "arcade-modes"));
+            new ListChatSettings().Parse(GetFlagsForCommand(flags, "chat-settings"));
+            new ListEsportTeams().Parse(GetFlagsForCommand(flags, "esport-teams"));
+            new ListGameModes().Parse(GetFlagsForCommand(flags, "gamemodes"));
+            new ListGameParams().Parse(GetFlagsForCommand(flags, "game-rulesets"));
+            new ListGeneralUnlocks().Parse(GetFlagsForCommand(flags, "general-unlocks"));
+            new ListHeroes().Parse(GetFlagsForCommand(flags, "heroes"));
+            new ListLoobox().Parse(GetFlagsForCommand(flags, "lootboxes"));
+            new ListMaps().Parse(GetFlagsForCommand(flags, "maps"));
+            new ListReportResponses().Parse(GetFlagsForCommand(flags, "report-responses"));
+            new DumpStrings().Parse(GetFlagsForCommand(flags, "strings", true));
+            new ListSubtitles().Parse(GetFlagsForCommand(flags, "subtitles"));
+            new ListHeroUnlocks().Parse(GetFlagsForCommand(flags, "unlocks"));
             new DumpFileLists().Parse(toolFlags);
         }
         
