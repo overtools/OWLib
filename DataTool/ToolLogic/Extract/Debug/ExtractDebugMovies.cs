@@ -13,7 +13,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct MOVI
+        public struct MOVI
         {
             public uint Magic;
             public uint Version;
