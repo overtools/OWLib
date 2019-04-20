@@ -408,8 +408,7 @@ namespace TankView {
         }
 
         private void ExtractFileList(object sender, RoutedEventArgs e) {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog {
-                IsFolderPicker = false,
+            var dialog = new CommonSaveFileDialog {
                 EnsurePathExists = true,
                 DefaultExtension = ".txt",
                 DefaultFileName = "filelist.txt"
