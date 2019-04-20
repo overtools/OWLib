@@ -572,10 +572,6 @@ namespace DataTool.FindLogic {
 
                     break;
                 case 0x6:
-                    if (guid == 720575940379302199) {
-                        
-                    }                   
-                    
                     if (info.Animations.ContainsKey(guid)) {
                         if (context.Model != 0) {
                             info.Models[context.Model].Animations.Add(guid);
@@ -595,18 +591,18 @@ namespace DataTool.FindLogic {
 
                     using (Stream animationStream = OpenFile(guid)) {
                         if (animationStream == null) break;
+                        ulong effectGuid;
                         using (BinaryReader animationReader = new BinaryReader(animationStream)) {
-                            animationStream.Position = 0;
-                            uint priority = animationReader.ReadUInt32();
-                            animationStream.Position = 8;
+                            uint priority = animationReader.ReadUInt16();
+                            animationStream.Position = 0xC;
                             float fps = animationReader.ReadSingle();
-                            animationStream.Position = 0x18L;
-                            ulong effectKey = animationReader.ReadUInt64();
+                            animationStream.Position = 0x10;
+                            effectGuid = animationReader.ReadUInt64();
                             animationInfo.FPS = fps;
                             animationInfo.Priority = priority;
-                            animationInfo.Effect = GetReplacement(effectKey, replacements);
-                            Find(info, effectKey, replacements, animationContext);
+                            animationInfo.Effect = GetReplacement(effectGuid, replacements);
                         }
+                        Find(info, effectGuid, replacements, animationContext);
                     }
 
                     if (context.Model != 0) {
