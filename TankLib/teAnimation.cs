@@ -14,7 +14,15 @@ namespace TankLib {
             /// <summary>
             /// Animation "priority". Is 160 for many animations. No idea what it is used for
             /// </summary>
-            public uint Priority;
+            public short Priority;
+
+            /// <summary>Number of bones animated</summary>
+            public ushort BoneCount;
+            
+            /// <summary>Unknown flags</summary>
+            public ushort Flags;
+
+            public ushort Unknown1;
             
             /// <summary>Duration, in seconds</summary>
             public float Duration;
@@ -22,35 +30,30 @@ namespace TankLib {
             /// <summary>Frames Per Second</summary>
             public float FPS;
             
-            /// <summary>Number of bones animated</summary>
-            public ushort BoneCount;
-            
-            /// <summary>Unknown flags</summary>
-            public ushort Flags;
-            
-            private ulong Unknown;
-            
-            /// <summary>teAnimationEffect(?) reference</summary>
+            /// <summary>AnimationEffect reference</summary>
             /// <remarks>File type 08F</remarks>
             public teResourceGUID Effect;
             
-            private ulong Padding;
+            public ulong EffectHandle;
             
             /// <summary>Offset to bone list</summary>
             public long BoneListOffset;
+
+            public long Unknown2;
+
+            public long Unknown3;
             
             /// <summary>Offset to info table</summary>
             public long InfoTableOffset;
             
-            /// <summary>Offset to end of animation</summary>
-            public long Size;
-            
-            /// <summary>Offset to end of file</summary>
-            public long Eof;
-            
-            
-            /// <summary>Unknown value that is always 0. Maybe padding</summary>
-            public long Zero;
+            ///// <summary>Offset to end of animation</summary>
+            //public long Size;
+            //
+            ///// <summary>Offset to end of file</summary>
+            //public long Eof;
+            //
+            ///// <summary>Unknown value that is always 0. Maybe padding</summary>
+            //public long Zero;
         }
         
         public struct InfoTable {

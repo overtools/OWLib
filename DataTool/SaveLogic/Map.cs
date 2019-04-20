@@ -63,15 +63,30 @@ namespace DataTool.SaveLogic {
                     STUModelComponent[][] modelComponentSets = new STUModelComponent[Entities.Header.PlaceableCount][];
 
                     for (int i = 0; i < Entities.Header.PlaceableCount; i++) {
+                        // todo: wtf is this code
+                        
                         teMapPlaceableEntity entity = (teMapPlaceableEntity) Entities.Placeables[i];
-                        var components = GetInstances<STUModelComponent>(entity.Header.EntityDefinition).Where(component => teResourceGUID.Index(component.m_model) > 1);
-                        if(components.Count() == 0)
+                        var modelComponents = GetInstances<STUModelComponent>(entity.Header.EntityDefinition).Where(component => teResourceGUID.Index(component.m_model) > 1);
+                        if(modelComponents.Count() == 0)
                         {
+                            foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
+                                if (instanceData is STUStatescriptComponentInstanceData statescriptComponentInstanceData) {
+                                    if (statescriptComponentInstanceData.m_6D10093E != null) {
+                                        foreach (STUStatescriptGraphWithOverrides graphWithOverrides in statescriptComponentInstanceData.m_6D10093E) {
+                                            FindLogic.Combo.Find(Info, graphWithOverrides);
+                                        }
+                                    }
+
+                                    if (statescriptComponentInstanceData.m_2D9815BA != null) {
+                                        // todo: ??
+                                    }
+                                }
+                            }
                             continue;
                         }
-                        modelComponentSets[i] = new STUModelComponent[components.Count()];
+                        modelComponentSets[i] = new STUModelComponent[modelComponents.Count()];
                         entitiesWithModelCount += modelComponentSets[i].Length;
-                        modelComponentSets[i] = components.ToArray();
+                        modelComponentSets[i] = modelComponents.ToArray();
                     }
 
                     writer.Write((uint)(SingleModels.Header.PlaceableCount + Models.Header.PlaceableCount +
@@ -249,6 +264,8 @@ namespace DataTool.SaveLogic {
                     // Extension 1.3 - Effects
                     foreach (IMapPlaceable mapPlaceable in Effects.Placeables ?? Array.Empty<IMapPlaceable>())
                     {
+                        var effect = (teMapPlaceableEffect)mapPlaceable;
+                        FindLogic.Combo.Find(Info, effect.Header.Effect);
                         // todo: wtf
                     }
                 }
@@ -276,11 +293,12 @@ namespace DataTool.SaveLogic {
             FindLogic.Combo.Find(info, mapHeader.m_map);
 
             //for (ushort i = 0; i < 255; i++) {
-            //    using (Stream mapChunkStream = OpenFile(map.GetDataKey(i))) {
+            //    using (Stream mapChunkStream = OpenFile(mapHeader.GetChunkKey((byte)i))) {
             //        if (mapChunkStream == null) continue;
             //        WriteFile(mapChunkStream, Path.Combine(mapPath, $"{(Enums.teMAP_PLACEABLE_TYPE)i}.0BC"));
             //    }
             //}
+            //return;
 
             teMapPlaceableData placeableModelGroups = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.MODEL_GROUP);
             teMapPlaceableData placeableSingleModels = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.SINGLE_MODEL);
