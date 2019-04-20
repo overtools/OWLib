@@ -11,11 +11,16 @@ using static DataTool.Helper.Logger;
 namespace DataTool.JSON {
     public class JSONTool {
         internal void OutputJSON(object jObj, ListFlags toolFlags) {
-            CompositeResolver.RegisterAndSetAsDefault(new IJsonFormatter[] {
-                new ResourceGUIDFormatter()
-            }, new[] {
-                StandardResolver.Default
-            });
+            try {
+                CompositeResolver.RegisterAndSetAsDefault(new IJsonFormatter[] {
+                    new ResourceGUIDFormatter()
+                }, new[] {
+                    StandardResolver.Default
+                });
+            } catch {
+                // rip, already registered and set as default???
+            }
+            
             byte[] json = Utf8Json.JsonSerializer.NonGeneric.Serialize(jObj.GetType(), jObj);
             if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
                 byte[] pretty =  Utf8Json.JsonSerializer.PrettyPrintByteArray(json);
