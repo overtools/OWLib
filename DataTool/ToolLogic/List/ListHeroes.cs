@@ -50,16 +50,17 @@ namespace DataTool.ToolLogic.List {
         }
 
         public Dictionary<teResourceGUID, Hero> GetHeroes() {
-            Dictionary<teResourceGUID, Hero> @return = new Dictionary<teResourceGUID, Hero>();
+            var heroes = new Dictionary<teResourceGUID, Hero>();
 
             foreach (teResourceGUID key in TrackedFiles[0x75]) {
-                STUHero hero = GetInstance<STUHero>(key);
-                if (hero == null) continue;
+                var hero = new Hero(key);
+                if (hero.GUID == 0)
+                    continue;
 
-                @return[key] = new Hero(hero);
+                heroes[key] = hero;
             }
 
-            return @return;
+            return heroes;
         }
     }
 }
