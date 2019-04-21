@@ -3,8 +3,8 @@ using TankLib.STU.Types.Enums;
 
 // ReSharper disable All
 namespace TankLib.STU.Types {
-    [STUAttribute(0xC294A43B)]
-    public class STU_C294A43B : STU_895A2A7A {
+    [STUAttribute(0xC294A43B, "STUUnlock_LootBox")]
+    public class STUUnlock_LootBox : STU_895A2A7A {
         [STUFieldAttribute(0x3CC2088A)]
         public teStructuredDataAssetRef<ulong> m_3CC2088A;
 

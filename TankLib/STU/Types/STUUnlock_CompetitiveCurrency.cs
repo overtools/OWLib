@@ -2,8 +2,8 @@
 
 // ReSharper disable All
 namespace TankLib.STU.Types {
-    [STUAttribute(0x136D45F1, "STUUnlock_CompetitivePoints")]
-    public class STUUnlock_CompetitivePoints : STU_895A2A7A {
+    [STUAttribute(0x136D45F1, "STUUnlock_CompetitiveCurrency")]
+    public class STUUnlock_CompetitiveCurrency : STU_895A2A7A {
         [STUFieldAttribute(0x760BF18E)]
         public int m_760BF18E;
     }

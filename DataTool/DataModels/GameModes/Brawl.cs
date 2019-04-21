@@ -22,10 +22,10 @@ namespace DataTool.DataModels.GameModes {
         public List<MapHeaderLite> Maps;
         
         [DataMember]
-        public teResourceGUID[] Achievements;         
+        public Achievement[] Achievements;         
         
         [DataMember]
-        public teResourceGUID[] Unlocks;
+        public Unlock[] Unlocks;
         
         public Brawl(ulong key) {
             STU_2B8093CD stu = GetInstance<STU_2B8093CD>(key);
@@ -61,11 +61,8 @@ namespace DataTool.DataModels.GameModes {
             if (brawlName != null)
                 Name = GetString(brawlName.m_name);
 
-            if (brawl.m_ECCC6D23 != null)
-                Achievements = Helper.JSON.FixArray(brawl.m_ECCC6D23);
-            
-            if (brawl.m_B1449DF7 != null)
-                Unlocks = Helper.JSON.FixArray(brawl.m_B1449DF7);
+            Achievements = brawl.m_ECCC6D23?.Select(x => new Achievement(x)).ToArray();
+            Unlocks = brawl.m_B1449DF7?.Select(x => new Unlock(x)).ToArray();
         }
     }
 }

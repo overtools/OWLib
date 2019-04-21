@@ -15,6 +15,9 @@ namespace DataTool.DataModels {
     /// </summary>
     [DataContract]
     public class Unlock {
+        [DataMember]
+        public teResourceGUID GUID;
+        
         /// <summary>
         /// Name of this unlock
         /// </summary>
@@ -53,9 +56,6 @@ namespace DataTool.DataModels {
         [IgnoreDataMember]
         public STUUnlock STU;
 
-        [DataMember]
-        public teResourceGUID GUID;
-
         /// <summary>
         /// DataTool specific Unlock Data Tag
         /// </summary>
@@ -63,11 +63,18 @@ namespace DataTool.DataModels {
         public string Tag;
 
         [DataMember]
-        public int CompetitivePoints;
+        public int CompetitiveCurrency;
 
-        public bool ShouldSerializeCompetitivePoints() => Type == "CompetitivePoints";
-        public bool ShouldSerializeAvailableIn() => AvailableIn != null;
-        public bool ShouldSerializeTag() => Tag != null;
+        [DataMember]
+        public Enum_BABC4175 LootBoxType;
+
+        [IgnoreDataMember]
+        public bool IsTraditionalUnlock;
+
+        public bool ShouldSerializeCompetitiveCurrency() => Type == "CompetitiveCurrency";
+        public bool ShouldSerializeLootBoxType() => Type == "LootBox";
+        public bool ShouldSerializeAvailableIn() => IsTraditionalUnlock;
+        public bool ShouldSerializeTag() => IsTraditionalUnlock;
 
         public Unlock(STUUnlock unlock, ulong guid) {
             Init(unlock, guid);
@@ -90,9 +97,14 @@ namespace DataTool.DataModels {
             Type = GetTypeName(unlock);
             Tag = UnlockData.GetTagFor(guid);
 
-            if (Type == "CompetitivePoints") {
-                var compUnlock = (STUUnlock_CompetitivePoints) unlock;
-                CompetitivePoints = compUnlock.m_760BF18E;
+            IsTraditionalUnlock = Type != "LootBox" && Type != "CompetitiveCurrency";
+            
+            if (unlock is STUUnlock_CompetitiveCurrency compStu)
+                CompetitiveCurrency = compStu.m_760BF18E;
+
+            if (unlock is STUUnlock_LootBox lootboxStu) {
+                Rarity = lootboxStu.m_2F922165;
+                LootBoxType = lootboxStu.m_lootboxType;
             }
         }
 
@@ -151,8 +163,11 @@ namespace DataTool.DataModels {
             if (type == typeof(STUUnlock_HeroMod)) {
                 return "HeroMod";  // wtf
             }
-            if (type == typeof(STUUnlock_CompetitivePoints)) {
-                return "CompetitivePoints";
+            if (type == typeof(STUUnlock_CompetitiveCurrency)) {
+                return "CompetitiveCurrency";
+            }
+            if (type == typeof(STUUnlock_LootBox)) {
+                return "LootBox";
             }
 
             throw new NotImplementedException($"Unknown Unlock Type: {type}");
