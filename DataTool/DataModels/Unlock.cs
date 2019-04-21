@@ -70,9 +70,12 @@ namespace DataTool.DataModels {
 
         [IgnoreDataMember]
         public bool IsTraditionalUnlock;
-
+        
+        // These types are specific to certain unlocks so don't show them unless we're on unlock
         public bool ShouldSerializeCompetitiveCurrency() => Type == "CompetitiveCurrency";
         public bool ShouldSerializeLootBoxType() => Type == "LootBox";
+        
+        // These only really apply to "normal" unlocks and can be removed from others
         public bool ShouldSerializeAvailableIn() => IsTraditionalUnlock;
         public bool ShouldSerializeTag() => IsTraditionalUnlock;
 
@@ -97,8 +100,10 @@ namespace DataTool.DataModels {
             Type = GetTypeName(unlock);
             Tag = UnlockData.GetTagFor(guid);
 
-            IsTraditionalUnlock = Type != "LootBox" && Type != "CompetitiveCurrency";
+            // todo: maybe Type should be an enum??
+            IsTraditionalUnlock = Type != "LootBox" && Type != "CompetitiveCurrency" && Type != "Currency";
             
+            // Lootbox and competitive point unlocks have some additional relevant data
             if (unlock is STUUnlock_CompetitiveCurrency compStu)
                 CompetitiveCurrency = compStu.m_760BF18E;
 
