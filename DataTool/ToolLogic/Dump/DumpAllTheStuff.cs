@@ -28,6 +28,7 @@ namespace DataTool.ToolLogic.Dump {
             new DumpStrings().Parse(GetFlagsForCommand(flags, "strings", true));
             new ListSubtitles().Parse(GetFlagsForCommand(flags, "subtitles"));
             new ListHeroUnlocks().Parse(GetFlagsForCommand(flags, "unlocks"));
+            new ListRankedSeasons().Parse(GetFlagsForCommand(flags, "ranked-seasons"));
             new DumpFileLists().Parse(toolFlags);
         }
         
