@@ -62,6 +62,13 @@ namespace DataTool.DataModels {
         [DataMember]
         public string Tag;
 
+        [DataMember]
+        public int CompetitivePoints;
+
+        public bool ShouldSerializeCompetitivePoints() => Type == "CompetitivePoints";
+        public bool ShouldSerializeAvailableIn() => AvailableIn != null;
+        public bool ShouldSerializeTag() => Tag != null;
+
         public Unlock(STUUnlock unlock, ulong guid) {
             Init(unlock, guid);
         }
@@ -73,17 +80,20 @@ namespace DataTool.DataModels {
         }
 
         private void Init(STUUnlock unlock, ulong guid) {
+            GUID = (teResourceGUID) guid;
+            STU = unlock;
+            
             Name = GetString(unlock.m_name)?.TrimEnd(' '); // ffs blizz, why do the names end in a space sometimes
             AvailableIn = GetString(unlock.m_53145FAF);
             Rarity = unlock.m_rarity;
             Description = GetDescriptionString(unlock.m_3446F580);
-
-            GUID = (teResourceGUID)guid;
-            STU = unlock;
-
             Type = GetTypeName(unlock);
-
             Tag = UnlockData.GetTagFor(guid);
+
+            if (Type == "CompetitivePoints") {
+                var compUnlock = (STUUnlock_CompetitivePoints) unlock;
+                CompetitivePoints = compUnlock.m_760BF18E;
+            }
         }
 
         public string GetName(bool isList = false) {
@@ -140,6 +150,9 @@ namespace DataTool.DataModels {
             }
             if (type == typeof(STUUnlock_HeroMod)) {
                 return "HeroMod";  // wtf
+            }
+            if (type == typeof(STUUnlock_CompetitivePoints)) {
+                return "CompetitivePoints";
             }
 
             throw new NotImplementedException($"Unknown Unlock Type: {type}");

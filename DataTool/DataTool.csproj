@@ -117,6 +117,7 @@
     <Compile Include="DataModels\MapHeader.cs" />
     <Compile Include="DataModels\PlayerProgression.cs" />
     <Compile Include="DataModels\ProgressionUnlocks.cs" />
+    <Compile Include="DataModels\RankedSeason.cs" />
     <Compile Include="DataModels\ReportResponse.cs" />
     <Compile Include="DataModels\ResourceKey.cs" />
     <Compile Include="DataModels\TeamDefinition.cs" />
@@ -203,6 +204,7 @@
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
     <Compile Include="ToolLogic\List\Misc\ListArcadeModes.cs" />
+    <Compile Include="ToolLogic\List\Misc\ListRankedSeasons.cs" />
     <Compile Include="ToolLogic\List\Misc\ListReportResponses.cs" />
     <Compile Include="ToolLogic\List\Misc\ListBrawls.cs" />
     <Compile Include="ToolLogic\List\Misc\ListChatReplacements.cs" />

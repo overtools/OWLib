@@ -1509,7 +1509,7 @@
     <Compile Include="STU\Types\STU_134F0EA3.cs" />
     <Compile Include="STU\Types\STU_1361E674.cs" />
     <Compile Include="STU\Types\STU_136C3C6A.cs" />
-    <Compile Include="STU\Types\STU_136D45F1.cs" />
+    <Compile Include="STU\Types\STUUnlock_CompetitivePoints.cs" />
     <Compile Include="STU\Types\STU_137A3D5B.cs" />
     <Compile Include="STU\Types\STU_13906491.cs" />
     <Compile Include="STU\Types\STU_1392EB73.cs" />

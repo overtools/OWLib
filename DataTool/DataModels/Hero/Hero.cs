@@ -11,6 +11,9 @@ namespace DataTool.DataModels.Hero {
     [DataContract]
     public class Hero {
         [DataMember]
+        public teResourceGUID GUID;
+        
+        [DataMember]
         public string Name;
         
         [DataMember]
@@ -30,8 +33,19 @@ namespace DataTool.DataModels.Hero {
         
         [DataMember]
         public List<SkinTheme> SkinThemes;
+        
+        public Hero(ulong key) {
+            STUHero stu = GetInstance<STUHero>(key);
+            if (stu == null) return;
+            Init(stu, key);
+        }
 
-        public Hero(STUHero hero) {
+        public Hero(STUHero stu) {
+            Init(stu);
+        }
+
+        private void Init(STUHero hero, ulong key = default) {
+            GUID = (teResourceGUID) key;
             Name = GetString(hero.m_0EDCE350);
             Description = GetDescriptionString(hero.m_3446F580);
             Gender = hero.m_gender;
