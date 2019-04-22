@@ -103,6 +103,8 @@
     <Compile Include="DataModels\ArcadeMode.cs" />
     <Compile Include="DataModels\Chat\ChatChannel.cs" />
     <Compile Include="DataModels\Chat\ChatCommand.cs" />
+    <Compile Include="DataModels\Chat\ChatReplacementSettings.cs" />
+    <Compile Include="DataModels\Chat\ChatReplacementsContainer.cs" />
     <Compile Include="DataModels\Chat\ChatSettings.cs" />
     <Compile Include="DataModels\GameModes\Brawl.cs" />
     <Compile Include="DataModels\GameModes\GameRulesetGameMode.cs" />
@@ -204,10 +206,10 @@
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
     <Compile Include="ToolLogic\List\Misc\ListArcadeModes.cs" />
+    <Compile Include="ToolLogic\List\Misc\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\Misc\ListRankedSeasons.cs" />
     <Compile Include="ToolLogic\List\Misc\ListReportResponses.cs" />
     <Compile Include="ToolLogic\List\Misc\ListBrawls.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\Misc\ListChatSettings.cs" />
     <Compile Include="ToolLogic\List\Misc\ListEsportsTeams.cs" />
     <Compile Include="ToolLogic\List\Misc\ListGameModes.cs" />
