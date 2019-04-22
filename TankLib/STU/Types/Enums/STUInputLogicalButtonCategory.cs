@@ -5,29 +5,29 @@ namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x44A05FE3, "STUInputLogicalButtonCategory")]
     public enum STUInputLogicalButtonCategory : uint {
         [STUFieldAttribute(0xB10DF7B3)]
-        xB10DF7B3 = 0x0,
+        None = 0x0,
         [STUFieldAttribute(0xDD8CF466)]
-        xDD8CF466 = 0x1,
+        Movement = 0x1,
         [STUFieldAttribute(0x3F197F17)]
-        x3F197F17 = 0x2,
+        Abilities  = 0x2,
         [STUFieldAttribute(0xBF6BF041)]
-        xBF6BF041 = 0x3,
+        Communication = 0x3,
         [STUFieldAttribute(0xC9318BD3)]
-        xC9318BD3 = 0x4,
+        Emotes = 0x4,
         [STUFieldAttribute(0xC276AD87)]
-        xC276AD87 = 0x5,
+        Voicelines = 0x5,
         [STUFieldAttribute(0xDA278AE2)]
-        xDA278AE2 = 0x6,
+        Sprays = 0x6,
         [STUFieldAttribute(0xDFACD42D)]
-        xDFACD42D = 0x7,
+        Spectate = 0x7,
         [STUFieldAttribute(0x79646B2A)]
-        x79646B2A = 0x8,
+        Replay = 0x8,
         [STUFieldAttribute(0xDB20D2FA)]
-        xDB20D2FA = 0x9,
+        Chat = 0x9,
         [STUFieldAttribute(0xB13AEDC6)]
-        xB13AEDC6 = 0xA,
+        Misc = 0xA,
         [STUFieldAttribute(0xED601272)]
-        xED601272 = 0xB,
+        Dev = 0xB,
         [STUFieldAttribute(0xDB51905B)]
         xDB51905B = 0xC,
         [STUFieldAttribute(0xDCA4E482)]

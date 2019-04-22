@@ -30,6 +30,7 @@ namespace DataTool.ToolLogic.Dump {
             new ListHeroUnlocks().Parse(GetFlagsForCommand(flags, "unlocks"));
             new ListRankedSeasons().Parse(GetFlagsForCommand(flags, "ranked-seasons"));
             new ListBrawls().Parse(GetFlagsForCommand(flags, "brawls"));
+            new ListLogicalButtonMapping().Parse(GetFlagsForCommand(flags, "button-mapping"));
             new DumpFileLists().Parse(toolFlags);
         }
         
