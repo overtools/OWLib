@@ -31,6 +31,7 @@ namespace DataTool.ToolLogic.Dump {
             new ListRankedSeasons().Parse(GetFlagsForCommand(flags, "ranked-seasons"));
             new ListBrawls().Parse(GetFlagsForCommand(flags, "brawls"));
             new ListLogicalButtonMapping().Parse(GetFlagsForCommand(flags, "button-mapping"));
+            new ListChatReplacements().Parse(GetFlagsForCommand(flags, "chat-replacements"));
             new DumpFileLists().Parse(toolFlags);
         }
         

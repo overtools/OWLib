@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Linq;
+using System.Runtime.Serialization;
 using TankLib;
 using TankLib.STU.Types;
 using DataTool.Helper;
@@ -26,7 +27,8 @@ namespace DataTool.DataModels {
         public teResourceGUID[] Children;
         
         [DataMember]
-        public teResourceGUID[] Unknown;
+        public string[] About;
+        
         
         public ArcadeMode(ulong key) {
             STU_E3594B8E stu = STUHelper.GetInstance<STU_E3594B8E>(key);
@@ -43,7 +45,6 @@ namespace DataTool.DataModels {
             Name = GetString(arcade.m_name);
             Description = GetString(arcade.m_description);
             Image = arcade.m_21EB3E73;
-            Unknown = Helper.JSON.FixArray(arcade.m_5797DE13);
 
             switch (arcade) {
                 case STU_598579A3 a1:
@@ -55,6 +56,18 @@ namespace DataTool.DataModels {
                 default:
                     break;
             }
+            
+            About = arcade.m_5797DE13?.Select(x => {
+                var aboutStuff = STUHelper.GetInstance<STU_56830926>(x);
+
+                var name = GetString(aboutStuff.m_name);
+                string desc = null;
+
+                if (aboutStuff is STU_F31D4F9C ye)
+                    desc = GetString(ye.m_description);
+
+                return new string[] {name, desc};
+            }).SelectMany(x => x).Where(x => x != null).ToArray();
         }
     }
 }
