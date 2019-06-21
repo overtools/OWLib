@@ -20,23 +20,19 @@ namespace DataTool.DataModels.Hero {
         [DataMember]
         public teResourceGUID MovieGUID;
 
-        public Loadout(ulong key) {
-            STULoadout loadout = STUHelper.GetInstance<STULoadout>(key);
-            if (loadout == null) return;
-            Init(loadout);
-        }
-
         public Loadout(STULoadout loadout) {
-            Init(loadout);
-        }
-
-        private void Init(STULoadout loadout) {
             MovieGUID = loadout.m_infoMovie;
             
             Category = loadout.m_category;
             
             Name = GetString(loadout.m_name);
             Description = GetString(loadout.m_description);
+        }
+
+        public static Loadout GetLoadout(ulong key) {
+            STULoadout loadout = STUHelper.GetInstance<STULoadout>(key);
+            if (loadout == null) return null;
+            return new Loadout(loadout);
         }
     }
 }

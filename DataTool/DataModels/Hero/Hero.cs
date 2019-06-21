@@ -62,11 +62,10 @@ namespace DataTool.DataModels.Hero {
             
             if (hero.m_heroLoadout != null) {
                 Loadouts = new List<Loadout>();
-                foreach (teResourceGUID loadout in hero.m_heroLoadout) {
-                    STULoadout stuLoadout = GetInstance<STULoadout>(loadout);
-                    if (stuLoadout == null) continue;
-                    
-                    Loadouts.Add(new Loadout(stuLoadout));
+                foreach (teResourceGUID loadoutGUID in hero.m_heroLoadout) {
+                    var loadout = Loadout.GetLoadout(loadoutGUID);
+                    if (loadout == null) continue;
+                    Loadouts.Add(loadout);
                 }
             }
         }
