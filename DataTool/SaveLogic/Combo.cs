@@ -32,8 +32,40 @@ namespace DataTool.SaveLogic {
         public static void SaveVoiceStimulus(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
             FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo) {
 
-            foreach (ulong soundFile in voiceLineInstanceInfo.SoundFiles) {
-                SaveSoundFile(flags, path, info, soundFile, true);
+            var realPath = path;
+            IEnumerable<string> subtitle = new HashSet<string>();
+
+            if (info.Subtitles.TryGetValue(voiceLineInstanceInfo.Subtitle, out var subtitleInfo)) {
+                subtitle = subtitle.Concat(subtitleInfo.Text);
+            }
+
+            if (info.Subtitles.TryGetValue(voiceLineInstanceInfo.SubtitleRuntime, out var subtitleRuntimeInfo)) {
+                subtitle = subtitle.Concat(subtitleRuntimeInfo.Text);
+            }
+            
+            var subtitleSet = new HashSet<string>(subtitle);
+            var soundSet = new HashSet<ulong>(voiceLineInstanceInfo.SoundFiles.Where(x => x != 0));
+
+            string overrideName = null;
+
+            if (subtitleSet.Any()) {
+                if (soundSet.Count > 1) {
+                    realPath = Path.Combine(realPath, IO.GetValidFilename(subtitleSet.First().TrimEnd('.')));
+                    WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{teResourceGUID.LongKey(voiceLineInstanceInfo.Subtitle):X8}-{teResourceGUID.LongKey(voiceLineInstanceInfo.SubtitleRuntime):X8}-subtitles.txt"));
+                } else if (soundSet.Count == 1) {
+                    try {
+                        overrideName = GetValidFilename($"{teResourceGUID.AsString(soundSet.First())}-{subtitleSet.First().TrimEnd('.')}");
+                        if (overrideName.Length > 128) overrideName = overrideName.Substring(0, 100);
+                        WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
+                    } catch {
+                        overrideName = teResourceGUID.AsString(soundSet.First());
+                        WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
+                    }
+                }
+            }
+
+            foreach (ulong soundFile in soundSet) {
+                SaveSoundFile(flags, realPath, info, soundFile, true, overrideName);
             }
         }
 
@@ -482,6 +514,10 @@ namespace DataTool.SaveLogic {
             IEnumerable<FindLogic.Combo.VoiceLineInstanceInfo> voiceLineInstances, bool split) {
             foreach (FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstance in voiceLineInstances) {
                 string thisPath = path;
+
+                if (flags is ExtractFlags extractFlags) {
+                    if (extractFlags.FlattenDirectory) split = false;
+                }
                 if (split) {
                     thisPath = Path.Combine(path, GetFileName(voiceLineInstance.VoiceStimulus));
                 }
@@ -597,9 +633,9 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void ConvertSoundFile(Stream stream, FindLogic.Combo.SoundFileInfo soundFileInfo, string directory)
+        private static void ConvertSoundFile(Stream stream, FindLogic.Combo.SoundFileInfo soundFileInfo, string directory, string name = null)
         {
-            string outputFile = Path.Combine(directory, $"{soundFileInfo.GetName()}.ogg");
+            string outputFile = Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.ogg");
             CreateDirectoryFromFile(outputFile);
             using (Stream outputStream = File.OpenWrite(outputFile))
             {
@@ -634,7 +670,7 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveSoundFile(ICLIFlags flags, string directory, FindLogic.Combo.ComboInfo info, ulong soundFile, bool voice) {
+        public static void SaveSoundFile(ICLIFlags flags, string directory, FindLogic.Combo.ComboInfo info, ulong soundFile, bool voice, string name = null) {
             if (soundFile == 0) return;
             bool convertWem = true;
             if (flags is ExtractFlags extractFlags) {
@@ -648,9 +684,9 @@ namespace DataTool.SaveLogic {
                 if (soundStream == null) return;
 
                 if (!convertWem) {
-                    WriteFile(soundStream, Path.Combine(directory, $"{soundFileInfo.GetName()}.wem"));
+                    WriteFile(soundStream, Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.wem"));
                 } else {
-                    ConvertSoundFile(soundStream, soundFileInfo, directory);
+                    ConvertSoundFile(soundStream, soundFileInfo, directory, name);
                 }
             }
         }

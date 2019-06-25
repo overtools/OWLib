@@ -35,6 +35,7 @@ namespace DataTool.FindLogic {
             public Dictionary<ulong, VoiceSetInfo> VoiceSets;
             public Dictionary<ulong, MapInfoNew> Maps;
             public Dictionary<ulong, StringInfo> Strings;
+            public Dictionary<ulong, SubtitleInfo> Subtitles; 
             public HashSet<ulong> DoneScripts;
 
             public ComboConfig Config = new ComboConfig();
@@ -58,6 +59,7 @@ namespace DataTool.FindLogic {
                 VoiceSets = new Dictionary<ulong, VoiceSetInfo>();
                 Maps = new Dictionary<ulong, MapInfoNew>();
                 Strings = new Dictionary<ulong, StringInfo>();
+                Subtitles = new Dictionary<ulong, SubtitleInfo>();
                 DoneScripts = new HashSet<ulong>();
             }
 
@@ -176,6 +178,7 @@ namespace DataTool.FindLogic {
             public ulong VoiceStimulus;
             public ulong VoiceConversation;
             public ulong Subtitle;
+            public ulong SubtitleRuntime;
             public HashSet<ulong> SoundFiles;
         }
         
@@ -278,6 +281,14 @@ namespace DataTool.FindLogic {
                 ModelLooks = new HashSet<ulong>();
                 ModelLookSets = new HashSet<IEnumerable<ulong>>();
                 LooseMaterials = new HashSet<ulong>();
+            }
+        }
+
+        public class SubtitleInfo : ComboType {
+            public HashSet<string> Text;
+
+            public SubtitleInfo(ulong guid) : base(guid) {
+                Text = new HashSet<string>();
             }
         }
 
@@ -944,12 +955,15 @@ namespace DataTool.FindLogic {
                                 GUIDx03C = voiceLineInstance.m_effectHardpoint,
                                 Subtitle = voiceLineInstance.m_43C90056
                             };
+                        Find(info, voiceLineInstanceInfo.Subtitle, replacements, context);
                         if (voiceLineInstance.m_voiceLineRuntime != null) {
                             voiceLineInstanceInfo.VoiceLineSet = voiceLineInstance.m_voiceLineRuntime.m_set;
                             voiceLineInstanceInfo.VoiceStimulus = voiceLineInstance.m_voiceLineRuntime.m_stimulus;
                             voiceLineInstanceInfo.ExternalSound = voiceLineInstance.m_voiceLineRuntime.m_externalSound;
                             voiceLineInstanceInfo.VoiceConversation = voiceLineInstance.m_voiceLineRuntime.m_voiceConversation;
+                            voiceLineInstanceInfo.SubtitleRuntime = voiceLineInstance.m_voiceLineRuntime.m_6148094F;
                             Find(info, voiceLineInstanceInfo.ExternalSound, replacements, context);
+                            Find(info, voiceLineInstanceInfo.SubtitleRuntime, replacements, context);
                         } else {
                             Console.Out.WriteLine("[DataTool.FindLogic.Combo]: ERROR: voice data container was null (please contact the developers)");
                             if (Debugger.IsAttached) {
@@ -986,6 +1000,18 @@ namespace DataTool.FindLogic {
                     };
 
                     info.Strings[guid] = stringInfo;
+                    break;
+                case 0x71:
+                    STU_7A68A730 subtitleContainer = GetInstance<STU_7A68A730>(guid);
+                    if (subtitleContainer == null) break;
+
+                    var subtitleSet = new SubtitleInfo(guid);
+                    subtitleSet.Text.Add(subtitleContainer.m_798027DE?.m_text);
+                    subtitleSet.Text.Add(subtitleContainer.m_A84AA2B5?.m_text);
+                    subtitleSet.Text.Add(subtitleContainer.m_D872E45C?.m_text);
+                    subtitleSet.Text.Add(subtitleContainer.m_1485B834?.m_text);
+                    subtitleSet.Text = new HashSet<string>(subtitleSet.Text.Where(x => x != null));
+                    info.Subtitles[guid] = subtitleSet;
                     break;
                 case 0xA5:
                     // hmm, if existing?

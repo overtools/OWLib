@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using TankLib;
 using TACTLib.Core;
@@ -72,6 +73,20 @@ namespace DataTool.Helper {
             using (Stream file = File.OpenWrite(filename)) {
                 file.SetLength(0); // ensure no leftover data
                 stream.CopyTo(file);
+            }
+        }
+
+        public static void WriteFile(string text, string filename) {
+            if (text == null) return;
+            string path = Path.GetDirectoryName(filename);
+            if (!Directory.Exists(path) && path != null) {
+                Directory.CreateDirectory(path);
+            }
+
+            using (Stream file = File.OpenWrite(filename)) {
+                file.SetLength(0); // ensure no leftover data
+                var bytes = Encoding.Unicode.GetBytes(text);
+                file.Write(bytes, 0, bytes.Length);
             }
         }
 
