@@ -271,7 +271,7 @@ namespace DataTool.ToolLogic.Extract {
                         teamDef.Location,  // New York
                         teamDef.Name,  // Excelsior
                         teamDef.FullName,  // New York Excelsior
-                        (teamDef.Division == Enum_5A789F71.None && teamDef.Abbreviation == null) ? "none" : "*",
+                        (teamDef.Division == Enum_5A789F71.None && teamDef.Location == null) ? "none" : "*",
                         "*");  // all
                 
                     // nice file structure
