@@ -7,34 +7,34 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xCA634E0A)]
     public class STU_CA634E0A : STU_A3C7077A {
         [STUFieldAttribute(0xFDA311DA)]
-        public teStructuredDataAssetRef<ulong> m_FDA311DA;
+        public teStructuredDataAssetRef<STUTexture> m_FDA311DA;
 
         [STUFieldAttribute(0x43FC4DFF)]
-        public teStructuredDataAssetRef<ulong> m_43FC4DFF;
+        public teStructuredDataAssetRef<STUTexture> m_43FC4DFF;
 
         [STUFieldAttribute(0xE90EAB9D)]
-        public teStructuredDataAssetRef<ulong> m_E90EAB9D;
+        public teStructuredDataAssetRef<STUTexture> m_E90EAB9D;
 
         [STUFieldAttribute(0xE1E200DD)]
-        public teStructuredDataAssetRef<ulong> m_E1E200DD;
+        public teStructuredDataAssetRef<STUTexture> m_E1E200DD;
 
         [STUFieldAttribute(0x2370E609)]
-        public teStructuredDataAssetRef<ulong> m_2370E609;
+        public teStructuredDataAssetRef<STUTexture> m_2370E609;
 
         [STUFieldAttribute(0xE88B4D9C)]
-        public teStructuredDataAssetRef<ulong> m_E88B4D9C;
+        public teStructuredDataAssetRef<STUTexture> m_E88B4D9C;
 
         [STUFieldAttribute(0x09E32A58)]
-        public teStructuredDataAssetRef<ulong> m_09E32A58;
+        public teStructuredDataAssetRef<STUTexture> m_09E32A58;
 
         [STUFieldAttribute(0xC9AC8391)]
-        public teStructuredDataAssetRef<ulong> m_C9AC8391;
+        public teStructuredDataAssetRef<STUTexture> m_C9AC8391;
 
         [STUFieldAttribute(0xDB643E43)]
-        public teStructuredDataAssetRef<ulong> m_DB643E43;
+        public teStructuredDataAssetRef<STUDataFlow> m_DB643E43;
 
         [STUFieldAttribute(0xB999DDE2)]
-        public teStructuredDataAssetRef<ulong> m_B999DDE2;
+        public teStructuredDataAssetRef<STUEmptyAsset> m_B999DDE2;
 
         [STUFieldAttribute(0x3ABA5FA0)]
         public teColorRGB m_3ABA5FA0;
@@ -95,8 +95,5 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x0A1A2080)]
         public byte m_0A1A2080;
-
-        [STUFieldAttribute(0x9710D80F)]
-        public byte m_9710D80F;
     }
 }

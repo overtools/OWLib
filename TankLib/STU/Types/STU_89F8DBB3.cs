@@ -10,10 +10,10 @@ namespace TankLib.STU.Types {
         public teVec3A m_0D7DD9D2;
 
         [STUFieldAttribute(0x7FA23299)]
-        public teStructuredDataAssetRef<ulong> m_7FA23299;
+        public teStructuredDataAssetRef<STUAnimBoneWeightMask> m_7FA23299;
 
         [STUFieldAttribute(0x3CFF054B)]
-        public teStructuredDataAssetRef<ulong> m_3CFF054B;
+        public teStructuredDataAssetRef<STUAnimBoneWeightMask> m_3CFF054B;
 
         [STUFieldAttribute(0xD1A08C94, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimBlendTree_PlayAnimCancelItem[] m_D1A08C94;

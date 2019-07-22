@@ -5,16 +5,16 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xD10B25CA, "STUProfileOverviewGeneralStat")]
     public class STUProfileOverviewGeneralStat : STUInstance {
         [STUFieldAttribute(0xB48F1D22, "m_name")]
-        public teStructuredDataAssetRef<ulong> m_name;
+        public teStructuredDataAssetRef<STUUXDisplayText> m_name;
 
         [STUFieldAttribute(0x93235476)]
-        public teStructuredDataAssetRef<ulong> m_93235476;
+        public teStructuredDataAssetRef<STUStat> m_93235476;
 
         [STUFieldAttribute(0xB5B91051)]
-        public teStructuredDataAssetRef<ulong> m_B5B91051;
+        public teStructuredDataAssetRef<STUStat> m_B5B91051;
 
         [STUFieldAttribute(0x07EC21F2)]
-        public teStructuredDataAssetRef<ulong> m_07EC21F2;
+        public teStructuredDataAssetRef<STUStat> m_07EC21F2;
 
         [STUFieldAttribute(0xDAD2E3A2)]
         public teStructuredDataAssetRef<ulong> m_DAD2E3A2;

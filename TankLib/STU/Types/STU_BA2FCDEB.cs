@@ -10,8 +10,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF649CC6C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_F649CC6C;
 
-        [STUFieldAttribute(0xEAC38022, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_EAC38022;
+        [STUFieldAttribute(0xDAD5978F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_DAD5978F;
 
         [STUFieldAttribute(0xBB16810A, "m_priority", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_priority;
@@ -42,6 +42,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x7DC1550F, "m_position", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_position;
+
+        [STUFieldAttribute(0x7762F430, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_7762F430;
 
         [STUFieldAttribute(0xA0B58111, "m_onFinishedPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptOutputPlug m_onFinishedPlug;

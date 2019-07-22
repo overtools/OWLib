@@ -9,7 +9,7 @@ namespace TankLib.STU.Types {
         public teString m_stringValue;
 
         [STUFieldAttribute(0x913D7864, "m_idValue")]
-        public teStructuredDataAssetRef<ulong> m_idValue;
+        public teStructuredDataAssetRef<STUUXLink> m_idValue;
 
         [STUFieldAttribute(0x19FDF5A2, "m_textValue")]
         public teStructuredDataAssetRef<ulong> m_textValue;

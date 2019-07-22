@@ -5,9 +5,9 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x5C713BD4, "STUUnlock_SprayPaintEffect")]
     public class STUUnlock_SprayPaintEffect : STUInstance {
         [STUFieldAttribute(0x58D56DD4, "m_effect")]
-        public teStructuredDataAssetRef<ulong> m_effect;
+        public teStructuredDataAssetRef<STUEffect> m_effect;
 
         [STUFieldAttribute(0x2B522C5B, "m_effectLook")]
-        public teStructuredDataAssetRef<ulong> m_effectLook;
+        public teStructuredDataAssetRef<STUEffectLook> m_effectLook;
     }
 }

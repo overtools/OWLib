@@ -6,5 +6,8 @@ namespace TankLib.STU.Types {
     public class STU_99ED4486 : STUStatescriptAction {
         [STUFieldAttribute(0xF3733689)]
         public byte m_F3733689;
+
+        [STUFieldAttribute(0x79252765)]
+        public byte m_79252765;
     }
 }

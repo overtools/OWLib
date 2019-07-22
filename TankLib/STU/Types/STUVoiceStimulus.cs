@@ -6,13 +6,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x3FBD80C6, "STUVoiceStimulus")]
     public class STUVoiceStimulus : STUInstance {
         [STUFieldAttribute(0x87DCD58E)]
-        public teStructuredDataAssetRef<ulong> m_87DCD58E;
+        public teStructuredDataAssetRef<STU_F38E9E14> m_87DCD58E;
 
         [STUFieldAttribute(0x099F25C9)]
-        public teStructuredDataAssetRef<ulong> m_099F25C9;
+        public teStructuredDataAssetRef<STUGenericSettings_Base> m_099F25C9;
 
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
-        public teStructuredDataAssetRef<ulong> m_category;
+        public teStructuredDataAssetRef<STUVoiceCategory> m_category;
 
         [STUFieldAttribute(0x4FF98D41, "m_criteria", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUCriteriaContainer m_criteria;

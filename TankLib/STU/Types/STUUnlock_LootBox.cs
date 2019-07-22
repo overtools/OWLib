@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xC294A43B, "STUUnlock_LootBox")]
     public class STUUnlock_LootBox : STU_895A2A7A {
         [STUFieldAttribute(0x3CC2088A)]
-        public teStructuredDataAssetRef<ulong> m_3CC2088A;
+        public teStructuredDataAssetRef<STUHero> m_3CC2088A;
 
         [STUFieldAttribute(0x7AB4E3F8, "m_lootboxType")]
         public Enum_BABC4175 m_lootboxType;

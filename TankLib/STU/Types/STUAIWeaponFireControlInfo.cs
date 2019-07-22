@@ -6,10 +6,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x0519019F, "STUAIWeaponFireControlInfo")]
     public class STUAIWeaponFireControlInfo : STUInstance {
         [STUFieldAttribute(0xF2810377)]
-        public teStructuredDataAssetRef<ulong> m_F2810377;
+        public teStructuredDataAssetRef<STUIdentifier> m_F2810377;
 
         [STUFieldAttribute(0xC3657821)]
-        public teStructuredDataAssetRef<ulong> m_C3657821;
+        public teStructuredDataAssetRef<STUHardPoint> m_C3657821;
 
         [STUFieldAttribute(0x4F5E7D4C)]
         public STULogicalButton m_4F5E7D4C;

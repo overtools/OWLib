@@ -23,9 +23,6 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xF1C1F010)]
         public float m_F1C1F010;
 
-        [STUFieldAttribute(0x9C86233B)]
-        public Enum_C37E9E24 m_9C86233B;
-
         [STUFieldAttribute(0x1796C4CC)]
         public float m_1796C4CC;
 
@@ -34,5 +31,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x3C76D873)]
         public byte m_3C76D873;
+
+        [STUFieldAttribute(0x9C86233B)]
+        public Enum_C37E9E24 m_9C86233B;
     }
 }

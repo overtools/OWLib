@@ -6,19 +6,22 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xFD20A05C)]
     public class STU_FD20A05C : STUInstance {
         [STUFieldAttribute(0x08D19750)]
-        public teStructuredDataAssetRef<ulong> m_08D19750;
+        public teStructuredDataAssetRef<STUUXDisplayText> m_08D19750;
 
         [STUFieldAttribute(0xB20A766C)]
-        public teStructuredDataAssetRef<ulong> m_B20A766C;
+        public teStructuredDataAssetRef<STUUXDisplayText> m_B20A766C;
 
         [STUFieldAttribute(0xAB9E98EC)]
-        public teStructuredDataAssetRef<ulong> m_AB9E98EC;
+        public teStructuredDataAssetRef<STUTexture> m_AB9E98EC;
 
         [STUFieldAttribute(0xD15238C3)]
         public teString m_D15238C3;
 
         [STUFieldAttribute(0x38B64266)]
         public teString m_38B64266;
+
+        [STUFieldAttribute(0x5172D3E5)]
+        public teString m_5172D3E5;
 
         [STUFieldAttribute(0xCB0E7350)]
         public Enum_E48A3B18 m_CB0E7350;

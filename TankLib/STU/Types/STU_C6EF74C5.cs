@@ -8,13 +8,13 @@ namespace TankLib.STU.Types {
         public STUAnimCurve m_F49CF9C3;
 
         [STUFieldAttribute(0x6EA0A0B2)]
-        public teStructuredDataAssetRef<ulong> m_6EA0A0B2;
+        public teStructuredDataAssetRef<STUAnimation> m_6EA0A0B2;
 
         [STUFieldAttribute(0xC027E938)]
-        public teStructuredDataAssetRef<ulong> m_C027E938;
+        public teStructuredDataAssetRef<STUAnimation> m_C027E938;
 
         [STUFieldAttribute(0xEC4CAE23)]
-        public teStructuredDataAssetRef<ulong> m_EC4CAE23;
+        public teStructuredDataAssetRef<STUDataFlow> m_EC4CAE23;
 
         [STUFieldAttribute(0x5620DA50, "m_globalWeightMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimGlobalWeightMultipliers m_globalWeightMultipliers;

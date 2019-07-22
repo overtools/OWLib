@@ -15,13 +15,13 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_290B2ADF;
 
         [STUFieldAttribute(0x245A3F6D)]
-        public teStructuredDataAssetRef<ulong> m_245A3F6D;
+        public teStructuredDataAssetRef<STUTexture> m_245A3F6D;
 
         [STUFieldAttribute(0xF5087894, "m_unlock")]
-        public teStructuredDataAssetRef<ulong> m_unlock;
+        public teStructuredDataAssetRef<STUUnlock> m_unlock;
 
         [STUFieldAttribute(0x544A6A4F)]
-        public teStructuredDataAssetRef<ulong> m_544A6A4F;
+        public teStructuredDataAssetRef<STUTexture> m_544A6A4F;
 
         [STUFieldAttribute(0x4E291DCC)]
         public teString m_4E291DCC;

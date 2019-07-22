@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xF199249B, "STUECHintPointInstanceData")]
     public class STUECHintPointInstanceData : STUComponentInstanceData {
         [STUFieldAttribute(0x4D2DB658, "m_identifier")]
-        public teStructuredDataAssetRef<ulong> m_identifier;
+        public teStructuredDataAssetRef<STUIdentifier> m_identifier;
     }
 }

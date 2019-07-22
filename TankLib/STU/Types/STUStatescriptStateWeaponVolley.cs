@@ -8,6 +8,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x351BD93F, "m_projectileMotions", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptWeaponProjectileMotion[] m_projectileMotions;
 
+        [STUFieldAttribute(0x12F599BD, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_FCB5575F[] m_12F599BD;
+
         [STUFieldAttribute(0xBAA390E1, "m_projectileEntity", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptWeaponProjectileEntity m_projectileEntity;
 

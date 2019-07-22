@@ -8,16 +8,16 @@ namespace TankLib.STU.Types {
         public STU_601E7678[] m_unlocks;
 
         [STUFieldAttribute(0x08D19750)]
-        public teStructuredDataAssetRef<ulong> m_08D19750;
+        public teStructuredDataAssetRef<STUUXDisplayText> m_08D19750;
 
         [STUFieldAttribute(0x456B5F79)]
-        public teStructuredDataAssetRef<ulong> m_456B5F79;
+        public teStructuredDataAssetRef<STUCelebration> m_456B5F79;
 
         [STUFieldAttribute(0xB20A766C)]
-        public teStructuredDataAssetRef<ulong> m_B20A766C;
+        public teStructuredDataAssetRef<STUUXDisplayText> m_B20A766C;
 
         [STUFieldAttribute(0xAB9E98EC)]
-        public teStructuredDataAssetRef<ulong> m_AB9E98EC;
+        public teStructuredDataAssetRef<STUTexture> m_AB9E98EC;
 
         [STUFieldAttribute(0x291F2404)]
         public long m_291F2404;

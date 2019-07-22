@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x72BB099A)]
     public class STU_72BB099A : STUInstance {
         [STUFieldAttribute(0x08D19750)]
-        public teStructuredDataAssetRef<ulong> m_08D19750;
+        public teStructuredDataAssetRef<STUUXDisplayText> m_08D19750;
 
         [STUFieldAttribute(0xDB803F2F, "m_unlocks", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_601E7678[] m_unlocks;

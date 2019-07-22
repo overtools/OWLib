@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x9783E116, "STUGameModeVarValuePair")]
     public class STUGameModeVarValuePair : STUInstance {
         [STUFieldAttribute(0x3E783677)]
-        public teStructuredDataAssetRef<ulong> m_3E783677;
+        public teStructuredDataAssetRef<STUIdentifier> m_3E783677;
 
         [STUFieldAttribute(0x07DD813E, "m_value", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_02E4C615 m_value;

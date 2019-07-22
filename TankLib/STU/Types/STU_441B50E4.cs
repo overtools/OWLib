@@ -5,13 +5,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x441B50E4)]
     public class STU_441B50E4 : STUStatescriptState {
         [STUFieldAttribute(0xBC4326FF, "m_stat")]
-        public teStructuredDataAssetRef<ulong> m_stat;
+        public teStructuredDataAssetRef<STUStat> m_stat;
 
         [STUFieldAttribute(0x118D9D9F, "m_stats")]
-        public teStructuredDataAssetRef<ulong>[] m_stats;
+        public teStructuredDataAssetRef<STUStat>[] m_stats;
 
         [STUFieldAttribute(0xD32CB484)]
-        public teStructuredDataAssetRef<ulong>[] m_D32CB484;
+        public teStructuredDataAssetRef<STUStat>[] m_D32CB484;
 
         [STUFieldAttribute(0xE3798C00, "m_targets", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_targets;

@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x819B1577, "STUConfigVarVoiceStimulus")]
     public class STUConfigVarVoiceStimulus : STU_E4324757 {
         [STUFieldAttribute(0x92FF811B, "m_voiceStimulus")]
-        public teStructuredDataAssetRef<ulong> m_voiceStimulus;
+        public teStructuredDataAssetRef<STUVoiceStimulus> m_voiceStimulus;
     }
 }

@@ -5,13 +5,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x0539C988, "STUFogData")]
     public class STUFogData : STUInstance {
         [STUFieldAttribute(0xF1DAE57E, "m_colorCube")]
-        public teStructuredDataAssetRef<ulong> m_colorCube;
+        public teStructuredDataAssetRef<STUTexture> m_colorCube;
 
         [STUFieldAttribute(0xFF1B5A9F)]
-        public teStructuredDataAssetRef<ulong> m_FF1B5A9F;
+        public teStructuredDataAssetRef<STUTexture> m_FF1B5A9F;
 
         [STUFieldAttribute(0xAF1F50CE, "m_colorLookup")]
-        public teStructuredDataAssetRef<ulong> m_colorLookup;
+        public teStructuredDataAssetRef<STUTexture> m_colorLookup;
 
         [STUFieldAttribute(0xB7BE49E5)]
         public float m_B7BE49E5;

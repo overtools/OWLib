@@ -17,7 +17,7 @@ namespace TankLib.STU.Types {
         public teString m_BFB85D17;
 
         [STUFieldAttribute(0xFD53ECB8, "m_rarity")]
-        public teStructuredDataAssetRef<ulong> m_rarity;
+        public teStructuredDataAssetRef<STUUXLink> m_rarity;
 
         [STUFieldAttribute(0xE75BEDA5, "m_heroGUID")]
         public ulong m_heroGUID;

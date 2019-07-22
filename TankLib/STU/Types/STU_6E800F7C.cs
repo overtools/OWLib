@@ -23,13 +23,13 @@ namespace TankLib.STU.Types {
         public STUTextureSource m_369489D8;
 
         [STUFieldAttribute(0xF0A9405A, "m_sourceTeam")]
-        public teStructuredDataAssetRef<ulong> m_sourceTeam;
+        public teStructuredDataAssetRef<STUTeamColor> m_sourceTeam;
 
         [STUFieldAttribute(0xC276CF5C)]
-        public teStructuredDataAssetRef<ulong> m_C276CF5C;
+        public teStructuredDataAssetRef<STU_C6A37088> m_C276CF5C;
 
         [STUFieldAttribute(0x1F791515)]
-        public teStructuredDataAssetRef<ulong> m_1F791515;
+        public teStructuredDataAssetRef<STUTexture> m_1F791515;
 
         [STUFieldAttribute(0xC0DD643E)]
         public uint m_C0DD643E;

@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x3D419B63)]
     public class STU_3D419B63 : STUStatescriptAction {
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
-        public teStructuredDataAssetRef<ulong> m_category;
+        public teStructuredDataAssetRef<STUVoiceCategory> m_category;
 
         [STUFieldAttribute(0xE3798C00, "m_targets", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_targets;

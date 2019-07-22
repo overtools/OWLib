@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_description;
 
         [STUFieldAttribute(0x91590545)]
-        public teStructuredDataAssetRef<ulong>[] m_91590545;
+        public teStructuredDataAssetRef<STU_6BE90C5C>[] m_91590545;
 
         [STUFieldAttribute(0x69A20070)]
         public float m_69A20070;

@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xA408D74F, "STUVoiceConversation")]
     public class STUVoiceConversation : STUInstance {
         [STUFieldAttribute(0x401F5484, "m_stimulus")]
-        public teStructuredDataAssetRef<ulong> m_stimulus;
+        public teStructuredDataAssetRef<STUVoiceStimulus> m_stimulus;
 
         [STUFieldAttribute(0xF79D31F9, "m_voiceConversationLine", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUVoiceConversationLine[] m_voiceConversationLine;

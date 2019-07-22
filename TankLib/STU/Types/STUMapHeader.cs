@@ -15,7 +15,7 @@ namespace TankLib.STU.Types {
         public STUMapCelebrationOverride[] m_celebrationOverrides;
 
         [STUFieldAttribute(0xD608E9F3)]
-        public teStructuredDataAssetRef<ulong>[] m_D608E9F3;
+        public teStructuredDataAssetRef<STUGameMode>[] m_D608E9F3;
 
         [STUFieldAttribute(0xDDC37F3D)]
         public teStructuredDataAssetRef<ulong> m_DDC37F3D;

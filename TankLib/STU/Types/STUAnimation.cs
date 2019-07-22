@@ -9,7 +9,7 @@ namespace TankLib.STU.Types {
         public STUAnimationSettings m_animationSettings;
 
         [STUFieldAttribute(0x0D890433)]
-        public teStructuredDataAssetRef<ulong> m_0D890433;
+        public teStructuredDataAssetRef<STU_8D423808> m_0D890433;
 
         [STUFieldAttribute(0xE4A7B00A)]
         public teString m_E4A7B00A;
@@ -18,19 +18,19 @@ namespace TankLib.STU.Types {
         public teString m_sourceSet;
 
         [STUFieldAttribute(0x818D011C, "m_skeleton")]
-        public teStructuredDataAssetRef<ulong> m_skeleton;
+        public teStructuredDataAssetRef<STUSkeleton> m_skeleton;
 
         [STUFieldAttribute(0x694849B1)]
-        public teStructuredDataAssetRef<ulong> m_694849B1;
+        public teStructuredDataAssetRef<STUAnimation> m_694849B1;
 
         [STUFieldAttribute(0x4B309629, "m_animationEffect")]
-        public teStructuredDataAssetRef<ulong> m_animationEffect;
+        public teStructuredDataAssetRef<STUEffect> m_animationEffect;
 
         [STUFieldAttribute(0xB64D5A14, "m_previewModel")]
-        public teStructuredDataAssetRef<ulong> m_previewModel;
+        public teStructuredDataAssetRef<STUModel> m_previewModel;
 
         [STUFieldAttribute(0x2FD502DE)]
-        public teStructuredDataAssetRef<ulong> m_2FD502DE;
+        public teStructuredDataAssetRef<STUAnimation> m_2FD502DE;
 
         [STUFieldAttribute(0x9991363C, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_67E91024[] m_9991363C;

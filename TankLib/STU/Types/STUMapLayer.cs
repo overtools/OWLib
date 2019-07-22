@@ -6,16 +6,16 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xC18DC9CD, "STUMapLayer")]
     public class STUMapLayer : STUInstance {
         [STUFieldAttribute(0x1A37A8D5)]
-        public teStructuredDataAssetRef<ulong>[] m_1A37A8D5;
+        public teStructuredDataAssetRef<STUMapLayer>[] m_1A37A8D5;
 
         [STUFieldAttribute(0xA8F4AE5B)]
-        public teStructuredDataAssetRef<ulong> m_A8F4AE5B;
+        public teStructuredDataAssetRef<STUIdentifier> m_A8F4AE5B;
 
         [STUFieldAttribute(0x3400CBD2)]
-        public teStructuredDataAssetRef<ulong> m_3400CBD2;
+        public teStructuredDataAssetRef<STUIdentifier> m_3400CBD2;
 
         [STUFieldAttribute(0xD2464EEA)]
-        public teStructuredDataAssetRef<ulong>[] m_D2464EEA;
+        public teStructuredDataAssetRef<STUMapLayer>[] m_D2464EEA;
 
         [STUFieldAttribute(0xF2D8BF6C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_7F3E332A m_F2D8BF6C;

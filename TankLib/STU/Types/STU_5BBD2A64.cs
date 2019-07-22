@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x5BBD2A64)]
     public class STU_5BBD2A64 : STUGenericSettings_Base {
         [STUFieldAttribute(0xF2C4BBBC)]
-        public teStructuredDataAssetRef<ulong>[] m_F2C4BBBC;
+        public teStructuredDataAssetRef<STUTeamColor>[] m_F2C4BBBC;
 
         [STUFieldAttribute(0x0C1D5CA6)]
         public Enum_6A6E2942 m_0C1D5CA6;

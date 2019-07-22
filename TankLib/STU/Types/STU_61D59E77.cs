@@ -4,6 +4,9 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x61D59E77)]
     public class STU_61D59E77 : STUInstance {
+        [STUFieldAttribute(0xC3885423, "m_rankedSeason")]
+        public int m_rankedSeason;
+
         [STUFieldAttribute(0xB0999384)]
         public byte m_B0999384;
 

@@ -9,7 +9,7 @@ namespace TankLib.STU.Types {
         public Enum_7D856D3B[] m_events;
 
         [STUFieldAttribute(0xDB803F2F, "m_unlocks")]
-        public teStructuredDataAssetRef<ulong>[] m_unlocks;
+        public teStructuredDataAssetRef<STUUnlock>[] m_unlocks;
 
         [STUFieldAttribute(0xD10618D1)]
         public uint m_D10618D1;

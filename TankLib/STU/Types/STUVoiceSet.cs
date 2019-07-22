@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xB466CBBD, "STUVoiceSet")]
     public class STUVoiceSet : STUInstance {
         [STUFieldAttribute(0x386B8E9C, "m_externalSound")]
-        public teStructuredDataAssetRef<ulong> m_externalSound;
+        public teStructuredDataAssetRef<STUSound> m_externalSound;
 
         [STUFieldAttribute(0x269FC4E9)]
         public teStructuredDataAssetRef<ulong> m_269FC4E9;

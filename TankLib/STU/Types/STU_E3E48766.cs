@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xE3E48766)]
     public class STU_E3E48766 : STUUXViewModel {
         [STUFieldAttribute(0x0EE72694)]
-        public teStructuredDataAssetRef<ulong> m_0EE72694;
+        public teStructuredDataAssetRef<STUTexture> m_0EE72694;
 
         [STUFieldAttribute(0x79E5C961, "m_rewardText")]
         public teString m_rewardText;

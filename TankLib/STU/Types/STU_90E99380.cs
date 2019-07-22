@@ -12,10 +12,10 @@ namespace TankLib.STU.Types {
         public STU_60D2D598 m_DEA3E7DA;
 
         [STUFieldAttribute(0x4E87690F, "m_map")]
-        public teStructuredDataAssetRef<ulong> m_map;
+        public teStructuredDataAssetRef<STUMap> m_map;
 
         [STUFieldAttribute(0xEB4F2408, "m_gamemode")]
-        public teStructuredDataAssetRef<ulong> m_gamemode;
+        public teStructuredDataAssetRef<STUGameMode> m_gamemode;
 
         [STUFieldAttribute(0xD7A516EC)]
         public teString m_D7A516EC;
@@ -24,43 +24,43 @@ namespace TankLib.STU.Types {
         public teString m_description;
 
         [STUFieldAttribute(0x9297ADB4, "m_look")]
-        public teStructuredDataAssetRef<ulong> m_look;
+        public teStructuredDataAssetRef<STU_687B11E7> m_look;
 
         [STUFieldAttribute(0x9386E669)]
-        public teStructuredDataAssetRef<ulong> m_9386E669;
+        public teStructuredDataAssetRef<STUTexture> m_9386E669;
 
         [STUFieldAttribute(0xEBCFAD22)]
         public teStructuredDataAssetRef<ulong> m_EBCFAD22;
 
         [STUFieldAttribute(0x8F0478F9)]
-        public teStructuredDataAssetRef<ulong> m_8F0478F9;
+        public teStructuredDataAssetRef<STUTexture> m_8F0478F9;
 
         [STUFieldAttribute(0x32102087)]
-        public teStructuredDataAssetRef<ulong> m_32102087;
+        public teStructuredDataAssetRef<STUTexture> m_32102087;
 
         [STUFieldAttribute(0xA0AE2E3E, "m_musicTease")]
-        public teStructuredDataAssetRef<ulong> m_musicTease;
+        public teStructuredDataAssetRef<STUEffect> m_musicTease;
 
         [STUFieldAttribute(0x956158FF, "m_announcerWelcome")]
-        public teStructuredDataAssetRef<ulong> m_announcerWelcome;
+        public teStructuredDataAssetRef<STUEffect> m_announcerWelcome;
 
         [STUFieldAttribute(0x7F5B54B2)]
-        public teStructuredDataAssetRef<ulong> m_7F5B54B2;
+        public teStructuredDataAssetRef<STUVoiceSet> m_7F5B54B2;
 
         [STUFieldAttribute(0x4FAD0FE9)]
-        public teStructuredDataAssetRef<ulong> m_4FAD0FE9;
+        public teStructuredDataAssetRef<STU_387B4158> m_4FAD0FE9;
 
         [STUFieldAttribute(0x0BF8AB9F)]
-        public teStructuredDataAssetRef<ulong> m_0BF8AB9F;
+        public teStructuredDataAssetRef<STUEntityDefinition> m_0BF8AB9F;
 
         [STUFieldAttribute(0xF542263E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_7D6D8405[] m_F542263E;
 
         [STUFieldAttribute(0x6B04495C)]
-        public teStructuredDataAssetRef<ulong> m_6B04495C;
+        public teStructuredDataAssetRef<STUTexture> m_6B04495C;
 
         [STUFieldAttribute(0x837D2E43)]
-        public teStructuredDataAssetRef<ulong> m_837D2E43;
+        public teStructuredDataAssetRef<STUTexture> m_837D2E43;
 
         [STUFieldAttribute(0xF0535DCF, "m_reflectionData", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_63ABE55E[] m_reflectionData;
@@ -81,10 +81,10 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_389CB894;
 
         [STUFieldAttribute(0xEBE72514)]
-        public teStructuredDataAssetRef<ulong> m_EBE72514;
+        public teStructuredDataAssetRef<STUTexture> m_EBE72514;
 
         [STUFieldAttribute(0xD58D0365)]
-        public teStructuredDataAssetRef<ulong> m_D58D0365;
+        public teStructuredDataAssetRef<STUTexture> m_D58D0365;
 
         [STUFieldAttribute(0x62354864)]
         public ulong m_62354864;

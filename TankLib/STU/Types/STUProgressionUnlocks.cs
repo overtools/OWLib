@@ -17,6 +17,6 @@ namespace TankLib.STU.Types {
         public STULootBoxUnlocks[] m_lootBoxesUnlocks;
 
         [STUFieldAttribute(0x160B0466)]
-        public teStructuredDataAssetRef<ulong> m_160B0466;
+        public teStructuredDataAssetRef<STUProgressionUnlocks> m_160B0466;
     }
 }

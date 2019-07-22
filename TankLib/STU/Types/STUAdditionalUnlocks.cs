@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x5C499B8E, "STUAdditionalUnlocks")]
     public class STUAdditionalUnlocks : STUInstance {
         [STUFieldAttribute(0xDB803F2F, "m_unlocks")]
-        public teStructuredDataAssetRef<ulong>[] m_unlocks;
+        public teStructuredDataAssetRef<STUUnlock>[] m_unlocks;
 
         [STUFieldAttribute(0x2C01908B, "m_level")]
         public uint m_level;

@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STU_B169BD65 m_ED8BCE99;
 
         [STUFieldAttribute(0x1574C6B7)]
-        public teStructuredDataAssetRef<ulong> m_1574C6B7;
+        public teStructuredDataAssetRef<STUIdentifier> m_1574C6B7;
 
         [STUFieldAttribute(0x9D936260, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_3F88EA3B[] m_9D936260;

@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x9288D2C6, "STUAnimParamUpdater_TurnParameters")]
     public class STUAnimParamUpdater_TurnParameters : STUInstance {
         [STUFieldAttribute(0x8F5C8462)]
-        public teStructuredDataAssetRef<ulong> m_8F5C8462;
+        public teStructuredDataAssetRef<STUAnimCategory> m_8F5C8462;
 
         [STUFieldAttribute(0x946D26E1)]
         public float m_946D26E1;

@@ -13,16 +13,16 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_description;
 
         [STUFieldAttribute(0x11B47C68, "m_id")]
-        public teStructuredDataAssetRef<ulong> m_id;
+        public teStructuredDataAssetRef<STUIdentifier> m_id;
 
         [STUFieldAttribute(0x544A6A4F)]
         public teStructuredDataAssetRef<ulong> m_544A6A4F;
 
         [STUFieldAttribute(0x1AF5CED5)]
-        public teStructuredDataAssetRef<ulong> m_1AF5CED5;
+        public teStructuredDataAssetRef<STU_71C0D73D> m_1AF5CED5;
 
         [STUFieldAttribute(0x905F1BB6)]
-        public teStructuredDataAssetRef<ulong> m_905F1BB6;
+        public teStructuredDataAssetRef<STUResourceKey> m_905F1BB6;
 
         [STUFieldAttribute(0xC3E03C7F, "m_color")]
         public teColorRGBA m_color;

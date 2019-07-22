@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xC3EE0CD6, "STUConfigVarResourceKey")]
     public class STUConfigVarResourceKey : STU_E4324757 {
         [STUFieldAttribute(0x2F709539, "m_key")]
-        public teStructuredDataAssetRef<ulong> m_key;
+        public teStructuredDataAssetRef<STUResourceKey> m_key;
     }
 }

@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xA864E828)]
     public class STU_A864E828 : STU_F421F08E {
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
-        public teStructuredDataAssetRef<ulong> m_category;
+        public teStructuredDataAssetRef<STUAnimCategory> m_category;
 
         [STUFieldAttribute(0x425DCDA1)]
         public byte m_425DCDA1;

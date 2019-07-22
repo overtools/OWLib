@@ -51,7 +51,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         public static void ProcessLootBoxUnlocks(STULootBoxUnlocks lootBoxUnlocks, HashSet<ulong> guids, Enum_BABC4175 lootboxType, HashSet<ulong> addedUnlocks) {
             if (lootBoxUnlocks?.m_unlocks?.m_unlocks == null) return;
             if (lootBoxUnlocks.m_lootboxType != lootboxType) return;
-            foreach (teStructuredDataAssetRef<ulong> unlock in lootBoxUnlocks.m_unlocks.m_unlocks) {
+            foreach (teStructuredDataAssetRef<STUUnlock> unlock in lootBoxUnlocks.m_unlocks.m_unlocks) {
                 //Unlock unlockModel = new Unlock(unlock);
                 //if (unlockModel.Type != "Skin") continue;
                 

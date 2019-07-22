@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x268A4205)]
     public class STU_268A4205 : STUMaterialDataFlow {
         [STUFieldAttribute(0xBA891264, "m_dataFlow")]
-        public teStructuredDataAssetRef<ulong> m_dataFlow;
+        public teStructuredDataAssetRef<STUDataFlow> m_dataFlow;
     }
 }

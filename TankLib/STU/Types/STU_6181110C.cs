@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x6181110C)]
     public class STU_6181110C : STUInstance {
         [STUFieldAttribute(0xF97609C8, "m_bone")]
-        public teStructuredDataAssetRef<ulong> m_bone;
+        public teStructuredDataAssetRef<STUBoneLabel> m_bone;
 
         [STUFieldAttribute(0x7EEFB57A, "m_flags")]
         public ushort m_flags;

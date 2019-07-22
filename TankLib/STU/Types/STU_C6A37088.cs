@@ -7,13 +7,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xC6A37088)]
     public class STU_C6A37088 : STUInstance {
         [STUFieldAttribute(0xD326911E, "m_thumbnailData")]
-        public teStructuredDataAssetRef<ulong> m_thumbnailData;
+        public teStructuredDataAssetRef<STUThumbnailData> m_thumbnailData;
 
         [STUFieldAttribute(0x27643B96)]
-        public teStructuredDataAssetRef<ulong> m_27643B96;
+        public teStructuredDataAssetRef<STU_4D28219D> m_27643B96;
 
         [STUFieldAttribute(0x939ABB2C, "m_materialData")]
-        public teStructuredDataAssetRef<ulong> m_materialData;
+        public teStructuredDataAssetRef<STUMaterialData> m_materialData;
 
         [STUFieldAttribute(0x996D7449, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_4B6F9A4C m_996D7449;
@@ -23,9 +23,6 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x90D4477E)]
         public float m_90D4477E;
-
-        [STUFieldAttribute(0xBCC3D95D)]
-        public Enum_F588EA94 m_BCC3D95D;
 
         [STUFieldAttribute(0x69300B47, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_314750D1 m_69300B47;
@@ -53,5 +50,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xEA487267)]
         public byte m_EA487267;
+
+        [STUFieldAttribute(0xBCC3D95D)]
+        public Enum_F588EA94 m_BCC3D95D;
     }
 }

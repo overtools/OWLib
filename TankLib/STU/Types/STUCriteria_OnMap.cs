@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xE9DB72FF, "STUCriteria_OnMap")]
     public class STUCriteria_OnMap : STUCriteria {
         [STUFieldAttribute(0x4E87690F, "m_map")]
-        public teStructuredDataAssetRef<ulong> m_map;
+        public teStructuredDataAssetRef<STUMap> m_map;
 
         [STUFieldAttribute(0xA2C1FA17, "m_exactMap")]
         public byte m_exactMap;

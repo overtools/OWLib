@@ -5,55 +5,55 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x19A39F25)]
     public class STU_19A39F25 : STU_C7C085F6 {
         [STUFieldAttribute(0x9A7ECA46, "m_runN")]
-        public teStructuredDataAssetRef<ulong> m_runN;
+        public teStructuredDataAssetRef<STUAnimation> m_runN;
 
         [STUFieldAttribute(0xB3A8AA36, "m_runNE")]
-        public teStructuredDataAssetRef<ulong> m_runNE;
+        public teStructuredDataAssetRef<STUAnimation> m_runNE;
 
         [STUFieldAttribute(0xB3DD0020, "m_runE")]
-        public teStructuredDataAssetRef<ulong> m_runE;
+        public teStructuredDataAssetRef<STUAnimation> m_runE;
 
         [STUFieldAttribute(0xC096526A, "m_runSE")]
-        public teStructuredDataAssetRef<ulong> m_runSE;
+        public teStructuredDataAssetRef<STUAnimation> m_runSE;
 
         [STUFieldAttribute(0xACB0FAE2, "m_runS")]
-        public teStructuredDataAssetRef<ulong> m_runS;
+        public teStructuredDataAssetRef<STUAnimation> m_runS;
 
         [STUFieldAttribute(0x3BDC38AE, "m_runSW")]
-        public teStructuredDataAssetRef<ulong> m_runSW;
+        public teStructuredDataAssetRef<STUAnimation> m_runSW;
 
         [STUFieldAttribute(0xE45FBD36, "m_runW")]
-        public teStructuredDataAssetRef<ulong> m_runW;
+        public teStructuredDataAssetRef<STUAnimation> m_runW;
 
         [STUFieldAttribute(0xAC019267, "m_runNW")]
-        public teStructuredDataAssetRef<ulong> m_runNW;
+        public teStructuredDataAssetRef<STUAnimation> m_runNW;
 
         [STUFieldAttribute(0x59860ABF, "m_runAimAdditiveN")]
-        public teStructuredDataAssetRef<ulong> m_runAimAdditiveN;
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveN;
 
         [STUFieldAttribute(0x51871150, "m_runAimAdditiveNE")]
-        public teStructuredDataAssetRef<ulong> m_runAimAdditiveNE;
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveNE;
 
         [STUFieldAttribute(0x7E2A7D18, "m_runAimAdditiveE")]
-        public teStructuredDataAssetRef<ulong> m_runAimAdditiveE;
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveE;
 
         [STUFieldAttribute(0xA7AB64E8, "m_runAimAdditiveSE")]
-        public teStructuredDataAssetRef<ulong> m_runAimAdditiveSE;
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveSE;
 
         [STUFieldAttribute(0x30AC076A, "m_runAimAdditiveS")]
-        public teStructuredDataAssetRef<ulong> m_runAimAdditiveS;
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveS;
 
         [STUFieldAttribute(0x5E229E24, "m_runAimAdditiveSW")]
-        public teStructuredDataAssetRef<ulong> m_runAimAdditiveSW;
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveSW;
 
         [STUFieldAttribute(0x6A64DD95, "m_runAimAdditiveW")]
-        public teStructuredDataAssetRef<ulong> m_runAimAdditiveW;
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveW;
 
         [STUFieldAttribute(0xC06F384E, "m_runAimAdditiveNW")]
-        public teStructuredDataAssetRef<ulong> m_runAimAdditiveNW;
+        public teStructuredDataAssetRef<STUAnimation> m_runAimAdditiveNW;
 
         [STUFieldAttribute(0x1FB4D322)]
-        public teStructuredDataAssetRef<ulong> m_1FB4D322;
+        public teStructuredDataAssetRef<STUDataFlow> m_1FB4D322;
 
         [STUFieldAttribute(0x4366D221, "m_runSpeedN")]
         public float m_runSpeedN;

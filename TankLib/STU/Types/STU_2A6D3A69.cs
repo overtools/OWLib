@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x2A6D3A69)]
     public class STU_2A6D3A69 : STUUXViewModel {
         [STUFieldAttribute(0x8B434C0C)]
-        public teStructuredDataAssetRef<ulong> m_8B434C0C;
+        public teStructuredDataAssetRef<STUUXLink> m_8B434C0C;
 
         [STUFieldAttribute(0xECF27C36, "m_message")]
         public teString m_message;

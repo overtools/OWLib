@@ -6,10 +6,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xBFC1FB55)]
     public class STU_BFC1FB55 : STUInstance {
         [STUFieldAttribute(0x4D2DB658, "m_identifier")]
-        public teStructuredDataAssetRef<ulong> m_identifier;
+        public teStructuredDataAssetRef<STUIdentifier> m_identifier;
 
         [STUFieldAttribute(0x5DB91CE2, "m_displayName")]
-        public teStructuredDataAssetRef<ulong> m_displayName;
+        public teStructuredDataAssetRef<STUUXDisplayText> m_displayName;
+
+        [STUFieldAttribute(0xCA7E6EDC, "m_description")]
+        public teStructuredDataAssetRef<STUUXDisplayText> m_description;
 
         [STUFieldAttribute(0xCF17DD30, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_9F7A0E66[] m_CF17DD30;
@@ -19,5 +22,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x10038BBD)]
         public Enum_43D38C2E m_10038BBD;
+
+        [STUFieldAttribute(0x89C93A57)]
+        public byte m_89C93A57;
     }
 }

@@ -18,23 +18,29 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x00A81A8E, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_C148094E m_00A81A8E;
 
+        [STUFieldAttribute(0x5DAEA97B, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_1605C85E m_5DAEA97B;
+
         [STUFieldAttribute(0x58C61359, "m_bloom", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUBloomData m_bloom;
 
         [STUFieldAttribute(0x3310BDBD, "m_colorRemap")]
-        public teStructuredDataAssetRef<ulong> m_colorRemap;
+        public teStructuredDataAssetRef<STUTexture> m_colorRemap;
 
         [STUFieldAttribute(0xEAE71612)]
-        public teStructuredDataAssetRef<ulong> m_EAE71612;
+        public teStructuredDataAssetRef<STUModel> m_EAE71612;
 
         [STUFieldAttribute(0xFF76B5BA)]
-        public teStructuredDataAssetRef<ulong> m_FF76B5BA;
+        public teStructuredDataAssetRef<STUModelLook> m_FF76B5BA;
 
         [STUFieldAttribute(0x2A21F33E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_D555EDB7 m_2A21F33E;
 
         [STUFieldAttribute(0x7A429A56)]
         public teVec3 m_7A429A56;
+
+        [STUFieldAttribute(0x4F9D2138)]
+        public float m_4F9D2138;
 
         [STUFieldAttribute(0x8A1EB43C)]
         public float m_8A1EB43C;

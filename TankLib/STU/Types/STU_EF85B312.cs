@@ -11,19 +11,19 @@ namespace TankLib.STU.Types {
         public STU_0FDED221[] m_5E6A0429;
 
         [STUFieldAttribute(0x4E87690F, "m_map")]
-        public teStructuredDataAssetRef<ulong> m_map;
+        public teStructuredDataAssetRef<STUMap> m_map;
 
         [STUFieldAttribute(0xA0D4ABDE, "m_emote")]
-        public teStructuredDataAssetRef<ulong> m_emote;
+        public teStructuredDataAssetRef<STUAnimation> m_emote;
 
         [STUFieldAttribute(0x2E5FBA99, "m_pose")]
-        public teStructuredDataAssetRef<ulong> m_pose;
+        public teStructuredDataAssetRef<STUAnimation> m_pose;
 
         [STUFieldAttribute(0x523E6CFA)]
-        public teStructuredDataAssetRef<ulong> m_523E6CFA;
+        public teStructuredDataAssetRef<STUSound> m_523E6CFA;
 
         [STUFieldAttribute(0xC6004E73)]
-        public teStructuredDataAssetRef<ulong> m_C6004E73;
+        public teStructuredDataAssetRef<STUSound> m_C6004E73;
 
         [STUFieldAttribute(0x58D56DD4, "m_effect")]
         public teStructuredDataAssetRef<ulong> m_effect;

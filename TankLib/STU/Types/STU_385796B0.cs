@@ -12,13 +12,13 @@ namespace TankLib.STU.Types {
         public STUAnimCurve m_3036606E;
 
         [STUFieldAttribute(0x0EC77AF1)]
-        public teStructuredDataAssetRef<ulong> m_0EC77AF1;
+        public teStructuredDataAssetRef<STUBoneLabel> m_0EC77AF1;
 
         [STUFieldAttribute(0xA74DE280)]
-        public teStructuredDataAssetRef<ulong> m_A74DE280;
+        public teStructuredDataAssetRef<STUBoneLabel> m_A74DE280;
 
         [STUFieldAttribute(0x0AD400C5)]
-        public teStructuredDataAssetRef<ulong> m_0AD400C5;
+        public teStructuredDataAssetRef<STUAnimBoneWeightMask> m_0AD400C5;
 
         [STUFieldAttribute(0xD4F15C60)]
         public teVec3 m_D4F15C60;

@@ -10,6 +10,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA1E72858, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUSoundImportanceFactor m_A1E72858;
 
+        [STUFieldAttribute(0xD68A3CDD, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUSoundImportanceFactor m_D68A3CDD;
+
         [STUFieldAttribute(0xA2D88FC6, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUSoundImportanceFactor m_A2D88FC6;
 
@@ -33,6 +36,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xD9D02CA5, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUSoundImportanceFactor m_D9D02CA5;
+
+        [STUFieldAttribute(0x602FA1E0, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUSoundImportanceFactor m_602FA1E0;
 
         [STUFieldAttribute(0x9B7C785F, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUSoundImportanceFactor m_9B7C785F;

@@ -8,9 +8,9 @@ namespace TankLib.STU.Types {
         public teString m_locale;
 
         [STUFieldAttribute(0x24482B14)]
-        public teStructuredDataAssetRef<ulong>[] m_24482B14;
+        public teStructuredDataAssetRef<STU_51BAFC27>[] m_24482B14;
 
         [STUFieldAttribute(0xA162176B)]
-        public teStructuredDataAssetRef<ulong>[] m_A162176B;
+        public teStructuredDataAssetRef<STU_51BAFC27>[] m_A162176B;
     }
 }

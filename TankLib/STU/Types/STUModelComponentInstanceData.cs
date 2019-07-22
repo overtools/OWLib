@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x02DEEEA0, "STUModelComponentInstanceData")]
     public class STUModelComponentInstanceData : STUComponentInstanceData {
         [STUFieldAttribute(0x9297ADB4, "m_look")]
-        public teStructuredDataAssetRef<ulong> m_look;
+        public teStructuredDataAssetRef<STUModelLook> m_look;
 
         [STUFieldAttribute(0x592F316A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_8D38C163[] m_592F316A;

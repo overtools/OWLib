@@ -12,7 +12,7 @@ namespace TankLib.STU.Types {
         public teVec3A m_DC2C3DA0;
 
         [STUFieldAttribute(0x339232A1)]
-        public teStructuredDataAssetRef<ulong> m_339232A1;
+        public teStructuredDataAssetRef<STU_6AD79C11> m_339232A1;
 
         [STUFieldAttribute(0x7AF913F7)]
         public float m_7AF913F7;

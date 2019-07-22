@@ -11,6 +11,6 @@ namespace TankLib.STU.Types {
         public STU_ABD8FE73 m_value;
 
         [STUFieldAttribute(0xBA891264, "m_dataFlow")]
-        public teStructuredDataAssetRef<ulong> m_dataFlow;
+        public teStructuredDataAssetRef<STUDataFlow> m_dataFlow;
     }
 }

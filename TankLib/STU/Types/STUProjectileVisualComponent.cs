@@ -35,10 +35,10 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_93A2D5E5;
 
         [STUFieldAttribute(0x0A84537A, "m_contactSet")]
-        public teStructuredDataAssetRef<ulong> m_contactSet;
+        public teStructuredDataAssetRef<STUContactSet> m_contactSet;
 
         [STUFieldAttribute(0xD02E414F)]
-        public teStructuredDataAssetRef<ulong> m_D02E414F;
+        public teStructuredDataAssetRef<STUContactSet> m_D02E414F;
 
         [STUFieldAttribute(0x930792A5, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_C6C0F8D7 m_930792A5;

@@ -11,6 +11,12 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x6A79BD98, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_6A79BD98;
 
+        [STUFieldAttribute(0x3418CEA4, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_3418CEA4;
+
+        [STUFieldAttribute(0x7A61C4A9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_7A61C4A9;
+
         [STUFieldAttribute(0x8DCA77B6, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_8DCA77B6;
 

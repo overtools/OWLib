@@ -10,6 +10,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x41469AE1, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_05EC79ED[] m_41469AE1;
 
+        [STUFieldAttribute(0x3147FE37)]
+        public teString m_3147FE37;
+
         [STUFieldAttribute(0x0AE9B623, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_E006CC54 m_0AE9B623;
 
@@ -53,12 +56,42 @@ namespace TankLib.STU.Types {
         public STUConfigVar m_2D6EC63C;
 
         [STUFieldAttribute(0xD0786B09, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_D0786B09;
+        public STU_076E0DBA m_D0786B09;
+
+        [STUFieldAttribute(0x41A92E2C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_076E0DBA m_41A92E2C;
 
         [STUFieldAttribute(0x0CC29E11, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptOutputPlug m_0CC29E11;
 
         [STUFieldAttribute(0x221287EA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptOutputPlug m_221287EA;
+
+        [STUFieldAttribute(0x2CF22C22, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_B9D4863D m_2CF22C22;
+
+        [STUFieldAttribute(0x2E2541DB, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_452DFED0 m_2E2541DB;
+
+        [STUFieldAttribute(0x5EE56FF7, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_5EE56FF7;
+
+        [STUFieldAttribute(0x1D9A4FA3, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_1D9A4FA3;
+
+        [STUFieldAttribute(0xEAE06684, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_EAE06684;
+
+        [STUFieldAttribute(0xC51F155D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_C51F155D;
+
+        [STUFieldAttribute(0x9722E21E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_9722E21E;
+
+        [STUFieldAttribute(0xB1483FCE, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_B1483FCE;
+
+        [STUFieldAttribute(0x38003CDE, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_38003CDE;
     }
 }

@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x8A1F18F9)]
     public class STU_8A1F18F9 : STUInstance {
         [STUFieldAttribute(0xEB4F2408, "m_gamemode")]
-        public teStructuredDataAssetRef<ulong> m_gamemode;
+        public teStructuredDataAssetRef<STUGameMode> m_gamemode;
 
         [STUFieldAttribute(0x118D9D9F, "m_stats", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_C0D5117B[] m_stats;

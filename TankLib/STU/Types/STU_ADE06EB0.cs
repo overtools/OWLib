@@ -5,11 +5,11 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0xADE06EB0)]
     public class STU_ADE06EB0 : STUInstance {
-        [STUFieldAttribute(0x8A8C6C4F)]
-        public Enum_0FD62339 m_8A8C6C4F;
-
         [STUFieldAttribute(0x550D19E2)]
         public ushort m_550D19E2;
+
+        [STUFieldAttribute(0x8A8C6C4F)]
+        public Enum_0FD62339 m_8A8C6C4F;
 
         [STUFieldAttribute(0x7EEFB57A, "m_flags")]
         public byte m_flags;

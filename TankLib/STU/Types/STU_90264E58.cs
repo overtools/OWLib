@@ -4,8 +4,14 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x90264E58)]
     public class STU_90264E58 : STU_11E07FD7 {
+        [STUFieldAttribute(0xB141AAE4, "m_entityID", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_6B62E4AD m_entityID;
+
         [STUFieldAttribute(0xE9A9B868, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_929685D3 m_E9A9B868;
+
+        [STUFieldAttribute(0x2F4FFE36, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_86F315F9 m_2F4FFE36;
 
         [STUFieldAttribute(0x0619C597, "m_type", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_0340770E m_type;

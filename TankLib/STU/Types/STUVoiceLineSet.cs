@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x2B407D38, "STUVoiceLineSet")]
     public class STUVoiceLineSet : STUInstance {
         [STUFieldAttribute(0x0DD426F8)]
-        public teStructuredDataAssetRef<ulong>[] m_0DD426F8;
+        public teStructuredDataAssetRef<STUVoiceLine>[] m_0DD426F8;
     }
 }

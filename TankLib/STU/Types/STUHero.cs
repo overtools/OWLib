@@ -7,34 +7,34 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x7C3457DC, "STUHero")]
     public class STUHero : STUShippable {
         [STUFieldAttribute(0x950BBA06, "m_gameplayEntity")]
-        public teStructuredDataAssetRef<ulong> m_gameplayEntity;
+        public teStructuredDataAssetRef<STUEntityDefinition> m_gameplayEntity;
 
         [STUFieldAttribute(0x0EDCE350)]
         public teStructuredDataAssetRef<ulong> m_0EDCE350;
 
         [STUFieldAttribute(0xE04197AF, "m_gameRulesetSchemas")]
-        public teStructuredDataAssetRef<ulong>[] m_gameRulesetSchemas;
+        public teStructuredDataAssetRef<STUGameRulesetSchema>[] m_gameRulesetSchemas;
 
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
-        public teStructuredDataAssetRef<ulong> m_category;
+        public teStructuredDataAssetRef<STUIdentifier> m_category;
 
         [STUFieldAttribute(0xF2D8DE15)]
-        public teStructuredDataAssetRef<ulong>[] m_F2D8DE15;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_F2D8DE15;
 
         [STUFieldAttribute(0x3446F580)]
-        public teStructuredDataAssetRef<ulong> m_3446F580;
+        public teStructuredDataAssetRef<STU_96ABC153> m_3446F580;
 
         [STUFieldAttribute(0x322C521A)]
-        public teStructuredDataAssetRef<ulong> m_322C521A;
+        public teStructuredDataAssetRef<STUEntityDefinition> m_322C521A;
 
         [STUFieldAttribute(0x26D71549)]
-        public teStructuredDataAssetRef<ulong> m_26D71549;
+        public teStructuredDataAssetRef<STUEntityDefinition> m_26D71549;
 
         [STUFieldAttribute(0x8125713E)]
-        public teStructuredDataAssetRef<ulong> m_8125713E;
+        public teStructuredDataAssetRef<STUEntityDefinition> m_8125713E;
 
         [STUFieldAttribute(0xAC91BECC, "m_previewEmoteEntity")]
-        public teStructuredDataAssetRef<ulong> m_previewEmoteEntity;
+        public teStructuredDataAssetRef<STUEntityDefinition> m_previewEmoteEntity;
 
         [STUFieldAttribute(0xFCD2B649, "m_previewWeaponEntities", ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_A0872511[] m_previewWeaponEntities;
@@ -52,25 +52,25 @@ namespace TankLib.STU.Types {
         public STU_8A1F18F9[] m_A341183E;
 
         [STUFieldAttribute(0x77FED604, "m_heroLoadout")]
-        public teStructuredDataAssetRef<ulong>[] m_heroLoadout;
+        public teStructuredDataAssetRef<STULoadout>[] m_heroLoadout;
 
         [STUFieldAttribute(0xD12CB4EA)]
-        public teStructuredDataAssetRef<ulong>[] m_D12CB4EA;
+        public teStructuredDataAssetRef<STU_1DEBD356>[] m_D12CB4EA;
 
         [STUFieldAttribute(0x485AA39C, "m_heroProgression")]
-        public teStructuredDataAssetRef<ulong> m_heroProgression;
+        public teStructuredDataAssetRef<STUProgressionUnlocks> m_heroProgression;
 
         [STUFieldAttribute(0x418F797D, ReaderType = typeof(InlineInstanceFieldReader))]
         public StatEventScoreScaler[] m_418F797D;
 
         [STUFieldAttribute(0xFF3C2071, "m_achievements")]
-        public teStructuredDataAssetRef<ulong>[] m_achievements;
+        public teStructuredDataAssetRef<STUAchievement>[] m_achievements;
 
         [STUFieldAttribute(0xA5C9CA02, "m_internalName")]
         public teString m_internalName;
 
         [STUFieldAttribute(0x893AAB2B, "m_heroEffects")]
-        public teStructuredDataAssetRef<ulong>[] m_heroEffects;
+        public teStructuredDataAssetRef<STUEffect>[] m_heroEffects;
 
         [STUFieldAttribute(0xE1258EC1, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_5E493D8B[] m_E1258EC1;

@@ -5,37 +5,37 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x0A21FC97)]
     public class STU_0A21FC97 : STU_C7C085F6 {
         [STUFieldAttribute(0x51876105)]
-        public teStructuredDataAssetRef<ulong> m_51876105;
+        public teStructuredDataAssetRef<STUAnimation> m_51876105;
 
         [STUFieldAttribute(0x9303291F)]
-        public teStructuredDataAssetRef<ulong> m_9303291F;
+        public teStructuredDataAssetRef<STUAnimation> m_9303291F;
 
         [STUFieldAttribute(0x88354B4F)]
-        public teStructuredDataAssetRef<ulong> m_88354B4F;
+        public teStructuredDataAssetRef<STUAnimation> m_88354B4F;
 
         [STUFieldAttribute(0x6291F57F)]
-        public teStructuredDataAssetRef<ulong> m_6291F57F;
+        public teStructuredDataAssetRef<STUAnimation> m_6291F57F;
 
         [STUFieldAttribute(0x067A516F)]
-        public teStructuredDataAssetRef<ulong> m_067A516F;
+        public teStructuredDataAssetRef<STUAnimation> m_067A516F;
 
         [STUFieldAttribute(0xAC3995D1)]
-        public teStructuredDataAssetRef<ulong> m_AC3995D1;
+        public teStructuredDataAssetRef<STUAnimation> m_AC3995D1;
 
         [STUFieldAttribute(0xE3FFDF52)]
-        public teStructuredDataAssetRef<ulong> m_E3FFDF52;
+        public teStructuredDataAssetRef<STUAnimation> m_E3FFDF52;
 
         [STUFieldAttribute(0x9ECA41E6)]
-        public teStructuredDataAssetRef<ulong> m_9ECA41E6;
+        public teStructuredDataAssetRef<STUAnimation> m_9ECA41E6;
 
         [STUFieldAttribute(0xF16FA114)]
-        public teStructuredDataAssetRef<ulong> m_F16FA114;
+        public teStructuredDataAssetRef<STUAnimation> m_F16FA114;
 
         [STUFieldAttribute(0xEC4CAE23)]
-        public teStructuredDataAssetRef<ulong> m_EC4CAE23;
+        public teStructuredDataAssetRef<STUDataFlow> m_EC4CAE23;
 
         [STUFieldAttribute(0x4559D62F)]
-        public teStructuredDataAssetRef<ulong> m_4559D62F;
+        public teStructuredDataAssetRef<STUDataFlow> m_4559D62F;
 
         [STUFieldAttribute(0x5620DA50, "m_globalWeightMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimGlobalWeightMultipliers m_globalWeightMultipliers;

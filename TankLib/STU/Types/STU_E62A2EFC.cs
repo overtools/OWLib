@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xE62A2EFC)]
     public class STU_E62A2EFC : STU_4EFF450F {
         [STUFieldAttribute(0x8E89B7FD)]
-        public teStructuredDataAssetRef<ulong> m_8E89B7FD;
+        public teStructuredDataAssetRef<STUContactSet> m_8E89B7FD;
 
         [STUFieldAttribute(0x7ACAB593)]
         public float m_7ACAB593;
@@ -47,12 +47,6 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x68AD5906)]
         public float m_68AD5906;
 
-        [STUFieldAttribute(0xE5FB1A8B)]
-        public Enum_12C8C2F6 m_E5FB1A8B;
-
-        [STUFieldAttribute(0x48462362)]
-        public Enum_12C8C2F6 m_48462362;
-
         [STUFieldAttribute(0xB8126548)]
         public float m_B8126548;
 
@@ -64,6 +58,12 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x2A4B47DF)]
         public byte m_2A4B47DF;
+
+        [STUFieldAttribute(0xE5FB1A8B)]
+        public Enum_12C8C2F6 m_E5FB1A8B;
+
+        [STUFieldAttribute(0x48462362)]
+        public Enum_12C8C2F6 m_48462362;
 
         [STUFieldAttribute(0xB4D8D9BB)]
         public byte m_B4D8D9BB;

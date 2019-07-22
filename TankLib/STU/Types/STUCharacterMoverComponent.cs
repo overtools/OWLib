@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x6EFDBD73, "STUCharacterMoverComponent")]
     public class STUCharacterMoverComponent : STUMirroredEntityComponent {
         [STUFieldAttribute(0x761CC74E)]
-        public teStructuredDataAssetRef<ulong> m_761CC74E;
+        public teStructuredDataAssetRef<STUHardPoint> m_761CC74E;
 
         [STUFieldAttribute(0x1972C687)]
         public float m_1972C687;
@@ -108,6 +108,15 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xE91D1664)]
         public float m_E91D1664;
+
+        [STUFieldAttribute(0x4A5244C1)]
+        public float m_4A5244C1;
+
+        [STUFieldAttribute(0x5D90DBDB)]
+        public float m_5D90DBDB;
+
+        [STUFieldAttribute(0xD9ECB731)]
+        public float m_D9ECB731;
 
         [STUFieldAttribute(0x6DB41D17)]
         public ushort m_6DB41D17;

@@ -6,13 +6,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x2A879F6B, "STUHeroSettingBase")]
     public class STUHeroSettingBase : STUInstance {
         [STUFieldAttribute(0x4D2DB658, "m_identifier")]
-        public teStructuredDataAssetRef<ulong> m_identifier;
+        public teStructuredDataAssetRef<STUIdentifier> m_identifier;
 
         [STUFieldAttribute(0xB48F1D22, "m_name")]
         public teStructuredDataAssetRef<ulong> m_name;
 
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
-        public teStructuredDataAssetRef<ulong> m_category;
+        public teStructuredDataAssetRef<STUIdentifier> m_category;
 
         [STUFieldAttribute(0x3DBF6FD2)]
         public Enum_B06ED6CF m_3DBF6FD2;

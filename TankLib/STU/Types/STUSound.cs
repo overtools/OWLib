@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x04118DBD, "STUSound")]
     public class STUSound : STUInstance {
         [STUFieldAttribute(0x42809FC5)]
-        public teStructuredDataAssetRef<ulong> m_42809FC5;
+        public teStructuredDataAssetRef<STUSound> m_42809FC5;
 
         [STUFieldAttribute(0xC32C2195, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_0FA0034C m_C32C2195;
@@ -37,6 +37,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x77092FDD)]
         public byte m_77092FDD;
+
+        [STUFieldAttribute(0x1A25BFB8)]
+        public byte m_1A25BFB8;
 
         [STUFieldAttribute(0xB62657B8)]
         public byte m_B62657B8;

@@ -6,10 +6,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x99257985, "STUECAISpawnerInstanceData")]
     public class STUECAISpawnerInstanceData : STUComponentInstanceData {
         [STUFieldAttribute(0xE74A5F9A)]
-        public teStructuredDataAssetRef<ulong> m_E74A5F9A;
+        public teStructuredDataAssetRef<STUHero> m_E74A5F9A;
 
         [STUFieldAttribute(0xEF29ED01)]
-        public teStructuredDataAssetRef<ulong> m_EF29ED01;
+        public teStructuredDataAssetRef<STUIdentifier> m_EF29ED01;
 
         [STUFieldAttribute(0xE5CEAD94, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUStatescriptGraphWithOverrides[] m_E5CEAD94;

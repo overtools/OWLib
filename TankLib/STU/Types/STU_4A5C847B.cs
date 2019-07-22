@@ -5,22 +5,22 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x4A5C847B)]
     public class STU_4A5C847B : STU_C7C085F6 {
         [STUFieldAttribute(0x2A399D82)]
-        public teStructuredDataAssetRef<ulong> m_2A399D82;
+        public teStructuredDataAssetRef<STUAnimation> m_2A399D82;
 
         [STUFieldAttribute(0x3642D4B4)]
-        public teStructuredDataAssetRef<ulong> m_3642D4B4;
+        public teStructuredDataAssetRef<STUAnimation> m_3642D4B4;
 
         [STUFieldAttribute(0xF1E2351A)]
-        public teStructuredDataAssetRef<ulong> m_F1E2351A;
+        public teStructuredDataAssetRef<STUAnimation> m_F1E2351A;
 
         [STUFieldAttribute(0x1F6BBC4D)]
-        public teStructuredDataAssetRef<ulong> m_1F6BBC4D;
+        public teStructuredDataAssetRef<STUAnimation> m_1F6BBC4D;
 
         [STUFieldAttribute(0x65ECFB36)]
-        public teStructuredDataAssetRef<ulong> m_65ECFB36;
+        public teStructuredDataAssetRef<STUAnimation> m_65ECFB36;
 
         [STUFieldAttribute(0x602FEBA4)]
-        public teStructuredDataAssetRef<ulong> m_602FEBA4;
+        public teStructuredDataAssetRef<STUAnimation> m_602FEBA4;
 
         [STUFieldAttribute(0x4AE7328B)]
         public float m_4AE7328B;

@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STUAnimBlendTree_OnFinished m_onFinished;
 
         [STUFieldAttribute(0xC0214513)]
-        public teStructuredDataAssetRef<ulong> m_C0214513;
+        public teStructuredDataAssetRef<STUAnimBlendTree> m_C0214513;
 
         [STUFieldAttribute(0x95877FC5)]
         public teStructuredDataAssetRef<ulong> m_95877FC5;

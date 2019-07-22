@@ -6,13 +6,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x543CF5E7, "STUAIHitReaction")]
     public class STUAIHitReaction : STUInstance {
         [STUFieldAttribute(0x2DDFCB42)]
-        public teStructuredDataAssetRef<ulong> m_2DDFCB42;
+        public teStructuredDataAssetRef<STUIdentifier> m_2DDFCB42;
 
         [STUFieldAttribute(0xB6A970ED, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_FC2C8334[] m_B6A970ED;
 
         [STUFieldAttribute(0x22A48A23)]
-        public teStructuredDataAssetRef<ulong>[] m_22A48A23;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_22A48A23;
 
         [STUFieldAttribute(0x1E958CD3, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_EAB333BD m_1E958CD3;

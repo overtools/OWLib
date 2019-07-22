@@ -5,10 +5,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x902CC8E4)]
     public class STU_902CC8E4 : STUInstance {
         [STUFieldAttribute(0x11B47C68, "m_id")]
-        public teStructuredDataAssetRef<ulong> m_id;
+        public teStructuredDataAssetRef<STUIdentifier> m_id;
 
         [STUFieldAttribute(0xB48F1D22, "m_name")]
-        public teStructuredDataAssetRef<ulong> m_name;
+        public teStructuredDataAssetRef<STUUXDisplayText> m_name;
 
         [STUFieldAttribute(0x23AAD9D8)]
         public teStructuredDataAssetRef<ulong> m_23AAD9D8;

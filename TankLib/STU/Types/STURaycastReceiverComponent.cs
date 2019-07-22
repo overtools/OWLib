@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x5ECEFF67, "STURayCastReceiverComponent")]
     public class STURayCastReceiverComponent : STUEntityComponent {
         [STUFieldAttribute(0x6ADA2BDF, "m_raycastReceiver")]
-        public teStructuredDataAssetRef<ulong> m_raycastReceiver;
+        public teStructuredDataAssetRef<STURayCastReceiver> m_raycastReceiver;
     }
 }

@@ -11,6 +11,6 @@ namespace TankLib.STU.Types {
         public teString m_A659000B;
 
         [STUFieldAttribute(0x4D2DB658, "m_identifier")]
-        public teStructuredDataAssetRef<ulong> m_identifier;
+        public teStructuredDataAssetRef<STUIdentifier> m_identifier;
     }
 }

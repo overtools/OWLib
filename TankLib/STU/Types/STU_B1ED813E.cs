@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public LineupOverrideCharacter[] m_39D3969F;
 
         [STUFieldAttribute(0x3B490EF9)]
-        public teStructuredDataAssetRef<ulong> m_3B490EF9;
+        public teStructuredDataAssetRef<STUIdentifier> m_3B490EF9;
     }
 }

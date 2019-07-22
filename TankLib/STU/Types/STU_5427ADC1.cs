@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x5427ADC1)]
     public class STU_5427ADC1 : STUInstance {
         [STUFieldAttribute(0x62E537BD)]
-        public teStructuredDataAssetRef<ulong>[] m_62E537BD;
+        public teStructuredDataAssetRef<STUSkinTheme>[] m_62E537BD;
     }
 }

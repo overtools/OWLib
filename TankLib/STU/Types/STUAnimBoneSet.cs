@@ -5,9 +5,9 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x0BD5EA17, "STUAnimBoneSet")]
     public class STUAnimBoneSet : STUInstance {
         [STUFieldAttribute(0x50558D63, "m_bones")]
-        public teStructuredDataAssetRef<ulong>[] m_bones;
+        public teStructuredDataAssetRef<STUBoneLabel>[] m_bones;
 
         [STUFieldAttribute(0x7CBECA0C, "m_hardPoints")]
-        public teStructuredDataAssetRef<ulong>[] m_hardPoints;
+        public teStructuredDataAssetRef<STUHardPoint>[] m_hardPoints;
     }
 }

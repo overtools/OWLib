@@ -17,6 +17,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x939ABB2C, "m_materialData")]
         public teStructuredDataAssetRef<ulong> m_materialData;
 
+        [STUFieldAttribute(0x61AD3AB8)]
+        public teStructuredDataAssetRef<ulong> m_61AD3AB8;
+
         [STUFieldAttribute(0x94C9FBD7)]
         public teColorRGBA m_94C9FBD7;
     }

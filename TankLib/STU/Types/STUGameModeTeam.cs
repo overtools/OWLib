@@ -6,13 +6,13 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xD797394C, "STUGameModeTeam")]
     public class STUGameModeTeam : STUInstance {
         [STUFieldAttribute(0xA2781AA4, "m_controllerScript")]
-        public teStructuredDataAssetRef<ulong> m_controllerScript;
+        public teStructuredDataAssetRef<STU_6BE90C5C> m_controllerScript;
 
         [STUFieldAttribute(0x6F71E9AA, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameModeVarValuePair[] m_6F71E9AA;
 
         [STUFieldAttribute(0x76E8C82A, "m_bodyScript")]
-        public teStructuredDataAssetRef<ulong> m_bodyScript;
+        public teStructuredDataAssetRef<STU_6BE90C5C> m_bodyScript;
 
         [STUFieldAttribute(0xEA2B516F, "m_bodyVars", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameModeBodyVars[] m_bodyVars;

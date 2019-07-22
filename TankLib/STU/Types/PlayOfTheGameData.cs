@@ -6,7 +6,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x5B8A4389, "PlayOfTheGameData")]
     public class PlayOfTheGameData : STUInstance {
         [STUFieldAttribute(0x371085C1)]
-        public teStructuredDataAssetRef<ulong> m_371085C1;
+        public teStructuredDataAssetRef<STU_C25281C3> m_371085C1;
 
         [STUFieldAttribute(0x11B47C68, "m_id", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_id;

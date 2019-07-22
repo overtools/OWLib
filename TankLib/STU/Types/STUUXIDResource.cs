@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x992CD1C4, "STUUXIDResource")]
     public class STUUXIDResource : STUUXResource {
         [STUFieldAttribute(0xB5C0F593, "m_guid")]
-        public teStructuredDataAssetRef<ulong> m_guid;
+        public teStructuredDataAssetRef<STUUXLink> m_guid;
     }
 }

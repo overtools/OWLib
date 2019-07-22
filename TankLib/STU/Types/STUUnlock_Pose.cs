@@ -6,5 +6,8 @@ namespace TankLib.STU.Types {
     public class STUUnlock_Pose : STUUnlock {
         [STUFieldAttribute(0x2E5FBA99, "m_pose")]
         public teStructuredDataAssetRef<ulong> m_pose;
+
+        [STUFieldAttribute(0x72F8972E)]
+        public byte m_72F8972E;
     }
 }

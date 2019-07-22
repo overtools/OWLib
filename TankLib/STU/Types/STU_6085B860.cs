@@ -11,31 +11,31 @@ namespace TankLib.STU.Types {
         public STUAnimCurve m_96F6171F;
 
         [STUFieldAttribute(0x375E1FFC)]
-        public teStructuredDataAssetRef<ulong> m_375E1FFC;
+        public teStructuredDataAssetRef<STUAnimation> m_375E1FFC;
 
         [STUFieldAttribute(0x6B558958)]
-        public teStructuredDataAssetRef<ulong> m_6B558958;
+        public teStructuredDataAssetRef<STUAnimation> m_6B558958;
 
         [STUFieldAttribute(0x4590460B)]
-        public teStructuredDataAssetRef<ulong> m_4590460B;
+        public teStructuredDataAssetRef<STUAnimation> m_4590460B;
 
         [STUFieldAttribute(0x3873672F)]
-        public teStructuredDataAssetRef<ulong> m_3873672F;
+        public teStructuredDataAssetRef<STUAnimation> m_3873672F;
 
         [STUFieldAttribute(0xBAA3CC74)]
-        public teStructuredDataAssetRef<ulong> m_BAA3CC74;
+        public teStructuredDataAssetRef<STUDataFlow> m_BAA3CC74;
 
         [STUFieldAttribute(0x62C265A5)]
-        public teStructuredDataAssetRef<ulong> m_62C265A5;
+        public teStructuredDataAssetRef<STUDataFlow> m_62C265A5;
 
         [STUFieldAttribute(0x07D3BC68)]
-        public teStructuredDataAssetRef<ulong> m_07D3BC68;
+        public teStructuredDataAssetRef<STUDataFlow> m_07D3BC68;
 
         [STUFieldAttribute(0x18D3D5EB)]
-        public teStructuredDataAssetRef<ulong> m_18D3D5EB;
+        public teStructuredDataAssetRef<STUAnimation> m_18D3D5EB;
 
         [STUFieldAttribute(0x37D84DA4)]
-        public teStructuredDataAssetRef<ulong> m_37D84DA4;
+        public teStructuredDataAssetRef<STUAnimIdentifier> m_37D84DA4;
 
         [STUFieldAttribute(0x5620DA50, "m_globalWeightMultipliers", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimGlobalWeightMultipliers m_globalWeightMultipliers;

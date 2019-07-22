@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x98CB8CB0)]
     public class STU_98CB8CB0 : STUConfigVarResource {
         [STUFieldAttribute(0x2C05CD95, "m_catalog")]
-        public teStructuredDataAssetRef<ulong> m_catalog;
+        public teStructuredDataAssetRef<STUCatalog> m_catalog;
     }
 }

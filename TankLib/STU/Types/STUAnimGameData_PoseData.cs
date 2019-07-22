@@ -8,6 +8,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x44B8E377)]
         public teVec3A m_44B8E377;
 
+        [STUFieldAttribute(0x0B5E9CF6, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_7C02B6CA m_0B5E9CF6;
+
         [STUFieldAttribute(0x03E0A520, "m_poseDataVecs")]
         public teVec3A[] m_poseDataVecs;
 

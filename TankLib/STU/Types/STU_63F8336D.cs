@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x63F8336D)]
     public class STU_63F8336D : STUInstance {
         [STUFieldAttribute(0x11B47C68, "m_id")]
-        public teStructuredDataAssetRef<ulong> m_id;
+        public teStructuredDataAssetRef<STUIdentifier> m_id;
 
         [STUFieldAttribute(0x61EF7BE0, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_AC3BAAC0[] m_61EF7BE0;
@@ -14,12 +14,12 @@ namespace TankLib.STU.Types {
         public STU_AC3BAAC0[] m_E91939CD;
 
         [STUFieldAttribute(0xAA76FAD1, "m_displayText")]
-        public teStructuredDataAssetRef<ulong> m_displayText;
+        public teStructuredDataAssetRef<STUUXDisplayText> m_displayText;
 
         [STUFieldAttribute(0x3CD6DC1E, "m_texture")]
         public teStructuredDataAssetRef<ulong> m_texture;
 
         [STUFieldAttribute(0x8A557E94)]
-        public teStructuredDataAssetRef<ulong> m_8A557E94;
+        public teStructuredDataAssetRef<STUSound> m_8A557E94;
     }
 }

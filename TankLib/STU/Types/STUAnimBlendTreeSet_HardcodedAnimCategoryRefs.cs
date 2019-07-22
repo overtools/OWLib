@@ -5,42 +5,42 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xC8704AD4, "STUAnimBlendTreeSet_HardcodedAnimCategoryRefs")]
     public class STUAnimBlendTreeSet_HardcodedAnimCategoryRefs : STUInstance {
         [STUFieldAttribute(0x013F5402)]
-        public teStructuredDataAssetRef<ulong> m_013F5402;
+        public teStructuredDataAssetRef<STUAnimCategory> m_013F5402;
 
         [STUFieldAttribute(0x9AC26F9B)]
-        public teStructuredDataAssetRef<ulong> m_9AC26F9B;
+        public teStructuredDataAssetRef<STUAnimCategory> m_9AC26F9B;
 
         [STUFieldAttribute(0xBB736F3F)]
-        public teStructuredDataAssetRef<ulong> m_BB736F3F;
+        public teStructuredDataAssetRef<STUAnimCategory> m_BB736F3F;
 
         [STUFieldAttribute(0x9D4FE3BA)]
-        public teStructuredDataAssetRef<ulong> m_9D4FE3BA;
+        public teStructuredDataAssetRef<STUAnimCategory> m_9D4FE3BA;
 
         [STUFieldAttribute(0x64CB9871)]
-        public teStructuredDataAssetRef<ulong> m_64CB9871;
+        public teStructuredDataAssetRef<STUAnimCategory> m_64CB9871;
 
         [STUFieldAttribute(0xA023ADB5)]
-        public teStructuredDataAssetRef<ulong> m_A023ADB5;
+        public teStructuredDataAssetRef<STUAnimCategory> m_A023ADB5;
 
         [STUFieldAttribute(0xD5DE1D8B)]
-        public teStructuredDataAssetRef<ulong> m_D5DE1D8B;
+        public teStructuredDataAssetRef<STUAnimCategory> m_D5DE1D8B;
 
         [STUFieldAttribute(0xA5DBA2DB)]
-        public teStructuredDataAssetRef<ulong> m_A5DBA2DB;
+        public teStructuredDataAssetRef<STUAnimCategory> m_A5DBA2DB;
 
         [STUFieldAttribute(0x198EE6D4)]
-        public teStructuredDataAssetRef<ulong> m_198EE6D4;
+        public teStructuredDataAssetRef<STUAnimCategory> m_198EE6D4;
 
         [STUFieldAttribute(0x4BE400BA)]
-        public teStructuredDataAssetRef<ulong> m_4BE400BA;
+        public teStructuredDataAssetRef<STUAnimCategory> m_4BE400BA;
 
         [STUFieldAttribute(0xCD6D2FA7)]
-        public teStructuredDataAssetRef<ulong> m_CD6D2FA7;
+        public teStructuredDataAssetRef<STUAnimCategory> m_CD6D2FA7;
 
         [STUFieldAttribute(0x75C041AD)]
-        public teStructuredDataAssetRef<ulong> m_75C041AD;
+        public teStructuredDataAssetRef<STUAnimCategory> m_75C041AD;
 
         [STUFieldAttribute(0xA93A7786)]
-        public teStructuredDataAssetRef<ulong> m_A93A7786;
+        public teStructuredDataAssetRef<STUAnimCategory> m_A93A7786;
     }
 }

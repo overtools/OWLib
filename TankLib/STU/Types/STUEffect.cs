@@ -9,10 +9,13 @@ namespace TankLib.STU.Types {
         public STU_49A12335 m_root;
 
         [STUFieldAttribute(0xB64D5A14, "m_previewModel")]
-        public teStructuredDataAssetRef<ulong> m_previewModel;
+        public teStructuredDataAssetRef<STUModel> m_previewModel;
 
         [STUFieldAttribute(0xF2C4BBBC)]
-        public teStructuredDataAssetRef<ulong> m_F2C4BBBC;
+        public teStructuredDataAssetRef<STUGenericSettings_Base> m_F2C4BBBC;
+
+        [STUFieldAttribute(0xE2B2B673)]
+        public byte m_E2B2B673;
 
         [STUFieldAttribute(0xBCC3D95D)]
         public Enum_F588EA94 m_BCC3D95D;

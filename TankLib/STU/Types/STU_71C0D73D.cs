@@ -11,7 +11,7 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<ulong> m_C65AA24E;
 
         [STUFieldAttribute(0xC21DB248)]
-        public teStructuredDataAssetRef<ulong> m_C21DB248;
+        public teStructuredDataAssetRef<STU_B77FCA72> m_C21DB248;
 
         [STUFieldAttribute(0x7F40AF15)]
         public int m_7F40AF15;

@@ -18,5 +18,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xC72FEA39, "m_underSubgraphPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_904BFCEC m_underSubgraphPlug;
+
+        [STUFieldAttribute(0x91FED9B3)]
+        public byte m_91FED9B3;
     }
 }

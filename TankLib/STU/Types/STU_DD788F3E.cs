@@ -5,10 +5,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xDD788F3E)]
     public class STU_DD788F3E : STUStatescriptScreenVM {
         [STUFieldAttribute(0x319337E2, "m_status")]
-        public teStructuredDataAssetRef<ulong> m_status;
+        public teStructuredDataAssetRef<STUUXLink> m_status;
 
         [STUFieldAttribute(0x1FD467D8)]
-        public teStructuredDataAssetRef<ulong> m_1FD467D8;
+        public teStructuredDataAssetRef<STUUXLink> m_1FD467D8;
 
         [STUFieldAttribute(0xA28F21A7, "m_elapsedTime")]
         public teString m_elapsedTime;
@@ -20,7 +20,7 @@ namespace TankLib.STU.Types {
         public teString m_98110E78;
 
         [STUFieldAttribute(0x5C1F0171)]
-        public teStructuredDataAssetRef<ulong> m_5C1F0171;
+        public teStructuredDataAssetRef<STUUXLink> m_5C1F0171;
 
         [STUFieldAttribute(0xFD438D55, "m_leaverTime")]
         public teString m_leaverTime;

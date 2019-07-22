@@ -6,10 +6,10 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xF4010FCE)]
     public class STU_F4010FCE : STU_4B0FCDF6 {
         [STUFieldAttribute(0x22C63DE3)]
-        public teStructuredDataAssetRef<ulong>[] m_22C63DE3;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_22C63DE3;
 
         [STUFieldAttribute(0x5CFFCBAE)]
-        public teStructuredDataAssetRef<ulong>[] m_5CFFCBAE;
+        public teStructuredDataAssetRef<STUIdentifier>[] m_5CFFCBAE;
 
         [STUFieldAttribute(0x60703B1E)]
         public teStructuredDataAssetRef<ulong> m_60703B1E;

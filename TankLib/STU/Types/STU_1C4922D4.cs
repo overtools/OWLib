@@ -8,19 +8,19 @@ namespace TankLib.STU.Types {
         public teString m_name;
 
         [STUFieldAttribute(0xEDC535A8)]
-        public teStructuredDataAssetRef<ulong> m_EDC535A8;
+        public teStructuredDataAssetRef<STUEffect> m_EDC535A8;
 
         [STUFieldAttribute(0x0FAB01F2)]
-        public teStructuredDataAssetRef<ulong> m_0FAB01F2;
+        public teStructuredDataAssetRef<STUEffect> m_0FAB01F2;
 
         [STUFieldAttribute(0xD0C28030, "m_effectHardpoint")]
-        public teStructuredDataAssetRef<ulong> m_effectHardpoint;
+        public teStructuredDataAssetRef<STUHardPoint> m_effectHardpoint;
 
         [STUFieldAttribute(0xCDB4356F)]
-        public teStructuredDataAssetRef<ulong> m_CDB4356F;
+        public teStructuredDataAssetRef<STUHardPoint> m_CDB4356F;
 
         [STUFieldAttribute(0x4D2DB658, "m_identifier")]
-        public teStructuredDataAssetRef<ulong> m_identifier;
+        public teStructuredDataAssetRef<STUIdentifier> m_identifier;
 
         [STUFieldAttribute(0x31C5E7E4, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_CB79EE74 m_31C5E7E4;

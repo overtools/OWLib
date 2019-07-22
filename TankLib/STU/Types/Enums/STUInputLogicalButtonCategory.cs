@@ -9,7 +9,7 @@ namespace TankLib.STU.Types.Enums {
         [STUFieldAttribute(0xDD8CF466)]
         Movement = 0x1,
         [STUFieldAttribute(0x3F197F17)]
-        Abilities  = 0x2,
+        Abilities = 0x2,
         [STUFieldAttribute(0xBF6BF041)]
         Communication = 0x3,
         [STUFieldAttribute(0xC9318BD3)]

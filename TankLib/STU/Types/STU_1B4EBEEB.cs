@@ -5,34 +5,34 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x1B4EBEEB)]
     public class STU_1B4EBEEB : STU_C7C085F6 {
         [STUFieldAttribute(0xF830FBBD)]
-        public teStructuredDataAssetRef<ulong> m_F830FBBD;
+        public teStructuredDataAssetRef<STUAnimation> m_F830FBBD;
 
         [STUFieldAttribute(0xED704301)]
-        public teStructuredDataAssetRef<ulong> m_ED704301;
+        public teStructuredDataAssetRef<STUAnimation> m_ED704301;
 
         [STUFieldAttribute(0x9514082C)]
-        public teStructuredDataAssetRef<ulong> m_9514082C;
+        public teStructuredDataAssetRef<STUAnimation> m_9514082C;
 
         [STUFieldAttribute(0x288ABC53)]
-        public teStructuredDataAssetRef<ulong> m_288ABC53;
+        public teStructuredDataAssetRef<STUAnimation> m_288ABC53;
 
         [STUFieldAttribute(0x5EF0A31B)]
-        public teStructuredDataAssetRef<ulong> m_5EF0A31B;
+        public teStructuredDataAssetRef<STUAnimation> m_5EF0A31B;
 
         [STUFieldAttribute(0x73C26D81)]
-        public teStructuredDataAssetRef<ulong> m_73C26D81;
+        public teStructuredDataAssetRef<STUAnimation> m_73C26D81;
 
         [STUFieldAttribute(0xC9AF9A44)]
-        public teStructuredDataAssetRef<ulong> m_C9AF9A44;
+        public teStructuredDataAssetRef<STUAnimation> m_C9AF9A44;
 
         [STUFieldAttribute(0xD25817CF)]
-        public teStructuredDataAssetRef<ulong> m_D25817CF;
+        public teStructuredDataAssetRef<STUAnimation> m_D25817CF;
 
         [STUFieldAttribute(0x7237A98F)]
-        public teStructuredDataAssetRef<ulong> m_7237A98F;
+        public teStructuredDataAssetRef<STUDataFlow> m_7237A98F;
 
         [STUFieldAttribute(0x321FF7A4)]
-        public teStructuredDataAssetRef<ulong> m_321FF7A4;
+        public teStructuredDataAssetRef<STUDataFlow> m_321FF7A4;
 
         [STUFieldAttribute(0xA9330380)]
         public float m_A9330380;

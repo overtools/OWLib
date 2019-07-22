@@ -9,5 +9,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xD4DF9339, "lifeTimeSecs")]
         public float lifeTimeSecs;
+
+        [STUFieldAttribute(0x5B41E11D)]
+        public byte m_5B41E11D;
     }
 }

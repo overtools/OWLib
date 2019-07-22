@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public teString m_value;
 
         [STUFieldAttribute(0xC1769D54, "m_displayText")]
-        public teStructuredDataAssetRef<ulong> m_displayText;
+        public teStructuredDataAssetRef<STUUXDisplayText> m_displayText;
     }
 }

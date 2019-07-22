@@ -12,10 +12,10 @@ namespace TankLib.STU.Types {
         public teString m_description;
 
         [STUFieldAttribute(0xE9155545)]
-        public teStructuredDataAssetRef<ulong> m_E9155545;
+        public teStructuredDataAssetRef<STU_6BE90C5C> m_E9155545;
 
         [STUFieldAttribute(0xAD69A9BD)]
-        public teStructuredDataAssetRef<ulong> m_AD69A9BD;
+        public teStructuredDataAssetRef<STU_105CCAEE> m_AD69A9BD;
 
         [STUFieldAttribute(0xD471F52A)]
         public Enum_38661995 m_D471F52A;
@@ -31,6 +31,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xF4B6714B)]
         public byte m_F4B6714B;
+
+        [STUFieldAttribute(0xA13281E1)]
+        public byte m_A13281E1;
 
         [STUFieldAttribute(0x79E4EEB6)]
         public byte m_79E4EEB6;

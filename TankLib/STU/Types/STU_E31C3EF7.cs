@@ -5,49 +5,49 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xE31C3EF7)]
     public class STU_E31C3EF7 : STU_C7C085F6 {
         [STUFieldAttribute(0x6576E6FA)]
-        public teStructuredDataAssetRef<ulong> m_6576E6FA;
+        public teStructuredDataAssetRef<STUDataFlow> m_6576E6FA;
 
         [STUFieldAttribute(0x8172F221)]
-        public teStructuredDataAssetRef<ulong> m_8172F221;
+        public teStructuredDataAssetRef<STUAnimation> m_8172F221;
 
         [STUFieldAttribute(0xED88B322)]
-        public teStructuredDataAssetRef<ulong> m_ED88B322;
+        public teStructuredDataAssetRef<STUAnimation> m_ED88B322;
 
         [STUFieldAttribute(0x39690A33)]
-        public teStructuredDataAssetRef<ulong> m_39690A33;
+        public teStructuredDataAssetRef<STUAnimation> m_39690A33;
 
         [STUFieldAttribute(0xC9B9CAFC)]
-        public teStructuredDataAssetRef<ulong> m_C9B9CAFC;
+        public teStructuredDataAssetRef<STUAnimation> m_C9B9CAFC;
 
         [STUFieldAttribute(0xB5217F55)]
-        public teStructuredDataAssetRef<ulong> m_B5217F55;
+        public teStructuredDataAssetRef<STUAnimation> m_B5217F55;
 
         [STUFieldAttribute(0x9D72569D)]
-        public teStructuredDataAssetRef<ulong> m_9D72569D;
+        public teStructuredDataAssetRef<STUAnimation> m_9D72569D;
 
         [STUFieldAttribute(0x6E5FA46A)]
-        public teStructuredDataAssetRef<ulong> m_6E5FA46A;
+        public teStructuredDataAssetRef<STUAnimation> m_6E5FA46A;
 
         [STUFieldAttribute(0xC423D0C0)]
-        public teStructuredDataAssetRef<ulong> m_C423D0C0;
+        public teStructuredDataAssetRef<STUAnimation> m_C423D0C0;
 
         [STUFieldAttribute(0x732FACE6)]
-        public teStructuredDataAssetRef<ulong> m_732FACE6;
+        public teStructuredDataAssetRef<STUAnimation> m_732FACE6;
 
         [STUFieldAttribute(0x703481F7)]
-        public teStructuredDataAssetRef<ulong> m_703481F7;
+        public teStructuredDataAssetRef<STUAnimation> m_703481F7;
 
         [STUFieldAttribute(0x920D87D4)]
-        public teStructuredDataAssetRef<ulong> m_920D87D4;
+        public teStructuredDataAssetRef<STUAnimation> m_920D87D4;
 
         [STUFieldAttribute(0xDD22B1DA)]
-        public teStructuredDataAssetRef<ulong> m_DD22B1DA;
+        public teStructuredDataAssetRef<STUAnimation> m_DD22B1DA;
 
         [STUFieldAttribute(0x4A5D3A5C)]
-        public teStructuredDataAssetRef<ulong> m_4A5D3A5C;
+        public teStructuredDataAssetRef<STUAnimation> m_4A5D3A5C;
 
         [STUFieldAttribute(0xC30C9501)]
-        public teStructuredDataAssetRef<ulong> m_C30C9501;
+        public teStructuredDataAssetRef<STUAnimation> m_C30C9501;
 
         [STUFieldAttribute(0xF61BC36F)]
         public float m_F61BC36F;

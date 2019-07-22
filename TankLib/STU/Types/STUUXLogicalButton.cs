@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x3E74C216, "STUUXLogicalButton")]
     public class STUUXLogicalButton : STUUXObject {
         [STUFieldAttribute(0x2605693D)]
-        public teStructuredDataAssetRef<ulong> m_2605693D;
+        public teStructuredDataAssetRef<STU_2376C502> m_2605693D;
     }
 }

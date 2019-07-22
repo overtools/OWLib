@@ -4,7 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xC5A448A5)]
     public class STU_C5A448A5 : STUInstance {
-        [STUFieldAttribute(0xB3928349)]
-        public teStructuredDataAssetRef<ulong>[] m_B3928349;
+        [STUFieldAttribute(0x0BB56C7D, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUStatescriptGraphWithOverrides m_0BB56C7D;
     }
 }

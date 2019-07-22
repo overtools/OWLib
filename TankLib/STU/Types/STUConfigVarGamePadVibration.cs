@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xF264A657, "STUConfigVarGamePadVibration")]
     public class STUConfigVarGamePadVibration : STU_E4324757 {
         [STUFieldAttribute(0x479BD164, "m_vibration")]
-        public teStructuredDataAssetRef<ulong> m_vibration;
+        public teStructuredDataAssetRef<STUGamePadVibration> m_vibration;
     }
 }

@@ -8,7 +8,7 @@ namespace TankLib.STU.Types {
         public STUAIBodyPartDamageGroupDamageTagScalar[] m_AAEA98C4;
 
         [STUFieldAttribute(0x2DDFCB42)]
-        public teStructuredDataAssetRef<ulong> m_2DDFCB42;
+        public teStructuredDataAssetRef<STUIdentifier> m_2DDFCB42;
 
         [STUFieldAttribute(0xD1C7F985, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_D1C7F985;

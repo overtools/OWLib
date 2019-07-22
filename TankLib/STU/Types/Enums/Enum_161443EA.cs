@@ -15,6 +15,6 @@ namespace TankLib.STU.Types.Enums {
         [STUFieldAttribute(0x6A29B99B)]
         Platinum = 0x4,
         [STUFieldAttribute(0xC9CA261C)]
-        xC9CA261C = 0x5,
+        Diamond = 0x5,
     }
 }

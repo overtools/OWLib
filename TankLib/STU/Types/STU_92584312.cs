@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x92584312)]
     public class STU_92584312 : STUEntityComponent {
         [STUFieldAttribute(0x92A85396, "m_gameMessage")]
-        public teStructuredDataAssetRef<ulong> m_gameMessage;
+        public teStructuredDataAssetRef<STUGameMessage> m_gameMessage;
 
         [STUFieldAttribute(0xBC2A8DA3, "m_params", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_7E3A0101[] m_params;

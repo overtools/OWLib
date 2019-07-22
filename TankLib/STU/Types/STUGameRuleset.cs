@@ -6,5 +6,11 @@ namespace TankLib.STU.Types {
     public class STUGameRuleset : STUInstance {
         [STUFieldAttribute(0xEB4F2408, "m_gamemode", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUGameRulesetGameMode m_gamemode;
+
+        [STUFieldAttribute(0x2690B60B)]
+        public teString m_2690B60B;
+
+        [STUFieldAttribute(0x26E97DBB)]
+        public teStructuredDataAssetRef<ulong>[] m_26E97DBB;
     }
 }

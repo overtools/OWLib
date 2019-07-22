@@ -6,22 +6,22 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x48AC0D75)]
     public class STU_48AC0D75 : STU_A3C7077A {
         [STUFieldAttribute(0xCDBFC5EC)]
-        public teStructuredDataAssetRef<ulong> m_CDBFC5EC;
+        public teStructuredDataAssetRef<STUTexture> m_CDBFC5EC;
 
         [STUFieldAttribute(0x6EE70996)]
-        public teStructuredDataAssetRef<ulong> m_6EE70996;
+        public teStructuredDataAssetRef<STUTexture> m_6EE70996;
 
         [STUFieldAttribute(0x09E32A58)]
-        public teStructuredDataAssetRef<ulong> m_09E32A58;
+        public teStructuredDataAssetRef<STUTexture> m_09E32A58;
 
         [STUFieldAttribute(0xE1E200DD)]
-        public teStructuredDataAssetRef<ulong> m_E1E200DD;
+        public teStructuredDataAssetRef<STUTexture> m_E1E200DD;
 
         [STUFieldAttribute(0xA665A5E4)]
-        public teStructuredDataAssetRef<ulong> m_A665A5E4;
+        public teStructuredDataAssetRef<STUTexture> m_A665A5E4;
 
         [STUFieldAttribute(0xB999DDE2)]
-        public teStructuredDataAssetRef<ulong> m_B999DDE2;
+        public teStructuredDataAssetRef<STUEmptyAsset> m_B999DDE2;
 
         [STUFieldAttribute(0x5298B793, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUMaterialDataFlow m_5298B793;

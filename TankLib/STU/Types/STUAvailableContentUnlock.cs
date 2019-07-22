@@ -8,6 +8,6 @@ namespace TankLib.STU.Types {
         public teString[] m_45216F79;
 
         [STUFieldAttribute(0xDB803F2F, "m_unlocks")]
-        public teStructuredDataAssetRef<ulong>[] m_unlocks;
+        public teStructuredDataAssetRef<STUUnlock>[] m_unlocks;
     }
 }

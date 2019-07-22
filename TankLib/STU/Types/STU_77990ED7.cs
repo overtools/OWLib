@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x77990ED7)]
     public class STU_77990ED7 : STUStatescriptSchema {
         [STUFieldAttribute(0x89EAAC40)]
-        public teStructuredDataAssetRef<ulong> m_89EAAC40;
+        public teStructuredDataAssetRef<STU_6BE90C5C> m_89EAAC40;
     }
 }

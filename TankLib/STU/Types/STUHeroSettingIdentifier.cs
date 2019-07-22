@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x90A50AC1, "STUHeroSettingIdentifier")]
     public class STUHeroSettingIdentifier : STUHeroSettingBase {
         [STUFieldAttribute(0x45A7A69C, "m_default")]
-        public teStructuredDataAssetRef<ulong> m_default;
+        public teStructuredDataAssetRef<STUIdentifier> m_default;
 
         [STUFieldAttribute(0x16B4863C, "m_entries", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_8811A9AC[] m_entries;

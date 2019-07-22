@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x7C37840C, "STUStatescriptState")]
     public class STUStatescriptState : STUStatescriptBase {
         [STUFieldAttribute(0xE390CDB8, "m_stateGroup")]
-        public teStructuredDataAssetRef<ulong> m_stateGroup;
+        public teStructuredDataAssetRef<STUStatescriptStateGroup> m_stateGroup;
 
         [STUFieldAttribute(0xC4E39595, "m_transitionPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_EE275B33[] m_transitionPlug;

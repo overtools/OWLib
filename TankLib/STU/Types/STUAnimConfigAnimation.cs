@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x3B17DC0D, "STUAnimConfigAnimation")]
     public class STUAnimConfigAnimation : STUInstance {
         [STUFieldAttribute(0x3F5B86A4, "m_animation")]
-        public teStructuredDataAssetRef<ulong> m_animation;
+        public teStructuredDataAssetRef<STUAnimation> m_animation;
 
         [STUFieldAttribute(0x452D0972)]
         public float m_452D0972;

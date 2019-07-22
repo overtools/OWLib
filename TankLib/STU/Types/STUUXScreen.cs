@@ -5,7 +5,7 @@ namespace TankLib.STU.Types {
     [STUAttribute(0x1C68E74D, "STUUXScreen")]
     public class STUUXScreen : STU_BB7E7366 {
         [STUFieldAttribute(0x75DD5735, "m_sampleData")]
-        public teStructuredDataAssetRef<ulong> m_sampleData;
+        public teStructuredDataAssetRef<STU_BC48636B> m_sampleData;
 
         [STUFieldAttribute(0x3547155A, "m_resourceKeyLookup", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_EDCF5A52 m_resourceKeyLookup;

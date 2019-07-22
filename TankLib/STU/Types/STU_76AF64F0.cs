@@ -6,5 +6,8 @@ namespace TankLib.STU.Types {
     public class STU_76AF64F0 : STUEntityComponent {
         [STUFieldAttribute(0x0D7E5DF7)]
         public byte m_0D7E5DF7;
+
+        [STUFieldAttribute(0x7B1CFF83)]
+        public byte m_7B1CFF83;
     }
 }

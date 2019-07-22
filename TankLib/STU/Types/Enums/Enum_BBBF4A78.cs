@@ -18,18 +18,18 @@ namespace TankLib.STU.Types.Enums {
         xDCF6F726 = 0x5,
         [STUFieldAttribute(0x58A9FF59)]
         x58A9FF59 = 0x6,
+        [STUFieldAttribute(0x4FC32F89)]
+        x4FC32F89 = 0x7,
         [STUFieldAttribute(0x09CF4D58)]
-        x09CF4D58 = 0x7,
+        x09CF4D58 = 0x8,
         [STUFieldAttribute(0xFF48FC08)]
-        xFF48FC08 = 0x8,
+        xFF48FC08 = 0x9,
         [STUFieldAttribute(0x21C6B4EF)]
-        x21C6B4EF = 0x9,
+        x21C6B4EF = 0xA,
         [STUFieldAttribute(0xBA60E48C)]
-        xBA60E48C = 0xA,
+        xBA60E48C = 0xB,
         [STUFieldAttribute(0x7480AA42)]
-        x7480AA42 = 0xB,
-        [STUFieldAttribute(0x9FA08D50)]
-        x9FA08D50 = 0xC,
+        x7480AA42 = 0xC,
         [STUFieldAttribute(0x0A71F992)]
         x0A71F992 = 0xD,
         [STUFieldAttribute(0xD63B03CE)]
@@ -76,37 +76,41 @@ namespace TankLib.STU.Types.Enums {
         xBD9F658E = 0x22,
         [STUFieldAttribute(0xB922634C)]
         xB922634C = 0x23,
+        [STUFieldAttribute(0x7B47C461)]
+        x7B47C461 = 0x24,
         [STUFieldAttribute(0x47BED440)]
-        x47BED440 = 0x24,
+        x47BED440 = 0x25,
         [STUFieldAttribute(0x6C9191B4)]
-        x6C9191B4 = 0x25,
+        x6C9191B4 = 0x26,
         [STUFieldAttribute(0x1CDC276A)]
-        x1CDC276A = 0x26,
+        x1CDC276A = 0x27,
         [STUFieldAttribute(0xFEAB06DF)]
-        xFEAB06DF = 0x27,
+        xFEAB06DF = 0x28,
         [STUFieldAttribute(0xD7BE6075)]
-        xD7BE6075 = 0x28,
+        xD7BE6075 = 0x29,
         [STUFieldAttribute(0xB9D6803D)]
-        xB9D6803D = 0x29,
+        xB9D6803D = 0x2A,
         [STUFieldAttribute(0x99D8747F)]
-        x99D8747F = 0x2A,
+        x99D8747F = 0x2B,
         [STUFieldAttribute(0x747B57D3)]
-        x747B57D3 = 0x2B,
+        x747B57D3 = 0x2C,
         [STUFieldAttribute(0x486EEB50)]
-        x486EEB50 = 0x2C,
+        x486EEB50 = 0x2D,
         [STUFieldAttribute(0xC91C4F01)]
-        xC91C4F01 = 0x2D,
+        xC91C4F01 = 0x2E,
         [STUFieldAttribute(0x105ADCA9)]
-        x105ADCA9 = 0x2E,
+        x105ADCA9 = 0x2F,
         [STUFieldAttribute(0x1890C1CD)]
-        x1890C1CD = 0x2F,
+        x1890C1CD = 0x30,
         [STUFieldAttribute(0xA27B8B9F)]
-        xA27B8B9F = 0x30,
+        xA27B8B9F = 0x31,
         [STUFieldAttribute(0xAE5A290B)]
-        xAE5A290B = 0x31,
+        xAE5A290B = 0x32,
         [STUFieldAttribute(0x8309D714)]
-        x8309D714 = 0x32,
+        x8309D714 = 0x33,
         [STUFieldAttribute(0x7BB4B4A0)]
-        x7BB4B4A0 = 0x33,
+        x7BB4B4A0 = 0x34,
+        [STUFieldAttribute(0x86255507)]
+        x86255507 = 0x35,
     }
 }

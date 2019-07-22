@@ -19,13 +19,19 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xA4977032, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_C8D87B59[] m_A4977032;
 
+        [STUFieldAttribute(0xE99CD9FB, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_F83A70F8[] m_E99CD9FB;
+
         [STUFieldAttribute(0x01689346)]
-        public teStructuredDataAssetRef<ulong> m_01689346;
+        public teStructuredDataAssetRef<STUIdentifier> m_01689346;
 
         [STUFieldAttribute(0xF50771F7)]
-        public teStructuredDataAssetRef<ulong>[] m_F50771F7;
+        public teStructuredDataAssetRef<STU_6BE90C5C>[] m_F50771F7;
 
         [STUFieldAttribute(0x50AE5CF0)]
-        public teStructuredDataAssetRef<ulong>[] m_50AE5CF0;
+        public teStructuredDataAssetRef<STU_6BE90C5C>[] m_50AE5CF0;
+
+        [STUFieldAttribute(0x12526C63)]
+        public teStructuredDataAssetRef<STU_031629FB>[] m_12526C63;
     }
 }
