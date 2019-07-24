@@ -408,17 +408,17 @@ namespace TankView {
             }
         }
 
-        private bool _hasShown = false;
+        private bool HasShown = false;
         private void FirstChance(object sender, EventArgs e) {
-            if (_hasShown) return;
+            if (HasShown) return;
             
-            _hasShown = true;
+            HasShown = true;
 
             if (Debugger.IsAttached) {
                 IsEnabled = true;
                 
                 // Use to auto load a dir at startup, useful or dev
-                OpenCASC("C:\\Games\\Overwatch");
+                // OpenCASC("");
                 return;
             }
             
