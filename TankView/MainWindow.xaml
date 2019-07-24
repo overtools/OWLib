@@ -129,6 +129,9 @@
                 <MenuItem Header="DarkMode" DataContext="{Binding AppSettings}"
                           IsChecked="{Binding EnableDarkMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                           IsCheckable="True" />
+                <MenuItem Header="Convert Sounds" DataContext="{Binding AppSettings}"
+                          IsChecked="{Binding EnableConvertSounds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                          IsCheckable="True" />
             </MenuItem>
             <MenuItem Header="Extract" Click="ExtractFiles"
                       IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />

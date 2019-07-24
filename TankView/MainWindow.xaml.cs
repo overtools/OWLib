@@ -18,6 +18,8 @@ using TankView.ViewModel;
 using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
 using TACTLib.Core.Product.Tank;
+using TankLib;
+
 // ReSharper disable MemberCanBeMadeStatic.Local
 
 namespace TankView {
@@ -349,13 +351,30 @@ namespace TankView {
                 }, (entry) => {
                     c++;
                     if (c % ((int) (t * 0.005) + 1) == 0) {
-                        _progressWorker?.ReportProgress((int) ((c / (float) t) * 100));
+                        var progress = (int) ((c / (float) t) * 100);
+                        _progressWorker?.ReportProgress(progress, $"Saving files... {progress}% ({c}/{t})");
                     }
-
+                    
+                    var dataType = DataHelper.GetDataType(teResourceGUID.Type(entry.GUID));
+                    var fileType = Path.GetExtension(entry.FullPath)?.Substring(1);
+                    var filePath = Path.ChangeExtension(entry.FullPath.Substring(1), null);
+                    string fileOutput;
+                    
+                    if (dataType == DataHelper.DataType.Sound && AppSettings.EnableConvertSounds) {
+                        fileOutput = $"{filePath}.ogg";
+                    } else {
+                        fileOutput = $"{filePath}.{fileType}";
+                    }
+                    
                     try {
                         using (Stream i = IOHelper.OpenFile(entry))
-                        using (Stream o = File.OpenWrite(Path.Combine(outPath, entry.FullPath.Substring(1)))) {
-                            i.CopyTo(o);
+                        using (Stream o = File.OpenWrite(Path.Combine(outPath, fileOutput))) {
+                            if (dataType == DataHelper.DataType.Sound && AppSettings.EnableConvertSounds) {
+                                o.SetLength(0);
+                                DataTool.SaveLogic.Combo.ConvertSoundFile(i, o);
+                            } else {
+                                i.CopyTo(o);
+                            }
                         }
                     } catch {
                         // ignored
@@ -389,17 +408,17 @@ namespace TankView {
             }
         }
 
-        private bool HasShown = false;
+        private bool _hasShown = false;
         private void FirstChance(object sender, EventArgs e) {
-            if (HasShown) return;
+            if (_hasShown) return;
             
-            HasShown = true;
+            _hasShown = true;
 
             if (Debugger.IsAttached) {
                 IsEnabled = true;
                 
                 // Use to auto load a dir at startup, useful or dev
-                // OpenCASC("");
+                OpenCASC("C:\\Games\\Overwatch");
                 return;
             }
             

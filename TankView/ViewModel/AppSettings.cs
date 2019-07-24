@@ -1,10 +1,10 @@
 using System.ComponentModel;
 using TankView.Properties;
-using TACTLib.Client.HandlerArgs;
 
 namespace TankView.ViewModel {
     public class AppSettings : INotifyPropertyChanged {
         private bool _darkMode = Settings.Default.DarkMode;
+        private bool _convertSounds = Settings.Default.ConvertSounds;
 
 
         public bool EnableDarkMode {
@@ -15,6 +15,16 @@ namespace TankView.ViewModel {
                 Settings.Default.Save();
                 (App.Current as App)?.SetDarkMode(EnableDarkMode);
                 NotifyPropertyChanged(nameof(EnableDarkMode));
+            }
+        }
+        
+        public bool EnableConvertSounds {
+            get => _convertSounds;
+            set {
+                _convertSounds = value;
+                Settings.Default.ConvertSounds = value;
+                Settings.Default.Save();
+                NotifyPropertyChanged(nameof(EnableConvertSounds));
             }
         }
 
