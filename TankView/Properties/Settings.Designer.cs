@@ -97,6 +97,18 @@ namespace TankView.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoPlay {
+            get {
+                return ((bool)(this["AutoPlay"]));
+            }
+            set {
+                this["AutoPlay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool LoadManifest {
             get {
                 return ((bool)(this["LoadManifest"]));

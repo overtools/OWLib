@@ -64,6 +64,10 @@ namespace TankView.ViewModel {
                     PreviewSource = DataHelper.ConvertSound(value);
                     PreviewControl = new PreviewDataSound();
                     ((PreviewDataSound) PreviewControl).SetAudio(PreviewSource as Stream);
+
+                    if (EnableAutoPlay) {
+                        ((PreviewDataSound) PreviewControl).Play(null, null);
+                    }
                 }
                     break;
                 case DataHelper.DataType.Model: {
@@ -108,6 +112,15 @@ namespace TankView.ViewModel {
                 NotifyPropertyChanged(nameof(ListRow));
                 NotifyPropertyChanged(nameof(PreviewRow));
                 NotifyPropertyChanged(nameof(PreviewRowMin));
+            }
+        }
+        
+        public bool EnableAutoPlay {
+            get => Settings.Default.AutoPlay;
+            set {
+                Settings.Default.AutoPlay = value;
+                Settings.Default.Save();
+                NotifyPropertyChanged(nameof(EnableAutoPlay));
             }
         }
 

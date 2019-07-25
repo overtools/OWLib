@@ -51,7 +51,7 @@ namespace TankView.View {
             }
         }
 
-        private void Play(object sender, RoutedEventArgs e) {
+        public void Play(object sender, RoutedEventArgs e) {
             if (outputDevice == null || outputDevice.PlaybackState == PlaybackState.Playing) {
                 return;
             }
@@ -62,8 +62,6 @@ namespace TankView.View {
                 Debugger.Log(0, "[TankView.Sound.Play]", $"Error setting audio! {ex.Message}\n");
                 // ignored
             }
-
-            
         }
 
         private void Stop(object sender, RoutedEventArgs e) {

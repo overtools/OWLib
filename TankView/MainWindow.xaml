@@ -123,14 +123,19 @@
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
                 </MenuItem>
+                <MenuItem Header="Extraction">
+                    <MenuItem Header="Convert Sounds" DataContext="{Binding AppSettings}"
+                              IsChecked="{Binding EnableConvertSounds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                              IsCheckable="True" />
+                </MenuItem>
                 <MenuItem Header="Preview" DataContext="{Binding GUIDTree}"
                           IsChecked="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                           IsCheckable="True" />
-                <MenuItem Header="DarkMode" DataContext="{Binding AppSettings}"
+                <MenuItem Header="Dark Mode" DataContext="{Binding AppSettings}"
                           IsChecked="{Binding EnableDarkMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                           IsCheckable="True" />
-                <MenuItem Header="Convert Sounds" DataContext="{Binding AppSettings}"
-                          IsChecked="{Binding EnableConvertSounds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                <MenuItem Header="Autoplay" DataContext="{Binding GUIDTree}"
+                          IsChecked="{Binding EnableAutoPlay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                           IsCheckable="True" />
             </MenuItem>
             <MenuItem Header="Extract" Click="ExtractFiles"
@@ -194,14 +199,14 @@
                                       GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                                 <ListView.View>
                                     <GridView>
-                                        <GridViewColumn Header="GUID" DisplayMemberBinding="{Binding Filename}" />
+                                        <GridViewColumn Header="GUID" DisplayMemberBinding="{Binding Filename}" Width="135" />
                                         <GridViewColumn Header="Flags"
                                                         DisplayMemberBinding="{Binding Flags, Converter={StaticResource EnumConverter}}" />
                                         <GridViewColumn Header="Locale"
                                                         DisplayMemberBinding="{Binding Locale, Converter={StaticResource EnumConverter}}" />
                                         <GridViewColumn Header="Size"
                                                         DisplayMemberBinding="{Binding Size, Converter={StaticResource SizeConverter}}"
-                                                        Width="130"/>
+                                                        Width="130" />
                                     </GridView>
                                 </ListView.View>
                             </ListView>
