@@ -46,7 +46,7 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = (byte)1, Flag = "lod", Help = "Force extracted model LOD", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagByte" })]
         public byte LOD;
         
-        [CLIFlag(Default = true, Flag = "scale-anims", Help = "set to true for Blender 2.79, false for Maya and when Blender SEAnim tools are updated for 2.8", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
+        [CLIFlag(Default = false, Flag = "scale-anims", Help = "set to true for Blender 2.79, false for Maya and when Blender SEAnim tools are updated for 2.8", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ScaleAnims;
 
         [CLIFlag(Default = false, Flag = "flatten", Help = "Flatten directory structure", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
