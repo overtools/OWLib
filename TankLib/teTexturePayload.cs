@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using TACTLib;
+using TACTLib.Core.Product.Tank;
 
 namespace TankLib {
     /// <summary>Tank Texture Payload, type 04D</summary>
@@ -69,8 +71,8 @@ namespace TankLib {
                     TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
                         Format = parentHeader.Format,
                         Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
-                        Misc = (uint)(parentHeader.IsCubemap() ? 0x4 : 0),
-                        Size = (uint)(parentHeader.IsCubemap() ? 1 : parentHeader.Surfaces),
+                        Misc = (uint)(parentHeader.IsCubemap ? 0x4 : 0),
+                        Size = (uint)(parentHeader.IsCubemap ? 1 : parentHeader.Surfaces),
                         Misc2 = 0
                     };
                     ddsWriter.Write(d10);

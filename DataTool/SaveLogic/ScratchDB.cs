@@ -36,7 +36,11 @@ namespace DataTool.SaveLogic {
         public bool HasRecord(ulong guid) {
             if (Records.ContainsKey(guid)) {
                 if (!Records[guid].CheckedExistence) {
-                    if (!File.Exists(Records[guid].AbsolutePath)) {
+                    if (!File.Exists(Records[guid].AbsolutePath) &&
+                        !File.Exists(Path.ChangeExtension(Records[guid].AbsolutePath, "dds")) &&
+                        !File.Exists(Path.ChangeExtension(Records[guid].AbsolutePath, "tif")) &&
+                        !File.Exists(Path.ChangeExtension(Records[guid].AbsolutePath, "png")) &&
+                        !File.Exists(Path.ChangeExtension(Records[guid].AbsolutePath, "jpg"))) {
                         RemoveRecord(guid);
                         return false;
                     } else {

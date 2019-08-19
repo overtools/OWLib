@@ -124,7 +124,7 @@ namespace TankView.ViewModel {
             }
         }
 
-        public bool ShowPreviewList => DataHelper.GetDataType(_selected.FirstOrDefault()) == DataHelper.DataType.Image;
+        public bool ShowPreviewList => DataHelper.GetDataType(_selected?.FirstOrDefault()) == DataHelper.DataType.Image;
 
         public GridLength ListRow => ShowPreview ? new GridLength(250, GridUnitType.Pixel) : new GridLength(1, GridUnitType.Star);
 

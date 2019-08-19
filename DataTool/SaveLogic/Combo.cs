@@ -573,7 +573,9 @@ namespace DataTool.SaveLogic {
 
                     using (Stream convertedStream = texture.SaveToDDS()) {
                         convertedStream.Position = 0;
-                        if (convertType == "dds" || convertedStream.Length == 0) {
+                        var isMulti = texture.Header.IsCubemap || texture.Header.IsMultiSurface || texture.HasMultipleSurfaces;
+                        if (convertType == "dds" || convertedStream.Length == 0 || isMulti) {
+                            if (isMulti) TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as DDS because multi surface");
                             WriteFile(convertedStream, $"{filePath}.dds");
                             return;
                         }

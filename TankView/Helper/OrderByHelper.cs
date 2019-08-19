@@ -9,6 +9,7 @@ namespace TankView.Helper
     {
         public static IOrderedEnumerable<TSource> OrderByWithDirection<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool descending)
         {
+            if(source == null) return Array.Empty<TSource>().OrderBy(keySelector);
             return descending ? source.OrderByDescending(keySelector)
                        : source.OrderBy(keySelector);
         }

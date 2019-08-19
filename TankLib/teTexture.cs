@@ -3,6 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using TACTLib;
+using TACTLib.Core.Product.Tank;
 
 namespace TankLib {
     /// <summary>Tank Texture, type 004</summary>
@@ -40,14 +42,14 @@ namespace TankLib {
                     Caps4 = 0,
                     Reserved2 = 0
                 };
-                if (Surfaces > 1) {
+                if (Surfaces > 1 || IsMultiSurface) {
                     ret.Caps1 = 0x8 | 0x1000;
                     ret.Format = TextureTypes.TextureType.Unknown.ToPixelFormat();
                 }
 
-                if (IsCubemap()) ret.Caps2 = 0xFE00;
+                if (IsCubemap) ret.Caps2 = 0xFE00;
 
-                if (Mips > 1 && (PayloadCount == 1 || IsCubemap())) {
+                if (Mips > 1 && (PayloadCount == 1 || IsCubemap)) {
                     ret.MipmapCount = Mips;
                     ret.Caps1 = 0x8 | 0x1000 | 0x400000;
                 }
@@ -77,17 +79,11 @@ namespace TankLib {
                 return (Flags & flag) == flag;
             }
 
-            public bool IsCubemap() {
-                return HasFlag(Flags.CUBEMAP);
-            }
+            public bool IsCubemap => HasFlag(Flags.CUBEMAP);
 
-            public bool IsMultisurface() {
-                return HasFlag(Flags.MULTISURFACE);
-            }
+            public bool IsMultiSurface => HasFlag(Flags.MULTISURFACE);
 
-            public bool IsWorld() {
-                return HasFlag(Flags.WORLD);
-            }
+            public bool IsWorld => HasFlag(Flags.WORLD);
         }
 
         public static readonly int[] DXGI_BC4 = { 79, 80, 91 };
@@ -125,8 +121,11 @@ namespace TankLib {
             Read(reader);
         }
 
+        public bool HasMultipleSurfaces => Header.Surfaces > 1 || Payload?.Header.Surfaces > 1;
+
         private void Read(BinaryReader reader) {
             Header = reader.Read<TextureHeader>();
+            if (Header.PayloadCount == 1) Logger.Debug("teTexture", $"texture {((reader.BaseStream is GuidStream gs) ? teResourceGUID.AsString(gs.GUID) : "internal") } is mip");
 
             if (Header.DataSize == 0 || Header.PayloadCount > 0) {
                 PayloadRequired = true;
@@ -187,8 +186,8 @@ namespace TankLib {
                         TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
                             Format = Header.Format,
                             Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
-                            Misc = (uint)(Header.IsCubemap() ? 0x4 : 0),
-                            Size = (uint)(Header.IsCubemap() ? 1 : Header.Surfaces),
+                            Misc = (uint)(Header.IsCubemap ? 0x4 : 0),
+                            Size = (uint)(Header.IsCubemap ? 1 : Header.Surfaces),
                             Misc2 = 0
                         };
                         ddsWriter.Write(d10);
