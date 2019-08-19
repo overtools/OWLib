@@ -528,12 +528,20 @@ namespace DataTool.SaveLogic {
         public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong textureGUID) {
             bool convertTextures = true;
             string convertType = "tif";
+            string multiSurfaceTarget = "tif";
             bool lossless = false;
 
             if (flags is ExtractFlags extractFlags) {
                 convertTextures = extractFlags.ConvertTextures  && !extractFlags.Raw;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
                 lossless = extractFlags.ConvertTexturesLossless;
+                if (extractFlags.ForceDDSMultiSurface) {
+                    multiSurfaceTarget = "dds";
+                }
+
+                if (extractFlags.DestroyMultiSurface) {
+                    multiSurfaceTarget = convertType;
+                }
                 if (extractFlags.SkipTextures) return;
             }
             path += Path.DirectorySeparatorChar;
@@ -573,12 +581,20 @@ namespace DataTool.SaveLogic {
 
                     using (Stream convertedStream = texture.SaveToDDS()) {
                         convertedStream.Position = 0;
-                        var isMulti = texture.Header.IsCubemap || texture.Header.IsMultiSurface || texture.HasMultipleSurfaces;
-                        if (convertType == "dds" || convertedStream.Length == 0 || isMulti) {
-                            if (isMulti) TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as DDS because multi surface");
+                        if (convertType == "dds" || convertedStream.Length == 0) {
                             WriteFile(convertedStream, $"{filePath}.dds");
                             return;
                         }
+
+                        if ((texture.Header.IsCubemap || texture.Header.IsMultiSurface || texture.HasMultipleSurfaces) && !convertType.Equals(multiSurfaceTarget, StringComparison.InvariantCultureIgnoreCase)) {
+                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceTarget} because it has more than one surface");
+                            if (multiSurfaceTarget == "dds") {
+                                WriteFile(convertedStream, $"{filePath}.dds");
+                                return;
+                            }
+
+                            convertType = multiSurfaceTarget;
+                        } 
                         
                         bool isBcffValid = teTexture.DXGI_BC4.Contains(texture.Header.Format) || 
                                            teTexture.DXGI_BC5.Contains(texture.Header.Format) ||
@@ -611,7 +627,7 @@ namespace DataTool.SaveLogic {
                                 RedirectStandardError = true,
                                 CreateNoWindow = true,
                                 Arguments =
-                                    $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{path}"
+                                    $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{path}\""
                             },
                             EnableRaisingEvents = true
                         };
@@ -628,6 +644,7 @@ namespace DataTool.SaveLogic {
                         string line = pProcess.StandardOutput.ReadLine();
                         if (line?.Contains("FAILED") == true) {
                             convertedStream.Position = 0;
+                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as dds because it failed.");
                             WriteFile(convertedStream, $"{filePath}.dds");
                         }
                     }

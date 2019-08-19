@@ -52,6 +52,12 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "flatten", Help = "Flatten directory structure", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool FlattenDirectory;
 
+        [CLIFlag(Default = false, Flag = "force-dds-multisurface", Help = "Save multisurface textures as DDS", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool ForceDDSMultiSurface;
+
+        [CLIFlag(Default = false, Flag = "flatten-multisurface", Help = "Convert multisurface textures to target type", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool DestroyMultiSurface;
+
         // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         // public bool ConvertBnk;
 
