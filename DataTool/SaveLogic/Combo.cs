@@ -627,21 +627,19 @@ namespace DataTool.SaveLogic {
                                 RedirectStandardError = true,
                                 CreateNoWindow = true,
                                 Arguments =
-                                    $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{path}\""
+                                    $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{(path.EndsWith(@"/") || path.EndsWith("\\") ? path.Substring(0, path.Length - 1) : path)}"
                             },
                             EnableRaisingEvents = true
                         };
-
-                        // erm, so if you add an end quote to this then it breaks.
-                        // but start one on it's own is fine (we need something for "Winged Victory")
+                        
                         pProcess.Start();
                         convertedStream.Position = 0;
                         convertedStream.CopyTo(pProcess.StandardInput.BaseStream);
+                        pProcess.StandardInput.BaseStream.Flush();
                         pProcess.StandardInput.BaseStream.Close();
-
-                        // pProcess.WaitForExit(); // not using this is kinda dangerous but I don't care
+                        pProcess.WaitForExit();
                         // when texconv writes with to the console -nologo is has done/failed conversion
-                        string line = pProcess.StandardOutput.ReadLine();
+                        string line = pProcess.StandardOutput.ReadToEnd();
                         if (line?.Contains("FAILED") == true) {
                             convertedStream.Position = 0;
                             TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as dds because it failed.");
