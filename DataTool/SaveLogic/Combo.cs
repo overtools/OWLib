@@ -609,7 +609,7 @@ namespace DataTool.SaveLogic {
                         // so there is no TGA image format.
                         // guess the TGA users are stuck with the DirectXTex stuff for now.
 
-                        if (isBcffValid && imageFormat != null) {
+                        if (isBcffValid && imageFormat != null && !(texture.Header.IsCubemap || texture.Header.IsMultiSurface || texture.HasMultipleSurfaces)) {
                             BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
                             decompressor.CreateImage();
                             decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
@@ -631,7 +631,7 @@ namespace DataTool.SaveLogic {
                             },
                             EnableRaisingEvents = true
                         };
-                        
+
                         pProcess.Start();
                         convertedStream.Position = 0;
                         convertedStream.CopyTo(pProcess.StandardInput.BaseStream);
