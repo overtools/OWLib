@@ -537,7 +537,7 @@ namespace DataTool.SaveLogic {
                 convertTextures = extractFlags.ConvertTextures  && !extractFlags.Raw;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
                 lossless = extractFlags.ConvertTexturesLossless;
-                if (extractFlags.ForceDDSMultiSurface) {
+                if (extractFlags.ForceDDSMultiSurface || convertType == "dds") {
                     multiSurfaceTarget = "dds";
                 }
 
@@ -546,7 +546,7 @@ namespace DataTool.SaveLogic {
                 }
 
                 if (convertType == "dds" && extractFlags.SaveMips) {
-                    maxMips = 16;
+                    maxMips = 0xF;
                 }
             }
             path += Path.DirectorySeparatorChar;
@@ -588,14 +588,14 @@ namespace DataTool.SaveLogic {
                         }
                     }
 
-                    using (Stream convertedStream = texture.SaveToDDS(Math.Min(maxMips, texture.Payloads.Length))) {
+                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.Mips)) {
                         convertedStream.Position = 0;
                         if (convertType == "dds" || convertedStream.Length == 0) {
                             WriteFile(convertedStream, $"{filePath}.dds");
                             return;
                         }
 
-                        if ((texture.Header.IsCubemap || texture.Header.IsMultiSurface || texture.HasMultipleSurfaces) && !convertType.Equals(multiSurfaceTarget, StringComparison.InvariantCultureIgnoreCase)) {
+                        if (texture.Header.IsCubemap || texture.Header.IsMultiSurface || texture.HasMultipleSurfaces) {
                             TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceTarget} because it has more than one surface");
                             if (multiSurfaceTarget == "dds") {
                                 WriteFile(convertedStream, $"{filePath}.dds");
