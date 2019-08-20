@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using DataTool.DataModels;
+using DataTool.ToolLogic.Extract;
 using DataTool.WPF.IO;
 using DirectXTexNet;
 using TankLib;
@@ -64,21 +65,19 @@ namespace DataTool.WPF.Tool.Export {
                                 if (tex != 0) {
                                     teTexture texture = new teTexture(OpenFile(tex));
                                     if (texture.PayloadRequired) {
-                                        for (int j = 0; j < texture.Payloads.Length; ++j) {
-                                            ulong payload = texture.GetPayloadGUID(tex, j + 1);
-                                            Stream payloadStream = OpenFile(payload);
-                                            if (payloadStream != null) {
-                                                texture.LoadPayload(payloadStream, j + 1);
-                                            } else {
-                                                continue;
-                                            }
+                                        ulong payload = texture.GetPayloadGUID(tex, 1, 1);
+                                        Stream payloadStream = OpenFile(payload);
+                                        if (payloadStream != null) {
+                                            texture.LoadPayload(payloadStream, 1);
+                                        } else {
+                                            continue;
                                         }
                                     }
 
                                     width = texture.Header.Width;
                                     height = texture.Header.Height;
 
-                                    Stream ms = texture.SaveToDDS();
+                                    Stream ms = texture.SaveToDDS(1);
 
                                     image = DDSConverter.ConvertDDS(ms, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.ImageFormat.PNG, 0);
                                 }

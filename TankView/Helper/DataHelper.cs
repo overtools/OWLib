@@ -65,17 +65,15 @@ namespace TankView.Helper {
 
                 teTexture texture = new teTexture(IOHelper.OpenFile(value));
                 if (texture.PayloadRequired) {
-                    for (int j = 0; j < texture.Payloads.Length; ++j) {
-                        ulong payload = texture.GetPayloadGUID(value.GUID, j + 1);
-                        if (IOHelper.HasFile(payload)) {
-                            texture.LoadPayload(IOHelper.OpenFile(payload), j + 1);
-                        } else {
-                            return null;
-                        }
+                    ulong payload = texture.GetPayloadGUID(value.GUID, 1, 1);
+                    if (IOHelper.HasFile(payload)) {
+                        texture.LoadPayload(IOHelper.OpenFile(payload), 1);
+                    } else {
+                        return null;
                     }
                 }
 
-                Stream ms = texture.SaveToDDS();
+                Stream ms = texture.SaveToDDS(1);
 
                 return DDSConverter.ConvertDDS(ms, targetFormat, imageFormat, frame);
             } catch {

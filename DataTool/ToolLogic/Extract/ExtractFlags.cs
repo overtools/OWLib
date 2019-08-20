@@ -58,6 +58,9 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "flatten-multisurface", Help = "Convert multisurface textures to target type", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool DestroyMultiSurface;
 
+        [CLIFlag(Default = false, Flag = "extract-mips", Help = "Extract mip files", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool SaveMips;
+
         // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         // public bool ConvertBnk;
 

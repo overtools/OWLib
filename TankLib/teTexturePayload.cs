@@ -62,8 +62,9 @@ namespace TankLib {
         /// <summary>Save DDS to stream</summary>
         /// <param name="parentHeader">Parent teTexture header</param>
         /// <param name="ddsWriter">Stream to be written to</param>
-        public void SaveToDDS(teTexture.TextureHeader parentHeader, BinaryWriter ddsWriter) {
-            TextureTypes.DDSHeader dds = parentHeader.ToDDSHeader();
+        /// <param name="mips"></param>
+        public void SaveToDDS(teTexture.TextureHeader parentHeader, BinaryWriter ddsWriter, int? mips) {
+            TextureTypes.DDSHeader dds = parentHeader.ToDDSHeader(mips ?? parentHeader.Mips);
             ddsWriter.Write(dds);
             if (dds.Format.FourCC == (int) TextureTypes.TextureType.Unknown) {
                 TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {

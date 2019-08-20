@@ -530,8 +530,10 @@ namespace DataTool.SaveLogic {
             string convertType = "tif";
             string multiSurfaceTarget = "tif";
             bool lossless = false;
+            int maxMips = 1;
 
             if (flags is ExtractFlags extractFlags) {
+                if (extractFlags.SkipTextures) return;
                 convertTextures = extractFlags.ConvertTextures  && !extractFlags.Raw;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
                 lossless = extractFlags.ConvertTexturesLossless;
@@ -542,7 +544,10 @@ namespace DataTool.SaveLogic {
                 if (extractFlags.DestroyMultiSurface) {
                     multiSurfaceTarget = convertType;
                 }
-                if (extractFlags.SkipTextures) return;
+
+                if (convertType == "dds" && extractFlags.SaveMips) {
+                    maxMips = 16;
+                }
             }
             path += Path.DirectorySeparatorChar;
 
@@ -564,8 +569,10 @@ namespace DataTool.SaveLogic {
                     WriteFile(textureStream, $"{filePath}.004");
 
                     if (!texture.PayloadRequired) return;
-                    using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID)))
-                        WriteFile(texturePayloadStream, $"{filePath}.04D");
+                    for (int i = 0; i < texture.Payloads.Length; ++i) {
+                        using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, 1, i + 1)))
+                            WriteFile(texturePayloadStream, $"{filePath}_{i}.04D");
+                    }
                 }
             } else {
                 using (Stream textureStream = OpenFile(textureGUID)) {
@@ -576,12 +583,12 @@ namespace DataTool.SaveLogic {
                     // for diffing when they add/regen loads of cubemaps
                     
                     if (texture.PayloadRequired) {
-                        for (int i = 0; i < texture.Payloads.Length; ++i) {
-                            texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID, i + 1)), i + 1);
+                        for (int i = 0; i < Math.Min(maxMips, texture.Payloads.Length); ++i) {
+                            texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID, 1, i + 1)), i + 1);
                         }
                     }
 
-                    using (Stream convertedStream = texture.SaveToDDS()) {
+                    using (Stream convertedStream = texture.SaveToDDS(Math.Min(maxMips, texture.Payloads.Length))) {
                         convertedStream.Position = 0;
                         if (convertType == "dds" || convertedStream.Length == 0) {
                             WriteFile(convertedStream, $"{filePath}.dds");
