@@ -64,12 +64,14 @@ namespace DataTool.WPF.Tool.Export {
                                 if (tex != 0) {
                                     teTexture texture = new teTexture(OpenFile(tex));
                                     if (texture.PayloadRequired) {
-                                        ulong payload = texture.GetPayloadGUID(tex);
-                                        Stream payloadStream = OpenFile(payload);
-                                        if (payloadStream != null) {
-                                            texture.LoadPayload(payloadStream);
-                                        } else {
-                                            continue;
+                                        for (int j = 0; j < texture.Payloads.Length; ++j) {
+                                            ulong payload = texture.GetPayloadGUID(tex, j + 1);
+                                            Stream payloadStream = OpenFile(payload);
+                                            if (payloadStream != null) {
+                                                texture.LoadPayload(payloadStream, j + 1);
+                                            } else {
+                                                continue;
+                                            }
                                         }
                                     }
 

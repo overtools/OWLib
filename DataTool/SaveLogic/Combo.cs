@@ -576,7 +576,9 @@ namespace DataTool.SaveLogic {
                     // for diffing when they add/regen loads of cubemaps
                     
                     if (texture.PayloadRequired) {
-                        texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID)));
+                        for (int i = 0; i < texture.Payloads.Length; ++i) {
+                            texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID, i + 1)), i + 1);
+                        }
                     }
 
                     using (Stream convertedStream = texture.SaveToDDS()) {

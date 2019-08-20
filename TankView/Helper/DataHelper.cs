@@ -65,11 +65,13 @@ namespace TankView.Helper {
 
                 teTexture texture = new teTexture(IOHelper.OpenFile(value));
                 if (texture.PayloadRequired) {
-                    ulong payload = texture.GetPayloadGUID(value.GUID);
-                    if (IOHelper.HasFile(payload)) {
-                        texture.LoadPayload(IOHelper.OpenFile(payload));
-                    } else {
-                        return null;
+                    for (int j = 0; j < texture.Payloads.Length; ++j) {
+                        ulong payload = texture.GetPayloadGUID(value.GUID, j + 1);
+                        if (IOHelper.HasFile(payload)) {
+                            texture.LoadPayload(IOHelper.OpenFile(payload), j + 1);
+                        } else {
+                            return null;
+                        }
                     }
                 }
 
