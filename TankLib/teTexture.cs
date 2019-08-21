@@ -140,8 +140,8 @@ namespace TankLib {
         }
 
         public teResourceGUID GetPayloadGUID(teResourceGUID textureResource, int region, int offset) {
-            if (Header.PayloadCount - offset < 0) return new teResourceGUID(0);
-            ulong guid = (textureResource & 0xFFF0FFFFFFFFUL) | ((ulong)(byte)(Header.PayloadCount - offset) << 32) | 0x0320000000000000UL;
+            if (Header.PayloadCount - offset - 1 < 0) return new teResourceGUID(0);
+            ulong guid = (textureResource & 0xFFF0FFFFFFFFUL) | ((ulong)(byte)(Header.PayloadCount - offset - 1) << 32) | 0x0320000000000000UL;
             // so basically: thing | (payloadIdx & 0xF) << 32) | 0x320000000000000i64
             
             if(teResourceGUID.Type(textureResource) == 0xF1)
@@ -157,20 +157,20 @@ namespace TankLib {
         /// <param name="payloadStream">The payload stream</param>
         /// <param name="offset"></param>
         public void LoadPayload(Stream payloadStream, int offset) {
-            if (!PayloadRequired || Payloads.Length < offset - 1) throw new Exceptions.TexturePayloadNotRequiredException();
-            if (Payloads[offset - 1] != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
+            if (!PayloadRequired || Payloads.Length < offset) throw new Exceptions.TexturePayloadNotRequiredException();
+            if (Payloads[offset] != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
             
-            Payloads[offset - 1] = new teTexturePayload(this, payloadStream);
+            Payloads[offset] = new teTexturePayload(this, payloadStream);
         }
 
         /// <summary>Set the texture payload</summary>
         /// <param name="payload">The texture payload</param>
         /// <param name="offset"></param>
         public void SetPayload(teTexturePayload payload, int offset) {
-            if (!PayloadRequired || Payloads.Length < offset - 1) throw new Exceptions.TexturePayloadNotRequiredException();
-            if (Payloads[offset - 1] != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
+            if (!PayloadRequired || Payloads.Length < offset) throw new Exceptions.TexturePayloadNotRequiredException();
+            if (Payloads[offset] != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
             
-            Payloads[offset - 1] = payload;
+            Payloads[offset] = payload;
         }
 
         /// <summary>Save DDS to stream</summary>

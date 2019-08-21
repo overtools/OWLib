@@ -570,7 +570,7 @@ namespace DataTool.SaveLogic {
 
                     if (!texture.PayloadRequired) return;
                     for (int i = 0; i < texture.Payloads.Length; ++i) {
-                        using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, 1, i + 1)))
+                        using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, 1, i)))
                             WriteFile(texturePayloadStream, $"{filePath}_{i}.04D");
                     }
                 }
@@ -584,7 +584,7 @@ namespace DataTool.SaveLogic {
                     
                     if (texture.PayloadRequired) {
                         for (int i = 0; i < Math.Min(maxMips, texture.Payloads.Length); ++i) {
-                            texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID, 1, i + 1)), i + 1);
+                            texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID, 1, i)), i);
                         }
                     }
 
