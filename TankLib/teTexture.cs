@@ -26,13 +26,13 @@ namespace TankLib {
             public ulong ReferenceKey;
             public ulong Unknown4;
 
-            public TextureTypes.DDSHeader ToDDSHeader(int mips) {
+            public TextureTypes.DDSHeader ToDDSHeader(int mips, uint width, uint height, uint surfaces) {
                 TextureTypes.DDSHeader ret = new TextureTypes.DDSHeader {
                     Magic = 0x20534444,
                     Size = 124,
                     Flags = 0x1 | 0x2 | 0x4 | 0x1000 | 0x20000,
-                    Height = Height,
-                    Width = Width,
+                    Height = height,
+                    Width = width,
                     LinearSize = 0,
                     Depth = 0,
                     MipmapCount = (uint)mips,
@@ -43,7 +43,7 @@ namespace TankLib {
                     Caps4 = 0,
                     Reserved2 = 0
                 };
-                if (Surfaces > 1 || IsMultiSurface) {
+                if (surfaces > 1 || IsMultiSurface) {
                     ret.Caps1 = 0x8 | 0x1000;
                     ret.Format = TextureTypes.TextureType.Unknown.ToPixelFormat();
                 }
@@ -122,7 +122,7 @@ namespace TankLib {
             Read(reader);
         }
 
-        public bool HasMultipleSurfaces => Header.Surfaces > 1 || Payloads.Any(x => x.Header.Surfaces > 1);
+        public bool HasMultipleSurfaces => Header.Surfaces > 1 || Payloads.Any(x => x != null && x.Header.Surfaces > 1);
 
         private void Read(BinaryReader reader) {
             Header = reader.Read<TextureHeader>();
@@ -177,18 +177,21 @@ namespace TankLib {
         /// <param name="stream">Stream to be written to</param>
         /// <param name="keepOpen">Keep the stream open after writing</param>
         /// <param name="mips"></param>
-        public void SaveToDDS(Stream stream, bool keepOpen, int mips) {
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="surfaces"></param>
+        public void SaveToDDS(Stream stream, bool keepOpen, int mips, uint? width = null, uint? height = null, uint? surfaces = null) {
             if (PayloadRequired && Payloads[0] == null) throw new Exceptions.TexturePayloadMissingException();
 
             using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
-                TextureTypes.DDSHeader dds = Header.ToDDSHeader(mips);
+                TextureTypes.DDSHeader dds = Header.ToDDSHeader(mips, width ?? Header.Width, height ?? Header.Height, surfaces ?? Header.Surfaces);
                 ddsWriter.Write(dds);
                 if (dds.Format.FourCC == 0x30315844) {
                     TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
                         Format = Header.Format,
                         Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
                         Misc = (uint) (Header.IsCubemap ? 0x4 : 0),
-                        Size = (uint) (Header.IsCubemap ? 1 : Header.Surfaces),
+                        Size = (uint) (Header.IsCubemap ? 1 : (surfaces ?? Header.Surfaces)),
                         Misc2 = 0
                     };
                     ddsWriter.Write(d10);
@@ -205,9 +208,9 @@ namespace TankLib {
         }
 
         /// <summary>Save DDS to stream</summary>
-        public Stream SaveToDDS(int? mips = null) {
+        public Stream SaveToDDS(int? mips = null, uint? width = null, uint? height = null, uint? surfaces = null) {
             MemoryStream stream = new MemoryStream();
-            SaveToDDS(stream, true, mips ?? Header.Mips);
+            SaveToDDS(stream, true, mips ?? Header.Mips, width, height, surfaces);
             stream.Position = 0;
             return stream;
         }
