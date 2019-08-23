@@ -600,6 +600,7 @@ namespace DataTool.SaveLogic {
                             TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet because it has more than one surface");
                             height = (uint)(texture.Header.Height * texture.Header.Surfaces);
                             surfaces = 1;
+                            texture.Header.Flags = 0;
                         }
                         else
                         {
@@ -607,6 +608,8 @@ namespace DataTool.SaveLogic {
                             convertType = multiSurfaceTarget;
                         }
                     }
+
+                    
 
                     using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.Mips, width, height, surfaces)) {
                         convertedStream.Position = 0;

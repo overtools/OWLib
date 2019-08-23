@@ -9,7 +9,9 @@ using static DataTool.ToolLogic.List.ListMaps;
 using System.IO;
 using DataTool.ConvertLogic;
 using DataTool.DataModels;
+using DataTool.SaveLogic;
 using TankLib;
+using TankLib.STU;
 using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Extract
@@ -70,46 +72,55 @@ namespace DataTool.ToolLogic.Extract
                 ulong dataKey = map.m_map;
 
                 //if (teResourceGUID.Index(dataKey) != 0x7A4) continue;
-                
-                using (Stream data = OpenFile(dataKey))
-                {
-                    if (data == null)
-                    {
-                        continue;
-                    }
 
-                    using (BinaryReader dataReader = new BinaryReader(data))
-                    {
-                        teMap env = dataReader.Read<teMap>();
+                var mapName = GetValidFilename($"{mapInfo.GetName()}_{teResourceGUID.Index(mapInfo.MapGUID):X}");
+                string fname = $"ow_map_{mapName}";
 
-                        var mapName = GetValidFilename($"{mapInfo.GetName()}_{teResourceGUID.Index(mapInfo.MapGUID):X}");
-                        string fname = $"ow_map_{mapName}";
-
-                        //using (Stream lightingStream = OpenFile(env.BakedLighting)) {
-                        //    teLightingManifest lightingManifest = new teLightingManifest(lightingStream);   
-                        //}
-
-                        if (!flags.SkipMapEnvironmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnvironmentSound, mapInfo.Name)))
-                            SaveSound(flags, basePath, Path.Combine("Sound", mapName), env.MapEnvironmentSound);
-                        if (!flags.SkipMapEnvironmentLUT && done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name)))
-                        {
-                            SaveTex(flags, basePath, "LUT", fname, env.LUT);
-                            SaveLUT(flags, basePath, "SPILUT", fname, env.LUT, Path.Combine(basePath, "SPILUT", "config.ocio"), mapInfo);
+                var reflectionData = Map.GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.REFLECTIONPOINT);
+                if (reflectionData != null) {
+                    foreach (var placeable in reflectionData.Placeables ?? Array.Empty<IMapPlaceable>()) {
+                        if (!(placeable is teMapPlaceableReflectionPoint reflectionPoint)) continue;
+                        if (done.Add(new KeyValuePair<ulong, string>(reflectionPoint.Header.Texture1, mapInfo.Name + "cube"))) {
+                            SaveTex(flags, basePath, Path.Combine("Cubemap", fname), reflectionPoint.Header.Texture1.ToString(), reflectionPoint.Header.Texture1);
                         }
-                        if (!flags.SkipMapEnvironmentBlendCubemap && done.Add(new KeyValuePair<ulong, string>(env.BlendEnvironmentCubemap, mapInfo.Name)))
-                            SaveTex(flags, basePath, "BlendCubemap", fname, env.BlendEnvironmentCubemap);
-                        if (!flags.SkipMapEnvironmentGroundCubemap && done.Add(new KeyValuePair<ulong, string>(env.GroundEnvironmentCubemap, mapInfo.Name)))
-                            SaveTex(flags, basePath, "GroundCubemap", fname, env.GroundEnvironmentCubemap);
-                        if (!flags.SkipMapEnvironmentSkyCubemap && done.Add(new KeyValuePair<ulong, string>(env.SkyEnvironmentCubemap, mapInfo.Name)))
-                            SaveTex(flags, basePath, "SkyCubemap", fname, env.SkyEnvironmentCubemap);
-                        if (!flags.SkipMapEnvironmentSkybox && done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel ^ env.SkyboxModelLook, mapInfo.Name)))
-                            SaveMdl(flags, basePath, Path.Combine("Skybox", mapName), env.SkyboxModel, env.SkyboxModelLook);
-                        if (!flags.SkipMapEnvironmentEntity && done.Add(new KeyValuePair<ulong, string>(env.EntityDefinition, mapInfo.Name)))
-                            SaveEntity(flags, basePath, Path.Combine("Entity", mapName), env.EntityDefinition);
 
-                        InfoLog("Saved Environment data for {0}", mapInfo.GetUniqueName());
+                        if (done.Add(new KeyValuePair<ulong, string>(reflectionPoint.Header.Texture2, mapInfo.Name + "cube"))) {
+                            SaveTex(flags, basePath, Path.Combine("Cubemap", fname), reflectionPoint.Header.Texture2.ToString(), reflectionPoint.Header.Texture2);
+                        }
                     }
                 }
+
+                using (Stream data = OpenFile(dataKey)) {
+                    if (data != null) {
+                        using (BinaryReader dataReader = new BinaryReader(data)) {
+                            teMap env = dataReader.Read<teMap>();
+
+                            // using (Stream lightingStream = OpenFile(env.BakedLighting)) {
+                            //    teLightingManifest lightingManifest = new teLightingManifest(lightingStream);   
+                            //}
+
+                            if (!flags.SkipMapEnvironmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnvironmentSound, mapInfo.Name)))
+                                SaveSound(flags, basePath, Path.Combine("Sound", mapName), env.MapEnvironmentSound);
+                            if (!flags.SkipMapEnvironmentLUT && done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name))) {
+                                SaveTex(flags, basePath, "LUT", fname, env.LUT);
+                                SaveLUT(flags, basePath, "SPILUT", fname, env.LUT, Path.Combine(basePath, "SPILUT", "config.ocio"), mapInfo);
+                            }
+
+                            if (!flags.SkipMapEnvironmentBlendCubemap && done.Add(new KeyValuePair<ulong, string>(env.BlendEnvironmentCubemap, mapInfo.Name)))
+                                SaveTex(flags, basePath, "BlendCubemap", fname, env.BlendEnvironmentCubemap);
+                            if (!flags.SkipMapEnvironmentGroundCubemap && done.Add(new KeyValuePair<ulong, string>(env.GroundEnvironmentCubemap, mapInfo.Name)))
+                                SaveTex(flags, basePath, "GroundCubemap", fname, env.GroundEnvironmentCubemap);
+                            if (!flags.SkipMapEnvironmentSkyCubemap && done.Add(new KeyValuePair<ulong, string>(env.SkyEnvironmentCubemap, mapInfo.Name)))
+                                SaveTex(flags, basePath, "SkyCubemap", fname, env.SkyEnvironmentCubemap);
+                            if (!flags.SkipMapEnvironmentSkybox && done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel + env.SkyboxModelLook, mapInfo.Name)))
+                                SaveMdl(flags, basePath, Path.Combine("Skybox", mapName), env.SkyboxModel, env.SkyboxModelLook);
+                            if (!flags.SkipMapEnvironmentEntity && done.Add(new KeyValuePair<ulong, string>(env.EntityDefinition, mapInfo.Name)))
+                                SaveEntity(flags, basePath, Path.Combine("Entity", mapName), env.EntityDefinition);
+                        }
+                    }
+                }
+
+                InfoLog("Saved Environment data for {0}", mapInfo.GetUniqueName());
             }
         }
 

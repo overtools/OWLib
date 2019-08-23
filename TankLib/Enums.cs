@@ -41,11 +41,11 @@ namespace TankLib {
             FOG = 0xE,
             INDOORBOX = 0xF,
             POSTPROCESSING = 0x10,
-            PLANAR_REFLECTION_SURFACE = 0x11
-            // MAP_CHUNK_COLLISION = 0x12
-            // MAP_CHUNK_PATHING 0x13
-            // MAP_CHUNK_SOUNDAREA = 0x14
-
+            PLANAR_REFLECTION_SURFACE = 0x11,
+            // MAP_REGION = 0x12,
+            // SOUNDAREA = 0x13
+            // COLLISION = 0x14, ??
+            // PATHING = 0x15,
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]

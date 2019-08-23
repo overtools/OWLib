@@ -182,7 +182,6 @@ namespace TankLib {
         /// <param name="surfaces"></param>
         public void SaveToDDS(Stream stream, bool keepOpen, int mips, uint? width = null, uint? height = null, uint? surfaces = null) {
             if (PayloadRequired && Payloads[0] == null) throw new Exceptions.TexturePayloadMissingException();
-
             using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
                 TextureTypes.DDSHeader dds = Header.ToDDSHeader(mips, width ?? Header.Width, height ?? Header.Height, surfaces ?? Header.Surfaces);
                 ddsWriter.Write(dds);

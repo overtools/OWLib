@@ -291,12 +291,14 @@ namespace TankLib {
             Header = reader.Read<teMapPlaceableModel.Structure>();
         }
     }
-    
-    public class teMapPlaceableModel : IMapPlaceable {
+
+    public class teMapPlaceableModel : IMapPlaceable
+    {
         public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.MODEL;
-        
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct Structure {
+        public struct Structure
+        {
             public teResourceGUID Model;
             public teResourceGUID ModelLook;
             public teVec3 Translation;
@@ -307,11 +309,53 @@ namespace TankLib {
 
         public Structure Header;
 
-        public void Read(BinaryReader reader) {
+        public void Read(BinaryReader reader)
+        {
             Header = reader.Read<Structure>();
         }
     }
-    
+
+    public class teMapPlaceableReflectionPoint : IMapPlaceable
+    {
+        public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.REFLECTIONPOINT;
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct Structure
+        {
+            public teVec3 Translation;
+            public teVec3 Scale;
+            public teQuat Rotation;
+            public teVec3 IdentityTranslation;
+            public teVec3 IdentityScale;
+            public teQuat IdentityRotation;
+            public teVec3 Corner;
+            public uint Unknown1;
+            public teResourceGUID Texture1;
+            public teResourceGUID Texture2;
+            public uint Unknown2;
+            public uint Unknown3;
+            public float UnknownFloat1;
+            public float UnknownFloat2;
+            public float UnknownFloat3;
+            public float UnknownFloat4;
+            public float UnknownFloat5;
+            public float UnknownFloat6;
+            public float UnknownFloat7;
+            public int UnknownInt1;
+            public int UnknownInt2;
+            public int UnknownInt3;
+            public int UnknownInt4;
+            public int UnknownInt5;
+        }
+
+        public Structure Header;
+
+        public void Read(BinaryReader reader)
+        {
+            Header = reader.Read<Structure>();
+        }
+    }
+
     public class teMapPlaceableText : IMapPlaceable {
         public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.TEXT;
         
