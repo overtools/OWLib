@@ -529,20 +529,27 @@ namespace DataTool.SaveLogic {
             bool convertTextures = true;
             string convertType = "tif";
             string multiSurfaceTarget = "tif";
+            bool flattenMultiSurface = false;
             bool lossless = false;
+            int maxMips = 1;
 
             if (flags is ExtractFlags extractFlags) {
+                if (extractFlags.SkipTextures) return;
+                flattenMultiSurface = extractFlags.SheetMultiSurface;
                 convertTextures = extractFlags.ConvertTextures  && !extractFlags.Raw;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
                 lossless = extractFlags.ConvertTexturesLossless;
-                if (extractFlags.ForceDDSMultiSurface) {
+                if (extractFlags.ForceDDSMultiSurface || convertType == "dds") {
                     multiSurfaceTarget = "dds";
                 }
 
                 if (extractFlags.DestroyMultiSurface) {
                     multiSurfaceTarget = convertType;
                 }
-                if (extractFlags.SkipTextures) return;
+
+                if (convertType == "dds" && extractFlags.SaveMips) {
+                    maxMips = 0xF;
+                }
             }
             path += Path.DirectorySeparatorChar;
 
@@ -564,8 +571,10 @@ namespace DataTool.SaveLogic {
                     WriteFile(textureStream, $"{filePath}.004");
 
                     if (!texture.PayloadRequired) return;
-                    using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID)))
-                        WriteFile(texturePayloadStream, $"{filePath}.04D");
+                    for (int i = 0; i < texture.Payloads.Length; ++i) {
+                        using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, 1, i)))
+                            WriteFile(texturePayloadStream, $"{filePath}_{i}.04D");
+                    }
                 }
             } else {
                 using (Stream textureStream = OpenFile(textureGUID)) {
@@ -576,24 +585,34 @@ namespace DataTool.SaveLogic {
                     // for diffing when they add/regen loads of cubemaps
                     
                     if (texture.PayloadRequired) {
-                        texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID)));
+                        for (int i = 0; i < Math.Min(maxMips, texture.Payloads.Length); ++i) {
+                            texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID, 1, i)), i);
+                        }
                     }
 
-                    using (Stream convertedStream = texture.SaveToDDS()) {
+                    uint width = texture.Header.Width;
+                    uint height = texture.Header.Height;
+                    uint surfaces = texture.Header.Surfaces;
+                    if (texture.Header.IsCubemap || texture.Header.IsMultiSurface || texture.HasMultipleSurfaces)
+                    {
+                        if (flattenMultiSurface)
+                        {
+                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet because it has more than one surface");
+                            height = (uint)(texture.Header.Height * texture.Header.Surfaces);
+                            surfaces = 1;
+                        }
+                        else
+                        {
+                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceTarget} because it has more than one surface");
+                            convertType = multiSurfaceTarget;
+                        }
+                    }
+
+                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.Mips, width, height, surfaces)) {
                         convertedStream.Position = 0;
                         if (convertType == "dds" || convertedStream.Length == 0) {
                             WriteFile(convertedStream, $"{filePath}.dds");
                             return;
-                        }
-
-                        if ((texture.Header.IsCubemap || texture.Header.IsMultiSurface || texture.HasMultipleSurfaces) && !convertType.Equals(multiSurfaceTarget, StringComparison.InvariantCultureIgnoreCase)) {
-                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceTarget} because it has more than one surface");
-                            if (multiSurfaceTarget == "dds") {
-                                WriteFile(convertedStream, $"{filePath}.dds");
-                                return;
-                            }
-
-                            convertType = multiSurfaceTarget;
                         } 
                         
                         bool isBcffValid = teTexture.DXGI_BC4.Contains(texture.Header.Format) || 

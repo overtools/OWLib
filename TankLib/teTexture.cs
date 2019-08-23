@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using TACTLib;
@@ -25,16 +26,16 @@ namespace TankLib {
             public ulong ReferenceKey;
             public ulong Unknown4;
 
-            public TextureTypes.DDSHeader ToDDSHeader() {
+            public TextureTypes.DDSHeader ToDDSHeader(int mips, uint width, uint height, uint surfaces) {
                 TextureTypes.DDSHeader ret = new TextureTypes.DDSHeader {
                     Magic = 0x20534444,
                     Size = 124,
                     Flags = 0x1 | 0x2 | 0x4 | 0x1000 | 0x20000,
-                    Height = Height,
-                    Width = Width,
+                    Height = height,
+                    Width = width,
                     LinearSize = 0,
                     Depth = 0,
-                    MipmapCount = 1,
+                    MipmapCount = (uint)mips,
                     Format = GetTextureType().ToPixelFormat(),
                     Caps1 = 0x1000,
                     Caps2 = 0,
@@ -42,7 +43,7 @@ namespace TankLib {
                     Caps4 = 0,
                     Reserved2 = 0
                 };
-                if (Surfaces > 1 || IsMultiSurface) {
+                if (surfaces > 1 || IsMultiSurface) {
                     ret.Caps1 = 0x8 | 0x1000;
                     ret.Format = TextureTypes.TextureType.Unknown.ToPixelFormat();
                 }
@@ -102,7 +103,7 @@ namespace TankLib {
             UNKNOWN5 = 0x80
         }
         
-        public teTexturePayload Payload;
+        public teTexturePayload[] Payloads = new teTexturePayload[0];
         public bool PayloadRequired;
 
         // non-payload
@@ -121,7 +122,7 @@ namespace TankLib {
             Read(reader);
         }
 
-        public bool HasMultipleSurfaces => Header.Surfaces > 1 || Payload?.Header.Surfaces > 1;
+        public bool HasMultipleSurfaces => Header.Surfaces > 1 || Payloads.Any(x => x != null && x.Header.Surfaces > 1);
 
         private void Read(BinaryReader reader) {
             Header = reader.Read<TextureHeader>();
@@ -129,6 +130,7 @@ namespace TankLib {
 
             if (Header.DataSize == 0 || Header.PayloadCount > 0) {
                 PayloadRequired = true;
+                Payloads = new teTexturePayload[Header.PayloadCount];
                 return;
             }
 
@@ -137,9 +139,9 @@ namespace TankLib {
             reader.Read(Data, 0, (int)Header.DataSize);
         }
 
-        public teResourceGUID GetPayloadGUID(teResourceGUID textureResource, int region = 1)
-        {
-            ulong guid = (textureResource & 0xF0FFFFFFFFUL) | ((ulong)(byte)(Header.PayloadCount - 1) << 32) | 0x0320000000000000UL;
+        public teResourceGUID GetPayloadGUID(teResourceGUID textureResource, int region, int offset) {
+            if (Header.PayloadCount - offset - 1 < 0) return new teResourceGUID(0);
+            ulong guid = (textureResource & 0xFFF0FFFFFFFFUL) | ((ulong)(byte)(Header.PayloadCount - offset - 1) << 32) | 0x0320000000000000UL;
             // so basically: thing | (payloadIdx & 0xF) << 32) | 0x320000000000000i64
             
             if(teResourceGUID.Type(textureResource) == 0xF1)
@@ -149,58 +151,66 @@ namespace TankLib {
             return new teResourceGUID(guid);
         }
 
-        public ulong GetPayloadGUID(ulong guid, int region = 1) => GetPayloadGUID(new teResourceGUID(guid), region);
+        public ulong GetPayloadGUID(ulong guid, int region, int offset) => GetPayloadGUID(new teResourceGUID(guid), region, offset);
 
         /// <summary>Load the texture payload</summary>
         /// <param name="payloadStream">The payload stream</param>
-        public void LoadPayload(Stream payloadStream) {
-            if (!PayloadRequired) throw new Exceptions.TexturePayloadNotRequiredException();
-            if (Payload != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
+        /// <param name="offset"></param>
+        public void LoadPayload(Stream payloadStream, int offset) {
+            if (!PayloadRequired || Payloads.Length < offset) throw new Exceptions.TexturePayloadNotRequiredException();
+            if (Payloads[offset] != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
             
-            Payload = new teTexturePayload(this, payloadStream);
+            Payloads[offset] = new teTexturePayload(this, payloadStream);
         }
 
         /// <summary>Set the texture payload</summary>
         /// <param name="payload">The texture payload</param>
-        public void SetPayload(teTexturePayload payload) {
-            if (!PayloadRequired) throw new Exceptions.TexturePayloadNotRequiredException();
-            if (Payload != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
+        /// <param name="offset"></param>
+        public void SetPayload(teTexturePayload payload, int offset) {
+            if (!PayloadRequired || Payloads.Length < offset) throw new Exceptions.TexturePayloadNotRequiredException();
+            if (Payloads[offset] != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
             
-            Payload = payload;
+            Payloads[offset] = payload;
         }
 
         /// <summary>Save DDS to stream</summary>
         /// <param name="stream">Stream to be written to</param>
         /// <param name="keepOpen">Keep the stream open after writing</param>
-        public void SaveToDDS(Stream stream, bool keepOpen=false) {
-            if (PayloadRequired) {
-                if (Payload == null) {
-                    throw new Exceptions.TexturePayloadMissingException();
+        /// <param name="mips"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="surfaces"></param>
+        public void SaveToDDS(Stream stream, bool keepOpen, int mips, uint? width = null, uint? height = null, uint? surfaces = null) {
+            if (PayloadRequired && Payloads[0] == null) throw new Exceptions.TexturePayloadMissingException();
+
+            using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
+                TextureTypes.DDSHeader dds = Header.ToDDSHeader(mips, width ?? Header.Width, height ?? Header.Height, surfaces ?? Header.Surfaces);
+                ddsWriter.Write(dds);
+                if (dds.Format.FourCC == 0x30315844) {
+                    TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
+                        Format = Header.Format,
+                        Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
+                        Misc = (uint) (Header.IsCubemap ? 0x4 : 0),
+                        Size = (uint) (Header.IsCubemap ? 1 : (surfaces ?? Header.Surfaces)),
+                        Misc2 = 0
+                    };
+                    ddsWriter.Write(d10);
                 }
-                Payload.SaveToDDS(Header, stream, keepOpen);
-            } else {
-                using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
-                    TextureTypes.DDSHeader dds = Header.ToDDSHeader();
-                    ddsWriter.Write(dds);
-                    if (dds.Format.FourCC == 0x30315844) {
-                        TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
-                            Format = Header.Format,
-                            Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
-                            Misc = (uint)(Header.IsCubemap ? 0x4 : 0),
-                            Size = (uint)(Header.IsCubemap ? 1 : Header.Surfaces),
-                            Misc2 = 0
-                        };
-                        ddsWriter.Write(d10);
+
+                if (PayloadRequired) {
+                    foreach (var payload in Payloads.Where(x => x != null)) {
+                        payload.SaveToDDSData(Header, ddsWriter);
                     }
-                    ddsWriter.Write(Data, 0, (int)Header.DataSize);
+                } else {
+                    ddsWriter.Write(Data, 0, (int) Header.DataSize);
                 }
             }
         }
 
         /// <summary>Save DDS to stream</summary>
-        public Stream SaveToDDS() {
+        public Stream SaveToDDS(int? mips = null, uint? width = null, uint? height = null, uint? surfaces = null) {
             MemoryStream stream = new MemoryStream();
-            SaveToDDS(stream, true);
+            SaveToDDS(stream, true, mips ?? Header.Mips, width, height, surfaces);
             stream.Position = 0;
             return stream;
         }

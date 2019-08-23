@@ -1,8 +1,5 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
-using TACTLib;
-using TACTLib.Core.Product.Tank;
 
 namespace TankLib {
     /// <summary>Tank Texture Payload, type 04D</summary>
@@ -61,48 +58,53 @@ namespace TankLib {
 
         /// <summary>Save DDS to stream</summary>
         /// <param name="parentHeader">Parent teTexture header</param>
-        /// <param name="stream">Stream to be written to</param>
-        /// <param name="keepOpen">Keep the stream open after writing</param>
-        public void SaveToDDS(teTexture.TextureHeader parentHeader, Stream stream, bool keepOpen=false) {
-            using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
-                TextureTypes.DDSHeader dds = parentHeader.ToDDSHeader();
-                ddsWriter.Write(dds);
-                if (dds.Format.FourCC == (int)TextureTypes.TextureType.Unknown) {
-                    TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
-                        Format = parentHeader.Format,
-                        Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
-                        Misc = (uint)(parentHeader.IsCubemap ? 0x4 : 0),
-                        Size = (uint)(parentHeader.IsCubemap ? 1 : parentHeader.Surfaces),
-                        Misc2 = 0
-                    };
-                    ddsWriter.Write(d10);
-                }
-                if (RawData != null) {
-                    stream.Write(RawData, 0, (int)Header.ImageSize);
-                    return;
-                }
-                for (int i = 0; i < Size; ++i) {
-                    if (parentHeader.Format > 72) {
-                        ddsWriter.Write(Color3[i]);
-                        ddsWriter.Write(Color4[i]);
-                        ddsWriter.Write(Color5[i]);
-                    }
-
-                    if (parentHeader.Format < 80) {
-                        ddsWriter.Write(Color1[i]);
-                        ddsWriter.Write(Color2[i]);
-                    }
-                }
+        /// <param name="ddsWriter">Stream to be written to</param>
+        /// <param name="mips"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="surfaces"></param>
+        public void SaveToDDS(teTexture.TextureHeader parentHeader, BinaryWriter ddsWriter, int? mips, uint? width, uint? height, uint? surfaces) {
+            TextureTypes.DDSHeader dds = parentHeader.ToDDSHeader(mips ?? parentHeader.Mips, width ?? parentHeader.Width, height ?? parentHeader.Height, surfaces ?? parentHeader.Surfaces);
+            ddsWriter.Write(dds);
+            if (dds.Format.FourCC == (int) TextureTypes.TextureType.Unknown) {
+                TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
+                    Format = parentHeader.Format,
+                    Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
+                    Misc = (uint) (parentHeader.IsCubemap ? 0x4 : 0),
+                    Size = (uint) (parentHeader.IsCubemap ? 1 : (surfaces ?? parentHeader.Surfaces)),
+                    Misc2 = 0
+                };
+                ddsWriter.Write(d10);
             }
+
+            SaveToDDSData(parentHeader, ddsWriter);
         }
 
-        /// <summary>Save DDS to stream</summary>
+        /// <summary>Save DDS data to stream</summary>
         /// <param name="parentHeader">Parent teTexture header</param>
-        /// <param name="keepOpen">Keep the stream open after writing</param>
-        public Stream SaveToDDS(teTexture.TextureHeader parentHeader, bool keepOpen=false) {
-            MemoryStream stream = new MemoryStream();
-            SaveToDDS(parentHeader, stream, keepOpen);
-            return stream;
+        /// <param name="ddsWriter">Stream to be written to</param>
+        public void SaveToDDSData(teTexture.TextureHeader parentHeader, BinaryWriter ddsWriter)
+        {
+            if (RawData != null)
+            {
+                ddsWriter.BaseStream.Write(RawData, 0, (int)Header.ImageSize);
+                return;
+            }
+            for (int i = 0; i < Size; ++i)
+            {
+                if (parentHeader.Format > 72)
+                {
+                    ddsWriter.Write(Color3[i]);
+                    ddsWriter.Write(Color4[i]);
+                    ddsWriter.Write(Color5[i]);
+                }
+
+                if (parentHeader.Format < 80)
+                {
+                    ddsWriter.Write(Color1[i]);
+                    ddsWriter.Write(Color2[i]);
+                }
+            }
         }
     }
 }

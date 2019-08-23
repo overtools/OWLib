@@ -301,7 +301,7 @@ namespace CASCEncDump {
                             texture.Header.Height < 10000 && texture.Header.Width < 10000 && texture.Header.DataSize > 68) {
                             using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".dds")) {
                                 file.SetLength(0);
-                                texture.SaveToDDS(file);
+                                texture.SaveToDDS(file, false, texture.Header.Mips);
                             }
                         }
                     } catch (Exception) {
