@@ -19,6 +19,13 @@ namespace TankLib.Math {
         /// <summary>Alpha component</summary>
         public float A;
         
+        public teColorRGBA(float red, float green, float blue, float alpha) {
+            R = red;
+            G = green;
+            B = blue;
+            A = alpha;
+        }
+        
         public teColorRGBA(IReadOnlyList<float> val) {
             if (val.Count != 4) {
                 throw new InvalidDataException();
