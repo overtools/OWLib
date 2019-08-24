@@ -553,6 +553,7 @@ namespace DataTool.SaveLogic {
 
             FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[textureGUID];
             string filePath = Path.Combine(path, $"{textureInfo.GetNameIndex()}");
+            if (teResourceGUID.Type(textureGUID) != 0x4) filePath += $".{teResourceGUID.Type(textureGUID):X3}";
 
             if (Program.Flags.Deduplicate) {
                 if(ScratchDBInstance.HasRecord(textureGUID)) {
@@ -583,8 +584,9 @@ namespace DataTool.SaveLogic {
                     // for diffing when they add/regen loads of cubemaps
                     
                     if (texture.PayloadRequired) {
-                        for (int i = 0; i < Math.Min(maxMips, texture.Payloads.Length); ++i) {
+                        for (int i = 0; i < texture.Payloads.Length; ++i) {
                             texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID, i)), i);
+                            if (maxMips == 1) break;
                         }
                     }
 
@@ -657,7 +659,7 @@ namespace DataTool.SaveLogic {
                         pProcess.WaitForExit();
                         // when texconv writes with to the console -nologo is has done/failed conversion
                         string line = pProcess.StandardOutput.ReadToEnd();
-                        if (line?.Contains("FAILED") == true) {
+                        if (line.Contains("FAILED")) {
                             convertedStream.Position = 0;
                             TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as dds because texconv failed.");
                             WriteFile(convertedStream, $"{filePath}.dds");

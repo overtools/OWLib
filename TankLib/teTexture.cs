@@ -143,10 +143,13 @@ namespace TankLib {
             if (Header.PayloadCount - offset - 1 < 0) return new teResourceGUID(0);
             ulong payloadGUID = (textureGUID & 0xFFF0FFFFFFFFUL) | ((ulong)(byte)(Header.PayloadCount - offset - 1) << 32) | 0x0320000000000000UL;
             // so basically: thing | (payloadIdx & 0xF) << 32) | 0x320000000000000i64
-            
-            if(teResourceGUID.Type(textureGUID) == 0xF1)
+
+            var type = teResourceGUID.Type(textureGUID);
+            if(type == 0xF1)
             {
-                payloadGUID |= 1 << 40;
+                payloadGUID |= (ulong)1 << 40;
+            } else if (type != 4) {
+                throw new Exception();
             }
             return new teResourceGUID(payloadGUID);
         }

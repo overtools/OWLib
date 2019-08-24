@@ -26,6 +26,12 @@ namespace TankLib.Test
                 Assert.AreEqual(0x0320000200001234UL, tex.GetPayloadGUID(baseGuid, 1), "GetPayloadGuid(1, 1) != 000200001234.04D");
                 Assert.AreEqual(0x0320000100001234UL, tex.GetPayloadGUID(baseGuid, 2), "GetPayloadGuid(1, 2) != 000100001234.04D");
                 Assert.AreEqual(0x0320000000001234UL, tex.GetPayloadGUID(baseGuid, 3), "GetPayloadGuid(1, 3) != 000000001234.04D");
+                
+                const ulong baseGuid0F1 = 0x00F0000000000002;
+                Assert.AreEqual(0x0320010300000002ul, tex.GetPayloadGUID(baseGuid0F1, 0), "GetPayloadGuid(1, 0) != 010300000002.04D");
+                Assert.AreEqual(0x0320010200000002ul, tex.GetPayloadGUID(baseGuid0F1, 1), "GetPayloadGuid(1, 1) != 010200000002.04D");
+                Assert.AreEqual(0x0320010100000002ul, tex.GetPayloadGUID(baseGuid0F1, 2), "GetPayloadGuid(1, 2) != 010100000002.04D");
+                Assert.AreEqual(0x0320010000000002ul, tex.GetPayloadGUID(baseGuid0F1, 3), "GetPayloadGuid(1, 3) != 010000000002.04D");
             }
         }
     }
