@@ -27,32 +27,28 @@ namespace DataTool.ToolLogic.Extract.Debug {
             string path = Path.Combine(basePath, container);
             
             foreach (ulong key in TrackedFiles[0xEE]) {
-                using (Stream stream = OpenFile(key)) {
-                    teStructuredData structuredData = new teStructuredData(stream);
+                var inst = Helper.STUHelper.GetInstance<STU_E3594B8E>(key);
 
-                    STU_E3594B8E inst = structuredData.GetMainInstance<STU_E3594B8E>();
-
-                    if (inst == null) {
-                        continue;
-                        //inst = structuredData.GetMainInstance<STU_598579A3>();
-                    }
-
-                    string name = $"{GetString(inst.m_name)}_{teResourceGUID.Index(key):X}";
-                    string description = GetString(inst.m_description);
-                    
-                    Combo.ComboInfo info = new Combo.ComboInfo();
-                    Combo.Find(info, (ulong)inst.m_21EB3E73);
-                    info.SetTextureName((ulong)inst.m_21EB3E73, name);
-
-                    OpenSTUTest(inst.m_7B7CCF55);  // ux1
-                    OpenSTUTest(inst.m_E81C5302);  // ux2
-                    OpenSTUTest(inst.m_FD9B53F4);  // ux3
-                    //{
-                    //    teStructuredData uxScreenData = new teStructuredData();
-                    //}
-                    
-                    SaveLogic.Combo.SaveLooseTextures(flags, path, info);
+                if (inst == null) {
+                    continue;
+                    //inst = structuredData.GetMainInstance<STU_598579A3>();
                 }
+
+                string name = $"{GetString(inst.m_name)}_{teResourceGUID.Index(key):X}";
+                string description = GetString(inst.m_description);
+                
+                Combo.ComboInfo info = new Combo.ComboInfo();
+                Combo.Find(info, (ulong)inst.m_21EB3E73);
+                info.SetTextureName((ulong)inst.m_21EB3E73, name);
+
+                OpenSTUTest(inst.m_7B7CCF55);  // ux1
+                OpenSTUTest(inst.m_E81C5302);  // ux2
+                OpenSTUTest(inst.m_FD9B53F4);  // ux3
+                //{
+                //    teStructuredData uxScreenData = new teStructuredData();
+                //}
+                
+                SaveLogic.Combo.SaveLooseTextures(flags, path, info);
             }
         }
 
@@ -63,7 +59,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     stream.CopyTo(file);
                 }
                 stream.Position = 0;
-                teStructuredData structuredData = new teStructuredData(stream);
+                using (teStructuredData structuredData = new teStructuredData(stream)) {
+                    
+                }
             }
         }
     }

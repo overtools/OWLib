@@ -29,9 +29,9 @@ namespace TankLib.Chunks {
 
                 reader.BaseStream.Position = Header.Offset;
 
-                using (SliceStream sliceStream = new SliceStream(input, Header.Offset, Header.Size)) {
-                    StructuredData = new teStructuredData(sliceStream).GetMainInstance<STUModel>();
-                }
+                using (SliceStream sliceStream = new SliceStream(input, Header.Offset, Header.Size))
+                using (var stu = new teStructuredData(sliceStream))
+                    StructuredData = stu.GetMainInstance<STUModel>();
             }
         }
     }

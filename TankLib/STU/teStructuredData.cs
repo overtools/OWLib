@@ -11,7 +11,7 @@ namespace TankLib.STU {
     /// <summary>
     /// Structured Data parser
     /// </summary>
-    public class teStructuredData {
+    public class teStructuredData : IDisposable {
         // ReSharper disable once InconsistentNaming
         /// <summary>"v1" STU magic number</summary>
         public static readonly int STRUCTURED_DATA_IMMUTABLE_MAGIC = Util.GetMagicBytes('S', 'T', 'U', 'D');
@@ -164,7 +164,7 @@ namespace TankLib.STU {
         /// <summary>Read a "Version2" STU asset</summary>
         private void DeserializeV2(BinaryReader reader) {
             reader.BaseStream.Position = StartPos;
-            HeaderChecksum = CRC.CRC64(reader.ReadBytes(36));
+            HeaderChecksum = CRC.CRC64(reader.ReadBytes(36), 36, 0xFFFFFFFFFFFFFFFF);
             reader.BaseStream.Position = StartPos;
             SerializableHelper.Deserialize(reader, out InstanceInfo);
             SerializableHelper.Deserialize(reader, out InlinedTypesInfo);
@@ -238,6 +238,15 @@ namespace TankLib.STU {
         
         public IEnumerable<T> GetInstances<T>() where T : STUInstance {
             return Instances.OfType<T>();
+        }
+        
+        public void Dispose() {
+            Instances = null;
+            InstanceInfo = null;
+            InstanceInfoV1 = null;
+            InlinedTypesInfo = null;
+            FieldInfoBags = null;
+            _instanceOffsets = null;
         }
     }
 

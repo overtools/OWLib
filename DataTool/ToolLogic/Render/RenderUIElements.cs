@@ -57,9 +57,8 @@ namespace DataTool.ToolLogic.Render {
                     using (Stream d = IO.OpenFile(guid)) {
                         d.CopyTo(f);
                     }
-
-                    var stu = STUHelper.OpenSTUSafe(guid);
-
+                    
+                    using (var stu = STUHelper.OpenSTUSafe(guid))
                     using (Stream f = File.Open(Path.Combine(output, type.ToString("X3"), teResourceGUID.AsString(guid) + ".xml"), FileMode.Create))
                     using (TextWriter w = new StreamWriter(f)) {
                         w.WriteLine(Serializer.Print(stu?.Instances[0], serializers));

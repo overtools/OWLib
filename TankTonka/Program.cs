@@ -144,18 +144,21 @@ namespace TankTonka {
         }
 
         private static void ProcessAssetSTUv2(ulong guid, string typeDir) {
-            teStructuredData structuredData = STUHelper.OpenSTUSafe(guid);
-            if (structuredData == null) return;
+            AssetRecord record;
+            
+            using (teStructuredData structuredData = STUHelper.OpenSTUSafe(guid)) {
+                if (structuredData == null) return;
 
-            AssetRecord record = new AssetRecord {
-                GUID = (teResourceGUID) guid,
-                StructuredDataInfo = new Common.StructuredDataInfo(),
-                References = new HashSet<teResourceGUID>()
-            };
+                record = new AssetRecord {
+                    GUID = (teResourceGUID) guid,
+                    StructuredDataInfo = new Common.StructuredDataInfo(),
+                    References = new HashSet<teResourceGUID>()
+                };
 
-            foreach (STUInstance instance in structuredData.Instances) {
-                if (instance == null) continue;
-                STUv2ProcessInstance(record, instance);
+                foreach (STUInstance instance in structuredData.Instances) {
+                    if (instance == null) continue;
+                    STUv2ProcessInstance(record, instance);
+                }
             }
 
             using (Stream outputFile = File.OpenWrite(Path.Combine(typeDir, $"{teResourceGUID.AsString(guid)}.json"))) {

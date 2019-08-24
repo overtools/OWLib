@@ -30,7 +30,9 @@ namespace TankLibHelper.Modes {
                 string filename = teResourceGUID.AsString(asset.Key);
                 using (Stream stream = _tankHandler.OpenFile(asset.Key)) {
                     if (stream == null) continue;
-                    teStructuredData structuredData = new teStructuredData(stream);
+                    using (var stu = new teStructuredData(stream)) {
+                        
+                    }
                 }
             }
             
@@ -53,7 +55,9 @@ namespace TankLibHelper.Modes {
         }
         
         public T GetInst<T>(ulong guid) where T : STUInstance {
-            return GetStructuredData(guid)?.GetMainInstance<T>();
+            using (var stu = GetStructuredData(guid)) {
+                return stu?.GetMainInstance<T>();
+            }
         }
     }
 }

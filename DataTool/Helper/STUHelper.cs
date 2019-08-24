@@ -20,14 +20,16 @@ namespace DataTool.Helper {
 
         public static T GetInstance<T>(ulong key) where T : STUInstance {
             if (key == 0) return null;
-            teStructuredData structuredData = OpenSTUSafe(key);
-            return structuredData?.GetInstance<T>();
+            using (teStructuredData structuredData = OpenSTUSafe(key)) {
+                return structuredData?.GetInstance<T>();
+            }
         }
         
         public static T[] GetInstances<T>(ulong key) where T : STUInstance {
             if (key == 0) return null;
-            teStructuredData structuredData = OpenSTUSafe(key);
-            return structuredData?.GetInstances<T>().ToArray();
+            using (teStructuredData structuredData = OpenSTUSafe(key)) {
+                return structuredData?.GetInstances<T>().ToArray();
+            }            
         }
 
         public static teStructuredData OpenSTUSafe(ulong key) {

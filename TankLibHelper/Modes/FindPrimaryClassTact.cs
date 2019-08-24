@@ -34,12 +34,13 @@ namespace TankLibHelper.Modes {
                 using (Stream stream = handler.OpenFile(asset.Key)) {
                     try {
                         if (stream == null) throw new Exception();
-                        teStructuredData structuredData = new teStructuredData(stream);
-                        var primary = structuredData.Instances.FirstOrDefault(x => x.Usage == TypeUsage.Root) ?? structuredData.Instances.FirstOrDefault();
+                        using (var structuredData = new teStructuredData(stream)) {
+                            var primary = structuredData.Instances.FirstOrDefault(x => x.Usage == TypeUsage.Root) ?? structuredData.Instances.FirstOrDefault();
 
-                        if (primary == default) throw new Exception();
+                            if (primary == default) throw new Exception();
                         
-                        Logger.Info(null, $"{filename}: {primary.GetType().Name}");
+                            Logger.Info(null, $"{filename}: {primary.GetType().Name}");
+                        }
                     } catch {
                         Logger.Warn(null, $"Can't find root instance for {filename}");
                     }

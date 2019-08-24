@@ -157,10 +157,11 @@ namespace DataTool.ToolLogic.Extract {
                 return EventConfig;
             }
 
-            var stu = OpenSTUSafe(TrackedFiles[0x54].First(x => teResourceGUID.Index(x) == 0x16C));
-            var map = stu.GetInstance<STU_D7BD8322>();
-            EventConfig = map.m_categories.ToDictionary(x => x.m_id.GUID, y => GetString(y.m_name));
-            return EventConfig;
+            using (var stu = OpenSTUSafe(TrackedFiles[0x54].First(x => teResourceGUID.Index(x) == 0x16C))) {
+                var map = stu.GetInstance<STU_D7BD8322>();
+                EventConfig = map.m_categories.ToDictionary(x => x.m_id.GUID, y => GetString(y.m_name));
+                return EventConfig;
+            }
         }
 
         public void SaveUnlocksForHeroes(ICLIFlags flags, IEnumerable<STUHero> heroes, string basePath, bool npc=false) {
