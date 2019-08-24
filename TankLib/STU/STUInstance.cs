@@ -37,8 +37,12 @@ namespace TankLib.STU {
         protected void DeserializeField(teStructuredData assetFile, STUField_Info fieldInfo,
             Dictionary<uint, KeyValuePair<FieldInfo, STUFieldAttribute>> fields, STUAttribute stuAttribute) {
             if (!fields.TryGetValue(fieldInfo.Hash, out var field)) {
-                string name = stuAttribute.Name ?? $"STU_{stuAttribute.Hash:X8}";  // todo: dis slow
+                
+            #if DEBUG
+                string name = stuAttribute.Name ?? $"STU_{stuAttribute.Hash:X8}";
                 Debugger.Log(0, "STUInstance", $"Unhandled field: {name}:{fieldInfo.Hash:X8} (size: {fieldInfo.Size})\r\n");
+            #endif
+                
                 return;
             }
 
