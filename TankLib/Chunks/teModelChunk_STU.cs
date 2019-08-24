@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using TankLib.STU;
 using TankLib.STU.Types;
 using TACTLib.Helpers;
+using TankLib.Helpers;
 
 namespace TankLib.Chunks {
     /// <inheritdoc />
@@ -27,12 +28,10 @@ namespace TankLib.Chunks {
                 Header = reader.Read<ModelSTUHeader>();
 
                 reader.BaseStream.Position = Header.Offset;
-                
-                MemoryStream stream = new MemoryStream();
-                input.CopyBytes(stream, (int)Header.Size);
-                stream.Position = 0;
-                
-                StructuredData = new teStructuredData(stream).GetMainInstance<STUModel>();
+
+                using (SliceStream sliceStream = new SliceStream(input, Header.Offset, Header.Size)) {
+                    StructuredData = new teStructuredData(sliceStream).GetMainInstance<STUModel>();
+                }
             }
         }
     }

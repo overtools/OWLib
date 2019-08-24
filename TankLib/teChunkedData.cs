@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using TankLib.Chunks;
-using TACTLib.Helpers;
+using TankLib.Helpers;
 
 namespace TankLib {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -40,7 +40,7 @@ namespace TankLib {
     }
 
     /// <summary>"Chunked" file parser</summary>
-    public class teChunkedData {
+    public class teChunkedData : IDisposable {
         public const uint Magic = 0xF123456F;
 
         public IChunk[] Chunks;
@@ -86,14 +86,10 @@ namespace TankLib {
                 next += entry.Size + sizeof(teChunkDataEntry);
 
                 IChunk chunk = Manager.CreateChunkInstance(entry.StringIdentifier, Header.StringIdentifier);
-                if (chunk != null) {
-                    MemoryStream dataStream = new MemoryStream(entry.Size);
-                    reader.BaseStream.CopyBytes(dataStream, entry.Size);
-                    dataStream.Position = 0;
-
-                    chunk.Parse(dataStream);
-
-                    dataStream.Dispose();
+                if (chunk != null) {                   
+                    using (SliceStream sliceStream = new SliceStream(reader.BaseStream, entry.Size)) {
+                       chunk.Parse(sliceStream);
+                    }
                 }
 
                 chunkTags.Add(entry.StringIdentifier);
@@ -134,6 +130,11 @@ namespace TankLib {
             var indices = ChunkTags.Select((x, y) => new {Value = x, Index = y}).Where(x => x.Value == tag).Select(x => x.Index);
             return Chunks.Select((x, y) => new {Value = x, Index = y}).Where(x => indices.Contains(x.Index)).Select(x => x.Value);
         }
+
+        public void Dispose() {
+            Chunks = null;
+            ChunkTags = null;
+        }
     }
 
     /// <summary>Chunk type manager</summary>
@@ -172,8 +173,14 @@ namespace TankLib {
                 Debugger.Log(0, "teChunkManager", $"{type.FullName} has no identifier!\r\n");
                 return;
             }
-            ChunkTypes.Add(instance.ID, type);
+            ChunkTypes[instance.ID] = type;
         }
+
+        #if DEBUG
+        public static bool USE_DUMMY_CHUNK = true;
+        #else
+        public static bool USE_DUMMY_CHUNK = false;
+        #endif
 
         /// <summary>Create a chunk instance from a chunk ID</summary>
         /// <param name="id">ID of instance to create</param>
@@ -188,12 +195,11 @@ namespace TankLib {
                     Debugger.Log(0, "teChunkManager", $"No handler for {rootID}:{id}\r\n");
                 }
             }
-            
-            #if DEBUG
-            return new teDataChunk_Dummy(id);
-            #else
+
+            if (USE_DUMMY_CHUNK) {
+                return new teDataChunk_Dummy(id);
+            }
             return null;
-            #endif
         }
     }
 }
