@@ -56,29 +56,28 @@ namespace TankLib {
             }
         }
 
-        /// <summary>Save DDS to stream</summary>
-        /// <param name="parentHeader">Parent teTexture header</param>
-        /// <param name="ddsWriter">Stream to be written to</param>
-        /// <param name="mips"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="surfaces"></param>
-        public void SaveToDDS(teTexture.TextureHeader parentHeader, BinaryWriter ddsWriter, int? mips, uint? width, uint? height, uint? surfaces) {
-            TextureTypes.DDSHeader dds = parentHeader.ToDDSHeader(mips ?? parentHeader.Mips, width ?? parentHeader.Width, height ?? parentHeader.Height, surfaces ?? parentHeader.Surfaces);
-            ddsWriter.Write(dds);
-            if (dds.Format.FourCC == (int) TextureTypes.TextureType.Unknown) {
-                TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
-                    Format = parentHeader.Format,
-                    Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
-                    Misc = (uint) (parentHeader.IsCubemap ? 0x4 : 0),
-                    Size = (uint) (parentHeader.IsCubemap ? 1 : (surfaces ?? parentHeader.Surfaces)),
-                    Misc2 = 0
-                };
-                ddsWriter.Write(d10);
-            }
-
-            SaveToDDSData(parentHeader, ddsWriter);
-        }
+        ///// <summary>Save DDS to stream</summary>
+        ///// <param name="parentHeader">Parent teTexture header</param>
+        ///// <param name="ddsWriter">Stream to be written to</param>
+        ///// <param name="mips"></param>
+        ///// <param name="width"></param>
+        ///// <param name="height"></param>
+        ///// <param name="surfaces"></param>
+        //public void SaveToDDS(teTexture.TextureHeader parentHeader, BinaryWriter ddsWriter, int? mips, uint? width, uint? height, uint? surfaces) {
+        //    TextureTypes.DDSHeader dds = parentHeader.ToDDSHeader(mips ?? parentHeader.MipCount, width ?? parentHeader.Width, height ?? parentHeader.Height, surfaces ?? parentHeader.Surfaces);
+        //    ddsWriter.Write(dds);
+        //    if (dds.Format.FourCC == (int) TextureTypes.TextureType.Unknown) {
+        //        TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
+        //            Format = parentHeader.Format,
+        //            Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
+        //            Misc = (uint) (parentHeader.IsCubemap ? 0x4 : 0),
+        //            Size = parentHeader.IsCubemap ? 1 : surfaces ?? parentHeader.Surfaces,
+        //            Misc2 = 0
+        //        };
+        //        ddsWriter.Write(d10);
+        //    }
+        //    SaveToDDSData(parentHeader, ddsWriter);
+        //}
 
         /// <summary>Save DDS data to stream</summary>
         /// <param name="parentHeader">Parent teTexture header</param>

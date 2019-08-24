@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using TACTLib;
 using TACTLib.Core.Product.Tank;
+using TankLib.STU.Types.Enums;
 
 namespace TankLib {
     /// <summary>Tank Texture, type 004</summary>
@@ -13,18 +14,18 @@ namespace TankLib {
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct TextureHeader {
             public Flags Flags;
-            public byte Unknown1;
-            public byte Mips;
-            public byte Format;
-            public byte Surfaces;
-            public byte Unknown2;
-            public byte PayloadCount;
-            public byte Unknown3;
-            public ushort Width;
-            public ushort Height;
-            public uint DataSize;
-            public ulong ReferenceKey;
-            public ulong Unknown4;
+            public byte MipCount; // 2
+            public byte Format; // 3
+            public byte Surfaces; // 4
+            public Enum_950F7205 UsageCategory; // 5
+            public byte PayloadCount; // 6
+            public byte Unk7; // 7
+            public ushort Width; // 8
+            public ushort Height; // 10
+            public uint DataSize; // 12
+            public ulong Unk16; // 16
+            public uint Unk20; // 20
+            public ulong Unk24; // 24
 
             public TextureTypes.DDSHeader ToDDSHeader(int mips, uint width, uint height, uint surfaces) {
                 TextureTypes.DDSHeader ret = new TextureTypes.DDSHeader {
@@ -43,15 +44,16 @@ namespace TankLib {
                     Caps4 = 0,
                     Reserved2 = 0
                 };
-                if (surfaces > 1 || IsMultiSurface) {
+                if (surfaces > 1 || IsArray) {
                     ret.Caps1 = 0x8 | 0x1000;
                     ret.Format = TextureTypes.TextureType.Unknown.ToPixelFormat();
                 }
 
                 if (IsCubemap) ret.Caps2 = 0xFE00;
 
-                if (Mips > 1 && (PayloadCount == 1 || IsCubemap)) {
-                    ret.MipmapCount = Mips;
+                // todo: wtf
+                if (MipCount > 1 && (PayloadCount == 1 || IsCubemap)) {
+                    ret.MipmapCount = MipCount;
                     ret.Caps1 = 0x8 | 0x1000 | 0x400000;
                 }
 
@@ -80,27 +82,25 @@ namespace TankLib {
                 return (Flags & flag) == flag;
             }
 
-            public bool IsCubemap => HasFlag(Flags.CUBEMAP);
+            public bool IsCubemap => HasFlag(Flags.Cube);
 
-            public bool IsMultiSurface => HasFlag(Flags.MULTISURFACE);
-
-            public bool IsWorld => HasFlag(Flags.WORLD);
+            public bool IsArray => HasFlag(Flags.Array);
         }
 
         public static readonly int[] DXGI_BC4 = { 79, 80, 91 };
         public static readonly int[] DXGI_BC5 = { 82, 83, 84 };
+        public static readonly TextureTypes.TextureType[] ATI2 = {TextureTypes.TextureType.ATI1, TextureTypes.TextureType.ATI2};
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         [Flags]
-        public enum Flags : byte {
-            UNKNOWN1 = 0x01,
-            DIFFUSE = 0x02,
-            UNKNOWN2 = 0x04,
-            CUBEMAP = 0x08,
-            UNKNOWN4 = 0x10,
-            WORLD = 0x20,
-            MULTISURFACE = 0x40,
-            UNKNOWN5 = 0x80
+        public enum Flags : short {
+            Tex1D = 0x01,
+            Tex2D = 0x02,
+            Tex3D = 0x04,
+            Cube = 0x08,
+            Unk16 = 0x10,
+            Unk32 = 0x20,
+            Array = 0x40,
+            Unk128 = 0x80
         }
         
         public teTexturePayload[] Payloads = new teTexturePayload[0];
@@ -139,19 +139,19 @@ namespace TankLib {
             reader.Read(Data, 0, (int)Header.DataSize);
         }
 
-        public teResourceGUID GetPayloadGUID(teResourceGUID textureResource, int region, int offset) {
+        public teResourceGUID GetPayloadGUID(teResourceGUID textureGUID, int offset) {
             if (Header.PayloadCount - offset - 1 < 0) return new teResourceGUID(0);
-            ulong guid = (textureResource & 0xFFF0FFFFFFFFUL) | ((ulong)(byte)(Header.PayloadCount - offset - 1) << 32) | 0x0320000000000000UL;
+            ulong payloadGUID = (textureGUID & 0xFFF0FFFFFFFFUL) | ((ulong)(byte)(Header.PayloadCount - offset - 1) << 32) | 0x0320000000000000UL;
             // so basically: thing | (payloadIdx & 0xF) << 32) | 0x320000000000000i64
             
-            if(teResourceGUID.Type(textureResource) == 0xF1)
+            if(teResourceGUID.Type(textureGUID) == 0xF1)
             {
-                guid |= (ulong)region << 40;
+                payloadGUID |= 1 << 40;
             }
-            return new teResourceGUID(guid);
+            return new teResourceGUID(payloadGUID);
         }
 
-        public ulong GetPayloadGUID(ulong guid, int region, int offset) => GetPayloadGUID(new teResourceGUID(guid), region, offset);
+        public ulong GetPayloadGUID(ulong guid, int offset) => GetPayloadGUID(new teResourceGUID(guid), offset);
 
         /// <summary>Load the texture payload</summary>
         /// <param name="payloadStream">The payload stream</param>
@@ -180,18 +180,29 @@ namespace TankLib {
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <param name="surfaces"></param>
-        public void SaveToDDS(Stream stream, bool keepOpen, int mips, uint? width = null, uint? height = null, uint? surfaces = null) {
+        public void SaveToDDS(Stream stream, bool keepOpen, int? mips, uint? width = null, uint? height = null, uint? surfaces = null) {
             if (PayloadRequired && Payloads[0] == null) throw new Exceptions.TexturePayloadMissingException();
             using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
-                TextureTypes.DDSHeader dds = Header.ToDDSHeader(mips, width ?? Header.Width, height ?? Header.Height, surfaces ?? Header.Surfaces);
+                TextureTypes.DDSHeader dds = Header.ToDDSHeader(mips ?? Header.MipCount, width ?? Header.Width, height ?? Header.Height, surfaces ?? Header.Surfaces);
                 ddsWriter.Write(dds);
                 if (dds.Format.FourCC == 0x30315844) {
+                    var dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.UNKNOWN;
+                    if (Header.HasFlag(Flags.Tex1D)) {
+                        dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE1D;
+                    } else if (Header.HasFlag(Flags.Tex2D)) {
+                        dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D;
+                    } else if (Header.HasFlag(Flags.Tex3D)) {
+                        dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE3D;
+                    } else if (Header.HasFlag(Flags.Cube)) {
+                        // cubemaps are just 2d textures
+                        dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D;
+                    }
+                    
                     TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
                         Format = Header.Format,
-                        Dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D,
-                        Misc = (uint) (Header.IsCubemap ? 0x4 : 0),
-                        Size = (uint) (Header.IsCubemap ? 1 : (surfaces ?? Header.Surfaces)),
-                        Misc2 = 0
+                        Dimension = dimension,
+                        Misc = (uint) (Header.IsCubemap ? 0x4 : 0), // 4 = D3D11_RESOURCE_MISC_TEXTURECUBE
+                        Size = surfaces ?? (Header.IsCubemap ? Header.Surfaces/6u : Header.Surfaces),
                     };
                     ddsWriter.Write(d10);
                 }
@@ -209,7 +220,7 @@ namespace TankLib {
         /// <summary>Save DDS to stream</summary>
         public Stream SaveToDDS(int? mips = null, uint? width = null, uint? height = null, uint? surfaces = null) {
             MemoryStream stream = new MemoryStream();
-            SaveToDDS(stream, true, mips ?? Header.Mips, width, height, surfaces);
+            SaveToDDS(stream, true, mips, width, height, surfaces);
             stream.Position = 0;
             return stream;
         }

@@ -290,18 +290,18 @@ namespace CASCEncDump {
                         
                         teTexture texture = new teTexture(reader);
                         if (!texture.PayloadRequired && texture.Header.DataSize <= stream.Length && 
-                            (texture.Header.Flags == teTexture.Flags.CUBEMAP ||
-                             texture.Header.Flags == teTexture.Flags.DIFFUSE ||
-                             texture.Header.Flags == teTexture.Flags.MULTISURFACE ||
-                             texture.Header.Flags == teTexture.Flags.UNKNOWN1 ||
-                             texture.Header.Flags == teTexture.Flags.UNKNOWN2 ||
-                             texture.Header.Flags == teTexture.Flags.UNKNOWN4 ||
-                             texture.Header.Flags == teTexture.Flags.UNKNOWN5 ||
-                             texture.Header.Flags == teTexture.Flags.WORLD) && 
+                            (texture.Header.Flags == teTexture.Flags.Tex1D ||
+                             texture.Header.Flags == teTexture.Flags.Tex2D ||
+                             texture.Header.Flags == teTexture.Flags.Tex3D ||
+                             texture.Header.Flags == teTexture.Flags.Cube ||
+                             texture.Header.Flags == teTexture.Flags.Array ||
+                             texture.Header.Flags == teTexture.Flags.Unk16 ||
+                             texture.Header.Flags == teTexture.Flags.Unk32 ||
+                             texture.Header.Flags == teTexture.Flags.Unk128) && 
                             texture.Header.Height < 10000 && texture.Header.Width < 10000 && texture.Header.DataSize > 68) {
                             using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".dds")) {
                                 file.SetLength(0);
-                                texture.SaveToDDS(file, false, texture.Header.Mips);
+                                texture.SaveToDDS(file, false, texture.Header.MipCount);
                             }
                         }
                     } catch (Exception) {

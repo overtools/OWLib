@@ -65,7 +65,7 @@ namespace DataTool.WPF.Tool.Export {
                                 if (tex != 0) {
                                     teTexture texture = new teTexture(OpenFile(tex));
                                     if (texture.PayloadRequired) {
-                                        ulong payload = texture.GetPayloadGUID(tex, 1, 1);
+                                        ulong payload = texture.GetPayloadGUID(tex, 1);
                                         Stream payloadStream = OpenFile(payload);
                                         if (payloadStream != null) {
                                             texture.LoadPayload(payloadStream, 1);

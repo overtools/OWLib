@@ -528,23 +528,21 @@ namespace DataTool.SaveLogic {
         public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong textureGUID) {
             bool convertTextures = true;
             string convertType = "tif";
-            string multiSurfaceTarget = "tif";
-            bool flattenMultiSurface = false;
+            string multiSurfaceConvertType = "tif";
+            bool createMultiSurfaceSheet = false;
             bool lossless = false;
             int maxMips = 1;
 
             if (flags is ExtractFlags extractFlags) {
                 if (extractFlags.SkipTextures) return;
-                flattenMultiSurface = extractFlags.SheetMultiSurface;
+                createMultiSurfaceSheet = extractFlags.SheetMultiSurface;
                 convertTextures = extractFlags.ConvertTextures  && !extractFlags.Raw;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
                 lossless = extractFlags.ConvertTexturesLossless;
-                if (extractFlags.ForceDDSMultiSurface || convertType == "dds") {
-                    multiSurfaceTarget = "dds";
-                }
-
-                if (extractFlags.DestroyMultiSurface) {
-                    multiSurfaceTarget = convertType;
+                
+                multiSurfaceConvertType = convertType;
+                if (extractFlags.ForceDDSMultiSurface) {
+                    multiSurfaceConvertType = "dds";
                 }
 
                 if (convertType == "dds" && extractFlags.SaveMips) {
@@ -572,7 +570,7 @@ namespace DataTool.SaveLogic {
 
                     if (!texture.PayloadRequired) return;
                     for (int i = 0; i < texture.Payloads.Length; ++i) {
-                        using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, 1, i)))
+                        using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
                             WriteFile(texturePayloadStream, $"{filePath}_{i}.04D");
                     }
                 }
@@ -586,16 +584,16 @@ namespace DataTool.SaveLogic {
                     
                     if (texture.PayloadRequired) {
                         for (int i = 0; i < Math.Min(maxMips, texture.Payloads.Length); ++i) {
-                            texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID, 1, i)), i);
+                            texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID, i)), i);
                         }
                     }
 
-                    uint width = texture.Header.Width;
-                    uint height = texture.Header.Height;
-                    uint surfaces = texture.Header.Surfaces;
-                    if (texture.Header.IsCubemap || texture.Header.IsMultiSurface || texture.HasMultipleSurfaces)
+                    uint? width = null;
+                    uint? height = null;
+                    uint? surfaces = null;
+                    if (texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces)
                     {
-                        if (flattenMultiSurface)
+                        if (createMultiSurfaceSheet)
                         {
                             TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet because it has more than one surface");
                             height = (uint)(texture.Header.Height * texture.Header.Surfaces);
@@ -604,14 +602,12 @@ namespace DataTool.SaveLogic {
                         }
                         else
                         {
-                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceTarget} because it has more than one surface");
-                            convertType = multiSurfaceTarget;
+                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceConvertType} because it has more than one surface");
+                            convertType = multiSurfaceConvertType;
                         }
                     }
 
-                    
-
-                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.Mips, width, height, surfaces)) {
+                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
                         convertedStream.Position = 0;
                         if (convertType == "dds" || convertedStream.Length == 0) {
                             WriteFile(convertedStream, $"{filePath}.dds");
@@ -620,8 +616,7 @@ namespace DataTool.SaveLogic {
                         
                         bool isBcffValid = teTexture.DXGI_BC4.Contains(texture.Header.Format) || 
                                            teTexture.DXGI_BC5.Contains(texture.Header.Format) ||
-                                           new[] {TextureTypes.TextureType.ATI1, 
-                                               TextureTypes.TextureType.ATI2}.Contains(texture.Header.GetTextureType());
+                                           teTexture.ATI2.Contains(texture.Header.GetTextureType());
                         
                         ImageFormat imageFormat = null;
                         if (convertType == "tif") imageFormat = ImageFormat.Tiff;
@@ -631,7 +626,7 @@ namespace DataTool.SaveLogic {
                         // so there is no TGA image format.
                         // guess the TGA users are stuck with the DirectXTex stuff for now.
 
-                        if (isBcffValid && imageFormat != null && !(texture.Header.IsCubemap || texture.Header.IsMultiSurface || texture.HasMultipleSurfaces)) {
+                        if (isBcffValid && imageFormat != null && !(texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces)) {
                             BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
                             decompressor.CreateImage();
                             decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
@@ -664,7 +659,7 @@ namespace DataTool.SaveLogic {
                         string line = pProcess.StandardOutput.ReadToEnd();
                         if (line?.Contains("FAILED") == true) {
                             convertedStream.Position = 0;
-                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as dds because it failed.");
+                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as dds because texconv failed.");
                             WriteFile(convertedStream, $"{filePath}.dds");
                         }
                     }
