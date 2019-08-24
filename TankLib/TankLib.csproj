@@ -150,7 +150,6 @@
     <Compile Include="STU\teStructuredDataDateAndTime.cs" />
     <Compile Include="STU\teStructuredDataHashMap.cs" />
     <Compile Include="STU\teStructuredDataMgr.cs" />
-    <Compile Include="STU\teStructuredDataV1Readers.cs" />
     <Compile Include="STU\Types\AITacticalChoke.cs" />
     <Compile Include="STU\Types\AITargetingInfo.cs" />
     <Compile Include="STU\Types\CaptureAreaResident.cs" />
@@ -5547,8 +5546,6 @@
     <Compile Include="STU\Types\teAITotemSurfaceAdditionalData.cs" />
     <Compile Include="TACT\LoadHelper.cs" />
     <Compile Include="teAnimation.cs" />
-    <Compile Include="teAssetPackage.cs" />
-    <Compile Include="teAssetPackagePayload.cs" />
     <Compile Include="teChunkedData.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="teLightingManifest.cs" />
