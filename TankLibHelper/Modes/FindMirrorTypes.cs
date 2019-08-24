@@ -31,7 +31,7 @@ namespace TankLibHelper.Modes {
                 if (!mirrorType.StartsWith("M")) continue;
 
                 var nameBytes = Encoding.ASCII.GetBytes(mirrorType.ToLowerInvariant());
-                uint hash = CRC.CRC32(nameBytes, nameBytes.Length);
+                uint hash = CRC.CRC32(nameBytes);
 
                 if (_info.Instances.ContainsKey(hash)) {
                     Console.Out.WriteLine($"{hash:X8}, {mirrorType}");

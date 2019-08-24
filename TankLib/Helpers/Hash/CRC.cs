@@ -179,7 +179,7 @@ namespace TankLib.Helpers.Hash {
             0x536fa08fdfd90e51, 0x29b7d047efec8728
         };
         
-        public static unsafe uint CRC32(byte[] data, int size, uint crc=0) {
+        public static unsafe uint CRC32(byte[] data, int size = -1, uint crc=0) {
             if (size == -1) size = data.Length;
             if (size > data.Length) throw new IndexOutOfRangeException("CRC64 out of range");
 
