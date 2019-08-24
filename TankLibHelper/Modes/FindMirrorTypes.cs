@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.HashFunction.CRC;
 using System.IO;
 using System.Text;
+using TankLib.Helpers.Hash;
 
 namespace TankLibHelper.Modes {
     public class FindMirrorTypes : IMode {
@@ -24,14 +24,14 @@ namespace TankLibHelper.Modes {
 
             _info = new StructuredDataInfo(dataDirectory);
 
-            ICRC crc32 = CRCFactory.Instance.Create(CRCConfig.CRC32);
-
             foreach (KeyValuePair<uint, string> instance in _info.KnownInstances) {
                 //if (instance.Value.StartsWith("STUStatescript")) {
                 if (instance.Value.StartsWith("M")) continue;
                 string mirrorType = instance.Value.Replace("STU", "M");
                 if (!mirrorType.StartsWith("M")) continue;
-                uint hash = BitConverter.ToUInt32(crc32.ComputeHash(Encoding.ASCII.GetBytes(mirrorType.ToLowerInvariant())).Hash, 0);
+
+                var nameBytes = Encoding.ASCII.GetBytes(mirrorType.ToLowerInvariant());
+                uint hash = CRC.CRC32(nameBytes, nameBytes.Length);
 
                 if (_info.Instances.ContainsKey(hash)) {
                     Console.Out.WriteLine($"{hash:X8}, {mirrorType}");
