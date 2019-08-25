@@ -229,6 +229,10 @@
       <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>
       <Name>TankLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\revorbstd\RevorbStd.csproj">
+      <Project>{c3130ece-02d9-4be6-9883-75351822e7de}</Project>
+      <Name>RevorbStd</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="TankView.ico" />
