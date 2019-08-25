@@ -50,7 +50,7 @@ namespace DataTool.SaveLogic {
 
             if (subtitleSet.Any()) {
                 if (soundSet.Count > 1) {
-                    realPath = Path.Combine(realPath, IO.GetValidFilename(subtitleSet.First().TrimEnd('.')));
+                    realPath = Path.Combine(realPath, IO.GetValidFilename(subtitleSet.First().Trim().TrimEnd('.')));
                     WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{teResourceGUID.LongKey(voiceLineInstanceInfo.Subtitle):X8}-{teResourceGUID.LongKey(voiceLineInstanceInfo.SubtitleRuntime):X8}-subtitles.txt"));
                 } else if (soundSet.Count == 1) {
                     try {
