@@ -30,13 +30,16 @@ namespace DataTool.SaveLogic {
         }
 
         public static void SaveVoiceStimulus(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo) {
-            var extractFlags = (ExtractFlags) flags;
-            
+            var saveSubtitles = true;
+
+            if (flags is ExtractFlags extractFlags) {
+                saveSubtitles = extractFlags.SubtitlesWithSounds;
+            }
             var realPath = path;
             var soundSet = new HashSet<ulong>(voiceLineInstanceInfo.SoundFiles.Where(x => x != 0));
             string overrideName = null;
 
-            if (extractFlags.SubtitlesWithSounds) {
+            if (saveSubtitles) {
                 IEnumerable<string> subtitle = new HashSet<string>();
 
                 if (info.Subtitles.TryGetValue(voiceLineInstanceInfo.Subtitle, out var subtitleInfo)) {
