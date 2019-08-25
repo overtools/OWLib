@@ -29,37 +29,39 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveVoiceStimulus(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
-            FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo) {
-
-            var realPath = path;
-            IEnumerable<string> subtitle = new HashSet<string>();
-
-            if (info.Subtitles.TryGetValue(voiceLineInstanceInfo.Subtitle, out var subtitleInfo)) {
-                subtitle = subtitle.Concat(subtitleInfo.Text);
-            }
-
-            if (info.Subtitles.TryGetValue(voiceLineInstanceInfo.SubtitleRuntime, out var subtitleRuntimeInfo)) {
-                subtitle = subtitle.Concat(subtitleRuntimeInfo.Text);
-            }
+        public static void SaveVoiceStimulus(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo) {
+            var extractFlags = (ExtractFlags) flags;
             
-            var subtitleSet = new HashSet<string>(subtitle);
+            var realPath = path;
             var soundSet = new HashSet<ulong>(voiceLineInstanceInfo.SoundFiles.Where(x => x != 0));
-
             string overrideName = null;
 
-            if (subtitleSet.Any()) {
-                if (soundSet.Count > 1) {
-                    realPath = Path.Combine(realPath, IO.GetValidFilename(subtitleSet.First().Trim().TrimEnd('.')));
-                    WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{teResourceGUID.LongKey(voiceLineInstanceInfo.Subtitle):X8}-{teResourceGUID.LongKey(voiceLineInstanceInfo.SubtitleRuntime):X8}-subtitles.txt"));
-                } else if (soundSet.Count == 1) {
-                    try {
-                        overrideName = GetValidFilename($"{teResourceGUID.AsString(soundSet.First())}-{subtitleSet.First().TrimEnd('.')}");
-                        if (overrideName.Length > 128) overrideName = overrideName.Substring(0, 100);
-                        WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
-                    } catch {
-                        overrideName = teResourceGUID.AsString(soundSet.First());
-                        WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
+            if (extractFlags.SubtitlesWithSounds) {
+                IEnumerable<string> subtitle = new HashSet<string>();
+
+                if (info.Subtitles.TryGetValue(voiceLineInstanceInfo.Subtitle, out var subtitleInfo)) {
+                    subtitle = subtitle.Concat(subtitleInfo.Text);
+                }
+
+                if (info.Subtitles.TryGetValue(voiceLineInstanceInfo.SubtitleRuntime, out var subtitleRuntimeInfo)) {
+                    subtitle = subtitle.Concat(subtitleRuntimeInfo.Text);
+                }
+            
+                var subtitleSet = new HashSet<string>(subtitle);
+
+                if (subtitleSet.Any()) {
+                    if (soundSet.Count > 1) {
+                        realPath = Path.Combine(realPath, IO.GetValidFilename(subtitleSet.First().Trim().TrimEnd('.')));
+                        WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{teResourceGUID.LongKey(voiceLineInstanceInfo.Subtitle):X8}-{teResourceGUID.LongKey(voiceLineInstanceInfo.SubtitleRuntime):X8}-subtitles.txt"));
+                    } else if (soundSet.Count == 1) {
+                        try {
+                            overrideName = GetValidFilename($"{teResourceGUID.AsString(soundSet.First())}-{subtitleSet.First().TrimEnd('.')}");
+                            if (overrideName.Length > 128) overrideName = overrideName.Substring(0, 100);
+                            WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
+                        } catch {
+                            overrideName = teResourceGUID.AsString(soundSet.First());
+                            WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
+                        }
                     }
                 }
             }

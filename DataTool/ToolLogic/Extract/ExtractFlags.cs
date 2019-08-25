@@ -60,6 +60,9 @@ namespace DataTool.ToolLogic.Extract {
 
         [CLIFlag(Default = false, Flag = "extract-mips", Help = "Extract mip files", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SaveMips;
+        
+        [CLIFlag(Default = true, Flag = "subtitles-with-sounds", Help = "Extract subtitles alongside voicelines", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool SubtitlesWithSounds;
 
         // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         // public bool ConvertBnk;
