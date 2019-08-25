@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:TankView.View"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="400">
@@ -15,7 +16,7 @@
         </WrapPanel>
         
         <WrapPanel DataContext="{Binding ProgressInfo}" Background="{DynamicResource MaterialDesignPaper}" Orientation="Vertical" HorizontalAlignment="Center" Height="64" Margin="79,10,79,0" VerticalAlignment="Center">
-            <ProgressBar Width="242" Height="18" Maximum="1000" Value="{Binding Percentage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <ProgressBar materialDesign:TransitionAssist.DisableTransitions="True" Width="242" Height="18" Maximum="1000" Value="{Binding Percentage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
             <TextBlock Text="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Foreground="{DynamicResource MaterialDesignBody}" FontSize="14" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,0" />
         </WrapPanel>
     </StackPanel>
