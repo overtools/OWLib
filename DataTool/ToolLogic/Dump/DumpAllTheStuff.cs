@@ -28,7 +28,7 @@ namespace DataTool.ToolLogic.Dump {
             new DumpStrings().Parse(GetFlagsForCommand(flags, "strings", true));
             new ListSubtitles().Parse(GetFlagsForCommand(flags, "subtitles"));
             new ListHeroUnlocks().Parse(GetFlagsForCommand(flags, "unlocks"));
-            new ListRankedSeasons().Parse(GetFlagsForCommand(flags, "ranked-seasons"));
+            //new ListRankedSeasons().Parse(GetFlagsForCommand(flags, "ranked-seasons"));
             new ListBrawls().Parse(GetFlagsForCommand(flags, "brawls"));
             new ListLogicalButtonMapping().Parse(GetFlagsForCommand(flags, "button-mapping"));
             new ListChatReplacements().Parse(GetFlagsForCommand(flags, "chat-replacements"));
