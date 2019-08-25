@@ -7,7 +7,6 @@ using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Animation;
 using DataTool.WPF;
 using TankView.ViewModel;
 
