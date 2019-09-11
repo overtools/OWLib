@@ -14,7 +14,8 @@ using static DataTool.Program;
 namespace DataTool.Helper {
     // ReSharper disable once InconsistentNaming
     public static class IO {
-        public static string GetValidFilename(string filename) {
+        public static string GetValidFilename(string filename, bool force=true) {
+            if (Flags.NoNames && !force) return null;
             if (filename == null) return null;
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
             string invalidReStr = $@"[{invalidChars}]+";

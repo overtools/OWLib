@@ -142,11 +142,11 @@ namespace DataTool.FindLogic {
             }
 
             public override string GetName() {
-                return GetValidFilename(Name) ?? GetFileName(GUID);
+                return GetValidFilename(Name, false) ?? GetFileName(GUID);
             }
 
             public override string GetNameIndex() {
-                return GetValidFilename(Name) ?? $"{GUID & 0xFFFFFFFFFFFF:X12}";
+                return GetValidFilename(Name, false) ?? $"{GUID & 0xFFFFFFFFFFFF:X12}";
             }
         }
 
