@@ -76,6 +76,9 @@ namespace DataTool {
         [Alias("argd")]
         public bool DeleteArgs;
 
+        [CLIFlag(Default = false, Flag = "no-names", Help = "Don't use names for textures", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool NoNames;
+
         public override bool Validate() => true;
     }
 }
