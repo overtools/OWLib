@@ -167,6 +167,7 @@
     <Compile Include="ToolLogic\Dbg\DebugModelDump.cs" />
     <Compile Include="ToolLogic\Dbg\DebugModelSTU.cs" />
     <Compile Include="ToolLogic\Dbg\DebugVoodoo.cs" />
+    <Compile Include="ToolLogic\Dbg\DebugKeyTest.cs" />
     <Compile Include="ToolLogic\Dump\DumpAllTheStuff.cs" />
     <Compile Include="ToolLogic\Dump\DumpFileLists.cs" />
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
