@@ -17,10 +17,12 @@ namespace DataTool.ToolLogic.Extract.Debug {
             ExtractNewEntities(toolFlags);
         }
         
-        public void AddNewByGUID(Combo.ComboInfo info, HashSet<ulong> lastVerGuids, ushort type) {
-            foreach (ulong key in TrackedFiles[type]) {
-                if (lastVerGuids.Contains(key)) continue;
-                Combo.Find(info, key);
+        public void AddNewByGUID(Combo.ComboInfo info, HashSet<ulong> lastVerGuids, params ushort[] types) {
+            foreach (ushort type in types) {
+                foreach (ulong key in TrackedFiles[type]) {
+                    if (lastVerGuids.Contains(key)) continue;
+                    Combo.Find(info, key);
+                }
             }
         }
 
@@ -83,14 +85,14 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 throw new Exception("no output path");
             }
 
-            const string ver = "54983";
-            var contentHashes = GetContentHashes($@"D:\ow\resources\verdata\{ver}.cmfhashes");
-            //var guids = GetGUIDs($@"D:\ow\resources\verdata\{ver}.guids");
+            const string ver = "60993";
+            //var contentHashes = GetContentHashes($@"D:\ow\resources\verdata\{ver}.cmfhashes");
+            var guids = GetGUIDs($@"D:\ow\resources\verdata\{ver}.guids");
 
-            const string container = "DebugNewEntities";
+            const string container = "DebugNewEntities2";
             
             Combo.ComboInfo info = new Combo.ComboInfo();
-            AddNewByContentHash(info, contentHashes, 0x4, 0x7C, 0x3F, 0xB2);
+            AddNewByGUID(info, guids, 0x4, 0x7C, 0x3F, 0xB2);
             
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, container), info);
             SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, container, "Sounds"), info);
