@@ -17,7 +17,7 @@ namespace TankView.ViewModel {
         public ProductLocations() {
             try {
                 AgentDatabase pdb = new AgentDatabase();
-                foreach (ProductInstall install in pdb.Data.ProductInstalls) {
+                foreach (ProductInstall install in pdb.Data.ProductInstall) {
                     if (KnownUIDs.ContainsKey(install.Uid) && Directory.Exists(install.Settings.InstallPath)) {
                         Add(new ProductLocation(KnownUIDs[install.Uid], Path.GetFullPath(install.Settings.InstallPath)));
                     }
