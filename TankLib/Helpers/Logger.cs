@@ -186,11 +186,22 @@ namespace TankLib.Helpers {
             return builder.ToString();
         }
         
+        private static string LastMessage { get; set; }
+        private static void Fill<T>(T[] array, T value)
+        {
+            Fill(array, value, 0, array.Length);
+        }
+
+        private static void Fill<T>(T[] array, T value, int start, int length)
+        {
+            for (int i = 0; i < length; ++i) array[i + start] = value;
+        }
+
         public static void LogProgress(string message, string pre, string post, double value, XTermColor messageColor, XTermColor preColor, XTermColor postColor, XTermColor brickColor, XTermColor processColor, bool showProgressValue, XTermColor processValueColor) {
             if (Console.IsOutputRedirected) return;
             var width = Console.WindowWidth;
             var empty = new char[width];
-            Array.Fill(empty, ' ');
+            Fill(empty, ' ');
             if (message != LastMessage) {
                 Console.Out.Write(empty);
                 Console.CursorLeft = 0;
@@ -204,14 +215,14 @@ namespace TankLib.Helpers {
             if (remaining > 0) {
                 Logger.Log24Bit(brickColor, false, Console.Out, null, " [");
                 empty = new char[remaining];
-                Array.Fill(empty, ' ');
-                Array.Fill(empty, '=', 0, (int)Math.Round(remaining * Math.Min(value, 1)));
+                Fill(empty, ' ');
+                Fill(empty, '=', 0, (int)System.Math.Round(remaining * System.Math.Min(value, 1)));
                 Logger.Log24Bit(processColor, false, Console.Out, null, string.Join("", empty));
                 Logger.Log24Bit(brickColor, false, Console.Out, null, "] ");
 
                 if(showProgressValue && remaining > 6) {
-                    var valueText = (Math.Min(value, 1) * 100).ToString().Split('.')[0] + "%";
-                    Console.CursorLeft = pre.Length + 2 + (int)Math.Floor(remaining / 2.0d - valueText.Length / 2.0d);
+                    var valueText = (System.Math.Min(value, 1) * 100).ToString().Split('.')[0] + "%";
+                    Console.CursorLeft = pre.Length + 2 + (int)System.Math.Floor(remaining / 2.0d - valueText.Length / 2.0d);
                     Logger.Log24Bit(processValueColor, false, Console.Out, null, valueText);
                     Console.CursorLeft = width - post.Length;
                 }
