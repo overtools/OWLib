@@ -212,6 +212,7 @@
     <Compile Include="ToolLogic\List\Misc\ListArcadeModes.cs" />
     <Compile Include="ToolLogic\List\Misc\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\Misc\ListLogicalButtonMapping.cs" />
+    <Compile Include="ToolLogic\List\Misc\ListProfanityFilter.cs" />
     <Compile Include="ToolLogic\List\Misc\ListRankedSeasons.cs" />
     <Compile Include="ToolLogic\List\Misc\ListReportResponses.cs" />
     <Compile Include="ToolLogic\List\Misc\ListBrawls.cs" />
