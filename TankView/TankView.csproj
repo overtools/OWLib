@@ -99,7 +99,7 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="VirtualizingWrapPanel, Version=1.2.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>$(SolutionDir)\packages\VirtualizingWrapPanel.1.2.2\lib\net45\VirtualizingWrapPanel.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\VirtualizingWrapPanel.1.2.2\lib\net45\VirtualizingWrapPanel.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
