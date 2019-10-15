@@ -32,6 +32,7 @@ namespace DataTool.ToolLogic.Dump {
             new ListBrawls().Parse(GetFlagsForCommand(flags, "brawls"));
             new ListLogicalButtonMapping().Parse(GetFlagsForCommand(flags, "button-mapping"));
             new ListChatReplacements().Parse(GetFlagsForCommand(flags, "chat-replacements"));
+            new ListProfanityFilters().Parse(GetFlagsForCommand(flags, "profanity-filters"));
             new DumpFileLists().Parse(toolFlags);
         }
         
