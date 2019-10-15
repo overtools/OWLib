@@ -24,7 +24,6 @@ namespace TankLib {
             public ushort Height; // 10
             public uint DataSize; // 12
             public ulong Unk16; // 16
-            public uint Unk20; // 20
             public ulong Unk24; // 24
 
             public TextureTypes.DDSHeader ToDDSHeader(int mips, uint width, uint height, uint surfaces) {
@@ -134,7 +133,7 @@ namespace TankLib {
                 return;
             }
 
-            reader.Seek(128);
+            reader.Seek(0x20);
             Data = new byte[Header.DataSize];
             reader.Read(Data, 0, (int)Header.DataSize);
         }
