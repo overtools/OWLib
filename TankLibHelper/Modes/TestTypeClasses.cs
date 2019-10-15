@@ -31,7 +31,7 @@ namespace TankLibHelper.Modes {
                 using (Stream stream = _tankHandler.OpenFile(asset.Key)) {
                     if (stream == null) continue;
                     using (var stu = new teStructuredData(stream)) {
-                        
+                        var inst = stu.GetMainInstance<STUInstance>();
                     }
                 }
             }
