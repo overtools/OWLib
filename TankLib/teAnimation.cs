@@ -23,12 +23,19 @@ namespace TankLib {
             public ushort Flags;
 
             public ushort Unknown1;
+
+            public long FuckyUnknown;
             
             /// <summary>Duration, in seconds</summary>
             public float Duration;
+
+            public float FuckyUnknownFloat1;
             
             /// <summary>Frames Per Second</summary>
             public float FPS;
+
+
+            public float FuckyUnknownFloat2;
             
             /// <summary>AnimationEffect reference</summary>
             /// <remarks>File type 08F</remarks>

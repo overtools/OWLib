@@ -600,23 +600,21 @@ namespace DataTool.FindLogic {
                     ComboContext animationContext = context.Clone();
                     animationContext.Animation = guid;
 
-                    // TODO: Fix Animations.
-                    if(false) { 
-                        using (Stream animationStream = OpenFile(guid)) {
-                            if (animationStream == null) break;
-                            ulong effectGuid;
-                            using (BinaryReader animationReader = new BinaryReader(animationStream)) {
-                                uint priority = animationReader.ReadUInt16();
-                                animationStream.Position = 0xC;
-                                float fps = animationReader.ReadSingle();
-                                animationStream.Position = 0x10;
-                                effectGuid = animationReader.ReadUInt64();
-                                animationInfo.FPS = fps;
-                                animationInfo.Priority = priority;
-                                animationInfo.Effect = GetReplacement(effectGuid, replacements);
-                            }
-                            Find(info, effectGuid, replacements, animationContext);
+                    using (Stream animationStream = OpenFile(guid)) {
+                        if (animationStream == null) break;
+                        ulong effectGuid;
+                        // This is ass.
+                        using (BinaryReader animationReader = new BinaryReader(animationStream)) {
+                            uint priority = animationReader.ReadUInt16();
+                            animationStream.Position = 0x18;
+                            float fps = animationReader.ReadSingle();
+                            animationStream.Position = 0x20;
+                            effectGuid = animationReader.ReadUInt64();
+                            animationInfo.FPS = fps;
+                            animationInfo.Priority = priority;
+                            animationInfo.Effect = GetReplacement(effectGuid, replacements);
                         }
+                        Find(info, effectGuid, replacements, animationContext);
                     }
 
                     if (context.Model != 0) {
