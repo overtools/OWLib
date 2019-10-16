@@ -13,17 +13,17 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertTexturesLossless;
         
-        [CLIFlag(Default = true, Flag = "raw-textures", Help = "Do not convert textures", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
-        public bool ConvertTextures;
+        [CLIFlag(Default = false, Flag = "raw-textures", Help = "Do not convert textures", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool RawTextures;
         
-        [CLIFlag(Default = true, Flag = "raw-sound", Help = "Do not convert sounds", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
-        public bool ConvertSound;
+        [CLIFlag(Default = false, Flag = "raw-sound", Help = "Do not convert sounds", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool RawSound;
         
-        [CLIFlag(Default = true, Flag = "raw-models", Help = "Do not convert models", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
-        public bool ConvertModels;
+        [CLIFlag(Default = false, Flag = "raw-models", Help = "Do not convert models", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool RawModels;
         
-        [CLIFlag(Default = true, Flag = "raw-animations", Help = "Do not convert animations", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
-        public bool ConvertAnimations;
+        [CLIFlag(Default = false, Flag = "raw-animations", Help = "Do not convert animations", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool RawAnimations;
         
         [CLIFlag(Default = false, Flag = "skip-textures", Help = "Skip texture extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SkipTextures;
@@ -61,7 +61,7 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "extract-mips", Help = "Extract mip files", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SaveMips;
         
-        [CLIFlag(Default = true, Flag = "subtitles-with-sounds", Help = "Extract subtitles alongside voicelines", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
+        [CLIFlag(Default = true, Flag = "subtitles-with-sounds", Help = "Extract subtitles alongside voicelines", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SubtitlesWithSounds;
 
         // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]

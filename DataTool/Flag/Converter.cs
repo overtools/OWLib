@@ -9,10 +9,6 @@ namespace DataTool.Flag {
             return @in.ToLower() == "true" || @in.ToLower() == "1" || @in.ToLower() == "y" || @in.ToLower() == "yes";
         }
 
-        public static object CLIFlagBooleanInv(string @in) {
-            return !(bool)CLIFlagBoolean(@in);
-        }
-        
         public static object CLIFlagInt(string @in) {
             return int.Parse(@in);
         }

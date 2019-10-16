@@ -164,7 +164,7 @@ namespace DataTool.SaveLogic {
             bool scaleAnims = false;
             if (flags is ExtractFlags extractFlags) {
                 scaleAnims = extractFlags.ScaleAnims;
-                convertAnims = extractFlags.ConvertAnimations && !extractFlags.Raw;
+                convertAnims = !extractFlags.RawAnimations && !extractFlags.Raw;
                 if (extractFlags.SkipAnimations) return;
             }
             
@@ -285,7 +285,7 @@ namespace DataTool.SaveLogic {
             byte lod = 1;
 
             if (flags is ExtractFlags extractFlags) {
-                convertModels = extractFlags.ConvertModels  && !extractFlags.Raw;
+                convertModels = !extractFlags.RawModels  && !extractFlags.Raw;
                 doRefpose = extractFlags.ExtractRefpose;
                 lod = extractFlags.LOD;
                 if (extractFlags.SkipModels) return;
@@ -550,7 +550,7 @@ namespace DataTool.SaveLogic {
             if (flags is ExtractFlags extractFlags) {
                 if (extractFlags.SkipTextures) return;
                 createMultiSurfaceSheet = extractFlags.SheetMultiSurface;
-                convertTextures = extractFlags.ConvertTextures  && !extractFlags.Raw;
+                convertTextures = !extractFlags.RawTextures && !extractFlags.Raw;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
                 lossless = extractFlags.ConvertTexturesLossless;
                 
@@ -724,7 +724,7 @@ namespace DataTool.SaveLogic {
             if (soundFile == 0) return;
             bool convertWem = true;
             if (flags is ExtractFlags extractFlags) {
-                convertWem = extractFlags.ConvertSound && !extractFlags.Raw;
+                convertWem = !extractFlags.RawSound && !extractFlags.Raw;
                 if (extractFlags.SkipSound) return;
             }
             
