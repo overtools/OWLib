@@ -13,16 +13,16 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertTexturesLossless;
         
-        [CLIFlag(Default = true, Flag = "convert-textures", Help = "Convert .004 files to {convert-textures-type}", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = true, Flag = "raw-textures", Help = "Do not convert textures", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
         public bool ConvertTextures;
         
-        [CLIFlag(Default = true, Flag = "convert-sound", Help = "Convert .wem files to .ogg", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = true, Flag = "raw-sound", Help = "Do not convert sounds", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
         public bool ConvertSound;
         
-        [CLIFlag(Default = true, Flag = "convert-models", Help = "Convert .00C files to .owmdl", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = true, Flag = "raw-models", Help = "Do not convert models", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
         public bool ConvertModels;
         
-        [CLIFlag(Default = true, Flag = "convert-animations", Help = "Convert .006 files to .seanim", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = true, Flag = "raw-animations", Help = "Do not convert animations", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
         public bool ConvertAnimations;
         
         [CLIFlag(Default = false, Flag = "skip-textures", Help = "Skip texture extraction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
@@ -61,7 +61,7 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "extract-mips", Help = "Extract mip files", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SaveMips;
         
-        [CLIFlag(Default = true, Flag = "subtitles-with-sounds", Help = "Extract subtitles alongside voicelines", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = true, Flag = "subtitles-with-sounds", Help = "Extract subtitles alongside voicelines", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBooleanInv" })]
         public bool SubtitlesWithSounds;
 
         // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]

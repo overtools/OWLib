@@ -115,12 +115,21 @@ namespace DataTool.SaveLogic {
         }
 
         private static void ConvertAnimation(Stream animStream, string path, bool convertAnims, FindLogic.Combo.AnimationInfoNew animationInfo, bool scaleAnims) {
-            teAnimation parsedAnimation = new teAnimation(animStream, true);
+            var parsedAnimation = default(teAnimation);
+            var priority = 100;
+            try
+            {
+                parsedAnimation = new teAnimation(animStream, true);
+                priority = parsedAnimation.Header.Priority;
+            }
+            catch
+            {
 
+            }
             string animationDirectory =
-                Path.Combine(path, "Animations", parsedAnimation.Header.Priority.ToString());
+                Path.Combine(path, "Animations", priority.ToString());
 
-            if (convertAnims) {
+            if (convertAnims && parsedAnimation != null) {
                 SEAnim seAnim = new SEAnim(parsedAnimation, scaleAnims);
                 string animOutput = Path.Combine(animationDirectory,
                     animationInfo.GetNameIndex() + "." + seAnim.Extension);

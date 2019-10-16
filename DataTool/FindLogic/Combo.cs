@@ -600,20 +600,23 @@ namespace DataTool.FindLogic {
                     ComboContext animationContext = context.Clone();
                     animationContext.Animation = guid;
 
-                    using (Stream animationStream = OpenFile(guid)) {
-                        if (animationStream == null) break;
-                        ulong effectGuid;
-                        using (BinaryReader animationReader = new BinaryReader(animationStream)) {
-                            uint priority = animationReader.ReadUInt16();
-                            animationStream.Position = 0xC;
-                            float fps = animationReader.ReadSingle();
-                            animationStream.Position = 0x10;
-                            effectGuid = animationReader.ReadUInt64();
-                            animationInfo.FPS = fps;
-                            animationInfo.Priority = priority;
-                            animationInfo.Effect = GetReplacement(effectGuid, replacements);
+                    // TODO: Fix Animations.
+                    if(false) { 
+                        using (Stream animationStream = OpenFile(guid)) {
+                            if (animationStream == null) break;
+                            ulong effectGuid;
+                            using (BinaryReader animationReader = new BinaryReader(animationStream)) {
+                                uint priority = animationReader.ReadUInt16();
+                                animationStream.Position = 0xC;
+                                float fps = animationReader.ReadSingle();
+                                animationStream.Position = 0x10;
+                                effectGuid = animationReader.ReadUInt64();
+                                animationInfo.FPS = fps;
+                                animationInfo.Priority = priority;
+                                animationInfo.Effect = GetReplacement(effectGuid, replacements);
+                            }
+                            Find(info, effectGuid, replacements, animationContext);
                         }
-                        Find(info, effectGuid, replacements, animationContext);
                     }
 
                     if (context.Model != 0) {
@@ -810,7 +813,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0x20:
                     STUAnimBlendTree blendTree = GetInstance<STUAnimBlendTree>(guid);
-                    if (blendTree.m_animNodes == null) break;
+                    if (blendTree == null || blendTree.m_animNodes == null) break;
                     foreach (STUAnimNode_Base animNode in blendTree.m_animNodes) {
                         if (animNode is STUAnimNode_Animation animNodeAnimation) {
                             Find(info, animNodeAnimation?.m_animation?.m_value, replacements, context);
