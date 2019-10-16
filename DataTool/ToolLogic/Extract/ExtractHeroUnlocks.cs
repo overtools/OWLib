@@ -98,7 +98,11 @@ namespace DataTool.ToolLogic.Extract {
             ["hammond"] = "wrecking ball",
             ["hamster"] = "wrecking ball",
             ["baguette"] = "brigitte",
-            ["burrito"] = "brigitte"
+            ["burrito"] = "brigitte",
+            ["angry japanese man"] = "genji",
+            ["guilty japanese man"] = "hanzo",
+            ["need healing"] = "genji",
+            ["healslut"] = "mercy"
         };
 
         public Dictionary<string, string> QueryNameOverrides => HeroMapping;

@@ -810,6 +810,7 @@ namespace DataTool.FindLogic {
                     break;
                 case 0x20:
                     STUAnimBlendTree blendTree = GetInstance<STUAnimBlendTree>(guid);
+                    if (blendTree.m_animNodes == null) break;
                     foreach (STUAnimNode_Base animNode in blendTree.m_animNodes) {
                         if (animNode is STUAnimNode_Animation animNodeAnimation) {
                             Find(info, animNodeAnimation?.m_animation?.m_value, replacements, context);
