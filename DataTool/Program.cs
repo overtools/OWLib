@@ -199,7 +199,7 @@ namespace DataTool {
 
             if (args.TextLanguage != "enUS") Logger.Warn("Core", "Reminder! When extracting data in other languages, the names of the heroes/skins/etc must be in the language you have chosen.");
 
-            if (Client.AgentProduct.Uid != "prometheus") Logger.Warn("Core", $"The branch \"{Client.AgentProduct.Uid}\" is not supported!. This might result in failure to load. Proceed with caution.");
+            if (Client.AgentProduct.ProductCode != "pro") Logger.Warn("Core", $"The branch \"{Client.AgentProduct.ProductCode}\" is not supported!. This might result in failure to load. Proceed with caution.");
 
             if (!Client.AgentProduct.Settings.Languages.Select(x => x.Language)
                        .Contains(args.TextLanguage))
