@@ -172,11 +172,13 @@
     <Compile Include="ToolLogic\Dbg\DebugModelSTU.cs" />
     <Compile Include="ToolLogic\Dbg\DebugVoodoo.cs" />
     <Compile Include="ToolLogic\Dbg\DebugKeyTest.cs" />
+    <Compile Include="ToolLogic\Dbg\DebugVoiceStimulus.cs" />
     <Compile Include="ToolLogic\Dump\Dump004.cs" />
     <Compile Include="ToolLogic\Dump\DumpAllTheStuff.cs" />
     <Compile Include="ToolLogic\Dump\DumpFileLists.cs" />
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
+    <Compile Include="ToolLogic\Extract\ExtractHeroVoiceBetter.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebug0EE.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimNodes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugMaterialData.cs" />

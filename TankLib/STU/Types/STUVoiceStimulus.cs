@@ -51,7 +51,7 @@ namespace TankLib.STU.Types {
         public byte m_announcer;
 
         [STUFieldAttribute(0xAB866031)]
-        public byte m_AB866031;
+        public byte m_AB866031; // dunno what it is but doesnt seem to be related to hero voicelines at all, no hero stimuli have this set
 
         [STUFieldAttribute(0xAC80C14A)]
         public byte m_AC80C14A;
@@ -66,7 +66,7 @@ namespace TankLib.STU.Types {
         public byte m_72AA9E92;
 
         [STUFieldAttribute(0xAFCF2626)]
-        public byte m_AFCF2626;
+        public byte m_AFCF2626; // event npc callouts "the witch is here" / "assassin's over there"
 
         [STUFieldAttribute(0xD7FE39AA)]
         public byte m_D7FE39AA;
@@ -81,7 +81,7 @@ namespace TankLib.STU.Types {
         public byte m_252D7B29;
 
         [STUFieldAttribute(0x5D07FCC3)]
-        public byte m_5D07FCC3;
+        public byte m_5D07FCC3; // post game card voting voicelines that play at 5 and 10 votes.
 
         [STUFieldAttribute(0x1AD9EC4A)]
         public byte m_1AD9EC4A;
