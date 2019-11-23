@@ -17,6 +17,7 @@ namespace DataTool.Helper {
         public static string GetValidFilename(string filename, bool force=true) {
             if (Flags.NoNames && !force) return null;
             if (filename == null) return null;
+
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
             string invalidReStr = $@"[{invalidChars}]+";
 
@@ -26,7 +27,8 @@ namespace DataTool.Helper {
                 "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
             };
 
-            string sanitisedNamePart = Regex.Replace(filename, invalidReStr, "_");
+            var newFileName = filename.TrimEnd('.');
+            string sanitisedNamePart = Regex.Replace(newFileName, invalidReStr, "_");
 
             return reservedWords.Select(reservedWord => $"^{reservedWord}\\.").Aggregate(sanitisedNamePart,
                 (current, reservedWordPattern) => Regex.Replace(current, reservedWordPattern, "_reservedWord_.",
