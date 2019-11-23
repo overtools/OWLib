@@ -113,11 +113,8 @@ namespace DataTool.DataModels {
             }
         }
 
-        public string GetName(bool isList = false) {
-            if (isList)
-                return Name ?? GetFileName(GUID);
-            
-            return Name?.Replace(".", "") ?? GetFileName(GUID);
+        public string GetName() {            
+            return Name ?? GetFileName(GUID);
         }
 
         /// <summary>

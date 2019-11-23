@@ -56,7 +56,7 @@ namespace DataTool.ToolLogic.List {
             Log($"{start}\t{category} Unlocks");
 
             foreach (Unlock unlock in unlocks) {
-                Log($"{start}\t\t{unlock.GetName(true)} ({unlock.Rarity} {unlock.Type})");
+                Log($"{start}\t\t{unlock.GetName()} ({unlock.Rarity} {unlock.Type})");
                 if (!string.IsNullOrEmpty(unlock.Description)) {
                     Log($"{start}\t\t\t{unlock.Description}");
                 }
