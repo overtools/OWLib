@@ -48,8 +48,8 @@ namespace DataTool.DataModels.GameModes {
             Type = gamemode.m_gameModeType;
         }
         
-        public GameModeLight ToLite() {
-            return new GameModeLight(this);
+        public GameModeLite ToLite() {
+            return new GameModeLite(this);
         } 
         
         private static string GetInternalName(ulong key) {
@@ -81,14 +81,14 @@ namespace DataTool.DataModels.GameModes {
         };
     }
 
-    public class GameModeLight {
+    public class GameModeLite {
         [DataMember]
         public teResourceGUID GUID;
         
         [DataMember]
         public string Name;
         
-        public GameModeLight(GameMode gameMode) {
+        public GameModeLite(GameMode gameMode) {
             GUID = gameMode.GUID;
             Name = gameMode.Name;
         }

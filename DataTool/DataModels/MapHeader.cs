@@ -39,7 +39,7 @@ namespace DataTool.DataModels {
         public teResourceGUID MapGUID;
         
         [DataMember]
-        public IEnumerable<GameModeLight> GameModes;
+        public IEnumerable<GameModeLite> GameModes;
 
         [DataMember]
         public Enum_668FA6B6 State;
