@@ -1,5 +1,7 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using DataTool.DataModels.GameModes;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
@@ -22,13 +24,22 @@ namespace DataTool.DataModels {
         public string Description2;
         
         [DataMember]
+        public string Subline;
+        
+        [DataMember]
+        public string StateA;
+        
+        [DataMember]
+        public string StateB;
+        
+        [DataMember]
         public string VariantName;
         
         [DataMember]
         public teResourceGUID MapGUID;
         
         [DataMember]
-        public teResourceGUID[] GameModes;
+        public IEnumerable<GameModeLight> GameModes;
 
         [DataMember]
         public Enum_668FA6B6 State;
@@ -52,11 +63,13 @@ namespace DataTool.DataModels {
             VariantName = GetString(mapHeader.m_1C706502);
             Description = GetString(mapHeader.m_389CB894);
             Description2 = GetString(mapHeader.m_ACB95597);
+            Subline = GetString(mapHeader.m_EBCFAD22);
+            StateA = GetString(mapHeader.m_8EBADA44);
+            StateB = GetString(mapHeader.m_5AFE2F61);
             MapGUID = mapHeader.m_map;
             State = mapHeader.m_A125818B;
             MapType = mapHeader.m_mapType;
-
-            GameModes = Helper.JSON.FixArray(mapHeader.m_D608E9F3);
+            GameModes = mapHeader.m_D608E9F3?.Select(x => new GameMode(x).ToLite()).Where(x => x.GUID != 0);
         }
 
         public MapHeaderLite ToLite() {
@@ -88,7 +101,6 @@ namespace DataTool.DataModels {
             GUID = mapHeader.GUID;
             Name = mapHeader.Name;
             MapGUID = mapHeader.MapGUID;
-
         }
     }
 }

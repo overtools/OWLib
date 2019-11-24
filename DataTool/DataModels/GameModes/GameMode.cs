@@ -48,6 +48,10 @@ namespace DataTool.DataModels.GameModes {
             Type = gamemode.m_gameModeType;
         }
         
+        public GameModeLight ToLite() {
+            return new GameModeLight(this);
+        } 
+        
         private static string GetInternalName(ulong key) {
             InternalGamemodeNames.TryGetValue(key, out string gamemode);
             return gamemode ?? $"UNKNOWN {teResourceGUID.AsString(key)}";
@@ -75,5 +79,18 @@ namespace DataTool.DataModels.GameModes {
             {0x0230000000000025, "Retribution"},
             {0x0230000000000029, "Yeti Hunter"}
         };
+    }
+
+    public class GameModeLight {
+        [DataMember]
+        public teResourceGUID GUID;
+        
+        [DataMember]
+        public string Name;
+        
+        public GameModeLight(GameMode gameMode) {
+            GUID = gameMode.GUID;
+            Name = gameMode.Name;
+        }
     }
 }

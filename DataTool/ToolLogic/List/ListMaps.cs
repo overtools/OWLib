@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DataTool.DataModels;
-using DataTool.DataModels.GameModes;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
@@ -35,27 +34,19 @@ namespace DataTool.ToolLogic.List {
                 if (!string.IsNullOrEmpty(data.Description2)) Log($"{iD+1}Desc2: {data.Description2}");
                 Log($"{iD+1}Status: {data.State}");
                 Log($"{iD+1}Type: {data.MapType}");
-
-                // if (!string.IsNullOrEmpty(data.Description)) Log($"{iD+1}Desc: {data.Description}");
-                // if (!string.IsNullOrEmpty(data.DescriptionB)) Log($"{iD+1}DescB: {data.DescriptionB}");
-                // if (!string.IsNullOrEmpty(data.Subline)) Log($"{iD+1}Subline: {data.Subline}");
-                //
-                // if (data.StateA != null || data.StateB != null) {
-                //     Log($"{iD+1}States:");
-                //     Log($"{iD+2}{data.StateA}");
-                //     Log($"{iD+2}{data.StateB}");
-                // }
-
+                
+                if (data.StateA != null || data.StateB != null) {
+                    Log($"{iD+1}States:");
+                    Log($"{iD+2}{data.StateA ?? "N/A"}");
+                    Log($"{iD+2}{data.StateB ?? "N/A"}");
+                }
+        
                 if (data.GameModes != null) {
                     Log($"{iD+1}GameModes:");
 
-                    foreach (teResourceGUID mode in data.GameModes) {
-                        var stu = GetInstance<STUGameMode>(mode);
-                        if (stu == null) continue;
-                        GameMode gameMode = new GameMode(stu);
-                        Console.Out.WriteLine($"{iD+2}{gameMode.Name}");
+                    foreach (var gameModeLight in data.GameModes) {
+                        Console.Out.WriteLine($"{iD+2}{gameModeLight.Name ?? "N/A"} ({teResourceGUID.AsString(gameModeLight.GUID)})");
                     }
-                    //data.GameModes.ForEach(m => Log($"{iD+2}{m.Name}"));
                 }
 
                 Log();
@@ -75,6 +66,7 @@ namespace DataTool.ToolLogic.List {
             foreach (teResourceGUID key in TrackedFiles[0x9F]) {
                 MapHeader map = GetMap(key);
                 if (map == null) continue;
+
                 @return[key] = map;
             }
 
