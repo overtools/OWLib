@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -43,6 +43,8 @@ namespace CASCEncDump {
 
             // casc setup
             
+            TankLib.TACT.LoadHelper.PreLoad();
+
             ClientCreateArgs createArgs = new ClientCreateArgs {
                 SpeechLanguage = language,
                 TextLanguage = language
@@ -54,6 +56,8 @@ namespace CASCEncDump {
             }
             Client = new ClientHandler(overwatchDir, createArgs);
             TankHandler = (ProductHandler_Tank)Client.ProductHandler;
+            
+            TankLib.TACT.LoadHelper.PostLoad(Client);
 
             BuildVersion = uint.Parse(Client.InstallationInfo.Values["Version"].Split('.').Last());
 
