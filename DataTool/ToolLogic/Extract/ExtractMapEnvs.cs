@@ -37,9 +37,9 @@ namespace DataTool.ToolLogic.Extract
         public void SaveMaps(ICLIFlags toolFlags)
         {
             string basePath;
-            if (toolFlags is ExtractMapEnvFlags flags)
+            if (toolFlags is ExtractFlags extractFlags)
             {
-                basePath = flags.OutputPath;
+                basePath = extractFlags.OutputPath;
             }
             else
             {
@@ -52,6 +52,8 @@ namespace DataTool.ToolLogic.Extract
             {
                 Directory.CreateDirectory(basePath);
             }
+
+            var flags = extractFlags as ExtractMapEnvFlags ?? new ExtractMapEnvFlags();
 
             if (!flags.SkipMapEnvironmentLUT && File.Exists(Path.Combine(basePath, "SPILUT", "config.ocio")))
             {
@@ -81,11 +83,11 @@ namespace DataTool.ToolLogic.Extract
                     foreach (var placeable in reflectionData.Placeables ?? Array.Empty<IMapPlaceable>()) {
                         if (!(placeable is teMapPlaceableReflectionPoint reflectionPoint)) continue;
                         if (done.Add(new KeyValuePair<ulong, string>(reflectionPoint.Header.Texture1, mapInfo.Name + "cube"))) {
-                            SaveTex(flags, basePath, Path.Combine("Cubemap", fname), reflectionPoint.Header.Texture1.ToString(), reflectionPoint.Header.Texture1);
+                            SaveTex(extractFlags, basePath, Path.Combine("Cubemap", fname), reflectionPoint.Header.Texture1.ToString(), reflectionPoint.Header.Texture1);
                         }
 
                         if (done.Add(new KeyValuePair<ulong, string>(reflectionPoint.Header.Texture2, mapInfo.Name + "cube"))) {
-                            SaveTex(flags, basePath, Path.Combine("Cubemap", fname), reflectionPoint.Header.Texture2.ToString(), reflectionPoint.Header.Texture2);
+                            SaveTex(extractFlags, basePath, Path.Combine("Cubemap", fname), reflectionPoint.Header.Texture2.ToString(), reflectionPoint.Header.Texture2);
                         }
                     }
                 }
@@ -100,22 +102,22 @@ namespace DataTool.ToolLogic.Extract
                             //}
 
                             if (!flags.SkipMapEnvironmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnvironmentSound, mapInfo.Name)))
-                                SaveSound(flags, basePath, Path.Combine("Sound", mapName), env.MapEnvironmentSound);
+                                SaveSound(extractFlags, basePath, Path.Combine("Sound", mapName), env.MapEnvironmentSound);
                             if (!flags.SkipMapEnvironmentLUT && done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name))) {
-                                SaveTex(flags, basePath, "LUT", fname + env.LUT, env.LUT);
-                                SaveLUT(flags, basePath, "SPILUT", fname + env.LUT, env.LUT, Path.Combine(basePath, "SPILUT", "config.ocio"), mapInfo);
+                                SaveTex(extractFlags, basePath, "LUT", fname + env.LUT, env.LUT);
+                                SaveLUT(extractFlags, basePath, "SPILUT", fname + env.LUT, env.LUT, Path.Combine(basePath, "SPILUT", "config.ocio"), mapInfo);
                             }
 
                             if (!flags.SkipMapEnvironmentBlendCubemap && done.Add(new KeyValuePair<ulong, string>(env.BlendEnvironmentCubemap, mapInfo.Name)))
-                                SaveTex(flags, basePath, "BlendCubemap", fname + env.BlendEnvironmentCubemap, env.BlendEnvironmentCubemap);
+                                SaveTex(extractFlags, basePath, "BlendCubemap", fname + env.BlendEnvironmentCubemap, env.BlendEnvironmentCubemap);
                             if (!flags.SkipMapEnvironmentGroundCubemap && done.Add(new KeyValuePair<ulong, string>(env.GroundEnvironmentCubemap, mapInfo.Name)))
-                                SaveTex(flags, basePath, "GroundCubemap", fname + env.GroundEnvironmentCubemap, env.GroundEnvironmentCubemap);
+                                SaveTex(extractFlags, basePath, "GroundCubemap", fname + env.GroundEnvironmentCubemap, env.GroundEnvironmentCubemap);
                             if (!flags.SkipMapEnvironmentSkyCubemap && done.Add(new KeyValuePair<ulong, string>(env.SkyEnvironmentCubemap, mapInfo.Name)))
-                                SaveTex(flags, basePath, "SkyCubemap", fname + env.SkyEnvironmentCubemap, env.SkyEnvironmentCubemap);
+                                SaveTex(extractFlags, basePath, "SkyCubemap", fname + env.SkyEnvironmentCubemap, env.SkyEnvironmentCubemap);
                             if (!flags.SkipMapEnvironmentSkybox && done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel + env.SkyboxModelLook, mapInfo.Name)))
-                                SaveMdl(flags, basePath, Path.Combine("Skybox", mapName), env.SkyboxModel, env.SkyboxModelLook);
+                                SaveMdl(extractFlags, basePath, Path.Combine("Skybox", mapName), env.SkyboxModel, env.SkyboxModelLook);
                             if (!flags.SkipMapEnvironmentEntity && done.Add(new KeyValuePair<ulong, string>(env.EntityDefinition, mapInfo.Name)))
-                                SaveEntity(flags, basePath, Path.Combine("Entity", mapName), env.EntityDefinition);
+                                SaveEntity(extractFlags, basePath, Path.Combine("Entity", mapName), env.EntityDefinition);
                         }
                     }
                 }
