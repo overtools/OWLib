@@ -227,6 +227,9 @@ namespace DataTool.SaveLogic {
         }
 
         public static void SaveSound(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong sound) {
+            if (!info.Sounds.ContainsKey(sound))
+                return;
+
             FindLogic.Combo.SoundInfoNew soundInfo = info.Sounds[sound];
             string soundDir = Path.Combine(path, soundInfo.GetName());
             CreateDirectorySafe(soundDir);
