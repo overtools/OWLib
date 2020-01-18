@@ -130,6 +130,8 @@
     <Compile Include="DataModels\Unlock.cs" />
     <Compile Include="DataModels\UXDisplayText.cs" />
     <Compile Include="DataModels\VoiceSet.cs" />
+    <Compile Include="DataModels\Voice\Conversation.cs" />
+    <Compile Include="DataModels\Voice\ConversationLine.cs" />
     <Compile Include="FindLogic\Combo.cs" />
     <Compile Include="Flag\AliasAttribute.cs" />
     <Compile Include="Flag\CLIFlagAttribute.cs" />
@@ -215,7 +217,9 @@
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
     <Compile Include="ToolLogic\List\Misc\ListArcadeModes.cs" />
+    <Compile Include="ToolLogic\List\Misc\ListBrawlName.cs" />
     <Compile Include="ToolLogic\List\Misc\ListChatReplacements.cs" />
+    <Compile Include="ToolLogic\List\Misc\ListConversations.cs" />
     <Compile Include="ToolLogic\List\Misc\ListLogicalButtonMapping.cs" />
     <Compile Include="ToolLogic\List\Misc\ListProfanityFilter.cs" />
     <Compile Include="ToolLogic\List\Misc\ListRankedSeasons.cs" />

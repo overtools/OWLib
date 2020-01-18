@@ -30,7 +30,7 @@ namespace DataTool.ToolLogic.List.Misc {
                 mapping.Add(new LogicalButtonMapping {
                     Name = IO.GetString(stu.m_name),
                     Category = stu.m_category,
-                    LogicalButton = stu.m_logicalButton,
+                    // LogicalButton = stu.m_logicalButton,
                     ModeFlags = stu.m_modeFlags,
                     SortValue = stu.m_sortValue,
                     UnkEnum = stu.m_946AA91D
@@ -43,7 +43,7 @@ namespace DataTool.ToolLogic.List.Misc {
         public class LogicalButtonMapping {
             public string Name;
             public STUInputLogicalButtonCategory Category;
-            public STULogicalButton LogicalButton;
+            // public STULogicalButton LogicalButton;
             public Enum_0DEE7CD5 ModeFlags;
             public float SortValue;
             public Enum_3D49D804 UnkEnum;

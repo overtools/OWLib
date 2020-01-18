@@ -53,8 +53,8 @@ namespace DataTool.DataModels {
             Init(stu, key);
         }
 
-        public MapHeader(STUMapHeader stu) {
-            Init(stu);
+        public MapHeader(STUMapHeader stu, ulong key = default) {
+            Init(stu, key);
         }
 
         public void Init(STUMapHeader mapHeader, ulong key = default) {
