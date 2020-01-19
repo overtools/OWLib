@@ -22,7 +22,7 @@ namespace DataTool.ToolLogic.Dump {
             new ListGameParams().Parse(GetFlagsForCommand(flags, "game-rulesets"));
             new ListGeneralUnlocks().Parse(GetFlagsForCommand(flags, "general-unlocks"));
             new ListHeroes().Parse(GetFlagsForCommand(flags, "heroes"));
-            new ListLoobox().Parse(GetFlagsForCommand(flags, "lootboxes"));
+            new ListLootbox().Parse(GetFlagsForCommand(flags, "lootboxes"));
             new ListMaps().Parse(GetFlagsForCommand(flags, "maps"));
             new ListReportResponses().Parse(GetFlagsForCommand(flags, "report-responses"));
             new DumpStrings().Parse(GetFlagsForCommand(flags, "strings", true));

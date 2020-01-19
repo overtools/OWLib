@@ -9,7 +9,7 @@ using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-lootbox", Description = "List lootboxes", CustomFlags = typeof(ListFlags))]
-    public class ListLoobox : JSONTool, ITool {
+    public class ListLootbox : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             List<LootBox> lootboxes = GetLootboxes();
 

@@ -8,10 +8,10 @@ namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-type", Description = "Extract type (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugType : ITool {
         public void Parse(ICLIFlags toolFlags) {
-            ExtractVoiceSets(toolFlags);
+            ExtractType(toolFlags);
         }
 
-        public void ExtractVoiceSets(ICLIFlags toolFlags) {
+        public void ExtractType(ICLIFlags toolFlags) {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
@@ -22,8 +22,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             const string container = "DebugTypes";
             string path = Path.Combine(basePath, container);
             
-            WriteType(0x88, path);
-            //WriteType(0x43, path);
+            WriteType(Convert.ToUInt16(toolFlags.Positionals[3], 16), path);
         }
 
         public void WriteType(ushort type, string path) {
