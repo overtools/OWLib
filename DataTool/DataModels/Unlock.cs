@@ -54,7 +54,7 @@ namespace DataTool.DataModels {
         /// Internal StructuredData
         /// </summary>
         [IgnoreDataMember]
-        public STUUnlock STU;
+        public STU_3021DDED STU;
 
         /// <summary>
         /// DataTool specific Unlock Data Tag
@@ -79,17 +79,17 @@ namespace DataTool.DataModels {
         public bool ShouldSerializeAvailableIn() => IsTraditionalUnlock;
         public bool ShouldSerializeTag() => IsTraditionalUnlock;
 
-        public Unlock(STUUnlock unlock, ulong guid) {
+        public Unlock(STU_3021DDED unlock, ulong guid) {
             Init(unlock, guid);
         }
         
         public Unlock(ulong guid) {
-            var unlock = GetInstance<STUUnlock>(guid);
+            var unlock = GetInstance<STU_3021DDED>(guid);
             if (unlock == null) return;
             Init(unlock, guid);
         }
 
-        private void Init(STUUnlock unlock, ulong guid) {
+        private void Init(STU_3021DDED unlock, ulong guid) {
             GUID = (teResourceGUID) guid;
             STU = unlock;
             
@@ -184,7 +184,7 @@ namespace DataTool.DataModels {
             if (guids == null) return null;
             List<Unlock> unlocks = new List<Unlock>();
             foreach (ulong guid in guids) {
-                STUUnlock stu = GetInstance<STUUnlock>(guid);
+                STU_3021DDED stu = GetInstance<STU_3021DDED>(guid);
                 if (stu == null) continue;
                 Unlock unlock = new Unlock(stu, guid);
                 unlocks.Add(unlock);

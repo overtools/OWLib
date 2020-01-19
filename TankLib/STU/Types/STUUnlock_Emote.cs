@@ -4,7 +4,7 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x0B517D2E, "STUUnlock_Emote")]
-    public class STUUnlock_Emote : STUUnlock {
+    public class STUUnlock_Emote : STU_3021DDED {
         [STUFieldAttribute(0xA0D4ABDE, "m_emote")]
         public teStructuredDataAssetRef<STUAnimAlias> m_emote;
 

@@ -8,8 +8,8 @@ namespace TankLib.STU.Types.Enums {
         x65296D8F = 0x0,
         [STUFieldAttribute(0xEE245B79)]
         xEE245B79 = 0x1,
-        [STUFieldAttribute(0x8FB58A41)]
-        x8FB58A41 = 0x2,
+        [STUFieldAttribute(0xB7CE940C)]
+        xB7CE940C = 0x2,
         [STUFieldAttribute(0x2D3B6ED0)]
         x2D3B6ED0 = 0x3,
         [STUFieldAttribute(0xD223CBB4)]

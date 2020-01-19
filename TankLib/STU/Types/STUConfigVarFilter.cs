@@ -4,6 +4,9 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x8BB02FF3, "STUConfigVarFilter")]
     public class STUConfigVarFilter : STUConfigVar {
+        [STUFieldAttribute(0x93FA1642, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_1E8E0BC3[] m_93FA1642;
+
         [STUFieldAttribute(0x84065FD1)]
         public ulong m_84065FD1;
 

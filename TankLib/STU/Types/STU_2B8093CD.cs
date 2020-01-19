@@ -52,6 +52,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xB1449DF7)]
         public teStructuredDataAssetRef<STUUnlock>[] m_B1449DF7;
 
+        [STUFieldAttribute(0x66C923AF, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_1A325379[] m_66C923AF;
+
         [STUFieldAttribute(0x7FB46D96, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_2B17E5B4[] m_7FB46D96;
 
@@ -88,6 +91,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x08E3EC71)]
         public byte m_08E3EC71;
 
+        [STUFieldAttribute(0x9C833A7F)]
+        public byte m_9C833A7F;
+
         [STUFieldAttribute(0x0BB1E4C3)]
         public byte m_0BB1E4C3;
 
@@ -99,6 +105,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x0BF2EFB0)]
         public byte m_0BF2EFB0;
+
+        [STUFieldAttribute(0xB412D9AA)]
+        public byte m_B412D9AA;
 
         [STUFieldAttribute(0xF67DA48B)]
         public byte m_F67DA48B;
@@ -132,5 +141,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x60F1B417)]
         public byte m_60F1B417;
+
+        [STUFieldAttribute(0xCC271A4B)]
+        public byte m_CC271A4B;
     }
 }

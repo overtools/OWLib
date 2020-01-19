@@ -23,6 +23,6 @@ namespace TankLib.STU.Types {
         public teStructuredDataAssetRef<STUModel>[] m_C03306D7;
 
         [STUFieldAttribute(0x312C5F1A, "m_materialEffects", ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUMaterialEffect[] m_materialEffects;
+        public STU_D75EA2E1[] m_materialEffects;
     }
 }

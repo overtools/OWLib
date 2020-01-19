@@ -34,8 +34,10 @@ namespace TankLib.STU.Types.Enums {
         x861B7D3B = 0xD,
         [STUFieldAttribute(0xC37107D3)]
         xC37107D3 = 0xE,
+        [STUFieldAttribute(0x26D71C59)]
+        x26D71C59 = 0xF,
         [STUFieldAttribute(0x40CE6362)]
-        x40CE6362 = 0xF,
+        x40CE6362 = 0x10,
         [STUFieldAttribute(0x7F7D3533)]
         x7F7D3533 = 0x0,
     }

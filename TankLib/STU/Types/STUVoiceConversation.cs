@@ -15,5 +15,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x9CDDC24D, "m_weight")]
         public float m_weight;
+
+        [STUFieldAttribute(0x98F0E612)]
+        public byte m_98F0E612;
     }
 }

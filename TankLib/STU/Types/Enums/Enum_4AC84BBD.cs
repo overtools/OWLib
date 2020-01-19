@@ -10,71 +10,73 @@ namespace TankLib.STU.Types.Enums {
         x9E374BEA = 0x1,
         [STUFieldAttribute(0x0A04B51B)]
         x0A04B51B = 0x2,
+        [STUFieldAttribute(0x269F51C2)]
+        x269F51C2 = 0x3,
         [STUFieldAttribute(0x02A51BD8)]
-        x02A51BD8 = 0x3,
+        x02A51BD8 = 0x4,
         [STUFieldAttribute(0x757573D4)]
-        x757573D4 = 0x4,
+        x757573D4 = 0x5,
         [STUFieldAttribute(0x4B07B5A5)]
-        x4B07B5A5 = 0x5,
+        x4B07B5A5 = 0x6,
         [STUFieldAttribute(0xF808ACE8)]
-        xF808ACE8 = 0x6,
+        xF808ACE8 = 0x7,
         [STUFieldAttribute(0x2ADC261B)]
-        x2ADC261B = 0x7,
+        x2ADC261B = 0x8,
         [STUFieldAttribute(0xB50D6922)]
-        xB50D6922 = 0x8,
+        xB50D6922 = 0x9,
         [STUFieldAttribute(0x129C8C93)]
-        x129C8C93 = 0x9,
+        x129C8C93 = 0xA,
         [STUFieldAttribute(0x5B83ECB5)]
-        x5B83ECB5 = 0xA,
+        x5B83ECB5 = 0xB,
         [STUFieldAttribute(0x978C5453)]
-        x978C5453 = 0xB,
+        x978C5453 = 0xC,
         [STUFieldAttribute(0xED8D6672)]
-        xED8D6672 = 0xC,
+        xED8D6672 = 0xD,
         [STUFieldAttribute(0xD81186E0)]
-        xD81186E0 = 0xD,
+        xD81186E0 = 0xE,
         [STUFieldAttribute(0x6B21ABFA)]
-        x6B21ABFA = 0xE,
+        x6B21ABFA = 0xF,
         [STUFieldAttribute(0x7FA25A61)]
-        x7FA25A61 = 0xF,
+        x7FA25A61 = 0x10,
         [STUFieldAttribute(0x4E596ED2)]
-        x4E596ED2 = 0x10,
+        x4E596ED2 = 0x11,
         [STUFieldAttribute(0x493C433E)]
-        x493C433E = 0x11,
+        x493C433E = 0x12,
         [STUFieldAttribute(0x5C571F43)]
-        x5C571F43 = 0x12,
+        x5C571F43 = 0x13,
         [STUFieldAttribute(0x292F571E)]
-        x292F571E = 0x13,
+        x292F571E = 0x14,
         [STUFieldAttribute(0xD3421CDE)]
-        xD3421CDE = 0x14,
+        xD3421CDE = 0x15,
         [STUFieldAttribute(0x89AC2608)]
-        x89AC2608 = 0x15,
+        x89AC2608 = 0x16,
         [STUFieldAttribute(0x799C77E1)]
-        x799C77E1 = 0x16,
+        x799C77E1 = 0x17,
         [STUFieldAttribute(0xF95352E8)]
-        xF95352E8 = 0x17,
+        xF95352E8 = 0x18,
         [STUFieldAttribute(0x71CA9DA3)]
-        x71CA9DA3 = 0x18,
+        x71CA9DA3 = 0x19,
         [STUFieldAttribute(0x67CFCB5F)]
-        x67CFCB5F = 0x19,
+        x67CFCB5F = 0x1A,
         [STUFieldAttribute(0xD7BA4510)]
-        xD7BA4510 = 0x1A,
+        xD7BA4510 = 0x1B,
         [STUFieldAttribute(0x7846208F)]
-        x7846208F = 0x1B,
+        x7846208F = 0x1C,
         [STUFieldAttribute(0x12B3AC14)]
-        x12B3AC14 = 0x1C,
+        x12B3AC14 = 0x1D,
         [STUFieldAttribute(0x6BE0CA0C)]
-        x6BE0CA0C = 0x1D,
+        x6BE0CA0C = 0x1E,
         [STUFieldAttribute(0x25FCBA42)]
-        x25FCBA42 = 0x1E,
+        x25FCBA42 = 0x1F,
         [STUFieldAttribute(0x830FF3AA)]
-        x830FF3AA = 0x1F,
+        x830FF3AA = 0x20,
         [STUFieldAttribute(0x07D4DB43)]
-        x07D4DB43 = 0x20,
+        x07D4DB43 = 0x21,
         [STUFieldAttribute(0xB5941741)]
-        xB5941741 = 0x21,
+        xB5941741 = 0x22,
         [STUFieldAttribute(0xCEB1A0B9)]
-        xCEB1A0B9 = 0x22,
+        xCEB1A0B9 = 0x23,
         [STUFieldAttribute(0x234D9D32)]
-        x234D9D32 = 0x23,
+        x234D9D32 = 0x24,
     }
 }

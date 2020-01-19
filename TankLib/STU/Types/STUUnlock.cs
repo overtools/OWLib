@@ -11,55 +11,13 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xDAD2E3A2)]
         public teStructuredDataAssetRef<ulong> m_DAD2E3A2;
 
-        [STUFieldAttribute(0xBDB2D444)]
-        public teStructuredDataAssetRef<ulong> m_BDB2D444;
-
-        [STUFieldAttribute(0xBEE9BCDA)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_BEE9BCDA;
-
-        [STUFieldAttribute(0x53145FAF)]
-        public teStructuredDataAssetRef<ulong> m_53145FAF;
-
-        [STUFieldAttribute(0xF8150591)]
-        public teStructuredDataAssetRef<ulong> m_F8150591;
-
-        [STUFieldAttribute(0xAA8E1BB0, "m_targetTags")]
-        public teStructuredDataAssetRef<STUTargetTag>[] m_targetTags;
-
-        [STUFieldAttribute(0x3446F580)]
-        public teStructuredDataAssetRef<STU_96ABC153> m_3446F580;
-
-        [STUFieldAttribute(0x0B1BA7C1)]
-        public teStructuredDataAssetRef<ulong> m_0B1BA7C1;
-
-        [STUFieldAttribute(0xC92AF903)]
-        public teStructuredDataAssetRef<STUUnlock>[] m_C92AF903;
-
         [STUFieldAttribute(0x38BFB46C, "m_resourceKey")]
         public teStructuredDataAssetRef<STUResourceKey> m_resourceKey;
 
         [STUFieldAttribute(0xEDE36CB7, "m_resourceKeyId")]
         public ulong m_resourceKeyId;
 
-        [STUFieldAttribute(0xBB99FCD3, "m_rarity")]
-        public STUUnlockRarity m_rarity;
-
-        [STUFieldAttribute(0x5B66C189)]
-        public Enum_14895597 m_5B66C189;
-
-        [STUFieldAttribute(0x8EEF1251)]
-        public int m_8EEF1251;
-
-        [STUFieldAttribute(0xEF7AAE4A)]
-        public Enum_E279F7A6 m_EF7AAE4A;
-
         [STUFieldAttribute(0xA7B393BF)]
         public Enum_5A7EBE59 m_A7B393BF;
-
-        [STUFieldAttribute(0x1A546C64)]
-        public byte m_1A546C64;
-
-        [STUFieldAttribute(0x40926C4A)]
-        public byte m_40926C4A;
     }
 }

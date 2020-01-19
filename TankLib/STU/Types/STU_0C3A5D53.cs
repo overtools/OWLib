@@ -5,8 +5,8 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0x0C3A5D53)]
     public class STU_0C3A5D53 : STUStatescriptState {
-        [STUFieldAttribute(0x4D2DB658, "m_identifier")]
-        public teStructuredDataAssetRef<STUIdentifier> m_identifier;
+        [STUFieldAttribute(0x411ABFEA, "m_context", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUStatescriptForCodeValue m_context;
 
         [STUFieldAttribute(0xFFA188A2, "m_values", ReaderType = typeof(InlineInstanceFieldReader))]
         public STUStatescriptForCodeValue[] m_values;

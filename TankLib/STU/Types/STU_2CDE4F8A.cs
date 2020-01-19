@@ -20,6 +20,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD9214822)]
         public teVec3 m_D9214822;
 
+        [STUFieldAttribute(0x8043A6E1)]
+        public teVec3 m_8043A6E1;
+
         [STUFieldAttribute(0x11467156)]
         public teVec2 m_11467156;
     }

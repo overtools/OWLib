@@ -6,5 +6,8 @@ namespace TankLib.STU.Types {
     public class STUStatescriptSchema : STUInstance {
         [STUFieldAttribute(0x16B4863C, "m_entries", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptSchemaEntry[] m_entries;
+
+        [STUFieldAttribute(0xF902AED1, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_6B6014C2[] m_F902AED1;
     }
 }

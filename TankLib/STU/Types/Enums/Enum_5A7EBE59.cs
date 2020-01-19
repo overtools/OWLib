@@ -20,8 +20,18 @@ namespace TankLib.STU.Types.Enums {
         WeaponSkin = 0x6,
         [STUFieldAttribute(0xD650E939)]
         Portrait = 0x7,
+        [STUFieldAttribute(0x8137167B)]
+        x8137167B = 0x8,
+        [STUFieldAttribute(0xAB5212AB)]
+        xAB5212AB = 0x9,
+        [STUFieldAttribute(0x090928A0)]
+        x090928A0 = 0xA,
+        [STUFieldAttribute(0x91661235)]
+        x91661235 = 0xB,
+        [STUFieldAttribute(0x8415D257)]
+        x8415D257 = 0xC,
         [STUFieldAttribute(0x06DC4E05)]
-        x06DC4E05 = 0x8,
+        x06DC4E05 = 0xD,
         [STUFieldAttribute(0x18098BDF)]
         x18098BDF = 0xFFFFFF,
     }

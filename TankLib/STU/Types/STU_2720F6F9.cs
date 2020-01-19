@@ -4,55 +4,43 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x2720F6F9)]
     public class STU_2720F6F9 : STU_C7C085F6 {
-        [STUFieldAttribute(0xF56A09FF)]
-        public teStructuredDataAssetRef<STUAnimation> m_F56A09FF;
+        [STUFieldAttribute(0x42EAEA96)]
+        public teStructuredDataAssetRef<STUDataFlow> m_42EAEA96;
 
-        [STUFieldAttribute(0x6BA6BC36)]
-        public teStructuredDataAssetRef<STUDataFlow> m_6BA6BC36;
+        [STUFieldAttribute(0x2401B15C)]
+        public teStructuredDataAssetRef<STUDataFlow> m_2401B15C;
 
-        [STUFieldAttribute(0x87489076)]
-        public teStructuredDataAssetRef<STUDataFlow> m_87489076;
+        [STUFieldAttribute(0xCAD74F65)]
+        public teStructuredDataAssetRef<STUDataFlow> m_CAD74F65;
 
-        [STUFieldAttribute(0x63691AF6, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUAnimConfigWeightSet m_63691AF6;
+        [STUFieldAttribute(0x70F76032)]
+        public teStructuredDataAssetRef<STUAnimation> m_70F76032;
 
-        [STUFieldAttribute(0x34EA4470, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUAnimConfigWeightSet m_34EA4470;
+        [STUFieldAttribute(0x162CE0DA)]
+        public teStructuredDataAssetRef<STUAnimation> m_162CE0DA;
 
-        [STUFieldAttribute(0x099F3E75, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUAnimConfigWeightSet m_099F3E75;
+        [STUFieldAttribute(0xE01D2805)]
+        public float m_E01D2805;
 
-        [STUFieldAttribute(0x0CCE726E, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUAnimConfigWeightSet m_0CCE726E;
+        [STUFieldAttribute(0xCEF43730)]
+        public float m_CEF43730;
 
-        [STUFieldAttribute(0xED840ACB, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUAnimConfigWeightSet m_ED840ACB;
+        [STUFieldAttribute(0x50D0E2E3)]
+        public float m_50D0E2E3;
 
-        [STUFieldAttribute(0x0DCDCE86, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUAnimConfigWeightSet m_0DCDCE86;
+        [STUFieldAttribute(0x4AC80705)]
+        public float m_4AC80705;
 
-        [STUFieldAttribute(0x8AD014A4, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUAnimConfigWeightSet m_8AD014A4;
+        [STUFieldAttribute(0xB476CC1B)]
+        public float m_B476CC1B;
 
-        [STUFieldAttribute(0xF64B2B67, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUAnimConfigWeightSet m_F64B2B67;
+        [STUFieldAttribute(0x2D305C1E)]
+        public float m_2D305C1E;
 
-        [STUFieldAttribute(0x3B439936, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUAnimConfigWeightSet m_3B439936;
+        [STUFieldAttribute(0x14E67C73)]
+        public float m_14E67C73;
 
-        [STUFieldAttribute(0x68CABF96)]
-        public float m_68CABF96;
-
-        [STUFieldAttribute(0x0DFEDFB1)]
-        public float m_0DFEDFB1;
-
-        [STUFieldAttribute(0x6F0BA030)]
-        public float m_6F0BA030;
-
-        [STUFieldAttribute(0xA246AB0F)]
-        public float m_A246AB0F;
-
-        [STUFieldAttribute(0x1456B4AF)]
-        public float m_1456B4AF;
+        [STUFieldAttribute(0xD32A2089)]
+        public float m_D32A2089;
     }
 }

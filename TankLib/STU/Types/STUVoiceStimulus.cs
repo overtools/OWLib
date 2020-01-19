@@ -14,6 +14,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
         public teStructuredDataAssetRef<STUVoiceCategory> m_category;
 
+        [STUFieldAttribute(0x91F599DF)]
+        public Enum_1964FED7[] m_91F599DF;
+
         [STUFieldAttribute(0x4FF98D41, "m_criteria", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUCriteriaContainer m_criteria;
 
@@ -43,6 +46,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xED61D926, "m_radius")]
         public float m_radius;
+
+        [STUFieldAttribute(0xBCE309D7)]
+        public Enum_523DC49D m_BCE309D7;
 
         [STUFieldAttribute(0x9502010D, "m_active")]
         public byte m_active;
@@ -82,8 +88,5 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x5D07FCC3)]
         public byte m_5D07FCC3; // post game card voting voicelines that play at 5 and 10 votes.
-
-        [STUFieldAttribute(0x1AD9EC4A)]
-        public byte m_1AD9EC4A;
     }
 }

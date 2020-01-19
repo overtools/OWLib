@@ -4,6 +4,9 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0xA6C292F2)]
     public class STU_A6C292F2 : STU_5BF8DA7A {
+        [STUFieldAttribute(0x94511F39)]
+        public float m_94511F39;
+
         [STUFieldAttribute(0xF328EA13)]
         public byte m_F328EA13;
 

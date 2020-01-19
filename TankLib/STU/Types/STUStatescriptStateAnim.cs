@@ -41,6 +41,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBB16810A, "m_priority", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_priority;
 
+        [STUFieldAttribute(0x6ECCC859, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_6ECCC859;
+
         [STUFieldAttribute(0x7CC54480, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_7CC54480;
 
@@ -67,6 +70,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xA0B58111, "m_onFinishedPlug", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptOutputPlug m_onFinishedPlug;
+
+        [STUFieldAttribute(0xC4FAB48B)]
+        public Enum_92D6330B m_C4FAB48B;
 
         [STUFieldAttribute(0xB2E34614)]
         public STUPlayAnimSlot m_B2E34614;

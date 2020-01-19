@@ -5,14 +5,14 @@ using TankLib.STU.Types.Enums;
 namespace TankLib.STU.Types {
     [STUAttribute(0xC2DC60F6, "STUStatescriptBase")]
     public class STUStatescriptBase : STUGraphNode {
-        [STUFieldAttribute(0x5328E4F8)]
-        public teString m_5328E4F8;
-
         [STUFieldAttribute(0xBF5B22B7, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUStatescriptRemoteSyncVar[] m_BF5B22B7;
 
         [STUFieldAttribute(0x8BF03679, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUStatescriptRemoteSyncVar[] m_8BF03679;
+
+        [STUFieldAttribute(0xA2287776)]
+        public Enum_46B5ADCA m_A2287776;
 
         [STUFieldAttribute(0x871A8203)]
         public int m_871A8203;

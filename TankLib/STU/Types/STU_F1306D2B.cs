@@ -5,6 +5,6 @@ namespace TankLib.STU.Types {
     [STUAttribute(0xF1306D2B)]
     public class STU_F1306D2B : STUUXObject {
         [STUFieldAttribute(0x5180E750, "m_value")]
-        public ulong m_value;
+        public uint m_value;
     }
 }

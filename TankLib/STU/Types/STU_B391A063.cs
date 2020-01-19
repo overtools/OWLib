@@ -6,5 +6,8 @@ namespace TankLib.STU.Types {
     public class STU_B391A063 : STUAnimNode_AnimationPose2d {
         [STUFieldAttribute(0x5E009A60, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_15EF3A7E m_5E009A60;
+
+        [STUFieldAttribute(0x7F30576A, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_15EF3A7E m_7F30576A;
     }
 }

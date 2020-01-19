@@ -17,6 +17,10 @@ namespace TankLibHelper {
             Name = Info.GetInstanceName(_instance.Hash);
             if (instance.Parent != 0) {
                 _parentName = Info.GetInstanceName(_instance.Parent);
+                
+                if (!info.Instances.ContainsKey(_instance.Parent)) {
+                    Console.Out.WriteLine($"pls fix: {_instance.Hash:X32}'s parent is missing (add to ignored)");
+                }
             }
         }
         
