@@ -9,6 +9,7 @@ using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.Extract;
+using NUnit.Framework.Constraints;
 using TankLib;
 using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
@@ -448,8 +449,24 @@ namespace DataTool.SaveLogic {
                     SaveTexture(flags, textureDirectory, info, texture.Key);
                 }
             }
+
+            if (flags is ExtractFlags extractFlags && extractFlags.ExtractShaders && materialInfo.Shaders != null) {
+                SaveShader(path, materialInfo, info);
+            }
         }
-        
+
+        private static void SaveShader(string path, FindLogic.Combo.MaterialInfo materialInfo, FindLogic.Combo.ComboInfo info) {
+            string shaderDirectory = Path.Combine(path, "Shaders", $"{materialInfo.MaterialData:X16}");
+            WriteFile(materialInfo.ShaderGroup, shaderDirectory);
+            WriteFile(materialInfo.ShaderSource, shaderDirectory);
+            foreach (var (instance, code, byteCode) in materialInfo.Shaders) {
+                var instancePath = Path.Combine(shaderDirectory, $"{instance:X12}");
+                WriteFile(instance, instancePath, "instance.088");
+                WriteFile(code, instancePath, "code.087");
+                WriteFile(byteCode, Path.Combine(instancePath, "code.fxc"));
+            }
+        }
+
 
         // helpers (NOT FOR INTERNAL USE)
         public static void SaveAllVoiceSets(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo soundInfo) {
