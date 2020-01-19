@@ -461,9 +461,9 @@ namespace DataTool.SaveLogic {
             WriteFile(materialInfo.ShaderSource, shaderDirectory);
             foreach (var (instance, code, byteCode) in materialInfo.Shaders) {
                 var instancePath = Path.Combine(shaderDirectory, $"{instance:X12}");
-                WriteFile(instance, instancePath, "instance.088");
-                WriteFile(code, instancePath, "code.087");
-                WriteFile(byteCode, Path.Combine(instancePath, "code.fxc"));
+                WriteFile(instance, instancePath);
+                WriteFile(code, instancePath);
+                WriteFile(byteCode, Path.Combine(instancePath, Path.ChangeExtension(teResourceGUID.AsString(code), "fxc")));
             }
         }
 
