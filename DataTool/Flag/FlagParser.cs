@@ -66,7 +66,7 @@ namespace DataTool.Flag {
             var fields     = iface.GetFields();
             foreach (var field in fields) {
                 var flagattr = field.GetCustomAttribute<CLIFlagAttribute>(true);
-                if (flagattr == null || flagattr.AllPositionals) continue;
+                if (flagattr == null || flagattr.AllPositionals || flagattr.Hidden) continue;
 
                 if (flagattr.Positional > -1) {
                     var x                     = flagattr.Flag;
@@ -132,7 +132,8 @@ namespace DataTool.Flag {
 
             foreach (var field in fields) {
                 var flagattr = field.GetCustomAttribute<CLIFlagAttribute>(true);
-                if (flagattr == null || flagattr.AllPositionals) continue;
+                if (flagattr == null || flagattr.AllPositionals || flagattr.Hidden) continue;
+                if (flagattr == null || flagattr.AllPositionals || flagattr.Hidden) continue;
                 var aliasattrs = field.GetCustomAttributes<AliasAttribute>(true)
                                       .ToArray();
 
