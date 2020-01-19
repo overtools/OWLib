@@ -2,10 +2,10 @@ using DataTool.Flag;
 using DataTool.ToolLogic.Dbg;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-everything", Description = "Extract everything", CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-everything", Description = "Extract everything", CustomFlags = typeof(ExtractMapEnvFlags))]
     public class ExtractEverything : ITool {
         public void Parse(ICLIFlags toolFlags) {
-            if (!(toolFlags is ExtractFlags flags)) {
+            if (!(toolFlags is ExtractMapEnvFlags flags)) {
                 // wat
                 return;
             }
