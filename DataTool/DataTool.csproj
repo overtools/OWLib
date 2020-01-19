@@ -210,7 +210,7 @@
     <Compile Include="ToolLogic\List\ListGeneralUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListHeroUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListHighlights.cs" />
-    <Compile Include="ToolLogic\List\ListLoobox.cs" />
+    <Compile Include="ToolLogic\List\ListLootbox.cs" />
     <Compile Include="ToolLogic\List\ListResourceKeys.cs" />
     <Compile Include="ToolLogic\List\ListMaps.cs" />
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
