@@ -450,7 +450,7 @@ namespace DataTool.SaveLogic {
                 }
             }
 
-            if (flags is ExtractFlags extractFlags && extractFlags.ExtractShaders && materialInfo.Shaders != null) {
+            if (Program.Flags.ExtractShaders && materialInfo.Shaders != null) {
                 SaveShader(path, materialInfo, info);
             }
         }

@@ -655,14 +655,16 @@ namespace DataTool.FindLogic {
                     materialInfo.ShaderSource = GetReplacement(material.Header.ShaderSource, replacements);
                     materialInfo.ShaderGroup = GetReplacement(material.Header.ShaderGroup, replacements);
                     try {
-                        teShaderGroup shaderGroup = new teShaderGroup(OpenFile(materialInfo.ShaderGroup));
-                        materialInfo.Shaders = new List<(ulong instance, ulong code, byte[] shaderData)>();
-                        foreach (teResourceGUID shaderGuid in shaderGroup.Instances) {
-                            ulong shaderInstanceGuid = GetReplacement(shaderGuid, replacements);
-                            teShaderInstance shaderInstance = new teShaderInstance(OpenFile(shaderInstanceGuid));
-                            ulong shaderCodeGuid = GetReplacement(shaderInstance.Header.ShaderCode, replacements);
-                            teShaderCode shaderCode = new teShaderCode(OpenFile(shaderCodeGuid));
-                            materialInfo.Shaders.Add((shaderInstanceGuid, shaderCodeGuid, shaderCode.ByteCode));
+                        if (Program.Flags.ExtractShaders) {
+                            teShaderGroup shaderGroup = new teShaderGroup(OpenFile(materialInfo.ShaderGroup));
+                            materialInfo.Shaders = new List<(ulong instance, ulong code, byte[] shaderData)>();
+                            foreach (teResourceGUID shaderGuid in shaderGroup.Instances) {
+                                ulong shaderInstanceGuid = GetReplacement(shaderGuid, replacements);
+                                teShaderInstance shaderInstance = new teShaderInstance(OpenFile(shaderInstanceGuid));
+                                ulong shaderCodeGuid = GetReplacement(shaderInstance.Header.ShaderCode, replacements);
+                                teShaderCode shaderCode = new teShaderCode(OpenFile(shaderCodeGuid));
+                                materialInfo.Shaders.Add((shaderInstanceGuid, shaderCodeGuid, shaderCode.ByteCode));
+                            }
                         }
                     } catch {
                         // lol xd
