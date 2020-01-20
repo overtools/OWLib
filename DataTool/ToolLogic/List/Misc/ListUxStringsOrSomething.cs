@@ -46,12 +46,12 @@ namespace DataTool.ToolLogic.List.Misc {
             return @return;
         }
 
-        private class UxStringContainer {
+        public class UxStringContainer {
             public teResourceGUID GUID;
             public List<UxString> Strings;
         }
 
-        private class UxString {
+        public class UxString {
             public teResourceGUID VirtualO1C;
             public string DisplayName;
         }
