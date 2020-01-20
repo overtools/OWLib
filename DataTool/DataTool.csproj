@@ -220,6 +220,7 @@
     <Compile Include="ToolLogic\List\Misc\ListBrawlName.cs" />
     <Compile Include="ToolLogic\List\Misc\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\Misc\ListConversations.cs" />
+    <Compile Include="ToolLogic\List\Misc\ListUxStringsOrSomething.cs" />
     <Compile Include="ToolLogic\List\Misc\ListLogicalButtonMapping.cs" />
     <Compile Include="ToolLogic\List\Misc\ListProfanityFilter.cs" />
     <Compile Include="ToolLogic\List\Misc\ListRankedSeasons.cs" />
