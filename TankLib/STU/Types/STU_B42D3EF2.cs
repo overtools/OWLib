@@ -6,5 +6,11 @@ namespace TankLib.STU.Types {
     public class STU_B42D3EF2 : STUEntityComponent {
         [STUFieldAttribute(0x2C2CCC26)]
         public byte m_2C2CCC26;
+
+        [STUFieldAttribute(0x67D8DE7E)]
+        public byte m_67D8DE7E;
+
+        [STUFieldAttribute(0x81008D06)]
+        public byte m_81008D06;
     }
 }

@@ -16,6 +16,12 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xBCAD245E)]
         public ulong[] m_BCAD245E;
 
+        [STUFieldAttribute(0xEED04EED)]
+        public ulong[] m_EED04EED;
+
+        [STUFieldAttribute(0x123205BA, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STUAnimBlendDriverParam[] m_123205BA;
+
         [STUFieldAttribute(0xA4712A0A, "m_treeCRC")]
         public ulong m_treeCRC;
 

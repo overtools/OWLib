@@ -23,6 +23,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x64839023)]
         public byte m_64839023;
 
+        [STUFieldAttribute(0xBFA825EA)]
+        public byte m_BFA825EA;
+
         [STUFieldAttribute(0x30465518)]
         public byte m_30465518;
     }

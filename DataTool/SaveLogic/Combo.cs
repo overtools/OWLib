@@ -9,6 +9,7 @@ using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.Extract;
+using NUnit.Framework.Constraints;
 using TankLib;
 using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
@@ -227,6 +228,9 @@ namespace DataTool.SaveLogic {
         }
 
         public static void SaveSound(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong sound) {
+            if (!info.Sounds.ContainsKey(sound))
+                return;
+
             FindLogic.Combo.SoundInfoNew soundInfo = info.Sounds[sound];
             string soundDir = Path.Combine(path, soundInfo.GetName());
             CreateDirectorySafe(soundDir);
@@ -445,8 +449,24 @@ namespace DataTool.SaveLogic {
                     SaveTexture(flags, textureDirectory, info, texture.Key);
                 }
             }
+
+            if (Program.Flags.ExtractShaders && materialInfo.Shaders != null) {
+                SaveShader(path, materialInfo, info);
+            }
         }
-        
+
+        private static void SaveShader(string path, FindLogic.Combo.MaterialInfo materialInfo, FindLogic.Combo.ComboInfo info) {
+            string shaderDirectory = Path.Combine(path, "Shaders", $"{materialInfo.MaterialData:X16}");
+            //WriteFile(materialInfo.ShaderGroup, shaderDirectory);
+            //WriteFile(materialInfo.ShaderSource, shaderDirectory);
+            foreach (var (instance, code, byteCode) in materialInfo.Shaders) {
+                //var instancePath = Path.Combine(shaderDirectory, $"{instance:X12}");
+                //WriteFile(instance, instancePath);
+                //WriteFile(code, instancePath);
+                WriteFile(byteCode, Path.Combine(shaderDirectory, Path.ChangeExtension(teResourceGUID.AsString(code), "fxc")));
+            }
+        }
+
 
         // helpers (NOT FOR INTERNAL USE)
         public static void SaveAllVoiceSets(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo soundInfo) {

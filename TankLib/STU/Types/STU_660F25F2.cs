@@ -4,9 +4,6 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x660F25F2)]
     public class STU_660F25F2 : STUGenericSettings_Base {
-        [STUFieldAttribute(0x9CB455AD, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUStatescriptGraphWithOverrides[] m_9CB455AD;
-
         [STUFieldAttribute(0xEDB26D81)]
         public float m_EDB26D81;
 

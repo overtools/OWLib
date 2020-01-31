@@ -248,7 +248,9 @@ namespace DataTool.FindLogic {
         public class MaterialInfo : ComboType {
             public ulong MaterialData;
             public ulong ShaderSource;
-            
+            public ulong ShaderGroup;
+            public List<(ulong instance, ulong code, byte[] shaderData)> Shaders;
+
             // shader info;
             // main shader = 44, used to be A5
             // golden = 50
@@ -651,6 +653,22 @@ namespace DataTool.FindLogic {
 
                     materialInfo.MaterialIDs.Add(context.MaterialID);
                     materialInfo.ShaderSource = GetReplacement(material.Header.ShaderSource, replacements);
+                    materialInfo.ShaderGroup = GetReplacement(material.Header.ShaderGroup, replacements);
+                    try {
+                        if (Program.Flags.ExtractShaders) {
+                            teShaderGroup shaderGroup = new teShaderGroup(OpenFile(materialInfo.ShaderGroup));
+                            materialInfo.Shaders = new List<(ulong instance, ulong code, byte[] shaderData)>();
+                            foreach (teResourceGUID shaderGuid in shaderGroup.Instances) {
+                                ulong shaderInstanceGuid = GetReplacement(shaderGuid, replacements);
+                                teShaderInstance shaderInstance = new teShaderInstance(OpenFile(shaderInstanceGuid));
+                                ulong shaderCodeGuid = GetReplacement(shaderInstance.Header.ShaderCode, replacements);
+                                teShaderCode shaderCode = new teShaderCode(OpenFile(shaderCodeGuid));
+                                materialInfo.Shaders.Add((shaderInstanceGuid, shaderCodeGuid, shaderCode.ByteCode));
+                            }
+                        }
+                    } catch {
+                        // lol xd
+                    }
 
                     if (context.ModelLook == 0 && context.Model != 0) {
                         info.Models[context.Model].LooseMaterials.Add(guid);

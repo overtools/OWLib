@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types {
     [STUAttribute(0x6FE91269, "STUUnlock_PortraitFrame")]
-    public class STUUnlock_PortraitFrame : STUUnlock {
+    public class STUUnlock_PortraitFrame : STU_3021DDED {
         [STUFieldAttribute(0x949D9C2A)]
         public teStructuredDataAssetRef<ulong> m_949D9C2A;
 

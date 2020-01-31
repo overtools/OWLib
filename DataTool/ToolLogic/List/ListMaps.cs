@@ -57,7 +57,7 @@ namespace DataTool.ToolLogic.List {
             STUMapHeader map = GetInstance<STUMapHeader>(key);
             if (map == null) return null;
 
-            return new MapHeader(map);
+            return new MapHeader(map, key);
         }
 
         public Dictionary<teResourceGUID, MapHeader> GetMaps() {

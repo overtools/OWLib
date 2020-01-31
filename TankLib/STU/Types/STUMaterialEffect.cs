@@ -4,10 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x4D03ED2B, "STUMaterialEffect")]
     public class STUMaterialEffect : STUInstance {
-        [STUFieldAttribute(0x0BCD10D6, "m_materialEffect")]
-        public teStructuredDataAssetRef<STUMaterialEffect> m_materialEffect;
-
-        [STUFieldAttribute(0xBAFDAFBA, "m_materials", ReaderType = typeof(InlineInstanceFieldReader))]
-        public STUModelMaterial[] m_materials;
+        [STUFieldAttribute(0x82F3DCE0)]
+        public teStructuredDataAssetRef<STU_C6A37088> m_82F3DCE0;
     }
 }

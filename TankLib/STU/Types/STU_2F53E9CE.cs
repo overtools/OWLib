@@ -6,5 +6,11 @@ namespace TankLib.STU.Types {
     public class STU_2F53E9CE : STUGenericSettings_Base {
         [STUFieldAttribute(0xDA16C400)]
         public uint[] m_DA16C400;
+
+        [STUFieldAttribute(0x339A497E)]
+        public uint[] m_339A497E;
+
+        [STUFieldAttribute(0x26EB3A5E, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_D3F5A16A[] m_26EB3A5E;
     }
 }

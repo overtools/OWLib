@@ -79,6 +79,9 @@ namespace DataTool {
         [CLIFlag(Default = false, Flag = "no-names", Help = "Don't use names for textures", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool NoNames;
 
+        [CLIFlag(Default = false, Flag = "extract-shaders", Help = "Extract shader files", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool ExtractShaders;
+
         public override bool Validate() => true;
     }
 }

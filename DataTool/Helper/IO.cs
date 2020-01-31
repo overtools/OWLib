@@ -93,9 +93,27 @@ namespace DataTool.Helper {
             }
         }
 
+        public static void WriteFile(byte[] bytes, string filename) {
+            if (bytes == null) return;
+            string path = Path.GetDirectoryName(filename);
+            if (!Directory.Exists(path) && path != null) {
+                Directory.CreateDirectory(path);
+            }
+
+            using (Stream file = File.OpenWrite(filename)) {
+                file.SetLength(0); // ensure no leftover data
+                file.Write(bytes, 0, bytes.Length);
+            }
+        }
+
         public static void WriteFile(ulong guid, string path) {
             if (!TankHandler.Assets.ContainsKey(guid)) return;
             WriteFile(OpenFile(guid), guid, path);
+        }
+
+        public static void WriteFile(ulong guid, string path, string filename) {
+            if (!TankHandler.Assets.ContainsKey(guid)) return;
+            WriteFile(OpenFile(guid), Path.Combine(path, filename));
         }
 
         public static void WriteFile(Stream stream, ulong guid, string path) {
@@ -107,14 +125,6 @@ namespace DataTool.Helper {
             string filename = GetFileName(guid);
             
             WriteFile(stream, Path.Combine(path, filename));
-            
-            if (!Directory.Exists(path)) {
-                Directory.CreateDirectory(path);
-            }
-
-            using (Stream file = File.OpenWrite(Path.Combine(path, filename))) {
-                stream.CopyTo(file);
-            }
         }
         
         public static HashSet<ulong> MissingKeyLog = new HashSet<ulong>();

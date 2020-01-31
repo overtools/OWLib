@@ -22,7 +22,7 @@ namespace DataTool.ToolLogic.Dump {
             new ListGameParams().Parse(GetFlagsForCommand(flags, "game-rulesets"));
             new ListGeneralUnlocks().Parse(GetFlagsForCommand(flags, "general-unlocks"));
             new ListHeroes().Parse(GetFlagsForCommand(flags, "heroes"));
-            new ListLoobox().Parse(GetFlagsForCommand(flags, "lootboxes"));
+            new ListLootbox().Parse(GetFlagsForCommand(flags, "lootboxes"));
             new ListMaps().Parse(GetFlagsForCommand(flags, "maps"));
             new ListReportResponses().Parse(GetFlagsForCommand(flags, "report-responses"));
             new DumpStrings().Parse(GetFlagsForCommand(flags, "strings", true));
@@ -33,6 +33,9 @@ namespace DataTool.ToolLogic.Dump {
             new ListLogicalButtonMapping().Parse(GetFlagsForCommand(flags, "button-mapping"));
             new ListChatReplacements().Parse(GetFlagsForCommand(flags, "chat-replacements"));
             new ListProfanityFilters().Parse(GetFlagsForCommand(flags, "profanity-filters"));
+            new ListBrawlName().Parse(GetFlagsForCommand(flags, "brawl-names"));
+            new ListConversations().Parse(GetFlagsForCommand(flags, "conversations"));
+            new ListUxStringsOrSomething().Parse(GetFlagsForCommand(flags, "ux-strings"));
             new DumpFileLists().Parse(toolFlags);
         }
         

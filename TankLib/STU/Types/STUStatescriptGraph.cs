@@ -17,12 +17,6 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x16B4863C, "m_entries", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptEntry[] m_entries;
 
-        [STUFieldAttribute(0x47B51C49, "m_consoleCommand")]
-        public teString m_consoleCommand;
-
-        [STUFieldAttribute(0x8DC71AA3)]
-        public teStructuredDataAssetRef<STUIdentifier>[] m_8DC71AA3;
-
         [STUFieldAttribute(0x44D31832)]
         public teStructuredDataAssetRef<STUIdentifier>[] m_44D31832;
 
@@ -52,6 +46,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x27FBFF72, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUStatescriptOperationPattern[] m_27FBFF72;
+
+        [STUFieldAttribute(0x85EE1391, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_85EE1391;
 
         [STUFieldAttribute(0xFF44FD8B, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptSchema m_FF44FD8B;
@@ -91,9 +88,6 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xBB90784A)]
         public byte m_BB90784A;
-
-        [STUFieldAttribute(0xC13BE5A5)]
-        public byte m_C13BE5A5;
 
         [STUFieldAttribute(0xCAA6714F)]
         public byte m_CAA6714F;

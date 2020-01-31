@@ -18,6 +18,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xD1A08C94, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUAnimBlendTree_PlayAnimCancelItem[] m_D1A08C94;
 
+        [STUFieldAttribute(0x774B528F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_99CD2290 m_774B528F;
+
         [STUFieldAttribute(0xB2E34614)]
         public STUPlayAnimSlot m_B2E34614;
 

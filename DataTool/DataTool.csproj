@@ -130,6 +130,8 @@
     <Compile Include="DataModels\Unlock.cs" />
     <Compile Include="DataModels\UXDisplayText.cs" />
     <Compile Include="DataModels\VoiceSet.cs" />
+    <Compile Include="DataModels\Voice\Conversation.cs" />
+    <Compile Include="DataModels\Voice\ConversationLine.cs" />
     <Compile Include="FindLogic\Combo.cs" />
     <Compile Include="Flag\AliasAttribute.cs" />
     <Compile Include="Flag\CLIFlagAttribute.cs" />
@@ -178,6 +180,7 @@
     <Compile Include="ToolLogic\Dump\DumpFileLists.cs" />
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
+    <Compile Include="ToolLogic\Extract\ExtractEverything.cs" />
     <Compile Include="ToolLogic\Extract\ExtractHeroVoiceBetter.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebug0EE.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimNodes.cs" />
@@ -209,13 +212,16 @@
     <Compile Include="ToolLogic\List\ListGeneralUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListHeroUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListHighlights.cs" />
-    <Compile Include="ToolLogic\List\ListLoobox.cs" />
+    <Compile Include="ToolLogic\List\ListLootbox.cs" />
     <Compile Include="ToolLogic\List\ListResourceKeys.cs" />
     <Compile Include="ToolLogic\List\ListMaps.cs" />
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
     <Compile Include="ToolLogic\List\Misc\ListArcadeModes.cs" />
+    <Compile Include="ToolLogic\List\Misc\ListBrawlName.cs" />
     <Compile Include="ToolLogic\List\Misc\ListChatReplacements.cs" />
+    <Compile Include="ToolLogic\List\Misc\ListConversations.cs" />
+    <Compile Include="ToolLogic\List\Misc\ListUxStringsOrSomething.cs" />
     <Compile Include="ToolLogic\List\Misc\ListLogicalButtonMapping.cs" />
     <Compile Include="ToolLogic\List\Misc\ListProfanityFilter.cs" />
     <Compile Include="ToolLogic\List\Misc\ListRankedSeasons.cs" />

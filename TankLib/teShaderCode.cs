@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
+using TankLib.Helpers.DataSerializer;
 
 namespace TankLib {
     /// <summary>Tank ShaderCode, file type 087</summary>
@@ -34,6 +36,9 @@ namespace TankLib {
 
         /// <summary>Header Data</summary>
         public ShaderCodeHeader Header;
+
+        /// <summary>Shader DXBC Byte Code</summary>
+        public byte[] ByteCode;
         
         /// <summary>
         /// Read ShaderCode from a stream
@@ -55,6 +60,11 @@ namespace TankLib {
 
         private void Read(BinaryReader reader) {
             Header = reader.Read<ShaderCodeHeader>();
+            reader.BaseStream.Position = Header.DataOffset;
+            using (GZipStream gzip = new GZipStream(reader.BaseStream, CompressionMode.Decompress)) {
+                ByteCode = new byte[Header.UncompressedSize];
+                gzip.Read(ByteCode, 0, ByteCode.Length);
+            }
         }
     }
 }

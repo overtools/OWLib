@@ -8,6 +8,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x2C54AEAF, "m_category")]
         public teStructuredDataAssetRef<STUVoiceCategory> m_category;
 
+        [STUFieldAttribute(0x91F599DF)]
+        public Enum_1964FED7[] m_91F599DF;
+
         [STUFieldAttribute(0xDF647B95)]
         public Enum_BC00E017 m_DF647B95;
 
@@ -34,6 +37,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xED61D926, "m_radius")]
         public float m_radius;
+
+        [STUFieldAttribute(0xBCE309D7)]
+        public Enum_523DC49D m_BCE309D7;
 
         [STUFieldAttribute(0x0AABC91F)]
         public byte m_0AABC91F;
@@ -64,8 +70,5 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x5D07FCC3)]
         public byte m_5D07FCC3;
-
-        [STUFieldAttribute(0x1AD9EC4A)]
-        public byte m_1AD9EC4A;
     }
 }

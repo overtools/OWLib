@@ -13,6 +13,7 @@ namespace DataTool.Flag {
         public string[] Parser = null;
         public string[] Valid = null;
         public bool AllPositionals = false;
+        public bool Hidden = false;
 
         public new string ToString() {
             return Flag;
