@@ -35,6 +35,7 @@ namespace DataTool.ToolLogic.Dump {
             new ListProfanityFilters().Parse(GetFlagsForCommand(flags, "profanity-filters"));
             new ListBrawlName().Parse(GetFlagsForCommand(flags, "brawl-names"));
             new ListConversations().Parse(GetFlagsForCommand(flags, "conversations"));
+            new ListUxStringsOrSomething().Parse(GetFlagsForCommand(flags, "ux-strings"));
             new DumpFileLists().Parse(toolFlags);
         }
         

@@ -26,6 +26,12 @@ namespace DataTool.DataModels.Hero {
         public Enum_C1DAF32A Size;
         
         [DataMember]
+        public byte IsNpc;
+        
+        [DataMember]
+        public byte SupportsAi;
+        
+        [DataMember]
         public teColorRGBA GalleryColor;
 
         [DataMember]
@@ -52,6 +58,8 @@ namespace DataTool.DataModels.Hero {
             Size = hero.m_heroSize;
             
             GalleryColor = hero.m_heroColor;
+            SupportsAi = hero.m_906C3711;
+            IsNpc = hero.m_62746D34;
 
             //if (hero.m_skinThemes != null) {
             //    SkinThemes = new List<HeroSkinTheme>();
