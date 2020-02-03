@@ -100,6 +100,8 @@ namespace DataTool.ToolLogic.Extract
                     }
 
                     foreach (var defaultUnlocks in progression.LevelUnlocks) {
+                        if (defaultUnlocks.Unlocks == null) continue; // wot??
+
                         foreach (Unlock unlock in defaultUnlocks.Unlocks) {
                             ProcessUnlock(unlock, flags, basePath, heroFileName, hero, baseComponent, baseInfo);
                         }
