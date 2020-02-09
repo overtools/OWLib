@@ -1,4 +1,4 @@
-version: 1.44.0.{build}
+version: 1.44.0.{build}-util-modes
 image: Visual Studio 2017
 configuration: Release
 platform: Any CPU
@@ -20,6 +20,7 @@ build:
 branches:
   only:
   - master
+  - util-modes
 before_package:
 - cmd: >-
     del /F /Q dist\Release\*.pdb
