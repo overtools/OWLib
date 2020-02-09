@@ -7,6 +7,7 @@ using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic.Unlock;
+using DataTool.ToolLogic.Util;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
@@ -16,7 +17,9 @@ using static DataTool.Helper.Logger;
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-convo", Description = "Extract hero voice conversations", CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
-        public List<QueryType> QueryTypes => new List<QueryType> {new QueryType {Name = "FakeType"}};
+        public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
+        
+        public List<QueryType> QueryTypes => new List<QueryType>();
 
         public Dictionary<string, string> QueryNameOverrides => ExtractHeroUnlocks.HeroMapping;
 
@@ -93,7 +96,7 @@ namespace DataTool.ToolLogic.Extract {
                 string heroNameActual =
                     (GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(heroGuid)}").TrimEnd(' ');
 
-                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*");
+                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*", teResourceGUID.Index(heroGuid).ToString("X"));
 
                 if (config.Count == 0) continue;
                 Log($"Processing data for {heroNameActual}");

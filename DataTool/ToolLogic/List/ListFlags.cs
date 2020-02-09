@@ -7,7 +7,7 @@ namespace DataTool.ToolLogic.List {
         [CLIFlag(Default = false, Flag = "json", Help = "Output JSON to stderr", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool JSON;
         
-        [CLIFlag(Flag = "out", Help = "Output JSON file")]
+        [CLIFlag(Flag = "out", NeedsValue = true, Help = "Output JSON file")]
         [Alias("o")]
         public string Output;
 

@@ -66,18 +66,24 @@ namespace DataTool {
     [DebuggerDisplay("ArgType: {" + nameof(Name) + "}")]
     public class QueryType {
         public string Name;
+        public string HumanName;
         public List<QueryTag> Tags;
+        public string DynamicChoicesKey;
     }
 
     [DebuggerDisplay("ArgTag: {" + nameof(Name) + "}")]
     public class QueryTag {
         public string Name;
+        public string HumanName;
         public List<string> Options;
         public Type ValueType = typeof(TagValue);
         public string Default;
 
-        public QueryTag(string name, List<string> options, string @default = null) {
+        public string DynamicChoicesKey;
+
+        public QueryTag(string name, string humanName, List<string> options, string @default = null) {
             Name = name;
+            HumanName = humanName;
             Options = options;
             Default = @default;
         }
@@ -105,6 +111,8 @@ namespace DataTool {
     public interface IQueryParser { // I want a consistent style
         List<QueryType> QueryTypes { get; }
         Dictionary<string, string> QueryNameOverrides { get; }
+
+        string DynamicChoicesKey { get; }
     }
 
     public class QueryParser {
@@ -142,6 +150,13 @@ namespace DataTool {
 
         protected Dictionary<string, Dictionary<string, ParsedArg>> ParseQuery(ICLIFlags flags,
                                                                                List<QueryType> queryTypes, Dictionary<string, string> queryNameOverrides) {
+            if (queryTypes.Count == 0) {
+                queryTypes = new List<QueryType> {
+                    new QueryType {Name = "FakeType"}
+                };
+                // todo: why is this needed
+            }
+
             string[] result = new string[flags.Positionals.Length - 3];
             Array.Copy(flags.Positionals, 3, result, 0, flags.Positionals.Length - 3);
 

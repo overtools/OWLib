@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using DataTool.DataModels;
+using DataTool.DataModels.Hero;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic.Unlock;
+using DataTool.ToolLogic.Util;
 using DataTool.WPF;
 using TankLib;
 using TankLib.STU.Types;
@@ -21,6 +23,7 @@ using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
+using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
 
 namespace DataTool.ToolLogic.Extract {
     // syntax:
@@ -56,14 +59,18 @@ namespace DataTool.ToolLogic.Extract {
     
     [DebuggerDisplay("CosmeticType: {" + nameof(Name) + "}")]
     public class CosmeticType : QueryType {
-        public CosmeticType(string name) {
+        public CosmeticType(string name, string humanName, string uxKey) {
             Name = name;
+            HumanName = humanName;
             Tags = new List<QueryTag> {
-                new QueryTag("rarity", new List<string>{"common", "rare", "epic", "legendary"}),
-                new QueryTag("event", new List<string>{"base", "summergames", "halloween", "winter", "lunarnewyear", "archives", "anniversary"}),
-                new QueryTag("leagueTeam", new List<string>(), "none"),
-                new QueryTag("special", new List<string> {"sg2018"})
+                new QueryTag("rarity", "Rarity", new List<string>{"common", "rare", "epic", "legendary"}),
+                new QueryTag("event", "Event", new List<string>{"base", "summergames", "halloween", "winter", "lunarnewyear", "archives", "anniversary"}),
+                new QueryTag("leagueTeam", "League Team", new List<string>(), "none") {
+                    DynamicChoicesKey = UtilDynamicChoices.VALID_OWL_TEAMS
+                },
+                new QueryTag("special", null, new List<string> {"sg2018"})
             };
+            DynamicChoicesKey = uxKey;
         }
     }
     
@@ -71,14 +78,17 @@ namespace DataTool.ToolLogic.Extract {
     public class ExtractHeroUnlocks : QueryParser, IAwareTool, IQueryParser {
         protected virtual string RootDir => "Heroes";
         protected virtual bool NPCs => false;
+        
+        public virtual string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
+        
         public List<QueryType> QueryTypes => new List<QueryType> {
-            new CosmeticType("skin"),
-            new CosmeticType("icon"),
-            new CosmeticType("spray"),
-            new CosmeticType("victorypose"),
-            new CosmeticType("highlightintro"), 
-            new CosmeticType("emote"),
-            new CosmeticType("voiceline")
+            new CosmeticType("skin", "Skin", UtilDynamicChoices.VALID_SKIN_NAMES),
+            new CosmeticType("icon", "Icon", UtilDynamicChoices.VALID_ICON_NAMES),
+            new CosmeticType("spray", "Spray", UtilDynamicChoices.VALID_SPRAY_NAMES),
+            new CosmeticType("victorypose", "Victory Pose", UtilDynamicChoices.VALID_VICTORYPOSE_NAMES),
+            new CosmeticType("highlightintro", "Highlight Intro", UtilDynamicChoices.VALID_HIGHLIGHTINTRO_NAMES), 
+            new CosmeticType("emote", "Emote", UtilDynamicChoices.VALID_EMOTE_NAMES),
+            new CosmeticType("voiceline", "Voice Line", UtilDynamicChoices.VALID_VOICELINE_NAMES)
         };
         
         [SuppressMessage("ReSharper", "StringLiteralTypo")]
@@ -123,13 +133,12 @@ namespace DataTool.ToolLogic.Extract {
             return WPF.Tool.Export.HeroUnlocksView.Get(worker, context, window, NPCs); 
         }
 
-        public List<STUHero> GetHeroes() {
-            var @return = new List<STUHero>();
+        public List<KeyValuePair<ulong, STUHero>> GetHeroes() {
+            var @return = new List<KeyValuePair<ulong, STUHero>>();
             foreach (ulong key in TrackedFiles[0x75]) {
                 var hero = GetInstance<STUHero>(key);
-                // if (hero?.Name == null || hero.LootboxUnlocks == null) continue;
-
-                @return.Add(hero);
+                if (hero == null) continue;
+                @return.Add(new KeyValuePair<ulong, STUHero>(key, hero));
             }
 
             return @return;
@@ -168,7 +177,7 @@ namespace DataTool.ToolLogic.Extract {
             }
         }
 
-        public void SaveUnlocksForHeroes(ICLIFlags flags, IEnumerable<STUHero> heroes, string basePath, bool npc=false) {
+        public void SaveUnlocksForHeroes(ICLIFlags flags, IEnumerable<KeyValuePair<ulong, STUHero>> heroes, string basePath, bool npc=false) {
             if (flags.Positionals.Length < 4) {
                 QueryHelp(QueryTypes);
                 return;
@@ -177,17 +186,14 @@ namespace DataTool.ToolLogic.Extract {
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
             
-            foreach (STUHero hero in heroes) {
-                if (hero == null) continue;
-                string heroNameActual = GetString(hero.m_0EDCE350);
+            foreach (KeyValuePair<ulong, STUHero> heroPair in heroes) {
+                var hero = heroPair.Value;
+                string heroNameActual = Hero.GetCleanName(hero);
 
-                if (heroNameActual == null) {
-                    continue;
-                }
-
-                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*");
+                if (heroNameActual == null) continue;
                 
-                heroNameActual = heroNameActual.TrimEnd(' ');
+                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*", teResourceGUID.Index(heroPair.Key).ToString("X"));
+                
                 string heroFileName = GetValidFilename(heroNameActual);
                 
                 if (config.Count == 0) continue;

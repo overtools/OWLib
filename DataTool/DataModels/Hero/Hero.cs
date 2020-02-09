@@ -77,5 +77,10 @@ namespace DataTool.DataModels.Hero {
                 }
             }
         }
+
+        public static string GetCleanName(STUHero hero) {
+            var name = GetString(hero.m_0EDCE350);
+            return name?.TrimEnd(' ');
+        }
     }
 }

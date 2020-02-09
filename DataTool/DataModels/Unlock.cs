@@ -181,7 +181,7 @@ namespace DataTool.DataModels {
         /// <param name="guids">GUID collection</param>
         /// <returns>Array of <see cref="Unlock"/></returns>
         public static Unlock[] GetArray(IEnumerable<ulong> guids) {
-            if (guids == null) return null;
+            if (guids == null) return new Unlock[0];
             List<Unlock> unlocks = new List<Unlock>();
             foreach (ulong guid in guids) {
                 STU_3021DDED stu = GetInstance<STU_3021DDED>(guid);

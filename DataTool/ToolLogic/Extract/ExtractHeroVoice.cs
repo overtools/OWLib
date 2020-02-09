@@ -11,6 +11,7 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using DataTool.DataModels;
 using DataTool.SaveLogic.Unlock;
+using DataTool.ToolLogic.Util;
 using TankLib;
 using TankLib.STU.Types;
 
@@ -18,9 +19,11 @@ namespace DataTool.ToolLogic.Extract
 {
     [Tool("extract-hero-voice", Description = "Extract hero voice sounds", CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroVoice : QueryParser, ITool, IQueryParser {
-        public List<QueryType> QueryTypes => new List<QueryType> { new QueryType { Name = "soundRestriction" }, new QueryType { Name = "groupRestriction" } };
+        public List<QueryType> QueryTypes => new List<QueryType> { new QueryType { Name = "soundRestriction", HumanName = "Sound"}, new QueryType { Name = "groupRestriction", HumanName = "Group"} };
 
         public Dictionary<string, string> QueryNameOverrides => ExtractHeroUnlocks.HeroMapping;
+
+        public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
 
         public void Parse(ICLIFlags toolFlags) {
             SaveHeroSounds(toolFlags);

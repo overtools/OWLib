@@ -5,6 +5,7 @@ using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.List;
+using DataTool.ToolLogic.Util;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Program;
@@ -15,6 +16,8 @@ using Map = DataTool.SaveLogic.Map;
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-maps", Description = "Extract maps", CustomFlags = typeof(ExtractFlags))]
     public class ExtractMaps : QueryParser, ITool, IQueryParser {
+        public string DynamicChoicesKey => UtilDynamicChoices.VALID_MAP_NAMES;
+        
         public void Parse(ICLIFlags toolFlags) {
             SaveMaps(toolFlags);
         }
@@ -59,7 +62,7 @@ namespace DataTool.ToolLogic.Extract {
             }
         }
 
-        public List<QueryType> QueryTypes => new List<QueryType> {new QueryType {Name = "MapFakeType"}};
+        public List<QueryType> QueryTypes => new List<QueryType>();
         
         [SuppressMessage("ReSharper", "StringLiteralTypo")]
         public static readonly Dictionary<string, string> MapMapping = new Dictionary<string, string> {

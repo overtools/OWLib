@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using DataTool.Helper;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
@@ -65,6 +66,33 @@ namespace DataTool.DataModels {
 
             OtherUnlocks = Unlock.GetArray(progressionUnlocks.m_otherUnlocks);
             UnknownUnlocks = Unlock.GetArray(progressionUnlocks.m_9135A4B2);
+        }
+
+        public IEnumerable<Unlock> IterateUnlocks() {
+            if (LootBoxesUnlocks != null) {
+                foreach (LootBoxUnlocks lootBoxUnlocks in LootBoxesUnlocks) {
+                    foreach (Unlock VARIABLE in lootBoxUnlocks.Unlocks) {
+                        yield return VARIABLE;
+                    }
+                }
+            }
+            if (LevelUnlocks != null) {
+                foreach (LevelUnlocks levelUnlocks in LevelUnlocks) {
+                    foreach (Unlock unlock in levelUnlocks.Unlocks) {
+                        yield return unlock;
+                    }
+                }
+            }
+            if (UnknownUnlocks != null) {
+                foreach (Unlock unlock in UnknownUnlocks) {
+                    yield return unlock;
+                }
+            }
+            if (OtherUnlocks != null) {
+                foreach (Unlock unlock in OtherUnlocks) {
+                    yield return unlock;
+                }
+            }
         }
     }
     

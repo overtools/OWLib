@@ -7,7 +7,7 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Flag = "out-path", NeedsValue = true, Help = "Output path", Positional = 2, Required = true)]
         public string OutputPath;
         
-        [CLIFlag(Default = "tif", Flag = "convert-textures-type", Help = "Texture output type", Valid = new[] { "dds", "tif", "tga", "png", "jpg", "hdr" })]
+        [CLIFlag(Default = "tif", NeedsValue = true, Flag = "convert-textures-type", Help = "Texture output type", Valid = new[] { "dds", "tif", "tga", "png", "jpg", "hdr" })]
         public string ConvertTexturesType;
         
         [CLIFlag(Default = false, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
@@ -43,7 +43,7 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "raw", Help = "Skip all conversion", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool Raw;
 
-        [CLIFlag(Default = (byte)1, Flag = "lod", Help = "Force extracted model LOD", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagByte" })]
+        [CLIFlag(Default = (byte)1, NeedsValue = true, Flag = "lod", Help = "Force extracted model LOD", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagByte" })]
         public byte LOD;
         
         [CLIFlag(Default = false, Flag = "scale-anims", Help = "set to true for Blender 2.79, false for Maya and when Blender SEAnim tools are updated for 2.8", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]

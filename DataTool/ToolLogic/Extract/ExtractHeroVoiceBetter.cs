@@ -5,16 +5,13 @@ using System.Linq;
 using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
-using DataTool.JSON;
-using DataTool.ToolLogic.Extract;
+using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
-using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.IO;
 
-namespace DataTool.ToolLogic.Dbg {
+namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-voice-better", Description = "Extracts hero voicelines but groups them a bit better.", CustomFlags = typeof(ExtractFlags))]
-    class ExtractHeroVoiceBetter : JSONTool, ITool {
+    class ExtractHeroVoiceBetter : ITool {
         class VoiceGroup {
             public string Name;
             public string[] StimulusSetIds = new string[0];
@@ -77,12 +74,12 @@ namespace DataTool.ToolLogic.Dbg {
             }
 
             foreach (var key in Program.TrackedFiles[0x75]) {
-                var hero = GetInstance<STUHero>(key);
+                var hero = STUHelper.GetInstance<STUHero>(key);
                 var progression = new ProgressionUnlocks(hero);
                 if (progression.LootBoxesUnlocks == null) continue; // no NPCs thanks
                 
-                string heroNameActual = GetValidFilename((GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(key)}").TrimEnd(' '));
-                var voiceSetComponent = GetInstance<STUVoiceSetComponent>(hero.m_gameplayEntity);
+                string heroNameActual = IO.GetValidFilename((IO.GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(key)}").TrimEnd(' '));
+                var voiceSetComponent = STUHelper.GetInstance<STUVoiceSetComponent>(hero.m_gameplayEntity);
                 if (voiceSetComponent?.m_voiceDefinition == null) continue;
 
                 var voiceSetsCombo = new Combo.ComboInfo();
@@ -94,7 +91,7 @@ namespace DataTool.ToolLogic.Dbg {
                     foreach (var voicelineInstanceInfo in voiceSet.Value.VoiceLineInstances) {
                         foreach (var voiceLineInstance in voicelineInstanceInfo.Value) {
                             var soundFilesCombo = new Combo.ComboInfo();;
-                            var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
+                            var stimulus = STUHelper.GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
 
                             if (stimulus == null) continue;
 

@@ -21,7 +21,7 @@ using static DataTool.Helper.STUHelper;
 using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool {
-    public class Program {
+    public static class Program {
         public static ClientHandler                      Client;
         public static ProductHandler_Tank                TankHandler;
         public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
@@ -32,13 +32,7 @@ namespace DataTool {
 
         public static bool ValidKey(ulong key) { return TankHandler.Assets.ContainsKey(key); }
 
-        private static void Main() {
-            InitTankSettings();
-
-            HookConsole();
-
-            #region Tool Detection
-
+        public static HashSet<Type> GetTools() {
             var tools = new HashSet<Type>();
             {
                 var t   = typeof(ITool);
@@ -53,8 +47,15 @@ namespace DataTool {
                     tools.Add(tt);
                 }
             }
+            return tools;
+        }
 
-            #endregion
+        private static void Main() {
+            InitTankSettings();
+
+            HookConsole();
+
+            var tools = GetTools();
 
         #if DEBUG
             FlagParser.CheckCollisions(typeof(ToolFlags), (flag, duplicate) => { Logger.Error("Flag", $"The flag \"{flag}\" from {duplicate} is a duplicate!"); });
@@ -91,6 +92,7 @@ namespace DataTool {
 
             ITool     targetTool      = null;
             ICLIFlags targetToolFlags = null;
+            ToolAttribute targetToolAttributes = null;
 
             #region Tool Activation
 
@@ -99,6 +101,7 @@ namespace DataTool {
 
                 if (!string.Equals(attribute.Keyword, Flags.Mode, StringComparison.InvariantCultureIgnoreCase)) continue;
                 targetTool = Activator.CreateInstance(type) as ITool;
+                targetToolAttributes = attribute;
 
                 if (attribute.CustomFlags != null) {
                     var flags = attribute.CustomFlags;
@@ -121,15 +124,17 @@ namespace DataTool {
                 return;
             }
 
-            InitStorage();
+            if (!targetToolAttributes.UtilNoArchiveNeeded) {
+                InitStorage();
 
-            //foreach (KeyValuePair<ushort, HashSet<ulong>> type in TrackedFiles.OrderBy(x => x.Key)) {
-            //    //Console.Out.WriteLine($"Found type: {type.Key:X4} ({type.Value.Count} files)");
-            //    Console.Out.WriteLine($"Found type: {type.Key:X4}");
-            //}
+                //foreach (KeyValuePair<ushort, HashSet<ulong>> type in TrackedFiles.OrderBy(x => x.Key)) {
+                //    //Console.Out.WriteLine($"Found type: {type.Key:X4} ({type.Value.Count} files)");
+                //    Console.Out.WriteLine($"Found type: {type.Key:X4}");
+                //}
 
-            InitKeys();
-            InitMisc();
+                InitKeys();
+                InitMisc();
+            }
 
             var stopwatch = new Stopwatch();
             Logger.Info("Core", "Tooling...");
