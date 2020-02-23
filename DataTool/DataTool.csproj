@@ -231,6 +231,7 @@
     <Compile Include="ToolLogic\List\Misc\ListEsportsTeams.cs" />
     <Compile Include="ToolLogic\List\Misc\ListGameModes.cs" />
     <Compile Include="ToolLogic\List\Misc\ListGameRulesets.cs" />
+    <Compile Include="ToolLogic\List\Misc\ListWorkshop.cs" />
     <Compile Include="ToolLogic\Render\RenderFlags.cs" />
     <Compile Include="ToolLogic\Render\RenderStateScript.cs" />
     <Compile Include="ToolLogic\Render\RenderUIElements.cs" />
