@@ -63,6 +63,33 @@ namespace DataTool.FindLogic {
                 DoneScripts = new HashSet<ulong>();
             }
 
+            public void RemoveByKey(ulong key) {
+                Entities.Remove(key);
+                EntitiesByIdentifier.Remove(key);
+                Models.Remove(key);
+                Materials.Remove(key);
+                MaterialDatas.Remove(key);
+                ModelLooks.Remove(key);
+                Animations.Remove(key);
+                Textures.Remove(key);
+                Effects.Remove(key);
+                AnimationEffects.Remove(key);
+                Sounds.Remove(key);
+                SoundBanks.Remove(key);
+                VoiceSoundFiles.Remove(key);
+                SoundFiles.Remove(key);
+                VoiceSets.Remove(key);
+                Maps.Remove(key);
+                Strings.Remove(key);
+                Subtitles.Remove(key);
+            }
+
+            public void RemoveByKey(ulong[] keys) {
+                foreach (var @ulong in keys) {
+                    RemoveByKey(@ulong);
+                }
+            }
+
             public void SetEntityName(ulong entity, string name, Dictionary<ulong, ulong> replacements=null) {
                 if (replacements != null) entity = GetReplacement(entity, replacements);
                 if (Entities.ContainsKey(entity)) {
