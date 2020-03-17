@@ -176,7 +176,6 @@
     <Compile Include="ToolLogic\Dbg\DebugKeyTest.cs" />
     <Compile Include="ToolLogic\Dbg\DebugVoiceStimulus.cs" />
     <Compile Include="ToolLogic\Dump\Dump004.cs" />
-    <Compile Include="ToolLogic\Dump\DumpAllTheStuff.cs" />
     <Compile Include="ToolLogic\Dump\DumpFileLists.cs" />
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
@@ -221,10 +220,7 @@
     <Compile Include="ToolLogic\List\Misc\ListBrawlName.cs" />
     <Compile Include="ToolLogic\List\Misc\ListChatReplacements.cs" />
     <Compile Include="ToolLogic\List\Misc\ListConversations.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListUxStringsOrSomething.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListLogicalButtonMapping.cs" />
     <Compile Include="ToolLogic\List\Misc\ListProfanityFilter.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListRankedSeasons.cs" />
     <Compile Include="ToolLogic\List\Misc\ListReportResponses.cs" />
     <Compile Include="ToolLogic\List\Misc\ListBrawls.cs" />
     <Compile Include="ToolLogic\List\Misc\ListChatSettings.cs" />
