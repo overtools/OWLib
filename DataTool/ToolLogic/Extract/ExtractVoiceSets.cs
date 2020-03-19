@@ -28,6 +28,7 @@ namespace DataTool.ToolLogic.Dump {
             Log("Saving all voice sets. This will take some time.");
             foreach (var key in TrackedFiles[0x5F]) {
                 var stu = STUHelper.GetInstance<STUVoiceSet>(key);
+                if (stu == null) continue;
                 
                 var guidClean = teResourceGUID.AsString(key);
                 Log($"Saving VoiceSet: {guidClean}");

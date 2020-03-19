@@ -15,7 +15,7 @@ using static DataTool.Helper.IO;
 namespace DataTool.ToolLogic.Dbg {
     [Tool("extract-hero-voice-better", Description = "Extracts hero voicelines but groups them a bit better.", CustomFlags = typeof(ExtractFlags))]
     class ExtractHeroVoiceBetter : JSONTool, ITool {
-        class VoiceGroup {
+        public class VoiceGroup {
             public string Name;
             public string[] StimulusSetIds = new string[0];
             public string[] StimulusUnknownIds = new string[0];
@@ -24,7 +24,7 @@ namespace DataTool.ToolLogic.Dbg {
         
         private const string Container = "BetterHeroVoice";
 
-        private List<VoiceGroup> VoiceGroups = new List<VoiceGroup>() {
+        public static List<VoiceGroup> VoiceGroups = new List<VoiceGroup>() {
             new VoiceGroup { Name = "Ultimate",        StimulusUnknownIds = new []{ "000000000079.08A" } },
             new VoiceGroup { Name = "Voicelines",      StimulusCategoryIds = new []{ "000000000031.079" } },
             new VoiceGroup { Name = "Hello",           StimulusSetIds = new []{ "0000000001CF.078" } },
@@ -97,19 +97,10 @@ namespace DataTool.ToolLogic.Dbg {
                             var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
 
                             if (stimulus == null) continue;
-
-                            var stimulusId = teResourceGUID.AsString(voiceLineInstance.VoiceStimulus);
-                            var stimulusCategoryId = teResourceGUID.AsString(stimulus.m_category);
-                            var stimulusUnknownId = teResourceGUID.AsString(stimulus.m_87DCD58E);
                             
-                            // Some voices can be classified in multiple groups but we can only have one, we use use the Stimulus name first, then the unknown and finally the category
-                            var stimMatches = VoiceGroups.FirstOrDefault(x => x.StimulusSetIds.Contains(stimulusId));
-                            var stimCatMatches = VoiceGroups.FirstOrDefault(x => x.StimulusCategoryIds.Contains(stimulusCategoryId));
-                            var stimUnkMatches = VoiceGroups.FirstOrDefault(x => x.StimulusUnknownIds.Contains(stimulusUnknownId));
-                            
-                            if (stimMatches == null && stimCatMatches == null && stimUnkMatches == null) continue;
-
-                            var groupName = stimMatches?.Name ?? stimUnkMatches?.Name ?? stimCatMatches?.Name;
+                            var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E);
+                            if (groupName == null)
+                                continue;
                             
                             foreach (var soundFile in voiceLineInstance.SoundFiles) {
                                 Combo.Find(soundFilesCombo, soundFile);
@@ -120,6 +111,22 @@ namespace DataTool.ToolLogic.Dbg {
                     }
                 }
             }
+        }
+
+        public static string GetVoiceGroup(ulong stimulusGuid, ulong categoryGuid, ulong unkGuid)
+        {
+            var stimulusId = teResourceGUID.AsString(stimulusGuid);
+            var stimulusCategoryId = teResourceGUID.AsString(categoryGuid);
+            var stimulusUnknownId = teResourceGUID.AsString(unkGuid);
+
+            var stimMatches = VoiceGroups.FirstOrDefault(x => x.StimulusSetIds.Contains(stimulusId));
+            var stimCatMatches = VoiceGroups.FirstOrDefault(x => x.StimulusCategoryIds.Contains(stimulusCategoryId));
+            var stimUnkMatches = VoiceGroups.FirstOrDefault(x => x.StimulusUnknownIds.Contains(stimulusUnknownId));
+                
+            if (stimMatches == null && stimCatMatches == null && stimUnkMatches == null)
+                return null;
+
+            return stimMatches?.Name ?? stimUnkMatches?.Name ?? stimCatMatches?.Name;
         }
     }
 }
