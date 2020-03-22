@@ -5,25 +5,25 @@ namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x542A081B)]
     public enum Enum_542A081B : uint {
         [STUFieldAttribute(0x45DAA27C)]
-        x45DAA27C = 0x0,
+        Generic = 0x0,
         [STUFieldAttribute(0x42AC6AEC)]
-        x42AC6AEC = 0x1,
+        Team = 0x1,
         [STUFieldAttribute(0xA5697714)]
-        xA5697714 = 0x2,
+        Player = 0x2,
         [STUFieldAttribute(0x06C814EF)]
-        x06C814EF = 0x3,
+        Hero = 0x3,
         [STUFieldAttribute(0xCA906AF5)]
-        xCA906AF5 = 0x4,
+        Boolean = 0x4,
         [STUFieldAttribute(0x98E3B566)]
-        x98E3B566 = 0x5,
+        Integer = 0x5,
         [STUFieldAttribute(0x2B03A17F)]
-        x2B03A17F = 0x6,
+        Float = 0x6,
         [STUFieldAttribute(0x688919C2)]
         x688919C2 = 0x7,
         [STUFieldAttribute(0x2F06646B)]
         x2F06646B = 0x8,
         [STUFieldAttribute(0xEB59EA18)]
-        xEB59EA18 = 0x9,
+        Vector = 0x9,
         [STUFieldAttribute(0x9C8C8F7A)]
         x9C8C8F7A = 0xA,
         [STUFieldAttribute(0x52198DC8)]
