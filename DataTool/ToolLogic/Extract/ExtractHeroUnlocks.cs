@@ -112,7 +112,11 @@ namespace DataTool.ToolLogic.Extract {
             ["angry japanese man"] = "genji",
             ["guilty japanese man"] = "hanzo",
             ["need healing"] = "genji",
-            ["healslut"] = "mercy"
+            ["healslut"] = "mercy",
+            ["master of the blg black hole"] = "sigma",
+            ["dat is a lot of damage"] = "echo",
+            ["young punks i am not your father"] = "soldier: 76",
+            ["wrestle with Jeph prepare for death"] = "doomfist"
         };
 
         public Dictionary<string, string> QueryNameOverrides => HeroMapping;

@@ -31,6 +31,6 @@ namespace TankLib.STU.Types.Enums {
         [STUFieldAttribute(0x31176720)]
         x31176720 = 0xC, // ???
         [STUFieldAttribute(0x1681F925)]
-        x1681F925 = 0xD, // something to do with vectors
+        x1681F925 = 0xD, // Directional vector
     }
 }
