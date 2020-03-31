@@ -9,8 +9,10 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
 
 namespace DataTool.JSON {
+
+    enum JSONOutputTo { console, file };
     public class JSONTool {
-        internal void OutputJSON(object jObj, ListFlags toolFlags) {
+        internal void OutputJSON(object jObj, ListFlags toolFlags, JSONOutputTo outputTo = JSONOutputTo.file) {
             try {
                 CompositeResolver.RegisterAndSetAsDefault(new IJsonFormatter[] {
                     new ResourceGUIDFormatter()
@@ -25,15 +27,23 @@ namespace DataTool.JSON {
             if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
                 byte[] pretty =  Utf8Json.JsonSerializer.PrettyPrintByteArray(json);
 
-                Log("Writing to {0}", toolFlags.Output);
+                if (outputTo.Equals(JSONOutputTo.console))
+                {
+                    Console.Write(pretty.ToString());
+                }
+                else
+                {
+                    Log("Writing to {0}", toolFlags.Output);
 
-                CreateDirectoryFromFile(toolFlags.Output);
+                    CreateDirectoryFromFile(toolFlags.Output);
 
-                var fileName = !toolFlags.Output.EndsWith(".json") ? $"{toolFlags.Output}.json" : toolFlags.Output; 
+                    var fileName = !toolFlags.Output.EndsWith(".json") ? $"{toolFlags.Output}.json" : toolFlags.Output;
 
-                using (Stream file = File.OpenWrite(fileName)) {
-                    file.SetLength(0);
-                    file.Write(pretty, 0, pretty.Length);
+                    using (Stream file = File.OpenWrite(fileName))
+                    {
+                        file.SetLength(0);
+                        file.Write(pretty, 0, pretty.Length);
+                    }
                 }
             } else {
                 Console.Error.WriteLine(Utf8Json.JsonSerializer.PrettyPrint(json));

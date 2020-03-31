@@ -10,9 +10,11 @@ using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
+using static DataTool.Helper.Logger;
+using System.Reflection;
 
 namespace DataTool.ToolLogic.List.Misc {
-    [Tool("list-workshop", CustomFlags = typeof(ListFlags), IsSensitive = true)]
+    [Tool("list-workshop", Description = "List workshop", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListWorkshop : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
@@ -21,6 +23,9 @@ namespace DataTool.ToolLogic.List.Misc {
                 if (flags.JSON) {
                     OutputJSON(data, flags);
                     return;
+                }
+                else {
+                    OutputJSON(data, flags, JSONOutputTo.console);
                 }
         }
 
@@ -103,7 +108,7 @@ namespace DataTool.ToolLogic.List.Misc {
                                @out.InferredType = "Variable";
                                break;
                            case STU_7BF2036D ss:
-                               @out.InferredType = "WaitThing";
+                               @out.InferredType = "WaitBehaviour";
                                break;
                            case STU_C5BE2B08 ss:
                                @out.InferredType = "GenericInput";
@@ -145,10 +150,10 @@ namespace DataTool.ToolLogic.List.Misc {
                                @out.Name = GetString(ss.m_B9AD8659);
                                break;
                            case STU_F654E6FB ss:
-                               @out.InferredType = "CustomString";
+                               @out.InferredType = "CustomString"; //Text formed from a selection of strings and specified Values
                                break;
                            case STU_218BCF68 ss:
-                               @out.InferredType = "CustomString2"; // wot ??
+                               @out.InferredType = "CustomString2"; //Custom text with optional inserted Values
                                break;
                            case STU_E08C5126 ss:
                                @out.InferredType = "Player"; // Only used on events??
