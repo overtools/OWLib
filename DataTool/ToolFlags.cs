@@ -37,6 +37,9 @@ namespace DataTool {
         [Alias("q")]
         [Alias("silent")]
         public bool Quiet;
+        
+        [CLIFlag(Default = false, Flag = "string-guid", Help = "Returns all strings as their GUID instead of their value", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" }, Hidden = true)]
+        public bool StringsAsGuids;
 
         [CLIFlag(Default = false, Flag = "skip-keys", Help = "Skip key detection", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         [Alias("n")]

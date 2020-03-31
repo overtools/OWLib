@@ -166,6 +166,9 @@ namespace DataTool.Helper {
         public static string GetString(ulong guid) {
             if (guid == 0) return null;  // don't even try
             try {
+                if (Flags.StringsAsGuids)
+                    return teResourceGUID.AsString(guid);
+
                 using (Stream stream = OpenFile(guid)) {
                     return stream == null ? null : new teString(stream);
                 }
