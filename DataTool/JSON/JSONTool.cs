@@ -8,70 +8,76 @@ using Newtonsoft.Json.Converters;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
 
-namespace DataTool.JSON {
-
-    enum JSONOutputTo { console, file };
-    public class JSONTool {
-        internal void OutputJSON(object jObj, ListFlags toolFlags, JSONOutputTo outputTo = JSONOutputTo.file) {
-            try {
+namespace DataTool.JSON
+{
+    public class JSONTool
+    {
+        internal void OutputJSON(object jObj, ListFlags toolFlags)
+        {
+            try
+            {
                 CompositeResolver.RegisterAndSetAsDefault(new IJsonFormatter[] {
                     new ResourceGUIDFormatter()
                 }, new[] {
                     StandardResolver.Default
                 });
-            } catch {
+            }
+            catch
+            {
                 // rip, already registered and set as default???
             }
-            
+
             byte[] json = Utf8Json.JsonSerializer.NonGeneric.Serialize(jObj.GetType(), jObj);
-            if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
-                byte[] pretty =  Utf8Json.JsonSerializer.PrettyPrintByteArray(json);
+            if (!string.IsNullOrWhiteSpace(toolFlags.Output))
+            {
+                byte[] pretty = Utf8Json.JsonSerializer.PrettyPrintByteArray(json);
 
-                if (outputTo.Equals(JSONOutputTo.console))
+                Log("Writing to {0}", toolFlags.Output);
+
+                CreateDirectoryFromFile(toolFlags.Output);
+
+                var fileName = !toolFlags.Output.EndsWith(".json") ? $"{toolFlags.Output}.json" : toolFlags.Output;
+
+                using (Stream file = File.OpenWrite(fileName))
                 {
-                    Console.Write(pretty.ToString());
+                    file.SetLength(0);
+                    file.Write(pretty, 0, pretty.Length);
                 }
-                else
-                {
-                    Log("Writing to {0}", toolFlags.Output);
-
-                    CreateDirectoryFromFile(toolFlags.Output);
-
-                    var fileName = !toolFlags.Output.EndsWith(".json") ? $"{toolFlags.Output}.json" : toolFlags.Output;
-
-                    using (Stream file = File.OpenWrite(fileName))
-                    {
-                        file.SetLength(0);
-                        file.Write(pretty, 0, pretty.Length);
-                    }
-                }
-            } else {
+            }
+            else
+            {
                 Console.Error.WriteLine(Utf8Json.JsonSerializer.PrettyPrint(json));
             }
         }
 
         // Outputs JSON using JSON.net
         // Might not output STUs and GUIDs the same as the other one but it supports object inheritance better
-        internal void OutputJSONAlt(object jObj, ListFlags toolFlags) {
+        internal void OutputJSONAlt(object jObj, ListFlags toolFlags)
+        {
             var serializeSettings = new JsonSerializerSettings();
             serializeSettings.Converters.Add(new StringEnumConverter());
-            
+
             string json = JsonConvert.SerializeObject(jObj, Formatting.Indented, serializeSettings);
-            
-            if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
+
+            if (!string.IsNullOrWhiteSpace(toolFlags.Output))
+            {
                 Log("Writing to {0}", toolFlags.Output);
 
                 CreateDirectoryFromFile(toolFlags.Output);
 
-                var fileName = !toolFlags.Output.EndsWith(".json") ? $"{toolFlags.Output}.json" : toolFlags.Output; 
+                var fileName = !toolFlags.Output.EndsWith(".json") ? $"{toolFlags.Output}.json" : toolFlags.Output;
 
-                using (Stream file = File.OpenWrite(fileName)) {
+                using (Stream file = File.OpenWrite(fileName))
+                {
                     file.SetLength(0);
-                    using (TextWriter writer = new StreamWriter(file)) {
+                    using (TextWriter writer = new StreamWriter(file))
+                    {
                         writer.WriteLine(json);
                     }
                 }
-            } else {
+            }
+            else
+            {
                 Console.Error.WriteLine(json);
             }
         }

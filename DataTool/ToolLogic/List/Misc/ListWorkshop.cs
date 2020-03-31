@@ -19,14 +19,9 @@ namespace DataTool.ToolLogic.List.Misc {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(data, flags);
-                    return;
-                }
-                else {
-                    OutputJSON(data, flags, JSONOutputTo.console);
-                }
+            if (toolFlags is ListFlags flags)       
+                OutputJSON(data, flags);
+
         }
 
         private static WorkshopContainer GetData() {
