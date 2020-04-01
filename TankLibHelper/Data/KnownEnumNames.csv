@@ -108,3 +108,6 @@ CA906AF5, Boolean
 98E3B566, Integer
 2B03A17F, Float
 EB59EA18, Vector
+9FA37C09, GamemodeConstant
+082CAB24, MapConstant
+52198DC8, String

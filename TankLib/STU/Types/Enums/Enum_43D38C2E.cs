@@ -23,7 +23,7 @@ namespace TankLib.STU.Types.Enums {
         [STUFieldAttribute(0x03242961)]
         x03242961 = 0x8, // Degrees per Second
         [STUFieldAttribute(0x39B732D1)]
-        x39B732D1 = 0x9, // Position ?? Vectors?
+        x39B732D1 = 0x9, // Position Vector
         [STUFieldAttribute(0x2289BC93)]
         x2289BC93 = 0xA, // ???
         [STUFieldAttribute(0x711B7441)]
@@ -31,6 +31,6 @@ namespace TankLib.STU.Types.Enums {
         [STUFieldAttribute(0x31176720)]
         x31176720 = 0xC, // ???
         [STUFieldAttribute(0x1681F925)]
-        x1681F925 = 0xD, // something to do with vectors
+        x1681F925 = 0xD, // Directional vector
     }
 }

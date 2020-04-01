@@ -11,10 +11,7 @@ namespace DataTool.ToolLogic.List.Misc {
             var data = GetData();
             
             if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(data, flags);
-                    return;
-                }
+                OutputJSON(data, flags);
         }
 
         private static List<Brawl> GetData() {
