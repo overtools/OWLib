@@ -94,6 +94,9 @@ namespace ReplayMp4Tool {
                 Console.Out.WriteLine($"Hero: {hero.Name}");
                 Console.Out.WriteLine($"Map: {mapData.Name}");
                 Console.Out.WriteLine($"Skin: {skinTheme?.Name ?? "Unknown"}");
+                Console.Out.WriteLine($"Recorded At: {DateTimeOffset.FromUnixTimeSeconds(replayInfo.Header.Timestamp)}");
+                Console.Out.WriteLine($"Type: {replayInfo.Header.Type:G}");
+                Console.Out.WriteLine($"Quality: {replayInfo.Header.QualityPct}% ({(ReplayQuality) replayInfo.Header.QualityPct})");
             }
         }
 
@@ -103,6 +106,10 @@ namespace ReplayMp4Tool {
                 public teResourceGUID MapGuid;
                 public teResourceGUID HeroGuid;
                 public teResourceGUID SkinGuid;
+                public long Timestamp;
+                public ulong UserId;
+                public ReplayType Type;
+                public int QualityPct;
             }
 
             public Structure Header;
@@ -112,41 +119,18 @@ namespace ReplayMp4Tool {
             }
         }
 
-        public static long Seek(FileStream fs, string searchString) {
-            char[] search = searchString.ToCharArray();
-            long result = -1,
-                 position = 0,
-                 stored = -1,
-                 begin = fs.Position;
-            int c;
-
-            while ((c = fs.ReadByte()) != -1) {
-                if ((char) c == search[position]) {
-                    if (stored == -1 && position > 0
-                                     && (char) c == search[0]) {
-                        stored = fs.Position;
-                    }
-
-                    if (position + 1 == search.Length) {
-                        result = fs.Position - search.Length;
-                        fs.Position = result;
-                        break;
-                    }
-
-                    position++;
-                } else if (stored > -1) {
-                    fs.Position = stored + 1;
-                    position = 1;
-                } else {
-                    position = 0;
-                }
-            }
-
-            if (result == -1) {
-                fs.Position = begin;
-            }
-
-            return result;
+        public enum ReplayType {
+            Manual = 0,
+            Play = 2,
+            Top5 = 8,
+        }
+        
+        public enum ReplayQuality
+        {
+            Low = 30,
+            Medium = 50,
+            High = 80,
+            Ultra = 100
         }
     }
 }
