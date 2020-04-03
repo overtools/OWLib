@@ -91,7 +91,15 @@ namespace ReplayMp4Tool {
             }
         }
 
+        public static void ParseReplays(IEnumerable<string> files) {
+            foreach (var filePath in files) {
+                ParseReplay(filePath);
+            }
+        }
+        
         public static void ParseReplay(string filePath) {
+            Console.Out.WriteLine($"Processing file: {Path.GetFileName(filePath)}");
+
             var buffer = (Memory<byte>) File.ReadAllBytes(filePath);
             if (buffer.Length == 0) return;
 
@@ -111,14 +119,15 @@ namespace ReplayMp4Tool {
                 ulong mapHeaderGuid = (replayInfo.Header.MapGuid & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
                 var mapData = new MapHeader(mapHeaderGuid);
 
-                Console.Out.WriteLine("\nReplay Info\n");
-                Console.Out.WriteLine($"Original Name: {filename}");
-                Console.Out.WriteLine($"Hero: {hero.Name}");
-                Console.Out.WriteLine($"Map: {mapData.Name}");
-                Console.Out.WriteLine($"Skin: {skinTheme?.Name ?? "Unknown"}");
-                Console.Out.WriteLine($"Recorded At: {DateTimeOffset.FromUnixTimeSeconds(replayInfo.Header.Timestamp)}");
-                Console.Out.WriteLine($"Type: {replayInfo.Header.Type:G}");
-                Console.Out.WriteLine($"Quality: {replayInfo.Header.QualityPct}% ({(ReplayQuality) replayInfo.Header.QualityPct})");
+                Console.Out.WriteLine("Replay Info:");
+                Console.Out.WriteLine($" - Title: {filename}");
+                Console.Out.WriteLine($" - Hero: {hero.Name}");
+                Console.Out.WriteLine($" - Map: {mapData.Name}");
+                Console.Out.WriteLine($" - Skin: {skinTheme?.Name ?? "Unknown"}");
+                Console.Out.WriteLine($" - Recorded At: {DateTimeOffset.FromUnixTimeSeconds(replayInfo.Header.Timestamp).ToLocalTime()}");
+                Console.Out.WriteLine($" - Type: {replayInfo.Header.Type:G}");
+                Console.Out.WriteLine($" - Quality: {replayInfo.Header.QualityPct}% ({(ReplayQuality) replayInfo.Header.QualityPct})");
+                Console.Out.WriteLine("\n");
             }
         }
 
@@ -142,9 +151,9 @@ namespace ReplayMp4Tool {
         }
 
         public enum ReplayType {
-            Manual = 0,
-            Play = 2,
-            Top5 = 8,
+            Highlight = 0,
+            PlayOfTheGame = 2,
+            ManualHighlight = 8
         }
         
         public enum ReplayQuality
