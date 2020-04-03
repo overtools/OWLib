@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using DataTool.Helper;
 using TankLib.STU.Types;
@@ -93,6 +94,31 @@ namespace DataTool.DataModels {
                     yield return unlock;
                 }
             }
+        }
+
+        public IEnumerable<Unlock> GetUnlocksOfType(string type) {
+            var @return = new List<Unlock>();
+
+            if (OtherUnlocks != null)
+                @return.AddRange(OtherUnlocks?.Where(x => x.Type == type));
+            
+            
+            if (UnknownUnlocks != null)
+                @return.AddRange(UnknownUnlocks?.Where(x => x.Type == type));
+            
+            if (LevelUnlocks != null)
+                foreach (var levelUnlocks in LevelUnlocks) {
+                    if (levelUnlocks?.Unlocks == null) continue;
+                    @return.AddRange(levelUnlocks?.Unlocks.Where(x => x.Type == type));
+                }
+            
+            if (LootBoxesUnlocks != null)
+                foreach (var lootBoxesUnlock in LootBoxesUnlocks) {
+                    if (lootBoxesUnlock?.Unlocks == null) continue;
+                    @return.AddRange(lootBoxesUnlock?.Unlocks.Where(x => x.Type == type));
+                }
+            
+            return @return;
         }
     }
     

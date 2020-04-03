@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealingML", "HealingML\Heal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankLib.Test", "TankLib.Test\TankLib.Test.csproj", "{DE6F508B-2A82-432F-86A9-58D1F71833D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplayMp4Tool", "ReplayMp4Tool\ReplayMp4Tool.csproj", "{08F8C3DE-4A68-4D68-BED5-C438C3D33989}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{DE6F508B-2A82-432F-86A9-58D1F71833D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE6F508B-2A82-432F-86A9-58D1F71833D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE6F508B-2A82-432F-86A9-58D1F71833D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08F8C3DE-4A68-4D68-BED5-C438C3D33989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08F8C3DE-4A68-4D68-BED5-C438C3D33989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08F8C3DE-4A68-4D68-BED5-C438C3D33989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08F8C3DE-4A68-4D68-BED5-C438C3D33989}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,6 +106,7 @@ Global
 		{CCD0AAAF-2428-4405-9C07-A8C8354A99C9} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 		{CC681FAC-B05D-483F-9FA1-D8DEC4871B99} = {3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}
 		{939E5D93-09B7-4BAD-8F28-1F204A58BBC4} = {3D7A76E0-ADD8-4F3C-8BE6-DF54FCB0CBCA}
+		{08F8C3DE-4A68-4D68-BED5-C438C3D33989} = {97878F88-59A9-47BD-BAA4-7B4DEAC97826}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {225E86D0-10B9-4E96-8ED4-B8C90CB70682}
