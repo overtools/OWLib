@@ -14,18 +14,39 @@ using TankLib.STU.Types;
 
 namespace ReplayMp4Tool {
     public static class ReplayThing {
-        private static IEnumerable<string[]> ProcessAtoms(Memory<byte> buffer) {
+        private static string ProcessAtomsButDumber(Memory<byte> buffer) {
             var cursor = 0;
+            while (cursor < buffer.Length) {
+                var atom = new MP4Atom(buffer.Span.Slice(cursor));
+                cursor += Math.Max(4, atom.Size);
+                if (atom.Name == "ilst" || atom.Name == "?nam") {
+                    return ProcessAtomsButDumber(atom.Buffer);
+                }
+
+                if (atom.Name == "data") {
+                    return Encoding.UTF8.GetString(atom.Buffer.Slice(8).ToArray());
+                }
+            }
+
+            return "";
+        }
+        
+
+        private static IEnumerable<(string, string[])> ProcessAtoms(Memory<byte> buffer) {
+            var cursor = 0;
+            var filename = default(string);
             while (cursor < buffer.Length) {
                 var atom = new MP4Atom(buffer.Span.Slice(cursor));
                 cursor += atom.Size;
                 if (atom.Name == "moov" || atom.Name == "udta") {
-                    foreach (var str in ProcessAtoms(atom.Buffer)) {
-                        yield return str;
+                    foreach (var (fn, str) in ProcessAtoms(atom.Buffer)) {
+                        yield return (fn, str);
                     }
 
                     continue;
                 }
+
+                if (atom.Name == "meta") filename = ProcessAtomsButDumber(atom.Buffer);
 
                 if (atom.Name != "Xtra") continue; // moov -> udta -> Xtra
 
@@ -65,7 +86,7 @@ namespace ReplayMp4Tool {
                     var b64Str = Encoding.Unicode.GetString(data.ToArray());
                     localCursor += encodedSettingLength;
 
-                    yield return b64Str.Split(':');
+                    yield return (filename, b64Str.Split(':'));
                 }
             }
         }
@@ -74,7 +95,7 @@ namespace ReplayMp4Tool {
             var buffer = (Memory<byte>) File.ReadAllBytes(filePath);
             if (buffer.Length == 0) return;
 
-            foreach (var b64Str in ProcessAtoms(buffer)) { // hash, payload, settinghash?
+            foreach (var (filename, b64Str) in ProcessAtoms(buffer)) { // hash, payload, settinghash?
                 byte[] bytes = Convert.FromBase64String(b64Str[1]);
                 // string hex = BitConverter.ToString(bytes);
 
@@ -91,6 +112,7 @@ namespace ReplayMp4Tool {
                 var mapData = new MapHeader(mapHeaderGuid);
 
                 Console.Out.WriteLine("\nReplay Info\n");
+                Console.Out.WriteLine($"Original Name: {filename}");
                 Console.Out.WriteLine($"Hero: {hero.Name}");
                 Console.Out.WriteLine($"Map: {mapData.Name}");
                 Console.Out.WriteLine($"Skin: {skinTheme?.Name ?? "Unknown"}");
