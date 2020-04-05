@@ -29,10 +29,9 @@ namespace DataTool.ToolLogic.List.Misc {
                     return;
                 }
 
-
+            Log("Name | Internal name | Type");
             foreach (GameMode gameMode in gameModes) {
-                if (string.IsNullOrWhiteSpace(gameMode.Name)) continue;
-                Log($"{gameMode.Name} ({gameMode.InternalName})");
+                Log($"{(string.IsNullOrWhiteSpace(gameMode.Name) ? "Not found" : gameMode.Name)} | {gameMode.InternalName} | {gameMode.Type}");
             }
         }
     }

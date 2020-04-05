@@ -5,15 +5,15 @@ namespace TankLib.STU.Types.Enums {
     [STUEnumAttribute(0x1964FED7)]
     public enum Enum_1964FED7 : uint {
         [STUFieldAttribute(0xD33D7203)]
-        xD33D7203 = 0x0,
+        DayOneGamemode = 0x0, //Assault, Payload, Hybrid (modes from start of OW closed beta)
         [STUFieldAttribute(0x023CE0F6)]
-        x023CE0F6 = 0x1,
+        Other = 0x1, //Looks like modes released after three basic ones
         [STUFieldAttribute(0x3F1EFF08)]
-        x3F1EFF08 = 0x2,
+        Deathmatch = 0x2,
         [STUFieldAttribute(0x28C99BBF)]
-        x28C99BBF = 0x3,
+        PVE = 0x3,
         [STUFieldAttribute(0xF9FA193B)]
-        xF9FA193B = 0x4,
+        YetiHunter = 0x4,
         [STUFieldAttribute(0x22BD557C)]
         x22BD557C = 0x5,
         [STUFieldAttribute(0x850B8131)]
