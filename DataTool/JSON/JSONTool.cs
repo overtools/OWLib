@@ -10,7 +10,7 @@ using static DataTool.Helper.Logger;
 
 namespace DataTool.JSON {
     public class JSONTool {
-        internal void OutputJSON(object jObj, ListFlags toolFlags) {
+        public void OutputJSON(object jObj, ListFlags toolFlags) {
             try {
                 CompositeResolver.RegisterAndSetAsDefault(new IJsonFormatter[] {
                     new ResourceGUIDFormatter()
@@ -42,7 +42,7 @@ namespace DataTool.JSON {
 
         // Outputs JSON using JSON.net
         // Might not output STUs and GUIDs the same as the other one but it supports object inheritance better
-        internal void OutputJSONAlt(object jObj, ListFlags toolFlags) {
+        public void OutputJSONAlt(object jObj, ListFlags toolFlags) {
             var serializeSettings = new JsonSerializerSettings();
             serializeSettings.Converters.Add(new StringEnumConverter());
             
