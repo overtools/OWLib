@@ -12,6 +12,7 @@ using TankLib;
 using TankLib.Helpers;
 using TankLib.STU.Types;
 
+
 namespace ReplayMp4Tool {
     public static class ReplayThing {
         private static string ProcessAtomsButDumber(Memory<byte> buffer) {
@@ -91,17 +92,20 @@ namespace ReplayMp4Tool {
             }
         }
 
-        public static void ParseReplays(IEnumerable<string> files) {
+        public static List<Replay> ParseReplays(IEnumerable<string> files) {
+            List<Replay> replays = new List<Replay>();
             foreach (var filePath in files) {
-                ParseReplay(filePath);
+                replays.AddRange(ParseReplay(filePath));
             }
+            return replays;
         }
         
-        public static void ParseReplay(string filePath) {
+        public static List<Replay> ParseReplay(string filePath) {
             Console.Out.WriteLine($"Processing file: {Path.GetFileName(filePath)}");
+            List<Replay> replays = new List<Replay>();
 
             var buffer = (Memory<byte>) File.ReadAllBytes(filePath);
-            if (buffer.Length == 0) return;
+            if (buffer.Length == 0) return replays;
 
             foreach (var (filename, b64Str) in ProcessAtoms(buffer)) { // hash, payload, settinghash?
                 byte[] bytes = Convert.FromBase64String(b64Str[1]);
@@ -119,19 +123,26 @@ namespace ReplayMp4Tool {
                 ulong mapHeaderGuid = (replayInfo.Header.MapGuid & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
                 var mapData = new MapHeader(mapHeaderGuid);
 
-                Console.Out.WriteLine("Replay Info:");
-                Console.Out.WriteLine($" - Title: {filename}");
-                Console.Out.WriteLine($" - Hero: {hero.Name}");
-                Console.Out.WriteLine($" - Map: {mapData.Name}");
-                Console.Out.WriteLine($" - Skin: {skinTheme?.Name ?? "Unknown"}");
-                Console.Out.WriteLine($" - Recorded At: {DateTimeOffset.FromUnixTimeSeconds(replayInfo.Header.Timestamp).ToLocalTime()}");
-                Console.Out.WriteLine($" - Type: {replayInfo.Header.Type:G}");
-                Console.Out.WriteLine($" - Quality: {replayInfo.Header.QualityPct}% ({(ReplayQuality) replayInfo.Header.QualityPct})");
-                Console.Out.WriteLine("\n");
+                var replay = new Replay {
+                    Title = filename,
+                    Hero = hero.Name,
+                    Map = mapData.Name,
+                    Skin = skinTheme?.Name ?? "Unknown",
+                    RecordedAt = $"{DateTimeOffset.FromUnixTimeSeconds(replayInfo.Header.Timestamp).ToLocalTime()}",
+                    HighlightType = $"{replayInfo.Header.Type:G}",
+                    Quality = $"{replayInfo.Header.QualityPct}% ({(ReplayQuality)replayInfo.Header.QualityPct})"
+                };
+
+                replays.Add(replay);
             }
+            return replays;
+        }
+        public struct Replay{
+            public string Title, Hero, Map, Skin, RecordedAt, HighlightType, Quality;
         }
 
-        public class Mp4Replay {
+        public class Mp4Replay
+        {
             [StructLayout(LayoutKind.Sequential, Pack = 4)]
             public struct Structure {
                 public teResourceGUID MapGuid;
