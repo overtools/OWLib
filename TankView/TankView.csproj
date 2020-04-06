@@ -133,9 +133,11 @@
     <Compile Include="ObjectModel\SizeConverter.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\AppSettings.cs" />
+    <Compile Include="ViewModel\ExtractionSettings.cs" />
     <Compile Include="ViewModel\Folder.cs" />
     <Compile Include="ViewModel\GUIDCollection.cs" />
     <Compile Include="ViewModel\GUIDEntry.cs" />
+    <Compile Include="ViewModel\ImageExtractionFormats.cs" />
     <Compile Include="ViewModel\PatchHost.cs" />
     <Compile Include="ViewModel\CASCSettings.cs" />
     <Compile Include="ViewModel\NGDPPatchHosts.cs" />

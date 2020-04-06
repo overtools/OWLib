@@ -63,16 +63,7 @@ namespace TankView.Helper {
                     return null;
                 }
 
-                teTexture texture = new teTexture(IOHelper.OpenFile(value));
-                if (texture.PayloadRequired) {
-                    ulong payload = texture.GetPayloadGUID(value.GUID, 0);
-                    if (IOHelper.HasFile(payload)) {
-                        texture.LoadPayload(IOHelper.OpenFile(payload), 0);
-                    } else {
-                        return null;
-                    }
-                }
-
+                teTexture texture = LoadTexture(value);
                 Stream ms = texture.SaveToDDS(1);
 
                 return DDSConverter.ConvertDDS(ms, targetFormat, imageFormat, frame);
@@ -81,6 +72,29 @@ namespace TankView.Helper {
             }
 
             return null;
+        }
+
+        public static void SaveImage(GUIDEntry value, Stream fileStream, Stream outStream) {
+            if (GetDataType(value) != DataType.Image) {
+                return;
+            }
+            
+            teTexture texture = LoadTexture(value, fileStream);
+            texture.SaveToDDS(outStream, false, 1);
+        }
+
+        internal static teTexture LoadTexture(GUIDEntry value, Stream fileStream = null) {
+            teTexture texture = new teTexture(fileStream ?? IOHelper.OpenFile(value));
+            if (texture.PayloadRequired) {
+                ulong payload = texture.GetPayloadGUID(value.GUID, 0);
+                if (IOHelper.HasFile(payload)) {
+                    texture.LoadPayload(IOHelper.OpenFile(payload), 0);
+                } else {
+                    return null;
+                }
+            }
+
+            return texture;
         }
 
         internal static object GetString(GUIDEntry value) {

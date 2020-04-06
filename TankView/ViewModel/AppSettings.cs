@@ -4,8 +4,6 @@ using TankView.Properties;
 namespace TankView.ViewModel {
     public class AppSettings : INotifyPropertyChanged {
         private bool _darkMode = Settings.Default.DarkMode;
-        private bool _convertSounds = Settings.Default.ConvertSounds;
-
 
         public bool EnableDarkMode {
             get => _darkMode;
@@ -15,16 +13,6 @@ namespace TankView.ViewModel {
                 Settings.Default.Save();
                 (App.Current as App)?.SetDarkMode(EnableDarkMode);
                 NotifyPropertyChanged(nameof(EnableDarkMode));
-            }
-        }
-        
-        public bool EnableConvertSounds {
-            get => _convertSounds;
-            set {
-                _convertSounds = value;
-                Settings.Default.ConvertSounds = value;
-                Settings.Default.Save();
-                NotifyPropertyChanged(nameof(EnableConvertSounds));
             }
         }
 

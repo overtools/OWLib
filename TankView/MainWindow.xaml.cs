@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using DataTool.SaveLogic;
+using DataTool.ToolLogic.Extract;
 using DataTool.WPF;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using TankView.Helper;
@@ -36,6 +38,8 @@ namespace TankView {
         public AppSettings AppSettings { get; set; }
         public GUIDCollection GUIDTree { get; set; } = new GUIDCollection();
         public ProductLocations ProductAgent { get; set; }
+        public ExtractionSettings ExtractionSettings { get; set; }
+        public ImageExtractionFormats ImageExtractionFormats { get; set; }
 
         public string SearchText { get; set; } = string.Empty;
 
@@ -80,11 +84,17 @@ namespace TankView {
             CASCSettings = new CASCSettings();
             AppSettings = new AppSettings();
             ProductAgent = new ProductLocations();
+            ExtractionSettings = new ExtractionSettings();
+            ImageExtractionFormats = new ImageExtractionFormats();
 
             _progressWorker.OnProgress += UpdateProgress;
 
             if (!NGDPPatchHosts.Any(x => x.Active)) {
                 NGDPPatchHosts[0].Active = true;
+            }
+            
+            if (!ImageExtractionFormats.Any(x => x.Active)) {
+                ImageExtractionFormats[0].Active = true;
             }
 
             InitializeComponent();
@@ -160,6 +170,15 @@ namespace TankView {
             }
 
             CollectionViewSource.GetDefaultView(NGDPPatchHosts).Refresh();
+        }
+        
+        private void ImageExtractionFormatChange(object sender, RoutedEventArgs e) {
+            if (!(sender is MenuItem menuItem)) return;
+            foreach (ImageFormat node in ImageExtractionFormats.Where(x => x.Active && x.GetHashCode() != ((ImageFormat) menuItem.DataContext).GetHashCode())) {
+                node.Active = false;
+            }
+
+            CollectionViewSource.GetDefaultView(ImageExtractionFormats).Refresh();
         }
 
         private void OpenNGDP(object sender, RoutedEventArgs e) {
@@ -341,6 +360,10 @@ namespace TankView {
                     Directory.CreateDirectory(directory);
                 }
             }
+            
+            var imageExtractFlags = new ExtractFlags {
+                ConvertTexturesType = Settings.Default.ImageExtractionFormat
+            };
 
             Task.Run(delegate {
                 int c = 0;
@@ -358,22 +381,32 @@ namespace TankView {
                     var dataType = DataHelper.GetDataType(teResourceGUID.Type(entry.GUID));
                     var fileType = Path.GetExtension(entry.FullPath)?.Substring(1);
                     var filePath = Path.ChangeExtension(entry.FullPath.Substring(1), null);
-                    string fileOutput;
-                    
-                    if (dataType == DataHelper.DataType.Sound && AppSettings.EnableConvertSounds) {
-                        fileOutput = $"{filePath}.ogg";
-                    } else {
-                        fileOutput = $"{filePath}.{fileType}";
-                    }
-                    
+                    var fileOutput = $"{filePath}.{GetFileType(dataType) ?? fileType}";
+
                     try {
+                        if (dataType == DataHelper.DataType.Image && ExtractionSettings.EnableConvertImages) {
+                            DataTool.FindLogic.Combo.ComboInfo info = new DataTool.FindLogic.Combo.ComboInfo();
+                            DataTool.FindLogic.Combo.Find(info, entry.GUID);
+                            var newPath = Path.GetFullPath(Path.Combine(outPath, filePath, @"..\")); // filepath includes the filename which we don't want here as combo already does that
+                            Combo.SaveLooseTextures(imageExtractFlags, newPath, info);
+
+                            return;
+                        }
+
                         using (Stream i = IOHelper.OpenFile(entry))
                         using (Stream o = File.OpenWrite(Path.Combine(outPath, fileOutput))) {
-                            if (dataType == DataHelper.DataType.Sound && AppSettings.EnableConvertSounds) {
-                                o.SetLength(0);
-                                DataTool.SaveLogic.Combo.ConvertSoundFile(i, o);
-                            } else {
-                                i.CopyTo(o);
+                            switch (dataType) {
+                                case DataHelper.DataType.Sound when ExtractionSettings.EnableConvertSounds:
+                                    o.SetLength(0);
+                                    DataTool.SaveLogic.Combo.ConvertSoundFile(i, o);
+                                    break;
+                                // not used, image extraction is handled above
+                                case DataHelper.DataType.Image when ExtractionSettings.EnableConvertImages:
+                                    DataHelper.SaveImage(entry, i, o);
+                                    break;
+                                default:
+                                    i.CopyTo(o);
+                                    break;
                             }
                         }
                     } catch {
@@ -384,6 +417,17 @@ namespace TankView {
                 ViewContext.Send(delegate { IsReady = true; }, null);
             });
         }
+
+        private string GetFileType(DataHelper.DataType dataType) {
+            switch (dataType) {
+                case DataHelper.DataType.Sound when ExtractionSettings.EnableConvertSounds:
+                    return "ogg";
+                case DataHelper.DataType.Image when ExtractionSettings.EnableConvertImages:
+                    return "dds"; // todo, support other formats??
+                default:
+                    return null;
+            }
+        } 
 
         private void ExtractFolder(Folder folder, ref List<GUIDEntry> files) {
             files.AddRange(folder.Files);

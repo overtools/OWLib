@@ -37,6 +37,18 @@ namespace TankView.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ImageExtractionFormat {
+            get {
+                return ((string)(this["ImageExtractionFormat"]));
+            }
+            set {
+                this["ImageExtractionFormat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public global::System.Collections.Specialized.StringCollection RecentLocations {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["RecentLocations"]));
@@ -91,6 +103,18 @@ namespace TankView.Properties {
             }
             set {
                 this["ConvertSounds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ConvertImages {
+            get {
+                return ((bool)(this["ConvertImages"]));
+            }
+            set {
+                this["ConvertImages"] = value;
             }
         }
         

@@ -124,9 +124,24 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Extraction">
-                    <MenuItem Header="Convert Sounds" DataContext="{Binding AppSettings}"
+                    <MenuItem Header="Convert Sounds" DataContext="{Binding ExtractionSettings}"
                               IsChecked="{Binding EnableConvertSounds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                               IsCheckable="True" />
+                    <MenuItem Header="Convert Images" DataContext="{Binding ExtractionSettings}"
+                              IsChecked="{Binding EnableConvertImages, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                              IsCheckable="True" />
+                    
+                    <MenuItem Header="Image Format" ItemsSource="{Binding ImageExtractionFormats}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Header" Value="{Binding Path=Name}" />
+                                <Setter Property="Tag" Value="{Binding Path=Format}" />
+                                <Setter Property="IsCheckable" Value="True" />
+                                <Setter Property="IsChecked" Value="{Binding Path=Active}" />
+                                <EventSetter Event="Click" Handler="ImageExtractionFormatChange" />
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Preview" DataContext="{Binding GUIDTree}"
                           IsChecked="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

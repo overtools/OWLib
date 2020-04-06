@@ -583,13 +583,16 @@ namespace DataTool.SaveLogic {
                     maxMips = 0xF;
                 }
             }
-            path += Path.DirectorySeparatorChar;
+
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                path += Path.DirectorySeparatorChar;
+            
 
             FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[textureGUID];
             string filePath = Path.Combine(path, $"{textureInfo.GetNameIndex()}");
             if (teResourceGUID.Type(textureGUID) != 0x4) filePath += $".{teResourceGUID.Type(textureGUID):X3}";
 
-            if (Program.Flags.Deduplicate) {
+            if (Program.Flags != null && Program.Flags.Deduplicate) {
                 if(ScratchDBInstance.HasRecord(textureGUID)) {
                     return;
                 }
