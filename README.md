@@ -18,4 +18,4 @@ https://owdev.wiki/Main_Page
 ## Disclamer
 This project is not affiliated with Blizzard Entertainment, Inc.  
 All trademarks referenced herein are the properties of their respective owners.  
-©2019 Blizzard Entertainment, Inc. All rights reserved.
+2020 Blizzard Entertainment, Inc. All rights reserved.
