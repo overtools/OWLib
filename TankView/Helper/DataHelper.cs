@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -52,7 +53,13 @@ namespace TankView.Helper {
 
         internal static object ConvertSound(GUIDEntry value) {
             MemoryStream ms = new MemoryStream();
-            DataTool.SaveLogic.Combo.ConvertSoundFile(IOHelper.OpenFile(value), ms);
+            try {
+                DataTool.SaveLogic.Combo.ConvertSoundFile(IOHelper.OpenFile(value), ms);
+            } catch (Exception ex) {
+                Debugger.Log(0, "[TankView.DataHelper.ConvertSound]", $"Error converting sound! {ex.Message}\n");
+                // ignored
+            }
+            
             ms.Position = 0;
             return ms;
         }

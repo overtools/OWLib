@@ -21,6 +21,7 @@ using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
 using TACTLib.Core.Product.Tank;
 using TankLib;
+using TankLib.TACT;
 
 // ReSharper disable MemberCanBeMadeStatic.Local
 
@@ -249,6 +250,7 @@ namespace TankView {
             Task.Run(delegate {
                 try {
                     DataTool.Program.Client = new ClientHandler(path, ClientArgs);
+                    LoadHelper.PostLoad(DataTool.Program.Client);
 
                     DataTool.Program.TankHandler = DataTool.Program.Client.ProductHandler as ProductHandler_Tank;
 
