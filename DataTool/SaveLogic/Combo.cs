@@ -457,13 +457,15 @@ namespace DataTool.SaveLogic {
 
         private static void SaveShader(string path, FindLogic.Combo.MaterialInfo materialInfo, FindLogic.Combo.ComboInfo info) {
             string shaderDirectory = Path.Combine(path, "Shaders", $"{materialInfo.MaterialData:X16}");
-            //WriteFile(materialInfo.ShaderGroup, shaderDirectory);
-            //WriteFile(materialInfo.ShaderSource, shaderDirectory);
+            var fn = teResourceGUID.LongKey(materialInfo.ShaderGroup).ToString("X12");
+            WriteFile(materialInfo.ShaderGroup, shaderDirectory, $"{fn}.shadergroup");
+            WriteFile(materialInfo.ShaderSource, shaderDirectory, $"{fn}.hlsl");
             foreach (var (instance, code, byteCode) in materialInfo.Shaders) {
                 //var instancePath = Path.Combine(shaderDirectory, $"{instance:X12}");
-                //WriteFile(instance, instancePath);
-                //WriteFile(code, instancePath);
-                WriteFile(byteCode, Path.Combine(shaderDirectory, Path.ChangeExtension(teResourceGUID.AsString(code), "fxc")));
+                var codefn = $"{fn}{Path.DirectorySeparatorChar}{teResourceGUID.LongKey(code):X12}";
+                WriteFile(instance, shaderDirectory, $"{codefn}.fxi");
+                WriteFile(code, shaderDirectory, $"{codefn}.owfx");
+                WriteFile(byteCode, Path.Combine(shaderDirectory, $"{codefn}.fxc"));
             }
         }
 
