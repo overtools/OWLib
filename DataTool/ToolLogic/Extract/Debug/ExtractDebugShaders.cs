@@ -14,10 +14,10 @@ namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-shaders", Description = "Extract shaders for a material (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugShaders : ITool {
         public void Parse(ICLIFlags toolFlags) {
-            GetSoundbanks(toolFlags);
+            GetShaders(toolFlags);
         }
 
-        public void GetSoundbanks(ICLIFlags toolFlags) {
+        public void GetShaders(ICLIFlags toolFlags) {
             const string container = "ShaderCode";
             //const ulong materialGUID = 0xE00000000005860;  // 000000005860.008: Sombra - League - NYXL - Main
             //const string matName = "Sombra - League - NYXL - Main";
