@@ -130,15 +130,16 @@ namespace ReplayMp4Tool {
                     Skin = skinTheme?.Name ?? "Unknown",
                     RecordedAt = $"{DateTimeOffset.FromUnixTimeSeconds(replayInfo.Header.Timestamp).ToLocalTime()}",
                     HighlightType = $"{replayInfo.Header.Type:G}",
-                    Quality = $"{replayInfo.Header.QualityPct}% ({(ReplayQuality)replayInfo.Header.QualityPct})"
-                };
+                    Quality = $"{replayInfo.Header.QualityPct}% ({(ReplayQuality)replayInfo.Header.QualityPct})",
+                    FilePath = filePath
+            };
 
                 replays.Add(replay);
             }
             return replays;
         }
         public struct Replay{
-            public string Title, Hero, Map, Skin, RecordedAt, HighlightType, Quality;
+            public string Title, Hero, Map, Skin, RecordedAt, HighlightType, Quality, FilePath;
         }
 
         public class Mp4Replay
