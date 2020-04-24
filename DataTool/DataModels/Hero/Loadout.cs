@@ -36,6 +36,12 @@ namespace DataTool.DataModels.Hero {
         [DataMember]
         public teResourceGUID TextureGUID;
 
+        [DataMember]
+        public bool IsHiddenAbility;
+
+        [DataMember]
+        public bool IsSecondaryWeapon;
+        
         public Loadout(ulong key) {
             STULoadout stu = STUHelper.GetInstance<STULoadout>(key);
             if (stu == null) return;
@@ -64,6 +70,12 @@ namespace DataTool.DataModels.Hero {
             Button = GetString(STUHelper.GetInstance<STU_C5243F93>(loadout.m_logicalButton)?.m_name);
             ButtonUnk = GetString(STUHelper.GetInstance<STU_C5243F93>(loadout.m_9290B942)?.m_name);
             DescriptionButtons = loadout.m_B1124918?.Select(x => GetString(STUHelper.GetInstance<STU_C5243F93>(x)?.m_name)).ToArray();
+            
+            // If the ability isn't shown in the UI (weapons, zoom ability)
+            IsHiddenAbility = loadout.m_0E679979 >= 1;
+
+            // Mercy, Bastion and Torbjorn all have 2 weapons, this is only set on their secondary weapons??
+            IsSecondaryWeapon = loadout.m_0E679979 == 2;
         }
 
         public LoadoutLite ToLite() {
