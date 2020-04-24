@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Linq;
+using System.Runtime.Serialization;
 using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
@@ -8,6 +9,72 @@ using static DataTool.Helper.IO;
 namespace DataTool.DataModels.Hero {
     [DataContract]
     public class Loadout {
+        public teResourceGUID GUID;
+
+        [DataMember]
+        public string Name;
+        
+        [DataMember]
+        public string Description;
+        
+        [DataMember]
+        public LoadoutCategory Category;
+
+        [DataMember]
+        public string Button;
+
+        [DataMember]
+        public string ButtonUnk;
+
+        [DataMember]
+        public string[] DescriptionButtons;
+        
+        [DataMember]
+        public teResourceGUID MovieGUID;
+        
+        [DataMember]
+        public teResourceGUID TextureGUID;
+
+        [DataMember]
+        public int UnkInt;
+
+        public Loadout(ulong key) {
+            STULoadout stu = STUHelper.GetInstance<STULoadout>(key);
+            if (stu == null) return;
+            Init(stu, key);
+        }
+
+        public Loadout(STULoadout stu) {
+            Init(stu);
+        }
+        
+        public static Loadout GetLoadout(ulong key) {
+            STULoadout loadout = STUHelper.GetInstance<STULoadout>(key);
+            if (loadout == null) return null;
+            return new Loadout(loadout);
+        }
+
+        public void Init(STULoadout loadout, ulong key = default) {
+            GUID = (teResourceGUID) key;
+            MovieGUID = loadout.m_infoMovie;
+            TextureGUID = loadout.m_texture;
+            Category = loadout.m_category;
+            
+            Name = GetString(loadout.m_name);
+            Description = GetString(loadout.m_description);
+
+            Button = GetString(STUHelper.GetInstance<STU_C5243F93>(loadout.m_logicalButton)?.m_name);
+            ButtonUnk = GetString(STUHelper.GetInstance<STU_C5243F93>(loadout.m_9290B942)?.m_name);
+            DescriptionButtons = loadout.m_B1124918?.Select(x => GetString(STUHelper.GetInstance<STU_C5243F93>(x)?.m_name)).ToArray();
+            UnkInt = loadout.m_0E679979;
+        }
+
+        public LoadoutLite ToLite() {
+            return new LoadoutLite(this);
+        }
+    }
+
+    public class LoadoutLite {
         [DataMember]
         public string Name;
         
@@ -19,20 +86,16 @@ namespace DataTool.DataModels.Hero {
         
         [DataMember]
         public teResourceGUID MovieGUID;
+        
+        [DataMember]
+        public teResourceGUID TextureGUID;
 
-        public Loadout(STULoadout loadout) {
-            MovieGUID = loadout.m_infoMovie;
-            
-            Category = loadout.m_category;
-            
-            Name = GetString(loadout.m_name);
-            Description = GetString(loadout.m_description);
-        }
-
-        public static Loadout GetLoadout(ulong key) {
-            STULoadout loadout = STUHelper.GetInstance<STULoadout>(key);
-            if (loadout == null) return null;
-            return new Loadout(loadout);
+        public LoadoutLite(Loadout loadout) {
+            Name = loadout.Name;
+            Description = loadout.Description;
+            Category = loadout.Category;
+            MovieGUID = loadout.MovieGUID;
+            TextureGUID = loadout.TextureGUID;
         }
     }
 }

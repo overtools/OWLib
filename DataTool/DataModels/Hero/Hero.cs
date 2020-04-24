@@ -35,7 +35,7 @@ namespace DataTool.DataModels.Hero {
         public teColorRGBA GalleryColor;
 
         [DataMember]
-        public List<Loadout> Loadouts;
+        public List<LoadoutLite> Loadouts;
         
         [DataMember]
         public List<SkinTheme> SkinThemes;
@@ -69,11 +69,11 @@ namespace DataTool.DataModels.Hero {
             //}
             
             if (hero.m_heroLoadout != null) {
-                Loadouts = new List<Loadout>();
+                Loadouts = new List<LoadoutLite>();
                 foreach (teResourceGUID loadoutGUID in hero.m_heroLoadout) {
                     var loadout = Loadout.GetLoadout(loadoutGUID);
                     if (loadout == null) continue;
-                    Loadouts.Add(loadout);
+                    Loadouts.Add(loadout.ToLite());
                 }
             }
         }
