@@ -40,7 +40,8 @@ namespace DataTool.Helper {
         public static void LoadGUIDTable(bool onlyCanonical) {
             if (!File.Exists("GUIDNames.csv")) return;
             foreach (string dirtyLine in File.ReadAllLines("GUIDNames.csv")) {
-                var line = dirtyLine.Trim();
+                var line = dirtyLine.Split(';').FirstOrDefault()?.Trim();
+                if (string.IsNullOrEmpty(line)) continue;
                 string[] parts = line.Split(',').Select(x => x.Trim()).ToArray();
                 string indexString = parts[0];
                 string typeString = parts[1];
