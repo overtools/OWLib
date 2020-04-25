@@ -35,30 +35,24 @@ namespace DataTool.Helper {
                     RegexOptions.IgnoreCase));
         }
         
-        public static Dictionary<uint, Dictionary<uint, string>> GUIDTable = new Dictionary<uint, Dictionary<uint, string>>();
+        public static Dictionary<(uint, uint), string> GUIDTable = new Dictionary<(uint, uint), string>();
 
-        public static void LoadGUIDTable() {
+        public static void LoadGUIDTable(bool onlyCanonical) {
             if (!File.Exists("GUIDNames.csv")) return;
-            int i = 0;
-            foreach (string line in File.ReadAllLines("GUIDNames.csv")) {
-                if (i == 0) {
-                    i++;
-                    continue;
-                }
-                string[] parts = line.Split(',');
+            foreach (string dirtyLine in File.ReadAllLines("GUIDNames.csv")) {
+                var line = dirtyLine.Trim();
+                string[] parts = line.Split(',').Select(x => x.Trim()).ToArray();
                 string indexString = parts[0];
                 string typeString = parts[1];
                 string name = parts[2];
+                string canonicalString = parts[3];
 
                 uint index = uint.Parse(indexString, NumberStyles.HexNumber);
                 uint type = uint.Parse(typeString, NumberStyles.HexNumber);
-
-                if (!GUIDTable.ContainsKey(type)) {
-                    GUIDTable[type] = new Dictionary<uint, string>();
-                }
-                GUIDTable[type][index] = name;
-                
-                i++;
+                bool canonical = bool.Parse(canonicalString);
+                if (onlyCanonical && !canonical) continue;
+                if (!canonical) name += $"-{index:X}";
+                GUIDTable[(index, type)] = name;
             }
         }
 

@@ -162,10 +162,7 @@ namespace DataTool.FindLogic {
                 if (GUID == 0) return;
                 uint type = teResourceGUID.Type(GUID);
                 uint index = teResourceGUID.Index(GUID);
-                if (!GUIDTable.ContainsKey(type)) return;
-                if (GUIDTable[type].ContainsKey(index)) {
-                    Name = GUIDTable[type][index];
-                }
+                GUIDTable.TryGetValue((index, type), out Name);
             }
 
             public override string GetName() {

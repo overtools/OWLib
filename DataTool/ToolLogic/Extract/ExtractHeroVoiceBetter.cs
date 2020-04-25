@@ -13,16 +13,8 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.Extract {
-    public class BetterVoiceFlags : ExtractFlags
-    {
-        [CLIFlag(Default = false, Flag = "group-by-hero", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
-        public bool GroupByHero;
-        
-        [CLIFlag(Default = true, Flag = "group-by-type", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
-        public bool GroupByType;
-    }
     
-    [Tool("extract-hero-voice-better", Description = "Extracts hero voicelines but groups them a bit better.", CustomFlags = typeof(BetterVoiceFlags))]
+    [Tool("extract-hero-voice-better", Description = "Extracts hero voicelines but groups them a bit better.", CustomFlags = typeof(ExtractFlags))]
     class ExtractHeroVoiceBetter : JSONTool, ITool {
         public class VoiceGroup {
             public string Name;
@@ -110,7 +102,7 @@ namespace DataTool.ToolLogic.Extract {
 
         public void Parse(ICLIFlags toolFlags) {
             string basePath;
-            if (toolFlags is BetterVoiceFlags flags) {
+            if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
             } else {
                 throw new Exception("no output path");

@@ -1,8 +1,10 @@
-﻿GUID Index, GUID Type, Name
-42AD,006,ANCR_totemslam_totemprop_POTG
-4239,006,ANCR_totemslam_POTG
-42C9,006,ANCR_badass_POTG
-42D9,006,ANCR_base_3p_ohHai_POTG
-42F7,006,ANCR_GUN_base_3p_ohHai_POTG
-107,0B6,AMAR_LMB
-9AF8,004,Weapon_AMAR_BioticRifle_ux
+﻿; GUID Index, GUID Type, Name, Canonical
+42AD,006,ANCR_totemslam_totemprop_POTG,1
+4239,006,ANCR_totemslam_POTG,1
+42C9,006,ANCR_badass_POTG,1
+42D9,006,ANCR_base_3p_ohHai_POTG,1
+42F7,006,ANCR_GUN_base_3p_ohHai_POTG,1
+107,0B6,AMAR_LMB,1
+9AF8,004,Weapon_AMAR_BioticRifle_ux,1
+2594.003,Gameplay1P,0
+2025.003,MEKA,0

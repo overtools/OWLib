@@ -170,7 +170,7 @@ namespace DataTool {
                 }
             }
 
-            IO.LoadGUIDTable();
+            IO.LoadGUIDTable(Flags.OnlyCanonical);
             Sound.WwiseBank.GetReady();
         }
 
