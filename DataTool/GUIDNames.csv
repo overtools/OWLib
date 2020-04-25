@@ -1,4 +1,5 @@
 ﻿; GUID Index, GUID Type, Name, Canonical
+; Lines starting with ; are ignored, content after ; is ignored, lines have 4 commas to make github happy,
 42AD,006,ANCR_totemslam_totemprop_POTG,1
 4239,006,ANCR_totemslam_POTG,1
 42C9,006,ANCR_badass_POTG,1
@@ -6,5 +7,31 @@
 42F7,006,ANCR_GUN_base_3p_ohHai_POTG,1
 107,0B6,AMAR_LMB,1
 9AF8,004,Weapon_AMAR_BioticRifle_ux,1
-2594.003,Gameplay1P,0
-2025.003,MEKA,0
+; Note: Weapon models are often two entities, one for 1P, one for 3P, if they have different animations
+; Ana,Classic,47,
+1610,003,Teabag,0
+1609,003,Disc,0
+1607,003,Ammo,0
+2CD4,003,Ammo,0
+1605,003,Dart,0
+2CD3,003,Dart,0
+15B8,003,Dart,0
+15B7,003,Dart,0
+1DCF,003,Emitter,0
+1615,003,PlayerModel,0
+15E9,003,PlayerModel,0
+1611,003,Teacup,0
+1426,003,Biotic Grenade,0
+1425,003,Gameplay1P,0
+15CA,003,Sleep Dart,0
+15CA,003,Biotic Rifle,0
+; D.Va,Classic,47,
+2025,003,MEKA,0
+; Echo,Classic,47,
+2594,003,Gameplay1P,0
+; Sigma,Classic,47,
+324F,003,Rock,0
+33EB,003,Rock,0
+18BF,003,Rock,0
+1CC1,003,Barrier,0
+2AB0,003,Gameplay1P,0
