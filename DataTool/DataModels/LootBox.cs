@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
-using Utf8Json;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels {

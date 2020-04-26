@@ -4,7 +4,6 @@ using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.JSON;
 using TankLib.STU.Types;
-using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;

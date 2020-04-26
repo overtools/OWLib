@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using DataTool.DataModels.Chat;
 using TankLib.STU.Types;
 
 namespace DataTool.DataModels.Chat {

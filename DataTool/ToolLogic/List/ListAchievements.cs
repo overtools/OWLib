@@ -3,10 +3,8 @@ using DataTool.DataModels;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
-using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
-using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-achievements", Description = "List achievements", CustomFlags = typeof(ListFlags))]

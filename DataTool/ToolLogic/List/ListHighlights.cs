@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
-using TankLib.Math;
 using TankLib.Replay;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;

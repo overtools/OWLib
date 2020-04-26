@@ -1,5 +1,4 @@
 using DataTool.Flag;
-using DataTool.ToolLogic.Dbg;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-everything", Description = "Extract everything", CustomFlags = typeof(ExtractFlags))]

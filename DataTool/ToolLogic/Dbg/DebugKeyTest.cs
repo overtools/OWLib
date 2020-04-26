@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataTool.Flag;
+﻿using DataTool.Flag;
 using TACTLib.Core;
 using TACTLib.Core.Product.Tank;
 

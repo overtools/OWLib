@@ -164,7 +164,8 @@ namespace DataTool {
                 Logger.Warn("ScratchDB", "Will attempt to deduplicate files if extracting...");
                 if (!string.IsNullOrWhiteSpace(Flags.ScratchDBPath)) {
                     Logger.Warn("ScratchDB", "Loading Scratch database...");
-                    if (!File.Exists(dbPath) || new DirectoryInfo(dbPath).Exists) dbPath = Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db");
+                    if (!File.Exists(dbPath) || new DirectoryInfo(dbPath).Exists) 
+                        dbPath = Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db");
 
                     Combo.ScratchDBInstance.Load(dbPath);
                 }
@@ -176,8 +177,9 @@ namespace DataTool {
 
         public static void ShutdownMisc() {
             if (!string.IsNullOrWhiteSpace(Flags.ScratchDBPath)) {
-                var dbPath                                                           = Flags.ScratchDBPath;
-                if (!File.Exists(dbPath) || new DirectoryInfo(dbPath).Exists) dbPath = Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db");
+                var dbPath = Flags.ScratchDBPath;
+                if (!File.Exists(dbPath) || new DirectoryInfo(dbPath).Exists)
+                    dbPath = Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db");
 
                 if (Flags.Deduplicate && !string.IsNullOrWhiteSpace(dbPath)) {
                     Logger.Warn("ScratchDB", "Saving Scratch database...");
@@ -187,30 +189,34 @@ namespace DataTool {
         }
 
         public static void InitStorage(bool online = true) {
-            if (Flags.Language != null) Logger.Info("CASC", $"Set language to {Flags.Language}");
+            if (Flags.Language != null) 
+                Logger.Info("CASC", $"Set language to {Flags.Language}");
 
-            if (Flags.SpeechLanguage != null) Logger.Info("CASC", $"Set speech language to {Flags.SpeechLanguage}");
+            if (Flags.SpeechLanguage != null)
+                Logger.Info("CASC", $"Set speech language to {Flags.SpeechLanguage}");
 
             var args = new ClientCreateArgs {
-                                                SpeechLanguage = Flags.SpeechLanguage,
-                                                TextLanguage   = Flags.Language,
-                                                HandlerArgs    = new ClientCreateArgs_Tank { CacheAPM = Flags.UseCache },
-                                                Online         = online
-                                            };
+                SpeechLanguage = Flags.SpeechLanguage,
+                TextLanguage   = Flags.Language,
+                HandlerArgs    = new ClientCreateArgs_Tank { CacheAPM = Flags.UseCache },
+                Online         = online
+            };
 
             LoadHelper.PreLoad();
             Client = new ClientHandler(Flags.OverwatchDirectory, args);
             LoadHelper.PostLoad(Client);
 
-            if (args.TextLanguage != "enUS") Logger.Warn("Core", "Reminder! When extracting data in other languages, the names of the heroes/skins/etc must be in the language you have chosen.");
+            if (args.TextLanguage != "enUS")
+                Logger.Warn("Core", "Reminder! When extracting data in other languages, the names of the heroes/skins/etc must be in the language you have chosen.");
 
-            if (Client.AgentProduct.ProductCode != "pro") Logger.Warn("Core", $"The branch \"{Client.AgentProduct.ProductCode}\" is not supported!. This might result in failure to load. Proceed with caution.");
+            if (Client.AgentProduct.ProductCode != "pro")
+                Logger.Warn("Core", $"The branch \"{Client.AgentProduct.ProductCode}\" is not supported!. This might result in failure to load. Proceed with caution.");
 
-            if (!Client.AgentProduct.Settings.Languages.Select(x => x.Language)
-                       .Contains(args.TextLanguage))
-                Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", args.TextLanguage);
-            else if (!Client.AgentProduct.Settings.Languages.Select(x => x.Language)
-                            .Contains(args.SpeechLanguage)) Logger.Warn("Core", "Battle.Net Agent reports that language {0} is not installed.", args.SpeechLanguage);
+            var clientLanguages = Client.AgentProduct.Settings.Languages.Select(x => x.Language).ToArray();
+            if (!clientLanguages.Contains(args.TextLanguage))
+                Logger.Warn("Core", "Battle.Net Agent reports that text language {0} is not installed.", args.TextLanguage);
+            else if (!clientLanguages.Contains(args.SpeechLanguage))
+                Logger.Warn("Core", "Battle.Net Agent reports that speech language {0} is not installed.", args.SpeechLanguage);
 
             TankHandler = Client.ProductHandler as ProductHandler_Tank;
             if (TankHandler == null) {
@@ -218,9 +224,7 @@ namespace DataTool {
                 return;
             }
 
-            BuildVersion = uint.Parse(Client.InstallationInfo.Values["Version"]
-                                            .Split('.')
-                                            .Last());
+            BuildVersion = uint.Parse(Client.InstallationInfo.Values["Version"].Split('.').Last());
             if (BuildVersion < 39028)
                 Logger.Error("Core", "DataTool doesn't support Overwatch versions below 1.14. Please use OverTool.");
             else if (BuildVersion < 56957) 

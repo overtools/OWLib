@@ -11,7 +11,6 @@ using DataTool.ConvertLogic;
 using DataTool.DataModels;
 using DataTool.SaveLogic;
 using TankLib;
-using TankLib.STU;
 using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Extract
