@@ -120,7 +120,7 @@ A10,078,Retribution,1
 18BF,003,Rock,0
 1CC1,003,Barrier,0
 2AB0,003,Gameplay1P,0
-; Hero Class mapping
+; Hero Class, Identifiers used by StateScript,,
 850,01C,Tank,1
 851,01C,Support,1
 84E,01C,Damage,1
