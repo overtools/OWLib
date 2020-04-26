@@ -3,9 +3,7 @@ using System.IO;
 using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
-using TankLib;
 using TankLib.STU.Types;
-using static DataTool.Helper.IO;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 

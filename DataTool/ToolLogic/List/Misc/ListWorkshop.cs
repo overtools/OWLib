@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using DataTool.Flag;
@@ -10,8 +9,6 @@ using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
-using static DataTool.Helper.Logger;
-using System.Reflection;
 
 namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-workshop", Description = "List workshop", CustomFlags = typeof(ListFlags), IsSensitive = true)]

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using DataTool.DataModels;
-using DataTool.ToolLogic.Extract;
 using DataTool.WPF.IO;
 using DirectXTexNet;
 using TankLib;

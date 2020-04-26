@@ -1,12 +1,5 @@
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization;
-using TankLib;
 using TankLib.STU.Types;
-using TankLib.STU.Types.Enums;
-using static DataTool.Helper.IO;
-using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels.GameModes {
     public enum TeamIndexFuckYou {

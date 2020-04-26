@@ -26,7 +26,7 @@ namespace DataTool.DataModels.Hero {
         public Enum_C1DAF32A Size;
         
         [DataMember]
-        public byte IsNpc;
+        public bool IsHero;
         
         [DataMember]
         public byte SupportsAi;
@@ -59,7 +59,7 @@ namespace DataTool.DataModels.Hero {
             
             GalleryColor = hero.m_heroColor;
             SupportsAi = hero.m_906C3711;
-            IsNpc = hero.m_62746D34;
+            IsHero = hero.m_62746D34 > 0;
 
             //if (hero.m_skinThemes != null) {
             //    SkinThemes = new List<HeroSkinTheme>();
