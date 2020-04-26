@@ -34,7 +34,7 @@ namespace DataTool.Helper {
                     RegexOptions.IgnoreCase));
         }
         
-        public static Dictionary<(uint, uint), string> GUIDTable = new Dictionary<(uint, uint), string>();
+        public static Dictionary<(ulong, ushort), string> GUIDTable = new Dictionary<(ulong, ushort), string>();
 
         public static void LoadGUIDTable(bool onlyCanonical) {
             if (!File.Exists("GUIDNames.csv")) return;
@@ -47,13 +47,23 @@ namespace DataTool.Helper {
                 string name = parts[2];
                 string canonicalString = parts[3];
 
-                uint index = uint.Parse(indexString, NumberStyles.HexNumber);
-                uint type = uint.Parse(typeString, NumberStyles.HexNumber);
-                bool canonical = Convert.ToBoolean(Convert.ToByte(canonicalString));
+                ulong index = ulong.Parse(indexString, NumberStyles.HexNumber);
+                ushort type = ushort.Parse(typeString, NumberStyles.HexNumber);
+                bool canonical = byte.Parse(canonicalString) == 1;
                 if (onlyCanonical && !canonical) continue;
                 if (!canonical) name += $"-{index:X}";
                 GUIDTable[(index, type)] = name;
             }
+        }
+
+        public static string GetGUIDName(ulong guid) {
+            return GetNullableGUIDName(guid) ?? GetFileName(guid);
+        }
+
+        public static string GetNullableGUIDName(ulong guid) {
+            var index = teResourceGUID.LongKey(guid);
+            var type = teResourceGUID.Type(guid);
+            return GUIDTable.TryGetValue((index, type), out var name) ? name : null;
         }
 
         public static string GetFileName(ulong guid) {

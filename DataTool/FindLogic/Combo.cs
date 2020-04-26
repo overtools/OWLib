@@ -160,9 +160,7 @@ namespace DataTool.FindLogic {
 
             public ComboNameable(ulong guid) : base(guid) {
                 if (GUID == 0) return;
-                uint type = teResourceGUID.Type(GUID);
-                uint index = teResourceGUID.Index(GUID);
-                GUIDTable.TryGetValue((index, type), out Name);
+                Name = GetNullableGUIDName(guid);
             }
 
             public override string GetName() {
