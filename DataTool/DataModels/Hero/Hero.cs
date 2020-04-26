@@ -18,6 +18,9 @@ namespace DataTool.DataModels.Hero {
         
         [DataMember]
         public string Description;
+        
+        [DataMember]
+        public string Class;
 
         [DataMember]
         public Enum_0C014B4A Gender;
@@ -29,8 +32,8 @@ namespace DataTool.DataModels.Hero {
         public bool IsHero;
         
         [DataMember]
-        public byte SupportsAi;
-        
+        public bool SupportsAi;
+
         [DataMember]
         public teColorRGBA GalleryColor;
 
@@ -54,11 +57,11 @@ namespace DataTool.DataModels.Hero {
             GUID = (teResourceGUID) key;
             Name = GetString(hero.m_0EDCE350);
             Description = GetDescriptionString(hero.m_3446F580);
+            Class = GetNullableGUIDName(hero.m_category);
             Gender = hero.m_gender;
             Size = hero.m_heroSize;
-            
             GalleryColor = hero.m_heroColor;
-            SupportsAi = hero.m_906C3711;
+            SupportsAi = hero.m_906C3711 > 0;
             IsHero = hero.m_62746D34 > 0;
 
             //if (hero.m_skinThemes != null) {
