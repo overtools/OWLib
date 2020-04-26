@@ -9,6 +9,7 @@ using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic;
+using DataTool.ToolLogic.Extract;
 using TankLib;
 using TankLib.STU;
 using TankLib.STU.Types;
