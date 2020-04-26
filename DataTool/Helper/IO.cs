@@ -49,7 +49,7 @@ namespace DataTool.Helper {
 
                 uint index = uint.Parse(indexString, NumberStyles.HexNumber);
                 uint type = uint.Parse(typeString, NumberStyles.HexNumber);
-                bool canonical = bool.Parse(canonicalString);
+                bool canonical = Convert.ToBoolean(Convert.ToByte(canonicalString));
                 if (onlyCanonical && !canonical) continue;
                 if (!canonical) name += $"-{index:X}";
                 GUIDTable[(index, type)] = name;
