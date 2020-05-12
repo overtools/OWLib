@@ -121,13 +121,7 @@ namespace DataTool.FindLogic {
             protected ComboAsset(ulong guid) {
                 m_name = null;
                 m_GUID = guid;
-                
-                uint type = teResourceGUID.Type(m_GUID);
-                uint index = teResourceGUID.Index(m_GUID);
-                if (!GUIDTable.ContainsKey(type)) return;
-                if (GUIDTable[type].ContainsKey(index)) {
-                    m_name = GUIDTable[type][index];
-                }
+                m_name = GetNullableGUIDName(guid);
             }
             
             public string GetName() {

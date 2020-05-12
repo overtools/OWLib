@@ -5,10 +5,8 @@ using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
 using TankLib;
-using TankLib.STU.Types;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
-using static DataTool.Helper.STUHelper;
 using TankLib.Helpers;
 
 namespace DataTool.ToolLogic.List {
@@ -39,7 +37,7 @@ namespace DataTool.ToolLogic.List {
 
                 if (hero.Value.Loadouts != null) {
                     Log($"{indentLevel + 1}Loadouts:");
-                    foreach (Loadout loadout in hero.Value.Loadouts) {
+                    foreach (var loadout in hero.Value.Loadouts) {
                         Log($"{indentLevel + 2}{loadout.Name}: {loadout.Category}");
                         Log($"{indentLevel + 3}{loadout.Description}");
                     }

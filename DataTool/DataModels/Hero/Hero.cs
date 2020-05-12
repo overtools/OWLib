@@ -18,6 +18,9 @@ namespace DataTool.DataModels.Hero {
         
         [DataMember]
         public string Description;
+        
+        [DataMember]
+        public string Class;
 
         [DataMember]
         public Enum_0C014B4A Gender;
@@ -26,16 +29,16 @@ namespace DataTool.DataModels.Hero {
         public Enum_C1DAF32A Size;
         
         [DataMember]
-        public byte IsNpc;
+        public bool IsHero;
         
         [DataMember]
-        public byte SupportsAi;
-        
+        public bool SupportsAi;
+
         [DataMember]
         public teColorRGBA GalleryColor;
 
         [DataMember]
-        public List<Loadout> Loadouts;
+        public List<LoadoutLite> Loadouts;
         
         [DataMember]
         public List<SkinTheme> SkinThemes;
@@ -54,12 +57,12 @@ namespace DataTool.DataModels.Hero {
             GUID = (teResourceGUID) key;
             Name = GetString(hero.m_0EDCE350);
             Description = GetDescriptionString(hero.m_3446F580);
+            Class = GetNullableGUIDName(hero.m_category);
             Gender = hero.m_gender;
             Size = hero.m_heroSize;
-            
             GalleryColor = hero.m_heroColor;
-            SupportsAi = hero.m_906C3711;
-            IsNpc = hero.m_62746D34;
+            SupportsAi = hero.m_906C3711 > 0;
+            IsHero = hero.m_62746D34 > 0;
 
             //if (hero.m_skinThemes != null) {
             //    SkinThemes = new List<HeroSkinTheme>();
@@ -69,11 +72,11 @@ namespace DataTool.DataModels.Hero {
             //}
             
             if (hero.m_heroLoadout != null) {
-                Loadouts = new List<Loadout>();
+                Loadouts = new List<LoadoutLite>();
                 foreach (teResourceGUID loadoutGUID in hero.m_heroLoadout) {
                     var loadout = Loadout.GetLoadout(loadoutGUID);
                     if (loadout == null) continue;
-                    Loadouts.Add(loadout);
+                    Loadouts.Add(loadout.ToLite());
                 }
             }
         }

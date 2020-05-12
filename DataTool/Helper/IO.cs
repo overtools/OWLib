@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -35,31 +34,36 @@ namespace DataTool.Helper {
                     RegexOptions.IgnoreCase));
         }
         
-        public static Dictionary<uint, Dictionary<uint, string>> GUIDTable = new Dictionary<uint, Dictionary<uint, string>>();
+        public static Dictionary<(ulong, ushort), string> GUIDTable = new Dictionary<(ulong, ushort), string>();
 
-        public static void LoadGUIDTable() {
+        public static void LoadGUIDTable(bool onlyCanonical) {
             if (!File.Exists("GUIDNames.csv")) return;
-            int i = 0;
-            foreach (string line in File.ReadAllLines("GUIDNames.csv")) {
-                if (i == 0) {
-                    i++;
-                    continue;
-                }
-                string[] parts = line.Split(',');
+            foreach (string dirtyLine in File.ReadAllLines("GUIDNames.csv")) {
+                var line = dirtyLine.Split(';').FirstOrDefault()?.Trim();
+                if (string.IsNullOrEmpty(line)) continue;
+                string[] parts = line.Split(',').Select(x => x.Trim()).ToArray();
                 string indexString = parts[0];
                 string typeString = parts[1];
                 string name = parts[2];
+                string canonicalString = parts[3];
 
-                uint index = uint.Parse(indexString, NumberStyles.HexNumber);
-                uint type = uint.Parse(typeString, NumberStyles.HexNumber);
-
-                if (!GUIDTable.ContainsKey(type)) {
-                    GUIDTable[type] = new Dictionary<uint, string>();
-                }
-                GUIDTable[type][index] = name;
-                
-                i++;
+                ulong index = ulong.Parse(indexString, NumberStyles.HexNumber);
+                ushort type = ushort.Parse(typeString, NumberStyles.HexNumber);
+                bool canonical = byte.Parse(canonicalString) == 1;
+                if (onlyCanonical && !canonical) continue;
+                if (!canonical) name += $"-{index:X}";
+                GUIDTable[(index, type)] = name;
             }
+        }
+
+        public static string GetGUIDName(ulong guid) {
+            return GetNullableGUIDName(guid) ?? GetFileName(guid);
+        }
+
+        public static string GetNullableGUIDName(ulong guid) {
+            var index = teResourceGUID.LongKey(guid);
+            var type = teResourceGUID.Type(guid);
+            return GUIDTable.TryGetValue((index, type), out var name) ? name : null;
         }
 
         public static string GetFileName(ulong guid) {

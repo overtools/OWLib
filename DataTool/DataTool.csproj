@@ -209,6 +209,7 @@
     <Compile Include="ToolLogic\Extract\ExtractFlags.cs" />
     <Compile Include="ToolLogic\Extract\ExtractNPCs.cs" />
     <Compile Include="ToolLogic\List\Debug\ListDebugHeroSettings.cs" />
+    <Compile Include="ToolLogic\List\ListAbilities.cs" />
     <Compile Include="ToolLogic\List\ListAchievements.cs" />
     <Compile Include="ToolLogic\List\ListFlags.cs" />
     <Compile Include="ToolLogic\List\ListHeroes.cs" />

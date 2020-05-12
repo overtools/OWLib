@@ -1,17 +1,13 @@
 using System;
 using System.IO;
-using System.Linq;
 using DataTool.DataModels;
 using DataTool.Flag;
-using DataTool.Helper;
 using DataTool.ToolLogic.Extract;
 using DataTool.ToolLogic.Extract.Debug;
 using TankLib;
 using TankLib.Chunks;
-using TankLib.STU;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
-using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Dbg
 {

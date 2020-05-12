@@ -8,7 +8,6 @@ using TankLib.STU;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
-using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.Debug
 {
