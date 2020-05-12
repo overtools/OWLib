@@ -33,21 +33,23 @@ namespace DataTool.SaveLogic.Unlock {
         
         public static void SaveVoiceLines(ICLIFlags flags, HashSet<ulong> lines, VoiceSet voiceSet, string directory) {
             FindLogic.Combo.ComboInfo fakeComboInfo = new FindLogic.Combo.ComboInfo();
-
+            var saveContext = new Combo.SaveContext(fakeComboInfo);
+            
             foreach (ulong line in lines) {
                 VoiceLineInstance voiceLineInstance = voiceSet.VoiceLines[line];
 
-                SaveVoiceLine(flags, voiceLineInstance, directory, fakeComboInfo);
+                SaveVoiceLine(flags, voiceLineInstance, directory, saveContext);
             }
+            saveContext.Wait();
         }
 
-        public static void SaveVoiceLine(ICLIFlags flags, VoiceLineInstance voiceLineInstance, string directory, FindLogic.Combo.ComboInfo combo) {
+        public static void SaveVoiceLine(ICLIFlags flags, VoiceLineInstance voiceLineInstance, string directory, Combo.SaveContext context) {
             if (voiceLineInstance.VoiceSounds == null) return;
             foreach (ulong soundFile in voiceLineInstance.VoiceSounds) {
-                FindLogic.Combo.SoundFileInfo fakeSoundFileInfo = new FindLogic.Combo.SoundFileInfo(soundFile);
-                combo.VoiceSoundFiles[soundFile] = fakeSoundFileInfo;
+                FindLogic.Combo.SoundFileAsset fakeSoundFileInfo = new FindLogic.Combo.SoundFileAsset(soundFile);
+                context.m_info.m_voiceSoundFiles[soundFile] = fakeSoundFileInfo;
                 
-                Combo.SaveSoundFile(flags, directory, combo, soundFile, true);
+                Combo.SaveSoundFile(flags, directory, context, soundFile, true);
             }
         }
     }

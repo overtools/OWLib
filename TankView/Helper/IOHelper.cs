@@ -14,7 +14,7 @@ namespace TankView.Helper {
         }
 
         public static Stream OpenFile(ApplicationPackageManifest.PackageRecord packageRecord) {
-            return DataTool.Program.TankHandler.OpenFile(packageRecord.GUID);
+            return DataTool.Program.TankHandler.OpenFile(packageRecord.m_GUID);
         }
 
         public static Stream OpenFile(GUIDEntry entry) {
@@ -26,7 +26,7 @@ namespace TankView.Helper {
         }
 
         public static bool HasFile(ulong guid) {
-            return DataTool.Program.TankHandler.Assets.ContainsKey(guid);
+            return DataTool.Program.TankHandler.m_assets.ContainsKey(guid);
         }
     }
 }

@@ -225,22 +225,23 @@ namespace TankView.ViewModel {
             Tank = tank;
             _worker = worker;
 
-            int totalHashList = tank.Assets.Count;
-            long total = tank.RootFiles.Length + totalHashList;
+            int totalHashList = tank.m_assets.Count;
+            long total = tank.m_rootFiles.Length + totalHashList;
 
             worker?.ReportProgress(0, "Building file tree...");
 
             long c = 0;
 
-            foreach (var entry in Tank.RootFiles.OrderBy(x => x.FileName).ToArray()) {
+            foreach (var entry in Tank.m_rootFiles.OrderBy(x => x.FileName).ToArray()) {
                 c++;
                 worker?.ReportProgress((int) (((float) c / (float) total) * 100));
                 AddEntry(entry.FileName, 0, entry.MD5, 0, "None");
             }
 
             if (totalHashList != default) {
-                foreach (ContentManifestFile contentManifest in new [] {Tank.MainContentManifest, Tank.SpeechContentManifest}) {
-                    foreach (var record in contentManifest.HashList) {
+                foreach (ContentManifestFile contentManifest in new [] {Tank.m_rootContentManifest, Tank.m_textContentManifest, Tank.m_speechContentManifest}) {
+                    if (contentManifest == null) continue;
+                    foreach (var record in contentManifest.m_hashList) {
                         c++;
                         if (c % 10000 == 0) {
                             worker?.ReportProgress((int) (((float) c / (float) total) * 100));

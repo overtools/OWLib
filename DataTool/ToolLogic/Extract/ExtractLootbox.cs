@@ -47,8 +47,11 @@ namespace DataTool.ToolLogic.Extract {
                 foreach (STULootBoxShopCard lootboxShopCard in lootbox.m_shopCards) {
                     Combo.Find(info, lootboxShopCard.m_cardTexture);  // 004
                 }
-                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, name, "ShopCards"), info);
-                SaveLogic.Combo.Save(flags, Path.Combine(basePath, Container, name), info);
+
+                var context = new SaveLogic.Combo.SaveContext(info);
+                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, name, "ShopCards"), context);
+                SaveLogic.Combo.Save(flags, Path.Combine(basePath, Container, name), context);
+                context.Wait();
             }
         }
     }

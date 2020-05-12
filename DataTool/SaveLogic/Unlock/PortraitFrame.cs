@@ -27,8 +27,10 @@ namespace DataTool.SaveLogic.Unlock {
                     
                 info.SetTextureName(portraitFrame.m_949D9C2A, $"Border - {borderNum}");
             }
-                
-            Combo.SaveLooseTextures(flags, Path.Combine(directory, tier), info);
+
+            var context = new Combo.SaveContext(info);
+            Combo.SaveLooseTextures(flags, Path.Combine(directory, tier), context);
+            context.Wait();
         }
     }
 }

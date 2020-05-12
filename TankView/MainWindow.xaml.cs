@@ -64,7 +64,7 @@ namespace TankView {
 
         public bool IsDataReady => IsReady && GUIDTree?.Data?.Folders.Count > 1;
 
-        public bool IsDataToolSafe => IsDataReady && DataTool.Program.TankHandler?.MainContentManifest?.HashList != null;  // todo
+        public bool IsDataToolSafe => IsDataReady && DataTool.Program.TankHandler?.m_rootContentManifest?.m_hashList != null;  // todo
 
         private ProgressWorker _progressWorker = new ProgressWorker();
 
@@ -390,7 +390,9 @@ namespace TankView {
                             DataTool.FindLogic.Combo.ComboInfo info = new DataTool.FindLogic.Combo.ComboInfo();
                             DataTool.FindLogic.Combo.Find(info, entry.GUID);
                             var newPath = Path.GetFullPath(Path.Combine(outPath, filePath, @"..\")); // filepath includes the filename which we don't want here as combo already does that
-                            Combo.SaveLooseTextures(imageExtractFlags, newPath, info);
+                            var context = new Combo.SaveContext(info);
+                            Combo.SaveLooseTextures(imageExtractFlags, newPath, context);
+                            context.Wait();
 
                             return;
                         }

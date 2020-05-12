@@ -97,7 +97,7 @@ namespace DataTool.SaveLogic {
                         teMapPlaceableModelGroup modelGroup = (teMapPlaceableModelGroup) mapPlaceable;
 
                         FindLogic.Combo.Find(Info, modelGroup.Header.Model);
-                        FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[modelGroup.Header.Model];
+                        FindLogic.Combo.ModelAsset modelInfo = Info.m_models[modelGroup.Header.Model];
                         string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl";
                         writer.Write(modelFn);
                         writer.Write(modelGroup.Header.GroupCount);
@@ -105,7 +105,7 @@ namespace DataTool.SaveLogic {
                             teMapPlaceableModelGroup.Group group = modelGroup.Groups[j];
                             FindLogic.Combo.Find(Info, group.ModelLook, null,
                                 new FindLogic.Combo.ComboContext {Model = modelGroup.Header.Model});
-                            FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[group.ModelLook];
+                            FindLogic.Combo.ModelLookAsset modelLookInfo = Info.m_modelLooks[group.ModelLook];
                             string materialFn =
                                 $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
 
@@ -128,8 +128,8 @@ namespace DataTool.SaveLogic {
                         FindLogic.Combo.Find(Info, singleModel.Header.ModelLook, null,
                             new FindLogic.Combo.ComboContext {Model = singleModel.Header.Model});
 
-                        FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[singleModel.Header.Model];
-                        FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[singleModel.Header.ModelLook];
+                        FindLogic.Combo.ModelAsset modelInfo = Info.m_models[singleModel.Header.Model];
+                        FindLogic.Combo.ModelLookAsset modelLookInfo = Info.m_modelLooks[singleModel.Header.ModelLook];
                         string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl";
                         string matFn =
                             $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
@@ -148,8 +148,8 @@ namespace DataTool.SaveLogic {
                         FindLogic.Combo.Find(Info, placeableModel.Header.ModelLook, null,
                             new FindLogic.Combo.ComboContext {Model = placeableModel.Header.Model});
 
-                        FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[placeableModel.Header.Model];
-                        FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[placeableModel.Header.ModelLook];
+                        FindLogic.Combo.ModelAsset modelInfo = Info.m_models[placeableModel.Header.Model];
+                        FindLogic.Combo.ModelLookAsset modelLookInfo = Info.m_modelLooks[placeableModel.Header.ModelLook];
                         string modelFn =
                             $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl";
                         string matFn =
@@ -186,15 +186,15 @@ namespace DataTool.SaveLogic {
                                 FindLogic.Combo.Find(Info, modelLook, null, new FindLogic.Combo.ComboContext { Model = model });
                             }
 
-                            FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[model];
+                            FindLogic.Combo.ModelAsset modelInfo = Info.m_models[model];
                             string modelFn = $"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl";
-                            if (Info.Entities.ContainsKey(entity.Header.EntityDefinition))
+                            if (Info.m_entities.ContainsKey(entity.Header.EntityDefinition))
                             {
-                                modelFn = $"Entities\\{Info.Entities[entity.Header.EntityDefinition].GetName()}\\{Info.Entities[entity.Header.EntityDefinition].GetName()}.owentity";
+                                modelFn = $"Entities\\{Info.m_entities[entity.Header.EntityDefinition].GetName()}\\{Info.m_entities[entity.Header.EntityDefinition].GetName()}.owentity";
                             }
                             string matFn = "null";
                             try {
-                                FindLogic.Combo.ModelLookInfo modelLookInfo = Info.ModelLooks[modelLookSet.First(x => x > 0)];
+                                FindLogic.Combo.ModelLookAsset modelLookInfo = Info.m_modelLooks[modelLookSet.First(x => x > 0)];
                                 matFn = $"Models\\{modelInfo.GetName()}\\ModelLooks\\{modelLookInfo.GetNameIndex()}.owmat";
                             }
                             catch { }
@@ -250,14 +250,14 @@ namespace DataTool.SaveLogic {
                         var sound = (teMapPlaceableSound)mapPlaceable;
                         FindLogic.Combo.Find(Info, sound.Header.Sound);
                         writer.Write(sound.Header.Translation);
-                        if(!Info.Sounds.ContainsKey(sound.Header.Sound) || Info.Sounds[sound.Header.Sound].SoundFiles == null) {
+                        if(!Info.m_sounds.ContainsKey(sound.Header.Sound) || Info.m_sounds[sound.Header.Sound].SoundFiles == null) {
                             writer.Write(0);
                             continue;
                         }
-                        writer.Write(Info.Sounds[sound.Header.Sound].SoundFiles.Count);
-                        foreach(var soundfile in Info.Sounds[sound.Header.Sound].SoundFiles?.Values)
+                        writer.Write(Info.m_sounds[sound.Header.Sound].SoundFiles.Count);
+                        foreach(var soundfile in Info.m_sounds[sound.Header.Sound].SoundFiles?.Values)
                         {
-                            writer.Write($@"Sounds\{Info.SoundFiles[soundfile].GetName()}.ogg");
+                            writer.Write($@"Sounds\{Info.m_soundFiles[soundfile].GetName()}.ogg");
                         }
                     }
 
@@ -356,19 +356,21 @@ namespace DataTool.SaveLogic {
                 }
             }
             
-            LoudLog("\tSaving");
-            Combo.Save(flags, mapPath, info);
-            Combo.SaveLooseTextures(flags, Path.Combine(mapPath, "Textures"), info);
-            
             if (mapHeader.m_7F5B54B2 != 0) {  // map voice set. not announcer
                 FindLogic.Combo.Find(info, mapHeader.m_7F5B54B2);
             }
 
             if (announcerVoiceSet != 0) {  // whole thing in env mode, not here
-                info.VoiceSets.Remove(announcerVoiceSet);
+                info.m_voiceSets.Remove(announcerVoiceSet);
             }
-            Combo.SaveAllVoiceSets(flags, Path.Combine(mapPath, "VoiceSets"), info);
-            Combo.SaveAllSoundFiles(flags, Path.Combine(mapPath, "Sound"), info);
+            
+            LoudLog("\tSaving");
+            var context = new Combo.SaveContext(info);
+            Combo.Save(flags, mapPath, context);
+            Combo.SaveLooseTextures(flags, Path.Combine(mapPath, "Textures"), context);
+            Combo.SaveAllVoiceSets(flags, Path.Combine(mapPath, "VoiceSets"), context);
+            Combo.SaveAllSoundFiles(flags, Path.Combine(mapPath, "Sound"), context);
+            context.Wait();
 
             LoudLog("\tDone");
         }

@@ -81,6 +81,7 @@ namespace DataTool.ToolLogic.Extract {
             // }
 
             Combo.ComboInfo comboInfo = new Combo.ComboInfo();
+            var comboSaveContext = new SaveLogic.Combo.SaveContext(comboInfo);
 
             foreach (ulong heroGuid in Program.TrackedFiles[0x75]) {
                 STUHero hero = GetInstance<STUHero>(heroGuid);
@@ -120,13 +121,13 @@ namespace DataTool.ToolLogic.Extract {
                         string linePath = Path.Combine(convoDir, line.m_B4D405A1.ToString());
                         foreach (VoiceSet voiceSet in allVoiceSets.Values) {
                             if (voiceSet.VoiceLines.ContainsKey(line.m_lineGUID)) {
-                                VoiceLine.SaveVoiceLine(flags, voiceSet.VoiceLines[line.m_lineGUID], linePath,
-                                    comboInfo);
+                                VoiceLine.SaveVoiceLine(flags, voiceSet.VoiceLines[line.m_lineGUID], linePath, comboSaveContext);
                             }
                         }
                     }
                 }
             }
+            comboSaveContext.Wait();
         }
 
         /*public void HandleCondition(ICLIFlags flags, Combo.ComboInfo comboInfo, VoiceLineInstance lineInstance,

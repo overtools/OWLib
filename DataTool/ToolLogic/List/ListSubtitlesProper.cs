@@ -28,9 +28,9 @@ namespace DataTool.ToolLogic.List {
 
             foreach (ulong key in TrackedFiles[0x5F]) {
                 Combo.Find(comboInfo, key);
-                if (!comboInfo.VoiceSets.ContainsKey(key)) continue;
+                if (!comboInfo.m_voiceSets.ContainsKey(key)) continue;
 
-                Combo.VoiceSetInfo voiceSetInfo = comboInfo.VoiceSets[key];
+                Combo.VoiceSetAsset voiceSetInfo = comboInfo.m_voiceSets[key];
                 if (voiceSetInfo.VoiceLineInstances == null) continue;
                 foreach (KeyValuePair<ulong,HashSet<Combo.VoiceLineInstanceInfo>> lineInstance in voiceSetInfo.VoiceLineInstances) {
                     foreach (Combo.VoiceLineInstanceInfo lineInstanceInfo in lineInstance.Value) {

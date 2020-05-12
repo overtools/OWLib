@@ -238,7 +238,10 @@ namespace DataTool.ToolLogic.Extract.Debug {
                             FindLogic.Combo.Find(comboInfo, texture.TextureGUID);
                             comboInfo.SetTextureName(texture.TextureGUID, texture.NameHash.ToString("X8"));
                         }
-                        Combo.SaveLooseTextures(null, imgPath, comboInfo);
+                        
+                        var context = new Combo.SaveContext(comboInfo);
+                        Combo.SaveLooseTextures(null, imgPath, context);
+                        context.Wait();
                     }
                 }
             }

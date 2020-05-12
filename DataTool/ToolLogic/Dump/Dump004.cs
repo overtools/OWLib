@@ -25,9 +25,11 @@ namespace DataTool.ToolLogic.Dump {
                 Combo.Find(info, key);
             }
 
-            Log($"Preparing to save roughly {info.Textures.Count()} textures.");
+            Log($"Preparing to save roughly {info.m_textures.Count()} textures.");
             Log($"This will take a long time and take up a lot of space.");
-            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, "004Dump"), info);
+            var saveContext = new SaveLogic.Combo.SaveContext(info);
+            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, "004Dump"), saveContext);
+            saveContext.Wait();
         }
     }
 }

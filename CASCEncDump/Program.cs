@@ -84,21 +84,23 @@ namespace CASCEncDump {
         }
 
         public static void DumpCMF(string[] args) {
-            using (StreamWriter writer = new StreamWriter($"{BuildVersion}.cmfhashes")) {
-                foreach (ContentManifestFile contentManifestFile in new [] {TankHandler.MainContentManifest, TankHandler.SpeechContentManifest}) {
-                    foreach (ContentManifestFile.HashData hashData in contentManifestFile.HashList) {
-                        writer.WriteLine(hashData.ContentKey.ToHexString());
-                    }
+            HashSet<CKey> cKeys = new HashSet<CKey>(CASCKeyComparer.Instance);
+            foreach (ContentManifestFile contentManifestFile in new [] {TankHandler.m_rootContentManifest, TankHandler.m_textContentManifest, TankHandler.m_speechContentManifest}) {
+                if (contentManifestFile == null) continue;
+                foreach (ContentManifestFile.HashData hashData in contentManifestFile.m_hashList) {
+                    cKeys.Add(hashData.ContentKey);
                 }
             }
+            
+            Diff.WriteBinaryCKeys($"{BuildVersion}.cmfhashes", cKeys);
+            //Diff.WriteBinaryCKeys(TankHandler, $"{BuildVersion}.cmfhashes", guids);
         }
 
         public static void DumpGUIDs(string[] args) {
-            using (StreamWriter writer = new StreamWriter($"{BuildVersion}.guids")) {
-                foreach (KeyValuePair<ulong, ProductHandler_Tank.Asset> file in TankHandler.Assets) {
-                    writer.WriteLine(file.Key.ToString("X"));
-                }
-            }
+            List<ulong> guids = TankHandler.m_assets.Select(x => x.Key).ToList();
+            
+            Diff.WriteBinaryGUIDs($"{BuildVersion}.guids", guids);
+            //Diff.WriteTextGUIDs(TankHandler, $"{BuildVersion}.guids", guids);
         }
 
         public static void CompareGUIDs(string[] args) {
@@ -106,13 +108,13 @@ namespace CASCEncDump {
 
             Directory.CreateDirectory(GUIDDir);  // file name is the version it is compared to
 
-            ulong[] last;
-            using (StreamReader reader = new StreamReader($"{otherVerNum}.guids")) {
-                last = reader.ReadToEnd().Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
+            HashSet<ulong> last;
+            using (Stream lastStream = File.OpenRead($"{otherVerNum}.guids")) {
+                last = Diff.ReadGUIDs(lastStream);
             }
 
-            List<ulong> added = TankHandler.Assets.Keys.Except(last).ToList();
-            List<ulong> removed = last.Except(TankHandler.Assets.Keys).ToList();
+            List<ulong> added = TankHandler.m_assets.Keys.Except(last).ToList();
+            List<ulong> removed = last.Except(TankHandler.m_assets.Keys).ToList();
             
             using (StreamWriter writer = new StreamWriter(Path.Combine(GUIDDir, $"{otherVerNum}.added"))) {
                 foreach (ulong addedFile in added) {
@@ -131,7 +133,7 @@ namespace CASCEncDump {
             ushort[] types = args.Skip(2).Select(x => ushort.Parse(x, NumberStyles.HexNumber)).ToArray();
             
             Directory.CreateDirectory(AllCMFDir);
-            foreach (KeyValuePair<ulong, ProductHandler_Tank.Asset> asset in TankHandler.Assets) {
+            foreach (KeyValuePair<ulong, ProductHandler_Tank.Asset> asset in TankHandler.m_assets) {
                 ushort type = teResourceGUID.Type(asset.Key);
                 if (!types.Contains(type)) continue;
                 try {
@@ -175,15 +177,19 @@ namespace CASCEncDump {
             Directory.CreateDirectory(RawIdxDir);
             Directory.CreateDirectory(ConvertIdxDir);
 
-            string[] otherHashes;
-            using (StreamReader reader = new StreamReader($"{otherVerNum}.idxhashes")) {
-                otherHashes = reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).ToArray();
+            HashSet<CKey> otherHashes;
+            using (Stream stream = File.OpenRead($"{otherVerNum}.idxhashes")) {
+                otherHashes = Diff.ReadCKeys(stream);
+            }
+            HashSet<EKey> eKeys = new HashSet<EKey>();
+            foreach (CKey cKey in otherHashes) {
+                eKeys.Add(cKey.AsEKey());
             }
 
             foreach (KeyValuePair<EKey, ContainerHandler.IndexEntry> indexEntry in Client.ContainerHandler.IndexEntries) {
                 string md5 = indexEntry.Key.ToHexString();
 
-                if (!otherHashes.Contains(md5)) {
+                if (!eKeys.Contains(indexEntry.Key)) {
                     try {
                         Stream stream = Client.OpenEKey(indexEntry.Key);
                         TryConvertFile(stream, ConvertIdxDir, md5);
@@ -225,12 +231,15 @@ namespace CASCEncDump {
             }
 
             foreach (KeyValuePair<CKey, EncodingHandler.CKeyEntry> entry in Client.EncodingHandler.Entries) {
-                string md5 = entry.Key.ToHexString();
-
                 if (hashSet.Contains(entry.Key)) continue;
                 try {
                     Stream stream = Client.OpenCKey(entry.Key);
-                    TryConvertFile(stream, ConvertEncDir, md5);
+                    if (stream == null) continue;
+                    string md5 = entry.Key.ToHexString();
+                    using (Stream fileStream = File.OpenWrite(Path.Combine(RawEncDir, md5))) {
+                        stream.CopyTo(fileStream);
+                    }
+                    //TryConvertFile(stream, ConvertEncDir, md5);
                 } catch (Exception e) {
                     if (e is BLTEKeyException exception) {
                         if (missingKeys.Add(exception.MissingKey)) {

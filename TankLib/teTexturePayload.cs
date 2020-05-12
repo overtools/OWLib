@@ -86,7 +86,7 @@ namespace TankLib {
         {
             if (RawData != null)
             {
-                ddsWriter.BaseStream.Write(RawData, 0, (int)Header.ImageSize);
+                ddsWriter.Write(RawData, 0, (int)Header.ImageSize);
                 return;
             }
             for (int i = 0; i < Size; ++i)

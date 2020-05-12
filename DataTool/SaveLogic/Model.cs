@@ -10,9 +10,9 @@ namespace DataTool.SaveLogic {
             public string Extension => "owmat";
 
             protected FindLogic.Combo.ComboInfo Info;
-            protected FindLogic.Combo.ModelLookInfo ModelLookInfo;
+            protected FindLogic.Combo.ModelLookAsset ModelLookInfo;
 
-            public OverwatchModelLook(FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelLookInfo modelLookInfo) {
+            public OverwatchModelLook(FindLogic.Combo.ComboInfo info, FindLogic.Combo.ModelLookAsset modelLookInfo) {
                 Info = info;
                 ModelLookInfo = modelLookInfo;
             }
@@ -21,16 +21,16 @@ namespace DataTool.SaveLogic {
                 using (BinaryWriter writer = new BinaryWriter(stream)) {
                     writer.Write(OverwatchMaterial.VersionMajor);
                     writer.Write(OverwatchMaterial.VersionMinor);
-                    if (ModelLookInfo.Materials == null) {
+                    if (ModelLookInfo.m_materialGUIDs == null) {
                         writer.Write(0L);
                         writer.Write((uint)OverwatchMaterial.OWMatType.ModelLook);
                         return;
                     }
-                    writer.Write(ModelLookInfo.Materials.LongCount());
+                    writer.Write(ModelLookInfo.m_materialGUIDs.LongCount());
                     writer.Write((uint)OverwatchMaterial.OWMatType.ModelLook);
                     
-                    foreach (ulong modelLookMaterial in ModelLookInfo.Materials) {
-                        FindLogic.Combo.MaterialInfo materialInfo = Info.Materials[modelLookMaterial];
+                    foreach (ulong modelLookMaterial in ModelLookInfo.m_materialGUIDs) {
+                        FindLogic.Combo.MaterialAsset materialInfo = Info.m_materials[modelLookMaterial];
                         writer.Write($"..\\..\\Materials\\{materialInfo.GetNameIndex()}.{Extension}");
                     }
                 }
@@ -49,35 +49,35 @@ namespace DataTool.SaveLogic {
             }
             
             protected FindLogic.Combo.ComboInfo Info;
-            protected FindLogic.Combo.MaterialInfo MaterialInfo;
+            protected FindLogic.Combo.MaterialAsset MaterialInfo;
 
-            public OverwatchMaterial(FindLogic.Combo.ComboInfo info, FindLogic.Combo.MaterialInfo materialInfo) {
+            public OverwatchMaterial(FindLogic.Combo.ComboInfo info, FindLogic.Combo.MaterialAsset materialInfo) {
                 Info = info;
                 MaterialInfo = materialInfo;
             }
 
             public void Write(Stream stream) {
                 using (BinaryWriter writer = new BinaryWriter(stream)) {
-                    FindLogic.Combo.MaterialDataInfo materialDataInfo = Info.MaterialDatas[MaterialInfo.MaterialData];
+                    FindLogic.Combo.MaterialDataAsset materialDataInfo = Info.m_materialData[MaterialInfo.m_materialDataGUID];
                     writer.Write(VersionMajor);
                     writer.Write(VersionMinor);
-                    if (materialDataInfo.Textures != null) {
-                        writer.Write(materialDataInfo.Textures.LongCount());
+                    if (materialDataInfo.m_textureMap != null) {
+                        writer.Write(materialDataInfo.m_textureMap.LongCount());
                     } else {
                         writer.Write(0L);
                     }
                     writer.Write((uint)OWMatType.Material);
-                    writer.Write(teResourceGUID.Index(MaterialInfo.ShaderSource));
-                    writer.Write(MaterialInfo.MaterialIDs.Count);
-                    foreach (ulong id in MaterialInfo.MaterialIDs) {
+                    writer.Write(teResourceGUID.Index(MaterialInfo.m_shaderSourceGUID));
+                    writer.Write(MaterialInfo.m_materialIDs.Count);
+                    foreach (ulong id in MaterialInfo.m_materialIDs) {
                         writer.Write(id);
                     }
 
-                    if (materialDataInfo.Textures != null) {
-                        foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.Textures) {
-                            FindLogic.Combo.TextureInfoNew textureInfo = Info.Textures[texture.Key];
+                    if (materialDataInfo.m_textureMap != null) {
+                        foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.m_textureMap) {
+                            FindLogic.Combo.TextureAsset textureInfo = Info.m_textures[texture.Key];
                             if (stream is FileStream fs) {
-                                writer.Write(Combo.GetScratchRelative(textureInfo.GUID, Path.GetDirectoryName(fs.Name), $@"..\Textures\{textureInfo.GetNameIndex()}.dds"));
+                                writer.Write(Combo.GetScratchRelative(textureInfo.m_GUID, Path.GetDirectoryName(fs.Name), $@"..\Textures\{textureInfo.GetNameIndex()}.dds"));
                             } else {
                                 writer.Write($@"..\Textures\{textureInfo.GetNameIndex()}.dds");
                             }

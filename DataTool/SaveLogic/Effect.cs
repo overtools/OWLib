@@ -68,12 +68,12 @@ namespace DataTool.SaveLogic {
                     writer.Write(dmceInfo.Animation);
                     writer.Write(dmceInfo.Material);
                     writer.Write(dmceInfo.Model);
-                    FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[dmceInfo.Model];
+                    FindLogic.Combo.ModelAsset modelInfo = Info.m_models[dmceInfo.Model];
                     writer.Write($"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl");
                     if (dmceInfo.Animation == 0) {
                         writer.Write("null");
                     } else {
-                        FindLogic.Combo.AnimationInfoNew animationInfo = Info.Animations[dmceInfo.Animation];
+                        FindLogic.Combo.AnimationAsset animationInfo = Info.m_animations[dmceInfo.Animation];
                         writer.Write($"Models\\{modelInfo.GetName()}\\{OverwatchAnimationEffect.AnimationEffectDir}\\{animationInfo.GetNameIndex()}\\{animationInfo.GetNameIndex()}.owanim");
                     }
                 }
@@ -85,7 +85,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(ceceInfo.Identifier);
                     writer.Write(teResourceGUID.Index(ceceInfo.Identifier));
                     if (ceceInfo.Animation != 0) {
-                        FindLogic.Combo.AnimationInfoNew animationInfo = Info.Animations[ceceInfo.Animation];
+                        FindLogic.Combo.AnimationAsset animationInfo = Info.m_animations[ceceInfo.Animation];
                         writer.Write($"{OverwatchAnimationEffect.AnimationEffectDir}\\{animationInfo.GetNameIndex()}\\{animationInfo.GetNameIndex()}.owanim");
                     } else {
                         writer.Write("null");
@@ -96,7 +96,7 @@ namespace DataTool.SaveLogic {
                     WriteTime(writer, neceInfo.PlaybackInfo);
                     writer.Write(neceInfo.GUID);
                     writer.Write(teResourceGUID.Index(neceInfo.Identifier));
-                    FindLogic.Combo.EntityInfoNew entityInfo = Info.Entities[neceInfo.GUID];
+                    FindLogic.Combo.EntityAsset entityInfo = Info.m_entities[neceInfo.GUID];
                     
                     writer.Write($"Entities\\{entityInfo.GetName()}\\{entityInfo.GetName()}.owentity");
                 }
@@ -106,7 +106,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(rpceInfo.Model);
                     // todo: make the materials work
                     writer.Write(rpceInfo.Material);
-                    FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[rpceInfo.Model];
+                    FindLogic.Combo.ModelAsset modelInfo = Info.m_models[rpceInfo.Model];
                     //writer.Write(rpceInfo.TextureDefiniton);
                     
                     writer.Write($"Models\\{modelInfo.GetName()}\\{modelInfo.GetName()}.owmdl");
@@ -122,8 +122,8 @@ namespace DataTool.SaveLogic {
                         foreach (FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstance in lines) {
                             writer.Write(voiceLineInstance.SoundFiles.Count);
                             foreach (ulong soundFile in voiceLineInstance.SoundFiles) {
-                                FindLogic.Combo.SoundFileInfo soundFileInfo =
-                                    Info.VoiceSoundFiles[soundFile];
+                                FindLogic.Combo.SoundFileAsset soundFileInfo =
+                                    Info.m_voiceSoundFiles[soundFile];
                                 writer.Write($"Sounds\\{soundFileInfo.GetNameIndex()}.ogg");
                             }
                         }
@@ -139,7 +139,7 @@ namespace DataTool.SaveLogic {
             
             public const string AnimationEffectDir = "AnimationEffects";
 
-            protected readonly FindLogic.Combo.AnimationInfoNew Animation;
+            protected readonly FindLogic.Combo.AnimationAsset Animation;
             protected readonly ulong Model;
             
             public const ushort AnimVersionMajor = 1;
@@ -148,7 +148,7 @@ namespace DataTool.SaveLogic {
             public OverwatchAnimationEffect(FindLogic.Combo.ComboInfo info,
                  FindLogic.Combo.EffectInfoCombo animationEffect,
                 Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> voiceStimuli,
-                FindLogic.Combo.AnimationInfoNew animation,
+                FindLogic.Combo.AnimationAsset animation,
                 ulong model) : base(info, animationEffect, voiceStimuli) {
 
                 Animation = animation;
@@ -167,13 +167,13 @@ namespace DataTool.SaveLogic {
                     writer.Write(Extension);
                     writer.Write(AnimVersionMajor);
                     writer.Write(AnimVersionMinor);
-                    writer.Write(teResourceGUID.Index(Animation.GUID));
-                    writer.Write(Animation.FPS);
+                    writer.Write(teResourceGUID.Index(Animation.m_GUID));
+                    writer.Write(Animation.m_fps);
                     writer.Write((int)OWAnimType.Data);
                     
-                    FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[Model];
+                    FindLogic.Combo.ModelAsset modelInfo = Info.m_models[Model];
                     
-                    writer.Write($"Models\\{modelInfo.GetName()}\\Animations\\{Animation.Priority}\\{Animation.GetNameIndex()}.seanim");
+                    writer.Write($"Models\\{modelInfo.GetName()}\\Animations\\{Animation.m_priority}\\{Animation.GetNameIndex()}.seanim");
                     writer.Write($"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl");
                     
                     // wrap oweffect
@@ -186,10 +186,10 @@ namespace DataTool.SaveLogic {
             public string Extension => "owanim";
 
             protected readonly FindLogic.Combo.ComboInfo Info;
-            protected readonly FindLogic.Combo.AnimationInfoNew Animation;
+            protected readonly FindLogic.Combo.AnimationAsset Animation;
             protected readonly ulong Model;
 
-            public OverwatchAnimationEffectReference(FindLogic.Combo.ComboInfo info, FindLogic.Combo.AnimationInfoNew animation, ulong model) {
+            public OverwatchAnimationEffectReference(FindLogic.Combo.ComboInfo info, FindLogic.Combo.AnimationAsset animation, ulong model) {
                 Info = info;
                 Animation = animation;
                 Model = model;
@@ -200,11 +200,11 @@ namespace DataTool.SaveLogic {
                     writer.Write(Extension); // identifier
                     writer.Write(OverwatchAnimationEffect.AnimVersionMajor);
                     writer.Write(OverwatchAnimationEffect.AnimVersionMinor);
-                    writer.Write(teResourceGUID.Index(Animation.GUID));
-                    writer.Write(Animation.FPS);
+                    writer.Write(teResourceGUID.Index(Animation.m_GUID));
+                    writer.Write(Animation.m_fps);
                     writer.Write((int)OverwatchAnimationEffect.OWAnimType.Reference);
 
-                    FindLogic.Combo.ModelInfoNew modelInfo = Info.Models[Model];
+                    FindLogic.Combo.ModelAsset modelInfo = Info.m_models[Model];
                     
                     writer.Write($"Models\\{modelInfo.GetName()}\\{OverwatchAnimationEffect.AnimationEffectDir}\\{Animation.GetNameIndex()}\\{Animation.GetNameIndex()}.{Extension}"); // so I can change it in DataTool and not go mad
                 }

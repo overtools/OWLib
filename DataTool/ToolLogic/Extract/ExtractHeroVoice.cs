@@ -158,7 +158,9 @@ namespace DataTool.ToolLogic.Extract
 
             Log($"\tSaving {skin}");
 
-            SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName, skin), info, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements));
+            var context = new SaveLogic.Combo.SaveContext(info);
+            SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName, skin), context, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements));
+            context.Wait();
 
             return true;
         }

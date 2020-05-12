@@ -10,7 +10,7 @@ namespace DataTool.SaveLogic.Unlock {
 
             bool saveAllTextures = false;
             try {
-                info.Textures.First(x => x.Value.Loose).Value.Name = unlock.Name;
+                info.m_textures.First(x => x.Value.m_loose).Value.m_name = unlock.Name;
                 directory = Path.GetFullPath(Path.Combine(directory, ".."));
             } catch {
                 // animated spray - no main image
@@ -18,10 +18,16 @@ namespace DataTool.SaveLogic.Unlock {
                 saveAllTextures = true;
             }
 
-            Combo.SaveLooseTextures(flags, directory, info);
-            if (!saveAllTextures) return;
-            Combo.SaveAllMaterials(flags, directory, info);
-            Combo.Save(flags, directory, info);
+            var context = new Combo.SaveContext(info);
+            
+            Combo.SaveLooseTextures(flags, directory, context);
+            if (!saveAllTextures) {
+                context.Wait();
+                return;
+            }
+            Combo.SaveAllMaterials(flags, directory, context);
+            Combo.Save(flags, directory, context);
+            context.Wait();
         }
     }
 }

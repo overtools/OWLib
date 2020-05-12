@@ -25,7 +25,7 @@ namespace TankLibHelper.Modes {
             _tankHandler = (ProductHandler_Tank)client.ProductHandler;
             TankLib.TACT.LoadHelper.PostLoad(client);
 
-            foreach (var asset in _tankHandler.Assets) {
+            foreach (var asset in _tankHandler.m_assets) {
                 if (teResourceGUID.Type(asset.Key) != type) continue;
                 string filename = teResourceGUID.AsString(asset.Key);
                 using (Stream stream = _tankHandler.OpenFile(asset.Key)) {

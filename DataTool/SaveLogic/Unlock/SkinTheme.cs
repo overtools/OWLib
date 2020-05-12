@@ -32,7 +32,8 @@ namespace DataTool.SaveLogic.Unlock {
             LoudLog("\t\tFinding");
             
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            
+            var saveContext = new Combo.SaveContext(info);
+
             FindLogic.Combo.Find(info, hero.m_gameplayEntity, replacements);
             info.SetEntityName(hero.m_gameplayEntity, "Gameplay3P");
             
@@ -49,31 +50,30 @@ namespace DataTool.SaveLogic.Unlock {
             info.SetEntityName(hero.m_8125713E, "HighlightIntro");
             
             if (skin is STUSkinTheme skinTheme) {
-                info.Config.DoExistingEntities = true;
+                info.m_processExistingEntities = true;
                 foreach (var weaponOverrideGUID in skinTheme.m_heroWeapons) {
                     STUHeroWeapon heroWeapon = GetInstance<STUHeroWeapon>(weaponOverrideGUID);
                     if (heroWeapon == null) continue;
 
                     Dictionary<ulong, ulong> weaponReplacements = GetReplacements(heroWeapon);
 
-                    SavePreviewWeapons(info, weaponReplacements, hero.m_previewWeaponEntities);
-                    SavePreviewWeapons(info, weaponReplacements, hero.m_C2FE396F);
+                    SetPreviewWeaponNames(info, weaponReplacements, hero.m_previewWeaponEntities);
+                    SetPreviewWeaponNames(info, weaponReplacements, hero.m_C2FE396F);
                 }
-                info.Config.DoExistingEntities = false;
+                info.m_processExistingEntities = false;
             }
 
-            foreach (STU_1A496D3C tex in hero.m_8203BFE1) {
+            foreach (STU_1A496D3C tex in hero.m_8203BFE1) { // find GUI
                 FindLogic.Combo.Find(info, tex.m_texture, replacements);
                 info.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
             }
             
-            Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), info);
-
             if (replacements != null) {
                 string soundDirectory = Path.Combine(directory, "Sound");
             
                 FindLogic.Combo.ComboInfo diffInfoBefore = new FindLogic.Combo.ComboInfo();
                 FindLogic.Combo.ComboInfo diffInfoAfter = new FindLogic.Combo.ComboInfo();
+                var diffInfoAfterContext = new Combo.SaveContext(diffInfoAfter); // todo: remove
                 
                 foreach (KeyValuePair<ulong,ulong> replacement in replacements) {
                     uint diffReplacementType = teResourceGUID.Type(replacement.Value);
@@ -83,28 +83,30 @@ namespace DataTool.SaveLogic.Unlock {
                     FindLogic.Combo.Find(diffInfoBefore, replacement.Key);
                 }
                 
-                foreach (KeyValuePair<ulong, FindLogic.Combo.VoiceSetInfo> voiceSet in diffInfoAfter.VoiceSets) {
-                    if (diffInfoBefore.VoiceSets.ContainsKey(voiceSet.Key)) continue;
-                    Combo.SaveVoiceSet(flags, soundDirectory, diffInfoAfter, voiceSet.Key);
+                foreach (KeyValuePair<ulong, FindLogic.Combo.VoiceSetAsset> voiceSet in diffInfoAfter.m_voiceSets) {
+                    if (diffInfoBefore.m_voiceSets.ContainsKey(voiceSet.Key)) continue;
+                    Combo.SaveVoiceSet(flags, soundDirectory, diffInfoAfterContext, voiceSet.Key);
                 }
 
-                foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileInfo> soundFile in diffInfoAfter.SoundFiles) {
-                    if (diffInfoBefore.SoundFiles.ContainsKey(soundFile.Key)) continue;
-                    Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfter, soundFile.Key, false);
+                foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileAsset> soundFile in diffInfoAfter.m_soundFiles) {
+                    if (diffInfoBefore.m_soundFiles.ContainsKey(soundFile.Key)) continue;
+                    Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, false);
                 }
             
-                foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileInfo> soundFile in diffInfoAfter.VoiceSoundFiles) {
-                    if (diffInfoBefore.VoiceSoundFiles.ContainsKey(soundFile.Key)) continue;
-                    Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfter, soundFile.Key, true);
+                foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileAsset> soundFile in diffInfoAfter.m_voiceSoundFiles) {
+                    if (diffInfoBefore.m_voiceSoundFiles.ContainsKey(soundFile.Key)) continue;
+                    Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, true);
                 }
+                diffInfoAfterContext.Wait();
             }
-
             LoudLog("\t\tSaving");
-            Combo.Save(flags, directory, info);
+            Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext);
+            Combo.Save(flags, directory, saveContext);
+            saveContext.Wait();
             LoudLog("\t\tDone");
         }
 
-        private static void SavePreviewWeapons(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> weaponReplacements, STU_A0872511[] entities) {
+        private static void SetPreviewWeaponNames(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> weaponReplacements, STU_A0872511[] entities) {
             if (entities == null) return;
             foreach (STU_A0872511 weaponEntity in entities) {
                 FindLogic.Combo.Find(info, weaponEntity.m_entityDefinition, weaponReplacements);

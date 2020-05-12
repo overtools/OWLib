@@ -30,7 +30,7 @@ namespace DataTool {
         public static uint      BuildVersion;
         public static bool      IsPTR => Client?.AgentProduct?.Uid == "prometheus_test";
 
-        public static bool ValidKey(ulong key) { return TankHandler.Assets.ContainsKey(key); }
+        public static bool ValidKey(ulong key) { return TankHandler.m_assets.ContainsKey(key); }
 
         public static HashSet<Type> GetTools() {
             var tools = new HashSet<Type>();
@@ -186,7 +186,7 @@ namespace DataTool {
             }
         }
 
-        public static void InitStorage(bool online = true) {
+        public static void InitStorage(bool online = false) { // turnin offline off again, can cause perf issues with bundle hack
             if (Flags.Language != null) Logger.Info("CASC", $"Set language to {Flags.Language}");
 
             if (Flags.SpeechLanguage != null) Logger.Info("CASC", $"Set speech language to {Flags.SpeechLanguage}");
@@ -231,7 +231,7 @@ namespace DataTool {
 
         public static void InitTrackedFiles() {
             TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
-            foreach (var asset in TankHandler.Assets) {
+            foreach (var asset in TankHandler.m_assets) {
                 var type = teResourceGUID.Type(asset.Key);
                 if (!TrackedFiles.TryGetValue(type, out var typeMap)) {
                     typeMap            = new HashSet<ulong>();

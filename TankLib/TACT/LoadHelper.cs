@@ -1,6 +1,7 @@
 using System.IO;
 using System.Reflection;
 using TACTLib.Client;
+using TACTLib.Core.Product.Tank;
 
 namespace TankLib.TACT {
     public static class LoadHelper {
@@ -13,8 +14,13 @@ namespace TankLib.TACT {
         
         public static void PostLoad(ClientHandler clientHandler) {
             string keyFile = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\ow.keys";
-            if (File.Exists(keyFile))
+            if (File.Exists(keyFile)) {
                 clientHandler.ConfigHandler.Keyring.LoadSupportFile(keyFile);
+
+                if (clientHandler.ProductHandler is ProductHandler_Tank tankHandler) {
+                    tankHandler.DoBundleLookupHack();
+                }
+            }
         }
     }
 }

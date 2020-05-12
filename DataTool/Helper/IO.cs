@@ -107,12 +107,12 @@ namespace DataTool.Helper {
         }
 
         public static void WriteFile(ulong guid, string path) {
-            if (!TankHandler.Assets.ContainsKey(guid)) return;
+            if (!TankHandler.m_assets.ContainsKey(guid)) return;
             WriteFile(OpenFile(guid), guid, path);
         }
 
         public static void WriteFile(ulong guid, string path, string filename) {
-            if (!TankHandler.Assets.ContainsKey(guid)) return;
+            if (!TankHandler.m_assets.ContainsKey(guid)) return;
             WriteFile(OpenFile(guid), Path.Combine(path, filename));
         }
 

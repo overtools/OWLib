@@ -33,7 +33,10 @@ namespace DataTool.ToolLogic.Extract {
                 
                 Combo.ComboInfo info = new Combo.ComboInfo();
                 Combo.Find(info, loadout.m_texture);
-                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, folderName, name), info);
+                
+                var context = new SaveLogic.Combo.SaveContext(info);
+                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, folderName, name), context);
+                context.Wait();
 
                 using (Stream videoStream = OpenFile(loadout.m_infoMovie)) {
                     if (videoStream != null) {

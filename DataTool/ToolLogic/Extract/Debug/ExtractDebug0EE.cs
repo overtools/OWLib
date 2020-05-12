@@ -48,7 +48,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 //    teStructuredData uxScreenData = new teStructuredData();
                 //}
                 
-                SaveLogic.Combo.SaveLooseTextures(flags, path, info);
+                var context = new SaveLogic.Combo.SaveContext(info);
+                SaveLogic.Combo.SaveLooseTextures(flags, path, context);
+                context.Wait();
             }
         }
 

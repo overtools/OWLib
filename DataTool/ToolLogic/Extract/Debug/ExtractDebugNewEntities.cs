@@ -27,7 +27,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         public void AddNewByContentHash(Combo.ComboInfo info, HashSet<CKey> contentHashes, params ushort[] types) {
-            foreach (KeyValuePair<ulong,ProductHandler_Tank.Asset> asset in TankHandler.Assets) {
+            foreach (KeyValuePair<ulong,ProductHandler_Tank.Asset> asset in TankHandler.m_assets) {
                 TankHandler.UnpackAsset(asset.Value, out var package, out var record);
                 
                 ushort fileType = teResourceGUID.Type(asset.Key);
@@ -37,7 +37,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 if (!types.Contains(fileType)) continue;
 
                 var cmf = TankHandler.GetContentManifestForAsset(asset.Key);
-                if (!cmf.TryGet(record.GUID, out var cmfData)) {
+                if (!cmf.TryGet(record.m_GUID, out var cmfData)) {
                     //throw new FileNotFoundException();
                     // todo: wtf
                     continue;
@@ -61,19 +61,13 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         public static HashSet<CKey> GetContentHashes(string path) {
-            using (StreamReader reader = new StreamReader(path)) {
-                return new HashSet<CKey>(reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r'))
-                                               .Where(x => !string.IsNullOrWhiteSpace(x))
-                                               .Select(CKey.FromString), CASCKeyComparer.Instance);
-            }
+            using (var stream = File.OpenRead(path))
+                return Diff.ReadCKeys(stream);
         }
         
         public static HashSet<ulong> GetGUIDs(string path) {
-            using (StreamReader reader = new StreamReader(path)) {
-                return new HashSet<ulong>(reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r'))
-                                                .Where(x => !string.IsNullOrWhiteSpace(x))
-                                                .Select(x => ulong.Parse(x, NumberStyles.HexNumber)));
-            }
+            using (var stream = File.OpenRead(path))
+                return Diff.ReadGUIDs(stream);
         }
 
         public void ExtractNewEntities(ICLIFlags toolFlags) {
@@ -93,12 +87,14 @@ namespace DataTool.ToolLogic.Extract.Debug {
             
             Combo.ComboInfo info = new Combo.ComboInfo();
             AddNewByGUID(info, guids, 0x4, 0x7C, 0x3F, 0xB2);
-            
-            SaveLogic.Combo.Save(flags, Path.Combine(basePath, container), info);
-            SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, container, "Sounds"), info);
-            SaveLogic.Combo.SaveAllVoiceSoundFiles(flags, Path.Combine(basePath, container, "VoiceSounds"), info);
-            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, container, "LooseTex"), info);
+
+            var context = new SaveLogic.Combo.SaveContext(info);
+            SaveLogic.Combo.Save(flags, Path.Combine(basePath, container), context);
+            SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, container, "Sounds"), context);
+            SaveLogic.Combo.SaveAllVoiceSoundFiles(flags, Path.Combine(basePath, container, "VoiceSounds"), context);
+            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, container, "LooseTex"), context);
             SaveLogic.Combo.SaveAllStrings(flags, Path.Combine(basePath, container, "Strings"), info);
+            context.Wait();
         }
     }
 }

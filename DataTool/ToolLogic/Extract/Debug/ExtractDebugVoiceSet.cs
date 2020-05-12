@@ -29,8 +29,10 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 string voiceMaterDir = Path.Combine(basePath, container, GetFileName(key));
                 
                 Combo.ComboInfo info = new Combo.ComboInfo();
+                var context = new SaveLogic.Combo.SaveContext(info);
                 Combo.Find(info, key);
-                SaveLogic.Combo.SaveVoiceSet(flags, voiceMaterDir, info, key);
+                SaveLogic.Combo.SaveVoiceSet(flags, voiceMaterDir, context, key);
+                context.Wait();
 
                 // foreach (STUVoiceLineInstance voiceLineInstance in voiceSet.VoiceLineInstances) {
                 //     if (voiceLineInstance?.SoundDataContainer == null) continue;

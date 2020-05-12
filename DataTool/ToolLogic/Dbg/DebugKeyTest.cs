@@ -14,7 +14,7 @@ namespace DataTool.ToolLogic.Dbg
     {
         public void Parse(ICLIFlags toolFlags)
         {
-            foreach(var guid in Program.TankHandler.Assets.Keys)
+            foreach(var guid in Program.TankHandler.m_assets.Keys)
             {
                 var stream = Program.TankHandler.OpenFile(guid);
                 var blte = stream as BLTEStream ?? (stream as GuidStream)?.BaseStream as BLTEStream;

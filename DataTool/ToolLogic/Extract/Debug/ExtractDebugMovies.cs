@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using DataTool.Flag;
+using DataTool.SaveLogic;
 using TankLib;
 using static DataTool.Helper.IO;
 
@@ -51,12 +52,14 @@ namespace DataTool.ToolLogic.Extract.Debug {
                             WriteFile(videoStream, videoFile);
                             FindLogic.Combo.ComboInfo audioInfo = new FindLogic.Combo.ComboInfo
                             {
-                                SoundFiles = new System.Collections.Generic.Dictionary<ulong, FindLogic.Combo.SoundFileInfo>
+                                m_soundFiles = new System.Collections.Generic.Dictionary<ulong, FindLogic.Combo.SoundFileAsset>
                                 {
-                                    { movi.MasterAudio, new FindLogic.Combo.SoundFileInfo(movi.MasterAudio) }
+                                    { movi.MasterAudio, new FindLogic.Combo.SoundFileAsset(movi.MasterAudio) }
                                 }
                             };
-                            SaveLogic.Combo.SaveSoundFile(flags, Path.Combine(basePath, container, teResourceGUID.LongKey(key).ToString("X12")), audioInfo, movi.MasterAudio, false);
+                            var audioContext = new Combo.SaveContext(audioInfo);
+                            SaveLogic.Combo.SaveSoundFile(flags, Path.Combine(basePath, container, teResourceGUID.LongKey(key).ToString("X12")), audioContext, movi.MasterAudio, false);
+                            audioContext.Wait();
                         }
                     }
                 }

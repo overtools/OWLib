@@ -223,7 +223,9 @@ namespace DataTool.ToolLogic.Extract {
                         guiInfo.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
                     }
 
-                    SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(heroPath, "GUI"), guiInfo);
+                    var guiContext = new SaveLogic.Combo.SaveContext(guiInfo);
+                    SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(heroPath, "GUI"), guiContext);
+                    guiContext.Wait();
                 }
 
                 if (progressionUnlocks.OtherUnlocks != null) { // achievements and stuff

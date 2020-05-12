@@ -35,6 +35,10 @@
     <Prefer32bit>false</Prefer32bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LZ4, Version=1.0.15.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd">
+      <HintPath>$(SolutionDir)\packages\lz4net.1.0.15.93\lib\net4-client\LZ4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

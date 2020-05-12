@@ -128,17 +128,18 @@ namespace DataTool.ToolLogic.Extract {
                 var voiceSetsCombo = new Combo.ComboInfo();
                 Combo.Find(voiceSetsCombo, voiceSetComponent.m_voiceDefinition);
 
-                foreach (var voiceSet in voiceSetsCombo.VoiceSets) {
+                foreach (var voiceSet in voiceSetsCombo.m_voiceSets) {
                     if (voiceSet.Value.VoiceLineInstances == null) continue;
 
                     foreach (var voicelineInstanceInfo in voiceSet.Value.VoiceLineInstances) {
                         foreach (var voiceLineInstance in voicelineInstanceInfo.Value) {
-                            var soundFilesCombo = new Combo.ComboInfo();;
                             var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
-
                             if (stimulus == null) continue;
                             
                             var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E) ?? "Unknown";
+                            
+                            var soundFilesCombo = new Combo.ComboInfo();
+                            var soundFilesContext = new SaveLogic.Combo.SaveContext(soundFilesCombo);
                             
                             foreach (var soundFile in voiceLineInstance.SoundFiles) {
                                 Combo.Find(soundFilesCombo, soundFile);
@@ -148,14 +149,15 @@ namespace DataTool.ToolLogic.Extract {
                                 ? Path.Combine(basePath, Container, heroNameActual, groupName)
                                 : Path.Combine(basePath, Container, flags.GroupByHero ? Path.Combine(groupName, heroNameActual) : groupName);
 
-                            foreach (var soundInfo in soundFilesCombo.VoiceSoundFiles.Values) {
+                            foreach (var soundInfo in soundFilesCombo.m_voiceSoundFiles.Values) {
                                 var filename = soundInfo.GetName();
                                 if (!flags.GroupByHero) {
                                     filename = $"{heroNameActual}-{soundInfo.GetName()}";
                                 }
                                 
-                                SaveLogic.Combo.SaveSoundFile(flags, path, soundFilesCombo, soundInfo.GUID, true, filename);
-                            }                    
+                                SaveLogic.Combo.SaveSoundFile(flags, path, soundFilesContext, soundInfo.m_GUID, true, filename);
+                            }
+                            soundFilesContext.Wait();
                         }
                     }
                 }

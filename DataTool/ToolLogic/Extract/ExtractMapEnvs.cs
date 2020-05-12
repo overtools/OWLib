@@ -133,17 +133,19 @@ namespace DataTool.ToolLogic.Extract
 
             string soundDirectory = Path.Combine(basePath, part, "Sound");
 
-            foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileInfo> soundFile in info.SoundFiles)
+            var context = new Combo.SaveContext(info);
+            foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in info.m_soundFiles)
             {
-                SaveLogic.Combo.SaveSoundFile(flags, soundDirectory, info, soundFile.Key, false);
+                SaveLogic.Combo.SaveSoundFile(flags, soundDirectory, context, soundFile.Key, false);
             }
 
-            foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileInfo> soundFile in info.VoiceSoundFiles)
+            foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in info.m_voiceSoundFiles)
             {
-                SaveLogic.Combo.SaveSoundFile(flags, soundDirectory, info, soundFile.Key, true);
+                SaveLogic.Combo.SaveSoundFile(flags, soundDirectory, context, soundFile.Key, true);
             }
 
-            SaveLogic.Combo.Save(flags, Path.Combine(basePath, part), info);
+            SaveLogic.Combo.Save(flags, Path.Combine(basePath, part), context);
+            context.Wait();
         }
 
         private void SaveLUT(ExtractFlags flags, string basePath, string part, string fname, ulong key, string ocioPath, MapHeader map)
@@ -188,8 +190,10 @@ namespace DataTool.ToolLogic.Extract
                 return;
             }
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
+            var context = new Combo.SaveContext(info);
             FindLogic.Combo.Find(info, stu.m_B3685B0D);
-            SaveLogic.Combo.SaveSound(flags, Path.Combine(basePath, part), info, stu.m_B3685B0D);
+            SaveLogic.Combo.SaveSound(flags, Path.Combine(basePath, part), context, stu.m_B3685B0D);
+            context.Wait();
         }
 
         private void SaveMdl(ExtractFlags flags, string basePath, string part, ulong model, ulong modelLook)
@@ -202,9 +206,14 @@ namespace DataTool.ToolLogic.Extract
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             FindLogic.Combo.Find(info, model);
             FindLogic.Combo.Find(info, modelLook);
-            SaveLogic.Combo.Save(flags, Path.Combine(basePath, part), info);
-            SaveLogic.Combo.SaveAllModelLooks(flags, Path.Combine(basePath, part), info);
-            SaveLogic.Combo.SaveAllMaterials(flags, Path.Combine(basePath, part), info);
+            
+            var context = new Combo.SaveContext(info) {
+                m_saveAnimationEffects = false
+            };
+            SaveLogic.Combo.Save(flags, Path.Combine(basePath, part), context);
+            SaveLogic.Combo.SaveAllModelLooks(flags, Path.Combine(basePath, part), context);
+            SaveLogic.Combo.SaveAllMaterials(flags, Path.Combine(basePath, part), context);
+            context.Wait();
         }
 
         private void SaveTex(ExtractFlags flags, string basePath, string part, string filename, ulong key)
@@ -217,7 +226,10 @@ namespace DataTool.ToolLogic.Extract
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             FindLogic.Combo.Find(info, key);
             info.SetTextureName(key, filename);
-            SaveLogic.Combo.SaveTexture(flags, Path.Combine(basePath, part), info, key);
+
+            var context = new Combo.SaveContext(info);
+            SaveLogic.Combo.SaveTexture(flags, Path.Combine(basePath, part), context, key);
+            context.Wait();
         }
     }
     

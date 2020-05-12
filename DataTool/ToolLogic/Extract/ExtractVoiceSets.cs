@@ -34,8 +34,10 @@ namespace DataTool.ToolLogic.Dump {
                 Log($"Saving VoiceSet: {guidClean}");
                 
                 var comboInfo = new Combo.ComboInfo();
+                var context = new SaveLogic.Combo.SaveContext(comboInfo);
                 Combo.Find(comboInfo, key);
-                SaveLogic.Combo.SaveVoiceSet(toolFlags, Path.Combine(basePath, Container), comboInfo, key);      
+                SaveLogic.Combo.SaveVoiceSet(toolFlags, Path.Combine(basePath, Container), context, key);
+                context.Wait();
             }
         }
     }

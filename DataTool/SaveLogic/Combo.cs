@@ -1,36 +1,103 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using BCFF;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.Extract;
-using NUnit.Framework.Constraints;
 using TankLib;
 using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
+using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool.SaveLogic {
-    public class Combo {
+    public static class Combo {
         public static ScratchDB ScratchDBInstance = new ScratchDB();
+        
+        private static readonly SemaphoreSlim s_texurePrepareSemaphore = new SemaphoreSlim(100, 100); // don't load too many texures into memory
+        private static readonly SemaphoreSlim s_texconvSemaphore = new SemaphoreSlim(2, 2); // don't kill windows with 900 texconv processes
+        private static readonly SemaphoreSlim s_gdiSemaphore = new SemaphoreSlim(1, 1); // gdi doesn't like multithreading
 
-        public static void Save(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            foreach (FindLogic.Combo.EntityInfoNew entity in info.Entities.Values) {
-                SaveEntity(flags, path, info, entity.GUID);
+        public class SaveContext {
+            public FindLogic.Combo.ComboInfo m_info;
+            public bool m_saveAnimationEffects = true;
+
+            private readonly ConcurrentBag<Task> m_pendingTasks = new ConcurrentBag<Task>();
+
+            public SaveContext(FindLogic.Combo.ComboInfo info) {
+                m_info = info;
             }
-            foreach (FindLogic.Combo.EffectInfoCombo effectInfo in info.Effects.Values) {
-                SaveEffect(flags, path, info, effectInfo.GUID);
+
+            private int CountPending() {
+                int count = 0;
+                foreach (Task task in m_pendingTasks) {
+                    if (task.IsCompleted) continue;
+                    count++;
+                }
+                return count;
             }
-            foreach (FindLogic.Combo.ModelInfoNew model in info.Models.Values) {
-                SaveModel(flags, path, info, model.GUID);
+
+            private void UpdateTitle() {
+                Console.Title = $"Saving... {CountPending()} tasks pending";
+            }
+
+            public void Wait() {
+                while (true) {
+                    bool done = true;
+                    foreach (Task task in m_pendingTasks) {
+                        if (task.IsCompleted) continue;
+                        UpdateTitle();
+                        task.Wait(100);
+                        done = false;
+                    }
+                    if (done) break;
+                }
+                Console.Title = "done save";
+            }
+            
+            public void AddTask(Action action) {
+                //action();
+                m_pendingTasks.Add(Task.Run(() => {
+                    try {
+                        action();
+                    } catch (Exception e) {
+                        Logger.Error("Combo", $"Async exception: {e}");
+                    }
+                }));
+            }
+            
+            public void AddTask(Func<Task> action) {
+                //action().Wait();
+                m_pendingTasks.Add(Task.Run(async () => {
+                    try {
+                        await action();
+                    } catch (Exception e) {
+                        Logger.Error("Combo", $"Async exception: {e}");
+                    }
+                }));
             }
         }
 
-        public static void SaveVoiceStimulus(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo) {
+        public static void Save(ICLIFlags flags, string path, SaveContext context) {
+            foreach (FindLogic.Combo.ModelAsset model in context.m_info.m_models.Values) {
+                context.AddTask(() => SaveModel(flags, path, context, model.m_GUID));
+            }
+            foreach (FindLogic.Combo.EntityAsset entity in context.m_info.m_entities.Values) {
+                context.AddTask(() => SaveEntity(flags, path, context, entity.m_GUID));
+            }
+            foreach (FindLogic.Combo.EffectInfoCombo effectInfo in context.m_info.m_effects.Values) {
+                context.AddTask(() => SaveEffect(flags, path, context, effectInfo.m_GUID));
+            }
+        }
+
+        public static void SaveVoiceStimulus(ICLIFlags flags, string path, SaveContext context, FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo) {
             var saveSubtitles = true;
 
             if (flags is ExtractFlags extractFlags) {
@@ -43,19 +110,19 @@ namespace DataTool.SaveLogic {
             if (saveSubtitles) {
                 IEnumerable<string> subtitle = new HashSet<string>();
 
-                if (info.Subtitles.TryGetValue(voiceLineInstanceInfo.Subtitle, out var subtitleInfo)) {
-                    subtitle = subtitle.Concat(subtitleInfo.Text);
+                if (context.m_info.m_subtitles.TryGetValue(voiceLineInstanceInfo.Subtitle, out var subtitleInfo)) {
+                    subtitle = subtitle.Concat(subtitleInfo.m_text);
                 }
 
-                if (info.Subtitles.TryGetValue(voiceLineInstanceInfo.SubtitleRuntime, out var subtitleRuntimeInfo)) {
-                    subtitle = subtitle.Concat(subtitleRuntimeInfo.Text);
+                if (context.m_info.m_subtitles.TryGetValue(voiceLineInstanceInfo.SubtitleRuntime, out var subtitleRuntimeInfo)) {
+                    subtitle = subtitle.Concat(subtitleRuntimeInfo.m_text);
                 }
             
                 var subtitleSet = new HashSet<string>(subtitle);
 
                 if (subtitleSet.Any()) {
                     if (soundSet.Count > 1) {
-                        realPath = Path.Combine(realPath, IO.GetValidFilename(subtitleSet.First().Trim().TrimEnd('.')));
+                        realPath = Path.Combine(realPath, GetValidFilename(subtitleSet.First().Trim().TrimEnd('.')));
                         WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{teResourceGUID.LongKey(voiceLineInstanceInfo.Subtitle):X8}-{teResourceGUID.LongKey(voiceLineInstanceInfo.SubtitleRuntime):X8}-subtitles.txt"));
                     } else if (soundSet.Count == 1) {
                         try {
@@ -71,15 +138,14 @@ namespace DataTool.SaveLogic {
             }
 
             foreach (ulong soundFile in soundSet) {
-                SaveSoundFile(flags, realPath, info, soundFile, true, overrideName);
+                SaveSoundFile(flags, realPath, context, soundFile, true, overrideName);
             }
         }
 
-        public static void SaveEntity(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
-            ulong entityGuid) {
-            FindLogic.Combo.EntityInfoNew entityInfo = info.Entities[entityGuid];
+        public static void SaveEntity(ICLIFlags flags, string path, SaveContext context, ulong entityGuid) {
+            FindLogic.Combo.EntityAsset entityInfo = context.m_info.m_entities[entityGuid];
             
-            Entity.OverwatchEntity entity = new Entity.OverwatchEntity(entityInfo, info);
+            Entity.OverwatchEntity entity = new Entity.OverwatchEntity(entityInfo, context.m_info);
             
             string entityDir = Path.Combine(path, "Entities", entityInfo.GetName());
             string outputFile = Path.Combine(entityDir, entityInfo.GetName() + $".{entity.Extension}");
@@ -90,20 +156,20 @@ namespace DataTool.SaveLogic {
                 entity.Write(entityOutputStream);
             }
 
-            if (!info.SaveConfig.SaveAnimationEffects) return;
-            if (entityInfo.Model == 0) return; 
-            foreach (ulong animation in entityInfo.Animations) {
-                SaveAnimationEffectReference(entityDir, info, animation, entityInfo.Model);
+            if (!context.m_saveAnimationEffects) return;
+            if (entityInfo.m_modelGUID == 0) return; 
+            
+            foreach (ulong effect in entityInfo.m_effects) {
+                SaveEffect(flags, entityDir, context, effect);
             }
-
-            foreach (ulong effect in entityInfo.Effects) {
-                SaveEffect(flags, entityDir, info, effect);
+            
+            foreach (ulong animation in entityInfo.m_animations) {
+                SaveAnimationEffectReference(entityDir, context.m_info, animation, entityInfo.m_modelGUID);
             }
         }
 
-        public static void SaveAnimationEffectReference(string path, FindLogic.Combo.ComboInfo info,
-            ulong animation, ulong model) {
-            FindLogic.Combo.AnimationInfoNew animationInfo = info.Animations[animation];
+        public static void SaveAnimationEffectReference(string path, FindLogic.Combo.ComboInfo info, ulong animation, ulong model) {
+            FindLogic.Combo.AnimationAsset animationInfo = info.m_animations[animation];
             
             Effect.OverwatchAnimationEffectReference reference = new Effect.OverwatchAnimationEffectReference(info, animationInfo, model);
             
@@ -115,7 +181,7 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void ConvertAnimation(Stream animStream, string path, bool convertAnims, FindLogic.Combo.AnimationInfoNew animationInfo, bool scaleAnims) {
+        private static void ConvertAnimation(Stream animStream, string path, bool convertAnims, FindLogic.Combo.AnimationAsset animationInfo, bool scaleAnims) {
             var parsedAnimation = default(teAnimation);
             var priority = 100;
             try
@@ -123,9 +189,9 @@ namespace DataTool.SaveLogic {
                 parsedAnimation = new teAnimation(animStream, true);
                 priority = parsedAnimation.Header.Priority;
             }
-            catch
+            catch (Exception)
             {
-
+                Logger.Error("Combo", $"Unable to parse animation {animationInfo.GetName()}");
             }
             string animationDirectory =
                 Path.Combine(path, "Animations", priority.ToString());
@@ -141,7 +207,7 @@ namespace DataTool.SaveLogic {
             } else {
                 animStream.Position = 0;
                 string rawAnimOutput = Path.Combine(animationDirectory,
-                    $"{animationInfo.GetNameIndex()}.{teResourceGUID.Type(animationInfo.GUID):X3}");
+                    $"{animationInfo.GetNameIndex()}.{teResourceGUID.Type(animationInfo.m_GUID):X3}");
                 CreateDirectoryFromFile(rawAnimOutput);
                 using (Stream fileStream = new FileStream(rawAnimOutput, FileMode.Create)) {
                     animStream.CopyTo(fileStream);
@@ -159,8 +225,7 @@ namespace DataTool.SaveLogic {
             return basePath;
         }
 
-        public static void SaveAnimation(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong animation,
-            ulong model) {
+        private static void SaveAnimationTask(ICLIFlags flags, string path, SaveContext context, ulong animation, ulong model) {
             bool convertAnims = false;
             bool scaleAnims = false;
             if (flags is ExtractFlags extractFlags) {
@@ -168,27 +233,26 @@ namespace DataTool.SaveLogic {
                 convertAnims = !extractFlags.RawAnimations && !extractFlags.Raw;
                 if (extractFlags.SkipAnimations) return;
             }
-            
-            FindLogic.Combo.AnimationInfoNew animationInfo = info.Animations[animation];
 
+            FindLogic.Combo.AnimationAsset animationInfo = context.m_info.m_animations[animation];
             using (Stream animStream = OpenFile(animation)) {
                 if (animStream == null) return;
                 ConvertAnimation(animStream, path, convertAnims, animationInfo, scaleAnims);
             }
 
-            if (!info.SaveConfig.SaveAnimationEffects) return;
+            if (!context.m_saveAnimationEffects) return;
             FindLogic.Combo.EffectInfoCombo animationEffect;
 
             
             // just create a fake effect if it doesn't exist
-            if (animationInfo.Effect == 0) {
+            if (animationInfo.m_effect == 0) {
                 animationEffect = new FindLogic.Combo.EffectInfoCombo(0) {Effect = new EffectParser.EffectInfo()};
                 animationEffect.Effect.SetupEffect();
-            } else if (info.Effects.ContainsKey(animationInfo.Effect)) {
+            } else if (context.m_info.m_effects.ContainsKey(animationInfo.m_effect)) {
                 // wot, why
-                animationEffect = info.Effects[animationInfo.Effect];
-            } else if (info.AnimationEffects.ContainsKey(animationInfo.Effect)) {
-                animationEffect = info.AnimationEffects[animationInfo.Effect];
+                animationEffect = context.m_info.m_effects[animationInfo.m_effect];
+            } else if (context.m_info.m_animationEffects.ContainsKey(animationInfo.m_effect)) {
+                animationEffect = context.m_info.m_animationEffects[animationInfo.m_effect];
             } else {
                 return;
             }
@@ -196,10 +260,10 @@ namespace DataTool.SaveLogic {
             string animationEffectDir = Path.Combine(path, Effect.OverwatchAnimationEffect.AnimationEffectDir, animationInfo.GetNameIndex());
             
             Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines = new Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>>();
-            if (animationEffect.GUID != 0) {
-                SaveEffectExtras(flags, animationEffectDir, info, animationEffect.Effect, out svceLines);
+            if (animationEffect.m_GUID != 0) {
+                SaveEffectExtras(flags, animationEffectDir, context, animationEffect.Effect, out svceLines);
             }
-            Effect.OverwatchAnimationEffect output = new Effect.OverwatchAnimationEffect(info, animationEffect, svceLines, animationInfo, model);
+            Effect.OverwatchAnimationEffect output = new Effect.OverwatchAnimationEffect(context.m_info, animationEffect, svceLines, animationInfo, model);
             string animationEffectFile =
                 Path.Combine(animationEffectDir, $"{animationInfo.GetNameIndex()}.{output.Extension}");
             CreateDirectoryFromFile(animationEffectFile);
@@ -210,10 +274,14 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveEffectExtras(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+        public static void SaveAnimation(ICLIFlags flags, string path, SaveContext context, ulong animation, ulong model) {
+            context.AddTask(() => SaveAnimationTask(flags, path, context, animation, model));
+        }
+
+        public static void SaveEffectExtras(ICLIFlags flags, string path, SaveContext info,
             EffectParser.EffectInfo effectInfo, out Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines) {
             string soundDirectory = Path.Combine(path, "Sounds");
-            svceLines = GetSVCELines(effectInfo, info);
+            svceLines = GetSVCELines(effectInfo, info.m_info);
             
             HashSet<ulong> done = new HashSet<ulong>();
             foreach (EffectParser.OSCEInfo osceInfo in effectInfo.OSCEs) {
@@ -227,11 +295,11 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveSound(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong sound) {
-            if (!info.Sounds.ContainsKey(sound))
+        public static void SaveSound(ICLIFlags flags, string path, SaveContext context, ulong sound) {
+            if (!context.m_info.m_sounds.ContainsKey(sound))
                 return;
 
-            FindLogic.Combo.SoundInfoNew soundInfo = info.Sounds[sound];
+            FindLogic.Combo.SoundInfoNew soundInfo = context.m_info.m_sounds[sound];
             string soundDir = Path.Combine(path, soundInfo.GetName());
             CreateDirectorySafe(soundDir);
 
@@ -239,7 +307,7 @@ namespace DataTool.SaveLogic {
             if (soundInfo.SoundFiles != null) {
                 foreach (KeyValuePair<uint, ulong> soundPair in soundInfo.SoundFiles) {
                     if (done.Contains(soundPair.Value)) continue;
-                    SaveSoundFile(flags, soundDir, info, soundPair.Value, false);
+                    SaveSoundFile(flags, soundDir, context, soundPair.Value, false);
                     done.Add(soundPair.Value);
                 }
             }
@@ -247,7 +315,7 @@ namespace DataTool.SaveLogic {
             if (soundInfo.SoundStreams != null) {
                 foreach (KeyValuePair<uint, ulong> soundStream in soundInfo.SoundStreams) {
                     if (done.Contains(soundStream.Value)) continue;
-                    SaveSoundFile(flags, soundDir, info, soundStream.Value, false);
+                    SaveSoundFile(flags, soundDir, context, soundStream.Value, false);
                     done.Add(soundStream.Value);
                 }
             }
@@ -258,7 +326,7 @@ namespace DataTool.SaveLogic {
             if (effectInfo.SVCEs.Count == 0 || effectInfo.VoiceSet == 0) return output;
 
             foreach (EffectParser.SVCEInfo svceInfo in effectInfo.SVCEs) {
-                Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> instances = info.VoiceSets[effectInfo.VoiceSet].VoiceLineInstances;
+                Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> instances = info.m_voiceSets[effectInfo.VoiceSet].VoiceLineInstances;
                 if (instances?.ContainsKey(svceInfo.VoiceStimulus) == true) {
                     output[svceInfo.VoiceStimulus] = instances[svceInfo.VoiceStimulus];
                 }
@@ -267,13 +335,13 @@ namespace DataTool.SaveLogic {
             return output;
         }
 
-        public static void SaveEffect(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong effect) {
-            FindLogic.Combo.EffectInfoCombo effectInfo = info.Effects[effect];
+        public static void SaveEffect(ICLIFlags flags, string path, SaveContext context, ulong effect) {
+            FindLogic.Combo.EffectInfoCombo effectInfo = context.m_info.m_effects[effect];
             string effectDirectory = Path.Combine(path, "Effects", effectInfo.GetName());
 
-            SaveEffectExtras(flags, effectDirectory, info, effectInfo.Effect, out Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines);
+            SaveEffectExtras(flags, effectDirectory, context, effectInfo.Effect, out Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines);
 
-            Effect.OverwatchEffect output = new Effect.OverwatchEffect(info, effectInfo, svceLines);
+            Effect.OverwatchEffect output = new Effect.OverwatchEffect(context.m_info, effectInfo, svceLines);
             string effectFile = Path.Combine(effectDirectory, $"{effectInfo.GetNameIndex()}.{output.Extension}");
             CreateDirectoryFromFile(effectFile);
             
@@ -283,7 +351,7 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveModel(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong modelGUID) {
+        public static void SaveModel(ICLIFlags flags, string path, SaveContext info, ulong modelGUID) {
             bool convertModels = true;
             bool doRefpose = false;
             byte lod = 1;
@@ -295,21 +363,21 @@ namespace DataTool.SaveLogic {
                 if (extractFlags.SkipModels) return;
             }
             
-            FindLogic.Combo.ModelInfoNew modelInfo = info.Models[modelGUID];
+            FindLogic.Combo.ModelAsset modelInfo = info.m_info.m_models[modelGUID];
             string modelDirectory = Path.Combine(path, "Models", modelInfo.GetName());
 
             if (convertModels) {
                 string modelPath = Path.Combine(modelDirectory, $"{modelInfo.GetNameIndex()}.owmdl");
 
-                using (Stream modelStream = OpenFile(modelInfo.GUID)) {
+                using (Stream modelStream = OpenFile(modelInfo.m_GUID)) {
                     if (modelStream == null) return;
                     CreateDirectoryFromFile(modelPath);
                     
                     teChunkedData chunkedData = new teChunkedData(modelStream);
                     
-                    OverwatchModel model = new OverwatchModel(chunkedData, modelInfo.GUID, (sbyte)lod);
-                    if (modelInfo.ModelLooks.Count > 0) {
-                        FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelInfo.ModelLooks.First()];
+                    OverwatchModel model = new OverwatchModel(chunkedData, modelInfo.m_GUID, (sbyte)lod);
+                    if (modelInfo.m_modelLooks.Count > 0) {
+                        FindLogic.Combo.ModelLookAsset modelLookInfo = info.m_info.m_modelLooks[modelInfo.m_modelLooks.First()];
                         model.ModelLookFileName = Path.Combine("ModelLooks",
                             modelLookInfo.GetNameIndex() + ".owmat");
                     }
@@ -329,30 +397,25 @@ namespace DataTool.SaveLogic {
                     }
                 }
             } else {
-                using (Stream modelStream = OpenFile(modelInfo.GUID)) {
+                using (Stream modelStream = OpenFile(modelInfo.m_GUID)) {
                     WriteFile(modelStream, Path.Combine(modelDirectory, modelInfo.GetNameIndex()+".00C"));
                 }
             }
 
-            foreach (ulong modelModelLook in modelInfo.ModelLooks) {
+            foreach (ulong modelModelLook in modelInfo.m_modelLooks) {
                 SaveModelLook(flags, modelDirectory, info, modelModelLook);
             }
 
-            //
-            //foreach (IEnumerable<ulong> modelModelLookSet in modelInfo.ModelLookSets) {
-            //    SaveModelLookSet(flags, modelDirectory, info, modelModelLookSet);
-            //}
-
-            foreach (ulong looseMaterial in modelInfo.LooseMaterials) {
+            foreach (ulong looseMaterial in modelInfo.m_looseMaterials) {
                 SaveMaterial(flags, modelDirectory, info, looseMaterial);
             }
 
-            foreach (ulong modelAnimation in modelInfo.Animations) {
+            foreach (ulong modelAnimation in modelInfo.n_animations) {
                 SaveAnimation(flags, modelDirectory, info, modelAnimation, modelGUID);
             }
         }
 
-        public static void SaveOWMaterialModelLookFile(string path, FindLogic.Combo.ModelLookInfo modelLookInfo, FindLogic.Combo.ComboInfo info) {
+        public static void SaveOWMaterialModelLookFile(string path, FindLogic.Combo.ModelLookAsset modelLookInfo, FindLogic.Combo.ComboInfo info) {
             Model.OverwatchModelLook modelLook = new Model.OverwatchModelLook(info, modelLookInfo);
             
             string modelLookPath =
@@ -364,19 +427,19 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveModelLook(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+        public static void SaveModelLook(ICLIFlags flags, string path, SaveContext info,
             ulong modelLook) {
-            FindLogic.Combo.ModelLookInfo modelLookInfo = info.ModelLooks[modelLook];
+            FindLogic.Combo.ModelLookAsset modelLookInfo = info.m_info.m_modelLooks[modelLook];
 
-            SaveOWMaterialModelLookFile(path, modelLookInfo, info);
+            SaveOWMaterialModelLookFile(path, modelLookInfo, info.m_info);
 
-            if (modelLookInfo.Materials == null) return;
-            foreach (ulong modelLookMaterial in modelLookInfo.Materials) {
+            if (modelLookInfo.m_materialGUIDs == null) return;
+            foreach (ulong modelLookMaterial in modelLookInfo.m_materialGUIDs) {
                 SaveMaterial(flags, path, info, modelLookMaterial);
             }
         }
 
-        public static void SaveModelLookSet(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+        /*public static void SaveModelLookSet(ICLIFlags flags, string path, SaveContext info,
             IEnumerable<ulong> modelLookSet) {
             if(modelLookSet.Count() < 2) {
                 if (modelLookSet.Count() < 1) {
@@ -386,35 +449,35 @@ namespace DataTool.SaveLogic {
                 return;
             }
 
-            FindLogic.Combo.ModelLookInfo modelLookInfo = new FindLogic.Combo.ModelLookInfo(0) {
-                Name = string.Join("_", modelLookSet.Select(x => info.ModelLooks.ContainsKey(x) ? info.ModelLooks[x].GetNameIndex() : $"{x & 0xFFFFFFFFFFFF:X12}")),
-                Materials = new HashSet<ulong>()
+            FindLogic.Combo.ModelLookAsset modelLookInfo = new FindLogic.Combo.ModelLookAsset(0) {
+                m_name = string.Join("_", modelLookSet.Select(x => info.m_info.m_modelLooks.ContainsKey(x) ? info.m_info.m_modelLooks[x].GetNameIndex() : $"{x & 0xFFFFFFFFFFFF:X12}")),
+                m_materialGUIDs = new HashSet<ulong>()
             };
 
             var doneIDs = new HashSet<ulong>();
             
             foreach (ulong modelLookGuid in modelLookSet.Reverse()) {
-                if (info.ModelLooks.ContainsKey(modelLookGuid)) {
-                    foreach(var materialGuid in info.ModelLooks[modelLookGuid].Materials) {
-                        var material = info.Materials[materialGuid];
-                        if (doneIDs.Any(x => material.MaterialIDs.Contains(x))) {
+                if (info.m_info.m_modelLooks.ContainsKey(modelLookGuid)) {
+                    foreach(var materialGuid in info.m_info.m_modelLooks[modelLookGuid].m_materialGUIDs) {
+                        var material = info.m_info.m_materials[materialGuid];
+                        if (doneIDs.Any(x => material.m_materialIDs.Contains(x))) {
                             continue;
                         }
-                        doneIDs.UnionWith(material.MaterialIDs);
-                        modelLookInfo.Materials.Add(materialGuid);
+                        doneIDs.UnionWith(material.m_materialIDs);
+                        modelLookInfo.m_materialGUIDs.Add(materialGuid);
                     }
                 }
             }
 
-            SaveOWMaterialModelLookFile(path, modelLookInfo, info);
+            SaveOWMaterialModelLookFile(path, modelLookInfo, info.m_info);
 
-            if (modelLookInfo.Materials == null) return;
-            foreach (ulong modelLookMaterial in modelLookInfo.Materials) {
+            if (modelLookInfo.m_materialGUIDs == null) return;
+            foreach (ulong modelLookMaterial in modelLookInfo.m_materialGUIDs) {
                 SaveMaterial(flags, path, info, modelLookMaterial);
             }
-        }
+        }*/
 
-        public static void SaveOWMaterialFile(string path, FindLogic.Combo.MaterialInfo materialInfo, FindLogic.Combo.ComboInfo info) {
+        public static void SaveOWMaterialFile(string path, FindLogic.Combo.MaterialAsset materialInfo, FindLogic.Combo.ComboInfo info) {
             Model.OverwatchMaterial material = new Model.OverwatchMaterial(info, materialInfo);
             string materialPath =
                 Path.Combine(path, "Materials", $"{materialInfo.GetNameIndex()}.{material.Extension}");
@@ -425,42 +488,42 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void SaveVoiceSetInternal(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+        private static void SaveVoiceSetInternal(ICLIFlags flags, string path, SaveContext context,
             ulong voiceSet) {
             string thisPath = Path.Combine(path, GetFileName(voiceSet));
 
-            FindLogic.Combo.VoiceSetInfo voiceSetInfo = info.VoiceSets[voiceSet];
+            FindLogic.Combo.VoiceSetAsset voiceSetInfo = context.m_info.m_voiceSets[voiceSet];
             if (voiceSetInfo.VoiceLineInstances == null) return;
             foreach (KeyValuePair<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> stimuliSet in voiceSetInfo.VoiceLineInstances) {
-                SaveVoiceStimuliInternal(flags, thisPath, info, stimuliSet.Value, true);
+                SaveVoiceStimuliInternal(flags, thisPath, context, stimuliSet.Value, true);
             }
         }
 
-        public static void SaveMaterial(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong material) {
-            FindLogic.Combo.MaterialInfo materialInfo = info.Materials[material];
-            FindLogic.Combo.MaterialDataInfo materialDataInfo = info.MaterialDatas[materialInfo.MaterialData];
+        public static void SaveMaterial(ICLIFlags flags, string path, SaveContext info, ulong material) {
+            FindLogic.Combo.MaterialAsset materialInfo = info.m_info.m_materials[material];
+            FindLogic.Combo.MaterialDataAsset materialDataInfo = info.m_info.m_materialData[materialInfo.m_materialDataGUID];
 
             string textureDirectory = Path.Combine(path, "Textures");
             
-            SaveOWMaterialFile(path, materialInfo, info);
+            SaveOWMaterialFile(path, materialInfo, info.m_info);
 
-            if (materialDataInfo.Textures != null) {
-                foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.Textures) {
+            if (materialDataInfo.m_textureMap != null) {
+                foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.m_textureMap) {
                     SaveTexture(flags, textureDirectory, info, texture.Key);
                 }
             }
 
-            if (Program.Flags.ExtractShaders && materialInfo.Shaders != null) {
-                SaveShader(path, materialInfo, info);
+            if (Program.Flags.ExtractShaders && materialInfo.m_shaders != null) {
+                SaveShader(path, materialInfo, info.m_info);
             }
         }
 
-        private static void SaveShader(string path, FindLogic.Combo.MaterialInfo materialInfo, FindLogic.Combo.ComboInfo info) {
-            string shaderDirectory = Path.Combine(path, "Shaders", $"{materialInfo.MaterialData:X16}");
-            var fn = teResourceGUID.LongKey(materialInfo.ShaderGroup).ToString("X12");
-            WriteFile(materialInfo.ShaderGroup, shaderDirectory, $"{fn}.shadergroup");
-            WriteFile(materialInfo.ShaderSource, shaderDirectory, $"{fn}.hlsl");
-            foreach (var (instance, code, byteCode) in materialInfo.Shaders) {
+        private static void SaveShader(string path, FindLogic.Combo.MaterialAsset materialInfo, FindLogic.Combo.ComboInfo info) {
+            string shaderDirectory = Path.Combine(path, "Shaders", $"{materialInfo.m_materialDataGUID:X16}");
+            var fn = teResourceGUID.LongKey(materialInfo.m_shaderGroupGUID).ToString("X12");
+            WriteFile(materialInfo.m_shaderGroupGUID, shaderDirectory, $"{fn}.shadergroup");
+            WriteFile(materialInfo.m_shaderSourceGUID, shaderDirectory, $"{fn}.shadersource"); // note to others: this isn't source code, its another shader group
+            foreach (var (instance, code, byteCode) in materialInfo.m_shaders) {
                 //var instancePath = Path.Combine(shaderDirectory, $"{instance:X12}");
                 var codefn = $"{fn}{Path.DirectorySeparatorChar}{teResourceGUID.LongKey(code):X12}";
                 WriteFile(instance, shaderDirectory, $"{codefn}.fxi");
@@ -471,82 +534,89 @@ namespace DataTool.SaveLogic {
 
 
         // helpers (NOT FOR INTERNAL USE)
-        public static void SaveAllVoiceSets(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo soundInfo) {
-            foreach (KeyValuePair<ulong,FindLogic.Combo.VoiceSetInfo> voiceSet in soundInfo.VoiceSets) {
-                SaveVoiceSet(flags, path, soundInfo, voiceSet.Value);
+        public static void SaveAllVoiceSets(ICLIFlags flags, string path, SaveContext context) {
+            foreach (KeyValuePair<ulong,FindLogic.Combo.VoiceSetAsset> voiceSet in context.m_info.m_voiceSets) {
+                SaveVoiceSet(flags, path, context, voiceSet.Value);
             }
         }
         
-        public static void SaveLooseTextures(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            foreach (FindLogic.Combo.TextureInfoNew textureInfo in info.Textures.Values) {
-                if (!textureInfo.Loose) continue;
-                SaveTexture(flags, path, info, textureInfo.GUID);
+        public static void SaveLooseTextures(ICLIFlags flags, string path, SaveContext context) {
+            foreach (FindLogic.Combo.TextureAsset textureInfo in context.m_info.m_textures.Values) {
+                if (!textureInfo.m_loose) continue;
+                SaveTexture(flags, path, context, textureInfo.m_GUID);
             }
         }
         
         public static void SaveAllStrings(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            foreach (FindLogic.Combo.StringInfo stringInfo in info.Strings.Values) {
-                if (stringInfo.Value == null) continue;
+            foreach (FindLogic.Combo.DisplayTextAsset stringInfo in info.m_displayText.Values) {
+                if (stringInfo.m_text == null) continue;
                 string file = Path.Combine(path, stringInfo.GetName()) + ".txt";
                 CreateDirectoryFromFile(file);
                 using (StreamWriter writer = new StreamWriter(file)) {
-                    writer.Write(stringInfo.Value);
+                    writer.Write(stringInfo.m_text);
                 }
             }
         }
         
-        public static void SaveAllSoundFiles(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            foreach (FindLogic.Combo.SoundFileInfo soundInfo in info.SoundFiles.Values) {
-                SaveSoundFile(flags, path, info, soundInfo.GUID, false);
+        public static void SaveAllSoundFiles(ICLIFlags flags, string path, SaveContext context) {
+            foreach (FindLogic.Combo.SoundFileAsset soundInfo in context.m_info.m_soundFiles.Values) {
+                SaveSoundFile(flags, path, context, soundInfo.m_GUID, false);
             }
         }
         
-        public static void SaveAllVoiceSoundFiles(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            foreach (FindLogic.Combo.SoundFileInfo soundInfo in info.VoiceSoundFiles.Values) {
-                SaveSoundFile(flags, path, info, soundInfo.GUID, true);
+        public static void SaveAllVoiceSoundFiles(ICLIFlags flags, string path, SaveContext context) {
+            foreach (FindLogic.Combo.SoundFileAsset soundInfo in context.m_info.m_voiceSoundFiles.Values) {
+                SaveSoundFile(flags, path, context, soundInfo.m_GUID, true);
             }
         }
         
-        public static void SaveAllMaterials(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            foreach (ulong material in info.Materials.Keys) {
+        public static void SaveAllMaterials(ICLIFlags flags, string path, SaveContext info) {
+            foreach (ulong material in info.m_info.m_materials.Keys) {
                 SaveMaterial(flags, path, info, material);
             }
         }
 
-        public static void SaveAllModelLooks(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            foreach (ulong material in info.ModelLooks.Keys) {
-                SaveModelLook(flags, path, info, material);
+        public static void SaveAllModelLooks(ICLIFlags flags, string path, SaveContext context) {
+            foreach (ulong material in context.m_info.m_modelLooks.Keys) {
+                SaveModelLook(flags, path, context, material);
             }
         }
 
 #warning TODO: This method does not support animation effects
-        public static void SaveAllAnimations(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info) {
-            bool beforeSaveAnimEffects = info.SaveConfig.SaveAnimationEffects;
-            info.SaveConfig.SaveAnimationEffects = false;
+        public static void SaveAllAnimations(ICLIFlags flags, string path, SaveContext context) {
+            // TODO: THREADING ISSUE HERE
+            // TODO: THREADING ISSUE HERE
+            // TODO: THREADING ISSUE HERE
+            // TODO: THREADING ISSUE HERE
+            // TODO: THREADING ISSUE HERE
+            // TODO: THREADING ISSUE HERE
+
+            bool beforeSaveAnimEffects = context.m_saveAnimationEffects;
+            context.m_saveAnimationEffects = false;
             
-            foreach (ulong material in info.Animations.Keys) {
-                SaveAnimation(flags, path, info, material, 0);
+            foreach (ulong material in context.m_info.m_animations.Keys) {
+                SaveAnimation(flags, path, context, material, 0);
             }
-            info.SaveConfig.SaveAnimationEffects = beforeSaveAnimEffects;
+            context.m_saveAnimationEffects = beforeSaveAnimEffects;
         }
         
-        public static void SaveVoiceSet(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, 
+        public static void SaveVoiceSet(ICLIFlags flags, string path, SaveContext context, 
             ulong voiceSet) {
-            SaveVoiceSetInternal(flags, path, info, voiceSet);
+            SaveVoiceSetInternal(flags, path, context, voiceSet);
         }
 
-        public static void SaveVoiceSet(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
-            FindLogic.Combo.VoiceSetInfo voiceSetInfo) {
-            SaveVoiceSetInternal(flags, path, info, voiceSetInfo.GUID);
+        public static void SaveVoiceSet(ICLIFlags flags, string path, SaveContext context,
+            FindLogic.Combo.VoiceSetAsset voiceSetInfo) {
+            SaveVoiceSetInternal(flags, path, context, voiceSetInfo.m_GUID);
         }
 
-        public static void SaveVoiceStimuli(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+        public static void SaveVoiceStimuli(ICLIFlags flags, string path, SaveContext context,
             IEnumerable<FindLogic.Combo.VoiceLineInstanceInfo> voiceLineInstances, bool split) {
-            SaveVoiceStimuliInternal(flags, path, info, voiceLineInstances, split);
+            SaveVoiceStimuliInternal(flags, path, context, voiceLineInstances, split);
         }
         
         // internal stuff for helpers (for internal use)
-        private static void SaveVoiceStimuliInternal(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info,
+        private static void SaveVoiceStimuliInternal(ICLIFlags flags, string path, SaveContext context,
             IEnumerable<FindLogic.Combo.VoiceLineInstanceInfo> voiceLineInstances, bool split) {
             foreach (FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstance in voiceLineInstances) {
                 string thisPath = path;
@@ -557,11 +627,11 @@ namespace DataTool.SaveLogic {
                 if (split) {
                     thisPath = Path.Combine(path, GetFileName(voiceLineInstance.VoiceStimulus));
                 }
-                SaveVoiceStimulus(flags, thisPath, info, voiceLineInstance);
+                SaveVoiceStimulus(flags, thisPath, context, voiceLineInstance);
             }
         }
 
-        public static void SaveTexture(ICLIFlags flags, string path, FindLogic.Combo.ComboInfo info, ulong textureGUID) {
+        private static async Task SaveTextureTask(ICLIFlags flags, string path, SaveContext info, ulong textureGUID) {
             bool convertTextures = true;
             string convertType = "tif";
             string multiSurfaceConvertType = "tif";
@@ -590,7 +660,7 @@ namespace DataTool.SaveLogic {
                 path += Path.DirectorySeparatorChar;
             
 
-            FindLogic.Combo.TextureInfoNew textureInfo = info.Textures[textureGUID];
+            FindLogic.Combo.TextureAsset textureInfo = info.m_info.m_textures[textureGUID];
             string filePath = Path.Combine(path, $"{textureInfo.GetNameIndex()}");
             if (teResourceGUID.Type(textureGUID) != 0x4) filePath += $".{teResourceGUID.Type(textureGUID):X3}";
 
@@ -602,113 +672,138 @@ namespace DataTool.SaveLogic {
             }
 
             CreateDirectoryFromFile(path);
+            
+            await s_texurePrepareSemaphore.WaitAsync();
+
             if (!convertTextures) {
+                teTexture texture;
                 using (Stream textureStream = OpenFile(textureGUID)) {
-                    teTexture texture = new teTexture(textureStream, true);
+                    texture = new teTexture(textureStream, true);
                     textureStream.Position = 0;
                     WriteFile(textureStream, $"{filePath}.004");
-
-                    if (!texture.PayloadRequired) return;
-                    for (int i = 0; i < texture.Payloads.Length; ++i) {
-                        using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
-                            WriteFile(texturePayloadStream, $"{filePath}_{i}.04D");
-                    }
                 }
+                if (!texture.PayloadRequired) return;
+                for (int i = 0; i < texture.Payloads.Length; ++i) {
+                    using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
+                        WriteFile(texturePayloadStream, $"{filePath}_{i}.04D");
+                }
+                s_texurePrepareSemaphore.Release();
             } else {
+                teTexture texture;
                 using (Stream textureStream = OpenFile(textureGUID)) {
-                    if (textureStream == null) return;
-                    teTexture texture = new teTexture(textureStream);
-
-                    //if (texture.Header.Flags.HasFlag(teTexture.Flags.CUBEMAP)) return;
-                    // for diffing when they add/regen loads of cubemaps
-                    
-                    if (texture.PayloadRequired) {
-                        for (int i = 0; i < texture.Payloads.Length; ++i) {
-                            texture.LoadPayload(OpenFile(texture.GetPayloadGUID(textureGUID, i)), i);
-                            if (maxMips == 1) break;
-                        }
+                    if (textureStream == null) {
+                        s_texurePrepareSemaphore.Release();
+                        return;
                     }
+                    texture = new teTexture(textureStream);
+                }
+                
+                //if (texture.Header.Flags.HasFlag(teTexture.Flags.CUBEMAP)) return;
+                // for diffing when they add/regen loads of cubemaps
 
-                    uint? width = null;
-                    uint? height = null;
-                    uint? surfaces = null;
-                    if (texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces)
-                    {
-                        if (createMultiSurfaceSheet)
-                        {
-                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet because it has more than one surface");
-                            height = (uint)(texture.Header.Height * texture.Header.Surfaces);
-                            surfaces = 1;
-                            texture.Header.Flags = 0;
-                        }
-                        else
-                        {
-                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceConvertType} because it has more than one surface");
-                            convertType = multiSurfaceConvertType;
-                        }
-                    }
-
-                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                        convertedStream.Position = 0;
-                        if (convertType == "dds" || convertedStream.Length == 0) {
-                            WriteFile(convertedStream, $"{filePath}.dds");
-                            return;
-                        } 
-                        
-                        bool isBcffValid = teTexture.DXGI_BC4.Contains(texture.Header.Format) || 
-                                           teTexture.DXGI_BC5.Contains(texture.Header.Format) ||
-                                           teTexture.ATI2.Contains(texture.Header.GetTextureType());
-                        
-                        ImageFormat imageFormat = null;
-                        if (convertType == "tif") imageFormat = ImageFormat.Tiff;
-                        if (convertType == "png") imageFormat = ImageFormat.Png;
-                        if (convertType == "jpg") imageFormat = ImageFormat.Jpeg;
-                        // if (convertType == "tga") imageFormat = Im.... oh
-                        // so there is no TGA image format.
-                        // guess the TGA users are stuck with the DirectXTex stuff for now.
-
-                        if (isBcffValid && imageFormat != null && !(texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces)) {
-                            BlockDecompressor decompressor = new BlockDecompressor(convertedStream);
-                            decompressor.CreateImage();
-                            decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
-                            return;
-                        }
-                        
-                        string losslessFlag = lossless ? "-wiclossless" : string.Empty;
-
-                        Process pProcess = new Process {
-                            StartInfo = {
-                                FileName = "Third Party\\texconv.exe",
-                                UseShellExecute = false,
-                                RedirectStandardOutput = true,
-                                RedirectStandardInput = true,
-                                RedirectStandardError = true,
-                                CreateNoWindow = true,
-                                Arguments =
-                                    $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{(path.EndsWith(@"/") || path.EndsWith("\\") ? path.Substring(0, path.Length - 1) : path)}"
-                            },
-                            EnableRaisingEvents = true
-                        };
-
-                        pProcess.Start();
-                        convertedStream.Position = 0;
-                        convertedStream.CopyTo(pProcess.StandardInput.BaseStream);
-                        pProcess.StandardInput.BaseStream.Flush();
-                        pProcess.StandardInput.BaseStream.Close();
-                        pProcess.WaitForExit();
-                        // when texconv writes with to the console -nologo is has done/failed conversion
-                        string line = pProcess.StandardOutput.ReadToEnd();
-                        if (line.Contains("FAILED")) {
-                            convertedStream.Position = 0;
-                            TankLib.Helpers.Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as dds because texconv failed.");
-                            WriteFile(convertedStream, $"{filePath}.dds");
-                        }
+                if (texture.PayloadRequired) {
+                    for (int i = 0; i < texture.Payloads.Length; ++i) {
+                        using (var payloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
+                            texture.LoadPayload(payloadStream, i);
+                        if (maxMips == 1) break;
                     }
                 }
+
+                uint? width = null;
+                uint? height = null;
+                uint? surfaces = null;
+                if (texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces) {
+                    if (createMultiSurfaceSheet) {
+                        Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet because it has more than one surface");
+                        height = (uint) (texture.Header.Height * texture.Header.Surfaces);
+                        surfaces = 1;
+                        texture.Header.Flags = 0;
+                    } else {
+                        Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceConvertType} because it has more than one surface");
+                        convertType = multiSurfaceConvertType;
+                    }
+                }
+                
+                bool isBcffValid = teTexture.DXGI_BC4.Contains(texture.Header.Format) ||
+                                   teTexture.DXGI_BC5.Contains(texture.Header.Format) ||
+                                   teTexture.ATI2.Contains(texture.Header.GetTextureType());
+
+                ImageFormat imageFormat = null;
+                if (convertType == "tif") imageFormat = ImageFormat.Tiff;
+                if (convertType == "png") imageFormat = ImageFormat.Png;
+                if (convertType == "jpg") imageFormat = ImageFormat.Jpeg;
+                // if (convertType == "tga") imageFormat = Im.... oh
+                // so there is no TGA image format.
+                // guess the TGA users are stuck with the DirectXTex stuff for now.
+
+                if (isBcffValid && imageFormat != null && !(texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces)) {
+                    await s_gdiSemaphore.WaitAsync();
+                    BlockDecompressor decompressor;
+                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                        decompressor = new BlockDecompressor(convertedStream);
+                        decompressor.CreateImage();
+                    }
+                    decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
+                    s_gdiSemaphore.Release();
+                    s_texurePrepareSemaphore.Release();
+                    return;
+                }
+
+                if (convertType == "dds") {
+                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                        WriteFile(convertedStream, $"{filePath}.dds");
+                    }
+                    s_texurePrepareSemaphore.Release();
+                    return;
+                }
+                Process pProcess;
+                
+                using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                    await s_texconvSemaphore.WaitAsync();
+                    
+                    string losslessFlag = lossless ? "-wiclossless" : string.Empty;
+
+                    pProcess = new Process {
+                        StartInfo = {
+                            FileName = "Third Party\\texconv.exe",
+                            UseShellExecute = false,
+                            RedirectStandardOutput = true,
+                            RedirectStandardInput = true,
+                            RedirectStandardError = true,
+                            CreateNoWindow = true,
+                            Arguments =
+                                $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{(path.EndsWith(@"/") || path.EndsWith("\\") ? path.Substring(0, path.Length - 1) : path)}"
+                        },
+                        EnableRaisingEvents = true
+                    };
+
+                    pProcess.Start();
+                    convertedStream.Position = 0;
+                    await convertedStream.CopyToAsync(pProcess.StandardInput.BaseStream);
+                }
+
+                await pProcess.StandardInput.BaseStream.FlushAsync();
+                pProcess.StandardInput.BaseStream.Close();
+                pProcess.WaitForExit();
+                s_texconvSemaphore.Release();
+                
+                // when texconv writes with to the console -nologo is has done/failed conversion
+                string line = await pProcess.StandardOutput.ReadToEndAsync();
+                    
+                if (line.Contains("FAILED")) {
+                    s_texurePrepareSemaphore.Release();
+                    throw new Exception($"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
+                }
+                
+                s_texurePrepareSemaphore.Release();
             }
         }
 
-        private static void ConvertSoundFile(Stream stream, FindLogic.Combo.SoundFileInfo soundFileInfo, string directory, string name = null)
+        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID) {
+            info.AddTask(() => SaveTextureTask(flags, path, info, textureGUID));
+        }
+
+        private static void ConvertSoundFile(Stream stream, FindLogic.Combo.ComboAsset soundFileInfo, string directory, string name = null)
         {
             string outputFile = Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.ogg");
             CreateDirectoryFromFile(outputFile);
@@ -741,21 +836,18 @@ namespace DataTool.SaveLogic {
             }
             catch (Exception e)
             {
-                Console.Out.WriteLine(e);
+                Logger.Error("Combo", $"Error converting sound: {e}");
             }
         }
 
-        public static void SaveSoundFile(ICLIFlags flags, string directory, FindLogic.Combo.ComboInfo info, ulong soundFile, bool voice, string name = null) {
-            if (soundFile == 0) return;
+        private static void SaveSoundFileTask(ICLIFlags flags, string directory, FindLogic.Combo.SoundFileAsset soundFileInfo, string name = null) {
             bool convertWem = true;
             if (flags is ExtractFlags extractFlags) {
                 convertWem = !extractFlags.RawSound && !extractFlags.Raw;
                 if (extractFlags.SkipSound) return;
             }
             
-            FindLogic.Combo.SoundFileInfo soundFileInfo = voice ? info.VoiceSoundFiles[soundFile] : info.SoundFiles[soundFile];
-
-            using (Stream soundStream = OpenFile(soundFile)) {
+            using (Stream soundStream = OpenFile(soundFileInfo.m_GUID)) {
                 if (soundStream == null) return;
 
                 if (!convertWem) {
@@ -764,6 +856,13 @@ namespace DataTool.SaveLogic {
                     ConvertSoundFile(soundStream, soundFileInfo, directory, name);
                 }
             }
+        }
+
+        public static void SaveSoundFile(ICLIFlags flags, string directory, SaveContext context, ulong soundFile, bool voice, string name = null) {
+            if (soundFile == 0) return;
+            
+            FindLogic.Combo.SoundFileAsset soundFileInfo = voice ? context.m_info.m_voiceSoundFiles[soundFile] : context.m_info.m_soundFiles[soundFile];
+            context.AddTask(() => SaveSoundFileTask(flags, directory, soundFileInfo, name));
         }
     }
 }
