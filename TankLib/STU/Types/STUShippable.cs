@@ -13,14 +13,5 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xB7A1D145, "m_chunkId")]
         public int m_chunkId;
-
-        [STUFieldAttribute(0x6461415F)]
-        public byte m_6461415F;
-
-        [STUFieldAttribute(0x1C50268A)]
-        public byte m_1C50268A;
-
-        [STUFieldAttribute(0x646B9249, "m_complete")]
-        public byte m_complete;
     }
 }

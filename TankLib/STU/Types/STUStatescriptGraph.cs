@@ -47,6 +47,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x27FBFF72, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUStatescriptOperationPattern[] m_27FBFF72;
 
+        [STUFieldAttribute(0xF3CFCE23, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_D5316035[] m_F3CFCE23;
+
         [STUFieldAttribute(0x85EE1391, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_85EE1391;
 
@@ -55,6 +58,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x151AD444, "m_publicSchema", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptSchema m_publicSchema;
+
+        [STUFieldAttribute(0x36F7B64C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_21E27D68 m_36F7B64C;
 
         [STUFieldAttribute(0xF63B1D41, "m_playScriptHotReloadBehavior")]
         public Enum_CE6658F5 m_playScriptHotReloadBehavior;

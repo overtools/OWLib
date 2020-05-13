@@ -4,6 +4,9 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x164EF13B, "STUStatescriptStateTrackRay")]
     public class STUStatescriptStateTrackRay : STUStatescriptState {
+        [STUFieldAttribute(0x03AD3873, "m_ignoreEntities", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar[] m_ignoreEntities;
+
         [STUFieldAttribute(0xF5732403, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_1F8FAD25 m_F5732403;
 
@@ -19,6 +22,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x57DAE1B5, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_57DAE1B5;
 
+        [STUFieldAttribute(0xF8EE6235, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_F8EE6235;
+
         [STUFieldAttribute(0xF8274C10, "m_filter", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVarFilter m_filter;
 
@@ -33,6 +39,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x8A12D912, "m_target", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_AEFE4F94 m_target;
+
+        [STUFieldAttribute(0x3B0AD973, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_3B0AD973;
 
         [STUFieldAttribute(0x1DA04609)]
         public byte m_1DA04609;

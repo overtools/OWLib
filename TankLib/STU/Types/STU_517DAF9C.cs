@@ -4,5 +4,7 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x517DAF9C)]
     public class STU_517DAF9C : STUStatescriptAction {
+        [STUFieldAttribute(0x78A08312, "m_string", ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_string;
     }
 }

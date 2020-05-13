@@ -5,11 +5,11 @@ using TankLib.Math;
 namespace TankLib.STU.Types {
     [STUAttribute(0xB38E3226)]
     public class STU_B38E3226 : STUAnimGameData_Base {
+        [STUFieldAttribute(0x13406922, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_F34863F8 m_13406922;
+
         [STUFieldAttribute(0x44B8E377)]
         public teVec3A m_44B8E377;
-
-        [STUFieldAttribute(0x2A195E35)]
-        public teVec3A m_2A195E35;
 
         [STUFieldAttribute(0xF9CA7995, "m_paramIds")]
         public uint[] m_paramIds;

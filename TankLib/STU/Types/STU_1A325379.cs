@@ -12,5 +12,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x746C254B)]
         public teStructuredDataAssetRef<STUUnlock>[] m_746C254B;
+
+        [STUFieldAttribute(0xAC4BF158)]
+        public int m_AC4BF158;
     }
 }

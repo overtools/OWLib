@@ -42,5 +42,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x0A11C604, "AITacicalVolumes", ReaderType = typeof(InlineInstanceFieldReader))]
         public SDD_AITacticalVolume[] AITacicalVolumes;
+
+        [STUFieldAttribute(0xFAFDF322, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_EFAD796C[] m_FAFDF322;
     }
 }

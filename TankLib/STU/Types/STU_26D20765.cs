@@ -11,6 +11,21 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xEFB45A8C)]
         public teVec3A m_EFB45A8C;
 
+        [STUFieldAttribute(0xDAE5CCBB)]
+        public teStructuredDataAssetRef<STUEntityDefinition> m_DAE5CCBB;
+
+        [STUFieldAttribute(0xF99D9D47)]
+        public teStructuredDataAssetRef<STUSkinTheme> m_F99D9D47;
+
+        [STUFieldAttribute(0xE0352A8A)]
+        public teStructuredDataAssetRef<STUSkinTheme> m_E0352A8A;
+
+        [STUFieldAttribute(0x8A24128D)]
+        public teStructuredDataAssetRef<STUAnimBlendTreeSet> m_8A24128D;
+
+        [STUFieldAttribute(0x38F8928D)]
+        public teStructuredDataAssetRef<STUBoneLabel> m_38F8928D;
+
         [STUFieldAttribute(0xD94F72ED)]
         public float[] m_D94F72ED;
 
@@ -25,21 +40,6 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x6297A36A, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUDataFlowStream_Guid[] m_6297A36A;
-
-        [STUFieldAttribute(0xDAE5CCBB)]
-        public ulong m_DAE5CCBB;
-
-        [STUFieldAttribute(0xF99D9D47)]
-        public ulong m_F99D9D47;
-
-        [STUFieldAttribute(0xE0352A8A)]
-        public ulong m_E0352A8A;
-
-        [STUFieldAttribute(0x8A24128D)]
-        public ulong m_8A24128D;
-
-        [STUFieldAttribute(0x38F8928D)]
-        public ulong m_38F8928D;
 
         [STUFieldAttribute(0x373243A6)]
         public byte m_373243A6;

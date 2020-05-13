@@ -8,8 +8,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xC08C4427, "m_name")]
         public teStructuredDataAssetRef<ulong> m_name;
 
-        [STUFieldAttribute(0x0916AFB9, "m_category")]
-        public STUInputLogicalButtonCategory m_category;
+        [STUFieldAttribute(0xFF17AC75, "m_categories", ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_A1353B54[] m_categories;
 
         [STUFieldAttribute(0x3C9341F5, "m_logicalButton")]
         public STULogicalButton m_logicalButton;
@@ -22,5 +22,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x946AA91D)]
         public Enum_3D49D804 m_946AA91D;
+
+        [STUFieldAttribute(0xA64CDF28)]
+        public byte m_A64CDF28;
     }
 }

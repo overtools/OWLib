@@ -23,6 +23,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x8CBE558B, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_8CBE558B;
 
+        [STUFieldAttribute(0x3B0AD973, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_3B0AD973;
+
         [STUFieldAttribute(0x7404C882, "m_castFilter", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVarFilter m_castFilter;
 

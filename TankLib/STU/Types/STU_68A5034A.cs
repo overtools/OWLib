@@ -8,17 +8,8 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x0201671C)]
         public teStructuredDataAssetRef<STU_68A5034A> m_0201671C;
 
-        [STUFieldAttribute(0xC0A83121, "m_skin")]
-        public teStructuredDataAssetRef<STU_68A5034A> m_skin;
-
-        [STUFieldAttribute(0x7F09E612)]
-        public teStructuredDataAssetRef<STU_68A5034A>[] m_7F09E612;
-
-        [STUFieldAttribute(0x9F657FFB)]
-        public teStructuredDataAssetRef<STU_68A5034A>[] m_9F657FFB;
-
-        [STUFieldAttribute(0x25989447, ReaderType = typeof(InlineInstanceFieldReader))]
-        public STU_B5261A29[] m_25989447;
+        [STUFieldAttribute(0xCDBF216C)]
+        public teStructuredDataAssetRef<STU_68A5034A> m_CDBF216C;
 
         [STUFieldAttribute(0xE7DE6A4B)]
         public teStructuredDataAssetRef<STU_68A5034A>[] m_E7DE6A4B;
@@ -29,49 +20,22 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xEE691D90, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_2135E8B7[] m_EE691D90;
 
-        [STUFieldAttribute(0x7DB92D38)]
-        public int[] m_7DB92D38;
-
-        [STUFieldAttribute(0xCBA4B39F)]
-        public teStructuredDataAssetRef<STU_68A5034A>[] m_CBA4B39F;
-
-        [STUFieldAttribute(0x690071AC)]
-        public teStructuredDataAssetRef<STU_68A5034A>[] m_690071AC;
-
-        [STUFieldAttribute(0x957ADFF3)]
-        public ulong m_957ADFF3;
-
-        [STUFieldAttribute(0x82FF1D0F)]
-        public ulong m_82FF1D0F;
-
-        [STUFieldAttribute(0xF5F7640A)]
-        public ulong m_F5F7640A;
-
         [STUFieldAttribute(0xC6B14E42)]
         public Enum_0B764400 m_C6B14E42;
 
         [STUFieldAttribute(0x4DA666FF)]
         public Enum_0B764400 m_4DA666FF;
 
-        [STUFieldAttribute(0xB7F17AEF)]
-        public Enum_ED4AE624 m_B7F17AEF;
+        [STUFieldAttribute(0x855C145A)]
+        public Enum_74783EE2 m_855C145A;
 
         [STUFieldAttribute(0xE4AACE6E)]
         public byte m_E4AACE6E;
-
-        [STUFieldAttribute(0x0ECC2AB8)]
-        public byte m_0ECC2AB8;
-
-        [STUFieldAttribute(0x159D1394)]
-        public byte m_159D1394;
 
         [STUFieldAttribute(0xB4D8D9BB)]
         public byte m_B4D8D9BB;
 
         [STUFieldAttribute(0xFF565DCF)]
         public byte m_FF565DCF;
-
-        [STUFieldAttribute(0xD9D3469B)]
-        public byte m_D9D3469B;
     }
 }

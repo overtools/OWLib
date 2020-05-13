@@ -7,9 +7,6 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xB3685B0D)]
         public teStructuredDataAssetRef<STUSound> m_B3685B0D;
 
-        [STUFieldAttribute(0xF7BBC834)]
-        public teStructuredDataAssetRef<STU_6BA402D7> m_F7BBC834;
-
         [STUFieldAttribute(0xBD1B72B9, "m_soundSwitch")]
         public teStructuredDataAssetRef<STUSoundSwitch> m_soundSwitch;
 

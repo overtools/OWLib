@@ -4,6 +4,9 @@
 namespace TankLib.STU.Types {
     [STUAttribute(0x017ED998, "STUGenericSettings_Sound_ClientApp")]
     public class STUGenericSettings_Sound_ClientApp : STUGenericSettings_Base {
+        [STUFieldAttribute(0xE6BCFF60)]
+        public teStructuredDataAssetRef<STUHero>[] m_E6BCFF60;
+
         [STUFieldAttribute(0x4CEF6760, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUSoundImportanceFactor m_4CEF6760;
 

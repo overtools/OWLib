@@ -300,8 +300,44 @@ namespace TankLib.STU.Types.Enums {
         x37FF4661 = 0x92,
         [STUFieldAttribute(0xFBAC9C34)]
         xFBAC9C34 = 0x93,
+        [STUFieldAttribute(0x1CFE9299)]
+        x1CFE9299 = 0x94,
+        [STUFieldAttribute(0x2B41C028)]
+        x2B41C028 = 0x95,
+        [STUFieldAttribute(0xAED43D4A)]
+        xAED43D4A = 0x96,
+        [STUFieldAttribute(0x9843980E)]
+        x9843980E = 0x97,
+        [STUFieldAttribute(0x3F5F724A)]
+        x3F5F724A = 0x98,
+        [STUFieldAttribute(0x8366BE3E)]
+        x8366BE3E = 0x99,
+        [STUFieldAttribute(0xD0F893A6)]
+        xD0F893A6 = 0x9A,
+        [STUFieldAttribute(0x4FA1B972)]
+        x4FA1B972 = 0x9B,
+        [STUFieldAttribute(0xDC18FFB5)]
+        xDC18FFB5 = 0x9C,
+        [STUFieldAttribute(0xF7EE3964)]
+        xF7EE3964 = 0x9D,
+        [STUFieldAttribute(0x55F07856)]
+        x55F07856 = 0x9E,
+        [STUFieldAttribute(0x3F52A817)]
+        x3F52A817 = 0x9F,
+        [STUFieldAttribute(0x14FB58AF)]
+        x14FB58AF = 0xA0,
+        [STUFieldAttribute(0xE46D0AED)]
+        xE46D0AED = 0xA1,
+        [STUFieldAttribute(0x613664A6)]
+        x613664A6 = 0xA2,
+        [STUFieldAttribute(0xA71B4644)]
+        xA71B4644 = 0xA3,
+        [STUFieldAttribute(0x497D0F7E)]
+        x497D0F7E = 0xA4,
+        [STUFieldAttribute(0x98F50777)]
+        x98F50777 = 0xA5,
         [STUFieldAttribute(0x0BAF7C79)]
-        x0BAF7C79 = 0x94,
+        x0BAF7C79 = 0xA6,
         [STUFieldAttribute(0xADC2B02C)]
         xADC2B02C = 0xFFFFFF,
     }

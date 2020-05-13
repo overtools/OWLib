@@ -52,8 +52,14 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xB1449DF7)]
         public teStructuredDataAssetRef<STUUnlock>[] m_B1449DF7;
 
+        [STUFieldAttribute(0x3A709228)]
+        public teStructuredDataAssetRef<STUUnlock>[] m_3A709228;
+
         [STUFieldAttribute(0x66C923AF, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_1A325379[] m_66C923AF;
+
+        [STUFieldAttribute(0x810E87D5)]
+        public teStructuredDataAssetRef<STUUnlock>[] m_810E87D5;
 
         [STUFieldAttribute(0x7FB46D96, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_2B17E5B4[] m_7FB46D96;
@@ -63,6 +69,9 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x679737B3)]
         public teStructuredDataAssetRef<STU_2B8093CD> m_679737B3;
+
+        [STUFieldAttribute(0xC5CC626A)]
+        public teStructuredDataAssetRef<STU_C87931B7> m_C5CC626A;
 
         [STUFieldAttribute(0xAB6047ED)]
         public float m_AB6047ED;
@@ -94,11 +103,17 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x9C833A7F)]
         public byte m_9C833A7F;
 
+        [STUFieldAttribute(0x042CE0C5)]
+        public byte m_042CE0C5;
+
         [STUFieldAttribute(0x0BB1E4C3)]
         public byte m_0BB1E4C3;
 
         [STUFieldAttribute(0x157AF68C)]
         public byte m_157AF68C;
+
+        [STUFieldAttribute(0x69DC4D43)]
+        public byte m_69DC4D43;
 
         [STUFieldAttribute(0x3A9D36A5)]
         public byte m_3A9D36A5;
@@ -108,9 +123,6 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0xB412D9AA)]
         public byte m_B412D9AA;
-
-        [STUFieldAttribute(0xF67DA48B)]
-        public byte m_F67DA48B;
 
         [STUFieldAttribute(0x58739879)]
         public byte m_58739879;

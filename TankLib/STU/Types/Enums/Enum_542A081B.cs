@@ -42,5 +42,9 @@ namespace TankLib.STU.Types.Enums {
         MapConstant = 0x11,
         [STUFieldAttribute(0x9FA37C09)]
         GamemodeConstant = 0x12,
+        [STUFieldAttribute(0x1A2634B4)]
+        x1A2634B4 = 0x13,
+        [STUFieldAttribute(0xCB43CF0D)]
+        xCB43CF0D = 0x14,
     }
 }

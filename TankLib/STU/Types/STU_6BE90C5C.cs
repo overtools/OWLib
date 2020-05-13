@@ -12,5 +12,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x151AD444, "m_publicSchema", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUStatescriptSchema m_publicSchema;
+
+        [STUFieldAttribute(0x36F7B64C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_21E27D68 m_36F7B64C;
     }
 }

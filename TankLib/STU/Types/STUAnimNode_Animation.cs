@@ -59,6 +59,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x881F239A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_B9FE55F9 m_881F239A;
 
+        [STUFieldAttribute(0xE68FF23C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_2A90F751 m_E68FF23C;
+
         [STUFieldAttribute(0x29AFF063, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_5861C542 m_29AFF063;
 

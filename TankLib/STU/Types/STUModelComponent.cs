@@ -10,6 +10,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x36F54327)]
         public teStructuredDataAssetRef<STUAnimBlendTree> m_36F54327;
 
+        [STUFieldAttribute(0xFD090EAD)]
+        public teStructuredDataAssetRef<STUAnimation> m_FD090EAD;
+
         [STUFieldAttribute(0x9C3F817E)]
         public teStructuredDataAssetRef<STUSkeleton> m_9C3F817E;
 

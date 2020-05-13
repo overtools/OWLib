@@ -41,6 +41,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x7E48C526, "m_breakable", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUBreakable m_breakable;
 
+        [STUFieldAttribute(0x78985272, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STU_BBBFC3C9 m_78985272;
+
         [STUFieldAttribute(0x87916047)]
         public Enum_790E517D m_87916047;
 

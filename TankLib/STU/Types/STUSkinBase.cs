@@ -15,5 +15,8 @@ namespace TankLib.STU.Types {
 
         [STUFieldAttribute(0x258A7D5C, "m_runtimeOverrides")]
         public teStructuredDataHashMap<STUSkinRuntimeOverride> m_runtimeOverrides;
+
+        [STUFieldAttribute(0x16051DC7)]
+        public ulong m_16051DC7;
     }
 }

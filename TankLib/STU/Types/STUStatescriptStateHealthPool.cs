@@ -8,29 +8,32 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0xFA3ECC43, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_FA3ECC43;
 
-        [STUFieldAttribute(0xBCFDD2E9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_BCFDD2E9;
+        [STUFieldAttribute(0x7BE02F89, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_7BE02F89;
 
         [STUFieldAttribute(0xAF872E86, "m_amount", ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_amount;
 
-        [STUFieldAttribute(0x0E8A5C8E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_0E8A5C8E;
+        [STUFieldAttribute(0xBCFDD2E9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_BCFDD2E9;
+
+        [STUFieldAttribute(0x69A20070, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_69A20070;
+
+        [STUFieldAttribute(0x4895B8B6, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_4895B8B6;
 
         [STUFieldAttribute(0x64839023, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_64839023;
+
+        [STUFieldAttribute(0x0E8A5C8E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        public STUConfigVar m_0E8A5C8E;
 
         [STUFieldAttribute(0xCEAB19E8, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_076E0DBA m_CEAB19E8;
 
         [STUFieldAttribute(0xC99FAFDD, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STU_076E0DBA m_C99FAFDD;
-
-        [STUFieldAttribute(0x4895B8B6, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_4895B8B6;
-
-        [STUFieldAttribute(0x7BE02F89, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUConfigVar m_7BE02F89;
 
         [STUFieldAttribute(0xFF79E783, ReaderType = typeof(EmbeddedInstanceFieldReader))]
         public STUConfigVar m_FF79E783;

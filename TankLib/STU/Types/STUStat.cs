@@ -41,6 +41,9 @@ namespace TankLib.STU.Types {
         [STUFieldAttribute(0x2FC4460C)]
         public Enum_CD0A8047 m_2FC4460C;
 
+        [STUFieldAttribute(0xF3507330)]
+        public Enum_3AA82AF1 m_F3507330;
+
         [STUFieldAttribute(0x0619C597, "m_type")]
         public STUStatType m_type;
 

@@ -6,8 +6,5 @@ namespace TankLib.STU.Types {
     public class STUUnlock_SprayPaint : STU_3021DDED {
         [STUFieldAttribute(0x1B25AB90, ReaderType = typeof(InlineInstanceFieldReader))]
         public STUUnlock_SprayPaintEffect m_1B25AB90;
-
-        [STUFieldAttribute(0xABFBD552, ReaderType = typeof(EmbeddedInstanceFieldReader))]
-        public STUUnlock_SprayPaintEffect m_ABFBD552;
     }
 }

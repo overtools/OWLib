@@ -6,5 +6,8 @@ namespace TankLib.STU.Types {
     public class STU_D2CD8F5A : STUAnimNode_BranchByCategory {
         [STUFieldAttribute(0x4C2A2F3C, ReaderType = typeof(InlineInstanceFieldReader))]
         public STU_15EF3A7E m_4C2A2F3C;
+
+        [STUFieldAttribute(0x446B5FAB, ReaderType = typeof(InlineInstanceFieldReader))]
+        public STU_15EF3A7E m_446B5FAB;
     }
 }
