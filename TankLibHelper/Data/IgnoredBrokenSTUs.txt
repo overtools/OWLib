@@ -1,4 +1,7 @@
 STU_7DC752C4 Unsupported SerializationType18 bsDataStore
+STU_11A69B4F Unsupported SerializationType18 bsDataStore
+STU_F76CB28A Unsupported SerializationType18 bsDataStore
+STU_35018E98 Inlines STU_11A69B4F (Non existant)
 STU_3295EB0E Embeds STU_8DF63EB2 (Non existant)
 STU_2BB2C217 Embeds STU_547BE49F (Broken)
 STU_E779527F Inherits STU_3295EB0E (Broken)
