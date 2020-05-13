@@ -1055,8 +1055,8 @@ namespace DataTool.FindLogic {
                         Find(info, unlockSpray.m_1B25AB90?.m_effect, replacements, context);
                         Find(info, unlockSpray.m_1B25AB90?.m_effectLook, replacements, context);
                         
-                        Find(info, unlockSpray.m_ABFBD552?.m_effect, replacements, context);
-                        Find(info, unlockSpray.m_ABFBD552?.m_effectLook, replacements, context);
+                        //Find(info, unlockSpray.m_ABFBD552?.m_effect, replacements, context);
+                        //Find(info, unlockSpray.m_ABFBD552?.m_effectLook, replacements, context);
                     } else if (cosmetic is STUUnlock_AvatarPortrait unlockIcon) {
                         Find(info, unlockIcon.m_1B25AB90?.m_effect, replacements, context);
                         Find(info, unlockIcon.m_1B25AB90?.m_effectLook, replacements, context);
