@@ -9,7 +9,8 @@
 9AF8,004,Weapon_AMAR_BioticRifle_ux,1
 ; Voice Groups,aka Stimulus, Set Id, Unknown Id
 79,08A,Ultimate,1
-31,079,Voicelines,1
+;31,079,Voicelines,1
+5E1,078,Sorry,1
 1CF,078,Hello,1
 2D4,078,Bye,1
 1D2,078,No,1
@@ -65,6 +66,7 @@ CD,078,Payload,1
 283,078,Damaged,1
 12F,078,Electrocuted,1
 113,078,Scream,1
+52B,078,Scream,1
 1,078,Death,1
 D,078,MatchTalk,1
 26F,078,LevelUp,1
