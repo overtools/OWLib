@@ -73,7 +73,7 @@ namespace DataTool.ToolLogic.Extract {
 
         public static string GetVoiceGroup(ulong stimulusGuid, ulong categoryGuid, ulong unkGuid)
         {
-            return GetGUIDName(stimulusGuid) ?? GetGUIDName(categoryGuid) ?? GetGUIDName(unkGuid);
+            return GetNullableGUIDName(stimulusGuid) ?? GetNullableGUIDName(categoryGuid) ?? GetNullableGUIDName(unkGuid);
         }
     }
 }
