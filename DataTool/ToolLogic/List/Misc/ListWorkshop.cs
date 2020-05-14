@@ -132,26 +132,30 @@ namespace DataTool.ToolLogic.List.Misc {
                            case STU_3FA24DEA ss:
                                @out.InferredType = "Dropdown";
                                @out.DropdownId = ss.m_7533CD4C;
-                               @out.Name = GetString(ss.m_B9AD8659);
                                break;
                            case STU_8504E8FE ss:
                                @out.InferredType = "ComparisonThing";
                                break;
                            case STU_CFF9EFAB ss:
-                               @out.InferredType = "SomeFakeDebugThingy";
-                               @out.Name = GetString(ss.m_B9AD8659);
+                               @out.InferredType = "ArrayThing";
                                break;
                            case STU_F654E6FB ss:
-                               @out.InferredType = "CustomString"; //Text formed from a selection of strings and specified Values
+                               @out.InferredType = "CustomString"; // Text formed from a selection of strings and specified Values
                                break;
                            case STU_218BCF68 ss:
-                               @out.InferredType = "CustomString2"; //Custom text with optional inserted Values
+                               @out.InferredType = "CustomString2"; // Custom text with optional inserted Values
                                break;
                            case STU_E08C5126 ss:
                                @out.InferredType = "Player"; // Only used on events??
                                break;
                            case STU_16886813 ss:
                                @out.InferredType = "Team"; // Only used on events??
+                               break;
+                           case STU_27CC2BBE ss:
+                               @out.InferredType = "SubroutineEvent";
+                               break;
+                           case STU_BE408E5C ss:
+                               @out.InferredType = "SubroutineThing";
                                break;
                            default:
                                Debugger.Break();

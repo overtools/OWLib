@@ -45,6 +45,6 @@ namespace TankLib.STU.Types.Enums {
         [STUFieldAttribute(0x1A2634B4)]
         x1A2634B4 = 0x13,
         [STUFieldAttribute(0xCB43CF0D)]
-        xCB43CF0D = 0x14,
+        ButtonConstant = 0x14,
     }
 }
