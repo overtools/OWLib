@@ -63,25 +63,31 @@ namespace DataTool.SaveLogic {
             }
             
             public void AddTask(Action action) {
-                //action();
-                m_pendingTasks.Add(Task.Run(() => {
-                    try {
-                        action();
-                    } catch (Exception e) {
-                        Logger.Error("Combo", $"Async exception: {e}");
-                    }
-                }));
+                if (Program.Flags?.DisableAsyncSave == true) {
+                    action();
+                } else {
+                    m_pendingTasks.Add(Task.Run(() => {
+                        try {
+                            action();
+                        } catch (Exception e) {
+                            Logger.Error("Combo", $"Async exception: {e}");
+                        }
+                    }));
+                }
             }
             
             public void AddTask(Func<Task> action) {
-                //action().Wait();
-                m_pendingTasks.Add(Task.Run(async () => {
-                    try {
-                        await action();
-                    } catch (Exception e) {
-                        Logger.Error("Combo", $"Async exception: {e}");
-                    }
-                }));
+                if (Program.Flags?.DisableAsyncSave == true) {
+                    action().Wait();
+                } else {
+                    m_pendingTasks.Add(Task.Run(async () => {
+                        try {
+                            await action();
+                        } catch (Exception e) {
+                            Logger.Error("Combo", $"Async exception: {e}");
+                        }
+                    }));
+                }
             }
         }
 
