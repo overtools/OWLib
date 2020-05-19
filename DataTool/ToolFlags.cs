@@ -88,7 +88,7 @@ namespace DataTool {
         [CLIFlag(Default = false, Flag = "extract-shaders", Help = "Extract shader files", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool ExtractShaders;
         
-        [CLIFlag(Default = false, Flag = "disable-async-save", Help = "Disable asynchronous saving", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        [CLIFlag(Default = false, Flag = "disable-async-save", Help = "Disable asynchronous saving", Hidden = false, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool DisableAsyncSave;
 
         public override bool Validate() => true;
