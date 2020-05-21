@@ -226,7 +226,7 @@ namespace DataTool.SaveLogic {
                 return basePath;
             }
             if (ScratchDBInstance.HasRecord(GUID)) {
-                return ScratchDBInstance[GUID].MakeRelative(cwd);
+                return ScratchDBInstance[GUID]?.MakeRelative(cwd);
             }
             return basePath;
         }

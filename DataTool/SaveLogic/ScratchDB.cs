@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMethodReturnValue.Global
+
 namespace DataTool.SaveLogic {
     public class ScratchDB : IEnumerable<KeyValuePair<ulong, ScratchDB.ScratchPath>> {
-        public class ScratchPath {
-            public string AbsolutePath { get; private set; }
-            private Uri AbsoluteUri { get; set; }
+        public struct ScratchPath {
+            public string AbsolutePath { get; }
+            private Uri AbsoluteUri { get; }
             public bool CheckedExistence { get; set; }
 
             public ScratchPath(string path) {
                 AbsolutePath = Path.GetFullPath(path);
                 AbsoluteUri = new Uri(AbsolutePath);
+                CheckedExistence = false;
             }
 
             public string MakeRelative(string cwd) {
@@ -23,7 +28,7 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private Dictionary<ulong, ScratchPath> Records = new Dictionary<ulong, ScratchPath>();
+        private readonly ConcurrentDictionary<ulong, ScratchPath> Records = new ConcurrentDictionary<ulong, ScratchPath>();
 
         public IEnumerator<KeyValuePair<ulong, ScratchPath>> GetEnumerator() {
             return Records.GetEnumerator();
@@ -36,44 +41,40 @@ namespace DataTool.SaveLogic {
         public bool HasRecord(ulong guid) {
             if (Records.ContainsKey(guid)) {
                 if (!Records[guid].CheckedExistence) {
-                    if (!File.Exists(Records[guid].AbsolutePath) &&
-                        !File.Exists(Path.ChangeExtension(Records[guid].AbsolutePath, "dds")) &&
-                        !File.Exists(Path.ChangeExtension(Records[guid].AbsolutePath, "tif")) &&
-                        !File.Exists(Path.ChangeExtension(Records[guid].AbsolutePath, "png")) &&
-                        !File.Exists(Path.ChangeExtension(Records[guid].AbsolutePath, "jpg"))) {
+                    if (!Records.TryGetValue(guid, out var record)) return false;
+                    
+                    if (!File.Exists(record.AbsolutePath) &&
+                        !File.Exists(Path.ChangeExtension(record.AbsolutePath, "dds")) &&
+                        !File.Exists(Path.ChangeExtension(record.AbsolutePath, "tif")) &&
+                        !File.Exists(Path.ChangeExtension(record.AbsolutePath, "png")) &&
+                        !File.Exists(Path.ChangeExtension(record.AbsolutePath, "jpg"))) {
                         RemoveRecord(guid);
                         return false;
-                    } else {
-                        Records[guid].CheckedExistence = true;
                     }
+
+                    record.CheckedExistence = true;
+                    SetRecord(guid, record);
                 }
                 return true;
             }
             return false;
         }
 
-        public void SetRecord(ulong guid, ScratchPath path) {
-            Records[guid] = path;
+        public bool SetRecord(ulong guid, ScratchPath path) {
+            return Records.TryAdd(guid, path);
         }
 
-        public ScratchPath GetRecord(ulong guid) {
-            if (HasRecord(guid)) {
-                return Records[guid];
-            }
-            return null;
+        public ScratchPath? GetRecord(ulong guid) {
+            return HasRecord(guid) && Records.TryGetValue(guid, out var record) ? record : default;
         }
 
         public bool RemoveRecord(ulong guid) {
-            return Records.Remove(guid);
+            return Records.TryRemove(guid, out _);
         }
 
-        public ScratchPath this[ulong guid] {
-            get {
-                return GetRecord(guid);
-            }
-            set {
-                SetRecord(guid, value);
-            }
+        public ScratchPath? this[ulong guid] {
+            get => GetRecord(guid);
+            set => SetRecord(guid, value.GetValueOrDefault());
         }
 
         public int Count => Records.Count;
@@ -88,7 +89,7 @@ namespace DataTool.SaveLogic {
             }
 
             string dir = Path.GetDirectoryName(dbPath);
-            if (!Directory.Exists(dir)) {
+            if (dir != null && !Directory.Exists(dir)) {
                 Directory.CreateDirectory(dir);
             }
 
@@ -129,10 +130,10 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private delegate void ScratchDBLogicCallback(ulong guid, ScratchPath scratchPath);
+        private delegate bool ScratchDBLogicCallback(ulong guid, ScratchPath scratchPath);
         private delegate void ScratchDBLogicMethod(BinaryReader reader, string dbPath, ScratchDBLogicCallback cb);
 
-        private List<ScratchDBLogicMethod> ScratchDBLogic = new List<ScratchDBLogicMethod>() {
+        private readonly List<ScratchDBLogicMethod> ScratchDBLogic = new List<ScratchDBLogicMethod>() {
             null,
             (reader, dbPath, cb) => {
                 ulong amount = reader.ReadUInt64();
