@@ -674,7 +674,7 @@ namespace DataTool.SaveLogic {
                 if(ScratchDBInstance.HasRecord(textureGUID)) {
                     return;
                 }
-                ScratchDBInstance[textureGUID] = new ScratchDB.ScratchPath($"{filePath}.{convertType}");
+                ScratchDBInstance[textureGUID] = new ScratchDB.ScratchPath($"{filePath}.{convertType}", true);
             }
 
             CreateDirectoryFromFile(path);

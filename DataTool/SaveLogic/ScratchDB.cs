@@ -16,10 +16,10 @@ namespace DataTool.SaveLogic {
             private Uri AbsoluteUri { get; }
             public bool CheckedExistence { get; set; }
 
-            public ScratchPath(string path) {
+            public ScratchPath(string path, bool checkedExistence) {
                 AbsolutePath = Path.GetFullPath(path);
                 AbsoluteUri = new Uri(AbsolutePath);
-                CheckedExistence = false;
+                CheckedExistence = checkedExistence;
             }
 
             public string MakeRelative(string cwd) {
@@ -140,7 +140,7 @@ namespace DataTool.SaveLogic {
                 for(ulong i = 0; i < amount; ++i) {
                     ulong guid = reader.ReadUInt64();
                     string path = reader.ReadString();
-                    cb(guid, new ScratchPath(path));
+                    cb(guid, new ScratchPath(path, false));
                 }
             },
             (reader, dbPath, cb) => {
@@ -151,7 +151,7 @@ namespace DataTool.SaveLogic {
                 for(ulong i = 0; i < amount; ++i) {
                     ulong guid = reader.ReadUInt64();
                     string path = reader.ReadString();
-                    cb(guid, new ScratchPath(path));
+                    cb(guid, new ScratchPath(path, false));
                 }
             }
         };
