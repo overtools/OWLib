@@ -271,6 +271,8 @@ namespace DataTool.ToolLogic.Extract {
             foreach (Unlock unlock in unlocks) {
                 SaveUnlock(flags, unlock, path, eventKey, config, tags, voiceSet, hero);
             }
+
+            SaveScratchDatabase();
         }
 
         public static void SaveUnlock(ICLIFlags flags, Unlock unlock, string path, string eventKey,

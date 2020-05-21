@@ -50,6 +50,7 @@ namespace DataTool.ToolLogic.Extract {
                 SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, name, "ShopCards"), context);
                 SaveLogic.Combo.Save(flags, Path.Combine(basePath, Container, name), context);
                 context.Wait();
+                SaveScratchDatabase();
             }
         }
     }

@@ -176,6 +176,10 @@ namespace DataTool {
         }
 
         public static void ShutdownMisc() {
+            SaveScratchDatabase();
+        }
+
+        public static void SaveScratchDatabase() {
             if (!string.IsNullOrWhiteSpace(Flags.ScratchDBPath)) {
                 var dbPath = Flags.ScratchDBPath;
                 if (!File.Exists(dbPath) || new DirectoryInfo(dbPath).Exists)
