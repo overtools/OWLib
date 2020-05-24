@@ -111,6 +111,11 @@ namespace TankLib {
             return $"{LongKey(guid):X12}.{Type(guid):X3}";
         }
 
+        /// <summary>String representation a GUID</summary>
+        public static string AsHexString(ulong guid) {
+            return $"0x{guid:X16}";
+        }
+        
         public override int GetHashCode() {
             return GUID.GetHashCode();
         }
