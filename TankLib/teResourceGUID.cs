@@ -17,7 +17,8 @@ namespace TankLib {
             Region   = 0x00000F8000000000,
             Platform = 0x0000F00000000000,
             Type     = 0x0FFF000000000000,
-            Engine   = 0xF000000000000000
+            Engine   = 0xF000000000000000,
+            Key      = 0x0000FFFFFFFFFFFF
         };
 
         public teResourceGUID(ulong guid) {
@@ -29,7 +30,7 @@ namespace TankLib {
         }
 
         public static ulong LongKey(ulong key) {
-            return Attribute(key, (AttributeEnum)0xFFFFFFFFFFFFUL);
+            return Attribute(key, AttributeEnum.Key);
         }
 
         /// <summary>Unique ID</summary>
@@ -61,12 +62,7 @@ namespace TankLib {
         public static ushort Type(ulong key) {
             ulong num = Attribute(key, AttributeEnum.Type) >> 48;
 
-            num = ((num >> 1) & 0x55555555) | ((num & 0x55555555) << 1);
-            num = ((num >> 2) & 0x33333333) | ((num & 0x33333333) << 2);
-            num = ((num >> 4) & 0x0F0F0F0F) | ((num & 0x0F0F0F0F) << 4);
-            num = ((num >> 8) & 0x00FF00FF) | ((num & 0x00FF00FF) << 8);
-            num = (num >> 16) | (num << 16);
-            num >>= 20;
+            num = FlipTypeBits(num);
 
             return (ushort)(num + 1);
         }
@@ -79,6 +75,58 @@ namespace TankLib {
         /// <summary>Reserved engine component of this GUID</summary>
         public static byte Engine(ulong key) {
             return (byte)(Attribute(key, AttributeEnum.Engine) >> 60);
+        }
+
+        public void SetAttribute(ulong value, AttributeEnum flags) {
+            var attr = (ulong) flags;
+            GUID &= ~attr;
+            GUID |= value & attr;
+        }
+
+        public void SetLongKey(ulong value) {
+            SetAttribute(value, AttributeEnum.Key);
+        }
+
+        public void SetIndex(uint value) {
+            SetAttribute(value, AttributeEnum.Index);
+        }
+
+        public void SetLocale(byte value) {
+            SetAttribute((ulong) value << 32, AttributeEnum.Locale);
+        }
+
+        public void SetReserved(byte value) {
+            SetAttribute((ulong) value << 37, AttributeEnum.Reserved);
+        }
+
+        public void SetRegion(byte value) {
+            SetAttribute((ulong) value << 39, AttributeEnum.Region);
+        }
+
+        public void SetPlatform(byte value) {
+            SetAttribute((ulong) value << 44, AttributeEnum.Platform);
+        }
+
+        public void SetType(ushort value) {
+            SetMangledType((ushort) FlipTypeBits((ulong) (value - 1)));
+        }
+
+        public void SetMangledType(ushort value) {
+            SetAttribute((ulong) value << 48, AttributeEnum.Type);
+        }
+
+        public void SetEngine(byte value) {
+            SetAttribute((ulong) value << 60, AttributeEnum.Engine);
+        }
+
+        private static ulong FlipTypeBits(ulong num) {
+            num = ((num >> 1) & 0x55555555) | ((num & 0x55555555) << 1);
+            num = ((num >> 2) & 0x33333333) | ((num & 0x33333333) << 2);
+            num = ((num >> 4) & 0x0F0F0F0F) | ((num & 0x0F0F0F0F) << 4);
+            num = ((num >> 8) & 0x00FF00FF) | ((num & 0x00FF00FF) << 8);
+            num = (num >> 16) | (num << 16);
+            num >>= 20;
+            return num;
         }
 
         /// <summary>Dump info about a guid</summary>
