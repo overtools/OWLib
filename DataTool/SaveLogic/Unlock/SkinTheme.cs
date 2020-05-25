@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DataTool.DataModels.Hero;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib;
+using TankLib.STU;
 using TankLib.STU.Types;
+using TankLib.STU.Types.Enums;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
@@ -51,6 +54,7 @@ namespace DataTool.SaveLogic.Unlock {
             
             if (skin is STUSkinTheme skinTheme) {
                 info.m_processExistingEntities = true;
+                List<Dictionary<ulong, ulong>> weaponReplacementStack = new List<Dictionary<ulong, ulong>>();
                 foreach (var weaponOverrideGUID in skinTheme.m_heroWeapons) {
                     STUHeroWeapon heroWeapon = GetInstance<STUHeroWeapon>(weaponOverrideGUID);
                     if (heroWeapon == null) continue;
@@ -59,7 +63,16 @@ namespace DataTool.SaveLogic.Unlock {
 
                     SetPreviewWeaponNames(info, weaponReplacements, hero.m_previewWeaponEntities);
                     SetPreviewWeaponNames(info, weaponReplacements, hero.m_C2FE396F);
+                    
+                    weaponReplacementStack.Add(weaponReplacements.Where(x => teResourceGUID.Type(x.Key) == 0x1A).ToDictionary(x => x.Key, x => x.Value));
                 }
+
+                for (var index = 0; index < weaponReplacementStack.Count; index++) {
+                    foreach (var pair in weaponReplacementStack[index].Where(pair => pair.Key != pair.Value && info.m_modelLooks.ContainsKey(pair.Value) && info.m_modelLooks[pair.Value].m_name == null)) {
+                        info.SetModelLookName(pair.Value, $"{(STUWeaponType)index:G}-{teResourceGUID.Index(pair.Value):X}");
+                    }
+                }
+
                 info.m_processExistingEntities = false;
             }
 
