@@ -237,8 +237,8 @@ namespace DataTool.ToolLogic.Extract {
                     foreach (var skin in hero.m_skinThemes) {
                         if (!config.ContainsKey("skin") || !config["skin"].ShouldDo(GetFileName(skin.m_5E9665E3)))
                             continue;
-                        SkinTheme.Save(flags, Path.Combine(heroPath, Unlock.GetTypeName(typeof(STUUnlock_SkinTheme)), 
-                            string.Empty, GetFileName(skin.m_5E9665E3)), skin, hero);
+
+                        SkinTheme.Save(flags, Path.Combine(heroPath, UnlockType.Skin.ToString(), string.Empty, GetFileName(skin.m_5E9665E3)), skin, hero);
                     }
                     continue;
                 }
@@ -312,7 +312,7 @@ namespace DataTool.ToolLogic.Extract {
                 }
             }
 
-            string thisPath = Path.Combine(path, unlock.GetTypeNameEnum(), eventKey, rarity, GetValidFilename(unlock.GetName()));
+            string thisPath = Path.Combine(path, unlock.Type.ToString(), eventKey, rarity, GetValidFilename(unlock.GetName()));
             
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SprayPaint))) {
                 SprayAndIcon.Save(flags, thisPath, unlock);
@@ -340,7 +340,7 @@ namespace DataTool.ToolLogic.Extract {
             }
             
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_PortraitFrame))) {
-                thisPath = Path.Combine(path, unlock.Type);
+                thisPath = Path.Combine(path, unlock.Type.ToString());
                 PortraitFrame.Save(flags, thisPath, unlock);
             }
         }
@@ -348,9 +348,12 @@ namespace DataTool.ToolLogic.Extract {
         private static bool ShouldDo(Unlock unlock, Dictionary<string, ParsedArg> config,
             Dictionary<string, TagExpectedValue> tags, Type unlockType) {
 
-            string type = Unlock.GetTypeName(unlockType);
-            string typeLower = type.ToLowerInvariant();
-            if (config == null) return unlock.Type == type;
+            UnlockType type = Unlock.GetUnlockType(unlockType);
+            string typeLower = type.ToString().ToLowerInvariant();
+
+            if (config == null)
+                return unlock.Type == type;
+
             return unlock.Type == type && config.ContainsKey(typeLower) &&
                    config[typeLower].ShouldDo(unlock.GetName(), tags);
         }

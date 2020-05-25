@@ -112,7 +112,7 @@ namespace DataTool.ToolLogic.Util {
                         }
                     }
 
-                    var key = "datatool.ux.valid_" + Unlock.GetTypeName(unlock.STU.GetType()).ToLowerInvariant() + "_names";
+                    var key = "datatool.ux.valid_" + unlock.Type.ToString().ToLowerInvariant() + "_names";
 
                     if (choice.Children == null) {
                         choice.Children = new DynamicChoicesContainer();

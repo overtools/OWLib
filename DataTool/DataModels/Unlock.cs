@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using TACTLib;
 using TankLib;
 using TankLib.STU;
 using TankLib.STU.Types;
@@ -48,13 +49,7 @@ namespace DataTool.DataModels {
         /// Friendly type name
         /// </summary>
         [DataMember]
-        public string Type;
-        
-        /// <summary>
-        /// Internal StructuredData
-        /// </summary>
-        [IgnoreDataMember]
-        public STU_3021DDED STU;
+        public UnlockType Type;
 
         /// <summary>
         /// DataTool specific Unlock Data Tag
@@ -63,7 +58,7 @@ namespace DataTool.DataModels {
         public string Tag;
 
         [DataMember]
-        public int CompetitiveCurrency;
+        public int Currency;
 
         [DataMember]
         public Enum_BABC4175 LootBoxType;
@@ -71,9 +66,15 @@ namespace DataTool.DataModels {
         [IgnoreDataMember]
         public bool IsTraditionalUnlock;
         
-        // These types are specific to certain unlocks so don't show them unless we're on unlock
-        public bool ShouldSerializeCompetitiveCurrency() => Type == "CompetitiveCurrency";
-        public bool ShouldSerializeLootBoxType() => Type == "LootBox";
+        /// <summary>
+        /// Internal StructuredData
+        /// </summary>
+        [IgnoreDataMember]
+        public STU_3021DDED STU;
+        
+        // These types are specific to certain unlocks so don't show them unless we're on that unlock
+        public bool ShouldSerializeLootBoxType() => Type == UnlockType.Lootbox;
+        public bool ShouldSerializeCurrency() => Type == UnlockType.CompetitiveCurrency || Type == UnlockType.Currency || Type == UnlockType.OverwatchLeagueCurrency;
         
         // These only really apply to "normal" unlocks and can be removed from others
         public bool ShouldSerializeAvailableIn() => IsTraditionalUnlock;
@@ -97,19 +98,29 @@ namespace DataTool.DataModels {
             AvailableIn = GetString(unlock.m_53145FAF);
             Rarity = unlock.m_rarity;
             Description = GetDescriptionString(unlock.m_3446F580);
-            Type = GetTypeName(unlock);
+            Type = GetTypeForUnlock(unlock);
             Tag = UnlockData.GetTagFor(guid);
-
-            // todo: maybe Type should be an enum??
-            IsTraditionalUnlock = Type != "LootBox" && Type != "CompetitiveCurrency" && Type != "Currency";
             
-            // Lootbox and competitive point unlocks have some additional relevant data
-            if (unlock is STUUnlock_CompetitiveCurrency compStu)
-                CompetitiveCurrency = compStu.m_760BF18E;
+            IsTraditionalUnlock = 
+                Type == UnlockType.Icon || Type == UnlockType.Spray || 
+                Type == UnlockType.Skin || Type == UnlockType.HighlightIntro || 
+                Type == UnlockType.VictoryPose || Type == UnlockType.VoiceLine;
 
-            if (unlock is STUUnlock_LootBox lootboxStu) {
-                Rarity = lootboxStu.m_2F922165;
-                LootBoxType = lootboxStu.m_lootboxType;
+            // Lootbox and currency unlocks have some additional relevant data
+            switch (unlock) {
+                case STUUnlock_CompetitiveCurrency stu1:
+                    Currency = stu1.m_760BF18E;
+                    break;
+                case STUUnlock_Currency stu2:
+                    Currency = stu2.m_currency;
+                    break;
+                case STUUnlock_OverwatchLeagueCurrency stu3:
+                    Currency = stu3.m_63A026AF;
+                    break;
+                case STUUnlock_LootBox lootboxStu:
+                    Rarity = lootboxStu.m_2F922165;
+                    LootBoxType = lootboxStu.m_lootboxType;
+                    break;
             }
         }
 
@@ -118,61 +129,65 @@ namespace DataTool.DataModels {
         }
 
         /// <summary>
-        /// Get user friendly type name
+        /// Returns the UnlockType for an Unlock
         /// </summary>
         /// <param name="unlock">Source unlock</param>
         /// <returns>Friendly type name</returns>
-        /// <exception cref="NotImplementedException">Unlock type is unknown</exception>
-        private static string GetTypeName(STUUnlock unlock) {
-            return GetTypeName(unlock.GetType());
+        private static UnlockType GetTypeForUnlock(STUUnlock unlock) {
+            return GetUnlockType(unlock.GetType());
         }
 
-        public string GetTypeNameEnum() {
-            return STU.m_A7B393BF.ToString();
-        }
-
-        public static string GetTypeName(Type type) {
+        /// <summary>
+        /// Returns the UnlockType for a STUUnlock Type
+        /// </summary>
+        /// <param name="type">unlock stu type</param>
+        /// <returns></returns>
+        public static UnlockType GetUnlockType(Type type) {
             if (type == typeof(STUUnlock_SkinTheme)) {
-                return "Skin";
+                return UnlockType.Skin;
             }
             if (type == typeof(STUUnlock_AvatarPortrait)) {
-                return "Icon";
+                return UnlockType.Icon;
             }
             if (type == typeof(STUUnlock_Emote)) {
-                return "Emote";
+                return UnlockType.Emote;
             }
             if (type == typeof(STUUnlock_Pose)) {
-                return "VictoryPose";
+                return UnlockType.VictoryPose;
             }
             if (type == typeof(STUUnlock_VoiceLine)) {
-                return "VoiceLine";
+                return UnlockType.VoiceLine;
             }
             if (type == typeof(STUUnlock_SprayPaint)) {
-                return "Spray";
+                return UnlockType.Spray;
             }
             if (type == typeof(STUUnlock_Currency)) {
-                return "Currency";
+                return UnlockType.Currency;
             }
             if (type == typeof(STUUnlock_PortraitFrame)) {
-                return "PortraitFrame";
+                return UnlockType.PortraitFrame;
             }
             if (type == typeof(STUUnlock_Weapon)) {
-                return "WeaponSkin";
+                return UnlockType.WeaponSkin;
             }
             if (type == typeof(STUUnlock_POTGAnimation)) {
-                return "HighlightIntro";
+                return UnlockType.HighlightIntro;
             }
             if (type == typeof(STUUnlock_HeroMod)) {
-                return "HeroMod";  // wtf
+                return UnlockType.HeroMod;
             }
             if (type == typeof(STUUnlock_CompetitiveCurrency)) {
-                return "CompetitiveCurrency";
+                return UnlockType.CompetitiveCurrency;
+            }
+            if (type == typeof(STUUnlock_OverwatchLeagueCurrency)) {
+                return UnlockType.OverwatchLeagueCurrency;
             }
             if (type == typeof(STUUnlock_LootBox)) {
-                return "LootBox";
+                return UnlockType.Lootbox;
             }
 
-            throw new NotImplementedException($"Unknown Unlock Type: {type}");
+            Logger.Debug("Unlock", $"Unknown unlock type ${type}");
+            return UnlockType.Unknown;
         }
 
         /// <summary>
@@ -203,6 +218,25 @@ namespace DataTool.DataModels {
         }
     }
 
+    public enum UnlockType {
+        Unknown, // :david:
+        Skin,
+        Icon,
+        Spray,
+        Emote,
+        VictoryPose,
+        HighlightIntro,
+        VoiceLine,
+        WeaponSkin,
+        Lootbox,
+        PortraitFrame, // borders
+        Currency,
+        CompetitiveCurrency, // competitive points
+        OverwatchLeagueCurrency, // owl tokens
+        HeroMod, // wot? unused?
+    }
+
+    // todo: fix this lmao :zingy:
     public static class UnlockData {
         public static readonly Dictionary<string, ulong[]> CuratedGUID = new Dictionary<string, ulong[]> {
             { "sg2018",

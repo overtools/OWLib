@@ -211,6 +211,7 @@
     <Compile Include="ToolLogic\List\Debug\ListDebugHeroSettings.cs" />
     <Compile Include="ToolLogic\List\ListAbilities.cs" />
     <Compile Include="ToolLogic\List\ListAchievements.cs" />
+    <Compile Include="ToolLogic\List\ListAllUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListFlags.cs" />
     <Compile Include="ToolLogic\List\ListHeroes.cs" />
     <Compile Include="ToolLogic\List\ListGeneralUnlocks.cs" />
