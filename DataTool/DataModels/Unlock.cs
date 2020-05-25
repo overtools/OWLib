@@ -108,13 +108,13 @@ namespace DataTool.DataModels {
 
             // Lootbox and currency unlocks have some additional relevant data
             switch (unlock) {
-                case Unk_STUUnlock_CompetitiveCurrency stu1:
+                case STUUnlock_CompetitiveCurrency stu1:
                     Currency = stu1.m_760BF18E;
                     break;
                 case STUUnlock_Currency stu2:
                     Currency = stu2.m_currency;
                     break;
-                case STUUnlock_OverwatchLeagueCurrency stu3:
+                case Unk_STUUnlock_OverwatchLeagueCurrency stu3:
                     Currency = stu3.m_63A026AF;
                     break;
                 case STUUnlock_LootBox lootboxStu:
@@ -176,10 +176,10 @@ namespace DataTool.DataModels {
             if (type == typeof(STUUnlock_HeroMod)) {
                 return UnlockType.HeroMod;
             }
-            if (type == typeof(Unk_STUUnlock_CompetitiveCurrency)) {
+            if (type == typeof(STUUnlock_CompetitiveCurrency)) {
                 return UnlockType.CompetitiveCurrency;
             }
-            if (type == typeof(STUUnlock_OverwatchLeagueCurrency)) {
+            if (type == typeof(Unk_STUUnlock_OverwatchLeagueCurrency)) {
                 return UnlockType.OverwatchLeagueCurrency;
             }
             if (type == typeof(STUUnlock_LootBox)) {

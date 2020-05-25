@@ -2,8 +2,8 @@
 
 // ReSharper disable All
 namespace TankLib.STU.Types {
-    [STUAttribute(0xF2E74AF9)]
-    public class STUUnlock_OverwatchLeagueCurrency : STU_895A2A7A {
+    [STUAttribute(0xF2E74AF9, "Unk_STUUnlock_OverwatchLeagueCurrency")]
+    public class Unk_STUUnlock_OverwatchLeagueCurrency : STU_895A2A7A {
         [STUFieldAttribute(0x63A026AF)]
         public int m_63A026AF;
     }
