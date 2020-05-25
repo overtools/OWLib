@@ -117,7 +117,7 @@ namespace ReplayMp4Tool {
                 var heroStu = STUHelper.GetInstance<STUHero>(replayInfo.Header.HeroGuid);
                 var hero = new Hero(heroStu);
                 var unlocks = new ProgressionUnlocks(heroStu);
-                var skins = unlocks.GetUnlocksOfType("Skin");
+                var skins = unlocks.GetUnlocksOfType(UnlockType.Skin);
                 var skinTheme = skins.FirstOrDefault(skin => ((STUUnlock_SkinTheme) skin.STU)?.m_skinTheme == replayInfo.Header.SkinGuid);
 
                 ulong mapHeaderGuid = (replayInfo.Header.MapGuid & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;

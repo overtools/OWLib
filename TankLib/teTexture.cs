@@ -142,8 +142,7 @@ namespace TankLib {
             if (Header.PayloadCount - offset - 1 < 0) return new teResourceGUID(0);
             // ulong payloadGUID = (textureGUID & 0xFFF0FFFFFFFFUL) | ((ulong)(byte)(Header.PayloadCount - offset - 1) << 32) | 0x0320000000000000UL;
             // so basically: thing | (payloadIdx & 0xF) << 32) | 0x320000000000000i64
-            var payloadGUID = new teResourceGUID(teResourceGUID.Index(textureGUID));
-            payloadGUID.SetPlatform(teResourceGUID.Platform(textureGUID));
+            var payloadGUID = new teResourceGUID(textureGUID & 0xFFF0FFFFFFFFUL);
             payloadGUID.SetType(0x4D);
             payloadGUID.SetLocale((byte)(Header.PayloadCount - offset - 1));
             

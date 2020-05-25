@@ -5521,7 +5521,7 @@
     <Compile Include="STU\Types\STU_F2943064.cs" />
     <Compile Include="STU\Types\STU_F2A52D8C.cs" />
     <Compile Include="STU\Types\STU_F2C55363.cs" />
-    <Compile Include="STU\Types\STU_F2E74AF9.cs" />
+    <Compile Include="STU\Types\Unk_STUUnlock_OverwatchLeagueCurrency.cs" />
     <Compile Include="STU\Types\STU_F2EEFA75.cs" />
     <Compile Include="STU\Types\STU_F3104738.cs" />
     <Compile Include="STU\Types\STU_F312D164.cs" />

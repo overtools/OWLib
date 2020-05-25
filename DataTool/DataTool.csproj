@@ -179,6 +179,7 @@
     <Compile Include="ToolLogic\Dbg\DebugKeyTest.cs" />
     <Compile Include="ToolLogic\Dbg\DebugVoiceStimulus.cs" />
     <Compile Include="ToolLogic\Dump\Dump004.cs" />
+    <Compile Include="ToolLogic\Dump\DumpAllLocaleStrings.cs" />
     <Compile Include="ToolLogic\Dump\DumpFileLists.cs" />
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="ToolLogic\List\Debug\ListDebugHeroSettings.cs" />
     <Compile Include="ToolLogic\List\ListAbilities.cs" />
     <Compile Include="ToolLogic\List\ListAchievements.cs" />
+    <Compile Include="ToolLogic\List\ListAllUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListFlags.cs" />
     <Compile Include="ToolLogic\List\ListHeroes.cs" />
     <Compile Include="ToolLogic\List\ListGeneralUnlocks.cs" />
