@@ -55,16 +55,17 @@ namespace DataTool.SaveLogic.Unlock {
             if (skin is STUSkinTheme skinTheme) {
                 info.m_processExistingEntities = true;
                 List<Dictionary<ulong, ulong>> weaponReplacementStack = new List<Dictionary<ulong, ulong>>();
-                foreach (var weaponOverrideGUID in skinTheme.m_heroWeapons) {
+                for (var index = 0; index < skinTheme.m_heroWeapons.Length; index++) {
+                    var weaponOverrideGUID = skinTheme.m_heroWeapons[index];
                     STUHeroWeapon heroWeapon = GetInstance<STUHeroWeapon>(weaponOverrideGUID);
                     if (heroWeapon == null) continue;
 
                     Dictionary<ulong, ulong> weaponReplacements = GetReplacements(heroWeapon);
 
-                    SetPreviewWeaponNames(info, weaponReplacements, hero.m_previewWeaponEntities);
-                    SetPreviewWeaponNames(info, weaponReplacements, hero.m_C2FE396F);
-                    
-                    weaponReplacementStack.Add(weaponReplacements.Where(x => teResourceGUID.Type(x.Key) == 0x1A).ToDictionary(x => x.Key, x => x.Value));
+                    SetPreviewWeaponNames(info, weaponReplacements, hero.m_previewWeaponEntities, index);
+                    SetPreviewWeaponNames(info, weaponReplacements, hero.m_C2FE396F, index);
+
+                    weaponReplacementStack.Add(weaponReplacements == null ? new Dictionary<ulong, ulong>() : weaponReplacements.Where(x => teResourceGUID.Type(x.Key) == 0x1A).ToDictionary(x => x.Key, x => x.Value));
                 }
 
                 for (var index = 0; index < weaponReplacementStack.Count; index++) {
@@ -119,7 +120,7 @@ namespace DataTool.SaveLogic.Unlock {
             LoudLog("\t\tDone");
         }
 
-        private static void SetPreviewWeaponNames(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> weaponReplacements, STU_A0872511[] entities) {
+        private static void SetPreviewWeaponNames(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> weaponReplacements, STU_A0872511[] entities, int index) {
             if (entities == null) return;
             foreach (STU_A0872511 weaponEntity in entities) {
                 FindLogic.Combo.Find(info, weaponEntity.m_entityDefinition, weaponReplacements);
@@ -128,6 +129,12 @@ namespace DataTool.SaveLogic.Unlock {
                 Loadout loadout = Loadout.GetLoadout(weaponEntity.m_loadout);
                 if (loadout == null) continue;
                 info.SetEntityName(weaponEntity.m_entityDefinition, $"{loadout.Name}-{teResourceGUID.Index(weaponEntity.m_entityDefinition)}");
+
+                if ((weaponReplacements == null || index == 0) && info.m_entities.TryGetValue(weaponEntity.m_entityDefinition, out var entity) && info.m_models.TryGetValue(entity.m_modelGUID, out var model)) {
+                    foreach (var modellook in model.m_modelLooks) {
+                        info.SetModelLookName(modellook, $"{(STUWeaponType)index:G}-{teResourceGUID.Index(modellook):X}");
+                    }
+                }
             }
         }
 
