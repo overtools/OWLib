@@ -1107,7 +1107,7 @@
     <Compile Include="STU\Types\STUUnlock.cs" />
     <Compile Include="STU\Types\STUUnlocks.cs" />
     <Compile Include="STU\Types\STUUnlock_AvatarPortrait.cs" />
-    <Compile Include="STU\Types\STUUnlock_CompetitiveCurrency.cs" />
+    <Compile Include="STU\Types\Unk_STUUnlock_CompetitiveCurrency.cs" />
     <Compile Include="STU\Types\STUUnlock_Currency.cs" />
     <Compile Include="STU\Types\STUUnlock_Emote.cs" />
     <Compile Include="STU\Types\STUUnlock_HeroMod.cs" />
