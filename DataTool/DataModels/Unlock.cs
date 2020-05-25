@@ -74,7 +74,7 @@ namespace DataTool.DataModels {
         
         // These types are specific to certain unlocks so don't show them unless we're on that unlock
         public bool ShouldSerializeLootBoxType() => Type == UnlockType.Lootbox;
-        public bool ShouldSerializeCurrency() => Type == UnlockType.CompetitiveCurrency || Type == UnlockType.Currency || Type == UnlockType.OverwatchLeagueCurrency;
+        public bool ShouldSerializeCurrency() => Type == UnlockType.CompetitiveCurrency || Type == UnlockType.Currency || Type == UnlockType.OWLToken;
         
         // These only really apply to "normal" unlocks and can be removed from others
         public bool ShouldSerializeAvailableIn() => IsTraditionalUnlock;
@@ -114,7 +114,7 @@ namespace DataTool.DataModels {
                 case STUUnlock_Currency stu2:
                     Currency = stu2.m_currency;
                     break;
-                case Unk_STUUnlock_OverwatchLeagueCurrency stu3:
+                case STUUnlock_OWLToken stu3:
                     Currency = stu3.m_63A026AF;
                     break;
                 case STUUnlock_LootBox lootboxStu:
@@ -179,8 +179,8 @@ namespace DataTool.DataModels {
             if (type == typeof(STUUnlock_CompetitiveCurrency)) {
                 return UnlockType.CompetitiveCurrency;
             }
-            if (type == typeof(Unk_STUUnlock_OverwatchLeagueCurrency)) {
-                return UnlockType.OverwatchLeagueCurrency;
+            if (type == typeof(STUUnlock_OWLToken)) {
+                return UnlockType.OWLToken;
             }
             if (type == typeof(STUUnlock_LootBox)) {
                 return UnlockType.Lootbox;
@@ -230,9 +230,9 @@ namespace DataTool.DataModels {
         WeaponSkin,
         Lootbox,
         PortraitFrame, // borders
-        Currency,
+        Currency, // gold
         CompetitiveCurrency, // competitive points
-        OverwatchLeagueCurrency, // owl tokens
+        OWLToken,
         HeroMod, // wot? unused?
     }
 
