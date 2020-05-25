@@ -179,6 +179,7 @@
     <Compile Include="ToolLogic\Dbg\DebugKeyTest.cs" />
     <Compile Include="ToolLogic\Dbg\DebugVoiceStimulus.cs" />
     <Compile Include="ToolLogic\Dump\Dump004.cs" />
+    <Compile Include="ToolLogic\Dump\DumpAllLocaleStrings.cs" />
     <Compile Include="ToolLogic\Dump\DumpFileLists.cs" />
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
