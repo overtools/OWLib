@@ -171,6 +171,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolAttribute.cs" />
+    <Compile Include="ToolLogic\Dbg\DebugDumpSTU.cs" />
     <Compile Include="ToolLogic\Dbg\DebugEffect.cs" />
     <Compile Include="ToolLogic\Dbg\DebugMapDump.cs" />
     <Compile Include="ToolLogic\Dbg\DebugModelDump.cs" />

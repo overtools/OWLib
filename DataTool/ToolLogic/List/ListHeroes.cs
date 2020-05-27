@@ -32,8 +32,12 @@ namespace DataTool.ToolLogic.List {
                 
                 Log($"{indentLevel + 1}Size: {hero.Value.Size}");
                 
-                TankLib.Helpers.Logger.Log24Bit(ConsoleSwatch.ColorReset, null, false, Console.Out, null, $"{indentLevel + 1}Color: {hero.Value.GalleryColor.ToHex()} ");
+                TankLib.Helpers.Logger.Log24Bit(ConsoleColor.White.AsDOSColor().AsXTermColor().ToForeground(), null, false, Console.Out, null, $"{indentLevel + 1}Color: {hero.Value.GalleryColor.ToHex()} ");
                 TankLib.Helpers.Logger.Log24Bit(hero.Value.GalleryColor.ToForeground(), null, true, Console.Out, null, "██████");
+
+                
+                TankLib.Helpers.Logger.Log24Bit(ConsoleColor.White.AsDOSColor().AsXTermColor().ToForeground(), null, false, Console.Out, null, $"{indentLevel + 1}sRGB Color: {hero.Value.GalleryColor.ToNonLinear().ToHex()} ");
+                TankLib.Helpers.Logger.Log24Bit(hero.Value.GalleryColor.ToNonLinear().ToForeground(), null, true, Console.Out, null, "██████");
 
                 if (hero.Value.Loadouts != null) {
                     Log($"{indentLevel + 1}Loadouts:");
