@@ -372,6 +372,7 @@ F3A63FB4, STUTip
 6760479E, STUUnlock
 614BC677, STUUnlock_Currency
 136D45F1, STUUnlock_CompetitiveCurrency
+F2E74AF9, STUUnlock_OWLToken
 C294A43B, STUUnlock_LootBox
 0B517D2E, STUUnlock_Emote
 C6A72877, STUUnlock_Pose
@@ -468,5 +469,3 @@ E9DB72FF, STUCriteria_OnMap
 BDD783B9, STUCriteria_Team
 C27E676E, STUCriteria_PlayerLevel
 D931E2CF, STUCriteria_IsHero
-
-F2E74AF9, Unk_STUUnlock_OverwatchLeagueCurrency
