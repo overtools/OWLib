@@ -797,8 +797,10 @@ namespace DataTool.SaveLogic {
                 string line = await pProcess.StandardOutput.ReadToEndAsync();
                     
                 if (line.Contains("FAILED")) {
-                    s_texurePrepareSemaphore.Release();
-                    throw new Exception($"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
+                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                        WriteFile(convertedStream, $"{filePath}.dds");
+                    }
+                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
                 }
                 
                 s_texurePrepareSemaphore.Release();
