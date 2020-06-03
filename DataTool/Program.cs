@@ -164,14 +164,16 @@ namespace DataTool {
                 Logger.Warn("ScratchDB", "Will attempt to deduplicate files if extracting...");
                 if (!string.IsNullOrWhiteSpace(Flags.ScratchDBPath)) {
                     Logger.Warn("ScratchDB", "Loading Scratch database...");
-                    if (!File.Exists(dbPath) || new DirectoryInfo(dbPath).Exists) 
+                    if (!File.Exists(dbPath) || new DirectoryInfo(dbPath).Exists)
                         dbPath = Path.Combine(Path.GetFullPath(Flags.ScratchDBPath), "Scratch.db");
 
                     Combo.ScratchDBInstance.Load(dbPath);
                 }
             }
 
-            IO.LoadGUIDTable(Flags.OnlyCanonical);
+            if (!Flags.NoGuidNames)
+                IO.LoadGUIDTable(Flags.OnlyCanonical);
+
             Sound.WwiseBank.GetReady();
         }
 
@@ -231,7 +233,7 @@ namespace DataTool {
             BuildVersion = uint.Parse(Client.InstallationInfo.Values["Version"].Split('.').Last());
             if (BuildVersion < 39028)
                 Logger.Error("Core", "DataTool doesn't support Overwatch versions below 1.14. Please use OverTool.");
-            else if (BuildVersion < 56957) 
+            else if (BuildVersion < 56957)
                 Logger.Error("Core", "This version of DataTool doesn't support versions of Overwatch below 1.35. Please downgrade DataTool.");
 
             InitTrackedFiles();
@@ -325,7 +327,7 @@ namespace DataTool {
                                       ?.MakeGenericMethod(flags)
                                       .Invoke(null, new object[] { null, true });
                 } else {
-                    // 
+                    //
                 }
             }
         }
