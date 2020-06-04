@@ -108,9 +108,9 @@ namespace DataTool.ToolLogic.List.Misc {
                                @out.UnkEnum = ss.m_444416F6;
                                @out.Min = ss.m_min;
                                @out.Max = ss.m_max;
-                               @out.InputId = ss.m_464FB148;
+                               @out.DefaultValue = ss.m_464FB148;
                                @out.UnkByte = ss.m_89C93A57;
-                               @out.DefaultValue = ss.m_D62358FA;
+                               @out.DefaultNumberValue = ss.m_D62358FA;
                                break;
                            case STU_8302E7AC ss:
                                @out.InferredType = "NumberConstant";
@@ -203,14 +203,14 @@ namespace DataTool.ToolLogic.List.Misc {
             public string Description;
 
             public teResourceGUID DropdownId;
-
-            public teResourceGUID InputId;
             public Enum_542A081B InputType;
             public Enum_43D38C2E UnkEnum;
+            public teResourceGUID DefaultValue;
+            public float DefaultNumberValue;
             public float Max;
             public float Min;
-            public byte UnkByte;
-            public float DefaultValue;
+            public float UnkByte;
+
 
             // utf8 doesnt really support polymorphism so.... we gotta do this
             public bool ShouldSerializeDropdownId() => InferredType == "Dropdown";
