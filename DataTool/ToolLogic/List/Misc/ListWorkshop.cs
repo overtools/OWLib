@@ -16,7 +16,7 @@ namespace DataTool.ToolLogic.List.Misc {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
 
-            if (toolFlags is ListFlags flags)       
+            if (toolFlags is ListFlags flags)
                 OutputJSON(data, flags);
 
         }
@@ -157,6 +157,9 @@ namespace DataTool.ToolLogic.List.Misc {
                            case STU_BE408E5C ss:
                                @out.InferredType = "SubroutineThing";
                                break;
+                           case STU_EE41F5B8 ss:
+                               @out.InferredType = "ButtonConstant";
+                               break;
                            default:
                                Debugger.Break();
                                break;
@@ -174,7 +177,7 @@ namespace DataTool.ToolLogic.List.Misc {
             public IEnumerable<WorkshopDropdownDefinition> Dropdowns;
             public IEnumerable<string> TextOptions;
         }
-        
+
         public class WorkshopDefinition {
             public string DisplayName;
             public string Description;
@@ -198,7 +201,7 @@ namespace DataTool.ToolLogic.List.Misc {
             public string STU;
             public string Name;
             public string Description;
-            
+
             public teResourceGUID DropdownId;
 
             public teResourceGUID InputId;
