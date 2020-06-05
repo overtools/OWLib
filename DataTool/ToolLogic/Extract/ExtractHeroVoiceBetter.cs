@@ -3,6 +3,7 @@ using System.IO;
 using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
+using DataTool.Helper;
 using DataTool.JSON;
 using TankLib;
 using TankLib.STU.Types;
@@ -10,7 +11,7 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.Extract {
-    
+
     [Tool("extract-hero-voice-better", Description = "Extracts hero voicelines but groups them a bit better.", CustomFlags = typeof(ExtractFlags))]
     class ExtractHeroVoiceBetter : JSONTool, ITool {
         private const string Container = "BetterHeroVoice";
@@ -27,8 +28,9 @@ namespace DataTool.ToolLogic.Extract {
                 var hero = GetInstance<STUHero>(key);
                 var progression = new ProgressionUnlocks(hero);
                 if (progression.LootBoxesUnlocks == null) continue; // no NPCs thanks
-                
+
                 string heroNameActual = GetValidFilename((GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(key)}").TrimEnd(' '));
+                Logger.Log($"Processing {heroNameActual}");
                 var voiceSetComponent = GetInstance<STUVoiceSetComponent>(hero.m_gameplayEntity);
                 if (voiceSetComponent?.m_voiceDefinition == null) continue;
 
@@ -42,12 +44,11 @@ namespace DataTool.ToolLogic.Extract {
                         foreach (var voiceLineInstance in voicelineInstanceInfo.Value) {
                             var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
                             if (stimulus == null) continue;
-                            
+
                             var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E) ?? "Unknown";
-                            
                             var soundFilesCombo = new Combo.ComboInfo();
                             var soundFilesContext = new SaveLogic.Combo.SaveContext(soundFilesCombo);
-                            
+
                             foreach (var soundFile in voiceLineInstance.SoundFiles) {
                                 Combo.Find(soundFilesCombo, soundFile);
                             }
@@ -61,7 +62,7 @@ namespace DataTool.ToolLogic.Extract {
                                 if (!flags.GroupByHero) {
                                     filename = $"{heroNameActual}-{soundInfo.GetName()}";
                                 }
-                                
+
                                 SaveLogic.Combo.SaveSoundFile(flags, path, soundFilesContext, soundInfo.m_GUID, true, filename);
                             }
                             soundFilesContext.Wait();
