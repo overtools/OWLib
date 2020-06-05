@@ -11,8 +11,11 @@ using BCFF;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.JSON;
 using DataTool.ToolLogic.Extract;
+using DataTool.ToolLogic.List;
 using TankLib;
+using TankLib.Chunks;
 using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
 using Logger = TankLib.Helpers.Logger;
@@ -360,11 +363,13 @@ namespace DataTool.SaveLogic {
         public static void SaveModel(ICLIFlags flags, string path, SaveContext info, ulong modelGUID) {
             bool convertModels = true;
             bool doRefpose = false;
+            bool doStu = false;
             byte lod = 1;
 
             if (flags is ExtractFlags extractFlags) {
                 convertModels = !extractFlags.RawModels  && !extractFlags.Raw;
                 doRefpose = extractFlags.ExtractRefpose;
+                doStu = extractFlags.ExtractModelStu;
                 lod = extractFlags.LOD;
                 if (extractFlags.SkipModels) return;
             }
@@ -400,6 +405,12 @@ namespace DataTool.SaveLogic {
                             var refpose = new RefPoseSkeleton(chunkedData);
                             refpose.Write(fileStream);
                         }
+                    }
+
+                    if (doStu) {
+                        var stu = chunkedData.GetChunks<teModelChunk_STU>().Select(x => x.StructuredData).ToArray();
+                        string stuPath = Path.Combine(modelDirectory, modelInfo.GetNameIndex() + ".json");
+                        JSONTool.OutputJSONAlt(stu, new ListFlags {Output = stuPath}, false);
                     }
                 }
             } else {

@@ -40,6 +40,9 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "extract-refpose", Help = "Extract skeleton refposes", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ExtractRefpose;
         
+        [CLIFlag(Default = false, Flag = "extract-mstu", Help = "Extract model STU", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool ExtractModelStu;
+        
         [CLIFlag(Default = false, Flag = "raw", Help = "Skip all conversion", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool Raw;
 

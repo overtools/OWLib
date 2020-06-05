@@ -10,7 +10,7 @@ using static DataTool.Helper.Logger;
 
 namespace DataTool.JSON {
     public class JSONTool {
-        public void OutputJSON(object jObj, ListFlags toolFlags) {
+        public static void OutputJSON(object jObj, ListFlags toolFlags, bool log = true) {
             try {
                 CompositeResolver.RegisterAndSetAsDefault(new IJsonFormatter[] {
                     new ResourceGUIDFormatter()
@@ -25,7 +25,7 @@ namespace DataTool.JSON {
             if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
                 byte[] pretty =  Utf8Json.JsonSerializer.PrettyPrintByteArray(json);
 
-                Log("Writing to {0}", toolFlags.Output);
+                if(log) Log("Writing to {0}", toolFlags.Output);
 
                 CreateDirectoryFromFile(toolFlags.Output);
 
@@ -42,14 +42,14 @@ namespace DataTool.JSON {
 
         // Outputs JSON using JSON.net
         // Might not output STUs and GUIDs the same as the other one but it supports object inheritance better
-        public void OutputJSONAlt(object jObj, ListFlags toolFlags) {
+        public static void OutputJSONAlt(object jObj, ListFlags toolFlags, bool log = true) {
             var serializeSettings = new JsonSerializerSettings();
             serializeSettings.Converters.Add(new StringEnumConverter());
             
             string json = JsonConvert.SerializeObject(jObj, Formatting.Indented, serializeSettings);
             
             if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
-                Log("Writing to {0}", toolFlags.Output);
+                if(log) Log("Writing to {0}", toolFlags.Output);
 
                 CreateDirectoryFromFile(toolFlags.Output);
 
