@@ -12,13 +12,13 @@ namespace DataTool.DataModels.Hero {
     public class Hero {
         [DataMember]
         public teResourceGUID GUID;
-        
+
         [DataMember]
         public string Name;
-        
+
         [DataMember]
         public string Description;
-        
+
         [DataMember]
         public string Class;
 
@@ -27,22 +27,25 @@ namespace DataTool.DataModels.Hero {
 
         [DataMember]
         public Enum_C1DAF32A Size;
-        
+
         [DataMember]
-        public bool IsHero;
-        
+        public string Color;
+
         [DataMember]
-        public bool SupportsAi;
+        public string sRGBColor;
 
         [DataMember]
         public teColorRGBA GalleryColor;
 
         [DataMember]
-        public List<LoadoutLite> Loadouts;
-        
+        public bool IsHero;
+
         [DataMember]
-        public List<SkinTheme> SkinThemes;
-        
+        public bool SupportsAi;
+
+        [DataMember]
+        public List<LoadoutLite> Loadouts;
+
         public Hero(ulong key) {
             STUHero stu = GetInstance<STUHero>(key);
             if (stu == null) return;
@@ -61,6 +64,8 @@ namespace DataTool.DataModels.Hero {
             Gender = hero.m_gender;
             Size = hero.m_heroSize;
             GalleryColor = hero.m_heroColor;
+            Color = GalleryColor.ToHex();
+            sRGBColor = GalleryColor.ToNonLinear().ToHex();
             SupportsAi = hero.m_906C3711 > 0;
             IsHero = hero.m_62746D34 > 0;
 
@@ -70,7 +75,7 @@ namespace DataTool.DataModels.Hero {
             //        SkinThemes.Add(new HeroSkinTheme(skinTheme));
             //    }
             //}
-            
+
             if (hero.m_heroLoadout != null) {
                 Loadouts = new List<LoadoutLite>();
                 foreach (teResourceGUID loadoutGUID in hero.m_heroLoadout) {
