@@ -21,8 +21,20 @@ namespace DataTool.ToolLogic.List.Misc {
 
         }
 
+        private static Dictionary<ulong, string> _valuesNameDictById = new Dictionary<ulong, string>();
+
         private static WorkshopContainer GetData() {
             var @return = new WorkshopContainer();
+
+            foreach (ulong key in TrackedFiles[0x54]) {
+                var stu = STUHelper.GetInstance<STU_A21A7043>(key);
+                if (stu == null) continue;
+
+                foreach (var val in stu.m_values) {
+                    if (!_valuesNameDictById.ContainsKey(val.m_identifier))
+                        _valuesNameDictById[val.m_identifier] = GetString(val.m_displayName);
+                }
+            }
 
             foreach (ulong key in TrackedFiles[0x54]) {
                 var baseStu = STUHelper.GetInstance<STUGenericSettings_Base>(key);
@@ -57,6 +69,7 @@ namespace DataTool.ToolLogic.List.Misc {
                             Description = GetString(action.m_description),
                             GraphId = action.m_graph,
                             UnkByte = action.m_89C93A57,
+                            Zach = action.m_64B9FD09,
                             Parameters = ParseParameters(action.m_params)
                         });
                         break;
@@ -66,6 +79,7 @@ namespace DataTool.ToolLogic.List.Misc {
                             Description = GetString(action.m_description),
                             GraphId = action.m_graph,
                             UnkByte = action.m_89C93A57,
+                            Zach = action.m_64B9FD09,
                             Parameters = ParseParameters(action.m_params)
                         });
 
@@ -74,6 +88,7 @@ namespace DataTool.ToolLogic.List.Misc {
                             Description = GetString(x.m_description),
                             GraphId = x.m_graph,
                             UnkByte = x.m_89C93A57,
+                            Zach = x.m_64B9FD09,
                             Parameters = ParseParameters(x.m_params)
                         });
                         break;
@@ -108,9 +123,14 @@ namespace DataTool.ToolLogic.List.Misc {
                                @out.UnkEnum = ss.m_444416F6;
                                @out.Min = ss.m_min;
                                @out.Max = ss.m_max;
-                               @out.DefaultValue = ss.m_464FB148;
                                @out.UnkByte = ss.m_89C93A57;
                                @out.DefaultNumberValue = ss.m_D62358FA;
+
+                               _valuesNameDictById.TryGetValue(ss.m_464FB148, out var name);
+                               @out.DefaultValue = new WorkshopParamDefaultValue {
+                                   Id = ss.m_464FB148,
+                                   DisplayName = name
+                               };
                                break;
                            case STU_8302E7AC ss:
                                @out.InferredType = "NumberConstant";
@@ -183,6 +203,7 @@ namespace DataTool.ToolLogic.List.Misc {
             public string Description;
             public teResourceGUID GraphId;
             public byte UnkByte;
+            public byte Zach;
             public IEnumerable<WorkshopParameter> Parameters;
         }
 
@@ -205,12 +226,11 @@ namespace DataTool.ToolLogic.List.Misc {
             public teResourceGUID DropdownId;
             public Enum_542A081B InputType;
             public Enum_43D38C2E UnkEnum;
-            public teResourceGUID DefaultValue;
+            public WorkshopParamDefaultValue DefaultValue;
             public float DefaultNumberValue;
             public float Max;
             public float Min;
             public float UnkByte;
-
 
             // utf8 doesnt really support polymorphism so.... we gotta do this
             public bool ShouldSerializeDropdownId() => InferredType == "Dropdown";
@@ -234,6 +254,11 @@ namespace DataTool.ToolLogic.List.Misc {
             public teResourceGUID VirtualId;
             public string DisplayName;
             public string Description;
+        }
+
+        public class WorkshopParamDefaultValue {
+            public teResourceGUID Id;
+            public string DisplayName;
         }
     }
 }
