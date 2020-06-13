@@ -10,13 +10,13 @@ namespace ReplayMp4Tool {
     internal class Program {
         public static void Main(string[] args) {
             if (args.Length < 2) {
-                Console.Out.WriteLine("Usage: Mp4Tool {owverwatch dir} {file} [--json] [--out=outfile.json]");
+                Console.Out.WriteLine("Usage: Mp4Tool {overwatch dir} {file} [--json] [--out=outfile.json]");
                 return;
             }
 
             string gameDir = args[0];
             string filePath = args[1];
-            
+
             var files = new List<string>();
             var fileAttributes = File.GetAttributes(filePath);
 
@@ -32,25 +32,25 @@ namespace ReplayMp4Tool {
                     Console.Out.WriteLine("Only MP4s are supported");
                     return;
                 }
-                
+
                 files.Add(filePath);
             }
-            
-            const string locale = "enUS";
+
+            var flags = FlagParser.Parse<ListFlags>();
+            var toolFlags = FlagParser.Parse<ToolFlags>();
 
             DataTool.Program.Flags = new ToolFlags {
                 OverwatchDirectory = gameDir,
-                Language = locale,
-                SpeechLanguage = locale,
+                Language = toolFlags.Language ?? "enUS",
+                SpeechLanguage = toolFlags.SpeechLanguage ?? "enUS",
                 UseCache = true,
                 CacheCDNData = true,
                 Quiet = true
             };
 
-            DataTool.Program.InitStorage(false);          
+            DataTool.Program.InitStorage(false);
             var replays = ReplayThing.ParseReplays(files);
 
-            var flags = FlagParser.Parse<ListFlags>();
             if (flags.JSON){
                 new JSONTool().OutputJSON(replays, flags);
             } else {
@@ -66,7 +66,6 @@ namespace ReplayMp4Tool {
                     Console.Out.WriteLine("\n");
                 }
             }
-
         }
     }
 }
