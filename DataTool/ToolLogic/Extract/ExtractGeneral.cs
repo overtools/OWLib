@@ -45,6 +45,8 @@ namespace DataTool.ToolLogic.Extract {
                 if (playerProgression.OtherUnlocks != null) {
                     ExtractHeroUnlocks.SaveUnlocks(flags, playerProgression.OtherUnlocks, path, "Achievement", null, null, null, null);
                 }
+                
+                SaveScratchDatabase();
             }
         }
     }

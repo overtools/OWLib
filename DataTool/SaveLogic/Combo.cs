@@ -11,8 +11,11 @@ using BCFF;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
+using DataTool.JSON;
 using DataTool.ToolLogic.Extract;
+using DataTool.ToolLogic.List;
 using TankLib;
+using TankLib.Chunks;
 using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
 using Logger = TankLib.Helpers.Logger;
@@ -226,7 +229,7 @@ namespace DataTool.SaveLogic {
                 return basePath;
             }
             if (ScratchDBInstance.HasRecord(GUID)) {
-                return ScratchDBInstance[GUID].MakeRelative(cwd);
+                return ScratchDBInstance[GUID]?.MakeRelative(cwd);
             }
             return basePath;
         }
@@ -360,11 +363,13 @@ namespace DataTool.SaveLogic {
         public static void SaveModel(ICLIFlags flags, string path, SaveContext info, ulong modelGUID) {
             bool convertModels = true;
             bool doRefpose = false;
+            bool doStu = false;
             byte lod = 1;
 
             if (flags is ExtractFlags extractFlags) {
                 convertModels = !extractFlags.RawModels  && !extractFlags.Raw;
                 doRefpose = extractFlags.ExtractRefpose;
+                doStu = extractFlags.ExtractModelStu;
                 lod = extractFlags.LOD;
                 if (extractFlags.SkipModels) return;
             }
@@ -400,6 +405,12 @@ namespace DataTool.SaveLogic {
                             var refpose = new RefPoseSkeleton(chunkedData);
                             refpose.Write(fileStream);
                         }
+                    }
+
+                    if (doStu) {
+                        var stu = chunkedData.GetChunks<teModelChunk_STU>().Select(x => x.StructuredData).ToArray();
+                        string stuPath = Path.Combine(modelDirectory, modelInfo.GetNameIndex() + ".json");
+                        JSONTool.OutputJSONAlt(stu, new ListFlags {Output = stuPath}, false);
                     }
                 }
             } else {
@@ -674,7 +685,7 @@ namespace DataTool.SaveLogic {
                 if(ScratchDBInstance.HasRecord(textureGUID)) {
                     return;
                 }
-                ScratchDBInstance[textureGUID] = new ScratchDB.ScratchPath($"{filePath}.{convertType}");
+                ScratchDBInstance[textureGUID] = new ScratchDB.ScratchPath($"{filePath}.{convertType}", true);
             }
 
             CreateDirectoryFromFile(path);
@@ -797,8 +808,10 @@ namespace DataTool.SaveLogic {
                 string line = await pProcess.StandardOutput.ReadToEndAsync();
                     
                 if (line.Contains("FAILED")) {
-                    s_texurePrepareSemaphore.Release();
-                    throw new Exception($"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
+                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                        WriteFile(convertedStream, $"{filePath}.dds");
+                    }
+                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
                 }
                 
                 s_texurePrepareSemaphore.Release();

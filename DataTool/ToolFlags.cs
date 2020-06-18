@@ -6,10 +6,10 @@ namespace DataTool {
     public class ToolFlags : ICLIFlags {
         [CLIFlag(Flag = "directory", Positional = 0, NeedsValue = true, Required = true, Help = "Overwatch Directory")]
         public string OverwatchDirectory;
-        
+
         [CLIFlag(Flag = "mode", Positional = 1, NeedsValue = true, Required = true, Help = "Extraction Mode")]
         public string Mode;
-        
+
         [CLIFlag(Default = null, Flag = "language", Help = "Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" })]
         [Alias("L")]
         [Alias("lang")]
@@ -32,12 +32,12 @@ namespace DataTool {
 
         [CLIFlag(Default = false, Flag = "validate-cache", Help = "Validate files from CDN", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ValidateCache;
-        
+
         [CLIFlag(Default = false, Flag = "quiet", Help = "Suppress majority of output messages", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         [Alias("q")]
         [Alias("silent")]
         public bool Quiet;
-        
+
         [CLIFlag(Default = false, Flag = "string-guid", Help = "Returns all strings as their GUID instead of their value", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" }, Hidden = true)]
         public bool StringsAsGuids;
 
@@ -85,9 +85,12 @@ namespace DataTool {
         [CLIFlag(Default = false, Flag = "canonical-names", Help = "Only use canonical names", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool OnlyCanonical;
 
+        [CLIFlag(Default = false, Flag = "no-guid-names", Help = "Completely disables using GUIDNames", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool NoGuidNames;
+
         [CLIFlag(Default = false, Flag = "extract-shaders", Help = "Extract shader files", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool ExtractShaders;
-        
+
         [CLIFlag(Default = false, Flag = "disable-async-save", Help = "Disable asynchronous saving", Hidden = false, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool DisableAsyncSave;
 

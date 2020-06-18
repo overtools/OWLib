@@ -96,7 +96,7 @@ namespace DataTool.DataModels {
             }
         }
 
-        public IEnumerable<Unlock> GetUnlocksOfType(string type) {
+        public IEnumerable<Unlock> GetUnlocksOfType(UnlockType type) {
             var @return = new List<Unlock>();
 
             if (OtherUnlocks != null)

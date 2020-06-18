@@ -5521,7 +5521,7 @@
     <Compile Include="STU\Types\STU_F2943064.cs" />
     <Compile Include="STU\Types\STU_F2A52D8C.cs" />
     <Compile Include="STU\Types\STU_F2C55363.cs" />
-    <Compile Include="STU\Types\STU_F2E74AF9.cs" />
+    <Compile Include="STU\Types\STUUnlock_OWLToken.cs" />
     <Compile Include="STU\Types\STU_F2EEFA75.cs" />
     <Compile Include="STU\Types\STU_F3104738.cs" />
     <Compile Include="STU\Types\STU_F312D164.cs" />
@@ -5780,7 +5780,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ow.keys">
+    <Content Include="Overwatch.keyring">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

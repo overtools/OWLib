@@ -45,9 +45,12 @@ namespace TankLib.Math {
             );
         }
 
+        private byte ToHex(float a) {
+            return (byte) (a * 255f);
+        }
+        
         public string ToHex() {
-            Color c = this;
-            return $"#{c.Name}";
+            return $"#{ToHex(R):X2}{ToHex(G):X2}{ToHex(B):X2} {A}";
         }
 
         public static bool operator ==(teColorRGBA a, teColorRGBA b) {
@@ -74,6 +77,14 @@ namespace TankLib.Math {
                 hashCode = (hashCode * 397) ^ A.GetHashCode();
                 return hashCode;
             }
+        }
+
+        public teColorRGBA ToNonLinear(float gamma = 2.2f) {
+            return new teColorRGBA((float) System.Math.Pow(R, 1/gamma), (float) System.Math.Pow(G, 1/gamma), (float) System.Math.Pow(B, 1/gamma), A);
+        }
+
+        public teColorRGBA ToLinear(float gamma = 2.2f) {
+            return new teColorRGBA((float) System.Math.Pow(R, gamma), (float) System.Math.Pow(G, gamma), (float) System.Math.Pow(B, gamma), A);
         }
     }
 }

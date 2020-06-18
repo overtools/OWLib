@@ -13,14 +13,6 @@ namespace TankLib.TACT {
         }
         
         public static void PostLoad(ClientHandler clientHandler) {
-            string keyFile = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\ow.keys";
-            if (File.Exists(keyFile)) {
-                clientHandler.ConfigHandler.Keyring.LoadSupportFile(keyFile);
-
-                if (clientHandler.ProductHandler is ProductHandler_Tank tankHandler) {
-                    tankHandler.DoBundleLookupHack();
-                }
-            }
         }
     }
 }

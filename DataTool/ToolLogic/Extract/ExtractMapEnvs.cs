@@ -120,6 +120,7 @@ namespace DataTool.ToolLogic.Extract
                 }
 
                 InfoLog("Saved Environment data for {0}", mapInfo.GetUniqueName());
+                SaveScratchDatabase();
             }
         }
 
