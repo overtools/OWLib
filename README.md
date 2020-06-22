@@ -1,4 +1,4 @@
-# overtools [![Build status](https://ci.appveyor.com/api/projects/status/5quie68hde5e1hs2?svg=true)](https://ci.appveyor.com/project/yretenai/owlib)
+# overtools [![Build status](https://ci.appveyor.com/api/projects/status/5quie68hde5e1hs2?svg=true)](https://ci.appveyor.com/project/yretenai/owlib) [![Discord](https://img.shields.io/discord/346445737367699456.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/XM93ZdB)
 
 Series of programs (tools) to interact with the Overwatch files.
 
