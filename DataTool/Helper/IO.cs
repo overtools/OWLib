@@ -52,6 +52,10 @@ namespace DataTool.Helper {
                 bool canonical = byte.Parse(canonicalString) == 1;
                 if (onlyCanonical && !canonical) continue;
                 if (!canonical) name += $"-{index:X}";
+                
+                if (GUIDTable.ContainsKey((index, type)))
+                    TankLib.Helpers.Logger.Warn("GUIDNames", $"Duplicate key detected: {indexString}.{typeString}");
+
                 GUIDTable[(index, type)] = name;
             }
         }
