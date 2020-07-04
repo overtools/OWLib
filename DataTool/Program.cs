@@ -9,6 +9,7 @@ using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic;
+using Microsoft.Win32;
 using TankLib;
 using TankLib.STU;
 using TankLib.STU.Types;
@@ -29,6 +30,8 @@ namespace DataTool {
         public static ToolFlags Flags;
         public static uint      BuildVersion;
         public static bool      IsPTR => Client?.AgentProduct?.Uid == "prometheus_test";
+        
+        public static string[] ValidLanguages = {"deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW"};
 
         public static bool ValidKey(ulong key) { return TankHandler.m_assets.ContainsKey(key); }
 
@@ -58,7 +61,9 @@ namespace DataTool {
             var tools = GetTools();
 
         #if DEBUG
-            FlagParser.CheckCollisions(typeof(ToolFlags), (flag, duplicate) => { Logger.Error("Flag", $"The flag \"{flag}\" from {duplicate} is a duplicate!"); });
+            FlagParser.CheckCollisions(typeof(ToolFlags), (flag, duplicate) => {
+                Logger.Error("Flag", $"The flag \"{flag}\" from {duplicate} is a duplicate!");
+            });
         #endif
 
             FlagParser.LoadArgs();
@@ -68,21 +73,24 @@ namespace DataTool {
             Logger.Info("Core", $"CommandLine: [{string.Join(", ", FlagParser.AppArgs.Select(x => $"\"{x}\""))}]");
 
             Flags = FlagParser.Parse<ToolFlags>(full => PrintHelp(full, tools));
-            if (Flags == null) return;
+            if (Flags == null)
+                return;
 
             Logger.Info("Core", $"CommandLineFile: {FlagParser.ArgFilePath}");
 
             if (Flags.SaveArgs) {
-                FlagParser.AppArgs = FlagParser.AppArgs.Where(x => !x.StartsWith("--arg"))
-                                               .ToArray();
+                FlagParser.AppArgs = FlagParser.AppArgs.Where(x => !x.StartsWith("--arg")).ToArray();
                 FlagParser.SaveArgs(Flags.OverwatchDirectory);
             } else if (Flags.ResetArgs || Flags.DeleteArgs) {
                 FlagParser.ResetArgs();
-                if (Flags.DeleteArgs) FlagParser.DeleteArgs();
+
+                if (Flags.DeleteArgs)
+                    FlagParser.DeleteArgs();
 
                 Logger.Info("Core", $"CommandLineNew: [{string.Join(", ", FlagParser.AppArgs.Select(x => $"\"{x}\""))}]");
                 Flags = FlagParser.Parse<ToolFlags>(full => PrintHelp(full, tools));
-                if (Flags == null) return;
+                if (Flags == null)
+                    return;
             }
 
             if (string.IsNullOrWhiteSpace(Flags.OverwatchDirectory) || string.IsNullOrWhiteSpace(Flags.Mode) || Flags.Help) {
@@ -195,11 +203,13 @@ namespace DataTool {
         }
 
         public static void InitStorage(bool online = false) { // turnin offline off again, can cause perf issues with bundle hack
-            if (Flags.Language != null)
-                Logger.Info("CASC", $"Set language to {Flags.Language}");
-
-            if (Flags.SpeechLanguage != null)
-                Logger.Info("CASC", $"Set speech language to {Flags.SpeechLanguage}");
+            // Attempt to load language via registry, if they were already provided via flags then this won't do anything
+            if (!Flags.NoLanguageRegistry)
+                TryFetchLocaleFromRegistry();
+            
+            Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
+            
+            Debugger.Break();
 
             var args = new ClientCreateArgs {
                 SpeechLanguage = Flags.SpeechLanguage,
@@ -264,6 +274,28 @@ namespace DataTool {
                     Client.ConfigHandler.Keyring.AddKey(resourceKey.GetReverseKeyID(), resourceKey.m_key);
                     Logger.Info("Core", $"Added ResourceKey {resourceKey.GetKeyIDString()}, Value: {resourceKey.GetKeyValueString()}");
                 }
+            }
+        }
+
+        private static void TryFetchLocaleFromRegistry() {
+            try {
+                if (Flags.Language == null) {
+                    var textLanguage = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Launch Options\Pro", "LOCALE", null);
+                    if (ValidLanguages.Contains(textLanguage))
+                        Flags.Language = textLanguage;
+                    else
+                        Logger.Error("Core", $"Invalid text language found via registry: {textLanguage}. Ignoring.");
+                }
+
+                if (Flags.SpeechLanguage == null) {
+                    var speechLanguage = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Launch Options\Pro", "LOCALE_AUDIO", null);
+                    if (ValidLanguages.Contains(speechLanguage))
+                        Flags.SpeechLanguage = speechLanguage;
+                    else
+                        Logger.Error("Core", $"Invalid speech language found via registry: {speechLanguage}. Ignoring.");
+                }
+            } catch (Exception) {
+                // Ignored   
             }
         }
 
