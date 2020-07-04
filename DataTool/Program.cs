@@ -208,8 +208,6 @@ namespace DataTool {
                 TryFetchLocaleFromRegistry();
             
             Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
-            
-            Debugger.Break();
 
             var args = new ClientCreateArgs {
                 SpeechLanguage = Flags.SpeechLanguage,
