@@ -93,6 +93,9 @@ namespace DataTool {
 
         [CLIFlag(Default = false, Flag = "disable-async-save", Help = "Disable asynchronous saving", Hidden = false, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool DisableAsyncSave;
+        
+        [CLIFlag(Default = false, Flag = "disable-language-registry", Help = "Disable fetching language from registry", Hidden = false, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool NoLanguageRegistry;
 
         public override bool Validate() => true;
     }

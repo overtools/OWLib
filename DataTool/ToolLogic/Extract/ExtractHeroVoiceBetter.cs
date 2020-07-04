@@ -45,7 +45,10 @@ namespace DataTool.ToolLogic.Extract {
                             var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
                             if (stimulus == null) continue;
 
-                            var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E) ?? "Unknown";
+                            var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E);
+                            if (groupName == null)
+                                groupName = $"Unknown\\{teResourceGUID.Index(voiceLineInstance.VoiceStimulus):X}.{teResourceGUID.Type(voiceLineInstance.VoiceStimulus):X3}";
+
                             var soundFilesCombo = new Combo.ComboInfo();
                             var soundFilesContext = new SaveLogic.Combo.SaveContext(soundFilesCombo);
 
@@ -53,13 +56,13 @@ namespace DataTool.ToolLogic.Extract {
                                 Combo.Find(soundFilesCombo, soundFile);
                             }
 
-                            var path = flags.GroupByHero && flags.GroupByType
+                            var path = flags.VoiceGroupByHero && flags.VoiceGroupByType
                                 ? Path.Combine(basePath, Container, heroNameActual, groupName)
-                                : Path.Combine(basePath, Container, flags.GroupByHero ? Path.Combine(groupName, heroNameActual) : groupName);
+                                : Path.Combine(basePath, Container, flags.VoiceGroupByHero ? Path.Combine(groupName, heroNameActual) : groupName);
 
                             foreach (var soundInfo in soundFilesCombo.m_voiceSoundFiles.Values) {
                                 var filename = soundInfo.GetName();
-                                if (!flags.GroupByHero) {
+                                if (!flags.VoiceGroupByHero) {
                                     filename = $"{heroNameActual}-{soundInfo.GetName()}";
                                 }
 

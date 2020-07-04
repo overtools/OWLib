@@ -19,16 +19,14 @@ namespace DataTool.ToolLogic.Dump {
                 OutputJSON(data, flags);
             }
         }
-        
-        private readonly string[] Languages = {"deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW"};
 
         private Dictionary<teResourceGUID, Dictionary<string, string>> GetData() {
             var @return = new Dictionary<teResourceGUID, Dictionary<string, string>>();
 
-            Helper.Logger.Log($"Preparing to dump strings for following languages: {string.Join(", ", Languages)}");
+            Helper.Logger.Log($"Preparing to dump strings for following languages: {string.Join(", ", Program.ValidLanguages)}");
             Helper.Logger.Log("You must have the language installed in order for it to be included, languages not installed will be ignored.");
 
-            foreach (var language in Languages) {
+            foreach (var language in Program.ValidLanguages) {
                 try {
                     InitStorage(language);
 
