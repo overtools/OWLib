@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DataTool.DataModels;
+using DataTool.DataModels.Hero;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -15,6 +18,7 @@ namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-voice-better", Description = "Extracts hero voicelines but groups them a bit better.", CustomFlags = typeof(ExtractFlags))]
     class ExtractHeroVoiceBetter : JSONTool, ITool {
         private const string Container = "BetterHeroVoice";
+        private static readonly HashSet<ulong> SoundIdCache = new HashSet<ulong>();
 
         public void Parse(ICLIFlags toolFlags) {
             string basePath;
@@ -23,15 +27,17 @@ namespace DataTool.ToolLogic.Extract {
             } else {
                 throw new Exception("no output path");
             }
+            
+            // Do normal heroes first then NPCs, this is because NPCs have a lot of duplicate sounds and normal heroes (should) have none
+            // so any duplicate sounds would only come up while processing NPCs which can be ignored as they (probably) belong to heroes
+            var heroes = Program.TrackedFiles[0x75].Select(x => new Hero(x)).OrderBy(x => !x.IsHero).ThenBy(x => x.GUID.GUID).ToArray();
 
-            foreach (var key in Program.TrackedFiles[0x75]) {
-                var hero = GetInstance<STUHero>(key);
-                var progression = new ProgressionUnlocks(hero);
-                if (progression.LootBoxesUnlocks == null) continue; // no NPCs thanks
+            foreach (var hero in heroes) {
+                var heroStu = GetInstance<STUHero>(hero.GUID);
 
-                string heroNameActual = GetValidFilename((GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(key)}").TrimEnd(' '));
+                string heroNameActual = GetValidFilename((GetString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}").TrimEnd(' '));
                 Logger.Log($"Processing {heroNameActual}");
-                var voiceSetComponent = GetInstance<STUVoiceSetComponent>(hero.m_gameplayEntity);
+                var voiceSetComponent = GetInstance<STUVoiceSetComponent>(heroStu.m_gameplayEntity);
                 if (voiceSetComponent?.m_voiceDefinition == null) continue;
 
                 var voiceSetsCombo = new Combo.ComboInfo();
@@ -66,8 +72,15 @@ namespace DataTool.ToolLogic.Extract {
                                     filename = $"{heroNameActual}-{soundInfo.GetName()}";
                                 }
 
+                                if (SoundIdCache.Contains(soundInfo.m_GUID)) {
+                                    TACTLib.Logger.Debug("Tool", "Duplicate sound detected, ignoring.");
+                                    continue;
+                                }
+
+                                SoundIdCache.Add(soundInfo.m_GUID);
                                 SaveLogic.Combo.SaveSoundFile(flags, path, soundFilesContext, soundInfo.m_GUID, true, filename);
                             }
+
                             soundFilesContext.Wait();
                         }
                     }
