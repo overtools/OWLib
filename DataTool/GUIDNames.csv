@@ -200,7 +200,7 @@ D8,078,Turret/EnemyTurretSeen,1
 7AB,078,Uprising/EradicatorIncoming,1
 7AC,078,Uprising/Revived,1
 7AD,078,Uprising/PlayerDown,1
-7D1,078,Junkenstein/EnemyAggravate,1
+7D1,078,EnemySeenCallout,1
 7D8,078,TeammateDown,1
 7DA,078,Objective/Meet,1
 7DB,078,Objective/Defend,1
@@ -234,8 +234,8 @@ D8,078,Turret/EnemyTurretSeen,1
 829,078,Uprising/Conversations,1
 833,078,Uprising/Conversations,1
 849,078,LookingAtEarth,1
-852,078,Halloween/Conversations,1
-854,078,Halloween/Conversations,1
+852,078,Junkenstein/Conversations,1
+854,078,Junkenstein/Conversations,1
 86B,078,Junkenstein/Conversations,1
 86C,078,Junkenstein/Conversations,1
 86D,078,Junkenstein/Conversations,1

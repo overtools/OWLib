@@ -1,12 +1,12 @@
 [submodule "bcffnet"]
 	path = bcffnet
-	url = https://github.com/healingbrew/bcffnet
+	url = https://github.com/yretenai/bcffnet
 [submodule "revorbstd"]
 	path = revorbstd
-	url = https://github.com/healingbrew/revorbstd
+	url = https://github.com/yretenai/revorbstd
 [submodule "TACTLib"]
 	path = TACTLib
 	url = https://github.com/overtools/TACTLib
 [submodule "HealingML"]
 	path = HealingML
-	url = https://github.com/healingbrew/HealingML
+	url = https://github.com/yretenai/HealingML
