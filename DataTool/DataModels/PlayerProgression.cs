@@ -1,4 +1,5 @@
-﻿ using System.Runtime.Serialization;
+﻿ using System.Collections.Generic;
+ using System.Runtime.Serialization;
  using TankLib.STU.Types;
 
 namespace DataTool.DataModels {
@@ -31,6 +32,28 @@ namespace DataTool.DataModels {
             }
             
             OtherUnlocks = Unlock.GetArray(progression.m_otherUnlocks);
+        }
+        
+        public IEnumerable<Unlock> IterateUnlocks() {
+            if (LootBoxesUnlocks != null) {
+                foreach (LootBoxUnlocks lootBoxUnlocks in LootBoxesUnlocks) {
+                    foreach (Unlock VARIABLE in lootBoxUnlocks.Unlocks) {
+                        yield return VARIABLE;
+                    }
+                }
+            }
+            if (AdditionalUnlocks != null) {
+                foreach (AdditionalUnlocks additionalUnlock in AdditionalUnlocks) {
+                    foreach (Unlock unlock in additionalUnlock.Unlocks) {
+                        yield return unlock;
+                    }
+                }
+            }
+            if (OtherUnlocks != null) {
+                foreach (Unlock otherUnlock in OtherUnlocks) {
+                    yield return otherUnlock;
+                }
+            }
         }
     }
     
