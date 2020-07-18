@@ -397,3 +397,22 @@ D77,078,Voicelines,1
 850,01C,Tank,1
 851,01C,Support,1
 84E,01C,Damage,1
+; Unlock categories, used for hero gallery filtering, and career profile icons, yep
+410B,01C,Base,1
+3F9D,01C,SummerGames,1
+3F9B,01C,Halloween,1
+3F9E,01C,Winter,1
+3FA1,01C,Lunar,1
+3FA4,01C,Archives,1
+3FA5,01C,Anniversary,1
+3FA6,01C,OWL,1
+41E9,01C,Legacy,1
+3F9C,01C,Special,1
+3FAA,01C,Achievement,1
+471D,01C,Limited,1
+4335,01C,ExtraSpecial,1
+4058,01C,LegacyOWL,1
+3FA7,01C,BCRF,1
+7A9A,01C,Pachimari,1
+7A82,01C,Blizzard,1
+40A1,01C,Competitive,1

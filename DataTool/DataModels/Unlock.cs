@@ -62,6 +62,12 @@ namespace DataTool.DataModels {
         /// </summary>
         [DataMember]
         public string Tag;
+        
+        /// <summary>
+        /// Array of categories the Unlock belongs to that the Hero Gallery & Career Profile filtering options use
+        /// </summary>
+        [DataMember]
+        public string[] Categories;
 
         /// <summary>
         /// If the Unlock is a form of Currency, the amount of currency it is
@@ -92,6 +98,7 @@ namespace DataTool.DataModels {
         // These only really apply to "normal" unlocks and can be removed from others
         public bool ShouldSerializeAvailableIn() => IsTraditionalUnlock;
         public bool ShouldSerializeTag() => IsTraditionalUnlock;
+        public bool ShouldSerializeCategories() => IsTraditionalUnlock;
 
         public Unlock(STU_3021DDED unlock, ulong guid) {
             Init(unlock, guid);
@@ -118,6 +125,9 @@ namespace DataTool.DataModels {
                 Type == UnlockType.Icon || Type == UnlockType.Spray || 
                 Type == UnlockType.Skin || Type == UnlockType.HighlightIntro || 
                 Type == UnlockType.VictoryPose || Type == UnlockType.VoiceLine;
+            
+            if (unlock.m_BEE9BCDA != null)
+                Categories = unlock.m_BEE9BCDA.Select(x => GetGUIDName(x.GUID)).ToArray();
 
             // Lootbox and currency unlocks have some additional relevant data
             switch (unlock) {
