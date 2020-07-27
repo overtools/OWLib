@@ -10,6 +10,9 @@ namespace DataTool.ToolLogic.List {
         [CLIFlag(Flag = "out", NeedsValue = true, Help = "Output JSON file")]
         [Alias("o")]
         public string Output;
+        
+        [CLIFlag(Default = false, Flag = "flatten", Help = "Flatten output", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool Flatten;
 
         public override bool Validate() => true;
     }

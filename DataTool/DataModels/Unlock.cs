@@ -26,10 +26,10 @@ namespace DataTool.DataModels {
         public string Name;
         
         /// <summary>
-        /// Description of this unlock
+        /// DataTool enum for the type of Unlock
         /// </summary>
         [DataMember]
-        public string Description;
+        public UnlockType Type;
         
         /// <summary>
         /// Unlock rarity
@@ -39,6 +39,12 @@ namespace DataTool.DataModels {
         public STUUnlockRarity Rarity;
         
         /// <summary>
+        /// Description of this unlock
+        /// </summary>
+        [DataMember]
+        public string Description;
+
+        /// <summary>
         /// Where this unlock can be obtained from
         /// </summary>
         /// <example>"Available in Halloween Loot Boxes"</example>
@@ -46,39 +52,53 @@ namespace DataTool.DataModels {
         public string AvailableIn;
 
         /// <summary>
-        /// Friendly type name
+        /// If the Unlock is a Skin, the GUID of the SkinTheme
         /// </summary>
         [DataMember]
-        public UnlockType Type;
+        public teResourceGUID SkinThemeGUID;
 
         /// <summary>
         /// DataTool specific Unlock Data Tag
         /// </summary>
         [DataMember]
         public string Tag;
+        
+        /// <summary>
+        /// Array of categories the Unlock belongs to that the Hero Gallery & Career Profile filtering options use
+        /// </summary>
+        [DataMember]
+        public string[] Categories;
 
+        /// <summary>
+        /// If the Unlock is a form of Currency, the amount of currency it is
+        /// </summary>
         [DataMember]
         public int Currency;
 
         [DataMember]
         public Enum_BABC4175 LootBoxType;
 
-        [IgnoreDataMember]
-        public bool IsTraditionalUnlock;
-        
         /// <summary>
-        /// Internal StructuredData
+        /// Internal Unlock STU
         /// </summary>
         [IgnoreDataMember]
         public STU_3021DDED STU;
         
+        /// <summary>
+        /// Whether this is a "normal" Unlock like a skin, emote, voiceline, pose, icon, etc and not something like a Lootbox or Currency.
+        /// </summary>
+        [IgnoreDataMember]
+        public bool IsTraditionalUnlock;
+
         // These types are specific to certain unlocks so don't show them unless we're on that unlock
         public bool ShouldSerializeLootBoxType() => Type == UnlockType.Lootbox;
+        public bool ShouldSerializeSkinThemeGUID() => Type == UnlockType.Skin;
         public bool ShouldSerializeCurrency() => Type == UnlockType.CompetitiveCurrency || Type == UnlockType.Currency || Type == UnlockType.OWLToken;
         
         // These only really apply to "normal" unlocks and can be removed from others
         public bool ShouldSerializeAvailableIn() => IsTraditionalUnlock;
         public bool ShouldSerializeTag() => IsTraditionalUnlock;
+        public bool ShouldSerializeCategories() => IsTraditionalUnlock;
 
         public Unlock(STU_3021DDED unlock, ulong guid) {
             Init(unlock, guid);
@@ -105,21 +125,27 @@ namespace DataTool.DataModels {
                 Type == UnlockType.Icon || Type == UnlockType.Spray || 
                 Type == UnlockType.Skin || Type == UnlockType.HighlightIntro || 
                 Type == UnlockType.VictoryPose || Type == UnlockType.VoiceLine;
+            
+            if (unlock.m_BEE9BCDA != null)
+                Categories = unlock.m_BEE9BCDA.Select(x => GetGUIDName(x.GUID)).ToArray();
 
             // Lootbox and currency unlocks have some additional relevant data
             switch (unlock) {
-                case STUUnlock_CompetitiveCurrency stu1:
-                    Currency = stu1.m_760BF18E;
+                case STUUnlock_CompetitiveCurrency stu:
+                    Currency = stu.m_760BF18E;
                     break;
-                case STUUnlock_Currency stu2:
-                    Currency = stu2.m_currency;
+                case STUUnlock_Currency stu:
+                    Currency = stu.m_currency;
                     break;
-                case STUUnlock_OWLToken stu3:
-                    Currency = stu3.m_63A026AF;
+                case STUUnlock_OWLToken stu:
+                    Currency = stu.m_63A026AF;
                     break;
-                case STUUnlock_LootBox lootboxStu:
-                    Rarity = lootboxStu.m_2F922165;
-                    LootBoxType = lootboxStu.m_lootboxType;
+                case STUUnlock_LootBox stu:
+                    Rarity = stu.m_2F922165;
+                    LootBoxType = stu.m_lootboxType;
+                    break;
+                case STUUnlock_SkinTheme stu:
+                    SkinThemeGUID = stu.m_skinTheme;
                     break;
             }
         }

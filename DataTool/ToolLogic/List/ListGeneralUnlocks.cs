@@ -13,7 +13,12 @@ namespace DataTool.ToolLogic.List {
 
             if (toolFlags is ListFlags flags) {
                 if (flags.JSON) {
-                    OutputJSON(unlocks, flags);
+                    if (flags.Flatten) {
+                        OutputJSON(unlocks.IterateUnlocks(), flags);
+                    } else {
+                        OutputJSON(unlocks, flags);
+                    }
+                    
                     return;
                 }
             }
