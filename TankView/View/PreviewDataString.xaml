@@ -6,7 +6,24 @@
              xmlns:local="clr-namespace:TankView.View"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="{Binding PreviewSource}" Margin="15,15,15,15" Foreground="White" />
+    <Grid VerticalAlignment="Top" HorizontalAlignment="Left">
+        <TextBlock 
+            Text="{Binding GUIDString}"
+            Margin="15,15,15,15"
+            Foreground="White" 
+            FontWeight="Bold" 
+            FontSize="16" />
+
+        <TextBlock 
+            Text="{Binding PreviewSource}"
+            Margin="15,40,15,15"
+            Foreground="White"
+            FontSize="17" 
+            Background="#FF454545"
+            Padding="6"
+            MaxWidth="850"
+            HorizontalAlignment="Left"
+            TextWrapping="Wrap"
+            VerticalAlignment="Center" />
     </Grid>
 </UserControl>

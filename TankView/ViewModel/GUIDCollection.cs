@@ -25,6 +25,9 @@ namespace TankView.ViewModel {
         private readonly ProgressWorker _worker;
 
         private GUIDEntry _top;
+        public string GUIDStr;
+
+        public string GUIDString => teResourceGUID.AsString(_top.GUID);
 
         public GUIDEntry TopSelectedEntry {
             get => _top;
