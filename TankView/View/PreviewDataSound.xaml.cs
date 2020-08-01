@@ -32,7 +32,7 @@ namespace TankView.View {
             _progressWorker.OnProgress += UpdateProgress;
             
             var timer = new System.Timers.Timer();
-            timer.Interval = 150;
+            timer.Interval = 100;
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
         }
@@ -77,6 +77,11 @@ namespace TankView.View {
                 return;
             }
 
+            if (vorbis == null) {
+                _progressWorker.ReportProgress(0, "An error occured playing this sound");
+                return;
+            }
+
             try {
                 if (outputDevice.PlaybackState == PlaybackState.Stopped) {
                     vorbis.Position = 0;
@@ -84,8 +89,8 @@ namespace TankView.View {
                 
                 outputDevice.Play();
             } catch (Exception ex) {
+                _progressWorker.ReportProgress(0, "An error occured playing this sound");
                 Debugger.Log(0, "[TankView.Sound.Play]", $"Error setting audio! {ex.Message}\n");
-                // ignored
             }
         }
 
@@ -113,7 +118,9 @@ namespace TankView.View {
         
         private void UpdateProgressBar()
         {
-            if (outputDevice.PlaybackState == PlaybackState.Playing) {
+            if (outputDevice == null) {
+                _progressWorker.ReportProgress(0, "");
+            } else if (outputDevice.PlaybackState == PlaybackState.Playing) {
                 var progress = (int) Math.Round(((float) vorbis.CurrentTime.Ticks / (float) vorbis.TotalTime.Ticks) * 1000);
                 _progressWorker.ReportProgress(progress, $"{new DateTime(vorbis.CurrentTime.Ticks):mm:ss}/{new DateTime(vorbis.TotalTime.Ticks):mm:ss}");
             }

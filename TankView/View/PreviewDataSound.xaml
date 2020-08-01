@@ -16,7 +16,7 @@
         </WrapPanel>
         
         <WrapPanel DataContext="{Binding ProgressInfo}" Background="{DynamicResource MaterialDesignPaper}" Orientation="Vertical" HorizontalAlignment="Center" Height="64" Margin="79,10,79,0" VerticalAlignment="Center">
-            <ProgressBar materialDesign:TransitionAssist.DisableTransitions="True" Width="242" Height="18" Maximum="1000" Value="{Binding Percentage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+            <ProgressBar materialDesign:TransitionAssist.DisableTransitions="True" Width="242" Height="18" Maximum="1000" Value="{Binding Percentage, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
             <TextBlock Text="{Binding State, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Foreground="{DynamicResource MaterialDesignBody}" FontSize="14" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,0" />
         </WrapPanel>
     </StackPanel>
