@@ -211,7 +211,7 @@
                             <ListView x:Name="FolderItemList" SelectedItem="{Binding TopSelectedEntry, Mode=OneWayToSource}"
                                       ItemsSource="{Binding SelectedEntries, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                                       VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
-                                      GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+                                      GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" PreviewKeyDown="FolderItemList_OnKeyDown">
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn Header="GUID" DisplayMemberBinding="{Binding Filename}" Width="135" />

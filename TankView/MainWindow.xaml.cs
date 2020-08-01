@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using DataTool.Flag;
 using DataTool.SaveLogic;
 using DataTool.ToolLogic.Extract;
@@ -479,6 +480,17 @@ namespace TankView {
             
             new AboutPage(this).Show();
             Hide();
+        }
+
+        private bool justPressed = false;
+        private void FolderItemList_OnKeyDown(object sender, KeyEventArgs e) {
+            if (justPressed) {
+                e.Handled = true;
+                return;
+            }
+
+            justPressed = true;
+            Task.Delay(90).ContinueWith(t => justPressed = false);
         }
     }
 }
