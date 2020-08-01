@@ -46,7 +46,7 @@ namespace TankView.View {
             try {
                 outputDevice = new WaveOutEvent();
                 vorbis = new VorbisWaveReader(data);
-                outputDevice.Volume = 1.0f;
+                outputDevice.Volume = 0.8f;
                 outputDevice.Init(vorbis);
                 _progressWorker.ReportProgress(0, $"00:00/{new DateTime(vorbis.TotalTime.Ticks):mm:ss}");
             } catch (Exception ex) {
