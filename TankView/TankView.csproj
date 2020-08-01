@@ -132,6 +132,7 @@
     <Compile Include="ObjectModel\ObservableHashCollection.cs" />
     <Compile Include="ObjectModel\SizeConverter.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="ToolFlags.cs" />
     <Compile Include="ViewModel\AppSettings.cs" />
     <Compile Include="ViewModel\ExtractionSettings.cs" />
     <Compile Include="ViewModel\Folder.cs" />

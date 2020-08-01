@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using DataTool.Flag;
 using DataTool.SaveLogic;
 using DataTool.ToolLogic.Extract;
 using DataTool.WPF;
@@ -249,6 +250,12 @@ namespace TankView {
 
             Task.Run(delegate {
                 try {
+                    var flags = FlagParser.Parse<ToolFlags>();
+                    if (flags != null) {
+                        ClientArgs.TextLanguage = flags.Language;
+                        ClientArgs.SpeechLanguage = flags.SpeechLanguage;
+                    }
+
                     DataTool.Program.Client = new ClientHandler(path, ClientArgs);
                     LoadHelper.PostLoad(DataTool.Program.Client);
 
