@@ -46,6 +46,11 @@ namespace DataTool.DataModels.Hero {
         [DataMember]
         public List<LoadoutLite> Loadouts;
 
+        [DataMember]
+        public List<HeroImage> Images;
+
+        internal STUHero STU;
+
         public Hero(ulong key) {
             STUHero stu = GetInstance<STUHero>(key);
             if (stu == null) return;
@@ -57,6 +62,7 @@ namespace DataTool.DataModels.Hero {
         }
 
         private void Init(STUHero hero, ulong key = default) {
+            STU = hero;
             GUID = (teResourceGUID) key;
             Name = GetString(hero.m_0EDCE350);
             Description = GetDescriptionString(hero.m_3446F580);
@@ -69,13 +75,6 @@ namespace DataTool.DataModels.Hero {
             SupportsAi = hero.m_906C3711 > 0;
             IsHero = hero.m_62746D34 > 0;
 
-            //if (hero.m_skinThemes != null) {
-            //    SkinThemes = new List<HeroSkinTheme>();
-            //    foreach (STU_63172E83 skinTheme in hero.m_skinThemes) {
-            //        SkinThemes.Add(new HeroSkinTheme(skinTheme));
-            //    }
-            //}
-
             if (hero.m_heroLoadout != null) {
                 Loadouts = new List<LoadoutLite>();
                 foreach (teResourceGUID loadoutGUID in hero.m_heroLoadout) {
@@ -84,11 +83,27 @@ namespace DataTool.DataModels.Hero {
                     Loadouts.Add(loadout.ToLite());
                 }
             }
+
+            // Contains array of various hero images, hero gallery portraits, small hero select icons, etc.
+            if (hero.m_8203BFE1 != null) {
+                Images = new List<HeroImage>();
+                foreach (var imageSet in hero.m_8203BFE1) {
+                    Images.Add(new HeroImage {
+                        Id = imageSet.m_id,
+                        TextureGUID = imageSet.m_texture
+                    });
+                }
+            }
         }
 
         public static string GetCleanName(STUHero hero) {
             var name = GetString(hero.m_0EDCE350);
             return name?.TrimEnd(' ');
+        }
+
+        public class HeroImage {
+            public teResourceGUID Id;
+            public teResourceGUID TextureGUID;
         }
     }
 }
