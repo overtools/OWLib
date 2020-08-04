@@ -648,7 +648,7 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static async Task SaveTextureTask(ICLIFlags flags, string path, SaveContext info, ulong textureGUID) {
+        private static async Task SaveTextureTask(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name = null) {
             bool convertTextures = true;
             string convertType = "tif";
             string multiSurfaceConvertType = "tif";
@@ -678,7 +678,7 @@ namespace DataTool.SaveLogic {
             
 
             FindLogic.Combo.TextureAsset textureInfo = info.m_info.m_textures[textureGUID];
-            string filePath = Path.Combine(path, $"{textureInfo.GetNameIndex()}");
+            string filePath = Path.Combine(path, name ?? $"{textureInfo.GetNameIndex()}");
             if (teResourceGUID.Type(textureGUID) != 0x4) filePath += $".{teResourceGUID.Type(textureGUID):X3}";
 
             if (Program.Flags != null && Program.Flags.Deduplicate) {
@@ -818,8 +818,8 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID) {
-            info.AddTask(() => SaveTextureTask(flags, path, info, textureGUID));
+        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name = null) {
+            info.AddTask(() => SaveTextureTask(flags, path, info, textureGUID, name));
         }
 
         private static void ConvertSoundFile(Stream stream, FindLogic.Combo.ComboAsset soundFileInfo, string directory, string name = null)
