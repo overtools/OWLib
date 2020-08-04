@@ -1,4 +1,4 @@
-version: 1.50.0.{build}
+version: 1.51.0.{build}
 image: Visual Studio 2019
 configuration: Release
 platform: Any CPU
