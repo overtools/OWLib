@@ -46,6 +46,15 @@ namespace DataTool.DataModels {
 
         [DataMember]
         public Enum_A0F51DCC MapType;
+
+        [DataMember]
+        public teResourceGUID Thumbnail;
+        
+        [DataMember]
+        public teResourceGUID Image;
+        
+        [DataMember]
+        public teResourceGUID FlagImage;
         
         public MapHeader(ulong key) {
             STUMapHeader stu = GetInstance<STUMapHeader>(key);
@@ -69,6 +78,9 @@ namespace DataTool.DataModels {
             MapGUID = mapHeader.m_map;
             State = mapHeader.m_A125818B;
             MapType = mapHeader.m_mapType;
+            Thumbnail = mapHeader.m_9386E669;
+            Image = mapHeader.m_86C1CFAB;
+            FlagImage = mapHeader.m_C6599DEB;
             GameModes = mapHeader.m_D608E9F3?.Select(x => new GameMode(x).ToLite()).Where(x => x.GUID != 0);
         }
 
