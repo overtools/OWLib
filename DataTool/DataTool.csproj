@@ -141,6 +141,7 @@
     <Compile Include="Flag\Converter.cs" />
     <Compile Include="Flag\FlagParser.cs" />
     <Compile Include="Flag\ICLIFlags.cs" />
+    <Compile Include="Helper\DebuggerExtensions.cs" />
     <Compile Include="Helper\EffectParser.cs" />
     <Compile Include="Helper\JSON.cs" />
     <Compile Include="Helper\IO.cs" />
