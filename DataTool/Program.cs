@@ -133,8 +133,16 @@ namespace DataTool {
             }
 
             if (!targetToolAttributes.UtilNoArchiveNeeded) {
-                InitStorage();
-
+                try {
+                    InitStorage();
+                } catch (Exception ex) {
+                    Logger.Error("CASC", 
+                                 "=================\nError initializing CASC!\n" +
+                                 "Please Scan & Repair your game, launch it for a minute, and try the tools again before reporting a bug!\n" +
+                                 "========================");
+                    throw;
+                }
+                
                 //foreach (KeyValuePair<ushort, HashSet<ulong>> type in TrackedFiles.OrderBy(x => x.Key)) {
                 //    //Console.Out.WriteLine($"Found type: {type.Key:X4} ({type.Value.Count} files)");
                 //    Console.Out.WriteLine($"Found type: {type.Key:X4}");
