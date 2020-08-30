@@ -58,7 +58,7 @@ namespace DataTool.ToolLogic.Extract {
                 
                 if (config.Count == 0) continue;
                 
-                Map.Save(flags, map, key, basePath);
+                Map.Save(flags, mapInfo, map, key, basePath);
                 SaveScratchDatabase();
             }
         }

@@ -10,6 +10,7 @@ using static DataTool.Helper.Logger;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataTool.DataModels;
 
 namespace DataTool.SaveLogic {
     public static class Map {
@@ -272,21 +273,20 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void Save(ICLIFlags flags, STUMapHeader mapHeader, ulong key, string basePath) {
-            string name = GetString(mapHeader.m_displayName) ?? "Title Screen";
-            //string name = map.m_506FA8D8;
-            var variantName = GetString(mapHeader.m_1C706502);
-            if (variantName != null) name = variantName;
+        public static void Save(ICLIFlags flags, MapHeader mapInfo, STUMapHeader mapHeader, ulong key, string basePath) {
+            var name = mapInfo.GetName();
+            LoudLog($"Extracting map {name}/{teResourceGUID.Index(key):X}");
 
-            LoudLog($"Extracting map {name}\\{teResourceGUID.Index(key):X}");
-            name = GetValidFilename(name);
-            
             // TODO: MAP11 HAS CHANGED
             // TODO: MAP10 TOO?
             
             string mapPath = Path.Combine(basePath, "Maps", name, teResourceGUID.Index(key).ToString("X")) + Path.DirectorySeparatorChar;
-            
             CreateDirectoryFromFile(mapPath);
+            
+            // Clean the filename after the map path as menu maps contain a slash which we want to preserve. e.g Menu/Hanamura
+            // but we dont want to preserve it below as it messes up the file paths
+            // not sure if this could cause potential issues above?????
+            name = GetValidFilename(name);
             
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             LoudLog("\tFinding");

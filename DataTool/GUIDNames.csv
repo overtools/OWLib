@@ -430,21 +430,36 @@ D77,078,Voicelines,1
 794,09F,Menu/Horizon Lunar Colony,1
 801,09F,Menu/Junkertown,1
 817,09F,Menu/World Cup,1
-85F,09F,Menu/Eichenwalde,1
+85F,09F,Menu/Black Forest (Winter),1
 862,09F,Menu/OWL,1
 864,09F,Menu/OWL,1
-8B4,09F,Menu/Rialto,1
+8B4,09F,Menu/Rialto (Archives),1
 8BE,09F,Menu/Rialto,1
 A13,09F,Menu/OWL,1
-A5A,09F,Menu/Chateau,1
+A5A,09F,Menu/Chateau (Halloween),1
 AF0,09F,Menu/Paris,1
 B55,09F,Menu/Havana,1
 B56,09F,Menu/Havana (Archives),1
-C04,09F,Menu/Eichenwalde,1
-C46,09F,Menu/Temple of Anubis,1
-C61,09F,Menu/Eichenwalde (Winter),1
+BCE,09F,Menu/Summer Games (2020),1
+C04,09F,Menu/Eichenwalde (Alt),1
+C46,09F,Menu/Temple of Anubis (Alt),1
+C61,09F,Menu/Black Forest (Winter) (Alt),1
 C83,09F,Menu/OWL,1
 C8F,09F,Menu/Anniversary,1
-CAC,09F,Menu/Route 66,1
+CAC,09F,Menu/Route 66 (Alt),1
 CCF,09F,Menu/Anniversary,1
 CE0,09F,Menu/Anniversary,1
+CE6,09F,Menu/Paris (Alt),1
+CFE,09F,Menu/Sydney (Lucioball),1
+CFF,09F,Menu/Busan (Lucioball),1
+D0A,09F,Menu/OWL,1
+; Celebrations,,,
+2168,01C,Christmas,1
+2498,01C,LunarNewYear,1
+237C,01C,LunarNewYear,1
+2497,01C,NewYearResolution,1
+24A6,01C,ValentinesDay,1
+24A7,01C,ValentinesDay,1
+2658,01C,StPatricksDay,1
+2659,01C,Easter,1
+212E,01C,Halloween,1

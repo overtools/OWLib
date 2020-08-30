@@ -16,7 +16,7 @@ namespace DataTool.DataModels {
         
         [DataMember]
         public string Name;
-        
+
         [DataMember]
         public string Description;
         
@@ -55,6 +55,8 @@ namespace DataTool.DataModels {
         
         [DataMember]
         public teResourceGUID FlagImage;
+
+        public MapCelebrationVariant[] CelebrationVariants;
         
         public MapHeader(ulong key) {
             STUMapHeader stu = GetInstance<STUMapHeader>(key);
@@ -82,6 +84,24 @@ namespace DataTool.DataModels {
             Image = mapHeader.m_86C1CFAB;
             FlagImage = mapHeader.m_C6599DEB;
             GameModes = mapHeader.m_D608E9F3?.Select(x => new GameMode(x).ToLite()).Where(x => x.GUID != 0);
+
+            if (mapHeader.m_celebrationOverrides != null) {
+                CelebrationVariants = mapHeader.m_celebrationOverrides.Select(x => {
+                    var hmm = (teResourceGUID) x.m_map;
+                    hmm.SetType(0x9F);
+
+                    return new MapCelebrationVariant {
+                        Name = GetGUIDName(x.m_celebrationType),
+                        Virtual01C = x.m_celebrationType,
+                        MapInfo = new MapHeader(hmm).ToLite()
+                    };
+                }).ToArray();
+            }
+
+            // Attempt to get the menu map name if one exists
+            var mapHeaderGuid = (teResourceGUID) mapHeader.m_map;
+            mapHeaderGuid.SetType(0x9F);
+            Name = GetNullableGUIDName(mapHeaderGuid) ?? Name;
         }
 
         public MapHeaderLite ToLite() {
@@ -98,6 +118,17 @@ namespace DataTool.DataModels {
         }
     }
 
+    public class MapCelebrationVariant {
+        [DataMember]
+        public string Name;
+
+        [DataMember]
+        public teResourceGUID Virtual01C;
+
+        [DataMember]
+        public MapHeaderLite MapInfo;
+    }
+
     // Lighter version of the MapHeader, just used to make JSON exports less thicc if you only need basic map info
     public class MapHeaderLite {
         [DataMember]
@@ -107,12 +138,12 @@ namespace DataTool.DataModels {
         public string Name;
         
         [DataMember]
-        public teResourceGUID MapGUID;
+        public string VariantName;
 
         public MapHeaderLite(MapHeader mapHeader) {
             GUID = mapHeader.GUID;
             Name = mapHeader.Name;
-            MapGUID = mapHeader.MapGUID;
+            VariantName = mapHeader.VariantName;
         }
     }
 }
