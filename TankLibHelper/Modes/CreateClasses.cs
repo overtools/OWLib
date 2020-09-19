@@ -72,22 +72,20 @@ namespace TankLibHelper.Modes {
                     var enumType = field.TypeHash2;
                     if (!enumFields.ContainsKey(enumType)) {
                         enumFields[enumType] = field;
-                        
-                        EnumBuilder enumBuilder = new EnumBuilder(_info, field);
-                        Build(enumBuilder, true);
                     }
                 }
             }
 
             foreach (KeyValuePair<uint, EnumNew> enumData in _info.Enums.OrderBy(x => x.Value.Hash2)) {
-                if (enumFields.ContainsKey(enumData.Key)) continue;
-                
-                Logger.Warn("Enum", $"Enum {enumData.Value.Hash2:X8} is not referenced by a field");
-                
-                EnumBuilder enumBuilder = new EnumBuilder(_info, new FieldNew {
-                    m_typeHash = enumData.Key.ToString("X8"),
-                    m_size = 4
-                });
+                FieldNew field;
+                if (!enumFields.TryGetValue(enumData.Key, out field)) {
+                    field = new FieldNew {
+                        m_typeHash = enumData.Key.ToString("X8"),
+                        m_size = 4
+                    };
+                    Logger.Warn("Enum", $"Enum {enumData.Value.Hash2:X8} is not referenced by a field");
+                }
+                EnumBuilder enumBuilder = new EnumBuilder(_info, field);
                 Build(enumBuilder, true);
             }
 
