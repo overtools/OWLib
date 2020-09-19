@@ -23,11 +23,11 @@ namespace DataTool.DataModels {
         [DataMember]
         public Unlock Reward;
         
-        [DataMember]
-        public Enum_8E40F295 Trophy;
+        //[DataMember]
+        //public Enum_8E40F295 Trophy;
         
-        [DataMember]
-        public Enum_116F9601 Category;
+        //[DataMember]
+        //public Enum_116F9601 Category;
 
         [DataMember]
         public int GamerScore;
@@ -48,8 +48,8 @@ namespace DataTool.DataModels {
             AchievementName = achievement.m_4E291DCC.Value;
             Description = GetString(achievement.m_description);
 
-            Trophy = achievement.m_trophy;
-            Category = achievement.m_category;
+            //Trophy = achievement.m_trophy;
+            //Category = achievement.m_category;
             GamerScore = achievement.m_gamerScore;
 
             if (achievement.m_unlock != 0) {
