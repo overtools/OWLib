@@ -13,6 +13,7 @@ using TACTLib.Client.HandlerArgs;
 using TACTLib.Container;
 using TACTLib.Core;
 using TACTLib.Core.Product.Tank;
+using TACTLib.Exceptions;
 
 namespace CASCEncDump {
     internal class Program {

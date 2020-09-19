@@ -17,6 +17,7 @@ using TankLib.TACT;
 using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
 using TACTLib.Core.Product.Tank;
+using TACTLib.Exceptions;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 using Logger = TankLib.Helpers.Logger;
@@ -309,11 +310,15 @@ namespace DataTool {
         private static void ExceptionHandler(object sender, UnhandledExceptionEventArgs e) {
             if (e.ExceptionObject is Exception ex) {
                 Logger.Error(null, ex.ToString());
+                if (ex is BLTEDecoderException decoder) {
+                    File.WriteAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"BLTEDump-{AppDomain.CurrentDomain.FriendlyName}_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.blte"), decoder.GetBLTEData());
+                }
+
                 if (Debugger.IsAttached) throw ex;
             }
 
             unchecked {
-                Environment.Exit((int) 0xDEADBEEF);
+                Environment.Exit(-1);
             }
         }
 

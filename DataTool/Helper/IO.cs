@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using TankLib;
 using TACTLib.Core;
+using TACTLib.Exceptions;
 using static DataTool.Program;
 
 namespace DataTool.Helper {
