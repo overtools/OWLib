@@ -315,7 +315,7 @@ namespace DataTool {
                 }
 
                 Logger.Log24Bit(ConsoleSwatch.XTermColor.HotPink3, true, Console.Error, null, ex.Message);
-                Logger.Log24Bit(ConsoleSwatch.XTermColor.DarkRed, true, Console.Error, null, ex.StackTrace);
+                Logger.Log24Bit(ConsoleSwatch.XTermColor.MediumPurple, true, Console.Error, null, ex.StackTrace);
                 
                 if (ex is BLTEDecoderException decoder) {
                     File.WriteAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"BLTEDump-{AppDomain.CurrentDomain.FriendlyName}_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.blte"), decoder.GetBLTEData());
