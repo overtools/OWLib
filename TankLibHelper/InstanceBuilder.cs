@@ -1,7 +1,7 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
+using System.IO;
 using TankLib;
 using TankLib.Math;
 using TankLib.STU;
@@ -9,17 +9,19 @@ using TankLib.STU;
 namespace TankLibHelper {
     public class InstanceBuilder : ClassBuilder {
         private readonly string _parentName;
-        private readonly STUInstanceJSON _instance;
+        private readonly InstanceNew _instance;
+
+        public override bool HasRealName => Info.KnownInstances.ContainsKey(_instance.Hash2); 
         
-        public InstanceBuilder(BuilderConfig config, StructuredDataInfo info, STUInstanceJSON instance) : base(config, info) {
+        public InstanceBuilder(StructuredDataInfo info, InstanceNew instance) : base(info) {
             _instance = instance;            
             
-            Name = Info.GetInstanceName(_instance.Hash);
-            if (instance.Parent != 0) {
-                _parentName = Info.GetInstanceName(_instance.Parent);
+            Name = Info.GetInstanceName(_instance.Hash2);
+            if (instance.ParentHash2 != 0) {
+                _parentName = Info.GetInstanceName(_instance.ParentHash2);
                 
-                if (!info.Instances.ContainsKey(_instance.Parent)) {
-                    Console.Out.WriteLine($"pls fix: {_instance.Hash:X32}'s parent is missing (add to ignored)");
+                if (!info.Instances.ContainsKey(_instance.ParentHash2)) {
+                    Console.Out.WriteLine($"pls fix: {_instance.Hash2:X32}'s parent is missing (add to ignored)");
                 }
             }
         }
@@ -27,141 +29,133 @@ namespace TankLibHelper {
         private static readonly List<string> ImportTankMathTypes = new List<string> {"teColorRGB", "teColorRGBA", "teEntityID", 
              "teMtx43A", "teQuat", "teUUID", "teVec4", "teVec3A", "teVec3", "teVec2", "DBID"};
 
-        public override string BuildCSharp() {
-            if (_instance.Parent != 0 && !Info.Instances.ContainsKey(_instance.Parent)) {
+        public override IndentedTextWriter Build(FileWriter file) {
+            if (_instance.ParentHash2 != 0 && !Info.Instances.ContainsKey(_instance.ParentHash2)) {
                 return null; // parent isn't registered for some reason
             }
 
-            StringBuilder builder = new StringBuilder();
-            StringBuilder importBuilder = new StringBuilder();  // ahh rewrite
-
-            bool importedTankMath = false;
-            bool importedEnums = false;
-
-            {
-                //WriteDefaultHeader(builder, "Instance", "TankLibHelper.InstanceBuilder");
-
-                if (Info.KnownInstances.ContainsKey(_instance.Hash)) {
-                    builder.AppendLine($"    [{nameof(STUAttribute)}(0x{_instance.Hash:X8}, \"{Name}\")]");
-                } else {
-                    builder.AppendLine($"    [{nameof(STUAttribute)}(0x{_instance.Hash:X8})]");
-                }
-
-                if (_instance.Parent == 0) {
-                    builder.AppendLine($"    public class {Name} : {nameof(STUInstance)} {{");
-                } else {
-                    builder.AppendLine($"    public class {Name} : {_parentName} {{");
-                }
+            var writer = new IndentedTextWriter(new StringWriter(), "    ");
+            
+            if (Info.KnownInstances.ContainsKey(_instance.Hash2)) {
+                writer.WriteLine($"[STU(0x{_instance.Hash2:X8}, \"{Name}\")]");
+            } else {
+                writer.WriteLine($"[STU(0x{_instance.Hash2:X8})]");
             }
 
-            int i = 0;
-            foreach (STUFieldJSON field in _instance.Fields) {
-                if (i != 0) {
-                    builder.AppendLine();
-                }
-                BuildFieldCSharp(field, builder);
+            if (_instance.ParentHash2 == 0) {
+                writer.WriteLine($"public class {Name} : {nameof(STUInstance)}");
+            } else {
+                writer.WriteLine($"public class {Name} : {_parentName}");
+            }
+            writer.WriteLine("{");
+            writer.Indent++;
 
-                if (ImportTankMathTypes.Contains(field.Type) && !importedTankMath) {
-                    importedTankMath = true;
-                    importBuilder.AppendLine("using TankLib.Math;");
-                }
+            bool first = true;
+            foreach (FieldNew field in _instance.m_fields) {
+                if (first) first = false;
+                else writer.WriteLine();
 
-                if ((field.SerializationType == 8 || field.SerializationType == 9) && !importedEnums) {
-                    importedEnums = true;
-                    importBuilder.AppendLine("using TankLib.STU.Types.Enums;");
-                }
+                BuildField(field, writer);
+
+                if (ImportTankMathTypes.Contains(field.m_typeName)) 
+                    file.m_includes.Add("TankLib.Math");
+                if (field.m_serializationType == 8 || field.m_serializationType == 9) 
+                    file.m_includes.Add("TankLib.STU.Types.Enums");
+            }
+
+            writer.Indent--;
+            writer.Write("}");  // close class
+            
+            file.m_children.Add(writer);
                 
-                i++;
-            }
-
-            {
-                builder.AppendLine("    }");  // close class
-                builder.AppendLine("}"); // close namespace
-            }
-
-            return GetDefaultHeader("Instance", "TankLibHelper.InstanceBuilder", importBuilder.ToString()) + builder;
+            return writer;
         }
 
-        private void BuildFieldCSharp(STUFieldJSON field, StringBuilder builder) {
+        private void BuildField(FieldNew field, IndentedTextWriter builder) {
             string linePrefix = string.Empty;
-            if (field.SerializationType == 2 || field.SerializationType == 3 || field.SerializationType == 4 || 
-                field.SerializationType == 5 || field.SerializationType == 7) {
-                if (!Info.Instances.ContainsKey(field.GetSTUTypeHash())) {
+            if (field.m_serializationType == 2 || field.m_serializationType == 3 || field.m_serializationType == 4 || 
+                field.m_serializationType == 5 || field.m_serializationType == 7) {
+                if (!Info.Instances.ContainsKey(field.TypeHash2)) {
                     linePrefix = "// ";
                 }
             }
             
             string attribute;
             {
-                attribute = $"[{nameof(STUFieldAttribute)}(0x{field.Hash:X8}";
+                attribute = $"[STUField(0x{field.Hash2:X8}";
 
-                if (Info.KnownFields.ContainsKey(field.Hash)) {
-                    attribute += $", \"{Info.GetFieldName(field.Hash)}\"";
-                }
+                //if (Info.KnownFields.ContainsKey(field.Hash2)) {
+                //    attribute += $", \"{Info.GetFieldName(field.Hash2)}\"";
+                //}
 
-                if (field.SerializationType == 2 || field.SerializationType == 3) {  // 2 = embed, 3 = embed array
+                if (field.m_serializationType == 2 || field.m_serializationType == 3) {  // 2 = embed, 3 = embed array
                     attribute += $", ReaderType = typeof({nameof(EmbeddedInstanceFieldReader)})";
                 }
 
-                if (field.SerializationType == 4 || field.SerializationType == 5) {  // 4 = inline, 5 = inline array
+                if (field.m_serializationType == 4 || field.m_serializationType == 5) {  // 4 = inline, 5 = inline array
                     attribute += $", ReaderType = typeof({nameof(InlineInstanceFieldReader)})";
                 }
             
                 attribute += ")]"; 
             }
 
-            string definition;
-
-            {
-                string type = GetFieldTypeCSharp(field) + GetFieldPostTypeCSharp(field);
-                definition = $"{type} {Info.GetFieldName(field.Hash)}";
+            var fieldName = Info.GetFieldName(field.Hash2);
+            var actualType = GetFieldTypeCSharp(field);
+            if (actualType == null) {
+                builder.WriteLine($"// {fieldName}: unsupported data type {field.m_typeName}");
+                return;
             }
-
-            builder.AppendLine($"        {linePrefix}{attribute}");
-            builder.AppendLine($"        {linePrefix}public {definition};");
+            
+            var postField = GetFieldPostTypeCSharp(field);
+            var type = actualType + postField;
+            builder.WriteLine($"{linePrefix}{attribute}");
+            builder.WriteLine($"{linePrefix}public {type} {fieldName};");
+            
+            // todo: // {field.m_offset} - size: {field.m_size}
+            // todo: why was i bullied into removing this
             
             // todo: what is going on with stuunlock
+            // todo: the todo above is not descriptive enough for me to have any idea what it means
         }
 
-        private string GetFieldPostTypeCSharp(STUFieldJSON field) {
-            if (field.SerializationType == 1 || field.SerializationType == 3 || field.SerializationType == 5 ||
-                field.SerializationType == 9 || field.SerializationType == 11 || field.SerializationType == 13) {
+        private string GetFieldPostTypeCSharp(FieldNew field) {
+            if (field.m_serializationType == 1 || field.m_serializationType == 3 || field.m_serializationType == 5 ||
+                field.m_serializationType == 9 || field.m_serializationType == 11 || field.m_serializationType == 13) {
                 return "[]";
             }
             return null;
         }
         
 
-        private string GetFieldTypeCSharp(STUFieldJSON field) {
-            if ((field.SerializationType == 2 || field.SerializationType == 3 || field.SerializationType == 4 ||
-                 field.SerializationType == 5) && field.Type.StartsWith("STU_")) {
-                uint hash = field.GetSTUTypeHash();
+        private string GetFieldTypeCSharp(FieldNew field) {
+            if ((field.m_serializationType == 2 || field.m_serializationType == 3 || field.m_serializationType == 4 ||
+                 field.m_serializationType == 5) && string.IsNullOrEmpty(field.m_typeName)) {
+                uint hash = field.TypeHash2;
 
                 return Info.GetInstanceName(hash);
             }
 
-            if (field.SerializationType == 7) {
-                uint hash = field.GetSTUTypeHash();
-                return $"{nameof(teStructuredDataHashMap<STUInstance>)}<{Info.GetInstanceName(hash)}>";
+            if (field.m_serializationType == 7) {
+                return $"{nameof(teStructuredDataHashMap<STUInstance>)}<{Info.GetInstanceName(field.TypeHash2)}>";
             }
 
-            if (field.SerializationType == 8 || field.SerializationType == 9) {  // 8 = enum, 9 = enum array
-                return Info.GetEnumName(uint.Parse(field.Type, NumberStyles.HexNumber));
+            if (field.m_serializationType == 8 || field.m_serializationType == 9) {  // 8 = enum, 9 = enum array
+                return Info.GetEnumName(field.TypeHash2);
             }
 
-            if (field.SerializationType == 10 || field.SerializationType == 11) {
+            if (field.m_serializationType == 10 || field.m_serializationType == 11) {
                 return nameof(teStructuredDataAssetRef<ulong>) + "<ulong>";
             }
 
-            if (field.SerializationType == 12 || field.SerializationType == 13) {
-                uint hash = uint.Parse(field.Type.Split('_')[1], NumberStyles.HexNumber);
+            if (field.m_serializationType == 12 || field.m_serializationType == 13) {
+                uint hash = field.TypeHash2;
                 if (!Info.Instances.ContainsKey(hash)) {
                     return nameof(teStructuredDataAssetRef<ulong>) + "<ulong>";
                 }
                 return nameof(teStructuredDataAssetRef<ulong>) + $"<{Info.GetInstanceName(hash)}>";
             }
             
-            switch (field.Type) {
+            switch (field.m_typeName) {
                 // primitives with factories
                 case "u64":
                     return "ulong";
@@ -216,6 +210,9 @@ namespace TankLibHelper {
                 // ISerializable_STU
                 case "DBID":
                     return nameof(DBID);
+                
+                case "bsDataStore":
+                    return null; // not supported
             }
             throw new NotImplementedException();
         }

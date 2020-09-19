@@ -423,7 +423,7 @@ DD8658BA, STUAnimNode_LayerIsolate
 9E77B793, STUAnimNode_LayerIsolateSourceTargetPair
 538E0279, STUAnimNode_LayerOverride
 1B872806, STUContactSet
-5054972D, STUContactSetSTUContactSetComponent
+5054972D, STUContactSetComponent
 D45222EC, STUAnimNode_Identity
 95CDBEAB, STUConfigVarContactSet
 A408D74F, STUVoiceConversation

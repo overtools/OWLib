@@ -1,57 +1,48 @@
-﻿using System.Globalization;
-using System.Text;
-using TankLib.STU;
+﻿using System.CodeDom.Compiler;
+using System.IO;
 
 namespace TankLibHelper {
     public class EnumBuilder : ClassBuilder {
-        private readonly uint _hash;
-        private readonly STUFieldJSON _field;
+        private uint _hash => _field.TypeHash2;
+        private readonly FieldNew _field;
         
-        public EnumBuilder(BuilderConfig config, StructuredDataInfo info, STUFieldJSON field) : base(config, info) {
-            _hash = uint.Parse(field.Type, NumberStyles.HexNumber);
+        public override bool HasRealName => Info.KnownEnums.ContainsKey(_hash);
+
+        public EnumBuilder(StructuredDataInfo info, FieldNew field) : base(info) {
             _field = field;
-            
             Name = Info.GetEnumName(_hash);
         }
 
-        public uint GetHash() {
-            return _hash;
-        }
-
-        public static bool IsValid(STUFieldJSON field) {
-            return field.SerializationType == 8 || field.SerializationType == 9;
-        }
-
-        public override string BuildCSharp() {
-            StringBuilder builder = new StringBuilder();
-            
-            WriteDefaultHeader(builder, "Enum", "TankLibHelper.EnumBuilder");
+        public override IndentedTextWriter Build(FileWriter file) {
+            IndentedTextWriter writer = new IndentedTextWriter(new StringWriter(), "    ");
 
             string attribute;
 
-            if (!Info.KnownEnums.ContainsKey(_hash)) {
-                attribute = $"[{nameof(STUEnumAttribute)}(0x{_hash:X8})]";
-            } else {
-                attribute = $"[{nameof(STUEnumAttribute)}(0x{_hash:X8}, \"{Info.GetEnumName(_hash)}\")]";
-            }
+            //if (!Info.KnownEnums.ContainsKey(_hash)) {
+                attribute = $"[STUEnum(0x{_hash:X8})]";
+            //} else {
+            //    attribute = $"[{nameof(STUEnumAttribute)}(0x{_hash:X8}, \"{Info.GetEnumName(_hash)}\")]";
+            //}
             
-            builder.AppendLine($"    {attribute}");
+            writer.WriteLine($"{attribute}");
 
-            string type = GetSizeType(_field.Size);
-            builder.AppendLine($"    public enum {Name} : {type} {{");
+            string type = GetSizeType(_field.m_size);
+            writer.WriteLine($"public enum {Name} : {type}");
+            writer.WriteLine("{");
+            writer.Indent++;
 
             if (Info.Enums.ContainsKey(_hash)) {
                 var enumData = Info.Enums[_hash];
-                foreach (var @enum in enumData.Values) {
-                    if (!Info.KnownEnumNames.ContainsKey(_hash)) {
-                        attribute = $"[{nameof(STUFieldAttribute)}(0x{@enum.Hash:X8})]";
-                    } else {
-                        attribute = $"[{nameof(STUFieldAttribute)}(0x{@enum.Hash:X8}, \"{Info.GetEnumValueName(@enum.Hash)}\")]";
-                    }
+                foreach (var value in enumData.m_values) {
+                    //if (!Info.KnownEnumNames.ContainsKey(_hash)) {
+                        attribute = $"[STUField(0x{value.Hash2:X8})]";
+                    //} else {
+                    //    attribute = $"[STUField(0x{value.Hash2:X8}, \"{Info.GetEnumValueName(value.Hash2)}\")]";
+                    //}
 
-                    var safeValue = @enum.Value;
+                    var safeValue = value.m_value;
                     // ReSharper disable once SwitchStatementMissingSomeCases
-                    switch (_field.Size) {
+                    switch (_field.m_size) {
                         case 1:
                             safeValue = (byte)(safeValue % 0xFF);
                             break;
@@ -62,19 +53,20 @@ namespace TankLibHelper {
                             safeValue = (uint)(safeValue % 0xFFFFFFFFFF);
                             break;
                     }
-
-                    builder.AppendLine($"        {attribute}");
-                    builder.AppendLine($"        {Info.GetEnumValueName(@enum.Hash)} = 0x{safeValue:X},");
+                    
+                    writer.WriteLine($"{attribute} {Info.GetEnumValueName(value.Hash2)} = 0x{safeValue:X},");
                 }
             }
-            
-            builder.AppendLine("    }");  // close enum
-            builder.AppendLine("}");  // close namespace
 
-            return builder.ToString();
+            writer.Indent--;
+            writer.Write("}"); // close enum
+            
+            file.m_children.Add(writer);
+            
+            return writer;
         }
 
-        private string GetSizeType(int size) {
+        private string GetSizeType(uint size) {
             switch (size) {
                 default:
                     return null;

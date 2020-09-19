@@ -4,7 +4,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json.Linq;
+using System.Runtime.Serialization;
+using Utf8Json;
 
 namespace TankLibHelper {
     public class StructuredDataInfo {
@@ -12,27 +13,21 @@ namespace TankLibHelper {
         public Dictionary<uint, string> KnownEnums;
         public Dictionary<uint, string> KnownFields;
         public Dictionary<uint, string> KnownEnumNames;
-        public List<uint> BrokenInstances;
-        public Dictionary<uint, STUInstanceJSON> Instances;
-        public Dictionary<uint, STUEnumJSON> Enums;
-
-        //private readonly string _directory;
+        public Dictionary<uint, InstanceNew> Instances;
+        public Dictionary<uint, EnumNew> Enums;
         
         public StructuredDataInfo(string directory) {
-            //_directory = directory;
-            BrokenInstances = new List<uint>();
             KnownEnums = new Dictionary<uint, string>();
             KnownFields = new Dictionary<uint, string>();
             KnownInstances = new Dictionary<uint, string>();
             KnownEnumNames = new Dictionary<uint, string>();
-            Instances = new Dictionary<uint, STUInstanceJSON>();
-            Enums = new Dictionary<uint, STUEnumJSON>();
+            Instances = new Dictionary<uint, InstanceNew>();
+            Enums = new Dictionary<uint, EnumNew>();
             
             Load(directory);
         }
 
         private void Load(string directory) {
-            LoadBrokenInstances(Path.Combine(directory, "IgnoredBrokenSTUs.txt"));
             LoadInstances(Path.Combine(directory, "RegisteredSTUTypes.json"));
             LoadEnums(Path.Combine(directory, "RegisteredEnums.json"));
             LoadNames(directory);
@@ -77,55 +72,23 @@ namespace TankLibHelper {
         }
 
         private void LoadInstances(string filename) {
-            JObject stuTypesJson = JObject.Parse(File.ReadAllText(filename));
-            foreach (KeyValuePair<string, JToken> pair in stuTypesJson) {
-                uint checksum = uint.Parse(pair.Key.Split('_')[1], NumberStyles.HexNumber);
-                STUInstanceJSON instance = new STUInstanceJSON {
-                    Fields = null,
-                    Hash = checksum,
-                    Parent = (string)pair.Value["parent"] == null ? 0 : uint.Parse(((string)pair.Value["parent"]).Split('_')[1], NumberStyles.HexNumber)
-                };
-                Instances[checksum] = instance;
+            List<InstanceNew> list;
+            using (var stream = File.OpenRead(filename)) {
+                list = JsonSerializer.Deserialize<List<InstanceNew>>(stream);
+            }
 
-                JToken fields = pair.Value["fields"];
-                if (fields == null) continue;
-                instance.Fields = new STUFieldJSON[fields.Count()];
-                
-                uint i = 0;
-                foreach (JToken field in fields) {
-                    instance.Fields[i] = new STUFieldJSON {
-                        Hash = uint.Parse((string)field["name"], NumberStyles.HexNumber),
-                        SerializationType = (int)field["serializationType"],
-                        Size = field.Value<int>("size"),
-                        Type = field.Value<string>("type")
-                    };
-                    i++;
-                }       
+            foreach (InstanceNew instanceNew in list) {
+                Instances[instanceNew.Hash2] = instanceNew;
             }
         }
 
         private void LoadEnums(string filename) {
-            JArray stuEnumJson = JArray.Parse(File.ReadAllText(filename));
-            foreach (JToken token in stuEnumJson) {
-                uint checksum = uint.Parse((string)token["hash"], NumberStyles.HexNumber);
-                STUEnumJSON instance = new STUEnumJSON {
-                    Hash = checksum
-                };
-                Enums[checksum] = instance;
-
-                JToken values = token["values"];
-                if (values == null) continue;
-                instance.Values = new STUEnumValueJSON[values.Count()];
-                
-                uint i = 0;
-                foreach (JToken value in values) {
-                    var valueText = (string) value["value"];
-                    instance.Values[i] = new STUEnumValueJSON {
-                        Hash = uint.Parse((string)value["hash"], NumberStyles.HexNumber),
-                        Value = valueText.StartsWith("-") ? (ulong)long.Parse(valueText) : ulong.Parse(valueText)
-                    };
-                    i++;
-                }       
+            List<EnumNew> list;
+            using (var stream = File.OpenRead(filename)) {
+                list = JsonSerializer.Deserialize<List<EnumNew>>(stream);
+            }
+            foreach (EnumNew enumNew in list) {
+                Enums[enumNew.Hash2] = enumNew;
             }
         }
         
@@ -155,52 +118,63 @@ namespace TankLibHelper {
             }
         }
 
-        private void LoadBrokenInstances(string filename) {
-            IEnumerable<uint> brokenInsts = File.Exists(filename)
-                ? File.ReadAllLines(filename).Where(x => !string.IsNullOrEmpty(x)).Select(x => uint.Parse(x.Split(' ')[0].Split('_')[1], NumberStyles.HexNumber))
-                : null;
-            if (brokenInsts != null) {
-                BrokenInstances.AddRange(brokenInsts);
-            }
-        }
-
         public static string GetDefaultDirectory() {
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
         }
     }
     
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
-    public class STUInstanceJSON {
-        public uint Hash;
-        public uint Parent;
-        public STUFieldJSON[] Fields;
-        internal string DebuggerDisplay => $"{Hash:X8}{(Parent == 0 ? "" : $" (Parent: {Parent:X8})")}";
-    }
-    
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
-    public class STUEnumJSON {
-        public uint Hash;
-        public STUEnumValueJSON[] Values;
-        internal string DebuggerDisplay => $"{Hash:X8}";
+    public class InstanceNew {
+        [DataMember(Name="Name")] public string m_name;
+        [DataMember(Name="Hash")] public string m_hash;
+        [DataMember(Name="ParentName")] public string m_parentName;
+        [DataMember(Name="ParentHash")] public string m_parentHash;
+        [DataMember(Name="Fields")] public List<FieldNew> m_fields;
+        [DataMember(Name="InstanceSize")] public uint m_size;
+        [DataMember(Name="InstanceAlignment")] public uint m_alignment;
+        
+        public uint Hash2 => uint.Parse(m_hash, NumberStyles.HexNumber);
+        public uint ParentHash2 => m_parentHash == null ? 0 : uint.Parse(m_parentHash, NumberStyles.HexNumber);
     }
 
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
-    public class STUEnumValueJSON {
-        public uint Hash;
-        public ulong Value;
-        internal string DebuggerDisplay => $"{Hash:X8}: {Value}";
+    public class FieldNew {
+        [DataMember(Name="Name")] public string m_name;
+        [DataMember(Name="Hash")] public string m_hash;
+        [DataMember(Name="TypeName")] public string m_typeName;
+        [DataMember(Name="TypeHash")] public string m_typeHash;
+        [DataMember(Name="SerializationType")] public uint m_serializationType;
+        [DataMember(Name="Size")] public uint m_size;
+        [DataMember(Name="DefaultValue")] public FieldDefaultValue m_defaultValue;
+        [DataMember(Name="Offset")] public uint m_offset;
+
+        public uint Hash2 => uint.Parse(m_hash, NumberStyles.HexNumber);
+        public uint TypeHash2 => uint.Parse(m_typeHash, NumberStyles.HexNumber);
     }
 
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
-    public class STUFieldJSON {
-        public uint Hash;
-        public string Type;
-        public int SerializationType;
-        public int Size = -1;
-        internal string DebuggerDisplay => $"{Hash:X8} (Type: {Type})";
+    public class FieldDefaultValue {
+        [DataMember(Name="Value")] public dynamic m_value;
+        [DataMember(Name="Hex")] public string m_hexValue;
 
-        public uint GetSTUTypeHash() {
-            return uint.Parse(Type.Split('_')[1], NumberStyles.HexNumber);
-        }
+        [DataMember(Name="X")] public float m_x;
+        [DataMember(Name="Y")] public float m_y;
+        [DataMember(Name="Z")] public float m_z;
+        [DataMember(Name="W")] public float m_w;
+        [DataMember(Name="A")] public float m_a;
+    }
+
+    public class EnumNew {
+        [DataMember(Name="Name")] public string m_name;
+        [DataMember(Name="Hash")] public string m_hash;
+        [DataMember(Name="Values")] public List<EnumValueNew> m_values;
+        
+        public uint Hash2 => uint.Parse(m_hash, NumberStyles.HexNumber);
+    }
+
+    public class EnumValueNew {
+        [DataMember(Name="Name")] public string m_name;
+        [DataMember(Name="Hash")] public string m_hash;
+        [DataMember(Name="Value")] public ulong m_value;
+        [DataMember(Name="Hex")] public string m_hexValue;
+        
+        public uint Hash2 => uint.Parse(m_hash, NumberStyles.HexNumber);
     }
 }

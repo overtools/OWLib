@@ -30,7 +30,7 @@ namespace TankLibHelper.Modes {
 
         public static void WriteInstancesFile(StructuredDataInfo info, string output, uint[] allowedBases) {
             using (StreamWriter writer = new StreamWriter(output)) {
-                foreach (KeyValuePair<uint, STUInstanceJSON> hashPair in info.Instances) {
+                foreach (KeyValuePair<uint, InstanceNew> hashPair in info.Instances) {
                     if (allowedBases != null) {
                         uint[] parents = GetParentTree(info, hashPair.Value);
                         
@@ -42,20 +42,20 @@ namespace TankLibHelper.Modes {
             }
         }
 
-        public static uint[] GetParentTree(StructuredDataInfo info, STUInstanceJSON instanceJSON) {
-            if (info.BrokenInstances.Contains(instanceJSON.Hash)) return new uint[0];
-            if (instanceJSON.Parent == 0) return new uint[0];
+        public static uint[] GetParentTree(StructuredDataInfo info, InstanceNew instanceJSON) {
+            //if (info.BrokenInstances.Contains(instanceJSON.m_hash)) return new uint[0];
+            if (instanceJSON.ParentHash2 == 0) return new uint[0];
 
-            uint[] parents = new[] {instanceJSON.Parent}.Concat(GetParentTree(info, info.Instances[instanceJSON.Parent])).ToArray();
+            uint[] parents = new[] {instanceJSON.ParentHash2}.Concat(GetParentTree(info, info.Instances[instanceJSON.ParentHash2])).ToArray();
             return parents;
         }
         
-        public static void WriteFieldsFile(Dictionary<uint, STUInstanceJSON> source, string output) {
+        public static void WriteFieldsFile(Dictionary<uint, InstanceNew> source, string output) {
             HashSet<uint> fields = new HashSet<uint>();
 
-            foreach (KeyValuePair<uint,STUInstanceJSON> instanceJSON in source) {
-                foreach (STUFieldJSON field in instanceJSON.Value.Fields) {
-                    fields.Add(field.Hash);
+            foreach (KeyValuePair<uint,InstanceNew> instanceJSON in source) {
+                foreach (FieldNew field in instanceJSON.Value.m_fields) {
+                    fields.Add(field.Hash2);
                 }
             }
             using (StreamWriter writer = new StreamWriter(output)) {

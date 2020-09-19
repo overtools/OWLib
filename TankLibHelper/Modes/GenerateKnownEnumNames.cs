@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +8,7 @@ using TankLib.STU;
 namespace TankLibHelper.Modes {
     public class GenerateKnownEnumNames : IMode {
         public ModeResult Run(string[] args) {
-            var asm = typeof(TankLib.STU.teStructuredData).Assembly;
+            var asm = typeof(teStructuredData).Assembly;
             var knownEnums = asm.GetTypes().Where(x => x.IsEnum && x.GetCustomAttribute<STUEnumAttribute>() != null).ToDictionary(x => x.GetCustomAttribute<STUEnumAttribute>().Hash, GetEnumDict);
 
             var dataDirectory = args.Length >= 2 ? args[1] : StructuredDataInfo.GetDefaultDirectory();
@@ -24,7 +23,7 @@ namespace TankLibHelper.Modes {
                 writer.WriteLine("Hash, Name");
                 foreach (var entry in _info.Enums) {
                     if (!knownEnums.ContainsKey(entry.Key) || knownEnums.Count <= 0) continue;
-                    var reverseDictionary = ToDictionarySafe(entry.Value.Values, x => x.Value, y => y.Hash);
+                    var reverseDictionary = ToDictionarySafe(entry.Value.m_values, x => x.m_value, y => y.Hash2);
                     foreach (var pair in reverseDictionary) {
                         if (knownEnums[entry.Key].ContainsKey(pair.Key)) {
                             writer.WriteLine($"{pair.Value:X8}, {knownEnums[entry.Key][pair.Key]}");

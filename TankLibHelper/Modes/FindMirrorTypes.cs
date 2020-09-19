@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using TankLib.Helpers.Hash;
 
@@ -40,14 +39,6 @@ namespace TankLibHelper.Modes {
             }
 
             return ModeResult.Success;
-        }
-
-        public void BuildAndWriteCSharp(ClassBuilder builder, string directory) {
-            string instanceCode = builder.BuildCSharp();
-
-            using (StreamWriter file = new StreamWriter(Path.Combine(directory, builder.GetName()+".cs"))) {
-                file.Write(instanceCode);
-            }
         }
     }
 }
