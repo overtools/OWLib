@@ -32,7 +32,7 @@ namespace TankLib {
                 while (reader.ReadByte() != 0)
                 {
                 }
-                var end = (int)reader.BaseStream.Position;
+                var end = (int) reader.BaseStream.Position - 1;
                 
                 reader.BaseStream.Position = offset;
                 var bytes = reader.ReadBytes(end - offset);
