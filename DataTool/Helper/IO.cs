@@ -195,5 +195,21 @@ namespace DataTool.Helper {
                 return null;
             }
         }
+        
+        public static string GetSubtitleString(ulong key) {
+            if (key == 0) return null;
+            var subtitle = GetSubtitle(key);
+            return subtitle.m_strings.FirstOrDefault();
+        }
+        
+        public static teSubtitleThing GetSubtitle(ulong guid) {
+            if (guid == 0) return null;  // don't even try
+            using (var stream = OpenFile(guid)) {
+                if (stream == null) return null;
+                using (var reader = new BinaryReader(stream)) {
+                    return new teSubtitleThing(reader);
+                }
+            }
+        }
     }
 }

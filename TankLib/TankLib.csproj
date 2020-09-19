@@ -737,6 +737,7 @@
     <Compile Include="teShaderGroup.cs" />
     <Compile Include="teShaderInstance.cs" />
     <Compile Include="teString.cs" />
+    <Compile Include="teSubtitleThing.cs" />
     <Compile Include="teTexture.cs" />
     <Compile Include="teTexturePayload.cs" />
     <Compile Include="TextureTypes.cs" />

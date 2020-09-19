@@ -11,12 +11,6 @@ namespace DataTool.Helper {
             STU_96ABC153 description = GetInstance<STU_96ABC153>(key);
             return GetString(description?.m_94672A2A);
         }
-        
-        public static string GetSubtitleString(ulong key) {
-            if (key == 0) return null;
-            STU_A94C5E3B subtitle = GetInstance<STU_A94C5E3B>(key);
-            return subtitle?.m_text;
-        }
 
         public static T GetInstance<T>(ulong key) where T : STUInstance {
             if (key == 0) return null;

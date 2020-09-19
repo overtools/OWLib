@@ -99,13 +99,21 @@ namespace TankView.Helper {
         }
 
         internal static object GetString(GUIDEntry value) {
-            // subtitle too as of 1.52
+            if (teResourceGUID.Type(value.GUID) == 0x071) {
+                return GetSubtitle(value);
+            }
+            
             try {
                 teString str = new teString(IOHelper.OpenFile(value));
                 return str.Value;
             } catch {
                 return string.Empty;
             }
+        }
+        
+        private static object GetSubtitle(GUIDEntry value) {
+            var subtitle = new teSubtitleThing(IOHelper.OpenFile(value));
+            return string.Join("\n", subtitle.m_strings);
         }
     }
 }

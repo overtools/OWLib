@@ -1028,11 +1028,13 @@ namespace DataTool.FindLogic {
                 case 0x71: {
                     if (info.m_subtitles.ContainsKey(guid)) break;
 
-                    var subtitle = GetString(guid);
+                    var subtitle = GetSubtitle(guid);
                     if (subtitle == null) break;
 
                     var subtitleSet = new SubtitleAsset(guid);
-                    subtitleSet.AddText(subtitle);
+                    foreach (string s in subtitle.m_strings) {
+                        subtitleSet.AddText(s);
+                    }
                     info.m_subtitles[guid] = subtitleSet;
                     break;
                 }
