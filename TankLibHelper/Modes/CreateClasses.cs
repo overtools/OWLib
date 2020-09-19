@@ -62,7 +62,11 @@ namespace TankLibHelper.Modes {
                 //if (instance.Key == 0x440233A5) {  // for generating the mirror types with oldhash
                 //    continue;
                 //}
-
+                
+                if (instance.Key == 0x2BB2C217) continue; // references mirror data. todo: handle better
+                var tree = DumpHashes.GetParentTree(_info, instance.Value);
+                if (tree.Contains(0x54D6A5F9u)) continue; // ignore MirrorData (thx tim)
+                
                 InstanceBuilder instanceBuilder = new InstanceBuilder(_info, instance.Value);
                 Build(instanceBuilder, false);
 
