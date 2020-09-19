@@ -40,17 +40,6 @@ namespace TankLib.STU {
             Name = name;
             ReaderType = typeof(DefaultStructuredDataFieldReader);
         }
-        
-        public STUFieldAttribute(uint hash, Type readerType) {
-            Hash = hash;
-            ReaderType = readerType;
-        }
-        
-        public STUFieldAttribute(uint hash, string name, Type readerType) {
-            Hash = hash;
-            Name = name;
-            ReaderType = readerType;
-        }
     }
 
     [AttributeUsage(AttributeTargets.Enum)]
