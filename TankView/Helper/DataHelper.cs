@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using DataTool.WPF.IO;
 using DirectXTexNet;
 using TankLib;
-using TankLib.STU;
-using TankLib.STU.Types;
 using TankView.ViewModel;
-using TACTLib;
 
 namespace TankView.Helper {
     public static class DataHelper {
@@ -105,23 +99,12 @@ namespace TankView.Helper {
         }
 
         internal static object GetString(GUIDEntry value) {
-            if (teResourceGUID.Type(value.GUID) == 0x071) {
-                return GetSubtitle(value);
-            }
-
+            // subtitle too as of 1.52
             try {
                 teString str = new teString(IOHelper.OpenFile(value));
                 return str.Value;
             } catch {
                 return string.Empty;
-            }
-        }
-
-        private static object GetSubtitle(GUIDEntry value) {
-            using (var stu = new teStructuredData(IOHelper.OpenFile(value))) {
-                STU_7A68A730 container = stu.GetInstance<STU_7A68A730>();
-                IEnumerable<string> strings = new[] {container.m_798027DE?.m_text?.Value, container.m_A84AA2B5?.m_text?.Value, container.m_D872E45C?.m_text?.Value, container.m_1485B834?.m_text?.Value}.Where(x => !string.IsNullOrEmpty(x));
-                return string.Join("\n", strings);
             }
         }
     }

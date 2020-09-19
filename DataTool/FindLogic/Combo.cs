@@ -1027,15 +1027,12 @@ namespace DataTool.FindLogic {
                 }
                 case 0x71: {
                     if (info.m_subtitles.ContainsKey(guid)) break;
-                    
-                    STU_7A68A730 subtitleContainer = GetInstance<STU_7A68A730>(guid);
-                    if (subtitleContainer == null) break;
+
+                    var subtitle = GetString(guid);
+                    if (subtitle == null) break;
 
                     var subtitleSet = new SubtitleAsset(guid);
-                    subtitleSet.AddText(subtitleContainer.m_798027DE?.m_text);
-                    subtitleSet.AddText(subtitleContainer.m_A84AA2B5?.m_text);
-                    subtitleSet.AddText(subtitleContainer.m_D872E45C?.m_text);
-                    subtitleSet.AddText(subtitleContainer.m_1485B834?.m_text);
+                    subtitleSet.AddText(subtitle);
                     info.m_subtitles[guid] = subtitleSet;
                     break;
                 }
