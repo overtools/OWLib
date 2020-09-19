@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using TACTLib;
@@ -165,7 +166,7 @@ namespace TankLib {
         public void LoadPayload(Stream payloadStream, int offset) {
             if (!PayloadRequired || Payloads.Length < offset) throw new Exceptions.TexturePayloadNotRequiredException();
             if (Payloads[offset] != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
-            
+            if (payloadStream == null) return;
             Payloads[offset] = new teTexturePayload(this, payloadStream);
         }
 

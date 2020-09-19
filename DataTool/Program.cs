@@ -221,7 +221,7 @@ namespace DataTool {
             var args = new ClientCreateArgs {
                 SpeechLanguage = Flags.SpeechLanguage,
                 TextLanguage   = Flags.Language,
-                HandlerArgs    = new ClientCreateArgs_Tank { CacheAPM = Flags.UseCache },
+                HandlerArgs    = new ClientCreateArgs_Tank { CacheAPM = Flags.UseCache, ManifestRegion = Flags.RCN ? ProductHandler_Tank.REGION_CN : ProductHandler_Tank.REGION_DEV },
                 Online         = online
             };
 

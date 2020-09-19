@@ -308,11 +308,11 @@ namespace DataTool.ToolLogic.Extract {
             if (unlock.STU.m_BEE9BCDA != null) {
                 var formalEventKey = unlock.STU.m_BEE9BCDA.FirstOrDefault(x => eventMap.ContainsKey(x));
                 if (eventMap.ContainsKey(formalEventKey)) {
-                    eventKey = eventMap[formalEventKey];
+                    eventKey = eventMap[formalEventKey] ?? eventKey;
                 }
             }
 
-            string thisPath = Path.Combine(path, unlock.Type.ToString(), eventKey, rarity, GetValidFilename(unlock.GetName()));
+            string thisPath = Path.Combine(path, unlock.Type.ToString(), eventKey ?? "Default", rarity, GetValidFilename(unlock.GetName()));
             
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SprayPaint))) {
                 SprayAndIcon.Save(flags, thisPath, unlock);
