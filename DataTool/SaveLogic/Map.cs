@@ -356,6 +356,12 @@ namespace DataTool.SaveLogic {
                 }
             }
             
+            LoudLog("\tSaving");
+            var context = new Combo.SaveContext(info);
+            Combo.Save(flags, mapPath, context);
+            Combo.SaveLooseTextures(flags, Path.Combine(mapPath, "Textures"), context);
+            context.Wait();
+            
             if (mapHeader.m_7F5B54B2 != 0) {  // map voice set. not announcer
                 FindLogic.Combo.Find(info, mapHeader.m_7F5B54B2);
             }
@@ -363,11 +369,6 @@ namespace DataTool.SaveLogic {
             if (announcerVoiceSet != 0) {  // whole thing in env mode, not here
                 info.m_voiceSets.Remove(announcerVoiceSet);
             }
-            
-            LoudLog("\tSaving");
-            var context = new Combo.SaveContext(info);
-            Combo.Save(flags, mapPath, context);
-            Combo.SaveLooseTextures(flags, Path.Combine(mapPath, "Textures"), context);
             Combo.SaveAllVoiceSets(flags, Path.Combine(mapPath, "VoiceSets"), context);
             Combo.SaveAllSoundFiles(flags, Path.Combine(mapPath, "Sound"), context);
             context.Wait();
