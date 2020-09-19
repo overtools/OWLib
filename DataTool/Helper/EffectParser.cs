@@ -48,7 +48,7 @@ namespace DataTool.Helper {
         public IEnumerable<KeyValuePair<ChunkPlaybackInfo, IChunk>> GetChunks() {
             PMCEInfo lastComponent = null;
             IChunk lastChunk = null;
-            for (int i = 0; i < ChunkedData.Chunks.Length; i++) {
+            for (int i = 0; i < ChunkedData.Chunks?.Length; i++) {
                 if (ChunkedData?.Chunks[i]?.GetType() == typeof(teEffectChunkComponent)) {
                     if (!(ChunkedData.Chunks[i] is teEffectChunkComponent component)) continue;
                     lastComponent = new PMCEInfo {Hardpoint = component.Header.Hardpoint, StartTime = component.StartTime, EndTime = component.Duration};
