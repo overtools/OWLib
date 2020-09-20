@@ -56,6 +56,11 @@ namespace TankLib.STU {
         }
         
         private void Deobfuscate(ulong headerChecksum, uint fieldHash, ulong guid) {
+            if (guid == 0) {
+                GUID = new teResourceGUID();
+                return;
+            }
+            
             ulong fieldHash64 = fieldHash;
             fieldHash64 |= fieldHash64 << 32;
             guid ^= fieldHash64 ^ headerChecksum;
