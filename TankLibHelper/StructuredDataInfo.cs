@@ -178,7 +178,23 @@ namespace TankLibHelper {
         [DataMember(Name="Hash")] public string m_hash;
         [DataMember(Name="Value")] public ulong m_value;
         [DataMember(Name="Hex")] public string m_hexValue;
-        
+
         public uint Hash2 => uint.Parse(m_hash, NumberStyles.HexNumber);
+
+        public ulong GetSafeValue(FieldNew field) {
+            var safeValue = m_value;
+            switch (field.m_size) {
+                case 1:
+                    safeValue = (byte)(safeValue & byte.MaxValue);
+                    break;
+                case 2:
+                    safeValue = (ushort)(safeValue & ushort.MaxValue);
+                    break;
+                case 4:
+                    safeValue = (uint)(safeValue & uint.MaxValue);
+                    break;
+            }
+            return safeValue;
+        }
     }
 }

@@ -12,6 +12,6 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x4585FFFF)] Legendary = 0x3,
         [STUField(0xBD3BA67B)] xBD3BA67B = 0x4,
         [STUField(0xEF68A54A)] xEF68A54A = 0x5,
-        [STUField(0x3A3ADA03)] x3A3ADA03 = 0xFFFFFF,
+        [STUField(0x3A3ADA03)] x3A3ADA03 = 0xFFFFFFFF,
     }
 }

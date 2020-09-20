@@ -39,21 +39,7 @@ namespace TankLibHelper {
                     //} else {
                     //    attribute = $"[STUField(0x{value.Hash2:X8}, \"{Info.GetEnumValueName(value.Hash2)}\")]";
                     //}
-
-                    var safeValue = value.m_value;
-                    // ReSharper disable once SwitchStatementMissingSomeCases
-                    switch (_field.m_size) {
-                        case 1:
-                            safeValue = (byte)(safeValue % 0xFF);
-                            break;
-                        case 2:
-                            safeValue = (ushort)(safeValue % 0xFFFFF);
-                            break;
-                        case 4:
-                            safeValue = (uint)(safeValue % 0xFFFFFFFFFF);
-                            break;
-                    }
-                    
+                    var safeValue = value.GetSafeValue(_field);
                     writer.WriteLine($"{attribute} {Info.GetEnumValueName(value.Hash2)} = 0x{safeValue:X},");
                 }
             }

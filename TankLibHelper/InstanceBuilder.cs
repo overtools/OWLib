@@ -232,7 +232,7 @@ namespace TankLibHelper {
             if (Info.Enums.TryGetValue(typeHash, out var enumDef)) {
                 var defaultVal = (ulong) field.m_defaultValue.m_value;
                 
-                var enumValues = enumDef.m_values.Where(x => x.m_value == defaultVal).ToArray();
+                var enumValues = enumDef.m_values.Where(x => x.GetSafeValue(field) == defaultVal).ToArray();
 
                 if (enumValues.Length != 1) { // 0 or 2+
                     return $"({Info.GetEnumName(enumDef.Hash2)})0x{defaultVal:X}";
