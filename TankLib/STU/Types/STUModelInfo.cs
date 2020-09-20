@@ -11,7 +11,7 @@ namespace TankLib.STU.Types
         public STU_6250465B[] m_0E023673;
         
         [STUField(0x1E1CC3C6)]
-        public teQuat m_1E1CC3C6;
+        public teQuat m_1E1CC3C6 = new teQuat(0f, 0f, 0f, 1f);
         
         [STUField(0xBA93D5FE)]
         public teVec3 m_BA93D5FE;

@@ -15,15 +15,15 @@ namespace TankLib.STU.Types
         public Enum_06FA22BB m_A92070A2;
         
         [STUField(0x30CD4137)]
-        public float m_30CD4137;
+        public float m_30CD4137 = 0.95f;
         
         [STUField(0x4579B961)]
-        public float m_4579B961;
+        public float m_4579B961 = 0f;
         
         [STUField(0x2C0246C1)]
-        public float m_2C0246C1;
+        public float m_2C0246C1 = 1f;
         
         [STUField(0xA3B3682C)]
-        public byte m_A3B3682C;
+        public byte m_A3B3682C = 0x0;
     }
 }

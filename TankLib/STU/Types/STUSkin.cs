@@ -37,6 +37,6 @@ namespace TankLib.STU.Types
         public teString m_49A51309;
         
         [STUField(0x62746D34)]
-        public byte m_62746D34;
+        public byte m_62746D34 = 0x0;
     }
 }

@@ -101,21 +101,21 @@ namespace TankLib.STU.Types
         public STUConfigVar m_485109CB;
         
         [STUField(0xAB289E1F)]
-        public Enum_904BCECF m_AB289E1F;
+        public Enum_904BCECF m_AB289E1F = Enum_904BCECF.x86118A15;
         
         [STUField(0xA2577872)]
-        public Enum_0372962B m_A2577872;
+        public Enum_0372962B m_A2577872 = Enum_0372962B.xA456E27E;
         
         [STUField(0x209F58C8)]
-        public Enum_DAE586FD m_209F58C8;
+        public Enum_DAE586FD m_209F58C8 = (Enum_DAE586FD)0x1;
         
         [STUField(0x43620CE9)]
-        public byte m_43620CE9;
+        public byte m_43620CE9 = 0x0;
         
         [STUField(0x25D46946)]
-        public byte m_25D46946;
+        public byte m_25D46946 = 0x0;
         
         [STUField(0x10B52156)]
-        public byte m_10B52156;
+        public byte m_10B52156 = 0x0;
     }
 }

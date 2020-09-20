@@ -8,42 +8,42 @@ namespace TankLib.STU.Types
     public class STURagdollConfig : STUInstance
     {
         [STUField(0xFE263D30)]
-        public STURagdollMode m_FE263D30;
+        public STURagdollMode m_FE263D30 = STURagdollMode.x4F190FE5;
         
         [STUField(0x0094F094)]
-        public STURagdollMode m_0094F094;
+        public STURagdollMode m_0094F094 = STURagdollMode.x4F190FE5;
         
         [STUField(0xB8BEFA67)]
-        public STURagdollMode m_B8BEFA67;
+        public STURagdollMode m_B8BEFA67 = STURagdollMode.x4423EC07;
         
         [STUField(0x055B5368)]
-        public float m_055B5368;
+        public float m_055B5368 = 0.6f;
         
         [STUField(0x889AE87B)]
-        public int m_889AE87B;
+        public int m_889AE87B = 0x0;
         
         [STUField(0xDA28BE51)]
-        public int m_DA28BE51;
+        public int m_DA28BE51 = 0x5;
         
         [STUField(0x99A72E75)]
-        public int m_99A72E75;
+        public int m_99A72E75 = 0x3;
         
         [STUField(0x39943678)]
-        public byte m_39943678;
+        public byte m_39943678 = 0x0;
         
         [STUField(0xEDA30E4A)]
-        public byte m_EDA30E4A;
+        public byte m_EDA30E4A = 0x1;
         
         [STUField(0xD7C2FC23)]
-        public byte m_D7C2FC23;
+        public byte m_D7C2FC23 = 0x1;
         
         [STUField(0x794ACECD)]
-        public byte m_794ACECD;
+        public byte m_794ACECD = 0x1;
         
         [STUField(0x388DFDA7)]
-        public byte m_388DFDA7;
+        public byte m_388DFDA7 = 0x0;
         
         [STUField(0x6E669016)]
-        public byte m_6E669016;
+        public byte m_6E669016 = 0x0;
     }
 }

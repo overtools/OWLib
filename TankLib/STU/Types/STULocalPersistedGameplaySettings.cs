@@ -7,7 +7,7 @@ namespace TankLib.STU.Types
     public class STULocalPersistedGameplaySettings : STUInstance
     {
         [STUField(0x0CDB5C49)]
-        public byte m_0CDB5C49;
+        public byte m_0CDB5C49 = 0x1;
         
         [STUField(0x6FB4AB75)]
         public byte m_6FB4AB75;
@@ -16,7 +16,7 @@ namespace TankLib.STU.Types
         public byte m_6EFEB733;
         
         [STUField(0xA70B50D3)]
-        public byte m_A70B50D3;
+        public byte m_A70B50D3 = 0x1;
         
         [STUField(0x0D0FF2FA)]
         public byte m_0D0FF2FA;

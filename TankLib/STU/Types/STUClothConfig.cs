@@ -7,15 +7,15 @@ namespace TankLib.STU.Types
     public class STUClothConfig : STUInstance
     {
         [STUField(0x889AE87B)]
-        public int m_889AE87B;
+        public int m_889AE87B = 0x0;
         
         [STUField(0xC5A195CC)]
-        public byte m_C5A195CC;
+        public byte m_C5A195CC = 0x1;
         
         [STUField(0x9B9B09C7)]
-        public byte m_9B9B09C7;
+        public byte m_9B9B09C7 = 0x0;
         
         [STUField(0x2CBB62DB)]
-        public byte m_2CBB62DB;
+        public byte m_2CBB62DB = 0x0;
     }
 }

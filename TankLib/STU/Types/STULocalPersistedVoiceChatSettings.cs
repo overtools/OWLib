@@ -7,18 +7,18 @@ namespace TankLib.STU.Types
     public class STULocalPersistedVoiceChatSettings : STUInstance
     {
         [STUField(0xFD597304)]
-        public byte m_FD597304;
+        public byte m_FD597304 = 0x1;
         
         [STUField(0x59F175A3)]
-        public byte m_59F175A3;
+        public byte m_59F175A3 = 0x1;
         
         [STUField(0x0776F30B)]
-        public byte m_0776F30B;
+        public byte m_0776F30B = 0x1;
         
         [STUField(0x15556D84)]
-        public byte m_15556D84;
+        public byte m_15556D84 = 0x1;
         
         [STUField(0x6EEF7774)]
-        public byte m_6EEF7774;
+        public byte m_6EEF7774 = 0x1;
     }
 }

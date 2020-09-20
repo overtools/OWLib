@@ -39,16 +39,16 @@ namespace TankLib.STU.Types
         public float m_CBCE6044;
         
         [STUField(0x33461301)]
-        public float m_33461301;
+        public float m_33461301 = 5f;
         
         [STUField(0xFADFE325)]
         public TeamIndex m_initialTeam;
         
         [STUField(0x6675D16B)]
-        public int m_6675D16B;
+        public int m_6675D16B = -1;
         
         [STUField(0xB0D03CAE)]
-        public float m_B0D03CAE;
+        public float m_B0D03CAE = 1f;
         
         [STUField(0xC12407C5)]
         public byte m_C12407C5;

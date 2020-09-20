@@ -17,7 +17,7 @@ namespace TankLib.STU.Types
         public int m_D8A49A4D;
         
         [STUField(0x2F922165)]
-        public STUUnlockRarity m_2F922165;
+        public STUUnlockRarity m_2F922165 = STUUnlockRarity.Rare;
         
         [STUField(0x48A41554)]
         public byte m_48A41554;

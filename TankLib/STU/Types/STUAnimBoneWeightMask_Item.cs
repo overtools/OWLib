@@ -10,12 +10,12 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUBoneLabel> m_bone;
         
         [STUField(0x9CDDC24D)]
-        public float m_weight;
+        public float m_weight = 1f;
         
         [STUField(0xC7E4EB10)]
         public byte m_C7E4EB10;
         
         [STUField(0xA08C6C1C)]
-        public byte m_A08C6C1C;
+        public byte m_A08C6C1C = 0x1;
     }
 }

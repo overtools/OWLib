@@ -29,6 +29,6 @@ namespace TankLib.STU.Types
         public Enum_96A73C9E m_2C6F5BC0;
         
         [STUField(0x0F764DCB)]
-        public ushort m_0F764DCB;
+        public ushort m_0F764DCB = 0x3;
     }
 }

@@ -44,10 +44,10 @@ namespace TankLib.STU.Types
         public int m_6499BB02;
         
         [STUField(0x38833852)]
-        public Enum_8369E80A m_compressionType;
+        public Enum_8369E80A m_compressionType = Enum_8369E80A.x7E5D49A9;
         
         [STUField(0x563C7626)]
-        public float m_compressionScale;
+        public float m_compressionScale = 1f;
         
         [STUField(0x38158126)]
         public float m_movementSpeed;

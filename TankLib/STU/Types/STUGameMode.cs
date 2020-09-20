@@ -53,10 +53,10 @@ namespace TankLib.STU.Types
         public Enum_1964FED7 m_gameModeType;
         
         [STUField(0xE2B6AAC3)]
-        public Enum_3285FBF5 m_E2B6AAC3;
+        public Enum_3285FBF5 m_E2B6AAC3 = Enum_3285FBF5.x0FB42EC4;
         
         [STUField(0x7E0B4B96)]
-        public float m_7E0B4B96;
+        public float m_7E0B4B96 = 1f;
         
         [STUField(0x70064613)]
         public byte m_70064613;
@@ -74,7 +74,7 @@ namespace TankLib.STU.Types
         public byte m_372E20EB;
         
         [STUField(0xF40CE5D4)]
-        public byte m_F40CE5D4;
+        public byte m_F40CE5D4 = 0x1;
         
         [STUField(0x96C5A6F6)]
         public byte m_96C5A6F6;

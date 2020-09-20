@@ -22,10 +22,10 @@ namespace TankLib.STU.Types
         public float m_43FFCCCA;
         
         [STUField(0xB5AA16FB)]
-        public float m_B5AA16FB;
+        public float m_B5AA16FB = 0.75f;
         
         [STUField(0x4E89FF0D)]
-        public float m_4E89FF0D;
+        public float m_4E89FF0D = 1.25f;
         
         [STUField(0xB8F4A86C)]
         public float m_B8F4A86C;

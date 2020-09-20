@@ -10,9 +10,9 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_lightEffect;
         
         [STUField(0xCF9DF961)]
-        public teStructuredDataAssetRef<ulong> m_heavyEffect;
+        public teStructuredDataAssetRef<ulong> m_heavyEffect = 0x3000000000001E4;
         
         [STUField(0x43A3CE29)]
-        public float m_43A3CE29;
+        public float m_43A3CE29 = 0.49f;
     }
 }

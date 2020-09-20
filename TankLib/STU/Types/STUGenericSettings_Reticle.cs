@@ -12,22 +12,22 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_2A25A783;
         
         [STUField(0x8B7F6B0C)]
-        public teColorRGB m_8B7F6B0C;
+        public teColorRGB m_8B7F6B0C = new teColorRGB(1f, 0.0648f, 0.01938f);
         
         [STUField(0xA699CE1C)]
-        public teColorRGB m_A699CE1C;
+        public teColorRGB m_A699CE1C = new teColorRGB(0.0648f, 0.01938f, 1f);
         
         [STUField(0x33207F6F)]
-        public teColorRGB m_33207F6F;
+        public teColorRGB m_33207F6F = new teColorRGB(1f, 1f, 1f);
         
         [STUField(0xE397D09F)]
-        public float m_E397D09F;
+        public float m_E397D09F = 10f;
         
         [STUField(0xEEC455A9)]
-        public float m_EEC455A9;
+        public float m_EEC455A9 = 1f;
         
         [STUField(0x2ADE63D3)]
-        public float m_2ADE63D3;
+        public float m_2ADE63D3 = 1f;
         
         [STUField(0x86A84408)]
         public float m_86A84408;
@@ -42,21 +42,21 @@ namespace TankLib.STU.Types
         public float m_58750551;
         
         [STUField(0x5BD110A8)]
-        public Enum_C074B9DE m_reticleType;
+        public Enum_C074B9DE m_reticleType = Enum_C074B9DE.x4F1B70A3;
         
         [STUField(0x2B4AB8AB)]
-        public float m_2B4AB8AB;
+        public float m_2B4AB8AB = 5f;
         
         [STUField(0x919834B3)]
-        public float m_919834B3;
+        public float m_919834B3 = 0.8f;
         
         [STUField(0x10323077)]
-        public float m_10323077;
+        public float m_10323077 = 10f;
         
         [STUField(0xEA8ADC97)]
-        public float m_EA8ADC97;
+        public float m_EA8ADC97 = 0.8f;
         
         [STUField(0x0DC4BA0B)]
-        public float m_0DC4BA0B;
+        public float m_0DC4BA0B = 2f;
     }
 }

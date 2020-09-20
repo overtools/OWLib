@@ -17,10 +17,10 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUDataFlow> m_5A6D4FBD;
         
         [STUField(0xBE382990)]
-        public Enum_90451E4A m_BE382990;
+        public Enum_90451E4A m_BE382990 = Enum_90451E4A.x8B638C34;
         
         [STUField(0xC98EBA70)]
-        public Enum_90451E4A m_C98EBA70;
+        public Enum_90451E4A m_C98EBA70 = Enum_90451E4A.x5BFEC833;
         
         [STUField(0x7952DAFC)]
         public float m_7952DAFC;

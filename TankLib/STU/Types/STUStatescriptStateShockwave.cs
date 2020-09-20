@@ -86,9 +86,9 @@ namespace TankLib.STU.Types
         public Enum_3BED1D03 m_43478CAD;
         
         [STUField(0x95FFC3C5)]
-        public byte m_95FFC3C5;
+        public byte m_95FFC3C5 = 0x1;
         
         [STUField(0x1C2A9945)]
-        public byte m_1C2A9945;
+        public byte m_1C2A9945 = 0x1;
     }
 }

@@ -25,15 +25,15 @@ namespace TankLib.STU.Types
         public teString m_9AE3C787;
         
         [STUField(0xF38456B2)]
-        public int m_F38456B2;
+        public int m_F38456B2 = 0x5;
         
         [STUField(0x214BFFD8)]
-        public float m_214BFFD8;
+        public float m_214BFFD8 = 0f;
         
         [STUField(0xFAA34CAF)]
-        public float m_FAA34CAF;
+        public float m_FAA34CAF = 0f;
         
         [STUField(0xD10EE147)]
-        public float m_D10EE147;
+        public float m_D10EE147 = 0f;
     }
 }

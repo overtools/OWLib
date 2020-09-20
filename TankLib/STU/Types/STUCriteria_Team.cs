@@ -11,6 +11,6 @@ namespace TankLib.STU.Types
         public TeamIndex m_team;
         
         [STUField(0xEB5492C4)]
-        public byte m_EB5492C4;
+        public byte m_EB5492C4 = 0x1;
     }
 }

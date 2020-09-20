@@ -16,9 +16,9 @@ namespace TankLib.STU.Types
         public STUCriteriaContainer m_criteria;
         
         [STUField(0x9CDDC24D)]
-        public float m_weight;
+        public float m_weight = 1f;
         
         [STUField(0x98F0E612)]
-        public byte m_98F0E612;
+        public byte m_98F0E612 = 0x0;
     }
 }

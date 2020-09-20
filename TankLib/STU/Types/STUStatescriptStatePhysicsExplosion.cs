@@ -43,6 +43,6 @@ namespace TankLib.STU.Types
         public STUConfigVar m_17E9238F;
         
         [STUField(0x86CE02DE)]
-        public byte m_86CE02DE;
+        public byte m_86CE02DE = 0x1;
     }
 }

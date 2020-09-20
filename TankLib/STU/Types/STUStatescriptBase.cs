@@ -14,7 +14,7 @@ namespace TankLib.STU.Types
         public STUStatescriptRemoteSyncVar[] m_8BF03679;
         
         [STUField(0xA2287776)]
-        public Enum_46B5ADCA m_A2287776;
+        public Enum_46B5ADCA m_A2287776 = Enum_46B5ADCA.x1F0B0C4D;
         
         [STUField(0x871A8203)]
         public int m_871A8203;

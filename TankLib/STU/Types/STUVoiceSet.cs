@@ -35,7 +35,7 @@ namespace TankLib.STU.Types
         public float m_5E15FBE2;
         
         [STUField(0x7D88A63A)]
-        public Enum_0C014B4A m_gender;
+        public Enum_0C014B4A m_gender = Enum_0C014B4A.Neither;
         
         [STUField(0x2866DEC2)]
         public byte m_2866DEC2;

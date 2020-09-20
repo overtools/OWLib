@@ -10,6 +10,6 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUVoiceSet> m_voiceDefinition;
         
         [STUField(0x176FAE00)]
-        public byte m_176FAE00;
+        public byte m_176FAE00 = 0x0;
     }
 }

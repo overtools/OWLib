@@ -49,6 +49,6 @@ namespace TankLib.STU.Types
         public int m_gamerScore;
         
         [STUField(0x5351832E)]
-        public int m_5351832E;
+        public int m_5351832E = -1;
     }
 }

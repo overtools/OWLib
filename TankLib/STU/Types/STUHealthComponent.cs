@@ -22,21 +22,21 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_9AF692CD;
         
         [STUField(0xE64867CE)]
-        public int m_E64867CE;
+        public int m_E64867CE = -1;
         
         [STUField(0x5AF3C1F6)]
-        public float m_5AF3C1F6;
+        public float m_5AF3C1F6 = 7.5f;
         
         [STUField(0x5A007127)]
         public byte m_5A007127;
         
         [STUField(0xCDB100D1)]
-        public byte m_CDB100D1;
+        public byte m_CDB100D1 = 0x1;
         
         [STUField(0xF6CE4EAC)]
         public byte m_F6CE4EAC;
         
         [STUField(0xA80BAB3F)]
-        public byte m_A80BAB3F;
+        public byte m_A80BAB3F = 0x1;
     }
 }

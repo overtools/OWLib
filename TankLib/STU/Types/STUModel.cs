@@ -47,7 +47,7 @@ namespace TankLib.STU.Types
         public STU_BBBFC3C9 m_78985272;
         
         [STUField(0x87916047)]
-        public Enum_790E517D m_87916047;
+        public Enum_790E517D m_87916047 = Enum_790E517D.x001C5783;
         
         [STUField(0xD64F7813)]
         public byte m_D64F7813;
@@ -56,6 +56,6 @@ namespace TankLib.STU.Types
         public byte m_ADC54E57;
         
         [STUField(0x81AF6609)]
-        public Enum_950F7205 m_usageCategory;
+        public Enum_950F7205 m_usageCategory = Enum_950F7205.xE8ACB95D;
     }
 }

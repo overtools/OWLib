@@ -13,6 +13,6 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUDataFlow> m_dataFlow;
         
         [STUField(0x07DD813E)]
-        public float m_value;
+        public float m_value = 1f;
     }
 }

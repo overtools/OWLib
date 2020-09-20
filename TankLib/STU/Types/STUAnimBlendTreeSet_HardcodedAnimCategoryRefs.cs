@@ -7,42 +7,42 @@ namespace TankLib.STU.Types
     public class STUAnimBlendTreeSet_HardcodedAnimCategoryRefs : STUInstance
     {
         [STUField(0x013F5402)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_013F5402;
+        public teStructuredDataAssetRef<STUAnimCategory> m_013F5402 = 0x280000000000004;
         
         [STUField(0x9AC26F9B)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_9AC26F9B;
+        public teStructuredDataAssetRef<STUAnimCategory> m_9AC26F9B = 0x280000000000005;
         
         [STUField(0xBB736F3F)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_BB736F3F;
+        public teStructuredDataAssetRef<STUAnimCategory> m_BB736F3F = 0x280000000000009;
         
         [STUField(0x9D4FE3BA)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_9D4FE3BA;
+        public teStructuredDataAssetRef<STUAnimCategory> m_9D4FE3BA = 0x280000000000006;
         
         [STUField(0x64CB9871)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_64CB9871;
+        public teStructuredDataAssetRef<STUAnimCategory> m_64CB9871 = 0x280000000000015;
         
         [STUField(0xA023ADB5)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_A023ADB5;
+        public teStructuredDataAssetRef<STUAnimCategory> m_A023ADB5 = 0x280000000000066;
         
         [STUField(0xD5DE1D8B)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_D5DE1D8B;
+        public teStructuredDataAssetRef<STUAnimCategory> m_D5DE1D8B = 0x280000000000065;
         
         [STUField(0xA5DBA2DB)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_A5DBA2DB;
+        public teStructuredDataAssetRef<STUAnimCategory> m_A5DBA2DB = 0x280000000000007;
         
         [STUField(0x198EE6D4)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_198EE6D4;
+        public teStructuredDataAssetRef<STUAnimCategory> m_198EE6D4 = 0x28000000000003F;
         
         [STUField(0x4BE400BA)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_4BE400BA;
+        public teStructuredDataAssetRef<STUAnimCategory> m_4BE400BA = 0x28000000000022E;
         
         [STUField(0xCD6D2FA7)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_CD6D2FA7;
+        public teStructuredDataAssetRef<STUAnimCategory> m_CD6D2FA7 = 0x28000000000022F;
         
         [STUField(0x75C041AD)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_75C041AD;
+        public teStructuredDataAssetRef<STUAnimCategory> m_75C041AD = 0x280000000000068;
         
         [STUField(0xA93A7786)]
-        public teStructuredDataAssetRef<STUAnimCategory> m_A93A7786;
+        public teStructuredDataAssetRef<STUAnimCategory> m_A93A7786 = 0x280000000000069;
     }
 }

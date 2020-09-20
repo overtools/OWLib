@@ -17,6 +17,6 @@ namespace TankLib.STU.Types
         public Enum_B6526149 m_AA43F96E;
         
         [STUField(0xF8584EDD)]
-        public byte m_F8584EDD;
+        public byte m_F8584EDD = 0x0;
     }
 }

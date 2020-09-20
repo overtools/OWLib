@@ -13,6 +13,6 @@ namespace TankLib.STU.Types
         public STUConfigVar m_entityDef;
         
         [STUField(0xA9A62FD0)]
-        public byte m_A9A62FD0;
+        public byte m_A9A62FD0 = 0x1;
     }
 }

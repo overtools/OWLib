@@ -23,7 +23,7 @@ namespace TankLib.STU.Types
         public ulong m_context;
         
         [STUField(0x5D32D524)]
-        public Enum_2D0A59BA m_5D32D524;
+        public Enum_2D0A59BA m_5D32D524 = Enum_2D0A59BA.x712178EF;
         
         [STUField(0x5ED79353)]
         public Enum_10064D07 m_5ED79353;

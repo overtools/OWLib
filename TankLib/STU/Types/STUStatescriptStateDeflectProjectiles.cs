@@ -76,7 +76,7 @@ namespace TankLib.STU.Types
         public byte m_8B251D53;
         
         [STUField(0xED96CD23)]
-        public byte m_ED96CD23;
+        public byte m_ED96CD23 = 0x1;
         
         [STUField(0xFB15AEF6)]
         public byte m_FB15AEF6;

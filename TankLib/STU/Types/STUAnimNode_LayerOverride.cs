@@ -20,6 +20,6 @@ namespace TankLib.STU.Types
         public STU_5861C542 m_CC95F1B0;
         
         [STUField(0x059042DC)]
-        public Enum_96A73C9E m_059042DC;
+        public Enum_96A73C9E m_059042DC = Enum_96A73C9E.x13AD5D2E;
     }
 }

@@ -17,18 +17,18 @@ namespace TankLib.STU.Types
         public float m_15D5849E;
         
         [STUField(0x6D6F179F)]
-        public float m_6D6F179F;
+        public float m_6D6F179F = 1.57f;
         
         [STUField(0xF2E8E816)]
-        public float m_F2E8E816;
+        public float m_F2E8E816 = 0.2f;
         
         [STUField(0xF3D0818C)]
-        public float m_F3D0818C;
+        public float m_F3D0818C = 0f;
         
         [STUField(0xD67894A0)]
-        public byte m_D67894A0;
+        public byte m_D67894A0 = 0x1;
         
         [STUField(0xFBEA8A90)]
-        public byte m_FBEA8A90;
+        public byte m_FBEA8A90 = 0x0;
     }
 }

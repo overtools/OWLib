@@ -18,81 +18,81 @@ namespace TankLib.STU.Types
         public STU_FAA3F9A2 m_C95E70CF;
         
         [STUField(0xB8938E78)]
-        public teColorRGBA m_backgroundColor;
+        public teColorRGBA m_backgroundColor = new teColorRGBA(0.05f, 0.05f, 0.05f, 0.93f);
         
         [STUField(0x8B7F6B0C)]
-        public teColorRGB m_8B7F6B0C;
+        public teColorRGB m_8B7F6B0C = new teColorRGB(1f, 0.065f, 0.019f);
         
         [STUField(0xA699CE1C)]
-        public teColorRGB m_A699CE1C;
+        public teColorRGB m_A699CE1C = new teColorRGB(0.065f, 0.019f, 1f);
         
         [STUField(0x950E2A8F)]
-        public float m_950E2A8F;
+        public float m_950E2A8F = 20f;
         
         [STUField(0x9D442A12)]
-        public float m_9D442A12;
+        public float m_9D442A12 = 10f;
         
         [STUField(0xBD5D0EA8)]
-        public float m_BD5D0EA8;
+        public float m_BD5D0EA8 = 0.8f;
         
         [STUField(0x6C703AAF)]
-        public float m_6C703AAF;
+        public float m_6C703AAF = 0.3f;
         
         [STUField(0x620F883F)]
-        public float m_620F883F;
+        public float m_620F883F = 0.6f;
         
         [STUField(0xA373BBA0)]
-        public float m_A373BBA0;
+        public float m_A373BBA0 = 0.3f;
         
         [STUField(0x53B51068)]
-        public float m_53B51068;
+        public float m_53B51068 = 22f;
         
         [STUField(0xF201584C)]
-        public float m_F201584C;
+        public float m_F201584C = 10f;
         
         [STUField(0x0E9C9C80)]
         public Enum_988457C2 m_0E9C9C80;
         
         [STUField(0xC6C76DAF)]
-        public int m_C6C76DAF;
+        public int m_C6C76DAF = 0x190;
         
         [STUField(0x126BF429)]
-        public int m_126BF429;
+        public int m_126BF429 = 0x5;
         
         [STUField(0x8C167EFF)]
-        public float m_8C167EFF;
+        public float m_8C167EFF = 15f;
         
         [STUField(0x85587E17)]
-        public float m_85587E17;
+        public float m_85587E17 = 1E-05f;
         
         [STUField(0x1DE67E91)]
-        public float m_1DE67E91;
+        public float m_1DE67E91 = 0.00021f;
         
         [STUField(0xD1195FED)]
-        public float m_D1195FED;
+        public float m_D1195FED = 11f;
         
         [STUField(0xEF5CE860)]
-        public float m_EF5CE860;
+        public float m_EF5CE860 = 5f;
         
         [STUField(0xF09A2168)]
-        public float m_F09A2168;
+        public float m_F09A2168 = 150f;
         
         [STUField(0xCE86B746)]
-        public float m_CE86B746;
+        public float m_CE86B746 = 90f;
         
         [STUField(0x449E32A3)]
-        public uint m_449E32A3;
+        public uint m_449E32A3 = 0x14;
         
         [STUField(0xC0ACAD1E)]
-        public uint m_C0ACAD1E;
+        public uint m_C0ACAD1E = 0x5;
         
         [STUField(0xA9391B0F)]
-        public uint m_A9391B0F;
+        public uint m_A9391B0F = 0x1;
         
         [STUField(0x1D79B55F)]
-        public byte m_1D79B55F;
+        public byte m_1D79B55F = 0x0;
         
         [STUField(0x288D781A)]
-        public byte m_288D781A;
+        public byte m_288D781A = 0x0;
     }
 }

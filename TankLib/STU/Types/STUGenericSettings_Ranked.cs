@@ -13,10 +13,10 @@ namespace TankLib.STU.Types
         public STURankedTierDefinition[] m_rankedTiers;
         
         [STUField(0x4245A80C)]
-        public double m_4245A80C;
+        public double m_4245A80C = 0.05;
         
         [STUField(0x3909E0E2)]
-        public double m_3909E0E2;
+        public double m_3909E0E2 = 0.03;
         
         [STUField(0xD2B2A90F)]
         public int m_D2B2A90F;
@@ -25,7 +25,7 @@ namespace TankLib.STU.Types
         public int m_6B8068D7;
         
         [STUField(0xB3359A7B)]
-        public int m_B3359A7B;
+        public int m_B3359A7B = 0xA;
         
         [STUField(0xB1A4844B)]
         public int m_B1A4844B;
@@ -40,7 +40,7 @@ namespace TankLib.STU.Types
         public int m_0F30ABF7;
         
         [STUField(0xBA88A3D8)]
-        public int m_BA88A3D8;
+        public int m_BA88A3D8 = 0xF3C;
         
         [STUField(0x7AE0E896)]
         public int m_7AE0E896;

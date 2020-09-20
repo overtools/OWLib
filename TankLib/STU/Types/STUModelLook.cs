@@ -19,7 +19,7 @@ namespace TankLib.STU.Types
         public STU_D5C245D3[] m_844B23C0;
         
         [STUField(0x7B5D8241)]
-        public teStructuredDataAssetRef<STUMaterialEffect> m_7B5D8241;
+        public teStructuredDataAssetRef<STUMaterialEffect> m_7B5D8241 = 0x0;
         
         [STUField(0xC03306D7)]
         public teStructuredDataAssetRef<STUModel>[] m_C03306D7;

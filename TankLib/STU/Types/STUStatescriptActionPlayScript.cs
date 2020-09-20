@@ -26,6 +26,6 @@ namespace TankLib.STU.Types
         public Enum_80C90536 m_AA4DE426;
         
         [STUField(0x7ABA409C)]
-        public byte m_7ABA409C;
+        public byte m_7ABA409C = 0x1;
     }
 }

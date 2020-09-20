@@ -37,7 +37,7 @@ namespace TankLib.STU.Types
         public STUClothConfig m_clothConfig;
         
         [STUField(0xBE0D6D29)]
-        public uint m_BE0D6D29;
+        public uint m_BE0D6D29 = 0x1;
         
         [STUField(0x94546E3D)]
         public float m_94546E3D;

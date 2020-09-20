@@ -7,16 +7,16 @@ namespace TankLib.STU.Types
     public class STUBreakableConfig : STUInstance
     {
         [STUField(0xE1B0C07F)]
-        public byte m_clientOnly;
+        public byte m_clientOnly = 0x0;
         
         [STUField(0xEDA30E4A)]
-        public byte m_EDA30E4A;
+        public byte m_EDA30E4A = 0x1;
         
         [STUField(0xD7C2FC23)]
-        public byte m_D7C2FC23;
+        public byte m_D7C2FC23 = 0x1;
         
         [STUField(0x06CC8602)]
-        public byte m_06CC8602;
+        public byte m_06CC8602 = 0x0;
         
         [STUField(0x83798806)]
         public byte m_83798806;

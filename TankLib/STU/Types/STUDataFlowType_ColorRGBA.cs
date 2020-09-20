@@ -8,6 +8,6 @@ namespace TankLib.STU.Types
     public class STUDataFlowType_ColorRGBA : STUDataFlowType
     {
         [STUField(0x45A7A69C)]
-        public teColorRGBA m_default;
+        public teColorRGBA m_default = new teColorRGBA(1f, 1f, 1f, 1f);
     }
 }

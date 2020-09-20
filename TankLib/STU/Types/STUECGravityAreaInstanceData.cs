@@ -14,6 +14,6 @@ namespace TankLib.STU.Types
         public teUUID m_2746D7E4;
         
         [STUField(0xDB660199)]
-        public float m_DB660199;
+        public float m_DB660199 = 1f;
     }
 }

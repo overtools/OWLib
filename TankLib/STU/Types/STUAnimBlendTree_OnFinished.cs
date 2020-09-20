@@ -13,9 +13,9 @@ namespace TankLib.STU.Types
         public STUAnimBlendTree_SlotAnimation[] m_slotAnims;
         
         [STUField(0x5E17A3D1)]
-        public byte m_5E17A3D1;
+        public byte m_5E17A3D1 = 0x1;
         
         [STUField(0xE10F639C)]
-        public byte m_E10F639C;
+        public byte m_E10F639C = 0x1;
     }
 }

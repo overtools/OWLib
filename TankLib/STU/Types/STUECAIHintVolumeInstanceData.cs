@@ -21,10 +21,10 @@ namespace TankLib.STU.Types
         public Enum_FB7F61B4[] m_E005252F;
         
         [STUField(0x44CE67EA)]
-        public int m_44CE67EA;
+        public int m_44CE67EA = -1;
         
         [STUField(0x428B4854)]
-        public Enum_135DBBD2 m_428B4854;
+        public Enum_135DBBD2 m_428B4854 = Enum_135DBBD2.x7C9383E2;
         
         [STUField(0x7F8C228D)]
         public byte m_7F8C228D;

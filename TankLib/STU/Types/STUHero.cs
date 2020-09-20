@@ -84,13 +84,13 @@ namespace TankLib.STU.Types
         public teColorRGBA m_heroColor;
         
         [STUField(0x44D13CC2)]
-        public int m_44D13CC2;
+        public int m_44D13CC2 = -1;
         
         [STUField(0xAF4EC410)]
         public Enum_C1DAF32A m_heroSize;
         
         [STUField(0x7D88A63A)]
-        public Enum_0C014B4A m_gender;
+        public Enum_0C014B4A m_gender = Enum_0C014B4A.Neither;
         
         [STUField(0x62746D34)]
         public byte m_62746D34;
@@ -99,6 +99,6 @@ namespace TankLib.STU.Types
         public byte m_906C3711;
         
         [STUField(0x40B57B0B)]
-        public byte m_40B57B0B;
+        public byte m_40B57B0B = 0x0;
     }
 }

@@ -7,9 +7,9 @@ namespace TankLib.STU.Types
     public class STUSoundImportanceFactor : STUInstance
     {
         [STUField(0x9CDDC24D)]
-        public float m_weight;
+        public float m_weight = 0.2f;
         
         [STUField(0x2376DE9C)]
-        public float m_2376DE9C;
+        public float m_2376DE9C = 2f;
     }
 }

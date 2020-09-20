@@ -35,7 +35,7 @@ namespace TankLib.STU.Types
         public STU_904BFCEC m_33DA5163;
         
         [STUField(0x39B47960)]
-        public Enum_0B105E0B m_39B47960;
+        public Enum_0B105E0B m_39B47960 = Enum_0B105E0B.x30A063CA;
         
         [STUField(0x586B4905)]
         public byte m_586B4905;

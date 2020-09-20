@@ -23,72 +23,72 @@ namespace TankLib.STU.Types
         public STUCriteriaContainer m_criteria;
         
         [STUField(0xDF647B95)]
-        public Enum_BC00E017 m_DF647B95;
+        public Enum_BC00E017 m_DF647B95 = Enum_BC00E017.x104CDEDC;
         
         [STUField(0x35EC21DC)]
-        public Enum_4368B765 m_interrupt;
+        public Enum_4368B765 m_interrupt = Enum_4368B765.xEFAD49F4;
         
         [STUField(0xA73F2EBE)]
-        public float m_A73F2EBE;
+        public float m_A73F2EBE = 0f;
         
         [STUField(0xDD27AC95)]
-        public float m_DD27AC95;
+        public float m_DD27AC95 = 0f;
         
         [STUField(0xF6658B6B)]
-        public Enum_A3FB08F9 m_loadData;
+        public Enum_A3FB08F9 m_loadData = Enum_A3FB08F9.x0998A170;
         
         [STUField(0xBB16810A)]
-        public uint m_priority;
+        public uint m_priority = 0x32;
         
         [STUField(0x1CC5EF25)]
-        public float m_1CC5EF25;
+        public float m_1CC5EF25 = 1f;
         
         [STUField(0xB1C6CDA2)]
-        public float m_volume;
+        public float m_volume = 0f;
         
         [STUField(0xED61D926)]
-        public float m_radius;
+        public float m_radius = 35f;
         
         [STUField(0xBCE309D7)]
-        public Enum_523DC49D m_BCE309D7;
+        public Enum_523DC49D m_BCE309D7 = Enum_523DC49D.x0C3524EE;
         
         [STUField(0x9502010D)]
-        public byte m_active;
+        public byte m_active = 0x1;
         
         [STUField(0xDC30A92A)]
-        public byte m_announcer;
+        public byte m_announcer = 0x0;
         
         [STUField(0xAB866031)]
-        public byte m_AB866031;
+        public byte m_AB866031 = 0x0;
         
         [STUField(0xAC80C14A)]
-        public byte m_AC80C14A;
+        public byte m_AC80C14A = 0x1;
         
         [STUField(0xEE144B9E)]
-        public byte m_EE144B9E;
+        public byte m_EE144B9E = 0x0;
         
         [STUField(0xA9A901C1)]
-        public byte m_A9A901C1;
+        public byte m_A9A901C1 = 0x0;
         
         [STUField(0x72AA9E92)]
-        public byte m_72AA9E92;
+        public byte m_72AA9E92 = 0x0;
         
         [STUField(0xAFCF2626)]
-        public byte m_AFCF2626;
+        public byte m_AFCF2626 = 0x0;
         
         [STUField(0xD7FE39AA)]
-        public byte m_D7FE39AA;
+        public byte m_D7FE39AA = 0x0;
         
         [STUField(0x345921CC)]
-        public byte m_345921CC;
+        public byte m_345921CC = 0x0;
         
         [STUField(0x14A22FA7)]
-        public byte m_14A22FA7;
+        public byte m_14A22FA7 = 0x0;
         
         [STUField(0x252D7B29)]
-        public byte m_252D7B29;
+        public byte m_252D7B29 = 0x1;
         
         [STUField(0x5D07FCC3)]
-        public byte m_5D07FCC3;
+        public byte m_5D07FCC3 = 0x0;
     }
 }

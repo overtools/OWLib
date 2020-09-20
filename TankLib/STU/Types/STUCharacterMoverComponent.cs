@@ -28,10 +28,10 @@ namespace TankLib.STU.Types
         public float m_D97B3735;
         
         [STUField(0xD4AE9D05)]
-        public float m_D4AE9D05;
+        public float m_D4AE9D05 = 0.25f;
         
         [STUField(0x5C6B4602)]
-        public int m_5C6B4602;
+        public int m_5C6B4602 = 0x4;
         
         [STUField(0x6B7FDB90)]
         public float m_6B7FDB90;
@@ -70,7 +70,7 @@ namespace TankLib.STU.Types
         public float m_E631BA84;
         
         [STUField(0xD24BF4E6)]
-        public float m_D24BF4E6;
+        public float m_D24BF4E6 = 0.5f;
         
         [STUField(0xE0A0FE25)]
         public float m_E0A0FE25;
@@ -109,28 +109,28 @@ namespace TankLib.STU.Types
         public float m_CEF4898C;
         
         [STUField(0xE91D1664)]
-        public float m_E91D1664;
+        public float m_E91D1664 = 4.5f;
         
         [STUField(0x4A5244C1)]
-        public float m_4A5244C1;
+        public float m_4A5244C1 = 15f;
         
         [STUField(0x5D90DBDB)]
-        public float m_5D90DBDB;
+        public float m_5D90DBDB = 8f;
         
         [STUField(0xD9ECB731)]
-        public float m_D9ECB731;
+        public float m_D9ECB731 = 15f;
         
         [STUField(0x6DB41D17)]
         public ushort m_6DB41D17;
         
         [STUField(0xD4A3C694)]
-        public byte m_D4A3C694;
+        public byte m_D4A3C694 = 0x1;
         
         [STUField(0xFD92C072)]
-        public byte m_FD92C072;
+        public byte m_FD92C072 = 0x1;
         
         [STUField(0x1FF06061)]
-        public byte m_1FF06061;
+        public byte m_1FF06061 = 0x1;
         
         [STUField(0x5AA2E07C)]
         public byte m_5AA2E07C;

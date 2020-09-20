@@ -119,16 +119,16 @@ namespace TankLib.STU.Types
         public Enum_3BED1D03 m_43478CAD;
         
         [STUField(0xDD792FF0)]
-        public Enum_B101E48A m_DD792FF0;
+        public Enum_B101E48A m_DD792FF0 = Enum_B101E48A.xBB2CFC53;
         
         [STUField(0x08285CD6)]
-        public byte m_08285CD6;
+        public byte m_08285CD6 = 0x1;
         
         [STUField(0x0297060F)]
-        public byte m_0297060F;
+        public byte m_0297060F = 0x1;
         
         [STUField(0x95FFC3C5)]
-        public byte m_95FFC3C5;
+        public byte m_95FFC3C5 = 0x1;
         
         [STUField(0x8D13DD07)]
         public byte m_8D13DD07;
@@ -137,12 +137,12 @@ namespace TankLib.STU.Types
         public byte m_2F5FAF65;
         
         [STUField(0x32AFE9AA)]
-        public byte m_32AFE9AA;
+        public byte m_32AFE9AA = 0x1;
         
         [STUField(0xE4A295CE)]
-        public byte m_E4A295CE;
+        public byte m_E4A295CE = 0x1;
         
         [STUField(0x1C2A9945)]
-        public byte m_1C2A9945;
+        public byte m_1C2A9945 = 0x1;
     }
 }

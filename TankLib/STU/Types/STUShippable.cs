@@ -11,9 +11,9 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUResourceKey> m_resourceKey;
         
         [STUField(0xBB16810A)]
-        public Enum_D407CA8B m_priority;
+        public Enum_D407CA8B m_priority = Enum_D407CA8B.xD8105002;
         
         [STUField(0xB7A1D145)]
-        public int m_chunkId;
+        public int m_chunkId = 0x2;
     }
 }

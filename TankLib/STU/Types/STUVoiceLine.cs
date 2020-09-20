@@ -28,21 +28,21 @@ namespace TankLib.STU.Types
         public STUCriteriaContainer m_criteria;
         
         [STUField(0x9CDDC24D)]
-        public float m_weight;
+        public float m_weight = 1f;
         
         [STUField(0xB4D405A1)]
-        public uint m_B4D405A1;
+        public uint m_B4D405A1 = 0x1;
         
         [STUField(0xE89F291B)]
-        public int m_E89F291B;
+        public int m_E89F291B = 0x0;
         
         [STUField(0x093FCEEB)]
         public float m_093FCEEB;
         
         [STUField(0x9502010D)]
-        public byte m_active;
+        public byte m_active = 0x1;
         
         [STUField(0xB4799113)]
-        public byte m_B4799113;
+        public byte m_B4799113 = 0x0;
     }
 }

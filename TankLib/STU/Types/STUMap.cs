@@ -107,19 +107,19 @@ namespace TankLib.STU.Types
         public STU_7D6D8405[] m_F542263E;
         
         [STUField(0x62354864)]
-        public ulong m_62354864;
+        public ulong m_62354864 = 0x0;
         
         [STUField(0x1DD3A0CD)]
-        public Enum_A0F51DCC m_mapType;
+        public Enum_A0F51DCC m_mapType = Enum_A0F51DCC.Standard;
         
         [STUField(0x44D13CC2)]
-        public int m_44D13CC2;
+        public int m_44D13CC2 = -1;
         
         [STUField(0xC0E32840)]
-        public float m_C0E32840;
+        public float m_C0E32840 = -100f;
         
         [STUField(0xA125818B)]
-        public Enum_668FA6B6 m_A125818B;
+        public Enum_668FA6B6 m_A125818B = Enum_668FA6B6.Enabled;
         
         [STUField(0xA8BF9196)]
         public byte m_A8BF9196;
@@ -128,13 +128,13 @@ namespace TankLib.STU.Types
         public byte m_5FB9732D;
         
         [STUField(0x61550F4E)]
-        public byte m_61550F4E;
+        public byte m_61550F4E = 0x1;
         
         [STUField(0xC11DA2F7)]
-        public byte m_C11DA2F7;
+        public byte m_C11DA2F7 = 0x1;
         
         [STUField(0x7BF9245C)]
-        public byte m_7BF9245C;
+        public byte m_7BF9245C = 0x1;
         
         [STUField(0x13D8A0DD)]
         public byte m_13D8A0DD;

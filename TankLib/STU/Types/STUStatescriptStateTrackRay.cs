@@ -46,12 +46,12 @@ namespace TankLib.STU.Types
         public STUConfigVar m_3B0AD973;
         
         [STUField(0x1DA04609)]
-        public byte m_1DA04609;
+        public byte m_1DA04609 = 0x1;
         
         [STUField(0xE4A295CE)]
-        public byte m_E4A295CE;
+        public byte m_E4A295CE = 0x1;
         
         [STUField(0x1C2A9945)]
-        public byte m_1C2A9945;
+        public byte m_1C2A9945 = 0x1;
     }
 }

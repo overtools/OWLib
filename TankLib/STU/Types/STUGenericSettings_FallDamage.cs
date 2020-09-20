@@ -19,6 +19,6 @@ namespace TankLib.STU.Types
         public float m_6CFD21C9;
         
         [STUField(0xF871EA4D)]
-        public float m_F871EA4D;
+        public float m_F871EA4D = 10f;
     }
 }

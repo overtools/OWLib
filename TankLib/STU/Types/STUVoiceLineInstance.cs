@@ -19,6 +19,6 @@ namespace TankLib.STU.Types
         public STUVoiceLine m_voiceLineRuntime;
         
         [STUField(0x38BFB46C)]
-        public ulong m_resourceKey;
+        public ulong m_resourceKey = 0x0;
     }
 }

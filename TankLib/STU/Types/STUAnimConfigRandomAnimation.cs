@@ -10,9 +10,9 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUAnimation> m_animation;
         
         [STUField(0x452D0972)]
-        public float m_452D0972;
+        public float m_452D0972 = 0f;
         
         [STUField(0xAFC41FBA)]
-        public float m_AFC41FBA;
+        public float m_AFC41FBA = 1f;
     }
 }

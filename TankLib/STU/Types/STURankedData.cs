@@ -49,12 +49,12 @@ namespace TankLib.STU.Types
         public teStructuredDataDateAndTime m_9A31D01C;
         
         [STUField(0xAE69132D)]
-        public uint m_AE69132D;
+        public uint m_AE69132D = 0x32;
         
         [STUField(0x82AA08B4)]
-        public uint m_82AA08B4;
+        public uint m_82AA08B4 = 0xA;
         
         [STUField(0xB5DD91B7)]
-        public byte m_B5DD91B7;
+        public byte m_B5DD91B7 = 0x1;
     }
 }

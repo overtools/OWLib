@@ -7,18 +7,18 @@ namespace TankLib.STU.Types
     public class STURigidBodyConfig : STUInstance
     {
         [STUField(0xEDA30E4A)]
-        public byte m_EDA30E4A;
+        public byte m_EDA30E4A = 0x1;
         
         [STUField(0xD7C2FC23)]
-        public byte m_D7C2FC23;
+        public byte m_D7C2FC23 = 0x1;
         
         [STUField(0x55B0407E)]
-        public byte m_55B0407E;
+        public byte m_55B0407E = 0x0;
         
         [STUField(0xE266C501)]
-        public byte m_E266C501;
+        public byte m_E266C501 = 0x0;
         
         [STUField(0x3AA8336F)]
-        public byte m_3AA8336F;
+        public byte m_3AA8336F = 0x0;
     }
 }

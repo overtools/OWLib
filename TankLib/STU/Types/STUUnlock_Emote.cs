@@ -23,10 +23,10 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STU_6BE90C5C>[] m_421B4005;
         
         [STUField(0x28814AE5)]
-        public teVec3 m_28814AE5;
+        public teVec3 m_28814AE5 = new teVec3(0f, 1f, 0f);
         
         [STUField(0x69150A1D)]
-        public teVec3 m_69150A1D;
+        public teVec3 m_69150A1D = new teVec3(1f, 1f, 1f);
         
         [STUField(0x7AE191BC)]
         public byte m_7AE191BC;

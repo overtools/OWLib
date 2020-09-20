@@ -13,24 +13,24 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUTexture> m_FF1B5A9F;
         
         [STUField(0xAF1F50CE)]
-        public teStructuredDataAssetRef<STUTexture> m_colorLookup;
+        public teStructuredDataAssetRef<STUTexture> m_colorLookup = 0xC0000000000000B;
         
         [STUField(0xB7BE49E5)]
-        public float m_B7BE49E5;
+        public float m_B7BE49E5 = 1f;
         
         [STUField(0x825101A9)]
-        public float m_825101A9;
+        public float m_825101A9 = 500f;
         
         [STUField(0xA16426C6)]
-        public float m_height;
+        public float m_height = 0f;
         
         [STUField(0x79476727)]
-        public float m_79476727;
+        public float m_79476727 = 0f;
         
         [STUField(0xBDA6F5E1)]
-        public float m_BDA6F5E1;
+        public float m_BDA6F5E1 = 100f;
         
         [STUField(0x9884BDEE)]
-        public float m_9884BDEE;
+        public float m_9884BDEE = 0.01f;
     }
 }

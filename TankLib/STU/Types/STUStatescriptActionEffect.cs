@@ -68,9 +68,9 @@ namespace TankLib.STU.Types
         public STUConfigVar m_31DC818B;
         
         [STUField(0x7A46FA0F)]
-        public Enum_148B377B m_7A46FA0F;
+        public Enum_148B377B m_7A46FA0F = Enum_148B377B.x9F0CD222;
         
         [STUField(0x6A3C1510)]
-        public byte m_6A3C1510;
+        public byte m_6A3C1510 = 0x0;
     }
 }

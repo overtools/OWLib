@@ -7,9 +7,9 @@ namespace TankLib.STU.Types
     public class STUAnimGlobalLayerMultipliers : STUInstance
     {
         [STUField(0xAA38C74B)]
-        public float m_AA38C74B;
+        public float m_AA38C74B = 1f;
         
         [STUField(0x89E1564D)]
-        public float m_89E1564D;
+        public float m_89E1564D = 1f;
     }
 }

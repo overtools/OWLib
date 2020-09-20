@@ -22,6 +22,6 @@ namespace TankLib.STU.Types
         public STU_298296AE[] m_transitions;
         
         [STUField(0x121C1319)]
-        public byte m_121C1319;
+        public byte m_121C1319 = 0x1;
     }
 }

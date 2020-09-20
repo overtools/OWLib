@@ -7,6 +7,6 @@ namespace TankLib.STU.Types
     public class STUCollisionConfig : STUInstance
     {
         [STUField(0xE5338DEC)]
-        public byte m_E5338DEC;
+        public byte m_E5338DEC = 0x1;
     }
 }

@@ -14,48 +14,48 @@ namespace TankLib.STU.Types
         public STU_0FA0034C m_C32C2195;
         
         [STUField(0x13523278)]
-        public float m_13523278;
+        public float m_13523278 = 0f;
         
         [STUField(0xBEB35A19)]
-        public float m_BEB35A19;
+        public float m_BEB35A19 = 0f;
         
         [STUField(0xD138B819)]
-        public float m_D138B819;
+        public float m_D138B819 = 1f;
         
         [STUField(0x6657412F)]
-        public uint m_6657412F;
+        public uint m_6657412F = 0x3;
         
         [STUField(0xACA7FBC8)]
-        public float m_ACA7FBC8;
+        public float m_ACA7FBC8 = 0f;
         
         [STUField(0x97FF2EB7)]
         public Enum_255164EF m_97FF2EB7;
         
         [STUField(0x66AD5CBC)]
-        public float m_66AD5CBC;
+        public float m_66AD5CBC = 0f;
         
         [STUField(0x43F0D346)]
-        public Enum_D2BF23BC m_43F0D346;
+        public Enum_D2BF23BC m_43F0D346 = Enum_D2BF23BC.x6399F3D5;
         
         [STUField(0xEF90634C)]
         public uint m_EF90634C;
         
         [STUField(0x77092FDD)]
-        public byte m_77092FDD;
+        public byte m_77092FDD = 0x0;
         
         [STUField(0x1A25BFB8)]
-        public byte m_1A25BFB8;
+        public byte m_1A25BFB8 = 0x0;
         
         [STUField(0xB62657B8)]
-        public byte m_B62657B8;
+        public byte m_B62657B8 = 0x1;
         
         [STUField(0x59AD4231)]
-        public byte m_59AD4231;
+        public byte m_59AD4231 = 0x0;
         
         [STUField(0x6E7728C9)]
-        public byte m_6E7728C9;
+        public byte m_6E7728C9 = 0x0;
         
         [STUField(0x529B2C24)]
-        public byte m_529B2C24;
+        public byte m_529B2C24 = 0x0;
     }
 }

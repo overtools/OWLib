@@ -119,15 +119,15 @@ namespace TankLib.STU.Types
         public STUStatescriptOutputPlug m_onFinishedPlug;
         
         [STUField(0x5E4A4E85)]
-        public Enum_5A207C64 m_5E4A4E85;
+        public Enum_5A207C64 m_5E4A4E85 = Enum_5A207C64.x71E73343;
         
         [STUField(0x7671FCB1)]
-        public byte m_7671FCB1;
+        public byte m_7671FCB1 = 0x0;
         
         [STUField(0x7FB497BE)]
-        public byte m_7FB497BE;
+        public byte m_7FB497BE = 0x0;
         
         [STUField(0x45271E8C)]
-        public byte m_45271E8C;
+        public byte m_45271E8C = 0x1;
     }
 }

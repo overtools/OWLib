@@ -13,15 +13,15 @@ namespace TankLib.STU.Types
         public STUChatCommand[] m_chatCommands;
         
         [STUField(0x8C4E0BA1)]
-        public float m_8C4E0BA1;
+        public float m_8C4E0BA1 = 10f;
         
         [STUField(0x33A4B186)]
-        public float m_33A4B186;
+        public float m_33A4B186 = 2f;
         
         [STUField(0x615EACEF)]
-        public uint m_615EACEF;
+        public uint m_615EACEF = 0x19;
         
         [STUField(0xE700D46F)]
-        public uint m_E700D46F;
+        public uint m_E700D46F = 0x384;
     }
 }

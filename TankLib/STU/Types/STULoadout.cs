@@ -35,6 +35,6 @@ namespace TankLib.STU.Types
         public LoadoutCategory m_category;
         
         [STUField(0x0E679979)]
-        public int m_0E679979;
+        public int m_0E679979 = -1;
     }
 }

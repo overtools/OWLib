@@ -31,6 +31,6 @@ namespace TankLib.STU.Types
         public STUAIDifficultyProfile[] m_difficultyProfiles;
         
         [STUField(0x72D00D60)]
-        public float m_72D00D60;
+        public float m_72D00D60 = 0.1f;
     }
 }

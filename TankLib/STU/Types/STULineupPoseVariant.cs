@@ -11,21 +11,21 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_11E0A658;
         
         [STUField(0x6FAFEC54)]
-        public teVec3 m_6FAFEC54;
+        public teVec3 m_6FAFEC54 = new teVec3(0f, 1f, 0f);
         
         [STUField(0xC5A005D3)]
-        public teVec3 m_C5A005D3;
+        public teVec3 m_C5A005D3 = new teVec3(1f, 1f, 1f);
         
         [STUField(0x8EAC4C30)]
-        public teVec3 m_8EAC4C30;
+        public teVec3 m_8EAC4C30 = new teVec3(0f, 1f, 0f);
         
         [STUField(0x2944DDBC)]
-        public teVec3 m_2944DDBC;
+        public teVec3 m_2944DDBC = new teVec3(1f, 1f, 1f);
         
         [STUField(0x28814AE5)]
-        public teVec3 m_28814AE5;
+        public teVec3 m_28814AE5 = new teVec3(0f, 1f, 0f);
         
         [STUField(0x69150A1D)]
-        public teVec3 m_69150A1D;
+        public teVec3 m_69150A1D = new teVec3(1f, 1f, 1f);
     }
 }

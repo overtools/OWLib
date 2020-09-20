@@ -10,6 +10,6 @@ namespace TankLib.STU.Types
         public STUAnimNode_LayerChild[] m_layers;
         
         [STUField(0x668D2844)]
-        public ushort m_668D2844;
+        public ushort m_668D2844 = 0x3;
     }
 }

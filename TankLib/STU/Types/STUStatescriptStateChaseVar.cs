@@ -44,7 +44,7 @@ namespace TankLib.STU.Types
         public STUStatescriptOutputPlug m_onFinishedPlug;
         
         [STUField(0x1E10B2B1)]
-        public Enum_8FC75FF8 m_1E10B2B1;
+        public Enum_8FC75FF8 m_1E10B2B1 = Enum_8FC75FF8.x24A6704B;
         
         [STUField(0xCB671004)]
         public byte m_CB671004;

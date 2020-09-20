@@ -7,6 +7,6 @@ namespace TankLib.STU.Types
     public class STURayCastReceiverResult : STUInstance
     {
         [STUField(0x7EEFB57A)]
-        public uint m_flags;
+        public uint m_flags = 0x0;
     }
 }

@@ -19,6 +19,6 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_E599EB7C;
         
         [STUField(0x40AF7E2D)]
-        public float m_40AF7E2D;
+        public float m_40AF7E2D = 1f;
     }
 }

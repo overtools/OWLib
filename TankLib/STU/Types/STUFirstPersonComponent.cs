@@ -13,9 +13,9 @@ namespace TankLib.STU.Types
         public float m_4B75D84E;
         
         [STUField(0xE29993A5)]
-        public float m_E29993A5;
+        public float m_E29993A5 = 1.55f;
         
         [STUField(0x816B830F)]
-        public float m_816B830F;
+        public float m_816B830F = 1.15f;
     }
 }
