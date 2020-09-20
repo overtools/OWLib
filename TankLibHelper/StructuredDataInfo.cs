@@ -158,6 +158,10 @@ namespace TankLibHelper {
         [DataMember(Name="Y")] public float m_y;
         [DataMember(Name="Z")] public float m_z;
         [DataMember(Name="W")] public float m_w;
+        
+        [DataMember(Name="R")] public float m_r;
+        [DataMember(Name="G")] public float m_g;
+        [DataMember(Name="B")] public float m_b;
         [DataMember(Name="A")] public float m_a;
     }
 

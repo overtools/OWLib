@@ -1,7 +1,9 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using TankLib;
 using TankLib.Math;
 using TankLib.STU;
@@ -107,10 +109,15 @@ namespace TankLibHelper {
             }
             
             var postField = GetFieldPostTypeCSharp(field);
+            var defaultVal = GetDefaultValue(field);
             var type = actualType + postField;
             builder.WriteLine($"{linePrefix}{attribute}");
-            builder.WriteLine($"{linePrefix}public {type} {fieldName};");
-            
+            builder.Write($"{linePrefix}public {type} {fieldName}");
+            if (defaultVal != null) {
+                builder.Write($" = {defaultVal}");
+            }
+            builder.WriteLine(";");
+
             // todo: // {field.m_offset} - size: {field.m_size}
             // todo: why was i bullied into removing this
             
@@ -215,6 +222,61 @@ namespace TankLibHelper {
                     return null; // not supported
             }
             throw new NotImplementedException();
+        }
+
+        private string GetDefaultValue(FieldNew field) {
+            if (string.IsNullOrEmpty(field.m_typeName)) return null;
+            if (field.m_defaultValue == null) return null;
+
+            var typeHash = field.TypeHash2;
+            if (Info.Enums.TryGetValue(typeHash, out var enumDef)) {
+                var defaultVal = (ulong) field.m_defaultValue.m_value;
+                
+                var enumValues = enumDef.m_values.Where(x => x.m_value == defaultVal).ToArray();
+
+                if (enumValues.Length != 1) { // 0 or 2+
+                    return $"({Info.GetEnumName(enumDef.Hash2)})0x{defaultVal:X}";
+                }
+                var enumValue = enumValues[0];
+                return $"{Info.GetEnumName(enumDef.Hash2)}.{Info.GetEnumValueName(enumValue.Hash2)}";
+            }
+
+            if (field.m_typeName == "s32" && field.m_defaultValue.m_hexValue == "FFFFFFFF") {
+                // todo: handle more generically... this is the only case for now tho
+                return "-1";
+            }
+
+            switch (field.m_typeName) {
+                case "f32":
+                    return $"{field.m_defaultValue.m_value}f";
+                case "f64":
+                    return $"{field.m_defaultValue.m_value}";
+                
+                case "teVec2":
+                    return $"new teVec2({field.m_defaultValue.m_x}f, {field.m_defaultValue.m_y}f)";
+                case "teVec3":
+                    return $"new teVec3({field.m_defaultValue.m_x}f, {field.m_defaultValue.m_y}f, {field.m_defaultValue.m_z}f)";
+                case "teVec3A":
+                    return $"new teVec3A({field.m_defaultValue.m_x}f, {field.m_defaultValue.m_y}f, {field.m_defaultValue.m_z}f, {field.m_defaultValue.m_a}f)";
+                case "teVec4":
+                    return $"new teVec4({field.m_defaultValue.m_x}f, {field.m_defaultValue.m_y}f, {field.m_defaultValue.m_z}f, {field.m_defaultValue.m_w}f)";
+                case "teQuat":
+                    return $"new teQuat({field.m_defaultValue.m_x}f, {field.m_defaultValue.m_y}f, {field.m_defaultValue.m_z}f, {field.m_defaultValue.m_w}f)";
+                
+                case "teColorRGB":
+                    return $"new teColorRGB({field.m_defaultValue.m_r}f, {field.m_defaultValue.m_g}f, {field.m_defaultValue.m_b}f)";
+                case "teColorRGBA":
+                    return $"new teColorRGBA({field.m_defaultValue.m_r}f, {field.m_defaultValue.m_g}f, {field.m_defaultValue.m_b}f, {field.m_defaultValue.m_a}f)";
+                
+                case "teString":
+                    return $"\"{field.m_defaultValue.m_value}\"";
+                case "teUUID":
+                    throw new NotImplementedException();
+                
+                default:
+                    return $"0x{ulong.Parse(field.m_defaultValue.m_hexValue, NumberStyles.HexNumber):X}";
+            }
+            return null;
         }
     }
 }

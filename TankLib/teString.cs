@@ -44,6 +44,10 @@ namespace TankLib {
         public static implicit operator string(teString @string) {
             return @string?.Value;
         }
+        
+        public static implicit operator teString(string @string) {
+            return new teString(@string);
+        }
 
         public override string ToString() {
             return Value;

@@ -22,6 +22,14 @@ namespace TankLib.STU {
             if (assetRef == null) return 0;
             return assetRef.GUID.GUID;
         }
+        
+        public static implicit operator teStructuredDataAssetRef<T>(ulong guid) {
+            if (guid == 0) return null;
+            return new teStructuredDataAssetRef<T> {
+                GUID = new teResourceGUID(guid),
+                Padding = ulong.MaxValue
+            };
+        }
 
         public void Deserialize(teStructuredData data, STUField_Info field) {
             if (data.Format == teStructuredDataFormat.V2) {
