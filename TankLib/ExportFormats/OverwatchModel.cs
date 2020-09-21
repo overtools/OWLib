@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using SharpDX;
 using TankLib.Chunks;
+using TankLib.Helpers;
 using TankLib.Math;
 using TankLib.STU.Types;
 
@@ -145,10 +146,23 @@ namespace TankLib.ExportFormats {
                         
                         Matrix parentMat = Matrix.Identity;
                         if (hardPoint.m_FF592924 != 0 && skeleton != null) {
-                            int boneIdx = skeleton.IDs.TakeWhile(id => id != teResourceGUID.Index(hardPoint.m_FF592924))
-                                .Count();
+                            int? boneIdx = null;
+                            var hardPointBoneID = teResourceGUID.Index(hardPoint.m_FF592924);
+                            for (int i = 0; i < skeleton.IDs.Length; i++) {
+                                var currBoneID = skeleton.IDs[i];
+                                if (currBoneID == hardPointBoneID) {
+                                    boneIdx = i;
+                                    break;
+                                }
+                            }
 
-                            parentMat = skeleton.GetWorldSpace(boneIdx);
+                            if (boneIdx == null) {
+                                parentMat = Matrix.Identity;
+                                Logger.Debug("OverwatchModel", 
+                                             $"Hardpoint {teResourceGUID.AsString(hardPoint.m_EDF0511C)} is attached to bone {teResourceGUID.AsString(hardPoint.m_FF592924)} which doesn't exist on model {teResourceGUID.AsString(GUID)}");
+                            } else {
+                                parentMat = skeleton.GetWorldSpace(boneIdx.Value);
+                            }
                         }
 
                         Matrix hardPointMat = Matrix.RotationQuaternion(hardPoint.m_rotation) *
