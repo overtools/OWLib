@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using TankLib.Math;
@@ -114,14 +113,14 @@ namespace TankLib {
 
                         entity.InstanceData = new STUComponentInstanceData[entity.Header.InstanceDataCount];
                         for (int i = 0; i < entity.Header.InstanceDataCount; i++) {
-                            long beforePos = reader.BaseStream.Position;
+                            reader.BaseStream.Position = entity.m_instanceDataOffsets[i];
+
                             try {
                                 teStructuredData structuredData = new teStructuredData(reader);
                                 entity.InstanceData[i] = structuredData.GetInstance<STUComponentInstanceData>();
-                                AlignPosition(beforePos, reader, structuredData);
-                            } catch (Exception) {
+                            } catch (Exception e)
+                            {
                                 execCount++;
-                                AlignPositionInternal(reader, beforePos + 8); // try and recover
                             }
                         }
                     }
@@ -133,7 +132,7 @@ namespace TankLib {
             }
         }
         
-        private void AlignPosition(long start, BinaryReader reader, teStructuredData stu) {
+        /*private void AlignPosition(long start, BinaryReader reader, teStructuredData stu) {
             long maxOffset = stu.InstanceInfoV1.Max(x => x.Offset)+start;
             AlignPositionInternal(reader, maxOffset+8);
         }
@@ -150,7 +149,7 @@ namespace TankLib {
                 reader.BaseStream.Position -= 4;
                 break;
             }
-        }
+        }*/
     }
 
     public interface IMapPlaceable {
@@ -236,9 +235,26 @@ namespace TankLib {
 
         public Structure Header;
         public STUComponentInstanceData[] InstanceData;
+        public uint[] m_instanceDataOffsets;
 
         public void Read(BinaryReader reader) {
+            long start = reader.BaseStream.Position;
+            
             Header = reader.Read<Structure>();
+            
+            m_instanceDataOffsets = new uint[Header.InstanceDataCount];
+
+            const int instArrayOffset = 112;
+            reader.BaseStream.Position = start + instArrayOffset;
+            for (int i = 0; i < Header.InstanceDataCount; i++) {
+                long disStart = reader.BaseStream.Position;
+                
+                var type = reader.ReadUInt32();
+                var relOffset = reader.ReadUInt32();
+
+                var offset = disStart + relOffset;
+                m_instanceDataOffsets[i] = (uint)offset;
+            }
         }
     }
     
