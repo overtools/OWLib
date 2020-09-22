@@ -3,34 +3,34 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x0539C988, "STUFogData")]
+    [STU(0x0539C988, 80)]
     public class STUFogData : STUInstance
     {
-        [STUField(0xF1DAE57E)]
+        [STUField(0xF1DAE57E, 8)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_colorCube;
         
-        [STUField(0xFF1B5A9F)]
+        [STUField(0xFF1B5A9F, 24)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_FF1B5A9F;
         
-        [STUField(0xAF1F50CE)]
+        [STUField(0xAF1F50CE, 40)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_colorLookup = 0xC0000000000000B;
         
-        [STUField(0xB7BE49E5)]
+        [STUField(0xB7BE49E5, 56)] // size: 4
         public float m_B7BE49E5 = 1f;
         
-        [STUField(0x825101A9)]
+        [STUField(0x825101A9, 60)] // size: 4
         public float m_825101A9 = 500f;
         
-        [STUField(0xA16426C6)]
+        [STUField(0xA16426C6, 64)] // size: 4
         public float m_height = 0f;
         
-        [STUField(0x79476727)]
+        [STUField(0x79476727, 68)] // size: 4
         public float m_79476727 = 0f;
         
-        [STUField(0xBDA6F5E1)]
+        [STUField(0xBDA6F5E1, 72)] // size: 4
         public float m_BDA6F5E1 = 100f;
         
-        [STUField(0x9884BDEE)]
+        [STUField(0x9884BDEE, 76)] // size: 4
         public float m_9884BDEE = 0.01f;
     }
 }

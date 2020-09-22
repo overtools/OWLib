@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x57AEDFA2, "STUGameModeBodyVars")]
+    [STU(0x57AEDFA2, 24)]
     public class STUGameModeBodyVars : STUInstance
     {
-        [STUField(0x5C307091, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x5C307091, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameModeVarValuePair[] m_vars;
         
-        [STUField(0x37AB13D3, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x37AB13D3, 16, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_21CE58F6 m_hero;
     }
 }

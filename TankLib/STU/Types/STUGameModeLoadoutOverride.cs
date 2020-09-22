@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x456C3C15, "STUGameModeLoadoutOverride")]
+    [STU(0x456C3C15, 32)]
     public class STUGameModeLoadoutOverride : STUInstance
     {
-        [STUField(0x37AB13D3)]
+        [STUField(0x37AB13D3, 0)] // size: 16
         public teStructuredDataAssetRef<STUHero> m_hero;
         
-        [STUField(0x7B95AB93)]
+        [STUField(0x7B95AB93, 16)] // size: 16
         public teStructuredDataAssetRef<STULoadout>[] m_loadouts;
     }
 }

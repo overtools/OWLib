@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xD05AEF31, "STUConfigVar")]
+    [STU(0xD05AEF31, 16)]
     public class STUConfigVar : STUInstance
     {
-        [STUField(0xEE729DCB)]
+        [STUField(0xEE729DCB, 8)] // size: 8
         public ulong m_EE729DCB;
     }
 }

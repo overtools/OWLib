@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB70590E4, "STUCaptureAreaComponent")]
+    [STU(0xB70590E4, 48)]
     public class STUCaptureAreaComponent : STUMirroredEntityComponent
     {
-        [STUField(0x1CB29B8C, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x1CB29B8C, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUCaptureAreaResidencyMultiplier[] m_residencyMultipliers;
         
-        [STUField(0x9472AB02, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x9472AB02, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUCaptureAreaSegment[] m_segments;
         
-        [STUField(0x27410361)]
+        [STUField(0x27410361, 40)] // size: 4
         public float m_27410361;
     }
 }

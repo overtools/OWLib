@@ -3,34 +3,34 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xDDD18945, "STUAnimBlendTreeSet_BlendTreeItem")]
+    [STU(0xDDD18945, 128)]
     public class STUAnimBlendTreeSet_BlendTreeItem : STUInstance
     {
-        [STUField(0x560940DC, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x560940DC, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 48
         public STUAnimBlendTree_OnFinished m_onFinished;
         
-        [STUField(0xC0214513)]
+        [STUField(0xC0214513, 48)] // size: 16
         public teStructuredDataAssetRef<STUAnimBlendTree> m_C0214513;
         
-        [STUField(0x95877FC5)]
+        [STUField(0x95877FC5, 64)] // size: 16
         public teStructuredDataAssetRef<ulong> m_95877FC5;
         
-        [STUField(0xF6E6D4B1, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xF6E6D4B1, 80, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_3B150012 m_F6E6D4B1;
         
-        [STUField(0x9AD6CC25, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x9AD6CC25, 88, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAnimGameData_Base m_gameData;
         
-        [STUField(0xCCB4CD4A)]
+        [STUField(0xCCB4CD4A, 96)] // size: 8
         public ulong m_CCB4CD4A;
         
-        [STUField(0x274F833F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x274F833F, 104, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_89F8DBB3 m_274F833F;
         
-        [STUField(0x384DE14F, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x384DE14F, 112, ReaderType = typeof(InlineInstanceFieldReader))] // size: 8
         public STUAnimBlendTreeSet_RetargetParams m_retargetParams;
         
-        [STUField(0xE54B9419)]
+        [STUField(0xE54B9419, 120)] // size: 4
         public uint m_uniqueID;
     }
 }

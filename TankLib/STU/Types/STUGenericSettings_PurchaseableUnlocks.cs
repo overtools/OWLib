@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xBE7A8749, "STUGenericSettings_PurchaseableUnlocks")]
+    [STU(0xBE7A8749, 40)]
     public class STUGenericSettings_PurchaseableUnlocks : STUGenericSettings_Base
     {
-        [STUField(0xCFE57CEB, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xCFE57CEB, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAvailableContentUnlock[] m_availableContentUnlocks;
         
-        [STUField(0x4807C17A, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x4807C17A, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUEntitlementUnlock[] m_entitlementUnlocks;
     }
 }

@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xC6A72877, "STUUnlock_Pose")]
+    [STU(0xC6A72877, 248)]
     public class STUUnlock_Pose : STU_3021DDED
     {
-        [STUField(0x2E5FBA99)]
+        [STUField(0x2E5FBA99, 224)] // size: 16
         public teStructuredDataAssetRef<ulong> m_pose;
         
-        [STUField(0x72F8972E)]
+        [STUField(0x72F8972E, 240)] // size: 1
         public byte m_72F8972E;
     }
 }

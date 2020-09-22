@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB6243CC3, "STUPublishEntry")]
+    [STU(0xB6243CC3, 24)]
     public class STUPublishEntry : STUInstance
     {
-        [STUField(0x2F709539)]
+        [STUField(0x2F709539, 0)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_key;
         
-        [STUField(0x07DD813E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x07DD813E, 16, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_value;
     }
 }

@@ -4,22 +4,22 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xAF3DFC87, "STULootBoxRules")]
+    [STU(0xAF3DFC87, 48)]
     public class STULootBoxRules : STUInstance
     {
-        [STUField(0xB7C0634C, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xB7C0634C, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STULootBoxRarityRules[] m_rarityRules;
         
-        [STUField(0x96D86FB8, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x96D86FB8, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STULootBoxRarityRules[] m_currencyRarityRules;
         
-        [STUField(0x7AB4E3F8)]
+        [STUField(0x7AB4E3F8, 32)] // size: 4
         public Enum_BABC4175 m_lootboxType;
         
-        [STUField(0x24391F9B)]
+        [STUField(0x24391F9B, 36)] // size: 4
         public int m_24391F9B;
         
-        [STUField(0x53B8C818)]
+        [STUField(0x53B8C818, 40)] // size: 4
         public int m_53B8C818;
     }
 }

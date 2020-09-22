@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x0F4B5C2F, "SDD_AITacticalVolume")]
+    [STU(0x0F4B5C2F, 16)]
     public class SDD_AITacticalVolume : SDD_Base
     {
-        [STUField(0x4A0D3E2E)]
+        [STUField(0x4A0D3E2E, 12)] // size: 4
         public int m_volumeID;
     }
 }

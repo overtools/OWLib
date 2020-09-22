@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6B77CF61, "STUUXPopupRoot")]
+    [STU(0x6B77CF61, 32)]
     public class STUUXPopupRoot : STUUXElement
     {
     }

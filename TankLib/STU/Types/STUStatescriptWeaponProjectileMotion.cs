@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x487AE227, "STUStatescriptWeaponProjectileMotion")]
+    [STU(0x487AE227, 8)]
     public class STUStatescriptWeaponProjectileMotion : STUInstance
     {
     }

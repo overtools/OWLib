@@ -3,19 +3,19 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x18B8F445, "STUUXResourceDictionary")]
+    [STU(0x18B8F445, 64)]
     public class STUUXResourceDictionary : STUUXObject
     {
-        [STUField(0x2A217ECD)]
+        [STUField(0x2A217ECD, 8)] // size: 16
         public ulong[] m_keys;
         
-        [STUField(0x70341E18, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x70341E18, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUUXObject[] m_values;
         
-        [STUField(0xBBA15F10)]
+        [STUField(0xBBA15F10, 40)] // size: 16
         public teStructuredDataAssetRef<ulong>[] m_BBA15F10;
         
-        [STUField(0x3547155A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x3547155A, 56, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_EDCF5A52 m_resourceKeyLookup;
     }
 }

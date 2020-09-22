@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF2E74AF9, "STUUnlock_OWLToken")]
+    [STU(0xF2E74AF9, 232)]
     public class STUUnlock_OWLToken : STU_895A2A7A
     {
-        [STUField(0x63A026AF)]
+        [STUField(0x63A026AF, 224)] // size: 4
         public int m_63A026AF;
     }
 }

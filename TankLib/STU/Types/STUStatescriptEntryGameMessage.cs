@@ -3,28 +3,28 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8A7E9DA8, "STUStatescriptEntryGameMessage")]
+    [STU(0x8A7E9DA8, 192)]
     public class STUStatescriptEntryGameMessage : STUStatescriptEntry
     {
-        [STUField(0xBC2A8DA3, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xBC2A8DA3, 128, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_EF930FD7[] m_params;
         
-        [STUField(0x92A85396, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x92A85396, 144, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_gameMessage;
         
-        [STUField(0xB60ABDA4, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xB60ABDA4, 152, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_076E0DBA m_B60ABDA4;
         
-        [STUField(0xFF703F20, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xFF703F20, 160, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_076E0DBA m_FF703F20;
         
-        [STUField(0x44D0D060, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x44D0D060, 168, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_076E0DBA m_44D0D060;
         
-        [STUField(0xF8274C10, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xF8274C10, 176, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVarFilter m_filter;
         
-        [STUField(0xFDBDCB70)]
+        [STUField(0xFDBDCB70, 184)] // size: 1
         public byte m_FDBDCB70;
     }
 }

@@ -3,22 +3,22 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x83587DEE, "STUAIBodyPartDamageGroup")]
+    [STU(0x83587DEE, 56)]
     public class STUAIBodyPartDamageGroup : STUInstance
     {
-        [STUField(0xAAEA98C4, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xAAEA98C4, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAIBodyPartDamageGroupDamageTagScalar[] m_AAEA98C4;
         
-        [STUField(0x2DDFCB42)]
+        [STUField(0x2DDFCB42, 16)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_2DDFCB42;
         
-        [STUField(0xD1C7F985, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xD1C7F985, 32, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_D1C7F985;
         
-        [STUField(0x137B3D93, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x137B3D93, 40, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_137B3D93;
         
-        [STUField(0x4A498149, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x4A498149, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_4A498149;
     }
 }

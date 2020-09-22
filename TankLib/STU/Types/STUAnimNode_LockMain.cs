@@ -3,19 +3,19 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xBED93F9B, "STUAnimNode_LockMain")]
+    [STU(0xBED93F9B, 160)]
     public class STUAnimNode_LockMain : STUAnimNode_Base
     {
-        [STUField(0xCE880AAB, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xCE880AAB, 80, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_25B808BD m_CE880AAB;
         
-        [STUField(0x994A38FF, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x994A38FF, 112, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_25B808BD m_994A38FF;
         
-        [STUField(0xA5ECF4EC, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xA5ECF4EC, 144, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_BDB86C7B m_A5ECF4EC;
         
-        [STUField(0x436BEFE6, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x436BEFE6, 152, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_2F6BD485 m_child;
     }
 }

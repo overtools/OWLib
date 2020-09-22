@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x7DFC365B, "STUUXItemsControl")]
+    [STU(0x7DFC365B, 80)]
     public class STUUXItemsControl : STUUXControl
     {
-        [STUField(0xADE95629, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xADE95629, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUUXObject[] m_items;
         
-        [STUField(0x8226791C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x8226791C, 64, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_C8AAFEDE[] m_8226791C;
     }
 }

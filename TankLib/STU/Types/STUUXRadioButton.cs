@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xDD1EC812, "STUUXRadioButton")]
+    [STU(0xDD1EC812, 48)]
     public class STUUXRadioButton : STU_74217D0B
     {
     }

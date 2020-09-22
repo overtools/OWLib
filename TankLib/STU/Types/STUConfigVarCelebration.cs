@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xA67443FE, "STUConfigVarCelebration")]
+    [STU(0xA67443FE, 48)]
     public class STUConfigVarCelebration : STU_E4324757
     {
-        [STUField(0xE02BEE24)]
+        [STUField(0xE02BEE24, 32)] // size: 16
         public teStructuredDataAssetRef<STUCelebration> m_celebration;
     }
 }

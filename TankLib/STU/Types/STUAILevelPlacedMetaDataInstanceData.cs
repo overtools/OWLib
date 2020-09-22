@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF51269FD, "STUAILevelPlacedMetaDataInstanceData")]
+    [STU(0xF51269FD, 16)]
     public class STUAILevelPlacedMetaDataInstanceData : STUComponentInstanceData
     {
-        [STUField(0x2032E7EA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x2032E7EA, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAILevelPlacedMetaData m_metaData;
     }
 }

@@ -3,28 +3,28 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x5207484B, "STUModelLook")]
+    [STU(0x5207484B, 120)]
     public class STUModelLook : STUInstance
     {
-        [STUField(0xBAFDAFBA, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xBAFDAFBA, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUModelMaterial[] m_materials;
         
-        [STUField(0x33DA887B)]
+        [STUField(0x33DA887B, 24)] // size: 16
         public teStructuredDataAssetRef<STU_CBD8CDF3>[] m_33DA887B;
         
-        [STUField(0x05692DC5, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x05692DC5, 40, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimationPermutation[] m_05692DC5;
         
-        [STUField(0x844B23C0, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x844B23C0, 56, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_D5C245D3[] m_844B23C0;
         
-        [STUField(0x7B5D8241)]
+        [STUField(0x7B5D8241, 72)] // size: 16
         public teStructuredDataAssetRef<STUMaterialEffect> m_7B5D8241 = 0x0;
         
-        [STUField(0xC03306D7)]
+        [STUField(0xC03306D7, 88)] // size: 16
         public teStructuredDataAssetRef<STUModel>[] m_C03306D7;
         
-        [STUField(0x312C5F1A, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x312C5F1A, 104, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_D75EA2E1[] m_materialEffects;
     }
 }

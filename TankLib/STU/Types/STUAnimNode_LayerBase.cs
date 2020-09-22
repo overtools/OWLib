@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x37D4419F, "STUAnimNode_LayerBase")]
+    [STU(0x37D4419F, 8)]
     public class STUAnimNode_LayerBase : STUInstance
     {
     }

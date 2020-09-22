@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF199249B, "STUECHintPointInstanceData")]
+    [STU(0xF199249B, 32)]
     public class STUECHintPointInstanceData : STUComponentInstanceData
     {
-        [STUField(0x4D2DB658)]
+        [STUField(0x4D2DB658, 8)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_identifier;
     }
 }

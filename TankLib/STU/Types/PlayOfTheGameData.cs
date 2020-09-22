@@ -4,25 +4,25 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x5B8A4389, "PlayOfTheGameData")]
+    [STU(0x5B8A4389, 56)]
     public class PlayOfTheGameData : STUInstance
     {
-        [STUField(0x371085C1)]
+        [STUField(0x371085C1, 0)] // size: 16
         public teStructuredDataAssetRef<STU_C25281C3> m_371085C1;
         
-        [STUField(0x11B47C68, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x11B47C68, 16, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_id;
         
-        [STUField(0x07DD813E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x07DD813E, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_value;
         
-        [STUField(0xE3798C00, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xE3798C00, 32, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_targets;
         
-        [STUField(0xCA7E6EDC, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xCA7E6EDC, 40, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_description;
         
-        [STUField(0x41B10FF2)]
+        [STUField(0x41B10FF2, 48)] // size: 4
         public Enum_D530FD08 m_41B10FF2;
     }
 }

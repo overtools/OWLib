@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6021C7EC, "STUGenericSettings_HeroSettings")]
+    [STU(0x6021C7EC, 56)]
     public class STUGenericSettings_HeroSettings : STUGenericSettings_Base
     {
-        [STUField(0x2EB919C9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x2EB919C9, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUHeroSettingCategory[] m_categories;
         
-        [STUField(0x142A3CA9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x142A3CA9, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUHeroSettingBase[] m_142A3CA9;
         
-        [STUField(0xFC1FFB1E, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xFC1FFB1E, 40, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUHeroSpecificSettings[] m_heroSpecificSettings;
     }
 }

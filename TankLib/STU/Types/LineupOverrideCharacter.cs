@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB396243E, "LineupOverrideCharacter")]
+    [STU(0xB396243E, 48)]
     public class LineupOverrideCharacter : STUInstance
     {
-        [STUField(0xC0A83121)]
+        [STUField(0xC0A83121, 0)] // size: 16
         public teStructuredDataAssetRef<ulong> m_skin;
         
-        [STUField(0x7DD89F4F)]
+        [STUField(0x7DD89F4F, 16)] // size: 16
         public teStructuredDataAssetRef<ulong> m_entityDef;
         
-        [STUField(0xEF19F506)]
+        [STUField(0xEF19F506, 32)] // size: 16
         public teStructuredDataAssetRef<STUUnlock> m_poseUnlock;
     }
 }

@@ -3,25 +3,25 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x87C00EC0, "STUGameRulesetTeam")]
+    [STU(0x87C00EC0, 72)]
     public class STUGameRulesetTeam : STUInstance
     {
-        [STUField(0x6F71E9AA, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x6F71E9AA, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameModeVarValuePair[] m_6F71E9AA;
         
-        [STUField(0xEA2B516F, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xEA2B516F, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameModeBodyVars[] m_bodyVars;
         
-        [STUField(0xCF58324E, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xCF58324E, 32, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameModeVarValuePair[] m_CF58324E;
         
-        [STUField(0x33B0B2B6, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x33B0B2B6, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_2BA92134 m_team;
         
-        [STUField(0x59C86C8D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x59C86C8D, 56, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_5427ADC1 m_availableHeroes;
         
-        [STUField(0x341EF5FA)]
+        [STUField(0x341EF5FA, 64)] // size: 4
         public int m_341EF5FA;
     }
 }

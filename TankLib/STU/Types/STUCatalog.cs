@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x85618B21, "STUCatalog")]
+    [STU(0x85618B21, 56)]
     public class STUCatalog : STU_52A38A22
     {
-        [STUField(0x3D83C363)]
+        [STUField(0x3D83C363, 16)] // size: 16
         public ulong[] m_assets;
         
-        [STUField(0xB7FC20A3)]
+        [STUField(0xB7FC20A3, 32)] // size: 16
         public long[] m_B7FC20A3;
         
-        [STUField(0x2358A685)]
+        [STUField(0x2358A685, 48)] // size: 1
         public byte m_2358A685;
     }
 }

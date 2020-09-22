@@ -3,19 +3,19 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x75001A77, "STUStatescriptActionSetVar")]
+    [STU(0x75001A77, 160)]
     public class STUStatescriptActionSetVar : STUStatescriptAction
     {
-        [STUField(0xAE2D8911, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xAE2D8911, 128, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_index;
         
-        [STUField(0x592D15F7, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x592D15F7, 136, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_076E0DBA m_out_Var;
         
-        [STUField(0x2F709539, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x2F709539, 144, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_key;
         
-        [STUField(0x07DD813E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x07DD813E, 152, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_value;
     }
 }

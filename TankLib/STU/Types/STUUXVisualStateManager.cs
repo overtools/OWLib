@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x67F9627E, "STUUXVisualStateManager")]
+    [STU(0x67F9627E, 24)]
     public class STUUXVisualStateManager : STUUXDependencyObject
     {
     }

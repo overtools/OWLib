@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x22BD6AAD, "STUBreakable")]
+    [STU(0x22BD6AAD, 24)]
     public class STUBreakable : STUInstance
     {
-        [STUField(0xA4E3DBA5, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xA4E3DBA5, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_1C4922D4[] m_zones;
     }
 }

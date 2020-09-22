@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB613AECA, "STUSoundImportanceFactor")]
+    [STU(0xB613AECA, 8)]
     public class STUSoundImportanceFactor : STUInstance
     {
-        [STUField(0x9CDDC24D)]
+        [STUField(0x9CDDC24D, 0)] // size: 4
         public float m_weight = 0.2f;
         
-        [STUField(0x2376DE9C)]
+        [STUField(0x2376DE9C, 4)] // size: 4
         public float m_2376DE9C = 2f;
     }
 }

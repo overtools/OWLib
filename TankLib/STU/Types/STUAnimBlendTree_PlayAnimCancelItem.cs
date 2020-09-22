@@ -4,16 +4,16 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x38F4E107, "STUAnimBlendTree_PlayAnimCancelItem")]
+    [STU(0x38F4E107, 40)]
     public class STUAnimBlendTree_PlayAnimCancelItem : STUInstance
     {
-        [STUField(0xB4FF0E2F)]
+        [STUField(0xB4FF0E2F, 0)] // size: 16
         public teStructuredDataAssetRef<STUAnimAlias> m_animAlias;
         
-        [STUField(0xDB084D42, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xDB084D42, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimBlendTree_PlayAnimCancelCategory[] m_DB084D42;
         
-        [STUField(0x28E3DD84)]
+        [STUField(0x28E3DD84, 32)] // size: 4
         public Enum_613C4AA2 m_28E3DD84;
     }
 }

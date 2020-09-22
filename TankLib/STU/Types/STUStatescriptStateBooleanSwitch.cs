@@ -3,22 +3,22 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x76F0CF47, "STUStatescriptStateBooleanSwitch")]
+    [STU(0x76F0CF47, 256)]
     public class STUStatescriptStateBooleanSwitch : STUStatescriptState
     {
-        [STUField(0xBAA74493, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xBAA74493, 216, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_condition;
         
-        [STUField(0xCCB1626C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xCCB1626C, 224, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptOutputPlug m_onTruePlug;
         
-        [STUField(0x4ED7649D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x4ED7649D, 232, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptOutputPlug m_onFalsePlug;
         
-        [STUField(0x508D4685, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x508D4685, 240, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_904BFCEC m_trueSubgraphPlug;
         
-        [STUField(0x3953AC0D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x3953AC0D, 248, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_904BFCEC m_falseSubgraphPlug;
     }
 }

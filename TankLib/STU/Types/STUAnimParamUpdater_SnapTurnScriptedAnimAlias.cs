@@ -4,19 +4,19 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8C8C0627, "STUAnimParamUpdater_SnapTurnScriptedAnimAlias")]
+    [STU(0x8C8C0627, 32)]
     public class STUAnimParamUpdater_SnapTurnScriptedAnimAlias : STUInstance
     {
-        [STUField(0xB4FF0E2F)]
+        [STUField(0xB4FF0E2F, 0)] // size: 16
         public teStructuredDataAssetRef<STUAnimAlias> m_animAlias;
         
-        [STUField(0x3AE19A5A)]
+        [STUField(0x3AE19A5A, 16)] // size: 8
         public teVec2 m_3AE19A5A;
         
-        [STUField(0xECF77C3E)]
+        [STUField(0xECF77C3E, 24)] // size: 4
         public float m_ECF77C3E;
         
-        [STUField(0x1D4B8A76)]
+        [STUField(0x1D4B8A76, 28)] // size: 1
         public byte m_1D4B8A76;
     }
 }

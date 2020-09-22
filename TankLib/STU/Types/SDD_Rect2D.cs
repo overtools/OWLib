@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB4BB8CFC, "SDD_Rect2D")]
+    [STU(0xB4BB8CFC, 28)]
     public class SDD_Rect2D : SDD_Line2D
     {
     }

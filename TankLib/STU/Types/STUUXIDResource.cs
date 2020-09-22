@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x992CD1C4, "STUUXIDResource")]
+    [STU(0x992CD1C4, 40)]
     public class STUUXIDResource : STUUXResource
     {
-        [STUField(0xB5C0F593)]
+        [STUField(0xB5C0F593, 24)] // size: 16
         public teStructuredDataAssetRef<STUUXLink> m_guid;
     }
 }

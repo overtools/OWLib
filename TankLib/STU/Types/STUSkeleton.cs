@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x5E569E7A, "STUSkeleton")]
+    [STU(0x5E569E7A, 56)]
     public class STUSkeleton : STUInstance
     {
-        [STUField(0x0D890433)]
+        [STUField(0x0D890433, 8)] // size: 16
         public teStructuredDataAssetRef<STU_8D423808> m_0D890433;
         
-        [STUField(0xE4A7B00A)]
+        [STUField(0xE4A7B00A, 24)] // size: 16
         public teString m_E4A7B00A;
         
-        [STUField(0xA7FE4B94)]
+        [STUField(0xA7FE4B94, 40)] // size: 16
         public teString m_sourceSet;
     }
 }

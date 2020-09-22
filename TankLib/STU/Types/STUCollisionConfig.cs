@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xCAAB2581, "STUCollisionConfig")]
+    [STU(0xCAAB2581, 16)]
     public class STUCollisionConfig : STUInstance
     {
-        [STUField(0xE5338DEC)]
+        [STUField(0xE5338DEC, 8)] // size: 1
         public byte m_E5338DEC = 0x1;
     }
 }

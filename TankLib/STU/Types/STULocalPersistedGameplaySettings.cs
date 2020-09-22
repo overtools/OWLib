@@ -3,25 +3,25 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xE8B1E584, "STULocalPersistedGameplaySettings")]
+    [STU(0xE8B1E584, 6)]
     public class STULocalPersistedGameplaySettings : STUInstance
     {
-        [STUField(0x0CDB5C49)]
+        [STUField(0x0CDB5C49, 0)] // size: 1
         public byte m_0CDB5C49 = 0x1;
         
-        [STUField(0x6FB4AB75)]
+        [STUField(0x6FB4AB75, 1)] // size: 1
         public byte m_6FB4AB75;
         
-        [STUField(0x6EFEB733)]
+        [STUField(0x6EFEB733, 2)] // size: 1
         public byte m_6EFEB733;
         
-        [STUField(0xA70B50D3)]
+        [STUField(0xA70B50D3, 3)] // size: 1
         public byte m_A70B50D3 = 0x1;
         
-        [STUField(0x0D0FF2FA)]
+        [STUField(0x0D0FF2FA, 4)] // size: 1
         public byte m_0D0FF2FA;
         
-        [STUField(0x593A9558)]
+        [STUField(0x593A9558, 5)] // size: 1
         public byte m_593A9558;
     }
 }

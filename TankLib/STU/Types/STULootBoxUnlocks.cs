@@ -4,13 +4,13 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF818D652, "STULootBoxUnlocks")]
+    [STU(0xF818D652, 32)]
     public class STULootBoxUnlocks : STUInstance
     {
-        [STUField(0xDB803F2F, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xDB803F2F, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STUUnlocks m_unlocks;
         
-        [STUField(0x7AB4E3F8)]
+        [STUField(0x7AB4E3F8, 24)] // size: 4
         public Enum_BABC4175 m_lootboxType;
     }
 }

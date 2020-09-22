@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x33A7CE78, "STUUXEmbeddedSimpleCheckout")]
+    [STU(0x33A7CE78, 32)]
     public class STUUXEmbeddedSimpleCheckout : STU_F473415B
     {
     }

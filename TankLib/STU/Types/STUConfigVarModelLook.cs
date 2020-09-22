@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF2179AD1, "STUConfigVarModelLook")]
+    [STU(0xF2179AD1, 48)]
     public class STUConfigVarModelLook : STU_E4324757
     {
-        [STUField(0x041CE51F)]
+        [STUField(0x041CE51F, 32)] // size: 16
         public teStructuredDataAssetRef<STUModelLook> m_modelLook;
     }
 }

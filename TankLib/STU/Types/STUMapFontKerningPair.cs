@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xCFFB28E5, "STUMapFontKerningPair")]
+    [STU(0xCFFB28E5, 12)]
     public class STUMapFontKerningPair : STUInstance
     {
-        [STUField(0xD18773B2)]
+        [STUField(0xD18773B2, 0)] // size: 4
         public uint m_D18773B2;
         
-        [STUField(0xBB73A241)]
+        [STUField(0xBB73A241, 4)] // size: 4
         public uint m_BB73A241;
         
-        [STUField(0x96987C24)]
+        [STUField(0x96987C24, 8)] // size: 2
         public short m_96987C24;
     }
 }

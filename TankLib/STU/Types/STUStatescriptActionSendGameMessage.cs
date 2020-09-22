@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xBD6F5F83, "STUStatescriptActionSendGameMessage")]
+    [STU(0xBD6F5F83, 168)]
     public class STUStatescriptActionSendGameMessage : STU_473D3BBD
     {
-        [STUField(0xE3798C00, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xE3798C00, 160, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_targets;
     }
 }

@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xC6F0ECDF, "STUUXCollectionViewGroup")]
+    [STU(0xC6F0ECDF, 24)]
     public class STUUXCollectionViewGroup : STUUXDependencyObject
     {
     }

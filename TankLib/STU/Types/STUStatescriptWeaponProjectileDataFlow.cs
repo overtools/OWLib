@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x61235676, "STUStatescriptWeaponProjectileDataFlow")]
+    [STU(0x61235676, 16)]
     public class STUStatescriptWeaponProjectileDataFlow : STUInstance
     {
-        [STUField(0xBA891264, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xBA891264, 0, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_dataFlow;
         
-        [STUField(0xF92402E9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xF92402E9, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_answer;
     }
 }

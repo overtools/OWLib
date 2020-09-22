@@ -3,67 +3,67 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x419E5D60, "STUAnimationSettings")]
+    [STU(0x419E5D60, 88)]
     public class STUAnimationSettings : STUInstance
     {
-        [STUField(0x41A3777D)]
+        [STUField(0x41A3777D, 8)] // size: 16
         public teString m_41A3777D;
         
-        [STUField(0x7FA6B71A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x7FA6B71A, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_35BFBF20[] m_7FA6B71A;
         
-        [STUField(0x7006FA69, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x7006FA69, 40, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_BBBFC3C9 m_7006FA69;
         
-        [STUField(0x491C8A84, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x491C8A84, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAnimBoneWeightMask m_491C8A84;
         
-        [STUField(0x4ED7C887, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x4ED7C887, 56, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_BBBFC3C9 m_4ED7C887;
         
-        [STUField(0x41180910)]
+        [STUField(0x41180910, 64)] // size: 4
         public uint m_41180910;
         
-        [STUField(0xEBDCB029)]
+        [STUField(0xEBDCB029, 68)] // size: 4
         public uint m_EBDCB029;
         
-        [STUField(0x11993C03)]
+        [STUField(0x11993C03, 72)] // size: 4
         public uint m_11993C03;
         
-        [STUField(0x0258F64B)]
+        [STUField(0x0258F64B, 76)] // size: 1
         public byte m_0258F64B;
         
-        [STUField(0x5A50286D)]
+        [STUField(0x5A50286D, 77)] // size: 1
         public byte m_5A50286D;
         
-        [STUField(0x4DDA41EB)]
+        [STUField(0x4DDA41EB, 78)] // size: 1
         public byte m_4DDA41EB;
         
-        [STUField(0x59903079)]
+        [STUField(0x59903079, 79)] // size: 1
         public byte m_59903079;
         
-        [STUField(0xA794731B)]
+        [STUField(0xA794731B, 80)] // size: 1
         public byte m_A794731B;
         
-        [STUField(0x59DB9B44)]
+        [STUField(0x59DB9B44, 81)] // size: 1
         public byte m_59DB9B44;
         
-        [STUField(0xB81EAB00)]
+        [STUField(0xB81EAB00, 82)] // size: 1
         public byte m_B81EAB00;
         
-        [STUField(0x7E0DCF00)]
+        [STUField(0x7E0DCF00, 83)] // size: 1
         public byte m_7E0DCF00;
         
-        [STUField(0xF5150933)]
+        [STUField(0xF5150933, 84)] // size: 1
         public byte m_F5150933;
         
-        [STUField(0xFF8E0FC4)]
+        [STUField(0xFF8E0FC4, 85)] // size: 1
         public byte m_FF8E0FC4;
         
-        [STUField(0x37EE887D)]
+        [STUField(0x37EE887D, 86)] // size: 1
         public byte m_37EE887D;
         
-        [STUField(0x0A40CFA0)]
+        [STUField(0x0A40CFA0, 87)] // size: 1
         public byte m_0A40CFA0;
     }
 }

@@ -4,19 +4,19 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x23F2C185, "STUVoiceCategory")]
+    [STU(0x23F2C185, 24)]
     public class STUVoiceCategory : STUInstance
     {
-        [STUField(0x15EA4237)]
+        [STUField(0x15EA4237, 8)] // size: 4
         public uint m_15EA4237;
         
-        [STUField(0xB4531CD2)]
+        [STUField(0xB4531CD2, 12)] // size: 4
         public Enum_8880A556 m_B4531CD2;
         
-        [STUField(0xAA43F96E)]
+        [STUField(0xAA43F96E, 16)] // size: 4
         public Enum_B6526149 m_AA43F96E;
         
-        [STUField(0xF8584EDD)]
+        [STUField(0xF8584EDD, 20)] // size: 1
         public byte m_F8584EDD = 0x0;
     }
 }

@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x9F1D18DD, "STUAICellData")]
+    [STU(0x9F1D18DD, 24)]
     public class STUAICellData : STUInstance
     {
-        [STUField(0xB62FC651)]
+        [STUField(0xB62FC651, 0)] // size: 8
         public ulong m_B62FC651;
         
-        [STUField(0x8A30AD88)]
+        [STUField(0x8A30AD88, 8)] // size: 8
         public ulong m_8A30AD88;
         
-        [STUField(0xFFBC98C1)]
+        [STUField(0xFFBC98C1, 16)] // size: 4
         public uint m_FFBC98C1;
     }
 }

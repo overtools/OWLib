@@ -4,10 +4,10 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x295A9417, "STUAnimNode_Blend2dChild")]
+    [STU(0x295A9417, 48)]
     public class STUAnimNode_Blend2dChild : STU_2F6BD485
     {
-        [STUField(0xADFE2B69)]
+        [STUField(0xADFE2B69, 40)] // size: 8
         public teVec2 m_ADFE2B69;
     }
 }

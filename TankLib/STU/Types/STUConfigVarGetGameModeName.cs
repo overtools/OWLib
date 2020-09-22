@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x93ED2F10, "STUConfigVarGetGameModeName")]
+    [STU(0x93ED2F10, 24)]
     public class STUConfigVarGetGameModeName : STUConfigVarStringBase
     {
-        [STUField(0xEB4F2408, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xEB4F2408, 16, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_gamemode;
     }
 }

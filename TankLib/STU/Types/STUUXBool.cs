@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x5FE555AA, "STUUXBool")]
+    [STU(0x5FE555AA, 16)]
     public class STUUXBool : STUUXObject
     {
-        [STUField(0x5180E750)]
+        [STUField(0x5180E750, 8)] // size: 1
         public byte m_value;
     }
 }

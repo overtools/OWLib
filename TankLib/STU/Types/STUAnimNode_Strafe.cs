@@ -3,52 +3,52 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xA311F881, "STUAnimNode_Strafe")]
+    [STU(0xA311F881, 400)]
     public class STUAnimNode_Strafe : STUAnimNode_Base
     {
-        [STUField(0xCE880AAB, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xCE880AAB, 80, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_25B808BD m_CE880AAB;
         
-        [STUField(0x6E576DA0, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x6E576DA0, 112, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_25B808BD m_6E576DA0;
         
-        [STUField(0xEEA82FCA, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xEEA82FCA, 144, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_25B808BD m_EEA82FCA;
         
-        [STUField(0x65F41E49, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x65F41E49, 176, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_51A9D9C7 m_65F41E49;
         
-        [STUField(0x59444EC7, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x59444EC7, 208, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_CCC326B7 m_59444EC7;
         
-        [STUField(0x67910D72, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x67910D72, 240, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_CCC326B7 m_67910D72;
         
-        [STUField(0x8E421E8D, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x8E421E8D, 272, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_ABD8FE73 m_8E421E8D;
         
-        [STUField(0x6D2F8BDE, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x6D2F8BDE, 296, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_6D2F8BDE;
         
-        [STUField(0xF2B3F5D4, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xF2B3F5D4, 320, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_ABD8FE73 m_F2B3F5D4;
         
-        [STUField(0xAB34269B, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xAB34269B, 344, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimNode_StrafeProfileOverride[] m_AB34269B;
         
-        [STUField(0x09FE31A5, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x09FE31A5, 360, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_2F6BD485 m_09FE31A5;
         
-        [STUField(0x7A2F0A64, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x7A2F0A64, 368, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_2F6BD485 m_7A2F0A64;
         
-        [STUField(0xCDA1FD6A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xCDA1FD6A, 376, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_2F6BD485 m_CDA1FD6A;
         
-        [STUField(0xE15BD392, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xE15BD392, 384, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_2F6BD485 m_E15BD392;
         
-        [STUField(0x29BA51E7, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x29BA51E7, 392, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_DB72CA9C m_29BA51E7;
     }
 }

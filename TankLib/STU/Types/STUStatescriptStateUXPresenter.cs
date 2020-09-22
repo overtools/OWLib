@@ -3,28 +3,28 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x7A7F2732, "STUStatescriptStateUXPresenter")]
+    [STU(0x7A7F2732, 312)]
     public class STUStatescriptStateUXPresenter : STUStatescriptState
     {
-        [STUField(0x3DBF6FD2, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x3DBF6FD2, 216, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_5F31962C m_3DBF6FD2;
         
-        [STUField(0xAC8CB6BC, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xAC8CB6BC, 240, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_398F9098[] m_AC8CB6BC;
         
-        [STUField(0x8D6AF7DD, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x8D6AF7DD, 256, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_EB19DAFA[] m_8D6AF7DD;
         
-        [STUField(0x4FF3A882, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x4FF3A882, 272, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_294F6168[] m_4FF3A882;
         
-        [STUField(0x45216F79, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x45216F79, 288, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_4586592B m_45216F79;
         
-        [STUField(0xEC32138E, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xEC32138E, 296, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_EC32138E;
         
-        [STUField(0x45017CEA, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x45017CEA, 304, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_076E0DBA m_45017CEA;
     }
 }

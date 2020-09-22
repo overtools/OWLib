@@ -4,10 +4,10 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xE3206AE9, "STUConfigVarEntityReference")]
+    [STU(0xE3206AE9, 32)]
     public class STUConfigVarEntityReference : STUConfigVarEntityID
     {
-        [STUField(0x4A2AD74A)]
+        [STUField(0x4A2AD74A, 16)] // size: 16
         public teUUID m_4A2AD74A;
     }
 }

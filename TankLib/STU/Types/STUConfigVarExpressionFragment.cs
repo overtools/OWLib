@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x17E6DDEB, "STUConfigVarExpressionFragment")]
+    [STU(0x17E6DDEB, 32)]
     public class STUConfigVarExpressionFragment : STUInstance
     {
-        [STUField(0xF1CB3BA0)]
+        [STUField(0xF1CB3BA0, 0)] // size: 16
         public teString m_text;
         
-        [STUField(0xBA53D5ED)]
+        [STUField(0xBA53D5ED, 16)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_guid;
     }
 }

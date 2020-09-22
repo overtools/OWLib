@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xA30AC223, "STUUXDependencyObject")]
+    [STU(0xA30AC223, 24)]
     public class STUUXDependencyObject : STUUXObject
     {
-        [STUField(0xCCBAB44D, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xCCBAB44D, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_540641B9[] m_localValues;
     }
 }

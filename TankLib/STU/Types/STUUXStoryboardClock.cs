@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB5D8D58C, "STUUXStoryboardClock")]
+    [STU(0xB5D8D58C, 8)]
     public class STUUXStoryboardClock : STUUXObject
     {
     }

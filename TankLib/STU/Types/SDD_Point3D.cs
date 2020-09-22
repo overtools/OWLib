@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xEE9FE883, "SDD_Point3D")]
+    [STU(0xEE9FE883, 28)]
     public class SDD_Point3D : SDD_3D
     {
-        [STUField(0x06D48E86)]
+        [STUField(0x06D48E86, 24)] // size: 4
         public float fSize;
     }
 }

@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x3E74C216, "STUUXLogicalButton")]
+    [STU(0x3E74C216, 24)]
     public class STUUXLogicalButton : STUUXObject
     {
-        [STUField(0x2605693D)]
+        [STUField(0x2605693D, 8)] // size: 16
         public teStructuredDataAssetRef<STU_2376C502> m_2605693D;
     }
 }

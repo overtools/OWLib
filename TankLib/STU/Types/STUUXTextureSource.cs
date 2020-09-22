@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x08E3FE3B, "STUUXTextureSource")]
+    [STU(0x08E3FE3B, 48)]
     public class STUUXTextureSource : STU_ED693AD7
     {
-        [STUField(0xB15392E8)]
+        [STUField(0xB15392E8, 32)] // size: 16
         public teStructuredDataAssetRef<ulong> m_textureGUID;
     }
 }

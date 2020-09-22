@@ -4,19 +4,19 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8FAF5745, "STUGraphItem")]
+    [STU(0x8FAF5745, 56)]
     public class STUGraphItem : STUInstance
     {
-        [STUField(0x5DB91CE2)]
+        [STUField(0x5DB91CE2, 8)] // size: 16
         public teString m_displayName;
         
-        [STUField(0x6EAB6810)]
+        [STUField(0x6EAB6810, 24)] // size: 16
         public teString m_comment;
         
-        [STUField(0xA10A5EAF)]
+        [STUField(0xA10A5EAF, 40)] // size: 8
         public teVec2 m_pos;
         
-        [STUField(0xE3B4FA5C)]
+        [STUField(0xE3B4FA5C, 48)] // size: 4
         public uint m_uniqueID;
     }
 }

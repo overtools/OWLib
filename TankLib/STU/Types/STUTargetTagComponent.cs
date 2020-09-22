@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x445E7678, "STUTargetTagComponent")]
+    [STU(0x445E7678, 24)]
     public class STUTargetTagComponent : STUEntityComponent
     {
-        [STUField(0xAA8E1BB0)]
+        [STUField(0xAA8E1BB0, 8)] // size: 16
         public teStructuredDataAssetRef<STUTargetTag>[] m_targetTags;
     }
 }

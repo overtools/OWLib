@@ -4,31 +4,31 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xE42D9464, "STUParametricMovementComponentInstanceData")]
+    [STU(0xE42D9464, 64)]
     public class STUParametricMovementComponentInstanceData : STUComponentInstanceData
     {
-        [STUField(0x20D151F5)]
+        [STUField(0x20D151F5, 8)] // size: 16
         public teUUID m_destination;
         
-        [STUField(0xCDCAE1B6, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xCDCAE1B6, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 20
         public STU_51E9B772 m_CDCAE1B6;
         
-        [STUField(0x15D5849E)]
+        [STUField(0x15D5849E, 44)] // size: 4
         public float m_15D5849E;
         
-        [STUField(0x6D6F179F)]
+        [STUField(0x6D6F179F, 48)] // size: 4
         public float m_6D6F179F = 1.57f;
         
-        [STUField(0xF2E8E816)]
+        [STUField(0xF2E8E816, 52)] // size: 4
         public float m_F2E8E816 = 0.2f;
         
-        [STUField(0xF3D0818C)]
+        [STUField(0xF3D0818C, 56)] // size: 4
         public float m_F3D0818C = 0f;
         
-        [STUField(0xD67894A0)]
+        [STUField(0xD67894A0, 60)] // size: 1
         public byte m_D67894A0 = 0x1;
         
-        [STUField(0xFBEA8A90)]
+        [STUField(0xFBEA8A90, 61)] // size: 1
         public byte m_FBEA8A90 = 0x0;
     }
 }

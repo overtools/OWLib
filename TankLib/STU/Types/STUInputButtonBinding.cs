@@ -3,22 +3,22 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x0A55BCC0, "STUInputButtonBinding")]
+    [STU(0x0A55BCC0, 40)]
     public class STUInputButtonBinding : STUInstance
     {
-        [STUField(0xF5928F34)]
+        [STUField(0xF5928F34, 0)] // size: 16
         public teStructuredDataAssetRef<STU_51BAFC27> m_F5928F34;
         
-        [STUField(0x3C9341F5)]
+        [STUField(0x3C9341F5, 16)] // size: 16
         public teStructuredDataAssetRef<STU_C5243F93> m_logicalButton;
         
-        [STUField(0xE3DB6B8C)]
+        [STUField(0xE3DB6B8C, 32)] // size: 1
         public byte m_E3DB6B8C;
         
-        [STUField(0x9C8D4B5B)]
+        [STUField(0x9C8D4B5B, 33)] // size: 1
         public byte m_9C8D4B5B;
         
-        [STUField(0xE9FC8421)]
+        [STUField(0xE9FC8421, 34)] // size: 1
         public byte m_E9FC8421;
     }
 }

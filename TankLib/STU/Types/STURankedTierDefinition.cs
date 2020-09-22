@@ -4,16 +4,16 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xA0F2FE14, "STURankedTierDefinition")]
+    [STU(0xA0F2FE14, 24)]
     public class STURankedTierDefinition : STUInstance
     {
-        [STUField(0x4BF7CD58)]
+        [STUField(0x4BF7CD58, 8)] // size: 4
         public uint m_4BF7CD58;
         
-        [STUField(0xD2F14FFA)]
+        [STUField(0xD2F14FFA, 12)] // size: 4
         public uint m_D2F14FFA;
         
-        [STUField(0x85CA53C8)]
+        [STUField(0x85CA53C8, 16)] // size: 4
         public Enum_4BE16CA5 m_85CA53C8;
     }
 }

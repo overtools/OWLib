@@ -4,31 +4,31 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x0352046B, "STUAnimTriangulationMap_Triangle")]
+    [STU(0x0352046B, 52)]
     public class STUAnimTriangulationMap_Triangle : STUInstance
     {
-        [STUField(0xA0EEB9AF)]
+        [STUField(0xA0EEB9AF, 0)] // size: 8
         public teVec2 m_A0EEB9AF;
         
-        [STUField(0x4DF116EB)]
+        [STUField(0x4DF116EB, 8)] // size: 8
         public teVec2 m_4DF116EB;
         
-        [STUField(0x6B532D98)]
+        [STUField(0x6B532D98, 16)] // size: 8
         public teVec2 m_6B532D98;
         
-        [STUField(0xB853170A)]
+        [STUField(0xB853170A, 24)] // size: 8
         public teVec2 m_B853170A;
         
-        [STUField(0x18A188D2)]
+        [STUField(0x18A188D2, 32)] // size: 8
         public teVec2 m_18A188D2;
         
-        [STUField(0x28A3F5DB)]
+        [STUField(0x28A3F5DB, 40)] // size: 4
         public int m_28A3F5DB;
         
-        [STUField(0x592884EA)]
+        [STUField(0x592884EA, 44)] // size: 4
         public int m_592884EA;
         
-        [STUField(0xD7372AE3)]
+        [STUField(0xD7372AE3, 48)] // size: 4
         public int m_D7372AE3;
     }
 }

@@ -4,28 +4,28 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF13353CA, "STULineupPoseVariant")]
+    [STU(0xF13353CA, 96)]
     public class STULineupPoseVariant : STUInstance
     {
-        [STUField(0x11E0A658)]
+        [STUField(0x11E0A658, 8)] // size: 16
         public teStructuredDataAssetRef<ulong> m_11E0A658;
         
-        [STUField(0x6FAFEC54)]
+        [STUField(0x6FAFEC54, 24)] // size: 12
         public teVec3 m_6FAFEC54 = new teVec3(0f, 1f, 0f);
         
-        [STUField(0xC5A005D3)]
+        [STUField(0xC5A005D3, 36)] // size: 12
         public teVec3 m_C5A005D3 = new teVec3(1f, 1f, 1f);
         
-        [STUField(0x8EAC4C30)]
+        [STUField(0x8EAC4C30, 48)] // size: 12
         public teVec3 m_8EAC4C30 = new teVec3(0f, 1f, 0f);
         
-        [STUField(0x2944DDBC)]
+        [STUField(0x2944DDBC, 60)] // size: 12
         public teVec3 m_2944DDBC = new teVec3(1f, 1f, 1f);
         
-        [STUField(0x28814AE5)]
+        [STUField(0x28814AE5, 72)] // size: 12
         public teVec3 m_28814AE5 = new teVec3(0f, 1f, 0f);
         
-        [STUField(0x69150A1D)]
+        [STUField(0x69150A1D, 84)] // size: 12
         public teVec3 m_69150A1D = new teVec3(1f, 1f, 1f);
     }
 }

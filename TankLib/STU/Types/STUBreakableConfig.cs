@@ -3,22 +3,22 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x44897C73, "STUBreakableConfig")]
+    [STU(0x44897C73, 5)]
     public class STUBreakableConfig : STUInstance
     {
-        [STUField(0xE1B0C07F)]
+        [STUField(0xE1B0C07F, 0)] // size: 1
         public byte m_clientOnly = 0x0;
         
-        [STUField(0xEDA30E4A)]
+        [STUField(0xEDA30E4A, 1)] // size: 1
         public byte m_EDA30E4A = 0x1;
         
-        [STUField(0xD7C2FC23)]
+        [STUField(0xD7C2FC23, 2)] // size: 1
         public byte m_D7C2FC23 = 0x1;
         
-        [STUField(0x06CC8602)]
+        [STUField(0x06CC8602, 3)] // size: 1
         public byte m_06CC8602 = 0x0;
         
-        [STUField(0x83798806)]
+        [STUField(0x83798806, 4)] // size: 1
         public byte m_83798806;
     }
 }

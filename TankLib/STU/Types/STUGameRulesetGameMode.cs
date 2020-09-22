@@ -4,28 +4,28 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x2E1A0A0B, "STUGameRulesetGameMode")]
+    [STU(0x2E1A0A0B, 112)]
     public class STUGameRulesetGameMode : STUInstance
     {
-        [STUField(0xEB4F2408)]
+        [STUField(0xEB4F2408, 0)] // size: 16
         public teStructuredDataAssetRef<STUGameMode> m_gamemode;
         
-        [STUField(0x3CE93B76, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x3CE93B76, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameModeVarValuePair[] m_3CE93B76;
         
-        [STUField(0xAD4BF17F, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xAD4BF17F, 32, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameModeVarValuePair[] m_AD4BF17F;
         
-        [STUField(0xD440A0F7, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xD440A0F7, 48, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameRulesetTeam[] m_teams;
         
-        [STUField(0xDB2577DB)]
+        [STUField(0xDB2577DB, 64)] // size: 4
         public STUXPGainType[] m_DB2577DB;
         
-        [STUField(0xCA7E6EDC)]
+        [STUField(0xCA7E6EDC, 80)] // size: 16
         public teStructuredDataAssetRef<ulong> m_description;
         
-        [STUField(0x86C1CFAB)]
+        [STUField(0x86C1CFAB, 96)] // size: 16
         public teStructuredDataAssetRef<ulong> m_86C1CFAB;
     }
 }

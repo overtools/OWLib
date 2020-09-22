@@ -4,10 +4,10 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xC23F89EB, "STUUnlock_Weapon")]
+    [STU(0xC23F89EB, 232)]
     public class STUUnlock_Weapon : STU_3021DDED
     {
-        [STUField(0xCDEF1203)]
+        [STUField(0xCDEF1203, 224)] // size: 4
         public STUWeaponType m_weaponType;
     }
 }

@@ -4,22 +4,22 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6760479E, "STUUnlock")]
+    [STU(0x6760479E, 72)]
     public class STUUnlock : STUInstance
     {
-        [STUField(0xB48F1D22)]
+        [STUField(0xB48F1D22, 8)] // size: 16
         public teStructuredDataAssetRef<ulong> m_name;
         
-        [STUField(0xDAD2E3A2)]
+        [STUField(0xDAD2E3A2, 24)] // size: 16
         public teStructuredDataAssetRef<ulong> m_DAD2E3A2;
         
-        [STUField(0x38BFB46C)]
+        [STUField(0x38BFB46C, 40)] // size: 16
         public teStructuredDataAssetRef<STUResourceKey> m_resourceKey;
         
-        [STUField(0xEDE36CB7)]
+        [STUField(0xEDE36CB7, 56)] // size: 8
         public ulong m_resourceKeyId;
         
-        [STUField(0xA7B393BF)]
+        [STUField(0xA7B393BF, 64)] // size: 4
         public Enum_5A7EBE59 m_A7B393BF;
     }
 }

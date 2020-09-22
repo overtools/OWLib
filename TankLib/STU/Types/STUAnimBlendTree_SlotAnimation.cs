@@ -3,19 +3,19 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xBE20B7F5, "STUAnimBlendTree_SlotAnimation")]
+    [STU(0xBE20B7F5, 48)]
     public class STUAnimBlendTree_SlotAnimation : STUInstance
     {
-        [STUField(0x65033558)]
+        [STUField(0x65033558, 0)] // size: 16
         public teStructuredDataAssetRef<STUAnimIdentifier> m_animSlotID;
         
-        [STUField(0x3F5B86A4)]
+        [STUField(0x3F5B86A4, 16)] // size: 16
         public teStructuredDataAssetRef<ulong> m_animation;
         
-        [STUField(0xBAA74493, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xBAA74493, 32, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_8C127DE2 m_condition;
         
-        [STUField(0x5BA0B476)]
+        [STUField(0x5BA0B476, 40)] // size: 4
         public int m_5BA0B476;
     }
 }

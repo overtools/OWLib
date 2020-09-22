@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x0BD5EA17, "STUAnimBoneSet")]
+    [STU(0x0BD5EA17, 40)]
     public class STUAnimBoneSet : STUInstance
     {
-        [STUField(0x50558D63)]
+        [STUField(0x50558D63, 8)] // size: 16
         public teStructuredDataAssetRef<STUBoneLabel>[] m_bones;
         
-        [STUField(0x7CBECA0C)]
+        [STUField(0x7CBECA0C, 24)] // size: 16
         public teStructuredDataAssetRef<STUHardPoint>[] m_hardPoints;
     }
 }

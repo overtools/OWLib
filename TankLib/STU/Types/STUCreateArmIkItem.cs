@@ -3,28 +3,28 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF7C4B7FD, "STUCreateArmIkItem")]
+    [STU(0xF7C4B7FD, 56)]
     public class STUCreateArmIkItem : STUInstance
     {
-        [STUField(0x1C801B34, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x1C801B34, 0, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_1C801B34;
         
-        [STUField(0x150B2356, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x150B2356, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_150B2356;
         
-        [STUField(0x8E5E5010, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x8E5E5010, 16, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_8E5E5010;
         
-        [STUField(0x42D4C050, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x42D4C050, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_42D4C050;
         
-        [STUField(0xB69CCAC5, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xB69CCAC5, 32, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_B69CCAC5;
         
-        [STUField(0x0F88291F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x0F88291F, 40, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_weightDriver;
         
-        [STUField(0x87DFFE28, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x87DFFE28, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_87DFFE28;
     }
 }

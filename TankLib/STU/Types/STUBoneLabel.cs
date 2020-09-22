@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x7A0B33DA, "STUBoneLabel")]
+    [STU(0x7A0B33DA, 16)]
     public class STUBoneLabel : STUInstance
     {
-        [STUField(0x383F1D54)]
+        [STUField(0x383F1D54, 8)] // size: 1
         public byte m_383F1D54;
     }
 }

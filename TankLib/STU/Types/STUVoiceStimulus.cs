@@ -4,91 +4,91 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x3FBD80C6, "STUVoiceStimulus")]
+    [STU(0x3FBD80C6, 136)]
     public class STUVoiceStimulus : STUInstance
     {
-        [STUField(0x87DCD58E)]
+        [STUField(0x87DCD58E, 8)] // size: 16
         public teStructuredDataAssetRef<STU_F38E9E14> m_87DCD58E;
         
-        [STUField(0x099F25C9)]
+        [STUField(0x099F25C9, 24)] // size: 16
         public teStructuredDataAssetRef<STUGenericSettings_Base> m_099F25C9;
         
-        [STUField(0x2C54AEAF)]
+        [STUField(0x2C54AEAF, 40)] // size: 16
         public teStructuredDataAssetRef<STUVoiceCategory> m_category;
         
-        [STUField(0x91F599DF)]
+        [STUField(0x91F599DF, 56)] // size: 4
         public Enum_1964FED7[] m_91F599DF;
         
-        [STUField(0x4FF98D41, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x4FF98D41, 72, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUCriteriaContainer m_criteria;
         
-        [STUField(0xDF647B95)]
+        [STUField(0xDF647B95, 80)] // size: 4
         public Enum_BC00E017 m_DF647B95 = Enum_BC00E017.x104CDEDC;
         
-        [STUField(0x35EC21DC)]
+        [STUField(0x35EC21DC, 84)] // size: 4
         public Enum_4368B765 m_interrupt = Enum_4368B765.xEFAD49F4;
         
-        [STUField(0xA73F2EBE)]
+        [STUField(0xA73F2EBE, 88)] // size: 4
         public float m_A73F2EBE = 0f;
         
-        [STUField(0xDD27AC95)]
+        [STUField(0xDD27AC95, 92)] // size: 4
         public float m_DD27AC95 = 0f;
         
-        [STUField(0xF6658B6B)]
+        [STUField(0xF6658B6B, 96)] // size: 4
         public Enum_A3FB08F9 m_loadData = Enum_A3FB08F9.x0998A170;
         
-        [STUField(0xBB16810A)]
+        [STUField(0xBB16810A, 100)] // size: 4
         public uint m_priority = 0x32;
         
-        [STUField(0x1CC5EF25)]
+        [STUField(0x1CC5EF25, 104)] // size: 4
         public float m_1CC5EF25 = 1f;
         
-        [STUField(0xB1C6CDA2)]
+        [STUField(0xB1C6CDA2, 108)] // size: 4
         public float m_volume = 0f;
         
-        [STUField(0xED61D926)]
+        [STUField(0xED61D926, 112)] // size: 4
         public float m_radius = 35f;
         
-        [STUField(0xBCE309D7)]
+        [STUField(0xBCE309D7, 116)] // size: 4
         public Enum_523DC49D m_BCE309D7 = Enum_523DC49D.x0C3524EE;
         
-        [STUField(0x9502010D)]
+        [STUField(0x9502010D, 120)] // size: 1
         public byte m_active = 0x1;
         
-        [STUField(0xDC30A92A)]
+        [STUField(0xDC30A92A, 121)] // size: 1
         public byte m_announcer = 0x0;
         
-        [STUField(0xAB866031)]
+        [STUField(0xAB866031, 122)] // size: 1
         public byte m_AB866031 = 0x0;
         
-        [STUField(0xAC80C14A)]
+        [STUField(0xAC80C14A, 123)] // size: 1
         public byte m_AC80C14A = 0x1;
         
-        [STUField(0xEE144B9E)]
+        [STUField(0xEE144B9E, 124)] // size: 1
         public byte m_EE144B9E = 0x0;
         
-        [STUField(0xA9A901C1)]
+        [STUField(0xA9A901C1, 125)] // size: 1
         public byte m_A9A901C1 = 0x0;
         
-        [STUField(0x72AA9E92)]
+        [STUField(0x72AA9E92, 126)] // size: 1
         public byte m_72AA9E92 = 0x0;
         
-        [STUField(0xAFCF2626)]
+        [STUField(0xAFCF2626, 127)] // size: 1
         public byte m_AFCF2626 = 0x0;
         
-        [STUField(0xD7FE39AA)]
+        [STUField(0xD7FE39AA, 128)] // size: 1
         public byte m_D7FE39AA = 0x0;
         
-        [STUField(0x345921CC)]
+        [STUField(0x345921CC, 129)] // size: 1
         public byte m_345921CC = 0x0;
         
-        [STUField(0x14A22FA7)]
+        [STUField(0x14A22FA7, 130)] // size: 1
         public byte m_14A22FA7 = 0x0;
         
-        [STUField(0x252D7B29)]
+        [STUField(0x252D7B29, 131)] // size: 1
         public byte m_252D7B29 = 0x1;
         
-        [STUField(0x5D07FCC3)]
+        [STUField(0x5D07FCC3, 132)] // size: 1
         public byte m_5D07FCC3 = 0x0;
     }
 }

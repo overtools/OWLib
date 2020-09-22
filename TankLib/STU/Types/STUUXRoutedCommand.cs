@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xBBD17665, "STUUXRoutedCommand")]
+    [STU(0xBBD17665, 16)]
     public class STUUXRoutedCommand : STU_A0BDC3D3
     {
-        [STUField(0x1AD4EC1E)]
+        [STUField(0x1AD4EC1E, 8)] // size: 4
         public uint m_commandKey;
     }
 }

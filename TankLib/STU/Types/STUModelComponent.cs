@@ -3,73 +3,73 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x191835F9, "STUModelComponent")]
+    [STU(0x191835F9, 208)]
     public class STUModelComponent : STUEntityComponent
     {
-        [STUField(0x523339C1)]
+        [STUField(0x523339C1, 8)] // size: 16
         public teStructuredDataAssetRef<STUAnimBlendTreeSet> m_animBlendTreeSet;
         
-        [STUField(0x36F54327)]
+        [STUField(0x36F54327, 24)] // size: 16
         public teStructuredDataAssetRef<STUAnimBlendTree> m_36F54327;
         
-        [STUField(0xFD090EAD)]
+        [STUField(0xFD090EAD, 40)] // size: 16
         public teStructuredDataAssetRef<STUAnimation> m_FD090EAD;
         
-        [STUField(0x9C3F817E)]
+        [STUField(0x9C3F817E, 56)] // size: 16
         public teStructuredDataAssetRef<STUSkeleton> m_9C3F817E;
         
-        [STUField(0x2D124BE2)]
+        [STUField(0x2D124BE2, 72)] // size: 16
         public teStructuredDataAssetRef<STUModel> m_model;
         
-        [STUField(0x9297ADB4)]
+        [STUField(0x9297ADB4, 88)] // size: 16
         public teStructuredDataAssetRef<STUModelLook> m_look;
         
-        [STUField(0xA6041C8B, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xA6041C8B, 104, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUCollisionConfig m_collisionConfig;
         
-        [STUField(0x33DA887B)]
+        [STUField(0x33DA887B, 120)] // size: 16
         public teStructuredDataAssetRef<STU_CBD8CDF3>[] m_33DA887B;
         
-        [STUField(0x14256239, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x14256239, 136, ReaderType = typeof(InlineInstanceFieldReader))] // size: 36
         public STURagdollConfig m_ragdollConfig;
         
-        [STUField(0xA7A9DA23, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xA7A9DA23, 172, ReaderType = typeof(InlineInstanceFieldReader))] // size: 8
         public STUClothConfig m_clothConfig;
         
-        [STUField(0xBE0D6D29)]
+        [STUField(0xBE0D6D29, 180)] // size: 4
         public uint m_BE0D6D29 = 0x1;
         
-        [STUField(0x94546E3D)]
+        [STUField(0x94546E3D, 184)] // size: 4
         public float m_94546E3D;
         
-        [STUField(0x93178192, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x93178192, 188, ReaderType = typeof(InlineInstanceFieldReader))] // size: 5
         public STURigidBodyConfig m_rigidBodyConfig;
         
-        [STUField(0xDEB1159A, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xDEB1159A, 193, ReaderType = typeof(InlineInstanceFieldReader))] // size: 5
         public STUBreakableConfig m_breakableConfig;
         
-        [STUField(0x65777ADA)]
+        [STUField(0x65777ADA, 198)] // size: 1
         public byte m_65777ADA;
         
-        [STUField(0xFFAD7FF2)]
+        [STUField(0xFFAD7FF2, 199)] // size: 1
         public byte m_FFAD7FF2;
         
-        [STUField(0x60BFA90D)]
+        [STUField(0x60BFA90D, 200)] // size: 1
         public byte m_60BFA90D;
         
-        [STUField(0x6DC5AE9B)]
+        [STUField(0x6DC5AE9B, 201)] // size: 1
         public byte m_6DC5AE9B;
         
-        [STUField(0x2056559D)]
+        [STUField(0x2056559D, 202)] // size: 1
         public byte m_2056559D;
         
-        [STUField(0xADC54E57)]
+        [STUField(0xADC54E57, 203)] // size: 1
         public byte m_ADC54E57;
         
-        [STUField(0xB287A07F)]
+        [STUField(0xB287A07F, 204)] // size: 1
         public byte m_B287A07F;
         
-        [STUField(0x4A82B056)]
+        [STUField(0x4A82B056, 205)] // size: 1
         public byte m_4A82B056;
     }
 }

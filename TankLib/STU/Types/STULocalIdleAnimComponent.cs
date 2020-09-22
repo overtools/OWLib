@@ -3,19 +3,19 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x9911A927, "STULocalIdleAnimComponent")]
+    [STU(0x9911A927, 40)]
     public class STULocalIdleAnimComponent : STUEntityComponent
     {
-        [STUField(0xC9D669B6)]
+        [STUField(0xC9D669B6, 8)] // size: 16
         public teStructuredDataAssetRef<STUAnimation> m_idleAnimation;
         
-        [STUField(0xEDF6D105)]
+        [STUField(0xEDF6D105, 24)] // size: 4
         public float m_EDF6D105;
         
-        [STUField(0x8D7C6FCE)]
+        [STUField(0x8D7C6FCE, 28)] // size: 4
         public uint m_8D7C6FCE;
         
-        [STUField(0xD4D6260D)]
+        [STUField(0xD4D6260D, 32)] // size: 1
         public byte m_D4D6260D;
     }
 }

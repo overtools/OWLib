@@ -3,19 +3,19 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xA6F1FE9E, "STUClothConfig")]
+    [STU(0xA6F1FE9E, 8)]
     public class STUClothConfig : STUInstance
     {
-        [STUField(0x889AE87B)]
+        [STUField(0x889AE87B, 0)] // size: 4
         public int m_889AE87B = 0x0;
         
-        [STUField(0xC5A195CC)]
+        [STUField(0xC5A195CC, 4)] // size: 1
         public byte m_C5A195CC = 0x1;
         
-        [STUField(0x9B9B09C7)]
+        [STUField(0x9B9B09C7, 5)] // size: 1
         public byte m_9B9B09C7 = 0x0;
         
-        [STUField(0x2CBB62DB)]
+        [STUField(0x2CBB62DB, 6)] // size: 1
         public byte m_2CBB62DB = 0x0;
     }
 }

@@ -4,13 +4,13 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xBDD783B9, "STUCriteria_Team")]
+    [STU(0xBDD783B9, 40)]
     public class STUCriteria_Team : STUCriteria
     {
-        [STUField(0x33B0B2B6)]
+        [STUField(0x33B0B2B6, 32)] // size: 4
         public TeamIndex m_team;
         
-        [STUField(0xEB5492C4)]
+        [STUField(0xEB5492C4, 36)] // size: 1
         public byte m_EB5492C4 = 0x1;
     }
 }

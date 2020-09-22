@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6ACE6097, "STUUXPriorityBinding")]
+    [STU(0x6ACE6097, 48)]
     public class STUUXPriorityBinding : STUUXBindingBase
     {
-        [STUField(0x5F03FB03, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x5F03FB03, 32, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUUXBinding[] m_bindings;
     }
 }

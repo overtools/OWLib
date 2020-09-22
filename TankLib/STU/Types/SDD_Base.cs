@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF0D215C7, "SDD_Base")]
+    [STU(0xF0D215C7, 12)]
     public class SDD_Base : STUInstance
     {
-        [STUField(0xA9701C27)]
+        [STUField(0xA9701C27, 0)] // size: 4
         public uint PackedColor;
         
-        [STUField(0xD4DF9339)]
+        [STUField(0xD4DF9339, 4)] // size: 4
         public float lifeTimeSecs;
         
-        [STUField(0x5B41E11D)]
+        [STUField(0x5B41E11D, 8)] // size: 1
         public byte m_5B41E11D;
     }
 }

@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF6279B0F, "STUAnimCurve")]
+    [STU(0xF6279B0F, 40)]
     public class STUAnimCurve : STUInstance
     {
-        [STUField(0xA747A384, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xA747A384, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STUAnimCurveCompiled m_compiled;
     }
 }

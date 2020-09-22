@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xC4BE37A6, "STUAITacticalVolumeNeighbor")]
+    [STU(0xC4BE37A6, 4)]
     public class STUAITacticalVolumeNeighbor : STUInstance
     {
-        [STUField(0xAE2D8911)]
+        [STUField(0xAE2D8911, 0)] // size: 4
         public int m_index;
     }
 }

@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xC261FEA5, "STUImpactEffectOverrideComponent")]
+    [STU(0xC261FEA5, 24)]
     public class STUImpactEffectOverrideComponent : STUEntityComponent
     {
-        [STUField(0xF69D3693, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xF69D3693, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUImpactEffectByCategory[] m_effectByCategory;
     }
 }

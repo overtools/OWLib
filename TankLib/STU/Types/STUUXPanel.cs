@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8AA50FF2, "STUUXPanel")]
+    [STU(0x8AA50FF2, 48)]
     public class STUUXPanel : STUUXElement
     {
-        [STUField(0xAECD07C2, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xAECD07C2, 32, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUUXElement[] m_children;
     }
 }

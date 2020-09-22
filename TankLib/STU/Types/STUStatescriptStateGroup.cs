@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xFC999513, "STUStatescriptStateGroup")]
+    [STU(0xFC999513, 8)]
     public class STUStatescriptStateGroup : STUInstance
     {
     }

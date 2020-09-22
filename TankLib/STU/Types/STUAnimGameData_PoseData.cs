@@ -4,37 +4,37 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x978A87DE, "STUAnimGameData_PoseData")]
+    [STU(0x978A87DE, 112)]
     public class STUAnimGameData_PoseData : STUInstance
     {
-        [STUField(0x44B8E377)]
+        [STUField(0x44B8E377, 0)] // size: 16
         public teVec3A m_44B8E377;
         
-        [STUField(0x0B5E9CF6, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x0B5E9CF6, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 48
         public STU_7C02B6CA m_0B5E9CF6;
         
-        [STUField(0x03E0A520)]
+        [STUField(0x03E0A520, 64)] // size: 16
         public teVec3A[] m_poseDataVecs;
         
-        [STUField(0xD65E1B08, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xD65E1B08, 80, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimGameData_GeoSetFlags[] m_geoSetFlags;
         
-        [STUField(0xDB11C2C0)]
+        [STUField(0xDB11C2C0, 96)] // size: 4
         public uint m_animationID;
         
-        [STUField(0xE0D91786)]
+        [STUField(0xE0D91786, 100)] // size: 4
         public uint m_E0D91786;
         
-        [STUField(0x7EEFB57A)]
+        [STUField(0x7EEFB57A, 104)] // size: 2
         public ushort m_flags;
         
-        [STUField(0xAE2D8911)]
+        [STUField(0xAE2D8911, 106)] // size: 2
         public ushort m_index;
         
-        [STUField(0x3016B9A1)]
+        [STUField(0x3016B9A1, 108)] // size: 2
         public ushort m_3016B9A1;
         
-        [STUField(0xC1B611DF)]
+        [STUField(0xC1B611DF, 110)] // size: 2
         public ushort m_C1B611DF;
     }
 }

@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x5ABF8769, "STUUnlocks")]
+    [STU(0x5ABF8769, 24)]
     public class STUUnlocks : STUInstance
     {
-        [STUField(0xDB803F2F)]
+        [STUField(0xDB803F2F, 8)] // size: 16
         public teStructuredDataAssetRef<STUUnlock>[] m_unlocks;
     }
 }

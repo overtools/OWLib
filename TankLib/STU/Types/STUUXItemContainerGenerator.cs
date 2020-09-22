@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x63BC5817, "STUUXItemContainerGenerator")]
+    [STU(0x63BC5817, 8)]
     public class STUUXItemContainerGenerator : STUUXObject
     {
     }

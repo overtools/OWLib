@@ -4,13 +4,13 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x9FFCF237, "STULootBoxCurrencyRarityUnlock")]
+    [STU(0x9FFCF237, 24)]
     public class STULootBoxCurrencyRarityUnlock : STUInstance
     {
-        [STUField(0xF5087894)]
+        [STUField(0xF5087894, 0)] // size: 16
         public teStructuredDataAssetRef<STUUnlock> m_unlock;
         
-        [STUField(0xBB99FCD3)]
+        [STUField(0xBB99FCD3, 16)] // size: 4
         public STUUnlockRarity m_rarity;
     }
 }

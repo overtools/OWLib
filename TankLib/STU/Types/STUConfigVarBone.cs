@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x3B911C89, "STUConfigVarBone")]
+    [STU(0x3B911C89, 48)]
     public class STUConfigVarBone : STU_E4324757
     {
-        [STUField(0xF97609C8)]
+        [STUField(0xF97609C8, 32)] // size: 16
         public teStructuredDataAssetRef<STUBoneLabel> m_bone;
     }
 }

@@ -5,28 +5,28 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x298FC27F, "STUECAIHintVolumeInstanceData")]
+    [STU(0x298FC27F, 96)]
     public class STUECAIHintVolumeInstanceData : STUComponentInstanceData
     {
-        [STUField(0x2746D7E4)]
+        [STUField(0x2746D7E4, 8)] // size: 16
         public teUUID m_2746D7E4;
         
-        [STUField(0x106543DC, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x106543DC, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_A23BFD3B[] m_106543DC;
         
-        [STUField(0x3A6C757E)]
+        [STUField(0x3A6C757E, 40)] // size: 4
         public TeamIndex[] m_3A6C757E;
         
-        [STUField(0xE005252F)]
+        [STUField(0xE005252F, 56)] // size: 4
         public Enum_FB7F61B4[] m_E005252F;
         
-        [STUField(0x44CE67EA)]
+        [STUField(0x44CE67EA, 72)] // size: 4
         public int m_44CE67EA = -1;
         
-        [STUField(0x428B4854)]
+        [STUField(0x428B4854, 76)] // size: 4
         public Enum_135DBBD2 m_428B4854 = Enum_135DBBD2.x7C9383E2;
         
-        [STUField(0x7F8C228D)]
+        [STUField(0x7F8C228D, 80)] // size: 1
         public byte m_7F8C228D;
     }
 }

@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xFCE18E3E, "SDD_Text3D")]
+    [STU(0xFCE18E3E, 40)]
     public class SDD_Text3D : SDD_3D
     {
-        [STUField(0x3B8BA7C7)]
+        [STUField(0x3B8BA7C7, 24)] // size: 16
         public teString Text;
     }
 }

@@ -4,58 +4,58 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x7FE73B95, "STUAITacticalVolume")]
+    [STU(0x7FE73B95, 104)]
     public class STUAITacticalVolume : STUInstance
     {
-        [STUField(0x42286A80)]
+        [STUField(0x42286A80, 0)] // size: 16
         public uint[] m_42286A80;
         
-        [STUField(0x63EE0EDB)]
+        [STUField(0x63EE0EDB, 16)] // size: 16
         public uint[] m_63EE0EDB;
         
-        [STUField(0xCF7CD15A, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xCF7CD15A, 32, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAITacticalVolumeNeighbor[] m_CF7CD15A;
         
-        [STUField(0x7D1FC63E)]
+        [STUField(0x7D1FC63E, 48)] // size: 12
         public teVec3 m_7D1FC63E;
         
-        [STUField(0x5BD33E19)]
+        [STUField(0x5BD33E19, 60)] // size: 4
         public float m_5BD33E19;
         
-        [STUField(0x29D89011)]
+        [STUField(0x29D89011, 64)] // size: 4
         public float m_29D89011;
         
-        [STUField(0xC182B8A7)]
+        [STUField(0xC182B8A7, 68)] // size: 4
         public float m_C182B8A7;
         
-        [STUField(0xA48C2064)]
+        [STUField(0xA48C2064, 72)] // size: 4
         public float m_A48C2064;
         
-        [STUField(0xB00894E4)]
+        [STUField(0xB00894E4, 76)] // size: 4
         public float m_B00894E4;
         
-        [STUField(0xFEF6FAAD)]
+        [STUField(0xFEF6FAAD, 80)] // size: 4
         public int m_FEF6FAAD;
         
-        [STUField(0x11B47C68)]
+        [STUField(0x11B47C68, 84)] // size: 4
         public int m_id;
         
-        [STUField(0xCE96F3F7)]
+        [STUField(0xCE96F3F7, 88)] // size: 2
         public short m_CE96F3F7;
         
-        [STUField(0xECE7575B)]
+        [STUField(0xECE7575B, 90)] // size: 2
         public short m_ECE7575B;
         
-        [STUField(0xD0EEE29A)]
+        [STUField(0xD0EEE29A, 92)] // size: 2
         public short m_D0EEE29A;
         
-        [STUField(0x090DE09F)]
+        [STUField(0x090DE09F, 94)] // size: 2
         public short m_090DE09F;
         
-        [STUField(0x5F565ED3)]
+        [STUField(0x5F565ED3, 96)] // size: 2
         public short m_5F565ED3;
         
-        [STUField(0x4689A5FB)]
+        [STUField(0x4689A5FB, 98)] // size: 2
         public short m_4689A5FB;
     }
 }

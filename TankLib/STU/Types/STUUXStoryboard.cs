@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x1CB65AAD, "STUUXStoryboard")]
+    [STU(0x1CB65AAD, 32)]
     public class STUUXStoryboard : STU_24024FA9
     {
     }

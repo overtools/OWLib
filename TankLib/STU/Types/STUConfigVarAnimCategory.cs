@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xCB43F2B1, "STUConfigVarAnimCategory")]
+    [STU(0xCB43F2B1, 48)]
     public class STUConfigVarAnimCategory : STU_2682C260
     {
-        [STUField(0x2C54AEAF)]
+        [STUField(0x2C54AEAF, 32)] // size: 16
         public teStructuredDataAssetRef<ulong> m_category;
     }
 }

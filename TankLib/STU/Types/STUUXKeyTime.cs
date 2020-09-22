@@ -4,13 +4,13 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xD881B568, "STUUXKeyTime")]
+    [STU(0xD881B568, 24)]
     public class STUUXKeyTime : STUUXObject
     {
-        [STUField(0x5180E750, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x5180E750, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUUXObject m_value;
         
-        [STUField(0x12716D08)]
+        [STUField(0x12716D08, 16)] // size: 4
         public STUUXKeyTimeType m_type;
     }
 }

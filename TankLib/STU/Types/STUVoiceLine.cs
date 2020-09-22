@@ -3,46 +3,46 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x40DA6CDF, "STUVoiceLine")]
+    [STU(0x40DA6CDF, 136)]
     public class STUVoiceLine : STUInstance
     {
-        [STUField(0x401F5484)]
+        [STUField(0x401F5484, 8)] // size: 16
         public teStructuredDataAssetRef<STUVoiceStimulus> m_stimulus;
         
-        [STUField(0x386B8E9C)]
+        [STUField(0x386B8E9C, 24)] // size: 16
         public teStructuredDataAssetRef<STUSound> m_externalSound;
         
-        [STUField(0xBA5545D6)]
+        [STUField(0xBA5545D6, 40)] // size: 16
         public teStructuredDataAssetRef<STUVoiceLineSet> m_set;
         
-        [STUField(0x6148094F)]
+        [STUField(0x6148094F, 56)] // size: 16
         public teStructuredDataAssetRef<STU_7A68A730> m_6148094F;
         
-        [STUField(0xDDF3EE5C)]
+        [STUField(0xDDF3EE5C, 72)] // size: 16
         public teStructuredDataAssetRef<STUVoiceConversation> m_voiceConversation;
         
-        [STUField(0x38F3ED5E)]
+        [STUField(0x38F3ED5E, 88)] // size: 16
         public teString m_38F3ED5E;
         
-        [STUField(0x4FF98D41, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x4FF98D41, 104, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUCriteriaContainer m_criteria;
         
-        [STUField(0x9CDDC24D)]
+        [STUField(0x9CDDC24D, 112)] // size: 4
         public float m_weight = 1f;
         
-        [STUField(0xB4D405A1)]
+        [STUField(0xB4D405A1, 116)] // size: 4
         public uint m_B4D405A1 = 0x1;
         
-        [STUField(0xE89F291B)]
+        [STUField(0xE89F291B, 120)] // size: 4
         public int m_E89F291B = 0x0;
         
-        [STUField(0x093FCEEB)]
+        [STUField(0x093FCEEB, 124)] // size: 4
         public float m_093FCEEB;
         
-        [STUField(0x9502010D)]
+        [STUField(0x9502010D, 128)] // size: 1
         public byte m_active = 0x1;
         
-        [STUField(0xB4799113)]
+        [STUField(0xB4799113, 129)] // size: 1
         public byte m_B4799113 = 0x0;
     }
 }

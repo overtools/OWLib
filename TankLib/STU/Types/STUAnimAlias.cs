@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x865FBB7E, "STUAnimAlias")]
+    [STU(0x865FBB7E, 8)]
     public class STUAnimAlias : STUInstance
     {
     }

@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xA46203AB, "STUComponentInstanceData")]
+    [STU(0xA46203AB, 16)]
     public class STUComponentInstanceData : STUInstance
     {
     }

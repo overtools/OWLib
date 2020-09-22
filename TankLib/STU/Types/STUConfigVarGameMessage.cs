@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xA5447DAD, "STUConfigVarGameMessage")]
+    [STU(0xA5447DAD, 48)]
     public class STUConfigVarGameMessage : STUConfigVarResource
     {
-        [STUField(0x92A85396)]
+        [STUField(0x92A85396, 32)] // size: 16
         public teStructuredDataAssetRef<STUGameMessage> m_gameMessage;
     }
 }

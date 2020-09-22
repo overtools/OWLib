@@ -4,40 +4,40 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB466CBBD, "STUVoiceSet")]
+    [STU(0xB466CBBD, 152)]
     public class STUVoiceSet : STUInstance
     {
-        [STUField(0x386B8E9C)]
+        [STUField(0x386B8E9C, 8)] // size: 16
         public teStructuredDataAssetRef<STUSound> m_externalSound;
         
-        [STUField(0x269FC4E9)]
+        [STUField(0x269FC4E9, 24)] // size: 16
         public teStructuredDataAssetRef<ulong> m_269FC4E9;
         
-        [STUField(0xC0835C08)]
+        [STUField(0xC0835C08, 40)] // size: 16
         public teStructuredDataAssetRef<ulong> m_C0835C08;
         
-        [STUField(0xA9277D84)]
+        [STUField(0xA9277D84, 56)] // size: 16
         public teStructuredDataAssetRef<ulong> m_A9277D84;
         
-        [STUField(0xF51B70C4, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xF51B70C4, 72, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUVoiceLineInstance[] m_voiceLineInstances;
         
-        [STUField(0xF7FA2CAC)]
+        [STUField(0xF7FA2CAC, 88)] // size: 16
         public ulong[] m_voiceLineGuids;
         
-        [STUField(0xD1ABBE04)]
+        [STUField(0xD1ABBE04, 104)] // size: 16
         public ulong[] m_D1ABBE04;
         
-        [STUField(0xFCF3C39E)]
+        [STUField(0xFCF3C39E, 120)] // size: 16
         public ulong[] m_FCF3C39E;
         
-        [STUField(0x5E15FBE2)]
+        [STUField(0x5E15FBE2, 136)] // size: 4
         public float m_5E15FBE2;
         
-        [STUField(0x7D88A63A)]
+        [STUField(0x7D88A63A, 140)] // size: 4
         public Enum_0C014B4A m_gender = Enum_0C014B4A.Neither;
         
-        [STUField(0x2866DEC2)]
+        [STUField(0x2866DEC2, 144)] // size: 1
         public byte m_2866DEC2;
     }
 }

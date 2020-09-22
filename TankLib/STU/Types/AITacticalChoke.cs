@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x82339442, "AITacticalChoke")]
+    [STU(0x82339442, 4)]
     public class AITacticalChoke : STUInstance
     {
-        [STUField(0xCFCB2BEB)]
+        [STUField(0xCFCB2BEB, 0)] // size: 4
         public int m_CFCB2BEB;
     }
 }

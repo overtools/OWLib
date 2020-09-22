@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x0CB105FA, "STUThumbnailData")]
+    [STU(0x0CB105FA, 48)]
     public class STUThumbnailData : STU_39091531
     {
     }

@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x1E2AF12C, "STUConfigVarUXDisplayText")]
+    [STU(0x1E2AF12C, 48)]
     public class STUConfigVarUXDisplayText : STU_E4324757
     {
-        [STUField(0xAA76FAD1)]
+        [STUField(0xAA76FAD1, 32)] // size: 16
         public teStructuredDataAssetRef<ulong> m_displayText;
     }
 }

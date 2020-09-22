@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB13E2A22, "STUGameRulesetSchemaValueEnumChoice")]
+    [STU(0xB13E2A22, 32)]
     public class STUGameRulesetSchemaValueEnumChoice : STUInstance
     {
-        [STUField(0xAA76FAD1)]
+        [STUField(0xAA76FAD1, 0)] // size: 16
         public teStructuredDataAssetRef<ulong> m_displayText;
         
-        [STUField(0x4D2DB658)]
+        [STUField(0x4D2DB658, 16)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_identifier;
     }
 }

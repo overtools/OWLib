@@ -4,22 +4,22 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x0519019F, "STUAIWeaponFireControlInfo")]
+    [STU(0x0519019F, 48)]
     public class STUAIWeaponFireControlInfo : STUInstance
     {
-        [STUField(0xF2810377)]
+        [STUField(0xF2810377, 0)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_F2810377;
         
-        [STUField(0xC3657821)]
+        [STUField(0xC3657821, 16)] // size: 16
         public teStructuredDataAssetRef<STUHardPoint> m_C3657821;
         
-        [STUField(0x4F5E7D4C)]
+        [STUField(0x4F5E7D4C, 32)] // size: 4
         public STULogicalButton m_4F5E7D4C = STULogicalButton.xADC2B02C;
         
-        [STUField(0xED6D601D)]
+        [STUField(0xED6D601D, 36)] // size: 4
         public uint m_ED6D601D;
         
-        [STUField(0xA60150E2)]
+        [STUField(0xA60150E2, 40)] // size: 4
         public uint m_A60150E2;
     }
 }

@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x2BB5472B, "STUAnimBlendTree_OnFinished_WeightDriver")]
+    [STU(0x2BB5472B, 24)]
     public class STUAnimBlendTree_OnFinished_WeightDriver : STUInstance
     {
-        [STUField(0x326005A3)]
+        [STUField(0x326005A3, 0)] // size: 16
         public teStructuredDataAssetRef<STUDataFlow> m_326005A3;
         
-        [STUField(0x3B68CA1F)]
+        [STUField(0x3B68CA1F, 16)] // size: 4
         public float m_3B68CA1F = 1f;
         
-        [STUField(0xBD631144)]
+        [STUField(0xBD631144, 20)] // size: 4
         public float m_BD631144;
     }
 }

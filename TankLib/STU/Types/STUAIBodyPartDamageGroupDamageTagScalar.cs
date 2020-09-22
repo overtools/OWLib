@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xE3C6AB71, "STUAIBodyPartDamageGroupDamageTagScalar")]
+    [STU(0xE3C6AB71, 16)]
     public class STUAIBodyPartDamageGroupDamageTagScalar : STUInstance
     {
-        [STUField(0xF60AA143, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xF60AA143, 0, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_F60AA143;
         
-        [STUField(0xBAA3A65F, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xBAA3A65F, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_BAA3A65F;
     }
 }

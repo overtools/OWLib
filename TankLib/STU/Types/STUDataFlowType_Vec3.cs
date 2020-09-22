@@ -4,10 +4,10 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xA748E281, "STUDataFlowType_Vec3")]
+    [STU(0xA748E281, 24)]
     public class STUDataFlowType_Vec3 : STUDataFlowType
     {
-        [STUField(0x45A7A69C)]
+        [STUField(0x45A7A69C, 8)] // size: 12
         public teVec3 m_default;
     }
 }

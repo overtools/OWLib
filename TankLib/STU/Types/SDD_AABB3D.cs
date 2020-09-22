@@ -4,10 +4,10 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x7D75D3EF, "SDD_AABB3D")]
+    [STU(0x7D75D3EF, 36)]
     public class SDD_AABB3D : SDD_3D
     {
-        [STUField(0x982D7B62)]
+        [STUField(0x982D7B62, 24)] // size: 12
         public teVec3 vPosTo_WS;
     }
 }

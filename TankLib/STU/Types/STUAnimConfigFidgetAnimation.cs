@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xFBBB375C, "STUAnimConfigFidgetAnimation")]
+    [STU(0xFBBB375C, 24)]
     public class STUAnimConfigFidgetAnimation : STUInstance
     {
-        [STUField(0x3F5B86A4)]
+        [STUField(0x3F5B86A4, 0)] // size: 16
         public teStructuredDataAssetRef<STUAnimation> m_animation;
         
-        [STUField(0x6CF6AED5)]
+        [STUField(0x6CF6AED5, 16)] // size: 4
         public float m_6CF6AED5 = 5f;
         
-        [STUField(0xB4110C24)]
+        [STUField(0xB4110C24, 20)] // size: 4
         public float m_B4110C24 = 5f;
     }
 }

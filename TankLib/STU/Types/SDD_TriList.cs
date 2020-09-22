@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF6A17A1C, "SDD_TriList")]
+    [STU(0xF6A17A1C, 32)]
     public class SDD_TriList : SDD_Base
     {
-        [STUField(0x320FB5B4, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x320FB5B4, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public SDD_Tri[] TriList;
     }
 }

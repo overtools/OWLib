@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x9F07821D, "STUUXTriggerBase")]
+    [STU(0x9F07821D, 32)]
     public class STUUXTriggerBase : STUUXAnimatable
     {
     }

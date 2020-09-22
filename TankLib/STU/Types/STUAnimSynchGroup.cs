@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x3E4FCBC8, "STUAnimSynchGroup")]
+    [STU(0x3E4FCBC8, 8)]
     public class STUAnimSynchGroup : STUInstance
     {
     }

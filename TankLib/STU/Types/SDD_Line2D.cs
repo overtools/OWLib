@@ -4,13 +4,13 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xA719138C, "SDD_Line2D")]
+    [STU(0xA719138C, 28)]
     public class SDD_Line2D : SDD_Base
     {
-        [STUField(0xB91AA170)]
+        [STUField(0xB91AA170, 12)] // size: 8
         public teVec2 m_B91AA170;
         
-        [STUField(0xD787D2C4)]
+        [STUField(0xD787D2C4, 20)] // size: 8
         public teVec2 m_D787D2C4;
     }
 }

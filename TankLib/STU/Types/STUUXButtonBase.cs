@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x0DA969F2, "STUUXButtonBase")]
+    [STU(0x0DA969F2, 48)]
     public class STUUXButtonBase : STUUXContentControl
     {
     }

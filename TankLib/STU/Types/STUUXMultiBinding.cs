@@ -4,16 +4,16 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x10F43B89, "STUUXMultiBinding")]
+    [STU(0x10F43B89, 64)]
     public class STUUXMultiBinding : STUUXBindingBase
     {
-        [STUField(0x5F03FB03, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x5F03FB03, 32, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUUXBinding[] m_bindings;
         
-        [STUField(0xB792BE50, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xB792BE50, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_64C11507 m_B792BE50;
         
-        [STUField(0x09657D8A)]
+        [STUField(0x09657D8A, 56)] // size: 4
         public Enum_2962B606 m_mode;
     }
 }

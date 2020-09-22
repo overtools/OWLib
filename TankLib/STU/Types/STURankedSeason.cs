@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xDDE937FD, "STURankedSeason")]
+    [STU(0xDDE937FD, 240)]
     public class STURankedSeason : STURankedData
     {
-        [STUField(0xC3885423)]
+        [STUField(0xC3885423, 232)] // size: 4
         public int m_rankedSeason;
     }
 }

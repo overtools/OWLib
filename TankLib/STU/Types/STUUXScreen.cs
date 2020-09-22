@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x1C68E74D, "STUUXScreen")]
+    [STU(0x1C68E74D, 56)]
     public class STUUXScreen : STU_BB7E7366
     {
-        [STUField(0x75DD5735)]
+        [STUField(0x75DD5735, 24)] // size: 16
         public teStructuredDataAssetRef<STU_C811573A> m_sampleData;
         
-        [STUField(0x3547155A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x3547155A, 40, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_EDCF5A52 m_resourceKeyLookup;
         
-        [STUField(0x4B31E7B9, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x4B31E7B9, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_C1210E7A m_loadBehavior;
     }
 }

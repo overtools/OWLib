@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8EA96764, "STUUXUniformGrid")]
+    [STU(0x8EA96764, 48)]
     public class STUUXUniformGrid : STUUXPanel
     {
     }

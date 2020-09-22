@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x41D3910F, "STUDataFlowType")]
+    [STU(0x41D3910F, 8)]
     public class STUDataFlowType : STUInstance
     {
     }

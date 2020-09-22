@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x12E434A1, "STUConfigVarInt")]
+    [STU(0x12E434A1, 24)]
     public class STUConfigVarInt : STUConfigVarIntBase
     {
-        [STUField(0x07DD813E)]
+        [STUField(0x07DD813E, 16)] // size: 4
         public int m_value;
     }
 }

@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x5CEF8CD7, "STUEnlightenData")]
+    [STU(0x5CEF8CD7, 64)]
     public class STUEnlightenData : STU_39091531
     {
-        [STUField(0x7B96A4EA)]
+        [STUField(0x7B96A4EA, 48)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_7B96A4EA;
     }
 }

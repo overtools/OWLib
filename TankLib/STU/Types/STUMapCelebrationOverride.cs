@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xAC40722C, "STUMapCelebrationOverride")]
+    [STU(0xAC40722C, 40)]
     public class STUMapCelebrationOverride : STUInstance
     {
-        [STUField(0xED999C8B)]
+        [STUField(0xED999C8B, 8)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_celebrationType;
         
-        [STUField(0x4E87690F)]
+        [STUField(0x4E87690F, 24)] // size: 16
         public teStructuredDataAssetRef<STUMap> m_map;
     }
 }

@@ -4,10 +4,10 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xE336A049, "STUConfigVarLogicalButton")]
+    [STU(0xE336A049, 24)]
     public class STUConfigVarLogicalButton : STU_C71ECB5D
     {
-        [STUField(0xFC33191B)]
+        [STUField(0xFC33191B, 16)] // size: 4
         public STULogicalButton m_logicalButton;
     }
 }

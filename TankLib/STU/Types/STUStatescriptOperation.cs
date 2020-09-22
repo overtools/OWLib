@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x5C7F719D, "STUStatescriptOperation")]
+    [STU(0x5C7F719D, 16)]
     public class STUStatescriptOperation : STUInstance
     {
-        [STUField(0xE8302243)]
+        [STUField(0xE8302243, 0)] // size: 8
         public ulong m_E8302243;
         
-        [STUField(0xBE4E7528)]
+        [STUField(0xBE4E7528, 8)] // size: 4
         public int m_opData;
         
-        [STUField(0x619AB3DB)]
+        [STUField(0x619AB3DB, 12)] // size: 1
         public byte m_opType;
     }
 }

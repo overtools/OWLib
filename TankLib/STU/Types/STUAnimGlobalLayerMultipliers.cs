@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x19354E9E, "STUAnimGlobalLayerMultipliers")]
+    [STU(0x19354E9E, 8)]
     public class STUAnimGlobalLayerMultipliers : STUInstance
     {
-        [STUField(0xAA38C74B)]
+        [STUField(0xAA38C74B, 0)] // size: 4
         public float m_AA38C74B = 1f;
         
-        [STUField(0x89E1564D)]
+        [STUField(0x89E1564D, 4)] // size: 4
         public float m_89E1564D = 1f;
     }
 }

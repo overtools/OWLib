@@ -4,16 +4,16 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xEF57D000, "STUUXRepeatBehavior")]
+    [STU(0xEF57D000, 32)]
     public class STUUXRepeatBehavior : STUUXObject
     {
-        [STUField(0x6BA2A431, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x6BA2A431, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_D3733E9D m_6BA2A431;
         
-        [STUField(0xD6568441)]
+        [STUField(0xD6568441, 24)] // size: 4
         public Enum_C4185663 m_repeatBehavior;
         
-        [STUField(0x18ED922B)]
+        [STUField(0x18ED922B, 28)] // size: 4
         public float m_18ED922B;
     }
 }

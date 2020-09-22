@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xD45222EC, "STUAnimNode_Identity")]
+    [STU(0xD45222EC, 88)]
     public class STUAnimNode_Identity : STUAnimNode_Base
     {
-        [STUField(0x53FBA27A)]
+        [STUField(0x53FBA27A, 80)] // size: 1
         public byte m_isInactive;
     }
 }

@@ -3,19 +3,19 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x57C43142, "STUAnimUserWeights")]
+    [STU(0x57C43142, 16)]
     public class STUAnimUserWeights : STUInstance
     {
-        [STUField(0x6BF38DE3)]
+        [STUField(0x6BF38DE3, 0)] // size: 4
         public float m_6BF38DE3 = 1f;
         
-        [STUField(0x272450D8)]
+        [STUField(0x272450D8, 4)] // size: 4
         public float m_272450D8 = 1f;
         
-        [STUField(0x7E83BEA5)]
+        [STUField(0x7E83BEA5, 8)] // size: 4
         public float m_7E83BEA5;
         
-        [STUField(0xAAD3423E)]
+        [STUField(0xAAD3423E, 12)] // size: 4
         public float m_AAD3423E;
     }
 }

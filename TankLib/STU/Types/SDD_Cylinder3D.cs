@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x0D2293E2, "SDD_Cylinder3D")]
+    [STU(0x0D2293E2, 44)]
     public class SDD_Cylinder3D : SDD_Line3D
     {
-        [STUField(0x8DF8D3EC)]
+        [STUField(0x8DF8D3EC, 36)] // size: 4
         public float fRadiusA;
         
-        [STUField(0x14F18256)]
+        [STUField(0x14F18256, 40)] // size: 4
         public float fRadiusB;
     }
 }

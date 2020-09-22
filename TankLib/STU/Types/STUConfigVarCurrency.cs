@@ -4,10 +4,10 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB1FB0918, "STUConfigVarCurrency")]
+    [STU(0xB1FB0918, 24)]
     public class STUConfigVarCurrency : STUConfigVarIntBase
     {
-        [STUField(0x4CE56BC0)]
+        [STUField(0x4CE56BC0, 16)] // size: 4
         public Enum_686430C5 m_currency;
     }
 }

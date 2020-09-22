@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xE93236BC, "STUAnimGameData_Animation")]
+    [STU(0xE93236BC, 144)]
     public class STUAnimGameData_Animation : STUInstance
     {
-        [STUField(0x864A1F44, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x864A1F44, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 112
         public STUAnimGameData_PoseData m_poseData;
         
-        [STUField(0x07EF10B8)]
+        [STUField(0x07EF10B8, 128)] // size: 4
         public float m_07EF10B8;
         
-        [STUField(0x8E7A6FDE)]
+        [STUField(0x8E7A6FDE, 132)] // size: 4
         public uint m_8E7A6FDE;
     }
 }

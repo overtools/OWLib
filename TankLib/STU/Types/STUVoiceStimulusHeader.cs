@@ -3,19 +3,19 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x2F427ADA, "STUVoiceStimulusHeader")]
+    [STU(0x2F427ADA, 32)]
     public class STUVoiceStimulusHeader : STUInstance
     {
-        [STUField(0x1A8738BF)]
+        [STUField(0x1A8738BF, 8)] // size: 8
         public ulong m_stimuliGUID;
         
-        [STUField(0xDD27AC95)]
+        [STUField(0xDD27AC95, 16)] // size: 4
         public float m_DD27AC95;
         
-        [STUField(0xA73F2EBE)]
+        [STUField(0xA73F2EBE, 20)] // size: 4
         public float m_A73F2EBE;
         
-        [STUField(0xAFCF2626)]
+        [STUField(0xAFCF2626, 24)] // size: 1
         public byte m_AFCF2626;
     }
 }

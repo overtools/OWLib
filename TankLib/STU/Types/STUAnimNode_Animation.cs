@@ -4,70 +4,70 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xCB6035BA, "STUAnimNode_Animation")]
+    [STU(0xCB6035BA, 552)]
     public class STUAnimNode_Animation : STUAnimNode_Base
     {
-        [STUField(0xED247E81, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xED247E81, 80, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_25B808BD m_ED247E81;
         
-        [STUField(0x3F5B86A4, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x3F5B86A4, 112, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_215BE8F3 m_animation;
         
-        [STUField(0x65033558, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x65033558, 144, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_C1C7CF4E m_animSlotID;
         
-        [STUField(0xC4EF5D15, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xC4EF5D15, 176, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_51A9D9C7 m_synchGroup;
         
-        [STUField(0x562445C2, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x562445C2, 208, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_51A9D9C7 m_562445C2;
         
-        [STUField(0x8A0E5071, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x8A0E5071, 240, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_ABD8FE73 m_8A0E5071;
         
-        [STUField(0x08BBFD30, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x08BBFD30, 264, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_08BBFD30;
         
-        [STUField(0xE382431C, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xE382431C, 288, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_F7E4CDAC m_E382431C;
         
-        [STUField(0xEE49D811, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xEE49D811, 312, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_ABD8FE73 m_EE49D811;
         
-        [STUField(0x9317B197, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x9317B197, 336, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_ABD8FE73 m_9317B197;
         
-        [STUField(0xA3081C7F, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xA3081C7F, 360, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_A3081C7F;
         
-        [STUField(0x73038249, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x73038249, 384, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_73038249;
         
-        [STUField(0x302DAC17, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x302DAC17, 408, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_302DAC17;
         
-        [STUField(0x11012D0E, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x11012D0E, 432, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_11012D0E;
         
-        [STUField(0x3E3C159E, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x3E3C159E, 456, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_3E3C159E;
         
-        [STUField(0xBCC400FE, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xBCC400FE, 480, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_disableEffect;
         
-        [STUField(0xC14EEC71, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xC14EEC71, 504, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimNode_AnimationTrackOverride[] m_animTrackOverrides;
         
-        [STUField(0x881F239A, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x881F239A, 520, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_B9FE55F9 m_881F239A;
         
-        [STUField(0xE68FF23C, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0xE68FF23C, 528, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_2A90F751 m_E68FF23C;
         
-        [STUField(0x29AFF063, ReaderType = typeof(EmbeddedInstanceFieldReader))]
+        [STUField(0x29AFF063, 536, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_5861C542 m_29AFF063;
         
-        [STUField(0xB774CFA6)]
+        [STUField(0xB774CFA6, 544)] // size: 4
         public Enum_9250F4C2 m_B774CFA6;
     }
 }

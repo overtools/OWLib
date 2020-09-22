@@ -4,10 +4,10 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xBF0D20BE, "STUDataFlowType_ColorRGBA")]
+    [STU(0xBF0D20BE, 24)]
     public class STUDataFlowType_ColorRGBA : STUDataFlowType
     {
-        [STUField(0x45A7A69C)]
+        [STUField(0x45A7A69C, 8)] // size: 16
         public teColorRGBA m_default = new teColorRGBA(1f, 1f, 1f, 1f);
     }
 }

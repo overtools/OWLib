@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xAEBBF451, "STUVoiceStimulusCatalog")]
+    [STU(0xAEBBF451, 24)]
     public class STUVoiceStimulusCatalog : STUInstance
     {
-        [STUField(0x3D83C363, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x3D83C363, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUVoiceStimulusHeader[] m_assets;
     }
 }

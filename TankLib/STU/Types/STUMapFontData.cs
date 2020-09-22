@@ -3,28 +3,28 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x5A5653E7, "STUMapFontData")]
+    [STU(0x5A5653E7, 64)]
     public class STUMapFontData : STUInstance
     {
-        [STUField(0xB741C5FF)]
+        [STUField(0xB741C5FF, 8)] // size: 16
         public uint[] m_B741C5FF;
         
-        [STUField(0xEF348BCF, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0xEF348BCF, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUMapFontGlyph[] m_glyphs;
         
-        [STUField(0x17DC8735, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x17DC8735, 40, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUMapFontKerningPair[] m_kerningPairs;
         
-        [STUField(0xEC261842)]
+        [STUField(0xEC261842, 56)] // size: 2
         public short m_EC261842;
         
-        [STUField(0xB91CFF97)]
+        [STUField(0xB91CFF97, 58)] // size: 2
         public short m_base;
         
-        [STUField(0x42623898)]
+        [STUField(0x42623898, 60)] // size: 2
         public short m_42623898;
         
-        [STUField(0xEAC2F49E)]
+        [STUField(0xEAC2F49E, 62)] // size: 2
         public short m_EAC2F49E;
     }
 }

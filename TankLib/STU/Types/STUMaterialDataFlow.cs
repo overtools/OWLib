@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6E33838C, "STUMaterialDataFlow")]
+    [STU(0x6E33838C, 8)]
     public class STUMaterialDataFlow : STUInstance
     {
     }

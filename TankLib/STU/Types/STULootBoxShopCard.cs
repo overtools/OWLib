@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x819B4F6D, "STULootBoxShopCard")]
+    [STU(0x819B4F6D, 32)]
     public class STULootBoxShopCard : STUInstance
     {
-        [STUField(0x87EACF5F)]
+        [STUField(0x87EACF5F, 0)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_cardTexture;
         
-        [STUField(0x90EB924A)]
+        [STUField(0x90EB924A, 16)] // size: 16
         public teStructuredDataAssetRef<STUUXDisplayText> m_cardText;
     }
 }

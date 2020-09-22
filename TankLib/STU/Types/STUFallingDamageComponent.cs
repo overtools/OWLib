@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xD34B823D, "STUFallingDamageComponent")]
+    [STU(0xD34B823D, 48)]
     public class STUFallingDamageComponent : STUEntityComponent
     {
-        [STUField(0xDFBAD635)]
+        [STUField(0xDFBAD635, 8)] // size: 16
         public teStructuredDataAssetRef<ulong> m_lightEffect;
         
-        [STUField(0xCF9DF961)]
+        [STUField(0xCF9DF961, 24)] // size: 16
         public teStructuredDataAssetRef<ulong> m_heavyEffect = 0x3000000000001E4;
         
-        [STUField(0x43A3CE29)]
+        [STUField(0x43A3CE29, 40)] // size: 4
         public float m_43A3CE29 = 0.49f;
     }
 }

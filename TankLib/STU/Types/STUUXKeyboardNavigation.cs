@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x7B440A39, "STUUXKeyboardNavigation")]
+    [STU(0x7B440A39, 24)]
     public class STUUXKeyboardNavigation : STU_3E5E47B4
     {
     }

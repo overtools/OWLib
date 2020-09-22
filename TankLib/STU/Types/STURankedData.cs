@@ -3,58 +3,58 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8159A26D, "STURankedData")]
+    [STU(0x8159A26D, 232)]
     public class STURankedData : STUInstance
     {
-        [STUField(0x58066D8F, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x58066D8F, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STUUnlocks m_58066D8F;
         
-        [STUField(0x3C1894B2, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x3C1894B2, 32, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STUUnlocks m_heroicUnlocks;
         
-        [STUField(0x5BB8DFF3, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x5BB8DFF3, 56, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_A92F620A[] m_5BB8DFF3;
         
-        [STUField(0xEC70AD04)]
+        [STUField(0xEC70AD04, 72)] // size: 16
         public teStructuredDataAssetRef<STUHero>[] m_EC70AD04;
         
-        [STUField(0x590CF462)]
+        [STUField(0x590CF462, 88)] // size: 16
         public teStructuredDataAssetRef<STUMap>[] m_590CF462;
         
-        [STUField(0x1E4E5957)]
+        [STUField(0x1E4E5957, 104)] // size: 16
         public teStructuredDataAssetRef<ulong> m_1E4E5957;
         
-        [STUField(0xB804C4DB)]
+        [STUField(0xB804C4DB, 120)] // size: 16
         public teStructuredDataAssetRef<ulong> m_B804C4DB;
         
-        [STUField(0xE0B3D69F)]
+        [STUField(0xE0B3D69F, 136)] // size: 16
         public teStructuredDataAssetRef<ulong> m_E0B3D69F;
         
-        [STUField(0x21EB3E73)]
+        [STUField(0x21EB3E73, 152)] // size: 16
         public teStructuredDataAssetRef<ulong> m_21EB3E73;
         
-        [STUField(0x56E7DD46)]
+        [STUField(0x56E7DD46, 168)] // size: 16
         public teStructuredDataAssetRef<STUMap>[] m_56E7DD46;
         
-        [STUField(0xF82A8727)]
+        [STUField(0xF82A8727, 184)] // size: 8
         public teStructuredDataDateAndTime m_F82A8727;
         
-        [STUField(0x275B6D5C)]
+        [STUField(0x275B6D5C, 192)] // size: 8
         public teStructuredDataDateAndTime m_275B6D5C;
         
-        [STUField(0x961B4853)]
+        [STUField(0x961B4853, 200)] // size: 8
         public teStructuredDataDateAndTime m_961B4853;
         
-        [STUField(0x9A31D01C)]
+        [STUField(0x9A31D01C, 208)] // size: 8
         public teStructuredDataDateAndTime m_9A31D01C;
         
-        [STUField(0xAE69132D)]
+        [STUField(0xAE69132D, 216)] // size: 4
         public uint m_AE69132D = 0x32;
         
-        [STUField(0x82AA08B4)]
+        [STUField(0x82AA08B4, 220)] // size: 4
         public uint m_82AA08B4 = 0xA;
         
-        [STUField(0xB5DD91B7)]
+        [STUField(0xB5DD91B7, 224)] // size: 1
         public byte m_B5DD91B7 = 0x1;
     }
 }

@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xC636B5B6, "STUUXChangePropertyAction")]
+    [STU(0xC636B5B6, 32)]
     public class STUUXChangePropertyAction : STU_01689D20
     {
     }

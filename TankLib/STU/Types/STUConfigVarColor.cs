@@ -4,10 +4,10 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x3C61114B, "STUConfigVarColor")]
+    [STU(0x3C61114B, 32)]
     public class STUConfigVarColor : STUConfigVarColorBase
     {
-        [STUField(0x07DD813E)]
+        [STUField(0x07DD813E, 16)] // size: 16
         public teColorRGBA m_value;
     }
 }

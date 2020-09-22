@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x9044BCFE, "STUGenericSettings_LootBoxes")]
+    [STU(0x9044BCFE, 24)]
     public class STUGenericSettings_LootBoxes : STUGenericSettings_Base
     {
-        [STUField(0x0BAD9672, ReaderType = typeof(InlineInstanceFieldReader))]
+        [STUField(0x0BAD9672, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STULootBoxRules[] m_lootboxes;
     }
 }

@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x08D800D7, "STUUXSelector")]
+    [STU(0x08D800D7, 80)]
     public class STUUXSelector : STUUXItemsControl
     {
     }

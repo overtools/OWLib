@@ -3,16 +3,16 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x2B388E5C, "STUAnimGameData_GeoSetFlags")]
+    [STU(0x2B388E5C, 12)]
     public class STUAnimGameData_GeoSetFlags : STUInstance
     {
-        [STUField(0xADEB87ED)]
+        [STUField(0xADEB87ED, 0)] // size: 4
         public uint m_ADEB87ED;
         
-        [STUField(0x2BFC6433)]
+        [STUField(0x2BFC6433, 4)] // size: 4
         public uint m_2BFC6433;
         
-        [STUField(0xCFB09B58)]
+        [STUField(0xCFB09B58, 8)] // size: 4
         public uint m_CFB09B58;
     }
 }
