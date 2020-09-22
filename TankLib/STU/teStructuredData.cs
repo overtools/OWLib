@@ -134,10 +134,12 @@ namespace TankLib.STU {
                     dumpFile.Write(buf, 0, size);
                 }*/
 
-                reader.BaseStream.Position = record.Offset + StartPos;
+                const uint instPrefixSize = sizeof(uint) * 2; // nameCrc and "nextOffset"
 
-                uint instanceHash = reader.ReadUInt32();
-                uint nextOffset = reader.ReadUInt32();
+                reader.BaseStream.Position = record.Offset + StartPos + instPrefixSize;
+
+                //uint instanceHash = reader.ReadUInt32();
+                //uint nextOffset = reader.ReadUInt32();
 
                 //if (instanceHash == 0xEA30C5E9) continue;
                 //if (instanceHash == 0x05C7059E) {
@@ -146,7 +148,9 @@ namespace TankLib.STU {
             #if RELEASE
                 try {
             #endif
-                Instances[i].Deserialize(this);
+                var instance = Instances[i];
+                instance.m_posInDataAtDeserializeCall = instPrefixSize;
+                instance.Deserialize(this);
             #if RELEASE
                 } catch (Exception) {
                     // ignored

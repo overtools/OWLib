@@ -5,17 +5,12 @@ namespace TankLib.STU {
     public class STUAttribute : Attribute {
         /// <summary>Instance name CRC32 (mangled in 1.14+)</summary>
         public uint Hash;
-        
-        /// <summary>Real value of name hash</summary>
-        public string Name;
-        
-        public STUAttribute(uint hash) {
-            Hash = hash;
-        }
 
-        public STUAttribute(uint hash, string name) {
+        public uint m_size;
+        
+        public STUAttribute(uint hash, uint size) {
             Hash = hash;
-            Name = name;
+            m_size = size;
         }
     }
 
@@ -30,15 +25,12 @@ namespace TankLib.STU {
         /// <summary>IStructuredDataFieldReader to use</summary>
         public Type ReaderType;
 
-        public STUFieldAttribute(uint hash) {
+        public uint m_offset;
+
+        public STUFieldAttribute(uint hash, uint offset=0) {
             Hash = hash;
             ReaderType = typeof(DefaultStructuredDataFieldReader);
-        }
-        
-        public STUFieldAttribute(uint hash, string name) {
-            Hash = hash;
-            Name = name;
-            ReaderType = typeof(DefaultStructuredDataFieldReader);
+            m_offset = offset;
         }
     }
 

@@ -30,8 +30,9 @@ namespace TankLib.STU {
     /// <summary>Base STU instance class</summary>
     public class STUInstance : ISerializable_STU {
         /// <summary>Instance usage</summary>
-        [IgnoreDataMember]
-        public TypeUsage Usage = TypeUsage.Root;
+        [IgnoreDataMember] public TypeUsage Usage = TypeUsage.Root;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)] public uint m_posInDataAtDeserializeCall;
 
         /// <summary>Read a specified STU field</summary>
         protected void DeserializeField(teStructuredData assetFile, STUField_Info fieldInfo,
@@ -39,7 +40,7 @@ namespace TankLib.STU {
             if (!fields.TryGetValue(fieldInfo.Hash, out var field)) {
                 
             #if DEBUG
-                string name = stuAttribute.Name ?? $"STU_{stuAttribute.Hash:X8}";
+                string name = GetType().Name;
                 Debugger.Log(0, "STUInstance", $"Unhandled field: {name}:{fieldInfo.Hash:X8} (size: {fieldInfo.Size})\r\n");
             #endif
                 
@@ -153,15 +154,31 @@ namespace TankLib.STU {
                 //    return;
                 //    //Debugger.Break();
                 //}
-                uint[] fieldOrder = teStructuredData.Manager.InstanceFields[instanceHash];
 
+                long instanceStartPos = assetFile.Data.BaseStream.Position - m_posInDataAtDeserializeCall;
+                
+                uint[] fieldOrder = teStructuredData.Manager.InstanceFields[instanceHash];
                 foreach (uint fieldHash in fieldOrder) {
-                    //long fieldStart = data.BaseStream.Position;
+                    var fieldDefinition = fields[fieldHash];
+                    if (fieldDefinition.Value.m_offset < m_posInDataAtDeserializeCall) {
+                        throw new InvalidDataException(
+                            $"Internal STU parser error. Field offset ({fieldDefinition.Value.m_offset}) is located " +
+                            "in data that was read before the instance deserialize method was called. (e.g field is " +
+                            "at 0, called at 8 due to crc+offset thing)");
+                    }
+
+                    // go to correct field pos. e.g vecs are aligned to 16 byte so not always exactly sequential
+                    assetFile.Data.BaseStream.Position = instanceStartPos + fieldDefinition.Value.m_offset;
+                    
+                    // todo: how does alignment work on arrays
+                    // e.g will an array of vec3a be aligned by the compiler or do we need to process that
                     
                     STUField_Info stuField = new STUField_Info {Hash = fieldHash, Size = -1};
-                    
                     DeserializeField(assetFile, stuField, fields, stuAttribute);
                 }
+
+                // make sure we are at the correct end of data including alignment padding etc
+                assetFile.Data.BaseStream.Position = instanceStartPos + stuAttribute.m_size;
             }
         }
 
