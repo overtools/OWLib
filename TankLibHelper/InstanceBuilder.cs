@@ -38,11 +38,11 @@ namespace TankLibHelper {
 
             var writer = new IndentedTextWriter(new StringWriter(), "    ");
             
-            if (Info.KnownInstances.ContainsKey(_instance.Hash2)) {
-                writer.WriteLine($"[STU(0x{_instance.Hash2:X8}, \"{Name}\")]");
-            } else {
-                writer.WriteLine($"[STU(0x{_instance.Hash2:X8})]");
-            }
+            //if (Info.KnownInstances.ContainsKey(_instance.Hash2)) {
+            //    writer.WriteLine($"[STU(0x{_instance.Hash2:X8}, \"{Name}\")]");
+            //} else {
+            writer.WriteLine($"[STU(0x{_instance.Hash2:X8}, {_instance.m_size})]");
+            //}
 
             if (_instance.ParentHash2 == 0) {
                 writer.WriteLine($"public class {Name} : {nameof(STUInstance)}");
@@ -84,7 +84,7 @@ namespace TankLibHelper {
             
             string attribute;
             {
-                attribute = $"[STUField(0x{field.Hash2:X8}";
+                attribute = $"[STUField(0x{field.Hash2:X8}, {field.m_offset}";
 
                 //if (Info.KnownFields.ContainsKey(field.Hash2)) {
                 //    attribute += $", \"{Info.GetFieldName(field.Hash2)}\"";
@@ -98,7 +98,7 @@ namespace TankLibHelper {
                     attribute += $", ReaderType = typeof({nameof(InlineInstanceFieldReader)})";
                 }
             
-                attribute += ")]"; 
+                attribute += $")] // size: {field.m_size}"; 
             }
 
             var fieldName = Info.GetFieldName(field.Hash2);
