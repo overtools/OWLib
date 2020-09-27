@@ -16,7 +16,7 @@ namespace DataTool.ToolLogic.Render {
         
         private readonly Dictionary<Type, string> TargetMap = new Dictionary<Type, string>();
         
-        public object Print(object instance, IReadOnlyDictionary<Type, ISerializer> custom, HashSet<object> visited, IndentHelperBase indent, string fieldName) {
+        public object Print(object instance, IReadOnlyDictionary<Type, ISerializer> custom, Dictionary<object, int> visited, IndentHelperBase indent, string fieldName, bool useRef) {
             var hmlNameTag = fieldName == null ? "" : $" hml:name=\"{fieldName}\"";
 
             try {
@@ -25,7 +25,15 @@ namespace DataTool.ToolLogic.Render {
                     target = instance.GetType().GenericTypeArguments.First().Name;
                     TargetMap[instance.GetType()] = target;
                 }
-                return $"{indent}<tank:ref hml:id=\"{instance.GetHashCode()}\"{hmlNameTag} GUID=\"{instance}\" Target=\"{target}\"/>\n";
+                var hmlIdTag = string.Empty;
+                if (!visited.ContainsKey(instance)) {
+                    visited[instance] = visited.Count;
+                }
+                if (useRef) {
+                    hmlIdTag = $" hml:id=\"{visited[instance]}\"";
+                }
+
+                return $"{indent}<tank:ref{hmlIdTag}{hmlNameTag} GUID=\"{instance}\" Target=\"{target}\"/>\n";
             } catch {
                 return null;
             }
