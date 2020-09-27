@@ -11,6 +11,6 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUAnimation> m_animation;
         
         [STUField(0x0619C597, 240)] // size: 4
-        public Enum_E5327514 m_type;
+        public POTGType m_type;
     }
 }

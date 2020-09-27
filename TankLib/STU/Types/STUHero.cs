@@ -87,10 +87,10 @@ namespace TankLib.STU.Types
         public int m_44D13CC2 = -1;
         
         [STUField(0xAF4EC410, 436)] // size: 4
-        public Enum_C1DAF32A m_heroSize;
+        public STUHeroSize m_heroSize;
         
         [STUField(0x7D88A63A, 440)] // size: 4
-        public Enum_0C014B4A m_gender = Enum_0C014B4A.Neither;
+        public Enum_0C014B4A m_gender = Enum_0C014B4A.Generic;
         
         [STUField(0x62746D34, 444)] // size: 1
         public byte m_62746D34;

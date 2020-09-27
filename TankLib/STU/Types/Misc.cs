@@ -773,7 +773,7 @@ namespace TankLib.STU.Types
         public STUConfigVar m_14A96615;
         
         [STUField(0x753213F9, 24)] // size: 4
-        public Enum_4BE16CA5 m_753213F9;
+        public STURankedTier m_753213F9;
     }
     
     [STU(0x0340770E, 56)]

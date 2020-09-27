@@ -14,7 +14,7 @@ namespace DataTool.DataModels.Chat {
         public teColorRGB Color;
 
         [DataMember]
-        public Enum_5D8C1DCC Type;
+        public STUChatChannelType Type;
 
         public ChatChannel(STUChatChannelDefinition channel) {
             Name = GetString(channel.m_chatChannelName);

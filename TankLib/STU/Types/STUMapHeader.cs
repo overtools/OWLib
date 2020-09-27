@@ -86,7 +86,7 @@ namespace TankLib.STU.Types
         public Enum_668FA6B6 m_A125818B;
         
         [STUField(0x1DD3A0CD, 412)] // size: 4
-        public Enum_A0F51DCC m_mapType;
+        public STUMapType m_mapType;
         
         [STUField(0x44D13CC2, 416)] // size: 4
         public int m_44D13CC2;

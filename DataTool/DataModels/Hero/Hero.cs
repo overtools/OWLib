@@ -26,7 +26,7 @@ namespace DataTool.DataModels.Hero {
         public Enum_0C014B4A Gender;
 
         [DataMember]
-        public Enum_C1DAF32A Size;
+        public STUHeroSize Size;
 
         [DataMember]
         public string Color;

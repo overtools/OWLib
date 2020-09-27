@@ -12,7 +12,6 @@ E95E2013, STUStatType
 8F2CDF51, TeamIndex
 1AA009C2, STUCriteriaType
 EF0DF8C0, LoadoutCategory
-3F970A9F, STUChatCommandType
 D61991A8, STUContactType
 281A4FD5, STUCriteriaType
 44A05FE3, STUInputLogicalButtonCategory
@@ -26,4 +25,10 @@ B3770108, STUUnlockRarity
 1B4947D2, STUUXKeyTimeType
 2001C460, STUWeaponType
 E6C2E533, STUXPGainType
-0CB7E361, TeamIndex
+0CB7E361, TeamIndex,
+E5327514, POTGType
+C1DAF32A, STUHeroSize
+5D8C1DCC, STUChatChannelType
+161443EA, STUPortraitFrameRank
+4BE16CA5, STURankedTier
+A0F51DCC, STUMapType

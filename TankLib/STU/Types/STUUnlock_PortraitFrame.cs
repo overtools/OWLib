@@ -14,7 +14,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_rankTexture;
         
         [STUField(0x8F736177, 256)] // size: 4
-        public Enum_161443EA m_rank;
+        public STUPortraitFrameRank m_rank;
         
         [STUField(0x2C01908B, 260)] // size: 2
         public ushort m_level;

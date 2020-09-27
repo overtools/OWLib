@@ -14,6 +14,6 @@ namespace TankLib.STU.Types
         public uint m_D2F14FFA;
         
         [STUField(0x85CA53C8, 16)] // size: 4
-        public Enum_4BE16CA5 m_85CA53C8;
+        public STURankedTier m_85CA53C8;
     }
 }

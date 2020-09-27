@@ -45,7 +45,7 @@ namespace DataTool.DataModels {
         public Enum_668FA6B6 State;
 
         [DataMember]
-        public Enum_A0F51DCC MapType;
+        public STUMapType MapType;
 
         [DataMember]
         public teResourceGUID Thumbnail;

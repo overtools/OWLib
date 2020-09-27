@@ -15,6 +15,6 @@ namespace TankLib.STU.Types
         public teColorRGB m_chatChannelColor;
         
         [STUField(0x9CB9B86D, 28)] // size: 4
-        public Enum_5D8C1DCC m_chatChannelType;
+        public STUChatChannelType m_chatChannelType;
     }
 }

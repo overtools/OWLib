@@ -110,7 +110,7 @@ namespace TankLib.STU.Types
         public ulong m_62354864 = 0x0;
         
         [STUField(0x1DD3A0CD, 664)] // size: 4
-        public Enum_A0F51DCC m_mapType = Enum_A0F51DCC.Standard;
+        public STUMapType m_mapType = STUMapType.Standard;
         
         [STUField(0x44D13CC2, 668)] // size: 4
         public int m_44D13CC2 = -1;

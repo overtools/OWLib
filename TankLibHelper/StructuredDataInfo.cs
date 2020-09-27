@@ -101,6 +101,8 @@ namespace TankLibHelper {
                 return;
             }
             foreach (string row in rows.Skip(1)) {
+                if (row.StartsWith("#")) continue; // ignore comments
+
                 string[] split = row.Split(',');
                 if (split.Length != 2) continue;
 
