@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DataTool.DataModels.GameModes;
 using DataTool.DataModels.Hero;
 using DataTool.Flag;
-using DataTool.Helper;
 using DataTool.JSON;
 using TankLib;
 using static DataTool.Program;
-using static DataTool.Helper.Logger;
-using TankLib.Helpers;
 
-namespace DataTool.ToolLogic.List {
+namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-heroes-rulesets", Description = "List heroes rulesets", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListHeroesRulesets : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
