@@ -228,6 +228,7 @@
     <Compile Include="ToolLogic\List\ListMaps.cs" />
     <Compile Include="ToolLogic\List\ListSubtitles.cs" />
     <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
+    <Compile Include="ToolLogic\List\ListTips.cs" />
     <Compile Include="ToolLogic\List\Misc\ListArcadeModes.cs" />
     <Compile Include="ToolLogic\List\Misc\ListBrawlName.cs" />
     <Compile Include="ToolLogic\List\Misc\ListChatReplacements.cs" />
