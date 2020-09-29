@@ -114,6 +114,7 @@
     <Compile Include="DataModels\Chat\ChatReplacementsContainer.cs" />
     <Compile Include="DataModels\Chat\ChatSettings.cs" />
     <Compile Include="DataModels\GameModes\Brawl.cs" />
+    <Compile Include="DataModels\GameModes\GameRuleset.cs" />
     <Compile Include="DataModels\GameModes\GameRulesetGameMode.cs" />
     <Compile Include="DataModels\GameModes\GameMode.cs" />
     <Compile Include="DataModels\GameModes\GameRulesetSchema.cs" />
@@ -216,6 +217,7 @@
     <Compile Include="ToolLogic\List\ListAchievements.cs" />
     <Compile Include="ToolLogic\List\ListAllUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListFlags.cs" />
+    <Compile Include="ToolLogic\List\ListGameRulesets.cs" />
     <Compile Include="ToolLogic\List\ListHeroes.cs" />
     <Compile Include="ToolLogic\List\ListGeneralUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListHeroesRulesets.cs" />
