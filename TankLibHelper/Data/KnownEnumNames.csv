@@ -135,3 +135,9 @@ C2030825, WeaponAmmo
 EA21330C, HeroSpecific
 F956D761, HeroCommon
 E5FACB24, None
+
+# Enum_1964FED7 gamemode types
+D33D7203, OffenseDefence
+023CE0F6, Mirrored
+3F1EFF08, FFA
+28C99BBF, PVE

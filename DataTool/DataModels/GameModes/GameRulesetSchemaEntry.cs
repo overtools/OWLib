@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Runtime.Serialization;
+using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
@@ -12,6 +13,9 @@ namespace DataTool.DataModels.GameModes {
         
         [DataMember]
         public string TextFormat;
+
+        [DataMember]
+        public teResourceGUID Virtual01C;
         
         [DataMember]
         public Enum_F2F62E3D Category;
@@ -23,6 +27,7 @@ namespace DataTool.DataModels.GameModes {
             Name = GetString(entry.m_displayText);
             Category = entry.m_category;
             TextFormat = GetString(entry.m_7DF418A5);
+            Virtual01C = entry.m_3E783677;
             
             switch (entry.m_value) {
                 case STU_118786E9 val1:
@@ -44,7 +49,7 @@ namespace DataTool.DataModels.GameModes {
                         DefaultValue = val2.m_default.ToString(),
                         Choices = val2.m_3FE1EA9E.Select(x => new RulesetSchemaValueEnumChoice {
                             DisplayText = GetString(x.m_displayText),
-                            Identifier = x.m_identifier.ToString()
+                            Identifier = x.m_identifier
                         }).ToArray()
                     };
                     break;
@@ -63,14 +68,14 @@ namespace DataTool.DataModels.GameModes {
 
         public class RulesetSchemaValue {}
 
-        private class RulesetSchemaValueInt : RulesetSchemaValue {
+        public class RulesetSchemaValueInt : RulesetSchemaValue {
             public string _Name = "RulesetSchemaValueInt";
             public int Min;
             public int Max;
             public int Default;
         }
         
-        private class RulesetSchemaValueFloat : RulesetSchemaValue {
+        public class RulesetSchemaValueFloat : RulesetSchemaValue {
             public string _Name = "RulesetSchemaValueFloat";
             public float Min;
             public float Max;
@@ -78,22 +83,22 @@ namespace DataTool.DataModels.GameModes {
             public float Unk1;
         }
         
-        private class RulesetSchemaValueBool : RulesetSchemaValue {
+        public class RulesetSchemaValueBool : RulesetSchemaValue {
             public string _Name = "RulesetSchemaValueBool";
             public string TrueText;
             public string FalseText;
             public int DefaultValue;
         }
         
-        private class RulesetSchemaValueEnum : RulesetSchemaValue {
+        public class RulesetSchemaValueEnum : RulesetSchemaValue {
             public string _Name = "RulesetSchemaValueEnum";
             public string DefaultValue;
             public RulesetSchemaValueEnumChoice[] Choices;
         }
         
-        private class RulesetSchemaValueEnumChoice {
+        public class RulesetSchemaValueEnumChoice {
             public string DisplayText;
-            public string Identifier;
+            public teResourceGUID Identifier;
         }
     }
 }

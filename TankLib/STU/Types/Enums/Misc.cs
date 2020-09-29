@@ -593,10 +593,10 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0x1964FED7)]
     public enum Enum_1964FED7 : uint
     {
-        [STUField(0xD33D7203)] xD33D7203 = 0x0,
-        [STUField(0x023CE0F6)] x023CE0F6 = 0x1,
-        [STUField(0x3F1EFF08)] x3F1EFF08 = 0x2,
-        [STUField(0x28C99BBF)] x28C99BBF = 0x3,
+        [STUField(0xD33D7203)] OffenseDefence = 0x0,
+        [STUField(0x023CE0F6)] Mirrored = 0x1,
+        [STUField(0x3F1EFF08)] FFA = 0x2,
+        [STUField(0x28C99BBF)] PVE = 0x3,
         [STUField(0xF9FA193B)] xF9FA193B = 0x4,
         [STUField(0x22BD557C)] x22BD557C = 0x5,
         [STUField(0x850B8131)] x850B8131 = 0x6,

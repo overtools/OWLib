@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using TankLib.STU.Types;
@@ -20,9 +19,15 @@ namespace DataTool.DataModels.GameModes {
 
         [DataMember]
         public string[] AvailableHeroes;
+        
+        [DataMember]
+        public GameRulesetGameMode.GamemodeRulesetValue[] ConfigValues;
+
+        internal STUGameRulesetTeam STU;
 
         public GameRulesetTeam(STUGameRulesetTeam team) {
             MaxPlayers = team.m_341EF5FA;
+            STU = team;
 
             switch (team.m_availableHeroes) {
                 case STU_C45DE560 stu:
