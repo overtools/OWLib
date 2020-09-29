@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Runtime.Serialization;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
@@ -12,84 +11,89 @@ namespace DataTool.DataModels.GameModes {
         public string Name;
         
         [DataMember]
+        public string TextFormat;
+        
+        [DataMember]
         public Enum_F2F62E3D Category;
         
         [DataMember]
-        public GenericRulesetValue Value;
+        public RulesetSchemaValue Value;
         
         public GameRulesetSchemaEntry(STUGameRulesetSchemaEntry entry) {
             Name = GetString(entry.m_displayText);
             Category = entry.m_category;
-            Value = GetRulesetValue(entry.m_value);
+            TextFormat = GetString(entry.m_7DF418A5);
+            
+            switch (entry.m_value) {
+                case STU_118786E9 val1:
+                    Value = new RulesetSchemaValueInt {
+                        Min = val1.m_min,
+                        Max = val1.m_max,
+                        Default = val1.m_default
+                    };
+                    break;
+                case STU_8A8AA0A4 val2:
+                    Value = new RulesetSchemaValueBool {
+                        TrueText = GetString(val2.m_9EC1DF9A),
+                        FalseText = GetString(val2.m_03613078),
+                        DefaultValue = val2.m_default
+                    };
+                    break;
+                case STU_776E5ADD val2:
+                    Value = new RulesetSchemaValueEnum {
+                        DefaultValue = val2.m_default.ToString(),
+                        Choices = val2.m_3FE1EA9E.Select(x => new RulesetSchemaValueEnumChoice {
+                            DisplayText = GetString(x.m_displayText),
+                            Identifier = x.m_identifier.ToString()
+                        }).ToArray()
+                    };
+                    break;
+                case STU_A499C365 val3:
+                    Value = new RulesetSchemaValueFloat {
+                        Min = val3.m_min,
+                        Max = val3.m_max,
+                        Default = val3.m_default,
+                        Unk1 = val3.m_ED39107B
+                    };
+                    break;
+                default:
+                    break;
+            }
         }
 
-        public class GenericRulesetValue {}
+        public class RulesetSchemaValue {}
 
-        private class RulesetValue_Range : GenericRulesetValue {
-            public string Name = "RulesetValue_Range";
+        private class RulesetSchemaValueInt : RulesetSchemaValue {
+            public string _Name = "RulesetSchemaValueInt";
             public int Min;
             public int Max;
             public int Default;
         }
         
-        private class RulesetValue_RangePercentage : GenericRulesetValue {
-            public string Name = "RulesetValue_RangePercentage";
+        private class RulesetSchemaValueFloat : RulesetSchemaValue {
+            public string _Name = "RulesetSchemaValueFloat";
             public float Min;
             public float Max;
             public float Default;
             public float Unk1;
         }
         
-        private class RulesetValue_Switch : GenericRulesetValue {
-            public string Name = "RulesetValue_Switch";
-            public string On;
-            public string Off;
-            public int Default;
+        private class RulesetSchemaValueBool : RulesetSchemaValue {
+            public string _Name = "RulesetSchemaValueBool";
+            public string TrueText;
+            public string FalseText;
+            public int DefaultValue;
         }
         
-        private class RulesetValue_Select : GenericRulesetValue {
-            public string Name = "RulesetValue_Select";
-            public string Default;
-            public IEnumerable<RulesetValue_SelectOption> Options;
+        private class RulesetSchemaValueEnum : RulesetSchemaValue {
+            public string _Name = "RulesetSchemaValueEnum";
+            public string DefaultValue;
+            public RulesetSchemaValueEnumChoice[] Choices;
         }
         
-        private class RulesetValue_SelectOption {
-            public string Name;
-            public string GUID;
-        }
-        
-        private static GenericRulesetValue GetRulesetValue(STU_848957AF value) {
-            switch (value) {
-                case STU_118786E9 val1:
-                    return new RulesetValue_Range {
-                        Min = val1.m_min,
-                        Max = val1.m_max,
-                        Default = val1.m_default
-                    };
-                case STU_8A8AA0A4 val2:
-                    return new RulesetValue_Switch {
-                        On = GetString(val2.m_9EC1DF9A),
-                        Off = GetString(val2.m_03613078),
-                        Default = val2.m_default
-                    };
-                case STU_776E5ADD val2:
-                    return new RulesetValue_Select {
-                        Default = val2.m_default.ToString(),
-                        Options = val2.m_3FE1EA9E.Select(x => new RulesetValue_SelectOption {
-                            Name = GetString(x.m_displayText),
-                            GUID = x.m_identifier.ToString()
-                        })
-                    };
-                case STU_A499C365 val3:
-                    return new RulesetValue_RangePercentage {
-                        Min = val3.m_min,
-                        Max = val3.m_max,
-                        Default = val3.m_default,
-                        Unk1 = val3.m_ED39107B
-                    };
-                default:
-                    return null;
-            }
+        private class RulesetSchemaValueEnumChoice {
+            public string DisplayText;
+            public string Identifier;
         }
     }
 }

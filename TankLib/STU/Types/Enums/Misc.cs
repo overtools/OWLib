@@ -4891,12 +4891,12 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0xF2F62E3D)]
     public enum Enum_F2F62E3D : uint
     {
-        [STUField(0xD2D95305)] xD2D95305 = 0x0,
-        [STUField(0x39B0CD3A)] x39B0CD3A = 0x1,
-        [STUField(0xC2030825)] xC2030825 = 0x2,
-        [STUField(0xEA21330C)] xEA21330C = 0x3,
-        [STUField(0xF956D761)] xF956D761 = 0x4,
-        [STUField(0xE5FACB24)] xE5FACB24 = 0x5,
+        [STUField(0xD2D95305)] Modes = 0x0,
+        [STUField(0x39B0CD3A)] Combat = 0x1,
+        [STUField(0xC2030825)] WeaponAmmo = 0x2,
+        [STUField(0xEA21330C)] HeroSpecific = 0x3,
+        [STUField(0xF956D761)] HeroCommon = 0x4,
+        [STUField(0xE5FACB24)] None = 0x5,
     }
     
     [STUEnum(0xF588EA94)]

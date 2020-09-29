@@ -45,7 +45,8 @@ namespace DataTool.JSON {
         public static void OutputJSONAlt(object jObj, ListFlags toolFlags, bool log = true) {
             var serializeSettings = new JsonSerializerSettings();
             serializeSettings.Converters.Add(new StringEnumConverter());
-            
+            serializeSettings.Converters.Add(new teResourceGUID_Newtonsoft());
+
             string json = JsonConvert.SerializeObject(jObj, Formatting.Indented, serializeSettings);
             
             if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {

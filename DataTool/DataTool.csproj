@@ -218,6 +218,7 @@
     <Compile Include="ToolLogic\List\ListFlags.cs" />
     <Compile Include="ToolLogic\List\ListHeroes.cs" />
     <Compile Include="ToolLogic\List\ListGeneralUnlocks.cs" />
+    <Compile Include="ToolLogic\List\ListHeroesRulesets.cs" />
     <Compile Include="ToolLogic\List\ListHeroUnlocks.cs" />
     <Compile Include="ToolLogic\List\ListHighlights.cs" />
     <Compile Include="ToolLogic\List\ListLootbox.cs" />

@@ -127,3 +127,11 @@ DF488316, SystemMessage
 D0B2CF7A, Match
 86BE3868, General
 30DB6DD8, CustomGame
+
+# Enum_F2F62E3D game ruleset schema catagory
+D2D95305, Modes
+39B0CD3A, Combat
+C2030825, WeaponAmmo
+EA21330C, HeroSpecific
+F956D761, HeroCommon
+E5FACB24, None
