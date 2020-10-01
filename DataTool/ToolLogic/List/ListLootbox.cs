@@ -21,9 +21,12 @@ namespace DataTool.ToolLogic.List {
 
             foreach (LootBox lootbox in lootboxes) {
                 Log($"{lootbox.Name}");
-                if (lootbox.ShopCards != null) {
-                    foreach (LootBoxShopCard shopCard in lootbox.ShopCards) {
-                        Log($"\t{shopCard.Text}");
+                if (!(toolFlags as ListFlags).Simplify) {
+                    if (lootbox.ShopCards != null) {
+                        foreach (LootBoxShopCard shopCard in lootbox.ShopCards)
+                        {
+                            Log($"\t{shopCard.Text}");
+                        }
                     }
                 }
             }

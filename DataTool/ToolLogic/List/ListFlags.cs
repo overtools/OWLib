@@ -14,6 +14,8 @@ namespace DataTool.ToolLogic.List {
         [CLIFlag(Default = false, Flag = "flatten", Help = "Flatten output", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool Flatten;
 
+        [CLIFlag(Default = false, Flag = "simplify", Help = "Reduces the amount of information output by -list commands (doesn't work for JSON out)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool Simplify;
         public override bool Validate() => true;
     }
 }

@@ -25,29 +25,32 @@ namespace DataTool.ToolLogic.List {
             
             foreach (KeyValuePair<teResourceGUID, Hero> hero in heroes) {
                 Log($"{hero.Value.Name}");
-                if (hero.Value.Description != null)
-                    Log($"{indentLevel + 1}Description: {hero.Value.Description}");
-                
-                Log($"{indentLevel + 1}Gender: {hero.Value.Gender}");
-                
-                Log($"{indentLevel + 1}Size: {hero.Value.Size}");
-                
-                TankLib.Helpers.Logger.Log24Bit(ConsoleColor.White.AsDOSColor().AsXTermColor().ToForeground(), null, false, Console.Out, null, $"{indentLevel + 1}Color: {hero.Value.GalleryColor.ToHex()} ");
-                TankLib.Helpers.Logger.Log24Bit(hero.Value.GalleryColor.ToForeground(), null, true, Console.Out, null, "██████");
+                if (!(toolFlags as ListFlags).Simplify) {
 
-                
-                TankLib.Helpers.Logger.Log24Bit(ConsoleColor.White.AsDOSColor().AsXTermColor().ToForeground(), null, false, Console.Out, null, $"{indentLevel + 1}sRGB Color: {hero.Value.GalleryColor.ToNonLinear().ToHex()} ");
-                TankLib.Helpers.Logger.Log24Bit(hero.Value.GalleryColor.ToNonLinear().ToForeground(), null, true, Console.Out, null, "██████");
+                    if (hero.Value.Description != null)
+                        Log($"{indentLevel + 1}Description: {hero.Value.Description}");
 
-                if (hero.Value.Loadouts != null) {
-                    Log($"{indentLevel + 1}Loadouts:");
-                    foreach (var loadout in hero.Value.Loadouts) {
-                        Log($"{indentLevel + 2}{loadout.Name}: {loadout.Category}");
-                        Log($"{indentLevel + 3}{loadout.Description}");
+                    Log($"{indentLevel + 1}Gender: {hero.Value.Gender}");
+
+                    Log($"{indentLevel + 1}Size: {hero.Value.Size}");
+
+                    TankLib.Helpers.Logger.Log24Bit(ConsoleColor.White.AsDOSColor().AsXTermColor().ToForeground(), null, false, Console.Out, null, $"{indentLevel + 1}Color: {hero.Value.GalleryColor.ToHex()} ");
+                    TankLib.Helpers.Logger.Log24Bit(hero.Value.GalleryColor.ToForeground(), null, true, Console.Out, null, "██████");
+
+
+                    TankLib.Helpers.Logger.Log24Bit(ConsoleColor.White.AsDOSColor().AsXTermColor().ToForeground(), null, false, Console.Out, null, $"{indentLevel + 1}sRGB Color: {hero.Value.GalleryColor.ToNonLinear().ToHex()} ");
+                    TankLib.Helpers.Logger.Log24Bit(hero.Value.GalleryColor.ToNonLinear().ToForeground(), null, true, Console.Out, null, "██████");
+
+                    if (hero.Value.Loadouts != null) {
+                        Log($"{indentLevel + 1}Loadouts:");
+                        foreach (var loadout in hero.Value.Loadouts) {
+                            Log($"{indentLevel + 2}{loadout.Name}: {loadout.Category}");
+                            Log($"{indentLevel + 3}{loadout.Description}");
+                        }
                     }
-                }
 
-                Log();
+                    Log();
+                }  
             }
         }
 

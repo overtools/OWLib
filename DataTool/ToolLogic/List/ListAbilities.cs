@@ -22,10 +22,12 @@ namespace DataTool.ToolLogic.List {
             IndentHelper indentLevel = new IndentHelper();
             foreach (var loadout in data) {
                 Log($"{indentLevel}{loadout.Value.Name}:");
-                Log($"{indentLevel + 1}       Type: {loadout.Value.Category}");
-                Log($"{indentLevel + 1}     Button: {loadout.Value.Button ?? "None"}");
-                Log($"{indentLevel + 1}Description: {loadout.Value.Description}");
-                Log();
+                if (!(toolFlags as ListFlags).Simplify) {
+                    Log($"{indentLevel + 1}       Type: {loadout.Value.Category}");
+                    Log($"{indentLevel + 1}     Button: {loadout.Value.Button ?? "None"}");
+                    Log($"{indentLevel + 1}Description: {loadout.Value.Description}");
+                    Log();
+                }
             }
         }
 
