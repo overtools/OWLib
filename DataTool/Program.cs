@@ -307,19 +307,27 @@ namespace DataTool {
             }
         }
 
+        private static void HandleSingleException(Exception ex) {
+            if (ex is TargetInvocationException fex) {
+                ex = fex.InnerException ?? ex;
+            }
+
+            Logger.Log24Bit(ConsoleSwatch.XTermColor.HotPink3, true, Console.Error, null, ex.Message);
+            Logger.Log24Bit(ConsoleSwatch.XTermColor.MediumPurple, true, Console.Error, null, ex.StackTrace);
+                
+            if (ex is BLTEDecoderException decoder) {
+                File.WriteAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"BLTEDump-{AppDomain.CurrentDomain.FriendlyName}_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.blte"), decoder.GetBLTEData());
+            }
+
+            if (ex.InnerException != null) {
+                HandleSingleException(ex.InnerException);
+            }
+        }
+
         [DebuggerStepThrough]
         private static void ExceptionHandler(object sender, UnhandledExceptionEventArgs e) {
             if (e.ExceptionObject is Exception ex) {
-                if (ex is TargetInvocationException fex) {
-                    ex = fex.InnerException ?? ex;
-                }
-
-                Logger.Log24Bit(ConsoleSwatch.XTermColor.HotPink3, true, Console.Error, null, ex.Message);
-                Logger.Log24Bit(ConsoleSwatch.XTermColor.MediumPurple, true, Console.Error, null, ex.StackTrace);
-                
-                if (ex is BLTEDecoderException decoder) {
-                    File.WriteAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"BLTEDump-{AppDomain.CurrentDomain.FriendlyName}_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.blte"), decoder.GetBLTEData());
-                }
+                HandleSingleException(ex);
 
                 if (Debugger.IsAttached) throw ex;
             }
