@@ -136,7 +136,7 @@ namespace DataTool {
 
             if (!targetToolAttributes.UtilNoArchiveNeeded) {
                 try {
-                    InitStorage();
+                    InitStorage(Flags.Online);
                 } catch (Exception ex) {
                     Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC",
                                     "=================\nError initializing CASC!\n" +

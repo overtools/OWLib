@@ -9,6 +9,9 @@ namespace DataTool {
 
         [CLIFlag(Flag = "mode", Positional = 1, NeedsValue = true, Required = true, Help = "Extraction Mode")]
         public string Mode;
+        
+        [CLIFlag(Default = false, Flag = "online", Help = "Allow downloading of corrupted files", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool Online;
 
         [CLIFlag(Default = null, Flag = "language", Help = "Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW" })]
         [Alias("L")]

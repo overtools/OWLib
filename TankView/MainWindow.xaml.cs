@@ -219,6 +219,7 @@ namespace TankView {
 
         private void OpenNGDP(string path) {
             throw new NotImplementedException(nameof(OpenNGDP));
+            // todo: can be supported again
             
 #pragma warning disable 162
             // ReSharper disable once HeuristicUnreachableCode
