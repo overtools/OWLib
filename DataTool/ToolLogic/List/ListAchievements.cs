@@ -22,12 +22,14 @@ namespace DataTool.ToolLogic.List {
                 var iD = new IndentHelper();
                 
                 Log($"{achievement.Name}");
-                Log($"{iD+1}Description: {achievement.Description}");
-                
-                if (achievement.Reward != null)
-                    Log($"{iD+1}Reward: {achievement.Reward.Name} ({achievement.Reward.Rarity} {achievement.Reward.Type})");
+                if (!(toolFlags as ListFlags).Simplify) {
+                    Log($"{iD + 1}Description: {achievement.Description}");
 
-                Log();
+                    if (achievement.Reward != null)
+                        Log($"{iD + 1}Reward: {achievement.Reward.Name} ({achievement.Reward.Rarity} {achievement.Reward.Type})");
+
+                    Log();
+                }
             }
         }
 

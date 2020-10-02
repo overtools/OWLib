@@ -25,31 +25,38 @@ namespace DataTool.ToolLogic.List {
             var iD = new IndentHelper();
             foreach (var map in maps) {
                 var data = map.Value;
-
-                Log($"{iD}{data.GetUniqueName()} ({data.MapGUID:X8})");
-
-                if (!string.IsNullOrEmpty(data.Name)) Log($"{iD+1}Name: {data.Name}");
-                if (!string.IsNullOrEmpty(data.VariantName)) Log($"{iD+1}VariantName: {data.VariantName}");
-                if (!string.IsNullOrEmpty(data.Description)) Log($"{iD+1}Desc1: {data.Description}");
-                if (!string.IsNullOrEmpty(data.Description2)) Log($"{iD+1}Desc2: {data.Description2}");
-                Log($"{iD+1}Status: {data.State}");
-                Log($"{iD+1}Type: {data.MapType}");
-                
-                if (data.StateA != null || data.StateB != null) {
-                    Log($"{iD+1}States:");
-                    Log($"{iD+2}{data.StateA ?? "N/A"}");
-                    Log($"{iD+2}{data.StateB ?? "N/A"}");
+                if ((toolFlags as ListFlags).Simplify) {
+                    Log(data.GetUniqueName());
                 }
-        
-                if (data.GameModes != null) {
-                    Log($"{iD+1}GameModes:");
+                else {
+                    Log($"{iD}{data.GetUniqueName()} ({data.MapGUID:X8})");
 
-                    foreach (var gameModeLight in data.GameModes) {
-                        Console.Out.WriteLine($"{iD+2}{gameModeLight.Name ?? "N/A"} ({teResourceGUID.AsString(gameModeLight.GUID)})");
+                    if (!string.IsNullOrEmpty(data.Name)) Log($"{iD + 1}Name: {data.Name}");
+                    if (!string.IsNullOrEmpty(data.VariantName)) Log($"{iD + 1}VariantName: {data.VariantName}");
+                    if (!string.IsNullOrEmpty(data.Description)) Log($"{iD + 1}Desc1: {data.Description}");
+                    if (!string.IsNullOrEmpty(data.Description2)) Log($"{iD + 1}Desc2: {data.Description2}");
+                    Log($"{iD + 1}Status: {data.State}");
+                    Log($"{iD + 1}Type: {data.MapType}");
+
+                    if (data.StateA != null || data.StateB != null)
+                    {
+                        Log($"{iD + 1}States:");
+                        Log($"{iD + 2}{data.StateA ?? "N/A"}");
+                        Log($"{iD + 2}{data.StateB ?? "N/A"}");
                     }
-                }
 
-                Log();
+                    if (data.GameModes != null)
+                    {
+                        Log($"{iD + 1}GameModes:");
+
+                        foreach (var gameModeLight in data.GameModes)
+                        {
+                            Console.Out.WriteLine($"{iD + 2}{gameModeLight.Name ?? "N/A"} ({teResourceGUID.AsString(gameModeLight.GUID)})");
+                        }
+                    }
+
+                    Log();
+                }
             }
         }
 
