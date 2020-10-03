@@ -42,8 +42,10 @@ namespace DataTool.ToolLogic.Extract {
                 Combo.Find(info, 0x400000000001456);  // coin chest, todo
                 // 00000000315A.00C in 000000001456.003 (288230376151716950)
                 
-                foreach (STULootBoxShopCard lootboxShopCard in lootbox.m_shopCards) {
-                    Combo.Find(info, lootboxShopCard.m_cardTexture);  // 004
+                if (lootbox.m_shopCards != null) {
+                    foreach (STULootBoxShopCard lootboxShopCard in lootbox.m_shopCards) {
+                        Combo.Find(info, lootboxShopCard.m_cardTexture);  // 004
+                    }
                 }
 
                 var context = new SaveLogic.Combo.SaveContext(info);
