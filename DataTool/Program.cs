@@ -18,6 +18,7 @@ using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
 using TACTLib.Core.Product.Tank;
 using TACTLib.Exceptions;
+using TankLib.Helpers;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 using Logger = TankLib.Helpers.Logger;
@@ -135,12 +136,12 @@ namespace DataTool {
 
             if (!targetToolAttributes.UtilNoArchiveNeeded) {
                 try {
-                    InitStorage();
+                    InitStorage(Flags.Online);
                 } catch (Exception ex) {
-                    Logger.Error("CASC", 
-                                 "=================\nError initializing CASC!\n" +
-                                 "Please Scan & Repair your game, launch it for a minute, and try the tools again before reporting a bug!\n" +
-                                 "========================");
+                    Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC",
+                                    "=================\nError initializing CASC!\n" +
+                                    "Please Scan & Repair your game, launch it for a minute, and try the tools again before reporting a bug!\n" +
+                                    "========================");
                     throw;
                 }
                 
@@ -221,7 +222,7 @@ namespace DataTool {
             var args = new ClientCreateArgs {
                 SpeechLanguage = Flags.SpeechLanguage,
                 TextLanguage   = Flags.Language,
-                HandlerArgs    = new ClientCreateArgs_Tank { CacheAPM = Flags.UseCache },
+                HandlerArgs    = new ClientCreateArgs_Tank { CacheAPM = Flags.UseCache, ManifestRegion = Flags.RCN ? ProductHandler_Tank.REGION_CN : ProductHandler_Tank.REGION_DEV },
                 Online         = online
             };
 
@@ -306,13 +307,27 @@ namespace DataTool {
             }
         }
 
+        private static void HandleSingleException(Exception ex) {
+            if (ex is TargetInvocationException fex) {
+                ex = fex.InnerException ?? ex;
+            }
+
+            Logger.Log24Bit(ConsoleSwatch.XTermColor.HotPink3, true, Console.Error, null, ex.Message);
+            Logger.Log24Bit(ConsoleSwatch.XTermColor.MediumPurple, true, Console.Error, null, ex.StackTrace);
+                
+            if (ex is BLTEDecoderException decoder) {
+                File.WriteAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"BLTEDump-{AppDomain.CurrentDomain.FriendlyName}_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.blte"), decoder.GetBLTEData());
+            }
+
+            if (ex.InnerException != null) {
+                HandleSingleException(ex.InnerException);
+            }
+        }
+
         [DebuggerStepThrough]
         private static void ExceptionHandler(object sender, UnhandledExceptionEventArgs e) {
             if (e.ExceptionObject is Exception ex) {
-                Logger.Error(null, ex.ToString());
-                if (ex is BLTEDecoderException decoder) {
-                    File.WriteAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"BLTEDump-{AppDomain.CurrentDomain.FriendlyName}_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.blte"), decoder.GetBLTEData());
-                }
+                HandleSingleException(ex);
 
                 if (Debugger.IsAttached) throw ex;
             }
