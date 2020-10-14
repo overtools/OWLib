@@ -38,13 +38,13 @@ namespace DataTool.SaveLogic {
                 Name = name;
                 Info = info;
 
-                SingleModels = singleModels;
-                ModelGroups = modelGroups;
-                Models = models;
-                Entities = entities;
-                Lights = lights;
-                Sounds = sounds;
-                Effects = effects;
+                SingleModels = singleModels ?? new teMapPlaceableData();
+                ModelGroups = modelGroups ?? new teMapPlaceableData();
+                Models = models ?? new teMapPlaceableData();
+                Entities = entities ?? new teMapPlaceableData();
+                Lights = lights ?? new teMapPlaceableData();
+                Sounds = sounds ?? new teMapPlaceableData();
+                Effects = effects ?? new teMapPlaceableData();
             }
 
             public void Write(Stream output) {
@@ -377,14 +377,13 @@ namespace DataTool.SaveLogic {
         }
 
         public static teMapPlaceableData GetPlaceableData(STUMapHeader map, Enums.teMAP_PLACEABLE_TYPE modelGroup) {
-            return GetPlaceableData(map, (byte) modelGroup);
+            using (Stream stream = OpenFile(map.GetChunkKey(modelGroup))) {
+                return stream == null ? null : new teMapPlaceableData(stream, modelGroup);
+            }
         }
 
         public static teMapPlaceableData GetPlaceableData(STUMapHeader map, byte type) {
-            using (Stream stream = OpenFile(map.GetChunkKey(type))) {
-                if (stream == null) return null;
-                return new teMapPlaceableData(stream);
-            }
+            return GetPlaceableData(map, (Enums.teMAP_PLACEABLE_TYPE) type);
         }
     }
 }

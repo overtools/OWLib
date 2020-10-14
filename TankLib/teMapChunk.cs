@@ -16,18 +16,23 @@ namespace TankLib {
     /// Tank MapChunk, file type 0BC
     /// </summary>
     public abstract class teMapChunk {
-        protected abstract void Read(BinaryReader reader);
+        protected abstract void Read(BinaryReader reader, teMAP_PLACEABLE_TYPE type);
+
+        [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
+        protected teMapChunk() {
+            
+        }
         
         [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
-        public teMapChunk(Stream stream) {
+        protected teMapChunk(Stream stream, teMAP_PLACEABLE_TYPE type) {
             using (BinaryReader reader = new BinaryReader(stream)) {
-                Read(reader);
+                Read(reader, type);
             }
         }
 
         [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
-        public teMapChunk(BinaryReader reader) {
-            Read(reader);
+        protected teMapChunk(BinaryReader reader, teMAP_PLACEABLE_TYPE type) {
+            Read(reader, type);
         }
     }
     
@@ -41,11 +46,7 @@ namespace TankLib {
             
             public ushort Unknown1;
             public byte Unknown2;
-            
-            /// <summary>
-            /// Placeable type
-            /// </summary>
-            public teMAP_PLACEABLE_TYPE Type;
+            public byte Unknown3;
             
             /// <summary>
             /// Size in bytes (including this structure)
@@ -79,13 +80,16 @@ namespace TankLib {
         public static teMapPlaceableManager Manager = new teMapPlaceableManager();
 
         public PlaceableDataHeader Header;
-        public IMapPlaceable[] Placeables;
-        public CommonStructure[] CommonStructures;
+        public IMapPlaceable[] Placeables = {};
+        public CommonStructure[] CommonStructures = {};
 
-        public teMapPlaceableData(Stream stream) : base(stream) { }
-        public teMapPlaceableData(BinaryReader reader) : base(reader) { }
+        public teMapPlaceableData() {
+        }
+
+        public teMapPlaceableData(Stream stream, teMAP_PLACEABLE_TYPE type) : base(stream, type) { }
+        public teMapPlaceableData(BinaryReader reader, teMAP_PLACEABLE_TYPE type) : base(reader, type) { }
         
-        protected override void Read(BinaryReader reader) {
+        protected override void Read(BinaryReader reader, teMAP_PLACEABLE_TYPE type) {
             Header = reader.Read<PlaceableDataHeader>();
             
             if (Header.PlaceableOffset > 0) {
@@ -100,12 +104,12 @@ namespace TankLib {
                     CommonStructure commonStructure = reader.Read<CommonStructure>();
                     CommonStructures[i] = commonStructure;
 
-                    Placeables[i] = Manager.CreateType(commonStructure, reader);
+                    Placeables[i] = Manager.CreateType(commonStructure, type, reader);
                     
                     reader.BaseStream.Position = beforePos + CommonStructures[i].Size;
                 }
 
-                if (CommonStructures.Length > 0 && CommonStructures[0].Type == teMAP_PLACEABLE_TYPE.ENTITY && Header.InstanceDataOffset > 0) {
+                if (CommonStructures.Length > 0 && type == teMAP_PLACEABLE_TYPE.ENTITY && Header.InstanceDataOffset > 0) {
                     int execCount = 0;
                     reader.BaseStream.Position = Header.InstanceDataOffset+16;
                     foreach (IMapPlaceable placeable in Placeables) {
@@ -118,7 +122,7 @@ namespace TankLib {
                             try {
                                 teStructuredData structuredData = new teStructuredData(reader);
                                 entity.InstanceData[i] = structuredData.GetInstance<STUComponentInstanceData>();
-                            } catch (Exception e)
+                            } catch
                             {
                                 execCount++;
                             }
@@ -249,7 +253,7 @@ namespace TankLib {
             for (int i = 0; i < Header.InstanceDataCount; i++) {
                 long disStart = reader.BaseStream.Position;
                 
-                var type = reader.ReadUInt32();
+                var _ = reader.ReadUInt32(); // type
                 var relOffset = reader.ReadUInt32();
 
                 var offset = disStart + relOffset;
@@ -480,12 +484,12 @@ namespace TankLib {
             Types[instance.Type] = type;
         }
 
-        public IMapPlaceable CreateType(teMapPlaceableData.CommonStructure commonStructure, BinaryReader reader) {
+        public IMapPlaceable CreateType(teMapPlaceableData.CommonStructure commonStructure, teMAP_PLACEABLE_TYPE type, BinaryReader reader) {
             IMapPlaceable value = new teMapPlaceableDummy((int)commonStructure.Size);
-            if (Types.TryGetValue(commonStructure.Type, out Type placeableType)) {
+            if (Types.TryGetValue(type, out Type placeableType)) {
                 value = (IMapPlaceable)Activator.CreateInstance(placeableType);
-            } else if (_misingTypes.Add(commonStructure.Type)) {
-                Debugger.Log(0, "teMapPlaceableManager", $"Unhandled placeable type: {commonStructure.Type}\r\n");
+            } else if (_misingTypes.Add(type)) {
+                Debugger.Log(0, "teMapPlaceableManager", $"Unhandled placeable type: {type}\r\n");
             }
             value.Read(reader);
             return value;

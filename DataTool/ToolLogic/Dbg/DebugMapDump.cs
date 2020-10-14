@@ -57,16 +57,16 @@ namespace DataTool.ToolLogic.Debug
 
         public static teMapPlaceableData GetPlaceableData(STUMapHeader map, Enums.teMAP_PLACEABLE_TYPE modelGroup)
         {
-            return GetPlaceableData(map, (byte)modelGroup);
+            using (Stream stream = OpenFile(map.GetChunkKey(modelGroup)))
+            {
+                if (stream == null) return null;
+                return new teMapPlaceableData(stream, modelGroup);
+            }
         }
 
         public static teMapPlaceableData GetPlaceableData(STUMapHeader map, byte type)
         {
-            using (Stream stream = OpenFile(map.GetChunkKey(type)))
-            {
-                if (stream == null) return null;
-                return new teMapPlaceableData(stream);
-            }
+            return GetPlaceableData(map, (Enums.teMAP_PLACEABLE_TYPE) type);
         }
     }
 }
