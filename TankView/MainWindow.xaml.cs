@@ -229,8 +229,6 @@ namespace TankView {
                 try {
                     DataTool.Program.Client = new ClientHandler(null, ClientArgs);
 
-                    ClientArgs.Online = true;
-
                     DataTool.Program.TankHandler = DataTool.Program.Client.ProductHandler as ProductHandler_Tank;
                 } catch (Exception e) {
                     MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
@@ -256,6 +254,9 @@ namespace TankView {
                     if (flags != null) {
                         ClientArgs.TextLanguage = flags.Language;
                         ClientArgs.SpeechLanguage = flags.SpeechLanguage;
+                        ClientArgs.Online = flags.Online;
+                    } else {
+                        ClientArgs.Online = false;
                     }
 
                     DataTool.Program.Client = new ClientHandler(path, ClientArgs);

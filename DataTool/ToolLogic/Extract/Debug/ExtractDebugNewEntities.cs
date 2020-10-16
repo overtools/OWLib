@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using DataTool.FindLogic;
@@ -79,14 +78,25 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 throw new Exception("no output path");
             }
 
-            const string ver = "60993";
-            //var contentHashes = GetContentHashes($@"D:\ow\resources\verdata\{ver}.cmfhashes");
-            var guids = GetGUIDs($@"D:\ow\resources\verdata\{ver}.guids");
+            if (flags.Positionals.Length != 4) {
+                throw new Exception("incorrect params provided");
+            }
 
+            var file = flags.Positionals[3];
             const string container = "DebugNewEntities2";
-            
             Combo.ComboInfo info = new Combo.ComboInfo();
-            AddNewByGUID(info, guids, 0x4, 0x7C, 0x3F, 0xB2);
+            var types = new ushort[]{0x4, 0x7C, 0x3F, 0xB2};
+
+            if (file.EndsWith("guids")) {
+                var guids = GetGUIDs(file);
+                AddNewByGUID(info, guids, types);
+            } else if (file.EndsWith("cmfhashes")) {
+                // does this even still work?
+                var contentHashes = GetContentHashes(file);
+                AddNewByContentHash(info, contentHashes, types);
+            } else {
+                throw new Exception("unknown file type");
+            }
 
             var context = new SaveLogic.Combo.SaveContext(info);
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, container), context);
