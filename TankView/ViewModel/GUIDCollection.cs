@@ -219,7 +219,7 @@ namespace TankView.ViewModel {
             Data
         };
 
-        public Folder Data = new Folder("/", "/");
+        public Folder Data = new Folder("/", "/", true);
 
         public GUIDCollection() { }
 

@@ -188,6 +188,7 @@
                         <EventSetter Event="Selected" Handler="ChangeActiveNode" />
                         <Setter Property="ContextMenu" Value="{StaticResource ExtractTree}" />
                         <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"></Setter>
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
                     </Style>
                 </TreeView.ItemContainerStyle>
             </TreeView>

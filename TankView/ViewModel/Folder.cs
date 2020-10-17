@@ -5,13 +5,15 @@ using System.Linq;
 
 namespace TankView.ViewModel {
     public class Folder {
-        public Folder(string name, string fullPath) {
+        public Folder(string name, string fullPath, bool isExpanded = false) {
             Name = name;
             FullPath = fullPath;
+            IsExpanded = isExpanded;
         }
 
         public string Name { get; set; }
         public string FullPath { get; set; }
+        public bool IsExpanded { get; set; }
         public List<Folder> Folders { get; set; } = new List<Folder>();
         public List<GUIDEntry> Files { get; set; } = new List<GUIDEntry>();
 
