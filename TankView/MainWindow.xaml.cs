@@ -273,14 +273,17 @@ namespace TankView {
                 } finally {
                     GCSettings.LatencyMode = GCLatencyMode.Interactive;
                     GC.Collect();
+
                     if (Settings.Default.LoadManifest) {
                         DataTool.Program.InitTrackedFiles();
                     }
+
                     ViewContext.Send(delegate { IsReady = true; NotifyPropertyChanged(nameof(IsReady)); }, null);
                 }
 
-                if (DataTool.Program.Client?.AgentProduct?.Uid != null && DataTool.Program.Client.AgentProduct.Uid != "prometheus") {
-                    MessageBox.Show($"The branch \"{DataTool.Program.Client.AgentProduct.Uid}\" is not supported!\nThis might result in failure to load.\nProceed with caution.", "Unsupported Branch", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                var productCode = DataTool.Program.Client.AgentProduct.ProductCode;
+                if (productCode != null && productCode != "pro") {
+                    MessageBox.Show($"The branch \"{productCode}\" is not supported!\nThis might result in failure to load.\nProceed with caution.", "Unsupported Branch", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                 }
             });
         }

@@ -1,14 +1,13 @@
 ﻿<Window x:Class="TankView.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TankView"
-        xmlns:tank="clr-namespace:TankView.View"
-        xmlns:vm="clr-namespace:TankView.ViewModel"
         xmlns:om="clr-namespace:TankView.ObjectModel"
+        xmlns:vm="clr-namespace:TankView.ViewModel"
         xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
-        xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -38,8 +37,7 @@
             <Setter Property="BorderThickness" Value="0,0,0,0" />
         </Style>
         <!-- hahahah slay me -->
-        <HierarchicalDataTemplate x:Key="FolderDataView" DataType="{x:Type TypeName=vm:Folder}"
-                                  ItemsSource="{Binding Folders}">
+        <HierarchicalDataTemplate x:Key="FolderDataView" DataType="{x:Type TypeName=vm:Folder}" ItemsSource="{Binding Folders}">
             <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
         </HierarchicalDataTemplate>
         <DataTemplate x:Key="HeaderTemplateArrowUp">
