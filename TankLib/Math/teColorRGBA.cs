@@ -46,7 +46,7 @@ namespace TankLib.Math {
         }
 
         private byte ToHex(float a) {
-            return (byte) (a * 255f);
+            return (byte) System.Math.Round(a * 255f);
         }
         
         public string ToHex() {
