@@ -280,14 +280,10 @@ namespace DataTool.SaveLogic {
             // TODO: MAP11 HAS CHANGED
             // TODO: MAP10 TOO?
             
+            name = GetValidFilename(name);
             string mapPath = Path.Combine(basePath, "Maps", name, teResourceGUID.Index(key).ToString("X")) + Path.DirectorySeparatorChar;
             CreateDirectoryFromFile(mapPath);
-            
-            // Clean the filename after the map path as menu maps contain a slash which we want to preserve. e.g Menu/Hanamura
-            // but we dont want to preserve it below as it messes up the file paths
-            // not sure if this could cause potential issues above?????
-            name = GetValidFilename(name);
-            
+
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             LoudLog("\tFinding");
             FindLogic.Combo.Find(info, mapHeader.m_map);
