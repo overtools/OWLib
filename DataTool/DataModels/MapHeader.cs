@@ -12,51 +12,51 @@ namespace DataTool.DataModels {
     [DataContract]
     public class MapHeader {
         [DataMember]
-        public teResourceGUID GUID;
-        
-        [DataMember]
-        public string Name;
+        public teResourceGUID GUID { get; set; }
 
         [DataMember]
-        public string Description;
-        
-        [DataMember]
-        public string Description2;
-        
-        [DataMember]
-        public string Subline;
-        
-        [DataMember]
-        public string StateA;
-        
-        [DataMember]
-        public string StateB;
-        
-        [DataMember]
-        public string VariantName;
-        
-        [DataMember]
-        public teResourceGUID MapGUID;
-        
-        [DataMember]
-        public IEnumerable<GameModeLite> GameModes;
+        public string Name { get; set; }
 
         [DataMember]
-        public Enum_668FA6B6 State;
-
-        [DataMember]
-        public STUMapType MapType;
-
-        [DataMember]
-        public teResourceGUID Thumbnail;
+        public string Description { get; set; }
         
         [DataMember]
-        public teResourceGUID Image;
+        public string Description2 { get; set; }
         
         [DataMember]
-        public teResourceGUID FlagImage;
+        public string Subline { get; set; }
+        
+        [DataMember]
+        public string StateA { get; set; }
+        
+        [DataMember]
+        public string StateB { get; set; }
+        
+        [DataMember]
+        public string VariantName { get; set; }
+        
+        [DataMember]
+        public teResourceGUID MapGUID { get; set; }
+        
+        [DataMember]
+        public IEnumerable<GameModeLite> GameModes { get; set; }
 
-        public MapCelebrationVariant[] CelebrationVariants;
+        [DataMember]
+        public Enum_668FA6B6 State { get; set; }
+
+        [DataMember]
+        public STUMapType MapType { get; set; }
+
+        [DataMember]
+        public teResourceGUID Thumbnail { get; set; }
+        
+        [DataMember]
+        public teResourceGUID Image { get; set; }
+        
+        [DataMember]
+        public teResourceGUID FlagImage { get; set; }
+
+        public MapCelebrationVariant[] CelebrationVariants { get; set; }
         
         public MapHeader(ulong key) {
             STUMapHeader stu = GetInstance<STUMapHeader>(key);

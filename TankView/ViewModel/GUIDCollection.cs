@@ -59,7 +59,7 @@ namespace TankView.ViewModel {
 
             switch (DataHelper.GetDataType(value)) {
                 case DataHelper.DataType.Image: {
-                    PreviewSource = DataHelper.ConvertDDS(value, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.ImageFormat.PNG, 0);
+                    PreviewSource = DataHelper.ConvertDDS(value.GUID, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.ImageFormat.PNG, 0);
                     PreviewControl = new PreviewDataImage();
                 }
                     break;
@@ -81,6 +81,16 @@ namespace TankView.ViewModel {
                 case DataHelper.DataType.String: {
                     PreviewSource = DataHelper.GetString(value);
                     PreviewControl = new PreviewDataString();
+                }
+                    break;
+                case DataHelper.DataType.MapHeader: {
+                    PreviewSource = null;
+                    PreviewControl = new PreviewDataMapHeader(value, DataHelper.GetMap(value));
+                }
+                    break;
+                case DataHelper.DataType.Hero: {
+                    PreviewSource = null;
+                    PreviewControl = new PreviewHeroData(value, DataHelper.GetHero(value));
                 }
                     break;
                 case DataHelper.DataType.Unknown:

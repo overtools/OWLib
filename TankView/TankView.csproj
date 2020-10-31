@@ -127,10 +127,13 @@
     <Compile Include="Helper\IOHelper.cs" />
     <Compile Include="Helper\OrderByHelper.cs" />
     <Compile Include="ObjectModel\EnumConverter.cs" />
+    <Compile Include="ObjectModel\GUIDVisibilityConverter.cs" />
     <Compile Include="ObjectModel\GUIDToImageConverter.cs" />
     <Compile Include="ObjectModel\InvertBoolConverter.cs" />
+    <Compile Include="ObjectModel\NullValueConverter.cs" />
     <Compile Include="ObjectModel\ObservableHashCollection.cs" />
     <Compile Include="ObjectModel\SizeConverter.cs" />
+    <Compile Include="ObjectModel\StringGuidConverter.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ToolFlags.cs" />
     <Compile Include="ViewModel\AppSettings.cs" />
@@ -149,6 +152,9 @@
     <Compile Include="View\PreviewDataImage.xaml.cs">
       <DependentUpon>PreviewDataImage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\PreviewDataMapHeader.xaml.cs">
+      <DependentUpon>PreviewDataMapHeader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\PreviewDataModel.xaml.cs">
       <DependentUpon>PreviewDataModel.xaml</DependentUpon>
     </Compile>
@@ -157,6 +163,9 @@
     </Compile>
     <Compile Include="View\PreviewDataString.xaml.cs">
       <DependentUpon>PreviewDataString.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PreviewHeroData.xaml.cs">
+      <DependentUpon>PreviewHeroData.xaml</DependentUpon>
     </Compile>
     <Page Include="AboutPage.xaml" />
     <Page Include="DataToolListView.xaml" />
@@ -177,7 +186,12 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="template\DetailsViewStyles.xaml" />
     <Page Include="View\PreviewDataImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PreviewDataMapHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -190,6 +204,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PreviewDataString.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PreviewHeroData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using DataTool.DataModels;
+using DataTool.DataModels.Hero;
 using DataTool.WPF.IO;
 using DirectXTexNet;
 using TankLib;
@@ -13,8 +15,20 @@ namespace TankView.Helper {
             Image,
             Sound,
             Model,
-            String
+            String,
+            MapHeader,
+            Hero
         };
+
+        public static ulong? GetGuid(object value) {
+            if (value is teResourceGUID teGuid)
+                return teGuid;
+
+            if (value is GUIDEntry geGuid)
+                return geGuid;
+
+            return null;
+        }
 
         public static DataType GetDataType(GUIDEntry value) {
             if (value == null || value.GUID == 0) {
@@ -22,6 +36,15 @@ namespace TankView.Helper {
             }
 
             ushort type = teResourceGUID.Type(value.GUID);
+            return GetDataType(type);
+        }
+        
+        public static DataType GetDataType(ulong? guid) {
+            if (guid == null || guid == 0) {
+                return DataType.Unknown;
+            }
+
+            ushort type = teResourceGUID.Type(guid.Value);
             return GetDataType(type);
         }
 
@@ -42,6 +65,14 @@ namespace TankView.Helper {
                 return DataType.String;
             }
 
+            if (type == 0x09F) {
+                return DataType.MapHeader;
+            }
+            
+            if (type == 0x075) {
+                return DataType.Hero;
+            }
+
             return DataType.Unknown;
         }
 
@@ -58,13 +89,13 @@ namespace TankView.Helper {
             return ms;
         }
 
-        public static byte[] ConvertDDS(GUIDEntry value, DXGI_FORMAT targetFormat, DDSConverter.ImageFormat imageFormat, int frame) {
+        public static byte[] ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, DDSConverter.ImageFormat imageFormat, int frame) {
             try {
-                if (GetDataType(value) != DataType.Image) {
+                if (GetDataType(guid) != DataType.Image) {
                     return null;
                 }
 
-                teTexture texture = LoadTexture(value);
+                teTexture texture = LoadTexture(guid);
                 Stream ms = texture.SaveToDDS(1);
 
                 return DDSConverter.ConvertDDS(ms, targetFormat, imageFormat, frame);
@@ -80,14 +111,14 @@ namespace TankView.Helper {
                 return;
             }
             
-            teTexture texture = LoadTexture(value, fileStream);
+            teTexture texture = LoadTexture(value.GUID, fileStream);
             texture.SaveToDDS(outStream, false, 1);
         }
 
-        internal static teTexture LoadTexture(GUIDEntry value, Stream fileStream = null) {
-            teTexture texture = new teTexture(fileStream ?? IOHelper.OpenFile(value));
+        internal static teTexture LoadTexture(ulong guid, Stream fileStream = null) {
+            teTexture texture = new teTexture(fileStream ?? IOHelper.OpenFile(guid));
             if (texture.PayloadRequired) {
-                ulong payload = texture.GetPayloadGUID(value.GUID, 0);
+                ulong payload = texture.GetPayloadGUID(guid, 0);
                 if (IOHelper.HasFile(payload)) {
                     texture.LoadPayload(IOHelper.OpenFile(payload), 0);
                 } else {
@@ -109,6 +140,20 @@ namespace TankView.Helper {
             } catch {
                 return string.Empty;
             }
+        }
+
+        internal static MapHeader GetMap(GUIDEntry value) {
+            if (value == null || value.GUID == 0)
+                return null;
+            
+            return new MapHeader(value.GUID);
+        }
+        
+        internal static Hero GetHero(GUIDEntry value) {
+            if (value == null || value.GUID == 0)
+                return null;
+            
+            return new Hero(value.GUID);
         }
         
         private static object GetSubtitle(GUIDEntry value) {

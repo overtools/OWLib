@@ -261,6 +261,7 @@ namespace TankView {
 
                     DataTool.Program.Client = new ClientHandler(path, ClientArgs);
                     LoadHelper.PostLoad(DataTool.Program.Client);
+                    DataTool.Helper.IO.LoadGUIDTable(false);
 
                     DataTool.Program.TankHandler = DataTool.Program.Client.ProductHandler as ProductHandler_Tank;
 

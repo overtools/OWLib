@@ -5,18 +5,19 @@ using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using DataTool.WPF.IO;
 using DirectXTexNet;
+using TankLib;
 using TankView.Helper;
 using TankView.ViewModel;
 
 namespace TankView.ObjectModel {
     public class GUIDToImageConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-            if (!(value is GUIDEntry guid) || DataHelper.GetDataType(guid) != DataHelper.DataType.Image) {
+            var guid = DataHelper.GetGuid(value);
+            if (guid == null || DataHelper.GetDataType(guid.Value) != DataHelper.DataType.Image)
                 return default;
-            }
 
             try {
-                var data = DataHelper.ConvertDDS(guid, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.ImageFormat.PNG, 0);
+                var data = DataHelper.ConvertDDS(guid.Value, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.ImageFormat.PNG, 0);
 
                 var bitmap = new BitmapImage();
                 using (var ms = new MemoryStream(data)) {

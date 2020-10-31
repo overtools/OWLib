@@ -11,43 +11,43 @@ namespace DataTool.DataModels.Hero {
     [DataContract]
     public class Hero {
         [DataMember]
-        public teResourceGUID GUID;
+        public teResourceGUID GUID { get; set; }
 
         [DataMember]
-        public string Name;
+        public string Name { get; set; }
 
         [DataMember]
-        public string Description;
+        public string Description { get; set; }
 
         [DataMember]
-        public string Class;
+        public string Class { get; set; }
 
         [DataMember]
-        public Enum_0C014B4A Gender;
+        public Enum_0C014B4A Gender { get; set; }
 
         [DataMember]
-        public STUHeroSize Size;
+        public STUHeroSize Size { get; set; }
 
         [DataMember]
-        public string Color;
+        public string Color { get; set; }
 
         [DataMember]
-        public string sRGBColor;
+        public string sRGBColor { get; set; }
 
         [DataMember]
-        public teColorRGBA GalleryColor;
+        public teColorRGBA GalleryColor { get; set; }
 
         [DataMember]
-        public bool IsHero;
+        public bool IsHero { get; set; }
 
         [DataMember]
-        public bool SupportsAi;
+        public bool SupportsAi { get; set; }
 
         [DataMember]
-        public List<LoadoutLite> Loadouts;
+        public List<LoadoutLite> Loadouts { get; set; }
 
         [DataMember]
-        public List<HeroImage> Images;
+        public List<HeroImage> Images { get; set; }
 
         internal STUHero STU;
 
@@ -102,8 +102,8 @@ namespace DataTool.DataModels.Hero {
         }
 
         public class HeroImage {
-            public teResourceGUID Id;
-            public teResourceGUID TextureGUID;
+            public teResourceGUID Id { get; set; }
+            public teResourceGUID TextureGUID { get; set; }
         }
     }
 }

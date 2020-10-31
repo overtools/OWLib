@@ -175,7 +175,7 @@ namespace DataTool.Helper {
         public static string GetString(ulong guid) {
             if (guid == 0) return null;  // don't even try
             try {
-                if (Flags.StringsAsGuids)
+                if (Flags != null && Flags.StringsAsGuids)
                     return teResourceGUID.AsString(guid);
 
                 return GetStringInternal(guid);

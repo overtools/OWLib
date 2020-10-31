@@ -27,7 +27,6 @@
         IsEnabled="False"
         >
     <Window.Resources>
-        <om:GUIDToImageConverter x:Key="GuidToImageConverter" />
         <om:SizeConverter x:Key="SizeConverter" />
         <om:EnumConverter x:Key="EnumConverter" />
         <BooleanToVisibilityConverter x:Key="BoolVisbilityConverter" />
@@ -246,7 +245,7 @@
                                         <RowDefinition Height="200" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <Image Grid.Row="0" Source="{Binding Converter={StaticResource GuidToImageConverter}}" Width="200" Height="200"></Image>
+                                    <Image Grid.Row="0" Source="{Binding Converter={StaticResource GUIDToImageConverter}}" Width="200" Height="200"></Image>
                                     <TextBlock Grid.Row="1" Text="{Binding Filename}" TextAlignment="Center"/>
                                 </Grid>
                             </DataTemplate>
