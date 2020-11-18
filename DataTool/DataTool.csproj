@@ -202,7 +202,6 @@
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVoiceSet.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugShaders.cs" />
     <Compile Include="ToolLogic\Extract\ExtractAbilities.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractAll.cs" />
     <Compile Include="ToolLogic\Extract\ExtractHeroConversations.cs" />
     <Compile Include="ToolLogic\Extract\ExtractHeroUnlocks.cs" />
     <Compile Include="ToolLogic\Extract\ExtractGeneral.cs" />
