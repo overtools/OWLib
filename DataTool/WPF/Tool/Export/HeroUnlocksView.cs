@@ -1,4 +1,5 @@
 using System;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using DataTool.DataModels;
-using DataTool.WPF.IO;
+using DataTool.Helper;
 using DirectXTexNet;
 using TankLib;
 using TankLib.STU.Types;
@@ -78,7 +79,7 @@ namespace DataTool.WPF.Tool.Export {
 
                                     Stream ms = texture.SaveToDDS(1);
 
-                                    image = DDSConverter.ConvertDDS(ms, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.ImageFormat.PNG, 0);
+                                    image = DDSConverter.ConvertDDS(ms, DXGI_FORMAT.R8G8B8A8_UNORM, ImageFormat.Png, 0);
                                 }
 
                                 var entry = control.Add(heroNameActual, image, 128, (int)ImagingHelper.CalculateSizeAS(height, width, 128));

@@ -1,13 +1,12 @@
 using System;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
-using DataTool.WPF.IO;
+using DataTool.Helper;
 using DirectXTexNet;
-using TankLib;
 using TankView.Helper;
-using TankView.ViewModel;
 
 namespace TankView.ObjectModel {
     public class GUIDToImageConverter : IValueConverter {
@@ -17,7 +16,7 @@ namespace TankView.ObjectModel {
                 return default;
 
             try {
-                var data = DataHelper.ConvertDDS(guid.Value, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.ImageFormat.PNG, 0);
+                var data = DataHelper.ConvertDDS(guid.Value, DXGI_FORMAT.R8G8B8A8_UNORM, ImageFormat.Png, 0);
 
                 var bitmap = new BitmapImage();
                 using (var ms = new MemoryStream(data)) {

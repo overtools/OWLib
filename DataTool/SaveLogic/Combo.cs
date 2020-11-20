@@ -14,6 +14,7 @@ using DataTool.Helper;
 using DataTool.JSON;
 using DataTool.ToolLogic.Extract;
 using DataTool.ToolLogic.List;
+using DirectXTexNet;
 using TankLib;
 using TankLib.Chunks;
 using TankLib.ExportFormats;
@@ -654,10 +655,12 @@ namespace DataTool.SaveLogic {
             string multiSurfaceConvertType = "tif";
             bool createMultiSurfaceSheet = false;
             bool lossless = false;
+            bool useDXTX = false;
             int maxMips = 1;
 
             if (flags is ExtractFlags extractFlags) {
                 if (extractFlags.SkipTextures) return;
+                useDXTX = extractFlags.UseDirectXTex;
                 createMultiSurfaceSheet = extractFlags.SheetMultiSurface;
                 convertTextures = !extractFlags.RawTextures && !extractFlags.Raw;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
@@ -777,41 +780,43 @@ namespace DataTool.SaveLogic {
                 
                 using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
                     await s_texconvSemaphore.WaitAsync();
-                    
-                    string losslessFlag = lossless ? "-wiclossless" : string.Empty;
 
-                    pProcess = new Process {
-                        StartInfo = {
-                            FileName = "Third Party\\texconv.exe",
-                            UseShellExecute = false,
-                            RedirectStandardOutput = true,
-                            RedirectStandardInput = true,
-                            RedirectStandardError = true,
-                            CreateNoWindow = true,
-                            Arguments =
-                                $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{(path.EndsWith(@"/") || path.EndsWith("\\") ? path.Substring(0, path.Length - 1) : path)}"
-                        },
-                        EnableRaisingEvents = true
-                    };
+                    if (useDXTX) {
+                        DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat, 0);
+                    } else {
+                        string losslessFlag = lossless ? "-wiclossless" : string.Empty;
 
-                    pProcess.Start();
-                    convertedStream.Position = 0;
-                    await convertedStream.CopyToAsync(pProcess.StandardInput.BaseStream);
-                }
+                        pProcess = new Process {
+                            StartInfo = {
+                                FileName = "Third Party\\texconv.exe",
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardInput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true,
+                                Arguments =
+                                    $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{(path.EndsWith(@"/") || path.EndsWith("\\") ? path.Substring(0, path.Length - 1) : path)}"
+                            },
+                            EnableRaisingEvents = true
+                        };
 
-                await pProcess.StandardInput.BaseStream.FlushAsync();
-                pProcess.StandardInput.BaseStream.Close();
-                pProcess.WaitForExit();
-                s_texconvSemaphore.Release();
+                        pProcess.Start();
+                        convertedStream.Position = 0;
+                        await convertedStream.CopyToAsync(pProcess.StandardInput.BaseStream);
+                        await pProcess.StandardInput.BaseStream.FlushAsync();
+                        pProcess.StandardInput.BaseStream.Close();
+                        pProcess.WaitForExit();
+                        s_texconvSemaphore.Release();
                 
-                // when texconv writes with to the console -nologo is has done/failed conversion
-                string line = await pProcess.StandardOutput.ReadToEndAsync();
-                    
-                if (line.Contains("FAILED")) {
-                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                        WriteFile(convertedStream, $"{filePath}.dds");
+                        // when texconv writes with to the console -nologo is has done/failed conversion
+                        string line = await pProcess.StandardOutput.ReadToEndAsync();
+
+                        if (line.Contains("FAILED")) {
+                            convertedStream.Position = 0;
+                            WriteFile(convertedStream, $"{filePath}.dds");
+                            Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
+                        }
                     }
-                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
                 }
                 
                 s_texurePrepareSemaphore.Release();

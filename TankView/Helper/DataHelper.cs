@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using DataTool.DataModels;
 using DataTool.DataModels.Hero;
-using DataTool.WPF.IO;
+using DataTool.Helper;
 using DirectXTexNet;
 using TankLib;
 using TankView.ViewModel;
@@ -89,7 +90,7 @@ namespace TankView.Helper {
             return ms;
         }
 
-        public static byte[] ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, DDSConverter.ImageFormat imageFormat, int frame) {
+        public static byte[] ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, System.Drawing.Imaging.ImageFormat imageFormat, int frame) {
             try {
                 if (GetDataType(guid) != DataType.Image) {
                     return null;
