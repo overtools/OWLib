@@ -32,7 +32,7 @@ namespace TankLib.STU {
         /// <summary>Instance usage</summary>
         [IgnoreDataMember] public TypeUsage Usage = TypeUsage.Root;
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] public uint m_posInDataAtDeserializeCall;
+        [IgnoreDataMember, DebuggerBrowsable(DebuggerBrowsableState.Never)] public uint m_posInDataAtDeserializeCall;
 
         /// <summary>Read a specified STU field</summary>
         protected void DeserializeField(teStructuredData assetFile, STUField_Info fieldInfo,
