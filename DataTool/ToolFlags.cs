@@ -99,6 +99,9 @@ namespace DataTool {
         
         [CLIFlag(Default = false, Flag = "disable-language-registry", Help = "Disable fetching language from registry", Hidden = false, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool NoLanguageRegistry;
+        
+        [CLIFlag(Default = 3, Flag = "retry", Help = "Number of times to retry saving a file before giving up", Hidden = false, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagInt"})]
+        public int RetryAttempts;
 
         public override bool Validate() => true;
     }

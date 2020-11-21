@@ -655,12 +655,12 @@ namespace DataTool.SaveLogic {
             string multiSurfaceConvertType = "tif";
             bool createMultiSurfaceSheet = false;
             bool lossless = false;
-            bool useDXTX = false;
+            bool useTexConv = false;
             int maxMips = 1;
 
             if (flags is ExtractFlags extractFlags) {
                 if (extractFlags.SkipTextures) return;
-                useDXTX = extractFlags.UseDirectXTex;
+                useTexConv = extractFlags.UseTexConv;
                 createMultiSurfaceSheet = extractFlags.SheetMultiSurface;
                 convertTextures = !extractFlags.RawTextures && !extractFlags.Raw;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
@@ -694,131 +694,146 @@ namespace DataTool.SaveLogic {
             CreateDirectoryFromFile(path);
             
             await s_texurePrepareSemaphore.WaitAsync();
-
-            if (!convertTextures) {
-                teTexture texture;
-                using (Stream textureStream = OpenFile(textureGUID)) {
-                    texture = new teTexture(textureStream, true);
-                    textureStream.Position = 0;
-                    WriteFile(textureStream, $"{filePath}.004");
-                }
-                if (!texture.PayloadRequired) return;
-                for (int i = 0; i < texture.Payloads.Length; ++i) {
-                    using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
-                        WriteFile(texturePayloadStream, $"{filePath}_{i}.04D");
-                }
-                s_texurePrepareSemaphore.Release();
-            } else {
-                teTexture texture;
-                using (Stream textureStream = OpenFile(textureGUID)) {
-                    if (textureStream == null) {
-                        s_texurePrepareSemaphore.Release();
-                        return;
+            try {
+                if (!convertTextures) {
+                    teTexture texture;
+                    using (Stream textureStream = OpenFile(textureGUID)) {
+                        texture = new teTexture(textureStream, true);
+                        textureStream.Position = 0;
+                        WriteFile(textureStream, $"{filePath}.004");
                     }
-                    texture = new teTexture(textureStream);
-                }
-                
-                //if (texture.Header.Flags.HasFlag(teTexture.Flags.CUBEMAP)) return;
-                // for diffing when they add/regen loads of cubemaps
 
-                if (texture.PayloadRequired) {
+                    if (!texture.PayloadRequired) return;
                     for (int i = 0; i < texture.Payloads.Length; ++i) {
-                        using (var payloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
-                            texture.LoadPayload(payloadStream, i);
-                        if (maxMips == 1) break;
+                        using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
+                            WriteFile(texturePayloadStream, $"{filePath}_{i}.04D");
                     }
-                }
+                } else {
+                    teTexture texture;
+                    using (Stream textureStream = OpenFile(textureGUID)) {
+                        if (textureStream == null) {
+                            return;
+                        }
 
-                uint? width = null;
-                uint? height = null;
-                uint? surfaces = null;
-                if (texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces) {
-                    if (createMultiSurfaceSheet) {
-                        Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet because it has more than one surface");
-                        height = (uint) (texture.Header.Height * texture.Header.Surfaces);
-                        surfaces = 1;
-                        texture.Header.Flags = 0;
-                    } else {
-                        Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceConvertType} because it has more than one surface");
-                        convertType = multiSurfaceConvertType;
+                        texture = new teTexture(textureStream);
                     }
-                }
-                
-                bool isBcffValid = teTexture.DXGI_BC4.Contains(texture.Header.Format) ||
-                                   teTexture.DXGI_BC5.Contains(texture.Header.Format) ||
-                                   teTexture.ATI2.Contains(texture.Header.GetTextureType());
 
-                ImageFormat imageFormat = null;
-                if (convertType == "tif") imageFormat = ImageFormat.Tiff;
-                if (convertType == "png") imageFormat = ImageFormat.Png;
-                if (convertType == "jpg") imageFormat = ImageFormat.Jpeg;
-                // if (convertType == "tga") imageFormat = Im.... oh
-                // so there is no TGA image format.
-                // guess the TGA users are stuck with the DirectXTex stuff for now.
+                    //if (texture.Header.Flags.HasFlag(teTexture.Flags.CUBEMAP)) return;
+                    // for diffing when they add/regen loads of cubemaps
 
-                if (isBcffValid && imageFormat != null && !(texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces)) {
-                    await s_gdiSemaphore.WaitAsync();
-                    BlockDecompressor decompressor;
-                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                        decompressor = new BlockDecompressor(convertedStream);
-                        decompressor.CreateImage();
-                    }
-                    decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
-                    s_gdiSemaphore.Release();
-                    s_texurePrepareSemaphore.Release();
-                    return;
-                }
-
-                if (convertType == "dds") {
-                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                        WriteFile(convertedStream, $"{filePath}.dds");
-                    }
-                    s_texurePrepareSemaphore.Release();
-                    return;
-                }
-                Process pProcess;
-                
-                using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                    await s_texconvSemaphore.WaitAsync();
-
-                    if (useDXTX) {
-                        DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat, 0);
-                    } else {
-                        string losslessFlag = lossless ? "-wiclossless" : string.Empty;
-
-                        pProcess = new Process {
-                            StartInfo = {
-                                FileName = "Third Party\\texconv.exe",
-                                UseShellExecute = false,
-                                RedirectStandardOutput = true,
-                                RedirectStandardInput = true,
-                                RedirectStandardError = true,
-                                CreateNoWindow = true,
-                                Arguments =
-                                    $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{(path.EndsWith(@"/") || path.EndsWith("\\") ? path.Substring(0, path.Length - 1) : path)}"
-                            },
-                            EnableRaisingEvents = true
-                        };
-
-                        pProcess.Start();
-                        convertedStream.Position = 0;
-                        await convertedStream.CopyToAsync(pProcess.StandardInput.BaseStream);
-                        await pProcess.StandardInput.BaseStream.FlushAsync();
-                        pProcess.StandardInput.BaseStream.Close();
-                        pProcess.WaitForExit();
-                        s_texconvSemaphore.Release();
-                
-                        // when texconv writes with to the console -nologo is has done/failed conversion
-                        string line = await pProcess.StandardOutput.ReadToEndAsync();
-
-                        if (line.Contains("FAILED")) {
-                            convertedStream.Position = 0;
-                            WriteFile(convertedStream, $"{filePath}.dds");
-                            Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
+                    if (texture.PayloadRequired) {
+                        for (int i = 0; i < texture.Payloads.Length; ++i) {
+                            using (var payloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
+                                texture.LoadPayload(payloadStream, i);
+                            if (maxMips == 1) break;
                         }
                     }
+
+                    uint? width = null;
+                    uint? height = null;
+                    uint? surfaces = null;
+                    if (texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces) {
+                        if (createMultiSurfaceSheet) {
+                            Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet because it has more than one surface");
+                            height = (uint) (texture.Header.Height * texture.Header.Surfaces);
+                            surfaces = 1;
+                            texture.Header.Flags = 0;
+                        } else {
+                            Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceConvertType} because it has more than one surface");
+                            convertType = multiSurfaceConvertType;
+                        }
+                    }
+
+                    bool isBcffValid = teTexture.DXGI_BC4.Contains(texture.Header.Format) ||
+                                       teTexture.DXGI_BC5.Contains(texture.Header.Format) ||
+                                       teTexture.ATI2.Contains(texture.Header.GetTextureType());
+
+                    ImageFormat imageFormat = null;
+                    if (convertType == "tif") imageFormat = ImageFormat.Tiff;
+                    if (convertType == "png") imageFormat = ImageFormat.Png;
+                    if (convertType == "jpg") imageFormat = ImageFormat.Jpeg;
+                    // if (convertType == "tga") imageFormat = Im.... oh
+                    // so there is no TGA image format.
+                    // guess the TGA users are stuck with the DirectXTex stuff for now.
+
+                    if (isBcffValid && imageFormat != null && !(texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces)) {
+                        await s_gdiSemaphore.WaitAsync();
+                        try {
+                            BlockDecompressor decompressor;
+                            using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                                decompressor = new BlockDecompressor(convertedStream);
+                                decompressor.CreateImage();
+                            }
+
+                            decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
+                        } finally {
+                            s_gdiSemaphore.Release();
+                        }
+                        return;
+                    }
+
+                    if (convertType == "dds") {
+                        using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                            WriteFile(convertedStream, $"{filePath}.dds");
+                        }
+
+                        return;
+                    }
+
+                    Process pProcess;
+
+                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                        if (!useTexConv) {
+                            var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat, 0);
+                            if (data != null) {
+                                WriteFile(data, $"{filePath}.{convertType}");
+                            } else {
+                                convertedStream.Position = 0;
+                                WriteFile(convertedStream, $"{filePath}.dds");
+                                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
+                            }
+                        } else {
+                            string losslessFlag = lossless ? "-wiclossless" : string.Empty;
+
+                            await s_texconvSemaphore.WaitAsync();
+                            try {
+                                pProcess = new Process {
+                                    StartInfo = {
+                                        FileName = "Third Party\\texconv.exe",
+                                        UseShellExecute = false,
+                                        RedirectStandardOutput = true,
+                                        RedirectStandardInput = true,
+                                        RedirectStandardError = true,
+                                        CreateNoWindow = true,
+                                        Arguments =
+                                            $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{(path.EndsWith(@"/") || path.EndsWith("\\") ? path.Substring(0, path.Length - 1) : path)}"
+                                    },
+                                    EnableRaisingEvents = true
+                                };
+
+                                pProcess.Start();
+                                convertedStream.Position = 0;
+                                await convertedStream.CopyToAsync(pProcess.StandardInput.BaseStream);
+                                await pProcess.StandardInput.BaseStream.FlushAsync();
+                                pProcess.StandardInput.BaseStream.Close();
+                                pProcess.WaitForExit();
+
+                                // when texconv writes with to the console -nologo is has done/failed conversion
+                                string line = await pProcess.StandardOutput.ReadToEndAsync();
+
+                                if (line.Contains("FAILED")) {
+                                    convertedStream.Position = 0;
+                                    WriteFile(convertedStream, $"{filePath}.dds");
+                                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
+                                }
+                            } finally {
+                                s_texconvSemaphore.Release();
+                            }
+                        }
+                    }
+
                 }
-                
+            } finally {
                 s_texurePrepareSemaphore.Release();
             }
         }

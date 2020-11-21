@@ -61,8 +61,8 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "sheet-multisurface", Help = "Save multisurface textures as one large image, tiled across in the Y (vertical) direction", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SheetMultiSurface;
 
-        [CLIFlag(Default = false, Flag = "directx-tex", Help = "Use P/Invoked DirectX Tex rather than TexConv", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
-        public bool UseDirectXTex;
+        [CLIFlag(Default = false, Flag = "texconv", Help = "Use TexConv rather than DirectXTex", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool UseTexConv;
 
         [CLIFlag(Default = false, Flag = "extract-mips", Help = "Extract mip files", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool SaveMips;
