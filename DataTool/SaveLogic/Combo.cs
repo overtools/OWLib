@@ -754,7 +754,7 @@ namespace DataTool.SaveLogic {
                     if (convertType == "jpg") imageFormat = ImageFormat.Jpeg;
                     // if (convertType == "tga") imageFormat = Im.... oh
                     // so there is no TGA image format.
-                    // guess the TGA users are stuck with the DirectXTex stuff for now.
+                    // sucks to be them
 
                     if (isBcffValid && imageFormat != null && !(texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces)) {
                         await s_gdiSemaphore.WaitAsync();
@@ -776,7 +776,6 @@ namespace DataTool.SaveLogic {
                         using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
                             WriteFile(convertedStream, $"{filePath}.dds");
                         }
-
                         return;
                     }
 
@@ -790,7 +789,7 @@ namespace DataTool.SaveLogic {
                             } else {
                                 convertedStream.Position = 0;
                                 WriteFile(convertedStream, $"{filePath}.dds");
-                                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
+                                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
                             }
                         } else {
                             string losslessFlag = lossless ? "-wiclossless" : string.Empty;
