@@ -9,7 +9,10 @@ namespace DataTool.DataModels {
     [DataContract]
     public class LootBox {
         [DataMember]
-        public string Name;
+        public string NameFormat;
+        
+        [DataMember]
+        public string Type;
         
         [DataMember]
         public Enum_BABC4175 LootBoxType;
@@ -25,7 +28,8 @@ namespace DataTool.DataModels {
         }
 
         private void Init(STULootBox lootBox) {
-            Name = GetName(lootBox.m_lootboxType);
+            NameFormat = GetString(lootBox.m_name);
+            Type = GetName(lootBox.m_lootboxType);
             LootBoxType = lootBox.m_lootboxType;
 
             HidePucks = lootBox.m_hidePucks == 1;
@@ -68,7 +72,8 @@ namespace DataTool.DataModels {
             {7, "Golden"},
             {8, "Internal"},
             {9, "Legendary Anniversary"},
-            {10, "Hammond"}
+            {10, "Hammond"},
+            {12, "Legendary"}
         };
     }
 

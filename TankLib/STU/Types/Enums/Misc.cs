@@ -3817,7 +3817,7 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x6C02F9A7)] LegendaryAnniversary = 0x9,
         [STUField(0xC026BA80)] Hammond = 0xA,
         [STUField(0xBE88B178)] xBE88B178 = 0xB,
-        [STUField(0x1F8953C7)] x1F8953C7 = 0xC,
+        [STUField(0x1F8953C7)] Legendary = 0xC,
         [STUField(0x8A0F302F)] x8A0F302F = 0xD,
         [STUField(0xC1854306)] xC1854306 = 0xFFFFFFFF,
     }

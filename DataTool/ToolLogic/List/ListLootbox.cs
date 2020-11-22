@@ -20,8 +20,8 @@ namespace DataTool.ToolLogic.List {
                 }
 
             foreach (LootBox lootbox in lootboxes) {
-                Log($"{lootbox.Name}");
-                if (!(toolFlags as ListFlags).Simplify) {
+                Log($"{lootbox.Type}");
+                if ((toolFlags as ListFlags)?.Simplify == false) {
                     if (lootbox.ShopCards != null) {
                         foreach (LootBoxShopCard shopCard in lootbox.ShopCards)
                         {
