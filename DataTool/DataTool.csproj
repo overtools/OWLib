@@ -188,10 +188,10 @@
     <Compile Include="ToolLogic\Dump\DumpFileLists.cs" />
     <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
     <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
+    <Compile Include="ToolLogic\Extract\ExtractGameModeImages.cs" />
     <Compile Include="ToolLogic\Extract\ExtractVoiceSets.cs" />
     <Compile Include="ToolLogic\Extract\ExtractEverything.cs" />
     <Compile Include="ToolLogic\Extract\ExtractHeroVoiceBetter.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebug0EE.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimNodes.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugMaterialData.cs" />
     <Compile Include="ToolLogic\Extract\Debug\ExtractDebugMovies.cs" />
