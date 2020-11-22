@@ -322,21 +322,12 @@ namespace DataTool.Flag {
                                        .ToArray();
 
             var positionalsField = default(FieldInfo);
-            
-            
             var newPositionals = new List<object>(Enumerable.Repeat(default(object), Math.Max(positionals.Count, flagAttributes.Max(x => x.attribute.Positional) + 1)));
-
-            var positionalTicker = 0;
+            
             foreach (var (field, flagAttribute) in flagAttributes.Where(x => x.attribute.Positional > -1)) {
                 if (!field.GetCustomAttributes<AliasAttribute>().Select(x => x.Alias).Concat(new[] {flagAttribute.Flag}).Any(x => presence.Contains(x))) {
-                    newPositionals[flagAttribute.Positional] = positionals.ElementAtOrDefault(positionalTicker);
-                    positionalTicker += 1;
+                    newPositionals[flagAttribute.Positional] = positionals.ElementAtOrDefault(flagAttribute.Positional);
                 }
-            }
-
-            foreach (var positional in positionals.Skip(positionalTicker)) {
-                newPositionals[positionalTicker] = positionals.ElementAtOrDefault(positionalTicker);
-                positionalTicker += 1;
             }
 
             positionals = newPositionals;
