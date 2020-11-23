@@ -11,7 +11,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>..\dist\Debug\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NoWarn>CS0108;CS0649;IDE0044;IDE1006</NoWarn>
+    <NoWarn>CS0108;CS0649;IDE0044;IDE1006;CA1416</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
