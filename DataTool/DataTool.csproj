@@ -1,285 +1,35 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\packages\NUnit.3.11.0\build\NUnit.props" Condition="Exists('$(SolutionDir)\packages\NUnit.3.11.0\build\NUnit.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9D1A3DCC-37BF-4979-ACD8-3E998E19CE71}</ProjectGuid>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DataTool</RootNamespace>
-    <AssemblyName>DataTool</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
     <LangVersion>7.2</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\dist\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>CS0108;CS0649;IDE0044;IDE1006</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\dist\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DirectXTexNet, Version=1.0.0.6, Culture=neutral, PublicKeyToken=67e4f5ed452a4f5d">
-      <HintPath>$(SolutionDir)\packages\DirectXTexNet.1.0.0-rc6\lib\netstandard2.0\DirectXTexNet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Google.Protobuf, Version=3.9.2.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604">
-      <HintPath>$(SolutionDir)\packages\Google.Protobuf.3.9.2\lib\net45\Google.Protobuf.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>$(SolutionDir)\packages\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.1.1322, Culture=neutral, PublicKeyToken=null">
-      <HintPath>$(SolutionDir)\packages\MaterialDesignThemes.2.5.1-ci1322\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Build.Tasks.v4.0" />
-    <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>$(SolutionDir)\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb">
-      <HintPath>$(SolutionDir)\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <HintPath>$(SolutionDir)\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>$(SolutionDir)\packages\System.Threading.Tasks.Extensions.4.6.0-preview.18571.3\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>$(SolutionDir)\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Utf8Json, Version=1.3.7.0, Culture=neutral, PublicKeyToken=8a73d3ba7e392e27">
-      <HintPath>$(SolutionDir)\packages\Utf8Json.1.3.7\lib\net47\Utf8Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConvertLogic\BitOggstream.cs" />
-    <Compile Include="ConvertLogic\BitStream.cs" />
-    <Compile Include="ConvertLogic\CodebookLibrary.cs" />
-    <Compile Include="ConvertLogic\LUT.cs" />
-    <Compile Include="ConvertLogic\Sound.cs" />
-    <Compile Include="DataModels\Achievement.cs" />
-    <Compile Include="DataModels\ArcadeMode.cs" />
-    <Compile Include="DataModels\Chat\ChatChannel.cs" />
-    <Compile Include="DataModels\Chat\ChatCommand.cs" />
-    <Compile Include="DataModels\Chat\ChatReplacementSettings.cs" />
-    <Compile Include="DataModels\Chat\ChatReplacementsContainer.cs" />
-    <Compile Include="DataModels\Chat\ChatSettings.cs" />
-    <Compile Include="DataModels\GameModes\Brawl.cs" />
-    <Compile Include="DataModels\GameModes\GameRuleset.cs" />
-    <Compile Include="DataModels\GameModes\GameRulesetGameMode.cs" />
-    <Compile Include="DataModels\GameModes\GameMode.cs" />
-    <Compile Include="DataModels\GameModes\GameRulesetSchema.cs" />
-    <Compile Include="DataModels\GameModes\GameRulesetSchemaEntry.cs" />
-    <Compile Include="DataModels\GameModes\GameRulesetTeam.cs" />
-    <Compile Include="DataModels\Hero\Hero.cs" />
-    <Compile Include="DataModels\Hero\SkinTheme.cs" />
-    <Compile Include="DataModels\Hero\Loadout.cs" />
-    <Compile Include="DataModels\LootBox.cs" />
-    <Compile Include="DataModels\MapHeader.cs" />
-    <Compile Include="DataModels\PlayerProgression.cs" />
-    <Compile Include="DataModels\ProgressionUnlocks.cs" />
-    <Compile Include="DataModels\RankedSeason.cs" />
-    <Compile Include="DataModels\ReportResponse.cs" />
-    <Compile Include="DataModels\ResourceKey.cs" />
-    <Compile Include="DataModels\TeamDefinition.cs" />
-    <Compile Include="DataModels\Unlock.cs" />
-    <Compile Include="DataModels\UXDisplayText.cs" />
-    <Compile Include="DataModels\VoiceSet.cs" />
-    <Compile Include="DataModels\Voice\Conversation.cs" />
-    <Compile Include="DataModels\Voice\ConversationLine.cs" />
-    <Compile Include="FindLogic\Combo.cs" />
-    <Compile Include="Flag\AliasAttribute.cs" />
-    <Compile Include="Flag\CLIFlagAttribute.cs" />
-    <Compile Include="Flag\Converter.cs" />
-    <Compile Include="Flag\FlagParser.cs" />
-    <Compile Include="Flag\ICLIFlags.cs" />
-    <Compile Include="Helper\DDSConverter.cs" />
-    <Compile Include="Helper\DebuggerExtensions.cs" />
-    <Compile Include="Helper\EffectParser.cs" />
-    <Compile Include="Helper\JSON.cs" />
-    <Compile Include="Helper\IO.cs" />
-    <Compile Include="Helper\LinqExtensions.cs" />
-    <Compile Include="Helper\Logger.cs" />
-    <Compile Include="Helper\IndentHelper.cs" />
-    <Compile Include="Helper\STUHelper.cs" />
-    <Compile Include="IAwareTool.cs" />
-    <Compile Include="IQueryParser.cs" />
-    <Compile Include="ITool.cs" />
-    <Compile Include="JSON\JSONTool.cs" />
-    <Compile Include="JSON\long_Newtonsoft.cs" />
-    <Compile Include="JSON\ResourceGUIDFormatter.cs" />
-    <Compile Include="JSON\teResourceGUID_Newtonsoft.cs" />
-    <Compile Include="JSON\ulong_Newtonsoft.cs" />
-    <Compile Include="SaveLogic\Combo.cs" />
-    <Compile Include="SaveLogic\Effect.cs" />
-    <Compile Include="SaveLogic\Entity.cs" />
-    <Compile Include="SaveLogic\Map.cs" />
-    <Compile Include="SaveLogic\Model.cs" />
-    <Compile Include="SaveLogic\ScratchDB.cs" />
-    <Compile Include="SaveLogic\Unlock\AnimationItem.cs" />
-    <Compile Include="SaveLogic\Unlock\PortraitFrame.cs" />
-    <Compile Include="SaveLogic\Unlock\SkinTheme.cs" />
-    <Compile Include="SaveLogic\Unlock\SprayAndIcon.cs" />
-    <Compile Include="SaveLogic\Unlock\VoiceLine.cs" />
-    <Compile Include="ToolFlags.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ToolAttribute.cs" />
-    <Compile Include="ToolLogic\Dbg\DebugDumpSTU.cs" />
-    <Compile Include="ToolLogic\Dbg\DebugEffect.cs" />
-    <Compile Include="ToolLogic\Dbg\DebugMapDump.cs" />
-    <Compile Include="ToolLogic\Dbg\DebugModelDump.cs" />
-    <Compile Include="ToolLogic\Dbg\DebugModelSTU.cs" />
-    <Compile Include="ToolLogic\Dbg\DebugVoodoo.cs" />
-    <Compile Include="ToolLogic\Dbg\DebugKeyTest.cs" />
-    <Compile Include="ToolLogic\Dbg\DebugVoiceStimulus.cs" />
-    <Compile Include="ToolLogic\Dump\Dump004.cs" />
-    <Compile Include="ToolLogic\Dump\DumpAllLocaleStrings.cs" />
-    <Compile Include="ToolLogic\Dump\DumpFileLists.cs" />
-    <Compile Include="ToolLogic\Dump\DumpFlags.cs" />
-    <Compile Include="ToolLogic\Dump\DumpStrings.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractGameModeImages.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractVoiceSets.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractEverything.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractHeroVoiceBetter.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugAnimNodes.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugMaterialData.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugMovies.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugNewEntities.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugPackageFinder.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugShaderHashes.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugSpecialHelper.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugType.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVCCE.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugVoiceSet.cs" />
-    <Compile Include="ToolLogic\Extract\Debug\ExtractDebugShaders.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractAbilities.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractHeroConversations.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractHeroUnlocks.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractGeneral.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractHeroVoice.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractLootbox.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractMapEnvs.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractMaps.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractFlags.cs" />
-    <Compile Include="ToolLogic\Extract\ExtractNPCs.cs" />
-    <Compile Include="ToolLogic\List\Debug\ListDebugHeroSettings.cs" />
-    <Compile Include="ToolLogic\List\ListAbilities.cs" />
-    <Compile Include="ToolLogic\List\ListAchievements.cs" />
-    <Compile Include="ToolLogic\List\ListAllUnlocks.cs" />
-    <Compile Include="ToolLogic\List\ListFlags.cs" />
-    <Compile Include="ToolLogic\List\ListHeroes.cs" />
-    <Compile Include="ToolLogic\List\ListGeneralUnlocks.cs" />
-    <Compile Include="ToolLogic\List\ListHeroUnlocks.cs" />
-    <Compile Include="ToolLogic\List\ListHighlights.cs" />
-    <Compile Include="ToolLogic\List\ListLootbox.cs" />
-    <Compile Include="ToolLogic\List\ListResourceKeys.cs" />
-    <Compile Include="ToolLogic\List\ListMaps.cs" />
-    <Compile Include="ToolLogic\List\ListSubtitles.cs" />
-    <Compile Include="ToolLogic\List\ListSubtitlesProper.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListArcadeModes.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListBrawlName.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListChatReplacements.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListConversations.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListGameRulesets.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListHeroesRulesets.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListProfanityFilter.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListReportResponses.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListBrawls.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListChatSettings.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListEsportsTeams.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListGameModes.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListGameRulesetSchemas.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListTips.cs" />
-    <Compile Include="ToolLogic\List\Misc\ListWorkshop.cs" />
-    <Compile Include="ToolLogic\Render\RenderFlags.cs" />
-    <Compile Include="ToolLogic\Render\RenderStateScript.cs" />
-    <Compile Include="ToolLogic\Render\RenderUIElements.cs" />
-    <Compile Include="ToolLogic\Util\UtilDynamicChoices.cs" />
-    <Compile Include="ToolLogic\Util\UtilToolInfo.cs" />
-    <Compile Include="WPF\DataToolWpfException.cs" />
-    <Compile Include="WPF\ImagingHelper.cs" />
-    <Compile Include="WPF\ProgressWorker.cs" />
-    <Compile Include="WPF\Tool\Export\HeroUnlocksView.cs" />
-    <Compile Include="WPF\Tool\ImageGridView.xaml.cs">
-      <DependentUpon>ImageGridView.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\bcffnet\BCFF\BCFF.csproj">
-      <Project>{9793cb2e-094a-41c9-81bc-27e60620538d}</Project>
-      <Name>BCFF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HealingML\HealingML\HealingML.csproj">
-      <Project>{939e5d93-09b7-4bad-8f28-1f204a58bbc4}</Project>
-      <Name>HealingML</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\revorbstd\RevorbStd.csproj">
-      <Project>{c3130ece-02d9-4be6-9883-75351822e7de}</Project>
-      <Name>RevorbStd</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TACTLib\TACTLib\TACTLib.csproj">
-      <Project>{cc681fac-b05d-483f-9fa1-d8dec4871b99}</Project>
-      <Name>TACTLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TankLib\TankLib.csproj">
-      <Project>{6c37d977-591c-48de-b25b-04c0847413d1}</Project>
-      <Name>TankLib</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\bcffnet\BCFF\BCFF.csproj" />
+    <ProjectReference Include="..\HealingML\HealingML\HealingML.csproj" />
+    <ProjectReference Include="..\revorbstd\RevorbStd.csproj" />
+    <ProjectReference Include="..\TACTLib\TACTLib\TACTLib.csproj" />
+    <ProjectReference Include="..\TankLib\TankLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="GUIDNames.csv">
@@ -301,13 +51,20 @@
   <ItemGroup>
     <Page Include="WPF\Tool\ImageGridView.xaml" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\packages\NUnit.3.11.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\NUnit.3.11.0\build\NUnit.props'))" />
-    <Error Condition="!Exists('$(SolutionDir)\packages\DirectXTexNet.1.0.0-rc6\build\DirectXTexNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\DirectXTexNet.1.0.0-rc6\build\DirectXTexNet.targets'))" />
-  </Target>
-  <Import Project="$(SolutionDir)\packages\DirectXTexNet.1.0.0-rc6\build\DirectXTexNet.targets" Condition="Exists('$(SolutionDir)\packages\DirectXTexNet.1.0.0-rc6\build\DirectXTexNet.targets')" />
+  <ItemGroup>
+    <PackageReference Include="DirectXTexNet" Version="1.0.0-rc6" />
+    <PackageReference Include="Google.Protobuf" Version="3.9.2" />
+    <PackageReference Include="MaterialDesignColors" Version="1.1.3" />
+    <PackageReference Include="MaterialDesignThemes" Version="2.5.1-ci1322" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="NUnit" Version="3.11.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.6.0-preview.19073.11" />
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.6.0-preview.19073.11" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.0-preview.18571.3" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="Utf8Json" Version="1.3.7" />
+  </ItemGroup>
 </Project>
