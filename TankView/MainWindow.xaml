@@ -84,7 +84,7 @@
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
-                <MenuItem Header="Battle.net" ItemsSource="{Binding ProductAgent}">
+                <MenuItem Header="Local Installs..." ItemsSource="{Binding ProductAgent}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem">
                             <Setter Property="Header" Value="{Binding Path=Label}" />
