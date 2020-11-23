@@ -12,12 +12,6 @@
     <ApplicationIcon>TankView.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Page Include="AboutPage.xaml" />
-    <Page Include="DataToolListView.xaml" />
-    <Page Include="DataToolProgressTransition.xaml" />
-    <Page Include="template\DetailsViewStyles.xaml" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DataTool\DataTool.csproj" />
     <ProjectReference Include="..\TACTLib\TACTLib\TACTLib.csproj" />
     <ProjectReference Include="..\TankLib\TankLib.csproj" />
@@ -33,19 +27,15 @@
     <Content Include="template\styles\main.css" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DirectXTexNet" Version="1.0.0-rc6" />
-    <PackageReference Include="Dragablz" Version="0.0.3.203" />
-    <PackageReference Include="Google.Protobuf" Version="3.9.2" />
-    <PackageReference Include="MaterialDesignColors" Version="1.1.3" />
-    <PackageReference Include="MaterialDesignThemes" Version="2.5.1-ci1322" />
+    <PackageReference Include="DirectXTexNet" Version="1.0.0" />
+    <PackageReference Include="Dragablz" Version="0.0.3.223" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.7" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="NAudio" Version="1.9.0-preview2" />
-    <PackageReference Include="NAudio.Vorbis" Version="1.0.0.0" />
-    <PackageReference Include="NVorbis" Version="0.8.6" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="VirtualizingWrapPanel" Version="1.2.2" />
+    <PackageReference Include="NAudio" Version="1.10.0" />
+    <PackageReference Include="NAudio.Vorbis" Version="1.2.0" />
+    <PackageReference Include="NVorbis" Version="0.10.1" />
+    <PackageReference Include="VirtualizingWrapPanel" Version="1.5.3" />
     <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>

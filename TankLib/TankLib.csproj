@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFrameworks>net5.0-windows</TargetFrameworks>
     <OutputType>Library</OutputType>
     <LangVersion>7.2</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -16,10 +16,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.ServiceModel" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\TACTLib\TACTLib\TACTLib.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -28,14 +24,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DynamicExpresso.Core" Version="2.1.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.9.2" />
+    <PackageReference Include="DynamicExpresso.Core" Version="2.3.3" />
     <PackageReference Include="lz4net" Version="1.0.15.93" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
-    <PackageReference Include="System.Management" Version="5.0.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
     <PackageReference Include="ZstdNet" Version="1.3.3" />
   </ItemGroup>
   <ItemGroup>

@@ -18,12 +18,6 @@
     <OutputPath>..\dist\Release\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.Build.Tasks.v4.0" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\bcffnet\BCFF\BCFF.csproj" />
     <ProjectReference Include="..\HealingML\HealingML\HealingML.csproj" />
@@ -49,22 +43,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="WPF\Tool\ImageGridView.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DirectXTexNet" Version="1.0.0-rc6" />
-    <PackageReference Include="Google.Protobuf" Version="3.9.2" />
-    <PackageReference Include="MaterialDesignColors" Version="1.1.3" />
-    <PackageReference Include="MaterialDesignThemes" Version="2.5.1-ci1322" />
+    <PackageReference Include="DirectXTexNet" Version="1.0.0" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.7" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="NUnit" Version="3.11.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Reflection.Emit" Version="4.6.0-preview.19073.11" />
-    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.6.0-preview.19073.11" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.0-preview.18571.3" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
   </ItemGroup>
 </Project>
