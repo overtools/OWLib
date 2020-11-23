@@ -64,7 +64,7 @@ namespace TankView.Helper {
                 case 0x07C:
                 case 0x0A9:
                 case 0x071:
-                    return DataType.Sound;
+                    return DataType.String;
                 case 0x09F:
                     return DataType.MapHeader;
                 case 0x00C:
