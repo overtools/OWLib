@@ -149,6 +149,9 @@
     <Compile Include="ViewModel\ProductLocations.cs" />
     <Compile Include="ViewModel\ProgressInfo.cs" />
     <Compile Include="ViewModel\RecentLocations.cs" />
+    <Compile Include="View\PreviewConversation.xaml.cs">
+      <DependentUpon>PreviewConversation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\PreviewDataImage.xaml.cs">
       <DependentUpon>PreviewDataImage.xaml</DependentUpon>
     </Compile>
@@ -187,6 +190,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="template\DetailsViewStyles.xaml" />
+    <Page Include="View\PreviewConversation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\PreviewDataImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

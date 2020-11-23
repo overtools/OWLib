@@ -7,7 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using DataTool.Helper;
+using DataTool.DataModels;
 using DataTool.WPF;
 using DirectXTexNet;
 using TankLib;
@@ -23,6 +23,7 @@ namespace TankView.ViewModel {
         private readonly ClientHandler Client;
         private readonly ProductHandler_Tank Tank;
         private readonly ProgressWorker _worker;
+        internal static Dictionary<ushort, HashSet<ulong>> TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
 
         private GUIDEntry _top;
         public string GUIDStr;
@@ -91,6 +92,11 @@ namespace TankView.ViewModel {
                 case DataHelper.DataType.Hero: {
                     PreviewSource = null;
                     PreviewControl = new PreviewHeroData(value, DataHelper.GetHero(value));
+                }
+                    break;
+                case DataHelper.DataType.Conversation: {
+                    PreviewSource = null;
+                    PreviewControl = new PreviewConversation(value, DataHelper.GetConversation(value), ConversationVoiceLineMapping);
                 }
                     break;
                 case DataHelper.DataType.Unknown:
@@ -250,6 +256,16 @@ namespace TankView.ViewModel {
                 worker?.ReportProgress((int) (((float) c / (float) total) * 100));
                 AddEntry(entry.FileName, 0, entry.MD5, 0, "None");
             }
+            
+            foreach (var asset in Tank.m_assets) {
+                var type = teResourceGUID.Type(asset.Key);
+                if (!TrackedFiles.TryGetValue(type, out var typeMap)) {
+                    typeMap            = new HashSet<ulong>();
+                    TrackedFiles[type] = typeMap;
+                }
+
+                typeMap.Add(asset.Key);
+            }
 
             if (totalHashList != default) {
                 foreach (ContentManifestFile contentManifest in new [] {Tank.m_rootContentManifest, Tank.m_textContentManifest, Tank.m_speechContentManifest}) {
@@ -352,5 +368,8 @@ namespace TankView.ViewModel {
                 disposable2.Dispose();
             }
         }
+
+        public Lazy<Dictionary<ulong, ulong[]>> ConversationVoiceLineMapping = 
+            new Lazy<Dictionary<ulong, ulong[]>>(() => DataHelper.GenerateVoicelineConversationMapping(TrackedFiles));
     }
 }

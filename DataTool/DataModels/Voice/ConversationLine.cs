@@ -7,13 +7,19 @@ namespace DataTool.DataModels.Voice {
     [DataContract]
     public class ConversationLine {
         [DataMember]
-        public teResourceGUID GUID;
+        public teResourceGUID GUID { get; set; }
         
         [DataMember]
-        public teResourceGUID VoicelineGUID;
+        public teResourceGUID VoicelineGUID { get; set; }
 
         [DataMember]
-        public ulong Position;
+        public ulong Position { get; set; }
+
+        public ConversationLine(ConversationLine line) {
+            GUID = line.GUID;
+            VoicelineGUID = line.VoicelineGUID;
+            Position = line.Position;
+        }
 
         public ConversationLine(ulong key) {
             var stu = GetInstance<STUVoiceConversationLine>(key);

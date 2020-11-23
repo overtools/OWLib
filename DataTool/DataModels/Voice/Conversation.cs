@@ -8,16 +8,16 @@ namespace DataTool.DataModels.Voice {
     [DataContract]
     public class Conversation {
         [DataMember]
-        public teResourceGUID GUID;
+        public teResourceGUID GUID { get; set; }
         
         [DataMember]
-        public teResourceGUID StimulusGUID;
+        public teResourceGUID StimulusGUID { get; set; }
 
         [DataMember]
-        public float Weight;
+        public float Weight { get; set; }
 
         [DataMember]
-        public ConversationLine[] Voicelines;
+        public ConversationLine[] Voicelines { get; set; }
 
         public Conversation(ulong key) {
             var stu = GetInstance<STUVoiceConversation>(key);

@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using DataTool.DataModels;
 using DataTool.DataModels.Hero;
+using DataTool.DataModels.Voice;
 using DataTool.Helper;
 using DirectXTexNet;
 using TankLib;
+using TankLib.STU.Types;
 using TankView.ViewModel;
 
 namespace TankView.Helper {
@@ -18,6 +21,7 @@ namespace TankView.Helper {
             Model,
             String,
             MapHeader,
+            Conversation,
             Hero
         };
 
@@ -50,34 +54,32 @@ namespace TankView.Helper {
         }
 
         public static DataType GetDataType(ushort type) {
-            if (type == 0x004 || type == 0x0F1) {
-                return DataType.Image;
+            switch (type) {
+                case 0x004:
+                case 0x0F1:
+                    return DataType.Image;
+                case 0x03F:
+                case 0x0B2:
+                case 0x0BB:
+                    return DataType.Sound;
+                case 0x07C:
+                case 0x0A9:
+                case 0x071:
+                    return DataType.Sound;
+                case 0x09F:
+                    return DataType.MapHeader;
+                case 0x00C:
+                    return DataType.Model;
+                case 0x075:
+                    return DataType.Hero;
+                case 0x0D0:
+                    return DataType.Conversation;
+                default:
+                    return DataType.Unknown;
             }
-
-            if (type == 0x03F || type == 0x0B2 || type == 0x0BB) {
-                return DataType.Sound;
-            }
-
-            if (type == 0x00C) {
-                return DataType.Model;
-            }
-
-            if (type == 0x07C || type == 0x0A9 || type == 0x071) {
-                return DataType.String;
-            }
-
-            if (type == 0x09F) {
-                return DataType.MapHeader;
-            }
-            
-            if (type == 0x075) {
-                return DataType.Hero;
-            }
-
-            return DataType.Unknown;
         }
 
-        internal static object ConvertSound(GUIDEntry value) {
+        internal static object ConvertSound(ulong value) {
             MemoryStream ms = new MemoryStream();
             try {
                 DataTool.SaveLogic.Combo.ConvertSoundFile(IOHelper.OpenFile(value), ms);
@@ -156,10 +158,31 @@ namespace TankView.Helper {
             
             return new Hero(value.GUID);
         }
+
+        internal static Conversation GetConversation(GUIDEntry value) {
+            if (value == null || value.GUID == 0)
+                return null;
+
+            return new Conversation(value);
+        }
         
         private static object GetSubtitle(GUIDEntry value) {
             var subtitle = new teSubtitleThing(IOHelper.OpenFile(value));
             return string.Join("\n", subtitle.m_strings);
+        }
+
+        internal static Dictionary<ulong, ulong[]> GenerateVoicelineConversationMapping(Dictionary<ushort, HashSet<ulong>> trackedFiles) {
+            var @return = new Dictionary<ulong, ulong[]>();
+            foreach (var guid in trackedFiles[0x5F]) {
+                var voiceSet = new VoiceSet(STUHelper.GetInstance<STUVoiceSet>(guid));
+                if (voiceSet.VoiceLines == null) continue;
+                
+                foreach (var voiceSetVoiceLine in voiceSet.VoiceLines) {
+                    @return[voiceSetVoiceLine.Key] = voiceSetVoiceLine.Value.VoiceSounds;
+                }
+            }
+
+            return @return;
         }
     }
 }
