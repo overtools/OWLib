@@ -4,19 +4,20 @@ using System.IO;
 using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
-using HealingML;
+using DragonLib.Indent;
+using DragonLib.XML;
 using TankLib;
 using TankLib.Helpers;
 using TankLib.STU;
 using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool.ToolLogic.Render {
-    public class teResourceGUIDSerializer : ISerializer {
-        public SerializationTarget OverrideTarget => SerializationTarget.Object;
+    public class teResourceGUIDSerializer : IDragonMLSerializer {
+        public DragonMLType OverrideTarget => DragonMLType.Object;
         
         private readonly Dictionary<Type, string> TargetMap = new Dictionary<Type, string>();
         
-        public object Print(object instance, IReadOnlyDictionary<Type, ISerializer> custom, Dictionary<object, int> visited, IndentHelperBase indent, string fieldName, bool useRef) {
+        public object Print(object instance, Dictionary<object, int> visited, IndentHelperBase indents, string fieldName, DragonMLSettings settings) {
             var hmlNameTag = fieldName == null ? "" : $" hml:name=\"{fieldName}\"";
 
             try {
@@ -29,11 +30,11 @@ namespace DataTool.ToolLogic.Render {
                 if (!visited.ContainsKey(instance)) {
                     visited[instance] = visited.Count;
                 }
-                if (useRef) {
+                if (settings.UseRefId) {
                     hmlIdTag = $" hml:id=\"{visited[instance]}\"";
                 }
 
-                return $"{indent}<tank:ref{hmlIdTag}{hmlNameTag} GUID=\"{instance}\" Target=\"{target}\"/>\n";
+                return $"{indents}<tank:ref{hmlIdTag}{hmlNameTag} GUID=\"{instance}\" Target=\"{target}\"/>\n";
             } catch {
                 return null;
             }
@@ -49,7 +50,7 @@ namespace DataTool.ToolLogic.Render {
                 Directory.CreateDirectory(output);
             }
 
-            var serializers = new Dictionary<Type, ISerializer> {
+            var serializers = new Dictionary<Type, IDragonMLSerializer> {
                 {typeof(teStructuredDataAssetRef<>), new teResourceGUIDSerializer()}
             };
 
@@ -69,7 +70,7 @@ namespace DataTool.ToolLogic.Render {
                     using (var stu = STUHelper.OpenSTUSafe(guid))
                     using (Stream f = File.Open(Path.Combine(output, type.ToString("X3"), teResourceGUID.AsString(guid) + ".xml"), FileMode.Create))
                     using (TextWriter w = new StreamWriter(f)) {
-                        w.WriteLine(Serializer.Print(stu?.Instances[0], serializers));
+                        w.WriteLine(HealingML.Print(stu?.Instances[0], new DragonMLSettings { TypeSerializers = serializers }));
 //                        w.WriteLine(JsonConvert.SerializeObject(stu?.Instances[0], Formatting.Indented, settings));
                     }
                 }

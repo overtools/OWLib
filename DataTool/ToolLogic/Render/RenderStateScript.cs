@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DataTool.Flag;
 using DataTool.Helper;
-using HealingML;
+using DragonLib.XML;
 using TankLib;
 using TankLib.Helpers;
 using TankLib.STU;
@@ -19,7 +19,7 @@ namespace DataTool.ToolLogic.Render {
                 Directory.CreateDirectory(output);
             }
 
-            var serializers = new Dictionary<Type, ISerializer> {
+            var serializers = new Dictionary<Type, IDragonMLSerializer> {
                 {typeof(teStructuredDataAssetRef<>), new teResourceGUIDSerializer()}
             };
 
@@ -39,7 +39,7 @@ namespace DataTool.ToolLogic.Render {
                     using (var stu = STUHelper.OpenSTUSafe(guid))
                     using (Stream f = File.Open(Path.Combine(output, type.ToString("X3"), teResourceGUID.AsString(guid) + ".xml"), FileMode.Create))
                     using (TextWriter w = new StreamWriter(f)) {
-                        w.WriteLine(Serializer.Print(stu?.Instances[0], serializers));
+                        w.WriteLine(HealingML.Print(stu?.Instances[0], new DragonMLSettings { TypeSerializers = serializers }));
 //                        w.WriteLine(JsonConvert.SerializeObject(stu?.Instances[0], Formatting.Indented, settings));
                     }
                 }

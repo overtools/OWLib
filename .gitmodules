@@ -7,6 +7,3 @@
 [submodule "TACTLib"]
 	path = TACTLib
 	url = https://github.com/overtools/TACTLib
-[submodule "HealingML"]
-	path = HealingML
-	url = https://github.com/yretenai/HealingML

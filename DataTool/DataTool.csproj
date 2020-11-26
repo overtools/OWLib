@@ -6,7 +6,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
-    <version>1.54.0.0</version>
+    <Version>1.54.0.0</Version>
   </PropertyGroup>
   <Target Name="monakS" AfterTargets="Build">
     <ItemGroup>
@@ -19,18 +19,15 @@
   </Target>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>..\dist\Debug\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>CS0108;CS0649;IDE0044;IDE1006;CA1416</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>..\dist\Release\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\bcffnet\BCFF\BCFF.csproj" />
-    <ProjectReference Include="..\HealingML\HealingML\HealingML.csproj" />
     <ProjectReference Include="..\revorbstd\RevorbStd.csproj" />
     <ProjectReference Include="..\TACTLib\TACTLib\TACTLib.csproj" />
     <ProjectReference Include="..\TankLib\TankLib.csproj" />
@@ -60,5 +57,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
+    <PackageReference Include="DragonLib" Version="1.1.1" />
   </ItemGroup>
 </Project>
