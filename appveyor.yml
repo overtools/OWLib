@@ -1,4 +1,5 @@
 version: 1.54.0.{build}
+image: Visual Studio 2019
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
@@ -6,27 +7,29 @@ dotnet_csproj:
   assembly_version: '{version}'
   file_version: '{version}'
   informational_version: '{build}'
-image: Visual Studio 2019
-branches:
-  only:
-  - master
 before_build:
   - cmd: git submodule update --init --recursive
   - cmd: dotnet --version
   - cmd: dotnet restore OverwatchToolchain.sln --verbosity m
 build_script:
-  - cmd: dotnet publish --configuration Release /p:PublishTrimmed=false -o dist/Release
-  - cmd: dotnet publish --configuration Debug /p:PublishTrimmed=false -o dist/Debug
-before_package:
-  - cmd: del dist\Release\*.json
-  - cmd: del dist\Release\*.xml
-  - cmd: del dist\Debug\*.json
-  - cmd: del dist\Debug\*.xml
-clone_depth: 3
-deploy: false
+  - cmd: dotnet publish --configuration Release /p:PublishTrimmed=false --self-contained false -o dist/Release
+  - cmd: dotnet publish --configuration Debug /p:PublishTrimmed=false --self-contained false -o dist/Debug
+branches:
+  only:
+    - master
+after_build:
+  - cmd: copy /B /Y dist\Release\runtimes\win-x64\native\*.dll dist\Release\x64
+  - cmd: del /S /Q dist\Release\runtimes\win-x86 dist\Release\x86 dist\Release\*.json dist\Release\*.xml
+  - cmd: rmdir /S /Q dist\Release\runtimes\win-x86 dist\Release\x86
+  - cmd: copy /B /Y dist\Debug\runtimes\win-x64\native\*.dll dist\Debug\x64
+  - cmd: del /S /Q dist\Debug\runtimes\win-x86 dist\Debug\x86 dist\Debug\*.json dist\Debug\*.xml
+  - cmd: rmdir /S /Q dist\Debug\runtimes\win-x86 dist\Debug\x86
 artifacts:
 - path: dist/Release
-  name: Release Build
+  name: toolchain-release
 - path: dist/Debug
-  name: Debug Build
+  name: toolchain-debug
 test: false
+deploy: false
+cache:
+  - packages -> **\packages.config 
