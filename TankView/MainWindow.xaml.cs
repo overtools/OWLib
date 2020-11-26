@@ -14,7 +14,6 @@ using System.Windows.Input;
 using DataTool.Flag;
 using DataTool.SaveLogic;
 using DataTool.ToolLogic.Extract;
-using DataTool.WPF;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using TankView.Helper;
 using TankView.Properties;
@@ -320,19 +319,6 @@ namespace TankView {
             if (item.DataContext is Folder folder) GUIDTree.SelectedEntries = folder.Files;
             NotifyPropertyChanged(nameof(GUIDTree));
             e.Handled = true;
-        }
-
-        private void OpenOrFocusSimView(object sender, RoutedEventArgs e) {
-            var view = Application.Current.Windows.OfType<DataToolSimView>().FirstOrDefault();
-            if (view != null) {
-                view.Show();
-                view.Focus();
-                return;
-            }
-            
-            var instance = Application.Current.Windows.OfType<DataToolListView>().FirstOrDefault() ?? new DataToolListView { };
-            instance.Show();
-            instance.Focus();
         }
 
         private void ExtractFiles(object sender, RoutedEventArgs e) {

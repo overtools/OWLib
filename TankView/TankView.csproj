@@ -16,9 +16,9 @@
       <RuntimeDataFiles_X64 Include="$(OutDir)\runtimes\win-x64\native\*.dll" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(RuntimeDataFiles_X64)" DestinationFolder="$(OutDir)\x64\" SkipUnchangedFiles="true"/>
-    <Delete Files="$(OutDir)\x86"/>
-    <Delete Files="$(OutDir)\runtimes\win-x86"/>
+    <Copy SourceFiles="@(RuntimeDataFiles_X64)" DestinationFolder="$(OutDir)\x64\" SkipUnchangedFiles="true" />
+    <Delete Files="$(OutDir)\x86" />
+    <Delete Files="$(OutDir)\runtimes\win-x86" />
   </Target>
   <PropertyGroup>
     <ApplicationIcon>TankView.ico</ApplicationIcon>

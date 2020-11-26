@@ -2,12 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BCFF;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -744,33 +742,23 @@ namespace DataTool.SaveLogic {
                         }
                     }
 
-                    bool isBcffValid = teTexture.DXGI_BC4.Contains(texture.Header.Format) ||
-                                       teTexture.DXGI_BC5.Contains(texture.Header.Format) ||
-                                       teTexture.ATI2.Contains(texture.Header.GetTextureType());
 
-                    ImageFormat imageFormat = null;
-                    if (convertType == "tif") imageFormat = ImageFormat.Tiff;
-                    if (convertType == "png") imageFormat = ImageFormat.Png;
-                    if (convertType == "jpg") imageFormat = ImageFormat.Jpeg;
+                    WICCodecs? imageFormat = null;
+                    switch (convertType) {
+                        case "tif":
+                            imageFormat = WICCodecs.TIFF;
+                            break;
+                        case "png":
+                            imageFormat = WICCodecs.PNG;
+                            break;
+                        case "jpg":
+                            imageFormat = WICCodecs.JPEG;
+                            break;
+                    }
+
                     // if (convertType == "tga") imageFormat = Im.... oh
                     // so there is no TGA image format.
                     // sucks to be them
-
-                    if (isBcffValid && imageFormat != null && !(texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces)) {
-                        await s_gdiSemaphore.WaitAsync();
-                        try {
-                            BlockDecompressor decompressor;
-                            using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                                decompressor = new BlockDecompressor(convertedStream);
-                                decompressor.CreateImage();
-                            }
-
-                            decompressor.Image.Save($"{filePath}.{convertType}", imageFormat);
-                        } finally {
-                            s_gdiSemaphore.Release();
-                        }
-                        return;
-                    }
 
                     if (convertType == "dds") {
                         using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
@@ -783,7 +771,7 @@ namespace DataTool.SaveLogic {
 
                     using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
                         if (!useTexConv) {
-                            var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat, 0);
+                            var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, 0);
                             if (data != null) {
                                 WriteFile(data, $"{filePath}.{convertType}");
                             } else {

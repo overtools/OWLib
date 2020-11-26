@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TankView"
-        xmlns:tank="clr-namespace:TankView.View"
         xmlns:vm="clr-namespace:TankView.ViewModel"
         xmlns:om="clr-namespace:TankView.ObjectModel"
         xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
@@ -153,8 +152,6 @@
             </MenuItem>
             <MenuItem Header="Extract" Click="ExtractFiles"
                       IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
-            <MenuItem Header="DataTool" Click="OpenOrFocusSimView"
-                      IsEnabled="{Binding IsDataToolSafe, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
             
             <MenuItem IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                 <MenuItem.Header>

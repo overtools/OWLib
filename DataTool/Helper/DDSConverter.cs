@@ -19,7 +19,7 @@ namespace DataTool.Helper {
         public static extern int CoInitializeEx([In, Optional] IntPtr pvReserved, [In] CoInit dwCoInit);
         
 
-        public static unsafe byte[] ConvertDDS(Stream ddsSteam, DXGI_FORMAT targetFormat, ImageFormat imageFormat, int frame) {
+        public static unsafe byte[] ConvertDDS(Stream ddsSteam, DXGI_FORMAT targetFormat, WICCodecs codec, int frame) {
             try {
                 CoInitializeEx(IntPtr.Zero, CoInit.MultiThreaded | CoInit.SpeedOverMemory);
 
@@ -45,20 +45,7 @@ namespace DataTool.Helper {
                         }
 
                         UnmanagedMemoryStream stream = null;
-                        WICCodecs codec = WICCodecs.PNG;
-                        bool isMultiFrame = false;
-                        if (imageFormat.Equals(ImageFormat.Bmp)) {
-                            codec = WICCodecs.BMP;
-                        } else if (imageFormat.Equals(ImageFormat.Gif)) {
-                            codec = WICCodecs.GIF;
-                            isMultiFrame = true;
-                        } else if (imageFormat.Equals(ImageFormat.Jpeg)) {
-                            codec = WICCodecs.JPEG;
-                        } else if (imageFormat.Equals(ImageFormat.Png)) {
-                            codec = WICCodecs.PNG;
-                        } else if (imageFormat.Equals(ImageFormat.Tiff)) {
-                            codec = WICCodecs.TIFF;
-                        } 
+                        var isMultiFrame = codec == WICCodecs.GIF || codec == WICCodecs.TIFF;
 
                         if (frame < 0) {
                             if (!isMultiFrame) {

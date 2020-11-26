@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <OutputType>Library</OutputType>
     <LangVersion>7.2</LangVersion>
-    <UseWindowsForms>true</UseWindowsForms>
     <Version>1.0.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>

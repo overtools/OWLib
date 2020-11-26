@@ -87,10 +87,6 @@ namespace TankLib {
             public bool IsArray => HasFlag(Flags.Array);
         }
 
-        public static readonly int[] DXGI_BC4 = { 79, 80, 91 };
-        public static readonly int[] DXGI_BC5 = { 82, 83, 84 };
-        public static readonly TextureTypes.TextureType[] ATI2 = {TextureTypes.TextureType.ATI1, TextureTypes.TextureType.ATI2};
-
         [Flags]
         public enum Flags : short {
             Tex1D = 0x01,

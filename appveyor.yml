@@ -12,24 +12,23 @@ before_build:
   - cmd: dotnet --version
   - cmd: dotnet restore OverwatchToolchain.sln --verbosity m
 build_script:
-  - cmd: dotnet build --configuration Release
-  - cmd: dotnet build --configuration Debug
+  - cmd: dotnet publish --configuration Release /p:PublishTrimmed=false --self-contained false -o dist/Release
+  - cmd: dotnet publish --configuration Debug /p:PublishTrimmed=false --self-contained false -o dist/Debug
 branches:
   only:
-    - masterz
+    - master
+after_build:
+  - cmd: copy /B /Y dist\Release\runtimes\win-x64\native\*.dll dist\Release\x64
+  - cmd: del /S /Q dist\Release\runtimes\win-x86 dist\Release\x86
+  - cmd: rmdir /S /Q dist\Release\runtimes\win-x86 dist\Release\x86
+  - cmd: copy /B /Y dist\Debug\runtimes\win-x64\native\*.dll dist\Debug\x64
+  - cmd: del /S /Q dist\Debug\runtimes\win-x86 dist\Debug\x86
+  - cmd: rmdir /S /Q dist\Debug\runtimes\win-x86 dist\Debug\x86
 artifacts:
-  - path: DataTool/bin/Release/net5.0-windows
+  - path: dist/Release
     name: toolchain-release
-  - path: DataTool/bin/Debug/net5.0-windows
+  - path: dist/Debug
     name: toolchain-debug
-  - path: TankView/bin/Release/net5.0-windows
-    name: TankView-release
-  - path: TankView/bin/Debug/net5.0-windows
-    name: TankView-debug
-  - path: TACTLib/TACTLib/bin/Release/net5.0/TACTLib.dll
-    name: TACTLib
-  - path: TankLib/bin/Release/net5.0-windows/TankLib.dll
-    name: TankLib
 test: false
 deploy: false
 cache:

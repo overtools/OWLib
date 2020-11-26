@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace DataTool.WPF {
+namespace TankView {
     /// <summary>Reports on progress</summary>
     public class ProgressWorker {
         private readonly object _lock = new object();

@@ -4,10 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using DataTool.DataModels;
 using DataTool.DataModels.Hero;
 using DataTool.FindLogic;
@@ -15,7 +11,6 @@ using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic.Unlock;
 using DataTool.ToolLogic.Util;
-using DataTool.WPF;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
@@ -75,7 +70,7 @@ namespace DataTool.ToolLogic.Extract {
     }
     
     [Tool("extract-unlocks", Name="Hero Cosmetics", Description = "Extract hero cosmetics", CustomFlags = typeof(ExtractFlags))]
-    public class ExtractHeroUnlocks : QueryParser, IAwareTool, IQueryParser {
+    public class ExtractHeroUnlocks : QueryParser, IQueryParser {
         protected virtual string RootDir => "Heroes";
         protected virtual bool NPCs => false;
         
@@ -131,10 +126,6 @@ namespace DataTool.ToolLogic.Extract {
 
             var heroes = GetHeroes();
             SaveUnlocksForHeroes(flags, heroes, basePath, NPCs);
-        }
-
-        public Task<Control> GetToolControl(ProgressWorker worker, SynchronizationContext context, Window window) {
-            return WPF.Tool.Export.HeroUnlocksView.Get(worker, context, window, NPCs); 
         }
 
         public List<KeyValuePair<ulong, STUHero>> GetHeroes() {

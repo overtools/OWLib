@@ -16,7 +16,7 @@ namespace TankView.ObjectModel {
                 return default;
 
             try {
-                var data = DataHelper.ConvertDDS(guid.Value, DXGI_FORMAT.R8G8B8A8_UNORM, ImageFormat.Png, 0);
+                var data = DataHelper.ConvertDDS(guid.Value, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.PNG, 0);
 
                 var bitmap = new BitmapImage();
                 using (var ms = new MemoryStream(data)) {

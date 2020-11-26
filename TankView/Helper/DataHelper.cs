@@ -91,7 +91,7 @@ namespace TankView.Helper {
             return ms;
         }
 
-        public static byte[] ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, System.Drawing.Imaging.ImageFormat imageFormat, int frame) {
+        public static byte[] ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, WICCodecs imageFormat, int frame) {
             try {
                 if (GetDataType(guid) != DataType.Image) {
                     return null;

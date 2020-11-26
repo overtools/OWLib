@@ -7,8 +7,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using DataTool.DataModels;
-using DataTool.WPF;
 using DirectXTexNet;
 using TankLib;
 using TankView.Helper;
@@ -60,7 +58,7 @@ namespace TankView.ViewModel {
 
             switch (DataHelper.GetDataType(value)) {
                 case DataHelper.DataType.Image: {
-                    PreviewSource = DataHelper.ConvertDDS(value.GUID, DXGI_FORMAT.R8G8B8A8_UNORM, System.Drawing.Imaging.ImageFormat.Png, 0);
+                    PreviewSource = DataHelper.ConvertDDS(value.GUID, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.PNG, 0);
                     PreviewControl = new PreviewDataImage();
                 }
                     break;
