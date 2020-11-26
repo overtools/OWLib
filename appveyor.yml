@@ -16,14 +16,7 @@ build_script:
   - cmd: dotnet build --configuration Debug
 branches:
   only:
-    - master
-after_build:
-  - cmd: copy /B /Y dist\Release\runtimes\win-x64\native\*.dll dist\Release\x64
-  - cmd: del /S /Q dist\Release\runtimes\win-x86 dist\Release\x86
-  - cmd: rmdir /S /Q dist\Release\runtimes\win-x86 dist\Release\x86
-  - cmd: copy /B /Y dist\Debug\runtimes\win-x64\native\*.dll dist\Debug\x64
-  - cmd: del /S /Q dist\Debug\runtimes\win-x86 dist\Debug\x86
-  - cmd: rmdir /S /Q dist\Debug\runtimes\win-x86 dist\Debug\x86
+    - masterz
 artifacts:
   - path: DataTool/bin/Release/net5.0-windows
     name: toolchain-release
