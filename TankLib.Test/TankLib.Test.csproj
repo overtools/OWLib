@@ -6,6 +6,7 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PlatformTarget>x64</PlatformTarget>
+    <version>1.0.0.0</version>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\TankLib\TankLib.csproj" />

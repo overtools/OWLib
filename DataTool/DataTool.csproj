@@ -6,6 +6,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
+    <version>1.54.0.0</version>
   </PropertyGroup>
   <Target Name="monakS" AfterTargets="Build">
     <ItemGroup>

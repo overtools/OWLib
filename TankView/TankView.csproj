@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
     <PlatformTarget>x64</PlatformTarget>
     <NoWarn>CA1416</NoWarn>
+    <version>1.54.0.0</version>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>TankView.ico</ApplicationIcon>
