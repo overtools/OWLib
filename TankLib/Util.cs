@@ -95,6 +95,9 @@ namespace TankLib {
         public static string GetVersion(Assembly asm) {
             AssemblyInformationalVersionAttribute attrib = asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
             AssemblyFileVersionAttribute file = asm.GetCustomAttribute<AssemblyFileVersionAttribute>();
+            if (file == null) {
+                return Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0.0";
+            }
             if (attrib == null) {
                 return file.Version;
             }
