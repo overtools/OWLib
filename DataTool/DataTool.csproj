@@ -7,6 +7,10 @@
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <Version>1.54.0.0</Version>
+    <PublishTrimmed>true</PublishTrimmed>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishSingleFile>true</PublishSingleFile>
+    <TrimMode>link</TrimMode>
   </PropertyGroup>
   <Target Name="monakS" AfterTargets="Build">
     <ItemGroup>
