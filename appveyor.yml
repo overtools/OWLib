@@ -6,7 +6,7 @@ dotnet_csproj:
   version: '{version}'
   assembly_version: '{version}'
   file_version: '{version}'
-  informational_version: '{build}'
+  informational_version: $(appveyor_repo_commit)
 before_build:
   - cmd: git submodule update --init --recursive
   - cmd: dotnet --version
