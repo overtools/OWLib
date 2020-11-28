@@ -19,21 +19,15 @@ branches:
   only:
     - master
 after_build:
-  - cmd: copy /B /Y dist\Release\runtimes\win7-x64\native\*.dll dist\Release\x64
-  - cmd: del /S /Q dist\Release\runtimes\win7-x86 dist\Release\x86
-  - cmd: rmdir /S /Q dist\Release\runtimes\win7-x86 dist\Release\x86
-  - cmd: copy /B /Y dist\Debug\runtimes\win7-x64\native\*.dll dist\Debug\x64
-  - cmd: del /S /Q dist\Debug\runtimes\win7-x86 dist\Debug\x86
-  - cmd: rmdir /S /Q dist\Debug\runtimes\win7-x86 dist\Debug\x86
-  - cmd: copy /B /Y dist\SelfContained\runtimes\win7-x64\native\*.dll dist\Debug\x64
-  - cmd: del /S /Q dist\SelfContained\runtimes\win7-x86 dist\Debug\x86
-  - cmd: rmdir /S /Q dist\SelfContained\runtimes\win7-x86 dist\Debug\x86
+  - cmd: copy /B /Y dist\Release\DirectXTexNetImpl.dll dist\Release\x64
+  - cmd: copy /B /Y dist\Debug\DirectXTexNetImpl.dll dist\Debug\x64
+  - cmd: copy /B /Y dist\SelfContained\DirectXTexNetImpl.dll dist\SelfContained\x64
 artifacts:
   - path: dist/Release
     name: toolchain-release
-  - path: dist/SelfContained
-    name: toolchain-selfcontained
   - path: dist/Debug
     name: toolchain-debug
+  - path: dist/SelfContained
+    name: toolchain-selfcontained
 test: false
 deploy: false

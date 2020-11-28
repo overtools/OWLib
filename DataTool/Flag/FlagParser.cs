@@ -8,7 +8,7 @@ using Utf8Json;
 namespace DataTool.Flag {
     public class FlagParser {
         public static string[] AppArgs { get; set; } = Environment.GetCommandLineArgs()
-                                                                  .Skip(1)
+                                                                  .SkipWhile(x => x.EndsWith(".exe") || x.EndsWith(".dll"))
                                                                   .ToArray();
 
         public static string ArgFilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{AppDomain.CurrentDomain.FriendlyName}.args");
@@ -322,12 +322,21 @@ namespace DataTool.Flag {
                                        .ToArray();
 
             var positionalsField = default(FieldInfo);
-            var newPositionals = new List<object>(Enumerable.Repeat(default(object), Math.Max(positionals.Count, flagAttributes.Max(x => x.attribute.Positional) + 1)));
             
+            
+            var newPositionals = new List<object>(Enumerable.Repeat(default(object), Math.Max(positionals.Count, flagAttributes.Max(x => x.attribute.Positional) + 1)));
+
+            var positionalTicker = 0;
             foreach (var (field, flagAttribute) in flagAttributes.Where(x => x.attribute.Positional > -1)) {
                 if (!field.GetCustomAttributes<AliasAttribute>().Select(x => x.Alias).Concat(new[] {flagAttribute.Flag}).Any(x => presence.Contains(x))) {
-                    newPositionals[flagAttribute.Positional] = positionals.ElementAtOrDefault(flagAttribute.Positional);
+                    newPositionals[flagAttribute.Positional] = positionals.ElementAtOrDefault(positionalTicker);
+                    positionalTicker += 1;
                 }
+            }
+
+            foreach (var positional in positionals.Skip(positionalTicker)) {
+                newPositionals[positionalTicker] = positionals.ElementAtOrDefault(positionalTicker);
+                positionalTicker += 1;
             }
 
             positionals = newPositionals;

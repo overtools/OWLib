@@ -12,14 +12,8 @@
     <FileVersion>1.54.0.0</FileVersion>
     <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
   </PropertyGroup>
-  <Target Name="monakS" AfterTargets="Build">
-    <ItemGroup>
-      <RuntimeDataFiles_X64 Include="$(OutDir)\runtimes\win-x64\native\*.dll" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(RuntimeDataFiles_X64)" DestinationFolder="$(OutDir)\x64\" SkipUnchangedFiles="true" />
-    <Delete Files="$(OutDir)\x86" />
-    <Delete Files="$(OutDir)\runtimes\win-x86" />
+  <Target Name="CleanupNativeAssemblies" AfterTargets="Build">
+    <Copy SourceFiles="$(OutDir)\DirectXTexNetImpl.dll" DestinationFolder="$(OutDir)\x64\" SkipUnchangedFiles="true" />
   </Target>
   <PropertyGroup>
     <ApplicationIcon>TankView.ico</ApplicationIcon>
