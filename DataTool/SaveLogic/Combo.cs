@@ -25,7 +25,6 @@ namespace DataTool.SaveLogic {
         
         private static readonly SemaphoreSlim s_texurePrepareSemaphore = new SemaphoreSlim(100, 100); // don't load too many texures into memory
         private static readonly SemaphoreSlim s_texconvSemaphore = new SemaphoreSlim(2, 2); // don't kill windows with 900 texconv processes
-        private static readonly SemaphoreSlim s_gdiSemaphore = new SemaphoreSlim(1, 1); // gdi doesn't like multithreading
 
         public class SaveContext {
             public FindLogic.Combo.ComboInfo m_info;
