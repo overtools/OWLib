@@ -124,7 +124,11 @@ namespace DataTool {
                 break;
             }
 
-            if (targetToolFlags == null) return;
+            if (targetToolFlags == null) {
+                Logger.Error("Overtools", $"Can't find tool {Flags.Mode}");
+                PrintHelp(false, tools);
+                return;
+            }
 
             #endregion
 

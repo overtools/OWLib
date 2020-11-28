@@ -70,7 +70,7 @@ namespace DataTool.ToolLogic.Extract {
     }
     
     [Tool("extract-unlocks", Name="Hero Cosmetics", Description = "Extract hero cosmetics", CustomFlags = typeof(ExtractFlags))]
-    public class ExtractHeroUnlocks : QueryParser, IQueryParser {
+    public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         protected virtual string RootDir => "Heroes";
         protected virtual bool NPCs => false;
         
