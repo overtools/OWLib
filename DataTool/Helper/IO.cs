@@ -6,9 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using TankLib;
-using TACTLib.Core;
 using TACTLib.Exceptions;
 using static DataTool.Program;
 
@@ -83,23 +81,14 @@ namespace DataTool.Helper {
                 Directory.CreateDirectory(path);
             }
 
-            var attempts = 0;
-            while (true) {
-                try {
-                    using (Stream file = File.OpenWrite(filename)) {
-                        file.SetLength(0); // ensure no leftover data
-                        stream.CopyTo(file);
-                    }
-                    
-                    break;
-                } catch {
-                    if (attempts < (Flags?.RetryAttempts ?? 3)) {
-                        attempts += 1;
-                        Thread.Sleep(100);
-                    } else {
-                        throw;
-                    }
+            try {
+                using (Stream file = File.OpenWrite(filename)) {
+                    file.SetLength(0); // ensure no leftover data
+                    stream.CopyTo(file);
                 }
+            } catch(IOException) {
+                if (File.Exists(filename)) return;
+                throw;
             }
         }
 
@@ -111,23 +100,14 @@ namespace DataTool.Helper {
             }
             var bytes = Encoding.Unicode.GetBytes(text);
 
-            var attempts = 0;
-            while (true) {
-                try {
-                    using (Stream file = File.OpenWrite(filename)) {
-                        file.SetLength(0); // ensure no leftover data
-                        file.Write(bytes, 0, bytes.Length);
-                    }
-                    
-                    break;
-                } catch {
-                    if (attempts < (Flags?.RetryAttempts ?? 3)) {
-                        attempts += 1;
-                        Thread.Sleep(100);
-                    } else {
-                        throw;
-                    }
+            try {
+                using (Stream file = File.OpenWrite(filename)) {
+                    file.SetLength(0); // ensure no leftover data
+                    file.Write(bytes, 0, bytes.Length);
                 }
+            } catch(IOException) {
+                if (File.Exists(filename)) return;
+                throw;
             }
         }
 
@@ -137,23 +117,14 @@ namespace DataTool.Helper {
             if (!Directory.Exists(path) && path != null) {
                 Directory.CreateDirectory(path);
             }
-            var attempts = 0;
-            while (true) {
-                try {
-                    using (Stream file = File.OpenWrite(filename)) {
-                        file.SetLength(0); // ensure no leftover data
-                        file.Write(bytes, 0, bytes.Length);
-                    }
-
-                    break;
-                } catch {
-                    if (attempts < (Flags?.RetryAttempts ?? 3)) {
-                        attempts += 1;
-                        Thread.Sleep(100);
-                    } else {
-                        throw;
-                    }
+            try {
+                using (Stream file = File.OpenWrite(filename)) {
+                    file.SetLength(0); // ensure no leftover data
+                    file.Write(bytes, 0, bytes.Length);
                 }
+            } catch(IOException) {
+                if (File.Exists(filename)) return;
+                throw;
             }
         }
 
