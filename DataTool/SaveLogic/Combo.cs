@@ -832,10 +832,14 @@ namespace DataTool.SaveLogic {
         {
             string outputFile = Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.ogg");
             CreateDirectoryFromFile(outputFile);
-            using (Stream outputStream = File.OpenWrite(outputFile))
-            {
-                outputStream.SetLength(0);
-                ConvertSoundFile(stream, outputStream);
+            try {
+                using (Stream outputStream = File.OpenWrite(outputFile)) {
+                    outputStream.SetLength(0);
+                    ConvertSoundFile(stream, outputStream);
+                }
+            } catch (IOException e) {
+                if (File.Exists(outputFile)) return;
+                throw;
             }
         }
 
