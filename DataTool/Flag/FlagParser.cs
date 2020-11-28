@@ -329,7 +329,7 @@ namespace DataTool.Flag {
             var positionalTicker = 0;
             foreach (var (field, flagAttribute) in flagAttributes.Where(x => x.attribute.Positional > -1)) {
                 if (!field.GetCustomAttributes<AliasAttribute>().Select(x => x.Alias).Concat(new[] {flagAttribute.Flag}).Any(x => presence.Contains(x))) {
-                    newPositionals[flagAttribute.Positional] = positionals.ElementAtOrDefault(positionalTicker);
+                    newPositionals[flagAttribute.Positional] = positionals.ElementAtOrDefault(flagAttribute.Positional);
                     positionalTicker += 1;
                 }
             }

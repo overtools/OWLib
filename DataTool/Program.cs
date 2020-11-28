@@ -124,19 +124,17 @@ namespace DataTool {
                 break;
             }
 
-            if (targetToolFlags == null) {
-                Logger.Error("Overtools", $"Can't find tool {Flags.Mode}");
-                PrintHelp(false, tools);
+            if (targetToolFlags == null && targetTool != null) {
                 return;
             }
-
-            #endregion
 
             if (targetTool == null) {
                 FlagParser.Help<ToolFlags>(false, new Dictionary<string, string>());
                 PrintHelp(false, tools);
                 return;
             }
+
+            #endregion
 
             if (!targetToolAttributes.UtilNoArchiveNeeded) {
                 try {
