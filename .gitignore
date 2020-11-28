@@ -253,3 +253,4 @@ paket-files/
 *.sln.iml
 !/DataTool/ToolLogic/List/Debug/
 !/DataTool/ToolLogic/Extract/Debug/
+/dist/

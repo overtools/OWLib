@@ -14,6 +14,7 @@ before_build:
 build_script:
   - cmd: dotnet publish --configuration Release /p:PublishTrimmed=false --self-contained false -o dist/Release
   - cmd: dotnet publish --configuration Debug /p:PublishTrimmed=false --self-contained false -o dist/Debug
+  - cmd: dotnet publish --configuration Release /p:PublishTrimmed=false --self-contained true -o dist/SelfContained
 branches:
   only:
     - master
@@ -24,9 +25,14 @@ after_build:
   - cmd: copy /B /Y dist\Debug\runtimes\win-x64\native\*.dll dist\Debug\x64
   - cmd: del /S /Q dist\Debug\runtimes\win-x86 dist\Debug\x86
   - cmd: rmdir /S /Q dist\Debug\runtimes\win-x86 dist\Debug\x86
+  - cmd: copy /B /Y dist\SelfContained\runtimes\win-x64\native\*.dll dist\Debug\x64
+  - cmd: del /S /Q dist\SelfContained\runtimes\win-x86 dist\Debug\x86
+  - cmd: rmdir /S /Q dist\SelfContained\runtimes\win-x86 dist\Debug\x86
 artifacts:
   - path: dist/Release
     name: toolchain-release
+  - path: dist/SelfContained
+    name: toolchain-selfcontained
   - path: dist/Debug
     name: toolchain-debug
 test: false

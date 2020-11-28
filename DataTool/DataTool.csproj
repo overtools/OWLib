@@ -8,6 +8,7 @@
     <AssemblyVersion>1.54.0.0</AssemblyVersion>
     <FileVersion>1.54.0.0</FileVersion>
     <InformationalVersion>develop</InformationalVersion>
+    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
   </PropertyGroup>
   <Target Name="monakS" AfterTargets="Build">
     <ItemGroup>
