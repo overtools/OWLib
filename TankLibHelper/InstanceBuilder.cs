@@ -276,7 +276,6 @@ namespace TankLibHelper {
                 default:
                     return $"0x{ulong.Parse(field.m_defaultValue.m_hexValue, NumberStyles.HexNumber):X}";
             }
-            return null;
         }
     }
 }

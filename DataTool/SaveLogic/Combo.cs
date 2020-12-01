@@ -600,11 +600,6 @@ namespace DataTool.SaveLogic {
 #warning TODO: This method does not support animation effects
         public static void SaveAllAnimations(ICLIFlags flags, string path, SaveContext context) {
             // TODO: THREADING ISSUE HERE
-            // TODO: THREADING ISSUE HERE
-            // TODO: THREADING ISSUE HERE
-            // TODO: THREADING ISSUE HERE
-            // TODO: THREADING ISSUE HERE
-            // TODO: THREADING ISSUE HERE
 
             bool beforeSaveAnimEffects = context.m_saveAnimationEffects;
             context.m_saveAnimationEffects = false;
@@ -837,7 +832,7 @@ namespace DataTool.SaveLogic {
                     outputStream.SetLength(0);
                     ConvertSoundFile(stream, outputStream);
                 }
-            } catch (IOException e) {
+            } catch (IOException) {
                 if (File.Exists(outputFile)) return;
                 throw;
             }

@@ -139,7 +139,7 @@ namespace DataTool {
             if (!targetToolAttributes.UtilNoArchiveNeeded) {
                 try {
                     InitStorage(Flags.Online);
-                } catch (Exception ex) {
+                } catch {
                     Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC",
                                     "=================\nError initializing CASC!\n" +
                                     "Please Scan & Repair your game, launch it for a minute, and try the tools again before reporting a bug!\n" +
