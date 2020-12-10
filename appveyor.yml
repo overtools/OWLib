@@ -12,16 +12,12 @@ before_build:
   - cmd: dotnet --version
   - cmd: dotnet restore OverwatchToolchain.sln --verbosity m
 build_script:
-  - cmd: dotnet publish --configuration Release /p:PublishTrimmed=false --self-contained false -o dist/Release
-  - cmd: dotnet publish --configuration Debug /p:PublishTrimmed=false --self-contained false -o dist/Debug
-  - cmd: dotnet publish --configuration Release /p:PublishTrimmed=false --self-contained true -o dist/SelfContained
+  - cmd: dotnet publish --configuration Release -r win7-x64 --self-contained false -o dist/Release
+  - cmd: dotnet publish --configuration Debug -r win7-x64 --self-contained false -o dist/Debug
+  - cmd: dotnet publish --configuration Release -r win7-x64 --self-contained true -o dist/SelfContained
 branches:
   only:
     - master
-after_build:
-  - cmd: copy /B /Y dist\Release\DirectXTexNetImpl.dll dist\Release\x64
-  - cmd: copy /B /Y dist\Debug\DirectXTexNetImpl.dll dist\Debug\x64
-  - cmd: copy /B /Y dist\SelfContained\DirectXTexNetImpl.dll dist\SelfContained\x64
 artifacts:
   - path: dist/Release
     name: toolchain-release
@@ -29,5 +25,4 @@ artifacts:
     name: toolchain-debug
   - path: dist/SelfContained
     name: toolchain-selfcontained
-test: false
 deploy: false

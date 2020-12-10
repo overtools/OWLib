@@ -8,11 +8,7 @@
     <AssemblyVersion>1.54.0.0</AssemblyVersion>
     <FileVersion>1.54.0.0</FileVersion>
     <InformationalVersion>develop</InformationalVersion>
-    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
   </PropertyGroup>
-  <Target Name="CleanupNativeAssemblies" AfterTargets="Build">
-    <Copy SourceFiles="$(OutDir)\DirectXTexNetImpl.dll" DestinationFolder="$(OutDir)\x64\" SkipUnchangedFiles="true" />
-  </Target>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -33,12 +29,6 @@
     <Content Include="GUIDNames.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Third Party\texconv.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Third Party\texconv.license.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Third Party\ww2ogg.license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -47,7 +37,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DirectXTexNet" Version="1.0.0" />
+    <PackageReference Include="DirectXTexNet" Version="1.0.1" />
     <PackageReference Include="MaterialDesignColors" Version="1.2.7" />
     <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />

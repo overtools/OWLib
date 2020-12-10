@@ -24,7 +24,6 @@ namespace DataTool.SaveLogic {
         public static ScratchDB ScratchDBInstance = new ScratchDB();
         
         private static readonly SemaphoreSlim s_texurePrepareSemaphore = new SemaphoreSlim(100, 100); // don't load too many texures into memory
-        private static readonly SemaphoreSlim s_texconvSemaphore = new SemaphoreSlim(2, 2); // don't kill windows with 900 texconv processes
 
         public class SaveContext {
             public FindLogic.Combo.ComboInfo m_info;
@@ -647,12 +646,10 @@ namespace DataTool.SaveLogic {
             string multiSurfaceConvertType = "tif";
             bool createMultiSurfaceSheet = false;
             bool lossless = false;
-            bool useTexConv = false;
             int maxMips = 1;
 
             if (flags is ExtractFlags extractFlags) {
                 if (extractFlags.SkipTextures) return;
-                useTexConv = extractFlags.UseTexConv;
                 createMultiSurfaceSheet = extractFlags.SheetMultiSurface;
                 convertTextures = !extractFlags.RawTextures && !extractFlags.Raw;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
@@ -764,52 +761,13 @@ namespace DataTool.SaveLogic {
                     Process pProcess;
 
                     using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                        if (!useTexConv) {
-                            var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, 0);
-                            if (data != null) {
-                                WriteFile(data, $"{filePath}.{convertType}");
-                            } else {
-                                convertedStream.Position = 0;
-                                WriteFile(convertedStream, $"{filePath}.dds");
-                                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
-                            }
+                        var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, 0);
+                        if (data != null) {
+                            WriteFile(data, $"{filePath}.{convertType}");
                         } else {
-                            string losslessFlag = lossless ? "-wiclossless" : string.Empty;
-
-                            await s_texconvSemaphore.WaitAsync();
-                            try {
-                                pProcess = new Process {
-                                    StartInfo = {
-                                        FileName = "Third Party\\texconv.exe",
-                                        UseShellExecute = false,
-                                        RedirectStandardOutput = true,
-                                        RedirectStandardInput = true,
-                                        RedirectStandardError = true,
-                                        CreateNoWindow = true,
-                                        Arguments =
-                                            $"-- \"{Path.GetFileName(filePath)}.dds\" -y -wicmulti {losslessFlag} -nologo -m 1 -ft {convertType} -f R8G8B8A8_UNORM -o \"{(path.EndsWith(@"/") || path.EndsWith("\\") ? path.Substring(0, path.Length - 1) : path)}"
-                                    },
-                                    EnableRaisingEvents = true
-                                };
-
-                                pProcess.Start();
-                                convertedStream.Position = 0;
-                                await convertedStream.CopyToAsync(pProcess.StandardInput.BaseStream);
-                                await pProcess.StandardInput.BaseStream.FlushAsync();
-                                pProcess.StandardInput.BaseStream.Close();
-                                pProcess.WaitForExit();
-
-                                // when texconv writes with to the console -nologo is has done/failed conversion
-                                string line = await pProcess.StandardOutput.ReadToEndAsync();
-
-                                if (line.Contains("FAILED")) {
-                                    convertedStream.Position = 0;
-                                    WriteFile(convertedStream, $"{filePath}.dds");
-                                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because texconv failed.");
-                                }
-                            } finally {
-                                s_texconvSemaphore.Release();
-                            }
+                            convertedStream.Position = 0;
+                            WriteFile(convertedStream, $"{filePath}.dds");
+                            Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
                         }
                     }
 

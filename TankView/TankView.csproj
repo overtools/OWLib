@@ -10,11 +10,7 @@
     <Version>1.54.0.0</Version>
     <AssemblyVersion>1.54.0.0</AssemblyVersion>
     <FileVersion>1.54.0.0</FileVersion>
-    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
   </PropertyGroup>
-  <Target Name="CleanupNativeAssemblies" AfterTargets="Build">
-    <Copy SourceFiles="$(OutDir)\DirectXTexNetImpl.dll" DestinationFolder="$(OutDir)\x64\" SkipUnchangedFiles="true" />
-  </Target>
   <PropertyGroup>
     <ApplicationIcon>TankView.ico</ApplicationIcon>
   </PropertyGroup>
@@ -34,7 +30,7 @@
     <Content Include="template\styles\main.css" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DirectXTexNet" Version="1.0.0" />
+    <PackageReference Include="DirectXTexNet" Version="1.0.1" />
     <PackageReference Include="Dragablz" Version="0.0.3.223" />
     <PackageReference Include="MaterialDesignColors" Version="1.2.7" />
     <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
