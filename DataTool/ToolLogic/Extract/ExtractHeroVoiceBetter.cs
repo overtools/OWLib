@@ -12,6 +12,7 @@ using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
+using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
 
 namespace DataTool.ToolLogic.Extract {
 
@@ -38,54 +39,90 @@ namespace DataTool.ToolLogic.Extract {
                 string heroNameActual = GetValidFilename((GetString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}").TrimEnd(' '));
                 Logger.Log($"Processing {heroNameActual}");
                 var voiceSetComponent = GetInstance<STUVoiceSetComponent>(heroStu.m_gameplayEntity);
-                if (voiceSetComponent?.m_voiceDefinition == null) continue;
+                
+                STUVoiceSetComponent baseComponent = default;
+                Combo.ComboInfo baseInfo = default;
 
-                var voiceSetsCombo = new Combo.ComboInfo();
-                Combo.Find(voiceSetsCombo, voiceSetComponent.m_voiceDefinition);
+                if (SaveSet(flags, basePath, heroStu.m_gameplayEntity, heroNameActual, ref baseComponent, ref baseInfo)) {
+                    
+                    var skins = new ProgressionUnlocks(heroStu).GetUnlocksOfType(UnlockType.Skin);
+                    foreach (var unlock in skins) {
+                        TACTLib.Logger.Debug("Tool", $"Processing skin {unlock.Name}");
+                        if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
+                        if (unlockSkinTheme.m_0B1BA7C1 != 0)
+                            continue;
+                        
+                        var skinTheme = GetInstance<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
+                        if (skinTheme == null)
+                            continue;
 
-                foreach (var voiceSet in voiceSetsCombo.m_voiceSets) {
-                    if (voiceSet.Value.VoiceLineInstances == null) continue;
+                        STUVoiceSetComponent component = default;
+                        Combo.ComboInfo info = default;
 
-                    foreach (var voicelineInstanceInfo in voiceSet.Value.VoiceLineInstances) {
-                        foreach (var voiceLineInstance in voicelineInstanceInfo.Value) {
-                            var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
-                            if (stimulus == null) continue;
-
-                            var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E);
-                            if (groupName == null)
-                                groupName = $"Unknown\\{teResourceGUID.Index(voiceLineInstance.VoiceStimulus):X}.{teResourceGUID.Type(voiceLineInstance.VoiceStimulus):X3}";
-
-                            var soundFilesCombo = new Combo.ComboInfo();
-                            var soundFilesContext = new SaveLogic.Combo.SaveContext(soundFilesCombo);
-
-                            foreach (var soundFile in voiceLineInstance.SoundFiles) {
-                                Combo.Find(soundFilesCombo, soundFile);
-                            }
-
-                            var path = flags.VoiceGroupByHero && flags.VoiceGroupByType
-                                ? Path.Combine(basePath, Container, heroNameActual, groupName)
-                                : Path.Combine(basePath, Container, flags.VoiceGroupByHero ? Path.Combine(groupName, heroNameActual) : groupName);
-
-                            foreach (var soundInfo in soundFilesCombo.m_voiceSoundFiles.Values) {
-                                var filename = soundInfo.GetName();
-                                if (!flags.VoiceGroupByHero) {
-                                    filename = $"{heroNameActual}-{soundInfo.GetName()}";
-                                }
-
-                                if (SoundIdCache.Contains(soundInfo.m_GUID)) {
-                                    TACTLib.Logger.Debug("Tool", "Duplicate sound detected, ignoring.");
-                                    continue;
-                                }
-
-                                SoundIdCache.Add(soundInfo.m_GUID);
-                                SaveLogic.Combo.SaveSoundFile(flags, path, soundFilesContext, soundInfo.m_GUID, true, filename);
-                            }
-
-                            soundFilesContext.Wait();
-                        }
+                        SaveSet(flags, basePath, heroStu.m_gameplayEntity, heroNameActual, ref component, ref info, baseComponent, baseInfo, SkinTheme.GetReplacements(skinTheme));
                     }
                 }
             }
+        }
+
+        private static bool SaveSet(ExtractFlags flags, string basePath, ulong entityMain, string heroNameActual, ref STUVoiceSetComponent voiceSetComponent, ref Combo.ComboInfo info, STUVoiceSetComponent baseComponent = null, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null) {
+            voiceSetComponent = GetInstance<STUVoiceSetComponent>(Combo.GetReplacement(entityMain, replacements));
+
+            if (voiceSetComponent?.m_voiceDefinition == null) {
+                return false;
+            }
+
+            info = new Combo.ComboInfo();
+            Combo.Find(info, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements), replacements);
+            if (baseComponent != null && baseCombo != null) {
+                if (!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, baseComponent.m_voiceDefinition, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements)))
+                    return false;
+            }
+            
+            foreach (var voiceSet in info.m_voiceSets) {
+                if (voiceSet.Value.VoiceLineInstances == null) continue;
+
+                foreach (var voicelineInstanceInfo in voiceSet.Value.VoiceLineInstances) {
+                    foreach (var voiceLineInstance in voicelineInstanceInfo.Value) {
+                        var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
+                        if (stimulus == null) continue;
+
+                        var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E);
+                        if (groupName == null)
+                            groupName = $"Unknown\\{teResourceGUID.Index(voiceLineInstance.VoiceStimulus):X}.{teResourceGUID.Type(voiceLineInstance.VoiceStimulus):X3}";
+
+                        var soundFilesCombo = new Combo.ComboInfo();
+                        var soundFilesContext = new SaveLogic.Combo.SaveContext(soundFilesCombo);
+
+                        foreach (var soundFile in voiceLineInstance.SoundFiles) {
+                            Combo.Find(soundFilesCombo, soundFile);
+                        }
+
+                        var path = flags.VoiceGroupByHero && flags.VoiceGroupByType
+                            ? Path.Combine(basePath, Container, heroNameActual, groupName)
+                            : Path.Combine(basePath, Container, flags.VoiceGroupByHero ? Path.Combine(groupName, heroNameActual) : groupName);
+
+                        foreach (var soundInfo in soundFilesCombo.m_voiceSoundFiles.Values) {
+                            var filename = soundInfo.GetName();
+                            if (!flags.VoiceGroupByHero) {
+                                filename = $"{heroNameActual}-{soundInfo.GetName()}";
+                            }
+
+                            if (SoundIdCache.Contains(soundInfo.m_GUID)) {
+                                TACTLib.Logger.Debug("Tool", "Duplicate sound detected, ignoring.");
+                                continue;
+                            }
+
+                            SoundIdCache.Add(soundInfo.m_GUID);
+                            SaveLogic.Combo.SaveSoundFile(flags, path, soundFilesContext, soundInfo.m_GUID, true, filename);
+                        }
+
+                        soundFilesContext.Wait();
+                    }
+                }
+            }
+
+            return true;
         }
 
         public static string GetVoiceGroup(ulong stimulusGuid, ulong categoryGuid, ulong unkGuid)
