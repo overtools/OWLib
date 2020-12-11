@@ -22,6 +22,4 @@ artifacts:
     name: toolchain-release
   - path: dist/Debug
     name: toolchain-debug
-  - path: dist/SelfContained
-    name: toolchain-selfcontained
 deploy: false
