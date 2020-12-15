@@ -1,4 +1,4 @@
-version: 1.54.0.{build}
+version: 1.55.0.{build}
 image: Visual Studio 2019
 dotnet_csproj:
   patch: true
