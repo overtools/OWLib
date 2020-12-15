@@ -18,6 +18,7 @@ namespace DataTool.ToolLogic.Extract {
             positionals.Add("*");
             flags.Positionals = positionals.ToArray();
             new ExtractAbilities().Parse(flags);
+            new ExtractGamemodeImages().Parse(flags);
             new ExtractGeneral().Parse(flags);
             SaveScratchDatabase();
             new ExtractHeroConversations().Parse(flags);

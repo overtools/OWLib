@@ -10,7 +10,7 @@ using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using Combo = DataTool.FindLogic.Combo;
 
-namespace DataTool.ToolLogic.Dump {
+namespace DataTool.ToolLogic.Extract {
     [Tool("extract-voice-sets", Description = "Extract voice sets", CustomFlags = typeof(ExtractFlags))]
     public class ExtractVoiceSets : JSONTool, ITool {
         private const string Container = "VoiceSets";
