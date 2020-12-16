@@ -12,8 +12,8 @@ before_build:
   - cmd: dotnet --version
   - cmd: dotnet restore OverwatchToolchain.sln --verbosity m
 build_script:
-  - cmd: dotnet publish -f net5.0-windows --configuration Release -r win7-x64 --self-contained false -o dist/Release
-  - cmd: dotnet publish -f net5.0-windows --configuration Debug -r win7-x64 --self-contained false -o dist/Debug
+  - cmd: dotnet publish --configuration Release -r win7-x64 --self-contained false -o dist/Release
+  - cmd: dotnet publish --configuration Debug -r win7-x64 --self-contained false -o dist/Debug
 branches:
   only:
     - master
