@@ -423,7 +423,7 @@ D77,078,Voicelines,1
 677,09F,Menu/Volskaya,1
 678,09F,Menu/Hollywood,1
 6E0,09F,Menu/Eichenwalde (Halloween),1
-700,09F,Menu/Kings Row (Winter),1
+700,09F,Menu/Kings Row (Winter) (2019),1
 710,09F,Menu/Busan (Lunar),1
 715,09F,Menu/Lijiang (Lunar),1
 764,09F,Menu/Kings Row (Archives),1
@@ -437,7 +437,9 @@ D77,078,Voicelines,1
 8BE,09F,Menu/Rialto,1
 A13,09F,Menu/OWL,1
 A5A,09F,Menu/Chateau (Halloween),1
+A9E,09F,Menu/Blizzard World (Winter),1
 AF0,09F,Menu/Paris,1
+B2D,09F,Menu/OWL All Stars (2020),1
 B55,09F,Menu/Havana,1
 B56,09F,Menu/Havana (Archives),1
 BCE,09F,Menu/Summer Games (2020),1
@@ -453,6 +455,11 @@ CE6,09F,Menu/Paris (Alt),1
 CFE,09F,Menu/Sydney (Lucioball),1
 CFF,09F,Menu/Busan (Lucioball),1
 D0A,09F,Menu/OWL,1
+D2C,09F,Menu/Tracer Comic Challenge,1
+D2D,09F,Menu/OWL Grand Finals (2020),1
+D67,09F,Menu/Symmetra Challenge,1
+D77,09F,Menu/Kings Row (Winter) (2020),1
+D7A,09F,Menu/Antarctica (Winter),1
 ; Celebrations,,,
 2168,01C,Christmas,1
 2498,01C,LunarNewYear,1
