@@ -23,7 +23,7 @@ namespace DataTool.SaveLogic {
     public static class Combo {
         public static ScratchDB ScratchDBInstance = new ScratchDB();
         
-        private static readonly SemaphoreSlim s_texurePrepareSemaphore = new SemaphoreSlim(100, 100); // don't load too many texures into memory
+        private static SemaphoreSlim s_texurePrepareSemaphore = new SemaphoreSlim(100, 100); // don't load too many texures into memory
 
         public class SaveContext {
             public FindLogic.Combo.ComboInfo m_info;
@@ -727,7 +727,7 @@ namespace DataTool.SaveLogic {
                             height = (uint) (texture.Header.Height * texture.Header.Surfaces);
                             surfaces = 1;
                             texture.Header.Flags = 0;
-                        } else {
+                        } else if(convertType != "tif" && convertType != "dds") {
                             Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceConvertType} because it has more than one surface");
                             convertType = multiSurfaceConvertType;
                         }

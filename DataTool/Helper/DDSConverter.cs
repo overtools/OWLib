@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using DirectXTexNet;
@@ -30,13 +29,14 @@ namespace DataTool.Helper {
                     fixed (byte* dataPin = data) {
                         scratch = TexHelper.Instance.LoadFromDDSMemory((IntPtr) dataPin, data.Length, DDS_FLAGS.NONE);
                         TexMetadata info = scratch.GetMetadata();
+
                         if (TexHelper.Instance.IsCompressed(info.Format)) {
-                            ScratchImage temp = scratch.Decompress(frame, DXGI_FORMAT.UNKNOWN);
+                            ScratchImage temp = scratch.Decompress(DXGI_FORMAT.UNKNOWN);
                             scratch.Dispose();
                             scratch = temp;
-                        }
 
-                        info = scratch.GetMetadata();
+                            info = scratch.GetMetadata();
+                        }
 
                         if (info.Format != targetFormat) {
                             ScratchImage temp = scratch.Convert(targetFormat, TEX_FILTER_FLAGS.DEFAULT, 0.5f);
@@ -47,16 +47,10 @@ namespace DataTool.Helper {
                         UnmanagedMemoryStream stream = null;
                         var isMultiFrame = codec == WICCodecs.GIF || codec == WICCodecs.TIFF;
 
-                        if (frame < 0) {
-                            if (!isMultiFrame) {
-                                frame = 0;
-                            } else {
-                                stream = scratch.SaveToWICMemory(0, info.ArraySize, WIC_FLAGS.ALL_FRAMES, TexHelper.Instance.GetWICCodec(codec));
-                            }
-                        }
-
-                        if (frame >= 0) {
+                        if (info.ArraySize == 1 || !isMultiFrame) {
                             stream = scratch.SaveToWICMemory(frame, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(codec));
+                        } else {
+                            stream = scratch.SaveToWICMemory(0, info.ArraySize, WIC_FLAGS.ALL_FRAMES, TexHelper.Instance.GetWICCodec(codec));
                         }
 
                         if (stream == null) {
