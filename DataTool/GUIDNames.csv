@@ -132,9 +132,23 @@ D8,078,Turret/EnemyTurretSeen,1
 5E2,078,NanoBoosted,1
 5E3,078,EnemyDetected,1
 5ED,078,Unwell,1
+5F1,078,HealingDart,1
+5F3,078,BioticGrenade/Heal,1
+5F4,078,BioticGrenade/Damage,1
+5F5,078,Sleep,1
 66D,078,Lucioball,1
 66E,078,Lucioball,1
 66F,078,Lucioball,1
+689,078,Hack/Start,1
+68A,078,Hack/Successful,1
+68C,078,Hack,1
+68F,078,Hack,1
+690,078,Hack,1
+697,078,Translocator/Place,1
+698,078,Translocator/Use,1
+69B,078,Hack,1
+69C,078,Hack,1
+69D,078,StealthActivate,1
 69E,078,YourWelcome,1
 6A1,078,Laugh,1
 6A4,078,Junkenstein,1
@@ -152,6 +166,7 @@ D8,078,Turret/EnemyTurretSeen,1
 6BC,078,Junkenstein,1
 6BE,078,Junkenstein,1
 6C5,078,Junkenstein,1
+6E7,078,Uncloak,1
 743,078,ShieldGenerator/FoundEnemyShieldGen,1
 744,078,ShieldGenerator/EnemyHasShieldGen,1
 745,078,ShieldGenerator/EnemyShieldGenDestroyed,1
@@ -306,6 +321,10 @@ A26,078,EnemiesAttacking,1
 A27,078,Karaoke,1
 A4A,078,Retribution/Conversations,1
 A4B,078,Retribution/Conversations,1
+A57,078,Bomb/Activate,1
+A57,078,Bomb/Elimination,1
+A8F,078,Translocator/Destroyed,1
+A96,078,Translocator/TakeBack,1
 D13,078,StormRising/Conversations,1
 D14,078,StormRising/Conversations,1
 D15,078,StormRising/Conversations,1
@@ -365,6 +384,9 @@ D00,078,Voicelines,1
 D0E,078,Voicelines,1
 D68,078,Voicelines,1
 D77,078,Voicelines,1
+DE5,078,Voicelines,1
+E34,078,Voicelines,1
+E89,078,Voicelines,1
 ; Note: Weapon models are often two entities, one for 1P, one for 3P, if they have different animations
 ; Ana,Classic,47,
 1610,003,Teabag,0
