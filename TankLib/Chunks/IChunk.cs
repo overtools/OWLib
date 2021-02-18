@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace TankLib.Chunks {
     /// <summary>Chunk interface, which all chunk types should use</summary>
@@ -7,5 +8,7 @@ namespace TankLib.Chunks {
         string ID { get; }
         /// <summary>Load the chunk from a stream</summary>
         void Parse(Stream stream);
+        
+        List<IChunk> SubChunks { get; set; }
     }
 }

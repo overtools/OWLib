@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace TankLib.Chunks {
@@ -6,6 +7,7 @@ namespace TankLib.Chunks {
     /// <summary>MDLC: Defines model</summary>
     public class teModelChunk_Model : IChunk {
         public string ID => "MDLC";  
+        public List<IChunk> SubChunks { get; set; }
         // todo: this might be wrong type. i think it is this because it is the last unknown except MSTU
         
         /// <summary>MDLC header</summary>

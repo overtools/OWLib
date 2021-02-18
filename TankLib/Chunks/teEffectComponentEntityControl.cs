@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace TankLib.Chunks {
     public class teEffectComponentEntityControl : IChunk {
         public string ID => "ECEC";
+        public List<IChunk> SubChunks { get; set; }
         
         public enum Action : byte {  // todo: maybe u16/i16
             Show = 1,  // Animation is 0

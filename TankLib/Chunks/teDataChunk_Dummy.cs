@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 
 namespace TankLib.Chunks {
@@ -6,6 +7,7 @@ namespace TankLib.Chunks {
 
         public MemoryStream Data;
         public string RealID;
+        public List<IChunk> SubChunks { get; set; }
         
         public teDataChunk_Dummy() {} // called by manager
 

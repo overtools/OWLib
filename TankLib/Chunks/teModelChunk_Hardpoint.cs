@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using TankLib.Math;
 
@@ -7,6 +8,7 @@ namespace TankLib.Chunks {
     /// <summary>MHRP: Defines hardpoints for a model</summary>
     public class teModelChunk_Hardpoint : IChunk {
         public string ID => "MHRP";
+        public List<IChunk> SubChunks { get; set; }
         
         /// <summary>MHRP header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

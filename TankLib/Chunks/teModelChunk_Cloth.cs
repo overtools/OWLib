@@ -9,6 +9,7 @@ namespace TankLib.Chunks {
     /// <summary>mskl: Defines model skeleton</summary>
     public class teModelChunk_Cloth : IChunk {
         public string ID => "CLTH";
+        public List<IChunk> SubChunks { get; set; }
         
         /// <summary>CLTH header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

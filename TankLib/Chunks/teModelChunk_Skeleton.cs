@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using SharpDX;
 using TankLib.Math;
@@ -8,6 +9,7 @@ namespace TankLib.Chunks {
     /// <summary>mskl: Defines model skeleton</summary>
     public class teModelChunk_Skeleton : IChunk {
         public string ID => "mskl";
+        public List<IChunk> SubChunks { get; set; }
         
         /// <summary>mskl header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

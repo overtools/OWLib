@@ -12,6 +12,7 @@ namespace TankLib.Chunks {
     /// <summary>MRNM: Defines model render mesh</summary>
     public class teModelChunk_RenderMesh : IChunk {
         public string ID => "MRNM";
+        public List<IChunk> SubChunks { get; set; }
         
         /// <summary>MRNM header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

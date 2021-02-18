@@ -27,11 +27,11 @@ namespace TankLib {
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct teChunkDataEntry {
         public uint ID;
-        public int Unknown1;
-        public int Size;
-        public ushort Unknown2;
-        public ushort Unknown3;
-
+        public int SerializedSize;
+        public int ChunkSize;
+        public ushort SerializationTag;
+        public ushort ChunkVersion;
+        
         public string StringIdentifier => Encoding.ASCII.GetString(BitConverter.GetBytes(ID)).ReverseXor();
 
         public new string ToString() {
@@ -68,7 +68,7 @@ namespace TankLib {
             Read(reader);
         }
 
-        private unsafe void Read(BinaryReader reader) {
+        private void Read(BinaryReader reader) {
             long start = reader.BaseStream.Position;
 
             List<IChunk> chunks = new List<IChunk>();
@@ -79,26 +79,52 @@ namespace TankLib {
                 return;
             }
 
-            long next = reader.BaseStream.Position - start; // rel stream pos
-
-            while (next < Header.Size) {
-                teChunkDataEntry entry = reader.Read<teChunkDataEntry>();
-                next += entry.Size + sizeof(teChunkDataEntry);
-
-                IChunk chunk = Manager.CreateChunkInstance(entry.StringIdentifier, Header.StringIdentifier);
-                if (chunk != null) {                   
-                    using (SliceStream sliceStream = new SliceStream(reader.BaseStream, entry.Size)) {
-                       chunk.Parse(sliceStream);
-                    }
-                }
-
-                chunkTags.Add(entry.StringIdentifier);
-                chunks.Add(chunk);
-                reader.BaseStream.Position = next + start;
+            while (reader.BaseStream.Position - start < Header.Size) {
+                ParseChunks(reader, chunks, chunkTags);
             }
 
             Chunks = chunks.ToArray();
             ChunkTags = chunkTags.ToArray();
+        }
+
+        private List<IChunk> ParseChunks(BinaryReader reader, List<IChunk> chunks,  List<string> chunkTags) {
+            var localChunks = new List<IChunk>();
+            teChunkDataEntry entry = reader.Read<teChunkDataEntry>();
+            var rootSize = entry.SerializedSize;
+            var start = reader.BaseStream.Position;
+            var startAbs = start;
+            while (entry.SerializationTag == 0xC65C) {
+                Debugger.Log(0, "teChunkedData", $"{entry.StringIdentifier} {entry.ChunkSize} chunk {entry.SerializedSize} serialized {entry.SerializationTag:X} tag\n");
+
+                IChunk chunk = Manager.CreateChunkInstance(entry.StringIdentifier, Header.StringIdentifier);
+                if (chunk != null) {
+                    using (SliceStream sliceStream = new SliceStream(reader.BaseStream, entry.ChunkSize)) {
+                        chunk.Parse(sliceStream);
+                    }
+                }
+
+                localChunks.Add(chunk);
+                
+                // i'm too lazy to rewrite a bunch of code.
+                chunks.Add(chunk);
+                chunkTags.Add(entry.StringIdentifier);
+
+                reader.BaseStream.Position = start + entry.ChunkSize;
+                if (entry.SerializedSize > entry.ChunkSize) { // child chunk
+                    var childChunk = ParseChunks(reader, chunks, chunkTags);
+                    if (chunk != null) {
+                        if (chunk.SubChunks == null) chunk.SubChunks = new List<IChunk>();
+                        chunk.SubChunks.AddRange(childChunk);
+                    }
+                }
+                
+                if (reader.BaseStream.Position - startAbs >= rootSize) break;
+                entry = reader.Read<teChunkDataEntry>();
+                start = reader.BaseStream.Position;
+            }
+            reader.BaseStream.Position = start + entry.SerializedSize;
+
+            return localChunks;
         }
 
         public IEnumerable<T> EnumerateChunks<T>() where T : IChunk {

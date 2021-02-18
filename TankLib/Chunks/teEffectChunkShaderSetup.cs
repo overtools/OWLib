@@ -1,10 +1,12 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace TankLib.Chunks {
     // ReSharper disable once InconsistentNaming
     public class teEffectChunkShaderSetup : IChunk {
         public string ID => "ECSS";
+        public List<IChunk> SubChunks { get; set; }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {

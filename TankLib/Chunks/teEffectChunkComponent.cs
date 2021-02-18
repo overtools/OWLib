@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace TankLib.Chunks {
@@ -6,6 +7,7 @@ namespace TankLib.Chunks {
     /// <summary>ECMP: Prefix chunk type that controls timing for the next chunk</summary>
     public class teEffectChunkComponent : IChunk {
         public string ID => "ECMP";
+        public List<IChunk> SubChunks { get; set; }
 
         /// <summary>ECMP header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using TankLib.STU;
 using TankLib.STU.Types;
@@ -10,6 +11,7 @@ namespace TankLib.Chunks {
     /// <summary>MSTU: StructuredData for model definitions</summary>
     public class teModelChunk_STU : IChunk {
         public string ID => "MSTU";
+        public List<IChunk> SubChunks { get; set; }
         
         /// <summary>MSTU header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
