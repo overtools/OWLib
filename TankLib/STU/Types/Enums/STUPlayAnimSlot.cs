@@ -4,9 +4,9 @@
 namespace TankLib.STU.Types.Enums
 {
     [STUEnum(0x9F4E2CAC)]
-    public enum STUPlayAnimSlot : uint
+    public enum STUPlayAnimSlot : int
     {
-        [STUField(0x5F2F54DC)] x5F2F54DC = 0x0,
+        [STUField(0x5F2F54DC)] x5F2F54DC = 0,
         [STUField(0x655A3B07)] x655A3B07 = 0x1,
         [STUField(0x43619957)] x43619957 = 0x2,
         [STUField(0x1276161E)] x1276161E = 0x3,

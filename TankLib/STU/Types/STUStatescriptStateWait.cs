@@ -3,22 +3,22 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6540C278, 248)]
+    [STU(0x6540C278, 264)]
     public class STUStatescriptStateWait : STUStatescriptState
     {
-        [STUField(0xEF6581D3, 216, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xEF6581D3, 232, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_timeout;
         
-        [STUField(0x5DA62D02, 224, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x5DA62D02, 240, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptOutputPlug m_onAbortPlug;
         
-        [STUField(0xA0B58111, 232, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xA0B58111, 248, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptOutputPlug m_onFinishedPlug;
         
-        [STUField(0x0DBAFD7F, 240)] // size: 1
+        [STUField(0x0DBAFD7F, 256)] // size: 1
         public byte m_0DBAFD7F;
         
-        [STUField(0xBF1A93B0, 241)] // size: 1
+        [STUField(0xBF1A93B0, 257)] // size: 1
         public byte m_BF1A93B0;
     }
 }

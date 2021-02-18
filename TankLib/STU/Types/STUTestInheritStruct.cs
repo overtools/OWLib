@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xE15F9581, 64)]
+    [STU(0xE15F9581, 80)]
     public class STUTestInheritStruct : STUTestStruct
     {
-        [STUField(0x46B8BD22, 48)] // size: 16
+        [STUField(0x46B8BD22, 64)] // size: 16
         public teString m_46B8BD22;
     }
 }

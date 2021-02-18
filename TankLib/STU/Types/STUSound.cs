@@ -34,28 +34,31 @@ namespace TankLib.STU.Types
         [STUField(0x66AD5CBC, 56)] // size: 4
         public float m_66AD5CBC = 0f;
         
-        [STUField(0x43F0D346, 60)] // size: 4
+        [STUField(0xD9B2ED93, 60)] // size: 4
+        public float m_D9B2ED93 = 0f;
+        
+        [STUField(0x43F0D346, 64)] // size: 4
         public Enum_D2BF23BC m_43F0D346 = Enum_D2BF23BC.x6399F3D5;
         
-        [STUField(0xEF90634C, 64)] // size: 4
+        [STUField(0xEF90634C, 68)] // size: 4
         public uint m_EF90634C;
         
-        [STUField(0x77092FDD, 68)] // size: 1
+        [STUField(0x77092FDD, 72)] // size: 1
         public byte m_77092FDD = 0x0;
         
-        [STUField(0x1A25BFB8, 69)] // size: 1
+        [STUField(0x1A25BFB8, 73)] // size: 1
         public byte m_1A25BFB8 = 0x0;
         
-        [STUField(0xB62657B8, 70)] // size: 1
+        [STUField(0xB62657B8, 74)] // size: 1
         public byte m_B62657B8 = 0x1;
         
-        [STUField(0x59AD4231, 71)] // size: 1
+        [STUField(0x59AD4231, 75)] // size: 1
         public byte m_59AD4231 = 0x0;
         
-        [STUField(0x6E7728C9, 72)] // size: 1
+        [STUField(0x6E7728C9, 76)] // size: 1
         public byte m_6E7728C9 = 0x0;
         
-        [STUField(0x529B2C24, 73)] // size: 1
+        [STUField(0x529B2C24, 77)] // size: 1
         public byte m_529B2C24 = 0x0;
     }
 }

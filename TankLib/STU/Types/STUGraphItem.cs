@@ -4,7 +4,7 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8FAF5745, 56)]
+    [STU(0x8FAF5745, 72)]
     public class STUGraphItem : STUInstance
     {
         [STUField(0x5DB91CE2, 8)] // size: 16
@@ -13,10 +13,13 @@ namespace TankLib.STU.Types
         [STUField(0x6EAB6810, 24)] // size: 16
         public teString m_comment;
         
-        [STUField(0xA10A5EAF, 40)] // size: 8
+        [STUField(0xF008EA57, 40)] // size: 16
+        public teString m_F008EA57;
+        
+        [STUField(0xA10A5EAF, 56)] // size: 8
         public teVec2 m_pos;
         
-        [STUField(0xE3B4FA5C, 48)] // size: 4
+        [STUField(0xE3B4FA5C, 64)] // size: 4
         public uint m_uniqueID;
     }
 }

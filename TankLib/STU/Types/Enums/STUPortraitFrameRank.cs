@@ -4,9 +4,9 @@
 namespace TankLib.STU.Types.Enums
 {
     [STUEnum(0x161443EA)]
-    public enum STUPortraitFrameRank : uint
+    public enum STUPortraitFrameRank : int
     {
-        [STUField(0x91D55538)] x91D55538 = 0x0,
+        [STUField(0x91D55538)] x91D55538 = 0,
         [STUField(0x0C1ADE62)] Bronze = 0x1,
         [STUField(0x0534BB83)] Sliver = 0x2,
         [STUField(0x91E4891F)] Gold = 0x3,

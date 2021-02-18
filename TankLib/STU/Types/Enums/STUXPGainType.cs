@@ -4,9 +4,9 @@
 namespace TankLib.STU.Types.Enums
 {
     [STUEnum(0x56DF3C94)]
-    public enum STUXPGainType : uint
+    public enum STUXPGainType : int
     {
-        [STUField(0x46C27207)] x46C27207 = 0x0,
+        [STUField(0x46C27207)] x46C27207 = 0,
         [STUField(0x4ED539D8)] x4ED539D8 = 0x1,
         [STUField(0xA76A57E1)] xA76A57E1 = 0x2,
         [STUField(0xC052C03F)] xC052C03F = 0x3,

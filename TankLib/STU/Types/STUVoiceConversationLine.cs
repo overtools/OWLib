@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6BB3C6F8, 16)]
+    [STU(0x6BB3C6F8, 24)]
     public class STUVoiceConversationLine : STUInstance
     {
-        [STUField(0x75161A21, 0)] // size: 8
-        public ulong m_lineGUID;
+        [STUField(0xE295B99C, 0)] // size: 16
+        public teStructuredDataAssetRef<STUVoiceLine> m_E295B99C;
         
-        [STUField(0xB4D405A1, 8)] // size: 4
+        [STUField(0xB4D405A1, 16)] // size: 4
         public uint m_B4D405A1;
     }
 }

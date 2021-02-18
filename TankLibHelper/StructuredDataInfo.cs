@@ -178,22 +178,26 @@ namespace TankLibHelper {
     public class EnumValueNew {
         [DataMember(Name="Name")] public string m_name;
         [DataMember(Name="Hash")] public string m_hash;
-        [DataMember(Name="Value")] public ulong m_value;
+        [DataMember(Name="Value")] public long m_value;
         [DataMember(Name="Hex")] public string m_hexValue;
 
         public uint Hash2 => uint.Parse(m_hash, NumberStyles.HexNumber);
 
-        public ulong GetSafeValue(FieldNew field) {
-            var safeValue = m_value;
+        public long GetSafeValue(FieldNew field) {
+            return TruncateValue(m_value, field);
+        }
+        
+        public static long TruncateValue(long val, FieldNew field) {
+            var safeValue = val;
             switch (field.m_size) {
                 case 1:
                     safeValue = (byte)(safeValue & byte.MaxValue);
                     break;
                 case 2:
-                    safeValue = (ushort)(safeValue & ushort.MaxValue);
+                    safeValue = (short)(safeValue & ushort.MaxValue);
                     break;
                 case 4:
-                    safeValue = (uint)(safeValue & uint.MaxValue);
+                    safeValue = (int)(safeValue & uint.MaxValue);
                     break;
             }
             return safeValue;

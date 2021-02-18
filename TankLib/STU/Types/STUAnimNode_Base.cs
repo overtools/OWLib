@@ -3,13 +3,13 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x15B4F157, 80)]
+    [STU(0x15B4F157, 96)]
     public class STUAnimNode_Base : STU_B90213F3
     {
-        [STUField(0x0DE1BA16, 56, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
+        [STUField(0x0DE1BA16, 72, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUAnimNode_LayerChild[] m_layers;
         
-        [STUField(0x668D2844, 72)] // size: 2
+        [STUField(0x668D2844, 88)] // size: 2
         public ushort m_668D2844 = 0x3;
     }
 }

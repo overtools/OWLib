@@ -4,9 +4,9 @@
 namespace TankLib.STU.Types.Enums
 {
     [STUEnum(0xBDE32585)]
-    public enum STUContactType : uint
+    public enum STUContactType : int
     {
-        [STUField(0x8D843DC5)] x8D843DC5 = 0x0,
+        [STUField(0x8D843DC5)] x8D843DC5 = 0,
         [STUField(0x9C2F636D)] x9C2F636D = 0x1,
         [STUField(0xEC5F3249)] xEC5F3249 = 0x2,
         [STUField(0xDB80B841)] xDB80B841 = 0x3,

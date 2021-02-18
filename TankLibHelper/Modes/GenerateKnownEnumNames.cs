@@ -49,12 +49,12 @@ namespace TankLibHelper.Modes {
             return d;
         }
 
-        private Dictionary<ulong, string> GetEnumDict(Type enumType) {
+        private Dictionary<long, string> GetEnumDict(Type enumType) {
             var names = enumType.GetEnumNames();
             var values = enumType.GetEnumValues();
-            var d = new Dictionary<ulong, string>();
+            var d = new Dictionary<long, string>();
             for (int i = 0; i < names.Length; ++i) {
-                d[Convert.ToUInt64(values.GetValue(i))] = names[i];
+                d[Convert.ToInt64(values.GetValue(i))] = names[i];
             }
 
             return d;

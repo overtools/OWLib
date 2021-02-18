@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x191835F9, 208)]
+    [STU(0x191835F9, 216)]
     public class STUModelComponent : STUEntityComponent
     {
         [STUField(0x523339C1, 8)] // size: 16
