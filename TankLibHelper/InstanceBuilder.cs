@@ -230,7 +230,7 @@ namespace TankLibHelper {
 
             var typeHash = field.TypeHash2;
             if (Info.Enums.TryGetValue(typeHash, out var enumDef)) {
-                var defaultVal = (long)field.m_defaultValue.m_value;
+                var defaultVal = EnumValueNew.TruncateValue((long)field.m_defaultValue.m_value, field);
                 
                 var enumValues = enumDef.m_values.Where(x => x.GetSafeValue(field) == defaultVal).ToArray();
 

@@ -184,7 +184,11 @@ namespace TankLibHelper {
         public uint Hash2 => uint.Parse(m_hash, NumberStyles.HexNumber);
 
         public long GetSafeValue(FieldNew field) {
-            var safeValue = m_value;
+            return TruncateValue(m_value, field);
+        }
+        
+        public static long TruncateValue(long val, FieldNew field) {
+            var safeValue = val;
             switch (field.m_size) {
                 case 1:
                     safeValue = (byte)(safeValue & byte.MaxValue);
