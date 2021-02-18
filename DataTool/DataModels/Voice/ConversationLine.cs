@@ -33,7 +33,7 @@ namespace DataTool.DataModels.Voice {
 
         private void Init(STUVoiceConversationLine convoLine, ulong key = default) {
             GUID = (teResourceGUID) key;
-            VoicelineGUID = (teResourceGUID) convoLine.m_lineGUID;
+            VoicelineGUID = (teResourceGUID) convoLine.m_E295B99C;
             Position = convoLine.m_B4D405A1;
         }
     }

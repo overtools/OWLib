@@ -33,7 +33,7 @@ namespace DataTool.DataModels.Voice {
             GUID = (teResourceGUID) key;
             StimulusGUID = voiceConvo.m_stimulus;
             Weight = voiceConvo.m_weight;
-            Voicelines = voiceConvo.m_voiceConversationLine?.Select(x => new ConversationLine(x)).ToArray();
+            Voicelines = voiceConvo.m_90D76F17?.Select(x => new ConversationLine(x)).ToArray();
         }
     }
 }

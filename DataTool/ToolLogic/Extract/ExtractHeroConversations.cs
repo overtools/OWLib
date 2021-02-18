@@ -117,11 +117,11 @@ namespace DataTool.ToolLogic.Extract {
                     if (conversation == null) continue; // wtf, blizz pls
 
                     string convoDir = Path.Combine(path, heroNameActual, GetFileName(lineInstance.VoiceConversation));
-                    foreach (STUVoiceConversationLine line in conversation.m_voiceConversationLine) {
+                    foreach (STUVoiceConversationLine line in conversation.m_90D76F17) {
                         string linePath = Path.Combine(convoDir, line.m_B4D405A1.ToString());
                         foreach (VoiceSet voiceSet in allVoiceSets.Values) {
-                            if (voiceSet.VoiceLines.ContainsKey(line.m_lineGUID)) {
-                                VoiceLine.SaveVoiceLine(flags, voiceSet.VoiceLines[line.m_lineGUID], linePath, comboSaveContext);
+                            if (voiceSet.VoiceLines.ContainsKey(line.m_E295B99C)) {
+                                VoiceLine.SaveVoiceLine(flags, voiceSet.VoiceLines[line.m_E295B99C], linePath, comboSaveContext);
                             }
                         }
                     }
