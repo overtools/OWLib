@@ -17,12 +17,13 @@ namespace TankLibHelper.Modes {
             }
             string gameDir = args[1];
             ushort[] types = args.Skip(2).Select(x => ushort.Parse(x, NumberStyles.HexNumber)).ToArray();
-            
+
             ClientCreateArgs createArgs = new ClientCreateArgs {
                 SpeechLanguage = "enUS",
-                TextLanguage = "enUS"
+                TextLanguage = "enUS",
+                Online = false
             };
-            
+
             TankLib.TACT.LoadHelper.PreLoad();
             ClientHandler client = new ClientHandler(gameDir, createArgs);
             var handler = (ProductHandler_Tank)client.ProductHandler;
@@ -38,7 +39,7 @@ namespace TankLibHelper.Modes {
                             var primary = structuredData.Instances.FirstOrDefault(x => x.Usage == TypeUsage.Root) ?? structuredData.Instances.FirstOrDefault();
 
                             if (primary == default) throw new Exception();
-                        
+
                             Logger.Info(null, $"{filename}: {primary.GetType().Name}");
                         }
                     } catch {
@@ -46,7 +47,7 @@ namespace TankLibHelper.Modes {
                     }
                 }
             }
-            
+
             return ModeResult.Success;
         }
 

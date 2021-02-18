@@ -17,25 +17,25 @@ using TACTLib.Exceptions;
 
 namespace CASCEncDump {
     internal class Program {
-        public static uint BuildVersion;
-        
-        public static string RawIdxDir => $"dump\\{BuildVersion}\\idx\\raw";
-        public static string RawEncDir => $"dump\\{BuildVersion}\\enc\\raw";
-        public static string ConvertIdxDir => $"dump\\{BuildVersion}\\idx\\convert";
-        public static string ConvertEncDir => $"dump\\{BuildVersion}\\enc\\convert";
-        public static string NonBLTEDir => $"dump\\{BuildVersion}\\nonblte";
-        public static string KeyFilesDir => $"dump\\{BuildVersion}\\keyfiles";
-        public static string AllCMFDir => $"dump\\{BuildVersion}\\allcmf";
-        public static string GUIDDir => $"dump\\{BuildVersion}\\guids";
+        private static uint BuildVersion;
 
-        public static ClientHandler Client;
-        public static ProductHandler_Tank TankHandler;
-        
+        private static string RawIdxDir => $"dump\\{BuildVersion}\\idx\\raw";
+        private static string RawEncDir => $"dump\\{BuildVersion}\\enc\\raw";
+        private static string ConvertIdxDir => $"dump\\{BuildVersion}\\idx\\convert";
+        private static string ConvertEncDir => $"dump\\{BuildVersion}\\enc\\convert";
+        private static string NonBLTEDir => $"dump\\{BuildVersion}\\nonblte";
+        private static string KeyFilesDir => $"dump\\{BuildVersion}\\keyfiles";
+        private static string AllCMFDir => $"dump\\{BuildVersion}\\allcmf";
+        private static string GUIDDir => $"dump\\{BuildVersion}\\guids";
+
+        private static ClientHandler Client;
+        private static ProductHandler_Tank TankHandler;
+
         public static void Main(string[] args) {
             string overwatchDir = args[0];
             string mode = args[1];
             const string language = "enUS";
-            
+
             // Usage:
             // {overwatch dir} dump  --  Dump hashes
             // {overwatch dir} compare-enc {other ver num}  --  Extract added files from encoding (requires dump from other version)
@@ -43,48 +43,56 @@ namespace CASCEncDump {
             // {overwatch dir} allcmf  --  Extract all files from the cmf
 
             // casc setup
-            
+
             TankLib.TACT.LoadHelper.PreLoad();
 
             ClientCreateArgs createArgs = new ClientCreateArgs {
                 SpeechLanguage = language,
-                TextLanguage = language
+                TextLanguage = language,
+                Online = false
             };
+
             if (mode != "allcmf" && mode != "dump-guids" && mode != "compare-guids" && mode != "dump-cmf") {
                 createArgs.HandlerArgs = new ClientCreateArgs_Tank {
                     LoadManifest = false
                 };
             }
+
             Client = new ClientHandler(overwatchDir, createArgs);
             TankHandler = (ProductHandler_Tank)Client.ProductHandler;
-            
+
             TankLib.TACT.LoadHelper.PostLoad(Client);
 
             BuildVersion = uint.Parse(Client.InstallationInfo.Values["Version"].Split('.').Last());
 
-            // c:\\ow\\game\\Overwatch dump
-            // "D:\Games\Overwatch Test" compare 44022
-
-            if (mode == "dump") {
-                Dump(args);
-            } else if (mode == "compare-enc") {
-                CompareEnc(args);
-            } else if (mode == "compare-idx") {
-                CompareIdx(args);
-            } else if (mode == "allcmf") {
-                AllCMF(args);
-            } else if (mode == "dump-guids") {
-                DumpGUIDs(args);
-            } else if (mode == "compare-guids") {
-                CompareGUIDs(args); 
-            } else if (mode == "dump-cmf") {
-                DumpCMF(args);
-            } else {
-                throw new Exception($"unknown mode: {mode}");
+            switch (mode) {
+                case "dump":
+                    Dump(args);
+                    break;
+                case "compare-enc":
+                    CompareEnc(args);
+                    break;
+                case "compare-idx":
+                    CompareIdx(args);
+                    break;
+                case "allcmf":
+                    AllCMF(args);
+                    break;
+                case "dump-guids":
+                    DumpGUIDs(args);
+                    break;
+                case "compare-guids":
+                    CompareGUIDs(args);
+                    break;
+                case "dump-cmf":
+                    DumpCMF(args);
+                    break;
+                default:
+                    throw new Exception($"unknown mode: {mode}");
             }
         }
 
-        public static void DumpCMF(string[] args) {
+        private static void DumpCMF(string[] args) {
             HashSet<CKey> cKeys = new HashSet<CKey>(CASCKeyComparer.Instance);
             foreach (ContentManifestFile contentManifestFile in new [] {TankHandler.m_rootContentManifest, TankHandler.m_textContentManifest, TankHandler.m_speechContentManifest}) {
                 if (contentManifestFile == null) continue;
@@ -92,19 +100,19 @@ namespace CASCEncDump {
                     cKeys.Add(hashData.ContentKey);
                 }
             }
-            
+
             Diff.WriteBinaryCKeys($"{BuildVersion}.cmfhashes", cKeys);
             //Diff.WriteBinaryCKeys(TankHandler, $"{BuildVersion}.cmfhashes", guids);
         }
 
-        public static void DumpGUIDs(string[] args) {
+        private static void DumpGUIDs(string[] args) {
             List<ulong> guids = TankHandler.m_assets.Select(x => x.Key).ToList();
-            
+
             Diff.WriteBinaryGUIDs($"{BuildVersion}.guids", guids);
             //Diff.WriteTextGUIDs(TankHandler, $"{BuildVersion}.guids", guids);
         }
 
-        public static void CompareGUIDs(string[] args) {
+        private static void CompareGUIDs(string[] args) {
             string otherVerNum = args[2];
 
             Directory.CreateDirectory(GUIDDir);  // file name is the version it is compared to
@@ -116,13 +124,13 @@ namespace CASCEncDump {
 
             List<ulong> added = TankHandler.m_assets.Keys.Except(last).ToList();
             List<ulong> removed = last.Except(TankHandler.m_assets.Keys).ToList();
-            
+
             using (StreamWriter writer = new StreamWriter(Path.Combine(GUIDDir, $"{otherVerNum}.added"))) {
                 foreach (ulong addedFile in added) {
                     writer.WriteLine(teResourceGUID.AsString(addedFile));
                 }
             }
-            
+
             using (StreamWriter writer = new StreamWriter(Path.Combine(GUIDDir, $"{otherVerNum}.removed"))) {
                 foreach (ulong removedFile in removed) {
                     writer.WriteLine(teResourceGUID.AsString(removedFile));
@@ -130,9 +138,9 @@ namespace CASCEncDump {
             }
         }
 
-        public static void AllCMF(string[] args) {
+        private static void AllCMF(string[] args) {
             ushort[] types = args.Skip(2).Select(x => ushort.Parse(x, NumberStyles.HexNumber)).ToArray();
-            
+
             Directory.CreateDirectory(AllCMFDir);
             foreach (KeyValuePair<ulong, ProductHandler_Tank.Asset> asset in TankHandler.m_assets) {
                 ushort type = teResourceGUID.Type(asset.Key);
@@ -152,27 +160,27 @@ namespace CASCEncDump {
             }
         }
 
-        public static void Dump(string[] args) {
+        private static void Dump(string[] args) {
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.enchashes")) {
                 foreach (KeyValuePair<CKey, EncodingHandler.CKeyEntry> entry in Client.EncodingHandler.Entries) {
                     string md5 = entry.Key.ToHexString();
-                    
+
                     writer.WriteLine(md5);
                 }
             }
-            
+
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.idxhashes")) {
                 foreach (KeyValuePair<EKey, ContainerHandler.IndexEntry> entry in Client.ContainerHandler.IndexEntries) {
                     string md5 = entry.Key.ToHexString();
-                    
+
                     writer.WriteLine(md5);
                 }
             }
         }
 
-        public static void CompareIdx(string[] args) {
+        private static void CompareIdx(string[] args) {
             string otherVerNum = args[2];
-            
+
             HashSet<ulong> missingKeys = new HashSet<ulong>();
 
             Directory.CreateDirectory(RawIdxDir);
@@ -194,14 +202,14 @@ namespace CASCEncDump {
                     try {
                         Stream stream = Client.OpenEKey(indexEntry.Key);
                         TryConvertFile(stream, ConvertIdxDir, md5);
-                        
+
                         stream.Dispose();
                     } catch (Exception e) {
                         if (e is BLTEKeyException exception) {
                             if (missingKeys.Add(exception.MissingKey)) {
                                 Console.Out.WriteLine($"Missing key: {exception.MissingKey:X16}");
                             }
-                        } 
+                        }
                         //else {
                         //    Console.Out.WriteLine(e);
                         //}
@@ -213,9 +221,9 @@ namespace CASCEncDump {
             Console.ReadLine();
         }
 
-        public static void CompareEnc(string[] args) {
+        private static void CompareEnc(string[] args) {
             string otherVerNum = args[2];
-            
+
             HashSet<ulong> missingKeys = new HashSet<ulong>();
 
             Directory.CreateDirectory(RawEncDir);
@@ -253,10 +261,10 @@ namespace CASCEncDump {
             }
         }
 
-        public static void TryConvertFile(Stream stream, string convertDir, string md5) {
+        private static void TryConvertFile(Stream stream, string convertDir, string md5) {
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, true)) {
                 uint magic = reader.ReadUInt32();
-                
+
                 stream.Position = 0;
                 if (magic == teChunkedData.Magic) {
                     teChunkedData chunkedData = new teChunkedData(reader);
@@ -292,7 +300,7 @@ namespace CASCEncDump {
                                     model.Write(file);
                                 }
                             }
-    
+
                             i++;
                         } catch (Exception) {
                             // fine
@@ -301,9 +309,9 @@ namespace CASCEncDump {
 
                     try {
                         //teStructuredData structuredData =new teStructuredData(stream, true);
-                        
+
                         teTexture texture = new teTexture(reader);
-                        if (!texture.PayloadRequired && texture.Header.DataSize <= stream.Length && 
+                        if (!texture.PayloadRequired && texture.Header.DataSize <= stream.Length &&
                             (texture.Header.Flags == teTexture.Flags.Tex1D ||
                              texture.Header.Flags == teTexture.Flags.Tex2D ||
                              texture.Header.Flags == teTexture.Flags.Tex3D ||
@@ -311,7 +319,7 @@ namespace CASCEncDump {
                              texture.Header.Flags == teTexture.Flags.Array ||
                              texture.Header.Flags == teTexture.Flags.Unk16 ||
                              texture.Header.Flags == teTexture.Flags.Unk32 ||
-                             texture.Header.Flags == teTexture.Flags.Unk128) && 
+                             texture.Header.Flags == teTexture.Flags.Unk128) &&
                             texture.Header.Height < 10000 && texture.Header.Width < 10000 && texture.Header.DataSize > 68) {
                             using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".dds")) {
                                 file.SetLength(0);
@@ -328,7 +336,7 @@ namespace CASCEncDump {
 
                         if (structuredData.GetInstance<STUResourceKey>() != null) {
                             var key = structuredData.GetInstance<STUResourceKey>();
-                            
+
                             Console.Out.WriteLine("found key");
                             var longKey = ulong.Parse(key.m_keyID, NumberStyles.HexNumber);
                             var longRevKey = BitConverter.ToUInt64(BitConverter.GetBytes(longKey).Reverse().ToArray(), 0);
@@ -337,7 +345,7 @@ namespace CASCEncDump {
                             Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}",keyNameProper, keyValueString);
                         }
                         // if (structuredData.GetInstance<STUHero>() != null) {
-                        //     
+                        //
                         // }
                     } catch (Exception) {
                         // fine
