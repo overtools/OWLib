@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x25C4F930, 56)]
+    [STU(0x25C4F930, 72)]
     public class STUGraphNode : STUGraphItem
     {
     }

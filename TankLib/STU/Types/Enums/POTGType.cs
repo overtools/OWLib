@@ -4,9 +4,9 @@
 namespace TankLib.STU.Types.Enums
 {
     [STUEnum(0xE5327514)]
-    public enum POTGType : uint
+    public enum POTGType : int
     {
-        [STUField(0xCE03E86E)] Normal = 0x0,
+        [STUField(0xCE03E86E)] Normal = 0,
         [STUField(0x3E4E3170)] Default = 0x1,
         [STUField(0x3F475F4D)] SombraHack = 0x2,
         [STUField(0x35FF9030)] Random = 0x3,

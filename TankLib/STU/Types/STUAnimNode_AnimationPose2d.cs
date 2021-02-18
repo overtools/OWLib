@@ -4,31 +4,31 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xC8B1D2D7, 688)]
+    [STU(0xC8B1D2D7, 704)]
     public class STUAnimNode_AnimationPose2d : STUAnimNode_Base
     {
-        [STUField(0xEB391735, 80, ReaderType = typeof(InlineInstanceFieldReader))] // size: 248
+        [STUField(0xEB391735, 96, ReaderType = typeof(InlineInstanceFieldReader))] // size: 248
         public STUAnimBlendDriverParam m_EB391735;
         
-        [STUField(0xE5E309D5, 328, ReaderType = typeof(InlineInstanceFieldReader))] // size: 248
+        [STUField(0xE5E309D5, 344, ReaderType = typeof(InlineInstanceFieldReader))] // size: 248
         public STUAnimBlendDriverParam m_E5E309D5;
         
-        [STUField(0x3F5B86A4, 576, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
+        [STUField(0x3F5B86A4, 592, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_215BE8F3 m_animation;
         
-        [STUField(0xA3081C7F, 608, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0xA3081C7F, 624, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_A3081C7F;
         
-        [STUField(0x73038249, 632, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
+        [STUField(0x73038249, 648, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_73038249;
         
-        [STUField(0xC14EEC71, 656, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xC14EEC71, 672, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimNode_AnimationTrackOverride[] m_animTrackOverrides;
         
-        [STUField(0x29AFF063, 672, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x29AFF063, 688, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_5861C542 m_29AFF063;
         
-        [STUField(0xB774CFA6, 680)] // size: 4
+        [STUField(0xB774CFA6, 696)] // size: 4
         public Enum_9250F4C2 m_B774CFA6;
     }
 }

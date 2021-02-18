@@ -4,19 +4,19 @@
 namespace TankLib.STU.Types.Enums
 {
     [STUEnum(0x8F2CDF51)]
-    public enum TeamIndex : uint
+    public enum TeamIndex : int
     {
-        [STUField(0x4FBE4DB7)] TeamBlue = 0x0,
+        [STUField(0x4FBE4DB7)] TeamBlue = 0,
         [STUField(0x1EC4639E)] TeamRed = 0x1,
         [STUField(0x64EE800E)] x64EE800E = 0x2,
         [STUField(0xB50082CF)] xB50082CF = 0x3,
         [STUField(0x36A550DF)] FFA = 0x4,
         [STUField(0x3A5ECACD)] x3A5ECACD = 0x5,
         [STUField(0xA6ACEEB1)] xA6ACEEB1 = 0x4,
-        [STUField(0xBC219E96)] xBC219E96 = 0xFFFFFFFF,
-        [STUField(0xE43A6397)] xE43A6397 = 0x0,
+        [STUField(0xBC219E96)] xBC219E96 = -1,
+        [STUField(0xE43A6397)] xE43A6397 = 0,
         [STUField(0xD959C384)] xD959C384 = 0x5,
-        [STUField(0x12111B22)] x12111B22 = 0x0,
+        [STUField(0x12111B22)] x12111B22 = 0,
         [STUField(0xD84380B7)] xD84380B7 = 0x4,
     }
 }

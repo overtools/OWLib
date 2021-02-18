@@ -4,9 +4,9 @@
 namespace TankLib.STU.Types.Enums
 {
     [STUEnum(0xC1DAF32A)]
-    public enum STUHeroSize : uint
+    public enum STUHeroSize : int
     {
-        [STUField(0x9B5CE715)] Normal = 0x0,
+        [STUField(0x9B5CE715)] Normal = 0,
         [STUField(0xF7A961FD)] Small = 0x1,
         [STUField(0x66A11B18)] Large = 0x2,
     }

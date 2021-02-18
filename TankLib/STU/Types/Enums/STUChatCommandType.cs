@@ -4,9 +4,9 @@
 namespace TankLib.STU.Types.Enums
 {
     [STUEnum(0x3D26984C)]
-    public enum STUChatCommandType : uint
+    public enum STUChatCommandType : int
     {
-        [STUField(0x07D6B2F8)] PartyInvite = 0x0,
+        [STUField(0x07D6B2F8)] PartyInvite = 0,
         [STUField(0x7EBFC038)] PartyAcceptInvite = 0x1,
         [STUField(0xE448A0C5)] PartyDeclineInvite = 0x2,
         [STUField(0x99EE4316)] Kick = 0x3,

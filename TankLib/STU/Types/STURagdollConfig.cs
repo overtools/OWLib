@@ -19,8 +19,8 @@ namespace TankLib.STU.Types
         [STUField(0x055B5368, 12)] // size: 4
         public float m_055B5368 = 0.6f;
         
-        [STUField(0x889AE87B, 16)] // size: 4
-        public int m_889AE87B = 0x0;
+        [STUField(0xF611CC22, 16)] // size: 4
+        public float m_F611CC22 = 0f;
         
         [STUField(0xDA28BE51, 20)] // size: 4
         public int m_DA28BE51 = 0x5;

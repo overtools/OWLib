@@ -12,7 +12,10 @@ namespace TankLib.STU.Types
         [STUField(0xD4DF9339, 4)] // size: 4
         public float lifeTimeSecs;
         
-        [STUField(0x5B41E11D, 8)] // size: 1
+        [STUField(0x6CA308D7, 8)] // size: 1
+        public byte m_6CA308D7;
+        
+        [STUField(0x5B41E11D, 9)] // size: 1
         public byte m_5B41E11D;
     }
 }

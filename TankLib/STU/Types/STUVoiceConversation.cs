@@ -9,8 +9,8 @@ namespace TankLib.STU.Types
         [STUField(0x401F5484, 8)] // size: 16
         public teStructuredDataAssetRef<STUVoiceStimulus> m_stimulus;
         
-        [STUField(0xF79D31F9, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
-        public STUVoiceConversationLine[] m_voiceConversationLine;
+        [STUField(0x90D76F17, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        public STUVoiceConversationLine[] m_90D76F17;
         
         [STUField(0x4FF98D41, 40, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUCriteriaContainer m_criteria;
