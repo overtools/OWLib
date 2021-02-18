@@ -34,13 +34,14 @@ namespace TankLibHelper {
             if (Info.Enums.ContainsKey(_hash)) {
                 var enumData = Info.Enums[_hash];
                 foreach (var value in enumData.m_values) {
-                    //if (!Info.KnownEnumNames.ContainsKey(_hash)) {
-                        attribute = $"[STUField(0x{value.Hash2:X8})]";
-                    //} else {
-                    //    attribute = $"[STUField(0x{value.Hash2:X8}, \"{Info.GetEnumValueName(value.Hash2)}\")]";
-                    //}
+                    attribute = $"[STUField(0x{value.Hash2:X8})]";
+                    
                     var safeValue = value.GetSafeValue(_field);
-                    writer.WriteLine($"{attribute} {Info.GetEnumValueName(value.Hash2)} = 0x{safeValue:X},");
+                    if (safeValue > 0) {
+                        writer.WriteLine($"{attribute} {Info.GetEnumValueName(value.Hash2)} = 0x{safeValue:X},");
+                    } else {
+                        writer.WriteLine($"{attribute} {Info.GetEnumValueName(value.Hash2)} = {safeValue},");
+                    }
                 }
             }
 
@@ -57,11 +58,11 @@ namespace TankLibHelper {
                 default:
                     return null;
                 case 8:
-                    return "ulong";
+                    return "long";
                 case 4:
-                    return "uint";
+                    return "int";
                 case 2:
-                    return "ushort";
+                    return "short";
                 case 1:
                     return "byte";
             }
