@@ -94,8 +94,6 @@ namespace TankLib {
             var start = reader.BaseStream.Position;
             var startAbs = start;
             while (entry.SerializationTag == 0xC65C) {
-                Debugger.Log(0, "teChunkedData", $"{entry.StringIdentifier} {entry.ChunkSize} chunk {entry.SerializedSize} serialized {entry.SerializationTag:X} tag\n");
-
                 IChunk chunk = Manager.CreateChunkInstance(entry.StringIdentifier, Header.StringIdentifier);
                 if (chunk != null) {
                     using (SliceStream sliceStream = new SliceStream(reader.BaseStream, entry.ChunkSize)) {

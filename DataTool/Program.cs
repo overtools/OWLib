@@ -291,18 +291,22 @@ namespace DataTool {
             try {
                 if (Flags.Language == null) {
                     var textLanguage = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Launch Options\Pro", "LOCALE", null);
-                    if (ValidLanguages.Contains(textLanguage))
-                        Flags.Language = textLanguage;
-                    else
-                        Logger.Error("Core", $"Invalid text language found via registry: {textLanguage}. Ignoring.");
+                    if (!string.IsNullOrWhiteSpace(textLanguage)) {
+                        if (ValidLanguages.Contains(textLanguage))
+                            Flags.Language = textLanguage;
+                        else
+                            Logger.Error("Core", $"Invalid text language found via registry: {textLanguage}. Ignoring.");
+                    }
                 }
 
                 if (Flags.SpeechLanguage == null) {
                     var speechLanguage = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Launch Options\Pro", "LOCALE_AUDIO", null);
-                    if (ValidLanguages.Contains(speechLanguage))
-                        Flags.SpeechLanguage = speechLanguage;
-                    else
-                        Logger.Error("Core", $"Invalid speech language found via registry: {speechLanguage}. Ignoring.");
+                    if (!string.IsNullOrWhiteSpace(speechLanguage)) {
+                        if (ValidLanguages.Contains(speechLanguage))
+                            Flags.SpeechLanguage = speechLanguage;
+                        else
+                            Logger.Error("Core", $"Invalid speech language found via registry: {speechLanguage}. Ignoring.");
+                    }
                 }
             } catch (Exception) {
                 // Ignored   
