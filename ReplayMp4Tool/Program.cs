@@ -43,9 +43,8 @@ namespace ReplayMp4Tool {
                 OverwatchDirectory = gameDir,
                 Language = toolFlags.Language ?? "enUS",
                 SpeechLanguage = toolFlags.SpeechLanguage ?? "enUS",
-                UseCache = true,
-                CacheCDNData = true,
-                Quiet = true
+                Quiet = true,
+                Online = false
             };
 
             DataTool.Program.InitStorage(false);

@@ -14,12 +14,13 @@ namespace TankLibHelper.Modes {
         public ModeResult Run(string[] args) {
             string gameDir = args[1];
             ushort type = ushort.Parse(args[2], NumberStyles.HexNumber);
-            
+
             ClientCreateArgs createArgs = new ClientCreateArgs {
                SpeechLanguage = "enUS",
-               TextLanguage = "enUS"
+               TextLanguage = "enUS",
+               Online = false
             };
-            
+
             TankLib.TACT.LoadHelper.PreLoad();
             ClientHandler client = new ClientHandler(gameDir, createArgs);
             _tankHandler = (ProductHandler_Tank)client.ProductHandler;
@@ -35,7 +36,7 @@ namespace TankLibHelper.Modes {
                     }
                 }
             }
-            
+
             return ModeResult.Success;
         }
 
@@ -53,7 +54,7 @@ namespace TankLibHelper.Modes {
                 return new teString(stream);
             }
         }
-        
+
         public T GetInst<T>(ulong guid) where T : STUInstance {
             using (var stu = GetStructuredData(guid)) {
                 return stu?.GetMainInstance<T>();
