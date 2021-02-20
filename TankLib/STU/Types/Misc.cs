@@ -11394,7 +11394,7 @@ namespace TankLib.STU.Types
         public STU_A2D1C183 m_BEF434F8;
         
         [STUField(0xA864F8C9, 1152, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
-        public teStructuredData m_A864F8C9;
+        public STUInstance m_A864F8C9;
         
         [STUField(0x4C991890, 1160, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_56D17458 m_4C991890;
@@ -39278,7 +39278,7 @@ namespace TankLib.STU.Types
     public class STU_B55F676C : STUInstance
     {
         [STUField(0xBC875271, 0, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
-        public teStructuredData m_BC875271;
+        public STUInstance m_BC875271;
         
         [STUField(0xBA53D5ED, 8)] // size: 8
         public ulong m_guid;

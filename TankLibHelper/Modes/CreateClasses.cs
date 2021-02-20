@@ -63,6 +63,7 @@ namespace TankLibHelper.Modes {
                 //    continue;
                 //}
                 
+                if (_info.GetInstanceName(instance.Key) == "teStructuredData") continue;
                 if (instance.Key == 0x2BB2C217) continue; // references mirror data. todo: handle better
                 var tree = DumpHashes.GetParentTree(_info, instance.Value);
                 if (tree.Contains(0x54D6A5F9u)) continue; // ignore MirrorData (thx tim)

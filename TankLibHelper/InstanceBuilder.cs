@@ -139,7 +139,11 @@ namespace TankLibHelper {
                  field.m_serializationType == 5) && string.IsNullOrEmpty(field.m_typeName)) {
                 uint hash = field.TypeHash2;
 
-                return Info.GetInstanceName(hash);
+                var instName = Info.GetInstanceName(hash);
+                if (instName == "teStructuredData") {
+                    instName = "STUInstance";
+                }
+                return instName;
             }
 
             if (field.m_serializationType == 7) {
