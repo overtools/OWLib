@@ -23,6 +23,7 @@ namespace DataTool.ToolLogic.Extract {
             SaveScratchDatabase();
             new ExtractHeroConversations().Parse(flags);
             new ExtractHeroVoiceBetter().Parse(flags);
+            new ExtractNPCVoice().Parse(flags);
             new ExtractLootbox().Parse(flags);
             SaveScratchDatabase();
             new ExtractMapEnvs().Parse(flags);
