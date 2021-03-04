@@ -15,7 +15,6 @@ using static DataTool.Helper.IO;
 using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
 
 namespace DataTool.ToolLogic.Extract {
-
     [Tool("extract-hero-voice-better", Description = "Extracts hero voicelines but groups them a bit better.", CustomFlags = typeof(ExtractFlags))]
     class ExtractHeroVoiceBetter : JSONTool, ITool {
         private const string Container = "BetterHeroVoice";
@@ -24,61 +23,62 @@ namespace DataTool.ToolLogic.Extract {
         public void Parse(ICLIFlags toolFlags) {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
+                basePath = Path.Combine(flags.OutputPath, Container);
             } else {
                 throw new Exception("no output path");
             }
-            
+
             // Do normal heroes first then NPCs, this is because NPCs have a lot of duplicate sounds and normal heroes (should) have none
             // so any duplicate sounds would only come up while processing NPCs which can be ignored as they (probably) belong to heroes
-            var heroes = Program.TrackedFiles[0x75].Select(x => new Hero(x)).OrderBy(x => !x.IsHero).ThenBy(x => x.GUID.GUID).ToArray();
+            var heroes = Program.TrackedFiles[0x75]
+                                .Select(x => new Hero(x))
+                                .OrderBy(x => !x.IsHero)
+                                .ThenBy(x => x.GUID.GUID)
+                                .ToArray();
 
             foreach (var hero in heroes) {
                 var heroStu = GetInstance<STUHero>(hero.GUID);
 
-                string heroNameActual = GetValidFilename((GetString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}").TrimEnd(' '));
-                Logger.Log($"Processing {heroNameActual}");
-                var voiceSetComponent = GetInstance<STUVoiceSetComponent>(heroStu.m_gameplayEntity);
-                
-                STUVoiceSetComponent baseComponent = default;
-                Combo.ComboInfo baseInfo = default;
+                string heroName = GetValidFilename((GetString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}").TrimEnd(' '));
+                Logger.Log($"Processing {heroName}");
 
-                if (SaveSet(flags, basePath, heroStu.m_gameplayEntity, heroNameActual, ref baseComponent, ref baseInfo)) {
-                    
+                Combo.ComboInfo baseInfo = default;
+                var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(heroStu.m_gameplayEntity)?.m_voiceDefinition;
+
+                if (SaveVoiceSet(flags, basePath, heroName, heroVoiceSetGuid, ref baseInfo)) {
                     var skins = new ProgressionUnlocks(heroStu).GetUnlocksOfType(UnlockType.Skin);
                     foreach (var unlock in skins) {
                         TACTLib.Logger.Debug("Tool", $"Processing skin {unlock.Name}");
                         if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
                         if (unlockSkinTheme.m_0B1BA7C1 != 0)
                             continue;
-                        
+
+                        Combo.ComboInfo info = default;
                         var skinTheme = GetInstance<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
                         if (skinTheme == null)
                             continue;
 
-                        STUVoiceSetComponent component = default;
-                        Combo.ComboInfo info = default;
-
-                        SaveSet(flags, basePath, heroStu.m_gameplayEntity, heroNameActual, ref component, ref info, baseComponent, baseInfo, SkinTheme.GetReplacements(skinTheme));
+                        SaveVoiceSet(flags, basePath, heroName, heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinTheme));
                     }
                 }
             }
         }
 
-        private static bool SaveSet(ExtractFlags flags, string basePath, ulong entityMain, string heroNameActual, ref STUVoiceSetComponent voiceSetComponent, ref Combo.ComboInfo info, STUVoiceSetComponent baseComponent = null, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null) {
-            voiceSetComponent = GetInstance<STUVoiceSetComponent>(Combo.GetReplacement(entityMain, replacements));
-
-            if (voiceSetComponent?.m_voiceDefinition == null) {
+        public static bool SaveVoiceSet(ExtractFlags flags, string basePath, string heroName, ulong? voiceSetGuid, ref Combo.ComboInfo info, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null, bool ignoreGroups = false) {
+            if (voiceSetGuid == null) {
                 return false;
             }
 
             info = new Combo.ComboInfo();
-            Combo.Find(info, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements), replacements);
-            if (baseComponent != null && baseCombo != null) {
-                if (!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, baseComponent.m_voiceDefinition, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements)))
+            Combo.Find(info, voiceSetGuid.Value, replacements);
+
+            // if we're processing a skin, baseCombo is the combo from the hero, this remove duplicate check removes any sounds that belong to the base hero
+            // this ensures you only get sounds unique to the skin when processing a skin
+            if (baseCombo != null) {
+                if (!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, voiceSetGuid.Value, Combo.GetReplacement(voiceSetGuid.Value, replacements)))
                     return false;
             }
-            
+
             foreach (var voiceSet in info.m_voiceSets) {
                 if (voiceSet.Value.VoiceLineInstances == null) continue;
 
@@ -99,13 +99,17 @@ namespace DataTool.ToolLogic.Extract {
                         }
 
                         var path = flags.VoiceGroupByHero && flags.VoiceGroupByType
-                            ? Path.Combine(basePath, Container, heroNameActual, groupName)
-                            : Path.Combine(basePath, Container, flags.VoiceGroupByHero ? Path.Combine(groupName, heroNameActual) : groupName);
+                            ? Path.Combine(basePath, heroName, groupName)
+                            : Path.Combine(basePath, flags.VoiceGroupByHero ? Path.Combine(groupName, heroName) : groupName);
+
+                        if (ignoreGroups) {
+                            path = Path.Combine(basePath, heroName);
+                        }
 
                         foreach (var soundInfo in soundFilesCombo.m_voiceSoundFiles.Values) {
                             var filename = soundInfo.GetName();
-                            if (!flags.VoiceGroupByHero) {
-                                filename = $"{heroNameActual}-{soundInfo.GetName()}";
+                            if (!flags.VoiceGroupByHero && !ignoreGroups) {
+                                filename = $"{heroName}-{soundInfo.GetName()}";
                             }
 
                             if (SoundIdCache.Contains(soundInfo.m_GUID)) {
@@ -125,8 +129,7 @@ namespace DataTool.ToolLogic.Extract {
             return true;
         }
 
-        public static string GetVoiceGroup(ulong stimulusGuid, ulong categoryGuid, ulong unkGuid)
-        {
+        public static string GetVoiceGroup(ulong stimulusGuid, ulong categoryGuid, ulong unkGuid) {
             return GetNullableGUIDName(stimulusGuid) ?? GetNullableGUIDName(categoryGuid) ?? GetNullableGUIDName(unkGuid);
         }
     }

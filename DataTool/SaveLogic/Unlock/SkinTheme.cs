@@ -5,7 +5,6 @@ using DataTool.DataModels.Hero;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib;
-using TankLib.STU;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.Logger;
@@ -17,7 +16,7 @@ namespace DataTool.SaveLogic.Unlock {
             if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
             STUSkinTheme skinTheme = GetInstance<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
             if (skinTheme == null) return;
-            
+
             LoudLog($"\tExtracting skin {unlock.Name}");
             Save(flags, directory, skinTheme, hero);
         }
@@ -31,27 +30,27 @@ namespace DataTool.SaveLogic.Unlock {
 
         public static void Save(ICLIFlags flags, string directory, STUSkinBase skin, STUHero hero) {
             Dictionary<ulong, ulong> replacements = GetReplacements(skin);
-            
+
             LoudLog("\t\tFinding");
-            
+
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             var saveContext = new Combo.SaveContext(info);
 
             FindLogic.Combo.Find(info, hero.m_gameplayEntity, replacements);
             info.SetEntityName(hero.m_gameplayEntity, "Gameplay3P");
-            
+
             FindLogic.Combo.Find(info, hero.m_previewEmoteEntity, replacements);
             info.SetEntityName(hero.m_previewEmoteEntity, "PreviewEmote");
-            
+
             FindLogic.Combo.Find(info, hero.m_322C521A, replacements);
             info.SetEntityName(hero.m_322C521A, "Showcase");
-            
+
             FindLogic.Combo.Find(info, hero.m_26D71549, replacements);
             info.SetEntityName(hero.m_26D71549, "HeroGallery");
-            
+
             FindLogic.Combo.Find(info, hero.m_8125713E, replacements);
             info.SetEntityName(hero.m_8125713E, "HighlightIntro");
-            
+
             if (skin is STUSkinTheme skinTheme) {
                 info.m_processExistingEntities = true;
                 List<Dictionary<ulong, ulong>> weaponReplacementStack = new List<Dictionary<ulong, ulong>>();
@@ -81,14 +80,14 @@ namespace DataTool.SaveLogic.Unlock {
                 FindLogic.Combo.Find(info, tex.m_texture, replacements);
                 info.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
             }
-            
+
             if (replacements != null) {
                 string soundDirectory = Path.Combine(directory, "Sound");
-            
+
                 FindLogic.Combo.ComboInfo diffInfoBefore = new FindLogic.Combo.ComboInfo();
                 FindLogic.Combo.ComboInfo diffInfoAfter = new FindLogic.Combo.ComboInfo();
                 var diffInfoAfterContext = new Combo.SaveContext(diffInfoAfter); // todo: remove
-                
+
                 foreach (KeyValuePair<ulong,ulong> replacement in replacements) {
                     uint diffReplacementType = teResourceGUID.Type(replacement.Value);
                     if (diffReplacementType != 0x2C && diffReplacementType != 0x3F &&
@@ -96,7 +95,7 @@ namespace DataTool.SaveLogic.Unlock {
                     FindLogic.Combo.Find(diffInfoAfter, replacement.Value);
                     FindLogic.Combo.Find(diffInfoBefore, replacement.Key);
                 }
-                
+
                 foreach (KeyValuePair<ulong, FindLogic.Combo.VoiceSetAsset> voiceSet in diffInfoAfter.m_voiceSets) {
                     if (diffInfoBefore.m_voiceSets.ContainsKey(voiceSet.Key)) continue;
                     Combo.SaveVoiceSet(flags, soundDirectory, diffInfoAfterContext, voiceSet.Key);
@@ -106,7 +105,7 @@ namespace DataTool.SaveLogic.Unlock {
                     if (diffInfoBefore.m_soundFiles.ContainsKey(soundFile.Key)) continue;
                     Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, false);
                 }
-            
+
                 foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileAsset> soundFile in diffInfoAfter.m_voiceSoundFiles) {
                     if (diffInfoBefore.m_voiceSoundFiles.ContainsKey(soundFile.Key)) continue;
                     Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, true);
@@ -138,15 +137,21 @@ namespace DataTool.SaveLogic.Unlock {
             }
         }
 
+        /// <summary>
+        /// Returns mapping of replacements for the skin theme, replacements can override whole voice sets or individual voice lines or any file really.
+        /// Pass these replacements into Combo.Find to make sure you're getting the right files for a specific skin theme.
+        /// </summary>
         public static Dictionary<ulong, ulong> GetReplacements(STUSkinBase skin) {
-            if (skin.m_runtimeOverrides != null) {
-                Dictionary<ulong, ulong> replacements = new Dictionary<ulong, ulong>();
-                foreach (KeyValuePair<ulong,STUSkinRuntimeOverride> @override in skin.m_runtimeOverrides) {
-                    replacements[@override.Key] = @override.Value.m_3D884507;
-                }
-                return replacements;
+            if (skin?.m_runtimeOverrides == null) {
+                return null;
             }
-            return null;
+
+            var replacements = new Dictionary<ulong, ulong>();
+            foreach (var (key, value) in skin.m_runtimeOverrides) {
+                replacements[key] = value.m_3D884507;
+            }
+
+            return replacements;
         }
     }
 }
