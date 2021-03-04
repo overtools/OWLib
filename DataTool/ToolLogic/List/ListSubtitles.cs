@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;

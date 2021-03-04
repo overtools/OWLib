@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using static DataTool.Program;
-using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.List {

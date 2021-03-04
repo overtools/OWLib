@@ -3,7 +3,6 @@ using System.IO;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.JSON;
-using DataTool.ToolLogic.Extract;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Program;
