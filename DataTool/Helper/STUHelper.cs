@@ -36,7 +36,7 @@ namespace DataTool.Helper {
                 return new teStructuredData(stream);
             }
         #if RELEASE
-            } catch (Exception) {
+            } catch (System.Exception) {
                 return null;
             }
         #endif
