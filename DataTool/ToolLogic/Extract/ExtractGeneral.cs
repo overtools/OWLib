@@ -26,7 +26,7 @@ namespace DataTool.ToolLogic.Extract {
             foreach (var key in TrackedFiles[0x54]) {
                 STUGenericSettings_PlayerProgression progression = GetInstance<STUGenericSettings_PlayerProgression>(key);
                 if (progression == null) continue;
-                
+
                 PlayerProgression playerProgression = new PlayerProgression(progression);
 
                 if (playerProgression.LootBoxesUnlocks != null) {
@@ -45,7 +45,7 @@ namespace DataTool.ToolLogic.Extract {
                 if (playerProgression.OtherUnlocks != null) {
                     ExtractHeroUnlocks.SaveUnlocks(flags, playerProgression.OtherUnlocks, path, "Achievement", null, null, null, null);
                 }
-                
+
                 SaveScratchDatabase();
             }
         }

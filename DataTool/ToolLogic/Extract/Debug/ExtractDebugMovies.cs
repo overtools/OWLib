@@ -14,8 +14,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MOVI
-        {
+        public struct MOVI {
             public uint Magic;
             public uint Version;
             public ushort Unknown1;
@@ -34,27 +33,23 @@ namespace DataTool.ToolLogic.Extract.Debug {
             string basePath;
             ExtractFlags flags = toolFlags as ExtractFlags;
             basePath = flags?.OutputPath;
-            if (string.IsNullOrWhiteSpace(basePath))
-            {
+            if (string.IsNullOrWhiteSpace(basePath)) {
                 throw new Exception("no output path");
             }
 
             const string container = "DebugMovies";
-            
+
             foreach (ulong key in Program.TrackedFiles[0xB6]) {
                 using (Stream videoStream = OpenFile(key)) {
                     if (videoStream != null) {
-                        using (BinaryReader reader = new BinaryReader(videoStream))
-                        {
+                        using (BinaryReader reader = new BinaryReader(videoStream)) {
                             MOVI movi = reader.Read<MOVI>();
-                            videoStream.Position = 128;  // wrapped in "MOVI" for some reason
+                            videoStream.Position = 128; // wrapped in "MOVI" for some reason
                             string videoFile = Path.Combine(basePath, container, teResourceGUID.LongKey(key).ToString("X12"), $"{teResourceGUID.LongKey(key):X12}.bk2");
                             WriteFile(videoStream, videoFile);
-                            FindLogic.Combo.ComboInfo audioInfo = new FindLogic.Combo.ComboInfo
-                            {
-                                m_soundFiles = new System.Collections.Generic.Dictionary<ulong, FindLogic.Combo.SoundFileAsset>
-                                {
-                                    { movi.MasterAudio, new FindLogic.Combo.SoundFileAsset(movi.MasterAudio) }
+                            FindLogic.Combo.ComboInfo audioInfo = new FindLogic.Combo.ComboInfo {
+                                m_soundFiles = new System.Collections.Generic.Dictionary<ulong, FindLogic.Combo.SoundFileAsset> {
+                                    {movi.MasterAudio, new FindLogic.Combo.SoundFileAsset(movi.MasterAudio)}
                                 }
                             };
                             var audioContext = new Combo.SaveContext(audioInfo);

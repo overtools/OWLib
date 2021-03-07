@@ -10,10 +10,10 @@ namespace DataTool.DataModels {
     public class LootBox {
         [DataMember]
         public string NameFormat;
-        
+
         [DataMember]
         public string Type;
-        
+
         [DataMember]
         public Enum_BABC4175 LootBoxType;
 
@@ -46,11 +46,12 @@ namespace DataTool.DataModels {
             if (LootBoxNames.TryGetValue(type, out string lootboxName)) {
                 return lootboxName;
             }
+
             return $"Unknown{type}";
         }
 
         public static string GetName(Enum_BABC4175 lootBoxType) {
-            return GetName((uint)lootBoxType);
+            return GetName((uint) lootBoxType);
         }
 
         public static string GetBasicName(uint type) {
@@ -81,7 +82,7 @@ namespace DataTool.DataModels {
     public class LootBoxShopCard {
         [DataMember]
         public string Text;
-        
+
         [DataMember]
         public teResourceGUID Texture;
 

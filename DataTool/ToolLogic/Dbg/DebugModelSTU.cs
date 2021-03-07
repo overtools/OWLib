@@ -24,14 +24,14 @@ namespace DataTool.ToolLogic.Dbg {
                     var hitboxes = stuChunk.StructuredData.m_CB4D298D;
                     var complex = hitboxes.Select(x => x.m_B7C8314A).OfType<STU_B3800E70>().First();
                     var lines = new List<string> {
-                                                     "ply",
-                                                     "format ascii 1.0",
-                                                     $"element vertex {complex.m_88FCECD7.Length}",
-                                                     "property float x",
-                                                     "property float y",
-                                                     "property float z",
-                                                     "end_header"
-                                                 };
+                        "ply",
+                        "format ascii 1.0",
+                        $"element vertex {complex.m_88FCECD7.Length}",
+                        "property float x",
+                        "property float y",
+                        "property float z",
+                        "end_header"
+                    };
                     lines.AddRange(complex.m_88FCECD7.Select(x => $"{x.X} {x.Y} {x.Z}")); // vertex
 
                     File.WriteAllText(@"F:\Test.ply", string.Join("\n", lines));

@@ -9,7 +9,7 @@ namespace DataTool.ConvertLogic {
         public long[] m_codebookOffsets;
 
         private readonly long m_codebookCount;
-        
+
         public CodebookLibrary(string file) {
             m_file = file;
 
@@ -21,7 +21,7 @@ namespace DataTool.ConvertLogic {
                     long offsetOffset = reader.ReadInt32();
 
                     m_codebookCount = (fileSize - offsetOffset) / 4;
-                    
+
                     m_codebookData = new byte[offsetOffset];
                     m_codebookOffsets = new long[m_codebookCount];
 
@@ -47,19 +47,19 @@ namespace DataTool.ConvertLogic {
                 cbSize = (ulong) signedCbSize;
             }
 
-            long cbStartIndex = (long)cbIndexStart;
+            long cbStartIndex = (long) cbIndexStart;
             long unsignedSize = (long) cbSize;
-            
+
             Stream codebookStream = new MemoryStream();
-            for (long i = cbStartIndex; i < unsignedSize+cbStartIndex; i++) {
+            for (long i = cbStartIndex; i < unsignedSize + cbStartIndex; i++) {
                 codebookStream.WriteByte(m_codebookData[i]);
             }
-            
+
             BinaryReader reader = new BinaryReader(codebookStream);
             BitStream bitStream = new BitStream(reader);
             reader.BaseStream.Position = 0;
-            
-            
+
+
             // todo: the rest of the stuff
             Rebuild(bitStream, cbSize, os);
         }
@@ -70,12 +70,12 @@ namespace DataTool.ConvertLogic {
             BitUint entries = new BitUint(14);
             bis.Read(dimensions);
             bis.Read(entries);
-            
+
             /* OUT: 24 bit identifier, 16 bit dimensions, 24 bit entry count */
             bos.Write(new BitUint(24, 0x564342));
             bos.Write(new BitUint(16, dimensions));
             bos.Write(new BitUint(24, entries));
-            
+
             /* IN/OUT: 1 bit ordered flag */
             BitUint ordered = new BitUint(1);
             bis.Read(ordered);
@@ -90,11 +90,12 @@ namespace DataTool.ConvertLogic {
                 int currentEntry = 0;
                 while (currentEntry < entries) {
                     /* IN/OUT: ilog(entries-current_entry) bit count w/ given length */
-                    BitUint number = new BitUint((uint)Sound.WwiseRIFFVorbis.Ilog((uint)(entries-currentEntry)));
+                    BitUint number = new BitUint((uint) Sound.WwiseRIFFVorbis.Ilog((uint) (entries - currentEntry)));
                     bis.Read(number);
                     bos.Write(number);
-                    currentEntry = (int)(currentEntry+number); 
+                    currentEntry = (int) (currentEntry + number);
                 }
+
                 if (currentEntry > entries) throw new Exception("current_entry out of range");
             } else {
                 /* IN: 3 bit codeword length length, 1 bit sparse flag */
@@ -102,12 +103,11 @@ namespace DataTool.ConvertLogic {
                 BitUint sparse = new BitUint(1);
                 bis.Read(codewordLengthLength);
                 bis.Read(sparse);
-                
-                if (0 == codewordLengthLength || 5 < codewordLengthLength)
-                {
+
+                if (0 == codewordLengthLength || 5 < codewordLengthLength) {
                     throw new Exception("nonsense codeword length");
                 }
-                
+
                 /* OUT: 1 bit sparse flag */
                 bos.Write(sparse);
                 //if (sparse)
@@ -118,12 +118,10 @@ namespace DataTool.ConvertLogic {
                 //{
                 //    cout << "Nonsparse" << endl;
                 //}
-                for (int i = 0; i < entries; i++)
-                {
+                for (int i = 0; i < entries; i++) {
                     bool presentBool = true;
 
-                    if (sparse == 1)
-                    {
+                    if (sparse == 1) {
                         /* IN/OUT 1 bit sparse presence flag */
                         BitUint present = new BitUint(1);
                         bis.Read(present);
@@ -142,15 +140,15 @@ namespace DataTool.ConvertLogic {
                     }
                 }
             } // done with lengths
-            
+
             // lookup table
-            
+
             /* IN: 1 bit lookup type */
             BitUint lookupType = new BitUint(1);
             bis.Read(lookupType);
             /* OUT: 4 bit lookup type */
             bos.Write(new BitUint(4, lookupType));
-            
+
             if (lookupType == 0) {
                 //cout << "no lookup table" << endl;
             } else if (lookupType == 1) {
@@ -165,26 +163,25 @@ namespace DataTool.ConvertLogic {
                 bis.Read(max);
                 bis.Read(valueLength);
                 bis.Read(sequenceFlag);
-                
+
                 bos.Write(min);
                 bos.Write(max);
                 bos.Write(valueLength);
                 bos.Write(sequenceFlag);
 
                 uint quantvals = _bookMaptype1Quantvals(entries, dimensions);
-                for (uint i = 0; i < quantvals; i++)
-                {
+                for (uint i = 0; i < quantvals; i++) {
                     /* IN/OUT: n bit value */
-                    BitUint val = new BitUint(valueLength+1);
+                    BitUint val = new BitUint(valueLength + 1);
                     bis.Read(val);
                     bos.Write(val);
                 }
             }
-            
+
             /* check that we used exactly all bytes */
             /* note: if all bits are used in the last byte there will be one extra 0 byte */
-            
-            if (0 != cbSize && bis.TotalBitsRead / 8 + 1 != (int)cbSize) {
+
+            if (0 != cbSize && bis.TotalBitsRead / 8 + 1 != (int) cbSize) {
                 throw new Exception($"{cbSize}, {bis.TotalBitsRead / 8 + 1}");
             }
         }
@@ -212,16 +209,16 @@ namespace DataTool.ConvertLogic {
         }
 
         public long? GetCodebook(int i) {
-            if (i >= m_codebookCount-1 || i < 0) return null;
-            return m_codebookOffsets[i];  // return the offset
+            if (i >= m_codebookCount - 1 || i < 0) return null;
+            return m_codebookOffsets[i]; // return the offset
             // CodebookData[CodebookOffsets[i]]
         }
 
         public long GetCodebookSize(int i) {
-            if (i >= m_codebookCount-1 || i < 0) return -1;
-            return m_codebookOffsets[i+1]-m_codebookOffsets[i];
+            if (i >= m_codebookCount - 1 || i < 0) return -1;
+            return m_codebookOffsets[i + 1] - m_codebookOffsets[i];
         }
 
-        public class InvalidID : Exception {}
+        public class InvalidID : Exception { }
     }
 }

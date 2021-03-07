@@ -11,12 +11,11 @@ namespace DataTool.SaveLogic.Unlock {
     public static class VoiceLine {
         public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock, VoiceSet voiceSet) {
             if (voiceSet == null) return;
-            
+
             if (!(unlock.STU is STUUnlock_VoiceLine vl)) return;
 
             HashSet<ulong> voiceLines = new HashSet<ulong>();
             using (Stream vlStream = IO.OpenFile(vl.m_F57B051E)) {
-                
                 teChunkedData chunkedData = new teChunkedData(vlStream);
 
                 foreach (teEffectComponentVoiceStimulus voiceStimulus in chunkedData.GetChunks<teEffectComponentVoiceStimulus>()) {
@@ -27,19 +26,20 @@ namespace DataTool.SaveLogic.Unlock {
                     }
                 }
             }
-            
+
             SaveVoiceLines(flags, voiceLines, voiceSet, directory);
         }
-        
+
         public static void SaveVoiceLines(ICLIFlags flags, HashSet<ulong> lines, VoiceSet voiceSet, string directory) {
             FindLogic.Combo.ComboInfo fakeComboInfo = new FindLogic.Combo.ComboInfo();
             var saveContext = new Combo.SaveContext(fakeComboInfo);
-            
+
             foreach (ulong line in lines) {
                 VoiceLineInstance voiceLineInstance = voiceSet.VoiceLines[line];
 
                 SaveVoiceLine(flags, voiceLineInstance, directory, saveContext);
             }
+
             saveContext.Wait();
         }
 
@@ -48,7 +48,7 @@ namespace DataTool.SaveLogic.Unlock {
             foreach (ulong soundFile in voiceLineInstance.VoiceSounds) {
                 FindLogic.Combo.SoundFileAsset fakeSoundFileInfo = new FindLogic.Combo.SoundFileAsset(soundFile);
                 context.m_info.m_voiceSoundFiles[soundFile] = fakeSoundFileInfo;
-                
+
                 Combo.SaveSoundFile(flags, directory, context, soundFile, true);
             }
         }

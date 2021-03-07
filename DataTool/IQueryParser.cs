@@ -46,7 +46,6 @@ namespace DataTool {
                     })) {
                         return false;
                     }
-
                 }
             }
 
@@ -96,8 +95,7 @@ namespace DataTool {
             Value = value;
         }
 
-        public TagValue() {
-        }
+        public TagValue() { }
 
         public virtual bool IsEqual(string query) {
             return StringEqual(query, Value);
@@ -122,7 +120,7 @@ namespace DataTool {
             Log("Error parsing query:");
             Log($"{indent + 1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
             Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be separated by spaces");
-            Log($"{indent+1}All hero and item names are in your selected locale");
+            Log($"{indent + 1}All hero and item names are in your selected locale");
 
             Log("\r\nTypes:");
             foreach (QueryType argType in types) {
@@ -138,6 +136,7 @@ namespace DataTool {
                     if (argTypeTag.Default != null) {
                         TankLib.Helpers.Logger.Log24Bit(ConsoleSwatch.XTermColor.Wheat, false, Console.Out, null, $" \"{argTypeTag.Default}\"");
                     }
+
                     Log();
                     foreach (string option in argTypeTag.Options) {
                         Log($"{indent + 2}{option}");
@@ -148,8 +147,9 @@ namespace DataTool {
             }
         }
 
-        protected Dictionary<string, Dictionary<string, ParsedArg>> ParseQuery(ICLIFlags flags,
-                                                                               List<QueryType> queryTypes, Dictionary<string, string> queryNameOverrides) {
+        protected Dictionary<string, Dictionary<string, ParsedArg>> ParseQuery(
+            ICLIFlags flags,
+            List<QueryType> queryTypes, Dictionary<string, string> queryNameOverrides) {
             if (queryTypes.Count == 0) {
                 queryTypes = new List<QueryType> {
                     new QueryType {Name = "FakeType"}
@@ -164,7 +164,7 @@ namespace DataTool {
                 new Dictionary<string, Dictionary<string, ParsedArg>>();
 
             if (result.Length == 0) return null;
-            
+
             foreach (string opt in result) {
                 if (opt.StartsWith("--")) continue; // ok so this is a flag
                 string[] split = opt.Split('|');
@@ -194,6 +194,7 @@ namespace DataTool {
                                 if (parsedTypes[hero][type.Name].Tags.ContainsKey(tagName)) {
                                     continue;
                                 }
+
                                 TagValue valueObject = (TagValue) Activator.CreateInstance(tagObj.ValueType);
                                 valueObject.Value = tagObj.Default;
 
@@ -284,6 +285,7 @@ namespace DataTool {
                                 if (parsedTypes[hero][typeObj.Name].Tags.ContainsKey(tagName)) {
                                     continue;
                                 }
+
                                 TagValue valueObject = (TagValue) Activator.CreateInstance(tagObj.ValueType);
                                 valueObject.Value = tagObj.Default;
 

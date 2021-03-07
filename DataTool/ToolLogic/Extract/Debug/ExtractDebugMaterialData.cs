@@ -38,7 +38,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             foreach (KeyValuePair<uint,int> pair in count) {
                 Console.Out.WriteLine($"{pair.Key:X8}: {pair.Value} times");
             }*/
-            
+
             // global values
             uint[] missing = {
                 0x55745484,
@@ -70,7 +70,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 0xDD4FF96B,
                 0xB50639D8
             };
-            
+
             /*HashSet<ulong> buffers = new HashSet<ulong>();
             foreach (var guid in Program.TrackedFiles[0x86]) {
                 teShaderInstance shaderInstance = new teShaderInstance(IO.OpenFile(guid));

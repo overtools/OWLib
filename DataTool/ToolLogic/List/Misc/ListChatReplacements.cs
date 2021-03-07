@@ -10,7 +10,7 @@ namespace DataTool.ToolLogic.List.Misc {
     public class ListChatReplacements : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
-            
+
             if (toolFlags is ListFlags flags)
                 OutputJSON(data, flags);
         }

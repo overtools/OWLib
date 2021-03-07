@@ -25,26 +25,28 @@ using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool {
     public static class Program {
-        public static ClientHandler                      Client;
-        public static ProductHandler_Tank                TankHandler;
+        public static ClientHandler Client;
+        public static ProductHandler_Tank TankHandler;
         public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
 
         public static ToolFlags Flags;
-        public static uint      BuildVersion;
-        public static bool      IsPTR => Client?.AgentProduct?.Uid == "prometheus_test";
-        
+        public static uint BuildVersion;
+        public static bool IsPTR => Client?.AgentProduct?.Uid == "prometheus_test";
+
         public static string[] ValidLanguages = {"deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW"};
 
-        public static bool ValidKey(ulong key) { return TankHandler.m_assets.ContainsKey(key); }
+        public static bool ValidKey(ulong key) {
+            return TankHandler.m_assets.ContainsKey(key);
+        }
 
         public static HashSet<Type> GetTools() {
             var tools = new HashSet<Type>();
             {
-                var t   = typeof(ITool);
+                var t = typeof(ITool);
                 var asm = t.Assembly;
                 var types = asm.GetTypes()
-                               .Where(tt => tt.IsClass && t.IsAssignableFrom(tt))
-                               .ToList();
+                    .Where(tt => tt.IsClass && t.IsAssignableFrom(tt))
+                    .ToList();
                 foreach (var tt in types) {
                     var attribute = tt.GetCustomAttribute<ToolAttribute>();
                     if (tt.IsInterface || attribute == null) continue;
@@ -100,7 +102,7 @@ namespace DataTool {
                 return;
             }
 
-            ITool     targetTool      = null;
+            ITool targetTool = null;
             ICLIFlags targetToolFlags = null;
             ToolAttribute targetToolAttributes = null;
 
@@ -117,8 +119,8 @@ namespace DataTool {
                     var flags = attribute.CustomFlags;
                     if (typeof(ICLIFlags).IsAssignableFrom(flags))
                         targetToolFlags = typeof(FlagParser).GetMethod(nameof(FlagParser.Parse), new Type[] { })
-                                                            ?.MakeGenericMethod(flags)
-                                                            .Invoke(null, null) as ICLIFlags;
+                                              ?.MakeGenericMethod(flags)
+                                              .Invoke(null, null) as ICLIFlags;
                 }
 
                 break;
@@ -146,7 +148,7 @@ namespace DataTool {
                                     "========================");
                     throw;
                 }
-                
+
                 //foreach (KeyValuePair<ushort, HashSet<ulong>> type in TrackedFiles.OrderBy(x => x.Key)) {
                 //    //Console.Out.WriteLine($"Found type: {type.Key:X4} ({type.Value.Count} files)");
                 //    Console.Out.WriteLine($"Found type: {type.Key:X4}");
@@ -170,13 +172,15 @@ namespace DataTool {
         private static void HookConsole() {
             AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
             Process.GetCurrentProcess()
-                   .EnableRaisingEvents = true;
+                .EnableRaisingEvents = true;
             AppDomain.CurrentDomain.ProcessExit += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
-            Console.CancelKeyPress              += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
-            Console.OutputEncoding              =  Encoding.UTF8;
+            Console.CancelKeyPress += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
+            Console.OutputEncoding = Encoding.UTF8;
         }
 
-        private static void InitTankSettings() { Logger.ShowDebug = Debugger.IsAttached; }
+        private static void InitTankSettings() {
+            Logger.ShowDebug = Debugger.IsAttached;
+        }
 
         public static void InitMisc() {
             var dbPath = Flags.ScratchDBPath;
@@ -218,14 +222,14 @@ namespace DataTool {
             // Attempt to load language via registry, if they were already provided via flags then this won't do anything
             if (!Flags.NoLanguageRegistry)
                 TryFetchLocaleFromRegistry();
-            
+
             Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
 
             var args = new ClientCreateArgs {
                 SpeechLanguage = Flags.SpeechLanguage,
-                TextLanguage   = Flags.Language,
-                HandlerArgs    = new ClientCreateArgs_Tank { CacheAPM = Flags.UseCache, ManifestRegion = Flags.RCN ? ProductHandler_Tank.REGION_CN : ProductHandler_Tank.REGION_DEV },
-                Online         = online
+                TextLanguage = Flags.Language,
+                HandlerArgs = new ClientCreateArgs_Tank {CacheAPM = Flags.UseCache, ManifestRegion = Flags.RCN ? ProductHandler_Tank.REGION_CN : ProductHandler_Tank.REGION_DEV},
+                Online = online
             };
 
             LoadHelper.PreLoad();
@@ -264,7 +268,7 @@ namespace DataTool {
             foreach (var asset in TankHandler.m_assets) {
                 var type = teResourceGUID.Type(asset.Key);
                 if (!TrackedFiles.TryGetValue(type, out var typeMap)) {
-                    typeMap            = new HashSet<ulong>();
+                    typeMap = new HashSet<ulong>();
                     TrackedFiles[type] = typeMap;
                 }
 
@@ -309,7 +313,7 @@ namespace DataTool {
                     }
                 }
             } catch (Exception) {
-                // Ignored   
+                // Ignored
             }
         }
 
@@ -320,7 +324,7 @@ namespace DataTool {
 
             Logger.Log24Bit(ConsoleSwatch.XTermColor.HotPink3, true, Console.Error, null, ex.Message);
             Logger.Log24Bit(ConsoleSwatch.XTermColor.MediumPurple, true, Console.Error, null, ex.StackTrace);
-                
+
             if (ex is BLTEDecoderException decoder) {
                 File.WriteAllBytes(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"BLTEDump-{AppDomain.CurrentDomain.FriendlyName}_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.blte"), decoder.GetBLTEData());
             }
@@ -355,7 +359,7 @@ namespace DataTool {
                     var attribute = t.GetCustomAttribute<ToolAttribute>();
                     if (attribute.IsSensitive && !Debugger.IsAttached) continue;
 
-                    var desc                                = attribute.Description;
+                    var desc = attribute.Description;
                     if (attribute.Description == null) desc = "";
 
                     Log("  {0, -23} | {1}", attribute.Keyword, desc);
@@ -371,7 +375,7 @@ namespace DataTool {
                 if (!attribute.Keyword.Contains("-")) continue;
 
                 var result = attribute.Keyword.Split('-')
-                                      .First();
+                    .First();
 
                 if (!sortedTools.ContainsKey(result)) sortedTools[result] = new List<Type>();
                 sortedTools[result]
@@ -388,8 +392,8 @@ namespace DataTool {
                     Log();
                     Log("Flags for {0}-*", toolType.Key);
                     typeof(FlagParser).GetMethod(nameof(FlagParser.FullHelp))
-                                      ?.MakeGenericMethod(flags)
-                                      .Invoke(null, new object[] { null, true });
+                        ?.MakeGenericMethod(flags)
+                        .Invoke(null, new object[] {null, true});
                 } else {
                     //
                 }

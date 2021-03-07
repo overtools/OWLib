@@ -33,7 +33,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             public string uuid;
             public string name;
         }
-        
+
         [DataContract]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public class GraphEdge {
@@ -41,7 +41,6 @@ namespace DataTool.ToolLogic.Extract.Debug {
             public string source_name;
             public string target_nodeId;
             public string target_name;
-            
         }
 
         public void Parse(ICLIFlags toolFlags) {
@@ -52,11 +51,12 @@ namespace DataTool.ToolLogic.Extract.Debug {
             if (!(toolFlags is ExtractFlags flags)) {
                 throw new Exception("wat");
             }
+
             string path = Path.Combine(flags.OutputPath, "DebugAnimNodes");
             IO.CreateDirectorySafe(path);
 
             // I didn't want to write code for a viewer so use: https://github.com/cb109/qtnodes
-            
+
             foreach (ulong key in TrackedFiles[0x20]) {
                 /*if (key != 1116892707587883363) continue; // 020 reaper hero select
                 STUAnimBlendTree tree = GetInstance<STUAnimBlendTree>(key);
@@ -80,10 +80,10 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     }
                 }
                 OutputJSON(root, flags);*/
-                
+
                 // notes: (all oldhash)
                 // {STU_2D84E49E} for strafe stuff
-                
+
                 // <= breakpoint here
                 GraphRoot root = new GraphRoot {nodes = new List<GraphNode>(), edges = new List<GraphEdge>()};
 
@@ -104,7 +104,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
         public void ParseNode(GraphRoot root, STUAnimNode_Base animNode) {
             if (animNode == null) return;
-            
+
             string name = $"{animNode.GetType().Name} - {animNode.m_uniqueID}";
 
             if (animNode.m_layers != null) {
@@ -120,6 +120,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     }
                 }
             }
+
             if (animNode is STUAnimNode_Random unk1) {
                 if (unk1.m_children != null) {
                     foreach (STU_597F8A0B child in unk1.m_children) {
@@ -127,6 +128,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     }
                 }
             }
+
             if (animNode is STUAnimNode_Sequence unk2) {
                 if (unk2.m_children != null) {
                     foreach (STU_F632355B child in unk2.m_children) {
@@ -134,11 +136,13 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     }
                 }
             }
+
             if (animNode is STU_58C5699C unk3) {
                 if (unk3.m_child != null) {
                     AddChild(root, unk3.m_child, animNode.m_uniqueID);
                 }
             }
+
             if (animNode is STUAnimNode_BranchByCategory byCategory) {
                 if (byCategory.m_children != null) {
                     foreach (STU_C9E2FF36 child in byCategory.m_children) {
@@ -150,13 +154,15 @@ namespace DataTool.ToolLogic.Extract.Debug {
             if (animNode is STUAnimNode_Animation anim) {
                 if (anim.m_animation != null) {
                     if (anim.m_animation.m_63DEDAC0 != 0) {
-                        name += $" - {anim.m_animation.m_63DEDAC0-1}";
+                        name += $" - {anim.m_animation.m_63DEDAC0 - 1}";
                     }
                 }
             }
-            
-            root.nodes.Add(new GraphNode {x = animNode.m_pos.X, y = animNode.m_pos.Y, 
-                uuid = animNode.m_uniqueID.ToString(), @class = "MaxObject", name = name});
+
+            root.nodes.Add(new GraphNode {
+                x = animNode.m_pos.X, y = animNode.m_pos.Y,
+                uuid = animNode.m_uniqueID.ToString(), @class = "MaxObject", name = name
+            });
         }
 
         public void AddChild(GraphRoot root, STU_2F6BD485 child, uint parentId) {

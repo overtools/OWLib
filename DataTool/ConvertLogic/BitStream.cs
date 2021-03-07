@@ -7,22 +7,21 @@ namespace DataTool.ConvertLogic {
         private byte _current;
         public byte BitsLeft;
         public int TotalBitsRead;
-        
+
         public BitStream(BinaryReader reader) {
             _reader = reader;
         }
 
         public bool GetBit() {
             if (BitsLeft == 0) {
-
                 _current = _reader.ReadByte();
                 // if (c == EOF) throw Out_of_bits();
                 // bit_buffer = c;
                 BitsLeft = 8;
-
             }
+
             TotalBitsRead++;
-            BitsLeft --;
+            BitsLeft--;
             return (_current & (0x80 >> BitsLeft)) != 0;
         }
 

@@ -22,7 +22,7 @@ namespace DataTool.ToolLogic.List.Misc {
             var i = new IndentHelper();
             foreach (var item in data) {
                 Log($"{item.Key}");
-                Log($"{i+1}{item.Value}");
+                Log($"{i + 1}{item.Value}");
             }
         }
 

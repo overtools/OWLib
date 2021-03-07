@@ -27,7 +27,7 @@ namespace DataTool.ToolLogic.Util {
         public const string VALID_HERO_NAMES = "datatool.ux.valid_hero_names";
         public const string VALID_NPC_NAMES = "datatool.ux.valid_npc_names";
         public const string VALID_MAP_NAMES = "datatool.ux.valid_map_names";
-        
+
         public const string VALID_SKIN_NAMES = "datatool.ux.valid_skin_names";
         public const string VALID_ICON_NAMES = "datatool.ux.valid_icon_names";
         public const string VALID_SPRAY_NAMES = "datatool.ux.valid_spray_names";
@@ -35,9 +35,9 @@ namespace DataTool.ToolLogic.Util {
         public const string VALID_HIGHLIGHTINTRO_NAMES = "datatool.ux.valid_highlightintro_names";
         public const string VALID_EMOTE_NAMES = "datatool.ux.valid_emote_names";
         public const string VALID_VOICELINE_NAMES = "datatool.ux.valid_voiceline_names";
-        
+
         public const string VALID_OWL_TEAMS = "datatool.ux.valid_owl_teams";
-        
+
         public class DynamicChoiceType {
             public List<DynamicChoice> Choices = new List<DynamicChoice>();
         }
@@ -55,14 +55,14 @@ namespace DataTool.ToolLogic.Util {
             var owlTeams = container.GetType(VALID_OWL_TEAMS);
 
             HashSet<string> handledTeams = new HashSet<string>();
-            
+
             Dictionary<ulong, STUHero> heroes = new Dictionary<ulong, STUHero>();
             Dictionary<string, int> nameOccurrances = new Dictionary<string, int>();
 
             foreach (ulong heroGUID in Program.TrackedFiles[0x75]) {
                 var hero = STUHelper.GetInstance<STUHero>(heroGUID);
                 if (hero == null) continue;
-                
+
                 string heroNameActual = Hero.GetCleanName(hero);
                 if (heroNameActual == null) continue;
 
@@ -82,7 +82,7 @@ namespace DataTool.ToolLogic.Util {
                 if (doGuidName) {
                     heroNameActual += $" ({teResourceGUID.Index(heroGUID):X})";
                 }
-                
+
                 ProgressionUnlocks progressionUnlocks = new ProgressionUnlocks(hero);
 
                 var choice = new DynamicChoice {
@@ -108,6 +108,7 @@ namespace DataTool.ToolLogic.Util {
                                     QueryName = teamDef.FullName
                                 });
                             }
+
                             continue;
                         }
                     }
@@ -117,7 +118,7 @@ namespace DataTool.ToolLogic.Util {
                     if (choice.Children == null) {
                         choice.Children = new DynamicChoicesContainer();
                     }
-                    
+
                     var test = choice.Children.GetType(key);
                     test.Choices.Add(new DynamicChoice {
                         QueryName = unlock.Name,
@@ -129,13 +130,13 @@ namespace DataTool.ToolLogic.Util {
 
         private static void ProcessMapNames(DynamicChoicesContainer container) {
             var mapContainer = container.GetType(VALID_MAP_NAMES);
-            
+
             foreach (ulong key in Program.TrackedFiles[0x9F]) {
                 MapHeader map = ListMaps.GetMap(key);
                 if (map == null) continue;
 
                 var name = map.VariantName ?? map.Name ?? $"Title Screen ({teResourceGUID.Index(key):X})";
-                
+
                 mapContainer.Choices.Add(new DynamicChoice {
                     DisplayName = name,
                     QueryName = teResourceGUID.Index(map.MapGUID).ToString("X")
@@ -148,7 +149,7 @@ namespace DataTool.ToolLogic.Util {
 
             ProcessHeroNames(info);
             ProcessMapNames(info);
-            
+
             OutputJSON(info, (ListFlags) toolFlags);
         }
     }

@@ -20,16 +20,16 @@ namespace DataTool.JSON {
             } catch {
                 // rip, already registered and set as default???
             }
-            
+
             byte[] json = Utf8Json.JsonSerializer.NonGeneric.Serialize(jObj.GetType(), jObj);
             if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
-                byte[] pretty =  Utf8Json.JsonSerializer.PrettyPrintByteArray(json);
+                byte[] pretty = Utf8Json.JsonSerializer.PrettyPrintByteArray(json);
 
-                if(log) Log("Writing to {0}", toolFlags.Output);
+                if (log) Log("Writing to {0}", toolFlags.Output);
 
                 CreateDirectoryFromFile(toolFlags.Output);
 
-                var fileName = !toolFlags.Output.EndsWith(".json") ? $"{toolFlags.Output}.json" : toolFlags.Output; 
+                var fileName = !toolFlags.Output.EndsWith(".json") ? $"{toolFlags.Output}.json" : toolFlags.Output;
 
                 using (Stream file = File.OpenWrite(fileName)) {
                     file.SetLength(0);
@@ -48,13 +48,13 @@ namespace DataTool.JSON {
             serializeSettings.Converters.Add(new teResourceGUID_Newtonsoft());
 
             string json = JsonConvert.SerializeObject(jObj, Formatting.Indented, serializeSettings);
-            
+
             if (!string.IsNullOrWhiteSpace(toolFlags.Output)) {
-                if(log) Log("Writing to {0}", toolFlags.Output);
+                if (log) Log("Writing to {0}", toolFlags.Output);
 
                 CreateDirectoryFromFile(toolFlags.Output);
 
-                var fileName = !toolFlags.Output.EndsWith(".json") ? $"{toolFlags.Output}.json" : toolFlags.Output; 
+                var fileName = !toolFlags.Output.EndsWith(".json") ? $"{toolFlags.Output}.json" : toolFlags.Output;
 
                 using (Stream file = File.OpenWrite(fileName)) {
                     file.SetLength(0);

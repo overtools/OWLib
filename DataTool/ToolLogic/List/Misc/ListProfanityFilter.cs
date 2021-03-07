@@ -12,7 +12,7 @@ namespace DataTool.ToolLogic.List.Misc {
     public class ListProfanityFilters : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
-            
+
             if (toolFlags is ListFlags flags)
                 OutputJSON(data, flags);
         }
@@ -24,11 +24,11 @@ namespace DataTool.ToolLogic.List.Misc {
 
         private static IList<ProfanityFilterContainer> GetData() {
             IList<ProfanityFilterContainer> @return = new List<ProfanityFilterContainer>();
-            
+
             foreach (var key in TrackedFiles[0x7F]) {
                 var stu = GetInstance<STU_E55DA1F4>(key);
                 if (stu == null) continue;
-                
+
                 @return.Add(new ProfanityFilterContainer {
                     GUID = (teResourceGUID) key,
                     BadWords = stu.m_F627FDCA?.Select(x => x.Value).ToArray()

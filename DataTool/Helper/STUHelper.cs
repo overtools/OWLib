@@ -18,12 +18,12 @@ namespace DataTool.Helper {
                 return structuredData?.GetInstance<T>();
             }
         }
-        
+
         public static T[] GetInstances<T>(ulong key) where T : STUInstance {
             if (key == 0) return null;
             using (teStructuredData structuredData = OpenSTUSafe(key)) {
                 return structuredData?.GetInstances<T>().ToArray();
-            }            
+            }
         }
 
         public static teStructuredData OpenSTUSafe(ulong key) {

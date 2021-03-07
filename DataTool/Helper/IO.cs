@@ -13,7 +13,7 @@ using static DataTool.Program;
 namespace DataTool.Helper {
     // ReSharper disable once InconsistentNaming
     public static class IO {
-        public static string GetValidFilename(string filename, bool force=true) {
+        public static string GetValidFilename(string filename, bool force = true) {
             if (Flags != null && Flags.NoNames && !force) return null;
             if (filename == null) return null;
 
@@ -30,10 +30,10 @@ namespace DataTool.Helper {
             string sanitisedNamePart = Regex.Replace(newFileName, invalidReStr, "_");
 
             return reservedWords.Select(reservedWord => $"^{reservedWord}\\.").Aggregate(sanitisedNamePart,
-                (current, reservedWordPattern) => Regex.Replace(current, reservedWordPattern, "_reservedWord_.",
-                    RegexOptions.IgnoreCase));
+                                                                                         (current, reservedWordPattern) => Regex.Replace(current, reservedWordPattern, "_reservedWord_.",
+                                                                                                                                         RegexOptions.IgnoreCase));
         }
-        
+
         public static Dictionary<(ulong, ushort), string> GUIDTable = new Dictionary<(ulong, ushort), string>();
 
         public static void LoadGUIDTable(bool onlyCanonical) {
@@ -52,7 +52,7 @@ namespace DataTool.Helper {
                 bool canonical = byte.Parse(canonicalString) == 1;
                 if (onlyCanonical && !canonical) continue;
                 if (!canonical) name += $"-{index:X}";
-                
+
                 if (GUIDTable.ContainsKey((index, type)))
                     TankLib.Helpers.Logger.Warn("GUIDNames", $"Duplicate key detected: {indexString}.{typeString}");
 
@@ -86,7 +86,7 @@ namespace DataTool.Helper {
                     file.SetLength(0); // ensure no leftover data
                     stream.CopyTo(file);
                 }
-            } catch(IOException) {
+            } catch (IOException) {
                 if (File.Exists(filename)) return;
                 throw;
             }
@@ -98,6 +98,7 @@ namespace DataTool.Helper {
             if (!Directory.Exists(path) && path != null) {
                 Directory.CreateDirectory(path);
             }
+
             var bytes = Encoding.Unicode.GetBytes(text);
 
             try {
@@ -105,7 +106,7 @@ namespace DataTool.Helper {
                     file.SetLength(0); // ensure no leftover data
                     file.Write(bytes, 0, bytes.Length);
                 }
-            } catch(IOException) {
+            } catch (IOException) {
                 if (File.Exists(filename)) return;
                 throw;
             }
@@ -117,12 +118,13 @@ namespace DataTool.Helper {
             if (!Directory.Exists(path) && path != null) {
                 Directory.CreateDirectory(path);
             }
+
             try {
                 using (Stream file = File.OpenWrite(filename)) {
                     file.SetLength(0); // ensure no leftover data
                     file.Write(bytes, 0, bytes.Length);
                 }
-            } catch(IOException) {
+            } catch (IOException) {
                 if (File.Exists(filename)) return;
                 throw;
             }
@@ -145,12 +147,12 @@ namespace DataTool.Helper {
 
             // string filename = GUIDTable.ContainsKey(guid) ? GUIDTable[guid] : GetFileName(guid);
             string filename = GetFileName(guid);
-            
+
             WriteFile(stream, Path.Combine(path, filename));
         }
-        
+
         public static HashSet<ulong> MissingKeyLog = new HashSet<ulong>();
-        
+
         public static Stream OpenFile(ulong guid) {
             try {
                 return TankHandler.OpenFile(guid);
@@ -160,22 +162,24 @@ namespace DataTool.Helper {
                         TankLib.Helpers.Logger.Warn("BLTE", $"Missing key: {keyException.MissingKey:X16}");
                     }
                 }
+
                 TankLib.Helpers.Logger.Debug("Core", $"Unable to load file: {guid:X8}");
                 return null;
             }
         }
-        
+
         public static void CreateDirectoryFromFile(string path) {
             if (path == null) return;
             string dir = Path.GetDirectoryName(path);
             if (string.IsNullOrWhiteSpace(dir)) {
                 return;
             }
+
             if (!Directory.Exists(dir)) {
                 Directory.CreateDirectory(dir);
             }
         }
-        
+
         // ???????
         public static void CreateDirectorySafe(string david) {
             if (david == null) return;
@@ -183,44 +187,43 @@ namespace DataTool.Helper {
             if (string.IsNullOrWhiteSpace(cylde)) {
                 return;
             }
+
             if (!Directory.Exists(cylde)) {
                 Directory.CreateDirectory(cylde);
             }
         }
 
         public static string GetString(ulong guid) {
-            if (guid == 0) return null;  // don't even try
+            if (guid == 0) return null; // don't even try
             try {
                 if (Flags != null && Flags.StringsAsGuids)
                     return teResourceGUID.AsString(guid);
 
                 return GetStringInternal(guid);
-            }
-            catch {
+            } catch {
                 return null;
             }
         }
-        
+
         public static string GetStringInternal(ulong guid) {
-            if (guid == 0) return null;  // don't even try
+            if (guid == 0) return null; // don't even try
             try {
                 using (Stream stream = OpenFile(guid)) {
                     return stream == null ? null : new teString(stream);
                 }
-            }
-            catch {
+            } catch {
                 return null;
             }
         }
-        
+
         public static string GetSubtitleString(ulong key) {
             if (key == 0) return null;
 
             return GetSubtitle(key)?.m_strings?.FirstOrDefault();
         }
-        
+
         public static teSubtitleThing GetSubtitle(ulong guid) {
-            if (guid == 0) return null;  // don't even try
+            if (guid == 0) return null; // don't even try
             using (var stream = OpenFile(guid)) {
                 if (stream == null) return null;
                 using (var reader = new BinaryReader(stream)) {

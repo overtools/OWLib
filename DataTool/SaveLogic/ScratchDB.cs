@@ -42,7 +42,7 @@ namespace DataTool.SaveLogic {
             if (Records.ContainsKey(guid)) {
                 if (!Records[guid].CheckedExistence) {
                     if (!Records.TryGetValue(guid, out var record)) return false;
-                    
+
                     if (!File.Exists(record.AbsolutePath) &&
                         !File.Exists(Path.ChangeExtension(record.AbsolutePath, "dds")) &&
                         !File.Exists(Path.ChangeExtension(record.AbsolutePath, "tif")) &&
@@ -55,8 +55,10 @@ namespace DataTool.SaveLogic {
                     record.CheckedExistence = true;
                     SetRecord(guid, record);
                 }
+
                 return true;
             }
+
             return false;
         }
 
@@ -84,6 +86,7 @@ namespace DataTool.SaveLogic {
             if (Count == 0) {
                 return;
             }
+
             if (File.Exists(dbPath)) {
                 File.Delete(dbPath);
             }
@@ -95,7 +98,7 @@ namespace DataTool.SaveLogic {
 
             using (Stream file = File.OpenWrite(dbPath))
             using (BinaryWriter writer = new BinaryWriter(file, Encoding.Unicode)) {
-                writer.Write((short)2);
+                writer.Write((short) 2);
                 writer.Write(dbPath);
                 writer.Write(LongCount);
                 foreach (KeyValuePair<ulong, ScratchPath> pair in this) {
@@ -116,12 +119,14 @@ namespace DataTool.SaveLogic {
                 if (file.Length - file.Position < 4) {
                     TankLib.Helpers.Logger.Error("ScratchDB", "File is not long enough");
                 }
+
                 short version = reader.ReadInt16();
                 ScratchDBLogicMethod method = ScratchDBLogic.ElementAtOrDefault(version);
                 if (method == null) {
                     TankLib.Helpers.Logger.Error("ScratchDB", $"Database is version {version} which is not supported");
                     return;
                 }
+
                 try {
                     method(reader, dbPath, SetRecord);
                 } catch (Exception e) {
@@ -131,13 +136,14 @@ namespace DataTool.SaveLogic {
         }
 
         private delegate bool ScratchDBLogicCallback(ulong guid, ScratchPath scratchPath);
+
         private delegate void ScratchDBLogicMethod(BinaryReader reader, string dbPath, ScratchDBLogicCallback cb);
 
         private readonly List<ScratchDBLogicMethod> ScratchDBLogic = new List<ScratchDBLogicMethod>() {
             null,
             (reader, dbPath, cb) => {
                 ulong amount = reader.ReadUInt64();
-                for(ulong i = 0; i < amount; ++i) {
+                for (ulong i = 0; i < amount; ++i) {
                     ulong guid = reader.ReadUInt64();
                     string path = reader.ReadString();
                     cb(guid, new ScratchPath(path, false));
@@ -147,8 +153,9 @@ namespace DataTool.SaveLogic {
                 if (reader.ReadString() != dbPath) {
                     return;
                 }
+
                 ulong amount = reader.ReadUInt64();
-                for(ulong i = 0; i < amount; ++i) {
+                for (ulong i = 0; i < amount; ++i) {
                     ulong guid = reader.ReadUInt64();
                     string path = reader.ReadString();
                     cb(guid, new ScratchPath(path, false));

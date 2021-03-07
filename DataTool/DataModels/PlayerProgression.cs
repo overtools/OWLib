@@ -1,19 +1,19 @@
-﻿ using System.Collections.Generic;
- using System.Runtime.Serialization;
- using TankLib.STU.Types;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using TankLib.STU.Types;
 
 namespace DataTool.DataModels {
     [DataContract]
     public class PlayerProgression {
         [DataMember]
         public LootBoxUnlocks[] LootBoxesUnlocks;
-        
+
         [DataMember]
         public AdditionalUnlocks[] AdditionalUnlocks;
-        
+
         [DataMember]
         public Unlock[] OtherUnlocks;
-        
+
         public PlayerProgression(STUGenericSettings_PlayerProgression progression) {
             if (progression.m_lootBoxesUnlocks != null) {
                 LootBoxesUnlocks = new LootBoxUnlocks[progression.m_lootBoxesUnlocks.Length];
@@ -30,10 +30,10 @@ namespace DataTool.DataModels {
                     AdditionalUnlocks[i] = new AdditionalUnlocks(progression.m_additionalUnlocks[i]);
                 }
             }
-            
+
             OtherUnlocks = Unlock.GetArray(progression.m_otherUnlocks);
         }
-        
+
         public IEnumerable<Unlock> IterateUnlocks() {
             if (LootBoxesUnlocks != null) {
                 foreach (LootBoxUnlocks lootBoxUnlocks in LootBoxesUnlocks) {
@@ -42,6 +42,7 @@ namespace DataTool.DataModels {
                     }
                 }
             }
+
             if (AdditionalUnlocks != null) {
                 foreach (AdditionalUnlocks additionalUnlock in AdditionalUnlocks) {
                     foreach (Unlock unlock in additionalUnlock.Unlocks) {
@@ -49,6 +50,7 @@ namespace DataTool.DataModels {
                     }
                 }
             }
+
             if (OtherUnlocks != null) {
                 foreach (Unlock otherUnlock in OtherUnlocks) {
                     yield return otherUnlock;
@@ -56,7 +58,7 @@ namespace DataTool.DataModels {
             }
         }
     }
-    
+
     /// <summary>
     /// Additional Unlocks data model
     /// </summary>
@@ -67,7 +69,7 @@ namespace DataTool.DataModels {
         /// </summary>
         [DataMember]
         public Unlock[] Unlocks;
-        
+
         /// <summary>
         /// Level unlocked at
         /// </summary>

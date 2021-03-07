@@ -18,17 +18,17 @@ namespace DataTool.ToolLogic.List {
                     } else {
                         OutputJSON(unlocks, flags);
                     }
-                    
+
                     return;
                 }
             }
-            
+
             ListHeroUnlocks.DisplayUnlocks("Other", unlocks.OtherUnlocks);
 
             if (unlocks.LootBoxesUnlocks != null) {
                 foreach (LootBoxUnlocks lootBoxUnlocks in unlocks.LootBoxesUnlocks) {
                     string boxName = LootBox.GetName(lootBoxUnlocks.LootBoxType);
-                        
+
                     ListHeroUnlocks.DisplayUnlocks(boxName, lootBoxUnlocks.Unlocks);
                 }
             }
@@ -47,6 +47,7 @@ namespace DataTool.ToolLogic.List {
 
                 return new PlayerProgression(playerProgression);
             }
+
             return null;
         }
     }

@@ -8,7 +8,7 @@ namespace DataTool.ConvertLogic {
 
         private byte _bitBuffer;
         private uint _bitsStored;
-        
+
         private enum SizeEnum {
             HeaderBytes = 27,
             MaxSegments = 255,
@@ -38,7 +38,7 @@ namespace DataTool.ConvertLogic {
 
         public void PutBit(bool bit) {
             if (bit) {
-                _bitBuffer |= (byte)(1 << (byte)_bitsStored);
+                _bitBuffer |= (byte) (1 << (byte) _bitsStored);
             }
 
             _bitsStored++;
@@ -65,14 +65,13 @@ namespace DataTool.ConvertLogic {
             _bitsStored = 0;
             _bitBuffer = 0;
         }
-        
-        public static byte[] Int2Le(uint data)
-        {
+
+        public static byte[] Int2Le(uint data) {
             byte[] b = new byte[4];
-            b[0] = (byte)data;
-            b[1] = (byte)((data >> 8) & 0xFF);
-            b[2] = (byte)((data >> 16) & 0xFF);
-            b[3] = (byte)((data >> 24) & 0xFF);
+            b[0] = (byte) data;
+            b[1] = (byte) ((data >> 8) & 0xFF);
+            b[2] = (byte) ((data >> 16) & 0xFF);
+            b[3] = (byte) ((data >> 24) & 0xFF);
             return b;
         }
 
@@ -165,6 +164,7 @@ namespace DataTool.ConvertLogic {
                 if (_granule == 0xFFFFFFFF) {
                     Write32Le(_pageBuffer, 10, 0xFFFFFFFF);
                 }
+
                 Write32Le(_pageBuffer, 14, 1); // stream serial number
                 Write32Le(_pageBuffer, 18, _seqno); // page sequence number
                 Write32Le(_pageBuffer, 22, 0); // checksum (0 for now)
@@ -181,7 +181,7 @@ namespace DataTool.ConvertLogic {
                 }
 
                 // checksum
-                Write32Le(_pageBuffer, 22, Checksum(_pageBuffer, (int)((int) SizeEnum.HeaderBytes + segments + _payloadBytes)));
+                Write32Le(_pageBuffer, 22, Checksum(_pageBuffer, (int) ((int) SizeEnum.HeaderBytes + segments + _payloadBytes)));
 
                 // output to ostream
                 for (uint i = 0; i < (int) SizeEnum.HeaderBytes + segments + _payloadBytes; i++) {
@@ -194,22 +194,20 @@ namespace DataTool.ConvertLogic {
                 _payloadBytes = 0;
             }
         }
-        
+
         public void Write(BitUint bui) {
-            for (int i = 0; i < bui.BitSize; i++)
-            {
+            for (int i = 0; i < bui.BitSize; i++) {
                 // put_bit((bui.Value & (1U << i)) != 0);
                 PutBit((bui.Value & (1U << i)) != 0);
             }
         }
-        
+
         public void Write(Sound.VorbisPacketHeader vph) {
             BitUint t = new BitUint(8, vph.m_type);
             Write(t);
 
-            for (uint i = 0; i < 6; i++)
-            {
-                BitUint c = new BitUint(8, (byte)Sound.VorbisPacketHeader.VORBIS_STR[i]);
+            for (uint i = 0; i < 6; i++) {
+                BitUint c = new BitUint(8, (byte) Sound.VorbisPacketHeader.VORBIS_STR[i]);
                 Write(c);
             }
         }
@@ -238,7 +236,7 @@ namespace DataTool.ConvertLogic {
         }
 
         public int AsInt() {
-            return (int)Value;
+            return (int) Value;
         }
     }
 }

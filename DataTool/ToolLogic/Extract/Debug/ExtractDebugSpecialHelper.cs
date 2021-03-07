@@ -13,7 +13,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         public void Parse(ICLIFlags toolFlags) {
             SpecialHelper(toolFlags);
         }
-        
+
         public void SpecialHelper(ICLIFlags toolFlags) {
             var guids = ExtractDebugNewEntities.GetGUIDs(@"D:\ow\resources\verdata\52926.guids");
 
@@ -22,7 +22,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             HashSet<ulong> addedUnlocks = new HashSet<ulong>();
             foreach (var progressionGuid in TrackedFiles[0x58]) {
                 STUProgressionUnlocks progressionUnlocks = GetInstance<STUProgressionUnlocks>(progressionGuid);
-                
+
                 if (progressionUnlocks?.m_lootBoxesUnlocks == null) continue;
                 foreach (STULootBoxUnlocks lootBoxUnlocks in progressionUnlocks.m_lootBoxesUnlocks) {
                     ProcessLootBoxUnlocks(lootBoxUnlocks, guids, lootboxType, addedUnlocks);
@@ -33,18 +33,19 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 STUGenericSettings_PlayerProgression playerProgression =
                     GetInstance<STUGenericSettings_PlayerProgression>(genericSettingsGuid);
                 if (playerProgression == null) continue;
-                
+
                 foreach (STULootBoxUnlocks lootBoxUnlocks in playerProgression.m_lootBoxesUnlocks) {
                     ProcessLootBoxUnlocks(lootBoxUnlocks, guids, lootboxType, addedUnlocks);
                 }
 
                 break;
             }
-            
+
             Console.Out.WriteLine("new ulong[] {");
             foreach (ulong addedUnlock in addedUnlocks) {
                 Console.Out.WriteLine($"    0x{addedUnlock:X16},");
             }
+
             Console.Out.WriteLine("};");
         }
 
@@ -54,7 +55,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             foreach (teStructuredDataAssetRef<STUUnlock> unlock in lootBoxUnlocks.m_unlocks.m_unlocks) {
                 //Unlock unlockModel = new Unlock(unlock);
                 //if (unlockModel.Type != "Skin") continue;
-                
+
                 if (!guids.Contains(unlock)) {
                     addedUnlocks.Add(unlock);
                 }

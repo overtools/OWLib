@@ -10,14 +10,13 @@ using TankLib;
 namespace DataTool.ToolLogic.Util {
     [Tool("util-tool-info", Description = "Export tool info", CustomFlags = typeof(ListFlags), IsSensitive = true, UtilNoArchiveNeeded = true)]
     public class UtilToolInfo : JSONTool, ITool {
-
         public class ToolInfo {
             public Dictionary<string, string> Version = new Dictionary<string, string>();
 
             public FlagGroup ToolFlags;
 
             public Dictionary<string, ToolGroup> ToolGroups = new Dictionary<string, ToolGroup>();
-            
+
             public void AddAssemblyVersion(Assembly assembly) {
                 Version[assembly.GetName().Name] = assembly.GetName().Version.ToString();
             }
@@ -28,6 +27,7 @@ namespace DataTool.ToolLogic.Util {
                         return groupPair.Value;
                     }
                 }
+
                 var group = new ToolGroup();
                 group.Flags = new FlagGroup(flagType);
                 ToolGroups[flagType.Name] = group;
@@ -50,7 +50,7 @@ namespace DataTool.ToolLogic.Util {
                 if (typeof(JSONTool).IsAssignableFrom(toolType)) {
                     tool.SupportsJson = true;
                 }
-                
+
                 if (typeof(IQueryParser).IsAssignableFrom(toolType)) {
                     tool.SupportsQuery = true;
 
@@ -78,10 +78,11 @@ namespace DataTool.ToolLogic.Util {
                                 });
                             }
                         }
+
                         tool.QueryInfo.Types.Add(typeJson);
                     }
                 }
-                
+
                 Tools.Add(tool);
             }
         }
@@ -112,7 +113,7 @@ namespace DataTool.ToolLogic.Util {
             public string Description;
 
             public bool SupportsJson;
-            
+
             public bool SupportsQuery;
             public QueryInfo QueryInfo;
         }
@@ -124,7 +125,7 @@ namespace DataTool.ToolLogic.Util {
 
             public FlagGroup(Type type) {
                 Name = type.Name;
-                
+
                 Flags = new List<Flag>();
                 AddFlags(Flags, type);
 
@@ -133,7 +134,7 @@ namespace DataTool.ToolLogic.Util {
                     Parent = parent.Name;
                 }
             }
-            
+
             private static void AddFlags(ICollection<Flag> flags, IReflect T) {
                 var fields = T.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
                 foreach (var field in fields) {
@@ -171,7 +172,7 @@ namespace DataTool.ToolLogic.Util {
                                 throw new Exception($"UtilCommands: unable to convert parser \"{t}\" to enum");
                         }
                     }
-                
+
                     flags.Add(flagJson);
                 }
             }
@@ -204,7 +205,7 @@ namespace DataTool.ToolLogic.Util {
             toolInfo.AddAssemblyVersion(typeof(UtilToolInfo).Assembly); // datatool
             toolInfo.AddAssemblyVersion(typeof(teResourceGUID).Assembly); // tanklib
             toolInfo.AddAssemblyVersion(typeof(ContainerHandler).Assembly); // tactlib
-            
+
             toolInfo.ToolFlags = new FlagGroup(typeof(ToolFlags));
 
             var tools = Program.GetTools();

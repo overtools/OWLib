@@ -32,7 +32,7 @@ namespace DataTool.ToolLogic.List.Misc {
             foreach (teResourceGUID key in TrackedFiles[0x75]) {
                 var hero = STUHelper.GetInstance<STUHero>(key);
                 if (hero?.m_gameRulesetSchemas == null) continue;
-                
+
                 foreach (var guid in hero.m_gameRulesetSchemas) {
                     var rulesetSchema = new GameRulesetSchema(guid);
                     if (rulesetSchema?.Entries == null) continue;
@@ -46,7 +46,7 @@ namespace DataTool.ToolLogic.List.Misc {
                     }
                 }
             }
-            
+
             foreach (teResourceGUID key in TrackedFiles[0xC0]) {
                 var ruleset = new GameRuleset(key);
                 if (ruleset.GUID == 0)
@@ -67,15 +67,15 @@ namespace DataTool.ToolLogic.List.Misc {
                 }
 
                 ruleset.GameMode.ConfigValues = ruleset.GameMode?.STU?.m_3CE93B76?
-                                                       .Select(configValuePair => GenerateConfigValues(configValuePair, rulesetMapping))
-                                                       .Where( x => x != null)
-                                                       .ToArray();
-                
+                    .Select(configValuePair => GenerateConfigValues(configValuePair, rulesetMapping))
+                    .Where(x => x != null)
+                    .ToArray();
+
                 foreach (var gameRulesetTeam in ruleset.GameMode?.Teams) {
                     gameRulesetTeam.ConfigValues = gameRulesetTeam.STU.m_CF58324E?
-                      .Select(configValuePair => GenerateConfigValues(configValuePair, heroRulesetMapping))
-                      .Where( x => x != null)
-                      .ToArray();
+                        .Select(configValuePair => GenerateConfigValues(configValuePair, heroRulesetMapping))
+                        .Where(x => x != null)
+                        .ToArray();
                 }
 
                 if (ruleset.GameMode.ConfigValues?.Length == 0) {

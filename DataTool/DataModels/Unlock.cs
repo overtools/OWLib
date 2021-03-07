@@ -18,26 +18,26 @@ namespace DataTool.DataModels {
     public class Unlock {
         [DataMember]
         public teResourceGUID GUID;
-        
+
         /// <summary>
         /// Name of this unlock
         /// </summary>
         [DataMember]
         public string Name;
-        
+
         /// <summary>
         /// DataTool enum for the type of Unlock
         /// </summary>
         [DataMember]
         public UnlockType Type;
-        
+
         /// <summary>
         /// Unlock rarity
         /// </summary>
         /// <see cref="STUUnlockRarity"/>
         [DataMember]
         public STUUnlockRarity Rarity;
-        
+
         /// <summary>
         /// Description of this unlock
         /// </summary>
@@ -62,7 +62,7 @@ namespace DataTool.DataModels {
         /// </summary>
         [DataMember]
         public string Tag;
-        
+
         /// <summary>
         /// Array of categories the Unlock belongs to that the Hero Gallery & Career Profile filtering options use
         /// </summary>
@@ -83,7 +83,7 @@ namespace DataTool.DataModels {
         /// </summary>
         [IgnoreDataMember]
         public STU_3021DDED STU;
-        
+
         /// <summary>
         /// Whether this is a "normal" Unlock like a skin, emote, voiceline, pose, icon, etc and not something like a Lootbox or Currency.
         /// </summary>
@@ -94,7 +94,7 @@ namespace DataTool.DataModels {
         public bool ShouldSerializeLootBoxType() => Type == UnlockType.Lootbox;
         public bool ShouldSerializeSkinThemeGUID() => Type == UnlockType.Skin;
         public bool ShouldSerializeCurrency() => Type == UnlockType.CompetitiveCurrency || Type == UnlockType.Currency || Type == UnlockType.OWLToken;
-        
+
         // These only really apply to "normal" unlocks and can be removed from others
         public bool ShouldSerializeAvailableIn() => IsTraditionalUnlock;
         public bool ShouldSerializeTag() => IsTraditionalUnlock;
@@ -103,7 +103,7 @@ namespace DataTool.DataModels {
         public Unlock(STU_3021DDED unlock, ulong guid) {
             Init(unlock, guid);
         }
-        
+
         public Unlock(ulong guid) {
             var unlock = GetInstance<STU_3021DDED>(guid);
             if (unlock == null) return;
@@ -113,19 +113,19 @@ namespace DataTool.DataModels {
         private void Init(STU_3021DDED unlock, ulong guid) {
             GUID = (teResourceGUID) guid;
             STU = unlock;
-            
+
             Name = GetString(unlock.m_name)?.TrimEnd(' '); // ffs blizz, why do the names end in a space sometimes
             AvailableIn = GetString(unlock.m_53145FAF);
             Rarity = unlock.m_rarity;
             Description = GetDescriptionString(unlock.m_3446F580);
             Type = GetTypeForUnlock(unlock);
             Tag = UnlockData.GetTagFor(guid);
-            
-            IsTraditionalUnlock = 
-                Type == UnlockType.Icon || Type == UnlockType.Spray || 
-                Type == UnlockType.Skin || Type == UnlockType.HighlightIntro || 
+
+            IsTraditionalUnlock =
+                Type == UnlockType.Icon || Type == UnlockType.Spray ||
+                Type == UnlockType.Skin || Type == UnlockType.HighlightIntro ||
                 Type == UnlockType.VictoryPose || Type == UnlockType.VoiceLine;
-            
+
             if (unlock.m_BEE9BCDA != null)
                 Categories = unlock.m_BEE9BCDA.Select(x => GetGUIDName(x.GUID)).ToArray();
 
@@ -150,7 +150,7 @@ namespace DataTool.DataModels {
             }
         }
 
-        public string GetName() {            
+        public string GetName() {
             return Name ?? GetFileName(GUID);
         }
 
@@ -172,42 +172,55 @@ namespace DataTool.DataModels {
             if (type == typeof(STUUnlock_SkinTheme)) {
                 return UnlockType.Skin;
             }
+
             if (type == typeof(STUUnlock_AvatarPortrait)) {
                 return UnlockType.Icon;
             }
+
             if (type == typeof(STUUnlock_Emote)) {
                 return UnlockType.Emote;
             }
+
             if (type == typeof(STUUnlock_Pose)) {
                 return UnlockType.VictoryPose;
             }
+
             if (type == typeof(STUUnlock_VoiceLine)) {
                 return UnlockType.VoiceLine;
             }
+
             if (type == typeof(STUUnlock_SprayPaint)) {
                 return UnlockType.Spray;
             }
+
             if (type == typeof(STUUnlock_Currency)) {
                 return UnlockType.Currency;
             }
+
             if (type == typeof(STUUnlock_PortraitFrame)) {
                 return UnlockType.PortraitFrame;
             }
+
             if (type == typeof(STUUnlock_Weapon)) {
                 return UnlockType.WeaponSkin;
             }
+
             if (type == typeof(STUUnlock_POTGAnimation)) {
                 return UnlockType.HighlightIntro;
             }
+
             if (type == typeof(STUUnlock_HeroMod)) {
                 return UnlockType.HeroMod;
             }
+
             if (type == typeof(STUUnlock_CompetitiveCurrency)) {
                 return UnlockType.CompetitiveCurrency;
             }
+
             if (type == typeof(STUUnlock_OWLToken)) {
                 return UnlockType.OWLToken;
             }
+
             if (type == typeof(STUUnlock_LootBox)) {
                 return UnlockType.Lootbox;
             }
@@ -230,9 +243,10 @@ namespace DataTool.DataModels {
                 Unlock unlock = new Unlock(stu, guid);
                 unlocks.Add(unlock);
             }
+
             return unlocks.ToArray();
         }
-        
+
         /// <summary>Get an array of <see cref="Unlock"/> from STUUnlocks</summary>
         /// <inheritdoc cref="GetArray(System.Collections.Generic.IEnumerable{ulong})"/>
         public static Unlock[] GetArray(STUUnlocks unlocks) {
@@ -265,7 +279,8 @@ namespace DataTool.DataModels {
     // todo: fix this lmao :zingy:
     public static class UnlockData {
         public static readonly Dictionary<string, ulong[]> CuratedGUID = new Dictionary<string, ulong[]> {
-            { "sg2018",
+            {
+                "sg2018",
                 new ulong[] {
                     0x0250000000001716,
                     0x0250000000001A8B,
@@ -326,8 +341,9 @@ namespace DataTool.DataModels {
                     0x0250000000001A7D,
                     0x0250000000001A83,
                     0x0250000000001A8C
-            } },
-            { "sg2017",
+                }
+            }, {
+                "sg2017",
                 new ulong[] {
                     0x025000000000106A,
                     0x025000000000106B,
@@ -381,8 +397,9 @@ namespace DataTool.DataModels {
                     0x0250000000001236,
                     0x0250000000001237,
                     0x025000000000125A,
-            } },
-            { "sg2016",
+                }
+            }, {
+                "sg2016",
                 new ulong[] {
                     0x0250000000000B08,
                     0x0250000000000B17,
@@ -494,8 +511,9 @@ namespace DataTool.DataModels {
                     0x0250000000000BDE,
                     0x0250000000000BDF,
                     0x0250000000000BE4,
-            } },
-            { "anniversary2018",
+                }
+            }, {
+                "anniversary2018",
                 new ulong[] {
                     0x025000000000137F,
                     0x0250000000001380,
@@ -561,8 +579,9 @@ namespace DataTool.DataModels {
                     0x02500000000019BE,
                     0x02500000000019C5,
                     0x02500000000019CA,
-            } },
-            { "anniversary2017",
+                }
+            }, {
+                "anniversary2017",
                 new ulong[] {
                     0x0250000000000A7E,
                     0x0250000000000CA9,
@@ -697,8 +716,9 @@ namespace DataTool.DataModels {
                     0x0250000000001177,
                     0x0250000000001178,
                     0x0250000000001195,
-            } },
-            { "archives2018",
+                }
+            }, {
+                "archives2018",
                 new ulong[] {
                     0x0250000000001253,
                     0x0250000000001258,
@@ -768,8 +788,9 @@ namespace DataTool.DataModels {
                     0x025000000000193D,
                     0x025000000000193E,
                     0x025000000000193F,
-            } },
-            { "archives2017",
+                }
+            }, {
+                "archives2017",
                 new ulong[] {
                     0x0250000000000D05,
                     0x0250000000000F62,
@@ -878,8 +899,9 @@ namespace DataTool.DataModels {
                     0x02500000000010F1,
                     0x02500000000010F4,
                     0x02500000000010F5,
-            } },
-            { "halloween2018", 
+                }
+            }, {
+                "halloween2018",
                 new ulong[] {
                     0x02500000000022B6,
                     0x02500000000022B5,
@@ -930,8 +952,9 @@ namespace DataTool.DataModels {
                     0x02500000000022D0,
                     0x02500000000022D1,
                     0x02500000000022D2
-            } },
-            { "halloween2017",
+                }
+            }, {
+                "halloween2017",
                 new ulong[] {
                     0x0250000000000E5C,
                     0x025000000000109C,
@@ -989,8 +1012,9 @@ namespace DataTool.DataModels {
                     0x02500000000012DC,
                     0x02500000000012DE,
                     0x02500000000012DF,
-            } },
-            { "halloween2016",
+                }
+            }, {
+                "halloween2016",
                 new ulong[] {
                     0x0250000000000A7C,
                     0x0250000000000A86,
@@ -1105,8 +1129,9 @@ namespace DataTool.DataModels {
                     0x0250000000000CA8,
                     0x0250000000000CAC,
                     0x0250000000000CAE,
-            } },
-            { "winter2018", 
+                }
+            }, {
+                "winter2018",
                 new ulong[] {
                     0x0250000000002496,
                     0x02500000000024C7,
@@ -1157,8 +1182,9 @@ namespace DataTool.DataModels {
                     0x025000000000250B,
                     0x025000000000250C,
                     0x025000000000250D,
-            } },
-            { "winter2017",
+                }
+            }, {
+                "winter2017",
                 new ulong[] {
                     0x0250000000001039,
                     0x02500000000011BA,
@@ -1220,8 +1246,9 @@ namespace DataTool.DataModels {
                     0x025000000000139E,
                     0x025000000000139F,
                     0x025000000000141D,
-            } },
-            { "winter2016",
+                }
+            }, {
+                "winter2016",
                 new ulong[] {
                     0x0250000000000A8D,
                     0x0250000000000BF1,
@@ -1342,8 +1369,9 @@ namespace DataTool.DataModels {
                     0x0250000000000D93,
                     0x0250000000000D94,
                     0x0250000000000E52,
-            } },
-            { "lunar2018",
+                }
+            }, {
+                "lunar2018",
                 new ulong[] {
                     0x025000000000120B,
                     0x025000000000124F,
@@ -1408,8 +1436,9 @@ namespace DataTool.DataModels {
                     0x025000000000169C,
                     0x02500000000016A1,
                     0x02500000000016A2,
-            } },
-            { "lunar2017",
+                }
+            }, {
+                "lunar2017",
                 new ulong[] {
                     0x0250000000000A87,
                     0x0250000000000BEB,
@@ -1532,7 +1561,8 @@ namespace DataTool.DataModels {
                     0x0250000000000F61,
                     0x0250000000000F6D,
                     0x0250000000000F6F,
-            } },
+                }
+            },
         };
 
         public static string GetTagFor(ulong guid) {

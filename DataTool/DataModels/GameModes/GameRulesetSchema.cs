@@ -10,7 +10,7 @@ namespace DataTool.DataModels.GameModes {
     public class GameRulesetSchema {
         [DataMember]
         public string GUID;
-        
+
         [DataMember]
         public string Name;
 
@@ -21,11 +21,11 @@ namespace DataTool.DataModels.GameModes {
             var stu = STUHelper.GetInstance<STUGameRulesetSchema>(key);
             Init(stu, key);
         }
-        
+
         public GameRulesetSchema(STUGameRulesetSchema stu, ulong key = default) {
             Init(stu, key);
         }
-        
+
         private void Init(STUGameRulesetSchema ruleset, ulong key = default) {
             GUID = teResourceGUID.AsString(key);
             Name = GetString(ruleset.m_displayText);

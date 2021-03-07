@@ -9,28 +9,28 @@ namespace DataTool.DataModels {
     public class Achievement {
         [DataMember]
         public teResourceGUID GUID;
-        
+
         [DataMember]
         public string Name;
-        
+
         [DataMember]
         public string AchievementName;
-        
+
         [DataMember]
         public string Description;
-        
+
         [DataMember]
         public Unlock Reward;
-        
+
         //[DataMember]
         //public Enum_8E40F295 Trophy;
-        
+
         //[DataMember]
         //public Enum_116F9601 Category;
 
         [DataMember]
         public int GamerScore;
-        
+
         public Achievement(ulong key) {
             STUAchievement stu = GetInstance<STUAchievement>(key);
             if (stu == null) return;

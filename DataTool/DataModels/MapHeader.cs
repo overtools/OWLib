@@ -19,25 +19,25 @@ namespace DataTool.DataModels {
 
         [DataMember]
         public string Description { get; set; }
-        
+
         [DataMember]
         public string Description2 { get; set; }
-        
+
         [DataMember]
         public string Subline { get; set; }
-        
+
         [DataMember]
         public string StateA { get; set; }
-        
+
         [DataMember]
         public string StateB { get; set; }
-        
+
         [DataMember]
         public string VariantName { get; set; }
-        
+
         [DataMember]
         public teResourceGUID MapGUID { get; set; }
-        
+
         [DataMember]
         public IEnumerable<GameModeLite> GameModes { get; set; }
 
@@ -49,15 +49,15 @@ namespace DataTool.DataModels {
 
         [DataMember]
         public teResourceGUID Thumbnail { get; set; }
-        
+
         [DataMember]
         public teResourceGUID Image { get; set; }
-        
+
         [DataMember]
         public teResourceGUID FlagImage { get; set; }
 
         public MapCelebrationVariant[] CelebrationVariants { get; set; }
-        
+
         public MapHeader(ulong key) {
             STUMapHeader stu = GetInstance<STUMapHeader>(key);
             if (stu == null) return;
@@ -106,7 +106,7 @@ namespace DataTool.DataModels {
 
         public MapHeaderLite ToLite() {
             return new MapHeaderLite(this);
-        } 
+        }
 
         public string GetName() {
             return VariantName ?? Name ?? "Title Screen";
@@ -133,10 +133,10 @@ namespace DataTool.DataModels {
     public class MapHeaderLite {
         [DataMember]
         public teResourceGUID GUID;
-        
+
         [DataMember]
         public string Name;
-        
+
         [DataMember]
         public string VariantName;
 

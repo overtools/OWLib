@@ -17,7 +17,7 @@ namespace DataTool.ToolLogic.List.Debug {
             foreach (ulong key in Program.TrackedFiles[0x54]) {
                 STUGenericSettings_HeroSettings settings = GetInstance<STUGenericSettings_HeroSettings>(key);
                 if (settings == null) continue;
-                
+
                 Dictionary<ulong, string> categories = new Dictionary<ulong, string>();
 
                 foreach (STUHeroSettingCategory category in settings.m_categories) {
@@ -27,7 +27,7 @@ namespace DataTool.ToolLogic.List.Debug {
                 foreach (STUHeroSpecificSettings heroSpecificSettings in settings.m_heroSpecificSettings) {
                     STUHero hero = GetInstance<STUHero>(heroSpecificSettings.m_hero);
                     Console.Out.WriteLine($"{GetString(hero.m_0EDCE350)}:");
-                    
+
                     PrintSettings(settings.m_142A3CA9.Concat(heroSpecificSettings.m_settings).ToArray(), categories);
                 }
             }
@@ -39,16 +39,17 @@ namespace DataTool.ToolLogic.List.Debug {
                 if (!settingCategories.ContainsKey(setting.m_category)) {
                     settingCategories[setting.m_category] = new List<STUHeroSettingBase>();
                 }
+
                 settingCategories[setting.m_category].Add(setting);
             }
 
-            foreach (KeyValuePair<ulong,List<STUHeroSettingBase>> settingCategory in settingCategories) {
+            foreach (KeyValuePair<ulong, List<STUHeroSettingBase>> settingCategory in settingCategories) {
                 Console.Out.WriteLine($"    {categories[settingCategory.Key]}:");
 
                 foreach (STUHeroSettingBase setting in settingCategory.Value) {
                     Console.Out.WriteLine($"        {GetString(setting.m_name)} ({setting.GetType().Name})");
-                    
-                    
+
+
                     if (setting is STUHeroSettingIdentifier settingIdentifier) {
                         foreach (STU_8811A9AC identifierEntry in settingIdentifier.m_entries) {
                             if (identifierEntry is STU_DC1455DA identifierEntryString)

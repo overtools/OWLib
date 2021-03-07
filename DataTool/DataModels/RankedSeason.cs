@@ -27,7 +27,7 @@ namespace DataTool.DataModels {
         public teResourceGUID Image;
 
         public SeasonRanks[] Ranks;
-        
+
         [DataMember]
         public Unlock[] YouTriedUnlocks;
 
@@ -54,14 +54,14 @@ namespace DataTool.DataModels {
             YouTriedUnlocks = season.m_58066D8F?.m_unlocks?.Select(x => new Unlock(x)).ToArray();
             Top500Unlocks = season.m_heroicUnlocks?.m_unlocks?.Select(x => new Unlock(x)).ToArray();
         }
-        
+
         public class SeasonRanks {
             [DataMember]
             public uint Min;
-            
+
             [DataMember]
             public uint Max;
-            
+
             [DataMember]
             public Unlock[] Unlocks;
 

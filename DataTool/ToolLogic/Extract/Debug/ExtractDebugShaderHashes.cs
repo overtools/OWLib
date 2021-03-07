@@ -16,7 +16,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
         public void GetSoundbanks(ICLIFlags toolFlags) {
             const string container = "ShaderHashes";
-            
+
             string basePath;
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
@@ -33,7 +33,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                 //if (shaderCode.Header.ShaderType != Enums.teSHADER_TYPE.PIXEL) continue;
                 //if (shaderCode.Header.ShaderType != Enums.teSHADER_TYPE.VERTEX) continue;
                 //if (shaderCode.Header.ShaderType != Enums.teSHADER_TYPE.COMPUTE) continue;
-                
+
                 //if (instance.ShaderResources != null) {
                 //    foreach (teShaderInstance.ShaderResourceDefinition inputDefinition in instance.ShaderResources) {
                 //        hashes.Add(inputDefinition.NameHash);

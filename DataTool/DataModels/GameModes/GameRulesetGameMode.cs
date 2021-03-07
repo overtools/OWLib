@@ -23,9 +23,9 @@ namespace DataTool.DataModels.GameModes {
 
         [DataMember]
         public GamemodeRulesetValue[] ConfigValues;
-        
+
         internal STUGameRulesetGameMode STU;
-        
+
         public GameRulesetGameMode(ulong key) {
             STUGameRulesetGameMode stu = GetInstance<STUGameRulesetGameMode>(key);
             if (stu == null) return;
@@ -52,7 +52,7 @@ namespace DataTool.DataModels.GameModes {
 
             [DataMember]
             public string Name;
-            
+
             [DataMember]
             public string Value;
         }

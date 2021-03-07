@@ -9,7 +9,7 @@ namespace DataTool.DataModels.Voice {
     public class Conversation {
         [DataMember]
         public teResourceGUID GUID { get; set; }
-        
+
         [DataMember]
         public teResourceGUID StimulusGUID { get; set; }
 

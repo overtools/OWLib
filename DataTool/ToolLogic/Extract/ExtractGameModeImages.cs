@@ -20,7 +20,7 @@ namespace DataTool.ToolLogic.Extract {
 
             const string container = "GamemodeImages";
             string path = Path.Combine(basePath, container);
-            
+
             foreach (ulong key in TrackedFiles[0xEE]) {
                 var stuE3594B8E = Helper.STUHelper.GetInstance<STU_E3594B8E>(key);
 
@@ -29,10 +29,10 @@ namespace DataTool.ToolLogic.Extract {
                 }
 
                 string name = $"{teResourceGUID.Index(key):X3}_{GetString(stuE3594B8E.m_name)}";
-                
+
                 Combo.ComboInfo info = new Combo.ComboInfo();
-                Combo.Find(info, (ulong)stuE3594B8E.m_21EB3E73);
-                info.SetTextureName((ulong)stuE3594B8E.m_21EB3E73, name);
+                Combo.Find(info, (ulong) stuE3594B8E.m_21EB3E73);
+                info.SetTextureName((ulong) stuE3594B8E.m_21EB3E73, name);
 
                 var context = new SaveLogic.Combo.SaveContext(info);
                 SaveLogic.Combo.SaveLooseTextures(flags, path, context);

@@ -16,9 +16,8 @@ namespace DataTool.ToolLogic.Dbg {
             public string OtherGuid;
             public STUVoiceStimulus StimulusSet;
         }
-        
+
         public void Parse(ICLIFlags toolFlags) {
-            
             var sets = Program.TrackedFiles[075].Select(key => {
                 var set = GetInstance<STUVoiceStimulus>(key);
                 return new DebugVoiceStim {

@@ -18,7 +18,6 @@ namespace DataTool.ToolLogic.List.Misc {
 
             if (toolFlags is ListFlags flags)
                 OutputJSON(data, flags);
-
         }
 
         private static Dictionary<ulong, string> _valuesNameDictById = new Dictionary<ulong, string>();
@@ -102,91 +101,91 @@ namespace DataTool.ToolLogic.List.Misc {
 
         private static IEnumerable<WorkshopParameter> ParseParameters(STU_9F7A0E66[] parameters) {
             return parameters?
-                   .Where(p => p != null)
-                   .Select(baseStu => {
-                       var @out = new WorkshopParameter {
-                           STU = baseStu.GetType().Name,
-                           Name = GetString(baseStu.m_B9AD8659),
-                           Description = GetString(baseStu.m_description)
-                       };
+                .Where(p => p != null)
+                .Select(baseStu => {
+                    var @out = new WorkshopParameter {
+                        STU = baseStu.GetType().Name,
+                        Name = GetString(baseStu.m_B9AD8659),
+                        Description = GetString(baseStu.m_description)
+                    };
 
-                       switch (baseStu) {
-                           case STU_DE6A15D2 ss:
-                               @out.InferredType = "Variable";
-                               break;
-                           case STU_7BF2036D ss:
-                               @out.InferredType = "WaitBehaviour";
-                               break;
-                           case STU_C5BE2B08 ss:
-                               @out.InferredType = "GenericInput";
-                               @out.InputType = ss.m_16CCEFC8;
-                               @out.UnkEnum = ss.m_444416F6;
-                               @out.Min = ss.m_min;
-                               @out.Max = ss.m_max;
-                               @out.UnkByte = ss.m_89C93A57;
-                               @out.DefaultNumberValue = ss.m_D62358FA;
+                    switch (baseStu) {
+                        case STU_DE6A15D2 ss:
+                            @out.InferredType = "Variable";
+                            break;
+                        case STU_7BF2036D ss:
+                            @out.InferredType = "WaitBehaviour";
+                            break;
+                        case STU_C5BE2B08 ss:
+                            @out.InferredType = "GenericInput";
+                            @out.InputType = ss.m_16CCEFC8;
+                            @out.UnkEnum = ss.m_444416F6;
+                            @out.Min = ss.m_min;
+                            @out.Max = ss.m_max;
+                            @out.UnkByte = ss.m_89C93A57;
+                            @out.DefaultNumberValue = ss.m_D62358FA;
 
-                               _valuesNameDictById.TryGetValue(ss.m_464FB148, out var name);
-                               @out.DefaultValue = new WorkshopParamDefaultValue {
-                                   Id = ss.m_464FB148,
-                                   DisplayName = name
-                               };
-                               break;
-                           case STU_8302E7AC ss:
-                               @out.InferredType = "NumberConstant";
-                               @out.Min = ss.m_min;
-                               @out.Max = ss.m_max;
-                               break;
-                           case STU_F5D532BC ss:
-                               @out.InferredType = "TeamConstant";
-                               break;
-                           case STU_28E537BD ss:
-                               @out.InferredType = "MapConstant";
-                               break;
-                           case STU_93382EAB ss:
-                               @out.InferredType = "GamemodeConstant";
-                               break;
-                           case STU_38B39A55 ss:
-                               @out.InferredType = "HeroConstant";
-                               break;
-                           case STU_3FA24DEA ss:
-                               @out.InferredType = "Dropdown";
-                               @out.DropdownId = ss.m_7533CD4C;
-                               break;
-                           case STU_8504E8FE ss:
-                               @out.InferredType = "ComparisonThing";
-                               break;
-                           case STU_CFF9EFAB ss:
-                               @out.InferredType = "ArrayThing";
-                               break;
-                           case STU_F654E6FB ss:
-                               @out.InferredType = "CustomString"; // Text formed from a selection of strings and specified Values
-                               break;
-                           case STU_218BCF68 ss:
-                               @out.InferredType = "CustomString2"; // Custom text with optional inserted Values
-                               break;
-                           case STU_E08C5126 ss:
-                               @out.InferredType = "Player"; // Only used on events??
-                               break;
-                           case STU_16886813 ss:
-                               @out.InferredType = "Team"; // Only used on events??
-                               break;
-                           case STU_27CC2BBE ss:
-                               @out.InferredType = "SubroutineEvent";
-                               break;
-                           case STU_BE408E5C ss:
-                               @out.InferredType = "SubroutineThing";
-                               break;
-                           case STU_EE41F5B8 ss:
-                               @out.InferredType = "ButtonConstant";
-                               break;
-                           default:
-                               Debugger.Break();
-                               break;
-                       }
+                            _valuesNameDictById.TryGetValue(ss.m_464FB148, out var name);
+                            @out.DefaultValue = new WorkshopParamDefaultValue {
+                                Id = ss.m_464FB148,
+                                DisplayName = name
+                            };
+                            break;
+                        case STU_8302E7AC ss:
+                            @out.InferredType = "NumberConstant";
+                            @out.Min = ss.m_min;
+                            @out.Max = ss.m_max;
+                            break;
+                        case STU_F5D532BC ss:
+                            @out.InferredType = "TeamConstant";
+                            break;
+                        case STU_28E537BD ss:
+                            @out.InferredType = "MapConstant";
+                            break;
+                        case STU_93382EAB ss:
+                            @out.InferredType = "GamemodeConstant";
+                            break;
+                        case STU_38B39A55 ss:
+                            @out.InferredType = "HeroConstant";
+                            break;
+                        case STU_3FA24DEA ss:
+                            @out.InferredType = "Dropdown";
+                            @out.DropdownId = ss.m_7533CD4C;
+                            break;
+                        case STU_8504E8FE ss:
+                            @out.InferredType = "ComparisonThing";
+                            break;
+                        case STU_CFF9EFAB ss:
+                            @out.InferredType = "ArrayThing";
+                            break;
+                        case STU_F654E6FB ss:
+                            @out.InferredType = "CustomString"; // Text formed from a selection of strings and specified Values
+                            break;
+                        case STU_218BCF68 ss:
+                            @out.InferredType = "CustomString2"; // Custom text with optional inserted Values
+                            break;
+                        case STU_E08C5126 ss:
+                            @out.InferredType = "Player"; // Only used on events??
+                            break;
+                        case STU_16886813 ss:
+                            @out.InferredType = "Team"; // Only used on events??
+                            break;
+                        case STU_27CC2BBE ss:
+                            @out.InferredType = "SubroutineEvent";
+                            break;
+                        case STU_BE408E5C ss:
+                            @out.InferredType = "SubroutineThing";
+                            break;
+                        case STU_EE41F5B8 ss:
+                            @out.InferredType = "ButtonConstant";
+                            break;
+                        default:
+                            Debugger.Break();
+                            break;
+                    }
 
-                       return @out;
-                   });
+                    return @out;
+                });
         }
 
         public class WorkshopContainer {
@@ -247,7 +246,6 @@ namespace DataTool.ToolLogic.List.Misc {
             public teResourceGUID Id;
             public teResourceGUID DefaultValue;
             public IEnumerable<WorkshopDropdownValue> Options;
-
         }
 
         public class WorkshopDropdownValue {

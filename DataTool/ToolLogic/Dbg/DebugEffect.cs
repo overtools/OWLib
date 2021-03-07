@@ -9,16 +9,12 @@ using TankLib.Chunks;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 
-namespace DataTool.ToolLogic.Dbg
-{
+namespace DataTool.ToolLogic.Dbg {
     [Tool("debug-effect", Description = "", IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
-    class DebugEffect : ITool
-    {
-        public void Parse(ICLIFlags toolFlags)
-        {
+    class DebugEffect : ITool {
+        public void Parse(ICLIFlags toolFlags) {
             var flags = toolFlags as ExtractFlags;
-            foreach (var guid in Program.TrackedFiles[0xA5])
-            {
+            foreach (var guid in Program.TrackedFiles[0xA5]) {
                 SaveUnlock(guid);
                 //try {
                 //    Unlock unlock = new Unlock(guid);
@@ -39,7 +35,7 @@ namespace DataTool.ToolLogic.Dbg
             } catch (NotImplementedException) {
                 return;
             }
-            
+
             STUUnlock_POTGAnimation potgAnim = unlock.STU as STUUnlock_POTGAnimation;
             if (potgAnim == null) return;
             if (potgAnim.m_animation == 0) return;
@@ -65,10 +61,10 @@ namespace DataTool.ToolLogic.Dbg
                 foreach (IChunk chunk in chunkedData.Chunks) {
                     if (chunk is teEffectChunkShaderSetup shaderSetup) {
                         //if (teResourceGUID.Index(lastModel) != 0x296B) continue;  // the circle
-                        
+
                         ExtractDebugShaders.SaveMaterial(dir, shaderSetup.Header.Material, GetFileName(guid));
                     }
-                            
+
                     if (chunk is teEffectComponentParticle particle) {
                         lastModel = particle.Header.Model;
                     } else {
@@ -78,13 +74,13 @@ namespace DataTool.ToolLogic.Dbg
 
                 foreach (teEffectComponentEntityControl entityControl in chunkedData.GetChunks<teEffectComponentEntityControl>()) {
                     if (entityControl.Header.Animation == 0) continue;
-                    
+
                     SaveAnimation(dir, entityControl.Header.Animation);
                 }
 
                 foreach (teEffectComponentModel model in chunkedData.GetChunks<teEffectComponentModel>()) {
                     if (model.Header.Animation == 0) continue;
-                    
+
                     SaveAnimation(dir, model.Header.Animation);
                 }
             }

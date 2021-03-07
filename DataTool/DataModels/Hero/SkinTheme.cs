@@ -7,10 +7,10 @@ namespace DataTool.DataModels.Hero {
     public class SkinTheme {
         [DataMember]
         public teResourceGUID GUID;
-        
+
         [DataMember]
         public teResourceGUID Skin;
-        
+
         [DataMember]
         public teResourceGUID[] HeroWeapons;
 

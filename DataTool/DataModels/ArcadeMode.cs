@@ -10,26 +10,26 @@ namespace DataTool.DataModels {
     public class ArcadeMode {
         [DataMember]
         public teResourceGUID GUID;
-        
+
         [DataMember]
         public string Name;
-        
+
         [DataMember]
         public string Description;
 
         [DataMember]
         public teResourceGUID Image;
-        
+
         [DataMember]
         public teResourceGUID Brawl;
-        
+
         [DataMember]
         public teResourceGUID[] Children;
-        
+
         [DataMember]
         public string[] About;
-        
-        
+
+
         public ArcadeMode(ulong key) {
             STU_E3594B8E stu = STUHelper.GetInstance<STU_E3594B8E>(key);
             if (stu == null) return;
@@ -56,7 +56,7 @@ namespace DataTool.DataModels {
                 default:
                     break;
             }
-            
+
             About = arcade.m_5797DE13?.Select(x => {
                 var aboutStuff = STUHelper.GetInstance<STU_56830926>(x);
 

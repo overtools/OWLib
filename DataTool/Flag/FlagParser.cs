@@ -8,8 +8,8 @@ using Utf8Json;
 namespace DataTool.Flag {
     public class FlagParser {
         public static string[] AppArgs { get; set; } = Environment.GetCommandLineArgs()
-                                                                  .SkipWhile(x => x.EndsWith(".exe") || x.EndsWith(".dll"))
-                                                                  .ToArray();
+            .SkipWhile(x => x.EndsWith(".exe") || x.EndsWith(".dll"))
+            .ToArray();
 
         public static string ArgFilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{AppDomain.CurrentDomain.FriendlyName}.args");
 
@@ -18,8 +18,8 @@ namespace DataTool.Flag {
         public static void CheckCollisions(Type baseType, Action<string, string> OnCollision) {
             var type = typeof(ICLIFlags);
             var flagSets = Assembly.GetExecutingAssembly()
-                                   .GetTypes()
-                                   .Where(x => !x.IsInterface && type.IsAssignableFrom(x) && !baseType.IsAssignableFrom(x));
+                .GetTypes()
+                .Where(x => !x.IsInterface && type.IsAssignableFrom(x) && !baseType.IsAssignableFrom(x));
 
             var baseFlags = new Dictionary<string, Type>();
             {
@@ -32,14 +32,14 @@ namespace DataTool.Flag {
 
                     baseFlags.Add(flagAttr.Flag, field.DeclaringType);
                     var aliasAttrs = field.GetCustomAttributes<AliasAttribute>(true)
-                                          .ToArray();
+                        .ToArray();
                     foreach (var aliasAttr in aliasAttrs) baseFlags.Add(aliasAttr.Alias, field.DeclaringType);
                 }
             }
 
             foreach (var flagSet in flagSets) {
                 var currentFlags = new HashSet<string>();
-                var fields       = flagSet.GetFields();
+                var fields = flagSet.GetFields();
                 foreach (var field in fields) {
                     var flagAttr = field.GetCustomAttribute<CLIFlagAttribute>(true);
                     if (flagAttr == null || flagAttr.AllPositionals) continue;
@@ -49,7 +49,7 @@ namespace DataTool.Flag {
                     if (baseFlags.ContainsKey(flagAttr.Flag) && field.DeclaringType != baseFlags[flagAttr.Flag] || !currentFlags.Add(flagAttr.Flag)) OnCollision(flagAttr.Flag, flagSet.FullName + "::" + field.Name);
 
                     var aliasAttrs = field.GetCustomAttributes<AliasAttribute>(true)
-                                          .ToArray();
+                        .ToArray();
                     foreach (var aliasAttr in aliasAttrs)
                         if (baseFlags.ContainsKey(aliasAttr.Alias) && field.DeclaringType != baseFlags[aliasAttr.Alias] || !currentFlags.Add(aliasAttr.Alias))
                             OnCollision(aliasAttr.Alias, flagSet.FullName + "::" + field.Name);
@@ -61,15 +61,15 @@ namespace DataTool.Flag {
             var iface = typeof(T);
 
             var positonals = new List<string>();
-            var singulars  = new List<string>();
-            var help       = new List<string>();
-            var fields     = iface.GetFields();
+            var singulars = new List<string>();
+            var help = new List<string>();
+            var fields = iface.GetFields();
             foreach (var field in fields) {
                 var flagattr = field.GetCustomAttribute<CLIFlagAttribute>(true);
                 if (flagattr == null || flagattr.AllPositionals || flagattr.Hidden) continue;
 
                 if (flagattr.Positional > -1) {
-                    var x                     = flagattr.Flag;
+                    var x = flagattr.Flag;
                     if (!flagattr.Required) x = $"[{x}]";
 
                     if (!values.TryGetValue(x, out var v)) v = x;
@@ -79,22 +79,22 @@ namespace DataTool.Flag {
                 var localFlags = new List<string>();
                 localFlags.Add(flagattr.Flag);
                 localFlags.AddRange(field.GetCustomAttributes<AliasAttribute>()
-                                         .Select(x => x.Alias));
+                                        .Select(x => x.Alias));
                 foreach (var localFlag in localFlags) {
                     if (string.IsNullOrWhiteSpace(localFlag)) continue;
                     if (localFlag.Length == 1) {
                         singulars.Add(localFlag);
                     } else {
-                        var x                                    = localFlag;
+                        var x = localFlag;
                         if (!values.TryGetValue(x, out var v)) v = "value";
-                        var t                                    = field.FieldType;
+                        var t = field.FieldType;
                         if (t.IsGenericType &&
                             t.GetGenericTypeDefinition()
-                             .IsAssignableFrom(typeof(Dictionary<,>)))
+                                .IsAssignableFrom(typeof(Dictionary<,>)))
                             x = $"[--{x} key=value]";
                         else if (t.IsGenericType &&
                                  t.GetGenericTypeDefinition()
-                                  .IsAssignableFrom(typeof(List<>)))
+                                     .IsAssignableFrom(typeof(List<>)))
                             x = $"[--{x} value]";
                         else if (flagattr.Default != null && flagattr.NeedsValue)
                             x = $"[--{x}[={flagattr.Default}]]";
@@ -108,24 +108,24 @@ namespace DataTool.Flag {
                 }
             }
 
-            var helpstr                       = AppDomain.CurrentDomain.FriendlyName;
-            if (singulars.Count  > 0) helpstr += $" [-{string.Join("", singulars)}]";
-            if (help.Count       > 0) helpstr += $" {string.Join(" ",  help)}";
-            if (positonals.Count > 0) helpstr += $" {string.Join(" ",  positonals)}";
+            var helpstr = AppDomain.CurrentDomain.FriendlyName;
+            if (singulars.Count > 0) helpstr += $" [-{string.Join("", singulars)}]";
+            if (help.Count > 0) helpstr += $" {string.Join(" ", help)}";
+            if (positonals.Count > 0) helpstr += $" {string.Join(" ", positonals)}";
             Console.Out.WriteLine(helpstr);
         }
 
         public static void FullHelp<T>(Action<bool> extraHelp, bool skipOpener = false) where T : ICLIFlags {
             var iface = typeof(T);
 
-            var positionals    = new SortedList<int, string>();
+            var positionals = new SortedList<int, string>();
             var maxpositionals = "positional".Length;
             var positionalsstr = new SortedList<int, string>();
 
-            var helpflags    = new List<string>();
-            var maxflags     = "flags".Length;
-            var helpstrs     = new List<string>();
-            var maxstrs      = "help".Length;
+            var helpflags = new List<string>();
+            var maxflags = "flags".Length;
+            var helpstrs = new List<string>();
+            var maxstrs = "help".Length;
             var helpdefaults = new List<string>();
 
             var fields = iface.GetFields();
@@ -135,7 +135,7 @@ namespace DataTool.Flag {
                 if (flagattr == null || flagattr.AllPositionals || flagattr.Hidden) continue;
                 if (flagattr == null || flagattr.AllPositionals || flagattr.Hidden) continue;
                 var aliasattrs = field.GetCustomAttributes<AliasAttribute>(true)
-                                      .ToArray();
+                    .ToArray();
 
                 var required = "";
                 if (flagattr.Positional == -1) {
@@ -146,15 +146,15 @@ namespace DataTool.Flag {
 
                 var aliases = new List<string>();
 
-                var prefix                             = "--";
+                var prefix = "--";
                 if (flagattr.Flag?.Length == 1) prefix = "-";
-                if (flagattr.Positional   > -1) prefix = "";
+                if (flagattr.Positional > -1) prefix = "";
 
                 aliases.Add(prefix + flagattr.Flag);
                 foreach (var aliasattr in aliasattrs) {
                     prefix = "--";
                     if (aliasattr.Alias.Length == 1) prefix = "-";
-                    if (flagattr.Positional    > -1) prefix = "";
+                    if (flagattr.Positional > -1) prefix = "";
                     aliases.Add(prefix + aliasattr.Alias);
                 }
 
@@ -162,7 +162,7 @@ namespace DataTool.Flag {
                 maxflags = Math.Max(maxflags, helpflag.Length);
                 var helpstr = $"{flagattr.Help}{required}";
                 maxstrs = Math.Max(maxstrs, helpstr.Length);
-                var helpdefault                           = "";
+                var helpdefault = "";
                 if (flagattr.Default != null) helpdefault = flagattr.Default.ToString();
 
                 if (flagattr.Positional > -1) {
@@ -183,8 +183,8 @@ namespace DataTool.Flag {
                 Console.Out.WriteLine($"  {{0, -{maxflags}}} | {{1, -{maxstrs}}} | {{2}}", "flag", "help", "default");
                 Console.Out.WriteLine("".PadLeft(maxflags + maxstrs + 20, '-'));
                 for (var i = 0; i < helpstrs.Count; ++i) {
-                    var helpflag    = helpflags[i];
-                    var helpstr     = helpstrs[i];
+                    var helpflag = helpflags[i];
+                    var helpstr = helpstrs[i];
                     var helpdefault = helpdefaults[i];
                     Console.Out.WriteLine($"  {{0, -{maxflags}}} | {{1, -{maxstrs}}} | {{2}}", helpflag, helpstr, helpdefault);
                 }
@@ -197,7 +197,7 @@ namespace DataTool.Flag {
                 Console.Out.WriteLine($"  {{0, -{maxindex}}} | --{{1, -{maxpositionals}}} | {{2}}", "index", "positional", "help");
                 Console.Out.WriteLine("".PadLeft(maxindex + maxpositionals + 30, '-'));
                 foreach (var pair in positionals) {
-                    var positional    = pair.Value;
+                    var positional = pair.Value;
                     var positionalstr = positionalsstr[pair.Key];
                     Console.Out.WriteLine($"  {{0, -{maxindex}}} | --{{1, -{maxpositionals}}} | {{2}}", pair.Key, positional, positionalstr);
                 }
@@ -206,7 +206,9 @@ namespace DataTool.Flag {
             extraHelp?.Invoke(false);
         }
 
-        public static T Parse<T>(Action<bool> extraHelp) where T : ICLIFlags { return Parse<T>(extraHelp, AppArgs); }
+        public static T Parse<T>(Action<bool> extraHelp) where T : ICLIFlags {
+            return Parse<T>(extraHelp, AppArgs);
+        }
 
         public static T Parse<T>(Action<bool> extraHelp, string[] args) where T : ICLIFlags {
             if (args.Length == 0) {
@@ -218,11 +220,11 @@ namespace DataTool.Flag {
 
             if (!(Activator.CreateInstance(iface) is T instance)) return null;
 
-            var presence         = new HashSet<string>();
-            var positionals      = new List<object>();
-            var values           = new Dictionary<string, string>();
+            var presence = new HashSet<string>();
+            var positionals = new List<object>();
+            var values = new Dictionary<string, string>();
             var dictionaryValues = new Dictionary<string, Dictionary<string, string>>();
-            var arrayValues      = new Dictionary<string, List<string>>();
+            var arrayValues = new Dictionary<string, List<string>>();
 
             var fields = iface.GetFields();
             foreach (var field in fields) {
@@ -231,9 +233,9 @@ namespace DataTool.Flag {
                 var t = field.FieldType;
                 if (t.IsGenericType &&
                     t.GetGenericTypeDefinition()
-                     .IsAssignableFrom(typeof(Dictionary<,>))) {
+                        .IsAssignableFrom(typeof(Dictionary<,>))) {
                     var aliasattrs = field.GetCustomAttributes<AliasAttribute>(true)
-                                          .ToArray();
+                        .ToArray();
                     if (aliasattrs.Length > 0)
                         foreach (var aliasattr in aliasattrs)
                             dictionaryValues.Add(aliasattr.Alias, new Dictionary<string, string>());
@@ -242,9 +244,9 @@ namespace DataTool.Flag {
 
                 if (t.IsGenericType &&
                     t.GetGenericTypeDefinition()
-                     .IsAssignableFrom(typeof(List<>))) {
+                        .IsAssignableFrom(typeof(List<>))) {
                     var aliasattrs = field.GetCustomAttributes<AliasAttribute>(true)
-                                          .ToArray();
+                        .ToArray();
                     if (aliasattrs.Length > 0)
                         foreach (var aliasattr in aliasattrs)
                             arrayValues.Add(aliasattr.Alias, new List<string>());
@@ -256,11 +258,11 @@ namespace DataTool.Flag {
                 var arg = args[i];
                 if (arg[0] == '-') {
                     if (arg[1] == '-') {
-                        var name  = arg.Substring(2);
+                        var name = arg.Substring(2);
                         var value = "true";
                         if (name.Contains('=')) {
                             value = name.Substring(name.IndexOf('=') + 1);
-                            name  = name.Substring(0, name.IndexOf('='));
+                            name = name.Substring(0, name.IndexOf('='));
                         }
 
                         presence.Add(name);
@@ -268,7 +270,7 @@ namespace DataTool.Flag {
                             var key = args[++i];
                             if (key.Contains('=')) {
                                 value = key.Substring(key.IndexOf('=') + 1);
-                                key   = key.Substring(0, key.IndexOf('='));
+                                key = key.Substring(0, key.IndexOf('='));
                             }
 
                             dictionaryValues[name][key] = value;
@@ -280,7 +282,7 @@ namespace DataTool.Flag {
                         }
                     } else {
                         var letters = arg.Substring(1)
-                                         .ToArray();
+                            .ToArray();
                         foreach (var letter in letters) {
                             if (letter == '=') break;
                             if (letter == '?' || letter == 'h') {
@@ -291,14 +293,14 @@ namespace DataTool.Flag {
 
                             presence.Add(letter.ToString());
 
-                            var value                    = "true";
+                            var value = "true";
                             if (arg.Contains('=')) value = arg.Substring(arg.IndexOf('=') + 1);
-                            var name                     = letter.ToString();
+                            var name = letter.ToString();
                             if (dictionaryValues.ContainsKey(name)) {
                                 var key = args[++i];
                                 if (key.Contains('=')) {
                                     value = key.Substring(key.IndexOf('=') + 1);
-                                    key   = key.Substring(0, key.IndexOf('='));
+                                    key = key.Substring(0, key.IndexOf('='));
                                 }
 
                                 dictionaryValues[name][key] = value;
@@ -314,16 +316,16 @@ namespace DataTool.Flag {
                     positionals.Add(arg);
                 }
             }
-            
+
 
             var flagAttributes = fields.Select(x => (field: x, attribute: x.GetCustomAttribute<CLIFlagAttribute>(true)))
-                                       .Where(x => x.attribute != null)
-                                       .OrderBy(x => x.attribute.Positional)
-                                       .ToArray();
+                .Where(x => x.attribute != null)
+                .OrderBy(x => x.attribute.Positional)
+                .ToArray();
 
             var positionalsField = default(FieldInfo);
-            
-            
+
+
             var newPositionals = new List<object>(Enumerable.Repeat(default(object), Math.Max(positionals.Count, flagAttributes.Max(x => x.attribute.Positional) + 1)));
 
             var positionalTicker = 0;
@@ -340,7 +342,7 @@ namespace DataTool.Flag {
             }
 
             positionals = newPositionals;
-            
+
             foreach (var (field, flagAttribute) in flagAttributes) {
                 if (flagAttribute.AllPositionals) {
                     positionalsField = field;
@@ -348,23 +350,23 @@ namespace DataTool.Flag {
                 }
 
                 var kind = FieldKind.Default;
-                var t    = field.FieldType;
+                var t = field.FieldType;
                 if (t.IsGenericType &&
                     t.GetGenericTypeDefinition()
-                     .IsAssignableFrom(typeof(Dictionary<,>)))
+                        .IsAssignableFrom(typeof(Dictionary<,>)))
                     kind = FieldKind.Dictionary;
                 else if (t.IsGenericType &&
                          t.GetGenericTypeDefinition()
-                          .IsAssignableFrom(typeof(List<>))) kind = FieldKind.Array;
-                var    value         = flagAttribute.Default;
-                object key           = string.Empty;
-                var    insertedValue = false;
+                             .IsAssignableFrom(typeof(List<>))) kind = FieldKind.Array;
+                var value = flagAttribute.Default;
+                object key = string.Empty;
+                var insertedValue = false;
                 if (flagAttribute.Positional > -1 && positionals.Count > flagAttribute.Positional && positionals[flagAttribute.Positional] != null) value = positionals[flagAttribute.Positional] ?? value;
 
                 if (!string.IsNullOrWhiteSpace(flagAttribute.Flag)) {
                     if (!presence.Contains(flagAttribute.Flag)) {
                         var aliasattrs = field.GetCustomAttributes<AliasAttribute>(true)
-                                              .ToArray();
+                            .ToArray();
                         if (aliasattrs.Length > 0)
                             foreach (var aliasattr in aliasattrs)
                                 if (presence.Contains(aliasattr.Alias)) {
@@ -372,7 +374,7 @@ namespace DataTool.Flag {
                                     if (kind == FieldKind.Default)
                                         value = values[aliasattr.Alias];
                                     else if (kind == FieldKind.Dictionary)
-                                        value                               = dictionaryValues[aliasattr.Alias];
+                                        value = dictionaryValues[aliasattr.Alias];
                                     else if (kind == FieldKind.Array) value = arrayValues[aliasattr.Alias];
                                 }
                     } else {
@@ -380,13 +382,11 @@ namespace DataTool.Flag {
                         if (kind == FieldKind.Default)
                             value = values[flagAttribute.Flag];
                         else if (kind == FieldKind.Dictionary)
-                            value                               = dictionaryValues[flagAttribute.Flag];
+                            value = dictionaryValues[flagAttribute.Flag];
                         else if (kind == FieldKind.Array) value = arrayValues[flagAttribute.Flag];
                     }
 
-                    if (flagAttribute.Positional > 0) {
-                        
-                    }
+                    if (flagAttribute.Positional > 0) { }
                 }
 
                 if (value != null) {
@@ -399,7 +399,7 @@ namespace DataTool.Flag {
 
                     if (flagAttribute.Parser != null && insertedValue && flagAttribute.Parser.Length == 2) {
                         var parserclass = Type.GetType(flagAttribute.Parser[0]);
-                        var method      = parserclass?.GetMethod(flagAttribute.Parser[1]);
+                        var method = parserclass?.GetMethod(flagAttribute.Parser[1]);
                         if (method != null) {
                             var @params = method.GetParameters();
                             if (kind == FieldKind.Default) {
@@ -407,19 +407,19 @@ namespace DataTool.Flag {
                                     @params[0]
                                         .ParameterType.Name ==
                                     "String" &&
-                                    method.ReturnType.Name == "Object") value = method.Invoke(null, new object[] { (string) value });
+                                    method.ReturnType.Name == "Object") value = method.Invoke(null, new object[] {(string) value});
                             } else if (kind == FieldKind.Dictionary) {
                                 if (@params.Length == 1 &&
                                     @params[0]
                                         .ParameterType.Name ==
                                     "Dictionary`2" &&
-                                    method.ReturnType.Name == "Object") value = method.Invoke(null, new object[] { (Dictionary<string, string>) value });
+                                    method.ReturnType.Name == "Object") value = method.Invoke(null, new object[] {(Dictionary<string, string>) value});
                             } else if (kind == FieldKind.Array) {
                                 if (@params.Length == 1 &&
                                     @params[0]
                                         .ParameterType.Name ==
                                     "List`1" &&
-                                    method.ReturnType.Name == "Object") value = method.Invoke(null, new object[] { (List<string>) value });
+                                    method.ReturnType.Name == "Object") value = method.Invoke(null, new object[] {(List<string>) value});
                             }
                         }
                     }
@@ -445,24 +445,24 @@ namespace DataTool.Flag {
         public static void LoadArgs() {
             if (File.Exists(ArgFilePath))
                 AppArgs = JsonSerializer.Deserialize<string[]>(File.ReadAllText(ArgFilePath))
-                                        .Concat(AppArgs)
-                                        .Distinct()
-                                        .ToArray();
+                    .Concat(AppArgs)
+                    .Distinct()
+                    .ToArray();
         }
 
         public static void SaveArgs(params string[] extra) {
             DeleteArgs();
             var args = AppArgs.Where(x => x.StartsWith("-"))
-                              .Concat(extra.Where(x => !string.IsNullOrWhiteSpace(x)))
-                              .Reverse()
-                              .ToArray();
+                .Concat(extra.Where(x => !string.IsNullOrWhiteSpace(x)))
+                .Reverse()
+                .ToArray();
             File.WriteAllText(ArgFilePath, JsonSerializer.ToJsonString(args));
         }
 
         public static void ResetArgs() {
             AppArgs = Environment.GetCommandLineArgs()
-                                 .Skip(1)
-                                 .ToArray();
+                .Skip(1)
+                .ToArray();
         }
 
         public static void DeleteArgs() {

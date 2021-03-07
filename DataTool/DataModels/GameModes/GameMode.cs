@@ -10,19 +10,19 @@ namespace DataTool.DataModels.GameModes {
     public class GameMode {
         [DataMember]
         public teResourceGUID GUID;
-        
+
         [DataMember]
         public string Name;
 
         [DataMember]
         public Enum_1964FED7 Type;
-        
+
         [DataMember]
         public teResourceGUID[] GameRulesetSchemas;
 
         [DataMember]
         public teResourceGUID VoiceSet;
-        
+
         public GameMode(ulong key) {
             STUGameMode stu = GetInstance<STUGameMode>(key);
             if (stu == null) return;
@@ -40,7 +40,7 @@ namespace DataTool.DataModels.GameModes {
             VoiceSet = gamemode.m_7F5B54B2;
             Type = gamemode.m_gameModeType;
         }
-        
+
         public GameModeLite ToLite() {
             return new GameModeLite(this);
         }
@@ -49,10 +49,10 @@ namespace DataTool.DataModels.GameModes {
     public class GameModeLite {
         [DataMember]
         public teResourceGUID GUID;
-        
+
         [DataMember]
         public string Name;
-        
+
         public GameModeLite(GameMode gameMode) {
             GUID = gameMode.GUID;
             Name = gameMode.Name;

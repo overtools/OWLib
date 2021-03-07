@@ -15,7 +15,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         public void Parse(ICLIFlags toolFlags) {
             ExtractNewEntities(toolFlags);
         }
-        
+
         public void AddNewByGUID(Combo.ComboInfo info, HashSet<ulong> lastVerGuids, params ushort[] types) {
             foreach (ushort type in types) {
                 foreach (ulong key in TrackedFiles[type]) {
@@ -26,13 +26,13 @@ namespace DataTool.ToolLogic.Extract.Debug {
         }
 
         public void AddNewByContentHash(Combo.ComboInfo info, HashSet<CKey> contentHashes, params ushort[] types) {
-            foreach (KeyValuePair<ulong,ProductHandler_Tank.Asset> asset in TankHandler.m_assets) {
+            foreach (KeyValuePair<ulong, ProductHandler_Tank.Asset> asset in TankHandler.m_assets) {
                 TankHandler.UnpackAsset(asset.Value, out var package, out var record);
-                
+
                 ushort fileType = teResourceGUID.Type(asset.Key);
-                if (fileType == 0x9C) continue;  // bundle
-                if (fileType == 0x77) continue;  // package
-                
+                if (fileType == 0x9C) continue; // bundle
+                if (fileType == 0x77) continue; // package
+
                 if (!types.Contains(fileType)) continue;
 
                 var cmf = TankHandler.GetContentManifestForAsset(asset.Key);
@@ -41,7 +41,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     // todo: wtf
                     continue;
                 }
-                
+
                 if (contentHashes.Contains(cmfData.ContentKey)) continue;
 
                 if (fileType == 0x4) {
@@ -54,7 +54,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     if (locale == 0x5F) continue; // ? 
                     if (teResourceGUID.Platform(asset.Key) == 0x8) continue; // effect images
                 }
-                
+
                 Combo.Find(info, asset.Key);
             }
         }
@@ -63,7 +63,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             using (var stream = File.OpenRead(path))
                 return Diff.ReadCKeys(stream);
         }
-        
+
         public static HashSet<ulong> GetGUIDs(string path) {
             using (var stream = File.OpenRead(path))
                 return Diff.ReadGUIDs(stream);
@@ -71,7 +71,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
         public void ExtractNewEntities(ICLIFlags toolFlags) {
             string basePath;
-            
+
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
             } else {
@@ -85,7 +85,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             var file = flags.Positionals[3];
             const string container = "DebugNewEntities2";
             Combo.ComboInfo info = new Combo.ComboInfo();
-            var types = new ushort[]{0x4, 0x7C, 0x3F, 0xB2};
+            var types = new ushort[] {0x4, 0x7C, 0x3F, 0xB2};
 
             if (file.EndsWith("guids")) {
                 var guids = GetGUIDs(file);

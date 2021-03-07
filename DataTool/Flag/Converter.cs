@@ -12,28 +12,29 @@ namespace DataTool.Flag {
         public static object CLIFlagInt(string @in) {
             return int.Parse(@in);
         }
-        
+
         public static object CLIFlagByte(string @in) {
             return byte.Parse(@in);
         }
-        
+
         public static object CLIFlagChar(string @in) {
             if (@in.Length == 0) {
-                return (char)0;
+                return (char) 0;
             }
+
             return @in[0];
         }
 
         public static object CLIFlagTankGUID(string @in) {
-            return new teResourceGUID((ulong)CLIFlagGUID(@in));
+            return new teResourceGUID((ulong) CLIFlagGUID(@in));
         }
 
         public static object CLIFlagTankGUIDDict(Dictionary<string, string> @in) {
-            return @in.ToDictionary(x => (teResourceGUID)CLIFlagTankGUID(x.Key), x => (teResourceGUID)CLIFlagTankGUID(x.Value));
+            return @in.ToDictionary(x => (teResourceGUID) CLIFlagTankGUID(x.Key), x => (teResourceGUID) CLIFlagTankGUID(x.Value));
         }
 
         public static object CLIFlagTankGUIDArray(List<string> @in) {
-            return @in.Select(x => (teResourceGUID)CLIFlagTankGUID(x)).ToList();
+            return @in.Select(x => (teResourceGUID) CLIFlagTankGUID(x)).ToList();
         }
 
         public static object CLIFlagGUID(string @in) {
@@ -45,11 +46,11 @@ namespace DataTool.Flag {
         }
 
         public static object CLIFlagGUIDDict(Dictionary<string, string> @in) {
-            return @in.ToDictionary(x => (ulong)CLIFlagGUID(x.Key), x => (ulong)CLIFlagGUID(x.Value));
+            return @in.ToDictionary(x => (ulong) CLIFlagGUID(x.Key), x => (ulong) CLIFlagGUID(x.Value));
         }
 
         public static object CLIFlagGUIDArray(List<string> @in) {
-            return @in.Select(x => (ulong)CLIFlagGUID(x)).ToList();
+            return @in.Select(x => (ulong) CLIFlagGUID(x)).ToList();
         }
     }
 }

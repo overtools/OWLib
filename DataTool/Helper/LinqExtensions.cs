@@ -8,6 +8,7 @@ namespace DataTool.Helper {
             if (source == null) {
                 throw new ArgumentNullException(nameof(source));
             }
+
             return OfTypesIterator(source, types);
         }
 

@@ -22,11 +22,10 @@ namespace DataTool.ToolLogic.List {
                 }
 
             IndentHelper indentLevel = new IndentHelper();
-            
+
             foreach (KeyValuePair<teResourceGUID, Hero> hero in heroes) {
                 Log($"{hero.Value.Name}");
                 if (!(toolFlags as ListFlags).Simplify) {
-
                     if (hero.Value.Description != null)
                         Log($"{indentLevel + 1}Description: {hero.Value.Description}");
 
@@ -50,7 +49,7 @@ namespace DataTool.ToolLogic.List {
                     }
 
                     Log();
-                }  
+                }
             }
         }
 

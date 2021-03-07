@@ -23,8 +23,7 @@ namespace DataTool.ToolLogic.List {
                 Log($"{lootbox.Type}");
                 if ((toolFlags as ListFlags)?.Simplify == false) {
                     if (lootbox.ShopCards != null) {
-                        foreach (LootBoxShopCard shopCard in lootbox.ShopCards)
-                        {
+                        foreach (LootBoxShopCard shopCard in lootbox.ShopCards) {
                             Log($"\t{shopCard.Text}");
                         }
                     }

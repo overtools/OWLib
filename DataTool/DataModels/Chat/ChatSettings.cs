@@ -8,10 +8,10 @@ namespace DataTool.DataModels.Chat {
     public class ChatSettings {
         [DataMember]
         public IEnumerable<ChatChannel> Channels;
-        
+
         [DataMember]
         public IEnumerable<ChatCommand> Commands;
-        
+
         public ChatSettings(STUGenericSettings_Chat chatSettings) {
             Channels = chatSettings.m_chatChannels.Select(x => new ChatChannel(x));
             Commands = chatSettings.m_chatCommands.Select(x => new ChatCommand(x));

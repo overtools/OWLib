@@ -14,7 +14,7 @@ namespace DataTool.ToolLogic.List {
     public class ListAllUnlocks : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var allUnlocks = new Dictionary<teResourceGUID, UnlockAll>();
-            
+
             foreach (var key in TrackedFiles[0xA5]) {
                 var guid = (teResourceGUID) key;
                 if (!allUnlocks.ContainsKey(guid)) {
@@ -26,7 +26,7 @@ namespace DataTool.ToolLogic.List {
             }
 
             var heroes = TrackedFiles[0x75].Select(STUHelper.GetInstance<STUHero>);
-            
+
             foreach (var stuHero in heroes) {
                 var hero = new Hero(stuHero);
                 var progression = new ProgressionUnlocks(stuHero);
@@ -42,7 +42,7 @@ namespace DataTool.ToolLogic.List {
             }
         }
     }
-    
+
     public class UnlockAll : Unlock {
         public string Hero;
 

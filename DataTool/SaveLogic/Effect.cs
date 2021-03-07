@@ -8,7 +8,7 @@ namespace DataTool.SaveLogic {
     public static class Effect {
         public class OverwatchEffect : IExportFormat {
             public virtual string Extension => "oweffect";
-            
+
             public static void WriteTime(BinaryWriter writer, EffectParser.ChunkPlaybackInfo playbackInfo) {
                 writer.Write(playbackInfo.TimeInfo == null);
                 if (playbackInfo.TimeInfo != null) {
@@ -18,13 +18,14 @@ namespace DataTool.SaveLogic {
                     writer.Write(0f);
                     writer.Write(0f);
                 }
+
                 if (playbackInfo.Hardpoint != 0) {
                     writer.Write(OverwatchModel.IdToString("hardpoint", teResourceGUID.Index(playbackInfo.Hardpoint)));
                 } else {
                     writer.Write("null");
                 }
             }
-            
+
             public const ushort EffectVersionMajor = 1;
             public const ushort EffectVersionMinor = 2;
 
@@ -32,7 +33,8 @@ namespace DataTool.SaveLogic {
             protected readonly FindLogic.Combo.EffectInfoCombo EffectInfo;
             protected readonly Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> VoiceStimuli;
 
-            public OverwatchEffect(FindLogic.Combo.ComboInfo info, FindLogic.Combo.EffectInfoCombo effectInfo,
+            public OverwatchEffect(
+                FindLogic.Combo.ComboInfo info, FindLogic.Combo.EffectInfoCombo effectInfo,
                 Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> voiceStimuli) {
                 Info = info;
                 EffectInfo = effectInfo;
@@ -51,10 +53,10 @@ namespace DataTool.SaveLogic {
                 writer.Write(EffectVersionMinor);
 
                 EffectParser.EffectInfo effect = EffectInfo.Effect;
-                
+
                 writer.Write(teResourceGUID.Index(effect.GUID));
                 writer.Write(effect.EffectLength);
-                
+
                 writer.Write(effect.DMCEs.Count);
                 writer.Write(effect.CECEs.Count);
                 writer.Write(effect.NECEs.Count);
@@ -80,7 +82,7 @@ namespace DataTool.SaveLogic {
 
                 foreach (EffectParser.CECEInfo ceceInfo in effect.CECEs) {
                     WriteTime(writer, ceceInfo.PlaybackInfo);
-                    writer.Write((byte)ceceInfo.Action);
+                    writer.Write((byte) ceceInfo.Action);
                     writer.Write(ceceInfo.Animation);
                     writer.Write(ceceInfo.Identifier);
                     writer.Write(teResourceGUID.Index(ceceInfo.Identifier));
@@ -91,16 +93,16 @@ namespace DataTool.SaveLogic {
                         writer.Write("null");
                     }
                 }
-                
+
                 foreach (EffectParser.NECEInfo neceInfo in effect.NECEs) {
                     WriteTime(writer, neceInfo.PlaybackInfo);
                     writer.Write(neceInfo.GUID);
                     writer.Write(teResourceGUID.Index(neceInfo.Identifier));
                     FindLogic.Combo.EntityAsset entityInfo = Info.m_entities[neceInfo.GUID];
-                    
+
                     writer.Write($"Entities\\{entityInfo.GetName()}\\{entityInfo.GetName()}.owentity");
                 }
-                
+
                 foreach (EffectParser.RPCEInfo rpceInfo in effect.RPCEs) {
                     WriteTime(writer, rpceInfo.PlaybackInfo);
                     writer.Write(rpceInfo.Model);
@@ -108,7 +110,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(rpceInfo.Material);
                     FindLogic.Combo.ModelAsset modelInfo = Info.m_models[rpceInfo.Model];
                     //writer.Write(rpceInfo.TextureDefiniton);
-                    
+
                     writer.Write($"Models\\{modelInfo.GetName()}\\{modelInfo.GetName()}.owmdl");
                 }
 
@@ -136,25 +138,25 @@ namespace DataTool.SaveLogic {
 
         public class OverwatchAnimationEffect : OverwatchEffect {
             public override string Extension => "owanim";
-            
+
             public const string AnimationEffectDir = "AnimationEffects";
 
             protected readonly FindLogic.Combo.AnimationAsset Animation;
             protected readonly ulong Model;
-            
+
             public const ushort AnimVersionMajor = 1;
             public const ushort AnimVersionMinor = 0;
-            
-            public OverwatchAnimationEffect(FindLogic.Combo.ComboInfo info,
-                 FindLogic.Combo.EffectInfoCombo animationEffect,
+
+            public OverwatchAnimationEffect(
+                FindLogic.Combo.ComboInfo info,
+                FindLogic.Combo.EffectInfoCombo animationEffect,
                 Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> voiceStimuli,
                 FindLogic.Combo.AnimationAsset animation,
                 ulong model) : base(info, animationEffect, voiceStimuli) {
-
                 Animation = animation;
                 Model = model;
             }
-            
+
             public enum OWAnimType {
                 Unknown = -1,
                 Data = 0,
@@ -169,13 +171,13 @@ namespace DataTool.SaveLogic {
                     writer.Write(AnimVersionMinor);
                     writer.Write(teResourceGUID.Index(Animation.m_GUID));
                     writer.Write(Animation.m_fps);
-                    writer.Write((int)OWAnimType.Data);
-                    
+                    writer.Write((int) OWAnimType.Data);
+
                     FindLogic.Combo.ModelAsset modelInfo = Info.m_models[Model];
-                    
+
                     writer.Write($"Models\\{modelInfo.GetName()}\\Animations\\{Animation.m_priority}\\{Animation.GetNameIndex()}.seanim");
                     writer.Write($"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl");
-                    
+
                     // wrap oweffect
                     WriteEffect(writer);
                 }
@@ -202,10 +204,10 @@ namespace DataTool.SaveLogic {
                     writer.Write(OverwatchAnimationEffect.AnimVersionMinor);
                     writer.Write(teResourceGUID.Index(Animation.m_GUID));
                     writer.Write(Animation.m_fps);
-                    writer.Write((int)OverwatchAnimationEffect.OWAnimType.Reference);
+                    writer.Write((int) OverwatchAnimationEffect.OWAnimType.Reference);
 
                     FindLogic.Combo.ModelAsset modelInfo = Info.m_models[Model];
-                    
+
                     writer.Write($"Models\\{modelInfo.GetName()}\\{OverwatchAnimationEffect.AnimationEffectDir}\\{Animation.GetNameIndex()}\\{Animation.GetNameIndex()}.{Extension}"); // so I can change it in DataTool and not go mad
                 }
             }

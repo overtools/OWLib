@@ -23,12 +23,13 @@ namespace DataTool.SaveLogic {
                     writer.Write(OverwatchMaterial.VersionMinor);
                     if (ModelLookInfo.m_materialGUIDs == null) {
                         writer.Write(0L);
-                        writer.Write((uint)OverwatchMaterial.OWMatType.ModelLook);
+                        writer.Write((uint) OverwatchMaterial.OWMatType.ModelLook);
                         return;
                     }
+
                     writer.Write(ModelLookInfo.m_materialGUIDs.LongCount());
-                    writer.Write((uint)OverwatchMaterial.OWMatType.ModelLook);
-                    
+                    writer.Write((uint) OverwatchMaterial.OWMatType.ModelLook);
+
                     foreach (ulong modelLookMaterial in ModelLookInfo.m_materialGUIDs) {
                         FindLogic.Combo.MaterialAsset materialInfo = Info.m_materials[modelLookMaterial];
                         writer.Write($"..\\..\\Materials\\{materialInfo.GetNameIndex()}.{Extension}");
@@ -39,15 +40,15 @@ namespace DataTool.SaveLogic {
 
         public class OverwatchMaterial : IExportFormat {
             public string Extension => "owmat";
-            
+
             public const ushort VersionMajor = 2;
             public const ushort VersionMinor = 0;
-            
+
             public enum OWMatType : uint {
                 Material = 0,
                 ModelLook = 1
             }
-            
+
             protected FindLogic.Combo.ComboInfo Info;
             protected FindLogic.Combo.MaterialAsset MaterialInfo;
 
@@ -66,7 +67,8 @@ namespace DataTool.SaveLogic {
                     } else {
                         writer.Write(0L);
                     }
-                    writer.Write((uint)OWMatType.Material);
+
+                    writer.Write((uint) OWMatType.Material);
                     writer.Write(teResourceGUID.Index(MaterialInfo.m_shaderSourceGUID));
                     writer.Write(MaterialInfo.m_materialIDs.Count);
                     foreach (ulong id in MaterialInfo.m_materialIDs) {
@@ -81,6 +83,7 @@ namespace DataTool.SaveLogic {
                             } else {
                                 writer.Write($@"..\Textures\{textureInfo.GetNameIndex()}.dds");
                             }
+
                             writer.Write(texture.Value);
                         }
                     }

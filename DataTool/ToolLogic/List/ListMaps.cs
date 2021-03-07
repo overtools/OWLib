@@ -27,8 +27,7 @@ namespace DataTool.ToolLogic.List {
                 var data = map.Value;
                 if ((toolFlags as ListFlags).Simplify) {
                     Log(data.GetUniqueName());
-                }
-                else {
+                } else {
                     Log($"{iD}{data.GetUniqueName()} ({data.MapGUID:X8})");
 
                     if (!string.IsNullOrEmpty(data.Name)) Log($"{iD + 1}Name: {data.Name}");
@@ -38,19 +37,16 @@ namespace DataTool.ToolLogic.List {
                     Log($"{iD + 1}Status: {data.State}");
                     Log($"{iD + 1}Type: {data.MapType}");
 
-                    if (data.StateA != null || data.StateB != null)
-                    {
+                    if (data.StateA != null || data.StateB != null) {
                         Log($"{iD + 1}States:");
                         Log($"{iD + 2}{data.StateA ?? "N/A"}");
                         Log($"{iD + 2}{data.StateB ?? "N/A"}");
                     }
 
-                    if (data.GameModes != null)
-                    {
+                    if (data.GameModes != null) {
                         Log($"{iD + 1}GameModes:");
 
-                        foreach (var gameModeLight in data.GameModes)
-                        {
+                        foreach (var gameModeLight in data.GameModes) {
                             Console.Out.WriteLine($"{iD + 2}{gameModeLight.Name ?? "N/A"} ({teResourceGUID.AsString(gameModeLight.GUID)})");
                         }
                     }

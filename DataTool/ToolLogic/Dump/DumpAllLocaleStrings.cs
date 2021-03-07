@@ -14,7 +14,7 @@ namespace DataTool.ToolLogic.Dump {
     public class DumpStringsLocale : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
-            
+
             if (toolFlags is DumpFlags flags) {
                 OutputJSON(data, flags);
             }
@@ -34,14 +34,13 @@ namespace DataTool.ToolLogic.Dump {
                         var guid = (teResourceGUID) key;
                         if (!@return.ContainsKey(guid))
                             @return[guid] = new Dictionary<string, string>();
-                        
+
                         var str = Helper.IO.GetString(key);
                         if (str == null) continue;
 
                         @return[guid][language] = str;
                     }
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     // ignored
                 }
             }
@@ -61,7 +60,7 @@ namespace DataTool.ToolLogic.Dump {
                 HandlerArgs = new ClientCreateArgs_Tank {CacheAPM = Flags.UseCache},
                 Online = false
             };
-            
+
             Client = new ClientHandler(Flags.OverwatchDirectory, args);
             TankHandler = Client.ProductHandler as ProductHandler_Tank;
 

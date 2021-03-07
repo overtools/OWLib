@@ -31,10 +31,10 @@ namespace DataTool.ToolLogic.Extract {
             // Do normal heroes first then NPCs, this is because NPCs have a lot of duplicate sounds and normal heroes (should) have none
             // so any duplicate sounds would only come up while processing NPCs which can be ignored as they (probably) belong to heroes
             var heroes = Program.TrackedFiles[0x75]
-                                .Select(x => new Hero(x))
-                                .OrderBy(x => !x.IsHero)
-                                .ThenBy(x => x.GUID.GUID)
-                                .ToArray();
+                .Select(x => new Hero(x))
+                .OrderBy(x => !x.IsHero)
+                .ThenBy(x => x.GUID.GUID)
+                .ToArray();
 
             foreach (var hero in heroes) {
                 var heroStu = GetInstance<STUHero>(hero.GUID);
@@ -99,8 +99,8 @@ namespace DataTool.ToolLogic.Extract {
                         }
 
                         var path = flags.VoiceGroupByHero && flags.VoiceGroupByType
-                            ? Path.Combine(basePath, heroName, groupName)
-                            : Path.Combine(basePath, flags.VoiceGroupByHero ? Path.Combine(groupName, heroName) : groupName);
+                                       ? Path.Combine(basePath, heroName, groupName)
+                                       : Path.Combine(basePath, flags.VoiceGroupByHero ? Path.Combine(groupName, heroName) : groupName);
 
                         if (ignoreGroups) {
                             path = Path.Combine(basePath, heroName);

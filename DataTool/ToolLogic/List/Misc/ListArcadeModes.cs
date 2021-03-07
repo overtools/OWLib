@@ -11,7 +11,7 @@ namespace DataTool.ToolLogic.List.Misc {
     public class ListArcadeModes : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
-            
+
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
                     OutputJSON(data, flags);
@@ -21,7 +21,7 @@ namespace DataTool.ToolLogic.List.Misc {
             foreach (var arcade in data) {
                 Log($"{arcade.Name}:");
                 Log($"\tDescription: {arcade.Description}");
-                
+
                 if (arcade.Brawl != 0)
                     Log($"\tBrawl: {arcade.Brawl.ToString()}");
 
@@ -37,7 +37,7 @@ namespace DataTool.ToolLogic.List.Misc {
 
             foreach (ulong key in TrackedFiles[0xEE]) {
                 var arcade = new ArcadeMode(key);
-                
+
                 if (arcade.GUID != 0)
                     arcades.Add(arcade);
             }

@@ -21,7 +21,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
             const string container = "DebugTypes";
             string path = Path.Combine(basePath, container);
-            
+
             WriteType(Convert.ToUInt16(toolFlags.Positionals[3], 16), path);
         }
 

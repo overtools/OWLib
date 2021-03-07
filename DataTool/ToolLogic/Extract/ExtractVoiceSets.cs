@@ -26,10 +26,10 @@ namespace DataTool.ToolLogic.Extract {
             foreach (var key in TrackedFiles[0x5F]) {
                 var stu = STUHelper.GetInstance<STUVoiceSet>(key);
                 if (stu == null) continue;
-                
+
                 var guidClean = teResourceGUID.AsString(key);
                 Log($"Saving VoiceSet: {guidClean}");
-                
+
                 var comboInfo = new Combo.ComboInfo();
                 var context = new SaveLogic.Combo.SaveContext(comboInfo);
                 Combo.Find(comboInfo, key);

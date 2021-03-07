@@ -12,13 +12,13 @@ namespace DataTool.ToolLogic.List {
     public class ListAbilities : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
-            
+
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
                     OutputJSON(data, flags);
                     return;
                 }
-            
+
             IndentHelper indentLevel = new IndentHelper();
             foreach (var loadout in data) {
                 Log($"{indentLevel}{loadout.Value.Name}:");

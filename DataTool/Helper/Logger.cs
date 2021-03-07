@@ -15,6 +15,7 @@ namespace DataTool.Helper {
             if (Flags.Quiet) {
                 return;
             }
+
             TankLib.Helpers.Logger.Info(null, syntax);
         }
 
@@ -22,21 +23,22 @@ namespace DataTool.Helper {
             if (Flags.Quiet) {
                 return;
             }
+
             TankLib.Helpers.Logger.Info(null, syntax, payload);
         }
-        
+
         public static void Log() {
             Console.Out.WriteLine();
         }
-        
+
         public static void Log(string syntax) {
             TankLib.Helpers.Logger.Info(null, syntax);
         }
-        
+
         public static void LogSL(string syntax) {
             TankLib.Helpers.Logger.Log(ConsoleColor.White, false, false, null, syntax);
         }
-        
+
         public static void LoudLog(string syntax) {
             if (!Flags.Quiet)
                 TankLib.Helpers.Logger.Info(null, syntax);

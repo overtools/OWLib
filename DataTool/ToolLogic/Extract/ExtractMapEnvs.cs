@@ -13,18 +13,14 @@ using DataTool.SaveLogic;
 using TankLib;
 using TankLib.STU.Types;
 
-namespace DataTool.ToolLogic.Extract
-{
+namespace DataTool.ToolLogic.Extract {
     [Tool("extract-map-envs", Description = "Extract map environment data", CustomFlags = typeof(ExtractFlags))]
-    public class ExtractMapEnvs : QueryParser, ITool
-    {
-        public void Parse(ICLIFlags toolFlags)
-        {
+    public class ExtractMapEnvs : QueryParser, ITool {
+        public void Parse(ICLIFlags toolFlags) {
             SaveMaps(toolFlags);
         }
 
-        private string OCIOChunk(MapHeader info, string fname)
-        {
+        private string OCIOChunk(MapHeader info, string fname) {
             return $@"  - !<Look>
     name: {GetValidFilename($"{info.GetName().ToUpperInvariant()}_{teResourceGUID.Index(info.MapGUID):X}")}
     process_space: linear
@@ -33,36 +29,28 @@ namespace DataTool.ToolLogic.Extract
         - !<FileTransform> {{src: {fname}.spi3d, interpolation: linear}}";
         }
 
-        public void SaveMaps(ICLIFlags toolFlags)
-        {
+        public void SaveMaps(ICLIFlags toolFlags) {
             string basePath;
-            if (toolFlags is ExtractFlags flags)
-            {
+            if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
-            }
-            else
-            {
+            } else {
                 throw new Exception("no output path");
             }
 
             basePath = Path.Combine(basePath, "Environments");
 
-            if (!Directory.Exists(basePath))
-            {
+            if (!Directory.Exists(basePath)) {
                 Directory.CreateDirectory(basePath);
             }
 
-            if (!flags.SkipMapEnvironmentLUT && File.Exists(Path.Combine(basePath, "SPILUT", "config.ocio")))
-            {
+            if (!flags.SkipMapEnvironmentLUT && File.Exists(Path.Combine(basePath, "SPILUT", "config.ocio"))) {
                 File.Delete(Path.Combine(basePath, "SPILUT", "config.ocio"));
             }
 
             HashSet<KeyValuePair<ulong, string>> done = new HashSet<KeyValuePair<ulong, string>>();
-            foreach (ulong metaKey in TrackedFiles[0x9F])
-            {
+            foreach (ulong metaKey in TrackedFiles[0x9F]) {
                 STUMapHeader map = GetInstance<STUMapHeader>(metaKey);
-                if (map == null)
-                {
+                if (map == null) {
                     continue;
                 }
 
@@ -124,21 +112,18 @@ namespace DataTool.ToolLogic.Extract
             }
         }
 
-        private void SaveEntity(ExtractFlags flags, string basePath, string part, ulong key)
-        {
+        private void SaveEntity(ExtractFlags flags, string basePath, string part, ulong key) {
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             FindLogic.Combo.Find(info, key);
 
             string soundDirectory = Path.Combine(basePath, part, "Sound");
 
             var context = new Combo.SaveContext(info);
-            foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in info.m_soundFiles)
-            {
+            foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in info.m_soundFiles) {
                 SaveLogic.Combo.SaveSoundFile(flags, soundDirectory, context, soundFile.Key, false);
             }
 
-            foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in info.m_voiceSoundFiles)
-            {
+            foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in info.m_voiceSoundFiles) {
                 SaveLogic.Combo.SaveSoundFile(flags, soundDirectory, context, soundFile.Key, true);
             }
 
@@ -146,22 +131,17 @@ namespace DataTool.ToolLogic.Extract
             context.Wait();
         }
 
-        private void SaveLUT(ExtractFlags flags, string basePath, string part, string fname, ulong key, string ocioPath, MapHeader map)
-        {
-            if (!Directory.Exists(Path.Combine(basePath, part)))
-            {
+        private void SaveLUT(ExtractFlags flags, string basePath, string part, string fname, ulong key, string ocioPath, MapHeader map) {
+            if (!Directory.Exists(Path.Combine(basePath, part))) {
                 Directory.CreateDirectory(Path.Combine(basePath, part));
             }
 
-            if (key == 0)
-            {
+            if (key == 0) {
                 return;
             }
 
-            using (Stream lutStream = OpenFile(key))
-            {
-                if (lutStream == null)
-                {
+            using (Stream lutStream = OpenFile(key)) {
+                if (lutStream == null) {
                     return;
                 }
 
@@ -169,24 +149,21 @@ namespace DataTool.ToolLogic.Extract
 
                 string lut = LUT.SPILUT1024x32(lutStream);
                 using (Stream spilut = File.OpenWrite(Path.Combine(basePath, part, $"{fname}.spi3d")))
-                using (TextWriter spilutWriter = new StreamWriter(spilut))
-                {
+                using (TextWriter spilutWriter = new StreamWriter(spilut)) {
                     spilutWriter.WriteLine(lut);
-                    using (TextWriter ocioWriter = File.AppendText(Path.Combine(ocioPath)))
-                    {
+                    using (TextWriter ocioWriter = File.AppendText(Path.Combine(ocioPath))) {
                         ocioWriter.WriteLine(OCIOChunk(map, fname));
                     }
                 }
             }
         }
 
-        private void SaveSound(ExtractFlags flags, string basePath, string part, ulong key)
-        {
+        private void SaveSound(ExtractFlags flags, string basePath, string part, ulong key) {
             STU_F3EB00D4 stu = GetInstance<STU_F3EB00D4>(key); // todo: should be named
-            if(stu == null || stu.m_B3685B0D == 0)
-            {
+            if (stu == null || stu.m_B3685B0D == 0) {
                 return;
             }
+
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             var context = new Combo.SaveContext(info);
             FindLogic.Combo.Find(info, stu.m_B3685B0D);
@@ -194,17 +171,15 @@ namespace DataTool.ToolLogic.Extract
             context.Wait();
         }
 
-        private void SaveMdl(ExtractFlags flags, string basePath, string part, ulong model, ulong modelLook)
-        {
-            if(model == 0 || modelLook == 0)
-            {
+        private void SaveMdl(ExtractFlags flags, string basePath, string part, ulong model, ulong modelLook) {
+            if (model == 0 || modelLook == 0) {
                 return;
             }
 
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             FindLogic.Combo.Find(info, model);
             FindLogic.Combo.Find(info, modelLook);
-            
+
             var context = new Combo.SaveContext(info) {
                 m_saveAnimationEffects = false
             };
@@ -214,10 +189,8 @@ namespace DataTool.ToolLogic.Extract
             context.Wait();
         }
 
-        private void SaveTex(ExtractFlags flags, string basePath, string part, string filename, ulong key)
-        {
-            if(key == 0)
-            {
+        private void SaveTex(ExtractFlags flags, string basePath, string part, string filename, ulong key) {
+            if (key == 0) {
                 return;
             }
 

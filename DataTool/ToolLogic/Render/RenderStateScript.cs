@@ -27,19 +27,19 @@ namespace DataTool.ToolLogic.Render {
                 if (!Directory.Exists(Path.Combine(output, type.ToString("X3")))) {
                     Directory.CreateDirectory(Path.Combine(output, type.ToString("X3")));
                 }
-                
+
                 foreach (var guid in Program.TrackedFiles[type]) {
                     Logger.Log24Bit(ConsoleSwatch.XTermColor.Purple5, true, Console.Out, null, $"Saving {teResourceGUID.AsString(guid)}");
-                    
+
                     using (Stream f = File.Open(Path.Combine(output, type.ToString("X3"), teResourceGUID.AsString(guid)), FileMode.Create))
                     using (Stream d = IO.OpenFile(guid)) {
                         d.CopyTo(f);
                     }
-                    
+
                     using (var stu = STUHelper.OpenSTUSafe(guid))
                     using (Stream f = File.Open(Path.Combine(output, type.ToString("X3"), teResourceGUID.AsString(guid) + ".xml"), FileMode.Create))
                     using (TextWriter w = new StreamWriter(f)) {
-                        w.WriteLine(DragonML.Print(stu?.Instances[0], new DragonMLSettings { TypeSerializers = serializers }));
+                        w.WriteLine(DragonML.Print(stu?.Instances[0], new DragonMLSettings {TypeSerializers = serializers}));
 //                        w.WriteLine(JsonConvert.SerializeObject(stu?.Instances[0], Formatting.Indented, settings));
                     }
                 }

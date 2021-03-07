@@ -8,7 +8,7 @@ namespace DataTool.DataModels.Voice {
     public class ConversationLine {
         [DataMember]
         public teResourceGUID GUID { get; set; }
-        
+
         [DataMember]
         public teResourceGUID VoicelineGUID { get; set; }
 

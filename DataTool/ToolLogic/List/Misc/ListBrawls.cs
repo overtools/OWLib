@@ -9,7 +9,7 @@ namespace DataTool.ToolLogic.List.Misc {
     public class ListBrawls : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
-            
+
             if (toolFlags is ListFlags flags)
                 OutputJSON(data, flags);
         }
@@ -20,7 +20,7 @@ namespace DataTool.ToolLogic.List.Misc {
             foreach (ulong key in TrackedFiles[0xC7]) {
                 var brawl = new Brawl(key);
                 if (brawl.GUID == 0) continue;
-                
+
                 brawls.Add(brawl);
             }
 

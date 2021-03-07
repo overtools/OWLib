@@ -23,7 +23,7 @@ namespace DataTool.ToolLogic.List {
                     } else {
                         OutputJSON(unlocks, flags);
                     }
-                    
+
                     return;
                 }
             }
@@ -47,7 +47,7 @@ namespace DataTool.ToolLogic.List {
                 if (heroPair.Value.LootBoxesUnlocks != null) {
                     foreach (LootBoxUnlocks lootBoxUnlocks in heroPair.Value.LootBoxesUnlocks) {
                         string boxName = LootBox.GetName(lootBoxUnlocks.LootBoxType);
-                        
+
                         DisplayUnlocks(boxName, lootBoxUnlocks.Unlocks);
                     }
                 }
@@ -56,7 +56,7 @@ namespace DataTool.ToolLogic.List {
             }
         }
 
-        public static void DisplayUnlocks(string category, Unlock[] unlocks, string start="") {
+        public static void DisplayUnlocks(string category, Unlock[] unlocks, string start = "") {
             if (unlocks == null || unlocks.Length == 0) return;
             Log($"{start}\t{category} Unlocks");
 
@@ -65,6 +65,7 @@ namespace DataTool.ToolLogic.List {
                 if (!string.IsNullOrEmpty(unlock.Description)) {
                     Log($"{start}\t\t\t{unlock.Description}");
                 }
+
                 if (!string.IsNullOrEmpty(unlock.AvailableIn)) {
                     Log($"{start}\t\t\t{unlock.AvailableIn}");
                 }
@@ -72,10 +73,10 @@ namespace DataTool.ToolLogic.List {
                 if (unlock.STU.m_0B1BA7C1 != null) {
                     TeamDefinition teamDef = new TeamDefinition(unlock.STU.m_0B1BA7C1);
                     Log($"{start}\t\t\tTeam: {teamDef.FullName}");
-                    #if DEBUG
+                #if DEBUG
                     // todo
                     //System.Diagnostics.Debug.Assert(teamDef.Division < Enum_5A789F71.WorldCup, "teamDef.Division >= Enum_5A789F71.x063F4077");
-                    #endif
+                #endif
                 }
             }
         }

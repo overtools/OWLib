@@ -20,7 +20,7 @@ namespace DataTool.ToolLogic.Dump {
             }
 
             Combo.ComboInfo info = new Combo.ComboInfo();
-            
+
             foreach (ulong key in TrackedFiles[0x4]) {
                 Combo.Find(info, key);
             }

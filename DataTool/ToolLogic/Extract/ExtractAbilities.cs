@@ -24,23 +24,23 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             const string folderName = "Abilities";
-            
+
             foreach (ulong key in TrackedFiles[0x9E]) {
                 STULoadout loadout = GetInstance<STULoadout>(key);
                 if (loadout == null) continue;
-                
+
                 string name = GetValidFilename(GetString(loadout.m_name)?.TrimEnd().Replace(".", "_")) ?? $"Unknown{teResourceGUID.Index(key):X}";
-                
+
                 Combo.ComboInfo info = new Combo.ComboInfo();
                 Combo.Find(info, loadout.m_texture);
-                
+
                 var context = new SaveLogic.Combo.SaveContext(info);
                 SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, folderName, name), context);
                 context.Wait();
 
                 using (Stream videoStream = OpenFile(loadout.m_infoMovie)) {
                     if (videoStream != null) {
-                        videoStream.Position = 128;  // wrapped in "MOVI" for some reason
+                        videoStream.Position = 128; // wrapped in "MOVI" for some reason
                         WriteFile(videoStream, Path.Combine(basePath, folderName, name, $"{teResourceGUID.LongKey(loadout.m_infoMovie):X12}.bk2"));
                     }
                 }

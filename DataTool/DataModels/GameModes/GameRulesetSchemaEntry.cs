@@ -5,30 +5,30 @@ using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 
-namespace DataTool.DataModels.GameModes {   
+namespace DataTool.DataModels.GameModes {
     [DataContract]
     public class GameRulesetSchemaEntry {
         [DataMember]
         public string Name;
-        
+
         [DataMember]
         public string TextFormat;
 
         [DataMember]
         public teResourceGUID Virtual01C;
-        
+
         [DataMember]
         public Enum_F2F62E3D Category;
-        
+
         [DataMember]
         public RulesetSchemaValue Value;
-        
+
         public GameRulesetSchemaEntry(STUGameRulesetSchemaEntry entry) {
             Name = GetString(entry.m_displayText);
             Category = entry.m_category;
             TextFormat = GetString(entry.m_7DF418A5);
             Virtual01C = entry.m_3E783677;
-            
+
             switch (entry.m_value) {
                 case STU_118786E9 val1:
                     Value = new RulesetSchemaValueInt {
@@ -66,7 +66,7 @@ namespace DataTool.DataModels.GameModes {
             }
         }
 
-        public class RulesetSchemaValue {}
+        public class RulesetSchemaValue { }
 
         public class RulesetSchemaValueInt : RulesetSchemaValue {
             public string _Name = "RulesetSchemaValueInt";
@@ -74,7 +74,7 @@ namespace DataTool.DataModels.GameModes {
             public int Max;
             public int Default;
         }
-        
+
         public class RulesetSchemaValueFloat : RulesetSchemaValue {
             public string _Name = "RulesetSchemaValueFloat";
             public float Min;
@@ -82,20 +82,20 @@ namespace DataTool.DataModels.GameModes {
             public float Default;
             public float Unk1;
         }
-        
+
         public class RulesetSchemaValueBool : RulesetSchemaValue {
             public string _Name = "RulesetSchemaValueBool";
             public string TrueText;
             public string FalseText;
             public int DefaultValue;
         }
-        
+
         public class RulesetSchemaValueEnum : RulesetSchemaValue {
             public string _Name = "RulesetSchemaValueEnum";
             public string DefaultValue;
             public RulesetSchemaValueEnumChoice[] Choices;
         }
-        
+
         public class RulesetSchemaValueEnumChoice {
             public string DisplayText;
             public teResourceGUID Identifier;

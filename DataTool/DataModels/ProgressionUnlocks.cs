@@ -16,19 +16,19 @@ namespace DataTool.DataModels {
         /// </summary>
         [DataMember]
         public Unlock[] OtherUnlocks;
-        
+
         /// <summary>
         /// Unknown Unlocks
         /// </summary>
         [DataMember]
         public Unlock[] UnknownUnlocks;
-        
+
         /// <summary>
         /// Unlocks granted at a specific level
         /// </summary>
         [DataMember]
         public LevelUnlocks[] LevelUnlocks;
-        
+
         /// <summary>
         /// Loot Box specific unlocks
         /// </summary>
@@ -39,7 +39,7 @@ namespace DataTool.DataModels {
             var unlocks = STUHelper.GetInstance<STUProgressionUnlocks>(hero.m_heroProgression);
             Init(unlocks);
         }
-        
+
         public ProgressionUnlocks(ulong guid) {
             var unlocks = STUHelper.GetInstance<STUProgressionUnlocks>(guid);
             Init(unlocks);
@@ -77,6 +77,7 @@ namespace DataTool.DataModels {
                     }
                 }
             }
+
             if (LevelUnlocks != null) {
                 foreach (LevelUnlocks levelUnlocks in LevelUnlocks) {
                     foreach (Unlock unlock in levelUnlocks.Unlocks) {
@@ -84,11 +85,13 @@ namespace DataTool.DataModels {
                     }
                 }
             }
+
             if (UnknownUnlocks != null) {
                 foreach (Unlock unlock in UnknownUnlocks) {
                     yield return unlock;
                 }
             }
+
             if (OtherUnlocks != null) {
                 foreach (Unlock unlock in OtherUnlocks) {
                     yield return unlock;
@@ -101,27 +104,27 @@ namespace DataTool.DataModels {
 
             if (OtherUnlocks != null)
                 @return.AddRange(OtherUnlocks?.Where(x => x.Type == type));
-            
-            
+
+
             if (UnknownUnlocks != null)
                 @return.AddRange(UnknownUnlocks?.Where(x => x.Type == type));
-            
+
             if (LevelUnlocks != null)
                 foreach (var levelUnlocks in LevelUnlocks) {
                     if (levelUnlocks?.Unlocks == null) continue;
                     @return.AddRange(levelUnlocks?.Unlocks.Where(x => x.Type == type));
                 }
-            
+
             if (LootBoxesUnlocks != null)
                 foreach (var lootBoxesUnlock in LootBoxesUnlocks) {
                     if (lootBoxesUnlock?.Unlocks == null) continue;
                     @return.AddRange(lootBoxesUnlock?.Unlocks.Where(x => x.Type == type));
                 }
-            
+
             return @return;
         }
     }
-    
+
     [DataContract]
     public class LootBoxUnlocks {
         /// <summary>
@@ -129,7 +132,7 @@ namespace DataTool.DataModels {
         /// </summary>
         [DataMember]
         public Unlock[] Unlocks;
-        
+
         /// <summary>
         /// Loot Box type
         /// </summary>
@@ -151,7 +154,7 @@ namespace DataTool.DataModels {
         /// Unlocks
         /// </summary>
         public Unlock[] Unlocks;
-        
+
         /// <summary>
         /// Level unlocked at
         /// </summary>

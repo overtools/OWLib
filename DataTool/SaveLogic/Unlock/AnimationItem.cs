@@ -7,7 +7,7 @@ namespace DataTool.SaveLogic.Unlock {
             FindLogic.Combo.Find(info, unlock.GUID);
 
             var context = new Combo.SaveContext(info) {
-                m_saveAnimationEffects = false   // todo: unsupported here due to relative paths used by OWEffect
+                m_saveAnimationEffects = false // todo: unsupported here due to relative paths used by OWEffect
             };
             Combo.Save(flags, directory, context);
             Combo.SaveAllAnimations(flags, directory, context);

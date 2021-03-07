@@ -8,7 +8,7 @@ namespace DataTool.DataModels.GameModes {
         Attacking = 0x1, // TeamRed
         FFA = 0x4
     }
-    
+
     [DataContract]
     public class GameRulesetTeam {
         [DataMember]
@@ -19,7 +19,7 @@ namespace DataTool.DataModels.GameModes {
 
         [DataMember]
         public string[] AvailableHeroes;
-        
+
         [DataMember]
         public GameRulesetGameMode.GamemodeRulesetValue[] ConfigValues;
 

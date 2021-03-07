@@ -22,7 +22,7 @@ namespace DataTool.ToolLogic.List {
             foreach (KeyValuePair<teResourceGUID, string[]> subtitle in subtitles) {
                 Log($"{subtitle.Key}");
                 foreach (var str in subtitle.Value) {
-                    Log($"{i+1}{str}");
+                    Log($"{i + 1}{str}");
                 }
             }
         }

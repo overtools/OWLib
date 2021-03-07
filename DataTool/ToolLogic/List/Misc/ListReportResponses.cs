@@ -10,7 +10,7 @@ namespace DataTool.ToolLogic.List.Misc {
     public class ListReportResponses : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
-            
+
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
                     OutputJSON(data, flags);

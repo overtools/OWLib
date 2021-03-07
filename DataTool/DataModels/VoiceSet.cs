@@ -23,9 +23,10 @@ namespace DataTool.DataModels {
                 Debugger.Log(0, "DataTool.DataModels.VoiceSet", "Hero VoiceSet not found");
                 return;
             }
+
             STUVoiceSet set = GetInstance<STUVoiceSet>(voiceSetComponent.m_voiceDefinition);
             if (set == null) return;
-            
+
             Init(set);
         }
 
@@ -41,7 +42,7 @@ namespace DataTool.DataModels {
             for (int i = 0; i < voiceSet.m_voiceLineInstances.Length; i++) {
                 ulong voiceLineGuid = voiceSet.m_voiceLineGuids[i];
                 STUVoiceLineInstance instance = voiceSet.m_voiceLineInstances[i];
-                
+
                 VoiceLineInstance instanceModel = new VoiceLineInstance(instance);
 
                 VoiceLines[voiceLineGuid] = instanceModel;
@@ -52,6 +53,7 @@ namespace DataTool.DataModels {
                         if (!Stimuli.ContainsKey(stimuli)) {
                             Stimuli[stimuli] = new HashSet<ulong>();
                         }
+
                         Stimuli[stimuli].Add(voiceLineGuid);
                     }
                 }
@@ -64,12 +66,12 @@ namespace DataTool.DataModels {
         [DataMember]
         [JsonFormatter(typeof(ResourceGUIDFormatter))]
         public ulong[] VoiceSounds;
-        
+
         [DataMember]
         public teResourceGUID VoiceConversation;
-        
+
         // todo: more fields and stuff.
-        
+
         public VoiceLineInstance(STUVoiceLineInstance instance) {
             if (instance.m_AF226247 != null) {
                 var voiceSounds = new List<ulong>();
@@ -81,6 +83,7 @@ namespace DataTool.DataModels {
                         voiceSounds.Add(soundFile.m_3C099E86);
                     }
                 }
+
                 VoiceSounds = voiceSounds.ToArray();
             }
 

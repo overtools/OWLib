@@ -14,10 +14,10 @@ namespace DataTool.DataModels.Hero {
 
         [DataMember]
         public string Name;
-        
+
         [DataMember]
         public string Description;
-        
+
         [DataMember]
         public LoadoutCategory Category;
 
@@ -29,10 +29,10 @@ namespace DataTool.DataModels.Hero {
 
         [DataMember]
         public string[] DescriptionButtons;
-        
+
         [DataMember]
         public teResourceGUID MovieGUID;
-        
+
         [DataMember]
         public teResourceGUID TextureGUID;
 
@@ -41,7 +41,7 @@ namespace DataTool.DataModels.Hero {
 
         [DataMember]
         public bool IsSecondaryWeapon;
-        
+
         public Loadout(ulong key) {
             STULoadout stu = STUHelper.GetInstance<STULoadout>(key);
             if (stu == null) return;
@@ -51,7 +51,7 @@ namespace DataTool.DataModels.Hero {
         public Loadout(STULoadout stu) {
             Init(stu);
         }
-        
+
         public static Loadout GetLoadout(ulong key) {
             STULoadout loadout = STUHelper.GetInstance<STULoadout>(key);
             if (loadout == null) return null;
@@ -63,14 +63,14 @@ namespace DataTool.DataModels.Hero {
             MovieGUID = loadout.m_infoMovie;
             TextureGUID = loadout.m_texture;
             Category = loadout.m_category;
-            
+
             Name = GetString(loadout.m_name);
             Description = GetString(loadout.m_description);
 
             Button = GetString(STUHelper.GetInstance<STU_C5243F93>(loadout.m_logicalButton)?.m_name);
             ButtonUnk = GetString(STUHelper.GetInstance<STU_C5243F93>(loadout.m_9290B942)?.m_name);
             DescriptionButtons = loadout.m_B1124918?.Select(x => GetString(STUHelper.GetInstance<STU_C5243F93>(x)?.m_name)).ToArray();
-            
+
             // If the ability isn't shown in the UI (weapons, zoom ability)
             IsHiddenAbility = loadout.m_0E679979 >= 1;
 
@@ -86,16 +86,16 @@ namespace DataTool.DataModels.Hero {
     public class LoadoutLite {
         [DataMember]
         public string Name;
-        
+
         [DataMember]
         public string Description;
-        
+
         [DataMember]
         public LoadoutCategory Category;
-        
+
         [DataMember]
         public teResourceGUID MovieGUID;
-        
+
         [DataMember]
         public teResourceGUID TextureGUID;
 

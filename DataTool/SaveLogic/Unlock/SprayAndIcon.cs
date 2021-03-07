@@ -19,12 +19,13 @@ namespace DataTool.SaveLogic.Unlock {
             }
 
             var context = new Combo.SaveContext(info);
-            
+
             Combo.SaveLooseTextures(flags, directory, context);
             if (!saveAllTextures) {
                 context.Wait();
                 return;
             }
+
             Combo.SaveAllMaterials(flags, directory, context);
             Combo.Save(flags, directory, context);
             context.Wait();

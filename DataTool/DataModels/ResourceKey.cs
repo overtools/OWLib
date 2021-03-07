@@ -7,7 +7,7 @@ namespace DataTool.DataModels {
     public class ResourceKey {
         [DataMember]
         public string KeyID;
-        
+
         [DataMember]
         public string Value;
 

@@ -69,7 +69,7 @@ namespace DataTool.SaveLogic.Unlock {
 
                 for (var index = 0; index < weaponReplacementStack.Count; index++) {
                     foreach (var pair in weaponReplacementStack[index].Where(pair => pair.Key != pair.Value && info.m_modelLooks.ContainsKey(pair.Value) && info.m_modelLooks[pair.Value].m_name == null)) {
-                        info.SetModelLookName(pair.Value, $"{(STUWeaponType)index:G}-{teResourceGUID.Index(pair.Value):X}");
+                        info.SetModelLookName(pair.Value, $"{(STUWeaponType) index:G}-{teResourceGUID.Index(pair.Value):X}");
                     }
                 }
 
@@ -88,7 +88,7 @@ namespace DataTool.SaveLogic.Unlock {
                 FindLogic.Combo.ComboInfo diffInfoAfter = new FindLogic.Combo.ComboInfo();
                 var diffInfoAfterContext = new Combo.SaveContext(diffInfoAfter); // todo: remove
 
-                foreach (KeyValuePair<ulong,ulong> replacement in replacements) {
+                foreach (KeyValuePair<ulong, ulong> replacement in replacements) {
                     uint diffReplacementType = teResourceGUID.Type(replacement.Value);
                     if (diffReplacementType != 0x2C && diffReplacementType != 0x3F &&
                         diffReplacementType != 0xB2) continue; // no voice sets, use extract-hero-voice
@@ -101,17 +101,19 @@ namespace DataTool.SaveLogic.Unlock {
                     Combo.SaveVoiceSet(flags, soundDirectory, diffInfoAfterContext, voiceSet.Key);
                 }
 
-                foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileAsset> soundFile in diffInfoAfter.m_soundFiles) {
+                foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in diffInfoAfter.m_soundFiles) {
                     if (diffInfoBefore.m_soundFiles.ContainsKey(soundFile.Key)) continue;
                     Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, false);
                 }
 
-                foreach (KeyValuePair<ulong,FindLogic.Combo.SoundFileAsset> soundFile in diffInfoAfter.m_voiceSoundFiles) {
+                foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in diffInfoAfter.m_voiceSoundFiles) {
                     if (diffInfoBefore.m_voiceSoundFiles.ContainsKey(soundFile.Key)) continue;
                     Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, true);
                 }
+
                 diffInfoAfterContext.Wait();
             }
+
             LoudLog("\t\tSaving");
             Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext);
             Combo.Save(flags, directory, saveContext);
@@ -131,7 +133,7 @@ namespace DataTool.SaveLogic.Unlock {
 
                 if ((weaponReplacements == null || index == 0) && info.m_entities.TryGetValue(weaponEntity.m_entityDefinition, out var entity) && info.m_models.TryGetValue(entity.m_modelGUID, out var model)) {
                     foreach (var modellook in model.m_modelLooks) {
-                        info.SetModelLookName(modellook, $"{(STUWeaponType)index:G}-{teResourceGUID.Index(modellook):X}");
+                        info.SetModelLookName(modellook, $"{(STUWeaponType) index:G}-{teResourceGUID.Index(modellook):X}");
                     }
                 }
             }

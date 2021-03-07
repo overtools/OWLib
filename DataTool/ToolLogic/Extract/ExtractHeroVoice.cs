@@ -15,11 +15,10 @@ using DataTool.ToolLogic.Util;
 using TankLib;
 using TankLib.STU.Types;
 
-namespace DataTool.ToolLogic.Extract
-{
+namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-voice", Description = "Extract hero voice sounds", CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroVoice : QueryParser, ITool, IQueryParser {
-        public List<QueryType> QueryTypes => new List<QueryType> { new QueryType { Name = "soundRestriction", HumanName = "Sound"}, new QueryType { Name = "groupRestriction", HumanName = "Group"} };
+        public List<QueryType> QueryTypes => new List<QueryType> {new QueryType {Name = "soundRestriction", HumanName = "Sound"}, new QueryType {Name = "groupRestriction", HumanName = "Group"}};
 
         public Dictionary<string, string> QueryNameOverrides => ExtractHeroUnlocks.HeroMapping;
 
@@ -77,9 +76,9 @@ namespace DataTool.ToolLogic.Extract
                 Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*");
 
                 if (config.Count == 0) continue;
-                
+
                 Log($"Processing data for {heroNameActual}");
-                
+
                 STUVoiceSetComponent baseComponent = default;
                 Combo.ComboInfo baseInfo = default;
 
@@ -138,7 +137,7 @@ namespace DataTool.ToolLogic.Extract
             Combo.ComboInfo info = default;
 
             SaveSet(flags, basePath, hero.m_gameplayEntity, heroFileName, GetValidFilename(name), ref component,
-                ref info, baseComponent, baseInfo, SkinTheme.GetReplacements(skin));
+                    ref info, baseComponent, baseInfo, SkinTheme.GetReplacements(skin));
         }
 
         private static bool SaveSet(ICLIFlags flags, string basePath, ulong entityMain, string heroFileName, string skin, ref STUVoiceSetComponent voiceSetComponent, ref Combo.ComboInfo info, STUVoiceSetComponent baseComponent = null, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null) {

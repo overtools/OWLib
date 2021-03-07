@@ -6,7 +6,7 @@ namespace DataTool.Flag {
         [CLIFlag(AllPositionals = true)]
         public string[] Positionals;
 
-        [CLIFlag(Flag = "h", Default = false, Help = "Print this help text", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Flag = "h", Default = false, Help = "Print this help text", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         [Alias("help")]
         public bool Help;
 

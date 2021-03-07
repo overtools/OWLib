@@ -20,7 +20,7 @@ namespace DataTool.ToolLogic.List {
 
             foreach (Achievement achievement in data) {
                 var iD = new IndentHelper();
-                
+
                 Log($"{achievement.Name}");
                 if (!(toolFlags as ListFlags).Simplify) {
                     Log($"{iD + 1}Description: {achievement.Description}");
@@ -39,7 +39,7 @@ namespace DataTool.ToolLogic.List {
             foreach (ulong key in TrackedFiles[0x68]) {
                 var achievement = new Achievement(key);
                 if (achievement.GUID == 0) continue;
-                
+
                 achievements.Add(achievement);
             }
 

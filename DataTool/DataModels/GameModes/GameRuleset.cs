@@ -6,11 +6,18 @@ using TankLib.STU.Types;
 
 namespace DataTool.DataModels.GameModes {
     public class GameRuleset {
-        [DataMember] public teResourceGUID GUID;
-        [DataMember] public GameRulesetGameMode GameMode;
-        [DataMember] public string[] WorkshopRules;
-        [DataMember] public string WorkshopScript;
-        
+        [DataMember]
+        public teResourceGUID GUID;
+
+        [DataMember]
+        public GameRulesetGameMode GameMode;
+
+        [DataMember]
+        public string[] WorkshopRules;
+
+        [DataMember]
+        public string WorkshopScript;
+
         public GameRuleset(ulong key) {
             var stu = STUHelper.GetInstance<STUGameRuleset>(key);
             if (stu == null) return;

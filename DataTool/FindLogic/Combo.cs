@@ -34,9 +34,9 @@ namespace DataTool.FindLogic {
             public Dictionary<ulong, SoundFileAsset> m_soundFiles;
             public Dictionary<ulong, VoiceSetAsset> m_voiceSets;
             public Dictionary<ulong, DisplayTextAsset> m_displayText;
-            public Dictionary<ulong, SubtitleAsset> m_subtitles; 
+            public Dictionary<ulong, SubtitleAsset> m_subtitles;
             public HashSet<ulong> m_doneScripts;
-            
+
             public bool m_processExistingEntities = false;
             public bool m_fullLog = false;
 
@@ -87,7 +87,7 @@ namespace DataTool.FindLogic {
                 }
             }
 
-            private static void SetAssetName<T>(ulong guid, string name, Dictionary<ulong, T> map, Dictionary<ulong, ulong> replacements=null) where T: ComboAsset {
+            private static void SetAssetName<T>(ulong guid, string name, Dictionary<ulong, T> map, Dictionary<ulong, ulong> replacements = null) where T : ComboAsset {
                 if (replacements != null) guid = GetReplacement(guid, replacements);
                 if (!map.TryGetValue(guid, out var asset)) return;
                 asset.m_name = name.TrimEnd(' ');
@@ -95,20 +95,20 @@ namespace DataTool.FindLogic {
 
             public void SetEntityName(ulong entity, string name, Dictionary<ulong, ulong> replacements = null) => SetAssetName(entity, name, m_entities, replacements);
 
-            public void SetTextureName(ulong texture, string name, Dictionary<ulong, ulong> replacements=null) => SetAssetName(texture, name, m_textures, replacements);
-            
-            public void SetEffectName(ulong effect, string name, Dictionary<ulong, ulong> replacements=null) {
+            public void SetTextureName(ulong texture, string name, Dictionary<ulong, ulong> replacements = null) => SetAssetName(texture, name, m_textures, replacements);
+
+            public void SetEffectName(ulong effect, string name, Dictionary<ulong, ulong> replacements = null) {
                 SetAssetName(effect, name, m_effects, replacements);
                 SetAssetName(effect, name, m_animationEffects, replacements);
             }
 
-            public void SetModelLookName(ulong look, string name, Dictionary<ulong, ulong> replacements=null) => SetAssetName(look, name, m_modelLooks, replacements);    
-            
+            public void SetModelLookName(ulong look, string name, Dictionary<ulong, ulong> replacements = null) => SetAssetName(look, name, m_modelLooks, replacements);
+
             public void SetEffectVoiceSet(ulong effect, ulong voiceSet) {
                 if (m_animationEffects.ContainsKey(effect)) SetEffectVoiceSet(m_animationEffects[effect], voiceSet);
                 if (m_effects.ContainsKey(effect)) SetEffectVoiceSet(m_effects[effect], voiceSet);
             }
-            
+
             public static void SetEffectVoiceSet(EffectInfoCombo effect, ulong voiceSet) {
                 effect.Effect.VoiceSet = voiceSet;
             }
@@ -123,11 +123,11 @@ namespace DataTool.FindLogic {
                 m_GUID = guid;
                 m_name = GetNullableGUIDName(guid);
             }
-            
+
             public string GetName() {
                 return GetValidFilename(m_name, false) ?? GetFileName(m_GUID);
             }
-        
+
             public string GetNameIndex() {
                 return GetValidFilename(m_name, false) ?? $"{m_GUID & 0xFFFFFFFFFFFF:X12}";
             }
@@ -143,7 +143,7 @@ namespace DataTool.FindLogic {
 
         public class VoiceSetAsset : ComboAsset {
             public VoiceSetAsset(ulong guid) : base(guid) { }
-            
+
             public Dictionary<ulong, HashSet<VoiceLineInstanceInfo>> VoiceLineInstances;
             // key = 078 voice stimulus
         }
@@ -160,7 +160,7 @@ namespace DataTool.FindLogic {
             public ulong SubtitleRuntime;
             public HashSet<ulong> SoundFiles;
         }
-        
+
         public class SoundFileAsset : ComboAsset {
             public SoundFileAsset(ulong guid) : base(guid) { }
         }
@@ -174,7 +174,7 @@ namespace DataTool.FindLogic {
 
         public class WWiseBankEvent {
             public ConvertLogic.Sound.BankObjectEventAction.EventActionType Type;
-            public uint StartDelay;  // milliseconds
+            public uint StartDelay; // milliseconds
             public uint SoundID;
         }
 
@@ -182,7 +182,7 @@ namespace DataTool.FindLogic {
             public List<WWiseBankEvent> Events;
             public WWiseBankInfo(ulong guid) : base(guid) { }
         }
-        
+
         public class EffectInfoCombo : ComboAsset {
             // wrap
             public EffectParser.EffectInfo Effect;
@@ -194,8 +194,9 @@ namespace DataTool.FindLogic {
             public ulong m_modelGUID;
             public ulong m_effectGUID; // todo: STUEffectComponent defined instead of model is like a model in behaviour?
             public ulong m_voiceSet;
-            
+
             public HashSet<ulong> m_animations;
+
             public HashSet<ulong> m_effects;
             //public HashSet<ulong> m_animationEffects;
 
@@ -204,7 +205,7 @@ namespace DataTool.FindLogic {
             public EntityAsset(ulong guid) : base(guid) {
                 m_animations = new HashSet<ulong>();
                 m_effects = new HashSet<ulong>();
-               // m_animationEffects = new HashSet<ulong>();
+                // m_animationEffects = new HashSet<ulong>();
             }
         }
 
@@ -214,15 +215,15 @@ namespace DataTool.FindLogic {
             public ulong m_defGUID;
 
             public ChildEntityReference(STUChildEntityDefinition childEntityDefinition, Dictionary<ulong, ulong> replacements) {
-                m_defGUID = GetReplacement((ulong)childEntityDefinition.m_child, replacements);
+                m_defGUID = GetReplacement((ulong) childEntityDefinition.m_child, replacements);
                 m_hardpointGUID = childEntityDefinition.m_hardPoint;
                 m_identifier = childEntityDefinition.m_49F782CE;
             }
         }
 
         public class ModelLookAsset : ComboAsset {
-            public HashSet<ulong> m_materialGUIDs;  // id, guid
-            
+            public HashSet<ulong> m_materialGUIDs; // id, guid
+
             public ModelLookAsset(ulong guid) : base(guid) { }
         }
 
@@ -235,7 +236,7 @@ namespace DataTool.FindLogic {
             // shader info;
             // main shader = 44, used to be A5
             // golden = 50
-            
+
             public HashSet<ulong> m_materialIDs;
 
             public MaterialAsset(ulong guid) : base(guid) {
@@ -252,14 +253,16 @@ namespace DataTool.FindLogic {
 
         public class TextureAsset : ComboAsset {
             public bool m_loose;
-            
+
             public TextureAsset(ulong guid) : base(guid) { }
         }
 
         public class ModelAsset : ComboAsset {
             public ulong m_skeletonGUID;
             public HashSet<ulong> n_animations;
+
             public HashSet<ulong> m_modelLooks;
+
             //public HashSet<IEnumerable<ulong>> m_modelLookSets;
             public HashSet<ulong> m_looseMaterials;
 
@@ -301,29 +304,29 @@ namespace DataTool.FindLogic {
 
             // Animation Effects
             public ulong Animation;
-            
+
             // Model Looks
             public ulong Material;
             public ulong MaterialID;
             public ulong MaterialData;
-            
+
             // Child entities
             public ulong ChildEntityIdentifier;
 
             public ComboContext Clone() {
                 return new ComboContext {
-                    Model = Model, ModelLook = ModelLook, Entity = Entity, Effect = Effect, 
+                    Model = Model, ModelLook = ModelLook, Entity = Entity, Effect = Effect,
                     Animation = Animation, Material = Material, MaterialID = MaterialID, MaterialData = MaterialData
                 };
             }
         }
-        
+
         public static ulong GetReplacement(ulong guid, Dictionary<ulong, ulong> replacements) {
             if (replacements == null) return guid;
             if (replacements.ContainsKey(guid)) return replacements[guid];
             return guid;
         }
-        
+
         public static bool RemoveDuplicateVoiceSetEntries(ComboInfo @base, ref ComboInfo target, ulong voiceSet, ulong targetVoiceSet) {
             if (!@base.m_voiceSets.ContainsKey(voiceSet) || !target.m_voiceSets.ContainsKey(targetVoiceSet)) {
                 return false;
@@ -344,41 +347,43 @@ namespace DataTool.FindLogic {
             foreach (KeyValuePair<ulong, HashSet<VoiceLineInstanceInfo>> pair in target.m_voiceSets[targetVoiceSet].VoiceLineInstances.ToArray()) {
                 HashSet<VoiceLineInstanceInfo> newSet = new HashSet<VoiceLineInstanceInfo>();
                 foreach (VoiceLineInstanceInfo voice in pair.Value) {
-                    foreach (ulong guid in voice.SoundFiles.ToArray()) {  // and here
+                    foreach (ulong guid in voice.SoundFiles.ToArray()) { // and here
                         if (!keys.Add(guid)) {
                             voice.SoundFiles.Remove(guid);
                         }
                     }
+
                     if (voice.SoundFiles.Count > 0) {
                         newSet.Add(voice);
                         hasData = true;
                     }
                 }
+
                 target.m_voiceSets[targetVoiceSet].VoiceLineInstances[pair.Key] = newSet;
             }
 
             return hasData;
         }
-        
-        public static ComboInfo Find(ComboInfo info, ulong guid, Dictionary<ulong, ulong> replacements=null , ComboContext context=null) {
+
+        public static ComboInfo Find(ComboInfo info, ulong guid, Dictionary<ulong, ulong> replacements = null, ComboContext context = null) {
             if (info == null) info = new ComboInfo();
             if (context == null) context = new ComboContext();
             // it's time to redesign our FindLogic architecture
             // changes:
             //     All findlogics in one.
             //     ComboContext tells the function what to do.
-            
+
             // this allows for:
             //     Entities that do not have a model
             //     Model effects
-            
+
             if (guid == 0) return info;
             guid = GetReplacement(guid, replacements);
 
             if (info.m_fullLog) {
                 Logger.DebugLog("Combo", $"Searching in {GetFileName(guid)}");
             }
-            
+
             // Debugger break area:
             // if (GetFileName(guid) == "000000000F6D.00C") Debugger.Break();  // TIME VORTEX MANIPULATOR / TARDIS
             // in 216172782113785973 / 000000000875.00D
@@ -386,50 +391,50 @@ namespace DataTool.FindLogic {
             // if (GetFileName(guid) == "00000000302E.00C") Debugger.Break();  // albino TARDIS (NO COLOUR)
             // in 216172782113785973 / 000000000875.00D
             // in 216172782113784100 / 000000000124.00D
-            
+
             // 000000000124.00D - Playable ent, hardpoint = x11
             // 000000000875.00D - Main ent, hardpoint = null
-            
+
             // if (GetFileName(guid) == "0000000050F2.00C") Debugger.Break();  // renhardt OWL
             // if (GetFileName(guid) == "000000005100.00C") Debugger.Break();  // zen OWL
-            
+
             // if (GetFileName(guid) == "000000000AA9.008") Debugger.Break();
-            
+
             // 508906757892874256 / 000000002010.08F = ANCR_badass_POTG effect
             // 288230376151718579 / 000000001AB3.003 = shield entity
-            
+
             //if (GetFileName(guid) == "0000000014EF.003") Debugger.Break();  // ilios windmill
             //if (GetFileName(guid) == "0000000014F4.003") Debugger.Break();  // ilios bigboat
             //if (GetFileName(guid) == "000000001AF7.003") Debugger.Break();  // black forest (winter) windmill
             //if (GetFileName(guid) == "000000001A2E.003") Debugger.Break();  // black forest (winter) spawndoor
             //if (GetFileName(guid) == "000000001B4E.003") Debugger.Break();  // black forest (winter) middle cog
             //if (GetFileName(guid) == "000000001BDB.003") Debugger.Break();  // black forest (winter) capture point
-            
+
             ushort guidType = teResourceGUID.Type(guid);
             if (guidType == 0 || guidType == 1) return info;
             switch (guidType) {
                 /*case 0x2: {
                      if (info.Maps.ContainsKey(guid)) break;
- 
+
                      MapInfoNew mapInfo = new MapInfoNew(guid);
                      info.Maps[guid] = mapInfo;
- 
+
                      // <read the actual 002>
                      // todo
                      // </read the actual 002>
- 
+
                      using (Stream mapBStream = OpenFile(GetMapDataKey(guid, 0xB))) {
                          Map mapBData = new Map(mapBStream, BuildVersion, true);
- 
+
                          //int stuCount = mapBData.Records.Sum(record => ((MapEntity) record).STUBindings.Length);
                          //
                          //Debug.Assert(stuCount == mapBData.STUs.Count);
- 
+
                          foreach (ISTU mapBstu in mapBData.STUs) {
                              Dictionary<ulong, ulong> thisReplacements = new Dictionary<ulong, ulong>();
                              //foreach (Common.STUInstance stuInstance in mapBstu.Instances) {
                              //    if (stuInstance.GetType() == typeof(STU_83DEC8C7)) {
-                             //        
+                             //
                              //    }
                              //}
                              // STUStatescriptComponentInstanceData componentInstanceData = stu.Instances.OfType<STUStatescriptComponentInstanceData>().FirstOrDefault();
@@ -606,6 +611,7 @@ namespace DataTool.FindLogic {
                             animationInfo.m_priority = priority;
                             animationInfo.m_effect = GetReplacement(effectGuid, replacements);
                         }
+
                         Find(info, effectGuid, replacements, animationContext);
                     }
 
@@ -817,7 +823,7 @@ namespace DataTool.FindLogic {
                     //        Find(info, actionEntity.m_entityDef, replacements, context);
                     //    } else if (node is STUStatescriptActionPlayScript actionPlayScript) {
                     //        Find(info, actionPlayScript.m_script, replacements, context);
-                    //    } 
+                    //    }
                     //}
                     break;
                 }
@@ -921,12 +927,12 @@ namespace DataTool.FindLogic {
                 }
                 case 0x43: {
                     // todo: no point parsing this right now, not used
-                    #if ALL_FEATURES_WOULD_CEASE_TO_EXIST
+                #if ALL_FEATURES_WOULD_CEASE_TO_EXIST
                     if (info.SoundBanks.ContainsKey(guid)) break;
-                    
+
                     WWiseBankInfo bankInfo = new WWiseBankInfo(guid);
                     info.SoundBanks[guid] = bankInfo;
-                    
+
                     bankInfo.Events = new List<WWiseBankEvent>();
                     using (Stream bankStream = OpenFile(guid)) {
                         ConvertLogic.Sound.WwiseBank bank = new ConvertLogic.Sound.WwiseBank(bankStream);
@@ -951,7 +957,7 @@ namespace DataTool.FindLogic {
                             }
                         }
                     }
-                    #endif
+                #endif
                     break;
                 }
                 case 0x5F: {
@@ -963,7 +969,7 @@ namespace DataTool.FindLogic {
                     //string lastName = IO.GetString(voiceSet.m_C0835C08);
 
                     if (voiceSet == null) break;
-                    
+
                     VoiceSetAsset voiceSetInfo = new VoiceSetAsset(guid);
                     info.m_voiceSets[guid] = voiceSetInfo;
 
@@ -994,9 +1000,10 @@ namespace DataTool.FindLogic {
                             if (Debugger.IsAttached) {
                                 Debugger.Break();
                             }
+
                             break;
                         }
-                        
+
                         voiceLineInstanceInfo.SoundFiles = new HashSet<ulong>();
 
                         if (voiceLineInstance.m_AF226247 != null) {
@@ -1013,9 +1020,10 @@ namespace DataTool.FindLogic {
                         if (!voiceSetInfo.VoiceLineInstances.ContainsKey(voiceLineInstanceInfo.VoiceStimulus)) {
                             voiceSetInfo.VoiceLineInstances[voiceLineInstanceInfo.VoiceStimulus] = new HashSet<VoiceLineInstanceInfo>();
                         }
+
                         voiceSetInfo.VoiceLineInstances[voiceLineInstanceInfo.VoiceStimulus].Add(voiceLineInstanceInfo);
                     }
-                    
+
                     break;
                 }
                 case 0x7C: {
@@ -1035,6 +1043,7 @@ namespace DataTool.FindLogic {
                     foreach (string s in subtitle.m_strings) {
                         subtitleSet.AddText(s);
                     }
+
                     info.m_subtitles[guid] = subtitleSet;
                     break;
                 }
@@ -1053,7 +1062,7 @@ namespace DataTool.FindLogic {
                     } else if (cosmetic is STUUnlock_SprayPaint unlockSpray) {
                         Find(info, unlockSpray.m_1B25AB90?.m_effect, replacements, context);
                         Find(info, unlockSpray.m_1B25AB90?.m_effectLook, replacements, context);
-                        
+
                         //Find(info, unlockSpray.m_ABFBD552?.m_effect, replacements, context);
                         //Find(info, unlockSpray.m_ABFBD552?.m_effectLook, replacements, context);
                     } else if (cosmetic is STUUnlock_AvatarPortrait unlockIcon) {
@@ -1074,6 +1083,7 @@ namespace DataTool.FindLogic {
                         if (replacements.ContainsKey(replacement.Key)) continue;
                         replacements[replacement.Key] = replacement.Value.m_3D884507;
                     }
+
                     // replacements one object that gets modified
                     break;
                 }
@@ -1083,6 +1093,7 @@ namespace DataTool.FindLogic {
                     foreach (teStructuredDataAssetRef<ulong> effectLookMaterialData in effectLook.m_materialData) {
                         Find(info, effectLookMaterialData, replacements, context);
                     }
+
                     break;
                 }
                 case 0xB2: {
@@ -1095,11 +1106,11 @@ namespace DataTool.FindLogic {
                     if (info.m_materialData.ContainsKey(guid)) break;
                     ComboContext materialDataContext = context.Clone();
                     materialDataContext.MaterialData = guid;
-                    
+
                     MaterialDataAsset materialDataInfo = new MaterialDataAsset(guid);
 
                     info.m_materialData[guid] = materialDataInfo;
-                    
+
                     teMaterialData materialData = new teMaterialData(OpenFile(guid));
                     if (materialData.Textures != null) {
                         materialDataInfo.m_textureMap = new Dictionary<ulong, uint>();
@@ -1108,12 +1119,13 @@ namespace DataTool.FindLogic {
                             materialDataInfo.m_textureMap[matDataTex.TextureGUID] = matDataTex.NameHash;
                         }
                     }
+
                     break;
                 }
                 case 0xBF: {
                     STULineupPose lineupPose = GetInstance<STULineupPose>(guid);
                     if (lineupPose == null) break;
-                    
+
                     Find(info, lineupPose.m_E599EB7C, replacements, context);
 
                     Find(info, lineupPose.m_0189332F?.m_11E0A658, replacements, context);
@@ -1125,6 +1137,7 @@ namespace DataTool.FindLogic {
                     if (s_unhandledTypes.Add(guidType)) {
                         Debugger.Log(0, "DataTool", $"[DataTool.FindLogic.Combo]: Unhandled type: {guidType:X3}\r\n");
                     }
+
                     break;
                 }
             }
@@ -1132,7 +1145,7 @@ namespace DataTool.FindLogic {
             return info;
         }
 
-        public static void Find(ComboInfo info, STUStatescriptGraphWithOverrides graphWithOverrides, Dictionary<ulong, ulong> replacements=null, ComboContext context=null) {
+        public static void Find(ComboInfo info, STUStatescriptGraphWithOverrides graphWithOverrides, Dictionary<ulong, ulong> replacements = null, ComboContext context = null) {
             if (graphWithOverrides == null) return;
             Find(info, graphWithOverrides.m_graph, replacements, context);
             if (graphWithOverrides.m_1EB5A024 != null) {
@@ -1156,7 +1169,7 @@ namespace DataTool.FindLogic {
             } else if (configVar is STUConfigVarAnimation configVarAnim) {
                 Find(info, configVarAnim.m_animation, replacements, context);
             } else if (configVar is STUConfigVarModelLook configVarModelLook) {
-                Find(info, (ulong)configVarModelLook.m_modelLook, replacements, context);
+                Find(info, (ulong) configVarModelLook.m_modelLook, replacements, context);
             } else if (configVar is STUConfigVarExpression configVarExpression) {
                 if (configVarExpression.m_configVars != null) {
                     foreach (STUConfigVar subVar in configVarExpression.m_configVars) {
@@ -1170,10 +1183,10 @@ namespace DataTool.FindLogic {
 
         private static void FindModelMaterial(ComboInfo info, STUModelMaterial modelMaterial, ModelLookAsset modelLookInfo, ComboContext modelLookContext, Dictionary<ulong, ulong> replacements) {
             if (modelMaterial == null || modelMaterial.m_material == 0) return;
-            modelLookInfo.m_materialGUIDs.Add(GetReplacement((ulong)modelMaterial.m_material, replacements));
+            modelLookInfo.m_materialGUIDs.Add(GetReplacement((ulong) modelMaterial.m_material, replacements));
             ComboContext modelMaterialContext = modelLookContext.Clone();
             modelMaterialContext.MaterialID = modelMaterial.m_DC05EA3B;
-            Find(info, (ulong)modelMaterial.m_material, replacements, modelMaterialContext);
+            Find(info, (ulong) modelMaterial.m_material, replacements, modelMaterialContext);
         }
     }
 }

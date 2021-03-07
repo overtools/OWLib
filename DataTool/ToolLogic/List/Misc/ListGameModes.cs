@@ -22,7 +22,7 @@ namespace DataTool.ToolLogic.List.Misc {
 
         public void Parse(ICLIFlags toolFlags) {
             List<GameMode> gameModes = GetGameModes();
-            
+
             if (toolFlags is ListFlags flags)
                 if (flags.JSON) {
                     OutputJSON(gameModes, flags);

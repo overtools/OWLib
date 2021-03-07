@@ -10,7 +10,7 @@ namespace DataTool.ToolLogic.List {
     public class ListSubtitlesProper : ITool {
         public void Parse(ICLIFlags toolFlags) {
             GetSubtitles();
-            
+
             // todo: json
 
             // if (toolFlags is ListFlags flags)
@@ -31,7 +31,7 @@ namespace DataTool.ToolLogic.List {
 
                 Combo.VoiceSetAsset voiceSetInfo = comboInfo.m_voiceSets[key];
                 if (voiceSetInfo.VoiceLineInstances == null) continue;
-                foreach (KeyValuePair<ulong,HashSet<Combo.VoiceLineInstanceInfo>> lineInstance in voiceSetInfo.VoiceLineInstances) {
+                foreach (KeyValuePair<ulong, HashSet<Combo.VoiceLineInstanceInfo>> lineInstance in voiceSetInfo.VoiceLineInstances) {
                     foreach (Combo.VoiceLineInstanceInfo lineInstanceInfo in lineInstance.Value) {
                         if (lineInstanceInfo.Subtitle != 0) {
                             foreach (ulong soundInfoSound in lineInstanceInfo.SoundFiles) {

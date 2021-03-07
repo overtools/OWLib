@@ -22,12 +22,12 @@ namespace DataTool.ToolLogic.Extract.Debug {
             }
 
             const string container = "DebugVoiceSet";
-            
+
             foreach (ulong key in TrackedFiles[0x5F]) {
                 if (teResourceGUID.Index(key) != 0x19F) continue;
 
                 string voiceMaterDir = Path.Combine(basePath, container, GetFileName(key));
-                
+
                 Combo.ComboInfo info = new Combo.ComboInfo();
                 var context = new SaveLogic.Combo.SaveContext(info);
                 Combo.Find(info, key);

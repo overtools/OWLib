@@ -18,7 +18,7 @@ namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-convo", Description = "Extract hero voice conversations", CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
         public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
-        
+
         public List<QueryType> QueryTypes => new List<QueryType>();
 
         public Dictionary<string, string> QueryNameOverrides => ExtractHeroUnlocks.HeroMapping;
@@ -127,6 +127,7 @@ namespace DataTool.ToolLogic.Extract {
                     }
                 }
             }
+
             comboSaveContext.Wait();
         }
 

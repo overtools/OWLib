@@ -5,7 +5,6 @@ using DirectXTexNet;
 
 namespace DataTool.Helper {
     public static class DDSConverter {
-        
         [Flags]
         public enum CoInit : uint {
             MultiThreaded = 0x00,
@@ -16,7 +15,7 @@ namespace DataTool.Helper {
 
         [DllImport("Ole32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int CoInitializeEx([In, Optional] IntPtr pvReserved, [In] CoInit dwCoInit);
-        
+
 
         public static unsafe byte[] ConvertDDS(Stream ddsSteam, DXGI_FORMAT targetFormat, WICCodecs codec, int frame) {
             try {

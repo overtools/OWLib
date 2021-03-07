@@ -6,9 +6,9 @@ namespace DataTool.SaveLogic.Unlock {
     public static class PortraitFrame {
         public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock) {
             STUUnlock_PortraitFrame portraitFrame = (STUUnlock_PortraitFrame) unlock.STU;
-            
+
             string tier = portraitFrame.m_rank.ToString();
-                
+
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
 
             if (portraitFrame.m_rankTexture != null) {
@@ -18,13 +18,14 @@ namespace DataTool.SaveLogic.Unlock {
 
             if (portraitFrame.m_949D9C2A != null) {
                 FindLogic.Combo.Find(info, portraitFrame.m_949D9C2A);
-                int borderNum = portraitFrame.m_level - portraitFrame.m_stars * 10 - (int)portraitFrame.m_rank * 10;
+                int borderNum = portraitFrame.m_level - portraitFrame.m_stars * 10 - (int) portraitFrame.m_rank * 10;
 
                 if ((int) portraitFrame.m_rank > 1) {
                     borderNum -= 50 * ((int) portraitFrame.m_rank - 1);
                 }
+
                 borderNum -= 1;
-                    
+
                 info.SetTextureName(portraitFrame.m_949D9C2A, $"Border - {borderNum}");
             }
 
