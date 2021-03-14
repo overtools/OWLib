@@ -202,7 +202,7 @@ namespace DataTool.ToolLogic.List.Misc {
             public string Description;
             public teResourceGUID GraphId;
             public byte UnkByte;
-            public byte Zach;
+            internal byte Zach;
             public IEnumerable<WorkshopParameter> Parameters;
         }
 
