@@ -179,6 +179,12 @@ namespace DataTool.ToolLogic.List.Misc {
                         case STU_EE41F5B8 ss:
                             @out.InferredType = "ButtonConstant";
                             break;
+                        case STU_4DD36FA9 ss:
+                            @out.InferredType = "WorkshopSettingParam"; //Used in Sort Order and Min/Max params in "Workshop setting"
+                            break;
+                        case STU_1554B38A ss:
+                            @out.InferredType = "DefaultValue"; //Only used in "Default", debug thing?
+                            break;
                         default:
                             Debugger.Break();
                             break;
