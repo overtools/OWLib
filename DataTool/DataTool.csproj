@@ -47,4 +47,10 @@
     <PackageReference Include="Utf8Json" Version="1.3.7" />
     <PackageReference Include="DragonLib" Version="1.1.4.1" />
   </ItemGroup>
+  <Target Name="FixNet5Regression" AfterTargets="Publish">
+    <ConvertToAbsolutePath Paths="$(PublishDir)">
+        <Output TaskParameter="AbsolutePaths" PropertyName="AbsolutePublishDir"/>
+    </ConvertToAbsolutePath>
+    <Copy SourceFiles="$(AbsolutePublishDir)/DirectXTexNetImpl.dll" DestinationFolder="$(AbsolutePublishDir)/runtimes/win-x64/native" SkipUnchangedFiles="true" />
+  </Target>
 </Project>
