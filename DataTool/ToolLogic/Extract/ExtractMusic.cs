@@ -2,17 +2,14 @@
 using System.IO;
 using DataTool.Flag;
 using static DataTool.Program;
-using static DataTool.Helper.IO;
-using DataTool.ConvertLogic;
 using DataTool.SaveLogic;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace DataTool.ToolLogic.Extract.Debug
 {
-    [Tool("extract-music", Description = "Extracts sound files which are indentified as music.", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-music", Description = "Extracts sound files which are identified as music.", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
 
     public class ExtractMusic : ITool
     {
