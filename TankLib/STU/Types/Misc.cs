@@ -3224,8 +3224,10 @@ namespace TankLib.STU.Types
         public uint m_wwiseEventIDStop;
         
         [STUField(0xF7805734, 164)] // size: 4
-        public uint m_F7805734;
-        
+        //Sound class.
+        //3851462253 is loading screen music
+        public uint m_soundClass;
+
         [STUField(0x573D3605, 168)] // size: 1
         public byte m_573D3605;
     }

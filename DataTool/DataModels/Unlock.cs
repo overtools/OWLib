@@ -264,7 +264,7 @@ namespace DataTool.DataModels {
         Icon,
         Spray,
         Emote,
-        VictoryPose,
+        VictoryPose, //wrestle with Jeff prepare for death
         HighlightIntro,
         VoiceLine,
         WeaponSkin,
