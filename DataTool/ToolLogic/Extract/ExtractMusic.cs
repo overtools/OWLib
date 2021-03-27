@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace DataTool.ToolLogic.Extract.Debug
 {
-    [Tool("extract-music", Description = "Extracts sound files which are identified as music.", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-music", Description = "Extracts sound files which are identified as music.", CustomFlags = typeof(ExtractFlags)]
 
     public class ExtractMusic : ITool
     {
@@ -18,8 +18,8 @@ namespace DataTool.ToolLogic.Extract.Debug
         {   { 3851462253, "LoadingScreen" },
             { 3043319348, "Retribution" },
             { 935766596, "Uprising"},
-            { 1935561723, "StormRising1" },
-            { 3069540790, "StormRising2"},
+            { 1935561723, "StormRising" },
+            { 3069540790, "StormRising"},
             { 1287967541, "Junkenstein"},
             { 3187645923, "PvP" },
             { 3991942870, "Stinger" },
