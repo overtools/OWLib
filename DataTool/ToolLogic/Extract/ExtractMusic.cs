@@ -9,23 +9,24 @@ using System.Collections.Generic;
 
 namespace DataTool.ToolLogic.Extract.Debug
 {
-    [Tool("extract-music", Description = "Extracts sound files which are identified as music.", CustomFlags = typeof(ExtractFlags)]
+    [Tool("extract-music", Description = "Extracts sound files which are identified as music.", CustomFlags = typeof(ExtractFlags))]
 
     public class ExtractMusic : ITool
     {
 
         Dictionary<UInt32, string> music_types = new Dictionary<uint, string>
-        {   { 3851462253, "LoadingScreen" },
-            { 3043319348, "Retribution" },
-            { 935766596, "Uprising"},
-            { 1935561723, "StormRising" },
-            { 3069540790, "StormRising"},
-            { 1287967541, "Junkenstein"},
-            { 3187645923, "PvP" },
-            { 3991942870, "Stinger" },
-            { 397648059,  "PvE"},
-            { 2930411284, "MainMenuTheme"},
-            { 251430280, "RoundNearEnd"}
+        {   { 0xE590A66D, "LoadingScreen" },
+            { 0xB5655E34, "Retribution" },
+            { 0x37C6AA44, "Uprising"},
+            { 0x735E53FB, "StormRising" },
+            { 0xB6F579B6, "StormRising"},
+            { 0x4CC4D335, "Junkenstein"},
+            { 0xBDFF9DE3, "PvP" },
+            { 0xEDF036D6, "Stinger" },
+            { 0x17B3A0BB, "PvE"},
+            { 0xAEAA8714, "MainMenuTheme"},
+            { 0xDBB66679, "RoundNearEnd"},
+            { 0xA367CA4E, "PostGameFlow"}
         };
 
         public void Parse(ICLIFlags toolFlags)
