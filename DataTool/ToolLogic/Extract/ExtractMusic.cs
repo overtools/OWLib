@@ -49,7 +49,7 @@ namespace DataTool.ToolLogic.Extract.Debug
             foreach (ulong @ulong in TrackedFiles[0x2C])
             {
                 STUSound music = GetInstance<STUSound>(@ulong);
-                var s_class = music.m_C32C2195.m_soundClass;
+                var s_class = music.m_C32C2195.m_wwiseBankID;
                 if (music_types.ContainsKey(s_class))
                 {     
                     FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
