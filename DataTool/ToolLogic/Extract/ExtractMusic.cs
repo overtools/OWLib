@@ -7,12 +7,10 @@ using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using System.Collections.Generic;
 
-namespace DataTool.ToolLogic.Extract.Debug
-{
+namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-music", Description = "Extracts sound files which are identified as music.", CustomFlags = typeof(ExtractFlags))]
 
-    public class ExtractMusic : ITool
-    {
+    public class ExtractMusic : ITool {
 
         Dictionary<UInt32, string> music_types = new Dictionary<uint, string>
         {   { 0xE590A66D, "LoadingScreen" },
@@ -29,29 +27,22 @@ namespace DataTool.ToolLogic.Extract.Debug
             { 0xA367CA4E, "PostGameFlow"}
         };
 
-        public void Parse(ICLIFlags toolFlags)
-        {
+        public void Parse(ICLIFlags toolFlags) {
             ExtractType(toolFlags);
         }
 
-        public void ExtractType(ICLIFlags toolFlags)
-        {
+        public void ExtractType(ICLIFlags toolFlags) {
             string basePath;
-            if (toolFlags is ExtractFlags flags)
-            {
+            if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath + "\\Music";
-            }
-            else
-            {
+            } else {
                 throw new Exception("no output path");
             }
 
-            foreach (ulong @ulong in TrackedFiles[0x2C])
-            {
+            foreach (ulong @ulong in TrackedFiles[0x2C]) {
                 STUSound music = GetInstance<STUSound>(@ulong);
                 var s_class = music.m_C32C2195.m_wwiseBankID;
-                if (music_types.ContainsKey(s_class))
-                {     
+                if (music_types.ContainsKey(s_class)) {
                     FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
                     var context = new Combo.SaveContext(info);
                     FindLogic.Combo.Find(info, @ulong);
