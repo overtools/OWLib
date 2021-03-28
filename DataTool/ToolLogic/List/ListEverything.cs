@@ -10,7 +10,7 @@ using static DataTool.Helper.STUHelper;
 using DataTool.ToolLogic.List.Misc;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-everything", Description = "List everything", CustomFlags = typeof(ListFlags), IsSensitive = true)]
+    [Tool("list-everything", Description = "List everything", CustomFlags = typeof(ListFlags))]
     public class ListEverything : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             List<ITool> tools = new List<ITool> {
