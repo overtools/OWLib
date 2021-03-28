@@ -142,3 +142,17 @@ D33D7203, OffenseDefence
 023CE0F6, Mirrored
 3F1EFF08, FFA
 28C99BBF, PVE
+
+# Enum_43D38C2E workshop value expected type
+B94E4837, Generic
+2DE52FDE, NumberWithLimits
+552719FA, Percentage
+98EC6166, Duration
+643AA8C5, Distance
+46C2D02A, Speed
+97A1D04D, AccelerationRate
+89CC3419, Angle
+03242961, TurnRate
+39B732D1, Position
+1681F925, Vector
+711B7441, Velocity

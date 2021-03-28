@@ -1484,20 +1484,20 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0x43D38C2E)]
     public enum Enum_43D38C2E : int
     {
-        [STUField(0xB94E4837)] xB94E4837 = 0,
-        [STUField(0x2DE52FDE)] x2DE52FDE = 0x1,
-        [STUField(0x552719FA)] x552719FA = 0x2,
-        [STUField(0x98EC6166)] x98EC6166 = 0x3,
-        [STUField(0x643AA8C5)] x643AA8C5 = 0x4,
-        [STUField(0x46C2D02A)] x46C2D02A = 0x5,
-        [STUField(0x97A1D04D)] x97A1D04D = 0x6,
-        [STUField(0x89CC3419)] x89CC3419 = 0x7,
-        [STUField(0x03242961)] x03242961 = 0x8,
-        [STUField(0x39B732D1)] x39B732D1 = 0x9,
+        [STUField(0xB94E4837)] Generic = 0,
+        [STUField(0x2DE52FDE)] NumberWithLimits = 0x1,
+        [STUField(0x552719FA)] Percentage = 0x2,
+        [STUField(0x98EC6166)] Duration = 0x3,
+        [STUField(0x643AA8C5)] Distance = 0x4,
+        [STUField(0x46C2D02A)] Speed = 0x5,
+        [STUField(0x97A1D04D)] AccelerationRate = 0x6,
+        [STUField(0x89CC3419)] Angle = 0x7,
+        [STUField(0x03242961)] TurnRate = 0x8,
+        [STUField(0x39B732D1)] Position = 0x9,
         [STUField(0x2289BC93)] x2289BC93 = 0xA,
-        [STUField(0x711B7441)] x711B7441 = 0xB,
+        [STUField(0x711B7441)] Velocity = 0xB,
         [STUField(0x31176720)] x31176720 = 0xC,
-        [STUField(0x1681F925)] x1681F925 = 0xD,
+        [STUField(0x1681F925)] Vector = 0xD,
     }
     
     [STUEnum(0x440F623B)]

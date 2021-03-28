@@ -3224,9 +3224,8 @@ namespace TankLib.STU.Types
         public uint m_wwiseEventIDStop;
         
         [STUField(0xF7805734, 164)] // size: 4
-
         public uint m_wwiseBankID;
-
+        
         [STUField(0x573D3605, 168)] // size: 1
         public byte m_573D3605;
     }
@@ -45018,7 +45017,7 @@ namespace TankLib.STU.Types
         public uint m_1DFED57A;
         
         [STUField(0xF7805734, 60)] // size: 4
-        public uint m_F7805734;
+        public uint m_wwiseBankID;
     }
     
     [STU(0xD19ACE00, 32)]

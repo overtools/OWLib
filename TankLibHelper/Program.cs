@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using TankLibHelper.Modes;
 
 namespace TankLibHelper {
@@ -13,6 +15,7 @@ namespace TankLibHelper {
             //     abc.003
             //     *.003
             //     *.003 6A0BTFA(instance hash)
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US"); //To fix float seperator :prophet:
 
             if (args.Length < 1) {
                 Console.Out.WriteLine("Usage: TankLibHelper {mode} [mode args]");

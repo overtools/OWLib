@@ -36,7 +36,7 @@ namespace DataTool.JSON {
                     file.Write(pretty, 0, pretty.Length);
                 }
             } else {
-                Console.Error.WriteLine(Utf8Json.JsonSerializer.PrettyPrint(json));
+                Console.WriteLine(Utf8Json.JsonSerializer.PrettyPrint(json));
             }
         }
 
