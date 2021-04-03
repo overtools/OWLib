@@ -78,10 +78,9 @@ namespace DataTool.ToolLogic.List.Misc {
                         @return.Extensions = stu.m_86397C09.Select(ext => new WorkshopExtension {
                             DisplayName = GetString(ext.m_displayName),
                             Description = GetString(ext.m_description),
-                            UnlockedValues = (ext.m_assets == null ? def_assets : ext.m_assets).Select(v => new ExtensionVal {
+                            UnlockedValues = ext.m_assets?.Select(v => new ExtensionVal {
                                 DisplayName = GetString(v.m_displayName),
-                                DisplayName_Id = v.m_displayName,
-                                STUId = v.m_7533CD4C
+                                Virtual01C = v.m_7533CD4C
                             })
                      });
                         break;
@@ -227,9 +226,8 @@ namespace DataTool.ToolLogic.List.Misc {
         }
 
         public class ExtensionVal {
-            public teResourceGUID DisplayName_Id;
             public string DisplayName;
-            public teResourceGUID STUId;
+            public teResourceGUID Virtual01C;
         }
 
         public class WorkshopExtension {
