@@ -15,7 +15,7 @@ namespace TankLibHelper {
             //     abc.003
             //     *.003
             //     *.003 6A0BTFA(instance hash)
-            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US"); //To fix float seperator :prophet:
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture; //To fix float seperator :prophet:
 
             if (args.Length < 1) {
                 Console.Out.WriteLine("Usage: TankLibHelper {mode} [mode args]");
