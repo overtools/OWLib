@@ -254,4 +254,4 @@ paket-files/
 !/DataTool/ToolLogic/List/Debug/
 !/DataTool/ToolLogic/Extract/Debug/
 /dist/
-/DataTool/Properties/launchSettings.json
+launchSettings.json
