@@ -52,7 +52,7 @@ namespace DataTool {
         [Alias("ex")]
         public bool Expert;
 
-        [CLIFlag(Default = false, Flag = "disable-upd-chk", Help = "Disables datatool update check (happens if CASC init fails)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = false, Flag = "no-update-check", Help = "Disables datatool update check (happens if CASC init fails)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         [Alias("du")]
         public bool DisableUpdateCheck;
 

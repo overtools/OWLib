@@ -409,20 +409,22 @@ namespace DataTool {
 
         private static void CheckForUpdate() {
             try {
+                Version localVersion = new Version(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? string.Empty);
+                if (Debugger.IsAttached || localVersion.Revision == 0) {
+                    return;
+                }
+
                 using (WebClient web = new WebClient()) {
-                    Version ver_local = new Version(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
-                    //The revision number of the locally compiled build is zero. Update check feature is mostly for users who download builds from AppVeyor, if you compile tools yourself why would you need update check lmao.
-                    if (ver_local.Revision != 0) {
-                        dynamic data = JObject.Parse(web.DownloadString(LastestBuildInfoUrl));
-                        Version ver_remote = new Version(data.build.version.ToString());
-                        if (ver_remote > ver_local) {
-                            Logger.Warn("Core", $"Newer version of DataTool is available! Local version: {ver_local} Latest: {ver_remote}\nDownload latest build at {LastestBuildDownloadUrl}");
-                        }
+                    dynamic data = JObject.Parse(web.DownloadString(LastestBuildInfoUrl));
+                    Version remoteVersion = new Version(data.build.version.ToString());
+                    var buildSuccess = data.build.status == "success";
+
+                    if (remoteVersion > localVersion && buildSuccess) {
+                        Logger.Warn("Core", $"Newer version of DataTool is available! Local version: {localVersion} Latest: {remoteVersion}\nDownload latest build at {LastestBuildDownloadUrl}");
                     }
                 }
-            }
-            catch {
-                Logger.Warn("Core", $"Unable to get information about the latest version of DataTool.");
+            } catch (Exception ex) {
+                Logger.Debug("Core", $"Update check failed. {ex.Message}");
             }
         }
 
