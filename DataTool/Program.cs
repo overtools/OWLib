@@ -22,6 +22,9 @@ using TankLib.Helpers;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 using Logger = TankLib.Helpers.Logger;
+using System.Net;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DataTool {
     public static class Program {
@@ -34,6 +37,8 @@ namespace DataTool {
         public static bool IsPTR => Client?.AgentProduct?.Uid == "prometheus_test";
 
         public static string[] ValidLanguages = {"deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW"};
+        public static string LastestBuildInfoUrl = "https://ci.appveyor.com/api/projects/yretenai/owlib/branch/master";
+        public static string LastestBuildDownloadUrl = "https://ci.appveyor.com/project/yretenai/owlib/build/artifacts";
 
         public static bool ValidKey(ulong key) {
             return TankHandler.m_assets.ContainsKey(key);
@@ -101,11 +106,9 @@ namespace DataTool {
                 PrintHelp(false, tools);
                 return;
             }
-
             ITool targetTool = null;
             ICLIFlags targetToolFlags = null;
             ToolAttribute targetToolAttributes = null;
-
             #region Tool Activation
 
             foreach (var type in tools) {
@@ -146,6 +149,10 @@ namespace DataTool {
                                     "=================\nError initializing CASC!\n" +
                                     "Please Scan & Repair your game, launch it for a minute, and try the tools again before reporting a bug!\n" +
                                     "========================");
+
+                    if (!Flags.DisableUpdateCheck)
+                        CheckForUpdate();
+
                     throw;
                 }
 
@@ -397,6 +404,25 @@ namespace DataTool {
                 } else {
                     //
                 }
+            }
+        }
+
+        private static void CheckForUpdate() {
+            try {
+                using (WebClient web = new WebClient()) {
+                    Version ver_local = new Version(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
+                    //The revision number of the locally compiled build is zero. Update check feature is mostly for users who download builds from AppVeyor, if you compile tools yourself why would you need update check lmao.
+                    if (ver_local.Revision != 0) {
+                        dynamic data = JObject.Parse(web.DownloadString(LastestBuildInfoUrl));
+                        Version ver_remote = new Version(data.build.version.ToString());
+                        if (ver_remote > ver_local) {
+                            Logger.Warn("Core", $"Newer version of DataTool is available! Local version: {ver_local} Latest: {ver_remote}\nDownload latest build at {LastestBuildDownloadUrl}");
+                        }
+                    }
+                }
+            }
+            catch {
+                Logger.Warn("Core", $"Unable to get information about the latest version of DataTool.");
             }
         }
 
