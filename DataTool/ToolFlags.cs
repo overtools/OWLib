@@ -52,6 +52,10 @@ namespace DataTool {
         [Alias("ex")]
         public bool Expert;
 
+        [CLIFlag(Default = false, Flag = "disable-upd-chk", Help = "Disables datatool update check (happens if CASC init fails)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [Alias("du")]
+        public bool DisableUpdateCheck;
+
         [CLIFlag(Default = false, Flag = "rcn", Help = "use (R)CN? CMF", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         // ReSharper disable once InconsistentNaming
         public bool RCN;
