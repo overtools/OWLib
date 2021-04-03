@@ -9,6 +9,7 @@ using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
+using TankLib.STU;
 
 namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-workshop", Description = "List workshop", CustomFlags = typeof(ListFlags), IsSensitive = true)]
@@ -71,6 +72,18 @@ namespace DataTool.ToolLogic.List.Misc {
                             Zach = action.m_64B9FD09,
                             Parameters = ParseParameters(action.m_params)
                         });
+                        break;
+                    case STU_ACDD45D0 stu:
+                        STU_611C97A9[] def_assets = new STU_611C97A9[0];
+                        @return.Extensions = stu.m_86397C09.Select(ext => new WorkshopExtension {
+                            DisplayName = GetString(ext.m_displayName),
+                            Description = GetString(ext.m_description),
+                            UnlockedValues = (ext.m_assets == null ? def_assets : ext.m_assets).Select(v => new ExtensionVal {
+                                DisplayName = GetString(v.m_displayName),
+                                DisplayName_Id = v.m_displayName,
+                                STUId = v.m_7533CD4C
+                            })
+                     });
                         break;
                     case STU_8C73C07E stu:
                         @return.Events = stu.m_targets.Select(action => new WorkshopDefinition {
@@ -200,6 +213,7 @@ namespace DataTool.ToolLogic.List.Misc {
             public IEnumerable<WorkshopDefinition> Unknown;
             public IEnumerable<WorkshopValue> Values;
             public IEnumerable<WorkshopDropdownDefinition> Dropdowns;
+            public IEnumerable<WorkshopExtension> Extensions;
             public IEnumerable<string> TextOptions;
         }
 
@@ -212,6 +226,17 @@ namespace DataTool.ToolLogic.List.Misc {
             public IEnumerable<WorkshopParameter> Parameters;
         }
 
+        public class ExtensionVal {
+            public teResourceGUID DisplayName_Id;
+            public string DisplayName;
+            public teResourceGUID STUId;
+        }
+
+        public class WorkshopExtension {
+            public string DisplayName;
+            public string Description;
+            public IEnumerable<ExtensionVal> UnlockedValues; //values added to the ui when extension is on (is null for example in "Spawn More Dummy Bots")
+        }
         public class WorkshopValue {
             public teResourceGUID Id;
             public string DisplayName;
