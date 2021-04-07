@@ -32,7 +32,10 @@ namespace TankLibHelper.Modes {
 
             const string stuTypeNamespace = "TankLib.STU.Types";
             const string stuEnumNamespace = "TankLib.STU.Types.Enums";
-            
+
+            if (!Directory.Exists(outDirectory))
+                Directory.CreateDirectory(outDirectory);
+
             string generatedDirectory = Path.Combine(outDirectory, "Generated");
             string generatedEnumsDirectory = Path.Combine(outDirectory, "Generated", "Enums");
             
