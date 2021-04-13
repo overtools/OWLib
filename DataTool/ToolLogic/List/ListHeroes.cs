@@ -10,6 +10,7 @@ using static DataTool.Helper.Logger;
 using TankLib.Helpers;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
+using System.Linq;
 
 namespace DataTool.ToolLogic.List {
     [Tool("list-heroes", Description = "List heroes", CustomFlags = typeof(ListFlags))]
@@ -22,6 +23,14 @@ namespace DataTool.ToolLogic.List {
                     OutputJSON(heroes, flags);
                     return;
                 }
+
+
+            foreach (teResourceGUID key in TrackedFiles[0x1B]) {
+                var hero = new Hero(key);
+                if (hero.GUID == 0)
+                    continue;
+
+            }
 
             IndentHelper indentLevel = new IndentHelper();
 
@@ -50,7 +59,32 @@ namespace DataTool.ToolLogic.List {
                                 // 000000001683.01B is Torbjorn gun with 18 ammo
                                 foreach (var weapon in GetInstance<STUWeaponComponent>(hero.Value.STU.m_gameplayEntity.GUID).m_weapons) {
                                     if (weapon.m_script != null) {
-                                        foreach (var weap_var in GetInstances<STUConfigVarExpression>(weapon.m_script.GUID)) {
+                                        List<STUConfigVarExpression> weap_vars = new List<STUConfigVarExpression>(GetInstances<STUConfigVarExpression>(weapon.m_script.GUID));
+
+                                        //melee stats (TODO)
+                                        var spec_containters = GetInstances<STUStatescriptActionPlayScript>(weapon.m_script.GUID);
+                                        if (spec_containters.Length != 0) {
+                                            foreach (var script_ref in spec_containters)
+                                            weap_vars.AddRange(GetInstances<STUConfigVarExpression>((script_ref.m_script as STU_105E1BCC)?.m_graph));
+                                        }
+
+                                        //projectile params
+                                        var projectile_params = GetInstance<STUStatescriptStateWeaponVolley>(weapon.m_script.GUID);
+                                        if (projectile_params != null) {
+                                            var pps = (projectile_params.m_numProjectilesPerShot as STUConfigVarInt)?.m_value; 
+                                            if (pps != null && pps != 999)
+                                            Log($"{indentLevel + 2}Number of projectiles per shot: {pps}");
+
+                                            var sps = (projectile_params.m_numShotsPerSecond as STUConfigVarInt)?.m_value;
+                                            if (sps != null && sps != 999)
+                                            Log($"{indentLevel + 2}Number of shots per second: {sps}");
+
+                                            if (projectile_params.m_projectileMotions != null)
+                                            Log($"{indentLevel + 2}Speed of projectile (m/s): {((projectile_params.m_projectileMotions[0] as STU_E1A5B579)?.m_599AB8D7 as STUConfigVarFloat)?.m_value}");
+                                        }
+
+                                        //generic stats
+                                        foreach (var weap_var in weap_vars) {
                                             if (weap_var.m_expression.m_D99EF254 != null && opcodes.ContainsKey(weap_var.m_expression.m_opcodes)) {
                                                 Log($"{indentLevel + 2}{opcodes[weap_var.m_expression.m_opcodes]}: {String.Join("\n", weap_var.m_expression.m_D99EF254)}");
                                             }
@@ -74,10 +108,8 @@ namespace DataTool.ToolLogic.List {
                     { new byte[] { 14, 0, 4, 6, 14, 1, 0, 4, 6, 0, 0 } ,"Weapon damage "},
                     //{ new byte[] { 6,0,0 } ,"Weapon minimal damage "},
                     //{ new byte[] { 8, 0, 6, 0,25,0 } ,"Weapon shots per second "},
-                    //{ new byte[] { 6, 0, 14, 0,25,14,1,25,0 } ,"Melee weapon damage "} //TODO melees are not referenced in hero/weapon scripts....... 
+                    { new byte[] { 6, 0, 14, 0,25,14,1,25,0 } ,"Melee weapon damage "} // STUStatescriptActionPlayScript has scripts with melee weapon damage!
                 };
-
-        String[] cont_m_names = { "m_value", "m_timeout", "m_amount" }; //container with variables reside in members with such names
 
         //Dictionaries doesn't work properly with byte[] by default. Custom comparer must be implemented...
         //borrowed from https://stackoverflow.com/questions/1440392/use-byte-as-key-in-dictionary/30353296
@@ -105,13 +137,6 @@ namespace DataTool.ToolLogic.List {
                 }
                 return sum;
             }
-        }
-        private static object GetDynamicFieldVal(object obj, string field) {
-
-            if (obj == null)
-                return null;
-        
-           return obj.GetType()?.GetField(field)?.GetValue(obj);
         }
 
         public Dictionary<teResourceGUID, Hero> GetHeroes() {
