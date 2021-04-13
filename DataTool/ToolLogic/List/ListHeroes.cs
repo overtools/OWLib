@@ -24,14 +24,6 @@ namespace DataTool.ToolLogic.List {
                     return;
                 }
 
-
-            foreach (teResourceGUID key in TrackedFiles[0x1B]) {
-                var hero = new Hero(key);
-                if (hero.GUID == 0)
-                    continue;
-
-            }
-
             IndentHelper indentLevel = new IndentHelper();
 
             foreach (KeyValuePair<teResourceGUID, Hero> hero in heroes) {
