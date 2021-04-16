@@ -97,6 +97,9 @@ namespace DataTool.ToolLogic.Extract {
         // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         // public bool ConvertBnk;
 
+        [CLIFlag(Default = false, Flag = "xml", Help = "Convert STUs to xml when extracted with ExtractDebugType", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool ConvertToXML;
+
         public override bool Validate() => true;
     }
 }

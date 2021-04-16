@@ -2,12 +2,13 @@
 using DataTool.Flag;
 using DataTool.JSON;
 using DataTool.ToolLogic.Dump;
+using DataTool.ToolLogic.List;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Dbg {
-    [Tool("debug-voice-stimulus", Description = "I hear da call", IsSensitive = true, CustomFlags = typeof(DumpFlags))]
+    [Tool("debug-voice-stimulus", Description = "I hear da call", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     class DebugVoiceStimulus : JSONTool, ITool {
         class DebugVoiceStim {
             public string Guid;
@@ -29,7 +30,7 @@ namespace DataTool.ToolLogic.Dbg {
                 };
             });
 
-            OutputJSONAlt(sets, toolFlags as DumpFlags);
+            OutputJSONAlt(sets, toolFlags as ListFlags);
         }
     }
 }

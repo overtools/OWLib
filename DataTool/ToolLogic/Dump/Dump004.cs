@@ -9,7 +9,7 @@ using static DataTool.Program;
 using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.Dump {
-    [Tool("dump-004", Description = "Dumps 004", CustomFlags = typeof(ExtractFlags))]
+    [Tool("dump-textures", Description = "Saves all textures", CustomFlags = typeof(ExtractFlags))]
     public class Dump004 : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             string basePath;
@@ -28,7 +28,7 @@ namespace DataTool.ToolLogic.Dump {
             Log($"Preparing to save roughly {info.m_textures.Count()} textures.");
             Log($"This will take a long time and take up a lot of space.");
             var saveContext = new SaveLogic.Combo.SaveContext(info);
-            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, "004Dump"), saveContext);
+            SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, "TextureDump"), saveContext);
             saveContext.Wait();
         }
     }

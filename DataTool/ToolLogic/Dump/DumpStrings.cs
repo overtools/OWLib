@@ -6,14 +6,15 @@ using DataTool.JSON;
 using TankLib;
 using static DataTool.Program;
 using static DataTool.Helper.Logger;
+using DataTool.ToolLogic.List;
 
 namespace DataTool.ToolLogic.Dump {
-    [Tool("dump-strings", Description = "Dump strings", CustomFlags = typeof(DumpFlags))]
+    [Tool("dump-strings", Description = "Dump strings", CustomFlags = typeof(ListFlags))]
     public class DumpStrings : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var strings = GetStrings();
 
-            if (toolFlags is DumpFlags flags) {
+            if (toolFlags is ListFlags flags) {
                 if (flags.JSON) {
                     OutputJSON(strings, flags);
                     return;
