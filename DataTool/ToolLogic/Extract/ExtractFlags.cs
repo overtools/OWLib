@@ -1,8 +1,9 @@
 ﻿using System;
 using DataTool.Flag;
+using JetBrains.Annotations;
 
 namespace DataTool.ToolLogic.Extract {
-    [Serializable]
+    [Serializable, UsedImplicitly]
     public class ExtractFlags : ICLIFlags {
         [CLIFlag(Flag = "out-path", NeedsValue = true, Help = "Output path", Positional = 2, Required = true)]
         public string OutputPath;
@@ -97,7 +98,7 @@ namespace DataTool.ToolLogic.Extract {
         // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         // public bool ConvertBnk;
 
-        [CLIFlag(Default = false, Flag = "xml", Help = "Convert STUs to xml when extracted with ExtractDebugType", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        [CLIFlag(Default = false, Flag = "xml", Help = "Convert STUs to xml when extracted with ExtractDebugType", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertToXML;
 
         public override bool Validate() => true;
