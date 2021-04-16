@@ -12,6 +12,7 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
 using Map = DataTool.SaveLogic.Map;
+using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-maps", Description = "Extract maps", CustomFlags = typeof(ExtractFlags))]
@@ -32,9 +33,12 @@ namespace DataTool.ToolLogic.Extract {
             Log($"{indent + 1}Maps can be listed using the \"list-maps\" mode");
             Log($"{indent + 1}All map names are in your selected locale");
 
-            Log("\r\nExample commands: ");
+            Log("\r\nExample of map name argument: ");
             Log($"{indent + 1}\"Kings Row\"");
-            Log($"{indent + 1}\"Ilios\" \"Oasis\"");
+            Log($"{indent + 1}\"Ilios\" \"Kanezaka:D86\"");
+
+            Log("\r\nFull example: ");
+            Log($"{indent + 1}\"C:\\Program Files(x86)\\Overwatch\" extract-maps \"C:\\Output_Path\" Oasis");
         }
 
         public void SaveMaps(ICLIFlags toolFlags) {
@@ -50,6 +54,9 @@ namespace DataTool.ToolLogic.Extract {
                 QueryHelp(QueryTypes);
                 return;
             }
+
+            FillMapSpellDict(symSpell);
+            SpellCheckMapName(parsedTypes,symSpell);
 
             foreach (ulong key in TrackedFiles[0x9F]) {
                 STUMapHeader map = GetInstance<STUMapHeader>(key);

@@ -7,7 +7,7 @@ using static DataTool.Program;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-voiceset", Description = "Extract VoiceSets (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-voiceset", Description = "Extract VoiceSets (debug)", HideFromHelp = true, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugVoiceSet : ITool {
         public void Parse(ICLIFlags toolFlags) {
             ExtractVoiceSets(toolFlags);

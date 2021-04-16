@@ -8,7 +8,7 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-specialhelper", Description = "generate special categories", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-specialhelper", Description = "Generate special categories", HideFromHelp = true, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugSpecialHelper : ITool {
         public void Parse(ICLIFlags toolFlags) {
             SpecialHelper(toolFlags);

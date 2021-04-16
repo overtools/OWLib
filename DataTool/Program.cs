@@ -22,6 +22,7 @@ using TankLib.Helpers;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 using Logger = TankLib.Helpers.Logger;
+using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool {
     public static class Program {
@@ -39,7 +40,7 @@ namespace DataTool {
             return TankHandler.m_assets.ContainsKey(key);
         }
 
-        public static HashSet<Type> GetTools() {
+        public static HashSet<Type> GetTools(bool noDebugTools = false) {
             var tools = new HashSet<Type>();
             {
                 var t = typeof(ITool);
@@ -49,7 +50,7 @@ namespace DataTool {
                     .ToList();
                 foreach (var tt in types) {
                     var attribute = tt.GetCustomAttribute<ToolAttribute>();
-                    if (tt.IsInterface || attribute == null) continue;
+                    if (tt.IsInterface || attribute == null || noDebugTools && attribute.HideFromHelp == true) continue;
 
                     tools.Add(tt);
                 }
@@ -62,7 +63,7 @@ namespace DataTool {
 
             HookConsole();
 
-            var tools = GetTools();
+            var tools = GetTools(true);
 
         #if DEBUG
             FlagParser.CheckCollisions(typeof(ToolFlags), (flag, duplicate) => {
@@ -398,6 +399,9 @@ namespace DataTool {
                     //
                 }
             }
+            var symSpell = new SymSpell(50, 6);
+            FillToolSpellDict(symSpell);
+            SpellCheckString(Flags.Mode.ToLower(), symSpell);
         }
 
         internal class ToolComparer : IComparer<Type> {

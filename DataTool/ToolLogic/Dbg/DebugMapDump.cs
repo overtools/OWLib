@@ -10,7 +10,7 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Debug {
-    [Tool("te-map-placable-dump", Description = "", IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
+    [Tool("te-map-placable-dump", Description = "", IsSensitive = true, HideFromHelp = true, CustomFlags = typeof(ExtractFlags))]
     class DebugMapDump : ITool {
         public void Parse(ICLIFlags toolFlags) {
             var flags = toolFlags as ExtractFlags;

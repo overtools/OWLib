@@ -13,6 +13,7 @@ using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
+using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-convo", Description = "Extract hero voice conversations", CustomFlags = typeof(ExtractFlags))]
@@ -63,6 +64,9 @@ namespace DataTool.ToolLogic.Extract {
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes =
                 ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
+
+            FillHeroSpellDict(symSpell);
+            SpellCheckQuery(parsedTypes, symSpell);
 
             Dictionary<ulong, VoiceSet> allVoiceSets = new Dictionary<ulong, VoiceSet>();
             foreach (var voiceSetGUID in Program.TrackedFiles[0x5F]) {
