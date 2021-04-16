@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Serialization;
 using DataTool.JSON;
 using TankLib;
@@ -68,7 +69,7 @@ namespace DataTool.DataModels {
         public ulong[] VoiceSounds;
 
         [DataMember]
-        public teResourceGUID VoiceConversation;
+        public teResourceGUID[] Conversations;
 
         [IgnoreDataMember]
         public STUCriteriaContainer Conditions;
@@ -94,8 +95,8 @@ namespace DataTool.DataModels {
             }
 
             if (instance.m_voiceLineRuntime != null) {
-                if (instance.m_voiceLineRuntime.m_voiceConversation != null)
-                    VoiceConversation = instance.m_voiceLineRuntime.m_voiceConversation;
+                if (instance.m_voiceLineRuntime.m_BD1B6F64 != null)
+                    Conversations = instance.m_voiceLineRuntime.m_BD1B6F64.Select(x => x.GUID).ToArray();
 
                 if (instance.m_voiceLineRuntime.m_criteria != null) {
                     Conditions = instance.m_voiceLineRuntime.m_criteria;

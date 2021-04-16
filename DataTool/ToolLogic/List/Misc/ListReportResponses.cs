@@ -6,7 +6,7 @@ using static DataTool.Program;
 using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.List.Misc {
-    [Tool("list-report-responses", CustomFlags = typeof(ListFlags), IsSensitive = true)]
+    [Tool("list-report-responses", Description = "Lists the messages shown after the punishment of the reported player", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListReportResponses : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();

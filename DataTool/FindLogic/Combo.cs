@@ -155,7 +155,7 @@ namespace DataTool.FindLogic {
             public ulong VoiceLineSet;
             public ulong ExternalSound;
             public ulong VoiceStimulus;
-            public ulong VoiceConversation;
+            public ulong[] Conversations;
             public ulong Subtitle;
             public ulong SubtitleRuntime;
             public HashSet<ulong> SoundFiles;
@@ -991,7 +991,7 @@ namespace DataTool.FindLogic {
                             voiceLineInstanceInfo.VoiceLineSet = voiceLineInstance.m_voiceLineRuntime.m_set;
                             voiceLineInstanceInfo.VoiceStimulus = voiceLineInstance.m_voiceLineRuntime.m_stimulus;
                             voiceLineInstanceInfo.ExternalSound = voiceLineInstance.m_voiceLineRuntime.m_externalSound;
-                            voiceLineInstanceInfo.VoiceConversation = voiceLineInstance.m_voiceLineRuntime.m_voiceConversation;
+                            voiceLineInstanceInfo.Conversations = voiceLineInstance.m_voiceLineRuntime.m_BD1B6F64?.Select(x => x.GUID.GUID).ToArray();
                             voiceLineInstanceInfo.SubtitleRuntime = voiceLineInstance.m_voiceLineRuntime.m_6148094F;
                             Find(info, voiceLineInstanceInfo.ExternalSound, replacements, context);
                             Find(info, voiceLineInstanceInfo.SubtitleRuntime, replacements, context);
