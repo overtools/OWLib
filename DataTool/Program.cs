@@ -50,7 +50,7 @@ namespace DataTool {
                     .ToList();
                 foreach (var tt in types) {
                     var attribute = tt.GetCustomAttribute<ToolAttribute>();
-                    if (tt.IsInterface || attribute == null || noDebugTools && attribute.HideFromHelp == true) continue;
+                    if (tt.IsInterface || attribute == null) continue;
 
                     tools.Add(tt);
                 }
@@ -63,7 +63,7 @@ namespace DataTool {
 
             HookConsole();
 
-            var tools = GetTools(true);
+            var tools = GetTools();
 
         #if DEBUG
             FlagParser.CheckCollisions(typeof(ToolFlags), (flag, duplicate) => {

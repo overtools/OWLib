@@ -8,7 +8,6 @@ namespace DataTool {
         public bool IsSensitive { get; set; } = false;
         public Type CustomFlags { get; set; } = null;
         public string Name { get; set; } = string.Empty;
-        public bool HideFromHelp { get; set; } = false;
 
         public bool UtilNoArchiveNeeded = false;
 

@@ -3,7 +3,7 @@ using TACTLib.Core;
 using TACTLib.Core.Product.Tank;
 
 namespace DataTool.ToolLogic.Dbg {
-    [Tool("te-key-test", Description = "", IsSensitive = true, HideFromHelp = true, CustomFlags = typeof(ToolFlags))]
+    [Tool("te-key-test", Description = "", IsSensitive = true, CustomFlags = typeof(ToolFlags))]
     class DebugKeyTest : ITool {
         public void Parse(ICLIFlags toolFlags) {
             foreach (var guid in Program.TankHandler.m_assets.Keys) {

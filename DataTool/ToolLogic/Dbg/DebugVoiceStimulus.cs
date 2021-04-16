@@ -8,7 +8,7 @@ using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Dbg {
-    [Tool("debug-voice-stimulus", Description = "I hear da call", IsSensitive = true, HideFromHelp = true, CustomFlags = typeof(ListFlags))]
+    [Tool("debug-voice-stimulus", Description = "I hear da call", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     class DebugVoiceStimulus : JSONTool, ITool {
         class DebugVoiceStim {
             public string Guid;

@@ -9,7 +9,7 @@ using TankLib.Chunks;
 using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Dbg {
-    [Tool("te-model-chunk-stu", Description = "", IsSensitive = true, HideFromHelp = true, CustomFlags = typeof(ExtractFlags))]
+    [Tool("te-model-chunk-stu", Description = "", IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
     class DebugModelSTU : ITool {
         public void Parse(ICLIFlags toolFlags) {
             var flags = toolFlags as ExtractFlags;

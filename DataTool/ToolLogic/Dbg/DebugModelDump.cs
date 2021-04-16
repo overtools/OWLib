@@ -7,7 +7,7 @@ using TankLib;
 using TankLib.Chunks;
 
 namespace DataTool.ToolLogic.Dbg {
-    [Tool("te-model-chunk-dump", Description = "", IsSensitive = true, HideFromHelp = true, CustomFlags = typeof(ExtractFlags))]
+    [Tool("te-model-chunk-dump", Description = "", IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
     class DebugModelDump : ITool {
         public void Parse(ICLIFlags toolFlags) {
             var flags = toolFlags as ExtractFlags;

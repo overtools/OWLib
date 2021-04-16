@@ -10,7 +10,7 @@ using static DataTool.Program;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.Dump {
-    [Tool("dump-file-lists", Description = "Dump filelists", HideFromHelp = true, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("dump-file-lists", Description = "Dump filelists", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class DumpFileLists : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var flags = (ExtractFlags) toolFlags;

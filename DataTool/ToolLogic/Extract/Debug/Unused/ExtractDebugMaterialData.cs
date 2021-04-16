@@ -1,7 +1,7 @@
 ﻿using DataTool.Flag;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-materialdata", Description = "Extract material data hashes (debug)", HideFromHelp = true, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-materialdata", Description = "Extract material data hashes (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugMaterialData : ITool {
         public void Parse(ICLIFlags toolFlags) {
             GetSoundbanks(toolFlags);

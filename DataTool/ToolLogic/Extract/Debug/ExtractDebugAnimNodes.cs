@@ -13,7 +13,7 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.Extract.Debug {
-    [Tool("extract-debug-anim-nodes", Description = "Extract anim nodes (debug)", HideFromHelp = true, CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
+    [Tool("extract-debug-anim-nodes", Description = "Extract anim nodes (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugAnimNodes : JSONTool, ITool {
         // nocaps is intentional
         [DataContract]

@@ -10,7 +10,7 @@ using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.Dbg {
-    [Tool("debug-effect", Description = "", IsSensitive = true, HideFromHelp = true, CustomFlags = typeof(ExtractFlags))]
+    [Tool("debug-effect", Description = "", IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
     class DebugEffect : ITool {
         public void Parse(ICLIFlags toolFlags) {
             var flags = toolFlags as ExtractFlags;
