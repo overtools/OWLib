@@ -399,6 +399,7 @@ namespace DataTool {
                     //
                 }
             }
+
             if (Flags != null) {
                 var symSpell = new SymSpell(50, 6);
                 FillToolSpellDict(symSpell);
