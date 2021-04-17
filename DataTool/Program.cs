@@ -399,9 +399,11 @@ namespace DataTool {
                     //
                 }
             }
-            var symSpell = new SymSpell(50, 6);
-            FillToolSpellDict(symSpell);
-            SpellCheckString(Flags.Mode.ToLower(), symSpell);
+            if (Flags != null) {
+                var symSpell = new SymSpell(50, 6);
+                FillToolSpellDict(symSpell);
+                SpellCheckString(Flags.Mode.ToLower(), symSpell);
+            }
         }
 
         internal class ToolComparer : IComparer<Type> {
