@@ -394,14 +394,12 @@ namespace DataTool {
                     Log("Flags for {0}-*", toolType.Key);
                     typeof(FlagParser).GetMethod(nameof(FlagParser.FullHelp))
                         ?.MakeGenericMethod(flags)
-                        .Invoke(null, new object[] {null, true});
+                        .Invoke(null, new object[] { null, true });
                 } else {
                     //
                 }
             }
-            var symSpell = new SymSpell(50, 6);
-            FillToolSpellDict(symSpell);
-            SpellCheckString(Flags.Mode.ToLower(), symSpell);
+            ToolNameSpellCheck();
         }
 
         internal class ToolComparer : IComparer<Type> {
@@ -410,6 +408,16 @@ namespace DataTool {
                 var yT = (y ?? throw new ArgumentNullException(nameof(y))).GetCustomAttribute<ToolAttribute>();
                 return string.Compare(xT.Keyword, yT.Keyword, StringComparison.InvariantCultureIgnoreCase);
             }
+        }
+
+        private static void ToolNameSpellCheck() {
+            //this will happen if mode is not found
+            if (string.IsNullOrWhiteSpace(Flags?.Mode?.ToLower())) {
+                return;
+            }
+            var symSpell = new SymSpell(50, 6);
+            FillToolSpellDict(symSpell);
+            SpellCheckString(Flags.Mode.ToLower(), symSpell);
         }
     }
 }
