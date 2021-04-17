@@ -20,8 +20,8 @@ namespace DataTool.ToolLogic.Render {
         public object Print(object instance, Dictionary<object, int> visited, IndentHelperBase indents, string fieldName, DragonMLSettings settings) {
             var hmlNameTag = fieldName == null ? "" : $" hml:name=\"{fieldName}\"";
             //needed for xml namespace support
-            DragonML.CreateNamespacedTag("", "hml");
-            DragonML.CreateNamespacedTag("", "tank");
+            settings.Namespaces.Add("tank", "https://yretenai.com/dragonml/v1");
+            settings.Namespaces.Add("hml", "https://yretenai.com/dragonml/v1");
             try {
                 // ReSharper disable once InvertIf
                 if (!TargetMap.TryGetValue(instance.GetType(), out var target)) {
