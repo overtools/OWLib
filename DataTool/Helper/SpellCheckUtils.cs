@@ -12,11 +12,9 @@ using static TankLib.Helpers.Logger;
 namespace DataTool.Helper {
     public static class SpellCheckUtils {
         public static void SpellCheckString(string str, SymSpell checker) {
-            if (str != null) {
-                var correctedStr = checker.Lookup(str.ToLower(), SymSpell.Verbosity.Closest);
-                if (correctedStr.Count != 0 && correctedStr[0].term != str) {
-                    Warn("SpellCheck", $"Did you mean {correctedStr[0].term}?");
-                }
+            var correctedStr = checker.Lookup(str.ToLower(), SymSpell.Verbosity.Closest);
+            if (correctedStr.Count != 0 && correctedStr[0].term != str) {
+                Warn("SpellCheck", $"Did you mean {correctedStr[0].term}?");
             }
         }
 
