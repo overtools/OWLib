@@ -60,5 +60,8 @@ namespace TankLib.STU.Types
         
         [STUField(0x529B2C24, 77)] // size: 1
         public byte m_529B2C24 = 0x0;
+        
+        [STUField(0xAED659F0, 78)] // size: 1
+        public byte m_AED659F0 = 0x0;
     }
 }

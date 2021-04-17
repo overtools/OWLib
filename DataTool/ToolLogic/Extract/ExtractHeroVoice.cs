@@ -14,6 +14,7 @@ using DataTool.SaveLogic.Unlock;
 using DataTool.ToolLogic.Util;
 using TankLib;
 using TankLib.STU.Types;
+using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-voice", Description = "Extract hero voice sounds", CustomFlags = typeof(ExtractFlags))]
@@ -65,6 +66,9 @@ namespace DataTool.ToolLogic.Extract {
 
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
+
+            FillHeroSpellDict(symSpell);
+            SpellCheckQuery(parsedTypes, symSpell);
 
             foreach (ulong heroFile in TrackedFiles[0x75]) {
                 STUHero hero = GetInstance<STUHero>(heroFile);

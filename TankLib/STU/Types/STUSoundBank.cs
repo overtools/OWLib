@@ -16,6 +16,6 @@ namespace TankLib.STU.Types
         public STU_0FA0034C[] m_2075DBF6;
         
         [STUField(0xF7805734, 96)] // size: 4
-        public uint m_F7805734;
+        public uint m_wwiseBankID;
     }
 }

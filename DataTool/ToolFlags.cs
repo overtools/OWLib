@@ -1,8 +1,9 @@
 ﻿using System;
 using DataTool.Flag;
+using JetBrains.Annotations;
 
 namespace DataTool {
-    [Serializable]
+    [Serializable, UsedImplicitly]
     public class ToolFlags : ICLIFlags {
         [CLIFlag(Flag = "directory", Positional = 0, NeedsValue = true, Required = true, Help = "Overwatch Directory")]
         public string OverwatchDirectory;
@@ -85,7 +86,7 @@ namespace DataTool {
         [CLIFlag(Default = false, Flag = "no-names", Help = "Don't use names for textures", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool NoNames;
 
-        [CLIFlag(Default = false, Flag = "canonical-names", Help = "Only use canonical names", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        [CLIFlag(Default = false, Flag = "canonical-names", Help = "Only use canonical names", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool OnlyCanonical;
 
         [CLIFlag(Default = false, Flag = "no-guid-names", Help = "Completely disables using GUIDNames", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]

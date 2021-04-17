@@ -13,6 +13,7 @@ using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
+using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-convo", Description = "Extract hero voice conversations", CustomFlags = typeof(ExtractFlags))]
@@ -64,6 +65,9 @@ namespace DataTool.ToolLogic.Extract {
                 ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
 
+            FillHeroSpellDict(symSpell);
+            SpellCheckQuery(parsedTypes, symSpell);
+
             Dictionary<ulong, VoiceSet> allVoiceSets = new Dictionary<ulong, VoiceSet>();
             foreach (var voiceSetGUID in Program.TrackedFiles[0x5F]) {
                 STUVoiceSet set = GetInstance<STUVoiceSet>(voiceSetGUID);
@@ -110,18 +114,20 @@ namespace DataTool.ToolLogic.Extract {
                     //     HandleCondition(flags, comboInfo, lineInstance, path, heroNameActual, cond, mapNames);
                     // }
 
-                    if (lineInstance.VoiceConversation == 0) continue;
-                    STUVoiceConversation conversation =
-                        GetInstance<STUVoiceConversation>(lineInstance.VoiceConversation);
+                    if (lineInstance.Conversations == null || lineInstance.Conversations.Length == 0) continue;
 
-                    if (conversation == null) continue; // wtf, blizz pls
+                    foreach (var conversationGuid in lineInstance.Conversations) {
+                        STUVoiceConversation conversation = GetInstance<STUVoiceConversation>(conversationGuid);
 
-                    string convoDir = Path.Combine(path, heroNameActual, GetFileName(lineInstance.VoiceConversation));
-                    foreach (STUVoiceConversationLine line in conversation.m_90D76F17) {
-                        string linePath = Path.Combine(convoDir, line.m_B4D405A1.ToString());
-                        foreach (VoiceSet voiceSet in allVoiceSets.Values) {
-                            if (voiceSet.VoiceLines.ContainsKey(line.m_E295B99C)) {
-                                VoiceLine.SaveVoiceLine(flags, voiceSet.VoiceLines[line.m_E295B99C], linePath, comboSaveContext);
+                        if (conversation == null) continue; // wtf, blizz pls
+
+                        string convoDir = Path.Combine(path, heroNameActual, GetFileName(conversationGuid));
+                        foreach (STUVoiceConversationLine line in conversation.m_90D76F17) {
+                            string linePath = Path.Combine(convoDir, line.m_B4D405A1.ToString());
+                            foreach (VoiceSet voiceSet in allVoiceSets.Values) {
+                                if (voiceSet.VoiceLines.ContainsKey(line.m_E295B99C)) {
+                                    VoiceLine.SaveVoiceLine(flags, voiceSet.VoiceLines[line.m_E295B99C], linePath, comboSaveContext);
+                                }
                             }
                         }
                     }
@@ -138,10 +144,10 @@ namespace DataTool.ToolLogic.Extract {
 
                 HandleCondition(flags, comboInfo, lineInstance, path, heroNameActual, subCond, mapNames);
             } else {
-                
+
             }
         }
-        
+
         public void HandleCondition(ICLIFlags flags, Combo.ComboInfo comboInfo, VoiceLineInstance lineInstance,
             string path, string heroNameActual, STU_2F33B1B7 cond, Dictionary<uint, string> mapNames) {
 
@@ -150,7 +156,7 @@ namespace DataTool.ToolLogic.Extract {
                     HandleCondition(flags, comboInfo, lineInstance, path, heroNameActual, arrayElem, mapNames);
                 }
             }
-            
+
             if (cond is STU_E9DB72FF mapCond) {
                 VoiceLine.SaveVoiceLine(flags, lineInstance, Path.Combine(path, heroNameActual, "Maps", mapNames[teResourceGUID.Index(mapCond.m_map)]), comboInfo);
             }

@@ -54,9 +54,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
             ulong loadGuid = 0x400000000000001;
             HashSet<teResourceGUID> loadedAssets = new HashSet<teResourceGUID>();
-            
+
             FindStuff(loadedAssets, loadGuid);
-            
+
             //foreach (ulong key in Program.TrackedFiles[0x5F]) {
             //    if (teResourceGUID.Index(key) != 0x19F) continue;
             //    STUVoiceSet voiceSet = STUHelper.GetInstance<STUVoiceSet>(key);
@@ -66,7 +66,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             //    SaveLogic.Combo.SaveVoiceSet(flags, voiceMaterDir, info, key);
             //    // foreach (STUVoiceLineInstance voiceLineInstance in voiceSet.VoiceLineInstances) {
             //    //     if (voiceLineInstance?.SoundDataContainer == null) continue;
-            //    //     
+            //    //
             //    //     Combo.ComboInfo info = new Combo.ComboInfo();
             //    //
             //    //     Combo.Find(info, voiceLineInstance.SoundDataContainer.SoundbankMasterResource);
