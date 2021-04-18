@@ -108,18 +108,21 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveVoiceStimulus(ICLIFlags flags, string path, SaveContext context, FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo) {
-            var saveSubtitles = true;
+        public static void SaveVoiceStimulus(ICLIFlags flags, string path, SaveContext context, FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo, string fileNameOverride = null) {
+            var subtitlesWithSounds = false; // stores the subtitle alongside the sound file
+            var subtitleAsSound = true; // renames the sound file to include the subtitle
 
             if (flags is ExtractFlags extractFlags) {
-                saveSubtitles = extractFlags.SubtitlesWithSounds;
+                subtitlesWithSounds = extractFlags.SubtitlesWithSounds;
+                subtitleAsSound = extractFlags.SubtitlesAsSound;
             }
 
             var realPath = path;
             var soundSet = new HashSet<ulong>(voiceLineInstanceInfo.SoundFiles.Where(x => x != 0));
-            string overrideName = null;
+            var soundFileName = fileNameOverride ?? teResourceGUID.AsString(soundSet.First()); // file name override or the guid of the sound
+            string overrideName = fileNameOverride; // set this as a fallback if it isn't set below due to subtitles not being saved potentially
 
-            if (saveSubtitles) {
+            if (subtitlesWithSounds || subtitleAsSound) {
                 IEnumerable<string> subtitle = new HashSet<string>();
 
                 if (context.m_info.m_subtitles.TryGetValue(voiceLineInstanceInfo.Subtitle, out var subtitleInfo)) {
@@ -138,12 +141,19 @@ namespace DataTool.SaveLogic {
                         WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{teResourceGUID.LongKey(voiceLineInstanceInfo.Subtitle):X8}-{teResourceGUID.LongKey(voiceLineInstanceInfo.SubtitleRuntime):X8}-subtitles.txt"));
                     } else if (soundSet.Count == 1) {
                         try {
-                            overrideName = GetValidFilename($"{teResourceGUID.AsString(soundSet.First())}-{subtitleSet.First().TrimEnd('.')}");
-                            if (overrideName.Length > 128) overrideName = overrideName.Substring(0, 100);
-                            WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
+                            if (subtitleAsSound) {
+                                // if we're using the subtitle in the file name, generate the new name here, also trim it to make sure it isn't too long
+                                overrideName = GetValidFilename($"{soundFileName}-{subtitleSet.First().TrimEnd('.')}");
+                                if (overrideName.Length > 128) overrideName = overrideName.Substring(0, 130);
+                            }
+
+                            if (subtitlesWithSounds)
+                                WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
                         } catch {
-                            overrideName = teResourceGUID.AsString(soundSet.First());
-                            WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
+                            if (subtitlesWithSounds) {
+                                overrideName = soundFileName; // use default name if we can't save above
+                                WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
+                            }
                         }
                     }
                 }
@@ -479,7 +489,7 @@ namespace DataTool.SaveLogic {
             };
 
             var doneIDs = new HashSet<ulong>();
-            
+
             foreach (ulong modelLookGuid in modelLookSet.Reverse()) {
                 if (info.m_info.m_modelLooks.ContainsKey(modelLookGuid)) {
                     foreach(var materialGuid in info.m_info.m_modelLooks[modelLookGuid].m_materialGUIDs) {

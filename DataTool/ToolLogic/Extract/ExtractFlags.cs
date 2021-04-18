@@ -65,8 +65,11 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "extract-mips", Help = "Extract mip files", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool SaveMips;
 
-        [CLIFlag(Default = true, Flag = "subtitles-with-sounds", Help = "Extract subtitles alongside voicelines", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        [CLIFlag(Default = false, Flag = "subtitles-with-sounds", Help = "Extract subtitles alongside voicelines", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool SubtitlesWithSounds;
+
+        [CLIFlag(Default = true, Flag = "subtitles-as-sounds", Help = "Saves the sound files as the subtitle", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool SubtitlesAsSound;
 
         [CLIFlag(Default = false, Flag = "voice-group-by-hero", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool VoiceGroupByHero;
