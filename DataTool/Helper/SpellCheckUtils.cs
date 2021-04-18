@@ -12,13 +12,13 @@ using static TankLib.Helpers.Logger;
 namespace DataTool.Helper {
     public static class SpellCheckUtils {
         public static void SpellCheckString(string str, SymSpell checker) {
-            if (str == null) {
+            if (str == null || str == "*")
                 return;
-            }
+
             var correctedStr = checker.Lookup(str.ToLower(), SymSpell.Verbosity.Closest);
-            if (correctedStr.Count == 0 || correctedStr[0].term == str) {
+            if (correctedStr.Count == 0 || correctedStr[0].term == str)
                 return;
-            }
+
             Warn("SpellCheck", $"Did you mean {correctedStr[0].term}?");
         }
 
@@ -45,9 +45,9 @@ namespace DataTool.Helper {
                 heroes[key] = hero;
             }
 
-            foreach (KeyValuePair<teResourceGUID, Hero> hero in heroes) {
-                if (hero.Value.Name != null)
-                symSpell.CreateDictionaryEntry(hero.Value.Name.ToLower(), 1);
+            foreach (var (_, hero) in heroes) {
+                if (hero.Name != null)
+                    symSpell.CreateDictionaryEntry(hero.Name.ToLower(), 1);
             }
         }
 
