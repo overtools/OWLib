@@ -101,6 +101,9 @@ namespace DataTool {
         [CLIFlag(Default = false, Flag = "disable-language-registry", Help = "Disable fetching language from registry", Hidden = false, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool NoLanguageRegistry;
 
+        [CLIFlag(Default = false, Flag = "allow-manifest-fallback", Help = "Allows falling back to older versions if manfiest doesn't exist", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool TryManifestFallback;
+
         public override bool Validate() => true;
     }
 }

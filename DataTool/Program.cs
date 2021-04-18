@@ -142,7 +142,11 @@ namespace DataTool {
             if (!targetToolAttributes.UtilNoArchiveNeeded) {
                 try {
                     InitStorage(Flags.Online);
-                } catch {
+                } catch (Exception ex) when (ex.InnerException is UnsupportedBuildVersionException) {
+                    Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC", "This version of DataTool does not support this version of Overwatch. Download a newer version of the tools.");
+                    throw;
+                }
+                catch {
                     Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC",
                                     "=================\nError initializing CASC!\n" +
                                     "Please Scan & Repair your game, launch it for a minute, and try the tools again before reporting a bug!\n" +
@@ -226,6 +230,7 @@ namespace DataTool {
 
             Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
 
+            ManifestCryptoHandler.AttemptFallbackManifests = Flags.TryManifestFallback;
             var args = new ClientCreateArgs {
                 SpeechLanguage = Flags.SpeechLanguage,
                 TextLanguage = Flags.Language,
