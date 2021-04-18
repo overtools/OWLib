@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -146,7 +146,12 @@ namespace DataTool {
                 try {
                     InitStorage(Flags.Online);
                 } catch (Exception ex) when (ex.InnerException is UnsupportedBuildVersionException) {
-                    Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC", "This version of DataTool does not support this version of Overwatch. Download a newer version of the tools.");
+                    Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC",
+                        "This version of DataTool does not support this version of Overwatch."
+                        + (Flags.DisableUpdateCheck ? " Download a newer version of the tools if available." : ""));
+
+                    if (!Flags.DisableUpdateCheck)
+                        CheckForUpdate();
                     throw;
                 }
                 catch {
@@ -154,10 +159,6 @@ namespace DataTool {
                                     "=================\nError initializing CASC!\n" +
                                     "Please Scan & Repair your game, launch it for a minute, and try the tools again before reporting a bug!\n" +
                                     "========================");
-
-                    if (!Flags.DisableUpdateCheck)
-                        CheckForUpdate();
-
                     throw;
                 }
 
@@ -422,12 +423,16 @@ namespace DataTool {
                 }
 
                 using (WebClient web = new WebClient()) {
+                    Logger.Warn("Core", "Checking for update...");
                     dynamic data = JObject.Parse(web.DownloadString(LastestBuildInfoUrl));
                     Version remoteVersion = new Version(data.build.version.ToString());
                     var buildSuccess = data.build.status == "success";
 
                     if (remoteVersion > localVersion && buildSuccess) {
                         Logger.Warn("Core", $"Newer version of DataTool is available! Local version: {localVersion} Latest: {remoteVersion}\nDownload latest build at {LastestBuildDownloadUrl}");
+                    }
+                    else if (remoteVersion == localVersion && buildSuccess) {
+                        Logger.Warn("Core", "You have the latest version of DataTool. If the game was recently updated, then DataTool developers need time to add support for the latest version of the game.");
                     }
                 }
             } catch (Exception ex) {
