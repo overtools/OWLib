@@ -145,7 +145,11 @@ namespace DataTool {
             if (!targetToolAttributes.UtilNoArchiveNeeded) {
                 try {
                     InitStorage(Flags.Online);
-                } catch {
+                } catch (Exception ex) when (ex.InnerException is UnsupportedBuildVersionException) {
+                    Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC", "This version of DataTool does not support this version of Overwatch. Download a newer version of the tools.");
+                    throw;
+                }
+                catch {
                     Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC",
                                     "=================\nError initializing CASC!\n" +
                                     "Please Scan & Repair your game, launch it for a minute, and try the tools again before reporting a bug!\n" +
@@ -233,6 +237,7 @@ namespace DataTool {
 
             Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
 
+            ManifestCryptoHandler.AttemptFallbackManifests = Flags.TryManifestFallback;
             var args = new ClientCreateArgs {
                 SpeechLanguage = Flags.SpeechLanguage,
                 TextLanguage = Flags.Language,
@@ -401,14 +406,12 @@ namespace DataTool {
                     Log("Flags for {0}-*", toolType.Key);
                     typeof(FlagParser).GetMethod(nameof(FlagParser.FullHelp))
                         ?.MakeGenericMethod(flags)
-                        .Invoke(null, new object[] {null, true});
+                        .Invoke(null, new object[] { null, true });
                 } else {
                     //
                 }
             }
-            var symSpell = new SymSpell(50, 6);
-            FillToolSpellDict(symSpell);
-            SpellCheckString(Flags.Mode.ToLower(), symSpell);
+            ToolNameSpellCheck();
         }
 
         private static void CheckForUpdate() {
@@ -438,6 +441,16 @@ namespace DataTool {
                 var yT = (y ?? throw new ArgumentNullException(nameof(y))).GetCustomAttribute<ToolAttribute>();
                 return string.Compare(xT.Keyword, yT.Keyword, StringComparison.InvariantCultureIgnoreCase);
             }
+        }
+
+        private static void ToolNameSpellCheck() {
+            //this will happen if mode is not found
+            if (string.IsNullOrWhiteSpace(Flags?.Mode?.ToLower())) {
+                return;
+            }
+            var symSpell = new SymSpell(50, 6);
+            FillToolSpellDict(symSpell);
+            SpellCheckString(Flags.Mode.ToLower(), symSpell);
         }
     }
 }

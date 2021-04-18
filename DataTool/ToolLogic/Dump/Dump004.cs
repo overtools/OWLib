@@ -10,7 +10,7 @@ using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.Dump {
     [Tool("dump-textures", Description = "Saves all textures", CustomFlags = typeof(ExtractFlags))]
-    public class Dump004 : JSONTool, ITool {
+    public class DumpTextures : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             string basePath;
             if (toolFlags is ExtractFlags flags) {

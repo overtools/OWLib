@@ -1,8 +1,9 @@
 ﻿using System;
 using DataTool.Flag;
+using JetBrains.Annotations;
 
 namespace DataTool {
-    [Serializable]
+    [Serializable, UsedImplicitly]
     public class ToolFlags : ICLIFlags {
         [CLIFlag(Flag = "directory", Positional = 0, NeedsValue = true, Required = true, Help = "Overwatch Directory")]
         public string OverwatchDirectory;
@@ -89,7 +90,7 @@ namespace DataTool {
         [CLIFlag(Default = false, Flag = "no-names", Help = "Don't use names for textures", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool NoNames;
 
-        [CLIFlag(Default = false, Flag = "canonical-names", Help = "Only use canonical names", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        [CLIFlag(Default = false, Flag = "canonical-names", Help = "Only use canonical names", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool OnlyCanonical;
 
         [CLIFlag(Default = false, Flag = "no-guid-names", Help = "Completely disables using GUIDNames", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
@@ -103,6 +104,9 @@ namespace DataTool {
 
         [CLIFlag(Default = false, Flag = "disable-language-registry", Help = "Disable fetching language from registry", Hidden = false, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool NoLanguageRegistry;
+
+        [CLIFlag(Default = false, Flag = "allow-manifest-fallback", Help = "Allows falling back to older versions if manfiest doesn't exist", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool TryManifestFallback;
 
         public override bool Validate() => true;
     }
