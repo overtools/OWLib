@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using DataTool.Flag;
 using static DataTool.Program;
@@ -56,11 +56,13 @@ namespace DataTool.ToolLogic.Extract.Debug {
         public void WriteType(ushort type, string path, bool convertToXML) {
             string thisPath = Path.Combine(path, type.ToString("X3"));
             foreach (ulong @ulong in TrackedFiles[type]) {
+                if (!Directory.Exists(thisPath)) {
+                    Directory.CreateDirectory(thisPath);
+                }
                 if (convertToXML) {
                     using (var stu = STUHelper.OpenSTUSafe(@ulong))
-                    using (Stream f = File.Open(Path.Combine(thisPath, teResourceGUID.AsString(@ulong) + ".xml"), FileMode.Create))
+                    using (Stream f = File.Open(Path.Combine(thisPath, teResourceGUID.AsString(@ulong)) + ".xml", FileMode.Create))
                     using (TextWriter w = new StreamWriter(f)) {
-
                         DragonMLSettings settings = new DragonMLSettings();
                         settings.TypeSerializers = serializers;
                         settings.Namespaces["tank"] = "https://yretenai.com/dragonml/v1";
