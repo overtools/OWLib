@@ -511,10 +511,16 @@ namespace DataTool.SaveLogic {
             }
         }*/
 
-        public static void SaveOWMaterialFile(string path, FindLogic.Combo.MaterialAsset materialInfo, FindLogic.Combo.ComboInfo info) {
-            Model.OverwatchMaterial material = new Model.OverwatchMaterial(info, materialInfo);
+        public static void SaveOWMaterialFile(string path, FindLogic.Combo.MaterialAsset materialInfo, FindLogic.Combo.ComboInfo info, ICLIFlags flags) {
+            string format = "dds";
+            if (flags is ExtractFlags extractFlags && !extractFlags.RawTextures && !extractFlags.Raw) {
+                format = extractFlags.ConvertTexturesType.ToLower();
+            }
+
+            string materialDir = Path.Combine(path, "Materials");
+            Model.OverwatchMaterial material = new Model.OverwatchMaterial(info, materialInfo, format, materialDir);
             string materialPath =
-                Path.Combine(path, "Materials", $"{materialInfo.GetNameIndex()}.{material.Extension}");
+                Path.Combine(materialDir, $"{materialInfo.GetNameIndex()}.{material.Extension}");
             CreateDirectoryFromFile(materialPath);
             using (Stream materialOutputStream = File.OpenWrite(materialPath)) {
                 materialOutputStream.SetLength(0);
@@ -540,13 +546,13 @@ namespace DataTool.SaveLogic {
 
             string textureDirectory = Path.Combine(path, "Textures");
 
-            SaveOWMaterialFile(path, materialInfo, info.m_info);
-
             if (materialDataInfo.m_textureMap != null) {
                 foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.m_textureMap) {
                     SaveTexture(flags, textureDirectory, info, texture.Key);
                 }
             }
+
+            SaveOWMaterialFile(path, materialInfo, info.m_info, flags);
 
             if (Program.Flags.ExtractShaders && materialInfo.m_shaders != null) {
                 SaveShader(path, materialInfo, info.m_info);

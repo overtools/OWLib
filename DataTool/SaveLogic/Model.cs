@@ -51,10 +51,14 @@ namespace DataTool.SaveLogic {
 
             protected FindLogic.Combo.ComboInfo Info;
             protected FindLogic.Combo.MaterialAsset MaterialInfo;
+            public string Format;
+            public string MaterialDir;
 
-            public OverwatchMaterial(FindLogic.Combo.ComboInfo info, FindLogic.Combo.MaterialAsset materialInfo) {
+            public OverwatchMaterial(FindLogic.Combo.ComboInfo info, FindLogic.Combo.MaterialAsset materialInfo, string textureFormat, string materialDir) {
                 Info = info;
                 MaterialInfo = materialInfo;
+                Format = textureFormat;
+                MaterialDir = materialDir;
             }
 
             public void Write(Stream stream) {
@@ -76,15 +80,10 @@ namespace DataTool.SaveLogic {
                     }
 
                     if (materialDataInfo.m_textureMap != null) {
-                        foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.m_textureMap) {
-                            FindLogic.Combo.TextureAsset textureInfo = Info.m_textures[texture.Key];
-                            if (stream is FileStream fs) {
-                                writer.Write(Combo.GetScratchRelative(textureInfo.m_GUID, Path.GetDirectoryName(fs.Name), $@"..\Textures\{textureInfo.GetNameIndex()}.dds"));
-                            } else {
-                                writer.Write($@"..\Textures\{textureInfo.GetNameIndex()}.dds");
-                            }
-
-                            writer.Write(texture.Value);
+                        foreach (var (guid, hash) in materialDataInfo.m_textureMap) {
+                            FindLogic.Combo.TextureAsset textureInfo = Info.m_textures[guid];
+                            writer.Write(Combo.GetScratchRelative(textureInfo.m_GUID, MaterialDir, $@"..\Textures\{textureInfo.GetNameIndex()}.{Format}"));
+                            writer.Write(hash);
                         }
                     }
                 }
