@@ -119,6 +119,7 @@ namespace DataTool.SaveLogic {
 
             var realPath = path;
             var soundSet = new HashSet<ulong>(voiceLineInstanceInfo.SoundFiles.Where(x => x != 0));
+            if (!soundSet.Any()) return;
             var soundFileName = fileNameOverride ?? teResourceGUID.AsString(soundSet.First()); // file name override or the guid of the sound
             string overrideName = fileNameOverride; // set this as a fallback if it isn't set below due to subtitles not being saved potentially
 
