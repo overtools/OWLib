@@ -23,11 +23,13 @@ namespace DataTool.SaveLogic {
                     writer.Write(OverwatchMaterial.VersionMinor);
                     if (ModelLookInfo.m_materialGUIDs == null) {
                         writer.Write(0L);
+                        writer.Write(0L);
                         writer.Write((uint) OverwatchMaterial.OWMatType.ModelLook);
                         return;
                     }
 
                     writer.Write(ModelLookInfo.m_materialGUIDs.LongCount());
+                    writer.Write(0L);
                     writer.Write((uint) OverwatchMaterial.OWMatType.ModelLook);
 
                     foreach (ulong modelLookMaterial in ModelLookInfo.m_materialGUIDs) {
@@ -42,7 +44,7 @@ namespace DataTool.SaveLogic {
             public string Extension => "owmat";
 
             public const ushort VersionMajor = 2;
-            public const ushort VersionMinor = 0;
+            public const ushort VersionMinor = 1;
 
             public enum OWMatType : uint {
                 Material = 0,
@@ -71,6 +73,11 @@ namespace DataTool.SaveLogic {
                     } else {
                         writer.Write(0L);
                     }
+                    if (materialDataInfo.m_staticInputMap != null) {
+                        writer.Write(materialDataInfo.m_staticInputMap.LongCount());
+                    } else {
+                        writer.Write(0L);
+                    }
 
                     writer.Write((uint) OWMatType.Material);
                     writer.Write(teResourceGUID.Index(MaterialInfo.m_shaderSourceGUID));
@@ -84,6 +91,14 @@ namespace DataTool.SaveLogic {
                             FindLogic.Combo.TextureAsset textureInfo = Info.m_textures[guid];
                             writer.Write(Combo.GetScratchRelative(textureInfo.m_GUID, MaterialDir, $@"..\Textures\{textureInfo.GetNameIndex()}.{Format}"));
                             writer.Write(hash);
+                        }
+                    }
+
+                    if (materialDataInfo.m_staticInputMap != null) {
+                        foreach (var (hash, data) in materialDataInfo.m_staticInputMap) {
+                            writer.Write(hash);
+                            writer.Write(data.Length);
+                            stream.Write(data);
                         }
                     }
                 }

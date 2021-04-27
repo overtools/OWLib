@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DataTool.Helper;
+using Newtonsoft.Json;
 using TankLib;
 using TankLib.Chunks;
 using TankLib.STU;
@@ -247,6 +248,7 @@ namespace DataTool.FindLogic {
 
         public class MaterialDataAsset : ComboAsset {
             public Dictionary<ulong, uint> m_textureMap;
+            public Dictionary<uint, byte[]> m_staticInputMap;
 
             public MaterialDataAsset(ulong guid) : base(guid) { }
         }
@@ -1112,11 +1114,19 @@ namespace DataTool.FindLogic {
                     info.m_materialData[guid] = materialDataInfo;
 
                     teMaterialData materialData = new teMaterialData(OpenFile(guid));
+
                     if (materialData.Textures != null) {
                         materialDataInfo.m_textureMap = new Dictionary<ulong, uint>();
                         foreach (teMaterialData.Texture matDataTex in materialData.Textures) {
                             Find(info, matDataTex.TextureGUID, replacements, materialDataContext);
                             materialDataInfo.m_textureMap[matDataTex.TextureGUID] = matDataTex.NameHash;
+                        }
+                    }
+
+                    if (materialData.StaticInputs != null) {
+                        materialDataInfo.m_staticInputMap = new Dictionary<uint, byte[]>();
+                        foreach (teMaterialDataStaticInput staticinput in materialData.StaticInputs) {
+                            materialDataInfo.m_staticInputMap[staticinput.Header.Hash] = staticinput.Data;
                         }
                     }
 
