@@ -56,12 +56,23 @@ namespace TankLib.Math {
             return !a.Equals(b);
         }
         
+        public bool Equals(teColorRGB other) {
+            return R.Equals(other.R) && G.Equals(other.G) && B.Equals(other.B);
+        }
+        
         public bool Equals(teColorRGBA other) {
             return R.Equals(other.R) && G.Equals(other.G) && B.Equals(other.B);
         }
 
         public override bool Equals(object obj) {
-            return obj is teColorRGBA colorObj && Equals(colorObj);
+            switch (obj) {
+                case teColorRGB rgb:
+                    return Equals(rgb);
+                case teColorRGBA rgba:
+                    return Equals(rgba);
+                default:
+                    return base.Equals(obj);
+            }
         }
 
         public override int GetHashCode() {
