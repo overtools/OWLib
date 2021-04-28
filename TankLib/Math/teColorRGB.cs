@@ -60,21 +60,10 @@ namespace TankLib.Math {
             return R.Equals(other.R) && G.Equals(other.G) && B.Equals(other.B);
         }
         
-        public bool Equals(teColorRGBA other) {
-            return R.Equals(other.R) && G.Equals(other.G) && B.Equals(other.B);
-        }
-
         public override bool Equals(object obj) {
-            switch (obj) {
-                case teColorRGB rgb:
-                    return Equals(rgb);
-                case teColorRGBA rgba:
-                    return Equals(rgba);
-                default:
-                    return base.Equals(obj);
-            }
+            return obj is teColorRGB colorObj && Equals(colorObj);
         }
-
+        
         public override int GetHashCode() {
             unchecked {
                 int hashCode = R.GetHashCode();
