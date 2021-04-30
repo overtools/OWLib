@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DataTool.DataModels;
+using TACTLib;
 
 namespace DataTool.SaveLogic {
     public static class Map {

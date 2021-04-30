@@ -66,7 +66,7 @@ namespace DataTool.SaveLogic {
             }
 
             public void AddTask(Action action) {
-                if (Program.Flags?.DisableAsyncSave == true) {
+                if (Program.Flags?.EnableAsyncSave == false) {
                     action();
                 } else {
                     m_pendingTasks.Add(Task.Run(() => {
@@ -80,7 +80,7 @@ namespace DataTool.SaveLogic {
             }
 
             public void AddTask(Func<Task> action) {
-                if (Program.Flags?.DisableAsyncSave == true) {
+                if (Program.Flags?.EnableAsyncSave == false) {
                     action().Wait();
                 } else {
                     m_pendingTasks.Add(Task.Run(async () => {
