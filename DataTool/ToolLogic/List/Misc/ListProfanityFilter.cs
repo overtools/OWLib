@@ -8,7 +8,7 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List.Misc {
-    [Tool("list-profanity-filters", Description = "What did you say you ******* *****", CustomFlags = typeof(ListFlags), IsSensitive = true)]
+    [Tool("list-profanity-filters", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListProfanityFilters : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();

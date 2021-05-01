@@ -1,6 +1,6 @@
 ﻿using DataTool.Flag;
 
-namespace DataTool.ToolLogic.Extract.Debug.Unused {
+namespace DataTool.ToolLogic.Extract.Debug {
     [Tool("extract-debug-materialdata", Description = "Extract material data hashes (debug)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractDebugMaterialData : ITool {
         public void Parse(ICLIFlags toolFlags) {
@@ -21,7 +21,7 @@ namespace DataTool.ToolLogic.Extract.Debug.Unused {
 
             foreach (ulong guid in Program.TrackedFiles[0xB3]) {
                 teMaterialData instance = new teMaterialData(IO.OpenFile(guid));
-
+                
                 if (instance.BufferParts == null) continue;
                 foreach (teMaterialDataBufferPart bufferPart in instance.BufferParts) {
                     if (missing.Contains(bufferPart.Header.Hash)) {
@@ -79,7 +79,7 @@ namespace DataTool.ToolLogic.Extract.Debug.Unused {
                     buffers.Add(bufferHeader.Hash);
                     //if (bufferHeader.Hash == 0xC367945EB4F78189) {
                     //    if (bufferHeader.PartCount > 0) {
-                    //
+                    //        
                     //    }
                     //}
                 }
@@ -87,7 +87,7 @@ namespace DataTool.ToolLogic.Extract.Debug.Unused {
 
             /*foreach (ulong guid in Program.TrackedFiles[0xB3]) {
                 teMaterialData instance = new teMaterialData(IO.OpenFile(guid));
-
+                
                 //if (instance.Textures != null) {
                 //    foreach (teMaterialDataTexture texture in instance.Textures) {
                 //        if (missing.Contains(texture.NameHash)) {

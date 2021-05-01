@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
-using DragonLib.Indent;
 using DragonLib.XML;
 using TankLib;
 using TankLib.Helpers;
@@ -12,42 +10,11 @@ using TankLib.STU;
 using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool.ToolLogic.Render {
-    public class teResourceGUIDSerializer : IDragonMLSerializer {
-        public DragonMLType OverrideTarget => DragonMLType.Object;
-
-        private readonly Dictionary<Type, string> TargetMap = new Dictionary<Type, string>();
-
-        public object Print(object instance, Dictionary<object, int> visited, IndentHelperBase indents, string fieldName, DragonMLSettings settings) {
-            var hmlNameTag = fieldName == null ? "" : $" hml:name=\"{fieldName}\"";
-
-            try {
-                // ReSharper disable once InvertIf
-                if (!TargetMap.TryGetValue(instance.GetType(), out var target)) {
-                    target = instance.GetType().GenericTypeArguments.First().Name;
-                    TargetMap[instance.GetType()] = target;
-                }
-
-                var hmlIdTag = string.Empty;
-                if (!visited.ContainsKey(instance)) {
-                    visited[instance] = visited.Count;
-                }
-
-                if (settings.UseRefId) {
-                    hmlIdTag = $" hml:id=\"{visited[instance]}\"";
-                }
-
-                return $"{indents}<tank:ref{hmlIdTag}{hmlNameTag} GUID=\"{instance}\" Target=\"{target}\"/>\n";
-            } catch {
-                return null;
-            }
-        }
-    }
-
-    [Tool("render-ui-elements", Description = "Render UI elements", CustomFlags = typeof(RenderFlags), IsSensitive = true)]
-    public class RenderUIElements : ITool {
+    [Tool("render-statescript", Description = "Dump statescript to HML", CustomFlags = typeof(RenderFlags), IsSensitive = true)]
+    public class RenderStateScript : ITool {
         public void Parse(ICLIFlags toolFlags) {
             var flags = (RenderFlags) toolFlags;
-            var output = Path.Combine(flags.OutputPath, "UI", "Render");
+            var output = Path.Combine(flags.OutputPath, "Statescript", "HML");
             if (!Directory.Exists(output)) {
                 Directory.CreateDirectory(output);
             }
@@ -56,7 +23,7 @@ namespace DataTool.ToolLogic.Render {
                 {typeof(teStructuredDataAssetRef<>), new teResourceGUIDSerializer()}
             };
 
-            foreach (var type in new ushort[] {0x5E, 0x5A, 0x45}) {
+            foreach (var type in new ushort[] {0x3B, 0x5C, 0x1B, 0xC6, 0xC0, 0x3}) {
                 if (!Directory.Exists(Path.Combine(output, type.ToString("X3")))) {
                     Directory.CreateDirectory(Path.Combine(output, type.ToString("X3")));
                 }

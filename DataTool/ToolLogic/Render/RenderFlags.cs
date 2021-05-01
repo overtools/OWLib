@@ -1,9 +1,8 @@
 using System;
 using DataTool.Flag;
-using JetBrains.Annotations;
 
 namespace DataTool.ToolLogic.Render {
-    [Serializable, UsedImplicitly]
+    [Serializable]
     public class RenderFlags : ICLIFlags {
         [CLIFlag(Flag = "out-path", NeedsValue = true, Help = "Output path", Positional = 2, Required = true)]
         public string OutputPath;

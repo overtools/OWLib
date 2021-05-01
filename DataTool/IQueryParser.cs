@@ -114,7 +114,6 @@ namespace DataTool {
     }
 
     public class QueryParser {
-        protected SymSpell symSpell = new SymSpell(128, 4);
         protected virtual void QueryHelp(List<QueryType> types) {
             IndentHelper indent = new IndentHelper();
 

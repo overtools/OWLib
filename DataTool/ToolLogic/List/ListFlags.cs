@@ -1,9 +1,8 @@
 ﻿using System;
 using DataTool.Flag;
-using JetBrains.Annotations;
 
 namespace DataTool.ToolLogic.List {
-    [Serializable, UsedImplicitly]
+    [Serializable]
     public class ListFlags : ICLIFlags {
         [CLIFlag(Default = false, Flag = "json", Help = "Output JSON to stderr", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool JSON;

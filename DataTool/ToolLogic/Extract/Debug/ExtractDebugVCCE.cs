@@ -26,7 +26,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             }
 
             const string container = "DebugVCCE";
-
+            
             foreach (ulong key in TrackedFiles[0x8F]) {
                 // if (GUID.Index(key) != 0xDEADBEEF) continue;
 

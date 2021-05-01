@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using DataTool.Flag;
 using DataTool.JSON;
-using DataTool.ToolLogic.List;
 using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
 using TACTLib.Core.Product.Tank;
@@ -11,12 +10,12 @@ using TankLib.Helpers;
 using static DataTool.Program;
 
 namespace DataTool.ToolLogic.Dump {
-    [Tool("dump-all-locale-strings", Description = "Dump strings for all languages", CustomFlags = typeof(ListFlags), IsSensitive = true, UtilNoArchiveNeeded = true)]
+    [Tool("dump-all-locale-strings", Description = "Dump strings for all languages", CustomFlags = typeof(DumpFlags), IsSensitive = true, UtilNoArchiveNeeded = true)]
     public class DumpStringsLocale : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();
 
-            if (toolFlags is ListFlags flags) {
+            if (toolFlags is DumpFlags flags) {
                 OutputJSON(data, flags);
             }
         }

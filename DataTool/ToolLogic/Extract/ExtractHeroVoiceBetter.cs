@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
@@ -71,7 +70,6 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             info = new Combo.ComboInfo();
-            var saveContext = new SaveLogic.Combo.SaveContext(info);
             Combo.Find(info, voiceSetGuid.Value, replacements);
 
             // if we're processing a skin, baseCombo is the combo from the hero, this remove duplicate check removes any sounds that belong to the base hero
@@ -86,22 +84,19 @@ namespace DataTool.ToolLogic.Extract {
 
                 foreach (var voicelineInstanceInfo in voiceSet.Value.VoiceLineInstances) {
                     foreach (var voiceLineInstance in voicelineInstanceInfo.Value) {
-                        if (!voiceLineInstance.SoundFiles.Any()) {
-                            continue;
-                        }
-
-                        // is it even possible for a voice line instance to include multiple??
-                        if (voiceLineInstance.SoundFiles.Count > 1) {
-                            TACTLib.Logger.Warn("Tool", "VoiceLineInstance contains more than 1 sound file??");
-                            continue;
-                        }
-
                         var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
                         if (stimulus == null) continue;
 
                         var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E);
                         if (groupName == null)
                             groupName = $"Unknown\\{teResourceGUID.Index(voiceLineInstance.VoiceStimulus):X}.{teResourceGUID.Type(voiceLineInstance.VoiceStimulus):X3}";
+
+                        var soundFilesCombo = new Combo.ComboInfo();
+                        var soundFilesContext = new SaveLogic.Combo.SaveContext(soundFilesCombo);
+
+                        foreach (var soundFile in voiceLineInstance.SoundFiles) {
+                            Combo.Find(soundFilesCombo, soundFile);
+                        }
 
                         var path = flags.VoiceGroupByHero && flags.VoiceGroupByType
                                        ? Path.Combine(basePath, heroName, groupName)
@@ -111,24 +106,22 @@ namespace DataTool.ToolLogic.Extract {
                             path = Path.Combine(basePath, heroName);
                         }
 
-                        var soundFile = voiceLineInstance.SoundFiles.First();
-                        var soundFileGuid = teResourceGUID.AsString(soundFile);
-                        string filename = null;
+                        foreach (var soundInfo in soundFilesCombo.m_voiceSoundFiles.Values) {
+                            var filename = soundInfo.GetName();
+                            if (!flags.VoiceGroupByHero && !ignoreGroups) {
+                                filename = $"{heroName}-{soundInfo.GetName()}";
+                            }
 
-                        if (!flags.VoiceGroupByHero && !ignoreGroups) {
-                            filename = $"{heroName}-{soundFileGuid}";
+                            if (SoundIdCache.Contains(soundInfo.m_GUID)) {
+                                TACTLib.Logger.Debug("Tool", "Duplicate sound detected, ignoring.");
+                                continue;
+                            }
+
+                            SoundIdCache.Add(soundInfo.m_GUID);
+                            SaveLogic.Combo.SaveSoundFile(flags, path, soundFilesContext, soundInfo.m_GUID, true, filename);
                         }
 
-                        if (SoundIdCache.Contains(soundFile)) {
-                            TACTLib.Logger.Debug("Tool", "Duplicate sound detected, ignoring.");
-                            continue;
-                        }
-
-                        SoundIdCache.Add(soundFile);
-                        //SaveLogic.Combo.SaveSoundFile(flags, path, saveContext, soundFile, true, filename);
-                        SaveLogic.Combo.SaveVoiceStimulus(flags, path, saveContext, voiceLineInstance, filename);
-
-                        saveContext.Wait();
+                        soundFilesContext.Wait();
                     }
                 }
             }
