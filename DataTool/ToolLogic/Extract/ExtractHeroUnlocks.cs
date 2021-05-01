@@ -19,6 +19,7 @@ using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
 using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
+using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool.ToolLogic.Extract {
     // syntax:
@@ -180,6 +181,9 @@ namespace DataTool.ToolLogic.Extract {
 
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
+
+            FillHeroSpellDict(symSpell);
+            SpellCheckQuery(parsedTypes,symSpell);
 
             foreach (KeyValuePair<ulong, STUHero> heroPair in heroes) {
                 var hero = heroPair.Value;

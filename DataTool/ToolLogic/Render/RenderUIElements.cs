@@ -19,7 +19,6 @@ namespace DataTool.ToolLogic.Render {
 
         public object Print(object instance, Dictionary<object, int> visited, IndentHelperBase indents, string fieldName, DragonMLSettings settings) {
             var hmlNameTag = fieldName == null ? "" : $" hml:name=\"{fieldName}\"";
-
             try {
                 // ReSharper disable once InvertIf
                 if (!TargetMap.TryGetValue(instance.GetType(), out var target)) {
