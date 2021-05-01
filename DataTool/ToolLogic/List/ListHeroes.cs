@@ -54,6 +54,15 @@ namespace DataTool.ToolLogic.List {
                                 foreach (var weapon in GetInstance<STUWeaponComponent>(hero.Value.STU.m_gameplayEntity.GUID).m_weapons) {
                                     if (weapon.m_script != null) {
                                         List<STUConfigVarExpression> weap_vars = new List<STUConfigVarExpression>(GetInstances<STUConfigVarExpression>(weapon.m_script.GUID));
+                                        if (false) { //debug stuff, will be removed later
+                                            foreach (var z in weap_vars) {
+                                                if (z.m_expression.m_D99EF254 != null) {
+                                                    Log(String.Join(" ", z.m_expression.m_D99EF254));
+                                                    Log(String.Join(" ", z.m_expression.m_opcodes));
+                                                    Log("\n");
+                                                }
+                                            }
+                                        }
 
                                         //melee stats (TODO)
                                         var spec_containters = GetInstances<STUStatescriptActionPlayScript>(weapon.m_script.GUID);
