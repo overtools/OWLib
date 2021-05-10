@@ -13,7 +13,7 @@ namespace DataTool.ToolLogic.Extract {
     [Tool("extract-npc-voice", Description = "Extracts NPC voicelines.", CustomFlags = typeof(ExtractFlags))]
     class ExtractNPCVoice : JSONTool, ITool {
         private const string Container = "NPCVoice";
-        private static readonly List<string> WhitelistedNPCs = new List<string> {"OR14-NS", "B73-NS"};
+        private static readonly List<string> WhitelistedNPCs = new List<string> {"OR14-NS", "B73-NS", "Reyes"};
 
         public void Parse(ICLIFlags toolFlags) {
             string basePath;
