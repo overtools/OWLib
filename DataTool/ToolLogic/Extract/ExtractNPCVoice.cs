@@ -27,13 +27,17 @@ namespace DataTool.ToolLogic.Extract {
                 var voiceSet = GetInstance<STUVoiceSet>(guid);
                 if (voiceSet == null) continue;
 
-                var npcName = GetValidFilename(GetString(voiceSet.m_269FC4E9));
-                if (npcName == null) continue;
+                var npcName = $"{GetString(voiceSet.m_269FC4E9)} {GetString(voiceSet.m_C0835C08)}".Trim();
+                if (string.IsNullOrEmpty(npcName)) {
+                    continue;
+                }
+
+                var npcFileName = GetValidFilename(npcName);
 
                 Logger.Log($"Processing NPC {npcName}");
                 var info = new Combo.ComboInfo();
                 var ignoreGroups = !WhitelistedNPCs.Contains(npcName);
-                ExtractHeroVoiceBetter.SaveVoiceSet(flags, basePath, npcName, guid, ref info, ignoreGroups: ignoreGroups);
+                ExtractHeroVoiceBetter.SaveVoiceSet(flags, basePath, npcFileName, guid, ref info, ignoreGroups: ignoreGroups);
             }
         }
     }
