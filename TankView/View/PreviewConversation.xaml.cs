@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Controls;
 using DataTool.DataModels.Voice;
 using TankLib;
 using TankView.Helper;
@@ -17,14 +16,14 @@ namespace TankView.View {
         public TankViewConversationLine[] VoiceLines { get; set; }
         public PreviewDataSound SoundPreviewControl { get; set; } = new PreviewDataSound();
 
-        public PreviewConversation(GUIDEntry guidEntry, Conversation conversation, Lazy<Dictionary<ulong, ulong[]>> conversationVoiceLineMapping) {
+        public PreviewConversation(GUIDEntry guidEntry, Conversation conversation, Dictionary<ulong, ulong[]> conversationVoiceLineMapping) {
             GUIDEntry = guidEntry;
 
             VoiceLines = conversation.Voicelines
-                                         .Select(voiceline => new TankViewConversationLine(voiceline, conversationVoiceLineMapping.Value[voiceline.VoicelineGUID]))
+                                         .Select(voiceline => new TankViewConversationLine(voiceline, conversationVoiceLineMapping[voiceline.VoicelineGUID]))
                                          .OrderBy(x => x.Position)
                                          .ToArray();
-            
+
             InitializeComponent();
         }
 
@@ -41,12 +40,12 @@ namespace TankView.View {
                 if (value.Voicelines?.Length == 1) {
                     PlayAudio(value.Voicelines[0].GUID);
                 }
-                
+
                 NotifyPropertyChanged(nameof(SelectedItem));
             }
         }
-        
-        
+
+
         public Voiceline SelectedVoiceLineItem {
             get => _selectedVoiceline;
             set {
@@ -56,7 +55,7 @@ namespace TankView.View {
 
                 PlayAudio(value.GUID);
                 NotifyPropertyChanged(nameof(SelectedVoiceLineItem));
-                
+
             }
         }
 

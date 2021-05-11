@@ -18,8 +18,8 @@
         mc:Ignorable="d"
         Title="{Binding ModuloTitle}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Height="500"
-        Width="1000"
+        Height="800"
+        Width="1300"
         MinWidth="865"
         MinHeight="450"
         ContentRendered="FirstChance"
@@ -27,10 +27,9 @@
         >
     <Window.Resources>
         <om:SizeConverter x:Key="SizeConverter" />
-        <om:EnumConverter x:Key="EnumConverter" />
         <BooleanToVisibilityConverter x:Key="BoolVisbilityConverter" />
         <om:InvertBoolConverter x:Key="InvertBoolConverter" />
-        <Style x:Key="mdTabControl" TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}"> 
+        <Style x:Key="mdTabControl" TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}">
             <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}"/>
             <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
             <Setter Property="BorderThickness" Value="0,0,0,0" />
@@ -43,17 +42,17 @@
             <DockPanel>
                 <TextBlock HorizontalAlignment="Center" Text="{Binding}"/>
                 <Path x:Name="arrow"
-                      StrokeThickness = "1"                                     
+                      StrokeThickness = "1"
                       Fill            = "gray"
                       Data            = "M 5,10 L 15,10 L 10,5 L 5,10"/>
             </DockPanel>
         </DataTemplate>
-        
+
         <DataTemplate x:Key="HeaderTemplateArrowDown">
             <DockPanel>
                 <TextBlock HorizontalAlignment="Center" Text="{Binding}"/>
                 <Path x:Name="arrow"
-                      StrokeThickness = "1"                                     
+                      StrokeThickness = "1"
                       Fill            = "gray"
                       Data            = "M 5,5 L 10,10 L 15,5 L 5,5"/>
             </DockPanel>
@@ -127,7 +126,7 @@
                     <MenuItem Header="Convert Images" DataContext="{Binding ExtractionSettings}"
                               IsChecked="{Binding EnableConvertImages, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                               IsCheckable="True" />
-                    
+
                     <MenuItem Header="Image Format" ItemsSource="{Binding ImageExtractionFormats}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
@@ -152,16 +151,33 @@
             </MenuItem>
             <MenuItem Header="Extract" Click="ExtractFiles"
                       IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
-            
+
             <MenuItem IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                 <MenuItem.Header>
                     <Grid>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type TextBox}" x:Key="TextBoxWithColoredCaretStyle" BasedOn="{StaticResource {x:Type TextBox}}">
+                                <Setter Property="CaretBrush">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="White"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="#383838"></SolidColorBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Grid.Resources>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Width="300" TextChanged="GUIDSearch"
-                                 IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"></TextBox>
+                        <TextBox
+                            Width="300"
+                            Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                            IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                            Style="{StaticResource TextBoxWithColoredCaretStyle}" />
                     </Grid>
                 </MenuItem.Header>
             </MenuItem>
@@ -211,13 +227,16 @@
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn Header="GUID" DisplayMemberBinding="{Binding Filename}" Width="135" />
-                                        <GridViewColumn Header="Flags"
-                                                        DisplayMemberBinding="{Binding Flags, Converter={StaticResource EnumConverter}}" />
-                                        <GridViewColumn Header="Locale"
-                                                        DisplayMemberBinding="{Binding Locale, Converter={StaticResource EnumConverter}}" />
                                         <GridViewColumn Header="Size"
                                                         DisplayMemberBinding="{Binding Size, Converter={StaticResource SizeConverter}}"
                                                         Width="130" />
+                                        <GridViewColumn Header="Value" Width="600">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate >
+                                                    <TextBlock TextWrapping="Wrap" Text="{Binding StringValue}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
                                     </GridView>
                                 </ListView.View>
                             </ListView>

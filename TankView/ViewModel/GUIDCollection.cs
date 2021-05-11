@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using DataTool.Helper;
 using DirectXTexNet;
 using TankLib;
 using TankView.Helper;
@@ -131,7 +132,7 @@ namespace TankView.ViewModel {
                 NotifyPropertyChanged(nameof(PreviewRowMin));
             }
         }
-        
+
         public bool EnableAutoPlay {
             get => Settings.Default.AutoPlay;
             set {
@@ -210,13 +211,26 @@ namespace TankView.ViewModel {
 
         public List<GUIDEntry> SelectedEntries {
             get {
-                var selectedWithSearch = !string.IsNullOrWhiteSpace(searchQuery) ? _selected.Where(x => CultureInfo.CurrentUICulture.CompareInfo.IndexOf(x.Filename, searchQuery, CompareOptions.IgnoreCase | CompareOptions.IgnoreSymbols | CompareOptions.IgnoreWidth) > -1).ToList() : _selected;
+                var selectedWithSearch = _selected;
+                if (!string.IsNullOrEmpty(searchQuery)) {
+                    var newResults = new List<GUIDEntry>();
+                    foreach (var x in _selected) {
+                        if (CultureInfo.CurrentUICulture.CompareInfo.IndexOf(x.Filename, searchQuery, CompareOptions.IgnoreCase | CompareOptions.IgnoreSymbols | CompareOptions.IgnoreWidth) > -1 ||
+                            CultureInfo.CurrentUICulture.CompareInfo.IndexOf(x.StringValue ?? string.Empty, searchQuery, CompareOptions.IgnoreCase | CompareOptions.IgnoreSymbols | CompareOptions.IgnoreWidth) > -1) {
+                            newResults.Add(x);
+                        }
+                    }
+
+                    selectedWithSearch = newResults;
+                }
 
                 switch (_orderBy) {
                     case "Size":
                         return selectedWithSearch.OrderByWithDirection(x => x.Size, _orderDescending).ToList();
                     case "FileName":
                         return selectedWithSearch.OrderByWithDirection(x => x.GUID, _orderDescending).ToList();
+                    case "Value":
+                        return selectedWithSearch.OrderByWithDirection(x => x.StringValue, _orderDescending).ToList();
                     case "#":
                     default:
                         return selectedWithSearch;
@@ -254,7 +268,7 @@ namespace TankView.ViewModel {
                 worker?.ReportProgress((int) (((float) c / (float) total) * 100));
                 AddEntry(entry.FileName, 0, entry.MD5, 0, "None");
             }
-            
+
             foreach (var asset in Tank.m_assets) {
                 var type = teResourceGUID.Type(asset.Key);
                 if (!TrackedFiles.TryGetValue(type, out var typeMap)) {
@@ -264,6 +278,14 @@ namespace TankView.ViewModel {
 
                 typeMap.Add(asset.Key);
             }
+
+            worker?.ReportProgress(0, "Generating Conversation mappings...");
+            ConversationVoiceLineMapping = DataHelper.GenerateVoicelineConversationMapping(TrackedFiles, worker);
+
+            worker?.ReportProgress(0, "Generating Voiceline mappings...");
+            VoicelineSubtitleMapping = DataHelper.GenerateVoicelineSubtitleMapping(TrackedFiles, worker);
+
+            worker?.ReportProgress(0, "Building file tree...");
 
             if (totalHashList != default) {
                 foreach (ContentManifestFile contentManifest in new [] {Tank.m_rootContentManifest, Tank.m_textContentManifest, Tank.m_speechContentManifest}) {
@@ -347,7 +369,8 @@ namespace TankView.ViewModel {
                 FullPath = Path.Combine(d.FullPath, filename),
                 Size = size,
                 Locale = locale,
-                ContentKey = ckey
+                ContentKey = ckey,
+                StringValue = GetValue(guid)
             });
         }
 
@@ -367,7 +390,24 @@ namespace TankView.ViewModel {
             }
         }
 
-        public Lazy<Dictionary<ulong, ulong[]>> ConversationVoiceLineMapping = 
-            new Lazy<Dictionary<ulong, ulong[]>>(() => DataHelper.GenerateVoicelineConversationMapping(TrackedFiles));
+        public string GetValue(ulong guid) {
+            var dataType = DataHelper.GetDataType(guid);
+            if (dataType == DataHelper.DataType.String) {
+                return IO.GetString(guid);
+            }
+
+            if (teResourceGUID.Type(guid) == 0xB2) {
+                if (VoicelineSubtitleMapping.TryGetValue(guid, out var subtitle)) {
+                    return subtitle;
+                }
+
+                return null;
+            }
+
+            return null;
+        }
+
+        public readonly Dictionary<ulong, ulong[]> ConversationVoiceLineMapping;
+        public static Dictionary<ulong, string> VoicelineSubtitleMapping;
     }
 }

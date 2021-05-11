@@ -10,6 +10,7 @@ namespace TankView.ViewModel {
         public string Locale { get; set; }
         public CKey ContentKey { get; set; }
         public ContentFlags Flags { get; set; }
+        public string StringValue { get; set; }
 
         public override string ToString() {
             return teResourceGUID.AsString(GUID);
@@ -18,7 +19,7 @@ namespace TankView.ViewModel {
         public static implicit operator ulong(GUIDEntry guid) {
             return guid.GUID;
         }
-        
+
         public static implicit operator GUIDEntry(teResourceGUID guid) {
             return new GUIDEntry {
                 GUID = guid

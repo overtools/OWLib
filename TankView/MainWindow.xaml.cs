@@ -43,12 +43,10 @@ namespace TankView {
         public ExtractionSettings ExtractionSettings { get; set; }
         public ImageExtractionFormats ImageExtractionFormats { get; set; }
 
-        public string SearchText { get; set; } = string.Empty;
-
         public static ClientCreateArgs ClientArgs = new ClientCreateArgs();
 
         private bool ready = true;
- 
+
         public bool IsReady {
             get => ready;
             set {
@@ -60,6 +58,13 @@ namespace TankView {
                 NotifyPropertyChanged(nameof(IsReady));
                 NotifyPropertyChanged(nameof(IsDataReady));
                 NotifyPropertyChanged(nameof(IsDataToolSafe));
+            }
+        }
+
+        public string SearchQuery {
+            set {
+                if (GUIDTree == null) return;
+                GUIDTree.Search = value;
             }
         }
 
@@ -94,58 +99,52 @@ namespace TankView {
             if (!NGDPPatchHosts.Any(x => x.Active)) {
                 NGDPPatchHosts[0].Active = true;
             }
-            
+
             if (!ImageExtractionFormats.Any(x => x.Active)) {
                 ImageExtractionFormats[0].Active = true;
             }
 
             InitializeComponent();
-            
+
             DataContext = this;
 
             // FolderView.ItemsSource = ;
             // FolderItemList.ItemsSource = ;
         }
-        
-        GridViewColumnHeader _lastHeaderClicked = null;
-        private ListSortDirection _lastDirection = ListSortDirection.Descending; 
 
-        void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e) {  
+        GridViewColumnHeader _lastHeaderClicked = null;
+        private ListSortDirection _lastDirection = ListSortDirection.Descending;
+
+        void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e) {
             var headerClicked = e.OriginalSource as GridViewColumnHeader;
-    
+
             if (headerClicked == null) return;
             if (headerClicked.Role == GridViewColumnHeaderRole.Padding) return;
-            
+
             ListSortDirection direction;
-            if (headerClicked != _lastHeaderClicked)  {  
-                direction = ListSortDirection.Descending;  
+            if (headerClicked != _lastHeaderClicked)  {
+                direction = ListSortDirection.Descending;
             } else {
                 direction = _lastDirection == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
-            }  
-      
+            }
+
             var columnBinding = headerClicked.Column.DisplayMemberBinding as Binding;
             var sortBy = columnBinding?.Path.Path ?? headerClicked.Column.Header as string;
-    
-            GUIDTree.OrderBy(sortBy, direction);
-      
-            if (direction == ListSortDirection.Ascending) {  
-                headerClicked.Column.HeaderTemplate = Resources["HeaderTemplateArrowUp"] as DataTemplate;  
-            } else {  
-                headerClicked.Column.HeaderTemplate = Resources["HeaderTemplateArrowDown"] as DataTemplate;  
-            }  
-    
-            if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked) {  
-                _lastHeaderClicked.Column.HeaderTemplate = null;  
-            }  
-      
-            _lastHeaderClicked = headerClicked;  
-            _lastDirection = direction;
-        }
 
-        private void GUIDSearch(object sender, TextChangedEventArgs e) {
-            if (GUIDTree == null || e.Handled) return;
-            GUIDTree.Search = (e.Source as TextBox)?.Text;
-            e.Handled = true;
+            GUIDTree.OrderBy(sortBy, direction);
+
+            if (direction == ListSortDirection.Ascending) {
+                headerClicked.Column.HeaderTemplate = Resources["HeaderTemplateArrowUp"] as DataTemplate;
+            } else {
+                headerClicked.Column.HeaderTemplate = Resources["HeaderTemplateArrowDown"] as DataTemplate;
+            }
+
+            if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked) {
+                _lastHeaderClicked.Column.HeaderTemplate = null;
+            }
+
+            _lastHeaderClicked = headerClicked;
+            _lastDirection = direction;
         }
 
         private void UpdateProgress(object sender, ProgressChangedEventArgs @event) {
@@ -173,7 +172,7 @@ namespace TankView {
 
             CollectionViewSource.GetDefaultView(NGDPPatchHosts).Refresh();
         }
-        
+
         private void ImageExtractionFormatChange(object sender, RoutedEventArgs e) {
             if (!(sender is MenuItem menuItem)) return;
             foreach (ImageFormat node in ImageExtractionFormats.Where(x => x.Active && x.GetHashCode() != ((ImageFormat) menuItem.DataContext).GetHashCode())) {
@@ -219,7 +218,7 @@ namespace TankView {
         private void OpenNGDP(string path) {
             throw new NotImplementedException(nameof(OpenNGDP));
             // todo: can be supported again
-            
+
 #pragma warning disable 162
             // ReSharper disable once HeuristicUnreachableCode
             PrepareTank(path);
@@ -293,7 +292,7 @@ namespace TankView {
             CollectionViewSource.GetDefaultView(RecentLocations).Refresh();
 
             _progressWorker.ReportProgress(0, $"Preparing to load {path}");
-            
+
             IsReady = false;
 
             DataTool.Program.Client = null;
@@ -362,7 +361,7 @@ namespace TankView {
                     Directory.CreateDirectory(directory);
                 }
             }
-            
+
             var imageExtractFlags = new ExtractFlags {
                 ConvertTexturesType = Settings.Default.ImageExtractionFormat
             };
@@ -379,7 +378,7 @@ namespace TankView {
                         var progress = (int) ((c / (float) t) * 100);
                         _progressWorker?.ReportProgress(progress, $"Saving files... {progress}% ({c}/{t})");
                     }
-                    
+
                     var dataType = DataHelper.GetDataType(teResourceGUID.Type(entry.GUID));
                     var fileType = Path.GetExtension(entry.FullPath)?.Substring(1);
                     var filePath = Path.ChangeExtension(entry.FullPath.Substring(1), null);
@@ -431,7 +430,7 @@ namespace TankView {
                 default:
                     return null;
             }
-        } 
+        }
 
         private void ExtractFolder(Folder folder, ref List<GUIDEntry> files) {
             files.AddRange(folder.Files);
@@ -459,17 +458,17 @@ namespace TankView {
         private bool HasShown = false;
         private void FirstChance(object sender, EventArgs e) {
             if (HasShown) return;
-            
+
             HasShown = true;
 
             if (Debugger.IsAttached) {
                 IsEnabled = true;
-                
+
                 // Use to auto load a dir at startup, useful or dev
                 // OpenCASC("");
                 return;
             }
-            
+
             new AboutPage(this).Show();
             Hide();
         }
@@ -483,6 +482,17 @@ namespace TankView {
 
             justPressed = true;
             Task.Delay(90).ContinueWith(t => justPressed = false);
+        }
+
+        private bool justTyped = false;
+        private void TextInput_OnKeyDown(object sender, KeyEventArgs e) {
+            if (justTyped) {
+                e.Handled = true;
+                return;
+            }
+
+            justPressed = true;
+            Task.Delay(90).ContinueWith(t => justTyped = false);
         }
     }
 }
