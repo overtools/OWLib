@@ -2,51 +2,26 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using DataTool.DataModels;
+using DataTool.DataModels.Hero;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
-using DataTool.SaveLogic.Unlock;
-using DataTool.ToolLogic.Util;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
-using static DataTool.Helper.Logger;
-using static DataTool.Helper.SpellCheckUtils;
+using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
 
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-convo", Description = "Extract hero voice conversations", CustomFlags = typeof(ExtractFlags))]
-    public class ExtractHeroConversations : QueryParser, ITool, IQueryParser {
-        public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
-
-        public List<QueryType> QueryTypes => new List<QueryType>();
+    public class ExtractHeroConversations : QueryParser, ITool {
 
         public Dictionary<string, string> QueryNameOverrides => ExtractHeroUnlocks.HeroMapping;
+        public List<QueryType> QueryTypes => new List<QueryType>();
 
         public void Parse(ICLIFlags toolFlags) {
-            ExtractHeroConvos(toolFlags);
-        }
-
-        protected override void QueryHelp(List<QueryType> types) {
-            IndentHelper indent = new IndentHelper();
-
-            Log("Please specify what you want to extract:");
-            Log($"{indent + 1}Command format: \"{{hero name}}|{{type}}=({{tag name}}={{tag}}),{{item name}}\"");
-            Log($"{indent + 1}Each query should be surrounded by \", and individual queries should be separated by spaces");
-
-            Log($"{indent + 1}All hero names are in your selected locale");
-
-            Log("\r\nExample commands: ");
-            Log($"{indent + 1}\"Lúcio\"");
-            Log($"{indent + 1}\"Torbjörn\"");
-            Log($"{indent + 1}\"Moira\"");
-            Log($"{indent + 1}\"Wrecking Ball\"");
-        }
-
-        private const string Container = "HeroConvo";
-
-        public void ExtractHeroConvos(ICLIFlags toolFlags) {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
@@ -54,116 +29,153 @@ namespace DataTool.ToolLogic.Extract {
                 throw new Exception("no output path");
             }
 
-            if (flags.Positionals.Length < 4) {
-                QueryHelp(QueryTypes);
-                return;
-            }
+            var path = Path.Combine(basePath, Container);
+            Logger.Log($"Generating voiceline mappings, this will take some time.");
+            GenerateVoicelineMapping();
+            ProcessConversations(flags, path);
 
-            string path = Path.Combine(basePath, Container);
+        }
 
-            Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes =
-                ParseQuery(flags, QueryTypes, QueryNameOverrides);
-            if (parsedTypes == null) return;
+        private const string Container = "HeroConvo";
+        private static readonly Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)> VoicelineHeroMapping = new Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)>();
 
-            FillHeroSpellDict(symSpell);
-            SpellCheckQuery(parsedTypes, symSpell);
+        private void ProcessConversations(ICLIFlags flags, string basePath) {
+            var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
 
-            Dictionary<ulong, VoiceSet> allVoiceSets = new Dictionary<ulong, VoiceSet>();
-            foreach (var voiceSetGUID in Program.TrackedFiles[0x5F]) {
-                STUVoiceSet set = GetInstance<STUVoiceSet>(voiceSetGUID);
+            foreach (var conversationGuid in Program.TrackedFiles[0xD0]) {
+                var conversation = GetInstance<STUVoiceConversation>(conversationGuid);
 
-                if (set?.m_voiceLineInstances == null) continue;
-                allVoiceSets[voiceSetGUID] = new VoiceSet(set);
-            }
+                var shouldProcessConvo = false;
+                if (parsedTypes != null) {
+                    foreach (var voicelineGuid in conversation.m_90D76F17) {
+                        if (voicelineGuid.m_E295B99C == null || !VoicelineHeroMapping.ContainsKey(voicelineGuid.m_E295B99C)) {
+                            continue;
+                        }
 
-            // Dictionary<uint, string> mapNames = new Dictionary<uint, string>();
-            // foreach (ulong mapGuid in Program.TrackedFiles[0x9F]) {
-            //     STUMapHeader mapHeader = GetInstance<STUMapHeader>(mapGuid);
-            //     if (mapHeader == null) continue;
-            //
-            //     mapNames[teResourceGUID.Index(mapGuid)] = GetValidFilename(GetString(mapHeader.m_1C706502) ?? GetString(mapHeader.m_displayName));
-            // }
+                        var (heroName, instance) = VoicelineHeroMapping[voicelineGuid.m_E295B99C];
+                        if (string.IsNullOrEmpty(heroName)) continue;
 
-            Combo.ComboInfo comboInfo = new Combo.ComboInfo();
-            var comboSaveContext = new SaveLogic.Combo.SaveContext(comboInfo);
+                        var config = GetQuery(parsedTypes, heroName.ToLowerInvariant(), "*");
+                        if (config.Count >= 1) {
+                            shouldProcessConvo = true;
+                            break;
+                        }
+                    }
+                }
 
-            foreach (ulong heroGuid in Program.TrackedFiles[0x75]) {
-                STUHero hero = GetInstance<STUHero>(heroGuid);
-                if (hero == null) continue;
-                STUVoiceSetComponent voiceSetComponent = GetInstance<STUVoiceSetComponent>(hero.m_gameplayEntity);
-
-                if (voiceSetComponent?.m_voiceDefinition == null || !allVoiceSets.TryGetValue(voiceSetComponent.m_voiceDefinition, out var set)) {
-                    Debugger.Log(0, "DataTool.SaveLogic.Unlock.VoiceLine",
-                                 "[DataTool.SaveLogic.Unlock.VoiceLine]: VoiceSet not found\r\n");
+                if (!shouldProcessConvo) {
                     continue;
                 }
 
-                string heroNameActual =
-                    (GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(heroGuid)}").TrimEnd(' ');
+                var i = 0;
+                foreach (var voicelineGuid in conversation.m_90D76F17) {
+                    if (voicelineGuid.m_E295B99C == null || !VoicelineHeroMapping.ContainsKey(voicelineGuid.m_E295B99C)) {
+                        continue;
+                    }
 
-                Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*", teResourceGUID.Index(heroGuid).ToString("X"));
+                    i++;
+                    var (heroName, instance) = VoicelineHeroMapping[voicelineGuid.m_E295B99C];
+                    if (instance.SoundFiles.Count > 1 || instance.SoundFiles.Count == 0) {
+                        continue; // :david: it can happen, i don't know what this means
+                    }
 
-                if (config.Count == 0) continue;
-                Log($"Processing data for {heroNameActual}");
-                heroNameActual = GetValidFilename(heroNameActual);
+                    var soundFile = instance.SoundFiles.First();
+                    var soundFileGuid = teResourceGUID.AsString(soundFile);
+                    var filename = $"{i}-{heroName ?? "Unknown"}-{soundFileGuid}";
+                    var path = Path.Combine(basePath, teResourceGUID.AsString(conversationGuid));
+                    SaveLogic.Combo.SaveVoiceLineInstance(flags, path, instance, filename);
+                }
+            }
+        }
 
-                foreach (VoiceLineInstance lineInstance in set.VoiceLines.Values) {
-                    // if (lineInstance.STU.m_voiceLineRuntime.m_4FF98D41 != null) {
-                    //     var cond = lineInstance.STU.m_voiceLineRuntime.m_4FF98D41;
-                    //
-                    //     HandleCondition(flags, comboInfo, lineInstance, path, heroNameActual, cond, mapNames);
-                    // }
+        public void GenerateVoicelineMapping() {
+            var seenVoiceSets = new HashSet<ulong>();
 
-                    if (lineInstance.Conversations == null || lineInstance.Conversations.Length == 0) continue;
+            var heroes = Program.TrackedFiles[0x75]
+                .Select(x => new Hero(x))
+                .OrderBy(x => !x.IsHero)
+                .ThenBy(x => x.GUID.GUID)
+                .ToArray();
 
-                    foreach (var conversationGuid in lineInstance.Conversations) {
-                        STUVoiceConversation conversation = GetInstance<STUVoiceConversation>(conversationGuid);
+            foreach (var hero in heroes) {
+                var heroStu = GetInstance<STUHero>(hero.GUID);
 
-                        if (conversation == null) continue; // wtf, blizz pls
+                string heroName = GetValidFilename((GetString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}").TrimEnd(' '));
+                Logger.Log($"Generating mapping for {heroName}");
 
-                        string convoDir = Path.Combine(path, heroNameActual, GetFileName(conversationGuid));
-                        foreach (STUVoiceConversationLine line in conversation.m_90D76F17) {
-                            string linePath = Path.Combine(convoDir, line.m_B4D405A1.ToString());
-                            foreach (VoiceSet voiceSet in allVoiceSets.Values) {
-                                if (voiceSet.VoiceLines.ContainsKey(line.m_E295B99C)) {
-                                    VoiceLine.SaveVoiceLine(flags, voiceSet.VoiceLines[line.m_E295B99C], linePath, comboSaveContext);
-                                }
-                            }
+                Combo.ComboInfo baseInfo = default;
+                var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(heroStu.m_gameplayEntity)?.m_voiceDefinition;
+                seenVoiceSets.Add(heroVoiceSetGuid);
+
+                if (FindVoicelinesInVoiceSet(heroVoiceSetGuid, heroName, ref baseInfo)) {
+                    var skins = new ProgressionUnlocks(heroStu).GetUnlocksOfType(UnlockType.Skin);
+                    foreach (var unlock in skins) {
+                        if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
+                        if (unlockSkinTheme.m_0B1BA7C1 != 0)
+                            continue;
+
+                        Combo.ComboInfo info = default;
+                        var skinTheme = GetInstance<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
+                        if (skinTheme == null)
+                            continue;
+
+                        var replacements = SkinTheme.GetReplacements(skinTheme);
+                        foreach (var (_, newVoiceSetGuid) in replacements ?? new Dictionary<ulong, ulong>()) {
+                            seenVoiceSets.Add(newVoiceSetGuid);
                         }
+
+                        FindVoicelinesInVoiceSet(heroVoiceSetGuid, heroName, ref info, baseInfo, replacements);
                     }
                 }
             }
 
-            comboSaveContext.Wait();
-        }
+            foreach (var guid in Program.TrackedFiles[0x5F]) {
+                if (seenVoiceSets.Contains(guid)) {
+                    continue;
+                }
 
-        /*public void HandleCondition(ICLIFlags flags, Combo.ComboInfo comboInfo, VoiceLineInstance lineInstance,
-            string path, string heroNameActual, STU_C1A2DB26 cond, Dictionary<uint, string> mapNames) {
-            if (cond is STU_32A19631 cond2) {
-                var subCond = cond2.m_4FF98D41;
+                var voiceSet = GetInstance<STUVoiceSet>(guid);
+                if (voiceSet == null) continue;
 
-                HandleCondition(flags, comboInfo, lineInstance, path, heroNameActual, subCond, mapNames);
-            } else {
+                var npcName = $"{GetString(voiceSet.m_269FC4E9)} {GetString(voiceSet.m_C0835C08)}".Trim();
+                if (string.IsNullOrEmpty(npcName)) {
+                    npcName = IO.GetNullableGUIDName(guid) ?? $"Unknown{teResourceGUID.Index(guid):X}";
+                }
 
+                Logger.Log($"Generating mapping for {npcName}");
+                var info = new Combo.ComboInfo();
+                FindVoicelinesInVoiceSet(guid, npcName, ref info);
             }
         }
 
-        public void HandleCondition(ICLIFlags flags, Combo.ComboInfo comboInfo, VoiceLineInstance lineInstance,
-            string path, string heroNameActual, STU_2F33B1B7 cond, Dictionary<uint, string> mapNames) {
+        private bool FindVoicelinesInVoiceSet(ulong? voiceSetGuid, string heroName, ref Combo.ComboInfo info, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null) {
+            if (voiceSetGuid == null) {
+                return false;
+            }
 
-            if (cond is STU_7C69EA0F arrayCond) {
-                foreach (STU_C1A2DB26 arrayElem in arrayCond.m_4FF98D41) {
-                    HandleCondition(flags, comboInfo, lineInstance, path, heroNameActual, arrayElem, mapNames);
+            info = new Combo.ComboInfo();
+            Combo.Find(info, voiceSetGuid.Value, replacements);
+
+            // if we're processing a skin, baseCombo is the combo from the hero, this remove duplicate check removes any sounds that belong to the base hero
+            // this ensures you only get sounds unique to the skin when processing a skin
+            if (baseCombo != null) {
+                if (!Combo.RemoveDuplicateVoiceSetEntries(baseCombo, ref info, voiceSetGuid.Value, Combo.GetReplacement(voiceSetGuid.Value, replacements)))
+                    return false;
+            }
+
+            foreach (var voiceSet in info.m_voiceSets) {
+                if (voiceSet.Value.VoiceLineInstances == null) continue;
+
+                foreach (var voicelineInstanceInfo in voiceSet.Value.VoiceLineInstances) {
+                    foreach (var voiceLineInstance in voicelineInstanceInfo.Value) {
+                        if (VoicelineHeroMapping.ContainsKey(voiceLineInstance.GUIDx06F)) continue;
+
+                        VoicelineHeroMapping[voiceLineInstance.GUIDx06F] = (heroName, voiceLineInstance);
+                    }
                 }
             }
 
-            if (cond is STU_E9DB72FF mapCond) {
-                VoiceLine.SaveVoiceLine(flags, lineInstance, Path.Combine(path, heroNameActual, "Maps", mapNames[teResourceGUID.Index(mapCond.m_map)]), comboInfo);
-            }
-
-            if (cond is STU_C37857A5 celebrationCond) {
-                VoiceLine.SaveVoiceLine(flags, lineInstance, Path.Combine(path, heroNameActual, "Celebrations", GetFileName(celebrationCond.m_celebrationType)), comboInfo);
-            }
-        }*/
+            return true;
+        }
     }
 }

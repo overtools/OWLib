@@ -10,5 +10,9 @@ namespace DataTool.Helper {
 
             return null;
         }
+
+        public static string AsString(this ulong guid) {
+            return teResourceGUID.AsString(guid);
+        }
     }
 }
