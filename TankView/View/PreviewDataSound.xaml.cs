@@ -16,9 +16,8 @@ namespace TankView.View {
         private WaveOutEvent outputDevice;
         private VorbisWaveReader vorbis;
         public ProgressInfo ProgressInfo { get; set; }
-        private BackgroundWorker _worker = null;
+        private BackgroundWorker _worker;
         private Timer _timer;
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -59,10 +58,6 @@ namespace TankView.View {
                 Debugger.Log(0, "[TankView.Sound.SetAudio]", $"Error setting audio! {ex.Message}\n");
                 // ignored
             }
-        }
-
-        private void OnStopped(object sender, StoppedEventArgs e) {
-            CleanUp();
         }
 
         private void CleanUp() {
