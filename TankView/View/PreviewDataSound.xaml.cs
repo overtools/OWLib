@@ -35,10 +35,12 @@ namespace TankView.View {
             CleanUp();
         }
 
-        public void CreateProgressWorker() {
-            _timer = new Timer { Interval = 120 };
-            _timer.Elapsed += Timer_Elapsed;
-            _timer.Start();
+        public void CreateProgressWorker(bool noTimer = false) {
+            if (!noTimer) {
+                _timer = new Timer { Interval = 120 };
+                _timer.Elapsed += Timer_Elapsed;
+                _timer.Start();
+            }
 
             _worker = new BackgroundWorker { WorkerReportsProgress = true };
             _worker.ProgressChanged += UpdateProgress;
@@ -58,6 +60,13 @@ namespace TankView.View {
                 Debugger.Log(0, "[TankView.Sound.SetAudio]", $"Error setting audio! {ex.Message}\n");
                 // ignored
             }
+        }
+
+        public void SetAudioError(string message) {
+            CleanUp();
+            CreateProgressWorker(true);
+
+            _worker.ReportProgress(0, message);
         }
 
         private void CleanUp() {

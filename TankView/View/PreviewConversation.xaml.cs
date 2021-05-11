@@ -20,7 +20,7 @@ namespace TankView.View {
             GUIDEntry = guidEntry;
 
             VoiceLines = conversation.Voicelines
-                                         .Select(voiceline => new TankViewConversationLine(voiceline, conversationVoiceLineMapping[voiceline.VoicelineGUID]))
+                                         .Select(voiceline => new TankViewConversationLine(voiceline, conversationVoiceLineMapping))
                                          .OrderBy(x => x.Position)
                                          .ToArray();
 
@@ -39,6 +39,12 @@ namespace TankView.View {
 
                 if (value.Voicelines?.Length == 1) {
                     PlayAudio(value.Voicelines[0].GUID);
+                } else if (value.Voicelines?.Length == 0) {
+                    SoundPreviewControl.SetAudioError("Error: This sound does not exist?");
+                } else if (value.Voicelines?.Length > 1) {
+                    SoundPreviewControl.SetAudioError("Error: Sound contains multiple voicelines??!");
+                } else {
+                    SoundPreviewControl.SetAudioError("Error: Unable to play this sound");
                 }
 
                 NotifyPropertyChanged(nameof(SelectedItem));
@@ -83,8 +89,9 @@ namespace TankView.View {
         public class TankViewConversationLine : ConversationLine {
             public Voiceline[] Voicelines { get; set; }
 
-            public TankViewConversationLine(ConversationLine line, ulong[] voicelines) : base(line) {
-                Voicelines = voicelines?.Select(x => new Voiceline {
+            public TankViewConversationLine(ConversationLine line, Dictionary<ulong, ulong[]> voicelineMapping) : base(line) {
+                voicelineMapping.TryGetValue(line.VoicelineGUID, out var voicelines);
+                Voicelines = (voicelines ?? new ulong[0]).Select(x => new Voiceline {
                     GUID = x
                 }).ToArray();
             }
