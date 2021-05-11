@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using TankView.ViewModel;
+using Timer = System.Timers.Timer;
 
 namespace TankView.View {
     public partial class PreviewDataSound : UserControl, INotifyPropertyChanged, IDisposable {
@@ -15,8 +16,10 @@ namespace TankView.View {
         private WaveOutEvent outputDevice;
         private VorbisWaveReader vorbis;
         public ProgressInfo ProgressInfo { get; set; }
-        private ProgressWorker _progressWorker = new ProgressWorker();
-        
+        private BackgroundWorker _worker = null;
+        private Timer _timer;
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void NotifyPropertyChanged(string name) {
@@ -27,27 +30,31 @@ namespace TankView.View {
             InitializeComponent();
             ViewContext = SynchronizationContext.Current;
             ProgressInfo = new ProgressInfo();
-            
-            _progressWorker.OnProgress += UpdateProgress;
-            
-            var timer = new System.Timers.Timer();
-            timer.Interval = 100;
-            timer.Elapsed += Timer_Elapsed;
-            timer.Start();
         }
 
         public void Dispose() {
             CleanUp();
         }
 
+        public void CreateProgressWorker() {
+            _timer = new Timer { Interval = 120 };
+            _timer.Elapsed += Timer_Elapsed;
+            _timer.Start();
+
+            _worker = new BackgroundWorker { WorkerReportsProgress = true };
+            _worker.ProgressChanged += UpdateProgress;
+        }
+
         public void SetAudio(Stream data) {
             CleanUp();
+            CreateProgressWorker();
+
             try {
                 outputDevice = new WaveOutEvent();
                 vorbis = new VorbisWaveReader(data);
                 outputDevice.Volume = 0.8f;
                 outputDevice.Init(vorbis);
-                _progressWorker.ReportProgress(0, $"00:00/{new DateTime(vorbis.TotalTime.Ticks):mm:ss}");
+                _worker.ReportProgress(0, $"00:00/{new DateTime(vorbis.TotalTime.Ticks):mm:ss}");
             } catch (Exception ex) {
                 Debugger.Log(0, "[TankView.Sound.SetAudio]", $"Error setting audio! {ex.Message}\n");
                 // ignored
@@ -59,6 +66,16 @@ namespace TankView.View {
         }
 
         private void CleanUp() {
+            if (_worker != null) {
+                _worker.Dispose();
+                _worker = null;
+            }
+
+            if (_timer != null) {
+                _timer.Dispose();
+                _timer = null;
+            }
+
             if (outputDevice != null) {
                 outputDevice.Stop();
                 outputDevice.Dispose();
@@ -77,7 +94,7 @@ namespace TankView.View {
             }
 
             if (vorbis == null) {
-                _progressWorker.ReportProgress(0, "An error occured playing this sound");
+                _worker.ReportProgress(0, "An error occured playing this sound");
                 return;
             }
 
@@ -85,10 +102,10 @@ namespace TankView.View {
                 if (outputDevice.PlaybackState == PlaybackState.Stopped) {
                     vorbis.Position = 0;
                 }
-                
+
                 outputDevice.Play();
             } catch (Exception ex) {
-                _progressWorker.ReportProgress(0, "An error occured playing this sound");
+                _worker.ReportProgress(0, "An error occured playing this sound");
                 Debugger.Log(0, "[TankView.Sound.Play]", $"Error setting audio! {ex.Message}\n");
             }
         }
@@ -109,22 +126,20 @@ namespace TankView.View {
 
             outputDevice.Pause();
         }
-        
-        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e) {
             UpdateProgressBar();
         }
-        
-        private void UpdateProgressBar()
-        {
+
+        private void UpdateProgressBar() {
             if (outputDevice == null) {
-                _progressWorker.ReportProgress(0, "");
+                _worker.ReportProgress(0, "");
             } else if (outputDevice.PlaybackState == PlaybackState.Playing) {
                 var progress = (int) Math.Round(((float) vorbis.CurrentTime.Ticks / (float) vorbis.TotalTime.Ticks) * 1000);
-                _progressWorker.ReportProgress(progress, $"{new DateTime(vorbis.CurrentTime.Ticks):mm:ss}/{new DateTime(vorbis.TotalTime.Ticks):mm:ss}");
+                _worker.ReportProgress(progress, $"{new DateTime(vorbis.CurrentTime.Ticks):mm:ss}/{new DateTime(vorbis.TotalTime.Ticks):mm:ss}");
             }
         }
-        
+
         private void UpdateProgress(object sender, ProgressChangedEventArgs @event) {
             ViewContext.Send(x => {
                 if (!(x is ProgressChangedEventArgs evt)) return;
