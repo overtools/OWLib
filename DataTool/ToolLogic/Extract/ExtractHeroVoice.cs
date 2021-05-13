@@ -7,7 +7,6 @@ using DataTool.Flag;
 using DataTool.Helper;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.Logger;
-using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
 using DataTool.DataModels;
 using DataTool.SaveLogic.Unlock;
@@ -21,7 +20,7 @@ namespace DataTool.ToolLogic.Extract {
     public class ExtractHeroVoice : QueryParser, ITool, IQueryParser {
         public List<QueryType> QueryTypes => new List<QueryType> {new QueryType {Name = "soundRestriction", HumanName = "Sound"}, new QueryType {Name = "groupRestriction", HumanName = "Group"}};
 
-        public Dictionary<string, string> QueryNameOverrides => ExtractHeroUnlocks.HeroMapping;
+        public Dictionary<string, string> QueryNameOverrides => null;
 
         public string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
 
@@ -64,17 +63,18 @@ namespace DataTool.ToolLogic.Extract {
                 return;
             }
 
-            Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+            var heroes = Helpers.GetHeroes();
+            var validHeroes = Helpers.GetHeroNamesMapping(heroes);
+            var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) return;
 
             FillHeroSpellDict(symSpell);
             SpellCheckQuery(parsedTypes, symSpell);
 
-            foreach (ulong heroFile in TrackedFiles[0x75]) {
-                STUHero hero = GetInstance<STUHero>(heroFile);
+            foreach (var (heroGuid, hero) in heroes) {
                 if (hero == null) continue;
 
-                string heroNameActual = (GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(heroFile)}").TrimEnd(' ');
+                string heroNameActual = (GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(heroGuid)}").TrimEnd(' ');
 
 
                 Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*");

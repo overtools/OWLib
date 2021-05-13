@@ -5,6 +5,7 @@ using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
 using TankLib.Helpers;
+using TankLib.STU.Types;
 using static DataTool.Helper.Logger;
 
 namespace DataTool {
@@ -150,7 +151,9 @@ namespace DataTool {
 
         protected Dictionary<string, Dictionary<string, ParsedArg>> ParseQuery(
             ICLIFlags flags,
-            List<QueryType> queryTypes, Dictionary<string, string> queryNameOverrides) {
+            List<QueryType> queryTypes,
+            Dictionary<string, string> queryNameOverrides = null,
+            Dictionary<ulong, string> validNames = null) {
             if (queryTypes.Count == 0) {
                 queryTypes = new List<QueryType> {
                     new QueryType {Name = "FakeType"}
@@ -161,8 +164,7 @@ namespace DataTool {
             string[] result = new string[flags.Positionals.Length - 3];
             Array.Copy(flags.Positionals, 3, result, 0, flags.Positionals.Length - 3);
 
-            Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes =
-                new Dictionary<string, Dictionary<string, ParsedArg>>();
+            Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = new Dictionary<string, Dictionary<string, ParsedArg>>();
 
             if (result.Length == 0) return null;
 
@@ -173,6 +175,13 @@ namespace DataTool {
                 string hero = split[0].ToLowerInvariant();
                 if (queryNameOverrides != null && queryNameOverrides.ContainsKey(hero)) {
                     hero = queryNameOverrides[hero];
+                }
+
+                if (validNames != null && !validNames.Values.Contains(hero)) {
+                    var localizedNameGuid = IO.TryGetLocalizedName(0x75, hero);
+                    if (localizedNameGuid != null && validNames.ContainsKey(localizedNameGuid.Value)) {
+                        hero = validNames[localizedNameGuid.Value];
+                    }
                 }
 
                 string[] afterOpts = new string[split.Length - 1];

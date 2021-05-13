@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
@@ -17,8 +16,7 @@ using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
 namespace DataTool.ToolLogic.Extract {
     [Tool("extract-hero-convo", Description = "Extract hero voice conversations", CustomFlags = typeof(ExtractFlags))]
     public class ExtractHeroConversations : QueryParser, ITool {
-
-        public Dictionary<string, string> QueryNameOverrides => ExtractHeroUnlocks.HeroMapping;
+        public Dictionary<string, string> QueryNameOverrides => null;
         public List<QueryType> QueryTypes => new List<QueryType>();
 
         public void Parse(ICLIFlags toolFlags) {
@@ -33,14 +31,14 @@ namespace DataTool.ToolLogic.Extract {
             Logger.Log($"Generating voiceline mappings, this will take some time.");
             GenerateVoicelineMapping();
             ProcessConversations(flags, path);
-
         }
 
         private const string Container = "HeroConvo";
         private static readonly Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)> VoicelineHeroMapping = new Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)>();
 
         private void ProcessConversations(ICLIFlags flags, string basePath) {
-            var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+            var validHeroes = Helpers.GetHeroNamesMapping();
+            var parsedTypes = ParseQuery(flags, QueryTypes, validNames: validHeroes);
 
             foreach (var conversationGuid in Program.TrackedFiles[0xD0]) {
                 var conversation = GetInstance<STUVoiceConversation>(conversationGuid);
