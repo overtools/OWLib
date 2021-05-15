@@ -113,7 +113,8 @@ namespace DataTool.DataModels {
             return VariantName ?? Name ?? "Title Screen";
         }
 
-        public static string GetName(STUMapHeader stu, ulong key = default) {
+        public static string GetName(ulong key) {
+            var stu = GetInstance<STUMapHeader>(key);
             if (stu == null) return null;
             return GetNullableGUIDName(key) ?? GetString(stu.m_1C706502) ?? GetString(stu.m_displayName) ?? "Unknown";
         }

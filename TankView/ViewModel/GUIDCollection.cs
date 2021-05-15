@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using DataTool.DataModels;
+using DataTool.DataModels.Hero;
 using DataTool.Helper;
 using DirectXTexNet;
 using TankLib;
@@ -395,17 +396,20 @@ namespace TankView.ViewModel {
         public string GetValue(ulong guid) {
             var dataType = DataHelper.GetDataType(guid);
             var guidType = teResourceGUID.Type(guid);
-            if (dataType == DataHelper.DataType.String) {
-                return IO.GetString(guid);
-            }
+
 
             if (guidType == 0xB2) {
                 return VoicelineSubtitleMapping.TryGetValue(guid, out var subtitle) ? subtitle : null;
             }
 
-            if (dataType == DataHelper.DataType.MapHeader) {
-                var mapStu = STUHelper.GetInstance<STUMapHeader>(guid);
-                return MapHeader.GetName(mapStu, guid);
+            switch (dataType) {
+                case DataHelper.DataType.String:
+                    return IO.GetString(guid);
+                case DataHelper.DataType.MapHeader:
+                    return MapHeader.GetName(guid);
+                case DataHelper.DataType.Hero: {
+                    return Hero.GetName(guid);
+                }
             }
 
             return null;
