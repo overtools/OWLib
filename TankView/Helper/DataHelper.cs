@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using DataTool.DataModels;
 using DataTool.DataModels.Hero;
 using DataTool.DataModels.Voice;

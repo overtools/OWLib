@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using DataTool.DataModels.GameModes;
+using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
@@ -110,6 +111,11 @@ namespace DataTool.DataModels {
 
         public string GetName() {
             return VariantName ?? Name ?? "Title Screen";
+        }
+
+        public static string GetName(STUMapHeader stu, ulong key = default) {
+            if (stu == null) return null;
+            return GetNullableGUIDName(key) ?? GetString(stu.m_1C706502) ?? GetString(stu.m_displayName) ?? "Unknown";
         }
 
         public string GetUniqueName() {

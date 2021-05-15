@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using DataTool.DataModels;
 using DataTool.Helper;
 using DirectXTexNet;
 using TankLib;
@@ -16,6 +17,7 @@ using TankView.View;
 using TACTLib.Client;
 using TACTLib.Container;
 using TACTLib.Core.Product.Tank;
+using TankLib.STU.Types;
 
 namespace TankView.ViewModel {
     public class GUIDCollection : INotifyPropertyChanged, IDisposable {
@@ -392,16 +394,18 @@ namespace TankView.ViewModel {
 
         public string GetValue(ulong guid) {
             var dataType = DataHelper.GetDataType(guid);
+            var guidType = teResourceGUID.Type(guid);
             if (dataType == DataHelper.DataType.String) {
                 return IO.GetString(guid);
             }
 
-            if (teResourceGUID.Type(guid) == 0xB2) {
-                if (VoicelineSubtitleMapping.TryGetValue(guid, out var subtitle)) {
-                    return subtitle;
-                }
+            if (guidType == 0xB2) {
+                return VoicelineSubtitleMapping.TryGetValue(guid, out var subtitle) ? subtitle : null;
+            }
 
-                return null;
+            if (dataType == DataHelper.DataType.MapHeader) {
+                var mapStu = STUHelper.GetInstance<STUMapHeader>(guid);
+                return MapHeader.GetName(mapStu, guid);
             }
 
             return null;
