@@ -35,10 +35,12 @@ namespace DataTool.Helper {
         }
 
         public static Dictionary<(ulong, ushort), string> GUIDTable = new Dictionary<(ulong, ushort), string>();
+        public static Dictionary<ushort, Dictionary<string, ulong>> LocalizedNames = new Dictionary<ushort, Dictionary<string, ulong>>();
+        private static Dictionary<ushort, HashSet<string>> IgnoredLocalizedNames = new Dictionary<ushort, HashSet<string>>();
 
         public static void LoadGUIDTable(bool onlyCanonical) {
-            if (!File.Exists("GUIDNames.csv")) return;
-            foreach (string dirtyLine in File.ReadAllLines("GUIDNames.csv")) {
+            if (!File.Exists("Static\\GUIDNames.csv")) return;
+            foreach (string dirtyLine in File.ReadAllLines("Static\\GUIDNames.csv")) {
                 var line = dirtyLine.Split(';').FirstOrDefault()?.Trim();
                 if (string.IsNullOrEmpty(line)) continue;
                 string[] parts = line.Split(',').Select(x => x.Trim()).ToArray();
@@ -58,6 +60,52 @@ namespace DataTool.Helper {
 
                 GUIDTable[(index, type)] = name;
             }
+        }
+
+        public static void LoadLocalizedNamesMapping() {
+            if (!File.Exists("Static\\LocalizedNamesMapping.csv")) return;
+            foreach (string dirtyLine in File.ReadAllLines("Static\\LocalizedNamesMapping.csv")) {
+                var line = dirtyLine.Split(';').FirstOrDefault()?.Trim();
+                if (string.IsNullOrEmpty(line)) continue;
+
+                string[] parts = line.Split(',').Select(x => x.Trim()).ToArray();
+                string indexString = parts[0];
+                string typeString = parts[1];
+                string name = parts[2];
+
+                var index = ulong.Parse(indexString, NumberStyles.HexNumber);
+                ushort type = ushort.Parse(typeString, NumberStyles.HexNumber);
+
+                if (!LocalizedNames.ContainsKey(type)) {
+                    LocalizedNames[type] = new Dictionary<string, ulong>();
+                    IgnoredLocalizedNames[type] = new HashSet<string>();
+                }
+
+                if (LocalizedNames[type].ContainsKey(name) && LocalizedNames[type][name] != index) {
+                    TankLib.Helpers.Logger.Warn("LocalizedNames", $"Duplicate localized name with different values??: {indexString}.{typeString} {name}");
+                    LocalizedNames[type].Remove(name);
+                    IgnoredLocalizedNames[type].Add(name);
+                    continue;
+                }
+
+                if (IgnoredLocalizedNames[type].Contains(name) || LocalizedNames[type].ContainsKey(name)) {
+                    continue;
+                }
+
+                LocalizedNames[type][name] = index;
+            }
+        }
+
+        public static ulong? TryGetLocalizedName(ushort type, string name) {
+            if (!LocalizedNames.ContainsKey(type)) return null;
+
+            if (!LocalizedNames[type].TryGetValue(name, out var match)) {
+                return null;
+            }
+
+            var guid = new teResourceGUID(match);
+            guid.SetType(type);
+            return guid;
         }
 
         public static string GetGUIDName(ulong guid) {

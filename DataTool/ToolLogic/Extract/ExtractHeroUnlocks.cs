@@ -74,7 +74,7 @@ namespace DataTool.ToolLogic.Extract {
     public class ExtractHeroUnlocks : QueryParser, ITool, IQueryParser {
         protected virtual string RootDir => "Heroes";
         protected virtual bool NPCs => false;
-
+        public Dictionary<string, string> QueryNameOverrides => null;
         public virtual string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
 
         public List<QueryType> QueryTypes => new List<QueryType> {
@@ -87,36 +87,6 @@ namespace DataTool.ToolLogic.Extract {
             new CosmeticType("voiceline", "Voice Line", UtilDynamicChoices.VALID_VOICELINE_NAMES)
         };
 
-        [SuppressMessage("ReSharper", "StringLiteralTypo")]
-        public static readonly Dictionary<string, string> HeroMapping = new Dictionary<string, string> {
-            ["soldier76"] = "soldier: 76",
-            ["soldier 76"] = "soldier: 76",
-            ["soldier"] = "soldier: 76",
-            ["lucio"] = "lúcio",
-            ["torbjorn"] = "torbjörn",
-            ["torb"] = "torbjörn",
-            ["toblerone"] = "torbjörn",
-            ["dva"] = "d.va",
-            ["fanservice"] = "d.va",
-            ["starcraft_pro"] = "d.va",
-            ["nano_cola_shill"] = "d.va",
-            ["starcraft_pro_but_not_actually_because_michael_chu_retconned_it"] = "d.va",
-            ["hammond"] = "wrecking ball",
-            ["hamster"] = "wrecking ball",
-            ["baguette"] = "brigitte",
-            ["burrito"] = "brigitte",
-            ["angry japanese man"] = "genji",
-            ["guilty japanese man"] = "hanzo",
-            ["need healing"] = "genji",
-            ["healslut"] = "mercy",
-            ["master of the blg black hole"] = "sigma",
-            ["dat is a lot of damage"] = "echo",
-            ["young punks i am not your father"] = "soldier: 76",
-            ["wrestle with Jeph prepare for death"] = "doomfist"
-        };
-
-        public Dictionary<string, string> QueryNameOverrides => HeroMapping;
-
         public void Parse(ICLIFlags toolFlags) {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
@@ -125,19 +95,8 @@ namespace DataTool.ToolLogic.Extract {
                 throw new Exception("no output path");
             }
 
-            var heroes = GetHeroes();
+            var heroes = Helpers.GetHeroes();
             SaveUnlocksForHeroes(flags, heroes, basePath, NPCs);
-        }
-
-        public List<KeyValuePair<ulong, STUHero>> GetHeroes() {
-            var @return = new List<KeyValuePair<ulong, STUHero>>();
-            foreach (ulong key in TrackedFiles[0x75]) {
-                var hero = GetInstance<STUHero>(key);
-                if (hero == null) continue;
-                @return.Add(new KeyValuePair<ulong, STUHero>(key, hero));
-            }
-
-            return @return;
         }
 
         protected override void QueryHelp(List<QueryType> types) {
@@ -173,13 +132,14 @@ namespace DataTool.ToolLogic.Extract {
             }
         }
 
-        public void SaveUnlocksForHeroes(ICLIFlags flags, IEnumerable<KeyValuePair<ulong, STUHero>> heroes, string basePath, bool npc = false) {
+        public void SaveUnlocksForHeroes(ICLIFlags flags, Dictionary<ulong, STUHero> heroes, string basePath, bool npc = false) {
             if (flags.Positionals.Length < 4) {
                 QueryHelp(QueryTypes);
                 return;
             }
 
-            Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
+            var validNames = Helpers.GetHeroNamesMapping(heroes);
+            var parsedTypes = ParseQuery(flags, QueryTypes, validNames: validNames);
             if (parsedTypes == null) return;
 
             FillHeroSpellDict(symSpell);

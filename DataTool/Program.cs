@@ -203,6 +203,8 @@ namespace DataTool {
             if (!Flags.NoGuidNames)
                 IO.LoadGUIDTable(Flags.OnlyCanonical);
 
+            IO.LoadLocalizedNamesMapping();
+
             Sound.WwiseBank.GetReady();
         }
 
