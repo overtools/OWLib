@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -22,6 +22,9 @@ using TankLib.Helpers;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 using Logger = TankLib.Helpers.Logger;
+using System.Net;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool {
@@ -35,6 +38,8 @@ namespace DataTool {
         public static bool IsPTR => Client?.AgentProduct?.Uid == "prometheus_test";
 
         public static string[] ValidLanguages = {"deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW"};
+        public static string LastestBuildInfoUrl = "https://ci.appveyor.com/api/projects/yretenai/owlib/branch/master";
+        public static string LastestBuildDownloadUrl = "https://ci.appveyor.com/project/yretenai/owlib/build/artifacts";
 
         public static bool ValidKey(ulong key) {
             return TankHandler.m_assets.ContainsKey(key);
@@ -102,11 +107,9 @@ namespace DataTool {
                 PrintHelp(false, tools);
                 return;
             }
-
             ITool targetTool = null;
             ICLIFlags targetToolFlags = null;
             ToolAttribute targetToolAttributes = null;
-
             #region Tool Activation
 
             foreach (var type in tools) {
@@ -143,7 +146,12 @@ namespace DataTool {
                 try {
                     InitStorage(Flags.Online);
                 } catch (Exception ex) when (ex.InnerException is UnsupportedBuildVersionException) {
-                    Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC", "This version of DataTool does not support this version of Overwatch. Download a newer version of the tools.");
+                    Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC",
+                        "This version of DataTool does not support this version of Overwatch."
+                        + (Flags.DisableUpdateCheck ? " Download a newer version of the tools if available." : ""));
+
+                    if (!Flags.DisableUpdateCheck)
+                        CheckForUpdate();
                     throw;
                 }
                 catch {
@@ -407,6 +415,31 @@ namespace DataTool {
                 }
             }
             ToolNameSpellCheck();
+        }
+
+        private static void CheckForUpdate() {
+            try {
+                Version localVersion = new Version(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? string.Empty);
+                if (Debugger.IsAttached || localVersion.Revision == 0) {
+                    return;
+                }
+
+                using (WebClient web = new WebClient()) {
+                    Logger.Warn("Core", "Checking for update...");
+                    dynamic data = JObject.Parse(web.DownloadString(LastestBuildInfoUrl));
+                    Version remoteVersion = new Version(data.build.version.ToString());
+                    var buildSuccess = data.build.status == "success";
+
+                    if (remoteVersion > localVersion && buildSuccess) {
+                        Logger.Warn("Core", $"Newer version of DataTool is available! Local version: {localVersion} Latest: {remoteVersion}\nDownload latest build at {LastestBuildDownloadUrl}");
+                    }
+                    else if (remoteVersion == localVersion && buildSuccess) {
+                        Logger.Warn("Core", "You have the latest version of DataTool. If the game was recently updated, then DataTool developers need time to add support for the latest version of the game.");
+                    }
+                }
+            } catch (Exception ex) {
+                Logger.Debug("Core", $"Update check failed. {ex.Message}");
+            }
         }
 
         internal class ToolComparer : IComparer<Type> {
