@@ -18,10 +18,12 @@ using TankView.View;
 using TACTLib.Client;
 using TACTLib.Container;
 using TACTLib.Core.Product.Tank;
-using TankLib.STU.Types;
+using Logger = TACTLib.Logger;
 
 namespace TankView.ViewModel {
     public class GUIDCollection : INotifyPropertyChanged, IDisposable {
+        public static readonly string ApplicationDataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "overtools", "TankView");
+        private HashSet<ulong> PreviousBuildGuids = new HashSet<ulong>();
         private readonly ClientHandler Client;
         private readonly ProductHandler_Tank Tank;
         private readonly ProgressWorker _worker;
@@ -145,6 +147,15 @@ namespace TankView.ViewModel {
             }
         }
 
+        public bool OnlyShowNewFiles {
+            get => Settings.Default.OnlyShowNewFiles;
+            set {
+                Settings.Default.OnlyShowNewFiles = value;
+                NotifyPropertyChanged(nameof(OnlyShowNewFiles));
+                NotifyPropertyChanged(nameof(SelectedEntries));
+            }
+        }
+
         public bool ShowPreviewList => DataHelper.GetDataType(_selected?.FirstOrDefault()) == DataHelper.DataType.Image;
 
         public GridLength ListRow => ShowPreview ? new GridLength(250, GridUnitType.Pixel) : new GridLength(1, GridUnitType.Star);
@@ -215,9 +226,19 @@ namespace TankView.ViewModel {
         public List<GUIDEntry> SelectedEntries {
             get {
                 var selectedWithSearch = _selected;
-                if (!string.IsNullOrEmpty(searchQuery)) {
+
+                if (!string.IsNullOrEmpty(searchQuery) || OnlyShowNewFiles) {
                     var newResults = new List<GUIDEntry>();
                     foreach (var x in _selected) {
+                        if (OnlyShowNewFiles && !x.IsNew) {
+                            continue;
+                        }
+
+                        if (string.IsNullOrEmpty(searchQuery) && OnlyShowNewFiles) {
+                            newResults.Add(x);
+                            continue;
+                        }
+
                         if (CultureInfo.CurrentUICulture.CompareInfo.IndexOf(x.Filename, searchQuery, CompareOptions.IgnoreCase | CompareOptions.IgnoreSymbols | CompareOptions.IgnoreWidth) > -1 ||
                             CultureInfo.CurrentUICulture.CompareInfo.IndexOf(x.StringValue ?? string.Empty, searchQuery, CompareOptions.IgnoreCase | CompareOptions.IgnoreSymbols | CompareOptions.IgnoreWidth) > -1) {
                             newResults.Add(x);
@@ -271,6 +292,8 @@ namespace TankView.ViewModel {
                 worker?.ReportProgress((int) (((float) c / (float) total) * 100));
                 AddEntry(entry.FileName, 0, entry.MD5, 0, "None");
             }
+
+            LookupAndGeneratePreviousBuildGuids(client, tank);
 
             foreach (var asset in Tank.m_assets) {
                 var type = teResourceGUID.Type(asset.Key);
@@ -373,7 +396,8 @@ namespace TankView.ViewModel {
                 Size = size,
                 Locale = locale,
                 ContentKey = ckey,
-                StringValue = GetValue(guid)
+                StringValue = GetValue(guid),
+                IsNew = !PreviousBuildGuids.Contains(guid)
             });
         }
 
@@ -417,5 +441,51 @@ namespace TankView.ViewModel {
 
         public readonly Dictionary<ulong, ulong[]> ConversationVoiceLineMapping;
         public static Dictionary<ulong, string> VoicelineSubtitleMapping;
+
+        private void LookupAndGeneratePreviousBuildGuids(ClientHandler client, ProductHandler_Tank tank) {
+            try {
+                // store the current guids for the current version if it hasn't already been saved
+                var buildVersion = uint.Parse(client.InstallationInfo.Values["Version"].Split('.').Last());
+                var guidFilePath = Path.Join(ApplicationDataPath, $"{buildVersion}.guids");
+                var doesGuidFileExist = File.Exists(guidFilePath);
+                if (!doesGuidFileExist) {
+                    List<ulong> guids = Tank.m_assets.Select(x => x.Key).ToList();
+                    Diff.WriteBinaryGUIDs(guidFilePath, guids);
+                }
+
+                GetPreviousBuildGuids();
+            } catch (Exception ex) {
+                Logger.Debug("TankView", $"Error saving guids! {ex.Message}");
+            }
+        }
+
+        public void GetPreviousBuildGuids() {
+            try {
+                // find the latest guid that isnt current build and use that as the previous version
+                // todo: ideally allow choosing from any of the previous guids?
+                var files = Directory.GetFiles(ApplicationDataPath, "*.guids");
+
+                var lastBuildGuid = files
+                    .Select(Path.GetFileName)
+                    .Select(x => x.Split(".").FirstOrDefault())
+                    .Select(x => {
+                        if (uint.TryParse(x, out var buildNumber))
+                            return buildNumber;
+
+                        return (uint?) null;
+                    })
+                    .Where(x => x != null)
+                    .OrderByDescending(x => x) // is this even needed? will the files always be ordered due to the increasing numbers??
+                    .Skip(1) // first will always be the current build?
+                    .FirstOrDefault();
+
+                if (lastBuildGuid != null) {
+                    PreviousBuildGuids = Diff.ReadGUIDs(Path.Join(ApplicationDataPath, $"{lastBuildGuid}.guids"));
+                }
+
+            } catch (Exception ex) {
+                Logger.Debug("TankView", $"Error getting previous build guids! {ex.Message}");
+            }
+        }
     }
 }

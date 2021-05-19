@@ -11,6 +11,7 @@ namespace TankView.ViewModel {
         public CKey ContentKey { get; set; }
         public ContentFlags Flags { get; set; }
         public string StringValue { get; set; }
+        public bool IsNew { get; set; }
 
         public override string ToString() {
             return teResourceGUID.AsString(GUID);

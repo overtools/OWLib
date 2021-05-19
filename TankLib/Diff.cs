@@ -9,7 +9,8 @@ using TACTLib.Core.Product.Tank;
 namespace TankLib {
     public static class Diff {
         public static void WriteBinaryGUIDs(string file, IReadOnlyCollection<ulong> guids) {
-            using (Stream stream = File.OpenWrite(file)) 
+            Directory.CreateDirectory(Path.GetDirectoryName(file));
+            using (Stream stream = File.OpenWrite(file))
             using (var lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Compress))
             using (var writer = new BinaryWriter(lz4Stream)) {
                 stream.Write(new byte[4], 0, 4); // non-compressed
@@ -30,7 +31,7 @@ namespace TankLib {
             var count = reader.ReadInt32();
             return reader.ReadArray<ulong>(count);
         }
-        
+
         public static ulong[] ReadTextGUIDs(TextReader reader) {
             return reader.ReadToEnd().Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => ulong.Parse(x, NumberStyles.HexNumber)).ToArray();
         }
@@ -52,9 +53,14 @@ namespace TankLib {
                 return new HashSet<ulong>(guids);
             }
         }
-        
+
+        public static HashSet<ulong> ReadGUIDs(string path) {
+            using (var stream = File.OpenRead(path))
+                return ReadGUIDs(stream);
+        }
+
         public static void WriteBinaryCKeys( string file, IReadOnlyCollection<CKey> cKeys) {
-            using (Stream stream = File.OpenWrite(file)) 
+            using (Stream stream = File.OpenWrite(file))
             using (var lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Compress))
             using (var writer = new BinaryWriter(lz4Stream)) {
                 stream.Write(new byte[4], 0, 4); // non-compressed
@@ -70,7 +76,7 @@ namespace TankLib {
                 }
             }
         }
-        
+
         public static IEnumerable<CKey> ReadBinaryCKeys(BinaryReader reader) {
             var count = reader.ReadInt32();
             return reader.ReadArray<CKey>(count);
@@ -79,7 +85,7 @@ namespace TankLib {
         public static IEnumerable<CKey> ReadTextCKeys(StreamReader streamReader) {
             return streamReader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).Select(CKey.FromString);
         }
-        
+
         public static HashSet<CKey> ReadCKeys(Stream stream) {
             using (var reader = new BinaryReader(stream)) {
                 var zero = reader.ReadInt32();

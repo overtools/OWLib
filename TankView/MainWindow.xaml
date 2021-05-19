@@ -148,6 +148,9 @@
                 <MenuItem Header="Autoplay" DataContext="{Binding GUIDTree}"
                           IsChecked="{Binding EnableAutoPlay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                           IsCheckable="True" />
+                <MenuItem Header="Only show new files" DataContext="{Binding GUIDTree}"
+                          IsChecked="{Binding OnlyShowNewFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                          IsCheckable="True"/>
             </MenuItem>
             <MenuItem Header="Extract" Click="ExtractFiles"
                       IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
