@@ -16,7 +16,7 @@ using STUUnlock_Emote = TankLib.STU.Types.STUUnlock_Emote;
 using STUUnlock_VoiceLine = TankLib.STU.Types.STUUnlock_VoiceLine;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-highlights", Description = "List user highlights", CustomFlags = typeof(ListFlags))]
+    [Tool("list-highlights", Description = "List user highlights", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     public class ListHighlights : JSONTool, ITool {
         [DataContract]
         public class ReplayJSON {

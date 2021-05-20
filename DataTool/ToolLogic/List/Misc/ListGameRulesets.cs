@@ -12,7 +12,7 @@ using static DataTool.Program;
 using static DataTool.DataModels.GameModes.GameRulesetSchemaEntry;
 
 namespace DataTool.ToolLogic.List.Misc {
-    [Tool("list-game-rulesets", Description = "List game rulesets", CustomFlags = typeof(ListFlags))]
+    [Tool("list-game-rulesets", Description = "List game rulesets", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     public class ListGameRulesets : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();

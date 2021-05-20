@@ -361,7 +361,7 @@ namespace DataTool {
             if (!full) {
                 Log();
                 Log("Modes:");
-                Log("  {0, -23} | {1, -40}", "mode", "description");
+                Log("  {0, -26} | {1, -40}", "mode", "description");
                 Log("".PadLeft(94, '-'));
                 foreach (var t in tools) {
                     var attribute = t.GetCustomAttribute<ToolAttribute>();
@@ -370,7 +370,7 @@ namespace DataTool {
                     var desc = attribute.Description;
                     if (attribute.Description == null) desc = "";
 
-                    Log("  {0, -23} | {1}", attribute.Keyword, desc);
+                    Log("  {0, -26} | {1}", attribute.Keyword, desc);
                 }
             }
 

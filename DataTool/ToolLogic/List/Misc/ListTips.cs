@@ -8,7 +8,7 @@ using static DataTool.Program;
 using static DataTool.Helper.Logger;
 
 namespace DataTool.ToolLogic.List.Misc {
-    [Tool("list-tips", Description = "List game tips", CustomFlags = typeof(ListFlags))]
+    [Tool("list-tips", Description = "List game tips", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     public class ListTips : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             var data = GetData();

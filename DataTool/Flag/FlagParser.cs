@@ -393,7 +393,6 @@ namespace DataTool.Flag {
                     if (flagAttribute.Valid != null)
                         if (!flagAttribute.Valid.Contains(value.ToString())) {
                             Console.Error.WriteLine($"Value {value} is invalid for flag {flagAttribute.Flag}, valid values are {string.Join(", ", flagAttribute.Valid)}");
-                            FullHelp<T>(extraHelp);
                             return null;
                         }
 

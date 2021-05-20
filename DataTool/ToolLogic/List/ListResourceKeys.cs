@@ -9,7 +9,7 @@ using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.ToolLogic.List {
-    [Tool("list-keys", Description = "List resource keys", CustomFlags = typeof(ListFlags))]
+    [Tool("list-keys", Description = "List resource keys", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     public class ListResourceKeys : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
             Dictionary<teResourceGUID, ResourceKey> keys = GetKeys();
