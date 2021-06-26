@@ -48,16 +48,19 @@ namespace DataTool.ToolLogic.Extract {
 
                 if (SaveVoiceSet(flags, basePath, heroName, heroVoiceSetGuid, ref baseInfo)) {
                     var skins = new ProgressionUnlocks(heroStu).GetUnlocksOfType(UnlockType.Skin);
-                    foreach (var unlock in skins) {
-                        TACTLib.Logger.Debug("Tool", $"Processing skin {unlock.Name}");
-                        if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
-                        if (unlockSkinTheme.m_0B1BA7C1 != 0)
-                            continue;
 
+                    foreach (var unlock in skins) {
+                        var unlockSkinTheme = unlock.STU as STUUnlock_SkinTheme;
+                        if (unlockSkinTheme?.m_0B1BA7C1 != 0) {
+                            continue; // no idea what this is
+                        }
+
+                        TACTLib.Logger.Debug("Tool", $"Processing skin {unlock.Name}");
                         Combo.ComboInfo info = default;
                         var skinTheme = GetInstance<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
-                        if (skinTheme == null)
+                        if (skinTheme == null) {
                             continue;
+                        }
 
                         SaveVoiceSet(flags, basePath, heroName, heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinTheme));
                     }
@@ -90,7 +93,7 @@ namespace DataTool.ToolLogic.Extract {
                             continue;
                         }
 
-                        // is it even possible for a voice line instance to include multiple??
+                        // is it even possible for a voice line instance to include multiple?? (apparently not?)
                         if (voiceLineInstance.SoundFiles.Count > 1) {
                             TACTLib.Logger.Warn("Tool", "VoiceLineInstance contains more than 1 sound file??");
                             continue;
@@ -99,9 +102,8 @@ namespace DataTool.ToolLogic.Extract {
                         var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
                         if (stimulus == null) continue;
 
-                        var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E);
-                        if (groupName == null)
-                            groupName = $"Unknown\\{teResourceGUID.Index(voiceLineInstance.VoiceStimulus):X}.{teResourceGUID.Type(voiceLineInstance.VoiceStimulus):X3}";
+                        var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E) ??
+                                        $"Unknown\\{teResourceGUID.Index(voiceLineInstance.VoiceStimulus):X}.{teResourceGUID.Type(voiceLineInstance.VoiceStimulus):X3}";
 
                         var path = flags.VoiceGroupByHero && flags.VoiceGroupByType
                                        ? Path.Combine(basePath, heroName, groupName)
@@ -126,7 +128,7 @@ namespace DataTool.ToolLogic.Extract {
 
                         SoundIdCache.Add(soundFile);
                         //SaveLogic.Combo.SaveSoundFile(flags, path, saveContext, soundFile, true, filename);
-                        SaveLogic.Combo.SaveVoiceStimulus(flags, path, saveContext, voiceLineInstance, filename);
+                        SaveLogic.Combo.SaveVoiceLineInstance(flags, path, voiceLineInstance, filename);
 
                         saveContext.Wait();
                     }

@@ -108,64 +108,6 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveVoiceStimulus(ICLIFlags flags, string path, SaveContext context, FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo, string fileNameOverride = null) {
-            var subtitlesWithSounds = false; // stores the subtitle alongside the sound file
-            var subtitleAsSound = true; // renames the sound file to include the subtitle
-
-            if (flags is ExtractFlags extractFlags) {
-                subtitlesWithSounds = extractFlags.SubtitlesWithSounds;
-                subtitleAsSound = extractFlags.SubtitlesAsSound;
-            }
-
-            var realPath = path;
-            var soundSet = new HashSet<ulong>(voiceLineInstanceInfo.SoundFiles.Where(x => x != 0));
-            if (!soundSet.Any()) return;
-            var soundFileName = fileNameOverride ?? teResourceGUID.AsString(soundSet.First()); // file name override or the guid of the sound
-            string overrideName = fileNameOverride; // set this as a fallback if it isn't set below due to subtitles not being saved potentially
-
-            if (subtitlesWithSounds || subtitleAsSound) {
-                IEnumerable<string> subtitle = new HashSet<string>();
-
-                if (context.m_info.m_subtitles.TryGetValue(voiceLineInstanceInfo.Subtitle, out var subtitleInfo)) {
-                    subtitle = subtitle.Concat(subtitleInfo.m_text);
-                }
-
-                if (context.m_info.m_subtitles.TryGetValue(voiceLineInstanceInfo.SubtitleRuntime, out var subtitleRuntimeInfo)) {
-                    subtitle = subtitle.Concat(subtitleRuntimeInfo.m_text);
-                }
-
-                var subtitleSet = new HashSet<string>(subtitle);
-
-                if (subtitleSet.Any()) {
-                    if (soundSet.Count > 1) {
-                        realPath = Path.Combine(realPath, GetValidFilename(subtitleSet.First().Trim().TrimEnd('.')));
-                        WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{teResourceGUID.LongKey(voiceLineInstanceInfo.Subtitle):X8}-{teResourceGUID.LongKey(voiceLineInstanceInfo.SubtitleRuntime):X8}-subtitles.txt"));
-                    } else if (soundSet.Count == 1) {
-                        try {
-                            if (subtitleAsSound) {
-                                // if we're using the subtitle in the file name, generate the new name here, also trim it to make sure it isn't too long
-                                overrideName = GetValidFilename($"{soundFileName}-{subtitleSet.First().TrimEnd('.')}");
-                                if (overrideName.Length > 128) overrideName = overrideName.Substring(0, 130);
-                            }
-
-                            if (subtitlesWithSounds)
-                                WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
-                        } catch {
-                            if (subtitlesWithSounds) {
-                                overrideName = soundFileName; // use default name if we can't save above
-                                WriteFile(string.Join("\n", subtitleSet), Path.Combine(realPath, $"{overrideName}.txt"));
-                            }
-                        }
-                    }
-                }
-            }
-
-            foreach (ulong soundFile in soundSet) {
-                SaveSoundFile(flags, realPath, context, soundFile, true, overrideName);
-            }
-        }
-
-        // Duplicate of method above but lets us save a single voiceLineInstanceInfo without requiring Combo which isn't really needed anyway if you have the VoiceLineInstanceInfo
         public static void SaveVoiceLineInstance(ICLIFlags flags, string path, FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo, string fileNameOverride = null) {
             var subtitlesWithSounds = false; // stores the subtitle alongside the sound file
             var subtitleAsSound = true; // renames the sound file to include the subtitle
@@ -178,9 +120,12 @@ namespace DataTool.SaveLogic {
             var realPath = path;
             var soundSet = new HashSet<ulong>(voiceLineInstanceInfo.SoundFiles.Where(x => x != 0));
             if (!soundSet.Any()) return;
+
+
             var soundFileName = fileNameOverride ?? teResourceGUID.AsString(soundSet.First()); // file name override or the guid of the sound
             string overrideName = fileNameOverride; // set this as a fallback if it isn't set below due to subtitles not being saved potentially
 
+            // this is pretty jank
             if (subtitlesWithSounds || subtitleAsSound) {
                 var subtitle = GetSubtitleString(voiceLineInstanceInfo.Subtitle);
 
@@ -720,7 +665,7 @@ namespace DataTool.SaveLogic {
                     thisPath = Path.Combine(path, GetFileName(voiceLineInstance.VoiceStimulus));
                 }
 
-                SaveVoiceStimulus(flags, thisPath, context, voiceLineInstance);
+                SaveVoiceLineInstance(flags, thisPath, voiceLineInstance);
             }
         }
 

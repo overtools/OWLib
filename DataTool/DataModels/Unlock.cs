@@ -277,6 +277,7 @@ namespace DataTool.DataModels {
     }
 
     // todo: fix this lmao :zingy:
+    // todo: noidontthinkso :js:
     public static class UnlockData {
         public static readonly Dictionary<string, ulong[]> CuratedGUID = new Dictionary<string, ulong[]> {
             {
