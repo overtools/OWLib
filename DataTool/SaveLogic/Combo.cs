@@ -155,7 +155,7 @@ namespace DataTool.SaveLogic {
             }
 
             foreach (ulong soundFile in soundSet) {
-                SaveVoiceLineFile(flags, realPath, soundFile, overrideName);
+                SaveSoundFile(flags, realPath, soundFile, overrideName);
             }
         }
 
@@ -870,7 +870,7 @@ namespace DataTool.SaveLogic {
             context.AddTask(() => SaveSoundFileTask(flags, directory, soundFileInfo, name));
         }
 
-        public static void SaveVoiceLineFile(ICLIFlags flags, string directory, ulong soundFile, string name = null) {
+        public static void SaveSoundFile(ICLIFlags flags, string directory, ulong soundFile, string name = null) {
             if (soundFile == 0) return;
 
             SaveSoundFileTask(flags, directory, new FindLogic.Combo.SoundFileAsset(soundFile), name);

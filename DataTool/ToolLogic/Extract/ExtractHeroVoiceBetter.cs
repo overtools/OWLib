@@ -109,6 +109,8 @@ namespace DataTool.ToolLogic.Extract {
                                        ? Path.Combine(basePath, heroName, groupName)
                                        : Path.Combine(basePath, flags.VoiceGroupByHero ? Path.Combine(groupName, heroName) : groupName);
 
+                        var hero03FDir = flags.VoiceGroupByHero ? Path.Combine(basePath, heroName, "03F") : Path.Combine(basePath, "03F", heroName);
+
                         if (ignoreGroups) {
                             path = Path.Combine(basePath, heroName);
                         }
@@ -130,6 +132,18 @@ namespace DataTool.ToolLogic.Extract {
                         //SaveLogic.Combo.SaveSoundFile(flags, path, saveContext, soundFile, true, filename);
                         SaveLogic.Combo.SaveVoiceLineInstance(flags, path, voiceLineInstance, filename);
 
+                        // Saves Wrecking Balls squeak sounds, no other heroes have sounds like this it seems
+                        var stuSound = GetInstance<STUSound>(voiceLineInstance.ExternalSound);
+                        if (stuSound?.m_C32C2195?.m_soundWEMFiles != null) {
+                            foreach (var mSoundWemFile in stuSound?.m_C32C2195?.m_soundWEMFiles) {
+                                if (BadSoundFiles.Contains(mSoundWemFile)) {
+                                    continue;
+                                }
+
+                                SaveLogic.Combo.SaveSoundFile(flags, hero03FDir, mSoundWemFile);
+                            }
+                        }
+
                         saveContext.Wait();
                     }
                 }
@@ -141,5 +155,12 @@ namespace DataTool.ToolLogic.Extract {
         public static string GetVoiceGroup(ulong stimulusGuid, ulong categoryGuid, ulong unkGuid) {
             return GetNullableGUIDName(stimulusGuid) ?? GetNullableGUIDName(categoryGuid) ?? GetNullableGUIDName(unkGuid);
         }
+
+        // these are weird UI sounds that seem to be on every STUSound
+        public static readonly HashSet<ulong> BadSoundFiles = new HashSet<ulong>() {
+            0x7C0000000147482, // 000000147482.03F
+            0x7C00000000958E8, // 0000000958E8.03F
+            0x7C00000000958E6, // 0000000958E6.03F
+        };
     }
 }

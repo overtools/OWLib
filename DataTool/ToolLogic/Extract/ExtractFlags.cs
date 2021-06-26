@@ -71,7 +71,7 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = true, Flag = "subtitles-as-sounds", Help = "Saves the sound files as the subtitle", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool SubtitlesAsSound;
 
-        [CLIFlag(Default = false, Flag = "voice-group-by-hero", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        [CLIFlag(Default = true, Flag = "voice-group-by-hero", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool VoiceGroupByHero;
 
         [CLIFlag(Default = true, Flag = "voice-group-by-type", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
