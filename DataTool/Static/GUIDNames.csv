@@ -255,8 +255,9 @@ D8,078,Turret/EnemyTurretSeen,1
 86B,078,Junkenstein/Conversations,1
 86C,078,Junkenstein/Conversations,1
 86D,078,Junkenstein/Conversations,1
-926,078,Retribution/SniperSeen,1
 927,078,Retribution/TalonTroopersIncoming,1
+928,078,Retribution/TalonEnforcerSeen,1
+929,078,Retribution/TalonSniperSeen,1
 92A,078,Retribution/AssassinSpotted,1
 92B,078,Retribution/HeavyAssaultIncoming,1
 92D,078,Retribution/EnemiesIncoming,1
@@ -326,6 +327,9 @@ A57,078,Bomb/Activate,1
 A8F,078,Translocator/Destroyed,1
 A91,078,Bomb/Elimination,1
 A96,078,Translocator/TakeBack,1
+AD5,078,StormRising/MissionStart,1
+AD7,078,StormRising/MissionReminder,1
+AD9,078,StormRising/MissionComplete,1
 D13,078,StormRising/Conversations,1
 D14,078,StormRising/Conversations,1
 D15,078,StormRising/Conversations,1
