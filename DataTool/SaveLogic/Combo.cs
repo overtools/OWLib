@@ -108,7 +108,21 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveVoiceLineInstance(ICLIFlags flags, string path, FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo, string fileNameOverride = null) {
+        /// <summary>
+        /// Saves a voiceline instance and saves it's subtitles along with it
+        /// </summary>
+        /// <remarks>
+        /// Note this is only really designed for saving voiceline instances with a SINGLE sound file, if the voiceline instance contains multiple
+        /// you should be using the onlyThisSoundFile param
+        /// </remarks>
+        /// <param name="flags"></param>
+        /// <param name="path"></param>
+        /// <param name="voiceLineInstanceInfo"></param>
+        /// <param name="fileNameOverride">overrides the filename the sound will be saved as, note that subtitles will be appended to the filename</param>
+        /// <param name="onlyThisSoundFile">if instance contains multiple voicelines, the guid of the line we're saving</param>
+        public static void SaveVoiceLineInstance(
+            ICLIFlags flags, string path, FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo, string fileNameOverride = null,
+            ulong onlyThisSoundFile = default) {
             var subtitlesWithSounds = false; // stores the subtitle alongside the sound file
             var subtitleAsSound = true; // renames the sound file to include the subtitle
 
@@ -118,9 +132,8 @@ namespace DataTool.SaveLogic {
             }
 
             var realPath = path;
-            var soundSet = new HashSet<ulong>(voiceLineInstanceInfo.SoundFiles.Where(x => x != 0));
+            var soundSet = new HashSet<ulong>(voiceLineInstanceInfo.SoundFiles.Where(x => x != 0 && (onlyThisSoundFile == default || x == onlyThisSoundFile)));
             if (!soundSet.Any()) return;
-
 
             var soundFileName = fileNameOverride ?? teResourceGUID.AsString(soundSet.First()); // file name override or the guid of the sound
             string overrideName = fileNameOverride; // set this as a fallback if it isn't set below due to subtitles not being saved potentially
@@ -139,7 +152,9 @@ namespace DataTool.SaveLogic {
                             if (subtitleAsSound) {
                                 // if we're using the subtitle in the file name, generate the new name here, also trim it to make sure it isn't too long
                                 overrideName = GetValidFilename($"{soundFileName}-{subtitleStr}");
-                                if (overrideName.Length > 128) overrideName = overrideName.Substring(0, 130);
+                                if (overrideName.Length > 128) {
+                                    overrideName = overrideName.Substring(0, 130).Trim().TrimEnd('.');
+                                }
                             }
 
                             if (subtitlesWithSounds)

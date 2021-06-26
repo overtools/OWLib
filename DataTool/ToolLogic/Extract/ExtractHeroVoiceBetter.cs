@@ -93,12 +93,6 @@ namespace DataTool.ToolLogic.Extract {
                             continue;
                         }
 
-                        // is it even possible for a voice line instance to include multiple?? (apparently not?)
-                        if (voiceLineInstance.SoundFiles.Count > 1) {
-                            TACTLib.Logger.Warn("Tool", "VoiceLineInstance contains more than 1 sound file??");
-                            continue;
-                        }
-
                         var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
                         if (stimulus == null) continue;
 
@@ -115,22 +109,25 @@ namespace DataTool.ToolLogic.Extract {
                             path = Path.Combine(basePath, heroName);
                         }
 
-                        var soundFile = voiceLineInstance.SoundFiles.First();
-                        var soundFileGuid = teResourceGUID.AsString(soundFile);
-                        string filename = null;
+                        // 99% of voiceline instances only have a single sound file however there are cases where some NPCs have multiple
+                        // the Junkenstein Narrator is an example, the lines are the same however they are spoken differently.
+                        foreach (var soundFile in voiceLineInstance.SoundFiles) {
+                            var soundFileGuid = teResourceGUID.AsString(soundFile);
+                            string filename = null;
 
-                        if (!flags.VoiceGroupByHero && !ignoreGroups) {
-                            filename = $"{heroName}-{soundFileGuid}";
+                            if (!flags.VoiceGroupByHero && !ignoreGroups) {
+                                filename = $"{heroName}-{soundFileGuid}";
+                            }
+
+                            if (SoundIdCache.Contains(soundFile)) {
+                                TACTLib.Logger.Debug("Tool", "Duplicate sound detected, ignoring.");
+                                continue;
+                            }
+
+                            SoundIdCache.Add(soundFile);
+                            //SaveLogic.Combo.SaveSoundFile(flags, path, saveContext, soundFile, true, filename);
+                            SaveLogic.Combo.SaveVoiceLineInstance(flags, path, voiceLineInstance, filename, soundFile);
                         }
-
-                        if (SoundIdCache.Contains(soundFile)) {
-                            TACTLib.Logger.Debug("Tool", "Duplicate sound detected, ignoring.");
-                            continue;
-                        }
-
-                        SoundIdCache.Add(soundFile);
-                        //SaveLogic.Combo.SaveSoundFile(flags, path, saveContext, soundFile, true, filename);
-                        SaveLogic.Combo.SaveVoiceLineInstance(flags, path, voiceLineInstance, filename);
 
                         // Saves Wrecking Balls squeak sounds, no other heroes have sounds like this it seems
                         var stuSound = GetInstance<STUSound>(voiceLineInstance.ExternalSound);
