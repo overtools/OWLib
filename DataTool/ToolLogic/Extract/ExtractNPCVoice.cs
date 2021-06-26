@@ -29,6 +29,10 @@ namespace DataTool.ToolLogic.Extract {
 
                 var npcName = $"{GetString(voiceSet.m_269FC4E9)} {GetString(voiceSet.m_C0835C08)}".Trim();
                 if (string.IsNullOrEmpty(npcName)) {
+                    npcName = GetNullableGUIDName(guid);
+                }
+
+                if (string.IsNullOrEmpty(npcName)) {
                     continue;
                 }
 
