@@ -29,8 +29,14 @@ namespace DataTool.Helper {
                         scratch = TexHelper.Instance.LoadFromDDSMemory((IntPtr) dataPin, data.Length, DDS_FLAGS.NONE);
                         TexMetadata info = scratch.GetMetadata();
 
+                        var isMultiFrame = codec == WICCodecs.GIF || codec == WICCodecs.TIFF;
                         if (TexHelper.Instance.IsCompressed(info.Format)) {
-                            ScratchImage temp = scratch.Decompress(DXGI_FORMAT.UNKNOWN);
+                            ScratchImage temp;
+                            if (info.ArraySize == 1 || !isMultiFrame) {
+                                temp = scratch.Decompress(frame, DXGI_FORMAT.UNKNOWN);
+                            } else {
+                                temp = scratch.Decompress(DXGI_FORMAT.UNKNOWN);
+                            }
                             scratch.Dispose();
                             scratch = temp;
 
@@ -44,8 +50,6 @@ namespace DataTool.Helper {
                         }
 
                         UnmanagedMemoryStream stream = null;
-                        var isMultiFrame = codec == WICCodecs.GIF || codec == WICCodecs.TIFF;
-
                         if (info.ArraySize == 1 || !isMultiFrame) {
                             stream = scratch.SaveToWICMemory(frame, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(codec));
                         } else {
