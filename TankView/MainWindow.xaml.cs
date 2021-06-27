@@ -401,7 +401,7 @@ namespace TankView {
                             switch (dataType) {
                                 case DataHelper.DataType.Sound when ExtractionSettings.EnableConvertSounds:
                                     o.SetLength(0);
-                                    DataTool.SaveLogic.Combo.ConvertSoundFile(i, o);
+                                    Combo.ConvertSoundFile(i, o);
                                     break;
                                 // not used, image extraction is handled above
                                 case DataHelper.DataType.Image when ExtractionSettings.EnableConvertImages:
@@ -455,17 +455,17 @@ namespace TankView {
             }
         }
 
-        private bool HasShown = false;
+        private bool _hasShownWelcomePopup;
         private void FirstChance(object sender, EventArgs e) {
-            if (HasShown) return;
+            if (_hasShownWelcomePopup) {
+                return;
+            }
 
-            HasShown = true;
+            _hasShownWelcomePopup = true;
 
             if (Debugger.IsAttached) {
                 IsEnabled = true;
-
-                // Use to auto load a dir at startup, useful or dev
-                // OpenCASC("");
+                // OpenCASC(""); // Use to auto load a dir at startup, useful or dev
                 return;
             }
 
@@ -473,26 +473,18 @@ namespace TankView {
             Hide();
         }
 
-        private bool justPressed = false;
+        /// <summary>
+        /// Adds a small delay when holding the arrow key down so it doesn't go through like a million rows a second
+        /// </summary>
+        private bool _filJustPressedKeyDown;
         private void FolderItemList_OnKeyDown(object sender, KeyEventArgs e) {
-            if (justPressed) {
+            if (_filJustPressedKeyDown) {
                 e.Handled = true;
                 return;
             }
 
-            justPressed = true;
-            Task.Delay(90).ContinueWith(t => justPressed = false);
-        }
-
-        private bool justTyped = false;
-        private void TextInput_OnKeyDown(object sender, KeyEventArgs e) {
-            if (justTyped) {
-                e.Handled = true;
-                return;
-            }
-
-            justPressed = true;
-            Task.Delay(90).ContinueWith(t => justTyped = false);
+            _filJustPressedKeyDown = true;
+            Task.Delay(90).ContinueWith(t => _filJustPressedKeyDown = false);
         }
     }
 }

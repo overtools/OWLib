@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Windows.Data;
 using TankLib;
 using TankView.Helper;
-using TankView.ViewModel;
 
 namespace TankView.ObjectModel {
     public class StringGuidConverter : IValueConverter {

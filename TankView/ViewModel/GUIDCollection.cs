@@ -439,8 +439,8 @@ namespace TankView.ViewModel {
             return null;
         }
 
-        public readonly Dictionary<ulong, ulong[]> ConversationVoiceLineMapping;
-        public static Dictionary<ulong, string> VoicelineSubtitleMapping;
+        public readonly Dictionary<ulong, ulong[]> ConversationVoiceLineMapping = new Dictionary<ulong, ulong[]>();
+        public static Dictionary<ulong, string> VoicelineSubtitleMapping = new Dictionary<ulong, string>();
 
         private void LookupAndGeneratePreviousBuildGuids(ClientHandler client, ProductHandler_Tank tank) {
             try {

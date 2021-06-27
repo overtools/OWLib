@@ -1,10 +1,8 @@
 using System;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
-using DataTool.Helper;
 using DirectXTexNet;
 using TankView.Helper;
 

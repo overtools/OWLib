@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using DataTool.DataModels;
 using DataTool.DataModels.Hero;
 using TankLib;
 using TankView.ViewModel;
