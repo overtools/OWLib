@@ -486,5 +486,11 @@ namespace TankView {
             _filJustPressedKeyDown = true;
             Task.Delay(90).ContinueWith(t => _filJustPressedKeyDown = false);
         }
+
+        private void FolderItemList_OnMouseDoubleClick(object sender, MouseButtonEventArgs e) {
+            if (e.Source is ListView listView && listView.SelectedItem is GUIDEntry guidEntry) {
+                Clipboard.SetText(guidEntry.Filename);
+            }
+        }
     }
 }
