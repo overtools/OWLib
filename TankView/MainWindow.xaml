@@ -271,7 +271,7 @@
                         </ListView.ItemTemplate>
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <controls:VirtualizingWrapPanel/>
+                                <controls:VirtualizingWrapPanel MouseWheelDeltaItem="2" CacheLength="0" CacheLengthUnit="Item" />
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                     </ListView>
