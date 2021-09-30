@@ -227,6 +227,10 @@ namespace TankView.ViewModel {
             get {
                 var selectedWithSearch = _selected;
 
+                if (_selected == null) {
+                    return null;
+                }
+
                 if (!string.IsNullOrEmpty(searchQuery) || OnlyShowNewFiles) {
                     var newResults = new List<GUIDEntry>();
                     foreach (var x in _selected) {
