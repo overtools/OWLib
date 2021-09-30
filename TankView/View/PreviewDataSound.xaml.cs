@@ -1,4 +1,4 @@
-﻿using NAudio.Vorbis;
+using NAudio.Vorbis;
 using NAudio.Wave;
 using System;
 using System.ComponentModel;
@@ -16,8 +16,14 @@ namespace TankView.View {
         private WaveOutEvent outputDevice;
         private VorbisWaveReader vorbis;
         public ProgressInfo ProgressInfo { get; set; }
+        public AppSettings AppSettings = new AppSettings();
         private BackgroundWorker _worker;
         private Timer _timer;
+
+        public int AudioVolume {
+            get => AppSettings.AudioVolume;
+            set => AppSettings.AudioVolume = value;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -53,7 +59,7 @@ namespace TankView.View {
             try {
                 outputDevice = new WaveOutEvent();
                 vorbis = new VorbisWaveReader(data);
-                outputDevice.Volume = 0.8f;
+                UpdateVolume();
                 outputDevice.Init(vorbis);
                 _worker.ReportProgress(0, $"00:00/{new DateTime(vorbis.TotalTime.Ticks):mm:ss}");
             } catch (Exception ex) {
@@ -89,6 +95,12 @@ namespace TankView.View {
             if (vorbis != null) {
                 vorbis.Dispose();
                 vorbis = null;
+            }
+        }
+
+        public void UpdateVolume() {
+            if (outputDevice != null) {
+                outputDevice.Volume = (float) AppSettings.AudioVolume / 100;
             }
         }
 
@@ -155,6 +167,11 @@ namespace TankView.View {
             }, @event);
 
             NotifyPropertyChanged(nameof(ProgressInfo));
+        }
+
+        private void OnVolumeChange(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            AppSettings.AudioVolume = (int) VolumeSlider.Value;
+            UpdateVolume();
         }
     }
 }
