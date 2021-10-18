@@ -8,7 +8,7 @@ namespace TankLib {
     public struct teResourceGUID {
         /// <summary>GUID Value</summary>
         public ulong GUID;
-        
+
         [Flags]
         public enum AttributeEnum : ulong {
             Index    = 0x00000000FFFFFFFF,
@@ -140,15 +140,15 @@ namespace TankLib {
             @out.WriteLine($"Engine:   {Engine(key):X1}");
             @out.WriteLine();
         }
-        
+
         public static implicit operator ulong(teResourceGUID guid) {
             return guid.GUID;
         }
-        
+
         public static explicit operator teResourceGUID(ulong guid) {
             return new teResourceGUID(guid);
         }
-        
+
         /// <summary>String representation of this GUID</summary>
         public override string ToString() {
             return AsString(GUID);
@@ -160,10 +160,15 @@ namespace TankLib {
         }
 
         /// <summary>String representation a GUID</summary>
+        public static string AsIndexString(ulong guid) {
+            return $"{LongKey(guid):X12}";
+        }
+
+        /// <summary>String representation a GUID</summary>
         public static string AsHexString(ulong guid) {
             return $"0x{guid:X16}";
         }
-        
+
         public override int GetHashCode() {
             return GUID.GetHashCode();
         }

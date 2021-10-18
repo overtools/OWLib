@@ -34,9 +34,9 @@ namespace DataTool.Helper {
                     RegexOptions.IgnoreCase));
         }
 
-        public static Dictionary<(ulong, ushort), string> GUIDTable = new Dictionary<(ulong, ushort), string>();
-        public static Dictionary<ushort, Dictionary<string, ulong>> LocalizedNames = new Dictionary<ushort, Dictionary<string, ulong>>();
-        private static Dictionary<ushort, HashSet<string>> IgnoredLocalizedNames = new Dictionary<ushort, HashSet<string>>();
+        public static readonly Dictionary<(ulong, ushort), string> GUIDTable = new Dictionary<(ulong, ushort), string>();
+        public static readonly Dictionary<ushort, Dictionary<string, ulong>> LocalizedNames = new Dictionary<ushort, Dictionary<string, ulong>>();
+        private static readonly Dictionary<ushort, HashSet<string>> IgnoredLocalizedNames = new Dictionary<ushort, HashSet<string>>();
 
         public static void LoadGUIDTable(bool onlyCanonical) {
             if (!File.Exists("Static\\GUIDNames.csv")) return;
