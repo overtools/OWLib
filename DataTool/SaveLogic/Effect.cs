@@ -110,7 +110,7 @@ namespace DataTool.SaveLogic {
                     FindLogic.Combo.ModelAsset modelInfo = Info.m_models[rpceInfo.Model];
                     //writer.Write(rpceInfo.TextureDefiniton);
 
-                    writer.Write(Path.Combine("Models", modelInfo.GetName(), modelInfo.GetName() + ".owmdl"));
+                    writer.Write(Path.Combine("Models", modelInfo.GetName(), modelInfo.GetNameIndex() + ".owmdl"));
                 }
 
                 foreach (EffectParser.SVCEInfo svceInfo in effect.SVCEs) {
