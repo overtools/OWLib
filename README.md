@@ -2,7 +2,7 @@
 
 Series of programs (tools) to interact with the Overwatch files.
 
-**.NET 5 is required. Download here: https://dotnet.microsoft.com/download/dotnet/5.0**
+**.NET 5 Runtime (64-bit) is required. Download here: https://dotnet.microsoft.com/download/dotnet/5.0/runtime**
 
 ## Downloads
 You can find mostly stable releases on the AppVeyor page here:  
@@ -24,12 +24,19 @@ Most commands follow the structure `DataTool.exe <overwatch_directory> <mode> [m
 DataTool.exe "C:\Games\Overwatch" list-heroes
 DataTool.exe "C:\Games\Overwatch" list-unlocks
 DataTool.exe "C:\Games\Overwatch" list-maps
+DataTool.exe "C:\Games\Overwatch" list-achievements
 ```
 
 ### Example Extract Commands
 Extract commands follow the struture `DataTool.exe <overwatch_directory> <mode> <output_directory> [filters]`  
 Filters follow the format `{hero name}|{type}=({tag name}={tag}),{item name}`. You can specify `*` for the hero name or the type for everything.  
 Valid types include: skin, icon, spray, victorypose, emote, voiceline
+
+Some of the extract commands:
+ * extract-unlocks - ex all hero unlocks such as skins, highlight intros, emotes, sprays, icons
+ * extract-general - handles extracting all all class unlocks such as all class sprays and icons and portraits
+ * extract-hero-voice-better - extracts hero voicelines and subtitles
+ * extract-maps - extract maps
 
 #### Example Filters
 ```
@@ -63,6 +70,9 @@ DataTool.exe "C:\Games\Overwatch" extract-maps "C:\Games\Extracts" "Dorado"
 
 Extract All Maps (will take a long time)
 DataTool.exe "C:\Games\Overwatch" extract-maps "C:\Games\Extracts" *
+
+Extract Tracers Voicelines
+DataTool.exe "C:\Games\Overwatch" extract-hero-voice-better "C:\Games\Extracts" Tracer
 ```
 
 ## Disclaimer
