@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -20,9 +20,9 @@ namespace TankView.View {
             GUIDEntry = guidEntry;
 
             VoiceLines = conversation.Voicelines
-                                         .Select(voiceline => new TankViewConversationLine(voiceline, conversationVoiceLineMapping))
-                                         .OrderBy(x => x.Position)
-                                         .ToArray();
+                .Select(voiceline => new TankViewConversationLine(voiceline, conversationVoiceLineMapping))
+                .OrderBy(x => x.Position)
+                .ToArray();
 
             InitializeComponent();
         }
@@ -57,15 +57,17 @@ namespace TankView.View {
             set {
                 _selectedVoiceline = value;
 
-                if (value == null) return;
+                if (value == null) {
+                    return;
+                }
 
                 PlayAudio(value.GUID);
                 NotifyPropertyChanged(nameof(SelectedVoiceLineItem));
-
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         public void NotifyPropertyChanged(string name) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
@@ -86,13 +88,22 @@ namespace TankView.View {
         }
 
 
-        public class TankViewConversationLine : ConversationLine {
+        public class TankViewConversationLine {
             public Voiceline[] Voicelines { get; set; }
+            public ulong Position { get; set; }
+            public teResourceGUID GUID { get; set; }
+            public teResourceGUID VoicelineGUID { get; set; }
+            public string Subtitle { get; set; }
 
-            public TankViewConversationLine(ConversationLine line, Dictionary<ulong, ulong[]> voicelineMapping) : base(line) {
+            public TankViewConversationLine(ConversationLine line, IReadOnlyDictionary<ulong, ulong[]> voicelineMapping) {
                 voicelineMapping.TryGetValue(line.VoicelineGUID, out var voicelines);
-                Voicelines = (voicelines ?? new ulong[0]).Select(x => new Voiceline {
-                    GUID = x
+                GUID = line.GUID;
+                VoicelineGUID = line.VoicelineGUID;
+                Position = line.Position;
+                // conversations can technically contain multiple lines? we dont support this but it's pretty uncommon
+                Subtitle = GUIDCollection.VoicelineSubtitleMapping[voicelines?.FirstOrDefault() ?? 0];
+                Voicelines = (voicelines ?? Array.Empty<ulong>()).Select(x => new Voiceline {
+                    GUID = x,
                 }).ToArray();
             }
         }
