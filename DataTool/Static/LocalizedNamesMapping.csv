@@ -1,8 +1,7 @@
-﻿; Index, Type, Name
+; Index, Type, Name
 ; Custom Names, for people who, can't spell
 6E,75,soldier
 6E,75,soldier76
-76,6E,75,soldier
 79,75,lucio
 6,75,torbjorn
 6,75,torb
@@ -14,6 +13,8 @@ A,75,widow
 20,75,zen
 9,75,monkey
 12F,75,doom
+42,75,cole
+42,75,cassidi
 ; Normal Hero Localization Mapping,
 ;deDE,,
 2,75,reaper
