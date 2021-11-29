@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 
@@ -13,24 +14,18 @@ namespace TankView {
 
         public AboutPage() {
             InitializeComponent();
-        }
-
-        public AboutPage(Window window) : this() {
-            Owner = window;
+            if(Debugger.IsAttached) {
+                ContinueClick(this, new RoutedEventArgs());
+            }
         }
 
         private void ContinueClick(object sender, RoutedEventArgs e) {
-            Owner.Show();
-            Owner.IsEnabled = true;
+            Application.Current.MainWindow = new MainWindow();
+            Application.Current.MainWindow.Show();
             Close();
         }
 
-        private bool HasShown = false;
         private void FirstChance(object sender, EventArgs e) {
-            if (HasShown) return;
-            
-            HasShown = true;
-
             ContinueButton.Focus();
         }
     }

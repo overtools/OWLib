@@ -3,15 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:TankView.View"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:objectModel="clr-namespace:TankView.ObjectModel"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="400">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../template/DetailsViewStyles.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="../ResourceDictionary/DetailsViewStyles.xaml"/>
+                <ResourceDictionary>
+                    <objectModel:StringGuidConverter x:Key="StringGuidConverter" />
+                    <objectModel:NullValueConverter x:Key="NullValueConverter" />
+                    <objectModel:GUIDToImageConverter x:Key="GUIDToImageConverter" />
+                    <objectModel:GUIDVisibilityConverter x:Key="GUIDVisibilityConverter" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -33,8 +38,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
-        <TextBlock 
+
+        <TextBlock
             Text="{Binding GUIDString}"
             Margin="15,15,15,15"
             FontWeight="bold"
@@ -42,40 +47,40 @@
             Grid.Row="0" />
 
         <Label Grid.Row="1">Map Name:</Label>
-        <TextBlock Text="{Binding MapHeader.Name, Converter={StaticResource NullValueConverter} }" 
+        <TextBlock Text="{Binding MapHeader.Name, Converter={StaticResource NullValueConverter} }"
                    Grid.Column="1" Grid.Row="1" />
 
         <Label Grid.Row="2">Variant Name:</Label>
-        <TextBlock 
-            Text="{Binding MapHeader.VariantName, Converter={StaticResource NullValueConverter} }" 
+        <TextBlock
+            Text="{Binding MapHeader.VariantName, Converter={StaticResource NullValueConverter} }"
             Grid.Column="1" Grid.Row="2" />
 
         <Label Grid.Row="3">Subline:</Label>
-        <TextBlock 
-            Text="{Binding MapHeader.Subline, Converter={StaticResource NullValueConverter} }" 
+        <TextBlock
+            Text="{Binding MapHeader.Subline, Converter={StaticResource NullValueConverter} }"
             Grid.Column="1" Grid.Row="3" />
 
         <Label Grid.Row="4">Description:</Label>
         <TextBlock
-            Text="{Binding MapHeader.Description, Converter={StaticResource NullValueConverter} }" 
+            Text="{Binding MapHeader.Description, Converter={StaticResource NullValueConverter} }"
             Grid.Column="1" Grid.Row="4" />
 
         <Label Grid.Row="5">Description 2:</Label>
         <TextBlock
-            Text="{Binding MapHeader.Description2, Converter={StaticResource NullValueConverter} }" 
+            Text="{Binding MapHeader.Description2, Converter={StaticResource NullValueConverter} }"
             Grid.Column="1" Grid.Row="5" />
 
         <Label Grid.Row="6">Map:</Label>
         <TextBlock
-            Text="{Binding MapHeader.MapGUID, Converter={StaticResource StringGuidConverter}}" 
+            Text="{Binding MapHeader.MapGUID, Converter={StaticResource StringGuidConverter}}"
             Grid.Column="1" Grid.Row="6" />
-        
+
         <Label Grid.Row="7">Image:</Label>
         <StackPanel Grid.Column="1" Grid.Row="7">
             <TextBlock
                 Text="{Binding MapHeader.Image, Converter={StaticResource StringGuidConverter}}" Margin="0" />
             <Image
-                Source="{Binding MapHeader.Image, Converter={StaticResource GUIDToImageConverter}}" 
+                Source="{Binding MapHeader.Image, Converter={StaticResource GUIDToImageConverter}}"
                 Height="60" Visibility="{Binding MapHeader.Image, Converter={StaticResource GUIDVisibilityConverter}}" />
         </StackPanel>
 
@@ -84,7 +89,7 @@
             <TextBlock
                 Text="{Binding MapHeader.Thumbnail, Converter={StaticResource StringGuidConverter}}" Margin="0" />
             <Image
-                Source="{Binding MapHeader.Thumbnail, Converter={StaticResource GUIDToImageConverter}}" 
+                Source="{Binding MapHeader.Thumbnail, Converter={StaticResource GUIDToImageConverter}}"
                 Height="60" Visibility="{Binding MapHeader.Thumbnail, Converter={StaticResource GUIDVisibilityConverter}}" />
         </StackPanel>
 
@@ -93,7 +98,7 @@
             <TextBlock
                 Text="{Binding MapHeader.FlagImage, Converter={StaticResource StringGuidConverter}}" Margin="0" />
             <Image
-                Source="{Binding MapHeader.FlagImage, Converter={StaticResource GUIDToImageConverter}}" 
+                Source="{Binding MapHeader.FlagImage, Converter={StaticResource GUIDToImageConverter}}"
                 Height="30" Visibility="{Binding MapHeader.FlagImage, Converter={StaticResource GUIDVisibilityConverter}}" />
         </StackPanel>
     </Grid>

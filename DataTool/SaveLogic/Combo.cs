@@ -808,7 +808,7 @@ namespace DataTool.SaveLogic {
 
                     using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
                         var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, 0);
-                        if (data != null) {
+                        if (!data.IsEmpty) {
                             WriteFile(data, $"{filePath}.{convertType}");
                         } else {
                             convertedStream.Position = 0;

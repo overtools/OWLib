@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -91,13 +91,21 @@ namespace TankView.Helper {
             return ms;
         }
 
-        public static byte[] ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, WICCodecs imageFormat, int frame) {
+        public static Memory<byte> ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, WICCodecs imageFormat, int frame, out int width, out int height) {
+            width = 0;
+            height = 0;
+
             try {
                 if (GetDataType(guid) != DataType.Image) {
-                    return null;
+                    return default;
                 }
 
                 teTexture texture = LoadTexture(guid);
+                if(texture == null || texture.Header.Width == 0 || texture.Header.Height == 0) {
+                    return default;
+                }
+                width = texture.Header.Width;
+                height = texture.Header.Height;
                 Stream ms = texture.SaveToDDS(1);
 
                 return DDSConverter.ConvertDDS(ms, targetFormat, imageFormat, frame);
@@ -105,7 +113,7 @@ namespace TankView.Helper {
                 // ignored
             }
 
-            return null;
+            return default;
         }
 
         public static void SaveImage(GUIDEntry value, Stream fileStream, Stream outStream) {

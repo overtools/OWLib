@@ -1,8 +1,13 @@
-﻿using TACTLib.Container;
+using System;
+using System.Collections;
+using System.ComponentModel;
+using TACTLib.Container;
 using TankLib;
 
 namespace TankView.ViewModel {
-    public class GUIDEntry {
+    public class GUIDEntry : INotifyPropertyChanged, INotifyDataErrorInfo, IDataErrorInfo {
+        public string this[string columnName] => string.Empty;
+
         public string Filename { get; set; }
         public ulong GUID { get; set; }
         public string FullPath { get; set; }
@@ -12,6 +17,17 @@ namespace TankView.ViewModel {
         public ContentFlags Flags { get; set; }
         public string StringValue { get; set; }
         public bool IsNew { get; set; }
+
+        public bool HasErrors => false;
+
+        public string Error => string.Empty;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        public IEnumerable GetErrors(string propertyName) {
+            return Array.Empty<string>();
+        }
 
         public override string ToString() {
             return teResourceGUID.AsString(GUID);

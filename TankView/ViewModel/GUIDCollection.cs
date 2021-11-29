@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -6,11 +6,13 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using DataTool.DataModels;
 using DataTool.DataModels.Hero;
 using DataTool.Helper;
 using DirectXTexNet;
+using JetBrains.Annotations;
 using TankLib;
 using TankView.Helper;
 using TankView.Properties;
@@ -18,6 +20,7 @@ using TankView.View;
 using TACTLib.Client;
 using TACTLib.Container;
 using TACTLib.Core.Product.Tank;
+using TankView.ObjectModel;
 using Logger = TACTLib.Logger;
 
 namespace TankView.ViewModel {
@@ -48,7 +51,7 @@ namespace TankView.ViewModel {
             }
         }
 
-        private void UpdateControl(GUIDEntry value) {
+        private void UpdateControl([CanBeNull] GUIDEntry value) {
             if (PreviewControl is IDisposable disposable) {
                 disposable.Dispose();
             }
@@ -57,14 +60,15 @@ namespace TankView.ViewModel {
                 disposable2.Dispose();
             }
 
-            if (!ShowPreview) {
+            if (!ShowPreview || value == null) {
                 PreviewSource = null;
                 PreviewControl = null;
+                return;
             }
 
             switch (DataHelper.GetDataType(value)) {
                 case DataHelper.DataType.Image: {
-                    PreviewSource = DataHelper.ConvertDDS(value.GUID, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.PNG, 0);
+                    PreviewSource = new RGBABitmapSource(DataHelper.ConvertDDS(value.GUID, DXGI_FORMAT.R8G8B8A8_UNORM, 0, 0, out var width, out var height), width, height);
                     PreviewControl = new PreviewDataImage();
                 }
                     break;
@@ -123,8 +127,6 @@ namespace TankView.ViewModel {
             }
         }
 
-        private BitmapSource _frame;
-
         public bool ShowPreview {
             get => Settings.Default.ShowPreview;
             set {
@@ -162,45 +164,20 @@ namespace TankView.ViewModel {
 
         public GridLength PreviewRow => ShowPreview ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
 
-        public GridLength PreviewRowMin => ShowPreview ? new GridLength(50, GridUnitType.Pixel) : new GridLength(0);
+        public double PreviewRowMin => ShowPreview ? 50 : 0;
 
         private object _previewData = null;
 
         public object PreviewSource {
             get => _previewData;
             set {
-                _frame = null;
-                if (value != null) {
-                    switch (DataHelper.GetDataType(_top)) {
-                        case DataHelper.DataType.Image: {
-                            MemoryStream stream = new MemoryStream((byte[]) value);
-                            PngBitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.None);
-                            _frame = decoder.Frames[0];
-                        }
-                            break;
-                        case DataHelper.DataType.Unknown:
-                            break;
-                        case DataHelper.DataType.Sound:
-                            break;
-                        case DataHelper.DataType.Model:
-                            break;
-                        case DataHelper.DataType.String:
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-
                 _previewData = value;
-                NotifyPropertyChanged(nameof(ImageWidth));
-                NotifyPropertyChanged(nameof(ImageHeight));
                 NotifyPropertyChanged(nameof(PreviewSource));
             }
         }
 
-        public double ImageWidth => _frame?.Width ?? 0;
-
-        public double ImageHeight => _frame?.Height ?? 0;
+        public int ImageWidth { get; set; }
+        public int ImageHeight { get; set; }
 
         private string searchQuery = string.Empty;
 
@@ -221,9 +198,9 @@ namespace TankView.ViewModel {
             NotifyPropertyChanged(nameof(SelectedEntries));
         }
 
-        private List<GUIDEntry> _selected = null;
+        private GUIDEntry[] _selected = null;
 
-        public List<GUIDEntry> SelectedEntries {
+        public GUIDEntry[] SelectedEntries {
             get {
                 var selectedWithSearch = _selected;
 
@@ -249,23 +226,23 @@ namespace TankView.ViewModel {
                         }
                     }
 
-                    selectedWithSearch = newResults;
+                    selectedWithSearch = newResults.ToArray();
                 }
 
                 switch (_orderBy) {
                     case "Size":
-                        return selectedWithSearch.OrderByWithDirection(x => x.Size, _orderDescending).ToList();
+                        return selectedWithSearch.OrderByWithDirection(x => x.Size, _orderDescending).ToArray();
                     case "FileName":
-                        return selectedWithSearch.OrderByWithDirection(x => x.GUID, _orderDescending).ToList();
+                        return selectedWithSearch.OrderByWithDirection(x => x.GUID, _orderDescending).ToArray();
                     case "Value":
-                        return selectedWithSearch.OrderByWithDirection(x => x.StringValue, _orderDescending).ToList();
+                        return selectedWithSearch.OrderByWithDirection(x => x.StringValue, _orderDescending).ToArray();
                     case "#":
                     default:
                         return selectedWithSearch;
                 }
             }
             set {
-                _selected = value.OrderBy(x => x?.Filename).ToList();
+                _selected = value.OrderBy(x => x?.Filename).ToArray();
                 NotifyPropertyChanged(nameof(SelectedEntries));
                 NotifyPropertyChanged(nameof(ShowPreviewList));
             }
@@ -347,7 +324,7 @@ namespace TankView.ViewModel {
             NotifyPropertyChanged(nameof(Root));
 
             try {
-                SelectedEntries = Data.Folders.FirstOrDefault(x => x.Name.EndsWith("Client"))?.Files ?? new List<GUIDEntry>();
+                SelectedEntries = Data.Folders.FirstOrDefault(x => x.Name.EndsWith("Client"))?.Files.ToArray() ?? Array.Empty<GUIDEntry>();
             } catch (KeyNotFoundException) {
                 //
             }

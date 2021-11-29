@@ -1,8 +1,10 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
+using DataTool.DataModels.Hero;
 using DirectXTexNet;
 using TankView.Helper;
 
@@ -14,21 +16,11 @@ namespace TankView.ObjectModel {
                 return default;
 
             try {
-                var data = DataHelper.ConvertDDS(guid.Value, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.PNG, 0);
-
-                var bitmap = new BitmapImage();
-                using (var ms = new MemoryStream(data)) {
-                    ms.Position = 0;
-                    bitmap.BeginInit();
-                    bitmap.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.UriSource = null;
-                    bitmap.StreamSource = ms;
-                    bitmap.EndInit();
+                var data = DataHelper.ConvertDDS(guid.Value, DXGI_FORMAT.R8G8B8A8_UNORM, 0, 0, out var width, out var height);
+                if(data.IsEmpty) {
+                    return null;
                 }
-
-                bitmap.Freeze();
-                return bitmap;
+                return new RGBABitmapSource(data, width, height);
             } catch {
                 return default;
             }

@@ -17,39 +17,41 @@ namespace DataTool.Helper {
         public static extern int CoInitializeEx([In, Optional] IntPtr pvReserved, [In] CoInit dwCoInit);
 
 
-        public static unsafe byte[] ConvertDDS(Stream ddsSteam, DXGI_FORMAT targetFormat, WICCodecs codec, int frame) {
+        public static unsafe Memory<byte> ConvertDDS(Stream ddsSteam, DXGI_FORMAT targetFormat, WICCodecs codec, int frame) {
             try {
                 CoInitializeEx(IntPtr.Zero, CoInit.MultiThreaded | CoInit.SpeedOverMemory);
 
-                byte[] data = new byte[ddsSteam.Length];
-                ddsSteam.Read(data, 0, data.Length);
+                Memory<byte> data = new byte[ddsSteam.Length];
+                ddsSteam.Read(data.Span);
                 ScratchImage scratch = null;
                 try {
-                    fixed (byte* dataPin = data) {
-                        scratch = TexHelper.Instance.LoadFromDDSMemory((IntPtr) dataPin, data.Length, DDS_FLAGS.NONE);
-                        TexMetadata info = scratch.GetMetadata();
+                    var dataPin = data.Pin();
+                    scratch = TexHelper.Instance.LoadFromDDSMemory((IntPtr) dataPin.Pointer, data.Length, DDS_FLAGS.NONE);
+                    TexMetadata info = scratch.GetMetadata();
 
-                        var isMultiFrame = codec == WICCodecs.GIF || codec == WICCodecs.TIFF;
-                        if (TexHelper.Instance.IsCompressed(info.Format)) {
-                            ScratchImage temp;
-                            if (info.ArraySize == 1 || !isMultiFrame) {
-                                temp = scratch.Decompress(frame, DXGI_FORMAT.UNKNOWN);
-                            } else {
-                                temp = scratch.Decompress(DXGI_FORMAT.UNKNOWN);
-                            }
-                            scratch.Dispose();
-                            scratch = temp;
-
-                            info = scratch.GetMetadata();
+                    var isMultiFrame = codec == WICCodecs.GIF || codec == WICCodecs.TIFF;
+                    if (TexHelper.Instance.IsCompressed(info.Format)) {
+                        ScratchImage temp;
+                        if (info.ArraySize == 1 || !isMultiFrame) {
+                            temp = scratch.Decompress(frame, DXGI_FORMAT.UNKNOWN);
+                        } else {
+                            temp = scratch.Decompress(DXGI_FORMAT.UNKNOWN);
                         }
 
-                        if (info.Format != targetFormat) {
-                            ScratchImage temp = scratch.Convert(targetFormat, TEX_FILTER_FLAGS.DEFAULT, 0.5f);
-                            scratch.Dispose();
-                            scratch = temp;
-                        }
+                        scratch.Dispose();
+                        scratch = temp;
 
-                        UnmanagedMemoryStream stream = null;
+                        info = scratch.GetMetadata();
+                    }
+
+                    if (info.Format != targetFormat) {
+                        ScratchImage temp = scratch.Convert(targetFormat, TEX_FILTER_FLAGS.DEFAULT, 0.5f);
+                        scratch.Dispose();
+                        scratch = temp;
+                    }
+
+                    if (codec > 0) {
+                        UnmanagedMemoryStream stream;
                         if (info.ArraySize == 1 || !isMultiFrame) {
                             stream = scratch.SaveToWICMemory(frame, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(codec));
                         } else {
@@ -57,11 +59,17 @@ namespace DataTool.Helper {
                         }
 
                         if (stream == null) {
-                            return null;
+                            return default;
                         }
 
                         byte[] tex = new byte[stream.Length];
                         stream.Read(tex, 0, tex.Length);
+                        scratch.Dispose();
+                        return tex;
+                    } else { // save as raw RGBA
+                        var image = scratch.GetImage(0);
+                        Memory<byte> tex = new byte[image.Width * image.Height * 4];
+                        Buffer.MemoryCopy((void*) image.Pixels, tex.Pin().Pointer, tex.Length, tex.Length);
                         scratch.Dispose();
                         return tex;
                     }
@@ -74,7 +82,7 @@ namespace DataTool.Helper {
                 // ignored
             }
 
-            return null;
+            return default;
         }
     }
 }

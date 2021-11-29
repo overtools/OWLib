@@ -3,15 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:TankView.View"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:objectModel="clr-namespace:TankView.ObjectModel"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="400">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../template/DetailsViewStyles.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="../ResourceDictionary/DetailsViewStyles.xaml"></ResourceDictionary>
+                <ResourceDictionary>
+                    <objectModel:StringGuidConverter x:Key="StringGuidConverter" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -32,8 +34,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
-        <TextBlock 
+
+        <TextBlock
             Text="{Binding GUIDEntry}"
             Margin="15,15,15,0"
             FontWeight="bold"
@@ -41,13 +43,13 @@
 
         <ContentControl Grid.Row="1" Content="{Binding SoundPreviewControl}" />
 
-        <TextBlock 
+        <TextBlock
             Text="Voice Lines:"
             Margin="15,0,15,0"
             FontWeight="bold"
             Grid.Row="2" />
 
-        <ListView 
+        <ListView
             Grid.Row="3"
             ItemsSource="{Binding VoiceLines}" Margin="15,0,15,0"
             SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
@@ -59,17 +61,17 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        
+
         <!--
-        <TextBlock 
+        <TextBlock
             Text="Voice Lines:"
             Margin="15,15,15,0"
             FontWeight="bold"
             Grid.Row="3" />
             -->
-        
+
         <!--
-        <ListView 
+        <ListView
             Grid.Row="4"
             ItemsSource="{Binding SelectedItem.Voicelines}" Margin="15,15,15,0"
             SelectedItem="{Binding SelectedVoiceLineItem, Mode=OneWayToSource}">

@@ -181,6 +181,24 @@ namespace DataTool.Helper {
             }
         }
 
+        public static void WriteFile(Memory<byte> bytes, string filename) {
+            string path = Path.GetDirectoryName(filename);
+            if (!Directory.Exists(path) && path != null) {
+                Directory.CreateDirectory(path);
+            }
+
+            try {
+                using (Stream file = File.OpenWrite(filename)) {
+                    file.SetLength(0); // ensure no leftover data
+                    file.Write(bytes.Span);
+                }
+            }
+            catch (IOException) {
+                if (File.Exists(filename)) return;
+                throw;
+            }
+        }
+
         public static void WriteFile(ulong guid, string path) {
             if (!TankHandler.m_assets.ContainsKey(guid)) return;
             WriteFile(OpenFile(guid), guid, path);

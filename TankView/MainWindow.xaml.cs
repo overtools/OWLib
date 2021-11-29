@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -62,6 +62,9 @@ namespace TankView {
         }
 
         public string SearchQuery {
+            get {
+                return GUIDTree.Search;
+            }
             set {
                 if (GUIDTree == null) return;
                 GUIDTree.Search = value;
@@ -315,7 +318,7 @@ namespace TankView {
             }
 
             if (!(sender is TreeViewItem item)) return;
-            if (item.DataContext is Folder folder) GUIDTree.SelectedEntries = folder.Files;
+            if (item.DataContext is Folder folder) GUIDTree.SelectedEntries = folder.Files.ToArray();
             NotifyPropertyChanged(nameof(GUIDTree));
             e.Handled = true;
         }
@@ -453,24 +456,6 @@ namespace TankView {
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok) {
                 ExtractFolder(dialog.FileName, (sender as FrameworkElement)?.DataContext as Folder);
             }
-        }
-
-        private bool _hasShownWelcomePopup;
-        private void FirstChance(object sender, EventArgs e) {
-            if (_hasShownWelcomePopup) {
-                return;
-            }
-
-            _hasShownWelcomePopup = true;
-
-            if (Debugger.IsAttached) {
-                IsEnabled = true;
-                // OpenCASC(""); // Use to auto load a dir at startup, useful or dev
-                return;
-            }
-
-            new AboutPage(this).Show();
-            Hide();
         }
 
         /// <summary>
