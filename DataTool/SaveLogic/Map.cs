@@ -239,11 +239,11 @@ namespace DataTool.SaveLogic {
 
                         writer.Write(light.Header.Unknown4A);
                         writer.Write(light.Header.Unknown4B);
-                        writer.Write(light.Header.Unknown5);
-                        writer.Write(light.Header.Unknown6A);
-                        writer.Write(light.Header.Unknown6B);
-                        writer.Write(light.Header.Unknown7A);
-                        writer.Write(light.Header.Unknown7B);
+                        writer.Write(light.Header.ProjectionTexture1);
+                        writer.Write(light.Header.ProjectionTexture2);
+
+                        FindLogic.Combo.Find(Info, light.Header.ProjectionTexture1);
+                        FindLogic.Combo.Find(Info, light.Header.ProjectionTexture2);
                     }
 
                     writer.Write(Sounds.Header.PlaceableCount); // nr Sounds

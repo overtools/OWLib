@@ -20,9 +20,9 @@ namespace TankLib {
 
         [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
         protected teMapChunk() {
-            
+
         }
-        
+
         [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
         protected teMapChunk(Stream stream, teMAP_PLACEABLE_TYPE type) {
             using (BinaryReader reader = new BinaryReader(stream)) {
@@ -35,7 +35,7 @@ namespace TankLib {
             Read(reader, type);
         }
     }
-    
+
     public class teMapPlaceableData : teMapChunk {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct CommonStructure {
@@ -43,24 +43,24 @@ namespace TankLib {
             /// Placeable UUID
             /// </summary>
             public teUUID UUID;
-            
+
             public ushort Unknown1;
             public byte Unknown2;
             public byte Unknown3;
-            
+
             /// <summary>
             /// Size in bytes (including this structure)
             /// </summary>
             public uint Size;
         }
-        
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct PlaceableDataHeader {
             /// <summary>
             /// Number of placeables
             /// </summary>
             public uint PlaceableCount;
-            
+
             /// <summary>
             /// Offset to component instance data STUs
             /// </summary>
@@ -68,12 +68,12 @@ namespace TankLib {
             /// AFAIK you have to add 16 to get a useable value
             /// </remarks>
             public uint InstanceDataOffset;
-            
+
             /// <summary>
             /// Offset to placeables
             /// </summary>
             public uint PlaceableOffset;
-            
+
             public uint Unknown2;
         }
 
@@ -88,13 +88,13 @@ namespace TankLib {
 
         public teMapPlaceableData(Stream stream, teMAP_PLACEABLE_TYPE type) : base(stream, type) { }
         public teMapPlaceableData(BinaryReader reader, teMAP_PLACEABLE_TYPE type) : base(reader, type) { }
-        
+
         protected override void Read(BinaryReader reader, teMAP_PLACEABLE_TYPE type) {
             Header = reader.Read<PlaceableDataHeader>();
-            
+
             if (Header.PlaceableOffset > 0) {
                 reader.BaseStream.Position = Header.PlaceableOffset;
-                
+
                 CommonStructures = new CommonStructure[Header.PlaceableCount];
                 Placeables = new IMapPlaceable[Header.PlaceableCount];
 
@@ -105,7 +105,7 @@ namespace TankLib {
                     CommonStructures[i] = commonStructure;
 
                     Placeables[i] = Manager.CreateType(commonStructure, type, reader);
-                    
+
                     reader.BaseStream.Position = beforePos + CommonStructures[i].Size;
                 }
 
@@ -135,7 +135,7 @@ namespace TankLib {
                 }
             }
         }
-        
+
         /*private void AlignPosition(long start, BinaryReader reader, teStructuredData stu) {
             long maxOffset = stu.InstanceInfoV1.Max(x => x.Offset)+start;
             AlignPositionInternal(reader, maxOffset+8);
@@ -161,7 +161,7 @@ namespace TankLib {
 
         void Read(BinaryReader reader);
     }
-    
+
     public class teMapPlaceableModelGroup : IMapPlaceable {
         public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.MODEL_GROUP;
 
@@ -175,14 +175,14 @@ namespace TankLib {
             public uint Unk2;
             public uint Unk3;
         }
-        
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Group {
             public teResourceGUID ModelLook;
             public uint UnkSize;
             public int EntryCount;
         }
-        
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Entry {
             public teVec3 Translation;
@@ -205,10 +205,10 @@ namespace TankLib {
         public Structure Header;
         public Group[] Groups;
         public Entry[][] Entries;
-        
+
         public void Read(BinaryReader reader) {
             Header = reader.Read<Structure>();
-            
+
             Groups = new Group[Header.GroupCount];
             Entries = new Entry[Header.GroupCount][];
 
@@ -223,7 +223,7 @@ namespace TankLib {
 
     public class teMapPlaceableEntity : IMapPlaceable {
         public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.ENTITY;
-        
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
             public teResourceGUID EntityDefinition;  // 003
@@ -233,7 +233,7 @@ namespace TankLib {
             public teVec3 Scale;
             public teQuat Rotation;
             public uint InstanceDataCount;
-            
+
             // todo: more data here
         }
 
@@ -243,16 +243,16 @@ namespace TankLib {
 
         public void Read(BinaryReader reader) {
             long start = reader.BaseStream.Position;
-            
+
             Header = reader.Read<Structure>();
-            
+
             m_instanceDataOffsets = new uint[Header.InstanceDataCount];
 
             const int instArrayOffset = 112;
             reader.BaseStream.Position = start + instArrayOffset;
             for (int i = 0; i < Header.InstanceDataCount; i++) {
                 long disStart = reader.BaseStream.Position;
-                
+
                 var _ = reader.ReadUInt32(); // type
                 var relOffset = reader.ReadUInt32();
 
@@ -261,10 +261,10 @@ namespace TankLib {
             }
         }
     }
-    
+
     public class teMapPlaceableLight : IMapPlaceable {
         public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.LIGHT;
-        
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
             public teQuat Rotation;
@@ -288,11 +288,8 @@ namespace TankLib {
             public teQuat UnknownQuat3;
             public float Unknown4A;
             public float Unknown4B;
-            public uint Unknown5;       // definitly an Int of some kind
-            public short Unknown6A;
-            public short Unknown6B;
-            public uint Unknown7A;
-            public uint Unknown7B;
+            public teResourceGUID ProjectionTexture1;
+            public teResourceGUID ProjectionTexture2;
         }
 
         public Structure Header;
@@ -301,7 +298,7 @@ namespace TankLib {
             Header = reader.Read<Structure>();
         }
     }
-    
+
     public class teMapPlaceableSingleModel : IMapPlaceable {
         public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.SINGLE_MODEL;
 
@@ -378,19 +375,19 @@ namespace TankLib {
 
     public class teMapPlaceableText : IMapPlaceable {
         public teMAP_PLACEABLE_TYPE Type => teMAP_PLACEABLE_TYPE.TEXT;
-        
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
             public float FloatA;
             public float FloatB;
             public float FloatC;
             public float FloatD;
-            
+
             public float FloatE;
             public float FloatF;
             public float FloatG;
             public float FloatH;
-            
+
             public teResourceGUID String;
             public teResourceGUID MapFont;
             public teResourceGUID Material;
@@ -463,14 +460,14 @@ namespace TankLib {
 
     public class teMapPlaceableManager {
         public Dictionary<teMAP_PLACEABLE_TYPE, Type> Types;
-        private readonly HashSet<teMAP_PLACEABLE_TYPE> _misingTypes; 
-        
+        private readonly HashSet<teMAP_PLACEABLE_TYPE> _misingTypes;
+
         public teMapPlaceableManager() {
             _misingTypes = new HashSet<teMAP_PLACEABLE_TYPE>();
             Types = new Dictionary<teMAP_PLACEABLE_TYPE, Type>();
             AddAssemblyTypes(typeof(teMapPlaceableData).Assembly);
         }
-        
+
         public void AddAssemblyTypes(Assembly assembly) {
             foreach (Type type in GetAssemblyTypes<IMapPlaceable>(assembly)) {
                 if (type.IsInterface) continue;
