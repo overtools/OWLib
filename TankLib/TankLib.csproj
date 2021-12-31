@@ -38,7 +38,7 @@
   </ItemGroup>
   <Target Name="FixNet5Regression" AfterTargets="Publish">
     <ConvertToAbsolutePath Paths="$(PublishDir)">
-        <Output TaskParameter="AbsolutePaths" PropertyName="AbsolutePublishDir"/>
+        <Output TaskParameter="AbsolutePaths" PropertyName="AbsolutePublishDir" />
     </ConvertToAbsolutePath>
     <Copy SourceFiles="$(AbsolutePublishDir)/DirectXTexNetImpl.dll" DestinationFolder="$(AbsolutePublishDir)/runtimes/win-x64/native" SkipUnchangedFiles="true" />
   </Target>

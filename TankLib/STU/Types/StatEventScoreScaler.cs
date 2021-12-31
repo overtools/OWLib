@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     public class StatEventScoreScaler : STUInstance
     {
         [STUField(0xB44A42A0, 0)] // size: 4
-        public Enum_E7FEC166 m_B44A42A0;
+        public STUStatEvent m_B44A42A0;
         
         [STUField(0x9A97C666, 4)] // size: 4
         public float m_9A97C666;

@@ -32,3 +32,11 @@ C1DAF32A, STUHeroSize
 161443EA, STUPortraitFrameRank
 4BE16CA5, STURankedTier
 A0F51DCC, STUMapType
+CC0F4675, STUStatDisplayType
+6CBB673B, STUStatCategory
+149525F6, STUStatUpdateType
+E7FEC166, STUStatEvent
+8C9887E8, STUStatMapsType
+5B361C17, STUStatHeroesType
+B220D6E4, STUPlayerStatEvent
+F5D8585C, STUStatTimeframe

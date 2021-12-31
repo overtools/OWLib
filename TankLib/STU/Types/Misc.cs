@@ -4997,7 +4997,7 @@ namespace TankLib.STU.Types
     public class STU_187495F3 : STU_416D9897
     {
         [STUField(0xB44A42A0, 8)] // size: 4
-        public Enum_E7FEC166 m_B44A42A0;
+        public STUStatEvent m_B44A42A0;
     }
     
     [STU(0x187D5125, 144)]
@@ -6780,7 +6780,7 @@ namespace TankLib.STU.Types
         public STUConfigVar m_6E2D2269;
         
         [STUField(0xB44A42A0, 168)] // size: 4
-        public Enum_E7FEC166 m_B44A42A0;
+        public STUStatEvent m_B44A42A0;
     }
     
     [STU(0x1F35781A, 40)]
@@ -9996,7 +9996,7 @@ namespace TankLib.STU.Types
         public STU_CACA2D30 m_heroes;
         
         [STUField(0xB44A42A0, 16)] // size: 4
-        public Enum_E7FEC166 m_B44A42A0;
+        public STUStatEvent m_B44A42A0;
     }
     
     [STU(0x2CAC0A45, 16)]
@@ -10307,7 +10307,7 @@ namespace TankLib.STU.Types
         public STU_CACA2D30 m_heroes;
         
         [STUField(0x08CACF3A, 16)] // size: 4
-        public Enum_149525F6 m_08CACF3A;
+        public STUStatUpdateType m_08CACF3A;
     }
     
     [STU(0x2E708EC1, 24)]
@@ -12334,13 +12334,13 @@ namespace TankLib.STU.Types
         public STU_CACA2D30 m_heroes;
         
         [STUField(0xB44A42A0, 16)] // size: 4
-        public Enum_E7FEC166 m_B44A42A0;
+        public STUStatEvent m_B44A42A0;
         
         [STUField(0x08CACF3A, 20)] // size: 4
-        public Enum_149525F6 m_08CACF3A;
+        public STUStatUpdateType m_08CACF3A;
         
         [STUField(0xA76D02A2, 24)] // size: 4
-        public Enum_F5D8585C m_A76D02A2;
+        public STUStatTimeframe m_A76D02A2;
     }
     
     [STU(0x37D36253, 8)]
@@ -19468,7 +19468,7 @@ namespace TankLib.STU.Types
     public class STU_58E4EC09 : STUInstance
     {
         [STUField(0xB44A42A0, 8)] // size: 4
-        public Enum_E7FEC166 m_B44A42A0;
+        public STUStatEvent m_B44A42A0;
         
         [STUField(0xAF872E86, 12)] // size: 4
         public float m_amount;
@@ -21596,7 +21596,7 @@ namespace TankLib.STU.Types
         public STUConfigVar m_targets;
         
         [STUField(0xB44A42A0, 240)] // size: 4
-        public Enum_E7FEC166 m_B44A42A0;
+        public STUStatEvent m_B44A42A0;
     }
     
     [STU(0x63D9B81B, 40)]
@@ -21974,20 +21974,20 @@ namespace TankLib.STU.Types
         public STU_CACA2D30 m_heroes;
         
         [STUField(0xB44A42A0, 16)] // size: 4
-        public Enum_E7FEC166 m_B44A42A0;
+        public STUStatEvent m_B44A42A0;
         
         [STUField(0x08CACF3A, 20)] // size: 4
-        public Enum_149525F6 m_08CACF3A;
+        public STUStatUpdateType m_08CACF3A;
     }
     
     [STU(0x65F514A5, 16)]
     public class STU_65F514A5 : STU_0CF6650E
     {
         [STUField(0x08CACF3A, 8)] // size: 4
-        public Enum_149525F6 m_08CACF3A;
+        public STUStatUpdateType m_08CACF3A;
         
         [STUField(0xA76D02A2, 12)] // size: 4
-        public Enum_F5D8585C m_A76D02A2;
+        public STUStatTimeframe m_A76D02A2;
     }
     
     [STU(0x66080F70, 32)]
@@ -25468,16 +25468,16 @@ namespace TankLib.STU.Types
         public STU_CACA2D30 m_heroes;
         
         [STUField(0x0BB7C364, 16)] // size: 4
-        public Enum_E7FEC166 m_0BB7C364;
+        public STUStatEvent m_0BB7C364;
         
         [STUField(0x9F8E3168, 20)] // size: 4
-        public Enum_E7FEC166 m_9F8E3168;
+        public STUStatEvent m_9F8E3168;
         
         [STUField(0x08CACF3A, 24)] // size: 4
-        public Enum_149525F6 m_08CACF3A;
+        public STUStatUpdateType m_08CACF3A;
         
         [STUField(0xA76D02A2, 28)] // size: 4
-        public Enum_F5D8585C m_A76D02A2;
+        public STUStatTimeframe m_A76D02A2;
     }
     
     [STU(0x73AE9738, 152)]
@@ -29239,7 +29239,7 @@ namespace TankLib.STU.Types
     public class STU_835A7560 : STU_0CF6650E
     {
         [STUField(0x08CACF3A, 8)] // size: 4
-        public Enum_149525F6 m_08CACF3A;
+        public STUStatUpdateType m_08CACF3A;
     }
     
     [STU(0x835EBB76, 16)]
@@ -34344,13 +34344,13 @@ namespace TankLib.STU.Types
     public class STU_9CCA40BE : STU_9BDF539E
     {
         [STUField(0xB44A42A0, 8)] // size: 4
-        public Enum_E7FEC166 m_B44A42A0;
+        public STUStatEvent m_B44A42A0;
         
         [STUField(0x08CACF3A, 12)] // size: 4
-        public Enum_149525F6 m_08CACF3A;
+        public STUStatUpdateType m_08CACF3A;
         
         [STUField(0xA76D02A2, 16)] // size: 4
-        public Enum_F5D8585C m_A76D02A2;
+        public STUStatTimeframe m_A76D02A2;
     }
     
     [STU(0x9CD5CCA4, 40)]
@@ -45206,7 +45206,7 @@ namespace TankLib.STU.Types
     public class STU_D28A6BB5 : STU_042E618A
     {
         [STUField(0xC6C4C538, 8)] // size: 4
-        public Enum_B220D6E4 m_C6C4C538;
+        public STUPlayerStatEvent m_C6C4C538;
     }
     
     [STU(0xD2A58AB2, 24)]
@@ -48748,10 +48748,10 @@ namespace TankLib.STU.Types
         public STU_CACA2D30 m_heroes;
         
         [STUField(0x08CACF3A, 16)] // size: 4
-        public Enum_149525F6 m_08CACF3A;
+        public STUStatUpdateType m_08CACF3A;
         
         [STUField(0xA76D02A2, 20)] // size: 4
-        public Enum_F5D8585C m_A76D02A2;
+        public STUStatTimeframe m_A76D02A2;
     }
     
     [STU(0xE1CC1F9B, 24)]
@@ -48966,7 +48966,7 @@ namespace TankLib.STU.Types
     public class STU_E2C36BB8 : STUInstance
     {
         [STUField(0x34A798D4, 0)] // size: 4
-        public Enum_E7FEC166[] m_34A798D4;
+        public STUStatEvent[] m_34A798D4;
         
         [STUField(0x4D2DB658, 16)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_identifier;
@@ -52314,10 +52314,10 @@ namespace TankLib.STU.Types
         public STU_CACA2D30 m_heroes;
         
         [STUField(0x08CACF3A, 16)] // size: 4
-        public Enum_149525F6 m_08CACF3A;
+        public STUStatUpdateType m_08CACF3A;
         
         [STUField(0xA76D02A2, 20)] // size: 4
-        public Enum_F5D8585C m_A76D02A2;
+        public STUStatTimeframe m_A76D02A2;
     }
     
     [STU(0xF387032E, 16)]

@@ -6,10 +6,10 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0xE95E2013)]
     public enum STUStatType : int
     {
-        [STUField(0xA09C66B1)] xA09C66B1 = 0,
-        [STUField(0x7AC4E1D8)] x7AC4E1D8 = 0x1,
-        [STUField(0x0A77ABB7)] x0A77ABB7 = 0x2,
-        [STUField(0x85A4983B)] x85A4983B = 0x3,
-        [STUField(0x808C6030)] x808C6030 = 0x4,
+        [STUField(0xA09C66B1)] Invalid = 0,
+        [STUField(0x7AC4E1D8)] Hero = 0x1,
+        [STUField(0x0A77ABB7)] PlayerMap = 0x2,
+        [STUField(0x85A4983B)] Player = 0x3,
+        [STUField(0x808C6030)] Team = 0x4,
     }
 }

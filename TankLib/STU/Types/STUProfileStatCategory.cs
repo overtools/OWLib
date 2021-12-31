@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     public class STUProfileStatCategory : STUInstance
     {
         [STUField(0x2C54AEAF, 0)] // size: 4
-        public Enum_6CBB673B m_category;
+        public STUStatCategory m_category;
         
         [STUField(0x18983896, 4)] // size: 4
         public int m_18983896;
