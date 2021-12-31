@@ -1525,7 +1525,7 @@ namespace TankLib.STU.Types
     public class STU_07F1D93E : STU_BD9E06D1
     {
         [STUField(0x6E01378E, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
-        public STU_14C01353 m_6E01378E;
+        public STU_14C01353 m_maps;
     }
     
     [STU(0x0816083A, 32)]
@@ -10307,7 +10307,7 @@ namespace TankLib.STU.Types
         public STU_CACA2D30 m_heroes;
         
         [STUField(0x08CACF3A, 16)] // size: 4
-        public STUStatUpdateType m_08CACF3A;
+        public STUStatUpdateType m_updateType;
     }
     
     [STU(0x2E708EC1, 24)]
@@ -10854,7 +10854,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUStat> m_stat;
         
         [STUField(0x6E01378E, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
-        public STU_5BE96557 m_6E01378E;
+        public STU_5BE96557 m_maps;
     }
     
     [STU(0x3140A5AF, 232)]
@@ -12337,7 +12337,7 @@ namespace TankLib.STU.Types
         public STUStatEvent m_B44A42A0;
         
         [STUField(0x08CACF3A, 20)] // size: 4
-        public STUStatUpdateType m_08CACF3A;
+        public STUStatUpdateType m_updateType;
         
         [STUField(0xA76D02A2, 24)] // size: 4
         public STUStatTimeframe m_A76D02A2;
@@ -21977,14 +21977,14 @@ namespace TankLib.STU.Types
         public STUStatEvent m_B44A42A0;
         
         [STUField(0x08CACF3A, 20)] // size: 4
-        public STUStatUpdateType m_08CACF3A;
+        public STUStatUpdateType m_updateType;
     }
     
     [STU(0x65F514A5, 16)]
     public class STU_65F514A5 : STU_0CF6650E
     {
         [STUField(0x08CACF3A, 8)] // size: 4
-        public STUStatUpdateType m_08CACF3A;
+        public STUStatUpdateType m_updateType;
         
         [STUField(0xA76D02A2, 12)] // size: 4
         public STUStatTimeframe m_A76D02A2;
@@ -23913,7 +23913,7 @@ namespace TankLib.STU.Types
     public class STU_6C945453 : STUStatescriptState
     {
         [STUField(0x6E01378E, 232, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
-        public STUConfigVar m_6E01378E;
+        public STUConfigVar m_maps;
         
         [STUField(0x0F34B3E6, 240, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_0F34B3E6;
@@ -25468,13 +25468,13 @@ namespace TankLib.STU.Types
         public STU_CACA2D30 m_heroes;
         
         [STUField(0x0BB7C364, 16)] // size: 4
-        public STUStatEvent m_0BB7C364;
+        public STUStatEvent m_primaryEvent;
         
         [STUField(0x9F8E3168, 20)] // size: 4
         public STUStatEvent m_9F8E3168;
         
         [STUField(0x08CACF3A, 24)] // size: 4
-        public STUStatUpdateType m_08CACF3A;
+        public STUStatUpdateType m_updateType;
         
         [STUField(0xA76D02A2, 28)] // size: 4
         public STUStatTimeframe m_A76D02A2;
@@ -28020,7 +28020,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUStat> m_155E2A47;
         
         [STUField(0x6E01378E, 40, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
-        public STU_92F31FA1 m_6E01378E;
+        public STU_92F31FA1 m_maps;
     }
     
     [STU(0x7D66C14F, 8)]
@@ -28409,7 +28409,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUStat> m_155E2A47;
         
         [STUField(0x6E01378E, 40, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
-        public STU_92F31FA1 m_6E01378E;
+        public STU_92F31FA1 m_maps;
     }
     
     [STU(0x7F8DF540, 64)]
@@ -29239,7 +29239,7 @@ namespace TankLib.STU.Types
     public class STU_835A7560 : STU_0CF6650E
     {
         [STUField(0x08CACF3A, 8)] // size: 4
-        public STUStatUpdateType m_08CACF3A;
+        public STUStatUpdateType m_updateType;
     }
     
     [STU(0x835EBB76, 16)]
@@ -34347,7 +34347,7 @@ namespace TankLib.STU.Types
         public STUStatEvent m_B44A42A0;
         
         [STUField(0x08CACF3A, 12)] // size: 4
-        public STUStatUpdateType m_08CACF3A;
+        public STUStatUpdateType m_updateType;
         
         [STUField(0xA76D02A2, 16)] // size: 4
         public STUStatTimeframe m_A76D02A2;
@@ -35011,7 +35011,7 @@ namespace TankLib.STU.Types
     public class STU_A04C6179 : STU_769D90C4
     {
         [STUField(0x6E01378E, 8)] // size: 16
-        public teStructuredDataAssetRef<STUMap>[] m_6E01378E;
+        public teStructuredDataAssetRef<STUMap>[] m_maps;
     }
     
     [STU(0xA04D1C17, 16)]
@@ -40792,7 +40792,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUMapLayer> m_AA43F96E;
         
         [STUField(0x6E01378E, 24)] // size: 16
-        public teStructuredDataAssetRef<STUMap>[] m_6E01378E;
+        public teStructuredDataAssetRef<STUMap>[] m_maps;
     }
     
     [STU(0xBE408E5C, 48)]
@@ -45206,7 +45206,7 @@ namespace TankLib.STU.Types
     public class STU_D28A6BB5 : STU_042E618A
     {
         [STUField(0xC6C4C538, 8)] // size: 4
-        public STUPlayerStatEvent m_C6C4C538;
+        public STUPlayerStatEvent m_playerEvent;
     }
     
     [STU(0xD2A58AB2, 24)]
@@ -45786,7 +45786,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUStat> m_stat;
         
         [STUField(0x6E01378E, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
-        public STU_5BE96557 m_6E01378E;
+        public STU_5BE96557 m_maps;
     }
     
     [STU(0xD555EDB7, 8)]
@@ -48748,7 +48748,7 @@ namespace TankLib.STU.Types
         public STU_CACA2D30 m_heroes;
         
         [STUField(0x08CACF3A, 16)] // size: 4
-        public STUStatUpdateType m_08CACF3A;
+        public STUStatUpdateType m_updateType;
         
         [STUField(0xA76D02A2, 20)] // size: 4
         public STUStatTimeframe m_A76D02A2;
@@ -52314,7 +52314,7 @@ namespace TankLib.STU.Types
         public STU_CACA2D30 m_heroes;
         
         [STUField(0x08CACF3A, 16)] // size: 4
-        public STUStatUpdateType m_08CACF3A;
+        public STUStatUpdateType m_updateType;
         
         [STUField(0xA76D02A2, 20)] // size: 4
         public STUStatTimeframe m_A76D02A2;

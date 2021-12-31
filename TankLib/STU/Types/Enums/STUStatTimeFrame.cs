@@ -6,7 +6,7 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0xF5D8585C)]
     public enum STUStatTimeframe : int
     {
-        [STUField(0x1D7ECA26)] StateScript = 0,
+        [STUField(0x1D7ECA26)] x1D7ECA26 = 0,
         [STUField(0xDF9E5A62)] Life = 0x1,
         [STUField(0x6F4F71B6)] Match = 0x2,
         [STUField(0x140A7242)] Lifetime = 0x3,

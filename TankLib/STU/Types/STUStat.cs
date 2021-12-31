@@ -20,7 +20,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUHero>[] m_heroes;
 
         [STUField(0x6E01378E, 72)] // size: 16
-        public teStructuredDataAssetRef<STUMap>[] m_6E01378E;
+        public teStructuredDataAssetRef<STUMap>[] m_maps;
 
         [STUField(0xD440A0F7, 88)] // size: 4
         public TeamIndex[] m_teams;

@@ -4436,15 +4436,6 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xB47E98AC)] xB47E98AC = 0x3,
     }
 
-    [STUEnum(0xE279EC92)]
-    public enum STUStatTeamsType : int
-    {
-        [STUField(0xD41F5AF0)] AllTeams = 0,
-        [STUField(0xC132B6D7)] xC132B6D7 = 0x1,
-        [STUField(0xD34C2EA9)] SpecificTeams = 0x2,
-        [STUField(0xECAFCE50)] Invalid = 0x3,
-    }
-
     [STUEnum(0xE279F7A6)]
     public enum Enum_E279F7A6 : int
     {
