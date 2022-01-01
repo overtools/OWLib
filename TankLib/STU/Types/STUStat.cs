@@ -86,6 +86,6 @@ namespace TankLib.STU.Types
         public byte m_439EAAA8;
 
         [STUField(0xEED826CD, 203)] // size: 1
-        public byte m_EED826CD;
+        public byte m_derivedStat;
     }
 }

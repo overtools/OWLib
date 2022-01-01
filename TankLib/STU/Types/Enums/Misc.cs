@@ -4137,12 +4137,12 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0xCD0A8047)]
     public enum Enum_CD0A8047 : int
     {
-        [STUField(0x5BFD3D51)] x5BFD3D51 = 0,
-        [STUField(0xC33FF09B)] xC33FF09B = 0x1,
-        [STUField(0xB097D778)] xB097D778 = 0x2,
-        [STUField(0xBADE844D)] xBADE844D = 0x3,
-        [STUField(0x532D9D52)] x532D9D52 = 0x4,
-        [STUField(0xCC0FA6A2)] xCC0FA6A2 = 0x5,
+        [STUField(0x5BFD3D51)] Game = 0,
+        [STUField(0xC33FF09B)] Combat = 0x1,
+        [STUField(0xB097D778)] Assists = 0x2,
+        [STUField(0xBADE844D)] HeroSpecific = 0x3,
+        [STUField(0x532D9D52)] Average = 0x4,
+        [STUField(0xCC0FA6A2)] Best = 0x5,
         [STUField(0x582FC71C)] x582FC71C = 0x6,
         [STUField(0x9ECF2F6A)] x9ECF2F6A = 0x7,
     }
