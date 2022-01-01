@@ -311,7 +311,7 @@ namespace DataTool.SaveLogic {
             }
 
             {
-                FindLogic.Combo.Find(info, mapHeader.m_86C1CFAB);
+                FindLogic.Combo.Find(info, mapHeader.m_loadingScreen);
                 FindLogic.Combo.Find(info, mapHeader.m_smallMapIcon);
                 FindLogic.Combo.Find(info, mapHeader.m_loadingScreenFlag);
 

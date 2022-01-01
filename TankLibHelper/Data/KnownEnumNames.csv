@@ -165,13 +165,13 @@ D34C2EA9, SpecificTeams
 666FD065, SpecificHeroes
 3A6D687B, MatchEnter
 F669002F, MatchWon
-69F07E27, MatchLeft
-F54EBBAB, MatchDisconnect
-F428C120, MatchReconnect
-21B679C7, OffenseEnter
-1FB5608D, OffenseWon
-25B1D62F, DefenseEnter
-75CB2306, DefenseWon
+69F07E27, LeftMatch
+F54EBBAB, Disconnect
+F428C120, Reconnect
+21B679C7, OffenseMatchEnter
+1FB5608D, OffenseMatchWon
+25B1D62F, DefenseMatchEnter
+75CB2306, DefenseMatchWon
 D631CF0E, MatchTie
 DF9E5A62, Life
 6F4F71B6, Match
@@ -182,3 +182,5 @@ B097D778, Assists
 BADE844D, HeroSpecific
 532D9D52, Average
 CC0FA6A2, Best
+582FC71C, MatchAwards
+9ECF2F6A, Miscellaneous

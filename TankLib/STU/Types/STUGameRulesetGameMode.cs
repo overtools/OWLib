@@ -26,6 +26,6 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_description;
         
         [STUField(0x86C1CFAB, 96)] // size: 16
-        public teStructuredDataAssetRef<ulong> m_86C1CFAB;
+        public teStructuredDataAssetRef<ulong> m_loadingScreen;
     }
 }

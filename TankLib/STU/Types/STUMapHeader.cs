@@ -23,7 +23,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_DDC37F3D;
         
         [STUField(0x86C1CFAB, 88)] // size: 16
-        public teStructuredDataAssetRef<ulong> m_86C1CFAB;
+        public teStructuredDataAssetRef<ulong> m_loadingScreen;
         
         [STUField(0xC6599DEB, 104)] // size: 16
         public teStructuredDataAssetRef<ulong> m_loadingScreenFlag;

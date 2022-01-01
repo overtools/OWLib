@@ -82,7 +82,7 @@ namespace DataTool.DataModels {
             State = mapHeader.m_A125818B;
             MapType = mapHeader.m_mapType;
             Thumbnail = mapHeader.m_smallMapIcon;
-            Image = mapHeader.m_86C1CFAB;
+            Image = mapHeader.m_loadingScreen;
             FlagImage = mapHeader.m_loadingScreenFlag;
             GameModes = mapHeader.m_supportedGamemodes?.Select(x => new GameMode(x).ToLite()).Where(x => x.GUID != 0);
 

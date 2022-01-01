@@ -4143,8 +4143,8 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xBADE844D)] HeroSpecific = 0x3,
         [STUField(0x532D9D52)] Average = 0x4,
         [STUField(0xCC0FA6A2)] Best = 0x5,
-        [STUField(0x582FC71C)] x582FC71C = 0x6,
-        [STUField(0x9ECF2F6A)] x9ECF2F6A = 0x7,
+        [STUField(0x582FC71C)] MatchAwards = 0x6,
+        [STUField(0x9ECF2F6A)] Miscellaneous = 0x7,
     }
 
     [STUEnum(0xCD44C27E)]
