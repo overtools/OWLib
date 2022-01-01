@@ -17,7 +17,7 @@ namespace TankLib.STU.Types
         public STUMapCelebrationOverride[] m_celebrationOverrides;
         
         [STUField(0xD608E9F3, 56)] // size: 16
-        public teStructuredDataAssetRef<STUGameMode>[] m_D608E9F3;
+        public teStructuredDataAssetRef<STUGameMode>[] m_supportedGamemodes;
         
         [STUField(0xDDC37F3D, 72)] // size: 16
         public teStructuredDataAssetRef<ulong> m_DDC37F3D;
@@ -26,7 +26,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_86C1CFAB;
         
         [STUField(0xC6599DEB, 104)] // size: 16
-        public teStructuredDataAssetRef<ulong> m_C6599DEB;
+        public teStructuredDataAssetRef<ulong> m_loadingScreenFlag;
         
         [STUField(0xA0AE2E3E, 120)] // size: 16
         public teStructuredDataAssetRef<ulong> m_musicTease;
@@ -53,7 +53,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_displayName;
         
         [STUField(0x1C706502, 248)] // size: 16
-        public teStructuredDataAssetRef<ulong> m_1C706502;
+        public teStructuredDataAssetRef<ulong> m_overrideName;
         
         [STUField(0xEBCFAD22, 264)] // size: 16
         public teStructuredDataAssetRef<ulong> m_EBCFAD22;
@@ -71,7 +71,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_389CB894;
         
         [STUField(0x9386E669, 344)] // size: 16
-        public teStructuredDataAssetRef<ulong> m_9386E669;
+        public teStructuredDataAssetRef<ulong> m_smallMapIcon;
         
         [STUField(0xEBE72514, 360)] // size: 16
         public teStructuredDataAssetRef<ulong> m_EBE72514;

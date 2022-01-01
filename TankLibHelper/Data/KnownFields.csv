@@ -518,3 +518,7 @@ C6C4C538, m_playerEvent
 09276DD8, m_timeFrame
 C0211FD4, m_internalOnly
 EED826CD, m_derivedStat
+C6599DEB, m_loadingScreenFlag
+9386E669, m_smallMapIcon
+1C706502, m_overrideName
+D608E9F3, m_supportedGamemodes

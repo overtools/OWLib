@@ -72,7 +72,7 @@ namespace DataTool.DataModels {
         public void Init(STUMapHeader mapHeader, ulong key = default) {
             GUID = (teResourceGUID) key;
             Name = GetString(mapHeader.m_displayName);
-            VariantName = GetString(mapHeader.m_1C706502);
+            VariantName = GetString(mapHeader.m_overrideName);
             Description = GetString(mapHeader.m_389CB894);
             Description2 = GetString(mapHeader.m_ACB95597);
             Subline = GetString(mapHeader.m_EBCFAD22);
@@ -81,10 +81,10 @@ namespace DataTool.DataModels {
             MapGUID = mapHeader.m_map;
             State = mapHeader.m_A125818B;
             MapType = mapHeader.m_mapType;
-            Thumbnail = mapHeader.m_9386E669;
+            Thumbnail = mapHeader.m_smallMapIcon;
             Image = mapHeader.m_86C1CFAB;
-            FlagImage = mapHeader.m_C6599DEB;
-            GameModes = mapHeader.m_D608E9F3?.Select(x => new GameMode(x).ToLite()).Where(x => x.GUID != 0);
+            FlagImage = mapHeader.m_loadingScreenFlag;
+            GameModes = mapHeader.m_supportedGamemodes?.Select(x => new GameMode(x).ToLite()).Where(x => x.GUID != 0);
 
             if (mapHeader.m_celebrationOverrides != null) {
                 CelebrationVariants = mapHeader.m_celebrationOverrides.Select(x => {
@@ -116,7 +116,7 @@ namespace DataTool.DataModels {
         public static string GetName(ulong key) {
             var stu = GetInstance<STUMapHeader>(key);
             if (stu == null) return null;
-            return GetNullableGUIDName(key) ?? GetString(stu.m_1C706502) ?? GetString(stu.m_displayName) ?? "Unknown";
+            return GetNullableGUIDName(key) ?? GetString(stu.m_overrideName) ?? GetString(stu.m_displayName) ?? "Unknown";
         }
 
         public string GetUniqueName() {

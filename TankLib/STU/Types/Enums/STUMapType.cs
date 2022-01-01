@@ -6,7 +6,7 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0xA0F51DCC)]
     public enum STUMapType : int
     {
-        [STUField(0xA9A588B3)] Standard = 0,
+        [STUField(0xA9A588B3)] OffenseDefenseMap = 0,
         [STUField(0xA5BB799F)] MirroredMap = 0x1,
         [STUField(0x4224D20E)] PVE = 0x2,
     }

@@ -50,7 +50,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUTexture> m_D58D0365;
         
         [STUField(0x9386E669, 352)] // size: 16
-        public teStructuredDataAssetRef<STUTexture> m_9386E669;
+        public teStructuredDataAssetRef<STUTexture> m_smallMapIcon;
         
         [STUField(0xEBCFAD22, 368)] // size: 16
         public teStructuredDataAssetRef<ulong> m_EBCFAD22;
@@ -59,7 +59,7 @@ namespace TankLib.STU.Types
         public STUMapCelebrationOverride[] m_celebrationOverrides;
         
         [STUField(0x1C706502, 400)] // size: 16
-        public teStructuredDataAssetRef<ulong> m_1C706502;
+        public teStructuredDataAssetRef<ulong> m_overrideName;
         
         [STUField(0x8F0478F9, 416)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_8F0478F9;
@@ -89,7 +89,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUEntityDefinition> m_0BF8AB9F;
         
         [STUField(0xD608E9F3, 560)] // size: 16
-        public teStructuredDataAssetRef<STUGameMode>[] m_D608E9F3;
+        public teStructuredDataAssetRef<STUGameMode>[] m_supportedGamemodes;
         
         [STUField(0x6B04495C, 576)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_6B04495C;
@@ -110,7 +110,7 @@ namespace TankLib.STU.Types
         public ulong m_62354864 = 0x0;
         
         [STUField(0x1DD3A0CD, 664)] // size: 4
-        public STUMapType m_mapType = STUMapType.Standard;
+        public STUMapType m_mapType = STUMapType.OffenseDefenseMap;
         
         [STUField(0x44D13CC2, 668)] // size: 4
         public int m_44D13CC2 = -1;

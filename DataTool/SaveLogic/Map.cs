@@ -312,11 +312,11 @@ namespace DataTool.SaveLogic {
 
             {
                 FindLogic.Combo.Find(info, mapHeader.m_86C1CFAB);
-                FindLogic.Combo.Find(info, mapHeader.m_9386E669);
-                FindLogic.Combo.Find(info, mapHeader.m_C6599DEB);
+                FindLogic.Combo.Find(info, mapHeader.m_smallMapIcon);
+                FindLogic.Combo.Find(info, mapHeader.m_loadingScreenFlag);
 
-                if (mapHeader.m_D608E9F3 != null) {
-                    foreach (teResourceGUID gamemodeGUID in mapHeader.m_D608E9F3) {
+                if (mapHeader.m_supportedGamemodes != null) {
+                    foreach (teResourceGUID gamemodeGUID in mapHeader.m_supportedGamemodes) {
                         STUGameMode gameMode = GetInstance<STUGameMode>(gamemodeGUID);
                         if (gameMode == null) continue;
 

@@ -39818,7 +39818,7 @@ namespace TankLib.STU.Types
     public class STU_B7D2C9C0 : STUStatescriptState
     {
         [STUField(0x1C706502, 232)] // size: 16
-        public teStructuredDataAssetRef<ulong> m_1C706502;
+        public teStructuredDataAssetRef<ulong> m_overrideName;
         
         [STUField(0x14EDDDA7, 248, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_14EDDDA7;
