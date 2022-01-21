@@ -71,12 +71,12 @@ namespace DataTool.SaveLogic {
                     writer.Write(dmceInfo.Material);
                     writer.Write(dmceInfo.Model);
                     FindLogic.Combo.ModelAsset modelInfo = Info.m_models[dmceInfo.Model];
-                    writer.Write($"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl");
+                    writer.Write(Path.Combine("Models",modelInfo.GetName(),modelInfo.GetNameIndex() + ".owmdl"));
                     if (dmceInfo.Animation == 0) {
                         writer.Write("null");
                     } else {
                         FindLogic.Combo.AnimationAsset animationInfo = Info.m_animations[dmceInfo.Animation];
-                        writer.Write($"Models\\{modelInfo.GetName()}\\{OverwatchAnimationEffect.AnimationEffectDir}\\{animationInfo.GetNameIndex()}\\{animationInfo.GetNameIndex()}.owanim");
+                        writer.Write(Path.Combine("Models",modelInfo.GetName(),OverwatchAnimationEffect.AnimationEffectDir,animationInfo.GetNameIndex(),animationInfo.GetNameIndex() + ".owanim"));
                     }
                 }
 
@@ -88,7 +88,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(teResourceGUID.Index(ceceInfo.Identifier));
                     if (ceceInfo.Animation != 0) {
                         FindLogic.Combo.AnimationAsset animationInfo = Info.m_animations[ceceInfo.Animation];
-                        writer.Write($"{OverwatchAnimationEffect.AnimationEffectDir}\\{animationInfo.GetNameIndex()}\\{animationInfo.GetNameIndex()}.owanim");
+                        writer.Write(Path.Combine(OverwatchAnimationEffect.AnimationEffectDir, animationInfo.GetNameIndex(), animationInfo.GetNameIndex() + ".owanim"));
                     } else {
                         writer.Write("null");
                     }
@@ -99,8 +99,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(neceInfo.GUID);
                     writer.Write(teResourceGUID.Index(neceInfo.Identifier));
                     FindLogic.Combo.EntityAsset entityInfo = Info.m_entities[neceInfo.GUID];
-
-                    writer.Write($"Entities\\{entityInfo.GetName()}\\{entityInfo.GetName()}.owentity");
+                    writer.Write(Path.Combine("Entities",entityInfo.GetName(),entityInfo.GetName() + ".owentity"));
                 }
 
                 foreach (EffectParser.RPCEInfo rpceInfo in effect.RPCEs) {
@@ -111,7 +110,7 @@ namespace DataTool.SaveLogic {
                     FindLogic.Combo.ModelAsset modelInfo = Info.m_models[rpceInfo.Model];
                     //writer.Write(rpceInfo.TextureDefiniton);
 
-                    writer.Write($"Models\\{modelInfo.GetName()}\\{modelInfo.GetName()}.owmdl");
+                    writer.Write(Path.Combine("Models",modelInfo.GetName(),modelInfo.GetName() + ".owmdl"));
                 }
 
                 foreach (EffectParser.SVCEInfo svceInfo in effect.SVCEs) {
@@ -126,7 +125,7 @@ namespace DataTool.SaveLogic {
                             foreach (ulong soundFile in voiceLineInstance.SoundFiles) {
                                 FindLogic.Combo.SoundFileAsset soundFileInfo =
                                     Info.m_voiceSoundFiles[soundFile];
-                                writer.Write($"Sounds\\{soundFileInfo.GetNameIndex()}.ogg");
+                                writer.Write(Path.Combine("Sounds",soundFileInfo.GetNameIndex() + ".ogg"));
                             }
                         }
                     } else {
@@ -175,8 +174,9 @@ namespace DataTool.SaveLogic {
 
                     FindLogic.Combo.ModelAsset modelInfo = Info.m_models[Model];
 
-                    writer.Write($"Models\\{modelInfo.GetName()}\\Animations\\{Animation.m_priority}\\{Animation.GetNameIndex()}.seanim");
-                    writer.Write($"Models\\{modelInfo.GetName()}\\{modelInfo.GetNameIndex()}.owmdl");
+
+                    writer.Write(Path.Combine("Models",modelInfo.GetName(),"Animations",Animation.m_priority.ToString(),Animation.GetNameIndex() + ".seanim"));
+                    writer.Write(Path.Combine("Models",Animation.GetNameIndex() + ".owmdl"));
 
                     // wrap oweffect
                     WriteEffect(writer);
@@ -208,7 +208,7 @@ namespace DataTool.SaveLogic {
 
                     FindLogic.Combo.ModelAsset modelInfo = Info.m_models[Model];
 
-                    writer.Write($"Models\\{modelInfo.GetName()}\\{OverwatchAnimationEffect.AnimationEffectDir}\\{Animation.GetNameIndex()}\\{Animation.GetNameIndex()}.{Extension}"); // so I can change it in DataTool and not go mad
+                    writer.Write(Path.Combine("Models",modelInfo.GetName(),OverwatchAnimationEffect.AnimationEffectDir,Animation.GetNameIndex(),Animation.GetNameIndex() + Extension)); // so I can change it in DataTool and not go mad
                 }
             }
         }
