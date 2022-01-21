@@ -34,7 +34,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
         public void ExtractType(ICLIFlags toolFlags) {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath + "\\Music";
+                basePath = Path.Combine(flags.OutputPath,"Music");
             } else {
                 throw new Exception("no output path");
             }
