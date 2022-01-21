@@ -19,14 +19,15 @@ namespace CASCEncDump {
     internal class Program {
         private static uint BuildVersion;
 
-        private static string RawIdxDir => $"dump\\{BuildVersion}\\idx\\raw";
-        private static string RawEncDir => $"dump\\{BuildVersion}\\enc\\raw";
-        private static string ConvertIdxDir => $"dump\\{BuildVersion}\\idx\\convert";
-        private static string ConvertEncDir => $"dump\\{BuildVersion}\\enc\\convert";
-        private static string NonBLTEDir => $"dump\\{BuildVersion}\\nonblte";
-        private static string KeyFilesDir => $"dump\\{BuildVersion}\\keyfiles";
-        private static string AllCMFDir => $"dump\\{BuildVersion}\\allcmf";
-        private static string GUIDDir => $"dump\\{BuildVersion}\\guids";
+        private static string BaseDir => Path.Combine(Environment.CurrentDirectory, "dump", BuildVersion.ToString());
+        private static string RawIdxDir => Path.Combine(BaseDir,"idx","raw");
+        private static string RawEncDir => Path.Combine(BaseDir,"enc","raw");
+        private static string ConvertIdxDir => Path.Combine(BaseDir,"idx","convert");
+        private static string ConvertEncDir => Path.Combine(BaseDir,"enc","convert");
+        private static string NonBLTEDir => Path.Combine(BaseDir,"nonblte");
+        private static string KeyFilesDir => Path.Combine(BaseDir,"keyfiles");
+        private static string AllCMFDir => Path.Combine(BaseDir,"allcmf");
+        private static string GUIDDir => Path.Combine(BaseDir,"guids");
 
         private static ClientHandler Client;
         private static ProductHandler_Tank TankHandler;
