@@ -27,7 +27,7 @@ namespace CASCEncDump {
         private static string nonBLTEDir => Path.Combine(baseDir, "nonblte");
         private static string keyFilesDir => Path.Combine(baseDir, "keyfiles");
         private static string allCMFDir => Path.Combine(baseDir, "allcmf");
-        private static string GUIDDir => Path.Combine(baseDir, "guids");
+        private static string guidDir => Path.Combine(baseDir, "guids");
 
         private static ClientHandler Client;
         private static ProductHandler_Tank TankHandler;
@@ -116,7 +116,7 @@ namespace CASCEncDump {
         private static void CompareGUIDs(string[] args) {
             string otherVerNum = args[2];
 
-            Directory.CreateDirectory(GUIDDir); // file name is the version it is compared to
+            Directory.CreateDirectory(guidDir); // file name is the version it is compared to
 
             HashSet<ulong> last;
             using (Stream lastStream = File.OpenRead($"{otherVerNum}.guids")) {
@@ -126,13 +126,13 @@ namespace CASCEncDump {
             List<ulong> added = TankHandler.m_assets.Keys.Except(last).ToList();
             List<ulong> removed = last.Except(TankHandler.m_assets.Keys).ToList();
 
-            using (StreamWriter writer = new StreamWriter(Path.Combine(GUIDDir, $"{otherVerNum}.added"))) {
+            using (StreamWriter writer = new StreamWriter(Path.Combine(guidDir, $"{otherVerNum}.added"))) {
                 foreach (ulong addedFile in added) {
                     writer.WriteLine(teResourceGUID.AsString(addedFile));
                 }
             }
 
-            using (StreamWriter writer = new StreamWriter(Path.Combine(GUIDDir, $"{otherVerNum}.removed"))) {
+            using (StreamWriter writer = new StreamWriter(Path.Combine(guidDir, $"{otherVerNum}.removed"))) {
                 foreach (ulong removedFile in removed) {
                     writer.WriteLine(teResourceGUID.AsString(removedFile));
                 }
