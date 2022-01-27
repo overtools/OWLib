@@ -54,7 +54,7 @@ namespace DataTool.SaveLogic {
             }
 
             private string GetModelPath(FindLogic.Combo.ModelAsset modelInfo) {
-                return Path.Combine("Models",modelInfo.GetName(),modelInfo.GetNameIndex() + ".owmdl");
+                return Path.Combine("Models", modelInfo.GetName(), modelInfo.GetNameIndex() + ".owmdl");
             }
 
             public void Write(Stream output) {
@@ -103,6 +103,7 @@ namespace DataTool.SaveLogic {
 
                     writer.Write((uint) (SingleModels.Header.PlaceableCount + Models.Header.PlaceableCount +
                                          entitiesWithModelCount)); // nr details
+
                     writer.Write(Lights.Header.PlaceableCount); // nr Lights
 
                     foreach (IMapPlaceable mapPlaceable in ModelGroups.Placeables ?? Array.Empty<IMapPlaceable>()) {
@@ -115,10 +116,11 @@ namespace DataTool.SaveLogic {
                         for (int j = 0; j < modelGroup.Header.GroupCount; ++j) {
                             teMapPlaceableModelGroup.Group group = modelGroup.Groups[j];
                             FindLogic.Combo.Find(Info, group.ModelLook, null,
-                                                 new FindLogic.Combo.ComboContext {Model = modelGroup.Header.Model});
+                                                 new FindLogic.Combo.ComboContext { Model = modelGroup.Header.Model });
+
                             FindLogic.Combo.ModelLookAsset modelLookInfo = Info.m_modelLooks[group.ModelLook];
 
-                            writer.Write(GetModelLookMatPath(modelInfo,modelLookInfo));
+                            writer.Write(GetModelLookMatPath(modelInfo, modelLookInfo));
                             writer.Write(group.EntryCount);
                             for (int k = 0; k < group.EntryCount; ++k) {
                                 teMapPlaceableModelGroup.Entry record = modelGroup.Entries[j][k];
@@ -135,13 +137,13 @@ namespace DataTool.SaveLogic {
 
                         FindLogic.Combo.Find(Info, singleModel.Header.Model);
                         FindLogic.Combo.Find(Info, singleModel.Header.ModelLook, null,
-                                             new FindLogic.Combo.ComboContext {Model = singleModel.Header.Model});
+                                             new FindLogic.Combo.ComboContext { Model = singleModel.Header.Model });
 
                         FindLogic.Combo.ModelAsset modelInfo = Info.m_models[singleModel.Header.Model];
                         FindLogic.Combo.ModelLookAsset modelLookInfo = Info.m_modelLooks[singleModel.Header.ModelLook];
 
                         writer.Write(GetModelPath(modelInfo));
-                        writer.Write(GetModelLookMatPath(modelInfo,modelLookInfo));
+                        writer.Write(GetModelLookMatPath(modelInfo, modelLookInfo));
                         writer.Write(singleModel.Header.Translation);
                         writer.Write(singleModel.Header.Scale);
                         writer.Write(singleModel.Header.Rotation);
@@ -152,13 +154,13 @@ namespace DataTool.SaveLogic {
 
                         FindLogic.Combo.Find(Info, placeableModel.Header.Model);
                         FindLogic.Combo.Find(Info, placeableModel.Header.ModelLook, null,
-                                             new FindLogic.Combo.ComboContext {Model = placeableModel.Header.Model});
+                                             new FindLogic.Combo.ComboContext { Model = placeableModel.Header.Model });
 
                         FindLogic.Combo.ModelAsset modelInfo = Info.m_models[placeableModel.Header.Model];
                         FindLogic.Combo.ModelLookAsset modelLookInfo = Info.m_modelLooks[placeableModel.Header.ModelLook];
 
                         writer.Write(GetModelPath(modelInfo));
-                        writer.Write(GetModelLookMatPath(modelInfo,modelLookInfo));
+                        writer.Write(GetModelLookMatPath(modelInfo, modelLookInfo));
                         writer.Write(placeableModel.Header.Translation);
                         writer.Write(placeableModel.Header.Scale);
                         writer.Write(placeableModel.Header.Rotation);
@@ -174,7 +176,7 @@ namespace DataTool.SaveLogic {
 
                         foreach (var modelComponent in modelComponents) {
                             ulong model = modelComponent.m_model;
-                            var modelLookSet = new List<ulong> {modelComponent.m_look};
+                            var modelLookSet = new List<ulong> { modelComponent.m_look };
 
                             foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
                                 if (!(instanceData is STUModelComponentInstanceData modelComponentInstanceData)) continue;
@@ -185,7 +187,7 @@ namespace DataTool.SaveLogic {
 
                             FindLogic.Combo.Find(Info, model);
                             foreach (var modelLook in modelLookSet) {
-                                FindLogic.Combo.Find(Info, modelLook, null, new FindLogic.Combo.ComboContext {Model = model});
+                                FindLogic.Combo.Find(Info, modelLook, null, new FindLogic.Combo.ComboContext { Model = model });
                             }
 
                             FindLogic.Combo.ModelAsset modelInfo = Info.m_models[model];
@@ -197,7 +199,7 @@ namespace DataTool.SaveLogic {
                             string matFn = "null";
                             try {
                                 FindLogic.Combo.ModelLookAsset modelLookInfo = Info.m_modelLooks[modelLookSet.First(x => x > 0)];
-                                matFn = GetModelLookMatPath(modelInfo,modelLookInfo);
+                                matFn = GetModelLookMatPath(modelInfo, modelLookInfo);
                             } catch { }
 
                             writer.Write(modelFn);
@@ -343,6 +345,7 @@ namespace DataTool.SaveLogic {
 
                         STUVoiceSetComponent voiceSetComponent =
                             GetInstance<STUVoiceSetComponent>(map.EntityDefinition);
+
                         announcerVoiceSet = voiceSetComponent?.m_voiceDefinition;
                         FindLogic.Combo.Find(info, announcerVoiceSet);
 

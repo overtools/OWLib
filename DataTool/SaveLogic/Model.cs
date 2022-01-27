@@ -73,6 +73,7 @@ namespace DataTool.SaveLogic {
                     } else {
                         writer.Write(0L);
                     }
+
                     if (materialDataInfo.m_staticInputMap != null) {
                         writer.Write(materialDataInfo.m_staticInputMap.LongCount());
                     } else {
