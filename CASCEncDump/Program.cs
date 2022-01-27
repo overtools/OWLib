@@ -19,15 +19,15 @@ namespace CASCEncDump {
     internal class Program {
         private static uint BuildVersion;
 
-        private static string baseDir => Path.Combine(Environment.CurrentDirectory, "dump", BuildVersion.ToString());
-        private static string rawIdxDir => Path.Combine(baseDir, "idx", "raw");
-        private static string rawEncDir => Path.Combine(baseDir, "enc", "raw");
-        private static string convertIdxDir => Path.Combine(baseDir, "idx", "convert");
-        private static string convertEncDir => Path.Combine(baseDir, "enc", "convert");
-        private static string nonBLTEDir => Path.Combine(baseDir, "nonblte");
-        private static string keyFilesDir => Path.Combine(baseDir, "keyfiles");
-        private static string allCMFDir => Path.Combine(baseDir, "allcmf");
-        private static string GUIDDir => Path.Combine(baseDir, "guids");
+        private static string BaseDir => Path.Combine(Environment.CurrentDirectory, "dump", BuildVersion.ToString());
+        private static string RawIdxDir => Path.Combine(BaseDir,"idx","raw");
+        private static string RawEncDir => Path.Combine(BaseDir,"enc","raw");
+        private static string ConvertIdxDir => Path.Combine(BaseDir,"idx","convert");
+        private static string ConvertEncDir => Path.Combine(BaseDir,"enc","convert");
+        private static string NonBLTEDir => Path.Combine(BaseDir,"nonblte");
+        private static string KeyFilesDir => Path.Combine(BaseDir,"keyfiles");
+        private static string AllCMFDir => Path.Combine(BaseDir,"allcmf");
+        private static string GUIDDir => Path.Combine(BaseDir,"guids");
 
         private static ClientHandler Client;
         private static ProductHandler_Tank TankHandler;
@@ -60,7 +60,7 @@ namespace CASCEncDump {
             }
 
             Client = new ClientHandler(overwatchDir, createArgs);
-            TankHandler = (ProductHandler_Tank) Client.ProductHandler;
+            TankHandler = (ProductHandler_Tank)Client.ProductHandler;
 
             TankLib.TACT.LoadHelper.PostLoad(Client);
 
@@ -95,7 +95,7 @@ namespace CASCEncDump {
 
         private static void DumpCMF(string[] args) {
             HashSet<CKey> cKeys = new HashSet<CKey>(CASCKeyComparer.Instance);
-            foreach (ContentManifestFile contentManifestFile in new[] { TankHandler.m_rootContentManifest, TankHandler.m_textContentManifest, TankHandler.m_speechContentManifest }) {
+            foreach (ContentManifestFile contentManifestFile in new [] {TankHandler.m_rootContentManifest, TankHandler.m_textContentManifest, TankHandler.m_speechContentManifest}) {
                 if (contentManifestFile == null) continue;
                 foreach (ContentManifestFile.HashData hashData in contentManifestFile.m_hashList) {
                     cKeys.Add(hashData.ContentKey);
@@ -116,7 +116,7 @@ namespace CASCEncDump {
         private static void CompareGUIDs(string[] args) {
             string otherVerNum = args[2];
 
-            Directory.CreateDirectory(GUIDDir); // file name is the version it is compared to
+            Directory.CreateDirectory(GUIDDir);  // file name is the version it is compared to
 
             HashSet<ulong> last;
             using (Stream lastStream = File.OpenRead($"{otherVerNum}.guids")) {
@@ -142,14 +142,14 @@ namespace CASCEncDump {
         private static void AllCMF(string[] args) {
             ushort[] types = args.Skip(2).Select(x => ushort.Parse(x, NumberStyles.HexNumber)).ToArray();
 
-            Directory.CreateDirectory(allCMFDir);
+            Directory.CreateDirectory(AllCMFDir);
             foreach (KeyValuePair<ulong, ProductHandler_Tank.Asset> asset in TankHandler.m_assets) {
                 ushort type = teResourceGUID.Type(asset.Key);
                 if (!types.Contains(type)) continue;
                 try {
                     using (Stream stream = TankHandler.OpenFile(asset.Key)) {
                         if (stream == null) continue;
-                        string typeDir = Path.Combine(allCMFDir, type.ToString("X3"));
+                        string typeDir = Path.Combine(AllCMFDir, type.ToString("X3"));
                         Directory.CreateDirectory(typeDir);
                         using (Stream file = File.OpenWrite(Path.Combine(typeDir, teResourceGUID.AsString(asset.Key)))) {
                             stream.CopyTo(file);
@@ -184,14 +184,13 @@ namespace CASCEncDump {
 
             HashSet<ulong> missingKeys = new HashSet<ulong>();
 
-            Directory.CreateDirectory(rawIdxDir);
-            Directory.CreateDirectory(convertIdxDir);
+            Directory.CreateDirectory(RawIdxDir);
+            Directory.CreateDirectory(ConvertIdxDir);
 
             HashSet<CKey> otherHashes;
             using (Stream stream = File.OpenRead($"{otherVerNum}.idxhashes")) {
                 otherHashes = Diff.ReadCKeys(stream);
             }
-
             HashSet<EKey> eKeys = new HashSet<EKey>();
             foreach (CKey cKey in otherHashes) {
                 eKeys.Add(cKey.AsEKey());
@@ -203,7 +202,7 @@ namespace CASCEncDump {
                 if (!eKeys.Contains(indexEntry.Key)) {
                     try {
                         Stream stream = Client.OpenEKey(indexEntry.Key);
-                        TryConvertFile(stream, convertIdxDir, md5);
+                        TryConvertFile(stream, ConvertIdxDir, md5);
 
                         stream.Dispose();
                     } catch (Exception e) {
@@ -228,8 +227,8 @@ namespace CASCEncDump {
 
             HashSet<ulong> missingKeys = new HashSet<ulong>();
 
-            Directory.CreateDirectory(rawEncDir);
-            Directory.CreateDirectory(convertEncDir);
+            Directory.CreateDirectory(RawEncDir);
+            Directory.CreateDirectory(ConvertEncDir);
 
             string[] otherHashes;
             using (StreamReader reader = new StreamReader($"{otherVerNum}.enchashes")) {
@@ -247,7 +246,7 @@ namespace CASCEncDump {
                     Stream stream = Client.OpenCKey(entry.Key);
                     if (stream == null) continue;
                     string md5 = entry.Key.ToHexString();
-                    using (Stream fileStream = File.OpenWrite(Path.Combine(rawEncDir, md5))) {
+                    using (Stream fileStream = File.OpenWrite(Path.Combine(RawEncDir, md5))) {
                         stream.CopyTo(fileStream);
                     }
                     //TryConvertFile(stream, ConvertEncDir, md5);
@@ -277,7 +276,7 @@ namespace CASCEncDump {
                             model.Write(file);
                         }
                     }
-                } else if (magic == 0x4D4F5649) { // MOVI
+                } else if (magic == 0x4D4F5649) {  // MOVI
                     stream.Position = 128;
                     using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".bk2")) {
                         file.SetLength(0);
@@ -334,7 +333,7 @@ namespace CASCEncDump {
 
                     try {
                         stream.Position = 0;
-                        teStructuredData structuredData = new teStructuredData(stream, true);
+                        teStructuredData structuredData =new teStructuredData(stream, true);
 
                         if (structuredData.GetInstance<STUResourceKey>() != null) {
                             var key = structuredData.GetInstance<STUResourceKey>();
@@ -344,7 +343,7 @@ namespace CASCEncDump {
                             var longRevKey = BitConverter.ToUInt64(BitConverter.GetBytes(longKey).Reverse().ToArray(), 0);
                             var keyValueString = BitConverter.ToString(key.m_key).Replace("-", string.Empty);
                             var keyNameProper = longRevKey.ToString("X16");
-                            Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}", keyNameProper, keyValueString);
+                            Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}",keyNameProper, keyValueString);
                         }
                         // if (structuredData.GetInstance<STUHero>() != null) {
                         //
