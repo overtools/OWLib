@@ -39,8 +39,9 @@ namespace DataTool.Helper {
         private static readonly Dictionary<ushort, HashSet<string>> IgnoredLocalizedNames = new Dictionary<ushort, HashSet<string>>();
 
         public static void LoadGUIDTable(bool onlyCanonical) {
-            if (!File.Exists("Static\\GUIDNames.csv")) return;
-            foreach (string dirtyLine in File.ReadAllLines("Static\\GUIDNames.csv")) {
+            var guidNamesPath = Path.Combine("Static", "GUIDNames.csv");
+            if (!File.Exists(guidNamesPath)) return;
+            foreach (string dirtyLine in File.ReadAllLines(guidNamesPath)) {
                 var line = dirtyLine.Split(';').FirstOrDefault()?.Trim();
                 if (string.IsNullOrEmpty(line)) continue;
                 string[] parts = line.Split(',').Select(x => x.Trim()).ToArray();
@@ -63,8 +64,9 @@ namespace DataTool.Helper {
         }
 
         public static void LoadLocalizedNamesMapping() {
-            if (!File.Exists("Static\\LocalizedNamesMapping.csv")) return;
-            foreach (string dirtyLine in File.ReadAllLines("Static\\LocalizedNamesMapping.csv")) {
+            var locPath = Path.Combine("Static", "LocalizedNamesMapping.csv");
+            if (!File.Exists(locPath)) return;
+            foreach (string dirtyLine in File.ReadAllLines(locPath)) {
                 var line = dirtyLine.Split(';').FirstOrDefault()?.Trim();
                 if (string.IsNullOrEmpty(line)) continue;
 
