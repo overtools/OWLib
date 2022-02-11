@@ -78,4 +78,4 @@ DataTool.exe "C:\Games\Overwatch" extract-hero-voice-better "C:\Games\Extracts" 
 ## Disclaimer
 This project is not affiliated with Blizzard Entertainment, Inc.  
 All trademarks referenced herein are the properties of their respective owners.  
-2021 Blizzard Entertainment, Inc. All rights reserved.
+2022 Blizzard Entertainment, Inc. All rights reserved.
