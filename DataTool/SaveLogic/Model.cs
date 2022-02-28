@@ -34,7 +34,7 @@ namespace DataTool.SaveLogic {
 
                     foreach (ulong modelLookMaterial in ModelLookInfo.m_materialGUIDs) {
                         FindLogic.Combo.MaterialAsset materialInfo = Info.m_materials[modelLookMaterial];
-                        writer.Write($"..\\..\\Materials\\{materialInfo.GetNameIndex()}.{Extension}");
+                        writer.Write(Path.Combine("..", "..", "Materials", materialInfo.GetNameIndex() + $".{Extension}"));
                     }
                 }
             }
@@ -73,6 +73,7 @@ namespace DataTool.SaveLogic {
                     } else {
                         writer.Write(0L);
                     }
+
                     if (materialDataInfo.m_staticInputMap != null) {
                         writer.Write(materialDataInfo.m_staticInputMap.LongCount());
                     } else {
@@ -89,7 +90,7 @@ namespace DataTool.SaveLogic {
                     if (materialDataInfo.m_textureMap != null) {
                         foreach (var (guid, hash) in materialDataInfo.m_textureMap) {
                             FindLogic.Combo.TextureAsset textureInfo = Info.m_textures[guid];
-                            writer.Write(Combo.GetScratchRelative(textureInfo.m_GUID, MaterialDir, $@"..\Textures\{textureInfo.GetNameIndex()}.{Format}"));
+                            writer.Write(Combo.GetScratchRelative(textureInfo.m_GUID, MaterialDir, Path.Combine("..", "Textures", textureInfo.GetNameIndex() + $".{Format}")));
                             writer.Write(hash);
                         }
                     }

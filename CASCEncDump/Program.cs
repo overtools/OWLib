@@ -19,14 +19,15 @@ namespace CASCEncDump {
     internal class Program {
         private static uint BuildVersion;
 
-        private static string RawIdxDir => $"dump\\{BuildVersion}\\idx\\raw";
-        private static string RawEncDir => $"dump\\{BuildVersion}\\enc\\raw";
-        private static string ConvertIdxDir => $"dump\\{BuildVersion}\\idx\\convert";
-        private static string ConvertEncDir => $"dump\\{BuildVersion}\\enc\\convert";
-        private static string NonBLTEDir => $"dump\\{BuildVersion}\\nonblte";
-        private static string KeyFilesDir => $"dump\\{BuildVersion}\\keyfiles";
-        private static string AllCMFDir => $"dump\\{BuildVersion}\\allcmf";
-        private static string GUIDDir => $"dump\\{BuildVersion}\\guids";
+        private static string BaseDir => Path.Combine(Environment.CurrentDirectory, "dump", BuildVersion.ToString());
+        private static string RawIdxDir => Path.Combine(BaseDir, "idx", "raw");
+        private static string RawEncDir => Path.Combine(BaseDir, "enc", "raw");
+        private static string ConvertIdxDir => Path.Combine(BaseDir, "idx", "convert");
+        private static string ConvertEncDir => Path.Combine(BaseDir, "enc", "convert");
+        private static string NonBLTEDir => Path.Combine(BaseDir, "nonblte");
+        private static string KeyFilesDir => Path.Combine(BaseDir, "keyfiles");
+        private static string AllCMFDir => Path.Combine(BaseDir, "allcmf");
+        private static string GUIDDir => Path.Combine(BaseDir, "guids");
 
         private static ClientHandler Client;
         private static ProductHandler_Tank TankHandler;
@@ -59,7 +60,7 @@ namespace CASCEncDump {
             }
 
             Client = new ClientHandler(overwatchDir, createArgs);
-            TankHandler = (ProductHandler_Tank)Client.ProductHandler;
+            TankHandler = (ProductHandler_Tank) Client.ProductHandler;
 
             TankLib.TACT.LoadHelper.PostLoad(Client);
 
@@ -94,7 +95,7 @@ namespace CASCEncDump {
 
         private static void DumpCMF(string[] args) {
             HashSet<CKey> cKeys = new HashSet<CKey>(CASCKeyComparer.Instance);
-            foreach (ContentManifestFile contentManifestFile in new [] {TankHandler.m_rootContentManifest, TankHandler.m_textContentManifest, TankHandler.m_speechContentManifest}) {
+            foreach (ContentManifestFile contentManifestFile in new[] { TankHandler.m_rootContentManifest, TankHandler.m_textContentManifest, TankHandler.m_speechContentManifest }) {
                 if (contentManifestFile == null) continue;
                 foreach (ContentManifestFile.HashData hashData in contentManifestFile.m_hashList) {
                     cKeys.Add(hashData.ContentKey);
@@ -115,7 +116,7 @@ namespace CASCEncDump {
         private static void CompareGUIDs(string[] args) {
             string otherVerNum = args[2];
 
-            Directory.CreateDirectory(GUIDDir);  // file name is the version it is compared to
+            Directory.CreateDirectory(GUIDDir); // file name is the version it is compared to
 
             HashSet<ulong> last;
             using (Stream lastStream = File.OpenRead($"{otherVerNum}.guids")) {
@@ -190,6 +191,7 @@ namespace CASCEncDump {
             using (Stream stream = File.OpenRead($"{otherVerNum}.idxhashes")) {
                 otherHashes = Diff.ReadCKeys(stream);
             }
+
             HashSet<EKey> eKeys = new HashSet<EKey>();
             foreach (CKey cKey in otherHashes) {
                 eKeys.Add(cKey.AsEKey());
@@ -275,7 +277,7 @@ namespace CASCEncDump {
                             model.Write(file);
                         }
                     }
-                } else if (magic == 0x4D4F5649) {  // MOVI
+                } else if (magic == 0x4D4F5649) { // MOVI
                     stream.Position = 128;
                     using (Stream file = File.OpenWrite(Path.Combine(convertDir, md5) + ".bk2")) {
                         file.SetLength(0);
@@ -332,7 +334,7 @@ namespace CASCEncDump {
 
                     try {
                         stream.Position = 0;
-                        teStructuredData structuredData =new teStructuredData(stream, true);
+                        teStructuredData structuredData = new teStructuredData(stream, true);
 
                         if (structuredData.GetInstance<STUResourceKey>() != null) {
                             var key = structuredData.GetInstance<STUResourceKey>();
@@ -342,7 +344,7 @@ namespace CASCEncDump {
                             var longRevKey = BitConverter.ToUInt64(BitConverter.GetBytes(longKey).Reverse().ToArray(), 0);
                             var keyValueString = BitConverter.ToString(key.m_key).Replace("-", string.Empty);
                             var keyNameProper = longRevKey.ToString("X16");
-                            Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}",keyNameProper, keyValueString);
+                            Console.Out.WriteLine("Added Encryption Key {0}, Value: {1}", keyNameProper, keyValueString);
                         }
                         // if (structuredData.GetInstance<STUHero>() != null) {
                         //

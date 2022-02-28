@@ -97,7 +97,7 @@ namespace DataTool.ToolLogic.Extract {
                         if (stimulus == null) continue;
 
                         var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E) ??
-                                        $"Unknown\\{teResourceGUID.Index(voiceLineInstance.VoiceStimulus):X}.{teResourceGUID.Type(voiceLineInstance.VoiceStimulus):X3}";
+                                        Path.Combine("Unknown",$"{teResourceGUID.Index(voiceLineInstance.VoiceStimulus):X}.{teResourceGUID.Type(voiceLineInstance.VoiceStimulus):X3}");
 
                         var path = flags.VoiceGroupByHero && flags.VoiceGroupByType
                                        ? Path.Combine(basePath, heroName, groupName)

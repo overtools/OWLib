@@ -73,7 +73,7 @@ namespace DataTool.ToolLogic.List {
             DirectoryInfo overwatchAppdataFolder = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Blizzard Entertainment/Overwatch"));
             foreach (DirectoryInfo userFolder in overwatchAppdataFolder.GetDirectories()) {
                 DirectoryInfo highlightsFolder = new DirectoryInfo(Path.Combine(userFolder.FullName,
-                                                                                $"{(Program.IsPTR ? "PTR\\" : "")}Highlights"));
+                                                                                $"{(Program.IsPTR ? "PTR" + Path.DirectorySeparatorChar : "")}Highlights"));
                 if (!highlightsFolder.Exists) continue;
                 foreach (FileInfo file in highlightsFolder.GetFiles()) {
                     try {
