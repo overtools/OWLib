@@ -74,6 +74,9 @@ namespace DataTool.SaveLogic.Unlock {
                 }
 
                 info.m_processExistingEntities = false;
+
+                FindLogic.Combo.Find(info, skinTheme.m_ECCC4A5D, replacements);
+                info.SetTextureName(skinTheme.m_ECCC4A5D, teResourceGUID.AsString(skinTheme.m_ECCC4A5D));
             }
 
             foreach (STU_1A496D3C tex in hero.m_8203BFE1) { // find GUI
@@ -115,7 +118,7 @@ namespace DataTool.SaveLogic.Unlock {
             }
 
             LoudLog("\t\tSaving");
-            Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext);
+            Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext, true);
             Combo.Save(flags, directory, saveContext);
             saveContext.Wait();
             LoudLog("\t\tDone");

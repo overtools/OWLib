@@ -17,7 +17,7 @@ namespace DataTool.Helper {
         public static extern int CoInitializeEx([In, Optional] IntPtr pvReserved, [In] CoInit dwCoInit);
 
 
-        public static unsafe Memory<byte> ConvertDDS(Stream ddsSteam, DXGI_FORMAT targetFormat, WICCodecs codec, int frame) {
+        public static unsafe Memory<byte> ConvertDDS(Stream ddsSteam, DXGI_FORMAT targetFormat, WICCodecs codec, int? frameNr) {
             try {
                 CoInitializeEx(IntPtr.Zero, CoInit.MultiThreaded | CoInit.SpeedOverMemory);
 
@@ -30,6 +30,12 @@ namespace DataTool.Helper {
                     TexMetadata info = scratch.GetMetadata();
 
                     var isMultiFrame = codec == WICCodecs.GIF || codec == WICCodecs.TIFF;
+                    if (frameNr != null) {
+                        isMultiFrame = false;
+                    }
+
+                    var frame = frameNr ?? 0;
+
                     if (TexHelper.Instance.IsCompressed(info.Format)) {
                         ScratchImage temp;
                         if (info.ArraySize == 1 || !isMultiFrame) {
@@ -53,7 +59,7 @@ namespace DataTool.Helper {
                     if (codec > 0) {
                         UnmanagedMemoryStream stream;
                         if (info.ArraySize == 1 || !isMultiFrame) {
-                            stream = scratch.SaveToWICMemory(frame, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(codec));
+                            stream = scratch.SaveToWICMemory(0, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(codec));
                         } else {
                             stream = scratch.SaveToWICMemory(0, info.ArraySize, WIC_FLAGS.ALL_FRAMES, TexHelper.Instance.GetWICCodec(codec));
                         }
