@@ -180,7 +180,7 @@ namespace DataTool.ToolLogic.Extract {
                     }
 
                     var guiContext = new SaveLogic.Combo.SaveContext(guiInfo);
-                    SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(heroPath, "GUI"), guiContext);
+                    SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(heroPath, "GUI"), guiContext, true);
                     guiContext.Wait();
                 }
 

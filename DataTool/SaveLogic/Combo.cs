@@ -591,10 +591,10 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveLooseTextures(ICLIFlags flags, string path, SaveContext context) {
+        public static void SaveLooseTextures(ICLIFlags flags, string path, SaveContext context, bool split = false) {
             foreach (FindLogic.Combo.TextureAsset textureInfo in context.m_info.m_textures.Values) {
                 if (!textureInfo.m_loose) continue;
-                SaveTexture(flags, path, context, textureInfo.m_GUID);
+                SaveTexture(flags, path, context, textureInfo.m_GUID, split: split);
             }
         }
 
@@ -684,11 +684,11 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static async Task SaveTextureTask(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name = null) {
+        private static async Task SaveTextureTask(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name, bool split) {
             bool convertTextures = true;
             string convertType = "tif";
             string multiSurfaceConvertType = "tif";
-            bool createMultiSurfaceSheet = false;
+            bool createMultiSurfaceSheet = split;
             bool splitMultiSurface = false;
             bool lossless = false;
             int maxMips = 1;
@@ -697,7 +697,7 @@ namespace DataTool.SaveLogic {
                 if (extractFlags.SkipTextures) return;
                 createMultiSurfaceSheet = extractFlags.SheetMultiSurface;
                 convertTextures = !extractFlags.RawTextures && !extractFlags.Raw;
-                splitMultiSurface = extractFlags.SplitMultiSurface && convertTextures && !createMultiSurfaceSheet;
+                splitMultiSurface = (split || extractFlags.SplitMultiSurface) && convertTextures && !createMultiSurfaceSheet;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
                 lossless = extractFlags.ConvertTexturesLossless;
 
@@ -832,8 +832,8 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name = null) {
-            info.AddTask(() => SaveTextureTask(flags, path, info, textureGUID, name));
+        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name = null, bool split = false) {
+            info.AddTask(() => SaveTextureTask(flags, path, info, textureGUID, name, split));
         }
 
         private static void ConvertSoundFile(Stream stream, FindLogic.Combo.ComboAsset soundFileInfo, string directory, string name = null) {

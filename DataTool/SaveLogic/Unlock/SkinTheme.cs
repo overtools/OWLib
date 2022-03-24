@@ -118,7 +118,7 @@ namespace DataTool.SaveLogic.Unlock {
             }
 
             LoudLog("\t\tSaving");
-            Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext);
+            Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext, true);
             Combo.Save(flags, directory, saveContext);
             saveContext.Wait();
             LoudLog("\t\tDone");
