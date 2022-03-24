@@ -796,25 +796,27 @@ namespace DataTool.SaveLogic {
                     // so there is no TGA image format.
                     // sucks to be them
 
-                    if (convertType == "dds") {
+                    try {
+                        if (convertType == "dds") {
+                            using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                                WriteFile(convertedStream, $"{filePath}.dds");
+                            }
+
+                            return;
+                        }
+
                         using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                            WriteFile(convertedStream, $"{filePath}.dds");
+                            var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, 0);
+                            if (!data.IsEmpty) {
+                                WriteFile(data, $"{filePath}.{convertType}");
+                            } else {
+                                convertedStream.Position = 0;
+                                WriteFile(convertedStream, $"{filePath}.dds");
+                                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
+                            }
                         }
-
-                        return;
-                    }
-
-                    Process pProcess;
-
-                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                        var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, 0);
-                        if (!data.IsEmpty) {
-                            WriteFile(data, $"{filePath}.{convertType}");
-                        } else {
-                            convertedStream.Position = 0;
-                            WriteFile(convertedStream, $"{filePath}.dds");
-                            Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
-                        }
+                    } catch (Exceptions.TexturePayloadMissingException) {
+                        Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as it's missing required texture payload.");
                     }
                 }
             } finally {
