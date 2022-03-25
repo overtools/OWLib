@@ -591,10 +591,10 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveLooseTextures(ICLIFlags flags, string path, SaveContext context) {
+        public static void SaveLooseTextures(ICLIFlags flags, string path, SaveContext context, bool split = false) {
             foreach (FindLogic.Combo.TextureAsset textureInfo in context.m_info.m_textures.Values) {
                 if (!textureInfo.m_loose) continue;
-                SaveTexture(flags, path, context, textureInfo.m_GUID);
+                SaveTexture(flags, path, context, textureInfo.m_GUID, split: split);
             }
         }
 
@@ -684,11 +684,12 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static async Task SaveTextureTask(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name = null) {
+        private static async Task SaveTextureTask(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name, bool split) {
             bool convertTextures = true;
             string convertType = "tif";
             string multiSurfaceConvertType = "tif";
-            bool createMultiSurfaceSheet = false;
+            bool createMultiSurfaceSheet = split;
+            bool splitMultiSurface = false;
             bool lossless = false;
             int maxMips = 1;
 
@@ -696,6 +697,7 @@ namespace DataTool.SaveLogic {
                 if (extractFlags.SkipTextures) return;
                 createMultiSurfaceSheet = extractFlags.SheetMultiSurface;
                 convertTextures = !extractFlags.RawTextures && !extractFlags.Raw;
+                splitMultiSurface = (split || extractFlags.SplitMultiSurface) && convertTextures && !createMultiSurfaceSheet;
                 convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
                 lossless = extractFlags.ConvertTexturesLossless;
 
@@ -772,7 +774,7 @@ namespace DataTool.SaveLogic {
                             height = (uint) (texture.Header.Height * texture.Header.Surfaces);
                             surfaces = 1;
                             texture.Header.Flags = 0;
-                        } else if (convertType != "tif" && convertType != "dds") {
+                        } else if (!splitMultiSurface && convertType != "tif" && convertType != "dds") {
                             Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceConvertType} because it has more than one surface");
                             convertType = multiSurfaceConvertType;
                         }
@@ -796,25 +798,33 @@ namespace DataTool.SaveLogic {
                     // so there is no TGA image format.
                     // sucks to be them
 
-                    if (convertType == "dds") {
+                    try {
+                        if (convertType == "dds") {
+                            using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                                WriteFile(convertedStream, $"{filePath}.dds");
+                            }
+
+                            return;
+                        }
+
                         using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                            WriteFile(convertedStream, $"{filePath}.dds");
+                            var surfaceCount = splitMultiSurface ? texture.Header.Surfaces : 1;
+                            for (var surfaceNr = 0; surfaceNr < surfaceCount; ++surfaceNr) {
+                                var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
+                                convertedStream.Position = 0;
+                                // todo: this will decompress and convert the dds multiple times.
+                                var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, splitMultiSurface ? surfaceNr : default(int?));
+                                if (!data.IsEmpty) {
+                                    WriteFile(data, $"{surfacePath}.{convertType}");
+                                } else {
+                                    convertedStream.Position = 0;
+                                    WriteFile(convertedStream, $"{surfacePath}.dds");
+                                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} (surface {surfaceNr + 1}) as {convertType} because DirectXTex failed.");
+                                }
+                            }
                         }
-
-                        return;
-                    }
-
-                    Process pProcess;
-
-                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                        var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, 0);
-                        if (!data.IsEmpty) {
-                            WriteFile(data, $"{filePath}.{convertType}");
-                        } else {
-                            convertedStream.Position = 0;
-                            WriteFile(convertedStream, $"{filePath}.dds");
-                            Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
-                        }
+                    } catch (Exceptions.TexturePayloadMissingException) {
+                        Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as it's missing required texture payload.");
                     }
                 }
             } finally {
@@ -822,8 +832,8 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name = null) {
-            info.AddTask(() => SaveTextureTask(flags, path, info, textureGUID, name));
+        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name = null, bool split = false) {
+            info.AddTask(() => SaveTextureTask(flags, path, info, textureGUID, name, split));
         }
 
         private static void ConvertSoundFile(Stream stream, FindLogic.Combo.ComboAsset soundFileInfo, string directory, string name = null) {
