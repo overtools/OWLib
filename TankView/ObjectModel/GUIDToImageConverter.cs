@@ -16,7 +16,7 @@ namespace TankView.ObjectModel {
                 return default;
 
             try {
-                var data = DataHelper.ConvertDDS(guid.Value, DXGI_FORMAT.R8G8B8A8_UNORM, 0, 0, out var width, out var height);
+                var data = DataHelper.ConvertDDS(guid.Value, DXGI_FORMAT.R8G8B8A8_UNORM, 0, out var width, out var height);
                 if(data.IsEmpty) {
                     return null;
                 }
