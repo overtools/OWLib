@@ -76,7 +76,8 @@ namespace DataTool.SaveLogic.Unlock {
                 info.m_processExistingEntities = false;
 
                 FindLogic.Combo.Find(info, skinTheme.m_ECCC4A5D, replacements);
-                info.SetTextureName(skinTheme.m_ECCC4A5D, teResourceGUID.AsString(skinTheme.m_ECCC4A5D));
+                info.SetTextureName(skinTheme.m_ECCC4A5D, "Portrait");
+                info.SetTextureProcess(skinTheme.m_ECCC4A5D); // todo option? it forces png.
             }
 
             foreach (STU_1A496D3C tex in hero.m_8203BFE1) { // find GUI

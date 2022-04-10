@@ -13,10 +13,14 @@ using DataTool.JSON;
 using DataTool.ToolLogic.Extract;
 using DataTool.ToolLogic.List;
 using DirectXTexNet;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.ColorSpaces.Conversion;
+using SixLabors.ImageSharp.PixelFormats;
 using TankLib;
 using TankLib.Chunks;
 using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
+using Image = SixLabors.ImageSharp.Image;
 using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool.SaveLogic {
@@ -594,7 +598,7 @@ namespace DataTool.SaveLogic {
         public static void SaveLooseTextures(ICLIFlags flags, string path, SaveContext context, bool split = false) {
             foreach (FindLogic.Combo.TextureAsset textureInfo in context.m_info.m_textures.Values) {
                 if (!textureInfo.m_loose) continue;
-                SaveTexture(flags, path, context, textureInfo.m_GUID, split: split);
+                SaveTexture(flags, path, context, textureInfo.m_GUID, split: split, process: textureInfo.m_process);
             }
         }
 
@@ -684,7 +688,7 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static async Task SaveTextureTask(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name, bool split) {
+        private static async Task SaveTextureTask(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name, bool split, bool process) {
             bool convertTextures = true;
             string convertType = "tif";
             string multiSurfaceConvertType = "tif";
@@ -808,18 +812,57 @@ namespace DataTool.SaveLogic {
                         }
 
                         using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                            var surfaceCount = splitMultiSurface ? texture.Header.Surfaces : 1;
-                            for (var surfaceNr = 0; surfaceNr < surfaceCount; ++surfaceNr) {
-                                var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
+                            if (process && texture.Header.Surfaces == 2) {
+                                var alpha = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 0);
                                 convertedStream.Position = 0;
-                                // todo: this will decompress and convert the dds multiple times.
-                                var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, splitMultiSurface ? surfaceNr : default(int?));
-                                if (!data.IsEmpty) {
-                                    WriteFile(data, $"{surfacePath}.{convertType}");
+                                var color = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 1);
+                                if (!color.IsEmpty && !alpha.IsEmpty) {
+                                    using (Image<Rgba32> colorImage = Image.Load<Rgba32>(Configuration.Default, color.Span)) {
+                                        using (Image<Rgba32> alphaImage = Image.Load<Rgba32>(Configuration.Default, alpha.Span)) {
+                                            ColorSpaceConverter colorSpaceConverter = new ColorSpaceConverter();
+                                            alphaImage.ProcessPixelRows(colorImage, (source, target) => {
+                                                for (var y = 0; y < texture.Header.Height; ++y) {
+                                                    var sourceRow = source.GetRowSpan(y);
+                                                    var targetRow = target.GetRowSpan(y);
+                                                    for (var x = 0; x < texture.Header.Width; ++x) {
+                                                        var pixel = targetRow[x];
+                                                        pixel.R = (byte) (Math.Pow(pixel.R / 255f, 1.1f) * 0xFF);
+                                                        pixel.G = (byte) (Math.Pow(pixel.G / 255f, 1.1f) * 0xFF);
+                                                        pixel.B = (byte) (Math.Pow(pixel.B / 255f, 1.1f) * 0xFF);
+                                                        pixel.A = (byte) ((1 - colorSpaceConverter.ToHsl(sourceRow[x]).L ) * 0xFF);
+                                                        targetRow[x] = pixel;
+                                                    }
+                                                }
+                                            });
+
+                                            var fullName = $"{filePath}.png";
+                                            string fullPath = Path.GetDirectoryName(fullName);
+                                            if (!Directory.Exists(fullPath) && fullPath != null) {
+                                                Directory.CreateDirectory(fullPath);
+                                            }
+
+                                            colorImage.SaveAsPng(fullName);
+                                        }
+                                    }
                                 } else {
                                     convertedStream.Position = 0;
-                                    WriteFile(convertedStream, $"{surfacePath}.dds");
-                                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} (surface {surfaceNr + 1}) as {convertType} because DirectXTex failed.");
+                                    WriteFile(convertedStream, $"{filePath}.dds");
+                                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
+                                }
+                            } else {
+                                var surfaceCount = splitMultiSurface ? texture.Header.Surfaces : 1;
+                                for (var surfaceNr = 0; surfaceNr < surfaceCount; ++surfaceNr) {
+                                    var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
+                                    convertedStream.Position = 0;
+                                    // todo: this will decompress and convert the dds multiple times.
+                                    var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, splitMultiSurface ? surfaceNr : default(int?));
+                                    if (!data.IsEmpty) {
+                                        WriteFile(data, $"{surfacePath}.{convertType}");
+                                    } else {
+                                        convertedStream.Position = 0;
+                                        WriteFile(convertedStream, $"{surfacePath}.dds");
+                                        Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} (surface {surfaceNr + 1}) as {convertType} because DirectXTex failed.");
+                                    }
                                 }
                             }
                         }
@@ -832,8 +875,8 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name = null, bool split = false) {
-            info.AddTask(() => SaveTextureTask(flags, path, info, textureGUID, name, split));
+        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name = null, bool split = false, bool process = false) {
+            info.AddTask(() => SaveTextureTask(flags, path, info, textureGUID, name, split, process));
         }
 
         private static void ConvertSoundFile(Stream stream, FindLogic.Combo.ComboAsset soundFileInfo, string directory, string name = null) {

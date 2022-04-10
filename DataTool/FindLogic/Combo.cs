@@ -98,6 +98,11 @@ namespace DataTool.FindLogic {
 
             public void SetTextureName(ulong texture, string name, Dictionary<ulong, ulong> replacements = null) => SetAssetName(texture, name, m_textures, replacements);
 
+            public void SetTextureProcess(ulong texture) {
+                if (!m_textures.TryGetValue(texture, out var asset)) return;
+                asset.m_process = true;
+            }
+
             public void SetEffectName(ulong effect, string name, Dictionary<ulong, ulong> replacements = null) {
                 SetAssetName(effect, name, m_effects, replacements);
                 SetAssetName(effect, name, m_animationEffects, replacements);
@@ -255,6 +260,7 @@ namespace DataTool.FindLogic {
 
         public class TextureAsset : ComboAsset {
             public bool m_loose;
+            public bool m_process;
 
             public TextureAsset(ulong guid) : base(guid) { }
         }
