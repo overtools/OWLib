@@ -78,6 +78,12 @@ namespace DataTool.DataModels {
         [DataMember]
         public Enum_BABC4175 LootBoxType;
 
+        [DataMember]
+        public bool IsEsportsUnlock;
+
+        [DataMember]
+        public string EsportsTeam;
+
         /// <summary>
         /// Internal Unlock STU
         /// </summary>
@@ -147,6 +153,14 @@ namespace DataTool.DataModels {
                 case STUUnlock_SkinTheme stu:
                     SkinThemeGUID = stu.m_skinTheme;
                     break;
+            }
+
+            if (unlock.m_0B1BA7C1 != null) {
+                var teamDefinition = new TeamDefinition(unlock.m_0B1BA7C1);
+                if (teamDefinition.Id != 0) {
+                    IsEsportsUnlock = true;
+                    EsportsTeam = teamDefinition.FullName;
+                }
             }
         }
 
