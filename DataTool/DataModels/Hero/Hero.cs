@@ -44,10 +44,10 @@ namespace DataTool.DataModels.Hero {
         public bool SupportsAi { get; set; }
 
         [DataMember]
-        public List<LoadoutLite> Loadouts { get; set; } = new List<LoadoutLite>();
+        public List<LoadoutLite> Loadouts { get; set; }
 
         [DataMember]
-        public List<HeroImage> Images { get; set; } = new List<HeroImage>();
+        public List<HeroImage> Images { get; set; }
 
         internal STUHero STU;
 

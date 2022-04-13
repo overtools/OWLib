@@ -81,6 +81,7 @@ namespace DataTool.DataModels {
         /// <summary>
         /// Internal Unlock STU
         /// </summary>
+        [IgnoreDataMember]
         public STU_3021DDED STU;
 
         /// <summary>

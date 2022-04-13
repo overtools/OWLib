@@ -30,26 +30,30 @@ namespace DataTool.ToolLogic.Extract {
 
                 Logger.Log($"Processing {heroCleanName}");
 
-                var heroImageCombo = new FindLogic.Combo.ComboInfo();
-                foreach (var heroImage in hero.Images) {
-                    FindLogic.Combo.Find(heroImageCombo, heroImage.TextureGUID);
-                    heroImageCombo.SetTextureName(heroImage.TextureGUID, teResourceGUID.AsString(heroImage.Id));
+                if (hero.Images != null) {
+                    var heroImageCombo = new FindLogic.Combo.ComboInfo();
+                    foreach (var heroImage in hero.Images) {
+                        FindLogic.Combo.Find(heroImageCombo, heroImage.TextureGUID);
+                        heroImageCombo.SetTextureName(heroImage.TextureGUID, teResourceGUID.AsString(heroImage.Id));
+                    }
+
+                    Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName), new Combo.SaveContext(heroImageCombo), new Combo.SaveTextureOptions {
+                        FileTypeOverride = "png",
+                        ProcessIcon = true,
+                    });
                 }
 
-                var heroLoadoutCombo = new FindLogic.Combo.ComboInfo();
-                foreach (var heroLoadout in hero.Loadouts) {
-                    FindLogic.Combo.Find(heroLoadoutCombo, heroLoadout.TextureGUID);
-                    heroLoadoutCombo.SetTextureName(heroLoadout.TextureGUID, heroLoadout.Name);
+                if (hero.Loadouts != null) {
+                    var heroLoadoutCombo = new FindLogic.Combo.ComboInfo();
+                    foreach (var heroLoadout in hero.Loadouts) {
+                        FindLogic.Combo.Find(heroLoadoutCombo, heroLoadout.TextureGUID);
+                        heroLoadoutCombo.SetTextureName(heroLoadout.TextureGUID, heroLoadout.Name);
+                    }
+
+                    Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName, "Abilities"), new Combo.SaveContext(heroLoadoutCombo), new Combo.SaveTextureOptions {
+                        FileTypeOverride = "png"
+                    });
                 }
-
-                Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName), new Combo.SaveContext(heroImageCombo), new Combo.SaveTextureOptions {
-                    FileTypeOverride = "png",
-                    ProcessIcon = true,
-                });
-
-                Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName, "Abilities"), new Combo.SaveContext(heroLoadoutCombo), new Combo.SaveTextureOptions {
-                    FileTypeOverride = "png"
-                });
 
                 foreach (var unlock in hero.GetUnlocks().IterateUnlocks()) {
                     if (unlock.Type != UnlockType.Skin || unlock.SkinThemeGUID == 0) {
