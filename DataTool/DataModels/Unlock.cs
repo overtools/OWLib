@@ -92,6 +92,7 @@ namespace DataTool.DataModels {
         // These types are specific to certain unlocks so don't show them unless we're on that unlock
         public bool ShouldSerializeLootBoxType() => Type == UnlockType.Lootbox;
         public bool ShouldSerializeSkinThemeGUID() => Type == UnlockType.Skin;
+        public bool ShouldSerializeEsportsTeam() => IsEsportsUnlock;
         public bool ShouldSerializeCurrency() => Type == UnlockType.CompetitiveCurrency || Type == UnlockType.Currency || Type == UnlockType.OWLToken;
 
         // These only really apply to "normal" unlocks and can be removed from others
@@ -121,7 +122,8 @@ namespace DataTool.DataModels {
             IsTraditionalUnlock =
                 Type == UnlockType.Icon || Type == UnlockType.Spray ||
                 Type == UnlockType.Skin || Type == UnlockType.HighlightIntro ||
-                Type == UnlockType.VictoryPose || Type == UnlockType.VoiceLine;
+                Type == UnlockType.VictoryPose || Type == UnlockType.VoiceLine ||
+                Type == UnlockType.Emote;
 
             if (unlock.m_BEE9BCDA != null)
                 Categories = unlock.m_BEE9BCDA.Select(x => GetGUIDName(x.GUID)).ToArray();
