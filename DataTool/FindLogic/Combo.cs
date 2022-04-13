@@ -98,6 +98,26 @@ namespace DataTool.FindLogic {
 
             public void SetTextureName(ulong texture, string name, Dictionary<ulong, ulong> replacements = null) => SetAssetName(texture, name, m_textures, replacements);
 
+            public void SetTextureProcessIcon(ulong texture) {
+                if (!m_textures.TryGetValue(texture, out var asset)) return;
+                asset.m_processIcon = true;
+            }
+
+            public void SetTextureSplit(ulong texture) {
+                if (!m_textures.TryGetValue(texture, out var asset)) return;
+                asset.m_split = true;
+            }
+
+            /// <summary>
+            /// Overrides the file type the texture is saved as
+            /// </summary>
+            /// <param name="texture"></param>
+            /// <param name="fileType">tif, png, dds</param>
+            public void SetTextureFileType(ulong texture, string fileType) {
+                if (!m_textures.TryGetValue(texture, out var asset)) return;
+                asset.m_fileType = fileType;
+            }
+
             public void SetEffectName(ulong effect, string name, Dictionary<ulong, ulong> replacements = null) {
                 SetAssetName(effect, name, m_effects, replacements);
                 SetAssetName(effect, name, m_animationEffects, replacements);
@@ -255,6 +275,9 @@ namespace DataTool.FindLogic {
 
         public class TextureAsset : ComboAsset {
             public bool m_loose;
+            public bool? m_processIcon;
+            public bool? m_split;
+            public string m_fileType;
 
             public TextureAsset(ulong guid) : base(guid) { }
         }

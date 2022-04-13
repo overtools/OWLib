@@ -32,6 +32,8 @@ namespace DataTool.DataModels {
         [DataMember]
         public teResourceGUID LogoAlt;
 
+        internal STU_73AE9738 STU;
+
         public TeamDefinition(STU_73AE9738 def) {
             Init(def);
         }
@@ -44,6 +46,7 @@ namespace DataTool.DataModels {
         private void Init(STU_73AE9738 def, ulong key = default) {
             if (def == null) return;
 
+            STU = def;
             Id = (teResourceGUID) key;
             Name = GetString(def.m_137210AF);
             Location = GetString(def.m_4BA3B3CE);
