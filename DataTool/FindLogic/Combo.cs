@@ -765,6 +765,8 @@ namespace DataTool.FindLogic {
                             } else if (chunk.Value is teEffectComponentSound soundComponent) {
                                 Find(info, soundComponent.Header.Sound, replacements);
                             } else if (chunk.Value is teEffectChunkShaderSetup shaders) {
+                                if (lastParticleModel == 0) TankLib.Helpers.Logger.Debug("Combo", "ShaderSetup with no model. textures will get lost");
+
                                 ComboContext ssceContext = new ComboContext {Model = lastParticleModel};
                                 Find(info, shaders.Header.Material, replacements, ssceContext);
                                 Find(info, shaders.Header.MaterialData, replacements, ssceContext);
@@ -773,6 +775,9 @@ namespace DataTool.FindLogic {
                             if (chunk.Value is teEffectComponentParticle particle) {
                                 Find(info, particle.Header.Model, replacements);
                                 lastParticleModel = GetReplacement(particle.Header.Model, replacements);
+                            } else if (chunk.Value is teEffectComponentRibbonRenderer ribbonRenderer) {
+                                Find(info, ribbonRenderer.Header.ModelGUID, replacements);
+                                lastParticleModel = GetReplacement(ribbonRenderer.Header.ModelGUID, replacements);
                             } else {
                                 lastParticleModel = 0;
                             }
