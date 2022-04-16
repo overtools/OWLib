@@ -54,7 +54,6 @@ namespace DataTool.ToolLogic.Extract.Debug {
                             };
                             var audioContext = new Combo.SaveContext(audioInfo);
                             SaveLogic.Combo.SaveSoundFile(flags, Path.Combine(basePath, container, teResourceGUID.LongKey(key).ToString("X12")), audioContext, movi.MasterAudio, false);
-                            audioContext.Wait();
                         }
                     }
                 }

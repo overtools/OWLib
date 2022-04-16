@@ -128,7 +128,6 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, part), context);
-            context.Wait();
         }
 
         private void SaveLUT(ExtractFlags flags, string basePath, string part, string fname, ulong key, string ocioPath, MapHeader map) {
@@ -168,7 +167,6 @@ namespace DataTool.ToolLogic.Extract {
             var context = new Combo.SaveContext(info);
             FindLogic.Combo.Find(info, stu.m_B3685B0D);
             SaveLogic.Combo.SaveSound(flags, Path.Combine(basePath, part), context, stu.m_B3685B0D);
-            context.Wait();
         }
 
         private void SaveMdl(ExtractFlags flags, string basePath, string part, ulong model, ulong modelLook) {
@@ -186,7 +184,6 @@ namespace DataTool.ToolLogic.Extract {
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, part), context);
             SaveLogic.Combo.SaveAllModelLooks(flags, Path.Combine(basePath, part), context);
             SaveLogic.Combo.SaveAllMaterials(flags, Path.Combine(basePath, part), context);
-            context.Wait();
         }
 
         private void SaveTex(ExtractFlags flags, string basePath, string part, string filename, ulong key) {
@@ -200,7 +197,6 @@ namespace DataTool.ToolLogic.Extract {
 
             var context = new Combo.SaveContext(info);
             SaveLogic.Combo.SaveTexture(flags, Path.Combine(basePath, part), context, key);
-            context.Wait();
         }
     }
 }

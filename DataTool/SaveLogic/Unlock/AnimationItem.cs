@@ -11,7 +11,6 @@ namespace DataTool.SaveLogic.Unlock {
             };
             Combo.Save(flags, directory, context);
             Combo.SaveAllAnimations(flags, directory, context);
-            context.Wait();
         }
     }
 }

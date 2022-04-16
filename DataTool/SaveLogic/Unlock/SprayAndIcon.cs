@@ -22,13 +22,11 @@ namespace DataTool.SaveLogic.Unlock {
 
             Combo.SaveLooseTextures(flags, directory, context);
             if (!saveAllTextures) {
-                context.Wait();
                 return;
             }
 
             Combo.SaveAllMaterials(flags, directory, context);
             Combo.Save(flags, directory, context);
-            context.Wait();
         }
     }
 }

@@ -183,8 +183,6 @@ namespace DataTool.ToolLogic.Extract {
                     SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(heroPath, "GUI"), guiContext, new SaveLogic.Combo.SaveTextureOptions {
                         ProcessIcon = true
                     });
-
-                    guiContext.Wait();
                 }
 
                 if (progressionUnlocks.OtherUnlocks != null) { // achievements and stuff

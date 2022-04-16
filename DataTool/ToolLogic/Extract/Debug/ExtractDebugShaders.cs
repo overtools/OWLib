@@ -240,7 +240,6 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
                         var context = new Combo.SaveContext(comboInfo);
                         Combo.SaveLooseTextures(null, imgPath, context);
-                        context.Wait();
                     }
                 }
             }

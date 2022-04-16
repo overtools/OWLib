@@ -117,14 +117,11 @@ namespace DataTool.SaveLogic.Unlock {
                     if (diffInfoBefore.m_voiceSoundFiles.ContainsKey(soundFile.Key)) continue;
                     Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, true);
                 }
-
-                diffInfoAfterContext.Wait();
             }
 
             LoudLog("\t\tSaving");
             Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext);
             Combo.Save(flags, directory, saveContext);
-            saveContext.Wait();
             LoudLog("\t\tDone");
         }
 

@@ -45,7 +45,6 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     var context = new Combo.SaveContext(info);
                     FindLogic.Combo.Find(info, @ulong);
                     SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, music_types[s_class]), context);
-                    context.Wait();
                 }
             }
         }

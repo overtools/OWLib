@@ -358,7 +358,6 @@ namespace DataTool.SaveLogic {
             var context = new Combo.SaveContext(info);
             Combo.Save(flags, mapPath, context);
             Combo.SaveLooseTextures(flags, Path.Combine(mapPath, "Textures"), context);
-            context.Wait();
 
             if (mapHeader.m_7F5B54B2 != 0) { // map voice set. not announcer
                 FindLogic.Combo.Find(info, mapHeader.m_7F5B54B2);
@@ -370,7 +369,6 @@ namespace DataTool.SaveLogic {
 
             Combo.SaveAllVoiceSets(flags, Path.Combine(mapPath, "VoiceSets"), context);
             Combo.SaveAllSoundFiles(flags, Path.Combine(mapPath, "Sound"), context);
-            context.Wait();
 
             LoudLog("\tDone");
         }

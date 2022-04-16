@@ -36,7 +36,6 @@ namespace DataTool.ToolLogic.Extract {
 
                 var context = new SaveLogic.Combo.SaveContext(info);
                 SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, folderName, name), context);
-                context.Wait();
 
                 using (Stream videoStream = OpenFile(loadout.m_infoMovie)) {
                     if (videoStream != null) {

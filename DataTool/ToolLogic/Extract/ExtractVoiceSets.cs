@@ -34,7 +34,6 @@ namespace DataTool.ToolLogic.Extract {
                 var context = new SaveLogic.Combo.SaveContext(comboInfo);
                 Combo.Find(comboInfo, key);
                 SaveLogic.Combo.SaveVoiceSet(toolFlags, Path.Combine(basePath, Container), context, key);
-                context.Wait();
             }
         }
     }

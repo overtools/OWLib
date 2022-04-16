@@ -140,8 +140,6 @@ namespace DataTool.ToolLogic.Extract {
                                 SaveLogic.Combo.SaveSoundFile(flags, hero03FDir, mSoundWemFile);
                             }
                         }
-
-                        saveContext.Wait();
                     }
                 }
             }
