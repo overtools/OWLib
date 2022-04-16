@@ -8,10 +8,7 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using DataTool.DataModels;
-using TACTLib;
 
 namespace DataTool.SaveLogic {
     public static class Map {
@@ -71,34 +68,32 @@ namespace DataTool.SaveLogic {
                     writer.Write(ModelGroups.Header.PlaceableCount); // nr objects
 
                     int entitiesWithModelCount = 0;
-                    STUModelComponent[][] modelComponentSets = new STUModelComponent[Entities.Header.PlaceableCount][];
+                    STUModelComponent[] modelComponents = new STUModelComponent[Entities.Header.PlaceableCount];
 
                     for (int i = 0; i < Entities.Header.PlaceableCount; i++) {
-                        // todo: wtf is this code
 
                         teMapPlaceableEntity entity = (teMapPlaceableEntity) Entities.Placeables[i];
-                        var modelComponents = GetInstances<STUModelComponent>(entity.Header.EntityDefinition).Where(component => teResourceGUID.Index(component.m_model) > 1);
-                        if (modelComponents.Count() == 0) {
-                            foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
-                                if (instanceData is STUStatescriptComponentInstanceData statescriptComponentInstanceData) {
-                                    if (statescriptComponentInstanceData.m_6D10093E != null) {
-                                        foreach (STUStatescriptGraphWithOverrides graphWithOverrides in statescriptComponentInstanceData.m_6D10093E) {
-                                            FindLogic.Combo.Find(Info, graphWithOverrides);
-                                        }
-                                    }
+                        FindLogic.Combo.Find(Info, entity.Header.EntityDefinition);
 
-                                    if (statescriptComponentInstanceData.m_2D9815BA != null) {
-                                        // todo: ??
-                                    }
-                                }
-                            }
-
-                            continue;
+                        var modelComponent = GetInstance<STUModelComponent>(entity.Header.EntityDefinition);
+                        modelComponents[i] = modelComponent;
+                        if (modelComponent != null) {
+                            entitiesWithModelCount += 1;
                         }
 
-                        modelComponentSets[i] = new STUModelComponent[modelComponents.Count()];
-                        entitiesWithModelCount += modelComponentSets[i].Length;
-                        modelComponentSets[i] = modelComponents.ToArray();
+                        foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
+                            if (instanceData is STUStatescriptComponentInstanceData statescriptComponentInstanceData) {
+                                if (statescriptComponentInstanceData.m_6D10093E != null) {
+                                    foreach (STUStatescriptGraphWithOverrides graphWithOverrides in statescriptComponentInstanceData.m_6D10093E) {
+                                        FindLogic.Combo.Find(Info, graphWithOverrides);
+                                    }
+                                }
+
+                                if (statescriptComponentInstanceData.m_2D9815BA != null) {
+                                    // todo: ??
+                                }
+                            }
+                        }
                     }
 
                     writer.Write((uint) (SingleModels.Header.PlaceableCount + Models.Header.PlaceableCount +
@@ -169,45 +164,42 @@ namespace DataTool.SaveLogic {
                     for (int i = 0; i < Entities.Placeables?.Length; i++) {
                         var entity = (teMapPlaceableEntity) Entities.Placeables[i];
 
-                        STUModelComponent[] modelComponents = modelComponentSets[i];
-                        if (modelComponents == null) continue;
+                        STUModelComponent modelComponent = modelComponents[i];
+                        if (modelComponent == null) continue;
 
-                        FindLogic.Combo.Find(Info, entity.Header.EntityDefinition);
+                        var model = modelComponent.m_model;
+                        var look = modelComponent.m_look;
 
-                        foreach (var modelComponent in modelComponents) {
-                            ulong model = modelComponent.m_model;
-                            var modelLookSet = new List<ulong> { modelComponent.m_look };
+                        foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
+                            if (!(instanceData is STUModelComponentInstanceData modelComponentInstanceData)) continue;
 
-                            foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
-                                if (!(instanceData is STUModelComponentInstanceData modelComponentInstanceData)) continue;
-                                if (modelComponentInstanceData.m_look != 0) {
-                                    modelLookSet.Add(modelComponentInstanceData.m_look);
-                                }
-                            }
+                            if (modelComponentInstanceData.m_look == 0) break;
 
-                            FindLogic.Combo.Find(Info, model);
-                            foreach (var modelLook in modelLookSet) {
-                                FindLogic.Combo.Find(Info, modelLook, null, new FindLogic.Combo.ComboContext { Model = model });
-                            }
+                            look = modelComponentInstanceData.m_look;
 
-                            FindLogic.Combo.ModelAsset modelInfo = Info.m_models[model];
-                            string modelFn = GetModelPath(modelInfo);
-                            if (Info.m_entities.ContainsKey(entity.Header.EntityDefinition)) {
-                                modelFn = Path.Combine("Entities", Info.m_entities[entity.Header.EntityDefinition].GetName(), Info.m_entities[entity.Header.EntityDefinition].GetName() + ".owentity");
-                            }
-
-                            string matFn = "null";
-                            try {
-                                FindLogic.Combo.ModelLookAsset modelLookInfo = Info.m_modelLooks[modelLookSet.First(x => x > 0)];
-                                matFn = GetModelLookMatPath(modelInfo, modelLookInfo);
-                            } catch { }
-
-                            writer.Write(modelFn);
-                            writer.Write(matFn);
-                            writer.Write(entity.Header.Translation);
-                            writer.Write(entity.Header.Scale);
-                            writer.Write(entity.Header.Rotation);
+                            var lookContext = new FindLogic.Combo.ComboContext { Model = model };
+                            FindLogic.Combo.Find(Info, look, null, lookContext);
                         }
+
+
+                        FindLogic.Combo.ModelAsset modelInfo = Info.m_models[model];
+                        string modelFn = GetModelPath(modelInfo);
+                        if (Info.m_entities.ContainsKey(entity.Header.EntityDefinition)) {
+                            modelFn = Path.Combine("Entities", Info.m_entities[entity.Header.EntityDefinition].GetName(), Info.m_entities[entity.Header.EntityDefinition].GetName() + ".owentity");
+                        }
+
+                        // todo: stop throw pls. anyway
+                        string matFn = "null";
+                        try {
+                            FindLogic.Combo.ModelLookAsset modelLookInfo = Info.m_modelLooks[look];
+                            matFn = GetModelLookMatPath(modelInfo, modelLookInfo);
+                        } catch { }
+
+                        writer.Write(modelFn);
+                        writer.Write(matFn);
+                        writer.Write(entity.Header.Translation);
+                        writer.Write(entity.Header.Scale);
+                        writer.Write(entity.Header.Rotation);
                     }
 
                     // Extension 1.1 - Lights
