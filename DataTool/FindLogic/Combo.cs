@@ -987,7 +987,8 @@ namespace DataTool.FindLogic {
 
                     break;
                 }
-                case 0x3F: {
+                case 0x3F:
+                case 0xBB: {
                     if (info.m_soundFiles.ContainsKey(guid)) break;
                     SoundFileAsset soundFileInfo = new SoundFileAsset(guid);
                     info.m_soundFiles[guid] = soundFileInfo;

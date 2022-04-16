@@ -40,22 +40,27 @@ namespace DataTool.ToolLogic.Extract.Debug {
             const string container = "DebugMovies";
 
             foreach (ulong key in Program.TrackedFiles[0xB6]) {
-                using (Stream videoStream = OpenFile(key)) {
-                    if (videoStream != null) {
-                        using (BinaryReader reader = new BinaryReader(videoStream)) {
-                            MOVI movi = reader.Read<MOVI>();
-                            videoStream.Position = 128; // wrapped in "MOVI" for some reason
-                            string videoFile = Path.Combine(basePath, container, teResourceGUID.LongKey(key).ToString("X12"), $"{teResourceGUID.LongKey(key):X12}.bk2");
-                            WriteFile(videoStream, videoFile);
-                            FindLogic.Combo.ComboInfo audioInfo = new FindLogic.Combo.ComboInfo {
-                                m_soundFiles = new System.Collections.Generic.Dictionary<ulong, FindLogic.Combo.SoundFileAsset> {
-                                    {movi.MasterAudio, new FindLogic.Combo.SoundFileAsset(movi.MasterAudio)}
-                                }
-                            };
-                            var audioContext = new Combo.SaveContext(audioInfo);
-                            SaveLogic.Combo.SaveSoundFile(flags, Path.Combine(basePath, container, teResourceGUID.LongKey(key).ToString("X12")), audioContext, movi.MasterAudio, false);
-                        }
-                    }
+                SaveVideoFile(flags, key, Path.Combine(basePath, container, teResourceGUID.LongKey(key).ToString("X12")));
+            }
+        }
+
+        public static void SaveVideoFile(ICLIFlags flags, ulong guid, string directory) {
+            using (Stream videoStream = OpenFile(guid)) {
+                if (videoStream == null) return;
+
+                using (BinaryReader reader = new BinaryReader(videoStream)) {
+                    MOVI movi = reader.Read<MOVI>();
+                    videoStream.Position = 128;
+
+                    string videoFile = Path.Combine(directory, $"{teResourceGUID.LongKey(guid):X12}.bk2");
+                    WriteFile(videoStream, videoFile);
+
+                    FindLogic.Combo.ComboInfo audioInfo = new FindLogic.Combo.ComboInfo();
+                    FindLogic.Combo.Find(audioInfo, movi.MasterAudio);
+                    FindLogic.Combo.Find(audioInfo, movi.ExtraAudio);
+
+                    var audioContext = new Combo.SaveContext(audioInfo);
+                    Combo.SaveAllSoundFiles(flags, directory, audioContext);
                 }
             }
         }
