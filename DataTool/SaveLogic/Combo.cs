@@ -204,7 +204,7 @@ namespace DataTool.SaveLogic {
             return basePath;
         }
 
-        private static void SaveAnimationTask(ICLIFlags flags, string path, SaveContext context, ulong animation, ulong model) {
+        public static void SaveAnimation(ICLIFlags flags, string path, SaveContext context, ulong animation, ulong model) {
             bool convertAnims = false;
             bool scaleAnims = false;
             if (flags is ExtractFlags extractFlags) {
@@ -253,10 +253,6 @@ namespace DataTool.SaveLogic {
                 fileStream.SetLength(0);
                 output.Write(fileStream);
             }
-        }
-
-        public static void SaveAnimation(ICLIFlags flags, string path, SaveContext context, ulong animation, ulong model) {
-            SaveAnimationTask(flags, path, context, animation, model);
         }
 
         public static void SaveEffectExtras(
@@ -596,7 +592,76 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void SaveTextureTask(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, SaveTextureOptions options) {
+        private static void ProcessIconTexture(Stream convertedStream, teTexture texture, string filePath, string convertType) {
+            var alpha = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 0);
+            convertedStream.Position = 0;
+            var color = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 1);
+
+            if (color.IsEmpty || alpha.IsEmpty) {
+                convertedStream.Position = 0;
+                WriteFile(convertedStream, $"{filePath}.dds");
+                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
+                return;
+            }
+
+            try {
+                using (Image<Rgba32> colorImage = Image.Load<Rgba32>(Configuration.Default, color.Span))
+                using (Image<Rgba32> alphaImage = Image.Load<Rgba32>(Configuration.Default, alpha.Span)) {
+                    ColorSpaceConverter colorSpaceConverter = new ColorSpaceConverter();
+                    alphaImage.ProcessPixelRows(colorImage, (source, target) => {
+                        for (var y = 0; y < texture.Header.Height; ++y) {
+                            var sourceRow = source.GetRowSpan(y);
+                            var targetRow = target.GetRowSpan(y);
+                            for (var x = 0; x < texture.Header.Width; ++x) {
+                                var pixel = targetRow[x];
+                                pixel.R = (byte) (Math.Pow(pixel.R / 255f, 1.1f) * 0xFF);
+                                pixel.G = (byte) (Math.Pow(pixel.G / 255f, 1.1f) * 0xFF);
+                                pixel.B = (byte) (Math.Pow(pixel.B / 255f, 1.1f) * 0xFF);
+                                pixel.A = (byte) ((1 - colorSpaceConverter.ToHsl(sourceRow[x]).L) * 0xFF);
+                                targetRow[x] = pixel;
+                            }
+                        }
+                    });
+
+                    var fullName = $"{filePath}.png";
+                    string fullPath = Path.GetDirectoryName(fullName);
+                    if (!Directory.Exists(fullPath) && fullPath != null) {
+                        Directory.CreateDirectory(fullPath);
+                    }
+
+                    colorImage.SaveAsPng(fullName);
+                }
+            } catch (Exception ex) {
+                convertedStream.Position = 0;
+                WriteFile(convertedStream, $"{filePath}.dds");
+                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} ImageSharp failed.");
+            }
+        }
+
+        public class SaveTextureOptions {
+            /// <summary>
+            /// Overrides the filename.
+            /// </summary>
+            public string FileNameOverride { get; set; }
+
+            /// <summary>
+            /// Force split multi surface textures into multiple files.
+            /// </summary>
+            public bool? Split { get; set; }
+
+            /// <summary>
+            /// Forces texture to be processed as if it were an icon with multiple surfaces.
+            /// </summary>
+            public bool? ProcessIcon { get; set; }
+
+            /// <summary>
+            /// Overrides the file type the texture is saved as.
+            /// </summary>
+            public string FileTypeOverride { get; set; }
+        }
+
+        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, SaveTextureOptions options = null) {
+            options = options ?? new SaveTextureOptions();
             FindLogic.Combo.TextureAsset textureInfo = info.m_info.m_textures[textureGUID];
 
             var split = options?.Split ?? textureInfo.m_split ?? false;
@@ -666,9 +731,6 @@ namespace DataTool.SaveLogic {
 
                     texture = new teTexture(textureStream);
                 }
-
-                //if (texture.Header.Flags.HasFlag(teTexture.Flags.CUBEMAP)) return;
-                // for diffing when they add/regen loads of cubemaps
 
                 if (texture.PayloadRequired) {
                     for (uint i = 1; i < texture.Payloads.Length; i++) {
@@ -745,78 +807,6 @@ namespace DataTool.SaveLogic {
                     Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as it's missing required texture payload.");
                 }
             }
-        }
-
-        private static void ProcessIconTexture(Stream convertedStream, teTexture texture, string filePath, string convertType) {
-            var alpha = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 0);
-            convertedStream.Position = 0;
-            var color = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 1);
-
-            if (color.IsEmpty || alpha.IsEmpty) {
-                convertedStream.Position = 0;
-                WriteFile(convertedStream, $"{filePath}.dds");
-                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
-                return;
-            }
-
-            try {
-                using (Image<Rgba32> colorImage = Image.Load<Rgba32>(Configuration.Default, color.Span))
-                using (Image<Rgba32> alphaImage = Image.Load<Rgba32>(Configuration.Default, alpha.Span)) {
-                    ColorSpaceConverter colorSpaceConverter = new ColorSpaceConverter();
-                    alphaImage.ProcessPixelRows(colorImage, (source, target) => {
-                        for (var y = 0; y < texture.Header.Height; ++y) {
-                            var sourceRow = source.GetRowSpan(y);
-                            var targetRow = target.GetRowSpan(y);
-                            for (var x = 0; x < texture.Header.Width; ++x) {
-                                var pixel = targetRow[x];
-                                pixel.R = (byte) (Math.Pow(pixel.R / 255f, 1.1f) * 0xFF);
-                                pixel.G = (byte) (Math.Pow(pixel.G / 255f, 1.1f) * 0xFF);
-                                pixel.B = (byte) (Math.Pow(pixel.B / 255f, 1.1f) * 0xFF);
-                                pixel.A = (byte) ((1 - colorSpaceConverter.ToHsl(sourceRow[x]).L) * 0xFF);
-                                targetRow[x] = pixel;
-                            }
-                        }
-                    });
-
-                    var fullName = $"{filePath}.png";
-                    string fullPath = Path.GetDirectoryName(fullName);
-                    if (!Directory.Exists(fullPath) && fullPath != null) {
-                        Directory.CreateDirectory(fullPath);
-                    }
-
-                    colorImage.SaveAsPng(fullName);
-                }
-            } catch (Exception ex) {
-                convertedStream.Position = 0;
-                WriteFile(convertedStream, $"{filePath}.dds");
-                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} ImageSharp failed.");
-            }
-        }
-
-        public class SaveTextureOptions {
-            /// <summary>
-            /// Overrides the filename.
-            /// </summary>
-            public string FileNameOverride { get; set; }
-
-            /// <summary>
-            /// Force split multi surface textures into multiple files.
-            /// </summary>
-            public bool? Split { get; set; }
-
-            /// <summary>
-            /// Forces texture to be processed as if it were an icon with multiple surfaces.
-            /// </summary>
-            public bool? ProcessIcon { get; set; }
-
-            /// <summary>
-            /// Overrides the file type the texture is saved as.
-            /// </summary>
-            public string FileTypeOverride { get; set; }
-        }
-
-        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, SaveTextureOptions options = null) {
-            SaveTextureTask(flags, path, info, textureGUID, options ?? new SaveTextureOptions());
         }
 
         private static void ConvertSoundFile(Stream stream, FindLogic.Combo.ComboAsset soundFileInfo, string directory, string name = null) {
