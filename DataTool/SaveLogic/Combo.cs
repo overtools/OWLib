@@ -715,7 +715,7 @@ namespace DataTool.SaveLogic {
                     }
 
                     if (!texture.PayloadRequired) return;
-                    for (int i = 0; i < texture.Payloads.Length; ++i) {
+                    for (uint i = 1; i < texture.Payloads.Length; i++) {
                         using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
                             WriteFile(texturePayloadStream, $"{filePath}_{i}.04D");
                     }
@@ -733,7 +733,7 @@ namespace DataTool.SaveLogic {
                     // for diffing when they add/regen loads of cubemaps
 
                     if (texture.PayloadRequired) {
-                        for (int i = 0; i < texture.Payloads.Length; ++i) {
+                        for (uint i = 1; i < texture.Payloads.Length; i++) {
                             using (var payloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
                                 texture.LoadPayload(payloadStream, i);
 
@@ -785,48 +785,7 @@ namespace DataTool.SaveLogic {
 
                         using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
                             if (processIcon && texture.Header.Surfaces == 2) {
-                                var alpha = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 0);
-                                convertedStream.Position = 0;
-                                var color = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 1);
-                                if (!color.IsEmpty && !alpha.IsEmpty) {
-                                    try {
-                                        using (Image<Rgba32> colorImage = Image.Load<Rgba32>(Configuration.Default, color.Span)) {
-                                            using (Image<Rgba32> alphaImage = Image.Load<Rgba32>(Configuration.Default, alpha.Span)) {
-                                                ColorSpaceConverter colorSpaceConverter = new ColorSpaceConverter();
-                                                alphaImage.ProcessPixelRows(colorImage, (source, target) => {
-                                                    for (var y = 0; y < texture.Header.Height; ++y) {
-                                                        var sourceRow = source.GetRowSpan(y);
-                                                        var targetRow = target.GetRowSpan(y);
-                                                        for (var x = 0; x < texture.Header.Width; ++x) {
-                                                            var pixel = targetRow[x];
-                                                            pixel.R = (byte) (Math.Pow(pixel.R / 255f, 1.1f) * 0xFF);
-                                                            pixel.G = (byte) (Math.Pow(pixel.G / 255f, 1.1f) * 0xFF);
-                                                            pixel.B = (byte) (Math.Pow(pixel.B / 255f, 1.1f) * 0xFF);
-                                                            pixel.A = (byte) ((1 - colorSpaceConverter.ToHsl(sourceRow[x]).L ) * 0xFF);
-                                                            targetRow[x] = pixel;
-                                                        }
-                                                    }
-                                                });
-
-                                                var fullName = $"{filePath}.png";
-                                                string fullPath = Path.GetDirectoryName(fullName);
-                                                if (!Directory.Exists(fullPath) && fullPath != null) {
-                                                    Directory.CreateDirectory(fullPath);
-                                                }
-
-                                                colorImage.SaveAsPng(fullName);
-                                            }
-                                        }
-                                    } catch (Exception ex) {
-                                        convertedStream.Position = 0;
-                                        WriteFile(convertedStream, $"{filePath}.dds");
-                                        Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} ImageSharp failed.");
-                                    }
-                                } else {
-                                    convertedStream.Position = 0;
-                                    WriteFile(convertedStream, $"{filePath}.dds");
-                                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
-                                }
+                                ProcessIconTexture(convertedStream, texture, filePath, convertType);
                             } else {
                                 var surfaceCount = splitMultiSurface ? texture.Header.Surfaces : 1;
                                 for (var surfaceNr = 0; surfaceNr < surfaceCount; ++surfaceNr) {
@@ -850,6 +809,52 @@ namespace DataTool.SaveLogic {
                 }
             } finally {
                 s_texurePrepareSemaphore.Release();
+            }
+        }
+
+        private static void ProcessIconTexture(Stream convertedStream, teTexture texture, string filePath, string convertType) {
+            var alpha = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 0);
+            convertedStream.Position = 0;
+            var color = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 1);
+
+            if (color.IsEmpty || alpha.IsEmpty) {
+                convertedStream.Position = 0;
+                WriteFile(convertedStream, $"{filePath}.dds");
+                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
+                return;
+            }
+
+            try {
+                using (Image<Rgba32> colorImage = Image.Load<Rgba32>(Configuration.Default, color.Span))
+                using (Image<Rgba32> alphaImage = Image.Load<Rgba32>(Configuration.Default, alpha.Span)) {
+                    ColorSpaceConverter colorSpaceConverter = new ColorSpaceConverter();
+                    alphaImage.ProcessPixelRows(colorImage, (source, target) => {
+                        for (var y = 0; y < texture.Header.Height; ++y) {
+                            var sourceRow = source.GetRowSpan(y);
+                            var targetRow = target.GetRowSpan(y);
+                            for (var x = 0; x < texture.Header.Width; ++x) {
+                                var pixel = targetRow[x];
+                                pixel.R = (byte) (Math.Pow(pixel.R / 255f, 1.1f) * 0xFF);
+                                pixel.G = (byte) (Math.Pow(pixel.G / 255f, 1.1f) * 0xFF);
+                                pixel.B = (byte) (Math.Pow(pixel.B / 255f, 1.1f) * 0xFF);
+                                pixel.A = (byte) ((1 - colorSpaceConverter.ToHsl(sourceRow[x]).L) * 0xFF);
+                                targetRow[x] = pixel;
+                            }
+                        }
+                    });
+
+                    var fullName = $"{filePath}.png";
+                    string fullPath = Path.GetDirectoryName(fullName);
+                    if (!Directory.Exists(fullPath) && fullPath != null) {
+                        Directory.CreateDirectory(fullPath);
+                    }
+
+                    colorImage.SaveAsPng(fullName);
+                }
+            } catch (Exception ex) {
+                convertedStream.Position = 0;
+                WriteFile(convertedStream, $"{filePath}.dds");
+                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} ImageSharp failed.");
             }
         }
 
