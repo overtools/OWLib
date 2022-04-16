@@ -6,7 +6,7 @@ namespace TankLib.Chunks {
     public class teEffectComponentParticle : IChunk {
         public string ID => "ECPR";
         public List<IChunk> SubChunks { get; set; }
-        
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
             public ulong Unknown1;

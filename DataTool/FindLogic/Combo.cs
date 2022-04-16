@@ -823,13 +823,19 @@ namespace DataTool.FindLogic {
                     }
 
                     if (modelLook.m_materialEffects != null) {
+
+                        var matEffectContext = new ComboContext {
+                            Model = context.Model
+                            // this will be a loose material
+                        };
+
                         foreach (STU_D75EA2E1 materialEffect in modelLook.m_materialEffects) {
-                            Find(info, materialEffect.m_materialEffect, replacements);
-                            Find(info, materialEffect.m_82F3DCE0, replacements);
+                            Find(info, materialEffect.m_materialEffect, replacements, matEffectContext);
+                            Find(info, materialEffect.m_82F3DCE0, replacements, matEffectContext);
 
                             foreach (var material in materialEffect.m_materials) {
-                                Find(info, material.m_material, replacements);
-                                Find(info, material.m_5753874F, replacements);
+                                Find(info, material.m_material, replacements, matEffectContext);
+                                Find(info, material.m_5753874F, replacements, matEffectContext);
                             }
                         }
                     }
@@ -848,7 +854,7 @@ namespace DataTool.FindLogic {
 
                     if (modelLook.m_844B23C0 != null) {
                         foreach (var idk in modelLook.m_844B23C0) {
-                            Find(info, idk.m_8A557E94, replacements);
+                            Find(info, idk.m_8A557E94, replacements, context);
                         }
                     }
 
