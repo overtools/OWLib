@@ -486,49 +486,11 @@ namespace DataTool.SaveLogic {
 
             SaveOWMaterialModelLookFile(path, modelLookInfo, info.m_info);
 
-            if (modelLookInfo.m_materialGUIDs == null) return;
-            foreach (ulong modelLookMaterial in modelLookInfo.m_materialGUIDs) {
-                SaveMaterial(flags, path, info, modelLookMaterial);
+            if (modelLookInfo.m_materials == null) return;
+            foreach (var modelLookMaterial in modelLookInfo.m_materials) {
+                SaveMaterial(flags, path, info, modelLookMaterial.m_guid);
             }
         }
-
-        /*public static void SaveModelLookSet(ICLIFlags flags, string path, SaveContext info,
-            IEnumerable<ulong> modelLookSet) {
-            if(modelLookSet.Count() < 2) {
-                if (modelLookSet.Count() < 1) {
-                    return;
-                }
-                SaveModelLook(flags, path, info, modelLookSet.ElementAt(0));
-                return;
-            }
-
-            FindLogic.Combo.ModelLookAsset modelLookInfo = new FindLogic.Combo.ModelLookAsset(0) {
-                m_name = string.Join("_", modelLookSet.Select(x => info.m_info.m_modelLooks.ContainsKey(x) ? info.m_info.m_modelLooks[x].GetNameIndex() : $"{x & 0xFFFFFFFFFFFF:X12}")),
-                m_materialGUIDs = new HashSet<ulong>()
-            };
-
-            var doneIDs = new HashSet<ulong>();
-
-            foreach (ulong modelLookGuid in modelLookSet.Reverse()) {
-                if (info.m_info.m_modelLooks.ContainsKey(modelLookGuid)) {
-                    foreach(var materialGuid in info.m_info.m_modelLooks[modelLookGuid].m_materialGUIDs) {
-                        var material = info.m_info.m_materials[materialGuid];
-                        if (doneIDs.Any(x => material.m_materialIDs.Contains(x))) {
-                            continue;
-                        }
-                        doneIDs.UnionWith(material.m_materialIDs);
-                        modelLookInfo.m_materialGUIDs.Add(materialGuid);
-                    }
-                }
-            }
-
-            SaveOWMaterialModelLookFile(path, modelLookInfo, info.m_info);
-
-            if (modelLookInfo.m_materialGUIDs == null) return;
-            foreach (ulong modelLookMaterial in modelLookInfo.m_materialGUIDs) {
-                SaveMaterial(flags, path, info, modelLookMaterial);
-            }
-        }*/
 
         public static void SaveOWMaterialFile(string path, FindLogic.Combo.MaterialAsset materialInfo, FindLogic.Combo.ComboInfo info, ICLIFlags flags) {
             string format = "dds";

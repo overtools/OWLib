@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using TankLib;
 using TankLib.ExportFormats;
@@ -21,20 +20,24 @@ namespace DataTool.SaveLogic {
                 using (BinaryWriter writer = new BinaryWriter(stream)) {
                     writer.Write(OverwatchMaterial.VersionMajor);
                     writer.Write(OverwatchMaterial.VersionMinor);
-                    if (ModelLookInfo.m_materialGUIDs == null) {
+                    if (ModelLookInfo.m_materials == null) {
                         writer.Write(0L);
                         writer.Write(0L);
                         writer.Write((uint) OverwatchMaterial.OWMatType.ModelLook);
                         return;
                     }
 
-                    writer.Write(ModelLookInfo.m_materialGUIDs.LongCount());
+                    writer.Write(ModelLookInfo.m_materials.LongCount());
                     writer.Write(0L);
                     writer.Write((uint) OverwatchMaterial.OWMatType.ModelLook);
 
-                    foreach (ulong modelLookMaterial in ModelLookInfo.m_materialGUIDs) {
-                        FindLogic.Combo.MaterialAsset materialInfo = Info.m_materials[modelLookMaterial];
+                    foreach (var modelLookMaterial in ModelLookInfo.m_materials) {
+                        FindLogic.Combo.MaterialAsset materialInfo = Info.m_materials[modelLookMaterial.m_guid];
                         writer.Write(Path.Combine("..", "..", "Materials", materialInfo.GetNameIndex() + $".{Extension}"));
+                    }
+
+                    foreach (var modelLookMaterial in ModelLookInfo.m_materials) {
+                        writer.Write(modelLookMaterial.m_key);
                     }
                 }
             }
@@ -44,7 +47,7 @@ namespace DataTool.SaveLogic {
             public string Extension => "owmat";
 
             public const ushort VersionMajor = 2;
-            public const ushort VersionMinor = 1;
+            public const ushort VersionMinor = 2;
 
             public enum OWMatType : uint {
                 Material = 0,
