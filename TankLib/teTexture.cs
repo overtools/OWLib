@@ -142,11 +142,9 @@ namespace TankLib {
 
             byte payloadBit;
             var type = teResourceGUID.Type(textureGUID);
-            if (type == 4)
-            {
+            if (type == 4) {
                 payloadBit = 0;
-            } else if (type == 0xF1)
-            {
+            } else if (type == 0xF1) {
                 payloadBit = 1;
             } else {
                 throw new Exception($"what is texture type {type:X3}");
