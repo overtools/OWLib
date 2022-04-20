@@ -50,6 +50,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
             }
 
             string path = Path.Combine(basePath, container);
+            
+            
+            IO.WriteFile(0x0C008000CAE5C31B, path); // failing tex. 0 payloads. but data
 
             //TestModelLook(0x98000000000682F); // Chateau - Lake
 

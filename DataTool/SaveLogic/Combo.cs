@@ -805,7 +805,7 @@ namespace DataTool.SaveLogic {
                         }
                     }
                 } catch (Exception e) {
-                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} {e}");
+                    Logger.Error("Combo", $"Unable to save {textureGUID:X16} {Path.GetFileName(filePath)} {e}");
                 }
             }
         }

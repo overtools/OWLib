@@ -125,17 +125,22 @@ namespace TankLib {
             Header = reader.Read<TextureHeader>();
             Header.MipCount = 1;
             if (Header.Format >= 0x1A) Header.Format -= 1;
+            
+            if (Header.Format == 99) Header.Format = 98;
+            
             if (Header.PayloadCount == 1) Logger.Debug("teTexture", $"texture {((reader.BaseStream is GuidStream gs) ? teResourceGUID.AsString(gs.GUID) : "internal") } is mip");
 
-            PayloadRequired = true;
-            if (Header.DataSize == 0 || Header.PayloadCount > 1) {
+            if (Header.DataSize == 0 || Header.PayloadCount > 0) {
+                PayloadRequired = true;
                 Payloads = new teTexturePayload[Header.PayloadCount];
+                
+                reader.Seek(0x20);
+                Payloads[0] = new teTexturePayload(this, reader.BaseStream);
                 return;
             }
-
-            reader.Seek(0x20);
-            Payloads = new teTexturePayload[Header.PayloadCount];
-            Payloads[0] = new teTexturePayload(this, reader.BaseStream);
+            
+            Data = new byte[Header.DataSize];
+            reader.Read(Data, 0, (int)Header.DataSize);
         }
         
         public teResourceGUID GetPayloadGUID(ulong textureGUID, uint payloadIdx) {
