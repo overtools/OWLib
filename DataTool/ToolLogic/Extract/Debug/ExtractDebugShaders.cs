@@ -53,6 +53,11 @@ namespace DataTool.ToolLogic.Extract.Debug {
             
             
             IO.WriteFile(0x0C008000CAE5C31B, path); // failing tex. 0 payloads. but data
+            
+            FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
+            FindLogic.Combo.Find(comboInfo, 0x0C00000000035A3D); // toronto broken mips
+            var context = new Combo.SaveContext(comboInfo);
+            Combo.SaveLooseTextures(null, path, context);
 
             //TestModelLook(0x98000000000682F); // Chateau - Lake
 
