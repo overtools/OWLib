@@ -36,7 +36,7 @@ namespace DataTool.DataModels {
         }
 
         private void Init(STUVoiceSet voiceSet) {
-            if (voiceSet.m_voiceLineInstances == null) return;
+            if (voiceSet == null || voiceSet.m_voiceLineInstances == null) return;
             VoiceLines = new Dictionary<ulong, VoiceLineInstance>(voiceSet.m_voiceLineInstances.Length);
             Stimuli = new Dictionary<ulong, HashSet<ulong>>();
 

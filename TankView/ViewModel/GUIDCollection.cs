@@ -431,7 +431,7 @@ namespace TankView.ViewModel {
                 var doesGuidFileExist = File.Exists(guidFilePath);
                 if (!doesGuidFileExist) {
                     List<ulong> guids = Tank.m_assets.Select(x => x.Key).ToList();
-                    Diff.WriteBinaryGUIDs(guidFilePath, guids);
+                    Diff.WriteBinaryGUIDsTankView(guidFilePath, guids);
                 }
 
                 GetPreviousBuildGuids();

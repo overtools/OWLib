@@ -8,8 +8,12 @@ using TACTLib.Core.Product.Tank;
 
 namespace TankLib {
     public static class Diff {
-        public static void WriteBinaryGUIDs(string file, IReadOnlyCollection<ulong> guids) {
+        public static void WriteBinaryGUIDsTankView(string file, IReadOnlyCollection<ulong> guids) {
             Directory.CreateDirectory(Path.GetDirectoryName(file));
+            WriteBinaryGUIDs(file, guids);
+        }
+
+        public static void WriteBinaryGUIDs(string file, IReadOnlyCollection<ulong> guids) {
             using (Stream stream = File.OpenWrite(file))
             using (var lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Compress))
             using (var writer = new BinaryWriter(lz4Stream)) {
