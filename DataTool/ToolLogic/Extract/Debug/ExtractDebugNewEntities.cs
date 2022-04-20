@@ -85,7 +85,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             var file = flags.Positionals[3];
             const string container = "DebugNewEntities2";
             Combo.ComboInfo info = new Combo.ComboInfo();
-            var types = new ushort[] {0x4, 0x7C, 0x3F, 0xB2};
+            var types = new ushort[] {0x4, /*0x7C, 0x3F, 0xB2*/};
 
             if (file.EndsWith("guids")) {
                 var guids = GetGUIDs(file);

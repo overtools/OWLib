@@ -23,7 +23,8 @@ namespace TankLib {
             public byte Unk7; // 7
             public ushort Width; // 8
             public ushort Height; // 10
-            public uint DataSize; // 12
+            public ushort DataSize; // 12
+            public ushort Unk14NEW;
             public ulong Unk16; // 16
             public ulong Unk24; // 24
 
@@ -122,20 +123,26 @@ namespace TankLib {
 
         private void Read(BinaryReader reader) {
             Header = reader.Read<TextureHeader>();
+            Header.MipCount = 1;
+            if (Header.Format >= 0x1A) Header.Format -= 1;
             if (Header.PayloadCount == 1) Logger.Debug("teTexture", $"texture {((reader.BaseStream is GuidStream gs) ? teResourceGUID.AsString(gs.GUID) : "internal") } is mip");
 
+            PayloadRequired = true;
             if (Header.DataSize == 0 || Header.PayloadCount > 1) {
-                PayloadRequired = true;
                 Payloads = new teTexturePayload[Header.PayloadCount];
                 return;
             }
 
             reader.Seek(0x20);
-            Data = new byte[Header.DataSize];
-            reader.Read(Data, 0, (int)Header.DataSize);
+            Payloads = new teTexturePayload[Header.PayloadCount];
+            Payloads[0] = new teTexturePayload(this, reader.BaseStream);
+        }
+        
+        public teResourceGUID GetPayloadGUID(ulong textureGUID, uint payloadIdx) {
+            return GetPayloadGUID2(textureGUID, payloadIdx);
         }
 
-        public teResourceGUID GetPayloadGUID(ulong textureGUID, uint payloadIdx) {
+        public static teResourceGUID GetPayloadGUID2(ulong textureGUID, uint payloadIdx) {
             if (payloadIdx == 0) {
                 throw new Exception("dont call me for 0");
             }
@@ -190,8 +197,10 @@ namespace TankLib {
         /// <param name="height"></param>
         /// <param name="surfaces"></param>
         public void SaveToDDS(Stream stream, bool keepOpen, int? mips, uint? width = null, uint? height = null, uint? surfaces = null) {
-            if (PayloadRequired && Payloads[1] == null) throw new Exceptions.TexturePayloadMissingException();
+            if (PayloadRequired && Payloads[Payloads.Length-1] == null) throw new Exceptions.TexturePayloadMissingException();
             using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
+                Console.Out.WriteLine($"{mips ?? Header.MipCount} {width ?? Header.Width} {height ?? Header.Height} {surfaces ?? Header.Surfaces}");
+                
                 TextureTypes.DDSHeader dds = Header.ToDDSHeader(mips ?? Header.MipCount, width ?? Header.Width, height ?? Header.Height, surfaces ?? Header.Surfaces);
                 ddsWriter.Write(dds);
                 if (dds.Format.FourCC == 0x30315844) {
@@ -206,7 +215,8 @@ namespace TankLib {
                         // cubemaps are just 2d textures
                         dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D;
                     }
-
+                    
+                    Console.Out.WriteLine($"{Header.Format} {dimension} {Header.IsCubemap}");
                     TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
                         Format = Header.Format,
                         Dimension = dimension,

@@ -13,7 +13,12 @@ namespace TankLib {
             /// <summary>Offset to texture definitions</summary>
             public long TextureOffset;  // 16
             public long Offset4;  // 24
-            /// <summary>Number of static inputs </summary>
+            /// <summary>Number of static inputs </summary>          
+            
+            public ulong newpad32;
+            public ulong newpad40;
+            public ulong newpad48;
+            
             public short StaticInputCount;  // 28
 
             public short Unk;

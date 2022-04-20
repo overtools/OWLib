@@ -733,7 +733,7 @@ namespace DataTool.SaveLogic {
                 }
 
                 if (texture.PayloadRequired) {
-                    for (uint i = 1; i < texture.Payloads.Length; i++) {
+                    for (uint i = (uint)texture.Payloads.Length-1u; i >= 1; i++) {
                         using (var payloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
                             texture.LoadPayload(payloadStream, i);
 
@@ -756,8 +756,9 @@ namespace DataTool.SaveLogic {
                     }
                 }
 
+                convertType = "tif";
 
-                WICCodecs? imageFormat = null;
+                WICCodecs? imageFormat = WICCodecs.TIFF;
                 switch (convertType) {
                     case "tif":
                         imageFormat = WICCodecs.TIFF;
@@ -798,13 +799,13 @@ namespace DataTool.SaveLogic {
                                 } else {
                                     convertedStream.Position = 0;
                                     WriteFile(convertedStream, $"{surfacePath}.dds");
-                                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} (surface {surfaceNr + 1}) as {convertType} because DirectXTex failed.");
+                                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} (surface {surfaceNr + 1}) as {convertType} because DirectXTex failed. {texture.Header.Format} {texture.Header.PayloadCount} {texture.Header.MipCount} {texture.Header.Surfaces}");
                                 }
                             }
                         }
                     }
-                } catch (Exceptions.TexturePayloadMissingException) {
-                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as it's missing required texture payload.");
+                } catch (Exception e) {
+                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} {e}");
                 }
             }
         }

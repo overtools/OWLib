@@ -28,9 +28,9 @@ namespace TankLib {
             using (BinaryReader dataReader = new BinaryReader(payloadStream)) {
                 Header = dataReader.Read<TexturePayloadHeader>();
 
-                if(parent.Header.GetTextureType() == TextureTypes.TextureType.Unknown) {
+                //if(parent.Header.GetTextureType() == TextureTypes.TextureType.Unknown) {
                     RawData = dataReader.ReadBytes((int)Header.ImageSize);
-                    return;
+                /*    return;
                 }
 
                 Size = Header.ImageSize / parent.Header.GetTextureType().ByteSize();
@@ -52,7 +52,7 @@ namespace TankLib {
                 if (parent.Header.Format < 80) {
                     Color1 = dataReader.ReadArray<uint>((int)Size);
                     Color2 = dataReader.ReadArray<uint>((int)Size);
-                }
+                }*/
             }
         }
 

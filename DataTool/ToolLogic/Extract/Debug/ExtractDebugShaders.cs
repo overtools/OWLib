@@ -81,7 +81,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
 
             //SavePostFX(path);
             //SaveScreenQuad(path);
-            Save088(path);
+            //Save088(path);
         }
 
         public void TestModelLook(ulong guid) {
@@ -220,7 +220,9 @@ namespace DataTool.ToolLogic.Extract.Debug {
             // IO.CreateDirectorySafe(path);
             IO.CreateDirectorySafe(rawPath);
 
-            teMaterial material = new teMaterial(IO.OpenFile(materialGUID));
+            var matStream = IO.OpenFile(materialGUID);
+            if (matStream == null) return;
+            teMaterial material = new teMaterial(matStream);
 
             IO.WriteFile(materialGUID, rawPath);
             IO.WriteFile(material.Header.ShaderSource, rawPath);
@@ -235,7 +237,13 @@ namespace DataTool.ToolLogic.Extract.Debug {
                         FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
                         foreach (var texture in materialData.Textures) {
                             FindLogic.Combo.Find(comboInfo, texture.TextureGUID);
-                            comboInfo.SetTextureName(texture.TextureGUID, texture.NameHash.ToString("X8"));
+                            comboInfo.SetTextureName(texture.TextureGUID, texture.NameHash.ToString("X8")+".tif");
+                            
+                            IO.WriteFile(texture.TextureGUID, rawPath);
+                            IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 1), rawPath);
+                            IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 2), rawPath);
+                            IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 3), rawPath);
+                            IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 4), rawPath);
                         }
 
                         var context = new Combo.SaveContext(comboInfo);
@@ -243,6 +251,8 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     }
                 }
             }
+            
+            return;
 
             teShaderGroup shaderGroup = new teShaderGroup(IO.OpenFile(material.Header.ShaderGroup));
             SaveShaderGroup(shaderGroup, path);
