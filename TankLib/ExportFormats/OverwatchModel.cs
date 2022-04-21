@@ -108,6 +108,8 @@ namespace TankLib.ExportFormats {
                         }
 
                         if (skeleton != null && submesh.BoneIndices[j] != null) {
+                            //Console.Out.WriteLine($"{skeleton.Lookup.Length} {submesh.BoneIndices[j][0]} {submesh.BoneIndices[j][1]} {submesh.BoneIndices[j][2]} {submesh.BoneIndices[j][3]}");
+                           
                             writer.Write((byte)4);
                             writer.Write(skeleton.Lookup[submesh.BoneIndices[j][0]]);
                             writer.Write(skeleton.Lookup[submesh.BoneIndices[j][1]]);

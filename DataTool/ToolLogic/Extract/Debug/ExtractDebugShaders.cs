@@ -53,9 +53,15 @@ namespace DataTool.ToolLogic.Extract.Debug {
             
             
             IO.WriteFile(0x0C008000CAE5C31B, path); // failing tex. 0 payloads. but data
+            IO.WriteFile(0x0D00000000000F5B, path); // tracer model (idk which)
+            IO.WriteFile(0x0D0000000000302E, path); // tracer model 2 (idk which)
+            IO.WriteFile(0x0D00000000000413, path); // tracer model 3 (idk which)
+            IO.WriteFile(0x0D000000000002B1, path); // tracer model 4 (main)
             
             FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
             FindLogic.Combo.Find(comboInfo, 0x0C00000000035A3D); // toronto broken mips
+            FindLogic.Combo.Find(comboInfo, 0x0C0000000001B1D0); // more broken mips
+            FindLogic.Combo.Find(comboInfo, 0x0C0000000002C94F); // kanezaka cube
             var context = new Combo.SaveContext(comboInfo);
             Combo.SaveLooseTextures(null, path, context);
 

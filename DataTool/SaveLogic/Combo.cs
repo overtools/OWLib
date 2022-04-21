@@ -345,6 +345,8 @@ namespace DataTool.SaveLogic {
 
             FindLogic.Combo.ModelAsset modelInfo = info.m_info.m_models[modelGUID];
             string modelDirectory = Path.Combine(path, "Models", modelInfo.GetName());
+            
+            //Console.Out.WriteLine($"save model. {modelGUID:X16}");
 
             if (convertModels) {
                 string modelPath = Path.Combine(modelDirectory, $"{modelInfo.GetNameIndex()}.owmdl");

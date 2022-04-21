@@ -12,21 +12,23 @@ namespace TankLib.Chunks {
         public List<IChunk> SubChunks { get; set; }
         
         /// <summary>mskl header</summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct SkeletonHeader {
-            public long Hierarchy1Offset;
-            public long Matrix44Offset;
-            public long Matrix44iOffset;
-            public long Matrix43Offset;
-            public long Matrix43iOffset;
-            public long Struct6Offset;  // ?
-            public long IDOffset;
-            public long NameOffset;  // ?
-            public long Struct9Offset;
-            public long RemapOffset;
-            public long Hierarchy2Offset;
-            public int Unknown1;
-            public ushort BonesAbs;
+            public long Hierarchy1Offset; // 0
+            public long Matrix44Offset; // 8
+            public long Matrix44iOffset; // 16
+            public long Matrix43Offset; // 24 
+            public long Matrix43iOffset; // 32
+            public long Struct6Offset;  // ? 40
+            public long m_new48; // n/a -> 48
+            public long IDOffset; // 48 -> 56
+            public long NameOffset;  // ? 56 -> 64
+            public long Struct9Offset; // 64 -> 72
+            public long RemapOffset; // 72 -> 80
+            public long Hierarchy2Offset; // 80 -> 88
+            public long m_new96; // n/a -> 96
+            public int Unknown1; // 88 -> 104
+            public ushort BonesAbs; // 92 -> 108
             public ushort BonesSimple;
             public ushort BonesCloth;
             public ushort RemapCount;

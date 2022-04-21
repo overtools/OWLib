@@ -13,17 +13,14 @@ namespace TankLib.Chunks {
         /// <summary>MDLC header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public unsafe struct ModelHeader {
-            public fixed float BoundingBox[16];
-            public byte Unknown1;
-            public byte Unknown2;
-            public ushort Unknown3;
-            public uint Unknown4;
-            public float Unknown5;
-            public ushort MaterialCount;
-            public ushort Unknown6;
-            public long Unknown7;
-            public long Unknown8;
+            public long m_0;
             public long MaterialOffset;
+            public fixed float BoundingBox[16];
+            
+            public fixed uint Padding[16];
+            
+            public ushort MaterialCount; // 76->96
+            
         }
         
         /// <summary>Header data</summary>
