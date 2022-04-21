@@ -127,8 +127,6 @@ namespace TankLib {
             
             if (Header.Format == 99) Header.Format = 98;
             
-            if (Header.PayloadCount == 1) Logger.Debug("teTexture", $"texture {((reader.BaseStream is GuidStream gs) ? teResourceGUID.AsString(gs.GUID) : "internal") } is mip");
-
             if (Header.DataSize == 0 || Header.PayloadCount > 0) {
                 PayloadRequired = true;
                 Payloads = new teTexturePayload[Header.PayloadCount];

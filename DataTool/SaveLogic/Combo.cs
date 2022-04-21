@@ -734,7 +734,7 @@ namespace DataTool.SaveLogic {
                     texture = new teTexture(textureStream);
                 }
 
-                if (texture.PayloadRequired) {
+                if (texture.PayloadRequired && texture.Payloads.Length > 1) {
                     for (uint i = (uint)texture.Payloads.Length-1u; i >= 1; i++) {
                         using (var payloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
                             texture.LoadPayload(payloadStream, i);
