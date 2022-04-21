@@ -17,9 +17,9 @@ namespace TankLib.Chunks {
         /// <summary>MRNM header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public unsafe struct RenderMeshHeader {
-            public long VertexBufferDesciptorPointer;
-            public long IndexBufferDescriptorPointer;
-            public long SubmeshDescriptorPointer;
+            public long VertexBufferDesciptorPointer; // 112 -> 0
+            public long IndexBufferDescriptorPointer; // 120 -> 8
+            public long SubmeshDescriptorPointer; // 128 -> 16
             
             public uint VertexCount; // 0 -> 24
             public uint SubmeshCount; // 4 -> 28
@@ -61,7 +61,6 @@ namespace TankLib.Chunks {
             public byte m_128; // n/a -> 128
         }
         
-        // todo: merge me with whatever is going on in shader
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct VertexBufferDescriptor {
             public uint VertexCount; // 0
@@ -83,6 +82,7 @@ namespace TankLib.Chunks {
             public long DataStreamPointer;
         }
         
+        // todo: merge me with whatever is going on in shader
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct VertexElementDescriptor {
             public teShaderInstance.ShaderInputUse Type; // semantic type. rename me
