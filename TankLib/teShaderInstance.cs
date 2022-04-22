@@ -48,13 +48,18 @@ namespace TankLib {
         
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct ShaderResourceDefinition {
-            public uint NameHash;
-            public byte Register;  // 5
-            public ShaderResourceType Type;  // 6
-            public byte Format;  // 7
-            public ViewDimension ViewDimension;
-            public short Zero;
-            public short GlobalIndex;
+            public uint NameHash; // 0
+            public byte Register;  // 4
+            public byte m_flags; // 5
+            
+            public ViewDimension ViewDimension; // 7 -> 6
+            public byte m_7; // n/a -> 7
+            
+            public byte m_8; // 8
+            public byte m_9; // 8
+            public byte m_10; // 10
+            
+            public byte GlobalIndex; // 10 -> 11. short -> byte
         }
         
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
