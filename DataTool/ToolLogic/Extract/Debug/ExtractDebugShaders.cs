@@ -59,12 +59,19 @@ namespace DataTool.ToolLogic.Extract.Debug {
             IO.WriteFile(0x0D000000000002B1, path); // tracer model 4 (main)
             IO.WriteFile(0x0D000000000006A0, path); // pharah main
             
+            IO.WriteFile(0x0D0000000000DCA7, path); // sojurn main
+            IO.WriteFile(0x0D0000000000DCA8, path); // sojurn 1p
+            
+            IO.WriteFile(0x0E8800000000000F, path); // lod streaming model.... omnic waiter? donk
+            
             FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
             FindLogic.Combo.Find(comboInfo, 0x0C00000000035A3D); // toronto broken mips
             FindLogic.Combo.Find(comboInfo, 0x0C0000000001B1D0); // more broken mips
             FindLogic.Combo.Find(comboInfo, 0x0C0000000002C94F); // kanezaka cube
             var context = new Combo.SaveContext(comboInfo);
             Combo.SaveLooseTextures(null, path, context);
+            
+            //return;
 
             //TestModelLook(0x98000000000682F); // Chateau - Lake
 
@@ -266,8 +273,6 @@ namespace DataTool.ToolLogic.Extract.Debug {
                     }
                 }
             }
-            
-            return;
 
             teShaderGroup shaderGroup = new teShaderGroup(IO.OpenFile(material.Header.ShaderGroup));
             SaveShaderGroup(shaderGroup, path);
@@ -276,32 +281,24 @@ namespace DataTool.ToolLogic.Extract.Debug {
         public static void SaveShaderGroup(teShaderGroup shaderGroup, string path) {
             int i = 0;
             foreach (ulong shaderGroupInstance in shaderGroup.Instances) {
-                teShaderInstance instance = new teShaderInstance(IO.OpenFile(shaderGroupInstance));
-                teShaderCode shaderCode = new teShaderCode(IO.OpenFile(instance.Header.ShaderCode));
-
                 string name = null;
                 if (shaderGroup.Hashes != null && shaderGroup.Hashes[i] != 0) {
                     name = shaderGroup.Hashes[i].ToString("X8");
                 }
 
-                SaveShaderInstance(path, shaderGroupInstance, name, instance, shaderCode);
+                SaveShaderInstance(path, shaderGroupInstance, name);
                 i++;
             }
         }
 
         public static void SaveShaderInstance(string path, ulong guid, string name) {
-            using (Stream stream = IO.OpenFile(guid)) {
-                if (stream == null) return;
-                teShaderInstance instance = new teShaderInstance(stream);
-                using (Stream stream2 = IO.OpenFile(instance.Header.ShaderCode)) {
-                    if (stream2 == null) return;
-                    teShaderCode shaderCode = new teShaderCode(stream2);
-                    SaveShaderInstance(path, guid, name, instance, shaderCode);
-                }
-            }
-        }
-
-        public static void SaveShaderInstance(string path, ulong guid, string name, teShaderInstance instance, teShaderCode shaderCode) {
+            /*string rawPath = Path.Combine(path, "raw");
+            IO.WriteFile(guid, rawPath);
+            return;*/
+            
+            teShaderInstance instance = new teShaderInstance(IO.OpenFile(guid));
+            teShaderCode shaderCode = new teShaderCode(IO.OpenFile(instance.Header.ShaderCode));
+            
             if (name == null) {
                 name = teResourceGUID.AsString(guid);
             }
@@ -310,10 +307,10 @@ namespace DataTool.ToolLogic.Extract.Debug {
             IO.WriteFile(guid, instanceDirectory);
             IO.WriteFile(instance.Header.ShaderCode, instanceDirectory);
 
-            //using (Stream file = File.OpenWrite(Path.Combine(instanceDirectory, IO.GetFileName(instance.Header.ShaderCode)))) {
-            //    file.SetLength(0);
-            //    file.Write(shaderCode.Data, 0, shaderCode.Header.DataSize);
-            //}
+            using (Stream file = File.OpenWrite(Path.Combine(instanceDirectory, IO.GetFileName(instance.Header.ShaderCode) + ".bin"))) {
+                file.SetLength(0);
+                file.Write(shaderCode.ByteCode, 0, shaderCode.ByteCode.Length);
+            }
 
             using (StreamWriter writer =
                 new StreamWriter(Path.Combine(instanceDirectory, IO.GetFileName(instance.Header.ShaderCode)) + ".meta")) {

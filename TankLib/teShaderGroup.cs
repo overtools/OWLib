@@ -12,25 +12,25 @@ namespace TankLib {
             public long HashOffset; // 8
             public long FlagsOffset; // 16
             
-            public long OffsetD; // 24
-            public long OffsetE; // 32
+            public long NewIdk; // n/a -> 24
+            
+            public long OffsetD; // 24 -> 32
+            public long OffsetE; // 32 -> 40
             
             /// <summary>teShaderSource that this group was generated from</summary>
             /// <remarks>088 GUID</remarks>
-            public teResourceGUID SourceGUID; // 40
+            public teResourceGUID SourceGUID; // 40 -> 48
             
             /// <summary>A virtual reference. Usage unknown</summary>
             /// <remarks>00F GUID</remarks>
-            public teResourceGUID CacheGUID; // 48
+            public teResourceGUID CacheGUID; // 48 -> 56
 
-            public uint Unknown; // 56
-            public uint Flags; // 60
+            public ulong Flags; // 56 -> 64
             
-            /// <summary>Number of referenced shaders</summary>
-            public int NumShaders;  // m_numShaders, 64
-
-            /// <summary>Shader state flags</summary>
-            public Enums.teSHADER_STATE ShaderStateFlags;
+            public int NumIdk; // n/a -> 72
+            public int NumShaders;  // 64 -> 76
+            
+            // ...
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]

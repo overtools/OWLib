@@ -19,7 +19,7 @@ namespace TankLib {
             public ulong newpad40;
             public ulong newpad48;
             
-            public short StaticInputCount;  // 28
+            public short StaticInputCount;  // 28 -> 56
 
             public short Unk;
 

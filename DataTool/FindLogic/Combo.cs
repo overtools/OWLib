@@ -726,6 +726,7 @@ namespace DataTool.FindLogic {
                     Find(info, material.Header.MaterialData, replacements, materialContext);
                     break;
                 }
+                case 0x118: // streamed lods model???
                 case 0xC: {
                     if (info.m_models.ContainsKey(guid)) break;
                     ModelAsset modelInfo = new ModelAsset(guid);

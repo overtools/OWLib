@@ -221,6 +221,9 @@ namespace TankLib.Chunks {
         
         /// <summary>Parsed submeshes</summary>
         public Submesh[] Submeshes;
+        
+        // todo:...
+        //public byte HighestLOD;
 
         public void Parse(Stream input) {
             using (BinaryReader reader = new BinaryReader(input)) {

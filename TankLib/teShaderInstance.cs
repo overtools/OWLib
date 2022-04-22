@@ -8,83 +8,65 @@ namespace TankLib {
         /// <summary>ShaderInstance Header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct InstanceHeader {
-            public long BufferOffset;  // 0
+            public long BufferOffset;  // 0 -> 0
+            public long ShaderResourceOffset;  // 8 -> 8
+            //public long RWShaderResourceOffset; // 16 -> n/a
+            public long SamplerStatesOffset;  // 24 -> 16
+            public long VertexLayoutOffset;  // 32 -> 24  
+
+            public long m_new32; // n/a -> 32
+            public long m_new40; // n/a -> 40
             
-            /// <summary>Offset to texture input defintions</summary>
-            public long ShaderResourceOffset;  // 8
-            
-            public long RWShaderResourceOffset; // 16
-            
-            /// <summary>Offset to buffer input defintions</summary>
-            public long SamplerStatesOffset;  // 24
-            
-            /// <summary>Offset to vertex layut definition</summary>
-            public long VertexLayoutOffset;  // 32
-            
-            /// <summary>teShaderCode reference</summary>
-            /// <remarks>File type 087</remarks>
-            public teResourceGUID ShaderCode;  // 40
+            public teResourceGUID ShaderCode;  // 40 -> 48
 
             // these are just to get to the right position
-            public long PadA;  // 48
-            public uint PadB;  // 56
+            public long PadA;  // 48 -> 56
+            public uint PadB;  // 56 -> 64
             
-            public uint Unk1;  // 60
+            public uint m_pad68;
+            public uint m_pad72;
             
-            /// <summary>CRC32b of the vertex input elements. Allows for easy layout reuse</summary>
-            public uint ShaderInputCRC;  // 64
+            public uint Unk1;  // 60 -> 76
+            public uint ShaderInputCRC;  // 64 -> 80
             
-            //public short Unk3;
-            public TestByteFlags Unk3;
-            public byte Test;
+            // 84... who knows
+            public ulong m_pad84;
+            public short m_pad92;
             
-            public short Unk4;
+            public short Unk4; // 70 -> 94
             
-            public TestByteFlags Unk5;
-            public byte Unk6;
-            public byte Unk7;
-            public byte Unk8;
+            public uint m_pad96;
+            public short m_pad100;
 
             /// <summary>Constant buffer count</summary>
-            public sbyte NumConstantBuffers;  // 76
-            
-            /// <summary>Shader resource definition count</summary>
-            public sbyte NumShaderResources;  // 77
-            public sbyte NumShaderRWResources;  // 78
-            public sbyte SamplerStateCount;
-            public sbyte VertexInputElementCount;
+            public byte NumConstantBuffers;  // 76 -> 102
+            public byte NumShaderResources;  // 77 -> 103
+            //public byte NumShaderRWResources;  // 78 -> n/a
+            public byte SamplerStateCount; // 79 -> 104
+            public byte VertexInputElementCount; // 80 -> 105
         }
         
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct ShaderResourceDefinition {
-            /// <summary>CRC32 Hash</summary>
             public uint NameHash;
-            
-            /// <summary>Shader resource index</summary>
             public byte Register;  // 5
-            
-            /// <summary>Type of shader resource this is</summary>
             public ShaderResourceType Type;  // 6
             public byte Format;  // 7
             public ViewDimension ViewDimension;
             public short Zero;
-            
-            /// <summary>Global resource index</summary>
-            /// <note>This is calculated at runtime, CRC is looked up in an array in the client</note>
             public short GlobalIndex;
         }
         
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct SamplerState {
-            /// <summary>CRC32 Hash</summary>
-            public uint NameHash;
+            public uint NameHash; // 0
+            public byte Register; // 4
             
-            /// <summary>D3D register</summary>
-            public short Register;
+            public byte m_5; // n/a -> 5
+            public byte m_6; // n/a -> 6
+            public byte m_7; // n/a -> 7
             
-            /// <summary>Global sampler index</summary>
-            /// <note>This is calculated at runtime, CRC is looked up in an array in the client</note>
-            public short GlobalIndex;
+            public sbyte GlobalIndex; // 6 -> 8. word -> sbyte
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -101,46 +83,29 @@ namespace TankLib {
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct BufferPart {
-            /// <summary>"Hash" of the data. Not sure if it is actually a hash or not</summary>
-            public uint Hash;
-            
-            /// <summary>Size in bytes</summary>
-            public ushort Size;
-            public ushort Unk2Offset;
-            public ushort Unk3Offset;
-            
-            /// <summary>Offset in bytes</summary>
-            public ushort Offset;
+            public uint Hash; // 0
+            public ushort Size; // 4
+            public ushort Offset; // 10 (long ago) -> 6
             
             // unsure:
             public byte ElementSize;
             public byte ElementCount;
-            
-            /// <summary>If the "part" is global value or not?</summary>
-            public byte IsDynamic; // todo: bool
+            public byte IsDynamic;
             public byte Unknown;
         }
         
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct BufferHeader {
-            /// <summary>Offset to "part" definitions</summary>
-            public long PartOffset;
+            public long PartOffset; // 0
+            public long SkeletonOffset; // 8 -> 8
+            public ushort BufferSize; // 24 -> 16. dword -> word
             
-            /// <summary>Offset to skeleton byte array</summary>
-            public long SkeletonOffset;
+            public uint m_pad18;
+            public ushort m_pad22;
             
-            /// <summary>Identifier hash</summary>
-            public ulong Hash;
-            
-            /// <summary>Size in bytes</summary>
-            public int BufferSize;
-            
-            /// <summary>Number of "parts" that make up this buffer</summary>
-            /// <note>Most buffers now have no "parts" definied in the 086 data because blizzard keeps reading my code</note>
-            public short PartCount;
-            
-            /// <summary>DX11 register</summary>
-            public short Register;
+            public ulong Hash; // 16 -> 24
+            public short PartCount; // 28 -> 32
+            public byte Register; // 30 -> 34
         }
 
         public enum ShaderResourceType : byte {
@@ -204,16 +169,12 @@ namespace TankLib {
         /// <summary>Shader resources</summary>
         public ShaderResourceDefinition[] ShaderResources;
         
-        /// <summary>Read-write shader resources</summary>
-        // ReSharper disable once InconsistentNaming
-        public ShaderResourceDefinition[] RWShaderResources;
-        
         /// <summary>Shader samplers</summary>
         public SamplerState[] SamplerStates;
 
         /// <summary>Shader vertex layout</summary>
         public InputElementDefinition[] VertexLayout;
-
+        
         /// <summary>Shader constant buffer definitions</summary>
         public BufferHeader[] BufferHeaders;
         
@@ -249,12 +210,6 @@ namespace TankLib {
 
                 ShaderResources = reader.ReadArray<ShaderResourceDefinition>(Header.NumShaderResources);
             }
-            
-            if (Header.RWShaderResourceOffset != 0 && Header.NumShaderRWResources > -1) {
-                reader.BaseStream.Position = Header.RWShaderResourceOffset;
-
-                RWShaderResources = reader.ReadArray<ShaderResourceDefinition>(Header.NumShaderResources);
-            }
 
             if (Header.SamplerStatesOffset > 0) {
                 reader.BaseStream.Position = Header.SamplerStatesOffset;
@@ -267,7 +222,7 @@ namespace TankLib {
 
                 VertexLayout = reader.ReadArray<InputElementDefinition>(Header.VertexInputElementCount);
             }
-
+            
             if (Header.BufferOffset > 0) {
                 reader.BaseStream.Position = Header.BufferOffset;
                 

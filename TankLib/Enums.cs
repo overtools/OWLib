@@ -12,7 +12,7 @@ namespace TankLib {
 
         [Flags]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public enum teSHADER_TYPE : uint {
+        public enum teSHADER_TYPE : ushort {
             VERTEX = 1,
             PIXEL = 2,
             GEOMETRY = 4,
