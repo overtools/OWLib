@@ -57,6 +57,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
             IO.WriteFile(0x0D0000000000302E, path); // tracer model 2 (idk which)
             IO.WriteFile(0x0D00000000000413, path); // tracer model 3 (idk which)
             IO.WriteFile(0x0D000000000002B1, path); // tracer model 4 (main)
+            IO.WriteFile(0x0D000000000006A0, path); // pharah main
             
             FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
             FindLogic.Combo.Find(comboInfo, 0x0C00000000035A3D); // toronto broken mips

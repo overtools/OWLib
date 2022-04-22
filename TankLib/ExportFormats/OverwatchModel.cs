@@ -57,7 +57,7 @@ namespace TankLib.ExportFormats {
                     } else {
                         hierarchy = skeleton.Hierarchy;
                     }
-                    writer.Write(skeleton.Header.BonesAbs);
+                    writer.Write(skeleton.Header.IDCount); // todo: CLOTH BONES WHERE GONE.
                 } else {
                     writer.Write((ushort)0);
                 }
@@ -73,7 +73,8 @@ namespace TankLib.ExportFormats {
                 }
 
                 if (skeleton != null) {
-                    for (int i = 0; i < skeleton.Header.BonesAbs; ++i) {
+                    //Console.Out.WriteLine($"SKELETON {GUID:X16} {skeleton.Header.BonesAbs} {skeleton.Header.BonesSimple} {skeleton.Header.BonesCloth} {skeleton.Header.RemapCount} {skeleton.Header.IDCount}");
+                    for (int i = 0; i < skeleton.Header.IDCount; ++i) { // todo: CLOTH BONES WHERE GONE.
                         writer.Write(GetBoneName(skeleton.IDs[i]));
                         short parent = hierarchy[i];
                         if (parent == -1) {
@@ -183,8 +184,8 @@ namespace TankLib.ExportFormats {
 
                 // ext 1.4: embedded refpose
                 if (skeleton != null) {
-                    for (int i = 0; i < skeleton.Header.BonesAbs; ++i) {
-                        writer.Write(IdToString("bone", skeleton.IDs[i]));
+                    for (int i = 0; i < skeleton.Header.IDCount; ++i) {
+                        writer.Write(IdToString("bone", skeleton.IDs[i])); // todo: CLOTH BONES WHERE GONE.
                         short parent = hierarchy[i];
                         writer.Write(parent);
 

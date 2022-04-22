@@ -28,17 +28,14 @@ namespace TankLib.Chunks {
             public long Hierarchy2Offset; // 80 -> 88
             public long m_new96; // n/a -> 96
             public int Unknown1; // 88 -> 104
+            
             public ushort BonesAbs; // 92 -> 108
             public ushort BonesSimple;
             public ushort BonesCloth;
             public ushort RemapCount;
             public ushort IDCount;
-            public ushort UnknownStruct6Count;
-            public ushort Unknown4;
-            public ushort NameCount;
-            public ushort UnknownStruct9Count;
-            public ushort Unknown5;
-            public ushort PaddingSize;
+            
+            // ... idk. something added tho
         }
         
         /// <summary>Header data</summary>
@@ -98,10 +95,11 @@ namespace TankLib.Chunks {
                     Lookup = reader.ReadArray<ushort>(Header.RemapCount);
                 }
 
-                IDs = new uint[Header.BonesAbs];
+                IDs = new uint[Header.IDCount];
+                // todo: CLOTH BONES WHERE GONE.
                 if (Header.IDOffset > 0) {
                     input.Position = Header.IDOffset;
-                    IDs = reader.ReadArray<uint>(Header.BonesAbs);
+                    IDs = reader.ReadArray<uint>(Header.IDCount);
                 }
             }
         }
