@@ -47,9 +47,10 @@ namespace DataTool {
             {
                 var t = typeof(ITool);
                 var asm = t.Assembly;
-                var types = asm.GetTypes()
-                    .Where(tt => tt.IsClass && t.IsAssignableFrom(tt))
-                    .ToList();
+                var types = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(s => s.GetTypes())
+                    .Where(p => p.IsClass && t.IsAssignableFrom(p));
+
                 foreach (var tt in types) {
                     var attribute = tt.GetCustomAttribute<ToolAttribute>();
                     if (tt.IsInterface || attribute == null) continue;
@@ -60,7 +61,7 @@ namespace DataTool {
             return tools;
         }
 
-        private static void Main() {
+        public static void Main() {
             InitTankSettings();
 
             HookConsole();
