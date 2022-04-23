@@ -84,6 +84,13 @@ namespace DataTool {
             if (Flags == null)
                 return;
 
+            // Overrides the Overwatch Directory with the path set in the Environment variable.
+            // Useful for debugging as you can use saved configurations without having to edit the directory saved in the arguments
+            var overwatchDirectoryOverride = Environment.GetEnvironmentVariable("DATATOOL_OVERWATCH_DIR");
+            if (!string.IsNullOrEmpty(overwatchDirectoryOverride)) {
+                Flags.OverwatchDirectory = overwatchDirectoryOverride;
+            }
+
             Logger.Info("Core", $"CommandLineFile: {FlagParser.ArgFilePath}");
 
             if (Flags.SaveArgs) {
