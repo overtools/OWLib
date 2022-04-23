@@ -3,22 +3,28 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6540C278, 264)]
+    [STU(0x6540C278, 280)]
     public class STUStatescriptStateWait : STUStatescriptState
     {
-        [STUField(0xEF6581D3, 232, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xE2360AF4, 232, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STUConfigVar m_E2360AF4;
+        
+        [STUField(0xEF6581D3, 240, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_timeout;
         
-        [STUField(0x5DA62D02, 240, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xE0584DD8, 248, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STUConfigVar m_speedScalar;
+        
+        [STUField(0x5DA62D02, 256, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptOutputPlug m_onAbortPlug;
         
-        [STUField(0xA0B58111, 248, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xA0B58111, 264, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptOutputPlug m_onFinishedPlug;
         
-        [STUField(0x0DBAFD7F, 256)] // size: 1
+        [STUField(0x0DBAFD7F, 272)] // size: 1
         public byte m_0DBAFD7F;
         
-        [STUField(0xBF1A93B0, 257)] // size: 1
+        [STUField(0xBF1A93B0, 273)] // size: 1
         public byte m_BF1A93B0;
     }
 }

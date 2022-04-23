@@ -18,5 +18,8 @@ namespace TankLib.STU.Types
         
         [STUField(0x7CDE6A4B, 240)] // size: 4
         public Enum_E123E435 m_mode;
+        
+        [STUField(0xFAAF4DFB, 244)] // size: 4
+        public float m_FAAF4DFB = 1f;
     }
 }

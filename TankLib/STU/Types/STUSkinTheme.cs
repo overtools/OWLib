@@ -17,7 +17,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUHeroWeapon>[] m_heroWeapons;
         
         [STUField(0x71818BC5, 152)] // size: 16
-        public teStructuredDataAssetRef<STUEffect>[] m_71818BC5;
+        public teStructuredDataAssetRef<ulong>[] m_71818BC5;
         
         [STUField(0xB8DC6D46, 168)] // size: 16
         public teStructuredDataAssetRef<STUTeamColor> m_teamColor;

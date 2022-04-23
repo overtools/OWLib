@@ -7,7 +7,7 @@ namespace TankLib.STU.Types
     public class STUUnlock_SprayPaintEffect : STUInstance
     {
         [STUField(0x58D56DD4, 8)] // size: 16
-        public teStructuredDataAssetRef<STUEffect> m_effect = 0x300000000000663;
+        public teStructuredDataAssetRef<ulong> m_effect = 0x300000000000663;
         
         [STUField(0x2B522C5B, 24)] // size: 16
         public teStructuredDataAssetRef<STUEffectLook> m_effectLook;

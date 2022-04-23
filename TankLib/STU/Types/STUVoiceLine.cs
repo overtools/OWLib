@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x40DA6CDF, 128)]
+    [STU(0x40DA6CDF, 160)]
     public class STUVoiceLine : STUInstance
     {
         [STUField(0x401F5484, 8)] // size: 16
@@ -24,22 +24,31 @@ namespace TankLib.STU.Types
         [STUField(0x38F3ED5E, 88)] // size: 16
         public teString m_38F3ED5E;
         
-        [STUField(0x4FF98D41, 104, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x4C74D7BA, 104)] // size: 16
+        public teStructuredDataAssetRef<STUGameMessage> m_4C74D7BA;
+        
+        [STUField(0x0CBC0F34, 120)] // size: 16
+        public teStructuredDataAssetRef<STUGameMessage> m_0CBC0F34;
+        
+        [STUField(0x4FF98D41, 136, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUCriteriaContainer m_criteria;
         
-        [STUField(0x9CDDC24D, 112)] // size: 4
+        [STUField(0x9CDDC24D, 144)] // size: 4
         public float m_weight = 1f;
         
-        [STUField(0xE89F291B, 116)] // size: 4
+        [STUField(0xE89F291B, 148)] // size: 4
         public int m_E89F291B = 0x0;
         
-        [STUField(0x093FCEEB, 120)] // size: 4
+        [STUField(0x093FCEEB, 152)] // size: 4
         public float m_093FCEEB;
         
-        [STUField(0x9502010D, 124)] // size: 1
+        [STUField(0x9502010D, 156)] // size: 1
         public byte m_active = 0x1;
         
-        [STUField(0xB4799113, 125)] // size: 1
+        [STUField(0xB4799113, 157)] // size: 1
         public byte m_B4799113 = 0x0;
+        
+        [STUField(0x2866DEC2, 158)] // size: 1
+        public byte m_2866DEC2;
     }
 }

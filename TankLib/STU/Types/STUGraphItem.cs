@@ -5,7 +5,7 @@ using TankLib.Math;
 namespace TankLib.STU.Types
 {
     [STU(0x8FAF5745, 72)]
-    public class STUGraphItem : STUInstance
+    public class STUGraphItem : STU_95E4A53A
     {
         [STUField(0x5DB91CE2, 8)] // size: 16
         public teString m_displayName;

@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x0519019F, 48)]
+    [STU(0x0519019F, 56)]
     public class STUAIWeaponFireControlInfo : STUInstance
     {
         [STUField(0xF2810377, 0)] // size: 16
@@ -16,10 +16,19 @@ namespace TankLib.STU.Types
         [STUField(0x4F5E7D4C, 32)] // size: 4
         public STULogicalButton m_4F5E7D4C = STULogicalButton.xADC2B02C;
         
-        [STUField(0xED6D601D, 36)] // size: 4
+        [STUField(0x085ED8D9, 36)] // size: 4
+        public float m_085ED8D9 = 0f;
+        
+        [STUField(0xB78EB1E3, 40)] // size: 4
+        public STULogicalButton m_B78EB1E3 = STULogicalButton.xADC2B02C;
+        
+        [STUField(0xED6D601D, 44)] // size: 4
         public uint m_ED6D601D;
         
-        [STUField(0xA60150E2, 40)] // size: 4
+        [STUField(0xA60150E2, 48)] // size: 4
         public uint m_A60150E2;
+        
+        [STUField(0xC62B8D7A, 52)] // size: 1
+        public byte m_C62B8D7A = 0x0;
     }
 }

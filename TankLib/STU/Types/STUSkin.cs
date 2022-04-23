@@ -7,7 +7,7 @@ namespace TankLib.STU.Types
     public class STUSkin : STUSkinBase
     {
         [STUField(0x40996075, 104)] // size: 16
-        public teStructuredDataAssetRef<STU_EF85B312> m_40996075;
+        public teStructuredDataAssetRef<ulong> m_40996075;
         
         [STUField(0x0EDCE350, 120)] // size: 16
         public teStructuredDataAssetRef<ulong> m_0EDCE350;
@@ -28,7 +28,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<ulong> m_skinThumbnail;
         
         [STUField(0xDBEF61FE, 216)] // size: 16
-        public teStructuredDataAssetRef<STUEffect>[] m_skinEffects;
+        public teStructuredDataAssetRef<ulong>[] m_skinEffects;
         
         [STUField(0x38BFB46C, 232)] // size: 16
         public teStructuredDataAssetRef<STUResourceKey> m_resourceKey;

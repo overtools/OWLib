@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x04118DBD, 80)]
+    [STU(0x04118DBD, 96)]
     public class STUSound : STUInstance
     {
         [STUField(0x42809FC5, 8)] // size: 16
@@ -40,28 +40,37 @@ namespace TankLib.STU.Types
         [STUField(0x43F0D346, 64)] // size: 4
         public Enum_D2BF23BC m_43F0D346 = Enum_D2BF23BC.x6399F3D5;
         
-        [STUField(0xEF90634C, 68)] // size: 4
+        [STUField(0xD6EDF627, 68)] // size: 4
+        public Enum_5BDA56C9 m_D6EDF627 = Enum_5BDA56C9.x501CBFD0;
+        
+        [STUField(0xAE4ACA1F, 72)] // size: 4
+        public float m_AE4ACA1F = 0f;
+        
+        [STUField(0x0BF329D0, 76)] // size: 4
+        public float m_0BF329D0 = 150f;
+        
+        [STUField(0xEF90634C, 80)] // size: 4
         public uint m_EF90634C;
         
-        [STUField(0x77092FDD, 72)] // size: 1
+        [STUField(0x77092FDD, 84)] // size: 1
         public byte m_77092FDD = 0x0;
         
-        [STUField(0x1A25BFB8, 73)] // size: 1
+        [STUField(0x1A25BFB8, 85)] // size: 1
         public byte m_1A25BFB8 = 0x0;
         
-        [STUField(0xB62657B8, 74)] // size: 1
+        [STUField(0xB62657B8, 86)] // size: 1
         public byte m_B62657B8 = 0x1;
         
-        [STUField(0x59AD4231, 75)] // size: 1
+        [STUField(0x59AD4231, 87)] // size: 1
         public byte m_59AD4231 = 0x0;
         
-        [STUField(0x6E7728C9, 76)] // size: 1
+        [STUField(0x6E7728C9, 88)] // size: 1
         public byte m_6E7728C9 = 0x0;
         
-        [STUField(0x529B2C24, 77)] // size: 1
+        [STUField(0x529B2C24, 89)] // size: 1
         public byte m_529B2C24 = 0x0;
         
-        [STUField(0xAED659F0, 78)] // size: 1
-        public byte m_AED659F0 = 0x0;
+        [STUField(0xD28C4085, 90)] // size: 1
+        public byte m_D28C4085 = 0x0;
     }
 }

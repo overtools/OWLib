@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x99007908, 64)]
+    [STU(0x99007908, 72)]
     public class STUAnimationTrackOverride : STUInstance
     {
         [STUField(0xF46C7A7F, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 40
@@ -12,7 +12,10 @@ namespace TankLib.STU.Types
         [STUField(0xBA891264, 40)] // size: 16
         public teStructuredDataAssetRef<STUDataFlow> m_dataFlow;
         
-        [STUField(0x07DD813E, 56)] // size: 4
+        [STUField(0x7CDE6A4B, 56, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STU_824AB8D1 m_mode;
+        
+        [STUField(0x07DD813E, 64)] // size: 4
         public float m_value = 1f;
     }
 }

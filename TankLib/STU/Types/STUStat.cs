@@ -52,40 +52,43 @@ namespace TankLib.STU.Types
         [STUField(0x08CACF3A, 164)] // size: 4
         public STUStatUpdateType m_updateType;
         
-        [STUField(0x16CCEFC8, 168)] // size: 4
+        [STUField(0xA32E3245, 168)] // size: 4
+        public Enum_58CDF4DE m_A32E3245 = Enum_58CDF4DE.xE30F4E68;
+        
+        [STUField(0x16CCEFC8, 172)] // size: 4
         public Enum_C9A3B99F m_16CCEFC8;
         
-        [STUField(0x09276DD8, 172)] // size: 4
+        [STUField(0x09276DD8, 176)] // size: 4
         public STUStatTimeframe m_timeFrame;
         
-        [STUField(0xC6C4C538, 176)] // size: 4
+        [STUField(0xC6C4C538, 180)] // size: 4
         public STUPlayerStatEvent m_playerEvent;
         
-        [STUField(0x0BB7C364, 180)] // size: 4
+        [STUField(0x0BB7C364, 184)] // size: 4
         public STUStatEvent m_primaryEvent;
         
-        [STUField(0x33DDBA15, 184)] // size: 4
+        [STUField(0x33DDBA15, 188)] // size: 4
         public STUStatEvent m_secondaryEvent;
         
-        [STUField(0xD0FEEC0E, 188)] // size: 4
+        [STUField(0xD0FEEC0E, 192)] // size: 4
         public STUStatHeroesType m_heroesType;
         
-        [STUField(0x4811336B, 192)] // size: 4
+        [STUField(0x4811336B, 196)] // size: 4
         public STUStatMapsType m_mapsType;
         
-        [STUField(0xDFD4F586, 196)] // size: 4
+        [STUField(0xDFD4F586, 200)] // size: 4
         public STUStatTeamsType m_teamsType;
         
-        [STUField(0xC0211FD4, 200)] // size: 1
+        [STUField(0xC0211FD4, 204)] // size: 1
         public byte m_internalOnly;
         
-        [STUField(0x9B42F159, 201)] // size: 1
+        [STUField(0x9B42F159, 205)] // size: 1
         public byte m_9B42F159;
         
-        [STUField(0x439EAAA8, 202)] // size: 1
+        [STUField(0x439EAAA8, 206)] // size: 1
         public byte m_439EAAA8;
         
-        [STUField(0xEED826CD, 203)] // size: 1
+        [STUField(0xEED826CD, 207)] // size: 1
         public byte m_derivedStat;
     }
 }

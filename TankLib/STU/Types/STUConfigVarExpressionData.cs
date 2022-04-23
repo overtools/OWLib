@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x3D579F4F, 64)]
+    [STU(0x3D579F4F, 72)]
     public class STUConfigVarExpressionData : STUInstance
     {
         [STUField(0x882D0868, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
@@ -17,5 +17,11 @@ namespace TankLib.STU.Types
         
         [STUField(0xD99EF254, 48)] // size: 16
         public float[] m_D99EF254;
+        
+        [STUField(0xFA01B2BC, 64)] // size: 1
+        public byte m_FA01B2BC;
+        
+        [STUField(0xBC0520A3, 65)] // size: 1
+        public byte m_BC0520A3;
     }
 }

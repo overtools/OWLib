@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8FE674F9, 200)]
+    [STU(0x8FE674F9, 224)]
     public class STUAIBehaviorComponent : STUMirroredEntityComponent
     {
         [STUField(0x9325CAD8, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
@@ -30,7 +30,13 @@ namespace TankLib.STU.Types
         [STUField(0x97259BF6, 176, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAIDifficultyProfile[] m_difficultyProfiles;
         
-        [STUField(0x72D00D60, 192)] // size: 4
+        [STUField(0x7F9852BC, 192, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        public STUAIDifficultyProfile[] m_7F9852BC;
+        
+        [STUField(0x178D63BA, 208, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STU_7866565A m_178D63BA;
+        
+        [STUField(0x72D00D60, 216)] // size: 4
         public float m_72D00D60 = 0.1f;
     }
 }

@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xBB1054F4, 408)]
+    [STU(0xBB1054F4, 416)]
     public class STUStatescriptStateCreateEntity : STUStatescriptState
     {
         [STUField(0x7DD89F4F, 232, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
@@ -34,49 +34,52 @@ namespace TankLib.STU.Types
         [STUField(0x3EBF988B, 296, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_3EBF988B;
         
-        [STUField(0xAA26E7DD, 304, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xD939FB4D, 304, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STUConfigVar m_D939FB4D;
+        
+        [STUField(0xAA26E7DD, 312, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_AA26E7DD;
         
-        [STUField(0xA1A715A6, 312, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xA1A715A6, 320, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_A1A715A6;
         
-        [STUField(0xD7F85181, 320, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xD7F85181, 328, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_D7F85181;
         
-        [STUField(0x246C47AF, 328, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x246C47AF, 336, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_246C47AF;
         
-        [STUField(0xF8E56B94, 336, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xF8E56B94, 344, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_F8E56B94;
         
-        [STUField(0xA3A50DF2, 344, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xA3A50DF2, 352, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_A3A50DF2;
         
-        [STUField(0xDE3B4F01, 352, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xDE3B4F01, 360, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_DE3B4F01;
         
-        [STUField(0xE2BF1226, 360, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xE2BF1226, 368, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_E2BF1226;
         
-        [STUField(0x373DBF32, 368, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x373DBF32, 376, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_373DBF32;
         
-        [STUField(0x0FDD45BB, 376, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x0FDD45BB, 384, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_0FDD45BB;
         
-        [STUField(0x481C68E7, 384, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x481C68E7, 392, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_481C68E7;
         
-        [STUField(0xE95B313B, 392, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xE95B313B, 400, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_076E0DBA m_E95B313B;
         
-        [STUField(0x51AB9D21, 400)] // size: 4
+        [STUField(0x51AB9D21, 408)] // size: 4
         public Enum_49B6798B m_51AB9D21 = Enum_49B6798B.xE53C897A;
         
-        [STUField(0xA086DB58, 404)] // size: 1
+        [STUField(0xA086DB58, 412)] // size: 1
         public byte m_A086DB58;
         
-        [STUField(0x294B652A, 405)] // size: 1
+        [STUField(0x294B652A, 413)] // size: 1
         public byte m_294B652A;
     }
 }

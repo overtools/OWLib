@@ -4,7 +4,7 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xDDD18945, 168)]
+    [STU(0xDDD18945, 200)]
     public class STUAnimBlendTreeSet_BlendTreeItem : STUInstance
     {
         [STUField(0x560940DC, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 48
@@ -22,25 +22,31 @@ namespace TankLib.STU.Types
         [STUField(0x6AF62086, 96, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_9224E837[] m_6AF62086;
         
-        [STUField(0xF6E6D4B1, 112, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x6EAB6810, 112)] // size: 16
+        public teString m_comment;
+        
+        [STUField(0xF008EA57, 128)] // size: 16
+        public teString m_F008EA57;
+        
+        [STUField(0xF6E6D4B1, 144, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_3B150012 m_F6E6D4B1;
         
-        [STUField(0x9AD6CC25, 120, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x9AD6CC25, 152, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAnimGameData_Base m_gameData;
         
-        [STUField(0xCCB4CD4A, 128)] // size: 8
+        [STUField(0xCCB4CD4A, 160)] // size: 8
         public ulong m_CCB4CD4A;
         
-        [STUField(0x274F833F, 136, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x274F833F, 168, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_89F8DBB3 m_274F833F;
         
-        [STUField(0x384DE14F, 144, ReaderType = typeof(InlineInstanceFieldReader))] // size: 8
+        [STUField(0x384DE14F, 176, ReaderType = typeof(InlineInstanceFieldReader))] // size: 8
         public STUAnimBlendTreeSet_RetargetParams m_retargetParams;
         
-        [STUField(0xA10A5EAF, 152)] // size: 8
+        [STUField(0xA10A5EAF, 184)] // size: 8
         public teVec2 m_pos;
         
-        [STUField(0xE54B9419, 160)] // size: 4
+        [STUField(0xE54B9419, 192)] // size: 4
         public uint m_uniqueID;
     }
 }

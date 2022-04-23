@@ -3,16 +3,19 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x610E3DD8, 24)]
+    [STU(0x610E3DD8, 40)]
     public class STUBloomData : STUInstance
     {
-        [STUField(0x9AA71B77, 8)] // size: 4
+        [STUField(0x71B6A64F, 8)] // size: 16
+        public uint[] m_71B6A64F;
+        
+        [STUField(0x9AA71B77, 24)] // size: 4
         public float m_9AA71B77 = 0f;
         
-        [STUField(0xD7D65067, 12)] // size: 4
-        public float m_D7D65067 = -0.25f;
+        [STUField(0xD7D65067, 28)] // size: 4
+        public float m_D7D65067 = 1f;
         
-        [STUField(0xA1C4B45C, 16)] // size: 4
+        [STUField(0xA1C4B45C, 32)] // size: 4
         public float m_A1C4B45C = 0.75f;
     }
 }

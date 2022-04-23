@@ -4,7 +4,7 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB1B9C667, 176)]
+    [STU(0xB1B9C667, 192)]
     public class STUWaypointInstanceData : STUComponentInstanceData
     {
         [STUField(0xE95CE2AC, 16)] // size: 16
@@ -28,19 +28,22 @@ namespace TankLib.STU.Types
         [STUField(0xC65C1A53, 112)] // size: 16
         public teVec3A m_C65C1A53;
         
-        [STUField(0x2D9F5A0A, 128)] // size: 16
+        [STUField(0xACA92DCF, 128, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        public STU_1C969171[] m_ACA92DCF;
+        
+        [STUField(0x2D9F5A0A, 144)] // size: 16
         public teUUID m_2D9F5A0A;
         
-        [STUField(0x3709B21F, 144)] // size: 16
+        [STUField(0x3709B21F, 160)] // size: 16
         public teUUID m_3709B21F;
         
-        [STUField(0x9741DF92, 160)] // size: 4
+        [STUField(0x9741DF92, 176)] // size: 4
         public float m_9741DF92;
         
-        [STUField(0xE18F822F, 164)] // size: 1
+        [STUField(0xE18F822F, 180)] // size: 1
         public byte m_E18F822F;
         
-        [STUField(0xAAF049C1, 165)] // size: 1
+        [STUField(0xAAF049C1, 181)] // size: 1
         public byte m_AAF049C1;
     }
 }

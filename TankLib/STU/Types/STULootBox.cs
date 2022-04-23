@@ -14,13 +14,13 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUEntityDefinition> m_baseEntity;
         
         [STUField(0x3970E137, 40)] // size: 16
-        public teStructuredDataAssetRef<STUEffect> m_idleEffect;
+        public teStructuredDataAssetRef<ulong> m_idleEffect;
         
         [STUField(0xFFE7768F, 56)] // size: 16
-        public teStructuredDataAssetRef<STUEffect> m_FFE7768F;
+        public teStructuredDataAssetRef<ulong> m_FFE7768F;
         
         [STUField(0xFEC3ED62, 72)] // size: 16
-        public teStructuredDataAssetRef<STUEffect> m_FEC3ED62;
+        public teStructuredDataAssetRef<ulong> m_FEC3ED62;
         
         [STUField(0x041CE51F, 88)] // size: 16
         public teStructuredDataAssetRef<STUModelLook> m_modelLook;

@@ -4,25 +4,25 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8880FCB0, 1976)]
+    [STU(0x8880FCB0, 1832)]
     public class STUTeamColor : STUInstance
     {
-        [STUField(0x5A7D86C7, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 1232
+        [STUField(0x5A7D86C7, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 1088
         public STU_6B3A03D7 m_characterData;
         
-        [STUField(0x80B01FC2, 1240, ReaderType = typeof(InlineInstanceFieldReader))] // size: 584
+        [STUField(0x80B01FC2, 1096, ReaderType = typeof(InlineInstanceFieldReader))] // size: 584
         public STU_2854069F m_effectsData;
         
-        [STUField(0xD74D5F6F, 1824, ReaderType = typeof(InlineInstanceFieldReader))] // size: 104
+        [STUField(0xD74D5F6F, 1680, ReaderType = typeof(InlineInstanceFieldReader))] // size: 104
         public STU_176E7ACB m_uiData;
         
-        [STUField(0x939ABB2C, 1928)] // size: 16
+        [STUField(0x939ABB2C, 1784)] // size: 16
         public teStructuredDataAssetRef<ulong> m_materialData;
         
-        [STUField(0x61AD3AB8, 1944)] // size: 16
+        [STUField(0x61AD3AB8, 1800)] // size: 16
         public teStructuredDataAssetRef<ulong> m_61AD3AB8;
         
-        [STUField(0x94C9FBD7, 1960)] // size: 16
+        [STUField(0x94C9FBD7, 1816)] // size: 16
         public teColorRGBA m_94C9FBD7;
     }
 }

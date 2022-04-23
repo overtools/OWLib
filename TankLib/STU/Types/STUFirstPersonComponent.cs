@@ -17,5 +17,8 @@ namespace TankLib.STU.Types
         
         [STUField(0x816B830F, 32)] // size: 4
         public float m_816B830F = 1.15f;
+        
+        [STUField(0xCF5055F1, 36)] // size: 4
+        public float m_CF5055F1 = 1f;
     }
 }

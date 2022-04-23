@@ -218,10 +218,6 @@ namespace DataTool.DataModels {
                 return UnlockType.HighlightIntro;
             }
 
-            if (type == typeof(STUUnlock_HeroMod)) {
-                return UnlockType.HeroMod;
-            }
-
             if (type == typeof(STUUnlock_CompetitiveCurrency)) {
                 return UnlockType.CompetitiveCurrency;
             }

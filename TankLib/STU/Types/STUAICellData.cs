@@ -9,8 +9,8 @@ namespace TankLib.STU.Types
         [STUField(0xB62FC651, 0)] // size: 8
         public ulong m_B62FC651;
         
-        [STUField(0x8A30AD88, 8)] // size: 8
-        public ulong m_8A30AD88;
+        [STUField(0x0C1EE1EB, 8)] // size: 8
+        public ulong m_0C1EE1EB;
         
         [STUField(0xFFBC98C1, 16)] // size: 4
         public uint m_FFBC98C1;
