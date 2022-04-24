@@ -177,7 +177,7 @@ namespace DataTool.SaveLogic {
 
 
                     writer.Write(Path.Combine("Models", modelInfo.GetName(), "Animations", Animation.m_priority.ToString(), Animation.GetNameIndex() + ".seanim"));
-                    writer.Write(Path.Combine("Models", Animation.GetNameIndex() + ".owmdl"));
+                    writer.Write(Path.Combine("Models", modelInfo.GetName(), modelInfo.GetNameIndex() + ".owmdl"));
 
                     // wrap oweffect
                     WriteEffect(writer);
