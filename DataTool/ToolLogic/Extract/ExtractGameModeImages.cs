@@ -36,7 +36,6 @@ namespace DataTool.ToolLogic.Extract {
 
                 var context = new SaveLogic.Combo.SaveContext(info);
                 SaveLogic.Combo.SaveLooseTextures(flags, path, context);
-                context.Wait();
             }
         }
     }

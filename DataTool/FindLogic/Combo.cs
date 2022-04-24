@@ -98,6 +98,26 @@ namespace DataTool.FindLogic {
 
             public void SetTextureName(ulong texture, string name, Dictionary<ulong, ulong> replacements = null) => SetAssetName(texture, name, m_textures, replacements);
 
+            public void SetTextureProcessIcon(ulong texture) {
+                if (!m_textures.TryGetValue(texture, out var asset)) return;
+                asset.m_processIcon = true;
+            }
+
+            public void SetTextureSplit(ulong texture) {
+                if (!m_textures.TryGetValue(texture, out var asset)) return;
+                asset.m_split = true;
+            }
+
+            /// <summary>
+            /// Overrides the file type the texture is saved as
+            /// </summary>
+            /// <param name="texture"></param>
+            /// <param name="fileType">tif, png, dds</param>
+            public void SetTextureFileType(ulong texture, string fileType) {
+                if (!m_textures.TryGetValue(texture, out var asset)) return;
+                asset.m_fileType = fileType;
+            }
+
             public void SetEffectName(ulong effect, string name, Dictionary<ulong, ulong> replacements = null) {
                 SetAssetName(effect, name, m_effects, replacements);
                 SetAssetName(effect, name, m_animationEffects, replacements);
@@ -222,8 +242,18 @@ namespace DataTool.FindLogic {
             }
         }
 
+        public class ModelMaterial {
+            public readonly ulong m_guid;
+            public readonly ulong m_key;
+
+            public ModelMaterial(ulong guid, ulong key) {
+                m_guid = guid;
+                m_key = key;
+            }
+        }
+
         public class ModelLookAsset : ComboAsset {
-            public HashSet<ulong> m_materialGUIDs; // id, guid
+            public List<ModelMaterial> m_materials = new List<ModelMaterial>(); // id, guid
 
             public ModelLookAsset(ulong guid) : base(guid) { }
         }
@@ -255,6 +285,9 @@ namespace DataTool.FindLogic {
 
         public class TextureAsset : ComboAsset {
             public bool m_loose;
+            public bool? m_processIcon;
+            public bool? m_split;
+            public string m_fileType;
 
             public TextureAsset(ulong guid) : base(guid) { }
         }
@@ -628,10 +661,12 @@ namespace DataTool.FindLogic {
                     info.m_animations[guid] = animationInfo;
                     break;
                 }
-                case 0x8: {
-                    if (info.m_materials.ContainsKey(guid) &&
-                        (info.m_materials[guid].m_materialIDs.Contains(context.MaterialID) || context.MaterialID == 0)) break;
-                    // ^ break if material exists and has id, or id is 0
+                case 0x8:
+                case 0x127: {
+                    // if (info.m_materials.ContainsKey(guid) &&
+                    //     (info.m_materials[guid].m_materialIDs.Contains(context.MaterialID) || context.MaterialID == 0)) break;
+                    // // ^ break if material exists and has id, or id is 0
+
                     teMaterial material = null;
                     try {
                         material = new teMaterial(OpenFile(guid));
@@ -742,6 +777,8 @@ namespace DataTool.FindLogic {
                             } else if (chunk.Value is teEffectComponentSound soundComponent) {
                                 Find(info, soundComponent.Header.Sound, replacements);
                             } else if (chunk.Value is teEffectChunkShaderSetup shaders) {
+                                if (lastParticleModel == 0) TankLib.Helpers.Logger.Debug("Combo", "ShaderSetup with no model. textures will get lost");
+
                                 ComboContext ssceContext = new ComboContext {Model = lastParticleModel};
                                 Find(info, shaders.Header.Material, replacements, ssceContext);
                                 Find(info, shaders.Header.MaterialData, replacements, ssceContext);
@@ -750,6 +787,9 @@ namespace DataTool.FindLogic {
                             if (chunk.Value is teEffectComponentParticle particle) {
                                 Find(info, particle.Header.Model, replacements);
                                 lastParticleModel = GetReplacement(particle.Header.Model, replacements);
+                            } else if (chunk.Value is teEffectComponentRibbonRenderer ribbonRenderer) {
+                                Find(info, ribbonRenderer.Header.ModelGUID, replacements);
+                                lastParticleModel = GetReplacement(ribbonRenderer.Header.ModelGUID, replacements);
                             } else {
                                 lastParticleModel = 0;
                             }
@@ -777,20 +817,46 @@ namespace DataTool.FindLogic {
                     modelLookContext.ModelLook = guid;
 
                     if (modelLook.m_materials != null) {
-                        modelLookInfo.m_materialGUIDs = new HashSet<ulong>();
                         foreach (STUModelMaterial modelLookMaterial in modelLook.m_materials) {
                             FindModelMaterial(info, modelLookMaterial, modelLookInfo, modelLookContext, replacements);
                         }
                     }
 
-                    //if (modelLook.m_materialEffects != null) {
-                    //    if (modelLookInfo.Materials == null) modelLookInfo.Materials = new HashSet<ulong>();
-                    //    foreach (STUMaterialEffect materialEffect in modelLook.m_materialEffects) {
-                    //        foreach (STUModelMaterial materialEffectMaterial in materialEffect.m_materials) {
-                    //            FindModelMaterial(info, materialEffectMaterial, modelLookInfo, modelLookContext, replacements);
-                    //        }
-                    //    }
-                    //}
+                    if (modelLook.m_materialEffects != null) {
+
+                        var matEffectContext = new ComboContext {
+                            Model = context.Model
+                            // this will be a loose material
+                        };
+
+                        foreach (STU_D75EA2E1 materialEffect in modelLook.m_materialEffects) {
+                            Find(info, materialEffect.m_materialEffect, replacements, matEffectContext);
+                            Find(info, materialEffect.m_82F3DCE0, replacements, matEffectContext);
+
+                            foreach (var material in materialEffect.m_materials) {
+                                Find(info, material.m_material, replacements, matEffectContext);
+                                Find(info, material.m_5753874F, replacements, matEffectContext);
+                            }
+                        }
+                    }
+
+                    if (modelLook.m_C03306D7 != null) {
+                        foreach (var modelRef in modelLook.m_C03306D7) {
+                            Find(info, modelRef, replacements);
+                        }
+                    }
+
+                    if (modelLook.m_05692DC5 != null) {
+                        foreach (var anim in modelLook.m_05692DC5) {
+                            Find(info, anim.m_animation, replacements, context);
+                        }
+                    }
+
+                    if (modelLook.m_844B23C0 != null) {
+                        foreach (var idk in modelLook.m_844B23C0) {
+                            Find(info, idk.m_8A557E94, replacements, context);
+                        }
+                    }
 
                     if (context.Model != 0) {
                         info.m_models[context.Model].m_modelLooks.Add(guid);
@@ -921,7 +987,8 @@ namespace DataTool.FindLogic {
 
                     break;
                 }
-                case 0x3F: {
+                case 0x3F:
+                case 0xBB: {
                     if (info.m_soundFiles.ContainsKey(guid)) break;
                     SoundFileAsset soundFileInfo = new SoundFileAsset(guid);
                     info.m_soundFiles[guid] = soundFileInfo;
@@ -1193,7 +1260,9 @@ namespace DataTool.FindLogic {
 
         private static void FindModelMaterial(ComboInfo info, STUModelMaterial modelMaterial, ModelLookAsset modelLookInfo, ComboContext modelLookContext, Dictionary<ulong, ulong> replacements) {
             if (modelMaterial == null || modelMaterial.m_material == 0) return;
-            modelLookInfo.m_materialGUIDs.Add(GetReplacement((ulong) modelMaterial.m_material, replacements));
+
+            modelLookInfo.m_materials.Add(new ModelMaterial(GetReplacement((ulong) modelMaterial.m_material, replacements), modelMaterial.m_DC05EA3B));
+
             ComboContext modelMaterialContext = modelLookContext.Clone();
             modelMaterialContext.MaterialID = modelMaterial.m_DC05EA3B;
             Find(info, (ulong) modelMaterial.m_material, replacements, modelMaterialContext);

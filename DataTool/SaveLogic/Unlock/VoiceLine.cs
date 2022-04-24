@@ -39,8 +39,6 @@ namespace DataTool.SaveLogic.Unlock {
 
                 SaveVoiceLine(flags, voiceLineInstance, directory, saveContext);
             }
-
-            saveContext.Wait();
         }
 
         public static void SaveVoiceLine(ICLIFlags flags, VoiceLineInstance voiceLineInstance, string directory, Combo.SaveContext context) {

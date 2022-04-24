@@ -29,7 +29,6 @@ namespace DataTool.ToolLogic.Dump {
             Log($"This will take a long time and take up a lot of space.");
             var saveContext = new SaveLogic.Combo.SaveContext(info);
             SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, "TextureDump"), saveContext);
-            saveContext.Wait();
         }
     }
 }

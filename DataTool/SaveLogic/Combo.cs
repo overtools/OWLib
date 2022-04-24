@@ -13,10 +13,14 @@ using DataTool.JSON;
 using DataTool.ToolLogic.Extract;
 using DataTool.ToolLogic.List;
 using DirectXTexNet;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.ColorSpaces.Conversion;
+using SixLabors.ImageSharp.PixelFormats;
 using TankLib;
 using TankLib.Chunks;
 using TankLib.ExportFormats;
 using static DataTool.Helper.IO;
+using Image = SixLabors.ImageSharp.Image;
 using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool.SaveLogic {
@@ -29,82 +33,22 @@ namespace DataTool.SaveLogic {
             public FindLogic.Combo.ComboInfo m_info;
             public bool m_saveAnimationEffects = true;
 
-            private readonly ConcurrentBag<Task> m_pendingTasks = new ConcurrentBag<Task>();
-
             public SaveContext(FindLogic.Combo.ComboInfo info) {
                 m_info = info;
-            }
-
-            private int CountPending() {
-                int count = 0;
-                foreach (Task task in m_pendingTasks) {
-                    if (task.IsCompleted) continue;
-                    count++;
-                }
-
-                return count;
-            }
-
-            private void UpdateTitle() {
-                Console.Title = $"Saving... {CountPending()} tasks pending";
-            }
-
-            public void Wait() {
-                while (true) {
-                    bool done = true;
-                    foreach (Task task in m_pendingTasks) {
-                        if (task.IsCompleted) continue;
-                        UpdateTitle();
-                        task.Wait(100);
-                        done = false;
-                    }
-
-                    if (done) break;
-                }
-
-                Console.Title = "done save";
-            }
-
-            public void AddTask(Action action) {
-                if (Program.Flags?.EnableAsyncSave == false) {
-                    action();
-                } else {
-                    m_pendingTasks.Add(Task.Run(() => {
-                        try {
-                            action();
-                        } catch (Exception e) {
-                            Logger.Error("Combo", $"Async exception: {e}");
-                        }
-                    }));
-                }
-            }
-
-            public void AddTask(Func<Task> action) {
-                if (Program.Flags?.EnableAsyncSave == false) {
-                    action().Wait();
-                } else {
-                    m_pendingTasks.Add(Task.Run(async () => {
-                        try {
-                            await action();
-                        } catch (Exception e) {
-                            Logger.Error("Combo", $"Async exception: {e}");
-                        }
-                    }));
-                }
             }
         }
 
         public static void Save(ICLIFlags flags, string path, SaveContext context) {
             foreach (FindLogic.Combo.ModelAsset model in context.m_info.m_models.Values) {
-                context.AddTask(() => SaveModel(flags, path, context, model.m_GUID));
+                SaveModel(flags, path, context, model.m_GUID);
             }
 
             foreach (FindLogic.Combo.EntityAsset entity in context.m_info.m_entities.Values) {
-                context.AddTask(() => SaveEntity(flags, path, context, entity.m_GUID));
+                SaveEntity(flags, path, context, entity.m_GUID);
             }
 
             foreach (FindLogic.Combo.EffectInfoCombo effectInfo in context.m_info.m_effects.Values) {
-                context.AddTask(() => SaveEffect(flags, path, context, effectInfo.m_GUID));
+                SaveEffect(flags, path, context, effectInfo.m_GUID);
             }
         }
 
@@ -207,6 +151,7 @@ namespace DataTool.SaveLogic {
 
             string file = Path.Combine(path, Effect.OverwatchAnimationEffect.AnimationEffectDir,
                                        animationInfo.GetNameIndex() + $".{reference.Extension}");
+
             CreateDirectoryFromFile(file);
             using (Stream outputStream = File.OpenWrite(file)) {
                 reference.Write(outputStream);
@@ -230,6 +175,7 @@ namespace DataTool.SaveLogic {
                 SEAnim seAnim = new SEAnim(parsedAnimation, scaleAnims);
                 string animOutput = Path.Combine(animationDirectory,
                                                  animationInfo.GetNameIndex() + "." + seAnim.Extension);
+
                 CreateDirectoryFromFile(animOutput);
                 using (Stream fileStream = new FileStream(animOutput, FileMode.Create)) {
                     seAnim.Write(fileStream);
@@ -238,6 +184,7 @@ namespace DataTool.SaveLogic {
                 animStream.Position = 0;
                 string rawAnimOutput = Path.Combine(animationDirectory,
                                                     $"{animationInfo.GetNameIndex()}.{teResourceGUID.Type(animationInfo.m_GUID):X3}");
+
                 CreateDirectoryFromFile(rawAnimOutput);
                 using (Stream fileStream = new FileStream(rawAnimOutput, FileMode.Create)) {
                     animStream.CopyTo(fileStream);
@@ -257,7 +204,7 @@ namespace DataTool.SaveLogic {
             return basePath;
         }
 
-        private static void SaveAnimationTask(ICLIFlags flags, string path, SaveContext context, ulong animation, ulong model) {
+        public static void SaveAnimation(ICLIFlags flags, string path, SaveContext context, ulong animation, ulong model) {
             bool convertAnims = false;
             bool scaleAnims = false;
             if (flags is ExtractFlags extractFlags) {
@@ -278,7 +225,7 @@ namespace DataTool.SaveLogic {
 
             // just create a fake effect if it doesn't exist
             if (animationInfo.m_effect == 0) {
-                animationEffect = new FindLogic.Combo.EffectInfoCombo(0) {Effect = new EffectParser.EffectInfo()};
+                animationEffect = new FindLogic.Combo.EffectInfoCombo(0) { Effect = new EffectParser.EffectInfo() };
                 animationEffect.Effect.SetupEffect();
             } else if (context.m_info.m_effects.ContainsKey(animationInfo.m_effect)) {
                 // wot, why
@@ -299,16 +246,13 @@ namespace DataTool.SaveLogic {
             Effect.OverwatchAnimationEffect output = new Effect.OverwatchAnimationEffect(context.m_info, animationEffect, svceLines, animationInfo, model);
             string animationEffectFile =
                 Path.Combine(animationEffectDir, $"{animationInfo.GetNameIndex()}.{output.Extension}");
+
             CreateDirectoryFromFile(animationEffectFile);
 
             using (Stream fileStream = new FileStream(animationEffectFile, FileMode.Create)) {
                 fileStream.SetLength(0);
                 output.Write(fileStream);
             }
-        }
-
-        public static void SaveAnimation(ICLIFlags flags, string path, SaveContext context, ulong animation, ulong model) {
-            context.AddTask(() => SaveAnimationTask(flags, path, context, animation, model));
         }
 
         public static void SaveEffectExtras(
@@ -436,7 +380,7 @@ namespace DataTool.SaveLogic {
                     if (doStu) {
                         var stu = chunkedData.GetChunks<teModelChunk_STU>().Select(x => x.StructuredData).ToArray();
                         string stuPath = Path.Combine(modelDirectory, modelInfo.GetNameIndex() + ".json");
-                        JSONTool.OutputJSONAlt(stu, new ListFlags {Output = stuPath}, false);
+                        JSONTool.OutputJSONAlt(stu, new ListFlags { Output = stuPath }, false);
                     }
                 }
             } else {
@@ -463,6 +407,7 @@ namespace DataTool.SaveLogic {
 
             string modelLookPath =
                 Path.Combine(path, "ModelLooks", $"{modelLookInfo.GetNameIndex()}.{modelLook.Extension}");
+
             CreateDirectoryFromFile(modelLookPath);
             using (Stream modelLookOutputStream = File.OpenWrite(modelLookPath)) {
                 modelLookOutputStream.SetLength(0);
@@ -477,49 +422,11 @@ namespace DataTool.SaveLogic {
 
             SaveOWMaterialModelLookFile(path, modelLookInfo, info.m_info);
 
-            if (modelLookInfo.m_materialGUIDs == null) return;
-            foreach (ulong modelLookMaterial in modelLookInfo.m_materialGUIDs) {
-                SaveMaterial(flags, path, info, modelLookMaterial);
+            if (modelLookInfo.m_materials == null) return;
+            foreach (var modelLookMaterial in modelLookInfo.m_materials) {
+                SaveMaterial(flags, path, info, modelLookMaterial.m_guid);
             }
         }
-
-        /*public static void SaveModelLookSet(ICLIFlags flags, string path, SaveContext info,
-            IEnumerable<ulong> modelLookSet) {
-            if(modelLookSet.Count() < 2) {
-                if (modelLookSet.Count() < 1) {
-                    return;
-                }
-                SaveModelLook(flags, path, info, modelLookSet.ElementAt(0));
-                return;
-            }
-
-            FindLogic.Combo.ModelLookAsset modelLookInfo = new FindLogic.Combo.ModelLookAsset(0) {
-                m_name = string.Join("_", modelLookSet.Select(x => info.m_info.m_modelLooks.ContainsKey(x) ? info.m_info.m_modelLooks[x].GetNameIndex() : $"{x & 0xFFFFFFFFFFFF:X12}")),
-                m_materialGUIDs = new HashSet<ulong>()
-            };
-
-            var doneIDs = new HashSet<ulong>();
-
-            foreach (ulong modelLookGuid in modelLookSet.Reverse()) {
-                if (info.m_info.m_modelLooks.ContainsKey(modelLookGuid)) {
-                    foreach(var materialGuid in info.m_info.m_modelLooks[modelLookGuid].m_materialGUIDs) {
-                        var material = info.m_info.m_materials[materialGuid];
-                        if (doneIDs.Any(x => material.m_materialIDs.Contains(x))) {
-                            continue;
-                        }
-                        doneIDs.UnionWith(material.m_materialIDs);
-                        modelLookInfo.m_materialGUIDs.Add(materialGuid);
-                    }
-                }
-            }
-
-            SaveOWMaterialModelLookFile(path, modelLookInfo, info.m_info);
-
-            if (modelLookInfo.m_materialGUIDs == null) return;
-            foreach (ulong modelLookMaterial in modelLookInfo.m_materialGUIDs) {
-                SaveMaterial(flags, path, info, modelLookMaterial);
-            }
-        }*/
 
         public static void SaveOWMaterialFile(string path, FindLogic.Combo.MaterialAsset materialInfo, FindLogic.Combo.ComboInfo info, ICLIFlags flags) {
             string format = "dds";
@@ -531,6 +438,7 @@ namespace DataTool.SaveLogic {
             Model.OverwatchMaterial material = new Model.OverwatchMaterial(info, materialInfo, format, materialDir);
             string materialPath =
                 Path.Combine(materialDir, $"{materialInfo.GetNameIndex()}.{material.Extension}");
+
             CreateDirectoryFromFile(materialPath);
             using (Stream materialOutputStream = File.OpenWrite(materialPath)) {
                 materialOutputStream.SetLength(0);
@@ -591,10 +499,10 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveLooseTextures(ICLIFlags flags, string path, SaveContext context, bool split = false) {
+        public static void SaveLooseTextures(ICLIFlags flags, string path, SaveContext context, SaveTextureOptions options = null) {
             foreach (FindLogic.Combo.TextureAsset textureInfo in context.m_info.m_textures.Values) {
                 if (!textureInfo.m_loose) continue;
-                SaveTexture(flags, path, context, textureInfo.m_GUID, split: split);
+                SaveTexture(flags, path, context, textureInfo.m_GUID, options);
             }
         }
 
@@ -684,22 +592,96 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static async Task SaveTextureTask(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name, bool split) {
+        private static void ProcessIconTexture(Stream convertedStream, teTexture texture, string filePath, string convertType) {
+            var alpha = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 0);
+            convertedStream.Position = 0;
+            var color = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 1);
+
+            if (color.IsEmpty || alpha.IsEmpty) {
+                convertedStream.Position = 0;
+                WriteFile(convertedStream, $"{filePath}.dds");
+                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} because DirectXTex failed.");
+                return;
+            }
+
+            try {
+                using (Image<Rgba32> colorImage = Image.Load<Rgba32>(Configuration.Default, color.Span))
+                using (Image<Rgba32> alphaImage = Image.Load<Rgba32>(Configuration.Default, alpha.Span)) {
+                    ColorSpaceConverter colorSpaceConverter = new ColorSpaceConverter();
+                    alphaImage.ProcessPixelRows(colorImage, (source, target) => {
+                        for (var y = 0; y < texture.Header.Height; ++y) {
+                            var sourceRow = source.GetRowSpan(y);
+                            var targetRow = target.GetRowSpan(y);
+                            for (var x = 0; x < texture.Header.Width; ++x) {
+                                var pixel = targetRow[x];
+                                pixel.R = (byte) (Math.Pow(pixel.R / 255f, 1.1f) * 0xFF);
+                                pixel.G = (byte) (Math.Pow(pixel.G / 255f, 1.1f) * 0xFF);
+                                pixel.B = (byte) (Math.Pow(pixel.B / 255f, 1.1f) * 0xFF);
+                                pixel.A = (byte) ((1 - colorSpaceConverter.ToHsl(sourceRow[x]).L) * 0xFF);
+                                targetRow[x] = pixel;
+                            }
+                        }
+                    });
+
+                    var fullName = $"{filePath}.png";
+                    string fullPath = Path.GetDirectoryName(fullName);
+                    if (!Directory.Exists(fullPath) && fullPath != null) {
+                        Directory.CreateDirectory(fullPath);
+                    }
+
+                    colorImage.SaveAsPng(fullName);
+                }
+            } catch (Exception ex) {
+                convertedStream.Position = 0;
+                WriteFile(convertedStream, $"{filePath}.dds");
+                Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as {convertType} ImageSharp failed.");
+            }
+        }
+
+        public class SaveTextureOptions {
+            /// <summary>
+            /// Overrides the filename.
+            /// </summary>
+            public string FileNameOverride { get; set; }
+
+            /// <summary>
+            /// Force split multi surface textures into multiple files.
+            /// </summary>
+            public bool? Split { get; set; }
+
+            /// <summary>
+            /// Forces texture to be processed as if it were an icon with multiple surfaces.
+            /// </summary>
+            public bool? ProcessIcon { get; set; }
+
+            /// <summary>
+            /// Overrides the file type the texture is saved as.
+            /// </summary>
+            public string FileTypeOverride { get; set; }
+        }
+
+        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, SaveTextureOptions options = null) {
+            options = options ?? new SaveTextureOptions();
+            FindLogic.Combo.TextureAsset textureInfo = info.m_info.m_textures[textureGUID];
+
+            var split = options?.Split ?? textureInfo.m_split ?? false;
+            var processIcon = options?.ProcessIcon ?? textureInfo.m_processIcon ?? false;
+            var fileType = options?.FileTypeOverride ?? textureInfo.m_fileType ?? null;
+
             bool convertTextures = true;
-            string convertType = "tif";
+            string convertType = fileType;
             string multiSurfaceConvertType = "tif";
-            bool createMultiSurfaceSheet = split;
-            bool splitMultiSurface = false;
-            bool lossless = false;
-            int maxMips = 1;
+
+            var createMultiSurfaceSheet = split;
+            var splitMultiSurface = false;
+            var maxMips = 1;
 
             if (flags is ExtractFlags extractFlags) {
                 if (extractFlags.SkipTextures) return;
                 createMultiSurfaceSheet = extractFlags.SheetMultiSurface;
                 convertTextures = !extractFlags.RawTextures && !extractFlags.Raw;
                 splitMultiSurface = (split || extractFlags.SplitMultiSurface) && convertTextures && !createMultiSurfaceSheet;
-                convertType = extractFlags.ConvertTexturesType.ToLowerInvariant();
-                lossless = extractFlags.ConvertTexturesLossless;
+                convertType = fileType ?? extractFlags.ConvertTexturesType.ToLowerInvariant();
 
                 multiSurfaceConvertType = convertType;
                 if (extractFlags.ForceDDSMultiSurface) {
@@ -714,9 +696,7 @@ namespace DataTool.SaveLogic {
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 path += Path.DirectorySeparatorChar;
 
-
-            FindLogic.Combo.TextureAsset textureInfo = info.m_info.m_textures[textureGUID];
-            string filePath = Path.Combine(path, name ?? $"{textureInfo.GetNameIndex()}");
+            string filePath = Path.Combine(path, options.FileNameOverride ?? $"{textureInfo.GetNameIndex()}");
             if (teResourceGUID.Type(textureGUID) != 0x4) filePath += $".{teResourceGUID.Type(textureGUID):X3}";
 
             if (Program.Flags != null && Program.Flags.Deduplicate) {
@@ -729,85 +709,84 @@ namespace DataTool.SaveLogic {
 
             CreateDirectoryFromFile(path);
 
-            await s_texurePrepareSemaphore.WaitAsync();
-            try {
-                if (!convertTextures) {
-                    teTexture texture;
-                    using (Stream textureStream = OpenFile(textureGUID)) {
-                        texture = new teTexture(textureStream, true);
-                        textureStream.Position = 0;
-                        WriteFile(textureStream, $"{filePath}.004");
+            if (!convertTextures) {
+                teTexture texture;
+                using (Stream textureStream = OpenFile(textureGUID)) {
+                    texture = new teTexture(textureStream, true);
+                    textureStream.Position = 0;
+                    WriteFile(textureStream, $"{filePath}.004");
+                }
+
+                if (!texture.PayloadRequired) return;
+                for (uint i = 1; i < texture.Payloads.Length; i++) {
+                    using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
+                        WriteFile(texturePayloadStream, $"{filePath}_{i}.04D");
+                }
+            } else {
+                teTexture texture;
+                using (Stream textureStream = OpenFile(textureGUID)) {
+                    if (textureStream == null) {
+                        return;
                     }
 
-                    if (!texture.PayloadRequired) return;
-                    for (int i = 0; i < texture.Payloads.Length; ++i) {
-                        using (Stream texturePayloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
-                            WriteFile(texturePayloadStream, $"{filePath}_{i}.04D");
+                    texture = new teTexture(textureStream);
+                }
+
+                if (texture.PayloadRequired) {
+                    for (uint i = 1; i < texture.Payloads.Length; i++) {
+                        using (var payloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
+                            texture.LoadPayload(payloadStream, i);
+
+                        if (maxMips == 1) break;
                     }
-                } else {
-                    teTexture texture;
-                    using (Stream textureStream = OpenFile(textureGUID)) {
-                        if (textureStream == null) {
-                            return;
-                        }
+                }
 
-                        texture = new teTexture(textureStream);
+                uint? width = null;
+                uint? height = null;
+                uint? surfaces = null;
+                if ((texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces) && !processIcon) {
+                    if (createMultiSurfaceSheet) {
+                        Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet because it has more than one surface");
+                        height = (uint) (texture.Header.Height * texture.Header.Surfaces);
+                        surfaces = 1;
+                        texture.Header.Flags = 0;
+                    } else if (!splitMultiSurface && convertType != "tif" && convertType != "dds") {
+                        Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceConvertType} because it has more than one surface");
+                        convertType = multiSurfaceConvertType;
                     }
-
-                    //if (texture.Header.Flags.HasFlag(teTexture.Flags.CUBEMAP)) return;
-                    // for diffing when they add/regen loads of cubemaps
-
-                    if (texture.PayloadRequired) {
-                        for (int i = 0; i < texture.Payloads.Length; ++i) {
-                            using (var payloadStream = OpenFile(texture.GetPayloadGUID(textureGUID, i)))
-                                texture.LoadPayload(payloadStream, i);
-                            if (maxMips == 1) break;
-                        }
-                    }
-
-                    uint? width = null;
-                    uint? height = null;
-                    uint? surfaces = null;
-                    if (texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces) {
-                        if (createMultiSurfaceSheet) {
-                            Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet because it has more than one surface");
-                            height = (uint) (texture.Header.Height * texture.Header.Surfaces);
-                            surfaces = 1;
-                            texture.Header.Flags = 0;
-                        } else if (!splitMultiSurface && convertType != "tif" && convertType != "dds") {
-                            Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceConvertType} because it has more than one surface");
-                            convertType = multiSurfaceConvertType;
-                        }
-                    }
+                }
 
 
-                    WICCodecs? imageFormat = null;
-                    switch (convertType) {
-                        case "tif":
-                            imageFormat = WICCodecs.TIFF;
-                            break;
-                        case "png":
-                            imageFormat = WICCodecs.PNG;
-                            break;
-                        case "jpg":
-                            imageFormat = WICCodecs.JPEG;
-                            break;
-                    }
+                WICCodecs? imageFormat = null;
+                switch (convertType) {
+                    case "tif":
+                        imageFormat = WICCodecs.TIFF;
+                        break;
+                    case "png":
+                        imageFormat = WICCodecs.PNG;
+                        break;
+                    case "jpg":
+                        imageFormat = WICCodecs.JPEG;
+                        break;
+                }
 
-                    // if (convertType == "tga") imageFormat = Im.... oh
-                    // so there is no TGA image format.
-                    // sucks to be them
+                // if (convertType == "tga") imageFormat = Im.... oh
+                // so there is no TGA image format.
+                // sucks to be them
 
-                    try {
-                        if (convertType == "dds") {
-                            using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
-                                WriteFile(convertedStream, $"{filePath}.dds");
-                            }
-
-                            return;
-                        }
-
+                try {
+                    if (convertType == "dds") {
                         using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                            WriteFile(convertedStream, $"{filePath}.dds");
+                        }
+
+                        return;
+                    }
+
+                    using (Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount, width, height, surfaces)) {
+                        if (processIcon && texture.Header.Surfaces == 2) {
+                            ProcessIconTexture(convertedStream, texture, filePath, convertType);
+                        } else {
                             var surfaceCount = splitMultiSurface ? texture.Header.Surfaces : 1;
                             for (var surfaceNr = 0; surfaceNr < surfaceCount; ++surfaceNr) {
                                 var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
@@ -823,17 +802,11 @@ namespace DataTool.SaveLogic {
                                 }
                             }
                         }
-                    } catch (Exceptions.TexturePayloadMissingException) {
-                        Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as it's missing required texture payload.");
                     }
+                } catch (Exceptions.TexturePayloadMissingException) {
+                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} as it's missing required texture payload.");
                 }
-            } finally {
-                s_texurePrepareSemaphore.Release();
             }
-        }
-
-        public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, string name = null, bool split = false) {
-            info.AddTask(() => SaveTextureTask(flags, path, info, textureGUID, name, split));
         }
 
         private static void ConvertSoundFile(Stream stream, FindLogic.Combo.ComboAsset soundFileInfo, string directory, string name = null) {
@@ -850,13 +823,12 @@ namespace DataTool.SaveLogic {
             }
         }
 
-
         public static void ConvertSoundFile(Stream stream, Stream outputStream) {
             try {
                 using (Sound.WwiseRIFFVorbis vorbis =
-                    new Sound.WwiseRIFFVorbis(stream,
-                                              Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party",
-                                                                            "packed_codebooks_aoTuV_603.bin")))) {
+                       new Sound.WwiseRIFFVorbis(stream,
+                                                 Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party",
+                                                                               "packed_codebooks_aoTuV_603.bin")))) {
                     Stream vorbisStream = new MemoryStream();
                     vorbis.ConvertToOgg(vorbisStream);
                     vorbisStream.Position = 0;
@@ -892,7 +864,7 @@ namespace DataTool.SaveLogic {
             if (soundFile == 0) return;
 
             FindLogic.Combo.SoundFileAsset soundFileInfo = voice ? context.m_info.m_voiceSoundFiles[soundFile] : context.m_info.m_soundFiles[soundFile];
-            context.AddTask(() => SaveSoundFileTask(flags, directory, soundFileInfo, name));
+            SaveSoundFileTask(flags, directory, soundFileInfo, name);
         }
 
         public static void SaveSoundFile(ICLIFlags flags, string directory, ulong soundFile, string name = null) {

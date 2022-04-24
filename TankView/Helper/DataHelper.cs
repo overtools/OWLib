@@ -91,7 +91,7 @@ namespace TankView.Helper {
             return ms;
         }
 
-        public static Memory<byte> ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, WICCodecs imageFormat, int frame, out int width, out int height) {
+        public static Memory<byte> ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, WICCodecs imageFormat, out int width, out int height) {
             width = 0;
             height = 0;
 
@@ -108,7 +108,7 @@ namespace TankView.Helper {
                 height = texture.Header.Height;
                 Stream ms = texture.SaveToDDS(1);
 
-                return DDSConverter.ConvertDDS(ms, targetFormat, imageFormat, frame);
+                return DDSConverter.ConvertDDS(ms, targetFormat, imageFormat, texture.Header.Surfaces - 1);
             } catch {
                 // ignored
             }

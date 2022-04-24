@@ -180,8 +180,9 @@ namespace DataTool.ToolLogic.Extract {
                     }
 
                     var guiContext = new SaveLogic.Combo.SaveContext(guiInfo);
-                    SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(heroPath, "GUI"), guiContext, true);
-                    guiContext.Wait();
+                    SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(heroPath, "GUI"), guiContext, new SaveLogic.Combo.SaveTextureOptions {
+                        ProcessIcon = true
+                    });
                 }
 
                 if (progressionUnlocks.OtherUnlocks != null) { // achievements and stuff
@@ -258,8 +259,6 @@ namespace DataTool.ToolLogic.Extract {
                 }
 
                 tags["rarity"] = new TagExpectedValue(unlock.Rarity.ToString());
-
-                tags["special"] = new TagExpectedValue(unlock.Tag ?? "none");
             } else {
                 rarity = ""; // for general unlocks
             }

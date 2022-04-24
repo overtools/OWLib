@@ -76,12 +76,16 @@ namespace DataTool.SaveLogic.Unlock {
                 info.m_processExistingEntities = false;
 
                 FindLogic.Combo.Find(info, skinTheme.m_ECCC4A5D, replacements);
-                info.SetTextureName(skinTheme.m_ECCC4A5D, teResourceGUID.AsString(skinTheme.m_ECCC4A5D));
+                info.SetTextureName(skinTheme.m_ECCC4A5D, "Portrait");
+                info.SetTextureProcessIcon(skinTheme.m_ECCC4A5D);
+                info.SetTextureFileType(skinTheme.m_ECCC4A5D, "png");
             }
 
             foreach (STU_1A496D3C tex in hero.m_8203BFE1) { // find GUI
                 FindLogic.Combo.Find(info, tex.m_texture, replacements);
                 info.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
+                info.SetTextureProcessIcon(tex.m_texture);
+                info.SetTextureFileType(tex.m_texture, "png");
             }
 
             if (replacements != null) {
@@ -113,14 +117,11 @@ namespace DataTool.SaveLogic.Unlock {
                     if (diffInfoBefore.m_voiceSoundFiles.ContainsKey(soundFile.Key)) continue;
                     Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, true);
                 }
-
-                diffInfoAfterContext.Wait();
             }
 
             LoudLog("\t\tSaving");
-            Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext, true);
+            Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext);
             Combo.Save(flags, directory, saveContext);
-            saveContext.Wait();
             LoudLog("\t\tDone");
         }
 

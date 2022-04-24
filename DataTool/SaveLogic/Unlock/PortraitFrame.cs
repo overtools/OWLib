@@ -31,7 +31,6 @@ namespace DataTool.SaveLogic.Unlock {
 
             var context = new Combo.SaveContext(info);
             Combo.SaveLooseTextures(flags, Path.Combine(directory, tier), context);
-            context.Wait();
         }
     }
 }

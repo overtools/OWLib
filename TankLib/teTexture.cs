@@ -98,21 +98,21 @@ namespace TankLib {
             Array = 0x40,
             Unk128 = 0x80
         }
-        
+
         public teTexturePayload[] Payloads = new teTexturePayload[0];
         public bool PayloadRequired;
 
         // non-payload
         public byte[] Data;
         public TextureHeader Header;
-        
+
         /// <summary>Load texture from a stream</summary>
         public teTexture(Stream stream, bool keepOpen=false) {
             using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, keepOpen)) {
                 Read(reader);
             }
         }
-        
+
         /// <summary>Load texture from a stream</summary>
         public teTexture(BinaryReader reader) {
             Read(reader);
@@ -124,7 +124,7 @@ namespace TankLib {
             Header = reader.Read<TextureHeader>();
             if (Header.PayloadCount == 1) Logger.Debug("teTexture", $"texture {((reader.BaseStream is GuidStream gs) ? teResourceGUID.AsString(gs.GUID) : "internal") } is mip");
 
-            if (Header.DataSize == 0 || Header.PayloadCount > 0) {
+            if (Header.DataSize == 0 || Header.PayloadCount > 1) {
                 PayloadRequired = true;
                 Payloads = new teTexturePayload[Header.PayloadCount];
                 return;
@@ -135,45 +135,51 @@ namespace TankLib {
             reader.Read(Data, 0, (int)Header.DataSize);
         }
 
-        public teResourceGUID GetPayloadGUID(teResourceGUID textureGUID, int offset) {
-            if (Header.PayloadCount - offset - 1 < 0) return new teResourceGUID(0);
-            // ulong payloadGUID = (textureGUID & 0xFFF0FFFFFFFFUL) | ((ulong)(byte)(Header.PayloadCount - offset - 1) << 32) | 0x0320000000000000UL;
-            // so basically: thing | (payloadIdx & 0xF) << 32) | 0x320000000000000i64
-            var payloadGUID = new teResourceGUID(textureGUID & 0xFFF0FFFFFFFFUL);
-            payloadGUID.SetType(0x4D);
-            payloadGUID.SetLocale((byte)(Header.PayloadCount - offset - 1));
-            
-            var type = teResourceGUID.Type(textureGUID);
-            if(type == 0xF1)
-            {
-                // payloadGUID |= (ulong)1 << 40;
-                payloadGUID.SetRegion(2);
-            } else if (type != 4) {
-                throw new Exception();
+        public teResourceGUID GetPayloadGUID(ulong textureGUID, uint payloadIdx) {
+            if (payloadIdx == 0) {
+                throw new Exception("dont call me for 0");
             }
-            return new teResourceGUID(payloadGUID);
-        }
 
-        public ulong GetPayloadGUID(ulong guid, int offset) => GetPayloadGUID(new teResourceGUID(guid), offset);
+            byte payloadBit;
+            var type = teResourceGUID.Type(textureGUID);
+            if (type == 4) {
+                payloadBit = 0;
+            } else if (type == 0xF1) {
+                payloadBit = 1;
+            } else {
+                throw new Exception($"what is texture type {type:X3}");
+            }
+
+            var payload = textureGUID & 0xFFF0FFFFFFFFUL;
+            payload |= (payloadIdx & 0xFu | ((ulong) (payloadBit & 3u) << 8)) << 32;
+
+            var payloadGUID = new teResourceGUID(payload);
+            payloadGUID.SetType(0x4D);
+
+            return payloadGUID;
+        }
 
         /// <summary>Load the texture payload</summary>
         /// <param name="payloadStream">The payload stream</param>
-        /// <param name="offset"></param>
-        public void LoadPayload(Stream payloadStream, int offset) {
-            if (!PayloadRequired || Payloads.Length < offset) throw new Exceptions.TexturePayloadNotRequiredException();
-            if (Payloads[offset] != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
+        /// <param name="payloadIdx"></param>
+        public void LoadPayload(Stream payloadStream, uint payloadIdx) {
+            if (!PayloadRequired || Payloads.Length < payloadIdx) throw new Exceptions.TexturePayloadNotRequiredException();
+            if (Payloads[payloadIdx] != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
             if (payloadStream == null) return;
-            Payloads[offset] = new teTexturePayload(this, payloadStream);
+
+            Payloads[payloadIdx] = new teTexturePayload(this, payloadStream);
         }
 
         /// <summary>Set the texture payload</summary>
         /// <param name="payload">The texture payload</param>
-        /// <param name="offset"></param>
-        public void SetPayload(teTexturePayload payload, int offset) {
-            if (!PayloadRequired || Payloads.Length < offset) throw new Exceptions.TexturePayloadNotRequiredException();
-            if (Payloads[offset] != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
-            
-            Payloads[offset] = payload;
+        /// <param name="payloadIdx"></param>
+        public void SetPayload(teTexturePayload payload, uint payloadIdx) {
+            // todo: use this for embedded texture payload
+
+            if (!PayloadRequired || Payloads.Length < payloadIdx) throw new Exceptions.TexturePayloadNotRequiredException();
+            if (Payloads[payloadIdx] != null) throw new Exceptions.TexturePayloadAlreadyExistsException();
+
+            Payloads[payloadIdx] = payload;
         }
 
         /// <summary>Save DDS to stream</summary>
@@ -184,7 +190,7 @@ namespace TankLib {
         /// <param name="height"></param>
         /// <param name="surfaces"></param>
         public void SaveToDDS(Stream stream, bool keepOpen, int? mips, uint? width = null, uint? height = null, uint? surfaces = null) {
-            if (PayloadRequired && Payloads[0] == null) throw new Exceptions.TexturePayloadMissingException();
+            if (PayloadRequired && Payloads[1] == null) throw new Exceptions.TexturePayloadMissingException();
             using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
                 TextureTypes.DDSHeader dds = Header.ToDDSHeader(mips ?? Header.MipCount, width ?? Header.Width, height ?? Header.Height, surfaces ?? Header.Surfaces);
                 ddsWriter.Write(dds);
@@ -200,7 +206,7 @@ namespace TankLib {
                         // cubemaps are just 2d textures
                         dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D;
                     }
-                    
+
                     TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
                         Format = Header.Format,
                         Dimension = dimension,

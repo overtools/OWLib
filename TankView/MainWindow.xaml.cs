@@ -394,7 +394,6 @@ namespace TankView {
                             var newPath = Path.GetFullPath(Path.Combine(outPath, filePath, @"..\")); // filepath includes the filename which we don't want here as combo already does that
                             var context = new Combo.SaveContext(info);
                             Combo.SaveLooseTextures(imageExtractFlags, newPath, context);
-                            context.Wait();
 
                             return;
                         }

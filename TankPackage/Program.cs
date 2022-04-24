@@ -156,7 +156,6 @@ namespace TankPackage
 
                 var context = new DataTool.SaveLogic.Combo.SaveContext(info);
                 DataTool.SaveLogic.Combo.Save(flags, dest, context);
-                context.Wait();
             }
 
             Parallel.ForEach(records.Keys, Body);

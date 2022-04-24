@@ -1,19 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
 namespace TankLib.Chunks {
-    public class teEffectComponentParticle : IChunk {
-        public string ID => "ECPR";
+    public class teEffectComponentRibbonRenderer : IChunk {
+        public string ID => "ECRR";
         public List<IChunk> SubChunks { get; set; }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct Structure {
-            public ulong Unknown1;
-            public ulong Unknown2;
-            public ulong Unknown3;
-            public ulong Unknown4;
-            public ulong Model;
+            public teResourceGUID ModelGUID;
         }
 
         public Structure Header;

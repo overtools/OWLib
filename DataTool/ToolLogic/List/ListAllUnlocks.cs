@@ -13,6 +13,12 @@ namespace DataTool.ToolLogic.List {
     [Tool("list-all-unlocks", Description = "List all unlocks", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListAllUnlocks : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
+            if (toolFlags is ListFlags flags) {
+                OutputJSON(GetData(), flags);
+            }
+        }
+
+        public static Dictionary<teResourceGUID, UnlockAll> GetData() {
             var allUnlocks = new Dictionary<teResourceGUID, UnlockAll>();
 
             foreach (var key in TrackedFiles[0xA5]) {
@@ -37,9 +43,7 @@ namespace DataTool.ToolLogic.List {
                 }
             }
 
-            if (toolFlags is ListFlags flags) {
-                OutputJSON(allUnlocks, flags);
-            }
+            return allUnlocks;
         }
     }
 

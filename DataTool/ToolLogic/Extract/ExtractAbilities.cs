@@ -2,6 +2,7 @@
 using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
+using DataTool.ToolLogic.Extract.Debug;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
@@ -30,20 +31,15 @@ namespace DataTool.ToolLogic.Extract {
                 if (loadout == null) continue;
 
                 string name = GetValidFilename(GetString(loadout.m_name)?.TrimEnd().Replace(".", "_")) ?? $"Unknown{teResourceGUID.Index(key):X}";
+                var directory = Path.Combine(basePath, folderName, name);
 
                 Combo.ComboInfo info = new Combo.ComboInfo();
                 Combo.Find(info, loadout.m_texture);
 
                 var context = new SaveLogic.Combo.SaveContext(info);
-                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, folderName, name), context);
-                context.Wait();
+                SaveLogic.Combo.SaveLooseTextures(flags, directory, context);
 
-                using (Stream videoStream = OpenFile(loadout.m_infoMovie)) {
-                    if (videoStream != null) {
-                        videoStream.Position = 128; // wrapped in "MOVI" for some reason
-                        WriteFile(videoStream, Path.Combine(basePath, folderName, name, $"{teResourceGUID.LongKey(loadout.m_infoMovie):X12}.bk2"));
-                    }
-                }
+                ExtractDebugMovies.SaveVideoFile(flags, loadout.m_infoMovie, directory);
             }
         }
     }

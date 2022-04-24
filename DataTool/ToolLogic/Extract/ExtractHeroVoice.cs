@@ -163,7 +163,6 @@ namespace DataTool.ToolLogic.Extract {
 
             var context = new SaveLogic.Combo.SaveContext(info);
             SaveLogic.Combo.SaveVoiceSet(flags, Path.Combine(basePath, Container, heroFileName, skin), context, Combo.GetReplacement(voiceSetComponent.m_voiceDefinition, replacements));
-            context.Wait();
 
             return true;
         }

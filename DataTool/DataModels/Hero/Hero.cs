@@ -57,14 +57,14 @@ namespace DataTool.DataModels.Hero {
             Init(stu, key);
         }
 
-        public Hero(STUHero stu) {
-            Init(stu);
+        public Hero(STUHero stu, ulong key = default) {
+            Init(stu, key);
         }
 
         private void Init(STUHero hero, ulong key = default) {
             STU = hero;
             GUID = (teResourceGUID) key;
-            Name = GetString(hero.m_0EDCE350);
+            Name = GetCleanName(hero);
             Description = GetDescriptionString(hero.m_3446F580);
             Class = GetNullableGUIDName(hero.m_category);
             Gender = hero.m_gender;
@@ -94,6 +94,10 @@ namespace DataTool.DataModels.Hero {
                     });
                 }
             }
+        }
+
+        public ProgressionUnlocks GetUnlocks() {
+            return new ProgressionUnlocks(STU);
         }
 
         public static string GetName(ulong key) {
