@@ -169,6 +169,7 @@ namespace DataTool.SaveLogic {
 
                         var model = modelComponent.m_model;
                         var look = modelComponent.m_look;
+                        if (model == null) continue;
 
                         foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
                             if (!(instanceData is STUModelComponentInstanceData modelComponentInstanceData)) continue;
