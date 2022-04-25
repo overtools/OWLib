@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -265,8 +266,15 @@ namespace DataTool {
                 return;
             }
 
-            BuildVersion = uint.Parse(Client.InstallationInfo.Values["Version"].Split('.').Last());
-            if (BuildVersion < 39028)
+            // Handle cases where build version contains letters e.g. 1.71.1.0.97745a
+            // todo: these version checks don't really need to even exist anymore but whatever, maybe useful just for history - js
+            Client.InstallationInfo.Values.TryGetValue("Version", out var clientVersion);
+            var buildVersion = Regex.Replace(clientVersion?.Split('.').Last() ?? "", "[A-Za-z ]", "");
+            uint.TryParse(buildVersion, out BuildVersion);
+
+            if (BuildVersion == 0)
+                Logger.Warn("Core", "Could not parse build version from {0}", clientVersion ?? "null");
+            else if (BuildVersion < 39028)
                 Logger.Error("Core", "DataTool doesn't support Overwatch versions below 1.14. Please use OverTool.");
             else if (BuildVersion < ProductHandler_Tank.VERSION_152_PTR)
                 Logger.Error("Core", "This version of DataTool doesn't support versions of Overwatch below 1.52. Please downgrade DataTool.");
