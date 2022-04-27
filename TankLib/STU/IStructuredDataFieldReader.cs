@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -140,12 +140,12 @@ namespace TankLib.STU {
     /// <summary>STU field reader for reading inline instances</summary>
     public class InlineInstanceFieldReader : DefaultStructuredDataFieldReader {
         public override void Deserialize(teStructuredDataMgr manager, teStructuredData data, STUField_Info field, object instance, FieldInfo target) {
-            if (data.Format == teStructuredDataFormat.V1) {
-                var n = data.Data.ReadInt64();
-                if (n > 0) {
-                    
-                }
-            }
+            // if (data.Format == teStructuredDataFormat.V1) {
+            //     var n = data.Data.ReadInt64();
+            //     if (n > 0) {
+            //
+            //     }
+            // }
 
             STUInstance instanceObj = (STUInstance) DeserializeInternal(manager, data, field, target);
             instanceObj.Usage = TypeUsage.Inline;
