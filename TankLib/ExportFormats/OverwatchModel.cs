@@ -9,6 +9,16 @@ using TankLib.Math;
 using TankLib.STU.Types;
 
 namespace TankLib.ExportFormats {
+    public class StreamingLodsInfo {
+        public readonly teModelChunk_Model m_model;
+        public readonly teModelChunk_RenderMesh m_renderMesh;
+
+        public StreamingLodsInfo(teChunkedData chunkedData) {
+            m_model = chunkedData.GetChunk<teModelChunk_Model>();
+            m_renderMesh = chunkedData.GetChunk<teModelChunk_RenderMesh>();
+        }
+    }
+
     /// <summary>
     /// OWMDL format
     /// </summary>
@@ -20,17 +30,18 @@ namespace TankLib.ExportFormats {
         public string ModelLookFileName;
         public string Name;
         public ulong GUID;
-        public sbyte TargetLod;
 
-        public OverwatchModel(teChunkedData chunkedData, ulong guid, sbyte targetLod=1) {
+        public StreamingLodsInfo m_streamedLods;
+
+        public OverwatchModel(teChunkedData chunkedData, ulong guid, StreamingLodsInfo streamedLods=null) {
             _data = chunkedData;
             GUID = guid;
-            TargetLod = targetLod;
+            m_streamedLods = streamedLods;
         }
 
         public void Write(Stream stream) {
-            teModelChunk_RenderMesh renderMesh = _data.GetChunk<teModelChunk_RenderMesh>();
-            teModelChunk_Model model = _data.GetChunk<teModelChunk_Model>();
+            teModelChunk_RenderMesh renderMesh = m_streamedLods?.m_renderMesh ?? _data.GetChunk<teModelChunk_RenderMesh>();
+            teModelChunk_Model model = m_streamedLods?.m_model ?? _data.GetChunk<teModelChunk_Model>();
             teModelChunk_Skeleton skeleton = _data.GetChunk<teModelChunk_Skeleton>();
             teModelChunk_Cloth cloth = _data.GetChunk<teModelChunk_Cloth>();
             teModelChunk_STU stu = _data.GetChunk<teModelChunk_STU>();
@@ -62,7 +73,8 @@ namespace TankLib.ExportFormats {
                     writer.Write((ushort)0);
                 }
 
-                teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh?.Submeshes.Where(x => x.Descriptor.LOD == TargetLod || x.Descriptor.LOD == -1).ToArray() ?? Array.Empty<teModelChunk_RenderMesh.Submesh>();
+                var highestLOD = renderMesh?.Submeshes.Where(x => x.Descriptor.LOD != -1).Min(x => x.Descriptor.LOD) ?? 1;
+                teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh?.Submeshes.Where(x => x.Descriptor.LOD == highestLOD || x.Descriptor.LOD == -1).ToArray() ?? Array.Empty<teModelChunk_RenderMesh.Submesh>();
 
                 writer.Write((uint)submeshes.Length);
 
@@ -110,7 +122,7 @@ namespace TankLib.ExportFormats {
 
                         if (skeleton != null && submesh.BoneIndices[j] != null) {
                             //Console.Out.WriteLine($"{skeleton.Lookup.Length} {submesh.BoneIndices[j][0]} {submesh.BoneIndices[j][1]} {submesh.BoneIndices[j][2]} {submesh.BoneIndices[j][3]}");
-                           
+
                             writer.Write((byte)4);
                             writer.Write(skeleton.Lookup[submesh.BoneIndices[j][0]]);
                             writer.Write(skeleton.Lookup[submesh.BoneIndices[j][1]]);

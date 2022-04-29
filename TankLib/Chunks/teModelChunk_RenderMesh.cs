@@ -13,14 +13,14 @@ namespace TankLib.Chunks {
     public class teModelChunk_RenderMesh : IChunk {
         public string ID => "MRNM";
         public List<IChunk> SubChunks { get; set; }
-        
+
         /// <summary>MRNM header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public unsafe struct RenderMeshHeader {
             public long VertexBufferDesciptorPointer; // 112 -> 0
             public long IndexBufferDescriptorPointer; // 120 -> 8
             public long SubmeshDescriptorPointer; // 128 -> 16
-            
+
             public uint VertexCount; // 0 -> 24
             public uint SubmeshCount; // 4 -> 28
             public ushort MaterialCount; // 8 -> 32
@@ -28,39 +28,39 @@ namespace TankLib.Chunks {
             public byte IndexBufferDescriptorCount; // 11 -> 35
             public uint m_unk36; // 12 -> 36
         }
-        
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public unsafe struct SubmeshDescriptor {
             public fixed float Unknown1[3];// 0
             public fixed float Unknown1_A[4];// 12
             public fixed float Unknown1_B[3];// 28
-            
+
             public long m_40; // 40 -> 40
             public long m_48; // n/a -> 48
-            
+
             public float Unknown3; // 48 -> 56
             public uint VertexStart; // 52 -> 60
-            
+
             public uint IndexStart; // 56 -> 64. ushort -> uint
             public fixed uint OtherIndexStarts[7]; // 60 -> 68 ushort -> uint
-            
+
             public uint IndexCount; // 72 -> 96. word -> dword
             public uint IndicesToDraw; // 74 -> 100. word -> dword
             public ushort VerticesToDraw; // 76 -> 104
             public ushort BoneIdOffset; // 78 -> 106
-            
+
             public byte IndexBuffer; // 80 -> 108
             public fixed byte OtherIndexBuffers[7];
-            
+
             public byte VertexBuffer; // 88 -> 116
             public SubmeshFlags Flags; // 89 -> 117 probably
             public byte Material; // 90 -> 118
             public sbyte LOD;  // 91 -1 = all -> 119
-            
+
             public uint m_120; // n/a -> 120
             public byte m_128; // n/a -> 128
         }
-        
+
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct VertexBufferDescriptor {
             public uint VertexCount; // 0
@@ -81,7 +81,7 @@ namespace TankLib.Chunks {
             public uint Format;
             public long DataStreamPointer;
         }
-        
+
         // todo: merge me with whatever is going on in shader
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct VertexElementDescriptor {
@@ -89,44 +89,44 @@ namespace TankLib.Chunks {
             public byte Index; // semantic index. rename me
             public SemanticFormat Format;
             public byte Stream; // slot. rename me
-            
+
             public uint m_val4;
-            
+
             public byte SlotClass => (byte)(m_val4 & 0xF);
             public byte InstanceDataStepRate => (byte)(m_val4 >> 4);
             public byte Offset => (byte)((m_val4 >> 12) & 1023);
-            
+
             // todo: >>22 = size?
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum SemanticFormat : byte {
             NONE = 0x0, // DXGI_FORMAT_R32_FLOAT??
-            // DXGI_FORMAT_R32G32_FLOAT 
+            // DXGI_FORMAT_R32G32_FLOAT
             SINGLE_3 = 0x2, // DXGI_FORMAT_R32G32B32_FLOAT
-            // DXGI_FORMAT_R32G32B32A32_FLOAT 
-            HALF_2 = 0x4, // DXGI_FORMAT_R16G16_FLOAT 
-            // DXGI_FORMAT_R16G16B16A16_FLOAT 
+            // DXGI_FORMAT_R32G32B32A32_FLOAT
+            HALF_2 = 0x4, // DXGI_FORMAT_R16G16_FLOAT
+            // DXGI_FORMAT_R16G16B16A16_FLOAT
             UINT8_4 = 0x6, // DXGI_FORMAT_R8G8B8A8_UINT
-            UINT16_4 = 0x7, // DXGI_FORMAT_R16G16B16A16_UINT 
-            UINT8_UNORM4 = 0x8, // DXGI_FORMAT_R8G8B8A8_UNORM 
-            UINT8_SNORM4 = 0x9, // DXGI_FORMAT_R8G8B8A8_SNORM 
-            // DXGI_FORMAT_R16G16_SNORM 
+            UINT16_4 = 0x7, // DXGI_FORMAT_R16G16B16A16_UINT
+            UINT8_UNORM4 = 0x8, // DXGI_FORMAT_R8G8B8A8_UNORM
+            UINT8_SNORM4 = 0x9, // DXGI_FORMAT_R8G8B8A8_SNORM
+            // DXGI_FORMAT_R16G16_SNORM
             // DXGI_FORMAT_R8_UINT
-            UINT32 = 0xC // DXGI_FORMAT_R32_UINT 
+            UINT32 = 0xC // DXGI_FORMAT_R32_UINT
             // ...
         }
-        
+
         [Flags]
         public enum SubmeshFlags : byte {  // todo: i'm not 100% sure about these
             Unk1 = 1,  // ?? nothing
             NonStatic = 2,  // moveable or animated
             Opaque = 4,
             Unk4 = 8,  // everything that isn't MinDetail?
-            
+
             /// <summary>Mesh with really low detail</summary>
             MinDetail = 16,
-            
+
             Unk6 = 32,  // same as NonStatic (-cloth physics?)
             Vegetation = 64,
             Unk8 = 128
@@ -136,16 +136,16 @@ namespace TankLib.Chunks {
         public class Submesh {
             /// <summary>Vertex positions</summary>
             public teVec3[] Vertices;
-            
+
             /// <summary>Vertex normals</summary>
             public teVec3[] Normals;
-            
+
             /// <summary>Vertex tangents</summary>
             public teVec4[] Tangents;
-            
+
             /// <summary>Vertex UVs</summary>
             public teVec2[][] UV;
-            
+
             /// <summary>Vertex IDs</summary>
             /// <remarks>Seems to be 0 most of the time</remarks>
             // ReSharper disable once InconsistentNaming
@@ -153,7 +153,7 @@ namespace TankLib.Chunks {
 
             /// <summary>Vertex bone indices</summary>
             public ushort[][] BoneIndices;
-            
+
             /// <summary>Vertex bone weights</summary>
             public float[][] BoneWeights;
 
@@ -162,7 +162,7 @@ namespace TankLib.Chunks {
 
             public teColorRGBA[] Color1;
             public teColorRGBA[] Color2;
-            
+
             /// <summary>Source descriptor</summary>
             public SubmeshDescriptor Descriptor;
 
@@ -172,19 +172,19 @@ namespace TankLib.Chunks {
             public Submesh(SubmeshDescriptor submeshDescriptor, byte uvCount) {
                 Descriptor = submeshDescriptor;
                 UVCount = uvCount;
-                
+
                 Vertices = new teVec3[submeshDescriptor.VerticesToDraw];
                 Normals = new teVec3[submeshDescriptor.VerticesToDraw];
                 Tangents = new teVec4[submeshDescriptor.VerticesToDraw];
                 IDs = new uint[submeshDescriptor.VerticesToDraw];
-                
+
                 Indices = new ushort[submeshDescriptor.IndicesToDraw];
-                
+
                 UV = new teVec2[submeshDescriptor.VerticesToDraw][];
-                
+
                 Color1 = new teColorRGBA[submeshDescriptor.VerticesToDraw];
                 Color2 = new teColorRGBA[submeshDescriptor.VerticesToDraw];
-                
+
                 BoneIndices = new ushort[submeshDescriptor.VerticesToDraw][];
                 BoneWeights = new float[submeshDescriptor.VerticesToDraw][];
                 for (int i = 0; i < submeshDescriptor.VerticesToDraw; i++) {
@@ -194,19 +194,19 @@ namespace TankLib.Chunks {
                 }
             }
         }
-        
+
         /// <summary>Unhandled vertex semantic types</summary>
         private static readonly HashSet<teShaderInstance.ShaderInputUse> UnhandledSemanticTypes = new HashSet<teShaderInstance.ShaderInputUse>();
-        
+
         /// <summary>Header data</summary>
         public RenderMeshHeader Header;
-        
+
         /// <summary>Vertex buffer descriptors</summary>
         public VertexBufferDescriptor[] VertexBuffers;
-        
+
         /// <summary>Index buffer descriptors</summary>
         public IndexBufferDescriptor[] IndexBuffers;
-        
+
         /// <summary>Vertex elements</summary>
         public VertexElementDescriptor[][] VertexElements;
 
@@ -215,26 +215,23 @@ namespace TankLib.Chunks {
         ///     buffer -> stream -> vertex -> element
         /// </summary>
         public object[][][][] Stride; // buffer -> stream -> vertex -> element
-        
+
         /// <summary>Submesh descriptions</summary>
         public SubmeshDescriptor[] SubmeshDescriptors;
-        
+
         /// <summary>Parsed submeshes</summary>
         public Submesh[] Submeshes;
-        
-        // todo:...
-        //public byte HighestLOD;
 
         public void Parse(Stream input) {
             using (BinaryReader reader = new BinaryReader(input)) {
                 Header = reader.Read<RenderMeshHeader>();
-                
+
                 SubmeshDescriptors = new SubmeshDescriptor[Header.SubmeshCount];
                 VertexBuffers = new VertexBufferDescriptor[Header.VertexBufferDescriptorCount];
                 VertexElements = new VertexElementDescriptor[Header.VertexBufferDescriptorCount][];
                 IndexBuffers = new IndexBufferDescriptor[Header.IndexBufferDescriptorCount];
                 Stride = new object[Header.VertexBufferDescriptorCount][][][];
-                
+
                 ParseVBO(reader);
                 ParseIBO(reader);
                 ParseSubmesh(reader);
@@ -242,7 +239,7 @@ namespace TankLib.Chunks {
                 GenerateMeshes(reader);
             }
         }
-        
+
         #region Parser Subfunctions
         private void ParseVBO(BinaryReader reader) {
             reader.BaseStream.Position = Header.VertexBufferDesciptorPointer;
@@ -300,7 +297,7 @@ namespace TankLib.Chunks {
                     {
                         Console.Out.Write($"{element.Type} {element.Format} {element.Index} {element.Offset}");
                     }*/
-                    
+
                     Stride[i][j] = new object[vbo.VertexCount][];
                     reader.BaseStream.Position = offset[j];
                     for (int k = 0; k < vbo.VertexCount; ++k) {
@@ -350,20 +347,20 @@ namespace TankLib.Chunks {
         /// <summary>Generate <see cref="Submesh"/> objects</summary>
         private void GenerateMeshes(BinaryReader reader) {
             Submeshes = new Submesh[SubmeshDescriptors.Length];
-            
+
             for (int i = 0; i < SubmeshDescriptors.Length; ++i) {
                 SubmeshDescriptor submeshDescriptor = SubmeshDescriptors[i];
                 //VertexBufferDescriptor vbo = VertexBuffers[submeshDescriptor.VertexBuffer];
                 IndexBufferDescriptor ibo = IndexBuffers[submeshDescriptor.IndexBuffer];
                 byte uvCount = GetMaxIndex(VertexElements[submeshDescriptor.VertexBuffer], teShaderInstance.ShaderInputUse.TexCoord);
-                
+
                 Submesh submesh = new Submesh(submeshDescriptor, uvCount);
-                
+
                 //Console.Out.WriteLine($"SUBMESH: ptr {ibo.DataStreamPointer} indexstart: {submeshDescriptor.IndexStart} {submeshDescriptor.VertexStart} {submeshDescriptor.VerticesToDraw}");
                 reader.BaseStream.Position = ibo.DataStreamPointer + submeshDescriptor.IndexStart * 2;
                 Dictionary<int, ushort> indexRemap = new Dictionary<int, ushort>();
                 Dictionary<int, int> indexRemapInvert = new Dictionary<int, int>();
-                
+
                 // todo: make this cleaner
                 for (int j = 0; j < submeshDescriptor.IndicesToDraw; j++) {
                     ushort index = reader.ReadUInt16();
@@ -378,7 +375,7 @@ namespace TankLib.Chunks {
 
                     submesh.Indices[j] = newIndex;
                 }
-                
+
                 VertexElementDescriptor[][] elements = SplitVBE(VertexElements[submeshDescriptor.VertexBuffer]);
                 for (int j = 0; j < Stride[submeshDescriptor.VertexBuffer].Length; ++j)
                 for (int k = 0; k < submeshDescriptor.VerticesToDraw; ++k) {

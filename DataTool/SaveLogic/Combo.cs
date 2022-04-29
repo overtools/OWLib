@@ -333,19 +333,17 @@ namespace DataTool.SaveLogic {
             bool convertModels = true;
             bool doRefpose = false;
             bool doStu = false;
-            byte lod = 1;
 
             if (flags is ExtractFlags extractFlags) {
                 convertModels = !extractFlags.RawModels && !extractFlags.Raw;
                 doRefpose = extractFlags.ExtractRefpose;
                 doStu = extractFlags.ExtractModelStu;
-                lod = extractFlags.LOD;
                 if (extractFlags.SkipModels) return;
             }
 
             FindLogic.Combo.ModelAsset modelInfo = info.m_info.m_models[modelGUID];
             string modelDirectory = Path.Combine(path, "Models", modelInfo.GetName());
-            
+
             //Console.Out.WriteLine($"save model. {modelGUID:X16}");
 
             if (convertModels) {
@@ -356,8 +354,30 @@ namespace DataTool.SaveLogic {
                     CreateDirectoryFromFile(modelPath);
 
                     teChunkedData chunkedData = new teChunkedData(modelStream);
+                    var modelChunk = chunkedData.GetChunk<teModelChunk_Model>();
 
-                    OverwatchModel model = new OverwatchModel(chunkedData, modelInfo.m_GUID, (sbyte) lod);
+                    var hasStream1 = (modelChunk.Header.m_104 & 0x7000) != 0;
+                    var hasStream2 = (modelChunk.Header.m_104 & 0x1C0) != 0;
+                    var hasStream3 = (modelChunk.Header.m_104 & 7) != 0;
+
+                    ulong streamedLodsModel = 0;
+                    if (hasStream3) {
+                        streamedLodsModel = modelInfo.m_GUID & 0xFFFFFFF7FFFFFFFF | 0x600000000;
+                    } else if (hasStream2) {
+                        streamedLodsModel = modelInfo.m_GUID & 0xFFFFFFF5FFFFFFFF | 0x400000000;
+                    } else if (hasStream1) {
+                        streamedLodsModel = modelInfo.m_GUID & 0xFFFFFFF3FFFFFFFF | 0x200000000;
+                    }
+
+                    StreamingLodsInfo streamedLods = null;
+                    if (streamedLodsModel != 0) {
+                        using (Stream streamingLodStream = OpenFile(streamedLodsModel)) {
+                            teChunkedData streamingLodChunks = new teChunkedData(streamingLodStream);
+                            streamedLods = new StreamingLodsInfo(streamingLodChunks);
+                        }
+                    }
+
+                    OverwatchModel model = new OverwatchModel(chunkedData, modelInfo.m_GUID, streamedLods);
                     if (modelInfo.m_modelLooks.Count > 0) {
                         FindLogic.Combo.ModelLookAsset modelLookInfo = info.m_info.m_modelLooks[modelInfo.m_modelLooks.First()];
                         model.ModelLookFileName = Path.Combine("ModelLooks",

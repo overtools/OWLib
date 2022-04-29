@@ -726,11 +726,18 @@ namespace DataTool.FindLogic {
                     Find(info, material.Header.MaterialData, replacements, materialContext);
                     break;
                 }
-                case 0x118: // streamed lods model???
+                case 0x118: // something model...
                 case 0xC: {
                     if (info.m_models.ContainsKey(guid)) break;
                     ModelAsset modelInfo = new ModelAsset(guid);
                     info.m_models[guid] = modelInfo;
+
+                    /*teModelChunk_STU stu = chunkedData.GetChunk<teModelChunk_STU>();
+                    if (stu != null) {
+                        Find(info, stu.StructuredData.m_37ED05D0, replacements, context);
+                        Find(info, stu.StructuredData.m_AD47190C, replacements, context);
+                    }*/
+
                     break;
                 }
                 case 0xD:

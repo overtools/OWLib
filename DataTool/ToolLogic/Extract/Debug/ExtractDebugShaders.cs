@@ -50,27 +50,30 @@ namespace DataTool.ToolLogic.Extract.Debug {
             }
 
             string path = Path.Combine(basePath, container);
-            
-            
+
+
             IO.WriteFile(0x0C008000CAE5C31B, path); // failing tex. 0 payloads. but data
             IO.WriteFile(0x0D00000000000F5B, path); // tracer model (idk which)
             IO.WriteFile(0x0D0000000000302E, path); // tracer model 2 (idk which)
             IO.WriteFile(0x0D00000000000413, path); // tracer model 3 (idk which)
             IO.WriteFile(0x0D000000000002B1, path); // tracer model 4 (main)
             IO.WriteFile(0x0D000000000006A0, path); // pharah main
-            
+
             IO.WriteFile(0x0D0000000000DCA7, path); // sojurn main
             IO.WriteFile(0x0D0000000000DCA8, path); // sojurn 1p
-            
+
+            IO.WriteFile(0xD0000000000D748, path); // tracer new
+            IO.WriteFile(0xD0000020000D748, path); // tracer new lod
+
             IO.WriteFile(0x0E8800000000000F, path); // lod streaming model.... omnic waiter? donk
-            
+
             FindLogic.Combo.ComboInfo comboInfo = new FindLogic.Combo.ComboInfo();
             FindLogic.Combo.Find(comboInfo, 0x0C00000000035A3D); // toronto broken mips
             FindLogic.Combo.Find(comboInfo, 0x0C0000000001B1D0); // more broken mips
             FindLogic.Combo.Find(comboInfo, 0x0C0000000002C94F); // kanezaka cube
             var context = new Combo.SaveContext(comboInfo);
-            Combo.SaveLooseTextures(null, path, context);
-            
+            Combo.SaveLooseTextures(flags, path, context);
+
             //return;
 
             //TestModelLook(0x98000000000682F); // Chateau - Lake
@@ -260,7 +263,7 @@ namespace DataTool.ToolLogic.Extract.Debug {
                         foreach (var texture in materialData.Textures) {
                             FindLogic.Combo.Find(comboInfo, texture.TextureGUID);
                             comboInfo.SetTextureName(texture.TextureGUID, texture.NameHash.ToString("X8")+".tif");
-                            
+
                             IO.WriteFile(texture.TextureGUID, rawPath);
                             IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 1), rawPath);
                             IO.WriteFile(teTexture.GetPayloadGUID2(texture.TextureGUID, 2), rawPath);
@@ -295,10 +298,10 @@ namespace DataTool.ToolLogic.Extract.Debug {
             /*string rawPath = Path.Combine(path, "raw");
             IO.WriteFile(guid, rawPath);
             return;*/
-            
+
             teShaderInstance instance = new teShaderInstance(IO.OpenFile(guid));
             teShaderCode shaderCode = new teShaderCode(IO.OpenFile(instance.Header.ShaderCode));
-            
+
             if (name == null) {
                 name = teResourceGUID.AsString(guid);
             }
