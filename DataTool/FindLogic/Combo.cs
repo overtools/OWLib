@@ -525,6 +525,7 @@ namespace DataTool.FindLogic {
                             ComboContext childContext = new ComboContext {
                                 ChildEntityIdentifier = childEntityDefinition.m_49F782CE
                             };
+
                             Find(info, (ulong) childEntityDefinition.m_child, replacements, childContext);
                             if (info.m_entities.ContainsKey(GetReplacement((ulong) childEntityDefinition.m_child, replacements))) {
                                 // sometimes the entity can't be loaded
@@ -537,6 +538,7 @@ namespace DataTool.FindLogic {
                         STUEntityComponent[] components = entityDefinition.m_componentMap.Values
                             .OrderBy(x => x?.GetType() != typeof(STUModelComponent) &&
                                           x?.GetType() != typeof(STUEffectComponent)).ToArray();
+
                         // STUModelComponent first because we need model for context
                         // STUEffectComponent second(ish) because we need effect for context
                         foreach (STUEntityComponent component in components) {
@@ -679,6 +681,7 @@ namespace DataTool.FindLogic {
                         materialInfo = new MaterialAsset(guid) {
                             m_materialDataGUID = GetReplacement(material.Header.MaterialData, replacements)
                         };
+
                         info.m_materials[guid] = materialInfo;
                     } else {
                         materialInfo = info.m_materials[guid];
@@ -726,16 +729,17 @@ namespace DataTool.FindLogic {
                     EffectParser.EffectInfo effectInfo = new EffectParser.EffectInfo {
                         GUID = guid
                     };
+
                     effectInfo.SetupEffect();
 
 
                     if (guidType == 0xD || guidType == 0x8E) {
-                        info.m_effects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
+                        info.m_effects[guid] = new EffectInfoCombo(guid) { Effect = effectInfo };
                         if (context.Entity != 0) {
                             info.m_entities[context.Entity].m_effects.Add(guid);
                         }
                     } else if (guidType == 0x8F) {
-                        info.m_animationEffects[guid] = new EffectInfoCombo(guid) {Effect = effectInfo};
+                        info.m_animationEffects[guid] = new EffectInfoCombo(guid) { Effect = effectInfo };
                         //if (context.Entity != 0) {
                         //    info.Entities[context.Entity].m_animationEffects.Add(guid);
                         //}
@@ -754,6 +758,7 @@ namespace DataTool.FindLogic {
                                 ComboContext dmceContext = new ComboContext {
                                     Model = GetReplacement(model.Header.Model, replacements)
                                 };
+
                                 Find(info, model.Header.Model, replacements, dmceContext);
                                 Find(info, model.Header.ModelLook, replacements, dmceContext);
                                 Find(info, model.Header.Animation, replacements, dmceContext);
@@ -761,7 +766,8 @@ namespace DataTool.FindLogic {
                                 Find(info, effect.Header.Effect, replacements); // clean context
                             } else if (chunk.Value is teEffectComponentEntity entity) {
                                 ComboContext neceContext =
-                                    new ComboContext {ChildEntityIdentifier = entity.Header.Identifier};
+                                    new ComboContext { ChildEntityIdentifier = entity.Header.Identifier };
+
                                 Find(info, entity.Header.Entity, replacements, neceContext);
                             } else if (chunk.Value is teEffectComponentEntityControl entityControl) {
                                 if (entityControl.Header.Animation == 0) continue;
@@ -779,7 +785,7 @@ namespace DataTool.FindLogic {
                             } else if (chunk.Value is teEffectChunkShaderSetup shaders) {
                                 if (lastParticleModel == 0) TankLib.Helpers.Logger.Debug("Combo", "ShaderSetup with no model. textures will get lost");
 
-                                ComboContext ssceContext = new ComboContext {Model = lastParticleModel};
+                                ComboContext ssceContext = new ComboContext { Model = lastParticleModel };
                                 Find(info, shaders.Header.Material, replacements, ssceContext);
                                 Find(info, shaders.Header.MaterialData, replacements, ssceContext);
                             }
@@ -823,7 +829,6 @@ namespace DataTool.FindLogic {
                     }
 
                     if (modelLook.m_materialEffects != null) {
-
                         var matEffectContext = new ComboContext {
                             Model = context.Model
                             // this will be a loose material
@@ -833,8 +838,7 @@ namespace DataTool.FindLogic {
                             Find(info, materialEffect.m_materialEffect, replacements, matEffectContext);
                             Find(info, materialEffect.m_82F3DCE0, replacements, matEffectContext);
 
-                            if (materialEffect.m_materials != null)
-                            {
+                            if (materialEffect.m_materials != null) {
                                 foreach (var material in materialEffect.m_materials) {
                                     Find(info, material.m_material, replacements, matEffectContext);
                                     Find(info, material.m_5753874F, replacements, matEffectContext);
@@ -1058,6 +1062,7 @@ namespace DataTool.FindLogic {
                                 GUIDx03C = voiceLineInstance.m_effectHardpoint,
                                 Subtitle = voiceLineInstance.m_43C90056
                             };
+
                         Find(info, voiceLineInstanceInfo.Subtitle, replacements, context);
                         if (voiceLineInstance.m_voiceLineRuntime != null) {
                             voiceLineInstanceInfo.VoiceLineSet = voiceLineInstance.m_voiceLineRuntime.m_set;
@@ -1080,9 +1085,9 @@ namespace DataTool.FindLogic {
 
                         if (voiceLineInstance.m_AF226247 != null) {
                             foreach (var soundFile in new[] {
-                                voiceLineInstance.m_AF226247.m_1485B834, voiceLineInstance.m_AF226247.m_798027DE,
-                                voiceLineInstance.m_AF226247.m_A84AA2B5, voiceLineInstance.m_AF226247.m_D872E45C
-                            }) {
+                                         voiceLineInstance.m_AF226247.m_1485B834, voiceLineInstance.m_AF226247.m_798027DE,
+                                         voiceLineInstance.m_AF226247.m_A84AA2B5, voiceLineInstance.m_AF226247.m_D872E45C
+                                     }) {
                                 if (soundFile == null) continue;
                                 voiceLineInstanceInfo.SoundFiles.Add(soundFile.m_3C099E86);
                                 Find(info, soundFile.m_3C099E86, replacements, context);
