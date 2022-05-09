@@ -76,8 +76,9 @@ namespace DataTool.SaveLogic {
                         FindLogic.Combo.Find(Info, entity.Header.EntityDefinition);
 
                         var modelComponent = GetInstance<STUModelComponent>(entity.Header.EntityDefinition);
-                        modelComponents[i] = modelComponent;
-                        if (modelComponent != null) {
+
+                        if (modelComponent != null && modelComponent.m_model != 0) {
+                            modelComponents[i] = modelComponent;
                             entitiesWithModelCount += 1;
                         }
 
