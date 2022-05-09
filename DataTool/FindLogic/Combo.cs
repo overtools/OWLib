@@ -833,9 +833,12 @@ namespace DataTool.FindLogic {
                             Find(info, materialEffect.m_materialEffect, replacements, matEffectContext);
                             Find(info, materialEffect.m_82F3DCE0, replacements, matEffectContext);
 
-                            foreach (var material in materialEffect.m_materials) {
-                                Find(info, material.m_material, replacements, matEffectContext);
-                                Find(info, material.m_5753874F, replacements, matEffectContext);
+                            if (materialEffect.m_materials != null)
+                            {
+                                foreach (var material in materialEffect.m_materials) {
+                                    Find(info, material.m_material, replacements, matEffectContext);
+                                    Find(info, material.m_5753874F, replacements, matEffectContext);
+                                }
                             }
                         }
                     }
