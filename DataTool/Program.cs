@@ -33,7 +33,8 @@ namespace DataTool {
 
         public static ToolFlags Flags;
         public static uint BuildVersion;
-        public static bool IsPTR => Client?.AgentProduct?.Uid == "prometheus_test";
+        public static bool IsPTR => Client?.ProductCode == "prot";
+        public static bool IsBeta => Client?.ProductCode == "prob";
 
         public static string[] ValidLanguages = {"deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "zhCN", "zhTW"};
 
@@ -251,14 +252,16 @@ namespace DataTool {
             if (args.TextLanguage != "enUS")
                 Logger.Warn("Core", "Reminder! When extracting data in other languages, the names of the heroes/skins/etc must be in the language you have chosen.");
 
-            if (Client.AgentProduct.ProductCode != "pro")
-                Logger.Warn("Core", $"The branch \"{Client.AgentProduct.ProductCode}\" is not supported!. This might result in failure to load. Proceed with caution.");
+            if (Client.ProductCode != "pro")
+                Logger.Warn("Core", $"The branch \"{Client.ProductCode}\" is not supported!. This might result in failure to load. Proceed with caution.");
 
-            var clientLanguages = Client.AgentProduct.Settings.Languages.Select(x => x.Language).ToArray();
-            if (!clientLanguages.Contains(args.TextLanguage))
-                Logger.Warn("Core", "Battle.Net Agent reports that text language {0} is not installed.", args.TextLanguage);
-            else if (!clientLanguages.Contains(args.SpeechLanguage))
-                Logger.Warn("Core", "Battle.Net Agent reports that speech language {0} is not installed.", args.SpeechLanguage);
+            if (Client.AgentProduct != null) {
+                var clientLanguages = Client.AgentProduct.Settings.Languages.Select(x => x.Language).ToArray();
+                if (!clientLanguages.Contains(args.TextLanguage))
+                    Logger.Warn("Core", "Battle.Net Agent reports that text language {0} is not installed.", args.TextLanguage);
+                else if (!clientLanguages.Contains(args.SpeechLanguage))
+                    Logger.Warn("Core", "Battle.Net Agent reports that speech language {0} is not installed.", args.SpeechLanguage);
+            }
 
             TankHandler = Client.ProductHandler as ProductHandler_Tank;
             if (TankHandler == null) {

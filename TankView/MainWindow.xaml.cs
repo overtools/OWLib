@@ -283,7 +283,7 @@ namespace TankView {
                     ViewContext.Send(delegate { IsReady = true; NotifyPropertyChanged(nameof(IsReady)); }, null);
                 }
 
-                var productCode = DataTool.Program.Client.AgentProduct.ProductCode;
+                var productCode = DataTool.Program.Client.ProductCode;
                 if (productCode != null && productCode != "pro") {
                     MessageBox.Show($"The branch \"{productCode}\" is not supported!\nThis might result in failure to load.\nProceed with caution.", "Unsupported Branch", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                 }
