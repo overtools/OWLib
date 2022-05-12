@@ -66,21 +66,36 @@ namespace DataTool.ToolLogic.Extract {
                         continue;
                     }
 
-                    if (skinTheme.m_ECCC4A5D == null) {
-                        Logger.Log($"Can't save {unlock.Name} as it has no image");
-                        continue;
-                    }
 
-                    FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-                    FindLogic.Combo.Find(info, skinTheme.m_ECCC4A5D);
                     var filePath = Path.Combine(basePath, Container, heroCleanName, "Skins", unlock.IsEsportsUnlock ? "OWL" : String.Empty);
+                    var replacements = SaveLogic.Unlock.SkinTheme.GetReplacements(skinTheme);
+                    FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
                     var saveContext = new Combo.SaveContext(info);
 
-                    Combo.SaveTexture(flags, filePath, saveContext, skinTheme.m_ECCC4A5D, new Combo.SaveTextureOptions {
-                        FileTypeOverride = "png",
-                        ProcessIcon = true,
-                        FileNameOverride = $"{teResourceGUID.Index(unlock.GUID)} - {IO.GetValidFilename(unlock.Name)}"
-                    });
+                    foreach (STU_1A496D3C tex in hero.STU.m_8203BFE1) { // find GUI
+                        if (tex.m_id != 0x0D800000000040C8) {
+                            continue;
+                        }
+
+                        var guid = FindLogic.Combo.GetReplacement(tex.m_texture, replacements);
+                        FindLogic.Combo.Find(info, guid);
+                        info.SetTextureOptions(guid, new Combo.SaveTextureOptions {
+                            FileTypeOverride = "png",
+                            ProcessIcon = true,
+                            FileNameOverride = $"{teResourceGUID.Index(unlock.GUID)} - Icon - {IO.GetValidFilename(unlock.Name)}"
+                        });
+                    }
+
+                    if (skinTheme.m_ECCC4A5D != null) {
+                        FindLogic.Combo.Find(info, skinTheme.m_ECCC4A5D);
+                        info.SetTextureOptions(skinTheme.m_ECCC4A5D, new Combo.SaveTextureOptions {
+                            FileTypeOverride = "png",
+                            ProcessIcon = true,
+                            FileNameOverride = $"{teResourceGUID.Index(unlock.GUID)} - Portrait - {IO.GetValidFilename(unlock.Name)}"
+                        });
+                    }
+
+                    Combo.SaveLooseTextures(flags, filePath, saveContext);
                 }
             }
         }

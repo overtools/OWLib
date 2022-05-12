@@ -103,6 +103,18 @@ namespace DataTool.FindLogic {
                 asset.m_processIcon = true;
             }
 
+            /// <summary>
+            /// Sets save texture options for a texture, these will be used when saving the texture.
+            /// </summary>
+            /// <remarks>NOTE: If using replacements, these wont work as the guids will be different, in order for these to work, you need to set the options on the replaced guid</remarks>
+            public void SetTextureOptions(ulong texture, SaveLogic.Combo.SaveTextureOptions options) {
+                if (!m_textures.TryGetValue(texture, out var asset)) return;
+                asset.m_split = options.Split;
+                asset.m_fileType = options.FileTypeOverride;
+                asset.m_processIcon = options.ProcessIcon;
+                asset.m_name = options.FileNameOverride;
+            }
+
             public void SetTextureSplit(ulong texture) {
                 if (!m_textures.TryGetValue(texture, out var asset)) return;
                 asset.m_split = true;
