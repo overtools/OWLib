@@ -1,4 +1,4 @@
-﻿using DataTool.Flag;
+﻿/*using DataTool.Flag;
 using TACTLib.Core;
 using TACTLib.Core.Product.Tank;
 
@@ -16,3 +16,4 @@ namespace DataTool.ToolLogic.Dbg {
         }
     }
 }
+*/

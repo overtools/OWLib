@@ -10,10 +10,10 @@ dotnet_csproj:
 before_build:
   - cmd: git submodule update --init --recursive
   - cmd: dotnet --version
-  - cmd: dotnet restore OverwatchToolchain.sln --verbosity m
+  - cmd: dotnet restore OverwatchToolchain.sln --verbosity m -r win7-x64
 build_script:
-  - cmd: dotnet publish --configuration Release -r win7-x64 --self-contained false -o dist/Release
-  - cmd: dotnet publish --configuration Debug -r win7-x64 --self-contained false -o dist/Debug
+  - cmd: dotnet publish --configuration ReleasePublish -r win7-x64 -o dist/Release
+  - cmd: dotnet publish --configuration DebugPublish -r win7-x64 -o dist/Debug
 branches:
   only:
     - master
