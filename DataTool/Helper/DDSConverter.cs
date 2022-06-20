@@ -36,12 +36,7 @@ namespace DataTool.Helper {
                 var frame = frameNr ?? 0;
 
                 if (TexHelper.Instance.IsCompressed(info.Format)) {
-                    ScratchImage temp;
-                    if (info.ArraySize == 1 || !isMultiFrame) {
-                        temp = scratch.Decompress(frame, DXGI_FORMAT.UNKNOWN);
-                    } else {
-                        temp = scratch.Decompress(DXGI_FORMAT.UNKNOWN);
-                    }
+                    var temp = scratch.Decompress(DXGI_FORMAT.UNKNOWN);
 
                     scratch.Dispose();
                     scratch = temp;

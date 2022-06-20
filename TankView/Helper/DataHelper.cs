@@ -128,9 +128,9 @@ namespace TankView.Helper {
         internal static teTexture LoadTexture(ulong guid, Stream fileStream = null) {
             teTexture texture = new teTexture(fileStream ?? IOHelper.OpenFile(guid));
             if (texture.PayloadRequired) {
-                ulong payload = texture.GetPayloadGUID(guid, 0);
+                ulong payload = texture.GetPayloadGUID(guid, 1);
                 if (IOHelper.HasFile(payload)) {
-                    texture.LoadPayload(IOHelper.OpenFile(payload), 0);
+                    texture.LoadPayload(IOHelper.OpenFile(payload), 1);
                 } else {
                     return null;
                 }

@@ -68,8 +68,15 @@ namespace TankView.ViewModel {
 
             switch (DataHelper.GetDataType(value)) {
                 case DataHelper.DataType.Image: {
-                    PreviewSource = new RGBABitmapSource(DataHelper.ConvertDDS(value.GUID, DXGI_FORMAT.R8G8B8A8_UNORM, 0, out var width, out var height), width, height);
-                    PreviewControl = new PreviewDataImage();
+                    var buffer = DataHelper.ConvertDDS(value.GUID, DXGI_FORMAT.R8G8B8A8_UNORM, 0, out var width, out var height);
+                    if (!buffer.IsEmpty) {
+                        PreviewSource = new RGBABitmapSource(buffer, width, height);
+                        PreviewControl = new PreviewDataImage();
+                    } else {
+                        // i'm lazy
+                        PreviewSource = "failed to decode image";
+                        PreviewControl = new PreviewDataString();
+                    }
                 }
                     break;
                 case DataHelper.DataType.Sound: {
