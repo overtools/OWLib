@@ -18,8 +18,18 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet restore OverwatchToolchain.sln --verbosity m -r win7-x64
+    - name: Build Release
+      run: dotnet publish --configuration ReleasePublish -r win7-x64 -o dist/Release
+    - name: Build Debug
+      run: dotnet publish --configuration DebugPublish -r win7-x64 -o dist/Debug
+    - name: Upload Release build
+      uses: actions/upload-artifact@v3
+      with:
+        name: Release
+        path: dist/Release
+    - name: Upload debug build
+      uses: actions/upload-artifact@v3
+      with:
+        name: Debug
+        path: dist/Debug
