@@ -62,6 +62,10 @@ namespace DataTool.DataModels.Hero {
         }
 
         private void Init(STUHero hero, ulong key = default) {
+            if (hero == null) {
+                return;
+            }
+
             STU = hero;
             GUID = (teResourceGUID) key;
             Name = GetCleanName(hero);

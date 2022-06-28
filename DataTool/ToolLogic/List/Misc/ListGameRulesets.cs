@@ -54,15 +54,17 @@ namespace DataTool.ToolLogic.List.Misc {
 
                 // Generate game rulesets schemas that are used for this gamemode
                 var rulesetMapping = new Dictionary<teResourceGUID, RulesetSchemaMapping>();
-                foreach (var guid in ruleset.GameMode.GameMode.GameRulesetSchemas) {
-                    var rulesetSchema = new GameRulesetSchema(guid);
+                if (ruleset.GameMode.GameMode.GameRulesetSchemas != null) {
+                    foreach (var guid in ruleset.GameMode.GameMode.GameRulesetSchemas) {
+                        var rulesetSchema = new GameRulesetSchema(guid);
 
-                    foreach (var rulesetSchemaEntry in rulesetSchema?.Entries) {
-                        rulesetMapping[rulesetSchemaEntry.Virtual01C] = new RulesetSchemaMapping {
-                            GUID = rulesetSchemaEntry.Virtual01C,
-                            Name = rulesetSchemaEntry.Name,
-                            Value = rulesetSchemaEntry.Value
-                        };
+                        foreach (var rulesetSchemaEntry in rulesetSchema?.Entries) {
+                            rulesetMapping[rulesetSchemaEntry.Virtual01C] = new RulesetSchemaMapping {
+                                GUID = rulesetSchemaEntry.Virtual01C,
+                                Name = rulesetSchemaEntry.Name,
+                                Value = rulesetSchemaEntry.Value
+                            };
+                        }
                     }
                 }
 

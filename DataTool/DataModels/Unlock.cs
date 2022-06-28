@@ -57,6 +57,12 @@ namespace DataTool.DataModels {
         [DataMember]
         public teResourceGUID SkinThemeGUID;
 
+        [DataMember]
+        public bool IsEsportsUnlock;
+
+        [DataMember]
+        public string EsportsTeam;
+
         /// <summary>
         /// Array of categories the Unlock belongs to that the Hero Gallery & Career Profile filtering options use
         /// </summary>
@@ -71,12 +77,6 @@ namespace DataTool.DataModels {
 
         [DataMember]
         public Enum_BABC4175 LootBoxType;
-
-        [DataMember]
-        public bool IsEsportsUnlock;
-
-        [DataMember]
-        public string EsportsTeam;
 
         /// <summary>
         /// Internal Unlock STU
@@ -93,6 +93,7 @@ namespace DataTool.DataModels {
         // These types are specific to certain unlocks so don't show them unless we're on that unlock
         public bool ShouldSerializeLootBoxType() => Type == UnlockType.Lootbox;
         public bool ShouldSerializeSkinThemeGUID() => Type == UnlockType.Skin;
+        public bool ShouldSerializeIsEsportsUnlock() => IsEsportsUnlock || Type == UnlockType.Skin;
         public bool ShouldSerializeEsportsTeam() => IsEsportsUnlock;
         public bool ShouldSerializeCurrency() => Type == UnlockType.CompetitiveCurrency || Type == UnlockType.Currency || Type == UnlockType.OWLToken;
 

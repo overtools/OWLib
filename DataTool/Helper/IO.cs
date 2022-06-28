@@ -307,7 +307,7 @@ namespace DataTool.Helper {
         }
 
         private static readonly string[] _sizeSuffixes = { "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
-        private const string _sizeFormatTemplate = "{0}{1:0.#} {2}";
+        private const string _sizeFormatTemplate = "{0}{1:0.##} {2}";
 
         public static string FormatByteSize(long size) {
             if (size == 0) {

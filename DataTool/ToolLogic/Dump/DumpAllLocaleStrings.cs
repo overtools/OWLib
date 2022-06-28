@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DataTool.Flag;
 using DataTool.JSON;
 using DataTool.ToolLogic.List;
@@ -31,7 +32,7 @@ namespace DataTool.ToolLogic.Dump {
                 try {
                     InitStorage(language);
 
-                    foreach (var key in TrackedFiles[0x7C]) {
+                    foreach (var key in TrackedFiles[0x7C].OrderBy(teResourceGUID.Index)) {
                         var guid = (teResourceGUID) key;
                         if (!@return.ContainsKey(guid))
                             @return[guid] = new Dictionary<string, string>();

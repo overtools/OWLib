@@ -44,7 +44,7 @@ namespace DataTool.DataModels {
         public void Init(STUAchievement achievement, ulong key = default) {
             GUID = (teResourceGUID) key;
             Name = GetString(achievement.m_name);
-            AchievementName = achievement.m_4E291DCC.Value;
+            AchievementName = achievement.m_4E291DCC?.Value;
             Description = GetString(achievement.m_description);
 
             //Trophy = achievement.m_trophy;
