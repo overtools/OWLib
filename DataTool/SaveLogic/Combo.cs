@@ -465,8 +465,8 @@ namespace DataTool.SaveLogic {
             string textureDirectory = Path.Combine(path, "Textures");
 
             if (materialDataInfo.m_textureMap != null) {
-                foreach (KeyValuePair<ulong, uint> texture in materialDataInfo.m_textureMap) {
-                    SaveTexture(flags, textureDirectory, info, texture.Key);
+                foreach (var (_, guid) in materialDataInfo.m_textureMap) {
+                    SaveTexture(flags, textureDirectory, info, guid);
                 }
             }
 

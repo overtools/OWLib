@@ -289,7 +289,7 @@ namespace DataTool.FindLogic {
         }
 
         public class MaterialDataAsset : ComboAsset {
-            public Dictionary<ulong, uint> m_textureMap;
+            public Dictionary<uint, ulong> m_textureMap;
             public Dictionary<uint, byte[]> m_staticInputMap;
 
             public MaterialDataAsset(ulong guid) : base(guid) { }
@@ -1203,10 +1203,10 @@ namespace DataTool.FindLogic {
                     teMaterialData materialData = new teMaterialData(OpenFile(guid));
 
                     if (materialData.Textures != null) {
-                        materialDataInfo.m_textureMap = new Dictionary<ulong, uint>();
+                        materialDataInfo.m_textureMap = new Dictionary<uint, ulong>();
                         foreach (teMaterialData.Texture matDataTex in materialData.Textures) {
                             Find(info, matDataTex.TextureGUID, replacements, materialDataContext);
-                            materialDataInfo.m_textureMap[matDataTex.TextureGUID] = matDataTex.NameHash;
+                            materialDataInfo.m_textureMap[matDataTex.NameHash] = matDataTex.TextureGUID;
                         }
                     }
 

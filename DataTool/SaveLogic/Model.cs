@@ -91,7 +91,7 @@ namespace DataTool.SaveLogic {
                     }
 
                     if (materialDataInfo.m_textureMap != null) {
-                        foreach (var (guid, hash) in materialDataInfo.m_textureMap) {
+                        foreach (var (hash, guid) in materialDataInfo.m_textureMap) {
                             FindLogic.Combo.TextureAsset textureInfo = Info.m_textures[guid];
                             writer.Write(Combo.GetScratchRelative(textureInfo.m_GUID, MaterialDir, Path.Combine("..", "Textures", textureInfo.GetNameIndex() + $".{Format}")));
                             writer.Write(hash);
