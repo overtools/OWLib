@@ -5,7 +5,7 @@ using TankLib.Helpers;
 namespace TankLib {
     /// <summary>Tank Material Data, file type 0B3</summary>
     public class teMaterialData {
-        [StructLayout(LayoutKind.Sequential, Pack = 4)] 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct MatDataHeader {
             /// <summary>Offset to static input definitions</summary>
             public long StaticInputsOffset;  // 0
@@ -17,7 +17,7 @@ namespace TankLib {
             public short StaticInputCount;  // 28
 
             public short Unk;
-            
+
             /// <summary>Texture definition count</summary>
             public byte TextureCount;
             public byte Offset4Count;
@@ -36,21 +36,21 @@ namespace TankLib {
             /// <summary>Texture GUID</summary>
             /// <remarks>File type 004</remarks>
             public teResourceGUID TextureGUID;
-        
+
             /// <summary>CRC32 of input name</summary>
             /// <remarks>Matches up on teShaderInstance</remarks>
             public uint NameHash;
-        
+
             /// <summary>Unknown flags</summary>
             public byte Flags;
         }
 
         /// <summary>Header data</summary>
         public MatDataHeader Header;
-        
+
         /// <summary>Texture definitions</summary>
         public Texture[] Textures;
-        
+
         /// <summary>Unknown definitions</summary>
         public Unknown[] Unknowns;
 
@@ -102,14 +102,14 @@ namespace TankLib {
             public short Offset;
             public short Size;
         }
-        
+
         public HeaderData Header;
         public byte[] Data;
 
         public unsafe teMaterialDataStaticInput(BinaryReader reader) {
             using (var rms = new RememberMeStream(reader, sizeof(HeaderData))) {
                 Header = reader.Read<HeaderData>();
-                reader.BaseStream.Position = rms.Position + Header.Offset;
+                reader.BaseStream.Position = rms.BasePosition + Header.Offset;
                 Data = reader.ReadBytes(Header.Size);
             }
         }
