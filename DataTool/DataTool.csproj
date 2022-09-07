@@ -49,15 +49,21 @@
     <PackageReference Include="Utf8Json" Version="1.3.7" />
     <PackageReference Include="DragonLib" Version="1.1.5.1" />
   </ItemGroup>
-  <Target Name="SetSourceRevisionId" BeforeTargets="BeforeBuild">
+  <Target Name="SetSourceRevisionIdGit" BeforeTargets="BeforeBuild">
     <Exec Command="git describe --long --always --dirty --exclude=* --abbrev=8" ConsoleToMSBuild="True" IgnoreExitCode="False" ContinueOnError="True">
-      <Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput" />
+      <Output PropertyName="SourceRevisionIdGit" TaskParameter="ConsoleOutput" />
     </Exec>
     <OnError ExecuteTargets="SetSourceRevisionIdFallback" />
   </Target>
   <Target Name="SetSourceRevisionIdFallback">
     <PropertyGroup>
-      <SourceRevisionId>develop</SourceRevisionId>
+      <SourceRevisionIdGit>broken</SourceRevisionIdGit>
+    </PropertyGroup>
+  </Target>
+  <Target Name="SetSourceRevisionId" AfterTargets="SetSourceRevisionIdGit">
+    <PropertyGroup>
+      <GITHUB_RUN_NUMBER Condition="'$(GITHUB_RUN_NUMBER)' == ''">develop</GITHUB_RUN_NUMBER>
+      <SourceRevisionId>$(GITHUB_RUN_NUMBER)+$(SourceRevisionIdGit)</SourceRevisionId>
     </PropertyGroup>
   </Target>
 </Project>
