@@ -5,10 +5,7 @@
     <LangVersion>8</LangVersion>
     <PlatformTarget>x64</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Version>1.73.0.0</Version>
-    <AssemblyVersion>1.73.0.0</AssemblyVersion>
-    <FileVersion>1.73.0.0</FileVersion>
-    <InformationalVersion>develop</InformationalVersion>
+    <Version>1.74.0.0</Version>
     <Configurations>Debug;Release;ReleasePublish;DebugPublish</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' OR '$(Configuration)' == 'DebugPublish' ">
@@ -42,14 +39,25 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DirectXTexNet" Version="1.0.1" />
+    <PackageReference Include="DirectXTexNet" Version="1.0.3" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NUnit" Version="3.13.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.0" />
-    <PackageReference Include="SymSpell" Version="6.7.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+    <PackageReference Include="SymSpell" Version="6.7.2" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
     <PackageReference Include="DragonLib" Version="1.1.5.1" />
   </ItemGroup>
+  <Target Name="SetSourceRevisionId" BeforeTargets="BeforeBuild">
+    <Exec Command="git describe --long --always --dirty --exclude=* --abbrev=8" ConsoleToMSBuild="True" IgnoreExitCode="False" ContinueOnError="True">
+      <Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput" />
+    </Exec>
+    <OnError ExecuteTargets="SetSourceRevisionIdFallback" />
+  </Target>
+  <Target Name="SetSourceRevisionIdFallback">
+    <PropertyGroup>
+      <SourceRevisionId>develop</SourceRevisionId>
+    </PropertyGroup>
+  </Target>
 </Project>

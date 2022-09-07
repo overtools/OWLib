@@ -101,7 +101,7 @@ namespace TankLib {
             if (attrib == null) {
                 return file.Version;
             }
-            return file.Version + "-git-" + attrib.InformationalVersion;
+            return attrib.InformationalVersion;
         }
 
         public static List<Type> GetAssemblyTypes<T>(Assembly assembly) {
