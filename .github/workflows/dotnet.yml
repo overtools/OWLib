@@ -1,0 +1,35 @@
+name: TankLib
+on:
+    push:
+        branches: [ master ]
+    pull_request:
+        branches: [ master ]
+jobs:
+    build:
+        runs-on: windows-latest
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+                with:
+                    fetch-depth: 0
+                    submodules: 'recursive'
+            -   name: Install .NET Core 6
+                uses: actions/setup-dotnet@v1
+                with:
+                    dotnet-version: 6.0.x
+            -   name: Restore project
+                run: dotnet restore OverwatchToolchain.sln --verbosity m -r win7-x64
+            -   name: Build Release
+                run: dotnet publish --configuration ReleasePublish -r win7-x64 -o dist/Release
+            -   name: Upload Release
+                uses: actions/upload-artifact@v2
+                with:
+                    name: toolchain-release
+                    path: dist/Release
+            -   name: Build Debug
+                run: dotnet publish --configuration DebugPublish -r win7-x64 -o dist/Debug
+            -   name: Upload Debug
+                uses: actions/upload-artifact@v2
+                with:
+                    name: toolchain-debug
+                    path: dist/Debug
