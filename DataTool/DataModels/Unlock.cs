@@ -230,6 +230,15 @@ namespace DataTool.DataModels {
                 return UnlockType.Lootbox;
             }
 
+            if (type == typeof(STU_6A808718)) {
+                return UnlockType.WeaponCharm;
+            }
+
+            // dunno, contains a lootbox lol?
+            if (type == typeof(STU_1EB22BDB)) {
+                return UnlockType.Unknown;
+            }
+
             Logger.Debug("Unlock", $"Unknown unlock type ${type}");
             return UnlockType.Unknown;
         }
@@ -275,9 +284,13 @@ namespace DataTool.DataModels {
         WeaponSkin,
         Lootbox,
         PortraitFrame, // borders
-        Currency, // gold
+        Currency, // legacy credits
         CompetitiveCurrency, // competitive points
         OWLToken,
         HeroMod, // wot? unused?
+        OverwatchCoins,
+        WeaponCharm,
+        Souvenir,
+        Banner
     }
 }
