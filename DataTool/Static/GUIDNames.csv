@@ -49,6 +49,7 @@ D,078,MatchTalk,1
 5A,078,Resurrected,1
 81,078,Ultimate,1
 82,078,Ultimate,1
+83,078,Ultimate,1
 85,078,Ultimate,1
 93,078,Ultimate,1
 B7,078,Stagger,1
@@ -349,6 +350,25 @@ D22,078,StormRising/Conversations,1
 D23,078,StormRising/Conversations,1
 D24,078,StormRising/Conversations,1
 D25,078,StormRising/Conversations,1
+1D6,078,EnemyKilled/DeadEye,1
+11CE,078,EnemyKilled/CallMech,1
+11D7,078,Elimination,1
+; Voice line StateScript 01C ids,,,
+A809,01C,LongDistance,1
+A5FD,01C,NanoBoosted,1
+A697,01C,EnemyNanoBoosted,1
+A617,01C,UsingUltimate,1
+A5B5,01C,EnemyUsingUltimate,1
+9268,01C,EnemyInAir,1
+A776,01C,InAir,1
+A6FE,01C,MovingFast,1
+A753,01C,Jumped,1
+A81C,01C,LowHealth,1
+A752,01C,Melee,1
+A22A,01C,ZaryaUlt,1
+A6B2,01C,SigmaUlt,1
+9227,01C,Headshot,1
+92A4,01C,ReinhardtCharging,1
 ; Each 'set' of voicelines seem to be in a separate group?,Contains 1 per hero,Kinda weird,?
 5A0,078,Voicelines,1
 5A1,078,Voicelines,1
@@ -444,6 +464,9 @@ E89,078,Voicelines,1
 7A82,01C,Blizzard,1
 40A1,01C,Competitive,1
 7ACD,01C,ESports,1
+A03F,01C,BattlePass,1
+AD3F,01C,Shop,1
+AD37,01C,Season1,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
