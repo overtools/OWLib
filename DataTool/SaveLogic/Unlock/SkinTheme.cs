@@ -53,7 +53,8 @@ namespace DataTool.SaveLogic.Unlock {
 
             if (skin is STUSkinTheme skinTheme) {
                 info.m_processExistingEntities = true;
-                List<Dictionary<ulong, ulong>> weaponReplacementStack = new List<Dictionary<ulong, ulong>>();
+                // TODO: BROKE BY OW2
+                /*List<Dictionary<ulong, ulong>> weaponReplacementStack = new List<Dictionary<ulong, ulong>>();
                 for (var index = 0; index < skinTheme.m_heroWeapons.Length; index++) {
                     var weaponOverrideGUID = skinTheme.m_heroWeapons[index];
                     STUHeroWeapon heroWeapon = GetInstance<STUHeroWeapon>(weaponOverrideGUID);
@@ -71,7 +72,7 @@ namespace DataTool.SaveLogic.Unlock {
                     foreach (var pair in weaponReplacementStack[index].Where(pair => pair.Key != pair.Value && info.m_modelLooks.ContainsKey(pair.Value) && info.m_modelLooks[pair.Value].m_name == null)) {
                         info.SetModelLookName(pair.Value, $"{(STUWeaponType) index:G}-{teResourceGUID.Index(pair.Value):X}");
                     }
-                }
+                }*/
 
                 info.m_processExistingEntities = false;
 

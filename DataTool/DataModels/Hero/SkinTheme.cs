@@ -18,7 +18,8 @@ namespace DataTool.DataModels.Hero {
             GUID = skinTheme.m_5E9665E3;
             Skin = skinTheme.m_0029461B;
 
-            HeroWeapons = Helper.JSON.FixArray(skinTheme.m_heroWeapons);
+            // TODO: BROKEN BY OW2
+            //HeroWeapons = Helper.JSON.FixArray(skinTheme.m_heroWeapons);
         }
     }
 }

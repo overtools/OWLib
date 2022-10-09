@@ -44,11 +44,12 @@ namespace DataTool.DataModels.GameModes {
             if (brawlName != null)
                 Name = GetString(brawlName.m_name);
 
-            if (brawl.m_catalog != null) {
+            // TODO: BROKEN BY OW2
+            /*if (brawl.m_catalog != null) {
                 var mapCatalog = GetInstance<STUMapCatalog>(brawl.m_catalog);
                 if (mapCatalog?.m_headerGUIDs != null)
                     Maps = mapCatalog.m_headerGUIDs.Select(x => new MapHeader(x).ToLite()).ToList();
-            }
+            }*/
 
             Achievements = brawl.m_ECCC6D23?.Select(x => new Achievement(x)).ToArray();
             Unlocks = brawl.m_B1449DF7?.Select(x => new Unlock(x)).ToArray();
