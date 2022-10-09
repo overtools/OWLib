@@ -38,11 +38,11 @@ namespace TankLibHelper.Modes {
 
             string generatedDirectory = Path.Combine(outDirectory, "Generated");
             string generatedEnumsDirectory = Path.Combine(outDirectory, "Generated", "Enums");
-            
+
             var genericTypeFile = new FileWriter(Path.Combine(generatedDirectory, "Misc.cs"), stuTypeNamespace);
             var genericEnumsFile = new FileWriter(Path.Combine(generatedEnumsDirectory, "Misc.cs"), stuEnumNamespace);
             List<FileWriter> extraFileWriters = new List<FileWriter>();
-            
+
             Directory.CreateDirectory(generatedDirectory);
             Directory.CreateDirectory(generatedEnumsDirectory);
 
@@ -61,16 +61,16 @@ namespace TankLibHelper.Modes {
                 //if (_info.BrokenInstances.Contains(instance.Key)) {
                 //    continue;
                 //}
-                
+
                 //if (instance.Key == 0x440233A5) {  // for generating the mirror types with oldhash
                 //    continue;
                 //}
-                
+
                 if (_info.GetInstanceName(instance.Key) == "teStructuredData") continue;
                 if (instance.Key == 0x2BB2C217) continue; // references mirror data. todo: handle better
                 var tree = DumpHashes.GetParentTree(_info, instance.Value);
                 if (tree.Contains(0x54D6A5F9u)) continue; // ignore MirrorData (thx tim)
-                
+
                 InstanceBuilder instanceBuilder = new InstanceBuilder(_info, instance.Value);
                 Build(instanceBuilder, false);
 
@@ -96,6 +96,18 @@ namespace TankLibHelper.Modes {
                 EnumBuilder enumBuilder = new EnumBuilder(_info, field);
                 Build(enumBuilder, true);
             }
+
+            // Jank code for generating missing enums if we don't have any data for them
+            /*var missingEnums = enumFields.Select(x => x.Key).Except(_info.Enums.Select(x => x.Key));
+            foreach (var missingEnum in missingEnums) {
+                Logger.Warn("Enum", $"generating Missing Enum {missingEnum:X8}!");
+                EnumBuilder enumBuilder = new EnumBuilder(_info, new FieldNew {
+                    m_typeHash = missingEnum.ToString("X8"),
+                    m_size = 4
+                });
+
+                Build(enumBuilder, true);
+            }*/
 
             genericTypeFile.Finish();
             genericEnumsFile.Finish();
