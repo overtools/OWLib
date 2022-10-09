@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6760479E, 72)]
+    [STU(0x6760479E, 88)]
     public class STUUnlock : STUInstance
     {
         [STUField(0xB48F1D22, 8)] // size: 16
@@ -19,7 +19,13 @@ namespace TankLib.STU.Types
         [STUField(0xEDE36CB7, 56)] // size: 8
         public ulong m_resourceKeyId;
         
-        [STUField(0xA7B393BF, 64)] // size: 4
+        [STUField(0x00B16A0B, 64)] // size: 8
+        public long m_00B16A0B;
+        
+        [STUField(0x8A5CC633, 72)] // size: 8
+        public long m_8A5CC633;
+        
+        [STUField(0xA7B393BF, 80)] // size: 4
         public Enum_5A7EBE59 m_A7B393BF;
     }
 }

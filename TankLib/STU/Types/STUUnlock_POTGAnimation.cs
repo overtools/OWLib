@@ -4,13 +4,13 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x8E77E8A1, 248)]
+    [STU(0x8E77E8A1, 264)]
     public class STUUnlock_POTGAnimation : STU_3021DDED
     {
-        [STUField(0x3F5B86A4, 224)] // size: 16
+        [STUField(0x3F5B86A4, 240)] // size: 16
         public teStructuredDataAssetRef<STUAnimation> m_animation;
         
-        [STUField(0x0619C597, 240)] // size: 4
+        [STUField(0x0619C597, 256)] // size: 4
         public POTGType m_type;
     }
 }

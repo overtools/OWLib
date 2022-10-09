@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x2F427ADA, 32)]
+    [STU(0x2F427ADA, 24)]
     public class STUVoiceStimulusHeader : STUInstance
     {
         [STUField(0x1A8738BF, 8)] // size: 8
@@ -14,8 +14,5 @@ namespace TankLib.STU.Types
         
         [STUField(0xA73F2EBE, 20)] // size: 4
         public float m_A73F2EBE;
-        
-        [STUField(0xAFCF2626, 24)] // size: 1
-        public byte m_AFCF2626;
     }
 }

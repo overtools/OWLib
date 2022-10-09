@@ -7,14 +7,11 @@ namespace TankLib.STU.Types
     [STU(0x42270D59, 240)]
     public class STUSkinTheme : STUSkinBase
     {
-        [STUField(0xA5C9CA02, 104)] // size: 16
+        [STUField(0xA5C9CA02, 120)] // size: 16
         public teString m_internalName;
         
-        [STUField(0xECCC4A5D, 120)] // size: 16
+        [STUField(0xECCC4A5D, 136)] // size: 16
         public teStructuredDataAssetRef<ulong> m_ECCC4A5D;
-        
-        [STUField(0x88F5CF3E, 136)] // size: 16
-        public teStructuredDataAssetRef<STUHeroWeapon>[] m_heroWeapons;
         
         [STUField(0x71818BC5, 152)] // size: 16
         public teStructuredDataAssetRef<ulong>[] m_71818BC5;

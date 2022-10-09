@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x54BC2188, 264)]
+    [STU(0x54BC2188, 280)]
     public class STUUnlock_AvatarPortrait : STU_3021DDED
     {
-        [STUField(0x1B25AB90, 224, ReaderType = typeof(InlineInstanceFieldReader))] // size: 40
+        [STUField(0x1B25AB90, 240, ReaderType = typeof(InlineInstanceFieldReader))] // size: 40
         public STUUnlock_SprayPaintEffect m_1B25AB90;
     }
 }

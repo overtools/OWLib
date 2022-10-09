@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xF7C4B7FD, 56)]
+    [STU(0xF7C4B7FD, 64)]
     public class STUCreateArmIkItem : STUInstance
     {
         [STUField(0x1C801B34, 0, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
@@ -26,5 +26,8 @@ namespace TankLib.STU.Types
         
         [STUField(0x87DFFE28, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_87DFFE28;
+        
+        [STUField(0x4086E02A, 56, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STUConfigVar m_4086E02A;
     }
 }

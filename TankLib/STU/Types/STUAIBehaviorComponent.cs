@@ -37,6 +37,6 @@ namespace TankLib.STU.Types
         public STU_7866565A m_178D63BA;
         
         [STUField(0x72D00D60, 216)] // size: 4
-        public float m_72D00D60 = 0.1f;
+        public float m_72D00D60 = 0.045f;
     }
 }

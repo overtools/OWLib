@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x3A9B5E90, 688)]
+    [STU(0x3A9B5E90, 704)]
     public class STUMap : STUShippable
     {
         [STUField(0xDEA3E7DA, 32, ReaderType = typeof(InlineInstanceFieldReader))] // size: 72
@@ -79,64 +79,67 @@ namespace TankLib.STU.Types
         [STUField(0x719AA043, 512, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_01AA07B0[] m_719AA043;
         
-        [STUField(0x0DE1BA16, 528)] // size: 16
+        [STUField(0x964BB4AB, 528)] // size: 16
+        public teStructuredDataAssetRef<STU_C208081C> m_964BB4AB = 0x0;
+        
+        [STUField(0x0DE1BA16, 544)] // size: 16
         public teStructuredDataAssetRef<STUMapLayer>[] m_layers;
         
-        [STUField(0xD608E9F3, 544)] // size: 16
+        [STUField(0xD608E9F3, 560)] // size: 16
         public teStructuredDataAssetRef<STUGameMode>[] m_supportedGamemodes;
         
-        [STUField(0xF0535DCF, 560, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xF0535DCF, 576, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_63ABE55E[] m_reflectionData;
         
-        [STUField(0x38F33424, 576)] // size: 16
+        [STUField(0x38F33424, 592)] // size: 16
         public teStructuredDataAssetRef<STUMap> m_baseMap;
         
-        [STUField(0xF542263E, 592, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
+        [STUField(0xF542263E, 608, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_7D6D8405[] m_F542263E;
         
-        [STUField(0x092C7101, 608, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
+        [STUField(0x092C7101, 624, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_7E5F1892[] m_092C7101;
         
-        [STUField(0xDF0F206D, 624, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
+        [STUField(0xDF0F206D, 640, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_6E3F00ED[] m_DF0F206D;
         
-        [STUField(0x6B04495C, 640)] // size: 16
+        [STUField(0x6B04495C, 656)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_6B04495C;
         
-        [STUField(0x62354864, 656)] // size: 8
+        [STUField(0x62354864, 672)] // size: 8
         public ulong m_62354864 = 0x0;
         
-        [STUField(0x1DD3A0CD, 664)] // size: 4
+        [STUField(0x1DD3A0CD, 680)] // size: 4
         public STUMapType m_mapType = STUMapType.OffenseDefenseMap;
         
-        [STUField(0x44D13CC2, 668)] // size: 4
+        [STUField(0x44D13CC2, 684)] // size: 4
         public int m_44D13CC2 = -1;
         
-        [STUField(0xC0E32840, 672)] // size: 4
+        [STUField(0xC0E32840, 688)] // size: 4
         public float m_C0E32840 = -100f;
         
-        [STUField(0xA125818B, 676)] // size: 4
+        [STUField(0xA125818B, 692)] // size: 4
         public Enum_668FA6B6 m_A125818B = Enum_668FA6B6.Enabled;
         
-        [STUField(0xA8BF9196, 680)] // size: 1
+        [STUField(0xA8BF9196, 696)] // size: 1
         public byte m_A8BF9196;
         
-        [STUField(0x593F5545, 681)] // size: 1
+        [STUField(0x593F5545, 697)] // size: 1
         public byte m_593F5545;
         
-        [STUField(0x5FB9732D, 682)] // size: 1
+        [STUField(0x5FB9732D, 698)] // size: 1
         public byte m_5FB9732D;
         
-        [STUField(0x61550F4E, 683)] // size: 1
+        [STUField(0x61550F4E, 699)] // size: 1
         public byte m_61550F4E = 0x1;
         
-        [STUField(0xC11DA2F7, 684)] // size: 1
+        [STUField(0xC11DA2F7, 700)] // size: 1
         public byte m_C11DA2F7 = 0x1;
         
-        [STUField(0x7BF9245C, 685)] // size: 1
+        [STUField(0x7BF9245C, 701)] // size: 1
         public byte m_7BF9245C = 0x1;
         
-        [STUField(0x13D8A0DD, 686)] // size: 1
+        [STUField(0x13D8A0DD, 702)] // size: 1
         public byte m_13D8A0DD;
     }
 }

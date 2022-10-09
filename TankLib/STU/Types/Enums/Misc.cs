@@ -5997,7 +5997,7 @@ namespace TankLib.STU.Types.Enums
     }
     
     [STUEnum(0xF588EA94)]
-    public enum Enum_F588EA94 : byte
+    public enum Enum_F588EA94 : int
     {
         [STUField(0x8BFD39D8)] x8BFD39D8 = 0,
         [STUField(0x7B0228AB)] x7B0228AB = 0x1,
@@ -6473,5 +6473,90 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xB71D677E)] xB71D677E = 0x6,
         [STUField(0x3F24D678)] x3F24D678 = 0x7,
         [STUField(0x9EE13322)] x9EE13322 = 0x8,
+    }
+    
+    [STUEnum(0xF20100A6)]
+    public enum Enum_F20100A6 : int
+    {
+    }
+    
+    [STUEnum(0x987EE9F4)]
+    public enum Enum_987EE9F4 : int
+    {
+    }
+    
+    [STUEnum(0xD20552D3)]
+    public enum Enum_D20552D3 : int
+    {
+    }
+    
+    [STUEnum(0x774EF730)]
+    public enum Enum_774EF730 : int
+    {
+    }
+    
+    [STUEnum(0xC3C1A34F)]
+    public enum Enum_C3C1A34F : int
+    {
+    }
+    
+    [STUEnum(0xA9BAE20A)]
+    public enum Enum_A9BAE20A : int
+    {
+    }
+    
+    [STUEnum(0xA73CF620)]
+    public enum Enum_A73CF620 : int
+    {
+    }
+    
+    [STUEnum(0x32DA1059)]
+    public enum Enum_32DA1059 : int
+    {
+    }
+    
+    [STUEnum(0xF485FFB4)]
+    public enum Enum_F485FFB4 : int
+    {
+    }
+    
+    [STUEnum(0x73723EBA)]
+    public enum Enum_73723EBA : int
+    {
+    }
+    
+    [STUEnum(0xEBBD2758)]
+    public enum Enum_EBBD2758 : int
+    {
+    }
+    
+    [STUEnum(0x8DB996DD)]
+    public enum Enum_8DB996DD : int
+    {
+    }
+    
+    [STUEnum(0x026E83D4)]
+    public enum Enum_026E83D4 : int
+    {
+    }
+    
+    [STUEnum(0xFAB95581)]
+    public enum Enum_FAB95581 : int
+    {
+    }
+    
+    [STUEnum(0xDA7D4646)]
+    public enum Enum_DA7D4646 : int
+    {
+    }
+    
+    [STUEnum(0x5EBEFCA9)]
+    public enum Enum_5EBEFCA9 : int
+    {
+    }
+    
+    [STUEnum(0x859129BD)]
+    public enum Enum_859129BD : int
+    {
     }
 }

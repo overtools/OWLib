@@ -6,7 +6,5 @@ namespace TankLib.STU.Types
     [STU(0xF2646A89, 120)]
     public class STUHeroWeapon : STUSkinBase
     {
-        [STUField(0xA5C9CA02, 104)] // size: 16
-        public teString m_internalName = "Unnamed Weapon";
     }
 }

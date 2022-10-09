@@ -14,6 +14,6 @@ namespace TankLib.STU.Types
         public Enum_D407CA8B m_priority = Enum_D407CA8B.xD8105002;
         
         [STUField(0xB7A1D145, 28)] // size: 4
-        public int m_chunkId = 0x2;
+        public int m_chunkId = 0x1;
     }
 }

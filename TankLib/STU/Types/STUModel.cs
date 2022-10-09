@@ -63,5 +63,8 @@ namespace TankLib.STU.Types
         
         [STUField(0x81AF6609, 414)] // size: 1
         public Enum_950F7205 m_usageCategory = Enum_950F7205.xE8ACB95D;
+        
+        [STUField(0x646E63C6, 415)] // size: 1
+        public byte m_646E63C6 = 0x0;
     }
 }

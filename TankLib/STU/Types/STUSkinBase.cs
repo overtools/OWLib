@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xB7EEA3BE, 104)]
+    [STU(0xB7EEA3BE, 120)]
     public class STUSkinBase : STUShippable
     {
         [STUField(0xAA8E1BB0, 32)] // size: 16
@@ -18,7 +18,10 @@ namespace TankLib.STU.Types
         [STUField(0x258A7D5C, 80)] // size: 24
         public teStructuredDataHashMap<STUSkinRuntimeOverride> m_runtimeOverrides;
         
-        [STUField(0x16051DC7, 96)] // size: 8
+        [STUField(0xEBC69014, 96)] // size: 16
+        public teStructuredDataAssetRef<STUHeroWeapon> m_EBC69014;
+        
+        [STUField(0x16051DC7, 112)] // size: 8
         public ulong m_16051DC7;
     }
 }

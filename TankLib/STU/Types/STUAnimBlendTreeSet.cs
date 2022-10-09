@@ -4,14 +4,14 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xFC47A2ED, 504)]
+    [STU(0xFC47A2ED, 496)]
     public class STUAnimBlendTreeSet : STUInstance
     {
         [STUField(0x93DA6E7C, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 208
         public STUAnimBlendTreeSet_HardcodedAnimCategoryRefs m_hardcodedAnimCategoryRefs;
         
-        [STUField(0x253EE7C8, 216)] // size: 16
-        public ulong[] m_253EE7C8;
+        [STUField(0x0F898B40, 216)] // size: 16
+        public uint[] m_0F898B40;
         
         [STUField(0x6AFCD1A5, 232, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimBlendTreeSet_BlendTreeItem[] m_blendTreeItems;
@@ -55,25 +55,25 @@ namespace TankLib.STU.Types
         [STUField(0xBA53D5ED, 440)] // size: 8
         public ulong m_guid;
         
-        [STUField(0x84935843, 448)] // size: 8
-        public ulong m_rootAnimAliasGUID;
-        
-        [STUField(0xCF30A8E3, 456)] // size: 8
-        public ulong m_CF30A8E3;
-        
-        [STUField(0xD1467FCA, 464, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xD1467FCA, 448, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAnimGameData_Base m_D1467FCA;
         
-        [STUField(0x2B2C5C7F, 472, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x2B2C5C7F, 456, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_72C48DD7 m_animParamUpdater;
         
-        [STUField(0x5EF941B5, 480)] // size: 8
+        [STUField(0x5EF941B5, 464)] // size: 8
         public teVec2 m_5EF941B5;
         
-        [STUField(0x384DE14F, 488, ReaderType = typeof(InlineInstanceFieldReader))] // size: 8
+        [STUField(0x384DE14F, 472, ReaderType = typeof(InlineInstanceFieldReader))] // size: 8
         public STUAnimBlendTreeSet_RetargetParams m_retargetParams;
         
-        [STUField(0x2F9541A4, 496)] // size: 4
+        [STUField(0x1C7DF2B9, 480)] // size: 4
+        public uint m_1C7DF2B9;
+        
+        [STUField(0xCF30A8E3, 484)] // size: 4
+        public uint m_CF30A8E3;
+        
+        [STUField(0x2F9541A4, 488)] // size: 4
         public int m_crc;
     }
 }

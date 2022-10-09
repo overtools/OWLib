@@ -4,70 +4,70 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x92389E46, 344)]
+    [STU(0x92389E46, 360)]
     public class STUAnimation : STUInstance
     {
-        [STUField(0x19EFD1DB, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 120
+        [STUField(0x19EFD1DB, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 136
         public STUAnimationSettings m_animationSettings;
         
-        [STUField(0x0D890433, 128)] // size: 16
+        [STUField(0x0D890433, 144)] // size: 16
         public teStructuredDataAssetRef<STU_8D423808> m_0D890433;
         
-        [STUField(0xE4A7B00A, 144)] // size: 16
+        [STUField(0xE4A7B00A, 160)] // size: 16
         public teString m_E4A7B00A;
         
-        [STUField(0xA7FE4B94, 160)] // size: 16
+        [STUField(0xA7FE4B94, 176)] // size: 16
         public teString m_sourceSet;
         
-        [STUField(0x818D011C, 176)] // size: 16
+        [STUField(0x818D011C, 192)] // size: 16
         public teStructuredDataAssetRef<STUSkeleton> m_skeleton;
         
-        [STUField(0x694849B1, 192)] // size: 16
+        [STUField(0x694849B1, 208)] // size: 16
         public teStructuredDataAssetRef<STUAnimation> m_694849B1;
         
-        [STUField(0x4B309629, 208)] // size: 16
+        [STUField(0x4B309629, 224)] // size: 16
         public teStructuredDataAssetRef<ulong> m_animationEffect;
         
-        [STUField(0xB64D5A14, 224)] // size: 16
+        [STUField(0xB64D5A14, 240)] // size: 16
         public teStructuredDataAssetRef<STUModel> m_previewModel;
         
-        [STUField(0x305E1AEC, 240)] // size: 16
+        [STUField(0x305E1AEC, 256)] // size: 16
         public teStructuredDataAssetRef<STU_5CA5A90D> m_305E1AEC;
         
-        [STUField(0x2FD502DE, 256)] // size: 16
+        [STUField(0x2FD502DE, 272)] // size: 16
         public teStructuredDataAssetRef<STUAnimation> m_2FD502DE;
         
-        [STUField(0x9991363C, 272, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0x9991363C, 288, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_67E91024[] m_9991363C;
         
-        [STUField(0xA35BFD43, 288, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xA35BFD43, 304, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimationTrackOverride[] m_A35BFD43;
         
-        [STUField(0x436A147D, 304)] // size: 4
+        [STUField(0x436A147D, 320)] // size: 4
         public Enum_68BC28E6 m_436A147D = Enum_68BC28E6.xBB03FA23;
         
-        [STUField(0x6499BB02, 308)] // size: 4
+        [STUField(0x6499BB02, 324)] // size: 4
         public int m_6499BB02;
         
-        [STUField(0x025AC34A, 312)] // size: 4
+        [STUField(0x025AC34A, 328)] // size: 4
         public Enum_DD5CB4EB m_025AC34A;
         
-        [STUField(0x5828C294, 316)] // size: 4
+        [STUField(0x5828C294, 332)] // size: 4
         public int m_5828C294;
         
-        [STUField(0x38833852, 320)] // size: 4
+        [STUField(0x38833852, 336)] // size: 4
         public Enum_8369E80A m_compressionType = Enum_8369E80A.x7E5D49A9;
         
-        [STUField(0x563C7626, 324)] // size: 4
+        [STUField(0x563C7626, 340)] // size: 4
         public float m_compressionScale = 1f;
         
-        [STUField(0x38158126, 328)] // size: 4
+        [STUField(0x38158126, 344)] // size: 4
         public float m_movementSpeed;
         
-        [STUField(0x4B7125D8, 332)] // size: 4
+        [STUField(0x4B7125D8, 348)] // size: 4
         public int m_4B7125D8;
         
-        [STUField(0x614FE70E, 336)] // size: 1
+        [STUField(0x614FE70E, 352)] // size: 1
         public byte m_614FE70E;
     }
 }

@@ -7,11 +7,8 @@ namespace TankLib.STU.Types
     [STU(0xE05E4446, 264)]
     public class STUUnlock_SkinTheme : STU_3021DDED
     {
-        [STUField(0x4C167404, 224)] // size: 16
+        [STUField(0x4C167404, 240)] // size: 16
         public teStructuredDataAssetRef<STUSkinTheme> m_skinTheme;
-        
-        [STUField(0x650CA813, 240)] // size: 16
-        public teStructuredDataAssetRef<ulong> m_650CA813;
         
         [STUField(0x0619C597, 256)] // size: 4
         public Enum_D32A5854 m_type;

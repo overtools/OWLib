@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xC7BAA017, 208)]
+    [STU(0xC7BAA017, 232)]
     public class STUStat : STUInstance
     {
         [STUField(0xB48F1D22, 8)] // size: 16
@@ -31,64 +31,70 @@ namespace TankLib.STU.Types
         [STUField(0x155E2A47, 120)] // size: 16
         public teStructuredDataAssetRef<STUStat> m_155E2A47;
         
-        [STUField(0x57817968, 136, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x6EECB943, 136)] // size: 16
+        public teStructuredDataAssetRef<STUStat>[] m_6EECB943;
+        
+        [STUField(0x57817968, 152, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_783B8A59 m_57817968;
         
-        [STUField(0xBEA87015, 144)] // size: 4
+        [STUField(0xBEA87015, 160)] // size: 4
         public STUStatDisplayType m_displayType;
         
-        [STUField(0xF91D6DAD, 148)] // size: 4
+        [STUField(0xF91D6DAD, 164)] // size: 4
         public STUStatCategory m_statCategory;
         
-        [STUField(0x2FC4460C, 152)] // size: 4
+        [STUField(0x2FC4460C, 168)] // size: 4
         public Enum_CD0A8047 m_2FC4460C;
         
-        [STUField(0xF3507330, 156)] // size: 4
+        [STUField(0xF3507330, 172)] // size: 4
         public Enum_3AA82AF1 m_F3507330;
         
-        [STUField(0x0619C597, 160)] // size: 4
+        [STUField(0x0619C597, 176)] // size: 4
         public STUStatType m_type;
         
-        [STUField(0x08CACF3A, 164)] // size: 4
+        [STUField(0x08CACF3A, 180)] // size: 4
         public STUStatUpdateType m_updateType;
         
-        [STUField(0xA32E3245, 168)] // size: 4
+        [STUField(0xA32E3245, 184)] // size: 4
         public Enum_58CDF4DE m_A32E3245 = Enum_58CDF4DE.xE30F4E68;
         
-        [STUField(0x16CCEFC8, 172)] // size: 4
+        [STUField(0x16CCEFC8, 188)] // size: 4
         public Enum_C9A3B99F m_16CCEFC8;
         
-        [STUField(0x09276DD8, 176)] // size: 4
+        [STUField(0x09276DD8, 192)] // size: 4
         public STUStatTimeframe m_timeFrame;
         
-        [STUField(0xC6C4C538, 180)] // size: 4
+        [STUField(0xC6C4C538, 196)] // size: 4
         public STUPlayerStatEvent m_playerEvent;
         
-        [STUField(0x0BB7C364, 184)] // size: 4
+        [STUField(0x0BB7C364, 200)] // size: 4
         public STUStatEvent m_primaryEvent;
         
-        [STUField(0x33DDBA15, 188)] // size: 4
+        [STUField(0x33DDBA15, 204)] // size: 4
         public STUStatEvent m_secondaryEvent;
         
-        [STUField(0xD0FEEC0E, 192)] // size: 4
+        [STUField(0xD0FEEC0E, 208)] // size: 4
         public STUStatHeroesType m_heroesType;
         
-        [STUField(0x4811336B, 196)] // size: 4
+        [STUField(0x4811336B, 212)] // size: 4
         public STUStatMapsType m_mapsType;
         
-        [STUField(0xDFD4F586, 200)] // size: 4
+        [STUField(0xDFD4F586, 216)] // size: 4
         public STUStatTeamsType m_teamsType;
         
-        [STUField(0xC0211FD4, 204)] // size: 1
+        [STUField(0xC0211FD4, 220)] // size: 1
         public byte m_internalOnly;
         
-        [STUField(0x9B42F159, 205)] // size: 1
+        [STUField(0x9B42F159, 221)] // size: 1
         public byte m_9B42F159;
         
-        [STUField(0x439EAAA8, 206)] // size: 1
+        [STUField(0x439EAAA8, 222)] // size: 1
         public byte m_439EAAA8;
         
-        [STUField(0xEED826CD, 207)] // size: 1
+        [STUField(0xEED826CD, 223)] // size: 1
         public byte m_derivedStat;
+        
+        [STUField(0xD0035CE1, 224)] // size: 1
+        public byte m_D0035CE1 = 0x0;
     }
 }

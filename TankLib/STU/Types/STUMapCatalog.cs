@@ -3,13 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x25DA0DF5, 40)]
+    [STU(0x25DA0DF5, 24)]
     public class STUMapCatalog : STUInstance
     {
-        [STUField(0x242E748D, 8)] // size: 16
-        public ulong[] m_mapGUIDs;
-        
-        [STUField(0x669A4581, 24)] // size: 16
-        public ulong[] m_headerGUIDs;
+        [STUField(0x770D5BFF, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        public STU_68F1393E[] m_770D5BFF;
     }
 }
