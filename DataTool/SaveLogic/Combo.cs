@@ -377,7 +377,7 @@ namespace DataTool.SaveLogic {
                         }
                     }
 
-                    OverwatchModel model = new OverwatchModel(chunkedData, modelInfo.m_GUID, streamedLods);
+                    OverwatchModel model = new OverwatchModel(chunkedData, modelInfo.m_GUID, GetGUIDName(modelInfo.m_GUID), streamedLods);
                     if (modelInfo.m_modelLooks.Count > 0) {
                         FindLogic.Combo.ModelLookAsset modelLookInfo = info.m_info.m_modelLooks[modelInfo.m_modelLooks.First()];
                         model.ModelLookFileName = Path.Combine("ModelLooks",

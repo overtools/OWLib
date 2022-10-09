@@ -113,7 +113,7 @@ namespace TankLib.ExportFormats {
                 writer.Write((uint)0);
 
                 foreach (int boneID in Animation.BoneList) {
-                    WriteString(writer, OverwatchModel.GetBoneName((uint)boneID));
+                    WriteString(writer, OverwatchModel.IdToString("bone", (uint)boneID));
                 }
 
                 foreach (teAnimation.BoneAnimation boneAnimation in Animation.BoneAnimations) {

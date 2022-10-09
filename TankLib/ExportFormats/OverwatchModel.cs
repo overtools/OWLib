@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,9 +33,10 @@ namespace TankLib.ExportFormats {
 
         public StreamingLodsInfo m_streamedLods;
 
-        public OverwatchModel(teChunkedData chunkedData, ulong guid, StreamingLodsInfo streamedLods=null) {
+        public OverwatchModel(teChunkedData chunkedData, ulong guid, string name, StreamingLodsInfo streamedLods=null) {
             _data = chunkedData;
             GUID = guid;
+            Name = name;
             m_streamedLods = streamedLods;
         }
 
@@ -59,6 +60,7 @@ namespace TankLib.ExportFormats {
                 } else {
                     writer.Write(Name);
                 }
+                writer.Write(teResourceGUID.Index(GUID));
 
                 short[] hierarchy = null;
                 Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap = null;
@@ -87,17 +89,14 @@ namespace TankLib.ExportFormats {
                 if (skeleton != null) {
                     //Console.Out.WriteLine($"SKELETON {GUID:X16} {skeleton.Header.BonesAbs} {skeleton.Header.BonesSimple} {skeleton.Header.BonesCloth} {skeleton.Header.RemapCount} {skeleton.Header.IDCount}");
                     for (int i = 0; i < skeleton.Header.IDCount; ++i) { // todo: CLOTH BONES WHERE GONE.
-                        writer.Write(GetBoneName(skeleton.IDs[i]));
+                        writer.Write(IdToString("bone", skeleton.IDs[i]));
                         short parent = hierarchy[i];
-                        if (parent == -1) {
-                            parent = (short)i;
-                        }
                         writer.Write(parent);
 
-                        skeleton.GetWorldSpace(i, out teVec3 scale, out teQuat rotation, out teVec3 translation);
+                        GetRefPoseTransform(i, hierarchy, skeleton, clothNodeMap, out teVec3 scale, out teQuat quat, out teVec3 translation);
                         writer.Write(translation);
                         writer.Write(scale);
-                        writer.Write(rotation);
+                        writer.Write(quat.ToEulerAngles());
                     }
                 }
 
@@ -108,40 +107,73 @@ namespace TankLib.ExportFormats {
                     writer.Write(submesh.UVCount);
 
                     writer.Write(submesh.Vertices.Length);
-                    writer.Write(submesh.Indices.Length/3);
+                    writer.Write(submesh.Indices.Length / 3);
+
+                    var boneIndicesCount = 0;
+                    if (skeleton != null && submesh.BoneIndices[0] != null) {
+                        boneIndicesCount = submesh.BoneIndices.Max(x => x.Length);
+                    }
+                    writer.Write((byte) boneIndicesCount);
 
                     for (int j = 0; j < submesh.Vertices.Length; j++) {
-                        writer.Write(submesh.Vertices[j]);
-                        writer.Write(-submesh.Normals[j].X);
-                        writer.Write(-submesh.Normals[j].Y);
+                        writer.Write(submesh.Vertices[j].X);
+                        writer.Write(-submesh.Vertices[j].Z);
+                        writer.Write(submesh.Vertices[j].Y);
+                    }
+
+                    for (int j = 0; j < submesh.Vertices.Length; j++) {
+                        writer.Write(submesh.Normals[j].X);
                         writer.Write(-submesh.Normals[j].Z);
+                        writer.Write(submesh.Normals[j].Y);
+                    }
 
-                        foreach (teVec2 uv in submesh.UV[j]) {
-                            writer.Write(uv);
+                    for (int j = 0; j < submesh.Vertices.Length; j++) {
+                        writer.Write(submesh.Tangents[j].X);
+                        writer.Write(-submesh.Tangents[j].Z);
+                        writer.Write(submesh.Tangents[j].Y);
+                        writer.Write(submesh.Tangents[j].W);
+                    }
+
+                    for (int u = 0; u < submesh.UVCount; u++) {
+                        for (int j = 0; j < submesh.Vertices.Length; j++) {
+                            writer.Write(submesh.UV[j][u].X);
+                            writer.Write(1-submesh.UV[j][u].Y);
                         }
+                    }
 
-                        if (skeleton != null && submesh.BoneIndices[j] != null) {
-                            //Console.Out.WriteLine($"{skeleton.Lookup.Length} {submesh.BoneIndices[j][0]} {submesh.BoneIndices[j][1]} {submesh.BoneIndices[j][2]} {submesh.BoneIndices[j][3]}");
-
-                            writer.Write((byte)4);
-                            writer.Write(skeleton.Lookup[submesh.BoneIndices[j][0]]);
-                            writer.Write(skeleton.Lookup[submesh.BoneIndices[j][1]]);
-                            writer.Write(skeleton.Lookup[submesh.BoneIndices[j][2]]);
-                            writer.Write(skeleton.Lookup[submesh.BoneIndices[j][3]]);
-                            writer.Write(submesh.BoneWeights[j][0]);
-                            writer.Write(submesh.BoneWeights[j][1]);
-                            writer.Write(submesh.BoneWeights[j][2]);
-                            writer.Write(submesh.BoneWeights[j][3]);
-                        } else {
-                            writer.Write((byte)0);
+                    for (int j = 0; j < submesh.Vertices.Length; j++) {
+                        if (skeleton != null && submesh.BoneIndices[0] != null) {
+                            var k = 0;
+                            for(; k < submesh.BoneIndices.Length; ++k) {
+                                writer.Write(skeleton.Lookup[submesh.BoneIndices[j][k]]);
+                            }
+                            for(; k < boneIndicesCount; ++k) {
+                                writer.Write((ushort)0xFFFF);
+                            }
                         }
+                    }
 
+                    for (int j = 0; j < submesh.Vertices.Length; j++) {
+                        if (skeleton != null && submesh.BoneIndices[0] != null) {
+                            var k = 0;
+                            for(; k < submesh.BoneWeights.Length; ++k) {
+                                writer.Write(submesh.BoneWeights[j][k]);
+                            }
+                            for(; k < boneIndicesCount; ++k) {
+                                writer.Write(0.0f);
+                            }
+                        }
+                    }
+
+                    for (int j = 0; j < submesh.Vertices.Length; j++) {
                         writer.Write(submesh.Color1.ElementAtOrDefault(j));
+                    }
+
+                    for (int j = 0; j < submesh.Vertices.Length; j++) {
                         writer.Write(submesh.Color2.ElementAtOrDefault(j));
                     }
 
                     for (int j = 0; j < submesh.Descriptor.IndicesToDraw; j+=3) {
-                        writer.Write((byte)3);
                         writer.Write((int)submesh.Indices[j]);
                         writer.Write((int)submesh.Indices[j+1]);
                         writer.Write((int)submesh.Indices[j+2]);
@@ -154,6 +186,7 @@ namespace TankLib.ExportFormats {
                 if (stu?.StructuredData.m_hardPoints != null) {
                     foreach (STUModelHardpoint hardPoint in stu.StructuredData.m_hardPoints) {
                         writer.Write(IdToString("hardpoint", teResourceGUID.Index(hardPoint.m_EDF0511C)));
+                        writer.Write(IdToString("bone", teResourceGUID.Index(hardPoint.m_FF592924)));
 
                         Matrix parentMat = Matrix.Identity;
                         if (hardPoint.m_FF592924 != 0 && skeleton != null) {
@@ -185,33 +218,7 @@ namespace TankLib.ExportFormats {
                         writer.Write(pos);
                         writer.Write(rot);
                     }
-
-                    foreach (STUModelHardpoint modelHardpoint in stu.StructuredData.m_hardPoints) {
-                        writer.Write(IdToString("bone", teResourceGUID.Index(modelHardpoint.m_FF592924)));
-                    }
                 }
-
-                // ext 1.3: old cloth
-                writer.Write(0);
-
-                // ext 1.4: embedded refpose
-                if (skeleton != null) {
-                    for (int i = 0; i < skeleton.Header.IDCount; ++i) {
-                        writer.Write(IdToString("bone", skeleton.IDs[i])); // todo: CLOTH BONES WHERE GONE.
-                        short parent = hierarchy[i];
-                        writer.Write(parent);
-
-                        GetRefPoseTransform(i, hierarchy, skeleton, clothNodeMap, out teVec3 scale, out teQuat quat,
-                            out teVec3 translation);
-
-                        teVec3 rot = quat.ToEulerAngles();
-                        writer.Write(translation);
-                        writer.Write(scale);
-                        writer.Write(rot);
-                    }
-                }
-
-                writer.Write(teResourceGUID.Index(GUID));
             }
         }
 
@@ -236,10 +243,6 @@ namespace TankLib.ExportFormats {
                 quat = new teQuat(bone[0, 0], bone[0, 1], bone[0, 2], bone[0, 3]);
                 translation = new teVec3(bone[2, 0], bone[2, 1], bone[2, 2]);
             }
-        }
-
-        public static string GetBoneName(uint id) {
-            return IdToString("bone", id);
         }
 
         public static string IdToString(string prefix, uint id) {  // hmm
