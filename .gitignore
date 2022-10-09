@@ -253,5 +253,6 @@ paket-files/
 *.sln.iml
 !/DataTool/ToolLogic/List/Debug/
 !/DataTool/ToolLogic/Extract/Debug/
+/DataTool/Crypto
 /dist/
 launchSettings.json
