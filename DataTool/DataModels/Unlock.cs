@@ -11,78 +11,71 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels {
-    /// <summary>
-    /// Unlock data model
-    /// </summary>
-    [DataContract]
     public class Unlock {
-        [DataMember]
         public teResourceGUID GUID;
 
         /// <summary>
         /// Name of this unlock
         /// </summary>
-        [DataMember]
         public string Name;
 
         /// <summary>
         /// DataTool enum for the type of Unlock
         /// </summary>
-        [DataMember]
         public UnlockType Type;
 
         /// <summary>
         /// Unlock rarity
         /// </summary>
-        /// <see cref="STUUnlockRarity"/>
-        [DataMember]
         public STUUnlockRarity Rarity;
 
         /// <summary>
         /// Description of this unlock
         /// </summary>
-        [DataMember]
         public string Description;
 
         /// <summary>
         /// Where this unlock can be obtained from
         /// </summary>
-        /// <example>"Available in Halloween Loot Boxes"</example>
-        [DataMember]
+        /// <example>"Available in Shop"</example>
         public string AvailableIn;
+
+        /// <summary>
+        /// Battle.net Product Id
+        /// </summary>
+        public long ProductId;
 
         /// <summary>
         /// If the Unlock is a Skin, the GUID of the SkinTheme
         /// </summary>
-        [DataMember]
         public teResourceGUID SkinThemeGUID;
 
-        [DataMember]
+        /// <summary>
+        /// If the Unlock is a Hero, the GUID of the Hero
+        /// </summary>
+        public teResourceGUID HeroGUID;
+
+        /// <summary>
+        /// If this unlock belongs to an ESports Team
+        /// </summary>
         public bool IsEsportsUnlock;
 
-        [DataMember]
+        /// <summary>
+        /// If this unlock belongs to an ESports Team, the name of the team
+        /// </summary>
         public string EsportsTeam;
 
         /// <summary>
         /// Array of categories the Unlock belongs to that the Hero Gallery & Career Profile filtering options use
         /// </summary>
-        [DataMember]
         public string[] Categories;
 
         /// <summary>
-        /// If the Unlock is a form of Currency, the amount of currency it is
+        ///  If the Unlock is a form of Currency or XP, the amount granted
         /// </summary>
-        [DataMember]
-        public int Currency;
+        public int? Amount;
 
-        [DataMember]
         public Enum_BABC4175 LootBoxType;
-
-        /// <summary>
-        /// Internal Unlock STU
-        /// </summary>
-        [IgnoreDataMember]
-        public STU_3021DDED STU;
 
         /// <summary>
         /// Whether this is a "normal" Unlock like a skin, emote, voiceline, pose, icon, etc and not something like a Lootbox or Currency.
@@ -90,12 +83,16 @@ namespace DataTool.DataModels {
         [IgnoreDataMember]
         public bool IsTraditionalUnlock;
 
+        [IgnoreDataMember]
+        public STU_3021DDED STU;
+
         // These types are specific to certain unlocks so don't show them unless we're on that unlock
         public bool ShouldSerializeLootBoxType() => Type == UnlockType.Lootbox;
         public bool ShouldSerializeSkinThemeGUID() => Type == UnlockType.Skin;
+        public bool ShouldSerializeHeroGUID() => Type == UnlockType.Hero;
         public bool ShouldSerializeIsEsportsUnlock() => IsEsportsUnlock || Type == UnlockType.Skin;
         public bool ShouldSerializeEsportsTeam() => IsEsportsUnlock;
-        public bool ShouldSerializeCurrency() => Type == UnlockType.CompetitiveCurrency || Type == UnlockType.Currency || Type == UnlockType.OWLToken;
+        public bool ShouldSerializeAmount() => Amount != null;
 
         // These only really apply to "normal" unlocks and can be removed from others
         public bool ShouldSerializeAvailableIn() => IsTraditionalUnlock;
@@ -120,12 +117,15 @@ namespace DataTool.DataModels {
             Rarity = unlock.m_rarity;
             Description = GetDescriptionString(unlock.m_3446F580);
             Type = GetTypeForUnlock(unlock);
+            ProductId = unlock.m_00B16A0B;
 
             IsTraditionalUnlock =
                 Type == UnlockType.Icon || Type == UnlockType.Spray ||
                 Type == UnlockType.Skin || Type == UnlockType.HighlightIntro ||
                 Type == UnlockType.VictoryPose || Type == UnlockType.VoiceLine ||
-                Type == UnlockType.Emote;
+                Type == UnlockType.Emote || Type == UnlockType.Souvenir ||
+                Type == UnlockType.NameCard || Type == UnlockType.PlayerTitle ||
+                Type == UnlockType.WeaponCharm || Type == UnlockType.WeaponSkin;
 
             if (unlock.m_BEE9BCDA != null)
                 Categories = unlock.m_BEE9BCDA.Select(x => GetGUIDName(x.GUID)).ToArray();
@@ -133,13 +133,13 @@ namespace DataTool.DataModels {
             // Lootbox and currency unlocks have some additional relevant data
             switch (unlock) {
                 case STUUnlock_CompetitiveCurrency stu:
-                    Currency = stu.m_760BF18E;
+                    Amount = stu.m_760BF18E;
                     break;
                 case STUUnlock_Currency stu:
-                    Currency = stu.m_currency;
+                    Amount = stu.m_currency;
                     break;
                 case STUUnlock_OWLToken stu:
-                    Currency = stu.m_63A026AF;
+                    Amount = stu.m_63A026AF;
                     break;
                 case STUUnlock_LootBox stu:
                     Rarity = stu.m_2F922165;
@@ -147,6 +147,15 @@ namespace DataTool.DataModels {
                     break;
                 case STUUnlock_SkinTheme stu:
                     SkinThemeGUID = stu.m_skinTheme;
+                    break;
+                case STU_C3C6FD9E stu:
+                    HeroGUID = stu.m_hero;
+                    break;
+                case STU_514C0F6B stu:
+                    Amount = (int) stu.m_amount;
+                    break;
+                case STU_7A1A4764 stu:
+                    Amount = stu.m_E0A45C1B;
                     break;
             }
 
@@ -167,7 +176,6 @@ namespace DataTool.DataModels {
         /// Returns the UnlockType for an Unlock
         /// </summary>
         /// <param name="unlock">Source unlock</param>
-        /// <returns>Friendly type name</returns>
         private static UnlockType GetTypeForUnlock(STUUnlock unlock) {
             return GetUnlockType(unlock.GetType());
         }
@@ -176,7 +184,6 @@ namespace DataTool.DataModels {
         /// Returns the UnlockType for a STUUnlock Type
         /// </summary>
         /// <param name="type">unlock stu type</param>
-        /// <returns></returns>
         public static UnlockType GetUnlockType(Type type) {
             if (type == typeof(STUUnlock_SkinTheme)) {
                 return UnlockType.Skin;
@@ -234,9 +241,36 @@ namespace DataTool.DataModels {
                 return UnlockType.WeaponCharm;
             }
 
-            // dunno, contains a lootbox lol?
-            if (type == typeof(STU_1EB22BDB)) {
-                return UnlockType.Unknown;
+            if (type == typeof(STU_C3C6FD9E)) {
+                return UnlockType.Hero;
+            }
+
+            if (type == typeof(STU_7A1A4764)) {
+                return UnlockType.BattlePassXP;
+            }
+
+            if (type == typeof(STU_A458D547)) {
+                return UnlockType.Souvenir;
+            }
+
+            if (type == typeof(STU_DB1B05B5)) {
+                return UnlockType.NameCard;
+            }
+
+            if (type == typeof(STU_514C0F6B)) {
+                return UnlockType.OverwatchCoins;
+            }
+
+            if (type == typeof(STU_52AB57E9)) {
+                return UnlockType.PlayerTitle;
+            }
+
+            if (type == typeof(STU_AD84E2AA)) {
+                return UnlockType.BattlePass;
+            }
+
+            if (type == typeof(STU_184D5944)) {
+                return UnlockType.SeasonXPBoost;
             }
 
             Logger.Debug("Unlock", $"Unknown unlock type ${type}");
@@ -270,6 +304,30 @@ namespace DataTool.DataModels {
         public static Unlock[] GetArray(teStructuredDataAssetRef<STUUnlock>[] unlocks) {
             return GetArray(unlocks?.Select(x => (ulong) x));
         }
+
+        public UnlockLite ToLiteUnlock() {
+            return UnlockLite.FromUnlock(this);
+        }
+    }
+
+    public class UnlockLite {
+        public teResourceGUID GUID;
+        public string Name;
+        public UnlockType Type;
+        public STUUnlockRarity Rarity;
+        public int? Amount;
+
+        public bool ShouldSerializeAmount() => Amount != null;
+
+        public static UnlockLite FromUnlock(Unlock unlock) {
+            return new UnlockLite {
+                GUID = unlock.GUID,
+                Name = unlock.Name,
+                Type = unlock.Type,
+                Rarity = unlock.Rarity,
+                Amount = unlock.Amount
+            };
+        }
     }
 
     public enum UnlockType {
@@ -287,10 +345,14 @@ namespace DataTool.DataModels {
         Currency, // legacy credits
         CompetitiveCurrency, // competitive points
         OWLToken,
-        HeroMod, // wot? unused?
         OverwatchCoins,
+        SeasonXPBoost,
         WeaponCharm,
+        PlayerTitle,
+        BattlePass,
+        BattlePassXP,
         Souvenir,
-        Banner
+        NameCard,
+        Hero,
     }
 }

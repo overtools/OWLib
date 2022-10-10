@@ -20,7 +20,7 @@ namespace DataTool.DataModels {
         public string Description;
 
         [DataMember]
-        public Unlock Reward;
+        public UnlockLite Reward;
 
         //[DataMember]
         //public Enum_8E40F295 Trophy;
@@ -52,7 +52,7 @@ namespace DataTool.DataModels {
             GamerScore = achievement.m_gamerScore;
 
             if (achievement.m_unlock != 0) {
-                Reward = new Unlock(achievement.m_unlock);
+                Reward = new Unlock(achievement.m_unlock).ToLiteUnlock();
             }
         }
     }
