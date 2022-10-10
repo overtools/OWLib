@@ -323,6 +323,9 @@ namespace DataTool {
 
         private static void TryFetchLocaleFromRegistry() {
             try {
+                if (!OperatingSystem.IsWindows()) {
+                    return;
+                }
                 if (Flags.Language == null) {
                     var textLanguage = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Launch Options\Pro", "LOCALE", null);
                     if (!string.IsNullOrWhiteSpace(textLanguage)) {

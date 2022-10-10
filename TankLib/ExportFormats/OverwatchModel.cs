@@ -144,7 +144,7 @@ namespace TankLib.ExportFormats {
                     for (int j = 0; j < submesh.Vertices.Length; j++) {
                         if (skeleton != null && submesh.BoneIndices[0] != null) {
                             var k = 0;
-                            for(; k < submesh.BoneIndices.Length; ++k) {
+                            for(; k < submesh.BoneIndices[j].Length; ++k) {
                                 writer.Write(skeleton.Lookup[submesh.BoneIndices[j][k]]);
                             }
                             for(; k < boneIndicesCount; ++k) {
@@ -156,7 +156,7 @@ namespace TankLib.ExportFormats {
                     for (int j = 0; j < submesh.Vertices.Length; j++) {
                         if (skeleton != null && submesh.BoneIndices[0] != null) {
                             var k = 0;
-                            for(; k < submesh.BoneWeights.Length; ++k) {
+                            for(; k < submesh.BoneWeights[j].Length; ++k) {
                                 writer.Write(submesh.BoneWeights[j][k]);
                             }
                             for(; k < boneIndicesCount; ++k) {
