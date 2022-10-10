@@ -10,7 +10,7 @@ using TankLib.STU.Types;
 namespace DataTool.SaveLogic.Unlock {
     public static class VoiceLine {
         public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock, VoiceSet voiceSet) {
-            if (voiceSet == null) return;
+            if (voiceSet == null || voiceSet.Stimuli == null) return;
 
             if (!(unlock.STU is STUUnlock_VoiceLine vl)) return;
 
