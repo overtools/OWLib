@@ -171,6 +171,10 @@ namespace DataTool.FindLogic {
             }
 
             public string GetNameIndex() {
+                // new model and look
+                if (teResourceGUID.Type(m_GUID) == 0x118) return GetName();
+                if (teResourceGUID.Type(m_GUID) == 0x119) return GetName();
+
                 return GetValidFilename(m_name, false) ?? $"{m_GUID & 0xFFFFFFFFFFFF:X12}";
             }
         }
@@ -566,10 +570,17 @@ namespace DataTool.FindLogic {
                         foreach (STUEntityComponent component in components) {
                             if (component == null) continue;
                             if (component is STUModelComponent modelComponent) {
-                                entityContext.Model = GetReplacement(modelComponent.m_model, replacements);
+
+                                if (modelComponent.m_F5ADE169 != 0) {
+                                    entityContext.Model = GetReplacement(modelComponent.m_F5ADE169, replacements);
+                                } else {
+                                    entityContext.Model = GetReplacement(modelComponent.m_model, replacements);
+                                }
 
                                 Find(info, modelComponent.m_model, replacements, entityContext);
                                 Find(info, modelComponent.m_look, replacements, entityContext);
+                                Find(info, modelComponent.m_F5ADE169, replacements, entityContext); // new model
+                                Find(info, modelComponent.m_EE77FFF9, replacements, entityContext); // new look
                                 Find(info, modelComponent.m_animBlendTreeSet, replacements, entityContext);
                                 Find(info, modelComponent.m_36F54327, replacements, entityContext);
                             } else if (component is STUEffectComponent effectComponent) {
@@ -838,7 +849,8 @@ namespace DataTool.FindLogic {
 
                     break;
                 }
-                case 0x1A: {
+                case 0x1A:
+                case 0x119: {
                     if (info.m_modelLooks.ContainsKey(guid)) {
                         if (context.Model != 0) {
                             info.m_models[context.Model].m_modelLooks.Add(guid);
