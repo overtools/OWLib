@@ -629,6 +629,10 @@ namespace DataTool.FindLogic {
                     break;
                 }
                 case 0x6: {
+                    if (!Debugger.IsAttached) {
+                        break; // MARKER: Disabled animations.
+                    }
+
                     if (info.m_animations.ContainsKey(guid)) {
                         if (context.Model != 0) {
                             info.m_models[context.Model].n_animations.Add(guid);

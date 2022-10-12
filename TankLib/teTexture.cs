@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
-using TACTLib;
-using TACTLib.Core.Product.Tank;
 using TankLib.STU.Types.Enums;
 
 namespace TankLib {
@@ -124,22 +120,22 @@ namespace TankLib {
         private void Read(BinaryReader reader) {
             Header = reader.Read<TextureHeader>();
             if (Header.Format >= 0x1A) Header.Format -= 1;
-            
+
             if (Header.Format == 99) Header.Format = 98;
-            
+
             if (Header.DataSize == 0 || Header.PayloadCount > 0) {
                 PayloadRequired = true;
                 Payloads = new teTexturePayload[Header.PayloadCount];
-                
+
                 reader.Seek(0x20);
                 Payloads[0] = new teTexturePayload(this, reader.BaseStream);
                 return;
             }
-            
+
             Data = new byte[Header.DataSize];
             reader.Read(Data, 0, (int)Header.DataSize);
         }
-        
+
         public teResourceGUID GetPayloadGUID(ulong textureGUID, uint payloadIdx) {
             return GetPayloadGUID2(textureGUID, payloadIdx);
         }
@@ -201,8 +197,8 @@ namespace TankLib {
         public void SaveToDDS(Stream stream, bool keepOpen, int? mips, uint? width = null, uint? height = null, uint? surfaces = null) {
             if (PayloadRequired && Payloads[Payloads.Length-1] == null) throw new Exceptions.TexturePayloadMissingException();
             using (BinaryWriter ddsWriter = new BinaryWriter(stream, Encoding.Default, keepOpen)) {
-                Console.Out.WriteLine($"{mips ?? Header.MipCount} {width ?? Header.Width} {height ?? Header.Height} {surfaces ?? Header.Surfaces}");
-                
+                // Console.Out.WriteLine($"{mips ?? Header.MipCount} {width ?? Header.Width} {height ?? Header.Height} {surfaces ?? Header.Surfaces}");
+
                 var targetMips = mips ?? Header.MipCount;
                 uint saveMipCount = Header.MipCount;
                 int savePayloadCount = 0;
@@ -217,20 +213,20 @@ namespace TankLib {
                         }
                         Console.Out.Write($"{payload.Header.Mips} ");
                     }*/
-                    
+
                     var payloadIdx = Payloads.Length-1;
                     while (payloadIdx >= 0)
                     {
                         var mipLimitIncludedByThisPayload = Header.MipCount - Payloads[payloadIdx--].Header.Mips;
                         saveMipCount = mipLimitIncludedByThisPayload;
                         savePayloadCount++;
-                        
+
                         if (mipLimitIncludedByThisPayload >= targetMips) break;
                     }
-                    
+
                     //Console.Out.WriteLine($"---- {targetMips} {saveMipCount} {payloadIdx} {Payloads.Length} {savePayloadCount} -----");
                 }
-                
+
                 TextureTypes.DDSHeader dds = Header.ToDDSHeader((int)saveMipCount, width ?? Header.Width, height ?? Header.Height, surfaces ?? Header.Surfaces);
                 ddsWriter.Write(dds);
                 if (dds.Format.FourCC == 0x30315844) {
@@ -245,8 +241,8 @@ namespace TankLib {
                         // cubemaps are just 2d textures
                         dimension = TextureTypes.D3D10_RESOURCE_DIMENSION.TEXTURE2D;
                     }
-                    
-                    Console.Out.WriteLine($"{Header.Format} {dimension} {Header.IsCubemap}");
+
+                    // Console.Out.WriteLine($"{Header.Format} {dimension} {Header.IsCubemap}");
                     TextureTypes.DDS_HEADER_DXT10 d10 = new TextureTypes.DDS_HEADER_DXT10 {
                         Format = Header.Format,
                         Dimension = dimension,
