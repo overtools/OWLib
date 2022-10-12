@@ -709,7 +709,6 @@ namespace DataTool.SaveLogic {
                 splitMultiSurface = (split || extractFlags.SplitMultiSurface) && convertTextures && !createMultiSurfaceSheet;
                 convertType = fileType ?? extractFlags.ConvertTexturesType.ToLowerInvariant();
 
-                multiSurfaceConvertType = convertType;
                 if (extractFlags.ForceDDSMultiSurface) {
                     multiSurfaceConvertType = "dds";
                 }
@@ -782,24 +781,7 @@ namespace DataTool.SaveLogic {
                     }
                 }
 
-                convertType = "tif";
-
-                WICCodecs? imageFormat = WICCodecs.TIFF;
-                switch (convertType) {
-                    case "tif":
-                        imageFormat = WICCodecs.TIFF;
-                        break;
-                    case "png":
-                        imageFormat = WICCodecs.PNG;
-                        break;
-                    case "jpg":
-                        imageFormat = WICCodecs.JPEG;
-                        break;
-                }
-
-                // if (convertType == "tga") imageFormat = Im.... oh
-                // so there is no TGA image format.
-                // sucks to be them
+                WICCodecs? imageFormat = convertType[0] == 't' ? WICCodecs.TIFF : WICCodecs.PNG;
 
                 try {
                     if (convertType == "dds") {
@@ -819,13 +801,13 @@ namespace DataTool.SaveLogic {
                                 var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
                                 convertedStream.Position = 0;
                                 // todo: this will decompress and convert the dds multiple times.
-                                var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, splitMultiSurface ? surfaceNr : default(int?));
+                                var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.UNKNOWN, imageFormat.Value, splitMultiSurface ? surfaceNr : default(int?));
                                 if (!data.IsEmpty) {
                                     WriteFile(data, $"{surfacePath}.{convertType}");
                                 } else {
                                     convertedStream.Position = 0;
                                     WriteFile(convertedStream, $"{surfacePath}.dds");
-                                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} (surface {surfaceNr + 1}) as {convertType} because DirectXTex failed. {texture.Header.Format} {texture.Header.PayloadCount} {texture.Header.MipCount} {texture.Header.Surfaces}");
+                                    Logger.Error("Combo", $"Unable to save {Path.GetFileName(filePath)} (surface {surfaceNr + 1}) as {convertType} because DirectXTex failed. {(DXGI_FORMAT) texture.Header.Format} {texture.Header.Format} {texture.Header.PayloadCount} {texture.Header.MipCount} {texture.Header.Surfaces}");
                                 }
                             }
                         }

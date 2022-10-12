@@ -8,7 +8,7 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Flag = "out-path", NeedsValue = true, Help = "Output path", Positional = 2, Required = true)]
         public string OutputPath;
 
-        [CLIFlag(Default = "tif", NeedsValue = true, Flag = "convert-textures-type", Help = "Texture output type", Valid = new[] {"dds", "tif", "png", "jpg", "hdr"})]
+        [CLIFlag(Default = "tif", NeedsValue = true, Flag = "convert-textures-type", Help = "Texture output type", Valid = new[] {"dds", "tif", "png"})]
         public string ConvertTexturesType;
 
         [CLIFlag(Default = false, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]

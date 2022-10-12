@@ -121,7 +121,7 @@ namespace TankLib {
             Header = reader.Read<TextureHeader>();
             if (Header.Format >= 0x1A) Header.Format -= 1;
 
-            if (Header.Format == 99) Header.Format = 98;
+            // if (Header.Format == 99) Header.Format = 98;
 
             if (Header.DataSize == 0 || Header.PayloadCount > 0) {
                 PayloadRequired = true;
