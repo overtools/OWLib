@@ -102,8 +102,8 @@ namespace DataTool.FindLogic {
             public void SetTextureProcessIcon(ulong texture) {
                 if (!m_textures.TryGetValue(texture, out var asset)) return;
                 asset.m_processIcon = true;
-                asset.m_dxgiOverride = DXGI_FORMAT.R8G8B8A8_UNORM_SRGB;
-                asset.m_fileType = "png";
+                asset.m_dxgiOverride = DXGI_FORMAT.R8G8B8A8_UNORM;
+                asset.m_fileType = "tif";
             }
 
             /// <summary>
