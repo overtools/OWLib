@@ -183,7 +183,7 @@ namespace DataTool.ToolLogic.Extract {
                     var guiContext = new SaveLogic.Combo.SaveContext(guiInfo);
                     SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(heroPath, "GUI"), guiContext, new SaveLogic.Combo.SaveTextureOptions {
                         ProcessIcon = true,
-                        DXGIFormatOverride = DXGI_FORMAT.R8G8B8A8_UNORM,
+                        DXGIFormatOverride = DXGI_FORMAT.R8G8B8A8_UNORM_SRGB,
                         FileTypeOverride = "tif"
                     });
                 }
