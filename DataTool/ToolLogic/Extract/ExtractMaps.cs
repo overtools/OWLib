@@ -88,11 +88,16 @@ namespace DataTool.ToolLogic.Extract {
             ["lijiang"] = "lijiang tower",
             ["estadio das ras"] = "estádio das rãs",
             ["chateau guillard"] = "château guillard",
+            ["chateau"] = "château guillard",
             ["ecopoint"] = "ecopoint: antarctica",
             ["antarctica"] = "ecopoint: antarctica",
             ["ecopoint antarctica"] = "ecopoint: antarctica",
             ["volskaya"] = "volskaya industries",
             ["kings row"] = "king's row",
+            ["paraiso"] = "paraíso",
+            ["rio"] = "paraíso",
+            ["esperanca"] = "esperança",
+            ["portugal"] = "esperança",
         };
 
         public Dictionary<string, string> QueryNameOverrides => MapMapping;

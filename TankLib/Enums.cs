@@ -24,6 +24,8 @@ namespace TankLib {
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum teMAP_PLACEABLE_TYPE : byte {
+            // luckily they don't re-use chunk ids...
+
             UNKNOWN = 0,
             MODEL_GROUP = 0x1,
             SINGLE_MODEL = 0x2,
@@ -54,16 +56,16 @@ namespace TankLib {
             FRUSTUM = 1,
             NONE = 2
         }
-        
+
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         [Flags]
         public enum teSHADER_STATE : byte {
             DECAL = 2,
             REFRACTIVE = 0x10,
-            
+
             ALL_BLEND_MODES = 0x3F
         }
-        
+
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         [Flags]
         public enum teSHADER_FEATURE_FLAG : uint {

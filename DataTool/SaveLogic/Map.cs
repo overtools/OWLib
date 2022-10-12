@@ -9,6 +9,7 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
 using System;
 using DataTool.DataModels;
+using DataTool.Helper;
 
 namespace DataTool.SaveLogic {
     public static class Map {
@@ -282,25 +283,64 @@ namespace DataTool.SaveLogic {
             LoudLog("\tFinding");
             FindLogic.Combo.Find(info, mapHeader.m_map);
 
-            //for (ushort i = 0; i < 255; i++) {
-            //    using (Stream mapChunkStream = OpenFile(mapHeader.GetChunkKey((byte)i))) {
-            //        if (mapChunkStream == null) continue;
-            //        WriteFile(mapChunkStream, Path.Combine(mapPath, $"{(Enums.teMAP_PLACEABLE_TYPE)i}.0BC"));
-            //    }
-            //}
-            //return;
+            for (int i = 0; i < mapHeader.m_D97BC44F.Length; i++) {
+                var variantModeInfo = mapHeader.m_D97BC44F[i];
+                var variantResultingMap = mapHeader.m_78715D57[i];
+                var variantGUID = variantResultingMap.m_BF231F12;
 
-            teMapPlaceableData placeableModelGroups = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.MODEL_GROUP);
-            teMapPlaceableData placeableSingleModels = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.SINGLE_MODEL);
-            teMapPlaceableData placeableModel = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.MODEL);
-            teMapPlaceableData placeableLights = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.LIGHT);
-            teMapPlaceableData placeableEntities = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.ENTITY);
-            teMapPlaceableData placeableSounds = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.SOUND);
-            teMapPlaceableData placeableEffects = GetPlaceableData(mapHeader, Enums.teMAP_PLACEABLE_TYPE.EFFECT);
+                using (Stream stream = OpenFile(variantGUID)) {
+                    if (stream == null) {
+                        // not shipping
+                        continue;
+                    }
 
-            OverwatchMap exportMap = new OverwatchMap(name, info, placeableSingleModels, placeableModelGroups, placeableModel, placeableEntities, placeableLights, placeableSounds, placeableEffects);
-            using (Stream outputStream = File.OpenWrite(Path.Combine(mapPath, $"{name}.{exportMap.Extension}"))) {
-                exportMap.Write(outputStream);
+                    // load or something lol idk
+                }
+
+                var gameMode = STUHelper.GetInstance<STUGameMode>(variantModeInfo.m_gamemode);
+                var gameModeName = IO.GetString(gameMode?.m_displayName) ?? "Unknown Mode";
+
+                var variantName = $"{teResourceGUID.Index(variantModeInfo.m_A9253C68):X} - {gameModeName}";
+                if (variantModeInfo.m_216EA6DA != 0) {
+                    // todo: do missions have names or...
+                    variantName += $" - {variantModeInfo.m_216EA6DA}";
+                }
+                if (variantModeInfo.m_celebration != 0) {
+                    variantName += $" - {variantModeInfo.m_celebration}";
+                }
+
+                FindLogic.Combo.Find(info, variantResultingMap.m_loadingScreen); // big
+                FindLogic.Combo.Find(info, variantResultingMap.m_7E748F9C); // small
+
+                teMapPlaceableData placeableModelGroups = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.MODEL_GROUP);
+                teMapPlaceableData placeableSingleModels = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.SINGLE_MODEL);
+                teMapPlaceableData placeableModel = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.MODEL);
+                teMapPlaceableData placeableLights = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.LIGHT);
+                teMapPlaceableData placeableEntities = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.ENTITY);
+                teMapPlaceableData placeableSounds = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.SOUND);
+                teMapPlaceableData placeableEffects = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.EFFECT);
+
+                OverwatchMap exportMap = new OverwatchMap(name, info, placeableSingleModels, placeableModelGroups, placeableModel, placeableEntities, placeableLights, placeableSounds, placeableEffects);
+                using (Stream outputStream = File.OpenWrite(Path.Combine(mapPath, $"{variantName}.{exportMap.Extension}"))) {
+                    exportMap.Write(outputStream);
+                }
+
+                /*ulong announcerVoiceSet = 0;
+                using (Stream stream = OpenFile(mapHeader.m_map)) {
+                    if (stream != null) {
+                        using (BinaryReader reader = new BinaryReader(stream)) {
+                            teMap map = reader.Read<teMap>();
+
+                            STUVoiceSetComponent voiceSetComponent =
+                                GetInstance<STUVoiceSetComponent>(map.EntityDefinition);
+
+                            announcerVoiceSet = voiceSetComponent?.m_voiceDefinition;
+                            FindLogic.Combo.Find(info, announcerVoiceSet);
+
+                            info.SetEffectVoiceSet(mapHeader.m_announcerWelcome, announcerVoiceSet);
+                        }
+                    }
+                }*/
             }
 
             {
@@ -330,23 +370,6 @@ namespace DataTool.SaveLogic {
             FindLogic.Combo.Find(info, mapHeader.m_musicTease);
             info.SetEffectName(mapHeader.m_musicTease, "MusicTease");
 
-            ulong announcerVoiceSet = 0;
-            using (Stream stream = OpenFile(mapHeader.m_map)) {
-                if (stream != null) {
-                    using (BinaryReader reader = new BinaryReader(stream)) {
-                        teMap map = reader.Read<teMap>();
-
-                        STUVoiceSetComponent voiceSetComponent =
-                            GetInstance<STUVoiceSetComponent>(map.EntityDefinition);
-
-                        announcerVoiceSet = voiceSetComponent?.m_voiceDefinition;
-                        FindLogic.Combo.Find(info, announcerVoiceSet);
-
-                        info.SetEffectVoiceSet(mapHeader.m_announcerWelcome, announcerVoiceSet);
-                    }
-                }
-            }
-
             LoudLog("\tSaving");
             var context = new Combo.SaveContext(info);
             Combo.Save(flags, mapPath, context);
@@ -356,9 +379,9 @@ namespace DataTool.SaveLogic {
                 FindLogic.Combo.Find(info, mapHeader.m_7F5B54B2);
             }
 
-            if (announcerVoiceSet != 0) { // whole thing in env mode, not here
-                info.m_voiceSets.Remove(announcerVoiceSet);
-            }
+            //if (announcerVoiceSet != 0) { // whole thing in env mode, not here
+            //    info.m_voiceSets.Remove(announcerVoiceSet);
+            //}
 
             Combo.SaveAllVoiceSets(flags, Path.Combine(mapPath, "VoiceSets"), context);
             Combo.SaveAllSoundFiles(flags, Path.Combine(mapPath, "Sound"), context);
@@ -366,14 +389,14 @@ namespace DataTool.SaveLogic {
             LoudLog("\tDone");
         }
 
-        public static teMapPlaceableData GetPlaceableData(STUMapHeader map, Enums.teMAP_PLACEABLE_TYPE modelGroup) {
-            using (Stream stream = OpenFile(map.GetChunkKey(modelGroup))) {
-                return stream == null ? null : new teMapPlaceableData(stream, modelGroup);
+        public static teMapPlaceableData GetPlaceableData(STUMapHeader map, ulong variantGUID, Enums.teMAP_PLACEABLE_TYPE type) {
+            using (Stream stream = OpenFile(map.GetChunkKey(variantGUID, type))) {
+                return stream == null ? null : new teMapPlaceableData(stream, type);
             }
         }
 
-        public static teMapPlaceableData GetPlaceableData(STUMapHeader map, byte type) {
-            return GetPlaceableData(map, (Enums.teMAP_PLACEABLE_TYPE) type);
+        public static teMapPlaceableData GetPlaceableData(STUMapHeader map, ulong variantGUID, byte type) {
+            return GetPlaceableData(map, variantGUID, (Enums.teMAP_PLACEABLE_TYPE) type);
         }
     }
 }

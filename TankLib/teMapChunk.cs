@@ -44,9 +44,9 @@ namespace TankLib {
             /// </summary>
             public teUUID UUID;
 
-            public ushort Unknown1;
-            public byte Unknown2;
-            public byte Unknown3;
+            public byte Unknown16; // 16
+            public byte Unknown17; // 17
+            public byte Unknown18;
 
             /// <summary>
             /// Size in bytes (including this structure)
@@ -103,6 +103,8 @@ namespace TankLib {
 
                     CommonStructure commonStructure = reader.Read<CommonStructure>();
                     CommonStructures[i] = commonStructure;
+
+                    if ((commonStructure.Unknown16 & 0x40) != 0) throw new Exception("placeable with variant bitmask. please tell zingy which map");
 
                     Placeables[i] = Manager.CreateType(commonStructure, type, reader);
 
@@ -228,7 +230,6 @@ namespace TankLib {
         public struct Structure {
             public teResourceGUID EntityDefinition;  // 003
             public teResourceGUID Identifier1;  // 01C
-            public teResourceGUID Identifier2;  // 01C
             public teVec3 Translation;
             public teVec3 Scale;
             public teQuat Rotation;

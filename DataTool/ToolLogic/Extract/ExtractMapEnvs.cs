@@ -30,7 +30,9 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public void SaveMaps(ICLIFlags toolFlags) {
-            string basePath;
+            throw new Exception("extract-map-envs doesn't work in ow2 yet. sorry");
+
+            /*string basePath;
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
             } else {
@@ -83,7 +85,7 @@ namespace DataTool.ToolLogic.Extract {
                             teMap env = dataReader.Read<teMap>();
 
                             // using (Stream lightingStream = OpenFile(env.BakedLighting)) {
-                            //    teLightingManifest lightingManifest = new teLightingManifest(lightingStream);   
+                            //    teLightingManifest lightingManifest = new teLightingManifest(lightingStream);
                             //}
 
                             if (!flags.SkipMapEnvironmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnvironmentSound, mapInfo.Name)))
@@ -109,7 +111,7 @@ namespace DataTool.ToolLogic.Extract {
 
                 InfoLog("Saved Environment data for {0}", mapInfo.GetUniqueName());
                 SaveScratchDatabase();
-            }
+            }*/
         }
 
         private void SaveEntity(ExtractFlags flags, string basePath, string part, ulong key) {
