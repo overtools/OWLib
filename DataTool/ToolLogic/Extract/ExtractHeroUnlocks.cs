@@ -11,7 +11,6 @@ using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic.Unlock;
 using DataTool.ToolLogic.Util;
-using DirectXTexNet;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
@@ -182,9 +181,7 @@ namespace DataTool.ToolLogic.Extract {
 
                     var guiContext = new SaveLogic.Combo.SaveContext(guiInfo);
                     SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(heroPath, "GUI"), guiContext, new SaveLogic.Combo.SaveTextureOptions {
-                        ProcessIcon = true,
-                        DXGIFormatOverride = DXGI_FORMAT.R8G8B8A8_UNORM,
-                        FileTypeOverride = "tif"
+                        ProcessIcon = true
                     });
                 }
 
