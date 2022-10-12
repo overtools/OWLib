@@ -68,7 +68,7 @@ namespace TankView.ViewModel {
 
             switch (DataHelper.GetDataType(value)) {
                 case DataHelper.DataType.Image: {
-                    var buffer = DataHelper.ConvertDDS(value.GUID, DXGI_FORMAT.R8G8B8A8_UNORM, 0, out var width, out var height);
+                    var buffer = DataHelper.ConvertDDS(value.GUID, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.Codec.RAW, out var width, out var height);
                     if (!buffer.IsEmpty) {
                         PreviewSource = new RGBABitmapSource(buffer, width, height);
                         PreviewControl = new PreviewDataImage();

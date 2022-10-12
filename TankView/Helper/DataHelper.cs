@@ -91,7 +91,7 @@ namespace TankView.Helper {
             return ms;
         }
 
-        public static Memory<byte> ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, WICCodecs imageFormat, out int width, out int height) {
+        public static Memory<byte> ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, DDSConverter.Codec imageFormat, out int width, out int height) {
             width = 0;
             height = 0;
 

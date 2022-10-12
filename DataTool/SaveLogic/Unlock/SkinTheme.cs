@@ -79,14 +79,12 @@ namespace DataTool.SaveLogic.Unlock {
                 FindLogic.Combo.Find(info, skinTheme.m_ECCC4A5D, replacements);
                 info.SetTextureName(skinTheme.m_ECCC4A5D, "Portrait");
                 info.SetTextureProcessIcon(skinTheme.m_ECCC4A5D);
-                info.SetTextureFileType(skinTheme.m_ECCC4A5D, "png");
             }
 
             foreach (STU_1A496D3C tex in hero.m_8203BFE1) { // find GUI
                 FindLogic.Combo.Find(info, tex.m_texture, replacements);
                 info.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
                 info.SetTextureProcessIcon(tex.m_texture);
-                info.SetTextureFileType(tex.m_texture, "png");
             }
 
             if (replacements != null) {

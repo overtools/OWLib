@@ -47,6 +47,8 @@ namespace DataTool.SaveLogic {
                         !File.Exists(Path.ChangeExtension(record.AbsolutePath, "dds")) &&
                         !File.Exists(Path.ChangeExtension(record.AbsolutePath, "tif")) &&
                         !File.Exists(Path.ChangeExtension(record.AbsolutePath, "png")) &&
+                        !File.Exists(Path.ChangeExtension(record.AbsolutePath, "raw")) &&
+                        !File.Exists(Path.ChangeExtension(record.AbsolutePath, "tga")) &&
                         !File.Exists(Path.ChangeExtension(record.AbsolutePath, "jpg"))) {
                         RemoveRecord(guid);
                         return false;

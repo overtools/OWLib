@@ -13,11 +13,23 @@ namespace DataTool.Helper {
             SpeedOverMemory = 0x08
         }
 
+        public enum Codec {
+            // abstract formats
+            RAW,
+            // WIC formats
+            TIFF,
+            PNG,
+            JPEG,
+            // other formats
+            TGA,
+            HDR,
+        }
+
         [DllImport("Ole32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int CoInitializeEx([In, Optional] IntPtr pvReserved, [In] CoInit dwCoInit);
 
 
-        public static unsafe Memory<byte> ConvertDDS(Stream ddsSteam, DXGI_FORMAT targetFormat, WICCodecs codec, int? frameNr) {
+        public static unsafe Memory<byte> ConvertDDS(Stream ddsSteam, DXGI_FORMAT targetFormat, Codec codec, int? frameNr) {
             CoInitializeEx(IntPtr.Zero, CoInit.MultiThreaded | CoInit.SpeedOverMemory);
 
             Memory<byte> data = new byte[ddsSteam.Length];
@@ -28,7 +40,7 @@ namespace DataTool.Helper {
                 scratch = TexHelper.Instance.LoadFromDDSMemory((IntPtr) dataPin.Pointer, data.Length, DDS_FLAGS.NONE);
                 TexMetadata info = scratch.GetMetadata();
 
-                var isMultiFrame = codec == WICCodecs.GIF || codec == WICCodecs.TIFF;
+                var isMultiFrame = codec == Codec.TIFF;
                 if (frameNr != null) {
                     isMultiFrame = false;
                 }
@@ -50,30 +62,51 @@ namespace DataTool.Helper {
                     scratch = temp;
                 }
 
-                if (codec > 0) {
-                    UnmanagedMemoryStream stream;
-                    if (info.ArraySize == 1 || !isMultiFrame) {
-                        stream = scratch.SaveToWICMemory(0, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(codec));
-                    } else {
-                        stream = scratch.SaveToWICMemory(0, info.ArraySize, WIC_FLAGS.ALL_FRAMES, TexHelper.Instance.GetWICCodec(codec));
+                switch (codec) {
+                    case Codec.RAW: {
+                        var image = scratch.GetImage(0);
+                        Memory<byte> tex = new byte[image.SlicePitch];
+                        using (var pinned = tex.Pin()) {
+                            Buffer.MemoryCopy((void*) image.Pixels, pinned.Pointer, tex.Length, tex.Length);
+                        }
+                        scratch.Dispose();
+                        return tex;
                     }
 
-                    if (stream == null) {
-                        return default;
+                    case Codec.TGA: {
+                        using var stream = scratch.SaveToTGAMemory(frame);
+                        Memory<byte> tex = new byte[stream.Length];
+                        stream.Read(tex.Span);
+                        scratch.Dispose();
+                        return tex;
                     }
 
-                    byte[] tex = new byte[stream.Length];
-                    stream.Read(tex, 0, tex.Length);
-                    scratch.Dispose();
-                    return tex;
-                } else { // save as raw RGBA
-                    var image = scratch.GetImage(0);
-                    Memory<byte> tex = new byte[image.Width * image.Height * 4];
-                    using (var pinned = tex.Pin()) {
-                        Buffer.MemoryCopy((void*) image.Pixels, pinned.Pointer, tex.Length, tex.Length);
+                    case Codec.HDR: {
+                        using var stream = scratch.SaveToHDRMemory(frame);
+                        Memory<byte> tex = new byte[stream.Length];
+                        stream.Read(tex.Span);
+                        scratch.Dispose();
+                        return tex;
                     }
-                    scratch.Dispose();
-                    return tex;
+
+                    default: {
+                        var wic = codec switch {
+                            Codec.TIFF => WICCodecs.TIFF,
+                            Codec.PNG => WICCodecs.PNG,
+                            Codec.JPEG => WICCodecs.JPEG,
+                            _ => WICCodecs.TIFF
+                        };
+                        UnmanagedMemoryStream stream;
+                        if (info.ArraySize == 1 || !isMultiFrame) {
+                            stream = scratch.SaveToWICMemory(frame, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(wic));
+                        } else {
+                            stream = scratch.SaveToWICMemory(0, info.ArraySize, WIC_FLAGS.ALL_FRAMES, TexHelper.Instance.GetWICCodec(wic));
+                        }
+                        Memory<byte> tex = new byte[stream.Length];
+                        stream.Read(tex.Span);
+                        scratch.Dispose();
+                        return tex;
+                    }
                 }
             }  catch {
                 // ignored

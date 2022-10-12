@@ -619,9 +619,9 @@ namespace DataTool.SaveLogic {
         }
 
         private static void ProcessIconTexture(Stream convertedStream, teTexture texture, string filePath, string convertType) {
-            var alpha = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 0);
+            var alpha = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.Codec.TIFF, 0);
             convertedStream.Position = 0;
-            var color = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.TIFF, 1);
+            var color = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, DDSConverter.Codec.TIFF, 1);
 
             if (color.IsEmpty || alpha.IsEmpty) {
                 convertedStream.Position = 0;
@@ -684,6 +684,8 @@ namespace DataTool.SaveLogic {
             /// Overrides the file type the texture is saved as.
             /// </summary>
             public string FileTypeOverride { get; set; }
+
+            public DXGI_FORMAT? DXGIFormatOverride { get; set; }
         }
 
         public static void SaveTexture(ICLIFlags flags, string path, SaveContext info, ulong textureGUID, SaveTextureOptions options = null) {
@@ -693,10 +695,12 @@ namespace DataTool.SaveLogic {
             var split = options?.Split ?? textureInfo.m_split ?? false;
             var processIcon = options?.ProcessIcon ?? textureInfo.m_processIcon ?? false;
             var fileType = options?.FileTypeOverride ?? textureInfo.m_fileType ?? null;
+            var dxgiFormatNl = options?.DXGIFormatOverride ?? textureInfo.m_dxgiOverride ?? null;
 
             bool convertTextures = true;
             string convertType = fileType;
             string multiSurfaceConvertType = "tif";
+            DXGI_FORMAT dxgiFormat = dxgiFormatNl ?? DXGI_FORMAT.R8G8B8A8_UNORM;
 
             var createMultiSurfaceSheet = split;
             var splitMultiSurface = false;
@@ -708,6 +712,7 @@ namespace DataTool.SaveLogic {
                 convertTextures = !extractFlags.RawTextures && !extractFlags.Raw;
                 splitMultiSurface = (split || extractFlags.SplitMultiSurface) && convertTextures && !createMultiSurfaceSheet;
                 convertType = fileType ?? extractFlags.ConvertTexturesType.ToLowerInvariant();
+                dxgiFormat = dxgiFormatNl ?? extractFlags.DXGI;
 
                 multiSurfaceConvertType = convertType;
                 if (extractFlags.ForceDDSMultiSurface) {
@@ -782,24 +787,30 @@ namespace DataTool.SaveLogic {
                     }
                 }
 
-                convertType = "tif";
-
-                WICCodecs? imageFormat = WICCodecs.TIFF;
+                DDSConverter.Codec imageFormat = DDSConverter.Codec.TIFF;
                 switch (convertType) {
                     case "tif":
-                        imageFormat = WICCodecs.TIFF;
+                        imageFormat = DDSConverter.Codec.TIFF;
                         break;
                     case "png":
-                        imageFormat = WICCodecs.PNG;
+                        imageFormat = DDSConverter.Codec.PNG;
                         break;
                     case "jpg":
-                        imageFormat = WICCodecs.JPEG;
+                        imageFormat = DDSConverter.Codec.JPEG;
+                        dxgiFormat = DXGI_FORMAT.R8G8B8A8_UNORM;
+                        break;
+                    case "tga":
+                        imageFormat = DDSConverter.Codec.TGA;
+                        dxgiFormat = DXGI_FORMAT.R8G8B8A8_UNORM;
+                        break;
+                    case "hdr":
+                        imageFormat = DDSConverter.Codec.HDR;
+                        dxgiFormat = DXGI_FORMAT.R16G16B16A16_FLOAT;
+                        break;
+                    case "raw":
+                        imageFormat = DDSConverter.Codec.RAW;
                         break;
                 }
-
-                // if (convertType == "tga") imageFormat = Im.... oh
-                // so there is no TGA image format.
-                // sucks to be them
 
                 try {
                     if (convertType == "dds") {
@@ -819,7 +830,7 @@ namespace DataTool.SaveLogic {
                                 var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
                                 convertedStream.Position = 0;
                                 // todo: this will decompress and convert the dds multiple times.
-                                var data = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, imageFormat.Value, splitMultiSurface ? surfaceNr : default(int?));
+                                var data = DDSConverter.ConvertDDS(convertedStream, dxgiFormat, imageFormat, splitMultiSurface ? surfaceNr : default(int?));
                                 if (!data.IsEmpty) {
                                     WriteFile(data, $"{surfacePath}.{convertType}");
                                 } else {

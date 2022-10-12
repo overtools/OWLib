@@ -5,6 +5,7 @@ using DataTool.DataModels.Hero;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic;
+using DirectXTexNet;
 using TankLib;
 using TankLib.STU.Types;
 
@@ -38,8 +39,9 @@ namespace DataTool.ToolLogic.Extract {
                     }
 
                     Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName), new Combo.SaveContext(heroImageCombo), new Combo.SaveTextureOptions {
-                        FileTypeOverride = "png",
+                        FileTypeOverride = "tif",
                         ProcessIcon = true,
+                        DXGIFormatOverride = DXGI_FORMAT.R8G8B8A8_UNORM,
                     });
                 }
 
@@ -51,7 +53,8 @@ namespace DataTool.ToolLogic.Extract {
                     }
 
                     Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName, "Abilities"), new Combo.SaveContext(heroLoadoutCombo), new Combo.SaveTextureOptions {
-                        FileTypeOverride = "png"
+                        FileTypeOverride = "tif",
+                        DXGIFormatOverride = DXGI_FORMAT.R8G8B8A8_UNORM,
                     });
                 }
 
@@ -80,8 +83,9 @@ namespace DataTool.ToolLogic.Extract {
                         var guid = FindLogic.Combo.GetReplacement(tex.m_texture, replacements);
                         FindLogic.Combo.Find(info, guid);
                         info.SetTextureOptions(guid, new Combo.SaveTextureOptions {
-                            FileTypeOverride = "png",
+                            FileTypeOverride = "tif",
                             ProcessIcon = true,
+                            DXGIFormatOverride = DXGI_FORMAT.R8G8B8A8_UNORM,
                             FileNameOverride = $"{teResourceGUID.Index(unlock.GUID)} - Icon - {IO.GetValidFilename(unlock.Name)}"
                         });
                     }
@@ -89,8 +93,9 @@ namespace DataTool.ToolLogic.Extract {
                     if (skinTheme.m_ECCC4A5D != null) {
                         FindLogic.Combo.Find(info, skinTheme.m_ECCC4A5D);
                         info.SetTextureOptions(skinTheme.m_ECCC4A5D, new Combo.SaveTextureOptions {
-                            FileTypeOverride = "png",
+                            FileTypeOverride = "tif",
                             ProcessIcon = true,
+                            DXGIFormatOverride = DXGI_FORMAT.R8G8B8A8_UNORM,
                             FileNameOverride = $"{teResourceGUID.Index(unlock.GUID)} - Portrait - {IO.GetValidFilename(unlock.Name)}"
                         });
                     }

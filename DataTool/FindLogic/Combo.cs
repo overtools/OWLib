@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DataTool.Helper;
+using DirectXTexNet;
 using Newtonsoft.Json;
 using TankLib;
 using TankLib.Chunks;
@@ -101,6 +102,8 @@ namespace DataTool.FindLogic {
             public void SetTextureProcessIcon(ulong texture) {
                 if (!m_textures.TryGetValue(texture, out var asset)) return;
                 asset.m_processIcon = true;
+                asset.m_dxgiOverride = DXGI_FORMAT.R8G8B8A8_UNORM;
+                asset.m_fileType = "tif";
             }
 
             /// <summary>
@@ -113,6 +116,12 @@ namespace DataTool.FindLogic {
                 asset.m_fileType = options.FileTypeOverride;
                 asset.m_processIcon = options.ProcessIcon;
                 asset.m_name = options.FileNameOverride;
+                asset.m_dxgiOverride = options.DXGIFormatOverride;
+            }
+
+            public void SetTextureDXGIFormat(ulong texture, DXGI_FORMAT dxgiFormat) {
+                if (!m_textures.TryGetValue(texture, out var asset)) return;
+                asset.m_dxgiOverride = dxgiFormat;
             }
 
             public void SetTextureSplit(ulong texture) {
@@ -300,6 +309,7 @@ namespace DataTool.FindLogic {
             public bool? m_processIcon;
             public bool? m_split;
             public string m_fileType;
+            public DXGI_FORMAT? m_dxgiOverride;
 
             public TextureAsset(ulong guid) : base(guid) { }
         }
