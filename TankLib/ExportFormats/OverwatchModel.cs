@@ -48,8 +48,8 @@ namespace TankLib.ExportFormats {
             teModelChunk_STU stu = _data.GetChunk<teModelChunk_STU>();
 
             using (BinaryWriter writer = new BinaryWriter(stream)) {
-                writer.Write((ushort)1);
-                writer.Write((ushort)6);
+                writer.Write((ushort)2);
+                writer.Write((ushort)0);
                 if (ModelLookFileName == null) {   // mat ref
                     writer.Write((byte)0);
                 } else {
