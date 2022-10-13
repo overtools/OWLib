@@ -91,15 +91,7 @@ namespace DataTool.Helper {
                 return tex;
             } catch {
                 if (!didConvert) {
-                    var bpc = TexHelper.Instance.BitsPerColor(info.Format);
-                    DXGI_FORMAT newFormat;
-                    if (bpc <= 8) {
-                        newFormat = TexHelper.Instance.IsSRGB(info.Format) ? DXGI_FORMAT.R8G8B8A8_UNORM_SRGB : DXGI_FORMAT.R8G8B8A8_UNORM;
-                    } else {
-                        newFormat = DXGI_FORMAT.R16G16B16A16_UNORM;
-                    }
-
-                    ScratchImage temp = scratch.Convert(newFormat, TEX_FILTER_FLAGS.DEFAULT, 0.5f);
+                    ScratchImage temp = scratch.Convert(TexHelper.Instance.BitsPerColor(info.Format) <= 8 ? TexHelper.Instance.IsSRGB(info.Format) ? DXGI_FORMAT.R8G8B8A8_UNORM_SRGB : DXGI_FORMAT.R8G8B8A8_UNORM : DXGI_FORMAT.R16G16B16A16_UNORM, TEX_FILTER_FLAGS.DEFAULT, 0.5f);
                     scratch.Dispose();
                     scratch = temp;
                     return SaveWIC(codec, info, isMultiFrame, scratch, true);
