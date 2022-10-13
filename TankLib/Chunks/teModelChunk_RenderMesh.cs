@@ -169,7 +169,7 @@ namespace TankLib.Chunks {
             /// <summary>Number of UV maps</summary>
             public byte UVCount;
 
-            public Submesh(SubmeshDescriptor submeshDescriptor, byte uvCount) {
+            public Submesh(SubmeshDescriptor submeshDescriptor, byte uvCount, byte blendCount) {
                 Descriptor = submeshDescriptor;
                 UVCount = uvCount;
 
@@ -188,8 +188,8 @@ namespace TankLib.Chunks {
                 BoneIndices = new ushort[submeshDescriptor.VerticesToDraw][];
                 BoneWeights = new float[submeshDescriptor.VerticesToDraw][];
                 for (int i = 0; i < submeshDescriptor.VerticesToDraw; i++) {
-                    //BoneIndices[i] = new ushort[4];
-                    BoneWeights[i] = new float[4];
+                    BoneIndices[i] = new ushort[4*blendCount];
+                    BoneWeights[i] = new float[4*blendCount];
                     UV[i] = new teVec2[uvCount];
                 }
             }
@@ -353,8 +353,9 @@ namespace TankLib.Chunks {
                 //VertexBufferDescriptor vbo = VertexBuffers[submeshDescriptor.VertexBuffer];
                 IndexBufferDescriptor ibo = IndexBuffers[submeshDescriptor.IndexBuffer];
                 byte uvCount = GetMaxIndex(VertexElements[submeshDescriptor.VertexBuffer], teShaderInstance.ShaderInputUse.TexCoord);
+                byte blendCount = GetMaxIndex(VertexElements[submeshDescriptor.VertexBuffer], teShaderInstance.ShaderInputUse.BlendWeights);
 
-                Submesh submesh = new Submesh(submeshDescriptor, uvCount);
+                Submesh submesh = new Submesh(submeshDescriptor, uvCount, blendCount);
 
                 //Console.Out.WriteLine($"SUBMESH: ptr {ibo.DataStreamPointer} indexstart: {submeshDescriptor.IndexStart} {submeshDescriptor.VertexStart} {submeshDescriptor.VerticesToDraw}");
                 reader.BaseStream.Position = ibo.DataStreamPointer + submeshDescriptor.IndexStart * 2;
@@ -409,24 +410,17 @@ namespace TankLib.Chunks {
                             }
                                 break;
                             case teShaderInstance.ShaderInputUse.BlendIndices:
-                                if (element.Index == 0) {
-                                    ushort[] boneIndex = (ushort[]) value;
-                                    submesh.BoneIndices[k] = new ushort[boneIndex.Length];
-                                    for (int m = 0; m < boneIndex.Length; ++m) {
-                                        submesh.BoneIndices[k][m] = (ushort) (boneIndex[m] + submeshDescriptor.BoneIdOffset);
-                                    }
-                                } else {
-                                    Debugger.Log(2, "teModelChunk_RenderMesh",
-                                        $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");
+                                ushort[] thisIndices = (ushort[]) value;
+                                var indicesDest = submesh.BoneIndices[k].AsSpan(element.Index * 4, 4);
+
+                                for (int m = 0; m < thisIndices.Length; ++m) {
+                                    indicesDest[m] = (ushort) (thisIndices[m] + submeshDescriptor.BoneIdOffset);
                                 }
                                 break;
                             case teShaderInstance.ShaderInputUse.BlendWeights:
-                                if (element.Index == 0) {
-                                    submesh.BoneWeights[k] = (float[]) value;
-                                } else {
-                                    Debugger.Log(2, "teModelChunk_RenderMesh",
-                                        $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");
-                                }
+                                var thisWeights = (float[]) value;
+                                var weightsDest = submesh.BoneWeights[k].AsSpan(element.Index * 4, 4);
+                                thisWeights.AsSpan().CopyTo(weightsDest);
                                 break;
                             case teShaderInstance.ShaderInputUse.Tangent:
                                 float[] tangent = (float[]) value;
