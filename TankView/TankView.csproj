@@ -59,8 +59,8 @@
   </Target>
   <Target Name="SetSourceRevisionId" AfterTargets="SetSourceRevisionIdGit">
     <PropertyGroup>
-      <GITHUB_RUN_NUMBER Condition="'$(GITHUB_RUN_NUMBER)' == ''">develop</GITHUB_RUN_NUMBER>
-      <SourceRevisionId>$(GITHUB_RUN_NUMBER)+$(SourceRevisionIdGit)</SourceRevisionId>
+      <GITHUB_RUN_NUMBER_DELTA Condition="'$(GITHUB_RUN_NUMBER_DELTA)' == ''">develop</GITHUB_RUN_NUMBER_DELTA>
+      <SourceRevisionId>$(GITHUB_RUN_NUMBER_DELTA)+$(SourceRevisionIdGit)</SourceRevisionId>
     </PropertyGroup>
   </Target>
 </Project>

@@ -1,6 +1,5 @@
 ﻿using System;
 using DataTool.Flag;
-using DirectXTexNet;
 using JetBrains.Annotations;
 
 namespace DataTool.ToolLogic.Extract {
@@ -9,11 +8,8 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Flag = "out-path", NeedsValue = true, Help = "Output path", Positional = 2, Required = true)]
         public string OutputPath;
 
-        [CLIFlag(Default = "tif", NeedsValue = true, Flag = "convert-textures-type", Help = "Texture output type", Valid = new[] {"dds", "tif", "png", "jpg", "tga", "raw", "hdr"})]
+        [CLIFlag(Default = "tif", NeedsValue = true, Flag = "convert-textures-type", Help = "Texture output type", Valid = new[] {"dds", "tif", "png", "jpg", "hdr"})]
         public string ConvertTexturesType;
-
-        [CLIFlag(Default = "R8G8B8A8_UNORM", NeedsValue = true, Flag = "dxgi-format", Help = "Output DXGI Format for TGA")]
-        public string RawDXGIFormat;
 
         [CLIFlag(Default = false, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool ConvertTexturesLossless;
@@ -107,8 +103,6 @@ namespace DataTool.ToolLogic.Extract {
 
         [CLIFlag(Default = false, Flag = "xml", Help = "Convert STUs to xml when extracted with ExtractDebugType", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertToXML;
-
-        internal DXGI_FORMAT DXGI => Enum.Parse<DXGI_FORMAT>(RawDXGIFormat);
 
         public override bool Validate() => true;
     }
