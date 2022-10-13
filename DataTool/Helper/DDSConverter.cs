@@ -92,12 +92,11 @@ namespace DataTool.Helper {
             } catch {
                 if (!didConvert) {
                     var bpc = TexHelper.Instance.BitsPerColor(info.Format);
-                    var isSRGB = TexHelper.Instance.IsSRGB(info.Format);
                     DXGI_FORMAT newFormat;
                     if (bpc <= 8) {
-                        newFormat = isSRGB ? DXGI_FORMAT.R8G8B8A8_UNORM_SRGB : DXGI_FORMAT.R8G8B8A8_UNORM;
+                        newFormat = TexHelper.Instance.IsSRGB(info.Format) ? DXGI_FORMAT.R8G8B8A8_UNORM_SRGB : DXGI_FORMAT.R8G8B8A8_UNORM;
                     } else {
-                        newFormat = isSRGB ? DXGI_FORMAT.R8G8B8A8_UNORM_SRGB : DXGI_FORMAT.R8G8B8A8_UNORM;
+                        newFormat = DXGI_FORMAT.R16G16B16A16_UNORM;
                     }
 
                     ScratchImage temp = scratch.Convert(newFormat, TEX_FILTER_FLAGS.DEFAULT, 0.5f);
