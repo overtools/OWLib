@@ -568,8 +568,8 @@ namespace DataTool.FindLogic {
                                 }
 
                                 Find(info, modelComponent.m_model, replacements, entityContext);
-                                Find(info, modelComponent.m_look, replacements, entityContext);
                                 Find(info, modelComponent.m_F5ADE169, replacements, entityContext); // new model
+                                Find(info, modelComponent.m_look, replacements, entityContext);
                                 Find(info, modelComponent.m_EE77FFF9, replacements, entityContext); // new look
                                 Find(info, modelComponent.m_animBlendTreeSet, replacements, entityContext);
                                 Find(info, modelComponent.m_36F54327, replacements, entityContext);
