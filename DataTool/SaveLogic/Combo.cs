@@ -205,9 +205,8 @@ namespace DataTool.SaveLogic {
         }
 
         public static void SaveAnimation(ICLIFlags flags, string path, SaveContext context, ulong animation, ulong model) {
-            if (!Debugger.IsAttached) {
-                return; // MARKER: Disabled animations.
-            }
+            // todo OW2: ANIMATION DISABLED
+            if (!Debugger.IsAttached) return;
 
             bool convertAnims = false;
             bool scaleAnims = false;

@@ -568,8 +568,8 @@ namespace DataTool.FindLogic {
                                 }
 
                                 Find(info, modelComponent.m_model, replacements, entityContext);
-                                Find(info, modelComponent.m_look, replacements, entityContext);
                                 Find(info, modelComponent.m_F5ADE169, replacements, entityContext); // new model
+                                Find(info, modelComponent.m_look, replacements, entityContext);
                                 Find(info, modelComponent.m_EE77FFF9, replacements, entityContext); // new look
                                 Find(info, modelComponent.m_animBlendTreeSet, replacements, entityContext);
                                 Find(info, modelComponent.m_36F54327, replacements, entityContext);
@@ -640,10 +640,6 @@ namespace DataTool.FindLogic {
                     break;
                 }
                 case 0x6: {
-                    if (!Debugger.IsAttached) {
-                        break; // MARKER: Disabled animations.
-                    }
-
                     if (info.m_animations.ContainsKey(guid)) {
                         if (context.Model != 0) {
                             info.m_models[context.Model].n_animations.Add(guid);
@@ -660,6 +656,18 @@ namespace DataTool.FindLogic {
 
                     ComboContext animationContext = context.Clone();
                     animationContext.Animation = guid;
+
+                    if (context.Model != 0) {
+                        info.m_models[context.Model].n_animations.Add(guid);
+                    }
+
+                    if (context.Entity != 0) {
+                        info.m_entities[context.Entity].m_animations.Add(guid);
+                    }
+                    info.m_animations[guid] = animationInfo;
+
+                    // todo OW2: ANIMATION DISABLED
+                    if (!Debugger.IsAttached) break;
 
                     using (Stream animationStream = OpenFile(guid)) {
                         if (animationStream == null) break;
@@ -678,16 +686,6 @@ namespace DataTool.FindLogic {
 
                         Find(info, effectGuid, replacements, animationContext);
                     }
-
-                    if (context.Model != 0) {
-                        info.m_models[context.Model].n_animations.Add(guid);
-                    }
-
-                    if (context.Entity != 0) {
-                        info.m_entities[context.Entity].m_animations.Add(guid);
-                    }
-
-                    info.m_animations[guid] = animationInfo;
                     break;
                 }
                 case 0x8:
