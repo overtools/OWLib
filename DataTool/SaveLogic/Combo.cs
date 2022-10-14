@@ -768,7 +768,7 @@ namespace DataTool.SaveLogic {
                 uint? width = null;
                 uint? height = null;
                 uint? surfaces = null;
-                if ((texture.Header.IsCubemap || texture.Header.IsArray || texture.HasMultipleSurfaces) && !processIcon) {
+                if ((texture.Header.IsCubemap || texture.Header.IsArray) && !processIcon) {
                     if (createMultiSurfaceSheet) {
                         Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet because it has more than one surface");
                         height = (uint) (texture.Header.Height * texture.Header.Surfaces);
