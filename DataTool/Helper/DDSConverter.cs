@@ -44,6 +44,10 @@ namespace DataTool.Helper {
                     info = scratch.GetMetadata();
                 }
 
+                // trust me, this is the only way to do this
+                // we basically have to pray that the image is decompressed into a format that the target format supports
+                // this is because png will automatically switch between sRGB and Linear, but TIF will always use linear
+                // so if we always convert it to a linear target type, PNG loses accuracy.
                 if (info.Format != targetFormat && targetFormat != DXGI_FORMAT.UNKNOWN) {
                     ScratchImage temp = scratch.Convert(targetFormat, TEX_FILTER_FLAGS.DEFAULT, 0.5f);
                     scratch.Dispose();
@@ -74,6 +78,7 @@ namespace DataTool.Helper {
 
         private static Memory<byte> SaveWIC(WICCodecs codec, TexMetadata info, bool isMultiFrame, ScratchImage scratch, bool didConvert = false) {
             UnmanagedMemoryStream stream = null;
+            // this is fucked beyond belief lol
             try {
                 if (info.ArraySize == 1 || !isMultiFrame) {
                     stream = scratch.SaveToWICMemory(0, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(codec));
@@ -90,6 +95,9 @@ namespace DataTool.Helper {
                 scratch.Dispose();
                 return tex;
             } catch {
+                // if it crashes then the wic codec doesn't support the format, we gotta convert it to the proper format
+                // this is a hacky way to do it, but it works
+                // we keep bit depth and sRGB flag the same, but add extra channels
                 if (!didConvert) {
                     ScratchImage temp = scratch.Convert(TexHelper.Instance.BitsPerColor(info.Format) <= 8 ? TexHelper.Instance.IsSRGB(info.Format) ? DXGI_FORMAT.R8G8B8A8_UNORM_SRGB : DXGI_FORMAT.R8G8B8A8_UNORM : DXGI_FORMAT.R16G16B16A16_UNORM, TEX_FILTER_FLAGS.DEFAULT, 0.5f);
                     scratch.Dispose();
