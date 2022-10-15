@@ -99,6 +99,7 @@ namespace DataTool.Helper {
                 // this is a hacky way to do it, but it works
                 // we keep bit depth and sRGB flag the same, but add extra channels
                 if (!didConvert) {
+                    // if bits < 8 then { if srgb then DXGI_FORMAT_R8G8B8A8_UNORM_SRGB else DXGI_FORMAT_R8G8B8A8_UNORM } else { DXGI_FORMAT_R16G16B16A16_UNORM }
                     ScratchImage temp = scratch.Convert(TexHelper.Instance.BitsPerColor(info.Format) <= 8 ? TexHelper.Instance.IsSRGB(info.Format) ? DXGI_FORMAT.R8G8B8A8_UNORM_SRGB : DXGI_FORMAT.R8G8B8A8_UNORM : DXGI_FORMAT.R16G16B16A16_UNORM, TEX_FILTER_FLAGS.DEFAULT, 0.5f);
                     scratch.Dispose();
                     scratch = temp;
