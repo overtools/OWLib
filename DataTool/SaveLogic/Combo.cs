@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -932,8 +932,30 @@ namespace DataTool.SaveLogic {
 
         public static void VGMStreamSanity(ICLIFlags flags) {
             if (flags is ExtractFlags { ExportOgg: false } ef && !File.Exists(VgmStreamPath)) {
-                Logger.Warn("Combo", $"VGMStream not found, falling back to ww2ogg. Please download vgmstream from https://dl.vgmstream.org/ and extract it to the Third Party folder ({VgmStreamPath})");
-                ef.ExportOgg = true;
+                Logger.Warn("Combo", "vgmstream not found, downloading latest...");
+                try {
+                    if (OperatingSystem.IsLinux()) {
+                        // modcheck TarArchive dotnet?
+                        Logger.Warn("Combo", $"Failed to download vgmstream. Please download vgmstream from https://dl.vgmstream.org/ and extract it to the Third Party folder ({VgmStreamPath})");
+                    } else {
+                        using var web = new HttpClient();
+                        var id = web.GetStringAsync("https://cdn.vgmstream.org/latest_id_win").Result.Trim();
+                        var zip = web.GetStreamAsync($"https://cdn.vgmstream.org/{id}/windows/vgmstream-win.zip").Result;
+                        using var archive = new ZipArchive(zip);
+                        if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party", "vgmstream-win"))) {
+                            Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party", "vgmstream-win"));
+                        }
+                        foreach (var e in archive.Entries) {
+                            var targetPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party", "vgmstream-win", e.FullName));
+                            using var target = File.OpenWrite(targetPath);
+                            target.SetLength(0);
+                            e.Open().CopyTo(target);
+                        }
+                    }
+                } catch {
+                    Logger.Warn("Combo", $"Failed to download vgmstream. Please download vgmstream from https://dl.vgmstream.org/ and extract it to the Third Party folder ({VgmStreamPath})");
+                    ef.ExportOgg = true;
+                }
             }
         }
     }
