@@ -20,9 +20,9 @@
         <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\revorbstd\RevorbStd.csproj"/>
-        <ProjectReference Include="..\TACTLib\TACTLib\TACTLib.csproj"/>
-        <ProjectReference Include="..\TankLib\TankLib.csproj"/>
+        <ProjectReference Include="..\revorbstd\RevorbStd.csproj" />
+        <ProjectReference Include="..\TACTLib\TACTLib\TACTLib.csproj" />
+        <ProjectReference Include="..\TankLib\TankLib.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="Static\GUIDNames.csv">
@@ -31,29 +31,28 @@
         <Content Include="Static\LocalizedNamesMapping.csv">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="Third Party\ww2ogg.license.txt">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="Third Party\packed_codebooks_aoTuV_603.bin">
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="Third Party\**\*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="DirectXTexNet" Version="1.0.3"/>
-        <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
-        <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
-        <PackageReference Include="NUnit" Version="3.13.3"/>
-        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3"/>
-        <PackageReference Include="SymSpell" Version="6.7.2"/>
-        <PackageReference Include="Utf8Json" Version="1.3.7"/>
-        <PackageReference Include="DragonLib" Version="1.1.5.1"/>
+        <PackageReference Include="DirectXTexNet" Version="1.0.3" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="NUnit" Version="3.13.3" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+        <PackageReference Include="SymSpell" Version="6.7.2" />
+        <PackageReference Include="Utf8Json" Version="1.3.7" />
+        <PackageReference Include="DragonLib" Version="1.1.5.1" />
     </ItemGroup>
     <Target Name="SetSourceRevisionIdGit" BeforeTargets="BeforeBuild">
         <Exec Command="git describe --long --always --dirty --exclude=* --abbrev=8" ConsoleToMSBuild="True" IgnoreExitCode="False" ContinueOnError="True">
-            <Output PropertyName="SourceRevisionIdGit" TaskParameter="ConsoleOutput"/>
+            <Output PropertyName="SourceRevisionIdGit" TaskParameter="ConsoleOutput" />
         </Exec>
-        <OnError ExecuteTargets="SetSourceRevisionIdFallback"/>
+        <OnError ExecuteTargets="SetSourceRevisionIdFallback" />
     </Target>
     <Target Name="SetSourceRevisionIdFallback">
         <PropertyGroup>

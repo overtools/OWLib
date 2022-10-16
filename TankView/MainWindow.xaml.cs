@@ -403,7 +403,7 @@ namespace TankView {
                             switch (dataType) {
                                 case DataHelper.DataType.Sound when ExtractionSettings.EnableConvertSounds:
                                     o.SetLength(0);
-                                    Combo.ConvertSoundFile(i, o);
+                                    Combo.ConvertSoundFileWw2Ogg(i, o);
                                     break;
                                 // not used, image extraction is handled above
                                 case DataHelper.DataType.Image when ExtractionSettings.EnableConvertImages:

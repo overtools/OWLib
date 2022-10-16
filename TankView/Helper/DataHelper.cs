@@ -81,7 +81,7 @@ namespace TankView.Helper {
         internal static object ConvertSound(ulong value) {
             MemoryStream ms = new MemoryStream();
             try {
-                DataTool.SaveLogic.Combo.ConvertSoundFile(IOHelper.OpenFile(value), ms);
+                DataTool.SaveLogic.Combo.ConvertSoundFileWw2Ogg(IOHelper.OpenFile(value), ms);
             } catch (Exception ex) {
                 Debugger.Log(0, "[TankView.DataHelper.ConvertSound]", $"Error converting sound! {ex.Message}\n");
                 // ignored

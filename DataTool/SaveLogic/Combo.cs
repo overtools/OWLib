@@ -817,21 +817,66 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void ConvertSoundFile(Stream stream, FindLogic.Combo.ComboAsset soundFileInfo, string directory, string name = null) {
-            string outputFile = Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.ogg");
+        private static void ConvertSoundFile(Stream stream, FindLogic.Combo.ComboAsset soundFileInfo, string directory, string name = null, bool useVgmStream = false) {
+            string outputFile = Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.{(useVgmStream ? "wav" : "ogg")}");
             CreateDirectoryFromFile(outputFile);
             try {
-                using (Stream outputStream = File.OpenWrite(outputFile)) {
-                    outputStream.SetLength(0);
-                    ConvertSoundFile(stream, outputStream);
-                }
+                ConvertSoundFile(stream, outputFile, useVgmStream);
             } catch (IOException) {
                 if (File.Exists(outputFile)) return;
                 throw;
             }
         }
 
-        public static void ConvertSoundFile(Stream stream, Stream outputStream) {
+        public static void ConvertSoundFile(Stream stream, string outputFile, bool useVgmStream) {
+            if (useVgmStream) {
+                var temp = Path.ChangeExtension(Path.GetTempFileName(), ".wem");
+                try {
+                    using (Stream tempStream = File.OpenWrite(temp)) {
+                        stream.CopyTo(tempStream);
+                    }
+
+                    ConvertSoundFileVgmStream(temp, outputFile);
+                } finally {
+                    File.Delete(temp);
+                }
+            } else {
+                using Stream outputStream = File.OpenWrite(outputFile);
+                outputStream.SetLength(0);
+                ConvertSoundFileWw2Ogg(stream, outputStream);
+            }
+        }
+
+        public static string VgmStreamPathWin = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party",
+                                                                              "vgmstream-win", "test.exe"));
+        public static string VgmStreamPathLx = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party",
+                                                                              "vgmstream-cli"));
+
+        public static string VgmStreamPath => OperatingSystem.IsLinux() ? VgmStreamPathLx : VgmStreamPathWin;
+
+        public static void ConvertSoundFileVgmStream(string input, string output) {
+            try {
+                var proc = new ProcessStartInfo {
+                    FileName = OperatingSystem.IsLinux() ? VgmStreamPathLx : VgmStreamPathWin,
+                    Arguments = $"\"{input}\" -l 0 -f 0 -d 0 -L -o \"{output}\"",
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                };
+
+                using var process = Process.Start(proc);
+                process.WaitForExit();
+                if (process.ExitCode != 0) {
+                    var error = process.StandardError.ReadToEnd();
+                    Logger.Error("Combo", $"vgmstream failed with exit code {process.ExitCode} {error.Trim()}");
+                }
+            } catch (Exception e) {
+                Logger.Error("Combo", $"Error converting sound using vgmstream: {e}");
+            }
+        }
+
+        public static void ConvertSoundFileWw2Ogg(Stream stream, Stream outputStream) {
             try {
                 using (Sound.WwiseRIFFVorbis vorbis =
                        new Sound.WwiseRIFFVorbis(stream,
@@ -846,15 +891,17 @@ namespace DataTool.SaveLogic {
                     }
                 }
             } catch (Exception e) {
-                Logger.Error("Combo", $"Error converting sound: {e}");
+                Logger.Error("Combo", $"Error converting sound using ww2ogg: {e}");
             }
         }
 
         private static void SaveSoundFileTask(ICLIFlags flags, string directory, FindLogic.Combo.SoundFileAsset soundFileInfo, string name = null) {
             bool convertWem = true;
+            bool useVgmStream = true;
             if (flags is ExtractFlags extractFlags) {
                 convertWem = !extractFlags.RawSound && !extractFlags.Raw;
                 if (extractFlags.SkipSound) return;
+                if (extractFlags.ExportOgg) useVgmStream = false;
             }
 
             using (Stream soundStream = OpenFile(soundFileInfo.m_GUID)) {
@@ -863,7 +910,7 @@ namespace DataTool.SaveLogic {
                 if (!convertWem) {
                     WriteFile(soundStream, Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.wem"));
                 } else {
-                    ConvertSoundFile(soundStream, soundFileInfo, directory, name);
+                    ConvertSoundFile(soundStream, soundFileInfo, directory, name, useVgmStream);
                 }
             }
         }
@@ -871,6 +918,7 @@ namespace DataTool.SaveLogic {
         public static void SaveSoundFile(ICLIFlags flags, string directory, SaveContext context, ulong soundFile, bool voice, string name = null) {
             if (soundFile == 0) return;
 
+            VGMStreamSanity(flags);
             FindLogic.Combo.SoundFileAsset soundFileInfo = voice ? context.m_info.m_voiceSoundFiles[soundFile] : context.m_info.m_soundFiles[soundFile];
             SaveSoundFileTask(flags, directory, soundFileInfo, name);
         }
@@ -878,7 +926,15 @@ namespace DataTool.SaveLogic {
         public static void SaveSoundFile(ICLIFlags flags, string directory, ulong soundFile, string name = null) {
             if (soundFile == 0) return;
 
+            VGMStreamSanity(flags);
             SaveSoundFileTask(flags, directory, new FindLogic.Combo.SoundFileAsset(soundFile), name);
+        }
+
+        public static void VGMStreamSanity(ICLIFlags flags) {
+            if (flags is ExtractFlags { ExportOgg: false } ef && !File.Exists(VgmStreamPath)) {
+                Logger.Warn("Combo", $"VGMStream not found, falling back to ww2ogg. Please download vgmstream from https://dl.vgmstream.org/ and extract it to the Third Party folder ({VgmStreamPath})");
+                ef.ExportOgg = true;
+            }
         }
     }
 }
