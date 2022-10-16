@@ -918,7 +918,7 @@ namespace DataTool.SaveLogic {
         public static void SaveSoundFile(ICLIFlags flags, string directory, SaveContext context, ulong soundFile, bool voice, string name = null) {
             if (soundFile == 0) return;
 
-            VGMStreamSanity(flags);
+            // VGMStreamSanity(flags);
             FindLogic.Combo.SoundFileAsset soundFileInfo = voice ? context.m_info.m_voiceSoundFiles[soundFile] : context.m_info.m_soundFiles[soundFile];
             SaveSoundFileTask(flags, directory, soundFileInfo, name);
         }
@@ -926,7 +926,7 @@ namespace DataTool.SaveLogic {
         public static void SaveSoundFile(ICLIFlags flags, string directory, ulong soundFile, string name = null) {
             if (soundFile == 0) return;
 
-            VGMStreamSanity(flags);
+            // VGMStreamSanity(flags);
             SaveSoundFileTask(flags, directory, new FindLogic.Combo.SoundFileAsset(soundFile), name);
         }
 
