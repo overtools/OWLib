@@ -20,24 +20,19 @@ namespace DataTool.SaveLogic {
                 using (BinaryWriter writer = new BinaryWriter(stream)) {
                     writer.Write(OverwatchMaterial.VersionMajor);
                     writer.Write(OverwatchMaterial.VersionMinor);
+                    writer.Write((uint) OverwatchMaterial.OWMatType.ModelLook);
                     if (ModelLookInfo.m_materials == null) {
                         writer.Write(0L);
                         writer.Write(0L);
-                        writer.Write((uint) OverwatchMaterial.OWMatType.ModelLook);
                         return;
                     }
 
                     writer.Write(ModelLookInfo.m_materials.LongCount());
-                    writer.Write(0L);
-                    writer.Write((uint) OverwatchMaterial.OWMatType.ModelLook);
 
                     foreach (var modelLookMaterial in ModelLookInfo.m_materials) {
                         FindLogic.Combo.MaterialAsset materialInfo = Info.m_materials[modelLookMaterial.m_guid];
-                        writer.Write(Path.Combine("..", "..", "Materials", materialInfo.GetNameIndex() + $".{Extension}"));
-                    }
-
-                    foreach (var modelLookMaterial in ModelLookInfo.m_materials) {
                         writer.Write(modelLookMaterial.m_key);
+                        writer.Write(Path.Combine("..", "..", "Materials", materialInfo.GetNameIndex() + $".{Extension}"));
                     }
                 }
             }
@@ -46,8 +41,8 @@ namespace DataTool.SaveLogic {
         public class OverwatchMaterial : IExportFormat {
             public string Extension => "owmat";
 
-            public const ushort VersionMajor = 2;
-            public const ushort VersionMinor = 2;
+            public const ushort VersionMajor = 3;
+            public const ushort VersionMinor = 0;
 
             public enum OWMatType : uint {
                 Material = 0,
@@ -71,6 +66,7 @@ namespace DataTool.SaveLogic {
                     FindLogic.Combo.MaterialDataAsset materialDataInfo = Info.m_materialData[MaterialInfo.m_materialDataGUID];
                     writer.Write(VersionMajor);
                     writer.Write(VersionMinor);
+                    writer.Write((uint) OWMatType.Material);
                     if (materialDataInfo.m_textureMap != null) {
                         writer.Write(materialDataInfo.m_textureMap.LongCount());
                     } else {
@@ -83,12 +79,7 @@ namespace DataTool.SaveLogic {
                         writer.Write(0L);
                     }
 
-                    writer.Write((uint) OWMatType.Material);
                     writer.Write(teResourceGUID.Index(MaterialInfo.m_shaderSourceGUID));
-                    writer.Write(MaterialInfo.m_materialIDs.Count);
-                    foreach (ulong id in MaterialInfo.m_materialIDs) {
-                        writer.Write(id);
-                    }
 
                     if (materialDataInfo.m_textureMap != null) {
                         foreach (var (hash, guid) in materialDataInfo.m_textureMap) {
