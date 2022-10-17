@@ -901,7 +901,7 @@ namespace DataTool.SaveLogic {
             if (flags is ExtractFlags extractFlags) {
                 convertWem = !extractFlags.RawSound && !extractFlags.Raw;
                 if (extractFlags.SkipSound) return;
-                if (extractFlags.ExportOgg) useVgmStream = false;
+                if (!extractFlags.ExportWav) useVgmStream = false;
             }
 
             using (Stream soundStream = OpenFile(soundFileInfo.m_GUID)) {
@@ -931,7 +931,7 @@ namespace DataTool.SaveLogic {
         }
 
         public static void VGMStreamSanity(ICLIFlags flags) {
-            if (flags is ExtractFlags { ExportOgg: false } ef && !File.Exists(VgmStreamPath)) {
+            if (flags is ExtractFlags { ExportWav: true } ef && !File.Exists(VgmStreamPath)) {
                 Logger.Warn("Combo", "vgmstream not found, downloading latest...");
                 try {
                     if (OperatingSystem.IsLinux()) {
@@ -954,7 +954,7 @@ namespace DataTool.SaveLogic {
                     }
                 } catch {
                     Logger.Warn("Combo", $"Failed to download vgmstream. Please download vgmstream from https://dl.vgmstream.org/ and extract it to the Third Party folder ({VgmStreamPath})");
-                    ef.ExportOgg = true;
+                    ef.ExportWav = false;
                 }
             }
         }

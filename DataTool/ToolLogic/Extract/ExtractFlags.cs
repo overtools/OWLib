@@ -14,8 +14,8 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool ConvertTexturesLossless;
 
-        [CLIFlag(Default = false, Flag = "export-ogg", Help = "Use legacy sound converter that uses ww2ogg, faster but some sounds fail", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool ExportOgg;
+        [CLIFlag(Default = false, Flag = "export-wav", Help = "Use new sound converter that uses vgmstream, slower but all sounds export", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool ExportWav;
 
         [CLIFlag(Default = false, Flag = "raw-textures", Help = "Do not convert textures", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool RawTextures;
