@@ -830,7 +830,7 @@ namespace DataTool.SaveLogic {
 
         public static void ConvertSoundFile(Stream stream, string outputFile, bool useVgmStream) {
             if (useVgmStream) {
-                var temp = Path.ChangeExtension(Path.GetTempFileName(), ".wem");
+                var temp = Path.Combine(Path.GetTempPath(), $"vgmstream{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.wem");
                 try {
                     using (Stream tempStream = File.OpenWrite(temp)) {
                         stream.CopyTo(tempStream);
@@ -838,7 +838,9 @@ namespace DataTool.SaveLogic {
 
                     ConvertSoundFileVgmStream(temp, outputFile);
                 } finally {
-                    File.Delete(temp);
+                    if (File.Exists(temp)) {
+                        File.Delete(temp);
+                    }
                 }
             } else {
                 using Stream outputStream = File.OpenWrite(outputFile);
@@ -870,6 +872,7 @@ namespace DataTool.SaveLogic {
                 if (process.ExitCode != 0) {
                     var error = process.StandardError.ReadToEnd();
                     Logger.Error("Combo", $"vgmstream failed with exit code {process.ExitCode} {error.Trim()}");
+                    File.Copy(input, Path.ChangeExtension(output, ".wav"));
                 }
             } catch (Exception e) {
                 Logger.Error("Combo", $"Error converting sound using vgmstream: {e}");

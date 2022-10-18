@@ -16,6 +16,7 @@ namespace DataTool.SaveLogic.Unlock {
             if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
             STUSkinTheme skinTheme = GetInstance<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
             if (skinTheme == null) return;
+            if (hero == null) return;
 
             LoudLog($"\tExtracting skin {unlock.Name}");
             Save(flags, directory, skinTheme, hero);
