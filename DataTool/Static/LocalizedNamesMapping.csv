@@ -15,6 +15,7 @@ A,75,widow
 12F,75,doom
 42,75,cole
 42,75,cassidi
+42,75,mccree
 236,75,junkerqueen
 236,75,jq
 1EC,75,soujourn
@@ -37,7 +38,6 @@ A,75,widowmaker
 20,75,zenyatta
 29,75,genji
 40,75,roadhog
-42,75,mccree
 42,75,cassidy
 65,75,junkrat
 68,75,zarya
@@ -52,9 +52,12 @@ DD,75,mei
 195,75,brigitte
 1A2,75,moira
 1CA,75,wrecking ball
+1EC,75,sojourn
 200,75,ashe
 206,75,echo
 221,75,baptiste
+231,75,kiriko
+236,75,junker queen
 23B,75,sigma
 ;enUS,,
 2,75,reaper
@@ -71,7 +74,6 @@ A,75,widowmaker
 20,75,zenyatta
 29,75,genji
 40,75,roadhog
-42,75,mccree
 42,75,cassidy
 65,75,junkrat
 68,75,zarya
@@ -86,9 +88,12 @@ DD,75,mei
 195,75,brigitte
 1A2,75,moira
 1CA,75,wrecking ball
+1EC,75,sojourn
 200,75,ashe
 206,75,echo
 221,75,baptiste
+231,75,kiriko
+236,75,junker queen
 23B,75,sigma
 ;esES,,
 2,75,reaper
@@ -105,7 +110,6 @@ A,75,widowmaker
 20,75,zenyatta
 29,75,genji
 40,75,roadhog
-42,75,mccree
 42,75,cassidy
 65,75,junkrat
 68,75,zarya
@@ -120,9 +124,12 @@ DD,75,mei
 195,75,brigitte
 1A2,75,moira
 1CA,75,wrecking ball
+1EC,75,sojourn
 200,75,ashe
 206,75,echo
 221,75,baptiste
+231,75,kiriko
+236,75,junker queen
 23B,75,sigma
 ;esMX,,
 2,75,reaper
@@ -139,7 +146,6 @@ A,75,widowmaker
 20,75,zenyatta
 29,75,genji
 40,75,roadhog
-42,75,mccree
 42,75,cassidy
 65,75,junkrat
 68,75,zarya
@@ -154,9 +160,12 @@ DD,75,mei
 195,75,brigitte
 1A2,75,moira
 1CA,75,wrecking ball
+1EC,75,sojourn
 200,75,ashe
 206,75,echo
 221,75,baptiste
+231,75,kiriko
+236,75,junker queen
 23B,75,sigma
 ;frFR,,
 2,75,faucheur
@@ -173,7 +182,6 @@ A,75,fatale
 20,75,zenyatta
 29,75,genji
 40,75,chopper
-42,75,mccree
 42,75,cassidy
 65,75,chacal
 68,75,zarya
@@ -188,9 +196,12 @@ DD,75,mei
 195,75,brigitte
 1A2,75,moira
 1CA,75,bouldozer
+1EC,75,sojourn
 200,75,ashe
 206,75,écho
 221,75,baptiste
+231,75,kiriko
+236,75,reine des junkers
 23B,75,sigma
 ;itIT,,
 2,75,reaper
@@ -207,7 +218,6 @@ A,75,widowmaker
 20,75,zenyatta
 29,75,genji
 40,75,roadhog
-42,75,mccree
 42,75,cassidy
 65,75,junkrat
 68,75,zarya
@@ -222,9 +232,12 @@ DD,75,mei
 195,75,brigitte
 1A2,75,moira
 1CA,75,wrecking ball
+1EC,75,sojourn
 200,75,ashe
 206,75,echo
 221,75,baptiste
+231,75,kiriko
+236,75,regina dei junker
 23B,75,sigma
 ;jaJP,,
 2,75,リーパー
@@ -241,7 +254,6 @@ A,75,ウィドウメイカー
 20,75,ゼニヤッタ
 29,75,ゲンジ
 40,75,ロードホッグ
-42,75,マクリー
 42,75,キャスディ
 65,75,ジャンクラット
 68,75,ザリア
@@ -256,9 +268,12 @@ DD,75,メイ
 195,75,ブリギッテ
 1A2,75,モイラ
 1CA,75,レッキング・ボール
+1EC,75,ソジョーン
 200,75,アッシュ
 206,75,エコー
 221,75,バティスト
+231,75,キリコ
+236,75,ジャンカー・クイーン
 23B,75,シグマ
 ;koKR,,
 2,75,리퍼
@@ -275,7 +290,6 @@ A,75,위도우메이커
 20,75,젠야타
 29,75,겐지
 40,75,로드호그
-42,75,맥크리
 42,75,캐서디
 65,75,정크랫
 68,75,자리야
@@ -290,9 +304,12 @@ DD,75,메이
 195,75,브리기테
 1A2,75,모이라
 1CA,75,레킹볼
+1EC,75,소전
 200,75,애쉬
 206,75,에코
 221,75,바티스트
+231,75,키리코
+236,75,정커퀸
 23B,75,시그마
 ;plPL,,
 2,75,żniwiarz
@@ -309,7 +326,6 @@ A,75,trupia wdowa
 20,75,zenyatta
 29,75,genji
 40,75,wieprzu
-42,75,mccree
 42,75,cassidy
 65,75,złomiarz
 68,75,zaria
@@ -324,9 +340,12 @@ DD,75,mei
 195,75,brigitte
 1A2,75,moira
 1CA,75,burzyciel
+1EC,75,sojourn
 200,75,ashe
 206,75,echo
 221,75,baptiste
+231,75,kiriko
+236,75,królowa
 23B,75,sigma
 ;ptBR,,
 2,75,reaper
@@ -343,7 +362,6 @@ A,75,widowmaker
 20,75,zenyatta
 29,75,genji
 40,75,roadhog
-42,75,mccree
 42,75,cassidy
 65,75,junkrat
 68,75,zarya
@@ -358,9 +376,12 @@ DD,75,mei
 195,75,brigitte
 1A2,75,moira
 1CA,75,wrecking ball
+1EC,75,sojourn
 200,75,ashe
 206,75,echo
 221,75,baptiste
+231,75,kiriko
+236,75,rainha junker
 23B,75,sigma
 ;ruRU,,
 2,75,жнец
@@ -377,8 +398,7 @@ A,75,роковая вдова
 20,75,дзенъятта
 29,75,гэндзи
 40,75,турбосвин
-42,75,маккри
-42,75,Кэссиди
+42,75,кэссиди
 65,75,крысавчик
 68,75,заря
 6E,75,солдат-76
@@ -392,9 +412,12 @@ DD,75,мэй
 195,75,бригитта
 1A2,75,мойра
 1CA,75,таран
+1EC,75,соджорн
 200,75,эш
 206,75,эхо
 221,75,батист
+231,75,кирико
+236,75,королева стервятников
 23B,75,сигма
 ;zhCN,,
 2,75,死神
@@ -411,7 +434,6 @@ A,75,黑百合
 20,75,禅雅塔
 29,75,源氏
 40,75,路霸
-42,75,麦克雷
 42,75,卡西迪
 65,75,狂鼠
 68,75,查莉娅
@@ -426,9 +448,12 @@ DD,75,美
 195,75,布丽吉塔
 1A2,75,莫伊拉
 1CA,75,破坏球
+1EC,75,索杰恩
 200,75,艾什
 206,75,回声
 221,75,巴蒂斯特
+231,75,雾子
+236,75,渣客女王
 23B,75,西格玛
 ;zhTW,,
 2,75,死神
@@ -445,7 +470,6 @@ A,75,奪命女
 20,75,禪亞塔
 29,75,源氏
 40,75,攔路豬
-42,75,麥卡利
 42,75,卡西迪
 65,75,炸彈鼠
 68,75,札莉雅
@@ -460,7 +484,10 @@ DD,75,小美
 195,75,碧姬
 1A2,75,莫伊拉
 1CA,75,火爆鋼球
+1EC,75,索潔恩
 200,75,艾西
 206,75,迴音
 221,75,巴帝斯特
+231,75,霧子
+236,75,垃圾鎮女王
 23B,75,席格馬
