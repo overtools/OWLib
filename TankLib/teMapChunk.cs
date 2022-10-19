@@ -249,7 +249,7 @@ namespace TankLib {
 
             m_instanceDataOffsets = new uint[Header.InstanceDataCount];
 
-            const int instArrayOffset = 112;
+            const int instArrayOffset = 104;
             reader.BaseStream.Position = start + instArrayOffset;
             for (int i = 0; i < Header.InstanceDataCount; i++) {
                 long disStart = reader.BaseStream.Position;
