@@ -31,20 +31,22 @@ namespace TankLib.ExportFormats {
 
             if (skeleton == null) return;
 
-            short[] hierarchy;
+            short[] hierarchy = skeleton.Hierarchy;
             Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap = null;
-            if (cloth != null) {
-                hierarchy = cloth.CreateFakeHierarchy(skeleton, out clothNodeMap);
-            } else {
-                hierarchy = skeleton.Hierarchy;
-            }
+            // if (cloth != null) {
+            //     hierarchy = cloth.CreateFakeHierarchy(skeleton, out clothNodeMap);
+            // }
 
             using (StreamWriter writer = new StreamWriter(stream, Encoding.Default, 512)) {
                 writer.WriteLine("{0}", skeleton.Header.BonesAbs);
                 writer.WriteLine("version 1");
                 writer.WriteLine("nodes");
                 for (int i = 0; i < skeleton.Header.BonesAbs; ++i) {
-                    writer.WriteLine("{0} \"bone_{1:X4}\" {2}", i, skeleton.IDs[i], hierarchy[i]);
+                    if (i >= skeleton.IDs.Length) {
+                        writer.WriteLine("{0} \"cloth_{1:X4}\" {2}", i, i, skeleton.Hierarchy[i]);
+                    } else {
+                        writer.WriteLine("{0} \"bone_{1:X4}\" {2}", i, skeleton.IDs[i], skeleton.Hierarchy[i]);
+                    }
                 }
 
                 writer.WriteLine("end");

@@ -65,12 +65,11 @@ namespace TankLib.ExportFormats {
                 short[] hierarchy = null;
                 Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap = null;
                 if (skeleton != null) {
-                    if (cloth != null) {
-                        hierarchy = cloth.CreateFakeHierarchy(skeleton, out clothNodeMap);
-                    } else {
-                        hierarchy = skeleton.Hierarchy;
-                    }
-                    writer.Write(skeleton.Header.IDCount); // todo: CLOTH BONES WHERE GONE.
+                    // if (cloth != null) {
+                    //     hierarchy = cloth.CreateFakeHierarchy(skeleton, out clothNodeMap);
+                    // }
+                    hierarchy = skeleton.Hierarchy;
+                    writer.Write(skeleton.Header.BonesAbs);
                 } else {
                     writer.Write((ushort)0);
                 }
@@ -88,8 +87,8 @@ namespace TankLib.ExportFormats {
 
                 if (skeleton != null) {
                     //Console.Out.WriteLine($"SKELETON {GUID:X16} {skeleton.Header.BonesAbs} {skeleton.Header.BonesSimple} {skeleton.Header.BonesCloth} {skeleton.Header.RemapCount} {skeleton.Header.IDCount}");
-                    for (int i = 0; i < skeleton.Header.IDCount; ++i) { // todo: CLOTH BONES WHERE GONE.
-                        writer.Write(IdToString("bone", skeleton.IDs[i]));
+                    for (int i = 0; i < skeleton.Header.BonesAbs; ++i) { // todo: CLOTH BONES WHERE GONE.
+                        writer.Write(IdToString("bone", i >= skeleton.IDs.Length ? (long) -i : skeleton.IDs[i]));
                         short parent = hierarchy[i];
                         writer.Write(parent);
 
@@ -149,7 +148,8 @@ namespace TankLib.ExportFormats {
                                 if (ind >= skeleton.Lookup.Length) {
                                     writer.Write((ushort) 0xFFFF);
                                 } else {
-                                    writer.Write(skeleton.Lookup[ind]);
+                                    var bone = skeleton.Lookup[ind];
+                                    writer.Write(bone);
                                 }
                             }
 
@@ -250,8 +250,9 @@ namespace TankLib.ExportFormats {
             }
         }
 
-        public static string IdToString(string prefix, uint id) {  // hmm
-            return $"{prefix}_{id:X4}";
+        public static string IdToString(string prefix, long id) {  // hmm
+            // hack fix.
+            return id < 0 ? $"cloth_{-id:X4}" : $"{prefix}_{id:X4}";
         }
     }
 }
