@@ -11,11 +11,15 @@ using TACTLib.Exceptions;
 using static DataTool.Program;
 
 namespace DataTool.Helper {
-    // ReSharper disable once InconsistentNaming
     public static class IO {
         public static string GetValidFilename(string filename, bool force = true) {
-            if (Flags != null && Flags.NoNames && !force) return null;
-            if (filename == null) return null;
+            if (Flags != null && Flags.NoNames && !force) {
+                return null;
+            }
+
+            if (filename == null) {
+                return null;
+            }
 
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
             string invalidReStr = $@"[{invalidChars}]+";
@@ -40,10 +44,23 @@ namespace DataTool.Helper {
 
         public static void LoadGUIDTable(bool onlyCanonical) {
             var guidNamesPath = Path.Combine("Static", "GUIDNames.csv");
-            if (!File.Exists(guidNamesPath)) return;
-            foreach (string dirtyLine in File.ReadAllLines(guidNamesPath)) {
+            if (!File.Exists(guidNamesPath)) {
+                TankLib.Helpers.Logger.Warn("GUIDNames", "GUIDNames.csv not found");
+                return;
+            }
+
+            var csvLines = File.ReadAllLines(guidNamesPath).Skip(1); // skip header
+            foreach (string dirtyLine in csvLines) {
+                // remove comments
                 var line = dirtyLine.Split(';').FirstOrDefault()?.Trim();
-                if (string.IsNullOrEmpty(line)) continue;
+
+                // skip empty lines
+                if (string.IsNullOrEmpty(line)) {
+                    continue;
+                }
+
+                // :modCheck: csv parser
+                // sure hope we never have to deal with quotes containing commas
                 string[] parts = line.Split(',').Select(x => x.Trim()).ToArray();
                 string indexString = parts[0];
                 string typeString = parts[1];
@@ -53,11 +70,19 @@ namespace DataTool.Helper {
                 ulong index = ulong.Parse(indexString, NumberStyles.HexNumber);
                 ushort type = ushort.Parse(typeString, NumberStyles.HexNumber);
                 bool canonical = byte.Parse(canonicalString) == 1;
-                if (onlyCanonical && !canonical) continue;
-                if (!canonical) name += $"-{index:X}";
 
-                if (GUIDTable.ContainsKey((index, type)))
+                // tbh I don't know what this does
+                if (onlyCanonical && !canonical) {
+                    continue;
+                }
+
+                if (!canonical) {
+                    name += $"-{index:X}";
+                }
+
+                if (GUIDTable.ContainsKey((index, type))) {
                     TankLib.Helpers.Logger.Warn("GUIDNames", $"Duplicate key detected: {indexString}.{typeString}");
+                }
 
                 GUIDTable[(index, type)] = name;
             }
@@ -65,10 +90,21 @@ namespace DataTool.Helper {
 
         public static void LoadLocalizedNamesMapping() {
             var locPath = Path.Combine("Static", "LocalizedNamesMapping.csv");
-            if (!File.Exists(locPath)) return;
-            foreach (string dirtyLine in File.ReadAllLines(locPath)) {
+            if (!File.Exists(locPath)) {
+                TankLib.Helpers.Logger.Warn("LocalizedNames", "LocalizedNamesMapping.csv not found");
+                return;
+            }
+
+
+            var csvLines = File.ReadAllLines(locPath).Skip(1); // skip header
+            foreach (string dirtyLine in csvLines) {
+                // remove comments
                 var line = dirtyLine.Split(';').FirstOrDefault()?.Trim();
-                if (string.IsNullOrEmpty(line)) continue;
+
+                // skip empty lines
+                if (string.IsNullOrEmpty(line)) {
+                    continue;
+                }
 
                 string[] parts = line.Split(',').Select(x => x.Trim()).ToArray();
                 string indexString = parts[0];
