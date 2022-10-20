@@ -62,20 +62,22 @@ namespace TankLib.ExportFormats {
                 }
                 writer.Write(teResourceGUID.Index(GUID));
 
+                var highestLOD = renderMesh?.Submeshes.Where(x => x.Descriptor.LOD != -1).Min(x => x.Descriptor.LOD) ?? 1;
+                teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh?.Submeshes.Where(x => x.Descriptor.LOD == highestLOD || x.Descriptor.LOD == -1).ToArray() ?? Array.Empty<teModelChunk_RenderMesh.Submesh>();
+
                 short[] hierarchy = null;
-                Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap = null;
+                HashSet<int> clothNodeMap = null;
                 if (skeleton != null) {
-                    // if (cloth != null) {
-                    //     hierarchy = cloth.CreateFakeHierarchy(skeleton, out clothNodeMap);
-                    // }
-                    hierarchy = skeleton.Hierarchy;
+                    if (cloth != null) {
+                        hierarchy = cloth.CreateFakeHierarchy(skeleton, submeshes, out clothNodeMap);
+                    } else {
+                        hierarchy = skeleton.Hierarchy;
+                    }
+
                     writer.Write(skeleton.Header.BonesAbs);
                 } else {
                     writer.Write((ushort)0);
                 }
-
-                var highestLOD = renderMesh?.Submeshes.Where(x => x.Descriptor.LOD != -1).Min(x => x.Descriptor.LOD) ?? 1;
-                teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh?.Submeshes.Where(x => x.Descriptor.LOD == highestLOD || x.Descriptor.LOD == -1).ToArray() ?? Array.Empty<teModelChunk_RenderMesh.Submesh>();
 
                 writer.Write((uint)submeshes.Length);
 
@@ -227,10 +229,9 @@ namespace TankLib.ExportFormats {
             }
         }
 
-        public static void GetRefPoseTransform(int i, short[] hierarchy, teModelChunk_Skeleton skeleton,
-            Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap, out teVec3 scale, out teQuat quat,
+        public static void GetRefPoseTransform(int i, short[] hierarchy, teModelChunk_Skeleton skeleton, HashSet<int> clothNodeMap, out teVec3 scale, out teQuat quat,
             out teVec3 translation) {
-            if (clothNodeMap != null && clothNodeMap.ContainsKey(i)) {
+            if (clothNodeMap != null && clothNodeMap.Contains(i)) {
                 Matrix thisMat = skeleton.GetWorldSpace(i);
                 Matrix parentMat = skeleton.GetWorldSpace(hierarchy[i]);
 

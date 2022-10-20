@@ -32,7 +32,7 @@ namespace TankLib.ExportFormats {
             if (skeleton == null) return;
 
             short[] hierarchy = skeleton.Hierarchy;
-            Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap = null;
+            HashSet<int> clothNodeMap = null;
             // if (cloth != null) {
             //     hierarchy = cloth.CreateFakeHierarchy(skeleton, out clothNodeMap);
             // }

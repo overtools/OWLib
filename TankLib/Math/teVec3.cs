@@ -11,10 +11,10 @@ namespace TankLib.Math {
     public struct teVec3 {
         /// <summary>X component</summary>
         public float X;
-        
+
         /// <summary>Y component</summary>
         public float Y;
-        
+
         /// <summary>Z component</summary>
         public float Z;
 
@@ -38,17 +38,21 @@ namespace TankLib.Math {
             Y = val[1];
             Z = val[2];
         }
-        
+
         public static teVec3 operator +(teVec3 left, teVec3 right) {
             return new teVec3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
         }
-        
+
         public static teVec3 operator -(teVec3 left, teVec3 right) {
             return new teVec3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
         }
 
         public static implicit operator Vector3(teVec3 vec) {
             return new Vector3(vec.X, vec.Y, vec.Z);
+        }
+
+        public float Length() {
+            return (float) System.Math.Sqrt(X * X + Y * Y + Z * Z);
         }
     }
 }

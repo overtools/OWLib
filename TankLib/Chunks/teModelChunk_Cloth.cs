@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using TankLib.Math;
 
 namespace TankLib.Chunks {
     /// <inheritdoc />
@@ -202,6 +203,8 @@ namespace TankLib.Chunks {
         /// <summary>Cloth nodes => skeleton bones map</summary>
         public Dictionary<int, short>[] NodeBones;
 
+        public ushort[][] BoneLookup;
+
         public void Parse(Stream input) {
             using (BinaryReader reader = new BinaryReader(input)) {
                 Header = reader.Read<ClothHeader>();
@@ -210,14 +213,18 @@ namespace TankLib.Chunks {
                     reader.BaseStream.Position = Header.Offset;
 
                     Descriptors = new ClothDesc[Header.Count];
-                    Nodes = new ClothNode[Header.Count][];
-                    NodeBones = new Dictionary<int, short>[Header.Count];
+                    // Nodes = new ClothNode[Header.Count][];
+                    // NodeBones = new Dictionary<int, short>[Header.Count];
+                    BoneLookup = new ushort[Header.Count][];
 
                     if (Header.Count > 0) {
                         for (ulong i = 0; i < Header.Count; i++) {
                             Descriptors[i] = reader.Read<ClothDesc>();
 
                             long nextStartPos = reader.BaseStream.Position;
+
+                            reader.BaseStream.Position = Descriptors[i].BoneIndicesTableOffset;
+                            BoneLookup[i] = reader.ReadArray<ushort>(Descriptors[i].ClothBonesUsed);
 
                             // if (Descriptors[i].Section8Offset != 4574069944263674675) { // todo: wtf
                             //     reader.BaseStream.Position = Descriptors[i].Section8Offset;
@@ -242,7 +249,7 @@ namespace TankLib.Chunks {
             }
         }
 
-        public short[] CreateFakeHierarchy(teModelChunk_Skeleton skeleton, out Dictionary<int, ClothNode> nodeMap) {
+        public short[] CreateClothHierarchy(teModelChunk_Skeleton skeleton, out Dictionary<int, ClothNode> nodeMap) {
             short[] hierarchy = (short[]) skeleton.Hierarchy.Clone();
             nodeMap = new Dictionary<int, ClothNode>();
 
@@ -282,6 +289,60 @@ namespace TankLib.Chunks {
                     nodeIndex++;
                 }
                 clothIndex++;
+            }
+
+            return hierarchy;
+        }
+
+        public short[] CreateFakeHierarchy(teModelChunk_Skeleton skeleton, teModelChunk_RenderMesh.Submesh[] submeshes, out HashSet<int> nodeMap) {
+            short[] hierarchy = (short[]) skeleton.Hierarchy.Clone();
+            nodeMap = new HashSet<int>();
+
+            var guideBones = new Dictionary<int, teVec3>();
+            var seenBones = new HashSet<int>();
+            foreach (var submesh in submeshes) {
+                for (var index = 0; index < submesh.BoneIndices.Length; index++) {
+                    for (var i = 0; i < submesh.BoneIndices[index].Length; i++) {
+                        var bone = submesh.BoneIndices[index][i];
+                        var weight = submesh.BoneWeights[index][i];
+                        if (weight < 0.001f) {
+                            continue;
+                        }
+
+                        if (bone >= skeleton.Lookup.Length) {
+                            continue;
+                        }
+
+                        seenBones.Add(skeleton.Lookup[bone]);
+                    }
+                }
+            }
+
+            for (var index = 0; index < skeleton.Hierarchy.Length; index++) {
+                if (seenBones.Contains(index)) {
+                    continue;
+                }
+
+                skeleton.GetWorldSpace(index, out _, out _, out var pos);
+                guideBones[index] = pos;
+            }
+
+            foreach (var cloth in BoneLookup) {
+                foreach (var bone in cloth) {
+                    if (nodeMap.Add(bone)) {
+                        skeleton.GetWorldSpace(bone, out _, out _, out var src);
+
+                        var best = float.MaxValue;
+                        foreach (var (testBone, testPos) in guideBones) {
+                            const float bias = 2 / 3f;
+                            var upwardsBias = testPos.Y > src.Y ? bias : 1f;
+                            if ((testPos - src).Length() * upwardsBias < best) {
+                                hierarchy[bone] = (short) testBone;
+                                best = (testPos - src).Length() * upwardsBias;
+                            }
+                        }
+                    }
+                }
             }
 
             return hierarchy;

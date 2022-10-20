@@ -10,14 +10,14 @@ namespace TankLib.Chunks {
     public class teModelChunk_Skeleton : IChunk {
         public string ID => "mskl";
         public List<IChunk> SubChunks { get; set; }
-        
+
         /// <summary>mskl header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct SkeletonHeader {
             public long Hierarchy1Offset; // 0
             public long Matrix44Offset; // 8
             public long Matrix44iOffset; // 16
-            public long Matrix43Offset; // 24 
+            public long Matrix43Offset; // 24
             public long Matrix43iOffset; // 32
             public long Struct6Offset;  // ? 40
             public long m_new48; // n/a -> 48
@@ -28,19 +28,19 @@ namespace TankLib.Chunks {
             public long Hierarchy2Offset; // 80 -> 88
             public long m_new96; // n/a -> 96
             public int Unknown1; // 88 -> 104
-            
+
             public ushort BonesAbs; // 92 -> 108
             public ushort BonesSimple;
             public ushort BonesCloth;
             public ushort RemapCount;
             public ushort IDCount;
-            
+
             // ... idk. something added tho
         }
-        
+
         /// <summary>Header data</summary>
         public SkeletonHeader Header;
-        
+
         public teMtx44[] Matrices;
         public teMtx44[] MatricesInverted;
         public teMtx43[] Matrices34;
@@ -53,9 +53,9 @@ namespace TankLib.Chunks {
         public void Parse(Stream input) {
             using (BinaryReader reader = new BinaryReader(input)) {
                 Header = reader.Read<SkeletonHeader>();
-                
+
                 Hierarchy = new short[Header.BonesAbs];
-                
+
                 if (Header.Hierarchy1Offset > 0) {
                     input.Position = Header.Hierarchy1Offset;
                     for(int i = 0; i < Header.BonesAbs; ++i) {
@@ -105,7 +105,7 @@ namespace TankLib.Chunks {
         }
 
         public void GetWorldSpace(int idx, out teVec3 scale, out teQuat rotation, out teVec3 translation) {
-            teMtx43 parBoneMat = Matrices34[idx];
+            teMtx43 parBoneMat = idx == -1 ? teMtx43.Identity() : Matrices34[idx];
             scale = new teVec3(parBoneMat[1, 0], parBoneMat[1, 1], parBoneMat[1, 2]);
             rotation = new teQuat(parBoneMat[0, 0], parBoneMat[0, 1],parBoneMat[0, 2], parBoneMat[0, 3]);
             translation = new teVec3(parBoneMat[2, 0], parBoneMat[2, 1], parBoneMat[2, 2]);
