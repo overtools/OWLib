@@ -8,19 +8,19 @@ namespace TankLib {
         /// <summary>Value of the string</summary>
         public string Value;
         public Enums.SDAM Mutability;
-        
+
         public teString() {}
 
         public teString(string value) {
             Value = value;
             Mutability = Enums.SDAM.NONE;
         }
-        
+
         public teString(string value, Enums.SDAM mutability) {
             Value = value;
             Mutability = mutability;
         }
-        
+
         /// <summary>Header for 07C and 0A9 strings</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct DisplayTextHeader {
@@ -37,14 +37,14 @@ namespace TankLib {
                 DisplayTextHeader header = reader.Read<DisplayTextHeader>();
                 char[] bytes = reader.ReadChars((int)(stream.Length - stream.Position));
 
-                Value = new string(bytes).TrimEnd('\0');
+                Value = new string(bytes).Replace('\u00A0', ' ').TrimEnd('\0');
             }
         }
 
         public static implicit operator string(teString @string) {
             return @string?.Value;
         }
-        
+
         public static implicit operator teString(string @string) {
             return new teString(@string);
         }
