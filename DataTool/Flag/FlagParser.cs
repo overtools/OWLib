@@ -194,12 +194,12 @@ namespace DataTool.Flag {
             if (positionals.Count > 0) {
                 Console.Out.WriteLine();
                 Console.Out.WriteLine("Positionals:");
-                Console.Out.WriteLine($"  {{0, -{maxindex}}} | {{1}}", "index", "help");
-                Console.Out.WriteLine("".PadLeft(maxindex + 30, '-'));
+                Console.Out.WriteLine($"  {{0, -{maxindex}}} | {{1, -{maxpositionals}}} | {{2}}", "index", "positional", "help");
+                Console.Out.WriteLine("".PadLeft(maxindex + maxpositionals + 30, '-'));
                 foreach (var pair in positionals) {
                     var positional = pair.Value;
                     var positionalstr = positionalsstr[pair.Key];
-                    Console.Out.WriteLine($"  {{0, -{maxindex}}} | {{1}}", pair.Key, positionalstr);
+                    Console.Out.WriteLine($"  {{0, -{maxindex}}} | {{1, -{maxpositionals}}} | {{2}}", pair.Key, positional, positionalstr);
                 }
             }
 
