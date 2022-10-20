@@ -74,7 +74,7 @@ namespace DataTool.ToolLogic.Extract {
             foreach (var (heroGuid, hero) in heroes) {
                 if (hero == null) continue;
 
-                string heroNameActual = (GetString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(heroGuid)}").TrimEnd(' ');
+                string heroNameActual = (GetCleanString(hero.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(heroGuid)}").TrimEnd(' ');
 
 
                 Dictionary<string, ParsedArg> config = GetQuery(parsedTypes, heroNameActual.ToLowerInvariant(), "*");

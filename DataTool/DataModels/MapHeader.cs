@@ -71,13 +71,13 @@ namespace DataTool.DataModels {
 
         public void Init(STUMapHeader mapHeader, ulong key = default) {
             GUID = (teResourceGUID) key;
-            Name = GetString(mapHeader.m_displayName);
-            VariantName = GetString(mapHeader.m_overrideName);
-            Description = GetString(mapHeader.m_389CB894);
-            Description2 = GetString(mapHeader.m_ACB95597);
-            Subline = GetString(mapHeader.m_EBCFAD22);
-            StateA = GetString(mapHeader.m_8EBADA44);
-            StateB = GetString(mapHeader.m_5AFE2F61);
+            Name = GetCleanString(mapHeader.m_displayName);
+            VariantName = GetCleanString(mapHeader.m_overrideName);
+            Description = GetCleanString(mapHeader.m_389CB894);
+            Description2 = GetCleanString(mapHeader.m_ACB95597);
+            Subline = GetCleanString(mapHeader.m_EBCFAD22);
+            StateA = GetCleanString(mapHeader.m_8EBADA44);
+            StateB = GetCleanString(mapHeader.m_5AFE2F61);
             MapGUID = mapHeader.m_map;
             State = mapHeader.m_A125818B;
             MapType = mapHeader.m_mapType;

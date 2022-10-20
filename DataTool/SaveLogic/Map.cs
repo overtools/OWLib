@@ -300,7 +300,7 @@ namespace DataTool.SaveLogic {
                 }
 
                 var gameMode = STUHelper.GetInstance<STUGameMode>(variantModeInfo.m_gamemode);
-                var gameModeName = IO.GetString(gameMode?.m_displayName) ?? "Unknown Mode";
+                var gameModeName = IO.GetCleanString(gameMode?.m_displayName) ?? "Unknown Mode";
 
                 var variantName = $"{teResourceGUID.Index(variantModeInfo.m_A9253C68):X} - {gameModeName}";
                 if (variantModeInfo.m_216EA6DA != 0) {

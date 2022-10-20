@@ -28,7 +28,7 @@ namespace DataTool.ToolLogic.Extract {
                     continue;
                 }
 
-                string name = $"{teResourceGUID.Index(key):X3}_{GetString(stuE3594B8E.m_name)}";
+                string name = $"{teResourceGUID.Index(key):X3}_{GetCleanString(stuE3594B8E.m_name)}";
 
                 Combo.ComboInfo info = new Combo.ComboInfo();
                 Combo.Find(info, (ulong) stuE3594B8E.m_21EB3E73);

@@ -27,7 +27,7 @@ namespace DataTool.ToolLogic.Extract {
                 var voiceSet = GetInstance<STUVoiceSet>(guid);
                 if (voiceSet == null) continue;
 
-                var npcName = $"{GetString(voiceSet.m_269FC4E9)} {GetString(voiceSet.m_C0835C08)}".Trim();
+                var npcName = $"{GetCleanString(voiceSet.m_269FC4E9)} {GetCleanString(voiceSet.m_C0835C08)}".Trim();
                 if (string.IsNullOrEmpty(npcName)) {
                     npcName = GetNullableGUIDName(guid);
                 }

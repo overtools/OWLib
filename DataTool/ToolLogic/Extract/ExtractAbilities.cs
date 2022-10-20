@@ -30,7 +30,7 @@ namespace DataTool.ToolLogic.Extract {
                 STULoadout loadout = GetInstance<STULoadout>(key);
                 if (loadout == null) continue;
 
-                string name = GetValidFilename(GetString(loadout.m_name)?.TrimEnd().Replace(".", "_")) ?? $"Unknown{teResourceGUID.Index(key):X}";
+                string name = GetValidFilename(GetCleanString(loadout.m_name)?.TrimEnd().Replace(".", "_")) ?? $"Unknown{teResourceGUID.Index(key):X}";
                 var directory = Path.Combine(basePath, folderName, name);
 
                 Combo.ComboInfo info = new Combo.ComboInfo();

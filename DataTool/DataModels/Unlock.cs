@@ -112,7 +112,7 @@ namespace DataTool.DataModels {
             GUID = (teResourceGUID) guid;
             STU = unlock;
 
-            Name = GetString(unlock.m_name)?.TrimEnd(' '); // ffs blizz, why do the names end in a space sometimes
+            Name = GetCleanString(unlock.m_name);
             AvailableIn = GetString(unlock.m_53145FAF);
             Rarity = unlock.m_rarity;
             Description = GetDescriptionString(unlock.m_3446F580);

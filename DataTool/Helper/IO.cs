@@ -314,6 +314,12 @@ namespace DataTool.Helper {
             }
         }
 
+        // ffs blizz, why do the names end in a space sometimes, and sometimes have nbsp???
+        public static string GetCleanString(ulong guid) {
+            var name = GetString(guid);
+            return name?.Replace('\u00A0', ' ').TrimEnd(' ');
+        }
+
         public static string GetStringInternal(ulong guid) {
             if (guid == 0) return null; // don't even try
             try {

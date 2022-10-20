@@ -98,7 +98,7 @@ namespace DataTool.ToolLogic.Extract {
             foreach (var hero in heroes) {
                 var heroStu = GetInstance<STUHero>(hero.GUID);
 
-                string heroName = GetValidFilename((GetString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}").TrimEnd(' '));
+                string heroName = GetValidFilename((GetCleanString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}").TrimEnd(' '));
                 Logger.Log($"Generating mapping for {heroName}");
 
                 Combo.ComboInfo baseInfo = default;
@@ -135,7 +135,7 @@ namespace DataTool.ToolLogic.Extract {
                 var voiceSet = GetInstance<STUVoiceSet>(guid);
                 if (voiceSet == null) continue;
 
-                var npcName = $"{GetString(voiceSet.m_269FC4E9)} {GetString(voiceSet.m_C0835C08)}".Trim();
+                var npcName = $"{GetCleanString(voiceSet.m_269FC4E9)} {GetCleanString(voiceSet.m_C0835C08)}".Trim();
                 if (string.IsNullOrEmpty(npcName)) {
                     npcName = IO.GetNullableGUIDName(guid) ?? $"Unknown{teResourceGUID.Index(guid):X}";
                 }

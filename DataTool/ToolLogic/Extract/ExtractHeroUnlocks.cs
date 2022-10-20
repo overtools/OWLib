@@ -127,7 +127,7 @@ namespace DataTool.ToolLogic.Extract {
 
             using (var stu = OpenSTUSafe(TrackedFiles[0x54].First(x => teResourceGUID.Index(x) == 0x16C))) {
                 var map = stu.GetInstance<STU_D7BD8322>();
-                EventConfig = map.m_categories.ToDictionary(x => x.m_id.GUID, y => GetString(y.m_name));
+                EventConfig = map.m_categories.ToDictionary(x => x.m_id.GUID, y => GetCleanString(y.m_name));
                 return EventConfig;
             }
         }
