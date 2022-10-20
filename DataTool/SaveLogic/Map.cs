@@ -167,11 +167,12 @@ namespace DataTool.SaveLogic {
                         var entity = (teMapPlaceableEntity) Entities.Placeables[i];
                         var entityInfo = Info.m_entities[entity.Header.EntityDefinition];
 
-                        STUModelComponent modelComponent = modelComponents[i];
-                        if (modelComponent == null) continue;
-
                         var model = entityInfo.m_modelGUID;
-                        var look = modelComponent.m_look;
+                        var look = entityInfo.m_modelLookGUID;
+
+                        if (model == 0) {
+                            continue;
+                        }
 
                         foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
                             if (!(instanceData is STUModelComponentInstanceData modelComponentInstanceData)) continue;

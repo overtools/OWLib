@@ -229,6 +229,7 @@ namespace DataTool.FindLogic {
 
         public class EntityAsset : ComboAsset {
             public ulong m_modelGUID;
+            public ulong m_modelLookGUID;
             public ulong m_effectGUID; // todo: STUEffectComponent defined instead of model is like a model in behaviour?
             public ulong m_voiceSet;
 
@@ -563,8 +564,10 @@ namespace DataTool.FindLogic {
 
                                 if (modelComponent.m_F5ADE169 != 0) {
                                     entityContext.Model = GetReplacement(modelComponent.m_F5ADE169, replacements);
+                                    entityContext.ModelLook = GetReplacement(modelComponent.m_EE77FFF9, replacements);
                                 } else {
                                     entityContext.Model = GetReplacement(modelComponent.m_model, replacements);
+                                    entityContext.ModelLook = GetReplacement(modelComponent.m_look, replacements);
                                 }
 
                                 Find(info, modelComponent.m_model, replacements, entityContext);
@@ -623,6 +626,7 @@ namespace DataTool.FindLogic {
                     }
 
                     entityInfo.m_modelGUID = entityContext.Model;
+                    entityInfo.m_modelLookGUID = entityContext.ModelLook;
                     entityInfo.m_effectGUID = entityContext.Effect;
 
                     break;
