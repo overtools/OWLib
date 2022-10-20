@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Utf8Json;
 
 namespace DataTool.Flag {
@@ -60,7 +61,7 @@ namespace DataTool.Flag {
         public static void Help<T>(bool simple, Dictionary<string, string> values) where T : ICLIFlags {
             var iface = typeof(T);
 
-            var positonals = new List<string>();
+            var positonals = new List<(int order, string v)>();
             var singulars = new List<string>();
             var help = new List<string>();
             var fields = iface.GetFields();
@@ -70,10 +71,10 @@ namespace DataTool.Flag {
 
                 if (flagattr.Positional > -1) {
                     var x = flagattr.Flag;
-                    if (!flagattr.Required) x = $"[{x}]";
+                    x = flagattr.Required ? $"<{x}>" : $"[{x}]";
 
                     if (!values.TryGetValue(x, out var v)) v = x;
-                    positonals.Add(v);
+                    positonals.Add((flagattr.Positional, v));
                 }
 
                 var localFlags = new List<string>();
@@ -108,11 +109,18 @@ namespace DataTool.Flag {
                 }
             }
 
-            var helpstr = AppDomain.CurrentDomain.FriendlyName;
-            if (singulars.Count > 0) helpstr += $" [-{string.Join("", singulars)}]";
-            if (help.Count > 0) helpstr += $" {string.Join(" ", help)}";
-            if (positonals.Count > 0) helpstr += $" {string.Join(" ", positonals)}";
-            Console.Out.WriteLine(helpstr);
+            var sb = new StringBuilder();
+            sb.AppendLine();
+            sb.Append("Usage: ");
+
+            sb.Append(AppDomain.CurrentDomain.FriendlyName);
+            //if (singulars.Count > 0) sb.Append($" [-{string.Join("", singulars)}]");
+            if (positonals.Count > 0) sb.Append($" {string.Join(" ", positonals.OrderBy(x => x.order).Select(x => x.v))}");
+            //if (help.Count > 0) sb.Append($" {string.Join(" ", help)}");
+
+            sb.Append(" [mode options] [--flags]");
+
+            Console.Out.WriteLine(sb.ToString());
         }
 
         public static void FullHelp<T>(Action<bool> extraHelp, bool skipOpener = false) where T : ICLIFlags {
@@ -286,8 +294,7 @@ namespace DataTool.Flag {
                         foreach (var letter in letters) {
                             if (letter == '=') break;
                             if (letter == '?' || letter == 'h') {
-                                Help<T>(false, new Dictionary<string, string>());
-                                extraHelp?.Invoke(true);
+                                FullHelp<T>(extraHelp);
                                 return null;
                             }
 
@@ -425,7 +432,7 @@ namespace DataTool.Flag {
 
                     field.SetValue(instance, value);
                 } else if (flagAttribute.Required) {
-                    Console.Error.WriteLine(string.IsNullOrWhiteSpace(flagAttribute.Flag) ? $"Positional {flagAttribute.Positional} is required" : $"Flag {flagAttribute.Flag} is required");
+                    Console.Error.WriteLine(flagAttribute.Positional >= 0 ? $"Positional \"{flagAttribute.Flag}\" is required" : $"Flag \"{flagAttribute.Flag}\" is required");
 
                     FullHelp<T>(extraHelp);
                     return null;

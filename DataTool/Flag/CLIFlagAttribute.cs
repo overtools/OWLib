@@ -19,4 +19,9 @@ namespace DataTool.Flag {
             return Flag;
         }
     }
+
+    public class FlagInfo : Attribute {
+        public string Name;
+        public string Description;
+    }
 }

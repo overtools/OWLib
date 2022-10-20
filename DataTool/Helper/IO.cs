@@ -12,11 +12,7 @@ using static DataTool.Program;
 
 namespace DataTool.Helper {
     public static class IO {
-        public static string GetValidFilename(string filename, bool force = true) {
-            if (Flags != null && Flags.NoNames && !force) {
-                return null;
-            }
-
+        public static string GetValidFilename(string filename) {
             if (filename == null) {
                 return null;
             }

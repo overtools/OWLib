@@ -6,10 +6,16 @@ namespace DataTool.Flag {
         [CLIFlag(AllPositionals = true)]
         public string[] Positionals;
 
-        [CLIFlag(Flag = "h", Default = false, Help = "Print this help text", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        [Alias("help")]
-        public bool Help;
-
         public abstract bool Validate();
+    }
+
+    public abstract class IToolFlags : ICLIFlags {
+        [CLIFlag(Flag = "directory", Positional = 0, NeedsValue = true, Required = true, Help = "Overwatch Install Directory")]
+        public string OverwatchDirectory;
+
+        [CLIFlag(Flag = "mode", Positional = 1, NeedsValue = true, Required = true, Help = "Extraction Mode")]
+        public string Mode;
+
+        public abstract override bool Validate();
     }
 }

@@ -42,25 +42,6 @@ namespace DataTool {
             return TankHandler.m_assets.ContainsKey(key);
         }
 
-        public static HashSet<Type> GetTools(bool noDebugTools = false) {
-            var tools = new HashSet<Type>();
-            {
-                var t = typeof(ITool);
-                var asm = t.Assembly;
-                var types = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(s => s.GetTypes())
-                    .Where(p => p.IsClass && t.IsAssignableFrom(p));
-
-                foreach (var tt in types) {
-                    var attribute = tt.GetCustomAttribute<ToolAttribute>();
-                    if (tt.IsInterface || attribute == null) continue;
-
-                    tools.Add(tt);
-                }
-            }
-            return tools;
-        }
-
         public static void Main() {
             InitTankSettings();
 
@@ -109,7 +90,7 @@ namespace DataTool {
             }
 
             if (string.IsNullOrWhiteSpace(Flags.OverwatchDirectory) || string.IsNullOrWhiteSpace(Flags.Mode) || Flags.Help) {
-                PrintHelp(false, tools);
+                PrintHelp(true, tools);
                 return;
             }
 
@@ -380,57 +361,66 @@ namespace DataTool {
             }
         }
 
+        public static HashSet<Type> GetTools() {
+            var tools = new HashSet<Type>();
+            {
+                var t = typeof(ITool);
+                var asm = t.Assembly;
+                var types = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(s => s.GetTypes())
+                    .Where(p => p.IsClass && t.IsAssignableFrom(p));
+
+                foreach (var tt in types) {
+                    var attribute = tt.GetCustomAttribute<ToolAttribute>();
+                    if (tt.IsInterface || attribute == null) continue;
+
+                    tools.Add(tt);
+                }
+            }
+            return tools;
+        }
+
         private static void PrintHelp(bool full, IEnumerable<Type> eTools) {
             var tools = new List<Type>(eTools);
             tools.Sort(new ToolComparer());
-            if (!full) {
-                Log();
-                Log("Modes:");
-                Log("  {0, -26} | {1, -40}", "mode", "description");
-                Log("".PadLeft(94, '-'));
-                foreach (var t in tools) {
-                    var attribute = t.GetCustomAttribute<ToolAttribute>();
-                    if (attribute.IsSensitive && !Debugger.IsAttached) continue;
 
-                    var desc = attribute.Description;
-                    if (attribute.Description == null) desc = "";
+            Log();
+            Log("Modes:");
+            Log("  {0, -26} | {1, -40}", "mode", "description");
+            Log("".PadLeft(94, '-'));
+            foreach (var t in tools) {
+                var attribute = t.GetCustomAttribute<ToolAttribute>();
+                if (attribute.IsSensitive) continue;
 
-                    Log("  {0, -26} | {1}", attribute.Keyword, desc);
-                }
+                var desc = attribute.Description;
+                if (attribute.Description == null) desc = "";
+
+                Log("  {0, -26} | {1}", attribute.Keyword, desc);
             }
 
-            var sortedTools = new Dictionary<string, List<Type>>();
+            var flagTypes = new List<Type>();
 
             foreach (var t in tools) {
                 var attribute = t.GetCustomAttribute<ToolAttribute>();
                 if (attribute.IsSensitive) continue;
-                if (attribute.Keyword == null) continue;
-                if (!attribute.Keyword.Contains("-")) continue;
 
-                var result = attribute.Keyword.Split('-')
-                    .First();
-
-                if (!sortedTools.ContainsKey(result)) sortedTools[result] = new List<Type>();
-                sortedTools[result]
-                    .Add(t);
-            }
-
-            foreach (var toolType in sortedTools) {
-                var firstTool = toolType.Value.FirstOrDefault();
-                var attribute = firstTool?.GetCustomAttribute<ToolAttribute>();
                 if (attribute?.CustomFlags == null) continue;
                 var flags = attribute.CustomFlags;
                 if (!typeof(ICLIFlags).IsAssignableFrom(attribute.CustomFlags)) continue;
-                if (!full) {
-                    Log();
-                    Log("Flags for {0}-*", toolType.Key);
-                    typeof(FlagParser).GetMethod(nameof(FlagParser.FullHelp))
-                        ?.MakeGenericMethod(flags)
-                        .Invoke(null, new object[] { null, true });
-                } else {
-                    //
-                }
+
+                if (flagTypes.Contains(flags)) continue;
+                flagTypes.Add(flags);
             }
+
+            foreach (var flagType in flagTypes) {
+                var flagInfo = flagType.GetCustomAttribute<FlagInfo>();
+                Log();
+                Log($"{flagInfo?.Name ?? flagType.Name} Flags - {flagInfo?.Description ?? ""}");
+                typeof(FlagParser).GetMethod(nameof(FlagParser.FullHelp))
+                    ?.MakeGenericMethod(flagType)
+                    .Invoke(null, new object[] { null, true });
+            }
+
             ToolNameSpellCheck();
         }
 

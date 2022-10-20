@@ -61,8 +61,9 @@ namespace DataTool.Helper {
         }
 
         public static void FillToolSpellDict(SymSpell symSpell) {
-            foreach (var type in GetTools(false)) {
+            foreach (var type in GetTools()) {
                 var attribute = type.GetCustomAttribute<ToolAttribute>();
+                if (attribute == null || attribute.IsSensitive) continue;
                 symSpell.CreateDictionaryEntry(attribute.Keyword.ToLower(), 1);
             }
         }
