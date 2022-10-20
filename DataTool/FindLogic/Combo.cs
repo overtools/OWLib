@@ -91,7 +91,7 @@ namespace DataTool.FindLogic {
             private static void SetAssetName<T>(ulong guid, string name, Dictionary<ulong, T> map, Dictionary<ulong, ulong> replacements = null) where T : ComboAsset {
                 if (replacements != null) guid = GetReplacement(guid, replacements);
                 if (!map.TryGetValue(guid, out var asset)) return;
-                asset.m_name = name.TrimEnd(' ');
+                asset.m_name = name.Replace('\u00A0', ' ').TrimEnd(' ');
             }
 
             public void SetEntityName(ulong entity, string name, Dictionary<ulong, ulong> replacements = null) => SetAssetName(entity, name, m_entities, replacements);

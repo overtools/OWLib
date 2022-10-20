@@ -40,7 +40,7 @@ namespace DataTool.ToolLogic.Extract {
             foreach (var hero in heroes) {
                 var heroStu = GetInstance<STUHero>(hero.GUID);
 
-                string heroName = GetValidFilename((GetCleanString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}").TrimEnd(' '));
+                string heroName = GetValidFilename(GetCleanString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}");
                 Logger.Log($"Processing {heroName}");
 
                 Combo.ComboInfo baseInfo = default;
