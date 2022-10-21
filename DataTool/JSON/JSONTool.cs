@@ -10,7 +10,7 @@ using static DataTool.Helper.Logger;
 
 namespace DataTool.JSON {
     public class JSONTool {
-        public void OutputJSON(object jObj, ListFlags toolFlags, bool log = true) {
+        public void  OutputJSON(object jObj, ListFlags toolFlags, bool log = true) {
             try {
                 CompositeResolver.RegisterAndSetAsDefault(new IJsonFormatter[] {
                     new ResourceGUIDFormatter()

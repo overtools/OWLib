@@ -9,23 +9,23 @@ namespace TankLib.Math {
     public struct teColorRGBA {
         /// <summary>Red component</summary>
         public float R;
-        
+
         /// <summary>Green component</summary>
         public float G;
-        
+
         /// <summary>Blue component</summary>
         public float B;
-        
+
         /// <summary>Alpha component</summary>
         public float A;
-        
+
         public teColorRGBA(float red, float green, float blue, float alpha) {
             R = red;
             G = green;
             B = blue;
             A = alpha;
         }
-        
+
         public teColorRGBA(IReadOnlyList<float> val) {
             if (val.Count != 4) {
                 throw new InvalidDataException();
@@ -36,7 +36,7 @@ namespace TankLib.Math {
             B = val[2];
             A = val[3];
         }
-        
+
         public static implicit operator Color(teColorRGBA obj) {
             return Color.FromArgb (
                 (int) (obj.R * 255f),
@@ -48,19 +48,23 @@ namespace TankLib.Math {
         private byte ToHex(float a) {
             return (byte) System.Math.Round(a * 255f);
         }
-        
+
         public string ToHex() {
             return $"#{ToHex(R):X2}{ToHex(G):X2}{ToHex(B):X2} {A}";
+        }
+
+        public string ToCSS() {
+            return $"rgba({R * 255}, {G * 255}, {B * 255}, {A})";
         }
 
         public static bool operator ==(teColorRGBA a, teColorRGBA b) {
             return a.Equals(b);
         }
-        
+
         public static bool operator !=(teColorRGBA a, teColorRGBA b) {
             return !a.Equals(b);
         }
-        
+
         public bool Equals(teColorRGBA other) {
             return R.Equals(other.R) && G.Equals(other.G) && B.Equals(other.B) && A.Equals(other.A);
         }

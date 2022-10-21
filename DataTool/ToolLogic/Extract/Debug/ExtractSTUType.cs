@@ -8,9 +8,40 @@ using TankLib;
 using DragonLib.XML;
 using TankLib.STU;
 using System.Collections.Generic;
-using DataTool.ToolLogic.Render;
+using System.Linq;
+using DragonLib.Indent;
 
 namespace DataTool.ToolLogic.Extract.Debug {
+    public class teResourceGUIDSerializer : IDragonMLSerializer {
+        public DragonMLType OverrideTarget => DragonMLType.Object;
+
+        private readonly Dictionary<Type, string> TargetMap = new Dictionary<Type, string>();
+
+        public object Print(object instance, Dictionary<object, int> visited, IndentHelperBase indents, string fieldName, DragonMLSettings settings) {
+            var hmlNameTag = fieldName == null ? "" : $" hml:name=\"{fieldName}\"";
+            try {
+                // ReSharper disable once InvertIf
+                if (!TargetMap.TryGetValue(instance.GetType(), out var target)) {
+                    target = instance.GetType().GenericTypeArguments.First().Name;
+                    TargetMap[instance.GetType()] = target;
+                }
+
+                var hmlIdTag = string.Empty;
+                if (!visited.ContainsKey(instance)) {
+                    visited[instance] = visited.Count;
+                }
+
+                if (settings.UseRefId) {
+                    hmlIdTag = $" hml:id=\"{visited[instance]}\"";
+                }
+
+                return $"{indents}<tank:ref{hmlIdTag}{hmlNameTag} GUID=\"{instance}\" Target=\"{target}\"/>\n";
+            } catch {
+                return null;
+            }
+        }
+    }
+
     [Tool("extract-stu-type", Description = "Extract all STUs of a type. Type not provided - extract defaults. Can output in XML (--XML)", CustomFlags = typeof(ExtractFlags), IsSensitive = true)]
     public class ExtractSTUType : ITool {
 

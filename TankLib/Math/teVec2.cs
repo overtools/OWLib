@@ -10,7 +10,7 @@ namespace TankLib.Math {
     public struct teVec2 {
         /// <summary>X component</summary>
         public float X;
-        
+
         /// <summary>Y component</summary>
         public float Y;
 
@@ -26,6 +26,14 @@ namespace TankLib.Math {
             Half.Half x = Half.Half.ToHalf(val[0]);
             Half.Half y = Half.Half.ToHalf(val[1]);
             return new teVec2(x, y);
+        }
+
+        public static teVec2 operator +(teVec2 left, teVec2 right) {
+            return new teVec2(left.X + right.X, left.Y + right.Y);
+        }
+
+        public static teVec2 operator -(teVec2 left, teVec2 right) {
+            return new teVec2(left.X - right.X, left.Y - right.Y);
         }
     }
 }
