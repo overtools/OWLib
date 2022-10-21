@@ -56,8 +56,8 @@ namespace DataTool.SaveLogic {
 
             public void Write(Stream output) {
                 using (BinaryWriter writer = new BinaryWriter(output)) {
-                    writer.Write((ushort) 1); // version major
-                    writer.Write((ushort) 2); // version minor
+                    writer.Write((ushort) 2); // version major
+                    writer.Write((ushort) 0); // version minor
 
                     if (Name.Length == 0) {
                         writer.Write((byte) 0);

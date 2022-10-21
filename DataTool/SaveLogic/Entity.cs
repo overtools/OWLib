@@ -11,8 +11,8 @@ namespace DataTool.SaveLogic {
             protected readonly FindLogic.Combo.ComboInfo Info;
             protected readonly FindLogic.Combo.EntityAsset Entity;
 
-            public const ushort VersionMajor = 1;
-            public const ushort VersionMinor = 1;
+            public const ushort VersionMajor = 2;
+            public const ushort VersionMinor = 0;
 
             public OverwatchEntity(FindLogic.Combo.EntityAsset entity, FindLogic.Combo.ComboInfo info) {
                 Info = info;
