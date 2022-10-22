@@ -13,6 +13,7 @@ using DataTool.JSON;
 using DataTool.ToolLogic.Extract;
 using DataTool.ToolLogic.List;
 using DirectXTexNet;
+using RevorbStd;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.ColorSpaces.Conversion;
 using SixLabors.ImageSharp.PixelFormats;
@@ -888,7 +889,7 @@ namespace DataTool.SaveLogic {
                     Stream vorbisStream = new MemoryStream();
                     vorbis.ConvertToOgg(vorbisStream);
                     vorbisStream.Position = 0;
-                    using (Stream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream)) {
+                    using (Revorb.RevorbStream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream)) {
                         revorbStream.Position = 0;
                         revorbStream.CopyTo(outputStream);
                     }
