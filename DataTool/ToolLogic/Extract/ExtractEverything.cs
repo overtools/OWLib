@@ -1,15 +1,18 @@
 using DataTool.Flag;
 using DataTool.ToolLogic.Extract.Debug;
+using TankLib.Helpers;
 using static DataTool.Program;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-everything", Description = "Extract everything", CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-everything", Description = "Extract everything", IsSensitive = true, CustomFlags = typeof(ExtractFlags))]
     public class ExtractEverything : ITool {
         public void Parse(ICLIFlags toolFlags) {
             if (!(toolFlags is ExtractFlags flags)) {
                 // wat
                 return;
             }
+
+            Logger.Error("ExtractEverything", "Are you sure you want everything? This take a very long time and the output size will be huge");
 
             var positionals = new System.Collections.Generic.List<string>(flags.Positionals) {"*|*=*"};
             flags.Positionals = positionals.ToArray();

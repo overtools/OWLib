@@ -15,6 +15,9 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool ConvertTexturesLossless;
 
+        [CLIFlag(Default = false, Flag = "extract-refpose", Help = "Extract skeleton refposes", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool ExtractRefpose;
+
         [CLIFlag(Default = false, Hidden = true, Flag = "export-wav", Help = "Use new sound converter that uses vgmstream, slower but all sounds export", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool ExportWav;
 
@@ -30,31 +33,25 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "raw-animations", Help = "Do not convert animations", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool RawAnimations;
 
-        [CLIFlag(Default = false, Flag = "skip-textures", Help = "Skip texture extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool SkipTextures;
-
-        [CLIFlag(Default = false, Flag = "skip-sound", Help = "Skip sound extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool SkipSound;
-
-        [CLIFlag(Default = false, Flag = "skip-models", Help = "Skip model extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool SkipModels;
-
-        [CLIFlag(Default = false, Flag = "skip-animations", Help = "Skip animation extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool SkipAnimations;
-
-        [CLIFlag(Default = false, Flag = "extract-refpose", Help = "Extract skeleton refposes", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool ExtractRefpose;
-
-        [CLIFlag(Default = false, Flag = "extract-mstu", Help = "Extract model STU", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool ExtractModelStu;
-
         [CLIFlag(Default = false, Flag = "raw", Help = "Skip all conversion", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool Raw;
 
-        [CLIFlag(Default = false, Flag = "scale-anims", Help = "set to true for Blender 2.79, false for Maya and when Blender SEAnim tools are updated for 2.8", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        [CLIFlag(Default = false, Flag = "skip-textures", Help = "Skip texture extraction", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool SkipTextures;
+
+        [CLIFlag(Default = false, Flag = "skip-sound", Help = "Skip sound extraction", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool SkipSound;
+
+        [CLIFlag(Default = false, Flag = "skip-models", Help = "Skip model extraction", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool SkipModels;
+
+        [CLIFlag(Default = false, Flag = "skip-animations", Help = "Skip animation extraction", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool SkipAnimations;
+
+        [CLIFlag(Default = false, Flag = "scale-anims", Hidden = true, Help = "set to true for Blender 2.79, false for Maya and when Blender SEAnim tools are updated for 2.8", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool ScaleAnims;
 
-        [CLIFlag(Default = false, Flag = "flatten", Help = "Flatten directory structure", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        [CLIFlag(Default = false, Flag = "flatten", Help = "Flatten directory structure", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool FlattenDirectory;
 
         [CLIFlag(Default = false, Flag = "force-dds-multisurface", Help = "Save multisurface textures as DDS", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
@@ -80,30 +77,6 @@ namespace DataTool.ToolLogic.Extract {
 
         [CLIFlag(Default = true, Flag = "voice-group-by-type", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool VoiceGroupByType;
-
-        [CLIFlag(Default = false, Flag = "skip-map-env-sound", Help = "Skip map Environment sound extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool SkipMapEnvironmentSound;
-
-        [CLIFlag(Default = false, Flag = "skip-map-env-lut", Help = "Skip map Environment lut extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool SkipMapEnvironmentLUT;
-
-        [CLIFlag(Default = false, Flag = "skip-map-env-blend", Help = "Skip map Environment blend cubemap extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool SkipMapEnvironmentBlendCubemap;
-
-        [CLIFlag(Default = false, Flag = "skip-map-env-ground", Help = "Skip map Environment ground cubemap extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool SkipMapEnvironmentGroundCubemap;
-
-        [CLIFlag(Default = false, Flag = "skip-map-env-sky", Help = "Skip map Environment sky cubemap extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool SkipMapEnvironmentSkyCubemap;
-
-        [CLIFlag(Default = false, Flag = "skip-map-env-skybox", Help = "Skip map Environment skybox extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool SkipMapEnvironmentSkybox;
-
-        [CLIFlag(Default = false, Flag = "skip-map-env-entity", Help = "Skip map Environment entity extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool SkipMapEnvironmentEntity;
-
-        // [CLIFlag(Default = false, Flag = "convert-bnk", Help = "Convert .bnk files to .wem", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
-        // public bool ConvertBnk;
 
         [CLIFlag(Default = false, Flag = "xml", Help = "Convert STUs to xml when extracted with ExtractDebugType", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertToXML;

@@ -45,7 +45,7 @@ namespace DataTool.ToolLogic.Extract {
                 Directory.CreateDirectory(basePath);
             }
 
-            if (!flags.SkipMapEnvironmentLUT && File.Exists(Path.Combine(basePath, "SPILUT", "config.ocio"))) {
+            if (File.Exists(Path.Combine(basePath, "SPILUT", "config.ocio"))) {
                 File.Delete(Path.Combine(basePath, "SPILUT", "config.ocio"));
             }
 
@@ -88,22 +88,22 @@ namespace DataTool.ToolLogic.Extract {
                             //    teLightingManifest lightingManifest = new teLightingManifest(lightingStream);
                             //}
 
-                            if (!flags.SkipMapEnvironmentSound && done.Add(new KeyValuePair<ulong, string>(env.MapEnvironmentSound, mapInfo.Name)))
+                            if (done.Add(new KeyValuePair<ulong, string>(env.MapEnvironmentSound, mapInfo.Name)))
                                 SaveSound(flags, basePath, Path.Combine("Sound", mapName), env.MapEnvironmentSound);
-                            if (!flags.SkipMapEnvironmentLUT && done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name))) {
+                            if (done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name))) {
                                 SaveTex(flags, basePath, "LUT", fname + env.LUT, env.LUT);
                                 SaveLUT(flags, basePath, "SPILUT", fname + env.LUT, env.LUT, Path.Combine(basePath, "SPILUT", "config.ocio"), mapInfo);
                             }
 
-                            if (!flags.SkipMapEnvironmentBlendCubemap && done.Add(new KeyValuePair<ulong, string>(env.BlendEnvironmentCubemap, mapInfo.Name)))
+                            if (done.Add(new KeyValuePair<ulong, string>(env.BlendEnvironmentCubemap, mapInfo.Name)))
                                 SaveTex(flags, basePath, "BlendCubemap", fname + env.BlendEnvironmentCubemap, env.BlendEnvironmentCubemap);
-                            if (!flags.SkipMapEnvironmentGroundCubemap && done.Add(new KeyValuePair<ulong, string>(env.GroundEnvironmentCubemap, mapInfo.Name)))
+                            if (done.Add(new KeyValuePair<ulong, string>(env.GroundEnvironmentCubemap, mapInfo.Name)))
                                 SaveTex(flags, basePath, "GroundCubemap", fname + env.GroundEnvironmentCubemap, env.GroundEnvironmentCubemap);
-                            if (!flags.SkipMapEnvironmentSkyCubemap && done.Add(new KeyValuePair<ulong, string>(env.SkyEnvironmentCubemap, mapInfo.Name)))
+                            if (done.Add(new KeyValuePair<ulong, string>(env.SkyEnvironmentCubemap, mapInfo.Name)))
                                 SaveTex(flags, basePath, "SkyCubemap", fname + env.SkyEnvironmentCubemap, env.SkyEnvironmentCubemap);
-                            if (!flags.SkipMapEnvironmentSkybox && done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel + env.SkyboxModelLook, mapInfo.Name)))
+                            if (done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel + env.SkyboxModelLook, mapInfo.Name)))
                                 SaveMdl(flags, basePath, Path.Combine("Skybox", mapName), env.SkyboxModel, env.SkyboxModelLook);
-                            if (!flags.SkipMapEnvironmentEntity && done.Add(new KeyValuePair<ulong, string>(env.EntityDefinition, mapInfo.Name)))
+                            if (done.Add(new KeyValuePair<ulong, string>(env.EntityDefinition, mapInfo.Name)))
                                 SaveEntity(flags, basePath, Path.Combine("Entity", mapName), env.EntityDefinition);
                         }
                     }
