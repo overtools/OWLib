@@ -226,11 +226,10 @@ namespace DataTool {
 
             Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
 
-            ManifestCryptoHandler.AttemptFallbackManifests = Flags.TryManifestFallback;
             var args = new ClientCreateArgs {
                 SpeechLanguage = Flags.SpeechLanguage,
                 TextLanguage = Flags.Language,
-                HandlerArgs = new ClientCreateArgs_Tank {CacheAPM = Flags.UseCache, ManifestRegion = Flags.RCN ? ProductHandler_Tank.REGION_CN : ProductHandler_Tank.REGION_DEV},
+                HandlerArgs = new ClientCreateArgs_Tank {ManifestRegion = Flags.RCN ? ProductHandler_Tank.REGION_CN : ProductHandler_Tank.REGION_DEV},
                 Online = online
             };
 
@@ -288,17 +287,15 @@ namespace DataTool {
         }
 
         public static void InitKeys() {
-            if (!Flags.SkipKeys) {
-                Logger.Info("Core", "Checking ResourceKeys");
+            Logger.Info("Core", "Checking ResourceKeys");
 
-                foreach (var key in TrackedFiles[0x90]) {
-                    if (!ValidKey(key)) continue;
+            foreach (var key in TrackedFiles[0x90]) {
+                if (!ValidKey(key)) continue;
 
-                    var resourceKey = GetInstance<STUResourceKey>(key);
-                    if (resourceKey == null || resourceKey.GetKeyID() == 0 || Client.ConfigHandler.Keyring.Keys.ContainsKey(resourceKey.GetReverseKeyID())) continue;
-                    Client.ConfigHandler.Keyring.AddKey(resourceKey.GetReverseKeyID(), resourceKey.m_key);
-                    Logger.Info("Core", $"Added ResourceKey {resourceKey.GetKeyIDString()}, Value: {resourceKey.GetKeyValueString()}");
-                }
+                var resourceKey = GetInstance<STUResourceKey>(key);
+                if (resourceKey == null || resourceKey.GetKeyID() == 0 || Client.ConfigHandler.Keyring.Keys.ContainsKey(resourceKey.GetReverseKeyID())) continue;
+                Client.ConfigHandler.Keyring.AddKey(resourceKey.GetReverseKeyID(), resourceKey.m_key);
+                Logger.Info("Core", $"Added ResourceKey {resourceKey.GetKeyIDString()}, Value: {resourceKey.GetKeyValueString()}");
             }
         }
 

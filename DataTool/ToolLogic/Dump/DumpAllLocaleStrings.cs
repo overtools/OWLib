@@ -59,7 +59,7 @@ namespace DataTool.ToolLogic.Dump {
             var args = new ClientCreateArgs {
                 SpeechLanguage = "enUS",
                 TextLanguage = language,
-                HandlerArgs = new ClientCreateArgs_Tank {CacheAPM = Flags.UseCache},
+                HandlerArgs = new ClientCreateArgs_Tank(),
                 Online = false
             };
 

@@ -26,9 +26,7 @@ namespace TankTonka {
             DataTool.Program.Flags = new ToolFlags {
                 OverwatchDirectory = args[0],
                 Language = locale,
-                SpeechLanguage = locale,
-                UseCache = true,
-                CacheCDNData = true,
+                SpeechLanguage = locale
             };
 
             _outputDirectory = args[1];
@@ -53,7 +51,7 @@ namespace TankTonka {
                     ProcessType(type);
                 }
             }
-            
+
             using (Stream outputFile = File.OpenWrite(Path.Combine(_outputDirectory, $"missing.json"))) {
                 outputFile.SetLength(0);
                 byte[] buf = JsonSerializer.PrettyPrintByteArray(JsonSerializer.Serialize(IO.MissingKeyLog.ToList()));
@@ -65,7 +63,7 @@ namespace TankTonka {
             if (!DataTool.Program.TrackedFiles.ContainsKey(type)) {
                 return;
             }
-            
+
             TypeManifest manifest = new TypeManifest {
                 Type = (Common.AssetRepoType) type
             };
@@ -81,7 +79,7 @@ namespace TankTonka {
             if (TypeClassifications.KnownPayload.Contains(type)) {
                 return;
             }
-            
+
             manifest.StructuredDataInfo = new Common.StructuredDataInfo();
             HashSet<Common.AssetRepoType> referenceTypes = new HashSet<Common.AssetRepoType>();
 
@@ -108,7 +106,7 @@ namespace TankTonka {
                     GUID = (teResourceGUID) guid,
                     References = new HashSet<teResourceGUID>()
                 };
-                
+
                 unsafe {
                     fixed (byte* ptr = data) {
                         var i = 0;
@@ -145,7 +143,7 @@ namespace TankTonka {
 
         private static void ProcessAssetSTUv2(ulong guid, string typeDir) {
             AssetRecord record;
-            
+
             using (teStructuredData structuredData = STUHelper.OpenSTUSafe(guid)) {
                 if (structuredData == null) return;
 
@@ -212,13 +210,13 @@ namespace TankTonka {
 
             if (fieldType.IsGenericType) {
                 Type genericBase = fieldType.GetGenericTypeDefinition();
-                
+
                 Type[] genericParams = fieldType.GetGenericArguments();
                 if (genericBase != typeof(teStructuredDataAssetRef<>)) return;
-                
+
                 MethodInfo method = typeof(Program).GetMethod(nameof(GetAssetRefGUID));
                 if (method == null) return;
-                
+
                 method = method.MakeGenericMethod(genericParams);
                 record.References.Add((teResourceGUID) method.Invoke(null, new[] {value}));
                 return;
