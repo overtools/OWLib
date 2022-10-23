@@ -158,7 +158,11 @@ namespace DataTool.FindLogic {
             }
 
             public string GetName() {
-                return GetValidFilename(m_name, false) ?? GetFileName(m_GUID);
+                if (Program.Flags != null && Program.Flags.NoNames) {
+                    return GetFileName(m_GUID);
+                }
+
+                return GetValidFilename(m_name) ?? GetFileName(m_GUID);
             }
 
             public string GetNameIndex() {
@@ -166,7 +170,7 @@ namespace DataTool.FindLogic {
                 if (teResourceGUID.Type(m_GUID) == 0x118) return GetName();
                 if (teResourceGUID.Type(m_GUID) == 0x119) return GetName();
 
-                return GetValidFilename(m_name, false) ?? $"{m_GUID & 0xFFFFFFFFFFFF:X12}";
+                return GetName() ?? $"{m_GUID & 0xFFFFFFFFFFFF:X12}";
             }
         }
 

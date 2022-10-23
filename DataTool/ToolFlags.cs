@@ -4,13 +4,7 @@ using JetBrains.Annotations;
 
 namespace DataTool {
     [Serializable, UsedImplicitly]
-    public class ToolFlags : ICLIFlags {
-        [CLIFlag(Flag = "directory", Positional = 0, NeedsValue = true, Required = true, Help = "Overwatch Directory")]
-        public string OverwatchDirectory;
-
-        [CLIFlag(Flag = "mode", Positional = 1, NeedsValue = true, Required = true, Help = "Extraction Mode")]
-        public string Mode;
-
+    public class ToolFlags : IToolFlags {
         [CLIFlag(Default = false, Flag = "online", Help = "Allow downloading of corrupted files", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool Online;
 
@@ -22,9 +16,6 @@ namespace DataTool {
         [Alias("T")]
         public string SpeechLanguage;
 
-        [CLIFlag(Default = false, Flag = "graceful-exit", Help = "When enabled don't crash on invalid CMF Encryption", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool GracefulExit;
-
         [CLIFlag(Default = true, Flag = "cache", Help = "Cache Index files from CDN", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool UseCache;
 
@@ -32,12 +23,8 @@ namespace DataTool {
         // ReSharper disable once InconsistentNaming
         public bool CacheCDNData;
 
-        [CLIFlag(Default = false, Flag = "validate-cache", Help = "Validate files from CDN", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
-        public bool ValidateCache;
-
         [CLIFlag(Default = false, Flag = "quiet", Help = "Suppress majority of output messages", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         [Alias("q")]
-        [Alias("silent")]
         public bool Quiet;
 
         [CLIFlag(Default = false, Flag = "string-guid", Help = "Returns all strings as their GUID instead of their value", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"}, Hidden = true)]
@@ -75,7 +62,7 @@ namespace DataTool {
         [Alias("argd")]
         public bool DeleteArgs;
 
-        [CLIFlag(Default = false, Flag = "no-names", Help = "Don't use names for textures", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        [CLIFlag(Default = false, Flag = "no-names", Help = "Don't use names for textures", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool NoNames;
 
         [CLIFlag(Default = false, Flag = "canonical-names", Help = "Only use canonical names", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
@@ -92,6 +79,10 @@ namespace DataTool {
 
         [CLIFlag(Default = false, Flag = "allow-manifest-fallback", Help = "Allows falling back to older versions if manfiest doesn't exist", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool TryManifestFallback;
+
+        [CLIFlag(Flag = "h", Default = false, Help = "Print this help text", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        [Alias("help")]
+        public bool Help;
 
         public override bool Validate() => true;
     }
