@@ -218,10 +218,12 @@ namespace DataTool.ConvertLogic.WEM {
             #endregion
 
             Reader.BaseStream.Position = Header.DataOffset;
+            var granule = 0u;
             for (var index = 0; index < FrameTable.Length; index++) {
                 var frameSize = FrameTable[index];
                 var frame = Reader.ReadBytes(frameSize);
-                ogg.SetGranule((uint) (GetNbFrames(frame) * GetSamplesPerFrame(frame, 48000)));
+                granule += (uint) (GetNbFrames(frame) * GetSamplesPerFrame(frame, Header.SampleRate));
+                ogg.SetGranule(granule);
                 ogg.Write(frame);
                 ogg.FlushPage();
             }
