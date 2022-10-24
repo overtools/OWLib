@@ -974,6 +974,8 @@ namespace DataTool.SaveLogic {
 
             WarnedAboutVGMStream = true;
 
+            // disabled while i port the code to C#, no need in downloading 40 MB of data for only 1 KB of code.
+        #if DEBUG
             Logger.Warn("Combo", "opus wem found, using vgmstream to convert");
 
             if (!File.Exists(VgmStreamPath)) {
@@ -991,12 +993,14 @@ namespace DataTool.SaveLogic {
                         if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party", "vgmstream-win"))) {
                             Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party", "vgmstream-win"));
                         }
+
                         foreach (var e in archive.Entries) {
                             var targetPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party", "vgmstream-win", e.FullName));
                             using var target = File.OpenWrite(targetPath);
                             target.SetLength(0);
                             e.Open().CopyTo(target);
                         }
+
                         HasVGMStream = true;
                     }
                 } catch {
@@ -1005,6 +1009,7 @@ namespace DataTool.SaveLogic {
             } else {
                 HasVGMStream = true;
             }
+        #endif
         }
     }
 }
