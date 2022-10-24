@@ -908,7 +908,7 @@ namespace DataTool.SaveLogic {
 
                 if (convertWem) {
                     var type = WEMType(soundStream);
-                    if (type == -1) {
+                    if (type == 0) {
                         convertWem = false;
                     } else if (type == 2) {
                         VGMStreamSanity();
