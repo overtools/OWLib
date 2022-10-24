@@ -973,10 +973,6 @@ namespace DataTool.SaveLogic {
             }
 
             WarnedAboutVGMStream = true;
-            if (!Debugger.IsAttached) {
-                return;
-            }
-            // disabled until vgmstream merges my pull request
 
             Logger.Warn("Combo", "opus wem found, using vgmstream to convert");
 
