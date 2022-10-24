@@ -825,28 +825,28 @@ namespace DataTool.SaveLogic {
         }
 
         public static void ConvertSoundFile(Stream stream, Stream outputStream, string outputFile, bool useVgmStream) {
-            if (useVgmStream) {
-                ConvertSoundFileVgmStream(stream, outputStream);
-            } else {
-                try {
+            try {
+                if (useVgmStream) {
+                    ConvertSoundFileVgmStream(stream, outputStream);
+                } else {
                     ConvertSoundFileWw2Ogg(stream, outputStream);
-                } catch (Exception e) {
-                    if (!VGMStreamSanity()) {
-                        throw;
+                }
+            } catch (Exception e) {
+                if (!VGMStreamSanity()) {
+                    throw;
+                }
+
+                Logger.Warn("Combo", $"Error converting sound: {e.Message}, trying vgmstream directly");
+                var temp = Path.Combine(Path.GetTempPath(), $"vgmstream{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.wem");
+                try {
+                    using (Stream tempStream = File.OpenWrite(temp)) {
+                        stream.CopyTo(tempStream);
                     }
 
-                    Logger.Warn("Combo", $"Error converting sound: {e.Message}, trying vgmstream");
-                    var temp = Path.Combine(Path.GetTempPath(), $"vgmstream{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.wem");
-                    try {
-                        using (Stream tempStream = File.OpenWrite(temp)) {
-                            stream.CopyTo(tempStream);
-                        }
-
-                        ConvertSoundFileVgmStreamProcess(temp, outputFile);
-                    } finally {
-                        if (File.Exists(temp)) {
-                            File.Delete(temp);
-                        }
+                    ConvertSoundFileVgmStreamProcess(temp, outputFile);
+                } finally {
+                    if (File.Exists(temp)) {
+                        File.Delete(temp);
                     }
                 }
             }
@@ -883,12 +883,8 @@ namespace DataTool.SaveLogic {
         }
 
         public static void ConvertSoundFileVgmStream(Stream stream, Stream outputStream) {
-            try {
-                using WwiseRIFFOpus opus = new WwiseRIFFOpus(stream);
-                opus.ConvertToOgg(outputStream);
-            } catch (Exception e) {
-                Logger.Error("Combo", $"Error converting sound using vgmstream: {e}");
-            }
+            using WwiseRIFFOpus opus = new WwiseRIFFOpus(stream);
+            opus.ConvertToOgg(outputStream);
         }
 
         public static void ConvertSoundFileWw2Ogg(Stream stream, Stream outputStream) {
