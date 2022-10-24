@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace DataTool.ConvertLogic {
+namespace DataTool.ConvertLogic.WEM {
     public class CodebookLibrary {
         public string m_file;
 
@@ -37,7 +37,7 @@ namespace DataTool.ConvertLogic {
             }
         }
 
-        public void Rebuild(int codebookID, BitOggstream os) {
+        public void Rebuild(int codebookID, BitOggStream os) {
             long? cbIndexStart = GetCodebook(codebookID);
             ulong cbSize;
 
@@ -64,7 +64,7 @@ namespace DataTool.ConvertLogic {
             Rebuild(bitStream, cbSize, os);
         }
 
-        public void Rebuild(BitStream bis, ulong cbSize, BitOggstream bos) {
+        public void Rebuild(BitStream bis, ulong cbSize, BitOggStream bos) {
             /* IN: 4 bit dimensions, 14 bit entry count */
             BitUint dimensions = new BitUint(4);
             BitUint entries = new BitUint(14);
@@ -90,7 +90,7 @@ namespace DataTool.ConvertLogic {
                 int currentEntry = 0;
                 while (currentEntry < entries) {
                     /* IN/OUT: ilog(entries-current_entry) bit count w/ given length */
-                    BitUint number = new BitUint((uint) Sound.WwiseRIFFVorbis.Ilog((uint) (entries - currentEntry)));
+                    BitUint number = new BitUint((uint) WwiseRIFFVorbis.Ilog((uint) (entries - currentEntry)));
                     bis.Read(number);
                     bos.Write(number);
                     currentEntry = (int) (currentEntry + number);
@@ -188,7 +188,7 @@ namespace DataTool.ConvertLogic {
 
         private uint _bookMaptype1Quantvals(uint entries, uint dimensions) {
             /* get us a starting hint, we'll polish it below */
-            int bits = Sound.WwiseRIFFVorbis.Ilog(entries);
+            int bits = WwiseRIFFVorbis.Ilog(entries);
             int vals = (int) (entries >> (int) ((bits - 1) * (dimensions - 1) / dimensions));
             while (true) {
                 uint acc = 1;
