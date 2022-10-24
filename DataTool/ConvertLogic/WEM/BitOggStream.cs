@@ -208,6 +208,13 @@ namespace DataTool.ConvertLogic.WEM {
             }
         }
 
+        public void Write(byte[] bytes) {
+            FlushBits();
+
+            Buffer.BlockCopy(bytes, 0, _pageBuffer, (int)((int) SizeEnum.HeaderBytes + (int) SizeEnum.MaxSegments + _payloadBytes), bytes.Length);
+            _payloadBytes += (uint) bytes.Length;
+        }
+
         public void Write(VorbisPacketHeader vph) {
             BitUint t = new BitUint(8, vph.m_type);
             Write(t);
