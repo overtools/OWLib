@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using DataTool.ConvertLogic.WEM;
 using DataTool.Helper;
 using Newtonsoft.Json;
 using TankLib;
@@ -214,7 +215,7 @@ namespace DataTool.FindLogic {
         }
 
         public class WWiseBankEvent {
-            public ConvertLogic.Sound.BankObjectEventAction.EventActionType Type;
+            public BankObjectEventAction.EventActionType Type;
             public uint StartDelay; // milliseconds
             public uint SoundID;
         }

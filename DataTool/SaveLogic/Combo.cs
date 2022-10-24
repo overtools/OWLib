@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using DataTool.ConvertLogic;
+using DataTool.ConvertLogic.WEM;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.ToolLogic.Extract;
@@ -881,8 +882,8 @@ namespace DataTool.SaveLogic {
         }
 
         public static void ConvertSoundFileWw2Ogg(Stream stream, Stream outputStream) {
-            using (Sound.WwiseRIFFVorbis vorbis =
-                   new Sound.WwiseRIFFVorbis(stream,
+            using (WwiseRIFFVorbis vorbis =
+                   new WwiseRIFFVorbis(stream,
                                              Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party",
                                                                            "packed_codebooks_aoTuV_603.bin")))) {
                 Stream vorbisStream = new MemoryStream();

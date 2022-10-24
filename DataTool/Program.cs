@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using DataTool.ConvertLogic;
+using DataTool.ConvertLogic.WEM;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic;
@@ -199,7 +200,7 @@ namespace DataTool {
 
             IO.LoadLocalizedNamesMapping();
 
-            Sound.WwiseBank.GetReady();
+            WwiseBank.GetReady();
         }
 
         public static void ShutdownMisc() {
