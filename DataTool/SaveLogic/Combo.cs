@@ -881,21 +881,17 @@ namespace DataTool.SaveLogic {
         }
 
         public static void ConvertSoundFileWw2Ogg(Stream stream, Stream outputStream) {
-            try {
-                using (Sound.WwiseRIFFVorbis vorbis =
-                       new Sound.WwiseRIFFVorbis(stream,
-                                                 Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party",
-                                                                               "packed_codebooks_aoTuV_603.bin")))) {
-                    Stream vorbisStream = new MemoryStream();
-                    vorbis.ConvertToOgg(vorbisStream);
-                    vorbisStream.Position = 0;
-                    using (Revorb.RevorbStream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream)) {
-                        revorbStream.Position = 0;
-                        revorbStream.CopyTo(outputStream);
-                    }
+            using (Sound.WwiseRIFFVorbis vorbis =
+                   new Sound.WwiseRIFFVorbis(stream,
+                                             Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party",
+                                                                           "packed_codebooks_aoTuV_603.bin")))) {
+                Stream vorbisStream = new MemoryStream();
+                vorbis.ConvertToOgg(vorbisStream);
+                vorbisStream.Position = 0;
+                using (Revorb.RevorbStream revorbStream = RevorbStd.Revorb.Jiggle(vorbisStream)) {
+                    revorbStream.Position = 0;
+                    revorbStream.CopyTo(outputStream);
                 }
-            } catch (Exception e) {
-                Logger.Error("Combo", $"Error converting sound using ww2ogg: {e}");
             }
         }
 
