@@ -835,9 +835,18 @@ namespace DataTool.SaveLogic {
                     }
                 }
             } else {
-                using Stream outputStream = File.OpenWrite(outputFile);
-                outputStream.SetLength(0);
-                ConvertSoundFileWw2Ogg(stream, outputStream);
+                try {
+                    using Stream outputStream = File.OpenWrite(outputFile);
+                    outputStream.SetLength(0);
+                    ConvertSoundFileWw2Ogg(stream, outputStream);
+                } catch (Exception e) {
+                    if (HasVGMStream) {
+                        Logger.Warn("Combo", $"Error converting sound using ww2ogg, trying vgmstream: {e.Message}");
+                        ConvertSoundFile(stream, outputFile, true);
+                    } else {
+                        throw;
+                    }
+                }
             }
         }
 
