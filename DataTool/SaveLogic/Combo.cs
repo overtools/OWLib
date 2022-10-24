@@ -5,13 +5,12 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
-using DataTool.JSON;
 using DataTool.ToolLogic.Extract;
-using DataTool.ToolLogic.List;
 using DirectXTexNet;
 using RevorbStd;
 using SixLabors.ImageSharp;
@@ -865,7 +864,7 @@ namespace DataTool.SaveLogic {
                 if (process.ExitCode != 0) {
                     var error = process.StandardError.ReadToEnd();
                     Logger.Error("Combo", $"vgmstream failed with exit code {process.ExitCode} {error.Trim()}");
-                    File.Copy(input, Path.ChangeExtension(output, ".wav"));
+                    File.Copy(input, Path.ChangeExtension(output, ".wem"));
                 }
             } catch (Exception e) {
                 Logger.Error("Combo", $"Error converting sound using vgmstream: {e}");
@@ -893,15 +892,24 @@ namespace DataTool.SaveLogic {
 
         private static void SaveSoundFileTask(ICLIFlags flags, string directory, FindLogic.Combo.SoundFileAsset soundFileInfo, string name = null) {
             bool convertWem = true;
-            bool useVgmStream = true;
+            bool useVgmStream = false;
             if (flags is ExtractFlags extractFlags) {
                 convertWem = !extractFlags.RawSound && !extractFlags.Raw;
                 if (extractFlags.SkipSound) return;
-                if (!extractFlags.ExportWav) useVgmStream = false;
             }
 
             using (Stream soundStream = OpenFile(soundFileInfo.m_GUID)) {
                 if (soundStream == null) return;
+
+                if (convertWem) {
+                    var type = WEMType(soundStream);
+                    if (type == -1) {
+                        convertWem = false;
+                    } else if (type == 2) {
+                        VGMStreamSanity();
+                        useVgmStream = HasVGMStream;
+                    }
+                }
 
                 if (!convertWem) {
                     WriteFile(soundStream, Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.wem"));
@@ -911,10 +919,36 @@ namespace DataTool.SaveLogic {
             }
         }
 
+        public static int WEMType(Stream stream) {
+            try {
+                var reader = new BinaryReader(stream, Encoding.Default, true);
+                stream.Position = 12;
+                while (true) {
+                    char[] chunkType = reader.ReadChars(4);
+                    string chunkTypeString = new string(chunkType);
+                    int chunkSize = reader.ReadInt32();
+
+                    if (chunkTypeString == "fmt ") {
+                        var codec = reader.ReadUInt16();
+                        if (codec == 0xFFFF) {
+                            return 1; // vorbis
+                        } else if(codec == 0x3041) {
+                            return 2; // opus
+                        } else {
+                            return 0;
+                        }
+                    }
+                }
+            } catch {
+                return 0;
+            } finally {
+                stream.Position = 0;
+            }
+        }
+
         public static void SaveSoundFile(ICLIFlags flags, string directory, SaveContext context, ulong soundFile, bool voice, string name = null) {
             if (soundFile == 0) return;
 
-            // VGMStreamSanity(flags);
             FindLogic.Combo.SoundFileAsset soundFileInfo = voice ? context.m_info.m_voiceSoundFiles[soundFile] : context.m_info.m_soundFiles[soundFile];
             SaveSoundFileTask(flags, directory, soundFileInfo, name);
         }
@@ -922,12 +956,27 @@ namespace DataTool.SaveLogic {
         public static void SaveSoundFile(ICLIFlags flags, string directory, ulong soundFile, string name = null) {
             if (soundFile == 0) return;
 
-            // VGMStreamSanity(flags);
             SaveSoundFileTask(flags, directory, new FindLogic.Combo.SoundFileAsset(soundFile), name);
         }
 
-        public static void VGMStreamSanity(ICLIFlags flags) {
-            if (flags is ExtractFlags { ExportWav: true } ef && !File.Exists(VgmStreamPath)) {
+        private static bool WarnedAboutVGMStream;
+        public static bool HasVGMStream { get; private set; }
+
+        public static void VGMStreamSanity() {
+            if (WarnedAboutVGMStream) {
+                return;
+            }
+
+            WarnedAboutVGMStream = true;
+            if (!Debugger.IsAttached) {
+                return;
+            }
+            // disabled until vgmstream merges my pull request
+
+            Logger.Warn("Combo", "opus wem found, using vgmstream to convert");
+
+            if (!File.Exists(VgmStreamPath)) {
+                HasVGMStream = false;
                 Logger.Warn("Combo", "vgmstream not found, downloading latest...");
                 try {
                     if (OperatingSystem.IsLinux()) {
@@ -947,11 +996,13 @@ namespace DataTool.SaveLogic {
                             target.SetLength(0);
                             e.Open().CopyTo(target);
                         }
+                        HasVGMStream = true;
                     }
                 } catch {
                     Logger.Warn("Combo", $"Failed to download vgmstream. Please download vgmstream from https://dl.vgmstream.org/ and extract it to the Third Party folder ({VgmStreamPath})");
-                    ef.ExportWav = false;
                 }
+            } else {
+                HasVGMStream = true;
             }
         }
     }
