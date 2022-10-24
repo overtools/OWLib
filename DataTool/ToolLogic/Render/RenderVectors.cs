@@ -49,50 +49,14 @@ namespace DataTool.ToolLogic.Render {
                         var groups = path.m_CFE03E77;
 
                         writer.Write($"<svg x=\"{pathPos.X}\" y=\"{pathPos.Y}\" width=\"{pathSize.X}\" height=\"{pathSize.Y}\" >\n");
-                        // foreach (var triangle in triangles) {
-                        //     var (position1, _) = pathData[triangle.m_636C5113];
-                        //     var (position2, _) = pathData[triangle.m_F29D1FBF];
-                        //     var (position3, _) = pathData[triangle.m_B30017DE];
-                        //     writer.Write($"<polygon points=\"{position1.X},{position1.Y} {position2.X},{position2.Y} {position3.X},{position3.Y}\" ");
-                        //     switch (foreground) {
-                        //         case STU_06BD7A87 foregroundColor:
-                        //             writer.Write($" stroke=\"{foregroundColor.m_color.ToHexNoAlpha()}\" ");
-                        //             break;
-                        //         case STU_7654809A foregroundTexture:
-                        //             // todo: texture
-                        //             break;
-                        //     }
-                        //
-                        //     switch (stroke) {
-                        //         case STU_06BD7A87 strokeColor:
-                        //             writer.Write($" fill=\"{strokeColor.m_color.ToHexNoAlpha()}\" ");
-                        //             break;
-                        //         case STU_7654809A strokeTexture:
-                        //             // todo: texture
-                        //             break;
-                        //     }
-                        //
-                        //     writer.Write("/>\n");
-                        // }
-                        for (ushort i = 0; i < groups.Length; i++) {
-                            // what is this enum and flag lol
-                            var group = groups[i];
-                            var start = group.m_550D19E2;
-                            if (i > 0 && group.m_flags == 1) {
-                                start += i;
-                            }
-                            var end = i < groups.Length - 1 ? groups[i + 1].m_550D19E2 : (ushort) order.Length;
-                            writer.Write("<polygon points=\"");
-                            for (; start < end; start++) {
-                                var position = pathData[order[start]];
-                                writer.Write($"{position.X},{position.Y} ");
-                            }
-
-                            writer.Write("\" style=\"stroke-width:1;");
-
+                        foreach (var triangle in path.m_9557A9B0) {
+                            var position1 = pathData[triangle.m_636C5113];
+                            var position2 = pathData[triangle.m_F29D1FBF];
+                            var position3 = pathData[triangle.m_B30017DE];
+                            writer.Write($"<polygon points=\"{position1.X},{position1.Y} {position2.X},{position2.Y} {position3.X},{position3.Y}\" ");
                             switch (foreground) {
                                 case STU_06BD7A87 foregroundColor:
-                                    writer.Write($"fill:{foregroundColor.m_color.ToCSS()};");
+                                    writer.Write($" fill=\"{foregroundColor.m_color.ToCSS()}\" ");
                                     break;
                                 case STU_7654809A foregroundTexture:
                                     // todo: texture
@@ -100,16 +64,52 @@ namespace DataTool.ToolLogic.Render {
                             }
 
                             switch (stroke) {
-                                case STU_06BD7A87 strokeTexture:
-                                    writer.Write($"stroke:{strokeTexture.m_color.ToCSS()};");
+                                case STU_06BD7A87 strokeColor:
+                                    writer.Write($" stroke=\"{strokeColor.m_color.ToCSS()}\" ");
                                     break;
                                 case STU_7654809A strokeTexture:
                                     // todo: texture
                                     break;
                             }
 
-                            writer.Write("\"/>\n");
+                            writer.Write("/>\n");
                         }
+                        // for (ushort i = 0; i < groups.Length; i++) {
+                        //     // what is this enum and flag lol
+                        //     var group = groups[i];
+                        //     var start = group.m_550D19E2;
+                        //     if (i > 0 && group.m_flags == 1) {
+                        //         start += i;
+                        //     }
+                        //     var end = i < groups.Length - 1 ? groups[i + 1].m_550D19E2 : (ushort) order.Length;
+                        //     writer.Write("<polygon points=\"");
+                        //     for (; start < end; start++) {
+                        //         var position = pathData[order[start]];
+                        //         writer.Write($"{position.X},{position.Y} ");
+                        //     }
+                        //
+                        //     writer.Write("\" style=\"stroke-width:1;");
+                        //
+                        //     switch (foreground) {
+                        //         case STU_06BD7A87 foregroundColor:
+                        //             writer.Write($"fill:{foregroundColor.m_color.ToCSS()};");
+                        //             break;
+                        //         case STU_7654809A foregroundTexture:
+                        //             // todo: texture
+                        //             break;
+                        //     }
+                        //
+                        //     switch (stroke) {
+                        //         case STU_06BD7A87 strokeTexture:
+                        //             writer.Write($"stroke:{strokeTexture.m_color.ToCSS()};");
+                        //             break;
+                        //         case STU_7654809A strokeTexture:
+                        //             // todo: texture
+                        //             break;
+                        //     }
+                        //
+                        //     writer.Write("\"/>\n");
+                        // }
 
                         writer.Write("</svg>\n");
                     }
