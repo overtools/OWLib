@@ -860,7 +860,7 @@ namespace DataTool.SaveLogic {
         public static void ConvertSoundFileVgmStream(string input, string output) {
             try {
                 var proc = new ProcessStartInfo {
-                    FileName = OperatingSystem.IsLinux() ? VgmStreamPathLx : VgmStreamPathWin,
+                    FileName = VgmStreamPath,
                     Arguments = $"\"{input}\" -l 0 -f 0 -d 0 -L -o \"{output}\"",
                     CreateNoWindow = true,
                     WindowStyle = ProcessWindowStyle.Hidden,
