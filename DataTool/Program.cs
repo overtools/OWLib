@@ -6,11 +6,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using DataTool.ConvertLogic;
 using DataTool.ConvertLogic.WEM;
 using DataTool.Flag;
 using DataTool.Helper;
 using DataTool.SaveLogic;
+using DataTool.ToolLogic.Extract;
 using Microsoft.Win32;
 using TankLib;
 using TankLib.STU;
@@ -65,6 +65,15 @@ namespace DataTool {
             Flags = FlagParser.Parse<ToolFlags>(full => PrintHelp(full, tools));
             if (Flags == null)
                 return;
+
+            if (Flags.OverwatchDirectory == "{overwatch_directory}") {
+                Logger.Error("Core", "You need to replace {overwatch_directory} with the location you have Overwatch installed to. It can be found in Battle.net. Remember to surround it with quotes");
+                return;
+            }
+            if (Flags.OverwatchDirectory.EndsWith("\"")) {
+                Logger.Error("Core", "The Overwatch directory you passed will confuse the tool! Please remove the last \\ character");
+                return;
+            }
 
             // Overrides the Overwatch Directory with the path set in the Environment variable.
             // Useful for debugging as you can use saved configurations without having to edit the directory saved in the arguments
@@ -130,6 +139,17 @@ namespace DataTool {
             }
 
             #endregion
+
+            if (targetToolFlags is ExtractFlags extractFlags) {
+                if (extractFlags.OutputPath.EndsWith("\"")) {
+                    Logger.Error("Core", "The output directory you passed will confuse the tool! Please remove the last \\ character");
+                    return;
+                }
+                if (extractFlags.OutputPath == "{output_directory}") {
+                    Logger.Error("Core", "You need to replace {output_directory} with where you want the output files to go. Can just be something like \"out\" and a folder will be created next to the tool");
+                    return;
+                }
+            }
 
             if (!targetToolAttributes.UtilNoArchiveNeeded) {
                 try {
