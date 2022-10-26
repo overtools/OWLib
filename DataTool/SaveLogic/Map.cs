@@ -301,6 +301,7 @@ namespace DataTool.SaveLogic {
 
                 var gameMode = STUHelper.GetInstance<STUGameMode>(variantModeInfo.m_gamemode);
                 var gameModeName = IO.GetCleanString(gameMode?.m_displayName) ?? "Unknown Mode";
+                if (gameModeName == "Calypso HeroMode") gameModeName = "HeroMode";
 
                 var variantName = $"{teResourceGUID.Index(variantModeInfo.m_A9253C68):X} - {gameModeName}";
                 if (variantModeInfo.m_216EA6DA != 0) {
