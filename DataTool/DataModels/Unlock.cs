@@ -127,8 +127,11 @@ namespace DataTool.DataModels {
                 Type == UnlockType.NameCard || Type == UnlockType.PlayerTitle ||
                 Type == UnlockType.WeaponCharm || Type == UnlockType.WeaponSkin;
 
-            if (unlock.m_BEE9BCDA != null)
-                Categories = unlock.m_BEE9BCDA.Select(x => GetGUIDName(x.GUID)).ToArray();
+            if (unlock.m_BEE9BCDA != null) {
+                Categories = unlock.m_BEE9BCDA
+                    .Where(x => x.GUID != 0)
+                    .Select(x => GetGUIDName(x.GUID)).ToArray();
+            }
 
             // Lootbox and currency unlocks have some additional relevant data
             switch (unlock) {
@@ -271,6 +274,16 @@ namespace DataTool.DataModels {
 
             if (type == typeof(STU_184D5944)) {
                 return UnlockType.SeasonXPBoost;
+            }
+
+            // some lootbox thing
+            if (type == typeof(STU_1EB22BDB)) {
+                return UnlockType.Unknown;
+            }
+
+            // battlepass tier skip thing
+            if (type == typeof(STU_80C1169E)) {
+                return UnlockType.Unknown;
             }
 
             Logger.Debug("Unlock", $"Unknown unlock type ${type}");
