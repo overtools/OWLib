@@ -259,7 +259,7 @@ namespace DataTool {
             LoadHelper.PostLoad(Client);
 
             if (args.TextLanguage != "enUS")
-                Logger.Warn("Core", "Reminder! When extracting data in other languages, the names of the heroes/skins/etc must be in the language you have chosen.");
+                Logger.Warn("Core", $"Reminder!! When extracting data in languages other than English, the names of the heroes and skins MUST be in the language you have chosen! ({args.TextLanguage})");
 
             if (Client.ProductCode != "pro")
                 Logger.Warn("Core", $"The branch \"{Client.ProductCode}\" is not supported!. This might result in failure to load. Proceed with caution.");
