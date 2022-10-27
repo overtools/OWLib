@@ -159,7 +159,7 @@ namespace DataTool.FindLogic {
             }
 
             public string GetName() {
-                if (Program.Flags != null && Program.Flags.NoNames) {
+                if (Program.Flags is { NoNames: true }) {
                     return GetFileName(m_GUID);
                 }
 
@@ -167,11 +167,23 @@ namespace DataTool.FindLogic {
             }
 
             public string GetNameIndex() {
-                // new model and look
-                if (teResourceGUID.Type(m_GUID) == 0x118) return GetName();
-                if (teResourceGUID.Type(m_GUID) == 0x119) return GetName();
+                string fallback;
+                switch (teResourceGUID.Type(m_GUID)) {
+                    // new model and look
+                    case 0x118:
+                    case 0x119:
+                        fallback = GetFileName(m_GUID);
+                        break;
+                    default:
+                        fallback = $"{m_GUID & 0xFFFFFFFFFFFF:X12}";
+                        break;
+                }
 
-                return GetName() ?? $"{m_GUID & 0xFFFFFFFFFFFF:X12}";
+                if (Program.Flags is { NoNames: true }) {
+                    return fallback;
+                }
+
+                return GetValidFilename(m_name) ?? fallback;
             }
         }
 
