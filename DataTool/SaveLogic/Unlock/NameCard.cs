@@ -23,10 +23,7 @@ namespace DataTool.SaveLogic.Unlock {
             // larger version for the career page
             if (nameCard.m_C5B31BBA != null) {
                 FindLogic.Combo.Find(info, nameCard.m_C5B31BBA);
-                info.SetTextureOptions(nameCard.m_C5B31BBA, new Combo.SaveTextureOptions {
-                    FileTypeOverride = "png",
-                    FileNameOverride = name
-                });
+                info.SetTextureName(nameCard.m_C5B31BBA, name);
             }
 
             var context = new Combo.SaveContext(info);
