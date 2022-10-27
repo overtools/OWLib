@@ -1173,6 +1173,11 @@ namespace DataTool.FindLogic {
 
                     if (cosmetic is STUUnlock_Emote unlockEmote) {
                         Find(info, unlockEmote.m_emoteBlendTreeSet, replacements, context);
+                        if (cosmetic is STU_A458D547 unlockSouvenir) {
+                            Find(info, unlockSouvenir.m_F76EE871, replacements, context);
+                            info.SetEntityName(unlockSouvenir.m_F76EE871, GetCleanString(cosmetic.m_name), replacements);
+                        }
+
                     } else if (cosmetic is STUUnlock_Pose unlockPose) {
                         Find(info, unlockPose.m_pose, replacements, context);
                     } else if (cosmetic is STUUnlock_VoiceLine unlockVoiceLine) {
@@ -1190,6 +1195,17 @@ namespace DataTool.FindLogic {
                         Find(info, unlockIcon.m_1B25AB90?.m_effectLook, replacements, context);
                     } else if (cosmetic is STUUnlock_POTGAnimation unlockHighlightIntro) {
                         Find(info, unlockHighlightIntro.m_animation, replacements, context);
+                    } else if (cosmetic is STU_6A808718 unlockWeaponCharm) {
+                        Find(info, unlockWeaponCharm.m_F1F888F9, replacements, context);
+                        Find(info, unlockWeaponCharm.m_06EE5924, replacements, context);
+                        info.SetEntityName(unlockWeaponCharm.m_F1F888F9, GetCleanString(cosmetic.m_name), replacements);
+                        if(unlockWeaponCharm.m_06EE5924 != 0 && info.m_entities.TryGetValue(unlockWeaponCharm.m_F1F888F9, out var entity)) {
+                            if (entity.m_modelGUID != 0 && info.m_models.TryGetValue(entity.m_modelGUID, out var model)) {
+                                model.m_modelLooks.Add(unlockWeaponCharm.m_06EE5924);
+                            }
+
+                            entity.m_modelLookGUID = unlockWeaponCharm.m_06EE5924;
+                        }
                     }
 
                     break;

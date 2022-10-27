@@ -305,6 +305,18 @@ namespace DataTool.ToolLogic.Extract {
                 thisPath = Path.Combine(path, unlock.Type.ToString());
                 PortraitFrame.Save(flags, thisPath, unlock);
             }
+
+            if (ShouldDo(unlock, config, tags, typeof(STU_DB1B05B5))) {
+                NameCard.Save(flags, thisPath, unlock);
+            }
+
+            if (ShouldDo(unlock, config, tags, typeof(STU_6A808718))) {
+                SprayAndIcon.Save(flags, thisPath, unlock);
+            }
+
+            if (ShouldDo(unlock, config, tags, typeof(STU_A458D547))) {
+                AnimationItem.Save(flags, thisPath, unlock);
+            }
         }
 
         private static bool ShouldDo(
