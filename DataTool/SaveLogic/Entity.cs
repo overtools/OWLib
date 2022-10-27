@@ -12,11 +12,19 @@ namespace DataTool.SaveLogic {
             protected readonly FindLogic.Combo.EntityAsset Entity;
 
             public const ushort VersionMajor = 2;
-            public const ushort VersionMinor = 0;
+            public const ushort VersionMinor = 1;
 
             public OverwatchEntity(FindLogic.Combo.EntityAsset entity, FindLogic.Combo.ComboInfo info) {
                 Info = info;
                 Entity = entity;
+            }
+
+            private string GetModelPath(FindLogic.Combo.ModelAsset modelInfo) {
+                return Path.Combine("Models", modelInfo.GetName(), modelInfo.GetNameIndex() + ".owmdl");
+            }
+
+            private string GetEffectPath(FindLogic.Combo.EffectInfoCombo effectInfo) {
+                return Path.Combine("Effects", effectInfo.GetName(), effectInfo.GetNameIndex() + ".oweffect");
             }
 
             public void Write(Stream stream) {
@@ -28,6 +36,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(Entity.GetNameIndex());
                     if (Entity.m_modelGUID != 0) {
                         FindLogic.Combo.ModelAsset modelInfo = Info.m_models[Entity.m_modelGUID];
+                        writer.Write(GetModelPath(modelInfo));
                         writer.Write(modelInfo.GetName());
                     } else {
                         writer.Write("null");
@@ -35,6 +44,7 @@ namespace DataTool.SaveLogic {
 
                     if (Entity.m_effectGUID != 0) {
                         FindLogic.Combo.EffectInfoCombo effectInfo = Info.m_effects[Entity.m_effectGUID];
+                        writer.Write(GetEffectPath(effectInfo));
                         writer.Write(effectInfo.GetName());
                     } else {
                         writer.Write("null");
