@@ -20,6 +20,7 @@ using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.Logger;
 using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
 using static DataTool.Helper.SpellCheckUtils;
+using Logger = TankLib.Helpers.Logger;
 
 namespace DataTool.ToolLogic.Extract {
     // syntax:
@@ -76,6 +77,7 @@ namespace DataTool.ToolLogic.Extract {
         protected virtual bool NPCs => false;
         public Dictionary<string, string> QueryNameOverrides => null;
         public virtual string DynamicChoicesKey => UtilDynamicChoices.VALID_HERO_NAMES;
+        private static bool HasSavedAnything = false;
 
         public List<QueryType> QueryTypes => new List<QueryType> {
             new CosmeticType("skin", "Skin", UtilDynamicChoices.VALID_SKIN_NAMES),
@@ -97,6 +99,15 @@ namespace DataTool.ToolLogic.Extract {
 
             var heroes = Helpers.GetHeroes();
             SaveUnlocksForHeroes(flags, heroes, basePath, NPCs);
+
+            if (!HasSavedAnything) {
+                Logger.Warn("Tool", $"No unlocks were extracted as nothing was found matching your query? Did you spell the hero or unlock incorrectly?");
+                if (Client.CreateArgs.TextLanguage != "enUS") {
+                    Logger.Error("Tool", $"Reminder! You're language is set to \"{Client.CreateArgs.TextLanguage}\".");
+                    Logger.Warn("Tool", $"When extracting data in other languages, the names of the unlocks must be in the language you're extracting as they might differ from their English versions.");
+                }
+
+            }
         }
 
         protected override void QueryHelp(List<QueryType> types) {
@@ -319,17 +330,23 @@ namespace DataTool.ToolLogic.Extract {
             }
         }
 
-        private static bool ShouldDo(
-            Unlock unlock, Dictionary<string, ParsedArg> config,
-            Dictionary<string, TagExpectedValue> tags, Type unlockType) {
-            UnlockType type = Unlock.GetUnlockType(unlockType);
-            string typeLower = type.ToString().ToLowerInvariant();
+        private static bool ShouldDo(Unlock unlock, Dictionary<string, ParsedArg> config, Dictionary<string, TagExpectedValue> tags, Type unlockType) {
+            var type = Unlock.GetUnlockType(unlockType);
+            var typeLower = type.ToString().ToLowerInvariant();
 
-            if (config == null)
-                return unlock.Type == type;
+            bool shouldDo;
+            if (config == null) {
+                shouldDo = unlock.Type == type;
+            } else {
+                shouldDo = unlock.Type == type && config.ContainsKey(typeLower) &&
+                           config[typeLower].ShouldDo(unlock.GetName(), tags);
+            }
 
-            return unlock.Type == type && config.ContainsKey(typeLower) &&
-                   config[typeLower].ShouldDo(unlock.GetName(), tags);
+            if (shouldDo) {
+                HasSavedAnything = true;
+            }
+
+            return shouldDo;
         }
     }
 }

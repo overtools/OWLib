@@ -299,11 +299,18 @@ namespace TankLib.Chunks {
             nodeMap = new HashSet<int>();
 
             var guideBones = new Dictionary<int, teVec3>();
-            var seenBones = new HashSet<int>();
+            var seenBones = new HashSet<ushort>(BoneLookup.SelectMany(x => x));
+
             foreach (var submesh in submeshes) {
                 for (var index = 0; index < submesh.BoneIndices.Length; index++) {
                     for (var i = 0; i < submesh.BoneIndices[index].Length; i++) {
                         var bone = submesh.BoneIndices[index][i];
+
+                        if (hierarchy[bone] <= 0) {
+                            seenBones.Add(bone);
+                            continue;
+                        }
+
                         var weight = submesh.BoneWeights[index][i];
                         if (weight < 0.001f) {
                             continue;
@@ -318,7 +325,7 @@ namespace TankLib.Chunks {
                 }
             }
 
-            for (var index = 0; index < skeleton.Hierarchy.Length; index++) {
+            for (ushort index = 0; index < skeleton.Hierarchy.Length; index++) {
                 if (seenBones.Contains(index)) {
                     continue;
                 }
@@ -334,11 +341,9 @@ namespace TankLib.Chunks {
 
                         var best = float.MaxValue;
                         foreach (var (testBone, testPos) in guideBones) {
-                            const float bias = 2 / 3f;
-                            var upwardsBias = testPos.Y > src.Y ? bias : 1f;
-                            if ((testPos - src).Length() * upwardsBias < best) {
+                            if ((testPos - src).Length() < best) {
                                 hierarchy[bone] = (short) testBone;
-                                best = (testPos - src).Length() * upwardsBias;
+                                best = (testPos - src).Length();
                             }
                         }
                     }
