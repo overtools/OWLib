@@ -159,23 +159,21 @@ namespace DataTool.FindLogic {
             }
 
             public string GetName() {
-                if (Program.Flags is { NoNames: true }) {
-                    return GetFileName(m_GUID);
+                if (m_name != null && !Program.Flags.NoNames) {
+                    return GetValidFilename(m_name);
                 }
-
-                return GetValidFilename(m_name) ?? GetFileName(m_GUID);
+                return GetFileName(m_GUID);
             }
 
             public string GetNameIndex() {
-                if (Program.Flags is { NoNames: true }) {
-                    return GetFileName(m_GUID);
+                if (m_name != null && !Program.Flags.NoNames) {
+                    return GetValidFilename(m_name);
                 }
 
                 // new model and look
                 if (teResourceGUID.Type(m_GUID) == 0x118) return GetName();
                 if (teResourceGUID.Type(m_GUID) == 0x119) return GetName();
-
-                return GetValidFilename(m_name) ?? $"{m_GUID & 0xFFFFFFFFFFFF:X12}";
+                return $"{m_GUID & 0xFFFFFFFFFFFF:X12}";
             }
         }
 
