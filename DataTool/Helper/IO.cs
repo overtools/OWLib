@@ -12,26 +12,33 @@ using static DataTool.Program;
 
 namespace DataTool.Helper {
     public static class IO {
+        private static readonly string[] ReservedWords = {
+            "CON", "PRN", "AUX", "CLOCK$", "NUL", "COM0", "COM1", "COM2", "COM3", "COM4",
+            "COM5", "COM6", "COM7", "COM8", "COM9", "LPT0", "LPT1", "LPT2", "LPT3", "LPT4",
+            "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
+        };
+
+        private static readonly Regex InvalidChars = new Regex($@"[{Regex.Escape(new string(Path.GetInvalidFileNameChars()))}]+", RegexOptions.Compiled);
+
         public static string GetValidFilename(string filename) {
             if (filename == null) {
                 return null;
             }
 
-            string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
-            string invalidReStr = $@"[{invalidChars}]+";
-
-            string[] reservedWords = {
-                "CON", "PRN", "AUX", "CLOCK$", "NUL", "COM0", "COM1", "COM2", "COM3", "COM4",
-                "COM5", "COM6", "COM7", "COM8", "COM9", "LPT0", "LPT1", "LPT2", "LPT3", "LPT4",
-                "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
-            };
-
             var newFileName = filename.TrimEnd('.');
-            string sanitisedNamePart = Regex.Replace(newFileName, invalidReStr, "_");
+            string sanitisedNamePart = InvalidChars.Replace(newFileName, "_");
 
-            return reservedWords.Select(reservedWord => $"^{reservedWord}\\.").Aggregate(sanitisedNamePart,
-                (current, reservedWordPattern) => Regex.Replace(current, reservedWordPattern, "_reservedWord_.",
-                    RegexOptions.IgnoreCase));
+            if (!OperatingSystem.IsWindows()) {
+                return sanitisedNamePart;
+            }
+
+            foreach (var reservedWord in ReservedWords) {
+                if (sanitisedNamePart.Contains(reservedWord, StringComparison.Ordinal)) {
+                    sanitisedNamePart = sanitisedNamePart.Replace(reservedWord, "_reservedWord_.", StringComparison.Ordinal);
+                }
+            }
+
+            return sanitisedNamePart;
         }
 
         public static readonly Dictionary<(ulong, ushort), string> GUIDTable = new Dictionary<(ulong, ushort), string>();
