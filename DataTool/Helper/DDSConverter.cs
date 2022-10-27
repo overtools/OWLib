@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using DirectXTexNet;
@@ -44,18 +45,36 @@ namespace DataTool.Helper {
                     info = scratch.GetMetadata();
                 }
 
-                // trust me, this is the only way to do this
-                // we basically have to pray that the image is decompressed into a format that the target format supports
-                // this is because png will automatically switch between sRGB and Linear, but TIF will always use linear
-                // so if we always convert it to a linear target type, PNG loses accuracy.
-                if (info.Format != targetFormat && targetFormat != DXGI_FORMAT.UNKNOWN) {
+                if (targetFormat == DXGI_FORMAT.UNKNOWN) {
+                    targetFormat = TexHelper.Instance.BitsPerColor(info.Format) <= 8 ? TexHelper.Instance.IsSRGB(info.Format) ? DXGI_FORMAT.R8G8B8A8_UNORM_SRGB : DXGI_FORMAT.R8G8B8A8_UNORM : DXGI_FORMAT.R16G16B16A16_UNORM;
+                }
+
+                if (info.Format != targetFormat) {
                     ScratchImage temp = scratch.Convert(targetFormat, TEX_FILTER_FLAGS.DEFAULT, 0.5f);
                     scratch.Dispose();
                     scratch = temp;
                 }
 
                 if (codec > 0) {
-                    return SaveWIC(codec, info, isMultiFrame, scratch);
+                    UnmanagedMemoryStream stream = null;
+                    try {
+                        if (info.ArraySize == 1 || !isMultiFrame) {
+                            stream = scratch.SaveToWICMemory(0, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(codec));
+                        } else {
+                            stream = scratch.SaveToWICMemory(0, info.ArraySize, WIC_FLAGS.ALL_FRAMES, TexHelper.Instance.GetWICCodec(codec));
+                        }
+
+                        if (stream == null) {
+                            throw new InvalidDataException();
+                        }
+
+                        byte[] tex = new byte[stream.Length];
+                        stream.Read(tex, 0, tex.Length);
+                        scratch.Dispose();
+                        return tex;
+                    } finally {
+                        stream?.Dispose();
+                    }
                 } else { // save as raw RGBA
                     var image = scratch.GetImage(0);
                     Memory<byte> tex = new byte[image.Width * image.Height * 4];
@@ -74,42 +93,6 @@ namespace DataTool.Helper {
             }
 
             return default;
-        }
-
-        private static Memory<byte> SaveWIC(WICCodecs codec, TexMetadata info, bool isMultiFrame, ScratchImage scratch, bool didConvert = false) {
-            UnmanagedMemoryStream stream = null;
-            // this is fucked beyond belief lol
-            try {
-                if (info.ArraySize == 1 || !isMultiFrame) {
-                    stream = scratch.SaveToWICMemory(0, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(codec));
-                } else {
-                    stream = scratch.SaveToWICMemory(0, info.ArraySize, WIC_FLAGS.ALL_FRAMES, TexHelper.Instance.GetWICCodec(codec));
-                }
-
-                if (stream == null) {
-                    throw new InvalidDataException();
-                }
-
-                byte[] tex = new byte[stream.Length];
-                stream.Read(tex, 0, tex.Length);
-                scratch.Dispose();
-                return tex;
-            } catch {
-                // if it crashes then the wic codec doesn't support the format, we gotta convert it to the proper format
-                // this is a hacky way to do it, but it works
-                // we keep bit depth and sRGB flag the same, but add extra channels
-                if (!didConvert) {
-                    // if bits < 8 then { if srgb then DXGI_FORMAT_R8G8B8A8_UNORM_SRGB else DXGI_FORMAT_R8G8B8A8_UNORM } else { DXGI_FORMAT_R16G16B16A16_UNORM }
-                    ScratchImage temp = scratch.Convert(TexHelper.Instance.BitsPerColor(info.Format) <= 8 ? TexHelper.Instance.IsSRGB(info.Format) ? DXGI_FORMAT.R8G8B8A8_UNORM_SRGB : DXGI_FORMAT.R8G8B8A8_UNORM : DXGI_FORMAT.R16G16B16A16_UNORM, TEX_FILTER_FLAGS.DEFAULT, 0.5f);
-                    scratch.Dispose();
-                    scratch = temp;
-                    return SaveWIC(codec, info, isMultiFrame, scratch, true);
-                } else {
-                    throw;
-                }
-            } finally {
-                stream?.Dispose();
-            }
         }
     }
 }

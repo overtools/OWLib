@@ -34,7 +34,7 @@ namespace TankLib {
                     LinearSize = 0,
                     Depth = 0,
                     MipmapCount = (uint)mips,
-                    Format = GetTextureType().ToPixelFormat(),
+                    Format = TextureTypes.TextureType.Unknown.ToPixelFormat(),
                     Caps1 = 0x1000,
                     Caps2 = 0,
                     Caps3 = 0,
@@ -43,7 +43,6 @@ namespace TankLib {
                 };
                 if (surfaces > 1 || IsArray) {
                     ret.Caps1 = 0x8 | 0x1000;
-                    ret.Format = TextureTypes.TextureType.Unknown.ToPixelFormat();
                 }
 
                 if (IsCubemap) ret.Caps2 = 0xFE00;
