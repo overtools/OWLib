@@ -109,18 +109,19 @@ namespace DataTool.ToolLogic.Extract {
                         // !by-hero & by-skin & !by-type = "type"
                         // !by-hero & !by-skin & by-type = "type"
                         // !by-hero & !by-skin & !by-type = "type"
-                        CalculatePathStack(flags, heroName, unlockName, groupName, stack);
+                        CalculatePathStack(flags, heroName, unlockName, ignoreGroups ? "" : groupName, stack);
 
-                        var path = Path.Combine(stack.ToArray());
+                        var path = Path.Combine(stack.Where(x => x.Length > 0).ToArray());
 
                         stack.Clear();
                         stack.Add(basePath);
 
-                        CalculatePathStack(flags, heroName, unlockName, "03F", stack);
-                        var hero03FDir = Path.Combine(stack.ToArray());
-
-                        if (ignoreGroups) {
-                            path = Path.Combine(basePath, heroName);
+                        string hero03FDir;
+                        if (flags.VoiceGroup03FInType) {
+                            hero03FDir = Path.Combine(path, "03F");
+                        } else {
+                            CalculatePathStack(flags, heroName, unlockName, "03F", stack);
+                            hero03FDir = Path.Combine(stack.ToArray());
                         }
 
                         // 99% of voiceline instances only have a single sound file however there are cases where some NPCs have multiple
