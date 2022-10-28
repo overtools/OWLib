@@ -109,27 +109,15 @@ namespace DataTool.ToolLogic.Extract {
                         // !by-hero & by-skin & !by-type = "type"
                         // !by-hero & !by-skin & by-type = "type"
                         // !by-hero & !by-skin & !by-type = "type"
-                        if (!ignoreGroups) {
-                            if (flags.VoiceGroupByHero) {
-                                if (!flags.VoiceGroupByType) {
-                                    stack.Add(groupName);
-                                }
-
-                                stack.Add(heroName);
-
-                                if (flags.VoiceGroupBySkin) {
-                                    stack.Add(unlockName);
-                                }
-                            }
-
-                            if (!flags.VoiceGroupByHero || flags.VoiceGroupByType) {
-                                stack.Add(groupName);
-                            }
-                        }
+                        CalculatePathStack(flags, heroName, unlockName, groupName, stack);
 
                         var path = Path.Combine(stack.ToArray());
 
-                        var hero03FDir = flags.VoiceGroupByHero ? Path.Combine(basePath, heroName, "03F") : Path.Combine(basePath, "03F", heroName);
+                        stack.Clear();
+                        stack.Add(basePath);
+
+                        CalculatePathStack(flags, heroName, unlockName, "03F", stack);
+                        var hero03FDir = Path.Combine(stack.ToArray());
 
                         if (ignoreGroups) {
                             path = Path.Combine(basePath, heroName);
@@ -171,6 +159,24 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             return true;
+        }
+
+        private static void CalculatePathStack(ExtractFlags flags, string heroName, string unlockName, string groupName, List<string> stack) {
+            if (flags.VoiceGroupByHero) {
+                if (!flags.VoiceGroupByType) {
+                    stack.Add(groupName);
+                }
+
+                stack.Add(heroName);
+
+                if (flags.VoiceGroupBySkin) {
+                    stack.Add(unlockName);
+                }
+            }
+
+            if (!flags.VoiceGroupByHero || flags.VoiceGroupByType) {
+                stack.Add(groupName);
+            }
         }
 
         public static string GetVoiceGroup(ulong stimulusGuid, ulong categoryGuid, ulong unkGuid) {
