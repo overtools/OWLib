@@ -23,6 +23,8 @@ namespace DataTool.ToolLogic.Extract {
                 throw new Exception("no output path");
             }
 
+            flags.VoiceGroupBySkin = false;
+
             foreach (var guid in Program.TrackedFiles[0x5F]) {
                 var voiceSet = GetInstance<STUVoiceSet>(guid);
                 if (voiceSet == null) continue;
@@ -41,7 +43,7 @@ namespace DataTool.ToolLogic.Extract {
                 Logger.Log($"Processing NPC {npcName}");
                 var info = new Combo.ComboInfo();
                 var ignoreGroups = !WhitelistedNPCs.Contains(npcName);
-                ExtractHeroVoiceBetter.SaveVoiceSet(flags, basePath, npcFileName, guid, ref info, ignoreGroups: ignoreGroups);
+                ExtractHeroVoiceBetter.SaveVoiceSet(flags, basePath, npcFileName,  "Default", guid, ref info, ignoreGroups: ignoreGroups);
             }
         }
     }

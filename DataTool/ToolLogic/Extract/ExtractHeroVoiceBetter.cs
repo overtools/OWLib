@@ -46,7 +46,7 @@ namespace DataTool.ToolLogic.Extract {
                 Combo.ComboInfo baseInfo = default;
                 var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(heroStu.m_gameplayEntity)?.m_voiceDefinition;
 
-                if (SaveVoiceSet(flags, basePath, heroName, heroVoiceSetGuid, ref baseInfo)) {
+                if (SaveVoiceSet(flags, basePath, heroName, "Default", heroVoiceSetGuid, ref baseInfo)) {
                     var skins = new ProgressionUnlocks(heroStu).GetUnlocksOfType(UnlockType.Skin);
 
                     foreach (var unlock in skins) {
@@ -55,20 +55,20 @@ namespace DataTool.ToolLogic.Extract {
                             continue; // no idea what this is
                         }
 
-                        TACTLib.Logger.Debug("Tool", $"Processing skin {unlock.Name}");
+                        TACTLib.Logger.Debug("Tool", $"Processing skin {unlock.GetName()}");
                         Combo.ComboInfo info = default;
                         var skinTheme = GetInstance<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
                         if (skinTheme == null) {
                             continue;
                         }
 
-                        SaveVoiceSet(flags, basePath, heroName, heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinTheme));
+                        SaveVoiceSet(flags, basePath, heroName, GetValidFilename(unlock.GetName()), heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinTheme));
                     }
                 }
             }
         }
 
-        public static bool SaveVoiceSet(ExtractFlags flags, string basePath, string heroName, ulong? voiceSetGuid, ref Combo.ComboInfo info, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null, bool ignoreGroups = false) {
+        public static bool SaveVoiceSet(ExtractFlags flags, string basePath, string heroName, string unlockName, ulong? voiceSetGuid, ref Combo.ComboInfo info, Combo.ComboInfo baseCombo = null, Dictionary<ulong, ulong> replacements = null, bool ignoreGroups = false) {
             if (voiceSetGuid == null) {
                 return false;
             }
@@ -99,9 +99,35 @@ namespace DataTool.ToolLogic.Extract {
                         var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E) ??
                                         Path.Combine("Unknown",$"{teResourceGUID.Index(voiceLineInstance.VoiceStimulus):X}.{teResourceGUID.Type(voiceLineInstance.VoiceStimulus):X3}");
 
-                        var path = flags.VoiceGroupByHero && flags.VoiceGroupByType
-                                       ? Path.Combine(basePath, heroName, groupName)
-                                       : Path.Combine(basePath, flags.VoiceGroupByHero ? Path.Combine(groupName, heroName) : groupName);
+                        var stack = new List<string> { basePath };
+
+                        // by-hero & by-skin & by-type = "hero/skin/type"
+                        // by-hero & by-skin & !by-type = "type/hero/skin"
+                        // by-hero & !by-skin & by-type = "hero/type"
+                        // by-hero & !by-skin & !by-type = "type/hero"
+                        // !by-hero & by-skin & by-type = "type"
+                        // !by-hero & by-skin & !by-type = "type"
+                        // !by-hero & !by-skin & by-type = "type"
+                        // !by-hero & !by-skin & !by-type = "type"
+                        if (!ignoreGroups) {
+                            if (flags.VoiceGroupByHero) {
+                                if (!flags.VoiceGroupByType) {
+                                    stack.Add(groupName);
+                                }
+
+                                stack.Add(heroName);
+
+                                if (flags.VoiceGroupBySkin) {
+                                    stack.Add(unlockName);
+                                }
+                            }
+
+                            if (!flags.VoiceGroupByHero || flags.VoiceGroupByType) {
+                                stack.Add(groupName);
+                            }
+                        }
+
+                        var path = Path.Combine(stack.ToArray());
 
                         var hero03FDir = flags.VoiceGroupByHero ? Path.Combine(basePath, heroName, "03F") : Path.Combine(basePath, "03F", heroName);
 

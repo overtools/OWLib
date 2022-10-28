@@ -75,6 +75,9 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = true, Flag = "voice-group-by-type", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool VoiceGroupByType;
 
+        [CLIFlag(Default = false, Flag = "voice-group-by-skin", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool VoiceGroupBySkin;
+
         [CLIFlag(Default = false, Flag = "xml", Help = "Convert STUs to xml when extracted with ExtractDebugType", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertToXML;
 
