@@ -149,6 +149,12 @@ namespace DataTool.Helper {
             return guid;
         }
 
+        public static bool TryGetLocalizedName(ushort type, string name, out ulong match) {
+            var value = TryGetLocalizedName(type, name);
+            match = value ?? 0;
+            return value != null;
+        }
+
         public static string GetGUIDName(ulong guid) {
             return GetNullableGUIDName(guid) ?? GetFileName(guid);
         }

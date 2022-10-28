@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
@@ -37,10 +37,37 @@ namespace DataTool.ToolLogic.Extract {
                 .ThenBy(x => x.GUID.GUID)
                 .ToArray();
 
+            var validNames = heroes.GroupBy(x => x.Name ?? $"Unknown{teResourceGUID.Index(x.GUID)}").ToDictionary(x => x.Key, x => x.Select(y => y.GUID.GUID).ToArray(), StringComparer.InvariantCultureIgnoreCase);
+            var validGuids = heroes.Select(x => teResourceGUID.LongKey(x.GUID.GUID)).ToHashSet();
+
+            var query = new HashSet<ulong>();
+            foreach (var positional in flags.Positionals.Skip(3)) {
+                if(validNames.TryGetValue(positional, out var guids)) {
+                    foreach (var guid in guids) {
+                        query.Add(teResourceGUID.LongKey(guid));
+                    }
+                    continue;
+                }
+
+                if (TryGetLocalizedName(0x75, positional, out var localizedNameGuid) && validGuids.Contains(localizedNameGuid)) {
+                    query.Add(teResourceGUID.LongKey(localizedNameGuid));
+                    continue;
+                }
+
+                if (ulong.TryParse(positional, NumberStyles.HexNumber, null, out var parsedGuid)) {
+                    query.Add(teResourceGUID.LongKey(parsedGuid));
+                }
+            }
+
             foreach (var hero in heroes) {
+                if (query.Count > 0 && !query.Contains(teResourceGUID.LongKey(hero.GUID.GUID))) {
+                    continue;
+                }
+
                 var heroStu = GetInstance<STUHero>(hero.GUID);
 
                 string heroName = GetValidFilename(GetCleanString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}");
+
                 Logger.Log($"Processing {heroName}");
 
                 Combo.ComboInfo baseInfo = default;
