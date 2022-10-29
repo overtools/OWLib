@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using DirectXTexNet;
@@ -17,9 +16,20 @@ namespace DataTool.Helper {
         [DllImport("Ole32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int CoInitializeEx([In, Optional] IntPtr pvReserved, [In] CoInit dwCoInit);
 
+        public static bool Initialized { get; private set; }
+
+        public static void Initialize() {
+            if (Initialized) {
+                return;
+            }
+
+            CoInitializeEx(IntPtr.Zero, CoInit.MultiThreaded | CoInit.SpeedOverMemory);
+            Initialized = true;
+        }
+
 
         public static unsafe Memory<byte> ConvertDDS(Stream ddsSteam, DXGI_FORMAT targetFormat, WICCodecs codec, int? frameNr) {
-            CoInitializeEx(IntPtr.Zero, CoInit.MultiThreaded | CoInit.SpeedOverMemory);
+            Initialize();
 
             Memory<byte> data = new byte[ddsSteam.Length];
             ddsSteam.Read(data.Span);
@@ -59,9 +69,9 @@ namespace DataTool.Helper {
                     UnmanagedMemoryStream stream = null;
                     try {
                         if (info.ArraySize == 1 || !isMultiFrame) {
-                            stream = scratch.SaveToWICMemory(0, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(codec));
+                            stream = scratch.SaveToWICMemory(frame * info.MipLevels, WIC_FLAGS.NONE, TexHelper.Instance.GetWICCodec(codec));
                         } else {
-                            stream = scratch.SaveToWICMemory(0, info.ArraySize, WIC_FLAGS.ALL_FRAMES, TexHelper.Instance.GetWICCodec(codec));
+                            stream = scratch.SaveToWICMemory(frame * info.MipLevels,   (frame - info.ArraySize) * info.MipLevels, WIC_FLAGS.ALL_FRAMES, TexHelper.Instance.GetWICCodec(codec));
                         }
 
                         if (stream == null) {
@@ -76,7 +86,7 @@ namespace DataTool.Helper {
                         stream?.Dispose();
                     }
                 } else { // save as raw RGBA
-                    var image = scratch.GetImage(0);
+                    var image = scratch.GetImage(frame * info.MipLevels);
                     Memory<byte> tex = new byte[image.Width * image.Height * 4];
                     using (var pinned = tex.Pin()) {
                         Buffer.MemoryCopy((void*) image.Pixels, pinned.Pointer, tex.Length, tex.Length);
