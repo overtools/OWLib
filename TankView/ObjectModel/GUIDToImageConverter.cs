@@ -1,11 +1,6 @@
 using System;
 using System.Globalization;
-using System.IO;
-using System.Windows;
 using System.Windows.Data;
-using System.Windows.Media.Imaging;
-using DataTool.DataModels.Hero;
-using DirectXTexNet;
 using TankView.Helper;
 
 namespace TankView.ObjectModel {
@@ -16,7 +11,7 @@ namespace TankView.ObjectModel {
                 return default;
 
             try {
-                var data = DataHelper.ConvertDDS(guid.Value, DXGI_FORMAT.R8G8B8A8_UNORM, 0, out var width, out var height);
+                var data = DataHelper.ConvertDDS(guid.Value, out var width, out var height);
                 if(data.IsEmpty) {
                     return null;
                 }

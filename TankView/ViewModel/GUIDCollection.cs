@@ -6,12 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using DataTool.DataModels;
 using DataTool.DataModels.Hero;
 using DataTool.Helper;
-using DirectXTexNet;
 using JetBrains.Annotations;
 using TankLib;
 using TankView.Helper;
@@ -68,7 +65,7 @@ namespace TankView.ViewModel {
 
             switch (DataHelper.GetDataType(value)) {
                 case DataHelper.DataType.Image: {
-                    var buffer = DataHelper.ConvertDDS(value.GUID, DXGI_FORMAT.R8G8B8A8_UNORM, 0, out var width, out var height);
+                    var buffer = DataHelper.ConvertDDS(value.GUID, out var width, out var height);
                     if (!buffer.IsEmpty) {
                         PreviewSource = new RGBABitmapSource(buffer, width, height);
                         PreviewControl = new PreviewDataImage();

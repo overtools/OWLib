@@ -91,7 +91,7 @@ namespace TankView.Helper {
             return ms;
         }
 
-        public static Memory<byte> ConvertDDS(ulong guid, DXGI_FORMAT targetFormat, WICCodecs imageFormat, out int width, out int height) {
+        public static Memory<byte> ConvertDDS(ulong guid, out int width, out int height) {
             width = 0;
             height = 0;
 
@@ -107,8 +107,15 @@ namespace TankView.Helper {
                 width = texture.Header.Width;
                 height = texture.Header.Height;
                 Stream ms = texture.SaveToDDS(1);
+                using var dds = new DDSConverterImpl(ms, DXGI_FORMAT.UNKNOWN, true);
+                using var image = dds.GetFrame(0, 0, 1);
+                Memory<byte> rgb = new byte[image.Length];
+                var offset = 0;
+                while (offset < rgb.Length) {
+                    offset += image.Read(rgb[offset..].Span);
+                }
 
-                return DDSConverter.ConvertDDS(ms, targetFormat, imageFormat, texture.Header.Surfaces - 1);
+                return rgb;
             } catch {
                 // ignored
             }
@@ -127,10 +134,10 @@ namespace TankView.Helper {
 
         internal static teTexture LoadTexture(ulong guid, Stream fileStream = null) {
             teTexture texture = new teTexture(fileStream ?? IOHelper.OpenFile(guid));
-            if (texture.PayloadRequired) {
-                ulong payload = texture.GetPayloadGUID(guid, 1);
+            if (texture.PayloadRequired && texture.Payloads.Length > 1) {
+                ulong payload = texture.GetPayloadGUID(guid, (uint) texture.Payloads.Length - 1u);
                 if (IOHelper.HasFile(payload)) {
-                    texture.LoadPayload(IOHelper.OpenFile(payload), 1);
+                    texture.LoadPayload(IOHelper.OpenFile(payload), (uint) texture.Payloads.Length - 1u);
                 } else {
                     return null;
                 }

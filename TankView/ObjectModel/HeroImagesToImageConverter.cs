@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
 using DataTool.DataModels.Hero;
-using DirectXTexNet;
 using TankView.Helper;
 
 namespace TankView.ObjectModel {
@@ -23,7 +21,7 @@ namespace TankView.ObjectModel {
                     continue;
 
                 try {
-                    var data = DataHelper.ConvertDDS(guid, DXGI_FORMAT.R8G8B8A8_UNORM, 0, out var width, out var height);
+                    var data = DataHelper.ConvertDDS(guid, out var width, out var height);
                     image.Source = new RGBABitmapSource(data, width, height);
                     image.Width = width;
                     image.Height = height;

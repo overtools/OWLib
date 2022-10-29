@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using AdonisUI;
-using TankView.Properties;
 
 namespace TankView {
     /// <summary>
