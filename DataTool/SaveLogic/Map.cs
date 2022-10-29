@@ -58,7 +58,7 @@ namespace DataTool.SaveLogic {
             public void Write(Stream output) {
                 using (BinaryWriter writer = new BinaryWriter(output)) {
                     writer.Write((ushort) 2); // version major
-                    writer.Write((ushort) 0); // version minor
+                    writer.Write((ushort) 1); // version minor
 
                     if (Name.Length == 0) {
                         writer.Write((byte) 0);
@@ -216,25 +216,8 @@ namespace DataTool.SaveLogic {
                         writer.Write((uint) light.Header.Type);
                         writer.Write(light.Header.LightFOV);
                         writer.Write(light.Header.Color);
+                        writer.Write(light.Header.IntensityGUESS);
 
-                        writer.Write(light.Header.Unknown1A);
-                        writer.Write(light.Header.Unknown1B);
-                        writer.Write(light.Header.Unknown2A);
-                        writer.Write(light.Header.Unknown2B);
-                        writer.Write(light.Header.Unknown2C);
-                        writer.Write(light.Header.Unknown2D);
-                        writer.Write(light.Header.Unknown3A);
-                        writer.Write(light.Header.Unknown3B);
-
-                        writer.Write(light.Header.UnknownPos1);
-                        writer.Write(light.Header.UnknownQuat1);
-                        writer.Write(light.Header.UnknownPos2);
-                        writer.Write(light.Header.UnknownQuat2);
-                        writer.Write(light.Header.UnknownPos3);
-                        writer.Write(light.Header.UnknownQuat3);
-
-                        writer.Write(light.Header.Unknown4A);
-                        writer.Write(light.Header.Unknown4B);
                         writer.Write(light.Header.ProjectionTexture1);
                         writer.Write(light.Header.ProjectionTexture2);
 

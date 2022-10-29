@@ -270,15 +270,11 @@ namespace TankLib {
         public struct Structure {
             public teQuat Rotation;
             public teVec3 Translation;
-            public uint Unknown1A;
-            public uint Unknown1B;
-            public byte Unknown2A;
-            public byte Unknown2B;
-            public byte Unknown2C;
-            public byte Unknown2D;
-            public uint Unknown3A;
-            public uint Unknown3B;
+            public uint Unknown1;
+            public uint Unknown2;
             public teLIGHTTYPE Type;
+            public uint Unknown3;
+            public uint Unknown4;
             public teColorRGB Color;
             public teVec3 UnknownPos1;
             public teQuat UnknownQuat1;
@@ -286,12 +282,43 @@ namespace TankLib {
             public teVec3 UnknownPos2;
             public teQuat UnknownQuat2;
             public teVec3 UnknownPos3;
-            public teQuat UnknownQuat3;
-            public float Unknown4A;
-            public float Unknown4B;
+            public teVec3 UnknownPos4;
+            public float IntensityGUESS;
+            public float Unknown6;
+            public float Unknown7;
+            public float Unknown8;
+            public float Unknown9;
+            public float Unknown10;
             public teResourceGUID ProjectionTexture1;
             public teResourceGUID ProjectionTexture2;
         }
+
+        // [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        // public struct Structure {
+        //     public teQuat Rotation;
+        //     public teVec3 Translation;
+        //     public uint Unknown1A;
+        //     public uint Unknown1B;
+        //     public byte Unknown2A;
+        //     public byte Unknown2B;
+        //     public byte Unknown2C;
+        //     public byte Unknown2D;
+        //     public uint Unknown3A;
+        //     public uint Unknown3B;
+        //     public teLIGHTTYPE Type;
+        //     public teColorRGB Color;
+        //     public teVec3 UnknownPos1;
+        //     public teQuat UnknownQuat1;
+        //     public float LightFOV;      // Cone angle, in degrees. Set to -1.0 for Point Lights
+        //     public teVec3 UnknownPos2;
+        //     public teQuat UnknownQuat2;
+        //     public teVec3 UnknownPos3;
+        //     public teQuat UnknownQuat3;
+        //     public float Unknown4A;
+        //     public float Unknown4B;
+        //     public teResourceGUID ProjectionTexture1;
+        //     public teResourceGUID ProjectionTexture2;
+        // }
 
         public Structure Header;
 
