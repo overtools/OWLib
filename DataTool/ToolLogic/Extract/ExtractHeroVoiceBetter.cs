@@ -202,7 +202,7 @@ namespace DataTool.ToolLogic.Extract {
         3. If VoiceGroupByHero is not set or VoiceGroupByType is set, it will add the voice group name to the path stack. */
         private static void CalculatePathStack(ExtractFlags flags, string heroName, string unlockName, string groupName, List<string> stack) {
             if (flags.VoiceGroupByLocale) {
-                stack.Add(Program.Client.CreateArgs.SpeechLanguage);
+                stack.Add(Program.Client.CreateArgs.SpeechLanguage ?? "enUS");
             }
 
             if (flags.VoiceGroupByHero) {
