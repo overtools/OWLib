@@ -38,6 +38,7 @@ namespace DataTool.ToolLogic.Extract {
                     }
 
                     Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName), new Combo.SaveContext(heroImageCombo), new Combo.SaveTextureOptions {
+                        FileTypeOverride = "png",
                         ProcessIcon = true,
                     });
                 }
@@ -49,7 +50,9 @@ namespace DataTool.ToolLogic.Extract {
                         heroLoadoutCombo.SetTextureName(heroLoadout.TextureGUID, heroLoadout.Name);
                     }
 
-                    Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName, "Abilities"), new Combo.SaveContext(heroLoadoutCombo), new Combo.SaveTextureOptions());
+                    Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName, "Abilities"), new Combo.SaveContext(heroLoadoutCombo), new Combo.SaveTextureOptions {
+                        FileTypeOverride = "png"
+                    });
                 }
 
                 foreach (var unlock in hero.GetUnlocks().IterateUnlocks()) {
@@ -77,6 +80,7 @@ namespace DataTool.ToolLogic.Extract {
                         var guid = FindLogic.Combo.GetReplacement(tex.m_texture, replacements);
                         FindLogic.Combo.Find(info, guid);
                         info.SetTextureOptions(guid, new Combo.SaveTextureOptions {
+                            FileTypeOverride = "png",
                             ProcessIcon = true,
                             FileNameOverride = $"{teResourceGUID.Index(unlock.GUID)} - Icon - {IO.GetValidFilename(unlock.Name)}"
                         });
@@ -85,6 +89,7 @@ namespace DataTool.ToolLogic.Extract {
                     if (skinTheme.m_ECCC4A5D != null) {
                         FindLogic.Combo.Find(info, skinTheme.m_ECCC4A5D);
                         info.SetTextureOptions(skinTheme.m_ECCC4A5D, new Combo.SaveTextureOptions {
+                            FileTypeOverride = "png",
                             ProcessIcon = true,
                             FileNameOverride = $"{teResourceGUID.Index(unlock.GUID)} - Portrait - {IO.GetValidFilename(unlock.Name)}"
                         });
