@@ -101,7 +101,7 @@ namespace DataTool.SaveLogic {
                     writer.Write((uint) (SingleModels.Header.PlaceableCount + Models.Header.PlaceableCount +
                                          entitiesWithModelCount)); // nr details
 
-                    writer.Write(0); // nr Lights (debug)
+                    writer.Write(Lights.Header.PlaceableCount); // nr Lights
 
                     foreach (IMapPlaceable mapPlaceable in ModelGroups.Placeables ?? Array.Empty<IMapPlaceable>()) {
                         teMapPlaceableModelGroup modelGroup = (teMapPlaceableModelGroup) mapPlaceable;
@@ -206,7 +206,24 @@ namespace DataTool.SaveLogic {
                         writer.Write(entity.Header.Rotation);
                     }
 
-                    //1.1 - Lights (debug) - removed.
+                    // Extension 1.1 - Lights
+                    foreach (IMapPlaceable mapPlaceable in Lights.Placeables ?? Array.Empty<IMapPlaceable>()) {
+                        var light = (teMapPlaceableLight) mapPlaceable;
+
+                        writer.Write(light.Header.Translation);
+                        writer.Write(light.Header.Rotation);
+
+                        writer.Write((uint) light.Header.Type);
+                        writer.Write(light.Header.LightFOV);
+                        writer.Write(light.Header.Color);
+                        writer.Write(light.Header.IntensityGUESS);
+
+                        writer.Write(light.Header.ProjectionTexture1);
+                        writer.Write(light.Header.ProjectionTexture2);
+
+                        FindLogic.Combo.Find(Info, light.Header.ProjectionTexture1);
+                        FindLogic.Combo.Find(Info, light.Header.ProjectionTexture2);
+                    }
 
                     writer.Write(Sounds.Header.PlaceableCount); // nr Sounds
 
@@ -231,26 +248,6 @@ namespace DataTool.SaveLogic {
                         var effect = (teMapPlaceableEffect) mapPlaceable;
                         FindLogic.Combo.Find(Info, effect.Header.Effect);
                         // todo: wtf
-                    }
-
-                    // 2.1 - Lights (optimized)
-                    writer.Write(Lights.Header.PlaceableCount); // nr Lights
-                    foreach (IMapPlaceable mapPlaceable in Lights.Placeables ?? Array.Empty<IMapPlaceable>()) {
-                        var light = (teMapPlaceableLight) mapPlaceable;
-
-                        writer.Write(light.Header.Translation);
-                        writer.Write(light.Header.Rotation);
-
-                        writer.Write((uint) light.Header.Type);
-                        writer.Write(light.Header.LightFOV);
-                        writer.Write(light.Header.Color);
-                        writer.Write(light.Header.IntensityGUESS);
-
-                        writer.Write(light.Header.ProjectionTexture1);
-                        writer.Write(light.Header.ProjectionTexture2);
-
-                        FindLogic.Combo.Find(Info, light.Header.ProjectionTexture1);
-                        FindLogic.Combo.Find(Info, light.Header.ProjectionTexture2);
                     }
                 }
             }
