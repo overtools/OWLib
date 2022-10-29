@@ -128,14 +128,6 @@ namespace DataTool.ToolLogic.Extract {
 
                         var stack = new List<string> { basePath };
 
-                        // by-hero & by-skin & by-type = "hero/skin/type"
-                        // by-hero & by-skin & !by-type = "type/hero/skin"
-                        // by-hero & !by-skin & by-type = "hero/type"
-                        // by-hero & !by-skin & !by-type = "type/hero"
-                        // !by-hero & by-skin & by-type = "type"
-                        // !by-hero & by-skin & !by-type = "type"
-                        // !by-hero & !by-skin & by-type = "type"
-                        // !by-hero & !by-skin & !by-type = "type"
                         CalculatePathStack(flags, heroName, unlockName, ignoreGroups ? "" : groupName, stack);
 
                         var path = Path.Combine(stack.Where(x => x.Length > 0).ToArray());
@@ -189,7 +181,30 @@ namespace DataTool.ToolLogic.Extract {
             return true;
         }
 
+        /* Here is the explanation for the code below:
+        1. CalculatePathStack is a function that calculates the path stack needed to create the path for the voice line.
+        2. flags is the same variable that was created in the code above, it is used to determine how the path stack is built.
+        3. heroName is the name of the hero that the voice line is for.
+        4. unlockName is the name of the hero's unlockable skin that the voice line is for.
+        5. groupName is the name of the group that the voice line is for.
+        6. stack is the path stack that is being built.
+        7. If the voice group by locale flag is enabled, it adds the current locale to the path stack.
+        8. If the voice group by hero flag is enabled, it checks if the voice group by type flag is disabled.
+        9. If the voice group by type flag is disabled, it adds the group name to the path stack.
+        10. It then adds the hero name to the path stack.
+        11. If the voice group by skin flag is enabled, it adds the unlock name to the path stack.
+        12. If the voice group by hero flag is disabled or the voice group by type flag is enabled, it adds the group name to the path stack.
+        13. It then returns the path stack.
+
+        in English:
+        1. If VoiceGroupByLocale is set, it will add the current locale to the path stack.
+        2. If VoiceGroupByHero is set, it will add the hero name, the voice group name (if VoiceGroupByType is not set) and the unlock name (if VoiceGroupBySkin is set) to the path stack.
+        3. If VoiceGroupByHero is not set or VoiceGroupByType is set, it will add the voice group name to the path stack. */
         private static void CalculatePathStack(ExtractFlags flags, string heroName, string unlockName, string groupName, List<string> stack) {
+            if (flags.VoiceGroupByLocale) {
+                stack.Add(Program.Client.CreateArgs.SpeechLanguage);
+            }
+
             if (flags.VoiceGroupByHero) {
                 if (!flags.VoiceGroupByType) {
                     stack.Add(groupName);

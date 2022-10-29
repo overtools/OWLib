@@ -78,6 +78,9 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "voice-group-by-skin", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool VoiceGroupBySkin;
 
+        [CLIFlag(Default = false, Flag = "voice-group-by-locale", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool VoiceGroupByLocale;
+
         [CLIFlag(Default = false, Flag = "voice-03f-in-type", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool VoiceGroup03FInType;
 
