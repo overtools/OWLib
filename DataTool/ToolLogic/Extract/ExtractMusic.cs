@@ -32,7 +32,6 @@ namespace DataTool.ToolLogic.Extract.Debug {
             { 0x730BC8EB, "730BC8EB" },
             { 0x981B9AB5, "981B9AB5" },
             { 0x1845EE31, "1845EE31" },
-            { 0x8383A71C, "8383A71C" },
             { 0x56573649, "56573649" },
             { 0xA45CBFCA, "A45CBFCA" },
             { 0xC21B9447, "C21B9447" },
