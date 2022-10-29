@@ -50,6 +50,7 @@ namespace DataTool.ConvertLogic.WEM {
         public long LogicalOffset = 0;
         public int PageSize = 0;
         public int SamplesDone = 0;
+        public int MappingFamily = 0;
 
         public WwiseRIFFOpus(Stream stream) {
             Reader = new BinaryReader(stream, Encoding.UTF8, true);
@@ -133,8 +134,8 @@ namespace DataTool.ConvertLogic.WEM {
             Header.Skip = Reader.ReadInt16();
 
             var codecVersion = Reader.ReadByte();
-            var mapping = Reader.ReadByte();
-            if (mapping == 1 && Header.Channels > 8) {
+            MappingFamily = Reader.ReadByte();
+            if (MappingFamily == 1 && Header.Channels > 8) {
                 throw new InvalidDataException("Too many channels for remapping");
             }
 
@@ -142,7 +143,7 @@ namespace DataTool.ConvertLogic.WEM {
                 throw new InvalidDataException("Invalid codec version");
             }
 
-            if (mapping > 0 && Header.ChannelType == 1) {
+            if (MappingFamily > 0 && Header.ChannelType == 1) {
                 Header.CoupledCount = (WAVEChannelMask) Header.ChannelLayout switch {
                     WAVEChannelMask.STEREO => 1,
                     WAVEChannelMask.TWOPOINT1 => 1,
@@ -153,7 +154,7 @@ namespace DataTool.ConvertLogic.WEM {
                 };
                 Header.StreamCount = Header.Channels - Header.CoupledCount;
 
-                if (mapping == 1) {
+                if (MappingFamily == 1) {
                     for (var i = 0; i < Header.Channels; i++) {
                         Header.ChannelMapping[i] = MappingMatrix[Header.Channels - 1][i];
                     }
@@ -194,10 +195,9 @@ namespace DataTool.ConvertLogic.WEM {
             ogg.Write(new BitUint(16, (uint) Header.Skip));
             ogg.Write(new BitUint(32, (uint) Header.SampleRate));
             ogg.Write(new BitUint(16, 0));
-            var mappingFamily = Header.Channels > 2 || Header.StreamCount > 1 ? 1u : 0;
-            ogg.Write(new BitUint(8, mappingFamily));
+            ogg.Write(new BitUint(8, (uint) MappingFamily));
 
-            if (mappingFamily > 0) {
+            if (MappingFamily > 0) {
                 ogg.Write(new BitUint(8, (uint)Header.StreamCount));
                 ogg.Write(new BitUint(8, (uint)Header.CoupledCount));
                 for (var i = 0; i < Header.Channels; i++) {
