@@ -143,7 +143,14 @@ namespace DataTool.ConvertLogic.WEM {
             }
 
             if (mapping > 0 && Header.ChannelType == 1) {
-                Header.CoupledCount = Math.Max(1, (Header.Channels - 1) / 2);
+                Header.CoupledCount = (WAVEChannelMask) Header.ChannelLayout switch {
+                    WAVEChannelMask.STEREO => 1,
+                    WAVEChannelMask.TWOPOINT1 => 1,
+                    WAVEChannelMask.QUAD_side => 2,
+                    WAVEChannelMask.FIVEPOINT1 => 2,
+                    WAVEChannelMask.SEVENPOINT1 => 2,
+                    _ => 0,
+                };
                 Header.StreamCount = Header.Channels - Header.CoupledCount;
 
                 if (mapping == 1) {

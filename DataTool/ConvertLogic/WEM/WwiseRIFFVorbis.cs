@@ -329,8 +329,15 @@ namespace DataTool.ConvertLogic.WEM {
                     _loopEnd = _loopEnd + 1;
                 }
 
-                if (_loopStart >= _sampleCount || _loopEnd > _sampleCount || _loopStart > _loopEnd)
-                    throw new Exception("loops out of range");
+                if (_loopStart > _loopEnd) {
+                    (_loopStart, _loopEnd) = (_loopEnd, _loopStart);
+                }
+
+                if (_loopStart > _sampleCount || _loopEnd > _sampleCount || _loopStart > _loopEnd) {
+                    _loopStart = 0;
+                    _loopEnd = 0;
+                    _loopCount = 0;
+                }
             }
 
             // check subtype now that we know the vorb info
