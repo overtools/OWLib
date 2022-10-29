@@ -1,14 +1,38 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using DirectXTexNet;
 
 namespace DataTool.Helper {
     public sealed class DDSConverterImpl : IDisposable {
+
+        [Flags]
+        public enum CoInit : uint {
+            MultiThreaded = 0x00,
+            ApartmentThreaded = 0x02,
+            DisableOLE1DDE = 0x04,
+            SpeedOverMemory = 0x08
+        }
+
+        [DllImport("Ole32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int CoInitializeEx([In, Optional] IntPtr pvReserved, [In] CoInit dwCoInit);
+
+        public static bool Initialized { get; private set; }
+
+        public static void Initialize() {
+            if (Initialized) {
+                return;
+            }
+
+            CoInitializeEx(IntPtr.Zero, CoInit.MultiThreaded | CoInit.SpeedOverMemory);
+            Initialized = true;
+        }
+
         public ScratchImage Image { get; set; }
         public TexMetadata Info { get; set; }
 
         public unsafe DDSConverterImpl(Stream ddsSteam, DXGI_FORMAT targetFormat, bool force8bpc) {
-            DDSConverter.Initialize();
+            Initialize();
 
             Memory<byte> data = new byte[ddsSteam.Length];
             var offset = 0;

@@ -1,35 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using DirectXTexNet;
 
 namespace DataTool.Helper {
     public static class DDSConverter {
-        [Flags]
-        public enum CoInit : uint {
-            MultiThreaded = 0x00,
-            ApartmentThreaded = 0x02,
-            DisableOLE1DDE = 0x04,
-            SpeedOverMemory = 0x08
-        }
-
-        [DllImport("Ole32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int CoInitializeEx([In, Optional] IntPtr pvReserved, [In] CoInit dwCoInit);
-
-        public static bool Initialized { get; private set; }
-
-        public static void Initialize() {
-            if (Initialized) {
-                return;
-            }
-
-            CoInitializeEx(IntPtr.Zero, CoInit.MultiThreaded | CoInit.SpeedOverMemory);
-            Initialized = true;
-        }
-
-
+        [Obsolete("Use DDSConverterImpl instead")]
         public static unsafe Memory<byte> ConvertDDS(Stream ddsSteam, DXGI_FORMAT targetFormat, WICCodecs codec, int? frameNr) {
-            Initialize();
+            DDSConverterImpl.Initialize();
 
             Memory<byte> data = new byte[ddsSteam.Length];
             ddsSteam.Read(data.Span);
