@@ -87,6 +87,9 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "xml", Help = "Convert STUs to xml when extracted with ExtractDebugType", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool ConvertToXML;
 
+        [CLIFlag(Default = false, Flag = "keep-channels", Help = "Keep all audio channels when converting Ogg Opus", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool KeepSoundChannels;
+
         public override bool Validate() => true;
     }
 }

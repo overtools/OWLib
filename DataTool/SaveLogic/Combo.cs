@@ -807,13 +807,13 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void ConvertSoundFile(Stream stream, FindLogic.Combo.ComboAsset soundFileInfo, string directory, string name = null, bool useVgmStream = false) {
+        private static void ConvertSoundFile(Stream stream, FindLogic.Combo.ComboAsset soundFileInfo, string directory, string name = null, bool useVgmStream = false, bool forceStereo = true) {
             string outputFile = Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.ogg");
             CreateDirectoryFromFile(outputFile);
             using Stream outputStream = File.OpenWrite(outputFile);
             outputStream.SetLength(0);
             try {
-                ConvertSoundFile(stream, outputStream, outputFile, useVgmStream);
+                ConvertSoundFile(stream, outputStream, outputFile, useVgmStream, forceStereo);
             } catch (Exception e) {
                 Logger.Warn("Combo", $"Error converting sound: {e.Message}");
                 using var errorStream = File.OpenWrite(Path.ChangeExtension(outputFile, ".wem"));
@@ -822,19 +822,18 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void ConvertSoundFile(Stream stream, Stream outputStream, string outputFile, bool useVgmStream) {
+        public static void ConvertSoundFile(Stream stream, Stream outputStream, string outputFile, bool useVgmStream, bool forceStereo) {
             try {
                 if (useVgmStream) {
-                    ConvertSoundFileVgmStream(stream, outputStream);
+                    ConvertSoundFileVgmStream(stream, outputStream, forceStereo);
                 } else {
                     ConvertSoundFileWw2Ogg(stream, outputStream);
                 }
             } catch (Exception e) {
+                Logger.Warn("Combo", $"Error converting sound: {e.Message}, trying vgmstream directly");
                 if (!VGMStreamSanity()) {
                     throw;
                 }
-
-                Logger.Warn("Combo", $"Error converting sound: {e.Message}, trying vgmstream directly");
                 var temp = Path.Combine(Path.GetTempPath(), $"vgmstream{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.wem");
                 try {
                     using (Stream tempStream = File.OpenWrite(temp)) {
@@ -880,8 +879,8 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void ConvertSoundFileVgmStream(Stream stream, Stream outputStream) {
-            using WwiseRIFFOpus opus = new WwiseRIFFOpus(stream);
+        public static void ConvertSoundFileVgmStream(Stream stream, Stream outputStream, bool forceStereo) {
+            using WwiseRIFFOpus opus = new WwiseRIFFOpus(stream, forceStereo);
             opus.ConvertToOgg(outputStream);
         }
 
@@ -900,9 +899,11 @@ namespace DataTool.SaveLogic {
         private static void SaveSoundFileTask(ICLIFlags flags, string directory, FindLogic.Combo.SoundFileAsset soundFileInfo, string name = null) {
             bool convertWem = true;
             bool useVgmStream = false;
+            bool forceStereo = true;
             if (flags is ExtractFlags extractFlags) {
                 convertWem = !extractFlags.RawSound && !extractFlags.Raw;
                 if (extractFlags.SkipSound) return;
+                forceStereo = !extractFlags.KeepSoundChannels;
             }
 
             using (Stream soundStream = OpenFile(soundFileInfo.m_GUID)) {
@@ -920,7 +921,7 @@ namespace DataTool.SaveLogic {
                 if (!convertWem) {
                     WriteFile(soundStream, Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.wem"));
                 } else {
-                    ConvertSoundFile(soundStream, soundFileInfo, directory, name, useVgmStream);
+                    ConvertSoundFile(soundStream, soundFileInfo, directory, name, useVgmStream, forceStereo);
                 }
             }
         }
@@ -974,8 +975,6 @@ namespace DataTool.SaveLogic {
             }
 
             WarnedAboutVGMStream = true;
-
-            Logger.Warn("Combo", "opus wem found, using vgmstream to convert");
 
             if (!File.Exists(VgmStreamPath)) {
                 HasVGMStream = false;

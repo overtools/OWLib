@@ -6,6 +6,8 @@ using System.Text;
 namespace DataTool.ConvertLogic.WEM {
     // ported from vgmstream
     public sealed class WwiseRIFFOpus : IDisposable {
+        public bool DEBUGForceStereo { get; }
+
         public BinaryReader Reader;
 
         public struct WWiseHeader {
@@ -52,7 +54,8 @@ namespace DataTool.ConvertLogic.WEM {
         public int SamplesDone = 0;
         public int MappingFamily = 0;
 
-        public WwiseRIFFOpus(Stream stream) {
+        public WwiseRIFFOpus(Stream stream, bool forceStereo) {
+            DEBUGForceStereo = forceStereo;
             Reader = new BinaryReader(stream, Encoding.UTF8, true);
 
             Header = new WWiseHeader();
@@ -159,6 +162,11 @@ namespace DataTool.ConvertLogic.WEM {
                         Header.ChannelMapping[i] = MappingMatrix[Header.Channels - 1][i];
                     }
                 } else {
+                    if (DEBUGForceStereo && Header.Channels > 2) {
+                        Header.StreamCount = Header.Channels;
+                        Header.Channels = 2;
+                    }
+
                     Header.ChannelMapping = new byte[Header.Channels];
                     for (var i = 0; i < Header.Channels; i++) {
                         Header.ChannelMapping[i] = (byte) i;
@@ -200,7 +208,7 @@ namespace DataTool.ConvertLogic.WEM {
             if (MappingFamily > 0) {
                 ogg.Write(new BitUint(8, (uint)Header.StreamCount));
                 ogg.Write(new BitUint(8, (uint)Header.CoupledCount));
-                for (var i = 0; i < Header.Channels; i++) {
+                for (var i = 0; i < Header.ChannelMapping.Length; i++) {
                     ogg.Write(new BitUint(8, Header.ChannelMapping[i]));
                 }
             }
