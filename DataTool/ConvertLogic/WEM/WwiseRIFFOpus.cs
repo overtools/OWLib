@@ -165,6 +165,7 @@ namespace DataTool.ConvertLogic.WEM {
                     if (DEBUGForceStereo && Header.Channels > 2) {
                         Header.StreamCount = Header.Channels;
                         Header.Channels = 2;
+                        MappingFamily = 1;
                     }
 
                     Header.ChannelMapping = new byte[Header.Channels];
