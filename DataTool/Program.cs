@@ -149,6 +149,11 @@ namespace DataTool {
                     Logger.Error("Core", "You need to replace {output_directory} with where you want the output files to go. Can just be something like \"out\" and a folder will be created next to the tool");
                     return;
                 }
+
+                if (extractFlags.UseTextureDecoder) {
+                    Logger.Warn("Core", "Texture decoding currently only supports png, forcing png output...");
+                    extractFlags.ConvertTexturesType = "png";
+                }
             }
 
             if (!targetToolAttributes.UtilNoArchiveNeeded) {
