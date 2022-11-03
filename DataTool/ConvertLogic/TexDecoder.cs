@@ -100,40 +100,40 @@ namespace DataTool.ConvertLogic {
                 }
             }
 
-            // unshuffle bgra into rgba using Vector256
-            var vectorSize = Vector256<byte>.Count;
-            var vectorCount = Pixels / vectorSize;
-            var vectorRemainder = Pixels % vectorSize;
-            if (Avx2.IsSupported) {
-                var vectorSpan = MemoryMarshal.Cast<byte, Vector256<byte>>(PixelData.Span[..^vectorRemainder]);
-                Vector256<byte> Shuffle = Vector256.Create((byte) 2, 1, 0, 3, 6, 5, 4, 7, 10, 9, 8, 11, 14, 13, 12, 15, 18, 17, 16, 19, 22, 21, 20, 23, 26, 25, 24, 27, 30, 29, 28, 31);
-                for (var i = 0; i < vectorCount; i++) {
-                    vectorSpan[i] = Avx2.Shuffle(vectorSpan[i], Shuffle);
-                }
-            } else {
-                vectorCount = 0;
-                vectorRemainder = Pixels;
-            }
-
-            // handle remainder
-            if (vectorRemainder > 0) {
-                var remainder = PixelData.Span[(vectorCount * vectorSize)..];
-                for (var i = 0; i < remainder.Length; i += 4) {
-                    var b = remainder[i];
-                    var g = remainder[i + 1];
-                    var r = remainder[i + 2];
-                    var a = remainder[i + 3];
-                    remainder[i] = r;
-                    remainder[i + 1] = g;
-                    remainder[i + 2] = b;
-                    remainder[i + 3] = a;
-                }
-            }
+            // // unshuffle bgra into rgba using Vector256
+            // var vectorSize = Vector256<byte>.Count;
+            // var vectorCount = Pixels / vectorSize;
+            // var vectorRemainder = Pixels % vectorSize;
+            // if (Avx2.IsSupported) {
+            //     var vectorSpan = MemoryMarshal.Cast<byte, Vector256<byte>>(PixelData.Span[..^vectorRemainder]);
+            //     Vector256<byte> Shuffle = Vector256.Create((byte) 2, 1, 0, 3, 6, 5, 4, 7, 10, 9, 8, 11, 14, 13, 12, 15, 18, 17, 16, 19, 22, 21, 20, 23, 26, 25, 24, 27, 30, 29, 28, 31);
+            //     for (var i = 0; i < vectorCount; i++) {
+            //         vectorSpan[i] = Avx2.Shuffle(vectorSpan[i], Shuffle);
+            //     }
+            // } else {
+            //     vectorCount = 0;
+            //     vectorRemainder = Pixels;
+            // }
+            //
+            // // handle remainder
+            // if (vectorRemainder > 0) {
+            //     var remainder = PixelData.Span[(vectorCount * vectorSize)..];
+            //     for (var i = 0; i < remainder.Length; i += 4) {
+            //         var b = remainder[i];
+            //         var g = remainder[i + 1];
+            //         var r = remainder[i + 2];
+            //         var a = remainder[i + 3];
+            //         remainder[i] = r;
+            //         remainder[i + 1] = g;
+            //         remainder[i + 2] = b;
+            //         remainder[i + 3] = a;
+            //     }
+            // }
         }
 
         [CanBeNull]
-        public Image<Rgba32> GetFrame(int frame) {
-            return frame >= Surfaces ? null : Image.LoadPixelData<Rgba32>(PixelData.Slice(Pixels * frame, Pixels).Span, Texture.Header.Width, Texture.Header.Height);
+        public Image<Bgra32> GetFrame(int frame) {
+            return frame >= Surfaces ? null : Image.LoadPixelData<Bgra32>(PixelData.Slice(Pixels * frame, Pixels).Span, Texture.Header.Width, Texture.Header.Height);
         }
     }
 }
