@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace TankLib.Math {
     /// <summary>4 component RGBA color</summary>
@@ -83,12 +84,22 @@ namespace TankLib.Math {
             }
         }
 
-        public teColorRGBA ToNonLinear(float gamma = 2.2f) {
-            return new teColorRGBA((float) System.Math.Pow(R, 1/gamma), (float) System.Math.Pow(G, 1/gamma), (float) System.Math.Pow(B, 1/gamma), A);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float ToNonLinearValue(float value, float gamma = 2.4f) {
+            return (float)(value <= 0.0031308 ? value * 12.92 : System.Math.Pow(value, 1 / gamma) * 1.055 - 0.055);
         }
 
-        public teColorRGBA ToLinear(float gamma = 2.2f) {
-            return new teColorRGBA((float) System.Math.Pow(R, gamma), (float) System.Math.Pow(G, gamma), (float) System.Math.Pow(B, gamma), A);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float ToLinearValue(float value, float gamma = 2.4f) {
+            return (float)(value <= 0.04045 ? value / 12.92 : System.Math.Pow((value + 0.055) / 1.055, gamma));
+        }
+
+        public teColorRGBA ToNonLinear(float gamma = 2.4f) {
+            return new teColorRGBA(ToNonLinearValue(R), ToNonLinearValue(G), ToNonLinearValue(B), A);
+        }
+
+        public teColorRGBA ToLinear(float gamma = 2.4f) {
+            return new teColorRGBA(ToLinearValue(R), ToLinearValue(G), ToLinearValue(B), A);
         }
     }
 }

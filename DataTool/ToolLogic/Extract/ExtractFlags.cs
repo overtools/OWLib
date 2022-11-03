@@ -90,6 +90,9 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "keep-channels", Help = "Keep all audio channels when converting Ogg Opus", Hidden = true, Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
         public bool KeepSoundChannels;
 
+        [CLIFlag(Default = false, Flag = "use-texture-decoder", Help = "Use TextureDecoder for decoding textures, slower but more accurate (enforced on Linux)", Parser = new[] { "DataTool.Flag.Converter", "CLIFlagBoolean" })]
+        public bool UseTextureDecoder;
+
         public override bool Validate() => true;
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using DataTool.ConvertLogic;
 using DataTool.DataModels;
 using DataTool.DataModels.Hero;
 using DataTool.DataModels.Voice;
@@ -107,7 +108,7 @@ namespace TankView.Helper {
                 width = texture.Header.Width;
                 height = texture.Header.Height;
                 Stream ms = texture.SaveToDDS(1);
-                using var dds = new DDSConverterImpl(ms, DXGI_FORMAT.UNKNOWN, true);
+                using var dds = new DDSConverter(ms, DXGI_FORMAT.UNKNOWN, true);
                 using var image = dds.GetFrame(0, 0, 1);
                 Memory<byte> rgb = new byte[image.Length];
                 var offset = 0;

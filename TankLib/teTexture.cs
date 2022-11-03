@@ -186,6 +186,12 @@ namespace TankLib {
             Payloads[payloadIdx] = payload;
         }
 
+        public Span<byte> GetData() {
+            if (PayloadRequired && Payloads[Payloads.Length-1] == null) throw new Exceptions.TexturePayloadMissingException();
+
+            return PayloadRequired ? Payloads[Payloads.Length - 1].RawData : Data;
+        }
+
         /// <summary>Save DDS to stream</summary>
         /// <param name="stream">Stream to be written to</param>
         /// <param name="keepOpen">Keep the stream open after writing</param>

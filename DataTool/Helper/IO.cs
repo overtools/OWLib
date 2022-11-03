@@ -169,6 +169,21 @@ namespace DataTool.Helper {
             return teResourceGUID.AsString(guid);
         }
 
+        public static Stream OpenFile(string filename) {
+            string path = Path.GetDirectoryName(filename);
+            if (!Directory.Exists(path) && path != null) {
+                Directory.CreateDirectory(path);
+            }
+
+            try {
+                return File.OpenWrite(filename);
+            }
+            catch (IOException) {
+                if (File.Exists(filename)) return null;
+                throw;
+            }
+        }
+
         public static void WriteFile(Stream stream, string filename) {
             if (stream == null) return;
             string path = Path.GetDirectoryName(filename);
