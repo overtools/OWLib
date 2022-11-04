@@ -3,9 +3,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using DirectXTexNet;
 
-namespace DataTool.Helper {
-    public sealed class DDSConverterImpl : IDisposable {
-
+namespace DataTool.ConvertLogic {
+    public sealed class DDSConverter : IDisposable {
         [Flags]
         public enum CoInit : uint {
             MultiThreaded = 0x00,
@@ -31,7 +30,7 @@ namespace DataTool.Helper {
         public ScratchImage Image { get; set; }
         public TexMetadata Info { get; set; }
 
-        public unsafe DDSConverterImpl(Stream ddsSteam, DXGI_FORMAT targetFormat, bool force8bpc) {
+        public unsafe DDSConverter(Stream ddsSteam, DXGI_FORMAT targetFormat, bool force8bpc) {
             Initialize();
 
             Memory<byte> data = new byte[ddsSteam.Length];

@@ -50,7 +50,6 @@ namespace TankTonka.Models {
             ShaderGroup = 0x85,
             ShaderInstance = 0x86,
             ShaderCode = 0x87,
-            ShaderSource = 0x88,
             ResourceKey = 0x90,
             RaycastType = 0x97,
             RaycastReceiver = 0x98,
@@ -78,7 +77,12 @@ namespace TankTonka.Models {
             MapShadowData = 0xCB,
             TeamColor = 0xCE,
             LootBox = 0xCF,
-            VoiceConversation = 0xD0
+            VoiceConversation = 0xD0,
+            LocalizedTexture = 0xF1,
+            CustomizableSkinTheme = 0x103,
+            NewModel = 0x118,
+            NewModelLook = 0x119,
+            NewMaterial = 0x127,
         }
 
         public class StructuredDataInfo {
