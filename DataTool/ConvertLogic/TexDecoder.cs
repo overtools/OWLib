@@ -101,6 +101,8 @@ namespace DataTool.ConvertLogic {
                         BcDecoder.DecompressBC7(data, texture.Header.Width, texture.Header.Height, interm);
                         break;
                     }
+                    default:
+                        throw new NotImplementedException($"Unsupported format {format}");
                 }
             }
 

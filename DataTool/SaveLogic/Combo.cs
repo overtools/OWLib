@@ -788,6 +788,11 @@ namespace DataTool.SaveLogic {
                         }
                     }
 
+                    // DirectXTex is only available on Windows
+                    if (!OperatingSystem.IsWindows()) {
+                        return;
+                    }
+
                     ConvertDDS(texture, maxMips, width, height, surfaces, processIcon, filePath, convertType, splitMultiSurface, imageFormat.Value);
                 } catch (Exception e) {
                     Logger.Error("Combo", $"Unable to save {textureGUID:X16} {Path.GetFileName(filePath)} {e}");
