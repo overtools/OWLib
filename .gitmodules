@@ -6,4 +6,4 @@
 	url = https://github.com/overtools/TACTLib
 [submodule "TextureDecoder"]
 	path = TextureDecoder
-	url = https://github.com/AssetRipper/TextureDecoder.git
+	url = https://github.com/yretenai/TextureDecoder.git

@@ -54,6 +54,10 @@ namespace DataTool.ConvertLogic {
                         RgbConverter.RGBA64ToBGRA32(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
+                    case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R11G11B10_FLOAT:{
+                        RgbConverter.R11G11B10FloatToBGRA32(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        break;
+                    }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UINT:
