@@ -940,10 +940,12 @@ namespace DataTool.SaveLogic {
                 forceStereo = !extractFlags.KeepSoundChannels;
             }
 
-            if (Program.Flags.Deduplicate) {
+            if (Program.Flags is { Deduplicate: true }) {
                 if (ScratchDBInstance.HasRecord(soundFileInfo.m_GUID)) {
                     return;
                 }
+
+                ScratchDBInstance[soundFileInfo.m_GUID] = new ScratchDB.ScratchPath(Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.ogg"), true);
             }
 
             using (Stream soundStream = OpenFile(soundFileInfo.m_GUID)) {
@@ -955,12 +957,6 @@ namespace DataTool.SaveLogic {
                         convertWem = false;
                     } else if (type == 2) {
                         useVgmStream = true;
-                    }
-                }
-
-                if (Program.Flags.Deduplicate) {
-                    if (!ScratchDBInstance.SetRecord(soundFileInfo.m_GUID, new ScratchDB.ScratchPath(Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.ogg")))) {
-                        return;
                     }
                 }
 
