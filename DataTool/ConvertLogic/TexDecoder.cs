@@ -137,6 +137,10 @@ namespace DataTool.ConvertLogic {
             // }
         }
 
+        public Image<Bgra32> GetSheet() {
+            return Image.LoadPixelData<Bgra32>(PixelData.Span, Texture.Header.Width, (int) (Texture.Header.Height * Surfaces));
+        }
+
         [CanBeNull]
         public Image<Bgra32> GetFrame(int frame) {
             return frame >= Surfaces ? null : Image.LoadPixelData<Bgra32>(PixelData.Slice(Pixels * frame, Pixels).Span, Texture.Header.Width, Texture.Header.Height);
