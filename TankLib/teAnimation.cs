@@ -18,51 +18,59 @@ namespace TankLib {
 
             /// <summary>Number of bones animated</summary>
             public ushort BoneCount;
-            
+
             /// <summary>Unknown flags</summary>
             public ushort Flags;
 
             public ushort Unknown1;
 
-            public long FuckyUnknown;
-            
+            public uint Unknown2;
+
+            public ushort Unknown3;
+
+            public ushort Unknown4;
+
+            public uint Unknown5;
+
             /// <summary>Duration, in seconds</summary>
             public float Duration;
 
-            public float FuckyUnknownFloat1;
-            
+            public float Unknown6;
+
             /// <summary>Frames Per Second</summary>
             public float FPS;
 
+            public float Unknown7;
 
-            public float FuckyUnknownFloat2;
-            
+            public float Unknown8;
+
             /// <summary>AnimationEffect reference</summary>
             /// <remarks>File type 08F</remarks>
             public teResourceGUID Effect;
-            
-            public ulong EffectHandle;
-            
+
+            public long EffectStorage;
+
             /// <summary>Offset to bone list</summary>
             public long BoneListOffset;
 
-            public long Unknown2;
+            public long Unknown9;
 
-            public long Unknown3;
-            
+            public long Unknown10;
+
+            public long Unknown11;
+
+            public long Unknown12;
+
+            public long Unknown13;
+
+            public long SomeTableOffset; // new animation param table, usually float tracks
+
             /// <summary>Offset to info table</summary>
             public long InfoTableOffset;
-            
-            ///// <summary>Offset to end of animation</summary>
-            //public long Size;
-            //
-            ///// <summary>Offset to end of file</summary>
-            //public long Eof;
-            //
-            ///// <summary>Unknown value that is always 0. Maybe padding</summary>
-            //public long Zero;
+
+            public long Padding;
         }
-        
+
         public struct InfoTable {
             /// <summary>Number of scales</summary>
             public ushort ScaleCount;
@@ -75,26 +83,26 @@ namespace TankLib {
 
             /// <summary>Unknown flags</summary>
             public ushort Flags;
-            
+
             /// <summary>Offset to scale indices</summary>
             public int ScaleIndicesOffset;
-            
+
             /// <summary>Offset to position indices</summary>
             public int PositionIndicesOffset;
-            
+
             /// <summary>Offset to rotation indices</summary>
             public int RotationIndicesOffset;
-            
+
             /// <summary>Offset to scale data</summary>
             public int ScaleDataOffset;
-            
+
             /// <summary>Offset to postion data</summary>
             public int PositionDataOffset;
-            
+
             /// <summary>Offset to rotation data</summary>
             public int RotationDataOffset;
         }
-        
+
         public class BoneAnimation {
             public Dictionary<int, teVec3> Positions;
             public Dictionary<int, teVec3> Scales;
@@ -111,28 +119,28 @@ namespace TankLib {
 
         /// <summary>Header data</summary>
         public AnimHeader Header;
-        
+
         /// <summary>Number of info tables</summary>
         public int InfoTableSize;
 
         /// <summary>Bone IDs</summary>
         public int[] BoneList;
-        
+
         /// <summary>Bone info tables</summary>
         public InfoTable[] InfoTables;
 
         public BoneAnimation[] BoneAnimations;
-        
+
         /// <summary>Load animation from a stream</summary>
         public teAnimation(Stream stream, bool keepOpen = false) {
             using (BinaryReader reader = new BinaryReader(stream, Encoding.Default, keepOpen)) {
                 Header = reader.Read<AnimHeader>();
-                
+
                 InfoTableSize = (int)(Header.FPS * Header.Duration) + 1;
 
                 reader.BaseStream.Position = Header.BoneListOffset;
                 BoneList = reader.ReadArray<int>(Header.BoneCount);
-                
+
                 reader.BaseStream.Position = Header.InfoTableOffset;
                 InfoTables = new InfoTable[Header.BoneCount];
                 BoneAnimations = new BoneAnimation[Header.BoneCount];
@@ -142,7 +150,7 @@ namespace TankLib {
                     InfoTable infoTable = reader.Read<InfoTable>();
                     long afterTablePos = reader.BaseStream.Position;
                     InfoTables[boneIndex] = infoTable;
-                    
+
                     long scaleIndicesPos = (long)infoTable.ScaleIndicesOffset * 4 + streamPos;
                     long positionIndicesPos = (long)infoTable.PositionIndicesOffset * 4 + streamPos;
                     long rotationIndicesPos = (long)infoTable.RotationIndicesOffset * 4 + streamPos;
@@ -158,7 +166,7 @@ namespace TankLib {
 
                     reader.BaseStream.Position = rotationIndicesPos;
                     int[] rotationIndices = ReadIndices(reader, infoTable.RotationCount);
-                    
+
                     BoneAnimation boneAnimation = new BoneAnimation();
                     BoneAnimations[boneIndex] = boneAnimation;
 
@@ -194,7 +202,7 @@ namespace TankLib {
             ushort x = reader.ReadUInt16();
             ushort y = reader.ReadUInt16();
             ushort z = reader.ReadUInt16();
-                        
+
             return UnpackRotation(x, y, z);
         }
 
@@ -223,7 +231,7 @@ namespace TankLib {
 
             return UnpackScale(x, y, z);
         }
-        
+
         /// <summary>
         /// Unpack rotation value
         /// </summary>
@@ -262,7 +270,7 @@ namespace TankLib {
 
             return q;
         }
-        
+
         /// <summary>
         /// Unpack scale value
         /// </summary>
@@ -278,7 +286,7 @@ namespace TankLib {
             double xDelta = (1 - x) / 1024d;
             double yDelta = (1 - y) / 1024d;
             double zDelta = (1 - z) / 1024d;
-            
+
             return new teVec3(xDelta + 1, yDelta + 1, zDelta + 1);
         }
 

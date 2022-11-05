@@ -677,26 +677,16 @@ namespace DataTool.FindLogic {
                     }
                     info.m_animations[guid] = animationInfo;
 
-                    // todo OW2: ANIMATION DISABLED
-                    if (!Debugger.IsAttached) break;
+                    using Stream animationStream = OpenFile(guid);
+                    if (animationStream == null) break;
 
-                    using (Stream animationStream = OpenFile(guid)) {
-                        if (animationStream == null) break;
-                        ulong effectGuid;
-                        // This is ass.
-                        using (BinaryReader animationReader = new BinaryReader(animationStream)) {
-                            uint priority = animationReader.ReadUInt16();
-                            animationStream.Position = 0x18;
-                            float fps = animationReader.ReadSingle();
-                            animationStream.Position = 0x20;
-                            effectGuid = animationReader.ReadUInt64();
-                            animationInfo.m_fps = fps;
-                            animationInfo.m_priority = priority;
-                            animationInfo.m_effect = GetReplacement(effectGuid, replacements);
-                        }
+                    using BinaryReader animationReader = new BinaryReader(animationStream);
+                    var header = animationReader.Read<teAnimation.AnimHeader>();
+                    animationInfo.m_fps = header.FPS;
+                    animationInfo.m_priority = (uint) header.Priority;
+                    animationInfo.m_effect = GetReplacement(header.Effect, replacements);
 
-                        Find(info, effectGuid, replacements, animationContext);
-                    }
+                    Find(info, header.Effect, replacements, animationContext);
                     break;
                 }
                 case 0x8:

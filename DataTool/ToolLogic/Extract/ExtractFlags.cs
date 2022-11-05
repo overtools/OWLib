@@ -45,6 +45,9 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "skip-animations", Help = "Skip animation extraction", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool SkipAnimations;
 
+        [CLIFlag(Default = false, Flag = "skip-animation-effects", Help = "Skip animation effect extraction", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        public bool SkipAnimationEffects;
+
         [CLIFlag(Default = false, Flag = "scale-anims", Hidden = true, Help = "set to true for Blender 2.79, false for Maya and when Blender SEAnim tools are updated for 2.8", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool ScaleAnims;
 

@@ -206,24 +206,28 @@ namespace DataTool.SaveLogic {
         }
 
         public static void SaveAnimation(ICLIFlags flags, string path, SaveContext context, ulong animation, ulong model) {
-            // todo OW2: ANIMATION DISABLED
-            if (!Debugger.IsAttached) return;
-
             bool convertAnims = false;
             bool scaleAnims = false;
+            bool skip = false;
+            bool skipEffect = false;
             if (flags is ExtractFlags extractFlags) {
                 scaleAnims = extractFlags.ScaleAnims;
                 convertAnims = !extractFlags.RawAnimations && !extractFlags.Raw;
-                if (extractFlags.SkipAnimations) return;
+                skip = extractFlags.SkipAnimations;
+                skipEffect = extractFlags.SkipAnimationEffects;
             }
 
+            skip = skip || !Debugger.IsAttached; // todo: ow2 is anim positions are bugged
+
             FindLogic.Combo.AnimationAsset animationInfo = context.m_info.m_animations[animation];
-            using (Stream animStream = OpenFile(animation)) {
+            if (!skip) {
+                using Stream animStream = OpenFile(animation);
                 if (animStream == null) return;
+
                 ConvertAnimation(animStream, path, convertAnims, animationInfo, scaleAnims);
             }
 
-            if (!context.m_saveAnimationEffects) return;
+            if (!context.m_saveAnimationEffects || skipEffect) return;
             FindLogic.Combo.EffectInfoCombo animationEffect;
 
 
