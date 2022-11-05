@@ -757,7 +757,7 @@ namespace DataTool.SaveLogic {
                     if (createMultiSurfaceSheet) {
                         Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as a sheet with TextureDecoder because it has more than one surface");
                         useTextureDecoder = true;
-                    } else if (!splitMultiSurface && convertType != "tif" && convertType != "dds") {
+                    } else if (!splitMultiSurface && convertType != multiSurfaceConvertType) {
                         Logger.Debug("Combo", $"Saving {Path.GetFileName(filePath)} as {multiSurfaceConvertType} because it has more than one surface");
                         convertType = multiSurfaceConvertType;
                     }
