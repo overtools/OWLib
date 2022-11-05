@@ -22,6 +22,12 @@ namespace DataTool.SaveLogic {
                 CheckedExistence = checkedExistence;
             }
 
+            public ScratchPath(string path) {
+                AbsolutePath = Path.GetFullPath(path);
+                AbsoluteUri = new Uri(AbsolutePath);
+                CheckedExistence = false;
+            }
+
             public string MakeRelative(string cwd) {
                 Uri folder = new Uri(Path.GetFullPath(cwd) + Path.DirectorySeparatorChar);
                 return Uri.UnescapeDataString(folder.MakeRelativeUri(AbsoluteUri).ToString().Replace('/', Path.DirectorySeparatorChar));
@@ -43,11 +49,9 @@ namespace DataTool.SaveLogic {
                 if (!Records[guid].CheckedExistence) {
                     if (!Records.TryGetValue(guid, out var record)) return false;
 
-                    if (!File.Exists(record.AbsolutePath) &&
-                        !File.Exists(Path.ChangeExtension(record.AbsolutePath, "dds")) &&
-                        !File.Exists(Path.ChangeExtension(record.AbsolutePath, "tif")) &&
-                        !File.Exists(Path.ChangeExtension(record.AbsolutePath, "png")) &&
-                        !File.Exists(Path.ChangeExtension(record.AbsolutePath, "jpg"))) {
+                    var fileName = Path.GetFileNameWithoutExtension(record.AbsolutePath);
+                    var dir = new DirectoryInfo(Path.GetDirectoryName(record.AbsolutePath)!);
+                    if (!dir.Exists || dir.GetFiles(fileName + ".*").Length == 0) {
                         RemoveRecord(guid);
                         return false;
                     }
@@ -146,7 +150,7 @@ namespace DataTool.SaveLogic {
                 for (ulong i = 0; i < amount; ++i) {
                     ulong guid = reader.ReadUInt64();
                     string path = reader.ReadString();
-                    cb(guid, new ScratchPath(path, false));
+                    cb(guid, new ScratchPath(path));
                 }
             },
             (reader, dbPath, cb) => {
@@ -158,7 +162,7 @@ namespace DataTool.SaveLogic {
                 for (ulong i = 0; i < amount; ++i) {
                     ulong guid = reader.ReadUInt64();
                     string path = reader.ReadString();
-                    cb(guid, new ScratchPath(path, false));
+                    cb(guid, new ScratchPath(path));
                 }
             }
         };
