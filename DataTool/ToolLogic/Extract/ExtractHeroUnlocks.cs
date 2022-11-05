@@ -322,7 +322,7 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STU_6A808718))) {
-                SprayAndIcon.Save(flags, thisPath, unlock);
+                AnimationItem.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STU_A458D547))) {

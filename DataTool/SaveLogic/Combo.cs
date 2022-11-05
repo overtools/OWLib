@@ -810,16 +810,7 @@ namespace DataTool.SaveLogic {
                 if (convertType is "tif") {
                     surface.SaveAsTiff(dest);
                 } else {
-                    surface.SaveAsPng(dest, new PngEncoder() {
-                        BitDepth = PngBitDepth.Bit8,
-                        ColorType = PngColorType.RgbWithAlpha,
-                        InterlaceMethod = PngInterlaceMode.None,
-                        TransparentColorMode = PngTransparentColorMode.Preserve,
-                        IgnoreMetadata = true,
-                        FilterMethod = PngFilterMethod.None,
-                        ChunkFilter = PngChunkFilter.ExcludeAll,
-                        CompressionLevel = PngCompressionLevel.BestCompression
-                    });
+                    surface.SaveAsPng(dest);
                 }
             }
         }
