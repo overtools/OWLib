@@ -800,17 +800,6 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static PngEncoder _pngEncoder = new() {
-            BitDepth = PngBitDepth.Bit8,
-            ColorType = PngColorType.RgbWithAlpha,
-            InterlaceMethod = PngInterlaceMode.None,
-            TransparentColorMode = PngTransparentColorMode.Preserve,
-            IgnoreMetadata = true,
-            FilterMethod = PngFilterMethod.None,
-            ChunkFilter = PngChunkFilter.ExcludeAll,
-            CompressionLevel = PngCompressionLevel.BestCompression
-        };
-
         private static void ConvertTexture(teTexture texture, bool splitMultiSurface, bool createMultiSurfaceSheet, string filePath, string convertType) {
             var tex = new TexDecoder(texture);
             var surfaceCount = splitMultiSurface && !createMultiSurfaceSheet ? tex.Surfaces : 1;
@@ -821,7 +810,16 @@ namespace DataTool.SaveLogic {
                 if (convertType is "tif") {
                     surface.SaveAsTiff(dest);
                 } else {
-                    surface.SaveAsPng(dest, _pngEncoder);
+                    surface.SaveAsPng(dest, new PngEncoder() {
+                        BitDepth = PngBitDepth.Bit8,
+                        ColorType = PngColorType.RgbWithAlpha,
+                        InterlaceMethod = PngInterlaceMode.None,
+                        TransparentColorMode = PngTransparentColorMode.Preserve,
+                        IgnoreMetadata = true,
+                        FilterMethod = PngFilterMethod.None,
+                        ChunkFilter = PngChunkFilter.ExcludeAll,
+                        CompressionLevel = PngCompressionLevel.BestCompression
+                    });
                 }
             }
         }
