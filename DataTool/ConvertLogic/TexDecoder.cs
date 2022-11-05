@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics;
-using System.Runtime.Intrinsics.X86;
 using AssetRipper.TextureDecoder.Bc;
 using AssetRipper.TextureDecoder.Rgb;
+using AssetRipper.TextureDecoder.Rgb.Formats;
 using JetBrains.Annotations;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -32,50 +29,50 @@ namespace DataTool.ConvertLogic {
                 var interm = PixelData.Slice(Pixels * surface, Pixels).Span;
                 switch (format) {
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R32G32B32A32_FLOAT: {
-                        RgbConverter.RGBAFloatToBGRA32(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorRGBASingle, float, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_FLOAT: {
-                        RgbConverter.RGBAHalfToBGRA32(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorRGBAHalf, Half, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16_FLOAT: {
-                        RgbConverter.RGHalfToBGRA32(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorRGHalf, Half, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16_FLOAT: {
-                        RgbConverter.RHalfToBGRA32(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorRHalf, Half, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_UNORM:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_SNORM:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_UINT:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_SINT: {
-                        RgbConverter.RGBA64ToBGRA32(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorRGBA64, ushort, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R11G11B10_FLOAT:{
-                        RgbConverter.R11G11B10FloatToBGRA32(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorRGB32Half, Half, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UINT:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_SINT: {
-                        RgbConverter.RGBA32ToBGRA32(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorRGBA32, byte, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8_UNORM:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8_UINT:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8_SINT: {
-                        RgbConverter.RG16ToBGRA32(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorRG16, byte, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_UNORM:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_SNORM:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_UINT:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8_SINT: {
-                        RgbConverter.R8ToBGRA32(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorR8, byte, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC1_UNORM:
@@ -105,36 +102,6 @@ namespace DataTool.ConvertLogic {
                         throw new NotImplementedException($"Unsupported format {format}");
                 }
             }
-
-            // // unshuffle bgra into rgba using Vector256
-            // var vectorSize = Vector256<byte>.Count;
-            // var vectorCount = Pixels / vectorSize;
-            // var vectorRemainder = Pixels % vectorSize;
-            // if (Avx2.IsSupported) {
-            //     var vectorSpan = MemoryMarshal.Cast<byte, Vector256<byte>>(PixelData.Span[..^vectorRemainder]);
-            //     Vector256<byte> Shuffle = Vector256.Create((byte) 2, 1, 0, 3, 6, 5, 4, 7, 10, 9, 8, 11, 14, 13, 12, 15, 18, 17, 16, 19, 22, 21, 20, 23, 26, 25, 24, 27, 30, 29, 28, 31);
-            //     for (var i = 0; i < vectorCount; i++) {
-            //         vectorSpan[i] = Avx2.Shuffle(vectorSpan[i], Shuffle);
-            //     }
-            // } else {
-            //     vectorCount = 0;
-            //     vectorRemainder = Pixels;
-            // }
-            //
-            // // handle remainder
-            // if (vectorRemainder > 0) {
-            //     var remainder = PixelData.Span[(vectorCount * vectorSize)..];
-            //     for (var i = 0; i < remainder.Length; i += 4) {
-            //         var b = remainder[i];
-            //         var g = remainder[i + 1];
-            //         var r = remainder[i + 2];
-            //         var a = remainder[i + 3];
-            //         remainder[i] = r;
-            //         remainder[i + 1] = g;
-            //         remainder[i + 2] = b;
-            //         remainder[i + 3] = a;
-            //     }
-            // }
         }
 
         public Image<Bgra32> GetSheet() {
