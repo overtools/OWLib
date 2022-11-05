@@ -959,7 +959,7 @@ namespace DataTool.SaveLogic {
                 }
 
                 if (Program.Flags.Deduplicate) {
-                    if (ScratchDBInstance.SetRecord(soundFileInfo.m_GUID, new ScratchDB.ScratchPath(Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.ogg")))) {
+                    if (!ScratchDBInstance.SetRecord(soundFileInfo.m_GUID, new ScratchDB.ScratchPath(Path.Combine(directory, $"{name ?? soundFileInfo.GetName()}.ogg")))) {
                         return;
                     }
                 }
