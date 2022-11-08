@@ -29,19 +29,19 @@ namespace DataTool.ConvertLogic {
                 var interm = PixelData.Slice(Pixels * surface, Pixels).Span;
                 switch (format) {
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R32G32B32A32_FLOAT: {
-                        RgbConverter.Convert<ColorRGBASingle, float, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorRGBA128Single, float, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_FLOAT: {
-                        RgbConverter.Convert<ColorRGBAHalf, Half, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorRGBA64Half, Half, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16_FLOAT: {
-                        RgbConverter.Convert<ColorRGHalf, Half, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorR16Half, Half, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16_FLOAT: {
-                        RgbConverter.Convert<ColorRHalf, Half, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
+                        RgbConverter.Convert<ColorR16Half, Half, ColorBGRA32, byte>(data, Texture.Header.Width, Texture.Header.Height, interm);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16B16A16_UNORM:
