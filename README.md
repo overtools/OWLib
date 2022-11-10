@@ -2,21 +2,19 @@
 
 Series of programs (tools) to interact with the Overwatch files.
 
-**.NET 5 Runtime (64-bit) is required. Download here: https://dotnet.microsoft.com/download/dotnet/5.0/runtime**
-
-## Downloads
-You can find mostly stable releases on the AppVeyor page here:  
-https://ci.appveyor.com/project/yretenai/owlib/history
-
-## Help & Discussion
-For most discussion related to the tools and for support, join our Discord. https://discord.gg/XM93ZdB  
-
-
-You can also find some help and tutorials on the wiki here:  
-https://owdev.wiki/Main_Page
+## Downloads & Help
+Downloads for the tools and updates are posted on our Discord where you can also find support and disccusion around using them.  
+Join the Discord here:  https://discord.gg/XM93ZdB  
 
 ## How to use
-Run DataTool.exe for a list of help and supported commands.  
+DataTool is a command line application which means you need to know how to use a command line.
+
+0. Make sure Overwatch is installed.
+1. Download the latest relase from our Discord
+2. Extract the all the files to a folder, do not put it in your Overwatch Directory.
+3. Open a command line in the folder where you extracted the files.
+4. Run DataTool.exe via command line for a list of help and supported commands.
+
 Most commands follow the structure `DataTool.exe <overwatch_directory> <mode> [mode args]`
 
 ### Example List Commands
@@ -28,36 +26,24 @@ DataTool.exe "C:\Games\Overwatch" list-achievements
 ```
 
 ### Example Extract Commands
-Extract commands follow the struture `DataTool.exe <overwatch_directory> <mode> <output_directory> [filters]`  
-Filters follow the format `{hero name}|{type}=({tag name}={tag}),{item name}`. You can specify `*` for the hero name or the type for everything.  
-Valid types include: skin, icon, spray, victorypose, emote, voiceline
 
-Some of the extract commands:
+Some of the more common extract commands include:
  * extract-unlocks - ex all hero unlocks such as skins, highlight intros, emotes, sprays, icons
  * extract-general - handles extracting all all class unlocks such as all class sprays and icons and portraits
- * extract-hero-voice-better - extracts hero voicelines and subtitles
  * extract-maps - extract maps
+ * extract-hero-voice-better - extracts all heroes voicelines and groups them by type (kinda)
+ 
+ In most cases when using extract commands, you must provide the name of what you want to extract or use `*` for everything.  
+ See below for some examples.
 
-#### Example Filters
-```
-"*"                                   // Everything
-"*|skin=*"                            // All Heroes Skins
-"Lúcio|skin=Classic"                  // Lucio's Classic Skin
-"Torbjörn|skin=(rarity=legendary)"    // Torbjörn's Legendary Skins
-"D.Va|skin=(event=summergames)"       // D.Va's Summer Games skins
-"Reaper|spray=*"                      // Reaper's sprays
-"Reaper|spray=(event=!halloween)"     // Reaper's sprays that are not from Halloween
-"Reaper|spray=!Cute,*"                // Reaper's sprays except "Cute" spray
-"Soldier: 76|skin=Daredevil: 76" "Roadhog|spray=Pixel" // Soldier 76's Daredevil skin and Roadhogs Pixel spray
-```
 
 #### Example Commands
 ```
-Tracers Classic Skin (You can enter the name of any skin):
-DataTool.exe "C:\Games\Overwatch" extract-unlocks "C:\Games\Extracts" "Tracer|skin=Classic"
+Tracers Overwatch 1 Skin (You can enter the name of any skin):
+DataTool.exe "C:\Games\Overwatch" extract-unlocks "C:\Games\Extracts" "Tracer|skin=Overwatch 1"
 
-All Heroes Classic Skins:
-DataTool.exe "C:\Games\Overwatch" extract-unlocks "C:\Games\Extracts" "*|skin=Classic"
+All Heroes Overwatch 1 Skins:
+DataTool.exe "C:\Games\Overwatch" extract-unlocks "C:\Games\Extracts" "*|skin=Overwatch 1"
 
 All Heroes Skins (will take long time):
 DataTool.exe "C:\Games\Overwatch" extract-unlocks "C:\Games\Extracts" "*|skin=*"
@@ -73,6 +59,21 @@ DataTool.exe "C:\Games\Overwatch" extract-maps "C:\Games\Extracts" *
 
 Extract Tracers Voicelines
 DataTool.exe "C:\Games\Overwatch" extract-hero-voice-better "C:\Games\Extracts" Tracer
+```
+
+#### Extract Unlocks filters
+The extract unlocks command supports extracting a lot of data and you can filter to specifically what you want.  
+The command structure looks like: `DataTool.exe <overwatch_directory> extract-unlocks <output_directory> [filters]`  
+Filters follow the format `{hero name}|{type}={item name}`. You can specify `*` for the hero name or the type for everything.  
+Valid types include: skin, icon, spray, victorypose, emote, voiceline
+
+#### Example Filters
+```
+"*"                                   // Everything (all heroes skins, sprays, etc) (very slow)
+"*|skin=*"                            // All Heroes Skins
+"Tracer|skin=Overwatch 1"             // Tracers Overwatch 1 skin
+"Reaper|spray=*"                      // Reaper's sprays
+"Reaper|voiceline=*"                  // Reapers unlockable voicelines
 ```
 
 ## Disclaimer
