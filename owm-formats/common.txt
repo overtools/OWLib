@@ -1,0 +1,27 @@
+uleb128:
+    https://en.wikipedia.org/wiki/LEB128#Decode_unsigned_integer
+
+string:
+    uleb128 length;
+    uint8[] text[length];
+
+vector2:
+    float x;
+    float y;
+
+vector:
+    float x;
+    float y;
+    float z;
+
+vector4:
+    float x;
+    float y;
+    float z;
+    float w;
+
+quaternion:
+    float x;
+    float y;
+    float z;
+    float w;

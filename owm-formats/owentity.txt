@@ -1,0 +1,24 @@
+// see common.txt for shared structures such as string
+
+VERSION 2.0
+
+owentity:
+    string identifier = "owentity";
+    uint16 version_major = 2;
+    uint16 version_minor = 0;
+    string name;
+    string model_name;
+    string effect_name;
+    uint32 guid;
+    uint32 model_guid;
+    uint32 effect_guid;
+    uint32 subentity_count;
+    subentity subentities[subentity_count];
+
+subentity:
+    string path;
+    uint64 hardpoint_guid;
+    uint64 id_guid;
+    uint32 hardpoint;
+    uint32 id;
+    string hardpoint_name;

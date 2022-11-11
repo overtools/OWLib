@@ -1,0 +1,51 @@
+// see common.txt for shared structures such as string
+
+VERSION 2.1
+
+owmap:
+    uint16 version_major = 2;
+    uint16 version_minor = 1;
+    string name;
+    uint32 object_count;
+    uint32 prop_count;
+    uint32 light_count;
+    object objects[object_count];
+    prop props[prop_count];
+    light lights[light_count];
+    uint32 sound_count;
+
+object:
+    string model_path;
+    uint32 group_count;
+    group groups[group_count];
+
+group:
+    string material_path;
+    uint32 instance_count;
+    instance instances[instance_count];
+
+instance:
+    vector position;
+    vector scale;
+    quaternion rotation;
+
+prop:
+    string model_path;
+    string material_path;
+    vector position;
+    vector scale;
+    quaternion rotation;
+
+light:
+    vector position;
+    quaternion rotation;
+    enum { point, spot } type;
+    float fov;
+    vector4 color;
+    float intensity;
+    uint64 projection_guids[2];
+
+sound:
+    vector position;
+    uint32 count;
+    string sound_paths[count];
