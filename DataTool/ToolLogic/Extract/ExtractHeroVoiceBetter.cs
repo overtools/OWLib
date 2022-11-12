@@ -84,7 +84,7 @@ namespace DataTool.ToolLogic.Extract {
 
                         TACTLib.Logger.Debug("Tool", $"Processing skin {unlock.GetName()}");
                         Combo.ComboInfo info = default;
-                        var skinTheme = GetInstance<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
+                        var skinTheme = GetInstance<STUSkinBase>(unlockSkinTheme.m_skinTheme);
                         if (skinTheme == null) {
                             continue;
                         }

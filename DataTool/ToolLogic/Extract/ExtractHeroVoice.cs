@@ -133,7 +133,7 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         private static void SaveSkin(ICLIFlags flags, ulong skinResource, string basePath, STUHero hero, string heroFileName, string name, STUVoiceSetComponent baseComponent, Combo.ComboInfo baseInfo) {
-            STUSkinTheme skin = GetInstance<STUSkinTheme>(skinResource);
+            STUSkinBase skin = GetInstance<STUSkinBase>(skinResource);
             if (skin == null)
                 return;
 
