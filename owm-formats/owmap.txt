@@ -13,6 +13,7 @@ owmap:
     prop props[prop_count];
     light lights[light_count];
     uint32 sound_count;
+    sound sounds[sound_count];
 
 object:
     string model_path;
