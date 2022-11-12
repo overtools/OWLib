@@ -16,8 +16,8 @@ using TankLib.STU.Types;
 using static DataTool.Helper.SpellCheckUtils;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-hero-voice", Description = "Extract hero voice sounds", CustomFlags = typeof(ExtractFlags))]
-    public class ExtractHeroVoice : QueryParser, ITool, IQueryParser {
+    [Tool("extract-hero-voice-old", IsSensitive = true, Description = "Extract hero voice sounds", CustomFlags = typeof(ExtractFlags))]
+    public class ExtractHeroVoiceOld : QueryParser, ITool, IQueryParser {
         public List<QueryType> QueryTypes => new List<QueryType> {new QueryType {Name = "soundRestriction", HumanName = "Sound"}, new QueryType {Name = "groupRestriction", HumanName = "Group"}};
 
         public Dictionary<string, string> QueryNameOverrides => null;

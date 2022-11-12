@@ -16,9 +16,14 @@ using static DataTool.Helper.IO;
 using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-hero-voice-better", Description = "Extracts hero voicelines but groups them a bit better.", CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-hero-voice", Description = "Extracts hero voicelines.", CustomFlags = typeof(ExtractFlags))]
+    class ExtractHeroVoice : ExtractHeroVoiceBetter {
+        protected override string Container => "HeroVoice";
+    }
+
+    [Tool("extract-hero-voice-better", IsSensitive = true, Description = "Extracts hero voicelines but groups them a bit better.", CustomFlags = typeof(ExtractFlags))]
     class ExtractHeroVoiceBetter : JSONTool, ITool {
-        private const string Container = "BetterHeroVoice";
+        protected virtual string Container => "BetterHeroVoice";
         private static readonly HashSet<ulong> SoundIdCache = new HashSet<ulong>();
 
         public void Parse(ICLIFlags toolFlags) {
