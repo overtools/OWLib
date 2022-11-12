@@ -3,7 +3,7 @@ uleb128:
 
 string:
     uleb128 length;
-    uint8[] text[length];
+    uint8 text[length];
 
 vector2:
     float x;
