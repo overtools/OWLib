@@ -16,7 +16,7 @@
 4,078,Pain,1
 8,078,Elimination,1
 9,078,Objective/CaptureInProgress,1
-B,078,TeammateKilled,1
+B,078,Teammate/Killed,1
 C,078,EnemySeen,1
 D,078,MatchTalk,1
 12,078,Objective/EnemyMovingPayload,1
@@ -24,7 +24,7 @@ D,078,MatchTalk,1
 15,078,Objective/EnemyCaptureInProgress,1
 17,078,Objective/PayloadMoving,1
 19,078,UltimateSeenRemark,1
-1B,078,TeamElimination,1
+1B,078,Teammate/KillSeen,1
 1E,078,DeathExplosion,1
 1F,078,Health/LowHealthBreathStart,1
 20,078,Health/LowHealthBreathEnd,1
@@ -55,7 +55,7 @@ D,078,MatchTalk,1
 B7,078,Stagger,1
 B6,078,Knockdown,1
 C9,078,Killstreak,1
-CA,078,RescueTeammate,1
+CA,078,Teammate/Resuce,1
 CC,078,DamageBoosted,1
 CD,078,Objective/PayloadStopped,1
 CE,078,Objective/RunningOutOfTime,1
@@ -215,10 +215,10 @@ D8,078,Turret/EnemyTurretSeen,1
 7A9,078,Uprising/SlicerDestroyed,1
 7AA,078,Uprising/EradicatorDestroyed,1
 7AB,078,Uprising/EradicatorIncoming,1
-7AC,078,Uprising/Revived,1
+7AC,078,Teammate/Revive,1
 7AD,078,Uprising/PlayerDown,1
 7D1,078,EnemySeenCallout,1
-7D8,078,TeammateDown,1
+7D8,078,Teammate/Downed,1
 7DA,078,Objective/Meet,1
 7DB,078,Objective/Defend,1
 7DC,078,Objective/Take,1
@@ -226,7 +226,7 @@ D8,078,Turret/EnemyTurretSeen,1
 7DE,078,Objective/Destroy,1
 7DF,078,Objective/Damaged,1
 7E0,078,Objective/AlmostDestroyed,1
-7E1,078,OneTeammateRemaining,1
+7E1,078,Teammate/OneRemaining,1
 7E2,078,TimeRunningOut,1
 7E3,078,MissionAlmostDone,1
 7E4,078,Objective/EnemyDestroyed,1
@@ -234,7 +234,7 @@ D8,078,Turret/EnemyTurretSeen,1
 7E6,078,Objective/Kill,1
 7E7,078,Objective/Eliminated,1
 7EE,078,EnemyComingDoorway,1
-7EF,078,TeammateLocation,1
+7EF,078,Teammate/Location,1
 7F0,078,GroupUpContinue,1
 7F1,078,Uprising/AlmostDone,1
 7F2,078,Uprising/Misc,1
@@ -353,18 +353,21 @@ D25,078,StormRising/Conversations,1
 1D6,078,EnemyKilled/DeadEye,1
 11CE,078,EnemyKilled/CallMech,1
 11D7,078,Elimination,1
+115B,078,MatchTalk,1
 ; Voice line StateScript 01C ids,,,
 A809,01C,LongDistance,1
 A5FD,01C,NanoBoosted,1
 A697,01C,EnemyNanoBoosted,1
-A617,01C,UsingUltimate,1
-A5B5,01C,EnemyUsingUltimate,1
+A617,01C,EnemyUsingUltimate,1
+A5B5,01C,UsingUltimate,1
 9268,01C,EnemyInAir,1
 A776,01C,InAir,1
 A6FE,01C,MovingFast,1
 A753,01C,Jumped,1
 A81C,01C,LowHealth,1
 A752,01C,Melee,1
+A775,01C,DirectHit,1
+AD8E,01C,EnemyClose,1
 A22A,01C,ZaryaUlt,1
 A6B2,01C,SigmaUlt,1
 9227,01C,Headshot,1
