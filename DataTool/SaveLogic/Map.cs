@@ -308,6 +308,7 @@ namespace DataTool.SaveLogic {
 
                 OverwatchMap exportMap = new OverwatchMap(name, info, placeableSingleModels, placeableModelGroups, placeableModel, placeableEntities, placeableLights, placeableSounds, placeableEffects);
                 using (Stream outputStream = File.OpenWrite(Path.Combine(mapPath, $"{variantName}.{exportMap.Extension}"))) {
+                    outputStream.SetLength(0);
                     exportMap.Write(outputStream);
                 }
 
