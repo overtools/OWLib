@@ -209,7 +209,7 @@ namespace DataTool.SaveLogic {
 
                     FindLogic.Combo.ModelAsset modelInfo = Info.m_models[Model];
 
-                    writer.Write(Path.Combine("Models", modelInfo.GetName(), OverwatchAnimationEffect.AnimationEffectDir, Animation.GetNameIndex(), Animation.GetNameIndex() + $".{Extension}")); // so I can change it in DataTool and not go mad
+                    writer.Write(Path.Combine("Models", modelInfo.GetName(), OverwatchAnimationEffect.AnimationEffectDir, Animation.GetNameIndex(), Animation.GetNameIndex() + ".oweffect"));
                 }
             }
         }
