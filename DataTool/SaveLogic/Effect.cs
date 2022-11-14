@@ -76,7 +76,7 @@ namespace DataTool.SaveLogic {
                         writer.Write("null");
                     } else {
                         FindLogic.Combo.AnimationAsset animationInfo = Info.m_animations[dmceInfo.Animation];
-                        writer.Write(Path.Combine("Models", modelInfo.GetName(), OverwatchAnimationEffect.AnimationEffectDir, animationInfo.GetNameIndex(), animationInfo.GetNameIndex() + ".owanim"));
+                        writer.Write(Path.Combine("Models", modelInfo.GetName(), OverwatchAnimationEffect.AnimationEffectDir, animationInfo.GetNameIndex(), animationInfo.GetNameIndex() + ".oweffect"));
                     }
                 }
 
@@ -88,7 +88,7 @@ namespace DataTool.SaveLogic {
                     writer.Write(teResourceGUID.Index(ceceInfo.Identifier));
                     if (ceceInfo.Animation != 0) {
                         FindLogic.Combo.AnimationAsset animationInfo = Info.m_animations[ceceInfo.Animation];
-                        writer.Write(Path.Combine(OverwatchAnimationEffect.AnimationEffectDir, animationInfo.GetNameIndex(), animationInfo.GetNameIndex() + ".owanim"));
+                        writer.Write(Path.Combine(OverwatchAnimationEffect.AnimationEffectDir, animationInfo.GetNameIndex(), animationInfo.GetNameIndex() + ".oweffect"));
                     } else {
                         writer.Write("null");
                     }
@@ -137,9 +137,9 @@ namespace DataTool.SaveLogic {
         }
 
         public class OverwatchAnimationEffect : OverwatchEffect {
-            public override string Extension => "owanim";
+            public override string Extension => "oweffect";
 
-            public const string AnimationEffectDir = "AnimationEffects";
+            public const string AnimationEffectDir = "Effects";
 
             protected readonly FindLogic.Combo.AnimationAsset Animation;
             protected readonly ulong Model;
@@ -166,7 +166,7 @@ namespace DataTool.SaveLogic {
 
             public override void Write(Stream stream) {
                 using (BinaryWriter writer = new BinaryWriter(stream)) {
-                    writer.Write(Extension);
+                    writer.Write("owanim");
                     writer.Write(AnimVersionMajor);
                     writer.Write(AnimVersionMinor);
                     writer.Write(teResourceGUID.Index(Animation.m_GUID));
