@@ -73,7 +73,7 @@ namespace DataTool.SaveLogic.Unlock {
         }
 
         public static void SaveCore(ICLIFlags flags, string directory, STUSkinBase skin, FindLogic.Combo.ComboInfo info) {
-            Dictionary<ulong, ulong> replacements = GetReplacements(skin) ?? new Dictionary<ulong, ulong>();
+            Dictionary<ulong, ulong> replacements = GetReplacements(skin);
 
             FindSoundFiles(flags, directory, replacements);
 
@@ -183,15 +183,14 @@ namespace DataTool.SaveLogic.Unlock {
         /// Pass these replacements into Combo.Find to make sure you're getting the right files for a specific skin theme.
         /// </summary>
         public static Dictionary<ulong, ulong> GetReplacements(STUSkinBase skin) {
-            if (skin?.m_runtimeOverrides == null) {
-                return null;
-            }
+            if (skin == null) return null;
 
             var replacements = new Dictionary<ulong, ulong>();
-            foreach (var (key, value) in skin.m_runtimeOverrides) {
-                replacements[key] = value.m_3D884507;
+            if (skin.m_runtimeOverrides != null) {
+                foreach (var (key, value) in skin.m_runtimeOverrides) {
+                    replacements[key] = value.m_3D884507;
+                }
             }
-
             return replacements;
         }
     }

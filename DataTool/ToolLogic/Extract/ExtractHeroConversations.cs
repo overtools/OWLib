@@ -118,7 +118,7 @@ namespace DataTool.ToolLogic.Extract {
                             continue;
 
                         var replacements = SkinTheme.GetReplacements(skinTheme);
-                        foreach (var (_, newVoiceSetGuid) in replacements ?? new Dictionary<ulong, ulong>()) {
+                        foreach (var (_, newVoiceSetGuid) in replacements) {
                             seenVoiceSets.Add(newVoiceSetGuid);
                         }
 
