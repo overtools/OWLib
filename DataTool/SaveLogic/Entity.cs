@@ -10,13 +10,15 @@ namespace DataTool.SaveLogic {
 
             protected readonly FindLogic.Combo.ComboInfo Info;
             protected readonly FindLogic.Combo.EntityAsset Entity;
+            protected readonly string PathsRelativeTo;
 
             public const ushort VersionMajor = 2;
-            public const ushort VersionMinor = 0;
+            public const ushort VersionMinor = 1;
 
-            public OverwatchEntity(FindLogic.Combo.EntityAsset entity, FindLogic.Combo.ComboInfo info) {
+            public OverwatchEntity(FindLogic.Combo.EntityAsset entity, FindLogic.Combo.ComboInfo info, string pathsRelativeTo) {
                 Info = info;
                 Entity = entity;
+                PathsRelativeTo = pathsRelativeTo;
             }
 
             public void Write(Stream stream) {
@@ -46,24 +48,32 @@ namespace DataTool.SaveLogic {
 
                     if (Entity.Children == null) {
                         writer.Write(0);
-                        return;
-                    }
+                    } else {
+                        writer.Write(Entity.Children.Count(x => x.m_defGUID != 0));
+                        foreach (FindLogic.Combo.ChildEntityReference childEntityReference in Entity.Children.Where(x => x.m_defGUID != 0)) {
+                            FindLogic.Combo.EntityAsset childEntityInfo = Info.m_entities[childEntityReference.m_defGUID];
 
-                    writer.Write(Entity.Children.Count(x => x.m_defGUID != 0));
-                    foreach (FindLogic.Combo.ChildEntityReference childEntityReference in Entity.Children.Where(x => x.m_defGUID != 0)) {
-                        FindLogic.Combo.EntityAsset childEntityInfo = Info.m_entities[childEntityReference.m_defGUID];
-
-                        writer.Write(childEntityInfo.GetName());
-                        writer.Write(childEntityReference.m_hardpointGUID);
-                        writer.Write(childEntityReference.m_identifier);
-                        writer.Write(teResourceGUID.Index(childEntityReference.m_hardpointGUID));
-                        writer.Write(teResourceGUID.Index(childEntityReference.m_identifier));
-                        if (childEntityReference.m_hardpointGUID != 0) {
-                            writer.Write(OverwatchModel.IdToString("hardpoint", teResourceGUID.Index(childEntityReference.m_hardpointGUID)));
-                        } else {
-                            writer.Write("null"); // erm, k
+                            writer.Write(childEntityInfo.GetName());
+                            writer.Write(childEntityReference.m_hardpointGUID);
+                            writer.Write(childEntityReference.m_identifier);
+                            writer.Write(teResourceGUID.Index(childEntityReference.m_hardpointGUID));
+                            writer.Write(teResourceGUID.Index(childEntityReference.m_identifier));
+                            if (childEntityReference.m_hardpointGUID != 0) {
+                                writer.Write(OverwatchModel.IdToString("hardpoint", teResourceGUID.Index(childEntityReference.m_hardpointGUID)));
+                            } else {
+                                writer.Write("null"); // erm, k
+                            }
                         }
                     }
+
+                    // 2.1
+                    if (Entity.m_modelLookGUID != 0) {
+                        FindLogic.Combo.ModelLookAsset lookInfo = Info.m_modelLooks[Entity.m_modelLookGUID];
+                        writer.Write(lookInfo.GetName());
+                    } else {
+                        writer.Write("null");
+                    }
+                    writer.Write(PathsRelativeTo);
                 }
             }
         }

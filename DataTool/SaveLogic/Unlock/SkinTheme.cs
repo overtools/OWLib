@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels.Hero;
@@ -14,12 +15,18 @@ namespace DataTool.SaveLogic.Unlock {
     public static class SkinTheme {
         public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock, STUHero hero) {
             if (!(unlock.STU is STUUnlock_SkinTheme unlockSkinTheme)) return;
-            STUSkinTheme skinTheme = GetInstance<STUSkinTheme>(unlockSkinTheme.m_skinTheme);
-            if (skinTheme == null) return;
-            if (hero == null) return;
+
+            var skinBase = GetInstance<STUSkinBase>(unlockSkinTheme.m_skinTheme);
+            if (skinBase == null) return;
 
             LoudLog($"\tExtracting skin {unlock.Name}");
-            Save(flags, directory, skinTheme, hero);
+            if (skinBase is STUSkinTheme skinTheme) {
+                Save(flags, directory, skinTheme, hero);
+            } else if (skinBase is STU_EF85B312 mythicSkin) {
+                MythicSkin.SaveMythicSkin(flags, directory, unlockSkinTheme.m_skinTheme, mythicSkin, hero);
+            } else {
+                throw new Exception($"wtf is a {skinBase.GetType()} when its at home");
+            }
         }
 
         public static void Save(ICLIFlags flags, string directory, STU_63172E83 skin, STUHero hero) {
@@ -29,13 +36,8 @@ namespace DataTool.SaveLogic.Unlock {
             Save(flags, directory, skinTheme, hero);
         }
 
-        public static void Save(ICLIFlags flags, string directory, STUSkinBase skin, STUHero hero) {
+        public static void FindEntities(FindLogic.Combo.ComboInfo info, STUSkinBase skin, STUHero hero) {
             Dictionary<ulong, ulong> replacements = GetReplacements(skin);
-
-            LoudLog("\t\tFinding");
-
-            FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            var saveContext = new Combo.SaveContext(info);
 
             FindLogic.Combo.Find(info, hero.m_gameplayEntity, replacements);
             info.SetEntityName(hero.m_gameplayEntity, "Gameplay3P");
@@ -51,6 +53,62 @@ namespace DataTool.SaveLogic.Unlock {
 
             FindLogic.Combo.Find(info, hero.m_8125713E, replacements);
             info.SetEntityName(hero.m_8125713E, "HighlightIntro");
+        }
+
+        public static void Save(ICLIFlags flags, string directory, STUSkinBase skin, STUHero hero) {
+            LoudLog("\t\tFinding");
+
+            FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
+            FindSkinStuff(skin, hero, info);
+
+            SaveCore(flags, directory, skin, info);
+        }
+
+        public static void SaveCore(ICLIFlags flags, string directory, STUSkinBase skin, FindLogic.Combo.ComboInfo info) {
+            Dictionary<ulong, ulong> replacements = GetReplacements(skin);
+
+            FindSoundFiles(flags, directory, replacements);
+
+            LoudLog("\t\tSaving");
+            var saveContext = new Combo.SaveContext(info);
+            Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext);
+            Combo.Save(flags, directory, saveContext);
+            LoudLog("\t\tDone");
+        }
+
+        public static void FindSoundFiles(ICLIFlags flags, string directory, Dictionary<ulong, ulong> replacements) {
+            string soundDirectory = Path.Combine(directory, "Sound");
+
+            FindLogic.Combo.ComboInfo diffInfoBefore = new FindLogic.Combo.ComboInfo();
+            FindLogic.Combo.ComboInfo diffInfoAfter = new FindLogic.Combo.ComboInfo();
+            var diffInfoAfterContext = new Combo.SaveContext(diffInfoAfter); // todo: remove
+
+            foreach (KeyValuePair<ulong, ulong> replacement in replacements) {
+                uint diffReplacementType = teResourceGUID.Type(replacement.Value);
+                if (diffReplacementType != 0x2C && diffReplacementType != 0x3F &&
+                    diffReplacementType != 0xB2) continue; // no voice sets, use extract-hero-voice
+                FindLogic.Combo.Find(diffInfoAfter, replacement.Value);
+                FindLogic.Combo.Find(diffInfoBefore, replacement.Key);
+            }
+
+            foreach (KeyValuePair<ulong, FindLogic.Combo.VoiceSetAsset> voiceSet in diffInfoAfter.m_voiceSets) {
+                if (diffInfoBefore.m_voiceSets.ContainsKey(voiceSet.Key)) continue;
+                Combo.SaveVoiceSet(flags, soundDirectory, diffInfoAfterContext, voiceSet.Key);
+            }
+
+            foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in diffInfoAfter.m_soundFiles) {
+                if (diffInfoBefore.m_soundFiles.ContainsKey(soundFile.Key)) continue;
+                Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, false);
+            }
+
+            foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in diffInfoAfter.m_voiceSoundFiles) {
+                if (diffInfoBefore.m_voiceSoundFiles.ContainsKey(soundFile.Key)) continue;
+                Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, true);
+            }
+        }
+
+        private static void FindSkinStuff(STUSkinBase skin, STUHero hero, FindLogic.Combo.ComboInfo info) {
+            Dictionary<ulong, ulong> replacements = GetReplacements(skin);
 
             if (skin is STUSkinTheme skinTheme) {
                 info.m_processExistingEntities = true;
@@ -74,7 +132,7 @@ namespace DataTool.SaveLogic.Unlock {
 
                 for (var index = 0; index < weaponReplacementStack.Count; index++) {
                     foreach (var pair in weaponReplacementStack[index].Where(pair => pair.Key != pair.Value && info.m_modelLooks.ContainsKey(pair.Value) && info.m_modelLooks[pair.Value].m_name == null)) {
-                        info.SetModelLookName(pair.Value, $"{(STUWeaponType) index:G}-{teResourceGUID.Index(pair.Value):X}");
+                        info.SetModelLookName(pair.Value, $"{(STUWeaponType)index:G}-{teResourceGUID.Index(pair.Value):X}");
                     }
                 }
 
@@ -92,42 +150,6 @@ namespace DataTool.SaveLogic.Unlock {
                 info.SetTextureProcessIcon(tex.m_texture);
                 info.SetTextureFileType(tex.m_texture, "png");
             }
-
-            if (replacements != null) {
-                string soundDirectory = Path.Combine(directory, "Sound");
-
-                FindLogic.Combo.ComboInfo diffInfoBefore = new FindLogic.Combo.ComboInfo();
-                FindLogic.Combo.ComboInfo diffInfoAfter = new FindLogic.Combo.ComboInfo();
-                var diffInfoAfterContext = new Combo.SaveContext(diffInfoAfter); // todo: remove
-
-                foreach (KeyValuePair<ulong, ulong> replacement in replacements) {
-                    uint diffReplacementType = teResourceGUID.Type(replacement.Value);
-                    if (diffReplacementType != 0x2C && diffReplacementType != 0x3F &&
-                        diffReplacementType != 0xB2) continue; // no voice sets, use extract-hero-voice
-                    FindLogic.Combo.Find(diffInfoAfter, replacement.Value);
-                    FindLogic.Combo.Find(diffInfoBefore, replacement.Key);
-                }
-
-                foreach (KeyValuePair<ulong, FindLogic.Combo.VoiceSetAsset> voiceSet in diffInfoAfter.m_voiceSets) {
-                    if (diffInfoBefore.m_voiceSets.ContainsKey(voiceSet.Key)) continue;
-                    Combo.SaveVoiceSet(flags, soundDirectory, diffInfoAfterContext, voiceSet.Key);
-                }
-
-                foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in diffInfoAfter.m_soundFiles) {
-                    if (diffInfoBefore.m_soundFiles.ContainsKey(soundFile.Key)) continue;
-                    Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, false);
-                }
-
-                foreach (KeyValuePair<ulong, FindLogic.Combo.SoundFileAsset> soundFile in diffInfoAfter.m_voiceSoundFiles) {
-                    if (diffInfoBefore.m_voiceSoundFiles.ContainsKey(soundFile.Key)) continue;
-                    Combo.SaveSoundFile(flags, soundDirectory, diffInfoAfterContext, soundFile.Key, true);
-                }
-            }
-
-            LoudLog("\t\tSaving");
-            Combo.SaveLooseTextures(flags, Path.Combine(directory, "GUI"), saveContext);
-            Combo.Save(flags, directory, saveContext);
-            LoudLog("\t\tDone");
         }
 
         private static void SetPreviewWeaponNames(FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> weaponReplacements, STU_A0872511[] entities, int index) {

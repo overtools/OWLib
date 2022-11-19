@@ -120,10 +120,10 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        public static void SaveEntity(ICLIFlags flags, string path, SaveContext context, ulong entityGuid) {
+        public static void SaveEntity(ICLIFlags flags, string path, SaveContext context, ulong entityGuid, string pathsRelativeTo="../..") {
             FindLogic.Combo.EntityAsset entityInfo = context.m_info.m_entities[entityGuid];
 
-            Entity.OverwatchEntity entity = new Entity.OverwatchEntity(entityInfo, context.m_info);
+            Entity.OverwatchEntity entity = new Entity.OverwatchEntity(entityInfo, context.m_info, pathsRelativeTo);
 
             string entityDir = Path.Combine(path, "Entities", entityInfo.GetName());
             string outputFile = Path.Combine(entityDir, entityInfo.GetName() + $".{entity.Extension}");

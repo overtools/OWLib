@@ -47,8 +47,8 @@ namespace TankLib.Helpers.Hash {
             0x54de5729, 0x23d967bf, 0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94,
             0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
         };
-        
-        private static readonly ulong[] CRC64Tab = {
+
+        public static readonly ulong[] CRC64Tab = {
             0x0000000000000000, 0x7ad870c830358979,
             0xf5b0e190606b12f2, 0x8f689158505e9b8b,
             0xc038e5739841b68f, 0xbae095bba8743ff6,
@@ -178,7 +178,7 @@ namespace TankLib.Helpers.Hash {
             0xa6df411fbfb21ca3, 0xdc0731d78f8795da,
             0x536fa08fdfd90e51, 0x29b7d047efec8728
         };
-        
+
         public static unsafe uint CRC32(byte[] data, int size = -1, uint crc=0) {
             if (size == -1) size = data.Length;
             if (size > data.Length) throw new IndexOutOfRangeException("CRC64 out of range");
@@ -187,7 +187,7 @@ namespace TankLib.Helpers.Hash {
                 return CRC32(b, size, crc);
             }
         }
-        
+
         public static unsafe uint CRC32(byte* buf, int size, uint crc=0) {
             crc = ~crc;
             while (size-- > 0)
@@ -203,7 +203,7 @@ namespace TankLib.Helpers.Hash {
                 return CRC64(b, size, crc);
             }
         }
-        
+
         public static unsafe ulong CRC64(byte* buf, int size, ulong crc=0) {
             crc = ~crc;
             while (size-- > 0)
