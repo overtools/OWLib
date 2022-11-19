@@ -70,8 +70,13 @@ namespace DataTool {
                 Logger.Error("Core", "You need to replace {overwatch_directory} with the location you have Overwatch installed to. It can be found in Battle.net. Remember to surround it with quotes");
                 return;
             }
+            // todo: this code cant detect e.g `"c:\mypath\" list-heroes` because flags validation fails
             if (Flags.OverwatchDirectory.EndsWith("\"")) {
                 Logger.Error("Core", "The Overwatch directory you passed will confuse the tool! Please remove the last \\ character");
+                return;
+            }
+            if (Flags.OverwatchDirectory.StartsWith("{") || Flags.OverwatchDirectory.EndsWith("}")) {
+                Logger.Error("Core", "Do not include { or } in the Overwatch directory you pass to the tool. The path should be surrounded with quotation marks only");
                 return;
             }
 
@@ -149,9 +154,13 @@ namespace DataTool {
                     Logger.Error("Core", "You need to replace {output_directory} with where you want the output files to go. Can just be something like \"out\" and a folder will be created next to the tool");
                     return;
                 }
+                if (extractFlags.OutputPath.StartsWith("{") || extractFlags.OutputPath.EndsWith("}")) {
+                    Logger.Error("Core", "Do not include { or } in the output directory you pass to the tool. The path should be surrounded with quotation marks only");
+                    return;
+                }
 
                 if (extractFlags.UseTextureDecoder) {
-                    Logger.Warn("Core", "Texture decoding currently only supports png, forcing png output...");
+                    Logger.Warn("Core", "Texture decoding with TextureDecoder currently only supports png, forcing png output...");
                     extractFlags.ConvertTexturesType = "png";
                 }
             }
