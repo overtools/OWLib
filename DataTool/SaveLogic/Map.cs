@@ -101,7 +101,7 @@ namespace DataTool.SaveLogic {
                     writer.Write((uint) (SingleModels.Header.PlaceableCount + Models.Header.PlaceableCount +
                                          entitiesWithModelCount)); // nr details
 
-                    writer.Write(0); // nr Lights
+                    writer.Write(Lights.Header.PlaceableCount); // nr Lights
 
                     foreach (IMapPlaceable mapPlaceable in ModelGroups.Placeables ?? Array.Empty<IMapPlaceable>()) {
                         teMapPlaceableModelGroup modelGroup = (teMapPlaceableModelGroup) mapPlaceable;
@@ -206,27 +206,7 @@ namespace DataTool.SaveLogic {
                         writer.Write(entity.Header.Rotation);
                     }
 
-                    writer.Write(Sounds.Header.PlaceableCount); // nr Sounds
-
-                    // Extension 1.2 - Sounds
-                    foreach (IMapPlaceable mapPlaceable in Sounds.Placeables ?? Array.Empty<IMapPlaceable>()) {
-                        var sound = (teMapPlaceableSound) mapPlaceable;
-                        FindLogic.Combo.Find(Info, sound.Header.Sound);
-                        writer.Write(sound.Header.Translation);
-                        if (!Info.m_sounds.ContainsKey(sound.Header.Sound) || Info.m_sounds[sound.Header.Sound].SoundFiles == null) {
-                            writer.Write(0);
-                            continue;
-                        }
-
-                        writer.Write(Info.m_sounds[sound.Header.Sound].SoundFiles.Count);
-                        foreach (var soundfile in Info.m_sounds[sound.Header.Sound].SoundFiles?.Values) {
-                            writer.Write($@"Sounds\{Info.m_soundFiles[soundfile].GetName()}.ogg");
-                        }
-                    }
-
-                    writer.Write(Lights.Header.PlaceableCount);
-
-                    // Extension 2.0 - Lights
+                    // Extension 1.1 - Lights
                     foreach (IMapPlaceable mapPlaceable in Lights.Placeables ?? Array.Empty<IMapPlaceable>()) {
                         var light = (teMapPlaceableLight) mapPlaceable;
 
@@ -245,6 +225,25 @@ namespace DataTool.SaveLogic {
                         FindLogic.Combo.Find(Info, light.Header.ProjectionTexture2);
                     }
 
+                    writer.Write(Sounds.Header.PlaceableCount); // nr Sounds
+
+                    // Extension 1.2 - Sounds
+                    foreach (IMapPlaceable mapPlaceable in Sounds.Placeables ?? Array.Empty<IMapPlaceable>()) {
+                        var sound = (teMapPlaceableSound) mapPlaceable;
+                        FindLogic.Combo.Find(Info, sound.Header.Sound);
+                        writer.Write(sound.Header.Translation);
+                        if (!Info.m_sounds.ContainsKey(sound.Header.Sound) || Info.m_sounds[sound.Header.Sound].SoundFiles == null) {
+                            writer.Write(0);
+                            continue;
+                        }
+
+                        writer.Write(Info.m_sounds[sound.Header.Sound].SoundFiles.Count);
+                        foreach (var soundfile in Info.m_sounds[sound.Header.Sound].SoundFiles?.Values) {
+                            writer.Write($@"Sounds\{Info.m_soundFiles[soundfile].GetName()}.ogg");
+                        }
+                    }
+
+                    // Extension 1.3 - Effects
                     foreach (IMapPlaceable mapPlaceable in Effects.Placeables ?? Array.Empty<IMapPlaceable>()) {
                         var effect = (teMapPlaceableEffect) mapPlaceable;
                         FindLogic.Combo.Find(Info, effect.Header.Effect);
