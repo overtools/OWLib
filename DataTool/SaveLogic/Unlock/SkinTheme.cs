@@ -19,7 +19,14 @@ namespace DataTool.SaveLogic.Unlock {
             var skinBase = GetInstance<STUSkinBase>(unlockSkinTheme.m_skinTheme);
             if (skinBase == null) return;
 
+            if (hero == null) {
+                LoudLog($"\t(NOT) Extracting skin {unlock.Name}");
+                LoudLog("\t\twhy is there a skin in the general unlocks array. doesnt make any sense. thanks blizz");
+                return;
+            }
+
             LoudLog($"\tExtracting skin {unlock.Name}");
+
             if (skinBase is STUSkinTheme skinTheme) {
                 Save(flags, directory, skinTheme, hero);
             } else if (skinBase is STU_EF85B312 mythicSkin) {
