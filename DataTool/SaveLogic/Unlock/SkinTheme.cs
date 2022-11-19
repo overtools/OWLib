@@ -66,6 +66,7 @@ namespace DataTool.SaveLogic.Unlock {
             LoudLog("\t\tFinding");
 
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
+            FindEntities(info, skin, hero);
             FindSkinStuff(skin, hero, info);
 
             SaveCore(flags, directory, skin, info);
