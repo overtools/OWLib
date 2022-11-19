@@ -261,6 +261,9 @@ namespace DataTool.SaveLogic {
                 SaveEffectExtras(flags, animationEffectDir, context, animationEffect.Effect, out svceLines);
             }
 
+            // todo: broken af with mythic
+            return;
+
             Effect.OverwatchAnimationEffect output = new Effect.OverwatchAnimationEffect(context.m_info, animationEffect, svceLines, animationInfo, model);
             string animationEffectFile =
                 Path.Combine(animationEffectDir, $"{animationInfo.GetNameIndex()}.{output.Extension}");

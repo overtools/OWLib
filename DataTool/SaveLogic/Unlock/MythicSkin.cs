@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
+using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
 using DirectXTexNet;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using TACTLib.Helpers;
 using TankLib;
 using TankLib.Helpers.Hash;
 using TankLib.STU.Types;
@@ -129,6 +131,7 @@ namespace DataTool.SaveLogic.Unlock {
             Helper.Logger.LoudLog("\t\tFinding");
             PermuteMythic(0);
 
+            // todo: anim effect broken
             SkinTheme.SaveCore(flags, directory, mythicSkin, findInfo);
         }
 
@@ -150,8 +153,12 @@ namespace DataTool.SaveLogic.Unlock {
                     }
 
                     using var convertedStream = texture.SaveToDDS(1);
-                    var rgba = DDSConverter.ConvertDDS(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, WICCodecs.PNG, 0);
-                    partTextures[partIndex][partVariantIndex] = new PartTexture(rgba.ToArray(), texture.Header.Width, texture.Header.Height);
+                    using var dds = new DDSConverter(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, false);
+                    using var whyIsThisAStream = dds.GetFrame(WICCodecs.PNG, 0, 1); // "png" pepega
+                    var theArray = new byte[whyIsThisAStream.Length];
+                    whyIsThisAStream.DefinitelyRead(theArray);
+
+                    partTextures[partIndex][partVariantIndex] = new PartTexture(theArray, texture.Header.Width, texture.Header.Height);
                 }
             }
 
