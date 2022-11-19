@@ -73,7 +73,7 @@ namespace DataTool.SaveLogic.Unlock {
         }
 
         public static void SaveCore(ICLIFlags flags, string directory, STUSkinBase skin, FindLogic.Combo.ComboInfo info) {
-            Dictionary<ulong, ulong> replacements = GetReplacements(skin);
+            Dictionary<ulong, ulong> replacements = GetReplacements(skin) ?? new Dictionary<ulong, ulong>();
 
             FindSoundFiles(flags, directory, replacements);
 
