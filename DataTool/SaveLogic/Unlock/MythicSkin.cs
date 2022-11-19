@@ -56,7 +56,8 @@ namespace DataTool.SaveLogic.Unlock {
                     finalSkinGUID = finalSkinGUID_B;
                 }
 
-                Console.Out.WriteLine(teResourceGUID.AsString(finalSkinGUID));
+                //Console.Out.WriteLine(teResourceGUID.AsString(finalSkinGUID));
+
                 var variantSkin = GetInstance<STUSkinBase>(finalSkinGUID);
                 if (variantSkin == null) {
                     Logger.Warn("SkinTheme", $"couldn't load mythic skin permutation {teResourceGUID.AsString(finalSkinGUID)} for {teResourceGUID.AsString(guid)}. shouldn't happen");
@@ -125,6 +126,7 @@ namespace DataTool.SaveLogic.Unlock {
                 SavePermutation();
             }
 
+            Helper.Logger.LoudLog("\t\tFinding");
             PermuteMythic(0);
 
             SkinTheme.SaveCore(flags, directory, mythicSkin, findInfo);
