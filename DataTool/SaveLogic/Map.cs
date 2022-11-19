@@ -206,8 +206,6 @@ namespace DataTool.SaveLogic {
                         writer.Write(entity.Header.Rotation);
                     }
 
-                    writer.Write(0); // old lights
-
                     writer.Write(Sounds.Header.PlaceableCount); // nr Sounds
 
                     // Extension 1.2 - Sounds
