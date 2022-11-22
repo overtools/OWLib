@@ -20,12 +20,10 @@ namespace DataTool.SaveLogic.Unlock {
             if (skinBase == null) return;
 
             if (hero == null) {
-                LoudLog($"\t(NOT) Extracting skin {unlock.Name}");
+                LoudLog("\tSkipping skin...");
                 LoudLog("\t\twhy is there a skin in the general unlocks array. doesnt make any sense. thanks blizz");
                 return;
             }
-
-            LoudLog($"\tExtracting skin {unlock.Name}");
 
             if (skinBase is STUSkinTheme skinTheme) {
                 Save(flags, directory, skinTheme, hero);
