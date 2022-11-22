@@ -67,15 +67,15 @@ namespace DataTool.SaveLogic.Unlock {
                 }
 
                 //Console.Out.WriteLine(variantSkin);
-
-                findInfo.m_entities.Clear();
-                SkinTheme.FindEntities(findInfo, variantSkin, hero);
-
                 var variantDirectoryName = "";
                 for (int partIndex = 0; partIndex < partVariantIndices.Length; partIndex++) {
                     variantDirectoryName += $"{IO.GetString(mythicSkin.m_942A6CCA[partIndex].m_displayText)}-{partVariantIndices[partIndex]} ";
                 }
                 variantDirectoryName = variantDirectoryName.Trim();
+                Logger.Debug("SkinTheme", $"Processing mythic variant {variantDirectoryName}");
+
+                findInfo.m_entities.Clear();
+                SkinTheme.FindEntities(findInfo, variantSkin, hero);
 
                 var variantDirectory = Path.Combine(directory, variantDirectoryName);
                 foreach (var entity in findInfo.m_entities) {
@@ -128,11 +128,17 @@ namespace DataTool.SaveLogic.Unlock {
                 SavePermutation();
             }
 
+            var wasDeduping = Program.Flags.Deduplicate;
+            if (!wasDeduping) {
+                Helper.Logger.WarnLog("\t\tTemporarily enabling texture deduplication");
+            }
+            Program.Flags.Deduplicate = true;
             Helper.Logger.LoudLog("\t\tFinding");
             PermuteMythic(0);
 
             // todo: anim effect broken
             SkinTheme.SaveCore(flags, directory, mythicSkin, findInfo);
+            Program.Flags.Deduplicate = wasDeduping;
         }
 
         private static PartTexture[][] LoadPartTextures(STU_EF85B312 mythicSkin, FindLogic.Combo.ComboInfo findInfo) {

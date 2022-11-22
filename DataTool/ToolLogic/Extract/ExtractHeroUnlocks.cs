@@ -285,47 +285,58 @@ namespace DataTool.ToolLogic.Extract {
             string thisPath = Path.Combine(path, unlock.Type.ToString(), eventKey ?? "Default", GetValidFilename(unlock.GetName()));
 
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SprayPaint))) {
+                LoudLog($"\tExtracting spray {unlock.Name}");
                 SprayAndIcon.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_AvatarPortrait))) {
+                LoudLog($"\tExtracting icon {unlock.Name}");
                 SprayAndIcon.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_POTGAnimation))) {
+                LoudLog($"\tExtracting highlight intro {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_Emote))) {
+                LoudLog($"\tExtracting emote {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_Pose))) {
+                LoudLog($"\tExtracting pose {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_VoiceLine))) {
+                LoudLog($"\tExtracting voice line {unlock.Name}");
                 VoiceLine.Save(flags, thisPath, unlock, voiceSet);
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SkinTheme))) {
+                LoudLog($"\tExtracting skin {unlock.Name}");
                 SkinTheme.Save(flags, thisPath, unlock, hero);
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_PortraitFrame))) {
+                // LoudLog($"\tExtracting level frame {unlock.Name}");
                 thisPath = Path.Combine(path, unlock.Type.ToString());
                 PortraitFrame.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STU_DB1B05B5))) {
+                LoudLog($"\tExtracting name card {unlock.Name}");
                 NameCard.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STU_6A808718))) {
+                LoudLog($"\tExtracting charm {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STU_A458D547))) {
+                LoudLog($"\tExtracting souvenir {unlock.Name}");
                 AnimationItem.Save(flags, thisPath, unlock);
             }
         }

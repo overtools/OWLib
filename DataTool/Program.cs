@@ -198,7 +198,7 @@ namespace DataTool {
             targetTool.Parse(targetToolFlags);
             stopwatch.Stop();
 
-            Logger.Success("Core", $"Execution finished in {stopwatch.Elapsed} seconds");
+            Logger.Success("Core", $"Execution finished in {stopwatch.Elapsed}");
 
             ShutdownMisc();
         }
