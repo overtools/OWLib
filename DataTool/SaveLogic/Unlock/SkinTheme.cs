@@ -20,14 +20,16 @@ namespace DataTool.SaveLogic.Unlock {
             if (skinBase == null) return;
 
             if (hero == null) {
-                LoudLog("\tSkipping skin...");
-                LoudLog("\t\twhy is there a skin in the general unlocks array. doesnt make any sense. thanks blizz");
+                LoudLog($"\tSkipping skin {unlock.Name}");
+                LoudLog("\t\tCan not extract skin without a hero (thanks blizz)");
                 return;
             }
 
             if (skinBase is STUSkinTheme skinTheme) {
+                LoudLog($"\tExtracting skin {unlock.Name}");
                 Save(flags, directory, skinTheme, hero);
             } else if (skinBase is STU_EF85B312 mythicSkin) {
+                LoudLog($"\tExtracting mythic skin {unlock.Name}");
                 MythicSkin.SaveMythicSkin(flags, directory, unlockSkinTheme.m_skinTheme, mythicSkin, hero);
             } else {
                 throw new Exception($"wtf is a {skinBase.GetType()} when its at home");
@@ -37,7 +39,7 @@ namespace DataTool.SaveLogic.Unlock {
         public static void Save(ICLIFlags flags, string directory, STU_63172E83 skin, STUHero hero) {
             STUSkinTheme skinTheme = GetInstance<STUSkinTheme>(skin.m_5E9665E3);
             if (skinTheme == null) return;
-            LoudLog($"\tExtracting skin {IO.GetFileName(skin.m_5E9665E3)}");
+            LoudLog($"\tExtracting npc variant {IO.GetFileName(skin.m_5E9665E3)}");
             Save(flags, directory, skinTheme, hero);
         }
 

@@ -315,7 +315,6 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             if (ShouldDo(unlock, config, tags, typeof(STUUnlock_SkinTheme))) {
-                LoudLog($"\tExtracting skin {unlock.Name}");
                 SkinTheme.Save(flags, thisPath, unlock, hero);
             }
 
