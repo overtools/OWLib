@@ -59,5 +59,9 @@ namespace DataTool.Helper {
         public static void ErrorLog(string syntax, params object[] payload) {
             TankLib.Helpers.Logger.Error(null, syntax, payload);
         }
+
+        public static void WarnLog(string syntax) {
+            TankLib.Helpers.Logger.Warn(null, syntax);
+        }
     }
 }
