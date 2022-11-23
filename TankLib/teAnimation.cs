@@ -212,11 +212,12 @@ namespace TankLib {
         /// <param name="reader">Source reader</param>
         /// <returns>Position value</returns>
         private static teVec3 ReadPosition(BinaryReader reader) {
-            float x = reader.ReadSingle();
-            float y = reader.ReadSingle();
-            float z = reader.ReadSingle();
+            float x = (float) reader.ReadHalf();
+            float y = (float) reader.ReadHalf();
+            float z = (float) reader.ReadHalf();
+            // TODO: frame 1+n is relative to previous frame?
 
-            return new teVec3(x, y, z);
+            return new teVec3(x / 32f, y / 32f, z / 32f);
         }
 
         /// <summary>
