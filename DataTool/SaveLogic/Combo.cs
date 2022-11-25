@@ -141,17 +141,8 @@ namespace DataTool.SaveLogic {
                 SaveEffect(flags, entityDir, context, effect);
             }
 
-            bool skip = false;
-            if (flags is ExtractFlags extractFlags) {
-                skip = extractFlags.SkipAnimations;
-            }
-
-            skip = skip || !Debugger.IsAttached; // todo: ow2 is anim positions are bugged
-
-            if (!skip) {
-                foreach (ulong animation in entityInfo.m_animations) {
-                    SaveAnimationEffectReference(entityDir, context.m_info, animation, entityInfo.m_modelGUID);
-                }
+            foreach (ulong animation in entityInfo.m_animations) {
+                SaveAnimationEffectReference(entityDir, context.m_info, animation, entityInfo.m_modelGUID);
             }
         }
 
