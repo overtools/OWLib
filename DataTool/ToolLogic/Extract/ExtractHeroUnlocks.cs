@@ -103,7 +103,7 @@ namespace DataTool.ToolLogic.Extract {
             if (!HasSavedAnything) {
                 Logger.Warn("Tool", $"No unlocks were extracted as nothing was found matching your query? Did you spell the hero or unlock incorrectly?");
                 if (Client.CreateArgs.TextLanguage != "enUS") {
-                    Logger.Error("Tool", $"Reminder! You're language is set to \"{Client.CreateArgs.TextLanguage}\".");
+                    Logger.Error("Tool", $"Reminder! Your language is set to \"{Client.CreateArgs.TextLanguage}\".");
                     Logger.Warn("Tool", $"When extracting data in other languages, the names of the unlocks must be in the language you're extracting as they might differ from their English versions.");
                 }
 
