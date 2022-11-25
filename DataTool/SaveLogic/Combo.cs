@@ -16,7 +16,6 @@ using DirectXTexNet;
 using RevorbStd;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.ColorSpaces.Conversion;
-using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using TankLib;
 using TankLib.Chunks;
@@ -180,6 +179,7 @@ namespace DataTool.SaveLogic {
 
                 CreateDirectoryFromFile(animOutput);
                 using (Stream fileStream = new FileStream(animOutput, FileMode.Create)) {
+                    fileStream.SetLength(0);
                     seAnim.Write(fileStream);
                 }
             } else {

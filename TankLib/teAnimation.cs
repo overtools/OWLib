@@ -178,6 +178,7 @@ namespace TankLib {
 
                     reader.BaseStream.Position = positionDataPos;
                     for (int j = 0; j < infoTable.PositionCount; j++) {
+                        break; // todo: fix position frames
                         int frame = System.Math.Abs(positionIndices[j]) % InfoTableSize;
                         boneAnimation.Positions[frame] = ReadPosition(reader);
                     }
@@ -215,9 +216,9 @@ namespace TankLib {
             float x = (float) reader.ReadHalf();
             float y = (float) reader.ReadHalf();
             float z = (float) reader.ReadHalf();
-            // TODO: frame 1+n is relative to previous frame?
+            // TODO: frame 1+n is relative to previous frame? (delta?)
 
-            return new teVec3(x / 32f, y / 32f, z / 32f);
+            return new teVec3(x / 32f, y / 32f, z / 32f); // <-- sometimes 32 is not the constant?
         }
 
         /// <summary>
