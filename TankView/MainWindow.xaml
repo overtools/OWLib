@@ -128,9 +128,12 @@
                           IsChecked="{Binding OnlyShowNewFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                           IsCheckable="True" />
             </MenuItem>
-            <MenuItem Header="Extract" Click="ExtractFiles"
+            <MenuItem Header="Extract" Click="ExtractFiles" Width="100"
                       IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Background="Transparent"
-                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                      HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+            <MenuItem Header="Obj Export" Click="ExtractAsObj" Width="100"
+                      IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Background="Transparent"
+                      HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
             <MenuItem IsEnabled="{Binding IsDataReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Background="Transparent"
                       HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                 <MenuItem.Header>
@@ -209,7 +212,11 @@
                             IsEnabled="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                             Visibility="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BoolVisbilityConverter}}"
                             Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
-                            ResizeDirection="Rows" ShowsPreview="True" ResizeBehavior="CurrentAndNext" />
+                            ResizeDirection="Rows" ShowsPreview="True" ResizeBehavior="CurrentAndNext">
+                            <GridSplitter.Background>
+                                <SolidColorBrush Color="White"/>
+                            </GridSplitter.Background>
+                        </GridSplitter>
                         <DockPanel IsEnabled="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                                    Visibility="{Binding ShowPreview, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BoolVisbilityConverter}}"
                                    Grid.Row="1">
@@ -217,7 +224,7 @@
                         </DockPanel>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Image" IsEnabled="{Binding ShowPreviewList, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BoolVisbilityConverter}}">
+                <TabItem Header="Image" IsEnabled="{Binding ShowPreviewList, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource BoolVisbilityConverter}}" HorizontalAlignment="Right" Width="49">
                     <ListView x:Name="FolderImageList" ItemsSource="{Binding SelectedEntries, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" VirtualizingPanel.CacheLengthUnit="Page" VirtualizingPanel.CacheLength="1, 1" VirtualizingPanel.ScrollUnit="Item" VirtualizingPanel.VirtualizationMode="Recycling">
                         <ListView.Resources>
                             <Style x:Key="{x:Type ListViewItem}" TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
