@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using TankLib.Math;
 
 namespace TankLib.Chunks {
@@ -27,6 +29,89 @@ namespace TankLib.Chunks {
             public byte VertexBufferDescriptorCount; // 10 -> 34
             public byte IndexBufferDescriptorCount; // 11 -> 35
             public uint m_unk36; // 12 -> 36
+        }
+
+        public string ExportToObj(string path = null, string file = null) {
+            CultureInfo info = (CultureInfo) Thread.CurrentThread.CurrentCulture.Clone();
+            info.NumberFormat.NumberDecimalSeparator = ".";
+            Thread.CurrentThread.CurrentCulture = info;
+
+            string exportFile = "";
+            if (path == null)
+                path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            if (file != null)
+                exportFile = Path.Combine(path, file);
+            else
+                exportFile = Path.Combine(path, "temp.obj");
+            
+            
+
+            var allVertices = new List<teVec3>();
+            var allUVCoords = new List<teVec2>();
+            var allNormals = new List<teVec3>();
+            var allFaces = new List<teTriangle>();
+
+            int vertexStart = 1;
+
+            foreach (var submesh in Submeshes) {
+                if (submesh.Descriptor.LOD != 1) continue;
+
+                allVertices.AddRange(submesh.Vertices);
+                allNormals.AddRange(submesh.Normals);
+
+                if (submesh.UVCount > 0)
+                    for (int i = 0; i < submesh.Vertices.Length; i++) {
+                        allUVCoords.Add(new teVec2() { X = submesh.UV[i][0].X, Y = submesh.UV[i][0].Y });
+                    }
+
+
+                for (int i = 0; i < submesh.Indices.Length; i += 3) {
+                    allFaces.Add(new teTriangle() {
+                        IndexA = submesh.Indices[i] + vertexStart,
+                        IndexB = submesh.Indices[i + 1] + vertexStart,
+                        IndexC = submesh.Indices[i + 2] + vertexStart
+                    });
+                }
+
+                vertexStart = allVertices.Count + 1;
+            }
+
+            using (TextWriter tw = new StreamWriter(exportFile, false)) {
+
+                tw.WriteLine($"# Overwatch 2 .00C file");
+                tw.WriteLine($"# Exported on {DateTime.Now.ToString("yyyy/MM/ddThh:mm:ss")}");
+                tw.WriteLine($"# (c) 2022 - Written by the awesome team from Datawatch");
+
+                tw.WriteLine();
+                tw.WriteLine(string.Format("# numVerts: {0}", allVertices.Count));
+                for (int v = 0; v < allVertices.Count; v++) {
+                    tw.WriteLine(string.Format("v {0} {1} {2}", allVertices[v].X.ToString("0.000000"), allVertices[v].Y.ToString("0.000000"), allVertices[v].Z.ToString("0.000000")));
+
+                }
+
+                tw.WriteLine();
+                tw.WriteLine(string.Format("# numNormals: {0}", allVertices.Count));
+                for (int v = 0; v < allVertices.Count; v++) {
+                    tw.WriteLine(string.Format("vn {0} {1} {2}", allNormals[v].X.ToString("0.000000"), allNormals[v].Y.ToString("0.000000"), allNormals[v].Z.ToString("0.000000")));
+
+                }
+
+                tw.WriteLine();
+                tw.WriteLine(string.Format("# numTexCoord: {0}", allVertices.Count));
+                for (int v = 0; v < allVertices.Count; v++) {
+                    tw.WriteLine(string.Format("vt {0} {1} 0.00000", allUVCoords[v].X.ToString("0.000000"), allUVCoords[v].Y.ToString("0.000000")));
+                }
+
+                tw.WriteLine();
+                tw.WriteLine($"# numFaces: {allFaces.Count}");
+                foreach (teTriangle f in allFaces) {
+                    tw.WriteLine(string.Format("f {0}/{0}/{0} {1}/{1}/{1} {2}/{2}/{2}", (int) f.IndexA, (int) f.IndexB, (int) f.IndexC));
+                }
+
+            }
+
+            return exportFile;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -92,9 +177,9 @@ namespace TankLib.Chunks {
 
             public uint m_val4;
 
-            public byte SlotClass => (byte)(m_val4 & 0xF);
-            public byte InstanceDataStepRate => (byte)(m_val4 >> 4);
-            public byte Offset => (byte)((m_val4 >> 12) & 1023);
+            public byte SlotClass => (byte) (m_val4 & 0xF);
+            public byte InstanceDataStepRate => (byte) (m_val4 >> 4);
+            public byte Offset => (byte) ((m_val4 >> 12) & 1023);
 
             // todo: >>22 = size?
         }
@@ -188,8 +273,8 @@ namespace TankLib.Chunks {
                 BoneIndices = new ushort[submeshDescriptor.VerticesToDraw][];
                 BoneWeights = new float[submeshDescriptor.VerticesToDraw][];
                 for (int i = 0; i < submeshDescriptor.VerticesToDraw; i++) {
-                    BoneIndices[i] = new ushort[4*blendCount];
-                    BoneWeights[i] = new float[4*blendCount];
+                    BoneIndices[i] = new ushort[4 * blendCount];
+                    BoneWeights[i] = new float[4 * blendCount];
                     UV[i] = new teVec2[uvCount];
                 }
             }
@@ -255,7 +340,7 @@ namespace TankLib.Chunks {
 
         private void ParseSubmesh(BinaryReader reader) {
             reader.BaseStream.Position = Header.SubmeshDescriptorPointer;
-            SubmeshDescriptors = reader.ReadArray<SubmeshDescriptor>((int)Header.SubmeshCount);
+            SubmeshDescriptors = reader.ReadArray<SubmeshDescriptor>((int) Header.SubmeshCount);
         }
 
         private VertexElementDescriptor[] ParseVBE(BinaryReader reader, VertexBufferDescriptor descriptor) {
@@ -268,13 +353,13 @@ namespace TankLib.Chunks {
             VertexElementDescriptor[][] elements = new VertexElementDescriptor[2][];
 
             // pass 1
-            byte[] sizes = {0, 0};
+            byte[] sizes = { 0, 0 };
             for (int i = 0; i < input.Length; ++i) sizes[input[i].Stream] += 1;
 
             // pass 2
             elements[0] = new VertexElementDescriptor[sizes[0]];
             elements[1] = new VertexElementDescriptor[sizes[1]];
-            sizes = new byte[] {0, 0};
+            sizes = new byte[] { 0, 0 };
             for (int i = 0; i < input.Length; ++i) {
                 byte stream = input[i].Stream;
                 elements[stream][sizes[stream]] = input[i];
@@ -288,8 +373,8 @@ namespace TankLib.Chunks {
             for (int i = 0; i < VertexBuffers.Length; ++i) {
                 VertexBufferDescriptor vbo = VertexBuffers[i];
                 Stride[i] = new object[2][][];
-                long[] offset = {vbo.DataStream1Pointer, vbo.DataStream2Pointer};
-                byte[] sizes = {vbo.StrideStream1, vbo.StrideStream2};
+                long[] offset = { vbo.DataStream1Pointer, vbo.DataStream2Pointer };
+                byte[] sizes = { vbo.StrideStream1, vbo.StrideStream2 };
                 VertexElementDescriptor[][] elements = SplitVBE(VertexElements[i]);
                 for (int j = 0; j < offset.Length; ++j) {
                     /*Console.Out.WriteLine($"MESH: {offset[j]} {sizes[j]} {vbo.VertexCount}");
@@ -318,13 +403,13 @@ namespace TankLib.Chunks {
         private object ReadElement(SemanticFormat format, BinaryReader reader) {
             switch (format) {
                 case SemanticFormat.SINGLE_3:
-                    return new[] {reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()};
+                    return new[] { reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle() };
                 case SemanticFormat.HALF_2:
-                    return new[] {reader.ReadUInt16(), reader.ReadUInt16()};
+                    return new[] { reader.ReadUInt16(), reader.ReadUInt16() };
                 case SemanticFormat.UINT8_4:
-                    return new[] {reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte()};
+                    return new[] { reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte() };
                 case SemanticFormat.UINT16_4:
-                    return new[] {reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16()};
+                    return new[] { reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16() };
                 case SemanticFormat.UINT8_UNORM4:
                     return new[] {
                         reader.ReadByte() / 255f, reader.ReadByte() / 255f, reader.ReadByte() / 255f,
@@ -379,78 +464,78 @@ namespace TankLib.Chunks {
 
                 VertexElementDescriptor[][] elements = SplitVBE(VertexElements[submeshDescriptor.VertexBuffer]);
                 for (int j = 0; j < Stride[submeshDescriptor.VertexBuffer].Length; ++j)
-                for (int k = 0; k < submeshDescriptor.VerticesToDraw; ++k) {
-                    long offset = submeshDescriptor.VertexStart + indexRemapInvert[k];
-                    for (int l = 0; l < elements[j].Length; ++l) {
-                        VertexElementDescriptor element = elements[j][l];
-                        if (element.Format == SemanticFormat.NONE) break;
-                        object value = Stride[submeshDescriptor.VertexBuffer][j][offset][l];
-                        switch (element.Type) {
-                            case teShaderInstance.ShaderInputUse.Position:
-                                if (element.Index == 0) {
-                                    float[] position = (float[]) value;
-                                    submesh.Vertices[k] = new teVec3(position);
-                                } else {
-                                   Debugger.Log(2, "teModelChunk_RenderMesh",
-                                       $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");
-                                }
-                                break;
-                            case teShaderInstance.ShaderInputUse.Normal:
-                                if (element.Index == 0) {
-                                    float[] normal = (float[]) value;
-                                    submesh.Normals[k] = new teVec3(normal.Take(3).ToArray());
-                                } else {
-                                    Debugger.Log(2, "teModelChunk_RenderMesh",
-                                        $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");
-                                }
-                                break;
-                            case teShaderInstance.ShaderInputUse.TexCoord: {
-                                ushort[] uv = (ushort[]) value;
-                                submesh.UV[k][element.Index] = teVec2.FromHalf(uv);
+                    for (int k = 0; k < submeshDescriptor.VerticesToDraw; ++k) {
+                        long offset = submeshDescriptor.VertexStart + indexRemapInvert[k];
+                        for (int l = 0; l < elements[j].Length; ++l) {
+                            VertexElementDescriptor element = elements[j][l];
+                            if (element.Format == SemanticFormat.NONE) break;
+                            object value = Stride[submeshDescriptor.VertexBuffer][j][offset][l];
+                            switch (element.Type) {
+                                case teShaderInstance.ShaderInputUse.Position:
+                                    if (element.Index == 0) {
+                                        float[] position = (float[]) value;
+                                        submesh.Vertices[k] = new teVec3(position);
+                                    } else {
+                                        Debugger.Log(2, "teModelChunk_RenderMesh",
+                                            $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");
+                                    }
+                                    break;
+                                case teShaderInstance.ShaderInputUse.Normal:
+                                    if (element.Index == 0) {
+                                        float[] normal = (float[]) value;
+                                        submesh.Normals[k] = new teVec3(normal.Take(3).ToArray());
+                                    } else {
+                                        Debugger.Log(2, "teModelChunk_RenderMesh",
+                                            $"Unhandled vertex layer {element.Index:X} for type {element.Type}!\n");
+                                    }
+                                    break;
+                                case teShaderInstance.ShaderInputUse.TexCoord: {
+                                        ushort[] uv = (ushort[]) value;
+                                        submesh.UV[k][element.Index] = teVec2.FromHalf(uv);
+                                    }
+                                    break;
+                                case teShaderInstance.ShaderInputUse.BlendIndices:
+                                    ushort[] thisIndices = (ushort[]) value;
+                                    var indicesDest = submesh.BoneIndices[k].AsSpan(element.Index * 4, 4);
+
+                                    for (int m = 0; m < thisIndices.Length; ++m) {
+                                        indicesDest[m] = (ushort) (thisIndices[m] + submeshDescriptor.BoneIdOffset);
+                                    }
+                                    break;
+                                case teShaderInstance.ShaderInputUse.BlendWeights:
+                                    var thisWeights = (float[]) value;
+                                    var weightsDest = submesh.BoneWeights[k].AsSpan(element.Index * 4, 4);
+                                    thisWeights.AsSpan().CopyTo(weightsDest);
+                                    break;
+                                case teShaderInstance.ShaderInputUse.Tangent:
+                                    float[] tangent = (float[]) value;
+                                    submesh.Tangents[k] = new teVec4(tangent);
+                                    break;
+                                case teShaderInstance.ShaderInputUse.VertexIndex:  // todo: lolno
+                                    uint id = (uint) value;
+                                    submesh.IDs[k] = id;
+                                    break;
+                                case teShaderInstance.ShaderInputUse.Color:
+                                    float[] col = (float[]) value;
+                                    if (element.Index == 0) {
+                                        submesh.Color1[k] = new teColorRGBA(col);
+                                    } else if (element.Index == 1) {
+                                        submesh.Color2[k] = new teColorRGBA(col);
+                                    } else {
+                                        Debugger.Log(2, "teModelChunk_RenderMesh",
+                                            $"Unhandled vertex color index: {element.Index:X}\n");
+                                    }
+
+                                    break;
+                                default:
+                                    if (UnhandledSemanticTypes.Add(element.Type) && Debugger.IsAttached) {
+                                        Debugger.Log(2, "teModelChunk_RenderMesh",
+                                            $"Unhandled vertex type {element.Type}!\n");
+                                    }
+                                    break;
                             }
-                                break;
-                            case teShaderInstance.ShaderInputUse.BlendIndices:
-                                ushort[] thisIndices = (ushort[]) value;
-                                var indicesDest = submesh.BoneIndices[k].AsSpan(element.Index * 4, 4);
-
-                                for (int m = 0; m < thisIndices.Length; ++m) {
-                                    indicesDest[m] = (ushort) (thisIndices[m] + submeshDescriptor.BoneIdOffset);
-                                }
-                                break;
-                            case teShaderInstance.ShaderInputUse.BlendWeights:
-                                var thisWeights = (float[]) value;
-                                var weightsDest = submesh.BoneWeights[k].AsSpan(element.Index * 4, 4);
-                                thisWeights.AsSpan().CopyTo(weightsDest);
-                                break;
-                            case teShaderInstance.ShaderInputUse.Tangent:
-                                float[] tangent = (float[]) value;
-                                submesh.Tangents[k] = new teVec4(tangent);
-                                break;
-                            case teShaderInstance.ShaderInputUse.VertexIndex:  // todo: lolno
-                                uint id = (uint) value;
-                                submesh.IDs[k] = id;
-                                break;
-                            case teShaderInstance.ShaderInputUse.Color:
-                                float[] col = (float[]) value;
-                                if (element.Index == 0) {
-                                    submesh.Color1[k] = new teColorRGBA(col);
-                                } else if (element.Index == 1) {
-                                    submesh.Color2[k] = new teColorRGBA(col);
-                                } else {
-                                    Debugger.Log(2, "teModelChunk_RenderMesh",
-                                        $"Unhandled vertex color index: {element.Index:X}\n");
-                                }
-
-                                break;
-                            default:
-                                if (UnhandledSemanticTypes.Add(element.Type) && Debugger.IsAttached) {
-                                    Debugger.Log(2, "teModelChunk_RenderMesh",
-                                        $"Unhandled vertex type {element.Type}!\n");
-                                }
-                                break;
                         }
                     }
-                }
 
                 Submeshes[i] = submesh;
             }

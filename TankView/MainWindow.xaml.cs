@@ -125,7 +125,7 @@ namespace TankView {
             if (headerClicked.Role == GridViewColumnHeaderRole.Padding) return;
 
             ListSortDirection direction;
-            if (headerClicked != _lastHeaderClicked)  {
+            if (headerClicked != _lastHeaderClicked) {
                 direction = ListSortDirection.Descending;
             } else {
                 direction = _lastDirection == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
@@ -324,21 +324,21 @@ namespace TankView {
         }
 
         private void ExtractFiles(object sender, RoutedEventArgs e) {
-            GUIDEntry[] files = {};
+            GUIDEntry[] files = { };
 
             switch (Tabs.SelectedIndex) {
                 case 0: {
-                    files = FolderItemList.SelectedItems.OfType<GUIDEntry>().ToArray();
-                    if (files.Length == 0) {
-                        files = FolderItemList.Items.OfType<GUIDEntry>().ToArray();
-                    }
+                        files = FolderItemList.SelectedItems.OfType<GUIDEntry>().ToArray();
+                        if (files.Length == 0) {
+                            files = FolderItemList.Items.OfType<GUIDEntry>().ToArray();
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case 1: {
-                    files = FolderImageList.SelectedItems.OfType<GUIDEntry>().ToArray();
-                    break;
-                }
+                        files = FolderImageList.SelectedItems.OfType<GUIDEntry>().ToArray();
+                        break;
+                    }
             }
 
             if (files.Length == 0) {
@@ -354,7 +354,7 @@ namespace TankView {
             }
         }
 
-        private void ExtractFiles(string outPath, IEnumerable<GUIDEntry> files) {
+        private void ExtractFiles_OLD(string outPath, IEnumerable<GUIDEntry> files) {
             IsReady = false;
 
             IEnumerable<GUIDEntry> guidEntries = files as GUIDEntry[] ?? files.ToArray();
@@ -423,6 +423,79 @@ namespace TankView {
             });
         }
 
+        private void ExtractFiles(string outPath, IEnumerable<GUIDEntry> files) {
+            IsReady = false;
+
+            IEnumerable<GUIDEntry> guidEntries = files as GUIDEntry[] ?? files.ToArray();
+            HashSet<string> directories = new HashSet<string>(guidEntries.Select(x => Path.Combine(outPath, Path.GetDirectoryName(x.FullPath.Substring(1)) ?? string.Empty)));
+            foreach (string directory in directories) {
+                if (!Directory.Exists(directory)) {
+                    Directory.CreateDirectory(directory);
+                }
+            }
+
+            var imageExtractFlags = new ExtractFlags {
+                ConvertTexturesType = Settings.Default.ImageExtractionFormat
+            };
+
+            //Task.Run(delegate {
+            int c = 0;
+            int t = guidEntries.Count();
+            _progressWorker?.ReportProgress(0, "Saving files...");
+            //Parallel.ForEach(guidEntries, new ParallelOptions { MaxDegreeOfParallelism = 4 },
+            //(entry) => {
+
+            foreach (var entry in guidEntries) {
+
+
+                c++;
+                if (c % ((int) (t * 0.005) + 1) == 0) {
+                    var progress = (int) ((c / (float) t) * 100);
+                    _progressWorker?.ReportProgress(progress, $"Saving files... {progress}% ({c}/{t})");
+                }
+
+                var dataType = DataHelper.GetDataType(teResourceGUID.Type(entry.GUID));
+                var fileType = Path.GetExtension(entry.FullPath)?.Substring(1);
+                var filePath = Path.ChangeExtension(entry.FullPath.Substring(1), null);
+                var fileOutput = $"{filePath}.{GetFileType(dataType) ?? fileType}";
+
+                try {
+                    if (dataType == DataHelper.DataType.Image && ExtractionSettings.EnableConvertImages) {
+                        DataTool.FindLogic.Combo.ComboInfo info = new DataTool.FindLogic.Combo.ComboInfo();
+                        DataTool.FindLogic.Combo.Find(info, entry.GUID);
+                        var newPath = Path.GetFullPath(Path.Combine(outPath, filePath, @"..\")); // filepath includes the filename which we don't want here as combo already does that
+                        var context = new Combo.SaveContext(info);
+                        Combo.SaveLooseTextures(imageExtractFlags, newPath, context);
+
+                        return;
+                    }
+
+                    using (Stream i = IOHelper.OpenFile(entry))
+                    using (Stream o = File.OpenWrite(Path.Combine(outPath, fileOutput))) {
+                        switch (dataType) {
+                            case DataHelper.DataType.Sound when ExtractionSettings.EnableConvertSounds:
+                                o.SetLength(0);
+                                Combo.ConvertSoundFileWw2Ogg(i, o);
+                                break;
+                            // not used, image extraction is handled above
+                            case DataHelper.DataType.Image when ExtractionSettings.EnableConvertImages:
+                                DataHelper.SaveImage(entry, i, o);
+                                break;
+                            default:
+                                i.CopyTo(o);
+                                break;
+                        }
+                    }
+                } catch {
+                    // ignored
+                }
+            }
+            //});
+
+            ViewContext.Send(delegate { IsReady = true; }, null);
+            //});
+        }
+
         private string GetFileType(DataHelper.DataType dataType) {
             switch (dataType) {
                 case DataHelper.DataType.Sound when ExtractionSettings.EnableConvertSounds:
@@ -475,6 +548,61 @@ namespace TankView {
             if (e.Source is ListView listView && listView.SelectedItem is GUIDEntry guidEntry) {
                 Clipboard.SetText(guidEntry.Filename);
             }
+        }
+
+        private void ExtractAsObj(object sender, RoutedEventArgs e) {
+
+            GUIDEntry[] files = { };
+
+            if (Tabs.SelectedIndex == 0) {
+                files = FolderItemList.SelectedItems.OfType<GUIDEntry>().ToArray();
+                if (files.Length == 0) {
+                    files = FolderItemList.Items.OfType<GUIDEntry>().ToArray();
+                }
+            }
+            if (files.Length == 0) return;
+
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog {
+                IsFolderPicker = true,
+                EnsurePathExists = true
+            };
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok) {
+                ExtractFilesAsObj(dialog.FileName, files);
+            }
+        }
+
+        private void ExtractFilesAsObj(string outPath, IEnumerable<GUIDEntry> files) {
+
+            var logFile = Path.Combine(outPath, "export.log");
+            if (File.Exists(logFile)) File.Delete(logFile);
+
+            foreach (var entry in files) {
+
+                try {
+
+                    using (Stream i = IOHelper.OpenFile(entry)) {
+
+                        var chunkedData = new teChunkedData(i);
+
+                        foreach (var chunk in chunkedData.Chunks) {
+                            if (chunk is TankLib.Chunks.teModelChunk_RenderMesh) {
+                                ProgressInfo.State = $"Converting {entry.Filename} to obj";
+                                (chunk as TankLib.Chunks.teModelChunk_RenderMesh).ExportToObj(path: outPath, file: entry.Filename + ".obj");
+
+                            }
+                        }
+
+                    }
+                } catch (Exception ex) {
+
+                    using (TextWriter str = new StreamWriter(path: logFile, append: true)) {
+                        str.WriteLine($"Unable to convert { entry.Filename}");
+                        str.WriteLine(ex.Message);
+                    }
+
+                }
+            }
+
         }
     }
 }

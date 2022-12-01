@@ -87,8 +87,8 @@ namespace TankView.ViewModel {
                 }
                     break;
                 case DataHelper.DataType.Model: {
-                    PreviewSource = null;
-                    PreviewControl = new PreviewDataModel();
+                    PreviewSource = DataHelper.GetString(value); ;
+                    PreviewControl = new PreviewDataModel(value);
                 }
                     break;
                 case DataHelper.DataType.String: {

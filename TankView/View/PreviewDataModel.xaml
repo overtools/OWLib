@@ -1,12 +1,25 @@
-﻿<UserControl x:Class="TankView.View.PreviewDataModel"
+<UserControl x:Class="TankView.View.PreviewDataModel"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:TankView.View"
+             xmlns:helix="http://helix-toolkit.org/wpf"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Margin="15,15,15,15">Soon!</TextBlock>
+        <helix:HelixViewport3D
+            x:Name="MyHelixViewport"
+            ZoomExtentsWhenLoaded="True"
+            CameraRotationMode="Trackball"
+            CameraChanged="MyHelixViewport_CameraChanged"
+         >
+            <helix:DefaultLights/>
+            <ModelVisual3D x:Name="Content3D">
+                
+
+            </ModelVisual3D>
+            <helix:GridLinesVisual3D Width="3" Length="3" MinorDistance="1" MajorDistance="1" Thickness="0.01" ></helix:GridLinesVisual3D>
+        </helix:HelixViewport3D>
     </Grid>
 </UserControl>
