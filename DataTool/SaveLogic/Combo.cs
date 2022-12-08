@@ -364,6 +364,8 @@ namespace DataTool.SaveLogic {
                     if (modelStream == null) return;
                     CreateDirectoryFromFile(modelPath);
 
+                    teModelChunk_RenderMesh.LoadAssetFunc = static guid => OpenFile(guid);
+
                     teChunkedData chunkedData = new teChunkedData(modelStream);
                     var modelChunk = chunkedData.GetChunk<teModelChunk_Model>();
 

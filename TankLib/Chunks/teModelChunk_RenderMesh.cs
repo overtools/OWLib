@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using TACTLib;
 using TankLib.Math;
 
 namespace TankLib.Chunks {
@@ -14,9 +15,11 @@ namespace TankLib.Chunks {
         public string ID => "MRNM";
         public List<IChunk> SubChunks { get; set; }
 
+        public static Func<teResourceGUID, Stream> LoadAssetFunc;
+
         /// <summary>MRNM header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public unsafe struct RenderMeshHeader {
+        public struct RenderMeshHeader {
             public long VertexBufferDesciptorPointer; // 112 -> 0
             public long IndexBufferDescriptorPointer; // 120 -> 8
             public long SubmeshDescriptorPointer; // 128 -> 16
@@ -73,6 +76,20 @@ namespace TankLib.Chunks {
             public long VertexElementDescriptorPointer; // 16
             public long DataStream1Pointer; // 24
             public long DataStream2Pointer; // 32
+
+            public bool UsesVertexDataAsset() {
+                return (Unknown2 & 0x10) != 0;
+            }
+
+            public teResourceGUID GetVertexDataGUID1() {
+                if (!UsesVertexDataAsset()) throw new Exception("doesn't have vertex data");
+                return (teResourceGUID)(ulong)DataStream1Pointer;
+            }
+
+            public teResourceGUID GetVertexDataGUID2() {
+                if (!UsesVertexDataAsset()) throw new Exception("doesn't have vertex data");
+                return (teResourceGUID)(ulong)DataStream2Pointer;
+            }
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -236,6 +253,7 @@ namespace TankLib.Chunks {
                 ParseIBO(reader);
                 ParseSubmesh(reader);
                 ParseStride(reader);
+                LoadVertexDataAssets(LoadAssetFunc);
                 GenerateMeshes(reader);
             }
         }
@@ -288,31 +306,57 @@ namespace TankLib.Chunks {
             for (int i = 0; i < VertexBuffers.Length; ++i) {
                 VertexBufferDescriptor vbo = VertexBuffers[i];
                 Stride[i] = new object[2][][];
+
+                if (vbo.UsesVertexDataAsset()) continue;
+
                 long[] offset = {vbo.DataStream1Pointer, vbo.DataStream2Pointer};
                 byte[] sizes = {vbo.StrideStream1, vbo.StrideStream2};
                 VertexElementDescriptor[][] elements = SplitVBE(VertexElements[i]);
                 for (int j = 0; j < offset.Length; ++j) {
-                    /*Console.Out.WriteLine($"MESH: {offset[j]} {sizes[j]} {vbo.VertexCount}");
-                    foreach (var element in elements[j])
-                    {
-                        Console.Out.Write($"{element.Type} {element.Format} {element.Index} {element.Offset}");
-                    }*/
+                    ParseVBStrideHalf(reader, i, j, vbo, offset[j], elements, sizes);
+                }
+            }
+        }
 
-                    Stride[i][j] = new object[vbo.VertexCount][];
-                    reader.BaseStream.Position = offset[j];
-                    for (int k = 0; k < vbo.VertexCount; ++k) {
-                        Stride[i][j][k] = new object[elements[j].Length];
-                        long next = reader.BaseStream.Position + sizes[j];
-                        long current = reader.BaseStream.Position;
-                        for (int l = 0; l < elements[j].Length; ++l) {
-                            reader.BaseStream.Position = current + elements[j][l].Offset;
-                            Stride[i][j][k][l] = ReadElement(elements[j][l].Format, reader);
-                        }
-                        reader.BaseStream.Position = next;
+        public void LoadVertexDataAssets(Func<teResourceGUID, Stream> loadFunc) {
+            if (loadFunc == null) return;
+            for (int i = 0; i < VertexBuffers.Length; ++i) {
+                VertexBufferDescriptor vbo = VertexBuffers[i];
+                if (!vbo.UsesVertexDataAsset()) continue;
+
+                byte[] sizes = {vbo.StrideStream1, vbo.StrideStream2};
+                VertexElementDescriptor[][] elements = SplitVBE(VertexElements[i]);
+
+                for (int j = 0; j < 2; j++) {
+                    teResourceGUID vertexDataAsset;
+                    if (j == 0) {
+                        vertexDataAsset = vbo.GetVertexDataGUID1();
+                    } else {
+                        vertexDataAsset = vbo.GetVertexDataGUID2();
+                    }
+
+                    using (var vertexReader = new BinaryReader(loadFunc(vertexDataAsset))) {
+                        ParseVBStrideHalf(vertexReader, i, j, vbo, 0, elements, sizes);
                     }
                 }
             }
         }
+
+        private void ParseVBStrideHalf(BinaryReader reader, int i, int j, VertexBufferDescriptor vbo, long offset, VertexElementDescriptor[][] elements, byte[] sizes) {
+            Stride[i][j] = new object[vbo.VertexCount][];
+            reader.BaseStream.Position = offset;
+            for (int k = 0; k < vbo.VertexCount; ++k) {
+                Stride[i][j][k] = new object[elements[j].Length];
+                long next = reader.BaseStream.Position + sizes[j];
+                long current = reader.BaseStream.Position;
+                for (int l = 0; l < elements[j].Length; ++l) {
+                    reader.BaseStream.Position = current + elements[j][l].Offset;
+                    Stride[i][j][k][l] = ReadElement(elements[j][l].Format, reader);
+                }
+                reader.BaseStream.Position = next;
+            }
+        }
+
         #endregion
 
         private object ReadElement(SemanticFormat format, BinaryReader reader) {
@@ -350,7 +394,12 @@ namespace TankLib.Chunks {
 
             for (int i = 0; i < SubmeshDescriptors.Length; ++i) {
                 SubmeshDescriptor submeshDescriptor = SubmeshDescriptors[i];
-                //VertexBufferDescriptor vbo = VertexBuffers[submeshDescriptor.VertexBuffer];
+                VertexBufferDescriptor vbo = VertexBuffers[submeshDescriptor.VertexBuffer];
+                if (vbo.UsesVertexDataAsset() && Stride[submeshDescriptor.VertexBuffer][0] == null) {
+                    Logger.Warn("teModelChunk_RenderMesh", $"Can't generate mesh {i} because vertex data assets were not loaded! Set LoadAssetFunc");
+                    continue;
+                }
+
                 IndexBufferDescriptor ibo = IndexBuffers[submeshDescriptor.IndexBuffer];
                 byte uvCount = GetMaxIndex(VertexElements[submeshDescriptor.VertexBuffer], teShaderInstance.ShaderInputUse.TexCoord);
                 byte blendCount = GetMaxIndex(VertexElements[submeshDescriptor.VertexBuffer], teShaderInstance.ShaderInputUse.BlendWeights);
