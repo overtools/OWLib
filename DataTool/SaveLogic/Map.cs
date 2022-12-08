@@ -295,8 +295,7 @@ namespace DataTool.SaveLogic {
                     variantName += $" - {variantModeInfo.m_celebration}";
                 }
 
-                FindLogic.Combo.Find(info, variantResultingMap.m_loadingScreen); // big
-                FindLogic.Combo.Find(info, variantResultingMap.m_7E748F9C); // small
+                FindLogic.Combo.Find(info, variantResultingMap.m_0342E00E?.m_loadingScreen); // big
 
                 teMapPlaceableData placeableModelGroups = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.MODEL_GROUP);
                 teMapPlaceableData placeableSingleModels = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.SINGLE_MODEL);
@@ -331,9 +330,9 @@ namespace DataTool.SaveLogic {
             }
 
             {
-                FindLogic.Combo.Find(info, mapHeader.m_loadingScreen);
-                FindLogic.Combo.Find(info, mapHeader.m_smallMapIcon);
-                FindLogic.Combo.Find(info, mapHeader.m_loadingScreenFlag);
+                FindLogic.Combo.Find(info, mapHeader.m_0342E00E?.m_loadingScreen);
+                FindLogic.Combo.Find(info, mapHeader.m_0342E00E?.m_smallMapIcon);
+                FindLogic.Combo.Find(info, mapHeader.m_0342E00E?.m_loadingScreenFlag);
 
                 if (mapHeader.m_supportedGamemodes != null) {
                     foreach (teResourceGUID gamemodeGUID in mapHeader.m_supportedGamemodes) {
@@ -352,18 +351,18 @@ namespace DataTool.SaveLogic {
                 }
             }
 
-            FindLogic.Combo.Find(info, mapHeader.m_announcerWelcome);
-            info.SetEffectName(mapHeader.m_announcerWelcome, "AnnouncerWelcome");
-            FindLogic.Combo.Find(info, mapHeader.m_musicTease);
-            info.SetEffectName(mapHeader.m_musicTease, "MusicTease");
+            FindLogic.Combo.Find(info, mapHeader.m_0342E00E?.m_announcerWelcome);
+            info.SetEffectName(mapHeader.m_0342E00E?.m_announcerWelcome, "AnnouncerWelcome");
+            FindLogic.Combo.Find(info, mapHeader.m_0342E00E?.m_musicTease);
+            info.SetEffectName(mapHeader.m_0342E00E?.m_musicTease, "MusicTease");
 
             LoudLog("\tSaving");
             var context = new Combo.SaveContext(info);
             Combo.Save(flags, mapPath, context);
             Combo.SaveLooseTextures(flags, Path.Combine(mapPath, "Textures"), context);
 
-            if (mapHeader.m_7F5B54B2 != 0) { // map voice set. not announcer
-                FindLogic.Combo.Find(info, mapHeader.m_7F5B54B2);
+            if (mapHeader.m_0342E00E?.m_7F5B54B2 != 0) { // map voice set. not announcer
+                FindLogic.Combo.Find(info, mapHeader.m_0342E00E?.m_7F5B54B2);
             }
 
             //if (announcerVoiceSet != 0) { // whole thing in env mode, not here

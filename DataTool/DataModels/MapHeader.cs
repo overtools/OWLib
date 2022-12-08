@@ -81,9 +81,9 @@ namespace DataTool.DataModels {
             MapGUID = mapHeader.m_map;
             State = mapHeader.m_A125818B;
             MapType = mapHeader.m_mapType;
-            Thumbnail = mapHeader.m_smallMapIcon;
-            Image = mapHeader.m_loadingScreen;
-            FlagImage = mapHeader.m_loadingScreenFlag;
+            Thumbnail = mapHeader.m_0342E00E?.m_smallMapIcon;
+            Image = mapHeader.m_0342E00E?.m_loadingScreen;
+            FlagImage = mapHeader.m_0342E00E?.m_loadingScreenFlag;
             GameModes = mapHeader.m_supportedGamemodes?.Select(x => new GameMode(x).ToLite()).Where(x => x.GUID != 0);
 
             if (mapHeader.m_celebrationOverrides != null) {
