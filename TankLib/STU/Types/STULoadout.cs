@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x07A0E32F, 144)]
+    [STU(0x07A0E32F, 152)]
     public class STULoadout : STUInstance
     {
         [STUField(0xB48F1D22, 8)] // size: 16
@@ -36,5 +36,8 @@ namespace TankLib.STU.Types
         
         [STUField(0x0E679979, 140)] // size: 4
         public int m_0E679979 = -1;
+        
+        [STUField(0xCF86B024, 144)] // size: 4
+        public int m_CF86B024 = -1;
     }
 }

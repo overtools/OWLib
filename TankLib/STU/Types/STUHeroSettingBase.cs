@@ -20,7 +20,7 @@ namespace TankLib.STU.Types
         public Enum_B06ED6CF m_3DBF6FD2;
         
         [STUField(0x4BA4C058, 60)] // size: 4
-        public Enum_A73CF620 m_4BA4C058 = 0x0;
+        public Enum_A73CF620 m_4BA4C058 = Enum_A73CF620.x17C4A342;
         
         [STUField(0x84E9992A, 64)] // size: 1
         public byte m_84E9992A;

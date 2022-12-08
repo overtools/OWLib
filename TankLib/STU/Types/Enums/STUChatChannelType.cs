@@ -13,7 +13,6 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x698FE81F)] Party = 0x4,
         [STUField(0x7B17CA26)] Team = 0x5,
         [STUField(0xD0B2CF7A)] Match = 0x6,
-        [STUField(0x86BE3868)] General = 0x7,
-        [STUField(0x30DB6DD8)] CustomGame = 0x8,
+        [STUField(0x30DB6DD8)] CustomGame = 0x7,
     }
 }
