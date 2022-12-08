@@ -331,6 +331,7 @@ namespace DataTool.SaveLogic {
 
             SaveEffectExtras(flags, effectDirectory, context, effectInfo.Effect, out Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> svceLines);
 
+            return; // this is still crashing mythics bitch. dont remove
             Effect.OverwatchEffect output = new Effect.OverwatchEffect(context.m_info, effectInfo, svceLines);
             string effectFile = Path.Combine(effectDirectory, $"{effectInfo.GetNameIndex()}.{output.Extension}");
             CreateDirectoryFromFile(effectFile);
