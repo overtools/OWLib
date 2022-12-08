@@ -278,15 +278,20 @@ namespace DataTool.SaveLogic {
                         // not shipping
                         continue;
                     }
-
-                    // load or something lol idk
                 }
 
-                var gameMode = STUHelper.GetInstance<STUGameMode>(variantModeInfo.m_gamemode);
-                var gameModeName = IO.GetCleanString(gameMode?.m_displayName) ?? "Unknown Mode";
+                var gameMode = GetInstance<STUGameMode>(variantModeInfo.m_gamemode);
+                var gameModeName = GetCleanString(gameMode?.m_displayName) ?? "Unknown Mode";
                 if (gameModeName == "Calypso HeroMode") gameModeName = "HeroMode";
 
-                var variantName = $"{teResourceGUID.Index(variantModeInfo.m_A9253C68):X} - {gameModeName}";
+                var envName = GetString(variantResultingMap.m_0342E00E.m_D978BBDC);
+                if (envName == "Castle - Eichenwalde (Halloween) Junkenstein 2") {
+                    envName = "Wrath of the Bride";
+                } else if (string.IsNullOrEmpty(envName)) {
+                    envName = $"{teResourceGUID.Index(variantModeInfo.m_A9253C68):X}";
+                }
+
+                var variantName = $"{envName} - {gameModeName}";
                 if (variantModeInfo.m_216EA6DA != 0) {
                     // todo: do missions have names or...
                     variantName += $" - {variantModeInfo.m_216EA6DA}";
@@ -296,6 +301,20 @@ namespace DataTool.SaveLogic {
                 }
 
                 FindLogic.Combo.Find(info, variantResultingMap.m_0342E00E?.m_loadingScreen); // big
+                FindLogic.Combo.Find(info, variantResultingMap.m_0342E00E?.m_smallMapIcon);
+                FindLogic.Combo.Find(info, variantResultingMap.m_0342E00E?.m_loadingScreenFlag);
+
+                FindLogic.Combo.Find(info, variantResultingMap.m_0342E00E?.m_7F5B54B2);
+                FindLogic.Combo.Find(info, variantResultingMap.m_0342E00E?.m_announcerWelcome);
+                FindLogic.Combo.Find(info, variantResultingMap.m_0342E00E?.m_musicTease);
+
+                // todo: announcer save doesnt work properly
+                // at least for wrath of the bride...
+                // cant find the stim in this voice set...
+
+                info.SetEffectVoiceSet(variantResultingMap.m_0342E00E?.m_announcerWelcome, variantResultingMap.m_0342E00E?.m_7F5B54B2);
+                info.SetEffectName(variantResultingMap.m_0342E00E?.m_announcerWelcome, $"AnnouncerWelcome - {envName}");
+                info.SetEffectName(variantResultingMap.m_0342E00E?.m_musicTease, $"MusicTease - {envName}");
 
                 teMapPlaceableData placeableModelGroups = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.MODEL_GROUP);
                 teMapPlaceableData placeableSingleModels = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.SINGLE_MODEL);
