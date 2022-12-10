@@ -265,7 +265,9 @@ namespace DataTool {
                 SpeechLanguage = Flags.SpeechLanguage,
                 TextLanguage = Flags.Language,
                 HandlerArgs = new ClientCreateArgs_Tank {ManifestRegion = Flags.RCN ? ProductHandler_Tank.REGION_CN : ProductHandler_Tank.REGION_DEV},
-                Online = online
+                Online = online,
+
+                RemoteKeyringUrl = "https://raw.githubusercontent.com/overtools/OWLib/master/TankLib/Overwatch.keyring"
             };
 
             LoadHelper.PreLoad();
