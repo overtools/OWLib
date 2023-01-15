@@ -10,6 +10,7 @@
 9AF8,004,Weapon_AMAR_BioticRifle_ux,1
 ; Voice Groups, aka Stimulus, Set Id, Unknown Id
 79,08A,Ultimate,1
+15,079,Ultimate,1
 ;31,079,Voicelines,1
 1,078,Death,1
 3,078,Pain,1
@@ -354,6 +355,10 @@ D25,078,StormRising/Conversations,1
 11CE,078,EnemyKilled/CallMech,1
 11D7,078,Elimination,1
 115B,078,MatchTalk,1
+1300,078,BattleForOlympus/Armor,1
+1301,078,BattleForOlympus/UltCharge,1
+1302,078,BattleForOlympus/Petrify,1
+12F1,078,BattleForOlympus/UltEnds,1
 ; Voice line StateScript 01C ids,,,
 A809,01C,LongDistance,1
 A5FD,01C,NanoBoosted,1
@@ -535,3 +540,4 @@ D7A,09F,Menu/Antarctica (Winter),1
 212E,01C,Halloween,1
 ; NPC VoiceSet names,,,
 1C2,05F,Sojourn,1
+22F,05F,Zeus,1
