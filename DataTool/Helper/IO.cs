@@ -46,7 +46,7 @@ namespace DataTool.Helper {
         private static readonly Dictionary<ushort, HashSet<string>> IgnoredLocalizedNames = new Dictionary<ushort, HashSet<string>>();
 
         public static void LoadGUIDTable(bool onlyCanonical) {
-            var guidNamesPath = Path.Combine("Static", "GUIDNames.csv");
+            var guidNamesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Static", "GUIDNames.csv");
             if (!File.Exists(guidNamesPath)) {
                 TankLib.Helpers.Logger.Warn("GUIDNames", "GUIDNames.csv not found");
                 return;
@@ -92,7 +92,7 @@ namespace DataTool.Helper {
         }
 
         public static void LoadLocalizedNamesMapping() {
-            var locPath = Path.Combine("Static", "LocalizedNamesMapping.csv");
+            var locPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Static", "LocalizedNamesMapping.csv");
             if (!File.Exists(locPath)) {
                 TankLib.Helpers.Logger.Warn("LocalizedNames", "LocalizedNamesMapping.csv not found");
                 return;
