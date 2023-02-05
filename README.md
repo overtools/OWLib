@@ -79,4 +79,4 @@ Valid types include: skin, icon, spray, victorypose, emote, voiceline
 ## Disclaimer
 This project is not affiliated with Blizzard Entertainment, Inc.  
 All trademarks referenced herein are the properties of their respective owners.  
-2022 Blizzard Entertainment, Inc. All rights reserved.
+2023 Blizzard Entertainment, Inc. All rights reserved.
