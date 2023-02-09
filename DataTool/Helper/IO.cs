@@ -285,6 +285,12 @@ namespace DataTool.Helper {
         public static HashSet<ulong> MissingKeyLog = new HashSet<ulong>();
 
         public static Stream OpenFile(ulong guid) {
+            // avoid crashes until i am too lazy to fix
+            if (guid == 0x250000000005845) return null; // broken. for sure
+            if (guid == 0x250000000004F21) return null; // also broken!!
+            if (guid == 0x250000000005674) return null; // oh nyooo it is broken
+            if (guid == 0x2500000000056AC) return null; // same
+
             try {
                 return TankHandler.OpenFile(guid);
             }
