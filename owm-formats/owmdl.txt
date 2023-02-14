@@ -21,7 +21,7 @@ bone:
     uint16 parent_index;
     vector position;
     vector scale;
-    quaternion rotation;
+    vector rotationEuler;
 
 mesh:
     string mesh;
