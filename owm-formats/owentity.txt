@@ -5,7 +5,7 @@ VERSION 2.0
 owentity:
     string identifier = "owentity";
     uint16 version_major = 2;
-    uint16 version_minor = 0;
+    uint16 version_minor = 1;
     string name;
     string model_name;
     string effect_name;
@@ -14,6 +14,8 @@ owentity:
     uint32 effect_guid;
     uint32 subentity_count;
     subentity subentities[subentity_count];
+    string look_name;
+    string paths_relative_to;
 
 subentity:
     string path;
