@@ -43,7 +43,7 @@ namespace DataTool.SaveLogic.Unlock {
             Save(flags, directory, skinTheme, hero);
         }
 
-        public static void FindEntities(FindLogic.Combo.ComboInfo info, STUSkinBase skin, STUHero hero) {
+        public static Dictionary<ulong, ulong> FindEntities(FindLogic.Combo.ComboInfo info, STUSkinBase skin, STUHero hero) {
             Dictionary<ulong, ulong> replacements = GetReplacements(skin);
 
             FindLogic.Combo.Find(info, hero.m_gameplayEntity, replacements);
@@ -60,14 +60,16 @@ namespace DataTool.SaveLogic.Unlock {
 
             FindLogic.Combo.Find(info, hero.m_8125713E, replacements);
             info.SetEntityName(hero.m_8125713E, "HighlightIntro");
+
+            return replacements;
         }
 
         public static void Save(ICLIFlags flags, string directory, STUSkinBase skin, STUHero hero) {
             LoudLog("\t\tFinding");
 
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            FindEntities(info, skin, hero);
-            FindSkinStuff(skin, hero, info);
+            var replacements = FindEntities(info, skin, hero);
+            FindSkinStuff(skin, hero, info, replacements);
 
             SaveCore(flags, directory, skin, info);
         }
@@ -115,7 +117,7 @@ namespace DataTool.SaveLogic.Unlock {
             }
         }
 
-        private static void FindSkinStuff(STUSkinBase skin, STUHero hero, FindLogic.Combo.ComboInfo info) {
+        private static void FindSkinStuff(STUSkinBase skin, STUHero hero, FindLogic.Combo.ComboInfo info, Dictionary<ulong, ulong> skinReplacements) {
             Dictionary<ulong, ulong> replacements = GetReplacements(skin);
 
             if (skin is STUSkinTheme skinTheme) {
@@ -131,6 +133,12 @@ namespace DataTool.SaveLogic.Unlock {
                     if (heroWeapon == null) continue;
 
                     Dictionary<ulong, ulong> weaponReplacements = GetReplacements(heroWeapon);
+
+                    foreach (var (key, value) in skinReplacements) {
+                        if (!weaponReplacements.ContainsKey(key)) {
+                            weaponReplacements[key] = value;
+                        }
+                    }
 
                     SetPreviewWeaponNames(info, weaponReplacements, hero.m_previewWeaponEntities, index);
                     SetPreviewWeaponNames(info, weaponReplacements, hero.m_C2FE396F, index);
