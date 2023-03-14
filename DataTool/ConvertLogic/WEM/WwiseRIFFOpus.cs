@@ -155,22 +155,40 @@ namespace DataTool.ConvertLogic.WEM {
                     WAVEChannelMask.SEVENPOINT1 => 2,
                     _ => 0,
                 };
+
+                if (DEBUGForceStereo && Header.Channels > 2) {
+                    Header.CoupledCount = 1;
+                    Header.Channels = 2;
+                    MappingFamily = 1;
+                }
+
                 Header.StreamCount = Header.Channels - Header.CoupledCount;
 
+                Header.ChannelMapping = new byte[Header.Channels];
                 if (MappingFamily == 1) {
                     for (var i = 0; i < Header.Channels; i++) {
                         Header.ChannelMapping[i] = MappingMatrix[Header.Channels - 1][i];
                     }
                 } else {
-                    if (DEBUGForceStereo && Header.Channels > 2) {
-                        Header.StreamCount = Header.Channels;
-                        Header.Channels = 2;
-                        MappingFamily = 1;
-                    }
+                    if ((Header.ChannelLayout & 8) == 0) {
+                        for (var i = 0; i < Header.Channels; i++) {
+                            Header.ChannelMapping[i] = (byte) i;
+                        }
+                    } else {
+                        for (var i = 0; i < Header.Channels; i++) {
+                            var idx = 0;
+                            for (var j = Header.ChannelLayout & 7; j > 0; j &= j - 1) {
+                                idx++;
+                            }
 
-                    Header.ChannelMapping = new byte[Header.Channels];
-                    for (var i = 0; i < Header.Channels; i++) {
-                        Header.ChannelMapping[i] = (byte) i;
+                            if (idx == i) {
+                                Header.ChannelMapping[i] = (byte)(idx - 1);
+                            } else if (i > idx) {
+                                Header.ChannelMapping[i] = (byte)(i - 1);
+                            } else {
+                                Header.ChannelMapping[i] = (byte) i;
+                            }
+                        }
                     }
                 }
             }
