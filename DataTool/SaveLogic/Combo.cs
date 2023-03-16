@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -217,8 +217,6 @@ namespace DataTool.SaveLogic {
                 skip = extractFlags.SkipAnimations;
                 skipEffect = extractFlags.SkipAnimationEffects;
             }
-
-            skip = skip || !Debugger.IsAttached; // todo: ow2 is anim positions are bugged
 
             FindLogic.Combo.AnimationAsset animationInfo = context.m_info.m_animations[animation];
             if (!skip) {

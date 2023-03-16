@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -177,10 +177,10 @@ namespace TankLib {
                     }
 
                     reader.BaseStream.Position = positionDataPos;
+                    bool useNewFormat = (infoTable.Flags & 512) == 0; // If this flag isn't set, use the new 10 bytes format, otherwise use the 12 bytes one
                     for (int j = 0; j < infoTable.PositionCount; j++) {
-                        break; // todo: fix position frames
                         int frame = System.Math.Abs(positionIndices[j]) % InfoTableSize;
-                        boneAnimation.Positions[frame] = ReadPosition(reader);
+                        boneAnimation.Positions[frame] = ReadPosition(reader, useNewFormat);
                     }
 
                     reader.BaseStream.Position = rotationDataPos;
@@ -212,13 +212,23 @@ namespace TankLib {
         /// </summary>
         /// <param name="reader">Source reader</param>
         /// <returns>Position value</returns>
-        private static teVec3 ReadPosition(BinaryReader reader) {
-            float x = (float) reader.ReadHalf();
-            float y = (float) reader.ReadHalf();
-            float z = (float) reader.ReadHalf();
-            // TODO: frame 1+n is relative to previous frame? (delta?)
+        private static teVec3 ReadPosition(BinaryReader reader, bool newFormat) {
+            if (newFormat) {
+                float x = (float) reader.ReadHalf();
+                float y = (float) reader.ReadHalf();
+                float z = (float) reader.ReadHalf();
 
-            return new teVec3(x / 32f, y / 32f, z / 32f); // <-- sometimes 32 is not the constant?
+                // 32bits value here, tried float, int32, 2x halfs, 2x int16, 4x byte, didn't find anything that would make sense
+                float unknown = (float) reader.ReadSingle();
+
+                return new teVec3(x / 32f, y / 32f, z / 32f);
+            } else {
+                float x = reader.ReadSingle();
+                float y = reader.ReadSingle();
+                float z = reader.ReadSingle();
+
+                return new teVec3(x, y, z);
+            }
         }
 
         /// <summary>
