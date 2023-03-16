@@ -8,6 +8,17 @@ using TankLib.Math;
 namespace TankLib {
     /// <summary>Tank Animation, type 006</summary>
     public class teAnimation {
+        [Flags]
+        public enum AnimFlags : ushort {
+            // todo
+        }
+
+        [Flags]
+        public enum InfoTableFlags : ushort {
+            // todo
+            LegacyPositionFormat = 0x200,
+        }
+
         /// <summary>Animation header</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct AnimHeader {
@@ -20,7 +31,7 @@ namespace TankLib {
             public ushort BoneCount;
 
             /// <summary>Unknown flags</summary>
-            public ushort Flags;
+            public AnimFlags Flags;
 
             public ushort Unknown1;
 
@@ -82,7 +93,7 @@ namespace TankLib {
             public ushort RotationCount;
 
             /// <summary>Unknown flags</summary>
-            public ushort Flags;
+            public InfoTableFlags Flags;
 
             /// <summary>Offset to scale indices</summary>
             public int ScaleIndicesOffset;
@@ -145,6 +156,8 @@ namespace TankLib {
                 InfoTables = new InfoTable[Header.BoneCount];
                 BoneAnimations = new BoneAnimation[Header.BoneCount];
 
+                // todo: read data for non-bone animations
+
                 for (int boneIndex = 0; boneIndex < Header.BoneCount; boneIndex++) {
                     long streamPos = reader.BaseStream.Position;
                     InfoTable infoTable = reader.Read<InfoTable>();
@@ -177,7 +190,7 @@ namespace TankLib {
                     }
 
                     reader.BaseStream.Position = positionDataPos;
-                    bool useNewFormat = (infoTable.Flags & 512) == 0; // If this flag isn't set, use the new 10 bytes format, otherwise use the 12 bytes one
+                    bool useNewFormat = (infoTable.Flags & InfoTableFlags.LegacyPositionFormat) == 0; // If this flag isn't set, use the new 10 bytes format, otherwise use the 12 bytes one
                     for (int j = 0; j < infoTable.PositionCount; j++) {
                         int frame = System.Math.Abs(positionIndices[j]) % InfoTableSize;
                         boneAnimation.Positions[frame] = ReadPosition(reader, useNewFormat);
@@ -218,8 +231,11 @@ namespace TankLib {
                 float y = (float) reader.ReadHalf();
                 float z = (float) reader.ReadHalf();
 
-                // 32bits value here, tried float, int32, 2x halfs, 2x int16, 4x byte, didn't find anything that would make sense
-                float unknown = (float) reader.ReadSingle();
+                uint packedData = reader.ReadUInt32();
+                // var unkX = packedData & 0x3FF;
+                // var unkY = (packedData >> 10) & 0x3FF; // <-- sometimes this value changes with no changes to any component. a single bit gets flipped.
+                // var unkZ = (packedData >> 20) & 0x3FF; // <-- changes wildly, indicating that my bit shifting/masking is wrong
+                // var unk = packedData >> 30; // ????
 
                 return new teVec3(x / 32f, y / 32f, z / 32f);
             } else {
