@@ -30,6 +30,7 @@ namespace DataTool.ToolLogic.Extract {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
                 basePath = Path.Combine(flags.OutputPath, Container);
+                flags.EnableSound = true;
             } else {
                 throw new Exception("no output path");
             }
