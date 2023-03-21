@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using DataTool.Flag;
-using static DataTool.Program;
 using DataTool.SaveLogic;
 using TankLib.STU.Types;
+using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
-using System.Collections.Generic;
 
-namespace DataTool.ToolLogic.Extract.Debug {
+namespace DataTool.ToolLogic.Extract {
     [Tool("extract-music", Description = "Extracts sound files which are identified as music.", CustomFlags = typeof(ExtractFlags))]
     public class ExtractMusic : ITool {
         Dictionary<UInt32, string> music_types = new Dictionary<uint, string> {
