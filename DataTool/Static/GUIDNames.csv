@@ -476,6 +476,7 @@ A03F,01C,BattlePass,1
 AD3F,01C,Shop,1
 AD37,01C,Season1,1
 B647,01C,Season2,1
+B734,01C,Season3,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
@@ -541,3 +542,4 @@ D7A,09F,Menu/Antarctica (Winter),1
 ; NPC VoiceSet names,,,
 1C2,05F,Sojourn,1
 22F,05F,Zeus,1
+238,05F,Roadhog,1
