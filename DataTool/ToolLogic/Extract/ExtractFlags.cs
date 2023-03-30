@@ -12,6 +12,9 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = "tif", NeedsValue = true, Flag = "convert-textures-type", Help = "Texture output type", Valid = new[] {"dds", "tif", "png"})]
         public string ConvertTexturesType;
 
+        [CLIFlag(Default = "owanimclip", NeedsValue = true, Flag = "convert-animations-type", Help = "Animation output type", Valid = new[] {"owanimclip", "seanim"})]
+        public string ConvertAnimationsType;
+
         [CLIFlag(Default = false, Flag = "convert-lossless-textures", Help = "Output lossless textures (if converted)", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool ConvertTexturesLossless;
 

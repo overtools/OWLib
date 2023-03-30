@@ -159,7 +159,7 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void ConvertAnimation(Stream animStream, string path, bool convertAnims, FindLogic.Combo.AnimationAsset animationInfo, bool scaleAnims) {
+        private static void ConvertAnimation(Stream animStream, string path, bool convertAnims, FindLogic.Combo.AnimationAsset animationInfo, bool scaleAnims, string format) {
             var parsedAnimation = default(teAnimation);
             var priority = 100;
             try {
@@ -173,15 +173,18 @@ namespace DataTool.SaveLogic {
                 Path.Combine(path, "Animations", priority.ToString());
 
             if (convertAnims && parsedAnimation != null) {
-                SEAnim seAnim = new SEAnim(parsedAnimation, scaleAnims);
+                IExportFormat exportFormat = format switch {
+                    "seanim" => new SEAnim(parsedAnimation, scaleAnims),
+                    _ => new OverwatchAnimationClip(parsedAnimation)
+                };
+
                 string animOutput = Path.Combine(animationDirectory,
-                                                 animationInfo.GetNameIndex() + "." + seAnim.Extension);
+                                                 animationInfo.GetNameIndex() + "." + exportFormat.Extension);
 
                 CreateDirectoryFromFile(animOutput);
-                using (Stream fileStream = new FileStream(animOutput, FileMode.Create)) {
-                    fileStream.SetLength(0);
-                    seAnim.Write(fileStream);
-                }
+                using Stream fileStream = new FileStream(animOutput, FileMode.Create);
+                fileStream.SetLength(0);
+                exportFormat.Write(fileStream);
             } else {
                 animStream.Position = 0;
                 string rawAnimOutput = Path.Combine(animationDirectory,
@@ -211,11 +214,13 @@ namespace DataTool.SaveLogic {
             bool scaleAnims = false;
             bool skip = false;
             bool skipEffect = false;
+            string format = "seanim";
             if (flags is ExtractFlags extractFlags) {
                 scaleAnims = extractFlags.ScaleAnims;
                 convertAnims = !extractFlags.RawAnimations && !extractFlags.Raw;
                 skip = extractFlags.SkipAnimations;
                 skipEffect = extractFlags.SkipAnimationEffects;
+                format = extractFlags.ConvertAnimationsType;
             }
 
             FindLogic.Combo.AnimationAsset animationInfo = context.m_info.m_animations[animation];
@@ -223,7 +228,7 @@ namespace DataTool.SaveLogic {
                 using Stream animStream = OpenFile(animation);
                 if (animStream == null) return;
 
-                ConvertAnimation(animStream, path, convertAnims, animationInfo, scaleAnims);
+                ConvertAnimation(animStream, path, convertAnims, animationInfo, scaleAnims, format);
             }
 
             if (!context.m_saveAnimationEffects || skipEffect) return;
