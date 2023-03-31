@@ -40,7 +40,7 @@ prop:
 light:
     vector position;
     quaternion rotation;
-    enum { point, spot } type;
+    uint32 enum { point, spot } type;
     float fov;
     vector color;
     float intensity;

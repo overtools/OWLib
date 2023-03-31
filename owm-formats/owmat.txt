@@ -5,7 +5,7 @@ VERSION 3.0
 owmat:
     uint16 version_major = 3;
     uint16 version_minor = 0;
-    enum { material = 0, modellook = 1 } type;
+    uint32 enum { material = 0, modellook = 1 } type;
 
     if (type == material) {
         material material;

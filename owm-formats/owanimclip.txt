@@ -16,7 +16,7 @@ bone:
     track tracks[track_count];
 
 track:
-    enum { position = 0, rotation = 1, scale = 2 } track_type;
+    uint32 enum { position = 0, rotation = 1, scale = 2 } track_type;
     uint32 keyframe_count;
     uint32 component_count;
     keyframe keyframes[keyframe_count];
