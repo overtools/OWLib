@@ -1,0 +1,27 @@
+// see common.txt for shared structures such as string
+
+VERSION 2.0
+
+owanimclip:
+    uint16 version_major = 2;
+    uint16 version_minor = 0;
+    uint32 bone_count;
+    uint32 FPS;
+    uint32 duration;
+    bone bones[bone_count];
+
+bone:
+    string name;
+    uint32 track_count;
+    track tracks[track_count];
+
+track:
+    enum { position = 0, rotation = 1, scale = 2 } track_type;
+    uint32 keyframe_count;
+    uint32 component_count;
+    keyframe keyframes[keyframe_count];
+
+keyframe:
+    uint32 frame;
+    float data[component_count];
+

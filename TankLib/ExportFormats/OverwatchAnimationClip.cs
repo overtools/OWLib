@@ -55,9 +55,7 @@ namespace TankLib.ExportFormats {
                         writer.Write(3);
                         foreach (KeyValuePair<int, teVec3> pair in boneAnimation.Positions) {
                             writer.Write(pair.Key);
-                            writer.Write(pair.Value.X);
-                            writer.Write(pair.Value.Y);
-                            writer.Write(pair.Value.Z);
+                            writer.Write(pair.Value);
                         }
                     }
 
@@ -68,10 +66,7 @@ namespace TankLib.ExportFormats {
                         writer.Write(4);
                         foreach (KeyValuePair<int, teQuat> pair in boneAnimation.Rotations) {
                             writer.Write(pair.Key);
-                            writer.Write(pair.Value.X);
-                            writer.Write(pair.Value.Y);
-                            writer.Write(pair.Value.Z);
-                            writer.Write(pair.Value.W);
+                            writer.Write(pair.Value);
                         }
                     }
 
@@ -82,9 +77,7 @@ namespace TankLib.ExportFormats {
                         writer.Write(3);
                         foreach (KeyValuePair<int, teVec3> pair in boneAnimation.Scales) {
                             writer.Write(pair.Key);
-                            writer.Write(pair.Value.X);
-                            writer.Write(pair.Value.Y);
-                            writer.Write(pair.Value.Z);
+                            writer.Write(pair.Value);
                         }
                     }
                 }
