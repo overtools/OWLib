@@ -48,7 +48,6 @@ namespace DataTool.ToolLogic.Extract {
             string basePath;
             if (toolFlags is ExtractFlags flags) {
                 basePath = Path.Combine(flags.OutputPath, "Music");
-                flags.EnableSound = true;
             } else {
                 throw new Exception("no output path");
             }

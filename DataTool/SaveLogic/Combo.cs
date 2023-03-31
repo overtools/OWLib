@@ -946,7 +946,7 @@ namespace DataTool.SaveLogic {
             bool forceStereo = true;
             if (flags is ExtractFlags extractFlags) {
                 convertWem = !extractFlags.RawSound && !extractFlags.Raw;
-                if (!extractFlags.EnableSound) return;
+                if (extractFlags.SkipSound) return;
                 forceStereo = !extractFlags.KeepSoundChannels;
             }
 
