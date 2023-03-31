@@ -7,10 +7,10 @@ owmdl:
     uint16 version_minor = 0;
     string model_look_file_name;
     string model_name;
-    uint64 model_guid;
+    uint32 model_guid;
     uint16 bone_count;
-    uint16 mesh_count;
-    uint16 hardpoint_count;
+    uint32 mesh_count;
+    uint32 hardpoint_count;
 
     bone bones[bone_count];
     mesh meshes[mesh_count];
@@ -21,7 +21,7 @@ bone:
     uint16 parent_index;
     vector position;
     vector scale;
-    quaternion rotation;
+    vector rotationEuler;
 
 mesh:
     string mesh;
@@ -38,7 +38,7 @@ mesh:
     uint16 bone_index[bone_count][vertex_count];
     float bone_weight[bone_count][vertex_count];
     vector4 color[2][vertex_count];
-    uint32 index[index_count];
+    uint32 index[index_count][3];
 
 hardpoint:
     string name;

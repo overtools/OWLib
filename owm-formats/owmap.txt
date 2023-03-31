@@ -42,7 +42,7 @@ light:
     quaternion rotation;
     enum { point, spot } type;
     float fov;
-    vector4 color;
+    vector color;
     float intensity;
     uint64 projection_guids[2];
 
