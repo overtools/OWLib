@@ -39,7 +39,7 @@ namespace DataTool.ToolLogic.Extract {
         [CLIFlag(Default = false, Flag = "skip-textures", Help = "Skip texture extraction", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool SkipTextures;
 
-        [CLIFlag(Default = false, Flag = "extract-sound", Help = "Extract sounds with assets", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        [CLIFlag(Default = false, Flag = "extract-sound", Help = "Skip sound extraction", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool EnableSound;
 
         [CLIFlag(Default = false, Flag = "skip-models", Help = "Skip model extraction", Hidden = true, Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
