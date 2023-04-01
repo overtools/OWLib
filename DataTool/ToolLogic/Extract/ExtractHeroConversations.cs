@@ -28,6 +28,10 @@ namespace DataTool.ToolLogic.Extract {
             }
 
             var path = Path.Combine(basePath, Container);
+            if (flags.VoiceGroupByLocale) {
+                path = Path.Combine(path, Program.Client.CreateArgs.SpeechLanguage ?? "enUS");
+            }
+
             Logger.Log($"Generating voiceline mappings, this will take some time.");
             GenerateVoicelineMapping();
             ProcessConversations(flags, path);
@@ -36,7 +40,7 @@ namespace DataTool.ToolLogic.Extract {
         private const string Container = "HeroConvo";
         private static readonly Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)> VoicelineHeroMapping = new Dictionary<ulong, (string heroName, Combo.VoiceLineInstanceInfo voiceLineInstance)>();
 
-        private void ProcessConversations(ICLIFlags flags, string basePath) {
+        private void ProcessConversations(ExtractFlags flags, string basePath) {
             var validHeroes = Helpers.GetHeroNamesMapping();
             var parsedTypes = ParseQuery(flags, QueryTypes, validNames: validHeroes);
 
@@ -65,6 +69,16 @@ namespace DataTool.ToolLogic.Extract {
                     continue;
                 }
 
+                var newPath = basePath;
+                if (flags.VoiceGroupByHero) {
+                    var primaryHero = conversation.m_90D76F17.Where(x => x.m_E295B99C != null && VoicelineHeroMapping.ContainsKey(x.m_E295B99C)).Select(x => VoicelineHeroMapping[x.m_E295B99C].heroName).FirstOrDefault(x => !string.IsNullOrEmpty(x));
+                    if (string.IsNullOrEmpty(primaryHero)) {
+                        primaryHero = "Unknown";
+                    }
+
+                    newPath = Path.Combine(basePath, primaryHero);
+                }
+
                 var i = 0;
                 foreach (var voicelineGuid in conversation.m_90D76F17) {
                     if (voicelineGuid.m_E295B99C == null || !VoicelineHeroMapping.ContainsKey(voicelineGuid.m_E295B99C)) {
@@ -80,7 +94,7 @@ namespace DataTool.ToolLogic.Extract {
                     var soundFile = instance.SoundFiles.First();
                     var soundFileGuid = teResourceGUID.AsString(soundFile);
                     var filename = $"{i}-{heroName ?? "Unknown"}-{soundFileGuid}";
-                    var path = Path.Combine(basePath, teResourceGUID.AsString(conversationGuid));
+                    var path = Path.Combine(newPath, teResourceGUID.AsString(conversationGuid));
                     SaveLogic.Combo.SaveVoiceLineInstance(flags, path, instance, filename);
                 }
             }
