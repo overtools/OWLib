@@ -161,16 +161,17 @@ namespace DataTool.SaveLogic {
 
         private static void ConvertAnimation(Stream animStream, string path, bool convertAnims, FindLogic.Combo.AnimationAsset animationInfo, bool scaleAnims, string format) {
             var parsedAnimation = default(teAnimation);
-            var priority = 100;
+            var priority = 16;
+            var group = 16;
             try {
                 parsedAnimation = new teAnimation(animStream, true);
                 priority = parsedAnimation.Header.Priority;
+                group = parsedAnimation.Header.Group;
             } catch (Exception) {
                 Logger.Error("Combo", $"Unable to parse animation {animationInfo.GetName()}");
             }
 
-            string animationDirectory =
-                Path.Combine(path, "Animations", priority.ToString());
+            string animationDirectory = Path.Combine(path, "Animations", priority.ToString(), group.ToString());
 
             if (convertAnims && parsedAnimation != null) {
                 IExportFormat exportFormat = format switch {

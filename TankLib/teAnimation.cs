@@ -23,9 +23,14 @@ namespace TankLib {
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct AnimHeader {
             /// <summary>
-            /// Animation "priority". Is 160 for many animations. No idea what it is used for
+            /// Animation "priority". Is 16 for many animations.
             /// </summary>
-            public short Priority;
+            public byte Priority;
+
+            /// <summary>
+            /// Animation "group"? layer flags?
+            /// </summary>
+            public byte Group;
 
             /// <summary>Number of bones animated</summary>
             public ushort BoneCount;

@@ -176,7 +176,7 @@ namespace DataTool.SaveLogic {
                     FindLogic.Combo.ModelAsset modelInfo = Info.m_models[Model];
 
 
-                    writer.Write(Path.Combine("Models", modelInfo.GetName(), "Animations", Animation.m_priority.ToString(), Animation.GetNameIndex() + ".seanim"));
+                    writer.Write(Path.Combine("Models", modelInfo.GetName(), "Animations", Animation.m_priority.ToString(), Animation.m_group.ToString(), Animation.GetNameIndex() + ".owanimclip"));
                     writer.Write(Path.Combine("Models", modelInfo.GetName(), modelInfo.GetNameIndex() + ".owmdl"));
 
                     // wrap oweffect

@@ -349,6 +349,7 @@ namespace DataTool.FindLogic {
         public class AnimationAsset : ComboAsset {
             public float m_fps;
             public uint m_priority;
+            public uint m_group;
             public ulong m_effect;
 
             public AnimationAsset(ulong guid) : base(guid) { }
@@ -683,7 +684,8 @@ namespace DataTool.FindLogic {
                     using BinaryReader animationReader = new BinaryReader(animationStream);
                     var header = animationReader.Read<teAnimation.AnimHeader>();
                     animationInfo.m_fps = header.FPS;
-                    animationInfo.m_priority = (uint) header.Priority;
+                    animationInfo.m_priority = header.Priority;
+                    animationInfo.m_group = header.Group;
                     animationInfo.m_effect = GetReplacement(header.Effect, replacements);
 
                     Find(info, header.Effect, replacements, animationContext);
