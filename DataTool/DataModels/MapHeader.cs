@@ -25,6 +25,7 @@ namespace DataTool.DataModels {
         public teResourceGUID Image { get; set; }
         public teResourceGUID FlagImage { get; set; }
         public MapCelebrationVariant[] CelebrationVariants { get; set; }
+        public MapVariation[] Variations { get; set; }
 
         public MapHeader(ulong key) {
             STUMapHeader stu = GetInstance<STUMapHeader>(key);
@@ -63,6 +64,13 @@ namespace DataTool.DataModels {
                 }).ToArray();
             }
 
+            if (mapHeader.m_78715D57 != null) {
+                Variations = mapHeader.m_78715D57
+                    .Where(x => x.m_BF231F12 != 0)
+                    .Select(x => new MapVariation((teResourceGUID) x.m_BF231F12, GetString(x.m_0342E00E?.m_D978BBDC)))
+                    .ToArray();
+            }
+
             // Attempt to get the menu map name if one exists
             var mapHeaderGuid = ((teResourceGUID) mapHeader.m_map).WithType(0x9F);
             Name = GetNullableGUIDName(mapHeaderGuid) ?? Name;
@@ -89,6 +97,7 @@ namespace DataTool.DataModels {
     }
 
     public record MapCelebrationVariant(teResourceGUID GUID, string Name, MapHeaderLite MapInfo);
+    public record MapVariation(teResourceGUID GUID, string Name);
 
     // Lighter version of the MapHeader, just used to make JSON exports less thicc if you only need basic map info
     public class MapHeaderLite {
