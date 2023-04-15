@@ -9,7 +9,6 @@ using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Program;
 using static DataTool.Helper.IO;
-using TankLib.STU;
 
 namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-workshop", Description = "List workshop", CustomFlags = typeof(ListFlags), IsSensitive = true)]
@@ -21,12 +20,12 @@ namespace DataTool.ToolLogic.List.Misc {
                 OutputJSON(data, flags);
         }
 
-        private static Dictionary<ulong, string> _valuesNameDictById = new Dictionary<ulong, string>();
+        private static readonly Dictionary<ulong, string> _valuesNameDictById = new();
 
         private static WorkshopContainer GetData() {
             var @return = new WorkshopContainer();
 
-            foreach (ulong key in TrackedFiles[0x54]) {
+            foreach (var key in TrackedFiles[0x54]) {
                 var stu = STUHelper.GetInstance<STU_A21A7043>(key);
                 if (stu == null) continue;
 
@@ -36,7 +35,7 @@ namespace DataTool.ToolLogic.List.Misc {
                 }
             }
 
-            foreach (ulong key in TrackedFiles[0x54]) {
+            foreach (var key in TrackedFiles[0x54]) {
                 var baseStu = STUHelper.GetInstance<STUGenericSettings_Base>(key);
 
                 switch (baseStu) {
@@ -62,6 +61,7 @@ namespace DataTool.ToolLogic.List.Misc {
                             UnkByte = value.m_89C93A57,
                             Parameters = ParseParameters(value.m_CF17DD30)
                         });
+
                         break;
                     case STU_B85A66BB stu:
                         @return.Actions = stu.m_35CA5DCD.Select(action => new WorkshopDefinition {
@@ -72,17 +72,22 @@ namespace DataTool.ToolLogic.List.Misc {
                             Zach = action.m_64B9FD09,
                             Parameters = ParseParameters(action.m_params)
                         });
+
                         break;
                     case STU_ACDD45D0 stu:
-                        STU_611C97A9[] def_assets = new STU_611C97A9[0];
                         @return.Extensions = stu.m_86397C09.Select(ext => new WorkshopExtension {
+                            GUID = ext.m_identifier,
                             DisplayName = GetString(ext.m_displayName),
                             Description = GetString(ext.m_description),
+                            Cost = ext.m_925E7392,
                             UnlockedValues = ext.m_assets?.Select(v => new ExtensionVal {
                                 DisplayName = GetString(v.m_displayName),
-                                Virtual01C = v.m_7533CD4C
+                                Description = GetString(v.m_description),
+                                DropdownId = v.m_7533CD4C,
+                                ValueId = v.m_A5F1C73C,
                             })
-                     });
+                        });
+
                         break;
                     case STU_8C73C07E stu:
                         @return.Events = stu.m_targets.Select(action => new WorkshopDefinition {
@@ -102,6 +107,7 @@ namespace DataTool.ToolLogic.List.Misc {
                             Zach = x.m_64B9FD09,
                             Parameters = ParseParameters(x.m_params)
                         });
+
                         break;
                     default:
                         continue;
@@ -142,6 +148,7 @@ namespace DataTool.ToolLogic.List.Misc {
                                 Id = ss.m_464FB148,
                                 DisplayName = name
                             };
+
                             break;
                         case STU_8302E7AC ss:
                             @out.InferredType = "NumberConstant";
@@ -227,14 +234,19 @@ namespace DataTool.ToolLogic.List.Misc {
 
         public class ExtensionVal {
             public string DisplayName;
-            public teResourceGUID Virtual01C;
+            public string Description;
+            public teResourceGUID DropdownId;
+            public teResourceGUID ValueId;
         }
 
         public class WorkshopExtension {
+            public teResourceGUID GUID;
             public string DisplayName;
             public string Description;
+            public int Cost;
             public IEnumerable<ExtensionVal> UnlockedValues; //values added to the ui when extension is on (is null for example in "Spawn More Dummy Bots")
         }
+
         public class WorkshopValue {
             public teResourceGUID Id;
             public string DisplayName;
@@ -267,8 +279,8 @@ namespace DataTool.ToolLogic.List.Misc {
             public bool ShouldSerializeInputId() => InferredType == "GenericInput";
             public bool ShouldSerializeUnkByte() => InferredType == "GenericInput";
             public bool ShouldSerializeDefaultValue() => InferredType == "GenericInput";
-            public bool ShouldSerializeMax() => InferredType == "GenericInput" || InferredType == "NumberConstant";
-            public bool ShouldSerializeMin() => InferredType == "GenericInput" || InferredType == "NumberConstant";
+            public bool ShouldSerializeMax() => InferredType is "GenericInput" or "NumberConstant";
+            public bool ShouldSerializeMin() => InferredType is "GenericInput" or "NumberConstant";
         }
 
         public class WorkshopDropdownDefinition {
