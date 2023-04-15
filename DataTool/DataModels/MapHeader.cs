@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using DataTool.DataModels.GameModes;
-using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
@@ -10,53 +8,22 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels {
-    [DataContract]
     public class MapHeader {
-        [DataMember]
         public teResourceGUID GUID { get; set; }
-
-        [DataMember]
         public string Name { get; set; }
-
-        [DataMember]
         public string Description { get; set; }
-
-        [DataMember]
         public string Description2 { get; set; }
-
-        [DataMember]
         public string Subline { get; set; }
-
-        [DataMember]
         public string StateA { get; set; }
-
-        [DataMember]
         public string StateB { get; set; }
-
-        [DataMember]
         public string VariantName { get; set; }
-
-        [DataMember]
         public teResourceGUID MapGUID { get; set; }
-
-        [DataMember]
         public IEnumerable<GameModeLite> GameModes { get; set; }
-
-        [DataMember]
         public Enum_668FA6B6 State { get; set; }
-
-        [DataMember]
         public STUMapType MapType { get; set; }
-
-        [DataMember]
         public teResourceGUID Thumbnail { get; set; }
-
-        [DataMember]
         public teResourceGUID Image { get; set; }
-
-        [DataMember]
         public teResourceGUID FlagImage { get; set; }
-
         public MapCelebrationVariant[] CelebrationVariants { get; set; }
 
         public MapHeader(ulong key) {
@@ -84,24 +51,20 @@ namespace DataTool.DataModels {
             Thumbnail = mapHeader.m_0342E00E?.m_smallMapIcon;
             Image = mapHeader.m_0342E00E?.m_loadingScreen;
             FlagImage = mapHeader.m_0342E00E?.m_loadingScreenFlag;
-            GameModes = mapHeader.m_supportedGamemodes?.Select(x => new GameMode(x).ToLite()).Where(x => x.GUID != 0);
+            GameModes = mapHeader.m_supportedGamemodes?
+                .Select(x => new GameMode(x).ToLite())
+                .Where(x => x.GUID != 0);
 
             if (mapHeader.m_celebrationOverrides != null) {
                 CelebrationVariants = mapHeader.m_celebrationOverrides.Select(x => {
-                    var hmm = (teResourceGUID) x.m_map;
-                    hmm.SetType(0x9F);
-
-                    return new MapCelebrationVariant {
-                        Name = GetGUIDName(x.m_celebrationType),
-                        Virtual01C = x.m_celebrationType,
-                        MapInfo = new MapHeader(hmm).ToLite()
-                    };
+                    var mapHeaderGuid = ((teResourceGUID) mapHeader.m_map).WithType(0x9F);
+                    var mapInfo = new MapHeader(mapHeaderGuid).ToLite();
+                    return new MapCelebrationVariant(x.m_celebrationType, GetGUIDName(x.m_celebrationType), mapInfo);
                 }).ToArray();
             }
 
             // Attempt to get the menu map name if one exists
-            var mapHeaderGuid = (teResourceGUID) mapHeader.m_map;
-            mapHeaderGuid.SetType(0x9F);
+            var mapHeaderGuid = ((teResourceGUID) mapHeader.m_map).WithType(0x9F);
             Name = GetNullableGUIDName(mapHeaderGuid) ?? Name;
         }
 
@@ -125,26 +88,12 @@ namespace DataTool.DataModels {
         }
     }
 
-    public class MapCelebrationVariant {
-        [DataMember]
-        public string Name;
-
-        [DataMember]
-        public teResourceGUID Virtual01C;
-
-        [DataMember]
-        public MapHeaderLite MapInfo;
-    }
+    public record MapCelebrationVariant(teResourceGUID GUID, string Name, MapHeaderLite MapInfo);
 
     // Lighter version of the MapHeader, just used to make JSON exports less thicc if you only need basic map info
     public class MapHeaderLite {
-        [DataMember]
         public teResourceGUID GUID;
-
-        [DataMember]
         public string Name;
-
-        [DataMember]
         public string VariantName;
 
         public MapHeaderLite(MapHeader mapHeader) {
