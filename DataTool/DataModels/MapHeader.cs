@@ -59,7 +59,7 @@ namespace DataTool.DataModels {
             if (mapHeader.m_celebrationOverrides != null) {
                 CelebrationVariants = mapHeader.m_celebrationOverrides.Select(x => {
                     var mapHeaderGuid = ((teResourceGUID) mapHeader.m_map).WithType(0x9F);
-                    var mapInfo = new MapHeader(mapHeaderGuid).ToLite();
+                    var mapInfo = new MapHeaderLite(mapHeaderGuid);
                     return new MapCelebrationVariant(x.m_celebrationType, GetGUIDName(x.m_celebrationType), mapInfo);
                 }).ToArray();
             }
@@ -104,6 +104,22 @@ namespace DataTool.DataModels {
         public teResourceGUID GUID;
         public string Name;
         public string VariantName;
+
+        public MapHeaderLite(ulong key) {
+            STUMapHeader stu = GetInstance<STUMapHeader>(key);
+            if (stu == null) return;
+            Init(stu, key);
+        }
+
+        public MapHeaderLite(STUMapHeader stu, ulong key = default) {
+            Init(stu, key);
+        }
+
+        public void Init(STUMapHeader mapHeader, ulong key = default) {
+            GUID = (teResourceGUID) key;
+            Name = GetCleanString(mapHeader.m_displayName);
+            VariantName = GetCleanString(mapHeader.m_overrideName);
+        }
 
         public MapHeaderLite(MapHeader mapHeader) {
             GUID = mapHeader.GUID;
