@@ -343,7 +343,7 @@ namespace TankLib.Helpers {
         public const string ColorReset = "\x1b[0m";
 
         public static bool IsVTEnabled { get; private set; }
-        public static bool IsVTCapable { get; private set; } = Environment.OSVersion.Version.Major >= 6;
+        public static bool IsVTCapable { get; private set; } = OperatingSystem.IsWindows() && Environment.OSVersion.Version.Major >= 6;
 
         public static bool EnableVT() {
             if (IsVTEnabled) {
