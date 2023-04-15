@@ -119,6 +119,16 @@ namespace TankLib {
             SetAttribute((ulong) value << 60, AttributeEnum.Engine);
         }
 
+        public teResourceGUID WithIndex(uint value) {
+            SetAttribute(value, AttributeEnum.Index);
+            return this;
+        }
+
+        public teResourceGUID WithType(ushort value) {
+            SetMangledType((ushort) FlipTypeBits((ulong) (value - 1)));
+            return this;
+        }
+
         private static ulong FlipTypeBits(ulong num) {
             num = ((num >> 1) & 0x55555555) | ((num & 0x55555555) << 1);
             num = ((num >> 2) & 0x33333333) | ((num & 0x33333333) << 2);
