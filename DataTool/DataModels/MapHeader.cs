@@ -64,12 +64,19 @@ namespace DataTool.DataModels {
                 }).ToArray();
             }
 
-            if (mapHeader.m_78715D57 != null) {
-                Variations = mapHeader.m_78715D57
-                    .Where(x => x.m_BF231F12 != 0)
-                    .Select(x => new MapVariation((teResourceGUID) x.m_BF231F12, GetString(x.m_0342E00E?.m_D978BBDC)))
-                    .ToArray();
+            var mapVariations = new List<MapVariation>();
+            for (int i = 0; i < mapHeader.m_D97BC44F.Length; i++) {
+                var variantModeInfo = mapHeader.m_D97BC44F[i];
+                var variantResultingMap = mapHeader.m_78715D57[i];
+                var variantGuid = variantModeInfo.m_A9253C68;
+                var variantName = GetString(variantResultingMap.m_0342E00E?.m_D978BBDC);
+
+                var variation = new MapVariation(variantGuid, variantName);
+                mapVariations.Add(variation);
             }
+
+            // Multiple variations can have the same GUID but different Map GUIDs, we only care about unique variation ids here
+            Variations = mapVariations.DistinctBy(x => x.GUID).ToArray();
 
             // Attempt to get the menu map name if one exists
             var mapHeaderGuid = ((teResourceGUID) mapHeader.m_map).WithType(0x9F);
