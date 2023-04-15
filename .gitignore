@@ -256,3 +256,4 @@ paket-files/
 /DataTool/Crypto
 /dist/
 launchSettings.json
+.DS_Store
