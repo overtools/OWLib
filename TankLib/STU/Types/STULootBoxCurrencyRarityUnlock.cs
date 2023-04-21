@@ -9,7 +9,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0xF5087894, 0)] // size: 16
         public teStructuredDataAssetRef<STUUnlock> m_unlock;
-        
+
         [STUField(0xBB99FCD3, 16)] // size: 4
         public STUUnlockRarity m_rarity;
     }

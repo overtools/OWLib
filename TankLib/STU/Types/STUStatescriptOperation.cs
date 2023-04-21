@@ -8,10 +8,10 @@ namespace TankLib.STU.Types
     {
         [STUField(0xE8302243, 0)] // size: 8
         public ulong m_E8302243;
-        
+
         [STUField(0xBE4E7528, 8)] // size: 4
         public int m_opData;
-        
+
         [STUField(0x619AB3DB, 12)] // size: 1
         public byte m_opType;
     }

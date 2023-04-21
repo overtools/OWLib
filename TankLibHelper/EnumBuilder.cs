@@ -3,14 +3,14 @@ using System.IO;
 
 namespace TankLibHelper {
     public class EnumBuilder : ClassBuilder {
-        private uint _hash => _field.TypeHash2;
         private readonly FieldNew _field;
         
-        public override bool HasRealName => Info.KnownEnums.ContainsKey(_hash);
+        public override bool HasRealName => Info.KnownEnums.ContainsKey(Hash);
 
         public EnumBuilder(StructuredDataInfo info, FieldNew field) : base(info) {
             _field = field;
-            Name = Info.GetEnumName(_hash);
+            Hash = _field.TypeHash2;
+            Name = Info.GetEnumName(Hash);
         }
 
         public override IndentedTextWriter Build(FileWriter file) {
@@ -19,7 +19,7 @@ namespace TankLibHelper {
             string attribute;
 
             //if (!Info.KnownEnums.ContainsKey(_hash)) {
-                attribute = $"[STUEnum(0x{_hash:X8})]";
+                attribute = $"[STUEnum(0x{Hash:X8})]";
             //} else {
             //    attribute = $"[{nameof(STUEnumAttribute)}(0x{_hash:X8}, \"{Info.GetEnumName(_hash)}\")]";
             //}
@@ -31,8 +31,7 @@ namespace TankLibHelper {
             writer.WriteLine("{");
             writer.Indent++;
 
-            if (Info.Enums.ContainsKey(_hash)) {
-                var enumData = Info.Enums[_hash];
+            if (Info.Enums.TryGetValue(Hash, out var enumData)) {
                 foreach (var value in enumData.m_values) {
                     attribute = $"[STUField(0x{value.Hash2:X8})]";
                     

@@ -9,7 +9,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0xB91AA170, 12)] // size: 8
         public teVec2 m_B91AA170;
-        
+
         [STUField(0xD787D2C4, 20)] // size: 8
         public teVec2 m_D787D2C4;
     }

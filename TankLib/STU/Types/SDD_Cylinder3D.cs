@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x8DF8D3EC, 36)] // size: 4
         public float fRadiusA;
-        
+
         [STUField(0x14F18256, 40)] // size: 4
         public float fRadiusB;
     }

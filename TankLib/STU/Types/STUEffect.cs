@@ -8,16 +8,16 @@ namespace TankLib.STU.Types
     {
         [STUField(0xB64D5A14, 160)] // size: 16
         public teStructuredDataAssetRef<STUModel> m_previewModel;
-        
+
         [STUField(0x6AD1B882, 176)] // size: 16
         public teStructuredDataAssetRef<STUModelLook> m_6AD1B882;
-        
+
         [STUField(0x05AA9DFE, 192)] // size: 16
         public teStructuredDataAssetRef<STUHardPoint> m_05AA9DFE;
-        
+
         [STUField(0xF2C4BBBC, 208)] // size: 16
         public teStructuredDataAssetRef<STUGenericSettings_Base> m_F2C4BBBC;
-        
+
         [STUField(0xE2B2B673, 224)] // size: 1
         public byte m_E2B2B673;
     }

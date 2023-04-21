@@ -8,40 +8,40 @@ namespace TankLib.STU.Types
     {
         [STUField(0x780CEDBD, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUXPGain[] m_XPGains;
-        
+
         [STUField(0xED197020, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_3437BE66[] m_ED197020;
-        
+
         [STUField(0xEAFB532B, 40, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_3437BE66[] m_EAFB532B;
-        
+
         [STUField(0xB582A51A, 56)] // size: 16
         public float[] m_B582A51A;
-        
+
         [STUField(0x2918BCA4, 72, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_3437BE66[] m_2918BCA4;
-        
+
         [STUField(0x78625596, 88)] // size: 16
         public float[] m_78625596;
-        
+
         [STUField(0xE609C2C4, 104)] // size: 8
         public double m_E609C2C4;
-        
+
         [STUField(0xD99C35B7, 112)] // size: 8
         public double m_D99C35B7;
-        
+
         [STUField(0xF8D5359A, 120)] // size: 8
         public double m_F8D5359A;
-        
+
         [STUField(0xF63C0C7B, 128)] // size: 8
         public double m_F63C0C7B;
-        
+
         [STUField(0x84F13CFF, 136)] // size: 8
         public double m_84F13CFF;
-        
+
         [STUField(0x398CB1D9, 144)] // size: 8
         public double m_398CB1D9;
-        
+
         [STUField(0x94EA7D40, 152)] // size: 4
         public uint m_94EA7D40;
     }

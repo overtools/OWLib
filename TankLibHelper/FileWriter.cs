@@ -36,9 +36,13 @@ namespace TankLibHelper {
 
             foreach (IndentedTextWriter child in m_children) {
                 if (first) first = false;
-                else builder.WriteLine();
+                else BlankLine(builder);
                 
                 foreach (var line in child.InnerWriter.ToString().Split(stringSeparators, StringSplitOptions.None)) {
+                    if (string.IsNullOrWhiteSpace(line)) {
+                        BlankLine(builder);
+                        continue;
+                    }
                     builder.WriteLine(line);
                 }
             }
@@ -47,6 +51,13 @@ namespace TankLibHelper {
             builder.WriteLine("}");
             
             File.WriteAllText(m_filename, builder.InnerWriter.ToString());
+        }
+        
+        private static void BlankLine(IndentedTextWriter writer) {
+            var oldIndent = writer.Indent;
+            writer.Indent = 0;
+            writer.WriteLine();
+            writer.Indent = oldIndent;
         }
     }
 }

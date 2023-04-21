@@ -9,25 +9,25 @@ namespace TankLib.STU.Types
     {
         [STUField(0xA5C9CA02, 120)] // size: 16
         public teString m_internalName;
-        
+
         [STUField(0xECCC4A5D, 136)] // size: 16
         public teStructuredDataAssetRef<ulong> m_ECCC4A5D;
-        
+
         [STUField(0x71818BC5, 152)] // size: 16
         public teStructuredDataAssetRef<ulong>[] m_71818BC5;
-        
+
         [STUField(0xB8DC6D46, 168)] // size: 16
         public teStructuredDataAssetRef<STUTeamColor> m_teamColor;
-        
+
         [STUField(0x70D5F086, 184, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_882807BA[] m_70D5F086;
-        
+
         [STUField(0x02F889AE, 200)] // size: 16
         public teStructuredDataAssetRef<STUSkinTheme> m_02F889AE;
-        
+
         [STUField(0xC3E03C7F, 216)] // size: 16
         public teColorRGBA m_color;
-        
+
         [STUField(0xE9DA85BB, 232)] // size: 1
         public byte m_E9DA85BB;
     }

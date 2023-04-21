@@ -8,13 +8,13 @@ namespace TankLib.STU.Types
     {
         [STUField(0x0F88291F, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STUAnimBlendTree_OnFinished_WeightDriver m_weightDriver;
-        
+
         [STUField(0x6CB79D25, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimBlendTree_SlotAnimation[] m_slotAnims;
-        
+
         [STUField(0x5E17A3D1, 40)] // size: 1
         public byte m_5E17A3D1 = 0x1;
-        
+
         [STUField(0xE10F639C, 41)] // size: 1
         public byte m_E10F639C = 0x1;
     }

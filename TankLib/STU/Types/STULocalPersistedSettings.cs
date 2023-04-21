@@ -8,13 +8,13 @@ namespace TankLib.STU.Types
     {
         [STUField(0x9F827CDD, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STULocalPersistedBinding[] m_bindings;
-        
+
         [STUField(0x27315EFA, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STULocalPersistedHeroSetting[] m_settings;
-        
+
         [STUField(0xAB634626, 40, ReaderType = typeof(InlineInstanceFieldReader))] // size: 6
         public STULocalPersistedGameplaySettings m_gameplaySettings;
-        
+
         [STUField(0x464225DD, 46, ReaderType = typeof(InlineInstanceFieldReader))] // size: 5
         public STULocalPersistedVoiceChatSettings m_voiceChatSettings;
     }

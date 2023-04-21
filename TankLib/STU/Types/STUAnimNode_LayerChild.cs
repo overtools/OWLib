@@ -9,25 +9,25 @@ namespace TankLib.STU.Types
     {
         [STUField(0x541B8505, 40, ReaderType = typeof(InlineInstanceFieldReader))] // size: 208
         public STU_6754CB2C m_541B8505;
-        
+
         [STUField(0xE33AA964, 248, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_ABD8FE73 m_E33AA964;
-        
+
         [STUField(0xF2D8BF6C, 272, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAnimNode_LayerBase m_F2D8BF6C;
-        
+
         [STUField(0x0509737D, 280, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_32101B7B m_0509737D;
-        
+
         [STUField(0x0F88291F, 288, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_5861C542 m_weightDriver;
-        
+
         [STUField(0x4CDE1BE7, 296)] // size: 4
         public Enum_353C4AFF m_4CDE1BE7;
-        
+
         [STUField(0x2C6F5BC0, 300)] // size: 4
         public Enum_96A73C9E m_2C6F5BC0;
-        
+
         [STUField(0x0F764DCB, 304)] // size: 2
         public ushort m_0F764DCB = 0x3;
     }

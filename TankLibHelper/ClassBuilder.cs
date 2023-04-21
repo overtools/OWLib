@@ -2,6 +2,7 @@
 
 namespace TankLibHelper {
     public abstract class ClassBuilder {
+        public uint Hash { get; protected set; }
         public string Name { get; protected set; }
         protected readonly StructuredDataInfo Info;
 

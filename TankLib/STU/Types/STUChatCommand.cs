@@ -9,16 +9,16 @@ namespace TankLib.STU.Types
     {
         [STUField(0x4CED72F5, 0)] // size: 16
         public teStructuredDataAssetRef<ulong> m_4CED72F5;
-        
+
         [STUField(0xF96A9F40, 16)] // size: 16
         public teStructuredDataAssetRef<ulong> m_commandDescription;
-        
+
         [STUField(0xF5B138A2, 32)] // size: 16
         public teStructuredDataAssetRef<ulong>[] m_chatCommandAliases;
-        
+
         [STUField(0x7371BDE0, 48)] // size: 4
         public STUChatCommandType m_chatCommandType;
-        
+
         [STUField(0xE4E5988D, 52)] // size: 1
         public byte m_E4E5988D;
     }

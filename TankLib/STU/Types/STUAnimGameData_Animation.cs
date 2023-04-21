@@ -8,16 +8,16 @@ namespace TankLib.STU.Types
     {
         [STUField(0x864A1F44, 16, ReaderType = typeof(InlineInstanceFieldReader))] // size: 144
         public STUAnimGameData_PoseData m_poseData;
-        
+
         [STUField(0x07EF10B8, 160)] // size: 4
         public float m_07EF10B8;
-        
+
         [STUField(0x8E7A6FDE, 164)] // size: 4
         public uint m_8E7A6FDE;
-        
+
         [STUField(0x2B48C75E, 168)] // size: 2
         public ushort m_2B48C75E;
-        
+
         [STUField(0x304D90B8, 170)] // size: 2
         public ushort m_304D90B8;
     }

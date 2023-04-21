@@ -8,10 +8,10 @@ namespace TankLib.STU.Types
     {
         [STUField(0x2EB919C9, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUHeroSettingCategory[] m_categories;
-        
+
         [STUField(0x142A3CA9, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUHeroSettingBase[] m_142A3CA9;
-        
+
         [STUField(0xFC1FFB1E, 40, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUHeroSpecificSettings[] m_heroSpecificSettings;
     }

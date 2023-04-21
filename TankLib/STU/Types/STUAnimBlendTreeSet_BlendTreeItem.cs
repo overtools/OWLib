@@ -9,43 +9,43 @@ namespace TankLib.STU.Types
     {
         [STUField(0x560940DC, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 48
         public STUAnimBlendTree_OnFinished m_onFinished;
-        
+
         [STUField(0xC0214513, 48)] // size: 16
         public teStructuredDataAssetRef<STUAnimBlendTree> m_C0214513;
-        
+
         [STUField(0x95877FC5, 64)] // size: 16
         public teStructuredDataAssetRef<ulong> m_95877FC5;
-        
+
         [STUField(0xEB820D40, 80, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_9224E837[] m_EB820D40;
-        
+
         [STUField(0x6AF62086, 96, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_9224E837[] m_6AF62086;
-        
+
         [STUField(0x6EAB6810, 112)] // size: 16
         public teString m_comment;
-        
+
         [STUField(0xF008EA57, 128)] // size: 16
         public teString m_F008EA57;
-        
+
         [STUField(0xF6E6D4B1, 144, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_3B150012 m_F6E6D4B1;
-        
+
         [STUField(0x9AD6CC25, 152, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAnimGameData_Base m_gameData;
-        
+
         [STUField(0xCCB4CD4A, 160)] // size: 8
         public ulong m_CCB4CD4A;
-        
+
         [STUField(0x274F833F, 168, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_89F8DBB3 m_274F833F;
-        
+
         [STUField(0x384DE14F, 176, ReaderType = typeof(InlineInstanceFieldReader))] // size: 8
         public STUAnimBlendTreeSet_RetargetParams m_retargetParams;
-        
+
         [STUField(0xA10A5EAF, 184)] // size: 8
         public teVec2 m_pos;
-        
+
         [STUField(0xE54B9419, 192)] // size: 4
         public uint m_uniqueID;
     }

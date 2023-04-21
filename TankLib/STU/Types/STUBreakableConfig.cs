@@ -9,19 +9,19 @@ namespace TankLib.STU.Types
     {
         [STUField(0xFE263D30, 0)] // size: 4
         public Enum_D996C20B m_FE263D30 = Enum_D996C20B.x2A7B9AB4;
-        
+
         [STUField(0xE1B0C07F, 4)] // size: 1
         public byte m_clientOnly = 0x0;
-        
+
         [STUField(0xEDA30E4A, 5)] // size: 1
         public byte m_EDA30E4A = 0x1;
-        
+
         [STUField(0xD7C2FC23, 6)] // size: 1
         public byte m_D7C2FC23 = 0x1;
-        
+
         [STUField(0x06CC8602, 7)] // size: 1
         public byte m_06CC8602 = 0x0;
-        
+
         [STUField(0x83798806, 8)] // size: 1
         public byte m_83798806;
     }

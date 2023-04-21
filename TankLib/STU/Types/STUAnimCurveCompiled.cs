@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x909EE308, 0)] // size: 16
         public float[] m_valueKeys;
-        
+
         [STUField(0xA321EBE9, 16)] // size: 16
         public float[] m_timeKeys;
     }

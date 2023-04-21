@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0xEADB4E1E, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimBoneWeightMask_Item[] m_EADB4E1E;
-        
+
         [STUField(0x27AF7472, 24)] // size: 4
         public float m_27AF7472;
     }

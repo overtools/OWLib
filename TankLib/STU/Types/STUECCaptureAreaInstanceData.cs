@@ -10,46 +10,46 @@ namespace TankLib.STU.Types
     {
         [STUField(0x3F3ECAB5, 8)] // size: 16
         public teString m_3F3ECAB5;
-        
+
         [STUField(0x2746D7E4, 24)] // size: 16
         public teUUID m_2746D7E4;
-        
+
         [STUField(0x0E73ED6E, 40)] // size: 16
         public teUUID m_0E73ED6E;
-        
+
         [STUField(0x191ED9FD, 56)] // size: 16
         public teUUID m_191ED9FD;
-        
+
         [STUField(0x573705C6, 72)] // size: 4
         public float m_573705C6;
-        
+
         [STUField(0x34ED7800, 76)] // size: 4
         public float m_34ED7800;
-        
+
         [STUField(0x22670E2A, 80)] // size: 4
         public float m_22670E2A;
-        
+
         [STUField(0x26E67742, 84)] // size: 4
         public float m_26E67742;
-        
+
         [STUField(0x23470F7B, 88)] // size: 4
         public float m_23470F7B;
-        
+
         [STUField(0xCBCE6044, 92)] // size: 4
         public float m_CBCE6044;
-        
+
         [STUField(0x33461301, 96)] // size: 4
         public float m_33461301 = 5f;
-        
+
         [STUField(0xFADFE325, 100)] // size: 4
         public TeamIndex m_initialTeam;
-        
+
         [STUField(0x6675D16B, 104)] // size: 4
         public int m_6675D16B = -1;
-        
+
         [STUField(0xB0D03CAE, 108)] // size: 4
         public float m_B0D03CAE = 1f;
-        
+
         [STUField(0xC12407C5, 112)] // size: 1
         public byte m_C12407C5;
     }

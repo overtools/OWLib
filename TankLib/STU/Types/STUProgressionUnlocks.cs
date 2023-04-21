@@ -8,16 +8,16 @@ namespace TankLib.STU.Types
     {
         [STUField(0x9135A4B2, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STUUnlocks m_9135A4B2;
-        
+
         [STUField(0xBF482AA3, 32, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STUUnlocks m_otherUnlocks;
-        
+
         [STUField(0x7846C401, 56, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_1757E817[] m_7846C401;
-        
+
         [STUField(0x473494FF, 72, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STULootBoxUnlocks[] m_lootBoxesUnlocks;
-        
+
         [STUField(0x160B0466, 88)] // size: 16
         public teStructuredDataAssetRef<STUProgressionUnlocks> m_160B0466;
     }

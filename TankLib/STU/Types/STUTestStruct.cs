@@ -10,19 +10,19 @@ namespace TankLib.STU.Types
     {
         [STUField(0x71B6A64F, 0)] // size: 16
         public uint[] m_71B6A64F;
-        
+
         [STUField(0x92D7C726, 16)] // size: 16
         public teVec3A[] m_vecArray;
-        
+
         [STUField(0x78A08312, 32)] // size: 16
         public teString m_string;
-        
+
         [STUField(0x8AFBA769, 48)] // size: 4
         public float m_8AFBA769;
-        
+
         [STUField(0x0D90D271, 52)] // size: 4
         public Enum_0EF092C3 m_enum;
-        
+
         [STUField(0x6F51A649, 56)] // size: 1
         public byte m_6F51A649;
     }

@@ -9,25 +9,25 @@ namespace TankLib.STU.Types
     {
         [STUField(0x2C05CD95, 0)] // size: 16
         public teStructuredDataAssetRef<STUMapCatalog> m_catalog;
-        
+
         [STUField(0xE02BEE24, 16)] // size: 16
         public teStructuredDataAssetRef<STUCelebration> m_celebration;
-        
+
         [STUField(0x5A6D4FBD, 32)] // size: 16
         public teStructuredDataAssetRef<STUDataFlow> m_5A6D4FBD;
-        
+
         [STUField(0xBE382990, 48)] // size: 4
         public Enum_90451E4A m_BE382990 = Enum_90451E4A.x8B638C34;
-        
+
         [STUField(0xC98EBA70, 52)] // size: 4
         public Enum_90451E4A m_C98EBA70 = Enum_90451E4A.x5BFEC833;
-        
+
         [STUField(0x7952DAFC, 56)] // size: 4
         public float m_7952DAFC;
-        
+
         [STUField(0x2334A7D6, 60)] // size: 1
         public byte m_2334A7D6;
-        
+
         [STUField(0x261FA212, 61)] // size: 1
         public byte m_261FA212;
     }

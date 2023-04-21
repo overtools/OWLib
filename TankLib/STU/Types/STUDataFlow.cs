@@ -9,13 +9,13 @@ namespace TankLib.STU.Types
     {
         [STUField(0x0619C597, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUDataFlowType m_type;
-        
+
         [STUField(0x1B90FF5F, 16)] // size: 4
         public Enum_53E780F3 m_1B90FF5F;
-        
+
         [STUField(0x3509C20E, 20)] // size: 1
         public byte m_3509C20E;
-        
+
         [STUField(0x21A30BD8, 21)] // size: 1
         public byte m_21A30BD8;
     }

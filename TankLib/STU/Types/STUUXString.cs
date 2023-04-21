@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x5180E750, 8)] // size: 16
         public teString m_value;
-        
+
         [STUField(0xC1769D54, 24)] // size: 16
         public teStructuredDataAssetRef<STUUXDisplayText> m_displayText;
     }

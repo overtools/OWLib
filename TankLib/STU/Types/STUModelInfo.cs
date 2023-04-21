@@ -9,16 +9,16 @@ namespace TankLib.STU.Types
     {
         [STUField(0x0E023673, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_6250465B[] m_0E023673;
-        
+
         [STUField(0xF60121BC, 24)] // size: 16
         public teStructuredDataAssetRef<STU_CBD8CDF3>[] m_F60121BC;
-        
+
         [STUField(0x1E1CC3C6, 40)] // size: 16
         public teQuat m_1E1CC3C6 = new teQuat(0f, 0f, 0f, 1f);
-        
+
         [STUField(0xBA93D5FE, 56)] // size: 12
         public teVec3 m_BA93D5FE;
-        
+
         [STUField(0x62B0C83F, 68)] // size: 12
         public teVec3 m_62B0C83F;
     }

@@ -39,7 +39,10 @@ namespace TankLibHelper.Modes {
             string generatedDirectory = Path.Combine(outDirectory, "Generated");
             string generatedEnumsDirectory = Path.Combine(outDirectory, "Generated", "Enums");
 
-            var genericTypeFile = new FileWriter(Path.Combine(generatedDirectory, "Misc.cs"), stuTypeNamespace);
+            FileWriter[] genericTypeFiles = new FileWriter[10];
+            for (int i = 0; i < genericTypeFiles.Length; i++) {
+                genericTypeFiles[i] = new FileWriter(Path.Combine(generatedDirectory, $"Misc_{i}.cs"), stuTypeNamespace);
+            }
             var genericEnumsFile = new FileWriter(Path.Combine(generatedEnumsDirectory, "Misc.cs"), stuEnumNamespace);
             List<FileWriter> extraFileWriters = new List<FileWriter>();
 
@@ -47,7 +50,7 @@ namespace TankLibHelper.Modes {
             Directory.CreateDirectory(generatedEnumsDirectory);
 
             void Build(ClassBuilder classBuilder, bool isEnum) {
-                FileWriter fileWriter = isEnum ? genericEnumsFile : genericTypeFile;
+                FileWriter fileWriter = isEnum ? genericEnumsFile : genericTypeFiles[classBuilder.Hash % genericTypeFiles.Length];
                 if (classBuilder.HasRealName) {
                     fileWriter = new FileWriter(Path.Combine(isEnum ? generatedEnumsDirectory : generatedDirectory, classBuilder.Name+".cs"), isEnum ? stuEnumNamespace : stuTypeNamespace);
                     extraFileWriters.Add(fileWriter);
@@ -78,15 +81,12 @@ namespace TankLibHelper.Modes {
                     if (field.m_serializationType != 8 && field.m_serializationType != 9) continue;
 
                     var enumType = field.TypeHash2;
-                    if (!enumFields.ContainsKey(enumType)) {
-                        enumFields[enumType] = field;
-                    }
+                    enumFields.TryAdd(enumType, field);
                 }
             }
 
             foreach (KeyValuePair<uint, EnumNew> enumData in _info.Enums.OrderBy(x => x.Value.Hash2)) {
-                FieldNew field;
-                if (!enumFields.TryGetValue(enumData.Key, out field)) {
+                if (!enumFields.TryGetValue(enumData.Key, out var field)) {
                     field = new FieldNew {
                         m_typeHash = enumData.Key.ToString("X8"),
                         m_size = 4
@@ -109,7 +109,9 @@ namespace TankLibHelper.Modes {
                 Build(enumBuilder, true);
             }*/
 
-            genericTypeFile.Finish();
+            foreach (var genericTypeFile in genericTypeFiles) {
+                genericTypeFile.Finish();
+            }
             genericEnumsFile.Finish();
             foreach (FileWriter writer in extraFileWriters) {
                 writer.Finish();

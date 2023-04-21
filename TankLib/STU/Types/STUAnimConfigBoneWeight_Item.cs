@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x9CDDC24D, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_ABD8FE73 m_weight;
-        
+
         [STUField(0xF97609C8, 24)] // size: 16
         public teStructuredDataAssetRef<STUBoneLabel> m_bone;
     }

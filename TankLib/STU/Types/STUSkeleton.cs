@@ -8,10 +8,10 @@ namespace TankLib.STU.Types
     {
         [STUField(0x0D890433, 8)] // size: 16
         public teStructuredDataAssetRef<STU_8D423808> m_0D890433;
-        
+
         [STUField(0xE4A7B00A, 24)] // size: 16
         public teString m_E4A7B00A;
-        
+
         [STUField(0xA7FE4B94, 40)] // size: 16
         public teString m_sourceSet;
     }

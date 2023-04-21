@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x2C54AEAF, 0)] // size: 16
         public teStructuredDataAssetRef<STUAnimCategory> m_category;
-        
+
         [STUField(0xB1F28FCA, 16)] // size: 1
         public byte m_B1F28FCA;
     }

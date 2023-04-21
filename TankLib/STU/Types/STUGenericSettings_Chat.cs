@@ -8,19 +8,19 @@ namespace TankLib.STU.Types
     {
         [STUField(0xB54004FA, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUChatChannelDefinition[] m_chatChannels;
-        
+
         [STUField(0x75D955D6, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUChatCommand[] m_chatCommands;
-        
+
         [STUField(0x8C4E0BA1, 40)] // size: 4
         public float m_8C4E0BA1 = 10f;
-        
+
         [STUField(0x33A4B186, 44)] // size: 4
         public float m_33A4B186 = 2f;
-        
+
         [STUField(0x615EACEF, 48)] // size: 4
         public uint m_615EACEF = 0x19;
-        
+
         [STUField(0xE700D46F, 52)] // size: 4
         public uint m_E700D46F = 0x384;
     }

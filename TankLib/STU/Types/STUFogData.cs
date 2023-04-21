@@ -9,43 +9,43 @@ namespace TankLib.STU.Types
     {
         [STUField(0xAF1F50CE, 8)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_colorLookup = 0xC0000000000000B;
-        
+
         [STUField(0xF1DAE57E, 24)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_colorCube;
-        
+
         [STUField(0xFF1B5A9F, 40)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_FF1B5A9F;
-        
+
         [STUField(0xB3BBDD01, 56)] // size: 12
         public teVec3 m_B3BBDD01;
-        
+
         [STUField(0xB7BE49E5, 68)] // size: 4
         public float m_B7BE49E5 = 1f;
-        
+
         [STUField(0x825101A9, 72)] // size: 4
         public float m_825101A9 = 500f;
-        
+
         [STUField(0x79476727, 76)] // size: 4
         public float m_79476727 = 0f;
-        
+
         [STUField(0xBDA6F5E1, 80)] // size: 4
         public float m_BDA6F5E1 = 100f;
-        
+
         [STUField(0xA16426C6, 84)] // size: 4
         public float m_height = 0f;
-        
+
         [STUField(0x9884BDEE, 88)] // size: 4
         public float m_9884BDEE = 0.01f;
-        
+
         [STUField(0xDAE8949D, 92)] // size: 4
         public float m_DAE8949D = 1f;
-        
+
         [STUField(0xB9BFD74B, 96)] // size: 4
         public float m_B9BFD74B;
-        
+
         [STUField(0xBF35148C, 100)] // size: 4
         public float m_BF35148C;
-        
+
         [STUField(0x92E8BC2C, 104)] // size: 4
         public float m_92E8BC2C;
     }

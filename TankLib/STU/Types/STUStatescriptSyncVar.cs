@@ -9,10 +9,10 @@ namespace TankLib.STU.Types
     {
         [STUField(0x0D09D2D9, 0)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_0D09D2D9;
-        
+
         [STUField(0x56341592, 16)] // size: 4
         public Enum_143375DF m_56341592;
-        
+
         [STUField(0xAC9480C7, 20)] // size: 1
         public byte m_AC9480C7;
     }

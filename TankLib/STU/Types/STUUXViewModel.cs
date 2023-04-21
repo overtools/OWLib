@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x2A217ECD, 8)] // size: 16
         public ulong[] m_keys;
-        
+
         [STUField(0x70341E18, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUUXObject[] m_values;
     }

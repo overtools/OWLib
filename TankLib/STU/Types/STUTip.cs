@@ -8,16 +8,16 @@ namespace TankLib.STU.Types
     {
         [STUField(0x8A5FECAC, 0)] // size: 16
         public teStructuredDataAssetRef<ulong> m_tip;
-        
+
         [STUField(0xA127B088, 16)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_A127B088;
-        
+
         [STUField(0x54379800, 32, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUConfigVar[] m_54379800;
-        
+
         [STUField(0xBAA74493, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_condition;
-        
+
         [STUField(0xBB16810A, 56, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_priority;
     }

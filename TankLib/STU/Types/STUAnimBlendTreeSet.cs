@@ -9,71 +9,74 @@ namespace TankLib.STU.Types
     {
         [STUField(0x93DA6E7C, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 208
         public STUAnimBlendTreeSet_HardcodedAnimCategoryRefs m_hardcodedAnimCategoryRefs;
-        
+
         [STUField(0x0F898B40, 216)] // size: 16
         public uint[] m_0F898B40;
-        
+
         [STUField(0x6AFCD1A5, 232, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimBlendTreeSet_BlendTreeItem[] m_blendTreeItems;
-        
+
         [STUField(0x31698563, 248, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_EB199931[] m_31698563;
-        
+
         [STUField(0xF9CA7995, 264)] // size: 16
         public uint[] m_paramIds;
-        
+
         [STUField(0xBCAD245E, 280)] // size: 16
         public ulong[] m_BCAD245E;
-        
+
         [STUField(0x999F01F8, 296, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_C898217C[] m_999F01F8;
-        
+
         [STUField(0x85453F7B, 312)] // size: 16
         public teStructuredDataAssetRef<STUAnimCategory>[] m_85453F7B;
-        
+
         [STUField(0x95E7FDC0, 328)] // size: 16
         public teStructuredDataAssetRef<STU_6378747E>[] m_95E7FDC0;
-        
+
         [STUField(0xE1FA44F9, 344)] // size: 16
         public ulong[] m_externalRefs;
-        
+
         [STUField(0x280669CE, 360, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_7C51F8CA[] m_280669CE;
-        
+
         [STUField(0x226CC159, 376, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_A323F0F5[] m_226CC159;
-        
+
         [STUField(0x6DDF40DD, 392, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimBlendTreeSet_BonePoseOverrideItem[] m_bonePoseOverrideItems;
-        
+
         [STUField(0x85CC326B, 408, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_DF9B7DE2 m_85CC326B;
-        
+
         [STUField(0x8610C654, 424)] // size: 16
         public teStructuredDataAssetRef<ulong> m_8610C654;
-        
+
         [STUField(0xBA53D5ED, 440)] // size: 8
         public ulong m_guid;
-        
+
         [STUField(0xD1467FCA, 448, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAnimGameData_Base m_D1467FCA;
-        
+
         [STUField(0x2B2C5C7F, 456, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_72C48DD7 m_animParamUpdater;
-        
+
         [STUField(0x5EF941B5, 464)] // size: 8
         public teVec2 m_5EF941B5;
-        
+
         [STUField(0x384DE14F, 472, ReaderType = typeof(InlineInstanceFieldReader))] // size: 8
         public STUAnimBlendTreeSet_RetargetParams m_retargetParams;
-        
+
         [STUField(0x1C7DF2B9, 480)] // size: 4
         public uint m_1C7DF2B9;
-        
+
         [STUField(0xCF30A8E3, 484)] // size: 4
         public uint m_CF30A8E3;
-        
+
         [STUField(0x2F9541A4, 488)] // size: 4
         public int m_crc;
+
+        [STUField(0x97903BCA, 492)] // size: 2
+        public ushort m_97903BCA;
     }
 }

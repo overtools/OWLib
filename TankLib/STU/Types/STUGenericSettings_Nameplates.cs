@@ -9,61 +9,61 @@ namespace TankLib.STU.Types
     {
         [STUField(0xB8938E78, 8)] // size: 16
         public teColorRGBA m_backgroundColor = new teColorRGBA(0.05f, 0.05f, 0.05f, 0.93f);
-        
+
         [STUField(0x8B7F6B0C, 24)] // size: 12
         public teColorRGB m_8B7F6B0C = new teColorRGB(1f, 0.065f, 0.019f);
-        
+
         [STUField(0xA699CE1C, 36)] // size: 12
         public teColorRGB m_A699CE1C = new teColorRGB(0.065f, 0.019f, 1f);
-        
+
         [STUField(0x950E2A8F, 48)] // size: 4
         public float m_950E2A8F = 20f;
-        
+
         [STUField(0x9D442A12, 52)] // size: 4
         public float m_9D442A12 = 10f;
-        
+
         [STUField(0xBD5D0EA8, 56)] // size: 4
         public float m_BD5D0EA8 = 0.8f;
-        
+
         [STUField(0x6C703AAF, 60)] // size: 4
         public float m_6C703AAF = 0.3f;
-        
+
         [STUField(0x620F883F, 64)] // size: 4
         public float m_620F883F = 0.6f;
-        
+
         [STUField(0xA373BBA0, 68)] // size: 4
         public float m_A373BBA0 = 0.3f;
-        
+
         [STUField(0x8C167EFF, 72)] // size: 4
         public float m_8C167EFF = 15f;
-        
+
         [STUField(0x8FF7841C, 76)] // size: 4
         public float m_8FF7841C = 35f;
-        
+
         [STUField(0x85587E17, 80)] // size: 4
         public float m_85587E17 = 1E-05f;
-        
+
         [STUField(0x1DE67E91, 84)] // size: 4
         public float m_1DE67E91 = 0.00021f;
-        
+
         [STUField(0xD1195FED, 88)] // size: 4
         public float m_D1195FED = 11f;
-        
+
         [STUField(0xEF5CE860, 92)] // size: 4
         public float m_EF5CE860 = 5f;
-        
+
         [STUField(0xF09A2168, 96)] // size: 4
         public float m_F09A2168 = 150f;
-        
+
         [STUField(0xCE86B746, 100)] // size: 4
         public float m_CE86B746 = 90f;
-        
+
         [STUField(0x449E32A3, 104)] // size: 4
         public uint m_449E32A3 = 0x14;
-        
+
         [STUField(0xC0ACAD1E, 108)] // size: 4
         public uint m_C0ACAD1E = 0x5;
-        
+
         [STUField(0xA9391B0F, 112)] // size: 4
         public uint m_A9391B0F = 0x1;
     }

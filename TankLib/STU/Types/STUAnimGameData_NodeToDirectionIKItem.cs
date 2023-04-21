@@ -9,13 +9,13 @@ namespace TankLib.STU.Types
     {
         [STUField(0x88E08995, 0)] // size: 12
         public teVec3 m_88E08995;
-        
+
         [STUField(0x85FAE8CB, 12)] // size: 4
         public float m_85FAE8CB;
-        
+
         [STUField(0x0D38DEBA, 16)] // size: 2
         public ushort m_0D38DEBA;
-        
+
         [STUField(0x7E257788, 18)] // size: 2
         public ushort m_7E257788;
     }

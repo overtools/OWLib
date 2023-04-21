@@ -10,52 +10,52 @@ namespace TankLib.STU.Types
     {
         [STUField(0x9297ADB4, 8)] // size: 16
         public teStructuredDataAssetRef<STUModelLook> m_look;
-        
+
         [STUField(0xEE77FFF9, 24)] // size: 16
         public teStructuredDataAssetRef<STU_4189AEA5> m_EE77FFF9;
-        
+
         [STUField(0xFD090EAD, 40)] // size: 16
         public teStructuredDataAssetRef<STUAnimation> m_FD090EAD;
-        
+
         [STUField(0x592F316A, 56, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_8D38C163[] m_592F316A;
-        
+
         [STUField(0x2E5FBA99, 72, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_9371B680[] m_pose;
-        
+
         [STUField(0x7A429A56, 88)] // size: 12
         public teVec3 m_7A429A56 = new teVec3(0f, 0f, 0f);
-        
+
         [STUField(0x59D2DC64, 100)] // size: 12
         public teVec3 m_59D2DC64 = new teVec3(0f, 0f, 0f);
-        
+
         [STUField(0xCC9B90A5, 112)] // size: 4
         public float m_CC9B90A5 = 0f;
-        
+
         [STUField(0xB5BCCD69, 116)] // size: 4
         public float m_B5BCCD69 = 0f;
-        
+
         [STUField(0xD197FFE0, 120)] // size: 4
         public float m_D197FFE0 = 0f;
-        
+
         [STUField(0xC9A391CD, 124)] // size: 4
         public float m_C9A391CD = 0f;
-        
+
         [STUField(0xF6D474ED, 128)] // size: 4
         public Enum_703A3A64 m_F6D474ED = Enum_703A3A64.x3BC84655;
-        
+
         [STUField(0x22BC325D, 132)] // size: 4
         public Enum_703A3A64 m_22BC325D = Enum_703A3A64.x3BC84655;
-        
+
         [STUField(0x7F8B1118, 136)] // size: 4
         public Enum_703A3A64 m_7F8B1118 = Enum_703A3A64.x3BC84655;
-        
+
         [STUField(0x71068425, 140)] // size: 4
         public Enum_703A3A64 m_71068425 = Enum_703A3A64.x3BC84655;
-        
+
         [STUField(0x86C122AB, 144)] // size: 1
         public byte m_86C122AB = 0x0;
-        
+
         [STUField(0xEED141D9, 145)] // size: 1
         public byte m_EED141D9 = 0x0;
     }

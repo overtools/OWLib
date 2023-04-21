@@ -9,25 +9,25 @@ namespace TankLib.STU.Types
     {
         [STUField(0xA0D4ABDE, 240)] // size: 16
         public teStructuredDataAssetRef<STUAnimAlias> m_emote;
-        
+
         [STUField(0x2B8351DA, 256)] // size: 16
         public teStructuredDataAssetRef<STUAnimBlendTreeSet> m_emoteBlendTreeSet;
-        
+
         [STUField(0x89C64674, 272)] // size: 16
         public teStructuredDataAssetRef<ulong> m_89C64674;
-        
+
         [STUField(0x7E3ED979, 288)] // size: 16
         public teStructuredDataAssetRef<STUTargetTag>[] m_7E3ED979;
-        
+
         [STUField(0x421B4005, 304)] // size: 16
         public teStructuredDataAssetRef<STU_6BE90C5C>[] m_421B4005;
-        
+
         [STUField(0x28814AE5, 320)] // size: 12
         public teVec3 m_28814AE5 = new teVec3(0f, 1f, 0f);
-        
+
         [STUField(0x69150A1D, 332)] // size: 12
         public teVec3 m_69150A1D = new teVec3(1f, 1f, 1f);
-        
+
         [STUField(0x7AE191BC, 344)] // size: 1
         public byte m_7AE191BC;
     }

@@ -9,7 +9,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x3F5B86A4, 240)] // size: 16
         public teStructuredDataAssetRef<STUAnimation> m_animation;
-        
+
         [STUField(0x0619C597, 256)] // size: 4
         public POTGType m_type;
     }

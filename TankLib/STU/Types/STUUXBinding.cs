@@ -9,19 +9,19 @@ namespace TankLib.STU.Types
     {
         [STUField(0x27437CA7, 32)] // size: 16
         public teString m_27437CA7;
-        
+
         [STUField(0x95FBB12E, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUUXPropertyPath m_95FBB12E;
-        
+
         [STUField(0xF0E5E268, 56, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_C9E4B629 m_F0E5E268;
-        
+
         [STUField(0x15192D8D, 64, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUUXObject m_source;
-        
+
         [STUField(0xB792BE50, 72, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_64C11507 m_B792BE50;
-        
+
         [STUField(0x09657D8A, 80)] // size: 4
         public Enum_2962B606 m_mode = Enum_2962B606.x6820616E;
     }

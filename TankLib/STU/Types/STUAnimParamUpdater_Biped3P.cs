@@ -8,41 +8,44 @@ namespace TankLib.STU.Types
     {
         [STUField(0xD5AF8608, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 48
         public STUAnimParamUpdater_TurnParameters m_D5AF8608;
-        
+
         [STUField(0xAFA9EED7, 56, ReaderType = typeof(InlineInstanceFieldReader))] // size: 40
         public STU_1AC9AD09 m_AFA9EED7;
-        
+
         [STUField(0x6B655AEE, 96)] // size: 16
         public teStructuredDataAssetRef<STUAnimAlias>[] m_6B655AEE;
-        
+
         [STUField(0x49E4067A, 112, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimParamUpdater_SnapTurnScriptedAnimAlias[] m_49E4067A;
-        
+
         [STUField(0xA6400617, 128, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_90A7ED45 m_A6400617;
-        
+
         [STUField(0x045D3D91, 136, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_E0AB3A20 m_045D3D91;
-        
+
         [STUField(0x8D83146B, 144, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_48739F6A m_8D83146B;
-        
+
         [STUField(0x37258175, 152)] // size: 4
         public float m_37258175;
-        
+
         [STUField(0x8F2AC198, 156)] // size: 4
         public float m_8F2AC198;
-        
+
         [STUField(0x169C987A, 160)] // size: 4
         public float m_169C987A;
-        
-        [STUField(0x5F21028B, 164)] // size: 4
+
+        [STUField(0x08B119ED, 164)] // size: 4
+        public float m_08B119ED;
+
+        [STUField(0x5F21028B, 168)] // size: 4
         public float m_5F21028B;
-        
-        [STUField(0x2430F8CB, 168)] // size: 1
+
+        [STUField(0x2430F8CB, 172)] // size: 1
         public byte m_2430F8CB;
-        
-        [STUField(0xB5CF1111, 169)] // size: 1
+
+        [STUField(0xB5CF1111, 173)] // size: 1
         public byte m_B5CF1111;
     }
 }

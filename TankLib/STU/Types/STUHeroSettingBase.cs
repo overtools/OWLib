@@ -9,22 +9,22 @@ namespace TankLib.STU.Types
     {
         [STUField(0x4D2DB658, 8)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_identifier;
-        
+
         [STUField(0xB48F1D22, 24)] // size: 16
         public teStructuredDataAssetRef<ulong> m_name;
-        
+
         [STUField(0x2C54AEAF, 40)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_category;
-        
+
         [STUField(0x3DBF6FD2, 56)] // size: 4
         public Enum_B06ED6CF m_3DBF6FD2;
-        
+
         [STUField(0x4BA4C058, 60)] // size: 4
         public Enum_A73CF620 m_4BA4C058 = Enum_A73CF620.x17C4A342;
-        
+
         [STUField(0x84E9992A, 64)] // size: 1
         public byte m_84E9992A;
-        
+
         [STUField(0x0C3FF9F9, 65)] // size: 1
         public byte m_0C3FF9F9;
     }

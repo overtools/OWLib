@@ -8,46 +8,46 @@ namespace TankLib.STU.Types
     {
         [STUField(0xB48F1D22, 8)] // size: 16
         public teStructuredDataAssetRef<ulong> m_name;
-        
+
         [STUField(0xCA7E6EDC, 24)] // size: 16
         public teStructuredDataAssetRef<ulong> m_description;
-        
+
         [STUField(0x290B2ADF, 40)] // size: 16
         public teStructuredDataAssetRef<ulong> m_290B2ADF;
-        
+
         [STUField(0x245A3F6D, 56)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_245A3F6D;
-        
+
         [STUField(0xCF16B594, 72, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_DD1EC1A0 m_CF16B594;
-        
+
         [STUField(0xFD43B47A, 88, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_40DCA4BB m_FD43B47A;
-        
+
         [STUField(0xF5087894, 104)] // size: 16
         public teStructuredDataAssetRef<STUUnlock> m_unlock;
-        
+
         [STUField(0x544A6A4F, 120)] // size: 16
         public teStructuredDataAssetRef<STUTexture> m_544A6A4F;
-        
+
         [STUField(0x4E291DCC, 136)] // size: 16
         public teString m_4E291DCC;
-        
+
         [STUField(0x50AA3D4C, 152, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_8D3C97D8 m_50AA3D4C;
-        
+
         [STUField(0x4FF98D41, 168, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUCriteriaContainer m_criteria;
-        
+
         [STUField(0xE1F5C73D, 176)] // size: 4
         public int m_E1F5C73D;
-        
+
         [STUField(0x07DD813E, 180)] // size: 4
         public int m_value;
-        
+
         [STUField(0x628D48CC, 184)] // size: 4
         public int m_gamerScore;
-        
+
         [STUField(0x5351832E, 188)] // size: 4
         public int m_5351832E = -1;
     }

@@ -8,10 +8,10 @@ namespace TankLib.STU.Types
     {
         [STUField(0x9CB455AD, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUStatescriptGraphWithOverrides[] m_9CB455AD;
-        
+
         [STUField(0x2D9815BA, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUStatescriptSchema m_2D9815BA;
-        
+
         [STUField(0xC9EE018D, 32)] // size: 1
         public byte m_C9EE018D;
     }

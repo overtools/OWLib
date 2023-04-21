@@ -8,64 +8,64 @@ namespace TankLib.STU.Types
     {
         [STUField(0x3C1894B2, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STUUnlocks m_heroicUnlocks;
-        
+
         [STUField(0xB0670378, 32, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STURankedTierDefinition[] m_rankedTiers;
-        
+
         [STUField(0xB98780B8, 48)] // size: 16
         public teStructuredDataAssetRef<STU_F9392C2B> m_B98780B8;
-        
+
         [STUField(0x4245A80C, 64)] // size: 8
         public double m_4245A80C = 0.05;
-        
+
         [STUField(0x3909E0E2, 72)] // size: 8
         public double m_3909E0E2 = 0.03;
-        
+
         [STUField(0xD2B2A90F, 80)] // size: 4
         public int m_D2B2A90F;
-        
+
         [STUField(0x6B8068D7, 84)] // size: 4
         public int m_6B8068D7;
-        
+
         [STUField(0xB3359A7B, 88)] // size: 4
         public int m_B3359A7B = 0xA;
-        
+
         [STUField(0xB1A4844B, 92)] // size: 4
         public int m_B1A4844B;
-        
+
         [STUField(0x1B1F5025, 96)] // size: 4
         public int m_1B1F5025;
-        
+
         [STUField(0x0F30ABF7, 100)] // size: 4
         public int m_0F30ABF7;
-        
+
         [STUField(0xDA61B7DA, 104)] // size: 4
         public int m_DA61B7DA;
-        
+
         [STUField(0xBA88A3D8, 108)] // size: 4
         public int m_BA88A3D8 = 0xF3C;
-        
+
         [STUField(0x7AE0E896, 112)] // size: 4
         public int m_7AE0E896;
-        
+
         [STUField(0xD48BAB59, 116)] // size: 4
         public int m_D48BAB59;
-        
+
         [STUField(0x8AAD65C1, 120)] // size: 4
         public int m_8AAD65C1;
-        
+
         [STUField(0x4A95705B, 124)] // size: 4
         public int m_4A95705B;
-        
+
         [STUField(0x38166052, 128)] // size: 4
         public int m_38166052;
-        
+
         [STUField(0xD968DA45, 132)] // size: 4
         public int m_D968DA45;
-        
+
         [STUField(0x69A7A20C, 136)] // size: 4
         public int m_69A7A20C;
-        
+
         [STUField(0x6BB594B3, 140)] // size: 4
         public int m_6BB594B3;
     }

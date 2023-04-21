@@ -8,22 +8,22 @@ namespace TankLib.STU.Types
     {
         [STUField(0xDAE04657, 0)] // size: 4
         public float m_DAE04657 = 1f;
-        
+
         [STUField(0x96960C7F, 4)] // size: 4
         public float m_96960C7F = 1f;
-        
+
         [STUField(0x9F7F2742, 8)] // size: 4
         public float m_9F7F2742 = 1f;
-        
+
         [STUField(0x0C4880DA, 12)] // size: 4
         public float m_0C4880DA = 1f;
-        
+
         [STUField(0xA3659A33, 16)] // size: 4
         public float m_A3659A33 = 1f;
-        
+
         [STUField(0x336BADCB, 20)] // size: 4
         public float m_336BADCB = 1f;
-        
+
         [STUField(0x131257CD, 24)] // size: 4
         public float m_root = 1f;
     }

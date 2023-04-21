@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0xE295B99C, 8)] // size: 16
         public teStructuredDataAssetRef<STUVoiceLine> m_E295B99C;
-        
+
         [STUField(0xB4D405A1, 24)] // size: 4
         public uint m_B4D405A1;
     }

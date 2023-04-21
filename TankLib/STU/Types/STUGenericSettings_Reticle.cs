@@ -10,52 +10,52 @@ namespace TankLib.STU.Types
     {
         [STUField(0x2A25A783, 8)] // size: 16
         public teStructuredDataAssetRef<ulong> m_2A25A783;
-        
+
         [STUField(0x8B7F6B0C, 24)] // size: 12
         public teColorRGB m_8B7F6B0C = new teColorRGB(1f, 0.0648f, 0.01938f);
-        
+
         [STUField(0xA699CE1C, 36)] // size: 12
         public teColorRGB m_A699CE1C = new teColorRGB(0.0648f, 0.01938f, 1f);
-        
+
         [STUField(0x33207F6F, 48)] // size: 12
         public teColorRGB m_33207F6F = new teColorRGB(1f, 1f, 1f);
-        
+
         [STUField(0xE397D09F, 60)] // size: 4
         public float m_E397D09F = 10f;
-        
+
         [STUField(0xEEC455A9, 64)] // size: 4
         public float m_EEC455A9 = 1f;
-        
+
         [STUField(0x2ADE63D3, 68)] // size: 4
         public float m_2ADE63D3 = 1f;
-        
+
         [STUField(0x86A84408, 72)] // size: 4
         public float m_86A84408;
-        
+
         [STUField(0x9AB8E645, 76)] // size: 4
         public float m_9AB8E645;
-        
+
         [STUField(0x564A7379, 80)] // size: 4
         public float m_564A7379;
-        
+
         [STUField(0x58750551, 84)] // size: 4
         public float m_58750551;
-        
+
         [STUField(0x5BD110A8, 88)] // size: 4
         public Enum_C074B9DE m_reticleType = Enum_C074B9DE.x4F1B70A3;
-        
+
         [STUField(0x2B4AB8AB, 92)] // size: 4
         public float m_2B4AB8AB = 5f;
-        
+
         [STUField(0x919834B3, 96)] // size: 4
         public float m_919834B3 = 0.8f;
-        
+
         [STUField(0x10323077, 100)] // size: 4
         public float m_10323077 = 10f;
-        
+
         [STUField(0xEA8ADC97, 104)] // size: 4
         public float m_EA8ADC97 = 0.8f;
-        
+
         [STUField(0x0DC4BA0B, 108)] // size: 4
         public float m_0DC4BA0B = 2f;
     }

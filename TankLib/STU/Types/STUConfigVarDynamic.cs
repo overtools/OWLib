@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x4D2DB658, 16)] // size: 2
         public ushort m_identifier;
-        
+
         [STUField(0x60DB8F99, 18)] // size: 1
         public byte m_60DB8F99;
     }

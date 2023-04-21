@@ -4,23 +4,20 @@
 namespace TankLib.STU.Types
 {
     [STU(0xB7EEA3BE, 120)]
-    public class STUSkinBase : STUShippable
+    public class STUSkinBase : STU_21276722
     {
-        [STUField(0xAA8E1BB0, 32)] // size: 16
+        [STUField(0xAA8E1BB0, 48)] // size: 16
         public teStructuredDataAssetRef<STUTargetTag>[] m_targetTags;
-        
-        [STUField(0xBCC55571, 48, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+
+        [STUField(0xBCC55571, 64, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_47C34433[] m_BCC55571;
-        
-        [STUField(0x50FDDF83, 64)] // size: 16
+
+        [STUField(0x50FDDF83, 80)] // size: 16
         public teStructuredDataAssetRef<STUTeamColor> m_50FDDF83;
-        
-        [STUField(0x258A7D5C, 80)] // size: 24
-        public teStructuredDataHashMap<STUSkinRuntimeOverride> m_runtimeOverrides;
-        
+
         [STUField(0xEBC69014, 96)] // size: 16
         public teStructuredDataAssetRef<STUHeroWeapon> m_EBC69014;
-        
+
         [STUField(0x16051DC7, 112)] // size: 8
         public ulong m_16051DC7;
     }

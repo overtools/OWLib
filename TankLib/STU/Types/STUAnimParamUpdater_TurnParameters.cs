@@ -8,28 +8,28 @@ namespace TankLib.STU.Types
     {
         [STUField(0x8F5C8462, 0)] // size: 16
         public teStructuredDataAssetRef<STUAnimCategory> m_8F5C8462;
-        
+
         [STUField(0x946D26E1, 16)] // size: 4
         public float m_946D26E1 = 120f;
-        
+
         [STUField(0x1E8E92CC, 20)] // size: 4
         public float m_1E8E92CC = 90f;
-        
+
         [STUField(0x54A12FD0, 24)] // size: 4
         public float m_54A12FD0 = 120f;
-        
+
         [STUField(0x1E2C4675, 28)] // size: 4
         public float m_1E2C4675 = 150f;
-        
+
         [STUField(0x20FDCFD4, 32)] // size: 4
         public float m_20FDCFD4 = 1.2f;
-        
+
         [STUField(0xFDE68C76, 36)] // size: 4
         public float m_FDE68C76 = 1.4f;
-        
+
         [STUField(0x46715402, 40)] // size: 4
         public float m_46715402 = 0.1f;
-        
+
         [STUField(0xAAA3BF24, 44)] // size: 1
         public byte m_AAA3BF24;
     }

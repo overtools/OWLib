@@ -8,13 +8,13 @@ namespace TankLib.STU.Types
     {
         [STUField(0xE17B463D, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_25B808BD m_E17B463D;
-        
+
         [STUField(0x91546235, 40, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimNode_LayerIsolateSourceTargetPair[] m_91546235;
-        
+
         [STUField(0x9532A15B, 56, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimConfigBoneWeight_Item[] m_9532A15B;
-        
+
         [STUField(0x84AEA78F, 72)] // size: 1
         public byte m_84AEA78F;
     }

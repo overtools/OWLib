@@ -9,19 +9,19 @@ namespace TankLib.STU.Types
     {
         [STUField(0xE74A5F9A, 8)] // size: 16
         public teStructuredDataAssetRef<STUHero> m_E74A5F9A;
-        
+
         [STUField(0xEF29ED01, 24)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_EF29ED01;
-        
+
         [STUField(0xE5CEAD94, 40, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUStatescriptGraphWithOverrides[] m_E5CEAD94;
-        
+
         [STUField(0xCD66847E, 56)] // size: 4
         public TeamIndex m_CD66847E;
-        
+
         [STUField(0x8A10B520, 60)] // size: 1
         public byte m_8A10B520 = 0x1;
-        
+
         [STUField(0x44AB45F0, 61)] // size: 1
         public byte m_44AB45F0 = 0x1;
     }

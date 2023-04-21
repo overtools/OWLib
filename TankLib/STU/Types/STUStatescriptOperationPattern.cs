@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x88256056, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUStatescriptOperation[] m_operations;
-        
+
         [STUField(0x45E6B9FB, 16)] // size: 4
         public int m_45E6B9FB;
     }

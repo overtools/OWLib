@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x45A7A69C, 72)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_default;
-        
+
         [STUField(0x16B4863C, 88, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_8811A9AC[] m_entries;
     }

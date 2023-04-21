@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0xAA76FAD1, 8)] // size: 16
         public teStructuredDataAssetRef<ulong> m_displayText;
-        
+
         [STUField(0x16B4863C, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUGameRulesetSchemaEntry[] m_entries;
     }

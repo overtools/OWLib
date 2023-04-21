@@ -16,9 +16,10 @@ namespace TankLibHelper {
         public override bool HasRealName => Info.KnownInstances.ContainsKey(_instance.Hash2); 
         
         public InstanceBuilder(StructuredDataInfo info, InstanceNew instance) : base(info) {
-            _instance = instance;            
-            
-            Name = Info.GetInstanceName(_instance.Hash2);
+            _instance = instance;
+
+            Hash = _instance.Hash2;
+            Name = Info.GetInstanceName(Hash);
             if (instance.ParentHash2 != 0) {
                 _parentName = Info.GetInstanceName(_instance.ParentHash2);
                 
@@ -245,8 +246,9 @@ namespace TankLibHelper {
                 return $"{Info.GetEnumName(enumDef.Hash2)}.{Info.GetEnumValueName(enumValue.Hash2)}";
             }
 
-            if (field.m_typeName == "s32" && field.m_defaultValue.m_hexValue == "FFFFFFFF") {
-                // todo: handle more generically... this is the only case for now tho
+            // todo: handle more generically...
+            if ((field.m_typeName == "s32" && field.m_defaultValue.m_hexValue == "FFFFFFFF") ||
+                (field.m_typeName == "s16" && field.m_defaultValue.m_hexValue == "FFFF")) {
                 return "-1";
             }
 

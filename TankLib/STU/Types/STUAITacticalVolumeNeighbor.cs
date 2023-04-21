@@ -9,7 +9,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x3C2FFA87, 0)] // size: 16
         public teUUID m_3C2FFA87;
-        
+
         [STUField(0xC2A53C31, 16)] // size: 4
         public int m_C2A53C31;
     }

@@ -16,7 +16,8 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x25B1D62F)] DefenseMatchEnter = 0x7,
         [STUField(0x75CB2306)] DefenseMatchWon = 0x8,
         [STUField(0xD631CF0E)] MatchTie = 0x9,
-        [STUField(0x95A0BB39)] x95A0BB39 = 0xA,
-        [STUField(0x81681B66)] x81681B66 = 0xB,
+        [STUField(0xDF0DC52F)] xDF0DC52F = 0xA,
+        [STUField(0x95A0BB39)] x95A0BB39 = 0xB,
+        [STUField(0x81681B66)] x81681B66 = 0xC,
     }
 }

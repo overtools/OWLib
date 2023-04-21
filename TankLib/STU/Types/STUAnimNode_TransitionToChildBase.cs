@@ -8,19 +8,19 @@ namespace TankLib.STU.Types
     {
         [STUField(0x868A1EC8, 96, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_51A9D9C7 m_868A1EC8;
-        
+
         [STUField(0x9AACE4E1, 128, ReaderType = typeof(InlineInstanceFieldReader))] // size: 32
         public STU_A0675F24 m_9AACE4E1;
-        
+
         [STUField(0x287F50B3, 160, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_287F50B3;
-        
+
         [STUField(0x1B74A4CB, 184, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
         public STU_15EF3A7E m_1B74A4CB;
-        
+
         [STUField(0x4E86E083, 208, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STU_298296AE[] m_transitions;
-        
+
         [STUField(0x121C1319, 224)] // size: 1
         public byte m_121C1319 = 0x1;
     }

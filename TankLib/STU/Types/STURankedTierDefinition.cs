@@ -9,10 +9,10 @@ namespace TankLib.STU.Types
     {
         [STUField(0x4BF7CD58, 8)] // size: 4
         public uint m_4BF7CD58;
-        
+
         [STUField(0xD2F14FFA, 12)] // size: 4
         public uint m_D2F14FFA;
-        
+
         [STUField(0x85CA53C8, 16)] // size: 4
         public STURankedTier m_85CA53C8;
     }

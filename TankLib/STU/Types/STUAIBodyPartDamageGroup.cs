@@ -8,22 +8,22 @@ namespace TankLib.STU.Types
     {
         [STUField(0xAAEA98C4, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAIBodyPartDamageGroupDamageTagScalar[] m_AAEA98C4;
-        
+
         [STUField(0x2DDFCB42, 16)] // size: 16
         public teStructuredDataAssetRef<STUIdentifier> m_2DDFCB42;
-        
+
         [STUField(0xD1C7F985, 32, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_D1C7F985;
-        
+
         [STUField(0x137B3D93, 40, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_137B3D93;
-        
+
         [STUField(0x4A498149, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_4A498149;
-        
+
         [STUField(0x782896E4, 56, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_782896E4;
-        
+
         [STUField(0x2268C780, 64, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_2268C780;
     }

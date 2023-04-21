@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x2E93585A, 8)] // size: 16
         public ulong[] m_2E93585A;
-        
+
         [STUField(0x939ABB2C, 24)] // size: 16
         public teStructuredDataAssetRef<ulong>[] m_materialData;
     }

@@ -9,40 +9,40 @@ namespace TankLib.STU.Types
     {
         [STUField(0xE95CE2AC, 16)] // size: 16
         public teVec3A m_E95CE2AC;
-        
+
         [STUField(0x1CF13F31, 32)] // size: 16
         public teVec3A m_1CF13F31;
-        
+
         [STUField(0xA59FA1B0, 48)] // size: 16
         public teVec3A m_A59FA1B0;
-        
+
         [STUField(0x170877CD, 64)] // size: 16
         public teVec3A m_170877CD;
-        
+
         [STUField(0x52EA7AB9, 80)] // size: 16
         public teVec3A m_52EA7AB9;
-        
+
         [STUField(0x19E1CCED, 96)] // size: 16
         public teVec3A m_19E1CCED;
-        
+
         [STUField(0xC65C1A53, 112)] // size: 16
         public teVec3A m_C65C1A53;
-        
+
         [STUField(0xACA92DCF, 128, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_1C969171[] m_ACA92DCF;
-        
+
         [STUField(0x2D9F5A0A, 144)] // size: 16
         public teUUID m_2D9F5A0A;
-        
+
         [STUField(0x3709B21F, 160)] // size: 16
         public teUUID m_3709B21F;
-        
+
         [STUField(0x9741DF92, 176)] // size: 4
         public float m_9741DF92;
-        
+
         [STUField(0xE18F822F, 180)] // size: 1
         public byte m_E18F822F;
-        
+
         [STUField(0xAAF049C1, 181)] // size: 1
         public byte m_AAF049C1;
     }

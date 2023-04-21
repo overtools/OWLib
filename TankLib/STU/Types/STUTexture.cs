@@ -8,10 +8,10 @@ namespace TankLib.STU.Types
     {
         [STUField(0xD326911E, 8)] // size: 16
         public teStructuredDataAssetRef<STUThumbnailData> m_thumbnailData;
-        
+
         [STUField(0x98E808AE, 24)] // size: 16
         public teStructuredDataAssetRef<STUEmptyAsset> m_98E808AE;
-        
+
         [STUField(0x03376566, 40, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_05BDD390 m_textureType;
     }

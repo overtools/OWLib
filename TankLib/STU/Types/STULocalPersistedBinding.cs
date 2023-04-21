@@ -8,22 +8,22 @@ namespace TankLib.STU.Types
     {
         [STUField(0x9D07CD91, 0)] // size: 8
         public ulong m_9D07CD91;
-        
+
         [STUField(0xFC33191B, 8)] // size: 8
         public ulong m_logicalButton;
-        
+
         [STUField(0x37AB13D3, 16)] // size: 8
         public ulong m_hero;
-        
+
         [STUField(0xCDC82210, 24)] // size: 4
         public uint m_CDC82210;
-        
+
         [STUField(0xF1D42AA4, 28)] // size: 1
         public byte m_F1D42AA4;
-        
+
         [STUField(0x5B5B8335, 29)] // size: 1
         public byte m_5B5B8335;
-        
+
         [STUField(0x26A1D7ED, 30)] // size: 1
         public byte m_26A1D7ED;
     }

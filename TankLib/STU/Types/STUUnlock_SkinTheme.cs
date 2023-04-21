@@ -9,7 +9,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x4C167404, 240)] // size: 16
         public teStructuredDataAssetRef<STUSkinTheme> m_skinTheme;
-        
+
         [STUField(0x0619C597, 256)] // size: 4
         public Enum_D32A5854 m_type;
     }

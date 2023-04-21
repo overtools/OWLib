@@ -9,10 +9,10 @@ namespace TankLib.STU.Types
     {
         [STUField(0x0D50490E, 0, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimTriangulationMap_Triangle[] m_triangles;
-        
+
         [STUField(0xB853170A, 16)] // size: 8
         public teVec2 m_B853170A;
-        
+
         [STUField(0x18A188D2, 24)] // size: 8
         public teVec2 m_18A188D2;
     }

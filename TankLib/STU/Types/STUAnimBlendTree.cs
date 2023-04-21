@@ -8,34 +8,34 @@ namespace TankLib.STU.Types
     {
         [STUField(0x85CC326B, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_DF9B7DE2 m_85CC326B;
-        
+
         [STUField(0x0B15B894, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUAnimNode_Base[] m_animNodes;
-        
+
         [STUField(0xF9CA7995, 40)] // size: 16
         public uint[] m_paramIds;
-        
+
         [STUField(0x95E7FDC0, 56)] // size: 16
         public teStructuredDataAssetRef<STU_6378747E>[] m_95E7FDC0;
-        
+
         [STUField(0xBCAD245E, 72)] // size: 16
         public ulong[] m_BCAD245E;
-        
+
         [STUField(0xEED04EED, 88)] // size: 16
         public ulong[] m_EED04EED;
-        
+
         [STUField(0x123205BA, 104, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimBlendDriverParam[] m_123205BA;
-        
+
         [STUField(0x280669CE, 120, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_7C51F8CA[] m_280669CE;
-        
+
         [STUField(0xA4712A0A, 136)] // size: 8
         public ulong m_treeCRC;
-        
+
         [STUField(0x191CEC72, 144)] // size: 8
         public ulong m_191CEC72;
-        
+
         [STUField(0xD6497916, 152, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STU_CB30C7C3 m_rootNode;
     }

@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0xF92402E9, 0, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_answer;
-        
+
         [STUField(0x5A6D4FBD, 8, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_5A6D4FBD;
     }

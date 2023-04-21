@@ -3,10 +3,10 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xC27E676E, 40)]
+    [STU(0xC27E676E, 56)]
     public class STUCriteria_PlayerLevel : STUCriteria
     {
-        [STUField(0x2C01908B, 32)] // size: 4
+        [STUField(0x2C01908B, 48)] // size: 4
         public uint m_level;
     }
 }

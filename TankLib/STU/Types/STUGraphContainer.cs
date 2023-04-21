@@ -9,13 +9,13 @@ namespace TankLib.STU.Types
     {
         [STUField(0x52730CFE, 72, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUGraphItem[] m_52730CFE;
-        
+
         [STUField(0xC65AA24E, 88)] // size: 16
         public teString m_C65AA24E;
-        
+
         [STUField(0xE3C80AC9, 104)] // size: 16
         public teColorRGBA m_E3C80AC9;
-        
+
         [STUField(0xB8938E78, 120)] // size: 16
         public teColorRGBA m_backgroundColor;
     }

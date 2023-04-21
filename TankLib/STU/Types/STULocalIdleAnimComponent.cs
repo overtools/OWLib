@@ -8,13 +8,13 @@ namespace TankLib.STU.Types
     {
         [STUField(0xC9D669B6, 8)] // size: 16
         public teStructuredDataAssetRef<STUAnimation> m_idleAnimation;
-        
+
         [STUField(0xEDF6D105, 24)] // size: 4
         public float m_EDF6D105;
-        
+
         [STUField(0x8D7C6FCE, 28)] // size: 4
         public uint m_8D7C6FCE;
-        
+
         [STUField(0xD4D6260D, 32)] // size: 1
         public byte m_D4D6260D;
     }

@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0xCFE57CEB, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAvailableContentUnlock[] m_availableContentUnlocks;
-        
+
         [STUField(0x4807C17A, 24, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUEntitlementUnlock[] m_entitlementUnlocks;
     }

@@ -8,7 +8,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x37AB13D3, 0)] // size: 16
         public teStructuredDataAssetRef<STUHero> m_hero;
-        
+
         [STUField(0x7B95AB93, 16)] // size: 16
         public teStructuredDataAssetRef<STULoadout>[] m_loadouts;
     }

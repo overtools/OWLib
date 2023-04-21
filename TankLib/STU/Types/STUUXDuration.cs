@@ -9,7 +9,7 @@ namespace TankLib.STU.Types
     {
         [STUField(0x42636A6F, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_D3733E9D m_timeSpan;
-        
+
         [STUField(0x1930BE9A, 24)] // size: 4
         public Enum_17FD8E7C m_durationBehavior;
     }

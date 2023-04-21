@@ -9,10 +9,10 @@ namespace TankLib.STU.Types
     {
         [STUField(0x03EB0E34, 16, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_lootBoxGUID;
-        
+
         [STUField(0x7AB4E3F8, 24, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_lootboxType;
-        
+
         [STUField(0x0619C597, 32)] // size: 4
         public Enum_2551B350 m_type;
     }
