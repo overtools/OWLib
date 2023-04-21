@@ -17,7 +17,7 @@ namespace TankLib.Chunks {
             public long MaterialOffset;
             public fixed float BoundingBox[16];
 
-            public fixed byte Padding[16];
+            public fixed byte Padding[20];
 
             public ushort MaterialCount; // 76->96
             public byte m_98;
