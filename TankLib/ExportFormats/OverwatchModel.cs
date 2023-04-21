@@ -93,10 +93,6 @@ namespace TankLib.ExportFormats {
                     highestLOD = submeshesWithLod.Min(x => x.m_submesh.Descriptor.LOD);
                 }
 
-                if (highestLOD == 0) {
-                    highestLOD = 1; // sanity...
-                }
-
                 TempSubmesh[] submeshesToWrite = allSubmeshes.Where(x => (x.m_submesh.Descriptor.LOD & highestLOD) != 0 || x.m_submesh.Descriptor.LOD == -1).ToArray();
 
                 short[] hierarchy = null;
