@@ -57,10 +57,10 @@ namespace DataTool.DataModels {
                 .Where(x => x.GUID != 0);
 
             if (mapHeader.m_celebrationOverrides != null) {
-                CelebrationVariants = mapHeader.m_celebrationOverrides.Select(x => {
-                    var mapHeaderGuid = ((teResourceGUID) mapHeader.m_map).WithType(0x9F);
-                    var mapInfo = new MapHeaderLite(mapHeaderGuid);
-                    return new MapCelebrationVariant(x.m_celebrationType, GetGUIDName(x.m_celebrationType), mapInfo);
+                CelebrationVariants = mapHeader.m_celebrationOverrides.Select(info => {
+                    var celebrationMapHeaderGuid = ((teResourceGUID) info.m_map).WithType(0x9F);
+                    var celebrationMapInfo = new MapHeaderLite(celebrationMapHeaderGuid);
+                    return new MapCelebrationVariant(info.m_celebrationType, GetGUIDName(info.m_celebrationType), celebrationMapInfo);
                 }).ToArray();
             }
 
