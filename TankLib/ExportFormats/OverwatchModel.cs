@@ -31,7 +31,7 @@ namespace TankLib.ExportFormats {
         public string Name;
         public ulong GUID;
 
-        public StreamingLodsInfo m_streamedLods;
+        public readonly StreamingLodsInfo m_streamedLods;
 
         public OverwatchModel(teChunkedData chunkedData, ulong guid, string name, StreamingLodsInfo streamedLods=null) {
             _data = chunkedData;
@@ -41,11 +41,16 @@ namespace TankLib.ExportFormats {
         }
 
         public void Write(Stream stream) {
-            teModelChunk_RenderMesh renderMesh = m_streamedLods?.m_renderMesh ?? _data.GetChunk<teModelChunk_RenderMesh>();
+            teModelChunk_RenderMesh renderMesh = _data.GetChunk<teModelChunk_RenderMesh>();
             teModelChunk_Model model = m_streamedLods?.m_model ?? _data.GetChunk<teModelChunk_Model>();
             teModelChunk_Skeleton skeleton = _data.GetChunk<teModelChunk_Skeleton>();
             teModelChunk_Cloth cloth = _data.GetChunk<teModelChunk_Cloth>();
             teModelChunk_STU stu = _data.GetChunk<teModelChunk_STU>();
+
+            var allSubmeshes = renderMesh?.Submeshes; // nullable
+            if (m_streamedLods?.m_renderMesh != null) {
+                allSubmeshes = allSubmeshes.Concat(m_streamedLods.m_renderMesh.Submeshes).ToArray();
+            }
 
             using (BinaryWriter writer = new BinaryWriter(stream)) {
                 writer.Write((ushort)2);
@@ -62,14 +67,14 @@ namespace TankLib.ExportFormats {
                 }
                 writer.Write(teResourceGUID.Index(GUID));
 
-                var highestLOD = renderMesh?.Submeshes.Where(x => x.Descriptor.LOD != -1).Min(x => x.Descriptor.LOD) ?? 1;
-                teModelChunk_RenderMesh.Submesh[] submeshes = renderMesh?.Submeshes.Where(x => x.Descriptor.LOD == highestLOD || x.Descriptor.LOD == -1).ToArray() ?? Array.Empty<teModelChunk_RenderMesh.Submesh>();
+                var highestLOD = allSubmeshes?.Where(x => x.Descriptor.LOD != -1).Min(x => x.Descriptor.LOD) ?? 1;
+                teModelChunk_RenderMesh.Submesh[] submeshesToWrite = allSubmeshes?.Where(x => x.Descriptor.LOD == highestLOD || x.Descriptor.LOD == -1).ToArray() ?? Array.Empty<teModelChunk_RenderMesh.Submesh>();
 
                 short[] hierarchy = null;
                 HashSet<int> clothNodeMap = null;
                 if (skeleton != null) {
                     if (cloth != null) {
-                        hierarchy = cloth.CreateFakeHierarchy(skeleton, submeshes, out clothNodeMap);
+                        hierarchy = cloth.CreateFakeHierarchy(skeleton, submeshesToWrite, out clothNodeMap);
                     } else {
                         hierarchy = skeleton.Hierarchy;
                     }
@@ -79,7 +84,7 @@ namespace TankLib.ExportFormats {
                     writer.Write((ushort)0);
                 }
 
-                writer.Write((uint)submeshes.Length);
+                writer.Write((uint)submeshesToWrite.Length);
 
                 if (stu?.StructuredData.m_hardPoints != null) {
                     writer.Write(stu.StructuredData.m_hardPoints.Length);
@@ -102,7 +107,7 @@ namespace TankLib.ExportFormats {
                 }
 
                 int submeshIdx = 0;
-                foreach (teModelChunk_RenderMesh.Submesh submesh in submeshes) {
+                foreach (teModelChunk_RenderMesh.Submesh submesh in submeshesToWrite) {
                     writer.Write($"Submesh_{submeshIdx}.{model.Materials[submesh.Descriptor.Material]:X16}");
                     writer.Write(model.Materials[submesh.Descriptor.Material]);
                     writer.Write(submesh.UVCount);
