@@ -128,7 +128,7 @@ namespace DataTool.ToolLogic.Extract {
                         var stimulus = GetInstance<STUVoiceStimulus>(voiceLineInstance.VoiceStimulus);
                         if (stimulus == null) continue;
 
-                        var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category, stimulus.m_87DCD58E) ??
+                        var groupName = GetVoiceGroup(voiceLineInstance.VoiceStimulus, stimulus.m_category) ??
                                         Path.Combine("Unknown",$"{teResourceGUID.Index(voiceLineInstance.VoiceStimulus):X}.{teResourceGUID.Type(voiceLineInstance.VoiceStimulus):X3}");
 
                         var stack = new List<string> { basePath };
@@ -227,8 +227,8 @@ namespace DataTool.ToolLogic.Extract {
             }
         }
 
-        public static string GetVoiceGroup(ulong stimulusGuid, ulong categoryGuid, ulong unkGuid) {
-            return GetNullableGUIDName(stimulusGuid) ?? GetNullableGUIDName(categoryGuid) ?? GetNullableGUIDName(unkGuid);
+        public static string GetVoiceGroup(ulong stimulusGuid, ulong categoryGuid) {
+            return GetNullableGUIDName(stimulusGuid) ?? GetNullableGUIDName(categoryGuid);
         }
 
         // these are weird UI sounds that seem to be on every STUSound

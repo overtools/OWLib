@@ -49,5 +49,15 @@ namespace TankLib.STU {
             return null;
         }
         #endregion
+
+        public static teResourceGUID GetVoiceLineGUID(this STUVoiceLineInstance instance) {
+            if (instance.m_ECC13477 == 0) return default; // sanity
+            return new teResourceGUID(instance.m_ECC13477).WithType(0x6F);
+        }
+        
+        public static teResourceGUID Get9BGUID(this STUVoiceLineInstance instance) {
+            if (instance.m_3BE06155 == 0) return default; // sanity
+            return new teResourceGUID(instance.m_3BE06155).WithType(0x9B);
+        }
     }
 }

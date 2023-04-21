@@ -1094,8 +1094,8 @@ namespace DataTool.FindLogic {
 
                         VoiceLineInstanceInfo voiceLineInstanceInfo =
                             new VoiceLineInstanceInfo {
-                                GUIDx06F = voiceSet.m_voiceLineGuids[i],
-                                GUIDx09B = voiceSet.m_D1ABBE04[i],
+                                GUIDx06F = voiceLineInstance.GetVoiceLineGUID(),
+                                GUIDx09B = voiceLineInstance.Get9BGUID(),
                                 GUIDx03C = voiceLineInstance.m_effectHardpoint,
                                 Subtitle = voiceLineInstance.m_43C90056
                             };

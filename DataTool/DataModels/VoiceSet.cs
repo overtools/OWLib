@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using DataTool.JSON;
 using TankLib;
+using TankLib.STU;
 using TankLib.STU.Types;
 using Utf8Json;
 using static DataTool.Helper.STUHelper;
@@ -41,8 +42,8 @@ namespace DataTool.DataModels {
             Stimuli = new Dictionary<ulong, HashSet<ulong>>();
 
             for (int i = 0; i < voiceSet.m_voiceLineInstances.Length; i++) {
-                ulong voiceLineGuid = voiceSet.m_voiceLineGuids[i];
                 STUVoiceLineInstance instance = voiceSet.m_voiceLineInstances[i];
+                ulong voiceLineGuid = instance.GetVoiceLineGUID();
 
                 VoiceLineInstance instanceModel = new VoiceLineInstance(instance);
 
