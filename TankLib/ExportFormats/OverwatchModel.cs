@@ -49,7 +49,12 @@ namespace TankLib.ExportFormats {
 
             var allSubmeshes = renderMesh?.Submeshes; // nullable
             if (m_streamedLods?.m_renderMesh != null) {
-                allSubmeshes = allSubmeshes.Concat(m_streamedLods.m_renderMesh.Submeshes).ToArray();
+                if (allSubmeshes != null) {
+                    allSubmeshes = allSubmeshes.Concat(m_streamedLods.m_renderMesh.Submeshes).ToArray();
+                } else {
+                    // ok just assume this can happen idek dont crash pls
+                    allSubmeshes = m_streamedLods.m_renderMesh.Submeshes;
+                }
             }
 
             using (BinaryWriter writer = new BinaryWriter(stream)) {
