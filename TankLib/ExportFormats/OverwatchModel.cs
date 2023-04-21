@@ -87,8 +87,16 @@ namespace TankLib.ExportFormats {
                 }
                 writer.Write(teResourceGUID.Index(GUID));
 
-                var highestLOD = allSubmeshes.Where(x => x.m_submesh.Descriptor.LOD != -1).Min(x => x.m_submesh.Descriptor.LOD);
-                if (highestLOD == 0) highestLOD = 1; // sanity...
+                var highestLOD = 1;
+                var submeshesWithLod = allSubmeshes.Where(x => x.m_submesh.Descriptor.LOD != -1);
+                if (submeshesWithLod.Any()) {
+                    highestLOD = submeshesWithLod.Min(x => x.m_submesh.Descriptor.LOD);
+                }
+
+                if (highestLOD == 0) {
+                    highestLOD = 1; // sanity...
+                }
+
                 TempSubmesh[] submeshesToWrite = allSubmeshes.Where(x => (x.m_submesh.Descriptor.LOD & highestLOD) != 0 || x.m_submesh.Descriptor.LOD == -1).ToArray();
 
                 short[] hierarchy = null;
