@@ -40,21 +40,36 @@ namespace TankLib.ExportFormats {
             m_streamedLods = streamedLods;
         }
 
+        private struct TempSubmesh {
+            public readonly teModelChunk_RenderMesh.Submesh m_submesh;
+            public readonly ulong m_material;
+
+            public TempSubmesh(teModelChunk_RenderMesh.Submesh submesh, teModelChunk_Model srcModel) {
+                m_submesh = submesh;
+                m_material = srcModel.Materials[submesh.Descriptor.Material];
+            }
+        }
+
         public void Write(Stream stream) {
             teModelChunk_RenderMesh renderMesh = _data.GetChunk<teModelChunk_RenderMesh>();
-            teModelChunk_Model model = m_streamedLods?.m_model ?? _data.GetChunk<teModelChunk_Model>();
             teModelChunk_Skeleton skeleton = _data.GetChunk<teModelChunk_Skeleton>();
             teModelChunk_Cloth cloth = _data.GetChunk<teModelChunk_Cloth>();
             teModelChunk_STU stu = _data.GetChunk<teModelChunk_STU>();
 
-            var allSubmeshes = renderMesh?.Submeshes; // nullable
+            var allSubmeshes = new List<TempSubmesh>();
+            if (renderMesh?.Submeshes != null) {
+                var model = _data.GetChunk<teModelChunk_Model>();
+                allSubmeshes.AddRange(renderMesh.Submeshes.Select(x => new TempSubmesh(x, model)));
+            }
             if (m_streamedLods?.m_renderMesh != null) {
-                if (allSubmeshes != null) {
-                    allSubmeshes = allSubmeshes.Concat(m_streamedLods.m_renderMesh.Submeshes).ToArray();
-                } else {
-                    // ok just assume this can happen idek dont crash pls
-                    allSubmeshes = m_streamedLods.m_renderMesh.Submeshes;
-                }
+                // todo: can multiple stream payloads be required? and therefore we miss meshes again?
+                // i wasn't paying attention in class
+                 
+                // todo: also turns out this wasn't needed for necromancer, which is why i write this code. (instead lod was equality instead of bitflag)
+                // but i guess its useful if we wanted to add lod models back
+                 
+                var streamedModel = m_streamedLods.m_model;
+                allSubmeshes.AddRange(m_streamedLods.m_renderMesh.Submeshes.Select(x => new TempSubmesh(x, streamedModel)));
             }
 
             using (BinaryWriter writer = new BinaryWriter(stream)) {
@@ -72,14 +87,15 @@ namespace TankLib.ExportFormats {
                 }
                 writer.Write(teResourceGUID.Index(GUID));
 
-                var highestLOD = allSubmeshes?.Where(x => x.Descriptor.LOD != -1).Min(x => x.Descriptor.LOD) ?? 1;
-                teModelChunk_RenderMesh.Submesh[] submeshesToWrite = allSubmeshes?.Where(x => x.Descriptor.LOD == highestLOD || x.Descriptor.LOD == -1).ToArray() ?? Array.Empty<teModelChunk_RenderMesh.Submesh>();
+                var highestLOD = allSubmeshes.Where(x => x.m_submesh.Descriptor.LOD != -1).Min(x => x.m_submesh.Descriptor.LOD);
+                if (highestLOD == 0) highestLOD = 1; // sanity...
+                TempSubmesh[] submeshesToWrite = allSubmeshes.Where(x => (x.m_submesh.Descriptor.LOD & highestLOD) != 0 || x.m_submesh.Descriptor.LOD == -1).ToArray();
 
                 short[] hierarchy = null;
                 HashSet<int> clothNodeMap = null;
                 if (skeleton != null) {
                     if (cloth != null) {
-                        hierarchy = cloth.CreateFakeHierarchy(skeleton, submeshesToWrite, out clothNodeMap);
+                        hierarchy = cloth.CreateFakeHierarchy(skeleton, submeshesToWrite.Select(x => x.m_submesh).ToArray(), out clothNodeMap);
                     } else {
                         hierarchy = skeleton.Hierarchy;
                     }
@@ -112,9 +128,11 @@ namespace TankLib.ExportFormats {
                 }
 
                 int submeshIdx = 0;
-                foreach (teModelChunk_RenderMesh.Submesh submesh in submeshesToWrite) {
-                    writer.Write($"Submesh_{submeshIdx}.{model.Materials[submesh.Descriptor.Material]:X16}");
-                    writer.Write(model.Materials[submesh.Descriptor.Material]);
+                foreach (TempSubmesh submeshA in submeshesToWrite) {
+                    var submesh = submeshA.m_submesh;
+                    
+                    writer.Write($"Submesh_{submeshIdx}.{submeshA.m_material:X16}");
+                    writer.Write(submeshA.m_material);
                     writer.Write(submesh.UVCount);
 
                     writer.Write(submesh.Vertices.Length);
