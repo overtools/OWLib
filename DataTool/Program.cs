@@ -117,8 +117,13 @@ namespace DataTool {
 
             foreach (var type in tools) {
                 var attribute = type.GetCustomAttribute<ToolAttribute>();
+                var keywordMatch = string.Equals(attribute.Keyword, Flags.Mode, StringComparison.InvariantCultureIgnoreCase);
+                var aliasMatch = attribute.Aliases?.Any(x => string.Equals(x, Flags.Mode, StringComparison.InvariantCultureIgnoreCase)) ?? false;
 
-                if (!string.Equals(attribute.Keyword, Flags.Mode, StringComparison.InvariantCultureIgnoreCase)) continue;
+                if (!keywordMatch && !aliasMatch) {
+                    continue;
+                }
+
                 targetTool = Activator.CreateInstance(type) as ITool;
                 targetToolAttributes = attribute;
 
