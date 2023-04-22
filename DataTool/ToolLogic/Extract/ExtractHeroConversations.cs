@@ -14,7 +14,7 @@ using static DataTool.Helper.IO;
 using SkinTheme = DataTool.SaveLogic.Unlock.SkinTheme;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-hero-convo", Description = "Extract hero voice conversations", CustomFlags = typeof(ExtractFlags))]
+    [ExtractTool("extract-conversations", "extract-hero-convo", Description = "Extracts heroes voice conversations")]
     public class ExtractHeroConversations : QueryParser, ITool {
         public Dictionary<string, string> QueryNameOverrides => null;
         public List<QueryType> QueryTypes => new List<QueryType>();
