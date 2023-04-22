@@ -25,17 +25,25 @@ DataTool.exe "C:\Games\Overwatch" list-maps
 DataTool.exe "C:\Games\Overwatch" list-achievements
 ```
 
+#### JSON output
+Many of the list commands support JSON output.  
+To do this you must provide the `--json` flag as well as an `--output` flag to specify where to save the JSON file.  
+Example:
+```
+DataTool.exe "C:\Games\Overwatch" list-heroes --json --output "C:\Games\Extracts\Heroes.json"
+```
+
 ### Example Extract Commands
 
 Some of the more common extract commands include:
  * extract-unlocks - ex all hero unlocks such as skins, highlight intros, emotes, sprays, icons
  * extract-general - handles extracting all all class unlocks such as all class sprays and icons and portraits
  * extract-maps - extract maps
- * extract-hero-voice-better - extracts all heroes voicelines and groups them by type (kinda)
+ * extract-hero-voice - extracts all heroes voicelines and groups them by type (kinda)
+ * extract-conversations - extracts all hero conversations
  
  In most cases when using extract commands, you must provide the name of what you want to extract or use `*` for everything.  
  See below for some examples.
-
 
 #### Example Commands
 ```
@@ -58,7 +66,10 @@ Extract All Maps (will take a long time)
 DataTool.exe "C:\Games\Overwatch" extract-maps "C:\Games\Extracts" *
 
 Extract Tracers Voicelines
-DataTool.exe "C:\Games\Overwatch" extract-hero-voice-better "C:\Games\Extracts" Tracer
+DataTool.exe "C:\Games\Overwatch" extract-hero-voice "C:\Games\Extracts" Tracer
+
+Extract Tracers Conversations
+DataTool.exe "C:\Games\Overwatch" extract-conversations "C:\Games\Extracts" Tracer
 ```
 
 #### Extract Unlocks filters
@@ -74,6 +85,16 @@ Valid types include: skin, icon, spray, victorypose, emote, voiceline
 "Tracer|skin=Overwatch 1"             // Tracers Overwatch 1 skin
 "Reaper|spray=*"                      // Reaper's sprays
 "Reaper|voiceline=*"                  // Reapers unlockable voicelines
+```
+
+### Tool Flags
+There is also a variety of flags you can use that can change how some of the extract commands work.
+```
+--subtitles-with-sounds - Extracts subtitles in txt files next to the audio files (default false)
+--voice-group-by-hero - When extracting voicelines, groups them by the hero (default true)
+--voice-group-by-type - When extracting voicelines, groups them by the type (default true)
+--voice-group-by-skin - When extracting voicelines, groups them by the skin (default false)
+--voice-group-by-locale - When extracting voicelines, groups them by the locale (default false)
 ```
 
 ## Disclaimer
