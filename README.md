@@ -17,6 +17,11 @@ DataTool is a command line application which means you need to know how to use a
 
 Most commands follow the structure `DataTool.exe <overwatch_directory> <mode> [mode args]`
 
+### Blender Addon
+In order to import skins or maps into Blender extracted by the tool, you will need to install our blender addon: https://github.com/overtools/io_scene_owm  
+Releases and updates for the addon are also posted on our Discord linked above.  
+**Blender 3.4 or above is required.**
+
 ### Example List Commands
 ```
 DataTool.exe "C:\Games\Overwatch" list-heroes
