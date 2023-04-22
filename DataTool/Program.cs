@@ -310,7 +310,9 @@ namespace DataTool {
             else if (BuildVersion < 39028)
                 Logger.Error("Core", "DataTool doesn't support Overwatch versions below 1.14. Please use OverTool.");
             else if (BuildVersion < ProductHandler_Tank.VERSION_152_PTR)
-                Logger.Error("Core", "This version of DataTool doesn't support versions of Overwatch below 1.52. Please downgrade DataTool.");
+                Logger.Error("Core", "This version of DataTool doesn't support versions of Overwatch below 1.52. Please use older version of tool.");
+            else if (BuildVersion < 111387)
+                Logger.Error("Core", "This version of DataTool doesn't properly support versions of Overwatch below 2.4. Older version of tool is recommended.");
 
             InitTrackedFiles();
         }
