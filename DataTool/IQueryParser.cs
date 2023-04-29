@@ -126,7 +126,7 @@ namespace DataTool {
 
             Log("\r\nTypes:");
             foreach (QueryType argType in types) {
-                Log($"{indent + 1}{argType.Name}");
+                Log($"{indent + 1}{argType.Name} - {argType.HumanName}");
             }
 
             Log("\r\nTags:");

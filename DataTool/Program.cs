@@ -174,7 +174,8 @@ namespace DataTool {
                 try {
                     InitStorage(Flags.Online);
                 } catch (Exception ex) when (ex.InnerException is UnsupportedBuildVersionException) {
-                    Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC", "This version of DataTool does not support this version of Overwatch. Download a newer version of the tools.");
+                    Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC", "This version of DataTool does not support this version of Overwatch.");
+                    Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC", "DataTool must be updated to support every new build of the game. This tool update may not be available straight away.");
                     throw;
                 } catch (FileNotFoundException) {
                     // file not found exceptions thrown by TACTLib should already include good exception info, we don't need to log anything here
