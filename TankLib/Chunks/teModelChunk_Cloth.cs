@@ -132,19 +132,19 @@ namespace TankLib.Chunks {
 
                             reader.BaseStream.Position = Descriptors[i].BoneSectionOffset;
                             NodeBones[i] = new Dictionary<int, short>();
-                            for (int nodeIndex = 0; nodeIndex < Descriptors[i].ClothBonesUsed; nodeIndex++) {
+                            for (int nodeIndex = 0; nodeIndex < Descriptors[i].DriverNodeCount; nodeIndex++) {
                                 NodeBones[i][nodeIndex] = reader.ReadInt16();
                             }
                             
                             reader.BaseStream.Position = Descriptors[i].VertParent1Offset;
-                            var vertParent1 = reader.ReadArray<short>(Descriptors[i].ClothBonesUsed);
-                            reader.BaseStream.Position = Descriptors[i].VertParent2Offset;
-                            var weight = reader.ReadArray<float>(Descriptors[i].ClothBonesUsed * 4);
+                            var vertParent1 = reader.ReadArray<short>(Descriptors[i].DriverNodeCount);
+                            reader.BaseStream.Position = Descriptors[i].WeightOffset;
+                            var weight = reader.ReadArray<float>(Descriptors[i].DriverNodeCount * 4);
                             reader.BaseStream.Position = Descriptors[i].IndicesOffset;
-                            var indices = reader.ReadArray<short>(Descriptors[i].ClothBonesUsed * 4);
+                            var indices = reader.ReadArray<short>(Descriptors[i].DriverNodeCount * 4);
                             
-                            Nodes[i] = new ClothNode[Descriptors[i].ClothBonesUsed];
-                            for (int nodeIndex = 0; nodeIndex < Descriptors[i].ClothBonesUsed; nodeIndex++) {
+                            Nodes[i] = new ClothNode[Descriptors[i].DriverNodeCount];
+                            for (int nodeIndex = 0; nodeIndex < Descriptors[i].DriverNodeCount; nodeIndex++) {
                                 Nodes[i][nodeIndex] = new ClothNode {
                                     VerticalParent = vertParent1[nodeIndex],
                                     Bones = new[] {
