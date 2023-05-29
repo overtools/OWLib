@@ -32,10 +32,10 @@ namespace TankLib.ExportFormats {
             if (skeleton == null) return;
 
             short[] hierarchy = skeleton.Hierarchy;
-            HashSet<int> clothNodeMap = null;
-            // if (cloth != null) {
-            //     hierarchy = cloth.CreateFakeHierarchy(skeleton, out clothNodeMap);
-            // }
+            Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap = null;
+            if (cloth != null) {
+                hierarchy = cloth.CreateFakeHierarchy(skeleton, out clothNodeMap);
+            }
 
             using (StreamWriter writer = new StreamWriter(stream, Encoding.Default, 512)) {
                 writer.WriteLine("{0}", skeleton.Header.BonesAbs);

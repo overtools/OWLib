@@ -96,10 +96,10 @@ namespace TankLib.ExportFormats {
                 TempSubmesh[] submeshesToWrite = allSubmeshes.Where(x => (x.m_submesh.Descriptor.LOD & highestLOD) != 0 || x.m_submesh.Descriptor.LOD == -1).ToArray();
 
                 short[] hierarchy = null;
-                HashSet<int> clothNodeMap = null;
+                Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap = null;
                 if (skeleton != null) {
                     if (cloth != null) {
-                        hierarchy = cloth.CreateFakeHierarchy(skeleton, submeshesToWrite.Select(x => x.m_submesh).ToArray(), out clothNodeMap);
+                        hierarchy = cloth.CreateFakeHierarchy(skeleton, out clothNodeMap);
                     } else {
                         hierarchy = skeleton.Hierarchy;
                     }
@@ -261,9 +261,9 @@ namespace TankLib.ExportFormats {
             }
         }
 
-        public static void GetRefPoseTransform(int i, short[] hierarchy, teModelChunk_Skeleton skeleton, HashSet<int> clothNodeMap, out teVec3 scale, out teQuat quat,
+        public static void GetRefPoseTransform(int i, short[] hierarchy, teModelChunk_Skeleton skeleton, Dictionary<int, teModelChunk_Cloth.ClothNode> clothNodeMap, out teVec3 scale, out teQuat quat,
             out teVec3 translation) {
-            if (clothNodeMap != null && clothNodeMap.Contains(i)) {
+            if (clothNodeMap != null && clothNodeMap.ContainsKey(i)) {
                 Matrix thisMat = skeleton.GetWorldSpace(i);
                 Matrix parentMat = skeleton.GetWorldSpace(hierarchy[i]);
 

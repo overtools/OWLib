@@ -22,61 +22,56 @@ namespace TankLib.Chunks {
         /// <summary>Cloth description</summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public unsafe struct ClothDesc {
-            public long Section1Offset;
-            public long Section2Offset;
-            public long Section3Offset;
-            public long Section4Offset;
-            public long Section5Offset;
-            public long Section6Offset;
-            public long Section7Offset;
-            public long Section8Offset;
-            public long Section9Offset;
-            public long Section10Offset;
-            public long Section11Offset;
-            public long Section12Offset;
-            public long Section13Offset;
-            public long Section14Offset;
-            public long Section15Offset;
-            public long Section16Offset;
-            public long Section17Offset;
-            public long Section18Offset;
-            public long Section19Offset;
-            public long Section20Offset;
-            public long Section21Offset;
-            public long Section22Offset;
-            public long Section23Offset;
-            public long Section24Offset;
-            public long Section25Offset;
-            public long Section26Offset;
+            public long PositionsOffset;
+            public long SectionOffset3;
+            public long SectionOffset4;
+            public long SectionOffset5;
+            public long SectionOffset6;
+            public long SectionOffset7;
+            public long SectionOffset8;
+            public long VertParent1Offset;
+            public long VertParent2Offset;
+            public long DiagParentOffset;
+            public long WeightOffset;
+            public long IndicesOffset;
+            public long BoneSectionOffset;
+            public long SectionOffset15;
+            public long SectionOffset16;
+            public long SectionOffset17;
+            public long SectionOffset18;
+            public long SectionOffset19;
+            public long SectionOffset20;
+            public long SectionOffset21;
+            public long SectionOffset22;
+            public long SectionOffset23;
+            public long SectionOffset24;
+            public long SectionOffset25;
+            public long SectionOffset26;
+            public long SectionOffset27;
             public fixed byte Name[32];
-            public ushort Count1;
-            public ushort Count2;
-            public ushort Count3;
-            public ushort Count4;
-            public ushort Count5;
-            public ushort Count6;
-            public ushort Count7;
-            public ushort Count8;
-            public ushort Count9;
-            public ushort Count10;
-            public ushort Count11;
-            public ushort Count12;
-            public ushort Count13;
-            public ushort Count14;
-            public ushort Count15;
-            public ushort Count16;
-            public ushort Count17;
-            public ushort Count18;
-            public ushort Count19;
-            public ushort Count20;
-            public long BoneIndicesTableOffset;
-            public teResourceGUID UnkGUID1;
-            public teResourceGUID UnkGUID2;
-            public teResourceGUID UnkGUID3;
-            public teResourceGUID UnkGUID4;
-            public ulong Unk1;
-            public int ClothBonesUsed;
-            public int Unk2;
+            public int Unknown1;
+            public ushort ClothBonesUsed;
+            public ushort DriverNodeCount;
+            public ushort UnkCount3;
+            public ushort ThreeNodeRelationCount;
+            public ushort UnkCount5;
+            public ushort UnkCount6;
+            public ushort UnkCount7;
+            public ushort UnkCount8;
+            public ushort UnkCount9;
+            public ushort UnkCount10;
+            public ushort DriverChainCount;
+            public ushort UnkCount12;
+            public ushort UnkCount13;
+            public ushort UnkCount14;
+            public long Offset28;
+            public long MapOffset;
+            public teResourceGUID UnknownGuidx81;
+            public long unknown2;
+            public teResourceGUID Unknown3;
+            public long Unknown4;
+            public long Unknown5;
+            public long Unknown6;
 
             public string StringName {
                 get {
@@ -102,93 +97,8 @@ namespace TankLib.Chunks {
 
         /// <summary>Cloth node</summary>
         public class ClothNode {
-            public int ID;
-
-            public float X;
-            public float Y;
-            public float Z;
-
-            public short DiagonalParent;
             public short VerticalParent;
-
-            public float DiagonalParentStrength;
-            public float VerticalParentStrength1;
-            public float VerticalParentStrength2;
-
-            public short ChainNumber;
-            public bool IsChild;
-
             public ClothNodeWeight[] Bones;
-
-            //public Matrix3x4 Matrix;
-
-            public ClothNode(BinaryReader reader) {
-                long nodeStart = reader.BaseStream.Position;
-                X = reader.ReadSingle();
-                Y = reader.ReadSingle();
-                Z = reader.ReadSingle();
-                uint zero = reader.ReadUInt32();  // zero
-                float x2 = reader.ReadSingle();
-                float y2 = reader.ReadSingle();
-                float z2 = reader.ReadSingle();
-
-                if (zero != 0) {
-                    throw new InvalidDataException($"HTLC: zero != 0 ({zero})");
-                }
-
-                if (System.Math.Abs(X - x2) > 0.01 || System.Math.Abs(Y - y2) > 0.01 || System.Math.Abs(Z - z2) > 0.01) {
-                    throw new InvalidDataException($"HTLC: location is different: {X}:{x2} {Y}:{y2} {Z}:{z2}");
-                }
-
-                reader.BaseStream.Position = nodeStart+0x15c;
-                short ind1 = reader.ReadInt16();
-                short ind2 = reader.ReadInt16();
-                short ind3 = reader.ReadInt16();
-                short ind4 = reader.ReadInt16();
-
-                reader.BaseStream.Position = nodeStart+0x170;
-                float weight1 = reader.ReadSingle();
-                float weight2 = reader.ReadSingle();
-                float weight3 = reader.ReadSingle();
-                float weight4 = reader.ReadSingle();
-
-                Bones = new[] {
-                    new ClothNodeWeight(ind1, weight1),
-                    new ClothNodeWeight(ind2, weight2),
-                    new ClothNodeWeight(ind3, weight3),
-                    new ClothNodeWeight(ind4, weight4)
-                };
-
-                reader.BaseStream.Position = nodeStart+0x140;
-                VerticalParentStrength1 = reader.ReadSingle();
-
-                reader.BaseStream.Position = nodeStart+0x148;
-                VerticalParentStrength2 = reader.ReadSingle();
-
-                reader.BaseStream.Position = nodeStart+0x154;
-                DiagonalParentStrength = reader.ReadSingle();
-
-                reader.BaseStream.Position = nodeStart + 0x14c;
-                VerticalParent = reader.ReadInt16();
-
-                reader.BaseStream.Position = nodeStart + 0x158;
-                DiagonalParent = reader.ReadInt16();
-
-                reader.BaseStream.Position = nodeStart + 0x150;
-                ChainNumber = reader.ReadInt16();
-
-                reader.BaseStream.Position = nodeStart + 0x15a;
-                IsChild = reader.ReadBoolean();
-
-                if (IsChild && ChainNumber == -1) {
-                    throw new InvalidDataException("HTLC: node is child but not in a chain");
-                }
-
-                //reader.BaseStream.Position = nodeStart + 0xC0+16;
-                //Matrix3x4 ff = reader.Read<Matrix3x4B>().ToOpenTK(); // this is wrong...
-
-                reader.BaseStream.Position = nodeStart + 0x180;
-            }
         }
 
         /// <summary>Header data</summary>
@@ -203,8 +113,6 @@ namespace TankLib.Chunks {
         /// <summary>Cloth nodes => skeleton bones map</summary>
         public Dictionary<int, short>[] NodeBones;
 
-        public ushort[][] BoneLookup;
-
         public void Parse(Stream input) {
             using (BinaryReader reader = new BinaryReader(input)) {
                 Header = reader.Read<ClothHeader>();
@@ -213,9 +121,8 @@ namespace TankLib.Chunks {
                     reader.BaseStream.Position = Header.Offset;
 
                     Descriptors = new ClothDesc[Header.Count];
-                    // Nodes = new ClothNode[Header.Count][];
-                    // NodeBones = new Dictionary<int, short>[Header.Count];
-                    BoneLookup = new ushort[Header.Count][];
+                    Nodes = new ClothNode[Header.Count][];
+                    NodeBones = new Dictionary<int, short>[Header.Count];
 
                     if (Header.Count > 0) {
                         for (ulong i = 0; i < Header.Count; i++) {
@@ -223,24 +130,31 @@ namespace TankLib.Chunks {
 
                             long nextStartPos = reader.BaseStream.Position;
 
-                            reader.BaseStream.Position = Descriptors[i].BoneIndicesTableOffset;
-                            BoneLookup[i] = reader.ReadArray<ushort>(Descriptors[i].ClothBonesUsed);
-
-                            // if (Descriptors[i].Section8Offset != 4574069944263674675) { // todo: wtf
-                            //     reader.BaseStream.Position = Descriptors[i].Section8Offset;
-                            //     NodeBones[i] = new Dictionary<int, short>();
-                            //     for (int nodeIndex = 0; nodeIndex < Descriptors[i].ClothBonesUsed; nodeIndex++) {
-                            //         NodeBones[i][nodeIndex] = reader.ReadInt16();
-                            //     }
-                            // }
-                            //
-                            // if (Descriptors[i].Section1Offset > 0 && Descriptors[i].Section1Offset != 4692750811720056850) { // todo: wtf2
-                            //     Nodes[i] = new ClothNode[Descriptors[i].ClothBonesUsed];
-                            //     reader.BaseStream.Position = Descriptors[i].Section1Offset;
-                            //     for (int nodeIndex = 0; nodeIndex < Descriptors[i].ClothBonesUsed; nodeIndex++) {
-                            //         Nodes[i][nodeIndex] = new ClothNode(reader);
-                            //     }
-                            // }
+                            reader.BaseStream.Position = Descriptors[i].BoneSectionOffset;
+                            NodeBones[i] = new Dictionary<int, short>();
+                            for (int nodeIndex = 0; nodeIndex < Descriptors[i].ClothBonesUsed; nodeIndex++) {
+                                NodeBones[i][nodeIndex] = reader.ReadInt16();
+                            }
+                            
+                            reader.BaseStream.Position = Descriptors[i].VertParent1Offset;
+                            var vertParent1 = reader.ReadArray<short>(Descriptors[i].ClothBonesUsed);
+                            reader.BaseStream.Position = Descriptors[i].VertParent2Offset;
+                            var weight = reader.ReadArray<float>(Descriptors[i].ClothBonesUsed * 4);
+                            reader.BaseStream.Position = Descriptors[i].IndicesOffset;
+                            var indices = reader.ReadArray<short>(Descriptors[i].ClothBonesUsed * 4);
+                            
+                            Nodes[i] = new ClothNode[Descriptors[i].ClothBonesUsed];
+                            for (int nodeIndex = 0; nodeIndex < Descriptors[i].ClothBonesUsed; nodeIndex++) {
+                                Nodes[i][nodeIndex] = new ClothNode {
+                                    VerticalParent = vertParent1[nodeIndex],
+                                    Bones = new[] {
+                                        new ClothNodeWeight(indices[nodeIndex * 4], weight[nodeIndex * 4]),
+                                        new ClothNodeWeight(indices[nodeIndex * 4 + 1], weight[nodeIndex * 4 + 1]),
+                                        new ClothNodeWeight(indices[nodeIndex * 4 + 2], weight[nodeIndex * 4 + 2]),
+                                        new ClothNodeWeight(indices[nodeIndex * 4 + 3], weight[nodeIndex * 4 + 3]),
+                                    }
+                                };
+                            }
 
                             reader.BaseStream.Position = nextStartPos;
                         }
@@ -249,7 +163,7 @@ namespace TankLib.Chunks {
             }
         }
 
-        public short[] CreateClothHierarchy(teModelChunk_Skeleton skeleton, out Dictionary<int, ClothNode> nodeMap) {
+        public short[] CreateFakeHierarchy(teModelChunk_Skeleton skeleton, out Dictionary<int, ClothNode> nodeMap) {
             short[] hierarchy = (short[]) skeleton.Hierarchy.Clone();
             nodeMap = new Dictionary<int, ClothNode>();
 
@@ -264,14 +178,14 @@ namespace TankLib.Chunks {
                         if (NodeBones[clothIndex][nodeIndex] != -1) {
                             hierarchy[NodeBones[clothIndex][nodeIndex]] =
                                 NodeBones[clothIndex][parentRaw];
-                            if (NodeBones[clothIndex][parentRaw] == -1) {
+                            if (NodeBones[clothIndex][parentRaw] == -1) { // todo: this is unpredictable with new cloth
                                 ClothNodeWeight weightedBone =
                                     node.Bones.Aggregate((i1, i2) => i1.Weight > i2.Weight ? i1 : i2);
                                 hierarchy[NodeBones[clothIndex][nodeIndex]] = weightedBone.Bone;
                             }
                         }
                     } else {
-                        if (NodeBones[clothIndex].ContainsKey(nodeIndex)) {
+                        if (NodeBones[clothIndex].ContainsKey(nodeIndex)) { // todo: this is unpredictable with new cloth
                             if (NodeBones[clothIndex][nodeIndex] != -1) {
                                 hierarchy[NodeBones[clothIndex][nodeIndex]] = -1;
                                 ClothNodeWeight weightedBone =
@@ -289,65 +203,6 @@ namespace TankLib.Chunks {
                     nodeIndex++;
                 }
                 clothIndex++;
-            }
-
-            return hierarchy;
-        }
-
-        public short[] CreateFakeHierarchy(teModelChunk_Skeleton skeleton, teModelChunk_RenderMesh.Submesh[] submeshes, out HashSet<int> nodeMap) {
-            short[] hierarchy = (short[]) skeleton.Hierarchy.Clone();
-            nodeMap = new HashSet<int>();
-
-            var guideBones = new Dictionary<int, teVec3>();
-            var seenBones = new HashSet<ushort>(BoneLookup.SelectMany(x => x));
-
-            foreach (var submesh in submeshes) {
-                for (var index = 0; index < submesh.BoneIndices.Length; index++) {
-                    for (var i = 0; i < submesh.BoneIndices[index].Length; i++) {
-                        var bone = submesh.BoneIndices[index][i];
-
-                        if (hierarchy[bone] <= 0) {
-                            seenBones.Add(bone);
-                            continue;
-                        }
-
-                        var weight = submesh.BoneWeights[index][i];
-                        if (weight < 0.001f) {
-                            continue;
-                        }
-
-                        if (bone >= skeleton.Lookup.Length) {
-                            continue;
-                        }
-
-                        seenBones.Add(skeleton.Lookup[bone]);
-                    }
-                }
-            }
-
-            for (ushort index = 0; index < skeleton.Hierarchy.Length; index++) {
-                if (seenBones.Contains(index)) {
-                    continue;
-                }
-
-                skeleton.GetWorldSpace(index, out _, out _, out var pos);
-                guideBones[index] = pos;
-            }
-
-            foreach (var cloth in BoneLookup) {
-                foreach (var bone in cloth) {
-                    if (nodeMap.Add(bone)) {
-                        skeleton.GetWorldSpace(bone, out _, out _, out var src);
-
-                        var best = float.MaxValue;
-                        foreach (var (testBone, testPos) in guideBones) {
-                            if ((testPos - src).Length() < best) {
-                                hierarchy[bone] = (short) testBone;
-                                best = (testPos - src).Length();
-                            }
-                        }
-                    }
-                }
             }
 
             return hierarchy;
