@@ -30,10 +30,10 @@ namespace DataTool.ToolLogic.List.Misc {
             var @return = new Dictionary<teResourceGUID, string>();
 
             foreach (teResourceGUID key in TrackedFiles[0xD5]) {
-                var stu = STUHelper.GetInstance<STU_96ABC153>(key);
+                var stu = STUHelper.GetInstance<STU_7AC5B87B>(key);
                 if (stu == null) continue;
 
-                @return[key] = IO.GetString(stu.m_94672A2A);
+                @return[key] = IO.GetString(stu.m_6E7E23A2);
             }
 
             return @return;

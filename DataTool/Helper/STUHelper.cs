@@ -8,8 +8,8 @@ namespace DataTool.Helper {
     public static class STUHelper {
         public static string GetDescriptionString(ulong key) {
             if (key == 0) return null;
-            STU_96ABC153 description = GetInstance<STU_96ABC153>(key);
-            return GetString(description?.m_94672A2A);
+            var description = GetInstance<STU_7AC5B87B>(key);
+            return GetString(description?.m_6E7E23A2);
         }
 
         public static T GetInstance<T>(ulong key) where T : STUInstance {

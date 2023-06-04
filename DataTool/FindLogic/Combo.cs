@@ -195,7 +195,6 @@ namespace DataTool.FindLogic {
         public class VoiceLineInstanceInfo {
             public ulong GUIDx06F;
             public ulong GUIDx09B;
-            public ulong GUIDx03C;
             public ulong VoiceLineSet;
             public ulong ExternalSound;
             public ulong VoiceStimulus;
@@ -1096,7 +1095,6 @@ namespace DataTool.FindLogic {
                             new VoiceLineInstanceInfo {
                                 GUIDx06F = voiceLineInstance.GetVoiceLineGUID(),
                                 GUIDx09B = voiceLineInstance.Get9BGUID(),
-                                GUIDx03C = voiceLineInstance.m_effectHardpoint,
                                 Subtitle = voiceLineInstance.m_43C90056
                             };
 

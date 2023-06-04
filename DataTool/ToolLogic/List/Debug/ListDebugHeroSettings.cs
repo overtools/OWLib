@@ -56,10 +56,10 @@ namespace DataTool.ToolLogic.List.Debug {
                                 Console.Out.WriteLine($"            {GetString(identifierEntryString.m_name)}");
                             else if (identifierEntry is STU_31E34046 identifierEntryColor)
                                 Console.Out.WriteLine($"            {identifierEntryColor.m_color}");
-                            else if (identifierEntry is STU_714EA6C9 identifierEntryUx) {
+                            /*else if (identifierEntry is STU_714EA6C9 identifierEntryUx) {
                                 // unused
                                 Console.Out.WriteLine($"            {identifierEntryUx.m_name}");
-                            }
+                            }*/
                         }
                     }
                 }
