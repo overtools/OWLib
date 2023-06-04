@@ -7,7 +7,7 @@ namespace TankLib.STU.Types
     public class STUProfileOverviewGeneralStat : STUInstance
     {
         [STUField(0xB48F1D22, 0)] // size: 16
-        public teStructuredDataAssetRef<STUUXDisplayText> m_name;
+        public teStructuredDataAssetRef<STU_A7F15A16> m_name;
 
         [STUField(0x93235476, 16)] // size: 16
         public teStructuredDataAssetRef<STUStat> m_93235476;

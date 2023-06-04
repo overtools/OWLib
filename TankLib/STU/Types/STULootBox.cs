@@ -29,7 +29,7 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUModelLook> m_baseModelLook;
 
         [STUField(0xB48F1D22, 120)] // size: 16
-        public teStructuredDataAssetRef<STUUXDisplayText> m_name;
+        public teStructuredDataAssetRef<STU_A7F15A16> m_name;
 
         [STUField(0xE02BEE24, 136)] // size: 16
         public teStructuredDataAssetRef<STUCelebration> m_celebration;
@@ -38,7 +38,7 @@ namespace TankLib.STU.Types
         public STULootBoxShopCard[] m_shopCards;
 
         [STUField(0x3DFAC8CA, 168)] // size: 16
-        public teStructuredDataAssetRef<STUUXDisplayText>[] m_3DFAC8CA;
+        public teStructuredDataAssetRef<STU_A7F15A16>[] m_3DFAC8CA;
 
         [STUField(0x7AB4E3F8, 184)] // size: 4
         public Enum_BABC4175 m_lootboxType;

@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x84515D93, 296)]
+    [STU(0x84515D93, 312)]
     public class STUUnlock_SprayPaint : STU_3021DDED
     {
         [STUField(0x1B25AB90, 240, ReaderType = typeof(InlineInstanceFieldReader))] // size: 40
@@ -11,5 +11,8 @@ namespace TankLib.STU.Types
 
         [STUField(0xE29A79B7, 280)] // size: 16
         public teStructuredDataAssetRef<ulong> m_E29A79B7;
+
+        [STUField(0xC0A83121, 296)] // size: 16
+        public teStructuredDataAssetRef<STU_AB9DC011> m_skin;
     }
 }

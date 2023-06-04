@@ -10,6 +10,6 @@ namespace TankLib.STU.Types
         public teStructuredDataAssetRef<STUTexture> m_cardTexture;
 
         [STUField(0x90EB924A, 16)] // size: 16
-        public teStructuredDataAssetRef<STUUXDisplayText> m_cardText;
+        public teStructuredDataAssetRef<STU_A7F15A16> m_cardText;
     }
 }

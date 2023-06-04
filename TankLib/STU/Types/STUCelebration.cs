@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xACCDE63F, 152)]
+    [STU(0xACCDE63F, 168)]
     public class STUCelebration : STUInstance
     {
         [STUField(0x71D9486D, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 24
@@ -27,13 +27,16 @@ namespace TankLib.STU.Types
         [STUField(0x1DAD9B7C, 112, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_C12AE264[] m_1DAD9B7C;
 
-        [STUField(0xF81F4386, 128)] // size: 8
+        [STUField(0x5B32D0EF, 128, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        public STU_0F32B4E9[] m_5B32D0EF;
+
+        [STUField(0xF81F4386, 144)] // size: 8
         public teStructuredDataDateAndTime m_startTime;
 
-        [STUField(0xFBEBAD6F, 136)] // size: 8
+        [STUField(0xFBEBAD6F, 152)] // size: 8
         public teStructuredDataDateAndTime m_endTime;
 
-        [STUField(0xEDE36CB7, 144)] // size: 8
+        [STUField(0xEDE36CB7, 160)] // size: 8
         public ulong m_resourceKeyId;
     }
 }
