@@ -883,8 +883,8 @@ namespace DataTool.FindLogic {
                         }
                     }
 
-                    if (modelLook.m_C03306D7 != null) {
-                        foreach (var modelRef in modelLook.m_C03306D7) {
+                    if (modelLook.m_5ED21CE1 != null) {
+                        foreach (var modelRef in modelLook.m_5ED21CE1) {
                             Find(info, modelRef, replacements);
                         }
                     }
