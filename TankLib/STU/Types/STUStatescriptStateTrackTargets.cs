@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x41E3C7A7, 640)]
+    [STU(0x41E3C7A7, 656)]
     public class STUStatescriptStateTrackTargets : STUStatescriptState
     {
         [STUField(0x47AB1887, 232, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
@@ -151,34 +151,40 @@ namespace TankLib.STU.Types
         [STUField(0x05C79310, 616, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUConfigVar m_05C79310;
 
-        [STUField(0x43478CAD, 624)] // size: 4
+        [STUField(0x63650DBB, 624, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STUConfigVar m_63650DBB;
+
+        [STUField(0xA4F87630, 632, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        public STUConfigVar m_A4F87630;
+
+        [STUField(0x43478CAD, 640)] // size: 4
         public Enum_3BED1D03 m_43478CAD;
 
-        [STUField(0xDD792FF0, 628)] // size: 4
+        [STUField(0xDD792FF0, 644)] // size: 4
         public Enum_B101E48A m_DD792FF0 = Enum_B101E48A.xBB2CFC53;
 
-        [STUField(0x08285CD6, 632)] // size: 1
+        [STUField(0x08285CD6, 648)] // size: 1
         public byte m_08285CD6 = 0x1;
 
-        [STUField(0x0297060F, 633)] // size: 1
+        [STUField(0x0297060F, 649)] // size: 1
         public byte m_0297060F = 0x1;
 
-        [STUField(0x95FFC3C5, 634)] // size: 1
+        [STUField(0x95FFC3C5, 650)] // size: 1
         public byte m_95FFC3C5 = 0x1;
 
-        [STUField(0x8D13DD07, 635)] // size: 1
+        [STUField(0x8D13DD07, 651)] // size: 1
         public byte m_8D13DD07;
 
-        [STUField(0x2F5FAF65, 636)] // size: 1
+        [STUField(0x2F5FAF65, 652)] // size: 1
         public byte m_2F5FAF65;
 
-        [STUField(0x32AFE9AA, 637)] // size: 1
+        [STUField(0x32AFE9AA, 653)] // size: 1
         public byte m_32AFE9AA = 0x1;
 
-        [STUField(0xE4A295CE, 638)] // size: 1
+        [STUField(0xE4A295CE, 654)] // size: 1
         public byte m_E4A295CE = 0x1;
 
-        [STUField(0x1C2A9945, 639)] // size: 1
+        [STUField(0x1C2A9945, 655)] // size: 1
         public byte m_1C2A9945 = 0x1;
     }
 }

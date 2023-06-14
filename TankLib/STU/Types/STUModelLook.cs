@@ -30,13 +30,13 @@ namespace TankLib.STU.Types
         [STUField(0x7B5D8241, 120)] // size: 16
         public teStructuredDataAssetRef<STUMaterialEffect> m_7B5D8241 = 0x0;
 
-        [STUField(0xC03306D7, 136)] // size: 16
-        public teStructuredDataAssetRef<STUModel>[] m_C03306D7;
-
-        [STUField(0xC45F5F6F, 152, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
+        [STUField(0xC45F5F6F, 136, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
         public STUModelHardpoint[] m_hardPoints;
 
-        [STUField(0x312C5F1A, 168, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0x312C5F1A, 152, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_D75EA2E1[] m_materialEffects;
+
+        [STUField(0x5ED21CE1, 168)] // size: 16
+        public ulong[] m_5ED21CE1;
     }
 }

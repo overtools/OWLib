@@ -15,14 +15,14 @@ namespace TankLib.STU.Types
         [STUField(0xF9CA7995, 40)] // size: 16
         public uint[] m_paramIds;
 
-        [STUField(0x95E7FDC0, 56)] // size: 16
-        public teStructuredDataAssetRef<STU_6378747E>[] m_95E7FDC0;
-
-        [STUField(0xBCAD245E, 72)] // size: 16
+        [STUField(0xBCAD245E, 56)] // size: 16
         public ulong[] m_BCAD245E;
 
-        [STUField(0xEED04EED, 88)] // size: 16
+        [STUField(0xEED04EED, 72)] // size: 16
         public ulong[] m_EED04EED;
+
+        [STUField(0x95E7FDC0, 88, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        public STU_A5649E83[] m_95E7FDC0;
 
         [STUField(0x123205BA, 104, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STUAnimBlendDriverParam[] m_123205BA;
