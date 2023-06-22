@@ -69,17 +69,13 @@ namespace DataTool.SaveLogic {
                     writer.Write(ModelGroups.Header.PlaceableCount); // nr objects
 
                     int entitiesWithModelCount = 0;
-                    STUModelComponent[] modelComponents = new STUModelComponent[Entities.Header.PlaceableCount];
-
                     for (int i = 0; i < Entities.Header.PlaceableCount; i++) {
 
                         teMapPlaceableEntity entity = (teMapPlaceableEntity) Entities.Placeables[i];
                         FindLogic.Combo.Find(Info, entity.Header.EntityDefinition);
 
-                        var modelComponent = GetInstance<STUModelComponent>(entity.Header.EntityDefinition);
-
-                        if (modelComponent != null && modelComponent.m_model != 0) {
-                            modelComponents[i] = modelComponent;
+                        var entityInfo = Info.m_entities[entity.Header.EntityDefinition];
+                        if (entityInfo.m_modelGUID != 0) {
                             entitiesWithModelCount += 1;
                         }
 
@@ -248,6 +244,8 @@ namespace DataTool.SaveLogic {
                         var effect = (teMapPlaceableEffect) mapPlaceable;
                         FindLogic.Combo.Find(Info, effect.Header.Effect);
                         // todo: wtf
+                        
+                        // todo: who did this - zingy
                     }
                 }
             }
