@@ -105,6 +105,7 @@ namespace TankView.Helper {
                 if(texture == null || texture.Header.Width == 0 || texture.Header.Height == 0) {
                     return default;
                 }
+                if (texture.Header.IsCubemap) return default; // see combo but is currently broken
                 width = texture.Header.Width;
                 height = texture.Header.Height;
                 Stream ms = texture.SaveToDDS(1);

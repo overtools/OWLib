@@ -333,15 +333,17 @@ namespace DataTool {
 
         public static void InitKeys() {
             Logger.Info("Core", "Checking ResourceKeys");
-
-            foreach (var key in TrackedFiles[0x90]) {
+            
+            // todo: broken for now..
+            // surely fix
+            /*foreach (var key in TrackedFiles[0x90]) {
                 if (!ValidKey(key)) continue;
 
                 var resourceKey = GetInstance<STUResourceKey>(key);
                 if (resourceKey == null || resourceKey.GetKeyID() == 0 || Client.ConfigHandler.Keyring.Keys.ContainsKey(resourceKey.GetReverseKeyID())) continue;
                 Client.ConfigHandler.Keyring.AddKey(resourceKey.GetReverseKeyID(), resourceKey.m_key);
                 Logger.Info("Core", $"Added ResourceKey {resourceKey.GetKeyIDString()}, Value: {resourceKey.GetKeyValueString()}");
-            }
+            }*/
         }
 
         private static void TryFetchLocaleFromRegistry() {
