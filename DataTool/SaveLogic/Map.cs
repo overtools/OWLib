@@ -297,6 +297,7 @@ namespace DataTool.SaveLogic {
                 if (variantModeInfo.m_celebration != 0) {
                     variantName += $" - {variantModeInfo.m_celebration}";
                 }
+                variantName = GetValidFilename(variantName);
 
                 FindLogic.Combo.Find(info, variantResultingMap.m_0342E00E?.m_loadingScreen); // big
                 FindLogic.Combo.Find(info, variantResultingMap.m_0342E00E?.m_smallMapIcon);
