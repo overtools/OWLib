@@ -190,7 +190,7 @@ namespace DataTool.SaveLogic.Unlock {
         /// Returns mapping of replacements for the skin theme, replacements can override whole voice sets or individual voice lines or any file really.
         /// Pass these replacements into Combo.Find to make sure you're getting the right files for a specific skin theme.
         /// </summary>
-        public static Dictionary<ulong, ulong> GetReplacements(STUSkinBase skin) {
+        public static Dictionary<ulong, ulong> GetReplacements(STU_21276722 skin) {
             if (skin == null) return null;
 
             var replacements = new Dictionary<ulong, ulong>();
@@ -200,6 +200,11 @@ namespace DataTool.SaveLogic.Unlock {
                 }
             }
             return replacements;
+        }
+
+        public static Dictionary<ulong, ulong> GetReplacements(teResourceGUID skinGUID) {
+            var skin = GetInstance<STU_21276722>(skinGUID);
+            return GetReplacements(skin);
         }
     }
 }

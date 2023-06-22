@@ -13,6 +13,7 @@ namespace DataTool.SaveLogic.Unlock {
             directory = Path.GetFullPath(Path.Combine(directory, ".."));
 
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
+            var replacements = SkinTheme.GetReplacements(nameCard.m_skin);
 
             // smaller version for the name plate ui
             // if (nameCard.m_0CAFC9BA != null) {
@@ -22,7 +23,7 @@ namespace DataTool.SaveLogic.Unlock {
 
             // larger version for the career page
             if (nameCard.m_C5B31BBA != null) {
-                FindLogic.Combo.Find(info, nameCard.m_C5B31BBA);
+                FindLogic.Combo.Find(info, nameCard.m_C5B31BBA, replacements);
                 info.SetTextureName(nameCard.m_C5B31BBA, name);
             }
 

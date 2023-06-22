@@ -1,12 +1,22 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DataTool.Flag;
+using TankLib.STU.Types;
 
 namespace DataTool.SaveLogic.Unlock {
     public static class SprayAndIcon {
         public static void Save(ICLIFlags flags, string directory, DataModels.Unlock unlock) {
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
-            FindLogic.Combo.Find(info, unlock.GUID);
+
+            Dictionary<ulong, ulong> replacements = null;
+            if (unlock.STU is STUUnlock_SprayPaint spray) {
+                replacements = SkinTheme.GetReplacements(spray.m_skin);
+            } else if (unlock.STU is STUUnlock_AvatarPortrait avatar) {
+                replacements = SkinTheme.GetReplacements(avatar.m_skin);
+            }
+
+            FindLogic.Combo.Find(info, unlock.GUID, replacements);
 
             bool saveAllTextures = false;
             try {
