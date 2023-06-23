@@ -1245,7 +1245,7 @@ namespace DataTool.FindLogic {
                         materialDataInfo.m_textureMap = new Dictionary<uint, ulong>();
                         foreach (teMaterialData.Texture matDataTex in materialData.Textures) {
                             Find(info, matDataTex.TextureGUID, replacements, materialDataContext);
-                            materialDataInfo.m_textureMap[matDataTex.NameHash] = matDataTex.TextureGUID;
+                            materialDataInfo.m_textureMap[matDataTex.NameHash] = GetReplacement(matDataTex.TextureGUID, replacements);
                         }
                     }
 
