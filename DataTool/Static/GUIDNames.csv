@@ -474,9 +474,12 @@ E89,078,Voicelines,1
 7ACD,01C,ESports,1
 A03F,01C,BattlePass,1
 AD3F,01C,Shop,1
+C1A7,01C,Pride,1
 AD37,01C,Season1,1
 B647,01C,Season2,1
 B734,01C,Season3,1
+BB6D,01C,Season4,1
+BD98,01C,Season5,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
@@ -490,7 +493,7 @@ EFA,09F,Menu/Kanezaka,1
 F11,09F,Menu/Kanezaka,1
 F12,09F,Menu/Kanezaka,1
 E6E,09F,Menu/Junkertown,1
-EF0,09F,Menu/Tutorial,1
+EF0,09F,Menu/Hero Gallery,1
 D6C,09F,Menu/Toronto,1
 700,09F,Menu/Kings Row (Winter) (2019),1
 710,09F,Menu/Busan (Lunar),1
@@ -529,6 +532,10 @@ D2D,09F,Menu/OWL Grand Finals (2020),1
 D67,09F,Menu/Symmetra Challenge,1
 D77,09F,Menu/Kings Row (Winter) (2020),1
 D7A,09F,Menu/Antarctica (Winter),1
+807,09F,Menu/BattlePass,1
+B6B,09F,Menu/Cupid Hanzo,1
+DAD,09F,Menu/Lijang (Lunar) (2023),1
+EED,09F,Menu/One Punch Man,1
 ; Celebrations,,,
 2168,01C,Christmas,1
 2498,01C,LunarNewYear,1
