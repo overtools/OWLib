@@ -42,7 +42,10 @@ namespace DataTool.ToolLogic.Extract {
                 .ThenBy(x => x.GUID.GUID)
                 .ToArray();
 
-            var validNames = heroes.GroupBy(x => x.Name ?? $"Unknown{teResourceGUID.Index(x.GUID)}").ToDictionary(x => x.Key, x => x.Select(y => y.GUID.GUID).ToArray(), StringComparer.InvariantCultureIgnoreCase);
+            var validNames = heroes
+                .GroupBy(x => x.Name ?? $"Unknown{teResourceGUID.Index(x.GUID)}", StringComparer.InvariantCultureIgnoreCase)
+                .ToDictionary(x => x.Key,
+                              x => x.Select(y => y.GUID.GUID).ToArray(), StringComparer.InvariantCultureIgnoreCase);
             var validGuids = heroes.Select(x => teResourceGUID.LongKey(x.GUID.GUID)).ToHashSet();
 
             var query = new HashSet<ulong>();
