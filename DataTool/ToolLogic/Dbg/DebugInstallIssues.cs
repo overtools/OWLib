@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using DataTool.Flag;
 using DataTool.ToolLogic.List;
 using TACTLib.Agent;
@@ -40,8 +43,8 @@ class DebugInstallIssues : ITool {
         {
             var directoryInfo = new DirectoryInfo(Program.Flags.OverwatchDirectory);
             output.WriteLine($"Drive Letter: {directoryInfo.Root.Name}");
-            output.WriteLine($"Directory Creation Date: {directoryInfo.CreationTimeUtc}");
-            output.WriteLine($"Directory Modified Date: {directoryInfo.LastWriteTimeUtc}");
+            output.WriteLine($"Directory Creation Date: {directoryInfo.CreationTimeUtc.ToString(CultureInfo.InvariantCulture)}");
+            output.WriteLine($"Directory Modified Date: {directoryInfo.LastWriteTimeUtc.ToString(CultureInfo.InvariantCulture)}");
             output.WriteLine();
         }
         {
@@ -57,44 +60,99 @@ class DebugInstallIssues : ITool {
             output.WriteLine($"Other File Count: {otherFileCount}");
             output.WriteLine($"Total Data File Size: {dataFiles.Sum(x => new FileInfo(x).Length)}");
 
-            var countOkay = new Dictionary<int, int>();
-            var countFailedHeaderRead = new Dictionary<int, int>();
-            var countSizeZero = new Dictionary<int, int>();
-            var countSizeWrong = new Dictionary<int, int>();
+            var dataFileInfo = new Dictionary<int, DataFileInfo>();
             foreach (var dataFileIndex in client.ContainerHandler.GetDataFileIndices()) {
-                countFailedHeaderRead.Add(dataFileIndex, 0);
-                countOkay.Add(dataFileIndex, 0);
-                countSizeZero.Add(dataFileIndex, 0);
-                countSizeWrong.Add(dataFileIndex, 0);
+                dataFileInfo.Add(dataFileIndex, new DataFileInfo());
             }
             
-            foreach (var localIndexEntry in client.ContainerHandler.IndexEntries.Values) {
-                if (!client.ContainerHandler.OpenIndexEntryForDebug(localIndexEntry, out var header)) {
-                    countFailedHeaderRead[localIndexEntry.Index]++;
+            foreach (var (eKey, localIndexEntry) in client.ContainerHandler.IndexEntries) {
+                var dataFile = dataFileInfo[localIndexEntry.Index];
+                
+                if (!client.ContainerHandler.OpenIndexEntryForDebug(localIndexEntry, out var header, out var fourCC)) {
+                    dataFile.m_countFailedHeaderRead++;
                     continue;
                 }
 
-                if (header.m_size != localIndexEntry.EncodedSize) {
-                    countSizeWrong[localIndexEntry.Index]++;
-                    if (header.m_size == 0) countSizeZero[localIndexEntry.Index]++;
+                if (header.m_size == localIndexEntry.EncodedSize) {
+                    dataFileInfo[localIndexEntry.Index].m_countOkay++;
+                    continue;
+                }
+
+                // for testing
+                //var bad = Random.Shared.NextSingle() <= 1/1000f;
+                //if (!bad) {
+                //    continue;
+                //}
+                
+                var sample = new HeaderSample {
+                    m_ekey = eKey,
+                    m_data = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref header, 1)).ToArray(),
+                    m_fourCC = fourCC,
+                    m_expectedSize = localIndexEntry.EncodedSize,
+                    m_offset = localIndexEntry.Offset
+                };
+
+                if (header.m_size == 0) {
+                    dataFile.m_countSizeZero++;
+                    dataFile.m_sizeZeroSamples.Add(sample);
                 } else {
-                    countOkay[localIndexEntry.Index]++;
+                    dataFile.m_countSizeWrongOther++;
+                    dataFile.m_sizeWrongOtherSamples.Add(sample);
                 }
             }
 
-            foreach (var dataFileIndex in countSizeZero.Keys.OrderBy(x => x)) {
+            {
+                var ekeyMap = new Dictionary<EKey, CKey>(CASCKeyComparer.Instance);
+                foreach (var entry in client.EncodingHandler!.Entries.Values) {
+                    ekeyMap.TryAdd(entry.EKey.AsEKey(), entry.CKey);
+                }
+
+                foreach (var dataFile in dataFileInfo.Values) {
+                    foreach (var sample in dataFile.m_sizeZeroSamples) {
+                        sample.m_ckey = ekeyMap[sample.m_ekey];
+                    }
+                    foreach (var sample in dataFile.m_sizeWrongOtherSamples) {
+                        sample.m_ckey = ekeyMap[sample.m_ekey];
+                    }
+                }
+            }
+
+            foreach (var (dataFileIndex, info) in dataFileInfo.OrderBy(x => x.Key)) {
                 var dataFilePath = client.ContainerHandler.GetDataFilePath(dataFileIndex);
                 
                 output.WriteLine($"Data File[{dataFileIndex}]:");
                 output.WriteLine($"  Size: {new FileInfo(dataFilePath).Length}");
-                output.WriteLine($"  Count Failed Header Read: {countFailedHeaderRead[dataFileIndex]}");
-                output.WriteLine($"  Count Okay: {countOkay[dataFileIndex]}");
-                output.WriteLine($"  Count Size Zero: {countSizeZero[dataFileIndex]}");
-                output.WriteLine($"  Count Size Wrong: {countSizeWrong[dataFileIndex]}");
+                output.WriteLine($"  Count Failed Header Read: {info.m_countFailedHeaderRead}");
+                output.WriteLine($"  Count Okay: {info.m_countOkay}");
+                output.WriteLine($"  Count Size Zero: {info.m_countSizeZero}");
+                output.WriteLine($"  Count Size Wrong Other: {info.m_countSizeWrongOther}");
+
+                var sizeZeroSamples = info.m_sizeZeroSamples
+                    .Take(Math.Min(info.m_sizeZeroSamples.Count, 30))
+                    .ToArray();
+                var sizeWrongOtherSamples = info.m_sizeWrongOtherSamples
+                    .Take(Math.Min(info.m_sizeWrongOtherSamples.Count, 30))
+                    .ToArray();
+
+                void LogSample(HeaderSample sample) {
+                    output.WriteLine($"    EKey: {sample.m_ekey.ToHexString().ToLowerInvariant()}");
+                    output.WriteLine($"    CKey: {sample.m_ckey.ToHexString().ToLowerInvariant()}");
+                    output.WriteLine($"    Header: {Convert.ToHexString(sample.m_data).ToLowerInvariant()}");
+                    output.WriteLine($"    FourCC: {sample.m_fourCC:X8}");
+                    output.WriteLine($"    Expected Size: {sample.m_expectedSize}");
+                    output.WriteLine($"    Offset: 0x{sample.m_offset:X}");
+                }
+
+                for (int i = 0; i < sizeZeroSamples.Length; i++) {
+                    output.WriteLine($"  Size Zero Samples[{i}]:");
+                    LogSample(sizeZeroSamples[i]);
+                }
+                for (int i = 0; i < sizeWrongOtherSamples.Length; i++) {
+                    output.WriteLine($"  Size Wrong Other Samples[{i}]:");
+                    LogSample(sizeWrongOtherSamples[i]);
+                }
             }
         }
-
-        //output.Write($"Install Directory: {Program.Flags.OverwatchDirectory}");
 
         var agentInfo = AnonymizeAgentInfo(client.AgentProduct);
         output.WriteLine();
@@ -117,6 +175,26 @@ class DebugInstallIssues : ITool {
                 output.WriteLine($"Global Agent Info[{product}]: {AnonymizeAgentInfo(globalAgentDatabase.Data.ProductInstall.FirstOrDefault(x => x.ProductCode == product))}");
             }
         }
+    }
+
+    private class DataFileInfo {
+        public int m_countFailedHeaderRead;
+        public int m_countOkay;
+        public int m_countSizeZero;
+        public int m_countSizeWrongOther;
+
+        public readonly List<HeaderSample> m_sizeZeroSamples = new List<HeaderSample>();
+        public readonly List<HeaderSample> m_sizeWrongOtherSamples = new List<HeaderSample>();
+    }
+
+    private class HeaderSample {
+        public EKey m_ekey;
+        public byte[] m_data;
+        public uint m_fourCC;
+        public uint m_expectedSize;
+        public uint m_offset;
+        
+        public CKey m_ckey;
     }
 
     private ProductInstall AnonymizeAgentInfo(ProductInstall agentInfo) {
