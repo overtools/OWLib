@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using DataTool.Flag;
 using DataTool.ToolLogic.List;
 using TACTLib.Agent;
@@ -12,6 +14,7 @@ using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
 using TACTLib.Container;
 using TACTLib.Core.Product.Tank;
+using TankLib;
 using TankLib.TACT;
 
 namespace DataTool.ToolLogic.Dbg;
@@ -19,16 +22,16 @@ namespace DataTool.ToolLogic.Dbg;
 [Tool("debug-install-issues", Description = "", CustomFlags = typeof(ListFlags), UtilNoArchiveNeeded = true)]
 class DebugInstallIssues : ITool {
     public void Parse(ICLIFlags toolFlags) {
-        using var output = new StreamWriter("install-issues.txt");
-        
-        //output.WriteLine("---- SYSTEM ----");
+        const string filename = "install-issues.txt";
+        using var output = new StreamWriter(filename);
 
         var args = new ClientCreateArgs {
             SpeechLanguage = Program.Flags.SpeechLanguage,
             TextLanguage = Program.Flags.Language,
             HandlerArgs = new ClientCreateArgs_Tank {
                 ManifestRegion = Program.Flags.RCN ? ProductHandler_Tank.REGION_CN : ProductHandler_Tank.REGION_DEV,
-                LoadManifest = false // !
+                LoadManifest = true,
+                LoadBundlesForLookup = false
             },
             Online = false,
 
@@ -109,10 +112,30 @@ class DebugInstallIssues : ITool {
 
                 foreach (var dataFile in dataFileInfo.Values) {
                     foreach (var sample in dataFile.m_sizeZeroSamples) {
-                        sample.m_ckey = ekeyMap[sample.m_ekey];
+                        ekeyMap.TryGetValue(sample.m_ekey, out sample.m_ckey);
                     }
                     foreach (var sample in dataFile.m_sizeWrongOtherSamples) {
-                        sample.m_ckey = ekeyMap[sample.m_ekey];
+                        ekeyMap.TryGetValue(sample.m_ekey, out sample.m_ckey);
+                    }
+                }
+            }
+
+            {
+                var tankHandler = (ProductHandler_Tank)client.ProductHandler!;
+                var ckeyMap = new Dictionary<CKey, teResourceGUID>(CASCKeyComparer.Instance);
+                foreach (var guid in tankHandler.m_assets.Keys) {
+                    var cmf = tankHandler.GetContentManifestForAsset(guid);
+                    var asset = cmf.GetHashData(guid);
+
+                    ckeyMap.TryAdd(asset.ContentKey, (teResourceGUID) asset.GUID);
+                }
+
+                foreach (var dataFile in dataFileInfo.Values) {
+                    foreach (var sample in dataFile.m_sizeZeroSamples) {
+                        ckeyMap.TryGetValue(sample.m_ckey, out sample.m_guid);
+                    }
+                    foreach (var sample in dataFile.m_sizeWrongOtherSamples) {
+                        ckeyMap.TryGetValue(sample.m_ckey, out sample.m_guid);
                     }
                 }
             }
@@ -128,17 +151,24 @@ class DebugInstallIssues : ITool {
                 output.WriteLine($"  Count Size Wrong Other: {info.m_countSizeWrongOther}");
 
                 var sizeZeroSamples = info.m_sizeZeroSamples
-                    .Take(Math.Min(info.m_sizeZeroSamples.Count, 30))
+                    .Take(Math.Min(info.m_sizeZeroSamples.Count, 60))
                     .ToArray();
                 var sizeWrongOtherSamples = info.m_sizeWrongOtherSamples
-                    .Take(Math.Min(info.m_sizeWrongOtherSamples.Count, 30))
+                    .Take(Math.Min(info.m_sizeWrongOtherSamples.Count, 999))
                     .ToArray();
 
                 void LogSample(HeaderSample sample) {
                     output.WriteLine($"    EKey: {sample.m_ekey.ToHexString().ToLowerInvariant()}");
                     output.WriteLine($"    CKey: {sample.m_ckey.ToHexString().ToLowerInvariant()}");
-                    output.WriteLine($"    Header: {Convert.ToHexString(sample.m_data).ToLowerInvariant()}");
-                    output.WriteLine($"    FourCC: {sample.m_fourCC:X8}");
+                    output.WriteLine($"    Overwatch GUID: 0x{sample.m_guid.GUID:X16} / {sample.m_guid}");
+                    output.WriteLine($"    Header: " +
+                        $"{Convert.ToHexString(sample.m_data.Skip(0).Take(16).ToArray()).ToLowerInvariant()} " +
+                        $"{Convert.ToHexString(sample.m_data.Skip(16).Take(4).ToArray()).ToLowerInvariant()} " +
+                        $"{Convert.ToHexString(sample.m_data.Skip(16+4).Take(1).ToArray()).ToLowerInvariant()} " +
+                        $"{Convert.ToHexString(sample.m_data.Skip(16+4+1).Take(1).ToArray()).ToLowerInvariant()} " +
+                        $"{Convert.ToHexString(sample.m_data.Skip(16+4+1+1).Take(4).ToArray()).ToLowerInvariant()} " +
+                        $"{Convert.ToHexString(sample.m_data.Skip(16+4+1+1+4).Take(4).ToArray()).ToLowerInvariant()}");
+                    output.WriteLine($"    FourCC: {sample.m_fourCC:X8} ({Encoding.ASCII.GetString(BitConverter.GetBytes(sample.m_fourCC))})");
                     output.WriteLine($"    Expected Size: {sample.m_expectedSize}");
                     output.WriteLine($"    Offset: 0x{sample.m_offset:X}");
                 }
@@ -175,6 +205,8 @@ class DebugInstallIssues : ITool {
                 output.WriteLine($"Global Agent Info[{product}]: {AnonymizeAgentInfo(globalAgentDatabase.Data.ProductInstall.FirstOrDefault(x => x.ProductCode == product))}");
             }
         }
+        
+        Console.Out.WriteLine($"Debugging information written to {filename} in the toolchain-release directory. Please upload this to Discord in the #install-issues channel");
     }
 
     private class DataFileInfo {
@@ -195,6 +227,7 @@ class DebugInstallIssues : ITool {
         public uint m_offset;
         
         public CKey m_ckey;
+        public teResourceGUID m_guid;
     }
 
     private ProductInstall AnonymizeAgentInfo(ProductInstall agentInfo) {
