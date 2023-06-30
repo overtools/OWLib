@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -13,13 +12,14 @@ using TACTLib.Agent.Protobuf;
 using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
 using TACTLib.Container;
+using TACTLib.Core;
 using TACTLib.Core.Product.Tank;
 using TankLib;
 using TankLib.TACT;
 
 namespace DataTool.ToolLogic.Dbg;
 
-[Tool("debug-install-issues", Description = "", CustomFlags = typeof(ListFlags), UtilNoArchiveNeeded = true)]
+[Tool("debug-install-issues", Description = "Collect debugging information about the game install", CustomFlags = typeof(ListFlags), UtilNoArchiveNeeded = true)]
 class DebugInstallIssues : ITool {
     public void Parse(ICLIFlags toolFlags) {
         const string filename = "install-issues.txt";
@@ -33,9 +33,9 @@ class DebugInstallIssues : ITool {
                 LoadManifest = true,
                 LoadBundlesForLookup = false
             },
-            Online = false,
-
-            RemoteKeyringUrl = "https://raw.githubusercontent.com/overtools/OWLib/master/TankLib/Overwatch.keyring"
+            Online = false
+            
+            // dont need keys or anything..
         };
 
         LoadHelper.PreLoad();
@@ -84,6 +84,7 @@ class DebugInstallIssues : ITool {
                 // for testing
                 //var bad = Random.Shared.NextSingle() <= 1/1000f;
                 //if (!bad) {
+                //    dataFileInfo[localIndexEntry.Index].m_countOkay++;
                 //    continue;
                 //}
                 
@@ -94,6 +95,7 @@ class DebugInstallIssues : ITool {
                     m_expectedSize = localIndexEntry.EncodedSize,
                     m_offset = localIndexEntry.Offset
                 };
+                dataFile.m_allBadSamples.Add(sample);
 
                 if (header.m_size == 0) {
                     dataFile.m_countSizeZero++;
@@ -119,9 +121,11 @@ class DebugInstallIssues : ITool {
                     }
                 }
             }
-
+            
+            // guard to theoretically allow different products...
+            int overwatchAssetCount = 0;
+            if (client.ProductHandler is ProductHandler_Tank tankHandler) 
             {
-                var tankHandler = (ProductHandler_Tank)client.ProductHandler!;
                 var ckeyMap = new Dictionary<CKey, teResourceGUID>(CASCKeyComparer.Instance);
                 foreach (var guid in tankHandler.m_assets.Keys) {
                     var cmf = tankHandler.GetContentManifestForAsset(guid);
@@ -129,6 +133,8 @@ class DebugInstallIssues : ITool {
 
                     ckeyMap.TryAdd(asset.ContentKey, (teResourceGUID) asset.GUID);
                 }
+
+                overwatchAssetCount = ckeyMap.Count;
 
                 foreach (var dataFile in dataFileInfo.Values) {
                     foreach (var sample in dataFile.m_sizeZeroSamples) {
@@ -151,7 +157,7 @@ class DebugInstallIssues : ITool {
                 output.WriteLine($"  Count Size Wrong Other: {info.m_countSizeWrongOther}");
 
                 var sizeZeroSamples = info.m_sizeZeroSamples
-                    .Take(Math.Min(info.m_sizeZeroSamples.Count, 60))
+                    .Take(Math.Min(info.m_sizeZeroSamples.Count, 100))
                     .ToArray();
                 var sizeWrongOtherSamples = info.m_sizeWrongOtherSamples
                     .Take(Math.Min(info.m_sizeWrongOtherSamples.Count, 999))
@@ -182,6 +188,17 @@ class DebugInstallIssues : ITool {
                     LogSample(sizeWrongOtherSamples[i]);
                 }
             }
+            
+            output.WriteLine();
+            output.WriteLine($"Total Okay Count: {dataFileInfo.Values.Sum(x => x.m_countOkay)}");
+            output.WriteLine($"Total Size Zero Count: {dataFileInfo.Values.Sum(x => x.m_countSizeZero)}");
+            output.WriteLine($"Total Size Wrong Other Count: {dataFileInfo.Values.Sum(x => x.m_countSizeWrongOther)}");
+            output.WriteLine($"Total Bad Count: {dataFileInfo.Values.Sum(x => x.m_countSizeZero + x.m_countSizeWrongOther)}");
+            output.WriteLine($"Total Bad Count With BLTE Magic: {dataFileInfo.Values.Sum(x =>
+                x.m_allBadSamples.Count(y => y.m_fourCC == BLTEStream.Magic))}"); 
+            output.WriteLine($"Total Overwatch Asset Count: {overwatchAssetCount}"); 
+            output.WriteLine($"Total Bad Overwatch Asset Count: {dataFileInfo.Values.Sum(x => 
+                x.m_allBadSamples.Count(y => y.m_guid != 0))}");
         }
 
         var agentInfo = AnonymizeAgentInfo(client.AgentProduct);
@@ -200,13 +217,18 @@ class DebugInstallIssues : ITool {
 
         output.WriteLine($"Has Global Agent Info: {globalAgentDatabase != null}");
         if (globalAgentDatabase != null) {
-            var targetProducts = new[] { "pro", "bna", "agent" };
+            var targetProducts = new[] { "pro", "bna", "agent" /*,"thisdoesntexisttest"*/ };
             foreach (var product in targetProducts) {
-                output.WriteLine($"Global Agent Info[{product}]: {AnonymizeAgentInfo(globalAgentDatabase.Data.ProductInstall.FirstOrDefault(x => x.ProductCode == product))}");
+                var productInfo = AnonymizeAgentInfo(globalAgentDatabase.Data.ProductInstall.FirstOrDefault(x => x.ProductCode == product));
+                output.WriteLine($"Global Agent Info[{product}]: {productInfo}");
+
+                var baseProductState = productInfo?.CachedProductState?.BaseProductState;
+                var versionStr = baseProductState?.CurrentVersionStr ?? baseProductState?.CurrentVersion; // never seen second but sanity
+                output.WriteLine($"Global Agent Info[{product}].Version: {versionStr}");
             }
         }
         
-        Console.Out.WriteLine($"Debugging information written to {filename} in the toolchain-release directory. Please upload this to Discord in the #install-issues channel");
+        Console.Out.WriteLine($"Debugging information written to {filename} in the toolchain-release directory. Please upload this to Discord in the #corrupt-installs channel");
     }
 
     private class DataFileInfo {
@@ -215,6 +237,7 @@ class DebugInstallIssues : ITool {
         public int m_countSizeZero;
         public int m_countSizeWrongOther;
 
+        public readonly List<HeaderSample> m_allBadSamples = new List<HeaderSample>();
         public readonly List<HeaderSample> m_sizeZeroSamples = new List<HeaderSample>();
         public readonly List<HeaderSample> m_sizeWrongOtherSamples = new List<HeaderSample>();
     }
