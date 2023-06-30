@@ -42,35 +42,16 @@ class DebugInstallIssues : ITool {
         var client = new ClientHandler(Program.Flags.OverwatchDirectory, args);
         LoadHelper.PostLoad(client);
         
-        output.WriteLine("---- CONTAINER ----");
+        int overwatchAssetCount = 0;
+        var dataFileInfo = new Dictionary<int, DataFileInfo>();
         {
-            var directoryInfo = new DirectoryInfo(Program.Flags.OverwatchDirectory);
-            output.WriteLine($"Drive Letter: {directoryInfo.Root.Name}");
-            output.WriteLine($"Directory Creation Date: {directoryInfo.CreationTimeUtc.ToString(CultureInfo.InvariantCulture)}");
-            output.WriteLine($"Directory Modified Date: {directoryInfo.LastWriteTimeUtc.ToString(CultureInfo.InvariantCulture)}");
-            output.WriteLine();
-        }
-        {
-            var dataDirectory = Path.Combine(client.ContainerHandler!.ContainerDirectory, ContainerHandler.DataDirectory);
-
-            var dataFiles = Directory.GetFiles(dataDirectory, "data.*");
-            var dataFileCount = dataFiles.Length;
-            var indexFileCount = Directory.GetFiles(dataDirectory, "*.idx").Length;
-            var otherFileCount = Directory.GetFiles(dataDirectory).Length - dataFileCount - indexFileCount;
-            
-            output.WriteLine($"Data File Count: {dataFileCount}");
-            output.WriteLine($"Index File Count: {indexFileCount}");
-            output.WriteLine($"Other File Count: {otherFileCount}");
-            output.WriteLine($"Total Data File Size: {dataFiles.Sum(x => new FileInfo(x).Length)}");
-
-            var dataFileInfo = new Dictionary<int, DataFileInfo>();
-            foreach (var dataFileIndex in client.ContainerHandler.GetDataFileIndices()) {
+            foreach (var dataFileIndex in client.ContainerHandler!.GetDataFileIndices()) {
                 dataFileInfo.Add(dataFileIndex, new DataFileInfo());
             }
-            
+
             foreach (var (eKey, localIndexEntry) in client.ContainerHandler.IndexEntries) {
                 var dataFile = dataFileInfo[localIndexEntry.Index];
-                
+
                 if (!client.ContainerHandler.OpenIndexEntryForDebug(localIndexEntry, out var header, out var fourCC)) {
                     dataFile.m_countFailedHeaderRead++;
                     continue;
@@ -87,7 +68,7 @@ class DebugInstallIssues : ITool {
                 //    dataFileInfo[localIndexEntry.Index].m_countOkay++;
                 //    continue;
                 //}
-                
+
                 var sample = new HeaderSample {
                     m_ekey = eKey,
                     m_data = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref header, 1)).ToArray(),
@@ -95,6 +76,7 @@ class DebugInstallIssues : ITool {
                     m_expectedSize = localIndexEntry.EncodedSize,
                     m_offset = localIndexEntry.Offset
                 };
+
                 dataFile.m_allBadSamples.Add(sample);
 
                 if (header.m_size == 0) {
@@ -116,16 +98,15 @@ class DebugInstallIssues : ITool {
                     foreach (var sample in dataFile.m_sizeZeroSamples) {
                         ekeyMap.TryGetValue(sample.m_ekey, out sample.m_ckey);
                     }
+
                     foreach (var sample in dataFile.m_sizeWrongOtherSamples) {
                         ekeyMap.TryGetValue(sample.m_ekey, out sample.m_ckey);
                     }
                 }
             }
-            
+
             // guard to theoretically allow different products...
-            int overwatchAssetCount = 0;
-            if (client.ProductHandler is ProductHandler_Tank tankHandler) 
-            {
+            if (client.ProductHandler is ProductHandler_Tank tankHandler) {
                 var ckeyMap = new Dictionary<CKey, teResourceGUID>(CASCKeyComparer.Instance);
                 foreach (var guid in tankHandler.m_assets.Keys) {
                     var cmf = tankHandler.GetContentManifestForAsset(guid);
@@ -140,94 +121,139 @@ class DebugInstallIssues : ITool {
                     foreach (var sample in dataFile.m_sizeZeroSamples) {
                         ckeyMap.TryGetValue(sample.m_ckey, out sample.m_guid);
                     }
+
                     foreach (var sample in dataFile.m_sizeWrongOtherSamples) {
                         ckeyMap.TryGetValue(sample.m_ckey, out sample.m_guid);
                     }
                 }
             }
-
-            foreach (var (dataFileIndex, info) in dataFileInfo.OrderBy(x => x.Key)) {
-                var dataFilePath = client.ContainerHandler.GetDataFilePath(dataFileIndex);
-                
-                output.WriteLine($"Data File[{dataFileIndex}]:");
-                output.WriteLine($"  Size: {new FileInfo(dataFilePath).Length}");
-                output.WriteLine($"  Count Failed Header Read: {info.m_countFailedHeaderRead}");
-                output.WriteLine($"  Count Okay: {info.m_countOkay}");
-                output.WriteLine($"  Count Size Zero: {info.m_countSizeZero}");
-                output.WriteLine($"  Count Size Wrong Other: {info.m_countSizeWrongOther}");
-
-                var sizeZeroSamples = info.m_sizeZeroSamples
-                    .Take(Math.Min(info.m_sizeZeroSamples.Count, 100))
-                    .ToArray();
-                var sizeWrongOtherSamples = info.m_sizeWrongOtherSamples
-                    .Take(Math.Min(info.m_sizeWrongOtherSamples.Count, 999))
-                    .ToArray();
-
-                void LogSample(HeaderSample sample) {
-                    output.WriteLine($"    EKey: {sample.m_ekey.ToHexString().ToLowerInvariant()}");
-                    output.WriteLine($"    CKey: {sample.m_ckey.ToHexString().ToLowerInvariant()}");
-                    output.WriteLine($"    Overwatch GUID: 0x{sample.m_guid.GUID:X16} / {sample.m_guid}");
-                    output.WriteLine($"    Header: " +
-                        $"{Convert.ToHexString(sample.m_data.Skip(0).Take(16).ToArray()).ToLowerInvariant()} " +
-                        $"{Convert.ToHexString(sample.m_data.Skip(16).Take(4).ToArray()).ToLowerInvariant()} " +
-                        $"{Convert.ToHexString(sample.m_data.Skip(16+4).Take(1).ToArray()).ToLowerInvariant()} " +
-                        $"{Convert.ToHexString(sample.m_data.Skip(16+4+1).Take(1).ToArray()).ToLowerInvariant()} " +
-                        $"{Convert.ToHexString(sample.m_data.Skip(16+4+1+1).Take(4).ToArray()).ToLowerInvariant()} " +
-                        $"{Convert.ToHexString(sample.m_data.Skip(16+4+1+1+4).Take(4).ToArray()).ToLowerInvariant()}");
-                    output.WriteLine($"    FourCC: {sample.m_fourCC:X8} ({Encoding.ASCII.GetString(BitConverter.GetBytes(sample.m_fourCC))})");
-                    output.WriteLine($"    Expected Size: {sample.m_expectedSize}");
-                    output.WriteLine($"    Offset: 0x{sample.m_offset:X}");
-                }
-
-                for (int i = 0; i < sizeZeroSamples.Length; i++) {
-                    output.WriteLine($"  Size Zero Samples[{i}]:");
-                    LogSample(sizeZeroSamples[i]);
-                }
-                for (int i = 0; i < sizeWrongOtherSamples.Length; i++) {
-                    output.WriteLine($"  Size Wrong Other Samples[{i}]:");
-                    LogSample(sizeWrongOtherSamples[i]);
-                }
-            }
-            
-            output.WriteLine();
-            output.WriteLine($"Total Okay Count: {dataFileInfo.Values.Sum(x => x.m_countOkay)}");
-            output.WriteLine($"Total Size Zero Count: {dataFileInfo.Values.Sum(x => x.m_countSizeZero)}");
-            output.WriteLine($"Total Size Wrong Other Count: {dataFileInfo.Values.Sum(x => x.m_countSizeWrongOther)}");
-            output.WriteLine($"Total Bad Count: {dataFileInfo.Values.Sum(x => x.m_countSizeZero + x.m_countSizeWrongOther)}");
-            output.WriteLine($"Total Bad Count With BLTE Magic: {dataFileInfo.Values.Sum(x =>
-                x.m_allBadSamples.Count(y => y.m_fourCC == BLTEStream.Magic))}"); 
-            output.WriteLine($"Total Overwatch Asset Count: {overwatchAssetCount}"); 
-            output.WriteLine($"Total Bad Overwatch Asset Count: {dataFileInfo.Values.Sum(x => 
-                x.m_allBadSamples.Count(y => y.m_guid != 0))}");
         }
-
-        var agentInfo = AnonymizeAgentInfo(client.AgentProduct);
-        output.WriteLine();
-        output.WriteLine("---- AGENT ----");
-
-        output.WriteLine($"Has Game Agent Info: {agentInfo != null}");
-        if (agentInfo != null) {
-            output.WriteLine($"Game Agent Info: {agentInfo}");
-        }
-
+        
         AgentDatabase globalAgentDatabase = null;
         try {
             globalAgentDatabase = new AgentDatabase();
         } catch { }
 
-        output.WriteLine($"Has Global Agent Info: {globalAgentDatabase != null}");
-        if (globalAgentDatabase != null) {
-            var targetProducts = new[] { "pro", "bna", "agent" /*,"thisdoesntexisttest"*/ };
-            foreach (var product in targetProducts) {
-                var productInfo = AnonymizeAgentInfo(globalAgentDatabase.Data.ProductInstall.FirstOrDefault(x => x.ProductCode == product));
-                output.WriteLine($"Global Agent Info[{product}]: {productInfo}");
+        {
+            output.WriteLine("---- SUMMARY ----");
 
-                var baseProductState = productInfo?.CachedProductState?.BaseProductState;
-                var versionStr = baseProductState?.CurrentVersionStr ?? baseProductState?.CurrentVersion; // never seen second but sanity
-                output.WriteLine($"Global Agent Info[{product}].Version: {versionStr}");
+            if (globalAgentDatabase != null) {
+                var targetProducts = new[] { "agent", "bna" };
+                foreach (var product in targetProducts) {
+                    var productInfo = AnonymizeAgentInfo(globalAgentDatabase.Data.ProductInstall.FirstOrDefault(x => x.ProductCode == product));
+                    
+                    var baseProductState = productInfo?.CachedProductState?.BaseProductState;
+                    var versionStr = baseProductState?.CurrentVersionStr ?? baseProductState?.CurrentVersion; // never seen second but sanity
+                    output.WriteLine($"Global Agent Info[{product}].Version: {versionStr}");
+                }
+            }
+            
+            output.WriteLine($"Total Okay Count: {dataFileInfo.Values.Sum(x => x.m_countOkay)}");
+            output.WriteLine($"Total Size Zero Count: {dataFileInfo.Values.Sum(x => x.m_countSizeZero)}");
+            output.WriteLine($"Total Size Wrong Other Count: {dataFileInfo.Values.Sum(x => x.m_countSizeWrongOther)}");
+            output.WriteLine();
+        }
+        
+        output.WriteLine("---- CONTAINER ----");
+        {
+            var directoryInfo = new DirectoryInfo(Program.Flags.OverwatchDirectory);
+            output.WriteLine($"Drive Letter: {directoryInfo.Root.Name}");
+            output.WriteLine($"Directory Creation Date: {directoryInfo.CreationTimeUtc.ToString(CultureInfo.InvariantCulture)}");
+            output.WriteLine($"Directory Modified Date: {directoryInfo.LastWriteTimeUtc.ToString(CultureInfo.InvariantCulture)}");
+            output.WriteLine();
+        }
+
+        output.WriteLine($"Total Okay Count: {dataFileInfo.Values.Sum(x => x.m_countOkay)}");
+        output.WriteLine($"Total Size Zero Count: {dataFileInfo.Values.Sum(x => x.m_countSizeZero)}");
+        output.WriteLine($"Total Size Wrong Other Count: {dataFileInfo.Values.Sum(x => x.m_countSizeWrongOther)}");
+        output.WriteLine($"Total Bad Count: {dataFileInfo.Values.Sum(x => x.m_countSizeZero + x.m_countSizeWrongOther)}");
+        output.WriteLine($"Total Bad Count With BLTE Magic: {dataFileInfo.Values.Sum(x =>
+            x.m_allBadSamples.Count(y => y.m_fourCC == BLTEStream.Magic))}"); 
+        output.WriteLine($"Total Overwatch Asset Count: {overwatchAssetCount}"); 
+        output.WriteLine($"Total Bad Overwatch Asset Count: {dataFileInfo.Values.Sum(x => 
+            x.m_allBadSamples.Count(y => y.m_guid != 0))}");
+        output.WriteLine();
+
+        {
+            var dataDirectory = Path.Combine(client.ContainerHandler!.ContainerDirectory, ContainerHandler.DataDirectory);
+            var dataFiles = Directory.GetFiles(dataDirectory, "data.*");
+            var dataFileCount = dataFiles.Length;
+            var indexFileCount = Directory.GetFiles(dataDirectory, "*.idx").Length;
+            var otherFileCount = Directory.GetFiles(dataDirectory).Length - dataFileCount - indexFileCount;
+            output.WriteLine($"Data File Count: {dataFileCount}");
+            output.WriteLine($"Index File Count: {indexFileCount}");
+            output.WriteLine($"Other File Count: {otherFileCount}");
+            output.WriteLine($"Total Data File Size: {dataFiles.Sum(x => new FileInfo(x).Length)}");
+        }
+
+        foreach (var (dataFileIndex, info) in dataFileInfo.OrderBy(x => x.Key)) {
+            var dataFilePath = client.ContainerHandler.GetDataFilePath(dataFileIndex);
+            
+            output.WriteLine($"Data File[{dataFileIndex}]:");
+            output.WriteLine($"  Size: {new FileInfo(dataFilePath).Length}");
+            output.WriteLine($"  Count Failed Header Read: {info.m_countFailedHeaderRead}");
+            output.WriteLine($"  Count Okay: {info.m_countOkay}");
+            output.WriteLine($"  Count Size Zero: {info.m_countSizeZero}");
+            output.WriteLine($"  Count Size Wrong Other: {info.m_countSizeWrongOther}");
+
+            var sizeZeroSamples = info.m_sizeZeroSamples
+                .Take(Math.Min(info.m_sizeZeroSamples.Count, 100))
+                .ToArray();
+            var sizeWrongOtherSamples = info.m_sizeWrongOtherSamples
+                .Take(Math.Min(info.m_sizeWrongOtherSamples.Count, 999))
+                .ToArray();
+
+            void LogSample(HeaderSample sample) {
+                output.WriteLine($"    EKey: {sample.m_ekey.ToHexString().ToLowerInvariant()}");
+                output.WriteLine($"    CKey: {sample.m_ckey.ToHexString().ToLowerInvariant()}");
+                output.WriteLine($"    Overwatch GUID: 0x{sample.m_guid.GUID:X16} / {sample.m_guid}");
+                output.WriteLine($"    Header: " +
+                    $"{Convert.ToHexString(sample.m_data.Skip(0).Take(16).ToArray()).ToLowerInvariant()} " +
+                    $"{Convert.ToHexString(sample.m_data.Skip(16).Take(4).ToArray()).ToLowerInvariant()} " +
+                    $"{Convert.ToHexString(sample.m_data.Skip(16+4).Take(1).ToArray()).ToLowerInvariant()} " +
+                    $"{Convert.ToHexString(sample.m_data.Skip(16+4+1).Take(1).ToArray()).ToLowerInvariant()} " +
+                    $"{Convert.ToHexString(sample.m_data.Skip(16+4+1+1).Take(4).ToArray()).ToLowerInvariant()} " +
+                    $"{Convert.ToHexString(sample.m_data.Skip(16+4+1+1+4).Take(4).ToArray()).ToLowerInvariant()}");
+                output.WriteLine($"    FourCC: {sample.m_fourCC:X8} ({Encoding.ASCII.GetString(BitConverter.GetBytes(sample.m_fourCC))})");
+                output.WriteLine($"    Expected Size: {sample.m_expectedSize}");
+                output.WriteLine($"    Offset: 0x{sample.m_offset:X}");
+            }
+
+            for (int i = 0; i < sizeZeroSamples.Length; i++) {
+                output.WriteLine($"  Size Zero Samples[{i}]:");
+                LogSample(sizeZeroSamples[i]);
+            }
+            for (int i = 0; i < sizeWrongOtherSamples.Length; i++) {
+                output.WriteLine($"  Size Wrong Other Samples[{i}]:");
+                LogSample(sizeWrongOtherSamples[i]);
             }
         }
         
+        {
+            output.WriteLine("---- AGENT ----");
+            
+            //output.WriteLine($"Has Global Agent Info: {globalAgentDatabase != null}");
+            if (globalAgentDatabase != null) {
+                var targetProducts = new[] { "agent", "bna", "pro" /*,"thisdoesntexisttest"*/ };
+                foreach (var product in targetProducts) {
+                    var productInfo = AnonymizeAgentInfo(globalAgentDatabase.Data.ProductInstall.FirstOrDefault(x => x.ProductCode == product));
+                    
+                    var baseProductState = productInfo?.CachedProductState?.BaseProductState;
+                    var versionStr = baseProductState?.CurrentVersionStr ?? baseProductState?.CurrentVersion; // never seen second but sanity
+                    output.WriteLine($"Global Agent Info[{product}].Version: {versionStr}");
+                }
+
+                foreach (var product in targetProducts) {
+                    var productInfo = AnonymizeAgentInfo(globalAgentDatabase.Data.ProductInstall.FirstOrDefault(x => x.ProductCode == product));
+                    output.WriteLine($"Global Agent Info[{product}]: {productInfo}");
+                }
+            }
+            
+            var agentInfo = AnonymizeAgentInfo(client.AgentProduct);
+            output.WriteLine($"Game Agent Info: {agentInfo}");
+            output.WriteLine();
+        }
+
         Console.Out.WriteLine($"Debugging information written to {filename} in the toolchain-release directory. Please upload this to Discord in the #corrupt-installs channel");
     }
 
