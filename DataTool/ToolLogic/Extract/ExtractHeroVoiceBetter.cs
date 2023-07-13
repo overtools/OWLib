@@ -22,7 +22,9 @@ namespace DataTool.ToolLogic.Extract {
     }
 
     [Tool("extract-hero-voice-better", IsSensitive = true, Description = "Extracts hero voicelines but groups them a bit better.", CustomFlags = typeof(ExtractFlags))]
-    class ExtractHeroVoiceBetter : JSONTool, ITool {
+    class ExtractHeroVoiceBetter : QueryParser, ITool {
+        public Dictionary<string, string> QueryNameOverrides => null;
+        public List<QueryType> QueryTypes => new List<QueryType>();
         protected virtual string Container => "BetterHeroVoice";
         private static readonly HashSet<ulong> SoundIdCache = new HashSet<ulong>();
 
@@ -42,47 +44,27 @@ namespace DataTool.ToolLogic.Extract {
                 .ThenBy(x => x.GUID.GUID)
                 .ToArray();
 
-            var validNames = heroes
-                .GroupBy(x => x.Name ?? $"Unknown{teResourceGUID.Index(x.GUID)}", StringComparer.InvariantCultureIgnoreCase)
-                .ToDictionary(x => x.Key,
-                              x => x.Select(y => y.GUID.GUID).ToArray(), StringComparer.InvariantCultureIgnoreCase);
-            var validGuids = heroes.Select(x => teResourceGUID.LongKey(x.GUID.GUID)).ToHashSet();
-
-            var query = new HashSet<ulong>();
-            foreach (var positional in flags.Positionals.Skip(3)) {
-                if(validNames.TryGetValue(positional, out var guids)) {
-                    foreach (var guid in guids) {
-                        query.Add(teResourceGUID.LongKey(guid));
-                    }
-                    continue;
-                }
-
-                if (TryGetLocalizedName(0x75, positional, out var localizedNameGuid) && validGuids.Contains(localizedNameGuid)) {
-                    query.Add(teResourceGUID.LongKey(localizedNameGuid));
-                    continue;
-                }
-
-                if (ulong.TryParse(positional, NumberStyles.HexNumber, null, out var parsedGuid)) {
-                    query.Add(teResourceGUID.LongKey(parsedGuid));
-                }
-            }
+            var validHeroes = Helpers.GetHeroNamesMapping();
+            var parsedTypes = ParseQuery(flags, QueryTypes, validNames: validHeroes);
 
             foreach (var hero in heroes) {
-                if (query.Count > 0 && !query.Contains(teResourceGUID.LongKey(hero.GUID.GUID))) {
-                    continue;
+                // if we have a query, check if we should process this hero
+                if (parsedTypes != null) {
+                    var config = GetQuery(parsedTypes, hero.Name?.ToLowerInvariant(), "*", teResourceGUID.Index(hero.GUID).ToString("X"));
+                    if (config.Count == 0) {
+                        continue;
+                    }
                 }
 
-                var heroStu = GetInstance<STUHero>(hero.GUID);
-
-                string heroName = GetValidFilename(GetCleanString(heroStu.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}");
+                string heroName = GetValidFilename(GetCleanString(hero.STU.m_0EDCE350) ?? $"Unknown{teResourceGUID.Index(hero.GUID)}");
 
                 Logger.Log($"Processing {heroName}");
 
                 Combo.ComboInfo baseInfo = default;
-                var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(heroStu.m_gameplayEntity)?.m_voiceDefinition;
+                var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(hero.STU.m_gameplayEntity)?.m_voiceDefinition;
 
                 if (SaveVoiceSet(flags, basePath, heroName, "Default", heroVoiceSetGuid, ref baseInfo)) {
-                    var skins = new ProgressionUnlocks(heroStu).GetUnlocksOfType(UnlockType.Skin);
+                    var skins = new ProgressionUnlocks(hero.STU).GetUnlocksOfType(UnlockType.Skin);
 
                     foreach (var unlock in skins) {
                         var unlockSkinTheme = unlock.STU as STUUnlock_SkinTheme;
