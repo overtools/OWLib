@@ -5970,10 +5970,10 @@ namespace TankLib.STU.Types
     {
     }
 
-    [STU(0xC3AB3AFF, 328)]
+    [STU(0xC3AB3AFF, 344)]
     public class STU_C3AB3AFF : STU_F2815091
     {
-        [STUField(0x89AABA94, 256, ReaderType = typeof(InlineInstanceFieldReader))] // size: 72
+        [STUField(0x89AABA94, 256, ReaderType = typeof(InlineInstanceFieldReader))] // size: 88
         public STU_1A8C2E91 m_89AABA94;
     }
 

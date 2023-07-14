@@ -2038,11 +2038,6 @@ namespace TankLib.STU.Types
     {
     }
 
-    [STU(0x3F650435, 32)]
-    public class STU_3F650435 : STUStatescriptInputPlug
-    {
-    }
-
     [STU(0x3FD91271, 16)]
     public class STU_3FD91271 : STUInstance
     {

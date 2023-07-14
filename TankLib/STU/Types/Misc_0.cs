@@ -1518,6 +1518,11 @@ namespace TankLib.STU.Types
         public Enum_DBF3C1B6 m_color;
     }
 
+    [STU(0x3224CCBE, 144)]
+    public class STU_3224CCBE : STUStatescriptAction
+    {
+    }
+
     [STU(0x32E11478, 48)]
     public class STU_32E11478 : STU_A323F0F5
     {
@@ -3313,7 +3318,7 @@ namespace TankLib.STU.Types
         public STU_076E0DBA m_3DC6FAAA;
     }
 
-    [STU(0x781EEB82, 128)]
+    [STU(0x781EEB82, 136)]
     public class STU_781EEB82 : STU_F3318C83
     {
         [STUField(0x118D9D9F, 96, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
@@ -3322,7 +3327,10 @@ namespace TankLib.STU.Types
         [STUField(0x7FE9F87A, 112)] // size: 8
         public ulong m_heroGUID;
 
-        [STUField(0x62648C01, 120)] // size: 4
+        [STUField(0x0AEE8E83, 120)] // size: 8
+        public double m_0AEE8E83;
+
+        [STUField(0x62648C01, 128)] // size: 4
         public int m_62648C01;
     }
 

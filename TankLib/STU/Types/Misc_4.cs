@@ -700,6 +700,13 @@ namespace TankLib.STU.Types
     {
     }
 
+    [STU(0x1915A6AC, 104)]
+    public class STU_1915A6AC : STU_F3318C83
+    {
+        [STUField(0x181A7823, 96)] // size: 8
+        public long m_181A7823;
+    }
+
     [STU(0x1973FD2E, 416)]
     public class STU_1973FD2E : STUStatescriptState
     {
@@ -936,6 +943,13 @@ namespace TankLib.STU.Types
 
         [STUField(0xF24E4110, 176)] // size: 4
         public uint m_slot;
+    }
+
+    [STU(0x1E8C488E, 48)]
+    public class STU_1E8C488E : STU_6FE9208F
+    {
+        [STUField(0xF38055C1, 32, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 16
+        public STU_1AD8F57A[] m_F38055C1;
     }
 
     [STU(0x1F0F1BF6, 304)]

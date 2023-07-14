@@ -1496,6 +1496,13 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x9388C27F)] x9388C27F = 0x4,
     }
 
+    [STUEnum(0x403878DE)]
+    public enum Enum_403878DE : int
+    {
+        [STUField(0xF75D0350)] xF75D0350 = 0,
+        [STUField(0x099CC371)] x099CC371 = 0x1,
+    }
+
     [STUEnum(0x4045113F)]
     public enum Enum_4045113F : int
     {
@@ -4459,6 +4466,7 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x7D672DAA)] x7D672DAA = 0x4C,
         [STUField(0x0D6B81BA)] x0D6B81BA = 0x4D,
         [STUField(0x3D7BB766)] x3D7BB766 = 0x4E,
+        [STUField(0x0834D98C)] x0834D98C = 0x4F,
     }
 
     [STUEnum(0xBC00E017)]
