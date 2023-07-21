@@ -4,7 +4,10 @@ Series of programs (tools) to interact with the Overwatch files.
 
 ## Downloads & Help
 Downloads for the tools and updates are posted on our Discord where you can also find support and disccusion around using them.  
-Join the Discord here:  https://discord.gg/XM93ZdB  
+
+Join the Discord here: [https://discord.gg/XM93ZdB](https://discord.gg/XM93ZdB)
+
+If the discord invite link does not work, paste `XM93ZdB` into the invite link box when clicking `Add Server > Join Server`
 
 ## How to use
 DataTool is a command line application which means you need to know how to use a command line.
