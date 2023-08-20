@@ -28,7 +28,7 @@ namespace DataTool.SaveLogic.Unlock {
             var partTextures = LoadPartTextures(mythicSkin, findInfo);
 
             void SavePermutation() {
-                var hash = CRC64NoInout(BitConverter.GetBytes(guid), 0);
+                var hash = guid;
                 for (int partIndex = 0; partIndex < partVariantIndices.Length; partIndex++) {
                     var partVariantIndex = partVariantIndices[partIndex];
 
@@ -47,7 +47,7 @@ namespace DataTool.SaveLogic.Unlock {
                         intermediateSkinGUID = intermediateSkinGUID_B;
                     }
 
-                    hash = CRC64NoInout(BitConverter.GetBytes(intermediateSkinGUID), hash);
+                    hash += intermediateSkinGUID;
                 }
 
                 var finalSkinGUID = hash & 0x7FFFFFFFFFFF;
