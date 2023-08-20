@@ -291,8 +291,13 @@ namespace DataTool.SaveLogic {
 
                 var variantName = $"{envName} - {gameModeName}";
                 if (variantModeInfo.m_216EA6DA != 0) {
-                    // todo: do missions have names or...
-                    variantName += $" - {variantModeInfo.m_216EA6DA}";
+                    var mission = GetInstance<STU_8B0E97DC>(variantModeInfo.m_216EA6DA);
+                    var missionName = GetString(mission?.m_0EDCE350);
+                    if (missionName != null) {
+                        variantName += $" - {missionName}";
+                    } else {
+                        variantName += $" - {variantModeInfo.m_216EA6DA}";
+                    }
                 }
                 if (variantModeInfo.m_celebration != 0) {
                     variantName += $" - {variantModeInfo.m_celebration}";
