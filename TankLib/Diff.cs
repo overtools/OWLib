@@ -3,8 +3,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using LZ4;
-using TACTLib.Container;
+using TACTLib.Core.Key;
 using TACTLib.Core.Product.Tank;
+using CKey=TACTLib.Core.Key.FullKey;
+using EKey=TACTLib.Core.Key.TruncatedKey;
 
 namespace TankLib {
     public static class Diff {

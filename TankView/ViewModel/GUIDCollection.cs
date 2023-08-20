@@ -15,7 +15,7 @@ using TankView.Helper;
 using TankView.Properties;
 using TankView.View;
 using TACTLib.Client;
-using TACTLib.Container;
+using TACTLib.Core.Key;
 using TACTLib.Core.Product.Tank;
 using TankView.ObjectModel;
 using Logger = TACTLib.Logger;
@@ -353,7 +353,7 @@ namespace TankView.ViewModel {
             }
         }
 
-        private void AddEntry(string path, ulong guid, CKey ckey, int size, string locale) {
+        private void AddEntry(string path, ulong guid, FullKey ckey, int size, string locale) {
             string dir = guid != 0 ? path : Path.GetDirectoryName(path);
 
             string filename = guid != 0 ? teResourceGUID.AsString(guid) : Path.GetFileName(path);

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
-using TACTLib.Container;
+using TACTLib.Core.Key;
 using TankLib;
 
 namespace TankView.ViewModel {
@@ -13,7 +13,7 @@ namespace TankView.ViewModel {
         public string FullPath { get; set; }
         public int Size { get; set; }
         public string Locale { get; set; }
-        public CKey ContentKey { get; set; }
+        public FullKey ContentKey { get; set; }
         //public ContentFlags Flags { get; set; }
         public string StringValue { get; set; }
         public bool IsNew { get; set; }

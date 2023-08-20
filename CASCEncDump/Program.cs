@@ -11,7 +11,7 @@ using TankLib.STU.Types;
 using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
 using TACTLib.Container;
-using TACTLib.Core;
+using TACTLib.Core.Key;
 using TACTLib.Core.Product.Tank;
 using TACTLib.Exceptions;
 
@@ -94,7 +94,7 @@ namespace CASCEncDump {
         }
 
         private static void DumpCMF(string[] args) {
-            HashSet<CKey> cKeys = new HashSet<CKey>(CASCKeyComparer.Instance);
+            HashSet<FullKey> cKeys = new HashSet<FullKey>(CASCKeyComparer.Instance);
             foreach (ContentManifestFile contentManifestFile in new[] { TankHandler.m_rootContentManifest, TankHandler.m_textContentManifest, TankHandler.m_speechContentManifest }) {
                 if (contentManifestFile == null) continue;
                 foreach (ContentManifestFile.HashData hashData in contentManifestFile.m_hashList) {
@@ -163,15 +163,16 @@ namespace CASCEncDump {
 
         private static void Dump(string[] args) {
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.enchashes")) {
-                foreach (KeyValuePair<CKey, EncodingHandler.CKeyEntry> entry in Client.EncodingHandler.Entries) {
-                    string md5 = entry.Key.ToHexString();
+                foreach (var ckey in Client.EncodingHandler.GetCKeys()) {
+                    string md5 = ckey.ToHexString();
 
                     writer.WriteLine(md5);
                 }
             }
 
+            var dynamicContainer = (ContainerHandler)Client.ContainerHandler;
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.idxhashes")) {
-                foreach (KeyValuePair<EKey, ContainerHandler.IndexEntry> entry in Client.ContainerHandler.IndexEntries) {
+                foreach (KeyValuePair<TruncatedKey, ContainerHandler.IndexEntry> entry in dynamicContainer.IndexEntries) {
                     string md5 = entry.Key.ToHexString();
 
                     writer.WriteLine(md5);
@@ -187,22 +188,24 @@ namespace CASCEncDump {
             Directory.CreateDirectory(RawIdxDir);
             Directory.CreateDirectory(ConvertIdxDir);
 
-            HashSet<CKey> otherHashes;
+            HashSet<FullKey> otherHashes;
             using (Stream stream = File.OpenRead($"{otherVerNum}.idxhashes")) {
                 otherHashes = Diff.ReadCKeys(stream);
             }
 
-            HashSet<EKey> eKeys = new HashSet<EKey>();
-            foreach (CKey cKey in otherHashes) {
-                eKeys.Add(cKey.AsEKey());
+            HashSet<TruncatedKey> eKeys = new HashSet<TruncatedKey>();
+            foreach (FullKey cKey in otherHashes) {
+                eKeys.Add(cKey.AsTruncated());
             }
 
-            foreach (KeyValuePair<EKey, ContainerHandler.IndexEntry> indexEntry in Client.ContainerHandler.IndexEntries) {
+            var dynamicContainer = (ContainerHandler)Client.ContainerHandler;
+            foreach (KeyValuePair<TruncatedKey, ContainerHandler.IndexEntry> indexEntry in dynamicContainer.IndexEntries) {
                 string md5 = indexEntry.Key.ToHexString();
 
                 if (!eKeys.Contains(indexEntry.Key)) {
-                    try {
-                        Stream stream = Client.OpenEKey(indexEntry.Key);
+                    throw new NotImplementedException();
+                    /*try {
+                        Stream stream = dynamicContainer.OpenEKey(indexEntry.Key);
                         TryConvertFile(stream, ConvertIdxDir, md5);
 
                         stream.Dispose();
@@ -215,7 +218,7 @@ namespace CASCEncDump {
                         //else {
                         //    Console.Out.WriteLine(e);
                         //}
-                    }
+                    }*/
                 }
             }
 
@@ -236,17 +239,17 @@ namespace CASCEncDump {
                 otherHashes = reader.ReadToEnd().Split('\n').Select(x => x.TrimEnd('\r')).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
             }
 
-            HashSet<CKey> hashSet = new HashSet<CKey>(CASCKeyComparer.Instance);
-            foreach (CKey hash in otherHashes.Select(CKey.FromString)) {
+            HashSet<FullKey> hashSet = new HashSet<FullKey>(CASCKeyComparer.Instance);
+            foreach (FullKey hash in otherHashes.Select(FullKey.FromString)) {
                 hashSet.Add(hash);
             }
 
-            foreach (KeyValuePair<CKey, EncodingHandler.CKeyEntry> entry in Client.EncodingHandler.Entries) {
-                if (hashSet.Contains(entry.Key)) continue;
+            foreach (var ckey in Client.EncodingHandler.GetCKeys()) {
+                if (hashSet.Contains(ckey)) continue;
                 try {
-                    Stream stream = Client.OpenCKey(entry.Key);
+                    Stream stream = Client.OpenCKey(ckey);
                     if (stream == null) continue;
-                    string md5 = entry.Key.ToHexString();
+                    string md5 = ckey.ToHexString();
                     using (Stream fileStream = File.OpenWrite(Path.Combine(RawEncDir, md5))) {
                         stream.CopyTo(fileStream);
                     }

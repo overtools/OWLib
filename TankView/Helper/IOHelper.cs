@@ -1,16 +1,12 @@
 ﻿using System.IO;
+using TACTLib.Core.Key;
 using TankView.ViewModel;
-using TACTLib.Container;
 using TACTLib.Core.Product.Tank;
 
 namespace TankView.Helper {
     public static class IOHelper {
-        public static Stream OpenFile(CKey ckey) {
+        public static Stream OpenFile(FullKey ckey) {
             return DataTool.Program.Client.OpenCKey(ckey);
-        }
-
-        public static Stream OpenFile(EKey ekey) {
-            return DataTool.Program.Client.OpenEKey(ekey);
         }
 
         public static Stream OpenFile(ApplicationPackageManifest.PackageRecord packageRecord) {

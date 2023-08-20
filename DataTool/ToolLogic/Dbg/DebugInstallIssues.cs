@@ -13,9 +13,12 @@ using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
 using TACTLib.Container;
 using TACTLib.Core;
+using TACTLib.Core.Key;
 using TACTLib.Core.Product.Tank;
 using TankLib;
 using TankLib.TACT;
+using CKey=TACTLib.Core.Key.FullKey;
+using EKey=TACTLib.Core.Key.TruncatedKey;
 
 namespace DataTool.ToolLogic.Dbg;
 
@@ -41,18 +44,20 @@ class DebugInstallIssues : ITool {
         LoadHelper.PreLoad();
         var client = new ClientHandler(Program.Flags.OverwatchDirectory, args);
         LoadHelper.PostLoad(client);
+
+        var dynamicContainer = (ContainerHandler) client.ContainerHandler!;
         
         int overwatchAssetCount = 0;
         var dataFileInfo = new Dictionary<int, DataFileInfo>();
         {
-            foreach (var dataFileIndex in client.ContainerHandler!.GetDataFileIndices()) {
+            foreach (var dataFileIndex in dynamicContainer.GetDataFileIndices()) {
                 dataFileInfo.Add(dataFileIndex, new DataFileInfo());
             }
 
-            foreach (var (eKey, localIndexEntry) in client.ContainerHandler.IndexEntries) {
+            foreach (var (eKey, localIndexEntry) in dynamicContainer.IndexEntries) {
                 var dataFile = dataFileInfo[localIndexEntry.Index];
 
-                if (!client.ContainerHandler.OpenIndexEntryForDebug(localIndexEntry, out var header, out var fourCC)) {
+                if (!dynamicContainer.OpenIndexEntryForDebug(localIndexEntry, out var header, out var fourCC)) {
                     dataFile.m_countFailedHeaderRead++;
                     continue;
                 }
@@ -90,8 +95,9 @@ class DebugInstallIssues : ITool {
 
             {
                 var ekeyMap = new Dictionary<EKey, CKey>(CASCKeyComparer.Instance);
-                foreach (var entry in client.EncodingHandler!.Entries.Values) {
-                    ekeyMap.TryAdd(entry.EKey.AsEKey(), entry.CKey);
+                foreach (var ckey in client.EncodingHandler.GetCKeys()) {
+                    if (!client.EncodingHandler.TryGetEncodingEntry(ckey, out var entry)) continue;
+                    ekeyMap.TryAdd(entry.EKey.AsTruncated(), entry.CKey);
                 }
 
                 foreach (var dataFile in dataFileInfo.Values) {
@@ -175,7 +181,7 @@ class DebugInstallIssues : ITool {
         output.WriteLine();
 
         {
-            var dataDirectory = Path.Combine(client.ContainerHandler!.ContainerDirectory, ContainerHandler.DataDirectory);
+            var dataDirectory = Path.Combine(dynamicContainer.ContainerDirectory, ContainerHandler.DataDirectory);
             var dataFiles = Directory.GetFiles(dataDirectory, "data.*");
             var dataFileCount = dataFiles.Length;
             var indexFileCount = Directory.GetFiles(dataDirectory, "*.idx").Length;
@@ -187,7 +193,7 @@ class DebugInstallIssues : ITool {
         }
 
         foreach (var (dataFileIndex, info) in dataFileInfo.OrderBy(x => x.Key)) {
-            var dataFilePath = client.ContainerHandler.GetDataFilePath(dataFileIndex);
+            var dataFilePath = dynamicContainer.GetDataFilePath(dataFileIndex);
             
             output.WriteLine($"Data File[{dataFileIndex}]:");
             output.WriteLine($"  Size: {new FileInfo(dataFilePath).Length}");
