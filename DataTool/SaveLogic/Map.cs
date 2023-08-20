@@ -86,10 +86,14 @@ namespace DataTool.SaveLogic {
                                         FindLogic.Combo.Find(Info, graphWithOverrides);
                                     }
                                 }
-
-                                if (statescriptComponentInstanceData.m_2D9815BA != null) {
-                                    // todo: ??
-                                }
+                                
+                                FindLogic.Combo.Find(Info, statescriptComponentInstanceData.m_2D9815BA);
+                            } else if (instanceData is STUModelComponentInstanceData modelComponentInstanceData) {
+                                // (anim)
+                                FindLogic.Combo.Find(Info, modelComponentInstanceData.m_FD090EAD, null, new FindLogic.Combo.ComboContext {
+                                    Entity = entityInfo.m_GUID,
+                                    Model = entityInfo.m_modelGUID
+                                });
                             }
                         }
                     }
@@ -171,11 +175,14 @@ namespace DataTool.SaveLogic {
                         }
 
                         foreach (STUComponentInstanceData instanceData in entity.InstanceData) {
-                            if (!(instanceData is STUModelComponentInstanceData modelComponentInstanceData)) continue;
-
-                            if (modelComponentInstanceData.m_look == 0) break;
-
-                            look = modelComponentInstanceData.m_look;
+                            if (instanceData is not STUModelComponentInstanceData modelComponentInstanceData) continue;
+                            if (modelComponentInstanceData.m_EE77FFF9 != 0) {
+                                look = modelComponentInstanceData.m_EE77FFF9;
+                            } else if (modelComponentInstanceData.m_look == 0) {
+                                look = modelComponentInstanceData.m_look;
+                            } else {
+                                break;
+                            }
 
                             var lookContext = new FindLogic.Combo.ComboContext { Model = model };
                             FindLogic.Combo.Find(Info, look, null, lookContext);

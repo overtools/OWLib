@@ -910,6 +910,9 @@ namespace DataTool.FindLogic {
                 case 0x1B: {
                     if (!info.m_doneScripts.Add(guid)) break;
 
+                    var statescriptGraph = GetInstance<STUStatescriptGraph>(guid);
+                    Find(info, statescriptGraph.m_publicSchema, replacements, context);
+
                     STUConfigVar[] configVars = GetInstances<STUConfigVar>(guid);
                     if (configVars == null) break;
 
@@ -1291,7 +1294,14 @@ namespace DataTool.FindLogic {
             }
         }
 
-        private static void Find(ComboInfo info, STUConfigVar configVar, Dictionary<ulong, ulong> replacements, ComboContext context) {
+        public static void Find(ComboInfo info, STUStatescriptSchema schema, Dictionary<ulong, ulong> replacements = null, ComboContext context = null) {
+            if (schema?.m_entries == null) return;
+            foreach (STUStatescriptSchemaEntry schemaEntry in schema.m_entries) {
+                Find(info, schemaEntry.m_value, replacements, context);
+            }
+        }
+
+        public static void Find(ComboInfo info, STUConfigVar configVar, Dictionary<ulong, ulong> replacements = null, ComboContext context = null) {
             if (configVar == null) return;
             if (configVar is STU_8556841E configVarEntity) {
                 Find(info, configVarEntity.m_entityDef, replacements, context);
@@ -1314,6 +1324,8 @@ namespace DataTool.FindLogic {
                 }
             } else if (configVar is STUConfigVarTexture configVarTexture) {
                 Find(info, configVarTexture.m_texture, replacements, context);
+            } else if (configVar is STU_9DB46B98 configVarGraphWithOverrides) {
+                Find(info, configVarGraphWithOverrides.m_6525E98B, replacements, context);
             }
         }
 
