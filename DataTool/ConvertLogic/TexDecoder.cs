@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using AssetRipper.TextureDecoder.Bc;
 using AssetRipper.TextureDecoder.Rgb;
 using AssetRipper.TextureDecoder.Rgb.Formats;
@@ -12,7 +13,7 @@ namespace DataTool.ConvertLogic {
         public uint Surfaces { get; set; }
         private teTexture Texture { get; set; }
 
-        private int BytesPerOutputSurface;
+        private readonly int BytesPerOutputSurface;
 
         public TexDecoder(teTexture texture) {
             Texture = texture;
@@ -22,7 +23,7 @@ namespace DataTool.ConvertLogic {
             var inputData = Texture.GetData();
             var bytesPerInputSurface = (int) (inputData.Length / Surfaces);
             
-            BytesPerOutputSurface = Texture.Header.Width * Texture.Header.Height * 4;
+            BytesPerOutputSurface = Texture.Header.Width * Texture.Header.Height * Unsafe.SizeOf<Bgra32>();
             PixelData = new byte[BytesPerOutputSurface * Surfaces];
 
             for (var surface = 0; surface < Surfaces; ++surface) {
@@ -52,10 +53,6 @@ namespace DataTool.ConvertLogic {
                         RgbConverter.Convert<ColorRGBA64, ushort, ColorBGRA32, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                         break;
                     }
-                    case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R11G11B10_FLOAT:{
-                        RgbConverter.Convert<ColorRGB32Half, Half, ColorBGRA32, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
-                        break;
-                    }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R8G8B8A8_UINT:
@@ -78,25 +75,35 @@ namespace DataTool.ConvertLogic {
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC1_UNORM:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB: {
-                        BcDecoder.DecompressBC1(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                        Bc1.Decompress(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                        break;
+                    }
+                    case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC2_UNORM:
+                    case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB: {
+                        Bc2.Decompress(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                        break;
+                    }
+                    case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC3_UNORM:
+                    case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB: {
+                        Bc3.Decompress(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC4_UNORM: {
-                        BcDecoder.DecompressBC4(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                        Bc4.Decompress(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC5_UNORM: {
-                        BcDecoder.DecompressBC5(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                        Bc5.Decompress(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC6H_UF16:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC6H_SF16: {
-                        BcDecoder.DecompressBC6H(surfaceInputData, texture.Header.Width, texture.Header.Height, format is TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC6H_SF16, surfaceOutputData);
+                        Bc6h.Decompress(surfaceInputData, texture.Header.Width, texture.Header.Height, format is TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC6H_SF16, surfaceOutputData);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC7_UNORM:
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB: {
-                        BcDecoder.DecompressBC7(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
+                        Bc7.Decompress(surfaceInputData, texture.Header.Width, texture.Header.Height, surfaceOutputData);
                         break;
                     }
                     default:
