@@ -883,23 +883,24 @@ namespace DataTool.SaveLogic {
                 if (!VGMStreamSanity()) {
                     throw;
                 }
-                var temp = Path.Combine(Path.GetTempPath(), $"vgmstream{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.wem");
+                var tempFile = Path.Combine(Path.GetTempPath(), $"vgmstream{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.wem");
+                stream.Position = 0;
                 try {
-                    using (Stream tempStream = File.OpenWrite(temp)) {
+                    using (Stream tempStream = File.OpenWrite(tempFile)) {
                         stream.CopyTo(tempStream);
                     }
 
-                    ConvertSoundFileVgmStreamProcess(temp, outputFile);
+                    ConvertSoundFileVgmStreamProcess(tempFile, outputFile);
                 } finally {
-                    if (File.Exists(temp)) {
-                        File.Delete(temp);
+                    if (File.Exists(tempFile)) {
+                        File.Delete(tempFile);
                     }
                 }
             }
         }
 
         public static string VgmStreamPathWin = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party",
-                                                                              "vgmstream-win", "test.exe"));
+                                                                              "vgmstream-win", "vgmstream-cli.exe"));
         public static string VgmStreamPathLx = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party",
                                                                               "vgmstream-cli"));
 
@@ -917,11 +918,11 @@ namespace DataTool.SaveLogic {
                 };
 
                 using var process = Process.Start(proc);
-                process.WaitForExit();
+                process!.WaitForExit();
                 if (process.ExitCode != 0) {
                     var error = process.StandardError.ReadToEnd();
                     Logger.Error("Combo", $"vgmstream failed with exit code {process.ExitCode} {error.Trim()}");
-                    File.Copy(input, Path.ChangeExtension(output, ".wem"));
+                    File.Copy(input, Path.ChangeExtension(output, ".wem"), true);
                 }
             } catch (Exception e) {
                 Logger.Error("Combo", $"Error converting sound using vgmstream: {e}");
@@ -973,6 +974,7 @@ namespace DataTool.SaveLogic {
                     } else if (type == 2) {
                         useVgmStream = true;
                     }
+                    soundStream.Position = 0;
                 }
 
                 if (!convertWem) {
@@ -1002,6 +1004,8 @@ namespace DataTool.SaveLogic {
                             return 0;
                         }
                     }
+
+                    reader.BaseStream.Position += chunkSize;
                 }
             } catch {
                 return 0;
@@ -1042,8 +1046,7 @@ namespace DataTool.SaveLogic {
                         Logger.Warn("Combo", $"Failed to download vgmstream. Please download vgmstream from https://dl.vgmstream.org/ and extract it to the Third Party folder ({VgmStreamPath})");
                     } else {
                         using var web = new HttpClient();
-                        var id = web.GetStringAsync("https://cdn.vgmstream.org/latest_id_win").Result.Trim();
-                        var zip = web.GetStreamAsync($"https://cdn.vgmstream.org/{id}/windows/vgmstream-win.zip").Result;
+                        var zip = web.GetStreamAsync("https://github.com/vgmstream/vgmstream-releases/releases/download/nightly/vgmstream-win64.zip").Result;
                         using var archive = new ZipArchive(zip);
                         if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party", "vgmstream-win"))) {
                             Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Third Party", "vgmstream-win"));
