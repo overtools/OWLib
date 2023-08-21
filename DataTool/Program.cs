@@ -163,11 +163,6 @@ namespace DataTool {
                     Logger.Error("Core", "Do not include { or } in the output directory you pass to the tool. The path should be surrounded with quotation marks only");
                     return;
                 }
-
-                if (extractFlags.UseTextureDecoder) {
-                    Logger.Warn("Core", "Texture decoding with TextureDecoder currently only supports png, forcing png output...");
-                    extractFlags.ConvertTexturesType = "png";
-                }
             }
 
             if (!targetToolAttributes.UtilNoArchiveNeeded) {

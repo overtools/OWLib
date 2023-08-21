@@ -629,10 +629,9 @@ namespace DataTool.SaveLogic {
             using var alpha = dds.GetFrame(WICCodecs.TIFF, 0, 1);
             using var color = dds.GetFrame(WICCodecs.TIFF, 1, 1);
 
-            using Image<Rgba32> colorImage = Image.Load<Rgba32>(Configuration.Default, color);
-            using Image<Rgba32> alphaImage = Image.Load<Rgba32>(Configuration.Default, alpha);
-
-            ColorSpaceConverter colorSpaceConverter = new ColorSpaceConverter();
+            using Image<Rgba32> colorImage = Image.Load<Rgba32>(color);
+            using Image<Rgba32> alphaImage = Image.Load<Rgba32>(alpha);
+            
             alphaImage.ProcessPixelRows(colorImage, (source, target) => {
                 for (var y = 0; y < texture.Header.Height; ++y) {
                     var sourceRow = source.GetRowSpan(y);
@@ -642,7 +641,7 @@ namespace DataTool.SaveLogic {
                         pixel.R = (byte) (Math.Pow(pixel.R / 255f, 1.1f) * 0xFF);
                         pixel.G = (byte) (Math.Pow(pixel.G / 255f, 1.1f) * 0xFF);
                         pixel.B = (byte) (Math.Pow(pixel.B / 255f, 1.1f) * 0xFF);
-                        pixel.A = (byte) ((1 - colorSpaceConverter.ToHsl(sourceRow[x]).L) * 0xFF);
+                        pixel.A = (byte) ((1 - ColorSpaceConverter.ToHsl(sourceRow[x]).L) * 0xFF);
                         targetRow[x] = pixel;
                     }
                 }
@@ -819,7 +818,7 @@ namespace DataTool.SaveLogic {
                 using var surface = createMultiSurfaceSheet ? tex.GetSheet() : tex.GetFrame(surfaceNr);
                 var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
                 using var dest = OpenFile($"{surfacePath}.{convertType}");
-                if (convertType is "tif") {
+                if (convertType == "tif") {
                     surface.SaveAsTiff(dest);
                 } else {
                     surface.SaveAsPng(dest);
