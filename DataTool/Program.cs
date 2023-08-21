@@ -265,6 +265,8 @@ namespace DataTool {
             if (!Flags.NoLanguageRegistry)
                 TryFetchLocaleFromRegistry();
 
+            Flags.Language ??= "enUS";
+            Flags.SpeechLanguage ??= "enUS";
             Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
 
             var args = new ClientCreateArgs {
