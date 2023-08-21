@@ -625,12 +625,11 @@ namespace DataTool.SaveLogic {
             }
         }
 
-        private static void ProcessIconTexture(DDSConverter dds, teTexture texture, string filePath, string convertType) {
-            using var alpha = dds.GetFrame(WICCodecs.TIFF, 0, 1);
-            using var color = dds.GetFrame(WICCodecs.TIFF, 1, 1);
+        private static void ProcessIconTexture(teTexture texture, string filePath, string convertType) {
+            var converted = new TexDecoder(texture);
 
-            using Image<Rgba32> colorImage = Image.Load<Rgba32>(color);
-            using Image<Rgba32> alphaImage = Image.Load<Rgba32>(alpha);
+            using Image<Bgra32> alphaImage = converted.GetFrame(0);
+            using Image<Bgra32> colorImage = converted.GetFrame(1);
             
             alphaImage.ProcessPixelRows(colorImage, (source, target) => {
                 for (var y = 0; y < texture.Header.Height; ++y) {
@@ -641,7 +640,11 @@ namespace DataTool.SaveLogic {
                         pixel.R = (byte) (Math.Pow(pixel.R / 255f, 1.1f) * 0xFF);
                         pixel.G = (byte) (Math.Pow(pixel.G / 255f, 1.1f) * 0xFF);
                         pixel.B = (byte) (Math.Pow(pixel.B / 255f, 1.1f) * 0xFF);
-                        pixel.A = (byte) ((1 - ColorSpaceConverter.ToHsl(sourceRow[x]).L) * 0xFF);
+
+                        Rgba32 rgba32 = default;
+                        sourceRow[x].ToRgba32(ref rgba32);
+                        
+                        pixel.A = (byte) ((1 - ColorSpaceConverter.ToHsl(rgba32).L) * 0xFF);
                         targetRow[x] = pixel;
                     }
                 }
@@ -828,16 +831,16 @@ namespace DataTool.SaveLogic {
 
         private static void ConvertDDS(teTexture texture, int maxMips, bool processIcon, string filePath, string convertType, bool splitMultiSurface, WICCodecs imageFormat) {
             using Stream convertedStream = texture.SaveToDDS(maxMips == 1 ? 1 : texture.Header.MipCount);
-            using var dds = new DDSConverter(convertedStream, DXGI_FORMAT.UNKNOWN, processIcon);
             if (processIcon) {
                 try {
-                    ProcessIconTexture(dds, texture, filePath, convertType);
+                    ProcessIconTexture(texture, filePath, convertType);
                     return;
                 } catch {
                     Logger.Debug("Combo", $"Failed to process {Path.GetFileName(filePath)} as an icon, saving as normal");
                 }
             }
 
+            using var dds = new DDSConverter(convertedStream, DXGI_FORMAT.UNKNOWN, processIcon);
             var surfaceCount = splitMultiSurface ? texture.Header.Surfaces : 1;
             for (var surfaceNr = 0; surfaceNr < surfaceCount; ++surfaceNr) {
                 var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
