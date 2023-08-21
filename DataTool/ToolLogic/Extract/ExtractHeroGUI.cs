@@ -72,6 +72,7 @@ namespace DataTool.ToolLogic.Extract {
                     FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
                     var saveContext = new Combo.SaveContext(info);
 
+                    hero.STU.m_8203BFE1 ??= Array.Empty<STU_1A496D3C>(); // todo: fix the gosh darn stu
                     foreach (STU_1A496D3C tex in hero.STU.m_8203BFE1) { // find GUI
                         if (tex.m_id != 0x0D800000000040C8) {
                             continue;

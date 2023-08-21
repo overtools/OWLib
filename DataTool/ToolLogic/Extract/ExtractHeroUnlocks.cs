@@ -188,6 +188,7 @@ namespace DataTool.ToolLogic.Extract {
                 {
                     Combo.ComboInfo guiInfo = new Combo.ComboInfo();
 
+                    hero.m_8203BFE1 ??= Array.Empty<STU_1A496D3C>(); // todo: fix the gosh darn stu
                     foreach (STU_1A496D3C tex in hero.m_8203BFE1) {
                         Combo.Find(guiInfo, tex.m_texture);
                         guiInfo.SetTextureName(tex.m_texture, teResourceGUID.AsString(tex.m_id));
@@ -210,6 +211,7 @@ namespace DataTool.ToolLogic.Extract {
                             continue;
 
                         SkinTheme.Save(flags, Path.Combine(heroPath, UnlockType.Skin.ToString(), string.Empty, GetFileName(skin.m_5E9665E3)), skin, hero);
+                        HasSavedAnything = true;
                     }
 
                     continue;
