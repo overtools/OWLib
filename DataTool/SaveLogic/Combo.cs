@@ -430,7 +430,7 @@ namespace DataTool.SaveLogic {
                 SaveMaterial(flags, modelDirectory, info, looseMaterial);
             }
 
-            foreach (ulong modelAnimation in modelInfo.n_animations) {
+            foreach (ulong modelAnimation in modelInfo.m_animations) {
                 SaveAnimation(flags, modelDirectory, info, modelAnimation, modelGUID);
             }
         }

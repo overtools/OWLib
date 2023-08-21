@@ -135,9 +135,7 @@ namespace DataTool.SaveLogic.Unlock {
                     Dictionary<ulong, ulong> weaponReplacements = GetReplacements(heroWeapon);
 
                     foreach (var (key, value) in skinReplacements) {
-                        if (!weaponReplacements.ContainsKey(key)) {
-                            weaponReplacements[key] = value;
-                        }
+                        weaponReplacements.TryAdd(key, value);
                     }
 
                     SetPreviewWeaponNames(info, weaponReplacements, hero.m_previewWeaponEntities, index);

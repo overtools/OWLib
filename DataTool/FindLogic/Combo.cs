@@ -316,18 +316,13 @@ namespace DataTool.FindLogic {
         }
 
         public class ModelAsset : ComboAsset {
-            public ulong m_skeletonGUID;
-            public HashSet<ulong> n_animations;
-
+            public HashSet<ulong> m_animations;
             public HashSet<ulong> m_modelLooks;
-
-            //public HashSet<IEnumerable<ulong>> m_modelLookSets;
             public HashSet<ulong> m_looseMaterials;
 
             public ModelAsset(ulong guid) : base(guid) {
-                n_animations = new HashSet<ulong>();
+                m_animations = new HashSet<ulong>();
                 m_modelLooks = new HashSet<ulong>();
-                //m_modelLookSets = new HashSet<IEnumerable<ulong>>();
                 m_looseMaterials = new HashSet<ulong>();
             }
         }
@@ -382,7 +377,7 @@ namespace DataTool.FindLogic {
 
         public static ulong GetReplacement(ulong guid, Dictionary<ulong, ulong> replacements) {
             if (replacements == null) return guid;
-            if (replacements.ContainsKey(guid)) return replacements[guid];
+            if (replacements.TryGetValue(guid, out var replacement)) return replacement;
             return guid;
         }
 
@@ -472,52 +467,6 @@ namespace DataTool.FindLogic {
             ushort guidType = teResourceGUID.Type(guid);
             if (guidType == 0 || guidType == 1) return info;
             switch (guidType) {
-                /*case 0x2: {
-                     if (info.Maps.ContainsKey(guid)) break;
-
-                     MapInfoNew mapInfo = new MapInfoNew(guid);
-                     info.Maps[guid] = mapInfo;
-
-                     // <read the actual 002>
-                     // todo
-                     // </read the actual 002>
-
-                     using (Stream mapBStream = OpenFile(GetMapDataKey(guid, 0xB))) {
-                         Map mapBData = new Map(mapBStream, BuildVersion, true);
-
-                         //int stuCount = mapBData.Records.Sum(record => ((MapEntity) record).STUBindings.Length);
-                         //
-                         //Debug.Assert(stuCount == mapBData.STUs.Count);
-
-                         foreach (ISTU mapBstu in mapBData.STUs) {
-                             Dictionary<ulong, ulong> thisReplacements = new Dictionary<ulong, ulong>();
-                             //foreach (Common.STUInstance stuInstance in mapBstu.Instances) {
-                             //    if (stuInstance.GetType() == typeof(STU_83DEC8C7)) {
-                             //
-                             //    }
-                             //}
-                             // STUStatescriptComponentInstanceData componentInstanceData = stu.Instances.OfType<STUStatescriptComponentInstanceData>().FirstOrDefault();
-                             // if (componentInstanceData == null) continue;
-                             // foreach (STUStatescriptGraphWithOverrides graph in componentInstanceData.m_6D10093E) {
-                             //     ComboContext graphContext = new ComboContext(); // wipe?
-                             //     foreach (STUStatescriptSchemaEntry schemaEntry in graph.m_1EB5A024) {
-                             //         if (schemaEntry.Value == null) continue;
-                             //         if (schemaEntry.Value is STU_9EA8D0BA schemaX9Ea) {
-                             //             Find(info, schemaX9Ea.m_4C167404, thisReplacements, graphContext);
-                             //         } else if (schemaEntry.Value is STUStatescriptDataStoreComponent2 schemaEntity2) {
-                             //             Find(info, schemaEntity2.Entity, thisReplacements);  // wipe context again
-                             //             graphContext.Entity = GetReplacement(schemaEntity2.Entity, thisReplacements);
-                             //             graphContext.Model = info.Entities[graphContext.Entity].Model;
-                             //             graphContext.Effect = info.Entities[graphContext.Entity].Effect;
-                             //         } else if (schemaEntry.Value is STU_12B8954B schemaX12B) {
-                             //             Find(info, schemaX12B.Animation, thisReplacements, graphContext);
-                             //         }
-                             //     }
-                             // }
-                         }
-                     }
-                    break;
-                }*/
                 case 0x3: {
                     if (!info.m_processExistingEntities && info.m_entities.ContainsKey(guid)) break;
 
@@ -651,30 +600,22 @@ namespace DataTool.FindLogic {
                     break;
                 }
                 case 0x6: {
-                    if (info.m_animations.ContainsKey(guid)) {
-                        if (context.Model != 0) {
-                            info.m_models[context.Model].n_animations.Add(guid);
-                        }
-
-                        if (context.Entity != 0) {
-                            info.m_entities[context.Entity].m_animations.Add(guid);
-                        }
-
-                        break;
-                    }
-
-                    AnimationAsset animationInfo = new AnimationAsset(guid);
-
-                    ComboContext animationContext = context.Clone();
-                    animationContext.Animation = guid;
-
                     if (context.Model != 0) {
-                        info.m_models[context.Model].n_animations.Add(guid);
+                        info.m_models[context.Model].m_animations.Add(guid);
                     }
-
                     if (context.Entity != 0) {
                         info.m_entities[context.Entity].m_animations.Add(guid);
                     }
+
+                    if (context.Model == 0 && context.Entity == 0) {
+                        TankLib.Helpers.Logger.Debug("Combo", "Animation with no model or entity. will be lost");
+                    }
+
+                    if (info.m_animations.ContainsKey(guid)) break;
+                    
+                    AnimationAsset animationInfo = new AnimationAsset(guid);
+                    ComboContext animationContext = context.Clone();
+                    animationContext.Animation = guid;
                     info.m_animations[guid] = animationInfo;
 
                     using Stream animationStream = OpenFile(guid);
@@ -757,7 +698,9 @@ namespace DataTool.FindLogic {
                 }
                 case 0xD:
                 case 0x8F: // sorry for breaking order
-                case 0x8E: {
+                case 0x8E:
+                case 0x4A:
+                case 0x12B: {
                     if (info.m_effects.ContainsKey(guid)) break;
                     if (info.m_animationEffects.ContainsKey(guid)) break;
 
@@ -767,18 +710,18 @@ namespace DataTool.FindLogic {
 
                     effectInfo.SetupEffect();
 
-
-                    if (guidType == 0xD || guidType == 0x8E) {
-                        info.m_effects[guid] = new EffectInfoCombo(guid) { Effect = effectInfo };
-                        if (context.Entity != 0) {
-                            info.m_entities[context.Entity].m_effects.Add(guid);
-                        }
-                    } else if (guidType == 0x8F) {
-                        info.m_animationEffects[guid] = new EffectInfoCombo(guid) { Effect = effectInfo };
+                    var effectComboInfo = new EffectInfoCombo(guid) { Effect = effectInfo };
+                    if (guidType == 0x8F) {
+                        info.m_animationEffects[guid] = effectComboInfo;
                         //if (context.Entity != 0) {
                         //    info.Entities[context.Entity].m_animationEffects.Add(guid);
                         //}
-                    }
+                    } else {
+                        info.m_effects[guid] = effectComboInfo;
+                        if (context.Entity != 0) {
+                            info.m_entities[context.Entity].m_effects.Add(guid);
+                        }
+                    } 
 
                     using (Stream effectStream = OpenFile(guid)) {
                         teChunkedData chunkedData = new teChunkedData(effectStream);
@@ -812,7 +755,7 @@ namespace DataTool.FindLogic {
                                     EntityAsset ceceEntityInfo = info.m_entities[ceceEntity];
                                     ceceEntityInfo.m_animations.Add(GetReplacement(entityControl.Header.Animation, replacements));
                                     if (ceceEntityInfo.m_modelGUID != 0) {
-                                        info.m_models[ceceEntityInfo.m_modelGUID].n_animations.Add(GetReplacement(entityControl.Header.Animation, replacements));
+                                        info.m_models[ceceEntityInfo.m_modelGUID].m_animations.Add(GetReplacement(entityControl.Header.Animation, replacements));
                                     }
                                 }
                             } else if (chunk.Value is teEffectComponentSound soundComponent) {
@@ -919,26 +862,6 @@ namespace DataTool.FindLogic {
                     foreach (STUConfigVar configVar in configVars) {
                         Find(info, configVar, replacements, context);
                     }
-
-                    //STUStatescriptGraph graph = GetInstanceNew<STUStatescriptGraph>(guid);
-                    //if (graph == null) break;
-                    //foreach (STUStatescriptBase node in graph.m_nodes) {
-                    //    if (node is STUStatescriptStateCosmeticEntity cosmeticEntity) {
-                    //        Find(info, cosmeticEntity.m_entityDef, replacements, context);
-                    //    } else if (node is STUStatescriptStateWeaponVolley weaponVolley) {
-                    //        if (weaponVolley.m_projectileEntity != null) {
-                    //            Find(info, weaponVolley.m_projectileEntity.m_entityDef, replacements, context);
-                    //        }
-                    //    } else if (node is STUStatescriptStatePet statePet) {
-                    //        Find(info, statePet.m_entityDefinition, replacements, context);
-                    //    } else if (node is STUStatescriptActionEffect actionEffect) {
-                    //        Find(info, actionEffect.m_effect, replacements, context);
-                    //    } else if (node is STUStatescriptActionCreateEntity actionEntity) {
-                    //        Find(info, actionEntity.m_entityDef, replacements, context);
-                    //    } else if (node is STUStatescriptActionPlayScript actionPlayScript) {
-                    //        Find(info, actionPlayScript.m_script, replacements, context);
-                    //    }
-                    //}
                     break;
                 }
                 case 0x20: {

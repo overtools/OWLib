@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using DataTool.FindLogic;
 using TankLib;
 using TankLib.Chunks;
 
@@ -74,9 +75,9 @@ namespace DataTool.Helper {
                 Animation = model.Header.Animation,
                 PlaybackInfo = playbackInfo
             };
-            if (replacements.ContainsKey(newInfo.Model)) newInfo.Model = replacements[newInfo.Model];
-            if (replacements.ContainsKey(newInfo.Material)) newInfo.Material = replacements[newInfo.Material];
-            if (replacements.ContainsKey(newInfo.Animation)) newInfo.Animation = replacements[newInfo.Animation];
+            newInfo.Model = Combo.GetReplacement(newInfo.Model, replacements);
+            newInfo.Material = Combo.GetReplacement(newInfo.Material, replacements);
+            newInfo.Animation = Combo.GetReplacement(newInfo.Animation, replacements);
             effect.DMCEs.Add(newInfo);
         }
 
@@ -87,41 +88,41 @@ namespace DataTool.Helper {
                 Action = control.Header.Action,
                 Identifier = control.Header.Identifier
             };
-            if (replacements.ContainsKey(newInfo.Animation)) newInfo.Animation = replacements[newInfo.Animation];
-            if (replacements.ContainsKey(newInfo.Identifier)) newInfo.Identifier = replacements[newInfo.Identifier];
+            newInfo.Animation = Combo.GetReplacement(newInfo.Animation, replacements);
+            newInfo.Identifier = Combo.GetReplacement(newInfo.Identifier, replacements);
             effect.CECEs.Add(newInfo);
         }
 
         public static void AddOSCE(EffectInfo effect, teEffectComponentSound osce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
             OSCEInfo newInfo = new OSCEInfo {PlaybackInfo = playbackInfo, Sound = osce.Header.Sound};
-            if (replacements.ContainsKey(newInfo.Sound)) newInfo.Sound = replacements[newInfo.Sound];
+            newInfo.Sound = Combo.GetReplacement(newInfo.Sound, replacements);
             effect.OSCEs.Add(newInfo);
         }
 
         public static void AddFECE(EffectInfo effect, ulong guid, EffectInfo subEffect, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
             FECEInfo newInfo = new FECEInfo {PlaybackInfo = playbackInfo, Effect = subEffect, GUID = guid};
-            if (replacements.ContainsKey(newInfo.GUID)) newInfo.GUID = replacements[newInfo.GUID];
+            newInfo.GUID = Combo.GetReplacement(newInfo.GUID, replacements);
             effect.FECEs.Add(newInfo);
         }
 
         public static void AddNECE(EffectInfo effect, teEffectComponentEntity nece, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
             NECEInfo newInfo = new NECEInfo {PlaybackInfo = playbackInfo, GUID = nece.Header.Entity, Identifier = nece.Header.Identifier};
-            if (replacements.ContainsKey(newInfo.GUID)) newInfo.GUID = replacements[newInfo.GUID];
-            if (replacements.ContainsKey(newInfo.Identifier)) newInfo.Identifier = replacements[newInfo.Identifier];
+            newInfo.GUID = Combo.GetReplacement(newInfo.GUID, replacements);
+            newInfo.Identifier = Combo.GetReplacement(newInfo.Identifier, replacements);
             effect.NECEs.Add(newInfo);
         }
 
         /*public static void AddRPCE(EffectInfo effect, RPCE rpce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
             RPCEInfo newInfo = new RPCEInfo {PlaybackInfo = playbackInfo, Model = rpce.Data.Model};
-            if (replacements.ContainsKey(newInfo.Model)) newInfo.Model = replacements[newInfo.Model];
+            newInfo.Model = Combo.GetReplacement(newInfo.Model, replacements);
             effect.RPCEs.Add(newInfo);
         }
 
         public static void AddSSCE(EffectInfo effectInfo, SSCE ssce, Type lastType, Dictionary<ulong, ulong> replacements) {
             ulong def = ssce.Data.TextureDefinition;
             ulong mat = ssce.Data.Material;
-            if (replacements.ContainsKey(def)) def = replacements[def];
-            if (replacements.ContainsKey(mat)) mat = replacements[mat];
+            def = Combo.GetReplacement(def, replacements);
+            mat = Combo.GetReplacement(mat, replacements);
             if (lastType == typeof(RPCE)) {
                 RPCEInfo rpceInfo = effectInfo.RPCEs.Last();
                 rpceInfo.TextureDefiniton = def;
@@ -131,7 +132,7 @@ namespace DataTool.Helper {
 
         public static void AddSVCE(EffectInfo effect, teEffectComponentVoiceStimulus svce, ChunkPlaybackInfo playbackInfo, Dictionary<ulong, ulong> replacements) {
             SVCEInfo newInfo = new SVCEInfo {PlaybackInfo = playbackInfo, VoiceStimulus = svce.Header.VoiceStimulus};
-            if (replacements.ContainsKey(newInfo.VoiceStimulus)) newInfo.VoiceStimulus = replacements[newInfo.VoiceStimulus];
+            newInfo.VoiceStimulus = Combo.GetReplacement(newInfo.VoiceStimulus, replacements);
             effect.SVCEs.Add(newInfo);
         }
 
@@ -175,8 +176,7 @@ namespace DataTool.Helper {
                 AddOSCE(effectInfo, sound, chunk.Key, replacements);
             } else if (chunk.Value is teEffectComponentEffect effectComponentEffect) {
                 EffectInfo feceInfo = null;
-                ulong effectGuid = effectComponentEffect.Header.Effect;
-                if (replacements.ContainsKey(effectGuid)) effectGuid = replacements[effectGuid];
+                ulong effectGuid = Combo.GetReplacement(effectComponentEffect.Header.Effect, replacements);
                 using (Stream effectStream = IO.OpenFile(effectGuid)) {
                     if (effectStream != null) {
                         teChunkedData subChunked = new teChunkedData(effectStream);
