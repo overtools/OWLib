@@ -3,11 +3,9 @@ using System.IO;
 using DataTool.ConvertLogic;
 using DataTool.Flag;
 using DataTool.Helper;
-using DirectXTexNet;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using TACTLib.Helpers;
 using TankLib;
 using TankLib.Helpers.Hash;
 using TankLib.STU.Types;
@@ -106,7 +104,7 @@ namespace DataTool.SaveLogic.Unlock {
                     var partVariantIndex = partVariantIndices[partIndex];
                     var partTexture = partTextures[partIndex][partVariantIndex];
 
-                    using Image<Rgba32> colorImage = Image.Load<Rgba32>(partTexture.data);
+                    using Image<Bgra32> colorImage = Image.LoadPixelData<Bgra32>(partTexture.data, partTexture.width, partTexture.height);
                     // ReSharper disable once AccessToDisposedClosure
                     // ReSharper disable once AccessToModifiedClosure
                     infoTexture.Mutate(o => o.DrawImage(colorImage, new Point(xPos, 0), 1));
@@ -158,13 +156,8 @@ namespace DataTool.SaveLogic.Unlock {
                         texture = new teTexture(textureStream);
                     }
 
-                    using var convertedStream = texture.SaveToDDS(1);
-                    using var dds = new DDSConverter(convertedStream, DXGI_FORMAT.R8G8B8A8_UNORM, false);
-                    using var whyIsThisAStream = dds.GetFrame(WICCodecs.PNG, 0, 1); // "png" pepega
-                    var theArray = new byte[whyIsThisAStream.Length];
-                    whyIsThisAStream.DefinitelyRead(theArray);
-
-                    partTextures[partIndex][partVariantIndex] = new PartTexture(theArray, texture.Header.Width, texture.Header.Height);
+                    var convertedTexture = new TexDecoder(texture);
+                    partTextures[partIndex][partVariantIndex] = new PartTexture(convertedTexture.PixelData, texture.Header.Width, texture.Header.Height);
                 }
             }
 

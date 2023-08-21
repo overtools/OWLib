@@ -646,21 +646,8 @@ namespace DataTool.SaveLogic {
                     }
                 }
             });
-
-            var fullName = $"{filePath}.{convertType}";
-            string fullPath = Path.GetDirectoryName(fullName);
-            if (!Directory.Exists(fullPath) && fullPath != null) {
-                Directory.CreateDirectory(fullPath);
-            }
-
-            switch (convertType.ToLower()) {
-                case "png":
-                    colorImage.SaveAsPng(fullName);
-                    break;
-                case "tif":
-                    colorImage.SaveAsTiff(fullName);
-                    break;
-            }
+            
+            SaveTexImageSharp(colorImage, filePath, convertType.ToLowerInvariant());
         }
 
         public class SaveTextureOptions {
@@ -813,16 +800,29 @@ namespace DataTool.SaveLogic {
 
         private static void ConvertTexture(teTexture texture, bool splitMultiSurface, bool createMultiSurfaceSheet, string filePath, string convertType) {
             var tex = new TexDecoder(texture);
-            var surfaceCount = splitMultiSurface && !createMultiSurfaceSheet ? tex.Surfaces : 1;
-            for (var surfaceNr = 0; surfaceNr < surfaceCount; ++surfaceNr) {
-                using var surface = createMultiSurfaceSheet ? tex.GetSheet() : tex.GetFrame(surfaceNr);
-                var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
-                using var dest = OpenFile($"{surfacePath}.{convertType}");
-                if (convertType == "tif") {
-                    surface.SaveAsTiff(dest);
-                } else {
-                    surface.SaveAsPng(dest);
+            
+            if (splitMultiSurface) {
+                for (var surfaceNr = 0; surfaceNr < tex.Surfaces; ++surfaceNr) {
+                    using var surface = tex.GetFrame(surfaceNr);
+                    var surfacePath = surfaceNr == 0 ? filePath : $"{filePath}_{surfaceNr}";
+                    SaveTexImageSharp(surface, surfacePath, convertType);
                 }
+            } else if (createMultiSurfaceSheet) {
+                using var sheetImg = tex.GetSheet();
+                SaveTexImageSharp(sheetImg, filePath, convertType);
+            } else {
+                using var img = tex.GetFrames();
+                SaveTexImageSharp(img, filePath, convertType);
+            }
+        }
+
+        private static void SaveTexImageSharp(Image img, string path, string convertType) {
+            var finalPath = $"{path}.{convertType}";
+            CreateDirectoryFromFile(finalPath);
+            if (convertType == "tif") {
+                img.SaveAsTiff(finalPath);
+            } else {
+                img.SaveAsPng(finalPath);
             }
         }
 

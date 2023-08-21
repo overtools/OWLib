@@ -170,9 +170,17 @@ namespace DataTool.FindLogic {
                     return GetValidFilename(m_name);
                 }
 
-                // new model and look
-                if (teResourceGUID.Type(m_GUID) == 0x118) return GetName();
-                if (teResourceGUID.Type(m_GUID) == 0x119) return GetName();
+                var type = teResourceGUID.Type(m_GUID);
+                if (type == 0xF1) return GetName(); // localized texture
+                if (type == 0x118) return GetName(); // new model
+                if (type == 0x119) return GetName(); // new look
+                if (type == 0x127) return GetName(); // other material thing...
+                
+                // other effect types
+                if (type == 0x4A) return GetName();
+                if (type == 0x8E) return GetName();
+                if (type == 0x12B) return GetName();
+                
                 return $"{m_GUID & 0xFFFFFFFFFFFF:X12}";
             }
         }
@@ -854,6 +862,7 @@ namespace DataTool.FindLogic {
                     if (!info.m_doneScripts.Add(guid)) break;
 
                     var statescriptGraph = GetInstance<STUStatescriptGraph>(guid);
+                    if (statescriptGraph == null) break;
                     Find(info, statescriptGraph.m_publicSchema, replacements, context);
 
                     STUConfigVar[] configVars = GetInstances<STUConfigVar>(guid);
