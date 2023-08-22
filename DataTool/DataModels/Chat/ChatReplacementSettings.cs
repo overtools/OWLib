@@ -60,7 +60,7 @@ namespace DataTool.DataModels.Chat {
 
     public class ChatReplacementReplacementOverride {
         [DataMember]
-        public Enum_1C8CB734[] UnkEnum;
+        public Enum_0089A8AE[] UnkEnum;
 
         [DataMember]
         public byte? UnkByte;

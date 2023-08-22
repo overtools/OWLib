@@ -20,7 +20,9 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x996CFCAF)] x996CFCAF = 0xB,
         [STUField(0x9B57C592)] x9B57C592 = 0xC,
         [STUField(0x6F26D9EF)] x6F26D9EF = 0xD,
-        [STUField(0x2C21642B)] x2C21642B = 0xE,
+        [STUField(0x8A481B97)] x8A481B97 = 0xE,
+        [STUField(0x75F69F8F)] x75F69F8F = 0xF,
+        [STUField(0x2C21642B)] x2C21642B = 0x10,
     }
 
     [STUEnum(0x00A53D40)]
@@ -201,19 +203,6 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xB8367F3F)] xB8367F3F = 0,
         [STUField(0xD1239870)] xD1239870 = 0x1,
         [STUField(0xC70C3D89)] xC70C3D89 = 0x2,
-    }
-
-    [STUEnum(0x0700AB00)]
-    public enum Enum_0700AB00 : int
-    {
-        [STUField(0x8F8BF0A6)] x8F8BF0A6 = -1,
-        [STUField(0x59681CC8)] x59681CC8 = 0,
-        [STUField(0xBA24376B)] xBA24376B = 0x1,
-        [STUField(0xCAA8650F)] xCAA8650F = 0x2,
-        [STUField(0xFF8A8B83)] xFF8A8B83 = 0x3,
-        [STUField(0x35ACC01B)] x35ACC01B = 0x4,
-        [STUField(0x3AB98455)] x3AB98455 = 0x5,
-        [STUField(0xA2C392A8)] xA2C392A8 = 0x6,
     }
 
     [STUEnum(0x07D62806)]
@@ -815,26 +804,6 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x1F2B5283)] x1F2B5283 = 0x2,
     }
 
-    [STUEnum(0x1C8CB734)]
-    public enum Enum_1C8CB734 : int
-    {
-        [STUField(0xD22AC141)] xD22AC141 = -1,
-        [STUField(0x8698A708)] x8698A708 = 0,
-        [STUField(0xC0BD6250)] xC0BD6250 = 0x1,
-        [STUField(0xE6E1C959)] xE6E1C959 = 0x2,
-        [STUField(0x771C143C)] x771C143C = 0x3,
-        [STUField(0xFD31C7C0)] xFD31C7C0 = 0x4,
-        [STUField(0xB92F40C7)] xB92F40C7 = 0x5,
-        [STUField(0xAC98723B)] xAC98723B = 0x6,
-        [STUField(0xEEDE6ABE)] xEEDE6ABE = 0x7,
-        [STUField(0xD0A52936)] xD0A52936 = 0x8,
-        [STUField(0x4C5EEEDF)] x4C5EEEDF = 0x9,
-        [STUField(0x4E6679BF)] x4E6679BF = 0xA,
-        [STUField(0xF55B0428)] xF55B0428 = 0xB,
-        [STUField(0xE0A59734)] xE0A59734 = 0xC,
-        [STUField(0x7BE393B9)] x7BE393B9 = 0xD,
-    }
-
     [STUEnum(0x1D57CC95)]
     public enum Enum_1D57CC95 : int
     {
@@ -948,6 +917,14 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xA4B05B39)] xA4B05B39 = 0x1,
         [STUField(0xE2288A38)] xE2288A38 = 0x2,
         [STUField(0x85096040)] x85096040 = 0,
+    }
+
+    [STUEnum(0x2510B263)]
+    public enum Enum_2510B263 : int
+    {
+        [STUField(0xD316DBF1)] xD316DBF1 = 0,
+        [STUField(0x7840044E)] x7840044E = 0x1,
+        [STUField(0x73B49962)] x73B49962 = 0x2,
     }
 
     [STUEnum(0x255164EF)]
@@ -1630,6 +1607,13 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x0D3A61EA)] x0D3A61EA = 0x4,
     }
 
+    [STUEnum(0x439A6614)]
+    public enum Enum_439A6614 : int
+    {
+        [STUField(0xC5277E88)] xC5277E88 = 0,
+        [STUField(0x1F1F7C93)] x1F1F7C93 = 0x1,
+    }
+
     [STUEnum(0x439E511C)]
     public enum Enum_439E511C : int
     {
@@ -2196,7 +2180,8 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xDE371500)] Hero = 0x16,
         [STUField(0xADD112E7)] SeasonXPBoost = 0x17,
         [STUField(0x7DC18864)] x7DC18864 = 0x18,
-        [STUField(0x06DC4E05)] x06DC4E05 = 0x19,
+        [STUField(0x806E161D)] x806E161D = 0x19,
+        [STUField(0x06DC4E05)] x06DC4E05 = 0x1A,
         [STUField(0x18098BDF)] x18098BDF = -1,
     }
 
@@ -2277,7 +2262,8 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xE5481C2E)] xE5481C2E = 0x1B,
         [STUField(0xF520DDBE)] xF520DDBE = 0x1C,
         [STUField(0x3BD0F255)] x3BD0F255 = 0x1D,
-        [STUField(0x14C0C59A)] x14C0C59A = 0x1E,
+        [STUField(0x3E036215)] x3E036215 = 0x1E,
+        [STUField(0x14C0C59A)] x14C0C59A = 0x1F,
     }
 
     [STUEnum(0x5CDF102A)]
@@ -2319,6 +2305,20 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x3304784D)] x3304784D = 0x13,
         [STUField(0xA704A963)] xA704A963 = 0x14,
         [STUField(0xC7107FD5)] xC7107FD5 = 0x15,
+        [STUField(0x70CB3AB8)] x70CB3AB8 = 0x16,
+        [STUField(0x14D6951D)] x14D6951D = 0x17,
+        [STUField(0x55CDF205)] x55CDF205 = 0x18,
+        [STUField(0x2E031C68)] x2E031C68 = 0x19,
+        [STUField(0x370382A2)] x370382A2 = 0x1A,
+    }
+
+    [STUEnum(0x5EBD8982)]
+    public enum Enum_5EBD8982 : int
+    {
+        [STUField(0xEB76F344)] xEB76F344 = 0,
+        [STUField(0x8D730253)] x8D730253 = 0x1,
+        [STUField(0x7F432105)] x7F432105 = 0x2,
+        [STUField(0x131F8A2A)] x131F8A2A = 0x3,
     }
 
     [STUEnum(0x5EBEFCA9)]
@@ -2411,7 +2411,7 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0x635F8F25)]
     public enum Enum_635F8F25 : int
     {
-        [STUField(0x89763BE2)] x89763BE2 = 0x2,
+        [STUField(0x89763BE2)] x89763BE2 = 0x3,
     }
 
     [STUEnum(0x63EB4D24)]
@@ -2449,6 +2449,16 @@ namespace TankLib.STU.Types.Enums
     {
         [STUField(0x1A62C6F0)] Enabled = 0,
         [STUField(0xF4C0BC0F)] Disabled = 0x1,
+    }
+
+    [STUEnum(0x6728A506)]
+    public enum Enum_6728A506 : int
+    {
+        [STUField(0xE0ADC1C1)] xE0ADC1C1 = 0,
+        [STUField(0x568B62B6)] x568B62B6 = 0x1,
+        [STUField(0xCE0A2154)] xCE0A2154 = 0x2,
+        [STUField(0x08AF4827)] x08AF4827 = 0x3,
+        [STUField(0xEDFDB37F)] xEDFDB37F = 0x4,
     }
 
     [STUEnum(0x6842E392)]
@@ -3164,7 +3174,7 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0x8F651EAA)]
     public enum Enum_8F651EAA : int
     {
-        [STUField(0x24753B29)] x24753B29 = 0x7,
+        [STUField(0x24753B29)] x24753B29 = 0x8,
     }
 
     [STUEnum(0x8F7F65D3)]
@@ -3505,6 +3515,14 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x55716A15)] x55716A15 = 0x1,
     }
 
+    [STUEnum(0x9904B977)]
+    public enum Enum_9904B977 : int
+    {
+        [STUField(0x247C77FB)] x247C77FB = 0,
+        [STUField(0xBAF13E81)] xBAF13E81 = 0x1,
+        [STUField(0x1430457C)] x1430457C = 0x2,
+    }
+
     [STUEnum(0x99BFBE62)]
     public enum Enum_99BFBE62 : int
     {
@@ -3521,7 +3539,7 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0x9C12ABD8)]
     public enum Enum_9C12ABD8 : int
     {
-        [STUField(0x468B525B)] x468B525B = 0x1B8,
+        [STUField(0x468B525B)] x468B525B = 0x1BB,
     }
 
     [STUEnum(0x9C156357)]
@@ -3655,6 +3673,12 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x5F51CCAA)] x5F51CCAA = 0,
         [STUField(0x293F2F53)] x293F2F53 = 0x1,
         [STUField(0x0998A170)] x0998A170 = 0x2,
+    }
+
+    [STUEnum(0xA42D8C88)]
+    public enum Enum_A42D8C88 : int
+    {
+        [STUField(0x2D92BCB9)] x2D92BCB9 = 0x1,
     }
 
     [STUEnum(0xA48F875F)]
@@ -4101,6 +4125,7 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x1998A6DD)] x1998A6DD = 0x6,
         [STUField(0x695B61D4)] x695B61D4 = 0x7,
         [STUField(0x2EA48417)] x2EA48417 = 0x8,
+        [STUField(0x618902F3)] x618902F3 = 0x9,
     }
 
     [STUEnum(0xB3FCE7D5)]
@@ -4201,7 +4226,8 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xD64FF97B)] xD64FF97B = 0x19,
         [STUField(0x8DEBCA96)] x8DEBCA96 = 0x1A,
         [STUField(0xCBAC32BD)] xCBAC32BD = 0x1B,
-        [STUField(0x40CE6362)] x40CE6362 = 0x1C,
+        [STUField(0xCC7CC113)] xCC7CC113 = 0x1C,
+        [STUField(0x40CE6362)] x40CE6362 = 0x1D,
         [STUField(0x7F7D3533)] x7F7D3533 = 0,
     }
 
@@ -4231,7 +4257,7 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0xB83B5693)]
     public enum Enum_B83B5693 : int
     {
-        [STUField(0x4F8A3A34)] x4F8A3A34 = 0x5C,
+        [STUField(0x4F8A3A34)] x4F8A3A34 = 0x62,
     }
 
     [STUEnum(0xB87B0A59)]
@@ -4466,7 +4492,11 @@ namespace TankLib.STU.Types.Enums
         [STUField(0x7D672DAA)] x7D672DAA = 0x4C,
         [STUField(0x0D6B81BA)] x0D6B81BA = 0x4D,
         [STUField(0x3D7BB766)] x3D7BB766 = 0x4E,
-        [STUField(0x0834D98C)] x0834D98C = 0x4F,
+        [STUField(0xA9276A0E)] xA9276A0E = 0x4F,
+        [STUField(0x0834D98C)] x0834D98C = 0x50,
+        [STUField(0xEA2BC95A)] xEA2BC95A = 0x51,
+        [STUField(0x36761A8A)] x36761A8A = 0x52,
+        [STUField(0x4557321A)] x4557321A = 0x53,
     }
 
     [STUEnum(0xBC00E017)]
@@ -4541,11 +4571,11 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0xC185E6E8)]
     public enum Enum_C185E6E8 : int
     {
-        [STUField(0x8E21D3CF)] x8E21D3CF = 0,
-        [STUField(0xD8CF7286)] xD8CF7286 = 0x1,
-        [STUField(0xDCCE8238)] xDCCE8238 = 0x2,
-        [STUField(0x648DDF67)] x648DDF67 = 0x3,
-        [STUField(0x9869A2A2)] x9869A2A2 = 0x4,
+        [STUField(0xD8CF7286)] xD8CF7286 = 0,
+        [STUField(0xDCCE8238)] xDCCE8238 = 0x1,
+        [STUField(0x648DDF67)] x648DDF67 = 0x2,
+        [STUField(0x9869A2A2)] x9869A2A2 = 0x3,
+        [STUField(0x8E21D3CF)] x8E21D3CF = 0x1,
     }
 
     [STUEnum(0xC1D57798)]
@@ -4565,6 +4595,7 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xF4BA4600)] xF4BA4600 = 0xB,
         [STUField(0x86A2EBAA)] x86A2EBAA = 0xC,
         [STUField(0xEE146AD4)] xEE146AD4 = 0xD,
+        [STUField(0x028F5D1D)] x028F5D1D = 0xE,
     }
 
     [STUEnum(0xC1FE4D0B)]
@@ -5062,6 +5093,19 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xD119B53C)] xD119B53C = 0x1,
     }
 
+    [STUEnum(0xD3ED925A)]
+    public enum Enum_D3ED925A : int
+    {
+        [STUField(0x618BEEAF)] x618BEEAF = -1,
+        [STUField(0x57C4F6F6)] x57C4F6F6 = 0,
+        [STUField(0xE6D7A925)] xE6D7A925 = 0x1,
+        [STUField(0x4E8DD07B)] x4E8DD07B = 0x2,
+        [STUField(0xC55E3F07)] xC55E3F07 = 0x3,
+        [STUField(0x868360FE)] x868360FE = 0x4,
+        [STUField(0x27CE29A6)] x27CE29A6 = 0x5,
+        [STUField(0x4F4D8147)] x4F4D8147 = 0x6,
+    }
+
     [STUEnum(0xD407CA8B)]
     public enum Enum_D407CA8B : int
     {
@@ -5428,7 +5472,7 @@ namespace TankLib.STU.Types.Enums
     [STUEnum(0xE72B1CCA)]
     public enum Enum_E72B1CCA : int
     {
-        [STUField(0x53EFC99E)] x53EFC99E = 0x4E,
+        [STUField(0x53EFC99E)] x53EFC99E = 0x4F,
     }
 
     [STUEnum(0xE7352825)]
@@ -5549,6 +5593,16 @@ namespace TankLib.STU.Types.Enums
         [STUField(0xAB7DE4EA)] xAB7DE4EA = 0x1,
         [STUField(0xAF2F8B12)] xAF2F8B12 = 0x2,
         [STUField(0x8410A5B5)] x8410A5B5 = 0x3,
+    }
+
+    [STUEnum(0xEC0B2986)]
+    public enum Enum_EC0B2986 : int
+    {
+        [STUField(0xD3EEDE7F)] xD3EEDE7F = 0,
+        [STUField(0xC30CAED6)] xC30CAED6 = 0x1,
+        [STUField(0xE09A0FFA)] xE09A0FFA = 0x2,
+        [STUField(0x8323E0EC)] x8323E0EC = 0x3,
+        [STUField(0x53965E65)] x53965E65 = 0x4,
     }
 
     [STUEnum(0xEE33C425)]

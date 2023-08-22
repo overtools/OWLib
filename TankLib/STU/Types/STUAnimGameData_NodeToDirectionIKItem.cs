@@ -4,7 +4,7 @@ using TankLib.Math;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0xD1019A10, 20)]
+    [STU(0xD1019A10, 24)]
     public class STUAnimGameData_NodeToDirectionIKItem : STUInstance
     {
         [STUField(0x88E08995, 0)] // size: 12
@@ -13,10 +13,13 @@ namespace TankLib.STU.Types
         [STUField(0x85FAE8CB, 12)] // size: 4
         public float m_85FAE8CB;
 
-        [STUField(0x0D38DEBA, 16)] // size: 2
+        [STUField(0xD1E5D858, 16)] // size: 4
+        public float m_D1E5D858;
+
+        [STUField(0x0D38DEBA, 20)] // size: 2
         public ushort m_0D38DEBA;
 
-        [STUField(0x7E257788, 18)] // size: 2
+        [STUField(0x7E257788, 22)] // size: 2
         public ushort m_7E257788;
     }
 }

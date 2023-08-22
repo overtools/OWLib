@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x5207484B, 184)]
+    [STU(0x5207484B, 192)]
     public class STUModelLook : STUInstance
     {
         [STUField(0xBAFDAFBA, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
@@ -38,5 +38,8 @@ namespace TankLib.STU.Types
 
         [STUField(0x5ED21CE1, 168)] // size: 16
         public ulong[] m_5ED21CE1;
+
+        [STUField(0x7465A325, 184)] // size: 1
+        public byte m_7465A325 = 0x0;
     }
 }
