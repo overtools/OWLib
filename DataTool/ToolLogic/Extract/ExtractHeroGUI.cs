@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using DataTool.DataModels;
 using DataTool.DataModels.Hero;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -9,7 +9,7 @@ using TankLib;
 using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Extract {
-    [Tool("extract-hero-icons", Description = "Extract hero icons", CustomFlags = typeof(ExtractFlags))]
+    [Tool("extract-hero-icons", Aliases = new [] { "extract-hero-gui" }, Description = "Extract hero GUI images", CustomFlags = typeof(ExtractFlags))]
     public class ExrtactHeroGUI : ITool {
         private const string Container = "HeroIcons";
 
@@ -21,27 +21,42 @@ namespace DataTool.ToolLogic.Extract {
                 throw new Exception("no output path");
             }
 
+            var heroIntelImageMapping = GetIntelDatabaseHeroImages();
+            var heroProgressionImageMapping = GetHeroProgressionImageMapping();
+
             foreach (var (key, heroStu) in Helpers.GetHeroes()) {
                 var hero = new Hero(heroStu, key);
+                var heroNameLower = hero.Name?.ToLower().Trim();
                 var heroCleanName = IO.GetValidFilename(hero.Name);
+
                 if (string.IsNullOrEmpty(heroCleanName)) {
                     continue;
                 }
 
                 Logger.Log($"Processing {heroCleanName}");
 
+                var heroImageCombo = new FindLogic.Combo.ComboInfo();
                 if (hero.Images != null) {
-                    var heroImageCombo = new FindLogic.Combo.ComboInfo();
                     foreach (var heroImage in hero.Images) {
                         FindLogic.Combo.Find(heroImageCombo, heroImage.TextureGUID);
-                        heroImageCombo.SetTextureName(heroImage.TextureGUID, teResourceGUID.AsString(heroImage.Id));
+                        //heroImageCombo.SetTextureName(heroImage.TextureGUID, teResourceGUID.AsString(heroImage.Id));
                     }
-
-                    Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName), new Combo.SaveContext(heroImageCombo), new Combo.SaveTextureOptions {
-                        FileTypeOverride = "png",
-                        ProcessIcon = true,
-                    });
                 }
+
+                if (heroIntelImageMapping.TryGetValue(heroNameLower, out var value)) {
+                    foreach (var intelImage in value) {
+                        FindLogic.Combo.Find(heroImageCombo, intelImage);
+                    }
+                }
+
+                if (heroProgressionImageMapping.TryGetValue(hero.GUID, out var progressionImage)) {
+                    FindLogic.Combo.Find(heroImageCombo, progressionImage);
+                }
+
+                Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName), new Combo.SaveContext(heroImageCombo), new Combo.SaveTextureOptions {
+                    FileTypeOverride = "png",
+                    ProcessIcon = true,
+                });
 
                 if (hero.Loadouts != null) {
                     var heroLoadoutCombo = new FindLogic.Combo.ComboInfo();
@@ -55,7 +70,19 @@ namespace DataTool.ToolLogic.Extract {
                     });
                 }
 
-                foreach (var unlock in hero.GetUnlocks().IterateUnlocks()) {
+                if (heroStu.m_FC833C02 != null) {
+                    var combo = new FindLogic.Combo.ComboInfo();
+                    foreach (var statThing in heroStu.m_FC833C02) {
+                        FindLogic.Combo.Find(combo, statThing.m_D176E9FD);
+                    }
+
+                    Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, heroCleanName, "StatIcons"), new Combo.SaveContext(combo), new Combo.SaveTextureOptions {
+                        FileTypeOverride = "png"
+                    });
+                }
+
+                // skins don't have icons anymore so pointless
+                /*foreach (var unlock in hero.GetUnlocks().IterateUnlocks()) {
                     if (unlock.Type != UnlockType.Skin || unlock.SkinThemeGUID == 0) {
                         continue;
                     }
@@ -97,8 +124,96 @@ namespace DataTool.ToolLogic.Extract {
                     }
 
                     Combo.SaveLooseTextures(flags, filePath, saveContext);
-                }
+                }*/
             }
+        }
+
+        private static Dictionary<string, List<teResourceGUID>> GetIntelDatabaseHeroImages() {
+            /**
+             * Fetches images for heroes and NPCs from their Bios in the Intel Database
+             * Hero intel entries have their own STU but there's no way to differentiate between a Bio or Journal entry which generally refers to a mission
+             * Hacky fix for this is to just skip images that are referenced by multiple heroes as they're likely to be mission images
+             *
+             * Null Sector NPCs use a general STU that contains a lot of general lore so you can't filter based on the STU
+             * however general lore entries have an id that indicates what category they belong to so we can filter based on that
+             *
+             * Images are stored in a dictionary of hero/npc name to images. Hero names are from the hero stu directly so they can be easily looked up
+             * However Null Sector entries aren't linked to the NPCs hero meaning the mapping will only work if the name of the lore entry is the same as the NPC's Hero name
+             */
+
+            var imageMapping = new Dictionary<string, List<teResourceGUID>>();
+            var foundImageCache = new HashSet<teResourceGUID>();
+            var duplicateImageSet = new HashSet<teResourceGUID>();
+
+            foreach (var key in Program.TrackedFiles[0x14B]) {
+                var stu = STUHelper.GetInstance<STU_BFEFD7C8>(key);
+                if (stu == null) {
+                    continue;
+                }
+
+                string heroName = null;
+                switch (stu) {
+                    case STU_D75C45C2 heroStu: {
+                        var hero = new Hero(heroStu.m_hero);
+                        if (hero.GUID == 0 || stu?.m_1B3F1138 == null) {
+                            continue;
+                        }
+
+                        heroName = hero.Name?.ToLower().Trim();
+                        break;
+                    }
+                    case STU_1640A86B generalIntelStu:
+                        // null sector lore entries
+                        if (generalIntelStu.m_4F9CF442?.m_id != 0x0D80000000002788) {
+                            continue;
+                        }
+
+                        heroName = IO.GetString(generalIntelStu.m_93E355A7)?.ToLower().Trim();
+                        break;
+                    default:
+                        continue;
+                }
+
+                if (string.IsNullOrEmpty(heroName)) {
+                    continue;
+                }
+
+                var imageGuid = stu.m_1B3F1138;
+
+                if (foundImageCache.Contains(imageGuid)) {
+                    duplicateImageSet.Add(imageGuid);
+                    continue;
+                }
+
+                foundImageCache.Add(imageGuid);
+                if (!imageMapping.ContainsKey(heroName)) {
+                    imageMapping[heroName] = new List<teResourceGUID>();
+                }
+
+                imageMapping[heroName].Add(imageGuid);
+            }
+
+            // remove images that are referenced by multiple heroes
+            foreach (var (guid, list) in imageMapping) {
+                list.RemoveAll(x => duplicateImageSet.Contains(x));
+            }
+
+            return imageMapping;
+        }
+
+        private static Dictionary<teResourceGUID, teResourceGUID> GetHeroProgressionImageMapping() {
+            var imageMapping = new Dictionary<teResourceGUID, teResourceGUID>();
+
+            foreach (var key in Program.TrackedFiles[0x165]) {
+                var stu = STUHelper.GetInstance<STU_80B85097>(key);
+                if (stu?.m_hero == null || stu.m_5AE357B7 == null) {
+                    continue;
+                }
+
+                imageMapping.TryAdd(stu.m_hero, stu.m_5AE357B7);
+            }
+
+            return imageMapping;
         }
     }
 }
