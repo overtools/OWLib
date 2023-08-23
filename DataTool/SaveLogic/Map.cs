@@ -178,7 +178,7 @@ namespace DataTool.SaveLogic {
                             if (instanceData is not STUModelComponentInstanceData modelComponentInstanceData) continue;
                             if (modelComponentInstanceData.m_EE77FFF9 != 0) {
                                 look = modelComponentInstanceData.m_EE77FFF9;
-                            } else if (modelComponentInstanceData.m_look == 0) {
+                            } else if (modelComponentInstanceData.m_look != 0) {
                                 look = modelComponentInstanceData.m_look;
                             } else {
                                 break;
