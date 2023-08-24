@@ -39,7 +39,7 @@ namespace DataTool.ConvertLogic {
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16G16_FLOAT: {
-                        RgbConverter.Convert<ColorR<Half>, Half, ColorBGRA32, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
+                        RgbConverter.Convert<ColorRG<Half>, Half, ColorBGRA32, byte>(surfaceInputData, Texture.Header.Width, Texture.Header.Height, surfaceOutputData);
                         break;
                     }
                     case TextureTypes.DXGI_PIXEL_FORMAT.DXGI_FORMAT_R16_FLOAT: {
