@@ -455,9 +455,6 @@ namespace TankLib {
             public teVec3 Translation;
             public teVec3 Scale;
             public teQuat Rotation;
-            public teQuat Unknown;
-            public teQuat Unknown2;
-            public teVec2 Unknown3;
         }
 
         public Structure Header;
