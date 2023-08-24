@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Text;
-using TankLib.Helpers;
 
 namespace TankLib {
     public static class Extensions {
@@ -12,29 +11,8 @@ namespace TankLib {
         /// <param name="reader">Source reader</param>
         /// <typeparam name="T">Struct to read</typeparam>
         /// <returns>Read struct</returns>
-        public static T Read<T>(this BinaryReader reader) where T : struct {
-            byte[] result = reader.ReadBytes(FastStruct<T>.Size);
-            return FastStruct<T>.ArrayToStructure(result);
-        }
-
-        /// <summary>
-        /// Read array of structs from a BinaryReader
-        /// </summary>
-        /// <param name="reader">Source reader</param>
-        /// <typeparam name="T">Struct to read</typeparam>
-        /// <returns>Array of read structs</returns>
-        public static T[] ReadArray<T>(this BinaryReader reader) where T : struct
-        {
-            int numBytes = (int)reader.ReadInt64();
-            if (numBytes == 0)
-            {
-                return new T[0];
-            }
-
-            byte[] result = reader.ReadBytes(numBytes);
-
-            reader.BaseStream.Position += (0 - numBytes) & 0x07;
-            return FastStruct<T>.ReadArray(result);
+        public static T Read<T>(this BinaryReader reader) where T : unmanaged {
+            return TACTLib.Helpers.Extensions.Read<T>(reader);
         }
         
         /// <summary>
@@ -44,18 +22,9 @@ namespace TankLib {
         /// <param name="count">Count</param>
         /// <typeparam name="T">Struct to read</typeparam>
         /// <returns>Stuct array</returns>
-        public static T[] ReadArray<T>(this BinaryReader reader, int count) where T : struct
+        public static T[] ReadArray<T>(this BinaryReader reader, int count) where T : unmanaged
         {
-            if(count == 0)
-            {
-                return new T[0];
-            }
-
-            int numBytes = FastStruct<T>.Size * count;
-
-            byte[] result = reader.ReadBytes(numBytes);
-
-            return FastStruct<T>.ReadArray(result);
+            return TACTLib.Helpers.Extensions.ReadArray<T>(reader, count);
         }
 
         /// <summary>
@@ -64,9 +33,9 @@ namespace TankLib {
         /// <param name="writer">Target writer</param>
         /// <param name="struct">Struct instance to write</param>
         /// <typeparam name="T">Struct type</typeparam>
-        public static void Write<T>(this BinaryWriter writer, T @struct) where T : struct
+        public static void Write<T>(this BinaryWriter writer, T @struct) where T : unmanaged
         {
-            writer.Write(FastStruct<T>.StructureToArray(@struct));
+            TACTLib.Helpers.Extensions.Write(writer, @struct);
         }
         
         /// <summary>
@@ -75,9 +44,9 @@ namespace TankLib {
         /// <param name="writer">Target write</param>
         /// <param name="struct">Struct array to write</param>
         /// <typeparam name="T">Struct type</typeparam>
-        public static void WriteStructArray<T>(this BinaryWriter writer, T[] @struct) where T : struct
+        public static void WriteStructArray<T>(this BinaryWriter writer, T[] @struct) where T : unmanaged
         {
-            writer.Write(FastStruct<T>.WriteArray(@struct));
+            TACTLib.Helpers.Extensions.WriteStructArray(writer, @struct);
         }
         
         /// <summary>

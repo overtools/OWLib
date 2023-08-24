@@ -158,7 +158,7 @@ namespace ReplayMp4Tool {
             public Structure Header;
 
             public void Parse(byte[] bytes) {
-                Header = FastStruct<Structure>.ArrayToStructure(bytes);
+                Header = MemoryMarshal.Read<Structure>(bytes);
             }
         }
 
