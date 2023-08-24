@@ -296,14 +296,20 @@ namespace DataTool {
                 Logger.Error("Core", $"Not a valid Overwatch installation (detected product: {Client.Product})");
                 return;
             }
-
-            // Handle cases where build version contains letters e.g. 1.71.1.0.97745a
+            
             // todo: these version checks don't really need to even exist anymore but whatever, maybe useful just for history - js
             Client.InstallationInfo.Values.TryGetValue("Version", out var clientVersion);
-            var buildVersion = Regex.Replace(clientVersion?.Split('.').Last() ?? "", "[A-Za-z ]", "");
-            uint.TryParse(buildVersion, out BuildVersion);
+            string buildVersion;
+            if (clientVersion != null && clientVersion.Contains('.')) {
+                buildVersion = clientVersion.Split('.').LastOrDefault();
+            } else {
+                buildVersion = clientVersion?.Split('-').LastOrDefault();
+            }
 
-            if (BuildVersion == 0)
+            // Handle cases where build version contains letters e.g. 1.71.1.0.97745a
+            buildVersion = Regex.Replace(buildVersion ?? "", "[A-Za-z ]", "");
+            
+            if (!uint.TryParse(buildVersion, out BuildVersion))
                 Logger.Warn("Core", "Could not parse build version from {0}", clientVersion ?? "null");
             else if (BuildVersion < 39028)
                 Logger.Error("Core", "DataTool doesn't support Overwatch versions below 1.14. Please use OverTool.");
