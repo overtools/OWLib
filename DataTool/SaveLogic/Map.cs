@@ -289,7 +289,7 @@ namespace DataTool.SaveLogic {
                 var gameModeName = GetCleanString(gameMode?.m_displayName) ?? "Unknown Mode";
                 if (gameModeName == "Calypso HeroMode") gameModeName = "HeroMode";
 
-                var envName = GetString(variantResultingMap.m_0342E00E.m_D978BBDC);
+                var envName = GetCleanString(variantResultingMap.m_0342E00E.m_D978BBDC);
                 if (envName == "Castle - Eichenwalde (Halloween) Junkenstein 2") {
                     envName = "Wrath of the Bride";
                 } else if (string.IsNullOrEmpty(envName)) {
@@ -299,7 +299,7 @@ namespace DataTool.SaveLogic {
                 var variantName = $"{envName} - {gameModeName}";
                 if (variantModeInfo.m_216EA6DA != 0) {
                     var mission = GetInstance<STU_8B0E97DC>(variantModeInfo.m_216EA6DA);
-                    var missionName = GetString(mission?.m_0EDCE350);
+                    var missionName = GetCleanString(mission?.m_0EDCE350);
                     if (missionName != null) {
                         variantName += $" - {missionName}";
                     } else {
