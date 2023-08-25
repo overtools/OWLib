@@ -316,14 +316,20 @@ namespace DataTool.SaveLogic {
         }
 
         private static Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> GetSVCELines(EffectParser.EffectInfo effectInfo, FindLogic.Combo.ComboInfo info) {
-            Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> output = new Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>>();
+            var output = new Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>>();
             if (effectInfo.SVCEs.Count == 0 || effectInfo.VoiceSet == 0) return output;
+            
+            if (!info.m_voiceSets.TryGetValue(effectInfo.VoiceSet, out var voiceSetInfo)) {
+                // locale issues ig..
+                return output;
+            }
+            
+            var instances = voiceSetInfo.VoiceLineInstances;
+            if (instances == null) return output;
 
             foreach (EffectParser.SVCEInfo svceInfo in effectInfo.SVCEs) {
-                Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> instances = info.m_voiceSets[effectInfo.VoiceSet].VoiceLineInstances;
-                if (instances?.ContainsKey(svceInfo.VoiceStimulus) == true) {
-                    output[svceInfo.VoiceStimulus] = instances[svceInfo.VoiceStimulus];
-                }
+                if (!instances.TryGetValue(svceInfo.VoiceStimulus, out var voiceLineInstance)) continue;
+                output[svceInfo.VoiceStimulus] = voiceLineInstance;
             }
 
             return output;

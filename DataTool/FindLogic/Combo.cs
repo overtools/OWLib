@@ -138,12 +138,12 @@ namespace DataTool.FindLogic {
 
             public void SetModelLookName(ulong look, string name, Dictionary<ulong, ulong> replacements = null) => SetAssetName(look, name, m_modelLooks, replacements);
 
-            public void SetEffectVoiceSet(ulong effect, ulong voiceSet) {
-                if (m_animationEffects.ContainsKey(effect)) SetEffectVoiceSet(m_animationEffects[effect], voiceSet);
-                if (m_effects.ContainsKey(effect)) SetEffectVoiceSet(m_effects[effect], voiceSet);
+            public void SetEffectVoiceSet(ulong effectGUID, ulong voiceSet) {
+                if (m_animationEffects.TryGetValue(effectGUID, out var animationEffect)) SetEffectVoiceSet(animationEffect, voiceSet);
+                if (m_effects.TryGetValue(effectGUID, out var effect)) SetEffectVoiceSet(effect, voiceSet);
             }
 
-            public static void SetEffectVoiceSet(EffectInfoCombo effect, ulong voiceSet) {
+            private static void SetEffectVoiceSet(EffectInfoCombo effect, ulong voiceSet) {
                 effect.Effect.VoiceSet = voiceSet;
             }
         }
