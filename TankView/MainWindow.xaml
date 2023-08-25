@@ -74,14 +74,7 @@
                 <MenuItem Header="Exit" Click="Exit" />
             </MenuItem>
             <MenuItem Header="Options">
-                <MenuItem Header="CASC" DataContext="{Binding CASCSettings}">
-                    <MenuItem Header="Cache APM"
-                              IsChecked="{Binding APM, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                              IsCheckable="True" />
-                    <MenuItem Header="Load Manifests"
-                              IsChecked="{Binding Manifest, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                              IsCheckable="True" />
-                </MenuItem>
+                <!--<MenuItem Header="CASC" DataContext="{Binding CASCSettings}"/>
                 <MenuItem Header="NGDP">
                     <MenuItem Header="Patch Host" ItemsSource="{Binding NGDPPatchHosts}">
                         <MenuItem.ItemContainerStyle>
@@ -94,7 +87,7 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-                </MenuItem>
+                </MenuItem>-->
                 <MenuItem Header="Extraction">
                     <MenuItem Header="Convert Sounds" DataContext="{Binding ExtractionSettings}"
                               IsChecked="{Binding EnableConvertSounds, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

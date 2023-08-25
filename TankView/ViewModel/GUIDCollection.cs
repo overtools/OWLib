@@ -27,7 +27,7 @@ namespace TankView.ViewModel {
         private readonly ClientHandler Client;
         private readonly ProductHandler_Tank Tank;
         private readonly ProgressWorker _worker;
-        internal static Dictionary<ushort, HashSet<ulong>> TrackedFiles = new Dictionary<ushort, HashSet<ulong>>();
+        internal static IReadOnlyDictionary<ushort, HashSet<ulong>> TrackedFiles => DataTool.Program.TrackedFiles;
 
         private GUIDEntry _top;
         public string GUIDStr;
@@ -279,16 +279,6 @@ namespace TankView.ViewModel {
             }
 
             LookupAndGeneratePreviousBuildGuids(client, tank);
-
-            foreach (var asset in Tank.m_assets) {
-                var type = teResourceGUID.Type(asset.Key);
-                if (!TrackedFiles.TryGetValue(type, out var typeMap)) {
-                    typeMap            = new HashSet<ulong>();
-                    TrackedFiles[type] = typeMap;
-                }
-
-                typeMap.Add(asset.Key);
-            }
 
             try {
                 worker?.ReportProgress(0, "Generating Conversation mappings...");

@@ -18,11 +18,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using TankView.Helper;
 using TankView.Properties;
 using TankView.ViewModel;
-using TACTLib.Client;
-using TACTLib.Client.HandlerArgs;
-using TACTLib.Core.Product.Tank;
 using TankLib;
-using TankLib.TACT;
 
 // ReSharper disable MemberCanBeMadeStatic.Local
 
@@ -42,8 +38,6 @@ namespace TankView {
         public ProductLocations ProductAgent { get; set; }
         public ExtractionSettings ExtractionSettings { get; set; }
         public ImageExtractionFormats ImageExtractionFormats { get; set; }
-
-        public static ClientCreateArgs ClientArgs = new ClientCreateArgs();
 
         private bool ready = true;
 
@@ -84,8 +78,6 @@ namespace TankView {
         }
 
         public MainWindow() {
-            ClientArgs.HandlerArgs = new ClientCreateArgs_Tank();
-
             ViewContext = SynchronizationContext.Current;
 
             NGDPPatchHosts = new NGDPPatchHosts();
@@ -221,29 +213,6 @@ namespace TankView {
         private void OpenNGDP(string path) {
             throw new NotImplementedException(nameof(OpenNGDP));
             // todo: can be supported again
-
-#pragma warning disable 162
-            // ReSharper disable once HeuristicUnreachableCode
-            PrepareTank(path);
-
-            Task.Run(delegate {
-                try {
-                    DataTool.Program.Client = new ClientHandler(null, ClientArgs);
-
-                    DataTool.Program.TankHandler = DataTool.Program.Client.ProductHandler as ProductHandler_Tank;
-                } catch (Exception e) {
-                    MessageBox.Show(e.Message, "Error while loading CASC", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-                    IsReady = true;
-                    if (Debugger.IsAttached) {
-                        throw;
-                    }
-                } finally {
-                    GCSettings.LatencyMode = GCLatencyMode.Interactive;
-                    GC.Collect();
-                    DataTool.Program.InitTrackedFiles();
-                }
-            });
-#pragma warning restore 162
         }
 
         private void OpenCASC(string path) {
@@ -252,19 +221,20 @@ namespace TankView {
             Task.Run(delegate {
                 try {
                     var flags = FlagParser.Parse<ToolFlags>();
+
+                    DataTool.Program.Flags = new DataTool.ToolFlags {
+                        OverwatchDirectory = path
+                    };
                     if (flags != null) {
-                        ClientArgs.TextLanguage = flags.Language;
-                        ClientArgs.SpeechLanguage = flags.SpeechLanguage;
-                        ClientArgs.Online = flags.Online;
+                        DataTool.Program.Flags.Language = flags.Language;
+                        DataTool.Program.Flags.SpeechLanguage = flags.SpeechLanguage;
+                        DataTool.Program.Flags.Online = flags.Online;
                     } else {
-                        ClientArgs.Online = false;
+                        DataTool.Program.Flags.Online = false;
                     }
 
-                    DataTool.Program.Client = new ClientHandler(path, ClientArgs);
-                    LoadHelper.PostLoad(DataTool.Program.Client);
+                    DataTool.Program.InitStorage(DataTool.Program.Flags.Online);
                     DataTool.Helper.IO.LoadGUIDTable(false);
-
-                    DataTool.Program.TankHandler = DataTool.Program.Client.ProductHandler as ProductHandler_Tank;
 
                     BuildTree();
                 } catch (Exception e) {

@@ -52,6 +52,7 @@ namespace DataTool.Helper {
                 return;
             }
 
+            GUIDTable.Clear();
             var csvLines = File.ReadAllLines(guidNamesPath).Skip(1); // skip header
             foreach (string dirtyLine in csvLines) {
                 // remove comments

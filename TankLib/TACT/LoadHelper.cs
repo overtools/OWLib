@@ -1,11 +1,13 @@
-using System.IO;
-using System.Reflection;
 using TACTLib.Client;
-using TACTLib.Core.Product.Tank;
 
 namespace TankLib.TACT {
     public static class LoadHelper {
+        private static bool _loggerInitialized;
+        
         public static void PreLoad() {
+            if (_loggerInitialized) return;
+            _loggerInitialized = true;
+            
             TACTLib.Logger.OnInfo += (category, message) => Helpers.Logger.Info(category, message);
             TACTLib.Logger.OnDebug += (category, message) => Helpers.Logger.Debug(category, message);
             TACTLib.Logger.OnWarn += (category, message) => Helpers.Logger.Warn(category, message);

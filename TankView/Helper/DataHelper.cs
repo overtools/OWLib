@@ -187,7 +187,7 @@ namespace TankView.Helper {
             return string.Join("\n", subtitle.m_strings);
         }
 
-        internal static Dictionary<ulong, ulong[]> GenerateVoicelineConversationMapping(Dictionary<ushort, HashSet<ulong>> trackedFiles, ProgressWorker worker) {
+        internal static Dictionary<ulong, ulong[]> GenerateVoicelineConversationMapping(IReadOnlyDictionary<ushort, HashSet<ulong>> trackedFiles, ProgressWorker worker) {
             var @return = new Dictionary<ulong, ulong[]>();
             var size = trackedFiles[0x5F].Count;
             var i = 0;
@@ -205,7 +205,7 @@ namespace TankView.Helper {
             return @return;
         }
 
-        internal static Dictionary<ulong, string> GenerateVoicelineSubtitleMapping(Dictionary<ushort, HashSet<ulong>> trackedFiles, ProgressWorker worker) {
+        internal static Dictionary<ulong, string> GenerateVoicelineSubtitleMapping(IReadOnlyDictionary<ushort, HashSet<ulong>> trackedFiles, ProgressWorker worker) {
             var @return = new Dictionary<ulong, string>();
             var size = trackedFiles[0x5F].Count;
             var i = 0;
