@@ -290,11 +290,19 @@ namespace TankView.ViewModel {
                 typeMap.Add(asset.Key);
             }
 
-            worker?.ReportProgress(0, "Generating Conversation mappings...");
-            ConversationVoiceLineMapping = DataHelper.GenerateVoicelineConversationMapping(TrackedFiles, worker);
+            try {
+                worker?.ReportProgress(0, "Generating Conversation mappings...");
+                ConversationVoiceLineMapping = DataHelper.GenerateVoicelineConversationMapping(TrackedFiles, worker);
+            } catch (Exception ex) {
+                Logger.Error("TankView", $"Failed generating conversation mapping!\n{ex}");
+            }
 
-            worker?.ReportProgress(0, "Generating Voiceline mappings...");
-            VoicelineSubtitleMapping = DataHelper.GenerateVoicelineSubtitleMapping(TrackedFiles, worker);
+            try {
+                worker?.ReportProgress(0, "Generating Voiceline mappings...");
+                VoicelineSubtitleMapping = DataHelper.GenerateVoicelineSubtitleMapping(TrackedFiles, worker);
+            } catch (Exception ex) {
+                Logger.Error("TankView", $"Failed generating voiceline mapping mapping!\n{ex}");
+            }
 
             worker?.ReportProgress(0, "Building file tree...");
 

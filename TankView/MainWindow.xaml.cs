@@ -251,14 +251,12 @@ namespace TankView {
 
             Task.Run(delegate {
                 try {
-                    var flags = FlagParser.Parse<ToolFlags>();
-                    if (flags != null) {
-                        ClientArgs.TextLanguage = flags.Language;
-                        ClientArgs.SpeechLanguage = flags.SpeechLanguage;
-                        ClientArgs.Online = flags.Online;
-                    } else {
-                        ClientArgs.Online = false;
-                    }
+                    var flags = FlagParser.Parse<ToolFlags>() ?? new ToolFlags();
+                    DataTool.Program.TryFetchLocaleFromRegistry(flags);
+
+                    ClientArgs.TextLanguage = flags.Language;
+                    ClientArgs.SpeechLanguage = flags.SpeechLanguage;
+                    ClientArgs.Online = flags.Online;
 
                     DataTool.Program.Client = new ClientHandler(path, ClientArgs);
                     LoadHelper.PostLoad(DataTool.Program.Client);
