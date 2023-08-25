@@ -48,6 +48,7 @@ class DebugInstallIssues : ITool {
         var dynamicContainer = (ContainerHandler) client.ContainerHandler!;
         
         int overwatchAssetCount = 0;
+        var nonResidentOverwatchAssetCount = 0;
         var dataFileInfo = new Dictionary<int, DataFileInfo>();
         {
             foreach (var dataFileIndex in dynamicContainer.GetDataFileIndices()) {
@@ -134,6 +135,21 @@ class DebugInstallIssues : ITool {
                         ckeyMap.TryGetValue(sample.m_ckey, out sample.m_guid);
                     }
                 }
+
+                foreach (var guid in tankHandler.m_assets.Keys) {
+                    var cmf = tankHandler.GetContentManifestForAsset(guid);
+                    var asset = cmf.GetHashData(guid);
+
+                    if (client.EncodingHandler.TryGetEncodingEntry(asset.ContentKey, out var eKeys)) {
+                        var found = false;
+                        foreach (var eKey in eKeys) {
+                            if (!client.ContainerHandler.CheckResidency(eKey)) continue;
+                            found = true;
+                            break;
+                        }
+                        if (!found) nonResidentOverwatchAssetCount++;
+                    }
+                }
             }
         }
         
@@ -178,6 +194,7 @@ class DebugInstallIssues : ITool {
         output.WriteLine($"Total Bad Count With BLTE Magic: {dataFileInfo.Values.Sum(x =>
             x.m_allBadSamples.Count(y => y.m_fourCC == BLTEStream.Magic))}"); 
         output.WriteLine($"Total Overwatch Asset Count: {overwatchAssetCount}"); 
+        output.WriteLine($"Total NON-RESIDENT Overwatch Asset Count: {nonResidentOverwatchAssetCount}"); 
         output.WriteLine($"Total Bad Overwatch Asset Count: {dataFileInfo.Values.Sum(x => 
             x.m_allBadSamples.Count(y => y.m_guid != 0))}");
         output.WriteLine();
