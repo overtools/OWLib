@@ -9,19 +9,7 @@ namespace DataTool.Flag {
         public abstract bool Validate();
     }
 
-    public abstract class ILocaleFlags : ICLIFlags {
-        [CLIFlag(Default = null, Flag = "language", Help = "Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "thTH", "trTR", "zhCN", "zhTW" })]
-        [Alias("L")]
-        public string Language;
-
-        [CLIFlag(Default = null, Flag = "speech-language", Help = "Speech Language to load", NeedsValue = true, Valid = new[] { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "thTH", "trTR", "zhCN", "zhTW" })]
-        [Alias("T")]
-        public string SpeechLanguage;
-
-        public abstract override bool Validate();
-    }
-
-    public abstract class IToolFlags : ILocaleFlags {
+    public abstract class IToolFlags : ICLIFlags {
         [CLIFlag(Flag = "directory", Positional = 0, NeedsValue = true, Required = true, Help = "Overwatch Install Directory")]
         public string OverwatchDirectory;
 

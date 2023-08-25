@@ -258,7 +258,7 @@ namespace DataTool {
         public static void InitStorage(bool online = false) { // turnin offline off again, can cause perf issues with bundle hack
             // Attempt to load language via registry, if they were already provided via flags then this won't do anything
             if (!Flags.NoLanguageRegistry)
-                TryFetchLocaleFromRegistry(Flags);
+                TryFetchLocaleFromRegistry();
 
             Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
 
@@ -347,29 +347,26 @@ namespace DataTool {
             }*/
         }
 
-        public static void TryFetchLocaleFromRegistry(ILocaleFlags flags) {
+        private static void TryFetchLocaleFromRegistry() {
             try {
                 if (!OperatingSystem.IsWindows()) {
                     return;
                 }
-
-                if (flags.Language == null) {
+                if (Flags.Language == null) {
                     var textLanguage = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Launch Options\Pro", "LOCALE", null);
-                    Logger.Debug("Core", "Got text language from registry: {0}", textLanguage);
                     if (!string.IsNullOrWhiteSpace(textLanguage)) {
                         if (ValidLanguages.Contains(textLanguage))
-                            flags.Language = textLanguage;
+                            Flags.Language = textLanguage;
                         else
                             Logger.Error("Core", $"Invalid text language found via registry: {textLanguage}. Ignoring.");
                     }
                 }
 
-                if (flags.SpeechLanguage == null) {
+                if (Flags.SpeechLanguage == null) {
                     var speechLanguage = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Launch Options\Pro", "LOCALE_AUDIO", null);
-                    Logger.Debug("Core", "Got speech language from registry: {0}", speechLanguage);
                     if (!string.IsNullOrWhiteSpace(speechLanguage)) {
                         if (ValidLanguages.Contains(speechLanguage))
-                            flags.SpeechLanguage = speechLanguage;
+                            Flags.SpeechLanguage = speechLanguage;
                         else
                             Logger.Error("Core", $"Invalid speech language found via registry: {speechLanguage}. Ignoring.");
                     }
