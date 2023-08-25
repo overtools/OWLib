@@ -77,7 +77,7 @@ namespace DataTool.DataModels.Hero {
             Color = GalleryColor.ToHex();
             sRGBColor = GalleryColor.ToNonLinear().ToHex();
             SupportsAi = hero.m_906C3711 > 0;
-            IsHero = true; // todo s4: removed/changed
+            IsHero = hero.m_64DC571F > 0;
 
             if (hero.m_heroLoadout != null) {
                 Loadouts = new List<LoadoutLite>();
