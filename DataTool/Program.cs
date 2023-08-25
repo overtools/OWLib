@@ -260,8 +260,6 @@ namespace DataTool {
             if (!Flags.NoLanguageRegistry)
                 TryFetchLocaleFromRegistry();
 
-            Flags.Language ??= "enUS";
-            Flags.SpeechLanguage ??= "enUS";
             Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
 
             var args = new ClientCreateArgs {
@@ -269,7 +267,6 @@ namespace DataTool {
                 TextLanguage = Flags.Language,
                 HandlerArgs = new ClientCreateArgs_Tank {ManifestRegion = Flags.RCN ? ProductHandler_Tank.REGION_CN : ProductHandler_Tank.REGION_DEV},
                 Online = online,
-
                 RemoteKeyringUrl = "https://raw.githubusercontent.com/overtools/OWLib/master/TankLib/Overwatch.keyring"
             };
 
@@ -285,10 +282,11 @@ namespace DataTool {
 
             if (Client.AgentProduct != null) {
                 var clientLanguages = Client.AgentProduct.Settings.Languages.Select(x => x.Language).ToArray();
+                var clientLanguagesStr = string.Join(", ", clientLanguages);
                 if (!clientLanguages.Contains(args.TextLanguage))
-                    Logger.Warn("Core", "Battle.Net Agent reports that text language {0} is not installed.", args.TextLanguage);
+                    Logger.Warn("Core", "Battle.Net Agent reports that text language {0} is not installed. Tool likely will not work correctly. Installed languages: {1}", args.TextLanguage, clientLanguagesStr);
                 else if (!clientLanguages.Contains(args.SpeechLanguage))
-                    Logger.Warn("Core", "Battle.Net Agent reports that speech language {0} is not installed.", args.SpeechLanguage);
+                    Logger.Warn("Core", "Battle.Net Agent reports that speech language {0} is not installed. Installed languages: {1}", args.TextLanguage, clientLanguagesStr);
             }
 
             TankHandler = Client.ProductHandler as ProductHandler_Tank;
@@ -296,7 +294,7 @@ namespace DataTool {
                 Logger.Error("Core", $"Not a valid Overwatch installation (detected product: {Client.Product})");
                 return;
             }
-            
+
             // todo: these version checks don't really need to even exist anymore but whatever, maybe useful just for history - js
             Client.InstallationInfo.Values.TryGetValue("Version", out var clientVersion);
             string buildVersion;
@@ -308,7 +306,7 @@ namespace DataTool {
 
             // Handle cases where build version contains letters e.g. 1.71.1.0.97745a
             buildVersion = Regex.Replace(buildVersion ?? "", "[A-Za-z ]", "");
-            
+
             if (!uint.TryParse(buildVersion, out BuildVersion))
                 Logger.Warn("Core", "Could not parse build version from {0}", clientVersion ?? "null");
             else if (BuildVersion < 39028)
@@ -336,7 +334,7 @@ namespace DataTool {
 
         public static void InitKeys() {
             Logger.Info("Core", "Checking ResourceKeys");
-            
+
             // todo: broken for now..
             // surely fix
             /*foreach (var key in TrackedFiles[0x90]) {
