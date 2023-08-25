@@ -367,8 +367,8 @@ namespace TankView.ViewModel {
             }
 
             if (size == 0 && guid == 0) {
-                if (Client.EncodingHandler.TryGetEncodingEntry(ckey, out var info)) {
-                    size = info.GetSize();
+                if (Client.EncodingHandler!.TryGetContentSize(ckey, out var contentSize)) {
+                    size = (int)contentSize;
                 }
             }
 

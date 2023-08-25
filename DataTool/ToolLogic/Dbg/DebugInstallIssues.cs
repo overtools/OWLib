@@ -95,9 +95,11 @@ class DebugInstallIssues : ITool {
 
             {
                 var ekeyMap = new Dictionary<EKey, CKey>(CASCKeyComparer.Instance);
-                foreach (var ckey in client.EncodingHandler.GetCKeys()) {
-                    if (!client.EncodingHandler.TryGetEncodingEntry(ckey, out var entry)) continue;
-                    ekeyMap.TryAdd(entry.EKey.AsTruncated(), entry.CKey);
+                foreach (var ckey in client.EncodingHandler!.GetCKeys()) {
+                    if (!client.EncodingHandler.TryGetEncodingEntry(ckey, out var eKeys)) continue;
+                    foreach (var ekey in eKeys) {
+                        ekeyMap.TryAdd(ekey.AsTruncated(), ckey);
+                    }
                 }
 
                 foreach (var dataFile in dataFileInfo.Values) {

@@ -214,7 +214,7 @@ namespace DataTool {
         }
 
         private static void InitTankSettings() {
-            Logger.ShowDebug = Debugger.IsAttached;
+            Logger.ShowDebug |= Debugger.IsAttached;
         }
 
         public static void InitMisc() {
