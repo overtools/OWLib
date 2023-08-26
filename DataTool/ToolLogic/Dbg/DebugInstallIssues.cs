@@ -55,7 +55,7 @@ class DebugInstallIssues : ITool {
                 dataFileInfo.Add(dataFileIndex, new DataFileInfo());
             }
 
-            foreach (var (eKey, localIndexEntry) in dynamicContainer.IndexEntries) {
+            foreach (var (eKey, localIndexEntry) in dynamicContainer.GetIndexEntries()) {
                 var dataFile = dataFileInfo[localIndexEntry.Index];
 
                 if (!dynamicContainer.OpenIndexEntryForDebug(localIndexEntry, out var header, out var fourCC)) {
@@ -148,6 +148,8 @@ class DebugInstallIssues : ITool {
                             break;
                         }
                         if (!found) nonResidentOverwatchAssetCount++;
+                    } else {
+                        // bundled. its okay
                     }
                 }
             }

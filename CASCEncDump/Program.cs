@@ -172,7 +172,7 @@ namespace CASCEncDump {
 
             var dynamicContainer = (ContainerHandler)Client.ContainerHandler;
             using (StreamWriter writer = new StreamWriter($"{BuildVersion}.idxhashes")) {
-                foreach (KeyValuePair<TruncatedKey, ContainerHandler.IndexEntry> entry in dynamicContainer.IndexEntries) {
+                foreach (KeyValuePair<TruncatedKey, ContainerHandler.IndexEntry> entry in dynamicContainer.GetIndexEntries()) {
                     string md5 = entry.Key.ToHexString();
 
                     writer.WriteLine(md5);
@@ -199,7 +199,7 @@ namespace CASCEncDump {
             }
 
             var dynamicContainer = (ContainerHandler)Client.ContainerHandler;
-            foreach (KeyValuePair<TruncatedKey, ContainerHandler.IndexEntry> indexEntry in dynamicContainer.IndexEntries) {
+            foreach (KeyValuePair<TruncatedKey, ContainerHandler.IndexEntry> indexEntry in dynamicContainer.GetIndexEntries()) {
                 string md5 = indexEntry.Key.ToHexString();
 
                 if (!eKeys.Contains(indexEntry.Key)) {
