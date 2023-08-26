@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using TankLib.Math;
@@ -15,8 +16,18 @@ namespace TankLib {
 
         [Flags]
         public enum InfoTableFlags : ushort {
-            // todo
+            F1 = 0x1,
+            F2 = 0x2,
+            F4 = 0x4,
+            F8 = 0x8,
+            F16 = 0x10,
+            F32 = 0x20,
+            F64 = 0x40,
+            F128 = 0x80,
+            NewScaleCompression = 0x100, // todo: implement me
             LegacyPositionFormat = 0x200,
+            NewRotationCompression = 0x400,
+            F2048 = 0x800
         }
 
         /// <summary>Animation header</summary>
@@ -156,18 +167,19 @@ namespace TankLib {
 
                 reader.BaseStream.Position = Header.BoneListOffset;
                 BoneList = reader.ReadArray<int>(Header.BoneCount);
-
-                reader.BaseStream.Position = Header.InfoTableOffset;
-                InfoTables = new InfoTable[Header.BoneCount];
+                
                 BoneAnimations = new BoneAnimation[Header.BoneCount];
 
                 // todo: read data for non-bone animations
 
+                var nextTableOffset = reader.BaseStream.Position;
+                reader.BaseStream.Position = Header.InfoTableOffset;
+                InfoTables = reader.ReadArray<InfoTable>(Header.BoneCount);
+
                 for (int boneIndex = 0; boneIndex < Header.BoneCount; boneIndex++) {
-                    long streamPos = reader.BaseStream.Position;
-                    InfoTable infoTable = reader.Read<InfoTable>();
-                    long afterTablePos = reader.BaseStream.Position;
-                    InfoTables[boneIndex] = infoTable;
+                    var streamPos = nextTableOffset;
+                    nextTableOffset += Unsafe.SizeOf<InfoTable>();
+                    var infoTable = InfoTables[boneIndex];
 
                     long scaleIndicesPos = (long)infoTable.ScaleIndicesOffset * 4 + streamPos;
                     long positionIndicesPos = (long)infoTable.PositionIndicesOffset * 4 + streamPos;
@@ -195,34 +207,89 @@ namespace TankLib {
                     }
 
                     reader.BaseStream.Position = positionDataPos;
-                    bool useNewFormat = (infoTable.Flags & InfoTableFlags.LegacyPositionFormat) == 0; // If this flag isn't set, use the new 10 bytes format, otherwise use the 12 bytes one
+                    bool useNewPositionFormat = (infoTable.Flags & InfoTableFlags.LegacyPositionFormat) == 0; // If this flag isn't set, use the new 10 bytes format, otherwise use the 12 bytes one
                     for (int j = 0; j < infoTable.PositionCount; j++) {
                         int frame = System.Math.Abs(positionIndices[j]) % InfoTableSize;
-                        boneAnimation.Positions[frame] = ReadPosition(reader, useNewFormat);
+                        boneAnimation.Positions[frame] = ReadPosition(reader, useNewPositionFormat);
                     }
-
+                    
                     reader.BaseStream.Position = rotationDataPos;
+                    bool useNewRotationFormat = infoTable.Flags.HasFlag(InfoTableFlags.NewRotationCompression);
                     for (int j = 0; j < infoTable.RotationCount; j++) {
                         int frame = System.Math.Abs(rotationIndices[j]) % InfoTableSize;
-                        boneAnimation.Rotations[frame] = ReadRotation(reader);
+                        boneAnimation.Rotations[frame] = ReadRotation(reader, useNewRotationFormat);
                     }
-
-                    reader.BaseStream.Position = afterTablePos;
+                    
+                    //if (infoTable.PositionCount > 0) {
+                    //    Console.Out.WriteLine($"bytes per position: {(rotationDataPos-positionDataPos) / (float)infoTable.PositionCount}: {useNewPositionFormat}");
+                    //}
+                    
+                    //if (infoTable.PositionCount > 0 && boneIndex < Header.BoneCount-1 && infoTable.RotationCount > 1) {
+                    //    var nextTable = infoTables[boneIndex + 1];
+                    //    var nextScalesOffset = (long)nextTable.ScaleIndicesOffset * 4 + nextTableOffset;
+                    //    Console.Out.WriteLine($"bytes per rotation: {(nextScalesOffset-rotationDataPos) / (float)infoTable.RotationCount}: {useNewRotationFormat}");
+                    //}
                 }
             }
         }
+        
+        private static teQuat ReadRotation(BinaryReader reader, bool newFormat) {
+            if (newFormat) {
+                ushort a = reader.ReadUInt16();
+                ushort b = reader.ReadUInt16();
+                ushort c = reader.ReadUInt16();
+                ushort d = reader.ReadUInt16();
+                return UnpackNewRotation(a, b, c, d);
+            } else {
+                ushort a = reader.ReadUInt16();
+                ushort b = reader.ReadUInt16();
+                ushort c = reader.ReadUInt16();
+                return UnpackOldRotation(a, b, c);
+            }
+        }
+        
+        private static teQuat UnpackNewRotation(ushort a, ushort b, ushort c, ushort d) {
+            var aPre1 = a << 5 | (d & 0x1F);
+            var bPre1 = b << 4 | ((d >> 5) & 0xF);
+            var cPre1 = c << 5 | ((d >> 9) & 0x1F);
+            
+            var aDecoded = 0.5f * 1.41421f * (aPre1 - 0x100000) / 0x100000;
+            var bDecoded = 0.5f * 1.41421f * (bPre1 - 0x80000) / 0x80000;
+            var cDecoded = 0.5f * 1.41421f * (cPre1 - 0x100000) / 0x100000;
+            var dDecoded = CalcRotationW(aDecoded, bDecoded, cDecoded);
+            
+            var axis = d >> 14;
+            return QuatFromAxisOrder(axis, aDecoded, bDecoded, cDecoded, dDecoded);
+        }
+        
+        private static teQuat UnpackOldRotation(ushort a, ushort b, ushort c) {
+            int axis1 = a >> 15;
+            int axis2 = b >> 15;
+            int axis = axis2 << 1 | axis1;
 
-        /// <summary>
-        /// Read rotation value
-        /// </summary>
-        /// <param name="reader">Source reader</param>
-        /// <returns>Rotation value</returns>
-        private static teQuat ReadRotation(BinaryReader reader) {
-            ushort x = reader.ReadUInt16();
-            ushort y = reader.ReadUInt16();
-            ushort z = reader.ReadUInt16();
+            a = (ushort)(a & 0x7FFF);
+            b = (ushort)(b & 0x7FFF);
 
-            return UnpackRotation(x, y, z);
+            var x = 1.41421f * (a - 0x4000) / 0x8000;
+            var y = 1.41421f * (b - 0x4000) / 0x8000;
+            var z = 1.41421f * (c - 0x8000) / 0x10000;
+            var w = CalcRotationW(x, y, z);
+
+            // Console.Out.WriteLine("Unpack Values: X: {0}, Y: {1}, Z: {2}, W: {3}, Axis: {4}", x, y, z, w, axis);
+
+            return QuatFromAxisOrder(axis, x, y, z, w);
+        }
+
+        private static float CalcRotationW(float x, float y, float z) {
+            return MathF.Pow(1.0f - MathF.Min(x * x + y * y + z * z, 1), 0.5f);
+        }
+
+        private static teQuat QuatFromAxisOrder(int axis, float x, float y, float z, float w) {
+            if (axis == 0) return new teQuat(w, x, y, z);
+            if (axis == 1) return new teQuat(x, w, y, z);
+            if (axis == 2) return new teQuat(x, y, w, z);
+            if (axis == 3) return new teQuat(x, y, z, w);
+            throw new Exception($"Unknown Axis detected! Axis: {axis}");
         }
 
         /// <summary>
@@ -263,45 +330,6 @@ namespace TankLib {
             ushort z = reader.ReadUInt16();
 
             return UnpackScale(x, y, z);
-        }
-
-        /// <summary>
-        /// Unpack rotation value
-        /// </summary>
-        /// <param name="a">Packed A component</param>
-        /// <param name="b">Packed B component</param>
-        /// <param name="c">Packed C component</param>
-        /// <returns>Unpacked rotation value</returns>
-        private static teQuat UnpackRotation(ushort a, ushort b, ushort c) {
-            teQuat q = new teQuat();
-
-            int axis1 = a >> 15;
-            int axis2 = b >> 15;
-            int axis = axis2 << 1 | axis1;
-
-            a = (ushort)(a & 0x7FFF);
-            b = (ushort)(b & 0x7FFF);
-
-            double x = 1.41421 * (a - 0x4000) / 0x8000;
-            double y = 1.41421 * (b - 0x4000) / 0x8000;
-            double z = 1.41421 * (c - 0x8000) / 0x10000;
-            double w = System.Math.Pow(1.0 - x * x - y * y - z * z, 0.5);
-
-            // Console.Out.WriteLine("Unpack Values: X: {0}, Y: {1}, Z: {2}, W: {3}, Axis: {4}", x, y, z, w, axis);
-
-            if (axis == 0) {
-                q = new teQuat(w, x, y, z);
-            } else if (axis == 1) {
-                q = new teQuat(x, w, y, z);
-            } else if (axis == 2) {
-                q = new teQuat(x, y, w, z);
-            } else if (axis == 3) {
-                q = new teQuat(x, y, z, w);
-            } else {
-                Console.Out.WriteLine($"Unknown Axis detected! Axis: {axis}");
-            }
-
-            return q;
         }
 
         /// <summary>
