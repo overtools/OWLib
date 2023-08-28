@@ -285,31 +285,7 @@ namespace DataTool.SaveLogic {
                     }
                 }
 
-                var gameMode = GetInstance<STUGameMode>(variantModeInfo.m_gamemode);
-                var gameModeName = GetCleanString(gameMode?.m_displayName) ?? "Unknown Mode";
-                if (gameModeName == "Calypso HeroMode") gameModeName = "HeroMode";
-
-                var envName = GetCleanString(variantResultingMap.m_0342E00E.m_D978BBDC);
-                if (envName == "Castle - Eichenwalde (Halloween) Junkenstein 2") {
-                    envName = "Wrath of the Bride";
-                } else if (string.IsNullOrEmpty(envName)) {
-                    envName = $"{teResourceGUID.Index(variantModeInfo.m_A9253C68):X}";
-                }
-
-                var variantName = $"{envName} - {gameModeName}";
-                if (variantModeInfo.m_216EA6DA != 0) {
-                    var mission = GetInstance<STU_8B0E97DC>(variantModeInfo.m_216EA6DA);
-                    var missionName = GetCleanString(mission?.m_0EDCE350);
-                    if (missionName != null) {
-                        variantName += $" - {missionName}";
-                    } else {
-                        variantName += $" - {variantModeInfo.m_216EA6DA}";
-                    }
-                }
-                if (variantModeInfo.m_celebration != 0) {
-                    variantName += $" - {variantModeInfo.m_celebration}";
-                }
-                variantName = GetValidFilename(variantName);
+                string variantName = GetVariantName(variantModeInfo, variantResultingMap);
 
                 FindLogic.Combo.Find(info, variantResultingMap.m_0342E00E?.m_loadingScreen); // big
                 FindLogic.Combo.Find(info, variantResultingMap.m_0342E00E?.m_smallMapIcon);
@@ -324,8 +300,8 @@ namespace DataTool.SaveLogic {
                 // cant find the stim in this voice set...
 
                 info.SetEffectVoiceSet(variantResultingMap.m_0342E00E?.m_announcerWelcome, variantResultingMap.m_0342E00E?.m_7F5B54B2);
-                info.SetEffectName(variantResultingMap.m_0342E00E?.m_announcerWelcome, $"AnnouncerWelcome - {envName}");
-                info.SetEffectName(variantResultingMap.m_0342E00E?.m_musicTease, $"MusicTease - {envName}");
+                info.SetEffectName(variantResultingMap.m_0342E00E?.m_announcerWelcome, $"AnnouncerWelcome - {variantName}");
+                info.SetEffectName(variantResultingMap.m_0342E00E?.m_musicTease, $"MusicTease - {variantName}");
 
                 teMapPlaceableData placeableModelGroups = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.MODEL_GROUP);
                 teMapPlaceableData placeableSingleModels = GetPlaceableData(mapHeader, variantGUID, Enums.teMAP_PLACEABLE_TYPE.SINGLE_MODEL);
@@ -403,6 +379,37 @@ namespace DataTool.SaveLogic {
             Combo.SaveAllSoundFiles(flags, Path.Combine(mapPath, "Sound"), context);
 
             LoudLog("\tDone");
+        }
+
+        public static string GetVariantName(STU_71B2D30A variantModeInfo, STU_7FB10A24 variantResultingMap) {
+            var gameMode = GetInstance<STUGameMode>(variantModeInfo.m_gamemode);
+            var gameModeName = GetCleanString(gameMode?.m_displayName) ?? "Unknown Mode";
+            if (gameModeName == "Calypso HeroMode") gameModeName = "HeroMode";
+
+            var envName = GetCleanString(variantResultingMap.m_0342E00E.m_D978BBDC);
+            if (envName == "Castle - Eichenwalde (Halloween) Junkenstein 2") {
+                envName = "Wrath of the Bride";
+            } else if (string.IsNullOrEmpty(envName)) {
+                envName = $"{teResourceGUID.Index(variantModeInfo.m_A9253C68):X}";
+            }
+
+            var variantName = $"{envName} - {gameModeName}";
+            if (variantModeInfo.m_216EA6DA != 0) {
+                var mission = GetInstance<STU_8B0E97DC>(variantModeInfo.m_216EA6DA);
+                var missionName = GetCleanString(mission?.m_0EDCE350);
+                if (missionName != null) {
+                    variantName += $" - {missionName}";
+                } else {
+                    variantName += $" - {variantModeInfo.m_216EA6DA}";
+                }
+            }
+
+            if (variantModeInfo.m_celebration != 0) {
+                variantName += $" - {variantModeInfo.m_celebration}";
+            }
+
+            variantName = GetValidFilename(variantName);
+            return variantName;
         }
 
         public static teMapPlaceableData GetPlaceableData(STUMapHeader map, ulong variantGUID, Enums.teMAP_PLACEABLE_TYPE type) {
