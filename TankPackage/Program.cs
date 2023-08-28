@@ -88,7 +88,7 @@ namespace TankPackage
 
             ApplicationPackageManifest apm = TankHandler.m_packageManifest;
             foreach (ContentManifestFile contentManifest in new [] {TankHandler.m_textContentManifest, TankHandler.m_speechContentManifest}) {
-                var ids = contentManifest.m_indexMap.Where(x => guids.Length == 0 || guids.Contains(teResourceGUID.Type(x.Key))).Select(x => x.Key);
+                var ids = contentManifest.m_hashList.Where(x => guids.Length == 0 || guids.Contains(teResourceGUID.Type(x.GUID))).Select(x => x.GUID);
                 Save(output, apm.m_header.m_checksum, ids, contentManifest);
             }
         }
