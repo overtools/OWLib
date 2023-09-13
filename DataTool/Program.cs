@@ -13,8 +13,6 @@ using DataTool.SaveLogic;
 using DataTool.ToolLogic.Extract;
 using Microsoft.Win32;
 using TankLib;
-using TankLib.STU;
-using TankLib.STU.Types;
 using TankLib.TACT;
 using TACTLib.Client;
 using TACTLib.Client.HandlerArgs;
@@ -22,7 +20,6 @@ using TACTLib.Core.Product.Tank;
 using TACTLib.Exceptions;
 using TankLib.Helpers;
 using static DataTool.Helper.Logger;
-using static DataTool.Helper.STUHelper;
 using Logger = TankLib.Helpers.Logger;
 using static DataTool.Helper.SpellCheckUtils;
 
@@ -31,13 +28,12 @@ namespace DataTool {
         public static ClientHandler Client;
         public static ProductHandler_Tank TankHandler;
         public static Dictionary<ushort, HashSet<ulong>> TrackedFiles;
-
         public static ToolFlags Flags;
         public static uint BuildVersion;
         public static bool IsPTR => Client?.ProductCode == "prot";
         public static bool IsBeta => Client?.ProductCode == "prob";
 
-        public static string[] ValidLanguages = { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "thTH", "trTR", "zhCN", "zhTW" };
+        public static readonly string[] ValidLanguages = { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "thTH", "trTR", "zhCN", "zhTW" };
 
         public static void Main() {
             InitTankSettings();
@@ -66,11 +62,13 @@ namespace DataTool {
                 Logger.Error("Core", "You need to replace {overwatch_directory} with the location you have Overwatch installed to. It can be found in Battle.net. Remember to surround it with quotes");
                 return;
             }
+
             // todo: this code cant detect e.g `"c:\mypath\" list-heroes` because flags validation fails
             if (Flags.OverwatchDirectory.EndsWith("\"")) {
                 Logger.Error("Core", "The Overwatch directory you passed will confuse the tool! Please remove the last \\ character");
                 return;
             }
+
             if (Flags.OverwatchDirectory.StartsWith("{") || Flags.OverwatchDirectory.EndsWith("}")) {
                 Logger.Error("Core", "Do not include { or } in the Overwatch directory you pass to the tool. The path should be surrounded with quotation marks only");
                 return;
@@ -105,56 +103,23 @@ namespace DataTool {
                 return;
             }
 
-            ITool targetTool = null;
-            ICLIFlags targetToolFlags = null;
-            ToolAttribute targetToolAttributes = null;
-
-            #region Tool Activation
-
-            foreach (var type in tools) {
-                var attribute = type.GetCustomAttribute<ToolAttribute>();
-                var keywordMatch = string.Equals(attribute.Keyword, Flags.Mode, StringComparison.InvariantCultureIgnoreCase);
-                var aliasMatch = attribute.Aliases?.Any(x => string.Equals(x, Flags.Mode, StringComparison.InvariantCultureIgnoreCase)) ?? false;
-
-                if (!keywordMatch && !aliasMatch) {
-                    continue;
-                }
-
-                targetTool = Activator.CreateInstance(type) as ITool;
-                targetToolAttributes = attribute;
-
-                if (attribute.CustomFlags != null) {
-                    var flags = attribute.CustomFlags;
-                    if (typeof(ICLIFlags).IsAssignableFrom(flags))
-                        targetToolFlags = typeof(FlagParser).GetMethod(nameof(FlagParser.Parse), new Type[] { })
-                                              ?.MakeGenericMethod(flags)
-                                              .Invoke(null, null) as ICLIFlags;
-                }
-
-                break;
-            }
-
-            if (targetToolFlags == null && targetTool != null) {
-                return;
-            }
-
+            // find the current tool/mode to run
+            var (targetTool, targetToolFlags, targetToolAttributes) = GetToolActivation(tools);
             if (targetTool == null) {
-                FlagParser.Help<ToolFlags>(false, new Dictionary<string, string>());
-                PrintHelp(false, tools);
                 return;
             }
-
-            #endregion
 
             if (targetToolFlags is ExtractFlags extractFlags) {
                 if (extractFlags.OutputPath.EndsWith("\"")) {
                     Logger.Error("Core", "The output directory you passed will confuse the tool! Please remove the last \\ character");
                     return;
                 }
+
                 if (extractFlags.OutputPath == "{output_directory}") {
                     Logger.Error("Core", "You need to replace {output_directory} with where you want the output files to go. Can just be something like \"out\" and a folder will be created next to the tool");
                     return;
                 }
+
                 if (extractFlags.OutputPath.StartsWith("{") || extractFlags.OutputPath.EndsWith("}")) {
                     Logger.Error("Core", "Do not include { or } in the output directory you pass to the tool. The path should be surrounded with quotation marks only");
                     return;
@@ -171,12 +136,12 @@ namespace DataTool {
                 } catch (FileNotFoundException) {
                     // file not found exceptions thrown by TACTLib should already include good exception info, we don't need to log anything here
                     throw;
-                }
-                catch {
+                } catch {
                     Logger.Log24Bit(ConsoleSwatch.XTermColor.OrangeRed, true, Console.Error, "CASC",
                                     "=================\nError initializing CASC!\n" +
                                     "Please Scan & Repair your game, launch it for a minute, and try the tools again before reporting a bug!\n" +
                                     "========================");
+
                     throw;
                 }
 
@@ -200,10 +165,12 @@ namespace DataTool {
             ShutdownMisc();
         }
 
+
         private static void HookConsole() {
             AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
             Process.GetCurrentProcess()
                 .EnableRaisingEvents = true;
+
             AppDomain.CurrentDomain.ProcessExit += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
             Console.CancelKeyPress += (sender, @event) => Console.ForegroundColor = ConsoleColor.Gray;
             Console.OutputEncoding = Encoding.UTF8;
@@ -261,7 +228,7 @@ namespace DataTool {
             var args = new ClientCreateArgs {
                 SpeechLanguage = Flags.SpeechLanguage,
                 TextLanguage = Flags.Language,
-                HandlerArgs = new ClientCreateArgs_Tank {ManifestRegion = Flags.RCN ? ProductHandler_Tank.REGION_CN : ProductHandler_Tank.REGION_DEV},
+                HandlerArgs = new ClientCreateArgs_Tank { ManifestRegion = Flags.RCN ? ProductHandler_Tank.REGION_CN : ProductHandler_Tank.REGION_DEV },
                 Online = online,
                 RemoteKeyringUrl = "https://raw.githubusercontent.com/overtools/OWLib/master/TankLib/Overwatch.keyring"
             };
@@ -348,6 +315,7 @@ namespace DataTool {
                 if (!OperatingSystem.IsWindows()) {
                     return;
                 }
+
                 if (Flags.Language == null) {
                     var textLanguage = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Launch Options\Pro", "LOCALE", null);
                     if (!string.IsNullOrWhiteSpace(textLanguage)) {
@@ -402,6 +370,9 @@ namespace DataTool {
             }
         }
 
+        #region Tool Initialization
+
+        // returns all the tools/modes that are available
         public static HashSet<Type> GetTools() {
             var tools = new HashSet<Type>();
             {
@@ -418,9 +389,53 @@ namespace DataTool {
                     tools.Add(tt);
                 }
             }
+
             return tools;
         }
 
+        // returns the tool/mode that should be run based on the flags
+        private static (ITool targetTool, ICLIFlags targetToolFlags, ToolAttribute targetToolAttributes) GetToolActivation(HashSet<Type> tools) {
+            ITool targetTool = null;
+            ICLIFlags targetToolFlags = null;
+            ToolAttribute targetToolAttributes = null;
+
+            foreach (var type in tools) {
+                var attribute = type.GetCustomAttribute<ToolAttribute>();
+                var keywordMatch = string.Equals(attribute.Keyword, Flags.Mode, StringComparison.InvariantCultureIgnoreCase);
+                var aliasMatch = attribute.Aliases?.Any(x => string.Equals(x, Flags.Mode, StringComparison.InvariantCultureIgnoreCase)) ?? false;
+
+                if (!keywordMatch && !aliasMatch) {
+                    continue;
+                }
+
+                targetTool = Activator.CreateInstance(type) as ITool;
+                targetToolAttributes = attribute;
+
+                if (attribute.CustomFlags != null) {
+                    var flags = attribute.CustomFlags;
+                    if (typeof(ICLIFlags).IsAssignableFrom(flags))
+                        targetToolFlags = typeof(FlagParser).GetMethod(nameof(FlagParser.Parse), new Type[] { })
+                                              ?.MakeGenericMethod(flags)
+                                              .Invoke(null, null) as ICLIFlags;
+                }
+
+                break;
+            }
+
+            if (targetToolFlags == null && targetTool != null) {
+                return (null, null, null);
+            }
+
+            if (targetTool == null) {
+                FlagParser.Help<ToolFlags>(false, new Dictionary<string, string>());
+                PrintHelp(false, tools);
+                return (null, null, null);
+            }
+
+            return (targetTool, targetToolFlags, targetToolAttributes);
+        }
+
+        // prints the help message for available tools/modes and flags
         private static void PrintHelp(bool full, IEnumerable<Type> eTools) {
             var tools = new List<Type>(eTools);
             tools.Sort(new ToolComparer());
@@ -474,13 +489,16 @@ namespace DataTool {
         }
 
         private static void ToolNameSpellCheck() {
-            //this will happen if mode is not found
+            // this will happen if mode is not found
             if (string.IsNullOrWhiteSpace(Flags?.Mode?.ToLower())) {
                 return;
             }
+
             var symSpell = new SymSpell(50, 6);
             FillToolSpellDict(symSpell);
             SpellCheckString(Flags.Mode.ToLower(), symSpell);
         }
+
+        #endregion
     }
 }
