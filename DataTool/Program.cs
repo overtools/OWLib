@@ -39,10 +39,6 @@ namespace DataTool {
 
         public static string[] ValidLanguages = { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "thTH", "trTR", "zhCN", "zhTW" };
 
-        public static bool ValidKey(ulong key) {
-            return TankHandler.m_assets.ContainsKey(key);
-        }
-
         public static void Main() {
             InitTankSettings();
 
