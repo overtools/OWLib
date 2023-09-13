@@ -67,7 +67,7 @@ namespace DataTool.SaveLogic {
         /// <param name="onlyThisSoundFile">if instance contains multiple voicelines, the guid of the line we're saving</param>
         public static void SaveVoiceLineInstance(
             ICLIFlags flags, string path, FindLogic.Combo.VoiceLineInstanceInfo voiceLineInstanceInfo, string fileNameOverride = null,
-            ulong onlyThisSoundFile = default) {
+            ulong onlyThisSoundFile = default, string fileNamePrefix = null) {
             var subtitlesWithSounds = false; // stores the subtitle alongside the sound file
             var subtitleAsSound = true; // renames the sound file to include the subtitle
 
@@ -81,6 +81,10 @@ namespace DataTool.SaveLogic {
             if (!soundSet.Any()) return;
 
             var soundFileName = fileNameOverride ?? teResourceGUID.AsString(soundSet.First()); // file name override or the guid of the sound
+            if (fileNamePrefix != null) {
+                soundFileName = $"{fileNamePrefix}-{soundFileName}";
+            }
+
             string overrideName = soundFileName; // set this as a fallback if it isn't set below due to subtitles not being saved potentially
 
             // this is pretty jank
@@ -318,12 +322,12 @@ namespace DataTool.SaveLogic {
         private static Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>> GetSVCELines(EffectParser.EffectInfo effectInfo, FindLogic.Combo.ComboInfo info) {
             var output = new Dictionary<ulong, HashSet<FindLogic.Combo.VoiceLineInstanceInfo>>();
             if (effectInfo.SVCEs.Count == 0 || effectInfo.VoiceSet == 0) return output;
-            
+
             if (!info.m_voiceSets.TryGetValue(effectInfo.VoiceSet, out var voiceSetInfo)) {
                 // locale issues ig..
                 return output;
             }
-            
+
             var instances = voiceSetInfo.VoiceLineInstances;
             if (instances == null) return output;
 
@@ -636,7 +640,7 @@ namespace DataTool.SaveLogic {
 
             using Image<Bgra32> alphaImage = converted.GetFrame(0);
             using Image<Bgra32> colorImage = converted.GetFrame(1);
-            
+
             alphaImage.ProcessPixelRows(colorImage, (source, target) => {
                 for (var y = 0; y < texture.Header.Height; ++y) {
                     var sourceRow = source.GetRowSpan(y);
@@ -649,13 +653,13 @@ namespace DataTool.SaveLogic {
 
                         Rgba32 rgba32 = default;
                         sourceRow[x].ToRgba32(ref rgba32);
-                        
+
                         pixel.A = (byte) ((1 - ColorSpaceConverter.ToHsl(rgba32).L) * 0xFF);
                         targetRow[x] = pixel;
                     }
                 }
             });
-            
+
             SaveTexImageSharp(colorImage, filePath, convertType.ToLowerInvariant());
         }
 
@@ -809,7 +813,7 @@ namespace DataTool.SaveLogic {
 
         private static void ConvertTexture(teTexture texture, bool splitMultiSurface, bool createMultiSurfaceSheet, string filePath, string convertType) {
             var tex = new TexDecoder(texture);
-            
+
             if (splitMultiSurface) {
                 for (var surfaceNr = 0; surfaceNr < tex.Surfaces; ++surfaceNr) {
                     using var surface = tex.GetFrame(surfaceNr);
