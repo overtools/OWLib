@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -19,6 +20,7 @@ using TACTLib.Client.HandlerArgs;
 using TACTLib.Core.Product.Tank;
 using TACTLib.Exceptions;
 using TankLib.Helpers;
+using ValveKeyValue;
 using static DataTool.Helper.Logger;
 using Logger = TankLib.Helpers.Logger;
 using static DataTool.Helper.SpellCheckUtils;
@@ -35,9 +37,26 @@ namespace DataTool {
 
         public static readonly string[] ValidLanguages = { "deDE", "enUS", "esES", "esMX", "frFR", "itIT", "jaJP", "koKR", "plPL", "ptBR", "ruRU", "thTH", "trTR", "zhCN", "zhTW" };
 
+        private static readonly Dictionary<string, string> SteamLocaleMapping = new()  {
+            { "german", "deDE" },
+            { "english", "enUS" },
+            { "spanish", "esES" },
+            { "latam", "esMX" },
+            { "french", "frFR" },
+            { "italian", "itIT" },
+            { "japanese", "jaJP" },
+            { "koreana", "koKR" },
+            { "polish", "plPL" },
+            { "portuguese", "ptBR" },
+            { "russian", "ruRU" },
+            { "thai", "thTH" },
+            { "turkish", "trTR" },
+            { "schinese", "zhCN" },
+            { "tchinese", "zhTW" },
+        };
+
         public static void Main() {
             InitTankSettings();
-
             HookConsole();
 
             var tools = GetTools();
@@ -219,9 +238,11 @@ namespace DataTool {
         }
 
         public static void InitStorage(bool online = false) { // turnin offline off again, can cause perf issues with bundle hack
-            // Attempt to load language via registry, if they were already provided via flags then this won't do anything
-            if (!Flags.NoLanguageRegistry)
+            // Attempt to load language via registry or from Steam, if they were already provided via flags then this won't do anything
+            if (!Flags.NoLanguageRegistry) {
+                TryFetchLocaleFromSteamInstall(); // fetch from steam first
                 TryFetchLocaleFromRegistry();
+            }
 
             Logger.Info("CASC", $"Text Language: {Flags.Language} | Speech Language: {Flags.SpeechLanguage}");
 
@@ -319,23 +340,76 @@ namespace DataTool {
                 if (Flags.Language == null) {
                     var textLanguage = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Launch Options\Pro", "LOCALE", null);
                     if (!string.IsNullOrWhiteSpace(textLanguage)) {
-                        if (ValidLanguages.Contains(textLanguage))
+                        if (ValidLanguages.Contains(textLanguage)) {
                             Flags.Language = textLanguage;
-                        else
+                            Logger.Debug("Core", $"Found text language via registry: {textLanguage}");
+                        } else {
                             Logger.Error("Core", $"Invalid text language found via registry: {textLanguage}. Ignoring.");
+                        }
                     }
                 }
 
                 if (Flags.SpeechLanguage == null) {
                     var speechLanguage = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\Blizzard Entertainment\Battle.net\Launch Options\Pro", "LOCALE_AUDIO", null);
                     if (!string.IsNullOrWhiteSpace(speechLanguage)) {
-                        if (ValidLanguages.Contains(speechLanguage))
+                        if (ValidLanguages.Contains(speechLanguage)) {
                             Flags.SpeechLanguage = speechLanguage;
-                        else
+                            Logger.Debug("Core", $"Found speech language via registry: {speechLanguage}");
+                        } else {
                             Logger.Error("Core", $"Invalid speech language found via registry: {speechLanguage}. Ignoring.");
+                        }
                     }
                 }
-            } catch (Exception) {
+            } catch (Exception ex) {
+                Logger.Debug("Core", $"Failed to fetch locale from registry: {ex.Message}");
+                // Ignored
+            }
+        }
+
+        private static void TryFetchLocaleFromSteamInstall() {
+            try {
+                // already have langugae so no need to lookup
+                if (Flags.SpeechLanguage != null && Flags.Language != null) {
+                    return;
+                }
+
+                // see if the directory is a windows symlink and try to get the real path
+                // note: doesn't work on linux/wsl
+                var directoryInfo = new DirectoryInfo(Flags.OverwatchDirectory);
+                var realOverwatchDirectory = directoryInfo.LinkTarget ?? directoryInfo.FullName; // if it's not a symlink, LinkTarget will be null
+
+                Logger.Debug("Core", $"LinkTarget: {directoryInfo.LinkTarget} | FullName: {directoryInfo.FullName}");
+                var appManifestPath = Path.Combine(realOverwatchDirectory, "..", "..", "appmanifest_2357570.acf");
+                if (!File.Exists(appManifestPath)) {
+                    Logger.Debug("Core", $"Failed to find appmanifest at {appManifestPath}");
+                    return;
+                }
+
+                // read the appmanifest and get the language
+                var stream = File.OpenRead(appManifestPath);
+                var appManifest = KVSerializer.Create(KVSerializationFormat.KeyValues1Text).Deserialize(stream);
+                var language = appManifest["UserConfig"]?["language"]?.ToString(CultureInfo.InvariantCulture);
+                if (language == null) {
+                    return;
+                }
+
+                // try to map the steam language to a valid language code.
+                if (SteamLocaleMapping.TryGetValue(language.ToLower(), out var locale)) {
+                    // steam doesn't support seperate text and speech languages, so we just use the same language for both if they aren't already set
+                    if (Flags.Language == null) {
+                        Flags.Language = locale;
+                        Logger.Debug("Core", $"Found text language via Steam install: {locale}");
+                    }
+
+                    if (Flags.SpeechLanguage == null) {
+                        Flags.SpeechLanguage = locale;
+                        Logger.Debug("Core", $"Found speech via Steam install: {locale}");
+                    }
+                } else {
+                    Logger.Error("Core", $"Invalid language found via Steam install: {language}. Ignoring.");
+                }
+            } catch (Exception ex) {
+                Logger.Debug("Core", $"Failed to fetch locale from Steam install: {ex.Message}");
                 // Ignored
             }
         }
