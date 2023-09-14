@@ -17,7 +17,7 @@ namespace DataTool {
         [Alias("T")]
         public string SpeechLanguage;
 
-        [CLIFlag(Default = false, Flag = "online", Help = "Allow downloading of corrupted files", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
+        [CLIFlag(Default = true, Flag = "online", Help = "Allow downloading of corrupted files", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
         public bool Online;
 
         [CLIFlag(Default = false, Flag = "quiet", Help = "Suppress majority of output messages", Parser = new[] {"DataTool.Flag.Converter", "CLIFlagBoolean"})]
