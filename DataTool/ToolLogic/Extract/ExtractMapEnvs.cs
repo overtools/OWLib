@@ -11,6 +11,7 @@ using DataTool.ConvertLogic;
 using DataTool.DataModels;
 using DataTool.SaveLogic;
 using TankLib;
+using TankLib.Math;
 using TankLib.STU.Types;
 
 namespace DataTool.ToolLogic.Extract {
@@ -30,9 +31,7 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public void SaveMaps(ICLIFlags toolFlags) {
-            throw new Exception("extract-map-envs doesn't work in ow2 yet. sorry");
-
-            /*string basePath;
+            string basePath;
             if (toolFlags is ExtractFlags flags) {
                 basePath = flags.OutputPath;
             } else {
@@ -41,77 +40,94 @@ namespace DataTool.ToolLogic.Extract {
 
             basePath = Path.Combine(basePath, "Environments");
 
-            if (!Directory.Exists(basePath)) {
-                Directory.CreateDirectory(basePath);
-            }
+            FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
 
-            if (File.Exists(Path.Combine(basePath, "SPILUT", "config.ocio"))) {
-                File.Delete(Path.Combine(basePath, "SPILUT", "config.ocio"));
-            }
+            foreach (ulong key in TrackedFiles[0x9F]) {
+                STUMapHeader mapHeader = GetInstance<STUMapHeader>(key);
+                if (mapHeader == null) continue;
+                MapHeader mapInfo = GetMap(key);
+                string mapName = mapInfo.GetName();
+                string mapPath = Path.Combine(basePath, GetValidFilename(mapName));
 
-            HashSet<KeyValuePair<ulong, string>> done = new HashSet<KeyValuePair<ulong, string>>();
-            foreach (ulong metaKey in TrackedFiles[0x9F]) {
-                STUMapHeader map = GetInstance<STUMapHeader>(metaKey);
-                if (map == null) {
-                    continue;
-                }
+                for (int i = 0; i < mapHeader.m_D97BC44F.Length; i++) {
+                    var variantModeInfo = mapHeader.m_D97BC44F[i];
+                    var variantResultingMap = mapHeader.m_78715D57[i];
+                    var variantGUID = variantResultingMap.m_BF231F12;
 
-                MapHeader mapInfo = GetMap(metaKey);
+                    Stream mapStream = OpenFile(variantGUID);
+                    if (mapStream == null) continue;
 
-                ulong dataKey = map.m_map;
+                    string variantName = Map.GetVariantName(variantModeInfo, variantResultingMap);
+                    string variantPath = Path.Combine(mapPath, variantName);
 
-                //if (teResourceGUID.Index(dataKey) != 0x7A4) continue;
+                    using (BinaryReader reader = new BinaryReader(mapStream)) {
+                        const long lightingDataOffset = 160;
+                        mapStream.Position = lightingDataOffset + 228;
+                        ushort envScenarioCount = reader.ReadUInt16();
+                        mapStream.Position = lightingDataOffset + 240;
+                        uint envScenarioOffset = reader.ReadUInt32();
+                        mapStream.Position = lightingDataOffset + envScenarioOffset;
 
-                var mapName = GetValidFilename($"{mapInfo.GetName()}_{teResourceGUID.Index(mapInfo.MapGUID):X}");
-                string fname = $"ow_map_{mapName}";
+                        for (int j = 0; j < envScenarioCount; j++) {
+                            mapStream.Position += 40; // 5x u64
+                            ulong envState = reader.ReadUInt64();
+                            STU_CD1ED5FE envStateInst = GetInstance<STU_CD1ED5FE>(envState);
 
-                var reflectionData = Map.GetPlaceableData(map, Enums.teMAP_PLACEABLE_TYPE.REFLECTIONPOINT);
-                if (reflectionData != null) {
-                    foreach (var placeable in reflectionData.Placeables ?? Array.Empty<IMapPlaceable>()) {
-                        if (!(placeable is teMapPlaceableReflectionPoint reflectionPoint)) continue;
-                        if (done.Add(new KeyValuePair<ulong, string>(reflectionPoint.Header.Texture1, mapInfo.Name + "cube"))) {
-                            SaveTex(flags, basePath, Path.Combine("Cubemap", fname), reflectionPoint.Header.Texture1.ToString(), reflectionPoint.Header.Texture1);
-                        }
+                            // Sky
+                            if (envStateInst.m_B3F27D37.TryGetValue(7, out var sky)) {
+                                var skyAspect = (STU_70BAB99C) sky;
+                                ulong skyModel = skyAspect.m_EAE71612;
+                                ulong skyLook = skyAspect.m_FF76B5BA;
 
-                        if (done.Add(new KeyValuePair<ulong, string>(reflectionPoint.Header.Texture2, mapInfo.Name + "cube"))) {
-                            SaveTex(flags, basePath, Path.Combine("Cubemap", fname), reflectionPoint.Header.Texture2.ToString(), reflectionPoint.Header.Texture2);
-                        }
-                    }
-                }
-
-                using (Stream data = OpenFile(dataKey)) {
-                    if (data != null) {
-                        using (BinaryReader dataReader = new BinaryReader(data)) {
-                            teMap env = dataReader.Read<teMap>();
-
-                            // using (Stream lightingStream = OpenFile(env.BakedLighting)) {
-                            //    teLightingManifest lightingManifest = new teLightingManifest(lightingStream);
-                            //}
-
-                            if (done.Add(new KeyValuePair<ulong, string>(env.MapEnvironmentSound, mapInfo.Name)))
-                                SaveSound(flags, basePath, Path.Combine("Sound", mapName), env.MapEnvironmentSound);
-                            if (done.Add(new KeyValuePair<ulong, string>(env.LUT, mapInfo.Name))) {
-                                SaveTex(flags, basePath, "LUT", fname + env.LUT, env.LUT);
-                                SaveLUT(flags, basePath, "SPILUT", fname + env.LUT, env.LUT, Path.Combine(basePath, "SPILUT", "config.ocio"), mapInfo);
+                                SaveMdl(flags, variantPath, "Sky", skyModel, skyLook);
                             }
 
-                            if (done.Add(new KeyValuePair<ulong, string>(env.BlendEnvironmentCubemap, mapInfo.Name)))
-                                SaveTex(flags, basePath, "BlendCubemap", fname + env.BlendEnvironmentCubemap, env.BlendEnvironmentCubemap);
-                            if (done.Add(new KeyValuePair<ulong, string>(env.GroundEnvironmentCubemap, mapInfo.Name)))
-                                SaveTex(flags, basePath, "GroundCubemap", fname + env.GroundEnvironmentCubemap, env.GroundEnvironmentCubemap);
-                            if (done.Add(new KeyValuePair<ulong, string>(env.SkyEnvironmentCubemap, mapInfo.Name)))
-                                SaveTex(flags, basePath, "SkyCubemap", fname + env.SkyEnvironmentCubemap, env.SkyEnvironmentCubemap);
-                            if (done.Add(new KeyValuePair<ulong, string>(env.SkyboxModel + env.SkyboxModelLook, mapInfo.Name)))
-                                SaveMdl(flags, basePath, Path.Combine("Skybox", mapName), env.SkyboxModel, env.SkyboxModelLook);
-                            if (done.Add(new KeyValuePair<ulong, string>(env.EntityDefinition, mapInfo.Name)))
-                                SaveEntity(flags, basePath, Path.Combine("Entity", mapName), env.EntityDefinition);
+                            // Color Grading
+                            if (envStateInst.m_B3F27D37.TryGetValue(3, out var grading)) {
+                                var gradingAspect = (STU_40181BF1) grading;
+                                ulong lutKey = gradingAspect.m_450286A4;
+                                SaveTex(flags, variantPath, "Color Grading", teResourceGUID.AsIndexString(lutKey), lutKey);
+                            }
+
+                            // Sun
+                            if (envStateInst.m_B3F27D37.TryGetValue(6, out var sun)) {
+                                var sunAspect = (STU_DABD6A9B) sun;
+                                teQuat rotation = sunAspect.m_rotation;
+                                teQuat zUp = new teQuat(rotation.X, -rotation.Z, rotation.Y, rotation.W);
+                                teVec3 euler = zUp.ToEulerAngles();
+
+                                // :mentalcat:
+                                euler.X *= 57.295779513f;
+                                euler.Y *= 57.295779513f;
+                                euler.Z *= 57.295779513f;
+
+                                ulong lensFlare = sunAspect.m_F83BCB43;
+                                teColorRGB color = sunAspect.m_color;
+                                float intensity = sunAspect.m_A1C4B45C;
+
+                                FindLogic.Combo.ComboInfo lensFlareInfo = new FindLogic.Combo.ComboInfo();
+                                FindLogic.Combo.Find(lensFlareInfo, lensFlare);
+
+                                var context = new Combo.SaveContext(lensFlareInfo);
+                                SaveAllTextures(flags, variantPath, "Sun", context);
+
+                                string infoSuffix = j > 0 ? j.ToString() : "";
+                                string sunInfoFile = $"{Path.Combine(variantPath, "Sun")}/info{infoSuffix}.txt";
+                                CreateDirectoryFromFile(sunInfoFile);
+
+                                using (Stream f = File.OpenWrite(sunInfoFile))
+                                using (TextWriter w = new StreamWriter(f)) {
+                                    w.WriteLine($"Rotation (Blender): X:{euler.X - 90f}, Y:{euler.Y}, Z: {euler.Z}");
+                                    w.WriteLine($"Rotation (Quat): X:{rotation.X}, Y:{rotation.Z}, Z: {rotation.Y}, W: {rotation.W}");
+                                    w.WriteLine($"Color: R: {color.R}, G: {color.B}, B: {color.B}");
+                                    w.WriteLine($"Intensity: {intensity}");
+                                }
+                            }
                         }
                     }
                 }
-
-                InfoLog("Saved Environment data for {0}", mapInfo.GetUniqueName());
-                SaveScratchDatabase();
-            }*/
+                Log($"Saved Environment data for {mapName}");
+            }
         }
 
         private void SaveEntity(ExtractFlags flags, string basePath, string part, ulong key) {
@@ -178,14 +194,13 @@ namespace DataTool.ToolLogic.Extract {
 
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             FindLogic.Combo.Find(info, model);
-            FindLogic.Combo.Find(info, modelLook);
+            FindLogic.Combo.Find(info, modelLook, null, 
+                                 new FindLogic.Combo.ComboContext { Model = model});
 
             var context = new Combo.SaveContext(info) {
                 m_saveAnimationEffects = false
             };
             SaveLogic.Combo.Save(flags, Path.Combine(basePath, part), context);
-            SaveLogic.Combo.SaveAllModelLooks(flags, Path.Combine(basePath, part), context);
-            SaveLogic.Combo.SaveAllMaterials(flags, Path.Combine(basePath, part), context);
         }
 
         private void SaveTex(ExtractFlags flags, string basePath, string part, string filename, ulong key) {
@@ -199,6 +214,12 @@ namespace DataTool.ToolLogic.Extract {
 
             var context = new Combo.SaveContext(info);
             SaveLogic.Combo.SaveTexture(flags, Path.Combine(basePath, part), context, key);
+        }
+
+        private void SaveAllTextures(ExtractFlags flags, string basePath, string part, Combo.SaveContext context) {
+            foreach (var tex in context.m_info.m_textures.Values) {
+                Combo.SaveTexture(flags, Path.Combine(basePath, part), context, tex.m_GUID);
+            }
         }
     }
 }
