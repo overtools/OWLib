@@ -172,8 +172,8 @@ namespace TankLib {
 
                 // todo: read data for non-bone animations
 
-                var nextTableOffset = reader.BaseStream.Position;
                 reader.BaseStream.Position = Header.InfoTableOffset;
+                var nextTableOffset = reader.BaseStream.Position;
                 InfoTables = reader.ReadArray<InfoTable>(Header.BoneCount);
 
                 for (int boneIndex = 0; boneIndex < Header.BoneCount; boneIndex++) {
