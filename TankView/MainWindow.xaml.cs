@@ -225,12 +225,13 @@ namespace TankView {
                     DataTool.Program.Flags = new DataTool.ToolFlags {
                         OverwatchDirectory = path
                     };
+
                     if (flags != null) {
                         DataTool.Program.Flags.Language = flags.Language;
                         DataTool.Program.Flags.SpeechLanguage = flags.SpeechLanguage;
                         DataTool.Program.Flags.Online = flags.Online;
                     } else {
-                        DataTool.Program.Flags.Online = false;
+                        DataTool.Program.Flags.Online = true;
                     }
 
                     DataTool.Program.InitStorage(DataTool.Program.Flags.Online);
