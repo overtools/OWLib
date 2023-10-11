@@ -428,7 +428,7 @@ namespace TankView.ViewModel {
         private void LookupAndGeneratePreviousBuildGuids(ClientHandler client, ProductHandler_Tank tank) {
             try {
                 // store the current guids for the current version if it hasn't already been saved
-                var buildVersion = uint.Parse(client.InstallationInfo.Values["Version"].Split('.').Last());
+                var buildVersion = DataTool.Program.TryParseBuildVersion(client.InstallationInfo.Values["Version"]);
                 var guidFilePath = Path.Join(ApplicationDataPath, $"{buildVersion}.guids");
                 var doesGuidFileExist = File.Exists(guidFilePath);
                 if (!doesGuidFileExist) {

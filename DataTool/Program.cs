@@ -281,15 +281,7 @@ namespace DataTool {
 
             // todo: these version checks don't really need to even exist anymore but whatever, maybe useful just for history - js
             Client.InstallationInfo.Values.TryGetValue("Version", out var clientVersion);
-            string buildVersion;
-            if (clientVersion != null && clientVersion.Contains('.')) {
-                buildVersion = clientVersion.Split('.').LastOrDefault();
-            } else {
-                buildVersion = clientVersion?.Split('-').LastOrDefault();
-            }
-
-            // Handle cases where build version contains letters e.g. 1.71.1.0.97745a
-            buildVersion = Regex.Replace(buildVersion ?? "", "[A-Za-z ]", "");
+            var buildVersion = TryParseBuildVersion(clientVersion);
 
             if (!uint.TryParse(buildVersion, out BuildVersion))
                 Logger.Warn("Core", "Could not parse build version from {0}", clientVersion ?? "null");
@@ -301,6 +293,18 @@ namespace DataTool {
                 Logger.Error("Core", "This version of DataTool doesn't properly support versions of Overwatch below 2.4. Older version of tool is recommended.");
 
             InitTrackedFiles();
+        }
+
+        public static string TryParseBuildVersion(string clientVersion) {
+            string buildVersion;
+            if (clientVersion != null && clientVersion.Contains('.')) {
+                buildVersion = clientVersion.Split('.').LastOrDefault();
+            } else {
+                buildVersion = clientVersion?.Split('-').LastOrDefault();
+            }
+
+            // Handle cases where build version contains letters e.g. 1.71.1.0.97745a
+            return Regex.Replace(buildVersion ?? "", "[A-Za-z ]", "");
         }
 
         public static void InitTrackedFiles() {
