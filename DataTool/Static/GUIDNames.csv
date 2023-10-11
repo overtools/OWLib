@@ -611,12 +611,14 @@ A03F,01C,BattlePass,1
 AD3F,01C,Shop,1
 C1A7,01C,Pride,1
 C760,01C,Progression,1
+CB01,01C,HeroMastery,1
 AD37,01C,Season1,1
 B647,01C,Season2,1
 B734,01C,Season3,1
 BB6D,01C,Season4,1
 BD98,01C,Season5,1
 C0C9,01C,Season6,1
+C0CC,01C,Season7,1
 ; Lobby map names,,,
 664,09F,Menu/Hanamura,1
 675,09F,Menu/Gibraltar,1
