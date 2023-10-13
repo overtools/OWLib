@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x40906896, 160)]
+    [STU(0x40906896, 128)]
     public class STUGenericSettings_XPGains : STUGenericSettings_Base
     {
         [STUField(0x780CEDBD, 8, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
@@ -32,17 +32,5 @@ namespace TankLib.STU.Types
 
         [STUField(0xF8D5359A, 120)] // size: 8
         public double m_F8D5359A;
-
-        [STUField(0xF63C0C7B, 128)] // size: 8
-        public double m_F63C0C7B;
-
-        [STUField(0x84F13CFF, 136)] // size: 8
-        public double m_84F13CFF;
-
-        [STUField(0x398CB1D9, 144)] // size: 8
-        public double m_398CB1D9;
-
-        [STUField(0x94EA7D40, 152)] // size: 4
-        public uint m_94EA7D40;
     }
 }

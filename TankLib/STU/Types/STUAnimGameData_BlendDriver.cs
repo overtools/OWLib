@@ -3,7 +3,7 @@
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x6BC13553, 12)]
+    [STU(0x6BC13553, 16)]
     public class STUAnimGameData_BlendDriver : STUInstance
     {
         [STUField(0x0DEFD4FE, 0)] // size: 4
@@ -12,16 +12,19 @@ namespace TankLib.STU.Types
         [STUField(0xBD631144, 4)] // size: 4
         public float m_BD631144;
 
-        [STUField(0xE90BE025, 8)] // size: 1
+        [STUField(0xFF222F41, 8)] // size: 4
+        public float m_FF222F41;
+
+        [STUField(0xE90BE025, 12)] // size: 1
         public byte m_E90BE025;
 
-        [STUField(0xF4A5FD9C, 9)] // size: 1
-        public byte m_F4A5FD9C;
+        [STUField(0xBE59CC37, 13)] // size: 1
+        public byte m_BE59CC37;
 
-        [STUField(0xC08EF277, 10)] // size: 1
-        public byte m_C08EF277;
+        [STUField(0x7EEFB57A, 14)] // size: 1
+        public byte m_flags;
 
-        [STUField(0x823A5625, 11)] // size: 1
-        public byte m_823A5625;
+        [STUField(0x6A952ACB, 15)] // size: 1
+        public byte m_6A952ACB;
     }
 }

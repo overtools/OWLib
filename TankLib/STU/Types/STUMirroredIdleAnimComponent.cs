@@ -4,7 +4,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x3AA5CB04, 72)]
+    [STU(0x3AA5CB04, 88)]
     public class STUMirroredIdleAnimComponent : STUMirroredEntityComponent
     {
         [STUField(0xC9D669B6, 8)] // size: 16
@@ -13,19 +13,22 @@ namespace TankLib.STU.Types
         [STUField(0xD91EF907, 24)] // size: 16
         public teStructuredDataAssetRef<ulong> m_collisionModel;
 
-        [STUField(0x7D921E31, 40, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0xC76044CD, 40)] // size: 16
+        public teStructuredDataAssetRef<STUAnimBoneSet> m_C76044CD;
+
+        [STUField(0x7D921E31, 56, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAnimGameData_Skeleton m_7D921E31;
 
-        [STUField(0x25D54A00, 48, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
+        [STUField(0x25D54A00, 64, ReaderType = typeof(EmbeddedInstanceFieldReader))] // size: 8
         public STUAnimGameData_Animation m_25D54A00;
 
-        [STUField(0x422B4A8E, 56)] // size: 4
+        [STUField(0x422B4A8E, 72)] // size: 4
         public int m_422B4A8E;
 
-        [STUField(0xE96926C9, 60)] // size: 4
+        [STUField(0xE96926C9, 76)] // size: 4
         public Enum_E845A2D4 m_E96926C9;
 
-        [STUField(0x5E009A60, 64)] // size: 1
+        [STUField(0x5E009A60, 80)] // size: 1
         public byte m_5E009A60;
     }
 }

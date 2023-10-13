@@ -5,7 +5,7 @@ using TankLib.STU.Types.Enums;
 // ReSharper disable All
 namespace TankLib.STU.Types
 {
-    [STU(0x7C3457DC, 792)]
+    [STU(0x7C3457DC, 808)]
     public class STUHero : STUShippable
     {
         [STUField(0x950BBA06, 32)] // size: 16
@@ -71,109 +71,112 @@ namespace TankLib.STU.Types
         [STUField(0xCFC554DC, 352)] // size: 16
         public teStructuredDataAssetRef<STUAnimBlendTreeSet> m_CFC554DC;
 
-        [STUField(0xFCD2B649, 368, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xC1EC4555, 368)] // size: 16
+        public teStructuredDataAssetRef<STUAnimBlendTreeSet> m_C1EC4555;
+
+        [STUField(0xFCD2B649, 384, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_A0872511[] m_previewWeaponEntities;
 
-        [STUField(0xC2FE396F, 384, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xC2FE396F, 400, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_A0872511[] m_C2FE396F;
 
-        [STUField(0x9DC376A4, 400, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0x9DC376A4, 416, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_A0872511[] m_9DC376A4;
 
-        [STUField(0x8203BFE1, 416, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0x8203BFE1, 432, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_1A496D3C[] m_8203BFE1;
 
-        [STUField(0xFC833C02, 432, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xFC833C02, 448, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_C0D5117B[] m_FC833C02;
 
-        [STUField(0xA341183E, 448, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0xA341183E, 464, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_8A1F18F9[] m_A341183E;
 
-        [STUField(0x77FED604, 464)] // size: 16
+        [STUField(0x77FED604, 480)] // size: 16
         public teStructuredDataAssetRef<STULoadout>[] m_heroLoadout;
 
-        [STUField(0xD12CB4EA, 480)] // size: 16
+        [STUField(0xD12CB4EA, 496)] // size: 16
         public teStructuredDataAssetRef<STU_1DEBD356>[] m_D12CB4EA;
 
-        [STUField(0x9F34BD31, 496)] // size: 16
+        [STUField(0x9F34BD31, 512)] // size: 16
         public teStructuredDataAssetRef<STU_7C128E17> m_9F34BD31;
 
-        [STUField(0x34D442AA, 512)] // size: 16
+        [STUField(0x34D442AA, 528)] // size: 16
         public teStructuredDataAssetRef<STU_67A38DF7> m_34D442AA;
 
-        [STUField(0x4C064598, 528)] // size: 16
+        [STUField(0x4C064598, 544)] // size: 16
         public teStructuredDataAssetRef<STU_67A38DF7> m_4C064598;
 
-        [STUField(0x4DEC4E30, 544)] // size: 16
+        [STUField(0x4DEC4E30, 560)] // size: 16
         public teStructuredDataAssetRef<STU_67A38DF7> m_4DEC4E30;
 
-        [STUField(0xF921CC3F, 560)] // size: 16
+        [STUField(0xF921CC3F, 576)] // size: 16
         public teStructuredDataAssetRef<STUUnlock> m_F921CC3F;
 
-        [STUField(0x485AA39C, 576)] // size: 16
+        [STUField(0x485AA39C, 592)] // size: 16
         public teStructuredDataAssetRef<STUProgressionUnlocks> m_heroProgression;
 
-        [STUField(0x418F797D, 592, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0x418F797D, 608, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public StatEventScoreScaler[] m_418F797D;
 
-        [STUField(0xFF3C2071, 608)] // size: 16
+        [STUField(0xFF3C2071, 624)] // size: 16
         public teStructuredDataAssetRef<STUAchievement>[] m_achievements;
 
-        [STUField(0xA5C9CA02, 624)] // size: 16
+        [STUField(0xA5C9CA02, 640)] // size: 16
         public teString m_internalName;
 
-        [STUField(0xB20C2C32, 640)] // size: 16
+        [STUField(0xB20C2C32, 656)] // size: 16
         public teStructuredDataAssetRef<STU_1C5DE3A3> m_B20C2C32;
 
-        [STUField(0x6C61AEC3, 656)] // size: 16
+        [STUField(0x6C61AEC3, 672)] // size: 16
         public teStructuredDataAssetRef<STU_1C5DE3A3> m_6C61AEC3;
 
-        [STUField(0x893AAB2B, 672)] // size: 16
+        [STUField(0x893AAB2B, 688)] // size: 16
         public teStructuredDataAssetRef<ulong>[] m_heroEffects;
 
-        [STUField(0x84625AA3, 688, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
+        [STUField(0x84625AA3, 704, ReaderType = typeof(InlineInstanceFieldReader))] // size: 16
         public STU_63172E83[] m_skinThemes;
 
-        [STUField(0xEBC69014, 704)] // size: 16
+        [STUField(0xEBC69014, 720)] // size: 16
         public teStructuredDataAssetRef<STUHeroWeapon> m_EBC69014;
 
-        [STUField(0xE25DDDA1, 720)] // size: 16
+        [STUField(0xE25DDDA1, 736)] // size: 16
         public teColorRGBA m_heroColor;
 
-        [STUField(0x163DD68B, 736)] // size: 12
+        [STUField(0x163DD68B, 752)] // size: 12
         public teVec3 m_163DD68B;
 
-        [STUField(0xA7562960, 748, ReaderType = typeof(InlineInstanceFieldReader))] // size: 12
+        [STUField(0xA7562960, 764, ReaderType = typeof(InlineInstanceFieldReader))] // size: 12
         public STU_6AD90337 m_A7562960;
 
-        [STUField(0xED98DBD7, 760)] // size: 4
+        [STUField(0xED98DBD7, 776)] // size: 4
         public float m_ED98DBD7;
 
-        [STUField(0xC39495FA, 764)] // size: 4
+        [STUField(0xC39495FA, 780)] // size: 4
         public float m_C39495FA;
 
-        [STUField(0x44D13CC2, 768)] // size: 4
+        [STUField(0x44D13CC2, 784)] // size: 4
         public int m_44D13CC2 = -1;
 
-        [STUField(0xAF4EC410, 772)] // size: 4
+        [STUField(0xAF4EC410, 788)] // size: 4
         public STUHeroSize m_heroSize;
 
-        [STUField(0x7D88A63A, 776)] // size: 4
+        [STUField(0x7D88A63A, 792)] // size: 4
         public Enum_0C014B4A m_gender = Enum_0C014B4A.Generic;
 
-        [STUField(0x64DC571F, 780)] // size: 1
+        [STUField(0x64DC571F, 796)] // size: 1
         public byte m_64DC571F;
 
-        [STUField(0x5E3C55AE, 781)] // size: 1
+        [STUField(0x5E3C55AE, 797)] // size: 1
         public byte m_5E3C55AE;
 
-        [STUField(0x906C3711, 782)] // size: 1
+        [STUField(0x906C3711, 798)] // size: 1
         public byte m_906C3711;
 
-        [STUField(0xC93CEDD2, 783)] // size: 1
+        [STUField(0xC93CEDD2, 799)] // size: 1
         public byte m_C93CEDD2;
 
-        [STUField(0x40B57B0B, 784)] // size: 1
+        [STUField(0x40B57B0B, 800)] // size: 1
         public byte m_40B57B0B = 0x0;
     }
 }
