@@ -50,8 +50,14 @@ namespace TankLib.Math {
             return (byte) System.Math.Round(a * 255f);
         }
 
-        public string ToHex() {
-            return $"#{ToHex(R):X2}{ToHex(G):X2}{ToHex(B):X2} {A}";
+        public string ToHex(bool includeAlpha = true) {
+            var hex = $"#{ToHex(R):X2}{ToHex(G):X2}{ToHex(B):X2}";
+
+            if (includeAlpha) {
+                hex += $"{ToHex(A):X2}";
+            }
+
+            return hex;
         }
 
         public string ToCSS() {
