@@ -5,6 +5,11 @@ using TankLib;
 namespace DataTool.JSON {
     public class NewtonsoftResourceGUIDFormatter : JsonConverter<teResourceGUID> {
         public override void WriteJson(JsonWriter writer, teResourceGUID value, JsonSerializer serializer) {
+            if (value == 0) {
+                writer.WriteNull();
+                return;
+            }
+
             writer.WriteValue(value.ToString());
         }
 
