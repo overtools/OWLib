@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using DataTool.Flag;
 using DataTool.Helper;
+using TankLib;
 using TankLib.Helpers;
 using static DataTool.Helper.Logger;
 
@@ -152,7 +153,7 @@ namespace DataTool {
             ICLIFlags flags,
             List<QueryType> queryTypes,
             Dictionary<string, string> queryNameOverrides = null,
-            Dictionary<ulong, string> validNames = null) {
+            Dictionary<teResourceGUID, string> validNames = null) {
             if (queryTypes.Count == 0) {
                 queryTypes = new List<QueryType> {
                     new QueryType {Name = "FakeType"}

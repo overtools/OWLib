@@ -138,7 +138,7 @@ namespace DataTool.Helper {
             }
         }
 
-        public static ulong? TryGetLocalizedName(ushort type, string name) {
+        public static teResourceGUID? TryGetLocalizedName(ushort type, string name) {
             if (!LocalizedNames.ContainsKey(type)) return null;
 
             if (!LocalizedNames[type].TryGetValue(name, out var match)) {
@@ -148,12 +148,6 @@ namespace DataTool.Helper {
             var guid = new teResourceGUID(match);
             guid.SetType(type);
             return guid;
-        }
-
-        public static bool TryGetLocalizedName(ushort type, string name, out ulong match) {
-            var value = TryGetLocalizedName(type, name);
-            match = value ?? 0;
-            return value != null;
         }
 
         public static string GetGUIDName(ulong guid) {
