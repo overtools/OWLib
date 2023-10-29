@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -18,9 +19,9 @@ namespace DataTool.Helper {
             "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
         };
 
-        private static readonly Regex InvalidChars = new Regex($@"[{Regex.Escape(new string(Path.GetInvalidFileNameChars()))}]+", RegexOptions.Compiled);
+        private static readonly Regex InvalidChars = new ($@"[{Regex.Escape(new string(Path.GetInvalidFileNameChars()))}]+", RegexOptions.Compiled);
 
-        public static string GetValidFilename(string filename) {
+        public static string? GetValidFilename(string? filename) {
             if (filename == null) {
                 return null;
             }
@@ -41,9 +42,9 @@ namespace DataTool.Helper {
             return sanitisedNamePart;
         }
 
-        public static readonly Dictionary<(ulong, ushort), string> GUIDTable = new Dictionary<(ulong, ushort), string>();
-        public static readonly Dictionary<ushort, Dictionary<string, ulong>> LocalizedNames = new Dictionary<ushort, Dictionary<string, ulong>>();
-        private static readonly Dictionary<ushort, HashSet<string>> IgnoredLocalizedNames = new Dictionary<ushort, HashSet<string>>();
+        public static readonly Dictionary<(ulong, ushort), string> GUIDTable = new ();
+        public static readonly Dictionary<ushort, Dictionary<string, ulong>> LocalizedNames = new ();
+        private static readonly Dictionary<ushort, HashSet<string>> IgnoredLocalizedNames = new ();
 
         public static void LoadGUIDTable(bool onlyCanonical) {
             var guidNamesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Static", "GUIDNames.csv");
@@ -98,7 +99,6 @@ namespace DataTool.Helper {
                 TankLib.Helpers.Logger.Warn("LocalizedNames", "LocalizedNamesMapping.csv not found");
                 return;
             }
-
 
             var csvLines = File.ReadAllLines(locPath).Skip(1); // skip header
             foreach (string dirtyLine in csvLines) {
@@ -160,7 +160,7 @@ namespace DataTool.Helper {
             return GetNullableGUIDName(guid) ?? GetFileName(guid);
         }
 
-        public static string GetNullableGUIDName(ulong guid) {
+        public static string? GetNullableGUIDName(ulong guid) {
             var index = teResourceGUID.LongKey(guid);
             var type = teResourceGUID.Type(guid);
             return GUIDTable.TryGetValue((index, type), out var name) ? name : null;
@@ -170,43 +170,40 @@ namespace DataTool.Helper {
             return teResourceGUID.AsString(guid);
         }
 
-        public static Stream OpenFile(string filename) {
-            string path = Path.GetDirectoryName(filename);
+        public static Stream? OpenFile(string filename) {
+            string? path = Path.GetDirectoryName(filename);
             if (!Directory.Exists(path) && path != null) {
                 Directory.CreateDirectory(path);
             }
 
             try {
                 return File.OpenWrite(filename);
-            }
-            catch (IOException) {
+            } catch (IOException) {
                 if (File.Exists(filename)) return null;
                 throw;
             }
         }
 
-        public static void WriteFile(Stream stream, string filename) {
+        public static void WriteFile(Stream? stream, string filename) {
             if (stream == null) return;
-            string path = Path.GetDirectoryName(filename);
+            string? path = Path.GetDirectoryName(filename);
             if (!Directory.Exists(path) && path != null) {
                 Directory.CreateDirectory(path);
             }
 
             try {
-                using (Stream file = File.OpenWrite(filename)) {
-                    file.SetLength(0); // ensure no leftover data
-                    stream.CopyTo(file);
-                }
-            }
-            catch (IOException) {
+                using Stream file = File.OpenWrite(filename);
+                file.SetLength(0); // ensure no leftover data
+                stream.CopyTo(file);
+            } catch (IOException) {
                 if (File.Exists(filename)) return;
                 throw;
             }
         }
 
-        public static void WriteFile(string text, string filename) {
+        public static void WriteFile(string? text, string filename) {
             if (text == null) return;
-            string path = Path.GetDirectoryName(filename);
+            string? path = Path.GetDirectoryName(filename);
             if (!Directory.Exists(path) && path != null) {
                 Directory.CreateDirectory(path);
             }
@@ -214,49 +211,43 @@ namespace DataTool.Helper {
             var bytes = Encoding.Unicode.GetBytes(text);
 
             try {
-                using (Stream file = File.OpenWrite(filename)) {
-                    file.SetLength(0); // ensure no leftover data
-                    file.Write(bytes, 0, bytes.Length);
-                }
-            }
-            catch (IOException) {
+                using Stream file = File.OpenWrite(filename);
+                file.SetLength(0); // ensure no leftover data
+                file.Write(bytes, 0, bytes.Length);
+            } catch (IOException) {
                 if (File.Exists(filename)) return;
                 throw;
             }
         }
 
-        public static void WriteFile(byte[] bytes, string filename) {
+        public static void WriteFile(byte[]? bytes, string filename) {
             if (bytes == null) return;
-            string path = Path.GetDirectoryName(filename);
+            string? path = Path.GetDirectoryName(filename);
             if (!Directory.Exists(path) && path != null) {
                 Directory.CreateDirectory(path);
             }
 
             try {
-                using (Stream file = File.OpenWrite(filename)) {
-                    file.SetLength(0); // ensure no leftover data
-                    file.Write(bytes, 0, bytes.Length);
-                }
-            }
-            catch (IOException) {
+                using Stream file = File.OpenWrite(filename);
+                file.SetLength(0); // ensure no leftover data
+                file.Write(bytes, 0, bytes.Length);
+            } catch (IOException) {
                 if (File.Exists(filename)) return;
                 throw;
             }
         }
 
         public static void WriteFile(Memory<byte> bytes, string filename) {
-            string path = Path.GetDirectoryName(filename);
+            string? path = Path.GetDirectoryName(filename);
             if (!Directory.Exists(path) && path != null) {
                 Directory.CreateDirectory(path);
             }
 
             try {
-                using (Stream file = File.OpenWrite(filename)) {
-                    file.SetLength(0); // ensure no leftover data
-                    file.Write(bytes.Span);
-                }
-            }
-            catch (IOException) {
+                using Stream file = File.OpenWrite(filename);
+                file.SetLength(0); // ensure no leftover data
+                file.Write(bytes.Span);
+            } catch (IOException) {
                 if (File.Exists(filename)) return;
                 throw;
             }
@@ -272,7 +263,7 @@ namespace DataTool.Helper {
             WriteFile(OpenFile(guid), Path.Combine(path, filename));
         }
 
-        public static void WriteFile(Stream stream, ulong guid, string path) {
+        public static void WriteFile(Stream? stream, ulong guid, string path) {
             if (stream == null || guid == 0) {
                 return;
             }
@@ -283,13 +274,12 @@ namespace DataTool.Helper {
             WriteFile(stream, Path.Combine(path, filename));
         }
 
-        public static HashSet<ulong> MissingKeyLog = new HashSet<ulong>();
+        public static HashSet<ulong> MissingKeyLog = new ();
 
-        public static Stream OpenFile(ulong guid) {
+        public static Stream? OpenFile(ulong guid) {
             try {
                 return TankHandler.OpenFile(guid);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 if (e is BLTEKeyException keyException) {
                     if (MissingKeyLog.Add(keyException.MissingKey) && Debugger.IsAttached) {
                         TankLib.Helpers.Logger.Warn("BLTE", $"Missing key: {keyException.MissingKey:X16}");
@@ -301,9 +291,9 @@ namespace DataTool.Helper {
             }
         }
 
-        public static void CreateDirectoryFromFile(string path) {
+        public static void CreateDirectoryFromFile(string? path) {
             if (path == null) return;
-            string dir = Path.GetDirectoryName(path);
+            string? dir = Path.GetDirectoryName(path);
             if (string.IsNullOrWhiteSpace(dir)) {
                 return;
             }
@@ -314,7 +304,7 @@ namespace DataTool.Helper {
         }
 
         // ???????
-        public static void CreateDirectorySafe(string david) {
+        public static void CreateDirectorySafe(string? david) {
             if (david == null) return;
             string cylde = Path.GetFullPath(david);
             if (string.IsNullOrWhiteSpace(cylde)) {
@@ -329,56 +319,49 @@ namespace DataTool.Helper {
         /// <summary>
         /// Returns a string for the guid. NBSPs and trailing nulls are removed.
         /// </summary>
-        public static string GetString(ulong guid) {
-            if (guid == 0) return null; // don't even try
+        public static string? GetString(ulong guid) {
+            if (guid == 0) return null;
             try {
                 if (Flags != null && Flags.StringsAsGuids)
                     return teResourceGUID.AsString(guid);
 
                 // remove nbsp and trailing nulls which can cause issues
                 return GetStringInternal(guid)?.Replace('\u00A0', ' ').TrimEnd('\0');
-            }
-            catch {
+            } catch {
                 return null;
             }
         }
 
         // ffs blizz, why do the names end in a space sometimes, and sometimes have nbsp???
-        public static string GetCleanString(ulong guid) {
+        public static string? GetCleanString(ulong guid) {
             var name = GetString(guid);
             return name?.TrimEnd(' ');
         }
 
-
         /// <summary>
         /// Returns the raw string for the guid.
         /// </summary>
-        public static string GetStringInternal(ulong guid) {
-            if (guid == 0) return null; // don't even try
+        public static string? GetStringInternal(ulong guid) {
+            if (guid == 0) return null;
             try {
-                using (Stream stream = OpenFile(guid)) {
-                    return stream == null ? null : new teString(stream);
-                }
-            }
-            catch {
+                using Stream? stream = OpenFile(guid);
+                return stream == null ? null : new teString(stream);
+            } catch {
                 return null;
             }
         }
 
-        public static string GetSubtitleString(ulong key) {
+        public static string? GetSubtitleString(ulong key) {
             if (key == 0) return null;
-
             return GetSubtitle(key)?.m_strings?.FirstOrDefault();
         }
 
-        public static teSubtitleThing GetSubtitle(ulong guid) {
-            if (guid == 0) return null; // don't even try
-            using (var stream = OpenFile(guid)) {
-                if (stream == null) return null;
-                using (var reader = new BinaryReader(stream)) {
-                    return new teSubtitleThing(reader);
-                }
-            }
+        public static teSubtitleThing? GetSubtitle(ulong guid) {
+            if (guid == 0) return null;
+            using var stream = OpenFile(guid);
+            if (stream == null) return null;
+            using var reader = new BinaryReader(stream);
+            return new teSubtitleThing(reader);
         }
     }
 }
