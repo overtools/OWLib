@@ -11,13 +11,13 @@ namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-chat-settings", Description = "List chat settings", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListChatSettings : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var chatData = GetChatData();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(chatData, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(chatData, flags);
+                return;
+            }
 
             foreach (var chatGroup in chatData) {
                 Log("Channels:");

@@ -91,14 +91,10 @@ namespace DataTool.ToolLogic.Extract {
         };
 
         public void Parse(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
-            SaveUnlocksForHeroes(flags, basePath);
+            SaveUnlocksForHeroes(flags, flags.OutputPath);
 
             if (!HasSavedAnything) {
                 Logger.Warn("Tool", $"No unlocks were extracted as nothing was found matching your query? Did you spell the hero or unlock incorrectly?");

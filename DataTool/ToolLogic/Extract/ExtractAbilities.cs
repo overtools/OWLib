@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.ToolLogic.Extract.Debug;
@@ -17,12 +16,8 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public static void SaveAbilities(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
             const string folderName = "Abilities";
 
@@ -31,7 +26,7 @@ namespace DataTool.ToolLogic.Extract {
                 if (loadout == null) continue;
 
                 string name = GetValidFilename(GetCleanString(loadout.m_name)?.TrimEnd().Replace(".", "_")) ?? $"Unknown{teResourceGUID.Index(key):X}";
-                var directory = Path.Combine(basePath, folderName, name);
+                var directory = Path.Combine(flags.OutputPath, folderName, name);
 
                 Combo.ComboInfo info = new Combo.ComboInfo();
                 Combo.Find(info, loadout.m_texture);

@@ -45,12 +45,8 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public void ExtractType(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = Path.Combine(flags.OutputPath, "Music");
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
             foreach (ulong @ulong in TrackedFiles[0x2C]) {
                 STUSound music = GetInstance<STUSound>(@ulong);
@@ -63,7 +59,7 @@ namespace DataTool.ToolLogic.Extract {
                     FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
                     var context = new Combo.SaveContext(info);
                     FindLogic.Combo.Find(info, @ulong);
-                    SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(basePath, music_types[s_class]), context);
+                    SaveLogic.Combo.SaveAllSoundFiles(flags, Path.Combine(flags.OutputPath, music_types[s_class]), context);
                 }
             }
         }

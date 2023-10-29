@@ -9,18 +9,17 @@ namespace DataTool.ToolLogic.List {
     [Tool("list-general-unlocks", Description = "List general unlocks", CustomFlags = typeof(ListFlags))]
     public class ListGeneralUnlocks : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var unlocks = GetUnlocks();
 
-            if (toolFlags is ListFlags flags) {
-                if (flags.JSON) {
-                    if (flags.Flatten) {
-                        OutputJSON(unlocks.IterateUnlocks(), flags);
-                    } else {
-                        OutputJSON(unlocks, flags);
-                    }
-
-                    return;
+            if (flags.JSON) {
+                if (flags.Flatten) {
+                    OutputJSON(unlocks.IterateUnlocks(), flags);
+                } else {
+                    OutputJSON(unlocks, flags);
                 }
+
+                return;
             }
 
             ListHeroUnlocks.DisplayUnlocks("Other", unlocks.OtherUnlocks);

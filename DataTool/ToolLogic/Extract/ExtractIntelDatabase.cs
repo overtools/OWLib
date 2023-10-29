@@ -17,12 +17,9 @@ namespace DataTool.ToolLogic.Extract {
         private const string Container = "IntelDatabase";
 
         public void Parse(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            var basePath = flags.OutputPath;
+            flags.EnsureOutputDirectory();
 
             Combo.ComboInfo texturesCombo = new Combo.ComboInfo();
             var textFilePath = Path.Combine(basePath, Container, "Text");

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.Flag;
@@ -19,12 +18,8 @@ namespace DataTool.ToolLogic.Extract {
         public List<QueryType> QueryTypes => new List<QueryType>();
 
         public void Parse(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
             var parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null || parsedTypes.First().Key == "*") {
@@ -46,7 +41,7 @@ namespace DataTool.ToolLogic.Extract {
                 var comboInfo = new Combo.ComboInfo();
                 var context = new SaveLogic.Combo.SaveContext(comboInfo);
                 Combo.Find(comboInfo, key);
-                SaveLogic.Combo.SaveVoiceSet(toolFlags, Path.Combine(basePath, Container), context, key);
+                SaveLogic.Combo.SaveVoiceSet(toolFlags, Path.Combine(flags.OutputPath, Container), context, key);
             }
         }
     }

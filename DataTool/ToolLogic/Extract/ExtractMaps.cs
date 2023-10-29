@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using DataTool.DataModels;
 using DataTool.Flag;
@@ -42,12 +41,8 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public void SaveMaps(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
             Dictionary<string, Dictionary<string, ParsedArg>> parsedTypes = ParseQuery(flags, QueryTypes, QueryNameOverrides);
             if (parsedTypes == null) {
@@ -69,7 +64,7 @@ namespace DataTool.ToolLogic.Extract {
 
                 if (config.Count == 0) continue;
 
-                Map.Save(flags, mapInfo, map, key, basePath);
+                Map.Save(flags, mapInfo, map, key, flags.OutputPath);
                 SaveScratchDatabase();
             }
         }

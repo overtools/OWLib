@@ -10,14 +10,13 @@ namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-esport-teams", Description = "Lists eSport teams", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListEsportTeams : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
-            ;
+            var flags = (ListFlags) toolFlags;
             var teams = GetTeams();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(teams, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(teams, flags);
+                return;
+            }
 
             foreach (var team in teams) {
                 Log($"{team.FullName}");

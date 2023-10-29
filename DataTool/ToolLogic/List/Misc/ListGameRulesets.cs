@@ -15,13 +15,9 @@ namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-game-rulesets", Description = "List game rulesets", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     public class ListGameRulesets : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var data = GetData();
-
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(data, flags);
-                    return;
-                }
+            OutputJSON(data, flags);
         }
 
         private Dictionary<teResourceGUID, GameRuleset> GetData() {

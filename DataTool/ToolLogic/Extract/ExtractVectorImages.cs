@@ -13,14 +13,10 @@ namespace DataTool.ToolLogic.Extract {
         private const string Container = "VectorImages";
 
         public void Parse(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
-            var outputDir = Path.Combine(basePath, Container);
+            var outputDir = Path.Combine(flags.OutputPath, Container);
             foreach (var guid in TrackedFiles[0x129]) {
                 try {
                     SaveVectorImage(guid, outputDir);

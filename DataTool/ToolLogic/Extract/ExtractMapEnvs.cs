@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DataTool.Flag;
 using static DataTool.Program;
 using static DataTool.Helper.STUHelper;
@@ -31,14 +30,10 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public void SaveMaps(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
-            basePath = Path.Combine(basePath, "Environments");
+            var basePath = Path.Combine(flags.OutputPath, "Environments");
 
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
 
@@ -194,7 +189,7 @@ namespace DataTool.ToolLogic.Extract {
 
             FindLogic.Combo.ComboInfo info = new FindLogic.Combo.ComboInfo();
             FindLogic.Combo.Find(info, model);
-            FindLogic.Combo.Find(info, modelLook, null, 
+            FindLogic.Combo.Find(info, modelLook, null,
                                  new FindLogic.Combo.ComboContext { Model = model});
 
             var context = new Combo.SaveContext(info) {

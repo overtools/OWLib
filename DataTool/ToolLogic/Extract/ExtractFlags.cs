@@ -100,5 +100,11 @@ namespace DataTool.ToolLogic.Extract {
         public bool UseTextureDecoder;
 
         public override bool Validate() => true;
+
+        public void EnsureOutputDirectory() {
+            if (string.IsNullOrEmpty(OutputPath)) {
+                throw new InvalidOperationException("no output path");
+            }
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using DataTool.DataModels;
 using DataTool.Flag;
 using TankLib.STU.Types;
@@ -14,14 +13,10 @@ namespace DataTool.ToolLogic.Extract {
         }
 
         public void GetGeneralUnlocks(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
-            string path = Path.Combine(basePath, "General");
+            string path = Path.Combine(flags.OutputPath, "General");
 
             foreach (var key in TrackedFiles[0x54]) {
                 STUGenericSettings_PlayerProgression progression = GetInstance<STUGenericSettings_PlayerProgression>(key);

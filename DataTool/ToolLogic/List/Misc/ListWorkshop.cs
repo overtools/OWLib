@@ -11,13 +11,12 @@ using static DataTool.Program;
 using static DataTool.Helper.IO;
 
 namespace DataTool.ToolLogic.List.Misc {
-    [Tool("list-workshop", Description = "List workshop", CustomFlags = typeof(ListFlags), IsSensitive = true)]
+    [Tool("list-workshop", Description = "List workshop data", CustomFlags = typeof(ListFlags))]
     public class ListWorkshop : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var data = GetData();
-
-            if (toolFlags is ListFlags flags)
-                OutputJSON(data, flags);
+            OutputJSON(data, flags);
         }
 
         private static readonly Dictionary<ulong, string> _valuesNameDictById = new();

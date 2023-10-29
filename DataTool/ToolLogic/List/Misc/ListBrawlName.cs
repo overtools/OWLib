@@ -1,5 +1,4 @@
-﻿using System;
-using DataTool.Flag;
+﻿using DataTool.Flag;
 using TankLib.STU.Types;
 using System.Collections.Generic;
 using DataTool.JSON;
@@ -11,18 +10,14 @@ using static DataTool.Helper.STUHelper;
 namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-brawl-name", Description = "List brawl names", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListBrawlName : JSONTool, ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var data = GetData();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(data, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(data, flags);
+                return;
+            }
 
             Log("Brawl Names:");
             foreach (var item in data) {

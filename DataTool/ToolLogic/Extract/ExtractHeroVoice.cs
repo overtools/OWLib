@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using DataTool.FindLogic;
@@ -51,12 +50,9 @@ namespace DataTool.ToolLogic.Extract {
         private const string Container = "HeroVoice";
 
         private void SaveHeroSounds(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            var basePath = flags.OutputPath;
+            flags.EnsureOutputDirectory();
 
             if (flags.Positionals.Length < 4) {
                 QueryHelp(QueryTypes);

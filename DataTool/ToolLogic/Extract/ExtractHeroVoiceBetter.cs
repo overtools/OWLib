@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
@@ -26,12 +25,8 @@ namespace DataTool.ToolLogic.Extract {
         private static readonly HashSet<ulong> SoundIdCache = new HashSet<ulong>();
 
         public void Parse(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = Path.Combine(flags.OutputPath, Container);
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
             // Do normal heroes first then NPCs, this is because NPCs have a lot of duplicate sounds and normal heroes (should) have none
             // so any duplicate sounds would only come up while processing NPCs which can be ignored as they (probably) belong to heroes
@@ -60,7 +55,7 @@ namespace DataTool.ToolLogic.Extract {
                 Combo.ComboInfo baseInfo = default;
                 var heroVoiceSetGuid = GetInstance<STUVoiceSetComponent>(hero.STU.m_gameplayEntity)?.m_voiceDefinition;
 
-                if (SaveVoiceSet(flags, basePath, heroName, "Default", heroVoiceSetGuid, ref baseInfo)) {
+                if (SaveVoiceSet(flags, flags.OutputPath, heroName, "Default", heroVoiceSetGuid, ref baseInfo)) {
                     var skins = new ProgressionUnlocks(hero.STU).GetUnlocksOfType(UnlockType.Skin);
 
                     foreach (var unlock in skins) {
@@ -76,7 +71,7 @@ namespace DataTool.ToolLogic.Extract {
                             continue;
                         }
 
-                        SaveVoiceSet(flags, basePath, heroName, GetValidFilename(unlock.GetName()), heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinTheme));
+                        SaveVoiceSet(flags, flags.OutputPath, heroName, GetValidFilename(unlock.GetName()), heroVoiceSetGuid, ref info, baseInfo, SkinTheme.GetReplacements(skinTheme));
                     }
                 }
             }

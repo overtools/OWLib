@@ -12,13 +12,13 @@ namespace DataTool.ToolLogic.List {
     [Tool("list-keys", Description = "List resource keys", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     public class ListResourceKeys : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<teResourceGUID, ResourceKey> keys = GetKeys();
+            var flags = (ListFlags) toolFlags;
+            var keys = GetKeys();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(keys, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(keys, flags);
+                return;
+            }
 
             foreach (KeyValuePair<teResourceGUID, ResourceKey> key in keys) {
                 Log($"{key.Key}: {key.Value.KeyID} {key.Value.Value}");
@@ -26,7 +26,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public Dictionary<teResourceGUID, ResourceKey> GetKeys() {
-            Dictionary<teResourceGUID, ResourceKey> @return = new Dictionary<teResourceGUID, ResourceKey>();
+            var @return = new Dictionary<teResourceGUID, ResourceKey>();
 
             foreach (teResourceGUID key in TrackedFiles[0x90]) {
                 STUResourceKey resourceKey = GetInstance<STUResourceKey>(key);

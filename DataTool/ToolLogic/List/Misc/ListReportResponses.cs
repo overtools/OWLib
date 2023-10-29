@@ -9,13 +9,13 @@ namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-report-responses", Description = "Lists the messages shown after the punishment of the reported player", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListReportResponses : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var data = GetData();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(data, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(data, flags);
+                return;
+            }
 
             foreach (var response in data) {
                 Log($"Title: {response.Title ?? "N/A"}");

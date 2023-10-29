@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataTool.DataModels;
@@ -18,14 +17,10 @@ namespace DataTool.ToolLogic.Extract {
         public List<QueryType> QueryTypes => new List<QueryType>();
 
         public void Parse(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
-            var path = Path.Combine(basePath, Container);
+            var path = Path.Combine(flags.OutputPath, Container);
             if (flags.VoiceGroupByLocale) {
                 path = Path.Combine(path, Program.Client.CreateArgs.SpeechLanguage ?? "enUS");
             }

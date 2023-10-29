@@ -11,18 +11,18 @@ namespace DataTool.ToolLogic.List {
     [Tool("list-abilities", Description = "List abilities", CustomFlags = typeof(ListFlags))]
     public class ListAbilities : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var data = GetData();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(data, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(data, flags);
+                return;
+            }
 
             IndentHelper indentLevel = new IndentHelper();
             foreach (var loadout in data) {
                 Log($"{indentLevel}{loadout.Value.Name}:");
-                if (!(toolFlags as ListFlags).Simplify) {
+                if (!flags.Simplify) {
                     Log($"{indentLevel + 1}       Type: {loadout.Value.Category}");
                     Log($"{indentLevel + 1}     Button: {loadout.Value.Button ?? "None"}");
                     Log($"{indentLevel + 1}Description: {loadout.Value.Description}");

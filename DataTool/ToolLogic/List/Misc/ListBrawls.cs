@@ -8,10 +8,9 @@ namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-brawls", Description = "List brawls", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListBrawls : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var data = GetData();
-
-            if (toolFlags is ListFlags flags)
-                OutputJSON(data, flags);
+            OutputJSON(data, flags);
         }
 
         private static List<Brawl> GetData() {

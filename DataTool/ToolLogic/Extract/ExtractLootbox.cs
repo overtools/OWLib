@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using DataTool.DataModels;
 using DataTool.FindLogic;
 using DataTool.Flag;
@@ -17,13 +16,8 @@ namespace DataTool.ToolLogic.Extract {
         public const string Container = "LootBoxes";
 
         public void GetLootboxes(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
-
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
             foreach (ulong key in TrackedFiles[0xCF]) {
                 STULootBox lootbox = GetInstance<STULootBox>(key);
@@ -49,8 +43,8 @@ namespace DataTool.ToolLogic.Extract {
                 }
 
                 var context = new SaveLogic.Combo.SaveContext(info);
-                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(basePath, Container, name, "ShopCards"), context);
-                SaveLogic.Combo.Save(flags, Path.Combine(basePath, Container, name), context);
+                SaveLogic.Combo.SaveLooseTextures(flags, Path.Combine(flags.OutputPath, Container, name, "ShopCards"), context);
+                SaveLogic.Combo.Save(flags, Path.Combine(flags.OutputPath, Container, name), context);
                 SaveScratchDatabase();
             }
         }

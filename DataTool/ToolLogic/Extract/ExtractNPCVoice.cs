@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using DataTool.Helper;
@@ -15,12 +13,8 @@ namespace DataTool.ToolLogic.Extract {
         private const string Container = "NPCVoice";
 
         public void Parse(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = Path.Combine(flags.OutputPath, Container);
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
             flags.VoiceGroupBySkin = false;
 
@@ -62,7 +56,7 @@ namespace DataTool.ToolLogic.Extract {
 
                 Logger.Log($"Processing NPC {npcName}");
                 var info = new Combo.ComboInfo();
-                ExtractHeroVoiceBetter.SaveVoiceSet(flags, basePath, npcFileName, "Default", guid, ref info);
+                ExtractHeroVoiceBetter.SaveVoiceSet(flags, flags.OutputPath, npcFileName, "Default", guid, ref info);
             }
         }
     }

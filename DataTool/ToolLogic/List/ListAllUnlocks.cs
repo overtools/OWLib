@@ -10,9 +10,8 @@ namespace DataTool.ToolLogic.List {
     [Tool("list-all-unlocks", Description = "List all unlocks", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListAllUnlocks : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
-            if (toolFlags is ListFlags flags) {
-                OutputJSON(GetData(), flags);
-            }
+            var flags = (ListFlags) toolFlags;
+            OutputJSON(GetData(), flags);
         }
 
         public static Dictionary<teResourceGUID, UnlockAll> GetData() {

@@ -1,5 +1,4 @@
-﻿using System;
-using DataTool.Flag;
+﻿using DataTool.Flag;
 using TankLib.STU.Types;
 using System.Collections.Generic;
 using DataTool.DataModels.Voice;
@@ -10,15 +9,10 @@ using static DataTool.Helper.STUHelper;
 namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-conversations", Description = "List conversations", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListConversations : JSONTool, ITool {
-        public void IntegrateView(object sender) {
-            throw new NotImplementedException();
-        }
-
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var data = GetData();
-
-            if (toolFlags is ListFlags flags)
-                OutputJSON(data, flags);
+            OutputJSON(data, flags);
         }
 
         private static List<Conversation> GetData() {

@@ -7,21 +7,21 @@ using static DataTool.Program;
 using static DataTool.Helper.Logger;
 using static DataTool.Helper.STUHelper;
 
-namespace DataTool.ToolLogic.List {
-    [Tool("list-lootbox", Description = "List lootboxes", CustomFlags = typeof(ListFlags))]
+namespace DataTool.ToolLogic.List.Misc {
+    [Tool("list-lootbox", Description = "List lootboxes", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListLootbox : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
-            List<LootBox> lootboxes = GetLootboxes();
+            var flags = (ListFlags) toolFlags;
+            var lootboxes = GetLootboxes();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(lootboxes, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(lootboxes, flags);
+                return;
+            }
 
             foreach (LootBox lootbox in lootboxes) {
                 Log($"{lootbox.Type}");
-                if ((toolFlags as ListFlags)?.Simplify == false) {
+                if (!flags.Simplify) {
                     if (lootbox.ShopCards != null) {
                         foreach (LootBoxShopCard shopCard in lootbox.ShopCards) {
                             Log($"\t{shopCard.Text}");
@@ -32,10 +32,10 @@ namespace DataTool.ToolLogic.List {
         }
 
         public List<LootBox> GetLootboxes() {
-            List<LootBox> @return = new List<LootBox>();
+            var @return = new List<LootBox>();
 
             foreach (ulong key in TrackedFiles[0xCF]) {
-                STULootBox lootbox = GetInstance<STULootBox>(key);
+                var lootbox = GetInstance<STULootBox>(key);
                 if (lootbox == null) continue;
 
                 @return.Add(new LootBox(lootbox));

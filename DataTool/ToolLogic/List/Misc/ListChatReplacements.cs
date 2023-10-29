@@ -9,10 +9,9 @@ namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-chat-replacements", Description = "GG EZ -> It's past my bedtime", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListChatReplacements : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var data = GetData();
-
-            if (toolFlags is ListFlags flags)
-                OutputJSON(data, flags);
+            OutputJSON(data, flags);
         }
 
         private static ChatReplacementsContainer GetData() {

@@ -15,7 +15,7 @@ using STUHero = TankLib.STU.Types.STUHero;
 using STUUnlock_Emote = TankLib.STU.Types.STUUnlock_Emote;
 using STUUnlock_VoiceLine = TankLib.STU.Types.STUUnlock_VoiceLine;
 
-namespace DataTool.ToolLogic.List {
+namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-highlights", Description = "List user highlights", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     public class ListHighlights : JSONTool, ITool {
         [DataContract]
@@ -68,7 +68,8 @@ namespace DataTool.ToolLogic.List {
         }
 
         public void Parse(ICLIFlags toolFlags) {
-            List<HighlightJSON> highlights = new List<HighlightJSON>();
+            var flags = (ListFlags) toolFlags;
+            var highlights = new List<HighlightJSON>();
 
             DirectoryInfo overwatchAppdataFolder = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Blizzard Entertainment/Overwatch"));
             foreach (DirectoryInfo userFolder in overwatchAppdataFolder.GetDirectories()) {
@@ -84,11 +85,9 @@ namespace DataTool.ToolLogic.List {
                 }
             }
 
-            if (toolFlags is ListFlags flags) {
-                if (flags.JSON) {
-                    OutputJSON(highlights, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(highlights, flags);
+                return;
             }
 
             // todo: timestamp

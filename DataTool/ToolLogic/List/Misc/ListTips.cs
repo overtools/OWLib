@@ -11,13 +11,13 @@ namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-tips", Description = "List game tips", IsSensitive = true, CustomFlags = typeof(ListFlags))]
     public class ListTips : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var data = GetData();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(data, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(data, flags);
+                return;
+            }
 
             var i = new IndentHelper();
             foreach (var item in data) {

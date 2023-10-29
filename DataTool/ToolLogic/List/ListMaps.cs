@@ -14,18 +14,18 @@ namespace DataTool.ToolLogic.List {
     [Tool("list-maps", Description = "List maps", CustomFlags = typeof(ListFlags))]
     public class ListMaps : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<teResourceGUID, MapHeader> maps = GetMaps();
+            var flags = (ListFlags) toolFlags;
+            var maps = GetMaps();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(maps, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(maps, flags);
+                return;
+            }
 
             var iD = new IndentHelper();
             foreach (var map in maps) {
                 var data = map.Value;
-                if ((toolFlags as ListFlags).Simplify) {
+                if (flags.Simplify) {
                     Log(data.GetUniqueName());
                 } else {
                     Log($"{iD}{data.GetUniqueName()} ({data.MapGUID:X8})");
@@ -57,7 +57,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public static MapHeader GetMap(ulong key) {
-            STUMapHeader map = GetInstance<STUMapHeader>(key);
+            var map = GetInstance<STUMapHeader>(key);
             if (map == null) return null;
 
             return new MapHeader(map, key);

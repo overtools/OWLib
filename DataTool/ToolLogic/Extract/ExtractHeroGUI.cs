@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using DataTool.DataModels.Hero;
 using DataTool.Flag;
@@ -14,12 +13,9 @@ namespace DataTool.ToolLogic.Extract {
         private const string Container = "HeroIcons";
 
         public void Parse(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            var basePath = flags.OutputPath;
+            flags.EnsureOutputDirectory();
 
             var heroIntelImageMapping = GetIntelDatabaseHeroImages();
             var heroProgressionImageMapping = GetHeroProgressionImageMapping();

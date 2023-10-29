@@ -10,13 +10,13 @@ namespace DataTool.ToolLogic.List.Misc {
     [Tool("list-arcade-modes", Description = "List arcade modes", CustomFlags = typeof(ListFlags), IsSensitive = true)]
     public class ListArcadeModes : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
+            var flags = (ListFlags) toolFlags;
             var data = GetData();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(data, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(data, flags);
+                return;
+            }
 
             foreach (var arcade in data) {
                 Log($"{arcade.Name}:");

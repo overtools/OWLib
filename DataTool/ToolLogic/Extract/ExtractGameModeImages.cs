@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using DataTool.FindLogic;
 using DataTool.Flag;
 using TankLib;
@@ -11,15 +10,11 @@ namespace DataTool.ToolLogic.Extract {
     [Tool("extract-gamemode-images", Description = "Extracts gamemode and arcade images", CustomFlags = typeof(ExtractFlags))]
     public class ExtractGamemodeImages : ITool {
         public void Parse(ICLIFlags toolFlags) {
-            string basePath;
-            if (toolFlags is ExtractFlags flags) {
-                basePath = flags.OutputPath;
-            } else {
-                throw new Exception("no output path");
-            }
+            var flags = (ExtractFlags) toolFlags;
+            flags.EnsureOutputDirectory();
 
             const string container = "GamemodeImages";
-            string path = Path.Combine(basePath, container);
+            string path = Path.Combine(flags.OutputPath, container);
 
             foreach (ulong key in TrackedFiles[0xEE]) {
                 var stuE3594B8E = Helper.STUHelper.GetInstance<STU_E3594B8E>(key);

@@ -10,13 +10,13 @@ namespace DataTool.ToolLogic.List {
     [Tool("list-subtitles", Description = "List subtitles", CustomFlags = typeof(ListFlags))]
     public class ListSubtitles : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
-            Dictionary<teResourceGUID, string[]> subtitles = GetSubtitles();
+            var flags = (ListFlags) toolFlags;
+            var subtitles = GetSubtitles();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(subtitles, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(subtitles, flags);
+                return;
+            }
 
             IndentHelper i = new IndentHelper();
             foreach (KeyValuePair<teResourceGUID, string[]> subtitle in subtitles) {
@@ -28,7 +28,7 @@ namespace DataTool.ToolLogic.List {
         }
 
         public Dictionary<teResourceGUID, string[]> GetSubtitles() {
-            Dictionary<teResourceGUID, string[]> @return = new Dictionary<teResourceGUID, string[]>();
+            var @return = new Dictionary<teResourceGUID, string[]>();
 
             foreach (teResourceGUID key in TrackedFiles[0x71]) {
                 var subtitle = IO.GetSubtitle(key);

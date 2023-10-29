@@ -10,19 +10,19 @@ namespace DataTool.ToolLogic.List {
     [Tool("list-achievements", Description = "List achievements", CustomFlags = typeof(ListFlags))]
     public class ListAchievements : JSONTool, ITool {
         public void Parse(ICLIFlags toolFlags) {
-            List<Achievement> data = GetData();
+            var flags = (ListFlags) toolFlags;
+            var data = GetData();
 
-            if (toolFlags is ListFlags flags)
-                if (flags.JSON) {
-                    OutputJSON(data, flags);
-                    return;
-                }
+            if (flags.JSON) {
+                OutputJSON(data, flags);
+                return;
+            }
 
             foreach (Achievement achievement in data) {
                 var iD = new IndentHelper();
 
                 Log($"{achievement.Name}");
-                if (!(toolFlags as ListFlags).Simplify) {
+                if (!flags.Simplify) {
                     Log($"{iD + 1}Description: {achievement.Description}");
 
                     if (achievement.Reward != null)
