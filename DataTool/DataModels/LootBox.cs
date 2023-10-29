@@ -1,27 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels {
-    [DataContract]
     public class LootBox {
-        [DataMember]
-        public string NameFormat;
-
-        [DataMember]
-        public string Type;
-
-        [DataMember]
-        public Enum_BABC4175 LootBoxType;
-
-        [DataMember]
-        public LootBoxShopCard[] ShopCards;
-
-        [DataMember]
-        public bool HidePucks;
+        public string NameFormat { get; set; }
+        public string Type { get; set; }
+        public Enum_BABC4175 LootBoxType { get; set; }
+        public LootBoxShopCard[] ShopCards { get; set; }
+        public bool HidePucks { get; set; }
 
         public LootBox(STULootBox lootBox) {
             Init(lootBox);
@@ -78,13 +67,9 @@ namespace DataTool.DataModels {
         };
     }
 
-    [DataContract]
     public class LootBoxShopCard {
-        [DataMember]
-        public string Text;
-
-        [DataMember]
-        public teResourceGUID Texture;
+        public string Text { get; set; }
+        public teResourceGUID Texture { get; set; }
 
         public LootBoxShopCard(STULootBoxShopCard shopCard) {
             Text = GetString(shopCard.m_cardText);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using DataTool.ConvertLogic;
 using DataTool.DataModels;
 using DataTool.DataModels.Hero;
@@ -198,7 +199,7 @@ namespace TankView.Helper {
                 if (voiceSet.VoiceLines == null) continue;
 
                 foreach (var voiceSetVoiceLine in voiceSet.VoiceLines) {
-                    @return[voiceSetVoiceLine.Key] = voiceSetVoiceLine.Value.VoiceSounds;
+                    @return[voiceSetVoiceLine.Key] = voiceSetVoiceLine.Value.VoiceSounds.Select(x => x.GUID).ToArray();
                 }
             }
 

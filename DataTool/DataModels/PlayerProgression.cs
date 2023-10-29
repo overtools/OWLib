@@ -1,18 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
 using TankLib.STU.Types;
 
 namespace DataTool.DataModels {
-    [DataContract]
     public class PlayerProgression {
-        [DataMember]
-        public LootBoxUnlocks[] LootBoxesUnlocks;
-
-        [DataMember]
-        public AdditionalUnlocks[] AdditionalUnlocks;
-
-        [DataMember]
-        public Unlock[] OtherUnlocks;
+        public LootBoxUnlocks[] LootBoxesUnlocks { get; set; }
+        public AdditionalUnlocks[] AdditionalUnlocks { get; set; }
+        public Unlock[] OtherUnlocks { get; set; }
 
         public PlayerProgression(STUGenericSettings_PlayerProgression progression) {
             if (progression.m_lootBoxesUnlocks != null) {
@@ -59,22 +52,9 @@ namespace DataTool.DataModels {
         }
     }
 
-    /// <summary>
-    /// Additional Unlocks data model
-    /// </summary>
-    [DataContract]
     public class AdditionalUnlocks {
-        /// <summary>
-        /// Unlocks
-        /// </summary>
-        [DataMember]
-        public Unlock[] Unlocks;
-
-        /// <summary>
-        /// Level unlocked at
-        /// </summary>
-        [DataMember]
-        public uint Level;
+        public Unlock[] Unlocks { get; set; }
+        public uint Level { get; set; }
 
         public AdditionalUnlocks(STUAdditionalUnlocks additionalUnlocks) {
             Level = additionalUnlocks.m_level;

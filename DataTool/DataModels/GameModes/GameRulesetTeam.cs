@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Runtime.Serialization;
 using TankLib.STU.Types;
 
 namespace DataTool.DataModels.GameModes {
@@ -9,21 +8,13 @@ namespace DataTool.DataModels.GameModes {
         FFA = 0x4
     }
 
-    [DataContract]
     public class GameRulesetTeam {
-        [DataMember]
-        public string Team;
+        public string Team { get; set; }
+        public int MaxPlayers { get; set; }
+        public string[] AvailableHeroes { get; set; }
+        public GameRulesetGameMode.GamemodeRulesetValue[] ConfigValues { get; set; }
 
-        [DataMember]
-        public int MaxPlayers;
-
-        [DataMember]
-        public string[] AvailableHeroes;
-
-        [DataMember]
-        public GameRulesetGameMode.GamemodeRulesetValue[] ConfigValues;
-
-        internal STUGameRulesetTeam STU;
+        internal STUGameRulesetTeam STU { get; set; }
 
         public GameRulesetTeam(STUGameRulesetTeam team) {
             MaxPlayers = team.m_341EF5FA;

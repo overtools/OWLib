@@ -1,42 +1,32 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels.GameModes {
-    [DataContract]
     public class GameRulesetGameMode {
-        [DataMember]
-        public teResourceGUID GUID;
+        public teResourceGUID GUID { get; set; }
+        public string Description { get; set; }
+        public GameMode GameMode { get; set; }
+        public List<GameRulesetTeam> Teams { get; set; }
+        public GamemodeRulesetValue[] ConfigValues { get; set; }
 
-        [DataMember]
-        public string Description;
-
-        [DataMember]
-        public GameMode GameMode;
-
-        [DataMember]
-        public List<GameRulesetTeam> Teams;
-
-        [DataMember]
-        public GamemodeRulesetValue[] ConfigValues;
-
-        internal STUGameRulesetGameMode STU;
+        internal STUGameRulesetGameMode STU { get; set; }
 
         public GameRulesetGameMode(ulong key) {
-            STUGameRulesetGameMode stu = GetInstance<STUGameRulesetGameMode>(key);
-            if (stu == null) return;
+            var stu = GetInstance<STUGameRulesetGameMode>(key);
             Init(stu, key);
         }
 
-        public GameRulesetGameMode(STUGameRulesetGameMode stu) {
-            Init(stu);
+        public GameRulesetGameMode(STUGameRulesetGameMode stu, ulong key = default) {
+            Init(stu, key);
         }
 
         private void Init(STUGameRulesetGameMode ruleset, ulong key = default) {
+            if (ruleset == null) return;
+
             GUID = (teResourceGUID) key;
             Description = GetString(ruleset.m_description);
             GameMode = new GameMode(ruleset.m_gamemode);
@@ -47,14 +37,9 @@ namespace DataTool.DataModels.GameModes {
         }
 
         public class GamemodeRulesetValue {
-            [DataMember]
-            public teResourceGUID Virtual01C;
-
-            [DataMember]
-            public string Name;
-
-            [DataMember]
-            public string Value;
+            public teResourceGUID Virtual01C { get; set; }
+            public string Name { get; set; }
+            public string Value { get; set; }
         }
     }
 }

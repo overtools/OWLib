@@ -1,22 +1,13 @@
 ﻿using System.Linq;
-using System.Runtime.Serialization;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels.Voice {
-    [DataContract]
     public class Conversation {
-        [DataMember]
         public teResourceGUID GUID { get; set; }
-
-        [DataMember]
         public teResourceGUID StimulusGUID { get; set; }
-
-        [DataMember]
         public float Weight { get; set; }
-
-        [DataMember]
         public ConversationLine[] Voicelines { get; set; }
 
         public Conversation(ulong key) {

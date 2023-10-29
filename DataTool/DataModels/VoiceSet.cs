@@ -1,22 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
-using DataTool.JSON;
 using TankLib;
 using TankLib.STU;
 using TankLib.STU.Types;
-using Utf8Json;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels {
-    [DataContract]
     public class VoiceSet {
-        [DataMember]
-        public Dictionary<ulong, VoiceLineInstance> VoiceLines;
-
-        [DataMember]
-        public Dictionary<ulong, HashSet<ulong>> Stimuli;
+        public Dictionary<ulong, VoiceLineInstance> VoiceLines { get; set; }
+        public Dictionary<ulong, HashSet<ulong>> Stimuli { get; set; }
 
         public VoiceSet(STUHero hero) {
             STUVoiceSetComponent voiceSetComponent = GetInstance<STUVoiceSetComponent>(hero.m_gameplayEntity);
@@ -63,26 +56,18 @@ namespace DataTool.DataModels {
         }
     }
 
-    [DataContract]
     public class VoiceLineInstance {
-        [DataMember]
-        [JsonFormatter(typeof(ResourceGUIDFormatter))]
-        public ulong[] VoiceSounds;
+        public teResourceGUID[] VoiceSounds { get; set; }
+        public teResourceGUID[] Conversations { get; set; }
 
-        [DataMember]
-        public teResourceGUID[] Conversations;
-
-        [IgnoreDataMember]
-        public STUCriteriaContainer Conditions;
-
-        [IgnoreDataMember]
-        public STUVoiceLineInstance STU;
+        internal STUCriteriaContainer Conditions;
+        internal STUVoiceLineInstance STU;
 
         public VoiceLineInstance(STUVoiceLineInstance instance) {
             STU = instance;
 
             if (instance.m_AF226247 != null) {
-                var voiceSounds = new List<ulong>();
+                var voiceSounds = new List<teResourceGUID>();
                 foreach (var soundFile in new[] {
                     instance.m_AF226247.m_1485B834, instance.m_AF226247.m_798027DE,
                     instance.m_AF226247.m_A84AA2B5, instance.m_AF226247.m_D872E45C

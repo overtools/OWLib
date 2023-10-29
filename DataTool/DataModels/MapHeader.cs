@@ -29,7 +29,6 @@ namespace DataTool.DataModels {
 
         public MapHeader(ulong key) {
             STUMapHeader stu = GetInstance<STUMapHeader>(key);
-            if (stu == null) return;
             Init(stu, key);
         }
 
@@ -38,6 +37,8 @@ namespace DataTool.DataModels {
         }
 
         public void Init(STUMapHeader mapHeader, ulong key = default) {
+            if (mapHeader == null) return;
+
             GUID = (teResourceGUID) key;
             Name = GetCleanString(mapHeader.m_displayName);
             VariantName = GetCleanString(mapHeader.m_overrideName);

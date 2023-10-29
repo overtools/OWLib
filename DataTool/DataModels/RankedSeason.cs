@@ -1,50 +1,33 @@
 ﻿using System.Linq;
-using System.Runtime.Serialization;
 using TankLib;
 using TankLib.STU.Types;
 using static DataTool.Helper.STUHelper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels {
-    [DataContract]
     public class RankedSeason {
-        [DataMember]
-        public teResourceGUID GUID;
-
-        [DataMember]
-        public int SeasonNumber;
-
-        [DataMember]
-        public string Title;
-
-        [DataMember]
-        public string Title2;
-
-        [DataMember]
-        public string Description;
-
-        [DataMember]
-        public teResourceGUID Image;
-
+        public teResourceGUID GUID { get; set; }
+        public int SeasonNumber { get; set; }
+        public string Title { get; set; }
+        public string Title2 { get; set; }
+        public string Description { get; set; }
+        public teResourceGUID Image { get; set; }
         public SeasonRanks[] Ranks;
-
-        [DataMember]
-        public Unlock[] YouTriedUnlocks;
-
-        [DataMember]
-        public Unlock[] Top500Unlocks;
+        public Unlock[] YouTriedUnlocks { get; set; }
+        public Unlock[] Top500Unlocks { get; set; }
 
         public RankedSeason(ulong key) {
             var stu = GetInstance<STURankedSeason>(key);
-            if (stu == null) return;
             Init(stu, key);
         }
 
-        public RankedSeason(STURankedSeason stu) {
-            Init(stu);
+        public RankedSeason(STURankedSeason stu, ulong key = default) {
+            Init(stu, key);
         }
 
         private void Init(STURankedSeason season, ulong key = default) {
+            if (season == null) return;
+
             GUID = (teResourceGUID) key;
             SeasonNumber = season.m_rankedSeason;
             Image = season.m_21EB3E73;
@@ -56,14 +39,9 @@ namespace DataTool.DataModels {
         }
 
         public class SeasonRanks {
-            [DataMember]
-            public uint Min;
-
-            [DataMember]
-            public uint Max;
-
-            [DataMember]
-            public Unlock[] Unlocks;
+            public uint Min { get; set; }
+            public uint Max { get; set; }
+            public Unlock[] Unlocks { get; set; }
 
             public SeasonRanks(STU_A92F620A rank) {
                 Min = rank.m_4BF7CD58;

@@ -173,8 +173,8 @@ namespace DataTool.SaveLogic.Unlock {
                 FindLogic.Combo.Find(info, weaponEntity.m_entityDefinition, weaponReplacements);
 
                 if (weaponEntity.m_loadout == 0) continue;
-                Loadout loadout = Loadout.GetLoadout(weaponEntity.m_loadout);
-                if (loadout == null) continue;
+                Loadout loadout = new Loadout(weaponEntity.m_loadout);
+                if (loadout.GUID == 0) continue;
                 info.SetEntityName(weaponEntity.m_entityDefinition, $"{loadout.Name}-{teResourceGUID.Index(weaponEntity.m_entityDefinition)}");
 
                 if ((weaponReplacements == null || index == 0) && info.m_entities.TryGetValue(weaponEntity.m_entityDefinition, out var entity) && info.m_models.TryGetValue(entity.m_modelGUID, out var model)) {

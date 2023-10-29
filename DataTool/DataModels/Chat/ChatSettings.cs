@@ -1,16 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using TankLib.STU.Types;
 
 namespace DataTool.DataModels.Chat {
-    [DataContract]
     public class ChatSettings {
-        [DataMember]
-        public IEnumerable<ChatChannel> Channels;
-
-        [DataMember]
-        public IEnumerable<ChatCommand> Commands;
+        public IEnumerable<ChatChannel> Channels { get; set; }
+        public IEnumerable<ChatCommand> Commands { get; set; }
 
         public ChatSettings(STUGenericSettings_Chat chatSettings) {
             Channels = chatSettings.m_chatChannels.Select(x => new ChatChannel(x));

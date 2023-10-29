@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using TACTLib;
 using TankLib;
 using TankLib.STU;
@@ -12,79 +11,76 @@ using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels {
     public class Unlock {
-        public teResourceGUID GUID;
+        public teResourceGUID GUID { get; set; }
 
         /// <summary>
         /// Name of this unlock
         /// </summary>
-        public string Name;
+        public string Name { get; set; }
 
         /// <summary>
         /// DataTool enum for the type of Unlock
         /// </summary>
-        public UnlockType Type;
+        public UnlockType Type { get; set; }
 
         /// <summary>
         /// Unlock rarity
         /// </summary>
-        public STUUnlockRarity Rarity;
+        public STUUnlockRarity Rarity { get; set; }
 
         /// <summary>
         /// Description of this unlock
         /// </summary>
-        public string Description;
+        public string Description { get; set; }
 
         /// <summary>
         /// Where this unlock can be obtained from
         /// </summary>
         /// <example>"Available in Shop"</example>
-        public string AvailableIn;
+        public string AvailableIn { get; set; }
 
         /// <summary>
         /// Battle.net Product Id
         /// </summary>
-        public long ProductId;
+        public long ProductId { get; set; }
 
         /// <summary>
         /// If the Unlock is a Skin, the GUID of the SkinTheme
         /// </summary>
-        public teResourceGUID SkinThemeGUID;
+        public teResourceGUID SkinThemeGUID { get; set; }
 
         /// <summary>
         /// If the Unlock is a Hero, the GUID of the Hero
         /// </summary>
-        public teResourceGUID HeroGUID;
+        public teResourceGUID HeroGUID { get; set; }
 
         /// <summary>
         /// If this unlock belongs to an ESports Team
         /// </summary>
-        public bool IsEsportsUnlock;
+        public bool IsEsportsUnlock { get; set; }
 
         /// <summary>
         /// If this unlock belongs to an ESports Team, the name of the team
         /// </summary>
-        public string EsportsTeam;
+        public string EsportsTeam { get; set; }
 
         /// <summary>
         /// Array of categories the Unlock belongs to that the Hero Gallery & Career Profile filtering options use
         /// </summary>
-        public string[] Categories;
+        public string[] Categories { get; set; }
 
         /// <summary>
         ///  If the Unlock is a form of Currency or XP, the amount granted
         /// </summary>
-        public int? Amount;
+        public int? Amount { get; set; }
 
-        public Enum_BABC4175 LootBoxType;
+        public Enum_BABC4175 LootBoxType { get; set; }
 
         /// <summary>
         /// Whether this is a "normal" Unlock like a skin, emote, voiceline, pose, icon, etc and not something like a Lootbox or Currency.
         /// </summary>
-        [IgnoreDataMember]
-        public bool IsTraditionalUnlock;
-
-        [IgnoreDataMember]
-        public STU_3021DDED STU;
+        internal bool IsTraditionalUnlock { get; set; }
+        internal STU_3021DDED STU { get; set; }
 
         // These types are specific to certain unlocks so don't show them unless we're on that unlock
         public bool ShouldSerializeLootBoxType() => Type == UnlockType.Lootbox;
@@ -98,18 +94,19 @@ namespace DataTool.DataModels {
         public bool ShouldSerializeAvailableIn() => IsTraditionalUnlock;
         public bool ShouldSerializeCategories() => IsTraditionalUnlock;
 
-        public Unlock(STU_3021DDED unlock, ulong guid) {
-            Init(unlock, guid);
+        public Unlock(STU_3021DDED unlock, ulong key = default) {
+            Init(unlock, key);
         }
 
-        public Unlock(ulong guid) {
-            var unlock = GetInstance<STU_3021DDED>(guid);
+        public Unlock(ulong key) {
+            var unlock = GetInstance<STU_3021DDED>(key);
+            Init(unlock, key);
+        }
+
+        private void Init(STU_3021DDED unlock, ulong key) {
             if (unlock == null) return;
-            Init(unlock, guid);
-        }
 
-        private void Init(STU_3021DDED unlock, ulong guid) {
-            GUID = (teResourceGUID) guid;
+            GUID = (teResourceGUID) key;
             STU = unlock;
 
             Name = GetCleanString(unlock.m_name);
@@ -321,14 +318,16 @@ namespace DataTool.DataModels {
         public UnlockLite ToLiteUnlock() {
             return UnlockLite.FromUnlock(this);
         }
+
+        public STU_3021DDED GetSTU() => STU;
     }
 
     public class UnlockLite {
-        public teResourceGUID GUID;
-        public string Name;
-        public UnlockType Type;
-        public STUUnlockRarity Rarity;
-        public int? Amount;
+        public teResourceGUID GUID { get; set; }
+        public string Name { get; set; }
+        public UnlockType Type { get; set; }
+        public STUUnlockRarity Rarity { get; set; }
+        public int? Amount { get; set; }
 
         public bool ShouldSerializeAmount() => Amount != null;
 

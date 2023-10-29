@@ -1,20 +1,13 @@
-using System.Runtime.Serialization;
 using TankLib.Math;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels.Chat {
-    [DataContract]
     public class ChatChannel {
-        [DataMember]
-        public string Name;
-
-        [DataMember]
-        public teColorRGB Color;
-
-        [DataMember]
-        public STUChatChannelType Type;
+        public string Name { get; set; }
+        public teColorRGB Color { get; set; }
+        public STUChatChannelType Type { get; set; }
 
         public ChatChannel(STUChatChannelDefinition channel) {
             Name = GetString(channel.m_chatChannelName);

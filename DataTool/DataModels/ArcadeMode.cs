@@ -1,34 +1,18 @@
 ﻿using System.Linq;
-using System.Runtime.Serialization;
 using TankLib;
 using TankLib.STU.Types;
 using DataTool.Helper;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels {
-    [DataContract]
     public class ArcadeMode {
-        [DataMember]
-        public teResourceGUID GUID;
-
-        [DataMember]
-        public string Name;
-
-        [DataMember]
-        public string Description;
-
-        [DataMember]
-        public teResourceGUID Image;
-
-        [DataMember]
-        public teResourceGUID Brawl;
-
-        [DataMember]
-        public teResourceGUID[] Children;
-
-        [DataMember]
-        public string[] About;
-
+        public teResourceGUID GUID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public teResourceGUID Image { get; set; }
+        public teResourceGUID Brawl { get; set; }
+        public teResourceGUID[] Children { get; set; }
+        public string[] About { get; set; }
 
         public ArcadeMode(ulong key) {
             STU_E3594B8E stu = STUHelper.GetInstance<STU_E3594B8E>(key);
@@ -36,11 +20,13 @@ namespace DataTool.DataModels {
             Init(stu, key);
         }
 
-        public ArcadeMode(STU_E3594B8E stu) {
-            Init(stu);
+        public ArcadeMode(STU_E3594B8E stu, ulong key = default) {
+            Init(stu, key);
         }
 
         private void Init(STU_E3594B8E arcade, ulong key = default) {
+            if (arcade == null) return;
+
             GUID = (teResourceGUID) key;
             Name = GetString(arcade.m_name);
             Description = GetString(arcade.m_description);

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using TankLib;
 using TankLib.Math;
 using TankLib.STU.Types;
@@ -9,53 +8,26 @@ using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels.Hero {
-    [DataContract]
     [DebuggerDisplay("[{GUID.ToStringShort()}] {Name}")]
     public class Hero {
-        [DataMember]
         public teResourceGUID GUID { get; set; }
-
-        [DataMember]
         public string Name { get; set; }
-
-        [DataMember]
         public string Description { get; set; }
-
-        [DataMember]
         public string Class { get; set; }
-
-        [DataMember]
         public Enum_0C014B4A Gender { get; set; }
-
-        [DataMember]
         public STUHeroSize Size { get; set; }
-
-        [DataMember]
         public string Color { get; set; }
-
-        [DataMember]
         public string sRGBColor { get; set; }
-
-        [DataMember]
         public teColorRGBA GalleryColor { get; set; }
-
-        [DataMember]
         public bool IsHero { get; set; }
-
-        [DataMember]
         public bool SupportsAi { get; set; }
-
-        [DataMember]
         public List<LoadoutLite> Loadouts { get; set; }
-
-        [DataMember]
         public List<HeroImage> Images { get; set; }
 
-        internal STUHero STU;
+        internal STUHero STU { get; set; }
 
         public Hero(ulong key) {
             STUHero stu = GetInstance<STUHero>(key);
-            if (stu == null) return;
             Init(stu, key);
         }
 
@@ -64,9 +36,7 @@ namespace DataTool.DataModels.Hero {
         }
 
         private void Init(STUHero hero, ulong key = default) {
-            if (hero == null) {
-                return;
-            }
+            if (hero == null) return;
 
             STU = hero;
             GUID = (teResourceGUID) key;
@@ -83,9 +53,9 @@ namespace DataTool.DataModels.Hero {
 
             if (hero.m_heroLoadout != null) {
                 Loadouts = new List<LoadoutLite>();
-                foreach (teResourceGUID loadoutGUID in hero.m_heroLoadout) {
-                    var loadout = Loadout.GetLoadout(loadoutGUID);
-                    if (loadout == null) continue;
+                foreach (var loadoutGUID in hero.m_heroLoadout) {
+                    var loadout = new Loadout(loadoutGUID);
+                    if (loadout.GUID == 0) continue;
                     Loadouts.Add(loadout.ToLite());
                 }
             }

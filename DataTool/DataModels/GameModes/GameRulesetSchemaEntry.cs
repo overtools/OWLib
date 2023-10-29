@@ -1,27 +1,16 @@
 ﻿using System.Linq;
-using System.Runtime.Serialization;
 using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels.GameModes {
-    [DataContract]
     public class GameRulesetSchemaEntry {
-        [DataMember]
-        public string Name;
-
-        [DataMember]
-        public string TextFormat;
-
-        [DataMember]
-        public teResourceGUID Virtual01C;
-
-        [DataMember]
-        public Enum_F2F62E3D Category;
-
-        [DataMember]
-        public RulesetSchemaValue Value;
+        public string Name { get; set; }
+        public string TextFormat { get; set; }
+        public teResourceGUID Virtual01C { get; set; }
+        public Enum_F2F62E3D Category { get; set; }
+        public RulesetSchemaValue Value { get; set; }
 
         public GameRulesetSchemaEntry(STUGameRulesetSchemaEntry entry) {
             Name = GetString(entry.m_displayText);

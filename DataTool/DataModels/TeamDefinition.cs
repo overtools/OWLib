@@ -1,46 +1,28 @@
-﻿using System.Runtime.Serialization;
-using TankLib;
+﻿using TankLib;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 using static DataTool.Helper.STUHelper;
 
 namespace DataTool.DataModels {
-    [DataContract]
     public class TeamDefinition {
-        [DataMember]
-        public teResourceGUID Id;
+        public teResourceGUID Id { get; set; }
+        public string FullName { get; set; }
+        public string Name { get; set; }
+        public string Location { get; set; }
+        public string Abbreviation { get; set; }
+        public Enum_5A789F71 Division { get; set; }
+        public teResourceGUID Logo { get; set; }
+        public teResourceGUID LogoAlt { get; set; }
+        internal STU_73AE9738 STU { get; set; }
 
-        [DataMember]
-        public string FullName;
-
-        [DataMember]
-        public string Name;
-
-        [DataMember]
-        public string Location;
-
-        [DataMember]
-        public string Abbreviation;
-
-        [DataMember]
-        public Enum_5A789F71 Division;
-
-        [DataMember]
-        public teResourceGUID Logo;
-
-        [DataMember]
-        public teResourceGUID LogoAlt;
-
-        internal STU_73AE9738 STU;
-
-        public TeamDefinition(STU_73AE9738 def) {
-            Init(def);
+        public TeamDefinition(ulong key) {
+            var stu = GetInstance<STU_73AE9738>(key);
+            Init(stu, key);
         }
 
-        public TeamDefinition(ulong guid) {
-            var def = GetInstance<STU_73AE9738>(guid);
-            Init(def, guid);
+        public TeamDefinition(STU_73AE9738 def, ulong key = default) {
+            Init(def, key);
         }
 
         private void Init(STU_73AE9738 def, ulong key = default) {
@@ -53,9 +35,7 @@ namespace DataTool.DataModels {
             Abbreviation = GetString(def.m_0945E50A);
             Logo = def.m_AC77C84A;
             LogoAlt = def.m_DA688288;
-
             Division = def.m_AA53A680;
-
             FullName = $"{Location} {(string.Equals(Location, Name) ? "" : Name)}".Trim();
         }
     }

@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Runtime.Serialization;
 using DataTool.Helper;
 using TankLib;
 using TankLib.STU.Types;
@@ -7,58 +6,31 @@ using TankLib.STU.Types.Enums;
 using static DataTool.Helper.IO;
 
 namespace DataTool.DataModels.Hero {
-    [DataContract]
     public class Loadout {
-        [DataMember]
-        public teResourceGUID GUID;
-
-        [DataMember]
-        public string Name;
-
-        [DataMember]
-        public string Description;
-
-        [DataMember]
-        public LoadoutCategory Category;
-
-        [DataMember]
-        public string Button;
-
-        [DataMember]
-        public string ButtonUnk;
-
-        [DataMember]
-        public string[] DescriptionButtons;
-
-        [DataMember]
-        public teResourceGUID MovieGUID;
-
-        [DataMember]
-        public teResourceGUID TextureGUID;
-
-        [DataMember]
-        public bool IsHiddenAbility;
-
-        [DataMember]
-        public bool IsSecondaryWeapon;
+        public teResourceGUID GUID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public LoadoutCategory Category { get; set; }
+        public string Button { get; set; }
+        public string ButtonUnk { get; set; }
+        public string[] DescriptionButtons { get; set; }
+        public teResourceGUID MovieGUID { get; set; }
+        public teResourceGUID TextureGUID { get; set; }
+        public bool IsHiddenAbility { get; set; }
+        public bool IsSecondaryWeapon { get; set; }
 
         public Loadout(ulong key) {
             STULoadout stu = STUHelper.GetInstance<STULoadout>(key);
-            if (stu == null) return;
             Init(stu, key);
         }
 
-        public Loadout(STULoadout stu) {
-            Init(stu);
-        }
-
-        public static Loadout GetLoadout(ulong key) {
-            STULoadout loadout = STUHelper.GetInstance<STULoadout>(key);
-            if (loadout == null) return null;
-            return new Loadout(loadout);
+        public Loadout(STULoadout stu, ulong key = default) {
+            Init(stu, key);
         }
 
         public void Init(STULoadout loadout, ulong key = default) {
+            if (loadout == null) return;
+
             GUID = (teResourceGUID) key;
             MovieGUID = loadout.m_infoMovie;
             TextureGUID = loadout.m_texture;
@@ -84,20 +56,11 @@ namespace DataTool.DataModels.Hero {
     }
 
     public class LoadoutLite {
-        [DataMember]
-        public string Name;
-
-        [DataMember]
-        public string Description;
-
-        [DataMember]
-        public LoadoutCategory Category;
-
-        [DataMember]
-        public teResourceGUID MovieGUID;
-
-        [DataMember]
-        public teResourceGUID TextureGUID;
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public LoadoutCategory Category { get; set; }
+        public teResourceGUID MovieGUID { get; set; }
+        public teResourceGUID TextureGUID { get; set; }
 
         public LoadoutLite(Loadout loadout) {
             Name = loadout.Name;

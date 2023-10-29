@@ -1,39 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using DataTool.Helper;
 using TankLib.STU.Types;
 using TankLib.STU.Types.Enums;
 
 namespace DataTool.DataModels {
-    /// <summary>
-    /// Progression data model
-    /// </summary>
-    [DataContract]
     public class ProgressionUnlocks {
         /// <summary>
         /// "Other" Unlocks. Common examples are OWL skins and achievement rewards
         /// </summary>
-        [DataMember]
-        public Unlock[] OtherUnlocks;
+        public Unlock[] OtherUnlocks { get; set; }
 
         /// <summary>
         /// Unknown Unlocks
         /// </summary>
-        [DataMember]
-        public Unlock[] UnknownUnlocks;
+        public Unlock[] UnknownUnlocks { get; set; }
 
         /// <summary>
         /// Unlocks granted at a specific level
         /// </summary>
-        [DataMember]
-        public LevelUnlocks[] LevelUnlocks;
+        public LevelUnlocks[] LevelUnlocks { get; set; }
 
         /// <summary>
         /// Loot Box specific unlocks
         /// </summary>
-        [DataMember]
-        public LootBoxUnlocks[] LootBoxesUnlocks;
+        public LootBoxUnlocks[] LootBoxesUnlocks { get; set; }
 
         public ProgressionUnlocks(STUHero hero) {
             var unlocks = STUHelper.GetInstance<STUProgressionUnlocks>(hero.m_heroProgression);
@@ -104,19 +95,9 @@ namespace DataTool.DataModels {
         }
     }
 
-    [DataContract]
     public class LootBoxUnlocks {
-        /// <summary>
-        /// Unlocks
-        /// </summary>
-        [DataMember]
-        public Unlock[] Unlocks;
-
-        /// <summary>
-        /// Loot Box type
-        /// </summary>
-        /// <see cref="Enum_BABC4175"/>
-        public Enum_BABC4175 LootBoxType;
+        public Unlock[] Unlocks { get; set; }
+        public Enum_BABC4175 LootBoxType { get; set; }
 
         public LootBoxUnlocks(STULootBoxUnlocks lootBoxUnlocks) {
             LootBoxType = lootBoxUnlocks.m_lootboxType;
@@ -124,20 +105,9 @@ namespace DataTool.DataModels {
         }
     }
 
-    /// <summary>
-    /// Level Unlocks data model
-    /// </summary>
-    [DataContract]
     public class LevelUnlocks {
-        /// <summary>
-        /// Unlocks
-        /// </summary>
-        public Unlock[] Unlocks;
-
-        /// <summary>
-        /// Level unlocked at
-        /// </summary>
-        public int Level;
+        public Unlock[] Unlocks { get; set; }
+        public int Level { get; set; }
 
         public LevelUnlocks(STU_1757E817 levelUnlocks) {
             Level = levelUnlocks.m_level;

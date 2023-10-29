@@ -31,7 +31,7 @@ namespace ReplayMp4Tool {
 
             return "";
         }
-        
+
 
         private static IEnumerable<(string, string[])> ProcessAtoms(Memory<byte> buffer) {
             var cursor = 0;
@@ -99,7 +99,7 @@ namespace ReplayMp4Tool {
             }
             return replays;
         }
-        
+
         public static List<Replay> ParseReplay(string filePath) {
             Console.Out.WriteLine($"Processing file: {Path.GetFileName(filePath)}");
             List<Replay> replays = new List<Replay>();
@@ -118,7 +118,7 @@ namespace ReplayMp4Tool {
                 var hero = new Hero(heroStu);
                 var unlocks = new ProgressionUnlocks(heroStu);
                 var skins = unlocks.GetUnlocksOfType(UnlockType.Skin);
-                var skinTheme = skins.FirstOrDefault(skin => ((STUUnlock_SkinTheme) skin.STU)?.m_skinTheme == replayInfo.Header.SkinGuid);
+                var skinTheme = skins.FirstOrDefault(skin => ((STUUnlock_SkinTheme) skin.GetSTU())?.m_skinTheme == replayInfo.Header.SkinGuid);
 
                 ulong mapHeaderGuid = (replayInfo.Header.MapGuid & ~0xFFFFFFFF00000000ul) | 0x0790000000000000ul;
                 var mapData = new MapHeader(mapHeaderGuid);
@@ -167,7 +167,7 @@ namespace ReplayMp4Tool {
             PlayOfTheGame = 2,
             ManualHighlight = 8
         }
-        
+
         public enum ReplayQuality
         {
             Low = 30,
